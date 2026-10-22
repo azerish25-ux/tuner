@@ -1,40 +1,47 @@
-# Native iOS final code review
+# Native iOS verification and review
 
-Reviewed the current Swift integration using `code-review-and-quality` across correctness, security, architecture, readability and performance. The authoritative sources are the working files, with runtime evidence limited to the exact revision executed by CI.
+Reviewed native app and domain code for correctness, security, performance, architecture and readability. No actionable P1/P2 findings remain in the reviewed production source. The Android comparison uses the local, ignored reference snapshot; it is not a second application shipped in this repository.
 
-## Verification state
+## Runtime evidence
 
-[GitHub Actions run39851758978](https://github.com/azerish25-ux/tuner/actions/runs/39851758978) has passed core regression tests, iPhone application/StoreKit/UI tests and the unsigned generic-device archive, as reported by the coordinating agent. Its optional advertising integration compile also passed.
+Verified executable revision: `df44acb` ([Actions run 39862780625](https://github.com/azerish25-ux/tuner/actions/runs/39862780625)), completed successfully on October 22, 2026. Subsequent integration changes only update documentation; app, core, tests, project definitions and workflows remain identical to this verified revision.
 
-The next revision includes additional pause/reference/calibration resets, restoration regression coverage, metronome background checks and iPad tests. These later edits are **not covered by the earlier run**. Final approval requires successful results for the exact final commit and inspection of its screenshots/artifacts.
-
-## Findings closed in current source
-
-| Reviewed issue | Current implementation/evidence |
+| Check | Result |
 |---|---|
-| Physical bass/mallet image mismatched selected preset | `AppStore.photo` delegates to tuning-aware `Catalog.photo(instrumentId:tuningId:preferredAsset:)`. Four core regression cases cover variant mapping, incompatible preferences and foreign preset IDs. |
-| Collection instrument/photo/preset selection partially committed | `selectInstrument(_:photo:tuning:)` validates access and ownership, saves one candidate, and changes session/navigation only after confirmed persistence. Both Collection selection paths use it. |
-| Failed voice save resurrected after history deletion | Successful `clearHistory` clears pending record/result/retry state and stops activity; failed disk deletion retains retry evidence and reports an error. |
-| Overlapping StoreKit snapshots published stale ownership | CommerceService serializes revisioned verified-entitlement refreshes; superseded enumerations are discarded and waiting callers resume after the latest snapshot. Test setup polls actual cleared StoreKit state. |
-| Unconfigured linked Google SDK failed at launch | Baseline project excludes Google dependencies and GAD application ID; compile-guarded no-SDK AdvertisingService is used. Ads overlay adds dependencies only with validated build configuration. |
-| Audio errors were inaccessible outside Studio | Root presents global audio errors and an Open Settings action for denied microphone access. Voice cancels on audio errors; entering Settings/History stops audio. |
-| Paused measurements appeared live | Explicit pause preserves an identified LAST measurement; resume/target changes reset it appropriately in the pending revision. New regression coverage still requires final CI. |
-| Foreign remembered preset could select another instrument's courses | Restored preset ownership is checked; unknown/foreign IDs fall back to the instrument default. New regression coverage still requires final CI. |
+| Foundation-only core regressions | 64 tests passed |
+| App integration and verified StoreKit tests | 18 tests passed |
+| iPhone UI flows | 7 tests passed |
+| 13-inch iPad portrait/landscape flow | 1 test passed |
+| Catalogue, assets, fonts and localization resource checks | Passed |
+| Unsigned generic-iOS Release archive | Passed |
+| Optional Google advertising overlay compile | Passed |
 
-## Reference-note reset follow-up
+**90 automated tests passed.** Test ownership comes from actual verified local StoreKit transactions. The cold-launch fixture establishes the verified store precondition before creating a fresh service; microphone UI testing confirms the actual permission dialog is dismissed. These checks grant no production entitlement and fabricate no microphone data.
 
-The pending reference observer regression is corrected in the current source: `referenceMidi` is `private(set)`, and the manual Stepper calls `chooseReferenceNote`, which clears the retained reading, resets the tracker/tone and disables automatic mode. Automatic detection assigns the note internally without switching automatic mode off. Successful settings changes also clear a retained reading. New regressions cover multiple distinct automatic reference pitches and manual-note/calibration changes after pause; their execution awaits the final revision's CI.
+## Findings closed
 
-## Advertising boundary
+| Issue | Implementation and verification |
+|---|---|
+| Instrument/photo/preset partially committed | Collection uses one validated settings commit; failure keeps the previous selection and navigation. Integration regression covers unavailable storage. |
+| Physical image did not follow bass/mallet preset | Tuning-aware photo resolver preserves compatible aliases and follows physical variants; domain and app tests cover the mappings. |
+| Invalid remembered preset could select foreign courses | Unknown/foreign preset IDs fall back to the instrument's own default. |
+| Paused pitch appeared live or survived a new target | Explicit LAST state; resume, manual course/reference note and calibration changes clear it. Automatic chromatic tracking remains automatic. |
+| Recently used order differed from Android | Completed instrument sessions take precedence, deduplicated newest first; remembered selections are the fallback when none exist. |
+| Failed voice save could return after deletion | Atomic persistence, explicit retry with retained record identity, and successful clear-history removal of pending retry/progress state. |
+| Overlapping StoreKit snapshots could publish stale ownership | Revisioned, serialized verified entitlement reconciliation. No local ownership flag; purchase, pending, refund, restoration and cold service paths are exercised. |
+| Linked Google SDK crashed without an app ID | Baseline does not link Google. Explicit overlay validates IDs before building and rejects Google demo IDs for Release. |
+| Audio errors were hard to reach | Global error presentation, microphone Settings link, generation cancellation, and audio stop on navigation/background. |
+| Required timer declaration missing | App PrivacyInfo.xcprivacy declares SystemBootTime reason `35F9.1` for elapsed timers; resource verification checks it. |
 
-Default `project.yml` has no Google package/dependency and does not define `TIMBRE_ADS_ENABLED`. `project-ads.yml` explicitly adds Mobile Ads/UMP, compilation conditions and the GAD application ID. Its prebuild script rejects absent/invalid app IDs and rejects missing/test production identifiers for Release. DEBUG ad requests require explicit test-ad opt-in. The optional CI job compiles the overlay with Google's test application ID.
+## Evidence inspected
 
-Compilation proves API/build compatibility only. It does not establish consent-region behavior, successful live ad delivery or production account configuration. Inspect linked frameworks in the final baseline artifact and treat configured advertising as a separate release choice.
+- Actual iPhone screenshots: twelve-string paired courses, purchase gate and verified unlock, timed voice with no fabricated accuracy, Studio metronome playing and stopped after backgrounding, history, custom calibration, and German/Persian accessibility-size and RTL layouts.
+- Actual 13-inch iPad screenshots: complete portrait/landscape tuner, Browse, all eight Singing previews with selected piano note, Studio and Settings. Tests require real rotation, reachable in-bounds controls, selected native tabs and visible destinations. Captures use the unmodified physical-display screenshot.
+- Unsigned `df44acb` device archive: bundle `com.shahradazerisharghi.timbre`, iOS17 minimum, iPhone/iPad families, Xcode26.3/iOS26.2 SDK, app icon/fonts, and timer privacy declaration. No StoreKit fixture or default Google SDK bundle is present. The final artifact was downloaded and inspected directly.
+- The test environment uses actual local StoreKit transactions and real microphone permission controls. DEBUG UUID storage isolation changes the data directory only; it grants no entitlement, supplies no pitch and fabricates no history.
 
-## Remaining limits and release gate
+## Advertising and Apple boundary
 
-No production entitlement override, hard-coded purchase price, raw-audio persistence or credential material was identified in the reviewed native app. DEBUG storage isolation accepts a UUID and changes only the test data directory. Summary history is retained until explicit deletion; unmeasured accuracy/duration remains optional.
+`project.yml` builds without advertising SDKs. `project-ads.yml` adds Google Mobile Ads/UMP only with validated configuration; CI separately compiles it with Google's documented demo application ID. Compile success does not establish live advertising or consent-region behavior. Production iOS AdMob IDs/messages and release privacy answers remain an owner release choice.
 
-Collection recents now follow Android's completed-session-first rule, deduplicating available instrument IDs and using remembered selections only when no completed instrument sessions exist. A new regression covers completed bass/guitar sessions, later ukulele previews, and fallback after history deletion; execution for this later revision remains pending final CI. Forty-nine localization tables exist, but every translated phrase has not been linguistically validated. Simulator results do not measure physical iPhone acoustic accuracy, microphone latency, routing or interruptions. Live Apple product/signing/upload and optional production AdMob setup remain the documented owner handoff.
-
-There is no unconditional final approval while the latest edits remain unverified. Require the final commit's successful core/app/StoreKit/iPhone/iPad tests, archive and relevant screenshots before claiming the port's automated verification is complete.
+Forty-nine localization tables are bundled; every phrase has not been independently reviewed linguistically. Simulator checks do not measure physical iPhone acoustic accuracy, latency or hardware route/interruption behavior. No Apple signing or upload has been executed. The manual delivery workflow uses the `apple-delivery` environment, restricted to `main` with owner review, and the exact secrets listed in APPLE-DELIVERY.md.

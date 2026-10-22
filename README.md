@@ -17,7 +17,7 @@ xcodegen generate
 open Timbre.xcodeproj
 ```
 
-The [iOS workflow](https://github.com/azerish25-ux/tuner/actions/workflows/ios.yml) runs core regressions, validates resources, executes simulator application/StoreKit/UI tests, and creates an unsigned device archive. Its `ios-evidence` artifact contains the Xcode result bundle and archive when those steps succeed. Screenshots are attached to the UI test results. Inspect the actual run results before treating a revision as verified.
+The [iOS workflow](https://github.com/azerish25-ux/tuner/actions/workflows/ios.yml) runs core regressions, validates resources, executes simulator application/StoreKit/UI tests on iPhone plus a separate 13-inch iPad portrait/landscape flow, creates an unsigned device archive, and separately compiles the optional advertising overlay. Its `ios-evidence` artifact contains the Xcode result bundle and archive when those steps succeed. Screenshots are attached to the UI test results and exported; `ipad-evidence` contains the tablet result and captures. Inspect the actual run results before treating a revision as verified.
 
 `ios/Sources/TimbreCore` contains the Foundation-only musical and persistence logic. `ios/Timbre` contains the native interface, AVAudioEngine integration, StoreKit commerce and consent-gated advertising. `ios/project.yml` is the Xcode project source. Generated Xcode projects and build products are ignored.
 

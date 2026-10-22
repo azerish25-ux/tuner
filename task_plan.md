@@ -17,8 +17,8 @@ Port the complete existing Android app to native Swift/SwiftUI, retaining featur
 - [x] Native audio, lifecycle and route/interruption handling.
 - [x] Faithful Collection/Bench/Voice/Studio/History/Settings/Plus screens, assets and localization.
 - [x] Persistence, commerce, free/paid policy and ads parity decision/integration.
-- [ ] Simulator UI flow verification and screenshots; unsigned device archive.
-- [ ] Review code and parity evidence, fix gaps, prepare Apple delivery instructions and notify owner.
+- [x] Simulator UI flow verification and screenshots; unsigned device archive.
+- [x] Review code and parity evidence, fix gaps, prepare Apple delivery instructions and notify owner.
 
 ## Verification
 Port existing regression vectors and edge cases. Run `swift test --package-path ios` on macOS. Generate project with XcodeGen; run simulator UI tests and capture screenshots, then archive for generic iOS with signing disabled. A green build alone is not feature parity. Retain a checklist with exact implementation and evidence.

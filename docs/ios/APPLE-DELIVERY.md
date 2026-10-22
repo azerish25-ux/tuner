@@ -25,7 +25,7 @@ Verify that the privacy URL opens without authentication after merge. A file on 
 
 ## GitHub Actions signing secrets
 
-Use repository/environment **GitHub Actions secrets**, ideally a protected release environment with required owner approval. The manual `.github/workflows/apple-delivery.yml` workflow uses the following exact names in the `apple-delivery` environment:
+The `apple-delivery` GitHub environment is configured for deployments from `main` with required review by `azerish25-ux`. Add credentials through [repository environments](https://github.com/azerish25-ux/tuner/settings/environments), selecting `apple-delivery` and its environment secrets. The manual `.github/workflows/apple-delivery.yml` workflow uses the following exact names in the `apple-delivery` environment:
 
 | Secret | Contents/use |
 |---|---|
