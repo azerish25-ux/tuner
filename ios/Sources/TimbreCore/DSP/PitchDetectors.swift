@@ -15,7 +15,7 @@ public final class YinPitchDetector {
     public let silenceDbfs: Double
     public let threshold: Double
     private var frames: [Int: Frame] = [:]
-    public init(sampleRate: Double = 48000, minFrequency: Double = 25, maxFrequency: Double = 4200, silenceDbfs: Double = -65, threshold: Double = 0.30) {
+    public init(sampleRate: Double = 48000, minFrequency: Double = 25, maxFrequency: Double = 4200, silenceDbfs: Double = -60, threshold: Double = 0.30) {
         precondition(sampleRate.isFinite && sampleRate > 0 && minFrequency > 0 && maxFrequency > minFrequency)
         self.sampleRate = sampleRate; self.minFrequency = minFrequency; self.maxFrequency = maxFrequency
         self.silenceDbfs = silenceDbfs; self.threshold = threshold
@@ -82,7 +82,7 @@ public final class YinPitchDetector {
 public final class MpmPitchDetector {
     private let sampleRate: Double, minFrequency: Double, maxFrequency: Double, silenceDbfs: Double
     private var cached: Autocorrelation?
-    public init(sampleRate: Double = 48000, minFrequency: Double = 25, maxFrequency: Double = 4200, silenceDbfs: Double = -65) {
+    public init(sampleRate: Double = 48000, minFrequency: Double = 25, maxFrequency: Double = 4200, silenceDbfs: Double = -60) {
         precondition(sampleRate.isFinite && sampleRate > 0 && minFrequency > 0 && maxFrequency > minFrequency)
         self.sampleRate = sampleRate; self.minFrequency = minFrequency; self.maxFrequency = maxFrequency; self.silenceDbfs = silenceDbfs
     }

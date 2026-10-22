@@ -5,6 +5,7 @@ import TimbreCore
 struct SettingsView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
+    @EnvironmentObject private var ads: AdvertisingService
     @State private var referenceInput = ""
     @State private var confirmClear = false
     @State private var showAbout = false
@@ -139,9 +140,6 @@ struct SettingsView: View {
             }
             .accessibilityIdentifier("settings.theme")
             .accessibilityValue(store.settings.theme)
-            Picker("Skin", selection: setting(\.skin)) {
-                Text("Brass").tag("brass"); Text("Silver").tag("silver"); Text("Copper").tag("copper")
-            }
             Picker("Handedness", selection: setting(\.handedness)) {
                 Text("Right-handed").tag("right"); Text("Left-handed").tag("left")
             }
@@ -164,6 +162,7 @@ struct SettingsView: View {
             Text(text("timbre_settings_on_device_privacy_detail", "Microphone audio is analysed on this device. Recordings are not saved or uploaded."))
             Text("Practice summaries and preferences stay on this device. Apple handles purchases through the App Store.").font(.footnote).foregroundStyle(TimbreTheme.secondary)
             Button(text("timbre_settings_about_app_privacy", "About the app and privacy")) { showAbout = true }
+            if ads.privacyOptionsRequired { Button("Ad privacy choices") { Task { await ads.presentPrivacyOptions() } } }
             Button("Clear practice history", role: .destructive) { confirmClear = true }
         }
     }

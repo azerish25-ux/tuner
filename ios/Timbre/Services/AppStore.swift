@@ -6,6 +6,7 @@ final class AppStore: ObservableObject {
     let catalog: Catalog
     let audio = AudioService()
     let commerce = CommerceService()
+    let ads = AdvertisingService()
     private let persistence: LocalStore
     @Published private(set) var settings: UserSettings
     @Published private(set) var records: [PracticeRecord]
@@ -35,6 +36,7 @@ final class AppStore: ObservableObject {
     private var attempt: VoiceAttempt?
     private var voiceTask: Task<Void, Never>?
     private var sessionStarted: Date?
+    private var sessionStartedUptime: TimeInterval?
     private var sessionCount = 0
     private var stableCount = 0
     private var totalError = 0.0
@@ -43,16 +45,17 @@ final class AppStore: ObservableObject {
     private var lastTaps: [TimeInterval] = []
     private var voiceStarted: TimeInterval = 0
 
-    init() throws {
+    init(directory: URL? = nil) throws {
         catalog = try Catalog()
-        let directory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("Timbre", isDirectory: true)
-        persistence = try LocalStore(directory: directory)
+        let storageDirectory = directory ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("Timbre", isDirectory: true)
+        persistence = try LocalStore(directory: storageDirectory)
         settings = persistence.settings; records = persistence.records
         TimbreLocalization.language = settings.language
         tracker.confidenceThreshold = settings.confidenceThreshold
         audio.onReading = { [weak self] hz, confidence, level in self?.accept(hz, confidence: confidence, level: level) }
     }
     var demonstratedLevels: Set<Int> { persistence.demonstratedLevels }
+    var adEntitlement: AdEntitlement { commerce.isPlus ? .paid : commerce.pending ? .pending : commerce.entitlementResolved ? .free : .unknown }
     var instrument: Instrument { catalog.instrument(id: settings.selectedInstrumentId) ?? catalog.instruments[0] }
     var tuning: Tuning {
         let id = settings.lastTuningIds[instrument.id] ?? instrument.defaultTuningId
@@ -113,8 +116,8 @@ final class AppStore: ObservableObject {
     func toggleListening() {
         if audio.running { audio.stop(); tracker.reset() }
         else {
-            guard referenceMode || commerce.isPlus || instrument.isFree else { showPlus = true; return }
-            if sessionStarted == nil { sessionStarted = Date() }
+            guard referenceMode || commerce.isPlus || (instrument.isFree && tuning.isFree) else { showPlus = true; return }
+            if sessionStarted == nil { sessionStarted = Date(); sessionStartedUptime = ProcessInfo.processInfo.systemUptime }
             let scale = settings.referencePitchHz / 440
             let margin = pow(2.0, 2.0 / 12.0)
             let targets = referenceMode ? [25.0, 4500.0] : courses.map { target(for: $0) }
@@ -123,10 +126,17 @@ final class AppStore: ObservableObject {
             Task { await audio.start(minimum: low, maximum: high, micSensitivity: microphoneGain, analysisWindowOverride: settings.analysisWindowOverride, confidenceThreshold: settings.confidenceThreshold) }
         }
     }
-    func toggleTone() { if audio.tonePlaying { audio.stopTone() } else { audio.playTone(targetHz) } }
+    func toggleTone() {
+        if audio.tonePlaying { audio.stopTone(); tracker.reset() }
+        else {
+            guard referenceMode || commerce.isPlus || (instrument.isFree && tuning.isFree) else { showPlus = true; return }
+            tracker.reset()
+            audio.playTone(targetHz)
+        }
+    }
     private var microphoneGain: Double { pow(10, Double(settings.micSensitivity - 60) / 40) }
-    private func resetTuningMeasurements() { sessionCount = 0; stableCount = 0; totalError = 0; sessionStarted = nil }
-    private func accept(_ hz: Double?, confidence: Double, level: Double) {
+    private func resetTuningMeasurements() { sessionCount = 0; stableCount = 0; totalError = 0; sessionStarted = nil; sessionStartedUptime = nil }
+    func accept(_ hz: Double?, confidence: Double, level: Double) {
         let now = Int(ProcessInfo.processInfo.systemUptime * 1000)
         if voiceRunning {
             guard countdown == 0, let attempt else { return }
@@ -166,7 +176,12 @@ final class AppStore: ObservableObject {
         audio.stop(); tracker.reset()
         guard sessionCount > 0 else { error = "No measured notes to save. Listen and play a clear note first."; return }
         let record = PracticeRecord(instrumentId: referenceMode ? "reference.chromatic" : instrument.id, tuningId: referenceMode ? nil : tuning.id, kind: "tuning", count: sessionCount, stableCount: stableCount, meanAbsoluteCents: stableCount > 0 ? totalError / Double(stableCount) : nil)
-        do { try persistence.append(record); records = persistence.records; sessionCount = 0; stableCount = 0; totalError = 0; sessionStarted = nil }
+        do {
+            try persistence.append(record); records = persistence.records
+            let duration = Int((ProcessInfo.processInfo.systemUptime - (sessionStartedUptime ?? ProcessInfo.processInfo.systemUptime)) * 1000)
+            ads.completedTuning(sessionId: record.id.uuidString, durationMs: duration, stableReadingCount: stableCount, entitlement: adEntitlement)
+            resetTuningMeasurements()
+        }
         catch { self.error = "Practice could not be saved. Your measurements are retained; try Finish again. \(error.localizedDescription)" }
     }
     func startVoice() {

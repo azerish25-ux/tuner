@@ -77,7 +77,30 @@ final class PersistenceTests: XCTestCase {
         var settings = store.settings
         settings.recentInstrumentIds = ["a", "b", "a"] + (0..<20).map(String.init)
         try store.saveSettings(settings)
-        XCTAssertEqual(store.settings.recentInstrumentIds.count, 12)
+        XCTAssertEqual(store.settings.recentInstrumentIds.count, LocalStore.recentInstrumentLimit)
         XCTAssertEqual(Array(store.settings.recentInstrumentIds.prefix(2)), ["a", "b"])
+    }
+    func testReferencePitchAndWrittenTranspositionEnforceSourceBounds() throws {
+        let directory = try directory(), store = try LocalStore(directory: directory)
+        for pitch in [415.0, 466.0] {
+            var settings = store.settings; settings.referencePitchHz = pitch
+            try store.saveSettings(settings)
+            XCTAssertEqual(try LocalStore(directory: directory).settings.referencePitchHz, pitch)
+        }
+        for pitch in [414.999, 466.001, 300, 500] {
+            var settings = store.settings; settings.referencePitchHz = pitch
+            XCTAssertThrowsError(try store.saveSettings(settings))
+            XCTAssertEqual(store.settings.referencePitchHz, 466)
+        }
+        for transposition in [-12, 12] {
+            var settings = store.settings; settings.transposition = transposition
+            try store.saveSettings(settings)
+            XCTAssertEqual(try LocalStore(directory: directory).settings.transposition, transposition)
+        }
+        for transposition in [-24, -13, 13, 24] {
+            var settings = store.settings; settings.transposition = transposition
+            XCTAssertThrowsError(try store.saveSettings(settings))
+            XCTAssertEqual(store.settings.transposition, 12)
+        }
     }
 }

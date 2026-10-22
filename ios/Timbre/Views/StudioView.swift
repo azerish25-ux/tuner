@@ -23,16 +23,16 @@ struct StudioView: View {
                 }
                 Panel {
                     HStack { Text("Metronome").font(TimbreTheme.title(20)); Spacer(); if !commerce.isPlus { Label("Plus", systemImage: "lock") } }
-                    Text("\(store.bpm)").font(TimbreTheme.number(60)).frame(maxWidth: .infinity).accessibilityLabel("\(store.bpm) beats per minute")
+                    Text("\(store.bpm)").font(TimbreTheme.number(60)).frame(maxWidth: .infinity).accessibilityLabel("\(store.bpm) beats per minute").accessibilityIdentifier("studio.bpm")
                     Text("BPM").font(.caption).foregroundStyle(TimbreTheme.secondary).frame(maxWidth: .infinity)
-                    Stepper("Tempo", value: $store.bpm, in: 40...240)
+                    Stepper("Tempo", value: $store.bpm, in: 40...240).accessibilityIdentifier("studio.tempo")
                     Slider(value: Binding(get: { Double(store.bpm) }, set: { store.bpm = Int($0) }), in: 40...240, step: 1).accessibilityLabel("Tempo")
                     Picker("Beats per bar", selection: $store.beats) { ForEach(2...7, id: \.self) { Text("\($0)").tag($0) } }
                     Picker("Subdivision", selection: $store.subdivision) { ForEach(1...4, id: \.self) { Text("\($0)").tag($0) } }
                     Toggle("Accent first beat", isOn: $store.accents)
                     HStack {
                         Button("Tap tempo") { store.tapTempo() }.buttonStyle(.bordered).accessibilityIdentifier("tapTempo")
-                        Button { store.toggleMetronome() } label: { Label(audio.metronomeRunning ? "Stop" : "Start", systemImage: audio.metronomeRunning ? "stop.fill" : "play.fill") }.buttonStyle(PrimaryButton())
+                        Button { store.toggleMetronome() } label: { Label(audio.metronomeRunning ? "Stop" : "Start", systemImage: audio.metronomeRunning ? "stop.fill" : "play.fill") }.buttonStyle(PrimaryButton()).accessibilityIdentifier("studio.startMetronome")
                     }
                     if let error = audio.error { Text(error).foregroundStyle(TimbreTheme.warning).font(.caption) }
                 }

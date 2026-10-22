@@ -26,6 +26,7 @@ struct RootView: View {
         .font(.custom("Inter-Regular", size: 16, relativeTo: .body))
         .foregroundStyle(TimbreTheme.primary)
         .tint(TimbreTheme.brass)
+        .transaction { if store.settings.reducedMotion { $0.disablesAnimations = true } }
         .preferredColorScheme(store.settings.theme == "system" ? nil : store.settings.theme == "light" ? .light : .dark)
         .environment(\.locale, Locale(identifier: store.settings.language == "system" ? Locale.current.identifier : store.settings.language))
         .sheet(isPresented: $store.showPlus) { PlusView() }
@@ -35,5 +36,9 @@ struct RootView: View {
         .onChange(of: store.selectedTab) { _, _ in store.stopActivity() }
         .onChange(of: scenePhase) { _, phase in if phase != .active { store.stopActivity() } }
         .onChange(of: commerce.isPlus) { _, isPlus in if !isPlus { store.stopActivity() } }
+        .onChange(of: commerce.entitlementResolved) { _, _ in Task { await store.ads.prepare(entitlement: store.adEntitlement) } }
+        .onChange(of: commerce.pending) { _, _ in store.ads.updateEntitlement(store.adEntitlement) }
+        .onChange(of: commerce.isPlus) { _, _ in Task { await store.ads.prepare(entitlement: store.adEntitlement) } }
+        .task { await store.ads.prepare(entitlement: store.adEntitlement) }
     }
 }

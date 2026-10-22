@@ -16,6 +16,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Swift core regression tests
         run: swift test --package-path ios --parallel
+      - name: Verify catalogue and bundled resources
+        run: python3 tools/verify-ios-resources.py
   app:
     runs-on: macos-15
     steps:

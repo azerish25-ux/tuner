@@ -68,10 +68,10 @@ struct BenchView: View {
                 if store.referenceMode {
                     Image(systemName: "waveform").resizable().scaledToFit().foregroundStyle(TimbreTheme.brass.opacity(0.35)).padding(65)
                 } else if let photo = store.photo {
-                    Image(photo.asset).resizable().scaledToFit().padding(15).accessibilityLabel(store.instrument.name.localized)
+                    Image(photo.asset).resizable().scaledToFit().padding(15).accessibilityLabel(store.instrument.name.localized).accessibilityIdentifier("bench.photo")
                 }
                 HStack(alignment: .firstTextBaseline, spacing: 10) {
-                    Text(store.targetName).font(TimbreTheme.number(44)).foregroundStyle(TimbreTheme.primary)
+                    Text(store.targetName).font(TimbreTheme.number(44)).foregroundStyle(TimbreTheme.primary).accessibilityIdentifier("bench.targetNote")
                     Text("\(store.targetHz, specifier: "%.2f") Hz").font(.caption.monospacedDigit()).foregroundStyle(TimbreTheme.secondary)
                     Spacer()
                 }.padding(15).background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16)).padding(12)
@@ -81,7 +81,7 @@ struct BenchView: View {
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 9) {
-                        ForEach(store.courses) { course in
+                        ForEach(store.settings.handedness == "left" ? Array(store.courses.reversed()) : store.courses) { course in
                             Button { store.chooseCourse(course.index) } label: {
                                 VStack(spacing: 4) {
                                     Text(PitchMath.noteName(midi: course.targetMidi + store.settings.transposition - store.settings.capo, notation: store.settings.notation)).font(.headline.monospaced())
@@ -124,7 +124,7 @@ struct BenchView: View {
             HStack {
                 frequencyLabel("TARGET", frequency: store.targetHz)
                 Spacer()
-                frequencyLabel("LIVE", frequency: store.reading.frequency)
+                frequencyLabel("LIVE", frequency: store.reading.frequency).accessibilityIdentifier("bench.liveFrequency")
             }.padding(.top, 8)
             HStack(spacing: 9) {
                 Image(systemName: "mic").font(.caption)
@@ -142,7 +142,7 @@ struct BenchView: View {
         VStack(alignment: title == "TARGET" ? .leading : .trailing, spacing: 4) {
             Text(title).font(.caption2).tracking(1.5).foregroundStyle(TimbreTheme.secondary)
             Text(frequency.map { String(format: "%.2f Hz", $0) } ?? "— Hz").font(.subheadline.monospacedDigit())
-        }
+        }.accessibilityElement(children: .ignore).accessibilityLabel(frequency.map { String(format: "%.2f Hz", $0) } ?? "— Hz")
     }
     private var controls: some View {
         VStack(spacing: 12) {

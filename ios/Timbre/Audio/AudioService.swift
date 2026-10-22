@@ -24,6 +24,8 @@ final class AudioService: ObservableObject {
     private var sensitivity = 1.0, confidenceThreshold = 0.75
     private var windowOverride: Int?
     private var generation = 0
+    private var toneTask: Task<Void, Never>?
+    private var resumeCaptureAfterTone = false
 
     init() {
         observers.append(NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: .main) { [weak self] notification in
@@ -104,6 +106,7 @@ final class AudioService: ObservableObject {
 
     func stop() { suspend() }
     private func suspend() {
+        toneTask?.cancel(); toneTask = nil; resumeCaptureAfterTone = false
         generation += 1
         if tapInstalled { engine.inputNode.removeTap(onBus: 0); tapInstalled = false }
         engine.stop(); renderer.stop()
@@ -132,14 +135,34 @@ final class AudioService: ObservableObject {
         engine.attach(source); engine.connect(source, to: engine.mainMixerNode, format: format)
         self.source = source
     }
-    func playTone(_ hz: Double) {
+    func playTone(_ hz: Double, durationMs: Int = 2000) {
         guard UIApplication.shared.applicationState == .active, hz.isFinite, hz > 0 else { return }
+        generation += 1
+        let resume = running || resumeCaptureAfterTone
+        toneTask?.cancel(); toneTask = nil
+        if running { suspend() }
         do {
             if !engine.isRunning { try configureSession(); try attachOutput(); engine.prepare(); try engine.start() }
-            renderer.setTone(hz); tonePlaying = true
+            renderer.setTone(hz, durationMs: durationMs); tonePlaying = true; resumeCaptureAfterTone = resume
+            if durationMs > 0 {
+                toneTask = Task { [weak self] in
+                    do { try await Task.sleep(for: .milliseconds(durationMs)) } catch { return }
+                    guard !Task.isCancelled else { return }
+                    self?.stopTone()
+                }
+            }
         } catch { suspend(); self.error = "Could not play reference tone: \(error.localizedDescription)" }
     }
-    func stopTone() { renderer.setTone(0); tonePlaying = false; stopOutputIfIdle() }
+    func stopTone() {
+        toneTask?.cancel(); toneTask = nil
+        renderer.setTone(0); tonePlaying = false
+        let resume = resumeCaptureAfterTone
+        resumeCaptureAfterTone = false
+        if resume {
+            let token = generation
+            Task { guard generation == token else { return }; await start(minimum: minimum, maximum: maximum, micSensitivity: sensitivity, analysisWindowOverride: windowOverride, confidenceThreshold: confidenceThreshold) }
+        } else { stopOutputIfIdle() }
+    }
     func setMetronome(bpm: Int, beats: Int, subdivision: Int, accents: Bool) {
         guard UIApplication.shared.applicationState == .active else { return }
         do {
@@ -190,22 +213,29 @@ private final class PitchWorker: @unchecked Sendable {
     }
 }
 
-/// The render callback owns oscillator timing; controls are sampled under one nonblocking lock per buffer.
+/// Controls synchronize once per PCM buffer. Core renderers own sample-clock phase and envelopes.
 private final class OutputRenderer: @unchecked Sendable {
     private let lock = NSLock()
-    private var sampleRate = 48000.0, tone = 0.0, phase = 0.0
-    private var bpm = 0, beats = 4, subdivision = 1, tick = 0, clickRemaining = 0
-    private var accents = true
-    private var samplesToTick = 0.0, clickFrequency = 1200.0
-    func setSampleRate(_ rate: Double) { lock.lock(); sampleRate = rate; phase = 0; samplesToTick = 0; clickRemaining = 0; lock.unlock() }
-    func setTone(_ hz: Double) { lock.lock(); tone = hz; lock.unlock() }
+    private var sampleRate = 48000
+    private var tone: ReferenceToneRenderer?
+    private var metronome: MetronomeRenderer?
+    func setSampleRate(_ rate: Double) {
+        lock.lock(); defer { lock.unlock() }
+        sampleRate = max(40, Int(rate.rounded())); tone = nil; metronome = nil
+    }
+    func setTone(_ hz: Double, durationMs: Int = 2000) {
+        lock.lock(); defer { lock.unlock() }
+        guard hz > 0, hz < Double(sampleRate) / 2 else { tone?.stop(); return }
+        tone = ReferenceToneRenderer(frequencyHz: hz, sampleRateHz: sampleRate, durationMs: durationMs)
+    }
     func setMetronome(bpm: Int, beats: Int, subdivision: Int, accents: Bool) {
         lock.lock(); defer { lock.unlock() }
-        let safeBpm = min(400, max(0, bpm)), safeBeats = min(16, max(1, beats)), safeSubdivision = min(8, max(1, subdivision))
-        if self.bpm != safeBpm || self.beats != safeBeats || self.subdivision != safeSubdivision { tick = 0; samplesToTick = 0; clickRemaining = 0 }
-        self.bpm = safeBpm; self.beats = safeBeats; self.subdivision = safeSubdivision; self.accents = accents
+        guard bpm > 0 else { metronome = nil; return }
+        let pattern = MetronomePattern(bpm: min(240, max(40, bpm)), beatsPerBar: min(7, max(2, beats)), subdivision: min(4, max(1, subdivision)))
+        if let metronome { metronome.update(pattern); metronome.accents = accents }
+        else { let renderer = MetronomeRenderer(sampleRate: sampleRate, initial: pattern); renderer.accents = accents; metronome = renderer }
     }
-    func stop() { lock.lock(); tone = 0; bpm = 0; clickRemaining = 0; lock.unlock() }
+    func stop() { lock.lock(); tone = nil; metronome = nil; lock.unlock() }
     func render(frameCount: Int, audio: UnsafeMutablePointer<AudioBufferList>) {
         let buffers = UnsafeMutableAudioBufferListPointer(audio)
         guard lock.try() else {
@@ -213,31 +243,10 @@ private final class OutputRenderer: @unchecked Sendable {
             return
         }
         defer { lock.unlock() }
-        let clickLength = Int(sampleRate * 0.025)
         for frame in 0..<frameCount {
-            var value = 0.0
-            if tone > 0 {
-                phase += 2 * .pi * tone / sampleRate
-                phase.formTruncatingRemainder(dividingBy: 2 * .pi)
-                value = sin(phase) * 0.15
-            }
-            if bpm > 0 {
-                if samplesToTick <= 0 {
-                    samplesToTick += sampleRate * 60 / Double(bpm * subdivision)
-                    clickRemaining = clickLength
-                    clickFrequency = accents && tick % (beats * subdivision) == 0 ? 1800 : tick % subdivision == 0 ? 1200 : 800
-                    tick = (tick + 1) % (beats * subdivision)
-                }
-                samplesToTick -= 1
-                if clickRemaining > 0 {
-                    let elapsed = Double(clickLength - clickRemaining) / sampleRate
-                    value += sin(2 * .pi * clickFrequency * elapsed) * exp(-elapsed * 140) * 0.35
-                    clickRemaining -= 1
-                }
-            }
-            for buffer in buffers { buffer.mData?.assumingMemoryBound(to: Float.self)[frame] = Float(value) }
+            let value = (tone?.nextSample() ?? 0) + (metronome?.nextSample() ?? 0)
+            for buffer in buffers { buffer.mData?.assumingMemoryBound(to: Float.self)[frame] = value }
         }
     }
 }
-
 

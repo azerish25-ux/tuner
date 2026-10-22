@@ -60,7 +60,8 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(element("bench.photo").exists)
         XCTAssertTrue(element("bench.targetNote").exists)
         XCTAssertEqual(element("bench.liveFrequency").label, "— Hz")
-        XCTAssertEqual(app.otherElements["Pitch deviation"].value as? String, "No measured pitch")
+        let deviation = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Pitch deviation")).firstMatch
+        XCTAssertEqual(deviation.value as? String, "No measured pitch")
         XCTAssertTrue(app.buttons["listenButton"].exists)
         screenshot("Bench idle with actual instrument photo")
     }

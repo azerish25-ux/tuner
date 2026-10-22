@@ -7,7 +7,7 @@ struct TimbreApp: App {
     var body: some Scene {
         WindowGroup {
             Group {
-                if let store = bootstrap.store { RootView().environmentObject(store).environmentObject(store.audio).environmentObject(store.commerce) }
+                if let store = bootstrap.store { RootView().environmentObject(store).environmentObject(store.audio).environmentObject(store.commerce).environmentObject(store.ads) }
                 else {
                     ContentUnavailableView {
                         Label("Unable to open Timbre", systemImage: "exclamationmark.triangle")

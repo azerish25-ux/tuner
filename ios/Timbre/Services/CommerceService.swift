@@ -7,6 +7,7 @@ import Combine
 final class CommerceService: ObservableObject {
     static let productID = "timbre_plus_lifetime"
     @Published private(set) var isPlus = false
+    @Published private(set) var entitlementResolved = false
     @Published private(set) var loading = false
     @Published private(set) var product: Product?
     @Published private(set) var error: String?
@@ -94,6 +95,7 @@ final class CommerceService: ObservableObject {
             entitled = true
         }
         isPlus = entitled
+        entitlementResolved = true
     }
 }
 

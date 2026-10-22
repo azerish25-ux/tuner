@@ -24,7 +24,7 @@ struct LibraryView: View {
                 }
                 HStack {
                     Image(systemName: "magnifyingglass").foregroundStyle(TimbreTheme.secondary)
-                    TextField("timbre_library_search", text: $query).textInputAutocapitalization(.never).autocorrectionDisabled()
+                    TextField("timbre_library_search", text: $query).textInputAutocapitalization(.never).autocorrectionDisabled().accessibilityIdentifier("collection.search")
                     if !query.isEmpty { Button { query = "" } label: { Image(systemName: "xmark.circle.fill") }.accessibilityLabel(Text("timbre_library_clear_search")) }
                 }.padding(14).background(TimbreTheme.surface, in: RoundedRectangle(cornerRadius: 14))
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -103,7 +103,7 @@ struct LibraryView: View {
                     }
                     Spacer(minLength: 0)
                 }.contentShape(Rectangle())
-            }.buttonStyle(.plain)
+            }.buttonStyle(.plain).accessibilityIdentifier("collection.photo." + photo.asset)
             Menu {
                 ForEach(store.catalog.tunings.filter { $0.instrumentId == instrument.id }) { tuning in
                     Button {

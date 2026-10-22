@@ -52,6 +52,7 @@ public enum LocalStoreError: Error, Equatable {
 /// Caller serializes access (the app uses its main actor).
 public final class LocalStore {
     public static let historyLimit = 500
+    public static let recentInstrumentLimit = 12
     public static let fileName = "timbre-state.json"
     private struct State: Codable, Equatable {
         var version = 1
@@ -77,7 +78,7 @@ public final class LocalStore {
         var candidate = state
         candidate.settings = settings
         var seen: Set<String> = []
-        candidate.settings.recentInstrumentIds = Array(settings.recentInstrumentIds.filter { seen.insert($0).inserted }.prefix(12))
+        candidate.settings.recentInstrumentIds = Array(settings.recentInstrumentIds.filter { seen.insert($0).inserted }.prefix(Self.recentInstrumentLimit))
         try persist(candidate)
     }
     public func append(_ record: PracticeRecord) throws {
@@ -120,11 +121,11 @@ public final class LocalStore {
     private static func validate(_ value: State) throws {
         guard value.version == 1 else { throw LocalStoreError.unsupportedVersion(value.version) }
         let settings = value.settings
-        guard settings.referencePitchHz.isFinite, (300...500).contains(settings.referencePitchHz),
+        guard settings.referencePitchHz.isFinite, (415...466).contains(settings.referencePitchHz),
               (0...100).contains(settings.micSensitivity), settings.confidenceThreshold.isFinite,
               (0...1).contains(settings.confidenceThreshold), (0...12).contains(settings.capo),
-              (-24...24).contains(settings.transposition), settings.lastTuningIds.count <= 128,
-              settings.recentInstrumentIds.count <= 12,
+              (-12...12).contains(settings.transposition), settings.lastTuningIds.count <= 128,
+              settings.recentInstrumentIds.count <= recentInstrumentLimit,
               settings.analysisWindowOverride.map({ $0 > 0 && $0 <= 65536 }) ?? true else {
             throw LocalStoreError.invalidState("Invalid settings")
         }
