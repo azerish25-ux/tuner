@@ -102,6 +102,37 @@ final class DSPTests: XCTestCase {
             XCTAssertLessThan(abs(1200 * log2(reading.frequencyHz / expected)), 2)
         }
     }
+
+    /// Accuracy bench: decaying, slightly inharmonic plucks with noise, detuned off
+    /// the grid, analysed with the production window policy at 48 kHz.
+    func testPluckedStringAccuracyBench() throws {
+        let rate = 48000.0
+        var seed: UInt64 = 7
+        func noise() -> Double { seed = seed &* 6364136223846793005 &+ 1442695040888963407; return Double(seed >> 33) / Double(1 << 31) - 0.5 }
+        var worst = 0.0
+        for midi in [28, 33, 40, 45, 50, 55, 59, 64, 67, 69, 76] {
+            for detune in [-23.0, -3.7, 0.0, 4.2, 31.0] {
+                let f0 = 440 * pow(2, (Double(midi) - 69 + detune / 100) / 12)
+                let window = AnalysisWindowPolicy.windowSizeForTuningRange(minFrequencyHz: f0 / 1.12, sampleRateHz: Int(rate))
+                let b = midi < 45 ? 1.2e-4 : 4e-5
+                let samples: [Float] = (0..<window).map { i in
+                    let t = Double(i) / rate + 0.15
+                    var v = 0.0
+                    for n in 1...12 {
+                        let fn = Double(n) * f0 * sqrt(1 + b * Double(n * n))
+                        v += exp(-t * (0.8 + 0.35 * Double(n))) / Double(n) * sin(2 * .pi * fn * t + Double(n))
+                    }
+                    return Float(0.35 * v + 0.004 * noise())
+                }
+                let detector = YinPitchDetector(sampleRate: rate, minFrequency: f0 / 1.12 / 1.12, maxFrequency: f0 * 2.5)
+                let reading = try XCTUnwrap(detector.detect(samples), "midi \(midi) detune \(detune)")
+                let error = abs(1200 * log2(reading.frequencyHz / f0))
+                worst = max(worst, error)
+                XCTAssertLessThan(error, 1.5, "midi \(midi) detune \(detune): \(error) cents")
+            }
+        }
+        print("Accuracy bench worst error: \(worst) cents")
+    }
 }
 
 
