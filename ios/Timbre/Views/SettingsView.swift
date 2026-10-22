@@ -176,7 +176,7 @@ struct SettingsView: View {
             Section("timbre_settings_privacy") {
                 Text("Audio is processed on your device. Timbre does not save microphone recordings or send audio to a server. Local practice records contain dates, instrument selections and measured summaries. Clear history in Settings to remove those records.")
                 Text("Purchases and restoration use Apple StoreKit. When advertising is configured, eligible free sessions may show ads after consent requirements are resolved. Ad privacy choices are available in Settings.")
-                Link("Privacy policy", destination: URL(string: "https://timbre-privacy-shahrad.timbre.workers.dev")!)
+                Link("Privacy policy", destination: URL(string: "https://github.com/azerish25-ux/tuner/blob/main/docs/ios/PRIVACY.md")!)
             }
             Section("Open-source fonts") {
                 fontLicense("Inter", file: "Inter-OFL")

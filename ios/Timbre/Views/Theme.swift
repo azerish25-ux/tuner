@@ -13,7 +13,7 @@ enum TimbreTheme {
     static func adaptive(_ dark: UInt, _ light: UInt) -> Color {
         Color(uiColor: UIColor { $0.userInterfaceStyle == .dark ? UIColor(Color(hex: dark)) : UIColor(Color(hex: light)) })
     }
-    static func title(_ size: CGFloat = 28) -> Font { .custom("SpaceGrotesk-Medium", size: size, relativeTo: .title) }
+    static func title(_ size: CGFloat = 28) -> Font { .custom("SpaceGrotesk-Light", size: size, relativeTo: .title).weight(.medium) }
     static func number(_ size: CGFloat = 44) -> Font { .custom("IBMPlexMono-Medium", size: size, relativeTo: .largeTitle) }
 }
 extension Color {

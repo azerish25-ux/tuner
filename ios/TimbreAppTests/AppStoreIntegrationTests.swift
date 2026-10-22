@@ -1,5 +1,6 @@
 import XCTest
 import StoreKitTest
+import UIKit
 import TimbreCore
 @testable import Timbre
 
@@ -7,6 +8,11 @@ import TimbreCore
 /// Run serially with CommerceIntegrationTests because StoreKit has one shared test environment.
 @MainActor
 final class AppStoreIntegrationTests: XCTestCase {
+    func testBundledTypographyRegistersActualFontNames() {
+        for name in ["SpaceGrotesk-Light", "Inter-Regular", "IBMPlexMono-Medium"] {
+            XCTAssertNotNil(UIFont(name: name, size: 20), "Bundled font must be registered instead of silently falling back: \(name)")
+        }
+    }
     private var directory: URL!
     private var session: SKTestSession!
     private var store: Timbre.AppStore!

@@ -231,6 +231,10 @@ struct VoiceView: View {
                 Text(percent == 100 ? text("timbre_voice_score_contour_full", "The melody went the same direction as the target throughout.") : String(format: text("timbre_voice_score_contour_partial", "The melody went the same direction as the target %1$d%% of the time."), percent)).font(.footnote)
             }
             if result.demonstrated { Label("Skill demonstrated", systemImage: "checkmark.circle.fill").foregroundStyle(TimbreTheme.success) }
+            if store.voiceSaveFailed {
+                Text("timbre_voice_message_save_failed").foregroundStyle(TimbreTheme.warning)
+                Button("timbre_voice_retry_save") { store.retryVoiceSave() }.buttonStyle(.bordered)
+            }
             if exercise.level < 8 {
                 Button(text("timbre_voice_next_exercise", "Next exercise →")) { store.voiceLevel = exercise.level + 1 }
                     .buttonStyle(.bordered)

@@ -7,11 +7,11 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: ios-${{ github.ref }}
+  group: ios-26-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   core:
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
       - name: Swift core regression tests
@@ -19,9 +19,14 @@ jobs:
       - name: Verify catalogue and bundled resources
         run: python3 tools/verify-ios-resources.py
   app:
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
+      - name: Verify App Store SDK minimum
+        run: |
+          xcodebuild -version
+          SDK_VERSION=$(xcrun --sdk iphoneos --show-sdk-version)
+          test "${SDK_VERSION%%.*}" -ge 26
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate Xcode project

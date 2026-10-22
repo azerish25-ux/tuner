@@ -28,6 +28,7 @@ final class AppStore: ObservableObject {
     @Published private(set) var voiceElapsed = 0
     @Published private(set) var voiceLiveHoldMs = 0
     @Published private(set) var voiceResult: VoiceResult?
+    @Published private(set) var voiceSaveFailed = false
     @Published private(set) var trace: [Double?] = []
     @Published var bpm = 80
     @Published var beats = 4
@@ -36,6 +37,7 @@ final class AppStore: ObservableObject {
     private let tracker = TuningTracker()
     private let voiceStability = StabilityTracker()
     private var attempt: VoiceAttempt?
+    private var pendingVoiceRecord: PracticeRecord?
     private var voiceTask: Task<Void, Never>?
     private var sessionStarted: Date?
     private var sessionStartedUptime: TimeInterval?
@@ -193,6 +195,7 @@ final class AppStore: ObservableObject {
     }
     func startVoice() {
         guard commerce.isPlus else { showPlus = true; return }
+        if pendingVoiceRecord != nil { retryVoiceSave(); return }
         stopActivity(); voiceResult = nil; trace = []; tracker.reset(); voiceStability.reset(); voiceLiveHoldMs = 0
         voiceRunning = true; countdown = 3
         let exercise = voiceExercise
@@ -229,10 +232,14 @@ final class AppStore: ObservableObject {
         audio.stop(); voiceRunning = false; countdown = 0
         guard let attempt else { return }
         let result = attempt.finish(); voiceResult = result
-        guard result.readingCount > 0 else { self.attempt = nil; return }
         let record = PracticeRecord(instrumentId: "voice", tuningId: attempt.exercise.id, kind: "voice", count: result.readingCount, stableCount: result.stableReadingCount, meanAbsoluteCents: result.meanAbsoluteCentsError, voiceResult: result, durationMs: min(attempt.exercise.durationMs, max(0, Int((ProcessInfo.processInfo.systemUptime - voiceStarted) * 1000))))
-        do { try persistence.append(record); records = persistence.records; self.attempt = nil }
-        catch { self.error = "Voice result could not be saved: \(error.localizedDescription)" }
+        pendingVoiceRecord = record
+        retryVoiceSave()
+    }
+    func retryVoiceSave() {
+        guard let record = pendingVoiceRecord else { return }
+        do { try persistence.append(record); records = persistence.records; self.attempt = nil; pendingVoiceRecord = nil; voiceSaveFailed = false }
+        catch { voiceSaveFailed = true; self.error = "Voice result could not be saved: \(error.localizedDescription)" }
     }
     func cancelVoice() { voiceTask?.cancel(); voiceTask = nil; attempt = nil; voiceRunning = false; countdown = 0; voiceLiveHoldMs = 0; audio.stop(); tracker.reset(); voiceStability.reset() }
     func stopActivity() { cancelVoice(); audio.stop(); tracker.reset(); reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal") }

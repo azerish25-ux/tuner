@@ -59,7 +59,7 @@ struct PlusView: View {
                     Text("Guitar, four-string bass and ukulele remain available without a purchase.")
                         .font(.caption).foregroundStyle(TimbreTheme.secondary)
                     HStack(spacing: 20) {
-                        Link("Privacy policy", destination: URL(string: "https://timbre-privacy-shahrad.timbre.workers.dev")!)
+                        Link("Privacy policy", destination: URL(string: "https://github.com/azerish25-ux/tuner/blob/main/docs/ios/PRIVACY.md")!)
                         Link("Terms of use", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
                     }.font(.caption).frame(maxWidth: .infinity)
                 }.padding(24)
