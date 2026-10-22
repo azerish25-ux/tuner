@@ -76,6 +76,27 @@ final class AppStoreIntegrationTests: XCTestCase {
         store.selectTuning(alternate)
         XCTAssertEqual(store.tuning.id, alternate.id)
     }
+    func testInstrumentPhotoAndTuningSelectionIsOneConfirmedTransaction() async throws {
+        await store.commerce.purchase()
+        try await waitUntil { self.store.commerce.isPlus }
+        let bass = try XCTUnwrap(store.catalog.instrument(id: "bass.electric.4"))
+        let five = try XCTUnwrap(store.catalog.tuning(id: "bass.electric.4.five"))
+        let photo = try XCTUnwrap(store.catalog.photos.first { $0.label == "5-string bass" })
+        XCTAssertTrue(store.selectInstrument(bass, photo: photo.asset, tuning: five))
+        let saved = try LocalStore(directory: directory).settings
+        XCTAssertEqual(saved.selectedInstrumentId, bass.id)
+        XCTAssertEqual(saved.selectedPhotoAsset, photo.asset)
+        XCTAssertEqual(saved.lastTuningIds[bass.id], five.id)
+        XCTAssertEqual(store.photo?.label, "5-string bass")
+        store.selectReference()
+        try FileManager.default.removeItem(at: directory)
+        try Data("unavailable storage".utf8).write(to: directory)
+        let uke = try XCTUnwrap(store.catalog.instrument(id: "ukulele.soprano.4"))
+        XCTAssertFalse(store.selectInstrument(uke, tuning: store.catalog.tuning(id: uke.defaultTuningId)))
+        XCTAssertEqual(store.settings, saved)
+        XCTAssertTrue(store.referenceMode)
+        XCTAssertNotNil(store.error)
+    }
     func testDisplayTransposeAndCapoLeaveSoundingPitchUnchangedWhileCalibrationChangesIt() {
         store.chooseCourse(6)
         let originalMidi = store.activeMidi

@@ -71,9 +71,18 @@ final class AudioService: ObservableObject {
         generation += 1
         let token = generation
         let allowed = await AVAudioApplication.requestRecordPermission()
-        guard generation == token, !Task.isCancelled, UIApplication.shared.applicationState == .active else { return }
+        guard generation == token, !Task.isCancelled else { return }
         permissionDenied = !allowed
         guard allowed else { error = "Microphone access is off. Enable it in Settings → Timbre → Microphone."; return }
+        // The permission callback can precede dismissal of the system sheet.
+        // Preserve the explicit Listen intent while UIKit returns to the foreground.
+        var transitionChecks = 0
+        while UIApplication.shared.applicationState == .inactive && transitionChecks < 20 {
+            do { try await Task.sleep(for: .milliseconds(50)) } catch { return }
+            guard generation == token, !Task.isCancelled else { return }
+            transitionChecks += 1
+        }
+        guard UIApplication.shared.applicationState == .active else { return }
         self.minimum = minimum.isFinite && minimum > 0 ? minimum : 25
         self.maximum = maximum.isFinite && maximum > self.minimum ? maximum : max(4500, self.minimum * 2)
         sensitivity = micSensitivity.isFinite ? min(4, max(0.1, micSensitivity)) : 1

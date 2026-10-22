@@ -6,6 +6,7 @@ struct LibraryView: View {
     @EnvironmentObject private var commerce: CommerceService
     @State private var query = ""
     @State private var familyID: String?
+    @FocusState private var searchFocused: Bool
 
     private var visiblePhotos: [InstrumentPhoto] {
         store.catalog.photos.filter { photo in
@@ -24,7 +25,9 @@ struct LibraryView: View {
                 }
                 HStack {
                     Image(systemName: "magnifyingglass").foregroundStyle(TimbreTheme.secondary)
-                    TextField("timbre_library_search", text: $query).textInputAutocapitalization(.never).autocorrectionDisabled().accessibilityIdentifier("collection.search")
+                    TextField("timbre_library_search", text: $query).textInputAutocapitalization(.never).autocorrectionDisabled()
+                        .focused($searchFocused).submitLabel(.search).onSubmit { searchFocused = false }
+                        .accessibilityIdentifier("collection.search")
                     if !query.isEmpty { Button { query = "" } label: { Image(systemName: "xmark.circle.fill") }.accessibilityLabel(Text("timbre_library_clear_search")) }
                 }.padding(14).background(TimbreTheme.surface, in: RoundedRectangle(cornerRadius: 14))
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -82,7 +85,7 @@ struct LibraryView: View {
                     }
                 }
             }.padding(20)
-        }.background(TimbreTheme.canvas).foregroundStyle(TimbreTheme.primary)
+        }.background(TimbreTheme.canvas).foregroundStyle(TimbreTheme.primary).scrollDismissesKeyboard(.interactively)
     }
     private func filterButton(_ name: String, id: String?) -> some View {
         Button { familyID = id } label: {
@@ -98,7 +101,8 @@ struct LibraryView: View {
                     Image(photo.thumbnail).resizable().scaledToFit().frame(width: 95, height: 105).accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 7) {
                         Text(photoName(photo)).font(.headline).multilineTextAlignment(.leading)
-                        Text(instrument.isFree ? "timbre_library_free_to_tune" : "timbre_library_full_unlock").font(.caption).foregroundStyle(instrument.isFree ? TimbreTheme.success : TimbreTheme.action)
+                        let free = instrument.isFree && (store.catalog.tuning(id: photoTuningID(instrument, photo: photo))?.isFree ?? false)
+                        Text(free ? "timbre_library_free_to_tune" : "timbre_library_full_unlock").font(.caption).foregroundStyle(free ? TimbreTheme.success : TimbreTheme.action)
                         if instrument.isAdjustable { Text("Adjustable reference").font(.caption2).foregroundStyle(TimbreTheme.warning) }
                     }
                     Spacer(minLength: 0)
@@ -107,10 +111,9 @@ struct LibraryView: View {
             Menu {
                 ForEach(store.catalog.tunings.filter { $0.instrumentId == instrument.id }) { tuning in
                     Button {
+                        searchFocused = false
                         guard commerce.isPlus || (instrument.isFree && tuning.isFree) else { store.showPlus = true; return }
-                        store.selectInstrument(instrument, photo: photo.asset)
-                        store.selectTuning(tuning)
-                        store.selectedTab = 1
+                        store.selectInstrument(instrument, photo: photo.asset, tuning: tuning)
                     } label: {
                         Label(tuning.name.localized, systemImage: tuning.isFree || commerce.isPlus ? "music.note" : "lock")
                     }
@@ -122,16 +125,19 @@ struct LibraryView: View {
     private func photoName(_ photo: InstrumentPhoto) -> String {
         NSLocalizedString("timbre_photo_" + photo.asset, bundle: .main, value: photo.label, comment: "")
     }
-    private func open(_ instrument: Instrument, photo: InstrumentPhoto) {
+    private func photoTuningID(_ instrument: Instrument, photo: InstrumentPhoto) -> String {
         let tuningID: String
         if photo.label == "5-string bass" || photo.label == "5-string double bass" { tuningID = instrument.id + ".five" }
         else if instrument.id == "mallet.marimba.0", ["Xylophone", "Glockenspiel", "Vibraphone"].contains(photo.label) { tuningID = instrument.id + "." + photo.label.lowercased() }
         else if photo.label == "4-string bass" || photo.label == "4-string double bass" || photo.label == "Marimba" { tuningID = instrument.defaultTuningId }
         else { tuningID = store.settings.lastTuningIds[instrument.id] ?? instrument.defaultTuningId }
+        return tuningID
+    }
+    private func open(_ instrument: Instrument, photo: InstrumentPhoto) {
+        searchFocused = false
+        let tuningID = photoTuningID(instrument, photo: photo)
         guard commerce.isPlus || instrument.isFree else { store.showPlus = true; return }
         if let tuning = store.catalog.tuning(id: tuningID), !tuning.isFree && !commerce.isPlus { store.showPlus = true; return }
-        store.selectInstrument(instrument, photo: photo.asset)
-        if let tuning = store.catalog.tuning(id: tuningID) { store.selectTuning(tuning) }
-        store.selectedTab = 1
+        store.selectInstrument(instrument, photo: photo.asset, tuning: store.catalog.tuning(id: tuningID))
     }
 }

@@ -20,7 +20,9 @@ final class AppStore: ObservableObject {
     @Published var automatic = true
     @Published private(set) var reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal")
     @Published var voiceLevel = 1 {
-        didSet { if voiceLevel != oldValue { updateSettings { $0.selectedVoiceLevel = voiceLevel } } }
+        didSet {
+            if voiceLevel != oldValue && !updateSettings({ $0.selectedVoiceLevel = voiceLevel }) { voiceLevel = oldValue }
+        }
     }
     @Published var voiceRoot = 57
     @Published private(set) var voiceRunning = false
@@ -100,15 +102,21 @@ final class AppStore: ObservableObject {
         }
         catch { self.error = "Settings could not be saved: \(error.localizedDescription)"; return false }
     }
-    func selectInstrument(_ instrument: Instrument, photo: String? = nil) {
-        guard commerce.isPlus || instrument.isFree else { showPlus = true; return }
+    @discardableResult func selectInstrument(_ instrument: Instrument, photo: String? = nil, tuning: Tuning? = nil) -> Bool {
+        guard commerce.isPlus || instrument.isFree else { showPlus = true; return false }
+        if let tuning {
+            guard tuning.instrumentId == instrument.id else { error = "This tuning belongs to a different instrument."; return false }
+            guard commerce.isPlus || tuning.isFree else { showPlus = true; return false }
+        }
         let saved = updateSettings {
             $0.selectedInstrumentId = instrument.id; $0.selectedPhotoAsset = photo
+            if let tuning { $0.lastTuningIds[instrument.id] = tuning.id }
             $0.recentInstrumentIds = Array(([instrument.id] + $0.recentInstrumentIds.filter { $0 != instrument.id }).prefix(8))
         }
-        guard saved else { return }
+        guard saved else { return false }
         stopActivity(); resetTuningMeasurements(); referenceMode = false
         selectedCourse = courses.first?.index ?? 0; selectedTab = 1
+        return true
     }
     func selectTuning(_ tuning: Tuning) {
         guard tuning.instrumentId == instrument.id else { error = "This tuning belongs to a different instrument."; return }

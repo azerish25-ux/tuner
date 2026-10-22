@@ -73,7 +73,7 @@ struct VoiceView: View {
     }
     private var plusPreview: some View {
         Panel {
-            Label("Singing practice", systemImage: "waveform").font(.headline)
+            Label("timbre_tab_voice", systemImage: "waveform").font(.headline)
             Text(text("timbre_voice_practice_preview", "Preview any exercise. Singing practice is included in the one-time full unlock."))
             Button("Explore Timbre Plus") { store.showPlus = true }.buttonStyle(PrimaryButton())
         }

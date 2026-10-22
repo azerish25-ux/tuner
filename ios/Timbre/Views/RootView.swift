@@ -15,7 +15,7 @@ struct RootView: View {
                 StudioView().tabItem { Label("timbre_studio_title", systemImage: "metronome") }.tag(3)
             }
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) { Text("TIMBRE").font(TimbreTheme.title(20)).tracking(3) }
+                ToolbarItem(placement: .principal) { Text("TIMBRE").font(.custom("SpaceGrotesk-Light", fixedSize: 20).weight(.medium)).tracking(3).fixedSize().accessibilityLabel("Timbre") }
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink { SettingsView() } label: { Image(systemName: "gearshape") }.accessibilityLabel("timbre_settings_content_description").accessibilityIdentifier("settings.open")
                 }

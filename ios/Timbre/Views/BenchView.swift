@@ -7,19 +7,23 @@ struct BenchView: View {
     @EnvironmentObject private var commerce: CommerceService
     var body: some View {
         GeometryReader { geometry in
-            ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    header
-                    if geometry.size.width > 740 {
-                        HStack(alignment: .top, spacing: 20) {
-                            stage.frame(maxWidth: .infinity)
-                            VStack(spacing: 18) { dial; controls }.frame(maxWidth: .infinity)
+            VStack(spacing: 0) {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 18) {
+                        header
+                        if geometry.size.width > 740 {
+                            HStack(alignment: .top, spacing: 20) {
+                                stage.frame(maxWidth: .infinity)
+                                dial.frame(maxWidth: .infinity)
+                            }
+                        } else { stage; dial }
+                        if store.tuning.id == "oud.arabic.11.turkish" && !store.referenceMode {
+                            Label("timbre_bench_oud_turkish_caution", systemImage: "exclamationmark.triangle").font(.caption).foregroundStyle(TimbreTheme.warning)
                         }
-                    } else { stage; dial; controls }
-                    if store.tuning.id == "oud.arabic.11.turkish" && !store.referenceMode {
-                        Label("timbre_bench_oud_turkish_caution", systemImage: "exclamationmark.triangle").font(.caption).foregroundStyle(TimbreTheme.warning)
-                    }
-                }.padding(20).frame(maxWidth: 1150).frame(maxWidth: .infinity)
+                    }.padding(20).frame(maxWidth: 1150).frame(maxWidth: .infinity)
+                }
+                controls.padding(.horizontal, 20).padding(.top, 10).padding(.bottom, 6)
+                    .background(TimbreTheme.canvas)
             }.background(TimbreTheme.canvas).foregroundStyle(TimbreTheme.primary)
         }
     }

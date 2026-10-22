@@ -63,8 +63,11 @@ final class PaidFlowsUITests: XCTestCase {
         scrollTo(exercise); exercise.tap()
         let start = app.buttons["voice.start"]
         scrollTo(start); start.tap()
-        // Trigger the interruption handler if a microphone alert appears.
-        app.tap()
+        // The reference tone precedes the permission request by one second. Wait for
+        // the real SpringBoard permission control rather than tapping before it exists.
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let allowMicrophone = springboard.alerts.buttons["Allow"]
+        if allowMicrophone.waitForExistence(timeout: 10) { allowMicrophone.tap() }
         let lastAttempt = app.staticTexts["Your last attempt"]
         XCTAssertTrue(lastAttempt.waitForExistence(timeout: 25), "The timed exercise must finish with an honest result even without measured simulator singing")
         scrollTo(lastAttempt)

@@ -27,6 +27,13 @@ final class TimbreUITests: XCTestCase {
         }
         XCTAssertTrue(target.exists && target.isHittable, "Control should be reachable by scrolling: \(target)", file: file, line: line)
     }
+    private func scrollUpTo(_ target: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
+        for _ in 0..<12 {
+            if target.exists && target.isHittable { return }
+            app.swipeDown()
+        }
+        XCTAssertTrue(target.exists && target.isHittable, "Saved reference caption must be reachable", file: file, line: line)
+    }
     private func tab(_ name: String) {
         let names = ["Collection": "Browse", "Bench": "Tune", "Voice": "Singing"]
         app.tabBars.buttons[names[name] ?? name].tap()
@@ -136,8 +143,11 @@ final class TimbreUITests: XCTestCase {
         // A previous test run may already have saved 442; first choose another valid reference.
         if !apply.isEnabled { replace(input, with: "440"); apply.tap(); replace(input, with: "442") }
         XCTAssertTrue(apply.isEnabled); apply.tap()
-        XCTAssertTrue(app.staticTexts["A4 = 442.0 Hz"].exists)
-        app.swipeUp() // Move focus away from the decimal keyboard before scrolling to appearance.
+        let keyboardDismissed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: app.keyboards.firstMatch)
+        XCTAssertEqual(XCTWaiter.wait(for: [keyboardDismissed], timeout: 5), .completed, "Applying a reference should dismiss the decimal keyboard")
+        let currentReference = app.staticTexts["settings.currentReference"]
+        scrollUpTo(currentReference)
+        XCTAssertEqual(currentReference.label, "A4 = 442.0 Hz")
         let theme = element("settings.theme")
         scrollTo(theme)
         theme.tap(); app.buttons["Light"].tap()
@@ -148,7 +158,8 @@ final class TimbreUITests: XCTestCase {
         screenshot("Settings dark appearance")
         app.terminate(); app.launch()
         app.buttons["Settings"].tap()
-        XCTAssertTrue(app.staticTexts["A4 = 442.0 Hz"].waitForExistence(timeout: 5))
+        scrollTo(currentReference)
+        XCTAssertEqual(currentReference.label, "A4 = 442.0 Hz", "Saved reference must survive relaunch")
         scrollTo(element("settings.theme"))
         XCTAssertEqual(element("settings.theme").value as? String, "dark")
     }
@@ -167,7 +178,9 @@ final class TimbreUITests: XCTestCase {
         app.navigationBars.buttons.firstMatch.tap()
         XCTAssertTrue(app.tabBars.buttons["آواز"].waitForExistence(timeout: 5))
         app.tabBars.buttons["آواز"].tap()
-        XCTAssertTrue(app.buttons["voice.exercise.1"].waitForExistence(timeout: 5))
+        let firstExercise = app.buttons["voice.exercise.1"]
+        scrollTo(firstExercise)
+        XCTAssertTrue(firstExercise.exists && firstExercise.isHittable)
         screenshot("Persian voice exercise preview in RTL")
         app.buttons["settings.open"].tap()
         chooseLanguage("English")

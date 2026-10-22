@@ -9,6 +9,7 @@ struct SettingsView: View {
     @State private var referenceInput = ""
     @State private var confirmClear = false
     @State private var showAbout = false
+    @FocusState private var referenceFocused: Bool
 
     private func text(_ key: String, _ fallback: String) -> String {
         NSLocalizedString(key, value: fallback, comment: "")
@@ -38,6 +39,12 @@ struct SettingsView: View {
         .background(TimbreTheme.canvas)
         .tint(TimbreTheme.action)
         .navigationTitle(text("timbre_settings_title", "Settings"))
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") { referenceFocused = false }.accessibilityIdentifier("settings.dismissKeyboard")
+            }
+        }
         .onAppear { store.stopActivity(); referenceInput = String(store.settings.referencePitchHz) }
         .onChange(of: store.settings.referencePitchHz) { _, value in referenceInput = String(value) }
         .confirmationDialog("Clear practice history?", isPresented: $confirmClear, titleVisibility: .visible) {
@@ -56,12 +63,12 @@ struct SettingsView: View {
     }
     private var referenceSection: some View {
         Section(text("timbre_settings_reference_pitch", "Reference pitch")) {
-            Text("A4 = \(store.settings.referencePitchHz, specifier: "%.1f") Hz").font(.headline)
+            Text("A4 = \(store.settings.referencePitchHz, specifier: "%.1f") Hz").font(.headline).accessibilityIdentifier("settings.currentReference")
             Text(text("timbre_settings_reference_pitch_detail", "Choose a concert pitch or enter a value from 415 to 466 Hz."))
                 .font(.footnote).foregroundStyle(TimbreTheme.secondary)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 64))], spacing: 8) {
                 ForEach([415.0, 432, 435, 440, 442], id: \.self) { hz in
-                    Button(String(Int(hz))) { store.updateSettings { $0.referencePitchHz = hz } }
+                    Button(String(Int(hz))) { referenceFocused = false; store.updateSettings { $0.referencePitchHz = hz } }
                         .buttonStyle(.bordered)
                         .tint(store.settings.referencePitchHz == hz ? TimbreTheme.brass : .secondary)
                         .accessibilityLabel("A4 \(Int(hz)) hertz")
@@ -69,11 +76,13 @@ struct SettingsView: View {
             }
             TextField(text("timbre_settings_custom_a4", "Custom A4 (Hz)"), text: $referenceInput)
                 .keyboardType(.decimalPad)
+                .focused($referenceFocused)
                 .accessibilityIdentifier("settings.referenceInput")
             if parsedReference == nil {
                 Text(text("timbre_settings_a4_input_hint", "Enter a number from 415 to 466 Hz.")).font(.caption).foregroundStyle(.red)
             }
             Button(text("timbre_settings_apply_reference", "Apply reference pitch")) {
+                referenceFocused = false
                 if let value = parsedReference { store.updateSettings { $0.referencePitchHz = value } }
             }.disabled(parsedReference == nil || parsedReference == store.settings.referencePitchHz)
                 .accessibilityIdentifier("settings.applyReference")

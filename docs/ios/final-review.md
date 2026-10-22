@@ -1,43 +1,42 @@
 # Final independent native integration review
 
-Review scope: current native Swift source at the parent-requested ec48b6a baseline plus immediately visible working-tree changes; reviewed using `code-review-and-quality` across correctness, security, performance, architecture and readability. Earlier audit findings were rechecked against the current files rather than copied as unresolved. This document is not merge approval. The parent reports 60 core tests passing, while latest Xcode26.3 application/StoreKit/UI execution is still pending; those results were not independently established by this source review.
+Reviewed current 0876588-era source and visible working-tree changes using `code-review-and-quality` across correctness, security, performance, architecture and readability. Earlier findings were rechecked against authoritative files. The parent reports the latest core job passed64 tests; application/StoreKit/UI tests are still running. This is source closure evidence, not overall runtime approval.
 
-## Actionable findings
+## Earlier findings rechecked
 
-### [P2] Resolve physical photo variants from the active tuning
+| Finding | Current evidence | Status |
+|---|---|---|
+| P2 physical picture/header did not follow bass/mallet preset | `AppStore.photo` calls `Catalog.photo(instrumentId:tuningId:preferredAsset:)`. Resolver follows four/five-string and all four mallet presets while preserving compatible other aliases. `PhotoSelectionTests` has four regression cases. | Source closed; app screenshot/preset execution still requires latest test result. |
+| P2 failed voice save could resurrect after history deletion | `AppStore.clearHistory` first successfully clears disk, then clears `pendingVoiceRecord`, `voiceSaveFailed`, `voiceResult`, stops activity and resets tuning counters. Failure retains state and reports error. | Source closed; runtime/regression evidence still required. |
+| P2 multi-step instrument/preset/photo selection could partially commit | Each `updateSettings` commits confirmed settings before publishing them and returns a Bool. However Collection still invokes `selectInstrument` then `selectTuning` as separate persistent operations; callers cannot observe the first method's success. | Per-write failure handling improved; multi-step action remains source-open as described below. |
 
-Locations at review: `ios/Timbre/Services/AppStore.swift:77` and `:113`.
+## Remaining actionable finding
 
-`photo` prioritizes the persisted `selectedPhotoAsset`, while `selectTuning` changes only the preset ID. Starting from the four-string bass picture and choosing `.five` in Bench or Studio therefore retains the four-string image/header while displaying B0 and five-string targets. Marimba→Glockenspiel likewise retains a Marimba image/header with the glockenspiel range. Android's `InstrumentPhotos.primary` explicitly selects the pictured variant from these tuning IDs.
+### [P2] Commit a Collection instrument+preset choice atomically
 
-Remedy prepared in this review: new `TimbreCore/Catalog/PhotoSelection.swift` adds `Catalog.photo(instrumentId:tuningId:preferredAsset:)`. Bass/mallet physical variants follow the verified owner preset; compatible preferred aliases for concert/tenor ukulele, recorder, clarinet, saxophone and concertina remain selectable. Four regression tests cover every physical variant, incompatible preferred assets, compatible aliases, foreign preset ownership and missing inputs. Parent must wire AppStore's computed photo to this resolver and verify app behavior/CI. Core helper alone does not resolve the integration finding.
+Current locations: `ios/Timbre/Views/LibraryView.swift:110` (preset Menu), `:139` (photo open), `ios/Timbre/Services/AppStore.swift:103` (`selectInstrument`) and `:114` (`selectTuning`).
 
-### [P2] Clear pending voice-save state when deleting history
+Both Collection paths still select instrument/photo and then select its preset in two disk writes. `updateSettings` correctly retains the old published settings when an individual save fails, but that does not make the whole user action atomic. If the first write succeeds and the second fails, active instrument/photo already changes while its requested preset does not. If the first fails, the caller still attempts a tuning operation against the previous instrument, potentially replacing the useful save failure with an ownership error; it also unconditionally navigates to Bench.
 
-Locations at review: `ios/Timbre/Services/AppStore.swift:198`, `:239`, `:246`.
+Use a validated instrument+preset+photo selection method that produces one settings candidate and one persistent commit. Stop/reset the session and navigate only after that commit succeeds. A tuning-only action can remain separate for the current instrument. Add a regression for write failure that proves all selection fields and navigation remain unchanged. This finding is based on currently inspected files, not the earlier absence of per-write Bool handling; recheck if the parent subsequently completes this change.
 
-After a failed voice save, `pendingVoiceRecord` intentionally retains the record for retry. `clearHistory()` clears only persisted history and publishes records. It leaves that pending record and `voiceSaveFailed` intact. A subsequent Start or retry action runs `retryVoiceSave()` and inserts the pre-deletion attempt again, potentially restoring demonstrated progress the user explicitly deleted.
+## Newly rechecked integration paths
 
-Remedy: after a successful clear, cancel the current attempt and clear pending record/result/retry state as appropriate; do not discard pending data if the disk clear itself fails. Add a regression with a failed save, successful history clear and retry/start, proving the old record/progress cannot reappear. Parent is addressing this path.
+- RootView now displays `audio.error` as well as store errors, provides Open Settings when microphone permission is denied, and cancels active voice on an audio error. SettingsView/HistoryView stop audio when entering those screens.
+- The action/text accent is adaptive for light and dark backgrounds while filled primary-button colors remain intentionally paired. Dynamic text/RTL and screenshot inspection still need runtime evidence.
+- DEBUG-only test storage accepts a UUID environment value and places state below a dedicated application-support test directory. Release code does not read this environment override. It changes storage isolation only; it does not fabricate entitlement, pitch or history.
+- Verified StoreKit current entitlements remain the paid authority; revocation/upgrades are rejected, and initial unresolved commerce suppresses ads. No persisted `isPlus` bypass was found. Cold restoration/Ask to Buy/refund behavior still require actual StoreKit suite results.
+- Original course action cues/flat spellings and every paired pitch remain available through TargetLabelFormatter and the per-course strip. History duration/optional accuracy analytics and persisted voice level/evidence are present; destructive500-record trim is removed.
+- Capture queue bounding, generation/cancellation checks and tone capture invalidation remain present. Source inspection cannot establish actual acoustic latency, routing or interruption behavior on iPhone.
 
-### [P2] Make instrument/preset/photo selection one persistent operation
+## Advertising startup crash fix: source boundary reviewed
 
-Locations at review: `ios/Timbre/Views/LibraryView.swift:110` and `:139` (both selection paths), `AppStore.selectInstrument`/`selectTuning`.
+The baseline `ios/project.yml` now references only the local TimbreCore package and does not include Google SDK packages/dependencies or a `GADApplicationIdentifier`. `AdvertisingService.swift` imports/implements Google APIs only under `TIMBRE_ADS_ENABLED`; otherwise the application receives a compatible no-SDK service that does no advertising/consent work. This addresses the previous design where merely linking the Google SDK with no valid application ID could fail at application startup before the app-level configured guard helped.
 
-Collection currently selects instrument/photo and preset in two separate disk writes. If instrument write succeeds and preset write fails, UI has already switched instrument/photo and may show its previous/default preset rather than the requested variant. If the first save fails, the second operation can still run against the previous current instrument, replacing the original useful error with an ownership error. The existing single-method guards do not make the two-step user action atomic.
+The explicit `ios/project-ads.yml` overlay adds Google Mobile Ads/UMP dependencies and the compilation condition, resolves `GADApplicationIdentifier` from `TIMBRE_ADMOB_APP_ID`, and runs a prebuild validation script. The script rejects absent/invalid application IDs; Release additionally requires a valid production interstitial ID and rejects Google's test publisher. AdvertisingService separately rejects unconfigured Release IDs and requires DEBUG test-ad opt-in before requesting Google's test interstitial.
 
-Remedy: centralize a validated instrument+preset+photo selection operation with one settings commit; only change active session/navigation after persistence succeeds. Parent is addressing this integration path. Keep separate tuning-only selection for the existing instrument, using the same validation boundary.
-
-## Rechecked areas without an additional blocking finding
-
-- StoreKit access is derived from verified current entitlements, rejects revocation/upgrades, and handles pending/cancellation separately. No persisted `isPlus` bypass exists. Cold launch's initial unknown state suppresses ads until entitlement resolution. StoreKit local tests and paid UI flows still need actual successful execution.
-- Tuning listening/tone and metronome actions enforce the current free/paid boundary. All paired course targets are preserved rather than collapsed by anchor. Recent target-label updates retain authored physical/action cues and flat spellings.
-- Voice progression now persists selected level and demonstrated evidence; all exercise previews remain selectable. Voice saves retain the same pending record for retry rather than fabricating scores or creating new IDs on each retry.
-- History no longer destructively trims at500 entries. Analytics keeps absent accuracy/duration as optional, restricts longitudinal comparison to supported same-instrument evidence, and preserves all-time scored voice attempts from retained records.
-- Audio capture bounds queue work and validates permission/generation/cancellation around asynchronous capture start. Tone playback invalidates capture and clears published microphone readings. Core DSP remains on a serial worker queue; actual route/interrupt/latency behavior remains runtime evidence, not source-review proof.
-- No credential material or external authorization bypass was identified in the inspected Swift app. AppStoreConnect signing inputs are documented as future GitHub secrets, not source files. Local `.storekit` data must remain excluded from release app resources.
-- Bundled catalogue references are validated at load. This review did not treat hypothetical external mutation of immutable bundled resources as a new practical security finding. Current generated resources and tests, rather than public Codable conformance alone, are the relevant shipped input boundary.
+CI generates the baseline project for tests and unsigned archive first, then separately generates the ads overlay and compiles it with Google's documented test application ID. These are distinct verification scopes: the optional integration **compile** does not prove its launch, consent-region UI, network requests or a production ad unit. No source path was identified that links/loads Google in the unconfigured baseline. Inspect final app linked frameworks and launch artifacts to close runtime evidence rather than inferring it from this source structure.
 
 ## Approval/evidence gate
 
-No approval claim is made until the findings above are wired and regression-tested on the latest commit, the application and StoreKit/UI suites actually succeed, simulator screenshots are inspected, and the unsigned generic-device archive completes. Passing an earlier core revision cannot establish current app/UI parity. Apple delivery and any production AdMob setup remain the separately documented owner handoff.
+No overall approval claim is made while the remaining Collection transaction finding is open and the latest application/StoreKit/UI jobs are in progress. After the fix, inspect actual successful results for the same commit, simulator screenshots, unsigned generic-device archive and optional ads compile. An earlier core/job pass cannot establish the current app/UI revision. Signing/AppStoreConnect delivery and live AdMob configuration remain the owner handoff described in APPLE-DELIVERY.md.

@@ -15,7 +15,7 @@ struct StudioView: View {
                     HStack(spacing: 20) {
                         if let photo = store.photo { Image(photo.asset).resizable().scaledToFit().frame(width: 100, height: 120).accessibilityLabel(store.instrument.name.localized) }
                         VStack(alignment: .leading, spacing: 10) {
-                            Text(store.instrument.name.localized).font(.headline)
+                            Text(store.photo.map { NSLocalizedString("timbre_photo_" + $0.asset, value: $0.label, comment: "") } ?? store.instrument.name.localized).font(.headline)
                             Text(store.tuning.name.localized).foregroundStyle(TimbreTheme.secondary)
                             Button("timbre_tab_bench") { store.selectedTab = 1 }
                         }
@@ -27,7 +27,7 @@ struct StudioView: View {
                             Text(tuning.name.localized + (commerce.isPlus || tuning.isFree ? "" : " · Plus")).tag(tuning.id)
                         }
                     }.accessibilityIdentifier("studio.tuningPreset")
-                    Text(store.courses.map { PitchMath.noteName(midi: $0.targetMidi + store.settings.transposition - store.settings.capo, notation: store.settings.notation) }.joined(separator: " · "))
+                    Text(store.courses.map { store.courseLabel($0) }.joined(separator: " · "))
                         .font(.subheadline.monospaced()).foregroundStyle(TimbreTheme.secondary)
                 }
                 Panel {
