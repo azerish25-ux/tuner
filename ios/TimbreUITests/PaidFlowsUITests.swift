@@ -17,13 +17,6 @@ final class PaidFlowsUITests: XCTestCase {
         app = XCUIApplication()
         app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
-        addUIInterruptionMonitor(withDescription: "Microphone permission") { alert in
-            let allow = alert.buttons["Allow"]
-            if allow.exists { allow.tap(); return true }
-            let ok = alert.buttons["OK"]
-            if ok.exists { ok.tap(); return true }
-            return false
-        }
         app.launch()
         XCTAssertTrue(app.tabBars.buttons["Browse"].waitForExistence(timeout: 20))
     }
@@ -69,9 +62,7 @@ final class PaidFlowsUITests: XCTestCase {
         scrollTo(start); start.tap()
         // The reference tone precedes the permission request by one second. Wait for
         // the real SpringBoard permission control rather than tapping before it exists.
-        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let allowMicrophone = springboard.alerts.buttons["Allow"]
-        if allowMicrophone.waitForExistence(timeout: 10) { allowMicrophone.tap() }
+        resolveMicrophonePermission()
         let lastAttempt = app.staticTexts["Your last attempt"]
         XCTAssertTrue(lastAttempt.waitForExistence(timeout: 25), "The timed exercise must finish with an honest result even without measured simulator singing")
         scrollTo(lastAttempt)
@@ -98,6 +89,58 @@ final class PaidFlowsUITests: XCTestCase {
         screenshot("Paid history without invented practice evidence")
     }
     private func element(_ id: String) -> XCUIElement { app.descendants(matching: .any).matching(identifier: id).firstMatch }
+    private func resolveMicrophonePermission() {
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let appeared = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            self.microphonePermissionButton(springboard: springboard) != nil
+        }, object: app)
+        // A previous legitimate grant can mean no alert appears. The unchanged
+        // result assertions below still require a real capture and timed attempt.
+        guard XCTWaiter.wait(for: [appeared], timeout: 10) == .completed else { return }
+        for attempt in 1...3 {
+            var previousFrame = CGRect.zero
+            var stableObservations = 0
+            let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                guard let button = self.microphonePermissionButton(springboard: springboard), button.isHittable else { return false }
+                let frame = button.frame
+                stableObservations = frame == previousFrame ? stableObservations + 1 : 0
+                previousFrame = frame
+                return frame.width > 0 && stableObservations >= 2
+            }, object: app)
+            if XCTWaiter.wait(for: [settled], timeout: 6) == .completed,
+               let button = microphonePermissionButton(springboard: springboard) {
+                button.tap()
+            }
+            let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                self.microphonePermissionButton(springboard: springboard) == nil
+            }, object: app)
+            if XCTWaiter.wait(for: [dismissed], timeout: 5) == .completed { return }
+            let hierarchy = XCTAttachment(string: "App-owned alerts:\n\(app.alerts.debugDescription)\nSpringBoard-owned alerts:\n\(springboard.alerts.debugDescription)")
+            hierarchy.name = "Microphone permission still visible after attempt \(attempt)"
+            hierarchy.lifetime = .keepAlways
+            add(hierarchy)
+            let screen = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+            screen.name = hierarchy.name
+            screen.lifetime = .keepAlways
+            add(screen)
+        }
+        XCTFail("The actual microphone permission alert must be dismissed before waiting for voice completion")
+    }
+    private func microphonePermissionButton(springboard: XCUIApplication) -> XCUIElement? {
+        // iOS versions expose this system prompt under either application. Match
+        // its actual microphone copy so an unrelated OK/Allow is never accepted.
+        for owner in [app!, springboard] {
+            for alert in owner.alerts.allElementsBoundByIndex {
+                let copy = ([alert.label] + alert.staticTexts.allElementsBoundByIndex.map(\.label)).joined(separator: " ")
+                guard copy.localizedCaseInsensitiveContains("microphone") else { continue }
+                for title in ["Allow", "OK"] {
+                    let button = alert.buttons[title]
+                    if button.exists { return button }
+                }
+            }
+        }
+        return nil
+    }
     private func scrollTo(_ target: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
         for _ in 0..<12 {
             if target.exists && target.isHittable { return }

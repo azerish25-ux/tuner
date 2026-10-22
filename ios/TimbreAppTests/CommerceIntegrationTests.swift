@@ -49,8 +49,12 @@ final class CommerceIntegrationTests: XCTestCase {
     }
 
     func testExistingVerifiedPurchaseRestoresInFreshService() async throws {
-        try session.buyProduct(productIdentifier: CommerceService.productID)
-        // Re-create service; entitlement must come from StoreKit, never persisted local flags.
+        // Model a purchase completed while the app service is absent, then a cold launch.
+        commerce = nil
+        _ = try await session.buyProduct(identifier: CommerceService.productID, options: [])
+        try await StoreKitTestEnvironment.waitUntilVerifiedPurchase(session)
+        // The fixture now proves ownership exists before testing initial reconciliation.
+        // No local flag is set; the fresh service must enumerate verified StoreKit state.
         commerce = CommerceService()
         await commerce.load()
         try await waitUntil { self.commerce.isPlus }
