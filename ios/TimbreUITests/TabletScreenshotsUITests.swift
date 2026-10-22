@@ -77,12 +77,61 @@ final class TabletScreenshotsUITests: XCTestCase {
     }
 
     private func selectTab(_ name: String) {
-        // iPadOS 26 can put native tabs in the top toolbar rather than a UITabBar.
-        let broad = app.buttons.matching(identifier: name).firstMatch
-        if broad.waitForExistence(timeout: 5), broad.isHittable { broad.tap(); return }
-        let tab = app.tabBars.buttons.matching(identifier: name).firstMatch
-        XCTAssertTrue(tab.waitForExistence(timeout: 5) && tab.isHittable, "The actual native \(name) tab must be reachable")
-        tab.tap()
+        let destinations = ["Browse": "collection.search", "Tune": "bench.targetNote", "Singing": "voice.exercise.1", "Studio": "studio.bpm"]
+        guard let destinationID = destinations[name] else { XCTFail("Unknown destination: \(name)"); return }
+        let destination = element(destinationID)
+        // Rotation can leave a stale native-tab hit region briefly after the app
+        // frame settles. Re-query the real control and prove both selection and
+        // destination before any scrolling in the next screen.
+        for attempt in 1...3 {
+            let available = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in self.nativeTab(name) != nil }, object: app)
+            _ = XCTWaiter.wait(for: [available], timeout: 5)
+            guard let tab = nativeTab(name) else {
+                attachNavigationState("Missing native \(name) tab, attempt \(attempt)")
+                continue
+            }
+            if tab.isSelected && destination.exists && destination.isHittable { return }
+            var previousFrame = CGRect.zero
+            var stableObservations = 0
+            let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                guard tab.exists && tab.isHittable else { return false }
+                let frame = tab.frame
+                stableObservations = frame == previousFrame ? stableObservations + 1 : 0
+                previousFrame = frame
+                return stableObservations >= 2 && self.app.frame.contains(frame)
+            }, object: tab)
+            guard XCTWaiter.wait(for: [settled], timeout: 10) == .completed else {
+                attachNavigationState("Unsettled native \(name) tab, attempt \(attempt)")
+                continue
+            }
+            tab.tap()
+            let arrived = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                guard let currentTab = self.nativeTab(name) else { return false }
+                return currentTab.isSelected && destination.exists && destination.isHittable
+            }, object: app)
+            if XCTWaiter.wait(for: [arrived], timeout: 8) == .completed { return }
+            attachNavigationState("Native \(name) tap did not confirm its destination, attempt \(attempt)")
+        }
+        XCTFail("The real \(name) tab must be selected and \(destinationID) visible before continuing")
+    }
+
+    private func nativeTab(_ name: String) -> XCUIElement? {
+        let identifiers = ["Browse": "tab.collection", "Tune": "tab.bench", "Singing": "tab.voice"]
+        let candidates = [
+            app.tabBars.buttons.matching(identifier: name).firstMatch,
+            app.toolbars.buttons.matching(identifier: name).firstMatch,
+            app.buttons.matching(identifier: identifiers[name] ?? name).firstMatch,
+            app.buttons.matching(identifier: name).firstMatch
+        ]
+        return candidates.first { $0.exists && $0.isHittable }
+    }
+
+    private func attachNavigationState(_ name: String) {
+        let state = XCTAttachment(string: app.debugDescription)
+        state.name = name
+        state.lifetime = .keepAlways
+        add(state)
+        screenshot(name)
     }
 
     private func element(_ identifier: String) -> XCUIElement {
