@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 import bpy
+from bpy_extras.object_utils import world_to_camera_view
 from mathutils import Vector
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -94,7 +95,7 @@ def stage(scene, lo, hi):
     area_light("Top", center + Vector((0.0, -0.3 * k, 1.4 * k)), center, 0.6 * k, 28 * k * k, (1.0, 0.92, 0.82))
 
 
-def render(scene, path, target, height, res, samples, azimuth=24.0, elevation=6.0, lens=85.0, fill=1.1, aspect=1.0):
+def render(scene, path, target, height, res, samples, azimuth=24.0, elevation=6.0, lens=85.0, fill=1.1, aspect=1.0, points=None):
     cam_data = bpy.data.cameras.new("Camera")
     cam_data.lens = lens
     cam_data.sensor_fit = "VERTICAL"
@@ -125,7 +126,12 @@ def render(scene, path, target, height, res, samples, azimuth=24.0, elevation=6.
         pass
     scene.render.filepath = str(path)
     bpy.ops.render.render(write_still=True)
+    projected = {}
+    for name, point in (points or {}).items():
+        co = world_to_camera_view(scene, cam, Vector(point))
+        projected[name] = [round(co.x, 5), round(1 - co.y, 5)]
     bpy.data.objects.remove(cam)
+    return projected
 
 
 def main():
@@ -148,7 +154,15 @@ def main():
             stage(scene, lo, hi)
             center = (lo + hi) / 2
             height = (hi - lo).z
-            render(scene, out / f"{model_id}_hero.png", center, height, args.res, args.samples)
+            def blender_point(p):
+                return (p[0], -p[2], p[1])
+            points = {}
+            for s in rig["strings"]:
+                points[f"{s['anchor']}.saddle"] = blender_point(s["saddle"])
+                points[f"{s['anchor']}.nut"] = blender_point(s["nut"])
+                points[f"{s['anchor']}.peg"] = blender_point(s["pegCenter"])
+            rig["hero2D"] = render(scene, out / f"{model_id}_hero.png", center, height, args.res, args.samples, points=points)
+            (out / f"{model_id}.rig.json").write_text(json.dumps(rig, indent=1))
             head = Vector((rig["headCenter"][0], -rig["headCenter"][2], rig["headCenter"][1]))
             render(scene, out / f"{model_id}_head.png", head, 0.26 if spec.kind != "ukulele" else 0.17,
                    args.res // 2, args.samples, azimuth=18, elevation=10, lens=100, fill=1.0)

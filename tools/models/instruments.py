@@ -164,7 +164,7 @@ def build(spec: Spec):
         head_half = [(0.0, 0.0), (hw0, 0.0), (hw0 + 0.006, L * 0.3), (hw0 + 0.012, L * 0.75), (hw0 + 0.01, L * 0.95), (hw0 * 0.5, L * 1.02), (0.0, L * 0.98)]
         head_outline = mirrored_outline(head_half, 10)
     prism("headstock", head_outline, 0.0, head_t, P[spec.neck_wood], head, bevel=0.0025)
-    prism("head_veneer", head_outline, -0.0009, 0.0002, P["black" if spec.kind == "electric_bass" else spec.board], head, bevel=0.0006)
+    prism("head_veneer", offset_outline(head_outline, -0.0006), -0.0016, 0.0004, P["black" if spec.kind == "electric_bass" else spec.board], head, bevel=0.0004, segments=2)
 
     # ---------------------------------------------------------------- strings, posts, tuners
     def string_x(i, width):

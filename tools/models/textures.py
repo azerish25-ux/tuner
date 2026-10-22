@@ -73,9 +73,9 @@ def gray(values, path):
 def spruce(out):
     g = grain(SIZE, SIZE, 9.0, 18.0, 1, ray_strength=0.35)
     tone = fbm((SIZE, SIZE), 120, 3, 2)
-    base = ramp(0.25 + 0.25 * tone, [(0, (233, 208, 160)), (1, (214, 182, 128))])
-    dark = np.array([170, 128, 74]) / 255.0
-    rgb = base * (1 - 0.55 * g[..., None]) + dark * (0.55 * g[..., None])
+    base = ramp(0.25 + 0.5 * tone, [(0, (222, 182, 120)), (1, (196, 150, 88))])
+    dark = np.array([150, 102, 52]) / 255.0
+    rgb = base * (1 - 0.7 * g[..., None]) + dark * (0.7 * g[..., None])
     save(rgb, out / "spruce_color.jpg")
     gray(0.32 + 0.12 * g, out / "spruce_rough.png")
 
@@ -164,7 +164,7 @@ def rosette(out):
 def pearl(out):
     t = fbm((512, 512), 6, 5, 71)
     hue = fbm((512, 512), 20, 3, 72)
-    rgb = ramp(t, [(0, (210, 214, 220)), (0.5, (246, 244, 238)), (1, (255, 255, 252))])
+    rgb = ramp(t, [(0, (196, 186, 168)), (0.5, (226, 216, 196)), (1, (242, 234, 218))])
     tint = ramp(hue, [(0, (255, 214, 230)), (0.5, (214, 240, 255)), (1, (230, 255, 220))])
     rgb = rgb * 0.8 + tint * 0.2
     save(rgb, out / "pearl_color.jpg")
