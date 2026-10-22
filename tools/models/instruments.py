@@ -138,9 +138,10 @@ def build(spec: Spec):
 
     # ---------------------------------------------------------------- electric hardware
     if spec.kind == "electric_bass":
-        z_pick = saddle_z + 0.17
-        guard_pts = catmull_rom([(-0.13, 0.05), (0.0, 0.03), (0.14, 0.1), (0.13, 0.23), (0.10, 0.33), (0.045, 0.37), (-0.04, 0.37), (-0.075, 0.42), (-0.12, 0.40), (-0.14, 0.3), (-0.155, 0.16)], 8, closed=True)
-        guard_pts = [(x, z + saddle_z - 0.05) for x, z in guard_pts]
+        z_pick = saddle_z + 0.13
+        guard_pts = catmull_rom([(-0.115, 0.22), (-0.125, 0.3), (-0.12, 0.37), (-0.1, 0.415), (-0.078, 0.398), (-0.056, 0.35),
+                                 (-0.03, 0.336), (0.036, 0.334), (0.062, 0.346), (0.088, 0.372), (0.108, 0.37), (0.118, 0.32),
+                                 (0.104, 0.24), (0.07, 0.19), (0.0, 0.17), (-0.07, 0.18)], 8, closed=True)
         prism("pickguard", guard_pts, y_top - 0.0025, y_top + 0.0002, P[spec.guard or "white_guard"], root, bevel=0.0012)
         for k, dx in enumerate((-0.018, 0.018)):
             cube(f"pickup_{k}", (0.036, 0.012, 0.022), P["pickup_black"], root, location=(dx - 0.004 + 0.008 * k, y_top - 0.006, z_pick + (0.01 if k else -0.01)), bevel=0.004)
@@ -250,10 +251,11 @@ DREAD = [(0.0, 0.0), (0.105, 0.008), (0.168, 0.043), (0.196, 0.11), (0.191, 0.18
          (0.141, 0.345), (0.149, 0.4), (0.133, 0.455), (0.094, 0.492), (0.042, 0.505), (0.0, 0.506)]
 UKE = [(0.0, 0.0), (0.05, 0.005), (0.078, 0.034), (0.083, 0.072), (0.072, 0.11), (0.06, 0.132), (0.063, 0.162),
        (0.066, 0.196), (0.051, 0.226), (0.022, 0.239), (0.0, 0.24)]
-PBASS = [(0.0, 0.0), (0.10, 0.012), (0.155, 0.06), (0.168, 0.14), (0.15, 0.21), (0.125, 0.262), (0.13, 0.312),
-         (0.136, 0.372), (0.116, 0.418), (0.088, 0.404), (0.058, 0.356), (0.032, 0.36), (-0.032, 0.36), (-0.058, 0.378),
-         (-0.082, 0.432), (-0.106, 0.476), (-0.136, 0.456), (-0.151, 0.392), (-0.141, 0.312), (-0.131, 0.262),
-         (-0.158, 0.2), (-0.17, 0.13), (-0.155, 0.06), (-0.10, 0.012)]
+PBASS = [(0.0, 0.0), (0.09, 0.008), (0.145, 0.04), (0.168, 0.10), (0.165, 0.165), (0.145, 0.215), (0.128, 0.255),
+         (0.133, 0.295), (0.138, 0.335), (0.128, 0.37), (0.112, 0.388), (0.094, 0.38), (0.078, 0.352), (0.06, 0.332),
+         (0.034, 0.326), (-0.034, 0.326), (-0.052, 0.34), (-0.068, 0.372), (-0.082, 0.41), (-0.096, 0.438),
+         (-0.112, 0.448), (-0.128, 0.44), (-0.138, 0.41), (-0.14, 0.36), (-0.134, 0.30), (-0.128, 0.255),
+         (-0.148, 0.21), (-0.168, 0.15), (-0.168, 0.095), (-0.146, 0.04), (-0.09, 0.008)]
 
 
 def scaled(points, sx, sz):
@@ -278,13 +280,13 @@ MODELS = {
         guard="tortoise"),
     "bass_p4": Spec(
         id="bass_p4", kind="electric_bass", strings=["s4", "s3", "s2", "s1"], gauges=[0.00133, 0.00108, 0.00083, 0.00057],
-        wound=[True] * 4, scale=0.864, nut_width=0.042, saddle_width=0.076, frets=20, body_fret=16, body_len=0.36,
+        wound=[True] * 4, scale=0.864, nut_width=0.042, saddle_width=0.076, frets=20, body_fret=21, body_len=0.335,
         body_depth=0.045, body_full=PBASS, head="inline", head_tilt=0, head_len=0.2, post_s=[0.05, 0.088, 0.126, 0.164],
         finish="sunburst", neck_wood="maple", board="rosewood", string_material="nickel_wound", wound_material="nickel_wound",
         button="clover", guard="tortoise", deg_per_cent=1.0),
     "bass_j5": Spec(
         id="bass_j5", kind="electric_bass", strings=["s5", "s4", "s3", "s2", "s1"], gauges=[0.0016, 0.00133, 0.00108, 0.00083, 0.00057],
-        wound=[True] * 5, scale=0.864, nut_width=0.047, saddle_width=0.09, frets=20, body_fret=16, body_len=0.36,
+        wound=[True] * 5, scale=0.864, nut_width=0.047, saddle_width=0.09, frets=20, body_fret=21, body_len=0.335,
         body_depth=0.045, body_full=PBASS, head="inline", head_tilt=0, head_len=0.235, post_s=[0.05, 0.085, 0.12, 0.155, 0.19],
         finish="cherry", neck_wood="maple", board="rosewood", string_material="nickel_wound", wound_material="nickel_wound",
         button="clover", guard="white_guard", deg_per_cent=1.0),

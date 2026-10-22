@@ -88,10 +88,10 @@ def stage(scene, lo, hi):
     bg.inputs["Strength"].default_value = 1.0
     scene.world = world
     k = size
-    area_light("Key", center + Vector((-0.9 * k, -1.1 * k, 0.9 * k)), center, 1.1 * k, 900 * k * k, (1.0, 0.86, 0.72))
-    area_light("Rim", center + Vector((1.0 * k, 0.9 * k, 0.6 * k)), center, 0.8 * k, 700 * k * k, (0.72, 0.84, 1.0))
-    area_light("Fill", center + Vector((1.1 * k, -1.0 * k, -0.2 * k)), center, 1.4 * k, 140 * k * k, (1.0, 0.95, 0.9))
-    area_light("Top", center + Vector((0.0, -0.3 * k, 1.4 * k)), center, 0.6 * k, 260 * k * k, (1.0, 0.92, 0.82))
+    area_light("Key", center + Vector((-0.9 * k, -1.1 * k, 0.9 * k)), center, 1.1 * k, 110 * k * k, (1.0, 0.86, 0.72))
+    area_light("Rim", center + Vector((1.0 * k, 0.9 * k, 0.6 * k)), center, 0.8 * k, 90 * k * k, (0.72, 0.84, 1.0))
+    area_light("Fill", center + Vector((1.1 * k, -1.0 * k, -0.2 * k)), center, 1.4 * k, 16 * k * k, (1.0, 0.95, 0.9))
+    area_light("Top", center + Vector((0.0, -0.3 * k, 1.4 * k)), center, 0.6 * k, 28 * k * k, (1.0, 0.92, 0.82))
 
 
 def render(scene, path, target, height, res, samples, azimuth=24.0, elevation=6.0, lens=85.0, fill=1.1, aspect=1.0):
@@ -140,7 +140,8 @@ def main():
         root, rig = build(spec)
         export_usdz(root, out / f"{model_id}.usdz")
         lo, hi = bounds(root)
-        rig["boundsMin"], rig["boundsMax"] = blendkit.to_usd(lo), blendkit.to_usd(hi)
+        a, b = blendkit.to_usd(lo), blendkit.to_usd(hi)
+        rig["boundsMin"], rig["boundsMax"] = [min(x, y) for x, y in zip(a, b)], [max(x, y) for x, y in zip(a, b)]
         (out / f"{model_id}.rig.json").write_text(json.dumps(rig, indent=1))
         manifest["models"][model_id] = {"strings": [s["anchor"] for s in rig["strings"]], "length": rig["length"]}
         if not args.no_render:

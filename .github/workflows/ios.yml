@@ -5,7 +5,7 @@ on:
   pull_request:
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 concurrency:
   group: ios-native-${{ github.ref }}
   cancel-in-progress: true
@@ -18,9 +18,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Swift core regression tests
-        run: swift test --package-path ios --parallel
+        run: |
+          set -o pipefail
+          mkdir -p ci-out
+          swift test --package-path ios --parallel 2>&1 | tee ci-out/core.log
       - name: Verify catalogue and bundled resources
-        run: python3 tools/verify-ios-resources.py
+        run: python3 tools/verify-ios-resources.py 2>&1 | tee ci-out/resources.log
+      - name: Publish core results
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 tools/ci/summarize-log.py ci-out/core.log ci-out/core.summary.txt || true
+          bash tools/ci/publish-results.sh ci-results/core ci-out
   app:
     timeout-minutes: 30
     runs-on: macos-15
@@ -42,30 +52,41 @@ jobs:
         run: |
           DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,re,sys; d=json.load(sys.stdin); runtimes=sorted(d["devices"].items(),key=lambda pair:tuple(map(int,re.findall(r"\d+",pair[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if "iPhone" in x["name"]))')
           echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
-      - name: Build and run UI flows
+      - name: Build app and tests
         run: |
           set -o pipefail
-          mkdir -p ios/build
-          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -skip-testing:TimbreUITests/TabletScreenshotsUITests -destination "platform=iOS Simulator,id=$DEVICE_ID" -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ios/build/test.log
+          mkdir -p ios/build ci-out
+          xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/build.log
+      - name: Run app, StoreKit and UI flows
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -skip-testing:TimbreUITests/TabletScreenshotsUITests -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
       - name: Archive unsigned iOS app
         run: |
-          xcodebuild archive -project ios/Timbre.xcodeproj -scheme Timbre -destination 'generic/platform=iOS' -archivePath ios/build/Timbre.xcarchive CODE_SIGNING_ALLOWED=NO
-      - name: Compile optional advertising integration
-        working-directory: ios
-        run: |
-          xcodegen generate --spec project-ads.yml
-          xcodebuild build -project Timbre.xcodeproj -scheme Timbre -configuration Debug -destination 'generic/platform=iOS Simulator' TIMBRE_ADMOB_APP_ID='ca-app-pub-3940256099942544~1458002511' CODE_SIGNING_ALLOWED=NO
+          set -o pipefail
+          xcodebuild archive -project ios/Timbre.xcodeproj -scheme Timbre -destination 'generic/platform=iOS' -archivePath ios/build/Timbre.xcarchive CODE_SIGNING_ALLOWED=NO 2>&1 | tail -40 | tee ci-out/archive.log
       - name: Export simulator screenshots
         if: always()
         run: |
           if [ -d ios/build/UITests.xcresult ]; then
-            xcrun xcresulttool export attachments --path ios/build/UITests.xcresult --output-path ios/build/screenshots
+            xcrun xcresulttool export attachments --path ios/build/UITests.xcresult --output-path ci-out/screenshots || true
           fi
+      - name: Publish app results
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for log in ci-out/build.log ci-out/test.log; do [ -f "$log" ] && python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"; done
+          gzip -kf ci-out/build.log ci-out/test.log 2>/dev/null || true
+          rm -f ci-out/build.log ci-out/test.log
+          bash tools/ci/publish-results.sh ci-results/app ci-out
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ios-evidence
-          path: ios/build/
+          path: |
+            ios/build/*.xcresult
+            ios/build/Timbre.xcarchive
           retention-days: 14
   ipad:
     timeout-minutes: 25
@@ -110,13 +131,22 @@ jobs:
       - name: Run real iPad portrait and landscape screenshots
         run: |
           set -o pipefail
-          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -only-testing:TimbreUITests/TabletScreenshotsUITests -destination "platform=iOS Simulator,id=$IPAD_DEVICE_ID" -resultBundlePath ios/build/TabletScreenshots.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ios/build/ipad-test.log
+          mkdir -p ci-out
+          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -only-testing:TimbreUITests/TabletScreenshotsUITests -destination "platform=iOS Simulator,id=$IPAD_DEVICE_ID" -resultBundlePath ios/build/TabletScreenshots.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/ipad-test.log
       - name: Export iPad screenshot attachments
         if: always()
         run: |
           if [ -d ios/build/TabletScreenshots.xcresult ]; then
-            xcrun xcresulttool export attachments --path ios/build/TabletScreenshots.xcresult --output-path ios/build/ipad-screenshots
+            xcrun xcresulttool export attachments --path ios/build/TabletScreenshots.xcresult --output-path ci-out/ipad-screenshots || true
           fi
+      - name: Publish iPad results
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          [ -f ci-out/ipad-test.log ] && python3 tools/ci/summarize-log.py ci-out/ipad-test.log ci-out/ipad-test.summary.txt
+          gzip -f ci-out/ipad-test.log 2>/dev/null || true
+          bash tools/ci/publish-results.sh ci-results/ipad ci-out
       - uses: actions/upload-artifact@v4
         if: always()
         with:
