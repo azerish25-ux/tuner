@@ -81,7 +81,7 @@ struct BenchView: View {
                 }.padding(15).background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16)).padding(12)
             }.frame(height: store.referenceMode ? 205 : 245)
             if store.referenceMode {
-                Stepper(value: Binding(get: { store.referenceMidi }, set: { store.referenceMidi = $0; store.automatic = false }), in: 12...119) { Text("Choose a note · \(store.targetName)").font(.subheadline) }.padding(.horizontal, 5)
+                Stepper(value: Binding(get: { store.referenceMidi }, set: { store.chooseReferenceNote($0) }), in: 12...119) { Text("Choose a note · \(store.targetName)").font(.subheadline) }.padding(.horizontal, 5)
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 9) {
@@ -124,12 +124,12 @@ struct BenchView: View {
                     Text("CENTS").font(.caption2).tracking(2).foregroundStyle(TimbreTheme.secondary)
                 }.offset(y: 32)
             }.accessibilityElement(children: .ignore).accessibilityLabel("Pitch deviation").accessibilityValue(store.reading.cents.map { String(format: "%.1f cents", $0) } ?? "No measured pitch")
-            Text(audio.tonePlaying ? "Listen to the reference, then play your note." : store.statusText)
+            Text(audio.tonePlaying ? NSLocalizedString("timbre_bench_paused_tone_hint", comment: "") : store.statusText)
                 .font(.subheadline.weight(.medium)).foregroundStyle(store.reading.inTune ? TimbreTheme.success : TimbreTheme.secondary).multilineTextAlignment(.center)
             HStack {
                 frequencyLabel("TARGET", frequency: store.targetHz)
                 Spacer()
-                frequencyLabel("LIVE", frequency: store.reading.frequency).accessibilityIdentifier("bench.liveFrequency")
+                frequencyLabel(store.isReadingPreserved ? "LAST" : "LIVE", frequency: store.reading.frequency).accessibilityIdentifier("bench.liveFrequency")
             }.padding(.top, 8)
             HStack(spacing: 9) {
                 Image(systemName: "mic").font(.caption)

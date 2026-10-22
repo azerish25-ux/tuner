@@ -15,10 +15,11 @@ final class AppStore: ObservableObject {
     @Published var showSettings = false
     @Published var error: String?
     @Published var referenceMode = false
-    @Published var referenceMidi = 69
+    @Published private(set) var referenceMidi = 69
     @Published var selectedCourse = 0
     @Published var automatic = true
     @Published private(set) var reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal")
+    @Published private(set) var isReadingPreserved = false
     @Published var voiceLevel = 1 {
         didSet {
             if voiceLevel != oldValue && !updateSettings({ $0.selectedVoiceLevel = voiceLevel }) { voiceLevel = oldValue }
@@ -66,7 +67,8 @@ final class AppStore: ObservableObject {
     var instrument: Instrument { catalog.instrument(id: settings.selectedInstrumentId) ?? catalog.instruments[0] }
     var tuning: Tuning {
         let id = settings.lastTuningIds[instrument.id] ?? instrument.defaultTuningId
-        return catalog.tuning(id: id) ?? catalog.tuning(id: instrument.defaultTuningId)!
+        if let remembered = catalog.tuning(id: id), remembered.instrumentId == instrument.id { return remembered }
+        return catalog.tuning(id: instrument.defaultTuningId)!
     }
     var courses: [Course] { tuning.courses.sorted { $0.index < $1.index } }
     var activeCourse: Course { courses.first(where: { $0.index == selectedCourse }) ?? courses[0] }
@@ -82,13 +84,15 @@ final class AppStore: ObservableObject {
     var voiceExercise: VoiceExercise { VoiceExercise(level: voiceLevel, rootMidi: voiceRoot) }
     var voiceTargetMidi: Int { voiceExercise.note(at: voiceElapsed) }
     var statusText: String {
+        if isReadingPreserved { return NSLocalizedString("timbre_bench_paused", comment: "") }
+        if !audio.running { return NSLocalizedString("timbre_bench_paused_no_reading", comment: "") }
         switch reading.status {
-        case "inTune": return "In tune"
-        case "flat": return "Flat · tighten gently"
-        case "sharp": return "Sharp · loosen gently"
-        case "settling": return "Hold steady"
-        case "uncertain": return "Uncertain · play one clear note"
-        default: return audio.running ? "Play a note" : "Ready to listen"
+        case "inTune": return String(format: NSLocalizedString("timbre_bench_in_tune", comment: ""), targetName)
+        case "flat": return String(format: NSLocalizedString("timbre_bench_flat", comment: ""), Int(abs(reading.cents ?? 0).rounded()))
+        case "sharp": return String(format: NSLocalizedString("timbre_bench_sharp", comment: ""), Int(abs(reading.cents ?? 0).rounded()))
+        case "settling": return NSLocalizedString("timbre_bench_settling", comment: "")
+        case "uncertain": return NSLocalizedString("timbre_bench_uncertain", comment: "")
+        default: return NSLocalizedString("timbre_bench_no_signal", comment: "")
         }
     }
     @discardableResult func updateSettings(_ mutation: (inout UserSettings) -> Void) -> Bool {
@@ -96,7 +100,7 @@ final class AppStore: ObservableObject {
         do {
             try persistence.saveSettings(next); settings = persistence.settings
             TimbreLocalization.language = settings.language
-            tracker.confidenceThreshold = settings.confidenceThreshold; tracker.reset()
+            tracker.confidenceThreshold = settings.confidenceThreshold; tracker.reset(); clearReading()
             if audio.running || audio.tonePlaying || audio.metronomeRunning || voiceRunning { stopActivity() }
             return true
         }
@@ -126,11 +130,16 @@ final class AppStore: ObservableObject {
         selectedCourse = courses.first?.index ?? 0
     }
     func selectReference() { stopActivity(); resetTuningMeasurements(); referenceMode = true; selectedTab = 1 }
+    func chooseReferenceNote(_ midi: Int) {
+        referenceMidi = min(119, max(12, midi)); automatic = false
+        tracker.reset(); clearReading(); audio.stopTone()
+    }
     func chooseCourse(_ index: Int) { selectedCourse = index; automatic = false; tracker.reset(); clearReading(); audio.stopTone() }
     func toggleListening() {
-        if audio.running { audio.stop(); tracker.reset() }
+        if audio.running { pauseListening() }
         else {
             guard referenceMode || commerce.isPlus || (instrument.isFree && tuning.isFree) else { showPlus = true; return }
+            clearReading(); tracker.reset()
             if sessionStarted == nil { sessionStarted = Date(); sessionStartedUptime = ProcessInfo.processInfo.systemUptime }
             let scale = settings.referencePitchHz / 440
             let margin = pow(2.0, 2.0 / 12.0)
@@ -139,6 +148,11 @@ final class AppStore: ObservableObject {
             let high = max(referenceMode ? 4500 : instrument.maxFrequencyHz * scale, targets.max() ?? 4500) * margin
             Task { await audio.start(minimum: low, maximum: high, micSensitivity: microphoneGain, analysisWindowOverride: settings.analysisWindowOverride, confidenceThreshold: settings.confidenceThreshold) }
         }
+    }
+    func pauseListening() {
+        let last = reading.frequency != nil ? reading : nil
+        audio.stop(); tracker.reset()
+        if let last { reading = last; isReadingPreserved = true }
     }
     func toggleTone() {
         if audio.tonePlaying { audio.stopTone(); tracker.reset() }
@@ -150,8 +164,9 @@ final class AppStore: ObservableObject {
     }
     private var microphoneGain: Double { pow(10, Double(settings.micSensitivity - 60) / 40) }
     private func resetTuningMeasurements() { sessionCount = 0; stableCount = 0; totalError = 0; sessionStarted = nil; sessionStartedUptime = nil; autoHits = 0; lastAutoIndex = nil }
-    private func clearReading() { reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal") }
+    private func clearReading() { reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal"); isReadingPreserved = false }
     func accept(_ hz: Double?, confidence: Double, level: Double) {
+        isReadingPreserved = false
         let now = Int(ProcessInfo.processInfo.systemUptime * 1000)
         if hz == nil || confidence < settings.confidenceThreshold { autoHits = 0; lastAutoIndex = nil }
         if voiceRunning {
@@ -238,7 +253,7 @@ final class AppStore: ObservableObject {
     }
     func finishVoice() {
         voiceTask?.cancel(); voiceTask = nil
-        audio.stop(); voiceRunning = false; countdown = 0
+        audio.stop(); voiceRunning = false; countdown = 0; clearReading()
         guard let attempt else { return }
         let result = attempt.finish(); voiceResult = result
         let record = PracticeRecord(instrumentId: "voice", tuningId: attempt.exercise.id, kind: "voice", count: result.readingCount, stableCount: result.stableReadingCount, meanAbsoluteCents: result.meanAbsoluteCentsError, voiceResult: result, durationMs: min(attempt.exercise.durationMs, max(0, Int((ProcessInfo.processInfo.systemUptime - voiceStarted) * 1000))))
@@ -251,7 +266,7 @@ final class AppStore: ObservableObject {
         catch { voiceSaveFailed = true; self.error = "Voice result could not be saved: \(error.localizedDescription)" }
     }
     func cancelVoice() { voiceTask?.cancel(); voiceTask = nil; attempt = nil; voiceRunning = false; countdown = 0; voiceLiveHoldMs = 0; audio.stop(); tracker.reset(); voiceStability.reset() }
-    func stopActivity() { cancelVoice(); audio.stop(); tracker.reset(); reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal") }
+    func stopActivity() { cancelVoice(); audio.stop(); tracker.reset(); clearReading() }
     func clearHistory() {
         do {
             try persistence.clearHistory(); records = persistence.records

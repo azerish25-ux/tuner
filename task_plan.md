@@ -12,11 +12,11 @@ Port the complete existing Android app to native Swift/SwiftUI, retaining featur
 
 ## Phases
 - [x] Inspect repository/access and snapshot Android source without local signing credentials.
-- [ ] Inventory actual shipped features and source contracts; map each to Swift implementation and verification.
-- [ ] Foundation core, tests and macOS CI (DSP, catalogue, tuning maths, vocal progression/scoring).
-- [ ] Native audio, lifecycle and route/interruption handling.
-- [ ] Faithful Collection/Bench/Voice/Studio/History/Settings/Plus screens, assets and localization.
-- [ ] Persistence, commerce, free/paid policy and ads parity decision/integration.
+- [x] Inventory actual shipped features and source contracts; map each to Swift implementation and verification.
+- [x] Foundation core, tests and macOS CI (DSP, catalogue, tuning maths, vocal progression/scoring).
+- [x] Native audio, lifecycle and route/interruption handling.
+- [x] Faithful Collection/Bench/Voice/Studio/History/Settings/Plus screens, assets and localization.
+- [x] Persistence, commerce, free/paid policy and ads parity decision/integration.
 - [ ] Simulator UI flow verification and screenshots; unsigned device archive.
 - [ ] Review code and parity evidence, fix gaps, prepare Apple delivery instructions and notify owner.
 

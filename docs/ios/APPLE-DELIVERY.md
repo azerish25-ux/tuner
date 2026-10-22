@@ -25,29 +25,29 @@ Verify that the privacy URL opens without authentication after merge. A file on 
 
 ## GitHub Actions signing secrets
 
-Use repository/environment **GitHub Actions secrets**, ideally a protected release environment with required owner approval. Example names for a future explicitly authorized signing workflow:
+Use repository/environment **GitHub Actions secrets**, ideally a protected release environment with required owner approval. The manual `.github/workflows/apple-delivery.yml` workflow uses the following exact names in the `apple-delivery` environment:
 
 | Secret | Contents/use |
 |---|---|
 | `APPLE_TEAM_ID` | Apple Developer team identifier used for signing |
-| `APPLE_DISTRIBUTION_P12_BASE64` | Base64 transport of distribution certificate and private key; remains a secret, not encryption |
-| `APPLE_DISTRIBUTION_P12_PASSWORD` | Password protecting that certificate export |
+| `APPLE_CERTIFICATE_P12_BASE64` | Base64 transport of distribution certificate and private key; remains a secret, not encryption |
+| `APPLE_CERTIFICATE_PASSWORD` | Password protecting that certificate export |
 | `APPLE_PROVISIONING_PROFILE_BASE64` | App Store provisioning profile matching bundle ID and certificate |
 | `APP_STORE_CONNECT_KEY_ID` | Upload API key identifier |
 | `APP_STORE_CONNECT_ISSUER_ID` | API issuer identifier |
-| `APP_STORE_CONNECT_PRIVATE_KEY_BASE64` | Base64 transport of the downloaded `.p8` private key |
+| `APP_STORE_CONNECT_API_KEY_P8` | Complete raw PEM contents of the downloaded `.p8` private key, including BEGIN/END lines; do not Base64-encode this secret |
 
 Alternative signing methods can avoid a manually supplied profile, but must be concretely configured and verified before replacing these inputs. Use an ephemeral CI keychain, temporary files with restrictive permissions, and cleanup that runs even on failure. Do not echo secret values, enable shell tracing around secrets, or upload keychains, `.p12`, `.p8`, profiles or temporary credential directories. Rotate/revoke exposed credentials. Follow [Apple's API-key guidance][apple-keys] and [GitHub's secrets guidance][github-secrets].
 
 ## Optional iOS advertising configuration
 
-To retain free-edition monetization, the owner must create/confirm an **iOS** AdMob app and interstitial ad unit. Android identifiers do not identify the iOS app. Supply production build settings `TIMBRE_ADMOB_APP_ID` and `TIMBRE_ADMOB_INTERSTITIAL_ID`; `GADApplicationIdentifier` resolves from the former. Configure privacy messages in AdMob, verify required privacy-options access, and review the actual SDK privacy manifests and App Store privacy answers. If any proposed advertising behavior constitutes tracking, implement and validate Apple's applicable permission requirements before enabling it. [Google's UMP documentation][google-ump] and [Apple's tracking guidance][apple-tracking] describe separate responsibilities.
+To retain free-edition monetization, the owner must create/confirm an **iOS** AdMob app and interstitial ad unit. Android identifiers do not identify the iOS app. Supply production GitHub repository or `apple-delivery` environment variables `TIMBRE_ADMOB_APP_ID` and `TIMBRE_ADMOB_INTERSTITIAL_ID`; the delivery workflow forwards them as build settings and selects `ios/project-ads.yml` only when both are valid. `GADApplicationIdentifier` resolves from the former. The baseline `ios/project.yml` does not link the advertising SDKs, avoiding SDK startup without an application identifier. Configure privacy messages in AdMob, verify required privacy-options access, and review the actual SDK privacy manifests and App Store privacy answers. If any proposed advertising behavior constitutes tracking, implement and validate Apple's applicable permission requirements before enabling it. [Google's UMP documentation][google-ump] and [Apple's tracking guidance][apple-tracking] describe separate responsibilities.
 
-The current service suppresses ads when release identifiers are absent or invalid. Test identifiers/debug opt-in are not production monetization. Do not claim live iOS ads or consent-region behavior were verified until the configured release has been tested. If shipping without advertising, make that release decision explicit and ensure policy/metadata match the delivered build.
+When identifiers are absent, the delivery workflow selects the baseline build without advertising SDKs. Malformed, incomplete or Google demo identifier pairs fail delivery validation instead of producing a release with invalid advertising configuration. Test identifiers/debug opt-in are not production monetization. Do not claim live iOS ads or consent-region behavior were verified until the configured release has been tested. If shipping without advertising, make that release decision explicit and ensure policy/metadata match the delivered build.
 
 ## Signed delivery workflow outline
 
-The existing `.github/workflows/ios.yml` builds/tests on hosted macOS and creates an **unsigned** archive. Signing and uploading are a separate owner-approved release operation:
+The existing `.github/workflows/ios.yml` builds/tests on hosted macOS and creates an **unsigned** archive. Signing and uploading use the separate manual `.github/workflows/apple-delivery.yml` workflow. It runs only through `workflow_dispatch`, requires `confirm_delivery=true`, the approved `marketing_version` and a unique positive `build_number`, and targets the `apple-delivery` environment. Do not dispatch it before the owner authorizes Apple delivery. Its steps are:
 
 1. Select an exact reviewed commit; require successful latest core, application integration/StoreKit and UI flow jobs. Inspect simulator screenshots and test artifacts, rather than inferring feature parity from a compile alone.
 2. Resolve dependencies and generate `ios/Timbre.xcodeproj` with XcodeGen. Set the approved Apple team, bundle/version/build values and optional advertising configuration.

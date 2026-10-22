@@ -36,8 +36,16 @@ struct StudioView: View {
                     Text("timbre_studio_beats_per_minute").font(.caption).foregroundStyle(TimbreTheme.secondary).frame(maxWidth: .infinity)
                     Stepper("timbre_studio_tempo", value: $store.bpm, in: 40...240).accessibilityIdentifier("studio.tempo")
                     Slider(value: Binding(get: { Double(store.bpm) }, set: { store.bpm = Int($0) }), in: 40...240, step: 1).accessibilityLabel("timbre_studio_tempo")
-                    Picker("timbre_studio_beats_per_bar", selection: $store.beats) { ForEach([2, 3, 4, 6], id: \.self) { Text("\($0)").tag($0) } }
-                    Picker("timbre_studio_subdivision", selection: $store.subdivision) { ForEach(1...4, id: \.self) { Text("\($0)").tag($0) } }
+                    HStack {
+                        Text("timbre_studio_beats_per_bar")
+                        Spacer()
+                        Picker("timbre_studio_beats_per_bar", selection: $store.beats) { ForEach([2, 3, 4, 6], id: \.self) { Text("\($0)").tag($0) } }.labelsHidden()
+                    }
+                    HStack {
+                        Text("timbre_studio_subdivision")
+                        Spacer()
+                        Picker("timbre_studio_subdivision", selection: $store.subdivision) { ForEach(1...4, id: \.self) { Text("\($0)").tag($0) } }.labelsHidden()
+                    }
                     Toggle("Accent first beat", isOn: $store.accents)
                     HStack {
                         Button("timbre_studio_tap_tempo") { if commerce.isPlus { store.tapTempo() } else { store.showPlus = true } }.buttonStyle(.bordered).accessibilityIdentifier("tapTempo")

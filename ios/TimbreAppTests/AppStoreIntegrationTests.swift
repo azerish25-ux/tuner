@@ -58,6 +58,18 @@ final class AppStoreIntegrationTests: XCTestCase {
         XCTAssertTrue(store.showPlus)
         XCTAssertEqual(store.instrument.id, originalInstrument)
     }
+    func testRestorationRejectsUnknownAndForeignTuningIdentifiers() throws {
+        let guitar = store.instrument
+        let foreign = try XCTUnwrap(store.catalog.tunings.first { $0.instrumentId != guitar.id })
+        for identifier in ["missing.tuning", foreign.id] {
+            store.updateSettings { $0.lastTuningIds[guitar.id] = identifier }
+            let restored = try Timbre.AppStore(directory: directory)
+            XCTAssertEqual(restored.instrument.id, guitar.id)
+            XCTAssertEqual(restored.tuning.id, guitar.defaultTuningId)
+            XCTAssertEqual(restored.tuning.instrumentId, restored.instrument.id)
+            restored.stopActivity()
+        }
+    }
     func testVerifiedPurchaseUnlocksPaidInstrumentAndPairedTwelveStringCourses() async throws {
         _ = try XCTUnwrap(store.commerce.product)
         await store.commerce.purchase()
@@ -130,6 +142,45 @@ final class AppStoreIntegrationTests: XCTestCase {
         store.finishTuning()
         XCTAssertEqual(store.records.count, 1)
         XCTAssertNotNil(store.error)
+    }
+    func testPauseRetainsExplicitLastReadingAndChangingTargetClearsIt() throws {
+        let detected = try detectedPitch(hz: store.targetHz)
+        for _ in 0..<3 { store.accept(detected.frequencyHz, confidence: detected.confidence, level: detected.levelDbfs) }
+        store.pauseListening()
+        XCTAssertTrue(store.isReadingPreserved)
+        XCTAssertEqual(try XCTUnwrap(store.reading.frequency), detected.frequencyHz, accuracy: 1e-9)
+        XCTAssertFalse(store.audio.running)
+        store.chooseCourse(2)
+        XCTAssertFalse(store.isReadingPreserved)
+        XCTAssertNil(store.reading.frequency)
+    }
+    func testChangingReferenceNoteOrCalibrationClearsPausedMeasurement() throws {
+        store.selectReference()
+        let detected = try detectedPitch(hz: store.targetHz)
+        store.accept(detected.frequencyHz, confidence: detected.confidence, level: detected.levelDbfs)
+        store.pauseListening()
+        XCTAssertTrue(store.isReadingPreserved)
+        store.chooseReferenceNote(store.referenceMidi + 1)
+        XCTAssertNil(store.reading.frequency)
+        XCTAssertFalse(store.isReadingPreserved)
+        let next = try detectedPitch(hz: store.targetHz)
+        store.accept(next.frequencyHz, confidence: next.confidence, level: next.levelDbfs)
+        store.pauseListening()
+        XCTAssertTrue(store.isReadingPreserved)
+        XCTAssertTrue(store.updateSettings { $0.referencePitchHz = 432 })
+        XCTAssertNil(store.reading.frequency)
+        XCTAssertNil(store.reading.cents)
+        XCTAssertFalse(store.isReadingPreserved)
+    }
+    func testAutomaticReferenceContinuesFollowingDifferentDetectedNotes() {
+        store.selectReference()
+        store.automatic = true
+        for midi in [57, 64, 69] {
+            store.accept(PitchMath.frequency(midi: Double(midi)), confidence: 0.99, level: -18)
+            XCTAssertTrue(store.automatic)
+            XCTAssertEqual(store.referenceMidi, midi)
+            XCTAssertNotNil(store.reading.frequency)
+        }
     }
     func testChangingInstrumentDropsPreviousCountersRatherThanMisattributingHistory() throws {
         store.chooseCourse(6)

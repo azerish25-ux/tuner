@@ -25,7 +25,7 @@ The [iOS workflow](https://github.com/azerish25-ux/tuner/actions/workflows/ios.y
 
 The production product identifier is `timbre_plus_lifetime`, an Apple non-consumable. Prices come from StoreKit. The test fixture is bundled only with test targets; its price is local test data. Google Play purchases do not automatically establish an Apple purchase entitlement.
 
-Advertising requires the owner's iOS AdMob application and interstitial identifiers. Missing identifiers suppress ads without blocking the app; release builds reject Google demo identifiers. UMP supplies consent and privacy-choice state. Never put Apple signing keys, certificates or passwords in repository files.
+The default project does not link an advertising SDK and runs without advertising credentials. To include advertising, generate with `xcodegen generate --spec project-ads.yml` and supply the owner's iOS AdMob application and interstitial identifiers. Release builds reject missing or Google demo identifiers. The overlay uses UMP for consent and privacy choices. CI compiles the optional integration separately with Google's demo application ID. Never put Apple signing keys, certificates or passwords in repository files.
 
 The [manual Apple delivery workflow](.github/workflows/apple-delivery.yml) requires explicit owner confirmation and protected environment secrets. It is separate from normal verification and must not be dispatched until the owner authorizes Apple delivery. See [Apple delivery instructions](docs/ios/APPLE-DELIVERY.md), [privacy policy](docs/ios/PRIVACY.md), and the [source parity audit](docs/ios/parity-audit.md).
 

@@ -106,7 +106,8 @@ jobs:
           directory = pathlib.Path(os.environ['DELIVERY_DIRECTORY'])
           for key, filename in [('APPLE_CERTIFICATE_P12_BASE64', 'certificate.p12'),
                                 ('APPLE_PROVISIONING_PROFILE_BASE64', 'profile.mobileprovision')]:
-              (directory / filename).write_bytes(base64.b64decode(os.environ[key], validate=True))
+              encoded = "".join(os.environ[key].split())
+              (directory / filename).write_bytes(base64.b64decode(encoded, validate=True))
           (directory / 'private_keys' / ('AuthKey_' + os.environ['APP_STORE_CONNECT_KEY_ID'] + '.p8')).write_text(
               os.environ['APP_STORE_CONNECT_API_KEY_P8'])
           PY
