@@ -20,6 +20,7 @@ public struct UserSettings: Codable, Equatable, Sendable {
     public var selectedInstrumentId = "guitar.acoustic.6"
     public var selectedPhotoAsset: String?
     public var telemetryEnabled = false
+    public var selectedVoiceLevel: Int?
     public init() {}
 }
 
@@ -33,12 +34,14 @@ public struct PracticeRecord: Codable, Identifiable, Equatable, Sendable {
     public var stableCount: Int
     public var meanAbsoluteCents: Double?
     public var voiceResult: VoiceResult?
+    public var durationMs: Int?
     public init(id: UUID = UUID(), date: Date = Date(), instrumentId: String, tuningId: String? = nil,
                 kind: String, count: Int, stableCount: Int, meanAbsoluteCents: Double? = nil,
-                voiceResult: VoiceResult? = nil) {
+                voiceResult: VoiceResult? = nil, durationMs: Int? = nil) {
         self.id = id; self.date = date; self.instrumentId = instrumentId; self.tuningId = tuningId
         self.kind = kind; self.count = count; self.stableCount = stableCount
         self.meanAbsoluteCents = meanAbsoluteCents; self.voiceResult = voiceResult
+        self.durationMs = durationMs
     }
 }
 
@@ -51,7 +54,6 @@ public enum LocalStoreError: Error, Equatable {
 /// One atomic snapshot keeps settings, history and demonstrated evidence consistent.
 /// Caller serializes access (the app uses its main actor).
 public final class LocalStore {
-    public static let historyLimit = 500
     public static let recentInstrumentLimit = 12
     public static let fileName = "timbre-state.json"
     private struct State: Codable, Equatable {
@@ -86,7 +88,6 @@ public final class LocalStore {
         candidate.records.removeAll { $0.id == record.id }
         candidate.records.append(record)
         candidate.records.sort { $0.date > $1.date }
-        candidate.records = Array(candidate.records.prefix(Self.historyLimit))
         if let level = Self.evidencedLevel(record) { candidate.demonstratedLevels.insert(level) }
         try persist(candidate)
     }
@@ -125,19 +126,20 @@ public final class LocalStore {
               (0...100).contains(settings.micSensitivity), settings.confidenceThreshold.isFinite,
               (0...1).contains(settings.confidenceThreshold), (0...12).contains(settings.capo),
               (-12...12).contains(settings.transposition), settings.lastTuningIds.count <= 128,
+              settings.selectedVoiceLevel.map({ (1...8).contains($0) }) ?? true,
               settings.recentInstrumentIds.count <= recentInstrumentLimit,
               settings.analysisWindowOverride.map({ $0 > 0 && $0 <= 65536 }) ?? true else {
             throw LocalStoreError.invalidState("Invalid settings")
         }
-        guard value.records.count <= historyLimit,
-              Set(value.records.map(\.id)).count == value.records.count,
+        guard Set(value.records.map(\.id)).count == value.records.count,
               value.demonstratedLevels.allSatisfy({ (2...8).contains($0) && $0 != 7 }) else {
             throw LocalStoreError.invalidState("Invalid history or progress")
         }
         for record in value.records {
             guard record.date.timeIntervalSinceReferenceDate.isFinite, !record.instrumentId.isEmpty,
                   record.count >= 0, record.stableCount >= 0, record.stableCount <= record.count,
-                  record.meanAbsoluteCents.map({ $0.isFinite && $0 >= 0 }) ?? true else {
+                  record.meanAbsoluteCents.map({ $0.isFinite && $0 >= 0 }) ?? true,
+                  record.durationMs.map({ $0 >= 0 }) ?? true else {
                 throw LocalStoreError.invalidState("Invalid practice record")
             }
         }

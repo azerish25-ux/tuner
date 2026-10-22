@@ -42,7 +42,7 @@ struct SettingsView: View {
         .onChange(of: store.settings.referencePitchHz) { _, value in referenceInput = String(value) }
         .confirmationDialog("Clear practice history?", isPresented: $confirmClear, titleVisibility: .visible) {
             Button("Clear history", role: .destructive) { store.clearHistory() }
-            Button("Cancel", role: .cancel) {}
+            Button("timbre_about_cancel", role: .cancel) {}
         } message: { Text("This removes saved practice sessions and demonstrated voice progress from this device.") }
         .sheet(isPresented: $showAbout) { NavigationStack { aboutView } }
     }
@@ -155,6 +155,7 @@ struct SettingsView: View {
                     Text(Locale(identifier: code).localizedString(forIdentifier: code)?.localizedCapitalized ?? code).tag(code)
                 }
             }
+            .accessibilityIdentifier("settings.language")
         }
     }
     private var privacySection: some View {
@@ -162,19 +163,20 @@ struct SettingsView: View {
             Text(text("timbre_settings_on_device_privacy_detail", "Microphone audio is analysed on this device. Recordings are not saved or uploaded."))
             Text("Practice summaries and preferences stay on this device. Apple handles purchases through the App Store.").font(.footnote).foregroundStyle(TimbreTheme.secondary)
             Button(text("timbre_settings_about_app_privacy", "About the app and privacy")) { showAbout = true }
-            if ads.privacyOptionsRequired { Button("Ad privacy choices") { Task { await ads.presentPrivacyOptions() } } }
+            if ads.privacyOptionsRequired { Button("timbre_settings_ad_privacy") { Task { await ads.presentPrivacyOptions() } } }
             Button("Clear practice history", role: .destructive) { confirmClear = true }
         }
     }
     private var aboutView: some View {
         List {
-            Section("Timbre") {
+            Section("timbre_app_name") {
                 Text("An instrument tuner, vocal practice companion and metronome.")
                 Text("Version \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0")")
             }
-            Section("Privacy") {
+            Section("timbre_settings_privacy") {
                 Text("Audio is processed on your device. Timbre does not save microphone recordings or send audio to a server. Local practice records contain dates, instrument selections and measured summaries. Clear history in Settings to remove those records.")
-                Text("Purchases and restoration use Apple StoreKit. Timbre has no advertising or analytics SDK.")
+                Text("Purchases and restoration use Apple StoreKit. When advertising is configured, eligible free sessions may show ads after consent requirements are resolved. Ad privacy choices are available in Settings.")
+                Link("Privacy policy", destination: URL(string: "https://timbre-privacy-shahrad.timbre.workers.dev")!)
             }
             Section("Open-source fonts") {
                 fontLicense("Inter", file: "Inter-OFL")

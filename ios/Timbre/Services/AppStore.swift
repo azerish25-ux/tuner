@@ -19,7 +19,9 @@ final class AppStore: ObservableObject {
     @Published var selectedCourse = 0
     @Published var automatic = true
     @Published private(set) var reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal")
-    @Published var voiceLevel = 1
+    @Published var voiceLevel = 1 {
+        didSet { if voiceLevel != oldValue { updateSettings { $0.selectedVoiceLevel = voiceLevel } } }
+    }
     @Published var voiceRoot = 57
     @Published private(set) var voiceRunning = false
     @Published private(set) var countdown = 0
@@ -50,6 +52,7 @@ final class AppStore: ObservableObject {
         let storageDirectory = directory ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("Timbre", isDirectory: true)
         persistence = try LocalStore(directory: storageDirectory)
         settings = persistence.settings; records = persistence.records
+        voiceLevel = settings.selectedVoiceLevel ?? 1
         TimbreLocalization.language = settings.language
         tracker.confidenceThreshold = settings.confidenceThreshold
         audio.onReading = { [weak self] hz, confidence, level in self?.accept(hz, confidence: confidence, level: level) }
@@ -67,7 +70,8 @@ final class AppStore: ObservableObject {
     var targetHz: Double {
         Temperament.byId(settings.temperamentId).frequency(midi: activeMidi, reference: settings.referencePitchHz, letterName: referenceMode ? nil : activeCourse.label)
     }
-    var targetName: String { PitchMath.noteName(midi: activeMidi + settings.transposition - settings.capo, notation: settings.notation) }
+    var targetName: String { referenceMode ? PitchMath.noteName(midi: activeMidi + settings.transposition - settings.capo, notation: settings.notation) : TargetLabelFormatter.splitCue(courseLabel(activeCourse)).main }
+    func courseLabel(_ course: Course) -> String { TargetLabelFormatter.display(label: course.label, midi: course.targetMidi, notation: settings.notation, transposition: settings.transposition, capo: settings.capo) }
     var photo: InstrumentPhoto? {
         catalog.photos.first { $0.instrumentId == instrument.id && $0.asset == settings.selectedPhotoAsset } ?? catalog.photo(instrumentId: instrument.id)
     }
@@ -83,36 +87,36 @@ final class AppStore: ObservableObject {
         default: return audio.running ? "Play a note" : "Ready to listen"
         }
     }
-    func updateSettings(_ mutation: (inout UserSettings) -> Void) {
+    @discardableResult func updateSettings(_ mutation: (inout UserSettings) -> Void) -> Bool {
         var next = settings; mutation(&next)
         do {
             try persistence.saveSettings(next); settings = persistence.settings
             TimbreLocalization.language = settings.language
             tracker.confidenceThreshold = settings.confidenceThreshold; tracker.reset()
-            if audio.running { stopActivity() }
+            if audio.running || audio.tonePlaying || audio.metronomeRunning || voiceRunning { stopActivity() }
+            return true
         }
-        catch { self.error = "Settings could not be saved: \(error.localizedDescription)" }
+        catch { self.error = "Settings could not be saved: \(error.localizedDescription)"; return false }
     }
     func selectInstrument(_ instrument: Instrument, photo: String? = nil) {
         guard commerce.isPlus || instrument.isFree else { showPlus = true; return }
-        stopActivity()
-        resetTuningMeasurements()
-        referenceMode = false
-        updateSettings {
+        let saved = updateSettings {
             $0.selectedInstrumentId = instrument.id; $0.selectedPhotoAsset = photo
             $0.recentInstrumentIds = Array(([instrument.id] + $0.recentInstrumentIds.filter { $0 != instrument.id }).prefix(8))
         }
+        guard saved else { return }
+        stopActivity(); resetTuningMeasurements(); referenceMode = false
         selectedCourse = courses.first?.index ?? 0; selectedTab = 1
     }
     func selectTuning(_ tuning: Tuning) {
+        guard tuning.instrumentId == instrument.id else { error = "This tuning belongs to a different instrument."; return }
         guard commerce.isPlus || (instrument.isFree && tuning.isFree) else { showPlus = true; return }
-        stopActivity()
-        resetTuningMeasurements()
-        updateSettings { $0.lastTuningIds[instrument.id] = tuning.id }
+        guard updateSettings({ $0.lastTuningIds[instrument.id] = tuning.id }) else { return }
+        stopActivity(); resetTuningMeasurements()
         selectedCourse = courses.first?.index ?? 0
     }
     func selectReference() { stopActivity(); resetTuningMeasurements(); referenceMode = true; selectedTab = 1 }
-    func chooseCourse(_ index: Int) { selectedCourse = index; automatic = false; tracker.reset(); audio.stopTone() }
+    func chooseCourse(_ index: Int) { selectedCourse = index; automatic = false; tracker.reset(); clearReading(); audio.stopTone() }
     func toggleListening() {
         if audio.running { audio.stop(); tracker.reset() }
         else {
@@ -135,9 +139,11 @@ final class AppStore: ObservableObject {
         }
     }
     private var microphoneGain: Double { pow(10, Double(settings.micSensitivity - 60) / 40) }
-    private func resetTuningMeasurements() { sessionCount = 0; stableCount = 0; totalError = 0; sessionStarted = nil; sessionStartedUptime = nil }
+    private func resetTuningMeasurements() { sessionCount = 0; stableCount = 0; totalError = 0; sessionStarted = nil; sessionStartedUptime = nil; autoHits = 0; lastAutoIndex = nil }
+    private func clearReading() { reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal") }
     func accept(_ hz: Double?, confidence: Double, level: Double) {
         let now = Int(ProcessInfo.processInfo.systemUptime * 1000)
+        if hz == nil || confidence < settings.confidenceThreshold { autoHits = 0; lastAutoIndex = nil }
         if voiceRunning {
             guard countdown == 0, let attempt else { return }
             let elapsed = Int((ProcessInfo.processInfo.systemUptime - voiceStarted) * 1000)
@@ -175,7 +181,8 @@ final class AppStore: ObservableObject {
     func finishTuning() {
         audio.stop(); tracker.reset()
         guard sessionCount > 0 else { error = "No measured notes to save. Listen and play a clear note first."; return }
-        let record = PracticeRecord(instrumentId: referenceMode ? "reference.chromatic" : instrument.id, tuningId: referenceMode ? nil : tuning.id, kind: "tuning", count: sessionCount, stableCount: stableCount, meanAbsoluteCents: stableCount > 0 ? totalError / Double(stableCount) : nil)
+        let duration = sessionStartedUptime.map { max(0, Int((ProcessInfo.processInfo.systemUptime - $0) * 1000)) }
+        let record = PracticeRecord(date: sessionStarted ?? Date(), instrumentId: referenceMode ? "reference.chromatic" : instrument.id, tuningId: referenceMode ? nil : tuning.id, kind: "tuning", count: sessionCount, stableCount: stableCount, meanAbsoluteCents: stableCount > 0 ? totalError / Double(stableCount) : nil, durationMs: duration)
         do {
             try persistence.append(record); records = persistence.records
             let duration = Int((ProcessInfo.processInfo.systemUptime - (sessionStartedUptime ?? ProcessInfo.processInfo.systemUptime)) * 1000)
@@ -199,6 +206,7 @@ final class AppStore: ObservableObject {
             let low = min(65, (voiceTargets.min() ?? 65) / 1.1225)
             let high = max(1100, (voiceTargets.max() ?? 1100) * 1.1225)
             await self.audio.start(minimum: low, maximum: high, micSensitivity: self.microphoneGain, analysisWindowOverride: self.settings.analysisWindowOverride, confidenceThreshold: self.settings.confidenceThreshold)
+            guard !Task.isCancelled else { return }
             guard self.audio.running else { self.voiceRunning = false; self.countdown = 0; return }
             for value in [2, 1] {
                 self.countdown = value
@@ -217,11 +225,12 @@ final class AppStore: ObservableObject {
         }
     }
     func finishVoice() {
+        voiceTask?.cancel(); voiceTask = nil
         audio.stop(); voiceRunning = false; countdown = 0
         guard let attempt else { return }
         let result = attempt.finish(); voiceResult = result
         guard result.readingCount > 0 else { self.attempt = nil; return }
-        let record = PracticeRecord(instrumentId: "voice", tuningId: attempt.exercise.id, kind: "voice", count: result.readingCount, stableCount: result.stableReadingCount, meanAbsoluteCents: result.meanAbsoluteCentsError, voiceResult: result)
+        let record = PracticeRecord(instrumentId: "voice", tuningId: attempt.exercise.id, kind: "voice", count: result.readingCount, stableCount: result.stableReadingCount, meanAbsoluteCents: result.meanAbsoluteCentsError, voiceResult: result, durationMs: min(attempt.exercise.durationMs, max(0, Int((ProcessInfo.processInfo.systemUptime - voiceStarted) * 1000))))
         do { try persistence.append(record); records = persistence.records; self.attempt = nil }
         catch { self.error = "Voice result could not be saved: \(error.localizedDescription)" }
     }
@@ -234,6 +243,7 @@ final class AppStore: ObservableObject {
     }
     func updateMetronome() { audio.setMetronome(bpm: bpm, beats: beats, subdivision: subdivision, accents: accents) }
     func tapTempo() {
+        guard commerce.isPlus else { showPlus = true; return }
         let now = ProcessInfo.processInfo.systemUptime
         if lastTaps.last.map({ now - $0 > 2 }) == true { lastTaps = [] }
         lastTaps.append(now); lastTaps = Array(lastTaps.suffix(5))

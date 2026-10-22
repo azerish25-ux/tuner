@@ -8,17 +8,35 @@ public struct ReferenceToneWaveform: Sendable {
     private let normalization: Double
     public init(frequencyHz: Double, sampleRateHz: Int = 48000) {
         precondition(sampleRateHz > 0 && frequencyHz.isFinite && frequencyHz > 0 && frequencyHz < Double(sampleRateHz) / 2)
-        omega = 2 * .pi * frequencyHz / Double(sampleRateHz)
-        let color = min(1, max(0, (220 - frequencyHz) / 110))
-        weights = (0..<24).map { index in
-            if index == 0 { return 1 }
-            let harmonicHz = Double(index + 1) * frequencyHz
-            if harmonicHz > 850 { return 0 }
-            return 0.75 * (1 - 0.022 * Double(index)) * color * (0.6 + 0.4 * min(1, max(0, harmonicHz / 300)))
+        omega = 2.0 * Double.pi * frequencyHz / Double(sampleRateHz)
+        let color: Double = min(1.0, max(0.0, (220.0 - frequencyHz) / 110.0))
+        var harmonicWeights = [Double](repeating: 0.0, count: 24)
+        var squaredWeightSum: Double = 0.0
+        var activeCount: Int = 0
+        for index in 0..<24 {
+            let harmonicHz: Double = Double(index + 1) * frequencyHz
+            var weight: Double = 0.0
+            if index == 0 {
+                weight = 1.0
+            } else if harmonicHz <= 850.0 {
+                let rolloff: Double = 1.0 - 0.022 * Double(index)
+                let audibleFraction: Double = min(1.0, max(0.0, harmonicHz / 300.0))
+                let speakerWeight: Double = 0.6 + 0.4 * audibleFraction
+                weight = 0.75 * rolloff * color * speakerWeight
+            }
+            harmonicWeights[index] = weight
+            squaredWeightSum += weight * weight
+            if weight != 0.0 { activeCount += 1 }
         }
-        normalization = sqrt(weights.reduce(0) { $0 + $1 * $1 })
-        let active = weights.filter { $0 != 0 }.count
-        phases = (0..<24).map { index in -.pi * Double((index + 1) * index) / Double(active) }
+        var harmonicPhases = [Double](repeating: 0.0, count: 24)
+        for index in 0..<24 {
+            let harmonic: Double = Double(index + 1)
+            let previousHarmonic: Double = Double(index)
+            harmonicPhases[index] = -Double.pi * harmonic * previousHarmonic / Double(activeCount)
+        }
+        weights = harmonicWeights
+        phases = harmonicPhases
+        normalization = sqrt(squaredWeightSum)
     }
     public func sample(frame: Int64) -> Float {
         let phase = omega * Double(frame)
@@ -108,8 +126,11 @@ public final class MetronomeRenderer {
         if clickAge < clickLength {
             let age = clickAge
             clickAge += 1
-            let envelope = exp(-7 * Double(age) / Double(clickLength)) * min(1, Double(age) / 12)
-            value = Float(sin(2 * .pi * clickFrequency * Double(age) / Double(sampleRate)) * envelope * clickAmplitude)
+            let decay: Double = exp(-7.0 * Double(age) / Double(clickLength))
+            let attack: Double = min(1.0, Double(age) / 12.0)
+            let envelope: Double = decay * attack
+            let phase: Double = 2.0 * Double.pi * clickFrequency * Double(age) / Double(sampleRate)
+            value = Float(sin(phase) * envelope * clickAmplitude)
         }
         frame += 1
         return value
@@ -121,4 +142,3 @@ public final class MetronomeRenderer {
         return events
     }
 }
-

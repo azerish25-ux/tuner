@@ -3,6 +3,17 @@ import XCTest
 @testable import TimbreCore
 
 final class PersistenceTests: XCTestCase {
+    func testHistoryIsRetainedUntilExplicitDeletion() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = try LocalStore(directory: directory)
+        for index in 0..<502 {
+            try store.append(PracticeRecord(date: Date(timeIntervalSince1970: Double(index)), instrumentId: "guitar.acoustic.6", kind: "tuning", count: 3, stableCount: 2, durationMs: 2000))
+        }
+        XCTAssertEqual(try LocalStore(directory: directory).records.count, 502)
+        try store.clearHistory()
+        XCTAssertTrue(try LocalStore(directory: directory).records.isEmpty)
+    }
     private func directory() throws -> URL {
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)

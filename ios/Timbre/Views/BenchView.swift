@@ -82,10 +82,11 @@ struct BenchView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 9) {
                         ForEach(store.settings.handedness == "left" ? Array(store.courses.reversed()) : store.courses) { course in
+                            let label = TargetLabelFormatter.splitCue(store.courseLabel(course))
                             Button { store.chooseCourse(course.index) } label: {
                                 VStack(spacing: 4) {
-                                    Text(PitchMath.noteName(midi: course.targetMidi + store.settings.transposition - store.settings.capo, notation: store.settings.notation)).font(.headline.monospaced())
-                                    Text("\(course.index)").font(.caption2)
+                                    Text(label.main).font(.headline.monospaced())
+                                    Text(label.cue ?? "\(course.index)").font(.caption2)
                                 }.frame(minWidth: 46, minHeight: 52).padding(.horizontal, 7)
                                     .foregroundStyle(store.activeCourse.index == course.index ? TimbreTheme.ink : TimbreTheme.primary)
                                     .background(store.activeCourse.index == course.index ? TimbreTheme.brass : TimbreTheme.surface, in: RoundedRectangle(cornerRadius: 13))

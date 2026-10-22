@@ -38,7 +38,10 @@ final class AudioService: ObservableObject {
         observers.append(NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { [weak self] _ in
             Task { @MainActor in self?.stop() }
         })
-        observers.append(NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: .main) { [weak self] _ in
+        observers.append(NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: .main) { [weak self] notification in
+            let reason = (notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt).flatMap(AVAudioSession.RouteChangeReason.init(rawValue:))
+            // Configuring our own session emits categoryChange; it must not cancel a new tone or capture.
+            guard reason != nil, reason != .categoryChange, reason != .unknown else { return }
             Task { @MainActor in
                 guard let self else { return }
                 let resume = self.running
@@ -58,11 +61,15 @@ final class AudioService: ObservableObject {
     }
 
     func start(minimum: Double = 25, maximum: Double = 4500, micSensitivity: Double = 1, analysisWindowOverride: Int? = nil, confidenceThreshold: Double = 0.75) async {
-        guard !running else { return }
+        guard !running, !Task.isCancelled else { return }
+        if tonePlaying {
+            toneTask?.cancel(); toneTask = nil; resumeCaptureAfterTone = false
+            renderer.setTone(0); tonePlaying = false
+        }
         generation += 1
         let token = generation
         let allowed = await AVAudioApplication.requestRecordPermission()
-        guard generation == token, UIApplication.shared.applicationState == .active else { return }
+        guard generation == token, !Task.isCancelled, UIApplication.shared.applicationState == .active else { return }
         guard allowed else { error = "Microphone access is off. Enable it in Settings → Timbre → Microphone."; return }
         self.minimum = minimum.isFinite && minimum > 0 ? minimum : 25
         self.maximum = maximum.isFinite && maximum > self.minimum ? maximum : max(4500, self.minimum * 2)
@@ -249,4 +256,3 @@ private final class OutputRenderer: @unchecked Sendable {
         }
     }
 }
-

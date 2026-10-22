@@ -20,6 +20,14 @@ struct VoiceView: View {
         let suffix = ["1", "2", "3", "4", "interval", "melody", "range", "song"][level - 1]
         return text("timbre_voice_exercise_" + suffix, VoiceExercise(level: level).name)
     }
+    private var exerciseInstructions: String {
+        switch exercise.level {
+        case 1: return text("timbre_voice_easy_note", "An easy note, without a score")
+        case 7: return text("timbre_voice_range_plan_hint", "Start on an easy note. Follow the notes down and up. Skip any note that strains.")
+        case 5, 6, 8: return text("timbre_voice_message_pattern_ready", "Hear the pattern, then sing each note in turn.")
+        default: return text("timbre_voice_message_hear_then_sing", "Hear the target, then sing a comfortable, steady note.")
+        }
+    }
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -35,14 +43,14 @@ struct VoiceView: View {
         }
         .background(TimbreTheme.canvas)
         .foregroundStyle(TimbreTheme.primary)
-        .navigationTitle("Voice")
+        .navigationTitle("timbre_voice_title")
         .onChange(of: store.voiceLevel) { _, _ in hidePreviousResult = true; audio.stopTone() }
         .onChange(of: store.voiceRoot) { _, _ in hidePreviousResult = true; audio.stopTone() }
         .onChange(of: store.voiceResult) { _, result in if result != nil { hidePreviousResult = false } }
     }
     private var heading: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Find your voice").font(TimbreTheme.title(32))
+            Text("timbre_voice_subtitle").font(TimbreTheme.title(32))
             Text(text("timbre_voice_message_initial", "Choose a comfortable note, listen to it, then sing it."))
                 .foregroundStyle(TimbreTheme.secondary)
         }
@@ -89,8 +97,8 @@ struct VoiceView: View {
     private var target: some View {
         Panel {
             Text(exerciseName(exercise.level)).font(TimbreTheme.title(24))
-            Text(exercise.instructions).foregroundStyle(TimbreTheme.secondary)
-            Text("\(Double(exercise.holdMs) / 1000, specifier: "%.1f") s hold · ±\(Int(exercise.toleranceCents)) cents")
+            Text(exerciseInstructions).foregroundStyle(TimbreTheme.secondary)
+            Text(String(format: text("timbre_voice_hold_requirement", "%1$@ s hold · ±%2$d cents"), String(format: "%.1f", Double(exercise.holdMs) / 1000), Int(exercise.toleranceCents)))
                 .font(.footnote.monospaced())
             Picker("Starting note", selection: $store.voiceRoot) {
                 ForEach(45...81, id: \.self) { midi in Text(note(midi)).tag(midi) }
@@ -112,7 +120,7 @@ struct VoiceView: View {
                 if audio.tonePlaying { audio.stopTone() }
                 else { audio.playTone(PitchMath.frequency(midi: Double(store.voiceRoot), reference: store.settings.referencePitchHz)) }
             } label: {
-                Label(audio.tonePlaying ? "Stop target tone" : text("timbre_voice_hear_target", "Hear target"), systemImage: audio.tonePlaying ? "stop.fill" : "speaker.wave.2")
+                Label(audio.tonePlaying ? text("timbre_voice_playing_target", "Playing target…") : text("timbre_voice_hear_target", "Hear target"), systemImage: audio.tonePlaying ? "stop.fill" : "speaker.wave.2")
             }.buttonStyle(.bordered).disabled(store.voiceRunning).accessibilityIdentifier("voice.hearTarget")
             Text(text("timbre_voice_comfort", "Keep the note comfortable. Stop if your voice feels strained."))
                 .font(.footnote).foregroundStyle(TimbreTheme.secondary)
@@ -127,7 +135,7 @@ struct VoiceView: View {
                 }
                 Spacer()
                 if store.voiceRunning && store.countdown > 0 {
-                    Text("Ready in \(store.countdown)").font(TimbreTheme.title(24)).accessibilityAddTraits(.updatesFrequently)
+                    Text(String(format: text("timbre_voice_ready_in", "Ready in %1$d"), store.countdown)).font(TimbreTheme.title(24)).accessibilityAddTraits(.updatesFrequently)
                 } else if store.voiceRunning {
                     liveReading
                 } else { Text("Ready").foregroundStyle(TimbreTheme.secondary) }
@@ -144,9 +152,9 @@ struct VoiceView: View {
                     .font(.footnote).foregroundStyle(TimbreTheme.success)
             }
             if store.voiceRunning {
-                Button("Stop practice", role: .destructive) { store.cancelVoice() }.buttonStyle(.bordered).frame(maxWidth: .infinity)
+                Button("timbre_voice_stop_practice", role: .destructive) { store.cancelVoice() }.buttonStyle(.bordered).frame(maxWidth: .infinity)
             } else {
-                Button(store.voiceResult == nil ? "Start practice" : "Try again") { hidePreviousResult = false; store.startVoice() }
+                Button(store.voiceResult == nil ? text("timbre_voice_start_practice", "Start practice") : text("timbre_voice_try_again", "Try again")) { hidePreviousResult = false; store.startVoice() }
                     .buttonStyle(PrimaryButton()).accessibilityIdentifier("voice.start")
             }
         }
@@ -166,7 +174,7 @@ struct VoiceView: View {
             Text(text("timbre_voice_last_attempt", "Your last attempt")).font(TimbreTheme.title(24))
             HStack(alignment: .top, spacing: 24) {
                 resultMetric(text("timbre_voice_accuracy", "Accuracy"), value: result.accuracy)
-                resultMetric("Stability", value: result.stability)
+                resultMetric(text("timbre_voice_steadiness", "Steadiness"), value: result.stability)
             }
             if exercise.level == 7 {
                 if let low = result.lowestMidi, let high = result.highestMidi {

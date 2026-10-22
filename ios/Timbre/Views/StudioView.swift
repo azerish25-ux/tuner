@@ -17,23 +17,34 @@ struct StudioView: View {
                         VStack(alignment: .leading, spacing: 10) {
                             Text(store.instrument.name.localized).font(.headline)
                             Text(store.tuning.name.localized).foregroundStyle(TimbreTheme.secondary)
-                            Button("Open tuner") { store.selectedTab = 1 }
+                            Button("timbre_tab_bench") { store.selectedTab = 1 }
                         }
                     }
+                    Picker("timbre_studio_select_preset", selection: Binding(get: { store.tuning.id }, set: { id in
+                        if let tuning = store.catalog.tuning(id: id) { store.selectTuning(tuning) }
+                    })) {
+                        ForEach(store.catalog.tunings.filter { $0.instrumentId == store.instrument.id }) { tuning in
+                            Text(tuning.name.localized + (commerce.isPlus || tuning.isFree ? "" : " · Plus")).tag(tuning.id)
+                        }
+                    }.accessibilityIdentifier("studio.tuningPreset")
+                    Text(store.courses.map { PitchMath.noteName(midi: $0.targetMidi + store.settings.transposition - store.settings.capo, notation: store.settings.notation) }.joined(separator: " · "))
+                        .font(.subheadline.monospaced()).foregroundStyle(TimbreTheme.secondary)
                 }
                 Panel {
-                    HStack { Text("Metronome").font(TimbreTheme.title(20)); Spacer(); if !commerce.isPlus { Label("Plus", systemImage: "lock") } }
-                    Text("\(store.bpm)").font(TimbreTheme.number(60)).frame(maxWidth: .infinity).accessibilityLabel("\(store.bpm) beats per minute").accessibilityIdentifier("studio.bpm")
-                    Text("BPM").font(.caption).foregroundStyle(TimbreTheme.secondary).frame(maxWidth: .infinity)
-                    Stepper("Tempo", value: $store.bpm, in: 40...240).accessibilityIdentifier("studio.tempo")
-                    Slider(value: Binding(get: { Double(store.bpm) }, set: { store.bpm = Int($0) }), in: 40...240, step: 1).accessibilityLabel("Tempo")
-                    Picker("Beats per bar", selection: $store.beats) { ForEach(2...7, id: \.self) { Text("\($0)").tag($0) } }
-                    Picker("Subdivision", selection: $store.subdivision) { ForEach(1...4, id: \.self) { Text("\($0)").tag($0) } }
+                    HStack { Text("timbre_studio_metronome").font(TimbreTheme.title(20)); Spacer(); if !commerce.isPlus { Label("Plus", systemImage: "lock") } }
+                    Text("\(store.bpm)").font(TimbreTheme.number(60)).frame(maxWidth: .infinity).accessibilityLabel(String(format: NSLocalizedString("timbre_studio_tempo_value", comment: ""), store.bpm)).accessibilityIdentifier("studio.bpm")
+                    Text("timbre_studio_beats_per_minute").font(.caption).foregroundStyle(TimbreTheme.secondary).frame(maxWidth: .infinity)
+                    Stepper("timbre_studio_tempo", value: $store.bpm, in: 40...240).accessibilityIdentifier("studio.tempo")
+                    Slider(value: Binding(get: { Double(store.bpm) }, set: { store.bpm = Int($0) }), in: 40...240, step: 1).accessibilityLabel("timbre_studio_tempo")
+                    Picker("timbre_studio_beats_per_bar", selection: $store.beats) { ForEach(2...7, id: \.self) { Text("\($0)").tag($0) } }
+                    Picker("timbre_studio_subdivision", selection: $store.subdivision) { ForEach(1...4, id: \.self) { Text("\($0)").tag($0) } }
                     Toggle("Accent first beat", isOn: $store.accents)
                     HStack {
-                        Button("Tap tempo") { store.tapTempo() }.buttonStyle(.bordered).accessibilityIdentifier("tapTempo")
-                        Button { store.toggleMetronome() } label: { Label(audio.metronomeRunning ? "Stop" : "Start", systemImage: audio.metronomeRunning ? "stop.fill" : "play.fill") }.buttonStyle(PrimaryButton()).accessibilityIdentifier("studio.startMetronome")
+                        Button("timbre_studio_tap_tempo") { if commerce.isPlus { store.tapTempo() } else { store.showPlus = true } }.buttonStyle(.bordered).accessibilityIdentifier("tapTempo")
+                        Button { store.toggleMetronome() } label: { Label(audio.metronomeRunning ? NSLocalizedString("timbre_studio_stop_metronome", comment: "") : NSLocalizedString("timbre_studio_start_metronome", comment: ""), systemImage: audio.metronomeRunning ? "stop.fill" : "play.fill") }.buttonStyle(PrimaryButton()).accessibilityIdentifier("studio.startMetronome")
                     }
+                    if store.accents { Text("timbre_studio_metronome_hint").font(.caption).foregroundStyle(TimbreTheme.secondary) }
+                    if !commerce.isPlus { Text("timbre_studio_preview").font(.caption).foregroundStyle(TimbreTheme.secondary) }
                     if let error = audio.error { Text(error).foregroundStyle(TimbreTheme.warning).font(.caption) }
                 }
                 Panel {

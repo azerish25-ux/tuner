@@ -7,7 +7,7 @@ final class TimbreUITests: XCTestCase {
         app = XCUIApplication()
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
-        XCTAssertTrue(app.tabBars.buttons["Bench"].waitForExistence(timeout: 20), "App must load its catalog and local state")
+        XCTAssertTrue(app.tabBars.buttons["Tune"].waitForExistence(timeout: 20), "App must load its catalog and local state")
     }
     override func tearDownWithError() throws {
         if testRun?.hasSucceeded == false { screenshot("Failure state") }
@@ -26,7 +26,10 @@ final class TimbreUITests: XCTestCase {
         }
         XCTAssertTrue(target.exists && target.isHittable, "Control should be reachable by scrolling: \(target)", file: file, line: line)
     }
-    private func tab(_ name: String) { app.tabBars.buttons[name].tap() }
+    private func tab(_ name: String) {
+        let names = ["Collection": "Browse", "Bench": "Tune", "Voice": "Singing"]
+        app.tabBars.buttons[names[name] ?? name].tap()
+    }
     private func dismissPlus() {
         let close = app.buttons["Close"]
         XCTAssertTrue(close.waitForExistence(timeout: 10))
@@ -147,6 +150,33 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["A4 = 442.0 Hz"].waitForExistence(timeout: 5))
         scrollTo(element("settings.theme"))
         XCTAssertEqual(element("settings.theme").value as? String, "dark")
+    }
+    func testLocalizedGermanAndPersianNavigationAtAccessibilityTextSize() {
+        app.terminate()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        app.buttons["Settings"].tap()
+        chooseLanguage("Deutsch")
+        XCTAssertTrue(app.navigationBars["Einstellungen"].exists)
+        screenshot("German settings at accessibility text size")
+        chooseLanguage("فارسی")
+        XCTAssertTrue(app.navigationBars["تنظیمات"].exists)
+        screenshot("Persian settings at accessibility text size and RTL")
+        // Return using the system navigation back control, which follows the active layout direction.
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(app.tabBars.buttons["آواز"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["آواز"].tap()
+        XCTAssertTrue(app.buttons["voice.exercise.1"].waitForExistence(timeout: 5))
+        screenshot("Persian voice exercise preview in RTL")
+        app.buttons["settings.open"].tap()
+        chooseLanguage("English")
+        XCTAssertTrue(app.navigationBars["Settings"].exists)
+    }
+    private func chooseLanguage(_ name: String) {
+        let picker = element("settings.language")
+        scrollTo(picker); picker.tap()
+        let option = app.buttons[name].firstMatch
+        scrollTo(option); option.tap()
     }
     private func replace(_ field: XCUIElement, with value: String) {
         field.tap()
