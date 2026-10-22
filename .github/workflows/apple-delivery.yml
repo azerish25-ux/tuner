@@ -1,0 +1,198 @@
+# Manual owner handoff only. Never dispatch this workflow before Apple delivery is authorized.
+# Signing: https://docs.github.com/en/actions/how-tos/deploy/deploy-to-third-party-platforms/sign-xcode-applications
+# Upload: https://developer.apple.com/help/app-store-connect/manage-builds/upload-builds/
+name: Apple delivery
+on:
+  workflow_dispatch:
+    inputs:
+      marketing_version:
+        description: App Store version (for example 1.0.0)
+        required: true
+        default: '1.0.0'
+        type: string
+      build_number:
+        description: Unique positive build number not already uploaded for this version
+        required: true
+        type: string
+      confirm_delivery:
+        description: I authorize signing and uploading this revision to App Store Connect
+        required: true
+        default: false
+        type: boolean
+permissions:
+  contents: read
+concurrency:
+  group: apple-delivery
+  cancel-in-progress: false
+jobs:
+  deliver:
+    if: ${{ inputs.confirm_delivery }}
+    environment: apple-delivery
+    runs-on: macos-15
+    timeout-minutes: 60
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      APPLE_CERTIFICATE_P12_BASE64: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 }}
+      APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      APPLE_PROVISIONING_PROFILE_BASE64: ${{ secrets.APPLE_PROVISIONING_PROFILE_BASE64 }}
+      APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      APP_STORE_CONNECT_API_KEY_P8: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8 }}
+      MARKETING_VERSION: ${{ inputs.marketing_version }}
+      BUILD_NUMBER: ${{ inputs.build_number }}
+      TIMBRE_ADMOB_APP_ID: ${{ vars.TIMBRE_ADMOB_APP_ID }}
+      TIMBRE_ADMOB_INTERSTITIAL_ID: ${{ vars.TIMBRE_ADMOB_INTERSTITIAL_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate inputs and credentials without displaying values
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "DELIVERY_DIRECTORY=$RUNNER_TEMP/apple-delivery" >> "$GITHUB_ENV"
+          python3 - <<'PY'
+          import os, re
+          required = ['APPLE_TEAM_ID', 'APPLE_CERTIFICATE_P12_BASE64', 'APPLE_CERTIFICATE_PASSWORD',
+                      'APPLE_PROVISIONING_PROFILE_BASE64', 'APP_STORE_CONNECT_KEY_ID',
+                      'APP_STORE_CONNECT_ISSUER_ID', 'APP_STORE_CONNECT_API_KEY_P8']
+          missing = [name for name in required if not os.environ.get(name)]
+          if missing:
+              raise SystemExit('Missing apple-delivery environment secrets: ' + ', '.join(missing))
+          for name, pattern in [('APPLE_TEAM_ID', r'[A-Z0-9]{10}'),
+                                ('APP_STORE_CONNECT_KEY_ID', r'[A-Z0-9]{10}'),
+                                ('APP_STORE_CONNECT_ISSUER_ID', r'[A-Fa-f0-9-]{36}'),
+                                ('MARKETING_VERSION', r'[0-9]+\.[0-9]+(?:\.[0-9]+)?'),
+                                ('BUILD_NUMBER', r'[1-9][0-9]{0,8}')]:
+              if not re.fullmatch(pattern, os.environ[name]):
+                  raise SystemExit('Invalid format for ' + name)
+          app, unit = os.environ['TIMBRE_ADMOB_APP_ID'], os.environ['TIMBRE_ADMOB_INTERSTITIAL_ID']
+          if bool(app) != bool(unit):
+              raise SystemExit('Provide both iOS AdMob variables, or leave both absent to suppress ads.')
+          if app and (not re.fullmatch(r'ca-app-pub-[0-9]{16}~[0-9]{10}', app)
+                      or not re.fullmatch(r'ca-app-pub-[0-9]{16}/[0-9]{10}', unit)
+                      or '3940256099942544' in app or '3940256099942544' in unit):
+              raise SystemExit('Production delivery cannot contain malformed or Google demo AdMob IDs.')
+          PY
+          xcodebuild -version
+          XCODE_VERSION=$(xcodebuild -version | head -n 1 | awk '{print $2}')
+          SDK_VERSION=$(xcrun --sdk iphoneos --show-sdk-version)
+          test "${XCODE_VERSION%%.*}" -ge 26
+          test "${SDK_VERSION%%.*}" -ge 26
+      - name: Verify core and resources before signing
+        run: |
+          set -euo pipefail
+          swift test --package-path ios --parallel
+          python3 tools/verify-ios-resources.py
+      - name: Generate Xcode project
+        run: |
+          set -euo pipefail
+          brew install xcodegen
+          cd ios
+          if [ -n "$TIMBRE_ADMOB_APP_ID" ]; then
+            xcodegen generate --spec project-ads.yml
+          else
+            xcodegen generate
+          fi
+      - name: Install temporary distribution signing assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p "$DELIVERY_DIRECTORY/private_keys"
+          python3 - <<'PY'
+          import base64, os, pathlib
+          directory = pathlib.Path(os.environ['DELIVERY_DIRECTORY'])
+          for key, filename in [('APPLE_CERTIFICATE_P12_BASE64', 'certificate.p12'),
+                                ('APPLE_PROVISIONING_PROFILE_BASE64', 'profile.mobileprovision')]:
+              encoded = "".join(os.environ[key].split())
+              (directory / filename).write_bytes(base64.b64decode(encoded, validate=True))
+          (directory / 'private_keys' / ('AuthKey_' + os.environ['APP_STORE_CONNECT_KEY_ID'] + '.p8')).write_text(
+              os.environ['APP_STORE_CONNECT_API_KEY_P8'])
+          PY
+          security cms -D -i "$DELIVERY_DIRECTORY/profile.mobileprovision" > "$DELIVERY_DIRECTORY/profile.plist"
+          python3 - <<'PY'
+          import datetime, os, pathlib, plistlib, re
+          directory = pathlib.Path(os.environ['DELIVERY_DIRECTORY'])
+          profile = plistlib.loads((directory / 'profile.plist').read_bytes())
+          team = os.environ['APPLE_TEAM_ID']
+          bundle = 'com.shahradazerisharghi.timbre'
+          entitlements = profile.get('Entitlements', {})
+          if profile.get('TeamIdentifier', [None])[0] != team or entitlements.get('application-identifier') != team + '.' + bundle:
+              raise SystemExit('Provisioning profile must match the configured team and Timbre bundle identifier.')
+          if entitlements.get('get-task-allow', False) or 'ProvisionedDevices' in profile or profile.get('ProvisionsAllDevices', False):
+              raise SystemExit('An App Store Connect distribution provisioning profile is required.')
+          if profile.get('ExpirationDate', datetime.datetime.min) <= datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None):
+              raise SystemExit('Provisioning profile has expired.')
+          uuid = profile['UUID']
+          if not re.fullmatch(r'[A-Fa-f0-9-]{36}', uuid):
+              raise SystemExit('Invalid provisioning profile UUID.')
+          print('::add-mask::' + uuid)
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              output.write('PROFILE_UUID=' + uuid + '\n')
+          export = {'method': 'app-store-connect', 'destination': 'export', 'signingStyle': 'manual',
+                    'teamID': team, 'signingCertificate': 'Apple Distribution',
+                    'provisioningProfiles': {bundle: uuid}, 'manageAppVersionAndBuildNumber': False,
+                    'uploadSymbols': True}
+          (directory / 'ExportOptions.plist').write_bytes(plistlib.dumps(export))
+          PY
+          PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$DELIVERY_DIRECTORY/profile.plist")
+          KEYCHAIN_PASSWORD=$(openssl rand -hex 32)
+          echo "::add-mask::$KEYCHAIN_PASSWORD"
+          KEYCHAIN_PATH="$DELIVERY_DIRECTORY/signing.keychain-db"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 3600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$DELIVERY_DIRECTORY/certificate.p12" -P "$APPLE_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH" > /dev/null
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH" > /dev/null
+          security list-keychains -d user -s "$KEYCHAIN_PATH" "$HOME/Library/Keychains/login.keychain-db"
+          for directory in "$HOME/Library/MobileDevice/Provisioning Profiles" "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"; do
+            mkdir -p "$directory"
+            cp "$DELIVERY_DIRECTORY/profile.mobileprovision" "$directory/$PROFILE_UUID.mobileprovision"
+          done
+      - name: Archive and export signed Release IPA
+        working-directory: ios
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcodebuild -project Timbre.xcodeproj -scheme Timbre -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath "$DELIVERY_DIRECTORY/Timbre.xcarchive" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY='Apple Distribution' PROVISIONING_PROFILE_SPECIFIER="$PROFILE_UUID" \
+            OTHER_CODE_SIGN_FLAGS="--keychain $DELIVERY_DIRECTORY/signing.keychain-db" \
+            MARKETING_VERSION="$MARKETING_VERSION" CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
+            TIMBRE_ADMOB_APP_ID="$TIMBRE_ADMOB_APP_ID" TIMBRE_ADMOB_INTERSTITIAL_ID="$TIMBRE_ADMOB_INTERSTITIAL_ID" archive
+          xcodebuild -exportArchive -archivePath "$DELIVERY_DIRECTORY/Timbre.xcarchive" \
+            -exportOptionsPlist "$DELIVERY_DIRECTORY/ExportOptions.plist" -exportPath "$DELIVERY_DIRECTORY/export"
+          test -f "$DELIVERY_DIRECTORY/export/Timbre.ipa"
+      - name: Validate and upload to App Store Connect for TestFlight processing
+        shell: bash
+        run: |
+          set -euo pipefail
+          # altool discovers ./private_keys/AuthKey_KEYID.p8, documented by its installed help.
+          cd "$DELIVERY_DIRECTORY"
+          xcrun altool --validate-app --file export/Timbre.ipa --type ios \
+            --apiKey "$APP_STORE_CONNECT_KEY_ID" --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID"
+          xcrun altool --upload-app --file export/Timbre.ipa --type ios \
+            --apiKey "$APP_STORE_CONNECT_KEY_ID" --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID"
+          echo 'Upload accepted. Apple processing and TestFlight availability must be checked in App Store Connect.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Retain successfully delivered signed IPA
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Timbre-signed-${{ inputs.marketing_version }}-${{ inputs.build_number }}
+          path: ${{ runner.temp }}/apple-delivery/export/Timbre.ipa
+          if-no-files-found: error
+          retention-days: 7
+      - name: Remove temporary signing assets and API key
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          security delete-keychain "$DELIVERY_DIRECTORY/signing.keychain-db" 2>/dev/null || true
+          if [ -n "${PROFILE_UUID:-}" ]; then
+            rm -f "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
+            rm -f "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
+          fi
+          rm -rf "$DELIVERY_DIRECTORY"

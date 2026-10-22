@@ -1,0 +1,125 @@
+name: iOS
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ios-native-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  core:
+    timeout-minutes: 10
+    runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+      - name: Swift core regression tests
+        run: swift test --package-path ios --parallel
+      - name: Verify catalogue and bundled resources
+        run: python3 tools/verify-ios-resources.py
+  app:
+    timeout-minutes: 30
+    runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify App Store SDK minimum
+        run: |
+          xcodebuild -version
+          SDK_VERSION=$(xcrun --sdk iphoneos --show-sdk-version)
+          test "${SDK_VERSION%%.*}" -ge 26
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        working-directory: ios
+        run: xcodegen generate
+      - name: Select available iPhone simulator
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,re,sys; d=json.load(sys.stdin); runtimes=sorted(d["devices"].items(),key=lambda pair:tuple(map(int,re.findall(r"\d+",pair[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if "iPhone" in x["name"]))')
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+      - name: Build and run UI flows
+        run: |
+          set -o pipefail
+          mkdir -p ios/build
+          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -skip-testing:TimbreUITests/TabletScreenshotsUITests -destination "platform=iOS Simulator,id=$DEVICE_ID" -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ios/build/test.log
+      - name: Archive unsigned iOS app
+        run: |
+          xcodebuild archive -project ios/Timbre.xcodeproj -scheme Timbre -destination 'generic/platform=iOS' -archivePath ios/build/Timbre.xcarchive CODE_SIGNING_ALLOWED=NO
+      - name: Compile optional advertising integration
+        working-directory: ios
+        run: |
+          xcodegen generate --spec project-ads.yml
+          xcodebuild build -project Timbre.xcodeproj -scheme Timbre -configuration Debug -destination 'generic/platform=iOS Simulator' TIMBRE_ADMOB_APP_ID='ca-app-pub-3940256099942544~1458002511' CODE_SIGNING_ALLOWED=NO
+      - name: Export simulator screenshots
+        if: always()
+        run: |
+          if [ -d ios/build/UITests.xcresult ]; then
+            xcrun xcresulttool export attachments --path ios/build/UITests.xcresult --output-path ios/build/screenshots
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-evidence
+          path: ios/build/
+          retention-days: 14
+  ipad:
+    timeout-minutes: 25
+    runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify iPad SDK environment
+        run: |
+          xcodebuild -version
+          SDK_VERSION=$(xcrun --sdk iphonesimulator --show-sdk-version)
+          test "${SDK_VERSION%%.*}" -ge 26
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate baseline Xcode project
+        working-directory: ios
+        run: xcodegen generate
+      - name: Select latest available 13-inch iPad simulator
+        run: |
+          mkdir -p ios/build
+          xcrun simctl list devices available -j > ios/build/ipad-simulators.json
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          devices = json.loads(Path('ios/build/ipad-simulators.json').read_text())['devices']
+          version = lambda value: tuple(map(int, re.findall(r'\d+', value)))
+          for runtime, available in sorted(devices.items(), key=lambda item: version(item[0]), reverse=True):
+              if 'iOS' not in runtime:
+                  continue
+              candidates = [device for device in available if 'iPad' in device['name'] and re.search(r'\b13[- ]inch\b', device['name'])]
+              if not candidates:
+                  continue
+              device = max(candidates, key=lambda value: ('Pro' in value['name'], version(value['name'])))
+              print(f"Using {device['name']} on {runtime}: {device['udid']}")
+              with open(os.environ['GITHUB_ENV'], 'a') as environment:
+                  environment.write(f"IPAD_DEVICE_ID={device['udid']}\n")
+              break
+          else:
+              raise SystemExit('No available 13-inch iPad simulator; tablet verification cannot use a smaller device.')
+          PY
+      - name: Run real iPad portrait and landscape screenshots
+        run: |
+          set -o pipefail
+          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -only-testing:TimbreUITests/TabletScreenshotsUITests -destination "platform=iOS Simulator,id=$IPAD_DEVICE_ID" -resultBundlePath ios/build/TabletScreenshots.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ios/build/ipad-test.log
+      - name: Export iPad screenshot attachments
+        if: always()
+        run: |
+          if [ -d ios/build/TabletScreenshots.xcresult ]; then
+            xcrun xcresulttool export attachments --path ios/build/TabletScreenshots.xcresult --output-path ios/build/ipad-screenshots
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ipad-evidence
+          path: ios/build/
+          retention-days: 14

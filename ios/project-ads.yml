@@ -1,0 +1,37 @@
+# Explicit opt-in: the linked Google SDK requires a valid GAD application ID at launch.
+include: [project.yml]
+packages:
+  GoogleMobileAds:
+    url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
+    from: 13.11.0
+  GoogleUserMessagingPlatform:
+    url: https://github.com/googleads/swift-package-manager-google-user-messaging-platform.git
+    from: 3.1.0
+targets:
+  Timbre:
+    preBuildScripts:
+      - name: Validate AdMob app identity
+        basedOnDependencyAnalysis: false
+        script: |
+          python3 - <<'PY'
+          import os, re
+          app = os.environ.get('TIMBRE_ADMOB_APP_ID', '')
+          unit = os.environ.get('TIMBRE_ADMOB_INTERSTITIAL_ID', '')
+          if not re.fullmatch(r'ca-app-pub-[0-9]{16}~[0-9]{10}', app):
+              raise SystemExit('Ads-enabled builds require a valid TIMBRE_ADMOB_APP_ID. Use project.yml for a build without advertising credentials.')
+          if os.environ.get('CONFIGURATION') == 'Release':
+              if not re.fullmatch(r'ca-app-pub-[0-9]{16}/[0-9]{10}', unit) or '3940256099942544' in app or '3940256099942544' in unit:
+                  raise SystemExit('Ads-enabled Release builds require production iOS AdMob app and interstitial identifiers.')
+          PY
+    dependencies:
+      - package: GoogleMobileAds
+      - package: GoogleUserMessagingPlatform
+    info:
+      properties:
+        GADApplicationIdentifier: "$(TIMBRE_ADMOB_APP_ID)"
+    settings:
+      configs:
+        Debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) DEBUG TIMBRE_ADS_ENABLED"
+        Release:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) TIMBRE_ADS_ENABLED"
