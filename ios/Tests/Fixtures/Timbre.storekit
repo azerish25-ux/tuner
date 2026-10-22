@@ -1,0 +1,34 @@
+{
+  "identifier" : "86A2AA9F",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "7.99",
+      "familyShareable" : false,
+      "internalID" : "80657001",
+      "localizations" : [
+        {
+          "description" : "Every instrument, alternate tuning, singing practice and Studio. One-time purchase.",
+          "displayName" : "Timbre Plus Lifetime",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "timbre_plus_lifetime",
+      "referenceName" : "Timbre Plus Lifetime - LOCAL TEST FIXTURE ONLY",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_disableDialogs" : true,
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
+    "_storefront" : "USA",
+    "_timeRate" : 0
+  },
+  "subscriptionGroups" : [],
+  "version" : { "major" : 3, "minor" : 0 }
+}

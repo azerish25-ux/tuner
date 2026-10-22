@@ -1,0 +1,32 @@
+import SwiftUI
+import TimbreCore
+
+@main
+struct TimbreApp: App {
+    @StateObject private var bootstrap = Bootstrap()
+    var body: some Scene {
+        WindowGroup {
+            Group {
+                if let store = bootstrap.store { RootView().environmentObject(store).environmentObject(store.audio).environmentObject(store.commerce) }
+                else {
+                    ContentUnavailableView {
+                        Label("Unable to open Timbre", systemImage: "exclamationmark.triangle")
+                    } description: { Text(bootstrap.error ?? "Loading…") } actions: {
+                        Button("Retry") { bootstrap.load() }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@MainActor
+final class Bootstrap: ObservableObject {
+    @Published var store: AppStore?
+    @Published var error: String?
+    init() { load() }
+    func load() {
+        do { store = try AppStore(); error = nil }
+        catch { self.error = error.localizedDescription }
+    }
+}

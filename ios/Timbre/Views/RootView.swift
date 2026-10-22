@@ -1,0 +1,39 @@
+import SwiftUI
+
+struct RootView: View {
+    @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var audio: AudioService
+    @EnvironmentObject private var commerce: CommerceService
+    @Environment(\.scenePhase) private var scenePhase
+    var body: some View {
+        NavigationStack {
+            TabView(selection: $store.selectedTab) {
+                LibraryView().tabItem { Label("Collection", systemImage: "square.grid.2x2") }.tag(0)
+                BenchView().tabItem { Label("Bench", systemImage: "tuningfork") }.tag(1)
+                VoiceView().tabItem { Label("Voice", systemImage: "waveform") }.tag(2)
+                StudioView().tabItem { Label("Studio", systemImage: "metronome") }.tag(3)
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) { Text("TIMBRE").font(TimbreTheme.title(20)).tracking(3) }
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink { SettingsView() } label: { Image(systemName: "gearshape") }.accessibilityLabel("Settings")
+                }
+            }
+            .toolbarBackground(TimbreTheme.canvas, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .navigationDestination(isPresented: $store.showSettings) { SettingsView() }
+        }
+        .font(.custom("Inter-Regular", size: 16, relativeTo: .body))
+        .foregroundStyle(TimbreTheme.primary)
+        .tint(TimbreTheme.brass)
+        .preferredColorScheme(store.settings.theme == "system" ? nil : store.settings.theme == "light" ? .light : .dark)
+        .environment(\.locale, Locale(identifier: store.settings.language == "system" ? Locale.current.identifier : store.settings.language))
+        .sheet(isPresented: $store.showPlus) { PlusView() }
+        .alert("Timbre", isPresented: Binding(get: { store.error != nil }, set: { if !$0 { store.error = nil } })) {
+            Button("OK") { store.error = nil }
+        } message: { Text(store.error ?? "") }
+        .onChange(of: store.selectedTab) { _, _ in store.stopActivity() }
+        .onChange(of: scenePhase) { _, phase in if phase != .active { store.stopActivity() } }
+        .onChange(of: commerce.isPlus) { _, isPlus in if !isPlus { store.stopActivity() } }
+    }
+}

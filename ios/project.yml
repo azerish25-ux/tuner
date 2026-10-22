@@ -21,7 +21,7 @@ targets:
       - path: Timbre
         excludes: [Resources]
       - path: Timbre/Resources
-        type: folder
+        buildPhase: resources
     dependencies:
       - package: TimbreCore
     info:
@@ -34,6 +34,7 @@ targets:
           UIApplicationSupportsMultipleScenes: false
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
         ITSAppUsesNonExemptEncryption: false
+        UIAppFonts: [space_grotesk.ttf, inter.ttf, ibm_plex_mono.ttf]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre
@@ -44,11 +45,26 @@ targets:
     sources: [TimbreUITests]
     dependencies:
       - target: Timbre
+  TimbreAppTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: TimbreAppTests
+      - path: Tests/Fixtures/Timbre.storekit
+        buildPhase: resources
+    dependencies:
+      - target: Timbre
+    settings:
+      base:
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Timbre.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Timbre"
+        BUNDLE_LOADER: "$(TEST_HOST)"
 schemes:
   Timbre:
     build:
       targets:
         Timbre: all
         TimbreUITests: [test]
+        TimbreAppTests: [test]
     test:
-      targets: [TimbreUITests]
+      targets: [TimbreAppTests, TimbreUITests]
+      parallelizeBuild: false
