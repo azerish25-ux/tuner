@@ -48,11 +48,11 @@ struct LibraryView: View {
                             Image(systemName: "arrow.up.right")
                         }.padding(18).background(TimbreTheme.surface, in: RoundedRectangle(cornerRadius: 18))
                     }.buttonStyle(.plain)
-                    if !store.settings.recentInstrumentIds.isEmpty {
+                    if !store.recentInstrumentIds.isEmpty {
                         Text("timbre_library_recent").font(TimbreTheme.title(20))
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
-                                ForEach(store.settings.recentInstrumentIds, id: \.self) { id in
+                                ForEach(store.recentInstrumentIds, id: \.self) { id in
                                     if let instrument = store.catalog.instrument(id: id), let photo = store.catalog.photo(instrumentId: id) {
                                         Button { open(instrument, photo: photo) } label: {
                                             VStack(alignment: .leading) {

@@ -58,6 +58,27 @@ final class AppStoreIntegrationTests: XCTestCase {
         XCTAssertTrue(store.showPlus)
         XCTAssertEqual(store.instrument.id, originalInstrument)
     }
+    func testRecentInstrumentsPreferCompletedSessionsWithOpenedFallback() throws {
+        let guitar = store.instrument
+        let bass = try XCTUnwrap(store.catalog.instrument(id: "bass.electric.4"))
+        let ukulele = try XCTUnwrap(store.catalog.instrument(id: "ukulele.soprano.4"))
+        store.selectInstrument(bass)
+        XCTAssertEqual(store.recentInstrumentIds.first, bass.id)
+        store.chooseCourse(1)
+        store.accept(store.targetHz, confidence: 0.99, level: -18)
+        store.finishTuning()
+        store.selectInstrument(ukulele)
+        XCTAssertEqual(store.recentInstrumentIds, [bass.id], "Completed evidence takes precedence over later previews")
+        store.selectInstrument(guitar)
+        store.chooseCourse(1)
+        store.accept(store.targetHz, confidence: 0.99, level: -18)
+        store.finishTuning()
+        XCTAssertEqual(store.recentInstrumentIds, [guitar.id, bass.id])
+        store.clearHistory()
+        XCTAssertEqual(store.recentInstrumentIds.first, guitar.id, "Clearing evidence restores the remembered selection fallback")
+        store.selectInstrument(ukulele)
+        XCTAssertEqual(store.recentInstrumentIds.first, ukulele.id)
+    }
     func testRestorationRejectsUnknownAndForeignTuningIdentifiers() throws {
         let guitar = store.instrument
         let foreign = try XCTUnwrap(store.catalog.tunings.first { $0.instrumentId != guitar.id })

@@ -63,6 +63,16 @@ final class AppStore: ObservableObject {
         audio.onReading = { [weak self] hz, confidence, level in self?.accept(hz, confidence: confidence, level: level) }
     }
     var demonstratedLevels: Set<Int> { persistence.demonstratedLevels }
+    var recentInstrumentIds: [String] {
+        let available = Set(catalog.instruments.map(\.id))
+        var seen = Set<String>()
+        let completed = records.compactMap { record -> String? in
+            guard available.contains(record.instrumentId), seen.insert(record.instrumentId).inserted else { return nil }
+            return record.instrumentId
+        }
+        return Array((completed.isEmpty ? settings.recentInstrumentIds.filter { available.contains($0) } : completed).prefix(8))
+    }
+
     var adEntitlement: AdEntitlement { commerce.isPlus ? .paid : commerce.pending ? .pending : commerce.entitlementResolved ? .free : .unknown }
     var instrument: Instrument { catalog.instrument(id: settings.selectedInstrumentId) ?? catalog.instruments[0] }
     var tuning: Tuning {
