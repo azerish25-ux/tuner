@@ -4,7 +4,7 @@ Reviewed the current Swift integration using `code-review-and-quality` across co
 
 ## Verification state
 
-[GitHub Actions run39851758978](https://github.com/azerish25-ux/tuner/actions/runs/39851758978) has passed core regression tests, iPhone application/StoreKit/UI tests and the unsigned generic-device archive, as reported by the coordinating agent. Its optional advertising integration compile is still running at this document update.
+[GitHub Actions run39851758978](https://github.com/azerish25-ux/tuner/actions/runs/39851758978) has passed core regression tests, iPhone application/StoreKit/UI tests and the unsigned generic-device archive, as reported by the coordinating agent. Its optional advertising integration compile also passed.
 
 The next revision includes additional pause/reference/calibration resets, restoration regression coverage, metronome background checks and iPad tests. These later edits are **not covered by the earlier run**. Final approval requires successful results for the exact final commit and inspection of its screenshots/artifacts.
 

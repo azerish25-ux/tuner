@@ -2,6 +2,7 @@
 from pathlib import Path
 import json
 import re
+import plistlib
 
 root = Path(__file__).resolve().parents[1]
 core = root / 'ios/Sources/TimbreCore/Resources'
@@ -21,6 +22,11 @@ for photo in photos:
     assert photo['source'] and photo['sha256'] and photo['origin']
 for name in ['space_grotesk.ttf', 'inter.ttf', 'ibm_plex_mono.ttf', 'SpaceGrotesk-OFL.txt', 'Inter-OFL.txt', 'IBMPlexMono-OFL.txt']:
     assert (resources / 'Fonts' / name).is_file(), name
+# Timers and stability windows use systemUptime only for in-app elapsed events.
+# https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitype
+privacy = plistlib.loads((resources / 'PrivacyInfo.xcprivacy').read_bytes())
+assert {'NSPrivacyAccessedAPIType': 'NSPrivacyAccessedAPICategorySystemBootTime',
+        'NSPrivacyAccessedAPITypeReasons': ['35F9.1']} in privacy['NSPrivacyAccessedAPITypes']
 english = (resources / 'en.lproj/Localizable.strings').read_text(encoding='utf-8')
 keys = set(re.findall(r'^"([^"]+)"\s*=', english, re.M))
 missing = []

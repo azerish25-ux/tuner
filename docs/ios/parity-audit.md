@@ -4,7 +4,7 @@ This audit compares the checked-in authoritative `reference/android` implementat
 
 ## Runtime evidence boundary
 
-[CI run39851758978](https://github.com/azerish25-ux/tuner/actions/runs/39851758978) passed core regression tests, iPhone application/StoreKit/UI tests and an unsigned generic-iOS archive according to the coordinating agent. Optional ads-overlay compilation remains in progress at this update. Later pause/reference/calibration changes, additional restoration/metronome assertions and iPad coverage await the next exact-revision run; do not attach the earlier pass to those edits.
+[CI run39851758978](https://github.com/azerish25-ux/tuner/actions/runs/39851758978) passed core regression tests, iPhone application/StoreKit/UI tests and an unsigned generic-iOS archive according to the coordinating agent. Optional ads-overlay compilation also passed. Later pause/reference/calibration changes, additional restoration/metronome assertions and iPad coverage await the next exact-revision run; do not attach the earlier pass to those edits.
 
 ## Source-to-Swift mapping
 
