@@ -9,6 +9,20 @@ packages:
     from: 3.1.0
 targets:
   Timbre:
+    preBuildScripts:
+      - name: Validate AdMob app identity
+        basedOnDependencyAnalysis: false
+        script: |
+          python3 - <<'PY'
+          import os, re
+          app = os.environ.get('TIMBRE_ADMOB_APP_ID', '')
+          unit = os.environ.get('TIMBRE_ADMOB_INTERSTITIAL_ID', '')
+          if not re.fullmatch(r'ca-app-pub-[0-9]{16}~[0-9]{10}', app):
+              raise SystemExit('Ads-enabled builds require a valid TIMBRE_ADMOB_APP_ID. Use project.yml for a build without advertising credentials.')
+          if os.environ.get('CONFIGURATION') == 'Release':
+              if not re.fullmatch(r'ca-app-pub-[0-9]{16}/[0-9]{10}', unit) or '3940256099942544' in app or '3940256099942544' in unit:
+                  raise SystemExit('Ads-enabled Release builds require production iOS AdMob app and interstitial identifiers.')
+          PY
     dependencies:
       - package: GoogleMobileAds
       - package: GoogleUserMessagingPlatform

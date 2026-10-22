@@ -7,10 +7,11 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: ios-26-${{ github.ref }}
+  group: ios-native-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   core:
+    timeout-minutes: 10
     runs-on: macos-15
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
@@ -21,6 +22,7 @@ jobs:
       - name: Verify catalogue and bundled resources
         run: python3 tools/verify-ios-resources.py
   app:
+    timeout-minutes: 30
     runs-on: macos-15
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
@@ -42,7 +44,9 @@ jobs:
           echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
       - name: Build and run UI flows
         run: |
-          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO
+          set -o pipefail
+          mkdir -p ios/build
+          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -destination "platform=iOS Simulator,id=$DEVICE_ID" -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ios/build/test.log
       - name: Archive unsigned iOS app
         run: |
           xcodebuild archive -project ios/Timbre.xcodeproj -scheme Timbre -destination 'generic/platform=iOS' -archivePath ios/build/Timbre.xcarchive CODE_SIGNING_ALLOWED=NO
@@ -51,6 +55,12 @@ jobs:
         run: |
           xcodegen generate --spec project-ads.yml
           xcodebuild build -project Timbre.xcodeproj -scheme Timbre -configuration Debug -destination 'generic/platform=iOS Simulator' TIMBRE_ADMOB_APP_ID='ca-app-pub-3940256099942544~1458002511' CODE_SIGNING_ALLOWED=NO
+      - name: Export simulator screenshots
+        if: always()
+        run: |
+          if [ -d ios/build/UITests.xcresult ]; then
+            xcrun xcresulttool export attachments --path ios/build/UITests.xcresult --output-path ios/build/screenshots
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
