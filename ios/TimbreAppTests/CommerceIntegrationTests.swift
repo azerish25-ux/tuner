@@ -15,6 +15,7 @@ final class CommerceIntegrationTests: XCTestCase {
         session.resetToDefaultState()
         session.clearTransactions()
         session.disableDialogs = true
+        try await StoreKitTestEnvironment.waitUntilClean(session)
         commerce = CommerceService()
         await commerce.load()
     }
@@ -62,7 +63,9 @@ final class CommerceIntegrationTests: XCTestCase {
         await commerce.purchase()
         try await waitUntil { self.commerce.isPlus }
         let transaction = try XCTUnwrap(session.allTransactions().first { $0.productIdentifier == CommerceService.productID })
+        async let overlappingLoad: Void = commerce.load()
         try session.refundTransaction(identifier: transaction.identifier)
+        await overlappingLoad
         try await waitUntil { !self.commerce.isPlus }
         await commerce.load()
         XCTAssertFalse(commerce.isPlus)

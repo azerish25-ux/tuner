@@ -141,10 +141,17 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Enter a number from 415 to 466 Hz."].exists)
         replace(input, with: "442")
         // A previous test run may already have saved 442; first choose another valid reference.
-        if !apply.isEnabled { replace(input, with: "440"); apply.tap(); replace(input, with: "442") }
-        XCTAssertTrue(apply.isEnabled); apply.tap()
-        let keyboardDismissed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: app.keyboards.firstMatch)
-        XCTAssertEqual(XCTWaiter.wait(for: [keyboardDismissed], timeout: 5), .completed, "Applying a reference should dismiss the decimal keyboard")
+        if !apply.isEnabled {
+            replace(input, with: "440")
+            dismissReferenceKeyboard()
+            scrollTo(apply); apply.tap()
+            scrollUpTo(input); replace(input, with: "442")
+        }
+        XCTAssertTrue(apply.isEnabled)
+        // The decimal keyboard can overlap this Form row. Finish editing through
+        // the real toolbar before reaching and tapping the actual Apply control.
+        dismissReferenceKeyboard()
+        scrollTo(apply); apply.tap()
         let currentReference = app.staticTexts["settings.currentReference"]
         scrollUpTo(currentReference)
         XCTAssertEqual(currentReference.label, "A4 = 442.0 Hz")
@@ -190,7 +197,25 @@ final class TimbreUITests: XCTestCase {
         let picker = element("settings.language")
         scrollTo(picker); picker.tap()
         let option = app.buttons[name].firstMatch
-        scrollTo(option); option.tap()
+        // A native menu can reopen at its previous scroll position. With AX text
+        // only a few of the 49 real choices fit, so search both directions.
+        let directions = ["English", "Deutsch"].contains(name) ? [true, false] : [false, true]
+        for downward in directions {
+            for _ in 0..<24 {
+                if option.exists && option.isHittable { option.tap(); return }
+                if downward { app.swipeDown() } else { app.swipeUp() }
+            }
+        }
+        XCTAssertTrue(option.exists && option.isHittable, "The actual native language choice must be reachable: \(name)")
+        option.tap()
+    }
+    private func dismissReferenceKeyboard() {
+        let done = app.buttons["settings.dismissKeyboard"]
+        XCTAssertTrue(done.waitForExistence(timeout: 5))
+        XCTAssertTrue(done.isHittable, "The keyboard's real Done control must be accessible")
+        done.tap()
+        let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: app.keyboards.firstMatch)
+        XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 5), .completed, "Done must dismiss the decimal keyboard before applying a reference")
     }
     private func replace(_ field: XCUIElement, with value: String) {
         field.tap()

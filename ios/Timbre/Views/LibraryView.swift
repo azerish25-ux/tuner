@@ -70,7 +70,11 @@ struct LibraryView: View {
                     Text(String(format: NSLocalizedString("timbre_library_no_results", comment: ""), query)).foregroundStyle(TimbreTheme.secondary).padding(.vertical, 30)
                 }
                 ForEach(store.catalog.families) { family in
-                    let photos = visiblePhotos.filter { store.catalog.instrument(id: $0.instrumentId)?.familyId == family.id }
+                    let candidates = visiblePhotos.filter { store.catalog.instrument(id: $0.instrumentId)?.familyId == family.id }
+                    let photos = candidates.enumerated().sorted { left, right in
+                        let leftRank = photoRank(left.element), rightRank = photoRank(right.element)
+                        return leftRank == rightRank ? left.offset < right.offset : leftRank < rightRank
+                    }.map(\.element)
                     if !photos.isEmpty {
                         HStack {
                             Text(family.name.localized).font(TimbreTheme.title(21))
@@ -125,12 +129,18 @@ struct LibraryView: View {
     private func photoName(_ photo: InstrumentPhoto) -> String {
         NSLocalizedString("timbre_photo_" + photo.asset, bundle: .main, value: photo.label, comment: "")
     }
+    private func photoRank(_ photo: InstrumentPhoto) -> Int {
+        guard let instrument = store.catalog.instrument(id: photo.instrumentId) else { return 2 }
+        let id = photoTuningID(instrument, photo: photo)
+        if instrument.isFree && (store.catalog.tuning(id: id)?.isFree ?? false) { return 0 }
+        return id.hasSuffix(".five") ? 1 : 2
+    }
     private func photoTuningID(_ instrument: Instrument, photo: InstrumentPhoto) -> String {
         let tuningID: String
         if photo.label == "5-string bass" || photo.label == "5-string double bass" { tuningID = instrument.id + ".five" }
         else if instrument.id == "mallet.marimba.0", ["Xylophone", "Glockenspiel", "Vibraphone"].contains(photo.label) { tuningID = instrument.id + "." + photo.label.lowercased() }
         else if photo.label == "4-string bass" || photo.label == "4-string double bass" || photo.label == "Marimba" { tuningID = instrument.defaultTuningId }
-        else { tuningID = store.settings.lastTuningIds[instrument.id] ?? instrument.defaultTuningId }
+        else { tuningID = instrument.defaultTuningId }
         return tuningID
     }
     private func open(_ instrument: Instrument, photo: InstrumentPhoto) {

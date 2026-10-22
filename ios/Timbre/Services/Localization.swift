@@ -7,7 +7,18 @@ func NSLocalizedString(_ key: String, tableName: String? = nil, bundle: Bundle =
 }
 
 func localizedVoiceExplanation(_ result: VoiceResult, level: Int) -> String {
-    guard result.accuracy != nil, let average = result.scoreAverageOffCents, let count = result.scoreReadingCount else { return result.explanation }
+    guard result.accuracy != nil else {
+        let key: String
+        if level == 7 { key = "timbre_voice_score_range" }
+        else if result.readingCount == 0 { key = "timbre_voice_no_pitch_captured" }
+        else if level == 1 { key = "timbre_voice_warmup_no_score" }
+        else if [5, 6, 8].contains(level) { key = "timbre_voice_pattern_incomplete" }
+        else { key = "timbre_voice_hold_longer" }
+        return NSLocalizedString(key, comment: "")
+    }
+    guard let average = result.scoreAverageOffCents, let count = result.scoreReadingCount else {
+        return NSLocalizedString("timbre_voice_score_saved", comment: "")
+    }
     let tolerance = Int(result.toleranceCents)
     let primary: String
     switch level {

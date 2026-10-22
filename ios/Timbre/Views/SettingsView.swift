@@ -70,7 +70,7 @@ struct SettingsView: View {
                 ForEach([415.0, 432, 435, 440, 442], id: \.self) { hz in
                     Button(String(Int(hz))) { referenceFocused = false; store.updateSettings { $0.referencePitchHz = hz } }
                         .buttonStyle(.bordered)
-                        .tint(store.settings.referencePitchHz == hz ? TimbreTheme.brass : .secondary)
+                        .tint(store.settings.referencePitchHz == hz ? TimbreTheme.action : .secondary)
                         .accessibilityLabel("A4 \(Int(hz)) hertz")
                 }
             }
@@ -90,7 +90,7 @@ struct SettingsView: View {
                 ForEach(Temperament.all) { temperament in Text(temperament.name).tag(temperament.id) }
             }
             if store.settings.temperamentId != "equal" {
-                Text("Historical presets use the same approximate offset tables as Timbre for Android.").font(.caption).foregroundStyle(TimbreTheme.secondary)
+                Text("Historical temperaments are approximate reference presets.").font(.caption).foregroundStyle(TimbreTheme.secondary)
             }
         }
     }

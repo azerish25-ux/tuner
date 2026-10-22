@@ -118,7 +118,8 @@ struct VoiceView: View {
                 .font(.footnote.monospaced())
             Picker("Starting note", selection: $store.voiceRoot) {
                 ForEach(45...81, id: \.self) { midi in Text(note(midi)).tag(midi) }
-            }.disabled(store.voiceRunning).accessibilityIdentifier("voice.root")
+            }.disabled(store.voiceRunning).accessibilityIdentifier("voice.root").accessibilityValue(note(store.voiceRoot))
+            VoiceKeyboard(targetMidi: targetMidi, notation: store.settings.notation, editable: !store.voiceRunning) { store.voiceRoot = $0 }
             if exercise.notes.count > 1 {
                 Text(text("timbre_voice_sequence_target", "Sing these notes")).font(.caption).foregroundStyle(TimbreTheme.secondary)
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 54))], spacing: 8) {
@@ -134,7 +135,7 @@ struct VoiceView: View {
             Button {
                 guard commerce.isPlus else { store.showPlus = true; return }
                 if audio.tonePlaying { audio.stopTone() }
-                else { audio.playTone(PitchMath.frequency(midi: Double(store.voiceRoot), reference: store.settings.referencePitchHz)) }
+                else { audio.playTone(PitchMath.frequency(midi: Double(store.voiceRoot), reference: store.settings.referencePitchHz), durationMs: 1500) }
             } label: {
                 Label(audio.tonePlaying ? text("timbre_voice_playing_target", "Playing target…") : text("timbre_voice_hear_target", "Hear target"), systemImage: audio.tonePlaying ? "stop.fill" : "speaker.wave.2")
             }.buttonStyle(.bordered).disabled(store.voiceRunning).accessibilityIdentifier("voice.hearTarget")

@@ -61,6 +61,10 @@ final class PaidFlowsUITests: XCTestCase {
         app.tabBars.buttons["Singing"].tap()
         let exercise = app.buttons["voice.exercise.2"]
         scrollTo(exercise); exercise.tap()
+        let g3 = app.buttons["voice.key.55"]
+        scrollTo(g3); g3.tap()
+        XCTAssertTrue(g3.isSelected, "The visual piano key must select the actual singing target")
+        XCTAssertEqual(element("voice.root").value as? String, "G3")
         let start = app.buttons["voice.start"]
         scrollTo(start); start.tap()
         // The reference tone precedes the permission request by one second. Wait for

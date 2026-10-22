@@ -13,6 +13,9 @@ final class CommerceService: ObservableObject {
     @Published private(set) var error: String?
     @Published private(set) var pending = false
     private var updatesTask: Task<Void, Never>?
+    private var entitlementRefreshInProgress = false
+    private var entitlementRefreshRevision = 0
+    private var entitlementRefreshWaiters: [CheckedContinuation<Void, Never>] = []
 
     init() {
         updatesTask = Task { [weak self] in
@@ -85,17 +88,34 @@ final class CommerceService: ObservableObject {
     }
 
     private func refreshEntitlements() async {
-        var entitled = false
-        for await result in Transaction.currentEntitlements {
-            guard case .verified(let transaction) = result,
-                  transaction.productID == Self.productID,
-                  transaction.productType == .nonConsumable,
-                  transaction.revocationDate == nil,
-                  !transaction.isUpgraded else { continue }
-            entitled = true
+        entitlementRefreshRevision += 1
+        if entitlementRefreshInProgress {
+            await withCheckedContinuation { entitlementRefreshWaiters.append($0) }
+            return
         }
-        isPlus = entitled
-        entitlementResolved = true
+        entitlementRefreshInProgress = true
+        // Init, foreground loading and transaction updates can request snapshots while
+        // an earlier enumeration is suspended. Never publish that superseded snapshot;
+        // enumerate again and release every caller only after the newest request settles.
+        while true {
+            let revision = entitlementRefreshRevision
+            var entitled = false
+            for await result in Transaction.currentEntitlements {
+                guard case .verified(let transaction) = result,
+                      transaction.productID == Self.productID,
+                      transaction.productType == .nonConsumable,
+                      transaction.revocationDate == nil,
+                      !transaction.isUpgraded else { continue }
+                entitled = true
+            }
+            guard revision == entitlementRefreshRevision else { continue }
+            isPlus = entitled
+            entitlementResolved = true
+            break
+        }
+        entitlementRefreshInProgress = false
+        let waiting = entitlementRefreshWaiters
+        entitlementRefreshWaiters.removeAll()
+        for continuation in waiting { continuation.resume() }
     }
 }
-

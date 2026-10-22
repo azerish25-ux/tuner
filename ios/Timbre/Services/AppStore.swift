@@ -32,7 +32,7 @@ final class AppStore: ObservableObject {
     @Published private(set) var voiceResult: VoiceResult?
     @Published private(set) var voiceSaveFailed = false
     @Published private(set) var trace: [Double?] = []
-    @Published var bpm = 80
+    @Published var bpm = 96
     @Published var beats = 4
     @Published var subdivision = 1
     @Published var accents = true
@@ -158,12 +158,13 @@ final class AppStore: ObservableObject {
             guard countdown == 0, let attempt else { return }
             let elapsed = Int((ProcessInfo.processInfo.systemUptime - voiceStarted) * 1000)
             guard elapsed < voiceExercise.durationMs else { return }
-            let stable = voiceStability.update(confidence >= settings.confidenceThreshold ? hz : nil)
-            attempt.accept(frequency: hz, stable: stable, elapsedMs: elapsed)
+            let acceptedHz = confidence.isFinite && confidence >= settings.confidenceThreshold ? hz : nil
+            let stable = voiceStability.update(acceptedHz)
+            attempt.accept(frequency: acceptedHz, stable: stable, elapsedMs: elapsed)
             voiceLiveHoldMs = attempt.liveHoldMs
             let target = PitchMath.frequency(midi: Double(voiceExercise.note(at: elapsed)), reference: settings.referencePitchHz)
             reading = tracker.accept(frequency: hz, confidence: confidence, target: target, timestampMs: now)
-            trace.append(hz.map { PitchMath.cents(target: target, measured: $0) }); if trace.count > 600 { trace.removeFirst() }
+            trace.append(acceptedHz.map { PitchMath.cents(target: target, measured: $0) }); if trace.count > 600 { trace.removeFirst() }
             return
         }
         if automatic, !referenceMode, let hz, confidence >= settings.confidenceThreshold {

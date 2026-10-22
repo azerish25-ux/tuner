@@ -24,6 +24,7 @@ final class AppStoreIntegrationTests: XCTestCase {
         session.resetToDefaultState()
         session.clearTransactions()
         session.disableDialogs = true
+        try await StoreKitTestEnvironment.waitUntilClean(session)
         store = try Timbre.AppStore(directory: directory)
         store.updateSettings { $0.hapticsEnabled = false }
         await store.commerce.load()
@@ -90,7 +91,9 @@ final class AppStoreIntegrationTests: XCTestCase {
         XCTAssertEqual(store.photo?.label, "5-string bass")
         store.selectReference()
         try FileManager.default.removeItem(at: directory)
-        try Data("unavailable storage".utf8).write(to: directory)
+        let occupiedPath = directory.deletingLastPathComponent().appendingPathComponent(directory.lastPathComponent, isDirectory: false)
+        try Data("unavailable storage".utf8).write(to: occupiedPath)
+        defer { try? FileManager.default.removeItem(at: occupiedPath) }
         let uke = try XCTUnwrap(store.catalog.instrument(id: "ukulele.soprano.4"))
         XCTAssertFalse(store.selectInstrument(uke, tuning: store.catalog.tuning(id: uke.defaultTuningId)))
         XCTAssertEqual(store.settings, saved)

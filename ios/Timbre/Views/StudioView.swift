@@ -36,7 +36,7 @@ struct StudioView: View {
                     Text("timbre_studio_beats_per_minute").font(.caption).foregroundStyle(TimbreTheme.secondary).frame(maxWidth: .infinity)
                     Stepper("timbre_studio_tempo", value: $store.bpm, in: 40...240).accessibilityIdentifier("studio.tempo")
                     Slider(value: Binding(get: { Double(store.bpm) }, set: { store.bpm = Int($0) }), in: 40...240, step: 1).accessibilityLabel("timbre_studio_tempo")
-                    Picker("timbre_studio_beats_per_bar", selection: $store.beats) { ForEach(2...7, id: \.self) { Text("\($0)").tag($0) } }
+                    Picker("timbre_studio_beats_per_bar", selection: $store.beats) { ForEach([2, 3, 4, 6], id: \.self) { Text("\($0)").tag($0) } }
                     Picker("timbre_studio_subdivision", selection: $store.subdivision) { ForEach(1...4, id: \.self) { Text("\($0)").tag($0) } }
                     Toggle("Accent first beat", isOn: $store.accents)
                     HStack {
