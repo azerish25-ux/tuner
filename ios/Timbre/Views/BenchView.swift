@@ -170,21 +170,25 @@ private struct CentsDial: View {
     let active: Bool
     let inTune: Bool
     var body: some View {
-        Canvas { context, size in
-            let center = CGPoint(x: size.width / 2, y: size.height - 8)
-            let radius = min(size.width / 2 - 14, size.height - 15)
+        Canvas { (context: inout GraphicsContext, size: CGSize) in
+            let center = CGPoint(x: size.width / 2.0, y: size.height - 8.0)
+            let radius: CGFloat = min(size.width / 2.0 - 14.0, size.height - 15.0)
             for value in stride(from: -50, through: 50, by: 5) {
-                let angle = Double(value) / 50 * .pi / 2 - .pi / 2
+                let angle: Double = Double(value) / 50.0 * Double.pi / 2.0 - Double.pi / 2.0
                 let long = value % 25 == 0
-                let outer = CGPoint(x: center.x + cos(angle) * radius, y: center.y + sin(angle) * radius)
-                let inner = CGPoint(x: center.x + cos(angle) * (radius - (long ? 15 : 8)), y: center.y + sin(angle) * (radius - (long ? 15 : 8)))
+                let dx = CGFloat(cos(angle)), dy = CGFloat(sin(angle))
+                let tickLength: CGFloat = long ? 15.0 : 8.0
+                let outer = CGPoint(x: center.x + dx * radius, y: center.y + dy * radius)
+                let inner = CGPoint(x: center.x + dx * (radius - tickLength), y: center.y + dy * (radius - tickLength))
                 var path = Path(); path.move(to: inner); path.addLine(to: outer)
                 context.stroke(path, with: .color(value == 0 ? TimbreTheme.success : TimbreTheme.secondary.opacity(0.55)), lineWidth: value == 0 ? 3 : 1)
             }
             if active, let cents {
-                let angle = min(50, max(-50, cents)) / 50 * .pi / 2 - .pi / 2
-                let tip = CGPoint(x: center.x + cos(angle) * (radius - 20), y: center.y + sin(angle) * (radius - 20))
-                var needle = Path(); needle.move(to: CGPoint(x: center.x + cos(angle) * (radius - 37), y: center.y + sin(angle) * (radius - 37))); needle.addLine(to: tip)
+                let angle: Double = min(50.0, max(-50.0, cents)) / 50.0 * Double.pi / 2.0 - Double.pi / 2.0
+                let dx = CGFloat(cos(angle)), dy = CGFloat(sin(angle))
+                let tip = CGPoint(x: center.x + dx * (radius - 20.0), y: center.y + dy * (radius - 20.0))
+                let base = CGPoint(x: center.x + dx * (radius - 37.0), y: center.y + dy * (radius - 37.0))
+                var needle = Path(); needle.move(to: base); needle.addLine(to: tip)
                 context.stroke(needle, with: .color(inTune ? TimbreTheme.success : TimbreTheme.brass), style: StrokeStyle(lineWidth: 4, lineCap: .round))
             }
         }.overlay(alignment: .bottom) {

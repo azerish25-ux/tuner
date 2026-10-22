@@ -102,7 +102,7 @@ final class AdvertisingService: NSObject, ObservableObject, FullScreenContentDel
         guard let unitID, consentUpdated, !gatheringConsent, ConsentInformation.shared.canRequestAds,
               entitlement.isAdSupported, UIApplication.shared.applicationState == .active,
               !loading, interstitial == nil, presentingAd == nil else { return }
-        if !sdkStarted { sdkStarted = true; MobileAds.shared.start() }
+        if !sdkStarted { sdkStarted = true; _ = await MobileAds.shared.start() }
         loading = true
         let token = generation
         defer { loading = false }

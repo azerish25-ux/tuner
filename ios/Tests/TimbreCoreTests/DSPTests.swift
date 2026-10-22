@@ -48,10 +48,13 @@ final class DSPTests: XCTestCase {
         }
     }
     func testLevelConfidenceFallsNearSilence() throws {
-        let quiet = tone(440).map { $0 * 0.003 }
+        let quiet = tone(440).map { $0 * 0.006 }
+        XCTAssertGreaterThan(DspMath.rmsDbfs(quiet), -60)
+        XCTAssertLessThan(DspMath.rmsDbfs(quiet), -51)
         let reading = try XCTUnwrap(YinPitchDetector().detect(quiet))
         XCTAssertLessThan(reading.confidence, 0.6)
         XCTAssertGreaterThan(reading.confidence, 0)
+        XCTAssertNil(YinPitchDetector().detect(tone(440).map { $0 * 0.003 }), "Below Android's -60 dBFS floor must remain silence")
     }
     func testNoisyRehearsalSignalRetainsPitch() throws {
         for hz in [82.86, 440, 1760] {

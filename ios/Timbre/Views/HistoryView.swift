@@ -147,7 +147,7 @@ struct HistoryView: View {
                 if record.tuningId?.hasPrefix("voice.range.") == true, let low = voice.lowestMidi, let high = voice.highestMidi {
                     Text("Reliable range: \(PitchMath.noteName(midi: low, notation: store.settings.notation))–\(PitchMath.noteName(midi: high, notation: store.settings.notation))")
                 }
-                Text(voice.explanation).font(.footnote).foregroundStyle(TimbreTheme.secondary)
+                Text(localizedVoiceExplanation(voice, level: record.tuningId.flatMap { Int($0.split(separator: ".").last ?? "") } ?? 1)).font(.footnote).foregroundStyle(TimbreTheme.secondary)
                 if voice.demonstrated { Label("Skill demonstrated", systemImage: "checkmark.circle").font(.caption).foregroundStyle(TimbreTheme.success) }
             } else {
                 if let id = record.tuningId, let tuning = store.catalog.tunings.first(where: { $0.id == id }) { Text(tuning.name.localized).font(.subheadline) }

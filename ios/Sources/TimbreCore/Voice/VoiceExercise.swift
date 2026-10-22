@@ -44,6 +44,9 @@ public struct VoiceExercise: Codable, Equatable, Sendable {
 }
 
 public struct VoiceResult: Codable, Equatable, Sendable {
+    public var scoreAverageOffCents: Int? = nil
+    public var scorePitchVariationCents: Int? = nil
+    public var scoreReadingCount: Int? = nil
     public let accuracy: Int?
     public let stability: Int?
     public let longestHoldMs: Int
@@ -182,12 +185,16 @@ public final class VoiceAttempt {
             if exercise.level == 5 { explanation += " The interval is measured against the note you started on, so it does not depend on your key." }
             if let deviation { explanation += " Pitch variation was \(Int(deviation.rounded()))¢ (standard deviation), a proxy for steady breath support rather than a measurement of breathing." }
         } else { explanation = "Not enough continuous singing was captured to measure this exercise. Try holding each note for the requested time." }
-        return VoiceResult(accuracy: accuracy, stability: stability, longestHoldMs: measuredHold, demonstrated: demonstrated,
+        var result = VoiceResult(accuracy: accuracy, stability: stability, longestHoldMs: measuredHold, demonstrated: demonstrated,
             explanation: explanation, lowestMidi: low, highestMidi: high, readingCount: samples.count,
             stableReadingCount: stableErrors.count, meanAbsoluteCentsError: exercise.level == 7 ? nil : exercise.level == 5 ? (scored ? mean : nil) : stableErrors.isEmpty ? nil : stableErrors.reduce(0, +) / Double(stableErrors.count),
             toleranceCents: exercise.toleranceCents, stageHoldMs: stageVoiced, stageInBandMs: stageInBand,
             contourPercent: scored && [6, 8].contains(exercise.level) ? contour : nil,
             inBandPercent: scored && [6, 8].contains(exercise.level) ? Int((100 * Double(errors.filter { abs($0) <= exercise.toleranceCents }.count) / Double(errors.count)).rounded()) : nil)
+        result.scoreAverageOffCents = scored ? mean.map { Int($0.rounded()) } : nil
+        result.scorePitchVariationCents = deviation.map { Int($0.rounded()) }
+        result.scoreReadingCount = scored ? errors.count : nil
+        return result
     }
     private func score(_ value: Double, zeroAt: Double) -> Int { Int(min(100, max(0, 100 * (1 - abs(value) / zeroAt))).rounded()) }
 }

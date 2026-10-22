@@ -28,6 +28,22 @@ struct VoiceView: View {
         default: return text("timbre_voice_message_hear_then_sing", "Hear the target, then sing a comfortable, steady note.")
         }
     }
+    private var guidanceKey: String {
+        if store.countdown > 0 { return "timbre_voice_hint_breath" }
+        guard store.voiceRunning else { return "timbre_voice_message_listen_first" }
+        if store.reading.status == "uncertain" { return "timbre_voice_hint_clear" }
+        guard let cents = store.reading.cents, store.reading.frequency != nil else {
+            return audio.levelDbfs <= -60 ? "timbre_voice_hint_closer" : "timbre_voice_hint_clear"
+        }
+        if abs(cents) <= exercise.toleranceCents { return "timbre_voice_hint_inside" }
+        if cents < -100 { return "timbre_voice_hint_higher" }
+        if cents > 100 { return "timbre_voice_hint_lower" }
+        return cents < 0 ? "timbre_voice_hint_little_higher" : "timbre_voice_hint_little_lower"
+    }
+    private var displayedHold: Int {
+        if !hidePreviousResult, !store.voiceRunning, let result = store.voiceResult { return result.longestHoldMs }
+        return store.voiceLiveHoldMs
+    }
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -130,7 +146,7 @@ struct VoiceView: View {
         Panel {
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Target").font(.caption).foregroundStyle(TimbreTheme.secondary)
+                    Text("timbre_bench_label_target_note").font(.caption).foregroundStyle(TimbreTheme.secondary)
                     Text(note(targetMidi)).font(TimbreTheme.number(40))
                 }
                 Spacer()
@@ -140,6 +156,19 @@ struct VoiceView: View {
                     liveReading
                 } else { Text("Ready").foregroundStyle(TimbreTheme.secondary) }
             }
+            Text(text(guidanceKey, "Follow the target note."))
+                .font(.subheadline).foregroundStyle(guidanceKey == "timbre_voice_hint_inside" ? TimbreTheme.success : TimbreTheme.secondary)
+                .accessibilityIdentifier("voice.guidance")
+            if store.voiceRunning && store.countdown == 0 {
+                HStack(spacing: 12) {
+                    Image(systemName: "mic").accessibilityHidden(true)
+                    ProgressView(value: audio.levelDbfs.isFinite ? min(1, max(0, (audio.levelDbfs + 72) / 60)) : 0)
+                        .tint(TimbreTheme.success)
+                        .accessibilityLabel(text("timbre_voice_mic_level", "Microphone input level"))
+                        .accessibilityValue(audio.levelDbfs.isFinite ? String(format: "%.0f dB", audio.levelDbfs) : text("timbre_voice_not_measured", "Not measured"))
+                        .accessibilityIdentifier("voice.signalMeter")
+                }.foregroundStyle(TimbreTheme.secondary)
+            }
             VoicePitchTrace(values: hidePreviousResult ? [] : store.trace, tolerance: exercise.toleranceCents)
                 .frame(height: 170)
                 .accessibilityLabel(store.trace.contains(where: { $0 != nil }) ? "Measured pitch relative to each target. Shaded band is plus or minus \(Int(exercise.toleranceCents)) cents. Gaps indicate no measured pitch." : text("timbre_voice_graph_placeholder", "Your pitch appears here"))
@@ -148,14 +177,21 @@ struct VoiceView: View {
                     .tint(TimbreTheme.brass).accessibilityLabel("Exercise time")
                 Text("\(Double(store.voiceElapsed) / 1000, specifier: "%.1f") / \(Double(exercise.durationMs) / 1000, specifier: "%.1f") s")
                     .font(.caption.monospaced()).foregroundStyle(TimbreTheme.secondary)
-                Text("\(text("timbre_voice_continuous_hold", "Continuous in-tune hold")): \(Double(store.voiceLiveHoldMs) / 1000, specifier: "%.1f") s")
-                    .font(.footnote).foregroundStyle(TimbreTheme.success)
+            }
+            if exercise.notes.count == 1 {
+                VStack(alignment: .leading, spacing: 7) {
+                    Text(text("timbre_voice_continuous_hold", "Continuous in-tune hold")).font(.footnote).foregroundStyle(TimbreTheme.secondary)
+                    Text(String(format: text("timbre_voice_hold_progress", "%1$@ / %2$@ s"), String(format: "%.1f", Double(displayedHold) / 1000), String(format: "%.1f", Double(exercise.holdMs) / 1000))).font(.footnote.monospaced())
+                    ProgressView(value: Double(min(displayedHold, exercise.holdMs)), total: Double(exercise.holdMs))
+                        .tint(TimbreTheme.success).accessibilityLabel(text("timbre_voice_continuous_hold", "Continuous in-tune hold"))
+                        .accessibilityIdentifier("voice.holdProgress")
+                }
             }
             if store.voiceRunning {
                 Button("timbre_voice_stop_practice", role: .destructive) { store.cancelVoice() }.buttonStyle(.bordered).frame(maxWidth: .infinity)
             } else {
                 Button(store.voiceResult == nil ? text("timbre_voice_start_practice", "Start practice") : text("timbre_voice_try_again", "Try again")) { hidePreviousResult = false; store.startVoice() }
-                    .buttonStyle(PrimaryButton()).accessibilityIdentifier("voice.start")
+                    .buttonStyle(PrimaryButton()).disabled(audio.tonePlaying).accessibilityIdentifier("voice.start")
             }
         }
     }
@@ -182,12 +218,18 @@ struct VoiceView: View {
                     Text("A description of notes reached in this walk, not a clinical voice classification.").font(.footnote).foregroundStyle(TimbreTheme.secondary)
                 } else { Text(text("timbre_voice_range_no_result", "No reliable range yet. Try two comfortable notes.")) }
             }
-            Text(result.explanation).foregroundStyle(TimbreTheme.secondary)
+            if result.accuracy != nil { Text(localizedVoiceExplanation(result, level: exercise.level)).foregroundStyle(TimbreTheme.secondary) }
+            else {
+                Text(text(exercise.level == 7 ? "timbre_voice_score_range" : result.readingCount == 0 ? "timbre_voice_no_pitch_captured" : exercise.level == 1 ? "timbre_voice_warmup_no_score" : exercise.notes.count > 1 ? "timbre_voice_pattern_incomplete" : "timbre_voice_hold_longer", result.explanation))
+                    .foregroundStyle(TimbreTheme.secondary)
+            }
             if result.longestHoldMs > 0 {
                 Text("Measured hold: \(Double(result.longestHoldMs) / 1000, specifier: "%.1f") s").font(.footnote.monospaced())
             }
-            if let percent = result.inBandPercent { Text("\(percent)% of readings inside the target band").font(.footnote) }
-            if let percent = result.contourPercent { Text("Melody direction matched \(percent)% of the time").font(.footnote) }
+            if let percent = result.inBandPercent { Text(String(format: text("timbre_voice_score_readings_in_band", "%1$d%% of pitch readings were inside the ±%2$d¢ band."), percent, Int(result.toleranceCents))).font(.footnote) }
+            if let percent = result.contourPercent {
+                Text(percent == 100 ? text("timbre_voice_score_contour_full", "The melody went the same direction as the target throughout.") : String(format: text("timbre_voice_score_contour_partial", "The melody went the same direction as the target %1$d%% of the time."), percent)).font(.footnote)
+            }
             if result.demonstrated { Label("Skill demonstrated", systemImage: "checkmark.circle.fill").foregroundStyle(TimbreTheme.success) }
             if exercise.level < 8 {
                 Button(text("timbre_voice_next_exercise", "Next exercise →")) { store.voiceLevel = exercise.level + 1 }
