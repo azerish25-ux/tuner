@@ -26,7 +26,17 @@ final class Bootstrap: ObservableObject {
     @Published var error: String?
     init() { load() }
     func load() {
-        do { store = try AppStore(); error = nil }
+        do {
+            var directory: URL?
+            #if DEBUG
+            // Separate real application state per UI test; release builds never read this value.
+            if let identifier = ProcessInfo.processInfo.environment["TIMBRE_TEST_STORAGE_ID"], UUID(uuidString: identifier) != nil {
+                directory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+                    .appendingPathComponent("TimbreUITests", isDirectory: true).appendingPathComponent(identifier, isDirectory: true)
+            }
+            #endif
+            store = try AppStore(directory: directory); error = nil
+        }
         catch { self.error = error.localizedDescription }
     }
 }

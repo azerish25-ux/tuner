@@ -1,9 +1,11 @@
 import Foundation
 import UIKit
 import Combine
+import TimbreCore
+
+#if TIMBRE_ADS_ENABLED
 import GoogleMobileAds
 import UserMessagingPlatform
-import TimbreCore
 
 /// UMP owns consent evidence; StoreKit owns entitlement evidence. Neither is inferred from local flags.
 @MainActor
@@ -140,4 +142,24 @@ final class AdvertisingService: NSObject, ObservableObject, FullScreenContentDel
         #endif
     }
 }
+#else
+/// Builds without configured iOS AdMob identifiers do not link or initialize advertising SDKs.
+/// Preserves the app-facing contract while suppressing all advertising and consent SDK work.
+@MainActor
+final class AdvertisingService: ObservableObject {
+    @Published private(set) var privacyOptionsRequired = false
+    @Published private(set) var configured = false
+    @Published private(set) var notice: String? = nil
+    private let policy = PostTuningAdPolicy()
 
+    func prepare(entitlement: AdEntitlement) async {}
+    func updateEntitlement(_ value: AdEntitlement) {}
+    func completedTuning(sessionId: String, durationMs: Int, stableReadingCount: Int, entitlement: AdEntitlement) {
+        // Still consume explicit completion IDs; a build without SDKs never queues deferred ads.
+        _ = policy.claimCompletion(sessionId: sessionId, durationMs: durationMs, stableReadingCount: stableReadingCount,
+            elapsedRealtimeMs: Int(ProcessInfo.processInfo.systemUptime * 1000), entitlement: entitlement,
+            canRequestAds: false, adReady: false, foreground: UIApplication.shared.applicationState == .active)
+    }
+    func presentPrivacyOptions() async {}
+}
+#endif

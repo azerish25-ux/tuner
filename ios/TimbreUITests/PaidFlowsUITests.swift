@@ -15,6 +15,7 @@ final class PaidFlowsUITests: XCTestCase {
         session.clearTransactions()
         session.disableDialogs = true
         app = XCUIApplication()
+        app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         addUIInterruptionMonitor(withDescription: "Microphone permission") { alert in
             let allow = alert.buttons["Allow"]

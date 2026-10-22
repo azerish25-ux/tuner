@@ -75,7 +75,7 @@ final class AppStore: ObservableObject {
     var targetName: String { referenceMode ? PitchMath.noteName(midi: activeMidi + settings.transposition - settings.capo, notation: settings.notation) : TargetLabelFormatter.splitCue(courseLabel(activeCourse)).main }
     func courseLabel(_ course: Course) -> String { TargetLabelFormatter.display(label: course.label, midi: course.targetMidi, notation: settings.notation, transposition: settings.transposition, capo: settings.capo) }
     var photo: InstrumentPhoto? {
-        catalog.photos.first { $0.instrumentId == instrument.id && $0.asset == settings.selectedPhotoAsset } ?? catalog.photo(instrumentId: instrument.id)
+        catalog.photo(instrumentId: instrument.id, tuningId: tuning.id, preferredAsset: settings.selectedPhotoAsset)
     }
     var voiceExercise: VoiceExercise { VoiceExercise(level: voiceLevel, rootMidi: voiceRoot) }
     var voiceTargetMidi: Int { voiceExercise.note(at: voiceElapsed) }
@@ -243,7 +243,13 @@ final class AppStore: ObservableObject {
     }
     func cancelVoice() { voiceTask?.cancel(); voiceTask = nil; attempt = nil; voiceRunning = false; countdown = 0; voiceLiveHoldMs = 0; audio.stop(); tracker.reset(); voiceStability.reset() }
     func stopActivity() { cancelVoice(); audio.stop(); tracker.reset(); reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal") }
-    func clearHistory() { do { try persistence.clearHistory(); records = persistence.records } catch { self.error = "History could not be cleared: \(error.localizedDescription)" } }
+    func clearHistory() {
+        do {
+            try persistence.clearHistory(); records = persistence.records
+            pendingVoiceRecord = nil; voiceSaveFailed = false; voiceResult = nil
+            stopActivity(); resetTuningMeasurements()
+        } catch { self.error = "History could not be cleared: \(error.localizedDescription)" }
+    }
     func toggleMetronome() {
         guard commerce.isPlus else { showPlus = true; return }
         if audio.metronomeRunning { audio.stopMetronome() } else { updateMetronome() }

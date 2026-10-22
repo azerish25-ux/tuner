@@ -36,7 +36,7 @@ struct LibraryView: View {
                 if query.isEmpty && familyID == nil {
                     Button { store.selectReference() } label: {
                         HStack(spacing: 14) {
-                            Image(systemName: "waveform").font(.title2).foregroundStyle(TimbreTheme.brass)
+                            Image(systemName: "waveform").font(.title2).foregroundStyle(TimbreTheme.action)
                             VStack(alignment: .leading, spacing: 3) {
                                 Text(store.catalog.referenceMode?.name.localized ?? "Chromatic reference").font(.headline)
                                 Text("timbre_library_adjust_reference").font(.caption).foregroundStyle(TimbreTheme.secondary)
@@ -98,7 +98,7 @@ struct LibraryView: View {
                     Image(photo.thumbnail).resizable().scaledToFit().frame(width: 95, height: 105).accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 7) {
                         Text(photoName(photo)).font(.headline).multilineTextAlignment(.leading)
-                        Text(instrument.isFree ? "timbre_library_free_to_tune" : "timbre_library_full_unlock").font(.caption).foregroundStyle(instrument.isFree ? TimbreTheme.success : TimbreTheme.brass)
+                        Text(instrument.isFree ? "timbre_library_free_to_tune" : "timbre_library_full_unlock").font(.caption).foregroundStyle(instrument.isFree ? TimbreTheme.success : TimbreTheme.action)
                         if instrument.isAdjustable { Text("Adjustable reference").font(.caption2).foregroundStyle(TimbreTheme.warning) }
                     }
                     Spacer(minLength: 0)

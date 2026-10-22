@@ -189,7 +189,7 @@ private struct CentsDial: View {
                 let tip = CGPoint(x: center.x + dx * (radius - 20.0), y: center.y + dy * (radius - 20.0))
                 let base = CGPoint(x: center.x + dx * (radius - 37.0), y: center.y + dy * (radius - 37.0))
                 var needle = Path(); needle.move(to: base); needle.addLine(to: tip)
-                context.stroke(needle, with: .color(inTune ? TimbreTheme.success : TimbreTheme.brass), style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                context.stroke(needle, with: .color(inTune ? TimbreTheme.success : TimbreTheme.action), style: StrokeStyle(lineWidth: 4, lineCap: .round))
             }
         }.overlay(alignment: .bottom) {
             HStack { Text("−50"); Spacer(); Text("0").offset(y: -105); Spacer(); Text("+50") }.font(.caption2.monospacedDigit()).foregroundStyle(TimbreTheme.secondary).padding(.horizontal, 5)

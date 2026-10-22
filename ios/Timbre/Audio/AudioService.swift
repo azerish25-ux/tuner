@@ -11,6 +11,8 @@ final class AudioService: ObservableObject {
     @Published private(set) var confidence = 0.0
     @Published private(set) var levelDbfs = -120.0
     @Published private(set) var error: String?
+    @Published private(set) var permissionDenied = false
+    func clearError() { error = nil }
     @Published private(set) var metronomeRunning = false
     @Published private(set) var tonePlaying = false
     var onReading: ((Double?, Double, Double) -> Void)?
@@ -70,6 +72,7 @@ final class AudioService: ObservableObject {
         let token = generation
         let allowed = await AVAudioApplication.requestRecordPermission()
         guard generation == token, !Task.isCancelled, UIApplication.shared.applicationState == .active else { return }
+        permissionDenied = !allowed
         guard allowed else { error = "Microphone access is off. Enable it in Settings → Timbre → Microphone."; return }
         self.minimum = minimum.isFinite && minimum > 0 ? minimum : 25
         self.maximum = maximum.isFinite && maximum > self.minimum ? maximum : max(4500, self.minimum * 2)

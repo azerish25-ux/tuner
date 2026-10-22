@@ -36,9 +36,9 @@ struct SettingsView: View {
         .scrollContentBackground(.hidden)
         .scrollDismissesKeyboard(.interactively)
         .background(TimbreTheme.canvas)
-        .tint(TimbreTheme.brass)
+        .tint(TimbreTheme.action)
         .navigationTitle(text("timbre_settings_title", "Settings"))
-        .onAppear { referenceInput = String(store.settings.referencePitchHz) }
+        .onAppear { store.stopActivity(); referenceInput = String(store.settings.referencePitchHz) }
         .onChange(of: store.settings.referencePitchHz) { _, value in referenceInput = String(value) }
         .confirmationDialog("Clear practice history?", isPresented: $confirmClear, titleVisibility: .visible) {
             Button("Clear history", role: .destructive) { store.clearHistory() }

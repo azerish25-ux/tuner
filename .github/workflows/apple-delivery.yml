@@ -90,7 +90,11 @@ jobs:
           set -euo pipefail
           brew install xcodegen
           cd ios
-          xcodegen generate
+          if [ -n "$TIMBRE_ADMOB_APP_ID" ]; then
+            xcodegen generate --spec project-ads.yml
+          else
+            xcodegen generate
+          fi
       - name: Install temporary distribution signing assets
         shell: bash
         run: |

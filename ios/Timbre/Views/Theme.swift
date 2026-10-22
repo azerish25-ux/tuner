@@ -2,6 +2,7 @@ import SwiftUI
 
 enum TimbreTheme {
     static let brass = Color(hex: 0xDCC28B)
+    static let action = adaptive(0xDCC28B, 0x8A6A16)
     static let ink = Color(hex: 0x1A1206)
     static let canvas = adaptive(0x101419, 0xF4F6F8)
     static let surface = adaptive(0x1B2227, 0xFFFFFF)

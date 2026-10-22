@@ -10,9 +10,9 @@ struct PlusView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     HStack {
-                        Text("TIMBRE PLUS").font(.caption.weight(.semibold)).tracking(3).foregroundStyle(TimbreTheme.brass)
+                        Text("TIMBRE PLUS").font(.caption.weight(.semibold)).tracking(3).foregroundStyle(TimbreTheme.action)
                         Spacer()
-                        Image(systemName: "sparkle").foregroundStyle(TimbreTheme.brass)
+                        Image(systemName: "sparkle").foregroundStyle(TimbreTheme.action)
                     }
                     Text(commerce.isPlus ? "timbre_owned_heading" : "timbre_paywall_full_access_heading").font(TimbreTheme.title(36))
                     Text("One purchase opens every instrument, alternate tuning, singing practice and Studio.")
@@ -69,7 +69,7 @@ struct PlusView: View {
     }
     private func benefit(_ icon: String, title: LocalizedStringKey, detail: LocalizedStringKey) -> some View {
         HStack(alignment: .top, spacing: 14) {
-            Image(systemName: icon).font(.title3).foregroundStyle(TimbreTheme.brass).frame(width: 26)
+            Image(systemName: icon).font(.title3).foregroundStyle(TimbreTheme.action).frame(width: 26)
             VStack(alignment: .leading, spacing: 4) {
                 Text(title).font(.headline)
                 Text(detail).font(.subheadline).foregroundStyle(TimbreTheme.secondary)

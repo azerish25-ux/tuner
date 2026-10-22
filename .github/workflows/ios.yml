@@ -1,7 +1,7 @@
 name: iOS
 on:
   push:
-    branches: [main, 'ios/**']
+    branches: [main]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -46,6 +46,11 @@ jobs:
       - name: Archive unsigned iOS app
         run: |
           xcodebuild archive -project ios/Timbre.xcodeproj -scheme Timbre -destination 'generic/platform=iOS' -archivePath ios/build/Timbre.xcarchive CODE_SIGNING_ALLOWED=NO
+      - name: Compile optional advertising integration
+        working-directory: ios
+        run: |
+          xcodegen generate --spec project-ads.yml
+          xcodebuild build -project Timbre.xcodeproj -scheme Timbre -configuration Debug -destination 'generic/platform=iOS Simulator' TIMBRE_ADMOB_APP_ID='ca-app-pub-3940256099942544~1458002511' CODE_SIGNING_ALLOWED=NO
       - uses: actions/upload-artifact@v4
         if: always()
         with:

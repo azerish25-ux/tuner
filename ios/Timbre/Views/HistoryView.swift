@@ -37,11 +37,11 @@ struct HistoryView: View {
         .background(TimbreTheme.canvas)
         .foregroundStyle(TimbreTheme.primary)
         .navigationTitle("Practice history")
-        .onAppear { if !selectedInitialInstrument { selectedInstrument = store.instrument.id; selectedInitialInstrument = true } }
+        .onAppear { store.stopActivity(); if !selectedInitialInstrument { selectedInstrument = store.instrument.id; selectedInitialInstrument = true } }
     }
     private var lockedHistory: some View {
         Panel {
-            Image(systemName: "clock.arrow.circlepath").font(.largeTitle).foregroundStyle(TimbreTheme.brass)
+            Image(systemName: "clock.arrow.circlepath").font(.largeTitle).foregroundStyle(TimbreTheme.action)
             Text(NSLocalizedString("timbre_studio_history_locked", value: "Review your sessions and measured progress with full access.", comment: ""))
             Button("Explore Timbre Plus") { store.showPlus = true }.buttonStyle(PrimaryButton()).accessibilityIdentifier("history.unlock")
         }
@@ -86,7 +86,7 @@ struct HistoryView: View {
             Chart(analytics.activity) { day in
                 if let milliseconds = day.durationMs {
                     BarMark(x: .value("Day", day.date, unit: .day), y: .value("Minutes", Double(milliseconds) / 60000))
-                        .foregroundStyle(TimbreTheme.brass)
+                        .foregroundStyle(TimbreTheme.action)
                         .accessibilityLabel(day.date.formatted(date: .abbreviated, time: .omitted))
                         .accessibilityValue("\(day.sessionCount) sessions, \(duration(milliseconds))")
                 }
@@ -127,7 +127,7 @@ struct HistoryView: View {
                         .font(.caption).foregroundStyle(TimbreTheme.secondary)
                 }
                 Spacer()
-                Image(systemName: record.kind == "voice" ? "waveform" : "tuningfork").foregroundStyle(TimbreTheme.brass).accessibilityHidden(true)
+                Image(systemName: record.kind == "voice" ? "waveform" : "tuningfork").foregroundStyle(TimbreTheme.action).accessibilityHidden(true)
             }
             if let milliseconds = record.durationMs { Text(duration(milliseconds)).font(.caption.monospacedDigit()).foregroundStyle(TimbreTheme.secondary) }
             else { Text("Duration unavailable").font(.caption).foregroundStyle(TimbreTheme.secondary) }
