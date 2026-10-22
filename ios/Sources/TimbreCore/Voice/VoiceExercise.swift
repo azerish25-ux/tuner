@@ -141,10 +141,17 @@ public final class VoiceAttempt {
                 errors = readings[1].map { cents(start, $0.1) - interval }
             } else if eligible {
                 errors = readings.indices.flatMap { stage in readings[stage].map { cents(target(stage), $0.1) } }
-                let sung = readings.map { Int((69 + 12 * log2(median($0.map { $0.1 }) / 440)).rounded()) }
-                let matches = (1..<sung.count).filter { index in
-                    (sung[index] - sung[index - 1]).signum() == (exercise.notes[index] - exercise.notes[index - 1]).signum()
-                }.count
+                let sung: [Int] = readings.map { stage in
+                    let frequencies: [Double] = stage.map { $0.1 }
+                    let midi = 69.0 + 12.0 * log2(median(frequencies) / 440.0)
+                    return Int(midi.rounded())
+                }
+                var matches = 0
+                for index in 1..<sung.count {
+                    let sungDirection: Int = (sung[index] - sung[index - 1]).signum()
+                    let targetDirection: Int = (exercise.notes[index] - exercise.notes[index - 1]).signum()
+                    if sungDirection == targetDirection { matches += 1 }
+                }
                 contour = Int((100 * Double(matches) / Double(sung.count - 1)).rounded())
             }
         }
