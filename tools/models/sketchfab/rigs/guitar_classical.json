@@ -162,5 +162,11 @@
   }
  ],
  "pivotTriangles": 2500,
- "stringRatio": 0.5
+ "stringRatio": 0.5,
+ "protectMaterials": [
+  "fret_board_mat",
+  "guitar_neck",
+  "fret_mat"
+ ],
+ "triangles": 105000
 }

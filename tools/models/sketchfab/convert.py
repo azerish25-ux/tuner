@@ -10,7 +10,7 @@ Each rigs/<model>.json names its download folder and how to read it:
    "retouch": [{"material", "rects" (ink to remove) | "multiply" (tint)}] edits base colour images,
    "decimate": [{"re", "ratio", "minVerts"}] thins out needlessly dense parts before rigging,
    "triangles": budget for the shipped model (120000), "pivotTriangles" (4000 per peg or post),
-   "stringRatio" (thin the original strings kept beside the rebuilt ones),
+   "stringRatio" (thin the original strings kept beside the rebuilt ones), "protectMaterials": [never thinned],
    "textureMax" / "normalMax" (2048 px), "jpegQuality" (90), "optimise": false to ship the parts as split,
    "rig": "FRICTION_PEG", "degPerCent": 1.2, "stringKind": "steel" | "bronze" | "nylon" | "gut",
    "nutZ" / "saddleZ": a height or parts whose mean height it is, "stringEnds": "rings" (low-poly strings),
@@ -959,10 +959,10 @@ def slim(obj):
         for node in (slot.material.node_tree.nodes if slot.material and slot.material.use_nodes else []):
             wanted.update(filter(None, [getattr(node, "uv_map", ""), getattr(node, "attribute_name", ""), getattr(node, "layer_name", "")]))
     render_uv = next((uv.name for uv in mesh.uv_layers if uv.active_render), None)
-    for uv in [uv for uv in mesh.uv_layers if uv.name != render_uv and uv.name not in wanted]:
-        mesh.uv_layers.remove(uv)
-    for attr in [a for a in mesh.color_attributes if a.name not in wanted]:
-        mesh.color_attributes.remove(attr)
+    for name in [uv.name for uv in mesh.uv_layers if uv.name != render_uv and uv.name not in wanted]:
+        mesh.uv_layers.remove(mesh.uv_layers[name])  # look each up afresh: removal moves the others
+    for name in [a.name for a in mesh.color_attributes if a.name not in wanted]:
+        mesh.color_attributes.remove(mesh.color_attributes[name])
 
 
 def optimise(root, cfg):
@@ -978,11 +978,14 @@ def optimise(root, cfg):
     rebuilt = [o for o in everything if o.name.startswith("string_")]
     originals = [o for o in everything if o.name in _KEEP]
     moving = []
+    # Instances (one mesh shown several times, like a set of tuners) stay as they are: the USD crate file
+    # stores identical arrays once, so merging them would multiply their size.
+    instances = {o for o in everything if o.data.users > 1}
     for pivot in [o for o in root.children_recursive if o.type == "EMPTY" and o.name.startswith(("peg_", "post_"))]:
-        kids = [o for o in pivot.children if shown(o)]
+        kids = [o for o in pivot.children if shown(o) and o not in instances]
         if kids:
             moving.append(join(kids, f"{pivot.name}_mesh"))
-    fixed = set(moving) | set(rebuilt) | set(originals)
+    fixed = set(moving) | set(rebuilt) | set(originals) | instances
     groups = {}
     for obj in [o for o in root.children_recursive if shown(o) and o not in fixed]:
         # Smooth and faceted parts stay apart: a mesh that mixes them is written with a normal per corner.
@@ -990,8 +993,12 @@ def optimise(root, cfg):
         groups.setdefault((tuple(sorted(s.material.name for s in obj.material_slots if s.material)), domain), []).append(obj)
     still = [join(objs, "part_" + ("_".join(key[0])[:40] or "plain") + (f"_{key[1].lower()}" if key[1] else ""))
              for key, objs in groups.items()]
-    for obj in moving + still + originals:
+    for obj in moving + still + originals + list(instances):
         slim(obj)
+    guarded = {o for o in still if any(s.material and s.material.name in cfg.get("protectMaterials", []) for s in o.material_slots)}
+    fixed |= guarded
+    still = [o for o in still if o not in guarded]
+    print("thinnable:", ", ".join(f"{o.name} {triangles(o)}" for o in sorted(still, key=triangles, reverse=True)[:14]), flush=True)
     for obj in moving:
         if triangles(obj) > cap:
             thin(obj, cap / triangles(obj))
