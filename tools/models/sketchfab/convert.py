@@ -946,32 +946,90 @@ def join(objs, name):
     return objs[0]
 
 
-def thin(obj, ratio):
-    """Collapse-decimate one mesh in place (the error-driven collapse keeps outlines and fine parts).
-    Decimate scrambles imported custom normals (speckles, zebra bands), so the original's normals are
-    transferred back from an untouched copy, projected along each corner's normal so that the two faces
-    of a thin shell (a guitar top, a peg button) each find their own side."""
-    if ratio >= 1:
-        return
-    src = None
-    mod = obj.modifiers.new("thin", "DECIMATE")
-    mod.ratio = ratio
-    if getattr(obj.data, "has_custom_normals", False):
-        src = obj.copy()
-        src.data = obj.data.copy()
-        for coll in obj.users_collection:
-            coll.objects.link(src)
-        move = obj.modifiers.new("normals", "DATA_TRANSFER")
-        move.object = src
-        move.use_loop_data = True
-        move.data_types_loops = {"CUSTOM_NORMAL"}
-        move.loop_mapping = "POLYINTERP_LNORPROJ"
+def _apply(obj):
+    """Bake the object's modifier stack into a new mesh."""
     graph = bpy.context.evaluated_depsgraph_get()
     graph.update()
     mesh = bpy.data.meshes.new_from_object(obj.evaluated_get(graph))
     obj.modifiers.clear()
     obj.data = mesh
+    return mesh
+
+
+def _rim(obj):
+    """Vertex group of the open-boundary vertices. Parts are often split into pieces that meet edge to edge
+    (the sides of a guitar, fretboard segments); decimating each boundary on its own opens cracks."""
+    mesh = obj.data
+    edge_of = np.empty(len(mesh.loops), dtype=np.int64)
+    mesh.loops.foreach_get("edge_index", edge_of)
+    used = np.bincount(edge_of, minlength=len(mesh.edges))
+    ends = np.empty(len(mesh.edges) * 2, dtype=np.int64)
+    mesh.edges.foreach_get("vertices", ends)
+    rim = np.unique(ends.reshape(-1, 2)[used == 1])
+    if not len(rim):
+        return None
+    group = obj.vertex_groups.new(name="rim")
+    group.add(rim.tolist(), 1.0, "REPLACE")
+    return group.name
+
+
+def _guard_normals(mesh):
+    """Corners whose normal faces away from their own face (a transfer that hit the far side of a thin
+    shell) fall back to the mesh's own smooth normal."""
+    corners = getattr(mesh, "corner_normals", None)
+    if corners is None or not len(mesh.loops):
+        return 0
+    normal = np.empty(len(mesh.loops) * 3, dtype=np.float32)
+    corners.foreach_get("vector", normal)
+    normal = normal.reshape(-1, 3)
+    face = np.empty(len(mesh.polygons) * 3, dtype=np.float32)
+    mesh.polygons.foreach_get("normal", face)
+    totals = np.empty(len(mesh.polygons), dtype=np.int64)
+    mesh.polygons.foreach_get("loop_total", totals)
+    face_of = np.repeat(np.arange(len(mesh.polygons)), totals)
+    bad = (normal * face.reshape(-1, 3)[face_of]).sum(1) < 0.0
+    if bad.any():
+        normal[bad] = 0.0  # zero: the mesh's own normal
+        mesh.normals_split_custom_set([tuple(v) for v in normal])
+    return int(bad.sum())
+
+
+def thin(obj, ratio):
+    """Collapse-decimate one mesh in place (the error-driven collapse keeps outlines and fine parts), with
+    open boundaries held so pieces that meet edge to edge stay closed.
+    Decimate scrambles imported custom normals (speckles, zebra bands), so they are reset to the thinned
+    mesh's own normals and then transferred back from an untouched copy, projected along each corner's
+    normal so the two faces of a thin shell (a guitar top, a peg button) each find their own side."""
+    if ratio >= 1:
+        return
+    custom = getattr(obj.data, "has_custom_normals", False)
+    src = None
+    if custom:
+        src = obj.copy()
+        src.data = obj.data.copy()
+        for coll in obj.users_collection:
+            coll.objects.link(src)
+    obj.data = obj.data.copy() if obj.data.users > 1 else obj.data
+    rim = _rim(obj)
+    mod = obj.modifiers.new("thin", "DECIMATE")
+    mod.ratio = ratio
+    if rim:
+        mod.vertex_group = rim  # the group marks what may collapse; inverted, it holds the rim instead
+        mod.invert_vertex_group = True
+        mod.vertex_group_factor = 1000.0
+    mesh = _apply(obj)
+    obj.vertex_groups.clear()
     if src:
+        mesh.normals_split_custom_set([(0.0, 0.0, 0.0)] * len(mesh.loops))
+        move = obj.modifiers.new("normals", "DATA_TRANSFER")
+        move.object = src
+        move.use_loop_data = True
+        move.data_types_loops = {"CUSTOM_NORMAL"}
+        move.loop_mapping = "POLYINTERP_LNORPROJ"
+        mesh = _apply(obj)
+        flipped = _guard_normals(mesh)
+        if flipped:
+            print(f"   {obj.name}: {flipped} transferred normals faced away, reset", flush=True)
         data = src.data
         bpy.data.objects.remove(src)
         bpy.data.meshes.remove(data)
