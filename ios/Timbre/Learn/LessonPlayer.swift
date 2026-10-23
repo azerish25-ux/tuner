@@ -12,6 +12,7 @@ struct LessonPlayer: View {
     @State private var result: LessonResult?
     @State private var improved = false
     @State private var confirmQuit = false
+    @State private var tuneChecked = false
 
     init(course: LearnCourse, lesson: Lesson, onNext: ((Lesson) -> Void)? = nil) {
         self.course = course
@@ -33,7 +34,10 @@ struct LessonPlayer: View {
             } else {
                 VStack(spacing: 0) {
                     topBar
-                    if let step = run.step {
+                    if let step = run.step, step.usesMicrophone, !tuneChecked, TuneCheckStep.needed(for: course) {
+                        TuneCheckStep(course: course, accent: accent) { withAnimation { tuneChecked = true } }
+                            .transition(.opacity)
+                    } else if let step = run.step {
                         StepView(step: step, course: course, accent: accent) { score in advance(score) }
                             .id(run.index)
                             .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity), removal: .move(edge: .leading).combined(with: .opacity)))

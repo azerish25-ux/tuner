@@ -37,6 +37,7 @@ struct PaywallView: View {
                         .accessibilityAddTraits(.isHeader)
                     benefits
                     plans.padding(.top, 8)
+                    if selectedID == TimbreProduct.annual, commerce.trialLabel != nil, let annual = commerce.annual { trialTimeline(annual) }
                     cta
                     finePrint
                 }
@@ -159,6 +160,31 @@ struct PaywallView: View {
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("paywall.plan.\(product.id)")
+    }
+
+    /// No surprises: what happens on which day of the free trial.
+    private func trialTimeline(_ annual: Product) -> some View {
+        let days = trialDays(annual)
+        let items: [(String, Text, Text)] = [
+            ("lock.open.fill", Text("Today"), Text("Everything unlocked")),
+            ("bell.fill", Text("Day \(max(1, days - 2))"), Text("We remind you")),
+            ("creditcard.fill", Text("Day \(days)"), Text("\(annual.displayPrice)/year")),
+        ]
+        return HStack(alignment: .top, spacing: 0) {
+            ForEach(Array(items.enumerated()), id: \.offset) { index, item in
+                if index > 0 { Rectangle().fill(Palette.mint.opacity(0.3)).frame(width: 18, height: 2).padding(.top, 14) }
+                VStack(spacing: 6) {
+                    Image(systemName: item.0).font(.system(size: 13, weight: .bold)).foregroundStyle(index == 0 ? Palette.onAccent : Palette.mint)
+                        .frame(width: 30, height: 30)
+                        .background(Circle().fill(index == 0 ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(Palette.mint.opacity(0.14))))
+                    item.1.font(Typeface.label(13)).foregroundStyle(Palette.ink)
+                    item.2.font(.caption).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .accessibilityElement(children: .combine)
+        .padding(.vertical, 4)
     }
 
     private func trialDays(_ product: Product) -> Int {

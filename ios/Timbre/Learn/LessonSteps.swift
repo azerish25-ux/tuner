@@ -406,3 +406,122 @@ struct RhythmStep: View {
         SoundFX.shared.play(score >= 0.7 ? .correct : .wrong)
     }
 }
+
+// MARK: - Tune check before playing
+
+/// Out-of-tune strings are the main reason a listening app marks right notes wrong, so the first
+/// playing step of the day starts with a quick check of every open string (skippable).
+struct TuneCheckStep: View {
+    let course: LearnCourse
+    let accent: Color
+    let done: () -> Void
+    @EnvironmentObject private var store: AppStore
+    @State private var index = 0
+    @State private var cents: Double?
+    @State private var holdStart: CFTimeInterval?
+    @State private var burst = 0
+
+    private var strings: [Int] { ChordStep.openStrings(course).enumerated().filter { !(course.fretKind == "banjo" && $0.offset == 0) }.map(\.element) }
+
+    static func needed(for course: LearnCourse) -> Bool {
+        guard let instrument = course.instrument, course.fretKind != nil else { return false }
+        return UserDefaults.standard.string(forKey: "tunecheck.\(instrument)") != Quests.dayKey(Date())
+    }
+
+    var body: some View {
+        VStack(spacing: 18) {
+            VStack(spacing: 6) {
+                Text("Quick tune check").font(Typeface.display(28)).foregroundStyle(Palette.ink)
+                Text("Pluck each open string. In-tune strings help Timbre hear you right.").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                    .multilineTextAlignment(.center).padding(.horizontal, 30)
+            }
+            .padding(.top, 14)
+            HStack(spacing: 8) {
+                ForEach(Array(strings.enumerated()), id: \.offset) { i, midi in
+                    Text(NoteName.pitchClass(midi)).font(Typeface.label(15))
+                        .foregroundStyle(i < index ? Palette.onAccent : i == index ? Palette.ink : Palette.inkFaint)
+                        .frame(width: 44, height: 44)
+                        .background(Circle().fill(i < index ? AnyShapeStyle(accent) : AnyShapeStyle(Palette.stageRaised)))
+                        .overlay(Circle().strokeBorder(i == index ? accent : .clear, lineWidth: 2))
+                }
+            }
+            .animation(Motion.pluck, value: index)
+            Spacer(minLength: 0)
+            ZStack {
+                VStack(spacing: 14) {
+                    Text(index < strings.count ? NoteName.name(strings[index]) : "✓").font(Typeface.note(76)).foregroundStyle(Palette.ink)
+                    centsMeter
+                    Text(hint).font(.headline).foregroundStyle(meterColor)
+                }
+                SparkBurst(trigger: burst, color: accent)
+            }
+            Spacer(minLength: 0)
+            MicrophoneHint()
+            Button("My strings are tuned — skip") { finish() }
+                .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft)
+                .padding(.bottom, 18)
+                .accessibilityIdentifier("lesson.tunecheck.skip")
+        }
+        .onAppear { listen() }
+        .onDisappear { store.stopLessonListening() }
+    }
+
+    private var meterColor: Color {
+        guard let cents else { return Palette.inkSoft }
+        return abs(cents) <= 8 ? accent : Palette.amber
+    }
+
+    private var hint: LocalizedStringKey {
+        guard let cents else { return "Pluck the string" }
+        if abs(cents) <= 8 { return "In tune — hold it" }
+        return cents < 0 ? "Tune up a little" : "Tune down a little"
+    }
+
+    private var centsMeter: some View {
+        GeometryReader { geometry in
+            let w = geometry.size.width
+            ZStack(alignment: .leading) {
+                Capsule().fill(.white.opacity(0.08)).frame(height: 8)
+                Capsule().fill(accent.opacity(0.35)).frame(width: w * 16 / 100, height: 8).offset(x: w / 2 - w * 8 / 100)
+                if let cents {
+                    Capsule().fill(meterColor).frame(width: 6, height: 30)
+                        .offset(x: w / 2 + w * CGFloat(max(-50, min(50, cents))) / 100 - 3)
+                        .shadow(color: meterColor.opacity(0.7), radius: 8)
+                        .animation(.interpolatingSpring(stiffness: 220, damping: 22), value: cents)
+                }
+            }
+            .frame(height: 30)
+        }
+        .frame(height: 30)
+        .padding(.horizontal, 40)
+        .accessibilityHidden(true)
+    }
+
+    private func listen() {
+        guard index < strings.count else { return finish() }
+        store.gameTargetHz = frequency(strings[index], store)
+        store.startLessonListening { hz, _ in
+            guard index < strings.count, let hz else { cents = nil; holdStart = nil; return }
+            let target = frequency(strings[index], store)
+            let off = PitchMath.cents(target: target, measured: hz)
+            guard abs(off) < 300 else { cents = nil; return }
+            cents = off
+            let now = CACurrentMediaTime()
+            if abs(off) <= 8 {
+                if holdStart == nil { holdStart = now }
+                if now - (holdStart ?? now) >= 0.5 {
+                    holdStart = nil; cents = nil
+                    SoundFX.shared.play(.hit); Haptics.shared.lock(); burst += 1
+                    index += 1
+                    if index >= strings.count { finish() } else { store.gameTargetHz = frequency(strings[index], store) }
+                }
+            } else { holdStart = nil }
+        }
+    }
+
+    private func finish() {
+        store.stopLessonListening()
+        if let instrument = course.instrument { UserDefaults.standard.set(Quests.dayKey(Date()), forKey: "tunecheck.\(instrument)") }
+        done()
+    }
+}

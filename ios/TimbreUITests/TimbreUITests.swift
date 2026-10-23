@@ -164,7 +164,8 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
         tab("Learn"); settle(2.5); shot("50-learn")
         element("learn.continue").tap(); settle(1.5); shot("51-lesson-explain")
-        element("lesson.continue").tap(); settle(4); shot("52-lesson-chord")
+        element("lesson.continue").tap(); settle(2.5); shot("52-lesson-tunecheck")
+        settle(8); shot("52b-lesson-chord")
         let next = element("lesson.continue")
         XCTAssertTrue(next.waitForExistence(timeout: 20))
         settle(1.5); shot("53-lesson-strum-explain")
@@ -179,7 +180,10 @@ final class TimbreUITests: XCTestCase {
         let node = element("learn.lesson.gtr-1-2")
         scrollTo(node)
         node.tap(); settle(1.5)
-        element("lesson.continue").tap(); settle(2.5); shot("56-lesson-notes")
+        element("lesson.continue").tap(); settle(1)
+        let skip = element("lesson.tunecheck.skip")
+        if skip.exists { skip.tap(); settle(1) }
+        settle(1.5); shot("56-lesson-notes")
         // Two note steps finish on their own with the demo pitch, then a quiz and a listening question.
         XCTAssertTrue(element("lesson.option.0").waitForExistence(timeout: 25))
         element("lesson.option.0").tap(); settle(1); shot("57-lesson-quiz")
