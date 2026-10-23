@@ -129,6 +129,8 @@ struct TuneView: View {
             }
             TurnHint().padding(.top, 8)
         }
+        // A container element keeps its children's own identifiers (stage.debug, the hint).
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("tune.stage")
     }
 

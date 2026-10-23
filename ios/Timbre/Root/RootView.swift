@@ -22,8 +22,9 @@ struct RootView: View {
         .fullScreenCover(isPresented: Binding(get: { store.settings.onboardingCompleted != true }, set: { _ in })) {
             OnboardingView().environmentObject(store).environmentObject(audio).environmentObject(commerce)
         }
-        // Each presentation hangs off its own anchor so SwiftUI never has two sheets competing on one view.
-        .background { Color.clear.paywallSheet(active: !store.showSettings && !store.showInstrumentPicker) }
+        // The paywall hangs off the tab view itself (UI tests never saw it present from a clear background
+        // anchor); settings keeps its own anchor so two sheets never compete on one view.
+        .paywallSheet(active: !store.showSettings && !store.showInstrumentPicker)
         .background {
             Color.clear.sheet(isPresented: $store.showSettings) {
                 SettingsView().environmentObject(store).environmentObject(commerce).presentationBackground(Palette.stage)
