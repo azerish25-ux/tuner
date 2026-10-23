@@ -71,7 +71,8 @@ public struct EarSession: Sendable {
 
     public mutating func next() -> EarQuestion {
         let root = Int.random(in: 52...67, using: &rng)
-        let f = { (midi: Double) in PitchMath.frequency(midi: midi, reference: self.reference) }
+        let reference = reference
+        let f = { (midi: Double) in PitchMath.frequency(midi: midi, reference: reference) }
         switch drill {
         case .pitchDirection:
             let gap = Self.directionGaps[min(level, Self.directionGaps.count - 1)]

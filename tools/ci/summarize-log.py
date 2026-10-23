@@ -36,7 +36,8 @@ def main() -> None:
             if len(seen) >= 80:
                 break
     tail = lines[-60:]
-    out.write_text("\n".join(["# Matches"] + picked + ["", "# Tail"] + tail) + "\n")
+    errors = list(dict.fromkeys(l.strip() for l in lines if re.search(r"\.swift:\d+:\d+: error:", l)))
+    out.write_text("\n".join(["# Errors"] + errors + ["", "# Matches"] + picked + ["", "# Tail"] + tail) + "\n")
     for key in list(seen)[:10]:
         message = key.replace("%", "%25").replace("\r", "").replace("\n", " ")[:900]
         print(f"::error::{message}")
