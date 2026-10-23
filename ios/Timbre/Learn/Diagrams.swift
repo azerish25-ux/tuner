@@ -26,6 +26,7 @@ struct LessonVisualView: View {
 }
 
 /// A stretch of neck seen from the player: string 1 on top, nut on the left, dots where to press.
+/// Every string is numbered beside the nut, so the orientation never has to be guessed.
 struct FretboardDiagram: View {
     let strings: Int
     var dots: [Fretting] = []
@@ -48,9 +49,23 @@ struct FretboardDiagram: View {
             let beat = pulsing && !reduceMotion ? 0.5 + 0.5 * sin(timeline.date.timeIntervalSinceReferenceDate * 2 * .pi / 1.2) : 0
             Canvas { context, size in draw(&context, size: size, beat: beat) }
         }
-        .frame(height: CGFloat(max(4, strings)) * rowHeight + 10)
+        .frame(height: height)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(accessibility))
+    }
+
+    /// Room above the first string and below the last: the board's edge plus a whole finger dot and its
+    /// halo, so a dot on an outer string is never cut off.
+    private static let pad: CGFloat = 22
+    /// The row under the board for the "5fr" position label.
+    private static let positionRow: CGFloat = 16
+    /// Centre of the string-number column, left of the open-string rings.
+    private static let numberX: CGFloat = 8
+    /// The nut's x: the number column and the open-string rings sit left of it.
+    private static let nutX: CGFloat = 44
+
+    private var height: CGFloat {
+        CGFloat(max(4, strings)) * rowHeight + 10 + 2 * (Self.pad - 14) + (start > 1 ? Self.positionRow : 0)
     }
 
     /// Strings get thicker toward the bass (string 1, the highest, is the thinnest); the lower ones are wound.
@@ -59,7 +74,8 @@ struct FretboardDiagram: View {
     }
 
     private func draw(_ context: inout GraphicsContext, size: CGSize, beat: Double) {
-        let left: CGFloat = 26, right = size.width - 10, top: CGFloat = 14, bottom = size.height - 14
+        let left = Self.nutX, right = size.width - 10, top = Self.pad
+        let bottom = size.height - Self.pad - (start > 1 ? Self.positionRow : 0)
         let fretWidth = (right - left) / CGFloat(frets)
         let gap = strings > 1 ? (bottom - top) / CGFloat(strings - 1) : 0
         let board = Path(roundedRect: CGRect(x: left, y: top - 10, width: right - left, height: bottom - top + 20), cornerRadius: 8)
@@ -71,7 +87,7 @@ struct FretboardDiagram: View {
         if start <= 1 {
             context.fill(Path(CGRect(x: left - 3, y: top - 10, width: 6, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3)))
         } else {
-            context.draw(Text("\(start)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: left + fretWidth / 2, y: bottom + 16))
+            context.draw(Text("\(start)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: left + fretWidth / 2, y: size.height - 13))
         }
         for fret in 1...frets {
             let x = left + CGFloat(fret) * fretWidth
@@ -101,6 +117,7 @@ struct FretboardDiagram: View {
                 // A thin highlight along the top of a wound string.
                 context.fill(Path(CGRect(x: left, y: y - thickness / 2, width: right - left, height: 0.6)), with: .color(.white.opacity(0.28)))
             }
+            drawNumber(&context, string: string, y: y, gap: gap, lit: lit)
         }
         for dot in dots where dot.string >= 1 && dot.string <= strings {
             let y = top + CGFloat(dot.string - 1) * gap
@@ -116,7 +133,8 @@ struct FretboardDiagram: View {
             } else {
                 let x = left + (CGFloat(min(max(1, dot.fret - start + 1), frets)) - 0.5) * fretWidth
                 let r: CGFloat = min(15, gap * 0.48 + 4)
-                let halo = r + 4 + (pulsing ? swell : 0)
+                // Capped by the padding, so the halo of a dot on string 1 stays inside the drawing.
+                let halo = min(Self.pad - 1, r + 4 + (pulsing ? swell : 0))
                 context.fill(Path(ellipseIn: CGRect(x: x - halo, y: y - halo, width: halo * 2, height: halo * 2)), with: .color(accent.opacity(pulsing ? 0.2 + 0.15 * beat : 0.25)))
                 context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))
                 if let finger = dot.finger, finger > 0 {
@@ -126,12 +144,21 @@ struct FretboardDiagram: View {
         }
     }
 
+    /// The string's number in the column left of the nut; the string being played lights with it.
+    private func drawNumber(_ context: inout GraphicsContext, string: Int, y: CGFloat, gap: CGFloat, lit: Bool) {
+        let size = min(11, max(8, gap * 0.62))
+        let label = Text("\(string)").font(.system(size: size, weight: .bold, design: .rounded))
+            .foregroundStyle(lit ? accent : Palette.inkSoft.opacity(0.85))
+        context.draw(label, at: CGPoint(x: Self.numberX, y: y))
+    }
+
     private var accessibility: String {
         dots.map { $0.fret == 0 ? String(localized: "string \($0.string) open") : String(localized: "string \($0.string), fret \($0.fret)") }.joined(separator: "; ")
     }
 }
 
-/// A chord box: strings upright, nut on top, finger numbers in the dots, open and muted marks above.
+/// A chord box: strings upright, nut on top, finger numbers in the dots, open and muted marks above,
+/// a rounded bar where one finger holds several strings, and the string numbers along the bottom.
 struct ChordDiagram: View {
     let chord: ChordSpec
     var accent: Color = Palette.mint
@@ -150,59 +177,120 @@ struct ChordDiagram: View {
         VStack(spacing: 8) {
             if showName { Text(chord.name).font(Typeface.display(28)).foregroundStyle(Palette.ink) }
             TimelineView(.animation(paused: !landing || landed || reduceMotion)) { timeline in
-            let landScale = landScales(at: timeline.date)
-            Canvas { context, size in
-                let count = chord.frets.count
-                let rows = 4
-                let base = chord.baseFret ?? 1
-                // The "5fr" label gets its own column left of the grid instead of sitting on its edge.
-                let labelColumn: CGFloat = (reservesFretLabel || base > 1) ? 20 : 0
-                let top: CGFloat = 24, left: CGFloat = 22 + labelColumn, right = size.width - 22 + labelColumn / 4, bottom = size.height - 6
-                let gap = (right - left) / CGFloat(max(1, count - 1))
-                let rowHeight = (bottom - top) / CGFloat(rows)
-                if base == 1 {
-                    context.fill(Path(roundedRect: CGRect(x: left - 2, y: top - 5, width: right - left + 4, height: 6), cornerRadius: 2), with: .color(Palette.ink))
-                } else {
-                    let clearance = min(gap, rowHeight) * 0.38 + 4
-                    context.draw(Text("\(base)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft),
-                                 at: CGPoint(x: left - clearance, y: top + rowHeight / 2), anchor: .trailing)
-                }
-                for row in 0...rows {
-                    let y = top + CGFloat(row) * rowHeight
-                    context.fill(Path(CGRect(x: left, y: y - 0.75, width: right - left, height: 1.5)), with: .color(Palette.inkSoft.opacity(0.5)))
-                }
-                for i in 0..<count {
-                    let x = left + CGFloat(i) * gap
-                    let lit = ringing.contains(i)
-                    // Lowest string (left) thickest, like the real set.
-                    let thickness = count > 1 ? 1.1 + 2.1 * CGFloat(count - 1 - i) / CGFloat(count - 1) : 1.8
-                    context.fill(Path(CGRect(x: x - thickness / 2, y: top, width: thickness, height: bottom - top)), with: .color(lit ? accent : Palette.inkSoft.opacity(0.75)))
-                    let fret = chord.frets[i]
-                    if fret < 0 {
-                        context.draw(Text("×").font(.system(size: 15, weight: .bold)).foregroundStyle(Palette.inkFaint), at: CGPoint(x: x, y: 10))
-                    } else if fret == 0 {
-                        context.stroke(Path(ellipseIn: CGRect(x: x - 6, y: 4, width: 12, height: 12)), with: .color(lit ? accent : Palette.ink), lineWidth: 1.8)
-                    } else {
-                        let land = landScale(i)
-                        guard land > 0.01 else { continue }
-                        let row = CGFloat(fret - base) + 0.5
-                        let y = top + row * rowHeight - (1 - min(1, land)) * 12
-                        let r = min(gap, rowHeight) * 0.38 * land
-                        let halo = 3 * land
-                        context.fill(Path(ellipseIn: CGRect(x: x - r - halo, y: y - r - halo, width: (r + halo) * 2, height: (r + halo) * 2)), with: .color(accent.opacity(lit ? 0.45 : 0.18)))
-                        context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))
-                        if land > 0.6, let finger = chord.fingers?[safe: i], finger > 0 {
-                            context.draw(Text("\(finger)").font(.system(size: r * 1.05, weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent), at: CGPoint(x: x, y: y))
-                        }
-                    }
-                }
-            }
-            .aspectRatio(CGFloat(chord.frets.count) / 5.2, contentMode: .fit)
+                let landScale = landScales(at: timeline.date)
+                Canvas { context, size in draw(&context, size: size, land: landScale) }
+                    .aspectRatio(CGFloat(chord.frets.count) / 5.4, contentMode: .fit)
             }
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(chord.name) chord"))
         .onAppear { startLanding() }
+    }
+
+    /// One finger laid flat across several strings at one fret (an index-finger barre, or finger 3
+    /// across strings 4, 3 and 2): drawn as one rounded bar instead of a row of separate dots.
+    private struct Barre {
+        let fret: Int
+        /// Lowest and highest string index it spans (lowest string first, as `frets`).
+        let first: Int
+        let last: Int
+        let finger: Int
+    }
+
+    /// Barres in the suggested fingering: the same finger on two or more strings at the same fret, with
+    /// every string between them fretted at or above it (an open, muted or lower string can't sit under a barre).
+    private var barres: [Barre] {
+        guard let fingers = chord.fingers else { return [] }
+        let frets = chord.frets
+        var found: [Barre] = []
+        for finger in Set(fingers.filter { $0 > 0 }).sorted() {
+            let held = frets.indices.filter { fingers[safe: $0] == finger && frets[$0] > 0 }
+            guard held.count >= 2, let first = held.first, let last = held.last else { continue }
+            let fret = frets[first]
+            guard held.allSatisfy({ frets[$0] == fret }), (first...last).allSatisfy({ frets[$0] >= fret }) else { continue }
+            found.append(Barre(fret: fret, first: first, last: last, finger: finger))
+        }
+        return found
+    }
+
+    private func draw(_ context: inout GraphicsContext, size: CGSize, land: (Int) -> CGFloat) {
+        let count = chord.frets.count
+        let rows = 4
+        let base = chord.baseFret ?? 1
+        // The "5fr" label gets its own column left of the grid instead of sitting on its edge.
+        let labelColumn: CGFloat = (reservesFretLabel || base > 1) ? 20 : 0
+        let left: CGFloat = 22 + labelColumn, right = size.width - 22 + labelColumn / 4
+        let gap = (right - left) / CGFloat(max(1, count - 1))
+        // String numbers under the box when there's room (not on the small "next chord" preview).
+        let numbered = gap >= 13
+        let top: CGFloat = 24, bottom = size.height - (numbered ? 20 : 6)
+        let rowHeight = (bottom - top) / CGFloat(rows)
+        let radius = min(gap, rowHeight) * 0.38
+        if base == 1 {
+            context.fill(Path(roundedRect: CGRect(x: left - 2, y: top - 5, width: right - left + 4, height: 6), cornerRadius: 2), with: .color(Palette.ink))
+        } else {
+            context.draw(Text("\(base)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft),
+                         at: CGPoint(x: left - radius - 4, y: top + rowHeight / 2), anchor: .trailing)
+        }
+        for row in 0...rows {
+            let y = top + CGFloat(row) * rowHeight
+            context.fill(Path(CGRect(x: left, y: y - 0.75, width: right - left, height: 1.5)), with: .color(Palette.inkSoft.opacity(0.5)))
+        }
+        let barres = self.barres
+        for i in 0..<count {
+            let x = left + CGFloat(i) * gap
+            let lit = ringing.contains(i)
+            // Lowest string (left) thickest, like the real set.
+            let thickness = count > 1 ? 1.1 + 2.1 * CGFloat(count - 1 - i) / CGFloat(count - 1) : 1.8
+            context.fill(Path(CGRect(x: x - thickness / 2, y: top, width: thickness, height: bottom - top)), with: .color(lit ? accent : Palette.inkSoft.opacity(0.75)))
+            if numbered {
+                // String numbers run from the lowest string (left) down to 1.
+                context.draw(Text("\(count - i)").font(.system(size: 10, weight: .bold, design: .rounded)).foregroundStyle(lit ? accent : Palette.inkFaint),
+                             at: CGPoint(x: x, y: size.height - 8))
+            }
+            let fret = chord.frets[i]
+            if fret < 0 {
+                context.draw(Text("×").font(.system(size: 15, weight: .bold)).foregroundStyle(Palette.inkFaint), at: CGPoint(x: x, y: 10))
+            } else if fret == 0 {
+                context.stroke(Path(ellipseIn: CGRect(x: x - 6, y: 4, width: 12, height: 12)), with: .color(lit ? accent : Palette.ink), lineWidth: 1.8)
+            } else if !barres.contains(where: { $0.fret == fret && $0.first <= i && i <= $0.last }) {
+                let scale = land(i)
+                guard scale > 0.01 else { continue }
+                let y = top + (CGFloat(fret - base) + 0.5) * rowHeight - (1 - min(1, scale)) * 12
+                let r = radius * scale
+                let halo = 3 * scale
+                context.fill(Path(ellipseIn: CGRect(x: x - r - halo, y: y - r - halo, width: (r + halo) * 2, height: (r + halo) * 2)), with: .color(accent.opacity(lit ? 0.45 : 0.18)))
+                context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))
+                if scale > 0.6, let finger = chord.fingers?[safe: i], finger > 0 {
+                    context.draw(Text("\(finger)").font(.system(size: r * 1.05, weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent), at: CGPoint(x: x, y: y))
+                }
+            }
+        }
+        for barre in barres {
+            drawBarre(&context, barre, left: left, gap: gap, top: top, rowHeight: rowHeight, radius: radius, base: base, scale: land(barre.first))
+        }
+    }
+
+    /// A rounded bar across the strings the finger holds, landing with the barre's lowest string.
+    private func drawBarre(_ context: inout GraphicsContext, _ barre: Barre, left: CGFloat, gap: CGFloat, top: CGFloat,
+                           rowHeight: CGFloat, radius: CGFloat, base: Int, scale: CGFloat) {
+        guard scale > 0.01 else { return }
+        let y = top + (CGFloat(barre.fret - base) + 0.5) * rowHeight - (1 - min(1, scale)) * 12
+        let r = radius * scale
+        let halo = 3 * scale
+        let x0 = left + CGFloat(barre.first) * gap, x1 = left + CGFloat(barre.last) * gap
+        let lit = (barre.first...barre.last).contains { ringing.contains($0) }
+        let glow = CGRect(x: x0 - r - halo, y: y - r - halo, width: x1 - x0 + (r + halo) * 2, height: (r + halo) * 2)
+        context.fill(Path(roundedRect: glow, cornerRadius: r + halo), with: .color(accent.opacity(lit ? 0.45 : 0.18)))
+        let bar = CGRect(x: x0 - r, y: y - r, width: x1 - x0 + r * 2, height: r * 2)
+        context.fill(Path(roundedRect: bar, cornerRadius: r), with: .color(accent))
+        // A soft sheen along the top, so it reads as one finger lying flat.
+        context.fill(Path(roundedRect: CGRect(x: x0, y: y - r + 1.5, width: max(0, x1 - x0), height: max(1, r * 0.35)), cornerRadius: r * 0.2),
+                     with: .color(.white.opacity(0.22)))
+        if scale > 0.6 {
+            context.draw(Text("\(barre.finger)").font(.system(size: r * 1.05, weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent),
+                         at: CGPoint(x: (x0 + x1) / 2, y: y))
+        }
     }
 
     /// Scale of each string's finger dot: 0 before it lands, then a damped spring to 1; always 1 when still.
@@ -298,8 +386,9 @@ struct StaffView: View {
 
 enum NoteName {
     static let names = ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "A♭", "A", "B♭", "B"]
-    static func name(_ midi: Int) -> String { "\(names[((midi % 12) + 12) % 12])\(midi / 12 - 1)" }
-    static func pitchClass(_ midi: Int) -> String { names[((midi % 12) + 12) % 12] }
+    static func name(_ midi: Int) -> String { "\(pitchClass(midi))\(midi / 12 - 1)" }
+    /// In the player's note-naming system (Settings › Note names): B♭ is B and B is H in German.
+    static func pitchClass(_ midi: Int) -> String { NoteNames.spell(names[((midi % 12) + 12) % 12], system: NoteNames.active) }
 }
 
 /// Two octaves of keys, highlighted where the lesson points.
@@ -546,6 +635,7 @@ struct RingMotif: View {
                 Canvas { context, size in draw(&context, size: size, t: t, moving: moving) }
                 if let symbol {
                     Image(systemName: symbol).font(.system(size: 30, weight: .semibold)).foregroundStyle(Palette.onAccent)
+                        .contentTransition(.symbolEffect(.replace))
                         .frame(width: 76, height: 76)
                         .background(Circle().fill(accent))
                         .shadow(color: accent.opacity(0.55), radius: 20)

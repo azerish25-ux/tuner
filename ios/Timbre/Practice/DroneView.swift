@@ -64,11 +64,22 @@ struct DroneView: View {
             let t = timeline.date.timeIntervalSinceReferenceDate
             Canvas { context, size in
                 let center = CGPoint(x: size.width / 2, y: size.height / 2)
-                for i in 0..<7 {
-                    let phase = (t * 0.22 + Double(i) / 7).truncatingRemainder(dividingBy: 1)
-                    let r = 30 + phase * min(size.width, size.height) * 0.5
-                    let alpha = audio.droneRunning ? (1 - phase) * 0.55 : (i == 0 ? 0.25 : 0)
-                    context.stroke(Path(ellipseIn: CGRect(x: center.x - r, y: center.y - r, width: r * 2, height: r * 2)), with: .color(Palette.locked.opacity(alpha)), lineWidth: 1.5)
+                // Rings travel from the core to just inside the canvas (half its short side, less the
+                // line), so none is ever cut flat by the frame, however short the hero gets.
+                let inner: CGFloat = 30
+                let outer = max(inner, min(size.width, size.height) / 2 - 2)
+                if audio.droneRunning {
+                    for i in 0..<7 {
+                        let phase = (t * 0.22 + Double(i) / 7).truncatingRemainder(dividingBy: 1)
+                        let r = inner + CGFloat(phase) * (outer - inner)
+                        // Eases in as it leaves the core and out as it reaches the edge.
+                        let alpha = min(1, phase * 6) * (1 - phase) * 0.55
+                        context.stroke(Path(ellipseIn: CGRect(x: center.x - r, y: center.y - r, width: r * 2, height: r * 2)), with: .color(Palette.locked.opacity(alpha)), lineWidth: 1.5)
+                    }
+                } else {
+                    // At rest: one quiet ring, well inside the frame.
+                    let r = inner + 0.78 * (outer - inner)
+                    context.stroke(Path(ellipseIn: CGRect(x: center.x - r, y: center.y - r, width: r * 2, height: r * 2)), with: .color(Palette.locked.opacity(0.25)), lineWidth: 1.5)
                 }
                 let core = 46 + (audio.droneRunning ? 6 * sin(t * 2.1) : 0)
                 context.fill(Path(ellipseIn: CGRect(x: center.x - core, y: center.y - core, width: core * 2, height: core * 2)),

@@ -44,7 +44,20 @@ public struct UserSettings: Codable, Equatable, Sendable {
     public var learn: LearnProgress?
     /// The lock tolerance (`TuningPrecision` raw value); unset means Beginner, the original ±5¢.
     public var tuningPrecision: String?
+    /// True once the player picks a note-naming system in Settings; until then `notation` follows the app language.
+    public var notationChosen: Bool?
     public init() {}
+}
+
+extension UserSettings {
+    /// Until the player picks a note-naming system, it follows the app language: German letters (B natural is H)
+    /// for German, letters otherwise. A system picked in Settings, or one set before this existed other than
+    /// letters (solfège, sargam, numbers), is never changed. `systemLanguage` is the device's language
+    /// (e.g. "de-DE"), used when the app language is "system".
+    public mutating func applyNotationDefault(systemLanguage: String?) {
+        guard notationChosen != true, notation == "english" || notation == "german" else { return }
+        notation = NoteNames.defaultSystem(language: language == "system" ? (systemLanguage ?? "en") : language)
+    }
 }
 
 extension UserSettings {

@@ -57,8 +57,14 @@ struct TuneView: View {
         .onChange(of: store.lockedCourses) { old, new in
             // A string just locked: a soft bell at its own pitch (an octave up when it's low).
             guard let index = new.subtracting(old).first, let course = store.courses.first(where: { $0.index == index }) else { return }
-            store.autoQuietUntil = ProcessInfo.processInfo.systemUptime + 1.2
-            SoundFX.shared.playLock(frequency: store.target(for: course))
+            // The last string: a resolving chord for the whole instrument instead of one more bell.
+            if store.allCoursesLocked {
+                store.autoQuietUntil = ProcessInfo.processInfo.systemUptime + 2.6
+                SoundFX.shared.play(.tuned)
+            } else {
+                store.autoQuietUntil = ProcessInfo.processInfo.systemUptime + 1.2
+                SoundFX.shared.playLock(frequency: store.target(for: course))
+            }
         }
         .sheet(isPresented: $store.showInstrumentPicker) { InstrumentPicker().presentationDetents([.large]).presentationBackground(Palette.stage) }
     }
@@ -149,6 +155,8 @@ struct TuneView: View {
             let _ = motion.step(heard ? reading.cents : nil, locked: reading.inTune, now: timeline.date.timeIntervalSinceReferenceDate,
                                 hertz: reading.frequency, target: store.targetHz)
             let shown = motion.shown
+            // Once locked, the readout's "In tune" badge says it; the line below keeps its height but goes quiet.
+            let badgeSaysIt = reading.inTune && audio.running && !store.live.preserved
             VStack(spacing: 14) {
                 NoteReadout(note: store.targetName, shown: shown, hertz: motion.shownHertz, target: store.targetHz, locked: reading.inTune)
                 meter(locked: reading.inTune, shown: shown)
@@ -157,6 +165,9 @@ struct TuneView: View {
                 Text(statusLine(reading, shown: shown)).font(.footnote.weight(.semibold))
                     .foregroundStyle(statusColor(reading, shown: shown))
                     .monospacedDigit()
+                    .opacity(badgeSaysIt ? 0 : 1)
+                    .animation(Motion.quick, value: badgeSaysIt)
+                    .accessibilityHidden(badgeSaysIt)
                     .accessibilityIdentifier("tune.status")
             }
         }
@@ -175,7 +186,8 @@ struct TuneView: View {
     }
 
     /// The status under the meter reads the readout's own whole cents against the tracker's lock band:
-    /// "Hold it…" inside the band, "Tighten"/"Loosen" outside it, "In tune" once the tracker locks.
+    /// "Hold it…" inside the band, "Tighten"/"Loosen" outside it, "In tune" once the tracker locks
+    /// (then the readout's badge says it, and this line stays blank, holding its height).
     private func statusLine(_ reading: TuningReading, shown: Int?) -> String {
         guard audio.running, !store.live.preserved, reading.cents != nil, let shown else { return store.statusText }
         if reading.inTune { return String(localized: "In tune") }
@@ -192,7 +204,8 @@ struct TuneView: View {
     private var tuningPanel: some View {
         VStack(spacing: 6) {
             readout
-            if !store.referenceMode { questLine }
+            // In Chromatic: a free player's Pro instrument from onboarding, its strings and its stage in Pro.
+            if !store.referenceMode { questLine } else { ChromaticStandInHint() }
             StringRail(motion: motion).opacity(store.referenceMode ? 0 : 1).frame(height: store.referenceMode ? 8 : nil)
         }
         .padding(.bottom, 8)
@@ -201,7 +214,7 @@ struct TuneView: View {
     /// Today's tuning quest: every string of this instrument, with its XP.
     private var questLine: some View {
         let quest = store.quests.first { $0.kind == .tuneAll }
-        let counter = quest.map { Quests.counter(for: $0, progress: store.questProgress($0), lockedStrings: store.lockedCourses.count, strings: store.courses.count) }
+        let counter = quest.map { store.questCounter($0) }
         let done = counter?.done ?? min(store.lockedCourses.count, store.courses.count), total = counter?.total ?? store.courses.count
         return HStack {
             (Text("Daily quest · tune all \(total) ").foregroundStyle(Palette.inkSoft) + Text("\(done) / \(total)").foregroundStyle(Palette.ink).bold())

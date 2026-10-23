@@ -90,13 +90,10 @@ struct NotesStep: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            VStack(spacing: 6) {
-                Text(course.instrument == "voice" ? LocalizedStringKey("Sing this note") : LocalizedStringKey("Play this note")).font(Typeface.label(15)).foregroundStyle(Palette.inkSoft)
-                if let hint { Text(hint.localized).font(.subheadline).foregroundStyle(Palette.inkFaint).multilineTextAlignment(.center).padding(.horizontal, 30) }
-            }
-            .padding(.top, 10)
-            if notes.count > 1 { sequenceChips }
+            header
+            if isSequence { sequenceChips }
             Spacer(minLength: 0)
+            if isSequence { prompt }
             noteRing
             Spacer(minLength: 0)
             targetPicture
@@ -114,6 +111,30 @@ struct NotesStep: View {
         }
         .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(6)); canSkip = true } }
         .onDisappear { store.stopLessonListening(owner: owner) }
+    }
+
+    private var isSequence: Bool { notes.count > 1 }
+
+    /// "Play this note" names the note in the ring: over a single note it heads the step; in a sequence it
+    /// sits right on the ring (the one to play now), and the lesson's hint heads the whole run instead.
+    private var prompt: some View {
+        Text(course.instrument == "voice" ? LocalizedStringKey("Sing this note") : LocalizedStringKey("Play this note"))
+            .font(Typeface.label(15)).foregroundStyle(Palette.inkSoft)
+    }
+
+    private var header: some View {
+        VStack(spacing: 6) {
+            if !isSequence { prompt }
+            if let hint {
+                Text(hint.localized)
+                    .font(isSequence ? Typeface.label(15) : .subheadline)
+                    .foregroundStyle(isSequence ? Palette.ink : Palette.inkFaint)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 30)
+            }
+        }
+        .padding(.top, 10)
     }
 
     private var noteRing: some View {
@@ -636,6 +657,7 @@ struct TuneCheckStep: View {
     @State private var cents: Double?
     @State private var holdStart: CFTimeInterval?
     @State private var burst = 0
+    @State private var ringSide: CGFloat = 220
 
     private var strings: [Int] { ChordStep.openStrings(course).enumerated().filter { !(course.fretKind == "banjo" && $0.offset == 0) }.map(\.element) }
 
@@ -652,33 +674,23 @@ struct TuneCheckStep: View {
     }
 
     var body: some View {
-        VStack(spacing: 18) {
+        VStack(spacing: 14) {
             VStack(spacing: 6) {
                 Text("Quick tune check").font(Typeface.display(28)).foregroundStyle(Palette.ink)
                 Text("Pluck each open string. In-tune strings help Timbre hear you right.").font(.subheadline).foregroundStyle(Palette.inkSoft)
-                    .multilineTextAlignment(.center).padding(.horizontal, 30)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 30)
             }
             .padding(.top, 14)
             stringChips
             Spacer(minLength: 0)
-            ZStack {
-                // Rings ripple while a string is heard, still between plucks.
-                RingMotif(accent: accent, active: cents != nil)
-                    .frame(maxWidth: 260, maxHeight: 260)
-                    .opacity(0.8)
-                VStack(spacing: 14) {
-                    Text(index < strings.count ? NoteName.name(strings[index]) : "✓").font(Typeface.note(76)).foregroundStyle(Palette.ink)
-                    centsMeter
-                    Text(hint).font(.headline).foregroundStyle(meterColor)
-                }
-                SparkBurst(trigger: burst, color: accent)
-            }
-            .layoutPriority(1)
+            listeningCluster
             Spacer(minLength: 0)
             if let number = stringNumber {
                 // The string to pluck, lit on a strip of the neck.
                 FretboardDiagram(strings: course.stringCount, dots: [Fretting(string: number, fret: 0)], frets: 4, accent: accent,
-                                 activeString: number, fretless: course.fretless, rowHeight: 16, pulsing: true)
+                                 activeString: number, fretless: course.fretless, rowHeight: 15, pulsing: true)
                     .padding(.horizontal, 24)
                     .transition(.opacity)
             }
@@ -692,20 +704,60 @@ struct TuneCheckStep: View {
         .onDisappear { store.stopLessonListening(owner: owner) }
     }
 
+    /// The string to tune, top to bottom: its note, the rings (rippling while it's heard, still between
+    /// plucks) around an orb that points the way to turn, then the meter and what to do in words.
+    /// Nothing sits on top of the rings.
+    private var listeningCluster: some View {
+        VStack(spacing: 12) {
+            Text(index < strings.count ? NoteName.name(strings[index]) : "✓").font(Typeface.note(64)).foregroundStyle(Palette.ink)
+                .contentTransition(.numericText())
+                .animation(Motion.quick, value: index)
+            // Up to 220 pt; on short phones the space gives first, and the rings step aside when it's too small for them.
+            Color.clear
+                .aspectRatio(1, contentMode: .fit)
+                .frame(maxWidth: 220, maxHeight: 220)
+                .onGeometryChange(for: CGFloat.self) { min($0.size.width, $0.size.height) } action: { ringSide = $0 }
+                .overlay {
+                    if ringSide >= 110 {
+                        RingMotif(accent: cents == nil ? accent : meterColor, symbol: orbSymbol, active: cents != nil)
+                            .opacity(0.9)
+                    }
+                }
+            centsMeter
+            Text(hint).font(.headline).foregroundStyle(meterColor)
+        }
+        .layoutPriority(1)
+    }
+
+    /// The orb in the rings: which way to turn the peg, a check in tune, a waveform while waiting for a pluck.
+    private var orbSymbol: String {
+        guard let cents else { return "waveform" }
+        if abs(cents) <= 8 { return "checkmark" }
+        return cents < 0 ? "arrow.up" : "arrow.down"
+    }
+
     /// Done strings filled, the current one ringed; the ones still to come in soft ink on a raised chip
-    /// with a hairline (readable on the green wash, well over 3:1).
+    /// with a hairline (readable on the green wash, well over 3:1). A string bursts as it's ticked off.
     private var stringChips: some View {
         HStack(spacing: 8) {
             ForEach(Array(strings.enumerated()), id: \.offset) { i, midi in
                 Text(NoteName.pitchClass(midi)).font(Typeface.label(15))
                     .foregroundStyle(i < index ? Palette.onAccent : i == index ? Palette.ink : Palette.inkSoft)
-                    .frame(width: 44, height: 44)
+                    .frame(width: Self.chip, height: Self.chip)
                     .background(Circle().fill(i < index ? AnyShapeStyle(accent) : AnyShapeStyle(Palette.surface)))
                     .overlay(Circle().strokeBorder(i == index ? accent : i > index ? Color.white.opacity(0.14) : .clear, lineWidth: i == index ? 2 : 1))
             }
         }
         .animation(Motion.pluck, value: index)
+        .overlay(alignment: .leading) {
+            // Centred on the chip just tuned; outside the animation, so it doesn't slide between chips.
+            SparkBurst(trigger: burst, color: accent)
+                .frame(width: 300, height: 300)
+                .offset(x: CGFloat(max(0, index - 1)) * (Self.chip + 8) + Self.chip / 2 - 150)
+        }
     }
+
+    private static let chip: CGFloat = 44
 
     private var meterColor: Color {
         guard let cents else { return Palette.inkSoft }

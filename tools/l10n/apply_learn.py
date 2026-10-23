@@ -28,7 +28,13 @@ def escape(text: str) -> str:
     return text.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n")
 
 
-def problems(source: str, translation: str) -> list:
+# Locales that name notes the German way: B natural is H, B flat is B (so "B♭" loses its flat sign).
+H_LOCALES = {"de"}
+
+
+def problems(source: str, translation: str, locale: str = "") -> list:
+    if locale in H_LOCALES:
+        source = source.replace("B♭", "B")
     found = [sym for sym in "♯♭\n%" if source.count(sym) != translation.count(sym)]
     if Counter(re.findall(r"\d+", source)) != Counter(re.findall(r"\d+", translation)):
         found.append("numbers")
@@ -59,7 +65,7 @@ def main() -> None:
             value = table.get(key)
             if not value:
                 continue
-            issues = problems(english[key], value)
+            issues = problems(english[key], value, locale)
             if issues:
                 bad += 1
                 print(f"{locale} {key}: {issues} — kept English", file=sys.stderr)

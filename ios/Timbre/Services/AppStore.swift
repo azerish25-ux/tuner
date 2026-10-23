@@ -79,8 +79,13 @@ final class AppStore: ObservableObject {
         let storageDirectory = directory ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("Timbre", isDirectory: true)
         persistence = try LocalStore(directory: storageDirectory)
         settings = persistence.settings; records = persistence.records
+        // A free player tuning their Pro instrument in Chromatic comes back to Chromatic, not to the default guitar.
+        referenceMode = Self.standIn(settings: settings, catalog: catalog) != nil
         voiceLevel = settings.selectedVoiceLevel ?? 1
         TimbreLocalization.language = settings.language
+        // Note names follow the app language until the player picks a system (German reads B natural as H).
+        settings.applyNotationDefault(systemLanguage: Locale.preferredLanguages.first)
+        NoteNames.active = settings.notation
         tracker.confidenceThreshold = settings.confidenceThreshold
         applyPrecision()
         Haptics.shared.enabled = settings.hapticsEnabled
@@ -178,10 +183,11 @@ final class AppStore: ObservableObject {
     /// Unlocks achievements whose goals are already met (launch and foreground), announcing them like any other reward.
     func syncAchievements() {
         var state = progress
-        let earned = state.awardAchievements(streakBest: streak.best, customTunings: settings.customTunings?.count ?? 0)
+        let summary = streak
+        let earned = state.awardAchievements(streakBest: summary.best, customTunings: settings.customTunings?.count ?? 0,
+                                             metrics: achievementMetrics(minutes: summary.totalMinutes))
         guard !earned.isEmpty, updateSettings({ $0.progress = state }) else { return }
-        lastReward = ProgressUpdate(achievementsEarned: earned)
-        rewardPulse += 1
+        publishReward(ProgressUpdate(achievementsEarned: earned))
         Haptics.shared.done()
     }
 
@@ -248,6 +254,7 @@ final class AppStore: ObservableObject {
         do {
             try persistence.saveSettings(next); settings = persistence.settings
             TimbreLocalization.language = settings.language
+            NoteNames.active = settings.notation
             Haptics.shared.enabled = settings.hapticsEnabled
             tracker.confidenceThreshold = settings.confidenceThreshold
             applyPrecision()
@@ -269,6 +276,11 @@ final class AppStore: ObservableObject {
     func completeOnboarding(instrument: Instrument?, level: String, goal: String) {
         if let instrument, canTune(instrument) {
             _ = selectInstrument(instrument, photo: catalog.photo(instrumentId: instrument.id)?.asset)
+        } else if let instrument {
+            // A Pro instrument on the free plan: tune it in Chromatic (free), where the tuner names it and its
+            // strings (`chromaticStandIn`), rather than landing silently on the default guitar.
+            selectReference()
+            Analytics.log("chromatic_stand_in", ["instrument": instrument.id])
         }
         // "How long have you been playing?" places the learner: earlier units open, none counted as finished.
         let placed = onboardingProgress(level: level, instrumentId: instrument?.id, goal: goal)
@@ -281,6 +293,17 @@ final class AppStore: ObservableObject {
         // Learn opens on the course for the instrument (or the goal) chosen in onboarding.
         if let course = onboardingCourse(instrumentId: instrument?.id, goal: goal) { UserDefaults.standard.set(course.id, forKey: "learn.course") }
         publishWidgets()
+    }
+
+    /// The Pro instrument a player chose in onboarding without Pro: it leads the recent instruments but was never
+    /// selected. They tune it in Chromatic, and the tuner shows its strings and the way to its stage
+    /// (`ChromaticStandInHint`), which selects it once Pro is active.
+    var chromaticStandIn: Instrument? { Self.standIn(settings: settings, catalog: catalog) }
+
+    private static func standIn(settings: UserSettings, catalog: Catalog) -> Instrument? {
+        guard settings.onboardingCompleted == true, let id = settings.recentInstrumentIds.first, id != settings.selectedInstrumentId,
+              let instrument = catalog.instrument(id: id), !instrument.isFree else { return nil }
+        return instrument
     }
 
     /// The course onboarding's plan leads to: the goal's own course (ear, voice, rhythm), else the instrument's, else theory.
@@ -462,7 +485,11 @@ final class AppStore: ObservableObject {
                 let fresh = lockedCourses.insert(activeCourse.index).inserted
                 let completed = !before && allCoursesLocked
                 if completed { completedFullTune() }
-                if fresh { recordProgress(.stringTuned(instrumentId: instrument.id, all: completed)) }
+                if fresh {
+                    // The course goes into today's saved list too, so the tuning quest keeps its count after this session ends.
+                    recordProgress(.stringTuned(instrumentId: instrument.id, all: completed, course: activeCourse.index,
+                                                courses: courses.map(\.index), precise: settings.precision == .pro))
+                }
             }
         }
         if measuringTuning, let cents = reading.cents, reading.frequency != nil {
@@ -511,7 +538,10 @@ final class AppStore: ObservableObject {
         guard duration >= 10_000 || questions > 0 else { return }
         save(PracticeRecord(instrumentId: "practice.\(kind.rawValue)", kind: kind.rawValue, count: questions, stableCount: min(correct, questions), durationMs: duration))
         markDaily(kind)
-        if kind == .ear { for _ in 0..<min(correct, questions) { recordProgress(.earCorrect, announce: false) } }
+        if kind == .ear {
+            for _ in 0..<min(correct, questions) { recordProgress(.earCorrect, announce: false) }
+            if questions > 0 { recordProgress(.earRound(questions: questions, correct: correct), announce: false) }
+        }
         recordProgress(.practiceMinutes(max(1, duration / 60_000)))
     }
 
@@ -572,25 +602,50 @@ final class AppStore: ObservableObject {
     var progress: ProgressState { settings.progress ?? ProgressState() }
     var level: Level { Progression.level(for: progress.xp) }
     var quests: [Quest] { Quests.daily(for: Date()) }
-    func questProgress(_ quest: Quest) -> Int {
-        progress.questDay == Quests.dayKey(Date()) ? min(quest.target, progress.questProgress[quest.id] ?? 0) : 0
+    func questProgress(_ quest: Quest) -> Int { progress.todayProgress(quest) }
+    /// The one counter every quest display shows (Play hub, tuner quest line): the tuning quest counts this
+    /// instrument's strings locked today, saved with the progress, so a pause or a tab switch never resets it.
+    func questCounter(_ quest: Quest) -> (done: Int, total: Int) {
+        Quests.counter(for: quest, state: progress, instrumentId: referenceMode ? nil : instrument.id,
+                       courses: referenceMode ? [] : courses.map(\.index))
     }
     var stringDrift: [StringDrift] { StringHealth.drift(progress.stringSamples, instrumentId: instrument.id, since: progress.restrung[instrument.id]) }
+
+    /// Badge values derived outside ProgressState: Learn progress (courses, units, songs) and total practice minutes.
+    func achievementMetrics(minutes: Int) -> [String: Int] {
+        var metrics = Achievements.learnMetrics(learn, curriculum: curriculum)
+        metrics["minutes"] = minutes
+        return metrics
+    }
+    var badgeMetrics: [String: Int] { achievementMetrics(minutes: streak.totalMinutes) }
 
     /// Applies an event to the saved progress; announces XP, quests, badges and level-ups.
     @discardableResult
     func recordProgress(_ event: ProgressEvent, announce: Bool = true, toast: Bool = true) -> ProgressUpdate? {
         var state = progress
-        let update = state.record(event, streakBest: streak.best, customTunings: settings.customTunings?.count ?? 0)
+        let summary = streak
+        let update = state.record(event, streakBest: summary.best, customTunings: settings.customTunings?.count ?? 0,
+                                  metrics: achievementMetrics(minutes: summary.totalMinutes))
         guard updateSettings({ $0.progress = state }) else { return nil }
-        if toast, update.levelUp != nil || !update.achievementsEarned.isEmpty { Haptics.shared.done() }
-        if toast, announce || update.levelUp != nil || !update.questsCompleted.isEmpty || !update.achievementsEarned.isEmpty {
-            lastReward = update
-            rewardPulse += 1
+        if toast, update.levelUp != nil || !update.achievementsEarned.isEmpty || update.dailySetCompleted { Haptics.shared.done() }
+        if toast, announce || update.levelUp != nil || !update.questsCompleted.isEmpty || !update.achievementsEarned.isEmpty || update.dailySetCompleted {
+            publishReward(update)
         }
         for quest in update.questsCompleted { Analytics.log("quest_done", ["quest": quest.id]) }
         if let level = update.levelUp { Analytics.log("level_up", ["level": String(level.number)]) }
+        if update.dailySetCompleted { Analytics.log("daily_set_done") }
         return update
+    }
+
+    /// Hands a reward to the toast. Rewards recorded by one action (a finished ear round records several events)
+    /// merge into one announcement, so a quest or the daily set is never overwritten by the "+XP" that follows it.
+    private var rewardBatchOpen = false
+    private func publishReward(_ update: ProgressUpdate) {
+        if rewardBatchOpen, let pending = lastReward { lastReward = pending.merged(with: update) } else { lastReward = update }
+        rewardPulse += 1
+        guard !rewardBatchOpen else { return }
+        rewardBatchOpen = true
+        Task { @MainActor [weak self] in self?.rewardBatchOpen = false }
     }
 
     func markRestrung() {
@@ -613,8 +668,17 @@ final class AppStore: ObservableObject {
             if done.count > 45 { for old in done.keys.sorted().dropLast(45) { done.removeValue(forKey: old) } }
             settings.dailyDone = done
         }
+        // The last activity of the set pays its bonus, once a day (each activity already saved a practice record,
+        // so the day counts for the streak); the toast and the Play hub's Today card celebrate it.
+        if dailySetComplete { recordProgress(.dailySetCompleted) }
     }
-    var dailySet: [DailyActivity] { DailySet.activities(instrument: instrument, goal: settings.goal) }
+    /// Today's set; on the free plan its Pro tool's minutes go to ear training, so it can always be finished.
+    var dailySet: [DailyActivity] { DailySet.activities(instrument: instrument, goal: settings.goal, pro: isPro) }
+    /// Every activity of today's set done.
+    var dailySetComplete: Bool {
+        let set = dailySet
+        return !set.isEmpty && set.allSatisfy { dailyDone($0.kind) }
+    }
 
     // MARK: Voice
 

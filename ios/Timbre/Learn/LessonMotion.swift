@@ -208,7 +208,12 @@ struct StrumSweep: View {
         let wound = count >= 4 && gauge > 0.45
         let base = wound ? Color(hex: 0xCDB892) : Color(hex: 0xE4DFD6)
         let tint = base.mix(with: accent, by: Double(min(1, amplitude / 3.5)))
-        let left: CGFloat = 4, right = width - 4
+        // The string's number at the left edge (the thickest, on top, is the highest number), so this
+        // player's-eye view never reads as upside down next to the tab-style neck diagrams.
+        let number = Text("\(count - index)").font(.system(size: 10, weight: .bold, design: .rounded))
+            .foregroundStyle(amplitude > 0.5 ? accent : Palette.inkSoft.opacity(0.85))
+        context.draw(number, at: CGPoint(x: 8, y: y))
+        let left: CGFloat = 20, right = width - 4
         var path = Path()
         path.move(to: CGPoint(x: left, y: y))
         if amplitude > 0.2 {

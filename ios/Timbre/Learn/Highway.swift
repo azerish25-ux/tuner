@@ -69,14 +69,21 @@ struct AlongStep: View {
                 }
                 .onChange(of: Int(now * 20)) { _, _ in tick(now: now) }
             }
-            .frame(height: fretted ? 360 : 290)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("Play-along, \(notes.count) notes"))
+            // Shrinks on short phones rather than pushing the header off the top.
+            .frame(minHeight: 220, maxHeight: fretted ? 360 : 290)
+            // The results take the stage's place, so nothing above or below moves when they arrive.
+            .overlay { if phase == .done { resultsPanel } }
             .background(RoundedRectangle(cornerRadius: 26, style: .continuous).fill(Palette.stageDeep))
             .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
             .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
             .padding(.horizontal, 12)
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text("Play-along, \(notes.count) notes"))
-            if phase == .done { summary } else { upcoming }
+            .layoutPriority(1)
+            upcoming
+                .frame(minHeight: 44)
+                .opacity(phase == .done ? 0 : 1)
+                .accessibilityHidden(phase == .done)
             Spacer(minLength: 0)
             MicrophoneHint()
             controls
@@ -108,6 +115,8 @@ struct AlongStep: View {
         }
         .animation(Motion.pluck, value: judge.combo >= 3)
         .padding(.horizontal, 22).padding(.top, 8)
+        // Always its full height: the title never shrinks to make room below.
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     /// The next note by name, and where to play it.
@@ -132,6 +141,16 @@ struct AlongStep: View {
         }
     }
 
+    /// The take's results over the dimmed stage, in the same frame the notes ran in.
+    private var resultsPanel: some View {
+        ZStack {
+            Rectangle().fill(Palette.stageDeep.opacity(0.84))
+            RadialGradient(colors: [ScoreTint.color(judge.accuracy).opacity(0.14), .clear], center: .center, startRadius: 4, endRadius: 220)
+            summary.padding(12)
+        }
+        .transition(.opacity.combined(with: .scale(scale: 0.96)))
+    }
+
     private var summary: some View {
         let counts = Dictionary(grouping: grades.values, by: { $0 }).mapValues(\.count)
         return VStack(spacing: 10) {
@@ -143,7 +162,7 @@ struct AlongStep: View {
                 stat("Late/early", counts[.ok] ?? 0, Palette.amber)
                 stat("Missed", counts[.miss] ?? 0, Palette.danger)
             }
-            Text(timingNote).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+            Text(timingNote).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink).multilineTextAlignment(.center)
             Text("Best combo \(judge.bestCombo)").font(.footnote).foregroundStyle(Palette.inkSoft)
             if judge.accuracy < 0.8 && !slow {
                 Button { slow = true; reset() } label: { Label("Try it at \(Int((bpm * 0.75).rounded())) BPM", systemImage: "tortoise.fill") }
@@ -151,7 +170,6 @@ struct AlongStep: View {
                     .accessibilityIdentifier("along.slower")
             }
         }
-        .transition(.scale(scale: 0.9).combined(with: .opacity))
     }
 
     /// Where the timing went: early or late on average, in milliseconds.

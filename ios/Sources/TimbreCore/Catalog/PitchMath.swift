@@ -12,6 +12,7 @@ public enum PitchMath {
         let scientific = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
         let table: [String]
         switch notation.lowercased() {
+        case "german": table = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","H"]
         case "solfege": table = ["Do","Do#","Re","Re#","Mi","Fa","Fa#","Sol","Sol#","La","La#","Si"]
         case "sargam": table = ["Sa","Sa#","Re","Re#","Ga","Ma","Ma#","Pa","Pa#","Dha","Dha#","Ni"]
         case "numbered": table = ["1","1#","2","2#","3","4","4#","5","5#","6","6#","7"]

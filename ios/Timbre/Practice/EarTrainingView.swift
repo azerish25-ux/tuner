@@ -30,6 +30,9 @@ struct EarTrainingView: View {
     @State private var shownXP = 0
     @State private var ringShown = false
     @State private var resultBurst = 0
+    /// Answers so far in this drill, newest first, kept across rounds (each can be heard again).
+    @State private var history: [EarAnswerRecord] = []
+    @State private var answered = 0
     private let length = 10
 
     var body: some View {
@@ -43,6 +46,7 @@ struct EarTrainingView: View {
                     hud
                     card(question)
                         .transition(.opacity)
+                    recentStrip
                 }
             }
             .padding(.horizontal, Metrics.gutter).padding(.vertical, 14)
@@ -63,7 +67,7 @@ struct EarTrainingView: View {
     private var drillPicker: some View {
         Picker("Drill", selection: Binding(get: { drill }, set: { value in
             if value != .pitchDirection && !commerce.isPro { store.presentPaywall("ear.\(value.rawValue)"); return }
-            drill = value; start()
+            drill = value; history = []; start()
         })) {
             Text("Pitch").tag(EarDrill.pitchDirection)
             Text("Intervals").tag(EarDrill.interval)
@@ -240,6 +244,65 @@ struct EarTrainingView: View {
         .modifier(Shake(amount: shake))
     }
 
+    // MARK: Recent answers
+
+    /// Under the card: the latest answers, newest first, each a chip that plays its question again
+    /// (a miss shows what you picked struck through, then the answer). Placeholders until the first answer.
+    private var recentStrip: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Eyebrow("Recent", color: Palette.inkSoft)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    if history.isEmpty {
+                        ForEach(0..<4, id: \.self) { _ in
+                            Capsule().strokeBorder(Palette.line, style: StrokeStyle(lineWidth: 1, dash: [3, 4]))
+                                .frame(width: 92, height: 38)
+                        }
+                        .accessibilityHidden(true)
+                    } else {
+                        ForEach(history) { record in
+                            recentChip(record)
+                                .transition(reduceMotion ? AnyTransition.opacity : AnyTransition.move(edge: .leading).combined(with: .opacity))
+                        }
+                    }
+                }
+            }
+            .railBleed(leading: Metrics.gutter, trailing: Metrics.gutter)
+        }
+        .padding(.top, 2)
+    }
+
+    private func recentChip(_ record: EarAnswerRecord) -> some View {
+        let tint = record.right ? Palette.mint : Palette.coral
+        return Button { play(record.question) } label: {
+            HStack(spacing: 6) {
+                Image(systemName: record.right ? "checkmark" : "xmark").font(.caption.weight(.heavy)).foregroundStyle(tint)
+                if !record.right {
+                    Text(LocalizedStringKey(record.picked)).strikethrough().foregroundStyle(Palette.inkFaint)
+                    Image(systemName: "arrow.right").font(.caption2.weight(.bold)).foregroundStyle(Palette.inkFaint)
+                }
+                Text(LocalizedStringKey(record.question.answer)).foregroundStyle(Palette.ink)
+                if let cents = record.question.cents {
+                    Text(verbatim: "\(Int(abs(cents).rounded()))¢").font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                }
+                Image(systemName: "speaker.wave.2.fill").font(.caption2).foregroundStyle(Palette.inkFaint)
+            }
+            .font(.footnote.weight(.semibold))
+            .lineLimit(1)
+            .padding(.horizontal, 12).frame(height: 38)
+            .background(Capsule().fill(Palette.stageRaised))
+            .overlay(Capsule().strokeBorder(tint.opacity(0.35), lineWidth: 1))
+            .contentShape(Capsule())
+        }
+        .buttonStyle(PressScaleStyle())
+        .disabled(picked != nil)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(LocalizedStringKey(record.question.answer)))
+        .accessibilityValue(record.right ? Text(verbatim: "") : Text("Not quite."))
+        .accessibilityHint(Text("Play again"))
+        .accessibilityAddTraits(.isButton)
+    }
+
     private func choiceState(_ choice: String, _ question: EarQuestion) -> EarChoiceState {
         guard let picked else { return .idle }
         if choice == question.answer { return .right }
@@ -341,6 +404,11 @@ struct EarTrainingView: View {
         let right = current.answer(choice, for: question)
         session = current
         outcomes.append(right)
+        withAnimation(reduceMotion ? Animation.easeInOut(duration: 0.2) : Motion.pluck) {
+            history.insert(EarAnswerRecord(id: answered, question: question, picked: choice), at: 0)
+            if history.count > 12 { history.removeLast() }
+        }
+        answered += 1
         if right {
             combo += 1
             bestCombo = max(bestCombo, combo)
@@ -404,6 +472,14 @@ struct EarTrainingView: View {
 }
 
 private enum EarChoiceState: Equatable { case idle, right, wrong, faded }
+
+/// One answered question, kept so it can be heard again from the Recent strip.
+private struct EarAnswerRecord: Identifiable {
+    let id: Int
+    let question: EarQuestion
+    let picked: String
+    var right: Bool { picked == question.answer }
+}
 
 /// An answer tile: flashes mint with a check when right, coral with a cross when wrong.
 private struct EarChoiceButton: View {

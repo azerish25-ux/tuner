@@ -62,6 +62,11 @@ struct VoiceView: View {
                     }
                     .frame(width: 150, height: 86, alignment: .topLeading)
                     .padding(12)
+                    .overlay(alignment: .bottomTrailing) {
+                        NoteContour(notes: VoiceExercise(level: level, rootMidi: store.voiceRoot).notes, lit: store.voiceLevel == level)
+                            .frame(width: 66, height: 16)
+                            .padding(12)
+                    }
                     .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(store.voiceLevel == level ? Palette.brass.opacity(0.16) : Palette.stageRaised))
                     .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(store.voiceLevel == level ? Palette.brass : Palette.line, lineWidth: 1))
                 }
@@ -87,7 +92,10 @@ struct VoiceView: View {
                     LiveVoiceReading(tolerance: exercise.toleranceCents)
                 }
             }
-            VoiceTrace(tolerance: exercise.toleranceCents, hidden: hidePreviousResult).frame(height: 190)
+            VoiceTrace(tolerance: exercise.toleranceCents, hidden: hidePreviousResult, plan: exercise.notes,
+                       hold: exercise.notes.count == 1 ? Double(exercise.holdMs) / Double(max(1, exercise.durationMs)) : nil,
+                       notation: store.settings.notation)
+                .frame(height: 190)
             if store.voiceRunning && store.countdown == 0 { VoiceProgress(duration: exercise.durationMs, hold: exercise.notes.count == 1 ? exercise.holdMs : nil) }
             if store.voiceRunning {
                 Button(role: .destructive) { store.cancelVoice() } label: { Label("Stop", systemImage: "stop.fill") }
@@ -137,6 +145,7 @@ struct VoiceView: View {
             if exercise.level == 7 {
                 if let low = result.lowestMidi, let high = result.highestMidi {
                     Text("\(note(low)) – \(note(high))").font(Typeface.display(48)).foregroundStyle(Palette.locked)
+                    RangeLadder(low: low, high: high, notation: store.settings.notation)
                     Text("Your comfortable range today. A description, not a classification.").font(.footnote).foregroundStyle(Palette.inkSoft)
                 } else { Text(text("timbre_voice_range_no_result", "No reliable range yet. Try two comfortable notes.")).foregroundStyle(Palette.inkSoft) }
             } else {
@@ -196,13 +205,20 @@ private struct VoiceProgress: View {
     }
 }
 
-/// Live pitch line against the ±tolerance band, glowing where it sits in tune.
+/// Live pitch line against the ±tolerance band, glowing where it sits in tune. Before there is a line,
+/// the exercise's path: its notes as steps in time (the range walk's ladder down and up), each named,
+/// the first lit; a single held note shows how long to hold it.
 private struct VoiceTrace: View {
     let tolerance: Double
     let hidden: Bool
+    let plan: [Int]
+    /// Share of the exercise to hold a single note for.
+    let hold: Double?
+    let notation: String
     @EnvironmentObject private var store: AppStore
     var body: some View {
         let values = hidden ? [] : store.live.trace
+        let traced = values.contains { $0 != nil }
         Canvas { context, size in
             let extent = max(100.0, tolerance * 2)
             let center = size.height / 2
@@ -210,6 +226,10 @@ private struct VoiceTrace: View {
             context.fill(Path(roundedRect: CGRect(x: 0, y: center - half, width: size.width, height: half * 2), cornerRadius: 10), with: .color(Palette.locked.opacity(0.1)))
             var mid = Path(); mid.move(to: CGPoint(x: 0, y: center)); mid.addLine(to: CGPoint(x: size.width, y: center))
             context.stroke(mid, with: .color(Palette.inkFaint.opacity(0.5)), style: StrokeStyle(lineWidth: 1, dash: [4, 4]))
+            if !traced {
+                drawPlan(&context, size: size)
+                return
+            }
             var path = Path(); var connected = false
             for (index, value) in values.enumerated() {
                 guard let value, value.isFinite else { connected = false; continue }
@@ -223,5 +243,105 @@ private struct VoiceTrace: View {
         }
         .background(RoundedRectangle(cornerRadius: 16).fill(Palette.stageDeep.opacity(0.6)))
         .accessibilityLabel(Text("Your pitch relative to the target"))
+    }
+
+    private func drawPlan(_ context: inout GraphicsContext, size: CGSize) {
+        guard let low = plan.min(), let high = plan.max() else { return }
+        let inset: CGFloat = 16
+        let center = size.height / 2
+        let usable = max(0, size.height - 64)
+        let middle = Double(low + high) / 2
+        let span = Double(max(1, high - low))
+        func y(_ midi: Int) -> CGFloat { high == low ? center : center - CGFloat((Double(midi) - middle) / span) * usable }
+        if plan.count == 1, let midi = plan.first {
+            // One note: the whole take at the target, the stretch to hold lit in the middle.
+            let bar = CGRect(x: inset, y: center - 4, width: size.width - inset * 2, height: 8)
+            context.fill(Path(roundedRect: bar, cornerRadius: 4), with: .color(Palette.brass.opacity(0.18)))
+            let held = (size.width - inset * 2) * CGFloat(min(1, max(0.08, hold ?? 0.3)))
+            context.fill(Path(roundedRect: CGRect(x: size.width / 2 - held / 2, y: center - 4, width: held, height: 8), cornerRadius: 4),
+                         with: .color(Palette.brass.opacity(0.6)))
+            context.draw(Text(verbatim: PitchMath.noteName(midi: midi, notation: notation)).font(Typeface.label(11)).foregroundStyle(Palette.inkSoft),
+                         at: CGPoint(x: inset, y: center - 16), anchor: .leading)
+            return
+        }
+        let slot = (size.width - inset * 2) / CGFloat(plan.count)
+        var previous: CGPoint?
+        for (i, midi) in plan.enumerated() {
+            let x0 = inset + slot * CGFloat(i) + 2
+            let width = max(4, slot - 4)
+            let level = y(midi)
+            if let previous {
+                var step = Path()
+                step.move(to: previous)
+                step.addLine(to: CGPoint(x: x0, y: level))
+                context.stroke(step, with: .color(Palette.brass.opacity(0.2)), lineWidth: 1.5)
+            }
+            context.fill(Path(roundedRect: CGRect(x: x0, y: level - 4, width: width, height: 8), cornerRadius: 4),
+                         with: .color(Palette.brass.opacity(i == 0 ? 0.75 : 0.32)))
+            context.draw(Text(verbatim: PitchMath.noteName(midi: midi, notation: notation)).font(Typeface.label(10)).foregroundStyle(i == 0 ? Palette.ink : Palette.inkFaint),
+                         at: CGPoint(x: x0 + width / 2, y: level - 13))
+            previous = CGPoint(x: x0 + width, y: level)
+        }
+    }
+}
+
+/// A tiny picture of an exercise's notes for its card: steps for a melody, the range walk's V, a line
+/// for one held note.
+private struct NoteContour: View {
+    let notes: [Int]
+    let lit: Bool
+
+    var body: some View {
+        Canvas { context, size in
+            guard let low = notes.min(), let high = notes.max(), !notes.isEmpty else { return }
+            let span = CGFloat(max(1, high - low))
+            let slot = size.width / CGFloat(notes.count)
+            func y(_ midi: Int) -> CGFloat { high == low ? size.height / 2 : size.height - 1.5 - CGFloat(midi - low) / span * (size.height - 3) }
+            var path = Path()
+            for (i, midi) in notes.enumerated() {
+                let a = CGPoint(x: slot * CGFloat(i), y: y(midi))
+                let b = CGPoint(x: slot * CGFloat(i + 1), y: y(midi))
+                if i == 0 { path.move(to: a) } else { path.addLine(to: a) }
+                path.addLine(to: b)
+            }
+            context.stroke(path, with: .color(Palette.brass.opacity(lit ? 0.9 : 0.4)), style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}
+
+/// The range found, on a ladder from C2 to C6 with each C marked: where your comfortable notes sit.
+private struct RangeLadder: View {
+    let low: Int
+    let high: Int
+    let notation: String
+    private let first = 36
+    private let last = 84
+
+    var body: some View {
+        Canvas { context, size in
+            let inset: CGFloat = 10
+            func x(_ midi: Int) -> CGFloat {
+                inset + (size.width - inset * 2) * CGFloat(min(last, max(first, midi)) - first) / CGFloat(last - first)
+            }
+            let rail = size.height / 2 - 7
+            context.fill(Path(roundedRect: CGRect(x: inset, y: rail - 3, width: size.width - inset * 2, height: 6), cornerRadius: 3), with: .color(Palette.line))
+            for midi in stride(from: first, through: last, by: 12) {
+                var tick = Path()
+                tick.move(to: CGPoint(x: x(midi), y: rail - 8))
+                tick.addLine(to: CGPoint(x: x(midi), y: rail + 8))
+                context.stroke(tick, with: .color(Palette.inkFaint.opacity(0.6)), lineWidth: 1)
+                context.draw(Text(verbatim: PitchMath.noteName(midi: midi, notation: notation)).font(Typeface.label(10)).foregroundStyle(Palette.inkFaint),
+                             at: CGPoint(x: x(midi), y: size.height - 7))
+            }
+            let from = x(min(low, high)), to = x(max(low, high))
+            let band = CGRect(x: from - 5, y: rail - 6, width: to - from + 10, height: 12)
+            context.fill(Path(roundedRect: band.insetBy(dx: -4, dy: -4), cornerRadius: 10), with: .color(Palette.locked.opacity(0.14)))
+            context.fill(Path(roundedRect: band, cornerRadius: 6),
+                         with: .linearGradient(Gradient(colors: [Palette.mintDeep, Palette.locked]), startPoint: CGPoint(x: from, y: 0), endPoint: CGPoint(x: to, y: 0)))
+        }
+        .frame(height: 46)
+        .accessibilityHidden(true)
     }
 }

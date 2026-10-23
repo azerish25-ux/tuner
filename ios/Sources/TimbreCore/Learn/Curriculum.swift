@@ -87,15 +87,20 @@ public struct TimedNote: Codable, Equatable, Sendable {
 
 /// A chord a lesson asks for: root pitch class, quality, and the shape to show.
 public struct ChordSpec: Codable, Equatable, Sendable {
-    public let name: String
+    /// The chord symbol as the curriculum writes it, in letters ("Bm", "F#m").
+    public let symbol: String
     public let root: Int
     public let quality: String
     /// Fret per string from the lowest string; -1 muted.
     public let frets: [Int]
     public let fingers: [Int]?
     public let baseFret: Int?
+    /// The symbol as the player reads it, in the active note-naming system (`NoteNames.active`): "Hm" and "H7"
+    /// in German, so diagrams agree with the lesson text.
+    public var name: String { NoteNames.chordSymbol(symbol) }
+    enum CodingKeys: String, CodingKey { case symbol = "name", root, quality, frets, fingers, baseFret }
     public init(name: String, root: Int, quality: String, frets: [Int], fingers: [Int]? = nil, baseFret: Int? = nil) {
-        self.name = name; self.root = root; self.quality = quality; self.frets = frets; self.fingers = fingers; self.baseFret = baseFret
+        self.symbol = name; self.root = root; self.quality = quality; self.frets = frets; self.fingers = fingers; self.baseFret = baseFret
     }
 }
 

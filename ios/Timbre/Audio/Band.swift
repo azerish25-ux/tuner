@@ -235,7 +235,8 @@ final class BandPlayer {
 // MARK: - Offline synthesis
 
 /// Drums (sine-drop kick, noise snare, filtered-noise hat), a plucked bass and a detuned pad, written
-/// into plain buffers off the main thread. Deterministic: the same arrangement renders the same audio.
+/// into plain buffers off the main thread, humanized and set in a light room. Deterministic: the same
+/// arrangement renders the same audio.
 enum BandSynth {
     static func render(_ arrangement: BandArrangement, sampleRate: Int) -> BandTrack {
         let rate = Double(max(8000, sampleRate))
@@ -259,17 +260,25 @@ enum BandSynth {
         specs.append(BandArrangement.Bar(root: last?.root, tones: last?.tones ?? [], ending: true))
 
         let table = Wavetable(partials: [1, 0.35, 0.12, 0.05])
+        let push = 0.006 * rate
         var parts: [[Float]] = []
         for (number, spec) in specs.enumerated() {
             let sounding = spec.ending ? Int(1.3 * rate) : barLength
             var out = [Float](repeating: 0, count: sounding + tail)
             var noise = Noise(seed: UInt32(truncatingIfNeeded: 0x2545F491 &+ number &* 7919))
+            // The drummer's feel, apart from the drums' own noise so their sound stays the same.
+            var feel = Noise(seed: UInt32(truncatingIfNeeded: 0x51ED_270B &+ number &* 104_729))
             let hits = spec.ending ? [Hit(beat: 0, drum: .kick, velocity: 1), Hit(beat: 0, drum: .crash, velocity: 1)]
                                    : groove(meter: meter, fill: spec.fill, swing: arrangement.swing)
             for hit in hits {
-                let at = Int((hit.beat * beat).rounded())
-                // A touch of human variation in the dynamics, never in the timing.
-                let velocity = hit.velocity * Float(0.92 + 0.08 * abs(noise.next()))
+                var at = Int((hit.beat * beat).rounded())
+                // Played, not programmed: every hit within ±8 % of its velocity, hats and snares off the grid
+                // by up to ±6 ms. Kicks and anything on the downbeat stay exact, so the band stays
+                // sample-locked to the click.
+                let velocity = hit.velocity * Float(1 + 0.08 * feel.next())
+                if hit.beat > 0, hit.drum == .hat || hit.drum == .snare {
+                    at = max(0, at + Int((push * feel.next()).rounded()))
+                }
                 switch hit.drum {
                 case .kick: kick(&out, at: at, velocity: velocity, rate: rate)
                 case .snare: snare(&out, at: at, velocity: velocity, rate: rate, noise: &noise)
@@ -289,6 +298,10 @@ enum BandSynth {
                 let voices = padVoicing(root: root, tones: spec.tones).map { PitchMath.frequency(midi: Double($0), reference: reference) }
                 pad(&out, length: spec.ending ? Int(0.9 * rate) : barLength, frequencies: voices, rate: rate, table: table)
             }
+            // The same small room as the cues, its tail ringing into the release so it carries over the
+            // next downbeat; kick and bass stay dry under its low cut.
+            RoomReverb.apply(&out, rate: rate, settings: RoomReverb.Settings(wet: 0.16, feedback: 0.78, damping: 0.4, lowCut: 280))
+            RoomReverb.fadeTail(&out, frames: Int(0.04 * rate))
             parts.append(out)
         }
         return BandTrack(sampleRate: Int(rate), parts: parts, sequence: sequence, ending: specs.count - 1)

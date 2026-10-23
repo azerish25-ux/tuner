@@ -331,18 +331,41 @@ struct PaywallView: View {
 
     private var benefits: some View {
         VStack(alignment: .leading, spacing: 7) {
-            benefit("graduationcap.fill", "\(store.curriculum.lessonCount) lessons across \(store.curriculum.courses.count) courses")
-            benefit("guitars.fill", "\(store.catalog.instruments.count) instruments, each on its own live stage")
-            benefit("ear.fill", "Every ear game and practice tool")
+            benefit("\(store.curriculum.lessonCount) lessons across \(store.curriculum.courses.count) courses") { lessonsArt }
+            benefit("\(store.catalog.instruments.count) instruments, each on its own live stage") { instrumentArt }
+            benefit("Every ear game and practice tool") { earArt }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 6)
     }
 
-    private func benefit(_ symbol: String, _ title: LocalizedStringKey) -> some View {
+    private static let benefitArt: CGFloat = 26
+
+    /// The course the learner is on (else the first), in its own art.
+    @ViewBuilder private var lessonsArt: some View {
+        let id = UserDefaults.standard.string(forKey: "learn.course") ?? store.learn.lastCourseId ?? "guitar"
+        if let course = store.curriculum.course(id: id) ?? store.curriculum.courses.first {
+            CourseArt(course: course, size: Self.benefitArt)
+        }
+    }
+
+    /// The instrument that opened the paywall, else the violin, as a studio render.
+    @ViewBuilder private var instrumentArt: some View {
+        let id = store.paywallInstrumentId ?? "violin.standard.4"
+        if let image = CourseArtwork.instrumentImage(id, catalog: store.catalog) ?? CourseArtwork.instrumentImage("violin.standard.4", catalog: store.catalog) {
+            InstrumentTile(image: image.name, render: image.render, accent: Palette.amber, size: Self.benefitArt)
+        }
+    }
+
+    /// Ear training's drawn emblem.
+    private var earArt: some View {
+        CourseEmblemTile(glyph: .ear, accent: Palette.accent(store.curriculum.course(id: "ear")?.accent ?? "violet"), size: Self.benefitArt)
+    }
+
+    private func benefit<Art: View>(_ title: LocalizedStringKey, @ViewBuilder art: () -> Art) -> some View {
         HStack(spacing: 10) {
-            Image(systemName: symbol).font(.system(size: 10, weight: .bold)).foregroundStyle(Palette.mint)
-                .frame(width: 22, height: 22).background(Circle().fill(Palette.mint.opacity(0.14)))
+            art()
+                .frame(width: Self.benefitArt, height: Self.benefitArt)
                 .accessibilityHidden(true)
             // One line in English; longer translations wrap rather than truncate.
             Text(title).font(.subheadline).foregroundStyle(Palette.ink)

@@ -3,7 +3,7 @@ import TimbreCore
 
 enum PracticeRoute: Hashable { case metronome, ear, chords, scales, drone, voice, intonation, sniper }
 
-/// Play: your level, today's quests, ear games and practice tools.
+/// Play: today's practice set, your level, today's quests, ear games and practice tools.
 struct PracticeView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
@@ -24,6 +24,7 @@ struct PracticeView: View {
                         Spacer()
                         StreakChip { store.selectedTab = .journey }
                     }
+                    DailySetCard { open($0) }
                     levelCard
                     questSection
                     gamesSection
@@ -66,10 +67,7 @@ struct PracticeView: View {
         let level = store.level
         let next = Progression.level(for: level.next)
         return HStack(spacing: 14) {
-            ZStack {
-                LevelRing(size: 62)
-                Text("LEVEL").font(.system(size: 8, weight: .bold)).tracking(1).foregroundStyle(Palette.mint).offset(y: -15)
-            }
+            LevelRing(size: 62)
             VStack(alignment: .leading, spacing: 6) {
                 Text(LocalizedStringKey(level.name)).font(Typeface.display(17)).foregroundStyle(Palette.ink)
                 ProgressLine(value: level.progress(xp))
@@ -88,18 +86,13 @@ struct PracticeView: View {
                 Text("resets in \(hoursToMidnight) h").font(.caption).foregroundStyle(Palette.inkSoft)
             }
             ForEach(store.quests) { quest in
-                let count = counter(quest)
+                // The one saved counter (AppStore.questCounter): tuning counts today's strings, like the tuner's quest line.
+                let count = store.questCounter(quest)
                 Button { open(quest) } label: { HubQuestRow(quest: quest, done: count.done, total: count.total, claimed: store.questProgress(quest) >= quest.target) }
                     .buttonStyle(PressScaleStyle())
                     .accessibilityIdentifier("quest.\(quest.id)")
             }
         }
-    }
-
-    /// The quest's one counter (Quests.counter): tuning counts strings exactly like the tuner's quest line.
-    private func counter(_ quest: Quest) -> (done: Int, total: Int) {
-        let strings = store.referenceMode ? 0 : store.courses.count
-        return Quests.counter(for: quest, progress: store.questProgress(quest), lockedStrings: store.lockedCourses.count, strings: strings)
     }
 
     private var hoursToMidnight: Int {
@@ -151,17 +144,23 @@ struct PracticeView: View {
         .accessibilityIdentifier("practice.\(route)")
     }
 
+    /// Three equal columns, built eagerly (not lazily) so every tool exists for VoiceOver and UI tests
+    /// even while it is scrolled below the Today card.
     private var toolsSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Tools").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
-            LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
-                tool(.metronome, "metronome", "Metronome", pro: false)
-                tool(.drone, "waveform.path", "Drone", pro: true)
-                tool(.voice, "music.mic", "Voice", pro: false)
+            VStack(spacing: 10) {
+                HStack(spacing: 10) {
+                    tool(.metronome, "metronome", "Metronome", pro: false)
+                    tool(.drone, "waveform.path", "Drone", pro: true)
+                    tool(.voice, "music.mic", "Voice", pro: false)
+                }
                 if fretted {
-                    tool(.chords, "hand.raised.fingers.spread", "Chords", pro: true)
-                    tool(.scales, "point.3.connected.trianglepath.dotted", "Scales", pro: true)
-                    tool(.intonation, "ruler", "Intonation", pro: true)
+                    HStack(spacing: 10) {
+                        tool(.chords, "hand.raised.fingers.spread", "Chords", pro: true)
+                        tool(.scales, "point.3.connected.trianglepath.dotted", "Scales", pro: true)
+                        tool(.intonation, "ruler", "Intonation", pro: true)
+                    }
                 }
             }
         }
@@ -185,10 +184,9 @@ struct PracticeView: View {
         .accessibilityIdentifier("practice.\(route)")
     }
 
-    private func needsPro(_ kind: DailyActivity.Kind) -> Bool { [.chord, .scale, .drone].contains(kind) }
-
+    /// Opens a daily-set activity in its tool (the paywall for a Pro tool on a free plan).
     private func open(_ kind: DailyActivity.Kind) {
-        if needsPro(kind) && !commerce.isPro { store.presentPaywall("daily.\(kind.rawValue)"); return }
+        if kind.needsPro && !commerce.isPro { store.presentPaywall("daily.\(kind.rawValue)"); return }
         switch kind {
         case .tune: store.selectedTab = .tune
         case .ear: path.append(.ear)
@@ -197,30 +195,6 @@ struct PracticeView: View {
         case .rhythm: path.append(.metronome)
         case .voice: path.append(.voice)
         case .drone: path.append(.drone)
-        }
-    }
-
-    private func title(_ kind: DailyActivity.Kind) -> LocalizedStringKey {
-        switch kind {
-        case .tune: return "Tune up"
-        case .ear: return "Ear training"
-        case .chord: return "Chord of the day"
-        case .scale: return "Scale workout"
-        case .rhythm: return "Rhythm"
-        case .voice: return "Voice warm-up"
-        case .drone: return "Intonation over a drone"
-        }
-    }
-
-    private func detail(_ kind: DailyActivity.Kind) -> String {
-        switch kind {
-        case .tune: return String(localized: "every string to a still point")
-        case .ear: return String(localized: "ten questions")
-        case .chord: return String(localized: "learn one new shape")
-        case .scale: return String(localized: "one position, slowly")
-        case .rhythm: return String(localized: "steady at a comfortable tempo")
-        case .voice: return String(localized: "a comfortable range")
-        case .drone: return String(localized: "hold notes against a tonic")
         }
     }
 }

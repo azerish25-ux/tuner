@@ -109,6 +109,11 @@ final class PracticeTests: XCTestCase {
             XCTAssertEqual(set.first?.kind, .tune)
             XCTAssertEqual(Set(set.map(\.kind)).count, set.count)
             XCTAssertGreaterThanOrEqual(set.reduce(0) { $0 + $1.minutes }, 7)
+            // Without Pro the set has no Pro tool, keeps its length and can always be finished.
+            let free = DailySet.activities(instrument: guitar, goal: goal, pro: false)
+            XCTAssertTrue(free.allSatisfy { !DailySet.proKinds.contains($0.kind) })
+            XCTAssertEqual(free.reduce(0) { $0 + $1.minutes }, set.reduce(0) { $0 + $1.minutes })
+            XCTAssertEqual(free.first?.kind, .tune)
         }
     }
 

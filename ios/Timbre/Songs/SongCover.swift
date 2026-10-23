@@ -1,9 +1,9 @@
 import SwiftUI
 
-/// Generative cover art for a song. Everything is derived from the lesson id (and its course accent), so a
-/// song always wears the same cover in every language and no image assets are needed: a dark gradient from
-/// the course accent into a second hue, a soft glow, one of five line patterns, and an SF Symbol chosen from
-/// the song's title ("Twinkle" gets the moon and stars) or, failing that, from the id.
+/// Generative typographic cover art for a song. Colour, pattern and composition come from the lesson id (and its
+/// course accent), so a song always wears the same cover and no image assets are needed: a dark gradient from the
+/// course accent into a second hue, a soft glow, one of five line patterns, and the title's monogram set large in
+/// Sora ("Mary Had a Little Lamb" is ML, "Porchlight" is Po), cropped by the edge like a record sleeve.
 struct CoverArt {
     enum Pattern: Int, CaseIterable { case rings, stripes, halftone, waves, rays }
 
@@ -11,14 +11,16 @@ struct CoverArt {
     let primary: Color
     let secondary: Color
     let pattern: Pattern
-    let symbol: String
+    /// One or two letters from the title (`monogram(_:)`).
+    let monogram: String
     /// Gradient direction in degrees.
     let angle: Double
     /// Where the glow sits, as a fraction of the cover.
     let glow: UnitPoint
-    /// The symbol's lean in degrees.
+    /// The monogram's lean in degrees.
     let tilt: Double
 
+    /// `title` is the title as shown, so the letters match it in every language.
     init(id: String, title: String, accent: String) {
         let seed = Self.hash(id)
         self.seed = seed
@@ -26,13 +28,13 @@ struct CoverArt {
         let others = ["mint", "amber", "violet", "coral", "sky"].filter { $0 != accent }
         secondary = Palette.accent(others[Int((seed >> 8) % UInt64(others.count))])
         pattern = Pattern(rawValue: Int((seed >> 16) % UInt64(Pattern.allCases.count))) ?? .rings
-        symbol = Self.motif(id: id, title: title) ?? Self.symbols[Int((seed >> 24) % UInt64(Self.symbols.count))]
+        monogram = Self.monogram(title)
         angle = Double((seed >> 32) % 360)
         var random = SystemRandom(seed: seed)
         let glowX = 0.15 + 0.7 * random.next()
         let glowY = 0.1 + 0.5 * random.next()
         glow = UnitPoint(x: CGFloat(glowX), y: CGFloat(glowY))
-        tilt = -14 + 28 * random.next()
+        tilt = -6 + 12 * random.next()
     }
 
     /// The gradient's two ends: deep accent into a darker second hue.
@@ -54,38 +56,29 @@ struct CoverArt {
         return value
     }
 
-    private static let symbols = ["music.note", "music.mic", "guitars.fill", "pianokeys", "waveform", "sparkles",
-                                  "star.fill", "music.quarternote.3", "flame.fill", "bolt.fill", "headphones", "metronome.fill"]
-
-    /// Title words → symbol, first match wins (English title and id, so every language gets the same cover).
-    private static let motifs: [(words: [String], symbol: String)] = [
-        (["twinkle", "lullaby", "silent", "lune", "moon"], "moon.stars.fill"),
-        (["jingle", "deck the", "wenceslas", "christmas", "joy to the world"], "snowflake"),
-        (["jacques", "bell"], "bell.fill"),
-        (["swan", "bird", "lark"], "bird.fill"),
-        (["sailor", "river", "shenandoah", "clementine", "creek", "lightly row", "tide"], "water.waves"),
-        (["rain"], "cloud.rain.fill"),
-        (["radio", "static", "channel"], "antenna.radiowaves.left.and.right"),
-        (["ember", "smoke", "cedar"], "flame.fill"),
-        (["porchlight", "neon", "laundromat"], "lightbulb.fill"),
-        (["kite", "weather"], "wind"),
-        (["dashboard", "mile marker", "highway"], "car.fill"),
-        (["comet", "carousel"], "sparkles"),
-        (["shuffle"], "guitars.fill"),
-        (["mountain", "gap"], "mountain.2.fill"),
-        (["lamb", "macdonald", "cabbage", "grove", "greensleeves"], "leaf.fill"),
-        (["races", "traveler", "yankee", "susanna", "skip to"], "hare.fill"),
-        (["saints", "grace", "gifts", "joy"], "sun.max.fill"),
-        (["blues", "walking", "groove"], "guitars.fill"),
-        (["elise"], "pianokeys"),
-        (["symphony", "canon", "mozart", "nachtmusik", "largo", "minuet"], "music.quarternote.3"),
-        (["auld", "country"], "sparkles"),
-        (["danny", "aura", "love", "heart"], "heart.fill"),
+    /// Little words a monogram skips ("Ode to Joy" is OJ, "Ode an die Freude" OF).
+    private static let minorWords: Set<String> = [
+        "a", "an", "the", "to", "of", "in", "on", "at", "and", "or", "for", "my", "your", "our", "no",
+        "de", "del", "la", "le", "les", "du", "des", "el", "los", "las", "il", "lo", "et", "y", "e",
+        "der", "die", "das", "dem", "den", "ein", "eine", "und", "im", "am", "het", "een", "en",
     ]
 
-    private static func motif(id: String, title: String) -> String? {
-        let text = (id + " " + title).lowercased()
-        return motifs.first { motif in motif.words.contains { text.contains($0) } }?.symbol
+    /// The title's monogram: the initials of its first and last words that carry meaning ("Mary Had a Little
+    /// Lamb" → "ML"), or a one-word title's first two letters ("Porchlight" → "Po"). A subtitle after a colon or
+    /// in brackets is left out ("Greensleeves: the melody" → "Gr"). Scripts without capitals take one character.
+    static func monogram(_ title: String) -> String {
+        let main = title.split(whereSeparator: { $0 == ":" || $0 == "(" || $0 == "（" || $0 == "：" }).first.map(String.init) ?? title
+        let words = main.split(whereSeparator: { !$0.isLetter && $0 != "'" && $0 != "’" })
+            .map { $0.trimmingCharacters(in: CharacterSet(charactersIn: "'’")) }
+            .filter { !$0.isEmpty }
+        let meaningful = words.filter { $0.count > 1 && !minorWords.contains($0.lowercased()) }
+        let pool = meaningful.isEmpty ? words : meaningful
+        guard let first = pool.first, let lead = first.first else { return "♪" }
+        guard lead.isCased else { return String(lead) }
+        if pool.count > 1, let last = pool.last?.first { return (String(lead) + String(last)).uppercased() }
+        let letters = Array(first)
+        guard letters.count > 1 else { return String(lead).uppercased() }
+        return String(lead).uppercased() + String(letters[1]).lowercased()
     }
 
     // MARK: Pattern
@@ -194,12 +187,14 @@ struct CoverArt {
     }
 }
 
-/// A song's cover, drawn from its `CoverArt`: gradient, glow, pattern, symbol and a top-left sheen.
+/// A song's cover, drawn from its `CoverArt`: gradient, glow, pattern, the monogram and a top-left sheen.
 struct SongCover: View {
     let art: CoverArt
     var corner: CGFloat = 20
-    /// Where the symbol sits, as a fraction of the cover.
-    var symbolAnchor = UnitPoint(x: 0.66, y: 0.62)
+    /// Where the monogram's centre sits, as a fraction of the cover; near an edge it crops like a sleeve.
+    var monogramAnchor = UnitPoint(x: 0.66, y: 0.62)
+    /// The monogram's type size as a fraction of the cover's shorter side (two letters; one letter sets larger).
+    var monogramSize: CGFloat = 0.5
     /// The glow drifts slowly (the featured song), unless Reduce Motion is on.
     var drift = false
     var outlined = true
@@ -227,15 +222,29 @@ struct SongCover: View {
             glow(side: side)
                 .position(x: size.width * art.glow.x, y: size.height * art.glow.y)
             Canvas { context, canvasSize in art.drawPattern(in: &context, size: canvasSize) }
-            Image(systemName: art.symbol)
-                .font(.system(size: side * 0.46, weight: .bold))
-                .foregroundStyle(LinearGradient(colors: [.white, .white.opacity(0.7)], startPoint: .top, endPoint: .bottom))
-                .shadow(color: .black.opacity(0.35), radius: side * 0.05, y: side * 0.03)
-                .rotationEffect(.degrees(art.tilt))
-                .position(x: size.width * symbolAnchor.x, y: size.height * symbolAnchor.y)
+            monogram(side: side)
+                .position(x: size.width * monogramAnchor.x, y: size.height * monogramAnchor.y)
             LinearGradient(colors: [.white.opacity(0.14), .clear], startPoint: .topLeading, endPoint: .center)
         }
         .frame(width: size.width, height: size.height)
+    }
+
+    /// The letters in Sora, white over an offset print in the cover's second hue.
+    private func monogram(side: CGFloat) -> some View {
+        let points = side * monogramSize * (art.monogram.count > 1 ? 1 : 1.24)
+        let font = Font.custom("Sora-SemiBold", fixedSize: points)
+        return ZStack {
+            Text(verbatim: art.monogram).font(font).tracking(-points * 0.04)
+                .foregroundStyle(art.secondary.mix(with: .white, by: 0.25).opacity(0.7))
+                .offset(x: points * 0.05, y: points * 0.05)
+                .blendMode(.screen)
+            Text(verbatim: art.monogram).font(font).tracking(-points * 0.04)
+                .foregroundStyle(LinearGradient(colors: [.white, .white.opacity(0.76)], startPoint: .top, endPoint: .bottom))
+        }
+        .lineLimit(1)
+        .fixedSize()
+        .shadow(color: .black.opacity(0.3), radius: side * 0.04, y: side * 0.02)
+        .rotationEffect(.degrees(art.tilt))
     }
 
     private func glow(side: CGFloat) -> some View {

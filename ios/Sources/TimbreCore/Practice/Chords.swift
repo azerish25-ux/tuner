@@ -111,14 +111,6 @@ public enum ChordFingering {
     }
 }
 
-public enum NoteNames {
-    public static let sharps = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
-    public static let flats = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
-    public static func name(_ pitchClass: Int, preferFlats: Bool = false) -> String {
-        (preferFlats ? flats : sharps)[((pitchClass % 12) + 12) % 12]
-    }
-}
-
 public enum ChordFinder {
     /// Playable voicings of root + formula on strings tuned to `openMidi` (viewer's left to right).
     public static func shapes(root: Int, formula: ChordFormula, openMidi: [Int], maxFret: Int = 12, span: Int = 4, limit: Int = 8) -> [ChordShape] {

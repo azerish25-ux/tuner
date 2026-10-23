@@ -33,11 +33,11 @@ struct SongsView: View {
         var id: String { course.id }
     }
 
-    /// One instrument filter chip.
+    /// One instrument filter chip, wearing its course's art.
     struct Chip: Identifiable {
         let id: String
         let title: String
-        let symbol: String
+        let course: LearnCourse
     }
 
     struct Hint: Equatable {
@@ -126,7 +126,7 @@ struct SongsView: View {
             seen.insert(instrument)
             let candidates = store.curriculum.courses.filter { $0.instrument == instrument }
             let own = candidates.first { !Self.isCollection($0) } ?? course
-            chips.append(Chip(id: instrument, title: own.title.localized, symbol: own.symbol))
+            chips.append(Chip(id: instrument, title: own.title.localized, course: own))
         }
         return chips
     }
@@ -217,8 +217,8 @@ struct SongsView: View {
                 .id(Self.all)
             ForEach(chips) { chip in
                 Button { choose(chip.id) } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: chip.symbol).font(.caption.weight(.semibold)).accessibilityHidden(true)
+                    HStack(spacing: 7) {
+                        CourseArt(course: chip.course, size: 20).padding(.leading, -5)
                         Text(chip.title)
                     }
                 }
@@ -244,7 +244,8 @@ struct SongsView: View {
                 .frame(maxWidth: .infinity, minHeight: sizeClass == .regular ? 340 : 300, alignment: .bottomLeading)
                 .background {
                     ZStack {
-                        SongCover(art: CoverArt(song), corner: 28, symbolAnchor: UnitPoint(x: 0.8, y: 0.36), drift: true, outlined: false)
+                        // The monogram crops off the top-right corner, clear of the eyebrow and the title.
+                        SongCover(art: CoverArt(song), corner: 28, monogramAnchor: UnitPoint(x: 0.84, y: 0.27), monogramSize: 0.44, drift: true, outlined: false)
                         LinearGradient(colors: [.clear, .black.opacity(0.3), .black.opacity(0.82)], startPoint: .top, endPoint: .bottom)
                     }
                 }
@@ -280,7 +281,7 @@ struct SongsView: View {
                 .lineLimit(2).minimumScaleFactor(0.8).fixedSize(horizontal: false, vertical: true)
                 .shadow(color: .black.opacity(0.4), radius: 8, y: 2)
             HStack(spacing: 6) {
-                Image(systemName: song.course.symbol).foregroundStyle(accent).accessibilityHidden(true)
+                CourseArt(course: song.course, size: 18)
                 Text(song.course.title.localized).foregroundStyle(.white)
                 Text("\(song.lesson.minutes) min · +\(song.lesson.xp) XP").foregroundStyle(.white.opacity(0.72))
             }
@@ -309,14 +310,13 @@ struct SongsView: View {
     // MARK: Shelves
 
     private func shelfView(_ shelf: Shelf) -> some View {
-        let accent = Palette.accent(shelf.course.accent)
         let progress = store.learn
         let earned = shelf.songs.reduce(0) { $0 + (progress.stars[$1.lesson.id] ?? 0) }
         // The rail opens on the next song to play in it.
         let next = shelf.songs.first { !progress.isFinished($0.lesson.id) && LessonAccess.of($0.lesson, in: $0.course, store: store) == .play }
         return VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .center, spacing: 10) {
-                IconOrb(symbol: shelf.course.symbol, tint: accent, size: 32)
+                CourseArt(course: shelf.course, size: 32)
                 Text(shelf.course.title.localized).font(Typeface.display(20)).foregroundStyle(Palette.ink)
                     .accessibilityAddTraits(.isHeader)
                 Spacer(minLength: 8)
@@ -430,8 +430,9 @@ struct SongsView: View {
 }
 
 extension CoverArt {
+    /// The monogram follows the title as shown; colour and pattern follow the lesson id.
     init(_ song: SongsView.Song) {
-        self.init(id: song.lesson.id, title: song.lesson.title.defaultValue, accent: song.course.accent)
+        self.init(id: song.lesson.id, title: song.lesson.title.localized, accent: song.course.accent)
     }
 }
 

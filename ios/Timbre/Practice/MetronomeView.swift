@@ -1,3 +1,4 @@
+import QuartzCore
 import SwiftUI
 import TimbreCore
 
@@ -34,7 +35,9 @@ struct MetronomeView: View {
         .navigationBarTitleDisplayMode(.inline)
         .stageDock { transport }
         .onChange(of: store.bpm) { old, new in reanchor(from: old, to: new) }
-        .onChange(of: audio.metronomeRunning) { _, running in if running { anchor = Date(); anchorBpm = store.bpm } else { trainerTask?.cancel() } }
+        .onChange(of: audio.metronomeRunning) { _, running in
+            if running { anchor = Date(); anchorBpm = store.bpm; alignToClick() } else { trainerTask?.cancel() }
+        }
         .onDisappear { trainerTask?.cancel() }
     }
 
@@ -47,35 +50,68 @@ struct MetronomeView: View {
         anchor = Date().addingTimeInterval(-position * 60 / Double(new))
     }
 
+    /// Moves the beat clock onto the first click as it is heard (engine start-up and output latency
+    /// included) once audio is flowing, so the glow and the pendulum land with the sound.
+    private func alignToClick() {
+        let bpm = store.bpm
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(300))
+            guard audio.metronomeRunning, anchorBpm == bpm, store.bpm == bpm, let origin = audio.metronomeOrigin() else { return }
+            let heard = Date().addingTimeInterval(origin - CACurrentMediaTime())
+            // A start-up delay, never a stale clock.
+            guard abs(heard.timeIntervalSince(anchor)) < 0.75 else { return }
+            anchor = heard
+        }
+    }
+
+    /// Where the click is at `date`: the beat in the bar, a flash that peaks on the click and fades within
+    /// a third of the beat (none on silent beats), and whether the beat is accented (beat 1 by default).
+    private func moment(at date: Date) -> BeatMoment {
+        guard audio.metronomeRunning else { return BeatMoment() }
+        let position = beatPosition(at: date)
+        let count = max(1, store.beats)
+        let whole = Int(floor(position))
+        let beat = ((whole % count) + count) % count
+        let levels = store.beatLevels
+        let level = levels.indices.contains(beat) ? levels[beat] : 1
+        let fraction = position - floor(position)
+        let flash = position < 0 || level == 0 ? 0 : max(0, 1 - fraction * 3.5)
+        return BeatMoment(position: position, flash: flash, accent: level == 2, running: true)
+    }
+
+    /// The pendulum swings through the centre on every click, its soft trail behind it; the bob and the
+    /// space around it flare on each beat, amber with a ring on an accent. Reduce Motion: it hangs still
+    /// (no swing, no trail, no ring) and only glows with the beat.
     private var pendulum: some View {
-        TimelineView(.animation(paused: !audio.metronomeRunning || reduceMotion)) { timeline in
-            let position = audio.metronomeRunning ? beatPosition(at: timeline.date) : 0
-            let swing = sin(position * .pi)  // one side per beat
-            let beat = Int(floor(position)) % max(1, store.beats)
-            let frac = position - floor(position)
-            let flash = audio.metronomeRunning ? max(0, 1 - frac * 3.5) : 0
+        TimelineView(.animation(minimumInterval: reduceMotion ? 1.0 / 30 : nil, paused: !audio.metronomeRunning)) { timeline in
+            let now = moment(at: timeline.date)
+            let still = reduceMotion
             Canvas { context, size in
-                let pivot = CGPoint(x: size.width / 2, y: 14)
-                // Leaves room under the bob so its beat glow fades out inside the canvas.
-                let length = size.height - 62
-                let angle = swing * 0.42
-                let bob = CGPoint(x: pivot.x + sin(angle) * length, y: pivot.y + cos(angle) * length)
-                // Arc of travel
-                var arc = Path()
-                arc.addArc(center: pivot, radius: length, startAngle: .radians(.pi / 2 - 0.46), endAngle: .radians(.pi / 2 + 0.46), clockwise: false)
-                context.stroke(arc, with: .color(Palette.line), style: StrokeStyle(lineWidth: 2, dash: [2, 6]))
-                var rod = Path(); rod.move(to: pivot); rod.addLine(to: bob)
-                context.stroke(rod, with: .linearGradient(Gradient(colors: [Palette.brassDeep, Palette.brass]), startPoint: pivot, endPoint: bob), lineWidth: 3)
-                let accent = store.beatLevels.indices.contains(beat) && store.beatLevels[beat] == 2
-                let glowColor = accent ? Palette.ember : Palette.brass
-                let r: CGFloat = 26 + 10 * flash
-                context.fill(Path(ellipseIn: CGRect(x: bob.x - r * 1.5, y: bob.y - r * 1.5, width: r * 3, height: r * 3)),
-                             with: .radialGradient(Gradient(colors: [glowColor.opacity(0.45 * flash + 0.08), .clear]), center: bob, startRadius: 0, endRadius: r * 1.5))
-                context.fill(Path(ellipseIn: CGRect(x: bob.x - 22, y: bob.y - 22, width: 44, height: 44)),
-                             with: .linearGradient(Gradient(colors: [Color(hex: 0x8BF7D2), Palette.mintDeep]), startPoint: CGPoint(x: bob.x, y: bob.y - 22), endPoint: CGPoint(x: bob.x, y: bob.y + 22)))
-                context.fill(Path(ellipseIn: CGRect(x: pivot.x - 6, y: pivot.y - 6, width: 12, height: 12)), with: .color(Palette.brass))
+                PendulumArt.draw(&context, size: size, moment: now, still: still)
             }
         }
+        .accessibilityHidden(true)
+    }
+
+    /// A soft light behind the tempo that breathes with the click: mint on each beat, amber on an accent.
+    private var tempoGlow: some View {
+        TimelineView(.animation(minimumInterval: 1.0 / 60, paused: !audio.metronomeRunning)) { timeline in
+            let now = moment(at: timeline.date)
+            Canvas { context, size in
+                guard now.flash > 0, size.height > 0 else { return }
+                let tint = now.accent ? Palette.ember : Palette.brass
+                // A circle of light stretched to the canvas, so it fades out before every edge.
+                let radius = size.height / 2
+                var glow = context
+                glow.translateBy(x: size.width / 2, y: size.height / 2)
+                glow.scaleBy(x: size.width / size.height, y: 1)
+                glow.fill(Path(ellipseIn: CGRect(x: -radius, y: -radius, width: radius * 2, height: radius * 2)),
+                          with: .radialGradient(Gradient(colors: [tint.opacity((now.accent ? 0.34 : 0.22) * now.flash), .clear]),
+                                                center: .zero, startRadius: 0, endRadius: radius))
+            }
+        }
+        .frame(width: 280, height: 170)
+        .allowsHitTesting(false)
         .accessibilityHidden(true)
     }
 
@@ -89,6 +125,7 @@ struct MetronomeView: View {
                 Button { store.setMetronome(bpm: store.bpm + 1) } label: { Image(systemName: "plus").frame(width: 44, height: 44) }
                     .buttonStyle(.plain).foregroundStyle(Palette.inkSoft).accessibilityLabel("Faster")
             }
+            .background { tempoGlow }
             Text("\(tempoName) · beats per minute").font(.subheadline).foregroundStyle(Palette.inkSoft)
             Slider(value: Binding(get: { Double(store.bpm) }, set: { store.setMetronome(bpm: Int($0)) }), in: 30...300, step: 1)
                 .tint(Palette.brass).padding(.horizontal, 8)
@@ -252,5 +289,94 @@ struct MetronomeView: View {
                 }
             }
         }
+    }
+}
+
+/// One instant of the click, for drawing.
+private struct BeatMoment {
+    /// Beats since the clock's anchor (0 at rest).
+    var position: Double = 0
+    /// 1 on the click, fading to 0 within a third of the beat.
+    var flash: Double = 0
+    var accent = false
+    var running = false
+}
+
+/// The metronome hero in one pass: the arc of travel, the trail, the rod, the beat light, the bob.
+private enum PendulumArt {
+    /// Widest swing either side, in radians.
+    static let reach = 0.42
+    /// How far back the trail reaches, in beats: the same shape at any tempo.
+    static let trailBeats = 0.3
+
+    static func draw(_ context: inout GraphicsContext, size: CGSize, moment: BeatMoment, still: Bool) {
+        let pivot = CGPoint(x: size.width / 2, y: 14)
+        // Leaves room under the bob so its beat glow fades out inside the canvas.
+        let length = max(40, size.height - 62)
+        let swings = moment.running && !still
+        func bob(at position: Double) -> CGPoint {
+            let angle = swings ? sin(position * .pi) * reach : 0  // one side per beat, through the centre on the click
+            return CGPoint(x: pivot.x + CGFloat(sin(angle)) * length, y: pivot.y + CGFloat(cos(angle)) * length)
+        }
+        let here = bob(at: moment.position)
+        let flash = moment.flash
+        let tint = moment.accent ? Palette.ember : Palette.brass
+
+        // An accent warms the stage around the pendulum, inside the canvas.
+        if moment.accent && flash > 0 {
+            let center = CGPoint(x: size.width / 2, y: size.height / 2)
+            let r = min(size.width, size.height) / 2
+            context.fill(circle(center, r), with: .radialGradient(Gradient(colors: [Palette.ember.opacity(0.12 * flash), .clear]),
+                                                                  center: center, startRadius: 0, endRadius: r))
+        }
+
+        var arc = Path()
+        arc.addArc(center: pivot, radius: length, startAngle: .radians(.pi / 2 - 0.46), endAngle: .radians(.pi / 2 + 0.46), clockwise: false)
+        context.stroke(arc, with: .color(Palette.line), style: StrokeStyle(lineWidth: 2, dash: [2, 6]))
+
+        if swings { trail(&context, tint: tint, position: moment.position, bob: bob) }
+
+        var rod = Path(); rod.move(to: pivot); rod.addLine(to: here)
+        context.stroke(rod, with: .linearGradient(Gradient(colors: [Palette.brassDeep, Palette.brass]), startPoint: pivot, endPoint: here), lineWidth: 3)
+
+        // The beat light around the bob.
+        let r: CGFloat = 26 + 10 * CGFloat(flash)
+        context.fill(circle(here, r * 1.5), with: .radialGradient(Gradient(colors: [tint.opacity(0.5 * flash + 0.08), .clear]),
+                                                                  center: here, startRadius: 0, endRadius: r * 1.5))
+        // An accent sends a ring out from the bob.
+        if moment.accent && flash > 0 && !still {
+            context.stroke(circle(here, 24 + 20 * CGFloat(1 - flash)), with: .color(Palette.ember.opacity(0.75 * flash)), lineWidth: 2)
+        }
+        context.fill(circle(here, 22), with: .linearGradient(Gradient(colors: [Color(hex: 0x8BF7D2), Palette.mintDeep]),
+                                                             startPoint: CGPoint(x: here.x, y: here.y - 22), endPoint: CGPoint(x: here.x, y: here.y + 22)))
+        // The bob itself flushes amber on an accent.
+        if moment.accent && flash > 0 {
+            context.fill(circle(here, 22), with: .color(Palette.ember.opacity(0.55 * flash)))
+        }
+        context.fill(circle(CGPoint(x: here.x - 7, y: here.y - 8), 6), with: .color(.white.opacity(0.16 + 0.2 * flash)))
+        context.fill(circle(pivot, 6), with: .color(Palette.brass))
+    }
+
+    /// A soft ribbon where the bob just was, fading with age, blurred once as a single layer.
+    private static func trail(_ context: inout GraphicsContext, tint: Color, position: Double, bob: @escaping (Double) -> CGPoint) {
+        let steps = 14
+        var soft = context
+        soft.addFilter(.blur(radius: 6))
+        soft.drawLayer { layer in
+            var previous = bob(position - trailBeats)
+            for step in 1...steps {
+                let point = bob(position - trailBeats * Double(steps - step) / Double(steps))
+                var segment = Path()
+                segment.move(to: previous)
+                segment.addLine(to: point)
+                let age = Double(step) / Double(steps)
+                layer.stroke(segment, with: .color(tint.opacity(0.3 * age)), style: StrokeStyle(lineWidth: 28 * CGFloat(0.55 + 0.45 * age), lineCap: .round))
+                previous = point
+            }
+        }
+    }
+
+    private static func circle(_ center: CGPoint, _ radius: CGFloat) -> Path {
+        Path(ellipseIn: CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2))
     }
 }

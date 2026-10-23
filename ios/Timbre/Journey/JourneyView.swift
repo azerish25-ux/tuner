@@ -9,6 +9,14 @@ struct JourneyView: View {
     @State private var confirmRestring = false
     /// The string-health bars grow from the baseline once.
     @State private var driftShown = false
+    /// Every badge or only the first rows (earned first, then the closest).
+    @State private var allBadges = false
+    /// The badge whose details are showing.
+    @State private var openBadge: String?
+    /// Badges earned since the last visit: their medals catch the light once.
+    @State private var shining: Set<String> = []
+    /// Ids of the earned badges already shown here (comma-separated).
+    @AppStorage("journey.badgesSeen") private var badgesSeen = ""
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -187,20 +195,49 @@ struct JourneyView: View {
         return (n > 0 ? "+" : "−") + abs(n).formatted()
     }
 
+    /// Badges shown before "Show all" (three rows on a phone).
+    private static let collapsedBadges = 9
+
     private var achievements: some View {
         let badges = badgeProgress
         let earnedCount = badges.filter(\.earned).count
+        let shown = allBadges ? badges : Array(badges.prefix(Self.collapsedBadges))
         return VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .firstTextBaseline) {
                 Text("Achievements").font(Typeface.display(16)).foregroundStyle(Palette.ink)
                 Spacer()
                 Text("\(earnedCount) of \(Achievements.all.count)").font(.caption).foregroundStyle(Palette.inkSoft)
             }
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 92), spacing: 10, alignment: .top)], spacing: 16) {
-                ForEach(badges) { badge in badgeCell(badge) }
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 92), spacing: 10, alignment: .top)], alignment: .center, spacing: 18) {
+                ForEach(shown) { badge in badgeCell(badge) }
+            }
+            if badges.count > Self.collapsedBadges {
+                Button {
+                    withAnimation(Motion.settle) { allBadges.toggle() }
+                    Haptics.shared.selection()
+                } label: {
+                    HStack(spacing: 6) {
+                        Text(allBadges ? LocalizedStringKey("Show fewer") : LocalizedStringKey("Show all"))
+                        Image(systemName: "chevron.down").rotationEffect(.degrees(allBadges ? 180 : 0))
+                    }
+                    .font(.footnote.weight(.semibold)).foregroundStyle(Palette.mint)
+                    .frame(maxWidth: .infinity, minHeight: 36)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("journey.badges.more")
             }
         }
         .stillCard()
+        .onAppear(perform: noteNewBadges)
+    }
+
+    /// Earned badges not seen here before shine once; from now on they count as seen.
+    private func noteNewBadges() {
+        let earned = store.progress.achievements
+        let seen = Set(badgesSeen.split(separator: ",").map(String.init))
+        shining = Set(earned).subtracting(seen)
+        badgesSeen = earned.joined(separator: ",")
     }
 
     /// Earned first, then the locked ones closest to their goal.
@@ -209,33 +246,92 @@ struct JourneyView: View {
         let earned = Set(state.achievements)
         let streakBest = store.streak.best
         let custom = store.settings.customTunings?.count ?? 0
+        let metrics = store.badgeMetrics
         var all: [BadgeProgress] = []
         for (index, a) in Achievements.all.enumerated() {
-            let value = a.value(state, streakBest: streakBest, customTunings: custom)
+            let value = a.value(state, streakBest: streakBest, customTunings: custom, metrics: metrics)
             all.append(BadgeProgress(achievement: a, earned: earned.contains(a.id), value: value, order: index))
         }
         return all.sorted(by: BadgeProgress.precedes)
     }
 
+    /// Instrument artwork for a course badge (the course's instrument cut-out), nil for the others.
+    private func badgeImage(_ achievement: Achievement) -> String? {
+        guard let courseId = Achievements.courseId(of: achievement),
+              let instrument = store.curriculum.course(id: courseId)?.instrument else { return nil }
+        return store.catalog.photo(instrumentId: instrument)?.asset
+    }
+
+    /// Medal, two reserved lines of title and one line of status ("Earned" or "38 / 50"), so every cell is the
+    /// same height and the counters line up across a row. Tapping shows what the badge asks for.
     private func badgeCell(_ badge: BadgeProgress) -> some View {
         let a = badge.achievement
         let shown = min(badge.value, a.goal)
-        return VStack(spacing: 6) {
-            AchievementMedal(achievement: a, earned: badge.earned, progress: badge.earned ? nil : badge.fraction)
-            Text(LocalizedStringKey(a.title)).font(.caption.weight(.semibold))
-                .foregroundStyle(badge.earned ? Palette.ink : Palette.inkSoft)
-                .multilineTextAlignment(.center)
-                .lineLimit(2, reservesSpace: true)
-            if !badge.earned {
-                Text(verbatim: "\(shown.formatted()) / \(a.goal.formatted())").font(Typeface.number(11))
-                    .foregroundStyle(shown > 0 ? Palette.mint : Palette.inkFaint)
-                    .lineLimit(1).minimumScaleFactor(0.8)
+        return Button {
+            openBadge = a.id
+            Haptics.shared.selection()
+        } label: {
+            VStack(spacing: 6) {
+                AchievementMedal(achievement: a, earned: badge.earned, size: 58, progress: badge.earned ? nil : badge.fraction,
+                                 image: badgeImage(a), shine: shining.contains(a.id))
+                    .padding(.bottom, 2)
+                Text(LocalizedStringKey(a.title)).font(.caption.weight(.semibold))
+                    .foregroundStyle(badge.earned ? Palette.ink : Palette.inkSoft)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2, reservesSpace: true)
+                    .minimumScaleFactor(0.85)
+                status(badge, shown: shown)
             }
+            .frame(maxWidth: .infinity, alignment: .top)
+            .contentShape(Rectangle())
         }
-        .frame(maxWidth: .infinity)
+        .buttonStyle(PressScaleStyle())
+        .popover(isPresented: Binding(get: { openBadge == a.id }, set: { if !$0 && openBadge == a.id { openBadge = nil } })) {
+            badgeDetail(badge, shown: shown)
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(LocalizedStringKey(a.title)))
         .accessibilityValue(badge.earned ? Text("Earned") : Text(LocalizedStringKey(a.detail)) + Text(verbatim: ", ") + Text("\(shown) of \(a.goal)"))
+        .accessibilityAddTraits(.isButton)
+        .accessibilityIdentifier("badge.\(a.id)")
+    }
+
+    /// One line under every medal: the tier's colour once earned, the count toward the goal while locked.
+    @ViewBuilder private func status(_ badge: BadgeProgress, shown: Int) -> some View {
+        if badge.earned {
+            Text("Earned").font(Typeface.label(11)).foregroundStyle(badge.achievement.tier.ink)
+                .lineLimit(1).minimumScaleFactor(0.8)
+        } else {
+            Text(verbatim: "\(shown.formatted()) / \(badge.achievement.goal.formatted())").font(Typeface.number(11))
+                .foregroundStyle(shown > 0 ? badge.achievement.category.tint : Palette.inkFaint)
+                .lineLimit(1).minimumScaleFactor(0.8)
+        }
+    }
+
+    /// The popover: what the badge asks for and how far along it is.
+    private func badgeDetail(_ badge: BadgeProgress, shown: Int) -> some View {
+        let a = badge.achievement
+        return HStack(alignment: .center, spacing: 14) {
+            AchievementMedal(achievement: a, earned: badge.earned, size: 48, progress: badge.earned ? nil : badge.fraction, image: badgeImage(a))
+            VStack(alignment: .leading, spacing: 5) {
+                Text(LocalizedStringKey(a.title)).font(.headline).foregroundStyle(Palette.ink)
+                Text(LocalizedStringKey(a.detail)).font(.subheadline).foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
+                if badge.earned {
+                    Text("Earned").font(Typeface.label(12)).foregroundStyle(a.tier.ink)
+                } else {
+                    HStack(spacing: 8) {
+                        ProgressLine(value: badge.fraction, color: a.category.tint, height: 5).frame(width: 110)
+                        Text(verbatim: "\(shown.formatted()) / \(a.goal.formatted())").font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                    }
+                }
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: 320, alignment: .leading)
+        .presentationCompactAdaptation(.popover)
+        .presentationBackground(Palette.surface)
+        .environment(\.colorScheme, .dark)
     }
 
     private var tuningSessions: [PracticeRecord] {

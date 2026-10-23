@@ -146,10 +146,13 @@ final class TimbreUITests: XCTestCase {
     func test04PracticeTour() throws {
         launch()
         tab("Play"); settle(1.5); shot("20-practice-hub")
+        // The Today card sits above the tools: bring the metronome into view first.
+        scrollTo(element("practice.metronome"))
         element("practice.metronome").tap(); settle(1.2); shot("21-metronome")
         element("metronome.start").tap(); settle(1.0); shot("22-metronome-running")
         element("metronome.start").tap()
         app.navigationBars.buttons.firstMatch.tap(); settle()
+        scrollTo(element("practice.ear"))
         element("practice.ear").tap(); settle(2); shot("23-ear-training")
         app.navigationBars.buttons.firstMatch.tap(); settle()
         scrollTo(element("practice.voice"))

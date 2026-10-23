@@ -75,9 +75,24 @@ public struct DailyActivity: Identifiable, Equatable, Sendable {
 }
 
 public enum DailySet {
+    /// Activities that need Timbre Pro (chords, scales, the drone).
+    public static let proKinds: Set<DailyActivity.Kind> = [.chord, .scale, .drone]
+
     /// Builds about ten minutes of practice for the player's instrument and goal.
-    /// Deterministic per calendar day so the set is stable across launches.
-    public static func activities(instrument: Instrument, goal: String?, date: Date = Date(), calendar: Calendar = .current) -> [DailyActivity] {
+    /// Deterministic per calendar day so the set is stable across launches. Without Pro, the Pro activity's
+    /// minutes go to ear training instead, so a free player can always finish the whole set.
+    public static func activities(instrument: Instrument, goal: String?, pro: Bool = true, date: Date = Date(), calendar: Calendar = .current) -> [DailyActivity] {
+        let set = proActivities(instrument: instrument, goal: goal, date: date, calendar: calendar)
+        guard !pro else { return set }
+        let freed = set.filter { proKinds.contains($0.kind) }.reduce(0) { $0 + $1.minutes }
+        var free = set.filter { !proKinds.contains($0.kind) }
+        if freed > 0, let index = free.firstIndex(where: { $0.kind == .ear }) ?? free.firstIndex(where: { $0.kind != .tune }) {
+            free[index] = DailyActivity(kind: free[index].kind, minutes: free[index].minutes + freed)
+        }
+        return free
+    }
+
+    private static func proActivities(instrument: Instrument, goal: String?, date: Date, calendar: Calendar) -> [DailyActivity] {
         let day = calendar.ordinality(of: .day, in: .era, for: date) ?? 0
         let fretted = ["guitar", "ukulele", "mandolin", "folk_world_strings"].contains(instrument.familyId) && instrument.anchorType == "MACHINE_HEAD"
         var set: [DailyActivity] = [DailyActivity(kind: .tune, minutes: 1)]

@@ -116,7 +116,8 @@ struct FirstTuneStep: View {
     // MARK: Pieces
 
     private var header: some View {
-        let title: LocalizedStringKey = model.lockedIn ? "In tune" : "Pluck your thickest string"
+        // Locked: the readout's badge says "In tune"; the title cheers instead of repeating it.
+        let title: LocalizedStringKey = model.lockedIn ? "Great work" : "Pluck your thickest string"
         return VStack(alignment: .leading, spacing: 6) {
             Text(title).font(Typeface.display(32)).tracking(-0.6)
                 .foregroundStyle(model.lockedIn ? Palette.mint : Palette.ink)
@@ -174,10 +175,14 @@ struct FirstTuneStep: View {
                 NoteReadout(note: setup.note, shown: shown, hertz: motion.shownHertz, target: setup.hz, locked: locked, compact: true)
                 RibbonMeter(cents: motion.cents, shown: shown, phase: motion.phase, locked: locked)
                     .frame(height: 34).padding(.horizontal, 32)
+                // Once locked the badge above says "In tune"; the line keeps its height but goes quiet.
                 Text(statusLine(reading, shown: shown, locked: locked))
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(statusColor(reading, shown: shown, locked: locked))
                     .monospacedDigit()
+                    .opacity(locked ? 0 : 1)
+                    .animation(Motion.quick, value: locked)
+                    .accessibilityHidden(locked)
                     .accessibilityIdentifier("onboarding.firsttune.status")
             }
         }

@@ -2,6 +2,8 @@ import StoreKit
 import SwiftUI
 import TimbreCore
 
+/// Settings in the Studio Noir card style: each group is a raised card under an eyebrow header, every row
+/// carries an icon orb, separators are inset to the titles, and footers sit small and grey below their card.
 struct SettingsView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
@@ -23,24 +25,25 @@ struct SettingsView: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                membership
-                tuningSection
-                displaySection
-                Section("Feedback") {
-                    Toggle("Haptics", isOn: setting(\.hapticsEnabled))
-                    Picker("Stage", selection: Binding(get: { store.settings.stageMode ?? "3d" }, set: { v in store.updateSettings { $0.stageMode = v } })) {
-                        Text("Real-time 3D").tag("3d"); Text("Studio (lighter)").tag("studio")
-                    }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 28) {
+                    membership
+                    tuningSection
+                    displaySection
+                    feedbackSection
+                    reminderSection
+                    listeningSection
+                    languageSection
+                    privacySection
                 }
-                reminderSection
-                NavigationLink("Advanced listening") { AdvancedListening() }
-                languageSection
-                privacySection
+                .padding(.horizontal, Metrics.gutter)
+                .padding(.top, 12)
+                .padding(.bottom, 36)
             }
-            .scrollContentBackground(.hidden)
+            .scrollDismissesKeyboard(.interactively)
+            .stageTopShade()
             .background(StageBackground(motes: false))
-            .tint(Palette.brass)
+            .tint(Palette.mint)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -58,71 +61,151 @@ struct SettingsView: View {
         .paywallSheet()
     }
 
+    // MARK: Membership
+
     private var membership: some View {
-        Section {
+        SettingsGroup(tint: commerce.isPro ? Palette.mint : Palette.amber) {
             if commerce.isPro {
-                Label { VStack(alignment: .leading, spacing: 2) {
-                    Text("Timbre Pro is active").font(.headline)
-                    if let date = commerce.renewalDate { Text("Renews \(date.formatted(date: .abbreviated, time: .omitted))").font(.caption).foregroundStyle(Palette.inkSoft) }
-                    else if commerce.activeProductID == TimbreProduct.lifetime { Text("Lifetime").font(.caption).foregroundStyle(Palette.inkSoft) }
-                } } icon: { Image(systemName: "checkmark.seal.fill").foregroundStyle(Palette.brass) }
-                if commerce.activeProductID != TimbreProduct.lifetime { Button("Manage subscription") { manageSubscriptions = true } }
+                proStatus
+                if commerce.activeProductID != TimbreProduct.lifetime {
+                    RowDivider()
+                    Button { manageSubscriptions = true } label: {
+                        SettingRow(symbol: "creditcard", title: Text("Manage subscription")) { RowGlyph(symbol: "chevron.right") }
+                    }
+                    .buttonStyle(RowButtonStyle())
+                }
             } else {
                 Button { store.presentPaywall("settings") } label: {
                     FeatureRow(symbol: "sparkles", title: "Try Timbre Pro", detail: "Every instrument, every ear game and practice tool.") { ProBadge() }
+                        .padding(16)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(RowButtonStyle())
                 .accessibilityIdentifier("settings.pro")
             }
-            Button("Restore purchases") { Task { await commerce.restore() } }
+            RowDivider()
+            Button { Task { await commerce.restore() } } label: {
+                SettingRow(symbol: "arrow.clockwise", title: Text("Restore purchases"))
+            }
+            .buttonStyle(RowButtonStyle())
         }
     }
 
+    private var proStatus: some View {
+        HStack(spacing: 14) {
+            IconOrb(symbol: "checkmark.seal.fill", tint: Palette.mint)
+            VStack(alignment: .leading, spacing: 3) {
+                Text("Timbre Pro is active").font(.headline).foregroundStyle(Palette.ink)
+                if let date = commerce.renewalDate {
+                    Text("Renews \(date.formatted(date: .abbreviated, time: .omitted))").font(.caption).foregroundStyle(Palette.inkSoft)
+                } else if commerce.activeProductID == TimbreProduct.lifetime {
+                    Text("Lifetime").font(.caption).foregroundStyle(Palette.inkSoft)
+                }
+            }
+            Spacer(minLength: 8)
+            ProBadge()
+        }
+        .padding(16)
+        .accessibilityElement(children: .combine)
+    }
+
+    // MARK: Tuning
+
     private var tuningSection: some View {
-        Section {
-            HStack {
-                Text("A4")
-                Spacer()
-                TextField("440", text: $referenceInput).keyboardType(.decimalPad).multilineTextAlignment(.trailing).focused($referenceFocused).frame(width: 90)
-                    .accessibilityIdentifier("settings.referenceInput")
-                Text("Hz").foregroundStyle(Palette.inkSoft)
-            }
-            if parsedReference == nil { Text("Enter a value from 415 to 466 Hz.").font(.caption).foregroundStyle(Palette.danger) }
-            else if parsedReference != store.settings.referencePitchHz {
-                Button("Apply \(referenceInput) Hz") { referenceFocused = false; if let v = parsedReference { store.updateSettings { $0.referencePitchHz = v } } }
-                    .accessibilityIdentifier("settings.applyReference")
-            }
-            Picker("Temperament", selection: Binding(get: { store.settings.temperamentId }, set: { value in
-                if value != "equal" && !commerce.isPro { store.presentPaywall("temperament"); return }
-                store.updateSettings { $0.temperamentId = value }
-            })) { ForEach(Temperament.all) { Text($0.name).tag($0.id) } }
+        SettingsGroup(title: "Tuning", footer: Text("Capo and transposition change the names you see, never the pitch Timbre measures.")) {
+            referenceRow
+            RowDivider()
+            temperamentPicker
+            RowDivider()
             precisionPicker
-            Toggle(isOn: Binding(get: { strobeView }, set: { on in
-                if on && !commerce.isPro { store.presentPaywall("precision"); return }
-                strobeView = on
-            })) { Text("Strobe precision") }
-            .accessibilityIdentifier("settings.strobe")
-            Picker("Note names", selection: setting(\.notation)) {
-                Text("Letters").tag("english"); Text("Solfège").tag("solfege"); Text("Sargam").tag("sargam"); Text("Numbers").tag("numbered")
+            RowDivider()
+            strobeToggle
+            RowDivider()
+            notationPicker
+            RowDivider()
+            capoStepper
+            RowDivider()
+            transposeStepper
+        }
+    }
+
+    private var temperamentPicker: some View {
+        MenuRow(title: "Temperament", symbol: "slider.horizontal.3", id: "settings.temperament", selection: Binding(get: { store.settings.temperamentId }, set: { value in
+            if value != "equal" && !commerce.isPro { store.presentPaywall("temperament"); return }
+            store.updateSettings { $0.temperamentId = value }
+        })) { ForEach(Temperament.all) { Text($0.name).tag($0.id) } }
+    }
+
+    private var strobeToggle: some View {
+        Toggle(isOn: Binding(get: { strobeView }, set: { on in
+            if on && !commerce.isPro { store.presentPaywall("precision"); return }
+            strobeView = on
+        })) { RowLabel(symbol: "circle.dotted", title: Text("Strobe precision")) }
+        .settingsRow()
+        .accessibilityIdentifier("settings.strobe")
+    }
+
+    private var capoStepper: some View {
+        Stepper(value: Binding(get: { store.settings.capo }, set: { v in
+            guard commerce.isPro || v == 0 else { store.presentPaywall("capo"); return }
+            store.updateSettings { $0.capo = v }
+        }), in: 0...12) { RowLabel(symbol: "line.3.horizontal", title: Text("Capo: \(store.settings.capo)")) }
+        .settingsRow()
+    }
+
+    private var transposeStepper: some View {
+        Stepper(value: Binding(get: { store.settings.transposition }, set: { v in
+            guard commerce.isPro || v == 0 else { store.presentPaywall("transpose"); return }
+            store.updateSettings { $0.transposition = v }
+        }), in: -12...12) { RowLabel(symbol: "arrow.up.arrow.down", title: Text("Transpose: \(store.settings.transposition)")) }
+        .settingsRow()
+    }
+
+    /// A4 in hertz: typed, checked against 415–466 Hz, and applied on demand.
+    private var referenceRow: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 12) {
+                RowLabel(symbol: "tuningfork", title: Text("A4"))
+                Spacer(minLength: 8)
+                HStack(spacing: 6) {
+                    TextField("440", text: $referenceInput)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                        .focused($referenceFocused)
+                        .font(Typeface.number(17))
+                        .foregroundStyle(Palette.ink)
+                        .frame(width: 72)
+                        .accessibilityIdentifier("settings.referenceInput")
+                    Text("Hz").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                }
+                .padding(.horizontal, 12).padding(.vertical, 7)
+                .background(Capsule().fill(Palette.surface))
+                .overlay(Capsule().strokeBorder(referenceFocused ? Palette.mint.opacity(0.6) : Palette.line, lineWidth: 1))
             }
-            Stepper("Capo: \(store.settings.capo)", value: Binding(get: { store.settings.capo }, set: { v in
-                guard commerce.isPro || v == 0 else { store.presentPaywall("capo"); return }
-                store.updateSettings { $0.capo = v }
-            }), in: 0...12)
-            Stepper("Transpose: \(store.settings.transposition)", value: Binding(get: { store.settings.transposition }, set: { v in
-                guard commerce.isPro || v == 0 else { store.presentPaywall("transpose"); return }
-                store.updateSettings { $0.transposition = v }
-            }), in: -12...12)
-        } header: { Text("Tuning") } footer: {
-            Text("Capo and transposition change the names you see, never the pitch Timbre measures.")
-                .font(.footnote).foregroundStyle(Palette.inkSoft)
+            .settingsRow()
+            referenceStatus
+        }
+        .animation(Motion.quick, value: parsedReference)
+    }
+
+    @ViewBuilder private var referenceStatus: some View {
+        if parsedReference == nil {
+            Text("Enter a value from 415 to 466 Hz.")
+                .font(.footnote).foregroundStyle(Palette.danger)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, RowDivider.inset).padding(.trailing, 16).padding(.bottom, 12)
+        } else if parsedReference != store.settings.referencePitchHz {
+            Button("Apply \(referenceInput) Hz") { referenceFocused = false; if let v = parsedReference { store.updateSettings { $0.referencePitchHz = v } } }
+                .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.mint)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, RowDivider.inset).padding(.trailing, 16).padding(.bottom, 12)
+                .accessibilityIdentifier("settings.applyReference")
         }
     }
 
     /// How close a string must hold to lock: Beginner ±5¢ (the original), Standard ±3¢, Pro ±1¢ (Timbre Pro).
     /// The tracker, the colours and the meter's green zone all follow it.
     private var precisionPicker: some View {
-        Picker("Precision", selection: Binding(get: { store.settings.precision }, set: { value in
+        MenuRow(title: "Precision", symbol: "scope", id: "settings.precision", selection: Binding(get: { store.settings.precision }, set: { value in
             if value == .pro && !commerce.isPro { store.presentPaywall("precision"); return }
             store.updateSettings { $0.precision = value }
         })) {
@@ -130,7 +213,6 @@ struct SettingsView: View {
                 (Self.precisionName(precision) + Text(verbatim: " ±\(Int(precision.bandCents))¢")).tag(precision)
             }
         }
-        .accessibilityIdentifier("settings.precision")
     }
 
     private static func precisionName(_ precision: TuningPrecision) -> Text {
@@ -141,83 +223,281 @@ struct SettingsView: View {
         }
     }
 
+    /// Letters, German letters (B natural is H, B flat is B), solfège, sargam or numbers. Picking one here
+    /// fixes it; until then it follows the app language.
+    private var notationPicker: some View {
+        MenuRow(title: "Note names", symbol: "textformat.abc", id: "settings.notation", selection: Binding(get: { store.settings.notation }, set: { value in
+            store.updateSettings { $0.notation = value; $0.notationChosen = true }
+        })) {
+            Text("Letters").tag("english")
+            Text("German (H)").tag("german")
+            Text("Solfège").tag("solfege")
+            Text("Sargam").tag("sargam")
+            Text("Numbers").tag("numbered")
+        }
+    }
+
+    // MARK: Display and feedback
+
+    private var displaySection: some View {
+        SettingsGroup(title: "Display") {
+            MenuRow(title: "Handedness", symbol: "hand.raised", id: "settings.handedness", selection: setting(\.handedness)) {
+                Text("Right-handed").tag("right"); Text("Left-handed").tag("left")
+            }
+        }
+    }
+
+    private var feedbackSection: some View {
+        SettingsGroup(title: "Feedback") {
+            Toggle(isOn: setting(\.hapticsEnabled)) { RowLabel(symbol: "iphone.radiowaves.left.and.right", title: Text("Haptics")) }
+                .settingsRow()
+            RowDivider()
+            MenuRow(title: "Stage", symbol: "cube.transparent", id: "settings.stage",
+                    selection: Binding(get: { store.settings.stageMode ?? "3d" }, set: { v in store.updateSettings { $0.stageMode = v } })) {
+                Text("Real-time 3D").tag("3d"); Text("Studio (lighter)").tag("studio")
+            }
+        }
+    }
+
+    // MARK: Reminders
+
     @AppStorage(PracticeReminder.enabledKey) private var reminderOn = false
     @AppStorage(PracticeReminder.minutesKey) private var reminderMinutes = 19 * 60
 
     private var reminderSection: some View {
-        Section {
-            Toggle("Daily practice reminder", isOn: Binding(get: { reminderOn }, set: { on in
+        SettingsGroup(title: "Reminders", footer: Text("One gentle nudge a day, at a time you choose.")) {
+            Toggle(isOn: Binding(get: { reminderOn }, set: { on in
                 if on { Task { reminderOn = await PracticeReminder.enable(at: reminderMinutes) } } else { PracticeReminder.disable(); reminderOn = false }
-            }))
+            })) { RowLabel(symbol: "bell", title: Text("Daily practice reminder")) }
+            .settingsRow()
             .accessibilityIdentifier("settings.reminder")
             if reminderOn {
-                DatePicker("Time", selection: Binding(get: {
+                RowDivider()
+                DatePicker(selection: Binding(get: {
                     Calendar.current.date(bySettingHour: reminderMinutes / 60, minute: reminderMinutes % 60, second: 0, of: Date()) ?? Date()
                 }, set: { date in
                     let parts = Calendar.current.dateComponents([.hour, .minute], from: date)
                     reminderMinutes = (parts.hour ?? 19) * 60 + (parts.minute ?? 0)
                     Task { await PracticeReminder.enable(at: reminderMinutes) }
-                }), displayedComponents: .hourAndMinute)
+                }), displayedComponents: .hourAndMinute) { RowLabel(symbol: "clock", title: Text("Time")) }
+                .settingsRow()
+                .transition(.opacity)
             }
-        } header: { Text("Reminders") } footer: { Text("One gentle nudge a day, at a time you choose.").font(.footnote).foregroundStyle(Palette.inkSoft) }
+        }
+        .animation(Motion.settle, value: reminderOn)
     }
 
-    private var displaySection: some View {
-        Section("Display") {
-            Picker("Handedness", selection: setting(\.handedness)) { Text("Right-handed").tag("right"); Text("Left-handed").tag("left") }
+    // MARK: Listening, language, privacy
+
+    private var listeningSection: some View {
+        SettingsGroup {
+            NavigationLink { AdvancedListening() } label: {
+                SettingRow(symbol: "ear", title: Text("Advanced listening")) { RowGlyph(symbol: "chevron.right") }
+            }
+            .buttonStyle(RowButtonStyle())
         }
     }
 
     private var languageSection: some View {
-        Section("Language") {
-            Picker("App language", selection: setting(\.language)) {
+        SettingsGroup(title: "Language") {
+            // Note names follow the language until the player picks a system (German reads B natural as H).
+            MenuRow(title: "App language", symbol: "globe", id: "settings.language", selection: Binding(get: { store.settings.language }, set: { value in
+                store.updateSettings { $0.language = value; $0.applyNotationDefault(systemLanguage: Locale.preferredLanguages.first) }
+            })) {
                 Text("System default").tag("system")
                 ForEach(Self.languages, id: \.self) { code in
                     Text(Locale(identifier: code).localizedString(forIdentifier: code)?.localizedCapitalized ?? code).tag(code)
                 }
             }
-            .accessibilityIdentifier("settings.language")
         }
     }
 
     private var privacySection: some View {
-        Section {
-            Label("Microphone audio is analysed on this device. Recordings are never saved or uploaded.", systemImage: "lock.shield.fill")
-                .font(.subheadline).foregroundStyle(Palette.inkSoft)
-            Link("Privacy policy", destination: URL(string: "https://azerish25-ux.github.io/tuner/privacy.html")!)
-            NavigationLink("Acknowledgements") { Acknowledgements() }
-            Button("Clear practice history", role: .destructive) { confirmClear = true }
-        } header: { Text("Privacy") } footer: {
-            Text("Timbre \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "")")
-                .font(.footnote).foregroundStyle(Palette.inkSoft)
+        SettingsGroup(title: "Privacy", footer: Text("Timbre \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "")")) {
+            HStack(alignment: .top, spacing: 12) {
+                IconOrb(symbol: "lock.shield.fill", tint: Palette.mint, size: 30)
+                Text("Microphone audio is analysed on this device. Recordings are never saved or uploaded.")
+                    .font(.subheadline).foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 5)
+            }
+            .settingsRow()
+            RowDivider()
+            Link(destination: URL(string: "https://azerish25-ux.github.io/tuner/privacy.html")!) {
+                SettingRow(symbol: "doc.text", title: Text("Privacy policy")) { RowGlyph(symbol: "arrow.up.right") }
+            }
+            .buttonStyle(RowButtonStyle())
+            RowDivider()
+            NavigationLink { Acknowledgements() } label: {
+                SettingRow(symbol: "heart", title: Text("Acknowledgements")) { RowGlyph(symbol: "chevron.right") }
+            }
+            .buttonStyle(RowButtonStyle())
+            RowDivider()
+            Button(role: .destructive) { confirmClear = true } label: {
+                SettingRow(symbol: "trash", title: Text("Clear practice history"), tint: Palette.danger, titleColor: Palette.danger)
+            }
+            .buttonStyle(RowButtonStyle())
         }
     }
 
     static let languages = ["ar", "bg", "bn", "ca", "cs", "da", "de", "el", "en", "es", "et", "fa", "fi", "fr", "gu", "he", "hi", "hr", "hu", "id", "is", "it", "ja", "kn", "ko", "lt", "lv", "ml", "mr", "nl", "no", "pa", "pl", "pt", "ro", "ru", "sk", "sl", "sv", "sw", "ta", "te", "th", "tr", "uk", "ur", "vi", "zh-CN", "zu"]
 }
 
+// MARK: - Card parts
+
+/// One settings card: an eyebrow header, the rows on a raised surface, and a small grey footer.
+private struct SettingsGroup<Content: View>: View {
+    var title: LocalizedStringKey?
+    var footer: Text?
+    var tint: Color?
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            if let title {
+                Eyebrow(title).padding(.horizontal, 6).accessibilityAddTraits(.isHeader)
+            }
+            VStack(spacing: 0) { content }
+                .clipShape(RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous))
+                .stillCard(padding: 0, tint: tint)
+            if let footer {
+                footer
+                    .font(.footnote).foregroundStyle(Palette.inkFaint)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 6)
+            }
+        }
+    }
+}
+
+/// An icon orb and a title: the leading half of every row (and the label of toggles, steppers and pickers).
+private struct RowLabel: View {
+    let symbol: String
+    let title: Text
+    var tint: Color = Palette.mint
+    var titleColor: Color = Palette.ink
+
+    var body: some View {
+        HStack(spacing: 12) {
+            IconOrb(symbol: symbol, tint: tint, size: 30)
+            title.font(.body).foregroundStyle(titleColor).multilineTextAlignment(.leading)
+        }
+    }
+}
+
+/// A full row: label, then an optional trailing glyph or control.
+private struct SettingRow<Trailing: View>: View {
+    let symbol: String
+    let title: Text
+    var tint: Color = Palette.mint
+    var titleColor: Color = Palette.ink
+    @ViewBuilder var trailing: Trailing
+
+    var body: some View {
+        HStack(spacing: 12) {
+            RowLabel(symbol: symbol, title: title, tint: tint, titleColor: titleColor)
+            Spacer(minLength: 8)
+            trailing
+        }
+        .settingsRow()
+        .contentShape(Rectangle())
+    }
+}
+
+extension SettingRow where Trailing == EmptyView {
+    init(symbol: String, title: Text, tint: Color = Palette.mint, titleColor: Color = Palette.ink) {
+        self.init(symbol: symbol, title: title, tint: tint, titleColor: titleColor) { EmptyView() }
+    }
+}
+
+/// A row whose value is picked from a menu, shown in mint at the trailing edge.
+private struct MenuRow<Selection: Hashable, Options: View>: View {
+    let title: LocalizedStringKey
+    let symbol: String
+    let id: String
+    @Binding var selection: Selection
+    @ViewBuilder var options: Options
+
+    var body: some View {
+        HStack(spacing: 12) {
+            RowLabel(symbol: symbol, title: Text(title))
+            Spacer(minLength: 8)
+            Picker(title, selection: $selection) { options }
+                .labelsHidden()
+                .pickerStyle(.menu)
+                .accessibilityIdentifier(id)
+        }
+        .settingsRow()
+    }
+}
+
+/// Chevron or arrow at the end of a navigating row.
+private struct RowGlyph: View {
+    let symbol: String
+    var body: some View {
+        Image(systemName: symbol)
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(Palette.inkFaint)
+            .accessibilityHidden(true)
+    }
+}
+
+/// Hairline between rows, inset to line up with the titles (never full width).
+private struct RowDivider: View {
+    /// Row padding + icon orb + spacing.
+    static let inset: CGFloat = 16 + 30 + 12
+    var body: some View {
+        Divider().overlay(Palette.line).padding(.leading, Self.inset)
+    }
+}
+
+/// Rows that act as buttons light up softly under the finger.
+private struct RowButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .background(Color.white.opacity(configuration.isPressed ? 0.05 : 0))
+            .animation(Motion.quick, value: configuration.isPressed)
+    }
+}
+
+private extension View {
+    /// Padding and height shared by every settings row.
+    func settingsRow() -> some View {
+        padding(.horizontal, 16).padding(.vertical, 8)
+            .frame(maxWidth: .infinity, minHeight: 54, alignment: .leading)
+    }
+}
+
+// MARK: - Sub-pages
+
 private struct AdvancedListening: View {
     @EnvironmentObject private var store: AppStore
     var body: some View {
-        Form {
-            Section {
-                VStack(alignment: .leading) {
-                    Text("Microphone sensitivity: \(store.settings.micSensitivity)%")
+        ScrollView {
+            SettingsGroup(footer: Text("Strict confidence asks for a clearer note before showing a reading. Larger windows read lower notes with a little more delay.")) {
+                VStack(alignment: .leading, spacing: 8) {
+                    RowLabel(symbol: "mic", title: Text("Microphone sensitivity: \(store.settings.micSensitivity)%"))
                     Slider(value: Binding(get: { Double(store.settings.micSensitivity) }, set: { v in store.updateSettings { $0.micSensitivity = Int(v.rounded()) } }), in: 0...100, step: 1)
+                        .padding(.leading, RowDivider.inset - 16)
                 }
-                Picker("Confidence", selection: Binding(get: { store.settings.confidenceThreshold }, set: { v in store.updateSettings { $0.confidenceThreshold = v } })) {
+                .padding(.horizontal, 16).padding(.vertical, 12)
+                RowDivider()
+                MenuRow(title: "Confidence", symbol: "checkmark.circle", id: "settings.confidence",
+                        selection: Binding(get: { store.settings.confidenceThreshold }, set: { v in store.updateSettings { $0.confidenceThreshold = v } })) {
                     Text("Responsive").tag(0.60); Text("Balanced").tag(0.75); Text("Strict").tag(0.90)
                 }
-                Picker("Analysis window", selection: Binding(get: { store.settings.analysisWindowOverride }, set: { v in store.updateSettings { $0.analysisWindowOverride = v } })) {
+                RowDivider()
+                MenuRow(title: "Analysis window", symbol: "waveform", id: "settings.window",
+                        selection: Binding(get: { store.settings.analysisWindowOverride }, set: { v in store.updateSettings { $0.analysisWindowOverride = v } })) {
                     Text("Automatic").tag(Int?.none)
                     ForEach([2048, 4096, 8192], id: \.self) { Text("\($0) samples").tag(Optional($0)) }
                 }
-            } footer: {
-                Text("Strict confidence asks for a clearer note before showing a reading. Larger windows read lower notes with a little more delay.")
-                    .font(.footnote).foregroundStyle(Palette.inkSoft)
             }
+            .padding(.horizontal, Metrics.gutter)
+            .padding(.top, 12)
+            .padding(.bottom, 36)
         }
-        .scrollContentBackground(.hidden)
+        .stageTopShade()
         .background(StageBackground(motes: false))
         .navigationTitle("Advanced listening")
     }
@@ -225,33 +505,49 @@ private struct AdvancedListening: View {
 
 private struct Acknowledgements: View {
     var body: some View {
-        List {
-            Section("Fonts") {
-                license("Sora", file: "Sora-OFL")
-            }
-            Section("Music") { Text("The song exercise uses a phrase from Beethoven's public-domain Ode to Joy.") }
-            Section {
-                ForEach(ModelLibrary.credits()) { credit in
-                    VStack(alignment: .leading, spacing: 3) {
-                        Link(destination: credit.link) { Text("“\(credit.title)” by \(credit.author)").font(.subheadline.weight(.semibold)) }
-                        Text("\(credit.licenseName) · rigged, relit and rendered for Timbre").font(.caption).foregroundStyle(Palette.inkSoft)
-                        if let licence = credit.licenseLink { Link("Licence", destination: licence).font(.caption) }
-                    }
-                    .padding(.vertical, 2)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 28) {
+                SettingsGroup(title: "Fonts") { license("Sora", file: "Sora-OFL") }
+                SettingsGroup(title: "Music") {
+                    Text("The song exercise uses a phrase from Beethoven's public-domain Ode to Joy.")
+                        .font(.subheadline).foregroundStyle(Palette.inkSoft)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(16)
                 }
-            } header: { Text("Instruments") } footer: { Text("Instruments without a credit are modelled and rendered from code for Timbre.").font(.footnote).foregroundStyle(Palette.inkSoft) }
+                SettingsGroup(title: "Instruments", footer: Text("Instruments without a credit are modelled and rendered from code for Timbre.")) {
+                    ForEach(Array(ModelLibrary.credits().enumerated()), id: \.element.id) { index, credit in
+                        if index > 0 { Divider().overlay(Palette.line).padding(.leading, 16) }
+                        VStack(alignment: .leading, spacing: 4) {
+                            Link(destination: credit.link) { Text("“\(credit.title)” by \(credit.author)").font(.subheadline.weight(.semibold)) }
+                            Text("\(credit.licenseName) · rigged, relit and rendered for Timbre").font(.caption).foregroundStyle(Palette.inkSoft)
+                            if let licence = credit.licenseLink { Link("Licence", destination: licence).font(.caption) }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 16).padding(.vertical, 12)
+                    }
+                }
+            }
+            .padding(.horizontal, Metrics.gutter)
+            .padding(.top, 12)
+            .padding(.bottom, 36)
         }
-        .scrollContentBackground(.hidden)
+        .stageTopShade()
         .background(StageBackground(motes: false))
         .navigationTitle("Acknowledgements")
     }
+
     private func license(_ name: String, file: String) -> some View {
-        NavigationLink(name) {
+        NavigationLink {
             ScrollView {
                 Text((Bundle.main.url(forResource: file, withExtension: "txt")).flatMap { try? String(contentsOf: $0, encoding: .utf8) } ?? "SIL Open Font License 1.1")
-                    .font(.footnote.monospaced()).textSelection(.enabled).padding()
+                    .font(.footnote.monospaced()).foregroundStyle(Palette.inkSoft).textSelection(.enabled).padding()
             }
+            .background(StageBackground(motes: false))
             .navigationTitle(name)
+        } label: {
+            SettingRow(symbol: "textformat", title: Text(verbatim: name)) { RowGlyph(symbol: "chevron.right") }
         }
+        .buttonStyle(RowButtonStyle())
     }
 }

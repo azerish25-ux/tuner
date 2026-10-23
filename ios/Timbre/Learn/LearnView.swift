@@ -29,6 +29,8 @@ struct LearnView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 22) {
                         header
+                        // Today's practice set in one line; a tap opens it on the Play hub.
+                        DailySetCompactCard()
                         courses
                         if let course {
                             continueCard(course)
@@ -92,32 +94,7 @@ struct LearnView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 10) {
                 ForEach(store.curriculum.courses) { item in
-                    let selected = item.id == course?.id
-                    let accent = Palette.accent(item.accent)
-                    let done = store.learn.finishedCount(in: item)
-                    let total = item.lessons.count
-                    Button { withAnimation(Motion.settle) { courseId = item.id }; Haptics.shared.selection() } label: {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Image(systemName: item.symbol).font(.system(size: 20, weight: .semibold)).foregroundStyle(selected ? Palette.onAccent : accent)
-                                .frame(width: 40, height: 40)
-                                .background(Circle().fill(selected ? AnyShapeStyle(accent) : AnyShapeStyle(accent.opacity(0.14))))
-                            Spacer(minLength: 0)
-                            Text(item.title.localized).font(Typeface.display(16)).foregroundStyle(Palette.ink).lineLimit(1)
-                            Text("\(done)/\(total)").font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
-                            ProgressLine(value: total == 0 ? 0 : Double(done) / Double(total), color: accent, height: 4)
-                        }
-                        .padding(14)
-                        .frame(width: 128, height: 150)
-                        .background(
-                            RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised)
-                                .overlay(RadialGradient(colors: [accent.opacity(selected ? 0.28 : 0.10), .clear], center: .topLeading, startRadius: 4, endRadius: 150).clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous)))
-                        )
-                        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(selected ? accent : Palette.line, lineWidth: selected ? 1.5 : 1))
-                        .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-                    }
-                    .buttonStyle(PressScaleStyle())
-                    .accessibilityAddTraits(selected ? .isSelected : [])
-                    .accessibilityIdentifier("learn.course.\(item.id)")
+                    courseCard(item, selected: item.id == course?.id)
                 }
             }
             .padding(.horizontal, Metrics.gutter)
@@ -125,13 +102,49 @@ struct LearnView: View {
         .padding(.horizontal, -Metrics.gutter)
     }
 
+    /// One course in the carousel: its own art in the top corner (the instrument leaning into the card,
+    /// or the course emblem), the title and progress beneath. The chosen course glows in its accent.
+    private func courseCard(_ item: LearnCourse, selected: Bool) -> some View {
+        let accent = Palette.accent(item.accent)
+        let done = store.learn.finishedCount(in: item)
+        let total = item.lessons.count
+        let shape = RoundedRectangle(cornerRadius: 22, style: .continuous)
+        return Button { withAnimation(Motion.settle) { courseId = item.id }; Haptics.shared.selection() } label: {
+            ZStack(alignment: .bottomLeading) {
+                CourseHeroArt(artwork: CourseArtwork.of(item, catalog: store.catalog), accent: accent, size: 104, lean: -14)
+                    .scaleEffect(selected ? 1.05 : 1, anchor: .center)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    .offset(x: 14, y: -6)
+                // Keeps the title readable where the art reaches down.
+                LinearGradient(colors: [Palette.stageRaised.opacity(0), Palette.stageRaised.opacity(0.94)], startPoint: .center, endPoint: .bottom)
+                    .allowsHitTesting(false)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(item.title.localized).font(Typeface.display(16)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.8)
+                    Text("\(done)/\(total)").font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                    ProgressLine(value: total == 0 ? 0 : Double(done) / Double(total), color: accent, height: 4)
+                }
+                .padding(14)
+            }
+            .frame(width: 136, height: 170)
+            .background {
+                shape.fill(Palette.stageRaised)
+                    .overlay(RadialGradient(colors: [accent.opacity(selected ? 0.32 : 0.12), .clear], center: .topTrailing, startRadius: 4, endRadius: 170))
+            }
+            .clipShape(shape)
+            .overlay(shape.strokeBorder(selected ? accent : Palette.line, lineWidth: selected ? 1.5 : 1))
+            .contentShape(shape)
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityIdentifier("learn.course.\(item.id)")
+    }
+
     @ViewBuilder private func continueCard(_ course: LearnCourse) -> some View {
         let accent = Palette.accent(course.accent)
         let next = store.learn.nextLesson(in: course)
         let unit = next.flatMap { lesson in course.units.first { $0.lessons.contains { $0.id == lesson.id } } }
         let unitNumber = unit.flatMap { u in course.units.firstIndex { $0.id == u.id } }.map { $0 + 1 }
-        let photo = course.instrument.flatMap { store.catalog.photo(instrumentId: $0)?.asset }
-        let image = photo.map { asset in ModelLibrary.modelID(forPhoto: asset).map { ModelLibrary.hasCard($0) ? ModelLibrary.cardImageName($0) : asset } ?? asset }
+        let artwork = CourseArtwork.of(course, catalog: store.catalog)
         Button { if let next { open(course, next, from: Self.continueSource) } } label: {
             HStack(alignment: .center, spacing: 0) {
                 VStack(alignment: .leading, spacing: 8) {
@@ -154,11 +167,10 @@ struct LearnView: View {
                     }
                 }
                 Spacer(minLength: 8)
-                if let image {
-                    Image(image).resizable().interpolation(.high).scaledToFit().frame(width: 110, height: 170)
-                        .rotationEffect(.degrees(-12)).shadow(color: .black.opacity(0.6), radius: 16, y: 10)
-                        .padding(.trailing, -10)
-                }
+                // The instrument (or the course emblem) in the card's light, as on the carousel.
+                CourseHeroArt(artwork: artwork, accent: accent, size: 116, lean: -12)
+                    .frame(width: 110, height: 170)
+                    .padding(.trailing, -10)
             }
             .padding(20)
             .frame(maxWidth: .infinity, minHeight: 190, alignment: .leading)

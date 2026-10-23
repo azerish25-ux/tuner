@@ -5,6 +5,8 @@ import UIKit
 
 struct OnboardingView: View {
     @EnvironmentObject private var store: AppStore
+    /// Observed so the Pro badges on the instrument chips go when a restore unlocks everything.
+    @EnvironmentObject private var commerce: CommerceService
     @State private var step = 0
     @State private var instrumentID: String? = "guitar.acoustic.6"
     /// Unanswered until the player picks; Continue waits for an answer.
@@ -125,11 +127,15 @@ struct OnboardingView: View {
                             withAnimation(Motion.pluck) { instrumentID = choice.id }
                             Haptics.shared.selection()
                         } label: {
-                            Text(choice.title).font(.subheadline.weight(.semibold))
-                                .foregroundStyle(selected ? Color(hex: 0xC9FFEC) : Palette.ink)
-                                .padding(.horizontal, 18).frame(height: 44)
-                                .background(Capsule().fill(selected ? Palette.mint.opacity(0.10) : Palette.stageRaised))
-                                .overlay(Capsule().strokeBorder(selected ? Palette.mint : Palette.line, lineWidth: selected ? 1.5 : 1))
+                            HStack(spacing: 7) {
+                                Text(choice.title).font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(selected ? Color(hex: 0xC9FFEC) : Palette.ink)
+                                // Tuned in Chromatic on the free plan; its own stage is Pro.
+                                if needsPro(choice) { ProBadge() }
+                            }
+                            .padding(.horizontal, 18).frame(height: 44)
+                            .background(Capsule().fill(selected ? Palette.mint.opacity(0.10) : Palette.stageRaised))
+                            .overlay(Capsule().strokeBorder(selected ? Palette.mint : Palette.line, lineWidth: selected ? 1.5 : 1))
                         }
                         .buttonStyle(PressScaleStyle())
                         .accessibilityAddTraits(selected ? .isSelected : [])
@@ -167,6 +173,12 @@ struct OnboardingView: View {
     }
 
     private var selectedChoice: Choice { choices.first { $0.id == instrumentID } ?? choices[0] }
+
+    /// A Pro instrument for a free player (`AccessPolicy`): the welcome chip wears the Pro badge.
+    private func needsPro(_ choice: Choice) -> Bool {
+        guard let id = choice.id, let instrument = store.catalog.instrument(id: id) else { return false }
+        return !AccessPolicy.canTune(instrument: instrument, pro: commerce.isPro)
+    }
 
     /// The studio render when the instrument has an artist model, otherwise its photograph.
     private func heroImage(_ choice: Choice) -> String {
@@ -284,7 +296,7 @@ struct OnboardingView: View {
         if let course = store.onboardingCourse(instrumentId: instrument, goal: answeredGoal) {
             let progress = store.onboardingProgress(level: level ?? "beginner", instrumentId: instrument, goal: answeredGoal)
             let start = progress.nextLesson(in: course)
-            PlanStep(course: course, start: start, goal: goalOption, image: courseImage(course), onStart: { startPlan() })
+            PlanStep(course: course, start: start, goal: goalOption, artwork: CourseArtwork.of(course, catalog: store.catalog), onStart: { startPlan() })
         } else {
             VStack {
                 Spacer()
@@ -292,12 +304,6 @@ struct OnboardingView: View {
                     .accessibilityIdentifier("onboarding.plan.start")
             }
         }
-    }
-
-    /// The course instrument's studio render (or photograph), as on the Learn tab.
-    private func courseImage(_ course: LearnCourse) -> String? {
-        let photo = course.instrument.flatMap { store.catalog.photo(instrumentId: $0)?.asset }
-        return photo.map { asset in ModelLibrary.modelID(forPhoto: asset).map { ModelLibrary.hasCard($0) ? ModelLibrary.cardImageName($0) : asset } ?? asset }
     }
 
     private func question(_ title: LocalizedStringKey, _ detail: LocalizedStringKey) -> some View {
@@ -315,7 +321,8 @@ private struct PlanStep: View {
     let course: LearnCourse
     let start: Lesson?
     let goal: (String, LocalizedStringKey, String)?
-    let image: String?
+    /// The course's art, as on the Learn tab: the instrument's render or photograph, or the course emblem.
+    let artwork: CourseArtwork
     let onStart: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var shown = false
@@ -373,7 +380,7 @@ private struct PlanStep: View {
         HStack(alignment: .center, spacing: 0) {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 8) {
-                    Image(systemName: course.symbol).font(.system(size: 13, weight: .bold))
+                    CourseArt(course: course, size: 20)
                     Text(course.title.localized.uppercased()).font(Typeface.label(12)).tracking(1.2).lineLimit(1)
                 }
                 .foregroundStyle(accent)
@@ -388,7 +395,7 @@ private struct PlanStep: View {
                 }
             }
             Spacer(minLength: 8)
-            artwork
+            art
         }
         .padding(20)
         .frame(maxWidth: .infinity, minHeight: 170, alignment: .leading)
@@ -400,21 +407,21 @@ private struct PlanStep: View {
         .accessibilityElement(children: .combine)
     }
 
-    @ViewBuilder private var artwork: some View {
-        if let image {
-            Image(image).resizable().interpolation(.high).scaledToFit().frame(width: 96, height: 150)
+    @ViewBuilder private var art: some View {
+        switch artwork {
+        case .instrument(let name, _):
+            Image(name).resizable().interpolation(.high).scaledToFit().frame(width: 96, height: 150)
                 .rotationEffect(.degrees(floating ? -9 : -13))
                 .offset(y: floating ? -4 : 4)
                 .shadow(color: .black.opacity(0.6), radius: 16, y: 10)
                 .padding(.trailing, -6)
                 .accessibilityHidden(true)
-        } else {
-            Image(systemName: course.symbol).font(.system(size: 32, weight: .semibold)).foregroundStyle(Palette.onAccent)
-                .frame(width: 76, height: 76)
-                .background(Circle().fill(accent))
-                .shadow(color: accent.opacity(0.5), radius: 18)
-                .scaleEffect(floating ? 1.04 : 0.97)
-                .accessibilityHidden(true)
+        case .emblem(let glyph):
+            CourseEmblemTile(glyph: glyph, accent: accent, size: 80)
+                .rotationEffect(.degrees(floating ? -5 : -9))
+                .shadow(color: accent.opacity(0.45), radius: 18)
+                .scaleEffect(floating ? 1.03 : 0.97)
+                .padding(.trailing, 4)
         }
     }
 

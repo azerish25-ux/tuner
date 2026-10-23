@@ -69,6 +69,124 @@ final class ProgressionTests: XCTestCase {
         XCTAssertTrue(state.achievements.contains("multi"))
     }
 
+    func testStringsTunedTodayOutliveSessionsAndResetTheNextDay() throws {
+        var state = ProgressState()
+        let six = [0, 1, 2, 3, 4, 5]
+        let tune = Quest(kind: .tuneAll, target: 1, xp: 20)
+        _ = state.record(.stringTuned(instrumentId: "g", all: false, course: 0, courses: six), now: day(5, hour: 9), calendar: calendar)
+        _ = state.record(.stringTuned(instrumentId: "g", all: false, course: 1, courses: six), now: day(5, hour: 9), calendar: calendar)
+        // A new session (after a pause or a tab switch) locking the same string again does not count it twice.
+        _ = state.record(.stringTuned(instrumentId: "g", all: false, course: 1, courses: six), now: day(5, hour: 18), calendar: calendar)
+        XCTAssertEqual(state.stringsTunedToday(instrumentId: "g", courses: six, now: day(5, hour: 19), calendar: calendar), 2)
+        XCTAssertTrue(Quests.counter(for: tune, state: state, instrumentId: "g", courses: six, now: day(5, hour: 19), calendar: calendar) == (done: 2, total: 6))
+        // Each instrument keeps its own list; chromatic mode (no courses) counts nothing.
+        XCTAssertEqual(state.stringsTunedToday(instrumentId: "u", courses: [0, 1, 2, 3], now: day(5), calendar: calendar), 0)
+        XCTAssertTrue(Quests.counter(for: tune, state: state, instrumentId: nil, courses: [], now: day(5), calendar: calendar) == (done: 0, total: 1))
+        // The list is saved with the rest of the progress.
+        let decoded = try JSONDecoder().decode(ProgressState.self, from: JSONEncoder().encode(state))
+        XCTAssertEqual(decoded.stringsTunedToday(instrumentId: "g", courses: six, now: day(5, hour: 19), calendar: calendar), 2)
+        XCTAssertTrue(decoded.isValid)
+        // The other four strings in a later session complete the quest, though no single session tuned all six.
+        var update = ProgressUpdate()
+        for course in 2...5 { update = state.record(.stringTuned(instrumentId: "g", all: false, course: course, courses: six), now: day(5, hour: 20), calendar: calendar) }
+        XCTAssertEqual(update.questsCompleted.map(\.kind), [.tuneAll])
+        XCTAssertNil(state.stats["fullTunes"], "a full tune still means one session")
+        XCTAssertTrue(Quests.counter(for: tune, state: state, instrumentId: "g", courses: six, now: day(5, hour: 21), calendar: calendar) == (done: 6, total: 6))
+        // Tomorrow starts from zero, and the first event of the day clears the list.
+        XCTAssertTrue(Quests.counter(for: tune, state: state, instrumentId: "g", courses: six, now: day(6), calendar: calendar) == (done: 0, total: 6))
+        _ = state.record(.earCorrect, now: day(6), calendar: calendar)
+        XCTAssertNil(state.tunedToday)
+    }
+
+    func testSavesFromBeforeTheNewFieldsStillDecode() throws {
+        let old = #"{"xp":120,"stats":{"stringsTuned":3},"questDay":"2026-10-05","questProgress":{"tuneAll":1},"questsClaimed":["tuneAll"],"achievements":["first_tune"],"instrumentsTuned":["g"],"stringSamples":[],"restrung":{}}"#
+        let state = try JSONDecoder().decode(ProgressState.self, from: Data(old.utf8))
+        XCTAssertNil(state.tunedToday)
+        XCTAssertNil(state.dailySetDay)
+        XCTAssertTrue(state.isValid)
+        // Claimed today with no saved strings: the counter reads full, as before.
+        XCTAssertTrue(Quests.counter(for: Quest(kind: .tuneAll, target: 1, xp: 20), state: state, instrumentId: "g", courses: [0, 1, 2, 3, 4, 5], now: day(5), calendar: calendar) == (done: 6, total: 6))
+    }
+
+    func testDailySetPaysOnceADayAndCountsTowardBadges() {
+        var state = ProgressState()
+        var update = state.record(.dailySetCompleted, now: day(5), calendar: calendar)
+        XCTAssertTrue(update.dailySetCompleted)
+        XCTAssertEqual(update.xpGained, XPReward.dailySet)
+        XCTAssertTrue(update.achievementsEarned.contains { $0.id == "daily_1" })
+        update = state.record(.dailySetCompleted, now: day(5, hour: 22), calendar: calendar)
+        XCTAssertFalse(update.dailySetCompleted)
+        XCTAssertEqual(update.xpGained, 0)
+        update = state.record(.dailySetCompleted, now: day(6), calendar: calendar)
+        XCTAssertTrue(update.dailySetCompleted)
+        XCTAssertEqual(state.stats["dailySets"], 2)
+    }
+
+    func testMergedUpdatesKeepEveryReward() {
+        let quest = Quest(kind: .lessons, target: 2, xp: 30)
+        let badge = Achievements.all[0]
+        let a = ProgressUpdate(xpGained: 10, questsCompleted: [quest], dailySetCompleted: true)
+        let b = ProgressUpdate(xpGained: 5, levelUp: Progression.level(for: 100), questsCompleted: [quest], achievementsEarned: [badge])
+        let merged = a.merged(with: b)
+        XCTAssertEqual(merged.xpGained, 15)
+        XCTAssertEqual(merged.levelUp?.number, 2)
+        XCTAssertEqual(merged.questsCompleted.count, 1)
+        XCTAssertEqual(merged.achievementsEarned.map(\.id), [badge.id])
+        XCTAssertTrue(merged.dailySetCompleted)
+    }
+
+    func testAchievementSetKeepsSavedBadgesAndGrows() {
+        let all = Achievements.all
+        XCTAssertEqual(Set(all.map(\.id)).count, all.count, "ids are unique")
+        XCTAssertGreaterThanOrEqual(all.count, 40)
+        // The original sixteen keep their ids, metrics and goals, so saved progress stays valid.
+        let original: [(String, String, Int)] = [
+            ("first_tune", "stringsTuned", 1), ("full_tune", "fullTunes", 1), ("streak_7", "streakBest", 7), ("strings_100", "stringsTuned", 100),
+            ("bullseye", "bullseyes", 1), ("sharpshooter", "sniperBest", 2000), ("golden_ear", "earCorrect", 50), ("level_5", "level", 5),
+            ("multi", "instruments", 3), ("own_tuning", "customTunings", 1), ("streak_30", "streakBest", 30), ("strings_1000", "stringsTuned", 1000),
+            ("first_lesson", "lessons", 1), ("lessons_25", "lessons", 25), ("lessons_100", "lessons", 100), ("perfect_10", "perfectLessons", 10),
+        ]
+        for (id, metric, goal) in original {
+            let badge = all.first { $0.id == id }
+            XCTAssertEqual(badge?.metric, metric, id)
+            XCTAssertEqual(badge?.goal, goal, id)
+        }
+        XCTAssertTrue(all.allSatisfy { $0.goal > 0 && !$0.title.isEmpty && !$0.detail.isEmpty })
+        XCTAssertEqual(Achievements.courseId(of: all.first { $0.id == "course_violin" }!), "violin")
+        XCTAssertNil(Achievements.courseId(of: all[0]))
+        // Derived values win over stored counters; precision locks and perfect ear rounds are counted.
+        var state = ProgressState()
+        _ = state.record(.stringTuned(instrumentId: "g", all: false, course: 0, courses: [0], precise: true), now: day(5), calendar: calendar)
+        _ = state.record(.earRound(questions: 10, correct: 10), now: day(5), calendar: calendar)
+        _ = state.record(.earRound(questions: 10, correct: 9), now: day(5), calendar: calendar)
+        XCTAssertEqual(state.stats["preciseLocks"], 1)
+        XCTAssertEqual(state.stats["earPerfect"], 1)
+        XCTAssertTrue(state.achievements.contains("ear_perfect"))
+        let earned = state.awardAchievements(metrics: ["minutes": 75, "units": 1])
+        XCTAssertEqual(Set(earned.map(\.id)), ["minutes_60", "units_1"])
+    }
+
+    func testLearnMetricsCountCoursesUnitsAndSongs() throws {
+        let curriculum = try Curriculum.bundled()
+        let guitar = try XCTUnwrap(curriculum.course(id: "guitar"))
+        var learn = LearnProgress()
+        for lesson in guitar.units[0].lessons {
+            learn.record(LessonResult(lessonId: lesson.id, stars: 3, accuracy: 1, xp: 20, minutes: 3), courseId: "guitar")
+        }
+        let song = try XCTUnwrap(curriculum.course(id: "songs")?.lessons.first { $0.kind == .song })
+        learn.record(LessonResult(lessonId: song.id, stars: 2, accuracy: 0.8, xp: 20, minutes: 3), courseId: "songs")
+        let metrics = Achievements.learnMetrics(learn, curriculum: curriculum)
+        XCTAssertEqual(metrics["course.guitar"], guitar.units[0].lessons.count)
+        XCTAssertEqual(metrics["course.ukulele"], 0)
+        XCTAssertGreaterThanOrEqual(metrics["units"] ?? 0, 1)
+        XCTAssertEqual(metrics["songs"], 1 + guitar.units[0].lessons.filter { $0.kind == .song }.count)
+        XCTAssertEqual(metrics["courses"], 0)
+        // Every per-course badge points at a real course.
+        for badge in Achievements.all {
+            if let id = Achievements.courseId(of: badge) { XCTAssertNotNil(curriculum.course(id: id), badge.id) }
+        }
+    }
+
     func testStringDriftUsesTheMedianRateBetweenSessions() {
         var samples: [StringSample] = []
         // G drifts about −6 cents a day; E barely moves; a same-day retune is ignored.

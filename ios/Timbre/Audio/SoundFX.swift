@@ -1,8 +1,9 @@
 import AVFoundation
 
 /// Short interface sounds (right answer, wrong answer, star, count-in click, lock), synthesized once on
-/// device: Karplus–Strong plucks for notes, soft harmonic bells for rewards, a two-mode woodblock for clicks.
-/// They play through AVAudioPlayer so they never interrupt the microphone capture, and stay quiet.
+/// device: Karplus–Strong plucks for notes, soft harmonic bells for rewards, a two-mode woodblock for clicks,
+/// the musical ones in a light baked-in room (`RoomReverb`). They play through AVAudioPlayer so they never
+/// interrupt the microphone capture, and stay quiet. `play(.tuned)` is the full-tune resolution.
 @MainActor
 final class SoundFX {
     static let shared = SoundFX()
@@ -79,13 +80,15 @@ final class SoundFX {
         case .click, .accent: return 0.5
         case .hit: return 0.32
         case .wrong: return 0.3
+        case .tuned: return 0.4
         default: return 0.36
         }
     }
 }
 
 /// The interface sounds `SoundFX` plays (kept outside the main-actor class so they render off the main thread).
-enum SoundCue: CaseIterable, Sendable { case correct, wrong, star, click, accent, complete, hit, levelUp }
+/// `tuned` is the whole instrument in tune: a strummed suspended chord resolving to major.
+enum SoundCue: CaseIterable, Sendable { case correct, wrong, star, click, accent, complete, hit, levelUp, tuned }
 
 /// Offline synthesis for `SoundFX`: pure functions over sample buffers, normalised to a gentle peak.
 enum SoundSynth {
@@ -103,7 +106,38 @@ enum SoundSynth {
         return min(hz, 4_000)
     }
 
+    /// A cue as it plays: the dry voice in a small warm room (click and accent stay dry, they keep time).
     static func render(_ cue: SoundCue) -> [Float] {
+        let dry = voice(cue)
+        let wet = room(cue)
+        return wet > 0 ? reverberant(dry, wet: wet) : dry
+    }
+
+    /// How much room each cue gets (reverb level against the dry sound, at most 20 %).
+    private static func room(_ cue: SoundCue) -> Float {
+        switch cue {
+        case .click, .accent: return 0
+        case .hit: return 0.07
+        case .wrong: return 0.1
+        case .correct: return 0.14
+        case .star, .complete: return 0.17
+        case .levelUp, .tuned: return 0.2
+        }
+    }
+
+    /// The sound with a short tail appended and a light room mixed under it, brought back to its own peak
+    /// so the cue's loudness doesn't change.
+    static func reverberant(_ dry: [Float], wet: Float, tail: Double = 0.5) -> [Float] {
+        let peak = dry.reduce(Float(0)) { max($0, abs($1)) }
+        guard peak > 0 else { return dry }
+        var out = dry
+        out.append(contentsOf: [Float](repeating: 0, count: Int(tail * Double(rate))))
+        RoomReverb.apply(&out, rate: Double(rate), settings: RoomReverb.Settings(wet: wet))
+        RoomReverb.fadeTail(&out, frames: Int(0.12 * Double(rate)))
+        return normalised(out, peak: peak)
+    }
+
+    private static func voice(_ cue: SoundCue) -> [Float] {
         switch cue {
         case .correct:
             // Two bright plucks a sixth apart, the second ringing with a bell partial on top.
@@ -157,6 +191,20 @@ enum SoundSynth {
             chime(&b, hz: hz(91), at: 0.375, length: 1.5, gain: 0.4, shimmer: true)
             chime(&b, hz: hz(79), at: 0.375, length: 1.3, gain: 0.25)
             return normalised(b, peak: 0.55)
+        case .tuned:
+            // Every string in tune: a quick strum of Csus4 whose fourth falls to the third, the open C major
+            // ringing on under a bell, like the last peg settling.
+            var b = buffer(2.1)
+            for (i, midi) in [48, 55, 60, 65, 67].enumerated() {
+                pluck(&b, hz: hz(midi), at: Double(i) * 0.024, length: 0.42, gain: 0.55, brightness: 0.55, sustain: 0.5)
+            }
+            let resolve = 0.36
+            for (i, midi) in [48, 55, 60, 64, 67, 72].enumerated() {
+                pluck(&b, hz: hz(midi), at: resolve + Double(i) * 0.02, length: 1.7, gain: 0.62, brightness: 0.68, sustain: 1.3)
+            }
+            chime(&b, hz: hz(76), at: resolve + 0.1, length: 1.6, gain: 0.3, shimmer: true)
+            chime(&b, hz: hz(84), at: resolve + 0.12, length: 1.5, gain: 0.2)
+            return normalised(b, peak: 0.55)
         }
     }
 
@@ -166,7 +214,7 @@ enum SoundSynth {
         var b = buffer(1.3)
         pluck(&b, hz: hz, at: 0, length: 0.5, gain: 0.45, brightness: 0.6, sustain: 0.35)
         chime(&b, hz: hz, at: 0.004, length: 1.25, gain: 0.8)
-        return normalised(b, peak: 0.5)
+        return reverberant(normalised(b, peak: 0.5), wet: 0.14)
     }
 
     // MARK: Voices
@@ -295,6 +343,91 @@ enum SoundSynth {
         data.append(contentsOf: Array("data".utf8)); append(UInt32(bytes))
         for sample in samples { append(Int16(max(-1, min(1, sample)) * Float(Int16.max))) }
         return data
+    }
+}
+
+/// A small, warm room for offline renders (cues and the lesson band): Schroeder–Freeverb, eight damped
+/// comb filters in parallel into four all-passes in series, mono. The send is high-passed so kicks and bass
+/// stay dry, a short pre-delay keeps every attack clean, and the wet level is set against the dry sound's
+/// energy, so `wet` means the same on a click and on a chord. Runs once per render, never in real time.
+enum RoomReverb {
+    struct Settings: Sendable {
+        /// Reverb against the dry sound, by energy; capped at 20 %.
+        var wet: Float
+        /// Comb feedback: 0.8 fades 60 dB in under a second (a short tail).
+        var feedback: Float = 0.8
+        /// High frequencies fade faster in the tail (0 bright … 1 dark).
+        var damping: Float = 0.35
+        /// Nothing below this reaches the room (hertz).
+        var lowCut: Double = 180
+        /// Seconds between the dry attack and the room.
+        var preDelay: Double = 0.012
+    }
+
+    /// Freeverb's delay lengths at 44.1 kHz (mutually prime, so the echoes never line up).
+    private static let combs = [1116, 1188, 1277, 1356, 1422, 1491, 1557, 1617]
+    private static let allPasses = [556, 441, 341, 225]
+
+    static func apply(_ samples: inout [Float], rate: Double, settings: Settings) {
+        let wet = min(0.2, max(0, settings.wet))
+        guard wet > 0, samples.count > 1, rate > 0 else { return }
+        let scale = rate / 44_100
+        let count = samples.count
+        // The send: one-pole high-pass, at Freeverb's fixed input gain.
+        var send = [Float](repeating: 0, count: count)
+        let rc = 1 / (2 * Double.pi * max(20, settings.lowCut))
+        let a = Float(rc / (rc + 1 / rate))
+        var lastIn: Float = 0, lastOut: Float = 0
+        for i in 0..<count {
+            lastOut = a * (lastOut + samples[i] - lastIn)
+            lastIn = samples[i]
+            send[i] = lastOut * 0.015
+        }
+        var room = [Float](repeating: 0, count: count)
+        let feedback = min(0.95, max(0, settings.feedback))
+        let damping = min(0.95, max(0, settings.damping))
+        for tuning in combs {
+            let size = max(1, Int((Double(tuning) * scale).rounded()))
+            var line = [Float](repeating: 0, count: size)
+            var index = 0
+            var low: Float = 0
+            for i in 0..<count {
+                let out = line[index]
+                low = out * (1 - damping) + low * damping
+                line[index] = send[i] + low * feedback
+                index += 1
+                if index == size { index = 0 }
+                room[i] += out
+            }
+        }
+        for tuning in allPasses {
+            let size = max(1, Int((Double(tuning) * scale).rounded()))
+            var line = [Float](repeating: 0, count: size)
+            var index = 0
+            for i in 0..<count {
+                let buffered = line[index]
+                let input = room[i]
+                line[index] = input + buffered * 0.5
+                room[i] = buffered - input
+                index += 1
+                if index == size { index = 0 }
+            }
+        }
+        var dryEnergy: Float = 0, wetEnergy: Float = 0
+        for i in 0..<count { dryEnergy += samples[i] * samples[i]; wetEnergy += room[i] * room[i] }
+        guard dryEnergy > 0, wetEnergy > 0 else { return }
+        let gain = wet * (dryEnergy / wetEnergy).squareRoot()
+        let delay = max(0, Int(settings.preDelay * rate))
+        guard delay < count else { return }
+        for i in 0..<(count - delay) { samples[i + delay] += room[i] * gain }
+    }
+
+    /// A linear fade over the last `frames`, so a cut tail never clicks.
+    static func fadeTail(_ samples: inout [Float], frames: Int) {
+        let length = min(samples.count, max(0, frames))
+        guard length > 0 else { return }
+        let start = samples.count - length
+        for i in 0..<length { samples[start + i] *= Float(length - i) / Float(length) }
     }
 }
 
