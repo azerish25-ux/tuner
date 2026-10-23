@@ -200,17 +200,18 @@ def build(spec: Spec):
         return -width / 2 + width * (i + 0.5) / n_strings
 
     post_locals = []
+    # Strings never cross at the head: on split heads the outermost string runs to the
+    # farthest post; on Fender-style inline heads the low string takes the post nearest the nut.
     if spec.head == "inline":
         for i, anchor in enumerate(spec.strings):
-            order = (n_strings - 1 - i) if spec.kind == "electric_bass" else i
-            post_locals.append((-hw0 - 0.012, spec.post_s[order], -1))
+            post_locals.append((-hw0 - 0.012, spec.post_s[i], -1))
     else:
         half_n = n_strings // 2
         for i, anchor in enumerate(spec.strings):
             if i < half_n:
-                post_locals.append((-hw0 + 0.006 - 0.01, spec.post_s[i], -1))
+                post_locals.append((-hw0 + 0.006 - 0.01, spec.post_s[half_n - 1 - i], -1))
             else:
-                post_locals.append((hw0 - 0.006 + 0.01, spec.post_s[n_strings - 1 - i], 1))
+                post_locals.append((hw0 - 0.006 + 0.01, spec.post_s[i - half_n], 1))
 
     for i, anchor in enumerate(spec.strings):
         radius = spec.gauges[i] * 1.25
