@@ -21,10 +21,11 @@ from bowed import BOWED, BOWED_PHOTOS, build_bowed  # noqa: E402
 from instruments import MODELS, PHOTO_MODELS, build  # noqa: E402
 from kalimba import KALIMBA, KALIMBA_PHOTOS, build_kalimba  # noqa: E402
 from winds import WIND_BUILDERS, WIND_PHOTOS, WINDS  # noqa: E402
+from folk import FOLK, FOLK_BUILDERS, FOLK_PHOTOS  # noqa: E402
 
-ALL_MODELS = {**MODELS, **BOWED, **KALIMBA, **WINDS}
-ALL_PHOTOS = {**PHOTO_MODELS, **BOWED_PHOTOS, **KALIMBA_PHOTOS, **WIND_PHOTOS}
-BUILDERS = {"bowed": build_bowed, "kalimba": build_kalimba, **WIND_BUILDERS}
+ALL_MODELS = {**MODELS, **BOWED, **KALIMBA, **WINDS, **FOLK}
+ALL_PHOTOS = {**PHOTO_MODELS, **BOWED_PHOTOS, **KALIMBA_PHOTOS, **WIND_PHOTOS, **FOLK_PHOTOS}
+BUILDERS = {"bowed": build_bowed, "kalimba": build_kalimba, **WIND_BUILDERS, **FOLK_BUILDERS}
 
 
 def parse():
