@@ -10,6 +10,7 @@ Each rigs/<model>.json names its download folder and how to read it:
    "retouch": [{"material", "rects" (ink to remove) | "multiply" (tint)}] edits base colour images,
    "decimate": [{"re", "ratio", "minVerts"}] thins out needlessly dense parts before rigging,
    "triangles": budget for the shipped model (120000), "pivotTriangles" (4000 per peg or post),
+   "stringRatio" (thin the original strings kept beside the rebuilt ones),
    "textureMax" / "normalMax" (2048 px), "jpegQuality" (90), "optimise": false to ship the parts as split,
    "rig": "FRICTION_PEG", "degPerCent": 1.2, "stringKind": "steel" | "bronze" | "nylon" | "gut",
    "nutZ" / "saddleZ": a height or parts whose mean height it is, "stringEnds": "rings" (low-poly strings),
@@ -943,40 +944,75 @@ def thin(obj, ratio):
     obj.data = mesh
 
 
+def surface(obj):
+    """World-space surface area of a mesh."""
+    a = np.empty(len(obj.data.polygons))
+    obj.data.polygons.foreach_get("area", a)
+    return float(a.sum()) * float(np.mean(obj.matrix_world.to_scale())) ** 2
+
+
+def slim(obj):
+    """Drop UV maps and colour attributes no material reads: the USD export writes every one per corner."""
+    mesh = obj.data
+    wanted = set()
+    for slot in obj.material_slots:
+        for node in (slot.material.node_tree.nodes if slot.material and slot.material.use_nodes else []):
+            wanted.update(filter(None, [getattr(node, "uv_map", ""), getattr(node, "attribute_name", ""), getattr(node, "layer_name", "")]))
+    render_uv = next((uv.name for uv in mesh.uv_layers if uv.active_render), None)
+    for uv in [uv for uv in mesh.uv_layers if uv.name != render_uv and uv.name not in wanted]:
+        mesh.uv_layers.remove(uv)
+    for attr in [a for a in mesh.color_attributes if a.name not in wanted]:
+        mesh.color_attributes.remove(attr)
+
+
 def optimise(root, cfg):
-    """Fewer, lighter prims for the phone: still parts merged per material set, the parts under each peg or
-    post merged into one mesh, then triangles thinned toward "triangles" (default 120k). Rig nodes (peg_,
-    post_, string_) keep their names and places; the strings and pegs are thinned least."""
+    """Fewer, lighter prims for the phone. Still parts are merged per material set and the parts under each
+    peg or post into one mesh; turning parts are capped at "pivotTriangles" (4000) and the original strings
+    kept beside the rebuilt ones thinned by "stringRatio" (1: untouched). The rest share what is left of
+    "triangles" (120k) by surface area, so dense small detail (fret wire, gear teeth, coils) is thinned
+    first and broad panels and outlines keep their shape. Rig nodes (peg_, post_, string_) are unchanged."""
     budget, cap = cfg.get("triangles", 120000), cfg.get("pivotTriangles", 4000)
     shown = lambda o: o.type == "MESH" and not o.hide_render
     everything = [o for o in root.children_recursive if shown(o)]
     before = (len(everything), sum(triangles(o) for o in everything))
-    keep = [o for o in everything if o.name.startswith("string_") or o.name in _KEEP]
+    rebuilt = [o for o in everything if o.name.startswith("string_")]
+    originals = [o for o in everything if o.name in _KEEP]
     moving = []
     for pivot in [o for o in root.children_recursive if o.type == "EMPTY" and o.name.startswith(("peg_", "post_"))]:
         kids = [o for o in pivot.children if shown(o)]
         if kids:
             moving.append(join(kids, f"{pivot.name}_mesh"))
-    fixed = set(moving) | set(keep)
+    fixed = set(moving) | set(rebuilt) | set(originals)
     groups = {}
     for obj in [o for o in root.children_recursive if shown(o) and o not in fixed]:
         groups.setdefault(tuple(sorted(s.material.name for s in obj.material_slots if s.material)), []).append(obj)
     still = [join(objs, "part_" + ("_".join(key)[:40] or "plain")) for key, objs in groups.items()]
-    for obj in moving:  # a turning part keeps its detail up to a few thousand triangles
+    for obj in moving + still + originals:
+        slim(obj)
+    for obj in moving:
         if triangles(obj) > cap:
             thin(obj, cap / triangles(obj))
-    total = sum(triangles(o) for o in root.children_recursive if shown(o))
-    heavy = [o for o in still if triangles(o) > 1000]
-    heavy_tris = sum(triangles(o) for o in heavy)
-    if total > budget and heavy_tris:
-        ratio = max(0.12, (budget - (total - heavy_tris)) / heavy_tris)
-        for obj in heavy:
-            thin(obj, ratio)
+    if cfg.get("stringRatio", 1) < 1:
+        for obj in originals:
+            thin(obj, cfg["stringRatio"])
+    # Share the rest by surface area (water-filling): parts sparser than their share keep every triangle.
+    left = budget - sum(triangles(o) for o in fixed)
+    pool = [(o, triangles(o), max(surface(o), 1e-8) ** 0.7) for o in still]
+    while pool:
+        rate = left / sum(w for _, _, w in pool)
+        fits = [p for p in pool if p[1] <= rate * p[2]]
+        if not fits:
+            break
+        left -= sum(t for _, t, _ in fits)
+        pool = [p for p in pool if p not in fits]
+    for obj, tris, weight in pool:
+        thin(obj, max(400, rate * weight) / tris)
     after = [o for o in root.children_recursive if shown(o)]
     print(f"optimised: {before[0]} meshes / {before[1]} triangles -> {len(after)} meshes / "
           f"{sum(triangles(o) for o in after)} triangles", flush=True)
-    for obj in sorted(after, key=triangles, reverse=True)[:8]:
-        print(f"   {obj.name}: {triangles(obj)}", flush=True)
+    for obj in sorted(after, key=triangles, reverse=True)[:12]:
+        print(f"   {obj.name}: {triangles(obj)} tris, uv {[uv.name for uv in obj.data.uv_layers]}, "
+              f"colours {[a.name for a in obj.data.color_attributes]}", flush=True)
 
 
 def compress_textures(root, cfg, folder):
