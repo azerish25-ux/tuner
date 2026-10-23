@@ -1,5 +1,8 @@
 # Native iOS verification and review
 
+> Historical: this audit describes the v1 Android port (lifetime purchase and optional ads). Version 2 replaced ads with Timbre Pro subscriptions; see README.md and APPLE-DELIVERY.md.
+
+
 Reviewed native app and domain code for correctness, security, performance, architecture and readability. No actionable P1/P2 findings remain in the reviewed production source. The Android comparison uses the local, ignored reference snapshot; it is not a second application shipped in this repository.
 
 ## Runtime evidence

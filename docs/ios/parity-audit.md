@@ -1,5 +1,8 @@
 # Android → native Swift parity evidence
 
+> Historical: this audit describes the v1 Android port (lifetime purchase and optional ads). Version 2 replaced ads with Timbre Pro subscriptions; see README.md and APPLE-DELIVERY.md.
+
+
 This audit compares the authoritative local `reference/android` snapshot (ignored by Git) with the current iOS source. It describes implemented behavior and bounded evidence, rather than treating a successful compile as complete parity.
 
 ## Runtime evidence boundary
