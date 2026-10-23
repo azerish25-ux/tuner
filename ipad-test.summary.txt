@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+    t =     1.88s     Device orientation changed to Portrait
+    t =     2.08s     Wait for com.apple.DocumentManager.DockFolderViewService to idle
+    t =     2.31s     Wait for com.apple.springboard to idle
+    t =     2.46s Open com.shahradazerisharghi.timbre
+    t =     2.46s     Launch com.shahradazerisharghi.timbre
+Resolve Package Graph
+
+    t =    55.45s         Setting up automation session
+    t =    58.81s         Wait for com.shahradazerisharghi.timbre to idle
+    t =    69.82s Waiting 30.0s for "tune.stage" Any to exist
+    t =    70.93s     Checking `Expect predicate `existsNoRetry == 1` for object "tune.stage" Any`
+    t =    71.35s         Checking existence of `"tune.stage" Any`
+    t =    88.67s Added attachment named 'ipad-portrait-tune'
+    t =    88.69s Setting device orientation to Landscape Left
+    t =    88.82s     Device orientation changed to Landscape Left
+    t =    93.65s     Interface orientation changed to Landscape Right
+    t =    96.62s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   101.21s     Wait for com.apple.springboard to idle
+    t =   104.30s Added attachment named 'ipad-landscape-tune'
+    t =   104.33s Tap "Instruments" Button
+    t =   104.33s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   104.34s     Find the "Instruments" Button
+    t =   105.70s     Check for interrupting elements affecting "square.grid.2x2" Button
+    t =   107.30s         Wait for com.apple.springboard to idle
+    t =   107.83s     Synthesize event
+    t =   109.14s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   114.31s Added attachment named 'ipad-landscape-instruments'
+    t =   114.32s Tap "Play" Button
+    t =   114.32s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   114.32s     Find the "Play" Button
+    t =   114.42s     Check for interrupting elements affecting "gamecontroller" Button
+    t =   114.68s         Wait for com.apple.springboard to idle
+    t =   114.80s Ignoring failure to get hierarchy for remote element in process 10462 (Error getting main window kAXErrorServerNotFound)
+    t =   114.81s Ignoring failure to get hierarchy for remote element in process 10462 (Error getting main window kAXErrorServerNotFound)
+    t =   114.85s     Synthesize event
+    t =   115.19s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   119.41s Added attachment named 'ipad-landscape-practice'
+    t =   119.42s Setting device orientation to Portrait
+    t =   119.48s     Device orientation changed to Portrait
+    t =   120.09s     Interface orientation changed to Portrait
+    t =   120.09s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   120.75s     Wait for com.apple.springboard to idle
+    t =   121.08s Tear Down
+Test Case '-[TimbreUITests.TabletScreenshotsUITests testTabletLayouts]' passed (128.652 seconds).
+Test Suite 'TabletScreenshotsUITests' passed at 2026-10-23 07:30:34.344.
+	 Executed 1 test, with 0 failures (0 unexpected) in 128.652 (128.657) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-10-23 07:30:34.345.
+	 Executed 1 test, with 0 failures (0 unexpected) in 128.652 (128.659) seconds
+Test Suite 'Selected tests' passed at 2026-10-23 07:30:34.345.
+	 Executed 1 test, with 0 failures (0 unexpected) in 128.652 (128.661) seconds
+2026-10-23 07:30:36.364 xcodebuild[4189:16113] [MT] IDETestOperationsObserverDebug: 403.977 elapsed -- Testing started completed.
+2026-10-23 07:30:36.365 xcodebuild[4189:16113] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-23 07:30:36.365 xcodebuild[4189:16113] [MT] IDETestOperationsObserverDebug: 403.977 sec, +403.977 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/TabletScreenshots.xcresult
+
+** TEST SUCCEEDED **
+
+Testing started
