@@ -11,7 +11,8 @@ Each rigs/<model>.json names its download folder and how to read it:
    "decimate": [{"re", "ratio", "minVerts"}] thins out needlessly dense parts before rigging,
    "triangles": budget for the shipped model (120000), "pivotTriangles" (4000 per peg or post),
    "stringRatio" (thin the original strings kept beside the rebuilt ones), "protectMaterials": [never thinned],
-   "thinMaterials": {material: fixed ratio},
+   "thinMaterials": {material: fixed ratio}, "weldMaterials": [join seams of split panels before thinning],
+   "retouch" entries may also name an "image" (normal, metallicRoughness) and a "mode" (light, relief),
    "textureMax" / "normalMax" (2048 px), "jpegQuality" (90), "optimise": false to ship the parts as split,
    "rig": "FRICTION_PEG", "degPerCent": 1.2, "stringKind": "steel" | "bronze" | "nylon" | "gut",
    "nutZ" / "saddleZ": a height or parts whose mean height it is, "stringEnds": "rings" (low-poly strings),
@@ -927,6 +928,7 @@ def card_2d(scene, strings, res):
 
 
 _KEEP = set()  # names of original strings kept beside the rebuilt ones: never thinned out
+_WELD = set()  # materials whose seams are joined before thinning ("weldMaterials")
 
 
 def triangles(obj):
@@ -1013,10 +1015,12 @@ def _guard_normals(mesh):
 
 def thin(obj, ratio):
     """Collapse-decimate one mesh in place (the error-driven collapse keeps outlines and fine parts).
-    Decimate scrambles imported custom normals (speckles, zebra bands), so those meshes have their seams
-    joined first (no cracks), are thinned, reset to their own normals (hard edges kept by angle) and get
-    the original normals transferred back from an untouched copy, projected along each corner's normal
-    so the two faces of a thin shell (a guitar top, a peg button) each find their own side."""
+    Decimate scrambles imported custom normals (speckles, zebra bands), so those meshes are reset to their
+    own normals after thinning (hard edges kept by angle) and get the original normals transferred back
+    from an untouched copy, projected along each corner's normal so the two faces of a thin shell (a guitar
+    top, a peg button) each find their own side. Panels split into pieces that meet edge to edge crack
+    when thinned; their materials can be listed in "weldMaterials" to join the seams first (not for
+    inlays or fret segments: a joined inlay loses its outline, a joined thin wire collapses)."""
     if ratio >= 1:
         return
     if obj.data.users > 1:
@@ -1027,7 +1031,8 @@ def thin(obj, ratio):
         src.data = obj.data.copy()
         for coll in obj.users_collection:
             coll.objects.link(src)
-        _weld_seams(obj)  # only here: without the transfer, a joined hard seam would be shaded smooth
+        if any(slot.material and slot.material.name in _WELD for slot in obj.material_slots):
+            _weld_seams(obj)  # only with the transfer: otherwise a joined hard seam would be shaded smooth
     mod = obj.modifiers.new("thin", "DECIMATE")
     mod.ratio = ratio
     mesh = _apply(obj)
@@ -1093,6 +1098,8 @@ def optimise(root, cfg):
     "triangles" (120k) by surface area, so dense small detail (fret wire, gear teeth, coils) is thinned
     first and broad panels and outlines keep their shape. Rig nodes (peg_, post_, string_) are unchanged."""
     budget, cap = cfg.get("triangles", 120000), cfg.get("pivotTriangles", 4000)
+    _WELD.clear()
+    _WELD.update(cfg.get("weldMaterials", []))
     shown = lambda o: o.type == "MESH" and not o.hide_render
     everything = [o for o in root.children_recursive if shown(o)]
     before = (len(everything), sum(triangles(o) for o in everything))
