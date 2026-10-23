@@ -957,15 +957,26 @@ def _apply(obj):
 
 
 def _rim(obj):
-    """Vertex group of the open-boundary vertices. Parts are often split into pieces that meet edge to edge
-    (the sides of a guitar, fretboard segments); decimating each boundary on its own opens cracks."""
+    """Vertex group of the seams: open-boundary vertices lying on another open-boundary vertex. Parts are
+    often split into pieces that meet edge to edge (the sides of a guitar, fretboard segments), and
+    decimating each boundary on its own opens cracks. Free edges (a fret's cut end) stay unheld."""
     mesh = obj.data
+    if not len(mesh.loops):
+        return None
     edge_of = np.empty(len(mesh.loops), dtype=np.int64)
     mesh.loops.foreach_get("edge_index", edge_of)
     used = np.bincount(edge_of, minlength=len(mesh.edges))
     ends = np.empty(len(mesh.edges) * 2, dtype=np.int64)
     mesh.edges.foreach_get("vertices", ends)
     rim = np.unique(ends.reshape(-1, 2)[used == 1])
+    if not len(rim):
+        return None
+    co = np.empty(len(mesh.vertices) * 3)
+    mesh.vertices.foreach_get("co", co)
+    co = co.reshape(-1, 3)
+    cell = max(float(np.ptp(co, axis=0).max()), 1e-9) * 2e-5
+    _, back, count = np.unique(np.round(co[rim] / cell).astype(np.int64), axis=0, return_inverse=True, return_counts=True)
+    rim = rim[count[back.ravel()] > 1]
     if not len(rim):
         return None
     group = obj.vertex_groups.new(name="rim")
@@ -996,7 +1007,7 @@ def _guard_normals(mesh):
 
 def thin(obj, ratio):
     """Collapse-decimate one mesh in place (the error-driven collapse keeps outlines and fine parts), with
-    open boundaries held so pieces that meet edge to edge stay closed.
+    seams held so pieces that meet edge to edge stay closed.
     Decimate scrambles imported custom normals (speckles, zebra bands), so they are reset to the thinned
     mesh's own normals and then transferred back from an untouched copy, projected along each corner's
     normal so the two faces of a thin shell (a guitar top, a peg button) each find their own side."""
