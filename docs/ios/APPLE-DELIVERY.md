@@ -64,3 +64,12 @@ Never paste these into chat, issues, commits or logs. Revoke the key in App Stor
 - Encryption: the app uses only Apple's standard encryption (`ITSAppUsesNonExemptEncryption = false`).
 - Screenshots: the CI tour produces 6.9" iPhone and 13" iPad captures (`ci-results/app`, `ci-results/ipad`) as a starting point.
 - Subscription disclosures are on the paywall (price, period, auto-renewal, cancel in Settings, Terms and Privacy links), as App Review Guideline 3.1.2 requires.
+
+## 5. Analytics (optional, off until you switch it on)
+
+Timbre can send anonymous product events (onboarding finished, paywall shown, trial started, lesson done, streaks) to [TelemetryDeck](https://telemetrydeck.com), which is privacy-first: no IDFA, no personal data, and a random install ID hashed on the device. With no app ID, nothing leaves the device.
+
+1. Create a TelemetryDeck app and copy its App ID.
+2. GitHub → repository Settings → Secrets and variables → Actions → **Variables** → add `TELEMETRYDECK_APP_ID`. Delivery builds pick it up and debug builds stay in test mode.
+3. Before submitting, update the App Privacy label in App Store Connect to "Product Interaction → Analytics, not linked to the user, not used for tracking" (the app's privacy manifest already declares this), and update the "Analytics and advertising" section of PRIVACY.md.
+

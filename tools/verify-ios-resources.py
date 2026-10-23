@@ -54,6 +54,11 @@ for photo in photos:
 privacy = plistlib.loads((resources / 'PrivacyInfo.xcprivacy').read_bytes())
 assert {'NSPrivacyAccessedAPIType': 'NSPrivacyAccessedAPICategorySystemBootTime',
         'NSPrivacyAccessedAPITypeReasons': ['35F9.1']} in privacy['NSPrivacyAccessedAPITypes']
+# UserDefaults (settings, and the App Group the widgets read) is a required-reason API: CA92.1 + 1C8F.1.
+assert any(item['NSPrivacyAccessedAPIType'] == 'NSPrivacyAccessedAPICategoryUserDefaults' and {'CA92.1', '1C8F.1'} <= set(item['NSPrivacyAccessedAPITypeReasons'])
+           for item in privacy['NSPrivacyAccessedAPITypes']), 'PrivacyInfo: declare UserDefaults reasons'
+widget_privacy = plistlib.loads((root / 'ios/TimbreWidgets/PrivacyInfo.xcprivacy').read_bytes())
+assert any(item['NSPrivacyAccessedAPIType'] == 'NSPrivacyAccessedAPICategoryUserDefaults' for item in widget_privacy['NSPrivacyAccessedAPITypes'])
 english = (resources / 'en.lproj/Localizable.strings').read_text(encoding='utf-8')
 keys = set(re.findall(r'^"([^"]+)"\s*=', english, re.M))
 missing = []

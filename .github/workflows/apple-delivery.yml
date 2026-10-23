@@ -37,6 +37,7 @@ jobs:
       APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
       APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
       APP_STORE_CONNECT_API_KEY_P8: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8 }}
+      TELEMETRYDECK_APP_ID: ${{ vars.TELEMETRYDECK_APP_ID }}
       MARKETING_VERSION: ${{ inputs.marketing_version }}
       BUILD_NUMBER: ${{ inputs.build_number }}
     steps:
@@ -102,7 +103,8 @@ jobs:
             -authenticationKeyPath "$DELIVERY_DIRECTORY/AuthKey.p8" \
             -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID" \
             DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic \
-            MARKETING_VERSION="$MARKETING_VERSION" CURRENT_PROJECT_VERSION="$BUILD_NUMBER" archive
+            MARKETING_VERSION="$MARKETING_VERSION" CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
+            TIMBRE_TELEMETRY_APP_ID="${TELEMETRYDECK_APP_ID:-}" archive
       - name: Export, sign and upload to App Store Connect
         shell: bash
         run: |

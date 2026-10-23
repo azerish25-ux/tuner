@@ -46,8 +46,11 @@ targets:
         CFBundleURLTypes:
           - CFBundleURLName: com.shahradazerisharghi.timbre
             CFBundleURLSchemes: [timbre]
+        # Empty = analytics stay on the device. Set the TELEMETRYDECK_APP_ID repository variable to switch it on in delivery builds.
+        TimbreTelemetryAppID: $(TIMBRE_TELEMETRY_APP_ID)
     settings:
       base:
+        TIMBRE_TELEMETRY_APP_ID: ""
         PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre
         TARGETED_DEVICE_FAMILY: "1,2"
   TimbreWidgets:
@@ -55,6 +58,9 @@ targets:
     platform: iOS
     sources:
       - path: TimbreWidgets
+        excludes: [PrivacyInfo.xcprivacy]
+      - path: TimbreWidgets/PrivacyInfo.xcprivacy
+        buildPhase: resources
       - path: Timbre/Services/Intents.swift
       - path: Timbre/Services/WidgetBridge.swift
       - path: Timbre/Design/Theme.swift
