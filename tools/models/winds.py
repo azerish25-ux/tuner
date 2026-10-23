@@ -42,11 +42,11 @@ def flare(length, mouth, throat, steps=28, power=3.2):
     return [throat + (mouth - throat) * (1 - k / steps) ** power for k in range(steps + 1)]
 
 
-def bell(name, start, axis, length, mouth, throat, material, inner, parent, steps=28):
+def bell(name, start, axis, length, mouth, throat, material, inner, parent, steps=28, power=3.2):
     """Flared bell with an open mouth: lacquered outside, darker throat inside."""
     axis = Vector(axis).normalized()
     pts = [Vector(start) + axis * (length * k / steps) for k in range(steps + 1)]
-    radii = flare(length, mouth, throat, steps)
+    radii = flare(length, mouth, throat, steps, power)
     tube(name, pts, radii, material, parent, sides=40, caps=False)
     tube(name + "_inside", pts, [r * 0.94 for r in radii], inner, parent, sides=40, caps=False, flip=True)
     tube(name + "_rim", [Vector(start) - axis * 0.0015, Vector(start) + axis * 0.0015], radii[0] * 1.012, material, parent, sides=48)
@@ -255,8 +255,11 @@ def build_saxophone(spec):
     tube("body", body, [0.012 + 0.016 * k / 20 for k in range(21)], lq, root, sides=36)
     bow = arc_xz((0.045, 0.12), 0.045, 180, 360, 18)
     tube("bow", bow, [0.028 + 0.006 * k / 18 for k in range(19)], lq, root, sides=36)
-    bell("bell", (0.11, 0, 0.36), (-0.1, 0, -1), 0.24, 0.062, 0.034, lq, inner, root)
-    tube("bell_bottom", [(0.09, 0, 0.12), (0.096, 0, 0.13)], 0.034, lq, root, sides=36)
+    # Bell: a long cone that turns out sharply at the rim, its mouth tipped toward the player's front.
+    axis = Vector((-0.08, 0.12, -1)).normalized()  # camera sits on -Y, so the mouth leans toward it
+    throat = Vector((0.09, 0, 0.126))
+    bell("bell", throat - axis * 0.27, axis, 0.27, 0.066, 0.033, lq, inner, root, steps=36, power=5.5)
+    tube("bell_bottom", [(0.09, 0, 0.118), (0.09, 0, 0.128)], 0.0335, lq, root, sides=36)
     for k in range(14):
         z = 0.53 - k * 0.028
         rr = 0.012 + 0.016 * (0.58 - z) / 0.46
