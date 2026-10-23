@@ -30,7 +30,8 @@ for asset, model in manifest['photos'].items():
     assert asset in photo_by_asset, asset
     assert (models / f'{model}.usdz').is_file(), model
     rig = json.loads((models / f'{model}.rig.json').read_text())
-    assert (resources / 'Assets.xcassets' / f'render_{model}.imageset' / f'render_{model}.png').is_file(), model
+    if model not in manifest.get('photoCards', []):
+        assert (resources / 'Assets.xcassets' / f'render_{model}.imageset' / f'render_{model}.png').is_file(), model
     instrument = photo_by_asset[asset]['instrumentId']
     anchors = {c['anchorId'] for t in catalog['tunings'] if t['instrumentId'] == instrument for c in t['courses'] if c.get('anchorId')}
     rig_anchors = {s['anchor'] for s in rig['strings']}

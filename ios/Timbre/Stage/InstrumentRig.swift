@@ -1,5 +1,6 @@
 import CoreGraphics
 import Foundation
+import UIKit
 import simd
 import TimbreCore
 
@@ -71,4 +72,12 @@ enum ModelLibrary {
     }
     /// Studio render used for cards and the 2D stage.
     static func cardImageName(_ id: String) -> String { "render_\(id)" }
+    /// Some models ship 3D only; their cards keep the original photograph.
+    @MainActor static func hasCard(_ id: String) -> Bool {
+        if let known = cards[id] { return known }
+        let exists = UIImage(named: cardImageName(id)) != nil
+        cards[id] = exists
+        return exists
+    }
+    @MainActor private static var cards: [String: Bool] = [:]
 }

@@ -110,7 +110,7 @@ struct TuneView: View {
                     ZStack {
                         // The studio render holds the stage while the 3D model loads, then cross-fades out.
                         if ready3D != modelID {
-                            StudioStage(imageName: ModelLibrary.cardImageName(modelID), rig: nil, input: stageInput)
+                            StudioStage(imageName: ModelLibrary.hasCard(modelID) ? ModelLibrary.cardImageName(modelID) : (store.photo?.asset ?? ""), rig: nil, input: stageInput)
                                 .padding(.horizontal, 16)
                                 .transition(.opacity)
                         }
@@ -118,9 +118,11 @@ struct TuneView: View {
                                         onFailure: { failed3D = modelID },
                                         onReady: { withAnimation(.easeInOut(duration: 0.6)) { ready3D = modelID } })
                     }
-                } else {
+                } else if ModelLibrary.hasCard(modelID) {
                     StudioStage(imageName: ModelLibrary.cardImageName(modelID), rig: rig, input: stageInput) { store.chooseAnchor($0) }
                         .padding(.horizontal, 16)
+                } else if let photo = store.photo {
+                    StudioStage(imageName: photo.asset, rig: nil, input: stageInput).padding(28)
                 }
             } else if let photo = store.photo {
                 StudioStage(imageName: photo.asset, rig: nil, input: stageInput).padding(28)

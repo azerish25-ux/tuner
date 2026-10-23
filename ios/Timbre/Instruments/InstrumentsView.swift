@@ -166,7 +166,7 @@ struct InstrumentsView: View {
             VStack(alignment: .leading, spacing: 8) {
                 ZStack {
                     RadialGradient(colors: [Palette.ember.opacity(0.18), .clear], center: .center, startRadius: 4, endRadius: 110)
-                    Image(model.map(ModelLibrary.cardImageName) ?? photo.thumbnail).resizable().interpolation(.high).scaledToFit()
+                    Image(model.flatMap { ModelLibrary.hasCard($0) ? ModelLibrary.cardImageName($0) : nil } ?? photo.thumbnail).resizable().interpolation(.high).scaledToFit()
                         .padding(model == nil ? 14 : 4)
                         .shadow(color: .black.opacity(0.5), radius: 12, y: 8)
                 }

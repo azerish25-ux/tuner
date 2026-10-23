@@ -44,7 +44,7 @@ struct PaywallView: View {
     }
 
     private var heroImage: String {
-        if let model = store.modelID { return ModelLibrary.cardImageName(model) }
+        if let model = store.modelID, ModelLibrary.hasCard(model) { return ModelLibrary.cardImageName(model) }
         return ModelLibrary.cardImageName("guitar_acoustic")
     }
 
