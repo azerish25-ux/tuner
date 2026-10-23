@@ -1,0 +1,36 @@
+{
+ "cello_mat01": {
+  "images": [
+   "cello_mat01_baseColor.png",
+   "cello_mat01_metallicRoughness.png",
+   "cello_mat01_normal.png"
+  ],
+  "baseColor": [
+   0.8,
+   0.8,
+   0.8,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.5,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "cello_mat02": {
+  "images": [
+   "cello_mat02_baseColor.png",
+   "cello_mat02_metallicRoughness.png",
+   "cello_mat02_normal.png"
+  ],
+  "baseColor": [
+   0.8,
+   0.8,
+   0.8,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.5,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ }
+}
