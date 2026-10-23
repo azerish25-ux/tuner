@@ -1,0 +1,63 @@
+name: Convert artist models
+# Orients, scales and rigs imported models per tools/models/sketchfab/rigs/*.json, exports USDZ
+# and rig JSON for the app, and renders calibration grids plus studio renders for review.
+on:
+  push:
+    branches: ["convert/**"]
+    paths:
+      - "tools/models/sketchfab/**"
+      - ".github/workflows/convert.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: convert-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  convert:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      BLENDER_SERIES: "4.5"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Locate Blender LTS
+        run: |
+          VERSION=$(curl -fsSL "https://download.blender.org/release/Blender${BLENDER_SERIES}/" | grep -o "blender-${BLENDER_SERIES}\.[0-9]*-linux-x64\.tar\.xz" | sort -V | tail -1)
+          echo "BLENDER_TARBALL=$VERSION" >> "$GITHUB_ENV"
+          echo "Using $VERSION"
+      - uses: actions/cache@v4
+        with:
+          path: ~/blender
+          key: ${{ env.BLENDER_TARBALL }}
+      - name: Install Blender
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libxi6 libxxf86vm1 libxfixes3 libxrender1 libgl1 libegl1 libxkbcommon0 libsm6 libice6 > /dev/null
+          if [ ! -x ~/blender/blender ]; then
+            mkdir -p ~/blender
+            curl -fsSL "https://download.blender.org/release/Blender${BLENDER_SERIES}/${BLENDER_TARBALL}" | tar -xJ -C ~/blender --strip-components=1
+          fi
+          ~/blender/blender --version | head -1
+          python3 -m pip install --quiet pillow numpy scipy
+      - name: Download the sources the rigs use
+        env:
+          SKETCHFAB_TOKEN: ${{ secrets.SKETCHFAB_TOKEN }}
+        run: |
+          ONLY=$(cat tools/models/sketchfab/CONVERT 2>/dev/null)
+          SOURCES=$(python3 -c "import json,glob,sys; only=set(filter(None,'$ONLY'.split(','))); print(','.join(sorted({json.load(open(p))['source'] for p in glob.glob('tools/models/sketchfab/rigs/*.json') if not only or json.load(open(p))['model'] in only})))")
+          python3 tools/models/sketchfab/fetch.py tools/models/sketchfab/picks.json build/import "$SOURCES"
+      - name: Convert
+        run: |
+          mkdir -p build/convert
+          ~/blender/blender -b --factory-startup --python-exit-code 1 --python tools/models/sketchfab/convert.py -- build/import tools/models/sketchfab/rigs build/convert "$(cat tools/models/sketchfab/CONVERT 2>/dev/null)" 2>&1 | grep -v "^Fra:" | tee build/convert/blender.log
+      - name: Calibration grids
+        if: always()
+        run: |
+          python3 tools/models/sketchfab/calib_grid.py build/convert
+          rm -f build/convert/*_calib_*.png
+      - name: Publish results
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash tools/ci/publish-results.sh "ci-results/${GITHUB_REF_NAME}" build/convert
