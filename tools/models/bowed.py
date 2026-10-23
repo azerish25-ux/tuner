@@ -13,10 +13,10 @@ from blendkit import (catmull_rom, cube, cylinder, disc, ellipsoid, empty, loft,
                       offset_outline, palette, prism, ring, segment, to_usd, world)
 
 # Half outline of a 356 mm violin body, (x >= 0, z) in millimetres from the bottom centre.
-VIOLIN_HALF = [(0, 0), (30, 2), (60, 10), (85, 28), (100, 55), (104, 90), (101, 115), (95, 131), (89, 143),
-               (86, 151), (75, 153), (65, 162), (58, 177), (56, 192), (58, 206), (64, 219), (73, 228),
-               (80, 233), (79, 241), (82, 253), (85, 270), (83, 290), (76, 310), (62, 330), (41, 347),
-               (20, 354), (0, 356)]
+VIOLIN_HALF = [(0, 0), (30, 2), (60, 10), (85, 28), (100, 55), (104, 90), (101, 115), (97, 127), (93, 137),
+               (90, 146), (88.5, 151.5), (86.5, 153.2), (82, 153.4), (74, 155), (66, 161), (60, 171), (56.8, 183),
+               (56, 192), (57, 203), (61, 214), (68, 224), (76, 230.5), (81, 233.5), (82.2, 235.5), (81.2, 238.5),
+               (81.5, 246), (84, 258), (85, 270), (83, 290), (76, 310), (62, 330), (41, 347), (20, 354), (0, 356)]
 
 
 @dataclass
@@ -231,11 +231,15 @@ def build_bowed(spec: BowedSpec):
     L = spec.pegbox_len
     pb_w0, pb_w1 = nut_w + 0.0015, nut_w * 0.86
     depth = 0.021 * k ** 0.75
-    pegbox = cube("pegbox_shell", (1, 1, 1), P["varnish_maple"], head)
-    pegbox.scale = (pb_w0, depth, L)
-    pegbox.location = (0, depth / 2, L / 2)
-    cube("pegbox_cavity", (pb_w0 - 0.0055 * k ** 0.6, 0.0016, L - 0.012 * k ** 0.6), P["hole"], head,
-         location=(0, -0.0002, L / 2 + 0.002))
+    wall = 0.0032 * k ** 0.6
+    for side in (-1, 1):
+        cheek = [(0.0, 0.0), (0.0, L), (depth, L), (depth, 0.0)]
+        c = prism(f"pegbox_cheek_{'l' if side < 0 else 'r'}", cheek, -wall / 2, wall / 2, P["varnish_maple"], head, bevel=0.0008)
+        c.rotation_euler = (0, 0, math.pi / 2)  # outline (u, v) -> (y, z); thickness along x
+        c.location = (side * (pb_w0 / 2 - wall / 2), 0, 0)
+    cube("pegbox_back", (pb_w0, wall, L), P["varnish_maple"], head, location=(0, depth - wall / 2, L / 2), bevel=0.0006)
+    cube("pegbox_throat", (pb_w0, depth, 0.008 * k ** 0.6), P["varnish_maple"], head, location=(0, depth / 2, 0.004 * k ** 0.6), bevel=0.0006)
+    cube("pegbox_shadow", (pb_w0 - 2 * wall, 0.0008, L - 0.01 * k ** 0.6), P["hole"], head, location=(0, depth - wall - 0.0006, L / 2 + 0.003))
     # Scroll: a tapering square section swept along an inward spiral, in the head's YZ plane.
     c_y, c_z = depth * 0.42, L + 0.017 * k ** 0.75
     R0 = 0.0195 * k ** 0.75
@@ -278,10 +282,10 @@ def build_bowed(spec: BowedSpec):
         else:
             cylinder(f"peg_collar_{anchor}", 0.0048 * k ** 0.6, 0.0025 * k ** 0.6, P["ebony"], peg,
                      location=(w_here / 2 + 0.005 * k ** 0.6, 0, 0), rotation=(0, math.pi / 2, 0), vertices=24)
-        hx = w_here / 2 + 0.017 * k ** 0.6
-        ellipsoid(f"peg_head_{anchor}", (0.012 * k ** 0.6, 0.0042 * k ** 0.6, 0.0115 * k ** 0.6), P["ebony"], peg, location=(hx, 0, 0))
-        ellipsoid(f"peg_pip_{anchor}", (0.0022 * k ** 0.6, 0.0024 * k ** 0.6, 0.0022 * k ** 0.6), P["gold" if spec.machines else "bone"], peg,
-                  location=(hx + 0.0118 * k ** 0.6, 0, 0))
+        hx = w_here / 2 + 0.0135 * k ** 0.6
+        ellipsoid(f"peg_head_{anchor}", (0.0085 * k ** 0.6, 0.0036 * k ** 0.6, 0.0098 * k ** 0.6), P["ebony"], peg, location=(hx, 0, 0))
+        ellipsoid(f"peg_pip_{anchor}", (0.0016 * k ** 0.6, 0.0019 * k ** 0.6, 0.0016 * k ** 0.6), P["gold" if spec.machines else "bone"], peg,
+                  location=(hx + 0.0085 * k ** 0.6, 0, 0))
         wound_x = (-1 if side > 0 else 1) * w_here * 0.18
         cylinder(f"peg_winding_{anchor}", 0.0036 * k ** 0.6, 0.0045 * k ** 0.6, P["gut"], peg, location=(wound_x * (1 if side > 0 else -1), 0, 0),
                  rotation=(0, math.pi / 2, 0), vertices=14)
@@ -309,7 +313,7 @@ def build_bowed(spec: BowedSpec):
         rig["strings"].append({
             "anchor": anchor, "saddle": to_usd(b_pt), "nut": to_usd(n_pt), "radius": round(radius, 6),
             "wound": i == 0, "peg": f"peg_{anchor}", "post": f"peg_winding_{anchor}",
-            "pegCenter": to_usd(world(peg, (w_here / 2 + 0.017 * k ** 0.6, 0, 0))), "pegAxis": to_usd(axis_world),
+            "pegCenter": to_usd(world(peg, (w_here / 2 + 0.0135 * k ** 0.6, 0, 0))), "pegAxis": to_usd(axis_world),
             "tighten": -side,
         })
 
