@@ -9,6 +9,11 @@ import XCTest
 /// them with short cross-fades, so taps and waits between clips stay off camera. Clip times come from what
 /// the test sees on screen and from the demo pitch's known drift (14 cents flat into tune over 4.2 s,
 /// locking 3.35 s in, again every 6 s), never from fixed sleeps alone.
+///
+/// `PREVIEW-SYNC` screenshots (attached as `sync-<label>`) let the cut find each moment in the recording by
+/// its picture rather than by the clock, and prove the recording really shows the app there. On the tuner the
+/// test stays hands-off while a string is due to lock: every query holds the app's main thread, and a gap of
+/// more than 150 ms in the readings restarts the 0.65 s hold a lock needs. Screenshots don't touch the app.
 final class AppPreviewUITests: XCTestCase {
     /// Which end of a clip matters when the cut has to shorten it.
     private enum Keep: String { case head, tail }
@@ -26,6 +31,28 @@ final class AppPreviewUITests: XCTestCase {
         app.launchEnvironment["TIMBRE_DEMO_PITCH"] = "1"
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         mark("PREVIEW-BEGIN \(stamp(Date()))")
+        waitForRecorder()
+    }
+
+    /// preview.yml starts the screen recording only when the tour begins (minutes of home screen while the
+    /// runner installs only add load and length). It passes a shared folder as TEST_RUNNER_PREVIEW_HANDSHAKE:
+    /// the test drops `begin` there and waits for `recording`. Without the folder (a local run) it goes on at once.
+    private func waitForRecorder() {
+        guard let folder = ProcessInfo.processInfo.environment["PREVIEW_HANDSHAKE"], !folder.isEmpty else { return }
+        let directory = URL(fileURLWithPath: folder, isDirectory: true)
+        let recording = directory.appendingPathComponent("recording").path
+        do {
+            try Data().write(to: directory.appendingPathComponent("begin"))
+        } catch {
+            // The host also watches the log for PREVIEW-BEGIN: give it time to start the recorder that way.
+            mark("PREVIEW-MISSED handshake folder not writable: \(error.localizedDescription)")
+            pause(12)
+            return
+        }
+        let deadline = Date().addingTimeInterval(90)
+        while !FileManager.default.fileExists(atPath: recording) && Date() < deadline { pause(0.25) }
+        if !FileManager.default.fileExists(atPath: recording) { mark("PREVIEW-MISSED the recorder never said it started") }
+        pause(1)
     }
 
     override func tearDownWithError() throws {
@@ -60,59 +87,76 @@ final class AppPreviewUITests: XCTestCase {
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 30))
         let chips = stringChips()
         XCTAssertFalse(chips.ids.isEmpty, "The tuner shows no string chips")
-        let first = chips.selected ?? chips.ids[0]
+        let first = chips.selected ?? chips.ids.first ?? "string.1"
         // Let the 3D instrument settle, then restart listening: pausing ends the session (every string is
         // untuned again) and the demo pitch starts over, 14 cents flat.
         pause(2)
+        sync("tuner")
         let listen = listenButton()
-        if listen.label != "Listen" { listen.tap(); pause(0.6) }
-        // Resume; a tap while the audio session is still stopping can be dropped, so check and retry.
-        for _ in 0..<4 where listen.label == "Listen" { listen.tap(); pause(0.5) }
-        let resumed = Date()
-        let status = (try? element("tune.status").snapshot())?.label ?? ""
-        let read = resumed.addingTimeInterval(Date().timeIntervalSince(resumed) / 2)
-        let drift = demoStart(status: status, readAt: read, resumed: resumed) ?? resumed.addingTimeInterval(-0.8)
+        // A tap while the audio session is still stopping can be lost: let it stop first.
+        if listen.label != "Listen" { listen.tap(); pause(1.5) }
+        listen.tap()
+        // The restart came a little before the tap returned: taking the return as the start keeps every
+        // prediction below on the late, safe side.
+        var drift = Date()
+        sync("drift")
 
-        // The first lock comes 3.35 s into the drift: the 5-cent band at 2.7 s, then 0.65 s of hold.
-        let predicted = drift.addingTimeInterval(3.35)
-        hold(until: predicted.addingTimeInterval(0.15))
-        let looked = Date()
-        // The lock shows on the chip ("Tuned") or as the readout's in-tune badge; if the demo pitch is slow
-        // to settle, keep filming rather than failing the whole tour.
-        let seen = firstSeen(20) { isTuned(first) || inTuneBadge() } ?? Date()
-        // The prediction stands when the first look already found the string locked; otherwise it locked later.
-        let locked = seen.timeIntervalSince(looked) > 1.5 ? seen.addingTimeInterval(-0.5) : predicted
-        let lockStart = drift.addingTimeInterval(0.15)
+        // Hands off until the first lock is due (3.35 s into the drift), then one look. If the restart tap
+        // was lost or the hold was broken, try again on a fresh cycle.
+        var locked = drift.addingTimeInterval(Demo.firstLock)
+        hold(until: locked.addingTimeInterval(0.5))
+        sync("lock")
+        if !firstLocked(first) {
+            if listen.label == "Listen" {
+                listen.tap()
+                drift = Date()
+            } else {
+                while drift.addingTimeInterval(Demo.firstLock) < Date().addingTimeInterval(0.5) { drift = drift.addingTimeInterval(Demo.cycle) }
+            }
+            locked = drift.addingTimeInterval(Demo.firstLock)
+            hold(until: locked.addingTimeInterval(0.5))
+            sync("lock-2")
+            if !firstLocked(first) { print("PREVIEW-MISSED The first string never locked") }
+        }
+        let lockStart = drift.addingTimeInterval(0.1)
         let lockEnd = locked.addingTimeInterval(1.2)
         poster(at: locked.addingTimeInterval(0.9))
         hold(until: lockEnd)
 
-        // The other strings, one at a time: each locks within one 6-second cycle of the demo pitch.
+        // The other strings, one at a time: after each tap, hands off until that string's lock is due.
         let others = chips.ids.filter { $0 != first }
-        var celebratedAt: Date?
-        if others.isEmpty { celebratedAt = firstSeen(6) { celebration().exists } }
+        var finale = locked
         for (index, id) in others.enumerated() {
             element(id).tap()
+            var due = lockDue(selectedBy: Date(), cycleStart: drift)
+            hold(until: due.addingTimeInterval(0.5))
             if index == others.count - 1 {
-                celebratedAt = firstSeen(12) { celebration().exists }
-            } else {
-                let lockedAt = firstSeen(10) { isTuned(id) }
-                _ = lockedAt  // a slow string only shortens the clip; the tour carries on
+                finale = due
+            } else if !isTuned(id) {
+                // The phase estimate ran early, or the hold was broken: the next cycle.
+                due = due.addingTimeInterval(Demo.cycle)
+                hold(until: due.addingTimeInterval(0.5))
+                if !isTuned(id) { print("PREVIEW-MISSED \(id) never locked") }
             }
         }
-        let celebrated = soft(celebratedAt, "No celebration once every string locked")
-        // The burst starts a moment before the card is seen.
-        let burst = celebrated.addingTimeInterval(-0.3)
-        let finaleStart = burst.addingTimeInterval(-3.0)
-        let finaleEnd = burst.addingTimeInterval(2.6)
+        // The last lock brings the celebration (it closes itself after six seconds).
+        sync("celebration")
+        if !celebration().exists {
+            finale = finale.addingTimeInterval(Demo.cycle)
+            hold(until: finale.addingTimeInterval(0.5))
+            sync("celebration-2")
+            if !celebration().exists { print("PREVIEW-MISSED No celebration once every string locked") }
+        }
+        let finaleStart = finale.addingTimeInterval(-3.0)
+        let finaleEnd = finale.addingTimeInterval(2.6)
         if finaleStart.timeIntervalSince(lockEnd) < 1.0 {
             clip("tune", from: lockStart, to: finaleEnd, keep: .tail)
         } else {
             clip("tune-lock", from: lockStart, to: lockEnd, keep: .tail)
             clip("tune-all", from: finaleStart, to: finaleEnd, keep: .tail)
         }
-        // The card closes itself six seconds in (no tap near it: its share button opens a sheet).
-        hold(until: burst.addingTimeInterval(7.0))
+        // No tap near the card (its share button opens a sheet): wait for it to close.
+        hold(until: finale.addingTimeInterval(7.0))
     }
 
     /// Learn's next lesson is "Your first chord: E minor": the chord step hears the demo pitch play the
@@ -141,6 +185,7 @@ final class AppPreviewUITests: XCTestCase {
             let following = soft(followingAt, "The chord was never heard")
             heard = following.addingTimeInterval(-1.3)
         }
+        sync("chord")
         clip("chord", from: max(shown.addingTimeInterval(-0.2), heard.addingTimeInterval(-3.5)), to: heard.addingTimeInterval(0.7), keep: .tail)
 
         // The rest of this lesson (a tapped, then a strummed rhythm) runs on its own clock, off camera.
@@ -172,6 +217,10 @@ final class AppPreviewUITests: XCTestCase {
 
         // A one-bar count-in at 60 BPM, then each note runs down its string to the line and lights as it is played.
         let started = soft(press("Start"), "The play-along never started")
+        hold(until: started.addingTimeInterval(4.5))
+        sync("highway")
+        hold(until: started.addingTimeInterval(7.0))
+        sync("highway-2")
         hold(until: started.addingTimeInterval(8.8))
         clip("highway", from: started.addingTimeInterval(1.5), to: started.addingTimeInterval(8.6), keep: .head)
         XCTAssertTrue(element("along.again").waitForExistence(timeout: 30))
@@ -179,6 +228,8 @@ final class AppPreviewUITests: XCTestCase {
 
         // The results: stars land one by one, XP counts up and the level bar fills.
         let finished = soft(press("Continue"), "The play-along never finished")
+        hold(until: finished.addingTimeInterval(1.8))
+        sync("results")
         hold(until: finished.addingTimeInterval(3.9))
         clip("results", from: finished.addingTimeInterval(-0.4), to: finished.addingTimeInterval(3.8), keep: .head)
         try leaveResults()
@@ -191,6 +242,7 @@ final class AppPreviewUITests: XCTestCase {
         hold(until: switched.addingTimeInterval(1.6))
         app.swipeUp(velocity: .slow)
         let end = Date().addingTimeInterval(1.2)
+        sync("songs")
         hold(until: end)
         clip("songs", from: switched.addingTimeInterval(-0.2), to: end, keep: .head)
         // Spare footage, in case the cut needs to run a little longer.
@@ -212,6 +264,19 @@ final class AppPreviewUITests: XCTestCase {
     }
 
     private func poster(at moment: Date) { mark("PREVIEW-POSTER \(stamp(moment))") }
+
+    /// A picture of the screen at a known moment, for lining the cut up with the recording (and proving the
+    /// recording shows the app there). A screenshot comes from the simulator, not the app's main thread.
+    private func sync(_ label: String) {
+        let before = Date()
+        let shot = XCUIScreen.main.screenshot()
+        let after = Date()
+        let attachment = XCTAttachment(screenshot: shot)
+        attachment.name = "sync-\(label)"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        mark("PREVIEW-SYNC \(label) \(stamp(before)) \(stamp(after))")
+    }
 
     // MARK: Tuner
 
@@ -260,21 +325,26 @@ final class AppPreviewUITests: XCTestCase {
             .firstMatch
     }
 
-    /// When the demo pitch started over, from the status line read at `moment` ("Tighten · 9¢ flat" is
-    /// 1.5 s into the drift; "Hold it…" is inside the 5-cent band). Nil when the line can't say.
-    private func demoStart(status: String, readAt moment: Date, resumed: Date) -> Date? {
-        let elapsed: Double
-        if status.hasPrefix("Hold it") {
-            elapsed = 3.0
-        } else if status.contains("flat"), let cents = Int(status.filter(\.isNumber)), (1...14).contains(cents) {
-            elapsed = 4.2 * (1 - Double(cents) / 14)
-        } else {
-            return nil
-        }
-        let start = moment.addingTimeInterval(-elapsed)
-        // The restart happened before the tap returned, and not long before.
-        guard start <= resumed, resumed.timeIntervalSince(start) < 4 else { return nil }
-        return start
+    /// The first string has locked: its chip reads "Tuned", or the readout shows its in-tune badge.
+    private func firstLocked(_ id: String) -> Bool { isTuned(id) || inTuneBadge() }
+
+    /// The demo pitch's clock (AudioService.startDemo): each 6-second cycle drifts in from 14 cents flat, is
+    /// inside the 5-cent lock band from 2.7 s to the end, and a lock needs 0.65 s of the band.
+    private enum Demo {
+        static let cycle = 6.0
+        static let inBand = 2.7
+        static let hold = 0.65
+        static let firstLock = inBand + hold
+    }
+
+    /// When a string selected no later than `selected` has surely locked, for a cycle that started no later
+    /// than `cycleStart` (a later selection never locks earlier, so upper bounds give a safe answer).
+    private func lockDue(selectedBy selected: Date, cycleStart: Date) -> Date {
+        let phase = max(0, selected.timeIntervalSince(cycleStart)).truncatingRemainder(dividingBy: Demo.cycle)
+        let cycle = selected.addingTimeInterval(-phase)
+        if phase < Demo.inBand { return cycle.addingTimeInterval(Demo.firstLock) }
+        if phase + Demo.hold <= Demo.cycle { return selected.addingTimeInterval(Demo.hold) }
+        return cycle.addingTimeInterval(Demo.cycle + Demo.firstLock)
     }
 
     // MARK: Lessons

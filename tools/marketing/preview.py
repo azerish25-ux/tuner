@@ -5,27 +5,36 @@ Run by .github/workflows/preview.yml, in this order:
 
   preview.py device                        pick (or create) a 6.9-inch iPhone simulator; prints
                                            DEVICE_ID=... and DEVICE_NAME=... lines for $GITHUB_ENV
-  preview.py record --device ID --out DIR  start `simctl io ID recordVideo` in the background (DIR/raw.mp4)
-                                           and note the wall-clock moment it started (DIR/record.json)
+  preview.py record --device ID --out DIR [--handshake DIR --log LOG]
+                                           start `simctl io ID recordVideo` in the background (DIR/raw.mp4) and
+                                           note when it started (DIR/record.json). With --handshake it first waits
+                                           for the tour to begin (the test's `begin` file, or PREVIEW-BEGIN in LOG)
+                                           and answers with a `recording` file once the recorder runs
   preview.py stop --out DIR                stop it with SIGINT and wait until the file is written
   preview.py render --out DIR --log LOG [--attachments DIR] [--offset S]
                                            cut the clips the test marked into DIR/preview.mp4 + DIR/poster.png
 
 The test prints `PREVIEW-CLIP <name> <start> <end> <head|tail>` (wall-clock seconds) for each stretch worth
-showing and `PREVIEW-POSTER <time>` for the poster frame. render maps them onto the recording, joins the
-clips with short cross-fades and encodes to Apple's App Preview spec: 886x1920 portrait, 30 fps, H.264 High,
-a silent stereo AAC track at 44.1 kHz, 15-30 s. `--offset` shifts every cut (positive = later) if the cuts
-look early or late. render also writes DIR/PREVIEW.txt (what was cut and where the poster sits) and
-DIR/raw-small.mp4 (the whole recording, small, for checking a run).
+showing, `PREVIEW-POSTER <time>` for the poster frame and `PREVIEW-SYNC <label> <before> <after>` around each
+screenshot it attaches as `sync-<label>`. The recorder's own clock can't be trusted (simctl reported its start
+3 s late in the first CI run, and a recording can stop showing the app), so render finds each sync screenshot in
+the recording by its picture and maps every clip through the nearest syncs. A sync that isn't in the
+recording near a clip means the recording lost the app there: render then exits with code 3 (preview.yml
+records the tour again). The cut joins the clips with short cross-fades and is encoded to Apple's App
+Preview spec: 886x1920 portrait, 30 fps, H.264 High, a silent stereo AAC track at 44.1 kHz, 15-30 s.
+`--offset` shifts every cut by hand (positive = later). render also writes DIR/PREVIEW.txt (clips, syncs,
+poster time), DIR/sync.png (each sync screenshot beside the recording's frame it matched) and
+DIR/raw-small.mp4 (the whole recording, small).
 
-Re-cut a CI run locally: download the preview-recording artifact (raw.mp4, record.json, test.log) and run
-`python3 tools/marketing/preview.py render --out <that folder> --log <that folder>/test.log --offset 0.3`.
-Needs ffmpeg and ffprobe (brew install ffmpeg).
+Re-cut a CI run locally: download the preview-recording artifact (raw.mp4, record.json, test.log,
+attachments/) and run `python3 tools/marketing/preview.py render --out <folder> --log <folder>/test.log
+--attachments <folder>/attachments`. Needs ffmpeg and ffprobe (brew install ffmpeg).
 """
 from __future__ import annotations
 
 import argparse
 import json
+import operator
 import os
 import re
 import shutil
@@ -45,7 +54,16 @@ PUBLISH_LIMIT = 44 * 1024 * 1024      # tools/ci/publish-results.sh leaves out f
 APPLE_LIMIT = 500 * 1024 * 1024
 PREFERRED = ("iPhone 17 Pro Max", "iPhone 16 Pro Max")
 
+# Finding the sync screenshots in the recording: tiny grey pictures, 15 a second.
+THUMB_W, THUMB_H, THUMB_FPS = 54, 117, 15
+SYNC_WINDOW = 45.0      # seconds either side of where the recorder's clock puts a sync
+PRESENT = 10.0          # mean difference (pictures normalised to a spread of 32) under which a sync is in the
+                        # recording; the same screen scores about 1-3, another screen about 20
+DISTINCT = 1.15         # the match beats the best one 1.5 s away by this factor: it pins the moment down
+LOST = 3                # render's exit code when the recording lost the app in a clip
+
 CLIP = re.compile(r"PREVIEW-CLIP (\S+) (\d+(?:\.\d+)?) (\d+(?:\.\d+)?) (head|tail)")
+SYNC = re.compile(r"PREVIEW-SYNC (\S+) (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)")
 POSTER = re.compile(r"PREVIEW-POSTER (\d+(?:\.\d+)?)")
 BEGIN = re.compile(r"PREVIEW-BEGIN (\d+(?:\.\d+)?)")
 END = re.compile(r"PREVIEW-END (\w+)")
@@ -112,10 +130,32 @@ def wait_for_start(proc: subprocess.Popen, log: Path, timeout: float):
     return None
 
 
+def wait_for_tour(handshake: Path, log: Path | None, timeout: float = 45 * 60) -> str:
+    """Blocks until the tour begins: the test's `begin` file in the shared folder, or (if the simulator can't
+    write there) a PREVIEW-BEGIN line in the xcodebuild log written after this wait started."""
+    skip = log.stat().st_size if log and log.exists() else 0
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        if (handshake / "begin").exists():
+            return "the test's begin file"
+        if log and log.exists() and log.stat().st_size > skip:
+            with open(log, "rb") as handle:
+                handle.seek(skip)
+                if b"PREVIEW-BEGIN" in handle.read():
+                    return "PREVIEW-BEGIN in the log"
+        time.sleep(0.2)
+    sys.exit("The tour never began; nothing recorded.")
+
+
 def record_command(args) -> None:
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     raw, log = out / "raw.mp4", out / "record.log"
+    handshake = Path(args.handshake) if args.handshake else None
+    if handshake:
+        handshake.mkdir(parents=True, exist_ok=True)
+        print(f"Waiting for the tour to begin ({handshake})")
+        print(f"The tour began ({wait_for_tour(handshake, Path(args.log) if args.log else None)}); starting the recorder")
     # Run simctl itself (not through xcrun), so SIGINT reaches the recorder.
     tool = run(["xcrun", "-f", "simctl"]).strip() or "simctl"
     # The unmasked framebuffer (square corners, like a QuickTime device recording); older simctl lacks --mask.
@@ -138,6 +178,8 @@ def record_command(args) -> None:
         "startSource": "simctl reported 'Recording started'" if started else "estimated: 1 s after launching simctl",
     }
     (out / "record.json").write_text(json.dumps(info, indent=2))
+    if handshake:
+        (handshake / "recording").write_text(str(info["started"]))
     print(f"Recording {raw} (pid {proc.pid}; start {info['startSource']})")
 
 
@@ -196,21 +238,25 @@ class Clip:
 
 
 def read_marks(texts: list[str]):
-    """Clips and poster time (wall clock) of the last run that marked any, from the first text that has them.
-    A retried test prints a fresh PREVIEW-BEGIN, so earlier attempts are ignored."""
+    """Clips, syncs and poster time (wall clock) of the last run that marked any clips, from the first text that
+    has them. A retried test prints a fresh PREVIEW-BEGIN, so earlier attempts are ignored."""
     for text in texts:
         runs: list[dict] = []
         for line in text.splitlines():
             if BEGIN.search(line):
-                runs.append({"clips": [], "poster": None, "result": None})
+                runs.append({"clips": [], "syncs": [], "poster": None, "result": None})
                 continue
-            clip, poster, end = CLIP.search(line), POSTER.search(line), END.search(line)
-            if (clip or poster or end) and not runs:
-                runs.append({"clips": [], "poster": None, "result": None})
+            clip, sync, poster, end = CLIP.search(line), SYNC.search(line), POSTER.search(line), END.search(line)
+            if (clip or sync or poster or end) and not runs:
+                runs.append({"clips": [], "syncs": [], "poster": None, "result": None})
             if clip:
                 entry = (clip.group(1), float(clip.group(2)), float(clip.group(3)), clip.group(4))
                 if entry not in runs[-1]["clips"]:
                     runs[-1]["clips"].append(entry)
+            elif sync:
+                entry = (sync.group(1), float(sync.group(2)), float(sync.group(3)))
+                if entry not in runs[-1]["syncs"]:
+                    runs[-1]["syncs"].append(entry)
             elif poster:
                 runs[-1]["poster"] = float(poster.group(1))
             elif end:
@@ -267,6 +313,151 @@ def fit(clips: list[Clip], duration: float):
             pad = snap(need + 1 / FPS)
         notes.append(f"lengthened from {total:.1f} s to Apple's 15 s minimum ({extra:.1f} s more footage, {pad:.1f} s held frame)")
     return clips, pad, notes
+
+
+@dataclass
+class Sync:
+    """A screenshot the test took between `before` and `after` (wall clock), and where it is in the recording."""
+    label: str
+    before: float
+    after: float
+    picture: Path | None = None
+    at: float | None = None           # seconds into the recording of the best-matching frame
+    score: float | None = None        # its difference from the screenshot
+    runner_up: float | None = None    # the best difference at least 1.5 s away
+
+    @property
+    def wall(self) -> float:
+        return (self.before + self.after) / 2
+
+    @property
+    def present(self) -> bool:
+        return self.score is not None and self.score <= PRESENT
+
+    @property
+    def distinct(self) -> bool:
+        return self.present and self.runner_up is not None and self.runner_up >= self.score * DISTINCT + 0.05
+
+    @property
+    def offset(self) -> float:
+        """Seconds into the recording minus wall clock, at this moment."""
+        return self.at - self.wall
+
+
+def sync_pictures(folder: Path | None) -> dict[str, Path]:
+    """The test's `sync-<label>` screenshots among the exported xcresult attachments, by label."""
+    found: dict[str, Path] = {}
+    manifest = folder / "manifest.json" if folder else None
+    if not manifest or not manifest.exists():
+        return found
+    for test in json.loads(manifest.read_text()):
+        for item in test.get("attachments", []):
+            named = re.match(r"sync-(.+)_\d+_[0-9A-Fa-f-]{36}", item.get("suggestedHumanReadableName", ""))
+            if named and (folder / item["exportedFileName"]).exists():
+                found[named.group(1)] = folder / item["exportedFileName"]
+    return found
+
+
+def index_recording(raw: Path, out: Path) -> list[bytes]:
+    """One decode of the recording for two things: raw-small.mp4 (the whole run, small, for checking it) and a
+    tiny grey picture of every 1/15 s, for finding the sync screenshots."""
+    tiny = out / "tiny.gray"
+    graph = (f"[0:v]fps={THUMB_FPS}:start_time=0,split=2[a][b];[a]scale=432:-2[small];"
+             f"[b]scale={THUMB_W}:{THUMB_H}:flags=area,format=gray[tiny]")
+    ffmpeg(["-i", str(raw), "-filter_complex", graph,
+            "-map", "[small]", "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "32", str(out / "raw-small.mp4"),
+            "-map", "[tiny]", "-f", "rawvideo", str(tiny)])
+    data = tiny.read_bytes()
+    tiny.unlink()
+    size = THUMB_W * THUMB_H
+    return [data[i:i + size] for i in range(0, len(data) - size + 1, size)]
+
+
+def tiny_picture(path: Path) -> bytes:
+    return subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-nostdin", "-i", str(path),
+                           "-vf", f"scale={THUMB_W}:{THUMB_H}:flags=area,format=gray", "-frames:v", "1", "-f", "rawvideo", "-"],
+                          check=True, capture_output=True).stdout
+
+
+def normalised(pixels: bytes) -> list[int]:
+    """Mean 0, spread 32: a PNG screenshot and a video frame of the same screen differ in levels, not layout."""
+    count = len(pixels)
+    mean = sum(pixels) / count
+    spread = max(4.0, (sum(map(operator.mul, pixels, pixels)) / count - mean * mean) ** 0.5)
+    scale = 32 / spread
+    return [int((value - mean) * scale) for value in pixels]
+
+
+def distance(a: list[int], b: list[int]) -> float:
+    return sum(map(abs, map(operator.sub, a, b))) / len(a)
+
+
+def locate(syncs: list[Sync], frames: list[bytes], origin: float) -> None:
+    """Finds each sync screenshot among the recording's frames within SYNC_WINDOW of where the clock puts it."""
+    cache: dict[int, list[int]] = {}
+
+    def frame(i: int) -> list[int]:
+        if i not in cache:
+            if len(cache) > 4000:
+                cache.clear()
+            cache[i] = normalised(frames[i])
+        return cache[i]
+
+    for sync in syncs:
+        if not sync.picture:
+            continue
+        shot = tiny_picture(sync.picture)
+        if len(shot) != THUMB_W * THUMB_H:
+            continue
+        target = normalised(shot)
+        centre = (sync.wall - origin) * THUMB_FPS
+        low = max(0, int(centre - SYNC_WINDOW * THUMB_FPS))
+        high = min(len(frames), int(centre + SYNC_WINDOW * THUMB_FPS) + 1)
+        if low >= high:
+            continue
+        coarse = {i: distance(target, frame(i)) for i in range(low, high, 2)}
+        best = min(coarse, key=coarse.get)
+        fine = {i: distance(target, frame(i)) for i in range(max(low, best - 2), min(high, best + 3))}
+        best = min(fine, key=fine.get)
+        away = [d for i, d in coarse.items() if abs(i - best) > 1.5 * THUMB_FPS]
+        sync.at, sync.score = best / THUMB_FPS, fine[best]
+        sync.runner_up = min(away) if away else None
+
+
+def offset_near(wall: float, syncs: list[Sync], fallback: float) -> tuple[float, str]:
+    """Recording time minus wall clock around `wall`: the median of the three nearest syncs that pin their moment
+    down; else of the five nearest found at all (a still screen matches a little loosely); else the recorder's clock."""
+    for wanted, count in ((lambda s: s.distinct, 3), (lambda s: s.present, 5)):
+        usable = sorted((s for s in syncs if wanted(s)), key=lambda s: abs(s.wall - wall))[:count]
+        if usable:
+            offsets = sorted(s.offset for s in usable)
+            return offsets[len(offsets) // 2], "syncs " + ", ".join(s.label for s in sorted(usable, key=lambda s: s.wall))
+    return fallback, "recorder clock"
+
+
+def still(frames: list[bytes], start: float, end: float) -> bool:
+    """No change at all between the recording's frames in [start, end]: the recorder had stopped getting frames."""
+    low, high = int(start * THUMB_FPS), min(len(frames) - 1, int(end * THUMB_FPS))
+    return high > low and all(frames[i] == frames[low] for i in range(low, high + 1))
+
+
+def sync_sheet(syncs: list[Sync], small: Path, dest: Path) -> None:
+    """Each sync screenshot beside the recording's frame it matched, left to right in the order taken."""
+    found = [s for s in syncs if s.picture and s.at is not None]
+    if not found or not small.exists():
+        return
+    inputs: list[str] = []
+    parts: list[str] = []
+    for i, s in enumerate(found):
+        inputs += ["-i", str(s.picture), "-ss", f"{s.at:.3f}", "-i", str(small)]
+        parts.append(f"[{2 * i}:v]scale=-2:240,setsar=1[p{i}]")
+        parts.append(f"[{2 * i + 1}:v]trim=end_frame=1,scale=-2:240,setsar=1[v{i}]")
+    pairs = "".join(f"[p{i}][v{i}]" for i in range(len(found)))
+    parts.append(f"{pairs}hstack=inputs={2 * len(found)}[sheet]")
+    try:
+        ffmpeg([*inputs, "-filter_complex", ";".join(parts), "-map", "[sheet]", "-frames:v", "1", str(dest)])
+    except subprocess.CalledProcessError:
+        print("Could not draw sync.png", file=sys.stderr)
 
 
 def probe(path: Path) -> dict:
@@ -381,20 +572,42 @@ def render_command(args) -> None:
     if not (out / "record.json").exists():
         sys.exit(f"No {out / 'record.json'}: it says when the recording started (written by `preview.py record`).")
     record = json.loads((out / "record.json").read_text())
-    origin = record["started"] - offset          # wall clock at 0 s into the recording
+    clock = -record["started"]                   # the recorder's word: recording time = wall clock + clock
     raw_info = probe(raw)
     duration = float(raw_info["format"]["duration"])
 
     texts = [Path(p).read_text(errors="replace") for p in (args.log or []) if Path(p).exists()]
-    if args.attachments and Path(args.attachments).is_dir():
-        texts.append("\n".join(p.read_text(errors="replace") for p in sorted(Path(args.attachments).rglob("*.txt"))))
+    attachments = Path(args.attachments) if args.attachments and Path(args.attachments).is_dir() else None
+    if attachments:
+        texts.append("\n".join(p.read_text(errors="replace") for p in sorted(attachments.rglob("*.txt"))))
     marks = read_marks(texts)
+    print(f"Indexing {raw.name} ({duration:.1f} s)")
+    (out / "sync.png").unlink(missing_ok=True)
+    frames = index_recording(raw, out)
     notes: list[str] = []
+    syncs: list[Sync] = []
+    lost: list[str] = []
+    sources: dict[str, str] = {}
     if marks:
-        clips = [Clip(name, start - origin, end - origin, keep) for name, start, end, keep in marks["clips"]]
-        poster_raw = marks["poster"] - origin if marks["poster"] is not None else None
+        pictures = sync_pictures(attachments)
+        syncs = [Sync(label, before, after, pictures.get(label)) for label, before, after in marks["syncs"]]
+        locate(syncs, frames, record["started"])
+        missing = [s for s in syncs if s.picture and not s.present]
+        clips = []
+        for name, start, end, keep in marks["clips"]:
+            shift, sources[name] = offset_near((start + end) / 2, syncs, clock)
+            clips.append(Clip(name, start + shift + offset, end + shift + offset, keep))
+            # A screenshot taken in or right around the clip that the recording doesn't show: the app is missing there.
+            gone = [s.label for s in missing if start - 4 <= s.wall <= end + 4]
+            if gone:
+                lost.append(f"{name} (sync {', '.join(gone)} not in the recording)")
+        poster_raw = None
+        if marks["poster"] is not None:
+            poster_raw = marks["poster"] + offset_near(marks["poster"], syncs, clock)[0] + offset
         if marks["result"] != "passed":
             notes.append(f"WARNING: the tour test {marks['result'] or 'did not finish'}; check the cut before using it")
+        if syncs and not any(s.picture for s in syncs):
+            notes.append("WARNING: no sync screenshots among the attachments; the cut follows the recorder's clock")
     else:
         # No marks (the test never got going): skip the launch and keep what fits.
         start = min(12.0, duration * 0.25)
@@ -405,11 +618,14 @@ def render_command(args) -> None:
     notes += fitted
     if not clips:
         sys.exit("None of the marked clips fall inside the recording; check record.json and --offset.")
+    for c in clips:
+        if still(frames, c.start, c.end):
+            notes.append(f"WARNING: {c.name} doesn't move at all: the recorder may have stopped getting frames there")
 
     base = max(0.0, snap(min(c.start for c in clips) - 1))
     top = min(duration, max(c.end for c in clips) + 1)
     window = out / "window.mp4"
-    print(f"Cutting {len(clips)} clips from {raw.name} ({duration:.1f} s)")
+    print(f"Cutting {len(clips)} clips")
     cut_window(raw, base, top, window)
     color = color_args(raw_info)
     preview = out / "preview.mp4"
@@ -421,28 +637,48 @@ def render_command(args) -> None:
 
     poster_at = min(max(0.1, poster_time(clips, poster_raw)), total - 0.1)
     ffmpeg(["-ss", f"{poster_at:.3f}", "-i", str(preview), "-frames:v", "1", str(out / "poster.png")])
-    if not args.no_evidence:
-        ffmpeg(["-i", str(raw), "-an", "-vf", "fps=15,scale=432:-2", "-c:v", "libx264", "-preset", "veryfast", "-crf", "32",
-                str(out / "raw-small.mp4")])
+    sync_sheet(syncs, out / "raw-small.mp4", out / "sync.png")
 
     info, problems = check(preview)
     size = preview.stat().st_size
+    pinned = sorted(s.offset for s in syncs if s.distinct)
     lines = [
         'App Store App Preview: iPhone 6.9" display, portrait',
         f"preview.mp4: {WIDTH}x{HEIGHT}, {FPS} fps, H.264 High, silent stereo AAC 44.1 kHz, "
         f"{float(info['format']['duration']):.2f} s, {size / 1e6:.1f} MB",
         f"poster.png: the frame at {timecode(poster_at)}. In App Store Connect, set the preview's poster frame to this time.",
-        f"recording: {os.environ.get('DEVICE_NAME', 'simulator')}, {duration:.1f} s; start {record.get('startSource')}; offset {offset:+.2f} s",
-        "",
-        "clips (seconds into the recording -> into the preview):",
+        f"recording: {os.environ.get('DEVICE_NAME', 'simulator')}, {duration:.1f} s; start {record.get('startSource')}; "
+        f"manual offset {offset:+.2f} s",
     ]
+    if pinned:
+        lines.append(f"syncs vs the recorder's clock: {pinned[len(pinned) // 2] - clock:+.2f} s (median of {len(pinned)} pinned syncs)")
+    lines += ["", "clips (seconds into the recording -> into the preview; placed by):"]
     at = 0.0
     for c in clips:
-        lines.append(f"  {c.name:<10} {c.start:7.2f}-{c.end:7.2f} -> {at:5.2f}-{at + c.length:5.2f}  keep {c.keep}")
+        lines.append(f"  {c.name:<10} {c.start:7.2f}-{c.end:7.2f} -> {at:5.2f}-{at + c.length:5.2f}  keep {c.keep}  "
+                     f"({sources.get(c.name, 'recorder clock')})")
         at += c.length - FADE
-    lines += [""] + notes + ([f"OUT OF SPEC: {p}" for p in problems] or ["Meets the App Preview spec."])
+    if syncs:
+        lines += ["", "syncs (the test's screenshots, found in the recording; sync.png shows each beside its frame):"]
+        for s in syncs:
+            if not s.picture:
+                lines.append(f"  {s.label:<14} no screenshot among the attachments")
+            elif s.at is None:
+                lines.append(f"  {s.label:<14} outside the recording")
+            else:
+                verdict = "pinned" if s.distinct else ("found, not distinctive" if s.present else "NOT IN THE RECORDING")
+                runner = f"{s.runner_up:5.1f}" if s.runner_up is not None else "  -  "
+                lines.append(f"  {s.label:<14} at {s.at:7.2f} s  diff {s.score:5.1f} (next {runner})  "
+                             f"vs clock {s.offset - clock:+7.2f} s  {verdict}")
+    lines += [""] + notes
+    if lost:
+        lines += [f"LOST: the recording doesn't show the app in {item}" for item in lost]
+        lines.append("NOT FOR UPLOAD: record the tour again.")
+    lines += [f"OUT OF SPEC: {p}" for p in problems] or (["Meets the App Preview spec."] if not lost else [])
     (out / "PREVIEW.txt").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))
+    if lost:
+        sys.exit(LOST)
     if problems:
         sys.exit(1)
 
@@ -454,6 +690,8 @@ def main() -> None:
     record = sub.add_parser("record", help="start recording the simulator screen")
     record.add_argument("--device", required=True)
     record.add_argument("--out", required=True)
+    record.add_argument("--handshake", help="folder shared with the test: wait for its `begin`, answer with `recording`")
+    record.add_argument("--log", help="xcodebuild log to watch for PREVIEW-BEGIN while waiting")
     stop = sub.add_parser("stop", help="stop the recording")
     stop.add_argument("--out", required=True)
     render = sub.add_parser("render", help="cut the marked clips into the App Preview")
@@ -461,7 +699,6 @@ def main() -> None:
     render.add_argument("--log", action="append", help="xcodebuild log with the test's PREVIEW-* lines (repeatable)")
     render.add_argument("--attachments", help="exported xcresult attachments (the preview-clips note)")
     render.add_argument("--offset", default="0", help="seconds to shift every cut (positive = later)")
-    render.add_argument("--no-evidence", action="store_true", help="skip raw-small.mp4")
     args = parser.parse_args()
     {"device": device_command, "record": record_command, "stop": stop_command, "render": render_command}[args.command](args)
 
