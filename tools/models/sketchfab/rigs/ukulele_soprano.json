@@ -1,8 +1,189 @@
 {
  "model": "ukulele_soprano",
  "source": "ukulele_twilight",
- "length": 0.53,
+ "length": 0.51,
  "headEnd": "B",
  "face": "front",
- "separate": true
+ "separate": true,
+ "rig": "MACHINE_HEAD",
+ "degPerCent": 1.4,
+ "stringKind": "nylon",
+ "originalStrings": "cut",
+ "nutZ": [
+  "thing_a_low_Details_0.001",
+  "thing_a_low_Details_0.004"
+ ],
+ "saddleZ": [
+  "Brodge_a_low_Details_0.001"
+ ],
+ "strings": [
+  {
+   "anchor": "s4",
+   "string": [
+    "string_a_low_Details_0",
+    "string_a_low_Details_0.001"
+   ],
+   "peg": [
+    "pegs_c_low_Details_0.012",
+    "pegs_c_low_Details_0.013",
+    "pegs_c_low_Details_0.014",
+    "pegs_d_low_Details_0.010",
+    "pegs_d_low_Details_0.011",
+    "pegs_d_low_Details_0.012",
+    "pegs_d_low_Details_0.013",
+    "pegs_d_low_Details_0.014",
+    "pegs_d_low_Details_0.024",
+    "pegs_d_low_Details_0.025"
+   ],
+   "post": [
+    "pegs_a_low_Details_0.018",
+    "pegs_a_low_Details_0.019",
+    "pegs_a_low_Details_0.020",
+    "pegs_a_low_Details_0.021",
+    "pegs_a_low_Details_0.022",
+    "pegs_a_low_Details_0.023",
+    "pegs_a_low_Details_0.027",
+    "pegs_b_low_Details_0.006",
+    "pegs_b_low_Details_0.007",
+    "pegs_low_Details_0.030",
+    "pegs_low_Details_0.031",
+    "pegs_low_Details_0.032",
+    "pegs_low_Details_0.033",
+    "pegs_low_Details_0.034",
+    "pegs_low_Details_0.035",
+    "pegs_low_Details_0.036",
+    "pegs_low_Details_0.037",
+    "pegs_low_Details_0.038",
+    "pegs_low_Details_0.039"
+   ],
+   "gauge": 0.00071,
+   "wound": false
+  },
+  {
+   "anchor": "s3",
+   "string": [
+    "string_a_low_Details_0.002",
+    "string_a_low_Details_0.003"
+   ],
+   "peg": [
+    "pegs_c_low_Details_0.017",
+    "pegs_c_low_Details_0.018",
+    "pegs_c_low_Details_0.019",
+    "pegs_d_low_Details_0.015",
+    "pegs_d_low_Details_0.016",
+    "pegs_d_low_Details_0.017",
+    "pegs_d_low_Details_0.018",
+    "pegs_d_low_Details_0.019",
+    "pegs_d_low_Details_0.026",
+    "pegs_d_low_Details_0.027"
+   ],
+   "post": [
+    "pegs_a_low_Details_0.012",
+    "pegs_a_low_Details_0.013",
+    "pegs_a_low_Details_0.014",
+    "pegs_a_low_Details_0.015",
+    "pegs_a_low_Details_0.016",
+    "pegs_a_low_Details_0.017",
+    "pegs_a_low_Details_0.026",
+    "pegs_b_low_Details_0.004",
+    "pegs_b_low_Details_0.005",
+    "pegs_low_Details_0.020",
+    "pegs_low_Details_0.021",
+    "pegs_low_Details_0.022",
+    "pegs_low_Details_0.023",
+    "pegs_low_Details_0.024",
+    "pegs_low_Details_0.025",
+    "pegs_low_Details_0.026",
+    "pegs_low_Details_0.027",
+    "pegs_low_Details_0.028",
+    "pegs_low_Details_0.029"
+   ],
+   "gauge": 0.00091,
+   "wound": false
+  },
+  {
+   "anchor": "s2",
+   "string": [
+    "string_a_low_Details_0.004",
+    "string_a_low_Details_0.005"
+   ],
+   "peg": [
+    "pegs_c_low_Details_0.007",
+    "pegs_c_low_Details_0.008",
+    "pegs_c_low_Details_0.009",
+    "pegs_d_low_Details_0.005",
+    "pegs_d_low_Details_0.006",
+    "pegs_d_low_Details_0.007",
+    "pegs_d_low_Details_0.008",
+    "pegs_d_low_Details_0.009",
+    "pegs_d_low_Details_0.022",
+    "pegs_d_low_Details_0.023"
+   ],
+   "post": [
+    "pegs_a_low_Details_0.006",
+    "pegs_a_low_Details_0.007",
+    "pegs_a_low_Details_0.008",
+    "pegs_a_low_Details_0.009",
+    "pegs_a_low_Details_0.010",
+    "pegs_a_low_Details_0.011",
+    "pegs_a_low_Details_0.025",
+    "pegs_b_low_Details_0.002",
+    "pegs_b_low_Details_0.003",
+    "pegs_low_Details_0.010",
+    "pegs_low_Details_0.011",
+    "pegs_low_Details_0.012",
+    "pegs_low_Details_0.013",
+    "pegs_low_Details_0.014",
+    "pegs_low_Details_0.015",
+    "pegs_low_Details_0.016",
+    "pegs_low_Details_0.017",
+    "pegs_low_Details_0.018",
+    "pegs_low_Details_0.019"
+   ],
+   "gauge": 0.00081,
+   "wound": false
+  },
+  {
+   "anchor": "s1",
+   "string": [
+    "string_a_low_Details_0.006",
+    "string_a_low_Details_0.007"
+   ],
+   "peg": [
+    "pegs_c_low_Details_0.002",
+    "pegs_c_low_Details_0.003",
+    "pegs_c_low_Details_0.004",
+    "pegs_d_low_Details_0",
+    "pegs_d_low_Details_0.001",
+    "pegs_d_low_Details_0.002",
+    "pegs_d_low_Details_0.003",
+    "pegs_d_low_Details_0.004",
+    "pegs_d_low_Details_0.020",
+    "pegs_d_low_Details_0.021"
+   ],
+   "post": [
+    "pegs_a_low_Details_0",
+    "pegs_a_low_Details_0.001",
+    "pegs_a_low_Details_0.002",
+    "pegs_a_low_Details_0.003",
+    "pegs_a_low_Details_0.004",
+    "pegs_a_low_Details_0.005",
+    "pegs_a_low_Details_0.024",
+    "pegs_b_low_Details_0",
+    "pegs_b_low_Details_0.001",
+    "pegs_low_Details_0",
+    "pegs_low_Details_0.001",
+    "pegs_low_Details_0.002",
+    "pegs_low_Details_0.003",
+    "pegs_low_Details_0.004",
+    "pegs_low_Details_0.005",
+    "pegs_low_Details_0.006",
+    "pegs_low_Details_0.007",
+    "pegs_low_Details_0.008",
+    "pegs_low_Details_0.009"
+   ],
+   "gauge": 0.00066,
+   "wound": false
+  }
+ ]
 }

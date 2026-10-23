@@ -1,8 +1,186 @@
 {
  "model": "double_bass",
  "source": "double_bass_sandis",
- "length": 1.85,
+ "length": 1.98,
  "headEnd": "B",
  "face": "front",
- "separate": true
+ "separate": true,
+ "rig": "MACHINE_HEAD",
+ "degPerCent": 1.4,
+ "stringKind": "steel",
+ "strings": [
+  {
+   "anchor": "s4",
+   "nut": [
+    -0.01662,
+    1.7317
+   ],
+   "saddle": [
+    -0.04143,
+    0.68497
+   ],
+   "y": -0.00985,
+   "ySaddle": -0.16728,
+   "peg": [
+    "Object_6.554",
+    "Object_6.598",
+    "Object_7.059",
+    "Object_7.060",
+    "Object_7.061",
+    "Object_7.145",
+    "Object_7.171"
+   ],
+   "pegAxis": [
+    1,
+    0,
+    0
+   ],
+   "hide": [
+    "Object_5.028",
+    "Object_5.037",
+    "Object_5.075",
+    "Object_5.090",
+    "Object_5.115",
+    "Object_5.168",
+    "Object_5.171",
+    "Object_5.197",
+    "Object_5.206",
+    "Object_5.258",
+    "Object_5.269",
+    "Object_5.349",
+    "Object_5.391",
+    "Object_5.467",
+    "Object_5.498",
+    "Object_5.501",
+    "Object_5.619",
+    "Object_6.011"
+   ],
+   "gauge": 0.0029,
+   "wound": true
+  },
+  {
+   "anchor": "s3",
+   "nut": [
+    -0.00706,
+    1.7317
+   ],
+   "saddle": [
+    -0.01452,
+    0.68497
+   ],
+   "y": -0.01135,
+   "ySaddle": -0.17082,
+   "peg": [
+    "Object_7.033",
+    "Object_7.034"
+   ],
+   "pegAxis": [
+    1,
+    0,
+    0
+   ],
+   "hide": [
+    "Object_5",
+    "Object_5.001",
+    "Object_5.049",
+    "Object_5.083",
+    "Object_5.114",
+    "Object_5.130",
+    "Object_5.177",
+    "Object_5.194",
+    "Object_5.244",
+    "Object_5.350",
+    "Object_5.414",
+    "Object_5.446",
+    "Object_5.447",
+    "Object_5.475",
+    "Object_5.499",
+    "Object_5.574",
+    "Object_5.683"
+   ],
+   "gauge": 0.0024,
+   "wound": true
+  },
+  {
+   "anchor": "s2",
+   "nut": [
+    0.00245,
+    1.7317
+   ],
+   "saddle": [
+    0.01375,
+    0.68497
+   ],
+   "y": -0.01124,
+   "ySaddle": -0.17071,
+   "peg": [
+    "Object_7.054",
+    "Object_7.055",
+    "Object_7.252"
+   ],
+   "pegAxis": [
+    1,
+    0,
+    0
+   ],
+   "hide": [
+    "Object_5.007",
+    "Object_5.045",
+    "Object_5.047",
+    "Object_5.131",
+    "Object_5.135",
+    "Object_5.155",
+    "Object_5.200",
+    "Object_5.221",
+    "Object_5.285",
+    "Object_5.425",
+    "Object_5.481",
+    "Object_5.515",
+    "Object_5.620"
+   ],
+   "gauge": 0.002,
+   "wound": true
+  },
+  {
+   "anchor": "s1",
+   "nut": [
+    0.01187,
+    1.7317
+   ],
+   "saddle": [
+    0.04036,
+    0.68497
+   ],
+   "y": -0.00953,
+   "ySaddle": -0.16707,
+   "peg": [
+    "Object_6.533",
+    "Object_6.555",
+    "Object_6.572",
+    "Object_6.703",
+    "Object_7.106",
+    "Object_7.216"
+   ],
+   "pegAxis": [
+    1,
+    0,
+    0
+   ],
+   "hide": [
+    "Object_5.023",
+    "Object_5.089",
+    "Object_5.137",
+    "Object_5.150",
+    "Object_5.187",
+    "Object_5.224",
+    "Object_5.237",
+    "Object_5.392",
+    "Object_5.500",
+    "Object_5.621",
+    "Object_5.639"
+   ],
+   "gauge": 0.0016,
+   "wound": true
+  }
+ ]
 }

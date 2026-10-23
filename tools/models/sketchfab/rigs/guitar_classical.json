@@ -4,5 +4,154 @@
  "length": 0.99,
  "headEnd": "B",
  "face": "front",
- "separate": true
+ "separate": true,
+ "rig": "MACHINE_HEAD",
+ "degPerCent": 1.4,
+ "stringKind": "nylon",
+ "originalStrings": "cut",
+ "nutZ": [
+  "neck saddle_0",
+  "neck saddle_0.001"
+ ],
+ "saddleZ": [
+  "saddle bridge_0"
+ ],
+ "coat": [
+  "guitar body_0",
+  "neck_0"
+ ],
+ "strings": [
+  {
+   "anchor": "s6",
+   "string": [
+    "E6 string_0"
+   ],
+   "peg": [
+    "machine head base_L_3.002",
+    "machine head base_L_1.002"
+   ],
+   "post": [
+    "machine head base_L_2",
+    "machine head base_L_1.003"
+   ],
+   "postAxis": [
+    1,
+    0,
+    0
+   ],
+   "pegAxis": "pca",
+   "gauge": 0.0011,
+   "wound": true
+  },
+  {
+   "anchor": "s5",
+   "string": [
+    "A5 string_0"
+   ],
+   "peg": [
+    "machine head base_L_3.001",
+    "machine head base_L_1.001"
+   ],
+   "post": [
+    "machine head base_L_2.001",
+    "machine head base_L_1.004"
+   ],
+   "postAxis": [
+    1,
+    0,
+    0
+   ],
+   "pegAxis": "pca",
+   "gauge": 0.0009,
+   "wound": true
+  },
+  {
+   "anchor": "s4",
+   "string": [
+    "D4 string_0"
+   ],
+   "peg": [
+    "machine head base_L_3",
+    "machine head base_L_1"
+   ],
+   "post": [
+    "machine head base_L_2.002",
+    "machine head base_L_1.005"
+   ],
+   "postAxis": [
+    1,
+    0,
+    0
+   ],
+   "pegAxis": "pca",
+   "gauge": 0.00075,
+   "wound": true
+  },
+  {
+   "anchor": "s3",
+   "string": [
+    "G3 string_0"
+   ],
+   "peg": [
+    "machine head base_R_3",
+    "machine head base_R_1"
+   ],
+   "post": [
+    "machine head base_R_2.002",
+    "machine head base_R_1.005"
+   ],
+   "postAxis": [
+    1,
+    0,
+    0
+   ],
+   "pegAxis": "pca",
+   "gauge": 0.00103,
+   "wound": false
+  },
+  {
+   "anchor": "s2",
+   "string": [
+    "B2 string_0"
+   ],
+   "peg": [
+    "machine head base_R_3.001",
+    "machine head base_R_1.001"
+   ],
+   "post": [
+    "machine head base_R_2.001",
+    "machine head base_R_1.004"
+   ],
+   "postAxis": [
+    1,
+    0,
+    0
+   ],
+   "pegAxis": "pca",
+   "gauge": 0.00083,
+   "wound": false
+  },
+  {
+   "anchor": "s1",
+   "string": [
+    "E1 string_0"
+   ],
+   "peg": [
+    "machine head base_R_3.002",
+    "machine head base_R_1.002"
+   ],
+   "post": [
+    "machine head base_R_2",
+    "machine head base_R_1.003"
+   ],
+   "postAxis": [
+    1,
+    0,
+    0
+   ],
+   "pegAxis": "pca",
+   "gauge": 0.00071,
+   "wound": false
+  }
+ ]
 }

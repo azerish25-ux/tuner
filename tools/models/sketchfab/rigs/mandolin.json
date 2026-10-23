@@ -1,8 +1,280 @@
 {
  "model": "mandolin",
  "source": "mandolin_fstyle",
- "length": 0.68,
+ "length": 0.695,
  "headEnd": "B",
  "face": "front",
- "separate": true
+ "separate": true,
+ "dumpTextures": [
+  "headstock_mat"
+ ],
+ "rig": "MACHINE_HEAD",
+ "degPerCent": 1.4,
+ "stringKind": "bronze",
+ "originalStrings": "cut",
+ "stringEnds": "rings",
+ "coat": [
+  "polySurface42_top_mat",
+  "polySurface42_sides_mat",
+  "polySurface42_back_mat",
+  "polySurface42_headstock_mat"
+ ],
+ "strings": [
+  {
+   "anchor": "c4",
+   "string": [
+    "polySurface42_strings_mat_0.270"
+   ],
+   "peg": {
+    "re": "frets_mat|tuners_mat",
+    "box": [
+     -0.07154,
+     -0.01891,
+     null,
+     null,
+     0.55692,
+     0.5651
+    ],
+    "maxExtent": 0.03577
+   },
+   "post": {
+    "re": "frets_mat|strings_mat",
+    "box": [
+     -0.02351,
+     -0.00613,
+     null,
+     null,
+     0.54527,
+     0.56009
+    ],
+    "maxExtent": 0.01533
+   },
+   "gauge": 0.00102,
+   "wound": true
+  },
+  {
+   "anchor": "c4",
+   "string": [
+    "polySurface42_strings_mat_0.271"
+   ],
+   "peg": {
+    "re": "frets_mat|tuners_mat",
+    "box": [
+     -0.07154,
+     -0.01891,
+     null,
+     null,
+     0.58533,
+     0.59351
+    ],
+    "maxExtent": 0.03577
+   },
+   "post": {
+    "re": "frets_mat|strings_mat",
+    "box": [
+     -0.02351,
+     -0.00613,
+     null,
+     null,
+     0.5698,
+     0.58462
+    ],
+    "maxExtent": 0.01533
+   },
+   "gauge": 0.00102,
+   "wound": true
+  },
+  {
+   "anchor": "c3",
+   "string": [
+    "polySurface42_strings_mat_0.272"
+   ],
+   "peg": {
+    "re": "frets_mat|tuners_mat",
+    "box": [
+     -0.07154,
+     -0.01891,
+     null,
+     null,
+     0.61078,
+     0.61896
+    ],
+    "maxExtent": 0.03577
+   },
+   "post": {
+    "re": "frets_mat|strings_mat",
+    "box": [
+     -0.02351,
+     -0.00613,
+     null,
+     null,
+     0.59637,
+     0.61119
+    ],
+    "maxExtent": 0.01533
+   },
+   "gauge": 0.00066,
+   "wound": true
+  },
+  {
+   "anchor": "c3",
+   "string": [
+    "polySurface42_strings_mat_0.273"
+   ],
+   "peg": {
+    "re": "frets_mat|tuners_mat",
+    "box": [
+     -0.07154,
+     -0.01891,
+     null,
+     null,
+     0.63695,
+     0.64512
+    ],
+    "maxExtent": 0.03577
+   },
+   "post": {
+    "re": "frets_mat|strings_mat",
+    "box": [
+     -0.02351,
+     -0.00613,
+     null,
+     null,
+     0.62294,
+     0.63776
+    ],
+    "maxExtent": 0.01533
+   },
+   "gauge": 0.00066,
+   "wound": true
+  },
+  {
+   "anchor": "c2",
+   "string": [
+    "polySurface42_strings_mat_0.274"
+   ],
+   "peg": {
+    "re": "frets_mat|tuners_mat",
+    "box": [
+     0.01891,
+     0.07154,
+     null,
+     null,
+     0.63715,
+     0.64533
+    ],
+    "maxExtent": 0.03577
+   },
+   "post": {
+    "re": "frets_mat|strings_mat",
+    "box": [
+     0.00613,
+     0.02351,
+     null,
+     null,
+     0.62294,
+     0.63776
+    ],
+    "maxExtent": 0.01533
+   },
+   "gauge": 0.00038,
+   "wound": false
+  },
+  {
+   "anchor": "c2",
+   "string": [
+    "polySurface42_strings_mat_0.275"
+   ],
+   "peg": {
+    "re": "frets_mat|tuners_mat",
+    "box": [
+     0.01891,
+     0.07154,
+     null,
+     null,
+     0.61099,
+     0.61916
+    ],
+    "maxExtent": 0.03577
+   },
+   "post": {
+    "re": "frets_mat|strings_mat",
+    "box": [
+     0.00613,
+     0.02351,
+     null,
+     null,
+     0.59637,
+     0.61119
+    ],
+    "maxExtent": 0.01533
+   },
+   "gauge": 0.00038,
+   "wound": false
+  },
+  {
+   "anchor": "c1",
+   "string": [
+    "polySurface42_strings_mat_0.277"
+   ],
+   "peg": {
+    "re": "frets_mat|tuners_mat",
+    "box": [
+     0.01891,
+     0.07154,
+     null,
+     null,
+     0.58472,
+     0.5929
+    ],
+    "maxExtent": 0.03577
+   },
+   "post": {
+    "re": "frets_mat|strings_mat",
+    "box": [
+     0.00613,
+     0.02351,
+     null,
+     null,
+     0.5698,
+     0.58462
+    ],
+    "maxExtent": 0.01533
+   },
+   "gauge": 0.00028,
+   "wound": false
+  },
+  {
+   "anchor": "c1",
+   "string": [
+    "polySurface42_strings_mat_0.276"
+   ],
+   "peg": {
+    "re": "frets_mat|tuners_mat",
+    "box": [
+     0.01891,
+     0.07154,
+     null,
+     null,
+     0.55692,
+     0.5651
+    ],
+    "maxExtent": 0.03577
+   },
+   "post": {
+    "re": "frets_mat|strings_mat",
+    "box": [
+     0.00613,
+     0.02351,
+     null,
+     null,
+     0.54527,
+     0.56009
+    ],
+    "maxExtent": 0.01533
+   },
+   "gauge": 0.00028,
+   "wound": false
+  }
+ ]
 }

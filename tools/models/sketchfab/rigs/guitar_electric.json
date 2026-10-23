@@ -1,8 +1,188 @@
 {
  "model": "guitar_electric",
  "source": "electric_ironclad",
- "length": 1.0,
+ "length": 0.975,
  "headEnd": "B",
  "face": "front",
- "separate": true
+ "separate": true,
+ "tilt": -3.0,
+ "materials": {
+  "wood": {
+   "metallic": 0.0
+  },
+  "Wood_2": {
+   "metallic": 0.0
+  },
+  "wood2": {
+   "metallic": 0.0
+  },
+  "Neck": {
+   "metallic": 0.0
+  },
+  "Neck2": {
+   "metallic": 0.0
+  }
+ },
+ "coat": [
+  "pCube64_wood",
+  "pCube64_Wood_2",
+  "pCube64_Neck"
+ ],
+ "rig": "MACHINE_HEAD",
+ "degPerCent": 1.4,
+ "stringKind": "steel",
+ "originalStrings": "hide",
+ "nutZ": [
+  "pCube64_SilverLace_0"
+ ],
+ "saddleZ": [
+  "pCube64_SilverLace_0.053"
+ ],
+ "saddleLift": 0.0028,
+ "strings": [
+  {
+   "anchor": "s6",
+   "string": [
+    "pCube64_lambert2_0.001"
+   ],
+   "hide": [
+    "pCube64_lambert2_0",
+    "pCube64_lambert2_0.002",
+    "pCube64_lambert2_0.003"
+   ],
+   "post": [
+    "pCube64_SilverLace_0.002"
+   ],
+   "peg": [
+    "pCube64_SilverLace_0.013",
+    "pCube64_SilverLace_0.014",
+    "pCube64_SilverLace_0.150",
+    "pCube64_SilverLace_0.015",
+    "pCube64_SilverLace_0.016",
+    "pCube64_SilverLace_0.151"
+   ],
+   "gauge": 0.00117,
+   "wound": true
+  },
+  {
+   "anchor": "s5",
+   "string": [
+    "pCube64_lambert2_0.005"
+   ],
+   "hide": [
+    "pCube64_lambert2_0.004",
+    "pCube64_lambert2_0.006",
+    "pCube64_lambert2_0.007"
+   ],
+   "post": [
+    "pCube64_SilverLace_0.004"
+   ],
+   "peg": [
+    "pCube64_SilverLace_0.017",
+    "pCube64_SilverLace_0.018",
+    "pCube64_SilverLace_0.152",
+    "pCube64_SilverLace_0.019",
+    "pCube64_SilverLace_0.020",
+    "pCube64_SilverLace_0.153"
+   ],
+   "gauge": 0.00091,
+   "wound": true
+  },
+  {
+   "anchor": "s4",
+   "string": [
+    "pCube64_lambert2_0.009"
+   ],
+   "hide": [
+    "pCube64_lambert2_0.008",
+    "pCube64_lambert2_0.010",
+    "pCube64_lambert2_0.011"
+   ],
+   "post": [
+    "pCube64_SilverLace_0.006"
+   ],
+   "peg": [
+    "pCube64_SilverLace_0.021",
+    "pCube64_SilverLace_0.022",
+    "pCube64_SilverLace_0.154",
+    "pCube64_SilverLace_0.023",
+    "pCube64_SilverLace_0.024",
+    "pCube64_SilverLace_0.155"
+   ],
+   "gauge": 0.00066,
+   "wound": true
+  },
+  {
+   "anchor": "s3",
+   "string": [
+    "pCube64_lambert2_0.013"
+   ],
+   "hide": [
+    "pCube64_lambert2_0.012",
+    "pCube64_lambert2_0.014",
+    "pCube64_lambert2_0.015"
+   ],
+   "post": [
+    "pCube64_SilverLace_0.008"
+   ],
+   "peg": [
+    "pCube64_SilverLace_0.033",
+    "pCube64_SilverLace_0.034",
+    "pCube64_SilverLace_0.160",
+    "pCube64_SilverLace_0.035",
+    "pCube64_SilverLace_0.036",
+    "pCube64_SilverLace_0.161"
+   ],
+   "gauge": 0.00043,
+   "wound": false
+  },
+  {
+   "anchor": "s2",
+   "string": [
+    "pCube64_lambert2_0.017"
+   ],
+   "hide": [
+    "pCube64_lambert2_0.016",
+    "pCube64_lambert2_0.018",
+    "pCube64_lambert2_0.019"
+   ],
+   "post": [
+    "pCube64_SilverLace_0.010"
+   ],
+   "peg": [
+    "pCube64_SilverLace_0.029",
+    "pCube64_SilverLace_0.030",
+    "pCube64_SilverLace_0.158",
+    "pCube64_SilverLace_0.031",
+    "pCube64_SilverLace_0.032",
+    "pCube64_SilverLace_0.159"
+   ],
+   "gauge": 0.00033,
+   "wound": false
+  },
+  {
+   "anchor": "s1",
+   "string": [
+    "pCube64_lambert2_0.021"
+   ],
+   "hide": [
+    "pCube64_lambert2_0.020",
+    "pCube64_lambert2_0.022",
+    "pCube64_lambert2_0.023"
+   ],
+   "post": [
+    "pCube64_SilverLace_0.012"
+   ],
+   "peg": [
+    "pCube64_SilverLace_0.025",
+    "pCube64_SilverLace_0.026",
+    "pCube64_SilverLace_0.156",
+    "pCube64_SilverLace_0.027",
+    "pCube64_SilverLace_0.028",
+    "pCube64_SilverLace_0.157"
+   ],
+   "gauge": 0.00025,
+   "wound": false
+  }
+ ]
 }

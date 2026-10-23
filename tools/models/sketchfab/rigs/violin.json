@@ -4,5 +4,94 @@
  "length": 0.59,
  "headEnd": "A",
  "face": "back",
- "separate": true
+ "separate": true,
+ "remove": [
+  "defaultMaterial.016",
+  "defaultMaterial.095",
+  "defaultMaterial.096",
+  "defaultMaterial.097",
+  "defaultMaterial.098",
+  "defaultMaterial.099",
+  "defaultMaterial.100",
+  "defaultMaterial.101",
+  "defaultMaterial.102",
+  "defaultMaterial.103",
+  "defaultMaterial.104",
+  "defaultMaterial.105",
+  "defaultMaterial.106",
+  "defaultMaterial.107"
+ ],
+ "rig": "FRICTION_PEG",
+ "degPerCent": 1.2,
+ "stringKind": "steel",
+ "originalStrings": "cut",
+ "nutZ": [
+  "defaultMaterial.031"
+ ],
+ "saddleZ": [
+  "defaultMaterial.010",
+  "defaultMaterial.051"
+ ],
+ "strings": [
+  {
+   "anchor": "s4",
+   "string": [
+    "defaultMaterial.034"
+   ],
+   "peg": [
+    "defaultMaterial.058",
+    "defaultMaterial.059",
+    "defaultMaterial.014",
+    "defaultMaterial.057",
+    "defaultMaterial.004"
+   ],
+   "gauge": 0.0008,
+   "wound": true
+  },
+  {
+   "anchor": "s3",
+   "string": [
+    "defaultMaterial.037"
+   ],
+   "peg": [
+    "defaultMaterial.047",
+    "defaultMaterial.048",
+    "defaultMaterial.009",
+    "defaultMaterial.046",
+    "defaultMaterial.002"
+   ],
+   "gauge": 0.0007,
+   "wound": true
+  },
+  {
+   "anchor": "s2",
+   "string": [
+    "defaultMaterial.038"
+   ],
+   "peg": [
+    "defaultMaterial.044",
+    "defaultMaterial.045",
+    "defaultMaterial.008",
+    "defaultMaterial.043",
+    "defaultMaterial.006"
+   ],
+   "gauge": 0.0006,
+   "wound": true
+  },
+  {
+   "anchor": "s1",
+   "string": [
+    "defaultMaterial.039"
+   ],
+   "peg": [
+    "defaultMaterial.041",
+    "defaultMaterial.042",
+    "defaultMaterial.007",
+    "defaultMaterial.040",
+    "defaultMaterial.005"
+   ],
+   "gauge": 0.00026,
+   "wound": false
+  }
+ ]
 }
