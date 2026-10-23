@@ -1,7 +1,8 @@
 import SwiftUI
 import TimbreCore
 
-enum AppTab: Hashable { case tune, learn, practice, instruments, journey }
+/// The instrument browser lives in the tuner's picker sheet (`showInstrumentPicker`), not in a tab.
+enum AppTab: Hashable { case tune, learn, songs, practice, journey }
 
 /// App state and actions. High-rate readings live in `live` so they never invalidate
 /// views that observe this object.

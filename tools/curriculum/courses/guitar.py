@@ -827,6 +827,14 @@ UNIT_10 = unit("gtr-10", "Barre chords and the pentatonic", "The F barre and B m
     ], minutes=6, xp=40, kind="challenge"),
 ])
 
-COURSE = course("guitar", "Guitar", "From your first note to barre chords", "guitar.acoustic.6", "guitars", "mint", [
-    UNIT_1, UNIT_2, UNIT_3, UNIT_4, UNIT_5, UNIT_6, UNIT_7, UNIT_8, UNIT_9, UNIT_10,
+# Units 11–16 live in guitar_part2.py, which imports the shapes, rhythms and shared text above (so this stays last).
+try:
+    from courses.guitar_part2 import UNITS as PART_2
+except ModuleNotFoundError as missing:
+    if missing.name != "courses.guitar_part2":
+        raise
+    PART_2 = []
+
+COURSE = course("guitar", "Guitar", "From your first note to fingerstyle, blues and lead", "guitar.acoustic.6", "guitars", "mint", [
+    UNIT_1, UNIT_2, UNIT_3, UNIT_4, UNIT_5, UNIT_6, UNIT_7, UNIT_8, UNIT_9, UNIT_10, *PART_2,
 ])

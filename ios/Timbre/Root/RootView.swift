@@ -12,8 +12,10 @@ struct RootView: View {
         TabView(selection: $store.selectedTab) {
             Tab("Tune", systemImage: "tuningfork", value: AppTab.tune) { TuneView() }
             Tab("Learn", systemImage: "graduationcap", value: AppTab.learn) { LearnView() }
+            // Songs sits beside Learn (both are the curriculum) and takes the centre of the bar. Its title is the
+            // Songs course's own, already translated in every language. Instruments are chosen from the tuner's picker.
+            Tab(SongsView.title(in: store.curriculum), systemImage: "music.note.list", value: AppTab.songs) { SongsView() }
             Tab("Play", systemImage: "gamecontroller", value: AppTab.practice) { PracticeView() }
-            Tab("Instruments", systemImage: "square.grid.2x2", value: AppTab.instruments) { NavigationStack { InstrumentsView() } }
             Tab("Progress", systemImage: "chart.line.uptrend.xyaxis", value: AppTab.journey) { JourneyView() }
         }
         .tint(Palette.brass)
@@ -62,13 +64,14 @@ struct RootView: View {
         .task { store.applyStreakFreezes(); store.syncAchievements() }
         .onChange(of: commerce.isPro) { _, pro in if pro { Analytics.log("pro_active") } }
         .onOpenURL { url in
-            // timbre://tune, timbre://practice, timbre://metronome, timbre://ear, timbre://learn (widgets and links)
+            // timbre://tune, timbre://practice, timbre://metronome, timbre://ear, timbre://learn, timbre://songs (widgets and links)
             switch url.host {
             case "tune": IntentRouter.shared.pending = .tune
             case "practice": IntentRouter.shared.pending = .daily
             case "metronome": IntentRouter.shared.pending = .metronome
             case "ear": IntentRouter.shared.pending = .ear
             case "learn": IntentRouter.shared.pending = .learn
+            case "songs": store.selectedTab = .songs; Analytics.log("shortcut", ["destination": "songs"])
             default: break
             }
         }

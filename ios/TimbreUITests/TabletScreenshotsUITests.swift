@@ -23,10 +23,15 @@ final class TabletScreenshotsUITests: XCTestCase {
         shot("ipad-portrait-tune")
         XCUIDevice.shared.orientation = .landscapeLeft
         shot("ipad-landscape-tune")
-        app.buttons["Instruments"].firstMatch.tap()
+        // The instrument browser is the tuner's picker sheet.
+        app.descendants(matching: .any).matching(identifier: "tune.instrument").firstMatch.tap()
         shot("ipad-landscape-instruments")
+        app.buttons["Done"].firstMatch.tap()
+        Thread.sleep(forTimeInterval: 1)
         app.buttons["Play"].firstMatch.tap()
         shot("ipad-landscape-practice")
+        app.buttons["Songs"].firstMatch.tap()
+        shot("ipad-landscape-songs")
         XCUIDevice.shared.orientation = .portrait
     }
 }

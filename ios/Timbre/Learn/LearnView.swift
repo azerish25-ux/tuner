@@ -243,6 +243,17 @@ struct UnitSection: View {
     }
 }
 
+/// What a tap on a lesson does, wherever it is shown (the Learn path, the Songs shelves): a Pro lesson
+/// opens the paywall, a lesson past the learner's place refuses (the caller shakes it), the rest play.
+enum LessonAccess {
+    case play, pro, locked
+
+    @MainActor static func of(_ lesson: Lesson, in course: LearnCourse, store: AppStore) -> LessonAccess {
+        if !store.canPlay(lesson) { return .pro }
+        return store.learn.isUnlocked(lesson, in: course) ? .play : .locked
+    }
+}
+
 /// One stop on the path: raised disc, kind icon, stars when finished, lock when not yet open.
 struct LessonNode: View {
     let course: LearnCourse
@@ -268,9 +279,11 @@ struct LessonNode: View {
         let symbol = lesson.kind == .song ? "music.quarternote.3" : lesson.kind == .challenge ? "crown.fill" : lesson.kind == .review ? "arrow.clockwise" : stars > 0 ? "checkmark" : "music.note"
         let lit = unlocked && !pro
         Button {
-            if lit || stars > 0 { action() }
-            else if pro { store.presentPaywall("lesson", lesson: lesson) }
-            else { withAnimation(.default) { shake += 1 }; Haptics.shared.selection() }
+            switch LessonAccess.of(lesson, in: course, store: store) {
+            case .play: action()
+            case .pro: store.presentPaywall("lesson", lesson: lesson)
+            case .locked: withAnimation(.default) { shake += 1 }; Haptics.shared.selection()
+            }
         } label: {
             VStack(spacing: 6) {
                 ZStack {

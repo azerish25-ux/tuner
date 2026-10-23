@@ -44,6 +44,19 @@ final class TimbreUITests: XCTestCase {
         }
     }
     private func settle(_ seconds: Double = 1.2) { Thread.sleep(forTimeInterval: seconds) }
+    /// Opens the instrument browser (the tuner's picker sheet) unless it is already up.
+    private func openPicker() {
+        let picker = app.navigationBars["Choose instrument"]
+        if picker.exists || element("instruments.search").exists { return }
+        tab("Tune")
+        let button = element("tune.instrument")
+        XCTAssertTrue(button.waitForExistence(timeout: 25))
+        for _ in 0..<3 where !picker.exists {
+            button.tap()
+            _ = picker.waitForExistence(timeout: 4)
+        }
+        settle(1.2)
+    }
     /// Swipes until the element is on screen, then lets the scroll come to rest: a tap during
     /// momentum only stops the scroll and never reaches the button.
     private func scrollTo(_ target: XCUIElement) {
@@ -126,7 +139,7 @@ final class TimbreUITests: XCTestCase {
         launch(studio: true, pitch: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
         settle(3); shot("14-tune-studio")
-        tab("Instruments"); settle(1.5)
+        openPicker()
         element("instruments.chromatic").tap(); settle(2); shot("15-tune-chromatic")
     }
 
@@ -145,8 +158,10 @@ final class TimbreUITests: XCTestCase {
 
     func test05OtherTabs() throws {
         launch()
-        tab("Instruments"); settle(2); shot("30-instruments")
+        // The instrument browser is the tuner's picker sheet (the Songs tab took the Instruments tab's place).
+        openPicker(); settle(0.8); shot("30-instruments")
         app.swipeUp(); settle(); shot("31-instruments-scrolled")
+        app.buttons["Done"].firstMatch.tap(); settle()
         tab("Progress"); settle(2); shot("32-journey")
         app.swipeUp(); settle(); shot("33-journey-scrolled")
     }
@@ -189,7 +204,8 @@ final class TimbreUITests: XCTestCase {
         element("custom.save").tap(); settle(1.5); shot("48-custom-tuning-saved")
         // Pro instruments on their 3D stage.
         for (asset, name) in [("13_mandolin_mandolin", "49-tune-mandolin-3d"), ("17_bowed_strings_violin", "49b-tune-violin-3d"), ("19_bowed_strings_cello", "49c-tune-cello-3d")] {
-            tab("Instruments"); settle(1.2)
+            // The picker is still up after saving the custom tuning; later rounds open it from the tuner.
+            openPicker()
             let card = element("instrument." + asset)
             scrollTo(card)
             card.tap(); settle(6); shot(name)
@@ -199,14 +215,14 @@ final class TimbreUITests: XCTestCase {
     func test08PhotoStage() throws {
         launch(pitch: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
-        tab("Instruments"); settle(1.5)
+        openPicker()
         let ukulele = element("instrument.10_ukulele_soprano_ukulele")
         scrollTo(ukulele)
         ukulele.tap()
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 15))
         settle(7); shot("17-tune-photo-stage")
         element("string.2").tap(); settle(3); shot("18-tune-photo-stage-string")
-        tab("Instruments"); settle(1.2)
+        openPicker()
         let bass = element("instrument.06_bass_4_string_p_bass")
         scrollTo(bass)
         bass.tap(); settle(6); shot("19-tune-bass-3d")
@@ -229,6 +245,16 @@ final class TimbreUITests: XCTestCase {
     func test10PlayAlongLesson() throws {
         launch(pitch: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
+        // Songs: the song of the day opens the same lesson player as Learn.
+        tab("Songs")
+        let hero = element("songs.hero")
+        XCTAssertTrue(hero.waitForExistence(timeout: 10))
+        settle(2); shot("63-songs")
+        hero.tap()
+        let close = element("lesson.close")
+        XCTAssertTrue(close.waitForExistence(timeout: 10))
+        settle(1.5); shot("64-songs-lesson")
+        close.tap(); settle(1.5)
         tab("Learn"); settle(2)
         let node = element("learn.lesson.gtr-1-2")
         scrollTo(node)
