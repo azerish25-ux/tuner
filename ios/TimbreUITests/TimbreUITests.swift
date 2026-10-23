@@ -36,8 +36,12 @@ final class TimbreUITests: XCTestCase {
     private func element(_ id: String) -> XCUIElement { app.descendants(matching: .any).matching(identifier: id).firstMatch }
     private func tab(_ name: String) { app.tabBars.buttons[name].firstMatch.tap() }
     private func settle(_ seconds: Double = 1.2) { Thread.sleep(forTimeInterval: seconds) }
+    /// Swipes until the element is on screen, then lets the scroll come to rest: a tap during
+    /// momentum only stops the scroll and never reaches the button.
     private func scrollTo(_ target: XCUIElement) {
-        for _ in 0..<10 where !(target.exists && target.isHittable) { app.swipeUp() }
+        var swiped = false
+        for _ in 0..<10 where !(target.exists && target.isHittable) { app.swipeUp(velocity: .slow); swiped = true }
+        if swiped { settle(1.2) }
     }
 
     func test01Onboarding() throws {
