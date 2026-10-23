@@ -15,6 +15,8 @@ final class AudioService: ObservableObject {
     @Published private(set) var tonePlaying = false
     func clearError() { error = nil }
     var onReading: ((Double?, Double, Double) -> Void)?
+    /// Raw microphone samples for lesson analysers (chords, onsets), delivered on the analysis queue.
+    let frames = FrameSink()
     private var engine = AVAudioEngine()
     private let analysisQueue = DispatchQueue(label: "com.timbre.pitch", qos: .userInitiated)
     private let renderer = OutputRenderer()
@@ -95,10 +97,12 @@ final class AudioService: ObservableObject {
             guard format.sampleRate > 0, format.channelCount > 0 else { throw AudioFailure.noInput }
             let window = AnalysisWindowPolicy.windowSizeForTuningRange(minFrequencyHz: self.minimum, sampleRateHz: Int(format.sampleRate), preferredWindow: analysisWindowOverride)
             let worker = PitchWorker(rate: format.sampleRate, minimum: self.minimum, maximum: self.maximum, window: window, gain: sensitivity)
+            let frames = self.frames, rate = format.sampleRate
             input.installTap(onBus: 0, bufferSize: 512, format: format) { [weak self, analysisQueue] buffer, _ in
                 guard let samples = buffer.floatChannelData?[0], let epoch = worker.reserve() else { return }
                 let copy = Array(UnsafeBufferPointer(start: samples, count: Int(buffer.frameLength)))
                 analysisQueue.async {
+                    frames.send(copy, rate: rate)
                     let output = worker.consume(copy, epoch: epoch)
                     worker.release()
                     guard let output else { return }
@@ -387,5 +391,16 @@ private final class OutputRenderer: @unchecked Sendable {
             }
             for buffer in buffers { buffer.mData?.assumingMemoryBound(to: Float.self)[frame] = max(-1, min(1, value)) }
         }
+    }
+}
+
+/// A thread-safe slot for one raw-sample consumer.
+final class FrameSink: @unchecked Sendable {
+    private let lock = NSLock()
+    private var handler: (([Float], Double) -> Void)?
+    func set(_ handler: (([Float], Double) -> Void)?) { lock.lock(); self.handler = handler; lock.unlock() }
+    func send(_ samples: [Float], rate: Double) {
+        lock.lock(); let handler = self.handler; lock.unlock()
+        handler?(samples, rate)
     }
 }

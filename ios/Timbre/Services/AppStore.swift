@@ -432,9 +432,10 @@ final class AppStore: ObservableObject {
     private var lessonOwner: UUID?
 
     /// Opens the microphone for a lesson over a pitch range; the demo pitch (UI tests) follows `gameTargetHz`.
-    func startLessonListening(owner: UUID, lowHz: Double = 60, highHz: Double = 1400, listener: @escaping (Double?, Double) -> Void) {
+    func startLessonListening(owner: UUID, lowHz: Double = 60, highHz: Double = 1400, analyzer: LessonAnalyzer? = nil, listener: @escaping (Double?, Double) -> Void) {
         lessonOwner = owner
         lessonListener = listener
+        audio.frames.set(analyzer.map { analyzer in { samples, rate in analyzer.feed(samples, rate: rate) } })
         guard !audio.running else { return }
         #if DEBUG
         if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" {
@@ -450,6 +451,7 @@ final class AppStore: ObservableObject {
         if let owner, owner != lessonOwner { return }
         lessonOwner = nil
         lessonListener = nil
+        audio.frames.set(nil)
         gameTargetHz = nil
         if audio.running { audio.stopCapture() }
         tracker.reset(); live.clear()

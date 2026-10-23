@@ -188,6 +188,8 @@ struct ChordStep: View {
     @State private var burst = 0
     @State private var finished = false
     @State private var canSkip = false
+    @State private var hearing: String?
+    @State private var matchedFrames = 0
     private let order: [(index: Int, midi: Int)]
 
     init(chord: ChordSpec, course: LearnCourse, accent: Color, done: @escaping (Double?) -> Void) {
@@ -218,8 +220,8 @@ struct ChordStep: View {
     var body: some View {
         VStack(spacing: 16) {
             VStack(spacing: 6) {
-                Text(finished ? LocalizedStringKey("Every string rings") : LocalizedStringKey("Pluck each string, low to high")).font(Typeface.label(16)).foregroundStyle(Palette.inkSoft)
-                Text("Fingers in place, then let each one ring.").font(.subheadline).foregroundStyle(Palette.inkFaint)
+                Text(finished ? LocalizedStringKey("Every string rings") : LocalizedStringKey("Strum it, or pluck each string")).font(Typeface.label(16)).foregroundStyle(Palette.inkSoft)
+                Text("Fingers in place, then let it ring.").font(.subheadline).foregroundStyle(Palette.inkFaint)
             }
             .padding(.top, 12)
             Spacer(minLength: 0)
@@ -230,6 +232,11 @@ struct ChordStep: View {
                     .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Palette.stageRaised))
                     .shadow(color: finished ? accent.opacity(0.45) : .clear, radius: 26)
                 SparkBurst(trigger: burst, color: accent)
+            }
+            if let hearing, !finished {
+                Text("Hearing \(hearing)").font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
+                    .padding(.horizontal, 14).padding(.vertical, 7).background(Capsule().fill(Palette.stageRaised))
+                    .transition(.opacity)
             }
             Spacer(minLength: 0)
             MicrophoneHint()
@@ -247,7 +254,21 @@ struct ChordStep: View {
 
     private func listen() {
         if let first = judge.current { store.gameTargetHz = frequency(first, store) }
-        store.startLessonListening(owner: owner) { hz, _ in
+        // A recognised strum of the right chord counts at once; plucking string by string is the fallback.
+        let target = ChordTarget(root: chord.root, formulaId: chord.quality)
+        let analyzer = target.map { target in
+            LessonAnalyzer(chords: true, target: target, onChord: { estimate, matched in
+                guard !finished else { return }
+                withAnimation(Motion.quick) { hearing = estimate?.target.symbol }
+                matchedFrames = matched ? matchedFrames + 1 : 0
+                if matchedFrames >= 3 {
+                    withAnimation(Motion.pluck) { verified = Set(order.map(\.index)) }
+                    burst += 1; SoundFX.shared.play(.correct); Haptics.shared.lock()
+                    finish(1)
+                }
+            })
+        }
+        store.startLessonListening(owner: owner, analyzer: analyzer) { hz, _ in
             guard !finished else { return }
             let note = HeardNote(hz: hz, reference: store.settings.referencePitchHz)
             if case .hit(let i)? = judge.update(time: CACurrentMediaTime(), midi: note?.midi, cents: note?.cents) {
@@ -291,8 +312,6 @@ struct RhythmStep: View {
     @State private var startTime: CFTimeInterval = 0
     @State private var hits: [Double] = []
     @State private var grades: [Int: PlayAlongJudge.Grade] = [:]
-    @State private var lastLevel = -120.0
-    @State private var lastOnset: CFTimeInterval = 0
     @State private var pulse = 0
     @State private var score = 0.0
 
@@ -384,12 +403,8 @@ struct RhythmStep: View {
         phase = .playing
         store.audio.setMetronome(bpm: Int(bpm), beats: beatsPerBar, subdivision: 1, accents: true)
         if !isTap {
-            store.startLessonListening(owner: owner, lowHz: 60, highHz: 1400) { _, level in
-                // A strum is a sudden jump in loudness; ignore jumps within 120 ms of the last one.
-                let now = CACurrentMediaTime()
-                if level > -48, level - lastLevel > 8, now - lastOnset > 0.12 { lastOnset = now; register(now - 0.06) }
-                lastLevel = level
-            }
+            let analyzer = LessonAnalyzer(chords: false, onOnset: { time in register(time) })
+            store.startLessonListening(owner: owner, lowHz: 60, highHz: 1400, analyzer: analyzer) { _, _ in }
         }
     }
 

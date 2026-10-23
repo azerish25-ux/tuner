@@ -22,6 +22,7 @@ struct AlongStep: View {
     @State private var startTime: CFTimeInterval = 0
     @State private var trail: [(CFTimeInterval, Double)] = []
     @State private var lastLevel = -120.0
+    @State private var lastOnset: CFTimeInterval = 0
     @State private var burst = 0
 
     enum Phase { case ready, playing, done }
@@ -179,10 +180,12 @@ struct AlongStep: View {
         phase = .playing
         store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
         store.gameTargetHz = notes.first.map { PitchMath.frequency(midi: Double($0.midi), reference: store.settings.referencePitchHz) }
-        store.startLessonListening(owner: owner) { hz, level in
+        // Re-attacks of a repeated note come from the onset detector (a jump in loudness as a fallback).
+        let analyzer = LessonAnalyzer(chords: false, onOnset: { time in lastOnset = time })
+        store.startLessonListening(owner: owner, analyzer: analyzer) { hz, level in
             let now = CACurrentMediaTime()
             let heard = HeardNote(hz: hz, reference: store.settings.referencePitchHz)
-            let onset = level - lastLevel > 6 && level > -50
+            let onset = (level - lastLevel > 6 && level > -50) || now - lastOnset < 0.12
             lastLevel = level
             if let heard, !fretted { trail.append((now, Double(heard.midi) + heard.cents / 100)); if trail.count > 240 { trail.removeFirst(60) } }
             apply(judge.update(time: now - startTime - countIn, midi: heard?.midi, cents: heard?.cents, onset: onset), now: now)
