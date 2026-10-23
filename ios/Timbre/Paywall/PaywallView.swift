@@ -1,3 +1,4 @@
+import Metal
 import StoreKit
 import SwiftUI
 import TimbreCore
@@ -11,6 +12,9 @@ struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedID = TimbreProduct.annual
     @State private var appeared = false
+    @State private var hero3D = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private static let supports3D = MTLCreateSystemDefaultDevice() != nil
 
     private var selected: Product? { commerce.products.first { $0.id == selectedID } }
 
@@ -48,15 +52,28 @@ struct PaywallView: View {
         return ModelLibrary.cardImageName("guitar_acoustic")
     }
 
+    private var heroModel: String? {
+        guard let model = store.modelID ?? ModelLibrary.modelID(forPhoto: "01_guitar_acoustic_guitar") else { return nil }
+        return ModelLibrary.hasCard(model) ? model : nil
+    }
+
+    /// The player's instrument sways in a spotlight (3D); the studio render holds the spot while it loads.
     private var hero: some View {
         ZStack {
             Circle().fill(RadialGradient(colors: [Palette.ember.opacity(0.35), .clear], center: .center, startRadius: 10, endRadius: 170)).frame(width: 340, height: 340)
-            Image(heroImage).resizable().scaledToFit().frame(height: 230)
-                .rotationEffect(.degrees(appeared ? -8 : -14))
-                .offset(y: appeared ? 0 : 16)
-                .shadow(color: .black.opacity(0.6), radius: 28, y: 18)
+            if !hero3D {
+                Image(heroImage).resizable().scaledToFit().frame(height: 230)
+                    .rotationEffect(.degrees(appeared ? -8 : -14))
+                    .offset(y: appeared ? 0 : 16)
+                    .shadow(color: .black.opacity(0.6), radius: 28, y: 18)
+                    .transition(.opacity)
+            }
+            if let model = heroModel, Self.supports3D, !reduceMotion {
+                InstrumentStage(modelID: model, input: { StageInput() }, onReady: { withAnimation(.easeInOut(duration: 0.8)) { hero3D = true } }, showcase: true)
+                    .frame(height: 260)
+            }
         }
-        .frame(height: 240)
+        .frame(height: 260)
         .accessibilityHidden(true)
     }
 

@@ -236,9 +236,15 @@ struct TurnHint: View {
         let reading = store.live.reading
         if audio.running, !store.referenceMode, let cents = reading.cents, !reading.inTune, abs(cents) >= 3 {
             let tighten = cents < 0
-            let sign = store.modelID.flatMap { ModelLibrary.rig($0)?.string(store.activeAnchor)?.tighten } ?? 1
-            let clockwise = (tighten ? 1 : -1) * sign > 0
-            Label(tighten ? "Tighten" : "Loosen", systemImage: clockwise ? "arrow.clockwise" : "arrow.counterclockwise")
+            let rig = store.modelID.flatMap { ModelLibrary.rig($0)?.string(store.activeAnchor) }
+            let clockwise = (tighten ? 1 : -1) * (rig?.tighten ?? 1) > 0
+            Group {
+                if rig?.slides == true {
+                    Label(tighten ? "Push in" : "Pull out", systemImage: tighten ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
+                } else {
+                    Label(tighten ? "Tighten" : "Loosen", systemImage: clockwise ? "arrow.clockwise" : "arrow.counterclockwise")
+                }
+            }
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(tighten ? Palette.flat : Palette.sharp)
                 .padding(.horizontal, 14).padding(.vertical, 8)

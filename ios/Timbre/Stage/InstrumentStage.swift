@@ -26,7 +26,7 @@ final class StageController {
     private(set) var failed = false
     private var model: Entity?
     private var rig: InstrumentRig?
-    private var pegs: [String: (entity: Entity, base: simd_quatf)] = [:]
+    private var pegs: [String: (entity: Entity, base: simd_quatf, position: SIMD3<Float>)] = [:]
     private var posts: [String: (entity: Entity, base: simd_quatf)] = [:]
     private var staticStrings: [String: Entity] = [:]
     private var segments: [ModelEntity] = []
@@ -45,6 +45,8 @@ final class StageController {
     private var previousLevel: Double = -120
     private var currentAnchor: String?
     var input: () -> StageInput = { StageInput() }
+    /// Paywall and onboarding: the instrument sways slowly under the lights.
+    var showcase = false
     private static let segmentCount = 36
 
     init() {
@@ -82,7 +84,7 @@ final class StageController {
         loadedModel = modelID
         for string in rig.strings {
             if let peg = entity.findEntity(named: string.peg) {
-                pegs[string.peg] = (peg, peg.orientation)
+                pegs[string.peg] = (peg, peg.orientation, peg.position)
                 peg.components.set(CollisionComponent(shapes: [.generateSphere(radius: 0.024)]))
                 peg.components.set(InputTargetComponent())
             }
@@ -163,7 +165,7 @@ final class StageController {
         let focusDistance: Float = max(0.34, height * 0.33)
         let point = simd_mix(center, focusPoint, SIMD3(repeating: framing))
         let distance = wholeDistance + (focusDistance - wholeDistance) * framing
-        let targetYaw: Float = -0.32 - 0.22 * framing
+        let targetYaw: Float = showcase ? -0.18 + 0.5 * Float(sin(time * 0.32)) : -0.32 - 0.22 * framing
         yaw = immediately ? targetYaw : yaw + (targetYaw - yaw) * min(1, dt * 2.6)
         let breathing = Float(sin(time * 0.35)) * 0.025 * (1 - framing)
         let rotation = simd_quatf(angle: yaw + breathing, axis: [0, 1, 0]) * simd_quatf(angle: 0.04 * (1 - framing), axis: [1, 0, 0])
@@ -197,11 +199,17 @@ final class StageController {
             guard let peg = pegs[string.peg] else { continue }
             var goal: Float = 0
             if string.anchor == anchor, let smoothed {
-                goal = Float(-smoothed) * rig.degPerCent * Float(string.tighten) * .pi / 180
+                goal = string.slides ? Float(-smoothed) * (string.perCent ?? 0.0003)
+                                     : Float(-smoothed) * rig.degPerCent * Float(string.tighten) * .pi / 180
             }
             let current = angles[string.peg] ?? 0
             let next = current + (goal - current) * min(1, dt * 9)
             angles[string.peg] = next
+            if string.slides {
+                // Out when flat (the tube or tine is too long), in when sharp; home when in tune.
+                peg.entity.position = peg.position + peg.base.act(SIMD3<Float>(1, 0, 0)) * next
+                continue
+            }
             peg.entity.orientation = peg.base * simd_quatf(angle: next, axis: [1, 0, 0])
             if let post = posts[string.peg] { post.entity.orientation = post.base * simd_quatf(angle: next / 6, axis: [0, 0, 1]) }
         }
@@ -209,7 +217,7 @@ final class StageController {
     }
 
     private func updateString(_ string: InstrumentRig.StringRig?, phase: Float, locked: Bool, active: Bool) {
-        guard let string else { return }
+        guard let string, string.radius > 0 else { return }
         let visible = active && (energy > 0.02 || glow > 0.05)
         staticStrings[string.nodeName]?.isEnabled = !visible
         let a = string.saddlePoint, b = string.nutPoint
@@ -256,6 +264,7 @@ struct InstrumentStage: View {
     var onFailure: () -> Void = {}
     /// Called once the model is on stage (the host can retire its placeholder).
     var onReady: () -> Void = {}
+    var showcase = false
     @State private var controller = StageController()
     @State private var ready = false
     @State private var status = "make"
@@ -269,6 +278,7 @@ struct InstrumentStage: View {
                 controller.setEnvironment(resource)
             }
             controller.input = input
+            controller.showcase = showcase
             controller.attach(&content)
             status = "attached"
             await controller.load(modelID: modelID)
