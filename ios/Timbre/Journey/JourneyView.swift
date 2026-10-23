@@ -81,7 +81,7 @@ struct JourneyView: View {
         }
         .stillCard()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Practised on \(active) of the last 35 days"))
+        .accessibilityLabel(Text("Practiced on \(active) of the last 35 days"))
     }
 
     /// How each string of this instrument drifts between sessions, and when to restring.

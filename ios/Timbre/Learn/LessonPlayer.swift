@@ -120,7 +120,7 @@ struct StepView: View {
         case let .progression(chords, bars, pattern, bpm, beatsPerBar):
             RhythmStep(mode: .progression(chords, bars), pattern: pattern, bpm: bpm, bars: bars.reduce(0, +), meter: beatsPerBar, accent: accent, done: done)
         case let .tapRhythm(pattern, bpm, bars, beatsPerBar):
-            RhythmStep(mode: .tap, pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, accent: accent, done: done)
+            RhythmStep(mode: .tap, pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, hearsInstrument: course.fretKind != nil, accent: accent, done: done)
         case let .listen(prompt, sound, options, answer):
             ChoiceStep(prompt: prompt, options: options, answer: answer, why: nil, visual: .none, sound: sound, course: course, accent: accent, done: done)
         case let .quiz(prompt, options, answer, why, visual):
@@ -265,6 +265,7 @@ struct ChoiceStep: View {
     @State private var playing = false
 
     private var correct: Bool { picked == answer }
+    private var compact: Bool { options.count >= 3 && options.allSatisfy { $0.localized.count <= 8 } }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -278,8 +279,17 @@ struct ChoiceStep: View {
                             .padding(16).frame(maxWidth: .infinity)
                             .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
                     }
-                    VStack(spacing: 10) {
-                        ForEach(Array(options.enumerated()), id: \.offset) { index, option in optionRow(index, option) }
+                    Group {
+                        if compact {
+                            // Short answers (notes, numbers) as big tiles.
+                            LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
+                                ForEach(Array(options.enumerated()), id: \.offset) { index, option in optionRow(index, option) }
+                            }
+                        } else {
+                            VStack(spacing: 10) {
+                                ForEach(Array(options.enumerated()), id: \.offset) { index, option in optionRow(index, option) }
+                            }
+                        }
                     }
                     .modifier(Shake(amount: shake))
                 }
@@ -325,12 +335,13 @@ struct ChoiceStep: View {
             else { SoundFX.shared.play(.wrong); Haptics.shared.selection(); withAnimation(.default) { shake += 1 } }
         } label: {
             HStack(spacing: 12) {
-                Text(option.localized).font(.body.weight(.semibold)).foregroundStyle(Palette.ink).multilineTextAlignment(.leading)
-                Spacer(minLength: 8)
+                if compact { Spacer(minLength: 0) }
+                Text(option.localized).font(compact ? Typeface.display(26) : .body.weight(.semibold)).foregroundStyle(Palette.ink).multilineTextAlignment(.leading)
+                Spacer(minLength: compact ? 0 : 8)
                 if reveal && index == answer { Image(systemName: "checkmark.circle.fill").foregroundStyle(accent) }
                 else if reveal && isPicked { Image(systemName: "xmark.circle.fill").foregroundStyle(Palette.danger) }
             }
-            .padding(.horizontal, 18).frame(minHeight: 58)
+            .padding(.horizontal, 18).frame(minHeight: compact ? 84 : 58)
             .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(reveal && (index == answer || isPicked) ? tint.opacity(0.12) : Palette.stageRaised))
             .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(tint, lineWidth: reveal && (index == answer || isPicked) ? 2 : 1))
             .contentShape(Rectangle())

@@ -38,12 +38,19 @@ struct PaywallView: View {
                     benefits
                     plans.padding(.top, 8)
                     if selectedID == TimbreProduct.annual, commerce.trialLabel != nil, let annual = commerce.annual { trialTimeline(annual) }
-                    cta
                     finePrint
                 }
                 .padding(.horizontal, 20).padding(.top, 24).padding(.bottom, 30)
                 .frame(maxWidth: 520)
                 .frame(maxWidth: .infinity)
+            }
+            // The buy button never scrolls away.
+            .safeAreaInset(edge: .bottom) {
+                cta
+                    .padding(.horizontal, 20).padding(.top, 14).padding(.bottom, 6)
+                    .frame(maxWidth: 520)
+                    .frame(maxWidth: .infinity)
+                    .background(LinearGradient(colors: [Palette.stage.opacity(0), Palette.stage.opacity(0.92), Palette.stage], startPoint: .top, endPoint: .center).ignoresSafeArea())
             }
             Button { close() } label: {
                 Image(systemName: "xmark").font(.body.weight(.bold)).foregroundStyle(Palette.ink)
@@ -119,11 +126,12 @@ struct PaywallView: View {
                 }
             }
         } else {
-            HStack(alignment: .top, spacing: 12) {
+            HStack(alignment: .top, spacing: 10) {
                 if let annual = commerce.annual {
                     plan(annual, title: "Yearly", detail: perMonth(annual), tag: commerce.trialLabel != nil ? String(localized: "\(trialDays(annual)) days free") : String(localized: "Best value"))
                 }
                 if let monthly = commerce.monthly { plan(monthly, title: "Monthly", detail: String(localized: "cancel anytime"), tag: nil) }
+                if let lifetime = commerce.lifetime { plan(lifetime, title: "Lifetime", detail: String(localized: "pay once"), tag: nil) }
             }
             .padding(.top, 10)
         }
@@ -139,11 +147,11 @@ struct PaywallView: View {
         return Button { withAnimation(Motion.quick) { selectedID = product.id }; Haptics.shared.selection() } label: {
             VStack(alignment: .leading, spacing: 4) {
                 Text(title).font(.subheadline).foregroundStyle(Palette.inkSoft)
-                Text(product.displayPrice).font(Typeface.number(22)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.7)
+                Text(product.displayPrice).font(Typeface.number(20)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.6)
                 Text(detail).font(.footnote).foregroundStyle(isSelected ? Palette.mint : Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.8)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 16).padding(.vertical, 16)
+            .padding(.horizontal, 12).padding(.vertical, 16)
             .background(shape.fill(isSelected ? Palette.mint.opacity(0.07) : Palette.stageRaised))
             .overlay(shape.strokeBorder(isSelected ? Palette.mint : Palette.line, lineWidth: isSelected ? 2 : 1))
             .overlay(alignment: .topLeading) {
@@ -247,12 +255,6 @@ struct PaywallView: View {
     private var finePrint: some View {
         VStack(spacing: 14) {
             HStack(spacing: 18) {
-                if let lifetime = commerce.lifetime {
-                    Button("Lifetime \(lifetime.displayPrice)") { withAnimation(Motion.quick) { selectedID = lifetime.id }; Haptics.shared.selection() }
-                        .foregroundStyle(selectedID == lifetime.id ? Palette.mint : Palette.inkSoft)
-                        .accessibilityAddTraits(selectedID == lifetime.id ? .isSelected : [])
-                        .accessibilityIdentifier("paywall.plan.\(lifetime.id)")
-                }
                 Button("Restore") { Task { await commerce.restore() } }
                 Link("Terms", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
                 Link("Privacy", destination: URL(string: "https://azerish25-ux.github.io/tuner/privacy.html")!)

@@ -43,10 +43,16 @@ struct AlongStep: View {
             header
             TimelineView(.animation(paused: phase != .playing)) { timeline in
                 let now = CACurrentMediaTime()
-                let elapsed = phase == .ready ? -countIn : now - startTime - countIn
+                // Before the start the first notes already wait near the horizon.
+                let elapsed = phase == .ready ? -1.6 : now - startTime - countIn
+                let clock = phase == .done ? now + 10 : now
                 ZStack {
-                    HighwayCanvas(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: phase == .done ? now + 10 : now,
-                                  lanes: fretted ? course.stringCount : 0, accent: accent, trail: fretted ? [] : trail, startTime: startTime + countIn)
+                    if fretted {
+                        HighwayRunway(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: clock, strings: course.stringCount)
+                    } else {
+                        HighwayCanvas(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: clock,
+                                      lanes: 0, accent: accent, trail: trail, startTime: startTime + countIn)
+                    }
                     if phase == .playing, elapsed < 0 {
                         Text("\(Int(-elapsed / spb) + 1)").font(Typeface.note(96)).foregroundStyle(Palette.ink)
                             .shadow(color: accent.opacity(0.6), radius: 20)
@@ -54,12 +60,12 @@ struct AlongStep: View {
                     }
                     GeometryReader { geometry in
                         SparkBurst(trigger: burst, color: accent).frame(width: 140, height: 140)
-                            .position(x: geometry.size.width * 0.24, y: geometry.size.height / 2)
+                            .position(fretted ? CGPoint(x: geometry.size.width / 2, y: geometry.size.height - 58) : CGPoint(x: geometry.size.width * 0.24, y: geometry.size.height / 2))
                     }
                 }
                 .onChange(of: Int(now * 20)) { _, _ in tick(now: now) }
             }
-            .frame(height: 290)
+            .frame(height: fretted ? 360 : 290)
             .background(RoundedRectangle(cornerRadius: 26, style: .continuous).fill(Palette.stageDeep))
             .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
             .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
@@ -126,9 +132,25 @@ struct AlongStep: View {
                 stat("Late/early", counts[.ok] ?? 0, Palette.amber)
                 stat("Missed", counts[.miss] ?? 0, Palette.danger)
             }
+            Text(timingNote).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
             Text("Best combo \(judge.bestCombo)").font(.footnote).foregroundStyle(Palette.inkSoft)
+            if judge.accuracy < 0.8 && !slow {
+                Button { slow = true; reset() } label: { Label("Try it at \(Int((bpm * 0.75).rounded())) BPM", systemImage: "tortoise.fill") }
+                    .font(Typeface.label(14)).foregroundStyle(accent).padding(.top, 2)
+                    .accessibilityIdentifier("along.slower")
+            }
         }
         .transition(.scale(scale: 0.9).combined(with: .opacity))
+    }
+
+    /// Where the timing went: early or late on average, in milliseconds.
+    private var timingNote: LocalizedStringKey {
+        let offsets = judge.judgments.compactMap(\.offset)
+        guard !offsets.isEmpty else { return "Play each note as it reaches the line" }
+        let mean = offsets.reduce(0, +) / Double(offsets.count)
+        let ms = Int((abs(mean) * 1000).rounded())
+        if ms < 35 { return "Right on the beat" }
+        return mean > 0 ? "About \(ms) ms late on average" : "About \(ms) ms early on average"
     }
 
     private func stat(_ label: LocalizedStringKey, _ value: Int, _ color: Color) -> some View {
@@ -325,5 +347,137 @@ struct HighwayCanvas: View {
                 }
             }
         }
+    }
+}
+
+/// Fretted play-along as a runway: one coloured lane per string (lowest on the left, like a chord
+/// box), notes rise out of the horizon and land on the target row, perspective and glow included.
+struct HighwayRunway: View {
+    let notes: [TimedNote]
+    let secondsPerBeat: Double
+    let elapsed: Double
+    let grades: [Int: PlayAlongJudge.Grade]
+    let hitTimes: [Int: CFTimeInterval]
+    let now: CFTimeInterval
+    let strings: Int
+
+    static let lookahead = 2.8
+    static func color(string: Int, of count: Int) -> Color {
+        // Lowest string warm, highest cool.
+        let palette: [Color] = [Palette.violet, Palette.sky, Palette.mint, Color(hex: 0xFFE066), Palette.amber, Palette.coral]
+        let index = count <= 1 ? 0 : Int((Double(string - 1) / Double(count - 1) * Double(palette.count - 1)).rounded())
+        return palette[min(palette.count - 1, max(0, index))]
+    }
+
+    var body: some View {
+        Canvas { context, size in draw(&context, size: size) }
+            .accessibilityHidden(true)
+    }
+
+    private func draw(_ context: inout GraphicsContext, size: CGSize) {
+        let hitY = size.height - 58, horizonY: CGFloat = 16
+        let gap = (size.width - 36) / CGFloat(max(1, strings))
+        let k = 0.55
+        func depth(_ d: Double) -> CGFloat { CGFloat(d / (abs(d) + k) * (1 + k)) }
+        func y(_ d: Double) -> CGFloat { hitY - (hitY - horizonY) * depth(d) }
+        func scale(_ d: Double) -> CGFloat { 1 - 0.8 * depth(max(-0.3, d)) }
+        /// Lane of a string: string N (lowest) on the left.
+        func x(_ string: Int, _ d: Double) -> CGFloat {
+            let lane = CGFloat(strings - string) - CGFloat(strings - 1) / 2
+            return size.width / 2 + lane * gap * scale(d)
+        }
+        // Horizon glow and runway floor.
+        let sky = Gradient(colors: [Color(hex: 0x14161B), Palette.stageDeep])
+        context.fill(Path(CGRect(origin: .zero, size: size)), with: .linearGradient(sky, startPoint: .zero, endPoint: CGPoint(x: 0, y: size.height)))
+        var floor = Path()
+        floor.move(to: CGPoint(x: x(strings, 1) - gap * 0.5 * scale(1), y: horizonY))
+        floor.addLine(to: CGPoint(x: x(1, 1) + gap * 0.5 * scale(1), y: horizonY))
+        floor.addLine(to: CGPoint(x: x(1, -0.15) + gap * 0.5 * scale(-0.15), y: size.height))
+        floor.addLine(to: CGPoint(x: x(strings, -0.15) - gap * 0.5 * scale(-0.15), y: size.height))
+        floor.closeSubpath()
+        let ground = Gradient(colors: [Color(hex: 0x1C1F26).opacity(0.4), Color(hex: 0x1C1F26)])
+        context.fill(floor, with: .linearGradient(ground, startPoint: CGPoint(x: 0, y: horizonY), endPoint: CGPoint(x: 0, y: size.height)))
+        // Beat rungs scrolling toward you.
+        let firstBeat = Int(floor_(elapsed / secondsPerBeat))
+        for beat in firstBeat...(firstBeat + Int(Self.lookahead / secondsPerBeat) + 1) {
+            let d = (Double(beat) * secondsPerBeat - elapsed) / Self.lookahead
+            guard d > -0.1, d < 1 else { continue }
+            let yy = y(d)
+            var rung = Path()
+            rung.move(to: CGPoint(x: x(strings, d) - gap * 0.5 * scale(d), y: yy))
+            rung.addLine(to: CGPoint(x: x(1, d) + gap * 0.5 * scale(d), y: yy))
+            context.stroke(rung, with: .color(.white.opacity(beat % 4 == 0 ? 0.16 : 0.06)), lineWidth: beat % 4 == 0 ? 1.5 : 1)
+        }
+        // String lanes.
+        for s in 1...max(1, strings) {
+            var lane = Path()
+            lane.move(to: CGPoint(x: x(s, 1), y: horizonY))
+            lane.addLine(to: CGPoint(x: x(s, -0.15), y: size.height))
+            let laneTint: Color = Self.color(string: s, of: strings)
+            let fade = Gradient(colors: [laneTint.opacity(0.05), laneTint.opacity(0.45)])
+            context.stroke(lane, with: .linearGradient(fade, startPoint: CGPoint(x: 0, y: horizonY), endPoint: CGPoint(x: 0, y: hitY)), lineWidth: 1.4)
+        }
+        // Target row.
+        context.fill(Path(roundedRect: CGRect(x: 10, y: hitY - 2, width: size.width - 20, height: 4), cornerRadius: 2), with: .color(.white.opacity(0.18)))
+        for s in 1...max(1, strings) {
+            let center = CGPoint(x: x(s, 0), y: hitY)
+            let tint = Self.color(string: s, of: strings)
+            let lit = isLit(string: s)
+            let r: CGFloat = lit ? 19 : 15
+            context.fill(Path(ellipseIn: CGRect(x: center.x - r, y: center.y - r, width: r * 2, height: r * 2)), with: .color(tint.opacity(lit ? 0.45 : 0.10)))
+            context.stroke(Path(ellipseIn: CGRect(x: center.x - 15, y: center.y - 15, width: 30, height: 30)), with: .color(tint.opacity(0.9)), lineWidth: 2)
+            context.draw(Text("\(s)").font(.system(size: 10, weight: .bold)).foregroundStyle(Palette.inkFaint), at: CGPoint(x: center.x, y: hitY + 28))
+        }
+        // Notes, far ones first so near ones draw on top.
+        for (i, note) in notes.enumerated().reversed() {
+            guard let at = note.at else { continue }
+            let start = (note.beat * secondsPerBeat - elapsed) / Self.lookahead
+            let end = ((note.beat + note.beats) * secondsPerBeat - elapsed) / Self.lookahead
+            guard start < 1.05, end > -0.25 else { continue }
+            let grade = grades[i]
+            let age = min(1, hitTimes[i].map { now - $0 } ?? 0)
+            let tint = grade == .miss ? Palette.danger : Self.color(string: at.string, of: strings)
+            // Sustain tail.
+            if end - start > 0.08 {
+                var tail = Path()
+                let a = max(start, 0), b = min(end, 1)
+                if b > a {
+                    tail.move(to: CGPoint(x: x(at.string, a) - 4 * scale(a), y: y(a)))
+                    tail.addLine(to: CGPoint(x: x(at.string, b) - 4 * scale(b), y: y(b)))
+                    tail.addLine(to: CGPoint(x: x(at.string, b) + 4 * scale(b), y: y(b)))
+                    tail.addLine(to: CGPoint(x: x(at.string, a) + 4 * scale(a), y: y(a)))
+                    tail.closeSubpath()
+                    context.fill(tail, with: .color(tint.opacity(grade == nil ? 0.35 : 0.15)))
+                }
+            }
+            if grade != nil && grade != .miss && age > 0.4 { continue }
+            let d = grade != nil && grade != .miss ? 0 : start
+            let sc = scale(d)
+            let w = gap * 0.78 * sc, h = 30 * sc
+            var rect = CGRect(x: x(at.string, d) - w / 2, y: y(d) - h / 2, width: w, height: h)
+            var alpha = start > 0.85 ? max(0, (1.05 - start) / 0.2) : 1
+            if let grade, grade != .miss { alpha = 1 - age / 0.4; rect = rect.insetBy(dx: -CGFloat(age) * 40, dy: -CGFloat(age) * 24) }
+            if grade == .miss { alpha = max(0.2, 0.8 - age) }
+            let gem = Path(roundedRect: rect, cornerRadius: 9 * sc)
+            let top: Color = tint.mix(with: .white, by: 0.3).opacity(alpha)
+            let shine = Gradient(colors: [top, tint.opacity(alpha)])
+            context.fill(gem, with: .linearGradient(shine, startPoint: CGPoint(x: rect.midX, y: rect.minY), endPoint: CGPoint(x: rect.midX, y: rect.maxY)))
+            if grade == nil {
+                context.stroke(gem, with: .color(.white.opacity(0.35 * alpha)), lineWidth: 1)
+                context.draw(Text("\(at.fret)").font(.system(size: max(9, 17 * sc), weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent.opacity(alpha)),
+                             at: CGPoint(x: rect.midX, y: rect.midY))
+            }
+        }
+    }
+
+    private func floor_(_ v: Double) -> Double { v.rounded(.down) }
+
+    /// A string flashes on the target row for a moment after one of its notes is hit.
+    private func isLit(string: Int) -> Bool {
+        for (i, note) in notes.enumerated() where note.at?.string == string {
+            guard let grade = grades[i], grade != .miss, let time = hitTimes[i] else { continue }
+            if now - time < 0.25 { return true }
+        }
+        return false
     }
 }

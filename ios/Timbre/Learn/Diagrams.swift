@@ -253,6 +253,8 @@ struct RhythmBar: View {
     /// 0…1 through the bar, nil when not playing.
     var playhead: Double?
     var judged: [Int: PlayAlongJudge.Grade] = [:]
+    /// Strums: down arrows on the beat, up arrows between beats.
+    var arrows = false
 
     var body: some View {
         Canvas { context, size in
@@ -272,6 +274,12 @@ struct RhythmBar: View {
                 let r: CGFloat = hit.truncatingRemainder(dividingBy: 1) == 0 ? 11 : 8
                 context.fill(Path(ellipseIn: CGRect(x: x - r - 4, y: mid - r - 4, width: (r + 4) * 2, height: (r + 4) * 2)), with: .color(color.opacity(0.18)))
                 context.fill(Path(ellipseIn: CGRect(x: x - r, y: mid - r, width: r * 2, height: r * 2)), with: .color(color))
+                if arrows {
+                    let down = hit.truncatingRemainder(dividingBy: 1) == 0
+                    var symbol = context.resolve(Image(systemName: down ? "arrow.down" : "arrow.up"))
+                    symbol.shading = .color(Palette.onAccent)
+                    context.draw(symbol, in: CGRect(x: x - r * 0.6, y: mid - r * 0.6, width: r * 1.2, height: r * 1.2))
+                }
             }
             if let playhead {
                 let x = left + width * CGFloat(playhead)

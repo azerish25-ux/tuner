@@ -35,6 +35,7 @@ struct PracticeView: View {
             .onAppear(perform: consumePendingRoute)
             .onChange(of: store.pendingPracticeRoute) { _, _ in consumePendingRoute() }
             .navigationDestination(for: PracticeRoute.self) { route in
+                Group {
                 switch route {
                 case .metronome: MetronomeView()
                 case .ear: EarTrainingView()
@@ -45,6 +46,8 @@ struct PracticeView: View {
                 case .intonation: IntonationView()
                 case .sniper: PitchSniperView()
                 }
+                }
+                .toolbar(.hidden, for: .tabBar)
             }
         }
     }
@@ -111,7 +114,7 @@ struct PracticeView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Ear games").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
             HStack(spacing: 12) {
-                gameCard(.sniper, title: "Pitch Sniper", detail: (store.progress.stats["sniperBest"]).map { "Best \($0.formatted())" } ?? String(localized: "Hit the note dead centre"), tint: Palette.mint, symbol: "scope")
+                gameCard(.sniper, title: "Pitch Sniper", detail: (store.progress.stats["sniperBest"]).map { "Best \($0.formatted())" } ?? String(localized: "Hit the note dead center"), tint: Palette.mint, symbol: "scope")
                 gameCard(.ear, title: "Ear trainer", detail: String(localized: "Pitch, intervals, chords"), tint: Palette.amber, symbol: "ear")
             }
         }

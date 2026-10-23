@@ -191,7 +191,7 @@ struct OnboardingView: View {
     private var goals: some View {
         VStack(alignment: .leading, spacing: 18) {
             question("What matters most?", "Your daily set is built around it.")
-            options([("tune", "Tune fast and precisely", "tuningfork"), ("practice", "Practise every day", "calendar"), ("ear", "Train my ear", "ear.fill"), ("voice", "Sing in tune", "music.mic"), ("rhythm", "Keep better time", "metronome.fill")], selection: $goal)
+            options([("tune", "Tune fast and precisely", "tuningfork"), ("practice", "Practice every day", "calendar"), ("ear", "Train my ear", "ear.fill"), ("voice", "Sing in tune", "music.mic"), ("rhythm", "Keep better time", "metronome.fill")], selection: $goal)
             Spacer()
             Button("Continue") { next() }.buttonStyle(BrassButtonStyle()).accessibilityIdentifier("onboarding.continue")
         }

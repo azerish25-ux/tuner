@@ -83,7 +83,9 @@ struct NotesStep: View {
             }
             MicrophoneHint()
             HStack {
-                Button("Skip") { finish(score: 0) }.font(.subheadline).foregroundStyle(Palette.inkFaint).opacity(canSkip ? 1 : 0).disabled(!canSkip)
+                // If the microphone misses a right note, the player's word counts (for fewer stars).
+                Button("I played it") { finish(score: 0.6) }.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft).opacity(canSkip ? 1 : 0).disabled(!canSkip)
+                    .accessibilityIdentifier("lesson.override")
                 Spacer()
                 Button { hear() } label: { Label("Hear it", systemImage: "speaker.wave.2.fill") }
                     .font(.subheadline.weight(.semibold)).foregroundStyle(accent)
@@ -91,7 +93,7 @@ struct NotesStep: View {
             }
             .padding(.horizontal, 24).padding(.bottom, 18)
         }
-        .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(8)); canSkip = true } }
+        .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(6)); canSkip = true } }
         .onDisappear { store.stopLessonListening(owner: owner) }
     }
 
@@ -241,14 +243,15 @@ struct ChordStep: View {
             Spacer(minLength: 0)
             MicrophoneHint()
             HStack {
-                Button("Skip") { finish(0) }.font(.subheadline).foregroundStyle(Palette.inkFaint).opacity(canSkip ? 1 : 0).disabled(!canSkip)
+                Button("I played it") { finish(0.6) }.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft).opacity(canSkip ? 1 : 0).disabled(!canSkip)
+                    .accessibilityIdentifier("lesson.override")
                 Spacer()
                 Button { strumIt() } label: { Label("Hear it", systemImage: "speaker.wave.2.fill") }
                     .font(.subheadline.weight(.semibold)).foregroundStyle(accent)
             }
             .padding(.horizontal, 24).padding(.bottom, 18)
         }
-        .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(10)); canSkip = true } }
+        .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(6)); canSkip = true } }
         .onDisappear { store.stopLessonListening(owner: owner) }
     }
 
@@ -304,6 +307,8 @@ struct RhythmStep: View {
     let bars: Int
     /// Beats in a bar when the lesson sets it (3/4, 6/8 in eighths); otherwise 4, or longer if the pattern needs it.
     var meter: Int?
+    /// On an instrument course a tap step also hears the instrument, so hands can stay on the strings.
+    var hearsInstrument = false
     let accent: Color
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
@@ -325,7 +330,7 @@ struct RhythmStep: View {
     var body: some View {
         VStack(spacing: 18) {
             VStack(spacing: 6) {
-                Text(isTap ? LocalizedStringKey("Tap on the dots") : LocalizedStringKey("Strum on the dots")).font(Typeface.display(26)).foregroundStyle(Palette.ink)
+                Text(isTap ? (hearsInstrument ? LocalizedStringKey("Play or tap on the dots") : LocalizedStringKey("Tap on the dots")) : LocalizedStringKey("Strum on the arrows")).font(Typeface.display(26)).foregroundStyle(Palette.ink)
                 Text("\(Int(bpm)) BPM · \(bars) bars").font(.subheadline).foregroundStyle(Palette.inkSoft)
             }
             .padding(.top, 14)
@@ -347,7 +352,7 @@ struct RhythmStep: View {
                     } else {
                         Text(phase == .done ? LocalizedStringKey("") : LocalizedStringKey("Bar \(min(bars, bar + 1)) of \(bars)")).font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
                     }
-                    RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: phase == .playing ? within : nil, judged: barGrades)
+                    RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: phase == .playing ? within : nil, judged: barGrades, arrows: !isTap)
                         .padding(.horizontal, 16)
                         .onChange(of: Int(now * 30)) { _, _ in expire(now: now) }
                 }
@@ -402,7 +407,7 @@ struct RhythmStep: View {
         startTime = CACurrentMediaTime()
         phase = .playing
         store.audio.setMetronome(bpm: Int(bpm), beats: beatsPerBar, subdivision: 1, accents: true)
-        if !isTap {
+        if !isTap || hearsInstrument {
             let analyzer = LessonAnalyzer(chords: false, onOnset: { time in register(time) })
             store.startLessonListening(owner: owner, lowHz: 60, highHz: 1400, analyzer: analyzer) { _, _ in }
         }

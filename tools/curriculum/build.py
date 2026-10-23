@@ -121,6 +121,9 @@ def main() -> int:
             print(f"(skipping {module}: not written yet)")
             continue
         course = importlib.import_module(f"courses.{module}").COURSE
+        if not course:
+            print(f"(skipping {module}: no units yet)")
+            continue
         kind = instrument_kind(course)
         for u, unit in enumerate(course["units"]):
             for lesson in unit["lessons"]:

@@ -178,19 +178,27 @@ struct UnitSection: View {
             .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
             .overlay(alignment: .leading) { Capsule().fill(accent).frame(width: 4).padding(.vertical, 18) }
             GeometryReader { geometry in
+                let neck = course.fretKind != nil
+                let swing = neck ? 22.0 : min(90, geometry.size.width * 0.24)
                 let points = unit.lessons.indices.map { i in
-                    CGPoint(x: geometry.size.width / 2 + sin(Double(i) * 1.15 + Double(number)) * min(90, geometry.size.width * 0.24),
-                            y: rowHeight * (CGFloat(i) + 0.5))
+                    CGPoint(x: geometry.size.width / 2 + sin(Double(i) * 1.15 + Double(number)) * swing, y: rowHeight * (CGFloat(i) + 0.5))
                 }
                 ZStack {
-                    Path { path in
-                        guard let first = points.first else { return }
-                        path.move(to: first)
-                        for (a, b) in zip(points, points.dropFirst()) {
-                            path.addCurve(to: b, control1: CGPoint(x: a.x, y: (a.y + b.y) / 2), control2: CGPoint(x: b.x, y: (a.y + b.y) / 2))
+                    if neck {
+                        // The path is a stretch of fingerboard: frets between lessons, strings running through.
+                        NeckStrip(rows: unit.lessons.count, rowHeight: rowHeight, strings: course.stringCount, fretless: course.fretless, accent: accent)
+                            .frame(width: 150)
+                            .position(x: geometry.size.width / 2, y: rowHeight * CGFloat(unit.lessons.count) / 2)
+                    } else {
+                        Path { path in
+                            guard let first = points.first else { return }
+                            path.move(to: first)
+                            for (a, b) in zip(points, points.dropFirst()) {
+                                path.addCurve(to: b, control1: CGPoint(x: a.x, y: (a.y + b.y) / 2), control2: CGPoint(x: b.x, y: (a.y + b.y) / 2))
+                            }
                         }
+                        .stroke(Palette.line, style: StrokeStyle(lineWidth: 5, lineCap: .round, dash: [0.1, 13]))
                     }
-                    .stroke(Palette.line, style: StrokeStyle(lineWidth: 5, lineCap: .round, dash: [0.1, 13]))
                     ForEach(Array(unit.lessons.enumerated()), id: \.element.id) { i, lesson in
                         LessonNode(course: course, lesson: lesson, accent: accent, current: lesson.id == next?.id) { onPlay(course, lesson) }
                             .position(points[i])
@@ -267,5 +275,36 @@ struct LessonNode: View {
         .accessibilityLabel(Text(lesson.title.localized))
         .accessibilityValue(Text(stars > 0 ? LocalizedStringKey("\(stars) of 3 stars") : lit ? LocalizedStringKey("Open") : LocalizedStringKey("Locked")))
         .accessibilityIdentifier("learn.lesson.\(lesson.id)")
+    }
+}
+
+/// A vertical stretch of fingerboard behind a unit's lessons.
+struct NeckStrip: View {
+    let rows: Int
+    let rowHeight: CGFloat
+    let strings: Int
+    var fretless = false
+    var accent: Color = Palette.mint
+
+    var body: some View {
+        Canvas { context, size in
+            let board = Path(roundedRect: CGRect(origin: .zero, size: size), cornerRadius: 14)
+            let wood = Gradient(colors: fretless ? [Color(hex: 0x1D1D20), Color(hex: 0x111113)] : [Color(hex: 0x3B2519), Color(hex: 0x24160F)])
+            context.fill(board, with: .linearGradient(wood, startPoint: .zero, endPoint: CGPoint(x: size.width, y: 0)))
+            context.stroke(board, with: .color(.white.opacity(0.06)), lineWidth: 1)
+            if !fretless {
+                for row in 0...rows {
+                    let y = CGFloat(row) * rowHeight
+                    context.fill(Path(CGRect(x: 2, y: y - 1.5, width: size.width - 4, height: 3)), with: .color(Color(hex: 0xC8C2B8).opacity(row == 0 ? 0 : 0.55)))
+                }
+            }
+            for s in 0..<max(1, strings) {
+                let x = 16 + (size.width - 32) * CGFloat(s) / CGFloat(max(1, strings - 1))
+                let width = 0.8 + CGFloat(strings - 1 - s) * 0.35
+                context.fill(Path(CGRect(x: x - width / 2, y: 0, width: width, height: size.height)), with: .color(Color(hex: 0xE2DCD0).opacity(0.5)))
+            }
+        }
+        .shadow(color: .black.opacity(0.5), radius: 16, y: 8)
+        .accessibilityHidden(true)
     }
 }

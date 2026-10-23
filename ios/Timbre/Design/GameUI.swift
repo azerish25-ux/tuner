@@ -76,7 +76,7 @@ extension Quest {
         case .holdInTune: return "Lock \(target) strings in tune"
         case .sniperWin: return "Win a round of Pitch Sniper"
         case .bullseyes: return "Hit \(target) bullseyes"
-        case .practiceMinutes: return "Practise for \(target) minutes"
+        case .practiceMinutes: return "Practice for \(target) minutes"
         case .earCorrect: return "Get \(target) ear questions right"
         case .lessons: return "Finish \(target) lessons"
         }

@@ -136,14 +136,22 @@ struct TuneView: View {
                 NoteReadout(note: store.targetName, cents: motion.cents, hertz: reading.frequency, target: store.targetHz, locked: reading.inTune)
                 RibbonMeter(cents: motion.cents, phase: motion.phase, locked: reading.inTune)
                     .frame(height: 38).padding(.horizontal, 32)
-                Text(store.statusText).font(.footnote.weight(.semibold))
+                let status = statusLine(reading.status, cents: motion.cents)
+                Text(status).font(.footnote.weight(.semibold))
                     .foregroundStyle(reading.inTune ? Palette.mint : Palette.inkSoft)
                     .contentTransition(.opacity)
-                    .animation(Motion.quick, value: store.statusText)
+                    .animation(Motion.quick, value: status)
                     .accessibilityIdentifier("tune.status")
             }
         }
         .padding(.bottom, 4)
+    }
+
+    /// The status under the meter quotes the same smoothed cents as the readout above it.
+    private func statusLine(_ status: String, cents: Double?) -> String {
+        guard audio.running, let cents, status == "flat" || status == "sharp" else { return store.statusText }
+        let amount = Int(abs(cents).rounded())
+        return status == "flat" ? String(localized: "Tighten · \(amount)¢ flat") : String(localized: "Loosen · \(amount)¢ sharp")
     }
 
     private var tuningPanel: some View {
