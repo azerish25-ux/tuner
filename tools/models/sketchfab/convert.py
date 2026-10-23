@@ -985,8 +985,11 @@ def optimise(root, cfg):
     fixed = set(moving) | set(rebuilt) | set(originals)
     groups = {}
     for obj in [o for o in root.children_recursive if shown(o) and o not in fixed]:
-        groups.setdefault(tuple(sorted(s.material.name for s in obj.material_slots if s.material)), []).append(obj)
-    still = [join(objs, "part_" + ("_".join(key)[:40] or "plain")) for key, objs in groups.items()]
+        # Smooth and faceted parts stay apart: a mesh that mixes them is written with a normal per corner.
+        domain = getattr(obj.data, "normals_domain", "")
+        groups.setdefault((tuple(sorted(s.material.name for s in obj.material_slots if s.material)), domain), []).append(obj)
+    still = [join(objs, "part_" + ("_".join(key[0])[:40] or "plain") + (f"_{key[1].lower()}" if key[1] else ""))
+             for key, objs in groups.items()]
     for obj in moving + still + originals:
         slim(obj)
     for obj in moving:
@@ -1011,8 +1014,7 @@ def optimise(root, cfg):
     print(f"optimised: {before[0]} meshes / {before[1]} triangles -> {len(after)} meshes / "
           f"{sum(triangles(o) for o in after)} triangles", flush=True)
     for obj in sorted(after, key=triangles, reverse=True)[:12]:
-        print(f"   {obj.name}: {triangles(obj)} tris, uv {[uv.name for uv in obj.data.uv_layers]}, "
-              f"colours {[a.name for a in obj.data.color_attributes]}", flush=True)
+        print(f"   {obj.name}: {triangles(obj)} tris, normals {getattr(obj.data, 'normals_domain', '?')}", flush=True)
 
 
 def compress_textures(root, cfg, folder):
