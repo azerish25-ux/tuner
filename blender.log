@@ -1,0 +1,64 @@
+04:54:23 | INFO: Data are loaded, start creating Blender stuff
+04:54:23 | INFO: Blender create Mesh node guitar body_0
+04:54:23 | INFO: Blender create Mesh node guitar body_1
+04:54:23 | INFO: Blender create Mesh node guitar body_2
+04:54:23 | INFO: Blender create Mesh node black strip body_0
+04:54:23 | INFO: Blender create Mesh node neck_0
+04:54:23 | INFO: Blender create Mesh node A5 string_0
+04:54:23 | INFO: Blender create Mesh node B2 string_0
+04:54:23 | INFO: Blender create Mesh node D4 string_0
+04:54:23 | INFO: Blender create Mesh node E1 string_0
+04:54:23 | INFO: Blender create Mesh node E6 string_0
+04:54:23 | INFO: Blender create Mesh node G3 string_0
+04:54:23 | INFO: Blender create Mesh node frets_0
+04:54:23 | INFO: Blender create Mesh node frets_0
+04:54:23 | INFO: Blender create Mesh node frets_0
+04:54:24 | INFO: Blender create Mesh node frets_0
+04:54:24 | INFO: Blender create Mesh node frets_0
+04:54:24 | INFO: Blender create Mesh node frets_0
+04:54:24 | INFO: Blender create Mesh node frets_0
+04:54:24 | INFO: Blender create Mesh node frets_0
+04:54:24 | INFO: Blender create Mesh node head wire winder_0
+04:54:24 | INFO: Blender create Mesh node machine head base_L_0
+04:54:24 | INFO: Blender create Mesh node machine head base_L_1
+04:54:24 | INFO: Blender create Mesh node machine head base_L_2
+04:54:24 | INFO: Blender create Mesh node machine head base_L_3
+04:54:24 | INFO: Blender create Mesh node machine head base_R_0
+04:54:24 | INFO: Blender create Mesh node machine head base_R_1
+04:54:24 | INFO: Blender create Mesh node machine head base_R_2
+04:54:24 | INFO: Blender create Mesh node machine head base_R_3
+04:54:24 | INFO: Blender create Mesh node neck saddle_0
+04:54:24 | INFO: Blender create Mesh node fret board_0
+04:54:24 | INFO: Blender create Mesh node  black strip neck_0
+04:54:24 | INFO: Blender create Mesh node bridge top_0
+04:54:24 | INFO: Blender create Mesh node bridge top_1
+04:54:24 | INFO: Blender create Mesh node bridge base_0
+04:54:24 | INFO: Blender create Mesh node saddle bridge_0
+04:54:24 | INFO: glTF import finished in 1.33s
+decimated 31 parts: 454451 -> 23078 vertices
+Blender 4.5.15 LTS (hash 5afeabba6097 built 2026-10-22 01:33:47)
+Saved: 'build/convert/guitar_classical_calib_whole.png'
+Time: 00:23.62 (Saving: 00:00.24)
+
+Saved: 'build/convert/guitar_classical_calib_head.png'
+Time: 00:24.07 (Saving: 00:00.16)
+
+Saved: 'build/convert/guitar_classical_calib_ids.png'
+Time: 00:16.88 (Saving: 00:00.15)
+
+rigged s6: peg 2 parts, post 2 parts, scale 0.6541 m, tighten 1
+rigged s5: peg 2 parts, post 2 parts, scale 0.6541 m, tighten 1
+rigged s4: peg 2 parts, post 2 parts, scale 0.6541 m, tighten 1
+rigged s3: peg 2 parts, post 2 parts, scale 0.6541 m, tighten -1
+rigged s2: peg 2 parts, post 2 parts, scale 0.6541 m, tighten -1
+rigged s1: peg 2 parts, post 2 parts, scale 0.6541 m, tighten -1
+USD export of 'build/convert/guitar_classical.usdz' took 5.2 s
+Saved: 'build/convert/guitar_classical_hero.png'
+Time: 01:12.54 (Saving: 00:00.17)
+
+Saved: 'build/convert/guitar_classical_head.png'
+Time: 01:26.41 (Saving: 00:00.17)
+
+converted guitar_classical
+
+Blender quit
