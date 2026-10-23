@@ -8,19 +8,19 @@
  "materials": {
   "headstock_mat": {
    "baseColor": [
-    0.012,
-    0.012,
-    0.012
+    0.0,
+    0.0,
+    0.0
    ],
-   "roughness": 0.18,
+   "metallic": 1.0,
+   "roughness": 0.3,
    "alpha": 1.0
   }
  },
  "coat": [
   "polySurface42_top_mat",
   "polySurface42_sides_mat",
-  "polySurface42_back_mat",
-  "polySurface42_headstock_mat"
+  "polySurface42_back_mat"
  ],
  "rig": "MACHINE_HEAD",
  "degPerCent": 1.4,
