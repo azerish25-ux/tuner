@@ -68,7 +68,9 @@ struct ChordsView: View {
             ForEach(shapes, id: \.self) { shape in
                 Button { strum(shape) } label: {
                     VStack(spacing: 8) {
-                        ChordDiagram(shape: shape).frame(height: 170)
+                        ChordDiagram(chord: ChordSpec(name: "", root: root, quality: formula.name, frets: shape.frets.map { $0 ?? -1 },
+                                                      baseFret: shape.highestFret <= 4 ? nil : shape.lowestFret), showName: false)
+                            .frame(height: 170)
                         Text(shape.notation).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
                     }
                     .stillCard(cornerRadius: 22, padding: 12)
@@ -104,46 +106,6 @@ struct ChordsView: View {
             audio.playTones(notes, together: false, noteMs: 380, gapMs: 40)
         } label: { Label("Hear the scale", systemImage: "speaker.wave.2.fill") }
         .buttonStyle(BrassButtonStyle())
-    }
-}
-
-/// Vertical chord box: strings top to bottom, nut or base fret, finger dots.
-struct ChordDiagram: View {
-    let shape: ChordShape
-    var body: some View {
-        Canvas { context, size in
-            let strings = shape.frets.count
-            let base = shape.highestFret <= 4 ? 1 : shape.lowestFret
-            let rows = 4
-            let left: CGFloat = 22, right = size.width - 14, top: CGFloat = 26, bottom = size.height - 8
-            let dx = (right - left) / CGFloat(max(1, strings - 1)), dy = (bottom - top) / CGFloat(rows)
-            for i in 0..<strings {
-                var line = Path(); line.move(to: CGPoint(x: left + CGFloat(i) * dx, y: top)); line.addLine(to: CGPoint(x: left + CGFloat(i) * dx, y: bottom))
-                context.stroke(line, with: .color(Palette.inkSoft.opacity(0.6)), lineWidth: 1)
-            }
-            for j in 0...rows {
-                var line = Path(); line.move(to: CGPoint(x: left, y: top + CGFloat(j) * dy)); line.addLine(to: CGPoint(x: right, y: top + CGFloat(j) * dy))
-                context.stroke(line, with: .color(j == 0 && base == 1 ? Palette.ink : Palette.inkFaint.opacity(0.7)), lineWidth: j == 0 && base == 1 ? 4 : 1)
-            }
-            if base > 1 {
-                context.draw(Text("\(base)fr").font(.caption2).foregroundStyle(Palette.inkSoft), at: CGPoint(x: 8, y: top + dy / 2))
-            }
-            for (i, fret) in shape.frets.enumerated() {
-                let x = left + CGFloat(i) * dx
-                guard let fret else {
-                    context.draw(Text("×").font(.caption.weight(.bold)).foregroundStyle(Palette.inkFaint), at: CGPoint(x: x, y: 12))
-                    continue
-                }
-                if fret == 0 {
-                    context.stroke(Path(ellipseIn: CGRect(x: x - 5, y: 7, width: 10, height: 10)), with: .color(Palette.ink), lineWidth: 1.5)
-                } else {
-                    let y = top + (CGFloat(fret - base) + 0.5) * dy
-                    context.fill(Path(ellipseIn: CGRect(x: x - 8, y: y - 8, width: 16, height: 16)),
-                                 with: .linearGradient(Gradient(colors: [Color(hex: 0x8BF7D2), Palette.mintDeep]), startPoint: CGPoint(x: x, y: y - 8), endPoint: CGPoint(x: x, y: y + 8)))
-                }
-            }
-        }
-        .accessibilityHidden(true)
     }
 }
 

@@ -94,6 +94,9 @@ public struct ChordSpec: Codable, Equatable, Sendable {
     public let frets: [Int]
     public let fingers: [Int]?
     public let baseFret: Int?
+    public init(name: String, root: Int, quality: String, frets: [Int], fingers: [Int]? = nil, baseFret: Int? = nil) {
+        self.name = name; self.root = root; self.quality = quality; self.frets = frets; self.fingers = fingers; self.baseFret = baseFret
+    }
 }
 
 /// What an explanation card draws.
