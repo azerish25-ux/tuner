@@ -27,6 +27,8 @@ final class AppStore: ObservableObject {
     @Published private(set) var celebrate = 0
     @Published var requestReviewNow = false
     @Published var paywallReason: String?
+    /// A practice screen to open on the Practice tab (Siri, Shortcuts, deep links).
+    @Published var pendingPracticeRoute: PracticeRoute?
     // Voice
     @Published var voiceLevel = 1 {
         didSet { if voiceLevel != oldValue && !updateSettings({ $0.selectedVoiceLevel = voiceLevel }) { voiceLevel = oldValue } }
@@ -148,6 +150,16 @@ final class AppStore: ObservableObject {
             _ = selectInstrument(instrument, photo: catalog.photo(instrumentId: instrument.id)?.asset)
         }
         updateSettings { $0.onboardingCompleted = true; $0.playerLevel = level; $0.goal = goal; if let id = instrument?.id { $0.recentInstrumentIds = [id] + $0.recentInstrumentIds } }
+    }
+
+    func open(_ destination: IntentRouter.Destination) {
+        Analytics.log("shortcut", ["destination": destination.rawValue])
+        switch destination {
+        case .tune: selectedTab = .tune
+        case .metronome: selectedTab = .practice; pendingPracticeRoute = .metronome
+        case .ear: selectedTab = .practice; pendingPracticeRoute = .ear
+        case .daily: selectedTab = .practice
+        }
     }
 
     func presentPaywall(_ reason: String) { paywallReason = reason; showPaywall = true; Analytics.log("paywall_shown", ["reason": reason]) }

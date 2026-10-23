@@ -30,6 +30,8 @@ struct PracticeView: View {
                 .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
             }
             .background(StageBackground(motes: false))
+            .onAppear(perform: consumePendingRoute)
+            .onChange(of: store.pendingPracticeRoute) { _, _ in consumePendingRoute() }
             .navigationDestination(for: PracticeRoute.self) { route in
                 switch route {
                 case .metronome: MetronomeView()
@@ -41,6 +43,12 @@ struct PracticeView: View {
                 }
             }
         }
+    }
+
+    private func consumePendingRoute() {
+        guard let route = store.pendingPracticeRoute else { return }
+        store.pendingPracticeRoute = nil
+        path = [route]
     }
 
     private var fretted: Bool { store.instrument.anchorType == "MACHINE_HEAD" || ["guitar", "ukulele", "mandolin"].contains(store.instrument.familyId) }

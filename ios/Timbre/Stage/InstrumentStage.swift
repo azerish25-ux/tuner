@@ -20,6 +20,9 @@ final class StageController {
     let root = Entity()
     let camera = PerspectiveCamera()
     private(set) var loadedModel: String?
+    private var loading: String?
+    /// Plain-text load state for diagnostics (shown only when TIMBRE_STAGE_DEBUG is set in debug builds).
+    private(set) var status = "idle"
     private var model: Entity?
     private var rig: InstrumentRig?
     private var pegs: [String: (entity: Entity, base: simd_quatf)] = [:]
@@ -56,8 +59,14 @@ final class StageController {
     }
 
     func load(modelID: String) async {
-        guard loadedModel != modelID, let url = ModelLibrary.url(modelID), let rig = ModelLibrary.rig(modelID) else { return }
-        guard let entity = try? await Entity(contentsOf: url) else { return }
+        guard loadedModel != modelID, loading != modelID else { return }
+        guard let url = ModelLibrary.url(modelID) else { status = "no usdz for \(modelID)"; return }
+        guard let rig = ModelLibrary.rig(modelID) else { status = "no rig for \(modelID)"; return }
+        loading = modelID
+        defer { loading = nil }
+        status = "loading \(modelID)"
+        let entity: Entity
+        do { entity = try await Entity(contentsOf: url) } catch { status = "load failed: \(error.localizedDescription)"; return }
         model?.removeFromParent()
         pegs = [:]; posts = [:]; staticStrings = [:]; angles = [:]
         segments.forEach { $0.removeFromParent() }; halo.forEach { $0.removeFromParent() }
@@ -94,6 +103,9 @@ final class StageController {
         addLights()
         receiveImageBasedLight(holder)
         applyFraming(immediately: true)
+        let box = holder.visualBounds(relativeTo: nil)
+        func fmt(_ v: SIMD3<Float>) -> String { String(format: "%.2f,%.2f,%.2f", v.x, v.y, v.z) }
+        status = "loaded \(modelID) pegs=\(pegs.count) strings=\(staticStrings.count) c=\(fmt(box.center)) e=\(fmt(box.extents)) ibl=\(light.components.has(ImageBasedLightComponent.self))"
     }
 
     /// Image-based light from the procedural stage environment, applied to every model part.
@@ -232,6 +244,8 @@ struct InstrumentStage: View {
     var onSelect: (String) -> Void = { _ in }
     @State private var controller = StageController()
     @State private var ready = false
+    @State private var status = "make"
+    private let debug = ProcessInfo.processInfo.environment["TIMBRE_STAGE_DEBUG"] == "1"
 
     var body: some View {
         RealityView { content in
@@ -242,7 +256,9 @@ struct InstrumentStage: View {
             }
             controller.input = input
             controller.attach(&content)
+            status = "attached"
             await controller.load(modelID: modelID)
+            status = controller.status
             ready = true
         } update: { _ in
             controller.input = input
@@ -252,7 +268,7 @@ struct InstrumentStage: View {
             while let current = entity, !current.name.hasPrefix("peg_") { entity = current.parent }
             if let name = entity?.name { onSelect(String(name.dropFirst(4))) }
         })
-        .task(id: modelID) { await controller.load(modelID: modelID) }
+        .task(id: modelID) { await controller.load(modelID: modelID); status = controller.status }
         .mask {
             // Feather the edges so the stage melts into the screen whatever the renderer clears to.
             let edge: [Gradient.Stop] = [.init(color: .clear, location: 0), .init(color: .black, location: 0.06), .init(color: .black, location: 0.94), .init(color: .clear, location: 1)]
@@ -262,6 +278,14 @@ struct InstrumentStage: View {
         .opacity(ready ? 1 : 0)
         .animation(Motion.settle, value: ready)
         .accessibilityHidden(true)
+        .overlay(alignment: .bottomLeading) {
+            #if DEBUG
+            if debug {
+                Text(status).font(.system(size: 10, design: .monospaced)).foregroundStyle(.white.opacity(0.8)).padding(6)
+                    .accessibilityIdentifier("stage.debug")
+            }
+            #endif
+        }
     }
 }
 

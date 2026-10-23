@@ -13,11 +13,12 @@ final class TimbreUITests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
-        if testRun?.hasSucceeded == false { shot("zz-failure-\(name)") }
+        if (testRun?.totalFailureCount ?? 0) > 0 { shot("zz-failure-\(name)") }
         app.terminate()
     }
 
     private func launch(onboarded: Bool = true, demo: Bool = true, studio: Bool = false) {
+        app.launchEnvironment["TIMBRE_STAGE_DEBUG"] = "1"
         if onboarded { app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1" }
         if demo { app.launchEnvironment["TIMBRE_DEMO_DATA"] = "1" }
         if studio { app.launchEnvironment["TIMBRE_STAGE_MODE"] = "studio" }
@@ -61,6 +62,15 @@ final class TimbreUITests: XCTestCase {
         launch()
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
         settle(3); shot("10-tune-3d")
+        let debug = element("stage.debug")
+        if debug.waitForExistence(timeout: 10) {
+            print("STAGE DEBUG: \(debug.label)")
+            let note = XCTAttachment(string: debug.label)
+            note.name = "stage-debug"; note.lifetime = .keepAlways
+            add(note)
+        } else {
+            print("STAGE DEBUG: no stage.debug element")
+        }
         element("string.3").tap(); settle(1.5); shot("11-tune-string-selected")
         element("tune.instrument").tap(); settle(1.5); shot("12-instrument-picker")
         app.buttons["Done"].firstMatch.tap(); settle()
@@ -99,6 +109,7 @@ final class TimbreUITests: XCTestCase {
     func test06PurchaseUnlocksPro() throws {
         launch()
         tab("Practice"); settle()
+        scrollTo(element("practice.drone"))
         element("practice.drone").tap()
         let purchase = element("paywall.purchase")
         XCTAssertTrue(purchase.waitForExistence(timeout: 15))
@@ -107,12 +118,15 @@ final class TimbreUITests: XCTestCase {
         purchase.tap()
         XCTAssertTrue(element("practice.drone").waitForExistence(timeout: 20))
         settle(2)
+        scrollTo(element("practice.drone"))
         element("practice.drone").tap(); settle(1.5); shot("41-drone")
         element("drone.start").tap(); settle(1.5); shot("42-drone-running")
         element("drone.start").tap()
         app.navigationBars.buttons.firstMatch.tap(); settle()
+        scrollTo(element("practice.chords"))
         element("practice.chords").tap(); settle(1.5); shot("43-chords")
         app.navigationBars.buttons.firstMatch.tap(); settle()
+        scrollTo(element("practice.scales"))
         element("practice.scales").tap(); settle(1.5); shot("44-scales")
         app.navigationBars.buttons.firstMatch.tap(); settle()
         tab("Journey"); settle(2); shot("45-journey-pro")

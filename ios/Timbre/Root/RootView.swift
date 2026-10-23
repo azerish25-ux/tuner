@@ -33,5 +33,10 @@ struct RootView: View {
         .onChange(of: store.selectedTab) { old, _ in if old == .tune { store.stopActivity() } }
         .onChange(of: scenePhase) { _, phase in if phase == .background { store.stopActivity() } }
         .onChange(of: commerce.isPro) { _, pro in if pro { Analytics.log("pro_active") } }
+        .onReceive(IntentRouter.shared.$pending) { destination in
+            guard let destination else { return }
+            IntentRouter.shared.pending = nil
+            store.open(destination)
+        }
     }
 }
