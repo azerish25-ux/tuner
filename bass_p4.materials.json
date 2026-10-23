@@ -1,0 +1,19 @@
+{
+ "DefaultMaterial": {
+  "images": [
+   "DefaultMaterial_baseColor_clean.png",
+   "DefaultMaterial_metallicRoughness_clean.png",
+   "DefaultMaterial_normal_clean.png"
+  ],
+  "baseColor": [
+   0.8,
+   0.8,
+   0.8,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.5,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ }
+}

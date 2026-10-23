@@ -1,0 +1,13308 @@
+{
+ "whole": {
+  "center": [
+   -0.0,
+   0.0,
+   0.565
+  ],
+  "scale": 1.1977999240028432,
+  "res": 1200
+ },
+ "head": {
+  "center": [
+   -0.0181,
+   -0.01563,
+   0.9605
+  ],
+  "scale": 0.3728896154674204,
+  "res": 1200
+ },
+ "headObjects": [
+  {
+   "name": "defaultMaterial.001",
+   "color": [
+    0.75,
+    0.3,
+    0.3
+   ],
+   "vertices": 2150,
+   "center": [
+    0.0131,
+    -0.0095,
+    0.9935
+   ]
+  },
+  {
+   "name": "defaultMaterial.002",
+   "color": [
+    0.1,
+    0.363,
+    1.0
+   ],
+   "vertices": 92,
+   "center": [
+    -0.0224,
+    -0.0281,
+    0.9768
+   ]
+  },
+  {
+   "name": "defaultMaterial.005",
+   "color": [
+    0.75,
+    1.0,
+    0.4
+   ],
+   "vertices": 724,
+   "center": [
+    -0.0206,
+    -0.0285,
+    0.8506
+   ]
+  },
+  {
+   "name": "defaultMaterial.006",
+   "color": [
+    0.75,
+    0.075,
+    0.666
+   ],
+   "vertices": 728,
+   "center": [
+    0.0013,
+    -0.0271,
+    0.7795
+   ]
+  },
+  {
+   "name": "defaultMaterial.089",
+   "color": [
+    0.4,
+    1.0,
+    0.9
+   ],
+   "vertices": 1147,
+   "center": [
+    -0.0103,
+    -0.0229,
+    0.95
+   ]
+  },
+  {
+   "name": "defaultMaterial.090",
+   "color": [
+    1.0,
+    0.587,
+    0.1
+   ],
+   "vertices": 3447,
+   "center": [
+    -0.0162,
+    -0.014,
+    0.9735
+   ]
+  },
+  {
+   "name": "defaultMaterial.091",
+   "color": [
+    0.412,
+    0.3,
+    0.75
+   ],
+   "vertices": 739,
+   "center": [
+    0.0314,
+    -0.019,
+    1.0353
+   ]
+  },
+  {
+   "name": "defaultMaterial.092",
+   "color": [
+    0.138,
+    1.0,
+    0.1
+   ],
+   "vertices": 1652,
+   "center": [
+    0.0021,
+    -0.021,
+    1.0452
+   ]
+  },
+  {
+   "name": "defaultMaterial.093",
+   "color": [
+    1.0,
+    0.4,
+    0.601
+   ],
+   "vertices": 739,
+   "center": [
+    -0.0298,
+    -0.0219,
+    1.0354
+   ]
+  },
+  {
+   "name": "defaultMaterial.094",
+   "color": [
+    0.075,
+    0.498,
+    0.75
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0155,
+    -0.0086,
+    0.9578
+   ]
+  },
+  {
+   "name": "defaultMaterial.095",
+   "color": [
+    0.951,
+    1.0,
+    0.4
+   ],
+   "vertices": 3,
+   "center": [
+    -0.026,
+    -0.009,
+    0.9579
+   ]
+  },
+  {
+   "name": "defaultMaterial.096",
+   "color": [
+    0.811,
+    0.1,
+    1.0
+   ],
+   "vertices": 15,
+   "center": [
+    -0.0354,
+    -0.0095,
+    0.9595
+   ]
+  },
+  {
+   "name": "defaultMaterial.097",
+   "color": [
+    0.3,
+    0.75,
+    0.524
+   ],
+   "vertices": 7,
+   "center": [
+    -0.0126,
+    -0.0209,
+    0.961
+   ]
+  },
+  {
+   "name": "defaultMaterial.098",
+   "color": [
+    1.0,
+    0.286,
+    0.1
+   ],
+   "vertices": 9,
+   "center": [
+    -0.0257,
+    -0.0215,
+    0.9614
+   ]
+  },
+  {
+   "name": "defaultMaterial.099",
+   "color": [
+    0.4,
+    0.451,
+    1.0
+   ],
+   "vertices": 7,
+   "center": [
+    -0.0352,
+    -0.022,
+    0.961
+   ]
+  },
+  {
+   "name": "defaultMaterial.100",
+   "color": [
+    0.329,
+    0.75,
+    0.075
+   ],
+   "vertices": 9,
+   "center": [
+    -0.0457,
+    -0.0224,
+    0.9615
+   ]
+  },
+  {
+   "name": "defaultMaterial.101",
+   "color": [
+    1.0,
+    0.4,
+    0.801
+   ],
+   "vertices": 93,
+   "center": [
+    -0.0505,
+    -0.0144,
+    0.9612
+   ]
+  },
+  {
+   "name": "defaultMaterial.102",
+   "color": [
+    0.1,
+    0.964,
+    1.0
+   ],
+   "vertices": 4264,
+   "center": [
+    0.004,
+    -0.0209,
+    1.0608
+   ]
+  },
+  {
+   "name": "defaultMaterial.103",
+   "color": [
+    0.75,
+    0.636,
+    0.3
+   ],
+   "vertices": 15,
+   "center": [
+    -0.0359,
+    -0.0095,
+    0.9636
+   ]
+  },
+  {
+   "name": "defaultMaterial.104",
+   "color": [
+    0.51,
+    0.1,
+    1.0
+   ],
+   "vertices": 93,
+   "center": [
+    -0.0504,
+    -0.0145,
+    0.9662
+   ]
+  },
+  {
+   "name": "defaultMaterial.105",
+   "color": [
+    0.4,
+    1.0,
+    0.498
+   ],
+   "vertices": 15,
+   "center": [
+    -0.0337,
+    -0.0095,
+    0.9709
+   ]
+  },
+  {
+   "name": "defaultMaterial.106",
+   "color": [
+    0.75,
+    0.075,
+    0.161
+   ],
+   "vertices": 93,
+   "center": [
+    -0.0483,
+    -0.0144,
+    0.9746
+   ]
+  },
+  {
+   "name": "defaultMaterial.107",
+   "color": [
+    0.4,
+    0.652,
+    1.0
+   ],
+   "vertices": 15,
+   "center": [
+    -0.0308,
+    -0.0094,
+    0.9788
+   ]
+  },
+  {
+   "name": "defaultMaterial.108",
+   "color": [
+    0.74,
+    1.0,
+    0.1
+   ],
+   "vertices": 93,
+   "center": [
+    -0.0464,
+    -0.0144,
+    0.9813
+   ]
+  },
+  {
+   "name": "defaultMaterial.109",
+   "color": [
+    0.749,
+    0.3,
+    0.75
+   ],
+   "vertices": 15,
+   "center": [
+    -0.0289,
+    -0.0094,
+    0.9855
+   ]
+  },
+  {
+   "name": "defaultMaterial.110",
+   "color": [
+    0.1,
+    1.0,
+    0.735
+   ],
+   "vertices": 93,
+   "center": [
+    -0.0439,
+    -0.0144,
+    0.9912
+   ]
+  },
+  {
+   "name": "defaultMaterial.111",
+   "color": [
+    1.0,
+    0.648,
+    0.4
+   ],
+   "vertices": 31,
+   "center": [
+    -0.0248,
+    -0.0094,
+    1.0102
+   ]
+  },
+  {
+   "name": "defaultMaterial.112",
+   "color": [
+    0.157,
+    0.075,
+    0.75
+   ],
+   "vertices": 7,
+   "center": [
+    -0.034,
+    -0.01,
+    1.0012
+   ]
+  },
+  {
+   "name": "defaultMaterial.113",
+   "color": [
+    0.502,
+    1.0,
+    0.4
+   ],
+   "vertices": 5340,
+   "center": [
+    0.0099,
+    -0.0124,
+    1.1038
+   ]
+  },
+  {
+   "name": "defaultMaterial.1137",
+   "color": [
+    1.0,
+    0.1,
+    0.516
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0094,
+    -0.0284,
+    0.935
+   ]
+  },
+  {
+   "name": "defaultMaterial.1138",
+   "color": [
+    0.3,
+    0.639,
+    0.75
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0095,
+    -0.0284,
+    0.9227
+   ]
+  },
+  {
+   "name": "defaultMaterial.1139",
+   "color": [
+    1.0,
+    0.959,
+    0.1
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0096,
+    -0.0284,
+    0.9104
+   ]
+  },
+  {
+   "name": "defaultMaterial.114",
+   "color": [
+    0.798,
+    0.4,
+    1.0
+   ],
+   "vertices": 15,
+   "center": [
+    -0.0165,
+    -0.0094,
+    1.0541
+   ]
+  },
+  {
+   "name": "defaultMaterial.1140",
+   "color": [
+    0.075,
+    0.75,
+    0.325
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0096,
+    -0.0283,
+    0.898
+   ]
+  },
+  {
+   "name": "defaultMaterial.1141",
+   "color": [
+    1.0,
+    0.447,
+    0.4
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0097,
+    -0.0282,
+    0.8857
+   ]
+  },
+  {
+   "name": "defaultMaterial.1142",
+   "color": [
+    0.1,
+    0.292,
+    1.0
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0097,
+    -0.0281,
+    0.8734
+   ]
+  },
+  {
+   "name": "defaultMaterial.1143",
+   "color": [
+    0.527,
+    0.75,
+    0.3
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0098,
+    -0.0281,
+    0.8611
+   ]
+  },
+  {
+   "name": "defaultMaterial.1144",
+   "color": [
+    1.0,
+    0.1,
+    0.817
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0099,
+    -0.028,
+    0.8487
+   ]
+  },
+  {
+   "name": "defaultMaterial.1145",
+   "color": [
+    0.4,
+    1.0,
+    0.947
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0099,
+    -0.0279,
+    0.8364
+   ]
+  },
+  {
+   "name": "defaultMaterial.1146",
+   "color": [
+    0.75,
+    0.493,
+    0.075
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.01,
+    -0.0279,
+    0.8241
+   ]
+  },
+  {
+   "name": "defaultMaterial.1147",
+   "color": [
+    0.597,
+    0.4,
+    1.0
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0101,
+    -0.0278,
+    0.8117
+   ]
+  },
+  {
+   "name": "defaultMaterial.1148",
+   "color": [
+    0.1,
+    1.0,
+    0.133
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0101,
+    -0.0277,
+    0.7994
+   ]
+  },
+  {
+   "name": "defaultMaterial.1149",
+   "color": [
+    0.75,
+    0.3,
+    0.415
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0102,
+    -0.0277,
+    0.7871
+   ]
+  },
+  {
+   "name": "defaultMaterial.115",
+   "color": [
+    0.1,
+    0.593,
+    1.0
+   ],
+   "vertices": 11,
+   "center": [
+    0.004,
+    -0.0213,
+    1.1285
+   ]
+  },
+  {
+   "name": "defaultMaterial.1150",
+   "color": [
+    0.903,
+    1.0,
+    0.4
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0102,
+    -0.0276,
+    0.7748
+   ]
+  },
+  {
+   "name": "defaultMaterial.116",
+   "color": [
+    0.662,
+    0.075,
+    0.75
+   ],
+   "vertices": 9,
+   "center": [
+    0.0036,
+    -0.021,
+    1.1292
+   ]
+  },
+  {
+   "name": "defaultMaterial.117",
+   "color": [
+    0.4,
+    1.0,
+    0.746
+   ],
+   "vertices": 17,
+   "center": [
+    0.0085,
+    -0.0208,
+    1.1295
+   ]
+  },
+  {
+   "name": "defaultMaterial.1177",
+   "color": [
+    1.0,
+    0.357,
+    0.1
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0215,
+    -0.0282,
+    0.7854
+   ]
+  },
+  {
+   "name": "defaultMaterial.118",
+   "color": [
+    0.3,
+    0.303,
+    0.75
+   ],
+   "vertices": 17,
+   "center": [
+    0.0184,
+    -0.0203,
+    1.1296
+   ]
+  },
+  {
+   "name": "defaultMaterial.119",
+   "color": [
+    0.368,
+    1.0,
+    0.1
+   ],
+   "vertices": 14,
+   "center": [
+    0.0275,
+    -0.0198,
+    1.1286
+   ]
+  },
+  {
+   "name": "defaultMaterial.120",
+   "color": [
+    1.0,
+    0.4,
+    0.754
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0004,
+    -0.0108,
+    0.9391
+   ]
+  },
+  {
+   "name": "defaultMaterial.121",
+   "color": [
+    0.075,
+    0.67,
+    0.75
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0062,
+    -0.0109,
+    0.9391
+   ]
+  },
+  {
+   "name": "defaultMaterial.122",
+   "color": [
+    1.0,
+    0.896,
+    0.4
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0121,
+    -0.0112,
+    0.9391
+   ]
+  },
+  {
+   "name": "defaultMaterial.1222",
+   "color": [
+    0.581,
+    0.1,
+    1.0
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.021,
+    -0.0284,
+    0.8181
+   ]
+  },
+  {
+   "name": "defaultMaterial.1223",
+   "color": [
+    0.3,
+    0.75,
+    0.409
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0213,
+    -0.0283,
+    0.8017
+   ]
+  },
+  {
+   "name": "defaultMaterial.1224",
+   "color": [
+    1.0,
+    0.1,
+    0.144
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0208,
+    -0.0285,
+    0.8344
+   ]
+  },
+  {
+   "name": "defaultMaterial.1225",
+   "color": [
+    0.4,
+    0.604,
+    1.0
+   ],
+   "vertices": 717,
+   "center": [
+    -0.0205,
+    -0.0285,
+    0.8509
+   ]
+  },
+  {
+   "name": "defaultMaterial.1226",
+   "color": [
+    0.502,
+    0.75,
+    0.075
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0203,
+    -0.0286,
+    0.8671
+   ]
+  },
+  {
+   "name": "defaultMaterial.1227",
+   "color": [
+    1.0,
+    0.4,
+    0.955
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0201,
+    -0.0287,
+    0.8835
+   ]
+  },
+  {
+   "name": "defaultMaterial.1228",
+   "color": [
+    0.1,
+    1.0,
+    0.806
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0198,
+    -0.0288,
+    0.8999
+   ]
+  },
+  {
+   "name": "defaultMaterial.1229",
+   "color": [
+    0.75,
+    0.522,
+    0.3
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0196,
+    -0.0289,
+    0.9162
+   ]
+  },
+  {
+   "name": "defaultMaterial.123",
+   "color": [
+    0.28,
+    0.1,
+    1.0
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0176,
+    -0.0117,
+    0.9391
+   ]
+  },
+  {
+   "name": "defaultMaterial.1230",
+   "color": [
+    0.455,
+    1.0,
+    0.4
+   ],
+   "vertices": 1083,
+   "center": [
+    -0.0193,
+    -0.0289,
+    0.9326
+   ]
+  },
+  {
+   "name": "defaultMaterial.124",
+   "color": [
+    0.75,
+    0.075,
+    0.334
+   ],
+   "vertices": 128,
+   "center": [
+    -0.035,
+    -0.0142,
+    1.028
+   ]
+  },
+  {
+   "name": "defaultMaterial.125",
+   "color": [
+    0.4,
+    0.805,
+    1.0
+   ],
+   "vertices": 11,
+   "center": [
+    0.0034,
+    -0.0204,
+    1.1295
+   ]
+  },
+  {
+   "name": "defaultMaterial.126",
+   "color": [
+    0.97,
+    1.0,
+    0.1
+   ],
+   "vertices": 4,
+   "center": [
+    0.0084,
+    -0.02,
+    1.1298
+   ]
+  },
+  {
+   "name": "defaultMaterial.127",
+   "color": [
+    0.634,
+    0.3,
+    0.75
+   ],
+   "vertices": 11,
+   "center": [
+    0.0132,
+    -0.0199,
+    1.1299
+   ]
+  },
+  {
+   "name": "defaultMaterial.128",
+   "color": [
+    0.1,
+    1.0,
+    0.505
+   ],
+   "vertices": 4,
+   "center": [
+    0.0184,
+    -0.0195,
+    1.13
+   ]
+  },
+  {
+   "name": "defaultMaterial.1286",
+   "color": [
+    1.0,
+    0.495,
+    0.4
+   ],
+   "vertices": 710,
+   "center": [
+    0.0013,
+    -0.0271,
+    0.7797
+   ]
+  },
+  {
+   "name": "defaultMaterial.1287",
+   "color": [
+    0.075,
+    0.165,
+    0.75
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0012,
+    -0.0272,
+    0.7991
+   ]
+  },
+  {
+   "name": "defaultMaterial.1288",
+   "color": [
+    0.655,
+    1.0,
+    0.4
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0012,
+    -0.0271,
+    0.7894
+   ]
+  },
+  {
+   "name": "defaultMaterial.1289",
+   "color": [
+    1.0,
+    0.1,
+    0.746
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0011,
+    -0.0272,
+    0.8089
+   ]
+  },
+  {
+   "name": "defaultMaterial.129",
+   "color": [
+    0.3,
+    0.75,
+    0.746
+   ],
+   "vertices": 11,
+   "center": [
+    0.0232,
+    -0.0194,
+    1.1298
+   ]
+  },
+  {
+   "name": "defaultMaterial.1290",
+   "color": [
+    1.0,
+    0.729,
+    0.1
+   ],
+   "vertices": 1083,
+   "center": [
+    0.001,
+    -0.0273,
+    0.8187
+   ]
+  },
+  {
+   "name": "defaultMaterial.1291",
+   "color": [
+    0.644,
+    0.4,
+    1.0
+   ],
+   "vertices": 1083,
+   "center": [
+    0.001,
+    -0.0274,
+    0.8285
+   ]
+  },
+  {
+   "name": "defaultMaterial.1292",
+   "color": [
+    0.075,
+    0.75,
+    0.153
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0009,
+    -0.0274,
+    0.8383
+   ]
+  },
+  {
+   "name": "defaultMaterial.1293",
+   "color": [
+    1.0,
+    0.4,
+    0.506
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0009,
+    -0.0275,
+    0.848
+   ]
+  },
+  {
+   "name": "defaultMaterial.1294",
+   "color": [
+    0.1,
+    0.521,
+    1.0
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0008,
+    -0.0276,
+    0.8676
+   ]
+  },
+  {
+   "name": "defaultMaterial.1295",
+   "color": [
+    0.642,
+    0.75,
+    0.3
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0008,
+    -0.0275,
+    0.8578
+   ]
+  },
+  {
+   "name": "defaultMaterial.1296",
+   "color": [
+    0.953,
+    0.1,
+    1.0
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0007,
+    -0.0277,
+    0.8774
+   ]
+  },
+  {
+   "name": "defaultMaterial.1297",
+   "color": [
+    0.4,
+    1.0,
+    0.794
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0006,
+    -0.0277,
+    0.8872
+   ]
+  },
+  {
+   "name": "defaultMaterial.1298",
+   "color": [
+    0.75,
+    0.321,
+    0.075
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0006,
+    -0.0278,
+    0.8969
+   ]
+  },
+  {
+   "name": "defaultMaterial.1299",
+   "color": [
+    0.444,
+    0.4,
+    1.0
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0005,
+    -0.0278,
+    0.9067
+   ]
+  },
+  {
+   "name": "defaultMaterial.130",
+   "color": [
+    0.297,
+    1.0,
+    0.1
+   ],
+   "vertices": 3,
+   "center": [
+    0.0278,
+    -0.0191,
+    1.1289
+   ]
+  },
+  {
+   "name": "defaultMaterial.1300",
+   "color": [
+    0.75,
+    0.3,
+    0.53
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0005,
+    -0.0279,
+    0.9165
+   ]
+  },
+  {
+   "name": "defaultMaterial.1301",
+   "color": [
+    0.1,
+    0.822,
+    1.0
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0004,
+    -0.028,
+    0.9263
+   ]
+  },
+  {
+   "name": "defaultMaterial.1302",
+   "color": [
+    1.0,
+    0.943,
+    0.4
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0003,
+    -0.0279,
+    0.9361
+   ]
+  },
+  {
+   "name": "defaultMaterial.131",
+   "color": [
+    0.489,
+    0.075,
+    0.75
+   ],
+   "vertices": 4,
+   "center": [
+    -0.0,
+    -0.0102,
+    0.9424
+   ]
+  },
+  {
+   "name": "defaultMaterial.132",
+   "color": [
+    0.4,
+    1.0,
+    0.593
+   ],
+   "vertices": 4,
+   "center": [
+    -0.0122,
+    -0.0106,
+    0.9424
+   ]
+  },
+  {
+   "name": "defaultMaterial.133",
+   "color": [
+    1.0,
+    0.127,
+    0.1
+   ],
+   "vertices": 20,
+   "center": [
+    -0.0252,
+    -0.0128,
+    0.9422
+   ]
+  },
+  {
+   "name": "defaultMaterial.134",
+   "color": [
+    0.3,
+    0.418,
+    0.75
+   ],
+   "vertices": 20,
+   "center": [
+    0.0112,
+    -0.0113,
+    0.9422
+   ]
+  },
+  {
+   "name": "defaultMaterial.135",
+   "color": [
+    0.598,
+    1.0,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    0.0415,
+    -0.0184,
+    1.1103
+   ]
+  },
+  {
+   "name": "defaultMaterial.136",
+   "color": [
+    1.0,
+    0.4,
+    0.907
+   ],
+   "vertices": 10,
+   "center": [
+    0.0411,
+    -0.0184,
+    1.1131
+   ]
+  },
+  {
+   "name": "defaultMaterial.137",
+   "color": [
+    0.075,
+    0.75,
+    0.658
+   ],
+   "vertices": 10,
+   "center": [
+    0.0416,
+    -0.0184,
+    1.1078
+   ]
+  },
+  {
+   "name": "defaultMaterial.1377",
+   "color": [
+    1.0,
+    0.743,
+    0.4
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0129,
+    -0.0264,
+    0.7796
+   ]
+  },
+  {
+   "name": "defaultMaterial.1378",
+   "color": [
+    0.351,
+    0.1,
+    1.0
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0126,
+    -0.0266,
+    0.7992
+   ]
+  },
+  {
+   "name": "defaultMaterial.1379",
+   "color": [
+    0.306,
+    0.75,
+    0.3
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0128,
+    -0.0265,
+    0.7894
+   ]
+  },
+  {
+   "name": "defaultMaterial.138",
+   "color": [
+    1.0,
+    0.1,
+    0.374
+   ],
+   "vertices": 10,
+   "center": [
+    0.0409,
+    -0.0191,
+    1.1103
+   ]
+  },
+  {
+   "name": "defaultMaterial.1380",
+   "color": [
+    0.4,
+    0.758,
+    1.0
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0125,
+    -0.0266,
+    0.8089
+   ]
+  },
+  {
+   "name": "defaultMaterial.1381",
+   "color": [
+    0.674,
+    0.75,
+    0.075
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0123,
+    -0.0267,
+    0.8187
+   ]
+  },
+  {
+   "name": "defaultMaterial.1382",
+   "color": [
+    0.892,
+    0.4,
+    1.0
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0122,
+    -0.0268,
+    0.8285
+   ]
+  },
+  {
+   "name": "defaultMaterial.1383",
+   "color": [
+    0.1,
+    1.0,
+    0.576
+   ],
+   "vertices": 1083,
+   "center": [
+    0.012,
+    -0.0268,
+    0.8383
+   ]
+  },
+  {
+   "name": "defaultMaterial.1384",
+   "color": [
+    0.75,
+    0.407,
+    0.3
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0119,
+    -0.0269,
+    0.848
+   ]
+  },
+  {
+   "name": "defaultMaterial.1385",
+   "color": [
+    0.1,
+    0.149,
+    1.0
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0116,
+    -0.027,
+    0.8676
+   ]
+  },
+  {
+   "name": "defaultMaterial.1386",
+   "color": [
+    0.608,
+    1.0,
+    0.4
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0117,
+    -0.027,
+    0.8578
+   ]
+  },
+  {
+   "name": "defaultMaterial.1387",
+   "color": [
+    0.75,
+    0.075,
+    0.506
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0114,
+    -0.0271,
+    0.8774
+   ]
+  },
+  {
+   "name": "defaultMaterial.1388",
+   "color": [
+    0.4,
+    0.958,
+    1.0
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0113,
+    -0.0272,
+    0.8872
+   ]
+  },
+  {
+   "name": "defaultMaterial.1389",
+   "color": [
+    1.0,
+    0.8,
+    0.1
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0111,
+    -0.0272,
+    0.8969
+   ]
+  },
+  {
+   "name": "defaultMaterial.139",
+   "color": [
+    0.519,
+    0.3,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    0.041,
+    -0.0191,
+    1.1078
+   ]
+  },
+  {
+   "name": "defaultMaterial.1390",
+   "color": [
+    0.1,
+    1.0,
+    0.275
+   ],
+   "vertices": 1083,
+   "center": [
+    0.011,
+    -0.0273,
+    0.9067
+   ]
+  },
+  {
+   "name": "defaultMaterial.1391",
+   "color": [
+    1.0,
+    0.4,
+    0.459
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0109,
+    -0.0274,
+    0.9165
+   ]
+  },
+  {
+   "name": "defaultMaterial.1392",
+   "color": [
+    0.075,
+    0.338,
+    0.75
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0107,
+    -0.0274,
+    0.9263
+   ]
+  },
+  {
+   "name": "defaultMaterial.1393",
+   "color": [
+    0.809,
+    1.0,
+    0.4
+   ],
+   "vertices": 1083,
+   "center": [
+    0.0106,
+    -0.0274,
+    0.9361
+   ]
+  },
+  {
+   "name": "defaultMaterial.140",
+   "color": [
+    1.0,
+    0.1,
+    0.976
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0136,
+    -0.0215,
+    1.1126
+   ]
+  },
+  {
+   "name": "defaultMaterial.141",
+   "color": [
+    0.3,
+    0.75,
+    0.631
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0143,
+    -0.0216,
+    1.1104
+   ]
+  },
+  {
+   "name": "defaultMaterial.142",
+   "color": [
+    1.0,
+    0.499,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0124,
+    -0.0219,
+    1.1125
+   ]
+  },
+  {
+   "name": "defaultMaterial.1420",
+   "color": [
+    0.491,
+    0.4,
+    1.0
+   ],
+   "vertices": 3,
+   "center": [
+    0.0138,
+    -0.0254,
+    0.9367
+   ]
+  },
+  {
+   "name": "defaultMaterial.1421",
+   "color": [
+    0.17,
+    0.75,
+    0.075
+   ],
+   "vertices": 1245,
+   "center": [
+    0.0013,
+    -0.0021,
+    1.0875
+   ]
+  },
+  {
+   "name": "defaultMaterial.1422",
+   "color": [
+    1.0,
+    0.4,
+    0.659
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0045,
+    -0.0062,
+    1.0996
+   ]
+  },
+  {
+   "name": "defaultMaterial.1423",
+   "color": [
+    0.1,
+    0.751,
+    1.0
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0048,
+    -0.0065,
+    1.0993
+   ]
+  },
+  {
+   "name": "defaultMaterial.1424",
+   "color": [
+    0.75,
+    0.743,
+    0.3
+   ],
+   "vertices": 8,
+   "center": [
+    -0.005,
+    -0.0062,
+    1.0997
+   ]
+  },
+  {
+   "name": "defaultMaterial.1425",
+   "color": [
+    0.723,
+    0.1,
+    1.0
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0053,
+    -0.0059,
+    1.1002
+   ]
+  },
+  {
+   "name": "defaultMaterial.1426",
+   "color": [
+    0.4,
+    1.0,
+    0.641
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0025,
+    -0.0051,
+    1.1006
+   ]
+  },
+  {
+   "name": "defaultMaterial.1427",
+   "color": [
+    0.75,
+    0.149,
+    0.075
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0031,
+    -0.0051,
+    1.1008
+   ]
+  },
+  {
+   "name": "defaultMaterial.1428",
+   "color": [
+    0.4,
+    0.51,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0033,
+    -0.0052,
+    1.1008
+   ]
+  },
+  {
+   "name": "defaultMaterial.1429",
+   "color": [
+    0.527,
+    1.0,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0035,
+    -0.0051,
+    1.1009
+   ]
+  },
+  {
+   "name": "defaultMaterial.143",
+   "color": [
+    0.75,
+    0.3,
+    0.645
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0132,
+    -0.022,
+    1.1103
+   ]
+  },
+  {
+   "name": "defaultMaterial.1430",
+   "color": [
+    0.1,
+    1.0,
+    0.948
+   ],
+   "vertices": 22,
+   "center": [
+    -0.0041,
+    -0.0049,
+    1.1013
+   ]
+  },
+  {
+   "name": "defaultMaterial.1431",
+   "color": [
+    1.0,
+    0.79,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0008,
+    -0.005,
+    1.1001
+   ]
+  },
+  {
+   "name": "defaultMaterial.1432",
+   "color": [
+    0.317,
+    0.075,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0019,
+    -0.0051,
+    1.1004
+   ]
+  },
+  {
+   "name": "defaultMaterial.1433",
+   "color": [
+    0.4,
+    1.0,
+    0.44
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0014,
+    -0.005,
+    1.1002
+   ]
+  },
+  {
+   "name": "defaultMaterial.1434",
+   "color": [
+    1.0,
+    0.1,
+    0.303
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0016,
+    -0.0051,
+    1.1003
+   ]
+  },
+  {
+   "name": "defaultMaterial.1435",
+   "color": [
+    0.3,
+    0.533,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    0.0009,
+    -0.0049,
+    1.0996
+   ]
+  },
+  {
+   "name": "defaultMaterial.1436",
+   "color": [
+    0.828,
+    1.0,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    0.0003,
+    -0.0049,
+    1.0997
+   ]
+  },
+  {
+   "name": "defaultMaterial.1437",
+   "color": [
+    0.94,
+    0.4,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    0.0,
+    -0.005,
+    1.0998
+   ]
+  },
+  {
+   "name": "defaultMaterial.1438",
+   "color": [
+    0.075,
+    0.75,
+    0.485
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0002,
+    -0.005,
+    1.0999
+   ]
+  },
+  {
+   "name": "defaultMaterial.1439",
+   "color": [
+    1.0,
+    0.589,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    0.0026,
+    -0.0048,
+    1.099
+   ]
+  },
+  {
+   "name": "defaultMaterial.144",
+   "color": [
+    0.122,
+    0.1,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0113,
+    -0.0219,
+    1.1149
+   ]
+  },
+  {
+   "name": "defaultMaterial.1440",
+   "color": [
+    0.421,
+    0.75,
+    0.3
+   ],
+   "vertices": 28,
+   "center": [
+    0.0019,
+    -0.0049,
+    1.0992
+   ]
+  },
+  {
+   "name": "defaultMaterial.1441",
+   "color": [
+    1.0,
+    0.1,
+    0.604
+   ],
+   "vertices": 28,
+   "center": [
+    0.0017,
+    -0.0049,
+    1.0993
+   ]
+  },
+  {
+   "name": "defaultMaterial.1442",
+   "color": [
+    0.4,
+    0.911,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    0.0015,
+    -0.0049,
+    1.0994
+   ]
+  },
+  {
+   "name": "defaultMaterial.1443",
+   "color": [
+    0.75,
+    0.653,
+    0.075
+   ],
+   "vertices": 28,
+   "center": [
+    0.0043,
+    -0.0047,
+    1.0985
+   ]
+  },
+  {
+   "name": "defaultMaterial.1444",
+   "color": [
+    0.739,
+    0.4,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    0.0032,
+    -0.0048,
+    1.0989
+   ]
+  },
+  {
+   "name": "defaultMaterial.1445",
+   "color": [
+    0.1,
+    1.0,
+    0.346
+   ],
+   "vertices": 28,
+   "center": [
+    0.0036,
+    -0.0048,
+    1.0987
+   ]
+  },
+  {
+   "name": "defaultMaterial.1446",
+   "color": [
+    0.75,
+    0.3,
+    0.308
+   ],
+   "vertices": 28,
+   "center": [
+    0.0034,
+    -0.0048,
+    1.0988
+   ]
+  },
+  {
+   "name": "defaultMaterial.1447",
+   "color": [
+    0.1,
+    0.379,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    0.0059,
+    -0.0046,
+    1.098
+   ]
+  },
+  {
+   "name": "defaultMaterial.1448",
+   "color": [
+    0.761,
+    1.0,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    0.0053,
+    -0.0047,
+    1.0982
+   ]
+  },
+  {
+   "name": "defaultMaterial.1449",
+   "color": [
+    0.75,
+    0.075,
+    0.678
+   ],
+   "vertices": 28,
+   "center": [
+    0.0051,
+    -0.0047,
+    1.0983
+   ]
+  },
+  {
+   "name": "defaultMaterial.145",
+   "color": [
+    0.4,
+    1.0,
+    0.889
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0106,
+    -0.0218,
+    1.1176
+   ]
+  },
+  {
+   "name": "defaultMaterial.1450",
+   "color": [
+    1.0,
+    0.57,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    0.0049,
+    -0.0047,
+    1.0983
+   ]
+  },
+  {
+   "name": "defaultMaterial.1451",
+   "color": [
+    0.404,
+    0.3,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    0.0076,
+    -0.0045,
+    1.0975
+   ]
+  },
+  {
+   "name": "defaultMaterial.1452",
+   "color": [
+    0.155,
+    1.0,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    0.007,
+    -0.0046,
+    1.0977
+   ]
+  },
+  {
+   "name": "defaultMaterial.1453",
+   "color": [
+    1.0,
+    0.4,
+    0.612
+   ],
+   "vertices": 28,
+   "center": [
+    0.0068,
+    -0.0046,
+    1.0978
+   ]
+  },
+  {
+   "name": "defaultMaterial.1454",
+   "color": [
+    0.075,
+    0.51,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    0.0066,
+    -0.0046,
+    1.0978
+   ]
+  },
+  {
+   "name": "defaultMaterial.1455",
+   "color": [
+    0.962,
+    1.0,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    0.0093,
+    -0.0044,
+    1.097
+   ]
+  },
+  {
+   "name": "defaultMaterial.1456",
+   "color": [
+    0.794,
+    0.1,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    0.0087,
+    -0.0045,
+    1.0972
+   ]
+  },
+  {
+   "name": "defaultMaterial.1457",
+   "color": [
+    0.3,
+    0.75,
+    0.516
+   ],
+   "vertices": 28,
+   "center": [
+    0.0085,
+    -0.0046,
+    1.0973
+   ]
+  },
+  {
+   "name": "defaultMaterial.1458",
+   "color": [
+    1.0,
+    0.269,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    0.0083,
+    -0.0045,
+    1.0973
+   ]
+  },
+  {
+   "name": "defaultMaterial.1459",
+   "color": [
+    0.4,
+    0.462,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    0.0109,
+    -0.0044,
+    1.0965
+   ]
+  },
+  {
+   "name": "defaultMaterial.146",
+   "color": [
+    0.342,
+    0.75,
+    0.075
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0124,
+    -0.0215,
+    1.1151
+   ]
+  },
+  {
+   "name": "defaultMaterial.1460",
+   "color": [
+    1.0,
+    0.4,
+    0.812
+   ],
+   "vertices": 28,
+   "center": [
+    0.0104,
+    -0.0044,
+    1.0967
+   ]
+  },
+  {
+   "name": "defaultMaterial.1461",
+   "color": [
+    0.1,
+    0.981,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    0.0101,
+    -0.0045,
+    1.0968
+   ]
+  },
+  {
+   "name": "defaultMaterial.1462",
+   "color": [
+    0.75,
+    0.628,
+    0.3
+   ],
+   "vertices": 28,
+   "center": [
+    0.0099,
+    -0.0044,
+    1.0968
+   ]
+  },
+  {
+   "name": "defaultMaterial.1463",
+   "color": [
+    0.494,
+    0.1,
+    1.0
+   ],
+   "vertices": 22,
+   "center": [
+    0.0115,
+    -0.004,
+    1.0967
+   ]
+  },
+  {
+   "name": "defaultMaterial.1464",
+   "color": [
+    0.4,
+    1.0,
+    0.487
+   ],
+   "vertices": 32,
+   "center": [
+    0.012,
+    -0.0043,
+    1.0968
+   ]
+  },
+  {
+   "name": "defaultMaterial.1465",
+   "color": [
+    0.75,
+    0.075,
+    0.174
+   ],
+   "vertices": 22,
+   "center": [
+    0.0117,
+    -0.0039,
+    1.0967
+   ]
+  },
+  {
+   "name": "defaultMaterial.1466",
+   "color": [
+    0.4,
+    0.663,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0037,
+    -0.0062,
+    1.1
+   ]
+  },
+  {
+   "name": "defaultMaterial.1467",
+   "color": [
+    0.757,
+    1.0,
+    0.1
+   ],
+   "vertices": 256,
+   "center": [
+    0.0013,
+    -0.0032,
+    1.0875
+   ]
+  },
+  {
+   "name": "defaultMaterial.1468",
+   "color": [
+    0.74,
+    0.3,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0071,
+    -0.0054,
+    1.0886
+   ]
+  },
+  {
+   "name": "defaultMaterial.1469",
+   "color": [
+    0.1,
+    1.0,
+    0.718
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0068,
+    -0.0054,
+    1.0903
+   ]
+  },
+  {
+   "name": "defaultMaterial.147",
+   "color": [
+    1.0,
+    0.637,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0106,
+    -0.0214,
+    1.1185
+   ]
+  },
+  {
+   "name": "defaultMaterial.1470",
+   "color": [
+    0.144,
+    0.075,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0061,
+    -0.0054,
+    1.0918
+   ]
+  },
+  {
+   "name": "defaultMaterial.1471",
+   "color": [
+    0.513,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0051,
+    -0.0053,
+    1.0932
+   ]
+  },
+  {
+   "name": "defaultMaterial.1472",
+   "color": [
+    1.0,
+    0.1,
+    0.533
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0038,
+    -0.0053,
+    1.0943
+   ]
+  },
+  {
+   "name": "defaultMaterial.1473",
+   "color": [
+    0.3,
+    0.648,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0024,
+    -0.0052,
+    1.0952
+   ]
+  },
+  {
+   "name": "defaultMaterial.1474",
+   "color": [
+    1.0,
+    0.942,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0008,
+    -0.0051,
+    1.0958
+   ]
+  },
+  {
+   "name": "defaultMaterial.1475",
+   "color": [
+    0.786,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    0.0008,
+    -0.0051,
+    1.0961
+   ]
+  },
+  {
+   "name": "defaultMaterial.1476",
+   "color": [
+    0.075,
+    0.75,
+    0.313
+   ],
+   "vertices": 6,
+   "center": [
+    0.0025,
+    -0.005,
+    1.0961
+   ]
+  },
+  {
+   "name": "defaultMaterial.1477",
+   "color": [
+    1.0,
+    0.436,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    0.0042,
+    -0.0049,
+    1.0957
+   ]
+  },
+  {
+   "name": "defaultMaterial.1478",
+   "color": [
+    0.1,
+    0.308,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    0.0057,
+    -0.0048,
+    1.095
+   ]
+  },
+  {
+   "name": "defaultMaterial.1479",
+   "color": [
+    0.535,
+    0.75,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    0.0071,
+    -0.0047,
+    1.094
+   ]
+  },
+  {
+   "name": "defaultMaterial.148",
+   "color": [
+    1.0,
+    0.1,
+    0.834
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0149,
+    -0.0219,
+    1.1039
+   ]
+  },
+  {
+   "name": "defaultMaterial.1480",
+   "color": [
+    0.4,
+    1.0,
+    0.936
+   ],
+   "vertices": 6,
+   "center": [
+    0.0083,
+    -0.0047,
+    1.0928
+   ]
+  },
+  {
+   "name": "defaultMaterial.1481",
+   "color": [
+    0.75,
+    0.481,
+    0.075
+   ],
+   "vertices": 6,
+   "center": [
+    0.0092,
+    -0.0046,
+    1.0913
+   ]
+  },
+  {
+   "name": "defaultMaterial.1482",
+   "color": [
+    0.586,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    0.0098,
+    -0.0045,
+    1.0898
+   ]
+  },
+  {
+   "name": "defaultMaterial.1483",
+   "color": [
+    0.1,
+    1.0,
+    0.116
+   ],
+   "vertices": 6,
+   "center": [
+    0.01,
+    -0.0045,
+    1.0881
+   ]
+  },
+  {
+   "name": "defaultMaterial.1484",
+   "color": [
+    0.75,
+    0.3,
+    0.423
+   ],
+   "vertices": 6,
+   "center": [
+    0.01,
+    -0.0045,
+    1.0864
+   ]
+  },
+  {
+   "name": "defaultMaterial.1485",
+   "color": [
+    0.1,
+    0.609,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    0.0096,
+    -0.0045,
+    1.0847
+   ]
+  },
+  {
+   "name": "defaultMaterial.1486",
+   "color": [
+    0.915,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    0.0089,
+    -0.0045,
+    1.0832
+   ]
+  },
+  {
+   "name": "defaultMaterial.1487",
+   "color": [
+    0.649,
+    0.075,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    0.0079,
+    -0.0046,
+    1.0818
+   ]
+  },
+  {
+   "name": "defaultMaterial.1488",
+   "color": [
+    0.4,
+    1.0,
+    0.735
+   ],
+   "vertices": 6,
+   "center": [
+    0.0067,
+    -0.0046,
+    1.0807
+   ]
+  },
+  {
+   "name": "defaultMaterial.1489",
+   "color": [
+    1.0,
+    0.34,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    0.0053,
+    -0.0047,
+    1.0798
+   ]
+  },
+  {
+   "name": "defaultMaterial.149",
+   "color": [
+    0.3,
+    0.311,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0154,
+    -0.0219,
+    1.1017
+   ]
+  },
+  {
+   "name": "defaultMaterial.1490",
+   "color": [
+    0.385,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    0.0037,
+    -0.0048,
+    1.0792
+   ]
+  },
+  {
+   "name": "defaultMaterial.1491",
+   "color": [
+    1.0,
+    0.4,
+    0.765
+   ],
+   "vertices": 6,
+   "center": [
+    0.002,
+    -0.0048,
+    1.0789
+   ]
+  },
+  {
+   "name": "defaultMaterial.1492",
+   "color": [
+    0.075,
+    0.683,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    0.0003,
+    -0.0049,
+    1.0789
+   ]
+  },
+  {
+   "name": "defaultMaterial.1493",
+   "color": [
+    1.0,
+    0.885,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0013,
+    -0.005,
+    1.0793
+   ]
+  },
+  {
+   "name": "defaultMaterial.1494",
+   "color": [
+    0.565,
+    0.1,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0029,
+    -0.0051,
+    1.08
+   ]
+  },
+  {
+   "name": "defaultMaterial.1495",
+   "color": [
+    0.3,
+    0.75,
+    0.401
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0042,
+    -0.0052,
+    1.081
+   ]
+  },
+  {
+   "name": "defaultMaterial.1496",
+   "color": [
+    1.0,
+    0.1,
+    0.161
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0054,
+    -0.0052,
+    1.0822
+   ]
+  },
+  {
+   "name": "defaultMaterial.1497",
+   "color": [
+    0.4,
+    0.616,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0063,
+    -0.0053,
+    1.0837
+   ]
+  },
+  {
+   "name": "defaultMaterial.1498",
+   "color": [
+    0.514,
+    0.75,
+    0.075
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0069,
+    -0.0053,
+    1.0852
+   ]
+  },
+  {
+   "name": "defaultMaterial.1499",
+   "color": [
+    1.0,
+    0.4,
+    0.966
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0071,
+    -0.0054,
+    1.0862
+   ]
+  },
+  {
+   "name": "defaultMaterial.150",
+   "color": [
+    0.1,
+    1.0,
+    0.789
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0161,
+    -0.0215,
+    1.1039
+   ]
+  },
+  {
+   "name": "defaultMaterial.1500",
+   "color": [
+    0.75,
+    0.513,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0067,
+    -0.0053,
+    1.0845
+   ]
+  },
+  {
+   "name": "defaultMaterial.1501",
+   "color": [
+    0.264,
+    0.1,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.006,
+    -0.0053,
+    1.083
+   ]
+  },
+  {
+   "name": "defaultMaterial.1502",
+   "color": [
+    0.466,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0049,
+    -0.0052,
+    1.0817
+   ]
+  },
+  {
+   "name": "defaultMaterial.1503",
+   "color": [
+    0.75,
+    0.075,
+    0.346
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0037,
+    -0.0051,
+    1.0805
+   ]
+  },
+  {
+   "name": "defaultMaterial.1504",
+   "color": [
+    0.4,
+    0.816,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0022,
+    -0.0051,
+    1.0797
+   ]
+  },
+  {
+   "name": "defaultMaterial.1505",
+   "color": [
+    0.987,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0006,
+    -0.005,
+    1.0791
+   ]
+  },
+  {
+   "name": "defaultMaterial.1506",
+   "color": [
+    0.625,
+    0.3,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    0.0011,
+    -0.0049,
+    1.0789
+   ]
+  },
+  {
+   "name": "defaultMaterial.1507",
+   "color": [
+    0.1,
+    1.0,
+    0.488
+   ],
+   "vertices": 6,
+   "center": [
+    0.0027,
+    -0.0048,
+    1.079
+   ]
+  },
+  {
+   "name": "defaultMaterial.1508",
+   "color": [
+    1.0,
+    0.484,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    0.0044,
+    -0.0047,
+    1.0794
+   ]
+  },
+  {
+   "name": "defaultMaterial.1509",
+   "color": [
+    0.075,
+    0.178,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    0.0059,
+    -0.0047,
+    1.0801
+   ]
+  },
+  {
+   "name": "defaultMaterial.151",
+   "color": [
+    0.667,
+    1.0,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0166,
+    -0.0215,
+    1.1017
+   ]
+  },
+  {
+   "name": "defaultMaterial.1510",
+   "color": [
+    1.0,
+    0.1,
+    0.763
+   ],
+   "vertices": 6,
+   "center": [
+    0.0073,
+    -0.0046,
+    1.0811
+   ]
+  },
+  {
+   "name": "defaultMaterial.1511",
+   "color": [
+    0.3,
+    0.75,
+    0.737
+   ],
+   "vertices": 6,
+   "center": [
+    0.0084,
+    -0.0046,
+    1.0824
+   ]
+  },
+  {
+   "name": "defaultMaterial.1512",
+   "color": [
+    1.0,
+    0.712,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    0.0093,
+    -0.0045,
+    1.0838
+   ]
+  },
+  {
+   "name": "defaultMaterial.1513",
+   "color": [
+    0.633,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    0.0098,
+    -0.0045,
+    1.0854
+   ]
+  },
+  {
+   "name": "defaultMaterial.1514",
+   "color": [
+    0.075,
+    0.75,
+    0.14
+   ],
+   "vertices": 6,
+   "center": [
+    0.0101,
+    -0.0045,
+    1.0871
+   ]
+  },
+  {
+   "name": "defaultMaterial.1515",
+   "color": [
+    1.0,
+    0.4,
+    0.517
+   ],
+   "vertices": 6,
+   "center": [
+    0.01,
+    -0.0045,
+    1.0888
+   ]
+  },
+  {
+   "name": "defaultMaterial.1516",
+   "color": [
+    0.1,
+    0.538,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    0.0095,
+    -0.0046,
+    1.0905
+   ]
+  },
+  {
+   "name": "defaultMaterial.1517",
+   "color": [
+    0.65,
+    0.75,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    0.0088,
+    -0.0046,
+    1.092
+   ]
+  },
+  {
+   "name": "defaultMaterial.1518",
+   "color": [
+    0.937,
+    0.1,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    0.0078,
+    -0.0047,
+    1.0933
+   ]
+  },
+  {
+   "name": "defaultMaterial.1519",
+   "color": [
+    0.4,
+    1.0,
+    0.783
+   ],
+   "vertices": 6,
+   "center": [
+    0.0065,
+    -0.0048,
+    1.0945
+   ]
+  },
+  {
+   "name": "defaultMaterial.152",
+   "color": [
+    0.75,
+    0.308,
+    0.075
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0155,
+    -0.0215,
+    1.1061
+   ]
+  },
+  {
+   "name": "defaultMaterial.1520",
+   "color": [
+    0.432,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    0.0051,
+    -0.0048,
+    1.0953
+   ]
+  },
+  {
+   "name": "defaultMaterial.1521",
+   "color": [
+    0.314,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    0.0035,
+    -0.0049,
+    1.0959
+   ]
+  },
+  {
+   "name": "defaultMaterial.1522",
+   "color": [
+    0.75,
+    0.3,
+    0.538
+   ],
+   "vertices": 6,
+   "center": [
+    0.0018,
+    -0.005,
+    1.0961
+   ]
+  },
+  {
+   "name": "defaultMaterial.1523",
+   "color": [
+    0.1,
+    0.839,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    0.0001,
+    -0.0051,
+    1.096
+   ]
+  },
+  {
+   "name": "defaultMaterial.1524",
+   "color": [
+    1.0,
+    0.932,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0015,
+    -0.0052,
+    1.0956
+   ]
+  },
+  {
+   "name": "defaultMaterial.1525",
+   "color": [
+    0.477,
+    0.075,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.003,
+    -0.0052,
+    1.0949
+   ]
+  },
+  {
+   "name": "defaultMaterial.1526",
+   "color": [
+    0.4,
+    1.0,
+    0.582
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0044,
+    -0.0053,
+    1.0939
+   ]
+  },
+  {
+   "name": "defaultMaterial.1527",
+   "color": [
+    1.0,
+    0.11,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0055,
+    -0.0053,
+    1.0926
+   ]
+  },
+  {
+   "name": "defaultMaterial.1528",
+   "color": [
+    0.3,
+    0.426,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0064,
+    -0.0054,
+    1.0912
+   ]
+  },
+  {
+   "name": "defaultMaterial.1529",
+   "color": [
+    0.615,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.007,
+    -0.0054,
+    1.0896
+   ]
+  },
+  {
+   "name": "defaultMaterial.153",
+   "color": [
+    1.0,
+    0.4,
+    0.918
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0143,
+    -0.022,
+    1.1061
+   ]
+  },
+  {
+   "name": "defaultMaterial.1530",
+   "color": [
+    0.075,
+    0.75,
+    0.645
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0072,
+    -0.0054,
+    1.0869
+   ]
+  },
+  {
+   "name": "defaultMaterial.1531",
+   "color": [
+    1.0,
+    0.732,
+    0.4
+   ],
+   "vertices": 384,
+   "center": [
+    0.0013,
+    -0.003,
+    1.0875
+   ]
+  },
+  {
+   "name": "defaultMaterial.1532",
+   "color": [
+    0.335,
+    0.1,
+    1.0
+   ],
+   "vertices": 256,
+   "center": [
+    0.0013,
+    -0.0029,
+    1.0875
+   ]
+  },
+  {
+   "name": "defaultMaterial.1533",
+   "color": [
+    0.314,
+    0.75,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0072,
+    -0.0054,
+    1.0879
+   ]
+  },
+  {
+   "name": "defaultMaterial.1534",
+   "color": [
+    1.0,
+    0.1,
+    0.391
+   ],
+   "vertices": 256,
+   "center": [
+    0.0014,
+    -0.0034,
+    1.0875
+   ]
+  },
+  {
+   "name": "defaultMaterial.1535",
+   "color": [
+    0.4,
+    0.769,
+    1.0
+   ],
+   "vertices": 885,
+   "center": [
+    -0.0354,
+    -0.0072,
+    0.9998
+   ]
+  },
+  {
+   "name": "defaultMaterial.1536",
+   "color": [
+    0.687,
+    0.75,
+    0.075
+   ],
+   "vertices": 885,
+   "center": [
+    -0.0412,
+    -0.0072,
+    0.9685
+   ]
+  },
+  {
+   "name": "defaultMaterial.1537",
+   "color": [
+    0.881,
+    0.4,
+    1.0
+   ],
+   "vertices": 885,
+   "center": [
+    0.0191,
+    -0.0054,
+    1.1001
+   ]
+  },
+  {
+   "name": "defaultMaterial.1538",
+   "color": [
+    0.1,
+    1.0,
+    0.559
+   ],
+   "vertices": 885,
+   "center": [
+    -0.0214,
+    -0.0062,
+    0.9625
+   ]
+  },
+  {
+   "name": "defaultMaterial.1539",
+   "color": [
+    0.75,
+    0.398,
+    0.3
+   ],
+   "vertices": 343,
+   "center": [
+    0.0019,
+    -0.0217,
+    1.0871
+   ]
+  },
+  {
+   "name": "defaultMaterial.154",
+   "color": [
+    0.1,
+    0.166,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0172,
+    -0.0215,
+    1.0993
+   ]
+  },
+  {
+   "name": "defaultMaterial.1540",
+   "color": [
+    0.619,
+    1.0,
+    0.4
+   ],
+   "vertices": 343,
+   "center": [
+    0.002,
+    -0.0233,
+    1.0871
+   ]
+  },
+  {
+   "name": "defaultMaterial.1541",
+   "color": [
+    0.75,
+    0.075,
+    0.519
+   ],
+   "vertices": 98,
+   "center": [
+    0.002,
+    -0.0228,
+    1.087
+   ]
+  },
+  {
+   "name": "defaultMaterial.155",
+   "color": [
+    0.4,
+    0.969,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.018,
+    -0.0215,
+    1.0965
+   ]
+  },
+  {
+   "name": "defaultMaterial.156",
+   "color": [
+    1.0,
+    0.783,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0161,
+    -0.0219,
+    1.0992
+   ]
+  },
+  {
+   "name": "defaultMaterial.157",
+   "color": [
+    0.51,
+    0.3,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0168,
+    -0.022,
+    1.0964
+   ]
+  },
+  {
+   "name": "defaultMaterial.158",
+   "color": [
+    0.1,
+    1.0,
+    0.258
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0138,
+    -0.022,
+    1.1082
+   ]
+  },
+  {
+   "name": "defaultMaterial.159",
+   "color": [
+    1.0,
+    0.4,
+    0.47
+   ],
+   "vertices": 10,
+   "center": [
+    -0.015,
+    -0.0216,
+    1.1083
+   ]
+  },
+  {
+   "name": "defaultMaterial.160",
+   "color": [
+    0.075,
+    0.35,
+    0.75
+   ],
+   "vertices": 15,
+   "center": [
+    -0.0007,
+    -0.0212,
+    1.1282
+   ]
+  },
+  {
+   "name": "defaultMaterial.161",
+   "color": [
+    0.82,
+    1.0,
+    0.4
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0007,
+    -0.0205,
+    1.1287
+   ]
+  },
+  {
+   "name": "defaultMaterial.162",
+   "color": [
+    1.0,
+    0.1,
+    0.992
+   ],
+   "vertices": 10,
+   "center": [
+    0.0317,
+    -0.0197,
+    1.1263
+   ]
+  },
+  {
+   "name": "defaultMaterial.163",
+   "color": [
+    0.3,
+    0.75,
+    0.622
+   ],
+   "vertices": 10,
+   "center": [
+    0.0351,
+    -0.0195,
+    1.1232
+   ]
+  },
+  {
+   "name": "defaultMaterial.164",
+   "color": [
+    1.0,
+    0.482,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    0.0396,
+    -0.0192,
+    1.1162
+   ]
+  },
+  {
+   "name": "defaultMaterial.165",
+   "color": [
+    0.48,
+    0.4,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    0.0406,
+    -0.0191,
+    1.113
+   ]
+  },
+  {
+   "name": "defaultMaterial.166",
+   "color": [
+    0.182,
+    0.75,
+    0.075
+   ],
+   "vertices": 10,
+   "center": [
+    0.0416,
+    -0.0183,
+    1.1049
+   ]
+  },
+  {
+   "name": "defaultMaterial.167",
+   "color": [
+    1.0,
+    0.4,
+    0.67
+   ],
+   "vertices": 10,
+   "center": [
+    0.041,
+    -0.0191,
+    1.105
+   ]
+  },
+  {
+   "name": "defaultMaterial.1678",
+   "color": [
+    0.1,
+    0.768,
+    1.0
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0052,
+    -0.0032,
+    1.1014
+   ]
+  },
+  {
+   "name": "defaultMaterial.1679",
+   "color": [
+    0.75,
+    0.735,
+    0.3
+   ],
+   "vertices": 270,
+   "center": [
+    0.0014,
+    -0.0068,
+    1.0883
+   ]
+  },
+  {
+   "name": "defaultMaterial.168",
+   "color": [
+    0.707,
+    0.1,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0177,
+    -0.022,
+    1.0932
+   ]
+  },
+  {
+   "name": "defaultMaterial.1680",
+   "color": [
+    0.4,
+    1.0,
+    0.629
+   ],
+   "vertices": 21,
+   "center": [
+    0.0157,
+    -0.0022,
+    1.095
+   ]
+  },
+  {
+   "name": "defaultMaterial.1681",
+   "color": [
+    0.75,
+    0.136,
+    0.075
+   ],
+   "vertices": 21,
+   "center": [
+    0.0116,
+    -0.0024,
+    1.0963
+   ]
+  },
+  {
+   "name": "defaultMaterial.1682",
+   "color": [
+    0.4,
+    0.521,
+    1.0
+   ],
+   "vertices": 21,
+   "center": [
+    -0.0073,
+    -0.0034,
+    1.1019
+   ]
+  },
+  {
+   "name": "defaultMaterial.1683",
+   "color": [
+    0.544,
+    1.0,
+    0.1
+   ],
+   "vertices": 21,
+   "center": [
+    -0.0032,
+    -0.0032,
+    1.1007
+   ]
+  },
+  {
+   "name": "defaultMaterial.1684",
+   "color": [
+    0.75,
+    0.3,
+    0.653
+   ],
+   "vertices": 30,
+   "center": [
+    0.0137,
+    -0.0022,
+    1.0957
+   ]
+  },
+  {
+   "name": "defaultMaterial.1685",
+   "color": [
+    0.1,
+    1.0,
+    0.931
+   ],
+   "vertices": 30,
+   "center": [
+    0.0156,
+    -0.0021,
+    1.0951
+   ]
+  },
+  {
+   "name": "defaultMaterial.1686",
+   "color": [
+    1.0,
+    0.779,
+    0.4
+   ],
+   "vertices": 30,
+   "center": [
+    0.0116,
+    -0.0023,
+    1.0963
+   ]
+  },
+  {
+   "name": "defaultMaterial.1687",
+   "color": [
+    0.304,
+    0.075,
+    0.75
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0072,
+    -0.0033,
+    1.1019
+   ]
+  },
+  {
+   "name": "defaultMaterial.1688",
+   "color": [
+    0.4,
+    1.0,
+    0.429
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0032,
+    -0.0031,
+    1.1007
+   ]
+  },
+  {
+   "name": "defaultMaterial.169",
+   "color": [
+    1.0,
+    0.1,
+    0.32
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0189,
+    -0.0216,
+    1.0932
+   ]
+  },
+  {
+   "name": "defaultMaterial.170",
+   "color": [
+    0.3,
+    0.541,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    0.0377,
+    -0.0193,
+    1.1197
+   ]
+  },
+  {
+   "name": "defaultMaterial.171",
+   "color": [
+    0.845,
+    1.0,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    0.0382,
+    -0.0187,
+    1.1201
+   ]
+  },
+  {
+   "name": "defaultMaterial.172",
+   "color": [
+    0.928,
+    0.4,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    0.0401,
+    -0.0185,
+    1.1165
+   ]
+  },
+  {
+   "name": "defaultMaterial.173",
+   "color": [
+    0.075,
+    0.75,
+    0.473
+   ],
+   "vertices": 10,
+   "center": [
+    0.0408,
+    -0.019,
+    1.1018
+   ]
+  },
+  {
+   "name": "defaultMaterial.174",
+   "color": [
+    1.0,
+    0.578,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    0.0414,
+    -0.0183,
+    1.1016
+   ]
+  },
+  {
+   "name": "defaultMaterial.175",
+   "color": [
+    0.105,
+    0.1,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    0.0402,
+    -0.019,
+    1.0993
+   ]
+  },
+  {
+   "name": "defaultMaterial.176",
+   "color": [
+    0.429,
+    0.75,
+    0.3
+   ],
+   "vertices": 10,
+   "center": [
+    0.0408,
+    -0.0183,
+    1.099
+   ]
+  },
+  {
+   "name": "defaultMaterial.177",
+   "color": [
+    1.0,
+    0.1,
+    0.62
+   ],
+   "vertices": 10,
+   "center": [
+    0.0389,
+    -0.0191,
+    1.0974
+   ]
+  },
+  {
+   "name": "defaultMaterial.178",
+   "color": [
+    0.4,
+    0.922,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    0.0395,
+    -0.0184,
+    1.0972
+   ]
+  },
+  {
+   "name": "defaultMaterial.179",
+   "color": [
+    0.75,
+    0.641,
+    0.075
+   ],
+   "vertices": 10,
+   "center": [
+    0.0367,
+    -0.0192,
+    1.0955
+   ]
+  },
+  {
+   "name": "defaultMaterial.180",
+   "color": [
+    0.728,
+    0.4,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    0.0373,
+    -0.0185,
+    1.0954
+   ]
+  },
+  {
+   "name": "defaultMaterial.181",
+   "color": [
+    0.1,
+    1.0,
+    0.329
+   ],
+   "vertices": 10,
+   "center": [
+    0.034,
+    -0.0193,
+    1.0928
+   ]
+  },
+  {
+   "name": "defaultMaterial.182",
+   "color": [
+    0.75,
+    0.3,
+    0.317
+   ],
+   "vertices": 10,
+   "center": [
+    0.0346,
+    -0.0186,
+    1.0928
+   ]
+  },
+  {
+   "name": "defaultMaterial.183",
+   "color": [
+    0.1,
+    0.396,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    0.0313,
+    -0.0194,
+    1.0892
+   ]
+  },
+  {
+   "name": "defaultMaterial.184",
+   "color": [
+    0.773,
+    1.0,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    0.0319,
+    -0.0187,
+    1.0892
+   ]
+  },
+  {
+   "name": "defaultMaterial.185",
+   "color": [
+    0.75,
+    0.075,
+    0.691
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0187,
+    -0.022,
+    1.0893
+   ]
+  },
+  {
+   "name": "defaultMaterial.186",
+   "color": [
+    0.4,
+    1.0,
+    0.877
+   ],
+   "vertices": 10,
+   "center": [
+    0.0284,
+    -0.0188,
+    1.081
+   ]
+  },
+  {
+   "name": "defaultMaterial.187",
+   "color": [
+    1.0,
+    0.553,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    0.0298,
+    -0.0188,
+    1.0851
+   ]
+  },
+  {
+   "name": "defaultMaterial.188",
+   "color": [
+    0.395,
+    0.3,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    0.0278,
+    -0.0195,
+    1.0809
+   ]
+  },
+  {
+   "name": "defaultMaterial.189",
+   "color": [
+    0.172,
+    1.0,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    0.0292,
+    -0.0195,
+    1.0851
+   ]
+  },
+  {
+   "name": "defaultMaterial.190",
+   "color": [
+    1.0,
+    0.4,
+    0.623
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0221,
+    -0.0216,
+    1.081
+   ]
+  },
+  {
+   "name": "defaultMaterial.191",
+   "color": [
+    0.075,
+    0.523,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    -0.021,
+    -0.0216,
+    1.0852
+   ]
+  },
+  {
+   "name": "defaultMaterial.192",
+   "color": [
+    0.973,
+    1.0,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0209,
+    -0.022,
+    1.081
+   ]
+  },
+  {
+   "name": "defaultMaterial.193",
+   "color": [
+    0.778,
+    0.1,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0198,
+    -0.022,
+    1.0851
+   ]
+  },
+  {
+   "name": "defaultMaterial.194",
+   "color": [
+    0.3,
+    0.75,
+    0.508
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0199,
+    -0.0216,
+    1.0893
+   ]
+  },
+  {
+   "name": "defaultMaterial.195",
+   "color": [
+    1.0,
+    0.252,
+    0.1
+   ],
+   "vertices": 11,
+   "center": [
+    -0.0265,
+    -0.0208,
+    1.0658
+   ]
+  },
+  {
+   "name": "defaultMaterial.196",
+   "color": [
+    0.4,
+    0.473,
+    1.0
+   ],
+   "vertices": 8,
+   "center": [
+    0.0275,
+    -0.0182,
+    1.0644
+   ]
+  },
+  {
+   "name": "defaultMaterial.197",
+   "color": [
+    0.355,
+    0.75,
+    0.075
+   ],
+   "vertices": 20,
+   "center": [
+    -0.0223,
+    -0.0107,
+    1.0665
+   ]
+  },
+  {
+   "name": "defaultMaterial.198",
+   "color": [
+    1.0,
+    0.4,
+    0.824
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0233,
+    -0.0221,
+    1.0723
+   ]
+  },
+  {
+   "name": "defaultMaterial.199",
+   "color": [
+    0.1,
+    0.998,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0248,
+    -0.0221,
+    1.0665
+   ]
+  },
+  {
+   "name": "defaultMaterial.200",
+   "color": [
+    0.75,
+    0.62,
+    0.3
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0244,
+    -0.0216,
+    1.0723
+   ]
+  },
+  {
+   "name": "defaultMaterial.201",
+   "color": [
+    0.477,
+    0.1,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.026,
+    -0.0217,
+    1.0665
+   ]
+  },
+  {
+   "name": "defaultMaterial.202",
+   "color": [
+    0.4,
+    1.0,
+    0.476
+   ],
+   "vertices": 10,
+   "center": [
+    0.0265,
+    -0.0195,
+    1.0722
+   ]
+  },
+  {
+   "name": "defaultMaterial.203",
+   "color": [
+    0.75,
+    0.075,
+    0.186
+   ],
+   "vertices": 10,
+   "center": [
+    0.0267,
+    -0.0194,
+    1.0665
+   ]
+  },
+  {
+   "name": "defaultMaterial.204",
+   "color": [
+    0.4,
+    0.674,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    0.0271,
+    -0.0188,
+    1.0722
+   ]
+  },
+  {
+   "name": "defaultMaterial.205",
+   "color": [
+    0.774,
+    1.0,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    0.0273,
+    -0.0187,
+    1.0665
+   ]
+  },
+  {
+   "name": "defaultMaterial.206",
+   "color": [
+    0.732,
+    0.3,
+    0.75
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0259,
+    -0.0113,
+    1.0577
+   ]
+  },
+  {
+   "name": "defaultMaterial.207",
+   "color": [
+    0.1,
+    1.0,
+    0.701
+   ],
+   "vertices": 10,
+   "center": [
+    0.0275,
+    -0.0188,
+    1.0767
+   ]
+  },
+  {
+   "name": "defaultMaterial.208",
+   "color": [
+    1.0,
+    0.626,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    0.0285,
+    -0.0186,
+    1.0558
+   ]
+  },
+  {
+   "name": "defaultMaterial.209",
+   "color": [
+    0.132,
+    0.075,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    0.0314,
+    -0.0183,
+    1.038
+   ]
+  },
+  {
+   "name": "defaultMaterial.210",
+   "color": [
+    0.525,
+    1.0,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    0.027,
+    -0.0195,
+    1.0767
+   ]
+  },
+  {
+   "name": "defaultMaterial.211",
+   "color": [
+    1.0,
+    0.1,
+    0.549
+   ],
+   "vertices": 10,
+   "center": [
+    0.0279,
+    -0.0193,
+    1.0558
+   ]
+  },
+  {
+   "name": "defaultMaterial.212",
+   "color": [
+    0.3,
+    0.656,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    0.0308,
+    -0.019,
+    1.038
+   ]
+  },
+  {
+   "name": "defaultMaterial.213",
+   "color": [
+    1.0,
+    0.925,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0232,
+    -0.0216,
+    1.0767
+   ]
+  },
+  {
+   "name": "defaultMaterial.214",
+   "color": [
+    0.775,
+    0.4,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0289,
+    -0.0217,
+    1.0559
+   ]
+  },
+  {
+   "name": "defaultMaterial.215",
+   "color": [
+    0.075,
+    0.75,
+    0.3
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0338,
+    -0.0218,
+    1.0381
+   ]
+  },
+  {
+   "name": "defaultMaterial.216",
+   "color": [
+    1.0,
+    0.425,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0221,
+    -0.022,
+    1.0767
+   ]
+  },
+  {
+   "name": "defaultMaterial.217",
+   "color": [
+    0.1,
+    0.325,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0277,
+    -0.0221,
+    1.0559
+   ]
+  },
+  {
+   "name": "defaultMaterial.218",
+   "color": [
+    0.544,
+    0.75,
+    0.3
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0326,
+    -0.0222,
+    1.0381
+   ]
+  },
+  {
+   "name": "defaultMaterial.219",
+   "color": [
+    1.0,
+    0.1,
+    0.85
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0282,
+    -0.0112,
+    1.0491
+   ]
+  },
+  {
+   "name": "defaultMaterial.220",
+   "color": [
+    0.4,
+    1.0,
+    0.925
+   ],
+   "vertices": 24,
+   "center": [
+    0.0288,
+    -0.017,
+    1.0534
+   ]
+  },
+  {
+   "name": "defaultMaterial.221",
+   "color": [
+    0.75,
+    0.468,
+    0.075
+   ],
+   "vertices": 8,
+   "center": [
+    0.0324,
+    -0.0177,
+    1.0331
+   ]
+  },
+  {
+   "name": "defaultMaterial.222",
+   "color": [
+    0.575,
+    0.4,
+    1.0
+   ],
+   "vertices": 17,
+   "center": [
+    -0.0297,
+    -0.0194,
+    1.0543
+   ]
+  },
+  {
+   "name": "defaultMaterial.223",
+   "color": [
+    0.101,
+    1.0,
+    0.1
+   ],
+   "vertices": 4,
+   "center": [
+    -0.0296,
+    -0.021,
+    1.0545
+   ]
+  },
+  {
+   "name": "defaultMaterial.224",
+   "color": [
+    0.75,
+    0.3,
+    0.432
+   ],
+   "vertices": 11,
+   "center": [
+    -0.0346,
+    -0.0209,
+    1.0366
+   ]
+  },
+  {
+   "name": "defaultMaterial.225",
+   "color": [
+    0.1,
+    0.626,
+    1.0
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0308,
+    -0.0166,
+    1.049
+   ]
+  },
+  {
+   "name": "defaultMaterial.226",
+   "color": [
+    0.926,
+    1.0,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    0.0352,
+    -0.0179,
+    1.0195
+   ]
+  },
+  {
+   "name": "defaultMaterial.227",
+   "color": [
+    0.637,
+    0.075,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    0.0384,
+    -0.0176,
+    1.0042
+   ]
+  },
+  {
+   "name": "defaultMaterial.228",
+   "color": [
+    0.4,
+    1.0,
+    0.724
+   ],
+   "vertices": 10,
+   "center": [
+    0.0346,
+    -0.0186,
+    1.0195
+   ]
+  },
+  {
+   "name": "defaultMaterial.229",
+   "color": [
+    1.0,
+    0.323,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    0.0377,
+    -0.0183,
+    1.0042
+   ]
+  },
+  {
+   "name": "defaultMaterial.230",
+   "color": [
+    0.3,
+    0.32,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0388,
+    -0.0219,
+    1.0196
+   ]
+  },
+  {
+   "name": "defaultMaterial.231",
+   "color": [
+    0.402,
+    1.0,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0427,
+    -0.022,
+    1.0043
+   ]
+  },
+  {
+   "name": "defaultMaterial.232",
+   "color": [
+    1.0,
+    0.4,
+    0.776
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0375,
+    -0.0223,
+    1.0196
+   ]
+  },
+  {
+   "name": "defaultMaterial.233",
+   "color": [
+    0.075,
+    0.695,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0414,
+    -0.0224,
+    1.0043
+   ]
+  },
+  {
+   "name": "defaultMaterial.234",
+   "color": [
+    1.0,
+    0.874,
+    0.4
+   ],
+   "vertices": 4,
+   "center": [
+    -0.036,
+    -0.0103,
+    1.0046
+   ]
+  },
+  {
+   "name": "defaultMaterial.235",
+   "color": [
+    0.548,
+    0.1,
+    1.0
+   ],
+   "vertices": 24,
+   "center": [
+    0.0357,
+    -0.0164,
+    1.017
+   ]
+  },
+  {
+   "name": "defaultMaterial.236",
+   "color": [
+    0.3,
+    0.75,
+    0.393
+   ],
+   "vertices": 8,
+   "center": [
+    0.039,
+    -0.0171,
+    1.0009
+   ]
+  },
+  {
+   "name": "defaultMaterial.237",
+   "color": [
+    1.0,
+    0.1,
+    0.177
+   ],
+   "vertices": 17,
+   "center": [
+    -0.0396,
+    -0.0195,
+    1.018
+   ]
+  },
+  {
+   "name": "defaultMaterial.238",
+   "color": [
+    0.4,
+    0.627,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.043,
+    -0.0196,
+    1.0046
+   ]
+  },
+  {
+   "name": "defaultMaterial.239",
+   "color": [
+    0.527,
+    0.75,
+    0.075
+   ],
+   "vertices": 4,
+   "center": [
+    -0.0396,
+    -0.0212,
+    1.0179
+   ]
+  },
+  {
+   "name": "defaultMaterial.240",
+   "color": [
+    1.0,
+    0.4,
+    0.977
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0429,
+    -0.0211,
+    1.0051
+   ]
+  },
+  {
+   "name": "defaultMaterial.241",
+   "color": [
+    0.1,
+    1.0,
+    0.772
+   ],
+   "vertices": 10,
+   "center": [
+    0.0392,
+    -0.0181,
+    0.993
+   ]
+  },
+  {
+   "name": "defaultMaterial.242",
+   "color": [
+    0.75,
+    0.505,
+    0.3
+   ],
+   "vertices": 10,
+   "center": [
+    0.0399,
+    -0.0174,
+    0.993
+   ]
+  },
+  {
+   "name": "defaultMaterial.243",
+   "color": [
+    0.247,
+    0.1,
+    1.0
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0432,
+    -0.0138,
+    0.9989
+   ]
+  },
+  {
+   "name": "defaultMaterial.244",
+   "color": [
+    0.477,
+    1.0,
+    0.4
+   ],
+   "vertices": 11,
+   "center": [
+    -0.046,
+    -0.0211,
+    0.9924
+   ]
+  },
+  {
+   "name": "defaultMaterial.245",
+   "color": [
+    0.75,
+    0.075,
+    0.359
+   ],
+   "vertices": 24,
+   "center": [
+    0.0399,
+    -0.0159,
+    0.9917
+   ]
+  },
+  {
+   "name": "defaultMaterial.246",
+   "color": [
+    0.4,
+    0.827,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0442,
+    -0.0224,
+    0.9931
+   ]
+  },
+  {
+   "name": "defaultMaterial.247",
+   "color": [
+    1.0,
+    0.996,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0455,
+    -0.022,
+    0.9931
+   ]
+  },
+  {
+   "name": "defaultMaterial.248",
+   "color": [
+    0.617,
+    0.3,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0459,
+    -0.0224,
+    0.986
+   ]
+  },
+  {
+   "name": "defaultMaterial.249",
+   "color": [
+    0.1,
+    1.0,
+    0.471
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0473,
+    -0.022,
+    0.986
+   ]
+  },
+  {
+   "name": "defaultMaterial.250",
+   "color": [
+    1.0,
+    0.472,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    0.0393,
+    -0.0181,
+    0.9859
+   ]
+  },
+  {
+   "name": "defaultMaterial.251",
+   "color": [
+    0.075,
+    0.191,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    0.04,
+    -0.0174,
+    0.9859
+   ]
+  },
+  {
+   "name": "defaultMaterial.252",
+   "color": [
+    0.678,
+    1.0,
+    0.4
+   ],
+   "vertices": 4,
+   "center": [
+    -0.0477,
+    -0.0213,
+    0.9854
+   ]
+  },
+  {
+   "name": "defaultMaterial.253",
+   "color": [
+    1.0,
+    0.1,
+    0.779
+   ],
+   "vertices": 17,
+   "center": [
+    -0.0477,
+    -0.0197,
+    0.9855
+   ]
+  },
+  {
+   "name": "defaultMaterial.254",
+   "color": [
+    0.3,
+    0.75,
+    0.729
+   ],
+   "vertices": 8,
+   "center": [
+    0.0399,
+    -0.0169,
+    0.9847
+   ]
+  },
+  {
+   "name": "defaultMaterial.255",
+   "color": [
+    1.0,
+    0.695,
+    0.1
+   ],
+   "vertices": 24,
+   "center": [
+    0.039,
+    -0.0159,
+    0.9815
+   ]
+  },
+  {
+   "name": "defaultMaterial.256",
+   "color": [
+    0.622,
+    0.4,
+    1.0
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0447,
+    -0.0115,
+    0.984
+   ]
+  },
+  {
+   "name": "defaultMaterial.257",
+   "color": [
+    0.075,
+    0.75,
+    0.128
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0469,
+    -0.0224,
+    0.982
+   ]
+  },
+  {
+   "name": "defaultMaterial.258",
+   "color": [
+    1.0,
+    0.4,
+    0.528
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0483,
+    -0.022,
+    0.982
+   ]
+  },
+  {
+   "name": "defaultMaterial.259",
+   "color": [
+    0.1,
+    0.555,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    0.0386,
+    -0.0181,
+    0.9819
+   ]
+  },
+  {
+   "name": "defaultMaterial.260",
+   "color": [
+    0.659,
+    0.75,
+    0.3
+   ],
+   "vertices": 10,
+   "center": [
+    0.0393,
+    -0.0174,
+    0.9819
+   ]
+  },
+  {
+   "name": "defaultMaterial.261",
+   "color": [
+    0.92,
+    0.1,
+    1.0
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0478,
+    -0.0168,
+    0.984
+   ]
+  },
+  {
+   "name": "defaultMaterial.262",
+   "color": [
+    0.4,
+    1.0,
+    0.771
+   ],
+   "vertices": 11,
+   "center": [
+    -0.0487,
+    -0.0211,
+    0.9818
+   ]
+  },
+  {
+   "name": "defaultMaterial.263",
+   "color": [
+    0.75,
+    0.296,
+    0.075
+   ],
+   "vertices": 4,
+   "center": [
+    -0.0495,
+    -0.0213,
+    0.9788
+   ]
+  },
+  {
+   "name": "defaultMaterial.264",
+   "color": [
+    0.421,
+    0.4,
+    1.0
+   ],
+   "vertices": 17,
+   "center": [
+    -0.0495,
+    -0.0197,
+    0.9788
+   ]
+  },
+  {
+   "name": "defaultMaterial.265",
+   "color": [
+    0.331,
+    1.0,
+    0.1
+   ],
+   "vertices": 8,
+   "center": [
+    0.0374,
+    -0.017,
+    0.9782
+   ]
+  },
+  {
+   "name": "defaultMaterial.266",
+   "color": [
+    0.75,
+    0.3,
+    0.547
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0477,
+    -0.0225,
+    0.9791
+   ]
+  },
+  {
+   "name": "defaultMaterial.267",
+   "color": [
+    0.1,
+    0.856,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0491,
+    -0.0221,
+    0.9791
+   ]
+  },
+  {
+   "name": "defaultMaterial.268",
+   "color": [
+    1.0,
+    0.921,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    0.0371,
+    -0.0181,
+    0.979
+   ]
+  },
+  {
+   "name": "defaultMaterial.269",
+   "color": [
+    0.464,
+    0.075,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    0.0378,
+    -0.0174,
+    0.979
+   ]
+  },
+  {
+   "name": "defaultMaterial.270",
+   "color": [
+    0.4,
+    1.0,
+    0.571
+   ],
+   "vertices": 10,
+   "center": [
+    0.0354,
+    -0.0175,
+    0.9755
+   ]
+  },
+  {
+   "name": "defaultMaterial.271",
+   "color": [
+    1.0,
+    0.1,
+    0.106
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0494,
+    -0.0169,
+    0.9777
+   ]
+  },
+  {
+   "name": "defaultMaterial.272",
+   "color": [
+    0.3,
+    0.435,
+    0.75
+   ],
+   "vertices": 11,
+   "center": [
+    -0.0505,
+    -0.0212,
+    0.9752
+   ]
+  },
+  {
+   "name": "defaultMaterial.273",
+   "color": [
+    0.632,
+    1.0,
+    0.1
+   ],
+   "vertices": 24,
+   "center": [
+    0.0349,
+    -0.016,
+    0.9749
+   ]
+  },
+  {
+   "name": "defaultMaterial.274",
+   "color": [
+    1.0,
+    0.4,
+    0.93
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0464,
+    -0.0115,
+    0.9778
+   ]
+  },
+  {
+   "name": "defaultMaterial.275",
+   "color": [
+    0.075,
+    0.75,
+    0.632
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0487,
+    -0.0225,
+    0.9755
+   ]
+  },
+  {
+   "name": "defaultMaterial.276",
+   "color": [
+    1.0,
+    0.72,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    -0.05,
+    -0.0221,
+    0.9756
+   ]
+  },
+  {
+   "name": "defaultMaterial.277",
+   "color": [
+    0.318,
+    0.1,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    0.0347,
+    -0.0182,
+    0.9755
+   ]
+  },
+  {
+   "name": "defaultMaterial.278",
+   "color": [
+    0.322,
+    0.75,
+    0.3
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0512,
+    -0.0221,
+    0.9713
+   ]
+  },
+  {
+   "name": "defaultMaterial.279",
+   "color": [
+    1.0,
+    0.1,
+    0.407
+   ],
+   "vertices": 10,
+   "center": [
+    0.0314,
+    -0.0183,
+    0.9712
+   ]
+  },
+  {
+   "name": "defaultMaterial.280",
+   "color": [
+    0.4,
+    0.78,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    0.0321,
+    -0.0176,
+    0.9712
+   ]
+  },
+  {
+   "name": "defaultMaterial.281",
+   "color": [
+    0.699,
+    0.75,
+    0.075
+   ],
+   "vertices": 4,
+   "center": [
+    -0.0517,
+    -0.0214,
+    0.9708
+   ]
+  },
+  {
+   "name": "defaultMaterial.282",
+   "color": [
+    0.87,
+    0.4,
+    1.0
+   ],
+   "vertices": 17,
+   "center": [
+    -0.0517,
+    -0.0197,
+    0.9709
+   ]
+  },
+  {
+   "name": "defaultMaterial.283",
+   "color": [
+    0.1,
+    1.0,
+    0.542
+   ],
+   "vertices": 8,
+   "center": [
+    0.0313,
+    -0.0172,
+    0.9701
+   ]
+  },
+  {
+   "name": "defaultMaterial.284",
+   "color": [
+    0.75,
+    0.39,
+    0.3
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0498,
+    -0.0225,
+    0.9713
+   ]
+  },
+  {
+   "name": "defaultMaterial.285",
+   "color": [
+    0.1,
+    0.183,
+    1.0
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0517,
+    -0.0169,
+    0.9694
+   ]
+  },
+  {
+   "name": "defaultMaterial.286",
+   "color": [
+    0.63,
+    1.0,
+    0.4
+   ],
+   "vertices": 11,
+   "center": [
+    -0.0527,
+    -0.0212,
+    0.9667
+   ]
+  },
+  {
+   "name": "defaultMaterial.287",
+   "color": [
+    0.75,
+    0.075,
+    0.531
+   ],
+   "vertices": 24,
+   "center": [
+    0.0282,
+    -0.0163,
+    0.9664
+   ]
+  },
+  {
+   "name": "defaultMaterial.288",
+   "color": [
+    0.4,
+    0.981,
+    1.0
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0487,
+    -0.0116,
+    0.9694
+   ]
+  },
+  {
+   "name": "defaultMaterial.289",
+   "color": [
+    1.0,
+    0.766,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0509,
+    -0.0225,
+    0.967
+   ]
+  },
+  {
+   "name": "defaultMaterial.290",
+   "color": [
+    0.502,
+    0.3,
+    0.75
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0523,
+    -0.0221,
+    0.967
+   ]
+  },
+  {
+   "name": "defaultMaterial.291",
+   "color": [
+    0.1,
+    1.0,
+    0.241
+   ],
+   "vertices": 10,
+   "center": [
+    0.028,
+    -0.0185,
+    0.9669
+   ]
+  },
+  {
+   "name": "defaultMaterial.292",
+   "color": [
+    1.0,
+    0.4,
+    0.481
+   ],
+   "vertices": 10,
+   "center": [
+    0.0287,
+    -0.0178,
+    0.9669
+   ]
+  },
+  {
+   "name": "defaultMaterial.293",
+   "color": [
+    0.075,
+    0.363,
+    0.75
+   ],
+   "vertices": 4,
+   "center": [
+    -0.0531,
+    -0.0214,
+    0.9635
+   ]
+  },
+  {
+   "name": "defaultMaterial.294",
+   "color": [
+    0.831,
+    1.0,
+    0.4
+   ],
+   "vertices": 17,
+   "center": [
+    -0.0531,
+    -0.0197,
+    0.9636
+   ]
+  },
+  {
+   "name": "defaultMaterial.295",
+   "color": [
+    0.991,
+    0.1,
+    1.0
+   ],
+   "vertices": 8,
+   "center": [
+    0.0257,
+    -0.0174,
+    0.9631
+   ]
+  },
+  {
+   "name": "defaultMaterial.296",
+   "color": [
+    0.3,
+    0.75,
+    0.614
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0514,
+    -0.0225,
+    0.9638
+   ]
+  },
+  {
+   "name": "defaultMaterial.297",
+   "color": [
+    1.0,
+    0.466,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0528,
+    -0.0221,
+    0.9638
+   ]
+  },
+  {
+   "name": "defaultMaterial.298",
+   "color": [
+    0.469,
+    0.4,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    0.0254,
+    -0.0186,
+    0.9637
+   ]
+  },
+  {
+   "name": "defaultMaterial.299",
+   "color": [
+    0.195,
+    0.75,
+    0.075
+   ],
+   "vertices": 10,
+   "center": [
+    0.0261,
+    -0.0179,
+    0.9637
+   ]
+  },
+  {
+   "name": "defaultMaterial.300",
+   "color": [
+    1.0,
+    0.4,
+    0.682
+   ],
+   "vertices": 10,
+   "center": [
+    0.0239,
+    -0.0186,
+    0.9616
+   ]
+  },
+  {
+   "name": "defaultMaterial.301",
+   "color": [
+    0.1,
+    0.785,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    0.0245,
+    -0.0179,
+    0.9616
+   ]
+  },
+  {
+   "name": "defaultMaterial.302",
+   "color": [
+    0.75,
+    0.726,
+    0.3
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0528,
+    -0.0169,
+    0.9628
+   ]
+  },
+  {
+   "name": "defaultMaterial.303",
+   "color": [
+    0.69,
+    0.1,
+    1.0
+   ],
+   "vertices": 11,
+   "center": [
+    -0.0529,
+    -0.0212,
+    0.9615
+   ]
+  },
+  {
+   "name": "defaultMaterial.304",
+   "color": [
+    0.4,
+    1.0,
+    0.618
+   ],
+   "vertices": 24,
+   "center": [
+    0.0243,
+    -0.0165,
+    0.9613
+   ]
+  },
+  {
+   "name": "defaultMaterial.305",
+   "color": [
+    0.75,
+    0.123,
+    0.075
+   ],
+   "vertices": 8,
+   "center": [
+    -0.05,
+    -0.0225,
+    0.9612
+   ]
+  },
+  {
+   "name": "defaultMaterial.306",
+   "color": [
+    0.4,
+    0.532,
+    1.0
+   ],
+   "vertices": 11,
+   "center": [
+    0.0217,
+    -0.019,
+    0.9614
+   ]
+  },
+  {
+   "name": "defaultMaterial.307",
+   "color": [
+    0.561,
+    1.0,
+    0.1
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0499,
+    -0.0115,
+    0.9628
+   ]
+  },
+  {
+   "name": "defaultMaterial.308",
+   "color": [
+    0.75,
+    0.3,
+    0.662
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0513,
+    -0.0225,
+    0.9617
+   ]
+  },
+  {
+   "name": "defaultMaterial.309",
+   "color": [
+    0.1,
+    1.0,
+    0.914
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0526,
+    -0.0221,
+    0.9617
+   ]
+  },
+  {
+   "name": "defaultMaterial.310",
+   "color": [
+    1.0,
+    0.768,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    0.0233,
+    -0.018,
+    0.9596
+   ]
+  },
+  {
+   "name": "defaultMaterial.311",
+   "color": [
+    0.292,
+    0.075,
+    0.75
+   ],
+   "vertices": 4,
+   "center": [
+    -0.0519,
+    -0.0213,
+    0.9595
+   ]
+  },
+  {
+   "name": "defaultMaterial.312",
+   "color": [
+    0.4,
+    1.0,
+    0.418
+   ],
+   "vertices": 17,
+   "center": [
+    -0.0518,
+    -0.0196,
+    0.9595
+   ]
+  },
+  {
+   "name": "defaultMaterial.313",
+   "color": [
+    1.0,
+    0.1,
+    0.336
+   ],
+   "vertices": 4,
+   "center": [
+    0.0209,
+    -0.0191,
+    0.9594
+   ]
+  },
+  {
+   "name": "defaultMaterial.314",
+   "color": [
+    0.3,
+    0.549,
+    0.75
+   ],
+   "vertices": 17,
+   "center": [
+    0.0162,
+    -0.0194,
+    0.9594
+   ]
+  },
+  {
+   "name": "defaultMaterial.315",
+   "color": [
+    0.862,
+    1.0,
+    0.1
+   ],
+   "vertices": 8,
+   "center": [
+    0.023,
+    -0.0176,
+    0.959
+   ]
+  },
+  {
+   "name": "defaultMaterial.316",
+   "color": [
+    0.917,
+    0.4,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0504,
+    -0.0224,
+    0.9597
+   ]
+  },
+  {
+   "name": "defaultMaterial.317",
+   "color": [
+    0.075,
+    0.75,
+    0.46
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0517,
+    -0.022,
+    0.9597
+   ]
+  },
+  {
+   "name": "defaultMaterial.318",
+   "color": [
+    1.0,
+    0.567,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    0.0226,
+    -0.0187,
+    0.9596
+   ]
+  },
+  {
+   "name": "defaultMaterial.319",
+   "color": [
+    0.1,
+    0.112,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0481,
+    -0.0224,
+    0.9571
+   ]
+  },
+  {
+   "name": "defaultMaterial.320",
+   "color": [
+    0.437,
+    0.75,
+    0.3
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0494,
+    -0.022,
+    0.9571
+   ]
+  },
+  {
+   "name": "defaultMaterial.321",
+   "color": [
+    1.0,
+    0.1,
+    0.637
+   ],
+   "vertices": 10,
+   "center": [
+    0.0212,
+    -0.019,
+    0.957
+   ]
+  },
+  {
+   "name": "defaultMaterial.322",
+   "color": [
+    0.4,
+    0.933,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    0.0218,
+    -0.0183,
+    0.957
+   ]
+  },
+  {
+   "name": "defaultMaterial.323",
+   "color": [
+    0.75,
+    0.628,
+    0.075
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0509,
+    -0.0168,
+    0.9587
+   ]
+  },
+  {
+   "name": "defaultMaterial.324",
+   "color": [
+    0.717,
+    0.4,
+    1.0
+   ],
+   "vertices": 11,
+   "center": [
+    -0.0494,
+    -0.0211,
+    0.9569
+   ]
+  },
+  {
+   "name": "defaultMaterial.325",
+   "color": [
+    0.1,
+    1.0,
+    0.312
+   ],
+   "vertices": 24,
+   "center": [
+    0.0215,
+    -0.0169,
+    0.9566
+   ]
+  },
+  {
+   "name": "defaultMaterial.326",
+   "color": [
+    0.75,
+    0.3,
+    0.325
+   ],
+   "vertices": 8,
+   "center": [
+    0.0194,
+    -0.0193,
+    0.9572
+   ]
+  },
+  {
+   "name": "defaultMaterial.327",
+   "color": [
+    0.1,
+    0.413,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    0.0152,
+    -0.0197,
+    0.9571
+   ]
+  },
+  {
+   "name": "defaultMaterial.328",
+   "color": [
+    0.784,
+    1.0,
+    0.4
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0481,
+    -0.0114,
+    0.9588
+   ]
+  },
+  {
+   "name": "defaultMaterial.329",
+   "color": [
+    0.75,
+    0.075,
+    0.704
+   ],
+   "vertices": 17,
+   "center": [
+    -0.0449,
+    -0.0197,
+    0.9537
+   ]
+  },
+  {
+   "name": "defaultMaterial.330",
+   "color": [
+    0.4,
+    1.0,
+    0.866
+   ],
+   "vertices": 11,
+   "center": [
+    0.0176,
+    -0.0201,
+    0.9536
+   ]
+  },
+  {
+   "name": "defaultMaterial.331",
+   "color": [
+    1.0,
+    0.537,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    0.0129,
+    -0.0083,
+    0.9537
+   ]
+  },
+  {
+   "name": "defaultMaterial.332",
+   "color": [
+    0.387,
+    0.3,
+    0.75
+   ],
+   "vertices": 17,
+   "center": [
+    0.0163,
+    -0.0093,
+    0.9537
+   ]
+  },
+  {
+   "name": "defaultMaterial.333",
+   "color": [
+    0.189,
+    1.0,
+    0.1
+   ],
+   "vertices": 9,
+   "center": [
+    0.02,
+    -0.0171,
+    0.9536
+   ]
+  },
+  {
+   "name": "defaultMaterial.334",
+   "color": [
+    1.0,
+    0.4,
+    0.634
+   ],
+   "vertices": 8,
+   "center": [
+    0.0199,
+    -0.0187,
+    0.953
+   ]
+  },
+  {
+   "name": "defaultMaterial.335",
+   "color": [
+    0.075,
+    0.535,
+    0.75
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0431,
+    -0.0115,
+    0.9545
+   ]
+  },
+  {
+   "name": "defaultMaterial.336",
+   "color": [
+    0.984,
+    1.0,
+    0.4
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0438,
+    -0.0225,
+    0.954
+   ]
+  },
+  {
+   "name": "defaultMaterial.337",
+   "color": [
+    0.761,
+    0.1,
+    1.0
+   ],
+   "vertices": 10,
+   "center": [
+    -0.0451,
+    -0.0221,
+    0.954
+   ]
+  },
+  {
+   "name": "defaultMaterial.338",
+   "color": [
+    0.3,
+    0.75,
+    0.499
+   ],
+   "vertices": 10,
+   "center": [
+    0.0196,
+    -0.0197,
+    0.9539
+   ]
+  },
+  {
+   "name": "defaultMaterial.339",
+   "color": [
+    1.0,
+    0.236,
+    0.1
+   ],
+   "vertices": 10,
+   "center": [
+    0.0202,
+    -0.0189,
+    0.9539
+   ]
+  },
+  {
+   "name": "defaultMaterial.340",
+   "color": [
+    0.4,
+    0.485,
+    1.0
+   ],
+   "vertices": 17,
+   "center": [
+    0.0194,
+    -0.0145,
+    0.9536
+   ]
+  },
+  {
+   "name": "defaultMaterial.341",
+   "color": [
+    0.367,
+    0.75,
+    0.075
+   ],
+   "vertices": 4,
+   "center": [
+    -0.0449,
+    -0.0214,
+    0.9536
+   ]
+  },
+  {
+   "name": "defaultMaterial.342",
+   "color": [
+    1.0,
+    0.4,
+    0.835
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0414,
+    -0.0227,
+    0.9531
+   ]
+  },
+  {
+   "name": "defaultMaterial.343",
+   "color": [
+    0.1,
+    1.0,
+    0.985
+   ],
+   "vertices": 3,
+   "center": [
+    -0.04,
+    -0.0115,
+    0.9526
+   ]
+  },
+  {
+   "name": "defaultMaterial.344",
+   "color": [
+    0.75,
+    0.611,
+    0.3
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0427,
+    -0.017,
+    0.9525
+   ]
+  },
+  {
+   "name": "defaultMaterial.345",
+   "color": [
+    0.46,
+    0.1,
+    1.0
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0311,
+    -0.0188,
+    0.9447
+   ]
+  },
+  {
+   "name": "defaultMaterial.346",
+   "color": [
+    0.4,
+    1.0,
+    0.465
+   ],
+   "vertices": 6,
+   "center": [
+    0.0147,
+    -0.0149,
+    0.9423
+   ]
+  },
+  {
+   "name": "defaultMaterial.347",
+   "color": [
+    0.75,
+    0.075,
+    0.199
+   ],
+   "vertices": 9,
+   "center": [
+    0.0158,
+    -0.0182,
+    0.9418
+   ]
+  },
+  {
+   "name": "defaultMaterial.348",
+   "color": [
+    0.4,
+    0.685,
+    1.0
+   ],
+   "vertices": 11,
+   "center": [
+    -0.0287,
+    -0.0241,
+    0.9419
+   ]
+  },
+  {
+   "name": "defaultMaterial.349",
+   "color": [
+    0.79,
+    1.0,
+    0.1
+   ],
+   "vertices": 3,
+   "center": [
+    0.0163,
+    -0.0177,
+    0.9446
+   ]
+  },
+  {
+   "name": "defaultMaterial.350",
+   "color": [
+    0.723,
+    0.3,
+    0.75
+   ],
+   "vertices": 24,
+   "center": [
+    0.0164,
+    -0.0213,
+    0.9415
+   ]
+  },
+  {
+   "name": "defaultMaterial.351",
+   "color": [
+    0.1,
+    1.0,
+    0.684
+   ],
+   "vertices": 4,
+   "center": [
+    0.0146,
+    -0.0238,
+    0.9417
+   ]
+  },
+  {
+   "name": "defaultMaterial.352",
+   "color": [
+    1.0,
+    0.614,
+    0.4
+   ],
+   "vertices": 17,
+   "center": [
+    0.0115,
+    -0.0241,
+    0.9417
+   ]
+  },
+  {
+   "name": "defaultMaterial.353",
+   "color": [
+    0.119,
+    0.075,
+    0.75
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0286,
+    -0.0129,
+    0.9447
+   ]
+  },
+  {
+   "name": "defaultMaterial.354",
+   "color": [
+    0.536,
+    1.0,
+    0.4
+   ],
+   "vertices": 3,
+   "center": [
+    0.0078,
+    -0.008,
+    0.954
+   ]
+  },
+  {
+   "name": "defaultMaterial.355",
+   "color": [
+    1.0,
+    0.1,
+    0.566
+   ],
+   "vertices": 6,
+   "center": [
+    0.0144,
+    -0.0153,
+    0.9393
+   ]
+  },
+  {
+   "name": "defaultMaterial.356",
+   "color": [
+    0.3,
+    0.664,
+    0.75
+   ],
+   "vertices": 3,
+   "center": [
+    -0.0218,
+    -0.0126,
+    0.9391
+   ]
+  },
+  {
+   "name": "defaultMaterial.389",
+   "color": [
+    1.0,
+    0.909,
+    0.1
+   ],
+   "vertices": 2850,
+   "center": [
+    0.0028,
+    -0.0269,
+    1.0762
+   ]
+  },
+  {
+   "name": "defaultMaterial.390",
+   "color": [
+    0.764,
+    0.4,
+    1.0
+   ],
+   "vertices": 2200,
+   "center": [
+    -0.0059,
+    -0.0269,
+    1.0411
+   ]
+  },
+  {
+   "name": "defaultMaterial.391",
+   "color": [
+    0.075,
+    0.75,
+    0.288
+   ],
+   "vertices": 1900,
+   "center": [
+    -0.0141,
+    -0.0274,
+    1.0075
+   ]
+  },
+  {
+   "name": "defaultMaterial.392",
+   "color": [
+    1.0,
+    0.414,
+    0.4
+   ],
+   "vertices": 2050,
+   "center": [
+    -0.0249,
+    -0.0281,
+    0.9766
+   ]
+  },
+  {
+   "name": "defaultMaterial.393",
+   "color": [
+    0.1,
+    0.342,
+    1.0
+   ],
+   "vertices": 24,
+   "center": [
+    -0.0241,
+    -0.0282,
+    0.9349
+   ]
+  },
+  {
+   "name": "defaultMaterial.394",
+   "color": [
+    0.552,
+    0.75,
+    0.3
+   ],
+   "vertices": 16,
+   "center": [
+    0.0112,
+    -0.0272,
+    0.9348
+   ]
+  },
+  {
+   "name": "defaultMaterial.395",
+   "color": [
+    1.0,
+    0.1,
+    0.867
+   ],
+   "vertices": 16,
+   "center": [
+    0.0107,
+    -0.0269,
+    0.9348
+   ]
+  },
+  {
+   "name": "defaultMaterial.396",
+   "color": [
+    0.4,
+    1.0,
+    0.914
+   ],
+   "vertices": 16,
+   "center": [
+    -0.0184,
+    -0.0287,
+    0.9349
+   ]
+  },
+  {
+   "name": "defaultMaterial.397",
+   "color": [
+    0.75,
+    0.456,
+    0.075
+   ],
+   "vertices": 119,
+   "center": [
+    -0.0046,
+    -0.0278,
+    0.9348
+   ]
+  },
+  {
+   "name": "defaultMaterial.398",
+   "color": [
+    0.563,
+    0.4,
+    1.0
+   ],
+   "vertices": 24,
+   "center": [
+    0.0152,
+    -0.0262,
+    0.9348
+   ]
+  },
+  {
+   "name": "defaultMaterial.399",
+   "color": [
+    0.118,
+    1.0,
+    0.1
+   ],
+   "vertices": 16,
+   "center": [
+    -0.0002,
+    -0.0278,
+    0.9349
+   ]
+  },
+  {
+   "name": "defaultMaterial.400",
+   "color": [
+    0.75,
+    0.3,
+    0.44
+   ],
+   "vertices": 16,
+   "center": [
+    -0.0193,
+    -0.0284,
+    0.9349
+   ]
+  },
+  {
+   "name": "defaultMaterial.401",
+   "color": [
+    0.1,
+    0.643,
+    1.0
+   ],
+   "vertices": 16,
+   "center": [
+    -0.0094,
+    -0.0279,
+    0.9349
+   ]
+  },
+  {
+   "name": "defaultMaterial.402",
+   "color": [
+    0.937,
+    1.0,
+    0.4
+   ],
+   "vertices": 16,
+   "center": [
+    0.0009,
+    -0.0277,
+    0.9349
+   ]
+  },
+  {
+   "name": "defaultMaterial.403",
+   "color": [
+    0.624,
+    0.075,
+    0.75
+   ],
+   "vertices": 16,
+   "center": [
+    -0.01,
+    -0.0282,
+    0.9349
+   ]
+  },
+  {
+   "name": "defaultMaterial.404",
+   "color": [
+    0.4,
+    1.0,
+    0.713
+   ],
+   "vertices": 16,
+   "center": [
+    -0.0201,
+    -0.0287,
+    0.9349
+   ]
+  },
+  {
+   "name": "defaultMaterial.405",
+   "color": [
+    1.0,
+    0.307,
+    0.1
+   ],
+   "vertices": 16,
+   "center": [
+    -0.0088,
+    -0.0282,
+    0.9349
+   ]
+  },
+  {
+   "name": "defaultMaterial.406",
+   "color": [
+    0.3,
+    0.328,
+    0.75
+   ],
+   "vertices": 16,
+   "center": [
+    0.0101,
+    -0.0272,
+    0.9348
+   ]
+  },
+  {
+   "name": "defaultMaterial.407",
+   "color": [
+    0.419,
+    1.0,
+    0.1
+   ],
+   "vertices": 16,
+   "center": [
+    0.0003,
+    -0.0274,
+    0.9349
+   ]
+  },
+  {
+   "name": "defaultMaterial.408",
+   "color": [
+    1.0,
+    0.4,
+    0.787
+   ],
+   "vertices": 333,
+   "center": [
+    0.0042,
+    -0.0229,
+    0.9986
+   ]
+  },
+  {
+   "name": "defaultMaterial.409",
+   "color": [
+    0.075,
+    0.708,
+    0.75
+   ],
+   "vertices": 201,
+   "center": [
+    0.0042,
+    -0.0224,
+    0.9985
+   ]
+  },
+  {
+   "name": "defaultMaterial.410",
+   "color": [
+    1.0,
+    0.862,
+    0.4
+   ],
+   "vertices": 885,
+   "center": [
+    0.0042,
+    -0.0221,
+    0.9987
+   ]
+  },
+  {
+   "name": "defaultMaterial.411",
+   "color": [
+    0.531,
+    0.1,
+    1.0
+   ],
+   "vertices": 66,
+   "center": [
+    0.0041,
+    -0.0219,
+    0.9986
+   ]
+  },
+  {
+   "name": "defaultMaterial.412",
+   "color": [
+    0.3,
+    0.75,
+    0.384
+   ],
+   "vertices": 66,
+   "center": [
+    0.0041,
+    -0.0211,
+    0.9986
+   ]
+  },
+  {
+   "name": "defaultMaterial.413",
+   "color": [
+    1.0,
+    0.1,
+    0.194
+   ],
+   "vertices": 414,
+   "center": [
+    -0.0491,
+    -0.0063,
+    0.9971
+   ]
+  },
+  {
+   "name": "defaultMaterial.414",
+   "color": [
+    0.4,
+    0.638,
+    1.0
+   ],
+   "vertices": 1143,
+   "center": [
+    -0.0686,
+    -0.0073,
+    1.0024
+   ]
+  },
+  {
+   "name": "defaultMaterial.415",
+   "color": [
+    0.54,
+    0.75,
+    0.075
+   ],
+   "vertices": 292,
+   "center": [
+    -0.0554,
+    -0.0066,
+    0.9989
+   ]
+  },
+  {
+   "name": "defaultMaterial.416",
+   "color": [
+    1.0,
+    0.4,
+    0.988
+   ],
+   "vertices": 192,
+   "center": [
+    -0.0552,
+    -0.0066,
+    0.9988
+   ]
+  },
+  {
+   "name": "defaultMaterial.417",
+   "color": [
+    0.1,
+    1.0,
+    0.755
+   ],
+   "vertices": 1804,
+   "center": [
+    -0.0659,
+    -0.0056,
+    1.0017
+   ]
+  },
+  {
+   "name": "defaultMaterial.418",
+   "color": [
+    0.75,
+    0.496,
+    0.3
+   ],
+   "vertices": 1804,
+   "center": [
+    -0.0657,
+    -0.0087,
+    1.0016
+   ]
+  },
+  {
+   "name": "defaultMaterial.419",
+   "color": [
+    0.23,
+    0.1,
+    1.0
+   ],
+   "vertices": 414,
+   "center": [
+    -0.0392,
+    -0.0061,
+    1.0329
+   ]
+  },
+  {
+   "name": "defaultMaterial.420",
+   "color": [
+    0.488,
+    1.0,
+    0.4
+   ],
+   "vertices": 1143,
+   "center": [
+    -0.0587,
+    -0.0071,
+    1.0382
+   ]
+  },
+  {
+   "name": "defaultMaterial.421",
+   "color": [
+    0.75,
+    0.075,
+    0.371
+   ],
+   "vertices": 292,
+   "center": [
+    -0.0456,
+    -0.0064,
+    1.0346
+   ]
+  },
+  {
+   "name": "defaultMaterial.422",
+   "color": [
+    0.4,
+    0.839,
+    1.0
+   ],
+   "vertices": 192,
+   "center": [
+    -0.0453,
+    -0.0064,
+    1.0346
+   ]
+  },
+  {
+   "name": "defaultMaterial.423",
+   "color": [
+    1.0,
+    0.98,
+    0.1
+   ],
+   "vertices": 1804,
+   "center": [
+    -0.056,
+    -0.0054,
+    1.0374
+   ]
+  },
+  {
+   "name": "defaultMaterial.424",
+   "color": [
+    0.609,
+    0.3,
+    0.75
+   ],
+   "vertices": 1804,
+   "center": [
+    -0.0559,
+    -0.0085,
+    1.0374
+   ]
+  },
+  {
+   "name": "defaultMaterial.425",
+   "color": [
+    0.1,
+    1.0,
+    0.454
+   ],
+   "vertices": 414,
+   "center": [
+    -0.0299,
+    -0.0049,
+    1.0695
+   ]
+  },
+  {
+   "name": "defaultMaterial.426",
+   "color": [
+    1.0,
+    0.461,
+    0.4
+   ],
+   "vertices": 1143,
+   "center": [
+    -0.0494,
+    -0.0059,
+    1.0748
+   ]
+  },
+  {
+   "name": "defaultMaterial.427",
+   "color": [
+    0.075,
+    0.203,
+    0.75
+   ],
+   "vertices": 292,
+   "center": [
+    -0.0363,
+    -0.0052,
+    1.0712
+   ]
+  },
+  {
+   "name": "defaultMaterial.428",
+   "color": [
+    0.689,
+    1.0,
+    0.4
+   ],
+   "vertices": 192,
+   "center": [
+    -0.036,
+    -0.0052,
+    1.0712
+   ]
+  },
+  {
+   "name": "defaultMaterial.429",
+   "color": [
+    1.0,
+    0.1,
+    0.796
+   ],
+   "vertices": 1804,
+   "center": [
+    -0.0467,
+    -0.0042,
+    1.074
+   ]
+  },
+  {
+   "name": "defaultMaterial.430",
+   "color": [
+    0.3,
+    0.75,
+    0.721
+   ],
+   "vertices": 1804,
+   "center": [
+    -0.0466,
+    -0.0073,
+    1.074
+   ]
+  },
+  {
+   "name": "defaultMaterial.431",
+   "color": [
+    1.0,
+    0.679,
+    0.1
+   ],
+   "vertices": 414,
+   "center": [
+    -0.0208,
+    -0.0048,
+    1.1054
+   ]
+  },
+  {
+   "name": "defaultMaterial.432",
+   "color": [
+    0.611,
+    0.4,
+    1.0
+   ],
+   "vertices": 1143,
+   "center": [
+    -0.0404,
+    -0.0058,
+    1.1106
+   ]
+  },
+  {
+   "name": "defaultMaterial.433",
+   "color": [
+    0.075,
+    0.75,
+    0.115
+   ],
+   "vertices": 292,
+   "center": [
+    -0.0272,
+    -0.0051,
+    1.1071
+   ]
+  },
+  {
+   "name": "defaultMaterial.434",
+   "color": [
+    1.0,
+    0.4,
+    0.539
+   ],
+   "vertices": 192,
+   "center": [
+    -0.027,
+    -0.0051,
+    1.107
+   ]
+  },
+  {
+   "name": "defaultMaterial.435",
+   "color": [
+    0.1,
+    0.572,
+    1.0
+   ],
+   "vertices": 1804,
+   "center": [
+    -0.0376,
+    -0.0041,
+    1.1099
+   ]
+  },
+  {
+   "name": "defaultMaterial.436",
+   "color": [
+    0.667,
+    0.75,
+    0.3
+   ],
+   "vertices": 1804,
+   "center": [
+    -0.0375,
+    -0.0072,
+    1.1099
+   ]
+  },
+  {
+   "name": "defaultMaterial.452",
+   "color": [
+    0.903,
+    0.1,
+    1.0
+   ],
+   "vertices": 37,
+   "center": [
+    -0.0242,
+    -0.029,
+    0.9789
+   ]
+  },
+  {
+   "name": "defaultMaterial.453",
+   "color": [
+    0.4,
+    1.0,
+    0.76
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0246,
+    -0.0268,
+    0.979
+   ]
+  },
+  {
+   "name": "defaultMaterial.454",
+   "color": [
+    0.75,
+    0.283,
+    0.075
+   ],
+   "vertices": 34,
+   "center": [
+    -0.0236,
+    -0.0285,
+    0.9817
+   ]
+  },
+  {
+   "name": "defaultMaterial.455",
+   "color": [
+    0.41,
+    0.4,
+    1.0
+   ],
+   "vertices": 72,
+   "center": [
+    -0.0219,
+    -0.0283,
+    0.981
+   ]
+  },
+  {
+   "name": "defaultMaterial.456",
+   "color": [
+    0.347,
+    1.0,
+    0.1
+   ],
+   "vertices": 34,
+   "center": [
+    -0.0252,
+    -0.0261,
+    0.9789
+   ]
+  },
+  {
+   "name": "defaultMaterial.457",
+   "color": [
+    0.75,
+    0.3,
+    0.555
+   ],
+   "vertices": 19,
+   "center": [
+    -0.0252,
+    -0.0255,
+    0.9789
+   ]
+  },
+  {
+   "name": "defaultMaterial.458",
+   "color": [
+    0.1,
+    0.873,
+    1.0
+   ],
+   "vertices": 37,
+   "center": [
+    -0.0259,
+    -0.0291,
+    0.979
+   ]
+  },
+  {
+   "name": "defaultMaterial.459",
+   "color": [
+    1.0,
+    0.91,
+    0.4
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0256,
+    -0.0268,
+    0.979
+   ]
+  },
+  {
+   "name": "defaultMaterial.460",
+   "color": [
+    0.452,
+    0.075,
+    0.75
+   ],
+   "vertices": 183,
+   "center": [
+    -0.0278,
+    -0.0284,
+    0.979
+   ]
+  },
+  {
+   "name": "defaultMaterial.461",
+   "color": [
+    0.4,
+    1.0,
+    0.56
+   ],
+   "vertices": 98,
+   "center": [
+    -0.0254,
+    -0.0232,
+    0.979
+   ]
+  },
+  {
+   "name": "defaultMaterial.462",
+   "color": [
+    1.0,
+    0.1,
+    0.123
+   ],
+   "vertices": 343,
+   "center": [
+    -0.0255,
+    -0.0222,
+    0.9791
+   ]
+  },
+  {
+   "name": "defaultMaterial.463",
+   "color": [
+    0.3,
+    0.443,
+    0.75
+   ],
+   "vertices": 343,
+   "center": [
+    -0.0254,
+    -0.0237,
+    0.9791
+   ]
+  },
+  {
+   "name": "defaultMaterial.464",
+   "color": [
+    0.648,
+    1.0,
+    0.1
+   ],
+   "vertices": 37,
+   "center": [
+    -0.0145,
+    -0.0288,
+    1.0153
+   ]
+  },
+  {
+   "name": "defaultMaterial.465",
+   "color": [
+    1.0,
+    0.4,
+    0.941
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0149,
+    -0.0266,
+    1.0153
+   ]
+  },
+  {
+   "name": "defaultMaterial.466",
+   "color": [
+    0.075,
+    0.75,
+    0.62
+   ],
+   "vertices": 183,
+   "center": [
+    -0.0127,
+    -0.028,
+    1.0153
+   ]
+  },
+  {
+   "name": "defaultMaterial.467",
+   "color": [
+    1.0,
+    0.709,
+    0.4
+   ],
+   "vertices": 34,
+   "center": [
+    -0.0155,
+    -0.026,
+    1.0152
+   ]
+  },
+  {
+   "name": "defaultMaterial.468",
+   "color": [
+    0.301,
+    0.1,
+    1.0
+   ],
+   "vertices": 19,
+   "center": [
+    -0.0155,
+    -0.0253,
+    1.0153
+   ]
+  },
+  {
+   "name": "defaultMaterial.469",
+   "color": [
+    0.331,
+    0.75,
+    0.3
+   ],
+   "vertices": 37,
+   "center": [
+    -0.0162,
+    -0.0289,
+    1.0153
+   ]
+  },
+  {
+   "name": "defaultMaterial.470",
+   "color": [
+    1.0,
+    0.1,
+    0.424
+   ],
+   "vertices": 30,
+   "center": [
+    -0.016,
+    -0.0267,
+    1.0153
+   ]
+  },
+  {
+   "name": "defaultMaterial.471",
+   "color": [
+    0.4,
+    0.791,
+    1.0
+   ],
+   "vertices": 183,
+   "center": [
+    -0.0181,
+    -0.0282,
+    1.0153
+   ]
+  },
+  {
+   "name": "defaultMaterial.472",
+   "color": [
+    0.712,
+    0.75,
+    0.075
+   ],
+   "vertices": 98,
+   "center": [
+    -0.0157,
+    -0.0231,
+    1.0154
+   ]
+  },
+  {
+   "name": "defaultMaterial.473",
+   "color": [
+    0.859,
+    0.4,
+    1.0
+   ],
+   "vertices": 343,
+   "center": [
+    -0.0158,
+    -0.022,
+    1.0154
+   ]
+  },
+  {
+   "name": "defaultMaterial.474",
+   "color": [
+    0.1,
+    1.0,
+    0.525
+   ],
+   "vertices": 343,
+   "center": [
+    -0.0157,
+    -0.0236,
+    1.0154
+   ]
+  },
+  {
+   "name": "defaultMaterial.475",
+   "color": [
+    0.75,
+    0.381,
+    0.3
+   ],
+   "vertices": 37,
+   "center": [
+    -0.0056,
+    -0.0287,
+    1.0513
+   ]
+  },
+  {
+   "name": "defaultMaterial.476",
+   "color": [
+    0.1,
+    0.2,
+    1.0
+   ],
+   "vertices": 30,
+   "center": [
+    -0.006,
+    -0.0265,
+    1.0513
+   ]
+  },
+  {
+   "name": "defaultMaterial.477",
+   "color": [
+    0.642,
+    1.0,
+    0.4
+   ],
+   "vertices": 183,
+   "center": [
+    -0.0038,
+    -0.0279,
+    1.0513
+   ]
+  },
+  {
+   "name": "defaultMaterial.478",
+   "color": [
+    0.75,
+    0.075,
+    0.544
+   ],
+   "vertices": 34,
+   "center": [
+    -0.0066,
+    -0.0258,
+    1.0512
+   ]
+  },
+  {
+   "name": "defaultMaterial.479",
+   "color": [
+    0.4,
+    0.992,
+    1.0
+   ],
+   "vertices": 19,
+   "center": [
+    -0.0066,
+    -0.0252,
+    1.0513
+   ]
+  },
+  {
+   "name": "defaultMaterial.480",
+   "color": [
+    1.0,
+    0.75,
+    0.1
+   ],
+   "vertices": 37,
+   "center": [
+    -0.0073,
+    -0.0288,
+    1.0513
+   ]
+  },
+  {
+   "name": "defaultMaterial.481",
+   "color": [
+    0.494,
+    0.3,
+    0.75
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0071,
+    -0.0266,
+    1.0513
+   ]
+  },
+  {
+   "name": "defaultMaterial.482",
+   "color": [
+    0.1,
+    1.0,
+    0.224
+   ],
+   "vertices": 183,
+   "center": [
+    -0.0092,
+    -0.0281,
+    1.0513
+   ]
+  },
+  {
+   "name": "defaultMaterial.483",
+   "color": [
+    1.0,
+    0.4,
+    0.492
+   ],
+   "vertices": 98,
+   "center": [
+    -0.0068,
+    -0.0229,
+    1.0514
+   ]
+  },
+  {
+   "name": "defaultMaterial.484",
+   "color": [
+    0.075,
+    0.376,
+    0.75
+   ],
+   "vertices": 343,
+   "center": [
+    -0.0069,
+    -0.0219,
+    1.0514
+   ]
+  },
+  {
+   "name": "defaultMaterial.485",
+   "color": [
+    0.842,
+    1.0,
+    0.4
+   ],
+   "vertices": 343,
+   "center": [
+    -0.0068,
+    -0.0234,
+    1.0514
+   ]
+  },
+  {
+   "name": "defaultMaterial.486",
+   "color": [
+    0.974,
+    0.1,
+    1.0
+   ],
+   "vertices": 37,
+   "center": [
+    0.0032,
+    -0.0286,
+    1.0869
+   ]
+  },
+  {
+   "name": "defaultMaterial.487",
+   "color": [
+    0.3,
+    0.75,
+    0.606
+   ],
+   "vertices": 30,
+   "center": [
+    0.0027,
+    -0.0264,
+    1.087
+   ]
+  },
+  {
+   "name": "defaultMaterial.488",
+   "color": [
+    1.0,
+    0.449,
+    0.1
+   ],
+   "vertices": 183,
+   "center": [
+    0.005,
+    -0.0277,
+    1.0869
+   ]
+  },
+  {
+   "name": "defaultMaterial.489",
+   "color": [
+    0.457,
+    0.4,
+    1.0
+   ],
+   "vertices": 34,
+   "center": [
+    0.0022,
+    -0.0257,
+    1.0869
+   ]
+  },
+  {
+   "name": "defaultMaterial.490",
+   "color": [
+    0.207,
+    0.75,
+    0.075
+   ],
+   "vertices": 19,
+   "center": [
+    0.0022,
+    -0.025,
+    1.0869
+   ]
+  },
+  {
+   "name": "defaultMaterial.491",
+   "color": [
+    1.0,
+    0.4,
+    0.693
+   ],
+   "vertices": 37,
+   "center": [
+    0.0015,
+    -0.0287,
+    1.0869
+   ]
+  },
+  {
+   "name": "defaultMaterial.492",
+   "color": [
+    0.1,
+    0.802,
+    1.0
+   ],
+   "vertices": 30,
+   "center": [
+    0.0017,
+    -0.0264,
+    1.087
+   ]
+  },
+  {
+   "name": "defaultMaterial.493",
+   "color": [
+    0.75,
+    0.718,
+    0.3
+   ],
+   "vertices": 183,
+   "center": [
+    -0.0004,
+    -0.028,
+    1.087
+   ]
+  },
+  {
+   "name": "defaultMaterial.562",
+   "color": [
+    0.673,
+    0.1,
+    1.0
+   ],
+   "vertices": 45,
+   "center": [
+    -0.0041,
+    -0.025,
+    0.8
+   ]
+  },
+  {
+   "name": "defaultMaterial.563",
+   "color": [
+    0.4,
+    1.0,
+    0.607
+   ],
+   "vertices": 12,
+   "center": [
+    -0.0264,
+    -0.0259,
+    0.8
+   ]
+  },
+  {
+   "name": "defaultMaterial.564",
+   "color": [
+    0.75,
+    0.111,
+    0.075
+   ],
+   "vertices": 12,
+   "center": [
+    0.0181,
+    -0.0237,
+    0.8
+   ]
+  },
+  {
+   "name": "defaultMaterial.565",
+   "color": [
+    0.4,
+    0.543,
+    1.0
+   ],
+   "vertices": 45,
+   "center": [
+    -0.004,
+    -0.0253,
+    0.8423
+   ]
+  },
+  {
+   "name": "defaultMaterial.566",
+   "color": [
+    0.577,
+    1.0,
+    0.1
+   ],
+   "vertices": 12,
+   "center": [
+    -0.0256,
+    -0.0262,
+    0.8423
+   ]
+  },
+  {
+   "name": "defaultMaterial.567",
+   "color": [
+    0.75,
+    0.3,
+    0.67
+   ],
+   "vertices": 12,
+   "center": [
+    0.0173,
+    -0.0241,
+    0.8423
+   ]
+  },
+  {
+   "name": "defaultMaterial.568",
+   "color": [
+    0.1,
+    1.0,
+    0.897
+   ],
+   "vertices": 45,
+   "center": [
+    -0.0043,
+    -0.0258,
+    0.8874
+   ]
+  },
+  {
+   "name": "defaultMaterial.594",
+   "color": [
+    1.0,
+    0.757,
+    0.4
+   ],
+   "vertices": 12,
+   "center": [
+    -0.025,
+    -0.0266,
+    0.8874
+   ]
+  },
+  {
+   "name": "defaultMaterial.595",
+   "color": [
+    0.279,
+    0.075,
+    0.75
+   ],
+   "vertices": 12,
+   "center": [
+    0.0162,
+    -0.0245,
+    0.8874
+   ]
+  },
+  {
+   "name": "defaultMaterial.596",
+   "color": [
+    0.4,
+    1.0,
+    0.406
+   ],
+   "vertices": 270,
+   "center": [
+    -0.0269,
+    -0.0073,
+    0.9799
+   ]
+  },
+  {
+   "name": "defaultMaterial.597",
+   "color": [
+    1.0,
+    0.1,
+    0.353
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0316,
+    -0.0036,
+    0.9923
+   ]
+  },
+  {
+   "name": "defaultMaterial.598",
+   "color": [
+    0.3,
+    0.558,
+    0.75
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0356,
+    -0.0038,
+    0.9935
+   ]
+  },
+  {
+   "name": "defaultMaterial.599",
+   "color": [
+    0.878,
+    1.0,
+    0.1
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0167,
+    -0.0028,
+    0.9879
+   ]
+  },
+  {
+   "name": "defaultMaterial.600",
+   "color": [
+    0.906,
+    0.4,
+    1.0
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0127,
+    -0.0026,
+    0.9866
+   ]
+  },
+  {
+   "name": "defaultMaterial.601",
+   "color": [
+    0.075,
+    0.75,
+    0.447
+   ],
+   "vertices": 21,
+   "center": [
+    -0.0356,
+    -0.0039,
+    0.9935
+   ]
+  },
+  {
+   "name": "defaultMaterial.602",
+   "color": [
+    1.0,
+    0.556,
+    0.4
+   ],
+   "vertices": 21,
+   "center": [
+    -0.0168,
+    -0.0029,
+    0.9879
+   ]
+  },
+  {
+   "name": "defaultMaterial.603",
+   "color": [
+    0.1,
+    0.129,
+    1.0
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0335,
+    -0.0036,
+    0.993
+   ]
+  },
+  {
+   "name": "defaultMaterial.604",
+   "color": [
+    0.446,
+    0.75,
+    0.3
+   ],
+   "vertices": 21,
+   "center": [
+    -0.0315,
+    -0.0037,
+    0.9922
+   ]
+  },
+  {
+   "name": "defaultMaterial.605",
+   "color": [
+    1.0,
+    0.1,
+    0.654
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0147,
+    -0.0026,
+    0.9873
+   ]
+  },
+  {
+   "name": "defaultMaterial.606",
+   "color": [
+    0.4,
+    0.944,
+    1.0
+   ],
+   "vertices": 21,
+   "center": [
+    -0.0127,
+    -0.0027,
+    0.9866
+   ]
+  },
+  {
+   "name": "defaultMaterial.607",
+   "color": [
+    0.75,
+    0.616,
+    0.075
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0355,
+    -0.0058,
+    0.9785
+   ]
+  },
+  {
+   "name": "defaultMaterial.608",
+   "color": [
+    0.705,
+    0.4,
+    1.0
+   ],
+   "vertices": 885,
+   "center": [
+    -0.0071,
+    -0.0067,
+    1.1081
+   ]
+  },
+  {
+   "name": "defaultMaterial.609",
+   "color": [
+    0.1,
+    1.0,
+    0.296
+   ],
+   "vertices": 885,
+   "center": [
+    -0.0092,
+    -0.0058,
+    0.9917
+   ]
+  },
+  {
+   "name": "defaultMaterial.610",
+   "color": [
+    0.75,
+    0.3,
+    0.334
+   ],
+   "vertices": 885,
+   "center": [
+    -0.0129,
+    -0.0068,
+    1.0768
+   ]
+  },
+  {
+   "name": "defaultMaterial.611",
+   "color": [
+    0.1,
+    0.43,
+    1.0
+   ],
+   "vertices": 885,
+   "center": [
+    0.0069,
+    -0.0057,
+    1.0708
+   ]
+  },
+  {
+   "name": "defaultMaterial.612",
+   "color": [
+    0.795,
+    1.0,
+    0.4
+   ],
+   "vertices": 256,
+   "center": [
+    -0.027,
+    -0.0039,
+    0.9791
+   ]
+  },
+  {
+   "name": "defaultMaterial.613",
+   "color": [
+    0.75,
+    0.075,
+    0.716
+   ],
+   "vertices": 256,
+   "center": [
+    -0.027,
+    -0.0037,
+    0.9791
+   ]
+  },
+  {
+   "name": "defaultMaterial.614",
+   "color": [
+    0.4,
+    1.0,
+    0.855
+   ],
+   "vertices": 256,
+   "center": [
+    -0.027,
+    -0.0033,
+    0.9791
+   ]
+  },
+  {
+   "name": "defaultMaterial.615",
+   "color": [
+    1.0,
+    0.52,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0355,
+    -0.0058,
+    0.9802
+   ]
+  },
+  {
+   "name": "defaultMaterial.616",
+   "color": [
+    0.379,
+    0.3,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0351,
+    -0.0058,
+    0.9818
+   ]
+  },
+  {
+   "name": "defaultMaterial.617",
+   "color": [
+    0.205,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0344,
+    -0.0058,
+    0.9834
+   ]
+  },
+  {
+   "name": "defaultMaterial.618",
+   "color": [
+    1.0,
+    0.4,
+    0.645
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0334,
+    -0.0058,
+    0.9848
+   ]
+  },
+  {
+   "name": "defaultMaterial.619",
+   "color": [
+    0.075,
+    0.548,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0322,
+    -0.0057,
+    0.9859
+   ]
+  },
+  {
+   "name": "defaultMaterial.620",
+   "color": [
+    0.995,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0307,
+    -0.0057,
+    0.9868
+   ]
+  },
+  {
+   "name": "defaultMaterial.621",
+   "color": [
+    0.744,
+    0.1,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0292,
+    -0.0056,
+    0.9874
+   ]
+  },
+  {
+   "name": "defaultMaterial.622",
+   "color": [
+    0.3,
+    0.75,
+    0.491
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0275,
+    -0.0055,
+    0.9877
+   ]
+  },
+  {
+   "name": "defaultMaterial.623",
+   "color": [
+    1.0,
+    0.219,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0258,
+    -0.0054,
+    0.9877
+   ]
+  },
+  {
+   "name": "defaultMaterial.624",
+   "color": [
+    0.4,
+    0.496,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0241,
+    -0.0053,
+    0.9873
+   ]
+  },
+  {
+   "name": "defaultMaterial.625",
+   "color": [
+    0.38,
+    0.75,
+    0.075
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0226,
+    -0.0053,
+    0.9866
+   ]
+  },
+  {
+   "name": "defaultMaterial.626",
+   "color": [
+    1.0,
+    0.4,
+    0.846
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0212,
+    -0.0052,
+    0.9856
+   ]
+  },
+  {
+   "name": "defaultMaterial.627",
+   "color": [
+    0.1,
+    1.0,
+    0.968
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0201,
+    -0.0051,
+    0.9844
+   ]
+  },
+  {
+   "name": "defaultMaterial.628",
+   "color": [
+    0.75,
+    0.603,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0192,
+    -0.005,
+    0.9829
+   ]
+  },
+  {
+   "name": "defaultMaterial.629",
+   "color": [
+    0.443,
+    0.1,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0186,
+    -0.005,
+    0.9813
+   ]
+  },
+  {
+   "name": "defaultMaterial.630",
+   "color": [
+    0.4,
+    1.0,
+    0.454
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0183,
+    -0.005,
+    0.9797
+   ]
+  },
+  {
+   "name": "defaultMaterial.631",
+   "color": [
+    0.75,
+    0.075,
+    0.212
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0183,
+    -0.005,
+    0.978
+   ]
+  },
+  {
+   "name": "defaultMaterial.632",
+   "color": [
+    0.4,
+    0.696,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0187,
+    -0.005,
+    0.9763
+   ]
+  },
+  {
+   "name": "defaultMaterial.633",
+   "color": [
+    0.807,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0194,
+    -0.005,
+    0.9748
+   ]
+  },
+  {
+   "name": "defaultMaterial.634",
+   "color": [
+    0.715,
+    0.3,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0204,
+    -0.005,
+    0.9734
+   ]
+  },
+  {
+   "name": "defaultMaterial.635",
+   "color": [
+    0.1,
+    1.0,
+    0.668
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0216,
+    -0.0051,
+    0.9722
+   ]
+  },
+  {
+   "name": "defaultMaterial.636",
+   "color": [
+    1.0,
+    0.603,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0231,
+    -0.0051,
+    0.9713
+   ]
+  },
+  {
+   "name": "defaultMaterial.637",
+   "color": [
+    0.107,
+    0.075,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0246,
+    -0.0052,
+    0.9707
+   ]
+  },
+  {
+   "name": "defaultMaterial.638",
+   "color": [
+    0.547,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0263,
+    -0.0053,
+    0.9705
+   ]
+  },
+  {
+   "name": "defaultMaterial.639",
+   "color": [
+    1.0,
+    0.1,
+    0.583
+   ],
+   "vertices": 6,
+   "center": [
+    -0.028,
+    -0.0054,
+    0.9705
+   ]
+  },
+  {
+   "name": "defaultMaterial.640",
+   "color": [
+    0.3,
+    0.673,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0297,
+    -0.0055,
+    0.9709
+   ]
+  },
+  {
+   "name": "defaultMaterial.641",
+   "color": [
+    1.0,
+    0.892,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0312,
+    -0.0055,
+    0.9716
+   ]
+  },
+  {
+   "name": "defaultMaterial.642",
+   "color": [
+    0.753,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0326,
+    -0.0056,
+    0.9726
+   ]
+  },
+  {
+   "name": "defaultMaterial.643",
+   "color": [
+    0.075,
+    0.75,
+    0.275
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0337,
+    -0.0057,
+    0.9738
+   ]
+  },
+  {
+   "name": "defaultMaterial.644",
+   "color": [
+    1.0,
+    0.403,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0346,
+    -0.0058,
+    0.9752
+   ]
+  },
+  {
+   "name": "defaultMaterial.645",
+   "color": [
+    0.1,
+    0.359,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0352,
+    -0.0058,
+    0.9768
+   ]
+  },
+  {
+   "name": "defaultMaterial.646",
+   "color": [
+    0.561,
+    0.75,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0354,
+    -0.0058,
+    0.9778
+   ]
+  },
+  {
+   "name": "defaultMaterial.647",
+   "color": [
+    1.0,
+    0.1,
+    0.884
+   ],
+   "vertices": 6,
+   "center": [
+    -0.035,
+    -0.0058,
+    0.9761
+   ]
+  },
+  {
+   "name": "defaultMaterial.648",
+   "color": [
+    0.4,
+    1.0,
+    0.902
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0343,
+    -0.0057,
+    0.9746
+   ]
+  },
+  {
+   "name": "defaultMaterial.649",
+   "color": [
+    0.75,
+    0.443,
+    0.075
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0333,
+    -0.0057,
+    0.9732
+   ]
+  },
+  {
+   "name": "defaultMaterial.650",
+   "color": [
+    0.552,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.032,
+    -0.0056,
+    0.9721
+   ]
+  },
+  {
+   "name": "defaultMaterial.651",
+   "color": [
+    0.134,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0306,
+    -0.0055,
+    0.9713
+   ]
+  },
+  {
+   "name": "defaultMaterial.652",
+   "color": [
+    0.75,
+    0.3,
+    0.448
+   ],
+   "vertices": 6,
+   "center": [
+    -0.029,
+    -0.0054,
+    0.9707
+   ]
+  },
+  {
+   "name": "defaultMaterial.653",
+   "color": [
+    0.1,
+    0.66,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0273,
+    -0.0053,
+    0.9704
+   ]
+  },
+  {
+   "name": "defaultMaterial.654",
+   "color": [
+    0.948,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0256,
+    -0.0053,
+    0.9705
+   ]
+  },
+  {
+   "name": "defaultMaterial.655",
+   "color": [
+    0.611,
+    0.075,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.024,
+    -0.0052,
+    0.971
+   ]
+  },
+  {
+   "name": "defaultMaterial.656",
+   "color": [
+    0.4,
+    1.0,
+    0.702
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0224,
+    -0.0051,
+    0.9717
+   ]
+  },
+  {
+   "name": "defaultMaterial.657",
+   "color": [
+    1.0,
+    0.29,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0211,
+    -0.0051,
+    0.9727
+   ]
+  },
+  {
+   "name": "defaultMaterial.658",
+   "color": [
+    0.3,
+    0.336,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0199,
+    -0.005,
+    0.974
+   ]
+  },
+  {
+   "name": "defaultMaterial.659",
+   "color": [
+    0.435,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0191,
+    -0.005,
+    0.9754
+   ]
+  },
+  {
+   "name": "defaultMaterial.660",
+   "color": [
+    1.0,
+    0.4,
+    0.799
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0185,
+    -0.005,
+    0.977
+   ]
+  },
+  {
+   "name": "defaultMaterial.661",
+   "color": [
+    0.075,
+    0.72,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0183,
+    -0.005,
+    0.9787
+   ]
+  },
+  {
+   "name": "defaultMaterial.662",
+   "color": [
+    1.0,
+    0.851,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0184,
+    -0.005,
+    0.9804
+   ]
+  },
+  {
+   "name": "defaultMaterial.663",
+   "color": [
+    0.514,
+    0.1,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0188,
+    -0.005,
+    0.982
+   ]
+  },
+  {
+   "name": "defaultMaterial.664",
+   "color": [
+    0.3,
+    0.75,
+    0.376
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0195,
+    -0.0051,
+    0.9836
+   ]
+  },
+  {
+   "name": "defaultMaterial.665",
+   "color": [
+    1.0,
+    0.1,
+    0.211
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0205,
+    -0.0051,
+    0.9849
+   ]
+  },
+  {
+   "name": "defaultMaterial.666",
+   "color": [
+    0.4,
+    0.649,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0218,
+    -0.0052,
+    0.9861
+   ]
+  },
+  {
+   "name": "defaultMaterial.667",
+   "color": [
+    0.552,
+    0.75,
+    0.075
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0232,
+    -0.0053,
+    0.9869
+   ]
+  },
+  {
+   "name": "defaultMaterial.668",
+   "color": [
+    1.0,
+    0.4,
+    0.999
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0248,
+    -0.0054,
+    0.9875
+   ]
+  },
+  {
+   "name": "defaultMaterial.669",
+   "color": [
+    0.1,
+    1.0,
+    0.739
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0265,
+    -0.0055,
+    0.9877
+   ]
+  },
+  {
+   "name": "defaultMaterial.670",
+   "color": [
+    0.75,
+    0.488,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0282,
+    -0.0055,
+    0.9876
+   ]
+  },
+  {
+   "name": "defaultMaterial.671",
+   "color": [
+    0.213,
+    0.1,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0299,
+    -0.0056,
+    0.9872
+   ]
+  },
+  {
+   "name": "defaultMaterial.672",
+   "color": [
+    0.5,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0314,
+    -0.0057,
+    0.9865
+   ]
+  },
+  {
+   "name": "defaultMaterial.673",
+   "color": [
+    0.75,
+    0.075,
+    0.384
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0327,
+    -0.0057,
+    0.9855
+   ]
+  },
+  {
+   "name": "defaultMaterial.674",
+   "color": [
+    0.4,
+    0.85,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0339,
+    -0.0058,
+    0.9842
+   ]
+  },
+  {
+   "name": "defaultMaterial.675",
+   "color": [
+    1.0,
+    0.963,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0347,
+    -0.0058,
+    0.9827
+   ]
+  },
+  {
+   "name": "defaultMaterial.676",
+   "color": [
+    0.6,
+    0.3,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0355,
+    -0.0058,
+    0.9795
+   ]
+  },
+  {
+   "name": "defaultMaterial.677",
+   "color": [
+    0.1,
+    1.0,
+    0.438
+   ],
+   "vertices": 384,
+   "center": [
+    -0.027,
+    -0.0035,
+    0.9791
+   ]
+  },
+  {
+   "name": "defaultMaterial.678",
+   "color": [
+    1.0,
+    0.45,
+    0.4
+   ],
+   "vertices": 1245,
+   "center": [
+    -0.027,
+    -0.0025,
+    0.9791
+   ]
+  },
+  {
+   "name": "defaultMaterial.679",
+   "color": [
+    0.075,
+    0.216,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0353,
+    -0.0058,
+    0.9811
+   ]
+  },
+  {
+   "name": "defaultMaterial.680",
+   "color": [
+    0.7,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.032,
+    -0.0066,
+    0.9915
+   ]
+  },
+  {
+   "name": "defaultMaterial.681",
+   "color": [
+    1.0,
+    0.1,
+    0.813
+   ],
+   "vertices": 22,
+   "center": [
+    -0.0168,
+    -0.0044,
+    0.9883
+   ]
+  },
+  {
+   "name": "defaultMaterial.682",
+   "color": [
+    0.3,
+    0.75,
+    0.712
+   ],
+   "vertices": 22,
+   "center": [
+    -0.0166,
+    -0.0044,
+    0.9883
+   ]
+  },
+  {
+   "name": "defaultMaterial.683",
+   "color": [
+    1.0,
+    0.662,
+    0.1
+   ],
+   "vertices": 32,
+   "center": [
+    -0.0163,
+    -0.0047,
+    0.9884
+   ]
+  },
+  {
+   "name": "defaultMaterial.684",
+   "color": [
+    0.6,
+    0.4,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0184,
+    -0.0049,
+    0.9884
+   ]
+  },
+  {
+   "name": "defaultMaterial.685",
+   "color": [
+    0.075,
+    0.75,
+    0.103
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0182,
+    -0.0049,
+    0.9883
+   ]
+  },
+  {
+   "name": "defaultMaterial.686",
+   "color": [
+    1.0,
+    0.4,
+    0.551
+   ],
+   "vertices": 28,
+   "center": [
+    -0.018,
+    -0.0049,
+    0.9883
+   ]
+  },
+  {
+   "name": "defaultMaterial.687",
+   "color": [
+    0.1,
+    0.589,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0174,
+    -0.0048,
+    0.9881
+   ]
+  },
+  {
+   "name": "defaultMaterial.688",
+   "color": [
+    0.676,
+    0.75,
+    0.3
+   ],
+   "vertices": 28,
+   "center": [
+    -0.019,
+    -0.0049,
+    0.9886
+   ]
+  },
+  {
+   "name": "defaultMaterial.689",
+   "color": [
+    0.886,
+    0.1,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0199,
+    -0.005,
+    0.9889
+   ]
+  },
+  {
+   "name": "defaultMaterial.690",
+   "color": [
+    0.4,
+    1.0,
+    0.749
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0197,
+    -0.005,
+    0.9888
+   ]
+  },
+  {
+   "name": "defaultMaterial.691",
+   "color": [
+    0.75,
+    0.271,
+    0.075
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0201,
+    -0.005,
+    0.9889
+   ]
+  },
+  {
+   "name": "defaultMaterial.692",
+   "color": [
+    0.4,
+    0.401,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0207,
+    -0.005,
+    0.9891
+   ]
+  },
+  {
+   "name": "defaultMaterial.693",
+   "color": [
+    0.364,
+    1.0,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0218,
+    -0.0051,
+    0.9894
+   ]
+  },
+  {
+   "name": "defaultMaterial.694",
+   "color": [
+    0.75,
+    0.3,
+    0.563
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0216,
+    -0.0051,
+    0.9894
+   ]
+  },
+  {
+   "name": "defaultMaterial.695",
+   "color": [
+    0.1,
+    0.889,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0213,
+    -0.005,
+    0.9893
+   ]
+  },
+  {
+   "name": "defaultMaterial.696",
+   "color": [
+    1.0,
+    0.899,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0235,
+    -0.0052,
+    0.9899
+   ]
+  },
+  {
+   "name": "defaultMaterial.697",
+   "color": [
+    0.439,
+    0.075,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0232,
+    -0.0052,
+    0.9899
+   ]
+  },
+  {
+   "name": "defaultMaterial.698",
+   "color": [
+    0.4,
+    1.0,
+    0.548
+   ],
+   "vertices": 28,
+   "center": [
+    -0.023,
+    -0.0051,
+    0.9898
+   ]
+  },
+  {
+   "name": "defaultMaterial.699",
+   "color": [
+    1.0,
+    0.1,
+    0.14
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0224,
+    -0.0051,
+    0.9896
+   ]
+  },
+  {
+   "name": "defaultMaterial.700",
+   "color": [
+    0.3,
+    0.451,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0241,
+    -0.0052,
+    0.9901
+   ]
+  },
+  {
+   "name": "defaultMaterial.701",
+   "color": [
+    0.665,
+    1.0,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0251,
+    -0.0052,
+    0.9904
+   ]
+  },
+  {
+   "name": "defaultMaterial.702",
+   "color": [
+    1.0,
+    0.4,
+    0.952
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0249,
+    -0.0053,
+    0.9904
+   ]
+  },
+  {
+   "name": "defaultMaterial.703",
+   "color": [
+    0.075,
+    0.75,
+    0.607
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0247,
+    -0.0052,
+    0.9903
+   ]
+  },
+  {
+   "name": "defaultMaterial.704",
+   "color": [
+    1.0,
+    0.698,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0258,
+    -0.0052,
+    0.9906
+   ]
+  },
+  {
+   "name": "defaultMaterial.705",
+   "color": [
+    0.284,
+    0.1,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0268,
+    -0.0053,
+    0.9909
+   ]
+  },
+  {
+   "name": "defaultMaterial.706",
+   "color": [
+    0.339,
+    0.75,
+    0.3
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0266,
+    -0.0054,
+    0.9909
+   ]
+  },
+  {
+   "name": "defaultMaterial.707",
+   "color": [
+    1.0,
+    0.1,
+    0.441
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0264,
+    -0.0053,
+    0.9908
+   ]
+  },
+  {
+   "name": "defaultMaterial.708",
+   "color": [
+    0.4,
+    0.802,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0275,
+    -0.0053,
+    0.9911
+   ]
+  },
+  {
+   "name": "defaultMaterial.709",
+   "color": [
+    0.725,
+    0.75,
+    0.075
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0281,
+    -0.0054,
+    0.9913
+   ]
+  },
+  {
+   "name": "defaultMaterial.710",
+   "color": [
+    0.848,
+    0.4,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0285,
+    -0.0054,
+    0.9915
+   ]
+  },
+  {
+   "name": "defaultMaterial.711",
+   "color": [
+    0.1,
+    1.0,
+    0.509
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0283,
+    -0.0054,
+    0.9914
+   ]
+  },
+  {
+   "name": "defaultMaterial.712",
+   "color": [
+    0.75,
+    0.373,
+    0.3
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0291,
+    -0.0054,
+    0.9916
+   ]
+  },
+  {
+   "name": "defaultMaterial.713",
+   "color": [
+    0.1,
+    0.217,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0302,
+    -0.0055,
+    0.992
+   ]
+  },
+  {
+   "name": "defaultMaterial.714",
+   "color": [
+    0.653,
+    1.0,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    -0.03,
+    -0.0055,
+    0.9919
+   ]
+  },
+  {
+   "name": "defaultMaterial.715",
+   "color": [
+    0.75,
+    0.075,
+    0.556
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0298,
+    -0.0055,
+    0.9918
+   ]
+  },
+  {
+   "name": "defaultMaterial.716",
+   "color": [
+    0.4,
+    1.0,
+    0.997
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0308,
+    -0.0055,
+    0.9922
+   ]
+  },
+  {
+   "name": "defaultMaterial.717",
+   "color": [
+    1.0,
+    0.733,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0319,
+    -0.0056,
+    0.9925
+   ]
+  },
+  {
+   "name": "defaultMaterial.718",
+   "color": [
+    0.485,
+    0.3,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0317,
+    -0.0056,
+    0.9924
+   ]
+  },
+  {
+   "name": "defaultMaterial.719",
+   "color": [
+    0.1,
+    1.0,
+    0.208
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0314,
+    -0.0056,
+    0.9923
+   ]
+  },
+  {
+   "name": "defaultMaterial.720",
+   "color": [
+    1.0,
+    0.4,
+    0.503
+   ],
+   "vertices": 22,
+   "center": [
+    -0.0324,
+    -0.0053,
+    0.9929
+   ]
+  },
+  {
+   "name": "defaultMaterial.721",
+   "color": [
+    0.075,
+    0.388,
+    0.75
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0333,
+    -0.0067,
+    0.9913
+   ]
+  },
+  {
+   "name": "defaultMaterial.722",
+   "color": [
+    0.853,
+    1.0,
+    0.4
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0332,
+    -0.0069,
+    0.9909
+   ]
+  },
+  {
+   "name": "defaultMaterial.723",
+   "color": [
+    0.957,
+    0.1,
+    1.0
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0329,
+    -0.0066,
+    0.9912
+   ]
+  },
+  {
+   "name": "defaultMaterial.724",
+   "color": [
+    0.3,
+    0.75,
+    0.597
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0336,
+    -0.0064,
+    0.9918
+   ]
+  },
+  {
+   "name": "defaultMaterial.725",
+   "color": [
+    1.0,
+    0.432,
+    0.1
+   ],
+   "vertices": 270,
+   "center": [
+    -0.0171,
+    -0.0071,
+    1.0158
+   ]
+  },
+  {
+   "name": "defaultMaterial.726",
+   "color": [
+    0.446,
+    0.4,
+    1.0
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0217,
+    -0.0034,
+    1.0282
+   ]
+  },
+  {
+   "name": "defaultMaterial.727",
+   "color": [
+    0.22,
+    0.75,
+    0.075
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0257,
+    -0.0036,
+    1.0294
+   ]
+  },
+  {
+   "name": "defaultMaterial.728",
+   "color": [
+    1.0,
+    0.4,
+    0.704
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0069,
+    -0.0026,
+    1.0237
+   ]
+  },
+  {
+   "name": "defaultMaterial.729",
+   "color": [
+    0.1,
+    0.818,
+    1.0
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0029,
+    -0.0024,
+    1.0225
+   ]
+  },
+  {
+   "name": "defaultMaterial.730",
+   "color": [
+    0.75,
+    0.709,
+    0.3
+   ],
+   "vertices": 21,
+   "center": [
+    -0.0258,
+    -0.0037,
+    1.0293
+   ]
+  },
+  {
+   "name": "defaultMaterial.731",
+   "color": [
+    0.656,
+    0.1,
+    1.0
+   ],
+   "vertices": 21,
+   "center": [
+    -0.0069,
+    -0.0027,
+    1.0237
+   ]
+  },
+  {
+   "name": "defaultMaterial.732",
+   "color": [
+    0.4,
+    1.0,
+    0.596
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0237,
+    -0.0035,
+    1.0288
+   ]
+  },
+  {
+   "name": "defaultMaterial.733",
+   "color": [
+    0.75,
+    0.098,
+    0.075
+   ],
+   "vertices": 21,
+   "center": [
+    -0.0217,
+    -0.0035,
+    1.0281
+   ]
+  },
+  {
+   "name": "defaultMaterial.734",
+   "color": [
+    0.4,
+    0.554,
+    1.0
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0048,
+    -0.0025,
+    1.0232
+   ]
+  },
+  {
+   "name": "defaultMaterial.735",
+   "color": [
+    0.594,
+    1.0,
+    0.1
+   ],
+   "vertices": 21,
+   "center": [
+    -0.0028,
+    -0.0025,
+    1.0225
+   ]
+  },
+  {
+   "name": "defaultMaterial.736",
+   "color": [
+    0.75,
+    0.3,
+    0.678
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0257,
+    -0.0057,
+    1.0144
+   ]
+  },
+  {
+   "name": "defaultMaterial.737",
+   "color": [
+    0.1,
+    1.0,
+    0.881
+   ],
+   "vertices": 885,
+   "center": [
+    -0.0022,
+    -0.0059,
+    1.0347
+   ]
+  },
+  {
+   "name": "defaultMaterial.738",
+   "color": [
+    1.0,
+    0.745,
+    0.4
+   ],
+   "vertices": 885,
+   "center": [
+    0.0006,
+    -0.0056,
+    1.0275
+   ]
+  },
+  {
+   "name": "defaultMaterial.739",
+   "color": [
+    0.267,
+    0.075,
+    0.75
+   ],
+   "vertices": 885,
+   "center": [
+    -0.022,
+    -0.0069,
+    1.0407
+   ]
+  },
+  {
+   "name": "defaultMaterial.740",
+   "color": [
+    0.405,
+    1.0,
+    0.4
+   ],
+   "vertices": 885,
+   "center": [
+    -0.0162,
+    -0.0069,
+    1.072
+   ]
+  },
+  {
+   "name": "defaultMaterial.741",
+   "color": [
+    1.0,
+    0.1,
+    0.37
+   ],
+   "vertices": 256,
+   "center": [
+    -0.0171,
+    -0.0037,
+    1.015
+   ]
+  },
+  {
+   "name": "defaultMaterial.742",
+   "color": [
+    0.3,
+    0.566,
+    0.75
+   ],
+   "vertices": 256,
+   "center": [
+    -0.0171,
+    -0.0035,
+    1.015
+   ]
+  },
+  {
+   "name": "defaultMaterial.743",
+   "color": [
+    0.895,
+    1.0,
+    0.1
+   ],
+   "vertices": 256,
+   "center": [
+    -0.0172,
+    -0.0031,
+    1.015
+   ]
+  },
+  {
+   "name": "defaultMaterial.744",
+   "color": [
+    0.895,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0256,
+    -0.0057,
+    1.0161
+   ]
+  },
+  {
+   "name": "defaultMaterial.745",
+   "color": [
+    0.075,
+    0.75,
+    0.435
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0252,
+    -0.0057,
+    1.0177
+   ]
+  },
+  {
+   "name": "defaultMaterial.746",
+   "color": [
+    1.0,
+    0.545,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0245,
+    -0.0056,
+    1.0193
+   ]
+  },
+  {
+   "name": "defaultMaterial.747",
+   "color": [
+    0.1,
+    0.146,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0236,
+    -0.0056,
+    1.0206
+   ]
+  },
+  {
+   "name": "defaultMaterial.748",
+   "color": [
+    0.454,
+    0.75,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0223,
+    -0.0055,
+    1.0218
+   ]
+  },
+  {
+   "name": "defaultMaterial.749",
+   "color": [
+    1.0,
+    0.1,
+    0.671
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0209,
+    -0.0055,
+    1.0227
+   ]
+  },
+  {
+   "name": "defaultMaterial.750",
+   "color": [
+    0.4,
+    0.956,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0193,
+    -0.0054,
+    1.0233
+   ]
+  },
+  {
+   "name": "defaultMaterial.751",
+   "color": [
+    0.75,
+    0.603,
+    0.075
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0176,
+    -0.0053,
+    1.0236
+   ]
+  },
+  {
+   "name": "defaultMaterial.752",
+   "color": [
+    0.694,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0159,
+    -0.0052,
+    1.0235
+   ]
+  },
+  {
+   "name": "defaultMaterial.753",
+   "color": [
+    0.1,
+    1.0,
+    0.279
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0143,
+    -0.0052,
+    1.0232
+   ]
+  },
+  {
+   "name": "defaultMaterial.754",
+   "color": [
+    0.75,
+    0.3,
+    0.342
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0128,
+    -0.0051,
+    1.0225
+   ]
+  },
+  {
+   "name": "defaultMaterial.755",
+   "color": [
+    0.1,
+    0.446,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0114,
+    -0.005,
+    1.0215
+   ]
+  },
+  {
+   "name": "defaultMaterial.756",
+   "color": [
+    0.806,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0102,
+    -0.0049,
+    1.0202
+   ]
+  },
+  {
+   "name": "defaultMaterial.757",
+   "color": [
+    0.75,
+    0.075,
+    0.729
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0093,
+    -0.0049,
+    1.0188
+   ]
+  },
+  {
+   "name": "defaultMaterial.758",
+   "color": [
+    0.4,
+    1.0,
+    0.844
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0087,
+    -0.0048,
+    1.0172
+   ]
+  },
+  {
+   "name": "defaultMaterial.759",
+   "color": [
+    1.0,
+    0.503,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0084,
+    -0.0048,
+    1.0156
+   ]
+  },
+  {
+   "name": "defaultMaterial.760",
+   "color": [
+    0.37,
+    0.3,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0085,
+    -0.0048,
+    1.0139
+   ]
+  },
+  {
+   "name": "defaultMaterial.761",
+   "color": [
+    0.222,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0089,
+    -0.0048,
+    1.0122
+   ]
+  },
+  {
+   "name": "defaultMaterial.762",
+   "color": [
+    1.0,
+    0.4,
+    0.657
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0096,
+    -0.0048,
+    1.0107
+   ]
+  },
+  {
+   "name": "defaultMaterial.763",
+   "color": [
+    0.075,
+    0.561,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0105,
+    -0.0049,
+    1.0093
+   ]
+  },
+  {
+   "name": "defaultMaterial.764",
+   "color": [
+    1.0,
+    0.993,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0118,
+    -0.0049,
+    1.0081
+   ]
+  },
+  {
+   "name": "defaultMaterial.765",
+   "color": [
+    0.727,
+    0.1,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0132,
+    -0.005,
+    1.0072
+   ]
+  },
+  {
+   "name": "defaultMaterial.766",
+   "color": [
+    0.3,
+    0.75,
+    0.482
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0148,
+    -0.005,
+    1.0066
+   ]
+  },
+  {
+   "name": "defaultMaterial.767",
+   "color": [
+    1.0,
+    0.202,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0165,
+    -0.0051,
+    1.0063
+   ]
+  },
+  {
+   "name": "defaultMaterial.768",
+   "color": [
+    0.4,
+    0.507,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0182,
+    -0.0052,
+    1.0064
+   ]
+  },
+  {
+   "name": "defaultMaterial.769",
+   "color": [
+    0.392,
+    0.75,
+    0.075
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0198,
+    -0.0053,
+    1.0068
+   ]
+  },
+  {
+   "name": "defaultMaterial.770",
+   "color": [
+    1.0,
+    0.4,
+    0.857
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0214,
+    -0.0054,
+    1.0075
+   ]
+  },
+  {
+   "name": "defaultMaterial.771",
+   "color": [
+    0.1,
+    1.0,
+    0.952
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0227,
+    -0.0055,
+    1.0084
+   ]
+  },
+  {
+   "name": "defaultMaterial.772",
+   "color": [
+    0.75,
+    0.595,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0239,
+    -0.0055,
+    1.0097
+   ]
+  },
+  {
+   "name": "defaultMaterial.773",
+   "color": [
+    0.426,
+    0.1,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0248,
+    -0.0056,
+    1.0111
+   ]
+  },
+  {
+   "name": "defaultMaterial.774",
+   "color": [
+    0.4,
+    1.0,
+    0.443
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0254,
+    -0.0056,
+    1.0127
+   ]
+  },
+  {
+   "name": "defaultMaterial.775",
+   "color": [
+    0.75,
+    0.075,
+    0.224
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0256,
+    -0.0056,
+    1.0137
+   ]
+  },
+  {
+   "name": "defaultMaterial.776",
+   "color": [
+    0.4,
+    0.708,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0252,
+    -0.0056,
+    1.012
+   ]
+  },
+  {
+   "name": "defaultMaterial.777",
+   "color": [
+    0.824,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0244,
+    -0.0056,
+    1.0105
+   ]
+  },
+  {
+   "name": "defaultMaterial.778",
+   "color": [
+    0.707,
+    0.3,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0234,
+    -0.0055,
+    1.0091
+   ]
+  },
+  {
+   "name": "defaultMaterial.779",
+   "color": [
+    0.1,
+    1.0,
+    0.651
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0222,
+    -0.0054,
+    1.008
+   ]
+  },
+  {
+   "name": "defaultMaterial.780",
+   "color": [
+    1.0,
+    0.592,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0207,
+    -0.0053,
+    1.0071
+   ]
+  },
+  {
+   "name": "defaultMaterial.781",
+   "color": [
+    0.094,
+    0.075,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0191,
+    -0.0053,
+    1.0066
+   ]
+  },
+  {
+   "name": "defaultMaterial.782",
+   "color": [
+    0.558,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0174,
+    -0.0052,
+    1.0063
+   ]
+  },
+  {
+   "name": "defaultMaterial.783",
+   "color": [
+    1.0,
+    0.1,
+    0.6
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0157,
+    -0.0051,
+    1.0064
+   ]
+  },
+  {
+   "name": "defaultMaterial.784",
+   "color": [
+    0.3,
+    0.681,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0141,
+    -0.005,
+    1.0068
+   ]
+  },
+  {
+   "name": "defaultMaterial.785",
+   "color": [
+    1.0,
+    0.875,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0126,
+    -0.0049,
+    1.0076
+   ]
+  },
+  {
+   "name": "defaultMaterial.786",
+   "color": [
+    0.742,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0112,
+    -0.0049,
+    1.0086
+   ]
+  },
+  {
+   "name": "defaultMaterial.787",
+   "color": [
+    0.075,
+    0.75,
+    0.262
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0101,
+    -0.0048,
+    1.0099
+   ]
+  },
+  {
+   "name": "defaultMaterial.788",
+   "color": [
+    1.0,
+    0.4,
+    0.409
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0092,
+    -0.0048,
+    1.0113
+   ]
+  },
+  {
+   "name": "defaultMaterial.789",
+   "color": [
+    0.1,
+    0.375,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0087,
+    -0.0048,
+    1.0129
+   ]
+  },
+  {
+   "name": "defaultMaterial.790",
+   "color": [
+    0.569,
+    0.75,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0084,
+    -0.0048,
+    1.0146
+   ]
+  },
+  {
+   "name": "defaultMaterial.791",
+   "color": [
+    1.0,
+    0.1,
+    0.901
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0085,
+    -0.0048,
+    1.0163
+   ]
+  },
+  {
+   "name": "defaultMaterial.792",
+   "color": [
+    0.4,
+    1.0,
+    0.891
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0089,
+    -0.0048,
+    1.0179
+   ]
+  },
+  {
+   "name": "defaultMaterial.793",
+   "color": [
+    0.75,
+    0.431,
+    0.075
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0097,
+    -0.0049,
+    1.0194
+   ]
+  },
+  {
+   "name": "defaultMaterial.794",
+   "color": [
+    0.541,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0107,
+    -0.005,
+    1.0208
+   ]
+  },
+  {
+   "name": "defaultMaterial.795",
+   "color": [
+    0.151,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0119,
+    -0.005,
+    1.0219
+   ]
+  },
+  {
+   "name": "defaultMaterial.796",
+   "color": [
+    0.75,
+    0.3,
+    0.457
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0134,
+    -0.0051,
+    1.0228
+   ]
+  },
+  {
+   "name": "defaultMaterial.797",
+   "color": [
+    0.1,
+    0.676,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.015,
+    -0.0052,
+    1.0234
+   ]
+  },
+  {
+   "name": "defaultMaterial.798",
+   "color": [
+    0.959,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0167,
+    -0.0053,
+    1.0236
+   ]
+  },
+  {
+   "name": "defaultMaterial.799",
+   "color": [
+    0.599,
+    0.075,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0184,
+    -0.0054,
+    1.0235
+   ]
+  },
+  {
+   "name": "defaultMaterial.800",
+   "color": [
+    0.4,
+    1.0,
+    0.691
+   ],
+   "vertices": 6,
+   "center": [
+    -0.02,
+    -0.0054,
+    1.0231
+   ]
+  },
+  {
+   "name": "defaultMaterial.801",
+   "color": [
+    1.0,
+    0.273,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0215,
+    -0.0055,
+    1.0224
+   ]
+  },
+  {
+   "name": "defaultMaterial.802",
+   "color": [
+    0.3,
+    0.345,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0229,
+    -0.0056,
+    1.0213
+   ]
+  },
+  {
+   "name": "defaultMaterial.803",
+   "color": [
+    0.452,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.024,
+    -0.0056,
+    1.0201
+   ]
+  },
+  {
+   "name": "defaultMaterial.804",
+   "color": [
+    1.0,
+    0.4,
+    0.81
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0249,
+    -0.0056,
+    1.0186
+   ]
+  },
+  {
+   "name": "defaultMaterial.805",
+   "color": [
+    0.075,
+    0.733,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0257,
+    -0.0057,
+    1.0153
+   ]
+  },
+  {
+   "name": "defaultMaterial.806",
+   "color": [
+    1.0,
+    0.84,
+    0.4
+   ],
+   "vertices": 384,
+   "center": [
+    -0.0172,
+    -0.0033,
+    1.015
+   ]
+  },
+  {
+   "name": "defaultMaterial.807",
+   "color": [
+    0.497,
+    0.1,
+    1.0
+   ],
+   "vertices": 1245,
+   "center": [
+    -0.0172,
+    -0.0023,
+    1.015
+   ]
+  },
+  {
+   "name": "defaultMaterial.808",
+   "color": [
+    0.3,
+    0.75,
+    0.367
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0254,
+    -0.0057,
+    1.017
+   ]
+  },
+  {
+   "name": "defaultMaterial.809",
+   "color": [
+    1.0,
+    0.1,
+    0.228
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0222,
+    -0.0064,
+    1.0274
+   ]
+  },
+  {
+   "name": "defaultMaterial.810",
+   "color": [
+    0.4,
+    0.66,
+    1.0
+   ],
+   "vertices": 22,
+   "center": [
+    -0.007,
+    -0.0043,
+    1.0242
+   ]
+  },
+  {
+   "name": "defaultMaterial.811",
+   "color": [
+    0.565,
+    0.75,
+    0.075
+   ],
+   "vertices": 22,
+   "center": [
+    -0.0068,
+    -0.0042,
+    1.0242
+   ]
+  },
+  {
+   "name": "defaultMaterial.812",
+   "color": [
+    0.99,
+    0.4,
+    1.0
+   ],
+   "vertices": 32,
+   "center": [
+    -0.0065,
+    -0.0046,
+    1.0243
+   ]
+  },
+  {
+   "name": "defaultMaterial.813",
+   "color": [
+    0.1,
+    1.0,
+    0.722
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0086,
+    -0.0047,
+    1.0243
+   ]
+  },
+  {
+   "name": "defaultMaterial.814",
+   "color": [
+    0.75,
+    0.48,
+    0.3
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0083,
+    -0.0047,
+    1.0242
+   ]
+  },
+  {
+   "name": "defaultMaterial.815",
+   "color": [
+    0.197,
+    0.1,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0081,
+    -0.0047,
+    1.0242
+   ]
+  },
+  {
+   "name": "defaultMaterial.816",
+   "color": [
+    0.511,
+    1.0,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0075,
+    -0.0046,
+    1.024
+   ]
+  },
+  {
+   "name": "defaultMaterial.817",
+   "color": [
+    0.75,
+    0.075,
+    0.397
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0092,
+    -0.0047,
+    1.0245
+   ]
+  },
+  {
+   "name": "defaultMaterial.818",
+   "color": [
+    0.4,
+    0.861,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.01,
+    -0.0048,
+    1.0247
+   ]
+  },
+  {
+   "name": "defaultMaterial.819",
+   "color": [
+    1.0,
+    0.946,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0098,
+    -0.0048,
+    1.0247
+   ]
+  },
+  {
+   "name": "defaultMaterial.820",
+   "color": [
+    0.592,
+    0.3,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0102,
+    -0.0048,
+    1.0248
+   ]
+  },
+  {
+   "name": "defaultMaterial.821",
+   "color": [
+    0.1,
+    1.0,
+    0.421
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0109,
+    -0.0048,
+    1.025
+   ]
+  },
+  {
+   "name": "defaultMaterial.822",
+   "color": [
+    1.0,
+    0.439,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0119,
+    -0.0049,
+    1.0253
+   ]
+  },
+  {
+   "name": "defaultMaterial.823",
+   "color": [
+    0.075,
+    0.228,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0117,
+    -0.0049,
+    1.0252
+   ]
+  },
+  {
+   "name": "defaultMaterial.824",
+   "color": [
+    0.711,
+    1.0,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0115,
+    -0.0049,
+    1.0252
+   ]
+  },
+  {
+   "name": "defaultMaterial.825",
+   "color": [
+    1.0,
+    0.1,
+    0.83
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0136,
+    -0.005,
+    1.0258
+   ]
+  },
+  {
+   "name": "defaultMaterial.826",
+   "color": [
+    0.3,
+    0.75,
+    0.704
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0134,
+    -0.005,
+    1.0257
+   ]
+  },
+  {
+   "name": "defaultMaterial.827",
+   "color": [
+    1.0,
+    0.645,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0132,
+    -0.005,
+    1.0257
+   ]
+  },
+  {
+   "name": "defaultMaterial.828",
+   "color": [
+    0.588,
+    0.4,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0126,
+    -0.0049,
+    1.0255
+   ]
+  },
+  {
+   "name": "defaultMaterial.829",
+   "color": [
+    0.075,
+    0.75,
+    0.09
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0142,
+    -0.005,
+    1.026
+   ]
+  },
+  {
+   "name": "defaultMaterial.830",
+   "color": [
+    1.0,
+    0.4,
+    0.562
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0153,
+    -0.0051,
+    1.0263
+   ]
+  },
+  {
+   "name": "defaultMaterial.831",
+   "color": [
+    0.1,
+    0.605,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0151,
+    -0.0051,
+    1.0263
+   ]
+  },
+  {
+   "name": "defaultMaterial.832",
+   "color": [
+    0.684,
+    0.75,
+    0.3
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0149,
+    -0.0051,
+    1.0262
+   ]
+  },
+  {
+   "name": "defaultMaterial.833",
+   "color": [
+    0.869,
+    0.1,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0159,
+    -0.0051,
+    1.0265
+   ]
+  },
+  {
+   "name": "defaultMaterial.834",
+   "color": [
+    0.4,
+    1.0,
+    0.738
+   ],
+   "vertices": 28,
+   "center": [
+    -0.017,
+    -0.0052,
+    1.0268
+   ]
+  },
+  {
+   "name": "defaultMaterial.835",
+   "color": [
+    0.75,
+    0.258,
+    0.075
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0168,
+    -0.0052,
+    1.0268
+   ]
+  },
+  {
+   "name": "defaultMaterial.836",
+   "color": [
+    0.4,
+    0.412,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0166,
+    -0.0051,
+    1.0267
+   ]
+  },
+  {
+   "name": "defaultMaterial.837",
+   "color": [
+    0.381,
+    1.0,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0176,
+    -0.0052,
+    1.027
+   ]
+  },
+  {
+   "name": "defaultMaterial.838",
+   "color": [
+    0.75,
+    0.3,
+    0.572
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0182,
+    -0.0052,
+    1.0272
+   ]
+  },
+  {
+   "name": "defaultMaterial.839",
+   "color": [
+    0.1,
+    0.906,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0187,
+    -0.0053,
+    1.0273
+   ]
+  },
+  {
+   "name": "defaultMaterial.840",
+   "color": [
+    1.0,
+    0.887,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0184,
+    -0.0053,
+    1.0273
+   ]
+  },
+  {
+   "name": "defaultMaterial.841",
+   "color": [
+    0.426,
+    0.075,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0193,
+    -0.0052,
+    1.0275
+   ]
+  },
+  {
+   "name": "defaultMaterial.842",
+   "color": [
+    0.4,
+    1.0,
+    0.537
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0203,
+    -0.0053,
+    1.0278
+   ]
+  },
+  {
+   "name": "defaultMaterial.843",
+   "color": [
+    1.0,
+    0.1,
+    0.157
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0201,
+    -0.0054,
+    1.0278
+   ]
+  },
+  {
+   "name": "defaultMaterial.844",
+   "color": [
+    0.3,
+    0.46,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0199,
+    -0.0053,
+    1.0277
+   ]
+  },
+  {
+   "name": "defaultMaterial.845",
+   "color": [
+    0.682,
+    1.0,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    -0.021,
+    -0.0053,
+    1.028
+   ]
+  },
+  {
+   "name": "defaultMaterial.846",
+   "color": [
+    1.0,
+    0.4,
+    0.963
+   ],
+   "vertices": 28,
+   "center": [
+    -0.022,
+    -0.0054,
+    1.0283
+   ]
+  },
+  {
+   "name": "defaultMaterial.847",
+   "color": [
+    0.075,
+    0.75,
+    0.595
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0218,
+    -0.0055,
+    1.0283
+   ]
+  },
+  {
+   "name": "defaultMaterial.848",
+   "color": [
+    1.0,
+    0.687,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0216,
+    -0.0054,
+    1.0282
+   ]
+  },
+  {
+   "name": "defaultMaterial.849",
+   "color": [
+    0.268,
+    0.1,
+    1.0
+   ],
+   "vertices": 22,
+   "center": [
+    -0.0226,
+    -0.0051,
+    1.0288
+   ]
+  },
+  {
+   "name": "defaultMaterial.850",
+   "color": [
+    0.348,
+    0.75,
+    0.3
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0234,
+    -0.0065,
+    1.0272
+   ]
+  },
+  {
+   "name": "defaultMaterial.851",
+   "color": [
+    1.0,
+    0.1,
+    0.458
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0233,
+    -0.0068,
+    1.0268
+   ]
+  },
+  {
+   "name": "defaultMaterial.852",
+   "color": [
+    0.4,
+    0.814,
+    1.0
+   ],
+   "vertices": 8,
+   "center": [
+    -0.023,
+    -0.0065,
+    1.0271
+   ]
+  },
+  {
+   "name": "defaultMaterial.853",
+   "color": [
+    0.737,
+    0.75,
+    0.075
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0237,
+    -0.0062,
+    1.0277
+   ]
+  },
+  {
+   "name": "defaultMaterial.854",
+   "color": [
+    0.836,
+    0.4,
+    1.0
+   ],
+   "vertices": 270,
+   "center": [
+    -0.0077,
+    -0.0069,
+    1.0522
+   ]
+  },
+  {
+   "name": "defaultMaterial.855",
+   "color": [
+    0.1,
+    1.0,
+    0.492
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0124,
+    -0.0032,
+    1.0646
+   ]
+  },
+  {
+   "name": "defaultMaterial.856",
+   "color": [
+    0.75,
+    0.365,
+    0.3
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0164,
+    -0.0034,
+    1.0658
+   ]
+  },
+  {
+   "name": "defaultMaterial.857",
+   "color": [
+    0.1,
+    0.233,
+    1.0
+   ],
+   "vertices": 30,
+   "center": [
+    0.0025,
+    -0.0025,
+    1.0601
+   ]
+  },
+  {
+   "name": "defaultMaterial.858",
+   "color": [
+    0.664,
+    1.0,
+    0.4
+   ],
+   "vertices": 30,
+   "center": [
+    0.0065,
+    -0.0022,
+    1.0589
+   ]
+  },
+  {
+   "name": "defaultMaterial.859",
+   "color": [
+    0.75,
+    0.075,
+    0.569
+   ],
+   "vertices": 21,
+   "center": [
+    -0.0165,
+    -0.0036,
+    1.0657
+   ]
+  },
+  {
+   "name": "defaultMaterial.860",
+   "color": [
+    0.4,
+    1.0,
+    0.986
+   ],
+   "vertices": 21,
+   "center": [
+    0.0024,
+    -0.0025,
+    1.0601
+   ]
+  },
+  {
+   "name": "defaultMaterial.861",
+   "color": [
+    1.0,
+    0.716,
+    0.1
+   ],
+   "vertices": 30,
+   "center": [
+    -0.0144,
+    -0.0033,
+    1.0652
+   ]
+  },
+  {
+   "name": "defaultMaterial.862",
+   "color": [
+    0.477,
+    0.3,
+    0.75
+   ],
+   "vertices": 21,
+   "center": [
+    -0.0123,
+    -0.0034,
+    1.0645
+   ]
+  },
+  {
+   "name": "defaultMaterial.863",
+   "color": [
+    0.1,
+    1.0,
+    0.191
+   ],
+   "vertices": 30,
+   "center": [
+    0.0045,
+    -0.0023,
+    1.0596
+   ]
+  },
+  {
+   "name": "defaultMaterial.864",
+   "color": [
+    1.0,
+    0.4,
+    0.514
+   ],
+   "vertices": 21,
+   "center": [
+    0.0065,
+    -0.0024,
+    1.0589
+   ]
+  },
+  {
+   "name": "defaultMaterial.865",
+   "color": [
+    0.075,
+    0.401,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0163,
+    -0.0055,
+    1.0508
+   ]
+  },
+  {
+   "name": "defaultMaterial.866",
+   "color": [
+    0.865,
+    1.0,
+    0.4
+   ],
+   "vertices": 885,
+   "center": [
+    -0.0257,
+    -0.007,
+    1.0358
+   ]
+  },
+  {
+   "name": "defaultMaterial.867",
+   "color": [
+    0.94,
+    0.1,
+    1.0
+   ],
+   "vertices": 885,
+   "center": [
+    0.01,
+    -0.0055,
+    1.0639
+   ]
+  },
+  {
+   "name": "defaultMaterial.868",
+   "color": [
+    0.3,
+    0.75,
+    0.589
+   ],
+   "vertices": 885,
+   "center": [
+    -0.0315,
+    -0.007,
+    1.0045
+   ]
+  },
+  {
+   "name": "defaultMaterial.869",
+   "color": [
+    1.0,
+    0.415,
+    0.1
+   ],
+   "vertices": 885,
+   "center": [
+    -0.0117,
+    -0.006,
+    0.9985
+   ]
+  },
+  {
+   "name": "defaultMaterial.870",
+   "color": [
+    0.435,
+    0.4,
+    1.0
+   ],
+   "vertices": 256,
+   "center": [
+    -0.0078,
+    -0.0036,
+    1.0514
+   ]
+  },
+  {
+   "name": "defaultMaterial.871",
+   "color": [
+    0.232,
+    0.75,
+    0.075
+   ],
+   "vertices": 256,
+   "center": [
+    -0.0078,
+    -0.0034,
+    1.0514
+   ]
+  },
+  {
+   "name": "defaultMaterial.872",
+   "color": [
+    1.0,
+    0.4,
+    0.715
+   ],
+   "vertices": 256,
+   "center": [
+    -0.0078,
+    -0.003,
+    1.0514
+   ]
+  },
+  {
+   "name": "defaultMaterial.873",
+   "color": [
+    0.1,
+    0.835,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0163,
+    -0.0055,
+    1.0525
+   ]
+  },
+  {
+   "name": "defaultMaterial.874",
+   "color": [
+    0.75,
+    0.701,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0159,
+    -0.0055,
+    1.0541
+   ]
+  },
+  {
+   "name": "defaultMaterial.875",
+   "color": [
+    0.64,
+    0.1,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0152,
+    -0.0055,
+    1.0557
+   ]
+  },
+  {
+   "name": "defaultMaterial.876",
+   "color": [
+    0.4,
+    1.0,
+    0.585
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0142,
+    -0.0055,
+    1.057
+   ]
+  },
+  {
+   "name": "defaultMaterial.877",
+   "color": [
+    0.75,
+    0.086,
+    0.075
+   ],
+   "vertices": 6,
+   "center": [
+    -0.013,
+    -0.0054,
+    1.0582
+   ]
+  },
+  {
+   "name": "defaultMaterial.878",
+   "color": [
+    0.4,
+    0.566,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0116,
+    -0.0053,
+    1.0591
+   ]
+  },
+  {
+   "name": "defaultMaterial.879",
+   "color": [
+    0.611,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.01,
+    -0.0053,
+    1.0597
+   ]
+  },
+  {
+   "name": "defaultMaterial.880",
+   "color": [
+    0.75,
+    0.3,
+    0.687
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0083,
+    -0.0052,
+    1.06
+   ]
+  },
+  {
+   "name": "defaultMaterial.881",
+   "color": [
+    0.1,
+    1.0,
+    0.864
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0066,
+    -0.0051,
+    1.0599
+   ]
+  },
+  {
+   "name": "defaultMaterial.882",
+   "color": [
+    1.0,
+    0.734,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.005,
+    -0.005,
+    1.0596
+   ]
+  },
+  {
+   "name": "defaultMaterial.883",
+   "color": [
+    0.254,
+    0.075,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0034,
+    -0.0049,
+    1.0589
+   ]
+  },
+  {
+   "name": "defaultMaterial.884",
+   "color": [
+    0.416,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.002,
+    -0.0049,
+    1.0579
+   ]
+  },
+  {
+   "name": "defaultMaterial.885",
+   "color": [
+    1.0,
+    0.1,
+    0.387
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0009,
+    -0.0048,
+    1.0566
+   ]
+  },
+  {
+   "name": "defaultMaterial.886",
+   "color": [
+    0.3,
+    0.575,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    0.0,
+    -0.0047,
+    1.0552
+   ]
+  },
+  {
+   "name": "defaultMaterial.887",
+   "color": [
+    0.912,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    0.0006,
+    -0.0047,
+    1.0536
+   ]
+  },
+  {
+   "name": "defaultMaterial.888",
+   "color": [
+    0.884,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    0.0009,
+    -0.0047,
+    1.052
+   ]
+  },
+  {
+   "name": "defaultMaterial.889",
+   "color": [
+    0.075,
+    0.75,
+    0.422
+   ],
+   "vertices": 6,
+   "center": [
+    0.0008,
+    -0.0046,
+    1.0503
+   ]
+  },
+  {
+   "name": "defaultMaterial.890",
+   "color": [
+    1.0,
+    0.534,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    0.0005,
+    -0.0046,
+    1.0486
+   ]
+  },
+  {
+   "name": "defaultMaterial.891",
+   "color": [
+    0.1,
+    0.162,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0002,
+    -0.0047,
+    1.0471
+   ]
+  },
+  {
+   "name": "defaultMaterial.892",
+   "color": [
+    0.462,
+    0.75,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0012,
+    -0.0047,
+    1.0457
+   ]
+  },
+  {
+   "name": "defaultMaterial.893",
+   "color": [
+    1.0,
+    0.1,
+    0.688
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0024,
+    -0.0048,
+    1.0445
+   ]
+  },
+  {
+   "name": "defaultMaterial.894",
+   "color": [
+    0.4,
+    0.967,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0039,
+    -0.0048,
+    1.0436
+   ]
+  },
+  {
+   "name": "defaultMaterial.895",
+   "color": [
+    0.75,
+    0.59,
+    0.075
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0055,
+    -0.0049,
+    1.043
+   ]
+  },
+  {
+   "name": "defaultMaterial.896",
+   "color": [
+    0.683,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0071,
+    -0.005,
+    1.0427
+   ]
+  },
+  {
+   "name": "defaultMaterial.897",
+   "color": [
+    0.1,
+    1.0,
+    0.262
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0088,
+    -0.0051,
+    1.0428
+   ]
+  },
+  {
+   "name": "defaultMaterial.898",
+   "color": [
+    0.75,
+    0.3,
+    0.35
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0105,
+    -0.0051,
+    1.0432
+   ]
+  },
+  {
+   "name": "defaultMaterial.899",
+   "color": [
+    0.1,
+    0.463,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.012,
+    -0.0052,
+    1.0439
+   ]
+  },
+  {
+   "name": "defaultMaterial.900",
+   "color": [
+    0.817,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0134,
+    -0.0053,
+    1.0448
+   ]
+  },
+  {
+   "name": "defaultMaterial.901",
+   "color": [
+    0.75,
+    0.075,
+    0.741
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0146,
+    -0.0054,
+    1.0461
+   ]
+  },
+  {
+   "name": "defaultMaterial.902",
+   "color": [
+    0.4,
+    1.0,
+    0.833
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0155,
+    -0.0054,
+    1.0475
+   ]
+  },
+  {
+   "name": "defaultMaterial.903",
+   "color": [
+    1.0,
+    0.486,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0161,
+    -0.0055,
+    1.0491
+   ]
+  },
+  {
+   "name": "defaultMaterial.904",
+   "color": [
+    0.362,
+    0.3,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0163,
+    -0.0055,
+    1.05
+   ]
+  },
+  {
+   "name": "defaultMaterial.905",
+   "color": [
+    0.239,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0158,
+    -0.0055,
+    1.0484
+   ]
+  },
+  {
+   "name": "defaultMaterial.906",
+   "color": [
+    1.0,
+    0.4,
+    0.668
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0151,
+    -0.0054,
+    1.0469
+   ]
+  },
+  {
+   "name": "defaultMaterial.907",
+   "color": [
+    0.075,
+    0.573,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0141,
+    -0.0053,
+    1.0455
+   ]
+  },
+  {
+   "name": "defaultMaterial.908",
+   "color": [
+    1.0,
+    0.982,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0128,
+    -0.0053,
+    1.0444
+   ]
+  },
+  {
+   "name": "defaultMaterial.909",
+   "color": [
+    0.711,
+    0.1,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0114,
+    -0.0052,
+    1.0435
+   ]
+  },
+  {
+   "name": "defaultMaterial.910",
+   "color": [
+    0.3,
+    0.75,
+    0.474
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0098,
+    -0.0051,
+    1.043
+   ]
+  },
+  {
+   "name": "defaultMaterial.911",
+   "color": [
+    1.0,
+    0.185,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0081,
+    -0.005,
+    1.0427
+   ]
+  },
+  {
+   "name": "defaultMaterial.912",
+   "color": [
+    0.4,
+    0.518,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0064,
+    -0.0049,
+    1.0428
+   ]
+  },
+  {
+   "name": "defaultMaterial.913",
+   "color": [
+    0.405,
+    0.75,
+    0.075
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0048,
+    -0.0049,
+    1.0432
+   ]
+  },
+  {
+   "name": "defaultMaterial.914",
+   "color": [
+    1.0,
+    0.4,
+    0.868
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0032,
+    -0.0048,
+    1.044
+   ]
+  },
+  {
+   "name": "defaultMaterial.915",
+   "color": [
+    0.1,
+    1.0,
+    0.935
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0019,
+    -0.0047,
+    1.045
+   ]
+  },
+  {
+   "name": "defaultMaterial.916",
+   "color": [
+    0.75,
+    0.586,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0008,
+    -0.0047,
+    1.0463
+   ]
+  },
+  {
+   "name": "defaultMaterial.917",
+   "color": [
+    0.41,
+    0.1,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    0.0001,
+    -0.0047,
+    1.0477
+   ]
+  },
+  {
+   "name": "defaultMaterial.918",
+   "color": [
+    0.4,
+    1.0,
+    0.431
+   ],
+   "vertices": 6,
+   "center": [
+    0.0007,
+    -0.0046,
+    1.0493
+   ]
+  },
+  {
+   "name": "defaultMaterial.919",
+   "color": [
+    0.75,
+    0.075,
+    0.237
+   ],
+   "vertices": 6,
+   "center": [
+    0.0009,
+    -0.0046,
+    1.051
+   ]
+  },
+  {
+   "name": "defaultMaterial.920",
+   "color": [
+    0.4,
+    0.719,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    0.0008,
+    -0.0047,
+    1.0527
+   ]
+  },
+  {
+   "name": "defaultMaterial.921",
+   "color": [
+    0.841,
+    1.0,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    0.0004,
+    -0.0047,
+    1.0543
+   ]
+  },
+  {
+   "name": "defaultMaterial.922",
+   "color": [
+    0.698,
+    0.3,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0003,
+    -0.0048,
+    1.0558
+   ]
+  },
+  {
+   "name": "defaultMaterial.923",
+   "color": [
+    0.1,
+    1.0,
+    0.634
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0014,
+    -0.0048,
+    1.0572
+   ]
+  },
+  {
+   "name": "defaultMaterial.924",
+   "color": [
+    1.0,
+    0.581,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0026,
+    -0.0049,
+    1.0583
+   ]
+  },
+  {
+   "name": "defaultMaterial.925",
+   "color": [
+    0.082,
+    0.075,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0041,
+    -0.005,
+    1.0592
+   ]
+  },
+  {
+   "name": "defaultMaterial.926",
+   "color": [
+    0.569,
+    1.0,
+    0.4
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0057,
+    -0.0051,
+    1.0598
+   ]
+  },
+  {
+   "name": "defaultMaterial.927",
+   "color": [
+    1.0,
+    0.1,
+    0.616
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0073,
+    -0.0051,
+    1.06
+   ]
+  },
+  {
+   "name": "defaultMaterial.928",
+   "color": [
+    0.3,
+    0.69,
+    0.75
+   ],
+   "vertices": 6,
+   "center": [
+    -0.009,
+    -0.0052,
+    1.0599
+   ]
+  },
+  {
+   "name": "defaultMaterial.929",
+   "color": [
+    1.0,
+    0.858,
+    0.1
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0107,
+    -0.0053,
+    1.0595
+   ]
+  },
+  {
+   "name": "defaultMaterial.930",
+   "color": [
+    0.73,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0122,
+    -0.0054,
+    1.0588
+   ]
+  },
+  {
+   "name": "defaultMaterial.931",
+   "color": [
+    0.075,
+    0.75,
+    0.25
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0135,
+    -0.0054,
+    1.0577
+   ]
+  },
+  {
+   "name": "defaultMaterial.932",
+   "color": [
+    1.0,
+    0.4,
+    0.42
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0147,
+    -0.0055,
+    1.0565
+   ]
+  },
+  {
+   "name": "defaultMaterial.933",
+   "color": [
+    0.1,
+    0.392,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0155,
+    -0.0055,
+    1.055
+   ]
+  },
+  {
+   "name": "defaultMaterial.934",
+   "color": [
+    0.577,
+    0.75,
+    0.3
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0163,
+    -0.0055,
+    1.0517
+   ]
+  },
+  {
+   "name": "defaultMaterial.935",
+   "color": [
+    1.0,
+    0.1,
+    0.917
+   ],
+   "vertices": 384,
+   "center": [
+    -0.0078,
+    -0.0031,
+    1.0514
+   ]
+  },
+  {
+   "name": "defaultMaterial.936",
+   "color": [
+    0.4,
+    1.0,
+    0.88
+   ],
+   "vertices": 1245,
+   "center": [
+    -0.0079,
+    -0.0022,
+    1.0514
+   ]
+  },
+  {
+   "name": "defaultMaterial.937",
+   "color": [
+    0.75,
+    0.418,
+    0.075
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0161,
+    -0.0055,
+    1.0534
+   ]
+  },
+  {
+   "name": "defaultMaterial.938",
+   "color": [
+    0.53,
+    0.4,
+    1.0
+   ],
+   "vertices": 6,
+   "center": [
+    -0.0128,
+    -0.0063,
+    1.0638
+   ]
+  },
+  {
+   "name": "defaultMaterial.939",
+   "color": [
+    0.168,
+    1.0,
+    0.1
+   ],
+   "vertices": 22,
+   "center": [
+    0.0024,
+    -0.0041,
+    1.0606
+   ]
+  },
+  {
+   "name": "defaultMaterial.940",
+   "color": [
+    0.75,
+    0.3,
+    0.465
+   ],
+   "vertices": 22,
+   "center": [
+    0.0026,
+    -0.0041,
+    1.0606
+   ]
+  },
+  {
+   "name": "defaultMaterial.941",
+   "color": [
+    0.1,
+    0.693,
+    1.0
+   ],
+   "vertices": 32,
+   "center": [
+    0.0029,
+    -0.0044,
+    1.0607
+   ]
+  },
+  {
+   "name": "defaultMaterial.942",
+   "color": [
+    0.97,
+    1.0,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    0.0008,
+    -0.0046,
+    1.0607
+   ]
+  },
+  {
+   "name": "defaultMaterial.943",
+   "color": [
+    0.586,
+    0.075,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    0.001,
+    -0.0046,
+    1.0606
+   ]
+  },
+  {
+   "name": "defaultMaterial.944",
+   "color": [
+    0.4,
+    1.0,
+    0.679
+   ],
+   "vertices": 28,
+   "center": [
+    0.0012,
+    -0.0046,
+    1.0606
+   ]
+  },
+  {
+   "name": "defaultMaterial.945",
+   "color": [
+    1.0,
+    0.256,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    0.0018,
+    -0.0045,
+    1.0604
+   ]
+  },
+  {
+   "name": "defaultMaterial.946",
+   "color": [
+    0.3,
+    0.353,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    0.0002,
+    -0.0046,
+    1.0609
+   ]
+  },
+  {
+   "name": "defaultMaterial.947",
+   "color": [
+    0.469,
+    1.0,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0007,
+    -0.0047,
+    1.0611
+   ]
+  },
+  {
+   "name": "defaultMaterial.948",
+   "color": [
+    1.0,
+    0.4,
+    0.821
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0005,
+    -0.0046,
+    1.0611
+   ]
+  },
+  {
+   "name": "defaultMaterial.949",
+   "color": [
+    0.075,
+    0.746,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0009,
+    -0.0047,
+    1.0612
+   ]
+  },
+  {
+   "name": "defaultMaterial.950",
+   "color": [
+    1.0,
+    0.829,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0015,
+    -0.0047,
+    1.0614
+   ]
+  },
+  {
+   "name": "defaultMaterial.951",
+   "color": [
+    0.481,
+    0.1,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0026,
+    -0.0048,
+    1.0617
+   ]
+  },
+  {
+   "name": "defaultMaterial.952",
+   "color": [
+    0.3,
+    0.75,
+    0.359
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0024,
+    -0.0048,
+    1.0616
+   ]
+  },
+  {
+   "name": "defaultMaterial.953",
+   "color": [
+    1.0,
+    0.1,
+    0.245
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0022,
+    -0.0047,
+    1.0616
+   ]
+  },
+  {
+   "name": "defaultMaterial.954",
+   "color": [
+    0.4,
+    0.671,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0043,
+    -0.0048,
+    1.0622
+   ]
+  },
+  {
+   "name": "defaultMaterial.955",
+   "color": [
+    0.577,
+    0.75,
+    0.075
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0041,
+    -0.0049,
+    1.0621
+   ]
+  },
+  {
+   "name": "defaultMaterial.956",
+   "color": [
+    0.978,
+    0.4,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0038,
+    -0.0048,
+    1.0621
+   ]
+  },
+  {
+   "name": "defaultMaterial.957",
+   "color": [
+    0.1,
+    1.0,
+    0.705
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0032,
+    -0.0048,
+    1.0619
+   ]
+  },
+  {
+   "name": "defaultMaterial.958",
+   "color": [
+    0.75,
+    0.471,
+    0.3
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0049,
+    -0.0048,
+    1.0624
+   ]
+  },
+  {
+   "name": "defaultMaterial.959",
+   "color": [
+    0.18,
+    0.1,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.006,
+    -0.0049,
+    1.0627
+   ]
+  },
+  {
+   "name": "defaultMaterial.960",
+   "color": [
+    0.522,
+    1.0,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0057,
+    -0.005,
+    1.0626
+   ]
+  },
+  {
+   "name": "defaultMaterial.961",
+   "color": [
+    0.75,
+    0.075,
+    0.409
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0055,
+    -0.0049,
+    1.0626
+   ]
+  },
+  {
+   "name": "defaultMaterial.962",
+   "color": [
+    0.4,
+    0.872,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0066,
+    -0.0049,
+    1.0629
+   ]
+  },
+  {
+   "name": "defaultMaterial.963",
+   "color": [
+    1.0,
+    0.929,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0076,
+    -0.005,
+    1.0632
+   ]
+  },
+  {
+   "name": "defaultMaterial.964",
+   "color": [
+    0.583,
+    0.3,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0074,
+    -0.005,
+    1.0632
+   ]
+  },
+  {
+   "name": "defaultMaterial.965",
+   "color": [
+    0.1,
+    1.0,
+    0.404
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0072,
+    -0.005,
+    1.0631
+   ]
+  },
+  {
+   "name": "defaultMaterial.966",
+   "color": [
+    1.0,
+    0.428,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0083,
+    -0.005,
+    1.0634
+   ]
+  },
+  {
+   "name": "defaultMaterial.967",
+   "color": [
+    0.075,
+    0.241,
+    0.75
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0089,
+    -0.0051,
+    1.0636
+   ]
+  },
+  {
+   "name": "defaultMaterial.968",
+   "color": [
+    0.723,
+    1.0,
+    0.4
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0093,
+    -0.0051,
+    1.0637
+   ]
+  },
+  {
+   "name": "defaultMaterial.969",
+   "color": [
+    1.0,
+    0.1,
+    0.846
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0091,
+    -0.0051,
+    1.0637
+   ]
+  },
+  {
+   "name": "defaultMaterial.970",
+   "color": [
+    0.3,
+    0.75,
+    0.695
+   ],
+   "vertices": 28,
+   "center": [
+    -0.01,
+    -0.0051,
+    1.0639
+   ]
+  },
+  {
+   "name": "defaultMaterial.971",
+   "color": [
+    1.0,
+    0.628,
+    0.1
+   ],
+   "vertices": 28,
+   "center": [
+    -0.011,
+    -0.0052,
+    1.0642
+   ]
+  },
+  {
+   "name": "defaultMaterial.972",
+   "color": [
+    0.577,
+    0.4,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0108,
+    -0.0052,
+    1.0642
+   ]
+  },
+  {
+   "name": "defaultMaterial.973",
+   "color": [
+    0.075,
+    0.75,
+    0.077
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0106,
+    -0.0052,
+    1.0641
+   ]
+  },
+  {
+   "name": "defaultMaterial.974",
+   "color": [
+    1.0,
+    0.4,
+    0.573
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0116,
+    -0.0052,
+    1.0644
+   ]
+  },
+  {
+   "name": "defaultMaterial.975",
+   "color": [
+    0.1,
+    0.622,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0127,
+    -0.0053,
+    1.0647
+   ]
+  },
+  {
+   "name": "defaultMaterial.976",
+   "color": [
+    0.692,
+    0.75,
+    0.3
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0125,
+    -0.0053,
+    1.0647
+   ]
+  },
+  {
+   "name": "defaultMaterial.977",
+   "color": [
+    0.853,
+    0.1,
+    1.0
+   ],
+   "vertices": 28,
+   "center": [
+    -0.0123,
+    -0.0053,
+    1.0646
+   ]
+  },
+  {
+   "name": "defaultMaterial.978",
+   "color": [
+    0.4,
+    1.0,
+    0.727
+   ],
+   "vertices": 22,
+   "center": [
+    -0.0132,
+    -0.005,
+    1.0652
+   ]
+  },
+  {
+   "name": "defaultMaterial.979",
+   "color": [
+    0.75,
+    0.246,
+    0.075
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0141,
+    -0.0063,
+    1.0636
+   ]
+  },
+  {
+   "name": "defaultMaterial.980",
+   "color": [
+    0.4,
+    0.423,
+    1.0
+   ],
+   "vertices": 8,
+   "center": [
+    -0.014,
+    -0.0066,
+    1.0632
+   ]
+  },
+  {
+   "name": "defaultMaterial.981",
+   "color": [
+    0.398,
+    1.0,
+    0.1
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0137,
+    -0.0063,
+    1.0635
+   ]
+  },
+  {
+   "name": "defaultMaterial.982",
+   "color": [
+    0.75,
+    0.3,
+    0.58
+   ],
+   "vertices": 8,
+   "center": [
+    -0.0144,
+    -0.0061,
+    1.0641
+   ]
+  }
+ ]
+}
