@@ -148,6 +148,13 @@ final class TimbreUITests: XCTestCase {
         element("tunings.custom").tap(); settle(1.5); shot("47-custom-tuning")
         XCTAssertTrue(element("custom.save").waitForExistence(timeout: 10))
         element("custom.save").tap(); settle(1.5); shot("48-custom-tuning-saved")
+        // Pro instruments on their 3D stage.
+        for (asset, name) in [("13_mandolin_mandolin", "49-tune-mandolin-3d"), ("17_bowed_strings_violin", "49b-tune-violin-3d"), ("19_bowed_strings_cello", "49c-tune-cello-3d")] {
+            tab("Instruments"); settle(1.2)
+            let card = element("instrument." + asset)
+            scrollTo(card)
+            card.tap(); settle(6); shot(name)
+        }
     }
 
     func test08PhotoStage() throws {
@@ -160,6 +167,10 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 15))
         settle(7); shot("17-tune-photo-stage")
         element("string.2").tap(); settle(3); shot("18-tune-photo-stage-string")
+        tab("Instruments"); settle(1.2)
+        let bass = element("instrument.06_bass_4_string_p_bass")
+        scrollTo(bass)
+        bass.tap(); settle(6); shot("19-tune-bass-3d")
     }
 
     func test09LearnChordLesson() throws {
