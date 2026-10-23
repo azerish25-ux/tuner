@@ -1,0 +1,193 @@
+{
+ "id": "electric_sg",
+ "source": "scene.gltf",
+ "objects": [
+  {
+   "name": "Object_2",
+   "parent": "SG.obj.cleaner.materialmerger.gles",
+   "vertices": 9848,
+   "min": [
+    -0.0575,
+    -0.0389,
+    -0.0297
+   ],
+   "max": [
+    0.1308,
+    0.0381,
+    0.8269
+   ],
+   "center": [
+    0.0366,
+    -0.0004,
+    0.3986
+   ],
+   "materials": [
+    "Material.001"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.15
+   ]
+  },
+  {
+   "name": "Object_3",
+   "parent": "SG.obj.cleaner.materialmerger.gles",
+   "vertices": 9944,
+   "min": [
+    -0.1661,
+    -0.0398,
+    -0.1791
+   ],
+   "max": [
+    0.1663,
+    0.0364,
+    0.8062
+   ],
+   "center": [
+    0.0001,
+    -0.0017,
+    0.3136
+   ],
+   "materials": [
+    "Material.001"
+   ],
+   "color": [
+    0.4,
+    0.575,
+    1.0
+   ]
+  },
+  {
+   "name": "Object_4",
+   "parent": "SG.obj.cleaner.materialmerger.gles",
+   "vertices": 9927,
+   "min": [
+    -0.05,
+    -0.0415,
+    -0.0686
+   ],
+   "max": [
+    0.127,
+    0.0343,
+    0.8062
+   ],
+   "center": [
+    0.0385,
+    -0.0036,
+    0.3688
+   ],
+   "materials": [
+    "Material.001"
+   ],
+   "color": [
+    0.452,
+    0.7,
+    0.105
+   ]
+  },
+  {
+   "name": "Object_5",
+   "parent": "SG.obj.cleaner.materialmerger.gles",
+   "vertices": 9989,
+   "min": [
+    -0.0481,
+    -0.0389,
+    -0.1408
+   ],
+   "max": [
+    0.145,
+    0.0343,
+    0.8008
+   ],
+   "center": [
+    0.0485,
+    -0.0023,
+    0.33
+   ],
+   "materials": [
+    "Material.001"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.925
+   ]
+  },
+  {
+   "name": "Object_6",
+   "parent": "SG.obj.cleaner.materialmerger.gles",
+   "vertices": 2611,
+   "min": [
+    -0.05,
+    -0.0389,
+    -0.14
+   ],
+   "max": [
+    0.0831,
+    0.0339,
+    0.8003
+   ],
+   "center": [
+    0.0165,
+    -0.0025,
+    0.3302
+   ],
+   "materials": [
+    "Material.001"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.858
+   ]
+  }
+ ],
+ "axes": {
+  "mean": [
+   0.013,
+   -0.0135,
+   0.2456
+  ],
+  "long": [
+   -0.0328,
+   0.0479,
+   0.9983
+  ],
+  "mid": [
+   0.9979,
+   0.0568,
+   0.0301
+  ],
+  "thin": [
+   0.0553,
+   -0.9972,
+   0.0496
+  ],
+  "extent": [
+   1.0055,
+   0.3332,
+   0.0853
+  ]
+ },
+ "ends": {
+  "A": {
+   "center": [
+    0.0037,
+    0.0072,
+    0.6768
+   ],
+   "scale": 0.3371,
+   "objects": []
+  },
+  "B": {
+   "center": [
+    -0.0005,
+    -0.009,
+    -0.0279
+   ],
+   "scale": 0.3732,
+   "objects": []
+  }
+ }
+}

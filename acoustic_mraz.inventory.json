@@ -1,0 +1,1468 @@
+{
+ "id": "acoustic_mraz",
+ "source": "scene.gltf",
+ "objects": [
+  {
+   "name": "Backboard_Glossy Black_0",
+   "parent": "Backboard",
+   "vertices": 1386,
+   "min": [
+    -0.1801,
+    0.01,
+    0.1197
+   ],
+   "max": [
+    0.1821,
+    0.0945,
+    0.5781
+   ],
+   "center": [
+    0.001,
+    0.0522,
+    0.3489
+   ],
+   "materials": [
+    "Glossy_Black"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.15
+   ]
+  },
+  {
+   "name": "Backboard_Wood Back_0",
+   "parent": "Backboard",
+   "vertices": 4132,
+   "min": [
+    -0.1801,
+    0.0072,
+    0.1197
+   ],
+   "max": [
+    0.1821,
+    0.0945,
+    0.5786
+   ],
+   "center": [
+    0.001,
+    0.0509,
+    0.3491
+   ],
+   "materials": [
+    "Wood_Back"
+   ],
+   "color": [
+    0.4,
+    0.575,
+    1.0
+   ]
+  },
+  {
+   "name": "Bar_Brass polished_0",
+   "parent": "Bar",
+   "vertices": 1212,
+   "min": [
+    -0.1387,
+    0.0398,
+    0.0731
+   ],
+   "max": [
+    0.1359,
+    0.0456,
+    0.0789
+   ],
+   "center": [
+    -0.0014,
+    0.0427,
+    0.076
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    0.452,
+    0.7,
+    0.105
+   ]
+  },
+  {
+   "name": "Bar_Glossy Black_0",
+   "parent": "Bar",
+   "vertices": 2224,
+   "min": [
+    -0.1376,
+    0.0394,
+    0.0728
+   ],
+   "max": [
+    0.1348,
+    0.046,
+    0.0792
+   ],
+   "center": [
+    -0.0014,
+    0.0427,
+    0.076
+   ],
+   "materials": [
+    "Glossy_Black"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.925
+   ]
+  },
+  {
+   "name": "Binding_front and back_Lining_0",
+   "parent": "Binding_front and back",
+   "vertices": 19560,
+   "min": [
+    -0.1816,
+    -0.0793,
+    0.1183
+   ],
+   "max": [
+    0.1836,
+    0.0946,
+    0.5959
+   ],
+   "center": [
+    0.001,
+    0.0076,
+    0.3571
+   ],
+   "materials": [
+    "Lining"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.858
+   ]
+  },
+  {
+   "name": "Binding_top_Lining_0",
+   "parent": "Binding_top",
+   "vertices": 120,
+   "min": [
+    0.0217,
+    0.0104,
+    0.5746
+   ],
+   "max": [
+    0.0237,
+    0.0889,
+    0.5949
+   ],
+   "center": [
+    0.0227,
+    0.0496,
+    0.5848
+   ],
+   "materials": [
+    "Lining"
+   ],
+   "color": [
+    0.7,
+    0.507,
+    0.28
+   ]
+  },
+  {
+   "name": "Bracing_Interior_0",
+   "parent": "Bracing",
+   "vertices": 25078,
+   "min": [
+    -0.1793,
+    -0.0617,
+    0.1206
+   ],
+   "max": [
+    0.1813,
+    0.0915,
+    0.5906
+   ],
+   "center": [
+    0.001,
+    0.0149,
+    0.3556
+   ],
+   "materials": [
+    "Interior"
+   ],
+   "color": [
+    0.362,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "Bridge pins_Glossy Black_0",
+   "parent": "Bridge pins",
+   "vertices": 3668,
+   "min": [
+    -0.0277,
+    -0.0606,
+    0.3233
+   ],
+   "max": [
+    0.0249,
+    -0.0596,
+    0.3256
+   ],
+   "center": [
+    -0.0014,
+    -0.0601,
+    0.3244
+   ],
+   "materials": [
+    "Glossy_Black"
+   ],
+   "color": [
+    0.426,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "Bridge pins_Markings_0",
+   "parent": "Bridge pins",
+   "vertices": 16836,
+   "min": [
+    -0.0303,
+    -0.0607,
+    0.3202
+   ],
+   "max": [
+    0.0275,
+    -0.048,
+    0.3276
+   ],
+   "center": [
+    -0.0014,
+    -0.0543,
+    0.3239
+   ],
+   "materials": [
+    "Markings"
+   ],
+   "color": [
+    0.7,
+    0.105,
+    0.304
+   ]
+  },
+  {
+   "name": "Bridge_Bridge_0",
+   "parent": "Bridge",
+   "vertices": 25041,
+   "min": [
+    -0.0728,
+    -0.0567,
+    0.304
+   ],
+   "max": [
+    0.07,
+    -0.0421,
+    0.3394
+   ],
+   "center": [
+    -0.0014,
+    -0.0494,
+    0.3217
+   ],
+   "materials": [
+    "Bridge"
+   ],
+   "color": [
+    0.4,
+    0.776,
+    1.0
+   ]
+  },
+  {
+   "name": "Button.001_Brass polished_0",
+   "parent": "Button.001",
+   "vertices": 2881,
+   "min": [
+    -0.007,
+    -0.042,
+    0.1175
+   ],
+   "max": [
+    0.0046,
+    -0.0306,
+    0.1268
+   ],
+   "center": [
+    -0.0012,
+    -0.0363,
+    0.1222
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    0.93,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "Button.001_Glossy Black_0",
+   "parent": "Button.001",
+   "vertices": 705,
+   "min": [
+    -0.0055,
+    -0.0392,
+    0.1253
+   ],
+   "max": [
+    0.0031,
+    -0.0307,
+    0.1275
+   ],
+   "center": [
+    -0.0012,
+    -0.0349,
+    0.1264
+   ],
+   "materials": [
+    "Glossy_Black"
+   ],
+   "color": [
+    0.612,
+    0.28,
+    0.7
+   ]
+  },
+  {
+   "name": "Button:Screw.001_Brass polished_0",
+   "parent": "Button:Screw.001",
+   "vertices": 496,
+   "min": [
+    -0.0045,
+    -0.0389,
+    0.1212
+   ],
+   "max": [
+    0.0021,
+    -0.0323,
+    0.1233
+   ],
+   "center": [
+    -0.0012,
+    -0.0356,
+    0.1223
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.574
+   ]
+  },
+  {
+   "name": "Button:Screw_Brass polished_0",
+   "parent": "Button:Screw",
+   "vertices": 496,
+   "min": [
+    0.0119,
+    0.055,
+    0.5999
+   ],
+   "max": [
+    0.0146,
+    0.0615,
+    0.6064
+   ],
+   "center": [
+    0.0132,
+    0.0583,
+    0.6031
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    1.0,
+    0.524,
+    0.4
+   ]
+  },
+  {
+   "name": "Button_Brass polished_0",
+   "parent": "Button",
+   "vertices": 3796,
+   "min": [
+    0.0084,
+    0.0533,
+    0.5982
+   ],
+   "max": [
+    0.0185,
+    0.0647,
+    0.6096
+   ],
+   "center": [
+    0.0134,
+    0.059,
+    0.6039
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    0.105,
+    0.156,
+    0.7
+   ]
+  },
+  {
+   "name": "Button_Glossy Black_0",
+   "parent": "Button",
+   "vertices": 705,
+   "min": [
+    0.0077,
+    0.0533,
+    0.5981
+   ],
+   "max": [
+    0.0109,
+    0.0617,
+    0.6065
+   ],
+   "center": [
+    0.0093,
+    0.0575,
+    0.6023
+   ],
+   "materials": [
+    "Glossy_Black"
+   ],
+   "color": [
+    0.626,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "Fretboar_Nut_Saddle&Nut_0",
+   "parent": "Fretboar_Nut",
+   "vertices": 1487,
+   "min": [
+    -0.0201,
+    0.0578,
+    0.9209
+   ],
+   "max": [
+    0.0177,
+    0.0665,
+    0.9272
+   ],
+   "center": [
+    -0.0012,
+    0.0622,
+    0.924
+   ],
+   "materials": [
+    "SaddleNut"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.718
+   ]
+  },
+  {
+   "name": "Fretboard_Binding_Lining_0",
+   "parent": "Fretboard_Binding",
+   "vertices": 1622,
+   "min": [
+    -0.0274,
+    -0.0182,
+    0.5
+   ],
+   "max": [
+    0.025,
+    0.0654,
+    0.9218
+   ],
+   "center": [
+    -0.0012,
+    0.0236,
+    0.7109
+   ],
+   "materials": [
+    "Lining"
+   ],
+   "color": [
+    0.28,
+    0.683,
+    0.7
+   ]
+  },
+  {
+   "name": "Fretboard_Fretboard_0",
+   "parent": "Fretboard",
+   "vertices": 7981,
+   "min": [
+    -0.026,
+    -0.0178,
+    0.5023
+   ],
+   "max": [
+    0.0236,
+    0.0655,
+    0.922
+   ],
+   "center": [
+    -0.0012,
+    0.0238,
+    0.7121
+   ],
+   "materials": [
+    "Fretboard"
+   ],
+   "color": [
+    1.0,
+    0.786,
+    0.15
+   ]
+  },
+  {
+   "name": "Fretboard_Frets_Brass polished_0",
+   "parent": "Fretboard_Frets",
+   "vertices": 9996,
+   "min": [
+    -0.0266,
+    -0.0174,
+    0.51
+   ],
+   "max": [
+    0.0242,
+    0.0546,
+    0.8902
+   ],
+   "center": [
+    -0.0012,
+    0.0186,
+    0.7001
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    0.674,
+    0.4,
+    1.0
+   ]
+  },
+  {
+   "name": "Front board_Sounboard_0",
+   "parent": "Front board",
+   "vertices": 13168,
+   "min": [
+    -0.1801,
+    -0.0792,
+    0.1356
+   ],
+   "max": [
+    0.1821,
+    0.008,
+    0.5945
+   ],
+   "center": [
+    0.001,
+    -0.0356,
+    0.3651
+   ],
+   "materials": [
+    "Sounboard"
+   ],
+   "color": [
+    0.105,
+    0.7,
+    0.203
+   ]
+  },
+  {
+   "name": "Joint_Brass polished_0",
+   "parent": "Joint",
+   "vertices": 3582,
+   "min": [
+    -0.0055,
+    0.0961,
+    0.5219
+   ],
+   "max": [
+    0.0026,
+    0.139,
+    0.5353
+   ],
+   "center": [
+    -0.0014,
+    0.1176,
+    0.5286
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.477
+   ]
+  },
+  {
+   "name": "Kerfing_interior_Kerfing_interior_0",
+   "parent": "Kerfing_interior",
+   "vertices": 65532,
+   "min": [
+    -0.1793,
+    -0.0763,
+    0.121
+   ],
+   "max": [
+    0.1813,
+    0.0916,
+    0.5932
+   ],
+   "center": [
+    0.001,
+    0.0076,
+    0.3571
+   ],
+   "materials": [
+    "Kerfing_interior"
+   ],
+   "color": [
+    0.15,
+    0.507,
+    1.0
+   ]
+  },
+  {
+   "name": "Kerfing_interior_Kerfing_interior_0.001",
+   "parent": "Kerfing_interior",
+   "vertices": 5740,
+   "min": [
+    0.0195,
+    -0.0168,
+    0.4491
+   ],
+   "max": [
+    0.1351,
+    0.0882,
+    0.5689
+   ],
+   "center": [
+    0.0773,
+    0.0357,
+    0.509
+   ],
+   "materials": [
+    "Kerfing_interior"
+   ],
+   "color": [
+    0.579,
+    0.7,
+    0.28
+   ]
+  },
+  {
+   "name": "Legs_Stand_0",
+   "parent": "Legs",
+   "vertices": 23762,
+   "min": [
+    -0.1521,
+    -0.1383,
+    -0.0001
+   ],
+   "max": [
+    0.1493,
+    0.1479,
+    0.5359
+   ],
+   "center": [
+    -0.0014,
+    0.0048,
+    0.2679
+   ],
+   "materials": [
+    "Stand"
+   ],
+   "color": [
+    0.997,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "Markers_Markings_0",
+   "parent": "Markers",
+   "vertices": 1616,
+   "min": [
+    -0.0197,
+    -0.0075,
+    0.558
+   ],
+   "max": [
+    0.0173,
+    0.0516,
+    0.8471
+   ],
+   "center": [
+    -0.0012,
+    0.0221,
+    0.7025
+   ],
+   "materials": [
+    "Markings"
+   ],
+   "color": [
+    0.4,
+    1.0,
+    0.823
+   ]
+  },
+  {
+   "name": "Neck Cap_Lining_0",
+   "parent": "Neck Cap",
+   "vertices": 1961,
+   "min": [
+    -0.0121,
+    0.0874,
+    0.5798
+   ],
+   "max": [
+    0.0097,
+    0.0935,
+    0.606
+   ],
+   "center": [
+    -0.0012,
+    0.0904,
+    0.5929
+   ],
+   "materials": [
+    "Lining"
+   ],
+   "color": [
+    0.7,
+    0.351,
+    0.105
+   ]
+  },
+  {
+   "name": "Neck_Glossy Black_0",
+   "parent": "Neck",
+   "vertices": 8252,
+   "min": [
+    -0.037,
+    0.0053,
+    0.5801
+   ],
+   "max": [
+    0.0346,
+    0.1405,
+    1.0635
+   ],
+   "center": [
+    -0.0012,
+    0.0729,
+    0.8218
+   ],
+   "materials": [
+    "Glossy_Black"
+   ],
+   "color": [
+    0.473,
+    0.4,
+    1.0
+   ]
+  },
+  {
+   "name": "Pading.001_Pading_0",
+   "parent": "Pading.001",
+   "vertices": 2904,
+   "min": [
+    -0.1173,
+    -0.1357,
+    0.1338
+   ],
+   "max": [
+    0.1145,
+    -0.0014,
+    0.1525
+   ],
+   "center": [
+    -0.0014,
+    -0.0685,
+    0.1431
+   ],
+   "materials": [
+    "Pading"
+   ],
+   "color": [
+    0.295,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "Pading.002_Pading_0",
+   "parent": "Pading.002",
+   "vertices": 2884,
+   "min": [
+    -0.0453,
+    0.0733,
+    0.4325
+   ],
+   "max": [
+    0.0425,
+    0.089,
+    0.5303
+   ],
+   "center": [
+    -0.0014,
+    0.0812,
+    0.4814
+   ],
+   "materials": [
+    "Pading"
+   ],
+   "color": [
+    0.7,
+    0.28,
+    0.474
+   ]
+  },
+  {
+   "name": "Pading_Pading_0",
+   "parent": "Pading",
+   "vertices": 3324,
+   "min": [
+    -0.1139,
+    0.0139,
+    0.1426
+   ],
+   "max": [
+    0.1111,
+    0.0403,
+    0.1975
+   ],
+   "center": [
+    -0.0014,
+    0.0271,
+    0.17
+   ],
+   "materials": [
+    "Pading"
+   ],
+   "color": [
+    0.15,
+    0.791,
+    1.0
+   ]
+  },
+  {
+   "name": "Pickguard_Pickguard_0",
+   "parent": "Pickguard",
+   "vertices": 3996,
+   "min": [
+    0.0311,
+    -0.0412,
+    0.3504
+   ],
+   "max": [
+    0.122,
+    -0.0113,
+    0.5049
+   ],
+   "center": [
+    0.0765,
+    -0.0262,
+    0.4277
+   ],
+   "materials": [
+    "Pickguard"
+   ],
+   "color": [
+    1.0,
+    0.973,
+    0.4
+   ]
+  },
+  {
+   "name": "Rossete_Glossy Black_0",
+   "parent": "Rossete",
+   "vertices": 20122,
+   "min": [
+    -0.0636,
+    -0.0306,
+    0.4
+   ],
+   "max": [
+    0.0611,
+    -0.008,
+    0.5227
+   ],
+   "center": [
+    -0.0012,
+    -0.0193,
+    0.4614
+   ],
+   "materials": [
+    "Glossy_Black"
+   ],
+   "color": [
+    0.499,
+    0.105,
+    0.7
+   ]
+  },
+  {
+   "name": "Rossete_Lining_0",
+   "parent": "Rossete",
+   "vertices": 20146,
+   "min": [
+    -0.0648,
+    -0.0309,
+    0.3989
+   ],
+   "max": [
+    0.0623,
+    -0.0078,
+    0.5239
+   ],
+   "center": [
+    -0.0012,
+    -0.0193,
+    0.4614
+   ],
+   "materials": [
+    "Lining"
+   ],
+   "color": [
+    0.4,
+    1.0,
+    0.622
+   ]
+  },
+  {
+   "name": "Saddle_Saddle&Nut_0",
+   "parent": "Saddle",
+   "vertices": 6222,
+   "min": [
+    -0.0348,
+    -0.0561,
+    0.3274
+   ],
+   "max": [
+    0.0321,
+    -0.0429,
+    0.3351
+   ],
+   "center": [
+    -0.0014,
+    -0.0495,
+    0.3313
+   ],
+   "materials": [
+    "SaddleNut"
+   ],
+   "color": [
+    1.0,
+    0.217,
+    0.15
+   ]
+  },
+  {
+   "name": "Sideboards_Glossy Black_0",
+   "parent": "Sideboards",
+   "vertices": 6379,
+   "min": [
+    -0.1816,
+    -0.0736,
+    0.1193
+   ],
+   "max": [
+    0.1836,
+    0.0889,
+    0.5949
+   ],
+   "center": [
+    0.001,
+    0.0076,
+    0.3571
+   ],
+   "materials": [
+    "Glossy_Black"
+   ],
+   "color": [
+    0.28,
+    0.369,
+    0.7
+   ]
+  },
+  {
+   "name": "Sideboards_Wood Sides_0",
+   "parent": "Sideboards",
+   "vertices": 2598,
+   "min": [
+    -0.1794,
+    -0.0732,
+    0.1215
+   ],
+   "max": [
+    0.1813,
+    0.0884,
+    0.5927
+   ],
+   "center": [
+    0.001,
+    0.0076,
+    0.3571
+   ],
+   "materials": [
+    "Wood_Sides"
+   ],
+   "color": [
+    0.579,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "Strings_Strings_0",
+   "parent": "Strings",
+   "vertices": 39392,
+   "min": [
+    -0.0271,
+    -0.0565,
+    0.3229
+   ],
+   "max": [
+    0.024,
+    0.1111,
+    1.0356
+   ],
+   "center": [
+    -0.0016,
+    0.0273,
+    0.6792
+   ],
+   "materials": [
+    "Strings"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.878
+   ]
+  },
+  {
+   "name": "Tunner_Axel_Brass polished_0",
+   "parent": "Tunner_Axel",
+   "vertices": 12480,
+   "min": [
+    -0.0411,
+    0.1001,
+    0.9596
+   ],
+   "max": [
+    0.0396,
+    0.1314,
+    1.0255
+   ],
+   "center": [
+    -0.0007,
+    0.1157,
+    0.9926
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    0.105,
+    0.7,
+    0.647
+   ]
+  },
+  {
+   "name": "Tunner_Houseing_Brass polished_0",
+   "parent": "Tunner_Houseing",
+   "vertices": 35943,
+   "min": [
+    -0.0307,
+    0.0928,
+    0.9482
+   ],
+   "max": [
+    0.0292,
+    0.1352,
+    1.0316
+   ],
+   "center": [
+    -0.0007,
+    0.114,
+    0.9899
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    1.0,
+    0.772,
+    0.4
+   ]
+  },
+  {
+   "name": "Tunner_Houseing_Screws_Brass polished_0",
+   "parent": "Tunner_Houseing_Screws",
+   "vertices": 5966,
+   "min": [
+    -0.0302,
+    0.0942,
+    0.9491
+   ],
+   "max": [
+    0.0287,
+    0.1306,
+    1.0307
+   ],
+   "center": [
+    -0.0007,
+    0.1124,
+    0.9899
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    0.429,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "Tunner_Knob_Screws_Brass polished_0",
+   "parent": "Tunner_Knob_Screws",
+   "vertices": 2981,
+   "min": [
+    -0.0528,
+    0.1002,
+    0.9598
+   ],
+   "max": [
+    0.0513,
+    0.1312,
+    1.0254
+   ],
+   "center": [
+    -0.0007,
+    0.1157,
+    0.9926
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    0.28,
+    0.7,
+    0.295
+   ]
+  },
+  {
+   "name": "Tunner_Knobs_Brass polished_0",
+   "parent": "Tunner_Knobs",
+   "vertices": 37293,
+   "min": [
+    -0.0527,
+    0.0942,
+    0.9521
+   ],
+   "max": [
+    0.0512,
+    0.1377,
+    1.0332
+   ],
+   "center": [
+    -0.0007,
+    0.116,
+    0.9926
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.367
+   ]
+  },
+  {
+   "name": "Tunner_Peg_Washers_Brass polished_0",
+   "parent": "Tunner_Peg_Washers",
+   "vertices": 31063,
+   "min": [
+    -0.0277,
+    0.0823,
+    0.9637
+   ],
+   "max": [
+    0.0262,
+    0.1153,
+    1.0368
+   ],
+   "center": [
+    -0.0007,
+    0.0988,
+    1.0002
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    0.4,
+    0.728,
+    1.0
+   ]
+  },
+  {
+   "name": "Tunner_Pegs_Brass polished_0",
+   "parent": "Tunner_Pegs",
+   "vertices": 29731,
+   "min": [
+    -0.0243,
+    0.0763,
+    0.9665
+   ],
+   "max": [
+    0.0228,
+    0.1145,
+    1.037
+   ],
+   "center": [
+    -0.0007,
+    0.0954,
+    1.0017
+   ],
+   "materials": [
+    "Brass_polished"
+   ],
+   "color": [
+    0.604,
+    0.7,
+    0.105
+   ]
+  }
+ ],
+ "axes": {
+  "mean": [
+   0.0002,
+   0.0386,
+   0.6106
+  ],
+  "long": [
+   -0.0024,
+   0.1626,
+   0.9867
+  ],
+  "mid": [
+   1.0,
+   -0.0022,
+   0.0028
+  ],
+  "thin": [
+   -0.0026,
+   -0.9867,
+   0.1626
+  ],
+  "extent": [
+   1.0911,
+   0.3655,
+   0.307
+  ]
+ },
+ "ends": {
+  "A": {
+   "center": [
+    -0.0005,
+    0.0841,
+    0.905
+   ],
+   "scale": 0.3663,
+   "objects": [
+    {
+     "name": "Fretboar_Nut_Saddle&Nut_0",
+     "color": [
+      1.0,
+      0.15,
+      0.718
+     ],
+     "vertices": 1487
+    },
+    {
+     "name": "Neck_Glossy Black_0",
+     "color": [
+      0.473,
+      0.4,
+      1.0
+     ],
+     "vertices": 8252
+    },
+    {
+     "name": "Tunner_Axel_Brass polished_0",
+     "color": [
+      0.105,
+      0.7,
+      0.647
+     ],
+     "vertices": 12480
+    },
+    {
+     "name": "Tunner_Houseing_Brass polished_0",
+     "color": [
+      1.0,
+      0.772,
+      0.4
+     ],
+     "vertices": 35943
+    },
+    {
+     "name": "Tunner_Houseing_Screws_Brass polished_0",
+     "color": [
+      0.429,
+      0.15,
+      1.0
+     ],
+     "vertices": 5966
+    },
+    {
+     "name": "Tunner_Knob_Screws_Brass polished_0",
+     "color": [
+      0.28,
+      0.7,
+      0.295
+     ],
+     "vertices": 2981
+    },
+    {
+     "name": "Tunner_Knobs_Brass polished_0",
+     "color": [
+      1.0,
+      0.15,
+      0.367
+     ],
+     "vertices": 37293
+    },
+    {
+     "name": "Tunner_Peg_Washers_Brass polished_0",
+     "color": [
+      0.4,
+      0.728,
+      1.0
+     ],
+     "vertices": 31063
+    },
+    {
+     "name": "Tunner_Pegs_Brass polished_0",
+     "color": [
+      0.604,
+      0.7,
+      0.105
+     ],
+     "vertices": 29731
+    }
+   ]
+  },
+  "B": {
+   "center": [
+    0.0014,
+    0.0158,
+    0.1421
+   ],
+   "scale": 0.4094,
+   "objects": [
+    {
+     "name": "Bar_Brass polished_0",
+     "color": [
+      0.452,
+      0.7,
+      0.105
+     ],
+     "vertices": 1212
+    },
+    {
+     "name": "Bar_Glossy Black_0",
+     "color": [
+      1.0,
+      0.4,
+      0.925
+     ],
+     "vertices": 2224
+    },
+    {
+     "name": "Button.001_Brass polished_0",
+     "color": [
+      0.93,
+      1.0,
+      0.15
+     ],
+     "vertices": 2881
+    },
+    {
+     "name": "Button.001_Glossy Black_0",
+     "color": [
+      0.612,
+      0.28,
+      0.7
+     ],
+     "vertices": 705
+    },
+    {
+     "name": "Button:Screw.001_Brass polished_0",
+     "color": [
+      0.15,
+      1.0,
+      0.574
+     ],
+     "vertices": 496
+    },
+    {
+     "name": "Legs_Stand_0",
+     "color": [
+      0.997,
+      0.15,
+      1.0
+     ],
+     "vertices": 23762
+    },
+    {
+     "name": "Pading.001_Pading_0",
+     "color": [
+      0.295,
+      1.0,
+      0.15
+     ],
+     "vertices": 2904
+    },
+    {
+     "name": "Pading_Pading_0",
+     "color": [
+      0.15,
+      0.791,
+      1.0
+     ],
+     "vertices": 3324
+    }
+   ]
+  }
+ }
+}

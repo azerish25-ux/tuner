@@ -1,0 +1,1215 @@
+{
+ "id": "classical_davidstr",
+ "source": "scene.gltf",
+ "objects": [
+  {
+   "name": " black strip neck_0",
+   "parent": " black strip neck",
+   "vertices": 18,
+   "min": [
+    -0.0026,
+    0.021,
+    0.0301
+   ],
+   "max": [
+    0.0013,
+    0.0266,
+    0.3737
+   ],
+   "center": [
+    -0.0007,
+    0.0238,
+    0.2019
+   ],
+   "materials": [
+    "strip_on_back_body_colour"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.15
+   ]
+  },
+  {
+   "name": "A5 string_0",
+   "parent": "A5 string",
+   "vertices": 3906,
+   "min": [
+    -0.0228,
+    -0.0132,
+    -0.4192
+   ],
+   "max": [
+    -0.0103,
+    0.0614,
+    0.4798
+   ],
+   "center": [
+    -0.0166,
+    0.0241,
+    0.0303
+   ],
+   "materials": [
+    "strings_metal_mat"
+   ],
+   "color": [
+    0.4,
+    0.575,
+    1.0
+   ]
+  },
+  {
+   "name": "B2 string_0",
+   "parent": "B2 string",
+   "vertices": 3690,
+   "min": [
+    0.0139,
+    -0.0124,
+    -0.4186
+   ],
+   "max": [
+    0.0308,
+    0.0735,
+    0.5051
+   ],
+   "center": [
+    0.0224,
+    0.0305,
+    0.0433
+   ],
+   "materials": [
+    "strings_nylon_mat"
+   ],
+   "color": [
+    0.452,
+    0.7,
+    0.105
+   ]
+  },
+  {
+   "name": "D4 string_0",
+   "parent": "D4 string",
+   "vertices": 3690,
+   "min": [
+    -0.0238,
+    -0.0128,
+    -0.4188
+   ],
+   "max": [
+    0.0045,
+    0.0795,
+    0.5241
+   ],
+   "center": [
+    -0.0097,
+    0.0333,
+    0.0526
+   ],
+   "materials": [
+    "strings_metal_mat"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.925
+   ]
+  },
+  {
+   "name": "E1 string_0",
+   "parent": "E1 string",
+   "vertices": 3474,
+   "min": [
+    0.0139,
+    -0.0124,
+    -0.419
+   ],
+   "max": [
+    0.0441,
+    0.0553,
+    0.4384
+   ],
+   "center": [
+    0.029,
+    0.0214,
+    0.0097
+   ],
+   "materials": [
+    "strings_nylon_mat"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.858
+   ]
+  },
+  {
+   "name": "E6 string_0",
+   "parent": "E6 string",
+   "vertices": 3708,
+   "min": [
+    -0.0337,
+    -0.0132,
+    -0.4198
+   ],
+   "max": [
+    -0.0121,
+    0.0757,
+    0.4385
+   ],
+   "center": [
+    -0.0229,
+    0.0312,
+    0.0094
+   ],
+   "materials": [
+    "strings_metal_mat"
+   ],
+   "color": [
+    0.7,
+    0.507,
+    0.28
+   ]
+  },
+  {
+   "name": "G3 string_0",
+   "parent": "G3 string",
+   "vertices": 3690,
+   "min": [
+    0.0048,
+    -0.0128,
+    -0.4188
+   ],
+   "max": [
+    0.0193,
+    0.0797,
+    0.5259
+   ],
+   "center": [
+    0.0121,
+    0.0335,
+    0.0536
+   ],
+   "materials": [
+    "strings_nylon_mat"
+   ],
+   "color": [
+    0.362,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "black strip body_0",
+   "parent": "black strip body",
+   "vertices": 24,
+   "min": [
+    -0.0012,
+    0.107,
+    -0.5801
+   ],
+   "max": [
+    0.0016,
+    0.117,
+    -0.0069
+   ],
+   "center": [
+    0.0002,
+    0.112,
+    -0.2935
+   ],
+   "materials": [
+    "strip_on_back_body_colour"
+   ],
+   "color": [
+    0.426,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "bridge base_0",
+   "parent": "bridge base",
+   "vertices": 1668,
+   "min": [
+    -0.1067,
+    -0.0047,
+    -0.4208
+   ],
+   "max": [
+    0.1067,
+    0.0001,
+    -0.3859
+   ],
+   "center": [
+    -0.0,
+    -0.0023,
+    -0.4034
+   ],
+   "materials": [
+    "saddle_base_board"
+   ],
+   "color": [
+    0.7,
+    0.105,
+    0.304
+   ]
+  },
+  {
+   "name": "bridge top_0",
+   "parent": "bridge top",
+   "vertices": 5195,
+   "min": [
+    -0.0474,
+    -0.0114,
+    -0.417
+   ],
+   "max": [
+    0.0474,
+    -0.0026,
+    -0.3895
+   ],
+   "center": [
+    -0.0,
+    -0.007,
+    -0.4032
+   ],
+   "materials": [
+    "saddle_base_board"
+   ],
+   "color": [
+    0.4,
+    0.776,
+    1.0
+   ]
+  },
+  {
+   "name": "bridge top_1",
+   "parent": "bridge top",
+   "vertices": 414,
+   "min": [
+    -0.0467,
+    -0.0114,
+    -0.4159
+   ],
+   "max": [
+    0.0466,
+    -0.0109,
+    -0.4048
+   ],
+   "center": [
+    -0.0,
+    -0.0112,
+    -0.4104
+   ],
+   "materials": [
+    "saddle_design"
+   ],
+   "color": [
+    0.93,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "fret board_0",
+   "parent": "fret board",
+   "vertices": 22112,
+   "min": [
+    -0.0366,
+    -0.0059,
+    -0.1463
+   ],
+   "max": [
+    0.0366,
+    0.0008,
+    0.375
+   ],
+   "center": [
+    0.0,
+    -0.0025,
+    0.1144
+   ],
+   "materials": [
+    "fret_board_mat"
+   ],
+   "color": [
+    0.612,
+    0.28,
+    0.7
+   ]
+  },
+  {
+   "name": "frets_0",
+   "parent": "frets",
+   "vertices": 65532,
+   "min": [
+    -0.0309,
+    -0.0069,
+    0.2134
+   ],
+   "max": [
+    0.0309,
+    -0.0036,
+    0.3321
+   ],
+   "center": [
+    0.0,
+    -0.0052,
+    0.2727
+   ],
+   "materials": [
+    "fret_mat"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.574
+   ]
+  },
+  {
+   "name": "frets_0.001",
+   "parent": "frets",
+   "vertices": 65532,
+   "min": [
+    -0.032,
+    -0.0062,
+    -0.1408
+   ],
+   "max": [
+    0.0364,
+    -0.0017,
+    0.2148
+   ],
+   "center": [
+    0.0022,
+    -0.004,
+    0.037
+   ],
+   "materials": [
+    "fret_mat"
+   ],
+   "color": [
+    1.0,
+    0.524,
+    0.4
+   ]
+  },
+  {
+   "name": "frets_0.002",
+   "parent": "frets",
+   "vertices": 65532,
+   "min": [
+    -0.0335,
+    -0.0059,
+    0.0603
+   ],
+   "max": [
+    0.0335,
+    -0.0028,
+    0.1486
+   ],
+   "center": [
+    0.0,
+    -0.0043,
+    0.1044
+   ],
+   "materials": [
+    "fret_mat"
+   ],
+   "color": [
+    0.105,
+    0.156,
+    0.7
+   ]
+  },
+  {
+   "name": "frets_0.003",
+   "parent": "frets",
+   "vertices": 65532,
+   "min": [
+    -0.0345,
+    -0.0054,
+    -0.0131
+   ],
+   "max": [
+    0.0346,
+    -0.0024,
+    0.0617
+   ],
+   "center": [
+    0.0,
+    -0.0039,
+    0.0243
+   ],
+   "materials": [
+    "fret_mat"
+   ],
+   "color": [
+    0.626,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "frets_0.004",
+   "parent": "frets",
+   "vertices": 65532,
+   "min": [
+    -0.0366,
+    -0.005,
+    -0.1408
+   ],
+   "max": [
+    0.0366,
+    -0.0017,
+    -0.0116
+   ],
+   "center": [
+    -0.0,
+    -0.0033,
+    -0.0762
+   ],
+   "materials": [
+    "fret_mat"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.718
+   ]
+  },
+  {
+   "name": "frets_0.005",
+   "parent": "frets",
+   "vertices": 65532,
+   "min": [
+    -0.036,
+    -0.0069,
+    -0.1408
+   ],
+   "max": [
+    0.0366,
+    -0.0017,
+    0.3321
+   ],
+   "center": [
+    0.0003,
+    -0.0043,
+    0.0956
+   ],
+   "materials": [
+    "fret_mat"
+   ],
+   "color": [
+    0.28,
+    0.683,
+    0.7
+   ]
+  },
+  {
+   "name": "frets_0.006",
+   "parent": "frets",
+   "vertices": 65532,
+   "min": [
+    -0.0365,
+    -0.0048,
+    -0.1408
+   ],
+   "max": [
+    0.0364,
+    -0.0017,
+    -0.0336
+   ],
+   "center": [
+    -0.0,
+    -0.0033,
+    -0.0872
+   ],
+   "materials": [
+    "fret_mat"
+   ],
+   "color": [
+    1.0,
+    0.786,
+    0.15
+   ]
+  },
+  {
+   "name": "frets_0.007",
+   "parent": "frets",
+   "vertices": 39801,
+   "min": [
+    -0.0366,
+    -0.0055,
+    -0.1408
+   ],
+   "max": [
+    0.0363,
+    -0.0017,
+    0.0887
+   ],
+   "center": [
+    -0.0001,
+    -0.0036,
+    -0.0261
+   ],
+   "materials": [
+    "fret_mat"
+   ],
+   "color": [
+    0.674,
+    0.4,
+    1.0
+   ]
+  },
+  {
+   "name": "guitar body_0",
+   "parent": "guitar body",
+   "vertices": 18641,
+   "min": [
+    -0.2147,
+    -0.0,
+    -0.5817
+   ],
+   "max": [
+    0.2145,
+    0.0024,
+    -0.0061
+   ],
+   "center": [
+    -0.0001,
+    0.0012,
+    -0.2939
+   ],
+   "materials": [
+    "spruce_front_board"
+   ],
+   "color": [
+    0.105,
+    0.7,
+    0.203
+   ]
+  },
+  {
+   "name": "guitar body_1",
+   "parent": "guitar body",
+   "vertices": 12825,
+   "min": [
+    -0.2151,
+    0.0005,
+    -0.5829
+   ],
+   "max": [
+    0.2151,
+    0.1162,
+    -0.0055
+   ],
+   "center": [
+    0.0,
+    0.0584,
+    -0.2942
+   ],
+   "materials": [
+    "sides"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.477
+   ]
+  },
+  {
+   "name": "guitar body_2",
+   "parent": "guitar body",
+   "vertices": 16530,
+   "min": [
+    -0.2147,
+    0.1075,
+    -0.5817
+   ],
+   "max": [
+    0.2145,
+    0.1167,
+    -0.0062
+   ],
+   "center": [
+    -0.0001,
+    0.1121,
+    -0.2939
+   ],
+   "materials": [
+    "sides"
+   ],
+   "color": [
+    0.15,
+    0.507,
+    1.0
+   ]
+  },
+  {
+   "name": "head wire winder_0",
+   "parent": "head wire winder",
+   "vertices": 648,
+   "min": [
+    -0.0262,
+    0.0209,
+    0.4266
+   ],
+   "max": [
+    0.0265,
+    0.0584,
+    0.5202
+   ],
+   "center": [
+    0.0001,
+    0.0397,
+    0.4734
+   ],
+   "materials": [
+    "ivory_saddle_mat"
+   ],
+   "color": [
+    0.579,
+    0.7,
+    0.28
+   ]
+  },
+  {
+   "name": "machine head base_L_0",
+   "parent": "machine head base_L",
+   "vertices": 2050,
+   "min": [
+    -0.0382,
+    0.0141,
+    0.4119
+   ],
+   "max": [
+    -0.036,
+    0.0686,
+    0.5411
+   ],
+   "center": [
+    -0.0371,
+    0.0413,
+    0.4765
+   ],
+   "materials": [
+    "machine_head_base_mat"
+   ],
+   "color": [
+    0.997,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "machine head base_L_1",
+   "parent": "machine head base_L",
+   "vertices": 11095,
+   "min": [
+    -0.0446,
+    0.0176,
+    0.4241
+   ],
+   "max": [
+    -0.0368,
+    0.0968,
+    0.5262
+   ],
+   "center": [
+    -0.0407,
+    0.0572,
+    0.4752
+   ],
+   "materials": [
+    "machine_head_screw_mat"
+   ],
+   "color": [
+    0.4,
+    1.0,
+    0.823
+   ]
+  },
+  {
+   "name": "machine head base_L_2",
+   "parent": "machine head base_L",
+   "vertices": 6504,
+   "min": [
+    -0.0448,
+    0.0176,
+    0.4251
+   ],
+   "max": [
+    -0.037,
+    0.0677,
+    0.5292
+   ],
+   "center": [
+    -0.0409,
+    0.0426,
+    0.4771
+   ],
+   "materials": [
+    "machine_head_metal"
+   ],
+   "color": [
+    0.7,
+    0.351,
+    0.105
+   ]
+  },
+  {
+   "name": "machine head base_L_3",
+   "parent": "machine head base_L",
+   "vertices": 864,
+   "min": [
+    -0.0555,
+    0.0489,
+    0.4199
+   ],
+   "max": [
+    -0.0257,
+    0.0985,
+    0.5256
+   ],
+   "center": [
+    -0.0406,
+    0.0737,
+    0.4728
+   ],
+   "materials": [
+    "machine_head_handle_mat"
+   ],
+   "color": [
+    0.473,
+    0.4,
+    1.0
+   ]
+  },
+  {
+   "name": "machine head base_R_0",
+   "parent": "machine head base_R",
+   "vertices": 2042,
+   "min": [
+    0.0364,
+    0.0138,
+    0.4125
+   ],
+   "max": [
+    0.0386,
+    0.0682,
+    0.5417
+   ],
+   "center": [
+    0.0375,
+    0.041,
+    0.4771
+   ],
+   "materials": [
+    "machine_head_base_mat"
+   ],
+   "color": [
+    0.295,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "machine head base_R_1",
+   "parent": "machine head base_R",
+   "vertices": 11095,
+   "min": [
+    0.0372,
+    0.0173,
+    0.4247
+   ],
+   "max": [
+    0.045,
+    0.0964,
+    0.5268
+   ],
+   "center": [
+    0.0411,
+    0.0568,
+    0.4758
+   ],
+   "materials": [
+    "machine_head_screw_mat"
+   ],
+   "color": [
+    0.7,
+    0.28,
+    0.474
+   ]
+  },
+  {
+   "name": "machine head base_R_2",
+   "parent": "machine head base_R",
+   "vertices": 6504,
+   "min": [
+    0.0374,
+    0.0172,
+    0.4256
+   ],
+   "max": [
+    0.0452,
+    0.0674,
+    0.5298
+   ],
+   "center": [
+    0.0413,
+    0.0423,
+    0.4777
+   ],
+   "materials": [
+    "machine_head_metal"
+   ],
+   "color": [
+    0.15,
+    0.791,
+    1.0
+   ]
+  },
+  {
+   "name": "machine head base_R_3",
+   "parent": "machine head base_R",
+   "vertices": 864,
+   "min": [
+    0.0261,
+    0.0486,
+    0.4205
+   ],
+   "max": [
+    0.0559,
+    0.0982,
+    0.5263
+   ],
+   "center": [
+    0.041,
+    0.0734,
+    0.4734
+   ],
+   "materials": [
+    "machine_head_handle_mat"
+   ],
+   "color": [
+    1.0,
+    0.973,
+    0.4
+   ]
+  },
+  {
+   "name": "neck saddle_0",
+   "parent": "neck saddle",
+   "vertices": 852,
+   "min": [
+    -0.0284,
+    -0.0076,
+    0.3741
+   ],
+   "max": [
+    0.0284,
+    0.0029,
+    0.3797
+   ],
+   "center": [
+    0.0,
+    -0.0024,
+    0.3769
+   ],
+   "materials": [
+    "ivory_saddle_mat"
+   ],
+   "color": [
+    0.499,
+    0.105,
+    0.7
+   ]
+  },
+  {
+   "name": "neck_0",
+   "parent": "neck",
+   "vertices": 11858,
+   "min": [
+    -0.0374,
+    -0.0008,
+    -0.0157
+   ],
+   "max": [
+    0.0374,
+    0.1075,
+    0.5825
+   ],
+   "center": [
+    0.0,
+    0.0534,
+    0.2834
+   ],
+   "materials": [
+    "guitar_neck"
+   ],
+   "color": [
+    0.4,
+    1.0,
+    0.622
+   ]
+  },
+  {
+   "name": "saddle bridge_0",
+   "parent": "saddle bridge",
+   "vertices": 674,
+   "min": [
+    -0.0477,
+    -0.0117,
+    -0.3946
+   ],
+   "max": [
+    0.0476,
+    -0.006,
+    -0.3921
+   ],
+   "center": [
+    -0.0001,
+    -0.0088,
+    -0.3933
+   ],
+   "materials": [
+    "ivory_saddle_mat"
+   ],
+   "color": [
+    1.0,
+    0.217,
+    0.15
+   ]
+  }
+ ],
+ "axes": {
+  "mean": [
+   -0.0005,
+   0.0049,
+   0.0397
+  ],
+  "long": [
+   -0.0004,
+   -0.0125,
+   -0.9999
+  ],
+  "mid": [
+   -1.0,
+   -0.0024,
+   0.0005
+  ],
+  "thin": [
+   0.0024,
+   -0.9999,
+   0.0125
+  ],
+  "extent": [
+   1.166,
+   0.4304,
+   0.1375
+  ]
+ },
+ "ends": {
+  "A": {
+   "center": [
+    0.0,
+    0.053,
+    -0.4086
+   ],
+   "scale": 0.482,
+   "objects": [
+    {
+     "name": "black strip body_0",
+     "color": [
+      0.426,
+      1.0,
+      0.4
+     ],
+     "vertices": 24
+    },
+    {
+     "name": "bridge base_0",
+     "color": [
+      0.7,
+      0.105,
+      0.304
+     ],
+     "vertices": 1668
+    },
+    {
+     "name": "bridge top_0",
+     "color": [
+      0.4,
+      0.776,
+      1.0
+     ],
+     "vertices": 5195
+    },
+    {
+     "name": "bridge top_1",
+     "color": [
+      0.93,
+      1.0,
+      0.15
+     ],
+     "vertices": 414
+    },
+    {
+     "name": "guitar body_0",
+     "color": [
+      0.105,
+      0.7,
+      0.203
+     ],
+     "vertices": 18641
+    },
+    {
+     "name": "guitar body_1",
+     "color": [
+      1.0,
+      0.4,
+      0.477
+     ],
+     "vertices": 12825
+    },
+    {
+     "name": "guitar body_2",
+     "color": [
+      0.15,
+      0.507,
+      1.0
+     ],
+     "vertices": 16530
+    },
+    {
+     "name": "saddle bridge_0",
+     "color": [
+      1.0,
+      0.217,
+      0.15
+     ],
+     "vertices": 674
+    }
+   ]
+  },
+  "B": {
+   "center": [
+    0.0002,
+    0.0446,
+    0.4093
+   ],
+   "scale": 0.3884,
+   "objects": [
+    {
+     "name": "frets_0",
+     "color": [
+      0.15,
+      1.0,
+      0.574
+     ],
+     "vertices": 65532
+    },
+    {
+     "name": "head wire winder_0",
+     "color": [
+      0.579,
+      0.7,
+      0.28
+     ],
+     "vertices": 648
+    },
+    {
+     "name": "machine head base_L_0",
+     "color": [
+      0.997,
+      0.15,
+      1.0
+     ],
+     "vertices": 2050
+    },
+    {
+     "name": "machine head base_L_1",
+     "color": [
+      0.4,
+      1.0,
+      0.823
+     ],
+     "vertices": 11095
+    },
+    {
+     "name": "machine head base_L_2",
+     "color": [
+      0.7,
+      0.351,
+      0.105
+     ],
+     "vertices": 6504
+    },
+    {
+     "name": "machine head base_L_3",
+     "color": [
+      0.473,
+      0.4,
+      1.0
+     ],
+     "vertices": 864
+    },
+    {
+     "name": "machine head base_R_0",
+     "color": [
+      0.295,
+      1.0,
+      0.15
+     ],
+     "vertices": 2042
+    },
+    {
+     "name": "machine head base_R_1",
+     "color": [
+      0.7,
+      0.28,
+      0.474
+     ],
+     "vertices": 11095
+    },
+    {
+     "name": "machine head base_R_2",
+     "color": [
+      0.15,
+      0.791,
+      1.0
+     ],
+     "vertices": 6504
+    },
+    {
+     "name": "machine head base_R_3",
+     "color": [
+      1.0,
+      0.973,
+      0.4
+     ],
+     "vertices": 864
+    },
+    {
+     "name": "neck saddle_0",
+     "color": [
+      0.499,
+      0.105,
+      0.7
+     ],
+     "vertices": 852
+    },
+    {
+     "name": "neck_0",
+     "color": [
+      0.4,
+      1.0,
+      0.622
+     ],
+     "vertices": 11858
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,258 @@
+{
+ "id": "ukulele_sidekick",
+ "source": "scene.gltf",
+ "objects": [
+  {
+   "name": "Object_2",
+   "parent": "Ukulele.obj.cleaner.materialmerger.gles",
+   "vertices": 388,
+   "min": [
+    -0.0876,
+    2.4207,
+    0.2832
+   ],
+   "max": [
+    0.0967,
+    2.4262,
+    1.9577
+   ],
+   "center": [
+    0.0046,
+    2.4234,
+    1.1204
+   ],
+   "materials": [
+    "Material.002"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.15
+   ]
+  },
+  {
+   "name": "Object_3",
+   "parent": "Ukulele.obj.cleaner.materialmerger.gles",
+   "vertices": 108,
+   "min": [
+    -0.0724,
+    2.4221,
+    1.9572
+   ],
+   "max": [
+    -0.0138,
+    2.5227,
+    2.3204
+   ],
+   "center": [
+    -0.0431,
+    2.4724,
+    2.1388
+   ],
+   "materials": [
+    "Material.003"
+   ],
+   "color": [
+    0.4,
+    0.575,
+    1.0
+   ]
+  },
+  {
+   "name": "Object_4",
+   "parent": "Ukulele.obj.cleaner.materialmerger.gles",
+   "vertices": 108,
+   "min": [
+    0.0172,
+    2.4223,
+    1.9574
+   ],
+   "max": [
+    0.0653,
+    2.5174,
+    2.3152
+   ],
+   "center": [
+    0.0412,
+    2.4698,
+    2.1363
+   ],
+   "materials": [
+    "Material.004"
+   ],
+   "color": [
+    0.452,
+    0.7,
+    0.105
+   ]
+  },
+  {
+   "name": "Object_5",
+   "parent": "Ukulele.obj.cleaner.materialmerger.gles",
+   "vertices": 108,
+   "min": [
+    -0.0693,
+    2.4213,
+    1.9491
+   ],
+   "max": [
+    -0.0568,
+    2.4838,
+    2.1707
+   ],
+   "center": [
+    -0.063,
+    2.4526,
+    2.0599
+   ],
+   "materials": [
+    "Material.005"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.925
+   ]
+  },
+  {
+   "name": "Object_6",
+   "parent": "Ukulele.obj.cleaner.materialmerger.gles",
+   "vertices": 108,
+   "min": [
+    0.0604,
+    2.4218,
+    1.9512
+   ],
+   "max": [
+    0.0669,
+    2.4838,
+    2.1708
+   ],
+   "center": [
+    0.0636,
+    2.4528,
+    2.061
+   ],
+   "materials": [
+    "Material.006"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.858
+   ]
+  },
+  {
+   "name": "Object_7",
+   "parent": "Ukulele.obj.cleaner.materialmerger.gles",
+   "vertices": 46931,
+   "min": [
+    -0.4107,
+    2.4118,
+    0.0249
+   ],
+   "max": [
+    0.4094,
+    2.7591,
+    2.5054
+   ],
+   "center": [
+    -0.0006,
+    2.5854,
+    1.2652
+   ],
+   "materials": [
+    "Ukulele"
+   ],
+   "color": [
+    0.7,
+    0.507,
+    0.28
+   ]
+  }
+ ],
+ "axes": {
+  "mean": [
+   0.0,
+   2.5798,
+   0.9261
+  ],
+  "long": [
+   0.0026,
+   0.0378,
+   -0.9993
+  ],
+  "mid": [
+   -1.0,
+   0.0031,
+   -0.0025
+  ],
+  "thin": [
+   -0.0031,
+   -0.9993,
+   -0.0378
+  ],
+  "extent": [
+   2.4794,
+   0.8208,
+   0.3589
+  ]
+ },
+ "ends": {
+  "A": {
+   "center": [
+    -0.0008,
+    2.5897,
+    0.3957
+   ],
+   "scale": 0.9193,
+   "objects": []
+  },
+  "B": {
+   "center": [
+    -0.0007,
+    2.5303,
+    2.1303
+   ],
+   "scale": 0.8331,
+   "objects": [
+    {
+     "name": "Object_3",
+     "color": [
+      0.4,
+      0.575,
+      1.0
+     ],
+     "vertices": 108
+    },
+    {
+     "name": "Object_4",
+     "color": [
+      0.452,
+      0.7,
+      0.105
+     ],
+     "vertices": 108
+    },
+    {
+     "name": "Object_5",
+     "color": [
+      1.0,
+      0.4,
+      0.925
+     ],
+     "vertices": 108
+    },
+    {
+     "name": "Object_6",
+     "color": [
+      0.15,
+      1.0,
+      0.858
+     ],
+     "vertices": 108
+    }
+   ]
+  }
+ }
+}

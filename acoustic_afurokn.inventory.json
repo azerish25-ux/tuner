@@ -1,0 +1,3280 @@
+{
+ "id": "acoustic_afurokn",
+ "source": "scene.gltf",
+ "objects": [
+  {
+   "name": "guitar-body.001",
+   "parent": "guitar-body",
+   "vertices": 9430,
+   "min": [
+    -1.8228,
+    -0.9574,
+    -3.2707
+   ],
+   "max": [
+    1.8228,
+    0.611,
+    1.3992
+   ],
+   "center": [
+    0.0,
+    -0.1732,
+    -0.9357
+   ],
+   "materials": [
+    "Glossy_Wood"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.15
+   ]
+  },
+  {
+   "name": "guitar-bridge.001",
+   "parent": "guitar-bridge",
+   "vertices": 429,
+   "min": [
+    -0.7187,
+    -0.7308,
+    -1.4972
+   ],
+   "max": [
+    0.7142,
+    -0.6175,
+    -1.1557
+   ],
+   "center": [
+    -0.0023,
+    -0.6742,
+    -1.3264
+   ],
+   "materials": [
+    "Bridge"
+   ],
+   "color": [
+    0.4,
+    0.575,
+    1.0
+   ]
+  },
+  {
+   "name": "guitar-fret.001",
+   "parent": "guitar-fret.000",
+   "vertices": 56,
+   "min": [
+    -0.2642,
+    -0.368,
+    0.6043
+   ],
+   "max": [
+    0.2639,
+    -0.3216,
+    0.6287
+   ],
+   "center": [
+    -0.0001,
+    -0.3448,
+    0.6165
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.452,
+    0.7,
+    0.105
+   ]
+  },
+  {
+   "name": "guitar-fret.002",
+   "parent": "guitar-fret.019",
+   "vertices": 56,
+   "min": [
+    -0.207,
+    0.2921,
+    4.3476
+   ],
+   "max": [
+    0.2067,
+    0.3385,
+    4.372
+   ],
+   "center": [
+    -0.0001,
+    0.3153,
+    4.3598
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.925
+   ]
+  },
+  {
+   "name": "guitar-fret.003",
+   "parent": "guitar-fret.018",
+   "vertices": 56,
+   "min": [
+    -0.2113,
+    0.2367,
+    4.0338
+   ],
+   "max": [
+    0.211,
+    0.2831,
+    4.0582
+   ],
+   "center": [
+    -0.0001,
+    0.2599,
+    4.046
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.858
+   ]
+  },
+  {
+   "name": "guitar-fret.004",
+   "parent": "guitar-fret.017",
+   "vertices": 56,
+   "min": [
+    -0.2175,
+    0.1844,
+    3.7372
+   ],
+   "max": [
+    0.2173,
+    0.2308,
+    3.7616
+   ],
+   "center": [
+    -0.0001,
+    0.2076,
+    3.7494
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.7,
+    0.507,
+    0.28
+   ]
+  },
+  {
+   "name": "guitar-fret.005",
+   "parent": "guitar-fret.016",
+   "vertices": 56,
+   "min": [
+    -0.2218,
+    0.134,
+    3.4513
+   ],
+   "max": [
+    0.2215,
+    0.1804,
+    3.4758
+   ],
+   "center": [
+    -0.0001,
+    0.1572,
+    3.4636
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.362,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "guitar-fret.006",
+   "parent": "guitar-fret.015",
+   "vertices": 56,
+   "min": [
+    -0.2252,
+    0.0876,
+    3.1881
+   ],
+   "max": [
+    0.2249,
+    0.134,
+    3.2125
+   ],
+   "center": [
+    -0.0001,
+    0.1108,
+    3.2003
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.426,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "guitar-fret.007",
+   "parent": "guitar-fret.014",
+   "vertices": 56,
+   "min": [
+    -0.229,
+    0.0433,
+    2.9366
+   ],
+   "max": [
+    0.2287,
+    0.0897,
+    2.961
+   ],
+   "center": [
+    -0.0001,
+    0.0665,
+    2.9488
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.7,
+    0.105,
+    0.304
+   ]
+  },
+  {
+   "name": "guitar-fret.008",
+   "parent": "guitar-fret.013",
+   "vertices": 56,
+   "min": [
+    -0.2332,
+    0.0018,
+    2.7013
+   ],
+   "max": [
+    0.2329,
+    0.0482,
+    2.7257
+   ],
+   "center": [
+    -0.0001,
+    0.025,
+    2.7135
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.4,
+    0.776,
+    1.0
+   ]
+  },
+  {
+   "name": "guitar-fret.009",
+   "parent": "guitar-fret.012",
+   "vertices": 56,
+   "min": [
+    -0.2354,
+    -0.038,
+    2.4755
+   ],
+   "max": [
+    0.2351,
+    0.0084,
+    2.4999
+   ],
+   "center": [
+    -0.0001,
+    -0.0148,
+    2.4877
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.93,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "guitar-fret.010",
+   "parent": "guitar-fret.011",
+   "vertices": 56,
+   "min": [
+    -0.239,
+    -0.0748,
+    2.2671
+   ],
+   "max": [
+    0.2387,
+    -0.0284,
+    2.2915
+   ],
+   "center": [
+    -0.0001,
+    -0.0516,
+    2.2793
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.612,
+    0.28,
+    0.7
+   ]
+  },
+  {
+   "name": "guitar-fret.021",
+   "parent": "guitar-fret.020",
+   "vertices": 56,
+   "min": [
+    -0.2419,
+    -0.1105,
+    2.0647
+   ],
+   "max": [
+    0.2416,
+    -0.0641,
+    2.0891
+   ],
+   "center": [
+    -0.0001,
+    -0.0873,
+    2.0769
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.574
+   ]
+  },
+  {
+   "name": "guitar-fret.023",
+   "parent": "guitar-fret.022",
+   "vertices": 56,
+   "min": [
+    -0.2451,
+    -0.1436,
+    1.8765
+   ],
+   "max": [
+    0.2448,
+    -0.0973,
+    1.9009
+   ],
+   "center": [
+    -0.0001,
+    -0.1205,
+    1.8887
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    1.0,
+    0.524,
+    0.4
+   ]
+  },
+  {
+   "name": "guitar-fret.025",
+   "parent": "guitar-fret.024",
+   "vertices": 56,
+   "min": [
+    -0.2482,
+    -0.174,
+    1.7046
+   ],
+   "max": [
+    0.2479,
+    -0.1276,
+    1.729
+   ],
+   "center": [
+    -0.0001,
+    -0.1508,
+    1.7168
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.105,
+    0.156,
+    0.7
+   ]
+  },
+  {
+   "name": "guitar-fret.027",
+   "parent": "guitar-fret.026",
+   "vertices": 56,
+   "min": [
+    -0.2498,
+    -0.2026,
+    1.5422
+   ],
+   "max": [
+    0.2495,
+    -0.1562,
+    1.5666
+   ],
+   "center": [
+    -0.0001,
+    -0.1794,
+    1.5544
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.626,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "guitar-fret.029",
+   "parent": "guitar-fret.028",
+   "vertices": 56,
+   "min": [
+    -0.2518,
+    -0.2312,
+    1.3801
+   ],
+   "max": [
+    0.2515,
+    -0.1848,
+    1.4045
+   ],
+   "center": [
+    -0.0001,
+    -0.208,
+    1.3923
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.718
+   ]
+  },
+  {
+   "name": "guitar-fret.031",
+   "parent": "guitar-fret.030",
+   "vertices": 56,
+   "min": [
+    -0.2536,
+    -0.2572,
+    1.2328
+   ],
+   "max": [
+    0.2533,
+    -0.2108,
+    1.2572
+   ],
+   "center": [
+    -0.0001,
+    -0.234,
+    1.245
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.28,
+    0.683,
+    0.7
+   ]
+  },
+  {
+   "name": "guitar-fret.033",
+   "parent": "guitar-fret.032",
+   "vertices": 56,
+   "min": [
+    -0.2566,
+    -0.2821,
+    1.0914
+   ],
+   "max": [
+    0.2564,
+    -0.2357,
+    1.1158
+   ],
+   "center": [
+    -0.0001,
+    -0.2589,
+    1.1036
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    1.0,
+    0.786,
+    0.15
+   ]
+  },
+  {
+   "name": "guitar-fret.035",
+   "parent": "guitar-fret.034",
+   "vertices": 56,
+   "min": [
+    -0.2584,
+    -0.3056,
+    0.9581
+   ],
+   "max": [
+    0.2582,
+    -0.2592,
+    0.9825
+   ],
+   "center": [
+    -0.0001,
+    -0.2824,
+    0.9703
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.674,
+    0.4,
+    1.0
+   ]
+  },
+  {
+   "name": "guitar-fret.037",
+   "parent": "guitar-fret.036",
+   "vertices": 56,
+   "min": [
+    -0.2608,
+    -0.3279,
+    0.8315
+   ],
+   "max": [
+    0.2605,
+    -0.2815,
+    0.8559
+   ],
+   "center": [
+    -0.0001,
+    -0.3047,
+    0.8437
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    0.105,
+    0.7,
+    0.203
+   ]
+  },
+  {
+   "name": "guitar-fret.039",
+   "parent": "guitar-fret.038",
+   "vertices": 56,
+   "min": [
+    -0.262,
+    -0.3484,
+    0.7153
+   ],
+   "max": [
+    0.2617,
+    -0.302,
+    0.7397
+   ],
+   "center": [
+    -0.0001,
+    -0.3252,
+    0.7275
+   ],
+   "materials": [
+    "Metal"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.477
+   ]
+  },
+  {
+   "name": "guitar-fretboard.001",
+   "parent": "guitar-fretboard",
+   "vertices": 72,
+   "min": [
+    -0.2653,
+    -0.3877,
+    0.4293
+   ],
+   "max": [
+    0.2653,
+    0.4233,
+    4.7005
+   ],
+   "center": [
+    0.0,
+    0.0178,
+    2.5649
+   ],
+   "materials": [
+    "Fretboard"
+   ],
+   "color": [
+    0.15,
+    0.507,
+    1.0
+   ]
+  },
+  {
+   "name": "guitar-neck.001",
+   "parent": "guitar-neck",
+   "vertices": 5926,
+   "min": [
+    -0.3519,
+    -0.1617,
+    1.2636
+   ],
+   "max": [
+    0.3519,
+    0.9231,
+    6.0305
+   ],
+   "center": [
+    0.0,
+    0.3807,
+    3.647
+   ],
+   "materials": [
+    "Glossy_Wood"
+   ],
+   "color": [
+    0.579,
+    0.7,
+    0.28
+   ]
+  },
+  {
+   "name": "guitar-nut.001",
+   "parent": "guitar-nut",
+   "vertices": 608,
+   "min": [
+    -0.2028,
+    0.3367,
+    4.6894
+   ],
+   "max": [
+    0.2028,
+    0.4278,
+    4.7362
+   ],
+   "center": [
+    0.0,
+    0.3822,
+    4.7128
+   ],
+   "materials": [
+    "White_Material"
+   ],
+   "color": [
+    0.997,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "guitar-pick_guard.001",
+   "parent": "guitar-pick_guard",
+   "vertices": 3643,
+   "min": [
+    0.2517,
+    -0.6051,
+    -1.1083
+   ],
+   "max": [
+    1.1337,
+    -0.3283,
+    0.425
+   ],
+   "center": [
+    0.6927,
+    -0.4667,
+    -0.3416
+   ],
+   "materials": [
+    "Glossy_Black"
+   ],
+   "color": [
+    0.4,
+    1.0,
+    0.823
+   ]
+  },
+  {
+   "name": "guitar-saddle.001",
+   "parent": "guitar-saddle",
+   "vertices": 640,
+   "min": [
+    -0.3421,
+    -0.7368,
+    -1.2696
+   ],
+   "max": [
+    0.346,
+    -0.646,
+    -1.177
+   ],
+   "center": [
+    0.002,
+    -0.6914,
+    -1.2233
+   ],
+   "materials": [
+    "White_Material"
+   ],
+   "color": [
+    0.7,
+    0.351,
+    0.105
+   ]
+  },
+  {
+   "name": "pin.001",
+   "parent": "pin.005",
+   "vertices": 72,
+   "min": [
+    -0.2872,
+    -0.7597,
+    -1.3908
+   ],
+   "max": [
+    -0.2126,
+    -0.702,
+    -1.3172
+   ],
+   "center": [
+    -0.2499,
+    -0.7308,
+    -1.354
+   ],
+   "materials": [
+    "White_Material"
+   ],
+   "color": [
+    0.473,
+    0.4,
+    1.0
+   ]
+  },
+  {
+   "name": "pin.002",
+   "parent": "pin.005",
+   "vertices": 17,
+   "min": [
+    -0.2611,
+    -0.7594,
+    -1.3617
+   ],
+   "max": [
+    -0.2387,
+    -0.7548,
+    -1.3396
+   ],
+   "center": [
+    -0.2499,
+    -0.7571,
+    -1.3506
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.295,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "pin.003",
+   "parent": "pin.004",
+   "vertices": 72,
+   "min": [
+    -0.1869,
+    -0.7597,
+    -1.3908
+   ],
+   "max": [
+    -0.1123,
+    -0.702,
+    -1.3172
+   ],
+   "center": [
+    -0.1496,
+    -0.7308,
+    -1.354
+   ],
+   "materials": [
+    "White_Material"
+   ],
+   "color": [
+    0.7,
+    0.28,
+    0.474
+   ]
+  },
+  {
+   "name": "pin.006",
+   "parent": "pin.004",
+   "vertices": 17,
+   "min": [
+    -0.1608,
+    -0.7594,
+    -1.3617
+   ],
+   "max": [
+    -0.1384,
+    -0.7548,
+    -1.3396
+   ],
+   "center": [
+    -0.1496,
+    -0.7571,
+    -1.3506
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.15,
+    0.791,
+    1.0
+   ]
+  },
+  {
+   "name": "pin.008",
+   "parent": "pin.007",
+   "vertices": 72,
+   "min": [
+    -0.0866,
+    -0.7597,
+    -1.3908
+   ],
+   "max": [
+    -0.012,
+    -0.702,
+    -1.3172
+   ],
+   "center": [
+    -0.0493,
+    -0.7308,
+    -1.354
+   ],
+   "materials": [
+    "White_Material"
+   ],
+   "color": [
+    1.0,
+    0.973,
+    0.4
+   ]
+  },
+  {
+   "name": "pin.009",
+   "parent": "pin.007",
+   "vertices": 17,
+   "min": [
+    -0.0605,
+    -0.7594,
+    -1.3617
+   ],
+   "max": [
+    -0.0381,
+    -0.7548,
+    -1.3396
+   ],
+   "center": [
+    -0.0493,
+    -0.7571,
+    -1.3506
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.499,
+    0.105,
+    0.7
+   ]
+  },
+  {
+   "name": "pin.011",
+   "parent": "pin.010",
+   "vertices": 72,
+   "min": [
+    0.0137,
+    -0.7597,
+    -1.3908
+   ],
+   "max": [
+    0.0883,
+    -0.702,
+    -1.3172
+   ],
+   "center": [
+    0.051,
+    -0.7308,
+    -1.354
+   ],
+   "materials": [
+    "White_Material"
+   ],
+   "color": [
+    0.4,
+    1.0,
+    0.622
+   ]
+  },
+  {
+   "name": "pin.012",
+   "parent": "pin.010",
+   "vertices": 17,
+   "min": [
+    0.0398,
+    -0.7594,
+    -1.3617
+   ],
+   "max": [
+    0.0622,
+    -0.7548,
+    -1.3396
+   ],
+   "center": [
+    0.051,
+    -0.7571,
+    -1.3506
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    1.0,
+    0.217,
+    0.15
+   ]
+  },
+  {
+   "name": "pin.014",
+   "parent": "pin.013",
+   "vertices": 72,
+   "min": [
+    0.1166,
+    -0.7597,
+    -1.3908
+   ],
+   "max": [
+    0.1912,
+    -0.702,
+    -1.3172
+   ],
+   "center": [
+    0.1539,
+    -0.7308,
+    -1.354
+   ],
+   "materials": [
+    "White_Material"
+   ],
+   "color": [
+    0.28,
+    0.369,
+    0.7
+   ]
+  },
+  {
+   "name": "pin.015",
+   "parent": "pin.013",
+   "vertices": 17,
+   "min": [
+    0.1427,
+    -0.7594,
+    -1.3617
+   ],
+   "max": [
+    0.1651,
+    -0.7548,
+    -1.3396
+   ],
+   "center": [
+    0.1539,
+    -0.7571,
+    -1.3506
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.579,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "pin.016",
+   "parent": "pin.000",
+   "vertices": 72,
+   "min": [
+    0.2181,
+    -0.7597,
+    -1.3908
+   ],
+   "max": [
+    0.2928,
+    -0.702,
+    -1.3172
+   ],
+   "center": [
+    0.2554,
+    -0.7308,
+    -1.354
+   ],
+   "materials": [
+    "White_Material"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.878
+   ]
+  },
+  {
+   "name": "pin.017",
+   "parent": "pin.000",
+   "vertices": 17,
+   "min": [
+    0.2442,
+    -0.7594,
+    -1.3617
+   ],
+   "max": [
+    0.2666,
+    -0.7548,
+    -1.3396
+   ],
+   "center": [
+    0.2554,
+    -0.7571,
+    -1.3506
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.105,
+    0.7,
+    0.647
+   ]
+  },
+  {
+   "name": "string.001",
+   "parent": "string.000",
+   "vertices": 560,
+   "min": [
+    0.1535,
+    -0.7135,
+    -1.3377
+   ],
+   "max": [
+    0.2596,
+    0.4659,
+    5.0835
+   ],
+   "center": [
+    0.2065,
+    -0.1238,
+    1.8729
+   ],
+   "materials": [
+    "String_Metal"
+   ],
+   "color": [
+    1.0,
+    0.772,
+    0.4
+   ]
+  },
+  {
+   "name": "string.003",
+   "parent": "string.002",
+   "vertices": 304,
+   "min": [
+    0.0915,
+    -0.7167,
+    -1.3364
+   ],
+   "max": [
+    0.2378,
+    0.5858,
+    5.44
+   ],
+   "center": [
+    0.1647,
+    -0.0654,
+    2.0518
+   ],
+   "materials": [
+    "String_Metal"
+   ],
+   "color": [
+    0.429,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "string.005",
+   "parent": "string.004",
+   "vertices": 304,
+   "min": [
+    0.0282,
+    -0.7195,
+    -1.3512
+   ],
+   "max": [
+    0.2594,
+    0.6947,
+    5.795
+   ],
+   "center": [
+    0.1438,
+    -0.0124,
+    2.2219
+   ],
+   "materials": [
+    "String_Metal"
+   ],
+   "color": [
+    0.28,
+    0.7,
+    0.295
+   ]
+  },
+  {
+   "name": "string.007",
+   "parent": "string.006",
+   "vertices": 270,
+   "min": [
+    -0.2699,
+    -0.723,
+    -1.3399
+   ],
+   "max": [
+    -0.0227,
+    0.7034,
+    5.7938
+   ],
+   "center": [
+    -0.1463,
+    -0.0098,
+    2.2269
+   ],
+   "materials": [
+    "String_Metal_Tex"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.367
+   ]
+  },
+  {
+   "name": "string.009",
+   "parent": "string.008",
+   "vertices": 270,
+   "min": [
+    -0.2524,
+    -0.7292,
+    -1.342
+   ],
+   "max": [
+    -0.1444,
+    0.4914,
+    5.0888
+   ],
+   "center": [
+    -0.1984,
+    -0.1189,
+    1.8734
+   ],
+   "materials": [
+    "String_Metal_Tex"
+   ],
+   "color": [
+    0.4,
+    0.728,
+    1.0
+   ]
+  },
+  {
+   "name": "string.011",
+   "parent": "string.010",
+   "vertices": 270,
+   "min": [
+    -0.2503,
+    -0.7279,
+    -1.3369
+   ],
+   "max": [
+    -0.0848,
+    0.5929,
+    5.4501
+   ],
+   "center": [
+    -0.1675,
+    -0.0675,
+    2.0566
+   ],
+   "materials": [
+    "String_Metal_Tex"
+   ],
+   "color": [
+    0.604,
+    0.7,
+    0.105
+   ]
+  },
+  {
+   "name": "tuning_machine-base.001",
+   "parent": "tuning_machine-base",
+   "vertices": 938,
+   "min": [
+    0.1363,
+    0.5678,
+    4.8696
+   ],
+   "max": [
+    0.2811,
+    0.6913,
+    5.1823
+   ],
+   "center": [
+    0.2087,
+    0.6296,
+    5.026
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.922,
+    0.4,
+    1.0
+   ]
+  },
+  {
+   "name": "tuning_machine-base.002",
+   "parent": "tuning_machine-base.004",
+   "vertices": 938,
+   "min": [
+    -0.2772,
+    0.568,
+    4.8701
+   ],
+   "max": [
+    -0.1323,
+    0.6914,
+    5.1828
+   ],
+   "center": [
+    -0.2047,
+    0.6297,
+    5.0265
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.641
+   ]
+  },
+  {
+   "name": "tuning_machine-base.005",
+   "parent": "tuning_machine-base.003",
+   "vertices": 938,
+   "min": [
+    -0.2913,
+    0.6775,
+    5.2266
+   ],
+   "max": [
+    -0.1464,
+    0.8009,
+    5.5393
+   ],
+   "center": [
+    -0.2189,
+    0.7392,
+    5.383
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.7,
+    0.4,
+    0.28
+   ]
+  },
+  {
+   "name": "tuning_machine-base.007",
+   "parent": "tuning_machine-base.006",
+   "vertices": 938,
+   "min": [
+    0.1413,
+    0.6777,
+    5.227
+   ],
+   "max": [
+    0.2861,
+    0.8011,
+    5.5398
+   ],
+   "center": [
+    0.2137,
+    0.7394,
+    5.3834
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.15,
+    0.155,
+    1.0
+   ]
+  },
+  {
+   "name": "tuning_machine-base.009",
+   "parent": "tuning_machine-base.008",
+   "vertices": 938,
+   "min": [
+    -0.3108,
+    0.7844,
+    5.5747
+   ],
+   "max": [
+    -0.1659,
+    0.9079,
+    5.8875
+   ],
+   "center": [
+    -0.2384,
+    0.8462,
+    5.7311
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.579,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "tuning_machine-base.011",
+   "parent": "tuning_machine-base.010",
+   "vertices": 938,
+   "min": [
+    0.1609,
+    0.7857,
+    5.5786
+   ],
+   "max": [
+    0.3058,
+    0.9091,
+    5.8914
+   ],
+   "center": [
+    0.2333,
+    0.8474,
+    5.735
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.7,
+    0.105,
+    0.456
+   ]
+  },
+  {
+   "name": "tuning_machine-gear.001",
+   "parent": "tuning_machine-gear",
+   "vertices": 1368,
+   "min": [
+    0.1513,
+    0.6132,
+    4.9452
+   ],
+   "max": [
+    0.2665,
+    0.668,
+    5.0624
+   ],
+   "center": [
+    0.2089,
+    0.6406,
+    5.0038
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.4,
+    0.929,
+    1.0
+   ]
+  },
+  {
+   "name": "tuning_machine-gear.002",
+   "parent": "tuning_machine-gear.004",
+   "vertices": 1368,
+   "min": [
+    -0.2625,
+    0.6134,
+    4.9457
+   ],
+   "max": [
+    -0.1466,
+    0.6681,
+    5.0629
+   ],
+   "center": [
+    -0.2045,
+    0.6408,
+    5.0043
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    1.0,
+    0.853,
+    0.15
+   ]
+  },
+  {
+   "name": "tuning_machine-gear.005",
+   "parent": "tuning_machine-gear.003",
+   "vertices": 1368,
+   "min": [
+    -0.2767,
+    0.7229,
+    5.3022
+   ],
+   "max": [
+    -0.1607,
+    0.7776,
+    5.4193
+   ],
+   "center": [
+    -0.2187,
+    0.7503,
+    5.3608
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.505,
+    0.28,
+    0.7
+   ]
+  },
+  {
+   "name": "tuning_machine-gear.007",
+   "parent": "tuning_machine-gear.006",
+   "vertices": 1368,
+   "min": [
+    -0.2966,
+    0.8297,
+    5.6498
+   ],
+   "max": [
+    -0.1807,
+    0.8844,
+    5.767
+   ],
+   "center": [
+    -0.2387,
+    0.857,
+    5.7084
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.357
+   ]
+  },
+  {
+   "name": "tuning_machine-gear.009",
+   "parent": "tuning_machine-gear.008",
+   "vertices": 1368,
+   "min": [
+    0.1754,
+    0.8309,
+    5.6537
+   ],
+   "max": [
+    0.2906,
+    0.8857,
+    5.7709
+   ],
+   "center": [
+    0.233,
+    0.8583,
+    5.7123
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.429
+   ]
+  },
+  {
+   "name": "tuning_machine-gear.011",
+   "parent": "tuning_machine-gear.010",
+   "vertices": 1368,
+   "min": [
+    0.1563,
+    0.723,
+    5.3026
+   ],
+   "max": [
+    0.2715,
+    0.7778,
+    5.4199
+   ],
+   "center": [
+    0.2139,
+    0.7504,
+    5.3612
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.105,
+    0.308,
+    0.7
+   ]
+  },
+  {
+   "name": "tuning_machine-key.001",
+   "parent": "tuning_machine-key",
+   "vertices": 337,
+   "min": [
+    0.2762,
+    0.6347,
+    4.9756
+   ],
+   "max": [
+    0.4937,
+    0.6848,
+    5.173
+   ],
+   "center": [
+    0.385,
+    0.6598,
+    5.0743
+   ],
+   "materials": [
+    "Glossy_golden"
+   ],
+   "color": [
+    0.779,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "tuning_machine-key.002",
+   "parent": "tuning_machine-key.004",
+   "vertices": 337,
+   "min": [
+    -0.4915,
+    0.6231,
+    4.9756
+   ],
+   "max": [
+    -0.274,
+    0.6952,
+    5.1692
+   ],
+   "center": [
+    -0.3828,
+    0.6591,
+    5.0724
+   ],
+   "materials": [
+    "Glossy_golden"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.936
+   ]
+  },
+  {
+   "name": "tuning_machine-key.005",
+   "parent": "tuning_machine-key.003",
+   "vertices": 337,
+   "min": [
+    -0.5059,
+    0.67,
+    5.4023
+   ],
+   "max": [
+    -0.2882,
+    0.8672,
+    5.4556
+   ],
+   "center": [
+    -0.397,
+    0.7686,
+    5.4289
+   ],
+   "materials": [
+    "Glossy_golden"
+   ],
+   "color": [
+    0.28,
+    0.7,
+    0.609
+   ]
+  },
+  {
+   "name": "tuning_machine-key.007",
+   "parent": "tuning_machine-key.006",
+   "vertices": 337,
+   "min": [
+    0.2812,
+    0.6908,
+    5.3593
+   ],
+   "max": [
+    0.4988,
+    0.8484,
+    5.5042
+   ],
+   "center": [
+    0.39,
+    0.7696,
+    5.4318
+   ],
+   "materials": [
+    "Glossy_golden"
+   ],
+   "color": [
+    1.0,
+    0.568,
+    0.15
+   ]
+  },
+  {
+   "name": "tuning_machine-key.009",
+   "parent": "tuning_machine-key.008",
+   "vertices": 337,
+   "min": [
+    -0.5223,
+    0.8046,
+    5.6968
+   ],
+   "max": [
+    -0.3052,
+    0.9499,
+    5.854
+   ],
+   "center": [
+    -0.4138,
+    0.8772,
+    5.7754
+   ],
+   "materials": [
+    "Glossy_golden"
+   ],
+   "color": [
+    0.52,
+    0.4,
+    1.0
+   ]
+  },
+  {
+   "name": "tuning_machine-key.011",
+   "parent": "tuning_machine-key.010",
+   "vertices": 337,
+   "min": [
+    0.3008,
+    0.8511,
+    5.6848
+   ],
+   "max": [
+    0.5184,
+    0.9041,
+    5.8819
+   ],
+   "center": [
+    0.4096,
+    0.8776,
+    5.7833
+   ],
+   "materials": [
+    "Glossy_golden"
+   ],
+   "color": [
+    0.159,
+    0.7,
+    0.105
+   ]
+  },
+  {
+   "name": "tuning_machine-key_screw.001",
+   "parent": "tuning_machine-key_screw",
+   "vertices": 658,
+   "min": [
+    0.1308,
+    0.64,
+    5.0492
+   ],
+   "max": [
+    0.2564,
+    0.6835,
+    5.0936
+   ],
+   "center": [
+    0.1936,
+    0.6618,
+    5.0714
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.63
+   ]
+  },
+  {
+   "name": "tuning_machine-key_screw.002",
+   "parent": "tuning_machine-key_screw.004",
+   "vertices": 658,
+   "min": [
+    -0.2543,
+    0.6404,
+    5.0511
+   ],
+   "max": [
+    -0.1287,
+    0.6846,
+    5.0962
+   ],
+   "center": [
+    -0.1915,
+    0.6625,
+    5.0737
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.15,
+    0.724,
+    1.0
+   ]
+  },
+  {
+   "name": "tuning_machine-key_screw.005",
+   "parent": "tuning_machine-key_screw.003",
+   "vertices": 658,
+   "min": [
+    -0.2684,
+    0.7499,
+    5.4076
+   ],
+   "max": [
+    -0.1428,
+    0.7941,
+    5.4527
+   ],
+   "center": [
+    -0.2056,
+    0.772,
+    5.4302
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.686,
+    0.7,
+    0.28
+   ]
+  },
+  {
+   "name": "tuning_machine-key_screw.007",
+   "parent": "tuning_machine-key_screw.006",
+   "vertices": 658,
+   "min": [
+    0.1358,
+    0.7498,
+    5.4067
+   ],
+   "max": [
+    0.2615,
+    0.7934,
+    5.4511
+   ],
+   "center": [
+    0.1987,
+    0.7716,
+    5.4289
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.78,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "tuning_machine-key_screw.009",
+   "parent": "tuning_machine-key_screw.008",
+   "vertices": 658,
+   "min": [
+    -0.2888,
+    0.8563,
+    5.7532
+   ],
+   "max": [
+    -0.1632,
+    0.8999,
+    5.7978
+   ],
+   "center": [
+    -0.226,
+    0.8781,
+    5.7755
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.4,
+    1.0,
+    0.67
+   ]
+  },
+  {
+   "name": "tuning_machine-key_screw.011",
+   "parent": "tuning_machine-key_screw.010",
+   "vertices": 658,
+   "min": [
+    0.1555,
+    0.8578,
+    5.7582
+   ],
+   "max": [
+    0.2811,
+    0.9014,
+    5.8027
+   ],
+   "center": [
+    0.2183,
+    0.8796,
+    5.7804
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.7,
+    0.199,
+    0.105
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.001",
+   "parent": "tuning_machine-screw.000",
+   "vertices": 565,
+   "min": [
+    0.1983,
+    0.5867,
+    4.897
+   ],
+   "max": [
+    0.2218,
+    0.6018,
+    4.9216
+   ],
+   "center": [
+    0.2101,
+    0.5942,
+    4.9093
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.4,
+    0.48,
+    1.0
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.002",
+   "parent": "tuning_machine-screw.003",
+   "vertices": 565,
+   "min": [
+    0.1841,
+    0.6406,
+    4.9749
+   ],
+   "max": [
+    0.2336,
+    0.6656,
+    5.0254
+   ],
+   "center": [
+    0.2089,
+    0.6531,
+    5.0002
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.512,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.005",
+   "parent": "tuning_machine-screw.004",
+   "vertices": 565,
+   "min": [
+    0.1953,
+    0.659,
+    5.1315
+   ],
+   "max": [
+    0.2192,
+    0.6746,
+    5.1566
+   ],
+   "center": [
+    0.2072,
+    0.6668,
+    5.1441
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.7,
+    0.28,
+    0.581
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.006",
+   "parent": "tuning_machine-screw.014",
+   "vertices": 565,
+   "min": [
+    -0.2181,
+    0.6592,
+    5.132
+   ],
+   "max": [
+    -0.1942,
+    0.6747,
+    5.1572
+   ],
+   "center": [
+    -0.2062,
+    0.667,
+    5.1446
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.992
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.007",
+   "parent": "tuning_machine-screw.013",
+   "vertices": 565,
+   "min": [
+    -0.2293,
+    0.6408,
+    4.9755
+   ],
+   "max": [
+    -0.1798,
+    0.6658,
+    5.0259
+   ],
+   "center": [
+    -0.2045,
+    0.6533,
+    5.0007
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    1.0,
+    0.819,
+    0.4
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.008",
+   "parent": "tuning_machine-screw.012",
+   "vertices": 565,
+   "min": [
+    -0.2151,
+    0.5868,
+    4.8975
+   ],
+   "max": [
+    -0.1916,
+    0.6019,
+    4.9221
+   ],
+   "center": [
+    -0.2033,
+    0.5944,
+    4.9098
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.347,
+    0.105,
+    0.7
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.009",
+   "parent": "tuning_machine-screw.011",
+   "vertices": 565,
+   "min": [
+    -0.2292,
+    0.6963,
+    5.254
+   ],
+   "max": [
+    -0.2058,
+    0.7114,
+    5.2786
+   ],
+   "center": [
+    -0.2175,
+    0.7039,
+    5.2663
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.4,
+    1.0,
+    0.469
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.015",
+   "parent": "tuning_machine-screw.010",
+   "vertices": 565,
+   "min": [
+    -0.2434,
+    0.7503,
+    5.3319
+   ],
+   "max": [
+    -0.1939,
+    0.7753,
+    5.3824
+   ],
+   "center": [
+    -0.2187,
+    0.7628,
+    5.3572
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.3
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.017",
+   "parent": "tuning_machine-screw.016",
+   "vertices": 565,
+   "min": [
+    -0.2323,
+    0.7687,
+    5.4885
+   ],
+   "max": [
+    -0.2084,
+    0.7842,
+    5.5136
+   ],
+   "center": [
+    -0.2203,
+    0.7765,
+    5.5011
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.28,
+    0.477,
+    0.7
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.019",
+   "parent": "tuning_machine-screw.018",
+   "vertices": 565,
+   "min": [
+    0.2003,
+    0.7689,
+    5.489
+   ],
+   "max": [
+    0.2242,
+    0.7844,
+    5.5141
+   ],
+   "center": [
+    0.2123,
+    0.7766,
+    5.5015
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.796,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.021",
+   "parent": "tuning_machine-screw.020",
+   "vertices": 565,
+   "min": [
+    0.1891,
+    0.7505,
+    5.3324
+   ],
+   "max": [
+    0.2386,
+    0.7755,
+    5.3828
+   ],
+   "center": [
+    0.2139,
+    0.763,
+    5.3576
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.969,
+    0.4,
+    1.0
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.023",
+   "parent": "tuning_machine-screw.022",
+   "vertices": 565,
+   "min": [
+    0.2034,
+    0.6965,
+    5.2544
+   ],
+   "max": [
+    0.2268,
+    0.7116,
+    5.2791
+   ],
+   "center": [
+    0.2151,
+    0.7041,
+    5.2668
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.105,
+    0.7,
+    0.496
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.025",
+   "parent": "tuning_machine-screw.024",
+   "vertices": 565,
+   "min": [
+    -0.2518,
+    0.8757,
+    5.8366
+   ],
+   "max": [
+    -0.2279,
+    0.8912,
+    5.8618
+   ],
+   "center": [
+    -0.2398,
+    0.8834,
+    5.8492
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    1.0,
+    0.619,
+    0.4
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.027",
+   "parent": "tuning_machine-screw.026",
+   "vertices": 565,
+   "min": [
+    -0.263,
+    0.8572,
+    5.6801
+   ],
+   "max": [
+    -0.2134,
+    0.8822,
+    5.7305
+   ],
+   "center": [
+    -0.2382,
+    0.8697,
+    5.7053
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.212,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.029",
+   "parent": "tuning_machine-screw.028",
+   "vertices": 565,
+   "min": [
+    -0.2487,
+    0.8033,
+    5.6021
+   ],
+   "max": [
+    -0.2253,
+    0.8184,
+    5.6267
+   ],
+   "center": [
+    -0.237,
+    0.8108,
+    5.6144
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.372,
+    0.7,
+    0.28
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.031",
+   "parent": "tuning_machine-screw.030",
+   "vertices": 565,
+   "min": [
+    0.223,
+    0.8045,
+    5.606
+   ],
+   "max": [
+    0.2464,
+    0.8196,
+    5.6306
+   ],
+   "center": [
+    0.2347,
+    0.8121,
+    5.6183
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.584
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.033",
+   "parent": "tuning_machine-screw.032",
+   "vertices": 565,
+   "min": [
+    0.2087,
+    0.8585,
+    5.684
+   ],
+   "max": [
+    0.2583,
+    0.8835,
+    5.7344
+   ],
+   "center": [
+    0.2335,
+    0.871,
+    5.7092
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.4,
+    0.882,
+    1.0
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.035",
+   "parent": "tuning_machine-screw.034",
+   "vertices": 565,
+   "min": [
+    0.2199,
+    0.8769,
+    5.8405
+   ],
+   "max": [
+    0.2438,
+    0.8924,
+    5.8657
+   ],
+   "center": [
+    0.2319,
+    0.8846,
+    5.8531
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.7,
+    0.644,
+    0.105
+   ]
+  },
+  {
+   "name": "tuning_machine_post.001",
+   "parent": "tuning_machine_post.005",
+   "vertices": 696,
+   "min": [
+    0.1497,
+    0.4041,
+    4.9851
+   ],
+   "max": [
+    0.2661,
+    0.5385,
+    5.1008
+   ],
+   "center": [
+    0.2079,
+    0.4713,
+    5.043
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.768,
+    0.4,
+    1.0
+   ]
+  },
+  {
+   "name": "tuning_machine_post.002",
+   "parent": "tuning_machine_post.004",
+   "vertices": 696,
+   "min": [
+    0.1553,
+    0.5138,
+    5.3422
+   ],
+   "max": [
+    0.2716,
+    0.6482,
+    5.4578
+   ],
+   "center": [
+    0.2135,
+    0.581,
+    5.4
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.424
+   ]
+  },
+  {
+   "name": "tuning_machine_post.006",
+   "parent": "tuning_machine_post.003",
+   "vertices": 696,
+   "min": [
+    0.1746,
+    0.6217,
+    5.6934
+   ],
+   "max": [
+    0.291,
+    0.7561,
+    5.809
+   ],
+   "center": [
+    0.2328,
+    0.6889,
+    5.7512
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.7,
+    0.293,
+    0.28
+   ]
+  },
+  {
+   "name": "tuning_machine_post.008",
+   "parent": "tuning_machine_post.007",
+   "vertices": 696,
+   "min": [
+    -0.2972,
+    0.6202,
+    5.6885
+   ],
+   "max": [
+    -0.1809,
+    0.7546,
+    5.8041
+   ],
+   "center": [
+    -0.2391,
+    0.6874,
+    5.7463
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.15,
+    0.372,
+    1.0
+   ]
+  },
+  {
+   "name": "tuning_machine_post.010",
+   "parent": "tuning_machine_post.009",
+   "vertices": 696,
+   "min": [
+    -0.2765,
+    0.5136,
+    5.3415
+   ],
+   "max": [
+    -0.1602,
+    0.648,
+    5.4571
+   ],
+   "center": [
+    -0.2184,
+    0.5808,
+    5.3993
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.732,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "tuning_machine_post.011",
+   "parent": "tuning_machine_post.000",
+   "vertices": 696,
+   "min": [
+    -0.2634,
+    0.4041,
+    4.985
+   ],
+   "max": [
+    -0.147,
+    0.5385,
+    5.1007
+   ],
+   "center": [
+    -0.2052,
+    0.4713,
+    5.0429
+   ],
+   "materials": [
+    "Golden"
+   ],
+   "color": [
+    0.7,
+    0.105,
+    0.608
+   ]
+  }
+ ],
+ "axes": {
+  "mean": [
+   0.0446,
+   0.4183,
+   3.6523
+  ],
+  "long": [
+   -0.0253,
+   0.1693,
+   0.9852
+  ],
+  "mid": [
+   0.9987,
+   -0.0394,
+   0.0324
+  ],
+  "thin": [
+   -0.0443,
+   -0.9848,
+   0.1681
+  ],
+  "extent": [
+   9.3402,
+   3.6735,
+   0.9845
+  ]
+ },
+ "ends": {
+  "A": {
+   "center": [
+    0.0205,
+    0.5321,
+    4.6617
+   ],
+   "scale": 3.1346,
+   "objects": [
+    {
+     "name": "guitar-fret.002",
+     "color": [
+      1.0,
+      0.4,
+      0.925
+     ],
+     "vertices": 56
+    },
+    {
+     "name": "guitar-fret.003",
+     "color": [
+      0.15,
+      1.0,
+      0.858
+     ],
+     "vertices": 56
+    },
+    {
+     "name": "guitar-fret.004",
+     "color": [
+      0.7,
+      0.507,
+      0.28
+     ],
+     "vertices": 56
+    },
+    {
+     "name": "guitar-fret.005",
+     "color": [
+      0.362,
+      0.15,
+      1.0
+     ],
+     "vertices": 56
+    },
+    {
+     "name": "guitar-neck.001",
+     "color": [
+      0.579,
+      0.7,
+      0.28
+     ],
+     "vertices": 5926
+    },
+    {
+     "name": "guitar-nut.001",
+     "color": [
+      0.997,
+      0.15,
+      1.0
+     ],
+     "vertices": 608
+    },
+    {
+     "name": "tuning_machine-base.001",
+     "color": [
+      0.922,
+      0.4,
+      1.0
+     ],
+     "vertices": 938
+    },
+    {
+     "name": "tuning_machine-base.002",
+     "color": [
+      0.15,
+      1.0,
+      0.641
+     ],
+     "vertices": 938
+    },
+    {
+     "name": "tuning_machine-base.005",
+     "color": [
+      0.7,
+      0.4,
+      0.28
+     ],
+     "vertices": 938
+    },
+    {
+     "name": "tuning_machine-base.007",
+     "color": [
+      0.15,
+      0.155,
+      1.0
+     ],
+     "vertices": 938
+    },
+    {
+     "name": "tuning_machine-base.009",
+     "color": [
+      0.579,
+      1.0,
+      0.4
+     ],
+     "vertices": 938
+    },
+    {
+     "name": "tuning_machine-base.011",
+     "color": [
+      0.7,
+      0.105,
+      0.456
+     ],
+     "vertices": 938
+    },
+    {
+     "name": "tuning_machine-gear.001",
+     "color": [
+      0.4,
+      0.929,
+      1.0
+     ],
+     "vertices": 1368
+    },
+    {
+     "name": "tuning_machine-gear.002",
+     "color": [
+      1.0,
+      0.853,
+      0.15
+     ],
+     "vertices": 1368
+    },
+    {
+     "name": "tuning_machine-gear.005",
+     "color": [
+      0.505,
+      0.28,
+      0.7
+     ],
+     "vertices": 1368
+    },
+    {
+     "name": "tuning_machine-gear.007",
+     "color": [
+      0.15,
+      1.0,
+      0.357
+     ],
+     "vertices": 1368
+    },
+    {
+     "name": "tuning_machine-gear.009",
+     "color": [
+      1.0,
+      0.4,
+      0.429
+     ],
+     "vertices": 1368
+    },
+    {
+     "name": "tuning_machine-gear.011",
+     "color": [
+      0.105,
+      0.308,
+      0.7
+     ],
+     "vertices": 1368
+    },
+    {
+     "name": "tuning_machine-key.001",
+     "color": [
+      0.779,
+      1.0,
+      0.4
+     ],
+     "vertices": 337
+    },
+    {
+     "name": "tuning_machine-key.002",
+     "color": [
+      1.0,
+      0.15,
+      0.936
+     ],
+     "vertices": 337
+    },
+    {
+     "name": "tuning_machine-key.005",
+     "color": [
+      0.28,
+      0.7,
+      0.609
+     ],
+     "vertices": 337
+    },
+    {
+     "name": "tuning_machine-key.007",
+     "color": [
+      1.0,
+      0.568,
+      0.15
+     ],
+     "vertices": 337
+    },
+    {
+     "name": "tuning_machine-key.009",
+     "color": [
+      0.52,
+      0.4,
+      1.0
+     ],
+     "vertices": 337
+    },
+    {
+     "name": "tuning_machine-key.011",
+     "color": [
+      0.159,
+      0.7,
+      0.105
+     ],
+     "vertices": 337
+    },
+    {
+     "name": "tuning_machine-key_screw.001",
+     "color": [
+      1.0,
+      0.4,
+      0.63
+     ],
+     "vertices": 658
+    },
+    {
+     "name": "tuning_machine-key_screw.002",
+     "color": [
+      0.15,
+      0.724,
+      1.0
+     ],
+     "vertices": 658
+    },
+    {
+     "name": "tuning_machine-key_screw.005",
+     "color": [
+      0.686,
+      0.7,
+      0.28
+     ],
+     "vertices": 658
+    },
+    {
+     "name": "tuning_machine-key_screw.007",
+     "color": [
+      0.78,
+      0.15,
+      1.0
+     ],
+     "vertices": 658
+    },
+    {
+     "name": "tuning_machine-key_screw.009",
+     "color": [
+      0.4,
+      1.0,
+      0.67
+     ],
+     "vertices": 658
+    },
+    {
+     "name": "tuning_machine-key_screw.011",
+     "color": [
+      0.7,
+      0.199,
+      0.105
+     ],
+     "vertices": 658
+    },
+    {
+     "name": "tuning_machine-screw.001",
+     "color": [
+      0.4,
+      0.48,
+      1.0
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.002",
+     "color": [
+      0.512,
+      1.0,
+      0.15
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.005",
+     "color": [
+      0.7,
+      0.28,
+      0.581
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.006",
+     "color": [
+      0.15,
+      1.0,
+      0.992
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.007",
+     "color": [
+      1.0,
+      0.819,
+      0.4
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.008",
+     "color": [
+      0.347,
+      0.105,
+      0.7
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.009",
+     "color": [
+      0.4,
+      1.0,
+      0.469
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.015",
+     "color": [
+      1.0,
+      0.15,
+      0.3
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.017",
+     "color": [
+      0.28,
+      0.477,
+      0.7
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.019",
+     "color": [
+      0.796,
+      1.0,
+      0.15
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.021",
+     "color": [
+      0.969,
+      0.4,
+      1.0
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.023",
+     "color": [
+      0.105,
+      0.7,
+      0.496
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.025",
+     "color": [
+      1.0,
+      0.619,
+      0.4
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.027",
+     "color": [
+      0.212,
+      0.15,
+      1.0
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.029",
+     "color": [
+      0.372,
+      0.7,
+      0.28
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.031",
+     "color": [
+      1.0,
+      0.15,
+      0.584
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.033",
+     "color": [
+      0.4,
+      0.882,
+      1.0
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine-screw.035",
+     "color": [
+      0.7,
+      0.644,
+      0.105
+     ],
+     "vertices": 565
+    },
+    {
+     "name": "tuning_machine_post.001",
+     "color": [
+      0.768,
+      0.4,
+      1.0
+     ],
+     "vertices": 696
+    },
+    {
+     "name": "tuning_machine_post.002",
+     "color": [
+      0.15,
+      1.0,
+      0.424
+     ],
+     "vertices": 696
+    },
+    {
+     "name": "tuning_machine_post.006",
+     "color": [
+      0.7,
+      0.293,
+      0.28
+     ],
+     "vertices": 696
+    },
+    {
+     "name": "tuning_machine_post.008",
+     "color": [
+      0.15,
+      0.372,
+      1.0
+     ],
+     "vertices": 696
+    },
+    {
+     "name": "tuning_machine_post.010",
+     "color": [
+      0.732,
+      1.0,
+      0.4
+     ],
+     "vertices": 696
+    },
+    {
+     "name": "tuning_machine_post.011",
+     "color": [
+      0.7,
+      0.105,
+      0.608
+     ],
+     "vertices": 696
+    }
+   ]
+  },
+  "B": {
+   "center": [
+    -0.0056,
+    -0.3515,
+    -1.825
+   ],
+   "scale": 4.1143,
+   "objects": [
+    {
+     "name": "guitar-body.001",
+     "color": [
+      1.0,
+      0.15,
+      0.15
+     ],
+     "vertices": 9430
+    },
+    {
+     "name": "guitar-bridge.001",
+     "color": [
+      0.4,
+      0.575,
+      1.0
+     ],
+     "vertices": 429
+    },
+    {
+     "name": "guitar-saddle.001",
+     "color": [
+      0.7,
+      0.351,
+      0.105
+     ],
+     "vertices": 640
+    },
+    {
+     "name": "pin.001",
+     "color": [
+      0.473,
+      0.4,
+      1.0
+     ],
+     "vertices": 72
+    },
+    {
+     "name": "pin.002",
+     "color": [
+      0.295,
+      1.0,
+      0.15
+     ],
+     "vertices": 17
+    },
+    {
+     "name": "pin.003",
+     "color": [
+      0.7,
+      0.28,
+      0.474
+     ],
+     "vertices": 72
+    },
+    {
+     "name": "pin.006",
+     "color": [
+      0.15,
+      0.791,
+      1.0
+     ],
+     "vertices": 17
+    },
+    {
+     "name": "pin.008",
+     "color": [
+      1.0,
+      0.973,
+      0.4
+     ],
+     "vertices": 72
+    },
+    {
+     "name": "pin.009",
+     "color": [
+      0.499,
+      0.105,
+      0.7
+     ],
+     "vertices": 17
+    },
+    {
+     "name": "pin.011",
+     "color": [
+      0.4,
+      1.0,
+      0.622
+     ],
+     "vertices": 72
+    },
+    {
+     "name": "pin.012",
+     "color": [
+      1.0,
+      0.217,
+      0.15
+     ],
+     "vertices": 17
+    },
+    {
+     "name": "pin.014",
+     "color": [
+      0.28,
+      0.369,
+      0.7
+     ],
+     "vertices": 72
+    },
+    {
+     "name": "pin.015",
+     "color": [
+      0.579,
+      1.0,
+      0.15
+     ],
+     "vertices": 17
+    },
+    {
+     "name": "pin.016",
+     "color": [
+      1.0,
+      0.4,
+      0.878
+     ],
+     "vertices": 72
+    },
+    {
+     "name": "pin.017",
+     "color": [
+      0.105,
+      0.7,
+      0.647
+     ],
+     "vertices": 17
+    }
+   ]
+  }
+ }
+}

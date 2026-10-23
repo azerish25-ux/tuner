@@ -1,0 +1,472 @@
+{
+ "id": "ukulele_twilight",
+ "source": "scene.gltf",
+ "objects": [
+  {
+   "name": "Body_low_Main_0",
+   "parent": "Body_low",
+   "vertices": 1608,
+   "min": [
+    -0.1331,
+    -0.4476,
+    -0.0454
+   ],
+   "max": [
+    0.1331,
+    -0.0614,
+    0.0454
+   ],
+   "center": [
+    0.0,
+    -0.2545,
+    0.0
+   ],
+   "materials": [
+    "Main"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.15
+   ]
+  },
+  {
+   "name": "Bridge_low_Details_0",
+   "parent": "Bridge_low",
+   "vertices": 74,
+   "min": [
+    -0.0426,
+    -0.3498,
+    0.0448
+   ],
+   "max": [
+    0.0426,
+    -0.3194,
+    0.0461
+   ],
+   "center": [
+    0.0,
+    -0.3346,
+    0.0454
+   ],
+   "materials": [
+    "Details"
+   ],
+   "color": [
+    0.4,
+    0.575,
+    1.0
+   ]
+  },
+  {
+   "name": "Brodge_a_low_Details_0",
+   "parent": "Brodge_a_low",
+   "vertices": 612,
+   "min": [
+    -0.0375,
+    -0.347,
+    0.0445
+   ],
+   "max": [
+    0.0375,
+    -0.3386,
+    0.0504
+   ],
+   "center": [
+    0.0,
+    -0.3428,
+    0.0475
+   ],
+   "materials": [
+    "Details"
+   ],
+   "color": [
+    0.452,
+    0.7,
+    0.105
+   ]
+  },
+  {
+   "name": "Grief_low_Main_0",
+   "parent": "Grief_low",
+   "vertices": 913,
+   "min": [
+    -0.0501,
+    -0.1111,
+    -0.0349
+   ],
+   "max": [
+    0.049,
+    0.4335,
+    0.0463
+   ],
+   "center": [
+    -0.0005,
+    0.1612,
+    0.0057
+   ],
+   "materials": [
+    "Main"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.925
+   ]
+  },
+  {
+   "name": "pegs_a_low_Details_0",
+   "parent": "pegs_a_low",
+   "vertices": 120,
+   "min": [
+    -0.0318,
+    0.2984,
+    0.0114
+   ],
+   "max": [
+    0.0321,
+    0.3701,
+    0.0327
+   ],
+   "center": [
+    0.0002,
+    0.3342,
+    0.0221
+   ],
+   "materials": [
+    "Details"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.858
+   ]
+  },
+  {
+   "name": "pegs_b_low_Details_0",
+   "parent": "pegs_b_low",
+   "vertices": 400,
+   "min": [
+    -0.0345,
+    0.2956,
+    0.0106
+   ],
+   "max": [
+    0.0349,
+    0.3727,
+    0.0318
+   ],
+   "center": [
+    0.0002,
+    0.3341,
+    0.0212
+   ],
+   "materials": [
+    "Details"
+   ],
+   "color": [
+    0.7,
+    0.507,
+    0.28
+   ]
+  },
+  {
+   "name": "pegs_c_low_Details_0",
+   "parent": "pegs_c_low",
+   "vertices": 992,
+   "min": [
+    -0.0471,
+    0.2919,
+    -0.0151
+   ],
+   "max": [
+    0.0475,
+    0.375,
+    0.0143
+   ],
+   "center": [
+    0.0002,
+    0.3335,
+    -0.0004
+   ],
+   "materials": [
+    "Details"
+   ],
+   "color": [
+    0.362,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "pegs_d_low_Details_0",
+   "parent": "pegs_d_low",
+   "vertices": 1344,
+   "min": [
+    -0.0637,
+    0.2973,
+    -0.0156
+   ],
+   "max": [
+    0.0643,
+    0.3747,
+    0.0138
+   ],
+   "center": [
+    0.0003,
+    0.336,
+    -0.0009
+   ],
+   "materials": [
+    "Details"
+   ],
+   "color": [
+    0.426,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "pegs_low_Details_0",
+   "parent": "pegs_low",
+   "vertices": 2416,
+   "min": [
+    -0.0308,
+    0.2997,
+    0.009
+   ],
+   "max": [
+    0.0311,
+    0.3719,
+    0.0417
+   ],
+   "center": [
+    0.0002,
+    0.3358,
+    0.0254
+   ],
+   "materials": [
+    "Details"
+   ],
+   "color": [
+    0.7,
+    0.105,
+    0.304
+   ]
+  },
+  {
+   "name": "string_a_low_Details_0",
+   "parent": "string_a_low",
+   "vertices": 3380,
+   "min": [
+    -0.0349,
+    -0.344,
+    0.0169
+   ],
+   "max": [
+    0.0345,
+    0.3797,
+    0.0511
+   ],
+   "center": [
+    -0.0002,
+    0.0178,
+    0.034
+   ],
+   "materials": [
+    "Details"
+   ],
+   "color": [
+    0.4,
+    0.776,
+    1.0
+   ]
+  },
+  {
+   "name": "thing_a_low_Details_0",
+   "parent": "thing_a_low",
+   "vertices": 260,
+   "min": [
+    -0.0293,
+    0.2339,
+    0.0453
+   ],
+   "max": [
+    0.0293,
+    0.2376,
+    0.048
+   ],
+   "center": [
+    0.0,
+    0.2357,
+    0.0466
+   ],
+   "materials": [
+    "Details"
+   ],
+   "color": [
+    0.93,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "thing_low_Details_0",
+   "parent": "thing_low",
+   "vertices": 496,
+   "min": [
+    -0.0367,
+    -0.0626,
+    0.0456
+   ],
+   "max": [
+    0.0367,
+    0.2034,
+    0.0471
+   ],
+   "center": [
+    0.0,
+    0.0704,
+    0.0464
+   ],
+   "materials": [
+    "Details"
+   ],
+   "color": [
+    0.612,
+    0.28,
+    0.7
+   ]
+  }
+ ],
+ "axes": {
+  "mean": [
+   -0.0003,
+   0.1733,
+   0.0217
+  ],
+  "long": [
+   0.0003,
+   -0.9999,
+   0.0107
+  ],
+  "mid": [
+   -1.0,
+   -0.0003,
+   0.0018
+  ],
+  "thin": [
+   0.0018,
+   0.0107,
+   0.9999
+  ],
+  "extent": [
+   0.8816,
+   0.2663,
+   0.1008
+  ]
+ },
+ "ends": {
+  "A": {
+   "center": [
+    -0.0,
+    -0.3186,
+    0.0023
+   ],
+   "scale": 0.2983,
+   "objects": [
+    {
+     "name": "Body_low_Main_0",
+     "color": [
+      1.0,
+      0.15,
+      0.15
+     ],
+     "vertices": 1608
+    },
+    {
+     "name": "Bridge_low_Details_0",
+     "color": [
+      0.4,
+      0.575,
+      1.0
+     ],
+     "vertices": 74
+    },
+    {
+     "name": "Brodge_a_low_Details_0",
+     "color": [
+      0.452,
+      0.7,
+      0.105
+     ],
+     "vertices": 612
+    }
+   ]
+  },
+  "B": {
+   "center": [
+    0.0003,
+    0.3027,
+    0.0143
+   ],
+   "scale": 0.2936,
+   "objects": [
+    {
+     "name": "pegs_a_low_Details_0",
+     "color": [
+      0.15,
+      1.0,
+      0.858
+     ],
+     "vertices": 120
+    },
+    {
+     "name": "pegs_b_low_Details_0",
+     "color": [
+      0.7,
+      0.507,
+      0.28
+     ],
+     "vertices": 400
+    },
+    {
+     "name": "pegs_c_low_Details_0",
+     "color": [
+      0.362,
+      0.15,
+      1.0
+     ],
+     "vertices": 992
+    },
+    {
+     "name": "pegs_d_low_Details_0",
+     "color": [
+      0.426,
+      1.0,
+      0.4
+     ],
+     "vertices": 1344
+    },
+    {
+     "name": "pegs_low_Details_0",
+     "color": [
+      0.7,
+      0.105,
+      0.304
+     ],
+     "vertices": 2416
+    },
+    {
+     "name": "thing_a_low_Details_0",
+     "color": [
+      0.93,
+      1.0,
+      0.15
+     ],
+     "vertices": 260
+    }
+   ]
+  }
+ }
+}

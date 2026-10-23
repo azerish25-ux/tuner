@@ -1,0 +1,1408 @@
+{
+ "id": "ukulele_mrgicu",
+ "source": "scene.gltf",
+ "objects": [
+  {
+   "name": "Cylinder_Material.017_0",
+   "parent": "Cylinder",
+   "vertices": 357,
+   "min": [
+    -0.1567,
+    -0.1183,
+    -0.0243
+   ],
+   "max": [
+    -0.0793,
+    0.0943,
+    -0.0118
+   ],
+   "center": [
+    -0.118,
+    -0.012,
+    -0.018
+   ],
+   "materials": [
+    "Material.017"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.15
+   ]
+  },
+  {
+   "name": "body_paint_0",
+   "parent": "body",
+   "vertices": 489,
+   "min": [
+    -0.0824,
+    -0.2065,
+    -0.0238
+   ],
+   "max": [
+    0.3169,
+    0.1871,
+    0.0569
+   ],
+   "center": [
+    0.1173,
+    -0.0097,
+    0.0166
+   ],
+   "materials": [
+    "paint"
+   ],
+   "color": [
+    0.4,
+    0.575,
+    1.0
+   ]
+  },
+  {
+   "name": "body_wood_0",
+   "parent": "body",
+   "vertices": 355,
+   "min": [
+    -0.081,
+    -0.2052,
+    -0.0221
+   ],
+   "max": [
+    0.3156,
+    0.1857,
+    0.0556
+   ],
+   "center": [
+    0.1173,
+    -0.0097,
+    0.0167
+   ],
+   "materials": [
+    "wood"
+   ],
+   "color": [
+    0.452,
+    0.7,
+    0.105
+   ]
+  },
+  {
+   "name": "body_wood_glow_0",
+   "parent": "body",
+   "vertices": 256,
+   "min": [
+    -0.0824,
+    -0.2065,
+    0.0556
+   ],
+   "max": [
+    0.3169,
+    0.1871,
+    0.0569
+   ],
+   "center": [
+    0.1173,
+    -0.0097,
+    0.0563
+   ],
+   "materials": [
+    "wood_glow"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.925
+   ]
+  },
+  {
+   "name": "end_bodyform_wood_0",
+   "parent": "end_bodyform",
+   "vertices": 20,
+   "min": [
+    0.2233,
+    -0.1655,
+    -0.0227
+   ],
+   "max": [
+    0.2854,
+    -0.1005,
+    0.0558
+   ],
+   "center": [
+    0.2543,
+    -0.133,
+    0.0166
+   ],
+   "materials": [
+    "wood"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.858
+   ]
+  },
+  {
+   "name": "front_tailform_wood_0",
+   "parent": "front_tailform",
+   "vertices": 20,
+   "min": [
+    -0.064,
+    0.0975,
+    -0.0228
+   ],
+   "max": [
+    -0.0019,
+    0.1625,
+    0.057
+   ],
+   "center": [
+    -0.033,
+    0.13,
+    0.0171
+   ],
+   "materials": [
+    "wood"
+   ],
+   "color": [
+    0.7,
+    0.507,
+    0.28
+   ]
+  },
+  {
+   "name": "handler1_plastic_0",
+   "parent": "handler1",
+   "vertices": 533,
+   "min": [
+    -0.4413,
+    0.3934,
+    0.0035
+   ],
+   "max": [
+    -0.4199,
+    0.4138,
+    0.0101
+   ],
+   "center": [
+    -0.4306,
+    0.4036,
+    0.0068
+   ],
+   "materials": [
+    "plastic"
+   ],
+   "color": [
+    0.362,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "handler2_plastic_0",
+   "parent": "handler2",
+   "vertices": 533,
+   "min": [
+    -0.3509,
+    0.4925,
+    -0.002
+   ],
+   "max": [
+    -0.3324,
+    0.5117,
+    0.0149
+   ],
+   "center": [
+    -0.3416,
+    0.5021,
+    0.0065
+   ],
+   "materials": [
+    "plastic"
+   ],
+   "color": [
+    0.426,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "handler3_plastic_0",
+   "parent": "handler3",
+   "vertices": 533,
+   "min": [
+    -0.3907,
+    0.358,
+    0.0054
+   ],
+   "max": [
+    -0.3758,
+    0.3744,
+    0.0273
+   ],
+   "center": [
+    -0.3833,
+    0.3662,
+    0.0163
+   ],
+   "materials": [
+    "plastic"
+   ],
+   "color": [
+    0.7,
+    0.105,
+    0.304
+   ]
+  },
+  {
+   "name": "handler4_plastic_0",
+   "parent": "handler4",
+   "vertices": 533,
+   "min": [
+    -0.3091,
+    0.4479,
+    0.0094
+   ],
+   "max": [
+    -0.29,
+    0.4673,
+    0.0254
+   ],
+   "center": [
+    -0.2995,
+    0.4576,
+    0.0174
+   ],
+   "materials": [
+    "plastic"
+   ],
+   "color": [
+    0.4,
+    0.776,
+    1.0
+   ]
+  },
+  {
+   "name": "hor_gear1_metal_0",
+   "parent": "hor_gear1",
+   "vertices": 1551,
+   "min": [
+    -0.4275,
+    0.4093,
+    0.0016
+   ],
+   "max": [
+    -0.3975,
+    0.4444,
+    0.0119
+   ],
+   "center": [
+    -0.4125,
+    0.4268,
+    0.0068
+   ],
+   "materials": [
+    "metal"
+   ],
+   "color": [
+    0.93,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "hor_gear2_metal_0",
+   "parent": "hor_gear2",
+   "vertices": 1551,
+   "min": [
+    -0.3788,
+    0.4658,
+    0.0015
+   ],
+   "max": [
+    -0.3453,
+    0.4979,
+    0.0117
+   ],
+   "center": [
+    -0.3621,
+    0.4818,
+    0.0066
+   ],
+   "materials": [
+    "metal"
+   ],
+   "color": [
+    0.612,
+    0.28,
+    0.7
+   ]
+  },
+  {
+   "name": "hor_gear3_metal_0",
+   "parent": "hor_gear3",
+   "vertices": 1551,
+   "min": [
+    -0.3796,
+    0.3711,
+    0.0118
+   ],
+   "max": [
+    -0.3493,
+    0.406,
+    0.022
+   ],
+   "center": [
+    -0.3645,
+    0.3886,
+    0.0169
+   ],
+   "materials": [
+    "metal"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.574
+   ]
+  },
+  {
+   "name": "hor_gear4_metal_0",
+   "parent": "hor_gear4",
+   "vertices": 1551,
+   "min": [
+    -0.3372,
+    0.4217,
+    0.0121
+   ],
+   "max": [
+    -0.3037,
+    0.4538,
+    0.0224
+   ],
+   "center": [
+    -0.3205,
+    0.4378,
+    0.0172
+   ],
+   "materials": [
+    "metal"
+   ],
+   "color": [
+    1.0,
+    0.524,
+    0.4
+   ]
+  },
+  {
+   "name": "label_Material.020_0",
+   "parent": "label",
+   "vertices": 81,
+   "min": [
+    -0.0068,
+    -0.0148,
+    -0.0221
+   ],
+   "max": [
+    0.1182,
+    0.1116,
+    -0.0186
+   ],
+   "center": [
+    0.0557,
+    0.0484,
+    -0.0203
+   ],
+   "materials": [
+    "Material.020"
+   ],
+   "color": [
+    0.105,
+    0.156,
+    0.7
+   ]
+  },
+  {
+   "name": "lid1_plastic_0",
+   "parent": "lid1",
+   "vertices": 203,
+   "min": [
+    -0.4279,
+    0.4317,
+    0.0296
+   ],
+   "max": [
+    -0.4127,
+    0.4469,
+    0.0347
+   ],
+   "center": [
+    -0.4203,
+    0.4393,
+    0.0321
+   ],
+   "materials": [
+    "plastic"
+   ],
+   "color": [
+    0.626,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "lid2_plastic_0",
+   "parent": "lid2",
+   "vertices": 203,
+   "min": [
+    -0.383,
+    0.4808,
+    0.0295
+   ],
+   "max": [
+    -0.3678,
+    0.4959,
+    0.0346
+   ],
+   "center": [
+    -0.3754,
+    0.4883,
+    0.0321
+   ],
+   "materials": [
+    "plastic"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.718
+   ]
+  },
+  {
+   "name": "lid3_plastic_0",
+   "parent": "lid3",
+   "vertices": 203,
+   "min": [
+    -0.3797,
+    0.3935,
+    0.0398
+   ],
+   "max": [
+    -0.3644,
+    0.4087,
+    0.045
+   ],
+   "center": [
+    -0.3721,
+    0.4011,
+    0.0424
+   ],
+   "materials": [
+    "plastic"
+   ],
+   "color": [
+    0.28,
+    0.683,
+    0.7
+   ]
+  },
+  {
+   "name": "lid4_plastic_0",
+   "parent": "lid4",
+   "vertices": 203,
+   "min": [
+    -0.3413,
+    0.4366,
+    0.0399
+   ],
+   "max": [
+    -0.3261,
+    0.4518,
+    0.0449
+   ],
+   "center": [
+    -0.3337,
+    0.4442,
+    0.0424
+   ],
+   "materials": [
+    "plastic"
+   ],
+   "color": [
+    1.0,
+    0.786,
+    0.15
+   ]
+  },
+  {
+   "name": "metal_Material.026_0",
+   "parent": "metal",
+   "vertices": 192,
+   "min": [
+    -0.2989,
+    0.1109,
+    0.0551
+   ],
+   "max": [
+    -0.0169,
+    0.3765,
+    0.0602
+   ],
+   "center": [
+    -0.1579,
+    0.2437,
+    0.0577
+   ],
+   "materials": [
+    "Material.026"
+   ],
+   "color": [
+    0.674,
+    0.4,
+    1.0
+   ]
+  },
+  {
+   "name": "page2.001_Material.021_0",
+   "parent": "page2.001",
+   "vertices": 20,
+   "min": [
+    -0.3862,
+    -0.2261,
+    -0.0244
+   ],
+   "max": [
+    0.202,
+    0.3117,
+    -0.0242
+   ],
+   "center": [
+    -0.0921,
+    0.0428,
+    -0.0243
+   ],
+   "materials": [
+    "Material.021"
+   ],
+   "color": [
+    0.105,
+    0.7,
+    0.203
+   ]
+  },
+  {
+   "name": "page2.001_Material.022_0",
+   "parent": "page2.001",
+   "vertices": 4,
+   "min": [
+    -0.3862,
+    -0.2261,
+    -0.0242
+   ],
+   "max": [
+    0.202,
+    0.3117,
+    -0.0242
+   ],
+   "center": [
+    -0.0921,
+    0.0428,
+    -0.0242
+   ],
+   "materials": [
+    "Material.022"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.477
+   ]
+  },
+  {
+   "name": "page2.002_Material.021_0",
+   "parent": "page2.002",
+   "vertices": 20,
+   "min": [
+    -0.3018,
+    -0.2129,
+    -0.0241
+   ],
+   "max": [
+    0.2514,
+    0.2479,
+    -0.024
+   ],
+   "center": [
+    -0.0252,
+    0.0175,
+    -0.0241
+   ],
+   "materials": [
+    "Material.021"
+   ],
+   "color": [
+    0.15,
+    0.507,
+    1.0
+   ]
+  },
+  {
+   "name": "page2.002_Material.022_0",
+   "parent": "page2.002",
+   "vertices": 4,
+   "min": [
+    -0.3018,
+    -0.2129,
+    -0.024
+   ],
+   "max": [
+    0.2514,
+    0.2479,
+    -0.024
+   ],
+   "center": [
+    -0.0252,
+    0.0175,
+    -0.024
+   ],
+   "materials": [
+    "Material.022"
+   ],
+   "color": [
+    0.579,
+    0.7,
+    0.28
+   ]
+  },
+  {
+   "name": "papers_Material.023_0",
+   "parent": "papers",
+   "vertices": 225,
+   "min": [
+    -0.2902,
+    0.1481,
+    0.0549
+   ],
+   "max": [
+    -0.0241,
+    0.3881,
+    0.0609
+   ],
+   "center": [
+    -0.1571,
+    0.2681,
+    0.0579
+   ],
+   "materials": [
+    "Material.023"
+   ],
+   "color": [
+    0.997,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "stand1_metal_0",
+   "parent": "stand1",
+   "vertices": 141,
+   "min": [
+    -0.4257,
+    0.4144,
+    0.0006
+   ],
+   "max": [
+    -0.3949,
+    0.454,
+    0.0168
+   ],
+   "center": [
+    -0.4103,
+    0.4342,
+    0.0087
+   ],
+   "materials": [
+    "metal"
+   ],
+   "color": [
+    0.4,
+    1.0,
+    0.823
+   ]
+  },
+  {
+   "name": "stand2_metal_0",
+   "parent": "stand2",
+   "vertices": 141,
+   "min": [
+    -0.3896,
+    0.4637,
+    0.0004
+   ],
+   "max": [
+    -0.3489,
+    0.4945,
+    0.0166
+   ],
+   "center": [
+    -0.3693,
+    0.4791,
+    0.0085
+   ],
+   "materials": [
+    "metal"
+   ],
+   "color": [
+    0.7,
+    0.351,
+    0.105
+   ]
+  },
+  {
+   "name": "stand3_metal_0",
+   "parent": "stand3",
+   "vertices": 141,
+   "min": [
+    -0.3776,
+    0.376,
+    0.0108
+   ],
+   "max": [
+    -0.3467,
+    0.4158,
+    0.027
+   ],
+   "center": [
+    -0.3622,
+    0.3959,
+    0.0189
+   ],
+   "materials": [
+    "metal"
+   ],
+   "color": [
+    0.473,
+    0.4,
+    1.0
+   ]
+  },
+  {
+   "name": "stand4_metal_0",
+   "parent": "stand4",
+   "vertices": 141,
+   "min": [
+    -0.348,
+    0.4196,
+    0.0111
+   ],
+   "max": [
+    -0.3073,
+    0.4504,
+    0.0272
+   ],
+   "center": [
+    -0.3276,
+    0.435,
+    0.0192
+   ],
+   "materials": [
+    "metal"
+   ],
+   "color": [
+    0.295,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "string_keeper_Material.027_0",
+   "parent": "string_keeper",
+   "vertices": 228,
+   "min": [
+    0.1579,
+    -0.1265,
+    0.0559
+   ],
+   "max": [
+    0.2406,
+    -0.0394,
+    0.0645
+   ],
+   "center": [
+    0.1992,
+    -0.0829,
+    0.0602
+   ],
+   "materials": [
+    "Material.027"
+   ],
+   "color": [
+    0.7,
+    0.28,
+    0.474
+   ]
+  },
+  {
+   "name": "string_keeper_plastic_0",
+   "parent": "string_keeper",
+   "vertices": 36,
+   "min": [
+    0.1599,
+    -0.1139,
+    0.0576
+   ],
+   "max": [
+    0.2268,
+    -0.0412,
+    0.0669
+   ],
+   "center": [
+    0.1933,
+    -0.0775,
+    0.0623
+   ],
+   "materials": [
+    "plastic"
+   ],
+   "color": [
+    0.15,
+    0.791,
+    1.0
+   ]
+  },
+  {
+   "name": "strings_Material.028_0",
+   "parent": "strings",
+   "vertices": 6695,
+   "min": [
+    -0.4289,
+    -0.1161,
+    0.0368
+   ],
+   "max": [
+    0.23,
+    0.4965,
+    0.0681
+   ],
+   "center": [
+    -0.0995,
+    0.1902,
+    0.0524
+   ],
+   "materials": [
+    "Material.028"
+   ],
+   "color": [
+    1.0,
+    0.973,
+    0.4
+   ]
+  },
+  {
+   "name": "tail_paint_0",
+   "parent": "tail",
+   "vertices": 390,
+   "min": [
+    -0.4593,
+    0.1104,
+    -0.0237
+   ],
+   "max": [
+    -0.0167,
+    0.5258,
+    0.0568
+   ],
+   "center": [
+    -0.238,
+    0.3181,
+    0.0166
+   ],
+   "materials": [
+    "paint"
+   ],
+   "color": [
+    0.499,
+    0.105,
+    0.7
+   ]
+  },
+  {
+   "name": "tail_plastic2_0",
+   "parent": "tail",
+   "vertices": 80,
+   "min": [
+    -0.3186,
+    0.0876,
+    0.053
+   ],
+   "max": [
+    0.0083,
+    0.3944,
+    0.0586
+   ],
+   "center": [
+    -0.1551,
+    0.241,
+    0.0558
+   ],
+   "materials": [
+    "plastic2"
+   ],
+   "color": [
+    0.4,
+    1.0,
+    0.622
+   ]
+  },
+  {
+   "name": "tail_plastic_0",
+   "parent": "tail",
+   "vertices": 168,
+   "min": [
+    -0.3209,
+    0.354,
+    0.053
+   ],
+   "max": [
+    -0.2816,
+    0.3966,
+    0.0581
+   ],
+   "center": [
+    -0.3013,
+    0.3753,
+    0.0555
+   ],
+   "materials": [
+    "plastic"
+   ],
+   "color": [
+    1.0,
+    0.217,
+    0.15
+   ]
+  },
+  {
+   "name": "vert_gear1_metal_0",
+   "parent": "vert_gear1",
+   "vertices": 821,
+   "min": [
+    -0.4266,
+    0.4303,
+    0.0022
+   ],
+   "max": [
+    -0.4117,
+    0.4455,
+    0.0496
+   ],
+   "center": [
+    -0.4192,
+    0.4379,
+    0.0259
+   ],
+   "materials": [
+    "metal"
+   ],
+   "color": [
+    0.28,
+    0.369,
+    0.7
+   ]
+  },
+  {
+   "name": "vert_gear2_metal_0",
+   "parent": "vert_gear2",
+   "vertices": 821,
+   "min": [
+    -0.3815,
+    0.4794,
+    0.0022
+   ],
+   "max": [
+    -0.3666,
+    0.4946,
+    0.0495
+   ],
+   "center": [
+    -0.3741,
+    0.487,
+    0.0259
+   ],
+   "materials": [
+    "metal"
+   ],
+   "color": [
+    0.579,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "vert_gear3_metal_0",
+   "parent": "vert_gear3",
+   "vertices": 821,
+   "min": [
+    -0.3784,
+    0.3923,
+    0.0123
+   ],
+   "max": [
+    -0.3637,
+    0.4075,
+    0.0596
+   ],
+   "center": [
+    -0.371,
+    0.3999,
+    0.0359
+   ],
+   "materials": [
+    "metal"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.878
+   ]
+  },
+  {
+   "name": "vert_gear4_metal_0",
+   "parent": "vert_gear4",
+   "vertices": 822,
+   "min": [
+    -0.3398,
+    0.4352,
+    0.0124
+   ],
+   "max": [
+    -0.3249,
+    0.4504,
+    0.0597
+   ],
+   "center": [
+    -0.3324,
+    0.4428,
+    0.036
+   ],
+   "materials": [
+    "metal"
+   ],
+   "color": [
+    0.105,
+    0.7,
+    0.647
+   ]
+  }
+ ],
+ "axes": {
+  "mean": [
+   -0.2611,
+   0.3346,
+   0.0297
+  ],
+  "long": [
+   -0.7273,
+   0.6856,
+   -0.0308
+  ],
+  "mid": [
+   0.6796,
+   0.7257,
+   0.107
+  ],
+  "thin": [
+   -0.0957,
+   -0.0569,
+   0.9938
+  ],
+  "extent": [
+   0.9647,
+   0.5296,
+   0.1272
+  ]
+ },
+ "ends": {
+  "A": {
+   "center": [
+    -0.3427,
+    0.4093,
+    0.0277
+   ],
+   "scale": 0.324,
+   "objects": [
+    {
+     "name": "handler1_plastic_0",
+     "color": [
+      0.362,
+      0.15,
+      1.0
+     ],
+     "vertices": 533
+    },
+    {
+     "name": "handler2_plastic_0",
+     "color": [
+      0.426,
+      1.0,
+      0.4
+     ],
+     "vertices": 533
+    },
+    {
+     "name": "handler3_plastic_0",
+     "color": [
+      0.7,
+      0.105,
+      0.304
+     ],
+     "vertices": 533
+    },
+    {
+     "name": "handler4_plastic_0",
+     "color": [
+      0.4,
+      0.776,
+      1.0
+     ],
+     "vertices": 533
+    },
+    {
+     "name": "hor_gear1_metal_0",
+     "color": [
+      0.93,
+      1.0,
+      0.15
+     ],
+     "vertices": 1551
+    },
+    {
+     "name": "hor_gear2_metal_0",
+     "color": [
+      0.612,
+      0.28,
+      0.7
+     ],
+     "vertices": 1551
+    },
+    {
+     "name": "hor_gear3_metal_0",
+     "color": [
+      0.15,
+      1.0,
+      0.574
+     ],
+     "vertices": 1551
+    },
+    {
+     "name": "hor_gear4_metal_0",
+     "color": [
+      1.0,
+      0.524,
+      0.4
+     ],
+     "vertices": 1551
+    },
+    {
+     "name": "lid1_plastic_0",
+     "color": [
+      0.626,
+      1.0,
+      0.4
+     ],
+     "vertices": 203
+    },
+    {
+     "name": "lid2_plastic_0",
+     "color": [
+      1.0,
+      0.15,
+      0.718
+     ],
+     "vertices": 203
+    },
+    {
+     "name": "lid3_plastic_0",
+     "color": [
+      0.28,
+      0.683,
+      0.7
+     ],
+     "vertices": 203
+    },
+    {
+     "name": "lid4_plastic_0",
+     "color": [
+      1.0,
+      0.786,
+      0.15
+     ],
+     "vertices": 203
+    },
+    {
+     "name": "stand1_metal_0",
+     "color": [
+      0.4,
+      1.0,
+      0.823
+     ],
+     "vertices": 141
+    },
+    {
+     "name": "stand2_metal_0",
+     "color": [
+      0.7,
+      0.351,
+      0.105
+     ],
+     "vertices": 141
+    },
+    {
+     "name": "stand3_metal_0",
+     "color": [
+      0.473,
+      0.4,
+      1.0
+     ],
+     "vertices": 141
+    },
+    {
+     "name": "stand4_metal_0",
+     "color": [
+      0.295,
+      1.0,
+      0.15
+     ],
+     "vertices": 141
+    },
+    {
+     "name": "tail_paint_0",
+     "color": [
+      0.499,
+      0.105,
+      0.7
+     ],
+     "vertices": 390
+    },
+    {
+     "name": "tail_plastic_0",
+     "color": [
+      1.0,
+      0.217,
+      0.15
+     ],
+     "vertices": 168
+    },
+    {
+     "name": "vert_gear1_metal_0",
+     "color": [
+      0.28,
+      0.369,
+      0.7
+     ],
+     "vertices": 821
+    },
+    {
+     "name": "vert_gear2_metal_0",
+     "color": [
+      0.579,
+      1.0,
+      0.15
+     ],
+     "vertices": 821
+    },
+    {
+     "name": "vert_gear3_metal_0",
+     "color": [
+      1.0,
+      0.4,
+      0.878
+     ],
+     "vertices": 821
+    },
+    {
+     "name": "vert_gear4_metal_0",
+     "color": [
+      0.105,
+      0.7,
+      0.647
+     ],
+     "vertices": 822
+    }
+   ]
+  },
+  "B": {
+   "center": [
+    0.1446,
+    -0.0595,
+    0.0129
+   ],
+   "scale": 0.4509,
+   "objects": [
+    {
+     "name": "body_paint_0",
+     "color": [
+      0.4,
+      0.575,
+      1.0
+     ],
+     "vertices": 489
+    },
+    {
+     "name": "body_wood_0",
+     "color": [
+      0.452,
+      0.7,
+      0.105
+     ],
+     "vertices": 355
+    },
+    {
+     "name": "body_wood_glow_0",
+     "color": [
+      1.0,
+      0.4,
+      0.925
+     ],
+     "vertices": 256
+    },
+    {
+     "name": "end_bodyform_wood_0",
+     "color": [
+      0.15,
+      1.0,
+      0.858
+     ],
+     "vertices": 20
+    },
+    {
+     "name": "label_Material.020_0",
+     "color": [
+      0.105,
+      0.156,
+      0.7
+     ],
+     "vertices": 81
+    },
+    {
+     "name": "string_keeper_Material.027_0",
+     "color": [
+      0.7,
+      0.28,
+      0.474
+     ],
+     "vertices": 228
+    },
+    {
+     "name": "string_keeper_plastic_0",
+     "color": [
+      0.15,
+      0.791,
+      1.0
+     ],
+     "vertices": 36
+    }
+   ]
+  }
+ }
+}
