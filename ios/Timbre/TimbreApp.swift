@@ -67,7 +67,22 @@ enum DemoData {
                 store.save(PracticeRecord(date: date.addingTimeInterval(600), instrumentId: "practice.ear", kind: "ear", count: 10, stableCount: 7 + day % 3, durationMs: 240_000))
             }
         }
-        store.updateSettings { $0.fullTunes = 14 }
+        // A learner a few lessons in, level 5, with a G string that drifts flat.
+        var learn = LearnProgress()
+        let first = store.curriculum.course(id: "guitar")?.lessons.prefix(3) ?? []
+        for (i, lesson) in first.enumerated() {
+            learn.record(LessonResult(lessonId: lesson.id, stars: [3, 2, 3][i], accuracy: [0.96, 0.81, 0.93][i], xp: 20, minutes: 4), courseId: "guitar", now: now)
+        }
+        var progress = ProgressState()
+        progress.xp = 1240
+        progress.stats = ["stringsTuned": 140, "fullTunes": 14, "lessons": 3, "perfectLessons": 2, "earCorrect": 38, "bullseyes": 12, "sniperBest": 1650]
+        progress.achievements = ["first_tune", "full_tune", "streak_7", "strings_100", "bullseye", "first_lesson"]
+        progress.instrumentsTuned = ["guitar.acoustic.6"]
+        for (day, cents) in [(9, -2.0), (6, -9.0), (4, -14.0), (1, -23.0)] {
+            progress.sample(StringSample(instrumentId: "guitar.acoustic.6", anchor: "s3", date: now.addingTimeInterval(-Double(day) * 86400), cents: cents))
+            progress.sample(StringSample(instrumentId: "guitar.acoustic.6", anchor: "s1", date: now.addingTimeInterval(-Double(day) * 86400), cents: -0.5))
+        }
+        store.updateSettings { $0.fullTunes = 14; $0.learn = learn; $0.progress = progress }
     }
 }
 #endif

@@ -1,0 +1,408 @@
+import QuartzCore
+import SwiftUI
+import TimbreCore
+
+/// A live pitch as the nearest note and how far off it is.
+struct HeardNote: Equatable {
+    let midi: Int
+    let cents: Double
+    init?(hz: Double?, reference: Double) {
+        guard let hz, hz > 0 else { return nil }
+        let exact = PitchMath.midi(frequency: hz, reference: reference)
+        midi = Int(exact.rounded())
+        cents = (exact - Double(midi)) * 100
+    }
+}
+
+extension LearnCourse {
+    /// Fretted or fingerboard instruments draw string/fret positions; voice and any-instrument courses don't.
+    var fretKind: String? {
+        guard let instrument else { return nil }
+        return ["guitar", "ukulele", "bass", "violin", "cello", "mandolin", "banjo"].first { instrument.hasPrefix($0) }
+    }
+    var stringCount: Int {
+        switch fretKind { case "guitar": return 6; case "banjo": return 5; case .some: return 4; default: return 0 }
+    }
+    var fretless: Bool { fretKind == "violin" || fretKind == "cello" }
+    /// Singing and play-by-ear courses accept the right note in any octave.
+    var anyOctave: Bool { fretKind == nil }
+}
+
+private func frequency(_ midi: Int, _ store: AppStore) -> Double { PitchMath.frequency(midi: Double(midi), reference: store.settings.referencePitchHz) }
+
+// MARK: - Notes, one at a time
+
+struct NotesStep: View {
+    let notes: [TimedNote]
+    let hint: LearnText?
+    let course: LearnCourse
+    let accent: Color
+    let done: (Double?) -> Void
+    @EnvironmentObject private var store: AppStore
+    @State private var judge: NoteSequenceJudge
+    @State private var heard: HeardNote?
+    @State private var hold = 0.0
+    @State private var burst = 0
+    @State private var finished = false
+    @State private var canSkip = false
+
+    init(notes: [TimedNote], hint: LearnText?, course: LearnCourse, accent: Color, done: @escaping (Double?) -> Void) {
+        self.notes = notes; self.hint = hint; self.course = course; self.accent = accent; self.done = done
+        _judge = State(initialValue: NoteSequenceJudge(notes: notes.map(\.midi), anyOctave: course.anyOctave))
+    }
+
+    private var current: TimedNote? { judge.index < notes.count ? notes[judge.index] : nil }
+
+    var body: some View {
+        VStack(spacing: 18) {
+            VStack(spacing: 6) {
+                Text(course.instrument == "voice" ? LocalizedStringKey("Sing this note") : LocalizedStringKey("Play this note")).font(Typeface.label(15)).foregroundStyle(Palette.inkSoft)
+                if let hint { Text(hint.localized).font(.subheadline).foregroundStyle(Palette.inkFaint).multilineTextAlignment(.center).padding(.horizontal, 30) }
+            }
+            .padding(.top, 10)
+            if notes.count > 1 { sequenceChips }
+            Spacer(minLength: 0)
+            ZStack {
+                HoldRing(progress: finished ? 1 : hold, tint: ringTint)
+                VStack(spacing: 4) {
+                    let name = NoteName.name(current?.midi ?? notes.last?.midi ?? 60)
+                    Text(name.dropLast(name.last?.isNumber == true ? 1 : 0)).font(Typeface.note(88)).foregroundStyle(Palette.ink)
+                        .contentTransition(.numericText())
+                    Text(status).font(.subheadline.weight(.semibold)).foregroundStyle(ringTint).contentTransition(.opacity)
+                }
+                SparkBurst(trigger: burst, color: accent)
+            }
+            .frame(width: 250, height: 250)
+            .accessibilityElement(children: .combine)
+            Spacer(minLength: 0)
+            if course.fretKind != nil, let at = current?.at {
+                FretboardDiagram(strings: course.stringCount, dots: [at], frets: max(5, at.fret + 1), accent: accent, activeString: at.string, fretless: course.fretless)
+                    .padding(.horizontal, 20)
+                Text(at.fret == 0 ? LocalizedStringKey("String \(at.string), open") : LocalizedStringKey("String \(at.string), fret \(at.fret)")).font(.footnote).foregroundStyle(Palette.inkSoft)
+            }
+            MicrophoneHint()
+            HStack {
+                Button("Skip") { finish(score: 0) }.font(.subheadline).foregroundStyle(Palette.inkFaint).opacity(canSkip ? 1 : 0).disabled(!canSkip)
+                Spacer()
+                Button { hear() } label: { Label("Hear it", systemImage: "speaker.wave.2.fill") }
+                    .font(.subheadline.weight(.semibold)).foregroundStyle(accent)
+                    .accessibilityIdentifier("lesson.hear")
+            }
+            .padding(.horizontal, 24).padding(.bottom, 18)
+        }
+        .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(8)); canSkip = true } }
+        .onDisappear { store.stopLessonListening() }
+    }
+
+    private var ringTint: Color {
+        if finished { return accent }
+        guard let heard, let target = current?.midi else { return Palette.inkSoft }
+        let right = course.anyOctave ? (heard.midi - target) % 12 == 0 : heard.midi == target
+        return right && abs(heard.cents) <= judge.toleranceCents ? accent : Palette.amber
+    }
+
+    private var status: LocalizedStringKey {
+        if finished { return "Got it" }
+        guard let heard, let target = current?.midi else { return "Listening…" }
+        let right = course.anyOctave ? (heard.midi - target) % 12 == 0 : heard.midi == target
+        if right { return abs(heard.cents) <= judge.toleranceCents ? "Hold it…" : heard.cents < 0 ? "A little flat" : "A little sharp" }
+        return "That’s \(NoteName.pitchClass(heard.midi))"
+    }
+
+    private var sequenceChips: some View {
+        HStack(spacing: 8) {
+            ForEach(Array(notes.enumerated()), id: \.offset) { index, note in
+                let state = index < judge.index ? 2 : index == judge.index ? 1 : 0
+                Text(NoteName.pitchClass(note.midi)).font(Typeface.label(14))
+                    .foregroundStyle(state == 2 ? Palette.onAccent : state == 1 ? Palette.ink : Palette.inkFaint)
+                    .frame(minWidth: 38, minHeight: 34)
+                    .background(Capsule().fill(state == 2 ? AnyShapeStyle(accent) : AnyShapeStyle(Palette.stageRaised)))
+                    .overlay(Capsule().strokeBorder(state == 1 ? accent : .clear, lineWidth: 1.5))
+            }
+        }
+        .animation(Motion.pluck, value: judge.index)
+    }
+
+    private func listen() {
+        if let current { store.gameTargetHz = frequency(current.midi, store) }
+        store.startLessonListening { hz, _ in
+            let note = HeardNote(hz: hz, reference: store.settings.referencePitchHz)
+            heard = note
+            guard !finished else { return }
+            switch judge.update(time: CACurrentMediaTime(), midi: note?.midi, cents: note?.cents) {
+            case .holding(let p)?: hold = p
+            case .hit?:
+                hold = 0; burst += 1
+                SoundFX.shared.play(.correct); Haptics.shared.lock()
+                if judge.isFinished { finish(score: judge.accuracy) }
+                else if let next = current { store.gameTargetHz = frequency(next.midi, store) }
+            default: hold = max(0, hold - 0.1)
+            }
+        }
+    }
+
+    private func hear() {
+        guard let current else { return }
+        store.stopLessonListening()
+        store.audio.playTones([frequency(current.midi, store)], together: false, noteMs: 900, gapMs: 0)
+        Task { try? await Task.sleep(for: .milliseconds(1100)); if !finished { listen() } }
+    }
+
+    private func finish(score: Double) {
+        guard !finished else { return }
+        finished = true
+        store.stopLessonListening()
+        Task { try? await Task.sleep(for: .milliseconds(700)); done(score) }
+    }
+}
+
+/// A ring that fills while a note is held in tune.
+struct HoldRing: View {
+    let progress: Double
+    let tint: Color
+    var body: some View {
+        ZStack {
+            Circle().fill(tint.opacity(0.06))
+            Circle().stroke(.white.opacity(0.08), lineWidth: 10)
+            Circle().trim(from: 0, to: max(0.001, progress))
+                .stroke(tint, style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+                .shadow(color: tint.opacity(0.6), radius: 12)
+                .animation(.linear(duration: 0.08), value: progress)
+        }
+    }
+}
+
+// MARK: - Chord: place the fingers, check each string, let it ring
+
+struct ChordStep: View {
+    let chord: ChordSpec
+    let course: LearnCourse
+    let accent: Color
+    let done: (Double?) -> Void
+    @EnvironmentObject private var store: AppStore
+    @State private var judge: NoteSequenceJudge
+    @State private var verified: Set<Int> = []
+    @State private var burst = 0
+    @State private var finished = false
+    @State private var canSkip = false
+    private let order: [(index: Int, midi: Int)]
+
+    init(chord: ChordSpec, course: LearnCourse, accent: Color, done: @escaping (Double?) -> Void) {
+        self.chord = chord; self.course = course; self.accent = accent; self.done = done
+        let open = ChordStep.openStrings(course)
+        // Lowest string first, muted strings skipped.
+        let order = chord.frets.enumerated().compactMap { i, fret -> (index: Int, midi: Int)? in
+            guard fret >= 0, i < open.count else { return nil }
+            return (index: i, midi: open[i] + fret)
+        }
+        self.order = order
+        _judge = State(initialValue: NoteSequenceJudge(notes: order.map(\.midi), holdSeconds: 0.25, toleranceCents: 40))
+    }
+
+    /// Open-string MIDI lowest string first, matching chord shapes.
+    static func openStrings(_ course: LearnCourse) -> [Int] {
+        switch course.fretKind {
+        case "guitar": return [40, 45, 50, 55, 59, 64]
+        case "ukulele": return [67, 60, 64, 69]
+        case "bass": return [28, 33, 38, 43]
+        case "mandolin", "violin": return [55, 62, 69, 76]
+        case "cello": return [36, 43, 50, 57]
+        case "banjo": return [67, 50, 55, 59, 62]
+        default: return []
+        }
+    }
+
+    var body: some View {
+        VStack(spacing: 16) {
+            VStack(spacing: 6) {
+                Text(finished ? LocalizedStringKey("Every string rings") : LocalizedStringKey("Pluck each string, low to high")).font(Typeface.label(16)).foregroundStyle(Palette.inkSoft)
+                Text("Fingers in place, then let each one ring.").font(.subheadline).foregroundStyle(Palette.inkFaint)
+            }
+            .padding(.top, 12)
+            Spacer(minLength: 0)
+            ZStack {
+                ChordDiagram(chord: chord, accent: accent, ringing: verified)
+                    .frame(maxWidth: 260)
+                    .padding(22)
+                    .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Palette.stageRaised))
+                    .shadow(color: finished ? accent.opacity(0.45) : .clear, radius: 26)
+                SparkBurst(trigger: burst, color: accent)
+            }
+            Spacer(minLength: 0)
+            MicrophoneHint()
+            HStack {
+                Button("Skip") { finish(0) }.font(.subheadline).foregroundStyle(Palette.inkFaint).opacity(canSkip ? 1 : 0).disabled(!canSkip)
+                Spacer()
+                Button { strumIt() } label: { Label("Hear it", systemImage: "speaker.wave.2.fill") }
+                    .font(.subheadline.weight(.semibold)).foregroundStyle(accent)
+            }
+            .padding(.horizontal, 24).padding(.bottom, 18)
+        }
+        .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(10)); canSkip = true } }
+        .onDisappear { store.stopLessonListening() }
+    }
+
+    private func listen() {
+        if let first = judge.current { store.gameTargetHz = frequency(first, store) }
+        store.startLessonListening { hz, _ in
+            guard !finished else { return }
+            let note = HeardNote(hz: hz, reference: store.settings.referencePitchHz)
+            if case .hit(let i)? = judge.update(time: CACurrentMediaTime(), midi: note?.midi, cents: note?.cents) {
+                withAnimation(Motion.pluck) { _ = verified.insert(order[i].index) }
+                SoundFX.shared.play(.hit); Haptics.shared.selection()
+                if judge.isFinished { burst += 1; SoundFX.shared.play(.correct); Haptics.shared.lock(); finish(judge.accuracy) }
+                else if let next = judge.current { store.gameTargetHz = frequency(next, store) }
+            }
+        }
+    }
+
+    private func strumIt() {
+        store.stopLessonListening()
+        store.audio.playTones(order.map { frequency($0.midi, store) }, together: false, noteMs: 380, gapMs: 30)
+        Task { try? await Task.sleep(for: .milliseconds(order.count * 410 + 300)); if !finished { listen() } }
+    }
+
+    private func finish(_ score: Double) {
+        guard !finished else { return }
+        finished = true
+        store.stopLessonListening()
+        Task { try? await Task.sleep(for: .milliseconds(900)); done(score) }
+    }
+}
+
+// MARK: - Rhythm: tap or strum on the pattern
+
+struct RhythmStep: View {
+    enum Mode { case tap, strum(ChordSpec?) }
+    let mode: Mode
+    let pattern: [Double]
+    let bpm: Double
+    let bars: Int
+    let accent: Color
+    let done: (Double?) -> Void
+    @EnvironmentObject private var store: AppStore
+    @State private var phase = Phase.ready
+    @State private var startTime: CFTimeInterval = 0
+    @State private var hits: [Double] = []
+    @State private var grades: [Int: PlayAlongJudge.Grade] = [:]
+    @State private var lastLevel = -120.0
+    @State private var lastOnset: CFTimeInterval = 0
+    @State private var pulse = 0
+    @State private var score = 0.0
+
+    enum Phase { case ready, playing, done }
+    private var beatsPerBar: Int { max(4, Int((pattern.max() ?? 3) + 1)) }
+    private var spb: Double { 60 / bpm }
+    private var countIn: Double { Double(beatsPerBar) * spb }
+    private var expected: [Double] { (0..<bars).flatMap { bar in pattern.map { countIn + (Double(bar * beatsPerBar) + $0) * spb } } }
+    private var isTap: Bool { if case .tap = mode { return true } else { return false } }
+
+    var body: some View {
+        VStack(spacing: 18) {
+            VStack(spacing: 6) {
+                Text(isTap ? LocalizedStringKey("Tap on the dots") : LocalizedStringKey("Strum on the dots")).font(Typeface.display(26)).foregroundStyle(Palette.ink)
+                Text("\(Int(bpm)) BPM · \(bars) bars").font(.subheadline).foregroundStyle(Palette.inkSoft)
+            }
+            .padding(.top, 14)
+            if case .strum(let chord?) = mode { ChordDiagram(chord: chord, accent: accent).frame(maxWidth: 150) }
+            TimelineView(.animation(paused: phase != .playing)) { timeline in
+                let now = CACurrentMediaTime()
+                let elapsed = now - startTime - countIn
+                let bar = max(0, Int(elapsed / (Double(beatsPerBar) * spb)))
+                let within = elapsed < 0 ? nil : (elapsed / spb - Double(bar * beatsPerBar)) / Double(beatsPerBar)
+                let barGrades = Dictionary(uniqueKeysWithValues: grades.compactMap { i, g in i / pattern.count == bar ? (i % pattern.count, g) : nil })
+                VStack(spacing: 10) {
+                    if phase == .playing, elapsed < 0 {
+                        Text("\(Int(-elapsed / spb) + 1)").font(Typeface.note(64)).foregroundStyle(accent).contentTransition(.numericText())
+                    } else {
+                        Text(phase == .done ? LocalizedStringKey("") : LocalizedStringKey("Bar \(min(bars, bar + 1)) of \(bars)")).font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
+                    }
+                    RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: phase == .playing ? within : nil, judged: barGrades)
+                        .padding(.horizontal, 16)
+                        .onChange(of: Int(now * 30)) { _, _ in expire(now: now) }
+                }
+            }
+            .frame(height: 170)
+            Spacer(minLength: 0)
+            if phase == .done {
+                Text("\(Int((score * 100).rounded()))% on the beat").font(Typeface.display(28)).foregroundStyle(accent)
+            } else if isTap {
+                Button { tapped() } label: {
+                    Circle().fill(accent.opacity(0.14)).overlay(Circle().strokeBorder(accent, lineWidth: 3))
+                        .overlay(Image(systemName: "hand.tap.fill").font(.system(size: 40)).foregroundStyle(accent))
+                        .frame(width: 170, height: 170)
+                        .scaleEffect(pulse % 2 == 0 ? 1 : 0.94)
+                }
+                .buttonStyle(.plain)
+                .disabled(phase != .playing)
+                .accessibilityLabel("Tap")
+                .accessibilityIdentifier("lesson.tap")
+            } else {
+                MicrophoneHint()
+            }
+            Spacer(minLength: 0)
+            switch phase {
+            case .ready: StepButton(title: "Start", accent: accent) { start() }
+            case .playing: StepButton(title: "Listening…", accent: accent, enabled: false) {}
+            case .done:
+                HStack(spacing: 10) {
+                    Button("Try again") { start() }.font(Typeface.label(16)).foregroundStyle(Palette.ink)
+                        .frame(maxWidth: .infinity, minHeight: 56)
+                        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
+                    StepButton(title: "Continue", accent: accent) { done(score) }.padding(.horizontal, -20).frame(maxWidth: .infinity)
+                }
+                .padding(.horizontal, 20)
+            }
+        }
+        .onDisappear { store.audio.stopMetronome(); store.stopLessonListening() }
+    }
+
+    private func start() {
+        hits = []; grades = [:]; score = 0
+        startTime = CACurrentMediaTime()
+        phase = .playing
+        store.audio.setMetronome(bpm: Int(bpm), beats: beatsPerBar, subdivision: 1, accents: true)
+        if !isTap {
+            store.startLessonListening(lowHz: 60, highHz: 1400) { _, level in
+                // A strum is a sudden jump in loudness; ignore jumps within 120 ms of the last one.
+                let now = CACurrentMediaTime()
+                if level > -48, level - lastLevel > 8, now - lastOnset > 0.12 { lastOnset = now; register(now - 0.06) }
+                lastLevel = level
+            }
+        }
+    }
+
+    private func tapped() {
+        pulse += 1
+        Haptics.shared.selection()
+        register(CACurrentMediaTime())
+    }
+
+    private func register(_ time: CFTimeInterval) {
+        guard phase == .playing else { return }
+        let t = time - startTime
+        let times = expected
+        guard let index = times.indices.filter({ grades[$0] == nil }).min(by: { abs(times[$0] - t) < abs(times[$1] - t) }) else { return }
+        let offset = abs(times[index] - t)
+        guard offset <= 0.18 else { return }
+        grades[index] = offset <= 0.05 ? .perfect : offset <= 0.1 ? .good : .ok
+        SoundFX.shared.play(.hit)
+    }
+
+    private func expire(now: CFTimeInterval) {
+        guard phase == .playing else { return }
+        let t = now - startTime
+        for (i, time) in expected.enumerated() where grades[i] == nil && t > time + 0.2 { grades[i] = .miss }
+        if t > (expected.last ?? 0) + 0.4 { finish() }
+    }
+
+    private func finish() {
+        store.audio.stopMetronome()
+        store.stopLessonListening()
+        let points = grades.values.reduce(0.0) { $0 + ($1 == .perfect ? 1 : $1 == .good ? 0.8 : $1 == .ok ? 0.5 : 0) }
+        score = expected.isEmpty ? 1 : points / Double(expected.count)
+        phase = .done
+        SoundFX.shared.play(score >= 0.7 ? .correct : .wrong)
+    }
+}

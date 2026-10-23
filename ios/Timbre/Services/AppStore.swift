@@ -313,6 +313,10 @@ final class AppStore: ObservableObject {
     func target(for course: Course) -> Double { Temperament.byId(settings.temperamentId).frequency(midi: course.targetMidi, reference: settings.referencePitchHz, letterName: course.label) }
 
     func accept(_ hz: Double?, confidence: Double, level: Double) {
+        if let lessonListener {
+            lessonListener(confidence.isFinite && confidence >= settings.confidenceThreshold ? hz : nil, level)
+            return
+        }
         live.preserved = false
         live.level = level
         live.updatedAt = ProcessInfo.processInfo.systemUptime
@@ -409,6 +413,45 @@ final class AppStore: ObservableObject {
         markDaily(kind)
         if kind == .ear { for _ in 0..<min(correct, questions) { recordProgress(.earCorrect, announce: false) } }
         recordProgress(.practiceMinutes(max(1, duration / 60_000)))
+    }
+
+    // MARK: Learn
+
+    let curriculum: Curriculum = (try? Curriculum.bundled()) ?? Curriculum(courses: [])
+    var learn: LearnProgress { settings.learn ?? LearnProgress() }
+    /// While a lesson listens, raw readings (Hz when confident, level dBFS) go here instead of the tuner.
+    var lessonListener: ((Double?, Double) -> Void)?
+
+    func canPlay(_ lesson: Lesson) -> Bool { lesson.free || isPro }
+
+    /// Opens the microphone for a lesson over a pitch range; the demo pitch (UI tests) follows `gameTargetHz`.
+    func startLessonListening(lowHz: Double = 60, highHz: Double = 1400, listener: @escaping (Double?, Double) -> Void) {
+        lessonListener = listener
+        guard !audio.running else { return }
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" {
+            audio.startDemo { [weak self] in self?.gameTargetHz ?? 440 }
+            return
+        }
+        #endif
+        Task { await audio.start(minimum: lowHz, maximum: highHz, micSensitivity: microphoneGain, analysisWindowOverride: settings.analysisWindowOverride, confidenceThreshold: settings.confidenceThreshold) }
+    }
+
+    func stopLessonListening() {
+        lessonListener = nil
+        gameTargetHz = nil
+        if audio.running { audio.stopCapture() }
+        tracker.reset(); live.clear()
+    }
+
+    /// Saves a finished lesson: stars, XP, quests and badges, and a practice record for the streak.
+    func finishLesson(_ result: LessonResult, courseId: String) {
+        var learn = self.learn
+        learn.record(result, courseId: courseId)
+        guard updateSettings({ $0.learn = learn }) else { return }
+        save(PracticeRecord(instrumentId: "learn.\(courseId)", kind: "lesson", count: 1, stableCount: result.stars, durationMs: result.minutes * 60_000))
+        recordProgress(.lessonCompleted(stars: result.stars, xp: result.xp))
+        Analytics.log("lesson_done", ["lesson": result.lessonId, "stars": String(result.stars)])
     }
 
     // MARK: Progress (XP, quests, badges, string health)

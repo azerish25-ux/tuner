@@ -41,6 +41,8 @@ public struct PlayAlongJudge: Sendable {
     public func time(of index: Int) -> Double { notes[index].beat * secondsPerBeat + latency }
     public var duration: Double { notes.last.map { ($0.beat + $0.beats) * secondsPerBeat } ?? 0 }
     public var isFinished: Bool { next >= notes.count }
+    /// The next note waiting to be played.
+    public var nextIndex: Int { next }
 
     /// Feeds one reading (`midi` nil while silent; `onset` when a new attack was heard).
     /// Returns the notes judged by this reading, including misses that just expired.

@@ -11,6 +11,7 @@ struct RootView: View {
     var body: some View {
         TabView(selection: $store.selectedTab) {
             Tab("Tune", systemImage: "tuningfork", value: AppTab.tune) { TuneView() }
+            Tab("Learn", systemImage: "graduationcap", value: AppTab.learn) { LearnView() }
             Tab("Play", systemImage: "gamecontroller", value: AppTab.practice) { PracticeView() }
             Tab("Instruments", systemImage: "square.grid.2x2", value: AppTab.instruments) { NavigationStack { InstrumentsView() } }
             Tab("Progress", systemImage: "chart.line.uptrend.xyaxis", value: AppTab.journey) { JourneyView() }

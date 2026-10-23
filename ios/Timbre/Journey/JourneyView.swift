@@ -212,6 +212,8 @@ struct JourneyView: View {
                     Spacer()
                     if let cents = record.meanAbsoluteCents, record.kind == "tuning" {
                         Text(String(format: "%.1f¢", cents)).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
+                    } else if record.kind == "lesson" {
+                        Text(String(repeating: "★", count: max(1, min(3, record.stableCount)))).font(.footnote).foregroundStyle(Palette.amber)
                     } else if record.kind == "ear", record.count > 0 {
                         Text("\(record.stableCount)/\(record.count)").font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
                     } else if let accuracy = record.voiceResult?.accuracy {
@@ -227,6 +229,7 @@ struct JourneyView: View {
     private func symbol(_ record: PracticeRecord) -> String {
         switch record.kind {
         case "voice": return "music.mic"
+        case "lesson": return "graduationcap.fill"
         case "ear": return "ear.fill"
         case "rhythm": return "metronome.fill"
         case "drone": return "waveform.path"
@@ -238,6 +241,7 @@ struct JourneyView: View {
     private func title(_ record: PracticeRecord) -> String {
         switch record.kind {
         case "voice": return String(localized: "Voice practice")
+        case "lesson": return store.curriculum.course(id: String(record.instrumentId.dropFirst("learn.".count)))?.title.localized ?? String(localized: "Lesson")
         case "ear": return String(localized: "Ear training")
         case "rhythm": return String(localized: "Metronome")
         case "drone": return String(localized: "Drone")

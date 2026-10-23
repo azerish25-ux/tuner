@@ -19,8 +19,14 @@ TUNINGS = {
     "guitar": [64, 59, 55, 50, 45, 40],      # E4 B3 G3 D3 A2 E2
     "ukulele": [69, 64, 60, 67],             # A4 E4 C4 G4 (re-entrant)
     "bass": [43, 38, 33, 28],                # G2 D2 A1 E1
+    "violin": [76, 69, 62, 55],              # E5 A4 D4 G3 (fretless: "fret" = semitones above the open string)
+    "cello": [57, 50, 43, 36],               # A3 D3 G2 C2 (fretless)
+    "mandolin": [76, 69, 62, 55],            # E5 A4 D4 G3, paired courses
+    "banjo": [62, 59, 55, 50, 67],           # D4 B3 G3 D3, short 5th string G4 (open G)
 }
-INSTRUMENT_IDS = {"guitar": "guitar.acoustic.6", "ukulele": "ukulele.soprano.4", "bass": "bass.electric.4"}
+INSTRUMENT_IDS = {"guitar": "guitar.acoustic.6", "ukulele": "ukulele.soprano.4", "bass": "bass.electric.4",
+                  "violin": "violin.standard.4", "cello": "cello.standard.4", "mandolin": "mandolin.standard.8", "banjo": "banjo.five.5"}
+FRETLESS = {"violin", "cello"}
 NAMES = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]
 QUALITIES = {  # intervals above the root
     "maj": [0, 4, 7], "min": [0, 3, 7], "7": [0, 4, 7, 10], "maj7": [0, 4, 7, 11], "m7": [0, 3, 7, 10],

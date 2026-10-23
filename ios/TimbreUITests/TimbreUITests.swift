@@ -159,6 +159,39 @@ final class TimbreUITests: XCTestCase {
         element("string.2").tap(); settle(3); shot("18-tune-photo-stage-string")
     }
 
+    func test09LearnChordLesson() throws {
+        launch(pitch: true)
+        XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
+        tab("Learn"); settle(2.5); shot("50-learn")
+        element("learn.continue").tap(); settle(1.5); shot("51-lesson-explain")
+        element("lesson.continue").tap(); settle(4); shot("52-lesson-chord")
+        let next = element("lesson.continue")
+        XCTAssertTrue(next.waitForExistence(timeout: 20))
+        settle(1.5); shot("53-lesson-strum-explain")
+        next.tap(); settle(1.2); shot("54-lesson-strum-ready")
+        element("lesson.continue").tap(); settle(5); shot("55-lesson-strum")
+    }
+
+    func test10PlayAlongLesson() throws {
+        launch(pitch: true)
+        XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
+        tab("Learn"); settle(2)
+        let node = element("learn.lesson.gtr-1-2")
+        scrollTo(node)
+        node.tap(); settle(1.5)
+        element("lesson.continue").tap(); settle(2.5); shot("56-lesson-notes")
+        // Two note steps finish on their own with the demo pitch, then a quiz and a listening question.
+        XCTAssertTrue(element("lesson.option.0").waitForExistence(timeout: 25))
+        element("lesson.option.0").tap(); settle(1); shot("57-lesson-quiz")
+        element("lesson.continue").tap(); settle(2)
+        element("lesson.option.1").tap(); settle(1); shot("58-lesson-listen")
+        element("lesson.continue").tap(); settle(1.5); shot("59-along-ready")
+        element("lesson.continue").tap(); settle(7); shot("60-along-playing")
+        XCTAssertTrue(element("along.again").waitForExistence(timeout: 30))
+        settle(1); shot("61-along-done")
+        element("lesson.continue").tap(); settle(3.5); shot("62-lesson-results")
+    }
+
     func test07StageDiagnostics() throws {
         launch(stageDebug: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))

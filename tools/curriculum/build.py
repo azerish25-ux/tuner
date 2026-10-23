@@ -24,9 +24,10 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 from lib import TUNINGS, Text, fretted, name  # noqa: E402
 
-COURSES = ["guitar", "ukulele", "bass", "ear", "theory", "rhythm", "voice", "songs"]
+COURSES = ["guitar", "ukulele", "bass", "violin", "cello", "mandolin", "banjo", "ear", "theory", "rhythm", "voice", "songs"]
 LIMITS = {"title": 42, "body": 300, "prompt": 140, "option": 48, "hint": 120, "why": 220, "summary": 120, "subtitle": 80}
-RANGES = {"guitar": (40, 88), "ukulele": (60, 81), "bass": (28, 67), None: (36, 96)}
+RANGES = {"guitar": (40, 88), "ukulele": (60, 81), "bass": (28, 67), "violin": (55, 93), "cello": (36, 76),
+          "mandolin": (55, 88), "banjo": (50, 79), None: (36, 96)}
 
 strings: dict[str, str] = {}
 errors: list[str] = []
@@ -57,10 +58,7 @@ def encode(value, where: str, field: str = ""):
 
 def instrument_kind(course: dict) -> str | None:
     inst = course.get("instrument") or ""
-    for kind in TUNINGS:
-        if inst.startswith(kind):
-            return kind
-    return None
+    return next((kind for kind in TUNINGS if inst.startswith(kind)), None)
 
 
 def check_note(n: dict, kind: str | None, where: str):
