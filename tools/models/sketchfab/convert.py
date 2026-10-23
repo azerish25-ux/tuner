@@ -348,7 +348,8 @@ def box_mean(a, r):
 def retouch(entries, folder):
     """Retouch a material's base colour image. "rects": remove ink baked into it (autographs, scribbles):
     inside each [x0, x1, y0, y1(, darker)] (0...1 from the top left) pixels darker than "darker" (0.7) times
-    their surroundings are rebuilt by interpolating along the wood grain ("along": "y": grain runs down).
+    their surroundings are rebuilt by interpolating along the wood grain ("along": "y": grain runs down);
+    "mode": "light" removes pale lettering instead (pixels brighter than k times their surroundings).
     "multiply": [r, g, b] tints the whole image (a flat orange varnish toward amber brown)."""
     for entry in entries:
         mat = bpy.data.materials[entry["material"]]
@@ -368,7 +369,9 @@ def retouch(entries, folder):
             lum = crop[..., :3] @ np.array([0.2126, 0.7152, 0.0722], dtype=np.float32)
             ink = np.zeros(lum.shape, bool)
             ink[y0 - cy0:y1 - cy0, x0 - cx0:x1 - cx0] = True
-            ink &= lum < (rect[4] if len(rect) > 4 else entry.get("darker", 0.7)) * box_mean(lum, r)
+            k = rect[4] if len(rect) > 4 else entry.get("darker", 0.7)
+            # dark ink on wood by default; "mode": "light" finds pale lettering (k > 1) instead
+            ink &= (lum > k * box_mean(lum, r)) if entry.get("mode") == "light" else (lum < k * box_mean(lum, r))
             ink = box_mean(ink.astype(np.float32), max(1, r // 4)) > 0  # catch anti-aliased edges
             grain = crop if entry.get("along", "y") == "y" else crop.transpose(1, 0, 2)
             mask = ink if entry.get("along", "y") == "y" else ink.T
