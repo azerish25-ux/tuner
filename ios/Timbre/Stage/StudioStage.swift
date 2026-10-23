@@ -1,12 +1,44 @@
 import SwiftUI
 import TimbreCore
 
-/// 2D stage built on the studio render. Used when real-time 3D is unavailable or turned
-/// off, and for instruments whose 3D model is still to come. With rig data it draws the
-/// live string (drifting strobe ripple, frozen in tune) and a glowing peg on the render.
+/// Points on a 2D picture (studio render or photograph) that the 2D stage animates, normalised
+/// to the square the picture is fitted into: "<anchor>.nut", "<anchor>.saddle" (a string's
+/// speaking length) and "<anchor>.peg" (where the player tunes it).
+struct StageCard: Sendable {
+    let anchors: [String]
+    let points: [String: CGPoint]
+    func point(_ key: String) -> CGPoint? { points[key] }
+    func hasString(_ anchor: String) -> Bool { points["\(anchor).nut"] != nil && points["\(anchor).saddle"] != nil }
+
+    init(points: [String: [Double]]) {
+        var map: [String: CGPoint] = [:]
+        for (key, value) in points where value.count == 2 { map[key] = CGPoint(x: value[0], y: value[1]) }
+        self.points = map
+        var seen: [String] = []
+        for key in points.keys.sorted() {
+            let anchor = String(key.split(separator: ".").first ?? "")
+            if !anchor.isEmpty, !seen.contains(anchor) { seen.append(anchor) }
+        }
+        anchors = seen
+    }
+
+    /// A studio render's points; strings without geometry (wind slides) keep only the tuning point.
+    init?(rig: InstrumentRig) {
+        guard let card = rig.card2D else { return nil }
+        var points = card
+        for string in rig.strings where string.radius <= 0 {
+            points["\(string.anchor).nut"] = nil; points["\(string.anchor).saddle"] = nil
+        }
+        self.init(points: points)
+    }
+}
+
+/// 2D stage on a studio render or photograph. Used when real-time 3D is unavailable or turned
+/// off, and for instruments without a 3D model. With card points it draws the live string
+/// (strobe ripple that freezes in tune) and a glowing ring on the peg, which checks off in tune.
 struct StudioStage: View {
     let imageName: String
-    let rig: InstrumentRig?
+    let card: StageCard?
     let input: () -> StageInput
     var onSelect: (String) -> Void = { _ in }
     @State private var motion = Motion2D()
@@ -20,17 +52,18 @@ struct StudioStage: View {
                 Image(imageName).resizable().interpolation(.high).scaledToFit()
                     .frame(width: side, height: side)
                     .shadow(color: .black.opacity(0.55), radius: 30, y: 18)
-                if let rig {
+                    .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                if let card {
                     TimelineView(.animation(paused: reduceMotion)) { timeline in
-                        Canvas { context, _ in draw(&context, rig: rig, side: side, origin: origin, date: timeline.date) }
+                        Canvas { context, _ in draw(&context, card: card, side: side, origin: origin, date: timeline.date) }
                     }
                     .allowsHitTesting(false)
-                    ForEach(rig.strings, id: \.anchor) { string in
-                        if let peg = rig.card("\(string.anchor).peg") {
+                    ForEach(card.anchors, id: \.self) { anchor in
+                        if let peg = card.point("\(anchor).peg") {
                             Circle().fill(Color.white.opacity(0.001))
                                 .frame(width: 44, height: 44)
                                 .position(x: origin.x + peg.x * side, y: origin.y + peg.y * side)
-                                .onTapGesture { onSelect(string.anchor) }
+                                .onTapGesture { onSelect(anchor) }
                                 .accessibilityHidden(true)
                         }
                     }
@@ -39,42 +72,51 @@ struct StudioStage: View {
         }
     }
 
-    private func draw(_ context: inout GraphicsContext, rig: InstrumentRig, side: CGFloat, origin: CGPoint, date: Date) {
+    private func draw(_ context: inout GraphicsContext, card: StageCard, side: CGFloat, origin: CGPoint, date: Date) {
         let state = input()
         let now = date.timeIntervalSinceReferenceDate
         let (smoothed, phase, e, g) = motion.step(state, now: now)
-        guard let anchor = state.activeAnchor ?? rig.strings.first?.anchor,
-              let a = rig.card("\(anchor).saddle"), let b = rig.card("\(anchor).nut") else { return }
-        let hasString = (rig.string(anchor)?.radius ?? 1) > 0
-        let p0 = CGPoint(x: origin.x + a.x * side, y: origin.y + a.y * side)
-        let p1 = CGPoint(x: origin.x + b.x * side, y: origin.y + b.y * side)
-        let dx = p1.x - p0.x, dy = p1.y - p0.y
-        let length = max(1, sqrt(dx * dx + dy * dy))
-        let normal = CGPoint(x: -dy / length, y: dx / length)
-        let amplitude = (1.2 + 5.5 * e) * (1 - 0.85 * g)
-        var path = Path()
-        for i in 0...64 {
-            let u = Double(i) / 64
-            let envelope = sin(.pi * u)
-            let standing = sin(2 * .pi * 1.7 * now) * envelope + 0.3 * sin(2 * .pi * u) * sin(2 * .pi * 3.4 * now)
-            let ripple = 0.55 * sin(2 * .pi * (u * 7 - phase)) * envelope
-            let offset = amplitude * (standing * (1 - g) + ripple)
-            let point = CGPoint(x: p0.x + dx * u + normal.x * offset, y: p0.y + dy * u + normal.y * offset)
-            if i == 0 { path.move(to: point) } else { path.addLine(to: point) }
-        }
+        guard let anchor = state.activeAnchor.flatMap({ card.anchors.contains($0) ? $0 : nil }) ?? card.anchors.first else { return }
         let color = Palette.pitch(smoothed, locked: state.locked)
-        // The string only lights up while it rings (or holds the in-tune glow); a silent string stays the render's own.
-        let presence = max(g, min(1, e * 2.5))
-        if state.listening, presence > 0.02, hasString {
-            context.stroke(path, with: .color(color.opacity((0.25 + 0.35 * g) * presence)), style: StrokeStyle(lineWidth: 7 + 10 * g, lineCap: .round))
-            context.stroke(path, with: .color(Color.white.opacity(0.85 * presence)), style: StrokeStyle(lineWidth: 1.4 + g, lineCap: .round))
+        if let a = card.point("\(anchor).saddle"), let b = card.point("\(anchor).nut") {
+            let p0 = CGPoint(x: origin.x + a.x * side, y: origin.y + a.y * side)
+            let p1 = CGPoint(x: origin.x + b.x * side, y: origin.y + b.y * side)
+            let dx = p1.x - p0.x, dy = p1.y - p0.y
+            let length = max(1, sqrt(dx * dx + dy * dy))
+            let normal = CGPoint(x: -dy / length, y: dx / length)
+            let amplitude = (1.2 + 5.5 * e) * (1 - 0.85 * g)
+            var path = Path()
+            for i in 0...64 {
+                let u = Double(i) / 64
+                let envelope = sin(.pi * u)
+                let standing = sin(2 * .pi * 1.7 * now) * envelope + 0.3 * sin(2 * .pi * u) * sin(2 * .pi * 3.4 * now)
+                let ripple = 0.55 * sin(2 * .pi * (u * 7 - phase)) * envelope
+                let offset = amplitude * (standing * (1 - g) + ripple)
+                let point = CGPoint(x: p0.x + dx * u + normal.x * offset, y: p0.y + dy * u + normal.y * offset)
+                if i == 0 { path.move(to: point) } else { path.addLine(to: point) }
+            }
+            // The string only lights up while it rings (or holds the in-tune glow); a silent string stays the picture's own.
+            let presence = max(g, min(1, e * 2.5))
+            if state.listening, presence > 0.02 {
+                context.stroke(path, with: .color(color.opacity((0.25 + 0.35 * g) * presence)), style: StrokeStyle(lineWidth: 7 + 10 * g, lineCap: .round))
+                context.stroke(path, with: .color(Color.white.opacity(0.85 * presence)), style: StrokeStyle(lineWidth: 1.4 + g, lineCap: .round))
+            }
         }
-        if let peg = rig.card("\(anchor).peg") {
+        if let peg = card.point("\(anchor).peg") {
             let center = CGPoint(x: origin.x + peg.x * side, y: origin.y + peg.y * side)
-            let pulse = 14 + 6 * sin(now * 3)
-            let ring = Path(ellipseIn: CGRect(x: center.x - pulse, y: center.y - pulse, width: pulse * 2, height: pulse * 2))
-            context.stroke(ring, with: .color(color.opacity(0.75)), lineWidth: 2)
-            context.fill(Path(ellipseIn: CGRect(x: center.x - 4, y: center.y - 4, width: 8, height: 8)), with: .color(color))
+            let pulse = 15 + 5 * sin(now * 3) * (1 - g)
+            let halo = pulse + 10
+            context.fill(Path(ellipseIn: CGRect(x: center.x - halo, y: center.y - halo, width: halo * 2, height: halo * 2)), with: .color(color.opacity(0.10 + 0.12 * g)))
+            context.stroke(Path(ellipseIn: CGRect(x: center.x - pulse, y: center.y - pulse, width: pulse * 2, height: pulse * 2)), with: .color(color.opacity(0.85)), lineWidth: 2)
+            if g > 0.05 {
+                var check = Path()
+                check.move(to: CGPoint(x: center.x - 6, y: center.y + 0.5))
+                check.addLine(to: CGPoint(x: center.x - 1.5, y: center.y + 5))
+                check.addLine(to: CGPoint(x: center.x + 7, y: center.y - 5))
+                context.stroke(check, with: .color(color.opacity(g)), style: StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
+            } else {
+                context.fill(Path(ellipseIn: CGRect(x: center.x - 4, y: center.y - 4, width: 8, height: 8)), with: .color(color))
+            }
         }
     }
 }

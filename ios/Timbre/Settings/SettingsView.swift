@@ -172,7 +172,16 @@ private struct Acknowledgements: View {
                 license("Sora", file: "Sora-OFL")
             }
             Section("Music") { Text("The song exercise uses a phrase from Beethoven's public-domain Ode to Joy.") }
-            Section("Instruments") { Text("3D instruments, materials and renders are generated from code for Timbre.") }
+            Section {
+                ForEach(ModelLibrary.credits()) { credit in
+                    VStack(alignment: .leading, spacing: 3) {
+                        Link(destination: credit.link) { Text("“\(credit.title)” by \(credit.author)").font(.subheadline.weight(.semibold)) }
+                        Text("\(credit.licenseName) · rigged, relit and rendered for Timbre").font(.caption).foregroundStyle(Palette.inkSoft)
+                        if let licence = credit.licenseLink { Link("Licence", destination: licence).font(.caption) }
+                    }
+                    .padding(.vertical, 2)
+                }
+            } header: { Text("Instruments") } footer: { Text("Instruments without a credit are modelled and rendered from code for Timbre.") }
         }
         .scrollContentBackground(.hidden)
         .background(StageBackground(motes: false))

@@ -103,7 +103,7 @@ struct TuneView: View {
                     ZStack {
                         // The studio render holds the stage while the 3D model loads, then cross-fades out.
                         if ready3D != modelID {
-                            StudioStage(imageName: ModelLibrary.hasCard(modelID) ? ModelLibrary.cardImageName(modelID) : (store.photo?.asset ?? ""), rig: nil, input: stageInput)
+                            StudioStage(imageName: ModelLibrary.hasCard(modelID) ? ModelLibrary.cardImageName(modelID) : (store.photo?.asset ?? ""), card: nil, input: stageInput)
                                 .padding(.horizontal, 16)
                                 .transition(.opacity)
                         }
@@ -112,13 +112,13 @@ struct TuneView: View {
                                         onReady: { withAnimation(.easeInOut(duration: 0.6)) { ready3D = modelID } })
                     }
                 } else if ModelLibrary.hasCard(modelID) {
-                    StudioStage(imageName: ModelLibrary.cardImageName(modelID), rig: rig, input: stageInput) { store.chooseAnchor($0) }
+                    StudioStage(imageName: ModelLibrary.cardImageName(modelID), card: rig.flatMap(StageCard.init(rig:)), input: stageInput) { store.chooseAnchor($0) }
                         .padding(.horizontal, 16)
                 } else if let photo = store.photo {
-                    StudioStage(imageName: photo.asset, rig: nil, input: stageInput).padding(28)
+                    StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: stageInput) { store.chooseAnchor($0) }.padding(28)
                 }
             } else if let photo = store.photo {
-                StudioStage(imageName: photo.asset, rig: nil, input: stageInput).padding(28)
+                StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: stageInput) { store.chooseAnchor($0) }.padding(28)
             }
             TurnHint().padding(.top, 8).frame(maxWidth: .infinity, alignment: .leading).padding(.leading, 14)
         }

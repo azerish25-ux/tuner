@@ -89,4 +89,37 @@ enum ModelLibrary {
         return exists
     }
     @MainActor private static var cards: [String: Bool] = [:]
+
+    /// Stage points for instrument photographs (photo-rigs.json), keyed by photo asset.
+    private static let photoPoints: [String: [String: [Double]]] = {
+        guard let url = Bundle.main.url(forResource: "photo-rigs", withExtension: "json"),
+              let data = try? Data(contentsOf: url) else { return [:] }
+        return (try? JSONDecoder().decode([String: [String: [Double]]].self, from: data)) ?? [:]
+    }()
+    static func photoCard(_ asset: String?) -> StageCard? {
+        guard let asset, let points = photoPoints[asset], !points.isEmpty else { return nil }
+        return StageCard(points: points)
+    }
+
+    /// Attribution for artist models (the `credit` block of each bundled rig), for Acknowledgements.
+    static func credits() -> [ModelCredit] {
+        struct File: Decodable { let credit: ModelCredit? }
+        let urls = Bundle.main.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? []
+        let credits = urls.filter { $0.lastPathComponent.hasSuffix(".rig.json") }
+            .compactMap { url in (try? Data(contentsOf: url)).flatMap { try? JSONDecoder().decode(File.self, from: $0).credit } }
+        return Dictionary(credits.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a }).values.sorted { $0.title < $1.title }
+    }
+}
+
+struct ModelCredit: Decodable, Identifiable, Sendable {
+    let id: String
+    let title: String
+    let author: String
+    let license: String
+    let url: String
+    var link: URL { URL(string: url) ?? URL(string: "https://sketchfab.com")! }
+    var licenseName: String { license == "cc0" ? "CC0 1.0" : "CC BY 4.0" }
+    var licenseLink: URL? {
+        URL(string: license == "cc0" ? "https://creativecommons.org/publicdomain/zero/1.0/" : "https://creativecommons.org/licenses/by/4.0/")
+    }
 }

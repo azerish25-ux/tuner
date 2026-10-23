@@ -16,9 +16,30 @@ struct CelebrationOverlay: View {
                 Color.black.opacity(0.35).ignoresSafeArea().onTapGesture { dismiss() }
                 if !reduceMotion { Burst(started: started).allowsHitTesting(false) }
                 VStack(spacing: 14) {
-                    Eyebrow("Still point")
-                    Text("All strings in tune").font(Typeface.display(38)).foregroundStyle(Palette.locked).multilineTextAlignment(.center)
+                    Image(systemName: "checkmark").font(.system(size: 26, weight: .heavy)).foregroundStyle(Palette.onAccent)
+                        .frame(width: 64, height: 64)
+                        .background(Circle().fill(Palette.mint))
+                        .shadow(color: Palette.mint.opacity(0.6), radius: 24)
+                        .symbolEffect(.bounce, value: visible)
+                    Text("All strings in tune").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink).multilineTextAlignment(.center)
                     Text("\(store.instrumentDisplayName) · \(store.tuning.name.localized)").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                    HStack(spacing: 6) {
+                        ForEach(Array(store.courses.enumerated()), id: \.offset) { _, course in
+                            let note = NoteReadout.split(TargetLabelFormatter.splitCue(store.courseLabel(course)).main)
+                            (Text(note.name).font(Typeface.label(13)) + Text(note.octave).font(Typeface.label(9)))
+                                .foregroundStyle(Palette.mint)
+                                .frame(minWidth: 30, minHeight: 30)
+                                .background(Circle().fill(Palette.mint.opacity(0.12)))
+                        }
+                    }
+                    .accessibilityHidden(true)
+                    HStack(spacing: 10) {
+                        Label("+\(XPReward.fullTune) XP", systemImage: "sparkles").foregroundStyle(Palette.mint)
+                        if store.streak.current > 0 {
+                            Label("\(store.streak.current)-day streak", systemImage: "flame.fill").foregroundStyle(Color(hex: 0xFFD3A8))
+                        }
+                    }
+                    .font(Typeface.label(13))
                     HStack(spacing: 12) {
                         if let card {
                             ShareLink(item: card, preview: SharePreview("In tune with Timbre", image: card)) {
@@ -77,7 +98,7 @@ private struct Burst: View {
                     let d = spark.speed * t * (1 - t / 4)
                     let p = CGPoint(x: center.x + cos(spark.angle) * d, y: center.y + sin(spark.angle) * d + 60 * t * t)
                     let alpha = max(0, 1 - t / 2.2)
-                    let color = spark.hue > 0.5 ? Palette.brass : Palette.locked
+                    let color = spark.hue > 0.6 ? Palette.amber : Palette.mint
                     context.fill(Path(ellipseIn: CGRect(x: p.x - spark.size, y: p.y - spark.size, width: spark.size * 2, height: spark.size * 2)), with: .color(color.opacity(alpha)))
                 }
             }
@@ -95,22 +116,34 @@ struct ShareCard: View {
     let photo: String?
     let streak: Int
     var body: some View {
-        VStack(spacing: 18) {
+        VStack(spacing: 16) {
             HStack {
-                Text("TIMBRE").font(.system(size: 13, weight: .bold)).tracking(5).foregroundStyle(Palette.brass)
+                Text("TIMBRE").font(Typeface.label(13)).tracking(6).foregroundStyle(Palette.amber)
                 Spacer()
-                if streak > 1 { Label("\(streak)-day streak", systemImage: "flame.fill").font(.caption.weight(.semibold)).foregroundStyle(Palette.ember) }
+                if streak > 1 { Label("\(streak)-day streak", systemImage: "flame.fill").font(Typeface.label(12)).foregroundStyle(Color(hex: 0xFFD3A8)) }
             }
-            if let name = modelID.map(ModelLibrary.cardImageName) ?? photo {
-                Image(name).resizable().scaledToFit().frame(height: 300).shadow(color: .black.opacity(0.6), radius: 24, y: 14)
+            if let name = modelID.flatMap({ ModelLibrary.hasCard($0) ? ModelLibrary.cardImageName($0) : nil }) ?? photo {
+                Image(name).resizable().scaledToFit().frame(height: 300).shadow(color: .black.opacity(0.65), radius: 24, y: 14)
+                    .background(Ellipse().fill(RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.25), .clear], center: .center, startRadius: 2, endRadius: 160)).frame(width: 300, height: 40).offset(y: 150))
             }
-            Text("In tune").font(Typeface.display(54)).foregroundStyle(Color(hex: 0xFFF3DA))
-            Text("\(instrument) · \(tuning)").font(.headline).foregroundStyle(Color(hex: 0xB3A99E))
-            Text(notes.joined(separator: "  ")).font(Typeface.number(15)).foregroundStyle(Color(hex: 0xD9B26F))
+            Text("In tune").font(Typeface.display(52)).tracking(-1.2).foregroundStyle(Palette.ink)
+            Text("\(instrument) · \(tuning)").font(.headline).foregroundStyle(Palette.inkSoft)
+            HStack(spacing: 8) {
+                ForEach(Array(notes.enumerated()), id: \.offset) { _, note in
+                    Text(note).font(Typeface.label(14)).foregroundStyle(Palette.mint)
+                        .padding(.horizontal, 10).frame(height: 30)
+                        .background(Capsule().fill(Palette.mint.opacity(0.12)))
+                }
+            }
         }
         .padding(30)
         .frame(width: 400)
-        .background(LinearGradient(colors: [Color(hex: 0x1B1512), Color(hex: 0x0B0908)], startPoint: .top, endPoint: .bottom))
+        .background(
+            ZStack {
+                Palette.stage
+                RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.14), .clear], center: UnitPoint(x: 0.5, y: 0.3), startRadius: 4, endRadius: 320)
+            }
+        )
         .environment(\.colorScheme, .dark)
     }
 }
