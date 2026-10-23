@@ -170,6 +170,14 @@ def pearl(out):
     save(rgb, out / "pearl_color.jpg")
 
 
+def maple_plain(out):
+    """Straight-grained hard maple for bolt-on necks and headstocks."""
+    g = grain(SIZE, SIZE, 12.0, 20.0, 101)
+    tone = fbm((SIZE, SIZE), 110, 3, 102)
+    rgb = ramp(0.55 + 0.3 * tone - 0.25 * g, [(0, (190, 146, 88)), (0.6, (226, 190, 132)), (1, (240, 214, 166))])
+    save(rgb, out / "maple_plain_color.jpg")
+
+
 def varnish(out):
     """Violin-family finish: fine spruce under amber oil varnish; flamed maple under red-brown."""
     g = grain(SIZE, SIZE, 6.0, 12.0, 91, ray_strength=0.25)
@@ -191,7 +199,7 @@ def main():
     spruce(out); rosewood(out); mahogany(out); ebony(out); maple_flame(out)
     sunburst(out, "sunburst_3tone", 81, [(150, 70, 18), (232, 170, 52)], (18, 10, 6))
     sunburst(out, "sunburst_cherry", 82, [(150, 26, 18), (204, 70, 40)], (36, 6, 6))
-    tortoise(out); rosette(out); pearl(out); varnish(out)
+    tortoise(out); rosette(out); pearl(out); varnish(out); maple_plain(out)
     print("textures written to", out)
 
 

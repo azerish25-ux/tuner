@@ -193,7 +193,7 @@ def build(spec: Spec):
         head_half = [(0.0, 0.0), (hw0, 0.0), (hw0 + 0.006, L * 0.3), (hw0 + 0.012, L * 0.75), (hw0 + 0.01, L * 0.95), (hw0 * 0.5, L * 1.02), (0.0, L * 0.98)]
         head_outline = mirrored_outline(head_half, 10)
     prism("headstock", head_outline, 0.0, head_t, P[spec.neck_wood], head, bevel=0.0025)
-    prism("head_veneer", offset_outline(head_outline, -0.0006), -0.0016, 0.0004, P[spec.neck_wood if spec.kind == "electric_bass" else "ebony"], head, bevel=0.0004, segments=2)
+    prism("head_veneer", offset_outline(head_outline, -0.0006), -0.0016, 0.0004, P[spec.neck_wood if spec.kind == "electric_bass" else "ebony_satin"], head, bevel=0.0004, segments=2)
 
     # ---------------------------------------------------------------- strings, posts, tuners
     def string_x(i, width):
@@ -283,19 +283,19 @@ UKE = [(0.0, 0.0), (0.05, 0.005), (0.078, 0.034), (0.083, 0.072), (0.072, 0.11),
 # Offset-waist bass bodies, x > 0 is the treble side, listed counter-clockwise from the
 # bottom centre. The neck pocket sits at the 17th fret; the bass horn reaches the 12th.
 PBASS = [(0.0, 0.0), (0.08, 0.004), (0.13, 0.022), (0.158, 0.055), (0.168, 0.1), (0.166, 0.15), (0.152, 0.2),
-         (0.136, 0.238), (0.13, 0.268), (0.134, 0.298), (0.141, 0.33), (0.144, 0.365), (0.14, 0.4), (0.132, 0.428),
-         (0.122, 0.443), (0.11, 0.44), (0.098, 0.424), (0.084, 0.404), (0.066, 0.396), (0.05, 0.4), (0.034, 0.405),
-         (-0.034, 0.405), (-0.05, 0.412), (-0.065, 0.43), (-0.078, 0.458), (-0.09, 0.488), (-0.101, 0.505),
-         (-0.114, 0.508), (-0.128, 0.497), (-0.141, 0.468), (-0.15, 0.425), (-0.152, 0.375), (-0.146, 0.325),
+         (0.136, 0.238), (0.13, 0.268), (0.134, 0.298), (0.141, 0.33), (0.144, 0.365), (0.142, 0.395), (0.134, 0.42),
+         (0.121, 0.435), (0.106, 0.432), (0.092, 0.418), (0.075, 0.405), (0.055, 0.403), (0.034, 0.405),
+         (-0.034, 0.405), (-0.052, 0.41), (-0.068, 0.425), (-0.08, 0.452), (-0.092, 0.482), (-0.104, 0.502),
+         (-0.118, 0.508), (-0.132, 0.498), (-0.143, 0.47), (-0.15, 0.425), (-0.152, 0.375), (-0.146, 0.325),
          (-0.139, 0.285), (-0.142, 0.248), (-0.156, 0.2), (-0.166, 0.15), (-0.168, 0.1), (-0.158, 0.055),
          (-0.13, 0.022), (-0.08, 0.004)]
 # Jazz: narrower, more offset waist and slimmer horns.
 JBASS = [(0.0, 0.0), (0.08, 0.004), (0.128, 0.022), (0.155, 0.055), (0.165, 0.1), (0.162, 0.145), (0.146, 0.188),
-         (0.126, 0.222), (0.118, 0.252), (0.122, 0.285), (0.132, 0.32), (0.137, 0.36), (0.133, 0.398), (0.124, 0.426),
-         (0.114, 0.44), (0.103, 0.437), (0.093, 0.42), (0.08, 0.402), (0.064, 0.395), (0.049, 0.399), (0.034, 0.405),
-         (-0.034, 0.405), (-0.049, 0.413), (-0.062, 0.432), (-0.074, 0.461), (-0.085, 0.49), (-0.096, 0.507),
-         (-0.108, 0.511), (-0.121, 0.5), (-0.133, 0.47), (-0.141, 0.428), (-0.143, 0.38), (-0.136, 0.335),
-         (-0.128, 0.3), (-0.13, 0.262), (-0.146, 0.212), (-0.16, 0.16), (-0.165, 0.105), (-0.156, 0.056),
+         (0.128, 0.222), (0.12, 0.252), (0.123, 0.285), (0.132, 0.32), (0.138, 0.36), (0.137, 0.392), (0.13, 0.418),
+         (0.118, 0.433), (0.104, 0.431), (0.09, 0.417), (0.074, 0.405), (0.054, 0.402), (0.034, 0.405),
+         (-0.034, 0.405), (-0.052, 0.41), (-0.067, 0.426), (-0.079, 0.454), (-0.09, 0.485), (-0.101, 0.505),
+         (-0.115, 0.511), (-0.129, 0.501), (-0.139, 0.472), (-0.144, 0.428), (-0.144, 0.38), (-0.137, 0.335),
+         (-0.129, 0.3), (-0.131, 0.262), (-0.147, 0.212), (-0.16, 0.16), (-0.165, 0.105), (-0.156, 0.056),
          (-0.128, 0.022), (-0.08, 0.004)]
 
 
@@ -323,14 +323,14 @@ MODELS = {
         id="bass_p4", kind="electric_bass", strings=["s4", "s3", "s2", "s1"], gauges=[0.00133, 0.00108, 0.00083, 0.00057],
         wound=[True] * 4, scale=0.864, nut_width=0.042, saddle_width=0.076, frets=20, body_fret=21, body_len=0.335,
         body_depth=0.045, body_full=PBASS, head="inline", head_tilt=0, head_len=0.2, post_s=[0.05, 0.088, 0.126, 0.164],
-        finish="sunburst", neck_wood="maple", board="rosewood", string_material="nickel_wound", wound_material="nickel_wound",
+        finish="sunburst", neck_wood="maple_neck", board="rosewood", string_material="nickel_wound", wound_material="nickel_wound",
         button="clover", guard="white_guard", deg_per_cent=1.0),
     "bass_j5": Spec(
         id="bass_j5", kind="electric_bass", strings=["s5", "s4", "s3", "s2", "s1"], gauges=[0.0016, 0.00133, 0.00108, 0.00083, 0.00057],
         wound=[True] * 5, scale=0.864, nut_width=0.047, saddle_width=0.09, frets=20, body_fret=21, body_len=0.335,
         body_depth=0.045, body_full=JBASS, head="inline", head_tilt=0, head_len=0.235, post_s=[0.05, 0.085, 0.12, 0.155, 0.19],
-        finish="cherry", neck_wood="maple", board="rosewood", string_material="nickel_wound", wound_material="nickel_wound",
-        button="clover", guard="tortoise", pickups="jj", deg_per_cent=1.0),
+        finish="cherry", neck_wood="maple_neck", board="rosewood", string_material="nickel_wound", wound_material="nickel_wound",
+        button="clover", guard="black_guard", pickups="jj", deg_per_cent=1.0),
     "ukulele_soprano": uke("ukulele_soprano", 0.33, 1.0, 15),
     "ukulele_concert": uke("ukulele_concert", 0.38, 1.12, 18),
     "ukulele_tenor": uke("ukulele_tenor", 0.43, 1.26, 18),
