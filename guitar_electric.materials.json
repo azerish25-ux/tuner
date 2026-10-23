@@ -1,0 +1,175 @@
+{
+ "Bronze": {
+  "images": [],
+  "baseColor": [
+   0.512,
+   0.247,
+   0.0,
+   1.0
+  ],
+  "metallic": 1.0,
+  "roughness": 0.2,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "Chrome": {
+  "images": [],
+  "baseColor": [
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "metallic": 1.0,
+  "roughness": 0.14,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "DirtyBronze": {
+  "images": [],
+  "baseColor": [
+   0.392,
+   0.334,
+   0.001,
+   1.0
+  ],
+  "metallic": 1.0,
+  "roughness": 0.25,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "lambert2": {
+  "images": [],
+  "baseColor": [
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.2,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "mattBlack": {
+  "images": [],
+  "baseColor": [
+   0.0,
+   0.0,
+   0.0,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.2,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "Neck": {
+  "images": [],
+  "baseColor": [
+   0.0,
+   0.0,
+   0.0,
+   1.0
+  ],
+  "metallic": 1.0,
+  "roughness": 0.35,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "Neck2": {
+  "images": [],
+  "baseColor": [
+   0.0,
+   0.0,
+   0.0,
+   1.0
+  ],
+  "metallic": 1.0,
+  "roughness": 0.35,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "neckFace": {
+  "images": [],
+  "baseColor": [
+   0.0,
+   0.0,
+   0.0,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.2,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "SilverLace": {
+  "images": [],
+  "baseColor": [
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "metallic": 1.0,
+  "roughness": 0.42,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "sliver1": {
+  "images": [],
+  "baseColor": [
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "metallic": 1.0,
+  "roughness": 0.12,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "wood": {
+  "images": [
+   "wood_baseColor.png"
+  ],
+  "baseColor": [
+   0.8,
+   0.8,
+   0.8,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.35,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "wood2": {
+  "images": [],
+  "baseColor": [
+   0.0,
+   0.0,
+   0.0,
+   1.0
+  ],
+  "metallic": 1.0,
+  "roughness": 0.35,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "Wood_2": {
+  "images": [
+   "Wood_2_baseColor.png"
+  ],
+  "baseColor": [
+   0.8,
+   0.8,
+   0.8,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.35,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ }
+}

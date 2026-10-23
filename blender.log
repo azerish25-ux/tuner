@@ -1,0 +1,56 @@
+05:35:54 | INFO: Data are loaded, start creating Blender stuff
+05:35:54 | INFO: Blender create Mesh node pCube64_Neck_0
+05:35:54 | INFO: Blender create Mesh node pCube64_Neck2_0
+05:35:54 | INFO: Blender create Mesh node pCube64_neckFace_0
+05:35:54 | INFO: Blender create Mesh node pCube64_SilverLace_0
+05:35:54 | INFO: Blender create Mesh node pCube64_mattBlack_0
+05:35:54 | INFO: Blender create Mesh node pCube64_sliver1_0
+05:35:54 | INFO: Blender create Mesh node pCube64_lambert2_0
+05:35:54 | INFO: Blender create Mesh node pCube64_Bronze_0
+05:35:54 | INFO: Blender create Mesh node pCube64_DirtyBronze_0
+05:35:54 | INFO: Blender create Mesh node pCube64_Chrome_0
+05:35:54 | INFO: Blender create Mesh node pCube64_wood2_0
+05:35:54 | INFO: Blender create Mesh node pCube64_Wood_2_0
+05:35:54 | INFO: Blender create Mesh node pCube64_wood_0
+05:35:54 | INFO: glTF import finished in 0.08s
+Blender 4.5.15 LTS (hash 5afeabba6097 built 2026-10-22 01:33:47)
+Saved: 'build/convert/guitar_electric_calib_whole.png'
+Time: 00:18.98 (Saving: 00:00.19)
+
+Saved: 'build/convert/guitar_electric_calib_head.png'
+Time: 00:18.84 (Saving: 00:00.13)
+
+Saved: 'build/convert/guitar_electric_calib_ids.png'
+Time: 00:13.52 (Saving: 00:00.11)
+
+rigged s6: peg 6 parts, post 1 parts, scale 0.6332 m, tighten 1
+rigged s5: peg 6 parts, post 1 parts, scale 0.6332 m, tighten 1
+rigged s4: peg 6 parts, post 1 parts, scale 0.6332 m, tighten 1
+rigged s3: peg 6 parts, post 1 parts, scale 0.6332 m, tighten -1
+rigged s2: peg 6 parts, post 1 parts, scale 0.6332 m, tighten -1
+rigged s1: peg 6 parts, post 1 parts, scale 0.6332 m, tighten -1
+optimised: 1108 meshes / 44576 triangles -> 33 meshes / 44576 triangles
+   part_SilverLace: 7672 tris, uv ['UVMap'], colours []
+   part_sliver1: 6548 tris, uv ['UVMap'], colours []
+   part_DirtyBronze: 5600 tris, uv ['UVMap'], colours []
+   part_Chrome: 4228 tris, uv ['UVMap'], colours []
+   part_mattBlack: 3766 tris, uv ['UVMap'], colours []
+   part_Neck2: 3072 tris, uv ['UVMap'], colours []
+   part_Bronze: 1440 tris, uv ['UVMap'], colours []
+   part_Neck: 1332 tris, uv ['UVMap'], colours []
+   part_wood2: 888 tris, uv ['UVMap'], colours []
+   post_s1_mesh: 750 tris, uv ['UVMap'], colours []
+   post_s2_mesh: 750 tris, uv ['UVMap'], colours []
+   post_s3_mesh: 750 tris, uv ['UVMap'], colours []
+texture wood_baseColor.png: 1024x1024 -> 1024x1024 JPEG 187 KB
+texture Wood_2_baseColor.png: 1024x1024 -> 1024x1024 JPEG 186 KB
+USD export of 'build/convert/guitar_electric.usdz' took 102.21 ms
+Saved: 'build/convert/guitar_electric_hero.png'
+Time: 00:49.20 (Saving: 00:00.14)
+
+Saved: 'build/convert/guitar_electric_head.png'
+Time: 00:58.71 (Saving: 00:00.14)
+
+converted guitar_electric
+
+Blender quit
