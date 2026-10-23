@@ -1,0 +1,33 @@
+04:54:26 | INFO: Data are loaded, start creating Blender stuff
+04:54:26 | INFO: Blender create Mesh node Object_0
+04:54:26 | INFO: Blender create Mesh node Object_1
+04:54:26 | INFO: Blender create Mesh node Object_2
+04:54:26 | INFO: glTF import finished in 0.20s
+Blender 4.5.15 LTS (hash 5afeabba6097 built 2026-10-22 01:33:47)
+Saved: 'build/convert/double_bass_calib_whole.png'
+Time: 00:14.33 (Saving: 00:00.15)
+
+Saved: 'build/convert/double_bass_calib_head.png'
+Time: 00:12.15 (Saving: 00:00.11)
+
+Saved: 'build/convert/double_bass_calib_ids.png'
+Time: 00:07.08 (Saving: 00:00.09)
+
+rigged s4: peg 7 parts, post 0 parts, scale 1.0588 m, tighten 1
+rigged s3: peg 2 parts, post 0 parts, scale 1.0588 m, tighten 1
+rigged s2: peg 3 parts, post 0 parts, scale 1.0589 m, tighten -1
+rigged s1: peg 6 parts, post 0 parts, scale 1.0589 m, tighten -1
+Warning: in _EnqueueDependency at line 99 of /home/blender/prog/build_linux/deps_x64/build/usd/src/external_usd/pxr/usd/usdUtils/assetLocalization.cpp -- Failed to resolve reference @./textures/material_0_baseColor_clean.png@ with computed asset path @/tmp/blender_jno8xg/USDZ/textures/material_0_baseColor_clean.png@ found in layer @/tmp/blender_jno8xg/USDZ/double_bass.usdc@.
+Warning: in _EnqueueDependency at line 99 of /home/blender/prog/build_linux/deps_x64/build/usd/src/external_usd/pxr/usd/usdUtils/assetLocalization.cpp -- Failed to resolve reference @./textures/material_0_baseColor_clean.png@ with computed asset path @/tmp/blender_jno8xg/USDZ/textures/material_0_baseColor_clean.png@ found in layer @/tmp/blender_jno8xg/USDZ/double_bass.usdc@.
+Runtime Error: in AddFile at line 964 of /home/blender/prog/build_linux/deps_x64/build/usd/src/external_usd/pxr/usd/usd/zipFile.cpp -- Failed to map '/tmp/blender_jno8xg/USDZ/textures/material_0_baseColor_clean.png': No such file or directory
+Warning: in _AddAssetToPackage at line 473 of /home/blender/prog/build_linux/deps_x64/build/usd/src/external_usd/pxr/usd/usdUtils/assetLocalizationPackage.cpp -- Failed to add file '/tmp/blender_jno8xg/USDZ/textures/material_0_baseColor_clean.png' to the package at path 'double_bass.usdz'.
+USD export of 'build/convert/double_bass.usdz' took 1562.45 ms
+Saved: 'build/convert/double_bass_hero.png'
+Time: 00:51.00 (Saving: 00:00.11)
+
+Saved: 'build/convert/double_bass_head.png'
+Time: 00:50.30 (Saving: 00:00.12)
+
+converted double_bass
+
+Blender quit
