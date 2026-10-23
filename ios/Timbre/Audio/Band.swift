@@ -355,9 +355,13 @@ enum BandSynth {
             return [BassNote(beat: 0, beats: 0.9, interval: 0, velocity: 1), BassNote(beat: 1, beats: 0.9, interval: answer, velocity: 0.8)]
         default:
             if meter >= 6 && meter % 3 == 0 {
-                return stride(from: 0, to: meter, by: 3).map { b in
-                    BassNote(beat: Double(b), beats: 2.7, interval: (b / 3) % 2 == 0 ? 0 : answer, velocity: b == 0 ? 1 : 0.8)
+                var notes: [BassNote] = []
+                for b in stride(from: 0, to: meter, by: 3) {
+                    let interval: Int = (b / 3) % 2 == 0 ? 0 : answer
+                    let velocity: Float = b == 0 ? 1 : 0.8
+                    notes.append(BassNote(beat: Double(b), beats: 2.7, interval: interval, velocity: velocity))
                 }
+                return notes
             }
             if meter >= 4 {
                 let half = meter / 2
