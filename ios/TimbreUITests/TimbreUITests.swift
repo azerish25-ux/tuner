@@ -44,6 +44,13 @@ final class TimbreUITests: XCTestCase {
         }
     }
     private func settle(_ seconds: Double = 1.2) { Thread.sleep(forTimeInterval: seconds) }
+
+    /// Taps an element that may vanish on its own at any moment: the frame comes from a snapshot (which throws
+    /// rather than failing the test when the element is gone), and the tap goes to that point.
+    private func tapIfPresent(_ target: XCUIElement) {
+        guard let frame = (try? target.snapshot())?.frame, !frame.isEmpty else { return }
+        app.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: frame.midX, dy: frame.midY)).tap()
+    }
     /// Opens the instrument browser (the tuner's picker sheet) unless it is already up.
     private func openPicker() {
         let picker = app.navigationBars["Choose instrument"]
@@ -191,6 +198,9 @@ final class TimbreUITests: XCTestCase {
         settle(2); shot("40-paywall")
         scrollTo(purchase)
         purchase.tap()
+        // StoreKit testing can take a minute on a busy runner, and the Play tab stays in the tree behind the
+        // sheet the whole time: wait for the sheet itself to go.
+        if !purchase.waitForNonExistence(timeout: 150) { print("STATE after purchase: \(element("debug.state").label)") }
         XCTAssertTrue(element("practice.drone").waitForExistence(timeout: 20))
         settle(2)
         scrollTo(element("practice.drone"))
@@ -248,14 +258,14 @@ final class TimbreUITests: XCTestCase {
         // The lesson zooms open: a tap during the transition can be dropped, so tap until the tune check shows.
         let skip = element("lesson.tunecheck.skip")
         for _ in 0..<4 where !skip.exists { element("lesson.continue").tap(); _ = skip.waitForExistence(timeout: 3) }
-        settle(2.5); shot("52-lesson-tunecheck")
-        // The tune check is covered by its own screenshot; skip the rest of it to keep the run short.
-        if skip.exists { skip.tap() }
+        settle(1); shot("52-lesson-tunecheck")
+        // The tune check is covered by its own screenshot; skip the rest of it to keep the run short. The demo
+        // pitch tunes each string in turn, so the check can finish on its own while the tap is on its way.
+        tapIfPresent(skip)
         // The demo pitch plays the chord's strings straight away: shoot as soon as the chord step is up,
         // before it rings through and hands over to the strum explainer.
         let chord = element("lesson.chord")
-        XCTAssertTrue(chord.waitForExistence(timeout: 15))
-        settle(0.8); shot("52b-lesson-chord")
+        if chord.waitForExistence(timeout: 15) { shot("52b-lesson-chord") } else { print("The chord step went by before it was seen") }
         let next = element("lesson.continue")
         XCTAssertTrue(next.waitForExistence(timeout: 30))
         settle(1.5); shot("53-lesson-strum-explain")
