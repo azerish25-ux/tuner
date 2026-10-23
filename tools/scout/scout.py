@@ -55,6 +55,7 @@ def get(url: str) -> bytes:
 
 
 SAMPLE = []
+OUT = Path("build/scout")
 
 
 def search(query: str, license: str) -> list:
@@ -62,6 +63,8 @@ def search(query: str, license: str) -> list:
     rows = json.loads(get(f"{API}/search?{urllib.parse.urlencode(params)}")).get("results", [])
     if rows and not SAMPLE:
         SAMPLE.append(rows[0])
+        OUT.mkdir(parents=True, exist_ok=True)
+        (OUT / "sample-row.json").write_text(json.dumps(rows[0], indent=1))
         print("sample search row keys:", sorted(rows[0].keys()), "license:", rows[0].get("license"), flush=True)
     return rows
 
@@ -71,12 +74,26 @@ def thumbnail(model: dict, width: int = 640) -> str:
     return images[0]["url"] if images else ""
 
 
+LABELS = {"CC Attribution": "by", "CC0 Public Domain": "cc0", "CC Attribution-ShareAlike": "by-sa",
+          "CC Attribution-NoDerivs": "by-nd", "CC Attribution-NonCommercial": "by-nc"}
+
+
+def slug(license) -> str:
+    """Search rows carry the licence label only; model pages carry the slug."""
+    if not isinstance(license, dict):
+        return str(license or "")
+    if license.get("slug"):
+        return license["slug"]
+    label = license.get("label", "")
+    return LABELS.get(label, "cc0" if label.startswith("CC0") else label)
+
+
 def summary(model: dict) -> dict:
     license = model.get("license") or {}
     archives = model.get("archives") or {}
     return {
         "uid": model["uid"], "name": model.get("name", ""), "user": (model.get("user") or {}).get("username", ""),
-        "license": license.get("slug", "") if isinstance(license, dict) else str(license),
+        "license": slug(license),
         "licenseLabel": license.get("label", "") if isinstance(license, dict) else "",
         "faces": model.get("faceCount", 0), "vertices": model.get("vertexCount", 0), "likes": model.get("likeCount", 0),
         "views": model.get("viewCount", 0), "animated": model.get("animationCount", 0),
@@ -138,7 +155,8 @@ def polyhaven(out: Path) -> list:
 
 
 def main():
-    out = Path(sys.argv[1])
+    global OUT
+    out = OUT = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     (out / "large").mkdir(exist_ok=True)
     only = set(sys.argv[2].split(",")) if len(sys.argv) > 2 and sys.argv[2] else set()
