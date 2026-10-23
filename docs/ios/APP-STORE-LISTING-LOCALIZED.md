@@ -4,7 +4,7 @@ Localized store text for Timbre in de-DE, fr-FR, es-MX, pt-BR, it, ja, ko, zh-Ha
 
 ## How this was made
 
-- **Same facts as the English.** 60 instruments, 102 tunings, 12 courses, 439 lessons, 38 public-domain song lessons and the 40-lesson ear course. The free-tier, trial-reminder ("with notifications on, Timbre reminds you two days before the trial ends"), no-account, no-ads and audio-never-recorded lines carry the same claims as the English, no stronger.
+- **Same facts as the English.** 60 instruments, 102 tunings, 13 courses, 499 lessons, a Songs tab with 20 original songs in today's styles plus public-domain classics, and the 40-lesson ear course. The free-tier (the tuner for guitar, bass and ukulele, a chromatic tuner for anything else, and the first unit of every course), trial-reminder ("with notifications on, Timbre reminds you two days before the trial ends"), no-account, no-ads and audio-never-recorded lines carry the same claims as the English, no stronger.
 - **Adapted, not word-for-word.** Each description keeps the English structure (intro, tune, learn, practice tools, free to start, privacy, subscription terms) but is written for that market, using the terms the app itself uses in `Resources/<lang>.lproj` (for example Bordun / bourdon / nota pedal / bordone / ドローン / 드론 / 持续音 / бурдон for drone, and the app's own names for streak, quest, achievement, unit and course).
 - **Keywords.** Each field is at most 100 characters, comma-separated with no spaces after commas (a space appears only inside a two-word term), singular forms, and none of the words already in that locale's name or subtitle. Search terms were chosen from what people in each market type, not translated from the English list. A script checked this for every locale; for ja, ko and zh-Hans it checks that no keyword is a substring of the name or subtitle.
 - **Character counts** are Python `len()` on the NFC string, measured by script from the exact text below. Nothing is over a limit.
@@ -35,7 +35,7 @@ Localized store text for Timbre in de-DE, fr-FR, es-MX, pt-BR, it, ja, ko, zh-Ha
 | Subtitle | 30 | 30 |
 | Keywords | 100 | 100 |
 | Promotional text | 164 | 170 |
-| Description | 2295 | 4000 |
+| Description | 2454 | 4000 |
 | What's New | 114 | 4000 |
 
 ### Name
@@ -59,7 +59,7 @@ Tuner,Violine,Bass,Cello,Metronom,Akkord,Gehörbildung,Mandoline,Banjo,chromatis
 ### Promotional text (can change without a review)
 
 ```
-Stimmen, dann spielen lernen: 439 Lektionen, die dir zuhören – ob Gitarre, Ukulele, Bass, Violine, Cello, Mandoline, Banjo oder Gesang. Mit jedem Update neue Songs.
+Stimmen, dann spielen lernen: 499 Lektionen, die dir zuhören – ob Gitarre, Ukulele, Bass, Violine, Cello, Mandoline, Banjo oder Gesang. Mit jedem Update neue Songs.
 ```
 
 ### Description
@@ -75,10 +75,10 @@ ALLES STIMMEN, SCHNELL
 • Eigene Stimmungen, Kapodaster, einstellbare A4-Referenz sowie Solfège- und Sargam-Notennamen
 
 LERNEN DURCH SPIELEN
-• 439 Lektionen in 12 Kursen: Gitarre, Ukulele, Bass, Violine, Cello, Mandoline, Banjo, Singen, Gehörbildung, Musiktheorie, Rhythmus und Songs
+• 499 Lektionen in 13 Kursen: Gitarre, Ukulele, Bass, Violine, Cello, Mandoline, Banjo, Singen, Gehörbildung, Musiktheorie, Rhythmus, Songs und Originals
 • Timbre hört zu, während du spielst: einzelne Töne, ganze Akkorde und Schlagrhythmus, mit Feedback zur Tonhöhe und Timing-Feedback in Millisekunden
 • Eine Notenbahn zum Mitspielen, die für dich langsamer wird und mit deinem Fortschritt wieder anzieht
-• 38 Lektionen mit gemeinfreien Songs, von „Ode an die Freude“ bis „Amazing Grace“
+• Ein Songs-Tab: 20 Originalsongs in den Stilen von heute plus gemeinfreie Klassiker, von „Ode an die Freude“ bis „Amazing Grace“
 • Sterne, XP, Tagesquests, Serien und Erfolge halten dich bei der Stange
 
 ÜBUNGSTOOLS
@@ -88,7 +88,7 @@ LERNEN DURCH SPIELEN
 • Widgets für Home- und Sperrbildschirm sowie Siri-Kurzbefehle
 
 KOSTENLOS STARTEN
-Das Stimmen ist kostenlos, ebenso die erste Einheit jedes Kurses. Mit Timbre Pro schaltest du jede Lektion, jedes Instrument und alle Übungstools frei. Den Ablauf der Testphase siehst du auf dem Abo-Bildschirm, und bei eingeschalteten Mitteilungen erinnert dich Timbre zwei Tage vor dem Ende der Testphase.
+Das Stimmgerät für Gitarre, Bass und Ukulele ist kostenlos, mit einem chromatischen Stimmgerät für alles andere, und das gilt auch für die erste Einheit jedes Kurses. Mit Timbre Pro schaltest du jede Lektion, jedes Instrument und alle Übungstools frei. Den Ablauf der Testphase siehst du auf dem Abo-Bildschirm, und bei eingeschalteten Mitteilungen erinnert dich Timbre zwei Tage vor dem Ende der Testphase.
 
 Privat von Grund auf: Audio wird auf deinem iPhone analysiert und nie aufgezeichnet oder hochgeladen. Kein Konto, keine Werbung.
 
@@ -100,7 +100,7 @@ Datenschutz: <privacy policy URL>
 ### What's New
 
 ```
-Willkommen bei Timbre: ein präzises Stimmgerät für 60 Instrumente und 439 Lektionen, die dir beim Spielen zuhören.
+Willkommen bei Timbre: ein präzises Stimmgerät für 60 Instrumente und 499 Lektionen, die dir beim Spielen zuhören.
 ```
 
 ### Screenshot captions
@@ -111,8 +111,8 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 1. Alles in Sekunden stimmen
 2. Lektionen, die dir zuhören
 3. Mitspielen, Note für Note
-4. 439 Lektionen. 12 Kurse.
-5. Jedes Instrument in 3D
+4. 499 Lektionen. 13 Kurse.
+5. 60 Instrumente, jedes mit eigener Bühne
 6. Eine Serie, die du halten willst
 ```
 
@@ -128,7 +128,7 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 | Subtitle | 29 | 30 |
 | Keywords | 98 | 100 |
 | Promotional text | 168 | 170 |
-| Description | 2505 | 4000 |
+| Description | 2678 | 4000 |
 | What's New | 102 | 4000 |
 
 ### Name
@@ -152,7 +152,7 @@ tuner,violoncelle,chromatique,métronome,accord,mandoline,banjo,chant,diapason,s
 ### Promotional text (can change without a review)
 
 ```
-Accordez, puis apprenez : 439 leçons qui vous écoutent (guitare, ukulélé, basse, violon, violoncelle, mandoline, banjo, chant). Nouvelles chansons à chaque mise à jour.
+Accordez, puis apprenez : 499 leçons qui vous écoutent (guitare, ukulélé, basse, violon, violoncelle, mandoline, banjo, chant). Nouvelles chansons à chaque mise à jour.
 ```
 
 ### Description
@@ -168,10 +168,10 @@ ACCORDEZ TOUT, VITE
 • Accordages personnalisés, capodastre, référence A4 réglable, noms de notes en solfège et en sargam
 
 APPRENEZ EN JOUANT
-• 439 leçons réparties en 12 cours : guitare, ukulélé, basse, violon, violoncelle, mandoline, banjo, chant, entraînement auditif, théorie musicale, rythme et chansons
+• 499 leçons réparties en 13 cours : guitare, ukulélé, basse, violon, violoncelle, mandoline, banjo, chant, entraînement auditif, théorie musicale, rythme, chansons et Originals
 • Timbre vous écoute jouer : notes isolées, accords entiers et rythme de grattage, avec un retour sur la hauteur des notes et un retour sur le tempo en millisecondes
 • Une piste de notes à suivre, qui ralentit pour vous puis réaccélère à mesure que vous progressez
-• 38 leçons de chansons du domaine public, de « Ode à la joie » à « Amazing Grace »
+• Un onglet Chansons : 20 chansons originales dans les styles d'aujourd'hui, plus des classiques du domaine public, de « Ode à la joie » à « Amazing Grace »
 • Étoiles, XP, quêtes quotidiennes, séries et succès : de quoi vous donner envie de revenir
 
 OUTILS DE PRATIQUE
@@ -181,7 +181,7 @@ OUTILS DE PRATIQUE
 • Widgets pour l'écran d'accueil et l'écran verrouillé, plus raccourcis Siri
 
 GRATUIT POUR COMMENCER
-L'accordage est gratuit, tout comme la première unité de chaque cours. Timbre Pro débloque toutes les leçons, tous les instruments et tous les outils de pratique. Le calendrier de l'essai figure sur l'écran d'abonnement et, si les notifications sont activées, Timbre vous prévient deux jours avant la fin de l'essai.
+L'accordeur pour guitare, basse et ukulélé est gratuit, avec un accordeur chromatique pour tout autre instrument, tout comme la première unité de chaque cours. Timbre Pro débloque toutes les leçons, tous les instruments et tous les outils de pratique. Le calendrier de l'essai figure sur l'écran d'abonnement et, si les notifications sont activées, Timbre vous prévient deux jours avant la fin de l'essai.
 
 Confidentialité dès la conception : l'audio est analysé sur votre iPhone, jamais enregistré ni envoyé. Aucun compte, aucune publicité.
 
@@ -193,7 +193,7 @@ Confidentialité : <privacy policy URL>
 ### What's New
 
 ```
-Bienvenue dans Timbre : un accordeur précis pour 60 instruments et 439 leçons qui vous écoutent jouer.
+Bienvenue dans Timbre : un accordeur précis pour 60 instruments et 499 leçons qui vous écoutent jouer.
 ```
 
 ### Screenshot captions
@@ -204,8 +204,8 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 1. Accordez tout en quelques secondes
 2. Des leçons qui vous écoutent
 3. Jouez avec la piste, note à note
-4. 439 leçons. 12 cours.
-5. Chaque instrument en 3D
+4. 499 leçons. 13 cours.
+5. 60 instruments, chacun sur sa scène
 6. Une série à ne pas casser
 ```
 
@@ -221,7 +221,7 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 | Subtitle | 30 | 30 |
 | Keywords | 98 | 100 |
 | Promotional text | 165 | 170 |
-| Description | 2449 | 4000 |
+| Description | 2616 | 4000 |
 | What's New | 121 | 4000 |
 
 ### Name
@@ -245,7 +245,7 @@ afinar,lecciones,cromático,violonchelo,metrónomo,acorde,mandolina,banjo,ukulel
 ### Promotional text (can change without a review)
 
 ```
-Afina y aprende: 439 lecciones que te escuchan, para guitarra, ukelele, bajo, violín, violonchelo, mandolina, banjo o canto. Canciones nuevas con cada actualización.
+Afina y aprende: 499 lecciones que te escuchan, para guitarra, ukelele, bajo, violín, violonchelo, mandolina, banjo o canto. Canciones nuevas con cada actualización.
 ```
 
 ### Description
@@ -261,10 +261,10 @@ AFINA LO QUE SEA, RÁPIDO
 • Afinaciones personalizadas, cejilla, referencia A4 ajustable y nombres de notas en solfeo y sargam
 
 APRENDE TOCANDO
-• 439 lecciones en 12 cursos: guitarra, ukelele, bajo, violín, violonchelo, mandolina, banjo, canto, entrenamiento auditivo, teoría musical, ritmo y canciones
+• 499 lecciones en 13 cursos: guitarra, ukelele, bajo, violín, violonchelo, mandolina, banjo, canto, entrenamiento auditivo, teoría musical, ritmo, canciones y Originals
 • Timbre te escucha mientras tocas: notas sueltas, acordes completos y ritmo de rasgueo, con retroalimentación de afinación y de tiempo en milisegundos
 • Una autopista de notas para tocar al ritmo, que baja la velocidad por ti y la sube de nuevo conforme mejoras
-• 38 lecciones de canciones de dominio público, desde «Himno de la alegría» hasta «Sublime gracia»
+• Una pestaña de Canciones: 20 canciones originales en estilos de hoy, además de clásicos de dominio público, desde «Himno de la alegría» hasta «Sublime gracia»
 • Estrellas, XP, misiones diarias, rachas y logros para que sigas volviendo
 
 HERRAMIENTAS DE PRÁCTICA
@@ -274,7 +274,7 @@ HERRAMIENTAS DE PRÁCTICA
 • Widgets para la pantalla de inicio y la pantalla bloqueada, además de atajos de Siri
 
 GRATIS PARA EMPEZAR
-Afinar es gratis, igual que la primera unidad de cada curso. Timbre Pro desbloquea todas las lecciones, todos los instrumentos y todas las herramientas de práctica. La cronología de la prueba aparece en la pantalla de suscripción y, con las notificaciones activadas, Timbre te avisa dos días antes de que termine la prueba.
+El afinador para guitarra, bajo y ukelele es gratis, con un afinador cromático para cualquier otro instrumento, igual que la primera unidad de cada curso. Timbre Pro desbloquea todas las lecciones, todos los instrumentos y todas las herramientas de práctica. La cronología de la prueba aparece en la pantalla de suscripción y, con las notificaciones activadas, Timbre te avisa dos días antes de que termine la prueba.
 
 Privado por diseño: el audio se analiza en tu iPhone y nunca se graba ni se sube. Sin cuenta y sin anuncios.
 
@@ -286,7 +286,7 @@ Privacidad: <privacy policy URL>
 ### What's New
 
 ```
-Te damos la bienvenida a Timbre: un afinador preciso para 60 instrumentos y 439 lecciones que te escuchan mientras tocas.
+Te damos la bienvenida a Timbre: un afinador preciso para 60 instrumentos y 499 lecciones que te escuchan mientras tocas.
 ```
 
 ### Screenshot captions
@@ -297,8 +297,8 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 1. Afina lo que sea en segundos
 2. Lecciones que te escuchan
 3. Toca al ritmo, nota por nota
-4. 439 lecciones. 12 cursos.
-5. Cada instrumento en 3D
+4. 499 lecciones. 13 cursos.
+5. 60 instrumentos, cada uno en su escenario
 6. Una racha que quieres mantener
 ```
 
@@ -314,7 +314,7 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 | Subtitle | 30 | 30 |
 | Keywords | 96 | 100 |
 | Promotional text | 163 | 170 |
-| Description | 2332 | 4000 |
+| Description | 2501 | 4000 |
 | What's New | 98 | 4000 |
 
 ### Name
@@ -338,7 +338,7 @@ guitarra,afinar,cromático,violoncelo,bandolim,banjo,metrônomo,acorde,cifra,tre
 ### Promotional text (can change without a review)
 
 ```
-Afine e aprenda: 439 lições que ouvem você, para violão, guitarra, ukulele, baixo, violino, violoncelo, bandolim, banjo ou canto. Músicas novas a cada atualização.
+Afine e aprenda: 499 lições que ouvem você, para violão, guitarra, ukulele, baixo, violino, violoncelo, bandolim, banjo ou canto. Músicas novas a cada atualização.
 ```
 
 ### Description
@@ -354,10 +354,10 @@ AFINE QUALQUER COISA, RÁPIDO
 • Afinações personalizadas, capotraste, referência A4 ajustável e nomes de notas em solfejo e sargam
 
 APRENDA TOCANDO
-• 439 lições em 12 cursos: violão e guitarra, ukulele, baixo, violino, violoncelo, bandolim, banjo, canto, treino auditivo, teoria musical, ritmo e músicas
+• 499 lições em 13 cursos: violão e guitarra, ukulele, baixo, violino, violoncelo, bandolim, banjo, canto, treino auditivo, teoria musical, ritmo, músicas e Originais
 • O Timbre ouve você tocar: notas isoladas, acordes inteiros e ritmo de batida, com feedback de altura e de tempo em milissegundos
 • Uma pista de notas para tocar junto, que desacelera para você e volta a acelerar conforme você evolui
-• 38 lições de músicas em domínio público, de “Ode à Alegria” a “Amazing Grace”
+• Uma aba Músicas: 20 músicas originais nos estilos de hoje, além de clássicos em domínio público, de “Ode à Alegria” a “Amazing Grace”
 • Estrelas, XP, missões diárias, sequências e conquistas para você voltar sempre
 
 FERRAMENTAS DE PRÁTICA
@@ -367,7 +367,7 @@ FERRAMENTAS DE PRÁTICA
 • Widgets para a Tela de Início e a Tela Bloqueada, além de atalhos da Siri
 
 COMECE DE GRAÇA
-Afinar é grátis, assim como a primeira unidade de cada curso. O Timbre Pro libera todas as lições, todos os instrumentos e todas as ferramentas de prática. A linha do tempo do teste fica na tela de assinatura e, com as notificações ativadas, o Timbre avisa você dois dias antes de o teste terminar.
+O afinador para violão, guitarra, baixo e ukulele é grátis, com um afinador cromático para qualquer outro instrumento, assim como a primeira unidade de cada curso. O Timbre Pro libera todas as lições, todos os instrumentos e todas as ferramentas de prática. A linha do tempo do teste fica na tela de assinatura e, com as notificações ativadas, o Timbre avisa você dois dias antes de o teste terminar.
 
 Privado desde a concepção: o áudio é analisado no seu iPhone e nunca é gravado nem enviado. Sem conta e sem anúncios.
 
@@ -379,7 +379,7 @@ Privacidade: <privacy policy URL>
 ### What's New
 
 ```
-Boas-vindas ao Timbre: um afinador preciso para 60 instrumentos e 439 lições que ouvem você tocar.
+Boas-vindas ao Timbre: um afinador preciso para 60 instrumentos e 499 lições que ouvem você tocar.
 ```
 
 ### Screenshot captions
@@ -390,8 +390,8 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 1. Afine tudo em segundos
 2. Lições que ouvem você
 3. Toque junto, nota por nota
-4. 439 lições. 12 cursos.
-5. Todos os instrumentos em 3D
+4. 499 lições. 13 cursos.
+5. 60 instrumentos, cada um no seu palco
 6. Uma sequência que vale manter
 ```
 
@@ -407,7 +407,7 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 | Subtitle | 30 | 30 |
 | Keywords | 99 | 100 |
 | Promotional text | 164 | 170 |
-| Description | 2440 | 4000 |
+| Description | 2594 | 4000 |
 | What's New | 105 | 4000 |
 
 ### Name
@@ -431,7 +431,7 @@ tuner,lezioni,cromatico,violoncello,mandolino,banjo,metronomo,accordo,orecchio,c
 ### Promotional text (can change without a review)
 
 ```
-Accorda, poi impara: 439 lezioni che ti ascoltano, per chitarra, ukulele, basso, violino, violoncello, mandolino, banjo o canto. Canzoni nuove a ogni aggiornamento.
+Accorda, poi impara: 499 lezioni che ti ascoltano, per chitarra, ukulele, basso, violino, violoncello, mandolino, banjo o canto. Canzoni nuove a ogni aggiornamento.
 ```
 
 ### Description
@@ -447,10 +447,10 @@ ACCORDA TUTTO, IN FRETTA
 • Accordature personalizzate, capotasto, riferimento A4 regolabile e nomi delle note in solfeggio e sargam
 
 IMPARA SUONANDO
-• 439 lezioni in 12 corsi: chitarra, ukulele, basso, violino, violoncello, mandolino, banjo, canto, allenamento dell'orecchio, teoria musicale, ritmo e canzoni
+• 499 lezioni in 13 corsi: chitarra, ukulele, basso, violino, violoncello, mandolino, banjo, canto, allenamento dell'orecchio, teoria musicale, ritmo, canzoni e Originali
 • Timbre ti ascolta mentre suoni: note singole, accordi interi e ritmo delle pennate, con riscontro sull'altezza delle note e sul tempo in millisecondi
 • Un'autostrada delle note da suonare insieme, che rallenta per te e riprende velocità man mano che migliori
-• 38 lezioni su canzoni di pubblico dominio, da «Inno alla gioia» ad «Amazing Grace»
+• Una scheda Canzoni: 20 canzoni originali negli stili di oggi, più classici di pubblico dominio, da «Inno alla gioia» ad «Amazing Grace»
 • Stelle, XP, missioni quotidiane, serie e obiettivi ti fanno tornare ogni giorno
 
 PER ESERCITARTI
@@ -460,7 +460,7 @@ PER ESERCITARTI
 • Widget per la schermata Home e la schermata di blocco, più scorciatoie Siri
 
 SI COMINCIA GRATIS
-L'accordatura è gratuita, come la prima unità di ogni corso. Timbre Pro sblocca ogni lezione, ogni strumento musicale e tutte le funzioni di pratica. La cronologia della prova è sulla schermata dell'abbonamento e, con le notifiche attive, Timbre ti avvisa due giorni prima della fine della prova.
+L'accordatore per chitarra, basso e ukulele è gratuito, con un accordatore cromatico per qualsiasi altro strumento, come la prima unità di ogni corso. Timbre Pro sblocca ogni lezione, ogni strumento musicale e tutte le funzioni di pratica. La cronologia della prova è sulla schermata dell'abbonamento e, con le notifiche attive, Timbre ti avvisa due giorni prima della fine della prova.
 
 Privato per progettazione: l'audio viene analizzato sul tuo iPhone e non viene mai registrato né caricato. Nessun account, nessuna pubblicità.
 
@@ -472,7 +472,7 @@ Privacy: <privacy policy URL>
 ### What's New
 
 ```
-Benvenuto in Timbre: un accordatore preciso per 60 strumenti e 439 lezioni che ti ascoltano mentre suoni.
+Benvenuto in Timbre: un accordatore preciso per 60 strumenti e 499 lezioni che ti ascoltano mentre suoni.
 ```
 
 ### Screenshot captions
@@ -483,8 +483,8 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 1. Accorda tutto in pochi secondi
 2. Lezioni che ti ascoltano
 3. Suona insieme, nota dopo nota
-4. 439 lezioni. 12 corsi.
-5. Ogni strumento in 3D
+4. 499 lezioni. 13 corsi.
+5. 60 strumenti, ognuno sul suo palco
 6. Una serie da non spezzare
 ```
 
@@ -500,7 +500,7 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 | Subtitle | 18 | 30 |
 | Keywords | 98 | 100 |
 | Promotional text | 96 | 170 |
-| Description | 1182 | 4000 |
+| Description | 1249 | 4000 |
 | What's New | 55 | 4000 |
 
 ### Name
@@ -524,7 +524,7 @@ Timbre: ギター チューナー＆レッスン
 ### Promotional text (can change without a review)
 
 ```
-チューニングしたら、そのままレッスンへ。ギター、ウクレレ、ベース、バイオリン、チェロ、マンドリン、バンジョー、歌。演奏を聴き取る439レッスンを収録。アップデートのたびに新しい曲が登場します。
+チューニングしたら、そのままレッスンへ。ギター、ウクレレ、ベース、バイオリン、チェロ、マンドリン、バンジョー、歌。演奏を聴き取る499レッスンを収録。アップデートのたびに新しい曲が登場します。
 ```
 
 ### Description
@@ -540,10 +540,10 @@ Timbreは、精密なチューナーと音楽の先生がひとつになった�
 ・カスタムチューニング、カポ、調整できるA4基準音、ソルフェージュとサルガムの音名表示
 
 【弾きながら学ぶ】
-・12コース・全439レッスン：ギター、ウクレレ、ベース、バイオリン、チェロ、マンドリン、バンジョー、歌唱、耳トレーニング、音楽理論、リズム、曲
+・13コース・全499レッスン：ギター、ウクレレ、ベース、バイオリン、チェロ、マンドリン、バンジョー、歌唱、耳トレーニング、音楽理論、リズム、曲、オリジナル曲
 ・演奏中はTimbreが聴き取ります。単音、コードの全体、ストロークのリズムを判定し、ピッチとタイミングをミリ秒単位でフィードバック
 ・一緒に演奏するノートハイウェイは、最初はゆっくり、上達に合わせて元のテンポへ戻っていきます
-・「歓喜の歌」から「アメイジング・グレイス」まで、パブリックドメインの曲を使った38レッスン
+・「曲」タブ：いまどきのスタイルのオリジナル曲20曲と、「歓喜の歌」から「アメイジング・グレイス」までのパブリックドメインの名曲
 ・星、XP、デイリークエスト、連続記録、実績で、毎日続けたくなります
 
 【練習ツール】
@@ -553,7 +553,7 @@ Timbreは、精密なチューナーと音楽の先生がひとつになった�
 ・ホーム画面とロック画面のウィジェット、Siriショートカット
 
 【無料で始められます】
-チューニングは無料で、各コースの最初のユニットも無料です。Timbre Proなら、すべてのレッスン、すべての楽器、すべての練習ツールが使えるようになります。無料トライアルの流れはプラン選択画面に表示され、通知をオンにしていれば、トライアル終了の2日前にTimbreがお知らせします。
+ギター、ベース、ウクレレ用のチューナーは無料で、そのほかの楽器向けにクロマチックチューナーも付いています。各コースの最初のユニットも無料です。Timbre Proなら、すべてのレッスン、すべての楽器、すべての練習ツールが使えるようになります。無料トライアルの流れはプラン選択画面に表示され、通知をオンにしていれば、トライアル終了の2日前にTimbreがお知らせします。
 
 プライバシーに配慮した設計：音声はiPhone上で分析され、録音やアップロードは一切されません。アカウント登録も広告もありません。
 
@@ -565,7 +565,7 @@ Timbreは、精密なチューナーと音楽の先生がひとつになった�
 ### What's New
 
 ```
-Timbreへようこそ。60種類の楽器に対応する精密チューナーと、演奏を聴き取る439レッスンをお届けします。
+Timbreへようこそ。60種類の楽器に対応する精密チューナーと、演奏を聴き取る499レッスンをお届けします。
 ```
 
 ### Screenshot captions
@@ -576,8 +576,8 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 1. どんな楽器も数秒でチューニング
 2. あなたの演奏を聴くレッスン
 3. 音符に合わせて、一音ずつ
-4. 439レッスン。12コース。
-5. すべての楽器を3Dで
+4. 499レッスン。13コース。
+5. 60種類の楽器、それぞれ専用のステージで
 6. 続けたくなる連続記録
 ```
 
@@ -593,7 +593,7 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 | Subtitle | 19 | 30 |
 | Keywords | 84 | 100 |
 | Promotional text | 98 | 170 |
-| Description | 1194 | 4000 |
+| Description | 1266 | 4000 |
 | What's New | 66 | 4000 |
 
 ### Name
@@ -617,7 +617,7 @@ Timbre: 기타 튜너 & 레슨
 ### Promotional text (can change without a review)
 
 ```
-튜닝을 마치면 바로 레슨으로. 기타, 우쿨렐레, 베이스, 바이올린, 첼로, 만돌린, 밴조, 노래까지 연주를 듣고 알려 주는 439개 레슨. 업데이트마다 새로운 곡이 추가됩니다.
+튜닝을 마치면 바로 레슨으로. 기타, 우쿨렐레, 베이스, 바이올린, 첼로, 만돌린, 밴조, 노래까지 연주를 듣고 알려 주는 499개 레슨. 업데이트마다 새로운 곡이 추가됩니다.
 ```
 
 ### Description
@@ -633,10 +633,10 @@ Timbre는 정밀한 튜너와 음악 선생님을 하나의 앱에 담았습니�
 • 사용자 지정 튜닝, 카포, 조절 가능한 A4 기준음, 계명창과 사르감 음 이름
 
 ■ 연주하며 배우기
-• 12개 코스, 439개 레슨: 기타, 우쿨렐레, 베이스, 바이올린, 첼로, 만돌린, 밴조, 노래하기, 청음 훈련, 음악 이론, 리듬, 노래
+• 13개 코스, 499개 레슨: 기타, 우쿨렐레, 베이스, 바이올린, 첼로, 만돌린, 밴조, 노래하기, 청음 훈련, 음악 이론, 리듬, 노래, 오리지널 곡
 • 연주하는 동안 Timbre가 귀 기울입니다. 단음, 코드 전체, 스트럼 리듬을 듣고 음높이 피드백과 밀리초 단위 타이밍 피드백을 알려 드립니다
 • 따라 연주하는 음표 하이웨이는 실력에 맞춰 느려졌다가, 실력이 늘면 다시 빨라집니다
-• 〈환희의 송가〉부터 〈어메이징 그레이스〉까지 저작권이 만료된 곡 38개 레슨
+• 노래 탭: 요즘 스타일의 오리지널 곡 20곡과 〈환희의 송가〉부터 〈어메이징 그레이스〉까지 저작권이 만료된 명곡
 • 별, XP, 일일 퀘스트, 연속 기록, 업적이 매일 다시 찾게 만듭니다
 
 ■ 연습 도구
@@ -646,7 +646,7 @@ Timbre는 정밀한 튜너와 음악 선생님을 하나의 앱에 담았습니�
 • 홈 화면 및 잠금 화면 위젯, Siri 단축어
 
 ■ 무료로 시작
-튜닝은 무료이고, 모든 코스의 첫 번째 단원도 무료입니다. Timbre Pro를 사용하면 모든 레슨, 모든 악기, 모든 연습 도구의 잠금이 해제됩니다. 체험 일정은 구독 화면에 표시되며, 알림을 켜 두면 체험이 끝나기 2일 전에 Timbre가 알려 드립니다.
+기타, 베이스, 우쿨렐레용 튜너는 무료이고 그 밖의 악기를 위한 크로매틱 튜너도 함께 제공되며, 모든 코스의 첫 번째 단원도 무료입니다. Timbre Pro를 사용하면 모든 레슨, 모든 악기, 모든 연습 도구의 잠금이 해제됩니다. 체험 일정은 구독 화면에 표시되며, 알림을 켜 두면 체험이 끝나기 2일 전에 Timbre가 알려 드립니다.
 
 설계부터 프라이버시 우선: 오디오는 iPhone에서 분석되며 녹음되거나 업로드되지 않습니다. 계정도 광고도 없습니다.
 
@@ -658,7 +658,7 @@ Timbre는 정밀한 튜너와 음악 선생님을 하나의 앱에 담았습니�
 ### What's New
 
 ```
-Timbre에 오신 것을 환영합니다. 60가지 악기를 위한 정밀 튜너와 연주를 들어 주는 439개 레슨을 만나 보세요.
+Timbre에 오신 것을 환영합니다. 60가지 악기를 위한 정밀 튜너와 연주를 들어 주는 499개 레슨을 만나 보세요.
 ```
 
 ### Screenshot captions
@@ -669,8 +669,8 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 1. 어떤 악기든 몇 초 만에 튜닝
 2. 내 연주를 듣는 레슨
 3. 한 음 한 음 따라 연주
-4. 레슨 439개. 코스 12개.
-5. 모든 악기를 3D로
+4. 레슨 499개. 코스 13개.
+5. 악기 60가지, 저마다 전용 무대
 6. 지키고 싶은 연속 기록
 ```
 
@@ -686,7 +686,7 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 | Subtitle | 15 | 30 |
 | Keywords | 81 | 100 |
 | Promotional text | 67 | 170 |
-| Description | 868 | 4000 |
+| Description | 916 | 4000 |
 | What's New | 47 | 4000 |
 
 ### Name
@@ -710,7 +710,7 @@ Timbre：吉他调音器与课程
 ### Promotional text (can change without a review)
 
 ```
-先调音，再学琴：439 节会聆听你演奏的课程，涵盖吉他、尤克里里、贝斯、小提琴、大提琴、曼陀林、班卓琴和唱歌。每次更新都会加入新歌曲。
+先调音，再学琴：499 节会聆听你演奏的课程，涵盖吉他、尤克里里、贝斯、小提琴、大提琴、曼陀林、班卓琴和唱歌。每次更新都会加入新歌曲。
 ```
 
 ### Description
@@ -726,10 +726,10 @@ Timbre 集精准调音器与音乐老师于一体。几秒钟就能为 60 种乐
 • 自定义调弦、变调夹、可调 A4 基准音，以及唱名法和萨尔甘（Sargam）音名
 
 【边弹边学】
-• 12 门课程、439 节课：吉他、尤克里里、贝斯、小提琴、大提琴、曼陀林、班卓琴、唱歌、练耳、乐理、节奏和歌曲
+• 13 门课程、499 节课：吉他、尤克里里、贝斯、小提琴、大提琴、曼陀林、班卓琴、唱歌、练耳、乐理、节奏、歌曲和原创曲目
 • 你演奏时 Timbre 在聆听：单音、完整和弦、扫弦节奏，都会给出音高反馈和以毫秒计的节奏反馈
 • 可跟弹的音符轨道会为你放慢速度，随着你进步再逐步提速
-• 38 节公版歌曲课，从《欢乐颂》到《奇异恩典》
+• 歌曲标签页：20 首当代风格的原创歌曲，另有公版经典，从《欢乐颂》到《奇异恩典》
 • 星级、XP、每日任务、连续记录和成就，让你天天想打开它
 
 【练习工具】
@@ -739,7 +739,7 @@ Timbre 集精准调音器与音乐老师于一体。几秒钟就能为 60 种乐
 • 主屏幕和锁定屏幕小组件，以及 Siri 快捷指令
 
 【免费开始】
-调音免费，每门课程的第一个单元也免费。Timbre Pro 解锁全部课程、全部乐器和完整的练习工具。试用时间线显示在订阅页面上，开启通知后，Timbre 会在试用结束前两天提醒你。
+吉他、贝斯和尤克里里的调音器免费，其他乐器则配有半音阶调音器，每门课程的第一个单元也免费。Timbre Pro 解锁全部课程、全部乐器和完整的练习工具。试用时间线显示在订阅页面上，开启通知后，Timbre 会在试用结束前两天提醒你。
 
 从设计上保护隐私：音频在你的 iPhone 上分析，绝不会被录制或上传。无需账号，没有广告。
 
@@ -751,7 +751,7 @@ Timbre 集精准调音器与音乐老师于一体。几秒钟就能为 60 种乐
 ### What's New
 
 ```
-欢迎使用 Timbre：适用于 60 种乐器的精准调音器，以及 439 节会聆听你演奏的课程。
+欢迎使用 Timbre：适用于 60 种乐器的精准调音器，以及 499 节会聆听你演奏的课程。
 ```
 
 ### Screenshot captions
@@ -762,8 +762,8 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 1. 几秒钟调准任何乐器
 2. 会聆听你的课程
 3. 跟着音符，一音一音弹
-4. 439 节课。12 门课程。
-5. 每种乐器都有 3D 呈现
+4. 499 节课。13 门课程。
+5. 60 种乐器，各有各的舞台
 6. 值得坚持的连续记录
 ```
 
@@ -779,7 +779,7 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 | Subtitle | 29 | 30 |
 | Keywords | 97 | 100 |
 | Promotional text | 164 | 170 |
-| Description | 2315 | 4000 |
+| Description | 2466 | 4000 |
 | What's New | 106 | 4000 |
 
 ### Name
@@ -803,7 +803,7 @@ Timbre: Тюнер для гитары
 ### Promotional text (can change without a review)
 
 ```
-Настройте и учитесь: 439 уроков, которые слушают вас на гитаре, укулеле, басе, скрипке, виолончели, мандолине, банджо и в пении. С каждым обновлением — новые песни.
+Настройте и учитесь: 499 уроков, которые слушают вас на гитаре, укулеле, басе, скрипке, виолончели, мандолине, банджо и в пении. С каждым обновлением — новые песни.
 ```
 
 ### Description
@@ -819,10 +819,10 @@ Timbre — это точный тюнер и учитель музыки в од
 • Свои строи, каподастр, настраиваемая опорная частота A4, названия нот в системе сольфеджио и саргам
 
 УЧИТЕСЬ, ИГРАЯ
-• 439 уроков в 12 курсах: гитара, укулеле, бас, скрипка, виолончель, мандолина, банджо, пение, тренировка слуха, теория музыки, ритм и песни
+• 499 уроков в 13 курсах: гитара, укулеле, бас, скрипка, виолончель, мандолина, банджо, пение, тренировка слуха, теория музыки, ритм, песни и «Оригиналы»
 • Timbre слушает, как вы играете: отдельные ноты, целые аккорды и ритм боя, с оценкой высоты тона и тайминга в миллисекундах
 • Дорожка нот для игры вместе с приложением: она замедляется для вас и снова ускоряется по мере того, как вы растёте
-• 38 уроков с песнями из общественного достояния: от «Оды к радости» до Amazing Grace
+• Вкладка «Песни»: 20 оригинальных песен в современных стилях и классика из общественного достояния, от «Оды к радости» до Amazing Grace
 • Звёзды, XP, ежедневные задания, серии и достижения помогают заниматься каждый день
 
 ВСЁ ДЛЯ ЗАНЯТИЙ
@@ -832,7 +832,7 @@ Timbre — это точный тюнер и учитель музыки в од
 • Виджеты для экрана «Домой» и экрана блокировки, быстрые команды Siri
 
 НАЧНИТЕ БЕСПЛАТНО
-Настройка бесплатна, как и первый раздел каждого курса. Timbre Pro открывает все уроки, все инструменты и все возможности для занятий. График пробного периода показан на экране подписки, а если уведомления включены, Timbre напомнит вам за два дня до окончания пробного периода.
+Тюнер для гитары, баса и укулеле бесплатен, а для любых других инструментов есть хроматический тюнер. Бесплатен и первый раздел каждого курса. Timbre Pro открывает все уроки, все инструменты и все возможности для занятий. График пробного периода показан на экране подписки, а если уведомления включены, Timbre напомнит вам за два дня до окончания пробного периода.
 
 Приватность заложена в основу: звук анализируется на вашем iPhone и никогда не записывается и не отправляется. Без аккаунта и без рекламы.
 
@@ -844,7 +844,7 @@ Timbre — это точный тюнер и учитель музыки в од
 ### What's New
 
 ```
-Добро пожаловать в Timbre: точный тюнер для 60 инструментов и 439 уроков, которые слушают, как вы играете.
+Добро пожаловать в Timbre: точный тюнер для 60 инструментов и 499 уроков, которые слушают, как вы играете.
 ```
 
 ### Screenshot captions
@@ -855,8 +855,8 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 1. Настройка за секунды
 2. Уроки, которые вас слушают
 3. Играйте в ритм, нота за нотой
-4. 439 уроков. 12 курсов.
-5. Все инструменты в 3D
+4. 499 уроков. 13 курсов.
+5. 60 инструментов, у каждого своя сцена
 6. Серия, которую хочется сохранить
 ```
 
