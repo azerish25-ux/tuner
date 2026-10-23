@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 
 from mathutils import Vector
 
-from blendkit import (catmull_rom, cube, cylinder, disc, ellipsoid, empty, loft, mirrored_outline,
+from blendkit import (catmull_rom, cube, cylinder, disc, ellipsoid, empty, fit_uv, loft, mirrored_outline,
                       offset_outline, palette, prism, ring, segment, to_usd, world)
 
 # Half outline of a 356 mm violin body, (x >= 0, z) in millimetres from the bottom centre.
@@ -124,7 +124,8 @@ def build_bowed(spec: BowedSpec):
     for s in [0.985, 0.96, 0.93, 0.89, 0.84, 0.78, 0.71, 0.63, 0.54, 0.44, 0.33, 0.22, 0.12, 0.04]:
         h = H * arch_profile(s)
         stations.append([(center[0] + (x - center[0]) * s, y_top - h, center[1] + (z - center[1]) * s) for x, z in outline])
-    loft("top", stations, P["varnish_top"], root, sharp_angle=80)
+    xs = [x for x, _ in outline]; zs = [z for _, z in outline]
+    loft("top", stations, P["violin_top"], root, sharp_angle=80, uv=fit_uv(((min(xs), min(zs)), (max(xs), max(zs)))))
     purf = ring("purfling", offset_outline(outline, -0.0035 * k ** 0.5), offset_outline(outline, -0.0047 * k ** 0.5),
                 y_top - 0.0006, y_top - 0.0002, P["black"], root)
     drape(purf, arch)
@@ -231,7 +232,7 @@ def build_bowed(spec: BowedSpec):
     L = spec.pegbox_len
     pb_w0, pb_w1 = nut_w + 0.0015, nut_w * 0.86
     depth = 0.021 * k ** 0.75
-    wall = 0.0032 * k ** 0.6
+    wall = 0.0026 * k ** 0.6
     for side in (-1, 1):
         cheek = [(0.0, 0.0), (0.0, L), (depth, L), (depth, 0.0)]
         c = prism(f"pegbox_cheek_{'l' if side < 0 else 'r'}", cheek, -wall / 2, wall / 2, P["varnish_maple"], head, bevel=0.0008)
@@ -283,7 +284,7 @@ def build_bowed(spec: BowedSpec):
             cylinder(f"peg_collar_{anchor}", 0.0048 * k ** 0.6, 0.0025 * k ** 0.6, P["ebony"], peg,
                      location=(w_here / 2 + 0.005 * k ** 0.6, 0, 0), rotation=(0, math.pi / 2, 0), vertices=24)
         hx = w_here / 2 + 0.0135 * k ** 0.6
-        ellipsoid(f"peg_head_{anchor}", (0.0085 * k ** 0.6, 0.0036 * k ** 0.6, 0.0098 * k ** 0.6), P["ebony"], peg, location=(hx, 0, 0))
+        ellipsoid(f"peg_head_{anchor}", (0.0078 * k ** 0.6, 0.0032 * k ** 0.6, 0.0088 * k ** 0.6), P["ebony"], peg, location=(hx, 0, 0))
         ellipsoid(f"peg_pip_{anchor}", (0.0016 * k ** 0.6, 0.0019 * k ** 0.6, 0.0016 * k ** 0.6), P["gold" if spec.machines else "bone"], peg,
                   location=(hx + 0.0085 * k ** 0.6, 0, 0))
         wound_x = (-1 if side > 0 else 1) * w_here * 0.18

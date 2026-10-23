@@ -332,6 +332,7 @@ def palette():
         "ebony_satin": material("Satin Ebony", texture="ebony_color.jpg", roughness=0.55),
         "black_guard": material("Black Guard", color=(0.02, 0.02, 0.022), roughness=0.18),
         "varnish_top": material("Varnished Spruce", texture="varnish_spruce_color.jpg", roughness=0.3, coat=1.0),
+        "violin_top": material("Violin Top", texture="violin_top_color.jpg", roughness=0.22, coat=1.0),
         "varnish_maple": material("Varnished Maple", texture="varnish_maple_color.jpg", roughness=0.28, coat=1.0),
         "bridge_maple": material("Bridge Maple", texture="maple_color.jpg", roughness=0.55),
         "gut": material("Synthetic Gut", color=(0.62, 0.5, 0.34), metallic=0.6, roughness=0.4),

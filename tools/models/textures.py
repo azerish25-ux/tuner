@@ -200,6 +200,8 @@ def main():
     sunburst(out, "sunburst_3tone", 81, [(150, 70, 18), (232, 170, 52)], (18, 10, 6))
     sunburst(out, "sunburst_cherry", 82, [(150, 26, 18), (204, 70, 40)], (36, 6, 6))
     tortoise(out); rosette(out); pearl(out); varnish(out); maple_plain(out)
+    # Violin top: amber centre shading to antique dark edges, laid over fine spruce.
+    sunburst(out, "violin_top", 111, [(150, 66, 22), (204, 120, 50)], (52, 18, 6))
     print("textures written to", out)
 
 
