@@ -226,12 +226,16 @@ final class AppPreviewUITests: XCTestCase {
         XCTAssertTrue(element("along.again").waitForExistence(timeout: 30))
         pause(0.6)
 
-        // The results: stars land one by one, XP counts up and the level bar fills.
+        // The results: stars land one by one, XP counts up and the level bar fills. On a loaded runner the
+        // screen took close to 3 s to draw (run 2 filmed a blank screen from 0.4 s to 2.8 s), so the clip
+        // starts late and keeps its tail.
         let finished = soft(press("Continue"), "The play-along never finished")
-        hold(until: finished.addingTimeInterval(1.8))
+        hold(until: finished.addingTimeInterval(3.4))
         sync("results")
-        hold(until: finished.addingTimeInterval(3.9))
-        clip("results", from: finished.addingTimeInterval(-0.4), to: finished.addingTimeInterval(3.8), keep: .head)
+        hold(until: finished.addingTimeInterval(5.6))
+        sync("results-2")
+        hold(until: finished.addingTimeInterval(7.0))
+        clip("results", from: finished.addingTimeInterval(2.8), to: finished.addingTimeInterval(6.8), keep: .tail)
         try leaveResults()
     }
 

@@ -39,6 +39,11 @@ final class AppStore: ObservableObject {
     @Published var intonationMode = false
     /// Ear games set their own target; readings then never count as tuning.
     @Published var gameTargetHz: Double?
+    #if DEBUG
+    /// Demo pitch only (UI tests, App Preview): while set, the demo stays silent until this says the next
+    /// note is due, then plays it in tune — a play-along played on time rather than a slow drift.
+    var demoNoteDue: (() -> Bool)?
+    #endif
     private var measuringTuning: Bool { !intonationMode && gameTargetHz == nil }
     /// The latest XP / quest / badge result, for the reward toast; `rewardPulse` ticks on each.
     @Published private(set) var lastReward: ProgressUpdate?
@@ -632,7 +637,11 @@ final class AppStore: ObservableObject {
         guard !audio.running else { return }
         #if DEBUG
         if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" {
-            audio.startDemo { [weak self] in self?.gameTargetHz ?? 440 }
+            audio.startDemo(target: { [weak self] in
+                guard let self else { return nil }
+                if let due = self.demoNoteDue, !due() { return nil }
+                return self.gameTargetHz ?? 440
+            }, cued: { [weak self] in self?.demoNoteDue != nil })
             return
         }
         #endif

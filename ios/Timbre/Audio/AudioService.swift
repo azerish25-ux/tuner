@@ -159,7 +159,8 @@ final class AudioService: ObservableObject {
     #if DEBUG
     /// Screenshot and UI-test mode (TIMBRE_DEMO_PITCH=1): a plucked string drifting from
     /// 14 cents flat into tune, re-plucked every six seconds. No microphone involved.
-    func startDemo(target: @escaping () -> Double) {
+    /// `target` nil is silence; `cued` plays the target in tune at once (a note played on time).
+    func startDemo(target: @escaping () -> Double?, cued: @escaping () -> Bool = { false }) {
         guard !running else { return }
         generation += 1
         let token = generation
@@ -169,9 +170,14 @@ final class AudioService: ObservableObject {
             while let self, self.generation == token, self.running {
                 let t = ProcessInfo.processInfo.systemUptime - start
                 let cycle = t.truncatingRemainder(dividingBy: 6)
-                let cents = cycle < 4.2 ? -14 * (1 - cycle / 4.2) + 0.4 * sin(t * 9) : 0.3 * sin(t * 5)
-                let level = -22 - 18 * min(1, cycle / 6)
-                self.onReading?(target() * pow(2, cents / 1200), 0.95, level)
+                if let hz = target() {
+                    let onCue = cued()
+                    let cents = onCue || cycle >= 4.2 ? 0.3 * sin(t * 5) : -14 * (1 - cycle / 4.2) + 0.4 * sin(t * 9)
+                    let level = onCue ? -24 : -22 - 18 * min(1, cycle / 6)
+                    self.onReading?(hz * pow(2, cents / 1200), 0.95, level)
+                } else {
+                    self.onReading?(nil, 0, -120)
+                }
                 try? await Task.sleep(for: .milliseconds(16))
             }
         }

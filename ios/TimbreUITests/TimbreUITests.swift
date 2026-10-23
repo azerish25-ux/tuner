@@ -292,7 +292,7 @@ final class TimbreUITests: XCTestCase {
         node.tap(); settle(1.5)
         element("lesson.continue").tap(); settle(1)
         let skip = element("lesson.tunecheck.skip")
-        if skip.exists { skip.tap(); settle(1) }
+        tapIfPresent(skip); settle(1)
         settle(1.5); shot("56-lesson-notes")
         // Two note steps finish on their own with the demo pitch, then a quiz and a listening question.
         XCTAssertTrue(element("lesson.option.0").waitForExistence(timeout: 25))

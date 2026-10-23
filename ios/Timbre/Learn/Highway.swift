@@ -110,7 +110,12 @@ struct AlongStep: View {
         }
         .onAppear { store.audio.prepareBand(band) }
         .onChange(of: ladder.rung) { _, _ in store.audio.prepareBand(band) }
-        .onDisappear { store.audio.stopMetronome(); store.audio.stopBand(); store.stopLessonListening(owner: owner) }
+        .onDisappear {
+            store.audio.stopMetronome(); store.audio.stopBand(); store.stopLessonListening(owner: owner)
+            #if DEBUG
+            store.demoNoteDue = nil
+            #endif
+        }
         .sheet(isPresented: $calibrating) {
             LatencyCalibrationSheet(accent: accent).environmentObject(store)
         }
@@ -377,6 +382,9 @@ struct AlongStep: View {
         // The band rides the metronome from the bar after the count-in (headphones only; else the click).
         store.audio.playBand(band, firstBar: 1)
         store.gameTargetHz = notes.first.map { PitchMath.frequency(midi: Double($0.midi), reference: store.settings.referencePitchHz) }
+        #if DEBUG
+        store.demoNoteDue = { judge.nextIndex < notes.count && CACurrentMediaTime() - startTime - countIn >= judge.time(of: judge.nextIndex) - 0.02 }
+        #endif
         // Re-attacks of a repeated note come from the onset detector (a jump in loudness as a fallback).
         let analyzer = LessonAnalyzer(chords: false, onOnset: { time in lastOnset = time })
         store.startLessonListening(owner: owner, analyzer: analyzer) { hz, level in
@@ -427,6 +435,9 @@ struct AlongStep: View {
         // A good take ends on the band's final chord; otherwise it fades with the click.
         store.audio.finishBand(celebrate: accuracy >= 0.7)
         store.stopLessonListening(owner: owner)
+        #if DEBUG
+        store.demoNoteDue = nil
+        #endif
         withAnimation(Motion.settle) { phase = .done; steppedUp = up }
         SoundFX.shared.play(accuracy >= 0.7 ? .star : .wrong)
         if up { Haptics.shared.lock() }
