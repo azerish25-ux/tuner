@@ -1,0 +1,52 @@
+05:27:47 | INFO: Data are loaded, start creating Blender stuff
+05:27:47 | INFO: Blender create Mesh node polySurface42_sides_mat_0
+05:27:47 | INFO: Blender create Mesh node polySurface42_binding_mat_0
+05:27:47 | INFO: Blender create Mesh node polySurface42_back_mat_0
+05:27:47 | INFO: Blender create Mesh node polySurface42_top_mat_0
+05:27:47 | INFO: Blender create Mesh node polySurface42_blinn10_0
+05:27:47 | INFO: Blender create Mesh node polySurface42_frets_mat_0
+05:27:47 | INFO: Blender create Mesh node polySurface42_tuners_mat_0
+05:27:47 | INFO: Blender create Mesh node polySurface42_strings_mat_0
+05:27:47 | INFO: Blender create Mesh node polySurface42_headstock_mat_0
+05:27:47 | INFO: Blender create Mesh node polySurface42_tailpiece_mat_0
+05:27:47 | INFO: glTF import finished in 0.23s
+Blender 4.5.15 LTS (hash 5afeabba6097 built 2026-10-22 01:33:47)
+Saved: 'build/convert/mandolin_calib_whole.png'
+Time: 00:23.62 (Saving: 00:00.24)
+
+Saved: 'build/convert/mandolin_calib_head.png'
+Time: 00:25.81 (Saving: 00:00.15)
+
+Saved: 'build/convert/mandolin_calib_ids.png'
+Time: 00:16.03 (Saving: 00:00.14)
+
+rigged c4a: peg 4 parts, post 313 parts, scale 0.3506 m, tighten 1
+rigged c4b: peg 4 parts, post 256 parts, scale 0.3506 m, tighten 1
+rigged c3a: peg 4 parts, post 252 parts, scale 0.3484 m, tighten 1
+rigged c3b: peg 4 parts, post 274 parts, scale 0.3484 m, tighten 1
+rigged c2a: peg 4 parts, post 277 parts, scale 0.3508 m, tighten -1
+rigged c2b: peg 4 parts, post 256 parts, scale 0.3508 m, tighten -1
+rigged c1a: peg 4 parts, post 260 parts, scale 0.3488 m, tighten -1
+rigged c1b: peg 4 parts, post 314 parts, scale 0.3488 m, tighten -1
+optimised: 3057 meshes / 168325 triangles -> 35 meshes / 119993 triangles
+   part_strings_mat: 26809
+   part_top_mat: 14486
+   part_back_mat: 13550
+   part_sides_mat: 13271
+   part_binding_mat: 8608
+   post_c2a_mesh: 4000
+   post_c2b_mesh: 4000
+   post_c4b_mesh: 4000
+texture back_mat_baseColor.jpeg: 256x256 -> 256x256 JPEG 17 KB
+texture sides_mat_baseColor.png: 512x512 -> 512x512 JPEG 23 KB
+texture top_mat_baseColor.png: 512x512 -> 512x512 JPEG 19 KB
+USD export of 'build/convert/mandolin.usdz' took 219.19 ms
+Saved: 'build/convert/mandolin_hero.png'
+Time: 01:07.46 (Saving: 00:00.17)
+
+Saved: 'build/convert/mandolin_head.png'
+Time: 01:43.55 (Saving: 00:00.17)
+
+converted mandolin
+
+Blender quit
