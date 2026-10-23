@@ -279,6 +279,8 @@ struct RhythmStep: View {
     let pattern: [Double]
     let bpm: Double
     let bars: Int
+    /// Beats in a bar when the lesson sets it (3/4, 6/8 in eighths); otherwise 4, or longer if the pattern needs it.
+    var meter: Int?
     let accent: Color
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
@@ -292,7 +294,7 @@ struct RhythmStep: View {
     @State private var score = 0.0
 
     enum Phase { case ready, playing, done }
-    private var beatsPerBar: Int { max(4, Int((pattern.max() ?? 3) + 1)) }
+    private var beatsPerBar: Int { meter ?? max(4, Int((pattern.max() ?? 3) + 1)) }
     private var spb: Double { 60 / bpm }
     private var countIn: Double { Double(beatsPerBar) * spb }
     private var expected: [Double] { (0..<bars).flatMap { bar in pattern.map { countIn + (Double(bar * beatsPerBar) + $0) * spb } } }

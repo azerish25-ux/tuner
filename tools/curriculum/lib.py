@@ -184,13 +184,17 @@ def play_chord(spec):
     return {"type": "chord", "chord": spec}
 
 
-def strum(spec, pattern, bpm, bars=2):
-    """pattern: beats within one bar where to strum, e.g. [0, 1, 2, 3] or [0, 1, 1.5, 2.5, 3]."""
-    return {"type": "strum", "chord": spec, "pattern": list(pattern), "bpm": bpm, "bars": bars}
+def strum(spec, pattern, bpm, bars=2, beats_per_bar=None):
+    """pattern: beats within one bar where to strum, e.g. [0, 1, 2, 3] or [0, 1, 1.5, 2.5, 3].
+    beats_per_bar: 3 for 3/4, 6 for 6/8 counted in eighths; default 4."""
+    return {"type": "strum", "chord": spec, "pattern": list(pattern), "bpm": bpm, "bars": bars,
+            **({"beatsPerBar": beats_per_bar} if beats_per_bar else {})}
 
 
-def tap(pattern, bpm, bars=2):
-    return {"type": "tap", "pattern": list(pattern), "bpm": bpm, "bars": bars}
+def tap(pattern, bpm, bars=2, beats_per_bar=None):
+    """beats_per_bar: 3 for 3/4, 2 for 2/4, 6 for 6/8 counted in eighths; default 4."""
+    return {"type": "tap", "pattern": list(pattern), "bpm": bpm, "bars": bars,
+            **({"beatsPerBar": beats_per_bar} if beats_per_bar else {})}
 
 
 def listen(prompt, sounds, options, answer):

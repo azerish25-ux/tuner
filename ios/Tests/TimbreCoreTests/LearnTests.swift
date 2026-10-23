@@ -102,7 +102,8 @@ final class LearnTests: XCTestCase {
         let steps: [LessonStep] = [
             .explain(title: LearnText(key: "k", "T"), body: LearnText("B"), visual: .fretboard(strings: 6, dots: [Fretting(string: 1, fret: 3, finger: 3)], frets: 5)),
             .playAlong(notes: [TimedNote(midi: 64, beat: 0, beats: 1, at: Fretting(string: 1, fret: 0))], bpm: 80, beatsPerBar: 4, title: nil),
-            .strum(chord: ChordSpec(name: "Em", root: 4, quality: "min", frets: [0, 2, 2, 0, 0, 0], fingers: nil, baseFret: nil), pattern: [0, 1, 2, 3], bpm: 60, bars: 2),
+            .strum(chord: ChordSpec(name: "Em", root: 4, quality: "min", frets: [0, 2, 2, 0, 0, 0], fingers: nil, baseFret: nil), pattern: [0, 1, 2, 3], bpm: 60, bars: 2, beatsPerBar: nil),
+            .tapRhythm(pattern: [0, 1, 2], bpm: 90, bars: 2, beatsPerBar: 3),
             .listen(prompt: LearnText("Which?"), sound: [[60], [64, 67]], options: [LearnText("a"), LearnText("b")], answer: 1),
         ]
         let data = try JSONEncoder().encode(steps)

@@ -115,10 +115,10 @@ struct StepView: View {
             AlongStep(notes: notes, bpm: bpm, beatsPerBar: beatsPerBar, title: title, course: course, accent: accent, done: done)
         case let .playChord(chord):
             ChordStep(chord: chord, course: course, accent: accent, done: done)
-        case let .strum(chord, pattern, bpm, bars):
-            RhythmStep(mode: .strum(chord), pattern: pattern, bpm: bpm, bars: bars, accent: accent, done: done)
-        case let .tapRhythm(pattern, bpm, bars):
-            RhythmStep(mode: .tap, pattern: pattern, bpm: bpm, bars: bars, accent: accent, done: done)
+        case let .strum(chord, pattern, bpm, bars, beatsPerBar):
+            RhythmStep(mode: .strum(chord), pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, accent: accent, done: done)
+        case let .tapRhythm(pattern, bpm, bars, beatsPerBar):
+            RhythmStep(mode: .tap, pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, accent: accent, done: done)
         case let .listen(prompt, sound, options, answer):
             ChoiceStep(prompt: prompt, options: options, answer: answer, why: nil, visual: .none, sound: sound, course: course, accent: accent, done: done)
         case let .quiz(prompt, options, answer, why, visual):

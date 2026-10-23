@@ -8,7 +8,8 @@ from lib import along, course, explain, keyboard, lesson, listen, notes, quiz, s
 V = None  # no instrument: no fret positions
 
 C_MAJOR = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"]
-SCALE_UP_DOWN = "C4:1 D4:1 E4:1 F4:1 G4:1 A4:1 B4:1 C5:2 B4:1 A4:1 G4:1 F4:1 E4:1 D4:1 C4:2"
+SCALE_UP_DOWN = "C4 D4 E4 F4 G4 A4 B4 C5 B4 A4 G4 F4 E4 D4 C4:2"
+LONG_TONES = "G4:4 r:4 E4:4 r:4 C4:8"  # four-beat holds with a full bar to breathe
 FIVE_UP_DOWN = "C4:1 D4:1 E4:1 F4:1 G4:2 r:2 G4:1 F4:1 E4:1 D4:1 C4:4"
 
 # ---------------------------------------------------------------- melodies (traditional / public domain)
@@ -67,7 +68,7 @@ UNIT_1 = unit("voc-1", "Finding your voice", "Stand tall, breathe low, and hold 
         notes(V, ["E4"], hint='Now E. Same low breath, same easy "ah."'),
         explain("Open vowel, open throat", 'Sing "ah" with your jaw dropped and the tip of your tongue resting behind your lower teeth. The sound flows out instead of getting squeezed.'),
         notes(V, ["G4"], hint='G this time. Drop your jaw and keep the "ah" open.'),
-        along(V, "C4:4 r:2 E4:4 r:2 G4:4", bpm=60, title="Hold for four"),
+        along(V, "C4:3 r:1 E4:3 r:1 G4:4", bpm=60, title="Hold and breathe"),
     ], minutes=4, xp=20),
     lesson("voc-1-3", "Match a pitch", [
         explain("Hear it, then sing it", "Matching pitch means singing the same note you hear. Listen, imagine the note for a moment, then sing softly and adjust until it settles."),
@@ -84,9 +85,9 @@ UNIT_1 = unit("voc-1", "Finding your voice", "Stand tall, breathe low, and hold 
         notes(V, ["C4", "E4", "G4"], hint=HUM),
         explain("Lip trills", "Close your lips loosely and blow so they flutter like a motorboat, then add your voice. It keeps your throat relaxed while your voice wakes up."),
         notes(V, ["G4", "E4", "C4"], hint=TRILL),
-        quiz("A note feels tight or scratchy. What do you do?", ["Push harder through it", "Stop, rest, and try it softer", "Clear your throat hard"], 1,
+        quiz("A note feels tight or scratchy. What do you do?", ["Push harder through it", "Clear your throat hard", "Stop, rest, and try it softer"], 2,
              "Strain is a signal to ease off. Rest, sip some water, and come back lighter."),
-        along(V, "C4:2 D4:2 E4:4 r:2 E4:2 D4:2 C4:4", bpm=60, title="Easy hum"),
+        along(V, "C4:2 D4:2 E4:3 r:1 E4:2 D4:2 C4:4", bpm=60, title="Easy hum"),
     ], minutes=4, xp=20),
     lesson("voc-1-5", "First notes", [
         explain("Put it together", "Stand tall, breathe low, and start each note softly. Rest between steps if your voice feels tired."),
@@ -96,7 +97,7 @@ UNIT_1 = unit("voc-1", "Finding your voice", "Stand tall, breathe low, and hold 
         quiz("What does sharp mean?", ["Under the target pitch", "Louder than the note", "Over the target pitch"], 2,
              "Sharp is over the target pitch; flat is under it."),
         notes(V, ["D4"], hint="Sing D softly, then adjust until it settles."),
-        along(V, "C4:2 E4:2 G4:4 r:2 G4:2 E4:2 C4:4", bpm=60, title="Up and home"),
+        along(V, "C4:2 E4:2 G4:3 r:1 G4:2 E4:2 C4:4", bpm=60, title="Up and home"),
     ], minutes=5, xp=30, kind="challenge"),
 ])
 
@@ -106,7 +107,7 @@ UNIT_2 = unit("voc-2", "Pitch matching", "Hear a note, sing it back, and move by
         notes(V, ["D4"], hint="Hear D in your head, then sing it."),
         listen("Same note or different?", [["F4"], ["E4"]], ["Same", "Different"], 1),
         notes(V, ["F4"], hint="Hear F in your head, then sing it."),
-        quiz("Your first try lands flat. What next?", ["Give up on that note", "Lift a little and hold", "Jump up a lot"], 1,
+        quiz("Your first try lands flat. What next?", ["Lift a little and hold", "Give up on that note", "Jump up a lot"], 0,
              "Small changes find the note fastest. Lift gently and let it settle."),
         notes(V, ["A4"], hint="Hear A in your head, then sing it."),
         notes(V, ["D4", "F4", "A4"], hint="Three notes in a row: D, F, A."),
@@ -124,7 +125,7 @@ UNIT_2 = unit("voc-2", "Pitch matching", "Hear a note, sing it back, and move by
                 staff(["C4", "D4", "E4"])),
         notes(V, ["C4", "D4", "E4"], hint="Step up: C, D, E."),
         listen("Did it go up or down?", [["E4"], ["D4"]], ["Up", "Down"], 1),
-        explain("The half step", "A half step is the smallest step, like E to F, with no note between. Most neighbors, like C to D, are whole steps: two half steps.",
+        explain("The half step", "A half step is the smallest step, like E to F, with no note between. Most neighboring scale notes, like C and D, are a whole step apart: two half steps.",
                 keyboard(["E4", "F4"])),
         notes(V, ["E4", "F4", "E4"], hint="E, up a half step to F, and back."),
         listen("Half step or whole step?", [["E4"], ["F4"]], ["Half step", "Whole step"], 0),
@@ -135,7 +136,7 @@ UNIT_2 = unit("voc-2", "Pitch matching", "Hear a note, sing it back, and move by
         notes(V, ["G4"], hint="Hear G in your head, then sing it."),
         listen("Did it go up or down?", [["F4"], ["G4"]], ["Up", "Down"], 0),
         notes(V, ["B4", "C5", "B4"], hint="B, up a half step to C, and back."),
-        quiz("Which is a half step?", ["C to D", "E to F", "G to A"], 1,
+        quiz("Which is a half step?", ["C to D", "G to A", "E to F"], 2,
              "E to F has no note between them. C to D and G to A are whole steps."),
         listen("Same note or different?", [["A4"], ["A4"]], ["Same", "Different"], 0),
         along(V, "G4 G4 A4:2 G4 F4 E4:2 F4 F4 E4 D4 C4:4", bpm=66, title="Steps and repeats"),
@@ -147,7 +148,7 @@ UNIT_3 = unit("voc-3", "Scales", "Sing do-re-mi, the major scale, and five-note 
         explain("Solfege names the steps", "Solfege gives each step of the scale a syllable: do, re, mi, fa, sol, la, ti, do. Do is home, wherever the scale starts.",
                 staff(C_MAJOR)),
         notes(V, ["C4", "D4", "E4"], hint="Sing do, re, mi on C, D, E."),
-        quiz("Which syllable is home, the first step of the scale?", ["Mi", "Do", "Sol"], 1,
+        quiz("Which syllable is home, the first step of the scale?", ["Do", "Mi", "Sol"], 0,
              "Do is the first step and the note a scale comes back to."),
         notes(V, ["E4", "D4", "C4"], hint="Now back down: mi, re, do."),
         listen("Did it go up or down?", [["C4"], ["D4"], ["E4"]], ["Up", "Down"], 0),
@@ -157,7 +158,7 @@ UNIT_3 = unit("voc-3", "Scales", "Sing do-re-mi, the major scale, and five-note 
         explain("Five steps: do to sol", "Do, re, mi, fa, sol: the first five steps carry many simple tunes. Sing them up and back down on one breath if it feels easy.",
                 staff(["C4", "D4", "E4", "F4", "G4"])),
         notes(V, ["C4", "D4", "E4", "F4", "G4"], hint=FIVE_UP),
-        quiz("Between which two steps is there a half step?", ["Do and re", "Mi and fa", "Fa and sol"], 1,
+        quiz("Between which two steps is there a half step?", ["Do and re", "Fa and sol", "Mi and fa"], 2,
              "Mi to fa (E to F) is a half step. The other steps from do to sol are whole steps."),
         notes(V, ["G4", "F4", "E4", "D4", "C4"], hint="Sol back down to do: G down to C."),
         listen("Did it go up or down?", [["G4"], ["F4"], ["E4"]], ["Up", "Down"], 1),
@@ -167,7 +168,7 @@ UNIT_3 = unit("voc-3", "Scales", "Sing do-re-mi, the major scale, and five-note 
         explain("All eight steps", "The major scale runs from do up to the next do: eight notes. Mi to fa and ti to do are half steps; every other step is a whole step.",
                 staff(C_MAJOR)),
         notes(V, C_MAJOR, hint=SCALE_UP),
-        quiz("Where are the half steps in a major scale?", ["Do-re and sol-la", "Mi-fa and ti-do", "Re-mi and la-ti"], 1,
+        quiz("Where are the half steps in a major scale?", ["Mi-fa and ti-do", "Do-re and sol-la", "Re-mi and la-ti"], 0,
              "Mi-fa and ti-do are half steps. That pattern gives the major scale its sound."),
         explain("Lighter at the top", "Take a low breath before you start so you don't run out near the top. Let high notes get lighter, not louder, and keep your jaw loose."),
         notes(V, list(reversed(C_MAJOR)), hint=SCALE_DOWN),
@@ -190,7 +191,7 @@ UNIT_3 = unit("voc-3", "Scales", "Sing do-re-mi, the major scale, and five-note 
         notes(V, C_MAJOR, hint=SCALE_UP),
         listen("Which pattern did you hear?", [["E4"], ["D4"], ["C4"], ["D4"], ["E4"]], ["Up, then back down", "Down, then back up", "Straight down"], 1),
         notes(V, list(reversed(C_MAJOR)), hint=SCALE_DOWN),
-        along(V, f"{SCALE_UP_DOWN} r:2 C4 D4 E4 D4 C4:4", bpm=66, title="Scale and pattern"),
+        along(V, f"{SCALE_UP_DOWN} C4 D4 E4 D4 C4:4", bpm=66, title="Scale and pattern"),
     ], minutes=5, xp=30, kind="challenge"),
 ])
 
@@ -201,7 +202,7 @@ UNIT_4 = unit("voc-4", "Intervals you can sing", "Leap by thirds, fifths and oct
         notes(V, ["C4", "E4", "C4"], hint="Do to mi and back: C, E, C."),
         listen("A step or a skip?", [["C4"], ["E4"]], ["A step", "A skip (a third)"], 1),
         notes(V, ["D4", "F4", "D4"], hint="Another third: D, F, D."),
-        quiz("Which pair is a third?", ["C and D", "C and E", "C and G"], 1,
+        quiz("Which pair is a third?", ["C and D", "C and G", "C and E"], 2,
              "C to E skips over D, so it spans three scale notes: a third."),
         along(V, "C4 E4 D4 F4 E4 G4 F4 A4 G4:4", bpm=60, title="Thirds up the scale"),
     ], minutes=4, xp=20),
@@ -235,7 +236,7 @@ UNIT_4 = unit("voc-4", "Intervals you can sing", "Leap by thirds, fifths and oct
         quiz("What is the interval from do to the next do?", ["A fifth", "A third", "An octave"], 2,
              "Do to the next do spans eight scale notes: an octave."),
         listen("Octave or fifth?", [["F4"], ["C5"]], ["Octave", "Fifth"], 1),
-        along(V, "C4 E4 G4 C5 G4 E4 C4:2 D4 F4 A4:2 G4 E4 C4:4", bpm=66, title="Leaps and landings"),
+        along(V, "C4 E4 G4 C5 G4 E4 C4:2 D4 F4 A4:2 G4 E4 C4:2", bpm=66, title="Leaps and landings"),
     ], minutes=5, xp=30, kind="challenge"),
 ])
 
@@ -265,7 +266,7 @@ UNIT_5 = unit("voc-5", "Melodies", "Five public-domain tunes, melody only, at an
                 staff(["C4", "F4", "F4", "F4", "A4"])),
         notes(V, ["F4", "A4", "C5", "D5"], hint="The climb in the third bar: F, A, C, up to D."),
         along(V, ALS_A, bpm=60, title="First half"),
-        quiz("What is a pickup?", ["A note before the first full bar", "The loudest note of a song", "A rest at the end"], 0,
+        quiz("What is a pickup?", ["The loudest note of a song", "A rest at the end", "A note before the first full bar"], 2,
              "A pickup leads into beat 1 of the first full bar."),
         along(V, f"r:3 {ALS_B}", bpm=60, title="Second half"),
         along(V, ALS, bpm=72, title="Auld Lang Syne"),
@@ -294,7 +295,7 @@ UNIT_5 = unit("voc-5", "Melodies", "Five public-domain tunes, melody only, at an
         explain("Put it together", "Five tunes back to back, one phrase each. Breathe at every rest, and give repeated notes a fresh start."),
         along(V, TWINKLE_A, bpm=72, title="Twinkle Twinkle Little Star"),
         along(V, ODE_A, bpm=76, title="Ode to Joy"),
-        quiz("Which of these songs is in 3/4?", ["Ode to Joy", "Amazing Grace", "Twinkle Twinkle Little Star"], 1,
+        quiz("Which of these songs is in 3/4?", ["Ode to Joy", "Twinkle Twinkle Little Star", "Amazing Grace"], 2,
              "Amazing Grace counts 1, 2, 3 in every bar."),
         along(V, AG_A, bpm=72, beats_per_bar=3, title="Amazing Grace"),
         along(V, ALS_A, bpm=72, title="Auld Lang Syne"),
@@ -307,10 +308,10 @@ UNIT_6 = unit("voc-6", "Control", "Hold notes steady, shape loud and soft, and w
         explain("Steady air, steady pitch", "Pitch drifts when the air behind it changes. Keep a low, even breath and watch the note stay centered from start to finish."),
         notes(V, ["G4"], hint="Hold G and keep it centered."),
         explain("Finish before you're empty", "Notes often sag flat as your air runs out. Stop a little before you're empty, then take a fresh low breath."),
-        quiz("Your long notes go flat at the end. What helps?", ["Squeeze out the last air", "End the note sooner and breathe", "Sing the end louder"], 1,
+        quiz("Your long notes go flat at the end. What helps?", ["End the note sooner and breathe", "Squeeze out the last air", "Sing the end louder"], 0,
              "Pitch sags when you run low on air. Ending a bit early keeps the whole note in tune."),
-        along(V, "G4:4 r:2 E4:4 r:2 C4:6", bpm=60, title="Long and steady"),
-        along(V, "C4:4 r:2 D4:4 r:2 E4:4 r:2 F4:4 r:2 G4:8", bpm=60, title="Climbing long notes"),
+        along(V, LONG_TONES, bpm=60, title="Long and steady"),
+        along(V, "C4:3 r:1 D4:3 r:1 E4:3 r:1 F4:3 r:1 G4:4", bpm=60, title="Climbing long notes"),
     ], minutes=4, xp=20),
     lesson("voc-6-2", "Vibrato basics", [
         explain("What vibrato is", "Vibrato is a gentle, regular wave in pitch, around five to seven times a second. It grows out of a relaxed throat and steady breath, not out of shaking."),
@@ -320,7 +321,7 @@ UNIT_6 = unit("voc-6", "Control", "Hold notes steady, shape loud and soft, and w
         notes(V, ["A4"], hint="A straight, steady A. No wave, just a clear line."),
         quiz("What's the best first goal for a new singer?", ["A wide, fast wobble", "A steady, straight tone", "As much vibrato as possible"], 1,
              "A steady tone is the foundation. Vibrato that grows from it sounds natural."),
-        along(V, "E4:4 r:2 G4:4 r:2 A4:4 r:2 G4:6", bpm=60, title="Straight and steady"),
+        along(V, "E4:3 r:1 G4:3 r:1 A4:3 r:1 G4:4", bpm=60, title="Straight and steady"),
     ], minutes=4, xp=20),
     lesson("voc-6-3", "Loud and soft", [
         explain("Dynamics: loud and soft", "Dynamics are how loud or soft you sing. Get louder with more breath energy, not by squeezing your throat. The pitch should stay put."),
@@ -329,21 +330,21 @@ UNIT_6 = unit("voc-6", "Control", "Hold notes steady, shape loud and soft, and w
              "Extra push tends to raise the pitch, and very soft notes can sag flat. Watch the note either way."),
         explain("Swell and fade", "A swell grows from soft to louder and back on one breath. Start quietly, grow gently, then fade, all on the same pitch."),
         notes(V, ["G4"], hint="Swell on G: soft, louder, soft. Keep it centered."),
-        along(V, "C4:4 r:2 E4:4 r:2 G4:4 r:2 E4:4", bpm=60, title="Swell each note"),
+        along(V, "C4:3 r:1 E4:3 r:1 G4:3 r:1 E4:4", bpm=60, title="Swell each note"),
     ], minutes=4, xp=20),
     lesson("voc-6-4", "Your warm-up routine", [
         explain("Five minutes before you sing", "A short warm-up eases your voice in: breathe low, hum, lip trill, then sing a scale. Start in the middle of your range and stay comfortable."),
         notes(V, ["C4", "E4", "G4"], hint=HUM),
         notes(V, ["G4", "E4", "C4"], hint=TRILL),
         along(V, FIVE_UP_DOWN, bpm=66, title="Up five, down five"),
-        quiz("Your voice feels tired after practice. What's best?", ["Push through another hour", "Rest it and sip water", "Clear your throat hard"], 1,
+        quiz("Your voice feels tired after practice. What's best?", ["Push through another hour", "Clear your throat hard", "Rest it and sip water"], 2,
              "Rest helps a tired voice recover. If hoarseness lingers for a few weeks, check with a doctor."),
         along(V, SCALE_UP_DOWN, bpm=60, title="Major scale, up and down"),
     ], minutes=5, xp=25),
     lesson("voc-6-5", "Control check", [
         explain("Put it together", "Warm up first. Then hold each note steady, shape it soft and loud, and breathe before you run out."),
         notes(V, ["C4", "E4", "G4"], hint=HUM),
-        along(V, "G4:4 r:2 E4:4 r:2 C4:6", bpm=60, title="Long and steady"),
+        along(V, LONG_TONES, bpm=60, title="Long and steady"),
         quiz("What is vibrato?", ["A regular wave in pitch", "Singing slightly flat", "A very loud note"], 0,
              "Vibrato is a gentle, even wave around the note, a few times a second."),
         notes(V, ["E4"], hint="Sing E softly, then louder on the same pitch."),

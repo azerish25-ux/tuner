@@ -97,8 +97,10 @@ def check_lesson(lesson: dict, kind: str | None, where: str):
                 errors.append(f"{at}: duplicate options")
         if t == "listen" and not all(step["sound"]):
             errors.append(f"{at}: empty sound")
-        if t in ("strum", "tap") and (not step["pattern"] or any(not 0 <= b < 8 for b in step["pattern"])):
-            errors.append(f"{at}: pattern")
+        if t in ("strum", "tap"):
+            bar = step.get("beatsPerBar") or max(4, int(max(step["pattern"] or [0])) + 1)
+            if not step["pattern"] or any(not 0 <= b < bar for b in step["pattern"]) or not 2 <= bar <= 12:
+                errors.append(f"{at}: pattern outside its {bar}-beat bar")
 
 
 def main() -> int:
