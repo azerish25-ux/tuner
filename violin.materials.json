@@ -1,0 +1,19 @@
+{
+ "blinn1": {
+  "images": [
+   "blinn1_baseColor.jpeg",
+   "blinn1_metallicRoughness.png",
+   "blinn1_normal.png"
+  ],
+  "baseColor": [
+   0.8,
+   0.8,
+   0.8,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.5,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ }
+}
