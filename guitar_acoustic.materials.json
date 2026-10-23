@@ -1,0 +1,138 @@
+{
+ "Bridge": {
+  "images": [
+   "Bridge_baseColor.jpeg"
+  ],
+  "baseColor": [
+   0.8,
+   0.8,
+   0.8,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.43,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "Fretboard": {
+  "images": [
+   "Bridge_baseColor.jpeg"
+  ],
+  "baseColor": [
+   0.8,
+   0.8,
+   0.8,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.5,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "Glossy_Black": {
+  "images": [],
+  "baseColor": [
+   0.02,
+   0.02,
+   0.02,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.19,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "Glossy_golden": {
+  "images": [],
+  "baseColor": [
+   0.526,
+   0.364,
+   0.121,
+   1.0
+  ],
+  "metallic": 1.0,
+  "roughness": 0.14,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "Glossy_Wood": {
+  "images": [
+   "Glossy_Wood_baseColor.jpeg"
+  ],
+  "baseColor": [
+   0.8,
+   0.8,
+   0.8,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.17,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "Golden": {
+  "images": [],
+  "baseColor": [
+   0.576,
+   0.439,
+   0.207,
+   1.0
+  ],
+  "metallic": 1.0,
+  "roughness": 0.05,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "Metal": {
+  "images": [],
+  "baseColor": [
+   0.227,
+   0.22,
+   0.22,
+   1.0
+  ],
+  "metallic": 1.0,
+  "roughness": 0.34,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "String_Metal": {
+  "images": [],
+  "baseColor": [
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "metallic": 1.0,
+  "roughness": 0.18,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "String_Metal_Tex": {
+  "images": [],
+  "baseColor": [
+   0.369,
+   0.369,
+   0.369,
+   1.0
+  ],
+  "metallic": 1.0,
+  "roughness": 0.36,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "White_Material": {
+  "images": [],
+  "baseColor": [
+   0.767,
+   0.767,
+   0.767,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.16,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ }
+}
