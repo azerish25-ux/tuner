@@ -1,0 +1,89 @@
+06:00:30 | INFO: Data are loaded, start creating Blender stuff
+06:00:30 | INFO: Blender create Mesh node guitar body_0
+06:00:30 | INFO: Blender create Mesh node guitar body_1
+06:00:30 | INFO: Blender create Mesh node guitar body_2
+06:00:30 | INFO: Blender create Mesh node black strip body_0
+06:00:30 | INFO: Blender create Mesh node neck_0
+06:00:30 | INFO: Blender create Mesh node A5 string_0
+06:00:30 | INFO: Blender create Mesh node B2 string_0
+06:00:30 | INFO: Blender create Mesh node D4 string_0
+06:00:30 | INFO: Blender create Mesh node E1 string_0
+06:00:30 | INFO: Blender create Mesh node E6 string_0
+06:00:30 | INFO: Blender create Mesh node G3 string_0
+06:00:30 | INFO: Blender create Mesh node frets_0
+06:00:31 | INFO: Blender create Mesh node frets_0
+06:00:31 | INFO: Blender create Mesh node frets_0
+06:00:31 | INFO: Blender create Mesh node frets_0
+06:00:31 | INFO: Blender create Mesh node frets_0
+06:00:31 | INFO: Blender create Mesh node frets_0
+06:00:31 | INFO: Blender create Mesh node frets_0
+06:00:31 | INFO: Blender create Mesh node frets_0
+06:00:31 | INFO: Blender create Mesh node head wire winder_0
+06:00:31 | INFO: Blender create Mesh node machine head base_L_0
+06:00:31 | INFO: Blender create Mesh node machine head base_L_1
+06:00:31 | INFO: Blender create Mesh node machine head base_L_2
+06:00:31 | INFO: Blender create Mesh node machine head base_L_3
+06:00:31 | INFO: Blender create Mesh node machine head base_R_0
+06:00:31 | INFO: Blender create Mesh node machine head base_R_1
+06:00:31 | INFO: Blender create Mesh node machine head base_R_2
+06:00:31 | INFO: Blender create Mesh node machine head base_R_3
+06:00:31 | INFO: Blender create Mesh node neck saddle_0
+06:00:31 | INFO: Blender create Mesh node fret board_0
+06:00:31 | INFO: Blender create Mesh node  black strip neck_0
+06:00:31 | INFO: Blender create Mesh node bridge top_0
+06:00:31 | INFO: Blender create Mesh node bridge top_1
+06:00:31 | INFO: Blender create Mesh node bridge base_0
+06:00:31 | INFO: Blender create Mesh node saddle bridge_0
+06:00:31 | INFO: glTF import finished in 1.31s
+decimated 31 parts: 454451 -> 23078 vertices
+Blender 4.5.15 LTS (hash 5afeabba6097 built 2026-10-22 01:33:47)
+Saved: 'build/convert/guitar_classical_calib_whole.png'
+Time: 00:23.68 (Saving: 00:00.24)
+
+Saved: 'build/convert/guitar_classical_calib_head.png'
+Time: 00:23.95 (Saving: 00:00.16)
+
+Saved: 'build/convert/guitar_classical_calib_ids.png'
+Time: 00:16.83 (Saving: 00:00.14)
+
+rigged s6: peg 2 parts, post 2 parts, scale 0.6541 m, tighten 1
+rigged s5: peg 2 parts, post 2 parts, scale 0.6541 m, tighten 1
+rigged s4: peg 2 parts, post 2 parts, scale 0.6541 m, tighten 1
+rigged s3: peg 2 parts, post 2 parts, scale 0.6541 m, tighten -1
+rigged s2: peg 2 parts, post 2 parts, scale 0.6541 m, tighten -1
+rigged s1: peg 2 parts, post 2 parts, scale 0.6541 m, tighten -1
+thinnable: part_fret_mat_corner 93178, part_sides_corner 56832, part_spruce_front_board_corner 36352, part_saddle_base_board_corner 11638, part_machine_head_base_mat_corner 7552, part_ivory_saddle_mat_corner 3716, part_machine_head_metal_corner 3600, part_saddle_design_corner 384, part_strip_on_back_body_colour_corner 20
+optimised: 5890 meshes / 363453 triangles -> 35 meshes / 106966 triangles
+   part_guitar_neck_corner: 21638 tris, normals CORNER
+   part_fret_board_mat_corner: 17607 tris, normals CORNER
+   part_fret_mat_corner: 13976 tris, normals CORNER
+   A5 string_0: 3671 tris, normals CORNER
+   B2 string_0: 3456 tris, normals CORNER
+   D4 string_0: 3456 tris, normals CORNER
+   G3 string_0: 3456 tris, normals CORNER
+   E6 string_0: 3455 tris, normals CORNER
+   E1 string_0: 3240 tris, normals CORNER
+   peg_s5_mesh: 2500 tris, normals CORNER
+   post_s1_mesh: 2500 tris, normals CORNER
+   post_s2_mesh: 2500 tris, normals CORNER
+texture sides_baseColor.jpeg: 1024x512 -> 1024x512 JPEG 140 KB
+texture saddle_base_board_metallicRoughness.png: 1024x512 -> 1024x512 JPEG 123 KB
+texture saddle_design_baseColor.jpeg: 256x64 -> 256x64 JPEG 5 KB
+texture saddle_design_metallicRoughness.png: 256x64 -> 256x64 JPEG 3 KB
+texture fret_board_mat_baseColor.jpeg: 256x128 -> 256x128 JPEG 3 KB
+texture fret_board_mat_metallicRoughness.png: 256x128 -> 256x128 JPEG 1 KB
+texture machine_head_base_mat_metallicRoughness.png: 256x32 -> 256x32 JPEG 5 KB
+texture guitar_neck_baseColor.jpeg: 256x128 -> 256x128 JPEG 9 KB
+texture guitar_neck_metallicRoughness.png: 256x128 -> 256x128 JPEG 3 KB
+texture spruce_front_board_baseColor.jpeg: 512x512 -> 512x512 JPEG 47 KB
+texture spruce_front_board_metallicRoughness.png: 256x64 -> 256x64 JPEG 5 KB
+USD export of 'build/convert/guitar_classical.usdz' took 229.69 ms
+Saved: 'build/convert/guitar_classical_hero.png'
+Time: 01:12.61 (Saving: 00:00.17)
+
+Saved: 'build/convert/guitar_classical_head.png'
+Time: 01:26.21 (Saving: 00:00.17)
+
+converted guitar_classical
+
+Blender quit
