@@ -64,6 +64,18 @@ final class AppStore: ObservableObject {
         tracker.confidenceThreshold = settings.confidenceThreshold
         Haptics.shared.enabled = settings.hapticsEnabled
         audio.onReading = { [weak self] hz, confidence, level in self?.accept(hz, confidence: confidence, level: level) }
+        publishWidgets()
+    }
+
+    /// Keeps the home-screen widgets in step with practice history.
+    func publishWidgets() {
+        let calendar = Calendar.current
+        let summary = streak
+        let today = calendar.startOfDay(for: Date())
+        let days = Set(records.map { calendar.startOfDay(for: $0.date) })
+        let week = (0..<7).reversed().map { offset in calendar.date(byAdding: .day, value: -offset, to: today).map(days.contains) ?? false }
+        WidgetSnapshot.write(WidgetSnapshot(streak: summary.current, best: summary.best, practicedToday: summary.practicedToday,
+                                            week: week, instrument: instrumentDisplayName, updated: Date()))
     }
 
     // MARK: Derived state
@@ -352,7 +364,7 @@ final class AppStore: ObservableObject {
     }
 
     func save(_ record: PracticeRecord) {
-        do { try persistence.append(record); records = persistence.records }
+        do { try persistence.append(record); records = persistence.records; publishWidgets() }
         catch { self.error = String(localized: "Practice could not be saved: \(error.localizedDescription)") }
     }
 

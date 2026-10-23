@@ -24,6 +24,11 @@ targets:
         buildPhase: resources
     dependencies:
       - package: TimbreCore
+      - target: TimbreWidgets
+    entitlements:
+      path: Timbre/Timbre.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.shahradazerisharghi.timbre]
     info:
       path: Timbre/Info.plist
       properties:
@@ -38,9 +43,37 @@ targets:
         UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
         ITSAppUsesNonExemptEncryption: false
         UIAppFonts: [InstrumentSerif-Regular.ttf, InstrumentSerif-Italic.ttf, ibm_plex_mono.ttf]
+        CFBundleURLTypes:
+          - CFBundleURLName: com.shahradazerisharghi.timbre
+            CFBundleURLSchemes: [timbre]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre
+        TARGETED_DEVICE_FAMILY: "1,2"
+  TimbreWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: TimbreWidgets
+      - path: Timbre/Services/Intents.swift
+      - path: Timbre/Services/WidgetBridge.swift
+      - path: Timbre/Design/Theme.swift
+      - path: Timbre/Resources/Fonts
+        buildPhase: resources
+    entitlements:
+      path: TimbreWidgets/TimbreWidgets.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.shahradazerisharghi.timbre]
+    info:
+      path: TimbreWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Timbre
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+        UIAppFonts: [InstrumentSerif-Regular.ttf, InstrumentSerif-Italic.ttf, ibm_plex_mono.ttf]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre.widgets
         TARGETED_DEVICE_FAMILY: "1,2"
   TimbreUITests:
     type: bundle.ui-testing
