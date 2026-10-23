@@ -26,7 +26,9 @@ final class TabletScreenshotsUITests: XCTestCase {
         // The instrument browser is the tuner's picker sheet.
         app.descendants(matching: .any).matching(identifier: "tune.instrument").firstMatch.tap()
         shot("ipad-landscape-instruments")
-        app.buttons["Done"].firstMatch.tap()
+        // Close the sheet; on iPad it can still be settling, so wait for Done and fall back to a swipe.
+        let done = app.buttons["Done"].firstMatch
+        if done.waitForExistence(timeout: 6) { done.tap() } else { app.swipeDown(velocity: .fast) }
         Thread.sleep(forTimeInterval: 1)
         app.buttons["Play"].firstMatch.tap()
         shot("ipad-landscape-practice")
