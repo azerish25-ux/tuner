@@ -105,7 +105,11 @@ struct InstrumentsView: View {
 
     @ViewBuilder private var currentTunings: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Eyebrow("\(store.instrumentDisplayName) tunings")
+            HStack(alignment: .center) {
+                Eyebrow("\(store.instrumentDisplayName) tunings")
+                Spacer(minLength: 8)
+                customTuningButton
+            }
             EdgeRail(selection: store.referenceMode ? nil : store.tuning.id) {
                 ForEach(store.tunings) { tuning in
                     let available = AccessPolicy.canUse(tuning: tuning, of: store.instrument, pro: commerce.isPro)
@@ -128,21 +132,24 @@ struct InstrumentsView: View {
                         }
                     }
                 }
-                if !store.referenceMode, !store.courses.isEmpty {
-                    Button {
-                        if commerce.isPro { creating = true } else { store.presentPaywall("custom_tuning") }
-                    } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "plus")
-                            Text("Custom")
-                            if !commerce.isPro { ProBadge() }
-                        }
-                    }
-                    .buttonStyle(ChipButtonStyle(selected: false))
-                    .accessibilityIdentifier("tunings.custom")
-                    .id("tunings.custom")
+            }
+        }
+    }
+
+    /// New custom tuning: in the section header so it's always in reach, not at the far end of the rail.
+    @ViewBuilder private var customTuningButton: some View {
+        if !store.referenceMode, !store.courses.isEmpty {
+            Button {
+                if commerce.isPro { creating = true } else { store.presentPaywall("custom_tuning") }
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "plus")
+                    Text("Custom")
+                    if !commerce.isPro { ProBadge() }
                 }
             }
+            .buttonStyle(ChipButtonStyle(selected: false))
+            .accessibilityIdentifier("tunings.custom")
         }
     }
 
