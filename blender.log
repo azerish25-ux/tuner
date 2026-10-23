@@ -1,0 +1,56 @@
+05:35:58 | INFO: Data are loaded, start creating Blender stuff
+05:35:58 | INFO: Blender create Mesh node polySurface42_sides_mat_0
+05:35:58 | INFO: Blender create Mesh node polySurface42_binding_mat_0
+05:35:58 | INFO: Blender create Mesh node polySurface42_back_mat_0
+05:35:58 | INFO: Blender create Mesh node polySurface42_top_mat_0
+05:35:58 | INFO: Blender create Mesh node polySurface42_blinn10_0
+05:35:58 | INFO: Blender create Mesh node polySurface42_frets_mat_0
+05:35:58 | INFO: Blender create Mesh node polySurface42_tuners_mat_0
+05:35:58 | INFO: Blender create Mesh node polySurface42_strings_mat_0
+05:35:58 | INFO: Blender create Mesh node polySurface42_headstock_mat_0
+05:35:58 | INFO: Blender create Mesh node polySurface42_tailpiece_mat_0
+05:35:58 | INFO: glTF import finished in 0.20s
+Blender 4.5.15 LTS (hash 5afeabba6097 built 2026-10-22 01:33:47)
+Saved: 'build/convert/mandolin_calib_whole.png'
+Time: 00:20.38 (Saving: 00:00.19)
+
+Saved: 'build/convert/mandolin_calib_head.png'
+Time: 00:21.39 (Saving: 00:00.12)
+
+Saved: 'build/convert/mandolin_calib_ids.png'
+Time: 00:14.09 (Saving: 00:00.12)
+
+rigged c4a: peg 4 parts, post 313 parts, scale 0.3506 m, tighten 1
+rigged c4b: peg 4 parts, post 256 parts, scale 0.3506 m, tighten 1
+rigged c3a: peg 4 parts, post 252 parts, scale 0.3484 m, tighten 1
+rigged c3b: peg 4 parts, post 274 parts, scale 0.3484 m, tighten 1
+rigged c2a: peg 4 parts, post 277 parts, scale 0.3508 m, tighten -1
+rigged c2b: peg 4 parts, post 256 parts, scale 0.3508 m, tighten -1
+rigged c1a: peg 4 parts, post 260 parts, scale 0.3488 m, tighten -1
+rigged c1b: peg 4 parts, post 314 parts, scale 0.3488 m, tighten -1
+optimised: 3057 meshes / 168325 triangles -> 35 meshes / 120000 triangles
+   part_top_mat: 20799 tris, uv ['UVMap'], colours []
+   part_back_mat: 19456 tris, uv ['UVMap'], colours []
+   part_sides_mat: 19056 tris, uv ['UVMap'], colours []
+   part_strings_mat: 14661 tris, uv ['UVMap'], colours []
+   part_binding_mat: 12360 tris, uv ['UVMap'], colours []
+   part_frets_mat: 4728 tris, uv ['UVMap'], colours []
+   post_c1a_mesh: 2500 tris, uv ['UVMap'], colours []
+   post_c1b_mesh: 2500 tris, uv ['UVMap'], colours []
+   post_c2a_mesh: 2500 tris, uv ['UVMap'], colours []
+   post_c3a_mesh: 2500 tris, uv ['UVMap'], colours []
+   post_c3b_mesh: 2500 tris, uv ['UVMap'], colours []
+   post_c4b_mesh: 2500 tris, uv ['UVMap'], colours []
+texture back_mat_baseColor.jpeg: 256x256 -> 256x256 JPEG 17 KB
+texture sides_mat_baseColor.png: 512x512 -> 512x512 JPEG 23 KB
+texture top_mat_baseColor.png: 512x512 -> 512x512 JPEG 19 KB
+USD export of 'build/convert/mandolin.usdz' took 179.60 ms
+Saved: 'build/convert/mandolin_hero.png'
+Time: 00:53.88 (Saving: 00:00.14)
+
+Saved: 'build/convert/mandolin_head.png'
+Time: 01:20.26 (Saving: 00:00.14)
+
+converted mandolin
+
+Blender quit
