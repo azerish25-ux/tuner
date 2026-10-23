@@ -50,6 +50,19 @@ def import_model(folder: Path):
     bpy.context.view_layer.update()
 
 
+def separate_loose():
+    """Split merged meshes into their loose parts so pegs modelled inside one object can turn."""
+    for obj in [o for o in bpy.context.scene.objects if o.type == "MESH"]:
+        bpy.ops.object.select_all(action="DESELECT")
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active = obj
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_all(action="SELECT")
+        bpy.ops.mesh.separate(type="LOOSE")
+        bpy.ops.object.mode_set(mode="OBJECT")
+    bpy.context.view_layer.update()
+
+
 def meshes():
     return [o for o in bpy.context.scene.objects if o.type == "MESH"]
 
@@ -320,6 +333,32 @@ def calibrate(scene, out, model, lo, hi, pts):
     ortho_camera(scene, hc, hs)
     render(scene, out / f"{model}_calib_head.png", 1200, 16, transparent=False)
     calib["head"] = {"center": hc.round(5).tolist(), "scale": hs, "res": 1200}
+    # Identification: every object in the head view a flat colour, listed with its name.
+    import colorsys
+    members = []
+    half = hs / 2
+    for k, obj in enumerate(sorted((o for o in meshes() if not o.hide_render), key=lambda o: o.name)):
+        c = verts(obj).mean(0)
+        if abs(c[0] - hc[0]) < half and abs(c[2] - hc[2]) < half:
+            rgb = colorsys.hsv_to_rgb((len(members) * 0.61803398875) % 1, 0.9 if len(members) % 2 else 0.6, 1.0 if len(members) % 3 else 0.75)
+            obj.color = (*rgb, 1)
+            members.append({"name": obj.name, "color": [round(x, 3) for x in rgb], "vertices": len(obj.data.vertices),
+                            "center": c.round(4).tolist()})
+    calib["headObjects"] = members
+    mat = bpy.data.materials.new("ids")
+    mat.use_nodes = True
+    nodes, links = mat.node_tree.nodes, mat.node_tree.links
+    nodes.clear()
+    info, emit, outn = nodes.new("ShaderNodeObjectInfo"), nodes.new("ShaderNodeEmission"), nodes.new("ShaderNodeOutputMaterial")
+    links.new(info.outputs["Color"], emit.inputs["Color"])
+    links.new(emit.outputs["Emission"], outn.inputs["Surface"])
+    layer = scene.view_layers[0]
+    layer.material_override = mat
+    look = scene.view_settings.view_transform
+    scene.view_settings.view_transform = "Standard"
+    render(scene, out / f"{model}_calib_ids.png", 1200, 1, transparent=False)
+    scene.view_settings.view_transform = look
+    layer.material_override = None
     (out / f"{model}.calib.json").write_text(json.dumps(calib, indent=1))
 
 
@@ -432,6 +471,8 @@ def export_usdz(root, path):
 def convert(src: Path, cfg: dict, out: Path):
     scene = reset()
     import_model(src / cfg["source"])
+    if cfg.get("separate"):
+        separate_loose()
     root, lo, hi = normalise(cfg)
     visible = [o for o in meshes() if not o.hide_render]
     pts = np.concatenate([verts(o) for o in visible])

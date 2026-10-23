@@ -55,6 +55,21 @@ def main():
             grid(folder / f"{model}_calib_whole.png", calib["whole"], 0.05, 2, folder / f"{model}_whole_grid.jpg")
         if (folder / f"{model}_calib_head.png").exists():
             grid(folder / f"{model}_calib_head.png", calib["head"], 0.01, 5, folder / f"{model}_head_grid.jpg")
+        ids = folder / f"{model}_calib_ids.png"
+        if ids.exists():
+            grid(ids, calib["head"], 0.01, 5, folder / f"{model}_ids_grid.jpg")
+            shot = Image.open(folder / f"{model}_ids_grid.jpg")
+            rows = calib.get("headObjects", [])[:80]
+            panel = Image.new("RGB", (460, shot.height), (24, 24, 24))
+            d = ImageDraw.Draw(panel)
+            for k, m in enumerate(rows):
+                y = 6 + k * 14
+                d.rectangle([6, y, 20, y + 11], fill=tuple(int(c * 255) for c in m["color"]))
+                d.text((26, y - 1), f"{m['name'][:40]} ({m['vertices']})", font=font(11), fill=(230, 230, 230))
+            both = Image.new("RGB", (shot.width + panel.width, shot.height))
+            both.paste(shot, (0, 0)); both.paste(panel, (shot.width, 0))
+            both.save(folder / f"{model}_ids_key.jpg", quality=88)
+            (folder / f"{model}_ids_grid.jpg").unlink()
 
 
 if __name__ == "__main__":
