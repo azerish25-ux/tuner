@@ -328,6 +328,11 @@ def palette():
         "pickup_black": material("Pickup", color=(0.02, 0.02, 0.022), roughness=0.4),
         "satin_black": material("Satin Black", color=(0.03, 0.03, 0.032), roughness=0.55),
         "fret": material("Fret Wire", color=(0.86, 0.84, 0.8), metallic=1.0, roughness=0.15),
+        "varnish_top": material("Varnished Spruce", texture="varnish_spruce_color.jpg", roughness=0.3, coat=1.0),
+        "varnish_maple": material("Varnished Maple", texture="varnish_maple_color.jpg", roughness=0.28, coat=1.0),
+        "bridge_maple": material("Bridge Maple", texture="maple_color.jpg", roughness=0.55),
+        "gut": material("Synthetic Gut", color=(0.62, 0.5, 0.34), metallic=0.6, roughness=0.4),
+        "silver": material("Silver Winding", color=(0.86, 0.86, 0.88), metallic=1.0, roughness=0.22),
     }
 
 

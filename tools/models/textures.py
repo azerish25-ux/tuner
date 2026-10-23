@@ -170,13 +170,28 @@ def pearl(out):
     save(rgb, out / "pearl_color.jpg")
 
 
+def varnish(out):
+    """Violin-family finish: fine spruce under amber oil varnish; flamed maple under red-brown."""
+    g = grain(SIZE, SIZE, 6.0, 12.0, 91, ray_strength=0.25)
+    tone = fbm((SIZE, SIZE), 140, 3, 92)
+    base = ramp(0.3 + 0.5 * tone, [(0, (168, 78, 26)), (1, (206, 120, 46))])
+    dark = np.array([92, 36, 12]) / 255.0
+    save(base * (1 - 0.55 * g[..., None]) + dark * (0.55 * g[..., None]), out / "varnish_spruce_color.jpg")
+    y, x = np.mgrid[0:SIZE, 0:SIZE].astype(float)
+    warp = (fbm((SIZE, SIZE), 50, 4, 93) - 0.5) * 40
+    flame = (0.5 + 0.5 * np.sin((y + warp + 0.12 * x) / 6.0)) ** 3
+    rgb = ramp(0.6 + 0.25 * fbm((SIZE, SIZE), 90, 2, 94) - 0.4 * flame,
+               [(0, (70, 24, 10)), (0.55, (146, 62, 24)), (1, (198, 116, 52))])
+    save(rgb, out / "varnish_maple_color.jpg")
+
+
 def main():
     out = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).parent / "textures"
     out.mkdir(parents=True, exist_ok=True)
     spruce(out); rosewood(out); mahogany(out); ebony(out); maple_flame(out)
     sunburst(out, "sunburst_3tone", 81, [(150, 70, 18), (232, 170, 52)], (18, 10, 6))
     sunburst(out, "sunburst_cherry", 82, [(150, 26, 18), (204, 70, 40)], (36, 6, 6))
-    tortoise(out); rosette(out); pearl(out)
+    tortoise(out); rosette(out); pearl(out); varnish(out)
     print("textures written to", out)
 
 
