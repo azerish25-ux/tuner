@@ -11,6 +11,7 @@ Each rigs/<model>.json names its download folder and how to read it:
    "decimate": [{"re", "ratio", "minVerts"}] thins out needlessly dense parts before rigging,
    "triangles": budget for the shipped model (120000), "pivotTriangles" (4000 per peg or post),
    "stringRatio" (thin the original strings kept beside the rebuilt ones), "protectMaterials": [never thinned],
+   "thinMaterials": {material: fixed ratio},
    "textureMax" / "normalMax" (2048 px), "jpegQuality" (90), "optimise": false to ship the parts as split,
    "rig": "FRICTION_PEG", "degPerCent": 1.2, "stringKind": "steel" | "bronze" | "nylon" | "gut",
    "nutZ" / "saddleZ": a height or parts whose mean height it is, "stringEnds": "rings" (low-poly strings),
@@ -349,12 +350,16 @@ def retouch(entries, folder):
     """Retouch a material's base colour image. "rects": remove ink baked into it (autographs, scribbles):
     inside each [x0, x1, y0, y1(, darker)] (0...1 from the top left) pixels darker than "darker" (0.7) times
     their surroundings are rebuilt by interpolating along the wood grain ("along": "y": grain runs down);
-    "mode": "light" removes pale lettering instead (pixels brighter than k times their surroundings).
+    "mode": "light" removes pale lettering instead (pixels brighter than k times their surroundings), and
+    "relief" lettering embossed in another map ("image": "normal"; pixels departing more than k from around).
     "multiply": [r, g, b] tints the whole image (a flat orange varnish toward amber brown)."""
     for entry in entries:
         mat = bpy.data.materials[entry["material"]]
-        bsdf = next(n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
-        img = next(link.from_node.image for link in bsdf.inputs["Base Color"].links if link.from_node.type == "TEX_IMAGE")
+        if entry.get("image"):  # another map of the material, by part of its name ("normal", "metallicRoughness")
+            img = next(n.image for n in mat.node_tree.nodes if n.type == "TEX_IMAGE" and n.image and entry["image"] in n.image.name)
+        else:
+            bsdf = next(n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+            img = next(link.from_node.image for link in bsdf.inputs["Base Color"].links if link.from_node.type == "TEX_IMAGE")
         w, h = img.size
         flat = np.empty(w * h * 4, dtype=np.float32)
         img.pixels.foreach_get(flat)
@@ -371,7 +376,12 @@ def retouch(entries, folder):
             ink[y0 - cy0:y1 - cy0, x0 - cx0:x1 - cx0] = True
             k = rect[4] if len(rect) > 4 else entry.get("darker", 0.7)
             # dark ink on wood by default; "mode": "light" finds pale lettering (k > 1) instead
-            ink &= (lum > k * box_mean(lum, r)) if entry.get("mode") == "light" else (lum < k * box_mean(lum, r))
+            if entry.get("mode") == "relief":  # lettering embossed in a normal or roughness map: any departure
+                ink &= np.abs(crop[..., :3] - box_mean(crop[..., :3], r)).max(-1) > k
+            elif entry.get("mode") == "light":
+                ink &= lum > k * box_mean(lum, r)
+            else:
+                ink &= lum < k * box_mean(lum, r)
             ink = box_mean(ink.astype(np.float32), max(1, r // 4)) > 0  # catch anti-aliased edges
             grain = crop if entry.get("along", "y") == "y" else crop.transpose(1, 0, 2)
             mask = ink if entry.get("along", "y") == "y" else ink.T
@@ -984,6 +994,15 @@ def optimise(root, cfg):
     # Instances (one mesh shown several times, like a set of tuners) stay as they are: the USD crate file
     # stores identical arrays once, so merging them would multiply their size.
     instances = {o for o in everything if o.data.users > 1}
+    # Copies of one part (a row of identical tuners) are left apart for the same reason, if they are big.
+    signatures = {}
+    for obj in everything:
+        if obj not in instances and triangles(obj) >= 200 and not obj.name.startswith("string_"):
+            co = np.empty(len(obj.data.vertices) * 3)
+            obj.data.vertices.foreach_get("co", co)
+            mats = tuple(s.material.name for s in obj.material_slots if s.material)
+            signatures.setdefault((len(co), len(obj.data.polygons), mats, hash(np.round(co, 4).tobytes())), []).append(obj)
+    instances |= {o for copies in signatures.values() if len(copies) > 1 for o in copies}
     for pivot in [o for o in root.children_recursive if o.type == "EMPTY" and o.name.startswith(("peg_", "post_"))]:
         kids = [o for o in pivot.children if shown(o) and o not in instances]
         if kids:
@@ -1005,6 +1024,13 @@ def optimise(root, cfg):
     for obj in moving:
         if triangles(obj) > cap:
             thin(obj, cap / triangles(obj))
+    for obj in list(still):  # materials given a fixed ratio ("thinMaterials": {"fret_mat": 0.15})
+        ratio = min([r for m, r in cfg.get("thinMaterials", {}).items()
+                     if any(s.material and s.material.name == m for s in obj.material_slots)], default=None)
+        if ratio:
+            thin(obj, ratio)
+            fixed.add(obj)
+            still.remove(obj)
     if cfg.get("stringRatio", 1) < 1:
         for obj in originals:
             thin(obj, cfg["stringRatio"])
