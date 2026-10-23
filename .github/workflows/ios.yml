@@ -57,6 +57,10 @@ jobs:
           set -o pipefail
           mkdir -p ios/build ci-out
           xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/build.log
+      - name: Boot simulator and allow the microphone
+        run: |
+          xcrun simctl boot "$DEVICE_ID" || true
+          xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre || true
       - name: Run app, StoreKit and UI flows
         run: |
           set -o pipefail

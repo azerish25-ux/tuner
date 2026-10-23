@@ -21,6 +21,22 @@ public struct UserSettings: Codable, Equatable, Sendable {
     public var selectedPhotoAsset: String?
     public var telemetryEnabled = false
     public var selectedVoiceLevel: Int?
+    // v2 (all optional so earlier files still decode)
+    public var onboardingCompleted: Bool?
+    public var playerLevel: String?
+    public var goal: String?
+    public var stageMode: String?
+    public var metronomeBpm: Int?
+    public var metronomeBeats: Int?
+    public var metronomeSubdivision: Int?
+    public var metronomeSound: String?
+    public var metronomeBeatLevels: [Int]?
+    public var droneMidi: Int?
+    public var droneVoice: String?
+    public var fullTunes: Int?
+    /// Daily practice completion: "yyyy-MM-dd" -> activity ids.
+    public var dailyDone: [String: [String]]?
+    public var earLevels: [String: Int]?
     public init() {}
 }
 

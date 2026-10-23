@@ -85,19 +85,27 @@ public enum ChordFinder {
                 let interiorMutes = muted.filter { m in frets[..<m].contains { $0 != nil } && frets[(m + 1)...].contains { $0 != nil } }.count
                 guard interiorMutes <= 1 else { return }
                 let opens = frets.filter { $0 == 0 }.count
-                var score = Double(sounding.count) * 2 - Double(muted.count) * 1.5 - Double(interiorMutes) * 3
-                score += Double(opens) * 0.8 - Double(lowFret) * 0.6 - Double(fingers) * 0.3
+                var score: Double = Double(sounding.count) * 2
+                score -= Double(muted.count) * 1.5
+                score -= Double(interiorMutes) * 3
+                score += Double(opens) * 0.8
+                score -= Double(lowFret) * 0.6
+                score -= Double(fingers) * 0.3
                 let highest = fretted.max() ?? 0
                 if highest <= 3 { score += 2.5 }  // open-position shapes come first
                 score -= Double(highest - lowFret) * 0.5
                 if bass.0 == frets.firstIndex(where: { $0 != nil }) { score += 1 }
-                found[frets] = max(found[frets] ?? -.infinity, score)
+                let previous: Double = found[frets] ?? -Double.infinity
+                found[frets] = Swift.max(previous, score)
             }
             walk(0)
         }
-        return found.map { ChordShape(frets: $0.key, score: $0.value) }
-            .sorted { $0.score == $1.score ? $0.notation < $1.notation : $0.score > $1.score }
-            .prefix(limit).map { $0 }
+        let shapes: [ChordShape] = found.map { entry in ChordShape(frets: entry.key, score: entry.value) }
+        let ordered: [ChordShape] = shapes.sorted { (a: ChordShape, b: ChordShape) -> Bool in
+            if a.score != b.score { return a.score > b.score }
+            return a.notation < b.notation
+        }
+        return Array(ordered.prefix(limit))
     }
 }
 
