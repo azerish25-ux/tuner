@@ -147,6 +147,18 @@ final class TimbreUITests: XCTestCase {
         element("custom.save").tap(); settle(1.5); shot("48-custom-tuning-saved")
     }
 
+    func test08PhotoStage() throws {
+        launch(pitch: true)
+        XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
+        tab("Instruments"); settle(1.5)
+        let ukulele = element("instrument.10_ukulele_soprano_ukulele")
+        scrollTo(ukulele)
+        ukulele.tap()
+        XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 15))
+        settle(7); shot("17-tune-photo-stage")
+        element("string.2").tap(); settle(3); shot("18-tune-photo-stage-string")
+    }
+
     func test07StageDiagnostics() throws {
         launch(stageDebug: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
