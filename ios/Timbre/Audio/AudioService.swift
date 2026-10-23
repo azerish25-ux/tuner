@@ -13,6 +13,10 @@ final class AudioService: ObservableObject {
     @Published private(set) var metronomeRunning = false
     @Published private(set) var droneRunning = false
     @Published private(set) var tonePlaying = false
+    /// Headphones (wired, Bluetooth A2DP or LE, AirPods) carry the output: the backing band may play.
+    @Published private(set) var headphones = AudioService.headphonesConnected()
+    /// The lesson band is installed under the metronome (it sounds from the next downbeat).
+    @Published private(set) var bandPlaying = false
     func clearError() { error = nil }
     var onReading: ((Double?, Double, Double) -> Void)?
     /// Raw microphone samples for lesson analysers (chords, onsets), delivered on the analysis queue.
@@ -29,6 +33,16 @@ final class AudioService: ObservableObject {
     private var generation = 0
     private var toneTask: Task<Void, Never>?
     private var resumeCaptureAfterTone = false
+    /// Output latency of the current route (much larger on Bluetooth), for when a click is heard.
+    private var heardLatency = AVAudioSession.sharedInstance().outputLatency
+    private let bandQueue = DispatchQueue(label: "com.timbre.band", qos: .utility)
+    private var bandRequest: BandRequest?
+    private var bandPrepared: BandArrangement?
+    private var bandCache: [BandRenderKey: BandTrack] = [:]
+    private var bandRendering: Set<BandRenderKey> = []
+    /// A final chord is ringing out; the engine stays up for it.
+    private var bandOutro = false
+    private var outroTask: Task<Void, Never>?
 
     init() {
         observers.append(NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: .main) { [weak self] notification in
@@ -39,10 +53,16 @@ final class AudioService: ObservableObject {
             }
         })
         observers.append(NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { [weak self] _ in
-            // The microphone stops in the background; metronome and drone keep playing.
-            Task { @MainActor in self?.stopCapture() }
+            // The microphone stops in the background; metronome and drone keep playing, the lesson band stops.
+            Task { @MainActor in self?.stopBand(); self?.stopCapture() }
+        })
+        observers.append(NotificationCenter.default.addObserver(forName: UIApplication.didReceiveMemoryWarningNotification, object: nil, queue: .main) { [weak self] _ in
+            // Rendered bands are a few MB each; the one playing stays alive with its player.
+            Task { @MainActor in self?.bandCache.removeAll() }
         })
         observers.append(NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: .main) { [weak self] notification in
+            // Headphones in or out: the band follows at once (out: it fades before it can reach the mic).
+            Task { @MainActor in self?.refreshRoute() }
             let reason = (notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt).flatMap(AVAudioSession.RouteChangeReason.init(rawValue:))
             guard reason != nil, reason != .categoryChange, reason != .unknown else { return }
             Task { @MainActor in
@@ -62,7 +82,7 @@ final class AudioService: ObservableObject {
         })
     }
 
-    var outputActive: Bool { metronomeRunning || droneRunning || tonePlaying }
+    var outputActive: Bool { metronomeRunning || droneRunning || tonePlaying || bandOutro }
 
     func start(minimum: Double = 25, maximum: Double = 4500, micSensitivity: Double = 1, analysisWindowOverride: Int? = nil, confidenceThreshold: Double = 0.75) async {
         guard !running, !Task.isCancelled else { return }
@@ -161,6 +181,8 @@ final class AudioService: ObservableObject {
         if tapInstalled { engine.inputNode.removeTap(onBus: 0); tapInstalled = false }
         renderer.stop()
         running = false; metronomeRunning = false; tonePlaying = false; droneRunning = false
+        bandRequest = nil; bandPlaying = false
+        outroTask?.cancel(); outroTask = nil; bandOutro = false
         onReading?(nil, 0, -120)
         shutdown()
     }
@@ -177,15 +199,16 @@ final class AudioService: ObservableObject {
         try session.setPreferredSampleRate(48000)
         try session.setPreferredIOBufferDuration(0.005)
         try session.setActive(true)
+        heardLatency = session.outputLatency
     }
 
     private func attachOutput(keepState: Bool = false) throws {
         if let source { engine.disconnectNodeOutput(source); engine.detach(source); self.source = nil }
         let rate = engine.outputNode.inputFormat(forBus: 0).sampleRate
         guard rate > 0, let format = AVAudioFormat(standardFormatWithSampleRate: rate, channels: 1) else { throw AudioFailure.noOutput }
-        renderer.setSampleRate(rate, keepState: keepState)
-        let source = AVAudioSourceNode { [renderer] _, _, count, audio in
-            renderer.render(frameCount: Int(count), audio: audio)
+        if !renderer.setSampleRate(rate, keepState: keepState) { bandPlaying = false }
+        let source = AVAudioSourceNode { [renderer] _, timestamp, count, audio in
+            renderer.render(frameCount: Int(count), audio: audio, timestamp: timestamp)
             return noErr
         }
         engine.attach(source); engine.connect(source, to: engine.mainMixerNode, format: format)
@@ -228,7 +251,7 @@ final class AudioService: ObservableObject {
                 do { try await Task.sleep(for: .milliseconds(total + 60)) } catch { return }
                 guard !Task.isCancelled, let self else { return }
                 self.tonePlaying = false
-                if !self.running && !self.metronomeRunning && !self.droneRunning { self.shutdown() }
+                if !self.running && !self.outputActive { self.shutdown() }
             }
         } catch { self.error = String(localized: "Could not play tones: \(error.localizedDescription)") }
     }
@@ -252,10 +275,144 @@ final class AudioService: ObservableObject {
         } catch { suspend(); self.error = String(localized: "Could not start the metronome: \(error.localizedDescription)") }
     }
 
+    /// Stops the click; a lesson band under it fades out with it (a final chord already ringing finishes).
     func stopMetronome() {
         renderer.setMetronome(bpm: 0, beats: 4, subdivision: 1, accents: true, beatLevels: nil, sound: .click)
         metronomeRunning = false
+        bandRequest = nil; bandPlaying = false
         if !running && !outputActive { shutdown() }
+    }
+
+    /// When the running metronome's first click reached the ears, on the CACurrentMediaTime clock:
+    /// the render host time of its first frame plus the route's output latency. Engine restarts
+    /// (the microphone starting) and Bluetooth delay are included; nil until the first buffer plays.
+    func metronomeOrigin() -> TimeInterval? {
+        guard metronomeRunning, let anchor = renderer.clock.read() else { return nil }
+        return anchor + heardLatency
+    }
+
+    /// A step clock started at `start` (its tap on Start), moved toward the audio clock by at most
+    /// 25 ms per call, so notes glide rather than jump: nil when there is nothing to correct (no click
+    /// yet, a shift under 3 ms, or an implausible one).
+    func heardStart(near start: TimeInterval) -> TimeInterval? {
+        guard let origin = metronomeOrigin() else { return nil }
+        let shift = origin - start
+        guard abs(shift) > 0.003, abs(shift) < 0.75 else { return nil }
+        return start + min(0.025, max(-0.025, shift))
+    }
+
+    // MARK: Lesson band
+
+    /// Headphones of any kind carry the output: wired (3.5 mm/Lightning, or USB-C EarPods, which report
+    /// as USB audio), Bluetooth A2DP or LE (AirPods). The speaker, car kits (HFP), AirPlay and line out
+    /// don't count: there the band would reach the microphone.
+    nonisolated static func headphonesConnected() -> Bool {
+        let ports: Set<AVAudioSession.Port> = [.headphones, .bluetoothA2DP, .bluetoothLE, .usbAudio]
+        return AVAudioSession.sharedInstance().currentRoute.outputs.contains { ports.contains($0.portType) }
+    }
+
+    /// Re-reads the output route (headphones, latency) and lets the band follow it.
+    func refreshRoute() {
+        heardLatency = AVAudioSession.sharedInstance().outputLatency
+        let connected = Self.headphonesConnected()
+        if connected != headphones { headphones = connected }
+        refreshBand()
+    }
+
+    /// The player's band switch (and the app's sound effects switch) allow a band.
+    private var bandAllowed: Bool {
+        (UserDefaults.standard.object(forKey: BandArrangement.preferenceKey) as? Bool ?? true) && SoundFX.shared.enabled
+    }
+
+    /// A step that may play with a band: renders it ahead of time, off the main thread, when it could be
+    /// heard now (headphones, band on), or as soon as headphones connect.
+    func prepareBand(_ arrangement: BandArrangement?) {
+        bandPrepared = arrangement
+        refreshBand()
+    }
+
+    /// The step's band, from metronome bar `firstBar` (1: after a one-bar count-in). Call after
+    /// `setMetronome`; it plays only on headphones and joins at the next downbeat when they connect.
+    func playBand(_ arrangement: BandArrangement?, firstBar: Int = 1) {
+        bandRequest = arrangement.map { BandRequest(arrangement: $0, firstBar: firstBar) }
+        if bandPlaying { renderer.stopBand(); bandPlaying = false }
+        if let arrangement { bandPrepared = arrangement }
+        refreshBand()
+    }
+
+    /// Ends the step's band and metronome: a final chord when the take went well, else a short fade.
+    func finishBand(celebrate: Bool) {
+        if celebrate && bandPlaying {
+            renderer.finishBand()
+            bandOutro = true
+            outroTask?.cancel()
+            outroTask = Task { [weak self] in
+                do { try await Task.sleep(for: .milliseconds(1800)) } catch { return }
+                guard let self else { return }
+                self.bandOutro = false
+                if !self.running && !self.outputActive { self.shutdown() }
+            }
+        }
+        stopMetronome()
+    }
+
+    /// Silences the band now (the step left, the app went to the background); the click is untouched.
+    /// Also forgets the prepared arrangement, so headphones connecting elsewhere render nothing.
+    func stopBand() {
+        let ringing = bandOutro
+        bandRequest = nil; bandPrepared = nil; bandPlaying = false
+        outroTask?.cancel(); outroTask = nil; bandOutro = false
+        renderer.stopBand()
+        if ringing { shutdownSoonIfIdle() }
+    }
+
+    /// Brings the band in line with the switch, the route and the metronome. Headphones out (or the
+    /// switch off) fades it at once; in, it joins at the next downbeat, rendering first if needed.
+    /// The step's request stays, so the band comes back when the headphones do.
+    func refreshBand() {
+        let audible = bandAllowed && headphones && UIApplication.shared.applicationState != .background
+        guard audible else {
+            guard bandPlaying || bandOutro else { return }
+            let ringing = bandOutro
+            renderer.stopBand(); bandPlaying = false
+            outroTask?.cancel(); outroTask = nil; bandOutro = false
+            if ringing { shutdownSoonIfIdle() }
+            return
+        }
+        guard let arrangement = bandRequest?.arrangement ?? bandPrepared, let track = bandTrack(for: arrangement) else { return }
+        guard let request = bandRequest, metronomeRunning, !bandPlaying else { return }
+        bandPlaying = renderer.setBand(track, firstBar: request.firstBar)
+    }
+
+    /// After a band fade, lets the engine go if nothing else plays or listens.
+    private func shutdownSoonIfIdle() {
+        Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(120))
+            guard let self, !self.running, !self.outputActive else { return }
+            self.shutdown()
+        }
+    }
+
+    /// The rendered band at the output's sample rate: from the cache, or nil while it renders on a
+    /// background queue (`refreshBand` runs again when it is ready).
+    private func bandTrack(for arrangement: BandArrangement) -> BandTrack? {
+        let rate = renderer.rate
+        let key = BandRenderKey(arrangement: arrangement, rate: rate)
+        if let track = bandCache[key] { return track }
+        guard !bandRendering.contains(key) else { return nil }
+        bandRendering.insert(key)
+        bandQueue.async { [weak self] in
+            let track = BandSynth.render(arrangement, sampleRate: rate)
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.bandRendering.remove(key)
+                // A couple of steps' worth (normal and slow tempo); the playing one lives on in its player.
+                if self.bandCache.count >= 2 { self.bandCache.removeAll() }
+                self.bandCache[key] = track
+                self.refreshBand()
+            }
+        }
+        return nil
     }
 
     func setDrone(tonic: Double, voice: DroneRenderer.Voice, fifth: Bool) {
@@ -331,6 +488,21 @@ private final class PitchWorker: @unchecked Sendable {
     }
 }
 
+/// The step's band and the metronome bar it starts on.
+private struct BandRequest { let arrangement: BandArrangement; let firstBar: Int }
+/// A rendering is only valid at the sample rate it was made for.
+private struct BandRenderKey: Hashable { let arrangement: BandArrangement; let rate: Int }
+
+/// One Double handed from the render thread to the main thread. The render thread only ever
+/// `try`s the lock (it skips a publish rather than wait), so it can never block on the UI.
+private final class ClockSlot: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value: Double?
+    func publish(_ next: Double) { guard lock.try() else { return }; value = next; lock.unlock() }
+    func set(_ next: Double?) { lock.lock(); value = next; lock.unlock() }
+    func read() -> Double? { lock.lock(); defer { lock.unlock() }; return value }
+}
+
 /// Controls synchronize once per PCM buffer. Core renderers own sample-clock phase and envelopes.
 private final class OutputRenderer: @unchecked Sendable {
     private struct Scheduled { let renderer: ReferenceToneRenderer; let start: Int64 }
@@ -341,11 +513,32 @@ private final class OutputRenderer: @unchecked Sendable {
     private var sequenceFrame: Int64 = 0
     private var metronome: MetronomeRenderer?
     private var drone: DroneRenderer?
-    func setSampleRate(_ rate: Double, keepState: Bool) {
+    /// The lesson band; it starts bars on the metronome's downbeats.
+    private var band: BandPlayer?
+    /// Downbeats since the metronome started (0 = its first click, the count-in bar).
+    private var bar = -1
+    /// Frames the current metronome has played: with the buffer's host time, where its first click sits.
+    private var metronomeFrames: Int64 = 0
+    /// Host-clock seconds of the current metronome's first frame (render time, before output latency).
+    let clock = ClockSlot()
+    private let secondsPerTick: Double
+
+    init() {
+        var info = mach_timebase_info_data_t()
+        mach_timebase_info(&info)
+        secondsPerTick = Double(info.numer) / Double(max(1, info.denom)) / 1_000_000_000
+    }
+
+    var rate: Int { lock.lock(); defer { lock.unlock() }; return sampleRate }
+
+    /// Returns whether playing state was kept (same rate, `keepState`); otherwise everything stopped.
+    @discardableResult func setSampleRate(_ rate: Double, keepState: Bool) -> Bool {
         lock.lock(); defer { lock.unlock() }
         let next = max(40, Int(rate.rounded()))
-        if !keepState || next != sampleRate { tone = nil; sequence = []; metronome = nil; drone = nil }
+        let kept = keepState && next == sampleRate
+        if !kept { tone = nil; sequence = []; metronome = nil; drone = nil; band = nil; clock.set(nil) }
         sampleRate = next
+        return kept
     }
     func setTone(_ hz: Double, durationMs: Int = 2000) {
         lock.lock(); defer { lock.unlock() }
@@ -363,28 +556,77 @@ private final class OutputRenderer: @unchecked Sendable {
     }
     func setMetronome(bpm: Int, beats: Int, subdivision: Int, accents: Bool, beatLevels: [Int]?, sound: MetronomeRenderer.Sound) {
         lock.lock(); defer { lock.unlock() }
-        guard bpm > 0 else { metronome = nil; return }
+        guard bpm > 0 else {
+            // The band fades with the click; a final chord already ringing is left to finish.
+            metronome = nil; band?.stop(force: false); clock.set(nil)
+            return
+        }
         let pattern = MetronomePattern(bpm: min(300, max(30, bpm)), beatsPerBar: min(12, max(1, beats)), subdivision: min(4, max(1, subdivision)))
-        let renderer = metronome ?? MetronomeRenderer(sampleRate: sampleRate, initial: pattern)
+        let renderer: MetronomeRenderer
+        if let metronome {
+            renderer = metronome
+        } else {
+            // A fresh count from its first click; an older band can't follow it.
+            renderer = MetronomeRenderer(sampleRate: sampleRate, initial: pattern)
+            bar = -1; metronomeFrames = 0; band?.stop(); clock.set(nil)
+        }
         renderer.update(pattern)
         renderer.accents = accents; renderer.beatLevels = beatLevels; renderer.sound = sound
         metronome = renderer
     }
+    /// Installs a band under the running metronome; it starts at the next downbeat. False when the
+    /// rendering's sample rate doesn't match the output (or no metronome runs).
+    func setBand(_ track: BandTrack, firstBar: Int) -> Bool {
+        lock.lock()
+        guard track.sampleRate == sampleRate, metronome != nil else { lock.unlock(); return false }
+        let previous = band
+        band = BandPlayer(track: track, firstBar: firstBar)
+        lock.unlock()
+        // The old player (and maybe its buffer) is released here, not under the render lock.
+        withExtendedLifetime(previous) {}
+        return true
+    }
+    func stopBand() { lock.lock(); band?.stop(); lock.unlock() }
+    func finishBand() { lock.lock(); band?.finish(); lock.unlock() }
     func setDrone(tonic: Double, voice: DroneRenderer.Voice, fifth: Bool) {
         lock.lock(); defer { lock.unlock() }
         drone = DroneRenderer(tonic: tonic, fifth: fifth, voice: voice, sampleRate: sampleRate)
     }
     func stopDrone() { lock.lock(); drone?.stop(); lock.unlock() }
-    func stop() { lock.lock(); tone = nil; sequence = []; metronome = nil; drone = nil; lock.unlock() }
-    func render(frameCount: Int, audio: UnsafeMutablePointer<AudioBufferList>) {
+    func stop() { lock.lock(); tone = nil; sequence = []; metronome = nil; drone = nil; band = nil; clock.set(nil); lock.unlock() }
+    func render(frameCount: Int, audio: UnsafeMutablePointer<AudioBufferList>, timestamp: UnsafePointer<AudioTimeStamp>) {
         let buffers = UnsafeMutableAudioBufferListPointer(audio)
         guard lock.try() else {
             for buffer in buffers { if let data = buffer.mData { memset(data, 0, Int(buffer.mDataByteSize)) } }
             return
         }
         defer { lock.unlock() }
+        if metronome != nil {
+            // This buffer's host time minus what the metronome already played = its first frame, so the
+            // step clock can follow the audio (engine restarts and dropped buffers included).
+            let stamp = timestamp.pointee
+            let host = stamp.mFlags.contains(.hostTimeValid) ? stamp.mHostTime : mach_absolute_time()
+            clock.publish(Double(host) * secondsPerTick - Double(metronomeFrames) / Double(sampleRate))
+        }
         for frame in 0..<frameCount {
-            var value = (tone?.nextSample() ?? 0) + (metronome?.nextSample() ?? 0) + (drone?.nextSample() ?? 0)
+            var value = (tone?.nextSample() ?? 0) + (drone?.nextSample() ?? 0)
+            if let metronome {
+                let click = metronome.nextSample()
+                metronomeFrames += 1
+                // Bars of the band start on the metronome's own downbeats: same sample, same clock.
+                if let pulse = metronome.lastPulse, pulse.beat == 0, pulse.subdivision == 0 {
+                    bar += 1
+                    band?.downbeat(bar)
+                }
+                if let band {
+                    // Under the band (headphones only) the click steps back; the count-in stays full.
+                    value += band.nextSample() + click * (band.isSounding ? 0.45 : 1)
+                } else {
+                    value += click
+                }
+            } else if let band {
+                value += band.nextSample()
+            }
             if !sequence.isEmpty {
                 for item in sequence where sequenceFrame >= item.start { value += item.renderer.nextSample() }
                 sequenceFrame += 1

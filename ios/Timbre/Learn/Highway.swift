@@ -37,6 +37,10 @@ struct AlongStep: View {
     private var spb: Double { 60 / tempo }
     private var countIn: Double { Double(beatsPerBar) * spb }
     private var fretted: Bool { course.fretKind != nil && notes.allSatisfy { $0.at != nil } }
+    /// Drums and a bass on the key of the tune (no band bass when the player is the bass).
+    private var band: BandArrangement {
+        .melody(notes, bpm: tempo, beatsPerBar: beatsPerBar, reference: store.settings.referencePitchHz, bass: course.fretKind != "bass")
+    }
 
     var body: some View {
         VStack(spacing: 14) {
@@ -77,23 +81,29 @@ struct AlongStep: View {
             MicrophoneHint()
             controls
         }
-        .onDisappear { store.audio.stopMetronome(); store.stopLessonListening(owner: owner) }
+        .onAppear { store.audio.prepareBand(band) }
+        .onChange(of: slow) { _, _ in store.audio.prepareBand(band) }
+        .onDisappear { store.audio.stopMetronome(); store.audio.stopBand(); store.stopLessonListening(owner: owner) }
     }
 
     // MARK: Pieces
 
     private var header: some View {
-        HStack(alignment: .firstTextBaseline) {
-            VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .firstTextBaseline) {
                 Text(title?.localized ?? String(localized: "Play along")).font(Typeface.display(24)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.7)
-                Text("\(Int(tempo)) BPM · \(notes.count) notes").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                Spacer(minLength: 8)
+                if judge.combo >= 3 {
+                    Label("×\(judge.combo)", systemImage: "flame.fill").font(Typeface.label(16)).foregroundStyle(Palette.flame)
+                        .padding(.horizontal, 12).padding(.vertical, 7)
+                        .background(Capsule().fill(Palette.flame.opacity(0.14)))
+                        .transition(.scale.combined(with: .opacity))
+                }
             }
-            Spacer()
-            if judge.combo >= 3 {
-                Label("×\(judge.combo)", systemImage: "flame.fill").font(Typeface.label(16)).foregroundStyle(Palette.flame)
-                    .padding(.horizontal, 12).padding(.vertical, 7)
-                    .background(Capsule().fill(Palette.flame.opacity(0.14)))
-                    .transition(.scale.combined(with: .opacity))
+            HStack(spacing: 8) {
+                Text("\(Int(tempo)) BPM · \(notes.count) notes").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                Spacer(minLength: 8)
+                BandControls(audio: store.audio, accent: accent)
             }
         }
         .animation(Motion.pluck, value: judge.combo >= 3)
@@ -205,6 +215,8 @@ struct AlongStep: View {
         startTime = CACurrentMediaTime()
         phase = .playing
         store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
+        // The band rides the metronome from the bar after the count-in (headphones only; else the click).
+        store.audio.playBand(band, firstBar: 1)
         store.gameTargetHz = notes.first.map { PitchMath.frequency(midi: Double($0.midi), reference: store.settings.referencePitchHz) }
         // Re-attacks of a repeated note come from the onset detector (a jump in loudness as a fallback).
         let analyzer = LessonAnalyzer(chords: false, onOnset: { time in lastOnset = time })
@@ -220,6 +232,9 @@ struct AlongStep: View {
 
     private func tick(now: CFTimeInterval) {
         guard phase == .playing else { return }
+        // The first click is heard a little after the tap (engine and microphone starting, output
+        // latency, far more on Bluetooth): notes and judging follow the audio clock, not the tap.
+        if let heard = store.audio.heardStart(near: startTime) { startTime = heard }
         apply(judge.update(time: now - startTime - countIn, midi: nil, cents: nil), now: now)
         if judge.isFinished || now - startTime - countIn > judge.duration + 1.2 { finish() }
     }
@@ -238,10 +253,87 @@ struct AlongStep: View {
 
     private func finish() {
         guard phase == .playing else { return }
-        store.audio.stopMetronome()
+        // A good take ends on the band's final chord; otherwise it fades with the click.
+        store.audio.finishBand(celebrate: judge.accuracy >= 0.7)
         store.stopLessonListening(owner: owner)
         withAnimation(Motion.settle) { phase = .done }
         SoundFX.shared.play(judge.accuracy >= 0.7 ? .star : .wrong)
+    }
+}
+
+/// The band corner of a play-along header: the band switch and, on the speaker, a quiet note that the
+/// band plays in headphones (out loud it would reach the microphone and blur what it hears, so the
+/// speaker keeps the plain click).
+struct BandControls: View {
+    @ObservedObject var audio: AudioService
+    let accent: Color
+    @AppStorage(BandArrangement.preferenceKey) private var bandOn = true
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        HStack(spacing: 8) {
+            if bandOn && !audio.headphones { headphonesChip }
+            toggle
+        }
+        .animation(reduceMotion ? nil : Motion.quick, value: bandOn)
+        .animation(reduceMotion ? nil : Motion.quick, value: audio.headphones)
+        .onAppear { audio.refreshRoute() }
+    }
+
+    /// Words when they fit, just the headphones glyph when they don't (narrow phones, large type).
+    private var headphonesChip: some View {
+        ViewThatFits(in: .horizontal) {
+            chip(Label("Band with headphones", systemImage: "headphones"))
+            chip(Label("Band with headphones", systemImage: "headphones").labelStyle(.iconOnly))
+        }
+        .transition(.opacity.combined(with: .scale(scale: 0.9, anchor: .trailing)))
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("along.band.headphones")
+    }
+
+    private func chip(_ content: some View) -> some View {
+        content
+            .font(Typeface.label(12))
+            .foregroundStyle(Palette.inkSoft)
+            .lineLimit(1)
+            .fixedSize()
+            .padding(.horizontal, 10).padding(.vertical, 5)
+            .frame(minHeight: 26)
+            .background(Capsule().fill(Palette.stageRaised))
+            .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
+    }
+
+    private var toggle: some View {
+        Button {
+            bandOn.toggle()
+            Haptics.shared.selection()
+            audio.refreshBand()
+        } label: {
+            toggleFace
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
+                .padding(-8)
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityLabel(Text("Backing band"))
+        .accessibilityAddTraits(bandOn ? [.isToggle, .isSelected] : [.isToggle])
+        .accessibilityIdentifier("along.band")
+    }
+
+    /// A note in a ring: tinted when on, struck through when off; it hops when the band comes in.
+    private var toggleFace: some View {
+        ZStack {
+            Circle().fill(bandOn ? accent.opacity(0.16) : Palette.stageRaised)
+            Circle().strokeBorder(bandOn ? accent.opacity(0.45) : Palette.line, lineWidth: 1)
+            Image(systemName: "music.quarternote.3")
+                .font(.system(size: 12, weight: .bold))
+                .foregroundStyle(bandOn ? accent : Palette.inkFaint)
+                .symbolEffect(.bounce, value: reduceMotion ? false : audio.bandPlaying)
+            if !bandOn {
+                Capsule().fill(Palette.inkFaint).frame(width: 1.5, height: 20).rotationEffect(.degrees(-45))
+            }
+        }
+        .frame(width: 28, height: 28)
     }
 }
 

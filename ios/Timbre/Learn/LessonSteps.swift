@@ -334,12 +334,24 @@ struct RhythmStep: View {
     private var countIn: Double { Double(beatsPerBar) * spb }
     private var expected: [Double] { (0..<bars).flatMap { bar in pattern.map { countIn + (Double(bar * beatsPerBar) + $0) * spb } } }
     private var isTap: Bool { if case .tap = mode { return true } else { return false } }
+    /// Strum and progression steps play over drums, a bass on the roots and a pad on the chords.
+    private var band: BandArrangement? {
+        let reference = store.settings.referencePitchHz
+        switch mode {
+        case .tap: return nil
+        case .strum(let chord):
+            return BandArrangement.chords(chord.map { [$0] } ?? [], bars: [bars], pattern: pattern, bpm: bpm, beatsPerBar: beatsPerBar, reference: reference)
+        case .progression(let chords, let lengths):
+            return BandArrangement.chords(chords, bars: lengths, pattern: pattern, bpm: bpm, beatsPerBar: beatsPerBar, reference: reference)
+        }
+    }
 
     var body: some View {
         VStack(spacing: 18) {
             VStack(spacing: 6) {
                 Text(isTap ? (hearsInstrument ? LocalizedStringKey("Play or tap on the dots") : LocalizedStringKey("Tap on the dots")) : LocalizedStringKey("Strum on the arrows")).font(Typeface.display(26)).foregroundStyle(Palette.ink)
                 Text("\(Int(bpm)) BPM · \(bars) bars").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                if !isTap { BandControls(audio: store.audio, accent: accent).padding(.top, 2) }
             }
             .padding(.top, 14)
             if case .strum(let chord?) = mode { ChordDiagram(chord: chord, accent: accent, landing: true).frame(maxWidth: 150) }
@@ -397,7 +409,8 @@ struct RhythmStep: View {
                 .padding(.horizontal, 20)
             }
         }
-        .onDisappear { store.audio.stopMetronome(); store.stopLessonListening(owner: owner) }
+        .onAppear { store.audio.prepareBand(band) }
+        .onDisappear { store.audio.stopMetronome(); store.audio.stopBand(); store.stopLessonListening(owner: owner) }
     }
 
     /// Which chord of a progression is under the playhead (by bar).
@@ -415,6 +428,8 @@ struct RhythmStep: View {
         startTime = CACurrentMediaTime()
         phase = .playing
         store.audio.setMetronome(bpm: Int(bpm), beats: beatsPerBar, subdivision: 1, accents: true)
+        // From the bar after the count-in, on headphones; the speaker keeps the click alone.
+        store.audio.playBand(band, firstBar: 1)
         if !isTap || hearsInstrument {
             let analyzer = LessonAnalyzer(chords: false, onOnset: { time in register(time) })
             store.startLessonListening(owner: owner, lowHz: 60, highHz: 1400, analyzer: analyzer) { _, _ in }
@@ -440,16 +455,19 @@ struct RhythmStep: View {
 
     private func expire(now: CFTimeInterval) {
         guard phase == .playing else { return }
+        // Beats are where the click is heard (after engine start and output latency), not where Start was tapped.
+        if let heard = store.audio.heardStart(near: startTime) { startTime = heard }
         let t = now - startTime
         for (i, time) in expected.enumerated() where grades[i] == nil && t > time + 0.2 { grades[i] = .miss }
         if t > (expected.last ?? 0) + 0.4 { finish() }
     }
 
     private func finish() {
-        store.audio.stopMetronome()
-        store.stopLessonListening(owner: owner)
         let points = grades.values.reduce(0.0) { $0 + ($1 == .perfect ? 1 : $1 == .good ? 0.8 : $1 == .ok ? 0.5 : 0) }
         score = expected.isEmpty ? 1 : points / Double(expected.count)
+        // A good take ends on the band's final chord; otherwise it fades with the click.
+        store.audio.finishBand(celebrate: score >= 0.7)
+        store.stopLessonListening(owner: owner)
         phase = .done
         SoundFX.shared.play(score >= 0.7 ? .correct : .wrong)
     }
