@@ -17,7 +17,11 @@ from mathutils import Vector
 
 sys.path.insert(0, str(Path(__file__).parent))
 import blendkit  # noqa: E402
+from bowed import BOWED, BOWED_PHOTOS, build_bowed  # noqa: E402
 from instruments import MODELS, PHOTO_MODELS, build  # noqa: E402
+
+ALL_MODELS = {**MODELS, **BOWED}
+ALL_PHOTOS = {**PHOTO_MODELS, **BOWED_PHOTOS}
 
 
 def parse():
@@ -138,12 +142,12 @@ def main():
     args = parse()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    selected = [m for m in args.models.split(",") if m] or list(MODELS)
-    manifest = {"models": {}, "photos": PHOTO_MODELS}
+    selected = [m for m in args.models.split(",") if m] or list(ALL_MODELS)
+    manifest = {"models": {}, "photos": {k: v for k, v in ALL_PHOTOS.items() if v in selected}}
     for model_id in selected:
-        spec = MODELS[model_id]
+        spec = ALL_MODELS[model_id]
         scene = blendkit.reset_scene()
-        root, rig = build(spec)
+        root, rig = build_bowed(spec) if spec.kind == "bowed" else build(spec)
         export_usdz(root, out / f"{model_id}.usdz")
         lo, hi = bounds(root)
         a, b = blendkit.to_usd(lo), blendkit.to_usd(hi)
@@ -164,7 +168,8 @@ def main():
             rig["hero2D"] = render(scene, out / f"{model_id}_hero.png", center, height, args.res, args.samples, points=points)
             (out / f"{model_id}.rig.json").write_text(json.dumps(rig, indent=1))
             head = Vector((rig["headCenter"][0], -rig["headCenter"][2], rig["headCenter"][1]))
-            render(scene, out / f"{model_id}_head.png", head, 0.26 if spec.kind != "ukulele" else 0.17,
+            head_view = getattr(spec, "head_view", 0.26 if spec.kind != "ukulele" else 0.17)
+            render(scene, out / f"{model_id}_head.png", head, head_view,
                    args.res // 2, args.samples, azimuth=18, elevation=10, lens=100, fill=1.0)
         print("built", model_id)
     (out / "manifest.json").write_text(json.dumps(manifest, indent=1))

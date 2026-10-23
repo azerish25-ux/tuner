@@ -170,13 +170,38 @@ def pearl(out):
     save(rgb, out / "pearl_color.jpg")
 
 
+def maple_plain(out):
+    """Straight-grained hard maple for bolt-on necks and headstocks."""
+    g = grain(SIZE, SIZE, 12.0, 20.0, 101)
+    tone = fbm((SIZE, SIZE), 110, 3, 102)
+    rgb = ramp(0.55 + 0.3 * tone - 0.25 * g, [(0, (190, 146, 88)), (0.6, (226, 190, 132)), (1, (240, 214, 166))])
+    save(rgb, out / "maple_plain_color.jpg")
+
+
+def varnish(out):
+    """Violin-family finish: fine spruce under amber oil varnish; flamed maple under red-brown."""
+    g = grain(SIZE, SIZE, 6.0, 12.0, 91, ray_strength=0.25)
+    tone = fbm((SIZE, SIZE), 140, 3, 92)
+    base = ramp(0.3 + 0.5 * tone, [(0, (122, 46, 14)), (0.6, (156, 70, 24)), (1, (184, 98, 38))])
+    dark = np.array([70, 26, 8]) / 255.0
+    save(base * (1 - 0.3 * g[..., None]) + dark * (0.3 * g[..., None]), out / "varnish_spruce_color.jpg")
+    y, x = np.mgrid[0:SIZE, 0:SIZE].astype(float)
+    warp = (fbm((SIZE, SIZE), 50, 4, 93) - 0.5) * 40
+    flame = (0.5 + 0.5 * np.sin((y + warp + 0.12 * x) / 6.0)) ** 3
+    rgb = ramp(0.6 + 0.25 * fbm((SIZE, SIZE), 90, 2, 94) - 0.4 * flame,
+               [(0, (58, 18, 8)), (0.55, (118, 44, 16)), (1, (170, 88, 36))])
+    save(rgb, out / "varnish_maple_color.jpg")
+
+
 def main():
     out = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).parent / "textures"
     out.mkdir(parents=True, exist_ok=True)
     spruce(out); rosewood(out); mahogany(out); ebony(out); maple_flame(out)
     sunburst(out, "sunburst_3tone", 81, [(150, 70, 18), (232, 170, 52)], (18, 10, 6))
     sunburst(out, "sunburst_cherry", 82, [(150, 26, 18), (204, 70, 40)], (36, 6, 6))
-    tortoise(out); rosette(out); pearl(out)
+    tortoise(out); rosette(out); pearl(out); varnish(out); maple_plain(out)
+    # Violin top: amber centre shading to antique dark edges, laid over fine spruce.
+    sunburst(out, "violin_top", 111, [(150, 66, 22), (204, 120, 50)], (52, 18, 6))
     print("textures written to", out)
 
 
