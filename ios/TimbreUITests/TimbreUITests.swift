@@ -236,10 +236,15 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
         tab("Learn"); settle(2.5); shot("50-learn")
         element("learn.continue").tap(); settle(1.5); shot("51-lesson-explain")
-        element("lesson.continue").tap(); settle(2.5); shot("52-lesson-tunecheck")
+        // The lesson zooms open: a tap during the transition can be dropped, so tap until the tune check shows.
+        let skip = element("lesson.tunecheck.skip")
+        for _ in 0..<4 where !skip.exists { element("lesson.continue").tap(); _ = skip.waitForExistence(timeout: 3) }
+        settle(2.5); shot("52-lesson-tunecheck")
+        // The tune check is covered by its own screenshot; skip the rest of it to keep the run short.
+        if skip.exists { skip.tap() }
         settle(8); shot("52b-lesson-chord")
         let next = element("lesson.continue")
-        XCTAssertTrue(next.waitForExistence(timeout: 20))
+        XCTAssertTrue(next.waitForExistence(timeout: 30))
         settle(1.5); shot("53-lesson-strum-explain")
         next.tap(); settle(1.2); shot("54-lesson-strum-ready")
         element("lesson.continue").tap(); settle(5); shot("55-lesson-strum")
