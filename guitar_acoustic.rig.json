@@ -1,0 +1,214 @@
+{
+ "model": "guitar_acoustic",
+ "rig": "MACHINE_HEAD",
+ "degPerCent": 1.4,
+ "strings": [
+  {
+   "anchor": "s6",
+   "saddle": [
+    -0.02242,
+    0.22112,
+    0.05198
+   ],
+   "nut": [
+    0.00414,
+    0.87437,
+    0.04597
+   ],
+   "radius": 0.000712,
+   "wound": true,
+   "peg": "peg_s6",
+   "post": "post_s6",
+   "node": "string_s6",
+   "pegCenter": [
+    -0.02445,
+    0.9239,
+    0.02008
+   ],
+   "pegAxis": [
+    -0.93841,
+    0.34551,
+    4e-05
+   ],
+   "tighten": 1
+  },
+  {
+   "anchor": "s5",
+   "saddle": [
+    -0.01159,
+    0.22112,
+    0.05147
+   ],
+   "nut": [
+    0.01079,
+    0.87437,
+    0.04589
+   ],
+   "radius": 0.000659,
+   "wound": true,
+   "peg": "peg_s5",
+   "post": "post_s5",
+   "node": "string_s5",
+   "pegCenter": [
+    -0.02521,
+    0.96471,
+    0.01487
+   ],
+   "pegAxis": [
+    -0.93889,
+    0.34422,
+    0.00022
+   ],
+   "tighten": 1
+  },
+  {
+   "anchor": "s4",
+   "saddle": [
+    -0.00044,
+    0.22112,
+    0.05077
+   ],
+   "nut": [
+    0.01786,
+    0.87437,
+    0.04562
+   ],
+   "radius": 0.000463,
+   "wound": true,
+   "peg": "peg_s4",
+   "post": "post_s4",
+   "node": "string_s4",
+   "pegCenter": [
+    -0.02629,
+    1.00442,
+    0.00958
+   ],
+   "pegAxis": [
+    -0.9369,
+    0.34961,
+    -0.00056
+   ],
+   "tighten": 1
+  },
+  {
+   "anchor": "s3",
+   "saddle": [
+    0.01052,
+    0.22112,
+    0.0502
+   ],
+   "nut": [
+    0.02431,
+    0.87437,
+    0.0452
+   ],
+   "radius": 0.000341,
+   "wound": true,
+   "peg": "peg_s3",
+   "post": "post_s3",
+   "node": "string_s3",
+   "pegCenter": [
+    0.07069,
+    1.0028,
+    0.0054
+   ],
+   "pegAxis": [
+    0.94756,
+    0.30817,
+    -0.08465
+   ],
+   "tighten": 1
+  },
+  {
+   "anchor": "s2",
+   "saddle": [
+    0.02167,
+    0.22112,
+    0.0496
+   ],
+   "nut": [
+    0.0312,
+    0.87437,
+    0.04491
+   ],
+   "radius": 0.00025,
+   "wound": false,
+   "peg": "peg_s2",
+   "post": "post_s2",
+   "node": "string_s2",
+   "pegCenter": [
+    0.06774,
+    0.96265,
+    0.01071
+   ],
+   "pegAxis": [
+    0.94785,
+    0.30729,
+    -0.08455
+   ],
+   "tighten": 1
+  },
+  {
+   "anchor": "s1",
+   "saddle": [
+    0.03293,
+    0.22112,
+    0.04896
+   ],
+   "nut": [
+    0.03791,
+    0.87437,
+    0.04454
+   ],
+   "radius": 0.00025,
+   "wound": false,
+   "peg": "peg_s1",
+   "post": "post_s1",
+   "node": "string_s1",
+   "pegCenter": [
+    0.06639,
+    0.92177,
+    0.01603
+   ],
+   "pegAxis": [
+    0.94878,
+    0.30451,
+    -0.08424
+   ],
+   "tighten": 1
+  }
+ ],
+ "headCenter": [
+  0.0222,
+  0.87568,
+  0.02415
+ ],
+ "bodyCenter": [
+  0.0,
+  0.515,
+  -0.0
+ ],
+ "length": 1.03,
+ "boundsMin": [
+  -0.20255,
+  0.0,
+  -0.05428
+ ],
+ "boundsMax": [
+  0.20255,
+  1.03,
+  0.05428
+ ],
+ "credit": {
+  "id": "acoustic_afurokn",
+  "uid": "b52fcec4b641493f8939c50c253c4ac3",
+  "title": "Acoustic Guitar",
+  "author": "afurokn",
+  "authorUrl": "https://sketchfab.com/afurokn",
+  "license": "by",
+  "licenseLabel": "CC Attribution",
+  "url": "https://sketchfab.com/3d-models/acoustic-guitar-b52fcec4b641493f8939c50c253c4ac3",
+  "faces": 49940,
+  "archiveBytes": 1409238
+ }
+}

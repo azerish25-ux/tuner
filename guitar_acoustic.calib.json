@@ -1,0 +1,876 @@
+{
+ "whole": {
+  "center": [
+   0.0,
+   0.0,
+   0.515
+  ],
+  "scale": 1.0918000134458612,
+  "res": 1200
+ },
+ "head": {
+  "center": [
+   0.0222,
+   -0.02415,
+   0.87568
+  ],
+  "scale": 0.33949979291403987,
+  "res": 1200
+ },
+ "headObjects": [
+  {
+   "name": "guitar-fret.002",
+   "color": [
+    0.75,
+    0.3,
+    0.3
+   ],
+   "vertices": 56,
+   "center": [
+    0.0198,
+    -0.0419,
+    0.8389
+   ]
+  },
+  {
+   "name": "guitar-fret.003",
+   "color": [
+    0.1,
+    0.363,
+    1.0
+   ],
+   "vertices": 56,
+   "center": [
+    0.0189,
+    -0.0421,
+    0.8038
+   ]
+  },
+  {
+   "name": "guitar-fret.004",
+   "color": [
+    0.75,
+    1.0,
+    0.4
+   ],
+   "vertices": 56,
+   "center": [
+    0.0181,
+    -0.0423,
+    0.7706
+   ]
+  },
+  {
+   "name": "guitar-fret.005",
+   "color": [
+    0.75,
+    0.075,
+    0.666
+   ],
+   "vertices": 56,
+   "center": [
+    0.0173,
+    -0.0424,
+    0.7386
+   ]
+  },
+  {
+   "name": "guitar-fret.006",
+   "color": [
+    0.4,
+    1.0,
+    0.9
+   ],
+   "vertices": 56,
+   "center": [
+    0.0165,
+    -0.0426,
+    0.7091
+   ]
+  },
+  {
+   "name": "guitar-neck.001",
+   "color": [
+    1.0,
+    0.587,
+    0.1
+   ],
+   "vertices": 5926,
+   "center": [
+    0.0176,
+    -0.0173,
+    0.7831
+   ]
+  },
+  {
+   "name": "guitar-nut.001",
+   "color": [
+    0.412,
+    0.3,
+    0.75
+   ],
+   "vertices": 608,
+   "center": [
+    0.0211,
+    -0.0439,
+    0.8783
+   ]
+  },
+  {
+   "name": "string.001",
+   "color": [
+    0.138,
+    1.0,
+    0.1
+   ],
+   "vertices": 560,
+   "center": [
+    0.0439,
+    -0.0395,
+    0.8857
+   ]
+  },
+  {
+   "name": "string.003",
+   "color": [
+    1.0,
+    0.4,
+    0.601
+   ],
+   "vertices": 304,
+   "center": [
+    0.0432,
+    -0.0348,
+    0.8944
+   ]
+  },
+  {
+   "name": "string.005",
+   "color": [
+    0.075,
+    0.498,
+    0.75
+   ],
+   "vertices": 304,
+   "center": [
+    0.0445,
+    -0.0305,
+    0.9293
+   ]
+  },
+  {
+   "name": "string.007",
+   "color": [
+    0.951,
+    1.0,
+    0.4
+   ],
+   "vertices": 270,
+   "center": [
+    -0.0015,
+    -0.0328,
+    0.9117
+   ]
+  },
+  {
+   "name": "string.009",
+   "color": [
+    0.811,
+    0.1,
+    1.0
+   ],
+   "vertices": 270,
+   "center": [
+    -0.0028,
+    -0.0412,
+    0.8447
+   ]
+  },
+  {
+   "name": "string.011",
+   "color": [
+    0.3,
+    0.75,
+    0.524
+   ],
+   "vertices": 270,
+   "center": [
+    -0.0018,
+    -0.0376,
+    0.8787
+   ]
+  },
+  {
+   "name": "tuning_machine-base.001",
+   "color": [
+    1.0,
+    0.286,
+    0.1
+   ],
+   "vertices": 938,
+   "center": [
+    0.0438,
+    -0.0188,
+    0.9198
+   ]
+  },
+  {
+   "name": "tuning_machine-base.002",
+   "color": [
+    0.4,
+    0.451,
+    1.0
+   ],
+   "vertices": 938,
+   "center": [
+    -0.0017,
+    -0.0208,
+    0.921
+   ]
+  },
+  {
+   "name": "tuning_machine-base.005",
+   "color": [
+    0.329,
+    0.75,
+    0.075
+   ],
+   "vertices": 938,
+   "center": [
+    -0.0025,
+    -0.0156,
+    0.9618
+   ]
+  },
+  {
+   "name": "tuning_machine-base.007",
+   "color": [
+    1.0,
+    0.4,
+    0.801
+   ],
+   "vertices": 938,
+   "center": [
+    0.0452,
+    -0.0135,
+    0.9607
+   ]
+  },
+  {
+   "name": "tuning_machine-base.009",
+   "color": [
+    0.1,
+    0.964,
+    1.0
+   ],
+   "vertices": 938,
+   "center": [
+    -0.0038,
+    -0.0106,
+    1.0017
+   ]
+  },
+  {
+   "name": "tuning_machine-base.011",
+   "color": [
+    0.75,
+    0.636,
+    0.3
+   ],
+   "vertices": 938,
+   "center": [
+    0.0481,
+    -0.0082,
+    1.0008
+   ]
+  },
+  {
+   "name": "tuning_machine-gear.001",
+   "color": [
+    0.51,
+    0.1,
+    1.0
+   ],
+   "vertices": 1368,
+   "center": [
+    0.0437,
+    -0.0178,
+    0.9143
+   ]
+  },
+  {
+   "name": "tuning_machine-gear.002",
+   "color": [
+    0.4,
+    1.0,
+    0.498
+   ],
+   "vertices": 1368,
+   "center": [
+    -0.0018,
+    -0.0198,
+    0.9156
+   ]
+  },
+  {
+   "name": "tuning_machine-gear.005",
+   "color": [
+    0.75,
+    0.075,
+    0.161
+   ],
+   "vertices": 1368,
+   "center": [
+    -0.0026,
+    -0.0146,
+    0.9564
+   ]
+  },
+  {
+   "name": "tuning_machine-gear.007",
+   "color": [
+    0.4,
+    0.652,
+    1.0
+   ],
+   "vertices": 1368,
+   "center": [
+    -0.004,
+    -0.0095,
+    0.9962
+   ]
+  },
+  {
+   "name": "tuning_machine-gear.009",
+   "color": [
+    0.74,
+    1.0,
+    0.1
+   ],
+   "vertices": 1368,
+   "center": [
+    0.0479,
+    -0.0072,
+    0.9953
+   ]
+  },
+  {
+   "name": "tuning_machine-gear.011",
+   "color": [
+    0.749,
+    0.3,
+    0.75
+   ],
+   "vertices": 1368,
+   "center": [
+    0.045,
+    -0.0125,
+    0.9552
+   ]
+  },
+  {
+   "name": "tuning_machine-key.001",
+   "color": [
+    0.1,
+    1.0,
+    0.735
+   ],
+   "vertices": 337,
+   "center": [
+    0.0664,
+    -0.016,
+    0.9218
+   ]
+  },
+  {
+   "name": "tuning_machine-key.002",
+   "color": [
+    1.0,
+    0.648,
+    0.4
+   ],
+   "vertices": 337,
+   "center": [
+    -0.0244,
+    -0.0201,
+    0.9239
+   ]
+  },
+  {
+   "name": "tuning_machine-key.005",
+   "color": [
+    0.157,
+    0.075,
+    0.75
+   ],
+   "vertices": 337,
+   "center": [
+    -0.0252,
+    -0.0149,
+    0.9647
+   ]
+  },
+  {
+   "name": "tuning_machine-key.007",
+   "color": [
+    0.502,
+    1.0,
+    0.4
+   ],
+   "vertices": 337,
+   "center": [
+    0.0677,
+    -0.0107,
+    0.9626
+   ]
+  },
+  {
+   "name": "tuning_machine-key.009",
+   "color": [
+    1.0,
+    0.1,
+    0.516
+   ],
+   "vertices": 337,
+   "center": [
+    -0.0263,
+    -0.0096,
+    1.0044
+   ]
+  },
+  {
+   "name": "tuning_machine-key.011",
+   "color": [
+    0.3,
+    0.639,
+    0.75
+   ],
+   "vertices": 337,
+   "center": [
+    0.0707,
+    -0.0054,
+    1.0028
+   ]
+  },
+  {
+   "name": "tuning_machine-key_screw.001",
+   "color": [
+    1.0,
+    0.959,
+    0.1
+   ],
+   "vertices": 658,
+   "center": [
+    0.0424,
+    -0.0166,
+    0.9226
+   ]
+  },
+  {
+   "name": "tuning_machine-key_screw.002",
+   "color": [
+    0.798,
+    0.4,
+    1.0
+   ],
+   "vertices": 658,
+   "center": [
+    -0.0005,
+    -0.0186,
+    0.923
+   ]
+  },
+  {
+   "name": "tuning_machine-key_screw.005",
+   "color": [
+    0.075,
+    0.75,
+    0.325
+   ],
+   "vertices": 658,
+   "center": [
+    -0.0012,
+    -0.0134,
+    0.9638
+   ]
+  },
+  {
+   "name": "tuning_machine-key_screw.007",
+   "color": [
+    1.0,
+    0.447,
+    0.4
+   ],
+   "vertices": 658,
+   "center": [
+    0.0437,
+    -0.0113,
+    0.9634
+   ]
+  },
+  {
+   "name": "tuning_machine-key_screw.009",
+   "color": [
+    0.1,
+    0.292,
+    1.0
+   ],
+   "vertices": 658,
+   "center": [
+    -0.0027,
+    -0.0089,
+    1.0041
+   ]
+  },
+  {
+   "name": "tuning_machine-key_screw.011",
+   "color": [
+    0.527,
+    0.75,
+    0.3
+   ],
+   "vertices": 658,
+   "center": [
+    0.0467,
+    -0.006,
+    1.0036
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.001",
+   "color": [
+    1.0,
+    0.1,
+    0.817
+   ],
+   "vertices": 565,
+   "center": [
+    0.0437,
+    -0.0209,
+    0.9032
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.002",
+   "color": [
+    0.4,
+    1.0,
+    0.947
+   ],
+   "vertices": 565,
+   "center": [
+    0.0436,
+    -0.0161,
+    0.9141
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.005",
+   "color": [
+    0.75,
+    0.493,
+    0.075
+   ],
+   "vertices": 565,
+   "center": [
+    0.0439,
+    -0.0174,
+    0.93
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.006",
+   "color": [
+    0.597,
+    0.4,
+    1.0
+   ],
+   "vertices": 565,
+   "center": [
+    -0.0016,
+    -0.0194,
+    0.9312
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.007",
+   "color": [
+    0.1,
+    1.0,
+    0.133
+   ],
+   "vertices": 565,
+   "center": [
+    -0.0019,
+    -0.0181,
+    0.9153
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.008",
+   "color": [
+    0.75,
+    0.3,
+    0.415
+   ],
+   "vertices": 565,
+   "center": [
+    -0.0019,
+    -0.0229,
+    0.9044
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.009",
+   "color": [
+    0.1,
+    0.593,
+    1.0
+   ],
+   "vertices": 565,
+   "center": [
+    -0.0026,
+    -0.0177,
+    0.9452
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.015",
+   "color": [
+    0.903,
+    1.0,
+    0.4
+   ],
+   "vertices": 565,
+   "center": [
+    -0.0027,
+    -0.0129,
+    0.9562
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.017",
+   "color": [
+    0.662,
+    0.075,
+    0.75
+   ],
+   "vertices": 565,
+   "center": [
+    -0.0024,
+    -0.0142,
+    0.9721
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.019",
+   "color": [
+    0.4,
+    1.0,
+    0.746
+   ],
+   "vertices": 565,
+   "center": [
+    0.0452,
+    -0.012,
+    0.9709
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.021",
+   "color": [
+    1.0,
+    0.357,
+    0.1
+   ],
+   "vertices": 565,
+   "center": [
+    0.045,
+    -0.0108,
+    0.955
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.023",
+   "color": [
+    0.3,
+    0.303,
+    0.75
+   ],
+   "vertices": 565,
+   "center": [
+    0.045,
+    -0.0156,
+    0.944
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.025",
+   "color": [
+    0.368,
+    1.0,
+    0.1
+   ],
+   "vertices": 565,
+   "center": [
+    -0.0038,
+    -0.0091,
+    1.0119
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.027",
+   "color": [
+    1.0,
+    0.4,
+    0.754
+   ],
+   "vertices": 565,
+   "center": [
+    -0.0041,
+    -0.0079,
+    0.996
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.029",
+   "color": [
+    0.075,
+    0.67,
+    0.75
+   ],
+   "vertices": 565,
+   "center": [
+    -0.004,
+    -0.0126,
+    0.9851
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.031",
+   "color": [
+    1.0,
+    0.896,
+    0.4
+   ],
+   "vertices": 565,
+   "center": [
+    0.048,
+    -0.0103,
+    0.9842
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.033",
+   "color": [
+    0.581,
+    0.1,
+    1.0
+   ],
+   "vertices": 565,
+   "center": [
+    0.0479,
+    -0.0055,
+    0.9952
+   ]
+  },
+  {
+   "name": "tuning_machine-screw.035",
+   "color": [
+    0.3,
+    0.75,
+    0.409
+   ],
+   "vertices": 565,
+   "center": [
+    0.0482,
+    -0.0067,
+    1.0111
+   ]
+  },
+  {
+   "name": "tuning_machine_post.001",
+   "color": [
+    1.0,
+    0.1,
+    0.144
+   ],
+   "vertices": 696,
+   "center": [
+    0.0444,
+    -0.0359,
+    0.9168
+   ]
+  },
+  {
+   "name": "tuning_machine_post.002",
+   "color": [
+    0.4,
+    0.604,
+    1.0
+   ],
+   "vertices": 696,
+   "center": [
+    0.0459,
+    -0.0306,
+    0.9576
+   ]
+  },
+  {
+   "name": "tuning_machine_post.006",
+   "color": [
+    0.502,
+    0.75,
+    0.075
+   ],
+   "vertices": 696,
+   "center": [
+    0.0488,
+    -0.0253,
+    0.9977
+   ]
+  },
+  {
+   "name": "tuning_machine_post.008",
+   "color": [
+    1.0,
+    0.4,
+    0.955
+   ],
+   "vertices": 696,
+   "center": [
+    -0.0032,
+    -0.0277,
+    0.9985
+   ]
+  },
+  {
+   "name": "tuning_machine_post.010",
+   "color": [
+    0.1,
+    1.0,
+    0.806
+   ],
+   "vertices": 696,
+   "center": [
+    -0.0017,
+    -0.0327,
+    0.9587
+   ]
+  },
+  {
+   "name": "tuning_machine_post.011",
+   "color": [
+    0.75,
+    0.522,
+    0.3
+   ],
+   "vertices": 696,
+   "center": [
+    -0.001,
+    -0.038,
+    0.9179
+   ]
+  }
+ ]
+}
