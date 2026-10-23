@@ -22,9 +22,14 @@ struct RootView: View {
         .fullScreenCover(isPresented: Binding(get: { store.settings.onboardingCompleted != true }, set: { _ in })) {
             OnboardingView().environmentObject(store).environmentObject(audio).environmentObject(commerce)
         }
-        // The paywall hangs off the tab view itself (UI tests never saw it present from a clear background
-        // anchor); settings keeps its own anchor so two sheets never compete on one view.
-        .paywallSheet(active: !store.showSettings && !store.showInstrumentPicker)
+        // The root paywall is a plain overlay rather than a UIKit presentation: UI tests never saw a sheet
+        // anchored at the root appear over the tabs. Settings and the instrument picker host their own sheet.
+        .overlay {
+            if store.showPaywall && !store.showSettings && !store.showInstrumentPicker {
+                PaywallView().transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .animation(.spring(response: 0.45, dampingFraction: 0.9), value: store.showPaywall)
         .background {
             Color.clear.sheet(isPresented: $store.showSettings) {
                 SettingsView().environmentObject(store).environmentObject(commerce).presentationBackground(Palette.stage)

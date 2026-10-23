@@ -18,6 +18,12 @@ struct PaywallView: View {
 
     private var selected: Product? { commerce.products.first { $0.id == selectedID } }
 
+    /// Works both as a presented sheet (dismiss) and as the root overlay (the store flag).
+    private func close() {
+        if context == .standard { store.showPaywall = false }
+        dismiss()
+    }
+
     var body: some View {
         ZStack(alignment: .topTrailing) {
             StageBackground()
@@ -36,7 +42,7 @@ struct PaywallView: View {
                 }
                 .padding(.horizontal, 22).padding(.top, 36).padding(.bottom, 30)
             }
-            Button { dismiss() } label: {
+            Button { close() } label: {
                 Image(systemName: "xmark").font(.body.weight(.bold)).foregroundStyle(Palette.inkSoft).frame(width: 40, height: 40).glassCapsule()
             }
             .padding(.trailing, 18).padding(.top, 10)
@@ -44,7 +50,7 @@ struct PaywallView: View {
         }
         .task { await commerce.load() }
         .onAppear { withAnimation(.easeOut(duration: 1.2)) { appeared = true } }
-        .onChange(of: commerce.isPro) { _, pro in if pro { dismiss() } }
+        .onChange(of: commerce.isPro) { _, pro in if pro { close() } }
     }
 
     private var heroImage: String {
@@ -206,7 +212,7 @@ struct PaywallView: View {
             if commerce.pending { Text("Waiting for approval. Access unlocks when the App Store confirms.").font(.caption).foregroundStyle(Palette.inkSoft) }
             if let error = commerce.error, !commerce.products.isEmpty { Text(error).font(.caption).foregroundStyle(Palette.danger).accessibilityIdentifier("commerceError") }
             if context == .onboarding {
-                Button("Continue with the free tuner") { dismiss() }.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft).padding(.top, 4)
+                Button("Continue with the free tuner") { close() }.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft).padding(.top, 4)
                     .accessibilityIdentifier("paywall.free")
             }
         }
