@@ -1,0 +1,53 @@
+05:54:36 | INFO: Data are loaded, start creating Blender stuff
+05:54:36 | INFO: Blender create Mesh node defaultMaterial
+05:54:36 | INFO: Blender create Mesh node defaultMaterial
+05:54:36 | INFO: Blender create Mesh node defaultMaterial
+05:54:36 | INFO: Blender create Mesh node defaultMaterial
+05:54:36 | INFO: Blender create Mesh node defaultMaterial
+05:54:37 | INFO: Blender create Mesh node defaultMaterial
+05:54:37 | INFO: Blender create Mesh node defaultMaterial
+05:54:37 | INFO: Blender create Mesh node defaultMaterial
+05:54:37 | INFO: Blender create Mesh node defaultMaterial
+05:54:37 | INFO: glTF import finished in 0.51s
+retouched 47150 ink px in DefaultMaterial_baseColor.jpeg
+Blender 4.5.15 LTS (hash 5afeabba6097 built 2026-10-22 01:33:47)
+Saved: 'build/convert/bass_p4_calib_whole.png'
+Time: 00:11.40 (Saving: 00:00.17)
+
+Saved: 'build/convert/bass_p4_calib_head.png'
+Time: 00:11.18 (Saving: 00:00.11)
+
+Saved: 'build/convert/bass_p4_calib_ids.png'
+Time: 00:07.73 (Saving: 00:00.09)
+
+rigged s4: peg 6 parts, post 19 parts, scale 0.8661 m, tighten 1
+rigged s3: peg 6 parts, post 16 parts, scale 0.8660 m, tighten 1
+rigged s2: peg 6 parts, post 16 parts, scale 0.8660 m, tighten 1
+rigged s1: peg 6 parts, post 16 parts, scale 0.8661 m, tighten 1
+thinnable: part_DefaultMaterial_corner 288649, part_timbre_string_wound_face 288
+optimised: 1505 meshes / 352234 triangles -> 14 meshes / 90000 triangles
+   part_DefaultMaterial_corner: 57571 tris, normals CORNER
+   peg_s1_mesh: 4000 tris, normals CORNER
+   peg_s3_mesh: 4000 tris, normals CORNER
+   peg_s4_mesh: 4000 tris, normals CORNER
+   post_s1_mesh: 4000 tris, normals CORNER
+   post_s4_mesh: 4000 tris, normals CORNER
+   peg_s2_mesh: 3999 tris, normals CORNER
+   post_s2_mesh: 3999 tris, normals CORNER
+   post_s3_mesh: 3999 tris, normals CORNER
+   part_timbre_string_wound_face: 288 tris, normals FACE
+   string_s1: 36 tris, normals FACE
+   string_s2: 36 tris, normals FACE
+texture DefaultMaterial_baseColor_clean.png: 4096x4096 -> 2048x2048 JPEG 641 KB
+texture DefaultMaterial_metallicRoughness.png: 4096x4096 -> 2048x2048 JPEG 336 KB
+texture DefaultMaterial_normal.png: 4096x4096 -> 1024x1024 JPEG 33 KB
+USD export of 'build/convert/bass_p4.usdz' took 128.60 ms
+Saved: 'build/convert/bass_p4_hero.png'
+Time: 00:27.46 (Saving: 00:00.11)
+
+Saved: 'build/convert/bass_p4_head.png'
+Time: 00:40.95 (Saving: 00:00.11)
+
+converted bass_p4
+
+Blender quit
