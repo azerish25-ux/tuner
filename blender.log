@@ -1,0 +1,48 @@
+06:54:29 | INFO: Data are loaded, start creating Blender stuff
+06:54:29 | INFO: Blender create Mesh node cello_cello_mat01_0
+06:54:29 | INFO: Blender create Mesh node cello_cello_mat02_0
+06:54:29 | INFO: glTF import finished in 0.05s
+Blender 4.5.15 LTS (hash 5afeabba6097 built 2026-10-22 01:33:47)
+Saved: 'build/convert/cello_calib_whole.png'
+Time: 00:24.00 (Saving: 00:00.24)
+
+Saved: 'build/convert/cello_calib_head.png'
+Time: 00:21.84 (Saving: 00:00.15)
+
+Saved: 'build/convert/cello_calib_ids.png'
+Time: 00:15.43 (Saving: 00:00.14)
+
+rigged s4: peg 8 parts, post 0 parts, scale 0.6926 m, tighten 1
+rigged s3: peg 8 parts, post 0 parts, scale 0.6929 m, tighten 1
+rigged s2: peg 8 parts, post 0 parts, scale 0.6929 m, tighten -1
+rigged s1: peg 8 parts, post 0 parts, scale 0.6926 m, tighten -1
+thinnable: part_cello_mat02_corner 10369, part_cello_mat01_corner 8608, part_timbre_string_wound_face 468
+budget: 2824 fixed, 117176 shared by 3 parts
+optimised: 142 meshes / 22269 triangles -> 11 meshes / 22269 triangles
+   part_cello_mat02_corner: 10369 tris, normals CORNER
+   part_cello_mat01_corner: 8608 tris, normals CORNER
+   peg_s1_mesh: 670 tris, normals CORNER
+   peg_s2_mesh: 670 tris, normals CORNER
+   peg_s3_mesh: 670 tris, normals CORNER
+   peg_s4_mesh: 670 tris, normals CORNER
+   part_timbre_string_wound_face: 468 tris, normals FACE
+   string_s1: 36 tris, normals FACE
+   string_s2: 36 tris, normals FACE
+   string_s3: 36 tris, normals FACE
+   string_s4: 36 tris, normals FACE
+texture cello_mat02_baseColor.png: 2048x2048 -> 2048x2048 JPEG 528 KB
+texture cello_mat02_metallicRoughness.png: 2048x2048 -> 2048x2048 JPEG 527 KB
+texture cello_mat02_normal.png: 2048x2048 -> 2048x2048 JPEG 210 KB
+texture cello_mat01_baseColor.png: 2048x2048 -> 2048x2048 JPEG 858 KB
+texture cello_mat01_metallicRoughness.png: 2048x2048 -> 2048x2048 JPEG 616 KB
+texture cello_mat01_normal.png: 2048x2048 -> 2048x2048 JPEG 213 KB
+USD export of 'build/convert/cello.usdz' took 197.27 ms
+Saved: 'build/convert/cello_hero.png'
+Time: 01:07.28 (Saving: 00:00.17)
+
+Saved: 'build/convert/cello_head.png'
+Time: 01:16.43 (Saving: 00:00.17)
+
+converted cello
+
+Blender quit
