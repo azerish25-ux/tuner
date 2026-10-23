@@ -55,12 +55,16 @@ extension View {
     @ViewBuilder func stillCard(cornerRadius: CGFloat = Metrics.corner, padding: CGFloat = 18, tint: Color? = nil) -> some View {
         let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
         let padded = self.padding(padding).frame(maxWidth: .infinity, alignment: .leading)
+        // contentShape: the glass alone is not hit-testable, so a tap on an empty part of a
+        // card-styled button (between its icon and title) would otherwise do nothing.
         if #available(iOS 26.0, *) {
             padded.glassEffect(tint.map { Glass.regular.tint($0.opacity(0.18)) } ?? Glass.regular, in: shape)
+                .contentShape(shape)
         } else {
             padded
                 .background(.ultraThinMaterial, in: shape)
                 .overlay(shape.strokeBorder(Palette.line.opacity(0.9), lineWidth: 0.5))
+                .contentShape(shape)
         }
     }
 
