@@ -47,6 +47,13 @@ struct LessonResults: View {
         // The content scrolls inside its own frame: nothing slides under the buttons.
         VStack(spacing: 0) {
             ScrollView { content }.scrollBounceBehavior(.basedOnSize).scrollIndicators(.hidden)
+                // Content that continues below the fold fades out instead of being cut at the buttons.
+                .mask {
+                    VStack(spacing: 0) {
+                        Color.black
+                        LinearGradient(colors: [.black, .clear], startPoint: .top, endPoint: .bottom).frame(height: 28)
+                    }
+                }
             buttons
         }
         .task { await reveal() }
