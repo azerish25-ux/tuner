@@ -1,67 +1,66 @@
-# Timbre iOS — Apple delivery handoff
+# Timbre for iOS — Apple delivery handoff
 
-This document describes the remaining Apple-account and release work. It is not evidence that the current revision's tests, archive, App Store product, live advertising or submission have succeeded. Inspect the latest GitHub Actions results and release artifact before delivery.
+What the owner sets up in Apple's portals and GitHub before the first App Store build. Nothing here has been executed yet: no signing, upload or App Store product exists until the owner does these steps.
 
-## Application identity
+## Identity
 
-- Repository: https://github.com/azerish25-ux/tuner
-- Application: **Timbre**
-- Current XcodeGen bundle identifier: **com.shahradazerisharghi.timbre** (`ios/project.yml`)
-- Deployment target: **iOS 17.0**, iPhone and iPad
-- Owner/support: **Shahrad Azeri Sharghi**, **azerish25@gmail.com**
-- Non-consumable purchase identifier: **timbre_plus_lifetime**
-- Intended privacy URL after these files are merged to publicly accessible `main`: **https://github.com/azerish25-ux/tuner/blob/main/docs/ios/PRIVACY.md**
-- Standard Apple EULA: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
-
-Verify that the privacy URL opens without authentication after merge. A file on an unmerged branch or a private repository is not a public metadata URL. The previous linked Worker privacy site must not be assumed available. If this repository is private, publish this same approved policy at a publicly reachable location before submission.
-
-## Owner's Apple setup
-
-1. Register the exact bundle ID in Certificates, Identifiers & Profiles and create the matching iOS app in App Store Connect. Confirm the owner has accepted applicable agreements and configured required paid-app banking/tax information.
-2. Create **timbre_plus_lifetime** as a **non-consumable** in-app purchase. Add its localized display name/description, chosen real price and availability, and review screenshot/information. This is a permanent unlock with no renewal. The StoreKit fixture's 7.99 is strictly local test data and is not a production price decision. The app uses Apple's `displayPrice`.
-3. Add App Store metadata, support contact, privacy URL, category, age-rating questionnaire, export-compliance answers, and required iPhone/iPad screenshots. Complete App Privacy against the actual release SDK/configuration, including third-party partners; the on-device microphone design does not justify declaring all third-party data collection absent. Apple requires disclosure of integrated partners' practices. [Apple's privacy guidance][apple-privacy] and [Google's iOS SDK disclosure][google-disclosure] are the starting evidence.
-4. Establish signing for this bundle ID: Apple distribution certificate/private key and App Store provisioning profile, or an authorized automatic-signing workflow with appropriately scoped credentials. The current unsigned archive cannot be installed or uploaded as a signed App Store build.
-5. Create a scoped App Store Connect API key for the approved CI upload process and retain its issuer ID/key ID. The owner must authorize the signed delivery/upload step. Do not place credentials in chat, repository files, issues, logs or build artifacts.
-
-## GitHub Actions signing secrets
-
-The `apple-delivery` GitHub environment is configured for deployments from `main` with required review by `azerish25-ux`. Add credentials through [repository environments](https://github.com/azerish25-ux/tuner/settings/environments), selecting `apple-delivery` and its environment secrets. The manual `.github/workflows/apple-delivery.yml` workflow uses the following exact names in the `apple-delivery` environment:
-
-| Secret | Contents/use |
+| | |
 |---|---|
-| `APPLE_TEAM_ID` | Apple Developer team identifier used for signing |
-| `APPLE_CERTIFICATE_P12_BASE64` | Base64 transport of distribution certificate and private key; remains a secret, not encryption |
-| `APPLE_CERTIFICATE_PASSWORD` | Password protecting that certificate export |
-| `APPLE_PROVISIONING_PROFILE_BASE64` | App Store provisioning profile matching bundle ID and certificate |
-| `APP_STORE_CONNECT_KEY_ID` | Upload API key identifier |
-| `APP_STORE_CONNECT_ISSUER_ID` | API issuer identifier |
-| `APP_STORE_CONNECT_API_KEY_P8` | Complete raw PEM contents of the downloaded `.p8` private key, including BEGIN/END lines; do not Base64-encode this secret |
+| App | **Timbre** |
+| Bundle ID (app) | `com.shahradazerisharghi.timbre` |
+| Bundle ID (widgets) | `com.shahradazerisharghi.timbre.widgets` |
+| App Group | `group.com.shahradazerisharghi.timbre` (widgets read the practice streak from it) |
+| Minimum iOS | 18.0, iPhone and iPad |
+| Privacy policy URL | https://azerish25-ux.github.io/tuner/privacy.html |
+| Terms | Apple standard EULA: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/ |
 
-Alternative signing methods can avoid a manually supplied profile, but must be concretely configured and verified before replacing these inputs. Use an ephemeral CI keychain, temporary files with restrictive permissions, and cleanup that runs even on failure. Do not echo secret values, enable shell tracing around secrets, or upload keychains, `.p12`, `.p8`, profiles or temporary credential directories. Rotate/revoke exposed credentials. Follow [Apple's API-key guidance][apple-keys] and [GitHub's secrets guidance][github-secrets].
+## 1. App Store Connect app
 
-## Optional iOS advertising configuration
+1. Accept the Paid Apps agreement and complete banking and tax (Business → Agreements). Subscriptions cannot go live without it.
+2. Enrol in the **App Store Small Business Program** (15% commission instead of 30%).
+3. Create the app: **Apps → + → New App**, platform iOS, name Timbre, bundle ID `com.shahradazerisharghi.timbre` (register it under Certificates, Identifiers & Profiles if it is not offered; automatic signing in step 3 can also register it).
 
-To retain free-edition monetization, the owner must create/confirm an **iOS** AdMob app and interstitial ad unit. Android identifiers do not identify the iOS app. Supply production GitHub repository or `apple-delivery` environment variables `TIMBRE_ADMOB_APP_ID` and `TIMBRE_ADMOB_INTERSTITIAL_ID`; the delivery workflow forwards them as build settings and selects `ios/project-ads.yml` only when both are valid. `GADApplicationIdentifier` resolves from the former. The baseline `ios/project.yml` does not link the advertising SDKs, avoiding SDK startup without an application identifier. Configure privacy messages in AdMob, verify required privacy-options access, and review the actual SDK privacy manifests and App Store privacy answers. If any proposed advertising behavior constitutes tracking, implement and validate Apple's applicable permission requirements before enabling it. [Google's UMP documentation][google-ump] and [Apple's tracking guidance][apple-tracking] describe separate responsibilities.
+## 2. In-app purchases (exact identifiers — the app looks these up)
 
-When identifiers are absent, the delivery workflow selects the baseline build without advertising SDKs. Malformed, incomplete or Google demo identifier pairs fail delivery validation instead of producing a release with invalid advertising configuration. Test identifiers/debug opt-in are not production monetization. Do not claim live iOS ads or consent-region behavior were verified until the configured release has been tested. If shipping without advertising, make that release decision explicit and ensure policy/metadata match the delivered build.
+Create a subscription group named **Timbre Pro** with two auto-renewable subscriptions at the same level:
 
-## Signed delivery workflow outline
+| Product ID | Type | Duration | Suggested US price | Introductory offer |
+|---|---|---|---|---|
+| `timbre_pro_annual` | Auto-renewable | 1 year | $34.99 | Free trial, 2 weeks, new subscribers |
+| `timbre_pro_monthly` | Auto-renewable | 1 month | $6.99 | none |
 
-The existing `.github/workflows/ios.yml` builds/tests on hosted macOS and creates an **unsigned** archive. Signing and uploading use the separate manual `.github/workflows/apple-delivery.yml` workflow. It runs only through `workflow_dispatch`, requires `confirm_delivery=true`, the approved `marketing_version` and a unique positive `build_number`, and targets the `apple-delivery` environment. Do not dispatch it before the owner authorizes Apple delivery. Its steps are:
+And one non-consumable:
 
-1. Select an exact reviewed commit; require successful latest core, application integration/StoreKit and UI flow jobs. Inspect simulator screenshots and test artifacts, rather than inferring feature parity from a compile alone.
-2. Resolve dependencies and generate `ios/Timbre.xcodeproj` with XcodeGen. Set the approved Apple team, bundle/version/build values and optional advertising configuration.
-3. Import signing inputs into the ephemeral keychain and install the correct profile. Archive for `generic/platform=iOS` with distribution signing enabled; do not use `CODE_SIGNING_ALLOWED=NO` for this archive.
-4. Export with an App Store Connect distribution ExportOptions file for the same team/bundle. Check the signed app's identity, entitlements, version and resources. Local `.storekit` fixtures belong to test resources and must not be included in the release app.
-5. Upload the approved exported build using an Apple-supported upload tool authenticated with the scoped App Store Connect key. Preserve upload/processing results and report failures accurately.
-6. After Apple processes the build, select it in App Store Connect, attach the in-app purchase as required, finish review notes/metadata, and obtain owner authorization for the intended TestFlight or App Store submission action.
-7. Remove temporary credentials/keychain/profile copies from the runner. Retain useful test/archive/export evidence without secrets.
+| Product ID | Type | Suggested US price |
+|---|---|---|
+| `timbre_plus_lifetime` | Non-consumable | $89.99 |
 
-TestFlight distribution and App Store submission are distinct choices. This handoff imposes no recruited tester count; it also does not claim Apple's review is waived. Simulator checks cannot establish actual iPhone microphone latency, routing or acoustic accuracy. Those hardware measurements remain explicitly unverified until performed.
+`timbre_plus_lifetime` keeps the identifier of the earlier lifetime purchase, so anyone who bought it keeps Pro. Prices are suggestions: the app shows whatever Apple returns (`displayPrice`), including the trial length. Give each product a display name and description (for example "Timbre Pro — every instrument in 3D, strobe precision and the full practice set"), a review screenshot of the paywall, and review notes saying the trial and plans are on the paywall reached from Practice → Drone. Submit the products with the first app version.
 
-[apple-privacy]: https://developer.apple.com/app-store/app-privacy-details/
-[apple-keys]: https://developer.apple.com/documentation/appstoreconnectapi/creating-api-keys-for-app-store-connect-api
-[github-secrets]: https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions
-[google-disclosure]: https://developers.google.com/admob/ios/privacy/data-disclosure
-[google-ump]: https://developers.google.com/admob/ios/privacy
-[apple-tracking]: https://developer.apple.com/app-store/user-privacy-and-data-use/
+## 3. Signing and upload from GitHub Actions
+
+The delivery workflow signs automatically with an App Store Connect API key, which provisions the app, the widget extension and the App Group without certificates or profiles to export.
+
+1. App Store Connect → Users and Access → Integrations → **App Store Connect API** → Team Keys → generate a key with the **Admin** role (automatic signing needs to create a distribution certificate). Download the `.p8` once; note the Key ID and Issuer ID.
+2. Find the Team ID under Membership details at developer.apple.com.
+3. GitHub → repository Settings → Environments → **apple-delivery** → add these environment secrets:
+
+| Secret | Value |
+|---|---|
+| `APPLE_TEAM_ID` | 10-character Team ID |
+| `APP_STORE_CONNECT_KEY_ID` | Key ID |
+| `APP_STORE_CONNECT_ISSUER_ID` | Issuer ID |
+| `APP_STORE_CONNECT_API_KEY_P8` | Entire `.p8` file contents including the BEGIN/END lines (not Base64) |
+
+Never paste these into chat, issues, commits or logs. Revoke the key in App Store Connect if it is ever exposed.
+
+4. Run **Actions → Apple delivery → Run workflow** on `main` with a version (2.0.0), a new build number, and the confirmation box ticked. It runs the core tests, archives the Release build, signs it and uploads it to App Store Connect, where it appears under TestFlight after processing.
+
+## 4. Listing
+
+- Category: Music. Secondary: Education.
+- Age rating: 4+.
+- App Privacy: **Data Not Collected** matches this version (pitch analysis and history stay on the device, no analytics SDK, no ads). Revisit if analytics or a paywall service is added.
+- Encryption: the app uses only Apple's standard encryption (`ITSAppUsesNonExemptEncryption = false`).
+- Screenshots: the CI tour produces 6.9" iPhone and 13" iPad captures (`ci-results/app`, `ci-results/ipad`) as a starting point.
+- Subscription disclosures are on the paywall (price, period, auto-renewal, cancel in Settings, Terms and Privacy links), as App Review Guideline 3.1.2 requires.
