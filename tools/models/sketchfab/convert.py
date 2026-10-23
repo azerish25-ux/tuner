@@ -398,6 +398,38 @@ def calibrate(scene, out, model, lo, hi, pts):
     (out / f"{model}.calib.json").write_text(json.dumps(calib, indent=1))
 
 
+def dump_parts(out, model, per_object=160):
+    """Every visible part in the normalised frame, for rigging by hand: <model>.parts.npz holds names,
+    vertex counts, bounds and a vertex sample per part; <model>.materials.json the materials' textures."""
+    rng = np.random.default_rng(0)
+    names, counts, mats, samples, owner = [], [], [], [], []
+    for k, obj in enumerate(sorted((o for o in meshes() if not o.hide_render), key=lambda o: o.name)):
+        v = verts(obj, limit=200000)
+        names.append(obj.name)
+        counts.append(len(obj.data.vertices))
+        mats.append("|".join(s.material.name for s in obj.material_slots if s.material))
+        pick = v if len(v) <= per_object else v[rng.choice(len(v), per_object, replace=False)]
+        lo, hi = v.min(0), v.max(0)
+        samples.append(np.concatenate([pick, [lo, hi]]))
+        owner.append(np.full(len(pick) + 2, k))
+    np.savez_compressed(out / f"{model}.parts.npz", names=np.array(names), counts=np.array(counts), materials=np.array(mats),
+                        points=np.concatenate(samples).astype(np.float32), owner=np.concatenate(owner).astype(np.int32))
+    info = {}
+    for mat in bpy.data.materials:
+        if not mat.use_nodes or mat.users == 0:
+            continue
+        bsdf = next((n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
+        info[mat.name] = {
+            "images": sorted({n.image.name for n in mat.node_tree.nodes if n.type == "TEX_IMAGE" and n.image}),
+            "baseColor": [round(x, 3) for x in bsdf.inputs["Base Color"].default_value] if bsdf else None,
+            "metallic": round(bsdf.inputs["Metallic"].default_value, 3) if bsdf else None,
+            "roughness": round(bsdf.inputs["Roughness"].default_value, 3) if bsdf else None,
+            "alpha": round(bsdf.inputs["Alpha"].default_value, 3) if bsdf else None,
+            "blend": getattr(mat, "surface_render_method", ""),
+        }
+    (out / f"{model}.materials.json").write_text(json.dumps(info, indent=1))
+
+
 def to_usd(v):
     return [round(float(v[0]), 5), round(float(v[2]), 5), round(float(-v[1]), 5)]
 
@@ -515,6 +547,10 @@ def convert(src: Path, cfg: dict, out: Path):
     pts = np.concatenate([verts(o) for o in visible])
     studio(scene, lo, hi)
     model = cfg["model"]
+    dump_parts(out, model)
+    if cfg.get("dumpOnly"):
+        print("dumped", model, flush=True)
+        return
     calibrate(scene, out, model, lo, hi, pts)
     if cfg.get("auto"):
         rig, hc, hs = auto_rig(scene, root, cfg, lo, hi, pts)
