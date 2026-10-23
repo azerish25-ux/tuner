@@ -53,6 +53,7 @@ struct SettingsView: View {
             } message: { Text("This removes saved sessions, streaks and voice progress from this device.") }
             .manageSubscriptionsSheet(isPresented: $manageSubscriptions)
         }
+        .paywallSheet()
     }
 
     private var membership: some View {
@@ -65,7 +66,7 @@ struct SettingsView: View {
                 } } icon: { Image(systemName: "checkmark.seal.fill").foregroundStyle(Palette.brass) }
                 if commerce.activeProductID != TimbreProduct.lifetime { Button("Manage subscription") { manageSubscriptions = true } }
             } else {
-                Button { dismiss(); store.presentPaywall("settings") } label: {
+                Button { store.presentPaywall("settings") } label: {
                     FeatureRow(symbol: "sparkles", title: "Try Timbre Pro", detail: "Every instrument in 3D, strobe precision and daily practice.") { ProBadge() }
                 }
                 .buttonStyle(.plain)

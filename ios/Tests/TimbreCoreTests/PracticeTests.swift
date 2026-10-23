@@ -154,3 +154,28 @@ final class PracticeTests: XCTestCase {
         XCTAssertEqual(energy(3), 0)
     }
 }
+
+final class CustomTuningTests: XCTestCase {
+    func testCustomTuningKeepsAnchorsAndOrder() throws {
+        let catalog = try Catalog()
+        let base = try XCTUnwrap(catalog.tuning(id: "guitar.acoustic.6.standard"))
+        let dadgad = CustomTuning(instrumentId: "guitar.acoustic.6", name: "DADGAD", midis: [38, 45, 50, 55, 57, 62])
+        let tuning = dadgad.tuning(base: base)
+        XCTAssertTrue(tuning.isCustom)
+        XCTAssertEqual(tuning.courses.map(\.targetMidi), [38, 45, 50, 55, 57, 62])
+        XCTAssertEqual(tuning.courses.map(\.label), ["D2", "A2", "D3", "G3", "A3", "D4"])
+        XCTAssertEqual(tuning.courses.map(\.anchorId), base.courses.sorted { $0.index < $1.index }.map(\.anchorId))
+        XCTAssertEqual(tuning.name.localized, "DADGAD")
+    }
+
+    func testCustomTuningsPersistAndValidate() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let store = try LocalStore(directory: directory)
+        var settings = store.settings
+        settings.customTunings = [CustomTuning(instrumentId: "ukulele.soprano.4", name: "Low G", midis: [55, 60, 64, 69])]
+        try store.saveSettings(settings)
+        XCTAssertEqual(try LocalStore(directory: directory).settings.customTunings?.first?.name, "Low G")
+        settings.customTunings = [CustomTuning(instrumentId: "ukulele.soprano.4", name: "Broken", midis: [200])]
+        XCTAssertThrowsError(try store.saveSettings(settings))
+    }
+}

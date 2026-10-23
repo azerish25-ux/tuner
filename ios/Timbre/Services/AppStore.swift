@@ -73,10 +73,39 @@ final class AppStore: ObservableObject {
     var instrument: Instrument { catalog.instrument(id: settings.selectedInstrumentId) ?? catalog.instruments[0] }
     var tuning: Tuning {
         let id = settings.lastTuningIds[instrument.id] ?? instrument.defaultTuningId
+        if let custom = customTunings.first(where: { $0.id == id }) { return custom }
         if let remembered = catalog.tuning(id: id), remembered.instrumentId == instrument.id { return remembered }
         return catalog.tuning(id: instrument.defaultTuningId)!
     }
-    var tunings: [Tuning] { catalog.tunings.filter { $0.instrumentId == instrument.id } }
+    var tunings: [Tuning] { catalog.tunings.filter { $0.instrumentId == instrument.id } + customTunings }
+    /// The player's own tunings for the current instrument, built on its default tuning.
+    var customTunings: [Tuning] {
+        guard let base = catalog.tuning(id: instrument.defaultTuningId) else { return [] }
+        return (settings.customTunings ?? []).filter { $0.instrumentId == instrument.id }.map { $0.tuning(base: base) }
+    }
+    func customTuning(id: String) -> CustomTuning? { settings.customTunings?.first { $0.id == id } }
+    func saveCustomTuning(_ custom: CustomTuning) {
+        guard isPro else { presentPaywall("custom_tuning"); return }
+        endTuningSession()
+        guard updateSettings({ settings in
+            var list = settings.customTunings ?? []
+            if let index = list.firstIndex(where: { $0.id == custom.id }) { list[index] = custom } else { list.append(custom) }
+            settings.customTunings = list
+            settings.lastTuningIds[custom.instrumentId] = custom.id
+        }) else { return }
+        resetTuningMeasurements()
+        selectedCourse = courses.first?.index ?? 0
+        Analytics.log("custom_tuning_saved", ["instrument": custom.instrumentId, "strings": String(custom.midis.count)])
+    }
+    func deleteCustomTuning(id: String) {
+        endTuningSession()
+        updateSettings { settings in
+            settings.customTunings?.removeAll { $0.id == id }
+            for (instrument, tuning) in settings.lastTuningIds where tuning == id { settings.lastTuningIds[instrument] = nil }
+        }
+        resetTuningMeasurements()
+        selectedCourse = courses.first?.index ?? 0
+    }
     var courses: [Course] { tuning.courses.sorted { $0.index < $1.index } }
     var activeCourse: Course { courses.first(where: { $0.index == selectedCourse }) ?? courses[0] }
     var activeMidi: Int { referenceMode ? referenceMidi : activeCourse.targetMidi }

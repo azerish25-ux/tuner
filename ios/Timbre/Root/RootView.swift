@@ -22,7 +22,7 @@ struct RootView: View {
         .fullScreenCover(isPresented: Binding(get: { store.settings.onboardingCompleted != true }, set: { _ in })) {
             OnboardingView().environmentObject(store).environmentObject(audio).environmentObject(commerce)
         }
-        .sheet(isPresented: $store.showPaywall) { PaywallView().environmentObject(store).environmentObject(commerce) }
+        .paywallSheet(active: !store.showSettings && !store.showInstrumentPicker)
         .sheet(isPresented: $store.showSettings) { SettingsView().environmentObject(store).environmentObject(commerce).presentationBackground(Palette.stage) }
         .alert("Timbre", isPresented: Binding(get: { store.error != nil || audio.error != nil }, set: { if !$0 { store.error = nil; audio.clearError() } })) {
             if audio.permissionDenied {

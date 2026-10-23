@@ -63,6 +63,34 @@ public struct Tuning: Codable, Identifiable, Equatable, Sendable {
     public let courses: [Course]
     // Paired strings are separate courses sharing the physical anchor, preserving octave partners.
     public var coursesByAnchor: [String: [Course]] { Dictionary(grouping: courses, by: { $0.anchorId ?? "course-\($0.index)" }) }
+    public var isCustom: Bool { provenance == CustomTuning.provenance }
+    public init(id: String, instrumentId: String, name: LocalizedText, isDefault: Bool, isFree: Bool, a4Hz: Double,
+                temperamentId: String, provenance: String, courses: [Course]) {
+        self.id = id; self.instrumentId = instrumentId; self.name = name; self.isDefault = isDefault; self.isFree = isFree
+        self.a4Hz = a4Hz; self.temperamentId = temperamentId; self.provenance = provenance; self.courses = courses
+    }
+}
+
+/// A player-made tuning: one target per course of the instrument's default tuning, so
+/// string order, octave pairs and 3D anchors all carry over.
+public struct CustomTuning: Codable, Equatable, Identifiable, Sendable {
+    public static let provenance = "CUSTOM"
+    public var id: String
+    public var instrumentId: String
+    public var name: String
+    public var midis: [Int]
+    public init(id: String = "custom." + UUID().uuidString.lowercased(), instrumentId: String, name: String, midis: [Int]) {
+        self.id = id; self.instrumentId = instrumentId; self.name = name; self.midis = midis
+    }
+    public func tuning(base: Tuning) -> Tuning {
+        let ordered = base.courses.sorted { $0.index < $1.index }
+        let courses = ordered.enumerated().map { offset, course in
+            let midi = offset < midis.count ? midis[offset] : course.targetMidi
+            return Course(index: course.index, targetMidi: midi, label: PitchMath.noteName(midi: midi), anchorId: course.anchorId)
+        }
+        return Tuning(id: id, instrumentId: instrumentId, name: LocalizedText(defaultValue: name), isDefault: false, isFree: false,
+                      a4Hz: base.a4Hz, temperamentId: base.temperamentId, provenance: Self.provenance, courses: courses)
+    }
 }
 public struct ReferenceMode: Codable, Identifiable, Equatable, Sendable {
     public let id: String

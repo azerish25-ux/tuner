@@ -37,6 +37,7 @@ public struct UserSettings: Codable, Equatable, Sendable {
     /// Daily practice completion: "yyyy-MM-dd" -> activity ids.
     public var dailyDone: [String: [String]]?
     public var earLevels: [String: Int]?
+    public var customTunings: [CustomTuning]?
     public init() {}
 }
 
@@ -144,7 +145,9 @@ public final class LocalStore {
               (-12...12).contains(settings.transposition), settings.lastTuningIds.count <= 128,
               settings.selectedVoiceLevel.map({ (1...8).contains($0) }) ?? true,
               settings.recentInstrumentIds.count <= recentInstrumentLimit,
-              settings.analysisWindowOverride.map({ $0 > 0 && $0 <= 65536 }) ?? true else {
+              settings.analysisWindowOverride.map({ $0 > 0 && $0 <= 65536 }) ?? true,
+              (settings.customTunings ?? []).count <= 200,
+              (settings.customTunings ?? []).allSatisfy({ !$0.midis.isEmpty && $0.midis.count <= 48 && $0.midis.allSatisfy { (0...127).contains($0) } && $0.name.count <= 60 }) else {
             throw LocalStoreError.invalidState("Invalid settings")
         }
         guard Set(value.records.map(\.id)).count == value.records.count,

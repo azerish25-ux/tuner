@@ -9,6 +9,8 @@ struct InstrumentsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var query = ""
     @State private var family: String?
+    @State private var creating = false
+    @State private var editing: CustomTuning?
 
     private var photos: [InstrumentPhoto] {
         store.catalog.photos.filter { photo in
@@ -54,6 +56,16 @@ struct InstrumentsView: View {
         .scrollDismissesKeyboard(.interactively)
         .background(StageBackground(motes: false))
         .toolbar { if picker { ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() } } } }
+        .sheet(isPresented: $creating) {
+            if let base = store.catalog.tuning(id: store.instrument.defaultTuningId) {
+                CustomTuningEditor(base: base).presentationBackground(Palette.stage)
+            }
+        }
+        .sheet(item: $editing) { custom in
+            if let base = store.catalog.tuning(id: store.instrument.defaultTuningId) {
+                CustomTuningEditor(base: base, editing: custom).presentationBackground(Palette.stage)
+            }
+        }
     }
 
     private var recents: [InstrumentPhoto] {
@@ -72,11 +84,31 @@ struct InstrumentsView: View {
                             if available { dismiss() }
                         } label: {
                             HStack(spacing: 6) {
+                                if tuning.isCustom { Image(systemName: "slider.vertical.3").font(.caption2) }
                                 Text(tuning.name.localized)
                                 if !available { Image(systemName: "lock.fill").font(.caption2) }
                             }
                         }
                         .buttonStyle(ChipButtonStyle(selected: tuning.id == store.tuning.id && !store.referenceMode))
+                        .contextMenu {
+                            if tuning.isCustom, let custom = store.customTuning(id: tuning.id) {
+                                Button { editing = custom } label: { Label("Edit", systemImage: "pencil") }
+                                Button(role: .destructive) { store.deleteCustomTuning(id: custom.id) } label: { Label("Delete", systemImage: "trash") }
+                            }
+                        }
+                    }
+                    if !store.referenceMode, !store.courses.isEmpty {
+                        Button {
+                            if commerce.isPro { creating = true } else { store.presentPaywall("custom_tuning") }
+                        } label: {
+                            HStack(spacing: 6) {
+                                Image(systemName: "plus")
+                                Text("Custom")
+                                if !commerce.isPro { ProBadge() }
+                            }
+                        }
+                        .buttonStyle(ChipButtonStyle(selected: false))
+                        .accessibilityIdentifier("tunings.custom")
                     }
                 }
             }
@@ -178,5 +210,6 @@ struct InstrumentPicker: View {
                 .navigationTitle("Choose instrument")
                 .navigationBarTitleDisplayMode(.inline)
         }
+        .paywallSheet()
     }
 }
