@@ -75,6 +75,10 @@ final class TimbreUITests: XCTestCase {
         element("tune.instrument").tap(); settle(1.5); shot("12-instrument-picker")
         app.buttons["Done"].firstMatch.tap(); settle()
         element("settings.open").tap(); settle(1.5); shot("13-settings")
+        // Pro upsell from inside the settings sheet presents the paywall on top of it.
+        element("settings.pro").tap()
+        XCTAssertTrue(element("paywall.purchase").waitForExistence(timeout: 15))
+        settle(1.5); shot("16-paywall-from-settings")
     }
 
     func test03StudioStage() throws {

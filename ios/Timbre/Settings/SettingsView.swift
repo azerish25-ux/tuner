@@ -70,6 +70,7 @@ struct SettingsView: View {
                     FeatureRow(symbol: "sparkles", title: "Try Timbre Pro", detail: "Every instrument in 3D, strobe precision and daily practice.") { ProBadge() }
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("settings.pro")
             }
             Button("Restore purchases") { Task { await commerce.restore() } }
         }

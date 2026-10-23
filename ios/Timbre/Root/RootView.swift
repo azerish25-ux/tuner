@@ -22,8 +22,13 @@ struct RootView: View {
         .fullScreenCover(isPresented: Binding(get: { store.settings.onboardingCompleted != true }, set: { _ in })) {
             OnboardingView().environmentObject(store).environmentObject(audio).environmentObject(commerce)
         }
-        .paywallSheet(active: !store.showSettings && !store.showInstrumentPicker)
-        .sheet(isPresented: $store.showSettings) { SettingsView().environmentObject(store).environmentObject(commerce).presentationBackground(Palette.stage) }
+        // Each presentation hangs off its own anchor so SwiftUI never has two sheets competing on one view.
+        .background { Color.clear.paywallSheet(active: !store.showSettings && !store.showInstrumentPicker) }
+        .background {
+            Color.clear.sheet(isPresented: $store.showSettings) {
+                SettingsView().environmentObject(store).environmentObject(commerce).presentationBackground(Palette.stage)
+            }
+        }
         .alert("Timbre", isPresented: Binding(get: { store.error != nil || audio.error != nil }, set: { if !$0 { store.error = nil; audio.clearError() } })) {
             if audio.permissionDenied {
                 Button("Open Settings") { if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) } }
