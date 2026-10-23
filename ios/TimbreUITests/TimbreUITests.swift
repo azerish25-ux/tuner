@@ -54,6 +54,18 @@ final class TimbreUITests: XCTestCase {
         if swiped { settle(1.2) }
     }
 
+    /// Taps Continue (once it is enabled) until the next screen's element appears: a tap during the
+    /// enable animation or the page transition can be dropped.
+    private func continueUntil(_ next: XCUIElement) {
+        let button = element("onboarding.continue")
+        for _ in 0..<4 where !next.exists {
+            _ = button.waitForExistence(timeout: 3)
+            if button.isEnabled { button.tap() }
+            _ = next.waitForExistence(timeout: 2.5)
+        }
+        XCTAssertTrue(next.exists)
+    }
+
     func test01Onboarding() throws {
         launch(onboarded: false, demo: false)
         let start = element("onboarding.start")
@@ -63,8 +75,8 @@ final class TimbreUITests: XCTestCase {
         element("onboarding.instrument.guitar.acoustic.6").tap()
         start.tap(); settle(1.5); shot("03-onboarding-experience")
         // Nothing is pre-selected: Continue waits for an answer.
-        element("onboarding.option.intermediate").tap(); settle(0.5)
-        element("onboarding.continue").tap(); settle(1.5); shot("04-onboarding-goal")
+        element("onboarding.option.intermediate").tap()
+        continueUntil(element("onboarding.option.practice")); settle(1.2); shot("04-onboarding-goal")
         element("onboarding.option.practice").tap(); settle(0.5)
         let notNow = app.buttons["Not now"]
         for _ in 0..<3 where !notNow.exists { element("onboarding.continue").tap(); settle(1.5) }
