@@ -81,7 +81,7 @@ struct LessonResults: View {
                 UserDefaults.standard.set(true, forKey: PracticeReminder.askedKey)
                 Task { await PracticeReminder.enable(at: PracticeReminder.minutes); withAnimation { offerReminder = false } }
             }
-            .font(Typeface.label(14)).foregroundStyle(Palette.onAccent)
+            .font(Typeface.label(14)).foregroundStyle(Palette.onAccent).lineLimit(1).fixedSize()
             .padding(.horizontal, 14).frame(height: 36).background(Capsule().fill(accent))
             .accessibilityIdentifier("lesson.reminder")
             Button { UserDefaults.standard.set(true, forKey: PracticeReminder.askedKey); withAnimation { offerReminder = false } } label: {

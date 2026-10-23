@@ -34,6 +34,9 @@ struct CelebrationOverlay: View {
                     }
                     .accessibilityHidden(true)
                     HStack(spacing: 10) {
+                        if let seconds = store.lastTuneSeconds, seconds > 0 {
+                            Label("\(seconds) s", systemImage: "stopwatch.fill").foregroundStyle(Palette.ink)
+                        }
                         Label("+\(XPReward.fullTune) XP", systemImage: "sparkles").foregroundStyle(Palette.mint)
                         if store.streak.current > 0 {
                             Label("\(store.streak.current)-day streak", systemImage: "flame.fill").foregroundStyle(Color(hex: 0xFFD3A8))
@@ -85,7 +88,7 @@ struct CelebrationOverlay: View {
     private func renderCard() {
         let renderer = ImageRenderer(content: ShareCard(instrument: store.instrumentDisplayName, tuning: store.tuning.name.localized,
                                                          notes: store.courses.map { TargetLabelFormatter.splitCue(store.courseLabel($0)).main },
-                                                         modelID: store.modelID, photo: store.photo?.asset, streak: store.streak.current))
+                                                         modelID: store.modelID, photo: store.photo?.asset, streak: store.streak.current, seconds: store.lastTuneSeconds))
         renderer.scale = displayScale
         if let image = renderer.uiImage { card = Image(uiImage: image) }
     }
@@ -128,6 +131,7 @@ struct ShareCard: View {
     let modelID: String?
     let photo: String?
     let streak: Int
+    var seconds: Int?
     var body: some View {
         VStack(spacing: 16) {
             HStack {
@@ -140,6 +144,9 @@ struct ShareCard: View {
                     .background(Ellipse().fill(RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.25), .clear], center: .center, startRadius: 2, endRadius: 160)).frame(width: 300, height: 40).offset(y: 150))
             }
             Text("In tune").font(Typeface.display(52)).tracking(-1.2).foregroundStyle(Palette.ink)
+            if let seconds, seconds > 0 {
+                Text("Every string in \(seconds) seconds").font(Typeface.label(16)).foregroundStyle(Palette.mint)
+            }
             Text("\(instrument) · \(tuning)").font(.headline).foregroundStyle(Palette.inkSoft)
             HStack(spacing: 8) {
                 ForEach(Array(notes.enumerated()), id: \.offset) { _, note in

@@ -96,7 +96,8 @@ struct TuneView: View {
     @ViewBuilder private var stage: some View {
         ZStack(alignment: .top) {
             if store.referenceMode {
-                ChromaticStage(input: stageInput, note: store.targetName).padding(24)
+                // The note name lives in the readout below; the strobe ring stays clear of the side buttons.
+                ChromaticStage(input: stageInput, note: "").padding(.vertical, 20).padding(.horizontal, 64)
             } else if let modelID = store.modelID {
                 let rig = ModelLibrary.rig(modelID)
                 if Self.supports3D && store.settings.stageMode != "studio" && failed3D != modelID {

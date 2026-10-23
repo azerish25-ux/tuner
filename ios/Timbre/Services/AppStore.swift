@@ -379,7 +379,11 @@ final class AppStore: ObservableObject {
         }
     }
 
+    /// Seconds from the first reading to the last string locking, for the celebration and share card.
+    private(set) var lastTuneSeconds: Int?
+
     private func completedFullTune() {
+        lastTuneSeconds = sessionStartedUptime.map { Int((ProcessInfo.processInfo.systemUptime - $0).rounded()) }
         celebrate += 1
         Haptics.shared.done()
         let count = (settings.fullTunes ?? 0) + 1
