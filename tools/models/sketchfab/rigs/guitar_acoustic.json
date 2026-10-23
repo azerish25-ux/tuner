@@ -1,0 +1,16 @@
+{
+ "model": "guitar_acoustic",
+ "source": "acoustic_afurokn",
+ "length": 1.03,
+ "anchors": ["s6", "s5", "s4", "s3", "s2", "s1"],
+ "wound": [true, true, true, true, false, false],
+ "auto": {
+  "strings": "string.",
+  "posts": "tuning_machine_post",
+  "pegs": ["tuning_machine-key.", "tuning_machine-key_screw."],
+  "nut": "guitar-nut",
+  "saddle": "guitar-saddle"
+ },
+ "rig": "MACHINE_HEAD",
+ "degPerCent": 1.4
+}

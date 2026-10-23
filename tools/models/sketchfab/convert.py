@@ -65,6 +65,112 @@ def verts(obj, limit=60000):
     return co @ m[:3, :3].T + m[:3, 3]
 
 
+def matching(prefix):
+    prefixes = prefix if isinstance(prefix, list) else [prefix]
+    return [o for o in meshes() if any(o.name.startswith(p) for p in prefixes)]
+
+
+def centre(obj):
+    return verts(obj).mean(0)
+
+
+def principal(points):
+    _, vecs = np.linalg.eigh(np.cov((points - points.mean(0)).T))
+    return vecs[:, 2]
+
+
+def pivot(scene, name, root, center, local_axis, axis):
+    """Empty at center whose given local axis points along axis, parented under root."""
+    node = bpy.data.objects.new(name, None)
+    scene.collection.objects.link(node)
+    node.parent = root
+    node.matrix_world = Matrix.Translation(Vector(center)) @ Vector(local_axis).rotation_difference(Vector(axis)).to_matrix().to_4x4()
+    bpy.context.view_layer.update()
+    return node
+
+
+def adopt(node, objs):
+    for obj in objs:
+        world = obj.matrix_world.copy()
+        obj.parent = node
+        obj.matrix_world = world
+
+
+def cut_speaking_length(obj, z_low, z_high):
+    """Delete the faces of an original string between saddle and nut: the stage draws that part."""
+    import bmesh
+    mw = obj.matrix_world
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    doomed = [f for f in bm.faces if z_low < (mw @ f.calc_center_median()).z < z_high]
+    bmesh.ops.delete(bm, geom=doomed, context="FACES")
+    bm.to_mesh(obj.data)
+    bm.free()
+
+
+def auto_rig(scene, root, cfg, lo, hi, pts):
+    """Machine heads modelled as separate parts: posts, keys, strings, nut and saddle by name."""
+    auto = cfg["auto"]
+    nut_z = float(np.concatenate([verts(o) for o in matching(auto["nut"])])[:, 2].mean())
+    saddle_pts = np.concatenate([verts(o) for o in matching(auto["saddle"])])
+    saddle_z = float(saddle_pts[:, 2].max()) if auto.get("saddleTop", True) else float(saddle_pts[:, 2].mean())
+    posts = matching(auto["posts"])
+    post_c = {o.name: centre(o) for o in posts}
+    peg_parts = {prefix: matching(prefix) for prefix in auto["pegs"]}
+    span = nut_z - saddle_z
+    rows = []
+    for obj in matching(auto["strings"]):
+        v = verts(obj, limit=200000)
+        def at(z):
+            band = v[np.abs(v[:, 2] - z) < span * 0.01]
+            return band.mean(0) if len(band) else None
+        nut, saddle = at(nut_z - span * 0.012), at(saddle_z + span * 0.012)
+        if nut is None or saddle is None:
+            print("string without a speaking length:", obj.name)
+            continue
+        top = v[v[:, 2].argmax()]
+        post = min(posts, key=lambda o: np.linalg.norm(post_c[o.name] - top))
+        band = v[np.abs(v[:, 2] - (nut_z + saddle_z) / 2) < span * 0.01]
+        radius = float(np.linalg.norm(band[:, [0, 1]] - band[:, [0, 1]].mean(0), axis=1).mean()) if len(band) else 0.0006
+        rows.append({"obj": obj, "nut": nut, "saddle": saddle, "post": post, "radius": radius})
+    rows.sort(key=lambda r: r["nut"][0])
+    anchors = cfg["anchors"]
+    if len(rows) != len(anchors):
+        raise ValueError(f"found {len(rows)} strings, rig expects {len(anchors)}")
+    names = [a + "ab"[anchors[:i].count(a)] if anchors.count(a) > 1 else a for i, a in enumerate(anchors)]
+    strings = []
+    for row, anchor, name, k in zip(rows, anchors, names, range(len(rows))):
+        pc = post_c[row["post"].name]
+        post_axis = principal(verts(row["post"]))
+        if post_axis @ np.array([0, -1, 0]) < 0:
+            post_axis = -post_axis
+        parts = [min(objs, key=lambda o: np.linalg.norm(centre(o) - pc)) for objs in peg_parts.values() if objs]
+        key = parts[0]
+        kc = centre(key)
+        shaft = kc - pc
+        shaft = shaft - post_axis * (shaft @ post_axis)
+        shaft = shaft / np.linalg.norm(shaft)
+        peg = pivot(scene, f"peg_{name}", root, kc, (1, 0, 0), shaft)
+        adopt(peg, parts)
+        post = pivot(scene, f"post_{name}", root, pc, (0, 0, 1), post_axis)
+        adopt(post, [row["post"]])
+        mat = row["obj"].material_slots[0].material if row["obj"].material_slots else string_material()
+        cut_speaking_length(row["obj"], saddle_z + span * 0.004, nut_z - span * 0.004)
+        r = max(row["radius"], 0.00025)
+        cylinder_between(f"string_{name}", row["saddle"], row["nut"], r, mat, root)
+        # The shaft axis points outward on both sides, so one sign tightens every machine.
+        tighten = cfg.get("tighten", {}).get(anchor, 1)
+        strings.append({"anchor": anchor, "saddle": to_usd(row["saddle"]), "nut": to_usd(row["nut"]), "radius": round(r, 6),
+                        "wound": bool(cfg.get("wound", [False] * len(anchors))[k]), "peg": f"peg_{name}", "post": f"post_{name}",
+                        "node": f"string_{name}", "pegCenter": to_usd(kc), "pegAxis": to_usd(shaft), "tighten": tighten})
+    hc, hs = head_region(pts)
+    rig = {"model": cfg["model"], "rig": cfg.get("rig", "MACHINE_HEAD"), "degPerCent": cfg.get("degPerCent", 1.4),
+           "strings": strings, "headCenter": to_usd(hc), "bodyCenter": to_usd((lo + hi) / 2), "length": cfg["length"],
+           "boundsMin": [min(a, b) for a, b in zip(to_usd(lo), to_usd(hi))], "boundsMax": [max(a, b) for a, b in zip(to_usd(lo), to_usd(hi))],
+           "credit": cfg.get("credit")}
+    return rig, hc, hs
+
+
 def normalise(cfg):
     """Rotate/scale/centre everything under one root so the head points +Z and the face looks at -Y."""
     for name in cfg.get("remove", []):
@@ -84,6 +190,12 @@ def normalise(cfg):
     up = long_axis * (1 if cfg.get("headEnd", "A") == "A" else -1)
     # inspect.py's "front" renders look from +thin: a face seen there points along +thin.
     face = thin_axis * (1 if cfg.get("face", "front") == "front" else -1)
+    auto = cfg.get("auto")
+    if auto:  # the head is where the posts are; the face is the side the strings run on
+        posts = np.concatenate([verts(o) for o in matching(auto["posts"])])
+        strings = np.concatenate([verts(o) for o in matching(auto["strings"])])
+        up = long_axis * (1 if (posts.mean(0) - mean) @ long_axis > 0 else -1)
+        face = thin_axis * (1 if (strings.mean(0) - mean) @ thin_axis > 0 else -1)
     z = Vector(up).normalized()
     y = -Vector(face)
     y = (y - z * y.dot(z)).normalized()
@@ -311,10 +423,16 @@ def convert(src: Path, cfg: dict, out: Path):
     studio(scene, lo, hi)
     model = cfg["model"]
     calibrate(scene, out, model, lo, hi, pts)
-    if not cfg.get("strings"):
+    if cfg.get("auto"):
+        rig, hc, hs = auto_rig(scene, root, cfg, lo, hi, pts)
+    elif cfg.get("strings"):
+        rig, hc, hs = rig_model(scene, root, cfg, lo, hi, pts)
+    else:
         print("calibrated", model, "bounds", lo.round(3).tolist(), hi.round(3).tolist(), flush=True)
         return
-    rig, hc, hs = rig_model(scene, root, cfg, lo, hi, pts)
+    meta = src / cfg["source"] / "meta.json"
+    if meta.exists():
+        rig["credit"] = json.loads(meta.read_text())
     export_usdz(root, out / f"{model}.usdz")
     (out / f"{model}.rig.json").write_text(json.dumps(rig, indent=1))
     persp_camera(scene, (lo + hi) / 2, float(hi[2] - lo[2]), 24, 6, 85)
