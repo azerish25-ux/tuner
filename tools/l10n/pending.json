@@ -1,0 +1,2354 @@
+[
+ {
+  "table": "AppShortcuts.strings",
+  "key": "Open the ${applicationName} metronome",
+  "source": "Open the ${applicationName} metronome",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "AppShortcuts.strings",
+  "key": "Open the ${applicationName} tuner",
+  "source": "Open the ${applicationName} tuner",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "AppShortcuts.strings",
+  "key": "Start my ${applicationName} practice",
+  "source": "Start my ${applicationName} practice",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "AppShortcuts.strings",
+  "key": "Train my ear with ${applicationName}",
+  "source": "Train my ear with ${applicationName}",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "AppShortcuts.strings",
+  "key": "Tune with ${applicationName}",
+  "source": "Tune with ${applicationName}",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "InfoPlist.strings",
+  "key": "CFBundleDisplayName",
+  "source": "Timbre",
+  "note": "Bundle display name"
+ },
+ {
+  "table": "InfoPlist.strings",
+  "key": "NSMicrophoneUsageDescription",
+  "source": "Timbre listens to your instrument or voice to measure pitch. Audio is processed on your device and is never saved or uploaded.",
+  "note": "Privacy - Microphone Usage Description"
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%@ per month, billed yearly",
+  "source": "%@ per month, billed yearly",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%@ per year starts, unless you cancel.",
+  "source": "%@ per year starts, unless you cancel.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%@ tunings",
+  "source": "%@ tunings",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%@ · %@",
+  "source": "%@ · %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%@ · beats per minute",
+  "source": "%@ · beats per minute",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%@ – %@",
+  "source": "%@ – %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%@, %@. Double tap to hear.",
+  "source": "%@, %@. Double tap to hear.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld",
+  "source": "%lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld cents flat",
+  "source": "%lld cents flat",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld cents sharp",
+  "source": "%lld cents sharp",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld correct",
+  "source": "%lld correct",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld min · %@",
+  "source": "%lld min · %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld minutes",
+  "source": "%lld minutes",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld of %lld right · now level %lld",
+  "source": "%lld of %lld right · now level %lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld percent done",
+  "source": "%lld percent done",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld samples",
+  "source": "%lld samples",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld sessions",
+  "source": "%lld sessions",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld%%",
+  "source": "%lld%%",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld-day free trial",
+  "source": "%lld-day free trial",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld-day streak",
+  "source": "%lld-day streak",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld-month free trial",
+  "source": "%lld-month free trial",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld/%lld",
+  "source": "%lld/%lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lldfr",
+  "source": "%lldfr",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "+%lld",
+  "source": "+%lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "+%lld BPM every %lld bars up to %lld",
+  "source": "+%lld BPM every %lld bars up to %lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "3D",
+  "source": "3D",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "3D instruments, materials and renders are generated from code for Timbre.",
+  "source": "3D instruments, materials and renders are generated from code for Timbre.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "4",
+  "source": "4",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "440",
+  "source": "440",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "A daily practice set",
+  "source": "A daily practice set",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "A few years",
+  "source": "A few years",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "A precision tuner for sixty instruments, with the practice that keeps you in tune.",
+  "source": "A precision tuner for sixty instruments, with the practice that keeps you in tune.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "A strobe tuner for any note: voice, piano, winds or anything else.",
+  "source": "A strobe tuner for any note: voice, piano, winds or anything else.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "A%@ %lld",
+  "source": "A%@ %lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "A4",
+  "source": "A4",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "A4 = %lld Hz",
+  "source": "A4 = %lld Hz",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Accents, odd meters, tap",
+  "source": "Accents, odd meters, tap",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Accuracy over time",
+  "source": "Accuracy over time",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Accuracy trends and milestones, measured on device",
+  "source": "Accuracy trends and milestones, measured on device",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Acknowledgements",
+  "source": "Acknowledgements",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Adagio",
+  "source": "Adagio",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Advanced listening",
+  "source": "Advanced listening",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "All",
+  "source": "All",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "All sixty instruments in 3D",
+  "source": "All sixty instruments in 3D",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "All strings in tune",
+  "source": "All strings in tune",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Allegro",
+  "source": "Allegro",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Allow microphone",
+  "source": "Allow microphone",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Analysis window",
+  "source": "Analysis window",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Andante",
+  "source": "Andante",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Any note, any instrument",
+  "source": "Any note, any instrument",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "App language",
+  "source": "App language",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Appearance",
+  "source": "Appearance",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Apply %@ Hz",
+  "source": "Apply %@ Hz",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Auto",
+  "source": "Auto",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Automatic",
+  "source": "Automatic",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Automatic string detection on",
+  "source": "Automatic string detection on",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Average ¢ off",
+  "source": "Average ¢ off",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Balanced",
+  "source": "Balanced",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Banjo",
+  "source": "Banjo",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Bass",
+  "source": "Bass",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Beat %lld, %@",
+  "source": "Beat %lld, %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Beep",
+  "source": "Beep",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Best value",
+  "source": "Best value",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Cancel",
+  "source": "Cancel",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Cancel anytime",
+  "source": "Cancel anytime",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Capo and transposition change the names you see, never the pitch Timbre measures.",
+  "source": "Capo and transposition change the names you see, never the pitch Timbre measures.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Capo: %lld",
+  "source": "Capo: %lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Cello",
+  "source": "Cello",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Cents",
+  "source": "Cents",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Choose instrument",
+  "source": "Choose instrument",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Chord of the day",
+  "source": "Chord of the day",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Chords",
+  "source": "Chords",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Chromatic",
+  "source": "Chromatic",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Chromatic tuning",
+  "source": "Chromatic tuning",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Clear history",
+  "source": "Clear history",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Clear pitch",
+  "source": "Clear pitch",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Clear practice history",
+  "source": "Clear practice history",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Clear practice history?",
+  "source": "Clear practice history?",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Clear search",
+  "source": "Clear search",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Click",
+  "source": "Click",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Close",
+  "source": "Close",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Confidence",
+  "source": "Confidence",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Continue",
+  "source": "Continue",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Continue with the free tuner",
+  "source": "Continue with the free tuner",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Could not play the reference tone: %@",
+  "source": "Could not play the reference tone: %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Could not play tones: %@",
+  "source": "Could not play tones: %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Could not start audio: %@",
+  "source": "Could not start audio: %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Could not start the drone: %@",
+  "source": "Could not start the drone: %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Could not start the metronome: %@",
+  "source": "Could not start the metronome: %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Custom",
+  "source": "Custom",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Daily practice",
+  "source": "Daily practice",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Dark",
+  "source": "Dark",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Date",
+  "source": "Date",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Day %lld",
+  "source": "Day %lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Delete",
+  "source": "Delete",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Delete tuning",
+  "source": "Delete tuning",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Difference: %lld¢",
+  "source": "Difference: %lld¢",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Display",
+  "source": "Display",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Done",
+  "source": "Done",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Drill",
+  "source": "Drill",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Drone",
+  "source": "Drone",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Ear training",
+  "source": "Ear training",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Ear training, chords, scales, drone and voice coaching",
+  "source": "Ear training, chords, scales, drone and voice coaching",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Earned",
+  "source": "Earned",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Edit",
+  "source": "Edit",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Edit tuning",
+  "source": "Edit tuning",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Eighth notes",
+  "source": "Eighth notes",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Enter a value from 415 to 466 Hz.",
+  "source": "Enter a value from 415 to 466 Hz.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Every %lld bars",
+  "source": "Every %lld bars",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Every instrument in 3D, strobe precision and daily practice.",
+  "source": "Every instrument in 3D, strobe precision and daily practice.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Every instrument.\nEvery practice tool.",
+  "source": "Every instrument.\nEvery practice tool.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Every shape, any tuning",
+  "source": "Every shape, any tuning",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Every tune-up and practice session, measured on your device.",
+  "source": "Every tune-up and practice session, measured on your device.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Exercises start where you are.",
+  "source": "Exercises start where you are.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Faster",
+  "source": "Faster",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Feedback",
+  "source": "Feedback",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "First full tune",
+  "source": "First full tune",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Fonts",
+  "source": "Fonts",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Free trial",
+  "source": "Free trial",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Fretboard maps",
+  "source": "Fretboard maps",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Full access to everything in Timbre Pro.",
+  "source": "Full access to everything in Timbre Pro.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Get started",
+  "source": "Get started",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Go again",
+  "source": "Go again",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Guitar",
+  "source": "Guitar",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Handedness",
+  "source": "Handedness",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Haptics",
+  "source": "Haptics",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Hear",
+  "source": "Hear",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Hear the scale",
+  "source": "Hear the scale",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "High",
+  "source": "High",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "History could not be cleared: %@",
+  "source": "History could not be cleared: %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Hold it…",
+  "source": "Hold it…",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "How long have you been playing?",
+  "source": "How long have you been playing?",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Hz",
+  "source": "Hz",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "I play professionally",
+  "source": "I play professionally",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "In tune",
+  "source": "In tune",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "In tune with Timbre",
+  "source": "In tune with Timbre",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Instruments",
+  "source": "Instruments",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Intervals",
+  "source": "Intervals",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Intonation over a drone",
+  "source": "Intonation over a drone",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Is the second note higher or lower?",
+  "source": "Is the second note higher or lower?",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "It renews in two days. Keep tuning, or cancel anytime in Settings.",
+  "source": "It renews in two days. Keep tuning, or cancel anytime in Settings.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Journey",
+  "source": "Journey",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Just starting",
+  "source": "Just starting",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Keep better time",
+  "source": "Keep better time",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Language",
+  "source": "Language",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Largo",
+  "source": "Largo",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Last twelve weeks",
+  "source": "Last twelve weeks",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Left-handed",
+  "source": "Left-handed",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Let the string ring",
+  "source": "Let the string ring",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Letters",
+  "source": "Letters",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Level %lld",
+  "source": "Level %lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Lifetime",
+  "source": "Lifetime",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Light",
+  "source": "Light",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Listen",
+  "source": "Listen",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Live pegs, slides and strings for every tuning mechanism",
+  "source": "Live pegs, slides and strings for every tuning mechanism",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Loosen",
+  "source": "Loosen",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Loosen · %lld¢ sharp",
+  "source": "Loosen · %lld¢ sharp",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Low",
+  "source": "Low",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Lower is closer. Measured on stable readings only.",
+  "source": "Lower is closer. Measured on stable readings only.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Lower string %lld",
+  "source": "Lower string %lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Major",
+  "source": "Major",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Manage subscription",
+  "source": "Manage subscription",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Mandolin",
+  "source": "Mandolin",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Manual",
+  "source": "Manual",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Manual string selection",
+  "source": "Manual string selection",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Many years",
+  "source": "Many years",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Meter",
+  "source": "Meter",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Metronome",
+  "source": "Metronome",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Microphone access is off. Turn it on in Settings to tune.",
+  "source": "Microphone access is off. Turn it on in Settings to tune.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Microphone audio is analysed on this device. Recordings are never saved or uploaded.",
+  "source": "Microphone audio is analysed on this device. Recordings are never saved or uploaded.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Microphone sensitivity: %lld%%",
+  "source": "Microphone sensitivity: %lld%%",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Milestones",
+  "source": "Milestones",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Moderato",
+  "source": "Moderato",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Monthly",
+  "source": "Monthly",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "More in Settings…",
+  "source": "More in Settings…",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Move each string in semitones, up to an octave either way. Tap a string to hear it.",
+  "source": "Move each string in semitones, up to an octave either way. Tap a string to hear it.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Music",
+  "source": "Music",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "My tuning",
+  "source": "My tuning",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Name the chord",
+  "source": "Name the chord",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Name the interval",
+  "source": "Name the interval",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "New tuning",
+  "source": "New tuning",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "No Timbre Pro purchase was found for this Apple Account.",
+  "source": "No Timbre Pro purchase was found for this Apple Account.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "No audio output is available.",
+  "source": "No audio output is available.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "No comfortable shape for this chord in this tuning.",
+  "source": "No comfortable shape for this chord in this tuning.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "No instrument matches “%@”.",
+  "source": "No instrument matches “%@”.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "No microphone input is available.",
+  "source": "No microphone input is available.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "No pitch",
+  "source": "No pitch",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Not now",
+  "source": "Not now",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Not yet",
+  "source": "Not yet",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Note %lld, %@",
+  "source": "Note %lld, %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Note names",
+  "source": "Note names",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Numbers",
+  "source": "Numbers",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "OK",
+  "source": "OK",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Octave",
+  "source": "Octave",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Open Settings",
+  "source": "Open Settings",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Open the metronome",
+  "source": "Open the metronome",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Opens Timbre on the tuner, ready to listen.",
+  "source": "Opens Timbre on the tuner, ready to listen.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "PRO",
+  "source": "PRO",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Pause listening",
+  "source": "Pause listening",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Paused · last reading",
+  "source": "Paused · last reading",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Pay once, keep forever",
+  "source": "Pay once, keep forever",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Pitch",
+  "source": "Pitch",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Pitch is measured on your iPhone. Recordings are never saved or uploaded.",
+  "source": "Pitch is measured on your iPhone. Recordings are never saved or uploaded.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Pitch, intervals, chords",
+  "source": "Pitch, intervals, chords",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Plans are loading.",
+  "source": "Plans are loading.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Play %@",
+  "source": "Play %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Play again",
+  "source": "Play again",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Play reference tone",
+  "source": "Play reference tone",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Plays this string's note",
+  "source": "Plays this string's note",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Practice",
+  "source": "Practice",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Practice could not be saved: %@",
+  "source": "Practice could not be saved: %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Practise every day",
+  "source": "Practise every day",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Practise today to keep it alive.",
+  "source": "Practise today to keep it alive.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Practised on %lld days in the last twelve weeks",
+  "source": "Practised on %lld days in the last twelve weeks",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Practised today. Best run %lld days.",
+  "source": "Practised today. Best run %lld days.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Presto",
+  "source": "Presto",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Privacy",
+  "source": "Privacy",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Privacy policy",
+  "source": "Privacy policy",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Pro",
+  "source": "Pro",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Pure",
+  "source": "Pure",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Quarter notes",
+  "source": "Quarter notes",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Question %lld of %lld",
+  "source": "Question %lld of %lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Raise string %lld",
+  "source": "Raise string %lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Range measured",
+  "source": "Range measured",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Range test",
+  "source": "Range test",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Range test and exercises",
+  "source": "Range test and exercises",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Real-time 3D",
+  "source": "Real-time 3D",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Recent",
+  "source": "Recent",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Reference pitch A4 %lld hertz",
+  "source": "Reference pitch A4 %lld hertz",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Renews %@",
+  "source": "Renews %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Responsive",
+  "source": "Responsive",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Restore purchases",
+  "source": "Restore purchases",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Retry",
+  "source": "Retry",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Rhythm",
+  "source": "Rhythm",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Right-handed",
+  "source": "Right-handed",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Sargam",
+  "source": "Sargam",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Save",
+  "source": "Save",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Scale workout",
+  "source": "Scale workout",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Scales",
+  "source": "Scales",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Search instruments",
+  "source": "Search instruments",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "See how close you land, session after session, with Timbre Pro.",
+  "source": "See how close you land, session after session, with Timbre Pro.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "See yourself improve",
+  "source": "See yourself improve",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Session complete",
+  "source": "Session complete",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Settings",
+  "source": "Settings",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Settings could not be saved: %@",
+  "source": "Settings could not be saved: %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Settling",
+  "source": "Settling",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Seven-day streak",
+  "source": "Seven-day streak",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Share",
+  "source": "Share",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Sing in tune",
+  "source": "Sing in tune",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Sing or play long notes against the drone. Headphones keep it out of the microphone.",
+  "source": "Sing or play long notes against the drone. Headphones keep it out of the microphone.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Sing…",
+  "source": "Sing…",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Sixteenth notes",
+  "source": "Sixteenth notes",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Sixty instruments, each with its own tuning mechanism.",
+  "source": "Sixty instruments, each with its own tuning mechanism.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Skill demonstrated",
+  "source": "Skill demonstrated",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Slower",
+  "source": "Slower",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Solfège",
+  "source": "Solfège",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Sound",
+  "source": "Sound",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Speed trainer",
+  "source": "Speed trainer",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Stage",
+  "source": "Stage",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Start",
+  "source": "Start",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Start %@",
+  "source": "Start %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Start drone",
+  "source": "Start drone",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Start today's practice",
+  "source": "Start today's practice",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Step: %lld BPM",
+  "source": "Step: %lld BPM",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Still point",
+  "source": "Still point",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Stop",
+  "source": "Stop",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Stop drone",
+  "source": "Stop drone",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Stop reference tone",
+  "source": "Stop reference tone",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Strict",
+  "source": "Strict",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Strict confidence asks for a clearer note before showing a reading. Larger windows read lower notes with a little more delay.",
+  "source": "Strict confidence asks for a clearer note before showing a reading. Larger windows read lower notes with a little more delay.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "String %lld",
+  "source": "String %lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "String %lld, %@",
+  "source": "String %lld, %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Strobe precision",
+  "source": "Strobe precision",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Studio (lighter)",
+  "source": "Studio (lighter)",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Subscribe for %@",
+  "source": "Subscribe for %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The free tuner for guitar, bass and ukulele stays free.",
+  "source": "Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The free tuner for guitar, bass and ukulele stays free.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "System",
+  "source": "System",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "System default",
+  "source": "System default",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "TIMBRE",
+  "source": "TIMBRE",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tanpura",
+  "source": "Tanpura",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tanpura and pure tones",
+  "source": "Tanpura and pure tones",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tap",
+  "source": "Tap",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tap to listen",
+  "source": "Tap to listen",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Target",
+  "source": "Target",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Target %@",
+  "source": "Target %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Target %lld BPM",
+  "source": "Target %lld BPM",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Temperament",
+  "source": "Temperament",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Temperaments, custom tunings and written pitch",
+  "source": "Temperaments, custom tunings and written pitch",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tempo",
+  "source": "Tempo",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Ten ear sessions",
+  "source": "Ten ear sessions",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Ten full tunes",
+  "source": "Ten full tunes",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Ten minutes a day, built around %@.",
+  "source": "Ten minutes a day, built around %@.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Terms",
+  "source": "Terms",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "The App Store purchase could not be verified. Restore purchases or try again.",
+  "source": "The App Store purchase could not be verified. Restore purchases or try again.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "The App Store returned an unknown status. Please restore purchases.",
+  "source": "The App Store returned an unknown status. Please restore purchases.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "The song exercise uses a phrase from Beethoven's public-domain Ode to Joy.",
+  "source": "The song exercise uses a phrase from Beethoven's public-domain Ode to Joy.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Thirty-day streak",
+  "source": "Thirty-day streak",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "This removes saved sessions, streaks and voice progress from this device.",
+  "source": "This removes saved sessions, streaks and voice progress from this device.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tighten",
+  "source": "Tighten",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tighten · %lld¢ flat",
+  "source": "Tighten · %lld¢ flat",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Timbre",
+  "source": "Timbre",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Timbre %@",
+  "source": "Timbre %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Timbre Pro",
+  "source": "Timbre Pro",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Timbre Pro is active",
+  "source": "Timbre Pro is active",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Timbre Pro is unavailable in the App Store right now. Please try again later.",
+  "source": "Timbre Pro is unavailable in the App Store right now. Please try again later.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Timbre couldn't open",
+  "source": "Timbre couldn't open",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Timbre listens\nto your instrument",
+  "source": "Timbre listens\nto your instrument",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Today",
+  "source": "Today",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Today's set",
+  "source": "Today's set",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tonic",
+  "source": "Tonic",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tools",
+  "source": "Tools",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Train my ear",
+  "source": "Train my ear",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Transpose: %lld",
+  "source": "Transpose: %lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Triplets",
+  "source": "Triplets",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Try Timbre Pro",
+  "source": "Try Timbre Pro",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Try again",
+  "source": "Try again",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tune",
+  "source": "Tune",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tune a few times to see how close you land.",
+  "source": "Tune a few times to see how close you land.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tune fast and precisely",
+  "source": "Tune fast and precisely",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tune my instrument",
+  "source": "Tune my instrument",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tune until it\nstands still.",
+  "source": "Tune until it\nstands still.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tune up",
+  "source": "Tune up",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tuned",
+  "source": "Tuned",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tuning",
+  "source": "Tuning",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tuning accuracy",
+  "source": "Tuning accuracy",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tuning name",
+  "source": "Tuning name",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Ukulele",
+  "source": "Ukulele",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Unlock for %@",
+  "source": "Unlock for %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Violin",
+  "source": "Violin",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Voice",
+  "source": "Voice",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Voice or other",
+  "source": "Voice or other",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Voice practice",
+  "source": "Voice practice",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Voice result could not be saved: %@",
+  "source": "Voice result could not be saved: %@",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Voice warm-up",
+  "source": "Voice warm-up",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Waiting for approval. Access unlocks when the App Store confirms.",
+  "source": "Waiting for approval. Access unlocks when the App Store confirms.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "We remind you before the trial ends.",
+  "source": "We remind you before the trial ends.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "We'll set up your tuner and practice around it.",
+  "source": "We'll set up your tuner and practice around it.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "What do you play?",
+  "source": "What do you play?",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "What matters most?",
+  "source": "What matters most?",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Wood",
+  "source": "Wood",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Yearly",
+  "source": "Yearly",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Your Timbre Pro trial ends soon",
+  "source": "Your Timbre Pro trial ends soon",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Your comfortable range today. A description, not a classification.",
+  "source": "Your comfortable range today. A description, not a classification.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Your daily set is built around it.",
+  "source": "Your daily set is built around it.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Your instruments",
+  "source": "Your instruments",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Your pitch relative to the target",
+  "source": "Your pitch relative to the target",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Your sessions appear here after your first tune-up.",
+  "source": "Your sessions appear here after your first tune-up.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "a comfortable range",
+  "source": "a comfortable range",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "accent",
+  "source": "accent",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "best run",
+  "source": "best run",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "day streak",
+  "source": "day streak",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "every string to a still point",
+  "source": "every string to a still point",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "hold notes against a tonic",
+  "source": "hold notes against a tonic",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "learn one new shape",
+  "source": "learn one new shape",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "minutes",
+  "source": "minutes",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "normal",
+  "source": "normal",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "one position, slowly",
+  "source": "one position, slowly",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "silent",
+  "source": "silent",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "steady at a comfortable tempo",
+  "source": "steady at a comfortable tempo",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "ten questions",
+  "source": "ten questions",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "×",
+  "source": "×",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "—",
+  "source": "—",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "♯",
+  "source": "♯",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "InfoPlist.strings",
+  "key": "CFBundleDisplayName",
+  "source": "Timbre",
+  "note": "Bundle display name"
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld",
+  "source": "%lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld-day streak",
+  "source": "%lld-day streak",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Best %lld",
+  "source": "Best %lld",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Keep it alive today",
+  "source": "Keep it alive today",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Last 7 days",
+  "source": "Last 7 days",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Open Timbre already listening.",
+  "source": "Open Timbre already listening.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Open Timbre listening.",
+  "source": "Open Timbre listening.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Open the metronome",
+  "source": "Open the metronome",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Opens Timbre on the tuner, ready to listen.",
+  "source": "Opens Timbre on the tuner, ready to listen.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Practice streak",
+  "source": "Practice streak",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Practised today",
+  "source": "Practised today",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Quick tune",
+  "source": "Quick tune",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Start today's practice",
+  "source": "Start today's practice",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Ten minutes keeps it alive",
+  "source": "Ten minutes keeps it alive",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Timbre",
+  "source": "Timbre",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Timbre tuner",
+  "source": "Timbre tuner",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Train my ear",
+  "source": "Train my ear",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tune",
+  "source": "Tune",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Tune my instrument",
+  "source": "Tune my instrument",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Your streak and the last seven days.",
+  "source": "Your streak and the last seven days.",
+  "note": "No comment provided by engineer."
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "day streak",
+  "source": "day streak",
+  "note": "No comment provided by engineer."
+ }
+]
