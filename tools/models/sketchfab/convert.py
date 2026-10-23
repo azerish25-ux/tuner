@@ -108,6 +108,23 @@ def cut_speaking_length(obj, z_low, z_high):
     bm.free()
 
 
+def crossing(obj, z):
+    """Where a mesh crosses the plane at height z: the points on its edges (a string's ring)."""
+    mw = np.array(obj.matrix_world)
+    n = len(obj.data.vertices)
+    co = np.empty(n * 3)
+    obj.data.vertices.foreach_get("co", co)
+    co = co.reshape(-1, 3) @ mw[:3, :3].T + mw[:3, 3]
+    e = np.empty(len(obj.data.edges) * 2, dtype=np.int64)
+    obj.data.edges.foreach_get("vertices", e)
+    e = e.reshape(-1, 2)
+    a, b = co[e[:, 0]], co[e[:, 1]]
+    da, db = a[:, 2] - z, b[:, 2] - z
+    m = (da * db) < 0
+    t = da[m] / (da[m] - db[m])
+    return a[m] + (b[m] - a[m]) * t[:, None]
+
+
 def auto_rig(scene, root, cfg, lo, hi, pts):
     """Machine heads modelled as separate parts: posts, keys, strings, nut and saddle by name."""
     auto = cfg["auto"]
@@ -121,17 +138,15 @@ def auto_rig(scene, root, cfg, lo, hi, pts):
     rows = []
     for obj in matching(auto["strings"]):
         v = verts(obj, limit=200000)
-        def at(z):
-            band = v[np.abs(v[:, 2] - z) < span * 0.01]
-            return band.mean(0) if len(band) else None
-        nut, saddle = at(nut_z - span * 0.012), at(saddle_z + span * 0.012)
-        if nut is None or saddle is None:
+        rings = [crossing(obj, z) for z in (nut_z - span * 0.006, saddle_z + span * 0.006, (nut_z + saddle_z) / 2)]
+        if any(len(r) == 0 for r in rings):
             print("string without a speaking length:", obj.name)
             continue
+        nut, saddle = rings[0].mean(0), rings[1].mean(0)
         top = v[v[:, 2].argmax()]
         post = min(posts, key=lambda o: np.linalg.norm(post_c[o.name] - top))
-        band = v[np.abs(v[:, 2] - (nut_z + saddle_z) / 2) < span * 0.01]
-        radius = float(np.linalg.norm(band[:, [0, 1]] - band[:, [0, 1]].mean(0), axis=1).mean()) if len(band) else 0.0006
+        mid = rings[2]
+        radius = float(np.linalg.norm(mid[:, [0, 1]] - mid[:, [0, 1]].mean(0), axis=1).mean())
         rows.append({"obj": obj, "nut": nut, "saddle": saddle, "post": post, "radius": radius})
     rows.sort(key=lambda r: r["nut"][0])
     anchors = cfg["anchors"]
