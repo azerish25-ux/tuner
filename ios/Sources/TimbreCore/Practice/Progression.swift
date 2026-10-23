@@ -221,7 +221,7 @@ public enum StringHealth {
     /// Drift per string from consecutive sessions: each session ends in tune, so the next session's
     /// first reading over the days in between is how fast that string wanders.
     public static func drift(_ samples: [StringSample], instrumentId: String, since: Date? = nil, minimumGapHours: Double = 6) -> [StringDrift] {
-        let mine = samples.filter { $0.instrumentId == instrumentId && (since.map { s in $0.date > s } ?? true) }
+        let mine = samples.filter { sample in sample.instrumentId == instrumentId && (since.map { sample.date > $0 } ?? true) }
         var result: [StringDrift] = []
         for (anchor, list) in Dictionary(grouping: mine, by: \.anchor) {
             let sorted = list.sorted { $0.date < $1.date }

@@ -31,6 +31,9 @@ final class AppStore: ObservableObject {
     @Published var pendingPracticeRoute: PracticeRoute?
     /// While true, readings target the octave and never count as tuning sessions.
     @Published var intonationMode = false
+    /// Ear games set their own target; readings then never count as tuning.
+    @Published var gameTargetHz: Double?
+    private var measuringTuning: Bool { !intonationMode && gameTargetHz == nil }
     /// The latest XP / quest / badge result, for the reward toast; `rewardPulse` ticks on each.
     @Published private(set) var lastReward: ProgressUpdate?
     @Published private(set) var rewardPulse = 0
@@ -129,6 +132,7 @@ final class AppStore: ObservableObject {
     var activeCourse: Course { courses.first(where: { $0.index == selectedCourse }) ?? courses[0] }
     var activeMidi: Int { referenceMode ? referenceMidi : activeCourse.targetMidi }
     var targetHz: Double {
+        if let gameTargetHz { return gameTargetHz }
         let base = Temperament.byId(settings.temperamentId).frequency(midi: activeMidi, reference: settings.referencePitchHz, letterName: referenceMode ? nil : activeCourse.label)
         // The intonation check compares the 12th-fret harmonic and fretted note: one octave up.
         return intonationMode ? base * 2 : base
@@ -328,7 +332,7 @@ final class AppStore: ObservableObject {
             if live.trace.count > 600 { live.trace.removeFirst(live.trace.count - 600) }
             return
         }
-        if automatic, !referenceMode, let hz, confidence >= settings.confidenceThreshold {
+        if automatic, !referenceMode, gameTargetHz == nil, let hz, confidence >= settings.confidenceThreshold {
             let best = courses.min { abs(log(hz / target(for: $0))) < abs(log(hz / target(for: $1))) }
             if let best {
                 if lastAutoIndex == best.index { autoHits += 1 } else { autoHits = 1; lastAutoIndex = best.index }
@@ -344,14 +348,14 @@ final class AppStore: ObservableObject {
         if hz == nil && level > -60 && !audio.tonePlaying { reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "uncertain") }
         live.reading = reading
         Haptics.shared.detent(cents: reading.stable ? reading.cents : nil)
-        if !referenceMode, !intonationMode, reading.stable, let cents = reading.cents, abs(cents) <= 100,
+        if !referenceMode, measuringTuning, reading.stable, let cents = reading.cents, abs(cents) <= 100,
            !sampledCourses.contains(activeCourse.index), let anchor = activeCourse.anchorId {
             sampledCourses.insert(activeCourse.index)
             var state = progress
             state.sample(StringSample(instrumentId: instrument.id, anchor: anchor, date: Date(), cents: cents))
             updateSettings { $0.progress = state }
         }
-        if reading.inTune && !wasInTune && !intonationMode {
+        if reading.inTune && !wasInTune && measuringTuning {
             Haptics.shared.lock()
             if !referenceMode {
                 let before = allCoursesLocked
@@ -361,7 +365,7 @@ final class AppStore: ObservableObject {
                 if fresh { recordProgress(.stringTuned(instrumentId: instrument.id, all: completed)) }
             }
         }
-        if !intonationMode, let cents = reading.cents, reading.frequency != nil {
+        if measuringTuning, let cents = reading.cents, reading.frequency != nil {
             sessionCount += 1
             if reading.stable { stableCount += 1; totalError += abs(cents) }
         }

@@ -1,8 +1,9 @@
 import SwiftUI
 import TimbreCore
 
-enum PracticeRoute: Hashable { case metronome, ear, chords, scales, drone, voice, intonation }
+enum PracticeRoute: Hashable { case metronome, ear, chords, scales, drone, voice, intonation, sniper }
 
+/// Play: your level, today's quests, ear games and practice tools.
 struct PracticeView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
@@ -17,21 +18,16 @@ struct PracticeView: View {
         NavigationStack(path: $path) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
-                    ScreenTitle(title: "Practice", subtitle: "Ten minutes a day, built around \(Self.inSentence(store.instrumentDisplayName)).")
-                    streakCard
-                    dailyCard
-                    Eyebrow("Tools")
-                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
-                        tool(.metronome, "metronome.fill", "Metronome", "Accents, odd meters, tap", Palette.brass, pro: false)
-                        tool(.ear, "ear.fill", "Ear training", "Pitch, intervals, chords", Palette.flat, pro: false)
-                        if fretted {
-                            tool(.chords, "hand.raised.fingers.spread.fill", "Chords", "Every shape, any tuning", Palette.ember, pro: true)
-                            tool(.scales, "point.3.connected.trianglepath.dotted", "Scales", "Fretboard maps", Palette.sharp, pro: true)
-                            tool(.intonation, "ruler", "Intonation", "Check every string at the 12th fret", Palette.flat, pro: true)
-                        }
-                        tool(.drone, "waveform.path", "Drone", "Tanpura and pure tones", Palette.locked, pro: true)
-                        tool(.voice, "music.mic", "Voice", "Range test and exercises", Palette.success, pro: false)
+                    HStack(alignment: .center) {
+                        Text("Play").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        Spacer()
+                        StreakChip { store.selectedTab = .journey }
                     }
+                    levelCard
+                    questSection
+                    gamesSection
+                    toolsSection
                 }
                 .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
             }
@@ -47,6 +43,7 @@ struct PracticeView: View {
                 case .drone: DroneView()
                 case .voice: VoiceView()
                 case .intonation: IntonationView()
+                case .sniper: PitchSniperView()
                 }
             }
         }
@@ -60,70 +57,116 @@ struct PracticeView: View {
 
     private var fretted: Bool { store.instrument.anchorType == "MACHINE_HEAD" || ["guitar", "ukulele", "mandolin"].contains(store.instrument.familyId) }
 
-    private var streakCard: some View {
-        let streak = store.streak
-        return HStack(spacing: 16) {
+    private var levelCard: some View {
+        let xp = store.progress.xp
+        let level = store.level
+        let next = Progression.level(for: level.next)
+        return HStack(spacing: 14) {
             ZStack {
-                Circle().fill(Palette.ember.opacity(0.16)).frame(width: 62, height: 62)
-                Image(systemName: "flame.fill").font(.system(size: 28)).foregroundStyle(streak.practicedToday ? Palette.ember : Palette.inkFaint)
-                    .symbolEffect(.bounce, value: streak.current)
+                LevelRing(size: 62)
+                Text("LEVEL").font(.system(size: 8, weight: .bold)).tracking(1).foregroundStyle(Palette.mint).offset(y: -15)
             }
-            VStack(alignment: .leading, spacing: 4) {
-                Text("\(streak.current)-day streak").font(Typeface.display(28)).foregroundStyle(Palette.ink)
-                Text(streak.practicedToday ? "Practised today. Best run \(streak.best) days." : "Practise today to keep it alive.").font(.subheadline).foregroundStyle(Palette.inkSoft)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(LocalizedStringKey(level.name)).font(Typeface.display(17)).foregroundStyle(Palette.ink)
+                ProgressLine(value: level.progress(xp))
+                Text("\(xp - level.floor) / \(level.next - level.floor) XP · next: \(Text(LocalizedStringKey(next.name)))").font(.caption).foregroundStyle(Palette.inkSoft)
             }
-            Spacer()
         }
-        .stillCard()
+        .stillCard(cornerRadius: 24, padding: 16, tint: Palette.mint)
         .accessibilityElement(children: .combine)
     }
 
-    private var dailyCard: some View {
-        let set = store.dailySet
-        let done = set.filter { store.dailyDone($0.kind) }.count
-        return VStack(alignment: .leading, spacing: 14) {
-            HStack {
-                VStack(alignment: .leading, spacing: 3) {
-                    Eyebrow("Today's set")
-                    Text("\(set.reduce(0) { $0 + $1.minutes }) minutes").font(Typeface.display(26)).foregroundStyle(Palette.ink)
-                }
+    private var questSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Today’s quests").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
                 Spacer()
-                ProgressRing(progress: set.isEmpty ? 0 : Double(done) / Double(set.count)).frame(width: 46, height: 46)
+                Text("resets in \(hoursToMidnight) h").font(.caption).foregroundStyle(Palette.inkSoft)
             }
-            ForEach(set) { activity in
-                Button { open(activity.kind) } label: {
-                    HStack(spacing: 12) {
-                        Image(systemName: store.dailyDone(activity.kind) ? "checkmark.circle.fill" : "circle").font(.title3)
-                            .foregroundStyle(store.dailyDone(activity.kind) ? Palette.success : Palette.inkFaint)
-                        VStack(alignment: .leading, spacing: 1) {
-                            Text(title(activity.kind)).font(.headline).foregroundStyle(Palette.ink)
-                            Text("\(activity.minutes) min · \(detail(activity.kind))").font(.caption).foregroundStyle(Palette.inkSoft)
-                        }
-                        Spacer()
-                        if needsPro(activity.kind) && !commerce.isPro { ProBadge() } else { Image(systemName: "chevron.right").font(.caption.weight(.bold)).foregroundStyle(Palette.inkFaint) }
-                    }
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("daily.\(activity.kind.rawValue)")
+            ForEach(store.quests) { quest in
+                Button { open(quest) } label: { QuestRow(quest: quest) }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("quest.\(quest.id)")
             }
         }
-        .stillCard()
     }
 
-    private func tool(_ route: PracticeRoute, _ symbol: String, _ title: LocalizedStringKey, _ detail: LocalizedStringKey, _ tint: Color, pro: Bool) -> some View {
+    private var hoursToMidnight: Int {
+        let calendar = Calendar.current
+        let end = calendar.startOfDay(for: Date()).addingTimeInterval(86_400)
+        return max(1, Int((end.timeIntervalSinceNow / 3600).rounded(.up)))
+    }
+
+    private func open(_ quest: Quest) {
+        switch quest.kind {
+        case .tuneAll, .holdInTune: store.selectedTab = .tune
+        case .sniperWin, .bullseyes: path.append(.sniper)
+        case .earCorrect: path.append(.ear)
+        case .practiceMinutes: path.append(.metronome)
+        }
+    }
+
+    private var gamesSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Ear games").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+            HStack(spacing: 12) {
+                gameCard(.sniper, title: "Pitch Sniper", detail: (store.progress.stats["sniperBest"]).map { "Best \($0.formatted())" } ?? String(localized: "Hit the note dead centre"), tint: Palette.mint, symbol: "scope")
+                gameCard(.ear, title: "Ear trainer", detail: String(localized: "Pitch, intervals, chords"), tint: Palette.amber, symbol: "ear")
+            }
+        }
+    }
+
+    private func gameCard(_ route: PracticeRoute, title: LocalizedStringKey, detail: String, tint: Color, symbol: String) -> some View {
+        Button { path.append(route) } label: {
+            ZStack(alignment: .bottomLeading) {
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .fill(RadialGradient(colors: [tint.opacity(0.22), Palette.stageRaised], center: UnitPoint(x: 0.75, y: 0.2), startRadius: 0, endRadius: 150))
+                Image(systemName: symbol).font(.system(size: 46, weight: .light)).foregroundStyle(tint)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing).padding(16)
+                    .symbolEffect(.pulse, options: .repeating.speed(0.4))
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(title).font(Typeface.display(16)).foregroundStyle(Palette.ink)
+                    Text(detail).font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1)
+                }
+                .padding(14)
+            }
+            .frame(height: 150)
+            .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
+            .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("practice.\(route)")
+    }
+
+    private var toolsSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Tools").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
+                tool(.metronome, "metronome", "Metronome", pro: false)
+                tool(.drone, "waveform.path", "Drone", pro: true)
+                tool(.voice, "music.mic", "Voice", pro: false)
+                if fretted {
+                    tool(.chords, "hand.raised.fingers.spread", "Chords", pro: true)
+                    tool(.scales, "point.3.connected.trianglepath.dotted", "Scales", pro: true)
+                    tool(.intonation, "ruler", "Intonation", pro: true)
+                }
+            }
+        }
+    }
+
+    private func tool(_ route: PracticeRoute, _ symbol: String, _ title: LocalizedStringKey, pro: Bool) -> some View {
         Button {
             if pro && !commerce.isPro { store.presentPaywall("practice.\(route)") } else { path.append(route) }
         } label: {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack { IconOrb(symbol: symbol, tint: tint); Spacer(); if pro && !commerce.isPro { ProBadge() } }
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(title).font(.headline).foregroundStyle(Palette.ink)
-                    Text(detail).font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(2)
-                }
+            VStack(spacing: 6) {
+                Image(systemName: symbol).font(.system(size: 18, weight: .medium)).foregroundStyle(Palette.ink)
+                Text(title).font(.caption.weight(.semibold)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.8)
             }
-            .frame(maxWidth: .infinity, minHeight: 118, alignment: .topLeading)
-            .stillCard(cornerRadius: 22, padding: 14)
+            .frame(maxWidth: .infinity, minHeight: 66)
+            .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Palette.stageRaised))
+            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
+            .overlay(alignment: .topTrailing) { if pro && !commerce.isPro { ProBadge().scaleEffect(0.8).padding(4) } }
+            .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("practice.\(route)")
