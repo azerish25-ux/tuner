@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+    t =    18.24s     Synthesize event
+    t =    18.77s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    21.42s Checking existence of `"instrument.10_ukulele_soprano_ukulele" Button`
+    t =    25.46s Find the "instrument.10_ukulele_soprano_ukulele" Button
+    t =    26.79s Swipe up Target Application 'com.shahradazerisharghi.timbre'
+    t =    26.79s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    26.81s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    26.87s     Check for interrupting elements affecting "Timbre" Application
+    t =    26.97s     Synthesize event
+    t =    27.52s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    29.53s Checking existence of `"instrument.10_ukulele_soprano_ukulele" Button`
+    t =    30.48s Find the "instrument.10_ukulele_soprano_ukulele" Button
+    t =    30.88s Checking existence of `"instrument.10_ukulele_soprano_ukulele" Button`
+    t =    31.65s Find the "instrument.10_ukulele_soprano_ukulele" Button
+    t =    32.03s Checking existence of `"instrument.10_ukulele_soprano_ukulele" Button`
+    t =    32.30s Find the "instrument.10_ukulele_soprano_ukulele" Button
+    t =    32.62s Checking existence of `"instrument.10_ukulele_soprano_ukulele" Button`
+    t =    32.82s Find the "instrument.10_ukulele_soprano_ukulele" Button
+    t =    33.08s Checking existence of `"instrument.10_ukulele_soprano_ukulele" Button`
+    t =    33.27s Find the "instrument.10_ukulele_soprano_ukulele" Button
+    t =    33.51s Checking existence of `"instrument.10_ukulele_soprano_ukulele" Button`
+    t =    33.72s Find the "instrument.10_ukulele_soprano_ukulele" Button
+    t =    33.95s Checking existence of `"instrument.10_ukulele_soprano_ukulele" Button`
+    t =    34.13s Find the "instrument.10_ukulele_soprano_ukulele" Button
+    t =    35.57s Tap "instrument.10_ukulele_soprano_ukulele" Button
+    t =    35.57s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    35.58s     Find the "instrument.10_ukulele_soprano_ukulele" Button
+    t =    35.82s     Check for interrupting elements affecting "instrument.10_ukulele_soprano_ukulele" Button
+    t =    35.94s     Synthesize event
+    t =    36.52s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    37.38s Waiting 15.0s for "tune.stage" Any to exist
+    t =    38.43s     Checking `Expect predicate `existsNoRetry == 1` for object "tune.stage" Any`
+    t =    38.43s         Checking existence of `"tune.stage" Any`
+    t =    47.25s Added attachment named '17-tune-photo-stage'
+    t =    47.25s Tap "string.2" Any
+    t =    47.25s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    47.30s     Find the "string.2" Any
+    t =    48.53s     Check for interrupting elements affecting "string.2" Button
+    t =    49.17s     Synthesize event
+    t =    49.61s     Wait for com.shahradazerisharghi.timbre to idle
+    t =    53.08s Added attachment named '18-tune-photo-stage-string'
+    t =    53.09s Tear Down
+    t =    53.09s     Terminate com.shahradazerisharghi.timbre:29660
+Test Case '-[TimbreUITests.TimbreUITests test08PhotoStage]' passed (54.442 seconds).
+Test Suite 'TimbreUITests' passed at 2026-10-23 07:38:04.644.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 462.443 (462.453) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-10-23 07:38:04.646.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 462.443 (462.455) seconds
+Test Suite 'Selected tests' passed at 2026-10-23 07:38:04.648.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 462.443 (462.457) seconds
+2026-10-23 07:38:05.982 xcodebuild[9315:32085] [MT] IDETestOperationsObserverDebug: 640.620 elapsed -- Testing started completed.
+2026-10-23 07:38:05.983 xcodebuild[9315:32085] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-23 07:38:05.983 xcodebuild[9315:32085] [MT] IDETestOperationsObserverDebug: 640.620 sec, +640.620 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started
