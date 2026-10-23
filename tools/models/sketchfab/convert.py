@@ -11,6 +11,7 @@ Each rigs/<model>.json names its download folder and how to read it:
    "decimate": [{"re", "ratio", "minVerts"}] thins out needlessly dense parts before rigging,
    "triangles": budget for the shipped model (120000), "pivotTriangles" (4000 per peg or post),
    "stringRatio" (thin the original strings kept beside the rebuilt ones), "protectMaterials": [never thinned],
+   "thinMaterials": {material: fixed ratio},
    "textureMax" / "normalMax" (2048 px), "jpegQuality" (90), "optimise": false to ship the parts as split,
    "rig": "FRICTION_PEG", "degPerCent": 1.2, "stringKind": "steel" | "bronze" | "nylon" | "gut",
    "nutZ" / "saddleZ": a height or parts whose mean height it is, "stringEnds": "rings" (low-poly strings),
@@ -349,12 +350,16 @@ def retouch(entries, folder):
     """Retouch a material's base colour image. "rects": remove ink baked into it (autographs, scribbles):
     inside each [x0, x1, y0, y1(, darker)] (0...1 from the top left) pixels darker than "darker" (0.7) times
     their surroundings are rebuilt by interpolating along the wood grain ("along": "y": grain runs down);
-    "mode": "light" removes pale lettering instead (pixels brighter than k times their surroundings).
+    "mode": "light" removes pale lettering instead (pixels brighter than k times their surroundings), and
+    "relief" lettering embossed in another map ("image": "normal"; pixels departing more than k from around).
     "multiply": [r, g, b] tints the whole image (a flat orange varnish toward amber brown)."""
     for entry in entries:
         mat = bpy.data.materials[entry["material"]]
-        bsdf = next(n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
-        img = next(link.from_node.image for link in bsdf.inputs["Base Color"].links if link.from_node.type == "TEX_IMAGE")
+        if entry.get("image"):  # another map of the material, by part of its name ("normal", "metallicRoughness")
+            img = next(n.image for n in mat.node_tree.nodes if n.type == "TEX_IMAGE" and n.image and entry["image"] in n.image.name)
+        else:
+            bsdf = next(n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+            img = next(link.from_node.image for link in bsdf.inputs["Base Color"].links if link.from_node.type == "TEX_IMAGE")
         w, h = img.size
         flat = np.empty(w * h * 4, dtype=np.float32)
         img.pixels.foreach_get(flat)
@@ -371,7 +376,12 @@ def retouch(entries, folder):
             ink[y0 - cy0:y1 - cy0, x0 - cx0:x1 - cx0] = True
             k = rect[4] if len(rect) > 4 else entry.get("darker", 0.7)
             # dark ink on wood by default; "mode": "light" finds pale lettering (k > 1) instead
-            ink &= (lum > k * box_mean(lum, r)) if entry.get("mode") == "light" else (lum < k * box_mean(lum, r))
+            if entry.get("mode") == "relief":  # lettering embossed in a normal or roughness map: any departure
+                ink &= np.abs(crop[..., :3] - box_mean(crop[..., :3], r)).max(-1) > k
+            elif entry.get("mode") == "light":
+                ink &= lum > k * box_mean(lum, r)
+            else:
+                ink &= lum < k * box_mean(lum, r)
             ink = box_mean(ink.astype(np.float32), max(1, r // 4)) > 0  # catch anti-aliased edges
             grain = crop if entry.get("along", "y") == "y" else crop.transpose(1, 0, 2)
             mask = ink if entry.get("along", "y") == "y" else ink.T
@@ -937,14 +947,50 @@ def join(objs, name):
 
 
 def thin(obj, ratio):
-    """Collapse-decimate one mesh in place (the error-driven collapse keeps outlines and fine parts)."""
+    """Collapse-decimate one mesh in place (the error-driven collapse keeps outlines and fine parts).
+    Decimate scrambles imported custom normals (speckles, zebra bands), so the original's normals are
+    transferred back from an untouched copy, projected along each corner's normal so that the two faces
+    of a thin shell (a guitar top, a peg button) each find their own side."""
+    if ratio >= 1:
+        return
+    src = None
     mod = obj.modifiers.new("thin", "DECIMATE")
     mod.ratio = ratio
+    if getattr(obj.data, "has_custom_normals", False):
+        src = obj.copy()
+        src.data = obj.data.copy()
+        for coll in obj.users_collection:
+            coll.objects.link(src)
+        move = obj.modifiers.new("normals", "DATA_TRANSFER")
+        move.object = src
+        move.use_loop_data = True
+        move.data_types_loops = {"CUSTOM_NORMAL"}
+        move.loop_mapping = "POLYINTERP_LNORPROJ"
     graph = bpy.context.evaluated_depsgraph_get()
     graph.update()
     mesh = bpy.data.meshes.new_from_object(obj.evaluated_get(graph))
     obj.modifiers.clear()
     obj.data = mesh
+    if src:
+        data = src.data
+        bpy.data.objects.remove(src)
+        bpy.data.meshes.remove(data)
+
+
+def share(objs, budget, floor=400):
+    """Split a triangle budget by surface area (water-filling): parts sparser than their share keep every
+    triangle, so small or already light parts are never thinned; the rest are thinned to their share."""
+    left, rate = budget, 0.0
+    pool = [(o, triangles(o), max(surface(o), 1e-8) ** 0.7) for o in objs]
+    while pool:
+        rate = left / sum(w for _, _, w in pool)
+        fits = [p for p in pool if p[1] <= rate * p[2]]
+        if not fits:
+            break
+        left -= sum(t for _, t, _ in fits)
+        pool = [p for p in pool if p not in fits]
+    for obj, tris, weight in pool:
+        thin(obj, min(1.0, max(floor, rate * weight) / tris))
 
 
 def surface(obj):
@@ -984,9 +1030,23 @@ def optimise(root, cfg):
     # Instances (one mesh shown several times, like a set of tuners) stay as they are: the USD crate file
     # stores identical arrays once, so merging them would multiply their size.
     instances = {o for o in everything if o.data.users > 1}
+    # Copies of one part (a row of identical tuners) are left apart for the same reason, if they are big.
+    signatures = {}
+    for obj in everything:
+        if obj not in instances and triangles(obj) >= 200 and not obj.name.startswith("string_"):
+            co = np.empty(len(obj.data.vertices) * 3)
+            obj.data.vertices.foreach_get("co", co)
+            mats = tuple(s.material.name for s in obj.material_slots if s.material)
+            signatures.setdefault((len(co), len(obj.data.polygons), mats, hash(np.round(co, 4).tobytes())), []).append(obj)
+    instances |= {o for copies in signatures.values() if len(copies) > 1 for o in copies}
     for pivot in [o for o in root.children_recursive if o.type == "EMPTY" and o.name.startswith(("peg_", "post_"))]:
         kids = [o for o in pivot.children if shown(o) and o not in instances]
         if kids:
+            for obj in kids:  # thinned part by part, so a light button keeps its outline beside a dense gear
+                if obj.data.users > 1:
+                    obj.data = obj.data.copy()
+            if sum(triangles(o) for o in kids) > cap:
+                share(kids, cap, floor=60)
             moving.append(join(kids, f"{pivot.name}_mesh"))
     fixed = set(moving) | set(rebuilt) | set(originals) | instances
     groups = {}
@@ -1002,24 +1062,20 @@ def optimise(root, cfg):
     fixed |= guarded
     still = [o for o in still if o not in guarded]
     print("thinnable:", ", ".join(f"{o.name} {triangles(o)}" for o in sorted(still, key=triangles, reverse=True)[:14]), flush=True)
-    for obj in moving:
-        if triangles(obj) > cap:
-            thin(obj, cap / triangles(obj))
+    for obj in list(still):  # materials given a fixed ratio ("thinMaterials": {"fret_mat": 0.15})
+        ratio = min([r for m, r in cfg.get("thinMaterials", {}).items()
+                     if any(s.material and s.material.name == m for s in obj.material_slots)], default=None)
+        if ratio:
+            thin(obj, ratio)
+            fixed.add(obj)
+            still.remove(obj)
     if cfg.get("stringRatio", 1) < 1:
         for obj in originals:
             thin(obj, cfg["stringRatio"])
-    # Share the rest by surface area (water-filling): parts sparser than their share keep every triangle.
+    # Share the rest by surface area: parts sparser than their share keep every triangle.
     left = budget - sum(triangles(o) for o in fixed)
-    pool = [(o, triangles(o), max(surface(o), 1e-8) ** 0.7) for o in still]
-    while pool:
-        rate = left / sum(w for _, _, w in pool)
-        fits = [p for p in pool if p[1] <= rate * p[2]]
-        if not fits:
-            break
-        left -= sum(t for _, t, _ in fits)
-        pool = [p for p in pool if p not in fits]
-    for obj, tris, weight in pool:
-        thin(obj, max(400, rate * weight) / tris)
+    print(f"budget: {sum(triangles(o) for o in fixed)} fixed, {left} shared by {len(still)} parts", flush=True)
+    share(still, left)
     after = [o for o in root.children_recursive if shown(o)]
     print(f"optimised: {before[0]} meshes / {before[1]} triangles -> {len(after)} meshes / "
           f"{sum(triangles(o) for o in after)} triangles", flush=True)

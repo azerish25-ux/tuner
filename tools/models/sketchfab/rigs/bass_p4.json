@@ -11,14 +11,44 @@
    "material": "DefaultMaterial",
    "rects": [
     [
-     0.81,
-     0.95,
-     0.575,
-     0.625,
+     0.8,
+     0.955,
+     0.57,
+     0.63,
      1.2
     ]
    ],
    "mode": "light",
+   "along": "x"
+  },
+  {
+   "material": "DefaultMaterial",
+   "image": "normal",
+   "rects": [
+    [
+     0.8,
+     0.955,
+     0.57,
+     0.63,
+     0.04
+    ]
+   ],
+   "mode": "relief",
+   "along": "x"
+  },
+  {
+   "material": "DefaultMaterial",
+   "image": "metallicRoughness",
+   "rects": [
+    [
+     0.8,
+     0.955,
+     0.57,
+     0.63,
+     0.04
+    ]
+   ],
+   "mode": "relief",
    "along": "x"
   }
  ],
