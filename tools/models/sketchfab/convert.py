@@ -34,6 +34,7 @@ import math
 import sys
 from pathlib import Path
 
+import bmesh
 import bpy
 import numpy as np
 from mathutils import Matrix, Vector
@@ -956,13 +957,13 @@ def _apply(obj):
     return mesh
 
 
-def _rim(obj):
-    """Vertex group of the seams: open-boundary vertices lying on another open-boundary vertex. Parts are
-    often split into pieces that meet edge to edge (the sides of a guitar, fretboard segments), and
-    decimating each boundary on its own opens cracks. Free edges (a fret's cut end) stay unheld."""
+def _weld_seams(obj):
+    """Join the seams: open-boundary vertices lying on another open-boundary vertex. Parts are often split
+    into pieces that meet edge to edge (the sides of a guitar, fretboard and fret segments); decimating each
+    boundary on its own opens cracks, while a joined seam collapses as one. Free edges stay as they are."""
     mesh = obj.data
     if not len(mesh.loops):
-        return None
+        return 0
     edge_of = np.empty(len(mesh.loops), dtype=np.int64)
     mesh.loops.foreach_get("edge_index", edge_of)
     used = np.bincount(edge_of, minlength=len(mesh.edges))
@@ -970,18 +971,23 @@ def _rim(obj):
     mesh.edges.foreach_get("vertices", ends)
     rim = np.unique(ends.reshape(-1, 2)[used == 1])
     if not len(rim):
-        return None
+        return 0
     co = np.empty(len(mesh.vertices) * 3)
     mesh.vertices.foreach_get("co", co)
     co = co.reshape(-1, 3)
     cell = max(float(np.ptp(co, axis=0).max()), 1e-9) * 2e-5
     _, back, count = np.unique(np.round(co[rim] / cell).astype(np.int64), axis=0, return_inverse=True, return_counts=True)
-    rim = rim[count[back.ravel()] > 1]
-    if not len(rim):
-        return None
-    group = obj.vertex_groups.new(name="rim")
-    group.add(rim.tolist(), 1.0, "REPLACE")
-    return group.name
+    seam = rim[count[back.ravel()] > 1]
+    if not len(seam):
+        return 0
+    bm = bmesh.new()
+    bm.from_mesh(mesh)
+    bm.verts.ensure_lookup_table()
+    before = len(bm.verts)
+    bmesh.ops.remove_doubles(bm, verts=[bm.verts[i] for i in seam.tolist()], dist=cell)
+    bm.to_mesh(mesh)
+    bm.free()
+    return before - len(mesh.vertices)
 
 
 def _guard_normals(mesh):
@@ -1006,32 +1012,29 @@ def _guard_normals(mesh):
 
 
 def thin(obj, ratio):
-    """Collapse-decimate one mesh in place (the error-driven collapse keeps outlines and fine parts), with
-    seams held so pieces that meet edge to edge stay closed.
-    Decimate scrambles imported custom normals (speckles, zebra bands), so they are reset to the thinned
-    mesh's own normals and then transferred back from an untouched copy, projected along each corner's
-    normal so the two faces of a thin shell (a guitar top, a peg button) each find their own side."""
+    """Collapse-decimate one mesh in place (the error-driven collapse keeps outlines and fine parts).
+    Decimate scrambles imported custom normals (speckles, zebra bands), so those meshes have their seams
+    joined first (no cracks), are thinned, reset to their own normals (hard edges kept by angle) and get
+    the original normals transferred back from an untouched copy, projected along each corner's normal
+    so the two faces of a thin shell (a guitar top, a peg button) each find their own side."""
     if ratio >= 1:
         return
-    custom = getattr(obj.data, "has_custom_normals", False)
+    if obj.data.users > 1:
+        obj.data = obj.data.copy()
     src = None
-    if custom:
+    if getattr(obj.data, "has_custom_normals", False):
         src = obj.copy()
         src.data = obj.data.copy()
         for coll in obj.users_collection:
             coll.objects.link(src)
-    obj.data = obj.data.copy() if obj.data.users > 1 else obj.data
-    rim = _rim(obj)
+        _weld_seams(obj)  # only here: without the transfer, a joined hard seam would be shaded smooth
     mod = obj.modifiers.new("thin", "DECIMATE")
     mod.ratio = ratio
-    if rim:
-        mod.vertex_group = rim  # the group marks what may collapse; inverted, it holds the rim instead
-        mod.invert_vertex_group = True
-        mod.vertex_group_factor = 1000.0
     mesh = _apply(obj)
-    obj.vertex_groups.clear()
     if src:
         mesh.normals_split_custom_set([(0.0, 0.0, 0.0)] * len(mesh.loops))
+        if hasattr(mesh, "set_sharp_from_angle"):
+            mesh.set_sharp_from_angle(angle=math.radians(50))
         move = obj.modifiers.new("normals", "DATA_TRANSFER")
         move.object = src
         move.use_loop_data = True
