@@ -136,7 +136,15 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p ci-out
-          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -only-testing:TimbreUITests/TabletScreenshotsUITests -destination "platform=iOS Simulator,id=$IPAD_DEVICE_ID" -resultBundlePath ios/build/TabletScreenshots.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/ipad-test.log
+          run() { xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -only-testing:TimbreUITests/TabletScreenshotsUITests -destination "platform=iOS Simulator,id=$IPAD_DEVICE_ID" -resultBundlePath ios/build/TabletScreenshots.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee -a ci-out/ipad-test.log; }
+          # The hosted simulator sometimes fails to bring up accessibility for the test runner; that is not a test failure.
+          if ! run; then
+            grep -q "failed to initialize for UI testing" ci-out/ipad-test.log || exit 1
+            echo "Test runner failed to start; rebooting the simulator and retrying once"
+            xcrun simctl shutdown "$IPAD_DEVICE_ID" || true; xcrun simctl boot "$IPAD_DEVICE_ID" || true
+            rm -rf ios/build/TabletScreenshots.xcresult
+            run
+          fi
       - name: Export iPad screenshot attachments
         if: always()
         run: |
