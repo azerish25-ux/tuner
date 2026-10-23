@@ -60,6 +60,10 @@ targets:
       - path: Timbre/Design/Theme.swift
       - path: Timbre/Resources/Fonts
         buildPhase: resources
+      # Widget and control labels ("day streak", "Tune") read the app's string tables.
+      - path: Timbre/Resources
+        includes: ["*.lproj/Localizable.strings", "*.lproj/Localizable.stringsdict"]
+        buildPhase: resources
     entitlements:
       path: TimbreWidgets/TimbreWidgets.entitlements
       properties:

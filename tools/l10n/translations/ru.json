@@ -1,15 +1,4 @@
 {
- "AppShortcuts.strings": {
-  "Open the ${applicationName} metronome": "Открой метроном в ${applicationName}",
-  "Open the ${applicationName} tuner": "Открой тюнер в ${applicationName}",
-  "Start my ${applicationName} practice": "Начни занятие в ${applicationName}",
-  "Train my ear with ${applicationName}": "Тренируй слух с ${applicationName}",
-  "Tune with ${applicationName}": "Настрой инструмент в ${applicationName}"
- },
- "InfoPlist.strings": {
-  "CFBundleDisplayName": "Timbre",
-  "NSMicrophoneUsageDescription": "Timbre слушает ваш инструмент или голос, чтобы измерять высоту звука. Аудио обрабатывается на вашем устройстве и никогда не сохраняется и не отправляется в сеть."
- },
  "Localizable.strings": {
   "%@ per month, billed yearly": "%@ в месяц при оплате за год",
   "%@ per year starts, unless you cancel.": "Далее — %@ в год, если вы не отмените подписку.",
@@ -385,5 +374,16 @@
   "Ten minutes keeps it alive": "Десяти минут хватит, чтобы сохранить серию",
   "Timbre tuner": "Тюнер Timbre",
   "Your streak and the last seven days.": "Ваша серия и последние семь дней."
+ },
+ "AppShortcuts.strings": {
+  "Open the ${applicationName} metronome": "Открой метроном в ${applicationName}",
+  "Open the ${applicationName} tuner": "Открой тюнер в ${applicationName}",
+  "Start my ${applicationName} practice": "Начни занятие в ${applicationName}",
+  "Train my ear with ${applicationName}": "Тренируй слух с ${applicationName}",
+  "Tune with ${applicationName}": "Настрой инструмент в ${applicationName}"
+ },
+ "InfoPlist.strings": {
+  "CFBundleDisplayName": "Timbre",
+  "NSMicrophoneUsageDescription": "Timbre слушает ваш инструмент или голос, чтобы измерять высоту звука. Аудио обрабатывается на вашем устройстве и никогда не сохраняется и не отправляется в сеть."
  }
 }
