@@ -188,6 +188,8 @@ def auto_rig(scene, root, cfg, lo, hi, pts):
         key = parts[0]
         kc = centre(key)
         shaft = kc - pc
+        if auto.get("pegAxis"):  # keys mounted off the post's height: their shafts still run straight across
+            shaft = np.array(auto["pegAxis"], dtype=float) * (1 if np.dot(auto["pegAxis"], shaft) >= 0 else -1)
         shaft = shaft - post_axis * (shaft @ post_axis)
         shaft = shaft / np.linalg.norm(shaft)
         peg = pivot(scene, f"peg_{name}", root, kc, (1, 0, 0), shaft)
