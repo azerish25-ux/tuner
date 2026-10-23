@@ -28,6 +28,7 @@ final class StageController {
     private var segments: [ModelEntity] = []
     private var halo: [ModelEntity] = []
     private var subscription: EventSubscription?
+    private let light = Entity()
     private var filter = OneEuroFilter(minCutoff: 1.1, beta: 0.02)
     private var strobe = StrobePhase(bandsPerSecondPerCent: 0.07)
     private var time: Double = 0
@@ -79,7 +80,7 @@ final class StageController {
         let mesh = MeshResource.generateCylinder(height: 1, radius: 1)
         var metal = PhysicallyBasedMaterial()
         metal.baseColor = .init(tint: UIColor(white: 0.86, alpha: 1))
-        metal.metallic = 1; metal.roughness = 0.28
+        metal.metallic = 1.0; metal.roughness = 0.28
         var light = UnlitMaterial(color: UIColor(red: 1, green: 0.86, blue: 0.62, alpha: 0.32))
         light.blending = .transparent(opacity: 0.32)
         for _ in 0..<Self.segmentCount {
@@ -91,7 +92,21 @@ final class StageController {
             holder.addChild(glowSegment); halo.append(glowSegment)
         }
         addLights()
+        receiveImageBasedLight(holder)
         applyFraming(immediately: true)
+    }
+
+    /// Image-based light from the procedural stage environment, applied to every model part.
+    func setEnvironment(_ resource: EnvironmentResource) {
+        light.components.set(ImageBasedLightComponent(source: .single(resource), intensityExponent: 0.4))
+        if light.parent == nil { root.addChild(light) }
+        if let model { receiveImageBasedLight(model) }
+    }
+
+    private func receiveImageBasedLight(_ entity: Entity) {
+        guard light.components.has(ImageBasedLightComponent.self) else { return }
+        entity.components.set(ImageBasedLightReceiverComponent(imageBasedLight: light))
+        for child in entity.children { receiveImageBasedLight(child) }
     }
 
     private func addLights() {
@@ -221,11 +236,9 @@ struct InstrumentStage: View {
     var body: some View {
         RealityView { content in
             content.camera = .virtual
-            content.environment.background = .color(.clear)
             if let image = StageLighting.environmentImage(),
                let resource = try? await EnvironmentResource(equirectangular: image, withName: "timbre.stage") {
-                content.environment.lighting.resource = resource
-                content.environment.lighting.intensityExponent = 0.4
+                controller.setEnvironment(resource)
             }
             controller.input = input
             controller.attach(&content)
@@ -240,6 +253,12 @@ struct InstrumentStage: View {
             if let name = entity?.name { onSelect(String(name.dropFirst(4))) }
         })
         .task(id: modelID) { await controller.load(modelID: modelID) }
+        .mask {
+            // Feather the edges so the stage melts into the screen whatever the renderer clears to.
+            let edge: [Gradient.Stop] = [.init(color: .clear, location: 0), .init(color: .black, location: 0.06), .init(color: .black, location: 0.94), .init(color: .clear, location: 1)]
+            LinearGradient(stops: edge, startPoint: .top, endPoint: .bottom)
+                .mask(LinearGradient(stops: edge, startPoint: .leading, endPoint: .trailing))
+        }
         .opacity(ready ? 1 : 0)
         .animation(Motion.settle, value: ready)
         .accessibilityHidden(true)

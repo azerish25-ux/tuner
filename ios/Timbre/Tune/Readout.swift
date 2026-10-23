@@ -35,7 +35,7 @@ struct StrobeBand: View {
             for i in -2...(count + 2) {
                 let x = CGFloat(i) * width * 2 + offset - width
                 let rect = CGRect(x: x, y: 0, width: width, height: size.height)
-                let center = abs(rect.midX - size.width / 2) / (size.width / 2)
+                let center = Double(abs(rect.midX - size.width / 2) / (size.width / 2))
                 context.fill(Path(rect), with: .color(color.opacity((locked ? 0.95 : 0.7) * (1 - 0.55 * center))))
             }
             let gloss = Gradient(colors: [.white.opacity(0.22), .clear, .black.opacity(0.25)])
