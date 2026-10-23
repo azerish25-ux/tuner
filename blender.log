@@ -1,0 +1,89 @@
+06:54:21 | INFO: Data are loaded, start creating Blender stuff
+06:54:21 | INFO: Blender create Mesh node polySurface42_sides_mat_0
+06:54:21 | INFO: Blender create Mesh node polySurface42_binding_mat_0
+06:54:21 | INFO: Blender create Mesh node polySurface42_back_mat_0
+06:54:21 | INFO: Blender create Mesh node polySurface42_top_mat_0
+06:54:21 | INFO: Blender create Mesh node polySurface42_blinn10_0
+06:54:21 | INFO: Blender create Mesh node polySurface42_frets_mat_0
+06:54:21 | INFO: Blender create Mesh node polySurface42_tuners_mat_0
+06:54:21 | INFO: Blender create Mesh node polySurface42_strings_mat_0
+06:54:21 | INFO: Blender create Mesh node polySurface42_headstock_mat_0
+06:54:21 | INFO: Blender create Mesh node polySurface42_tailpiece_mat_0
+06:54:21 | INFO: glTF import finished in 0.13s
+Blender 4.5.15 LTS (hash 5afeabba6097 built 2026-10-22 01:33:47)
+Saved: 'build/convert/mandolin_calib_whole.png'
+Time: 00:11.01 (Saving: 00:00.16)
+
+Saved: 'build/convert/mandolin_calib_head.png'
+Time: 00:12.92 (Saving: 00:00.10)
+
+Saved: 'build/convert/mandolin_calib_ids.png'
+Time: 00:06.95 (Saving: 00:00.09)
+
+rigged c4a: peg 4 parts, post 313 parts, scale 0.3506 m, tighten 1
+rigged c4b: peg 4 parts, post 256 parts, scale 0.3506 m, tighten 1
+rigged c3a: peg 4 parts, post 252 parts, scale 0.3484 m, tighten 1
+rigged c3b: peg 4 parts, post 274 parts, scale 0.3484 m, tighten 1
+rigged c2a: peg 4 parts, post 277 parts, scale 0.3508 m, tighten -1
+rigged c2b: peg 4 parts, post 256 parts, scale 0.3508 m, tighten -1
+rigged c1a: peg 4 parts, post 260 parts, scale 0.3488 m, tighten -1
+rigged c1b: peg 4 parts, post 314 parts, scale 0.3488 m, tighten -1
+   polySurface42_frets_mat_0.1441: 944 of 2448 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1451: 35 of 180 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1448: 947 of 2241 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1450: 1 of 180 transferred normals strayed, reset
+   polySurface42_strings_mat_0.134: 11 of 180 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1446: 199 of 2127 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1453: 15 of 189 transferred normals strayed, reset
+   polySurface42_strings_mat_0.122: 11 of 180 transferred normals strayed, reset
+   polySurface42_strings_mat_0.125: 11 of 180 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1447: 126 of 2373 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1452: 7 of 222 transferred normals strayed, reset
+   polySurface42_strings_mat_0.116: 11 of 180 transferred normals strayed, reset
+   polySurface42_strings_mat_0.128: 11 of 180 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1444: 20 of 2427 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1455: 9 of 240 transferred normals strayed, reset
+   polySurface42_strings_mat_0.251: 11 of 180 transferred normals strayed, reset
+   polySurface42_strings_mat_0.263: 11 of 180 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1445: 13 of 2148 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1454: 12 of 246 transferred normals strayed, reset
+   polySurface42_strings_mat_0.257: 11 of 180 transferred normals strayed, reset
+   polySurface42_strings_mat_0.260: 11 of 180 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1442: 20 of 2133 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1456: 6 of 258 transferred normals strayed, reset
+   polySurface42_strings_mat_0.269: 11 of 180 transferred normals strayed, reset
+   polySurface42_frets_mat_0.1443: 16 of 2361 transferred normals strayed, reset
+   polySurface42_strings_mat_0.248: 11 of 180 transferred normals strayed, reset
+   polySurface42_strings_mat_0.266: 11 of 180 transferred normals strayed, reset
+thinnable: part_strings_mat_corner 38492, part_top_mat_corner 20799, part_back_mat_corner 19456, part_sides_mat_corner 19056, part_binding_mat_corner 12360, part_frets_mat_corner 4728, part_blinn10_corner 1704, part_headstock_mat_corner 1454, part_tailpiece_mat_corner 824, part_timbre_string_plain_face 288, part_timbre_string_wound_face 288
+budget: 24725 fixed, 75275 shared by 11 parts
+   part_binding_mat_corner: 294 of 16344 transferred normals strayed, reset
+   part_frets_mat_corner: 623 of 8784 transferred normals strayed, reset
+   part_sides_mat_corner: 983 of 55617 transferred normals strayed, reset
+   part_strings_mat_corner: 1700 of 10626 transferred normals strayed, reset
+optimised: 3057 meshes / 168325 triangles -> 35 meshes / 99995 triangles
+   part_top_mat_corner: 20799 tris, normals CORNER
+   part_back_mat_corner: 19456 tris, normals CORNER
+   part_sides_mat_corner: 18539 tris, normals CORNER
+   part_binding_mat_corner: 5448 tris, normals CORNER
+   part_strings_mat_corner: 3542 tris, normals CORNER
+   part_frets_mat_corner: 2928 tris, normals CORNER
+   post_c3b_mesh: 2554 tris, normals CORNER
+   post_c1a_mesh: 2550 tris, normals CORNER
+   post_c4b_mesh: 2547 tris, normals CORNER
+   post_c1b_mesh: 2546 tris, normals CORNER
+   post_c3a_mesh: 2545 tris, normals CORNER
+   post_c2a_mesh: 2538 tris, normals CORNER
+texture back_mat_baseColor.jpeg: 256x256 -> 256x256 JPEG 17 KB
+texture sides_mat_baseColor.png: 512x512 -> 512x512 JPEG 23 KB
+texture top_mat_baseColor.png: 512x512 -> 512x512 JPEG 19 KB
+USD export of 'build/convert/mandolin.usdz' took 122.81 ms
+Saved: 'build/convert/mandolin_hero.png'
+Time: 00:33.39 (Saving: 00:00.10)
+
+Saved: 'build/convert/mandolin_head.png'
+Time: 00:51.62 (Saving: 00:00.10)
+
+converted mandolin
+
+Blender quit
