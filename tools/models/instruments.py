@@ -46,6 +46,7 @@ class Spec:
     deg_per_cent: float = 1.4
     pickups: str = "p"        # p (split coil) | jj (two single coils) | hh (humbuckers) | none
     soundhole: str = "round"  # round | oval
+    pot_r: float = 0.14       # banjo pot radius
     tuner_scale: float = 1.0  # tuner hardware size relative to a guitar's
 
 
@@ -104,6 +105,21 @@ def build(spec: Spec):
             guard = catmull_rom([(r * 0.35, cz - r * 1.12), (r * 1.05, cz - r * 0.6), (r * 1.32, cz + r * 0.25), (r * 1.62, cz - r * 0.5),
                                  (r * 1.72, cz - r * 1.5), (r * 1.25, cz - r * 2.1), (r * 0.6, cz - r * 1.9)], 10, closed=True)
             prism("pickguard", guard, y_top - 0.0009, y_top - 0.0001, P[spec.guard], root, bevel=0.0004)
+    elif spec.kind == "banjo":
+        # Pot: maple rim behind a frosted head, chrome tension hoop and hooks, flange, resonator.
+        r, cz = spec.pot_r, spec.pot_r
+        def circ(radius, n=96):
+            return [(radius * math.cos(a), cz + radius * math.sin(a)) for a in [2 * math.pi * k / n for k in range(n)]]
+        prism("rim", circ(r), y_top + 0.004, y_top + 0.068, P["maple"], root, bevel=0.002)
+        prism("flange", circ(r + 0.016), y_top + 0.05, y_top + 0.057, P["chrome"], root, bevel=0.001)
+        prism("resonator", circ(r + 0.013), y_top + 0.057, y_top + 0.1, P[spec.back_wood], root, bevel=0.012, segments=4)
+        disc("drumhead", r - 0.002, y_top, (0, cz), P["drumhead"], root, segments=128)
+        ring("tension_hoop", circ(r + 0.003), circ(r - 0.005), y_top - 0.005, y_top + 0.003, P["chrome"], root)
+        for k in range(24):
+            a = 2 * math.pi * (k + 0.5) / 24
+            ca, sa = math.cos(a), math.sin(a)
+            segment(f"hook_{k:02d}", (ca * (r + 0.004), y_top - 0.003, cz + sa * (r + 0.004)), (ca * (r + 0.011), y_top + 0.05, cz + sa * (r + 0.011)),
+                    0.0016, P["chrome"], root, vertices=8)
     else:
         prism("body", outline, y_top, -y_top, P[spec.finish], root, bevel=0.009, segments=4, uv=fit_uv(bounds))
 
@@ -149,13 +165,17 @@ def build(spec: Spec):
 
     # ---------------------------------------------------------------- bridge
     n_strings = len(spec.strings)
-    saddle_top_y = y_top - (0.0115 if hollow else 0.0105)
+    saddle_top_y = y_top - (0.0115 if hollow else 0.012 if spec.kind == "banjo" else 0.0105)
     if spec.kind == "acoustic":
         cube("bridge", (spec.saddle_width + 0.09, 0.008, 0.028), P[spec.board], root, location=(0, y_top - 0.004, saddle_z - 0.004), bevel=0.003)
         cube("saddle", (spec.saddle_width + 0.012, 0.004, 0.003), P["bone"], root, location=(0, saddle_top_y + 0.0022, saddle_z))
     elif spec.kind == "ukulele":
         cube("bridge", (spec.saddle_width + 0.04, 0.008, 0.02), P[spec.board], root, location=(0, y_top - 0.004, saddle_z - 0.003), bevel=0.002)
         cube("saddle", (spec.saddle_width + 0.008, 0.004, 0.0028), P["bone"], root, location=(0, saddle_top_y + 0.0022, saddle_z))
+    elif spec.kind == "banjo":
+        cube("bridge", (spec.saddle_width + 0.022, 0.012, 0.0032), P["bridge_maple"], root, location=(0, y_top - 0.006, saddle_z), bevel=0.0006)
+        tail = [(-0.016, 0.006), (0.016, 0.006), (0.024, 0.075), (-0.024, 0.075)]
+        prism("tailpiece", catmull_rom(tail, 3, closed=True), y_top - 0.006, y_top - 0.002, P["chrome"], root, bevel=0.001)
     elif spec.kind == "mandolin":
         # Floating bridge: ebony foot and adjustable saddle; strings anchor at a cover tailpiece.
         cube("bridge", (spec.saddle_width + 0.03, 0.006, 0.012), P[spec.board], root, location=(0, y_top - 0.003, saddle_z - 0.001), bevel=0.0015)
@@ -241,24 +261,50 @@ def build(spec: Spec):
             center += (occurrence[i] - 0.5) * width / len(courses) * 0.36
         return center
 
-    post_locals = []
+    # A banjo's short fifth string tunes at a peg by the fifth fret; the head holds the other four.
+    fifth = spec.kind == "banjo"
+    head_strings = list(range(1, n_strings)) if fifth else list(range(n_strings))
+    post_locals = {}
     # Strings never cross at the head: on split heads the outermost string runs to the
     # farthest post; on Fender-style inline heads the low string takes the post nearest the nut.
     if spec.head == "inline":
-        for i, anchor in enumerate(spec.strings):
-            post_locals.append((-hw0 - 0.012, spec.post_s[i], -1))
+        for j, i in enumerate(head_strings):
+            post_locals[i] = (-hw0 - 0.012, spec.post_s[j], -1)
     else:
-        half_n = n_strings // 2
-        for i, anchor in enumerate(spec.strings):
-            if i < half_n:
-                post_locals.append((-hw0 + 0.006 - 0.01, spec.post_s[half_n - 1 - i], -1))
+        half_n = len(head_strings) // 2
+        for j, i in enumerate(head_strings):
+            if j < half_n:
+                post_locals[i] = (-hw0 + 0.006 - 0.01, spec.post_s[half_n - 1 - j], -1)
             else:
-                post_locals.append((hw0 - 0.006 + 0.01, spec.post_s[i - half_n], 1))
+                post_locals[i] = (hw0 - 0.006 + 0.01, spec.post_s[j - half_n], 1)
 
     ts = spec.tuner_scale
     for i, anchor in enumerate(spec.strings):
         name = names[i]
         radius = spec.gauges[i] * 1.25
+        if fifth and i == 0:
+            z5 = nut_z - fret_distance(spec.scale, 5)
+            edge = -width_at(z5) / 2
+            post = cylinder(f"post_{name}", 0.0028, 0.012, P["nickel"], root, location=(edge - 0.004, y_top + 0.004, z5), rotation=(0, math.pi / 2, 0), vertices=16)
+            peg = empty(f"peg_{name}", (edge - 0.01, y_top + 0.004, z5), root)
+            peg.rotation_euler = (0, 0, math.pi)
+            cylinder(f"shaft_{name}", 0.0017, 0.01, P["nickel"], peg, location=(0.005, 0, 0), rotation=(0, math.pi / 2, 0), vertices=12)
+            ellipsoid(f"button_{name}", (0.0075, 0.0032, 0.0065), P["button_pearl"], peg, location=(0.016, 0, 0))
+            sx = string_x(0, spec.saddle_width)
+            saddle_pt = Vector((sx, saddle_top_y - radius, saddle_z))
+            nut_pt = Vector((edge + 0.003, y_board - 0.003 - radius, z5))
+            cylinder(f"spike_{name}", 0.0011, 0.003, P["nickel"], root, location=(nut_pt.x, y_board - 0.0015, z5), rotation=(math.pi / 2, 0, 0), vertices=10)
+            mat = P[spec.wound_material if spec.wound[i] else spec.string_material]
+            segment(f"string_{name}", saddle_pt, nut_pt, radius, mat, root, vertices=10)
+            segment(f"string_{name}_head", nut_pt, world(post, (0, 0, 0)), radius, mat, root, vertices=8)
+            segment(f"string_{name}_tail", saddle_pt, Vector((sx * 0.6, y_top - 0.004, 0.07)), radius, mat, root, vertices=8)
+            peg_world = world(peg)
+            rig["strings"].append({
+                "anchor": anchor, "saddle": to_usd(saddle_pt), "nut": to_usd(nut_pt), "radius": round(radius, 6),
+                "wound": spec.wound[i], "peg": f"peg_{name}", "post": f"post_{name}", "node": f"string_{name}",
+                "pegCenter": to_usd(peg_world), "pegAxis": to_usd((world(peg, (1, 0, 0)) - peg_world).normalized()), "tighten": 1,
+            })
+            continue
         px, ps, side = post_locals[i]
         post = cylinder(f"post_{name}", (0.0031 if spec.kind != "electric_bass" else 0.0045) * ts, 0.026, P["nickel"], head,
                         location=(px, -0.004, ps), rotation=(math.pi / 2, 0, 0), vertices=20)
@@ -295,6 +341,8 @@ def build(spec: Spec):
         segment(f"string_{name}_head", nut_pt, head_pt, radius, mat, root, vertices=8)
         if spec.kind == "mandolin":
             tail_pt = Vector((sx * 0.7, y_top - 0.005, min(zs) + 0.07))
+        elif spec.kind == "banjo":
+            tail_pt = Vector((sx * 0.6, y_top - 0.004, 0.07))
         else:
             tail_pt = saddle_pt + Vector((0, 0.004, -0.012 if spec.kind == "acoustic" else -0.025))
         segment(f"string_{name}_tail", saddle_pt, tail_pt, radius, mat, root, vertices=8)
@@ -481,6 +529,12 @@ MODELS = {
         body_half=DOMRA, head="2+1", head_tilt=12, head_len=0.12, post_s=[0.035, 0.075], finish="spruce", back_wood="maple",
         neck_wood="mahogany", board="rosewood", soundhole_z=0.16, soundhole_r=0.026, string_material="steel",
         wound_material="bronze", button="pearl", tuner_scale=0.85, deg_per_cent=1.6),
+    "banjo": Spec(
+        id="banjo", kind="banjo", strings=["s5", "s4", "s3", "s2", "s1"], gauges=[0.00013, 0.00033, 0.00016, 0.00019, 0.00013],
+        wound=[False, True, False, False, False], scale=0.67, nut_width=0.032, saddle_width=0.04, frets=22, body_fret=22,
+        body_len=0.28, body_depth=0.1, body_half=[(0.0, 0.0), (0.154, 0.0), (0.154, 0.28), (0.0, 0.28)], head="2+2",
+        head_tilt=13, head_len=0.15, post_s=[0.04, 0.09], neck_wood="maple_neck", back_wood="mahogany", board="rosewood",
+        string_material="steel", wound_material="nickel_wound", button="pearl", deg_per_cent=1.5),
     "ukulele_soprano": uke("ukulele_soprano", 0.33, 1.0, 15),
     "ukulele_concert": uke("ukulele_concert", 0.38, 1.12, 18),
     "ukulele_tenor": uke("ukulele_tenor", 0.43, 1.26, 18),
@@ -501,6 +555,7 @@ PHOTO_MODELS = {
     "41_folk_world_strings_balalaika_prima": "balalaika",
     "42_folk_world_strings_domra": "domra",
     "baritone_ukulele": "ukulele_baritone",
+    "22_folk_world_strings_banjo_5_string": "banjo",
     "bass_ukulele": "ukulele_bass",
     "01_guitar_acoustic_guitar": "guitar_acoustic",
     "06_bass_4_string_p_bass": "bass_p4",

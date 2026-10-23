@@ -1,1 +1,1 @@
-mandolin,mandola,mandocello
+banjo,kalimba,mandolin,mandola,mandocello

@@ -328,6 +328,7 @@ def palette():
         "pickup_black": material("Pickup", color=(0.02, 0.02, 0.022), roughness=0.4),
         "satin_black": material("Satin Black", color=(0.03, 0.03, 0.032), roughness=0.55),
         "fret": material("Fret Wire", color=(0.86, 0.84, 0.8), metallic=1.0, roughness=0.15),
+        "drumhead": material("Frosted Head", color=(0.93, 0.91, 0.86), roughness=0.78),
         "maple_neck": material("Neck Maple", texture="maple_plain_color.jpg", roughness=0.3, coat=0.6),
         "ebony_satin": material("Satin Ebony", texture="ebony_color.jpg", roughness=0.55),
         "black_guard": material("Black Guard", color=(0.02, 0.02, 0.022), roughness=0.18),

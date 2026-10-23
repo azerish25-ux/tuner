@@ -19,9 +19,11 @@ sys.path.insert(0, str(Path(__file__).parent))
 import blendkit  # noqa: E402
 from bowed import BOWED, BOWED_PHOTOS, build_bowed  # noqa: E402
 from instruments import MODELS, PHOTO_MODELS, build  # noqa: E402
+from kalimba import KALIMBA, KALIMBA_PHOTOS, build_kalimba  # noqa: E402
 
-ALL_MODELS = {**MODELS, **BOWED}
-ALL_PHOTOS = {**PHOTO_MODELS, **BOWED_PHOTOS}
+ALL_MODELS = {**MODELS, **BOWED, **KALIMBA}
+ALL_PHOTOS = {**PHOTO_MODELS, **BOWED_PHOTOS, **KALIMBA_PHOTOS}
+BUILDERS = {"bowed": build_bowed, "kalimba": build_kalimba}
 
 
 def parse():
@@ -147,7 +149,7 @@ def main():
     for model_id in selected:
         spec = ALL_MODELS[model_id]
         scene = blendkit.reset_scene()
-        root, rig = build_bowed(spec) if spec.kind == "bowed" else build(spec)
+        root, rig = BUILDERS.get(spec.kind, build)(spec)
         export_usdz(root, out / f"{model_id}.usdz")
         lo, hi = bounds(root)
         a, b = blendkit.to_usd(lo), blendkit.to_usd(hi)
