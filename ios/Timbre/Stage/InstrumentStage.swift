@@ -41,6 +41,7 @@ final class StageController {
     private var angles: [String: Float] = [:]
     private var framing: Float = 0          // 0 = whole instrument, 1 = headstock close-up
     private var yaw: Float = -0.32
+    private var aimPoint: SIMD3<Float>?
     private var previousLevel: Double = -120
     private var currentAnchor: String?
     var input: () -> StageInput = { StageInput() }
@@ -150,8 +151,15 @@ final class StageController {
         let height = rig.upper.y - rig.lower.y
         let center = (rig.lower + rig.upper) / 2
         let wholeDistance = (height * 0.56) / tan(fov / 2)
+        // Close-up aims between the head and the peg being tuned, gliding when the string changes.
         let head = rig.head
-        let focusPoint = head + SIMD3<Float>(0, -0.045, 0)
+        var aim = head + SIMD3<Float>(0, -0.045, 0)
+        if let anchor = currentAnchor ?? rig.strings.first?.anchor, let string = rig.string(anchor) {
+            aim = head + (string.pegPoint - head) * 0.45 + SIMD3<Float>(0, -0.03, 0)
+        }
+        let previousAim = aimPoint ?? aim
+        let focusPoint = immediately ? aim : previousAim + (aim - previousAim) * min(1, dt * 3)
+        aimPoint = focusPoint
         let focusDistance: Float = max(0.34, height * 0.33)
         let point = simd_mix(center, focusPoint, SIMD3(repeating: framing))
         let distance = wholeDistance + (focusDistance - wholeDistance) * framing
