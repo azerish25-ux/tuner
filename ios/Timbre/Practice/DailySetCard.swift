@@ -189,18 +189,23 @@ struct DailySetCard: View {
     }
 
     private func ring(_ activities: [DailyActivity], done: Set<DailyActivity.Kind>, complete: Bool) -> some View {
+        // Every layer is sized explicitly: the ring must stay 112 pt whatever its siblings measure.
         ZStack {
             Circle().fill(RadialGradient(colors: [Palette.amber.opacity(complete ? 0.28 : 0), .clear], center: .center, startRadius: 10, endRadius: 70))
+                .frame(width: 112, height: 112)
                 .scaleEffect(1.25)
             DailySetRing(activities: activities, done: done, lineWidth: 11, open: open)
+                .frame(width: 112, height: 112)
             center(activities, done: done, complete: complete)
+        }
+        .frame(width: 112, height: 112)
+        .overlay {
             if !reduceMotion {
                 SparkBurst(trigger: burst, color: Palette.amber)
                     .frame(width: 240, height: 240)
                     .allowsHitTesting(false)
             }
         }
-        .frame(width: 112, height: 112)
         .scaleEffect(pop ? 1.06 : 1)
     }
 
