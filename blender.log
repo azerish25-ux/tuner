@@ -1,0 +1,56 @@
+05:42:57 | INFO: Data are loaded, start creating Blender stuff
+05:42:57 | INFO: Blender create Mesh node polySurface42_sides_mat_0
+05:42:57 | INFO: Blender create Mesh node polySurface42_binding_mat_0
+05:42:57 | INFO: Blender create Mesh node polySurface42_back_mat_0
+05:42:57 | INFO: Blender create Mesh node polySurface42_top_mat_0
+05:42:57 | INFO: Blender create Mesh node polySurface42_blinn10_0
+05:42:57 | INFO: Blender create Mesh node polySurface42_frets_mat_0
+05:42:57 | INFO: Blender create Mesh node polySurface42_tuners_mat_0
+05:42:57 | INFO: Blender create Mesh node polySurface42_strings_mat_0
+05:42:57 | INFO: Blender create Mesh node polySurface42_headstock_mat_0
+05:42:57 | INFO: Blender create Mesh node polySurface42_tailpiece_mat_0
+05:42:57 | INFO: glTF import finished in 0.22s
+Blender 4.5.15 LTS (hash 5afeabba6097 built 2026-10-22 01:33:47)
+Saved: 'build/convert/mandolin_calib_whole.png'
+Time: 00:24.72 (Saving: 00:00.24)
+
+Saved: 'build/convert/mandolin_calib_head.png'
+Time: 00:25.69 (Saving: 00:00.15)
+
+Saved: 'build/convert/mandolin_calib_ids.png'
+Time: 00:16.01 (Saving: 00:00.14)
+
+rigged c4a: peg 4 parts, post 313 parts, scale 0.3506 m, tighten 1
+rigged c4b: peg 4 parts, post 256 parts, scale 0.3506 m, tighten 1
+rigged c3a: peg 4 parts, post 252 parts, scale 0.3484 m, tighten 1
+rigged c3b: peg 4 parts, post 274 parts, scale 0.3484 m, tighten 1
+rigged c2a: peg 4 parts, post 277 parts, scale 0.3508 m, tighten -1
+rigged c2b: peg 4 parts, post 256 parts, scale 0.3508 m, tighten -1
+rigged c1a: peg 4 parts, post 260 parts, scale 0.3488 m, tighten -1
+rigged c1b: peg 4 parts, post 314 parts, scale 0.3488 m, tighten -1
+optimised: 3057 meshes / 168325 triangles -> 35 meshes / 120000 triangles
+   part_top_mat_corner: 20799 tris, normals CORNER
+   part_back_mat_corner: 19456 tris, normals CORNER
+   part_sides_mat_corner: 19056 tris, normals CORNER
+   part_strings_mat_corner: 14661 tris, normals CORNER
+   part_binding_mat_corner: 12360 tris, normals CORNER
+   part_frets_mat_corner: 4728 tris, normals CORNER
+   post_c1a_mesh: 2500 tris, normals CORNER
+   post_c1b_mesh: 2500 tris, normals CORNER
+   post_c2a_mesh: 2500 tris, normals CORNER
+   post_c3a_mesh: 2500 tris, normals CORNER
+   post_c3b_mesh: 2500 tris, normals CORNER
+   post_c4b_mesh: 2500 tris, normals CORNER
+texture back_mat_baseColor.jpeg: 256x256 -> 256x256 JPEG 17 KB
+texture sides_mat_baseColor.png: 512x512 -> 512x512 JPEG 23 KB
+texture top_mat_baseColor.png: 512x512 -> 512x512 JPEG 19 KB
+USD export of 'build/convert/mandolin.usdz' took 225.21 ms
+Saved: 'build/convert/mandolin_hero.png'
+Time: 01:07.63 (Saving: 00:00.17)
+
+Saved: 'build/convert/mandolin_head.png'
+Time: 01:43.06 (Saving: 00:00.17)
+
+converted mandolin
+
+Blender quit
