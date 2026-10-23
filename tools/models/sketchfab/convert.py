@@ -8,7 +8,9 @@ Each rigs/<model>.json names its download folder and how to read it:
    "remove": [objects deleted (bows, stands)], "hide": [objects hidden],
    "materials": {name: {"metallic": 0, ...}}, "coat": [object name prefixes given a clear coat],
    "retouch": [{"material", "rects" (ink to remove) | "multiply" (tint)}] edits base colour images,
-   "decimate": [{"re", "ratio", "minVerts"}] thins out needlessly dense parts,
+   "decimate": [{"re", "ratio", "minVerts"}] thins out needlessly dense parts before rigging,
+   "triangles": budget for the shipped model (120000), "pivotTriangles" (4000 per peg or post),
+   "textureMax" / "normalMax" (2048 px), "jpegQuality" (90), "optimise": false to ship the parts as split,
    "rig": "FRICTION_PEG", "degPerCent": 1.2, "stringKind": "steel" | "bronze" | "nylon" | "gut",
    "nutZ" / "saddleZ": a height or parts whose mean height it is, "stringEnds": "rings" (low-poly strings),
    "nutEven" / "saddleEven": {"span", "pairGap"} to space bunched-up strings evenly,
@@ -198,6 +200,7 @@ def auto_rig(scene, root, cfg, lo, hi, pts):
         adopt(post, [row["post"]])
         mat = row["obj"].material_slots[0].material if row["obj"].material_slots else string_material()
         cut_speaking_length(row["obj"], saddle_z + span * 0.004, nut_z - span * 0.004)
+        _KEEP.add(row["obj"].name)
         r = max(row["radius"], 0.00025)
         cylinder_between(f"string_{name}", row["saddle"], row["nut"], r, mat, root)
         # The shaft axis points outward on both sides, so one sign tightens every machine.
@@ -855,6 +858,7 @@ def rig_model(scene, root, cfg, lo, hi, pts):
             span = nut[2] - saddle[2]
             for obj in row["objs"]:
                 cut_speaking_length(obj, saddle[2] + span * 0.004, nut[2] - span * 0.004)
+                _KEEP.add(obj.name)
         elif row["objs"] and originals == "hide":  # rebuild the rest of the string too, at its true gauge
             top, bottom = string_end(row["objs"], True), string_end(row["objs"], False)
             for obj in row["objs"]:
@@ -907,6 +911,118 @@ def card_2d(scene, strings, res):
     return card
 
 
+_KEEP = set()  # names of original strings kept beside the rebuilt ones: never thinned out
+
+
+def triangles(obj):
+    n = np.empty(len(obj.data.polygons), dtype=np.int64)
+    obj.data.polygons.foreach_get("loop_total", n)
+    return int((n - 2).sum())
+
+
+def join(objs, name):
+    for obj in objs:  # instanced meshes: joining into a shared mesh would change its other users too
+        if obj.data.users > 1:
+            obj.data = obj.data.copy()
+    if len(objs) > 1:
+        with bpy.context.temp_override(active_object=objs[0], object=objs[0], selected_objects=objs,
+                                       selected_editable_objects=objs):
+            bpy.ops.object.join()
+    objs[0].name = name
+    return objs[0]
+
+
+def thin(obj, ratio):
+    """Collapse-decimate one mesh in place (the error-driven collapse keeps outlines and fine parts)."""
+    mod = obj.modifiers.new("thin", "DECIMATE")
+    mod.ratio = ratio
+    graph = bpy.context.evaluated_depsgraph_get()
+    graph.update()
+    mesh = bpy.data.meshes.new_from_object(obj.evaluated_get(graph))
+    obj.modifiers.clear()
+    obj.data = mesh
+
+
+def optimise(root, cfg):
+    """Fewer, lighter prims for the phone: still parts merged per material set, the parts under each peg or
+    post merged into one mesh, then triangles thinned toward "triangles" (default 120k). Rig nodes (peg_,
+    post_, string_) keep their names and places; the strings and pegs are thinned least."""
+    budget, cap = cfg.get("triangles", 120000), cfg.get("pivotTriangles", 4000)
+    shown = lambda o: o.type == "MESH" and not o.hide_render
+    everything = [o for o in root.children_recursive if shown(o)]
+    before = (len(everything), sum(triangles(o) for o in everything))
+    keep = [o for o in everything if o.name.startswith("string_") or o.name in _KEEP]
+    moving = []
+    for pivot in [o for o in root.children_recursive if o.type == "EMPTY" and o.name.startswith(("peg_", "post_"))]:
+        kids = [o for o in pivot.children if shown(o)]
+        if kids:
+            moving.append(join(kids, f"{pivot.name}_mesh"))
+    fixed = set(moving) | set(keep)
+    groups = {}
+    for obj in [o for o in root.children_recursive if shown(o) and o not in fixed]:
+        groups.setdefault(tuple(sorted(s.material.name for s in obj.material_slots if s.material)), []).append(obj)
+    still = [join(objs, "part_" + ("_".join(key)[:40] or "plain")) for key, objs in groups.items()]
+    for obj in moving:  # a turning part keeps its detail up to a few thousand triangles
+        if triangles(obj) > cap:
+            thin(obj, cap / triangles(obj))
+    total = sum(triangles(o) for o in root.children_recursive if shown(o))
+    heavy = [o for o in still if triangles(o) > 1000]
+    heavy_tris = sum(triangles(o) for o in heavy)
+    if total > budget and heavy_tris:
+        ratio = max(0.12, (budget - (total - heavy_tris)) / heavy_tris)
+        for obj in heavy:
+            thin(obj, ratio)
+    after = [o for o in root.children_recursive if shown(o)]
+    print(f"optimised: {before[0]} meshes / {before[1]} triangles -> {len(after)} meshes / "
+          f"{sum(triangles(o) for o in after)} triangles", flush=True)
+    for obj in sorted(after, key=triangles, reverse=True)[:8]:
+        print(f"   {obj.name}: {triangles(obj)}", flush=True)
+
+
+def compress_textures(root, cfg, folder):
+    """Textures the USDZ carries, at phone size: at most "textureMax" px (2048; "normalMax" for normal maps),
+    JPEG at "jpegQuality" (90) unless the alpha channel is used. Saved to disk and relinked, because the
+    USDZ export packs image files as they are."""
+    top, normal_top, quality = cfg.get("textureMax", 2048), cfg.get("normalMax", cfg.get("textureMax", 2048)), cfg.get("jpegQuality", 90)
+    used = {}
+    for obj in [o for o in root.children_recursive if o.type == "MESH" and not o.hide_render]:
+        for slot in obj.material_slots:
+            if not slot.material or not slot.material.use_nodes:
+                continue
+            for node in slot.material.node_tree.nodes:
+                if node.type != "TEX_IMAGE" or not node.image or not any(out.links for out in node.outputs):
+                    continue
+                role = used.setdefault(node.image.name, {"image": node.image, "normal": False, "alpha": False})
+                role["alpha"] |= bool(node.outputs["Alpha"].links)
+                role["normal"] |= any(link.to_node.type == "NORMAL_MAP" for link in node.outputs["Color"].links)
+    folder.mkdir(parents=True, exist_ok=True)
+    for name, role in used.items():
+        img = role["image"]
+        w, h = img.size
+        if not w:
+            continue
+        limit = normal_top if role["normal"] else top
+        k = min(1.0, limit / max(w, h))
+        if k < 1:
+            img.scale(max(1, int(w * k)), max(1, int(h * k)))
+        fmt, ext = ("PNG", "png") if role["alpha"] else ("JPEG", "jpg")
+        path = (folder / f"{Path(name).stem}.{ext}").resolve()
+        img.filepath_raw = str(path)
+        img.file_format = fmt
+        try:
+            img.save(quality=quality)
+        except TypeError:
+            img.save()
+        light = bpy.data.images.load(str(path), check_existing=False)
+        light.colorspace_settings.name = img.colorspace_settings.name
+        light.alpha_mode = img.alpha_mode
+        for mat in bpy.data.materials:
+            for node in (mat.node_tree.nodes if mat.use_nodes else []):
+                if node.type == "TEX_IMAGE" and node.image == img:
+                    node.image = light
+        print(f"texture {name}: {w}x{h} -> {light.size[0]}x{light.size[1]} {fmt} {path.stat().st_size // 1024} KB", flush=True)
+
+
 def export_usdz(root, path):
     bpy.ops.object.select_all(action="DESELECT")
     for obj in [root] + list(root.children_recursive):
@@ -927,6 +1043,7 @@ def export_usdz(root, path):
 def convert(src: Path, cfg: dict, out: Path):
     scene = reset()
     _SUMMARY.clear()
+    _KEEP.clear()
     import_model(src / cfg["source"])
     if cfg.get("separate"):
         separate_loose()
@@ -961,6 +1078,9 @@ def convert(src: Path, cfg: dict, out: Path):
     meta = src / cfg["source"] / "meta.json"
     if meta.exists():
         rig["credit"] = json.loads(meta.read_text())
+    if cfg.get("optimise", True):
+        optimise(root, cfg)
+        compress_textures(root, cfg, out.parent / "textures" / model)
     export_usdz(root, out / f"{model}.usdz")
     persp_camera(scene, (lo + hi) / 2, float(hi[2] - lo[2]), 24, 6, 85)
     rig["card2D"] = card_2d(scene, rig["strings"], 1400)
