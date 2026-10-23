@@ -35,7 +35,7 @@ And one non-consumable:
 |---|---|---|
 | `timbre_plus_lifetime` | Non-consumable | $89.99 |
 
-`timbre_plus_lifetime` keeps the identifier of the earlier lifetime purchase, so anyone who bought it keeps Pro. Prices are suggestions: the app shows whatever Apple returns (`displayPrice`), including the trial length. Give each product a display name and description (for example "Timbre Pro — every instrument in 3D, strobe precision and the full practice set"), a review screenshot of the paywall, and review notes saying the trial and plans are on the paywall reached from Practice → Drone. Submit the products with the first app version.
+`timbre_plus_lifetime` keeps the identifier of the earlier lifetime purchase, so anyone who bought it keeps Pro. Prices are suggestions: the app shows whatever Apple returns (`displayPrice`), including the trial length. Give each product a display name and description, a review screenshot of the paywall, and review notes saying the trial and plans are on the paywall reached from any locked lesson or Practice → Drone. Ready-to-paste names, descriptions, listing text, keywords, review notes and a pricing note are in [APP-STORE-LISTING.md](APP-STORE-LISTING.md). Submit the products with the first app version.
 
 ## 3. Signing and upload from GitHub Actions
 
