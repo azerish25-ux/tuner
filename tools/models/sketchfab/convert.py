@@ -12,6 +12,7 @@ Each rigs/<model>.json names its download folder and how to read it:
    "triangles": budget for the shipped model (120000), "pivotTriangles" (4000 per peg or post),
    "stringRatio" (thin the original strings kept beside the rebuilt ones), "protectMaterials": [never thinned],
    "thinMaterials": {material: fixed ratio}, "weldMaterials": [join seams of split panels before thinning],
+   "transferNormals": false keeps Decimate's own normals (when they survive it, as on bass_p4),
    "retouch" entries may also name an "image" (normal, metallicRoughness) and a "mode" (light, relief),
    "textureMax" / "normalMax" (2048 px), "jpegQuality" (90), "optimise": false to ship the parts as split,
    "rig": "FRICTION_PEG", "degPerCent": 1.2, "stringKind": "steel" | "bronze" | "nylon" | "gut",
@@ -929,6 +930,7 @@ def card_2d(scene, strings, res):
 
 _KEEP = set()  # names of original strings kept beside the rebuilt ones: never thinned out
 _WELD = set()  # materials whose seams are joined before thinning ("weldMaterials")
+_TRANSFER = True  # give thinned meshes their original normals back ("transferNormals")
 
 
 def triangles(obj):
@@ -1027,7 +1029,7 @@ def thin(obj, ratio):
     if obj.data.users > 1:
         obj.data = obj.data.copy()
     src = None
-    if getattr(obj.data, "has_custom_normals", False):
+    if _TRANSFER and getattr(obj.data, "has_custom_normals", False):
         src = obj.copy()
         src.data = obj.data.copy()
         for coll in obj.users_collection:
@@ -1100,8 +1102,10 @@ def optimise(root, cfg):
     "triangles" (120k) by surface area, so dense small detail (fret wire, gear teeth, coils) is thinned
     first and broad panels and outlines keep their shape. Rig nodes (peg_, post_, string_) are unchanged."""
     budget, cap = cfg.get("triangles", 120000), cfg.get("pivotTriangles", 4000)
+    global _TRANSFER
     _WELD.clear()
     _WELD.update(cfg.get("weldMaterials", []))
+    _TRANSFER = cfg.get("transferNormals", True)
     shown = lambda o: o.type == "MESH" and not o.hide_render
     everything = [o for o in root.children_recursive if shown(o)]
     before = (len(everything), sum(triangles(o) for o in everything))
