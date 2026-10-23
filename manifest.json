@@ -1,0 +1,122 @@
+{
+ "models": {
+  "saxophone": {
+   "strings": [
+    "key_1"
+   ],
+   "length": 0.7
+  },
+  "erhu": {
+   "strings": [
+    "s2",
+    "s1"
+   ],
+   "length": 0.92
+  },
+  "shamisen": {
+   "strings": [
+    "s3",
+    "s2",
+    "s1"
+   ],
+   "length": 1.01
+  },
+  "koto": {
+   "strings": [
+    "bridge_1",
+    "bridge_2",
+    "bridge_3",
+    "bridge_4",
+    "bridge_5",
+    "bridge_6",
+    "bridge_7",
+    "bridge_8",
+    "bridge_9",
+    "bridge_10",
+    "bridge_11",
+    "bridge_12",
+    "bridge_13"
+   ],
+   "length": 1.82
+  },
+  "gayageum": {
+   "strings": [
+    "bridge_1",
+    "bridge_2",
+    "bridge_3",
+    "bridge_4",
+    "bridge_5",
+    "bridge_6",
+    "bridge_7",
+    "bridge_8",
+    "bridge_9",
+    "bridge_10",
+    "bridge_11",
+    "bridge_12"
+   ],
+   "length": 1.6
+  },
+  "guzheng": {
+   "strings": [
+    "s21",
+    "s20",
+    "s19",
+    "s18",
+    "s17",
+    "s16",
+    "s15",
+    "s14",
+    "s13",
+    "s12",
+    "s11",
+    "s10",
+    "s9",
+    "s8",
+    "s7",
+    "s6",
+    "s5",
+    "s4",
+    "s3",
+    "s2",
+    "s1"
+   ],
+   "length": 1.63
+  },
+  "oud": {
+   "strings": [
+    "c6",
+    "c5",
+    "c5",
+    "c4",
+    "c4",
+    "c3",
+    "c3",
+    "c2",
+    "c2",
+    "c1",
+    "c1"
+   ],
+   "length": 0.73
+  },
+  "pipa": {
+   "strings": [
+    "s4",
+    "s3",
+    "s2",
+    "s1"
+   ],
+   "length": 0.7377
+  }
+ },
+ "photos": {
+  "52_winds_alto_eb_saxophone": "saxophone",
+  "53_winds_tenor_bb_saxophone": "saxophone",
+  "37_folk_world_strings_erhu": "erhu",
+  "38_folk_world_strings_shamisen": "shamisen",
+  "39_folk_world_strings_koto": "koto",
+  "40_folk_world_strings_gayageum": "gayageum",
+  "35_folk_world_strings_guzheng": "guzheng",
+  "33_folk_world_strings_oud_arabic": "oud",
+  "36_folk_world_strings_pipa": "pipa"
+ }
+}

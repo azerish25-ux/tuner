@@ -1,0 +1,692 @@
+{
+ "model": "gayageum",
+ "rig": "FRET_POSITION",
+ "degPerCent": 1.0,
+ "strings": [
+  {
+   "anchor": "bridge_1",
+   "saddle": [
+    -0.1176,
+    0.25,
+    0.058217
+   ],
+   "nut": [
+    -0.1176,
+    1.51,
+    0.058217
+   ],
+   "radius": 0.0006,
+   "wound": false,
+   "peg": "peg_bridge_1",
+   "post": "peg_bridge_1",
+   "node": "string_bridge_1",
+   "pegCenter": [
+    -0.1176,
+    0.25,
+    0.036217
+   ],
+   "pegAxis": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "tighten": 1,
+   "motion": "slide",
+   "perCent": 0.0006
+  },
+  {
+   "anchor": "bridge_2",
+   "saddle": [
+    -0.096218,
+    0.311364,
+    0.063793
+   ],
+   "nut": [
+    -0.096218,
+    1.51,
+    0.063793
+   ],
+   "radius": 0.000573,
+   "wound": false,
+   "peg": "peg_bridge_2",
+   "post": "peg_bridge_2",
+   "node": "string_bridge_2",
+   "pegCenter": [
+    -0.096218,
+    0.311364,
+    0.041793
+   ],
+   "pegAxis": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "tighten": 1,
+   "motion": "slide",
+   "perCent": 0.0006
+  },
+  {
+   "anchor": "bridge_3",
+   "saddle": [
+    -0.074836,
+    0.372727,
+    0.068693
+   ],
+   "nut": [
+    -0.074836,
+    1.51,
+    0.068693
+   ],
+   "radius": 0.000545,
+   "wound": false,
+   "peg": "peg_bridge_3",
+   "post": "peg_bridge_3",
+   "node": "string_bridge_3",
+   "pegCenter": [
+    -0.074836,
+    0.372727,
+    0.046693
+   ],
+   "pegAxis": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "tighten": 1,
+   "motion": "slide",
+   "perCent": 0.0006
+  },
+  {
+   "anchor": "bridge_4",
+   "saddle": [
+    -0.053455,
+    0.434091,
+    0.072637
+   ],
+   "nut": [
+    -0.053455,
+    1.51,
+    0.072637
+   ],
+   "radius": 0.000518,
+   "wound": false,
+   "peg": "peg_bridge_4",
+   "post": "peg_bridge_4",
+   "node": "string_bridge_4",
+   "pegCenter": [
+    -0.053455,
+    0.434091,
+    0.050637
+   ],
+   "pegAxis": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "tighten": 1,
+   "motion": "slide",
+   "perCent": 0.0006
+  },
+  {
+   "anchor": "bridge_5",
+   "saddle": [
+    -0.032073,
+    0.495455,
+    0.075399
+   ],
+   "nut": [
+    -0.032073,
+    1.51,
+    0.075399
+   ],
+   "radius": 0.000491,
+   "wound": false,
+   "peg": "peg_bridge_5",
+   "post": "peg_bridge_5",
+   "node": "string_bridge_5",
+   "pegCenter": [
+    -0.032073,
+    0.495455,
+    0.053399
+   ],
+   "pegAxis": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "tighten": 1,
+   "motion": "slide",
+   "perCent": 0.0006
+  },
+  {
+   "anchor": "bridge_6",
+   "saddle": [
+    -0.010691,
+    0.556818,
+    0.07682
+   ],
+   "nut": [
+    -0.010691,
+    1.51,
+    0.07682
+   ],
+   "radius": 0.000464,
+   "wound": false,
+   "peg": "peg_bridge_6",
+   "post": "peg_bridge_6",
+   "node": "string_bridge_6",
+   "pegCenter": [
+    -0.010691,
+    0.556818,
+    0.05482
+   ],
+   "pegAxis": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "tighten": 1,
+   "motion": "slide",
+   "perCent": 0.0006
+  },
+  {
+   "anchor": "bridge_7",
+   "saddle": [
+    0.010691,
+    0.618182,
+    0.07682
+   ],
+   "nut": [
+    0.010691,
+    1.51,
+    0.07682
+   ],
+   "radius": 0.000436,
+   "wound": false,
+   "peg": "peg_bridge_7",
+   "post": "peg_bridge_7",
+   "node": "string_bridge_7",
+   "pegCenter": [
+    0.010691,
+    0.618182,
+    0.05482
+   ],
+   "pegAxis": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "tighten": 1,
+   "motion": "slide",
+   "perCent": 0.0006
+  },
+  {
+   "anchor": "bridge_8",
+   "saddle": [
+    0.032073,
+    0.679545,
+    0.075399
+   ],
+   "nut": [
+    0.032073,
+    1.51,
+    0.075399
+   ],
+   "radius": 0.000409,
+   "wound": false,
+   "peg": "peg_bridge_8",
+   "post": "peg_bridge_8",
+   "node": "string_bridge_8",
+   "pegCenter": [
+    0.032073,
+    0.679545,
+    0.053399
+   ],
+   "pegAxis": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "tighten": 1,
+   "motion": "slide",
+   "perCent": 0.0006
+  },
+  {
+   "anchor": "bridge_9",
+   "saddle": [
+    0.053455,
+    0.740909,
+    0.072637
+   ],
+   "nut": [
+    0.053455,
+    1.51,
+    0.072637
+   ],
+   "radius": 0.000382,
+   "wound": false,
+   "peg": "peg_bridge_9",
+   "post": "peg_bridge_9",
+   "node": "string_bridge_9",
+   "pegCenter": [
+    0.053455,
+    0.740909,
+    0.050637
+   ],
+   "pegAxis": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "tighten": 1,
+   "motion": "slide",
+   "perCent": 0.0006
+  },
+  {
+   "anchor": "bridge_10",
+   "saddle": [
+    0.074836,
+    0.802273,
+    0.068693
+   ],
+   "nut": [
+    0.074836,
+    1.51,
+    0.068693
+   ],
+   "radius": 0.000355,
+   "wound": false,
+   "peg": "peg_bridge_10",
+   "post": "peg_bridge_10",
+   "node": "string_bridge_10",
+   "pegCenter": [
+    0.074836,
+    0.802273,
+    0.046693
+   ],
+   "pegAxis": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "tighten": 1,
+   "motion": "slide",
+   "perCent": 0.0006
+  },
+  {
+   "anchor": "bridge_11",
+   "saddle": [
+    0.096218,
+    0.863636,
+    0.063793
+   ],
+   "nut": [
+    0.096218,
+    1.51,
+    0.063793
+   ],
+   "radius": 0.000327,
+   "wound": false,
+   "peg": "peg_bridge_11",
+   "post": "peg_bridge_11",
+   "node": "string_bridge_11",
+   "pegCenter": [
+    0.096218,
+    0.863636,
+    0.041793
+   ],
+   "pegAxis": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "tighten": 1,
+   "motion": "slide",
+   "perCent": 0.0006
+  },
+  {
+   "anchor": "bridge_12",
+   "saddle": [
+    0.1176,
+    0.925,
+    0.058217
+   ],
+   "nut": [
+    0.1176,
+    1.51,
+    0.058217
+   ],
+   "radius": 0.0003,
+   "wound": false,
+   "peg": "peg_bridge_12",
+   "post": "peg_bridge_12",
+   "node": "string_bridge_12",
+   "pegCenter": [
+    0.1176,
+    0.925,
+    0.036217
+   ],
+   "pegAxis": [
+    0.0,
+    -1.0,
+    -0.0
+   ],
+   "tighten": 1,
+   "motion": "slide",
+   "perCent": 0.0006
+  }
+ ],
+ "headCenter": [
+  0.0,
+  0.72,
+  0.05
+ ],
+ "bodyCenter": [
+  0.0,
+  0.8,
+  -0.0
+ ],
+ "length": 1.6,
+ "boundsMin": [
+  -0.145,
+  0.0,
+  -0.045
+ ],
+ "boundsMax": [
+  0.145,
+  1.605,
+  0.077284
+ ],
+ "hero2D": {
+  "bridge_1.saddle": [
+   0.4302,
+   0.80737
+  ],
+  "bridge_1.nut": [
+   0.42872,
+   0.09674
+  ],
+  "bridge_1.peg": [
+   0.43542,
+   0.80523
+  ],
+  "bridge_2.saddle": [
+   0.43969,
+   0.77486
+  ],
+  "bridge_2.nut": [
+   0.43846,
+   0.09667
+  ],
+  "bridge_2.peg": [
+   0.44489,
+   0.77281
+  ],
+  "bridge_3.saddle": [
+   0.44939,
+   0.74207
+  ],
+  "bridge_3.nut": [
+   0.44842,
+   0.0966
+  ],
+  "bridge_3.peg": [
+   0.45458,
+   0.74012
+  ],
+  "bridge_4.saddle": [
+   0.45938,
+   0.709
+  ],
+  "bridge_4.nut": [
+   0.45864,
+   0.09654
+  ],
+  "bridge_4.peg": [
+   0.46456,
+   0.70715
+  ],
+  "bridge_5.saddle": [
+   0.46971,
+   0.67564
+  ],
+  "bridge_5.nut": [
+   0.46919,
+   0.09648
+  ],
+  "bridge_5.peg": [
+   0.47487,
+   0.67389
+  ],
+  "bridge_6.saddle": [
+   0.48041,
+   0.64199
+  ],
+  "bridge_6.nut": [
+   0.48009,
+   0.09643
+  ],
+  "bridge_6.peg": [
+   0.48555,
+   0.64035
+  ],
+  "bridge_7.saddle": [
+   0.4915,
+   0.60806
+  ],
+  "bridge_7.nut": [
+   0.49137,
+   0.09639
+  ],
+  "bridge_7.peg": [
+   0.49661,
+   0.60652
+  ],
+  "bridge_8.saddle": [
+   0.50297,
+   0.57388
+  ],
+  "bridge_8.nut": [
+   0.50301,
+   0.09635
+  ],
+  "bridge_8.peg": [
+   0.50806,
+   0.57244
+  ],
+  "bridge_9.saddle": [
+   0.5148,
+   0.53946
+  ],
+  "bridge_9.nut": [
+   0.515,
+   0.09632
+  ],
+  "bridge_9.peg": [
+   0.51986,
+   0.53813
+  ],
+  "bridge_10.saddle": [
+   0.52695,
+   0.50483
+  ],
+  "bridge_10.nut": [
+   0.52728,
+   0.09629
+  ],
+  "bridge_10.peg": [
+   0.53198,
+   0.50362
+  ],
+  "bridge_11.saddle": [
+   0.53937,
+   0.47003
+  ],
+  "bridge_11.nut": [
+   0.5398,
+   0.09627
+  ],
+  "bridge_11.peg": [
+   0.54436,
+   0.46893
+  ],
+  "bridge_12.saddle": [
+   0.55198,
+   0.43508
+  ],
+  "bridge_12.nut": [
+   0.5525,
+   0.09625
+  ],
+  "bridge_12.peg": [
+   0.55694,
+   0.43408
+  ]
+ },
+ "card2D": {
+  "bridge_1.saddle": [
+   0.42771,
+   0.8009
+  ],
+  "bridge_1.nut": [
+   0.42627,
+   0.10853
+  ],
+  "bridge_1.peg": [
+   0.4328,
+   0.79882
+  ],
+  "bridge_2.saddle": [
+   0.43696,
+   0.76923
+  ],
+  "bridge_2.nut": [
+   0.43576,
+   0.10846
+  ],
+  "bridge_2.peg": [
+   0.44202,
+   0.76723
+  ],
+  "bridge_3.saddle": [
+   0.44641,
+   0.73728
+  ],
+  "bridge_3.nut": [
+   0.44546,
+   0.10839
+  ],
+  "bridge_3.peg": [
+   0.45147,
+   0.73538
+  ],
+  "bridge_4.saddle": [
+   0.45614,
+   0.70506
+  ],
+  "bridge_4.nut": [
+   0.45542,
+   0.10833
+  ],
+  "bridge_4.peg": [
+   0.46119,
+   0.70326
+  ],
+  "bridge_5.saddle": [
+   0.46621,
+   0.67256
+  ],
+  "bridge_5.nut": [
+   0.4657,
+   0.10827
+  ],
+  "bridge_5.peg": [
+   0.47123,
+   0.67085
+  ],
+  "bridge_6.saddle": [
+   0.47663,
+   0.63977
+  ],
+  "bridge_6.nut": [
+   0.47632,
+   0.10822
+  ],
+  "bridge_6.peg": [
+   0.48164,
+   0.63817
+  ],
+  "bridge_7.saddle": [
+   0.48744,
+   0.60671
+  ],
+  "bridge_7.nut": [
+   0.48731,
+   0.10819
+  ],
+  "bridge_7.peg": [
+   0.49242,
+   0.60521
+  ],
+  "bridge_8.saddle": [
+   0.49861,
+   0.57341
+  ],
+  "bridge_8.nut": [
+   0.49865,
+   0.10815
+  ],
+  "bridge_8.peg": [
+   0.50357,
+   0.57201
+  ],
+  "bridge_9.saddle": [
+   0.51014,
+   0.53987
+  ],
+  "bridge_9.nut": [
+   0.51033,
+   0.10812
+  ],
+  "bridge_9.peg": [
+   0.51507,
+   0.53858
+  ],
+  "bridge_10.saddle": [
+   0.52198,
+   0.50613
+  ],
+  "bridge_10.nut": [
+   0.5223,
+   0.10809
+  ],
+  "bridge_10.peg": [
+   0.52688,
+   0.50495
+  ],
+  "bridge_11.saddle": [
+   0.53408,
+   0.47223
+  ],
+  "bridge_11.nut": [
+   0.5345,
+   0.10807
+  ],
+  "bridge_11.peg": [
+   0.53894,
+   0.47116
+  ],
+  "bridge_12.saddle": [
+   0.54636,
+   0.43817
+  ],
+  "bridge_12.nut": [
+   0.54687,
+   0.10805
+  ],
+  "bridge_12.peg": [
+   0.5512,
+   0.4372
+  ]
+ }
+}
