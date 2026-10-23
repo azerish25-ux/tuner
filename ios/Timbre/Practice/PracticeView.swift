@@ -8,11 +8,16 @@ struct PracticeView: View {
     @EnvironmentObject private var commerce: CommerceService
     @State private var path: [PracticeRoute] = []
 
+    /// German capitalises every noun, so the instrument name keeps its capital there.
+    static func inSentence(_ name: String) -> String {
+        Locale.current.language.languageCode == .german ? name : name.lowercased()
+    }
+
     var body: some View {
         NavigationStack(path: $path) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
-                    ScreenTitle(title: "Practice", subtitle: "Ten minutes a day, built around \(store.instrumentDisplayName.lowercased()).")
+                    ScreenTitle(title: "Practice", subtitle: "Ten minutes a day, built around \(Self.inSentence(store.instrumentDisplayName)).")
                     streakCard
                     dailyCard
                     Eyebrow("Tools")
