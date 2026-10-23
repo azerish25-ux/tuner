@@ -26,7 +26,7 @@ final class StageController {
     private(set) var failed = false
     private var model: Entity?
     private var rig: InstrumentRig?
-    private var pegs: [String: (entity: Entity, base: simd_quatf)] = [:]
+    private var pegs: [String: (entity: Entity, base: simd_quatf, position: SIMD3<Float>)] = [:]
     private var posts: [String: (entity: Entity, base: simd_quatf)] = [:]
     private var staticStrings: [String: Entity] = [:]
     private var segments: [ModelEntity] = []
@@ -84,7 +84,7 @@ final class StageController {
         loadedModel = modelID
         for string in rig.strings {
             if let peg = entity.findEntity(named: string.peg) {
-                pegs[string.peg] = (peg, peg.orientation)
+                pegs[string.peg] = (peg, peg.orientation, peg.position)
                 peg.components.set(CollisionComponent(shapes: [.generateSphere(radius: 0.024)]))
                 peg.components.set(InputTargetComponent())
             }
@@ -199,11 +199,17 @@ final class StageController {
             guard let peg = pegs[string.peg] else { continue }
             var goal: Float = 0
             if string.anchor == anchor, let smoothed {
-                goal = Float(-smoothed) * rig.degPerCent * Float(string.tighten) * .pi / 180
+                goal = string.slides ? Float(-smoothed) * (string.perCent ?? 0.0003)
+                                     : Float(-smoothed) * rig.degPerCent * Float(string.tighten) * .pi / 180
             }
             let current = angles[string.peg] ?? 0
             let next = current + (goal - current) * min(1, dt * 9)
             angles[string.peg] = next
+            if string.slides {
+                // Out when flat (the tube or tine is too long), in when sharp; home when in tune.
+                peg.entity.position = peg.position + peg.base.act(SIMD3<Float>(1, 0, 0)) * next
+                continue
+            }
             peg.entity.orientation = peg.base * simd_quatf(angle: next, axis: [1, 0, 0])
             if let post = posts[string.peg] { post.entity.orientation = post.base * simd_quatf(angle: next / 6, axis: [0, 0, 1]) }
         }
@@ -211,7 +217,7 @@ final class StageController {
     }
 
     private func updateString(_ string: InstrumentRig.StringRig?, phase: Float, locked: Bool, active: Bool) {
-        guard let string else { return }
+        guard let string, string.radius > 0 else { return }
         let visible = active && (energy > 0.02 || glow > 0.05)
         staticStrings[string.nodeName]?.isEnabled = !visible
         let a = string.saddlePoint, b = string.nutPoint

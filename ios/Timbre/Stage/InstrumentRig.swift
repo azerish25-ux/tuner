@@ -20,7 +20,13 @@ struct InstrumentRig: Decodable, Sendable {
         let tighten: Int
         /// Scene node of the speaking string; course pairs name each string (default string_<anchor>).
         let node: String?
+        /// "rotate" (pegs, machine heads: about the node's local X) or "slide" (wind joints,
+        /// brass slides, kalimba tines: along the node's local X, which points "out").
+        let motion: String?
+        /// Slide travel in metres per cent of pitch error.
+        let perCent: Float?
         var nodeName: String { node ?? "string_\(anchor)" }
+        var slides: Bool { motion == "slide" }
         var saddlePoint: SIMD3<Float> { SIMD3(rig: saddle) }
         var nutPoint: SIMD3<Float> { SIMD3(rig: nut) }
         var pegPoint: SIMD3<Float> { SIMD3(rig: pegCenter) }
