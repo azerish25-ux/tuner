@@ -91,7 +91,7 @@ struct PaywallView: View {
 
     private var benefits: some View {
         VStack(alignment: .leading, spacing: 12) {
-            benefit("\(store.catalog.instruments.count) instruments, live 3D on the stage")
+            benefit("\(store.catalog.instruments.count) instruments, each on its own live stage")
             benefit("All ear games and double XP quests")
             benefit("Chords, scales, intonation and drone")
             benefit("Unlimited custom tunings and string health")

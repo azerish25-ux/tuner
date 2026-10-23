@@ -67,7 +67,7 @@ struct SettingsView: View {
                 if commerce.activeProductID != TimbreProduct.lifetime { Button("Manage subscription") { manageSubscriptions = true } }
             } else {
                 Button { store.presentPaywall("settings") } label: {
-                    FeatureRow(symbol: "sparkles", title: "Try Timbre Pro", detail: "Every instrument in 3D, strobe precision and daily practice.") { ProBadge() }
+                    FeatureRow(symbol: "sparkles", title: "Try Timbre Pro", detail: "Every instrument, every ear game and practice tool.") { ProBadge() }
                 }
                 .buttonStyle(.plain)
                 .accessibilityIdentifier("settings.pro")
