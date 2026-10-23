@@ -374,11 +374,20 @@ def retouch(entries, folder):
                         t = ((run - lo) / (hi - lo))[:, None]
                         grain[run, c] = grain[lo, c] * (1 - t) + grain[hi, c] * t
             print(f"retouched {int(ink.sum())} ink px in {img.name}", flush=True)
+        # Save the result and point the material at the saved file: the USDZ export packs image files
+        # as they are on disk, so an image edited in memory would not reach the app.
         img.pixels.foreach_set(px[::-1].ravel())
-        folder.mkdir(parents=True, exist_ok=True)  # save it, so the USD export copies the cleaned texture
-        img.filepath_raw = str((folder / f"{Path(img.name).stem}_clean.png").resolve())
+        folder.mkdir(parents=True, exist_ok=True)
+        path = (folder / f"{Path(img.name).stem}_clean.png").resolve()
+        img.filepath_raw = str(path)
         img.file_format = "PNG"
         img.save()
+        clean = bpy.data.images.load(str(path), check_existing=False)
+        clean.colorspace_settings.name = img.colorspace_settings.name
+        for other in bpy.data.materials:
+            for node in (other.node_tree.nodes if other.use_nodes else []):
+                if node.type == "TEX_IMAGE" and node.image == img:
+                    node.image = clean
 
 
 def persp_camera(scene, target, height, azimuth, elevation, lens, fill=1.08, focus=None, fstop=None):
