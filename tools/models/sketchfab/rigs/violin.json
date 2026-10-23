@@ -21,6 +21,32 @@
   "defaultMaterial.106",
   "defaultMaterial.107"
  ],
+ "retouch": [
+  {
+   "material": "blinn1",
+   "rects": [
+    [
+     0.62,
+     0.73,
+     0.39,
+     0.49
+    ]
+   ],
+   "darker": 0.7
+  },
+  {
+   "material": "blinn1",
+   "rects": [
+    [
+     0.48,
+     0.75,
+     0.04,
+     0.14
+    ]
+   ],
+   "darker": 0.82
+  }
+ ],
  "rig": "FRICTION_PEG",
  "degPerCent": 1.2,
  "stringKind": "steel",

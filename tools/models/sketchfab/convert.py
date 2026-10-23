@@ -7,11 +7,15 @@ Each rigs/<model>.json names its download folder and how to read it:
    "separate": true (split merged meshes into loose parts), "tilt": degrees about the face normal,
    "remove": [objects deleted (bows, stands)], "hide": [objects hidden],
    "materials": {name: {"metallic": 0, ...}}, "coat": [object name prefixes given a clear coat],
+   "retouch": [{"material", "rects" (ink to remove) | "multiply" (tint)}] edits base colour images,
    "rig": "FRICTION_PEG", "degPerCent": 1.2, "stringKind": "steel" | "bronze" | "nylon" | "gut",
    "nutZ" / "saddleZ": a height or parts whose mean height it is, "stringEnds": "rings" (low-poly strings),
+   "nutEven" / "saddleEven": {"span", "pairGap"} to space bunched-up strings evenly,
    "originalStrings": "cut" (delete their speaking length) | "hide" (rebuild them thin) | "keep",
+   "routeHeads": bend rebuilt strings in front of the other pegs on their way to their own,
    "strings": [{"anchor": "s4", "string": [original string parts], "peg": parts, "post": parts,
                 "pegAxis": "post" | "pca" | [x,y,z], "postAxis": "front" | "pca" | [x,y,z], "tighten": 1,
+                "head": parts (where a rebuilt string ends: its peg's winding), "hide": parts,
                 "nut": [x, z], "saddle": [x, z] (when there is no "string"), "gauge": 0.0008, "wound": true}]}
 Parts are a list of object names or a filter {"re", "box": [x0,x1,y0,y1,z0,z1], "maxExtent", "exclude"}.
 Coordinates are metres in the normalised frame (head up +Z, face toward -Y, centred on the model): read
@@ -304,6 +308,56 @@ def fix_materials(fixes):
             socket.default_value = (*value, 1) if key == "baseColor" else value
         if "alpha" in values and values["alpha"] >= 1 and hasattr(mat, "surface_render_method"):
             mat.surface_render_method = "DITHERED"
+
+
+def box_mean(a, r):
+    """Mean over a (2r+1)^2 window, edges clamped (cumulative sums: fast on whole textures)."""
+    p = np.pad(a, ((r + 1, r), (r + 1, r)) + ((0, 0),) * (a.ndim - 2), mode="edge")
+    c = p.cumsum(0).cumsum(1)
+    k = 2 * r + 1
+    return (c[k:, k:] - c[:-k, k:] - c[k:, :-k] + c[:-k, :-k]) / (k * k)
+
+
+def retouch(entries, folder):
+    """Retouch a material's base colour image. "rects": remove ink baked into it (autographs, scribbles):
+    inside each [x0, x1, y0, y1] (0...1 from the top left) pixels much darker than their surroundings are
+    rebuilt by interpolating along the wood grain ("along": "y" when the grain runs down the image).
+    "multiply": [r, g, b] tints the whole image (a flat orange varnish toward amber brown)."""
+    for entry in entries:
+        mat = bpy.data.materials[entry["material"]]
+        bsdf = next(n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+        img = next(link.from_node.image for link in bsdf.inputs["Base Color"].links if link.from_node.type == "TEX_IMAGE")
+        w, h = img.size
+        flat = np.empty(w * h * 4, dtype=np.float32)
+        img.pixels.foreach_get(flat)
+        px = flat.reshape(h, w, 4)[::-1].copy()  # Blender stores rows bottom up
+        if entry.get("multiply"):
+            px[..., :3] *= np.array(entry["multiply"], dtype=np.float32)
+        r = max(3, int(round(w / 1024 * 10)))
+        for rect in entry.get("rects", []):
+            x0, x1, y0, y1 = int(rect[0] * w), int(rect[1] * w), int(rect[2] * h), int(rect[3] * h)
+            cx0, cx1, cy0, cy1 = max(0, x0 - 2 * r), min(w, x1 + 2 * r), max(0, y0 - 2 * r), min(h, y1 + 2 * r)
+            crop = px[cy0:cy1, cx0:cx1]
+            lum = crop[..., :3] @ np.array([0.2126, 0.7152, 0.0722], dtype=np.float32)
+            ink = np.zeros(lum.shape, bool)
+            ink[y0 - cy0:y1 - cy0, x0 - cx0:x1 - cx0] = True
+            ink &= lum < entry.get("darker", 0.7) * box_mean(lum, r)
+            ink = box_mean(ink.astype(np.float32), max(1, r // 4)) > 0  # catch anti-aliased edges
+            grain = crop if entry.get("along", "y") == "y" else crop.transpose(1, 0, 2)
+            mask = ink if entry.get("along", "y") == "y" else ink.T
+            for c in np.flatnonzero(mask.any(0)):
+                idx = np.flatnonzero(mask[:, c])
+                for run in np.split(idx, np.flatnonzero(np.diff(idx) > 1) + 1):
+                    lo, hi = run[0] - 1, run[-1] + 1
+                    if lo >= 0 and hi < grain.shape[0]:
+                        t = ((run - lo) / (hi - lo))[:, None]
+                        grain[run, c] = grain[lo, c] * (1 - t) + grain[hi, c] * t
+            print(f"retouched {int(ink.sum())} ink px in {img.name}", flush=True)
+        img.pixels.foreach_set(px[::-1].ravel())
+        folder.mkdir(parents=True, exist_ok=True)  # save it, so the USD export copies the cleaned texture
+        img.filepath_raw = str(folder / f"{Path(img.name).stem}_clean.png")
+        img.file_format = "PNG"
+        img.save()
 
 
 def persp_camera(scene, target, height, azimuth, elevation, lens, fill=1.08, focus=None, fstop=None):
@@ -846,6 +900,7 @@ def convert(src: Path, cfg: dict, out: Path):
         separate_loose()
     root, lo, hi = normalise(cfg)
     fix_materials(cfg.get("materials", {}))
+    retouch(cfg.get("retouch", []), out.parent / "retouched" / cfg["model"])
     lacquer(cfg.get("coat", []))
     visible = [o for o in meshes() if not o.hide_render]
     pts = np.concatenate([verts(o) for o in visible])

@@ -5,6 +5,19 @@
  "headEnd": "B",
  "face": "front",
  "separate": true,
+ "retouch": [
+  {
+   "material": "material_0",
+   "multiply": [
+    0.86,
+    0.72,
+    0.62
+   ]
+  }
+ ],
+ "coat": [
+  "Object_"
+ ],
  "rig": "MACHINE_HEAD",
  "degPerCent": 1.4,
  "stringKind": "steel",
