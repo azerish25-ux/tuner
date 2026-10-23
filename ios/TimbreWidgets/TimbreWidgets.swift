@@ -6,6 +6,7 @@ import WidgetKit
 struct TimbreWidgets: WidgetBundle {
     var body: some Widget {
         QuickTuneWidget()
+        NextLessonWidget()
         StreakWidget()
         TunerControl()
     }
@@ -20,7 +21,8 @@ struct SnapshotEntry: TimelineEntry {
 
 struct SnapshotProvider: TimelineProvider {
     func placeholder(in context: Context) -> SnapshotEntry {
-        SnapshotEntry(date: Date(), snapshot: WidgetSnapshot(streak: 7, best: 12, practicedToday: true, week: [true, true, false, true, true, true, true], instrument: "Acoustic guitar"))
+        SnapshotEntry(date: Date(), snapshot: WidgetSnapshot(streak: 7, best: 12, practicedToday: true, week: [true, true, false, true, true, true, true], instrument: "Acoustic guitar",
+                                                             lesson: .init(course: "Guitar", symbol: "guitars.fill", accent: "mint", title: "Your first chord: E minor", minutes: 4, xp: 20, done: 3, total: 60)))
     }
     func getSnapshot(in context: Context, completion: @escaping (SnapshotEntry) -> Void) {
         completion(context.isPreview ? placeholder(in: context) : SnapshotEntry(date: Date(), snapshot: WidgetSnapshot.read()))
@@ -157,6 +159,91 @@ struct StreakView: View {
                 LinearGradient(colors: [Color(hex: 0x1B1611), Palette.stage], startPoint: .top, endPoint: .bottom)
             }
         }
+    }
+}
+
+// MARK: - Next lesson
+
+struct NextLessonWidget: Widget {
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: "timbre.nextlesson", provider: SnapshotProvider()) { entry in
+            NextLessonView(entry: entry).widgetURL(URL(string: "timbre://learn"))
+        }
+        .configurationDisplayName("Next lesson")
+        .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular])
+    }
+}
+
+struct NextLessonView: View {
+    @Environment(\.widgetFamily) private var family
+    let entry: SnapshotEntry
+
+    var body: some View {
+        if let lesson = entry.snapshot.lesson {
+            content(lesson)
+        } else {
+            empty
+        }
+    }
+
+    @ViewBuilder private func content(_ lesson: WidgetSnapshot.NextLesson) -> some View {
+        let accent = Palette.accent(lesson.accent)
+        let progress = lesson.total == 0 ? 0 : Double(lesson.done) / Double(lesson.total)
+        switch family {
+        case .accessoryRectangular:
+            VStack(alignment: .leading, spacing: 1) {
+                Label(lesson.course, systemImage: lesson.symbol).font(.caption.weight(.semibold))
+                Text(lesson.title).font(.headline).lineLimit(2)
+            }
+            .containerBackground(for: .widget) { Color.clear }
+        default:
+            HStack(spacing: 14) {
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack(spacing: 6) {
+                        Image(systemName: lesson.symbol).font(.caption.weight(.bold)).foregroundStyle(accent)
+                        Text("Next lesson").font(.caption2.weight(.bold)).textCase(.uppercase).tracking(0.8).foregroundStyle(accent).lineLimit(1)
+                    }
+                    Text(lesson.title).font(Typeface.display(family == .systemSmall ? 17 : 20)).foregroundStyle(Palette.ink)
+                        .lineLimit(3).minimumScaleFactor(0.8)
+                    Spacer(minLength: 0)
+                    Text("\(lesson.minutes) min · +\(lesson.xp) XP").font(.caption2).foregroundStyle(Palette.inkSoft).lineLimit(1)
+                    if family == .systemSmall {
+                        Capsule().fill(Palette.line).frame(height: 4)
+                            .overlay(alignment: .leading) { GeometryReader { g in Capsule().fill(accent).frame(width: max(4, g.size.width * progress)) } }
+                    }
+                }
+                if family == .systemMedium {
+                    Spacer(minLength: 0)
+                    ZStack {
+                        Circle().stroke(Palette.line, lineWidth: 8)
+                        Circle().trim(from: 0, to: max(0.02, progress)).stroke(accent, style: StrokeStyle(lineWidth: 8, lineCap: .round)).rotationEffect(.degrees(-90))
+                        VStack(spacing: 0) {
+                            Text("\(lesson.done)/\(lesson.total)").font(Typeface.number(15)).foregroundStyle(Palette.ink)
+                            Text(lesson.course).font(.caption2).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.7)
+                        }
+                        .padding(.horizontal, 10)
+                    }
+                    .frame(width: 96, height: 96)
+                }
+            }
+            .containerBackground(for: .widget) {
+                ZStack {
+                    Palette.stage
+                    RadialGradient(colors: [accent.opacity(0.28), .clear], center: .topLeading, startRadius: 2, endRadius: 220)
+                }
+            }
+        }
+    }
+
+    private var empty: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Image(systemName: "graduationcap.fill").font(.title3).foregroundStyle(Palette.mint)
+            Text("Course complete").font(Typeface.display(18)).foregroundStyle(Palette.ink)
+            Spacer(minLength: 0)
+            Text("Replay any lesson for three stars.").font(.caption2).foregroundStyle(Palette.inkSoft).lineLimit(3)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .containerBackground(for: .widget) { Palette.stage }
     }
 }
 

@@ -36,6 +36,7 @@ struct LearnView: View {
                 .background(StageBackground(motes: false))
             }
         }
+        .onChange(of: courseId) { _, _ in store.publishWidgets() }
         .fullScreenCover(item: $playing) { item in
             LessonPlayer(course: item.course, lesson: item.lesson) { next in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { open(item.course, next) }

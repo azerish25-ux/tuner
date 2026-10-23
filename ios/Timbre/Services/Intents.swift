@@ -6,7 +6,7 @@ import SwiftUI
 /// Where a Siri or Shortcuts request should land once the app is in front.
 @MainActor
 final class IntentRouter: ObservableObject {
-    enum Destination: String { case tune, metronome, ear, daily }
+    enum Destination: String { case tune, metronome, ear, daily, learn }
     static let shared = IntentRouter()
     @Published var pending: Destination?
 }

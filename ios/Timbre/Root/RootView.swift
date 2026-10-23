@@ -57,12 +57,13 @@ struct RootView: View {
         .onChange(of: scenePhase) { _, phase in if phase == .background { store.stopActivity() } }
         .onChange(of: commerce.isPro) { _, pro in if pro { Analytics.log("pro_active") } }
         .onOpenURL { url in
-            // timbre://tune, timbre://practice, timbre://metronome, timbre://ear (widgets and links)
+            // timbre://tune, timbre://practice, timbre://metronome, timbre://ear, timbre://learn (widgets and links)
             switch url.host {
             case "tune": IntentRouter.shared.pending = .tune
             case "practice": IntentRouter.shared.pending = .daily
             case "metronome": IntentRouter.shared.pending = .metronome
             case "ear": IntentRouter.shared.pending = .ear
+            case "learn": IntentRouter.shared.pending = .learn
             default: break
             }
         }

@@ -84,8 +84,15 @@ final class AppStore: ObservableObject {
         let today = calendar.startOfDay(for: Date())
         let days = Set(records.map { calendar.startOfDay(for: $0.date) })
         let week = (0..<7).reversed().map { offset in calendar.date(byAdding: .day, value: -offset, to: today).map(days.contains) ?? false }
+        let course = curriculum.course(id: UserDefaults.standard.string(forKey: "learn.course") ?? "guitar")
+        let lesson = course.flatMap { course in
+            learn.nextLesson(in: course).map {
+                WidgetSnapshot.NextLesson(course: course.title.localized, symbol: course.symbol, accent: course.accent, title: $0.title.localized,
+                                          minutes: $0.minutes, xp: $0.xp, done: learn.finishedCount(in: course), total: course.lessons.count)
+            }
+        }
         WidgetSnapshot.write(WidgetSnapshot(streak: summary.current, best: summary.best, practicedToday: summary.practicedToday,
-                                            week: week, instrument: instrumentDisplayName, updated: Date()))
+                                            week: week, instrument: instrumentDisplayName, updated: Date(), lesson: lesson))
     }
 
     // MARK: Derived state
@@ -221,6 +228,7 @@ final class AppStore: ObservableObject {
         case .metronome: selectedTab = .practice; pendingPracticeRoute = .metronome
         case .ear: selectedTab = .practice; pendingPracticeRoute = .ear
         case .daily: selectedTab = .practice
+        case .learn: selectedTab = .learn
         }
     }
 

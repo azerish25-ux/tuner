@@ -11,6 +11,19 @@ struct WidgetSnapshot: Codable, Equatable {
     var week: [Bool] = Array(repeating: false, count: 7)
     var instrument = ""
     var updated = Date.distantPast
+    /// The next lesson in the course the learner last picked (nil before Learn is opened or once the course is done).
+    var lesson: NextLesson?
+
+    struct NextLesson: Codable, Equatable {
+        var course: String
+        var symbol: String
+        var accent: String
+        var title: String
+        var minutes: Int
+        var xp: Int
+        var done: Int
+        var total: Int
+    }
 
     static let group = "group.com.shahradazerisharghi.timbre"
     private static let key = "widget.snapshot"
