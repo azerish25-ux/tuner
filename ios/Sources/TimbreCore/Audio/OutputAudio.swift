@@ -47,6 +47,7 @@ public struct ReferenceToneWaveform: Sendable {
 }
 
 /// Sample-clock tone with the Android12ms raised-cosine envelope. No per-sample allocations.
+/// Kept for Android parity; the app now sounds tones in the instrument's own voice (`ToneSynth`, `InstrumentVoice`).
 public final class ReferenceToneRenderer {
     private let waveform: ReferenceToneWaveform
     private let totalFrames: Int64, fadeFrames: Int64, amplitude: Double

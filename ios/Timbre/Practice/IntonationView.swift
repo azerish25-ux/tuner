@@ -13,6 +13,10 @@ struct IntonationView: View {
     @State private var harmonic: [Int: Double] = [:]
     @State private var offsets: [Int: Double] = [:]
     @State private var restoreAutomatic = true
+    /// The neck drawing gives up height (down to where its strings still carry names) so the footnote ends
+    /// above the Listen dock instead of under it.
+    @State private var neckHeight: CGFloat = 140
+    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
 
     enum Step { case harmonic, fretted }
     private static let needed = 24
@@ -25,7 +29,7 @@ struct IntonationView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 14) {
                 picker
                 instruction
                 diagram
@@ -33,9 +37,12 @@ struct IntonationView: View {
                 if !offsets.isEmpty { results }
                 Label("Use fresh strings tuned to pitch. Measure with the instrument in playing position.", systemImage: "info.circle")
                     .font(.footnote).foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(.horizontal, Metrics.gutter).padding(.top, 12).padding(.bottom, 28)
+            // Clears the dock's fade, so the footnote rests fully above the Listen button.
+            .padding(.horizontal, Metrics.gutter).padding(.top, 12).padding(.bottom, 24)
         }
+        .fitsHero($neckHeight, in: 120...140)
         .stageTopShade()
         .background(StageBackground(motes: false))
         .navigationTitle("Intonation")
@@ -122,8 +129,9 @@ struct IntonationView: View {
                            harmonicDone: reference != nil,
                            cents: cents,
                            fretted: store.instrument.familyId != "bowed_strings",
+                           thinnestOnTop: stringOrder.thinnestOnTop,
                            animate: !reduceMotion)
-                .frame(height: 140)
+                .frame(height: neckHeight)
                 .animation(Motion.settle, value: course)
             HStack(spacing: 16) {
                 legend(harmonic: true, active: step == .harmonic, done: reference != nil,
@@ -166,14 +174,14 @@ struct IntonationView: View {
     private var meter: some View {
         let reading = store.live.reading
         let progress = Double(samples.count) / Double(Self.needed)
-        return HStack(spacing: 18) {
+        return HStack(spacing: 16) {
             ZStack {
-                Circle().stroke(Palette.line, lineWidth: 6)
-                Circle().trim(from: 0, to: progress).stroke(Palette.brass, style: StrokeStyle(lineWidth: 6, lineCap: .round)).rotationEffect(.degrees(-90))
-                Image(systemName: audio.running ? "waveform" : "mic.slash").font(.title2).foregroundStyle(audio.running ? Palette.brass : Palette.inkFaint)
+                Circle().stroke(Palette.line, lineWidth: 5)
+                Circle().trim(from: 0, to: progress).stroke(Palette.brass, style: StrokeStyle(lineWidth: 5, lineCap: .round)).rotationEffect(.degrees(-90))
+                Image(systemName: audio.running ? "waveform" : "mic.slash").font(.title3).foregroundStyle(audio.running ? Palette.brass : Palette.inkFaint)
                     .symbolEffect(.variableColor.iterative, isActive: audio.running && reading.frequency != nil)
             }
-            .frame(width: 74, height: 74)
+            .frame(width: 60, height: 60)
             .animation(Motion.quick, value: samples.count)
             VStack(alignment: .leading, spacing: 4) {
                 Text(reading.frequency.map { String(format: "%.2f Hz", $0) } ?? "—").font(Typeface.number(20)).foregroundStyle(Palette.ink)
@@ -263,14 +271,17 @@ private struct NeckLayout {
     let sectionEnd: CGFloat
     var breakBefore: CGFloat { (nut + sectionStart) / 2 + 2 }
     var breakAfter: CGFloat { sectionEnd + 12 }
-    /// The first (lowest) and last string.
+    /// The top and bottom string's y.
     let top: CGFloat
     let bottom: CGFloat
+    /// Tab order (Settings › String order): the last course, string 1, on top instead of the first.
+    let reversed: Bool
 
     private static let first = 9.5
     private static let last = 15.5
 
-    init(size: CGSize, strings: Int) {
+    init(size: CGSize, strings: Int, reversed: Bool = false) {
+        self.reversed = reversed
         let nutX: CGFloat = 30
         let start = nutX + 28
         let saddleX = max(start + 120, size.width - 28)
@@ -292,8 +303,10 @@ private struct NeckLayout {
         let from = Self.along(Self.first), to = Self.along(Self.last)
         return sectionStart + (sectionEnd - sectionStart) * CGFloat((Self.along(Double(n)) - from) / (to - from))
     }
+    /// The y of course `string` (its position in the course list, lowest course first).
     func y(_ string: Int) -> CGFloat {
-        strings > 1 ? top + (bottom - top) * CGFloat(string) / CGFloat(strings - 1) : (top + bottom) / 2
+        let row = reversed ? strings - 1 - string : string
+        return strings > 1 ? top + (bottom - top) * CGFloat(row) / CGFloat(strings - 1) : (top + bottom) / 2
     }
     var spacing: CGFloat { strings > 1 ? (bottom - top) / CGFloat(strings - 1) : 18 }
     /// Touched lightly right over the 12th fret.
@@ -302,7 +315,8 @@ private struct NeckLayout {
     func frettedPoint(_ string: Int) -> CGPoint { CGPoint(x: fret(11) + (fret(12) - fret(11)) * 0.5, y: y(string)) }
 }
 
-/// The neck from nut to saddle as you look down at it while playing (lowest string on top), each string
+/// The neck from nut to saddle, its strings in the player's string order (Settings › String order: string 1
+/// on top as in tab, or the lowest string on top as you look down at it while playing), each string
 /// named at the nut. On the string being checked: the harmonic point (a ring over the 12th fret) and the
 /// fretted note (a dot just behind it), the one being measured in amber with a breathing ring; once both
 /// are in, an arrow at the saddle shows which way it should move (a check when it's within 3 cents).
@@ -314,14 +328,16 @@ private struct IntonationNeck: View {
     let cents: Double?
     /// Frets drawn; a bowed instrument's fingerboard shows only its octave point.
     let fretted: Bool
+    /// String 1 (the last course) on top.
+    let thinnestOnTop: Bool
     let animate: Bool
 
     var body: some View {
         GeometryReader { geometry in
-            let layout = NeckLayout(size: geometry.size, strings: labels.count)
+            let layout = NeckLayout(size: geometry.size, strings: labels.count, reversed: thinnestOnTop)
             ZStack(alignment: .topLeading) {
                 Canvas { context, size in
-                    draw(&context, layout: NeckLayout(size: size, strings: labels.count))
+                    draw(&context, layout: NeckLayout(size: size, strings: labels.count, reversed: thinnestOnTop))
                 }
                 NeckBreath(animate: animate && cents == nil)
                     .position(measuringHarmonic ? layout.harmonicPoint(selected) : layout.frettedPoint(selected))

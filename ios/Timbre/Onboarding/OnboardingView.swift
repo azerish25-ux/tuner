@@ -52,7 +52,8 @@ struct OnboardingView: View {
         }
         .animation(Motion.settle, value: step)
         .fullScreenCover(isPresented: $showPaywall, onDismiss: finish) {
-            PaywallView(context: .onboarding).environmentObject(store).environmentObject(store.commerce)
+            PaywallView(context: .onboarding, answers: PaywallAnswers(instrumentId: instrumentID, level: level ?? "beginner", goal: goal ?? "tune", minutes: dailyMinutes))
+                .environmentObject(store).environmentObject(store.commerce)
         }
     }
 
@@ -532,26 +533,29 @@ private struct PlanCommitment: View {
 
     // MARK: Minutes a day
 
-    /// "Daily practice" and the three lengths (one picker, so its pill can slide; the words wrap if they must).
+    /// "Daily practice" on one line, the three lengths under it across the card (one picker, so its pill can
+    /// slide): side by side, the label had to wrap beside the picker on a phone.
     private var minutesRow: some View {
-        HStack(spacing: 10) {
-            rowIcon("timer", tint: Palette.amber)
-            Text("Daily practice").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
-                .lineLimit(2).minimumScaleFactor(0.85)
-            Spacer(minLength: 6)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 10) {
+                rowIcon("timer", tint: Palette.amber)
+                Text("Daily practice").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                    .lineLimit(1).minimumScaleFactor(0.8)
+            }
+            .accessibilityElement(children: .combine)
             minutePicker
         }
     }
 
-    /// A segmented capsule; the mint pill slides to the chosen length.
+    /// A segmented capsule as wide as the card, three equal segments; the mint pill slides to the chosen length.
     private var minutePicker: some View {
         HStack(spacing: 2) {
             ForEach(Self.choices, id: \.self) { value in minuteChip(value) }
         }
         .padding(3)
+        .frame(maxWidth: .infinity)
         .background(Capsule().fill(Palette.surface))
         .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
-        .fixedSize()
     }
 
     private func minuteChip(_ value: Int) -> some View {
@@ -563,7 +567,8 @@ private struct PlanCommitment: View {
             Text(Duration.seconds(value * 60), format: .units(allowed: [.minutes], width: .abbreviated))
                 .font(Typeface.label(13)).monospacedDigit()
                 .foregroundStyle(selected ? Palette.onAccent : Palette.inkSoft)
-                .padding(.horizontal, 11).frame(minHeight: 36)
+                .lineLimit(1)
+                .padding(.horizontal, 11).frame(maxWidth: .infinity, minHeight: 36)
                 .background {
                     if selected { Capsule().fill(Palette.mint).matchedGeometryEffect(id: "minutes", in: pill) }
                 }

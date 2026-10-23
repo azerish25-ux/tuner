@@ -357,6 +357,7 @@ struct ChordStep: View {
         VStack(spacing: 16) {
             VStack(spacing: 6) {
                 Text(finished ? LocalizedStringKey("Every string rings") : LocalizedStringKey("Strum it, or pluck each string")).font(Typeface.label(16)).foregroundStyle(Palette.inkSoft)
+                    .accessibilityIdentifier("lesson.chord")
                 Text("Fingers in place, then let it ring.").font(.subheadline).foregroundStyle(Palette.inkFaint)
             }
             .padding(.top, 12)
@@ -582,7 +583,8 @@ struct RhythmStep: View {
                 StrumSweep(pattern: pattern, beatsPerBar: beatsPerBar, strings: max(1, strings), style: sweepStyle, accent: accent,
                            secondsPerBeat: spb, time: sweepTime(CACurrentMediaTime()), bars: phase == .playing ? bars : nil, edges: edges)
             }
-            .frame(maxWidth: .infinity, maxHeight: 250)
+            // Tall enough for the stroke rail above the strings (`StrumSweep`), filling the room under the bar.
+            .frame(maxWidth: .infinity, maxHeight: 360)
             .padding(.horizontal, 24)
             .layoutPriority(1)
         }

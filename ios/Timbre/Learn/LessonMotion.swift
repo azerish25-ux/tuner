@@ -48,12 +48,22 @@ enum ScoreTint {
     }
 }
 
+/// Repeatable pseudo-random values in 0..<1 for canvas texture (wood grain): the same on every frame, nothing stored.
+enum CanvasNoise {
+    static func value(_ i: Int) -> Double {
+        let v = sin(Double(i) * 12.9898 + 78.233) * 43_758.5453
+        return v - v.rounded(.down)
+    }
+}
+
 // MARK: - Strum sweep
 
 /// A pick sweeping the strings on every stroke of a rhythm pattern, in time with the beat: down strokes
 /// run from the thickest string (top, named "Thickest") to the thinnest, up strokes back, and each string shimmers as the
-/// pick crosses it. `.pluck` plucks the lowest string on each hit; `.tap` pulses a pad for courses
-/// without an instrument. With no time (Reduce Motion) it holds still, showing the first stroke.
+/// pick crosses it. The strings run over a strip of the instrument's top, from the sound hole to the bridge;
+/// given the height (300 pt), a stroke rail above them brings each stroke in to the pick. `.pluck` plucks the
+/// lowest string on each hit; `.tap` pulses a pad for courses without an instrument. With no time (Reduce
+/// Motion) it holds still, showing the first stroke.
 struct StrumSweep: View {
     enum Style { case strum, pluck, tap }
 
@@ -150,31 +160,44 @@ struct StrumSweep: View {
 
     // MARK: Strings and pick
 
+    /// Height the stroke rail takes over the strings; it only shows when the sweep is given `railMinHeight`.
+    private static let railSpace: CGFloat = 58
+    private static let railMinHeight: CGFloat = 300
+
     private func drawStrings(_ context: inout GraphicsContext, size: CGSize) {
+        let rail = size.height >= Self.railMinHeight
+        let railSpace = rail ? Self.railSpace : 0
+        let area = CGRect(x: 0, y: railSpace, width: size.width, height: size.height - railSpace)
         let count = max(1, strings)
-        let band = min(size.height * 0.6, CGFloat(count) * (count <= 4 ? 36 : 30))
+        let band = min(area.height * 0.6, CGFloat(count) * (count <= 4 ? 40 : 32))
         let gap = count > 1 ? band / CGFloat(count - 1) : 0
-        let top = (size.height - band) / 2
-        let reach = max(8, min(26, top - 6))
+        let top = area.minY + (area.height - band) / 2
+        let reach = max(8, min(26, top - area.minY - 6))
         let above = top - reach, below = top + band + reach
         let pickX = size.width * 0.62
+        // The strings run from the neck end on the left to the bridge's saddle on the right.
+        let bridgeX = size.width - 22
         let moving = time != nil
         let t = time ?? 0
         let nearby = moving ? strokes(near: t) : []
         let state = moving ? pick(at: t, nearby) : PickState(position: 0, touching: false, down: pattern.first.map { $0.truncatingRemainder(dividingBy: 1) == 0 } ?? true, lift: 0)
 
+        drawSoundboard(&context, size: size, from: above - 12, to: below + 12)
         if style == .strum {
-            let radius = min(band * 0.5 + 20, size.width * 0.26, size.height / 2 - 8)
-            drawSoundHole(&context, center: CGPoint(x: max(radius + 10, size.width * 0.3), y: size.height / 2), radius: max(10, radius))
+            let radius = min(band * 0.5 + 20, size.width * 0.26, area.height / 2 - 8)
+            // Far enough in that the rosette clears the string numbers at the left edge.
+            drawSoundHole(&context, center: CGPoint(x: max(radius + 24, size.width * 0.3), y: area.midY), radius: max(10, radius))
         }
-        drawFlash(&context, size: size, t: t, nearby: nearby, moving: moving)
+        drawBridge(&context, x: bridgeX, top: top, gap: gap, count: count)
+        if rail { drawRail(&context, size: size, pickX: pickX, guideTo: above - 12, t: t, moving: moving) }
+        drawFlash(&context, center: CGPoint(x: pickX, y: area.midY), size: size, t: t, nearby: nearby, moving: moving)
 
         for index in 0..<count {
             let y = top + CGFloat(index) * gap
             let share = Double((y - above) / max(1, below - above))
             let crossed = moving ? lastExcitation(of: index, share: share, at: t, nearby) : nil
             let amplitude = crossed.map { CGFloat(5 * exp(-(t - $0) * 4.5)) } ?? 0
-            drawString(&context, index: index, of: count, y: y, width: size.width, amplitude: amplitude, t: t)
+            drawString(&context, index: index, of: count, y: y, right: bridgeX, amplitude: amplitude, t: t)
         }
         drawEdgeNames(&context, size: size, top: top, bottom: top + band, count: count)
 
@@ -203,27 +226,163 @@ struct StrumSweep: View {
         if let name = edges.canvasLabel(1) { context.draw(name, at: CGPoint(x: x, y: bottom + 14), anchor: .trailing) }
     }
 
-    private func drawSoundHole(_ context: inout GraphicsContext, center: CGPoint, radius: CGFloat) {
-        let hole = Path(ellipseIn: CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2))
-        context.fill(hole, with: .radialGradient(Gradient(colors: [Color.black.opacity(0.6), Color.black.opacity(0.2)]), center: center, startRadius: 0, endRadius: radius))
-        let ring = radius + 6
-        context.stroke(Path(ellipseIn: CGRect(x: center.x - ring, y: center.y - ring, width: ring * 2, height: ring * 2)), with: .color(accent.opacity(0.16)), lineWidth: 4)
+    /// A strip of the instrument's top under the strings: dark tonewood with its grain, a sheen across the
+    /// middle and a hairline of binding at the edge.
+    private func drawSoundboard(_ context: inout GraphicsContext, size: CGSize, from top: CGFloat, to bottom: CGFloat) {
+        let rect = CGRect(x: 0, y: top, width: size.width, height: max(1, bottom - top))
+        let board = Path(roundedRect: rect, cornerRadius: 18)
+        context.fill(board, with: .linearGradient(Self.wood, startPoint: CGPoint(x: 0, y: rect.minY), endPoint: CGPoint(x: 0, y: rect.maxY)))
+        var grain = context
+        grain.clip(to: board)
+        for i in 0..<16 {
+            let n = CanvasNoise.value(i)
+            let y = rect.minY + rect.height * CGFloat((Double(i) + 0.2 + 0.6 * n) / 16)
+            var line = Path()
+            line.move(to: CGPoint(x: rect.minX, y: y))
+            line.addCurve(to: CGPoint(x: rect.maxX, y: y + CGFloat(CanvasNoise.value(i + 40) - 0.5) * 6),
+                          control1: CGPoint(x: rect.width * 0.33, y: y + CGFloat(CanvasNoise.value(i + 20) - 0.5) * 9),
+                          control2: CGPoint(x: rect.width * 0.7, y: y - CGFloat(CanvasNoise.value(i + 60) - 0.5) * 9))
+            let tone: Color = i % 4 == 0 ? Color.white.opacity(0.035) : Color.black.opacity(0.16 + 0.14 * n)
+            grain.stroke(line, with: .color(tone), lineWidth: 0.6 + 1.5 * CGFloat(CanvasNoise.value(i + 80)))
+        }
+        grain.fill(board, with: .linearGradient(Self.sheen, startPoint: CGPoint(x: 0, y: rect.minY), endPoint: CGPoint(x: 0, y: rect.maxY)))
+        context.stroke(board, with: .color(Self.bone.opacity(0.1)), lineWidth: 1)
     }
 
-    /// A soft glow over the strings right after each stroke lands.
-    private func drawFlash(_ context: inout GraphicsContext, size: CGSize, t: Double, nearby: [Stroke], moving: Bool) {
+    /// Bone: saddle, pins and binding.
+    private static let bone = Color(hex: 0xEDE3CF)
+    private static let wood = Gradient(colors: [Color(hex: 0x2A2019), Color(hex: 0x1B1410)])
+    private static let sheen = Gradient(colors: [Color.black.opacity(0.3), Color.white.opacity(0.03), Color.black.opacity(0.3)])
+
+    /// The sound hole with its rosette: binding rings around a band of inlay that catches the accent.
+    private func drawSoundHole(_ context: inout GraphicsContext, center: CGPoint, radius: CGFloat) {
+        context.fill(circle(center, radius), with: .radialGradient(Gradient(colors: [Color.black.opacity(0.9), Color.black.opacity(0.6)]), center: center, startRadius: 0, endRadius: radius))
+        context.stroke(circle(center, radius + 3), with: .color(Self.bone.opacity(0.22)), lineWidth: 1)
+        context.stroke(circle(center, radius + 8), with: .color(accent.opacity(0.24)), style: StrokeStyle(lineWidth: 5, dash: [2, 2.5]))
+        context.stroke(circle(center, radius + 13), with: .color(Self.bone.opacity(0.15)), lineWidth: 1)
+    }
+
+    /// The bridge the strings run to: a dark body, a bone saddle and a pin behind each string.
+    private func drawBridge(_ context: inout GraphicsContext, x: CGFloat, top: CGFloat, gap: CGFloat, count: Int) {
+        let bottom = top + gap * CGFloat(max(0, count - 1))
+        let bridge = Path(roundedRect: CGRect(x: x - 8, y: top - 8, width: 20, height: bottom - top + 16), cornerRadius: 6)
+        context.fill(bridge, with: .color(Color(hex: 0x120D0A)))
+        context.stroke(bridge, with: .color(.white.opacity(0.06)), lineWidth: 1)
+        context.fill(Path(roundedRect: CGRect(x: x - 1.5, y: top - 5, width: 3, height: bottom - top + 10), cornerRadius: 1.5), with: .color(Self.bone.opacity(0.85)))
+        for index in 0..<count {
+            context.fill(circle(CGPoint(x: x + 7, y: top + CGFloat(index) * gap), 2.4), with: .color(Self.bone.opacity(0.5)))
+        }
+    }
+
+    /// The stroke rail over the strings: the pattern's strokes ride in from the right and land on the marker
+    /// above the pick as it plays them, then drift on to the left and fade; ticks mark the beats, taller on the
+    /// bar. With no time it holds the first strokes still, waiting just past the marker.
+    private func drawRail(_ context: inout GraphicsContext, size: CGSize, pickX: CGFloat, guideTo: CGFloat, t: Double, moving: Bool) {
+        let y: CGFloat = 26
+        let track = CGRect(x: 8, y: y - 19, width: size.width - 16, height: 38)
+        let shape = Path(roundedRect: track, cornerRadius: 19)
+        context.fill(shape, with: .color(.white.opacity(0.035)))
+        context.stroke(shape, with: .color(.white.opacity(0.08)), lineWidth: 1)
+        let perBeat: CGFloat = 54
+        let spb = max(0.05, secondsPerBeat)
+        let beatNow = (moving ? t : -0.4 * spb) / spb
+        let behind = Double((pickX - track.minX) / perBeat), ahead = Double((track.maxX - pickX) / perBeat)
+        let meter = max(1, beatsPerBar)
+
+        let firstBeat = Int((beatNow - behind).rounded(.down)), lastBeat = Int((beatNow + ahead).rounded(.up))
+        if lastBeat >= firstBeat {
+            for beat in firstBeat...lastBeat {
+                let x = pickX + CGFloat(Double(beat) - beatNow) * perBeat
+                guard x > track.minX + 6, x < track.maxX - 6 else { continue }
+                let bar = ((beat % meter) + meter) % meter == 0
+                let h: CGFloat = bar ? 22 : 10
+                context.fill(Path(roundedRect: CGRect(x: x - 0.75, y: y - h / 2, width: 1.5, height: h), cornerRadius: 0.75),
+                             with: .color(.white.opacity(bar ? 0.16 : 0.07)))
+            }
+        }
+
+        // The marker over the pick, and a dotted guide down to the strings.
+        var guide = Path()
+        guide.move(to: CGPoint(x: pickX, y: track.maxY + 3))
+        guide.addLine(to: CGPoint(x: pickX, y: max(track.maxY + 3, guideTo)))
+        context.stroke(guide, with: .color(accent.opacity(0.25)), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [2, 4]))
+        let halo = CGRect(x: pickX - 18, y: track.minY, width: 36, height: track.height)
+        let haloShade = Gradient(colors: [accent.opacity(0), accent.opacity(0.16), accent.opacity(0)])
+        context.fill(Path(roundedRect: halo, cornerRadius: 12), with: .linearGradient(haloShade, startPoint: CGPoint(x: halo.minX, y: y), endPoint: CGPoint(x: halo.maxX, y: y)))
+        context.fill(Path(roundedRect: CGRect(x: pickX - 1.5, y: track.minY - 3, width: 3, height: track.height + 6), cornerRadius: 1.5), with: .color(accent))
+
+        guard !pattern.isEmpty else { return }
+        let firstBar = Int(((beatNow - behind) / Double(meter)).rounded(.down))
+        let lastBar = Int(((beatNow + ahead) / Double(meter)).rounded(.down))
+        guard lastBar >= firstBar else { return }
+        let fadeSpan = Double(max(1, pickX - track.minX - 10))
+        for bar in firstBar...lastBar {
+            if let bars, bar < 0 || bar >= bars { continue }
+            for hit in pattern {
+                let beat = Double(bar * meter) + hit
+                let x = pickX + CGFloat(beat - beatNow) * perBeat
+                guard x > track.minX + 10, x < track.maxX - 10 else { continue }
+                let age = (beatNow - beat) * spb
+                // Fading in at the right end, out toward the left.
+                let alpha = age < 0 ? min(1, Double(track.maxX - 10 - x) / 28) : max(0, 1 - Double(pickX - x) / fadeSpan)
+                drawRailStroke(&context, center: CGPoint(x: x, y: y), down: hit.truncatingRemainder(dividingBy: 1) == 0,
+                               age: moving ? age : -1, alpha: alpha)
+            }
+        }
+    }
+
+    /// One stroke on the rail: an outlined arrow (a dot when plucking) on its way, filled once played, with a
+    /// pop and a ring as it lands on the marker.
+    private func drawRailStroke(_ context: inout GraphicsContext, center: CGPoint, down: Bool, age: Double, alpha: Double) {
+        guard alpha > 0.01 else { return }
+        let played = age >= 0
+        let landing = played && age < 0.3 ? 1 - age / 0.3 : 0
+        if landing > 0 {
+            context.stroke(circle(center, 12 + CGFloat(1 - landing) * 16), with: .color(accent.opacity(0.7 * landing * alpha)), lineWidth: 2)
+        }
+        let chip = circle(center, 12 * (1 + 0.3 * CGFloat(landing)))
+        if played {
+            context.fill(chip, with: .color(accent.mix(with: .white, by: 0.5 * landing).opacity((0.35 + 0.65 * landing) * alpha)))
+        } else {
+            context.fill(chip, with: .color(accent.opacity(0.14 * alpha)))
+            context.stroke(chip, with: .color(accent.opacity(0.85 * alpha)), lineWidth: 1.5)
+        }
+        // Dark on the bright landing, light on the faded chips it leaves behind.
+        let ink: Color = played ? (landing > 0.2 ? Palette.onAccent : Palette.ink) : accent
+        if style == .pluck {
+            context.fill(circle(center, 3.5), with: .color(ink.opacity(alpha)))
+        } else {
+            context.stroke(arrow(center, down: down), with: .color(ink.opacity(alpha)), style: StrokeStyle(lineWidth: 2.2, lineCap: .round, lineJoin: .round))
+        }
+    }
+
+    /// A short arrow pointing the way of the stroke.
+    private func arrow(_ c: CGPoint, down: Bool) -> Path {
+        let s: CGFloat = down ? 1 : -1
+        var p = Path()
+        p.move(to: CGPoint(x: c.x, y: c.y - s * 5.5))
+        p.addLine(to: CGPoint(x: c.x, y: c.y + s * 5))
+        p.move(to: CGPoint(x: c.x - 4.5, y: c.y + s * 0.8))
+        p.addLine(to: CGPoint(x: c.x, y: c.y + s * 5.3))
+        p.addLine(to: CGPoint(x: c.x + 4.5, y: c.y + s * 0.8))
+        return p
+    }
+
+    /// A soft glow over the strings right after each stroke lands, and a ring leaving the pick.
+    private func drawFlash(_ context: inout GraphicsContext, center: CGPoint, size: CGSize, t: Double, nearby: [Stroke], moving: Bool) {
         guard moving, let last = nearby.last(where: { $0.time <= t }) else { return }
         let age = t - last.time
         guard age < 0.4 else { return }
-        let center = CGPoint(x: size.width * 0.62, y: size.height / 2)
+        let fade = 1 - age / 0.4
         let radius = min(size.width, size.height) * 0.55
-        let glow = Gradient(colors: [accent.opacity(0.26 * (1 - age / 0.4)), .clear])
-        context.fill(Path(ellipseIn: CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2)),
-                     with: .radialGradient(glow, center: center, startRadius: 0, endRadius: radius))
+        let glow = Gradient(colors: [accent.opacity(0.26 * fade), .clear])
+        context.fill(circle(center, radius), with: .radialGradient(glow, center: center, startRadius: 0, endRadius: radius))
+        context.stroke(circle(center, 18 + CGFloat(age / 0.4) * 46), with: .color(accent.mix(with: .white, by: 0.4).opacity(0.55 * fade)), lineWidth: 0.5 + 2 * CGFloat(fade))
     }
 
-    /// One string, thicker toward the bass, bowing in a standing wave while it rings.
-    private func drawString(_ context: inout GraphicsContext, index: Int, of count: Int, y: CGFloat, width: CGFloat, amplitude: CGFloat, t: Double) {
+    /// One string, thicker toward the bass, bowing in a standing wave while it rings: a shadow on the top under
+    /// it, the winding on the wound strings and a thin highlight along it.
+    private func drawString(_ context: inout GraphicsContext, index: Int, of count: Int, y: CGFloat, right: CGFloat, amplitude: CGFloat, t: Double) {
         let gauge = count > 1 ? CGFloat(count - 1 - index) / CGFloat(count - 1) : 0.5
         let thickness = 1 + gauge * 2.6
         let wound = count >= 4 && gauge > 0.45
@@ -234,7 +393,7 @@ struct StrumSweep: View {
         let number = Text("\(count - index)").font(.system(size: 10, weight: .bold, design: .rounded))
             .foregroundStyle(amplitude > 0.5 ? accent : Palette.inkSoft.opacity(0.85))
         context.draw(number, at: CGPoint(x: 8, y: y))
-        let left: CGFloat = 20, right = width - 4
+        let left: CGFloat = 20
         var path = Path()
         path.move(to: CGPoint(x: left, y: y))
         if amplitude > 0.2 {
@@ -244,11 +403,18 @@ struct StrumSweep: View {
                 let u = CGFloat(k) / CGFloat(segments)
                 path.addLine(to: CGPoint(x: left + (right - left) * u, y: y + wobble * sin(.pi * u)))
             }
-            context.stroke(path, with: .color(accent.opacity(Double(min(1, amplitude / 5)) * 0.35)), style: StrokeStyle(lineWidth: thickness + 6, lineCap: .round))
         } else {
             path.addLine(to: CGPoint(x: right, y: y))
         }
+        context.stroke(path.offsetBy(dx: 0, dy: 2.5), with: .color(.black.opacity(0.35)), style: StrokeStyle(lineWidth: thickness, lineCap: .round))
+        if amplitude > 0.2 {
+            context.stroke(path, with: .color(accent.opacity(Double(min(1, amplitude / 5)) * 0.35)), style: StrokeStyle(lineWidth: thickness + 6, lineCap: .round))
+        }
         context.stroke(path, with: .color(tint.opacity(0.92)), style: StrokeStyle(lineWidth: thickness, lineCap: .round))
+        if wound {
+            context.stroke(path, with: .color(.black.opacity(0.22)), style: StrokeStyle(lineWidth: thickness, dash: [1, 1.5]))
+        }
+        context.stroke(path.offsetBy(dx: 0, dy: -thickness * 0.25), with: .color(.white.opacity(0.22)), style: StrokeStyle(lineWidth: max(0.5, thickness * 0.3), lineCap: .round))
     }
 
     /// The sweep itself: a streak from where the stroke began to the pick, fading once it lands.

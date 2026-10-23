@@ -92,7 +92,10 @@ final class AppStore: ObservableObject {
         applyPrecision()
         Haptics.shared.enabled = settings.hapticsEnabled
         audio.onReading = { [weak self] hz, confidence, level in self?.accept(hz, confidence: confidence, level: level) }
+        // Reference tones, "Hear it" and chord buttons sound like the selected instrument (a lesson's own course instrument while it is open).
+        audio.instrumentVoice = { [weak self] in self.map { InstrumentVoice(instrument: $0.instrument) } ?? .guitar }
         publishWidgets()
+        LiveActivityController.shared.attach(self)  // Lock Screen / Dynamic Island while the metronome, drone, tuner or a lesson runs
     }
 
     /// Keeps the home-screen widgets in step with practice history.
@@ -312,8 +315,9 @@ final class AppStore: ObservableObject {
         publishWidgets()
     }
 
-    /// The lesson onboarding hands to Learn: the placed first lesson, or, when that one is Pro on the free plan,
-    /// the first free lesson still to play (nil leaves Learn on the course without opening one).
+    /// The lesson onboarding hands to Learn: the placed first lesson (the plan card's "First lesson"; on the free plan
+    /// it opens as the placement pass), else the first lesson still to play that this player can open (nil leaves
+    /// Learn on the course without opening one).
     private func firstLesson(in course: LearnCourse) -> Lesson? {
         if let next = learn.nextLesson(in: course), canPlay(next) { return next }
         return course.lessons.first { canPlay($0) && !learn.isFinished($0.id) && learn.isUnlocked($0, in: course) }
@@ -612,7 +616,10 @@ final class AppStore: ObservableObject {
     /// While a lesson listens, raw readings (Hz when confident, level dBFS) go here instead of the tuner.
     var lessonListener: ((Double?, Double) -> Void)?
 
-    func canPlay(_ lesson: Lesson) -> Bool { lesson.free || isPro }
+    /// Free lessons, every lesson with Pro, and on the free plan the placement pass (`AccessPolicy.canPlay`).
+    func canPlay(_ lesson: Lesson) -> Bool {
+        AccessPolicy.canPlay(lesson, pro: isPro, progress: learn, courses: curriculum.courses)
+    }
 
     /// The step that owns the lesson microphone; a step leaving must not stop the one that just arrived.
     private var lessonOwner: UUID?
@@ -798,7 +805,7 @@ final class AppStore: ObservableObject {
         let exercise = voiceExercise
         voiceTask = Task { [weak self] in
             guard let self else { return }
-            self.audio.playTone(PitchMath.frequency(midi: Double(exercise.rootMidi), reference: self.settings.referencePitchHz))
+            self.audio.playTone(PitchMath.frequency(midi: Double(exercise.rootMidi), reference: self.settings.referencePitchHz), voice: .voice)
             try? await Task.sleep(for: .seconds(1))
             guard !Task.isCancelled else { return }
             self.audio.stopTone()
@@ -898,7 +905,10 @@ final class AppStore: ObservableObject {
         else { beginPractice(DailyActivity.Kind.rhythm.rawValue); applyMetronome() }
     }
 
-    func applyMetronome() { audio.setMetronome(bpm: bpm, beats: beats, subdivision: subdivision, accents: true, beatLevels: beatLevels, sound: metronomeSound) }
+    func applyMetronome() {
+        audio.setMetronome(bpm: bpm, beats: beats, subdivision: subdivision, accents: true, beatLevels: beatLevels, sound: metronomeSound)
+        LiveActivityController.shared.metronomeChanged()
+    }
 
     func tapTempo() {
         let now = ProcessInfo.processInfo.systemUptime

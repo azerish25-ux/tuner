@@ -53,11 +53,15 @@ struct LessonPlayer: View {
         .animation(.spring(response: 0.5, dampingFraction: 0.86), value: run.index)
         .animation(.easeInOut(duration: 0.4), value: result != nil)
         .preferredColorScheme(.dark)
+        // "Hear it", chords and listen steps sound like the course's instrument (theory, ear, rhythm: the selected one).
+        .onAppear { store.audio.courseVoice = InstrumentVoice(instrumentId: course.instrument) }
+        .onDisappear { store.audio.courseVoice = nil }
         .confirmationDialog("Leave this lesson?", isPresented: $confirmQuit, titleVisibility: .visible) {
             Button("Leave", role: .destructive) { dismiss() }
             Button("Keep going", role: .cancel) {}
         } message: { Text("Your progress in this lesson won’t be saved.") }
-        .onDisappear { store.stopLessonListening(); store.audio.stopMetronome() }
+        .onAppear { LiveActivityController.shared.lessonOpened(lesson.id, title: lesson.title.localized, symbol: course.symbol) }
+        .onDisappear { store.stopLessonListening(); store.audio.stopMetronome(); LiveActivityController.shared.lessonClosed(lesson.id) }
         .statusBarHidden(result == nil)
         // The zoom-in from the Learn tab can be pulled back down; not halfway through (the close button asks first).
         .interactiveDismissDisabled(run.index > 0 && result == nil)

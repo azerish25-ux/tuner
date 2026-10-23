@@ -244,8 +244,9 @@ struct SongsView: View {
                 .frame(maxWidth: .infinity, minHeight: sizeClass == .regular ? 340 : 300, alignment: .bottomLeading)
                 .background {
                     ZStack {
-                        // The monogram crops off the top-right corner, clear of the eyebrow and the title.
-                        SongCover(art: CoverArt(song), corner: 28, monogramAnchor: UnitPoint(x: 0.84, y: 0.27), monogramSize: 0.44, drift: true, outlined: false)
+                        // The monogram sits whole at the right, below the eyebrow and above the title.
+                        SongCover(art: CoverArt(song), corner: 28, monogramAnchor: UnitPoint(x: 0.84, y: 0.27), monogramSize: 0.44,
+                                  monogramBounds: CGRect(x: 0.42, y: 0.15, width: 0.53, height: 0.29), drift: true, outlined: false)
                         LinearGradient(colors: [.clear, .black.opacity(0.3), .black.opacity(0.82)], startPoint: .top, endPoint: .bottom)
                     }
                 }
@@ -359,22 +360,10 @@ struct SongsView: View {
     }
 
     /// The cover with its state: Pro songs keep their colour under a PRO badge, songs not yet reached
-    /// dim under a lock, finished songs wear their stars.
+    /// dim under a lock (in the corner clear of the monogram), finished songs wear their stars.
     private func tileCover(_ song: Song, access: LessonAccess, stars: Int) -> some View {
-        SongCover(art: CoverArt(song))
+        SongCover(art: CoverArt(song), locked: access == .locked)
             .frame(width: tileWidth, height: tileWidth)
-            .overlay {
-                if access == .locked {
-                    ZStack {
-                        Color.black.opacity(0.5)
-                        Image(systemName: "lock.fill").font(.system(size: 17, weight: .bold)).foregroundStyle(Palette.ink.opacity(0.9))
-                            .frame(width: 42, height: 42)
-                            .background(Circle().fill(.black.opacity(0.45)))
-                            .overlay(Circle().strokeBorder(.white.opacity(0.16), lineWidth: 1))
-                    }
-                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                }
-            }
             .overlay(alignment: .topTrailing) { if access == .pro { ProBadge().padding(10) } }
             .overlay(alignment: .bottomLeading) {
                 if stars > 0 {

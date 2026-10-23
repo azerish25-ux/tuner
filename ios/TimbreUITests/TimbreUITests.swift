@@ -251,7 +251,11 @@ final class TimbreUITests: XCTestCase {
         settle(2.5); shot("52-lesson-tunecheck")
         // The tune check is covered by its own screenshot; skip the rest of it to keep the run short.
         if skip.exists { skip.tap() }
-        settle(8); shot("52b-lesson-chord")
+        // The demo pitch plays the chord's strings straight away: shoot as soon as the chord step is up,
+        // before it rings through and hands over to the strum explainer.
+        let chord = element("lesson.chord")
+        XCTAssertTrue(chord.waitForExistence(timeout: 15))
+        settle(0.8); shot("52b-lesson-chord")
         let next = element("lesson.continue")
         XCTAssertTrue(next.waitForExistence(timeout: 30))
         settle(1.5); shot("53-lesson-strum-explain")

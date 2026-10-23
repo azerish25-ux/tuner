@@ -9,6 +9,7 @@ struct TimbreWidgets: WidgetBundle {
         NextLessonWidget()
         StreakWidget()
         TunerControl()
+        PracticeLiveActivity()
     }
 }
 

@@ -38,4 +38,27 @@ public enum AccessPolicy {
     public static func canUse(tuning: Tuning, of instrument: Instrument, pro: Bool) -> Bool {
         tuning.instrumentId == instrument.id && canTune(instrument: instrument, pro: pro)
     }
+
+    // MARK: Lessons
+
+    /// Free lessons are open to everyone and Pro opens them all. On the free plan a placement adds one more,
+    /// its placement pass (`placementPass`): only that lesson, only in the course the learner was placed in,
+    /// so the first lesson onboarding's plan names is the one that opens.
+    public static func canPlay(_ lesson: Lesson, pro: Bool, progress: LearnProgress, courses: [LearnCourse]) -> Bool {
+        if pro || lesson.free { return true }
+        return progress.placedThrough.keys.contains { courseId in
+            guard let course = courses.first(where: { $0.id == courseId }) else { return false }
+            return placementPass(in: course, progress: progress)?.id == lesson.id
+        }
+    }
+
+    /// A course's placement pass: the first lesson of the unit the learner was placed in (the one after the
+    /// placed units); nil when the course has no placement or no unit after it.
+    public static func placementPass(in course: LearnCourse, progress: LearnProgress) -> Lesson? {
+        guard let placed = progress.placedThrough[course.id], placed >= 0 else { return nil }
+        for unit in course.units.dropFirst(placed + 1) {
+            if let first = unit.lessons.first { return first }
+        }
+        return nil
+    }
 }

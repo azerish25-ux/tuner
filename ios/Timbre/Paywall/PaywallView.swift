@@ -6,6 +6,9 @@ import UserNotifications
 struct PaywallView: View {
     enum Context { case onboarding, standard }
     var context: Context = .standard
+    /// Onboarding's answers, not saved yet while the paywall shows: the outcomes and milestones follow the plan
+    /// the plan screen just built. Without them the saved goal, course and daily minutes are used.
+    var answers: PaywallAnswers? = nil
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
     @Environment(\.dismiss) private var dismiss
@@ -17,12 +20,15 @@ struct PaywallView: View {
     @State private var remindersBlocked = false
     /// The trial track draws itself in from Today.
     @State private var trackDrawn = false
-    // Measured layout. The plans, the whole trial timeline and the button show without scrolling:
-    // the benefits and then the hero give way to make room, and nothing rests under the pinned bar.
+    // Measured layout. The plans, the whole trial timeline and the button show without scrolling; the
+    // outcomes, the preview, the milestones and the counts line fill what is left, in that order, and what
+    // does not fit waits just below the fold. Nothing rests under the pinned bar.
     @State private var containerHeight: CGFloat = 0
     @State private var barHeight: CGFloat = 0
-    @State private var headerHeight: CGFloat = 110
-    @State private var benefitsHeight: CGFloat = 92
+    @State private var headerHeight: CGFloat = 66
+    @State private var outcomesHeight: CGFloat = 92
+    @State private var milestonesHeight: CGFloat = 46
+    @State private var countsHeight: CGFloat = 16
     @State private var offerHeight: CGFloat = 230
     @State private var timelineHeight: CGFloat = 78
 
@@ -37,6 +43,7 @@ struct PaywallView: View {
 
     var body: some View {
         let pitch = self.pitch
+        let plan = PaywallPlan.make(store: store, answers: answers, horizon: planHorizon)
         ZStack(alignment: .topTrailing) {
             Palette.stage.ignoresSafeArea()
             RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.16), .clear], center: UnitPoint(x: 0.5, y: 0.12), startRadius: 10, endRadius: 320)
@@ -46,7 +53,7 @@ struct PaywallView: View {
                 .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in containerHeight = height }
                 .accessibilityHidden(true)
             ScrollView {
-                content(pitch)
+                content(pitch, plan: plan)
             }
             .scrollIndicators(.hidden)
             .scrollBounceBehavior(.basedOnSize)
@@ -80,56 +87,107 @@ struct PaywallView: View {
     /// Headline (with its top inset), plans and trust row, and the trial timeline: what must show.
     private var essentials: CGFloat { headerHeight + 16 + offerHeight + (reservesTimeline ? timelineHeight : 0) }
 
-    /// The Pro pill on its own row, when there is no hero for it to stand on.
+    /// The Pro pill on its own row, when there is no preview for it to stand on.
     private static let pillRow: CGFloat = 40
+    private static let previewTop: CGFloat = 6
+    /// Below this the preview steps aside for the pill alone; above it, it grows to `previewMax`.
+    private static let previewMin: CGFloat = 84
+    private static let previewMax: CGFloat = 156
+    private static let outcomesTop: CGFloat = 12
+    private static let countsTop: CGFloat = 6
+    private static let milestonesTop: CGFloat = 12
 
-    /// The benefit list shows when it fits beside the essentials (or when nothing fits anyway and the page scrolls).
-    private var showsBenefits: Bool {
-        let room = viewport - essentials - Self.pillRow
-        return room < 0 || room >= benefitsHeight
+    /// Where each part of the pitch goes: above the fold when it fits, else just below it.
+    private struct Fold {
+        /// 0: no preview, the Pro pill stands on its own row.
+        var preview: CGFloat = 0
+        var outcomes = true
+        var counts = true
+        var milestones = true
     }
 
-    /// The hero takes what is left, the Pro pill standing on it; below 72 points it steps aside.
-    /// A locked lesson's card replaces it.
-    private func heroHeight(_ pitch: Pitch) -> CGFloat {
-        guard pitch.lesson == nil else { return 0 }
-        let room = viewport - essentials - (showsBenefits ? benefitsHeight : 0) - 6
-        return room >= 72 ? min(170, room) : 0
+    /// The room beside the essentials goes to the outcomes, then the preview's minimum, the milestones, the
+    /// preview's growth and the counts line. When not even the pill fits, the page scrolls anyway and
+    /// everything stays in reading order above the fine print. A locked lesson's card replaces the preview.
+    private func fold(_ pitch: Pitch, plan: PaywallPlan) -> Fold {
+        var left = viewport - essentials
+        guard left >= Self.pillRow else { return Fold() }
+        var result = Fold()
+        result.outcomes = left - Self.pillRow >= Self.outcomesTop + outcomesHeight
+        if result.outcomes { left -= Self.outcomesTop + outcomesHeight }
+        let previewFloor = Self.previewTop + Self.previewMin
+        let previews = pitch.lesson == nil && left >= previewFloor
+        left -= previews ? previewFloor : Self.pillRow
+        result.milestones = !plan.milestones.isEmpty && left >= Self.milestonesTop + milestonesHeight
+        if result.milestones { left -= Self.milestonesTop + milestonesHeight }
+        if previews {
+            let growth = max(0, min(left, Self.previewMax - Self.previewMin))
+            result.preview = Self.previewMin + growth
+            left -= growth
+        }
+        result.counts = result.outcomes && left >= Self.countsTop + countsHeight
+        return result
     }
 
-    private func content(_ pitch: Pitch) -> some View {
-        let heroSpace = heroHeight(pitch)
+    /// Days the milestones may reach: the free trial's, else two weeks.
+    private var planHorizon: Int { commerce.annual.map { trialDays($0) } ?? 14 }
+
+    private func content(_ pitch: Pitch, plan: PaywallPlan) -> some View {
+        let layout = fold(pitch, plan: plan)
         return VStack(spacing: 0) {
             VStack(spacing: 0) {
-                if heroSpace > 0 {
-                    hero(height: heroSpace, center: pitch.instrumentAsset)
+                if layout.preview > 0 {
+                    preview(pitch, plan: plan, height: layout.preview)
                         .overlay(alignment: .bottom) { proPill.offset(y: 6) }
-                        .padding(.top, 6)
+                        .padding(.top, Self.previewTop)
                 } else {
                     proPill.padding(.top, 14)
                 }
                 header(pitch)
                     .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in headerHeight = height }
-                    .padding(.top, heroSpace > 0 ? 16 : 10)
-                if showsBenefits {
-                    benefits.padding(.top, 12)
-                        .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in benefitsHeight = height }
+                    .padding(.top, layout.preview > 0 ? 16 : 10)
+                if layout.outcomes {
+                    outcomeList(plan).padding(.top, Self.outcomesTop)
+                    if layout.counts { countsLine.padding(.top, Self.countsTop) }
                 }
                 offer
                     .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in offerHeight = height }
+                // The plan's first days, right above the trial's: what you reach while it is free.
+                if layout.milestones, !plan.milestones.isEmpty {
+                    milestoneStrip(plan).padding(.top, Self.milestonesTop)
+                }
                 if showsTrialTimeline, let annual = commerce.annual {
                     trialTimeline(annual).padding(.top, 14)
                         .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in timelineHeight = height }
                         .transition(.opacity)
                 }
             }
-            // Everything that sells rests above the bar; the fine print waits below the fold, past its fade.
+            // Everything that sells rests above the bar; the rest waits below the fold, past its fade.
             .frame(minHeight: viewport, alignment: .top)
+            belowFold(plan, layout: layout)
             finePrint.padding(.top, 32)
         }
         .padding(.horizontal, 20).padding(.bottom, 12)
         .frame(maxWidth: 520)
         .frame(maxWidth: .infinity)
+    }
+
+    /// What did not fit above the fold: the milestones first, then the outcomes with their counts line.
+    /// A counts line that alone found no room is left out.
+    @ViewBuilder private func belowFold(_ plan: PaywallPlan, layout: Fold) -> some View {
+        let milestones = !layout.milestones && !plan.milestones.isEmpty
+        if milestones || !layout.outcomes {
+            VStack(spacing: 20) {
+                if milestones { milestoneStrip(plan) }
+                if !layout.outcomes {
+                    VStack(spacing: Self.countsTop) {
+                        outcomeList(plan)
+                        countsLine
+                    }
+                }
+            }
+            .padding(.top, 28)
+        }
     }
 
     private var closeButton: some View {
@@ -143,12 +201,12 @@ struct PaywallView: View {
 
     // MARK: Pitch
 
-    /// What the paywall leads with: the whole offer, or what the person just tried to open.
+    /// What the paywall leads with: the person's plan, or what they just tried to open.
     private struct Pitch {
         var headline: Text
         var subhead: Text? = nil
         var lesson: LockedLesson? = nil
-        /// The instrument to put in the middle of the hero.
+        /// The instrument to stand beside the preview's runway instead of the course's own.
         var instrumentAsset: String? = nil
     }
 
@@ -160,7 +218,8 @@ struct PaywallView: View {
     }
 
     private var pitch: Pitch {
-        let generic = Pitch(headline: Text("Every lesson.\nEvery instrument."))
+        // Onboarding comes straight from "Start my plan"; the outcomes below tell what the plan brings.
+        let generic = Pitch(headline: Text("Unlock your full plan"))
         guard context == .standard, let reason = store.paywallReason else { return generic }
         switch reason {
         case "lesson":
@@ -219,40 +278,31 @@ struct PaywallView: View {
         return LockedLesson(course: course, unitNumber: unit + 1, unitTitle: course.units[unit].title.localized, lesson: lesson)
     }
 
-    // MARK: Hero
+    // MARK: Preview
 
-    /// Three instruments in a spotlight, each floating on its own slow cycle. An instrument the
-    /// person just tried to open takes the middle.
-    private func hero(height: CGFloat, center: String?) -> some View {
-        let scale = height / 270
-        let trio = ["17_bowed_strings_violin", "01_guitar_acoustic_guitar", "19_bowed_strings_cello"]
-        let middle = center ?? trio[1]
-        let sides = trio.filter { $0 != middle }
-        let picks: [(asset: String, angle: Double, height: CGFloat, x: CGFloat)] = [
-            (sides.first ?? trio[0], -14, 190 * scale, -128 * scale),
-            (sides.last ?? trio[2], 12, 210 * scale, 128 * scale),
-            (middle, 0, 250 * scale, 0),
-        ]
-        return TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion)) { context in
-            let t = context.date.timeIntervalSinceReferenceDate
-            ZStack {
-                Ellipse().fill(.black.opacity(0.55)).frame(width: 300 * scale, height: max(12, 26 * scale)).blur(radius: 12).offset(y: 124 * scale)
-                ForEach(Array(picks.enumerated()), id: \.offset) { index, pick in
-                    let bob = reduceMotion ? 0 : sin(t * 0.9 + Double(index) * 2.1)
-                    Image(card(pick.asset)).resizable().interpolation(.high).scaledToFit()
-                        .frame(height: pick.height)
-                        .rotationEffect(.degrees(pick.angle + bob * 1.6))
-                        .offset(x: pick.x, y: CGFloat(bob) * 4 * scale + (index == 2 ? 0 : 8 * scale))
-                        .shadow(color: .black.opacity(0.6), radius: 14, y: 10)
-                        .opacity(appeared ? 1 : 0)
-                        .offset(y: appeared ? 0 : 18)
-                        .animation(.spring(response: 0.9, dampingFraction: 0.8).delay(Double(index) * 0.08), value: appeared)
-                }
-            }
+    /// A few seconds of a play-along, looping: the person's instrument (or the one they just tried to open)
+    /// beside a runway with one lane per string.
+    private func preview(_ pitch: Pitch, plan: PaywallPlan, height: CGFloat) -> some View {
+        let artwork: CourseArtwork
+        let instrumentId: String?
+        if let asset = pitch.instrumentAsset {
+            artwork = .instrument(name: card(asset), render: true)
+            instrumentId = store.paywallInstrumentId
+        } else {
+            artwork = plan.course.map { CourseArtwork.of($0, catalog: store.catalog) } ?? .emblem(.note)
+            instrumentId = plan.course?.instrument
         }
-        .frame(height: height)
-        .frame(maxWidth: .infinity)
-        .accessibilityHidden(true)
+        return PaywallPreview(artwork: artwork, accent: plan.accent, lanes: lanes(instrumentId), height: height)
+            .opacity(appeared ? 1 : 0)
+            .offset(y: appeared || reduceMotion ? 0 : 12)
+            .animation(.spring(response: 0.9, dampingFraction: 0.85), value: appeared)
+    }
+
+    /// One runway lane per string of the instrument's standard tuning (paired strings count once), four otherwise.
+    private func lanes(_ instrumentId: String?) -> Int {
+        guard let id = instrumentId, let instrument = store.catalog.instrument(id: id),
+              let tuning = store.catalog.tuning(id: instrument.defaultTuningId) else { return 4 }
+        return min(7, max(3, tuning.coursesByAnchor.count))
     }
 
     /// Studio render when the instrument has one, otherwise its photograph.
@@ -329,47 +379,102 @@ struct PaywallView: View {
         }
     }
 
-    private var benefits: some View {
-        VStack(alignment: .leading, spacing: 7) {
-            benefit("\(store.curriculum.lessonCount) lessons across \(store.curriculum.courses.count) courses") { lessonsArt }
-            benefit("\(store.catalog.instruments.count) instruments, each on its own live stage") { instrumentArt }
-            benefit("Every ear game and practice tool") { earArt }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 6)
-    }
+    // MARK: Outcomes
 
     private static let benefitArt: CGFloat = 26
 
-    /// The course the learner is on (else the first), in its own art.
-    @ViewBuilder private var lessonsArt: some View {
-        let id = UserDefaults.standard.string(forKey: "learn.course") ?? store.learn.lastCourseId ?? "guitar"
-        if let course = store.curriculum.course(id: id) ?? store.curriculum.courses.first {
+    /// Three results for the person's goal, each with its own art; they slide in one after another.
+    private func outcomeList(_ plan: PaywallPlan) -> some View {
+        VStack(alignment: .leading, spacing: 7) {
+            ForEach(Array(plan.outcomes.enumerated()), id: \.element.id) { index, outcome in
+                HStack(spacing: 10) {
+                    outcomeArt(outcome.art)
+                        .frame(width: Self.benefitArt, height: Self.benefitArt)
+                        .accessibilityHidden(true)
+                    // One line in English; longer translations wrap rather than truncate.
+                    outcome.text.font(.subheadline.weight(.medium)).foregroundStyle(Palette.ink)
+                        .lineLimit(2).minimumScaleFactor(0.85).fixedSize(horizontal: false, vertical: true)
+                }
+                .opacity(appeared ? 1 : 0)
+                .offset(x: appeared || reduceMotion ? 0 : -10)
+                .animation(.spring(response: 0.6, dampingFraction: 0.85).delay(0.12 + Double(index) * 0.09), value: appeared)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 6)
+        .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in outcomesHeight = height }
+    }
+
+    @ViewBuilder private func outcomeArt(_ art: PaywallPlan.Art) -> some View {
+        switch art {
+        case .course(let course):
             CourseArt(course: course, size: Self.benefitArt)
+        case .glyph(let glyph, let accent):
+            CourseEmblemTile(glyph: glyph, accent: accent, size: Self.benefitArt)
+        case .instrument(let id):
+            if let image = CourseArtwork.instrumentImage(id, catalog: store.catalog) {
+                InstrumentTile(image: image.name, render: image.render, accent: Palette.mint, size: Self.benefitArt)
+            } else {
+                CourseEmblemTile(glyph: .note, accent: Palette.mint, size: Self.benefitArt)
+            }
+        case .symbol(let symbol, let accent):
+            SymbolTile(symbol: symbol, accent: accent, size: Self.benefitArt)
         }
     }
 
-    /// The instrument that opened the paywall, else the violin, as a studio render.
-    @ViewBuilder private var instrumentArt: some View {
-        let id = store.paywallInstrumentId ?? "violin.standard.4"
-        if let image = CourseArtwork.instrumentImage(id, catalog: store.catalog) ?? CourseArtwork.instrumentImage("violin.standard.4", catalog: store.catalog) {
-            InstrumentTile(image: image.name, render: image.render, accent: Palette.amber, size: Self.benefitArt)
+    /// What Pro holds in all, small, under the outcomes (lined up with their text) when there is room.
+    private var countsLine: some View {
+        Text("\(store.curriculum.lessonCount) lessons across \(store.curriculum.courses.count) courses")
+            .font(.caption).foregroundStyle(Palette.inkFaint)
+            .lineLimit(2).fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading, 6 + Self.benefitArt + 10)
+            .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in countsHeight = height }
+    }
+
+    // MARK: Milestones
+
+    /// The plan's first days beside the trial's: today's lesson and the units the plan reaches while the
+    /// trial is free, after the course's own art.
+    private func milestoneStrip(_ plan: PaywallPlan) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            if let course = plan.course { CourseArt(course: course, size: 28) }
+            HStack(alignment: .top, spacing: 8) {
+                ForEach(Array(plan.milestones.enumerated()), id: \.element.id) { index, milestone in
+                    milestoneColumn(milestone, first: index == 0)
+                        .opacity(appeared ? 1 : 0)
+                        .offset(y: appeared || reduceMotion ? 0 : 6)
+                        .animation(.spring(response: 0.6, dampingFraction: 0.85).delay(0.3 + Double(index) * 0.12), value: appeared)
+                }
+            }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 2)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(milestonesSpoken(plan.milestones))
+        .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in milestonesHeight = height }
     }
 
-    /// Ear training's drawn emblem.
-    private var earArt: some View {
-        CourseEmblemTile(glyph: .ear, accent: Palette.accent(store.curriculum.course(id: "ear")?.accent ?? "violet"), size: Self.benefitArt)
+    private func milestoneColumn(_ milestone: PaywallPlan.Milestone, first: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(spacing: 4) {
+                Image(systemName: first ? "play.fill" : "flag.fill").font(.system(size: 8, weight: .bold))
+                milestoneDay(milestone.day).font(Typeface.label(11)).lineLimit(1)
+            }
+            .foregroundStyle(Palette.amber)
+            Text(milestone.title).font(.caption).foregroundStyle(Palette.ink)
+                .lineLimit(2).minimumScaleFactor(0.85)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private func benefit<Art: View>(_ title: LocalizedStringKey, @ViewBuilder art: () -> Art) -> some View {
-        HStack(spacing: 10) {
-            art()
-                .frame(width: Self.benefitArt, height: Self.benefitArt)
-                .accessibilityHidden(true)
-            // One line in English; longer translations wrap rather than truncate.
-            Text(title).font(.subheadline).foregroundStyle(Palette.ink)
-                .lineLimit(2).minimumScaleFactor(0.85).fixedSize(horizontal: false, vertical: true)
+    private func milestoneDay(_ day: Int) -> Text { day == 1 ? Text("Today") : Text("Day \(day)") }
+
+    /// "Your plan. Today: Three notes on string 2. Day 7: First chords. …"
+    private func milestonesSpoken(_ milestones: [PaywallPlan.Milestone]) -> Text {
+        milestones.reduce(Text("Your plan") + Text(verbatim: ". ")) { (label: Text, milestone: PaywallPlan.Milestone) -> Text in
+            label + milestoneDay(milestone.day) + Text(verbatim: ": \(milestone.title). ")
         }
     }
 
@@ -748,6 +853,26 @@ struct PaywallView: View {
         Text("Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The tuner for guitar, bass and ukulele stays free.")
             .font(.caption2).foregroundStyle(Palette.inkFaint).multilineTextAlignment(.center)
             .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+/// A symbol on an accent tile, styled like the course emblems, for outcomes that are not a course.
+private struct SymbolTile: View {
+    let symbol: String
+    let accent: Color
+    var size: CGFloat = 26
+
+    var body: some View {
+        let shape = RoundedRectangle(cornerRadius: size * 0.27, style: .continuous)
+        Image(systemName: symbol)
+            .font(.system(size: size * 0.46, weight: .bold))
+            .foregroundStyle(Palette.onAccent.opacity(0.92))
+            .frame(width: size, height: size)
+            .background(shape.fill(LinearGradient(colors: [accent.mix(with: .white, by: 0.2), accent, accent.mix(with: .black, by: 0.2)],
+                                                  startPoint: .topLeading, endPoint: .bottomTrailing)))
+            .overlay(shape.fill(LinearGradient(colors: [.white.opacity(0.24), .white.opacity(0)], startPoint: .top, endPoint: .center)))
+            .overlay(shape.strokeBorder(.white.opacity(0.28), lineWidth: 0.5))
+            .accessibilityHidden(true)
     }
 }
 

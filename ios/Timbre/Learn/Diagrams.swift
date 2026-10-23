@@ -28,6 +28,46 @@ struct LessonVisualView: View {
     private var strums: Bool { LearnCourse.strummed(instrumentId) }
 }
 
+/// Which string sits on top wherever a neck is drawn lying down (the fretboard strips, the intonation neck,
+/// the strum sweep, the highway's lanes), one choice for the whole app (Settings › String order): tab order,
+/// string 1 (the thinnest) on top as tablature writes it, or the mirror, the thickest on top as you see the
+/// neck looking down at it while playing. Chord boxes stand upright and keep their own convention.
+///
+/// In a view: `@AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab`, then
+/// `stringOrder.row(ofString:count:)` for where string n goes; elsewhere `StringOrder.current`.
+enum StringOrder: String, CaseIterable, Identifiable {
+    /// String 1, the thinnest, on top (the default).
+    case tab
+    /// The thickest string on top.
+    case mirror
+
+    /// The UserDefaults key the choice is stored under.
+    static let storageKey = "display.stringOrder"
+
+    /// The stored choice, for code outside a view (views read it through `@AppStorage` so they redraw).
+    static var current: StringOrder {
+        UserDefaults.standard.string(forKey: storageKey).flatMap(StringOrder.init(rawValue:)) ?? .tab
+    }
+
+    var id: String { rawValue }
+
+    var thinnestOnTop: Bool { self == .tab }
+
+    /// The row, counted from the top (0), of string `number` (1 is string 1) on an instrument with `count` strings.
+    func row(ofString number: Int, count: Int) -> Int { self == .tab ? number - 1 : count - number }
+
+    /// The string number drawn in row `row` (0 at the top): the inverse of `row(ofString:count:)`.
+    func string(atRow row: Int, count: Int) -> Int { self == .tab ? row + 1 : count - row }
+
+    /// Its name in Settings.
+    var title: LocalizedStringKey {
+        switch self {
+        case .tab: return "Tab (thinnest on top)"
+        case .mirror: return "Mirror (thickest on top)"
+        }
+    }
+}
+
 /// Which strings are the thinnest and the thickest, so every diagram can name its edges in words
 /// ("Thinnest (1)" on one side, "Thickest (6)" on the other) whichever way it is drawn. On reentrant
 /// tunings (ukulele, banjo) the thickest string sits inside the set, and an edge that is neither stays unnamed.
@@ -66,7 +106,8 @@ struct StringEdges: Equatable {
     }
 }
 
-/// A stretch of neck seen from the player: string 1 on top, nut on the left, dots where to press.
+/// A stretch of neck, nut on the left, dots where to press, its strings in the player's string order
+/// (string 1 on top by default, as in tab; the thickest on top with Settings › String order › Mirror).
 /// Every string is numbered beside the nut, and the top and bottom edges are named ("Thinnest (1)",
 /// "Thickest (6)"), so the orientation never has to be guessed.
 struct FretboardDiagram: View {
@@ -87,11 +128,13 @@ struct FretboardDiagram: View {
     /// Names the top and bottom edges in words; nil leaves just the numbers.
     var edges: StringEdges?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
 
     var body: some View {
+        let order = stringOrder
         TimelineView(.animation(minimumInterval: 1 / 30, paused: !pulsing || reduceMotion)) { timeline in
             let beat = pulsing && !reduceMotion ? 0.5 + 0.5 * sin(timeline.date.timeIntervalSinceReferenceDate * 2 * .pi / 1.2) : 0
-            Canvas { context, size in draw(&context, size: size, beat: beat) }
+            Canvas { context, size in draw(&context, size: size, beat: beat, order: order) }
         }
         .frame(height: height)
         .accessibilityElement(children: .ignore)
@@ -121,17 +164,21 @@ struct FretboardDiagram: View {
         strings > 1 ? CGFloat(string - 1) / CGFloat(strings - 1) : 0.5
     }
 
-    private func draw(_ context: inout GraphicsContext, size: CGSize, beat: Double) {
+    private func draw(_ context: inout GraphicsContext, size: CGSize, beat: Double, order: StringOrder) {
         let lift = edgeLift
         let left = Self.nutX, right = size.width - 10, top = Self.pad + lift
         let bottom = size.height - Self.pad - (start > 1 ? Self.positionRow : 0) - lift
+        let count = max(1, strings)
         if let edges, lift > 0 {
-            // "Thinnest (1)" over the top string's number, the bottom string's name under its own.
-            if let name = edges.canvasLabel(1) { context.draw(name, at: CGPoint(x: 2, y: lift / 2 + 1), anchor: .leading) }
-            if let name = edges.canvasLabel(strings) { context.draw(name, at: CGPoint(x: 2, y: size.height - lift / 2 - 1), anchor: .leading) }
+            // The top string's name over its number ("Thinnest (1)" in tab order), the bottom string's under its own.
+            let topString = order.string(atRow: 0, count: count), bottomString = order.string(atRow: count - 1, count: count)
+            if let name = edges.canvasLabel(topString) { context.draw(name, at: CGPoint(x: 2, y: lift / 2 + 1), anchor: .leading) }
+            if let name = edges.canvasLabel(bottomString) { context.draw(name, at: CGPoint(x: 2, y: size.height - lift / 2 - 1), anchor: .leading) }
         }
         let fretWidth = (right - left) / CGFloat(frets)
         let gap = strings > 1 ? (bottom - top) / CGFloat(strings - 1) : 0
+        // String n's y, in the player's string order.
+        func rowY(_ string: Int) -> CGFloat { top + CGFloat(order.row(ofString: string, count: count)) * gap }
         let board = Path(roundedRect: CGRect(x: left, y: top - 10, width: right - left, height: bottom - top + 20), cornerRadius: 8)
         context.fill(board, with: .linearGradient(Gradient(colors: fretless ? [Color(hex: 0x1C1C1E), Color(hex: 0x0E0E10)] : [Color(hex: 0x2A1E17), Color(hex: 0x1A120E)]), startPoint: CGPoint(x: 0, y: top), endPoint: CGPoint(x: 0, y: bottom)))
         for marker in [3, 5, 7, 9, 12, 15] where marker >= start && marker < start + frets && !fretless {
@@ -154,8 +201,8 @@ struct FretboardDiagram: View {
                 context.fill(Path(CGRect(x: x - 1, y: top - 10, width: 2, height: bottom - top + 20)), with: .color(Color(hex: 0xB9B2A6).opacity(0.8)))
             }
         }
-        for string in 1...max(1, strings) {
-            let y = top + CGFloat(string - 1) * gap
+        for string in 1...count {
+            let y = rowY(string)
             let g = gauge(string)
             let thickness = 1 + g * 2.4
             let wound = strings >= 4 && g > 0.45
@@ -174,7 +221,7 @@ struct FretboardDiagram: View {
             drawNumber(&context, string: string, y: y, gap: gap, lit: lit)
         }
         for dot in dots where dot.string >= 1 && dot.string <= strings {
-            let y = top + CGFloat(dot.string - 1) * gap
+            let y = rowY(dot.string)
             let swell = CGFloat(beat) * 5
             if dot.fret == 0 {
                 let center = CGPoint(x: left - 14, y: y)

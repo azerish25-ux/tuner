@@ -17,6 +17,9 @@ extension DailyActivity.Kind {
         }
     }
 
+    /// The name on a Today row: one line beside the minutes, so the drone goes by the tool's name.
+    var rowTitle: LocalizedStringKey { self == .drone ? "Drone" : title }
+
     var detail: String {
         switch self {
         case .tune: return String(localized: "every string to a still point")
@@ -289,16 +292,22 @@ struct DailySetCard: View {
         return Button { open(kind) } label: {
             HStack(spacing: 10) {
                 rowIcon(kind, done: done)
+                // The activity's name and its minutes share one line; the line under them (the lesson's title,
+                // or the quest riding on the row) gets the row's whole width instead of the name's.
                 VStack(alignment: .leading, spacing: 3) {
-                    rowTitle(kind, done: done)
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
+                        rowTitle(kind, done: done)
+                        Spacer(minLength: 4)
+                        if locked {
+                            ProBadge().scaleEffect(0.8)
+                        } else {
+                            minutesText(activity.minutes).font(Typeface.number(12)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
+                                .lineLimit(1).fixedSize()
+                        }
+                    }
                     rowCaption(kind, quest: quest)
                 }
-                Spacer(minLength: 4)
-                if locked {
-                    ProBadge().scaleEffect(0.8)
-                } else {
-                    minutesText(activity.minutes).font(Typeface.number(12)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
-                }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             .frame(minHeight: 32)
             .contentShape(Rectangle())
@@ -319,12 +328,13 @@ struct DailySetCard: View {
             .contentTransition(.symbolEffect(.replace))
     }
 
+    /// One line: a short name keeps its size, a long one (or a large text size) shrinks a little before it truncates.
     private func rowTitle(_ kind: DailyActivity.Kind, done: Bool) -> some View {
-        Text(kind == .lesson && done ? LocalizedStringKey("Lesson") : kind.title).font(.subheadline.weight(.semibold))
+        Text(kind == .lesson && done ? LocalizedStringKey("Lesson") : kind.rowTitle).font(.subheadline.weight(.semibold))
             .foregroundStyle(done ? Palette.inkSoft : Palette.ink)
             .strikethrough(done, color: Palette.inkFaint)
-            .lineLimit(2).minimumScaleFactor(0.85)
-            .fixedSize(horizontal: false, vertical: true)
+            .lineLimit(1).minimumScaleFactor(0.8)
+            .layoutPriority(1)
     }
 
     /// Under the title: the lesson's name for the lesson rep, and the daily quest riding on this row (its bar

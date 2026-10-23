@@ -37,6 +37,8 @@ targets:
         UILaunchScreen:
           UIColorName: LaunchBackground
         UIBackgroundModes: [audio]
+        # The practice session (metronome, drone, tuner, lesson) on the Lock Screen and in the Dynamic Island; local updates only.
+        NSSupportsLiveActivities: true
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
@@ -63,6 +65,7 @@ targets:
         buildPhase: resources
       - path: Timbre/Services/Intents.swift
       - path: Timbre/Services/WidgetBridge.swift
+      - path: Timbre/Services/PracticeActivityAttributes.swift
       - path: Timbre/Design/Theme.swift
       - path: Timbre/Resources/Fonts
         buildPhase: resources

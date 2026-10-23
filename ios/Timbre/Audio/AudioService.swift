@@ -46,6 +46,18 @@ final class AudioService: ObservableObject {
     /// A final chord is ringing out; the engine stays up for it.
     private var bandOutro = false
     private var outroTask: Task<Void, Never>?
+    /// The voice tones sound in when a call names none: the selected instrument's (the store provides it).
+    var instrumentVoice: () -> InstrumentVoice = { .guitar }
+    /// The open lesson's course instrument while its player is showing; nil falls back to `instrumentVoice`.
+    var courseVoice: InstrumentVoice?
+    /// Tones render here (a few milliseconds), never on the main thread or in the audio callback.
+    private let toneQueue = DispatchQueue(label: "com.timbre.tones", qos: .userInitiated)
+    /// Recent renderings: a lesson replays the same chord, the tuner the same string.
+    private var toneCache: [ToneRequest: ToneClip] = [:]
+    private var toneRecency: [ToneRequest] = []
+    /// The tone asked for last, until it starts; a newer one (or a stop) supersedes it.
+    private var pendingTone: PendingTone?
+    private var toneToken = 0
 
     init() {
         observers.append(NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: .main) { [weak self] notification in
@@ -60,8 +72,8 @@ final class AudioService: ObservableObject {
             Task { @MainActor in self?.stopBand(); self?.stopCapture() }
         })
         observers.append(NotificationCenter.default.addObserver(forName: UIApplication.didReceiveMemoryWarningNotification, object: nil, queue: .main) { [weak self] _ in
-            // Rendered bands are a few MB each; the one playing stays alive with its player.
-            Task { @MainActor in self?.bandCache.removeAll() }
+            // Rendered bands are a few MB each; the one playing stays alive with its player (tones likewise).
+            Task { @MainActor in self?.bandCache.removeAll(); self?.toneCache.removeAll(); self?.toneRecency.removeAll() }
         })
         observers.append(NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: .main) { [weak self] notification in
             // Headphones in or out: the band follows at once (out: it fades before it can reach the mic).
@@ -91,7 +103,8 @@ final class AudioService: ObservableObject {
         guard !running, !Task.isCancelled else { return }
         if tonePlaying {
             toneTask?.cancel(); toneTask = nil; resumeCaptureAfterTone = false
-            renderer.setTone(0); tonePlaying = false
+            pendingTone = nil
+            renderer.stopClip(); tonePlaying = false
         }
         generation += 1
         let token = generation
@@ -180,6 +193,7 @@ final class AudioService: ObservableObject {
 
     private func suspend() {
         toneTask?.cancel(); toneTask = nil; resumeCaptureAfterTone = false
+        pendingTone = nil
         generation += 1
         if tapInstalled { engine.inputNode.removeTap(onBus: 0); tapInstalled = false }
         renderer.stop()
@@ -222,46 +236,104 @@ final class AudioService: ObservableObject {
         if !engine.isRunning { try configureSession(); try attachOutput(); engine.prepare(); try engine.start() }
     }
 
-    func playTone(_ hz: Double, durationMs: Int = 2000) {
+    /// The tuner's reference (and other single held notes): the instrument's own voice at exactly `hz`, a string
+    /// plucked again every one to two seconds or a bowed, blown or sung note held without vibrato, so it can be
+    /// tuned to by ear. `voice` defaults to the open course's instrument, else the selected one. Capture pauses
+    /// while it sounds and resumes after; `durationMs` 0 sounds until `stopTone`.
+    func playTone(_ hz: Double, durationMs: Int = 2000, voice: InstrumentVoice? = nil) {
         guard UIApplication.shared.applicationState == .active, hz.isFinite, hz > 0 else { return }
         let resume = running || resumeCaptureAfterTone
         toneTask?.cancel(); toneTask = nil
         if running { stopCapture() }
         do {
             try ensureOutput()
-            renderer.setTone(hz, durationMs: durationMs); tonePlaying = true; resumeCaptureAfterTone = resume
-            if durationMs > 0 {
-                toneTask = Task { [weak self] in
-                    do { try await Task.sleep(for: .milliseconds(durationMs)) } catch { return }
-                    guard !Task.isCancelled else { return }
-                    self?.stopTone()
-                }
-            }
+            tonePlaying = true; resumeCaptureAfterTone = resume
+            let request = ToneRequest(frequencies: [hz], kind: .reference(durationMs: max(0, durationMs)),
+                                      voice: voice ?? currentVoice, sampleRate: renderer.rate)
+            sound(request, reference: true)
         } catch { suspend(); self.error = String(localized: "Could not play the reference tone: \(error.localizedDescription)") }
     }
 
-    /// Ear training: tones in sequence or together. Capture pauses while they sound.
-    func playTones(_ frequencies: [Double], together: Bool, noteMs: Int = 900, gapMs: Int = 150) {
+    /// "Hear it", chord buttons, listen steps and ear training: notes in turn, or together (strummed low to high
+    /// on plucked voices), in `voice`, else the open course's instrument, else the selected one. Capture pauses
+    /// while they sound.
+    func playTones(_ frequencies: [Double], together: Bool, noteMs: Int = 900, gapMs: Int = 150, voice: InstrumentVoice? = nil) {
         guard UIApplication.shared.applicationState == .active, !frequencies.isEmpty else { return }
         if running { stopCapture() }
         do {
             try ensureOutput()
-            let total = together ? noteMs + 400 : frequencies.count * (noteMs + gapMs)
-            renderer.setSequence(frequencies, together: together, noteMs: together ? noteMs + 400 : noteMs, gapMs: gapMs)
+            let kind = ToneRequest.Kind.phrase(together: together, noteMs: together ? noteMs + 400 : noteMs, gapMs: gapMs)
+            let request = ToneRequest(frequencies: frequencies, kind: kind, voice: voice ?? currentVoice, sampleRate: renderer.rate)
             tonePlaying = true
-            toneTask?.cancel()
-            toneTask = Task { [weak self] in
-                do { try await Task.sleep(for: .milliseconds(total + 60)) } catch { return }
-                guard !Task.isCancelled, let self else { return }
+            toneTask?.cancel(); toneTask = nil
+            sound(request, reference: false)
+        } catch { self.error = String(localized: "Could not play tones: \(error.localizedDescription)") }
+    }
+
+    private var currentVoice: InstrumentVoice { courseVoice ?? instrumentVoice() }
+
+    /// Plays a request from the cache, or renders it on the tone queue first; a newer request or a stop
+    /// in the meantime wins.
+    private func sound(_ request: ToneRequest, reference: Bool) {
+        toneToken += 1
+        let token = toneToken
+        let pending = PendingTone(request: request, token: token, reference: reference)
+        pendingTone = pending
+        if let clip = toneCache[request] {
+            remember(clip, for: request)
+            begin(clip, pending)
+            return
+        }
+        toneQueue.async { [weak self] in
+            let clip = ToneSynth.render(request)
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.remember(clip, for: request)
+                guard let pending = self.pendingTone, pending.token == token else { return }
+                self.begin(clip, pending)
+            }
+        }
+    }
+
+    /// Starts a rendered tone (the one sounding fades under it) and times its end.
+    private func begin(_ clip: ToneClip, _ pending: PendingTone) {
+        pendingTone = nil
+        guard tonePlaying else { return }
+        guard renderer.setClip(clip) else {
+            // The output's rate changed while it rendered: once more at the new rate.
+            let rate = renderer.rate
+            guard rate != pending.request.sampleRate else { tonePlaying = false; return }
+            sound(pending.request.at(sampleRate: rate), reference: pending.reference)
+            return
+        }
+        let ms = pending.request.durationMs
+        guard ms > 0 else { return }
+        let reference = pending.reference
+        toneTask?.cancel()
+        toneTask = Task { [weak self] in
+            do { try await Task.sleep(for: .milliseconds(reference ? ms : ms + 60)) } catch { return }
+            guard !Task.isCancelled, let self else { return }
+            if reference {
+                self.stopTone()
+            } else {
                 self.tonePlaying = false
                 if !self.running && !self.outputActive { self.shutdown() }
             }
-        } catch { self.error = String(localized: "Could not play tones: \(error.localizedDescription)") }
+        }
+    }
+
+    /// Keeps the last few renderings, most recent last.
+    private func remember(_ clip: ToneClip, for request: ToneRequest) {
+        toneRecency.removeAll { $0 == request }
+        toneRecency.append(request)
+        toneCache[request] = clip
+        while toneRecency.count > 16 { toneCache[toneRecency.removeFirst()] = nil }
     }
 
     func stopTone() {
         toneTask?.cancel(); toneTask = nil
-        renderer.setTone(0); tonePlaying = false
+        pendingTone = nil
+        renderer.stopClip(); tonePlaying = false
         let resume = resumeCaptureAfterTone
         resumeCaptureAfterTone = false
         if resume {
@@ -541,6 +613,8 @@ private final class PitchWorker: @unchecked Sendable {
 
 /// The step's band and the metronome bar it starts on.
 private struct BandRequest { let arrangement: BandArrangement; let firstBar: Int }
+/// A tone waiting for its rendering; `reference` tones resume capture when they end.
+private struct PendingTone { let request: ToneRequest; let token: Int; let reference: Bool }
 /// A rendering is only valid at the sample rate it was made for.
 private struct BandRenderKey: Hashable { let arrangement: BandArrangement; let rate: Int }
 
@@ -556,12 +630,11 @@ private final class ClockSlot: @unchecked Sendable {
 
 /// Controls synchronize once per PCM buffer. Core renderers own sample-clock phase and envelopes.
 private final class OutputRenderer: @unchecked Sendable {
-    private struct Scheduled { let renderer: ReferenceToneRenderer; let start: Int64 }
     private let lock = NSLock()
     private var sampleRate = 48000
-    private var tone: ReferenceToneRenderer?
-    private var sequence: [Scheduled] = []
-    private var sequenceFrame: Int64 = 0
+    /// The tone sounding (a rendered instrument clip) and the one before it, fading out underneath.
+    private var clip: ToneClipPlayer?
+    private var fadingClip: ToneClipPlayer?
     private var metronome: MetronomeRenderer?
     private var drone: DroneRenderer?
     /// The lesson band; it starts bars on the metronome's downbeats.
@@ -587,24 +660,26 @@ private final class OutputRenderer: @unchecked Sendable {
         lock.lock(); defer { lock.unlock() }
         let next = max(40, Int(rate.rounded()))
         let kept = keepState && next == sampleRate
-        if !kept { tone = nil; sequence = []; metronome = nil; drone = nil; band = nil; clock.set(nil) }
+        if !kept { clip = nil; fadingClip = nil; metronome = nil; drone = nil; band = nil; clock.set(nil) }
         sampleRate = next
         return kept
     }
-    func setTone(_ hz: Double, durationMs: Int = 2000) {
-        lock.lock(); defer { lock.unlock() }
-        guard hz > 0, hz < Double(sampleRate) / 2 else { tone?.stop(); return }
-        tone = ReferenceToneRenderer(frequencyHz: hz, sampleRateHz: sampleRate, durationMs: durationMs)
+    /// Plays a rendered tone; the one sounding is damped under it (25 ms) rather than cut. False when the
+    /// clip was rendered for another output rate.
+    func setClip(_ next: ToneClip) -> Bool {
+        lock.lock()
+        guard next.sampleRate == sampleRate else { lock.unlock(); return false }
+        let released = fadingClip
+        clip?.stop(fadeFrames: sampleRate / 40)
+        fadingClip = clip
+        clip = ToneClipPlayer(clip: next)
+        lock.unlock()
+        // The player let go (and maybe its clip) is freed here, not under the render lock.
+        withExtendedLifetime(released) {}
+        return true
     }
-    func setSequence(_ frequencies: [Double], together: Bool, noteMs: Int, gapMs: Int) {
-        lock.lock(); defer { lock.unlock() }
-        sequenceFrame = 0
-        sequence = frequencies.enumerated().compactMap { index, hz in
-            guard hz > 0, hz < Double(sampleRate) / 2 else { return nil }
-            let start = together ? 0 : Int64(index * (noteMs + gapMs)) * Int64(sampleRate) / 1000
-            return Scheduled(renderer: ReferenceToneRenderer(frequencyHz: hz, sampleRateHz: sampleRate, durationMs: noteMs, amplitude: together ? 0.12 : 0.2), start: start)
-        }
-    }
+    /// Damps the tone sounding over 30 ms, like a hand on the strings.
+    func stopClip() { lock.lock(); clip?.stop(fadeFrames: sampleRate * 3 / 100); lock.unlock() }
     func setMetronome(bpm: Int, beats: Int, subdivision: Int, accents: Bool, beatLevels: [Int]?, sound: MetronomeRenderer.Sound) {
         lock.lock(); defer { lock.unlock() }
         guard bpm > 0 else {
@@ -644,7 +719,7 @@ private final class OutputRenderer: @unchecked Sendable {
         drone = DroneRenderer(tonic: tonic, fifth: fifth, voice: voice, sampleRate: sampleRate)
     }
     func stopDrone() { lock.lock(); drone?.stop(); lock.unlock() }
-    func stop() { lock.lock(); tone = nil; sequence = []; metronome = nil; drone = nil; band = nil; clock.set(nil); lock.unlock() }
+    func stop() { lock.lock(); clip = nil; fadingClip = nil; metronome = nil; drone = nil; band = nil; clock.set(nil); lock.unlock() }
     func render(frameCount: Int, audio: UnsafeMutablePointer<AudioBufferList>, timestamp: UnsafePointer<AudioTimeStamp>) {
         let buffers = UnsafeMutableAudioBufferListPointer(audio)
         guard lock.try() else {
@@ -660,7 +735,7 @@ private final class OutputRenderer: @unchecked Sendable {
             clock.publish(Double(host) * secondsPerTick - Double(metronomeFrames) / Double(sampleRate))
         }
         for frame in 0..<frameCount {
-            var value = (tone?.nextSample() ?? 0) + (drone?.nextSample() ?? 0)
+            var value = (clip?.nextSample() ?? 0) + (fadingClip?.nextSample() ?? 0) + (drone?.nextSample() ?? 0)
             if let metronome {
                 let click = metronome.nextSample()
                 metronomeFrames += 1
@@ -677,10 +752,6 @@ private final class OutputRenderer: @unchecked Sendable {
                 }
             } else if let band {
                 value += band.nextSample()
-            }
-            if !sequence.isEmpty {
-                for item in sequence where sequenceFrame >= item.start { value += item.renderer.nextSample() }
-                sequenceFrame += 1
             }
             for buffer in buffers { buffer.mData?.assumingMemoryBound(to: Float.self)[frame] = max(-1, min(1, value)) }
         }

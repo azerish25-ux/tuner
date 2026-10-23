@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- ar plural forms (CLDR categories used: zero, one, two, few, many, other). Keys match en.lproj/Localizable.stringsdict; wording follows this locale's Localizable.strings. -->
+<plist version="1.0">
+<dict>
+	<key>%lld cents flat</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>zero</key>
+			<string>منخفض بمقدار %lld سنت</string>
+			<key>one</key>
+			<string>منخفض بمقدار %lld سنت</string>
+			<key>two</key>
+			<string>منخفض بمقدار %lld سنتين</string>
+			<key>few</key>
+			<string>منخفض بمقدار %lld سنتات</string>
+			<key>many</key>
+			<string>منخفض بمقدار %lld سنتًا</string>
+			<key>other</key>
+			<string>منخفض بمقدار %lld سنت</string>
+		</dict>
+	</dict>
+	<key>%lld cents sharp</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>zero</key>
+			<string>مرتفع بمقدار %lld سنت</string>
+			<key>one</key>
+			<string>مرتفع بمقدار %lld سنت</string>
+			<key>two</key>
+			<string>مرتفع بمقدار %lld سنتين</string>
+			<key>few</key>
+			<string>مرتفع بمقدار %lld سنتات</string>
+			<key>many</key>
+			<string>مرتفع بمقدار %lld سنتًا</string>
+			<key>other</key>
+			<string>مرتفع بمقدار %lld سنت</string>
+		</dict>
+	</dict>
+	<key>%lld minutes</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>zero</key>
+			<string>%lld دقيقة</string>
+			<key>one</key>
+			<string>%lld دقيقة</string>
+			<key>two</key>
+			<string>%lld دقيقتان</string>
+			<key>few</key>
+			<string>%lld دقائق</string>
+			<key>many</key>
+			<string>%lld دقيقة</string>
+			<key>other</key>
+			<string>%lld دقيقة</string>
+		</dict>
+	</dict>
+	<key>%lld sessions</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>zero</key>
+			<string>الجلسات: %lld</string>
+			<key>one</key>
+			<string>الجلسات: %lld</string>
+			<key>two</key>
+			<string>الجلسات: %lld</string>
+			<key>few</key>
+			<string>الجلسات: %lld</string>
+			<key>many</key>
+			<string>الجلسات: %lld</string>
+			<key>other</key>
+			<string>الجلسات: %lld</string>
+		</dict>
+	</dict>
+	<key>Every %lld bars</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>zero</key>
+			<string>كل %lld مازورة</string>
+			<key>one</key>
+			<string>كل مازورة</string>
+			<key>two</key>
+			<string>كل مازورتين</string>
+			<key>few</key>
+			<string>كل %lld مازورات</string>
+			<key>many</key>
+			<string>كل %lld مازورة</string>
+			<key>other</key>
+			<string>كل %lld مازورة</string>
+		</dict>
+	</dict>
+	<key>Practised on %lld days in the last twelve weeks</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>zero</key>
+			<string>أيام التمرين في آخر اثني عشر أسبوعًا: %lld</string>
+			<key>one</key>
+			<string>أيام التمرين في آخر اثني عشر أسبوعًا: %lld</string>
+			<key>two</key>
+			<string>أيام التمرين في آخر اثني عشر أسبوعًا: %lld</string>
+			<key>few</key>
+			<string>أيام التمرين في آخر اثني عشر أسبوعًا: %lld</string>
+			<key>many</key>
+			<string>أيام التمرين في آخر اثني عشر أسبوعًا: %lld</string>
+			<key>other</key>
+			<string>أيام التمرين في آخر اثني عشر أسبوعًا: %lld</string>
+		</dict>
+	</dict>
+	<key>Practised today. Best run %lld days.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>zero</key>
+			<string>تمرّنت اليوم. أفضل سلسلة: %lld يوم.</string>
+			<key>one</key>
+			<string>تمرّنت اليوم. أفضل سلسلة: %lld يوم.</string>
+			<key>two</key>
+			<string>تمرّنت اليوم. أفضل سلسلة: %lld يومان.</string>
+			<key>few</key>
+			<string>تمرّنت اليوم. أفضل سلسلة: %lld أيام.</string>
+			<key>many</key>
+			<string>تمرّنت اليوم. أفضل سلسلة: %lld يومًا.</string>
+			<key>other</key>
+			<string>تمرّنت اليوم. أفضل سلسلة: %lld يوم.</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

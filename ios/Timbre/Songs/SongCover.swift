@@ -1,9 +1,11 @@
+import CoreText
 import SwiftUI
+import UIKit
 
 /// Generative typographic cover art for a song. Colour, pattern and composition come from the lesson id (and its
 /// course accent), so a song always wears the same cover and no image assets are needed: a dark gradient from the
 /// course accent into a second hue, a soft glow, one of five line patterns, and the title's monogram set large in
-/// Sora ("Mary Had a Little Lamb" is ML, "Porchlight" is Po), cropped by the edge like a record sleeve.
+/// Sora ("Mary Had a Little Lamb" is ML, "Porchlight" is Po), whole inside the cover so it always reads.
 struct CoverArt {
     enum Pattern: Int, CaseIterable { case rings, stripes, halftone, waves, rays }
 
@@ -187,14 +189,21 @@ struct CoverArt {
     }
 }
 
-/// A song's cover, drawn from its `CoverArt`: gradient, glow, pattern, the monogram and a top-left sheen.
+/// A song's cover, drawn from its `CoverArt`: gradient, glow, pattern, the monogram and a top-left sheen; a song
+/// not reached yet dims under a lock.
 struct SongCover: View {
     let art: CoverArt
     var corner: CGFloat = 20
-    /// Where the monogram's centre sits, as a fraction of the cover; near an edge it crops like a sleeve.
+    /// Where the monogram's centre would like to sit, as a fraction of the cover; it moves in from there only as
+    /// far as it must to stay inside `monogramBounds`.
     var monogramAnchor = UnitPoint(x: 0.66, y: 0.62)
-    /// The monogram's type size as a fraction of the cover's shorter side (two letters; one letter sets larger).
+    /// The monogram's type size as a fraction of the cover's shorter side (two letters; one letter sets larger),
+    /// smaller when the letters wouldn't fit `monogramBounds` whole.
     var monogramSize: CGFloat = 0.5
+    /// The part of the cover (as fractions of it) that holds all of the monogram: letters, offset print and lean.
+    var monogramBounds = CGRect(x: 0.08, y: 0.08, width: 0.84, height: 0.84)
+    /// Not reached yet: the cover dims and a lock sits in the corner farthest from the letters.
+    var locked = false
     /// The glow drifts slowly (the featured song), unless Reduce Motion is on.
     var drift = false
     var outlined = true
@@ -217,21 +226,39 @@ struct SongCover: View {
 
     private func artwork(size: CGSize) -> some View {
         let side = min(size.width, size.height)
+        let placement = MonogramPlacement(text: art.monogram, points: side * monogramSize * (art.monogram.count > 1 ? 1 : 1.24),
+                                          tilt: art.tilt, cover: size, anchor: monogramAnchor, bounds: monogramBounds)
         return ZStack {
             LinearGradient(colors: [art.deep, art.far], startPoint: art.start, endPoint: art.end)
             glow(side: side)
                 .position(x: size.width * art.glow.x, y: size.height * art.glow.y)
             Canvas { context, canvasSize in art.drawPattern(in: &context, size: canvasSize) }
-            monogram(side: side)
-                .position(x: size.width * monogramAnchor.x, y: size.height * monogramAnchor.y)
+            monogram(points: placement.points, side: side)
+                .position(placement.center)
             LinearGradient(colors: [.white.opacity(0.14), .clear], startPoint: .topLeading, endPoint: .center)
+            if locked { lock(size: size, letters: placement.center) }
         }
         .frame(width: size.width, height: size.height)
     }
 
+    /// The dim over a song not reached yet, and its lock in the corner farthest from the letters.
+    private func lock(size: CGSize, letters: CGPoint) -> some View {
+        let badge: CGFloat = 36
+        let inset: CGFloat = 12
+        let x = letters.x > size.width / 2 ? inset + badge / 2 : size.width - inset - badge / 2
+        let y = letters.y > size.height / 2 ? inset + badge / 2 : size.height - inset - badge / 2
+        return ZStack {
+            Color.black.opacity(0.5)
+            Image(systemName: "lock.fill").font(.system(size: 15, weight: .bold)).foregroundStyle(Palette.ink.opacity(0.9))
+                .frame(width: badge, height: badge)
+                .background(Circle().fill(.black.opacity(0.45)))
+                .overlay(Circle().strokeBorder(.white.opacity(0.16), lineWidth: 1))
+                .position(x: x, y: y)
+        }
+    }
+
     /// The letters in Sora, white over an offset print in the cover's second hue.
-    private func monogram(side: CGFloat) -> some View {
-        let points = side * monogramSize * (art.monogram.count > 1 ? 1 : 1.24)
+    private func monogram(points: CGFloat, side: CGFloat) -> some View {
         let font = Font.custom("Sora-SemiBold", fixedSize: points)
         return ZStack {
             Text(verbatim: art.monogram).font(font).tracking(-points * 0.04)
@@ -254,5 +281,67 @@ struct SongCover: View {
             .scaleEffect(drifting ? 1.12 : 0.94)
             .offset(x: drifting ? side * 0.1 : -side * 0.04, y: drifting ? -side * 0.06 : side * 0.03)
             .blendMode(.screen)
+    }
+}
+
+/// Where a cover's monogram goes and at what size, so all of it (the letters, their offset print, the lean)
+/// stays inside the cover's monogram bounds: the ink is measured from the glyphs themselves with Core Text,
+/// set at the asked size when it fits and smaller when it doesn't, and moved from the anchor only as far as
+/// it must. Matches `SongCover.monogram`: Sora SemiBold, tracking −4 %, the print 5 % down and right.
+private struct MonogramPlacement {
+    /// The centre of the letters' text frame, in the cover.
+    let center: CGPoint
+    let points: CGFloat
+
+    init(text: String, points: CGFloat, tilt: Double, cover: CGSize, anchor: UnitPoint, bounds: CGRect) {
+        let box = CGRect(x: cover.width * bounds.minX, y: cover.height * bounds.minY,
+                         width: cover.width * bounds.width, height: cover.height * bounds.height)
+        let ink = Self.ink(text, points: max(1, points), tilt: tilt)
+        // Everything in the ink scales with the type size, about the frame's centre.
+        let scale = min(1, box.width / max(1, ink.width), box.height / max(1, ink.height))
+        let fitted = CGRect(x: ink.minX * scale, y: ink.minY * scale, width: ink.width * scale, height: ink.height * scale)
+        center = CGPoint(x: Self.clamp(cover.width * anchor.x, box.minX - fitted.minX, box.maxX - fitted.maxX),
+                         y: Self.clamp(cover.height * anchor.y, box.minY - fitted.minY, box.maxY - fitted.maxY))
+        self.points = points * scale
+    }
+
+    private static func clamp(_ value: CGFloat, _ low: CGFloat, _ high: CGFloat) -> CGFloat {
+        low > high ? (low + high) / 2 : min(max(value, low), high)
+    }
+
+    /// The box around the monogram's ink at `points`, relative to the centre of its text frame (y down).
+    private static func ink(_ text: String, points: CGFloat, tilt: Double) -> CGRect {
+        let font = UIFont(name: "Sora-SemiBold", size: points) ?? UIFont.systemFont(ofSize: points, weight: .semibold)
+        let attributed = NSAttributedString(string: text, attributes: [.font: font, .kern: -points * 0.04])
+        let line = CTLineCreateWithAttributedString(attributed as CFAttributedString)
+        var ascent: CGFloat = 0, descent: CGFloat = 0, leading: CGFloat = 0
+        let width = CGFloat(CTLineGetTypographicBounds(line, &ascent, &descent, &leading))
+        var glyphs = CTLineGetBoundsWithOptions(line, .useGlyphPathBounds)
+        if glyphs.isNull || glyphs.isEmpty { glyphs = CGRect(x: 0, y: -descent, width: width, height: ascent + descent) }
+        // Core Text measures up from the baseline; the frame's centre sits half its height below its top, and
+        // the baseline `ascent` below the top.
+        let baseline = ascent - (ascent + descent) / 2
+        let print = points * 0.05
+        let letters = CGRect(x: glyphs.minX - width / 2, y: baseline - glyphs.maxY,
+                             width: glyphs.width + print, height: glyphs.height + print)
+        return turned(letters, degrees: tilt)
+    }
+
+    /// The box around `rect` turned by `degrees` about the origin, either way (the lean is a few degrees).
+    private static func turned(_ rect: CGRect, degrees: Double) -> CGRect {
+        let corners = [CGPoint(x: rect.minX, y: rect.minY), CGPoint(x: rect.maxX, y: rect.minY),
+                       CGPoint(x: rect.minX, y: rect.maxY), CGPoint(x: rect.maxX, y: rect.maxY)]
+        var minX = CGFloat.infinity, minY = CGFloat.infinity, maxX = -CGFloat.infinity, maxY = -CGFloat.infinity
+        for sign in [1.0, -1.0] {
+            let radians = degrees * sign * Double.pi / 180
+            let c = CGFloat(cos(radians)), s = CGFloat(sin(radians))
+            for corner in corners {
+                let x = corner.x * c - corner.y * s
+                let y = corner.x * s + corner.y * c
+                minX = min(minX, x); maxX = max(maxX, x)
+                minY = min(minY, y); maxY = max(maxY, y)
+            }
+        }
+        return CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
     }
 }

@@ -9,8 +9,10 @@ struct JourneyView: View {
     @State private var confirmRestring = false
     /// The string-health bars grow from the baseline once.
     @State private var driftShown = false
-    /// Every badge or only the first rows (earned first, then the closest).
+    /// Every badge or only the first rows (the latest earned beside the goals closest to done).
     @State private var allBadges = false
+    /// The badge grid's width, for its column count.
+    @State private var badgeGridWidth: CGFloat = 0
     /// The badge whose details are showing.
     @State private var openBadge: String?
     /// Badges earned since the last visit: their medals catch the light once.
@@ -195,23 +197,32 @@ struct JourneyView: View {
         return (n > 0 ? "+" : "−") + abs(n).formatted()
     }
 
-    /// Badges shown before "Show all" (three rows on a phone).
-    private static let collapsedBadges = 9
+    /// Rows of badges shown before "Show all".
+    private static let collapsedRows = 3
+    /// The narrowest a badge cell gets, and the space between cells.
+    private static let badgeCellWidth: CGFloat = 92
+    private static let badgeSpacing: CGFloat = 10
+
+    /// As many columns as cells of `badgeCellWidth` fit (three on a phone).
+    private var badgeColumns: Int {
+        max(3, Int((badgeGridWidth + Self.badgeSpacing) / (Self.badgeCellWidth + Self.badgeSpacing)))
+    }
 
     private var achievements: some View {
-        let badges = badgeProgress
+        let columns = badgeColumns
+        let collapsed = columns * Self.collapsedRows
+        let badges = badgeProgress(collapsed: collapsed, columns: columns)
         let earnedCount = badges.filter(\.earned).count
-        let shown = allBadges ? badges : Array(badges.prefix(Self.collapsedBadges))
+        let shown = allBadges ? badges : Array(badges.prefix(collapsed))
         return VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .firstTextBaseline) {
                 Text("Achievements").font(Typeface.display(16)).foregroundStyle(Palette.ink)
                 Spacer()
                 Text("\(earnedCount) of \(Achievements.all.count)").font(.caption).foregroundStyle(Palette.inkSoft)
             }
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 92), spacing: 10, alignment: .top)], alignment: .center, spacing: 18) {
-                ForEach(shown) { badge in badgeCell(badge) }
-            }
-            if badges.count > Self.collapsedBadges {
+            badgeGrid(shown, columns: columns)
+                .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.width } action: { width in badgeGridWidth = width }
+            if badges.count > collapsed {
                 Button {
                     withAnimation(Motion.settle) { allBadges.toggle() }
                     Haptics.shared.selection()
@@ -240,19 +251,49 @@ struct JourneyView: View {
         badgesSeen = earned.joined(separator: ",")
     }
 
-    /// Earned first, then the locked ones closest to their goal.
-    private var badgeProgress: [BadgeProgress] {
+    /// Rows of equal-width cells, each row as tall as its tallest cell with every status line at the row's foot:
+    /// a title that wraps to two lines moves its row's counters down together, and a row whose titles all fit
+    /// on one line has no empty line before them.
+    private func badgeGrid(_ badges: [BadgeProgress], columns: Int) -> some View {
+        let rows = stride(from: 0, to: badges.count, by: columns).map { Array(badges[$0..<min($0 + columns, badges.count)]) }
+        return VStack(spacing: 18) {
+            ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
+                HStack(alignment: .top, spacing: Self.badgeSpacing) {
+                    ForEach(row) { badge in badgeCell(badge) }
+                    // A short last row keeps the columns' width.
+                    ForEach(row.count..<columns, id: \.self) { _ in
+                        Color.clear.frame(height: 0).frame(maxWidth: .infinity)
+                    }
+                }
+                .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    /// The first rows pair the latest earned badges (one row) with the locked ones closest to their goal, so the
+    /// next goals show before "Show all"; after them the other earned badges, latest first, then the other locked
+    /// ones, closest first. With few locked badges left, more earned ones fill the first rows (and the other way round).
+    private func badgeProgress(collapsed: Int, columns: Int) -> [BadgeProgress] {
         let state = store.progress
-        let earned = Set(state.achievements)
+        // Earned ids are appended as they are earned, so a later position is a more recent badge.
+        let earnedAt = Dictionary(state.achievements.enumerated().map { ($0.element, $0.offset) }, uniquingKeysWith: { first, _ in first })
         let streakBest = store.streak.best
         let custom = store.settings.customTunings?.count ?? 0
         let metrics = store.badgeMetrics
         var all: [BadgeProgress] = []
         for (index, a) in Achievements.all.enumerated() {
             let value = a.value(state, streakBest: streakBest, customTunings: custom, metrics: metrics)
-            all.append(BadgeProgress(achievement: a, earned: earned.contains(a.id), value: value, order: index))
+            all.append(BadgeProgress(achievement: a, earnedAt: earnedAt[a.id], value: value, order: index))
         }
-        return all.sorted(by: BadgeProgress.precedes)
+        let earned = all.filter(\.earned).sorted(by: BadgeProgress.later)
+        let locked = all.filter { !$0.earned }.sorted(by: BadgeProgress.closer)
+        let latest = min(earned.count, max(columns, collapsed - locked.count))
+        let closest = min(locked.count, max(0, collapsed - latest))
+        var ordered = Array(earned.prefix(latest))
+        ordered += locked.prefix(closest)
+        ordered += earned.dropFirst(latest)
+        ordered += locked.dropFirst(closest)
+        return ordered
     }
 
     /// Instrument artwork for a course badge (the course's instrument cut-out), nil for the others.
@@ -262,8 +303,9 @@ struct JourneyView: View {
         return store.catalog.photo(instrumentId: instrument)?.asset
     }
 
-    /// Medal, two reserved lines of title and one line of status ("Earned" or "38 / 50"), so every cell is the
-    /// same height and the counters line up across a row. Tapping shows what the badge asks for.
+    /// Medal, the title (one line, or two when it needs them) and one line of status ("Earned" or "38 / 50") at
+    /// the cell's foot, which stretches to its row's height so the counters line up across the row.
+    /// Tapping shows what the badge asks for.
     private func badgeCell(_ badge: BadgeProgress) -> some View {
         let a = badge.achievement
         let shown = min(badge.value, a.goal)
@@ -271,18 +313,20 @@ struct JourneyView: View {
             openBadge = a.id
             Haptics.shared.selection()
         } label: {
-            VStack(spacing: 6) {
+            VStack(spacing: 0) {
                 AchievementMedal(achievement: a, earned: badge.earned, size: 58, progress: badge.earned ? nil : badge.fraction,
                                  image: badgeImage(a), shine: shining.contains(a.id))
-                    .padding(.bottom, 2)
+                    .padding(.bottom, 8)
                 Text(LocalizedStringKey(a.title)).font(.caption.weight(.semibold))
                     .foregroundStyle(badge.earned ? Palette.ink : Palette.inkSoft)
                     .multilineTextAlignment(.center)
-                    .lineLimit(2, reservesSpace: true)
+                    .lineLimit(2)
                     .minimumScaleFactor(0.85)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 6)
                 status(badge, shown: shown)
             }
-            .frame(maxWidth: .infinity, alignment: .top)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .contentShape(Rectangle())
         }
         .buttonStyle(PressScaleStyle())
@@ -437,25 +481,44 @@ struct JourneyView: View {
         case "drone": return String(localized: "Drone")
         case "chord": return String(localized: "Chords")
         case "scale": return String(localized: "Scales")
-        default: return store.catalog.instrument(id: record.instrumentId)?.name.localized ?? String(localized: "Chromatic tuning")
+        default: return instrumentName(record) ?? String(localized: "Chromatic tuning")
         }
+    }
+
+    /// The instrument a session tuned, named the way the tuner and the picker name it: by its pictured variant
+    /// ("Acoustic guitar", "5-string bass"), not the catalogue's umbrella name ("Acoustic / electric guitar").
+    /// The current instrument keeps the picture chosen for it, as in the tuner's header.
+    private func instrumentName(_ record: PracticeRecord) -> String? {
+        guard let instrument = store.catalog.instrument(id: record.instrumentId) else { return nil }
+        let preferred = record.instrumentId == store.instrument.id ? store.settings.selectedPhotoAsset : nil
+        guard let photo = store.catalog.photo(instrumentId: record.instrumentId, tuningId: record.tuningId, preferredAsset: preferred) else {
+            return instrument.name.localized
+        }
+        return NSLocalizedString("timbre_photo_" + photo.asset, bundle: .main, value: photo.label, comment: "")
     }
 }
 
 /// An achievement with its live metric, for the grid.
 private struct BadgeProgress: Identifiable {
     let achievement: Achievement
-    let earned: Bool
+    /// Position in the earned list (later is more recent); nil while locked.
+    let earnedAt: Int?
     let value: Int
     /// Position in `Achievements.all`, to keep ties stable.
     let order: Int
     var id: String { achievement.id }
+    var earned: Bool { earnedAt != nil }
     var fraction: Double { min(1, Double(max(0, value)) / Double(max(1, achievement.goal))) }
 
-    static func precedes(_ lhs: BadgeProgress, _ rhs: BadgeProgress) -> Bool {
-        if lhs.earned != rhs.earned { return lhs.earned }
-        if !lhs.earned && lhs.fraction != rhs.fraction { return lhs.fraction > rhs.fraction }
-        return lhs.order < rhs.order
+    /// Earned badges: the most recent first.
+    static func later(_ lhs: BadgeProgress, _ rhs: BadgeProgress) -> Bool {
+        let left = lhs.earnedAt ?? -1, right = rhs.earnedAt ?? -1
+        return left != right ? left > right : lhs.order < rhs.order
+    }
+
+    /// Locked badges: the closest to its goal first.
+    static func closer(_ lhs: BadgeProgress, _ rhs: BadgeProgress) -> Bool {
+        lhs.fraction != rhs.fraction ? lhs.fraction > rhs.fraction : lhs.order < rhs.order
     }
 }
 

@@ -239,12 +239,54 @@ struct SettingsView: View {
 
     // MARK: Display and feedback
 
+    /// Which string is drawn on top wherever a neck lies across the screen (`StringOrder`).
+    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
+
     private var displaySection: some View {
         SettingsGroup(title: "Display") {
             MenuRow(title: "Handedness", symbol: "hand.raised", id: "settings.handedness", selection: setting(\.handedness)) {
                 Text("Right-handed").tag("right"); Text("Left-handed").tag("left")
             }
+            RowDivider()
+            stringOrderChoice
         }
+    }
+
+    /// "String order" and its two options, each with a small picture of the strings in that order and a check
+    /// on the chosen one (the options are too long to sit in a menu at the end of a row).
+    private var stringOrderChoice: some View {
+        VStack(spacing: 0) {
+            RowLabel(symbol: "list.number", title: Text("String order"))
+                .settingsRow()
+                .accessibilityAddTraits(.isHeader)
+            ForEach(StringOrder.allCases) { order in
+                RowDivider()
+                stringOrderOption(order)
+            }
+        }
+    }
+
+    private func stringOrderOption(_ order: StringOrder) -> some View {
+        let selected = stringOrder == order
+        return Button {
+            stringOrder = order
+            Haptics.shared.selection()
+        } label: {
+            HStack(spacing: 12) {
+                StringOrderGlyph(thinnestOnTop: order.thinnestOnTop, lit: selected)
+                Text(order.title).font(.body).foregroundStyle(Palette.ink).multilineTextAlignment(.leading)
+                Spacer(minLength: 8)
+                Image(systemName: "checkmark").font(.body.weight(.semibold)).foregroundStyle(Palette.mint)
+                    .opacity(selected ? 1 : 0)
+                    .accessibilityHidden(true)
+            }
+            .settingsRow()
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(RowButtonStyle())
+        .animation(Motion.quick, value: selected)
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityIdentifier("settings.stringOrder.\(order.rawValue)")
     }
 
     private var feedbackSection: some View {
@@ -428,6 +470,23 @@ private struct MenuRow<Selection: Hashable, Options: View>: View {
                 .accessibilityIdentifier(id)
         }
         .settingsRow()
+    }
+}
+
+/// Four strings, thin to thick from the top (tab order) or the other way round (mirror), in the orb column.
+private struct StringOrderGlyph: View {
+    let thinnestOnTop: Bool
+    let lit: Bool
+
+    var body: some View {
+        VStack(spacing: 4) {
+            ForEach(0..<4, id: \.self) { row in
+                Capsule().fill(lit ? Palette.mint : Palette.inkSoft)
+                    .frame(width: 22, height: 1 + 0.9 * CGFloat(thinnestOnTop ? row : 3 - row))
+            }
+        }
+        .frame(width: 30, height: 30)
+        .accessibilityHidden(true)
     }
 }
 
