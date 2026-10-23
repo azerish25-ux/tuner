@@ -14,22 +14,22 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 ROOT = Path(__file__).resolve().parents[2]
 FONTS = ROOT / "ios/Timbre/Resources/Fonts"
-INK, SOFT, BRASS, STAGE = (245, 239, 230), (179, 169, 158), (217, 178, 111), (14, 12, 11)
+INK, SOFT, MINT, AMBER, STAGE = (245, 243, 239), (163, 168, 177), (76, 242, 184), (255, 181, 71), (6, 7, 8)
 
 PHONE = [
-    ("11-tune-string-selected", "Tune until it\nstands still.", "Live 3D pegs turn with your pitch"),
-    ("30-instruments", "Sixty instruments.\nOne stage.", "Guitar, bass, ukulele, violin family, mandolin and more"),
-    ("15-tune-chromatic", "Strobe precision\nfor any note.", "Voice, piano, winds — anything you play"),
-    ("20-practice-hub", "Ten minutes\na day.", "A daily set built around your instrument"),
-    ("23-ear-training", "Hear the\ndifference.", "Pitch, intervals and chord training"),
-    ("32-journey", "Watch yourself\nimprove.", "Streaks, accuracy and milestones, on device"),
-    ("22-metronome-running", "Keep perfect\ntime.", "Accents, odd meters, tap tempo and speed trainer"),
+    ("10b-tune-locked", "Strobe-precise tuning\nfor 60 instruments", "No ads. Guitar, bass and ukulele free forever."),
+    ("60-along-playing", "Lessons that listen\nand tell you what to fix", "Cents and timing feedback on every note"),
+    ("50-learn", "400+ lessons\nin 12 courses", "Guitar, ukulele, bass, violin, cello, mandolin, banjo and more"),
+    ("62-lesson-results", "Five minutes a day,\nevery day", "Stars, streaks, levels and daily quests"),
+    ("52b-lesson-chord", "It hears your chords", "Strum it and Timbre checks every string"),
+    ("30-instruments", "Every instrument\non its own stage", "Real 3D instruments and photographs that move as you tune"),
+    ("32-journey", "Watch yourself\nimprove", "Accuracy, string health and achievements, on device"),
 ]
 PAD = [
-    ("ipad-landscape-tune", "Tune until it stands still.", "Live 3D pegs turn with your pitch"),
-    ("ipad-portrait-tune", "A precision tuner for sixty instruments.", "With the practice that keeps you in tune"),
-    ("ipad-landscape-instruments", "Every instrument has its own mechanism.", "Pegs, machines and strings in real time"),
-    ("ipad-landscape-practice", "Ten minutes a day.", "Ear training, chords, scales, drone and voice"),
+    ("ipad-landscape-tune", "Strobe-precise tuning for 60 instruments.", "No ads. Guitar, bass and ukulele free forever."),
+    ("ipad-portrait-tune", "Tune until it stands still.", "Real instruments that turn their pegs as you play"),
+    ("ipad-landscape-instruments", "Every instrument on its own stage.", "Pegs, machines and strings in real time"),
+    ("ipad-landscape-practice", "Five minutes a day.", "Lessons, ear games and practice tools"),
 ]
 
 
@@ -48,7 +48,7 @@ def stage(size) -> Image.Image:
     draw = ImageDraw.Draw(glow)
     draw.ellipse([w * 0.05, h * 0.18, w * 0.95, h * 0.78], fill=255)
     glow = glow.filter(ImageFilter.GaussianBlur(w * 0.18))
-    warm = Image.new("RGB", size, (64, 44, 24))
+    warm = Image.new("RGB", size, (40, 30, 20))
     return Image.composite(warm, base, glow)
 
 
@@ -64,11 +64,11 @@ def compose(shot_path: Path, title: str, subtitle: str, size, out: Path, portrai
     w, h = size
     canvas = stage(size).convert("RGBA")
     draw = ImageDraw.Draw(canvas)
-    display = ImageFont.truetype(str(FONTS / "InstrumentSerif-Regular.ttf"), int(w * (0.098 if portrait else 0.05)))
-    small = ImageFont.truetype(str(FONTS / "ibm_plex_mono.ttf"), int(w * (0.026 if portrait else 0.014)))
-    eyebrow = ImageFont.truetype(str(FONTS / "ibm_plex_mono.ttf"), int(w * (0.022 if portrait else 0.012)))
+    display = ImageFont.truetype(str(FONTS / "Sora-SemiBold.ttf"), int(w * (0.074 if portrait else 0.04)))
+    small = ImageFont.truetype(str(FONTS / "Sora-Medium.ttf"), int(w * (0.03 if portrait else 0.016)))
+    eyebrow = ImageFont.truetype(str(FONTS / "Sora-SemiBold.ttf"), int(w * (0.024 if portrait else 0.013)))
     top = int(h * 0.055)
-    draw.text((w / 2, top), "T I M B R E", font=eyebrow, fill=BRASS, anchor="ma")
+    draw.text((w / 2, top), "T I M B R E", font=eyebrow, fill=AMBER, anchor="ma")
     y = top + int(h * 0.035)
     for line in title.split("\n"):
         draw.text((w / 2, y), line, font=display, fill=INK, anchor="ma")
@@ -89,7 +89,7 @@ def compose(shot_path: Path, title: str, subtitle: str, size, out: Path, portrai
     canvas.alpha_composite(framed, (x, y))
     border = ImageDraw.Draw(canvas)
     border.rounded_rectangle([x, y, x + framed.width - 1, y + framed.height - 1], radius=int(target_w * (0.11 if portrait else 0.03)),
-                             outline=(70, 60, 50), width=3)
+                             outline=(46, 50, 58), width=3)
     canvas.convert("RGB").save(out, quality=95)
 
 
