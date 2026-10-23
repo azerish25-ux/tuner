@@ -1,0 +1,62 @@
+name: Import artist models
+# Downloads the picked Sketchfab models with the owner's token, then renders identification
+# sheets (object colours, both ends of the instrument) so each model can be rigged.
+on:
+  push:
+    branches: ["import/**"]
+    paths:
+      - "tools/models/sketchfab/**"
+      - ".github/workflows/import.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: import-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      BLENDER_SERIES: "4.5"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Locate Blender LTS
+        run: |
+          VERSION=$(curl -fsSL "https://download.blender.org/release/Blender${BLENDER_SERIES}/" | grep -o "blender-${BLENDER_SERIES}\.[0-9]*-linux-x64\.tar\.xz" | sort -V | tail -1)
+          echo "BLENDER_TARBALL=$VERSION" >> "$GITHUB_ENV"
+          echo "Using $VERSION"
+      - uses: actions/cache@v4
+        with:
+          path: ~/blender
+          key: ${{ env.BLENDER_TARBALL }}
+      - name: Install Blender
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libxi6 libxxf86vm1 libxfixes3 libxrender1 libgl1 libegl1 libxkbcommon0 libsm6 libice6 > /dev/null
+          if [ ! -x ~/blender/blender ]; then
+            mkdir -p ~/blender
+            curl -fsSL "https://download.blender.org/release/Blender${BLENDER_SERIES}/${BLENDER_TARBALL}" | tar -xJ -C ~/blender --strip-components=1
+          fi
+          ~/blender/blender --version | head -1
+          python3 -m pip install --quiet pillow numpy scipy
+      - name: Download picked models
+        env:
+          SKETCHFAB_TOKEN: ${{ secrets.SKETCHFAB_TOKEN }}
+        run: python3 tools/models/sketchfab/fetch.py tools/models/sketchfab/picks.json build/import "$(cat tools/models/sketchfab/ONLY 2>/dev/null)"
+      - name: Inspect and render
+        run: |
+          mkdir -p build/inspect
+          ~/blender/blender -b --factory-startup --python-exit-code 1 --python tools/models/sketchfab/inspect.py -- build/import build/inspect "$(cat tools/models/sketchfab/ONLY 2>/dev/null)" 2>&1 | grep -v "^Fra:" | tee build/inspect/blender.log
+      - name: Keys and sheets
+        if: always()
+        run: |
+          python3 tools/models/sketchfab/legend.py build/inspect
+          cp build/import/fetch-report.json build/inspect/ 2>/dev/null || true
+          for d in build/import/*/; do [ -f "$d/meta.json" ] && cp "$d/meta.json" "build/inspect/$(basename $d).meta.json"; done
+          rm -f build/inspect/*_ids.png
+      - name: Publish results
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash tools/ci/publish-results.sh ci-results/import build/inspect
