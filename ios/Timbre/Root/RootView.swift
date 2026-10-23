@@ -56,9 +56,9 @@ struct RootView: View {
         .onChange(of: store.selectedTab) { old, _ in if old == .tune { store.stopActivity() } }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { store.stopActivity() }
-            if phase == .active { store.applyStreakFreezes() }
+            if phase == .active { store.applyStreakFreezes(); store.syncAchievements() }
         }
-        .task { store.applyStreakFreezes() }
+        .task { store.applyStreakFreezes(); store.syncAchievements() }
         .onChange(of: commerce.isPro) { _, pro in if pro { Analytics.log("pro_active") } }
         .onOpenURL { url in
             // timbre://tune, timbre://practice, timbre://metronome, timbre://ear, timbre://learn (widgets and links)

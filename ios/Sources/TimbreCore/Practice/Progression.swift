@@ -125,6 +125,9 @@ public struct ProgressUpdate: Equatable, Sendable {
     public var levelUp: Level?
     public var questsCompleted: [Quest] = []
     public var achievementsEarned: [Achievement] = []
+    public init(xpGained: Int = 0, levelUp: Level? = nil, questsCompleted: [Quest] = [], achievementsEarned: [Achievement] = []) {
+        self.xpGained = xpGained; self.levelUp = levelUp; self.questsCompleted = questsCompleted; self.achievementsEarned = achievementsEarned
+    }
 }
 
 extension ProgressState {
@@ -163,11 +166,20 @@ extension ProgressState {
         xp += update.xpGained
         let after = Progression.level(for: xp)
         if after.number > before.number { update.levelUp = after }
+        update.achievementsEarned = awardAchievements(streakBest: streakBest, customTunings: customTunings)
+        return update
+    }
+
+    /// Awards every achievement whose goal is met but not yet recorded (also run at launch, so a goal
+    /// reached without an event — a streak kept by a freeze, say — still unlocks).
+    @discardableResult
+    public mutating func awardAchievements(streakBest: Int = 0, customTunings: Int = 0) -> [Achievement] {
+        var earned: [Achievement] = []
         for a in Achievements.all where !achievements.contains(a.id) && a.isEarned(self, streakBest: streakBest, customTunings: customTunings) {
             achievements.append(a.id)
-            update.achievementsEarned.append(a)
+            earned.append(a)
         }
-        return update
+        return earned
     }
 
     /// The first stable reading of a string in a session; older samples roll off.

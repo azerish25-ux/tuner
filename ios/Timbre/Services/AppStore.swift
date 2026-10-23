@@ -168,6 +168,16 @@ final class AppStore: ObservableObject {
     var streak: StreakSummary { Streaks.summary(records: records, frozen: Set(progress.frozenDays ?? [])) }
     var streakFreezes: Int { progress.streakFreezes ?? 0 }
 
+    /// Unlocks achievements whose goals are already met (launch and foreground), announcing them like any other reward.
+    func syncAchievements() {
+        var state = progress
+        let earned = state.awardAchievements(streakBest: streak.best, customTunings: settings.customTunings?.count ?? 0)
+        guard !earned.isEmpty, updateSettings({ $0.progress = state }) else { return }
+        lastReward = ProgressUpdate(achievementsEarned: earned)
+        rewardPulse += 1
+        Haptics.shared.done()
+    }
+
     /// Spends banked freezes on days missed since the last practice. Runs at launch and whenever the app comes forward.
     func applyStreakFreezes() {
         var state = progress
