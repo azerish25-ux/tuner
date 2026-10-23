@@ -1,7 +1,7 @@
 import SwiftUI
 import TimbreCore
 
-enum AppTab: Hashable { case tune, practice, instruments, journey }
+enum AppTab: Hashable { case tune, learn, practice, instruments, journey }
 
 /// App state and actions. High-rate readings live in `live` so they never invalidate
 /// views that observe this object.

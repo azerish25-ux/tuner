@@ -74,7 +74,7 @@ public enum Progression {
 // MARK: - Daily quests
 
 public struct Quest: Identifiable, Equatable, Sendable {
-    public enum Kind: String, Sendable, CaseIterable { case tuneAll, holdInTune, sniperWin, bullseyes, practiceMinutes, earCorrect }
+    public enum Kind: String, Sendable, CaseIterable { case tuneAll, holdInTune, sniperWin, bullseyes, practiceMinutes, earCorrect, lessons }
     public let kind: Kind
     public let target: Int
     public let xp: Int
@@ -89,7 +89,7 @@ public enum Quests {
         var pool: [Quest] = [
             Quest(kind: .sniperWin, target: 1, xp: 30), Quest(kind: .bullseyes, target: 5, xp: 25),
             Quest(kind: .practiceMinutes, target: 5, xp: 15), Quest(kind: .earCorrect, target: 10, xp: 20),
-            Quest(kind: .holdInTune, target: 3, xp: 15),
+            Quest(kind: .holdInTune, target: 3, xp: 15), Quest(kind: .lessons, target: 2, xp: 30),
         ]
         pool.shuffle(using: &rng)
         return [Quest(kind: .tuneAll, target: 1, xp: 20)] + pool.prefix(2)
@@ -110,6 +110,8 @@ public enum ProgressEvent: Equatable, Sendable {
     case earCorrect
     case sniperRound(bullseye: Bool)
     case sniperGame(score: Int, won: Bool)
+    /// A lesson finished (its XP already scaled by stars).
+    case lessonCompleted(stars: Int, xp: Int)
 }
 
 public struct ProgressUpdate: Equatable, Sendable {
@@ -143,6 +145,9 @@ extension ProgressState {
         case .sniperGame(let score, let won):
             stats["sniperBest"] = max(stats["sniperBest"] ?? 0, score)
             if won { update.xpGained += XPReward.sniperWin; bump("sniperWins"); quest(.sniperWin) }
+        case .lessonCompleted(let stars, let xp):
+            update.xpGained += max(0, xp); bump("lessons"); quest(.lessons)
+            if stars >= 3 { bump("perfectLessons") }
         }
         for q in Quests.daily(for: now, calendar: calendar) where !questsClaimed.contains(q.id) && (questProgress[q.id] ?? 0) >= q.target {
             questsClaimed.append(q.id)
@@ -205,6 +210,10 @@ public enum Achievements {
         Achievement(id: "own_tuning", title: "Your own sound", detail: "Create a custom tuning", symbol: "slider.horizontal.3", metric: "customTunings", goal: 1),
         Achievement(id: "streak_30", title: "Month of music", detail: "Play thirty days in a row", symbol: "calendar", metric: "streakBest", goal: 30),
         Achievement(id: "strings_1000", title: "Thousand strings", detail: "Tune 1,000 strings", symbol: "sparkles", metric: "stringsTuned", goal: 1000),
+        Achievement(id: "first_lesson", title: "First lesson", detail: "Finish your first lesson", symbol: "graduationcap.fill", metric: "lessons", goal: 1),
+        Achievement(id: "lessons_25", title: "Regular", detail: "Finish 25 lessons", symbol: "books.vertical.fill", metric: "lessons", goal: 25),
+        Achievement(id: "lessons_100", title: "Scholar", detail: "Finish 100 lessons", symbol: "medal.fill", metric: "lessons", goal: 100),
+        Achievement(id: "perfect_10", title: "Flawless", detail: "Earn three stars on 10 lessons", symbol: "star.circle.fill", metric: "perfectLessons", goal: 10),
     ]
 }
 

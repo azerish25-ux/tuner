@@ -103,6 +103,7 @@ struct PracticeView: View {
         case .sniperWin, .bullseyes: path.append(.sniper)
         case .earCorrect: path.append(.ear)
         case .practiceMinutes: path.append(.metronome)
+        case .lessons: store.selectedTab = .learn
         }
     }
 

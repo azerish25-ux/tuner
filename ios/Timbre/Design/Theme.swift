@@ -19,6 +19,13 @@ enum Palette {
     static let mintDeep = Color(hex: 0x1A8F69)
     static let amber = Color(hex: 0xFFB547)
     static let flame = Color(hex: 0xFF9F43)
+    /// Course accents for Learn.
+    static let violet = Color(hex: 0xA592FF)
+    static let coral = Color(hex: 0xFF7E6B)
+    static let sky = Color(hex: 0x62C9FF)
+    static func accent(_ name: String) -> Color {
+        switch name { case "amber": return amber; case "violet": return violet; case "coral": return coral; case "sky": return sky; default: return mint }
+    }
     /// Dark text on mint or gold fills.
     static let onAccent = Color(hex: 0x04130D)
     // Earlier names, mapped onto the new system.

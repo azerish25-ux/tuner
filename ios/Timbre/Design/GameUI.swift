@@ -78,6 +78,7 @@ extension Quest {
         case .bullseyes: return "Hit \(target) bullseyes"
         case .practiceMinutes: return "Practise for \(target) minutes"
         case .earCorrect: return "Get \(target) ear questions right"
+        case .lessons: return "Finish \(target) lessons"
         }
     }
     var symbol: String {
@@ -86,9 +87,10 @@ extension Quest {
         case .sniperWin, .bullseyes: return "scope"
         case .practiceMinutes: return "clock"
         case .earCorrect: return "ear"
+        case .lessons: return "graduationcap"
         }
     }
-    var tint: Color { [.tuneAll, .holdInTune].contains(kind) ? Palette.amber : kind == .practiceMinutes ? Palette.inkSoft : Palette.mint }
+    var tint: Color { [.tuneAll, .holdInTune].contains(kind) ? Palette.amber : kind == .practiceMinutes ? Palette.inkSoft : kind == .lessons ? Palette.violet : Palette.mint }
 }
 
 struct QuestRow: View {
