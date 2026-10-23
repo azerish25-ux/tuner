@@ -116,8 +116,19 @@ final class TimbreUITests: XCTestCase {
         print("STATE before: \(element("debug.state").label)")
         element("practice.drone").tap()
         let purchase = element("paywall.purchase")
-        let found = purchase.waitForExistence(timeout: 15)
-        print("STATE after: \(element("debug.state").label) hittable=\(element("practice.drone").isHittable) frame=\(element("practice.drone").frame)")
+        var found = purchase.waitForExistence(timeout: 8)
+        print("STATE after drone: \(element("debug.state").label) frame=\(element("practice.drone").frame)")
+        if !found {  // probe: a different point on the same tile, then a pro tile in the other column
+            element("practice.drone").coordinate(withNormalizedOffset: CGVector(dx: 0.25, dy: 0.3)).tap()
+            found = purchase.waitForExistence(timeout: 8)
+            print("STATE after drone corner: \(element("debug.state").label)")
+        }
+        if !found {
+            element("practice.intonation").tap()
+            found = purchase.waitForExistence(timeout: 8)
+            print("STATE after intonation: \(element("debug.state").label) frame=\(element("practice.intonation").frame)")
+            shot("40b-after-intonation")
+        }
         XCTAssertTrue(found)
         settle(2); shot("40-paywall")
         scrollTo(purchase)
