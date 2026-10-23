@@ -309,7 +309,8 @@ UNIT_3 = unit("ear-3", "Steps and skips", "Hear half steps and whole steps, then
 UNIT_4 = unit("ear-4", "Intervals I", "Unison, octave, fifth and fourth, each linked to a tune you can hum.", [
     lesson("ear-4-1", "Unison and octave", [
         explain("Intervals", "An interval is the distance between two notes. A unison is no distance at all: the same note "
-                "twice. An octave is the same letter eight notes higher; it sounds like one note, only brighter.",
+                "twice. An octave runs from one letter to the same letter above, like C to C. It sounds like one note, "
+                "only brighter.",
                 keyboard(["C4", "C5"])),
         explain("Tunes to remember", "Jingle Bells opens on one note repeated: a unison. Take Me Out to the Ball Game opens "
                 "with a leap up an octave. Hum each opening to recall the sound."),
