@@ -208,6 +208,10 @@ final class AppStore: ObservableObject {
             _ = selectInstrument(instrument, photo: catalog.photo(instrumentId: instrument.id)?.asset)
         }
         updateSettings { $0.onboardingCompleted = true; $0.playerLevel = level; $0.goal = goal; if let id = instrument?.id { $0.recentInstrumentIds = [id] + $0.recentInstrumentIds } }
+        // Learn opens on the course for the instrument (or the goal) chosen in onboarding.
+        let course: String? = goal == "ear" ? "ear" : goal == "voice" ? "voice" : goal == "rhythm" ? "rhythm"
+            : curriculum.courses.first { course in instrument.map { course.instrument == $0.id } ?? false }?.id
+        if let course, curriculum.course(id: course) != nil { UserDefaults.standard.set(course, forKey: "learn.course") }
     }
 
     func open(_ destination: IntentRouter.Destination) {

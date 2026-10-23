@@ -32,6 +32,7 @@ struct SettingsView: View {
                         Text("Real-time 3D").tag("3d"); Text("Studio (lighter)").tag("studio")
                     }
                 }
+                reminderSection
                 NavigationLink("Advanced listening") { AdvancedListening() }
                 languageSection
                 privacySection
@@ -106,6 +107,27 @@ struct SettingsView: View {
                 store.updateSettings { $0.transposition = v }
             }), in: -12...12)
         } header: { Text("Tuning") } footer: { Text("Capo and transposition change the names you see, never the pitch Timbre measures.") }
+    }
+
+    @AppStorage(PracticeReminder.enabledKey) private var reminderOn = false
+    @AppStorage(PracticeReminder.minutesKey) private var reminderMinutes = 19 * 60
+
+    private var reminderSection: some View {
+        Section {
+            Toggle("Daily practice reminder", isOn: Binding(get: { reminderOn }, set: { on in
+                if on { Task { reminderOn = await PracticeReminder.enable(at: reminderMinutes) } } else { PracticeReminder.disable(); reminderOn = false }
+            }))
+            .accessibilityIdentifier("settings.reminder")
+            if reminderOn {
+                DatePicker("Time", selection: Binding(get: {
+                    Calendar.current.date(bySettingHour: reminderMinutes / 60, minute: reminderMinutes % 60, second: 0, of: Date()) ?? Date()
+                }, set: { date in
+                    let parts = Calendar.current.dateComponents([.hour, .minute], from: date)
+                    reminderMinutes = (parts.hour ?? 19) * 60 + (parts.minute ?? 0)
+                    Task { await PracticeReminder.enable(at: reminderMinutes) }
+                }), displayedComponents: .hourAndMinute)
+            }
+        } header: { Text("Reminders") } footer: { Text("One gentle nudge a day, at a time you choose.") }
     }
 
     private var displaySection: some View {

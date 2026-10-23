@@ -169,6 +169,9 @@ public struct LessonResult: Equatable, Sendable {
     public let accuracy: Double
     public let xp: Int
     public let minutes: Int
+    public init(lessonId: String, stars: Int, accuracy: Double, xp: Int, minutes: Int) {
+        self.lessonId = lessonId; self.stars = stars; self.accuracy = accuracy; self.xp = xp; self.minutes = minutes
+    }
 }
 
 // MARK: - Progress through the courses

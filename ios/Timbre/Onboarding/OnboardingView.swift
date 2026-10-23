@@ -85,7 +85,7 @@ struct OnboardingView: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text("Tune until it\nstands still.").font(Typeface.display(40)).tracking(-1).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
-                Text("A precision tuner with your instrument on a live stage, ear games that sharpen you, and a daily quest to keep you playing.")
+                Text("A precision tuner, hundreds of lessons that listen as you play, and a daily quest to keep you going.")
                     .font(.body).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
             }
             .padding(.horizontal, 28)

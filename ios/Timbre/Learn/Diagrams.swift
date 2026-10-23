@@ -156,11 +156,11 @@ struct StaffView: View {
     var accent: Color = Palette.mint
     var activeIndex: Int?
 
-    /// Diatonic step of a MIDI note counted from C0, and whether it needs a sharp.
-    private static func step(_ midi: Int) -> (Int, Bool) {
-        let table: [(Int, Bool)] = [(0, false), (0, true), (1, false), (1, true), (2, false), (3, false), (3, true), (4, false), (4, true), (5, false), (5, true), (6, false)]
-        let (degree, sharp) = table[((midi % 12) + 12) % 12]
-        return ((midi / 12) * 7 + degree, sharp)
+    /// Diatonic step of a MIDI note counted from C0 and its accidental, spelled like NoteName (C♯ E♭ F♯ A♭ B♭).
+    private static func step(_ midi: Int) -> (Int, String?) {
+        let table: [(Int, String?)] = [(0, nil), (0, "♯"), (1, nil), (2, "♭"), (2, nil), (3, nil), (3, "♯"), (4, nil), (5, "♭"), (5, nil), (6, "♭"), (6, nil)]
+        let (degree, accidental) = table[((midi % 12) + 12) % 12]
+        return ((midi / 12) * 7 + degree, accidental)
     }
 
     var body: some View {
@@ -179,7 +179,7 @@ struct StaffView: View {
             let start: CGFloat = 64
             let spacing = notes.count > 1 ? min(56, (size.width - start - 24) / CGFloat(notes.count - 1)) : 0
             for (i, midi) in notes.enumerated() {
-                let (position, sharp) = Self.step(midi)
+                let (position, accidental) = Self.step(midi)
                 let offset = position - reference
                 let x = start + CGFloat(i) * spacing
                 let y = bottomLine - CGFloat(offset) * gap / 2
@@ -191,7 +191,7 @@ struct StaffView: View {
                 context.fill(head, with: .color(color))
                 let up = offset < 4
                 context.fill(Path(CGRect(x: up ? x + 5 : x - 6.3, y: up ? y - 32 : y, width: 1.4, height: 32)), with: .color(color))
-                if sharp { context.draw(Text("♯").font(.system(size: 17, weight: .semibold)).foregroundStyle(color), at: CGPoint(x: x - 15, y: y)) }
+                if let accidental { context.draw(Text(accidental).font(.system(size: 17, weight: .semibold)).foregroundStyle(color), at: CGPoint(x: x - 15, y: y)) }
             }
         }
         .frame(height: 120)

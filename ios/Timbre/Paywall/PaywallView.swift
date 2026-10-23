@@ -32,7 +32,7 @@ struct PaywallView: View {
                     Text("TIMBRE PRO").font(Typeface.label(13)).tracking(2.2).foregroundStyle(Color(hex: 0x1B1206))
                         .padding(.horizontal, 16).padding(.vertical, 6)
                         .background(Capsule().fill(Palette.proGold))
-                    Text("Every instrument.\nEvery practice tool.").font(Typeface.display(32)).tracking(-0.8)
+                    Text("Every lesson.\nEvery instrument.").font(Typeface.display(32)).tracking(-0.8)
                         .multilineTextAlignment(.center).foregroundStyle(Palette.ink).fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                     benefits
@@ -92,10 +92,10 @@ struct PaywallView: View {
 
     private var benefits: some View {
         VStack(alignment: .leading, spacing: 12) {
+            benefit("\(store.curriculum.lessonCount) lessons across \(store.curriculum.courses.count) courses")
             benefit("\(store.catalog.instruments.count) instruments, each on its own live stage")
-            benefit("All ear games and double XP quests")
-            benefit("Chords, scales, intonation and drone")
-            benefit("Unlimited custom tunings and string health")
+            benefit("Every ear game and practice tool")
+            benefit("Custom tunings, string health and accuracy insights")
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 8)
