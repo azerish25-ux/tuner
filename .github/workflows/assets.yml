@@ -18,7 +18,7 @@ concurrency:
 jobs:
   blender:
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 150
     env:
       BLENDER_SERIES: "4.5"
     steps:
@@ -48,7 +48,10 @@ jobs:
         run: |
           mkdir -p build/assets
           set -o pipefail
-          ~/blender/blender -b --factory-startup --python-exit-code 1 --python tools/models/build_assets.py -- --out build/assets --models "${{ github.event.inputs.models }}" --samples 64 --res 1024 2>&1 | tee build/assets/blender.log
+          MODELS="${{ github.event.inputs.models }}"
+          # A push builds only the models listed in tools/models/BUILD (all when the file is absent).
+          if [ -z "$MODELS" ] && [ -f tools/models/BUILD ]; then MODELS=$(tr -d ' \n' < tools/models/BUILD); fi
+          ~/blender/blender -b --factory-startup --python-exit-code 1 --python tools/models/build_assets.py -- --out build/assets --models "$MODELS" --samples 64 --res 1024 2>&1 | tee build/assets/blender.log
       - name: Thumbnails and contact sheet
         if: always()
         run: python3 tools/models/postprocess.py build/assets

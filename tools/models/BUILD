@@ -1,0 +1,1 @@
+guitar_12,guitar_tenor,guitar_7,guitar_baritone,guitalele,ukulele_baritone,ukulele_bass,mandolin,mandola,mandolin_octave,mandocello,bouzouki_irish,balalaika,domra
