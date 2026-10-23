@@ -16,12 +16,27 @@ struct TuneView: View {
         ZStack {
             StageBackground()
             PitchAura().allowsHitTesting(false)
-            VStack(spacing: 0) {
-                header
-                stage.frame(maxHeight: .infinity)
-                readout
-                StringRail().opacity(store.referenceMode ? 0 : 1).frame(height: store.referenceMode ? 8 : nil)
-                controls
+            GeometryReader { proxy in
+                // Landscape and large iPad windows: the stage takes the left, tuning controls the right.
+                let wide = proxy.size.width > proxy.size.height * 1.15
+                VStack(spacing: 0) {
+                    header
+                    if wide {
+                        HStack(spacing: 20) {
+                            stage.frame(maxWidth: .infinity, maxHeight: .infinity)
+                            VStack(spacing: 0) {
+                                Spacer(minLength: 0)
+                                tuningPanel
+                                Spacer(minLength: 0)
+                            }
+                            .frame(width: min(560, proxy.size.width * 0.44))
+                        }
+                    } else {
+                        stage.frame(maxHeight: .infinity)
+                        tuningPanel.frame(maxWidth: 680)
+                    }
+                }
+                .frame(width: proxy.size.width, height: proxy.size.height)
             }
             CelebrationOverlay()
         }
@@ -120,6 +135,14 @@ struct TuneView: View {
             }
         }
         .padding(.bottom, 6)
+    }
+
+    private var tuningPanel: some View {
+        VStack(spacing: 0) {
+            readout
+            StringRail().opacity(store.referenceMode ? 0 : 1).frame(height: store.referenceMode ? 8 : nil)
+            controls
+        }
     }
 
     private var controls: some View {
