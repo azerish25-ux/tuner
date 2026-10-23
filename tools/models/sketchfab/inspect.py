@@ -153,9 +153,9 @@ def inspect(folder: Path, out: Path, model_id: str):
     center = Vector(mean)
     camera(scene, center, -Vector(thin_axis) * 0.8 + Vector(mid_axis) * 0.35 - Vector(long_axis) * 0.2, Vector(long_axis),
            perspective_dist=size * 1.9, lens=50)
-    render(scene, out / f"{model_id}_overview.png", 768, 24)
+    render(scene, out / f"{model_id}_overview.png", 768, 16)
     camera(scene, center, -Vector(thin_axis), Vector(long_axis), scale=size * 1.08)
-    render(scene, out / f"{model_id}_front.png", 768, 24)
+    render(scene, out / f"{model_id}_front.png", 768, 16)
 
     # Both ends of the long axis (one of them is the headstock / pegbox / tuning end).
     inventory["ends"] = {}
@@ -178,7 +178,7 @@ def inspect(folder: Path, out: Path, model_id: str):
             camera(scene, Vector(rcenter), Vector(thin_axis) * direction, Vector(long_axis) * sign, scale=scale)
             render(scene, out / f"{model_id}_end{end}_{side}_ids.png", 900, 1, ids=True)
             if side == "front":
-                render(scene, out / f"{model_id}_end{end}_{side}.png", 900, 24)
+                render(scene, out / f"{model_id}_end{end}_{side}.png", 900, 16)
     (out / f"{model_id}.inventory.json").write_text(json.dumps(inventory, indent=1))
     print("inspected", model_id, len(objs), "objects", flush=True)
 
