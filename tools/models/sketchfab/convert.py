@@ -261,7 +261,24 @@ def ortho_camera(scene, center, scale, from_front=True):
     return cam
 
 
-def persp_camera(scene, target, height, azimuth, elevation, lens, fill=1.08):
+def lacquer(prefixes):
+    """Gloss finish: a clear coat over the named parts' materials (bodies and necks are lacquered)."""
+    done = set()
+    for obj in meshes():
+        if not any(obj.name.startswith(p) for p in prefixes):
+            continue
+        for slot in obj.material_slots:
+            mat = slot.material
+            if not mat or mat.name in done or not mat.use_nodes:
+                continue
+            bsdf = next((n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
+            if bsdf and "Coat Weight" in bsdf.inputs:
+                bsdf.inputs["Coat Weight"].default_value = 1.0
+                bsdf.inputs["Coat Roughness"].default_value = 0.05
+                done.add(mat.name)
+
+
+def persp_camera(scene, target, height, azimuth, elevation, lens, fill=1.08, focus=None, fstop=None):
     data = bpy.data.cameras.new("cam")
     data.lens = lens
     data.sensor_fit = "VERTICAL"
@@ -276,23 +293,42 @@ def persp_camera(scene, target, height, azimuth, elevation, lens, fill=1.08):
     look = (Vector(target) - cam.location).normalized()
     cam.rotation_euler = look.to_track_quat("-Z", "Y").to_euler()
     data.clip_end = dist * 10
+    if focus is not None:
+        data.dof.use_dof = True
+        data.dof.focus_distance = (Vector(focus) - cam.location).length
+        data.dof.aperture_fstop = fstop or 4.0
     scene.camera = cam
     return cam
 
 
+HDRI = Path("build/hdri/studio.hdr")
+
+
 def studio(scene, lo, hi):
-    """Dark stage with a warm key, cool rim and soft top light (matches the app stage)."""
+    """Photographic studio: a real HDRI for reflections plus warm key and cool rim softboxes."""
     world = bpy.data.worlds.new("Stage")
     world.use_nodes = True
-    world.node_tree.nodes["Background"].inputs["Color"].default_value = (0.02, 0.02, 0.022, 1)
+    nodes, links = world.node_tree.nodes, world.node_tree.links
+    background = nodes["Background"]
+    if HDRI.exists():
+        env = nodes.new("ShaderNodeTexEnvironment")
+        env.image = bpy.data.images.load(str(HDRI.resolve()))
+        mapping, coords = nodes.new("ShaderNodeMapping"), nodes.new("ShaderNodeTexCoord")
+        mapping.inputs["Rotation"].default_value = (0, 0, math.radians(200))
+        links.new(coords.outputs["Generated"], mapping.inputs["Vector"])
+        links.new(mapping.outputs["Vector"], env.inputs["Vector"])
+        links.new(env.outputs["Color"], background.inputs["Color"])
+        background.inputs["Strength"].default_value = 0.55
+    else:
+        background.inputs["Color"].default_value = (0.02, 0.02, 0.022, 1)
     scene.world = world
     center = Vector((lo + hi) / 2)
     k = float(np.linalg.norm(hi - lo))
     for name, offset, size, energy, color in (
-        ("Key", (-0.9, -1.1, 0.9), 1.0, 120, (1.0, 0.88, 0.76)),
-        ("Rim", (1.0, 0.9, 0.6), 0.8, 95, (0.74, 0.85, 1.0)),
-        ("Fill", (1.1, -1.0, -0.2), 1.4, 18, (1.0, 0.96, 0.92)),
-        ("Top", (0.0, -0.3, 1.4), 0.6, 30, (1.0, 0.93, 0.84)),
+        ("Key", (-0.9, -1.1, 0.9), 1.0, 70, (1.0, 0.88, 0.76)),
+        ("Rim", (1.0, 0.9, 0.6), 0.8, 110, (0.74, 0.85, 1.0)),
+        ("Kicker", (-1.0, 0.8, 0.3), 0.5, 60, (1.0, 0.8, 0.6)),
+        ("Top", (0.0, -0.3, 1.4), 0.6, 22, (1.0, 0.93, 0.84)),
     ):
         light = bpy.data.lights.new(name, "AREA")
         light.shape = "RECTANGLE"
@@ -474,6 +510,7 @@ def convert(src: Path, cfg: dict, out: Path):
     if cfg.get("separate"):
         separate_loose()
     root, lo, hi = normalise(cfg)
+    lacquer(cfg.get("coat", []))
     visible = [o for o in meshes() if not o.hide_render]
     pts = np.concatenate([verts(o) for o in visible])
     studio(scene, lo, hi)
@@ -487,7 +524,7 @@ def convert(src: Path, cfg: dict, out: Path):
         persp_camera(scene, (lo + hi) / 2, float(hi[2] - lo[2]), 24, 6, 85)
         render(scene, out / f"{model}_hero.png", 1200, 64)
         hc, hs = head_region(pts)
-        persp_camera(scene, hc, hs, 18, 10, 100, fill=1.0)
+        persp_camera(scene, hc, hs, 18, 10, 100, fill=1.0, focus=hc, fstop=5.6)
         render(scene, out / f"{model}_head.png", 1200, 64)
         print("calibrated", model, "bounds", lo.round(3).tolist(), hi.round(3).tolist(), flush=True)
         return
@@ -498,7 +535,7 @@ def convert(src: Path, cfg: dict, out: Path):
     (out / f"{model}.rig.json").write_text(json.dumps(rig, indent=1))
     persp_camera(scene, (lo + hi) / 2, float(hi[2] - lo[2]), 24, 6, 85)
     render(scene, out / f"{model}_hero.png", 1400, 96)
-    persp_camera(scene, hc, hs, 18, 10, 100, fill=1.0)
+    persp_camera(scene, hc, hs, 18, 10, 100, fill=1.0, focus=hc, fstop=5.6)
     render(scene, out / f"{model}_head.png", 1400, 96)
     print("converted", model, flush=True)
 

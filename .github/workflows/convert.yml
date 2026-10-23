@@ -47,6 +47,10 @@ jobs:
           ONLY=$(cat tools/models/sketchfab/CONVERT 2>/dev/null)
           SOURCES=$(python3 -c "import json,glob,sys; only=set(filter(None,'$ONLY'.split(','))); print(','.join(sorted({json.load(open(p))['source'] for p in glob.glob('tools/models/sketchfab/rigs/*.json') if not only or json.load(open(p))['model'] in only})))")
           python3 tools/models/sketchfab/fetch.py tools/models/sketchfab/picks.json build/import "$SOURCES"
+      - name: Studio HDRI (Poly Haven, CC0)
+        run: |
+          mkdir -p build/hdri
+          curl -fsSL -o build/hdri/studio.hdr "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/studio_small_09_2k.hdr" || echo "HDRI unavailable, softboxes only"
       - name: Convert
         run: |
           mkdir -p build/convert
