@@ -246,6 +246,8 @@ struct InstrumentStage: View {
     var onSelect: (String) -> Void = { _ in }
     /// Called when the model cannot be shown, so the host can fall back to the studio stage.
     var onFailure: () -> Void = {}
+    /// Called once the model is on stage (the host can retire its placeholder).
+    var onReady: () -> Void = {}
     @State private var controller = StageController()
     @State private var ready = false
     @State private var status = "make"
@@ -263,7 +265,7 @@ struct InstrumentStage: View {
             status = "attached"
             await controller.load(modelID: modelID)
             status = controller.status
-            if controller.failed { onFailure() }
+            if controller.failed { onFailure() } else { onReady() }
             ready = true
         } update: { _ in
             controller.input = input

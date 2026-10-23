@@ -11,6 +11,7 @@ struct TuneView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var motion = ReadoutMotion()
     @State private var failed3D: String?
+    @State private var ready3D: String?
     private static let supports3D = MTLCreateSystemDefaultDevice() != nil
 
     var body: some View {
@@ -106,7 +107,17 @@ struct TuneView: View {
             } else if let modelID = store.modelID {
                 let rig = ModelLibrary.rig(modelID)
                 if Self.supports3D && store.settings.stageMode != "studio" && failed3D != modelID {
-                    InstrumentStage(modelID: modelID, input: stageInput, onSelect: { store.chooseAnchor($0) }, onFailure: { failed3D = modelID })
+                    ZStack {
+                        // The studio render holds the stage while the 3D model loads, then cross-fades out.
+                        if ready3D != modelID {
+                            StudioStage(imageName: ModelLibrary.cardImageName(modelID), rig: nil, input: stageInput)
+                                .padding(.horizontal, 16)
+                                .transition(.opacity)
+                        }
+                        InstrumentStage(modelID: modelID, input: stageInput, onSelect: { store.chooseAnchor($0) },
+                                        onFailure: { failed3D = modelID },
+                                        onReady: { withAnimation(.easeInOut(duration: 0.6)) { ready3D = modelID } })
+                    }
                 } else {
                     StudioStage(imageName: ModelLibrary.cardImageName(modelID), rig: rig, input: stageInput) { store.chooseAnchor($0) }
                         .padding(.horizontal, 16)
