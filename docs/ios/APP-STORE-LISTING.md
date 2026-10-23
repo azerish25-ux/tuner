@@ -1,13 +1,13 @@
 # App Store listing (English, U.S.)
 
-Paste into App Store Connect → the app → the version's page and App Information. The lengths have been checked against Apple's limits. The numbers come from the build: 60 instruments, 102 tunings, 12 courses, 439 lessons and 49 languages.
+Paste into App Store Connect → the app → the version's page and App Information. The lengths have been checked against Apple's limits. The numbers come from the build: 60 instruments, 102 tunings, 12 courses, 439 lessons and 49 languages (lessons in 10 of them).
 
 ## App Information
 
 | Field | Value | Limit |
 |---|---|---|
-| Name | Timbre: Tuner & Music Lessons | 29/30 |
-| Subtitle | Guitar, Violin, Ukulele & More | 30/30 |
+| Name | Timbre: Guitar Tuner & Lessons | 30/30 |
+| Subtitle | Learn Violin, Ukulele & Bass | 28/30 |
 | Primary category | Music | |
 | Secondary category | Education | |
 | Age rating | 4+ (no user content, no web access) | |
@@ -15,10 +15,10 @@ Paste into App Store Connect → the app → the version's page and App Informat
 ## Keywords (100/100)
 
 ```
-chromatic,bass,cello,mandolin,banjo,metronome,chord,ear training,strobe,fiddle,learn,songs,pitch,uke
+chromatic,cello,mandolin,banjo,metronome,chord,ear training,strobe,fiddle,music,songs,pitch,uke,sing
 ```
 
-Apple already indexes words from the name and subtitle (tuner, music, lessons, guitar, violin, ukulele), so the keywords don't repeat them. Use singular forms; Apple matches plurals.
+Apple already indexes words from the name and subtitle (guitar, tuner, lessons, learn, violin, ukulele, bass), so the keywords don't repeat them. The name carries "guitar tuner", the category's highest-volume search. Use singular forms; Apple matches plurals.
 
 ## Promotional text (170 max; can change without a review)
 
