@@ -45,6 +45,7 @@ struct StudioStage: View {
         let (smoothed, phase, e, g) = motion.step(state, now: now)
         guard let anchor = state.activeAnchor ?? rig.strings.first?.anchor,
               let a = rig.card("\(anchor).saddle"), let b = rig.card("\(anchor).nut") else { return }
+        let hasString = (rig.string(anchor)?.radius ?? 1) > 0
         let p0 = CGPoint(x: origin.x + a.x * side, y: origin.y + a.y * side)
         let p1 = CGPoint(x: origin.x + b.x * side, y: origin.y + b.y * side)
         let dx = p1.x - p0.x, dy = p1.y - p0.y
@@ -64,7 +65,7 @@ struct StudioStage: View {
         let color = Palette.pitch(smoothed, locked: state.locked)
         // The string only lights up while it rings (or holds the in-tune glow); a silent string stays the render's own.
         let presence = max(g, min(1, e * 2.5))
-        if state.listening, presence > 0.02 {
+        if state.listening, presence > 0.02, hasString {
             context.stroke(path, with: .color(color.opacity((0.25 + 0.35 * g) * presence)), style: StrokeStyle(lineWidth: 7 + 10 * g, lineCap: .round))
             context.stroke(path, with: .color(Color.white.opacity(0.85 * presence)), style: StrokeStyle(lineWidth: 1.4 + g, lineCap: .round))
         }
