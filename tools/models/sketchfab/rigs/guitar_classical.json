@@ -165,8 +165,10 @@
  "stringRatio": 0.5,
  "protectMaterials": [
   "fret_board_mat",
-  "guitar_neck",
-  "fret_mat"
+  "guitar_neck"
  ],
- "triangles": 105000
+ "triangles": 105000,
+ "thinMaterials": {
+  "fret_mat": 0.15
+ }
 }
