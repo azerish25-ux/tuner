@@ -28,7 +28,7 @@ extension LearnCourse {
     var anyOctave: Bool { fretKind == nil }
 }
 
-private func frequency(_ midi: Int, _ store: AppStore) -> Double { PitchMath.frequency(midi: Double(midi), reference: store.settings.referencePitchHz) }
+@MainActor private func frequency(_ midi: Int, _ store: AppStore) -> Double { PitchMath.frequency(midi: Double(midi), reference: store.settings.referencePitchHz) }
 
 // MARK: - Notes, one at a time
 
@@ -274,7 +274,7 @@ struct ChordStep: View {
 // MARK: - Rhythm: tap or strum on the pattern
 
 struct RhythmStep: View {
-    enum Mode { case tap, strum(ChordSpec?) }
+    enum Mode { case tap, strum(ChordSpec?), progression([ChordSpec], [Int]) }
     let mode: Mode
     let pattern: [Double]
     let bpm: Double
@@ -308,6 +308,11 @@ struct RhythmStep: View {
             }
             .padding(.top, 14)
             if case .strum(let chord?) = mode { ChordDiagram(chord: chord, accent: accent).frame(maxWidth: 150) }
+            if case .progression(let chords, let lengths) = mode {
+                TimelineView(.periodic(from: .now, by: 0.1)) { _ in
+                    ProgressionStrip(chords: chords, bars: lengths, current: currentChord(lengths), accent: accent)
+                }
+            }
             TimelineView(.animation(paused: phase != .playing)) { timeline in
                 let now = CACurrentMediaTime()
                 let elapsed = now - startTime - countIn
@@ -358,6 +363,16 @@ struct RhythmStep: View {
             }
         }
         .onDisappear { store.audio.stopMetronome(); store.stopLessonListening() }
+    }
+
+    /// Which chord of a progression is under the playhead (by bar).
+    private func currentChord(_ lengths: [Int]) -> Int {
+        guard phase == .playing else { return 0 }
+        let elapsed = CACurrentMediaTime() - startTime - countIn
+        let bar = max(0, Int(elapsed / (Double(beatsPerBar) * spb)))
+        var total = 0
+        for (i, n) in lengths.enumerated() { total += n; if bar < total { return i } }
+        return max(0, lengths.count - 1)
     }
 
     private func start() {
@@ -525,5 +540,29 @@ struct TuneCheckStep: View {
         store.stopLessonListening()
         if let instrument = course.instrument { UserDefaults.standard.set(Quests.dayKey(Date()), forKey: "tunecheck.\(instrument)") }
         done()
+    }
+}
+
+/// The chords of a progression in a row; the one to play now is big, the next one waits beside it.
+struct ProgressionStrip: View {
+    let chords: [ChordSpec]
+    let bars: [Int]
+    let current: Int
+    let accent: Color
+
+    var body: some View {
+        HStack(alignment: .bottom, spacing: 14) {
+            ChordDiagram(chord: chords[min(current, chords.count - 1)], accent: accent).frame(width: 140)
+                .id(current).transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity), removal: .opacity))
+            if current + 1 < chords.count {
+                VStack(spacing: 4) {
+                    Text("Next").font(.caption).foregroundStyle(Palette.inkFaint)
+                    ChordDiagram(chord: chords[current + 1], accent: Palette.inkSoft).frame(width: 84).opacity(0.7)
+                }
+            }
+        }
+        .animation(Motion.settle, value: current)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(chords.map(\.name).joined(separator: ", ")))
     }
 }

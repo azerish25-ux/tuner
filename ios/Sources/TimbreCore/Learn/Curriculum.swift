@@ -102,18 +102,19 @@ public struct ChordSpec: Codable, Equatable, Sendable {
 /// What an explanation card draws.
 public enum LessonVisual: Codable, Equatable, Sendable {
     case none
-    case fretboard(strings: Int, dots: [Fretting], frets: Int)
+    /// `start`: the fret at the left edge (1 shows the nut).
+    case fretboard(strings: Int, dots: [Fretting], frets: Int, start: Int)
     case chord(ChordSpec)
     case staff(midi: [Int], clef: String)
     case rhythm(pattern: [Double], beatsPerBar: Int)
     case keyboard(midi: [Int])
     case instrument(part: String)
 
-    enum CodingKeys: String, CodingKey { case type, strings, dots, frets, chord, midi, clef, pattern, beatsPerBar, part }
+    enum CodingKeys: String, CodingKey { case type, strings, dots, frets, start, chord, midi, clef, pattern, beatsPerBar, part }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         switch try c.decode(String.self, forKey: .type) {
-        case "fretboard": self = .fretboard(strings: try c.decode(Int.self, forKey: .strings), dots: try c.decode([Fretting].self, forKey: .dots), frets: try c.decodeIfPresent(Int.self, forKey: .frets) ?? 5)
+        case "fretboard": self = .fretboard(strings: try c.decode(Int.self, forKey: .strings), dots: try c.decode([Fretting].self, forKey: .dots), frets: try c.decodeIfPresent(Int.self, forKey: .frets) ?? 5, start: try c.decodeIfPresent(Int.self, forKey: .start) ?? 1)
         case "chord": self = .chord(try c.decode(ChordSpec.self, forKey: .chord))
         case "staff": self = .staff(midi: try c.decode([Int].self, forKey: .midi), clef: try c.decodeIfPresent(String.self, forKey: .clef) ?? "treble")
         case "rhythm": self = .rhythm(pattern: try c.decode([Double].self, forKey: .pattern), beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar) ?? 4)
@@ -126,7 +127,7 @@ public enum LessonVisual: Codable, Equatable, Sendable {
         var c = encoder.container(keyedBy: CodingKeys.self)
         switch self {
         case .none: try c.encode("none", forKey: .type)
-        case let .fretboard(strings, dots, frets): try c.encode("fretboard", forKey: .type); try c.encode(strings, forKey: .strings); try c.encode(dots, forKey: .dots); try c.encode(frets, forKey: .frets)
+        case let .fretboard(strings, dots, frets, start): try c.encode("fretboard", forKey: .type); try c.encode(strings, forKey: .strings); try c.encode(dots, forKey: .dots); try c.encode(frets, forKey: .frets); try c.encode(start, forKey: .start)
         case let .chord(spec): try c.encode("chord", forKey: .type); try c.encode(spec, forKey: .chord)
         case let .staff(midi, clef): try c.encode("staff", forKey: .type); try c.encode(midi, forKey: .midi); try c.encode(clef, forKey: .clef)
         case let .rhythm(pattern, beatsPerBar): try c.encode("rhythm", forKey: .type); try c.encode(pattern, forKey: .pattern); try c.encode(beatsPerBar, forKey: .beatsPerBar)
@@ -150,12 +151,14 @@ public enum LessonStep: Codable, Equatable, Sendable {
     case strum(chord: ChordSpec?, pattern: [Double], bpm: Double, bars: Int, beatsPerBar: Int?)
     /// Tap the screen on the beats of a pattern.
     case tapRhythm(pattern: [Double], bpm: Double, bars: Int, beatsPerBar: Int?)
+    /// Strum a chord progression in time: each chord for its number of bars, the pattern in every bar.
+    case progression(chords: [ChordSpec], bars: [Int], pattern: [Double], bpm: Double, beatsPerBar: Int?)
     /// Listen and pick the answer (intervals, chord qualities, higher/lower, which note).
     case listen(prompt: LearnText, sound: [[Int]], options: [LearnText], answer: Int)
     /// A theory question.
     case quiz(prompt: LearnText, options: [LearnText], answer: Int, why: LearnText?, visual: LessonVisual)
 
-    enum CodingKeys: String, CodingKey { case type, title, body, visual, notes, hint, bpm, beatsPerBar, chord, pattern, bars, prompt, sound, options, answer, why }
+    enum CodingKeys: String, CodingKey { case type, title, body, visual, notes, hint, bpm, beatsPerBar, chord, chords, pattern, bars, prompt, sound, options, answer, why }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         switch try c.decode(String.self, forKey: .type) {
@@ -165,6 +168,7 @@ public enum LessonStep: Codable, Equatable, Sendable {
         case "chord": self = .playChord(chord: try c.decode(ChordSpec.self, forKey: .chord))
         case "strum": self = .strum(chord: try c.decodeIfPresent(ChordSpec.self, forKey: .chord), pattern: try c.decode([Double].self, forKey: .pattern), bpm: try c.decode(Double.self, forKey: .bpm), bars: try c.decodeIfPresent(Int.self, forKey: .bars) ?? 2, beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar))
         case "tap": self = .tapRhythm(pattern: try c.decode([Double].self, forKey: .pattern), bpm: try c.decode(Double.self, forKey: .bpm), bars: try c.decodeIfPresent(Int.self, forKey: .bars) ?? 2, beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar))
+        case "progression": self = .progression(chords: try c.decode([ChordSpec].self, forKey: .chords), bars: try c.decode([Int].self, forKey: .bars), pattern: try c.decode([Double].self, forKey: .pattern), bpm: try c.decode(Double.self, forKey: .bpm), beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar))
         case "listen": self = .listen(prompt: try c.decode(LearnText.self, forKey: .prompt), sound: try c.decode([[Int]].self, forKey: .sound), options: try c.decode([LearnText].self, forKey: .options), answer: try c.decode(Int.self, forKey: .answer))
         case "quiz": self = .quiz(prompt: try c.decode(LearnText.self, forKey: .prompt), options: try c.decode([LearnText].self, forKey: .options), answer: try c.decode(Int.self, forKey: .answer), why: try c.decodeIfPresent(LearnText.self, forKey: .why), visual: try c.decodeIfPresent(LessonVisual.self, forKey: .visual) ?? .none)
         default: throw DecodingError.dataCorruptedError(forKey: .type, in: c, debugDescription: "Unknown lesson step")
@@ -179,6 +183,7 @@ public enum LessonStep: Codable, Equatable, Sendable {
         case let .playChord(chord): try c.encode("chord", forKey: .type); try c.encode(chord, forKey: .chord)
         case let .strum(chord, pattern, bpm, bars, beatsPerBar): try c.encode("strum", forKey: .type); try c.encodeIfPresent(chord, forKey: .chord); try c.encode(pattern, forKey: .pattern); try c.encode(bpm, forKey: .bpm); try c.encode(bars, forKey: .bars); try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar)
         case let .tapRhythm(pattern, bpm, bars, beatsPerBar): try c.encode("tap", forKey: .type); try c.encode(pattern, forKey: .pattern); try c.encode(bpm, forKey: .bpm); try c.encode(bars, forKey: .bars); try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar)
+        case let .progression(chords, bars, pattern, bpm, beatsPerBar): try c.encode("progression", forKey: .type); try c.encode(chords, forKey: .chords); try c.encode(bars, forKey: .bars); try c.encode(pattern, forKey: .pattern); try c.encode(bpm, forKey: .bpm); try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar)
         case let .listen(prompt, sound, options, answer): try c.encode("listen", forKey: .type); try c.encode(prompt, forKey: .prompt); try c.encode(sound, forKey: .sound); try c.encode(options, forKey: .options); try c.encode(answer, forKey: .answer)
         case let .quiz(prompt, options, answer, why, visual): try c.encode("quiz", forKey: .type); try c.encode(prompt, forKey: .prompt); try c.encode(options, forKey: .options); try c.encode(answer, forKey: .answer); try c.encodeIfPresent(why, forKey: .why); try c.encode(visual, forKey: .visual)
         }
@@ -187,7 +192,7 @@ public enum LessonStep: Codable, Equatable, Sendable {
     /// Steps the player has to perform on the instrument (they need the microphone).
     public var usesMicrophone: Bool {
         switch self {
-        case .playNotes, .playAlong, .playChord, .strum: return true
+        case .playNotes, .playAlong, .playChord, .strum, .progression: return true
         default: return false
         }
     }

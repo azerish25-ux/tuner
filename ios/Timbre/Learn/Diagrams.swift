@@ -10,8 +10,8 @@ struct LessonVisualView: View {
     var body: some View {
         switch visual {
         case .none: EmptyView()
-        case let .fretboard(strings, dots, frets):
-            FretboardDiagram(strings: strings, dots: dots, frets: frets, accent: accent,
+        case let .fretboard(strings, dots, frets, start):
+            FretboardDiagram(strings: strings, dots: dots, frets: frets, accent: accent, start: start,
                              fretless: ["violin", "cello"].contains { instrumentId?.hasPrefix($0) == true })
         case let .chord(spec): ChordDiagram(chord: spec, accent: accent).frame(maxWidth: 220)
         case let .staff(midi, clef): StaffView(notes: midi, clef: clef, accent: accent)
@@ -28,6 +28,8 @@ struct FretboardDiagram: View {
     var dots: [Fretting] = []
     var frets: Int = 5
     var accent: Color = Palette.mint
+    /// Fret number at the left edge; 1 draws the nut, higher shows a position label instead.
+    var start: Int = 1
     /// Live highlight: the string being played right now.
     var activeString: Int?
     /// Violin and cello: an ebony fingerboard with finger-position tapes instead of frets.
@@ -40,11 +42,15 @@ struct FretboardDiagram: View {
             let gap = strings > 1 ? (bottom - top) / CGFloat(strings - 1) : 0
             let board = Path(roundedRect: CGRect(x: left, y: top - 10, width: right - left, height: bottom - top + 20), cornerRadius: 8)
             context.fill(board, with: .linearGradient(Gradient(colors: fretless ? [Color(hex: 0x1C1C1E), Color(hex: 0x0E0E10)] : [Color(hex: 0x2A1E17), Color(hex: 0x1A120E)]), startPoint: CGPoint(x: 0, y: top), endPoint: CGPoint(x: 0, y: bottom)))
-            for marker in [3, 5, 7, 9, 12] where marker <= frets && !fretless {
-                let x = left + (CGFloat(marker) - 0.5) * fretWidth
+            for marker in [3, 5, 7, 9, 12, 15] where marker >= start && marker < start + frets && !fretless {
+                let x = left + (CGFloat(marker - start + 1) - 0.5) * fretWidth
                 context.fill(Path(ellipseIn: CGRect(x: x - 4, y: (top + bottom) / 2 - 4, width: 8, height: 8)), with: .color(.white.opacity(0.18)))
             }
-            context.fill(Path(CGRect(x: left - 3, y: top - 10, width: 6, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3)))
+            if start <= 1 {
+                context.fill(Path(CGRect(x: left - 3, y: top - 10, width: 6, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3)))
+            } else {
+                context.draw(Text("\(start)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: left + fretWidth / 2, y: bottom + 16))
+            }
             for fret in 1...frets {
                 let x = left + CGFloat(fret) * fretWidth
                 if fretless {
@@ -70,7 +76,7 @@ struct FretboardDiagram: View {
                     let ring = Path(ellipseIn: CGRect(x: left - 22, y: y - 8, width: 16, height: 16))
                     context.stroke(ring, with: .color(accent), lineWidth: 2.5)
                 } else {
-                    let x = left + (CGFloat(min(dot.fret, frets)) - 0.5) * fretWidth
+                    let x = left + (CGFloat(min(max(1, dot.fret - start + 1), frets)) - 0.5) * fretWidth
                     let r: CGFloat = min(15, gap * 0.48 + 4)
                     context.fill(Path(ellipseIn: CGRect(x: x - r - 4, y: y - r - 4, width: (r + 4) * 2, height: (r + 4) * 2)), with: .color(accent.opacity(0.25)))
                     context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))

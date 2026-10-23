@@ -117,6 +117,8 @@ struct StepView: View {
             ChordStep(chord: chord, course: course, accent: accent, done: done)
         case let .strum(chord, pattern, bpm, bars, beatsPerBar):
             RhythmStep(mode: .strum(chord), pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, accent: accent, done: done)
+        case let .progression(chords, bars, pattern, bpm, beatsPerBar):
+            RhythmStep(mode: .progression(chords, bars), pattern: pattern, bpm: bpm, bars: bars.reduce(0, +), meter: beatsPerBar, accent: accent, done: done)
         case let .tapRhythm(pattern, bpm, bars, beatsPerBar):
             RhythmStep(mode: .tap, pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, accent: accent, done: done)
         case let .listen(prompt, sound, options, answer):
@@ -154,6 +156,24 @@ struct StepButton: View {
 
 /// A burst of sparks for right answers and hit notes.
 struct SparkBurst: View {
+    private func draw(_ context: inout GraphicsContext, size: CGSize, t: Double) {
+        guard t < 0.9 else { return }
+        let center = CGPoint(x: size.width / 2, y: size.height / 2)
+        let fade = 1 - t / 0.9
+        for i in 0..<22 {
+            let angle: Double = Double(i) / 22 * 2 * .pi + Double(trigger) * 0.37
+            let speed: Double = 90 + Double((i * 37) % 60)
+            let d: Double = speed * t * (1 - t / 1.8)
+            let p = CGPoint(x: center.x + CGFloat(cos(angle) * d), y: center.y + CGFloat(sin(angle) * d))
+            let r = CGFloat(3.2 * fade)
+            let tint: Color = i % 3 == 0 ? Palette.amber : color
+            context.fill(Path(ellipseIn: CGRect(x: p.x - r, y: p.y - r, width: r * 2, height: r * 2)), with: .color(tint.opacity(fade)))
+        }
+        let ring = CGFloat(20 + 160 * t)
+        let ringRect = CGRect(x: center.x - ring, y: center.y - ring, width: ring * 2, height: ring * 2)
+        context.stroke(Path(ellipseIn: ringRect), with: .color(color.opacity(max(0, 0.5 - t * 0.6))), lineWidth: 2)
+    }
+
     let trigger: Int
     var color: Color = Palette.mint
     @State private var started = Date.distantPast
@@ -161,21 +181,8 @@ struct SparkBurst: View {
 
     var body: some View {
         TimelineView(.animation(paused: reduceMotion)) { timeline in
-            Canvas { context, size in
-                let t = timeline.date.timeIntervalSince(started)
-                guard t < 0.9 else { return }
-                let center = CGPoint(x: size.width / 2, y: size.height / 2)
-                for i in 0..<22 {
-                    let angle = Double(i) / 22 * 2 * .pi + Double(trigger) * 0.37
-                    let speed = 90 + Double((i * 37) % 60)
-                    let d = speed * t * (1 - t / 1.8)
-                    let p = CGPoint(x: center.x + cos(angle) * d, y: center.y + sin(angle) * d)
-                    let r = 3.2 * (1 - t / 0.9)
-                    context.fill(Path(ellipseIn: CGRect(x: p.x - r, y: p.y - r, width: r * 2, height: r * 2)), with: .color((i % 3 == 0 ? Palette.amber : color).opacity(1 - t / 0.9)))
-                }
-                let ring = 20 + 160 * t
-                context.stroke(Path(ellipseIn: CGRect(x: center.x - ring, y: center.y - ring, width: ring * 2, height: ring * 2)), with: .color(color.opacity(max(0, 0.5 - t * 0.6))), lineWidth: 2)
-            }
+            let t = timeline.date.timeIntervalSince(started)
+            Canvas { context, size in draw(&context, size: size, t: t) }
         }
         .allowsHitTesting(false)
         .onChange(of: trigger) { _, _ in started = Date() }

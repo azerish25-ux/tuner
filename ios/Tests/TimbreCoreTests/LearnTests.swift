@@ -100,7 +100,8 @@ final class LearnTests: XCTestCase {
 
     func testStepsRoundTripThroughJSON() throws {
         let steps: [LessonStep] = [
-            .explain(title: LearnText(key: "k", "T"), body: LearnText("B"), visual: .fretboard(strings: 6, dots: [Fretting(string: 1, fret: 3, finger: 3)], frets: 5)),
+            .explain(title: LearnText(key: "k", "T"), body: LearnText("B"), visual: .fretboard(strings: 6, dots: [Fretting(string: 1, fret: 3, finger: 3)], frets: 5, start: 1)),
+            .progression(chords: [ChordSpec(name: "G", root: 7, quality: "maj", frets: [3, 2, 0, 0, 0, 3]), ChordSpec(name: "C", root: 0, quality: "maj", frets: [-1, 3, 2, 0, 1, 0])], bars: [2, 2], pattern: [0, 1, 2, 3], bpm: 70, beatsPerBar: nil),
             .playAlong(notes: [TimedNote(midi: 64, beat: 0, beats: 1, at: Fretting(string: 1, fret: 0))], bpm: 80, beatsPerBar: 4, title: nil),
             .strum(chord: ChordSpec(name: "Em", root: 4, quality: "min", frets: [0, 2, 2, 0, 0, 0], fingers: nil, baseFret: nil), pattern: [0, 1, 2, 3], bpm: 60, bars: 2, beatsPerBar: nil),
             .tapRhythm(pattern: [0, 1, 2], bpm: 90, bars: 2, beatsPerBar: 3),

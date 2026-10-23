@@ -55,8 +55,9 @@ def fretted(instrument: str, string: int, fret: int) -> int:
     return TUNINGS[instrument][string - 1] + fret
 
 
-def position(instrument: str, note, max_fret: int = 4, prefer_string: int | None = None):
-    """Where to play a note: lowest fret within max_fret (first position), on the requested string if possible."""
+def position(instrument: str, note, max_fret: int = 4, prefer_string: int | None = None, first_fret: int | None = None):
+    """Where to play a note: lowest fret within max_fret (first position), on the requested string if possible.
+    first_fret: the hand's position (e.g. 5 for a box at the fifth fret); fingers count from it."""
     m = midi(note)
     options = [(s, m - open_) for s, open_ in enumerate(TUNINGS[instrument], start=1) if 0 <= m - open_ <= max_fret]
     if prefer_string:
@@ -65,6 +66,12 @@ def position(instrument: str, note, max_fret: int = 4, prefer_string: int | None
         options = [(s, m - open_) for s, open_ in enumerate(TUNINGS[instrument], start=1) if 0 <= m - open_ <= 12]
     if not options:
         raise ValueError(f"{name(m)} is out of range on {instrument}")
+    if first_fret:
+        in_reach = [o for o in options if first_fret - 1 <= o[1] <= first_fret + 4]
+        options = in_reach or options
+        s, f = max(options, key=lambda o: (o[1] >= first_fret, -abs(o[1] - first_fret - 1.5)))
+        finger = max(1, min(4, f - first_fret + 1)) if f >= first_fret else 1
+        return {"s": s, "f": f, **({"g": finger} if f else {})}
     s, f = min(options, key=lambda o: (o[1], -o[0]))
     return {"s": s, "f": f, **({"g": min(4, f)} if f else {})}
 
@@ -86,13 +93,13 @@ def T(text):
 
 # ---------------------------------------------------------------- visuals
 
-def fretboard(instrument: str, dots, frets: int = 5):
-    """dots: [(string, fret)] or [(string, fret, finger)]."""
+def fretboard(instrument: str, dots, frets: int = 5, start: int = 1):
+    """dots: [(string, fret)] or [(string, fret, finger)]. start: fret at the left edge (5 for a box at fret 5)."""
     out = []
     for d in dots:
         s, f, *g = d
         out.append({"s": s, "f": f, **({"g": g[0]} if g else {})})
-    return {"type": "fretboard", "strings": len(TUNINGS[instrument]), "dots": out, "frets": frets}
+    return {"type": "fretboard", "strings": len(TUNINGS[instrument]), "dots": out, "frets": frets, "start": start}
 
 
 def staff(notes, clef="treble"):
@@ -156,17 +163,19 @@ def explain(title, body, visual=None):
     return {"type": "explain", "title": T(title), "body": T(body), "visual": visual or {"type": "none"}}
 
 
-def notes(instrument: str | None, seq, hint=None):
+def notes(instrument: str | None, seq, hint=None, max_fret: int = 4, first_fret: int | None = None):
     """Play notes in order at your own pace. seq: notes, or (note, string) to fix the string."""
     out = []
     for item in seq:
         n, s = (item if isinstance(item, tuple) else (item, None))
-        at = position(instrument, n, prefer_string=s) if instrument else None
+        at = position(instrument, n, max_fret=max_fret, prefer_string=s, first_fret=first_fret) if instrument else None
+        if at and s and at["s"] != s:
+            raise ValueError(f"{n} can't be played on string {s} within fret {max_fret}")
         out.append({"m": midi(n), "b": float(len(out)), "d": 1.0, **({"at": at} if at else {})})
     return {"type": "notes", "notes": out, **({"hint": T(hint)} if hint else {})}
 
 
-def along(instrument: str | None, melody: str, bpm: float, beats_per_bar: int = 4, title=None, max_fret: int = 4):
+def along(instrument: str | None, melody: str, bpm: float, beats_per_bar: int = 4, title=None, max_fret: int = 4, first_fret: int | None = None):
     """Play along. melody: "E4:1 D4:1 C4:2 r:1 ..." (note:beats; r = rest), optionally note@string."""
     out, beat = [], 0.0
     for token in melody.split():
@@ -174,7 +183,9 @@ def along(instrument: str | None, melody: str, bpm: float, beats_per_bar: int = 
         length = float(length or 1)
         if n.lower() != "r":
             n, _, s = n.partition("@")
-            at = position(instrument, n, max_fret=max_fret, prefer_string=int(s) if s else None) if instrument else None
+            at = position(instrument, n, max_fret=max_fret, prefer_string=int(s) if s else None, first_fret=first_fret) if instrument else None
+            if at and s and at["s"] != int(s):
+                raise ValueError(f"{n} can't be played on string {s} within fret {max_fret}")
             out.append({"m": midi(n), "b": beat, "d": length, **({"at": at} if at else {})})
         beat += length
     return {"type": "along", "notes": out, "bpm": bpm, "beatsPerBar": beats_per_bar, **({"title": T(title)} if title else {})}
@@ -189,6 +200,12 @@ def strum(spec, pattern, bpm, bars=2, beats_per_bar=None):
     beats_per_bar: 3 for 3/4, 6 for 6/8 counted in eighths; default 4."""
     return {"type": "strum", "chord": spec, "pattern": list(pattern), "bpm": bpm, "bars": bars,
             **({"beatsPerBar": beats_per_bar} if beats_per_bar else {})}
+
+
+def progression(changes, pattern, bpm, beats_per_bar=None):
+    """Strum chords in time. changes: [(chord spec, bars), ...]; the pattern repeats in every bar."""
+    return {"type": "progression", "chords": [c for c, _ in changes], "bars": [b for _, b in changes],
+            "pattern": list(pattern), "bpm": bpm, **({"beatsPerBar": beats_per_bar} if beats_per_bar else {})}
 
 
 def tap(pattern, bpm, bars=2, beats_per_bar=None):
