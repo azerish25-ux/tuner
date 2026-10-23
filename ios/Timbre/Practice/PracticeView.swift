@@ -1,7 +1,7 @@
 import SwiftUI
 import TimbreCore
 
-enum PracticeRoute: Hashable { case metronome, ear, chords, scales, drone, voice }
+enum PracticeRoute: Hashable { case metronome, ear, chords, scales, drone, voice, intonation }
 
 struct PracticeView: View {
     @EnvironmentObject private var store: AppStore
@@ -22,6 +22,7 @@ struct PracticeView: View {
                         if fretted {
                             tool(.chords, "hand.raised.fingers.spread.fill", "Chords", "Every shape, any tuning", Palette.ember, pro: true)
                             tool(.scales, "point.3.connected.trianglepath.dotted", "Scales", "Fretboard maps", Palette.sharp, pro: true)
+                            tool(.intonation, "ruler", "Intonation", "Check every string at the 12th fret", Palette.flat, pro: true)
                         }
                         tool(.drone, "waveform.path", "Drone", "Tanpura and pure tones", Palette.locked, pro: true)
                         tool(.voice, "music.mic", "Voice", "Range test and exercises", Palette.success, pro: false)
@@ -40,6 +41,7 @@ struct PracticeView: View {
                 case .scales: ChordsView(mode: .scales)
                 case .drone: DroneView()
                 case .voice: VoiceView()
+                case .intonation: IntonationView()
                 }
             }
         }

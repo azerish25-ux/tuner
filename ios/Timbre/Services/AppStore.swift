@@ -29,6 +29,8 @@ final class AppStore: ObservableObject {
     @Published var paywallReason: String?
     /// A practice screen to open on the Practice tab (Siri, Shortcuts, deep links).
     @Published var pendingPracticeRoute: PracticeRoute?
+    /// While true, readings target the octave and never count as tuning sessions.
+    @Published var intonationMode = false
     // Voice
     @Published var voiceLevel = 1 {
         didSet { if voiceLevel != oldValue && !updateSettings({ $0.selectedVoiceLevel = voiceLevel }) { voiceLevel = oldValue } }
@@ -122,7 +124,9 @@ final class AppStore: ObservableObject {
     var activeCourse: Course { courses.first(where: { $0.index == selectedCourse }) ?? courses[0] }
     var activeMidi: Int { referenceMode ? referenceMidi : activeCourse.targetMidi }
     var targetHz: Double {
-        Temperament.byId(settings.temperamentId).frequency(midi: activeMidi, reference: settings.referencePitchHz, letterName: referenceMode ? nil : activeCourse.label)
+        let base = Temperament.byId(settings.temperamentId).frequency(midi: activeMidi, reference: settings.referencePitchHz, letterName: referenceMode ? nil : activeCourse.label)
+        // The intonation check compares the 12th-fret harmonic and fretted note: one octave up.
+        return intonationMode ? base * 2 : base
     }
     var targetName: String { referenceMode ? PitchMath.noteName(midi: activeMidi + settings.transposition - settings.capo, notation: settings.notation) : TargetLabelFormatter.splitCue(courseLabel(activeCourse)).main }
     func courseLabel(_ course: Course) -> String { TargetLabelFormatter.display(label: course.label, midi: course.targetMidi, notation: settings.notation, transposition: settings.transposition, capo: settings.capo) }
@@ -329,7 +333,7 @@ final class AppStore: ObservableObject {
         if hz == nil && level > -60 && !audio.tonePlaying { reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "uncertain") }
         live.reading = reading
         Haptics.shared.detent(cents: reading.stable ? reading.cents : nil)
-        if reading.inTune && !wasInTune {
+        if reading.inTune && !wasInTune && !intonationMode {
             Haptics.shared.lock()
             if !referenceMode {
                 let before = allCoursesLocked
@@ -337,7 +341,7 @@ final class AppStore: ObservableObject {
                 if !before && allCoursesLocked { completedFullTune() }
             }
         }
-        if let cents = reading.cents, reading.frequency != nil {
+        if !intonationMode, let cents = reading.cents, reading.frequency != nil {
             sessionCount += 1
             if reading.stable { stableCount += 1; totalError += abs(cents) }
         }
