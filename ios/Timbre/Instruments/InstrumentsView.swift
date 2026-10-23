@@ -32,8 +32,8 @@ struct InstrumentsView: View {
                     chromaticCard
                     if !recents.isEmpty {
                         section("Your instruments", count: nil)
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) { ForEach(recents, id: \.asset) { photo in card(photo).frame(width: 180) } }
+                        EdgeRail(spacing: 12, selection: store.referenceMode ? nil : store.photo?.asset) {
+                            ForEach(recents, id: \.asset) { photo in card(photo).frame(width: 180).id(photo.asset) }
                         }
                     }
                 }
@@ -51,6 +51,7 @@ struct InstrumentsView: View {
             }
             .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
         }
+        .stageTopShade()
         .scrollDismissesKeyboard(.interactively)
         .background(StageBackground(motes: false))
         .toolbar { if picker { ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() } } } }
@@ -105,41 +106,41 @@ struct InstrumentsView: View {
     @ViewBuilder private var currentTunings: some View {
         VStack(alignment: .leading, spacing: 12) {
             Eyebrow("\(store.instrumentDisplayName) tunings")
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(store.tunings) { tuning in
-                        let available = AccessPolicy.canUse(tuning: tuning, of: store.instrument, pro: commerce.isPro)
-                        Button {
-                            store.selectTuning(tuning)
-                            if available { dismiss() }
-                        } label: {
-                            HStack(spacing: 6) {
-                                if tuning.isCustom { Image(systemName: "slider.vertical.3").font(.caption2) }
-                                Text(tuning.name.localized)
-                                if !available { Image(systemName: "lock.fill").font(.caption2) }
-                            }
-                        }
-                        .buttonStyle(ChipButtonStyle(selected: tuning.id == store.tuning.id && !store.referenceMode))
-                        .contextMenu {
-                            if tuning.isCustom, let custom = store.customTuning(id: tuning.id) {
-                                Button { editing = custom } label: { Label("Edit", systemImage: "pencil") }
-                                Button(role: .destructive) { store.deleteCustomTuning(id: custom.id) } label: { Label("Delete", systemImage: "trash") }
-                            }
+            EdgeRail(selection: store.referenceMode ? nil : store.tuning.id) {
+                ForEach(store.tunings) { tuning in
+                    let available = AccessPolicy.canUse(tuning: tuning, of: store.instrument, pro: commerce.isPro)
+                    Button {
+                        store.selectTuning(tuning)
+                        if available { dismiss() }
+                    } label: {
+                        HStack(spacing: 6) {
+                            if tuning.isCustom { Image(systemName: "slider.vertical.3").font(.caption2) }
+                            Text(tuning.name.localized)
+                            if !available { Image(systemName: "lock.fill").font(.caption2) }
                         }
                     }
-                    if !store.referenceMode, !store.courses.isEmpty {
-                        Button {
-                            if commerce.isPro { creating = true } else { store.presentPaywall("custom_tuning") }
-                        } label: {
-                            HStack(spacing: 6) {
-                                Image(systemName: "plus")
-                                Text("Custom")
-                                if !commerce.isPro { ProBadge() }
-                            }
+                    .buttonStyle(ChipButtonStyle(selected: tuning.id == store.tuning.id && !store.referenceMode))
+                    .id(tuning.id)
+                    .contextMenu {
+                        if tuning.isCustom, let custom = store.customTuning(id: tuning.id) {
+                            Button { editing = custom } label: { Label("Edit", systemImage: "pencil") }
+                            Button(role: .destructive) { store.deleteCustomTuning(id: custom.id) } label: { Label("Delete", systemImage: "trash") }
                         }
-                        .buttonStyle(ChipButtonStyle(selected: false))
-                        .accessibilityIdentifier("tunings.custom")
                     }
+                }
+                if !store.referenceMode, !store.courses.isEmpty {
+                    Button {
+                        if commerce.isPro { creating = true } else { store.presentPaywall("custom_tuning") }
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "plus")
+                            Text("Custom")
+                            if !commerce.isPro { ProBadge() }
+                        }
+                    }
+                    .buttonStyle(ChipButtonStyle(selected: false))
+                    .accessibilityIdentifier("tunings.custom")
+                    .id("tunings.custom")
                 }
             }
         }
@@ -160,15 +161,18 @@ struct InstrumentsView: View {
     }
 
     private var filters: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                Button("All") { family = nil }.buttonStyle(ChipButtonStyle(selected: family == nil))
-                ForEach(store.catalog.families) { group in
-                    Button(group.name.localized) { withAnimation(Motion.quick) { family = group.id } }.buttonStyle(ChipButtonStyle(selected: family == group.id))
-                }
+        EdgeRail(selection: family ?? Self.allFamilies) {
+            Button("All") { family = nil }.buttonStyle(ChipButtonStyle(selected: family == nil))
+                .id(Self.allFamilies)
+            ForEach(store.catalog.families) { group in
+                Button(group.name.localized) { withAnimation(Motion.quick) { family = group.id } }.buttonStyle(ChipButtonStyle(selected: family == group.id))
+                    .id(group.id)
             }
         }
     }
+
+    /// Rail id of the "All" filter chip.
+    private static let allFamilies = "filter.all"
 
     private var chromaticCard: some View {
         Button {

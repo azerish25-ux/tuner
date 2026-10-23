@@ -32,6 +32,7 @@ struct VoiceView: View {
             .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
             .frame(maxWidth: 760).frame(maxWidth: .infinity)
         }
+        .stageTopShade()
         .background(StageBackground(motes: false))
         .navigationTitle("Voice")
         .navigationBarTitleDisplayMode(.inline)
@@ -43,32 +44,31 @@ struct VoiceView: View {
     }
 
     private var exercises: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
-                ForEach([7, 1, 2, 3, 4, 5, 6, 8], id: \.self) { level in
-                    Button {
-                        guard !store.voiceRunning else { return }
-                        if locked(level) { store.presentPaywall("voice") } else { store.voiceLevel = level }
-                    } label: {
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Image(systemName: level == 7 ? "arrow.up.and.down" : "music.note").foregroundStyle(Palette.brass)
-                                Spacer()
-                                if store.demonstratedLevels.contains(level) { Image(systemName: "checkmark.seal.fill").foregroundStyle(Palette.success) }
-                                else if locked(level) { ProBadge() }
-                            }
-                            Text(level == 7 ? String(localized: "Range test") : exerciseName(level)).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
-                                .multilineTextAlignment(.leading).lineLimit(2)
+        EdgeRail(spacing: 10, selection: store.voiceLevel) {
+            ForEach([7, 1, 2, 3, 4, 5, 6, 8], id: \.self) { level in
+                Button {
+                    guard !store.voiceRunning else { return }
+                    if locked(level) { store.presentPaywall("voice") } else { store.voiceLevel = level }
+                } label: {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Image(systemName: level == 7 ? "arrow.up.and.down" : "music.note").foregroundStyle(Palette.brass)
+                            Spacer()
+                            if store.demonstratedLevels.contains(level) { Image(systemName: "checkmark.seal.fill").foregroundStyle(Palette.success) }
+                            else if locked(level) { ProBadge() }
                         }
-                        .frame(width: 150, height: 86, alignment: .topLeading)
-                        .padding(12)
-                        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(store.voiceLevel == level ? Palette.brass.opacity(0.16) : Palette.stageRaised))
-                        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(store.voiceLevel == level ? Palette.brass : Palette.line, lineWidth: 1))
+                        Text(level == 7 ? String(localized: "Range test") : exerciseName(level)).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                            .multilineTextAlignment(.leading).lineLimit(2)
                     }
-                    .buttonStyle(.plain)
-                    .disabled(store.voiceRunning)
-                    .accessibilityIdentifier("voice.exercise.\(level)")
+                    .frame(width: 150, height: 86, alignment: .topLeading)
+                    .padding(12)
+                    .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(store.voiceLevel == level ? Palette.brass.opacity(0.16) : Palette.stageRaised))
+                    .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(store.voiceLevel == level ? Palette.brass : Palette.line, lineWidth: 1))
                 }
+                .buttonStyle(.plain)
+                .disabled(store.voiceRunning)
+                .accessibilityIdentifier("voice.exercise.\(level)")
+                .id(level)
             }
         }
     }

@@ -13,13 +13,16 @@ struct LessonVisualView: View {
         case let .fretboard(strings, dots, frets, start):
             FretboardDiagram(strings: strings, dots: dots, frets: frets, accent: accent, start: start,
                              fretless: ["violin", "cello"].contains { instrumentId?.hasPrefix($0) == true })
-        case let .chord(spec): ChordDiagram(chord: spec, accent: accent).frame(maxWidth: 220)
+        case let .chord(spec): ChordDiagram(chord: spec, accent: accent, landing: true).frame(maxWidth: 220)
         case let .staff(midi, clef): StaffView(notes: midi, clef: clef, accent: accent)
-        case let .rhythm(pattern, beatsPerBar): RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent)
+        case let .rhythm(pattern, beatsPerBar): RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, arrows: strums)
         case let .keyboard(midi): KeyboardView(highlighted: Set(midi), accent: accent)
         case let .instrument(part): InstrumentPartView(part: part, instrumentId: instrumentId, accent: accent)
         }
     }
+
+    /// Strummed instruments read rhythm patterns as down and up strokes.
+    private var strums: Bool { LearnCourse.strummed(instrumentId) }
 }
 
 /// A stretch of neck seen from the player: string 1 on top, nut on the left, dots where to press.
@@ -103,21 +106,34 @@ struct ChordDiagram: View {
     var showName = true
     /// Strings that rang in the last reading (lowest string first), lit while the learner plays.
     var ringing: Set<Int> = []
+    /// Keep the fret-label column even for open shapes, so a set of diagrams shares one grid size (Chords tool).
+    var reservesFretLabel = false
+    /// Lessons: fingers land one by one when the diagram first appears. Off by default (the Chords tool stays still).
+    var landing = false
+    @State private var landStart: Date?
+    @State private var landed = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(spacing: 8) {
             if showName { Text(chord.name).font(Typeface.display(28)).foregroundStyle(Palette.ink) }
+            TimelineView(.animation(paused: !landing || landed || reduceMotion)) { timeline in
+            let landScale = landScales(at: timeline.date)
             Canvas { context, size in
                 let count = chord.frets.count
                 let rows = 4
-                let top: CGFloat = 24, left: CGFloat = 22, right = size.width - 22, bottom = size.height - 6
+                let base = chord.baseFret ?? 1
+                // The "5fr" label gets its own column left of the grid instead of sitting on its edge.
+                let labelColumn: CGFloat = (reservesFretLabel || base > 1) ? 20 : 0
+                let top: CGFloat = 24, left: CGFloat = 22 + labelColumn, right = size.width - 22 + labelColumn / 4, bottom = size.height - 6
                 let gap = (right - left) / CGFloat(max(1, count - 1))
                 let rowHeight = (bottom - top) / CGFloat(rows)
-                let base = chord.baseFret ?? 1
                 if base == 1 {
                     context.fill(Path(roundedRect: CGRect(x: left - 2, y: top - 5, width: right - left + 4, height: 6), cornerRadius: 2), with: .color(Palette.ink))
                 } else {
-                    context.draw(Text("\(base)fr").font(.system(size: 12, weight: .semibold)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: 8, y: top + rowHeight / 2), anchor: .leading)
+                    let clearance = min(gap, rowHeight) * 0.38 + 4
+                    context.draw(Text("\(base)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft),
+                                 at: CGPoint(x: left - clearance, y: top + rowHeight / 2), anchor: .trailing)
                 }
                 for row in 0...rows {
                     let y = top + CGFloat(row) * rowHeight
@@ -133,21 +149,57 @@ struct ChordDiagram: View {
                     } else if fret == 0 {
                         context.stroke(Path(ellipseIn: CGRect(x: x - 6, y: 4, width: 12, height: 12)), with: .color(lit ? accent : Palette.ink), lineWidth: 1.8)
                     } else {
+                        let land = landScale(i)
+                        guard land > 0.01 else { continue }
                         let row = CGFloat(fret - base) + 0.5
-                        let y = top + row * rowHeight
-                        let r = min(gap, rowHeight) * 0.38
-                        context.fill(Path(ellipseIn: CGRect(x: x - r - 3, y: y - r - 3, width: (r + 3) * 2, height: (r + 3) * 2)), with: .color(accent.opacity(lit ? 0.45 : 0.18)))
+                        let y = top + row * rowHeight - (1 - min(1, land)) * 12
+                        let r = min(gap, rowHeight) * 0.38 * land
+                        let halo = 3 * land
+                        context.fill(Path(ellipseIn: CGRect(x: x - r - halo, y: y - r - halo, width: (r + halo) * 2, height: (r + halo) * 2)), with: .color(accent.opacity(lit ? 0.45 : 0.18)))
                         context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))
-                        if let finger = chord.fingers?[safe: i], finger > 0 {
+                        if land > 0.6, let finger = chord.fingers?[safe: i], finger > 0 {
                             context.draw(Text("\(finger)").font(.system(size: r * 1.05, weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent), at: CGPoint(x: x, y: y))
                         }
                     }
                 }
             }
             .aspectRatio(CGFloat(chord.frets.count) / 5.2, contentMode: .fit)
+            }
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(chord.name) chord"))
+        .onAppear { startLanding() }
+    }
+
+    /// Scale of each string's finger dot: 0 before it lands, then a damped spring to 1; always 1 when still.
+    private func landScales(at date: Date) -> (Int) -> CGFloat {
+        guard landing, !landed, !reduceMotion else { return { _ in 1 } }
+        guard let landStart else { return { _ in 0 } }
+        let elapsed = date.timeIntervalSince(landStart)
+        let frets = chord.frets
+        return { i in
+            let order = frets.prefix(i).filter { $0 > 0 }.count
+            return CGFloat(ChordDiagram.spring(elapsed - Double(order) * 0.08))
+        }
+    }
+
+    /// A damped spring from 0 to 1: response 0.35 s with a slight overshoot.
+    private static func spring(_ t: Double) -> Double {
+        guard t > 0 else { return 0 }
+        let omega = 2 * Double.pi / 0.35, zeta = 0.62
+        let damped = omega * (1 - zeta * zeta).squareRoot()
+        return 1 - exp(-zeta * omega * t) * (cos(damped * t) + zeta * omega / damped * sin(damped * t))
+    }
+
+    /// A beat after the card arrives, the fingers land one every 80 ms.
+    private func startLanding() {
+        guard landing, !reduceMotion, landStart == nil else { return }
+        landStart = Date().addingTimeInterval(0.25)
+        let fingers = chord.frets.filter { $0 > 0 }.count
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(0.25 + Double(max(0, fingers - 1)) * 0.08 + 0.6))
+            landed = true
+        }
     }
 }
 
@@ -258,7 +310,8 @@ struct RhythmBar: View {
 
     var body: some View {
         Canvas { context, size in
-            let left: CGFloat = 14, right = size.width - 14
+            // Inset by the largest dot and its halo (15) plus air, so the first hit isn't clipped.
+            let left: CGFloat = 22, right = size.width - 14
             let width = right - left
             let mid = size.height / 2 - 8
             context.fill(Path(roundedRect: CGRect(x: left, y: mid - 1, width: width, height: 2), cornerRadius: 1), with: .color(Palette.line))
@@ -276,9 +329,8 @@ struct RhythmBar: View {
                 context.fill(Path(ellipseIn: CGRect(x: x - r, y: mid - r, width: r * 2, height: r * 2)), with: .color(color))
                 if arrows {
                     let down = hit.truncatingRemainder(dividingBy: 1) == 0
-                    var symbol = context.resolve(Image(systemName: down ? "arrow.down" : "arrow.up"))
-                    symbol.shading = .color(Palette.onAccent)
-                    context.draw(symbol, in: CGRect(x: x - r * 0.6, y: mid - r * 0.6, width: r * 1.2, height: r * 1.2))
+                    let arrow = Text(Image(systemName: down ? "arrow.down" : "arrow.up")).font(.system(size: r * 1.15, weight: .black)).foregroundStyle(Palette.onAccent)
+                    context.draw(arrow, at: CGPoint(x: x, y: mid))
                 }
             }
             if let playhead {
@@ -335,5 +387,172 @@ struct InstrumentPartView: View {
         .frame(height: 260)
         .onAppear { withAnimation(.easeInOut(duration: 1.1).repeatForever(autoreverses: true)) { pulse = true } }
         .accessibilityHidden(true)
+    }
+}
+
+// MARK: - Filling an explanation that has no picture
+
+/// The course instrument floating in a soft spotlight; for courses without one (theory, ear, rhythm,
+/// singing) a quiet motif in the course colour. Still with Reduce Motion.
+struct LessonBackdrop: View {
+    let course: LearnCourse
+    var accent: Color = Palette.mint
+    @EnvironmentObject private var store: AppStore
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var floating = false
+
+    /// The instrument's studio render, or its photograph, resolved as on the Learn tab.
+    private var image: String? {
+        let photo = course.instrument.flatMap { store.catalog.photo(instrumentId: $0)?.asset }
+        return photo.map { asset in ModelLibrary.modelID(forPhoto: asset).map { ModelLibrary.hasCard($0) ? ModelLibrary.cardImageName($0) : asset } ?? asset }
+    }
+
+    var body: some View {
+        ZStack {
+            RadialGradient(colors: [accent.opacity(0.18), .clear], center: .center, startRadius: 4, endRadius: 190)
+            if let image {
+                Ellipse().fill(RadialGradient(colors: [Color.black.opacity(0.6), .clear], center: .center, startRadius: 2, endRadius: 95))
+                    .frame(width: 190, height: 28)
+                    .scaleEffect(floating ? 0.84 : 1)
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+                Image(image).resizable().interpolation(.high).scaledToFit()
+                    .shadow(color: .black.opacity(0.6), radius: 22, y: 16)
+                    .rotationEffect(.degrees(floating ? -8 : -12))
+                    .offset(y: floating ? -8 : 4)
+                    .padding(.vertical, 24)
+            } else if course.id == "theory" {
+                StaffMotif(accent: accent)
+            } else {
+                RingMotif(accent: accent, symbol: course.symbol, beat: course.id == "rhythm")
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.easeInOut(duration: 3.4).repeatForever(autoreverses: true)) { floating = true }
+        }
+        .accessibilityHidden(true)
+    }
+}
+
+/// Five staff lines with a treble clef and notes drifting through them.
+struct StaffMotif: View {
+    var accent: Color = Palette.mint
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Staff positions of the notes (0 is the bottom line, each step a line or a space).
+    private static let steps = [2, 4, 6, 3, 7, 5, 8, 4, 1, 5]
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion)) { timeline in
+            let t = reduceMotion ? 0 : timeline.date.timeIntervalSinceReferenceDate
+            Canvas { context, size in draw(&context, size: size, t: t) }
+        }
+        .accessibilityHidden(true)
+    }
+
+    private func draw(_ context: inout GraphicsContext, size: CGSize, t: Double) {
+        let gap = min(18, size.height / 9)
+        let bottomLine = size.height / 2 + 2 * gap
+        let clefX: CGFloat = 36
+        let lineShade = Gradient(colors: [Palette.inkSoft.opacity(0), Palette.inkSoft.opacity(0.5), Palette.inkSoft.opacity(0.5), Palette.inkSoft.opacity(0)])
+        for line in 0..<5 {
+            let y = bottomLine - CGFloat(line) * gap
+            context.fill(Path(CGRect(x: 0, y: y - 0.7, width: size.width, height: 1.4)),
+                         with: .linearGradient(lineShade, startPoint: CGPoint(x: 0, y: y), endPoint: CGPoint(x: size.width, y: y)))
+        }
+        context.draw(Text("𝄞").font(.system(size: gap * 5.6)).foregroundStyle(Palette.ink.opacity(0.85)), at: CGPoint(x: clefX, y: bottomLine - gap * 1.85))
+        let spacing = max(64, (size.width + 80) / CGFloat(Self.steps.count))
+        let loop = spacing * CGFloat(Self.steps.count)
+        let scale = gap / 11
+        for (i, step) in Self.steps.enumerated() {
+            var x = (CGFloat(i) * spacing - CGFloat(t) * 26).truncatingRemainder(dividingBy: loop)
+            if x < 0 { x += loop }
+            x -= 30
+            // Fade in from the right edge, out before the clef.
+            let fade = max(0, min(1, (x - clefX - 34) / 50)) * max(0, min(1, (size.width - 8 - x) / 50))
+            guard fade > 0 else { continue }
+            let y = bottomLine - CGFloat(step) * gap / 2 + CGFloat(sin(t * 1.3 + Double(i))) * 2
+            let color = accent.opacity(fade)
+            if i % 4 == 0 {
+                let r = 13 * scale
+                context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent.opacity(0.18 * fade)))
+            }
+            var head = Path(ellipseIn: CGRect(x: -6.5 * scale, y: -4.8 * scale, width: 13 * scale, height: 9.6 * scale))
+            head = head.applying(CGAffineTransform(rotationAngle: -0.35)).applying(CGAffineTransform(translationX: x, y: y))
+            context.fill(head, with: .color(color))
+            let up = step < 4
+            let stem = 3 * gap
+            context.fill(Path(CGRect(x: up ? x + 5 * scale : x - 6.3 * scale, y: up ? y - stem : y, width: 1.4 * scale, height: stem)), with: .color(color))
+        }
+    }
+}
+
+/// Rings rippling out from the course symbol (ear, rhythm, singing) or from behind a play button.
+struct RingMotif: View {
+    var accent: Color = Palette.mint
+    /// SF Symbol in the centre orb; nil leaves the centre to whatever sits on top.
+    var symbol: String?
+    /// Rhythm: a ring leaves on every beat and the orb pulses with it.
+    var beat = false
+    /// Off: the rings hold still and dim (a listen button between plays).
+    var active = true
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private var period: Double { beat ? 60.0 / 76 : 2.6 }
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion || !active)) { timeline in
+            let t = timeline.date.timeIntervalSinceReferenceDate
+            let moving = active && !reduceMotion
+            let beatPhase = (t / period).truncatingRemainder(dividingBy: 1)
+            let pulse: CGFloat = moving && beat ? CGFloat(1 + 0.07 * exp(-7 * beatPhase)) : 1
+            ZStack {
+                Canvas { context, size in draw(&context, size: size, t: t, moving: moving) }
+                if let symbol {
+                    Image(systemName: symbol).font(.system(size: 30, weight: .semibold)).foregroundStyle(Palette.onAccent)
+                        .frame(width: 76, height: 76)
+                        .background(Circle().fill(accent))
+                        .shadow(color: accent.opacity(0.55), radius: 20)
+                        .scaleEffect(pulse)
+                }
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
+    private func draw(_ context: inout GraphicsContext, size: CGSize, t: Double, moving: Bool) {
+        let center = CGPoint(x: size.width / 2, y: size.height / 2)
+        let outer = max(48, min(size.width, size.height) / 2 - 4)
+        let inner: CGFloat = 40
+        let glow = Path(ellipseIn: CGRect(x: center.x - outer, y: center.y - outer, width: outer * 2, height: outer * 2))
+        context.fill(glow, with: .radialGradient(Gradient(colors: [accent.opacity(moving ? 0.16 : 0.10), .clear]), center: center, startRadius: 0, endRadius: outer))
+        let count = beat ? 3 : 4
+        // A beat sends one ring per beat; otherwise the rings spread evenly through a slow cycle.
+        let cycle = beat ? period * Double(count) : period * 1.6
+        for k in 0..<count {
+            let p = moving ? (t / cycle + Double(k) / Double(count)).truncatingRemainder(dividingBy: 1) : (Double(k) + 0.6) / Double(count)
+            let r = inner + (outer - inner) * CGFloat(p)
+            let alpha = pow(1 - p, 1.6) * (moving ? 0.6 : 0.3)
+            context.stroke(Path(ellipseIn: CGRect(x: center.x - r, y: center.y - r, width: r * 2, height: r * 2)), with: .color(accent.opacity(alpha)), lineWidth: 1.5)
+        }
+    }
+}
+
+/// A rhythm pattern with the playhead sweeping it on a loop (explanations); still with Reduce Motion.
+struct RhythmLoop: View {
+    let pattern: [Double]
+    var beatsPerBar = 4
+    var accent: Color = Palette.mint
+    var arrows = false
+    var bpm: Double = 76
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var start = Date()
+
+    var body: some View {
+        TimelineView(.animation(paused: reduceMotion)) { timeline in
+            let bar = Double(max(1, beatsPerBar)) * 60 / bpm
+            let through = (timeline.date.timeIntervalSince(start) / bar).truncatingRemainder(dividingBy: 1)
+            RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: reduceMotion ? nil : max(0, through), arrows: arrows)
+        }
     }
 }

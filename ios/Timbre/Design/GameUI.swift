@@ -13,6 +13,15 @@ struct StreakChip: View {
                     .foregroundStyle(streak.practicedToday ? Palette.flame : Palette.inkFaint)
                     .symbolEffect(.bounce, value: streak.current)
                 Text("\(streak.current)").font(Typeface.label(14)).foregroundStyle(Color(hex: 0xFFD3A8)).monospacedDigit()
+                if store.streakFreezes > 0 {
+                    // Banked streak freezes, one flake each.
+                    HStack(spacing: 1) {
+                        ForEach(0..<store.streakFreezes, id: \.self) { _ in
+                            Image(systemName: "snowflake").font(.system(size: 10, weight: .bold)).foregroundStyle(Color(hex: 0x9FD8FF))
+                        }
+                    }
+                    .transition(.scale.combined(with: .opacity))
+                }
             }
             .padding(.horizontal, 12).frame(height: 36)
             .background(Capsule().fill(Palette.flame.opacity(0.10)))
@@ -20,6 +29,7 @@ struct StreakChip: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text("\(streak.current)-day streak"))
+        .accessibilityValue(store.streakFreezes > 0 ? Text("\(store.streakFreezes) streak freezes") : Text(""))
         .accessibilityIdentifier("streak.chip")
     }
 }
@@ -93,6 +103,7 @@ extension Quest {
     var tint: Color { [.tuneAll, .holdInTune].contains(kind) ? Palette.amber : kind == .practiceMinutes ? Palette.inkSoft : kind == .lessons ? Palette.violet : Palette.mint }
 }
 
+/// One daily quest: icon, title, a bar with its count ("3 / 10") and the XP it pays.
 struct QuestRow: View {
     @EnvironmentObject private var store: AppStore
     let quest: Quest
@@ -104,12 +115,18 @@ struct QuestRow: View {
                 .foregroundStyle(done ? Palette.onAccent : quest.tint)
                 .frame(width: 34, height: 34)
                 .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(done ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(quest.tint.opacity(0.14))))
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 7) {
                 Text(quest.title).font(.subheadline.weight(.semibold)).foregroundStyle(done ? Palette.inkSoft : Palette.ink)
                     .strikethrough(done, color: Palette.inkFaint)
-                ProgressLine(value: Double(progress) / Double(quest.target), color: done ? Palette.mint : quest.tint, height: 4)
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 10) {
+                    ProgressLine(value: Double(progress) / Double(max(1, quest.target)), color: done ? Palette.mint : quest.tint, height: 5)
+                    Text("\(progress) / \(quest.target)").font(Typeface.number(12)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
+                        .contentTransition(.numericText())
+                        .fixedSize()
+                }
             }
-            Text(done ? "Done" : "+\(quest.xp) XP").font(Typeface.label(12)).foregroundStyle(Palette.mint)
+            reward(done)
         }
         .padding(.horizontal, 14).padding(.vertical, 12)
         .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
@@ -117,13 +134,28 @@ struct QuestRow: View {
         .accessibilityElement(children: .combine)
         .accessibilityValue(Text(done ? "Done" : "\(progress) of \(quest.target)"))
     }
+
+    /// "+20 XP" in a mint pill while open; "Done" once claimed.
+    @ViewBuilder private func reward(_ done: Bool) -> some View {
+        if done {
+            Text("Done").font(Typeface.label(12)).foregroundStyle(Palette.mint)
+        } else {
+            Text("+\(quest.xp) XP").font(Typeface.label(12)).foregroundStyle(Palette.mint)
+                .padding(.horizontal, 9).padding(.vertical, 5)
+                .background(Capsule().fill(Palette.mint.opacity(0.12)))
+                .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.25), lineWidth: 1))
+                .fixedSize()
+        }
+    }
 }
 
-/// Round medal: coloured when earned, a dashed lock when not.
+/// Round medal: coloured when earned; a dashed lock when not, ringed with the progress toward its goal.
 struct AchievementMedal: View {
     let achievement: Achievement
     let earned: Bool
     var size: CGFloat = 56
+    /// 0…1 toward the goal for a locked medal; nil (or 0) draws no ring.
+    var progress: Double? = nil
     var body: some View {
         ZStack {
             if earned {
@@ -132,6 +164,12 @@ struct AchievementMedal: View {
                 Image(systemName: achievement.symbol).font(.system(size: size * 0.36, weight: .bold)).foregroundStyle(Palette.onAccent)
             } else {
                 Circle().strokeBorder(.white.opacity(0.2), style: StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
+                if let progress, progress > 0 {
+                    Circle().inset(by: 1.5).trim(from: 0, to: CGFloat(min(1, max(0.03, progress))))
+                        .stroke(Palette.mint, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                        .rotationEffect(.degrees(-90))
+                        .shadow(color: Palette.mint.opacity(0.45), radius: 4)
+                }
                 Image(systemName: "lock.fill").font(.system(size: size * 0.26)).foregroundStyle(Palette.inkFaint)
             }
         }
@@ -146,9 +184,15 @@ struct AchievementMedal: View {
 struct RewardToast: View {
     @EnvironmentObject private var store: AppStore
     @State private var shown: ProgressUpdate?
+    @State private var notice: AppStore.StreakNotice?
     @State private var token = 0
     var body: some View {
         VStack(spacing: 8) {
+            switch notice {
+            case .earned: banner(symbol: "snowflake", title: Text("Streak freeze earned"), detail: Text("Keeps your streak if you miss a day"), gold: false)
+            case .saved(let days): banner(symbol: "snowflake", title: Text("Streak saved"), detail: Text("Streak freezes used: \(days)"), gold: false)
+            case nil: EmptyView()
+            }
             if let shown {
                 if let level = shown.levelUp {
                     banner(symbol: "star.fill", title: Text("Level \(level.number)"), detail: Text(LocalizedStringKey(level.name)), gold: true)
@@ -179,6 +223,14 @@ struct RewardToast: View {
             Task { @MainActor in
                 try? await Task.sleep(for: .seconds(long ? 2.6 : 1.2))
                 if mine == token { withAnimation(.easeOut(duration: 0.3)) { shown = nil } }
+            }
+        }
+        .onChange(of: store.streakPulse) { _, _ in
+            guard let next = store.streakNotice else { return }
+            withAnimation(Motion.pluck) { notice = next }
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(3))
+                withAnimation(.easeOut(duration: 0.3)) { notice = nil }
             }
         }
         .accessibilityElement(children: .combine)

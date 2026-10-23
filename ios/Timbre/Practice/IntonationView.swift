@@ -32,16 +32,17 @@ struct IntonationView: View {
                 Label("Use fresh strings tuned to pitch. Measure with the instrument in playing position.", systemImage: "info.circle")
                     .font(.footnote).foregroundStyle(Palette.inkSoft)
             }
-            .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+            .padding(.horizontal, Metrics.gutter).padding(.top, 12).padding(.bottom, 28)
         }
+        .stageTopShade()
         .background(StageBackground(motes: false))
         .navigationTitle("Intonation")
         .navigationBarTitleDisplayMode(.inline)
-        .safeAreaInset(edge: .bottom) {
+        .stageDock {
             Button { audio.running ? store.pauseListening() : store.startListening() } label: {
                 Label(audio.running ? "Pause" : "Listen", systemImage: audio.running ? "pause.fill" : "mic.fill")
             }
-            .buttonStyle(BrassButtonStyle()).padding(.horizontal, Metrics.gutter).padding(.bottom, 8)
+            .buttonStyle(BrassButtonStyle())
             .accessibilityIdentifier("intonation.listen")
         }
         .onAppear {

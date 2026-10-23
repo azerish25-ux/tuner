@@ -246,11 +246,34 @@ final class AppStore: ObservableObject {
         if let instrument, canTune(instrument) {
             _ = selectInstrument(instrument, photo: catalog.photo(instrumentId: instrument.id)?.asset)
         }
-        updateSettings { $0.onboardingCompleted = true; $0.playerLevel = level; $0.goal = goal; if let id = instrument?.id { $0.recentInstrumentIds = [id] + $0.recentInstrumentIds } }
+        // "How long have you been playing?" places the learner: earlier units open, none counted as finished.
+        let placed = onboardingProgress(level: level, instrumentId: instrument?.id, goal: goal)
+        let placementChanged = placed != learn
+        updateSettings {
+            $0.onboardingCompleted = true; $0.playerLevel = level; $0.goal = goal
+            if placementChanged { $0.learn = placed }
+            if let id = instrument?.id { $0.recentInstrumentIds = [id] + $0.recentInstrumentIds }
+        }
         // Learn opens on the course for the instrument (or the goal) chosen in onboarding.
-        let course: String? = goal == "ear" ? "ear" : goal == "voice" ? "voice" : goal == "rhythm" ? "rhythm"
-            : curriculum.courses.first { course in instrument.map { course.instrument == $0.id } ?? false }?.id
-        if let course, curriculum.course(id: course) != nil { UserDefaults.standard.set(course, forKey: "learn.course") }
+        if let course = onboardingCourse(instrumentId: instrument?.id, goal: goal) { UserDefaults.standard.set(course.id, forKey: "learn.course") }
+        publishWidgets()
+    }
+
+    /// The course onboarding's plan leads to: the goal's own course (ear, voice, rhythm), else the instrument's, else theory.
+    func onboardingCourse(instrumentId: String?, goal: String) -> LearnCourse? {
+        let byGoal = ["ear": "ear", "voice": "voice", "rhythm": "rhythm"][goal]
+        let id = byGoal ?? instrumentId.flatMap { instrument in curriculum.courses.first { $0.instrument == instrument }?.id }
+        return id.flatMap { curriculum.course(id: $0) } ?? curriculum.course(id: "theory")
+    }
+
+    /// Learn progress with the experience answer applied as a placement in the plan's course and the instrument's own course.
+    func onboardingProgress(level: String, instrumentId: String?, goal: String) -> LearnProgress {
+        var progress = learn
+        let own = instrumentId.flatMap { instrument in curriculum.courses.first { $0.instrument == instrument } }
+        for course in [onboardingCourse(instrumentId: instrumentId, goal: goal), own].compactMap({ $0 }) {
+            progress.place(level: level, in: course)
+        }
+        return progress
     }
 
     func open(_ destination: IntentRouter.Destination) {

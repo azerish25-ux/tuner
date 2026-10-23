@@ -90,7 +90,8 @@ struct TuneView: View {
 
     private func stageInput() -> StageInput {
         StageInput(cents: store.live.reading.cents, level: store.live.level, locked: store.live.reading.inTune,
-                   listening: audio.running, activeAnchor: store.activeAnchor, focus: audio.running && !store.referenceMode)
+                   listening: audio.running, activeAnchor: store.activeAnchor, focus: audio.running && !store.referenceMode,
+                   note: store.targetName)
     }
 
     @ViewBuilder private var stage: some View {
@@ -121,10 +122,9 @@ struct TuneView: View {
             } else if let photo = store.photo {
                 StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: stageInput) { store.chooseAnchor($0) }.padding(28)
             }
-            TurnHint().padding(.top, 8).frame(maxWidth: .infinity, alignment: .leading).padding(.leading, 14)
         }
         .overlay(alignment: .trailing) { sideControls.padding(.trailing, 14) }
-        // A container element keeps its children's own identifiers (stage.debug, the hint).
+        // A container element keeps its children's own identifiers (stage.debug).
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("tune.stage")
     }
@@ -133,33 +133,43 @@ struct TuneView: View {
         TimelineView(.animation) { timeline in
             let reading = store.live.reading
             let _ = motion.step(audio.running ? reading.cents : (store.live.preserved ? reading.cents : nil), locked: reading.inTune, now: timeline.date.timeIntervalSinceReferenceDate)
+            let shown = motion.shown
             VStack(spacing: 14) {
                 NoteReadout(note: store.targetName, cents: motion.cents, hertz: reading.frequency, target: store.targetHz, locked: reading.inTune)
                 RibbonMeter(cents: motion.cents, phase: motion.phase, locked: reading.inTune)
                     .frame(height: 38).padding(.horizontal, 32)
-                let status = statusLine(reading.status, cents: motion.cents)
-                Text(status).font(.footnote.weight(.semibold))
-                    .foregroundStyle(reading.inTune ? Palette.mint : Palette.inkSoft)
-                    .contentTransition(.opacity)
-                    .animation(Motion.quick, value: status)
+                // Same whole cents, same colour rule and the same single animation as the readout above,
+                // so the two never disagree mid-transition.
+                Text(statusLine(reading, shown: shown)).font(.footnote.weight(.semibold))
+                    .foregroundStyle(statusColor(reading, shown: shown))
+                    .contentTransition(.numericText(value: Double(shown ?? 0)))
+                    .animation(Motion.quick, value: shown)
                     .accessibilityIdentifier("tune.status")
             }
         }
         .padding(.bottom, 4)
     }
 
-    /// The status under the meter quotes the same smoothed cents as the readout above it.
-    private func statusLine(_ status: String, cents: Double?) -> String {
-        guard audio.running, let cents, status == "flat" || status == "sharp" else { return store.statusText }
-        let amount = Int(abs(cents).rounded())
-        return status == "flat" ? String(localized: "Tighten · \(amount)¢ flat") : String(localized: "Loosen · \(amount)¢ sharp")
+    /// The status under the meter reads the readout's own whole cents against the tracker's lock band:
+    /// "Hold it…" inside the band, "Tighten"/"Loosen" outside it, "In tune" once the tracker locks.
+    private func statusLine(_ reading: TuningReading, shown: Int?) -> String {
+        guard audio.running, !store.live.preserved, reading.cents != nil, let shown else { return store.statusText }
+        if reading.inTune { return String(localized: "In tune") }
+        let amount = abs(shown)
+        if Double(amount) <= InTuneRule.bandCents { return String(localized: "Hold it…") }
+        return shown < 0 ? String(localized: "Tighten · \(amount)¢ flat") : String(localized: "Loosen · \(amount)¢ sharp")
+    }
+
+    private func statusColor(_ reading: TuningReading, shown: Int?) -> Color {
+        guard audio.running, !store.live.preserved, reading.cents != nil, let shown else { return Palette.inkSoft }
+        return Palette.tuning(Double(shown), locked: reading.inTune)
     }
 
     private var tuningPanel: some View {
         VStack(spacing: 6) {
             readout
             if !store.referenceMode { questLine }
-            StringRail().opacity(store.referenceMode ? 0 : 1).frame(height: store.referenceMode ? 8 : nil)
+            StringRail(motion: motion).opacity(store.referenceMode ? 0 : 1).frame(height: store.referenceMode ? 8 : nil)
         }
         .padding(.bottom, 8)
     }
@@ -241,38 +251,9 @@ struct PitchAura: View {
     @EnvironmentObject private var store: AppStore
     var body: some View {
         let reading = store.live.reading
-        let color = Palette.pitch(reading.cents, locked: reading.inTune)
+        let color = Palette.tuning(reading.cents, locked: reading.inTune)
         RadialGradient(colors: [color.opacity(reading.cents == nil ? 0 : (reading.inTune ? 0.28 : 0.14)), .clear], center: UnitPoint(x: 0.5, y: 0.42), startRadius: 20, endRadius: 360)
             .ignoresSafeArea()
             .animation(.easeOut(duration: 0.35), value: reading.inTune)
-    }
-}
-
-/// "Tighten" / "Loosen" with the turn direction of the selected peg.
-struct TurnHint: View {
-    @EnvironmentObject private var store: AppStore
-    @EnvironmentObject private var audio: AudioService
-    var body: some View {
-        let reading = store.live.reading
-        if audio.running, !store.referenceMode, let cents = reading.cents, !reading.inTune, abs(cents) >= 3 {
-            let tighten = cents < 0
-            let rig = store.modelID.flatMap { ModelLibrary.rig($0)?.string(store.activeAnchor) }
-            let clockwise = (tighten ? 1 : -1) * (rig?.tighten ?? 1) > 0
-            Group {
-                if rig?.slides == true {
-                    Label(tighten ? "Push in" : "Pull out", systemImage: tighten ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
-                } else {
-                    Label(tighten ? "Tighten" : "Loosen", systemImage: clockwise ? "arrow.clockwise" : "arrow.counterclockwise")
-                }
-            }
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(Color(hex: 0xFFC977))
-                .padding(.horizontal, 10).padding(.vertical, 7)
-                .background(Capsule().fill(Palette.amber.opacity(0.14)))
-                .overlay(Capsule().strokeBorder(Palette.amber.opacity(0.35), lineWidth: 1))
-                .symbolEffect(.rotate, options: .repeating, isActive: true)
-                .transition(.move(edge: .top).combined(with: .opacity))
-                .accessibilityHidden(true)
-        }
     }
 }

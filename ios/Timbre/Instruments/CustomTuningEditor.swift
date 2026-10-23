@@ -47,6 +47,7 @@ struct CustomTuningEditor: View {
                 }
                 .padding(Metrics.gutter)
             }
+            .stageTopShade()
             .background(StageBackground(motes: false))
             .navigationTitle(editing == nil ? "New tuning" : "Edit tuning")
             .navigationBarTitleDisplayMode(.inline)

@@ -90,6 +90,49 @@ final class LearnTests: XCTestCase {
         XCTAssertTrue(progress.isValid)
     }
 
+    func testPlacementOpensEarlierUnitsWithoutFinishingThem() throws {
+        func unit(_ id: String, _ lessons: [String]) -> LearnUnit { LearnUnit(id: id, title: LearnText(id), summary: LearnText("s"), lessons: lessons.map { lesson($0) }) }
+        let course = LearnCourse(id: "c", title: LearnText("C"), subtitle: LearnText("s"), instrument: "guitar.acoustic.6", symbol: "guitars.fill", accent: "mint",
+                                 units: [unit("u1", ["a", "b"]), unit("u2", ["c", "d"]), unit("u3", ["e"]), unit("u4", ["f", "g"])])
+        func open(_ progress: LearnProgress) -> [String] { course.lessons.filter { progress.isUnlocked($0, in: course) }.map(\.id) }
+        var progress = LearnProgress()
+
+        progress.place(level: "beginner", in: course)
+        XCTAssertTrue(progress.placedThrough.isEmpty)
+        XCTAssertEqual(open(progress), ["a"])
+        XCTAssertEqual(progress.nextLesson(in: course)?.id, "a")
+
+        // A few years: unit 1 open, starting at the first lesson of unit 2.
+        progress.place(level: "intermediate", in: course)
+        XCTAssertEqual(progress.placedThrough["c"], 0)
+        XCTAssertEqual(open(progress), ["a", "b", "c"])
+        XCTAssertEqual(progress.nextLesson(in: course)?.id, "c")
+        XCTAssertEqual(progress.finishedCount(in: course), 0, "placed lessons are not finished")
+        XCTAssertTrue(progress.stars.isEmpty)
+
+        // Many years or professional: units 1–3 open.
+        progress.place(level: "pro", in: course)
+        XCTAssertEqual(progress.placedThrough["c"], 2)
+        XCTAssertEqual(open(progress), ["a", "b", "c", "d", "e", "f"])
+        XCTAssertEqual(progress.nextLesson(in: course)?.id, "f")
+        progress.record(LessonResult(lessonId: "f", stars: 3, accuracy: 1, xp: 20, minutes: 3), courseId: "c", now: Date(timeIntervalSince1970: 1_000))
+        XCTAssertEqual(progress.nextLesson(in: course)?.id, "g")
+        progress.record(LessonResult(lessonId: "g", stars: 3, accuracy: 1, xp: 20, minutes: 3), courseId: "c", now: Date(timeIntervalSince1970: 2_000))
+        XCTAssertEqual(progress.nextLesson(in: course)?.id, "a", "placed lessons are still there to play")
+        XCTAssertTrue(progress.isValid)
+
+        // Always at least one unit ahead.
+        XCTAssertEqual(LearnProgress.placementUnit(level: "advanced", unitCount: 3), 1)
+        XCTAssertEqual(LearnProgress.placementUnit(level: "advanced", unitCount: 2), 0)
+        XCTAssertNil(LearnProgress.placementUnit(level: "intermediate", unitCount: 1))
+
+        // Saves from before placement still decode; placement round-trips.
+        let old = try JSONDecoder().decode(LearnProgress.self, from: Data(#"{"stars":{"a":2},"bestAccuracy":{"a":0.8},"finishedDates":{}}"#.utf8))
+        XCTAssertEqual(old.stars["a"], 2)
+        XCTAssertTrue(old.placedThrough.isEmpty)
+        XCTAssertEqual(try JSONDecoder().decode(LearnProgress.self, from: JSONEncoder().encode(progress)), progress)
+    }
+
     func testLessonsEarnXPAndCountTowardQuestsAndBadges() {
         var state = ProgressState()
         let update = state.record(.lessonCompleted(stars: 3, xp: 25))

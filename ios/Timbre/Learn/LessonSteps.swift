@@ -26,6 +26,12 @@ extension LearnCourse {
     var fretless: Bool { fretKind == "violin" || fretKind == "cello" }
     /// Singing and play-by-ear courses accept the right note in any octave.
     var anyOctave: Bool { fretKind == nil }
+    /// Strummed instruments: rhythm patterns show down and up strokes.
+    var strums: Bool { Self.strummed(instrument) }
+    static func strummed(_ instrumentId: String?) -> Bool {
+        guard let instrumentId else { return false }
+        return ["guitar", "ukulele", "banjo", "mandolin"].contains { instrumentId.hasPrefix($0) }
+    }
 }
 
 @MainActor private func frequency(_ midi: Int, _ store: AppStore) -> Double { PitchMath.frequency(midi: Double(midi), reference: store.settings.referencePitchHz) }
@@ -228,7 +234,7 @@ struct ChordStep: View {
             .padding(.top, 12)
             Spacer(minLength: 0)
             ZStack {
-                ChordDiagram(chord: chord, accent: accent, ringing: verified)
+                ChordDiagram(chord: chord, accent: accent, ringing: verified, landing: true)
                     .frame(maxWidth: 260)
                     .padding(22)
                     .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Palette.stageRaised))
@@ -309,6 +315,8 @@ struct RhythmStep: View {
     var meter: Int?
     /// On an instrument course a tap step also hears the instrument, so hands can stay on the strings.
     var hearsInstrument = false
+    /// Strummed instruments: a tap step shows its pattern as down and up strokes too.
+    var strums = false
     let accent: Color
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
@@ -334,7 +342,7 @@ struct RhythmStep: View {
                 Text("\(Int(bpm)) BPM · \(bars) bars").font(.subheadline).foregroundStyle(Palette.inkSoft)
             }
             .padding(.top, 14)
-            if case .strum(let chord?) = mode { ChordDiagram(chord: chord, accent: accent).frame(maxWidth: 150) }
+            if case .strum(let chord?) = mode { ChordDiagram(chord: chord, accent: accent, landing: true).frame(maxWidth: 150) }
             if case .progression(let chords, let lengths) = mode {
                 TimelineView(.periodic(from: .now, by: 0.1)) { _ in
                     ProgressionStrip(chords: chords, bars: lengths, current: currentChord(lengths), accent: accent)
@@ -352,7 +360,7 @@ struct RhythmStep: View {
                     } else {
                         Text(phase == .done ? LocalizedStringKey("") : LocalizedStringKey("Bar \(min(bars, bar + 1)) of \(bars)")).font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
                     }
-                    RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: phase == .playing ? within : nil, judged: barGrades, arrows: !isTap)
+                    RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: phase == .playing ? within : nil, judged: barGrades, arrows: !isTap || strums)
                         .padding(.horizontal, 16)
                         .onChange(of: Int(now * 30)) { _, _ in expire(now: now) }
                 }

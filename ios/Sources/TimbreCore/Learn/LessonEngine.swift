@@ -183,23 +183,72 @@ public struct LearnProgress: Codable, Equatable, Sendable {
     public var lastLessonId: String?
     public var lastCourseId: String?
     public var finishedDates: [String: Date] = [:]
+    /// Placement from onboarding: per course, the last unit (0-based) the learner starts past.
+    /// Those units and the lesson after them are open; nothing in them counts as finished.
+    public var placedThrough: [String: Int] = [:]
     public init() {}
+
+    enum CodingKeys: String, CodingKey { case stars, bestAccuracy, lastLessonId, lastCourseId, finishedDates, placedThrough }
+
+    /// Saves from before placement have no `placedThrough`.
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        stars = try c.decodeIfPresent([String: Int].self, forKey: .stars) ?? [:]
+        bestAccuracy = try c.decodeIfPresent([String: Double].self, forKey: .bestAccuracy) ?? [:]
+        lastLessonId = try c.decodeIfPresent(String.self, forKey: .lastLessonId)
+        lastCourseId = try c.decodeIfPresent(String.self, forKey: .lastCourseId)
+        finishedDates = try c.decodeIfPresent([String: Date].self, forKey: .finishedDates) ?? [:]
+        placedThrough = try c.decodeIfPresent([String: Int].self, forKey: .placedThrough) ?? [:]
+    }
 
     public var isValid: Bool {
         stars.count <= 5_000 && stars.values.allSatisfy { (1...3).contains($0) } && bestAccuracy.values.allSatisfy { (0...1).contains($0) }
+            && placedThrough.count <= 100 && placedThrough.values.allSatisfy { (0...99).contains($0) }
     }
 
     public func isFinished(_ lessonId: String) -> Bool { stars[lessonId] != nil }
 
-    /// Lessons open in order: the first of each course, then each one after a finished lesson.
+    // MARK: Placement
+
+    /// The unit a self-reported level starts past (0-based), nil to start at lesson 1:
+    /// "intermediate" skips unit 1, "advanced" and "pro" skip units 1–3; at least one unit always stays ahead.
+    public static func placementUnit(level: String, unitCount: Int) -> Int? {
+        let target: Int
+        switch level {
+        case "intermediate": target = 0
+        case "advanced", "pro": target = 2
+        default: return nil
+        }
+        let cap = unitCount - 2
+        return cap >= 0 ? min(target, cap) : nil
+    }
+
+    /// Applies (or clears, for beginners) a course placement from the onboarding answer.
+    public mutating func place(level: String, in course: LearnCourse) {
+        placedThrough[course.id] = Self.placementUnit(level: level, unitCount: course.units.count)
+    }
+
+    /// Lessons a placement opened: every lesson of the placed units.
+    public func placedCount(in course: LearnCourse) -> Int {
+        guard let unit = placedThrough[course.id], unit >= 0 else { return 0 }
+        return course.units.prefix(unit + 1).reduce(0) { $0 + $1.lessons.count }
+    }
+
+    /// Lessons open in order: the first of each course, the placed units and the lesson after them,
+    /// then each one after a finished lesson.
     public func isUnlocked(_ lesson: Lesson, in course: LearnCourse) -> Bool {
         let all = course.lessons
         guard let position = all.firstIndex(where: { $0.id == lesson.id }) else { return false }
-        return position == 0 || isFinished(all[position - 1].id) || isFinished(lesson.id)
+        return position == 0 || position <= placedCount(in: course) || isFinished(all[position - 1].id) || isFinished(lesson.id)
     }
 
-    /// The next lesson to play in a course (the first unfinished one), nil when the course is done.
-    public func nextLesson(in course: LearnCourse) -> Lesson? { course.lessons.first { !isFinished($0.id) } }
+    /// The next lesson to play in a course: the first unfinished one after the placement
+    /// (then any unfinished one before it), nil when the course is done.
+    public func nextLesson(in course: LearnCourse) -> Lesson? {
+        let all = course.lessons
+        let placed = min(placedCount(in: course), all.count)
+        return all[placed...].first { !isFinished($0.id) } ?? all.first { !isFinished($0.id) }
+    }
 
     public func finishedCount(in course: LearnCourse) -> Int { course.lessons.filter { isFinished($0.id) }.count }
     public func stars(in unit: LearnUnit) -> Int { unit.lessons.reduce(0) { $0 + (stars[$1.id] ?? 0) } }

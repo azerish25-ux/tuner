@@ -121,7 +121,7 @@ struct StepView: View {
         case let .progression(chords, bars, pattern, bpm, beatsPerBar):
             RhythmStep(mode: .progression(chords, bars), pattern: pattern, bpm: bpm, bars: bars.reduce(0, +), meter: beatsPerBar, accent: accent, done: done)
         case let .tapRhythm(pattern, bpm, bars, beatsPerBar):
-            RhythmStep(mode: .tap, pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, hearsInstrument: course.fretKind != nil, accent: accent, done: done)
+            RhythmStep(mode: .tap, pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, hearsInstrument: course.fretKind != nil, strums: course.strums, accent: accent, done: done)
         case let .listen(prompt, sound, options, answer):
             ChoiceStep(prompt: prompt, options: options, answer: answer, why: nil, visual: .none, sound: sound, course: course, accent: accent, done: done)
         case let .quiz(prompt, options, answer, why, visual):
@@ -217,33 +217,101 @@ struct ExplainStep: View {
     let course: LearnCourse
     let accent: Color
     let done: (Double?) -> Void
+    @EnvironmentObject private var store: AppStore
     @State private var shown = false
+    @State private var sounding = false
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 22) {
-                    if visual != .none {
-                        LessonVisualView(visual: visual, accent: accent, instrumentId: course.instrument)
-                            .frame(maxWidth: .infinity)
-                            .padding(18)
-                            .background(RoundedRectangle(cornerRadius: 26, style: .continuous).fill(Palette.stageRaised))
-                            .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
+            GeometryReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 22) {
+                        hero(height: Self.heroHeight(proxy.size.height))
                             .scaleEffect(shown ? 1 : 0.94).opacity(shown ? 1 : 0)
+                        words
+                            .offset(y: shown ? 0 : 18).opacity(shown ? 1 : 0)
                     }
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text(title.localized).font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
-                            .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
-                        Text(text.localized).font(.title3).foregroundStyle(Palette.inkSoft).lineSpacing(3)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    .offset(y: shown ? 0 : 18).opacity(shown ? 1 : 0)
+                    .padding(.horizontal, 22).padding(.top, 18).padding(.bottom, 12)
                 }
-                .padding(.horizontal, 22).padding(.top, 18)
+                .scrollBounceBehavior(.basedOnSize)
             }
             StepButton(title: "Continue", accent: accent) { Haptics.shared.selection(); done(nil) }
         }
         .onAppear { withAnimation(.spring(response: 0.6, dampingFraction: 0.85).delay(0.05)) { shown = true } }
+    }
+
+    /// Every explanation gets the same generous picture area, so short steps don't leave the lower half bare.
+    private static func heroHeight(_ available: CGFloat) -> CGFloat { min(360, max(220, available * 0.46)) }
+
+    private var words: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(title.localized).font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
+                .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
+            Text(text.localized).font(.title3).foregroundStyle(Palette.inkSoft).lineSpacing(3)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    /// The lesson's picture on a card, or (without one) the course instrument or motif on the stage.
+    @ViewBuilder private func hero(height: CGFloat) -> some View {
+        if visual == .none {
+            LessonBackdrop(course: course, accent: accent).frame(height: height)
+        } else {
+            VStack(spacing: 16) {
+                picture
+                if case let .chord(spec) = visual { hearButton(spec) }
+            }
+            .frame(maxWidth: .infinity, minHeight: max(0, height - 36))
+            .padding(18)
+            .background(card)
+            .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
+        }
+    }
+
+    @ViewBuilder private var picture: some View {
+        if case let .rhythm(pattern, beatsPerBar) = visual {
+            RhythmLoop(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, arrows: course.strums)
+        } else {
+            LessonVisualView(visual: visual, accent: accent, instrumentId: course.instrument)
+        }
+    }
+
+    private var card: some View {
+        let shape = RoundedRectangle(cornerRadius: 26, style: .continuous)
+        return shape.fill(Palette.stageRaised)
+            .overlay(RadialGradient(colors: [accent.opacity(0.12), .clear], center: .top, startRadius: 4, endRadius: 260).clipShape(shape))
+    }
+
+    private func hearButton(_ chord: ChordSpec) -> some View {
+        Button { strum(chord) } label: {
+            Label("Hear it", systemImage: "speaker.wave.2.fill")
+                .font(Typeface.label(15)).foregroundStyle(accent)
+                .symbolEffect(.variableColor.iterative, isActive: sounding)
+                .padding(.horizontal, 18).frame(minHeight: 44)
+                .background(Capsule().fill(accent.opacity(0.12)))
+                .overlay(Capsule().strokeBorder(accent.opacity(0.35), lineWidth: 1))
+                .contentShape(Capsule())
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityIdentifier("lesson.hear")
+    }
+
+    /// Sounds the chord as shaped on the course instrument (as the Chords tool does); a plain triad when the course has none.
+    private func strum(_ chord: ChordSpec) {
+        let open = ChordStep.openStrings(course)
+        var midis = chord.frets.enumerated().compactMap { i, fret -> Int? in fret >= 0 && i < open.count ? open[i] + fret : nil }
+        if midis.isEmpty, let target = ChordTarget(root: chord.root, formulaId: chord.quality) {
+            midis = target.quality.intervals.map { 48 + target.root + $0 }
+        }
+        guard !midis.isEmpty else { return }
+        let reference = store.settings.referencePitchHz
+        store.audio.playTones(midis.map { PitchMath.frequency(midi: Double($0), reference: reference) }, together: true, noteMs: 1500)
+        Haptics.shared.selection()
+        sounding = true
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(1900))
+            sounding = false
+        }
     }
 }
 
@@ -305,21 +373,27 @@ struct ChoiceStep: View {
         .onAppear { if let sound { play(sound) } }
     }
 
+    /// A big play button with sound rings that ripple while the question plays.
     private func listenButton(_ sound: [[Int]]) -> some View {
         Button { play(sound) } label: {
-            HStack(spacing: 14) {
-                Image(systemName: playing ? "speaker.wave.3.fill" : "play.fill").font(.system(size: 26, weight: .bold))
-                    .foregroundStyle(Palette.onAccent).frame(width: 64, height: 64)
-                    .background(Circle().fill(accent)).shadow(color: accent.opacity(0.5), radius: 14)
-                    .symbolEffect(.variableColor.iterative, isActive: playing)
-                VStack(alignment: .leading, spacing: 2) {
+            VStack(spacing: 8) {
+                ZStack {
+                    RingMotif(accent: accent, active: playing)
+                    Image(systemName: playing ? "speaker.wave.3.fill" : "play.fill").font(.system(size: 28, weight: .bold))
+                        .foregroundStyle(Palette.onAccent).frame(width: 76, height: 76)
+                        .background(Circle().fill(accent)).shadow(color: accent.opacity(0.5), radius: 16)
+                        .symbolEffect(.variableColor.iterative, isActive: playing)
+                }
+                .frame(height: 156)
+                VStack(spacing: 2) {
                     Text("Hear it").font(Typeface.label(17)).foregroundStyle(Palette.ink)
                     Text("Tap to play again").font(.subheadline).foregroundStyle(Palette.inkSoft)
                 }
-                Spacer()
             }
-            .padding(14)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
             .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
+            .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityIdentifier("lesson.hear")

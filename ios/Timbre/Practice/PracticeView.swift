@@ -88,7 +88,7 @@ struct PracticeView: View {
             }
             ForEach(store.quests) { quest in
                 Button { open(quest) } label: { QuestRow(quest: quest) }
-                    .buttonStyle(.plain)
+                    .buttonStyle(PressScaleStyle())
                     .accessibilityIdentifier("quest.\(quest.id)")
             }
         }

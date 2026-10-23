@@ -32,7 +32,7 @@ enum Palette {
     static let brass = mint
     static let brassDeep = mintDeep
     static let ember = amber
-    // Pitch meaning: any distance from the target is amber (always with an arrow and words); in tune is mint.
+    // Pitch meaning: mint inside the tolerance, amber when close, coral when far (always with words too).
     static let flat = amber
     static let sharp = amber
     static let locked = mint
@@ -41,10 +41,24 @@ enum Palette {
     /// Timbre Pro gold.
     static let proGold = LinearGradient(colors: [Color(hex: 0xFFD08A), Color(hex: 0xE39A3B)], startPoint: .top, endPoint: .bottom)
 
+    /// Past this many cents a pitch is "far" (coral) rather than "close" (amber).
+    static let nearCents = 20.0
+
+    /// The pitch colour rule: mint inside `band` (or once locked), amber out to `nearCents`, coral beyond.
+    /// Cents are judged to the whole cent, as every readout shows them, so a digit and its colour never disagree.
+    /// The tuner passes the tracker's own lock band (see `Palette.tuning`), so the colour turns mint exactly where it can lock.
+    static func pitch(_ cents: Double?, locked: Bool, band: Double) -> Color {
+        guard let cents, cents.isFinite else { return inkSoft }
+        let shown = abs(cents.rounded())
+        if locked || shown <= band { return mint }
+        return shown <= nearCents ? amber : coral
+    }
+
+    /// Off-target colour for screens that judge their own tolerance first (intonation, voice):
+    /// mint once locked, amber otherwise. The tuner uses the three-zone rule above.
     static func pitch(_ cents: Double?, locked: Bool) -> Color {
-        guard let cents else { return inkSoft }
-        if locked || abs(cents) < 1.5 { return Palette.locked }
-        return amber
+        guard cents != nil else { return inkSoft }
+        return locked ? mint : amber
     }
 }
 

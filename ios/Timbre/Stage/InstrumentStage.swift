@@ -11,6 +11,8 @@ struct StageInput {
     var listening = false
     var activeAnchor: String?
     var focus = false
+    /// The note of the string being tuned ("D3"), for the peg label.
+    var note = ""
 }
 
 /// Drives the live 3D instrument: camera framing, peg rotation following measured cents,
@@ -33,21 +35,34 @@ final class StageController {
     private var halo: [ModelEntity] = []
     private var subscription: EventSubscription?
     private let light = Entity()
-    private var filter = OneEuroFilter(minCutoff: 1.1, beta: 0.02)
+    private var filter = ReadoutMotion.makeFilter()
     private var strobe = StrobePhase(bandsPerSecondPerCent: 0.07)
     private var time: Double = 0
     private var energy: Float = 0
     private var glow: Float = 0
     private var angles: [String: Float] = [:]
-    private var framing: Float = 0          // 0 = whole instrument, 1 = headstock close-up
+    private(set) var framing: Float = 0     // 0 = whole instrument, 1 = headstock close-up
     private var yaw: Float = -0.32
     private var aimPoint: SIMD3<Float>?
+    private var aimDistance: Float?
+    /// The stage view's size in points: the close-up keeps every peg clear of its edges.
+    var viewSize: CGSize = .zero
+    /// Reduce Motion: the camera cuts instead of gliding and the instrument holds still.
+    var reduceMotion = false
+    /// The pitch error the stage shows, smoothed like the readout (nil with no pitch).
+    private(set) var smoothedCents: Double?
     private var previousLevel: Double = -120
     private var currentAnchor: String?
     var input: () -> StageInput = { StageInput() }
     /// Paywall and onboarding: the instrument sways slowly under the lights.
     var showcase = false
     private static let segmentCount = 36
+    /// Close-up clearances in points: peg centres stay this far below the stage top (24 pt plus the peg ring),
+    /// the nut this far above its bottom; the headstock centres in the room left of the side controls.
+    private static let pegClearance: Float = 48
+    private static let nutClearance: Float = 30
+    private static let controlsInset: Float = 26
+    private static let closeYaw: Float = -0.54
 
     init() {
         camera.camera.fieldOfViewInDegrees = 30
@@ -147,30 +162,104 @@ final class StageController {
     /// This keeps framing correct whichever camera the view ends up using.
     private func applyFraming(immediately: Bool = false, dt: Float = 0) {
         guard let rig, let model else { return }
+        let snap = immediately || reduceMotion
         let target: Float = input().focus ? 1 : 0
-        framing = immediately ? target : framing + (target - framing) * min(1, dt * 2.6)
+        framing = snap ? target : framing + (target - framing) * min(1, dt * 2.6)
         let fov = Float(camera.camera.fieldOfViewInDegrees) * .pi / 180
         let height = rig.upper.y - rig.lower.y
         let center = (rig.lower + rig.upper) / 2
         let wholeDistance = (height * 0.56) / tan(fov / 2)
-        // Close-up aims between the head and the peg being tuned, gliding when the string changes.
-        let head = rig.head
-        var aim = head + SIMD3<Float>(0, -0.045, 0)
-        if let anchor = currentAnchor ?? rig.strings.first?.anchor, let string = rig.string(anchor) {
-            aim = head + (string.pegPoint - head) * 0.45 + SIMD3<Float>(0, -0.03, 0)
-        }
-        let previousAim = aimPoint ?? aim
-        let focusPoint = immediately ? aim : previousAim + (aim - previousAim) * min(1, dt * 3)
+        // Close-up: the whole headstock, gliding toward the peg being tuned when the string changes.
+        let close = closeUp(rig: rig, anchor: currentAnchor ?? rig.strings.first?.anchor, fov: fov)
+        let previousAim = aimPoint ?? close.aim
+        let focusPoint = snap ? close.aim : previousAim + (close.aim - previousAim) * min(1, dt * 3)
         aimPoint = focusPoint
-        let focusDistance: Float = max(0.34, height * 0.33)
+        let previousDistance = aimDistance ?? close.distance
+        let focusDistance = snap ? close.distance : previousDistance + (close.distance - previousDistance) * min(1, dt * 3)
+        aimDistance = focusDistance
         let point = simd_mix(center, focusPoint, SIMD3(repeating: framing))
         let distance = wholeDistance + (focusDistance - wholeDistance) * framing
-        let targetYaw: Float = showcase ? -0.18 + 0.5 * Float(sin(time * 0.32)) : -0.32 - 0.22 * framing
-        yaw = immediately ? targetYaw : yaw + (targetYaw - yaw) * min(1, dt * 2.6)
-        let breathing = Float(sin(time * 0.35)) * 0.025 * (1 - framing)
+        let sway: Float = showcase && !reduceMotion ? 0.5 * Float(sin(time * 0.32)) : 0
+        let targetYaw: Float = showcase ? -0.18 + sway : -0.32 + (Self.closeYaw + 0.32) * framing
+        yaw = snap ? targetYaw : yaw + (targetYaw - yaw) * min(1, dt * 2.6)
+        let breathing = reduceMotion ? 0 : Float(sin(time * 0.35)) * 0.025 * (1 - framing)
         let rotation = simd_quatf(angle: yaw + breathing, axis: [0, 1, 0]) * simd_quatf(angle: 0.04 * (1 - framing), axis: [1, 0, 0])
         model.orientation = rotation
-        model.position = -rotation.act(point) + SIMD3<Float>(0, 0, -distance)
+        // In close-up the headstock centres in the room left of the side controls.
+        let shift = Self.controlsInset * metresPerPoint(distance: distance, fov: fov) * framing
+        model.position = -rotation.act(point) + SIMD3<Float>(-shift, 0, -distance)
+    }
+
+    /// World metres one point spans at `distance` in front of the camera (0 before the view has a size).
+    private func metresPerPoint(distance: Float, fov: Float) -> Float {
+        let half = Float(viewSize.height) / 2
+        return half > 0 ? distance * tan(fov / 2) / half : 0
+    }
+
+    /// The close-up target: aimed between the head and the peg being tuned, then raised (and the camera
+    /// backed off if needed) so every tuning peg sits at least `pegClearance` below the top edge while the
+    /// nut stays `nutClearance` above the bottom. A point's height on screen is (y - aim.y) / ((distance - z) * t)
+    /// of the half-height, z being how far the turned instrument brings it toward the camera; the yaw leaves y alone.
+    private func closeUp(rig: InstrumentRig, anchor: String?, fov: Float) -> (aim: SIMD3<Float>, distance: Float) {
+        let head = rig.head
+        var aim = head + SIMD3<Float>(0, -0.045, 0)
+        if let string = rig.string(anchor) {
+            aim = head + (string.pegPoint - head) * 0.45 + SIMD3<Float>(0, -0.03, 0)
+        }
+        var distance: Float = max(0.34, (rig.upper.y - rig.lower.y) * 0.33)
+        let height = Float(viewSize.height)
+        guard height > Self.pegClearance + Self.nutClearance + 40, !rig.strings.isEmpty else { return (aim, distance) }
+        let t = tan(fov / 2)
+        let top = 1 - 2 * Self.pegClearance / height
+        let bottom = 1 - 2 * Self.nutClearance / height
+        let turn = simd_quatf(angle: Self.closeYaw, axis: [0, 1, 0])
+        var highest = -Float.greatestFiniteMagnitude
+        var lowest = Float.greatestFiniteMagnitude
+        for string in rig.strings {
+            let peg = string.pegPoint, nut = string.nutPoint
+            highest = max(highest, peg.y + top * turn.act(peg - aim).z * t)
+            lowest = min(lowest, nut.y - bottom * turn.act(nut - aim).z * t)
+        }
+        distance = max(distance, (highest - lowest) / ((top + bottom) * t))
+        let minAim = highest - top * distance * t
+        let maxAim = max(minAim, lowest + bottom * distance * t)
+        aim.y = min(max(aim.y, minAim), maxAim)
+        return (aim, distance)
+    }
+
+    /// Where a rig point (model space) lands in a stage view of `size`, in points; the same projection
+    /// the camera uses (at the origin, looking down -Z, vertical field of view).
+    func screenPoint(_ p: SIMD3<Float>, in size: CGSize) -> CGPoint? {
+        guard let model, size.width > 0, size.height > 0 else { return nil }
+        let world = model.orientation.act(p) + model.position
+        let depth = -world.z
+        guard depth > 0.01 else { return nil }
+        let fov = Float(camera.camera.fieldOfViewInDegrees) * .pi / 180
+        let scale = Float(size.height) / 2 / (depth * tan(fov / 2))
+        return CGPoint(x: size.width / 2 + CGFloat(world.x * scale), y: size.height / 2 - CGFloat(world.y * scale))
+    }
+
+    struct PegMarker {
+        /// The active course's pegs on screen (both pegs of a pair).
+        var points: [CGPoint]
+        /// The label's side: -1 left of the peg (pegs left of the head's centre), +1 right.
+        var side: CGFloat
+        /// The rig's turn sign: +1 when clockwise tightens.
+        var tighten: Int
+        var slides: Bool
+        /// 0 = whole instrument, 1 = headstock close-up.
+        var closeUp: Float
+    }
+
+    /// The pegs of the string being tuned, projected for the stage overlay; nil before the model is on stage.
+    func pegMarker(in size: CGSize) -> PegMarker? {
+        guard let rig, !showcase, let anchor = currentAnchor else { return nil }
+        let strings = rig.strings.filter { $0.anchor == anchor }
+        let points = strings.compactMap { screenPoint($0.pegPoint, in: size) }
+        guard let first = strings.first, let lead = points.first else { return nil }
+        let head = screenPoint(rig.head, in: size)
+        let left = head.map { lead.x < $0.x } ?? true
+        return PegMarker(points: points, side: left ? -1 : 1, tighten: first.tighten, slides: first.slides, closeUp: framing)
     }
 
     func tick(_ dt: Float) {
@@ -191,6 +280,8 @@ final class StageController {
         let target = state.listening ? Float(max(0, min(1, (state.level + 58) / 34))) : 0
         energy = rising ? max(energy, target) : max(target * 0.6, energy * exp(-dt * 1.4))
         let smoothed = state.cents.map { filter.filter(max(-60, min(60, $0)), at: time) }
+        if smoothed == nil { filter.reset() }
+        smoothedCents = state.listening ? smoothed : nil
         let phase = strobe.advance(cents: state.locked ? 0 : smoothed, dt: Double(dt))
         glow += ((state.locked ? 1 : 0) - glow) * min(1, dt * (state.locked ? 7 : 2.5))
 
@@ -255,7 +346,7 @@ final class StageController {
     }
 }
 
-/// SwiftUI host. Taps on a peg select its string.
+/// SwiftUI host. Taps on a peg select its string; the peg being tuned is ringed and labelled with its turn.
 struct InstrumentStage: View {
     let modelID: String
     let input: () -> StageInput
@@ -268,6 +359,8 @@ struct InstrumentStage: View {
     @State private var controller = StageController()
     @State private var ready = false
     @State private var status = "make"
+    @State private var attached = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private let debug = ProcessInfo.processInfo.environment["TIMBRE_STAGE_DEBUG"] == "1"
 
     var body: some View {
@@ -279,12 +372,12 @@ struct InstrumentStage: View {
             }
             controller.input = input
             controller.showcase = showcase
+            controller.reduceMotion = reduceMotion
             controller.attach(&content)
+            attached = true
             status = "attached"
             await controller.load(modelID: modelID)
-            status = controller.status
-            if controller.failed { onFailure() } else { onReady() }
-            ready = true
+            reportLoad()
         } update: { _ in
             controller.input = input
         }
@@ -295,14 +388,18 @@ struct InstrumentStage: View {
         })
         .task(id: modelID) {
             await controller.load(modelID: modelID)
-            status = controller.status
-            if controller.failed { onFailure() }
+            reportLoad()
         }
+        .onChange(of: reduceMotion, initial: true) { _, value in controller.reduceMotion = value }
+        .onGeometryChange(for: CGSize.self) { proxy in proxy.size } action: { size in controller.viewSize = size }
         .mask {
             // Feather the edges so the stage melts into the screen whatever the renderer clears to.
             let edge: [Gradient.Stop] = [.init(color: .clear, location: 0), .init(color: .black, location: 0.06), .init(color: .black, location: 0.94), .init(color: .clear, location: 1)]
             LinearGradient(stops: edge, startPoint: .top, endPoint: .bottom)
                 .mask(LinearGradient(stops: edge, startPoint: .leading, endPoint: .trailing))
+        }
+        .overlay {
+            if !showcase { StagePegCue(controller: controller, input: input, reduceMotion: reduceMotion) }
         }
         .opacity(ready ? 1 : 0)
         .animation(Motion.settle, value: ready)
@@ -315,6 +412,15 @@ struct InstrumentStage: View {
             }
             #endif
         }
+    }
+
+    /// The make closure and the model task both load, and a load already in flight returns at once.
+    /// So the stage reports ready (and the host retires its placeholder) only once this model is loaded
+    /// and the scene is attached; reporting on the early return left a blank stage while the model loaded.
+    private func reportLoad() {
+        status = controller.status
+        if controller.failed { onFailure() }
+        else if attached && controller.loadedModel == modelID { ready = true; onReady() }
     }
 }
 

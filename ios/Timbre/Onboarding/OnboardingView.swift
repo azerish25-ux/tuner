@@ -7,14 +7,15 @@ struct OnboardingView: View {
     @EnvironmentObject private var store: AppStore
     @State private var step = 0
     @State private var instrumentID: String? = "guitar.acoustic.6"
-    @State private var level = "beginner"
-    @State private var goal = "tune"
+    /// Unanswered until the player picks; Continue waits for an answer.
+    @State private var level: String?
+    @State private var goal: String?
     @State private var showPaywall = false
     @State private var restoring = false
     @State private var restoreMessage: String?
     @State private var floating = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    private let steps = 4
+    private let steps = 5
 
     var body: some View {
         ZStack {
@@ -32,7 +33,8 @@ struct OnboardingView: View {
                     case 0: welcome
                     case 1: experience
                     case 2: goals
-                    default: microphone
+                    case 3: microphone
+                    default: plan
                     }
                 }
                 .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity), removal: .move(edge: .leading).combined(with: .opacity)))
@@ -48,16 +50,21 @@ struct OnboardingView: View {
 
     private func next() { Haptics.shared.selection(); step += 1 }
 
+    /// After the microphone question comes the plan built from the answers.
+    private func afterMicrophone() { next() }
+
     /// Pro members skip the offer.
-    private func afterMicrophone() {
+    private func startPlan() {
         if store.commerce.isPro { finish() } else { showPaywall = true }
     }
 
     private func finish() {
         let instrument = instrumentID.flatMap { store.catalog.instrument(id: $0) }
-        store.completeOnboarding(instrument: instrument, level: level, goal: goal)
+        let answeredLevel = level ?? "beginner"
+        let answeredGoal = goal ?? "tune"
+        store.completeOnboarding(instrument: instrument, level: answeredLevel, goal: answeredGoal)
         if instrumentID == nil { store.selectReference() }
-        Analytics.log("onboarding_complete", ["instrument": instrumentID ?? "chromatic", "goal": goal, "level": level])
+        Analytics.log("onboarding_complete", ["instrument": instrumentID ?? "chromatic", "goal": answeredGoal, "level": answeredLevel])
     }
 
     /// Spotlit instrument, the promise, and the instrument picker in one screen.
@@ -159,31 +166,57 @@ struct OnboardingView: View {
          Choice(id: nil, title: "Voice or other", photo: nil, symbol: "dot.radiowaves.left.and.right")]
     }
 
-    private func options(_ items: [(String, LocalizedStringKey, String)], selection: Binding<String>) -> some View {
+    private var levelOptions: [(String, LocalizedStringKey, String)] {
+        [("beginner", "Just starting", "leaf.fill"), ("intermediate", "A few years", "music.note"), ("advanced", "Many years", "star.fill"), ("pro", "I play professionally", "crown.fill")]
+    }
+
+    private var goalOptions: [(String, LocalizedStringKey, String)] {
+        [("tune", "Tune fast and precisely", "tuningfork"), ("practice", "Practice every day", "calendar"), ("ear", "Train my ear", "ear.fill"), ("voice", "Sing in tune", "music.mic"), ("rhythm", "Keep better time", "metronome.fill")]
+    }
+
+    private func options(_ items: [(String, LocalizedStringKey, String)], selection: Binding<String?>) -> some View {
         VStack(spacing: 10) {
             ForEach(items, id: \.0) { item in
-                Button { selection.wrappedValue = item.0; Haptics.shared.selection() } label: {
+                let selected = selection.wrappedValue == item.0
+                Button {
+                    withAnimation(Motion.pluck) { selection.wrappedValue = item.0 }
+                    Haptics.shared.selection()
+                } label: {
                     HStack(spacing: 14) {
                         IconOrb(symbol: item.2, size: 40)
                         Text(item.1).font(.headline).foregroundStyle(Palette.ink)
                         Spacer()
-                        Image(systemName: selection.wrappedValue == item.0 ? "checkmark.circle.fill" : "circle").foregroundStyle(selection.wrappedValue == item.0 ? Palette.brass : Palette.inkFaint)
+                        Image(systemName: selected ? "checkmark.circle.fill" : "circle").foregroundStyle(selected ? Palette.brass : Palette.inkFaint)
+                            .contentTransition(.symbolEffect(.replace))
                     }
                     .padding(14)
-                    .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(selection.wrappedValue == item.0 ? Palette.brass.opacity(0.14) : Palette.stageRaised.opacity(0.8)))
-                    .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(selection.wrappedValue == item.0 ? Palette.brass : Palette.line, lineWidth: 1))
+                    .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(selected ? Palette.brass.opacity(0.14) : Palette.stageRaised.opacity(0.8)))
+                    .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(selected ? Palette.brass : Palette.line, lineWidth: 1))
+                    .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(PressScaleStyle())
+                .accessibilityAddTraits(selected ? .isSelected : [])
+                .accessibilityIdentifier("onboarding.option.\(item.0)")
             }
         }
+    }
+
+    /// Continue stays dimmed and disabled until a question is answered.
+    private func continueButton(enabled: Bool) -> some View {
+        Button("Continue") { next() }
+            .buttonStyle(BrassButtonStyle())
+            .disabled(!enabled)
+            .opacity(enabled ? 1 : 0.4)
+            .animation(Motion.quick, value: enabled)
+            .accessibilityIdentifier("onboarding.continue")
     }
 
     private var experience: some View {
         VStack(alignment: .leading, spacing: 18) {
             question("How long have you been playing?", "Exercises start where you are.")
-            options([("beginner", "Just starting", "leaf.fill"), ("intermediate", "A few years", "music.note"), ("advanced", "Many years", "star.fill"), ("pro", "I play professionally", "crown.fill")], selection: $level)
+            options(levelOptions, selection: $level)
             Spacer()
-            Button("Continue") { next() }.buttonStyle(BrassButtonStyle()).accessibilityIdentifier("onboarding.continue")
+            continueButton(enabled: level != nil)
         }
         .padding(.horizontal, 24).padding(.vertical, 18)
     }
@@ -191,9 +224,9 @@ struct OnboardingView: View {
     private var goals: some View {
         VStack(alignment: .leading, spacing: 18) {
             question("What matters most?", "Your daily set is built around it.")
-            options([("tune", "Tune fast and precisely", "tuningfork"), ("practice", "Practice every day", "calendar"), ("ear", "Train my ear", "ear.fill"), ("voice", "Sing in tune", "music.mic"), ("rhythm", "Keep better time", "metronome.fill")], selection: $goal)
+            options(goalOptions, selection: $goal)
             Spacer()
-            Button("Continue") { next() }.buttonStyle(BrassButtonStyle()).accessibilityIdentifier("onboarding.continue")
+            continueButton(enabled: goal != nil)
         }
         .padding(.horizontal, 24).padding(.vertical, 18)
     }
@@ -223,12 +256,214 @@ struct OnboardingView: View {
         }
     }
 
+    /// The plan from the answers: the course, where the placement starts, the goal and the next milestones.
+    @ViewBuilder private var plan: some View {
+        let instrument = instrumentID.flatMap { store.catalog.instrument(id: $0)?.id }
+        let answeredGoal = goal ?? "tune"
+        let goalOption = goalOptions.first { $0.0 == answeredGoal }
+        if let course = store.onboardingCourse(instrumentId: instrument, goal: answeredGoal) {
+            let progress = store.onboardingProgress(level: level ?? "beginner", instrumentId: instrument, goal: answeredGoal)
+            let start = progress.nextLesson(in: course)
+            PlanStep(course: course, start: start, goal: goalOption, image: courseImage(course), onStart: { startPlan() })
+        } else {
+            VStack {
+                Spacer()
+                Button("Start my plan") { startPlan() }.buttonStyle(BrassButtonStyle()).padding(.horizontal, 24).padding(.bottom, 14)
+                    .accessibilityIdentifier("onboarding.plan.start")
+            }
+        }
+    }
+
+    /// The course instrument's studio render (or photograph), as on the Learn tab.
+    private func courseImage(_ course: LearnCourse) -> String? {
+        let photo = course.instrument.flatMap { store.catalog.photo(instrumentId: $0)?.asset }
+        return photo.map { asset in ModelLibrary.modelID(forPhoto: asset).map { ModelLibrary.hasCard($0) ? ModelLibrary.cardImageName($0) : asset } ?? asset }
+    }
+
     private func question(_ title: LocalizedStringKey, _ detail: LocalizedStringKey) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title).font(Typeface.display(32)).tracking(-0.6).foregroundStyle(Palette.ink).fixedSize(horizontal: false, vertical: true)
             Text(detail).font(.subheadline).foregroundStyle(Palette.inkSoft)
         }
         .padding(.top, 8)
+    }
+}
+
+/// "Your plan": the course card with the first lesson after placement, the goal, and the first lessons
+/// of the next units as milestones. Rows rise in one after another.
+private struct PlanStep: View {
+    let course: LearnCourse
+    let start: Lesson?
+    let goal: (String, LocalizedStringKey, String)?
+    let image: String?
+    let onStart: () -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var shown = false
+    @State private var floating = false
+
+    private var accent: Color { Palette.accent(course.accent) }
+
+    private var startUnit: Int? {
+        guard let start else { return nil }
+        return course.units.firstIndex { unit in unit.lessons.contains { $0.id == start.id } }
+    }
+
+    /// Up to three units after the starting one.
+    private var milestones: [Int] {
+        let from = (startUnit ?? 0) + 1
+        return Array((from..<max(from, course.units.count)).prefix(3))
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    header.planReveal(shown, 0, reduceMotion)
+                    courseCard.planReveal(shown, 1, reduceMotion)
+                    if let goal { goalRow(goal).planReveal(shown, 2, reduceMotion) }
+                    if !milestones.isEmpty { milestoneList }
+                }
+                .padding(.horizontal, 24).padding(.top, 18).padding(.bottom, 16)
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            Button("Start my plan") { Haptics.shared.selection(); onStart() }
+                .buttonStyle(BrassButtonStyle())
+                .padding(.horizontal, 24).padding(.top, 8).padding(.bottom, 14)
+                .planReveal(shown, 7, reduceMotion)
+                .accessibilityIdentifier("onboarding.plan.start")
+        }
+        .onAppear {
+            shown = true
+            guard !reduceMotion else { return }
+            withAnimation(.easeInOut(duration: 3.2).repeatForever(autoreverses: true)) { floating = true }
+        }
+    }
+
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Your plan").font(Typeface.display(34)).tracking(-0.6).foregroundStyle(Palette.ink)
+                .accessibilityAddTraits(.isHeader)
+            Text(course.subtitle.localized).font(.subheadline).foregroundStyle(Palette.inkSoft)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.top, 8)
+    }
+
+    private var courseCard: some View {
+        HStack(alignment: .center, spacing: 0) {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 8) {
+                    Image(systemName: course.symbol).font(.system(size: 13, weight: .bold))
+                    Text(course.title.localized.uppercased()).font(Typeface.label(12)).tracking(1.2).lineLimit(1)
+                }
+                .foregroundStyle(accent)
+                Text("First lesson").font(.subheadline).foregroundStyle(Palette.inkSoft).padding(.top, 6)
+                if let start {
+                    Text(start.title.localized).font(Typeface.display(24)).tracking(-0.4).foregroundStyle(Palette.ink)
+                        .lineLimit(3).fixedSize(horizontal: false, vertical: true)
+                }
+                if let startUnit {
+                    Text("UNIT \(startUnit + 1) · \(course.units[startUnit].title.localized.uppercased())")
+                        .font(Typeface.label(11)).tracking(1.1).foregroundStyle(Palette.inkSoft).lineLimit(1)
+                }
+            }
+            Spacer(minLength: 8)
+            artwork
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, minHeight: 170, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .fill(LinearGradient(colors: [accent.opacity(0.26), Palette.stageRaised], startPoint: .topLeading, endPoint: .bottomTrailing))
+        )
+        .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(accent.opacity(0.35), lineWidth: 1))
+        .accessibilityElement(children: .combine)
+    }
+
+    @ViewBuilder private var artwork: some View {
+        if let image {
+            Image(image).resizable().interpolation(.high).scaledToFit().frame(width: 96, height: 150)
+                .rotationEffect(.degrees(floating ? -9 : -13))
+                .offset(y: floating ? -4 : 4)
+                .shadow(color: .black.opacity(0.6), radius: 16, y: 10)
+                .padding(.trailing, -6)
+                .accessibilityHidden(true)
+        } else {
+            Image(systemName: course.symbol).font(.system(size: 32, weight: .semibold)).foregroundStyle(Palette.onAccent)
+                .frame(width: 76, height: 76)
+                .background(Circle().fill(accent))
+                .shadow(color: accent.opacity(0.5), radius: 18)
+                .scaleEffect(floating ? 1.04 : 0.97)
+                .accessibilityHidden(true)
+        }
+    }
+
+    private func goalRow(_ goal: (String, LocalizedStringKey, String)) -> some View {
+        HStack(spacing: 14) {
+            IconOrb(symbol: goal.2, tint: Palette.amber, size: 44)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Your goal").font(.caption).foregroundStyle(Palette.inkSoft)
+                Text(goal.1).font(.headline).foregroundStyle(Palette.ink)
+            }
+            Spacer(minLength: 0)
+        }
+        .stillCard(padding: 14)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var milestoneList: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Eyebrow("Milestones", color: accent).planReveal(shown, 3, reduceMotion)
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(Array(milestones.enumerated()), id: \.element) { position, index in
+                    milestoneRow(index, last: position == milestones.count - 1)
+                        .planReveal(shown, 4 + position, reduceMotion)
+                }
+            }
+        }
+        .padding(.top, 6)
+    }
+
+    private func milestoneRow(_ index: Int, last: Bool) -> some View {
+        let unit = course.units[index]
+        return HStack(alignment: .top, spacing: 14) {
+            ZStack {
+                Circle().fill(Palette.stage)
+                Circle().strokeBorder(accent, lineWidth: 2)
+                if last { Image(systemName: "flag.fill").font(.system(size: 9, weight: .bold)).foregroundStyle(accent) }
+            }
+            .frame(width: 22, height: 22)
+            VStack(alignment: .leading, spacing: 3) {
+                Text("UNIT \(index + 1) · \(unit.title.localized.uppercased())")
+                    .font(Typeface.label(11)).tracking(1.1).foregroundStyle(accent).lineLimit(1)
+                Text(unit.lessons.first?.title.localized ?? unit.title.localized)
+                    .font(.body.weight(.semibold)).foregroundStyle(Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.top, 2)
+            .padding(.bottom, last ? 0 : 22)
+            Spacer(minLength: 0)
+        }
+        .background(alignment: .topLeading) {
+            // The path to the next milestone draws itself downwards.
+            if !last {
+                Capsule().fill(accent.opacity(0.35)).frame(width: 2)
+                    .padding(.top, 26).padding(.bottom, 2)
+                    .offset(x: 10)
+                    .scaleEffect(x: 1, y: shown ? 1 : 0, anchor: .top)
+            }
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
+private extension View {
+    /// Plan rows fade and rise in one after another; with Reduce Motion they only fade.
+    func planReveal(_ shown: Bool, _ order: Int, _ reduceMotion: Bool) -> some View {
+        let rise = Animation.spring(response: 0.62, dampingFraction: 0.86).delay(0.08 + Double(order) * 0.11)
+        return opacity(shown ? 1 : 0)
+            .offset(y: shown || reduceMotion ? 0 : 18)
+            .animation(reduceMotion ? Animation.easeOut(duration: 0.3) : rise, value: shown)
     }
 }
 

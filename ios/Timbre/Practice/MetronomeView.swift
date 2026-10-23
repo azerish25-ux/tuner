@@ -16,8 +16,9 @@ struct MetronomeView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 22) {
-                pendulum.frame(height: 300)
+            // Sized so tempo, beats and meter all sit above the dock on a 6.1" phone.
+            VStack(spacing: 16) {
+                pendulum.frame(height: 184)
                 tempo
                 beatRow
                 meter
@@ -25,10 +26,11 @@ struct MetronomeView: View {
             }
             .padding(.horizontal, Metrics.gutter).padding(.bottom, 30)
         }
+        .stageTopShade()
         .background(StageBackground(motes: false))
         .navigationTitle("Metronome")
         .navigationBarTitleDisplayMode(.inline)
-        .safeAreaInset(edge: .bottom) { transport.padding(.horizontal, Metrics.gutter).padding(.bottom, 8) }
+        .stageDock { transport }
         .onChange(of: store.bpm) { old, new in reanchor(from: old, to: new) }
         .onChange(of: audio.metronomeRunning) { _, running in if running { anchor = Date(); anchorBpm = store.bpm } else { trainerTask?.cancel() } }
         .onDisappear { trainerTask?.cancel() }
@@ -51,8 +53,9 @@ struct MetronomeView: View {
             let frac = position - floor(position)
             let flash = audio.metronomeRunning ? max(0, 1 - frac * 3.5) : 0
             Canvas { context, size in
-                let pivot = CGPoint(x: size.width / 2, y: 18)
-                let length = size.height - 50
+                let pivot = CGPoint(x: size.width / 2, y: 14)
+                // Leaves room under the bob so its beat glow fades out inside the canvas.
+                let length = size.height - 62
                 let angle = swing * 0.42
                 let bob = CGPoint(x: pivot.x + sin(angle) * length, y: pivot.y + cos(angle) * length)
                 // Arc of travel
@@ -64,8 +67,8 @@ struct MetronomeView: View {
                 let accent = store.beatLevels.indices.contains(beat) && store.beatLevels[beat] == 2
                 let glowColor = accent ? Palette.ember : Palette.brass
                 let r: CGFloat = 26 + 10 * flash
-                context.fill(Path(ellipseIn: CGRect(x: bob.x - r * 2, y: bob.y - r * 2, width: r * 4, height: r * 4)),
-                             with: .radialGradient(Gradient(colors: [glowColor.opacity(0.45 * flash + 0.08), .clear]), center: bob, startRadius: 0, endRadius: r * 2))
+                context.fill(Path(ellipseIn: CGRect(x: bob.x - r * 1.5, y: bob.y - r * 1.5, width: r * 3, height: r * 3)),
+                             with: .radialGradient(Gradient(colors: [glowColor.opacity(0.45 * flash + 0.08), .clear]), center: bob, startRadius: 0, endRadius: r * 1.5))
                 context.fill(Path(ellipseIn: CGRect(x: bob.x - 22, y: bob.y - 22, width: 44, height: 44)),
                              with: .linearGradient(Gradient(colors: [Color(hex: 0x8BF7D2), Palette.mintDeep]), startPoint: CGPoint(x: bob.x, y: bob.y - 22), endPoint: CGPoint(x: bob.x, y: bob.y + 22)))
                 context.fill(Path(ellipseIn: CGRect(x: pivot.x - 6, y: pivot.y - 6, width: 12, height: 12)), with: .color(Palette.brass))
@@ -79,7 +82,7 @@ struct MetronomeView: View {
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 Button { store.setMetronome(bpm: store.bpm - 1) } label: { Image(systemName: "minus").frame(width: 44, height: 44) }
                     .buttonStyle(.plain).foregroundStyle(Palette.inkSoft).accessibilityLabel("Slower")
-                Text("\(store.bpm)").font(Typeface.display(96)).foregroundStyle(Palette.ink).contentTransition(.numericText()).monospacedDigit()
+                Text("\(store.bpm)").font(Typeface.display(80)).foregroundStyle(Palette.ink).contentTransition(.numericText()).monospacedDigit()
                     .accessibilityIdentifier("metronome.bpm")
                 Button { store.setMetronome(bpm: store.bpm + 1) } label: { Image(systemName: "plus").frame(width: 44, height: 44) }
                     .buttonStyle(.plain).foregroundStyle(Palette.inkSoft).accessibilityLabel("Faster")
@@ -126,7 +129,7 @@ struct MetronomeView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .stillCard(padding: 14)
+        .stillCard(padding: 12)
     }
 
     private func levelName(_ level: Int) -> String {
@@ -138,14 +141,13 @@ struct MetronomeView: View {
     }
 
     private var meter: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 10) {
             Eyebrow("Meter")
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach([2, 3, 4, 5, 6, 7, 9, 12], id: \.self) { value in
-                        Button("\(value)/\(value == 6 || value == 9 || value == 12 ? 8 : 4)") { store.setMetronome(beats: value) }
-                            .buttonStyle(ChipButtonStyle(selected: store.beats == value))
-                    }
+            EdgeRail(bleed: 16, selection: store.beats) {
+                ForEach([2, 3, 4, 5, 6, 7, 9, 12], id: \.self) { value in
+                    Button("\(value)/\(value == 6 || value == 9 || value == 12 ? 8 : 4)") { store.setMetronome(beats: value) }
+                        .buttonStyle(ChipButtonStyle(selected: store.beats == value))
+                        .id(value)
                 }
             }
             HStack(spacing: 8) {
@@ -158,7 +160,7 @@ struct MetronomeView: View {
                 }
             }
         }
-        .stillCard()
+        .stillCard(padding: 16)
     }
 
     private var proControls: some View {

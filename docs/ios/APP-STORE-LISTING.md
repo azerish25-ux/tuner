@@ -35,12 +35,12 @@ TUNE ANYTHING, FAST
 • A chromatic and strobe tuner with cent-level precision
 • 60 instruments and 102 tunings, from guitar and violin to oud, sitar and erhu
 • Auto string detection, with a check-off as each string locks in
-• Studio-lit 3D guitars, basses, violin, cello and mandolin, plus 2D instrument photos
+• Studio-lit 3D guitars, basses, violin, cello and mandolin
 • Custom tunings, capo, adjustable A4 reference, solfège and sargam note names
 
 LEARN BY PLAYING
 • 439 lessons in 12 courses: guitar, ukulele, bass, violin, cello, mandolin, banjo, voice, ear training, music theory, rhythm and songs
-• Timbre listens as you play: single notes, whole chords and strumming rhythm, with feedback on pitch and timing to the millisecond
+• Timbre listens as you play: single notes, whole chords and strumming rhythm, with pitch feedback and timing feedback in milliseconds
 • A play-along note highway that slows down for you, then speeds back up as you improve
 • 38 public-domain song lessons, from Ode to Joy to Amazing Grace
 • Stars, XP, daily quests, streaks and badges keep you coming back
@@ -52,11 +52,11 @@ PRACTICE TOOLS
 • Home Screen and Lock Screen widgets, plus Siri shortcuts
 
 FREE TO START
-Tuning is free, along with the first unit of every course. Timbre Pro unlocks every lesson, every instrument and the full practice set. The trial timeline is on the paywall, and Timbre reminds you two days before the trial ends.
+Tuning is free, along with the first unit of every course. Timbre Pro unlocks every lesson, every instrument and the full practice set. The trial timeline is on the paywall, and, with notifications on, Timbre reminds you two days before the trial ends.
 
 Private by design: audio is analysed on your iPhone and never recorded or uploaded. No account and no ads.
 
-Subscriptions renew automatically unless cancelled at least 24 hours before the end of the period. Manage or cancel any time in Settings → Apple ID → Subscriptions.
+Subscriptions renew automatically unless cancelled at least 24 hours before the end of the period. Manage or cancel any time in Settings → Apple Account → Subscriptions.
 Terms: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Privacy: <privacy policy URL>
 ```

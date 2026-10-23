@@ -62,12 +62,19 @@ final class TimbreUITests: XCTestCase {
         element("onboarding.instrument.bass.electric.4").tap(); settle(); shot("02-onboarding-instrument")
         element("onboarding.instrument.guitar.acoustic.6").tap()
         start.tap(); settle(1.5); shot("03-onboarding-experience")
+        // Nothing is pre-selected: Continue waits for an answer.
+        element("onboarding.option.intermediate").tap(); settle(0.5)
         element("onboarding.continue").tap(); settle(1.5); shot("04-onboarding-goal")
+        element("onboarding.option.practice").tap(); settle(0.5)
         let notNow = app.buttons["Not now"]
         for _ in 0..<3 where !notNow.exists { element("onboarding.continue").tap(); settle(1.5) }
         XCTAssertTrue(notNow.waitForExistence(timeout: 5))
         shot("05-onboarding-microphone")
         notNow.tap()
+        let plan = element("onboarding.plan.start")
+        XCTAssertTrue(plan.waitForExistence(timeout: 10))
+        settle(2); shot("05b-onboarding-plan")
+        plan.tap()
         let free = element("paywall.free")
         XCTAssertTrue(free.waitForExistence(timeout: 15))
         settle(2); shot("06-paywall-onboarding")

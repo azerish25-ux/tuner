@@ -9,7 +9,7 @@ struct DroneView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 22) {
-                rings.frame(height: 300)
+                rings.frame(height: 250)
                 VStack(spacing: 4) {
                     Text(PitchMath.noteName(midi: store.droneMidi, notation: store.settings.notation)).font(Typeface.display(72)).foregroundStyle(Palette.ink)
                     Text(String(format: "Sa = %.1f Hz", PitchMath.frequency(midi: Double(store.droneMidi), reference: store.settings.referencePitchHz)))
@@ -17,13 +17,13 @@ struct DroneView: View {
                 }
                 VStack(alignment: .leading, spacing: 12) {
                     Eyebrow("Tonic")
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 6) {
-                            ForEach(0..<12, id: \.self) { pc in
-                                let midi = 48 + pc
-                                Button(NoteNames.name(pc, preferFlats: [1, 3, 8, 10].contains(pc))) { store.setDrone(midi: midi + (store.droneMidi >= 60 ? 12 : 0)) }
-                                    .buttonStyle(ChipButtonStyle(selected: store.droneMidi % 12 == pc))
-                            }
+                    // Runs to the card's edge (its 18 pt inset) so tonics scroll under it instead of being cut.
+                    EdgeRail(bleed: 18, spacing: 6, selection: store.droneMidi % 12) {
+                        ForEach(0..<12, id: \.self) { pc in
+                            let midi = 48 + pc
+                            Button(NoteNames.name(pc, preferFlats: [1, 3, 8, 10].contains(pc))) { store.setDrone(midi: midi + (store.droneMidi >= 60 ? 12 : 0)) }
+                                .buttonStyle(ChipButtonStyle(selected: store.droneMidi % 12 == pc))
+                                .id(pc)
                         }
                     }
                     Picker("Octave", selection: Binding(get: { store.droneMidi >= 60 ? 1 : 0 }, set: { store.setDrone(midi: store.droneMidi % 12 + ($0 == 1 ? 60 : 48)) })) {
@@ -40,16 +40,17 @@ struct DroneView: View {
                 Label("Sing or play long notes against the drone. Headphones keep it out of the microphone.", systemImage: "headphones")
                     .font(.footnote).foregroundStyle(Palette.inkSoft)
             }
-            .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+            .padding(.horizontal, Metrics.gutter).padding(.top, 12).padding(.bottom, 28)
         }
+        .stageTopShade()
         .background(StageBackground(motes: false))
         .navigationTitle("Drone")
         .navigationBarTitleDisplayMode(.inline)
-        .safeAreaInset(edge: .bottom) {
+        .stageDock {
             Button { store.toggleDrone() } label: {
                 Label(audio.droneRunning ? "Stop drone" : "Start drone", systemImage: audio.droneRunning ? "stop.fill" : "play.fill")
             }
-            .buttonStyle(BrassButtonStyle()).padding(.horizontal, Metrics.gutter).padding(.bottom, 8)
+            .buttonStyle(BrassButtonStyle())
             .accessibilityIdentifier("drone.start")
         }
     }
