@@ -17,8 +17,9 @@ final class TimbreUITests: XCTestCase {
         app.terminate()
     }
 
-    private func launch(onboarded: Bool = true, demo: Bool = true, studio: Bool = false) {
-        app.launchEnvironment["TIMBRE_STAGE_DEBUG"] = "1"
+    private func launch(onboarded: Bool = true, demo: Bool = true, studio: Bool = false, pitch: Bool = false, stageDebug: Bool = false) {
+        if stageDebug { app.launchEnvironment["TIMBRE_STAGE_DEBUG"] = "1" }
+        if pitch { app.launchEnvironment["TIMBRE_DEMO_PITCH"] = "1" }
         if onboarded { app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1" }
         if demo { app.launchEnvironment["TIMBRE_DEMO_DATA"] = "1" }
         if studio { app.launchEnvironment["TIMBRE_STAGE_MODE"] = "studio" }
@@ -59,18 +60,11 @@ final class TimbreUITests: XCTestCase {
     }
 
     func test02TuneScreen() throws {
-        launch()
+        launch(pitch: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
-        settle(3); shot("10-tune-3d")
-        let debug = element("stage.debug")
-        if debug.waitForExistence(timeout: 10) {
-            print("STAGE DEBUG: \(debug.label)")
-            let note = XCTAttachment(string: debug.label)
-            note.name = "stage-debug"; note.lifetime = .keepAlways
-            add(note)
-        } else {
-            print("STAGE DEBUG: no stage.debug element")
-        }
+        // The demo pitch drifts into tune over four seconds and re-plucks every six.
+        settle(8); shot("10-tune-3d")
+        settle(2.5); shot("10b-tune-locked")
         element("string.3").tap(); settle(1.5); shot("11-tune-string-selected")
         element("tune.instrument").tap(); settle(1.5); shot("12-instrument-picker")
         app.buttons["Done"].firstMatch.tap(); settle()
@@ -82,9 +76,9 @@ final class TimbreUITests: XCTestCase {
     }
 
     func test03StudioStage() throws {
-        launch(studio: true)
+        launch(studio: true, pitch: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
-        settle(2); shot("14-tune-studio")
+        settle(3); shot("14-tune-studio")
         tab("Instruments"); settle(1.5)
         element("instruments.chromatic").tap(); settle(2); shot("15-tune-chromatic")
     }
@@ -134,5 +128,18 @@ final class TimbreUITests: XCTestCase {
         element("practice.scales").tap(); settle(1.5); shot("44-scales")
         app.navigationBars.buttons.firstMatch.tap(); settle()
         tab("Journey"); settle(2); shot("45-journey-pro")
+    }
+
+    func test07StageDiagnostics() throws {
+        launch(stageDebug: true)
+        XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
+        let debug = element("stage.debug")
+        XCTAssertTrue(debug.waitForExistence(timeout: 20))
+        for _ in 0..<20 where !debug.label.hasPrefix("loaded") { settle(1) }
+        print("STAGE DEBUG: \(debug.label)")
+        let note = XCTAttachment(string: debug.label)
+        note.name = "stage-debug"; note.lifetime = .keepAlways
+        add(note)
+        shot("90-stage-diagnostics")
     }
 }

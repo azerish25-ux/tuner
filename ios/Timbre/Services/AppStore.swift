@@ -267,6 +267,12 @@ final class AppStore: ObservableObject {
         guard canListen else { presentPaywall("instrument"); return }
         tracker.reset(); live.clear()
         if sessionStarted == nil { sessionStarted = Date(); sessionStartedUptime = ProcessInfo.processInfo.systemUptime }
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" {
+            audio.startDemo { [weak self] in self?.targetHz ?? 440 }
+            return
+        }
+        #endif
         let scale = settings.referencePitchHz / 440
         let margin = pow(2.0, 2.0 / 12.0)
         let targets = referenceMode ? [25.0, 4500.0] : courses.map { target(for: $0) }
