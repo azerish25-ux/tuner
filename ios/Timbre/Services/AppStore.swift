@@ -37,6 +37,10 @@ final class AppStore: ObservableObject {
     /// The latest XP / quest / badge result, for the reward toast; `rewardPulse` ticks on each.
     @Published private(set) var lastReward: ProgressUpdate?
     @Published private(set) var rewardPulse = 0
+    /// A streak freeze was just earned or spent; the reward toast announces it, `streakPulse` ticks on each.
+    enum StreakNotice: Equatable { case earned, saved(days: Int) }
+    @Published private(set) var streakNotice: StreakNotice?
+    @Published private(set) var streakPulse = 0
     // Voice
     @Published var voiceLevel = 1 {
         didSet { if voiceLevel != oldValue && !updateSettings({ $0.selectedVoiceLevel = voiceLevel }) { voiceLevel = oldValue } }
@@ -93,6 +97,7 @@ final class AppStore: ObservableObject {
         }
         WidgetSnapshot.write(WidgetSnapshot(streak: summary.current, best: summary.best, practicedToday: summary.practicedToday,
                                             week: week, instrument: instrumentDisplayName, updated: Date(), lesson: lesson))
+        PracticeReminder.update(.init(streak: summary.current, practicedToday: summary.practicedToday, nextLesson: lesson?.title))
     }
 
     // MARK: Derived state
@@ -160,7 +165,34 @@ final class AppStore: ObservableObject {
     var allCoursesLocked: Bool { !courses.isEmpty && Set(courses.map(\.index)).isSubset(of: lockedCourses) }
     var voiceExercise: VoiceExercise { VoiceExercise(level: voiceLevel, rootMidi: voiceRoot) }
     var voiceTargetMidi: Int { voiceExercise.note(at: live.voiceElapsed) }
-    var streak: StreakSummary { Streaks.summary(records: records) }
+    var streak: StreakSummary { Streaks.summary(records: records, frozen: Set(progress.frozenDays ?? [])) }
+    var streakFreezes: Int { progress.streakFreezes ?? 0 }
+
+    /// Spends banked freezes on days missed since the last practice. Runs at launch and whenever the app comes forward.
+    func applyStreakFreezes() {
+        var state = progress
+        let frozen = Set(state.frozenDays ?? [])
+        let cover = StreakFreeze.daysToCover(records: records, frozen: frozen, available: state.streakFreezes ?? 0)
+        guard !cover.isEmpty else { return }
+        state.streakFreezes = (state.streakFreezes ?? 0) - cover.count
+        state.frozenDays = Array(frozen.union(cover).sorted().suffix(366))
+        guard updateSettings({ $0.progress = state }) else { return }
+        streakNotice = .saved(days: cover.count); streakPulse += 1
+        Analytics.log("streak_freeze_used", ["days": String(cover.count)])
+        publishWidgets()
+    }
+
+    /// Every seventh day of a run banks a freeze (up to two).
+    private func awardStreakFreezeIfEarned() {
+        var state = progress
+        let today = Quests.dayKey(Date())
+        guard StreakFreeze.earnsFreeze(summary: streak, banked: state.streakFreezes ?? 0, lastAwardDay: state.freezeAwardDay, todayKey: today) else { return }
+        state.streakFreezes = (state.streakFreezes ?? 0) + 1
+        state.freezeAwardDay = today
+        guard updateSettings({ $0.progress = state }) else { return }
+        streakNotice = .earned; streakPulse += 1
+        Analytics.log("streak_freeze_earned")
+    }
     var recentInstrumentIds: [String] {
         let available = Set(catalog.instruments.map(\.id))
         var seen = Set<String>()
@@ -412,7 +444,7 @@ final class AppStore: ObservableObject {
     }
 
     func save(_ record: PracticeRecord) {
-        do { try persistence.append(record); records = persistence.records; publishWidgets() }
+        do { try persistence.append(record); records = persistence.records; awardStreakFreezeIfEarned(); publishWidgets() }
         catch { self.error = String(localized: "Practice could not be saved: \(error.localizedDescription)") }
     }
 

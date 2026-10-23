@@ -75,6 +75,32 @@ final class PracticeTests: XCTestCase {
         XCTAssertEqual(Streaks.summary(records: [record(2)], now: now, calendar: calendar).current, 0)
     }
 
+    func testStreakFreezesBridgeAGapWithoutAddingToTheRun() {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        func day(_ daysAgo: Int) -> Date { calendar.startOfDay(for: now.addingTimeInterval(-Double(daysAgo) * 86400)) }
+        func record(_ daysAgo: Int) -> PracticeRecord {
+            PracticeRecord(date: day(daysAgo).addingTimeInterval(3600), instrumentId: "guitar.acoustic.6", kind: "tuning", count: 1, stableCount: 1, durationMs: 60_000)
+        }
+        // Practised 5, 4 and 3 days ago; missed 2 and 1.
+        let records = [record(5), record(4), record(3)]
+        XCTAssertEqual(Streaks.summary(records: records, now: now, calendar: calendar).current, 0)
+        XCTAssertEqual(StreakFreeze.daysToCover(records: records, frozen: [], available: 1, now: now, calendar: calendar), [], "one freeze can't cover two days")
+        let cover = StreakFreeze.daysToCover(records: records, frozen: [], available: 2, now: now, calendar: calendar)
+        XCTAssertEqual(cover, [day(2), day(1)])
+        let saved = Streaks.summary(records: records, frozen: Set(cover), now: now, calendar: calendar)
+        XCTAssertEqual(saved.current, 3, "frozen days keep the run but don't add to it")
+        XCTAssertEqual(Streaks.summary(records: records + [record(0)], frozen: Set(cover), now: now, calendar: calendar).current, 4)
+        // Nothing to cover when yesterday was practised.
+        XCTAssertEqual(StreakFreeze.daysToCover(records: [record(1)], frozen: [], available: 2, now: now, calendar: calendar), [])
+        // Earned on the seventh day, once.
+        let week = Streaks.summary(records: (0..<7).map(record), now: now, calendar: calendar)
+        XCTAssertTrue(StreakFreeze.earnsFreeze(summary: week, banked: 0, lastAwardDay: nil, todayKey: "d"))
+        XCTAssertFalse(StreakFreeze.earnsFreeze(summary: week, banked: 0, lastAwardDay: "d", todayKey: "d"))
+        XCTAssertFalse(StreakFreeze.earnsFreeze(summary: week, banked: StreakFreeze.cap, lastAwardDay: nil, todayKey: "d"))
+    }
+
     func testDailySetStartsWithTuneAndHasNoDuplicates() throws {
         let catalog = try Catalog()
         let guitar = try XCTUnwrap(catalog.instrument(id: "guitar.acoustic.6"))

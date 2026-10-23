@@ -17,6 +17,11 @@ public struct ProgressState: Codable, Equatable, Sendable {
     public var stringSamples: [StringSample] = []
     /// When each instrument was last restrung.
     public var restrung: [String: Date] = [:]
+    /// Banked streak freezes, the days they covered, and the day ("yyyy-MM-dd") the last one was earned.
+    /// Optional so saves from before streak freezes still decode.
+    public var streakFreezes: Int?
+    public var frozenDays: [Date]?
+    public var freezeAwardDay: String?
     public init() {}
 
     public static let sampleLimit = 600
@@ -24,6 +29,7 @@ public struct ProgressState: Codable, Equatable, Sendable {
         xp >= 0 && xp <= 50_000_000 && stats.values.allSatisfy { $0 >= 0 } && stringSamples.count <= Self.sampleLimit
             && questProgress.values.allSatisfy { $0 >= 0 } && questsClaimed.count <= 16 && achievements.count <= 128
             && instrumentsTuned.count <= 128 && stringSamples.allSatisfy { $0.cents.isFinite && abs($0.cents) <= 1200 }
+            && (0...StreakFreeze.cap).contains(streakFreezes ?? 0) && (frozenDays?.count ?? 0) <= 400
     }
 }
 
