@@ -5,6 +5,13 @@
  "headEnd": "B",
  "face": "front",
  "separate": true,
+ "decimate": [
+  {
+   "re": "^frets_0",
+   "ratio": 0.04,
+   "minVerts": 1000
+  }
+ ],
  "rig": "MACHINE_HEAD",
  "degPerCent": 1.4,
  "stringKind": "nylon",

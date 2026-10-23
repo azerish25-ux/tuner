@@ -8,6 +8,7 @@ Each rigs/<model>.json names its download folder and how to read it:
    "remove": [objects deleted (bows, stands)], "hide": [objects hidden],
    "materials": {name: {"metallic": 0, ...}}, "coat": [object name prefixes given a clear coat],
    "retouch": [{"material", "rects" (ink to remove) | "multiply" (tint)}] edits base colour images,
+   "decimate": [{"re", "ratio", "minVerts"}] thins out needlessly dense parts,
    "rig": "FRICTION_PEG", "degPerCent": 1.2, "stringKind": "steel" | "bronze" | "nylon" | "gut",
    "nutZ" / "saddleZ": a height or parts whose mean height it is, "stringEnds": "rings" (low-poly strings),
    "nutEven" / "saddleEven": {"span", "pairGap"} to space bunched-up strings evenly,
@@ -310,6 +311,26 @@ def fix_materials(fixes):
             mat.surface_render_method = "DITHERED"
 
 
+def decimate(rules):
+    """Thin out needlessly dense parts (some artists model each fret with 30k vertices):
+    [{"re": name pattern, "ratio": 0.04, "minVerts": 1000}]."""
+    import re
+    graph = bpy.context.evaluated_depsgraph_get()
+    for rule in rules:
+        rx = re.compile(rule["re"])
+        dense = [o for o in meshes() if rx.search(o.name) and len(o.data.vertices) >= rule.get("minVerts", 1000)]
+        before = sum(len(o.data.vertices) for o in dense)
+        for obj in dense:
+            mod = obj.modifiers.new("decimate", "DECIMATE")
+            mod.ratio = rule["ratio"]
+        graph.update()
+        for obj in dense:
+            mesh = bpy.data.meshes.new_from_object(obj.evaluated_get(graph))
+            obj.modifiers.clear()
+            obj.data = mesh
+        print(f"decimated {len(dense)} parts: {before} -> {sum(len(o.data.vertices) for o in dense)} vertices", flush=True)
+
+
 def box_mean(a, r):
     """Mean over a (2r+1)^2 window, edges clamped (cumulative sums: fast on whole textures)."""
     p = np.pad(a, ((r + 1, r), (r + 1, r)) + ((0, 0),) * (a.ndim - 2), mode="edge")
@@ -355,7 +376,7 @@ def retouch(entries, folder):
             print(f"retouched {int(ink.sum())} ink px in {img.name}", flush=True)
         img.pixels.foreach_set(px[::-1].ravel())
         folder.mkdir(parents=True, exist_ok=True)  # save it, so the USD export copies the cleaned texture
-        img.filepath_raw = str(folder / f"{Path(img.name).stem}_clean.png")
+        img.filepath_raw = str((folder / f"{Path(img.name).stem}_clean.png").resolve())
         img.file_format = "PNG"
         img.save()
 
@@ -899,6 +920,7 @@ def convert(src: Path, cfg: dict, out: Path):
     if cfg.get("separate"):
         separate_loose()
     root, lo, hi = normalise(cfg)
+    decimate(cfg.get("decimate", []))
     fix_materials(cfg.get("materials", {}))
     retouch(cfg.get("retouch", []), out.parent / "retouched" / cfg["model"])
     lacquer(cfg.get("coat", []))
