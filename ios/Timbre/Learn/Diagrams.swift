@@ -12,8 +12,11 @@ struct LessonVisualView: View {
         case .none: EmptyView()
         case let .fretboard(strings, dots, frets, start):
             FretboardDiagram(strings: strings, dots: dots, frets: frets, accent: accent, start: start,
-                             fretless: ["violin", "cello"].contains { instrumentId?.hasPrefix($0) == true })
-        case let .chord(spec): ChordDiagram(chord: spec, accent: accent, landing: true).frame(maxWidth: 220)
+                             fretless: ["violin", "cello"].contains { instrumentId?.hasPrefix($0) == true },
+                             edges: StringEdges.of(instrumentId: instrumentId, strings: strings))
+        case let .chord(spec):
+            ChordDiagram(chord: spec, accent: accent, landing: true, edges: StringEdges.of(instrumentId: instrumentId, strings: spec.frets.count))
+                .frame(maxWidth: 220)
         case let .staff(midi, clef): StaffView(notes: midi, clef: clef, accent: accent)
         case let .rhythm(pattern, beatsPerBar): RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, arrows: strums)
         case let .keyboard(midi): KeyboardView(highlighted: Set(midi), accent: accent)
@@ -25,8 +28,47 @@ struct LessonVisualView: View {
     private var strums: Bool { LearnCourse.strummed(instrumentId) }
 }
 
+/// Which strings are the thinnest and the thickest, so every diagram can name its edges in words
+/// ("Thinnest (1)" on one side, "Thickest (6)" on the other) whichever way it is drawn. On reentrant
+/// tunings (ukulele, banjo) the thickest string sits inside the set, and an edge that is neither stays unnamed.
+struct StringEdges: Equatable {
+    let thinnest: Int
+    let thickest: Int
+
+    init(thinnest: Int, thickest: Int) { self.thinnest = thinnest; self.thickest = thickest }
+
+    /// From the open strings, lowest string first (as `ChordStep.openStrings`): string 1 is the thinnest,
+    /// the lowest-pitched string the thickest.
+    init?(openStrings: [Int]) {
+        guard openStrings.count >= 2, let low = openStrings.indices.min(by: { openStrings[$0] < openStrings[$1] }) else { return nil }
+        self.init(thinnest: 1, thickest: openStrings.count - low)
+    }
+
+    /// The course instrument's edges; a plain run from 1 to `strings` when the tuning isn't known.
+    static func of(instrumentId: String?, strings: Int) -> StringEdges? {
+        let open = ChordStep.openStrings(kind: LearnCourse.fretKind(of: instrumentId))
+        if open.count == strings, let edges = StringEdges(openStrings: open) { return edges }
+        return strings >= 2 ? StringEdges(thinnest: 1, thickest: strings) : nil
+    }
+
+    static func of(_ course: LearnCourse) -> StringEdges? { of(instrumentId: course.instrument, strings: course.stringCount) }
+
+    /// The words for the string on an edge; nil when it is neither the thinnest nor the thickest.
+    func label(_ string: Int) -> Text? {
+        if string == thinnest { return Text("Thinnest (\(string))") }
+        if string == thickest { return Text("Thickest (\(string))") }
+        return nil
+    }
+
+    /// The same, styled for drawing into a Canvas.
+    func canvasLabel(_ string: Int, size: CGFloat = 10) -> Text? {
+        label(string)?.font(.system(size: size, weight: .semibold, design: .rounded)).foregroundStyle(Palette.inkSoft)
+    }
+}
+
 /// A stretch of neck seen from the player: string 1 on top, nut on the left, dots where to press.
-/// Every string is numbered beside the nut, so the orientation never has to be guessed.
+/// Every string is numbered beside the nut, and the top and bottom edges are named ("Thinnest (1)",
+/// "Thickest (6)"), so the orientation never has to be guessed.
 struct FretboardDiagram: View {
     let strings: Int
     var dots: [Fretting] = []
@@ -42,6 +84,8 @@ struct FretboardDiagram: View {
     var rowHeight: CGFloat = 26
     /// The dots (and the lit string) breathe: the target to play right now.
     var pulsing = false
+    /// Names the top and bottom edges in words; nil leaves just the numbers.
+    var edges: StringEdges?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -63,9 +107,13 @@ struct FretboardDiagram: View {
     private static let numberX: CGFloat = 8
     /// The nut's x: the number column and the open-string rings sit left of it.
     private static let nutX: CGFloat = 44
+    /// A row above and below the board for the edge names.
+    private static let edgeRow: CGFloat = 14
+
+    private var edgeLift: CGFloat { edges != nil && strings >= 2 ? Self.edgeRow : 0 }
 
     private var height: CGFloat {
-        CGFloat(max(4, strings)) * rowHeight + 10 + 2 * (Self.pad - 14) + (start > 1 ? Self.positionRow : 0)
+        CGFloat(max(4, strings)) * rowHeight + 10 + 2 * (Self.pad - 14) + (start > 1 ? Self.positionRow : 0) + 2 * edgeLift
     }
 
     /// Strings get thicker toward the bass (string 1, the highest, is the thinnest); the lower ones are wound.
@@ -74,8 +122,14 @@ struct FretboardDiagram: View {
     }
 
     private func draw(_ context: inout GraphicsContext, size: CGSize, beat: Double) {
-        let left = Self.nutX, right = size.width - 10, top = Self.pad
-        let bottom = size.height - Self.pad - (start > 1 ? Self.positionRow : 0)
+        let lift = edgeLift
+        let left = Self.nutX, right = size.width - 10, top = Self.pad + lift
+        let bottom = size.height - Self.pad - (start > 1 ? Self.positionRow : 0) - lift
+        if let edges, lift > 0 {
+            // "Thinnest (1)" over the top string's number, the bottom string's name under its own.
+            if let name = edges.canvasLabel(1) { context.draw(name, at: CGPoint(x: 2, y: lift / 2 + 1), anchor: .leading) }
+            if let name = edges.canvasLabel(strings) { context.draw(name, at: CGPoint(x: 2, y: size.height - lift / 2 - 1), anchor: .leading) }
+        }
         let fretWidth = (right - left) / CGFloat(frets)
         let gap = strings > 1 ? (bottom - top) / CGFloat(strings - 1) : 0
         let board = Path(roundedRect: CGRect(x: left, y: top - 10, width: right - left, height: bottom - top + 20), cornerRadius: 8)
@@ -87,7 +141,7 @@ struct FretboardDiagram: View {
         if start <= 1 {
             context.fill(Path(CGRect(x: left - 3, y: top - 10, width: 6, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3)))
         } else {
-            context.draw(Text("\(start)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: left + fretWidth / 2, y: size.height - 13))
+            context.draw(Text("\(start)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: left + fretWidth / 2, y: size.height - lift - 13))
         }
         for fret in 1...frets {
             let x = left + CGFloat(fret) * fretWidth
@@ -169,9 +223,20 @@ struct ChordDiagram: View {
     var reservesFretLabel = false
     /// Lessons: fingers land one by one when the diagram first appears. Off by default (the Chords tool stays still).
     var landing = false
+    /// The order the fingers land in: string by string, or finger 1 first (a demonstration).
+    var landingOrder: LandingOrder = .strings
+    /// Seconds between one finger landing and the next.
+    var landingStep: Double = 0.08
+    /// Changing it lands the fingers again (the demonstration replays).
+    var replay = 0
+    /// Names the outer strings under the box ("Thickest (6)" … "Thinnest (1)"); nil leaves just the numbers.
+    var edges: StringEdges?
     @State private var landStart: Date?
     @State private var landed = false
+    @State private var landGeneration = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    enum LandingOrder { case strings, fingers }
 
     var body: some View {
         VStack(spacing: 8) {
@@ -181,10 +246,27 @@ struct ChordDiagram: View {
                 Canvas { context, size in draw(&context, size: size, land: landScale) }
                     .aspectRatio(CGFloat(chord.frets.count) / 5.4, contentMode: .fit)
             }
+            if let edges, chord.frets.count >= 2 { edgeNames(edges) }
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(chord.name) chord"))
-        .onAppear { startLanding() }
+        .onAppear { if landStart == nil { startLanding() } }
+        .onChange(of: replay) { _, _ in startLanding(delay: 0.05) }
+    }
+
+    /// The lowest string's name under the left of the box, string 1's under the right.
+    private func edgeNames(_ edges: StringEdges) -> some View {
+        HStack(spacing: 6) {
+            edges.label(chord.frets.count)
+            Spacer(minLength: 0)
+            edges.label(1)
+        }
+        .font(.system(size: 10, weight: .semibold, design: .rounded))
+        .foregroundStyle(Palette.inkSoft)
+        .lineLimit(1)
+        .minimumScaleFactor(0.75)
+        .padding(.horizontal, 6)
+        .padding(.top, -4)
     }
 
     /// One finger laid flat across several strings at one fret (an index-finger barre, or finger 3
@@ -298,11 +380,31 @@ struct ChordDiagram: View {
         guard landing, !landed, !reduceMotion else { return { _ in 1 } }
         guard let landStart else { return { _ in 0 } }
         let elapsed = date.timeIntervalSince(landStart)
+        let ranks = landingRanks
+        let step = landingStep
+        return { i in CGFloat(ChordDiagram.spring(elapsed - Double(ranks[safe: i] ?? 0) * step)) }
+    }
+
+    /// When each string's finger lands (0, 1, 2 …): fretted strings left to right, or by finger number
+    /// (finger 1 first, a barre with its finger); strings without a finger after the rest.
+    var landingRanks: [Int] {
         let frets = chord.frets
-        return { i in
-            let order = frets.prefix(i).filter { $0 > 0 }.count
-            return CGFloat(ChordDiagram.spring(elapsed - Double(order) * 0.08))
+        let stringOrder = frets.indices.map { i in frets.prefix(i).filter { $0 > 0 }.count }
+        guard landingOrder == .fingers, let fingers = chord.fingers else { return stringOrder }
+        let used = Set(frets.indices.compactMap { i -> Int? in
+            guard frets[i] > 0, let finger = fingers[safe: i], finger > 0 else { return nil }
+            return finger
+        }).sorted()
+        return frets.indices.map { i in
+            guard let finger = fingers[safe: i], finger > 0, let rank = used.firstIndex(of: finger) else { return used.count + stringOrder[i] }
+            return rank
         }
+    }
+
+    /// How many landings there are (the last one's rank + 1).
+    var landingCount: Int {
+        let fretted = chord.frets.indices.filter { chord.frets[$0] > 0 }
+        return (fretted.map { landingRanks[$0] }.max() ?? -1) + 1
     }
 
     /// A damped spring from 0 to 1: response 0.35 s with a slight overshoot.
@@ -313,14 +415,18 @@ struct ChordDiagram: View {
         return 1 - exp(-zeta * omega * t) * (cos(damped * t) + zeta * omega / damped * sin(damped * t))
     }
 
-    /// A beat after the card arrives, the fingers land one every 80 ms.
-    private func startLanding() {
-        guard landing, !reduceMotion, landStart == nil else { return }
-        landStart = Date().addingTimeInterval(0.25)
-        let fingers = chord.frets.filter { $0 > 0 }.count
+    /// A beat after the card arrives (or the replay), the fingers land one every `landingStep`.
+    private func startLanding(delay: Double = 0.25) {
+        guard landing, !reduceMotion else { return }
+        landGeneration += 1
+        let generation = landGeneration
+        landed = false
+        landStart = Date().addingTimeInterval(delay)
+        let duration = delay + Double(max(0, landingCount - 1)) * landingStep + 0.6
         Task { @MainActor in
-            try? await Task.sleep(for: .seconds(0.25 + Double(max(0, fingers - 1)) * 0.08 + 0.6))
-            landed = true
+            try? await Task.sleep(for: .seconds(duration))
+            // A replay started meanwhile keeps the clock running.
+            if generation == landGeneration { landed = true }
         }
     }
 }
@@ -675,6 +781,8 @@ struct RhythmLoop: View {
     /// on the same clock as the playhead; give the loop a height to fill.
     var sweep: StrumSweep.Style?
     var strings = 6
+    /// Names the top and bottom strings of the sweep.
+    var edges: StringEdges?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var start = Date()
 
@@ -687,7 +795,7 @@ struct RhythmLoop: View {
             VStack(spacing: 10) {
                 if let sweep {
                     StrumSweep(pattern: pattern, beatsPerBar: beatsPerBar, strings: strings, style: sweep, accent: accent,
-                               secondsPerBeat: secondsPerBeat, time: reduceMotion ? nil : elapsed)
+                               secondsPerBeat: secondsPerBeat, time: reduceMotion ? nil : elapsed, edges: edges)
                         .frame(maxHeight: .infinity)
                 }
                 RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: reduceMotion ? nil : through, arrows: arrows)

@@ -199,9 +199,45 @@ final class ProgressionTests: XCTestCase {
         XCTAssertEqual(drift.first?.centsPerDay ?? 0, -6.0, accuracy: 0.3)
         XCTAssertEqual(drift.first?.sessions, 3)
         XCTAssertEqual(drift.last?.anchor, "s1")
-        XCTAssertTrue(StringHealth.needsRestring(drift, restrung: nil))
+        XCTAssertEqual(drift.first?.spanDays ?? 0, 4, accuracy: 0.1)
+        // Four days of readings with no restring date: the strings may be new, too early to judge.
+        XCTAssertFalse(StringHealth.needsRestring(drift, restrung: nil))
         XCTAssertFalse(StringHealth.needsRestring(drift.filter { $0.anchor == "s1" }, restrung: day(1), now: day(5)))
         XCTAssertTrue(StringHealth.needsRestring([], restrung: day(1), now: day(1).addingTimeInterval(71 * 86_400)))
+    }
+
+    func testRestringAdviceWithoutARestringDateWaitsForFiveDaysOfReadings() {
+        var samples: [StringSample] = []
+        // G goes about 8 cents flat a day.
+        for d in [1, 2, 3] { samples.append(StringSample(instrumentId: "g", anchor: "s3", date: day(d), cents: -8)) }
+        let early = StringHealth.drift(samples, instrumentId: "g")
+        XCTAssertEqual(early.first?.centsPerDay ?? 0, -8, accuracy: 0.01)
+        XCTAssertEqual(early.first?.sessions, 2)
+        XCTAssertFalse(StringHealth.needsRestring(early, restrung: nil, now: day(3)))
+        for d in [5, 7] { samples.append(StringSample(instrumentId: "g", anchor: "s3", date: day(d), cents: -16)) }
+        let later = StringHealth.drift(samples, instrumentId: "g")
+        XCTAssertGreaterThanOrEqual(later.first?.spanDays ?? 0, StringHealth.minimumSpanDays)
+        XCTAssertTrue(StringHealth.needsRestring(later, restrung: nil, now: day(7)))
+        // A string that holds its pitch never asks for new strings, however long the readings run.
+        let steady = (1...20).map { StringSample(instrumentId: "g", anchor: "s1", date: day($0), cents: -1) }
+        XCTAssertFalse(StringHealth.needsRestring(StringHealth.drift(steady, instrumentId: "g"), restrung: nil, now: day(20)))
+    }
+
+    func testNewStringsStretchingDoNotAskForARestring() {
+        // Restrung on the 1st: the new G stretches and goes 12 cents flat a day for its first week.
+        let restrung = day(1)
+        var samples = (2...9).map { StringSample(instrumentId: "g", anchor: "s3", date: day($0), cents: -12) }
+        let stretching = StringHealth.drift(samples, instrumentId: "g", since: restrung)
+        XCTAssertTrue(stretching.isEmpty, "readings from the first ten days after a restring are left out")
+        XCTAssertFalse(StringHealth.needsRestring(stretching, restrung: restrung, now: day(9)))
+        // Settled, it holds within a cent a day: still no advice, and the stretching days don't count.
+        samples += [13, 15, 17].map { StringSample(instrumentId: "g", anchor: "s3", date: day($0), cents: -1.5) }
+        let settled = StringHealth.drift(samples, instrumentId: "g", since: restrung)
+        XCTAssertEqual(settled.first?.centsPerDay ?? 0, -0.75, accuracy: 0.01)
+        XCTAssertFalse(StringHealth.needsRestring(settled, restrung: restrung, now: day(17)))
+        // A settled string that really wanders is flagged.
+        let worn = [13, 15, 17].map { StringSample(instrumentId: "g", anchor: "s3", date: day($0), cents: -10) }
+        XCTAssertTrue(StringHealth.needsRestring(StringHealth.drift(worn, instrumentId: "g", since: restrung), restrung: restrung, now: day(17)))
     }
 
     func testSamplesRollOff() {

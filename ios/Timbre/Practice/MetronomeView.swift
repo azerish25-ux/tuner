@@ -13,22 +13,22 @@ struct MetronomeView: View {
     @State private var trainerEvery = 4
     @State private var trainerTarget = 140
     @State private var trainerTask: Task<Void, Never>?
-    /// The pendulum gives up height so tempo, trainer, beats and meter end above the dock.
+    /// The pendulum gives up height so tempo, trainer and the meter card (beats, meter, sound) end above the dock.
     @State private var pendulumHeight: CGFloat = 184
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 16) {
+            VStack(spacing: 12) {
                 pendulum.frame(height: pendulumHeight)
                 tempo
                 trainerControls
-                beatRow
                 meter
             }
-            .padding(.horizontal, Metrics.gutter).padding(.bottom, 30)
+            // Clears the dock's fade, so the sound control rests fully above the bar.
+            .padding(.horizontal, Metrics.gutter).padding(.bottom, 24)
         }
-        .fitsHero($pendulumHeight, in: 120...184)
+        .fitsHero($pendulumHeight, in: 100...184)
         .stageTopShade()
         .background(StageBackground(motes: false))
         .navigationTitle("Metronome")
@@ -121,6 +121,10 @@ struct MetronomeView: View {
                 Button { store.setMetronome(bpm: store.bpm - 1) } label: { Image(systemName: "minus").frame(width: 44, height: 44) }
                     .buttonStyle(.plain).foregroundStyle(Palette.inkSoft).accessibilityLabel("Slower")
                 Text("\(store.bpm)").font(Typeface.display(80)).foregroundStyle(Palette.ink).contentTransition(.numericText()).monospacedDigit()
+                    // VoiceOver: swipe up or down to change the tempo a beat per minute at a time.
+                    .adjustableValue(Text("Tempo"), value: Text(verbatim: "\(store.bpm), \(tempoName)"),
+                                     increment: { store.setMetronome(bpm: store.bpm + 1) },
+                                     decrement: { store.setMetronome(bpm: store.bpm - 1) })
                     .accessibilityIdentifier("metronome.bpm")
                 Button { store.setMetronome(bpm: store.bpm + 1) } label: { Image(systemName: "plus").frame(width: 44, height: 44) }
                     .buttonStyle(.plain).foregroundStyle(Palette.inkSoft).accessibilityLabel("Faster")
@@ -168,7 +172,6 @@ struct MetronomeView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .stillCard(padding: 12)
     }
 
     private func levelName(_ level: Int) -> String {
@@ -179,9 +182,12 @@ struct MetronomeView: View {
         }
     }
 
+    /// The whole groove in one card: the bar's beats (lit as they click, tapped for accents), the meter, the
+    /// subdivision and the sound.
     private var meter: some View {
         VStack(alignment: .leading, spacing: 10) {
             Eyebrow("Meter")
+            beatRow
             EdgeRail(bleed: 16, selection: store.beats) {
                 ForEach([2, 3, 4, 5, 6, 7, 9, 12], id: \.self) { value in
                     Button("\(value)/\(value == 6 || value == 9 || value == 12 ? 8 : 4)") { store.setMetronome(beats: value) }
@@ -198,24 +204,43 @@ struct MetronomeView: View {
                     .accessibilityLabel(Text(["Quarter notes", "Eighth notes", "Triplets", "Sixteenth notes"][value - 1]))
                 }
             }
-            soundPicker.padding(.top, 6)
+            soundPicker.padding(.top, 4)
         }
         .stillCard(padding: 16)
     }
 
-    /// Click, wood or beep: part of the meter card, so the whole groove is set in one place.
+    /// Click, wood or beep: part of the meter card, so the whole groove is set in one place. Its name and
+    /// control share a line when they fit (large text stacks them).
     private var soundPicker: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack { Eyebrow("Sound"); Spacer(); if !commerce.isPro { ProBadge() } }
-            Picker("Sound", selection: Binding(get: { store.metronomeSound }, set: { value in
-                if commerce.isPro { store.setMetronome(sound: value) } else { store.presentPaywall("metronome.sound") }
-            })) {
-                Text("Click").tag(MetronomeRenderer.Sound.click)
-                Text("Wood").tag(MetronomeRenderer.Sound.wood)
-                Text("Beep").tag(MetronomeRenderer.Sound.beep)
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 10) {
+                soundLabel
+                Spacer(minLength: 12)
+                soundControl.fixedSize()
             }
-            .pickerStyle(.segmented)
+            VStack(alignment: .leading, spacing: 10) {
+                soundLabel
+                soundControl
+            }
         }
+    }
+
+    private var soundLabel: some View {
+        HStack(spacing: 8) {
+            Eyebrow("Sound")
+            if !commerce.isPro { ProBadge() }
+        }
+    }
+
+    private var soundControl: some View {
+        Picker("Sound", selection: Binding(get: { store.metronomeSound }, set: { value in
+            if commerce.isPro { store.setMetronome(sound: value) } else { store.presentPaywall("metronome.sound") }
+        })) {
+            Text("Click").tag(MetronomeRenderer.Sound.click)
+            Text("Wood").tag(MetronomeRenderer.Sound.wood)
+            Text("Beep").tag(MetronomeRenderer.Sound.beep)
+        }
+        .pickerStyle(.segmented)
     }
 
     /// The speed trainer sits right under the tempo it drives, so it is never parked under the dock;
@@ -246,8 +271,14 @@ struct MetronomeView: View {
             if trainer {
                 VStack(spacing: 6) {
                     Stepper("Step: \(trainerStep) BPM", value: $trainerStep, in: 1...20)
+                        .adjustableValue(Text("Step: \(trainerStep) BPM"), value: Text(verbatim: "\(trainerStep)"),
+                                         increment: { trainerStep = min(20, trainerStep + 1) }, decrement: { trainerStep = max(1, trainerStep - 1) })
                     Stepper("Every \(trainerEvery) bars", value: $trainerEvery, in: 1...16)
+                        .adjustableValue(Text("Every \(trainerEvery) bars"), value: Text(verbatim: "\(trainerEvery)"),
+                                         increment: { trainerEvery = min(16, trainerEvery + 1) }, decrement: { trainerEvery = max(1, trainerEvery - 1) })
                     Stepper("Target \(trainerTarget) BPM", value: $trainerTarget, in: 40...300, step: 2)
+                        .adjustableValue(Text("Target \(trainerTarget) BPM"), value: Text(verbatim: "\(trainerTarget)"),
+                                         increment: { trainerTarget = min(300, trainerTarget + 2) }, decrement: { trainerTarget = max(40, trainerTarget - 2) })
                 }
                 .font(.subheadline)
                 .foregroundStyle(Palette.ink)

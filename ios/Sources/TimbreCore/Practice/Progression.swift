@@ -396,13 +396,28 @@ public struct StringDrift: Equatable, Sendable {
     /// Average signed drift per day between sessions (negative: goes flat).
     public let centsPerDay: Double
     public let sessions: Int
+    /// Days from the first reading used to the last.
+    public let spanDays: Double
+    public init(anchor: String, centsPerDay: Double, sessions: Int, spanDays: Double = 0) {
+        self.anchor = anchor; self.centsPerDay = centsPerDay; self.sessions = sessions; self.spanDays = spanDays
+    }
 }
 
 public enum StringHealth {
+    /// New strings stretch and go flat for their first days: readings from this long after a restring are left out.
+    public static let settlingDays = 10.0
+    /// With no restring date (the strings may be new), drift is judged only once its readings span this many days.
+    public static let minimumSpanDays = 5.0
+    /// Past this many cents a day of drift, a string is due for replacing.
+    public static let restringCentsPerDay = 4.0
+
     /// Drift per string from consecutive sessions: each session ends in tune, so the next session's
     /// first reading over the days in between is how fast that string wanders.
+    /// - Parameter since: the restring date; readings from the first `settlingDays` after it are left out,
+    ///   since new strings still stretching go flat fast and would read as worn.
     public static func drift(_ samples: [StringSample], instrumentId: String, since: Date? = nil, minimumGapHours: Double = 6) -> [StringDrift] {
-        let mine = samples.filter { sample in sample.instrumentId == instrumentId && (since.map { sample.date > $0 } ?? true) }
+        let settled = since.map { $0.addingTimeInterval(settlingDays * 86_400) }
+        let mine = samples.filter { sample in sample.instrumentId == instrumentId && (settled.map { sample.date > $0 } ?? true) }
         var result: [StringDrift] = []
         for (anchor, list) in Dictionary(grouping: mine, by: \.anchor) {
             let sorted = list.sorted { $0.date < $1.date }
@@ -412,17 +427,21 @@ public enum StringHealth {
                 guard days * 24 >= minimumGapHours else { continue }
                 rates.append(b.cents / days)
             }
-            guard !rates.isEmpty else { continue }
+            guard !rates.isEmpty, let first = sorted.first, let last = sorted.last else { continue }
             rates.sort()
             let median = rates.count % 2 == 1 ? rates[rates.count / 2] : (rates[rates.count / 2 - 1] + rates[rates.count / 2]) / 2
-            result.append(StringDrift(anchor: anchor, centsPerDay: median, sessions: rates.count))
+            result.append(StringDrift(anchor: anchor, centsPerDay: median, sessions: rates.count,
+                                      spanDays: last.date.timeIntervalSince(first.date) / 86_400))
         }
         return result.sorted { abs($0.centsPerDay) > abs($1.centsPerDay) }
     }
 
     /// Restring advice: strings that wander more than 4 cents a day, or that are more than ten weeks old.
+    /// Drift counts once it is settled: `drift(since:)` already leaves out a fresh set's stretching days, and
+    /// with no restring date the readings must span `minimumSpanDays` (a few early sessions could be new strings).
     public static func needsRestring(_ drifts: [StringDrift], restrung: Date?, now: Date = Date()) -> Bool {
-        if let worst = drifts.first, abs(worst.centsPerDay) >= 4, worst.sessions >= 2 { return true }
+        let judged = drifts.filter { $0.sessions >= 2 && (restrung != nil || $0.spanDays >= minimumSpanDays) }
+        if judged.contains(where: { abs($0.centsPerDay) >= restringCentsPerDay }) { return true }
         if let restrung, now.timeIntervalSince(restrung) > 70 * 86_400 { return true }
         return false
     }

@@ -10,6 +10,35 @@ extension Palette {
     static func tuning(_ cents: Double?, locked: Bool) -> Color { pitch(cents, locked: locked, band: tuningBand) }
 }
 
+/// Sharp, flat or in tune as a symbol (▲ ▼ ✓), so with Differentiate Without Colour a pitch never reads
+/// by colour alone. Judged by the colour rule: the whole cents shown against the lock band.
+enum PitchMark: Equatable {
+    case sharp, flat, inTune
+
+    init?(shown: Int?, locked: Bool) {
+        if locked { self = .inTune; return }
+        guard let shown else { return nil }
+        if Double(abs(shown)) <= Palette.tuningBand { self = .inTune } else { self = shown > 0 ? .sharp : .flat }
+    }
+
+    var symbol: String {
+        switch self {
+        case .sharp: return "arrowtriangle.up.fill"
+        case .flat: return "arrowtriangle.down.fill"
+        case .inTune: return "checkmark"
+        }
+    }
+
+    /// The symbol in a fixed square (empty with no pitch), so the text beside it never shifts.
+    @MainActor static func image(_ mark: PitchMark?, size: CGFloat) -> some View {
+        Image(systemName: mark?.symbol ?? "checkmark")
+            .font(.system(size: size, weight: .heavy))
+            .opacity(mark == nil ? 0 : 1)
+            .frame(width: size + 3, height: size + 3)
+            .accessibilityHidden(true)
+    }
+}
+
 /// Per-frame smoothing for the readout. A class so frame updates never invalidate views.
 /// The needle and strobe move every frame; the numbers (`shown`, `shownHertz`) hold steady enough to read.
 final class ReadoutMotion {
@@ -69,7 +98,10 @@ struct RibbonMeter: View {
     var shown: Int?
     let phase: Double
     let locked: Bool
+    @Environment(\.colorSchemeContrast) private var contrast
     var body: some View {
+        // Increase Contrast: brighter ticks and a solid lock-zone outline.
+        let strong = contrast == .increased
         Canvas { context, size in
             let mid = size.width / 2, baseline = size.height / 2
             let span = size.width / 2
@@ -91,13 +123,13 @@ struct RibbonMeter: View {
             for value in stride(from: -50, through: 50, by: 10) where value != 0 {
                 let x = mid + CGFloat(value) * scale
                 let major = value % 50 == 0 || value % 20 == 0
-                context.fill(Path(CGRect(x: x - 0.5, y: baseline - (major ? 7 : 5), width: 1, height: major ? 14 : 10)), with: .color(Palette.inkFaint.opacity(0.7)))
+                context.fill(Path(CGRect(x: x - 0.5, y: baseline - (major ? 7 : 5), width: 1, height: major ? 14 : 10)), with: .color(strong ? Palette.inkSoft : Palette.inkFaint.opacity(0.7)))
             }
             // The lock zone is exactly the band the tracker locks in (it narrows with Precision).
             let zone = CGRect(x: mid - max(band, 3), y: baseline - 13, width: max(band, 3) * 2, height: 26)
             let radius = min(7, zone.width / 2)
             context.fill(Path(roundedRect: zone, cornerRadius: radius), with: .color(Palette.mint.opacity(locked ? 0.25 : 0.12)))
-            context.stroke(Path(roundedRect: zone, cornerRadius: radius), with: .color(Palette.mint.opacity(locked ? 1 : 0.5)), lineWidth: 1)
+            context.stroke(Path(roundedRect: zone, cornerRadius: radius), with: .color(Palette.mint.opacity(locked || strong ? 1 : 0.5)), lineWidth: strong ? 1.5 : 1)
             guard let cents else { return }
             let x = locked ? mid : mid + CGFloat(max(-50, min(50, cents))) * scale
             context.fill(Path(ellipseIn: CGRect(x: x - 18, y: baseline - 18, width: 36, height: 36)), with: .radialGradient(Gradient(colors: [tone.opacity(0.6), .clear]), center: CGPoint(x: x, y: baseline), startRadius: 0, endRadius: 18))
@@ -128,7 +160,9 @@ struct StrobeBand: View {
     let phase: Double
     let locked: Bool
     let active: Bool
+    @Environment(\.colorSchemeContrast) private var contrast
     var body: some View {
+        let outline = contrast == .increased ? Palette.inkSoft : Palette.line
         Canvas { context, size in
             let color = Palette.tuning(cents, locked: locked)
             let count = 28
@@ -148,7 +182,7 @@ struct StrobeBand: View {
             context.fill(shape, with: .linearGradient(gloss, startPoint: .zero, endPoint: CGPoint(x: 0, y: size.height)))
         }
         .overlay {
-            Capsule().strokeBorder(Palette.line, lineWidth: 1)
+            Capsule().strokeBorder(outline, lineWidth: 1)
         }
         .overlay(alignment: .center) {
             Rectangle().fill(Palette.ink.opacity(0.9)).frame(width: 2).padding(.vertical, -6)
@@ -199,6 +233,9 @@ struct NoteReadout: View {
     let target: Double
     let locked: Bool
     var compact = false
+    @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.accessibilityDifferentiateWithoutColor) private var withoutColor
+    private var strong: Bool { contrast == .increased }
     var body: some View {
         let parts = Self.split(note)
         VStack(spacing: compact ? 2 : 6) {
@@ -207,7 +244,7 @@ struct NoteReadout: View {
                     .foregroundStyle(locked ? Color(hex: 0xEFFFF8) : Palette.ink)
                     .contentTransition(.numericText())
                     .minimumScaleFactor(0.6).lineLimit(1)
-                Text(parts.octave).font(Typeface.displayLight(30)).foregroundStyle(locked ? Palette.mint.opacity(0.8) : Palette.inkFaint)
+                Text(parts.octave).font(Typeface.displayLight(30)).foregroundStyle(octaveColor)
             }
             .shadow(color: locked ? Palette.mint.opacity(0.6) : .clear, radius: 26)
             Group {
@@ -219,6 +256,13 @@ struct NoteReadout: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Target \(note)"))
         .accessibilityValue(Text(Self.spoken(shown, locked: locked)))
+        // VoiceOver reads the live value when it needs it rather than on every change.
+        .accessibilityAddTraits(.updatesFrequently)
+    }
+
+    private var octaveColor: Color {
+        if locked { return Palette.mint.opacity(strong ? 1 : 0.8) }
+        return strong ? Palette.inkSoft : Palette.inkFaint
     }
 
     private var lockedBadge: some View {
@@ -229,17 +273,21 @@ struct NoteReadout: View {
         .monospacedDigit()
         .padding(.horizontal, 12).padding(.vertical, 6)
         .background(Capsule().fill(Palette.mint.opacity(0.12)))
-        .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.4), lineWidth: 1))
+        .overlay(Capsule().strokeBorder(Palette.mint.opacity(strong ? 0.9 : 0.4), lineWidth: strong ? 1.5 : 1))
     }
 
     /// "−11¢ · 81.99 Hz": each number in its own fixed column, so the separator never moves.
+    /// With Differentiate Without Colour a symbol leads the cents (▲ sharp, ▼ flat, ✓ in the lock band).
     private var centsRow: some View {
         HStack(spacing: 10) {
-            Self.column(Self.signed(shown), placeholder: "−00¢", alignment: .trailing)
-                .foregroundStyle(Palette.tuning(shown.map { Double($0) }, locked: false))
-            Circle().fill(Palette.inkFaint).frame(width: 3, height: 3)
+            HStack(spacing: 5) {
+                if withoutColor { PitchMark.image(PitchMark(shown: shown, locked: false), size: 11) }
+                Self.column(Self.signed(shown), placeholder: "−00¢", alignment: .trailing)
+            }
+            .foregroundStyle(Palette.tuning(shown.map { Double($0) }, locked: false))
+            Circle().fill(strong ? Palette.inkSoft : Palette.inkFaint).frame(width: 3, height: 3)
             Self.column(Self.hertzText(hertz ?? target), placeholder: Self.hertzPlaceholder(target), alignment: .leading)
-                .foregroundStyle(Palette.inkSoft)
+                .foregroundStyle(strong ? Palette.ink : Palette.inkSoft)
         }
         .font(Typeface.number(15))
     }

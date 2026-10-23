@@ -101,6 +101,8 @@ final class TimbreUITests: XCTestCase {
         let firstTune = element("onboarding.firsttune")
         XCTAssertTrue(firstTune.waitForExistence(timeout: 10))
         settle(1.6); shot("05a-onboarding-first-tune")
+        // The lock counts as practice: the badge, the XP and day one of the streak show where Skip was.
+        if element("onboarding.firsttune.reward").waitForExistence(timeout: 15) { settle(0.5); shot("05a2-onboarding-first-tune-reward") }
         let plan = element("onboarding.plan.start")
         if !plan.waitForExistence(timeout: 15) {
             // Never stall the tour on the lock: Skip leads to the same plan.
@@ -115,6 +117,13 @@ final class TimbreUITests: XCTestCase {
         settle(2); shot("06-paywall-onboarding")
         scrollTo(free)
         free.tap()
+        // Onboarding hands over to Learn and opens the plan's first lesson (the first free one on the free plan).
+        let close = element("lesson.close")
+        XCTAssertTrue(close.waitForExistence(timeout: 20))
+        settle(2); shot("06b-first-lesson")
+        close.tap(); settle(1.5)
+        // The first tune already counted: the tuner shows day one of the streak.
+        tab("Tune")
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 15))
         settle(2.5); shot("07-tune-first-run")
     }

@@ -79,7 +79,7 @@ extension View {
     }
 }
 
-/// The 3D stage's peg cue: a pulsing ring on the active course's peg (both pegs of a pair), projected
+/// The 3D stage's peg cue: a pulsing ring on the peg being turned (on a pair, the string's own peg), projected
 /// from the rig every frame, with the note and turn arrow beside it once the camera frames the headstock.
 struct StagePegCue: View {
     let controller: StageController

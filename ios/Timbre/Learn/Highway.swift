@@ -3,7 +3,7 @@ import SwiftUI
 import TimbreCore
 
 /// Play-along: notes glide toward the "now" line on their string (or pitch lane); the microphone
-/// judges each one for timing and intonation. Count-in, tempo choice, combo, results.
+/// judges each one for timing and intonation. Count-in, a tempo ladder (75 → 90 → 100 → 110 %), combo, results.
 struct AlongStep: View {
     let notes: [TimedNote]
     let bpm: Double
@@ -11,29 +11,43 @@ struct AlongStep: View {
     let title: LearnText?
     let course: LearnCourse
     let accent: Color
+    /// How each note went in the take that counts (for the lesson's weak spots).
+    var onItem: (PracticeItem, Double) -> Void = { _, _ in }
+    /// Finished below the lesson tempo: the lesson's stars are capped.
+    var onStarCap: (Int) -> Void = { _ in }
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
     @State private var owner = UUID()
     @State private var phase = Phase.ready
-    @State private var slow = false
+    @State private var ladder: TempoLadder
+    /// The last take was good enough to move the ladder up a rung.
+    @State private var steppedUp = false
     @State private var judge: PlayAlongJudge
     @State private var grades: [Int: PlayAlongJudge.Grade] = [:]
+    /// The grades of the take that counts (the ladder's outcome).
+    @State private var countedGrades: [Int: PlayAlongJudge.Grade] = [:]
     @State private var hitTimes: [Int: CFTimeInterval] = [:]
     @State private var startTime: CFTimeInterval = 0
     @State private var trail: [(CFTimeInterval, Double)] = []
     @State private var lastLevel = -120.0
     @State private var lastOnset: CFTimeInterval = 0
     @State private var burst = 0
+    @State private var calibrating = false
 
     enum Phase { case ready, playing, done }
 
-    init(notes: [TimedNote], bpm: Double, beatsPerBar: Int, title: LearnText?, course: LearnCourse, accent: Color, done: @escaping (Double?) -> Void) {
+    init(notes: [TimedNote], bpm: Double, beatsPerBar: Int, title: LearnText?, course: LearnCourse, accent: Color,
+         onItem: @escaping (PracticeItem, Double) -> Void = { _, _ in }, onStarCap: @escaping (Int) -> Void = { _ in },
+         done: @escaping (Double?) -> Void) {
         self.notes = notes.sorted { $0.beat < $1.beat }
-        self.bpm = bpm; self.beatsPerBar = beatsPerBar; self.title = title; self.course = course; self.accent = accent; self.done = done
+        self.bpm = bpm; self.beatsPerBar = beatsPerBar; self.title = title; self.course = course; self.accent = accent
+        self.onItem = onItem; self.onStarCap = onStarCap; self.done = done
+        // Starts at the lesson tempo.
+        _ladder = State(initialValue: TempoLadder(bpm: bpm))
         _judge = State(initialValue: PlayAlongJudge(notes: notes, bpm: bpm, anyOctave: course.anyOctave))
     }
 
-    private var tempo: Double { slow ? (bpm * 0.75).rounded() : bpm }
+    private var tempo: Double { ladder.tempo }
     private var spb: Double { 60 / tempo }
     private var countIn: Double { Double(beatsPerBar) * spb }
     private var fretted: Bool { course.fretKind != nil && notes.allSatisfy { $0.at != nil } }
@@ -41,6 +55,8 @@ struct AlongStep: View {
     private var band: BandArrangement {
         .melody(notes, bpm: tempo, beatsPerBar: beatsPerBar, reference: store.settings.referencePitchHz, bass: course.fretKind != "bass")
     }
+    /// Slower rungs in amber, the lesson tempo and up in the course colour.
+    private func rungTint(_ rung: Int) -> Color { rung >= TempoLadder.lessonRung ? accent : Palette.amber }
 
     var body: some View {
         VStack(spacing: 14) {
@@ -52,7 +68,8 @@ struct AlongStep: View {
                 let clock = phase == .done ? now + 10 : now
                 ZStack {
                     if fretted {
-                        HighwayRunway(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: clock, strings: course.stringCount)
+                        HighwayRunway(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: clock,
+                                      strings: course.stringCount, edges: StringEdges.of(course))
                     } else {
                         HighwayCanvas(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: clock,
                                       lanes: 0, accent: accent, trail: trail, startTime: startTime + countIn)
@@ -89,8 +106,11 @@ struct AlongStep: View {
             controls
         }
         .onAppear { store.audio.prepareBand(band) }
-        .onChange(of: slow) { _, _ in store.audio.prepareBand(band) }
+        .onChange(of: ladder.rung) { _, _ in store.audio.prepareBand(band) }
         .onDisappear { store.audio.stopMetronome(); store.audio.stopBand(); store.stopLessonListening(owner: owner) }
+        .sheet(isPresented: $calibrating) {
+            LatencyCalibrationSheet(accent: accent).environmentObject(store)
+        }
     }
 
     // MARK: Pieces
@@ -109,7 +129,12 @@ struct AlongStep: View {
             }
             HStack(spacing: 8) {
                 Text("\(Int(tempo)) BPM · \(notes.count) notes").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                    .lineLimit(1).minimumScaleFactor(0.8)
+                tempoBadge
                 Spacer(minLength: 8)
+                CalibrateButton(audio: store.audio, accent: accent) { calibrating = true }
+                    .disabled(phase == .playing)
+                    .opacity(phase == .playing ? 0.4 : 1)
                 BandControls(audio: store.audio, accent: accent)
             }
         }
@@ -117,6 +142,20 @@ struct AlongStep: View {
         .padding(.horizontal, 22).padding(.top, 8)
         // Always its full height: the title never shrinks to make room below.
         .fixedSize(horizontal: false, vertical: true)
+    }
+
+    /// The tempo level at a glance: 100 % in the course colour, slower in amber.
+    private var tempoBadge: some View {
+        Text("\(ladder.percent)%")
+            .font(Typeface.number(12))
+            .foregroundStyle(rungTint(ladder.rung))
+            .contentTransition(.numericText(value: Double(ladder.percent)))
+            .padding(.horizontal, 8).padding(.vertical, 3)
+            .background(Capsule().fill(rungTint(ladder.rung).opacity(0.14)))
+            .animation(Motion.pluck, value: ladder.rung)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("Tempo"))
+            .accessibilityValue(Text("\(ladder.percent)%"))
     }
 
     /// The next note by name, and where to play it.
@@ -141,10 +180,10 @@ struct AlongStep: View {
         }
     }
 
-    /// The take's results over the dimmed stage, in the same frame the notes ran in.
+    /// The take's results on an opaque panel over the stage, in the same frame the notes ran in.
     private var resultsPanel: some View {
         ZStack {
-            Rectangle().fill(Palette.stageDeep.opacity(0.84))
+            Rectangle().fill(Palette.stageDeep)
             RadialGradient(colors: [ScoreTint.color(judge.accuracy).opacity(0.14), .clear], center: .center, startRadius: 4, endRadius: 220)
             summary.padding(12)
         }
@@ -156,6 +195,8 @@ struct AlongStep: View {
         return VStack(spacing: 10) {
             // Coloured by the result: mint from 90 %, gold from 70 %, coral below.
             Text("\(Int((judge.accuracy * 100).rounded()))%").font(Typeface.note(56)).foregroundStyle(ScoreTint.color(judge.accuracy))
+                .minimumScaleFactor(0.7)
+            if steppedUp { tempoUp }
             HStack(spacing: 18) {
                 stat("Perfect", counts[.perfect] ?? 0, accent)
                 stat("Good", counts[.good] ?? 0, Palette.ink)
@@ -163,13 +204,42 @@ struct AlongStep: View {
                 stat("Missed", counts[.miss] ?? 0, Palette.danger)
             }
             Text(timingNote).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink).multilineTextAlignment(.center)
-            Text("Best combo \(judge.bestCombo)").font(.footnote).foregroundStyle(Palette.inkSoft)
-            if judge.accuracy < 0.8 && !slow {
-                Button { slow = true; reset() } label: { Label("Try it at \(Int((bpm * 0.75).rounded())) BPM", systemImage: "tortoise.fill") }
+            if timingIsOff {
+                // Consistently early or late usually means the headphones or speaker lag: measure it.
+                Button { calibrating = true } label: { Label("Calibrate timing", systemImage: "metronome") }
+                    .font(Typeface.label(14)).foregroundStyle(accent)
+                    .accessibilityIdentifier("along.calibrate.hint")
+            } else if judge.bestCombo >= 2 {
+                Text("Best combo \(judge.bestCombo)").font(.footnote).foregroundStyle(Palette.inkSoft)
+            }
+            if judge.accuracy < 0.8 && ladder.rung > 0 {
+                Button { ladder.select(0); reset() } label: { Label("Try it at \(Int(ladder.tempo(at: 0))) BPM", systemImage: "tortoise.fill") }
                     .font(Typeface.label(14)).foregroundStyle(accent).padding(.top, 2)
                     .accessibilityIdentifier("along.slower")
             }
         }
+    }
+
+    /// The ladder moved up after a take of 90 % or better.
+    private var tempoUp: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "arrow.up.right")
+            Text("Tempo up")
+            Text("\(ladder.percent)%")
+        }
+        .font(Typeface.label(13))
+        .foregroundStyle(rungTint(ladder.rung))
+        .padding(.horizontal, 12).padding(.vertical, 5)
+        .background(Capsule().fill(rungTint(ladder.rung).opacity(0.14)))
+        .transition(.scale.combined(with: .opacity))
+        .accessibilityElement(children: .combine)
+    }
+
+    /// The take's offsets lean one way by 90 ms or more on average.
+    private var timingIsOff: Bool {
+        let offsets = judge.judgments.compactMap(\.offset)
+        guard offsets.count >= 3 else { return false }
+        return abs(offsets.reduce(0, +) / Double(offsets.count)) >= 0.09
     }
 
     /// Where the timing went: early or late on average, in milliseconds.
@@ -193,31 +263,80 @@ struct AlongStep: View {
         switch phase {
         case .ready:
             VStack(spacing: 12) {
-                Picker("Tempo", selection: $slow) {
-                    Text("Normal · \(Int(bpm))").tag(false)
-                    Text("Slow · \(Int((bpm * 0.75).rounded()))").tag(true)
-                }
-                .pickerStyle(.segmented).padding(.horizontal, 24)
+                ladderPicker
                 StepButton(title: "Start", accent: accent) { start() }
             }
         case .playing:
             StepButton(title: "Listening…", accent: accent, enabled: false) {}
         case .done:
-            HStack(spacing: 10) {
-                Button("Try again") { reset() }.font(Typeface.label(16)).foregroundStyle(Palette.ink)
-                    .frame(maxWidth: .infinity, minHeight: 56)
-                    .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
-                    .accessibilityIdentifier("along.again")
-                Button { done(judge.accuracy) } label: {
-                    Text("Continue").font(Typeface.label(18)).foregroundStyle(Palette.onAccent)
+            VStack(spacing: 12) {
+                ladderPicker
+                HStack(spacing: 10) {
+                    Button("Try again") { reset() }.font(Typeface.label(16)).foregroundStyle(Palette.ink)
                         .frame(maxWidth: .infinity, minHeight: 56)
-                        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(accent))
+                        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
+                        .accessibilityIdentifier("along.again")
+                    Button { complete() } label: {
+                        Text("Continue").font(Typeface.label(18)).foregroundStyle(Palette.onAccent)
+                            .frame(maxWidth: .infinity, minHeight: 56)
+                            .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(accent))
+                    }
+                    .buttonStyle(PressScaleStyle())
+                    .accessibilityIdentifier("lesson.continue")
                 }
-                .buttonStyle(PressScaleStyle())
-                .accessibilityIdentifier("lesson.continue")
+                .padding(.horizontal, 20).padding(.bottom, 12)
             }
-            .padding(.horizontal, 20).padding(.bottom, 12)
         }
+    }
+
+    /// The four tempo rungs, the current one filled; below the lesson tempo a note that full tempo earns three stars.
+    private var ladderPicker: some View {
+        VStack(spacing: 6) {
+            HStack(spacing: 8) {
+                ForEach(TempoLadder.rungs.indices, id: \.self) { rung in rungButton(rung) }
+            }
+            Label("Full tempo for 3 stars", systemImage: "star.fill")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Palette.amber)
+                .opacity(ladder.isFullTempo ? 0 : 1)
+                .accessibilityHidden(ladder.isFullTempo)
+        }
+        .padding(.horizontal, 20)
+        .animation(Motion.pluck, value: ladder.rung)
+    }
+
+    private func rungButton(_ rung: Int) -> some View {
+        let selected = ladder.rung == rung
+        let tint = rungTint(rung)
+        let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
+        return Button {
+            guard ladder.rung != rung else { return }
+            ladder.select(rung)
+            steppedUp = false
+            Haptics.shared.selection()
+        } label: {
+            VStack(spacing: 1) {
+                Text("\(Int((TempoLadder.rungs[rung] * 100).rounded()))%").font(Typeface.label(15))
+                Text(Int(ladder.tempo(at: rung)), format: .number).font(Typeface.number(11)).opacity(0.75)
+            }
+            .foregroundStyle(selected ? Palette.onAccent : Palette.ink)
+            .frame(maxWidth: .infinity, minHeight: 48)
+            .background(shape.fill(selected ? AnyShapeStyle(tint) : AnyShapeStyle(Palette.stageRaised)))
+            .overlay(shape.strokeBorder(selected ? Color.clear : Palette.line, lineWidth: 1))
+            .overlay(alignment: .topTrailing) {
+                if rung == TempoLadder.lessonRung {
+                    // The lesson's own tempo.
+                    Image(systemName: "star.fill").font(.system(size: 8, weight: .bold))
+                        .foregroundStyle(selected ? Palette.onAccent : Palette.amber).padding(6)
+                }
+            }
+            .contentShape(shape)
+        }
+        .buttonStyle(PressScaleStyle())
+        .disabled(phase == .playing)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityIdentifier("along.tempo.\(rung)")
     }
 
     // MARK: Flow
@@ -225,12 +344,14 @@ struct AlongStep: View {
     private func reset() {
         judge = PlayAlongJudge(notes: notes, bpm: tempo, anyOctave: course.anyOctave)
         grades = [:]; hitTimes = [:]; trail = []
+        steppedUp = false
         phase = .ready
     }
 
     private func start() {
         judge = PlayAlongJudge(notes: notes, bpm: tempo, anyOctave: course.anyOctave)
         grades = [:]; hitTimes = [:]; trail = []
+        steppedUp = false
         startTime = CACurrentMediaTime()
         phase = .playing
         store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
@@ -252,7 +373,8 @@ struct AlongStep: View {
     private func tick(now: CFTimeInterval) {
         guard phase == .playing else { return }
         // The first click is heard a little after the tap (engine and microphone starting, output
-        // latency, far more on Bluetooth): notes and judging follow the audio clock, not the tap.
+        // latency, far more on Bluetooth; the tap-along calibration when there is one): notes and
+        // judging follow the heard clock, not the tap.
         if let heard = store.audio.heardStart(near: startTime) { startTime = heard }
         apply(judge.update(time: now - startTime - countIn, midi: nil, cents: nil), now: now)
         if judge.isFinished || now - startTime - countIn > judge.duration + 1.2 { finish() }
@@ -272,11 +394,56 @@ struct AlongStep: View {
 
     private func finish() {
         guard phase == .playing else { return }
+        let accuracy = judge.accuracy
+        // The take that counts keeps its grades for the lesson's weak spots.
+        if ladder.improvesOutcome(accuracy) { countedGrades = grades }
+        let up = ladder.record(accuracy: accuracy)
         // A good take ends on the band's final chord; otherwise it fades with the click.
-        store.audio.finishBand(celebrate: judge.accuracy >= 0.7)
+        store.audio.finishBand(celebrate: accuracy >= 0.7)
         store.stopLessonListening(owner: owner)
-        withAnimation(Motion.settle) { phase = .done }
-        SoundFX.shared.play(judge.accuracy >= 0.7 ? .star : .wrong)
+        withAnimation(Motion.settle) { phase = .done; steppedUp = up }
+        SoundFX.shared.play(accuracy >= 0.7 ? .star : .wrong)
+        if up { Haptics.shared.lock() }
+    }
+
+    /// Continue: the best take at the lesson tempo or faster counts; only slower takes cap the lesson's stars.
+    private func complete() {
+        let outcome = ladder.outcome
+        if let cap = outcome?.starCap { onStarCap(cap) }
+        for (index, note) in notes.enumerated() {
+            onItem(course.practiceItem(for: note), PlayAlongJudge.credit(countedGrades[index] ?? .miss))
+        }
+        done(outcome?.score ?? judge.accuracy)
+    }
+}
+
+/// The header's timing button: opens the tap-along calibration. A dot asks for it on a wireless route that
+/// has never been calibrated (Bluetooth lag is the usual reason good playing scores late).
+struct CalibrateButton: View {
+    @ObservedObject var audio: AudioService
+    let accent: Color
+    let action: () -> Void
+
+    private var needsIt: Bool { audio.route == .bluetooth && AudioService.calibratedLatency(for: .bluetooth) == nil }
+
+    var body: some View {
+        Button(action: action) {
+            ZStack {
+                Circle().fill(Palette.stageRaised)
+                Circle().strokeBorder(Palette.line, lineWidth: 1)
+                Image(systemName: "metronome").font(.system(size: 12, weight: .bold)).foregroundStyle(Palette.inkSoft)
+            }
+            .frame(width: 28, height: 28)
+            .overlay(alignment: .topTrailing) {
+                if needsIt { Circle().fill(Palette.amber).frame(width: 8, height: 8).offset(x: 1, y: -1) }
+            }
+            .frame(width: 44, height: 44)
+            .contentShape(Rectangle())
+            .padding(-8)
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityLabel(Text("Calibrate timing"))
+        .accessibilityIdentifier("along.calibrate")
     }
 }
 
@@ -471,6 +638,8 @@ struct HighwayRunway: View {
     let hitTimes: [Int: CFTimeInterval]
     let now: CFTimeInterval
     let strings: Int
+    /// Names the outer lanes under their numbers ("Thickest (6)" left, "Thinnest (1)" right).
+    var edges: StringEdges?
 
     static let lookahead = 2.8
     static func color(string: Int, of count: Int) -> Color {
@@ -538,6 +707,11 @@ struct HighwayRunway: View {
             context.fill(Path(ellipseIn: CGRect(x: center.x - r, y: center.y - r, width: r * 2, height: r * 2)), with: .color(tint.opacity(lit ? 0.45 : 0.10)))
             context.stroke(Path(ellipseIn: CGRect(x: center.x - 15, y: center.y - 15, width: 30, height: 30)), with: .color(tint.opacity(0.9)), lineWidth: 2)
             context.draw(Text("\(s)").font(.system(size: 10, weight: .bold)).foregroundStyle(Palette.inkFaint), at: CGPoint(x: center.x, y: hitY + 28))
+        }
+        if let edges {
+            // Under the outer lanes' numbers, reading inward so they never run off the stage.
+            if let name = edges.canvasLabel(strings, size: 9) { context.draw(name, at: CGPoint(x: x(strings, 0) - 16, y: hitY + 43), anchor: .leading) }
+            if let name = edges.canvasLabel(1, size: 9) { context.draw(name, at: CGPoint(x: x(1, 0) + 16, y: hitY + 43), anchor: .trailing) }
         }
         // Notes, far ones first so near ones draw on top.
         for (i, note) in notes.enumerated().reversed() {

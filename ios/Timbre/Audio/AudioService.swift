@@ -17,6 +17,8 @@ final class AudioService: ObservableObject {
     @Published private(set) var headphones = AudioService.headphonesConnected()
     /// The lesson band is installed under the metronome (it sounds from the next downbeat).
     @Published private(set) var bandPlaying = false
+    /// Where the sound goes now; each kind of route keeps its own tap-along calibration.
+    @Published private(set) var route = AudioService.currentRoute()
     func clearError() { error = nil }
     var onReading: ((Double?, Double, Double) -> Void)?
     /// Raw microphone samples for lesson analysers (chords, onsets), delivered on the analysis queue.
@@ -33,8 +35,9 @@ final class AudioService: ObservableObject {
     private var generation = 0
     private var toneTask: Task<Void, Never>?
     private var resumeCaptureAfterTone = false
-    /// Output latency of the current route (much larger on Bluetooth), for when a click is heard.
-    private var heardLatency = AVAudioSession.sharedInstance().outputLatency
+    /// How late a click is heard on the current route: the learner's tap-along calibration for this kind of
+    /// route when there is one, else the session's output latency (often too low on Bluetooth).
+    private var heardLatency = AudioService.calibratedLatency(for: AudioService.currentRoute()) ?? AVAudioSession.sharedInstance().outputLatency
     private let bandQueue = DispatchQueue(label: "com.timbre.band", qos: .utility)
     private var bandRequest: BandRequest?
     private var bandPrepared: BandArrangement?
@@ -199,7 +202,7 @@ final class AudioService: ObservableObject {
         try session.setPreferredSampleRate(48000)
         try session.setPreferredIOBufferDuration(0.005)
         try session.setActive(true)
-        heardLatency = session.outputLatency
+        heardLatency = currentHeardLatency()
     }
 
     private func attachOutput(keepState: Bool = false) throws {
@@ -284,11 +287,57 @@ final class AudioService: ObservableObject {
     }
 
     /// When the running metronome's first click reached the ears, on the CACurrentMediaTime clock:
-    /// the render host time of its first frame plus the route's output latency. Engine restarts
-    /// (the microphone starting) and Bluetooth delay are included; nil until the first buffer plays.
+    /// the render host time of its first frame plus how late this route is heard (its tap-along
+    /// calibration, else the output latency). Engine restarts (the microphone starting) and Bluetooth
+    /// delay are included; nil until the first buffer plays.
     func metronomeOrigin() -> TimeInterval? {
-        guard metronomeRunning, let anchor = renderer.clock.read() else { return nil }
+        guard let anchor = metronomeRenderOrigin() else { return nil }
         return anchor + heardLatency
+    }
+
+    /// When the running metronome's first click left the engine (no output latency added), on the
+    /// CACurrentMediaTime clock; the tap-along calibration measures from here.
+    func metronomeRenderOrigin() -> TimeInterval? {
+        guard metronomeRunning else { return nil }
+        return renderer.clock.read()
+    }
+
+    // MARK: Latency calibration
+
+    /// Kinds of output route that keep their own calibration.
+    enum OutputRoute: String, CaseIterable {
+        case speaker, wired, bluetooth
+    }
+
+    nonisolated static func currentRoute() -> OutputRoute {
+        let ports = AVAudioSession.sharedInstance().currentRoute.outputs.map(\.portType)
+        let wireless: Set<AVAudioSession.Port> = [.bluetoothA2DP, .bluetoothLE, .bluetoothHFP, .airPlay, .carAudio]
+        let wired: Set<AVAudioSession.Port> = [.headphones, .usbAudio, .lineOut, .HDMI]
+        if ports.contains(where: { wireless.contains($0) }) { return .bluetooth }
+        if ports.contains(where: { wired.contains($0) }) { return .wired }
+        return .speaker
+    }
+
+    private nonisolated static func calibrationKey(_ route: OutputRoute) -> String { "latency.calibrated.\(route.rawValue)" }
+
+    /// The saved tap-along delay for a kind of route, in seconds.
+    nonisolated static func calibratedLatency(for route: OutputRoute) -> Double? {
+        guard let value = UserDefaults.standard.object(forKey: calibrationKey(route)) as? Double, value.isFinite else { return nil }
+        return min(LatencyCalibration.range.upperBound, max(LatencyCalibration.range.lowerBound, value))
+    }
+
+    /// Saves a tap-along result for a kind of route (nil forgets it); lessons time from it at once.
+    func saveCalibration(_ seconds: Double?, for route: OutputRoute) {
+        if let seconds, seconds.isFinite {
+            UserDefaults.standard.set(min(LatencyCalibration.range.upperBound, max(LatencyCalibration.range.lowerBound, seconds)), forKey: Self.calibrationKey(route))
+        } else {
+            UserDefaults.standard.removeObject(forKey: Self.calibrationKey(route))
+        }
+        heardLatency = currentHeardLatency()
+    }
+
+    private func currentHeardLatency() -> Double {
+        Self.calibratedLatency(for: Self.currentRoute()) ?? AVAudioSession.sharedInstance().outputLatency
     }
 
     /// A step clock started at `start` (its tap on Start), moved toward the audio clock by at most
@@ -313,7 +362,9 @@ final class AudioService: ObservableObject {
 
     /// Re-reads the output route (headphones, latency) and lets the band follow it.
     func refreshRoute() {
-        heardLatency = AVAudioSession.sharedInstance().outputLatency
+        heardLatency = currentHeardLatency()
+        let kind = Self.currentRoute()
+        if kind != route { route = kind }
         let connected = Self.headphonesConnected()
         if connected != headphones { headphones = connected }
         refreshBand()

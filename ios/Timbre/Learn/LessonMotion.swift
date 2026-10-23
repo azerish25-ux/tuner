@@ -14,6 +14,15 @@ enum LessonMicrophone {
         #endif
         return audio.permissionDenied || AVAudioApplication.shared.recordPermission == .denied
     }
+
+    /// The microphone may be used without asking: steps that only listen as a bonus (a chord played back
+    /// after a demonstration) never raise the permission prompt.
+    @MainActor static var granted: Bool {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" { return true }
+        #endif
+        return AVAudioApplication.shared.recordPermission == .granted
+    }
 }
 
 /// Marks a rhythm passed by tapping the screen because the microphone couldn't hear the instrument.
@@ -42,7 +51,7 @@ enum ScoreTint {
 // MARK: - Strum sweep
 
 /// A pick sweeping the strings on every stroke of a rhythm pattern, in time with the beat: down strokes
-/// run from the thickest string (top) to the thinnest, up strokes back, and each string shimmers as the
+/// run from the thickest string (top, named "Thickest") to the thinnest, up strokes back, and each string shimmers as the
 /// pick crosses it. `.pluck` plucks the lowest string on each hit; `.tap` pulses a pad for courses
 /// without an instrument. With no time (Reduce Motion) it holds still, showing the first stroke.
 struct StrumSweep: View {
@@ -58,6 +67,8 @@ struct StrumSweep: View {
     let time: Double?
     /// Bars the strokes run for; nil repeats the bar forever.
     var bars: Int?
+    /// Names the top and bottom strings in words ("Thickest (6)" over the top, "Thinnest (1)" under the bottom).
+    var edges: StringEdges?
 
     private struct Stroke {
         let time: Double
@@ -165,6 +176,7 @@ struct StrumSweep: View {
             let amplitude = crossed.map { CGFloat(5 * exp(-(t - $0) * 4.5)) } ?? 0
             drawString(&context, index: index, of: count, y: y, width: size.width, amplitude: amplitude, t: t)
         }
+        drawEdgeNames(&context, size: size, top: top, bottom: top + band, count: count)
 
         if style == .pluck {
             drawFinger(&context, x: pickX, stringY: top, t: t, nearby: nearby, moving: moving)
@@ -180,6 +192,15 @@ struct StrumSweep: View {
         let x = pickX + CGFloat(state.lift) * 24
         let alpha = state.touching || !moving ? 1 : 0.75 - 0.3 * state.lift
         drawPick(&context, center: CGPoint(x: x, y: y), down: state.down, scale: state.touching ? 1 : 0.9, alpha: alpha)
+    }
+
+    /// The top string's name just above it and the bottom string's just below, at the right end, clear of
+    /// the pick (which crosses at 62 % of the width) and the numbers on the left.
+    private func drawEdgeNames(_ context: inout GraphicsContext, size: CGSize, top: CGFloat, bottom: CGFloat, count: Int) {
+        guard let edges, count >= 2, top >= 22 else { return }
+        let x = size.width - 4
+        if let name = edges.canvasLabel(count) { context.draw(name, at: CGPoint(x: x, y: top - 14), anchor: .trailing) }
+        if let name = edges.canvasLabel(1) { context.draw(name, at: CGPoint(x: x, y: bottom + 14), anchor: .trailing) }
     }
 
     private func drawSoundHole(_ context: inout GraphicsContext, center: CGPoint, radius: CGFloat) {

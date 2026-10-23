@@ -66,46 +66,96 @@ public enum StreakFreeze {
     }
 }
 
-/// One activity in the daily practice set.
+/// One activity in Today, the day's one practice session.
 public struct DailyActivity: Identifiable, Equatable, Sendable {
-    public enum Kind: String, Sendable, CaseIterable { case tune, ear, chord, scale, rhythm, voice, drone }
+    /// `lesson` is the next lesson of the learner's course and `review` a review Learn has due; both are
+    /// played in Learn. The rest are tool reps.
+    public enum Kind: String, Sendable, CaseIterable { case tune, ear, chord, scale, rhythm, voice, drone, lesson, review }
     public let kind: Kind
     public let minutes: Int
     public var id: String { kind.rawValue }
+    public init(kind: Kind, minutes: Int) { self.kind = kind; self.minutes = minutes }
+    /// Played in Learn rather than in a tool.
+    public var isLearn: Bool { kind == .lesson || kind == .review }
 }
 
+/// Today: one session of about ten minutes, the same set on Tune, Learn and Play.
 public enum DailySet {
     /// Activities that need Timbre Pro (chords, scales, the drone).
     public static let proKinds: Set<DailyActivity.Kind> = [.chord, .scale, .drone]
+    /// The lesson's place on the ring: its own estimate, kept within these minutes.
+    public static let lessonMinutes = 3...8
+    /// A review's place on the ring.
+    public static let reviewMinutes = 2...6
 
-    /// Builds about ten minutes of practice for the player's instrument and goal.
-    /// Deterministic per calendar day so the set is stable across launches. Without Pro, the Pro activity's
-    /// minutes go to ear training instead, so a free player can always finish the whole set.
-    public static func activities(instrument: Instrument, goal: String?, pro: Bool = true, date: Date = Date(), calendar: Calendar = .current) -> [DailyActivity] {
-        let set = proActivities(instrument: instrument, goal: goal, date: date, calendar: calendar)
-        guard !pro else { return set }
-        let freed = set.filter { proKinds.contains($0.kind) }.reduce(0) { $0 + $1.minutes }
-        var free = set.filter { !proKinds.contains($0.kind) }
-        if freed > 0, let index = free.firstIndex(where: { $0.kind == .ear }) ?? free.firstIndex(where: { $0.kind != .tune }) {
-            free[index] = DailyActivity(kind: free[index].kind, minutes: free[index].minutes + freed)
+    /// Today's session, about `target` minutes long (the player's daily commitment). With `lessonMinutes` (the
+    /// next lesson of the learner's course, nil when there is none they can play) it opens with that lesson,
+    /// then a review when Learn has one due (`reviewMinutes`, a hook for the weak-spot reviews), then two tool
+    /// reps: a one-minute tune-up and the day's tool for the goal, which fills the rest. Without a lesson a
+    /// second tool takes its place. Deterministic per calendar day so the set is stable across launches;
+    /// without Pro no Pro tool is picked, so a free player can always finish the whole set.
+    public static func activities(instrument: Instrument, goal: String?, pro: Bool = true, lessonMinutes: Int? = nil, reviewMinutes: Int? = nil,
+                                  target: Int = 10, date: Date = Date(), calendar: Calendar = .current) -> [DailyActivity] {
+        let day = max(0, calendar.ordinality(of: .day, in: .era, for: date) ?? 0)
+        let rotation = tools(instrument: instrument, goal: goal, pro: pro)
+        let first = rotation[day % rotation.count]
+        let lesson = lessonMinutes.map { clamp($0, to: Self.lessonMinutes) }
+        let review = reviewMinutes.map { clamp($0, to: Self.reviewMinutes) }
+        // What the tools have left of the target, a couple of minutes each at least.
+        let toolTime = max(target, 5) - 1 - (lesson ?? 0) - (review ?? 0)
+        var set: [DailyActivity] = []
+        if let lesson { set.append(DailyActivity(kind: .lesson, minutes: lesson)) }
+        if let review { set.append(DailyActivity(kind: .review, minutes: review)) }
+        set.append(DailyActivity(kind: .tune, minutes: 1))
+        if lesson != nil {
+            set.append(DailyActivity(kind: first, minutes: clamp(toolTime, to: 2...10)))
+        } else {
+            // The next different tool of the rotation stands in for the lesson.
+            let second = (1..<max(2, rotation.count)).map { rotation[(day + $0) % rotation.count] }.first { $0 != first } ?? (first == .ear ? .rhythm : .ear)
+            let half = (toolTime + 1) / 2
+            set.append(DailyActivity(kind: first, minutes: clamp(half, to: 2...10)))
+            set.append(DailyActivity(kind: second, minutes: clamp(toolTime - half, to: 2...10)))
         }
-        return free
+        return set
     }
 
-    private static func proActivities(instrument: Instrument, goal: String?, date: Date, calendar: Calendar) -> [DailyActivity] {
-        let day = calendar.ordinality(of: .day, in: .era, for: date) ?? 0
+    /// The tools a goal rotates through, one a day; the goal's own tool comes round every other day.
+    static func tools(instrument: Instrument, goal: String?, pro: Bool) -> [DailyActivity.Kind] {
         let fretted = ["guitar", "ukulele", "mandolin", "folk_world_strings"].contains(instrument.familyId) && instrument.anchorType == "MACHINE_HEAD"
-        var set: [DailyActivity] = [DailyActivity(kind: .tune, minutes: 1)]
+        let list: [DailyActivity.Kind]
         switch goal {
-        case "voice": set += [DailyActivity(kind: .voice, minutes: 4), DailyActivity(kind: .ear, minutes: 3)]
-        case "ear": set += [DailyActivity(kind: .ear, minutes: 5), DailyActivity(kind: .drone, minutes: 2)]
-        case "rhythm": set += [DailyActivity(kind: .rhythm, minutes: 5), DailyActivity(kind: .ear, minutes: 2)]
-        default:
-            set.append(DailyActivity(kind: fretted ? (day % 2 == 0 ? .chord : .scale) : .drone, minutes: 4))
-            set.append(DailyActivity(kind: .ear, minutes: 3))
+        case "voice": list = [.voice, .ear, .voice, .drone]
+        case "ear": list = [.ear, .drone, .ear, .rhythm]
+        case "rhythm": list = [.rhythm, .ear, .rhythm, fretted ? .chord : .drone]
+        default: list = fretted ? [.chord, .ear, .scale, .rhythm] : [.drone, .ear, .rhythm, .ear]
         }
-        set.append(DailyActivity(kind: .rhythm, minutes: 2))
-        var seen = Set<DailyActivity.Kind>()
-        return set.filter { seen.insert($0.kind).inserted }
+        let open = pro ? list : list.filter { !proKinds.contains($0) }
+        return open.isEmpty ? [.ear, .rhythm] : open
+    }
+
+    private static func clamp(_ minutes: Int, to range: ClosedRange<Int>) -> Int { min(range.upperBound, max(range.lowerBound, minutes)) }
+
+    /// The quest that rides along with an activity of the set: the Play hub shows it on that activity's row
+    /// (an XP side goal) instead of as a second item for the same practice.
+    public static func quest(for kind: DailyActivity.Kind, in quests: [Quest]) -> Quest? {
+        quests.first { $0.dailyKind == kind }
+    }
+
+    /// The quests that stand on their own beside the set (none of its activities covers them).
+    public static func sideQuests(_ quests: [Quest], beside set: [DailyActivity]) -> [Quest] {
+        let kinds = Set(set.map(\.kind))
+        return quests.filter { quest in quest.dailyKind.map { !kinds.contains($0) } ?? true }
+    }
+}
+
+extension Quest {
+    /// The Today activity that covers the same practice, if any.
+    public var dailyKind: DailyActivity.Kind? {
+        switch kind {
+        case .tuneAll, .holdInTune: return .tune
+        case .earCorrect: return .ear
+        case .lessons: return .lesson
+        case .practiceMinutes, .sniperWin, .bullseyes: return nil
+        }
     }
 }

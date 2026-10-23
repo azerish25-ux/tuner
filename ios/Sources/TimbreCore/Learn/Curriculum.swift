@@ -86,7 +86,7 @@ public struct TimedNote: Codable, Equatable, Sendable {
 }
 
 /// A chord a lesson asks for: root pitch class, quality, and the shape to show.
-public struct ChordSpec: Codable, Equatable, Sendable {
+public struct ChordSpec: Codable, Equatable, Hashable, Sendable {
     /// The chord symbol as the curriculum writes it, in letters ("Bm", "F#m").
     public let symbol: String
     public let root: Int

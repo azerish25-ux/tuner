@@ -3,7 +3,7 @@ import TimbreCore
 
 enum PracticeRoute: Hashable { case metronome, ear, chords, scales, drone, voice, intonation, sniper }
 
-/// Play: today's practice set, your level, today's quests, ear games and practice tools.
+/// Play: Today (the day's one session), your level, the quests Today doesn't already cover, ear games and tools.
 struct PracticeView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
@@ -22,11 +22,13 @@ struct PracticeView: View {
                         Text("Play").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
                             .accessibilityAddTraits(.isHeader)
                         Spacer()
-                        StreakChip { store.selectedTab = .journey }
+                        // Today's ring is the card right below, so the chip shows just the streak.
+                        StreakChip(showsToday: false) { store.selectedTab = .journey }
                     }
                     DailySetCard { open($0) }
                     levelCard
-                    questSection
+                    let sideQuests = DailySet.sideQuests(store.quests, beside: store.dailySet)
+                    if !sideQuests.isEmpty { questSection(sideQuests) }
                     gamesSection
                     toolsSection
                 }
@@ -78,14 +80,15 @@ struct PracticeView: View {
         .accessibilityElement(children: .combine)
     }
 
-    private var questSection: some View {
+    /// The daily quests Today doesn't cover; the rest ride on Today's rows as XP side goals.
+    private func questSection(_ quests: [Quest]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
                 Text("Today’s quests").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
                 Spacer()
                 Text("resets in \(hoursToMidnight) h").font(.caption).foregroundStyle(Palette.inkSoft)
             }
-            ForEach(store.quests) { quest in
+            ForEach(quests) { quest in
                 // The one saved counter (AppStore.questCounter): tuning counts today's strings, like the tuner's quest line.
                 let count = store.questCounter(quest)
                 Button { open(quest) } label: { HubQuestRow(quest: quest, done: count.done, total: count.total, claimed: store.questProgress(quest) >= quest.target) }
@@ -184,10 +187,13 @@ struct PracticeView: View {
         .accessibilityIdentifier("practice.\(route)")
     }
 
-    /// Opens a daily-set activity in its tool (the paywall for a Pro tool on a free plan).
+    /// Opens an activity of Today: the lesson in Learn, a tool here (the paywall for a Pro tool on a free plan).
     private func open(_ kind: DailyActivity.Kind) {
         if kind.needsPro && !commerce.isPro { store.presentPaywall("daily.\(kind.rawValue)"); return }
         switch kind {
+        case .lesson: store.openDailyLesson()
+        // TODO: open the due review itself once the Learn engine offers one.
+        case .review: store.selectedTab = .learn
         case .tune: store.selectedTab = .tune
         case .ear: path.append(.ear)
         case .chord: path.append(.chords)

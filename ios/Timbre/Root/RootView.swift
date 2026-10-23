@@ -33,6 +33,8 @@ struct RootView: View {
             }
         }
         .animation(.spring(response: 0.45, dampingFraction: 0.9), value: store.showPaywall)
+        // A 7/30/100-day run reached outside a lesson: its share card (lesson results show their own).
+        .overlay { StreakMilestoneOverlay() }
         // Rewards grow out of the Dynamic Island, inside the status-bar band (RewardToast places itself).
         .overlay { RewardToast() }
         #if DEBUG

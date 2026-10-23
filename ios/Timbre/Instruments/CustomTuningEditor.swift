@@ -123,8 +123,12 @@ struct CustomTuningEditor: View {
             }
             .contentShape(Rectangle())
             .onTapGesture { play(group) }
+            // VoiceOver: one element per string; swipe up or down to move it a semitone, double-tap to hear it.
+            .adjustableValue(stringLabel(number: number, group: group), value: Text(verbatim: noteValue(midi: midi, shift: shift)),
+                             increment: { nudge(group, 1) }, decrement: { nudge(group, -1) })
             .accessibilityAddTraits(.isButton)
             .accessibilityHint(Text("Plays this string's note"))
+            .accessibilityAction { play(group) }
             Spacer()
             Button { step(group, -1) } label: { Image(systemName: "minus") }
                 .buttonStyle(ChipButtonStyle(selected: false)).disabled(shift <= -12)
@@ -141,6 +145,23 @@ struct CustomTuningEditor: View {
         withAnimation(Motion.quick) { for offset in group { midis[offset] += delta } }
         Haptics.shared.selection()
         play(group)
+    }
+
+    /// A step that stays within an octave of standard (the buttons disable themselves at the ends).
+    private func nudge(_ group: [Int], _ delta: Int) {
+        guard let first = group.first, (-12...12).contains(midis[first] - base[first].targetMidi + delta) else { return }
+        step(group, delta)
+    }
+
+    /// "String 6" (with "×2" for a pair), as the row's caption reads.
+    private func stringLabel(number: Int, group: [Int]) -> Text {
+        group.count > 1 ? Text("String \(number)") + Text(verbatim: " ×\(group.count)") : Text("String \(number)")
+    }
+
+    /// The note, and its move from standard once moved ("F2, +1").
+    private func noteValue(midi: Int, shift: Int) -> String {
+        let note = PitchMath.noteName(midi: midi, notation: store.settings.notation)
+        return shift == 0 ? note : note + ", " + (shift > 0 ? "+\(shift)" : "\(shift)")
     }
 
     /// The string's note; an octave pair sounds both notes together.

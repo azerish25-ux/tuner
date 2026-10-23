@@ -16,6 +16,10 @@ struct OnboardingView: View {
     @State private var restoring = false
     @State private var restoreMessage: String?
     @State private var floating = false
+    /// The plan's commitment: minutes a day and the reminder time ("Remind me" turns it on there).
+    @State private var dailyMinutes = 10
+    @State private var reminderTime = PlanCommitment.defaultTime
+    @State private var reminderOn = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// Welcome, experience, goal, microphone, first tune, plan.
     private let steps = 6
@@ -81,13 +85,16 @@ struct OnboardingView: View {
         if store.commerce.isPro { finish() } else { showPaywall = true }
     }
 
+    /// After the paywall (or the plan, for Pro members): onboarding closes onto Learn with the plan's first lesson opening.
     private func finish() {
         let instrument = instrumentID.flatMap { store.catalog.instrument(id: $0) }
         let answeredLevel = level ?? "beginner"
         let answeredGoal = goal ?? "tune"
-        store.completeOnboarding(instrument: instrument, level: answeredLevel, goal: answeredGoal)
+        // Chromatic first: it selects the Tune tab, and completing onboarding then hands over to Learn.
         if instrumentID == nil { store.selectReference() }
-        Analytics.log("onboarding_complete", ["instrument": instrumentID ?? "chromatic", "goal": answeredGoal, "level": answeredLevel])
+        store.completeOnboarding(instrument: instrument, level: answeredLevel, goal: answeredGoal, minutes: dailyMinutes)
+        Analytics.log("onboarding_complete", ["instrument": instrumentID ?? "chromatic", "goal": answeredGoal, "level": answeredLevel,
+                                              "minutes": String(dailyMinutes), "reminder": reminderOn ? "on" : "off"])
     }
 
     /// Spotlit instrument, the promise, and the instrument picker in one screen.
@@ -296,7 +303,8 @@ struct OnboardingView: View {
         if let course = store.onboardingCourse(instrumentId: instrument, goal: answeredGoal) {
             let progress = store.onboardingProgress(level: level ?? "beginner", instrumentId: instrument, goal: answeredGoal)
             let start = progress.nextLesson(in: course)
-            PlanStep(course: course, start: start, goal: goalOption, artwork: CourseArtwork.of(course, catalog: store.catalog), onStart: { startPlan() })
+            PlanStep(course: course, start: start, goal: goalOption, artwork: CourseArtwork.of(course, catalog: store.catalog),
+                     minutes: $dailyMinutes, reminder: $reminderTime, reminderOn: $reminderOn, onStart: { startPlan() })
         } else {
             VStack {
                 Spacer()
@@ -315,14 +323,17 @@ struct OnboardingView: View {
     }
 }
 
-/// "Your plan": the course card with the first lesson after placement, the goal, and the first lessons
-/// of the next units as milestones. Rows rise in one after another.
+/// "Your plan": the course card with the first lesson after placement, the goal with the daily commitment
+/// (minutes a day, a reminder), and the first lessons of the next units as milestones. Rows rise in one after another.
 private struct PlanStep: View {
     let course: LearnCourse
     let start: Lesson?
     let goal: (String, LocalizedStringKey, String)?
     /// The course's art, as on the Learn tab: the instrument's render or photograph, or the course emblem.
     let artwork: CourseArtwork
+    @Binding var minutes: Int
+    @Binding var reminder: Date
+    @Binding var reminderOn: Bool
     let onStart: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var shown = false
@@ -347,7 +358,8 @@ private struct PlanStep: View {
                 VStack(alignment: .leading, spacing: 16) {
                     header.planReveal(shown, 0, reduceMotion)
                     courseCard.planReveal(shown, 1, reduceMotion)
-                    if let goal { goalRow(goal).planReveal(shown, 2, reduceMotion) }
+                    PlanCommitment(goal: goal, minutes: $minutes, reminder: $reminder, reminderOn: $reminderOn)
+                        .planReveal(shown, 2, reduceMotion)
                     if !milestones.isEmpty { milestoneList }
                 }
                 .padding(.horizontal, 24).padding(.top, 18).padding(.bottom, 16)
@@ -425,19 +437,6 @@ private struct PlanStep: View {
         }
     }
 
-    private func goalRow(_ goal: (String, LocalizedStringKey, String)) -> some View {
-        HStack(spacing: 14) {
-            IconOrb(symbol: goal.2, tint: Palette.amber, size: 44)
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Your goal").font(.caption).foregroundStyle(Palette.inkSoft)
-                Text(goal.1).font(.headline).foregroundStyle(Palette.ink)
-            }
-            Spacer(minLength: 0)
-        }
-        .stillCard(padding: 14)
-        .accessibilityElement(children: .combine)
-    }
-
     private var milestoneList: some View {
         VStack(alignment: .leading, spacing: 12) {
             Eyebrow("Milestones", color: accent).planReveal(shown, 3, reduceMotion)
@@ -481,6 +480,184 @@ private struct PlanStep: View {
             }
         }
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// The plan's daily commitment, in the goal's card: minutes a day (5, 10 or 15) and a reminder time.
+/// "Remind me" asks for notifications right there; a refusal just leaves the reminder off.
+private struct PlanCommitment: View {
+    let goal: (String, LocalizedStringKey, String)?
+    @Binding var minutes: Int
+    @Binding var reminder: Date
+    @Binding var reminderOn: Bool
+    @State private var asking = false
+    @Namespace private var pill
+
+    static let choices = [5, 10, 15]
+
+    /// Today at the reminder's time: 7 pm unless one was chosen before.
+    static var defaultTime: Date {
+        let minutes = PracticeReminder.minutes
+        return Calendar.current.date(bySettingHour: minutes / 60, minute: minutes % 60, second: 0, of: Date()) ?? Date()
+    }
+
+    static func minutesOfDay(_ date: Date) -> Int {
+        let time = Calendar.current.dateComponents([.hour, .minute], from: date)
+        return (time.hour ?? 19) * 60 + (time.minute ?? 0)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            if let goal {
+                goalRow(goal)
+                Rectangle().fill(Palette.line).frame(height: 1).accessibilityHidden(true)
+            }
+            minutesRow
+            reminderRow
+        }
+        .stillCard(padding: 14)
+    }
+
+    private func goalRow(_ goal: (String, LocalizedStringKey, String)) -> some View {
+        HStack(spacing: 14) {
+            IconOrb(symbol: goal.2, tint: Palette.amber, size: 44)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Your goal").font(.caption).foregroundStyle(Palette.inkSoft)
+                Text(goal.1).font(.headline).foregroundStyle(Palette.ink)
+            }
+            Spacer(minLength: 0)
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    // MARK: Minutes a day
+
+    /// "Daily practice" and the three lengths (one picker, so its pill can slide; the words wrap if they must).
+    private var minutesRow: some View {
+        HStack(spacing: 10) {
+            rowIcon("timer", tint: Palette.amber)
+            Text("Daily practice").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                .lineLimit(2).minimumScaleFactor(0.85)
+            Spacer(minLength: 6)
+            minutePicker
+        }
+    }
+
+    /// A segmented capsule; the mint pill slides to the chosen length.
+    private var minutePicker: some View {
+        HStack(spacing: 2) {
+            ForEach(Self.choices, id: \.self) { value in minuteChip(value) }
+        }
+        .padding(3)
+        .background(Capsule().fill(Palette.surface))
+        .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
+        .fixedSize()
+    }
+
+    private func minuteChip(_ value: Int) -> some View {
+        let selected = minutes == value
+        return Button {
+            withAnimation(Motion.pluck) { minutes = value }
+            Haptics.shared.selection()
+        } label: {
+            Text(Duration.seconds(value * 60), format: .units(allowed: [.minutes], width: .abbreviated))
+                .font(Typeface.label(13)).monospacedDigit()
+                .foregroundStyle(selected ? Palette.onAccent : Palette.inkSoft)
+                .padding(.horizontal, 11).frame(minHeight: 36)
+                .background {
+                    if selected { Capsule().fill(Palette.mint).matchedGeometryEffect(id: "minutes", in: pill) }
+                }
+                .contentShape(Capsule())
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityIdentifier("onboarding.minutes.\(value)")
+    }
+
+    // MARK: Reminder
+
+    /// The time and "Remind me"; under each other when the type is large.
+    private var reminderRow: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 10) {
+                reminderTime
+                Spacer(minLength: 6)
+                remindButton
+            }
+            VStack(alignment: .leading, spacing: 10) {
+                reminderTime
+                remindButton
+            }
+        }
+        .onChange(of: reminder) { _, time in
+            // A new time while the reminder is on re-plans it (permission is already there).
+            guard reminderOn else { return }
+            Task { await PracticeReminder.enable(at: Self.minutesOfDay(time)) }
+        }
+    }
+
+    private var reminderTime: some View {
+        HStack(spacing: 10) {
+            rowIcon(reminderOn ? "bell.badge.fill" : "bell.fill", tint: reminderOn ? Palette.mint : Palette.amber)
+            DatePicker("Daily practice reminder", selection: $reminder, displayedComponents: .hourAndMinute)
+                .labelsHidden()
+                .datePickerStyle(.compact)
+                .tint(Palette.mint)
+                .fixedSize()
+                .accessibilityIdentifier("onboarding.reminder.time")
+        }
+    }
+
+    private var remindButton: some View {
+        Button(action: toggleReminder) {
+            HStack(spacing: 6) {
+                if asking {
+                    ProgressView().controlSize(.small).tint(Palette.mint)
+                } else if reminderOn {
+                    Image(systemName: "checkmark").font(.system(size: 12, weight: .heavy)).transition(.scale.combined(with: .opacity))
+                }
+                Text("Remind me").lineLimit(1)
+            }
+            .font(Typeface.label(14))
+            .foregroundStyle(reminderOn ? Palette.onAccent : Palette.mint)
+            .padding(.horizontal, 14).frame(minHeight: 38)
+            .background(Capsule().fill(reminderOn ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(Palette.mint.opacity(0.12))))
+            .overlay(Capsule().strokeBorder(Palette.mint.opacity(reminderOn ? 0 : 0.45), lineWidth: 1))
+            .contentShape(Capsule())
+            .fixedSize()
+        }
+        .buttonStyle(PressScaleStyle())
+        .disabled(asking)
+        .animation(Motion.quick, value: reminderOn)
+        .accessibilityAddTraits(reminderOn ? .isSelected : [])
+        .accessibilityIdentifier("onboarding.reminder")
+    }
+
+    private func rowIcon(_ symbol: String, tint: Color) -> some View {
+        Image(systemName: symbol).font(.system(size: 15, weight: .semibold)).foregroundStyle(tint)
+            .frame(width: 22)
+            .contentTransition(.symbolEffect(.replace))
+            .accessibilityHidden(true)
+    }
+
+    /// On: asks for notifications (once) and plans the reminders at the chosen time; a refusal leaves it off.
+    /// Off again: the reminders are removed.
+    private func toggleReminder() {
+        Haptics.shared.selection()
+        if reminderOn {
+            PracticeReminder.disable()
+            reminderOn = false
+            return
+        }
+        // Asked here, so the first lesson's results won't offer the reminder again.
+        UserDefaults.standard.set(true, forKey: PracticeReminder.askedKey)
+        asking = true
+        Task { @MainActor in
+            let on = await PracticeReminder.enable(at: Self.minutesOfDay(reminder))
+            asking = false
+            withAnimation(Motion.pluck) { reminderOn = on }
+            if on { Haptics.shared.lock() }
+        }
     }
 }
 

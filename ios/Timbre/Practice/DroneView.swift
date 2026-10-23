@@ -17,6 +17,11 @@ struct DroneView: View {
                     Text(String(format: "Sa = %.1f Hz", PitchMath.frequency(midi: Double(store.droneMidi), reference: store.settings.referencePitchHz)))
                         .font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
                 }
+                // VoiceOver: swipe up or down to move the tonic a semitone, across both octaves of the picker.
+                .adjustableValue(Text("Tonic"), value: Text(verbatim: PitchMath.noteName(midi: store.droneMidi, notation: store.settings.notation) + ", "
+                                     + String(format: "Sa = %.1f Hz", PitchMath.frequency(midi: Double(store.droneMidi), reference: store.settings.referencePitchHz))),
+                                 increment: { store.setDrone(midi: min(71, store.droneMidi + 1)) },
+                                 decrement: { store.setDrone(midi: max(48, store.droneMidi - 1)) })
                 VStack(alignment: .leading, spacing: 12) {
                     Eyebrow("Tonic")
                     // Runs to the card's edge (its 18 pt inset) so tonics scroll under it instead of being cut.

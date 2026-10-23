@@ -117,6 +117,58 @@ final class PracticeTests: XCTestCase {
         }
     }
 
+    func testTodayOpensWithTheNextLessonThenTwoToolReps() throws {
+        let catalog = try Catalog()
+        let guitar = try XCTUnwrap(catalog.instrument(id: "guitar.acoustic.6"))
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        for offset in 0..<8 {
+            let date = Date(timeIntervalSince1970: 1_800_000_000 + Double(offset) * 86_400)
+            for goal in [nil, "voice", "ear", "rhythm"] {
+                for pro in [true, false] {
+                    let set = DailySet.activities(instrument: guitar, goal: goal, pro: pro, lessonMinutes: 5, date: date, calendar: calendar)
+                    XCTAssertEqual(set.map(\.kind).first, .lesson)
+                    XCTAssertEqual(set.count, 3, "the lesson and two tool reps")
+                    XCTAssertEqual(set[1].kind, .tune)
+                    XCTAssertFalse(set[2].isLearn)
+                    XCTAssertEqual(Set(set.map(\.kind)).count, set.count)
+                    XCTAssertEqual(set.reduce(0) { $0 + $1.minutes }, 10)
+                    if !pro { XCTAssertTrue(set.allSatisfy { !DailySet.proKinds.contains($0.kind) }) }
+                    // Stable all day.
+                    XCTAssertEqual(set, DailySet.activities(instrument: guitar, goal: goal, pro: pro, lessonMinutes: 5, date: date.addingTimeInterval(3 * 3600), calendar: calendar))
+                }
+            }
+        }
+        // The lesson keeps a sensible share of the ring; a due review joins right after it.
+        XCTAssertEqual(DailySet.activities(instrument: guitar, goal: nil, lessonMinutes: 40).first?.minutes, DailySet.lessonMinutes.upperBound)
+        XCTAssertEqual(DailySet.activities(instrument: guitar, goal: nil, lessonMinutes: 1).first?.minutes, DailySet.lessonMinutes.lowerBound)
+        let withReview = DailySet.activities(instrument: guitar, goal: nil, lessonMinutes: 5, reviewMinutes: 3)
+        XCTAssertEqual(Array(withReview.map(\.kind).prefix(3)), [.lesson, .review, .tune])
+        XCTAssertEqual(withReview.count, 4)
+        // The tools fill out the player's daily commitment.
+        XCTAssertEqual(DailySet.activities(instrument: guitar, goal: nil, lessonMinutes: 5, target: 15).reduce(0) { $0 + $1.minutes }, 15)
+        XCTAssertEqual(DailySet.activities(instrument: guitar, goal: nil, target: 15).reduce(0) { $0 + $1.minutes }, 15)
+        XCTAssertTrue(DailySet.activities(instrument: guitar, goal: nil, lessonMinutes: 5, target: 5).allSatisfy { $0.minutes >= 1 })
+        // The goal's tool turns up on some days, another tool on others.
+        let days = (0..<8).map { DailySet.activities(instrument: guitar, goal: "voice", lessonMinutes: 5, date: Date(timeIntervalSince1970: 1_800_000_000 + Double($0) * 86_400), calendar: calendar)[2].kind }
+        XCTAssertTrue(days.contains(.voice))
+        XCTAssertGreaterThan(Set(days).count, 1)
+    }
+
+    func testQuestsForTheSamePracticeRideOnTodaysRows() {
+        let quests = [Quest(kind: .tuneAll, target: 1, xp: 20), Quest(kind: .earCorrect, target: 10, xp: 20), Quest(kind: .bullseyes, target: 5, xp: 25)]
+        let set = [DailyActivity(kind: .lesson, minutes: 5), DailyActivity(kind: .tune, minutes: 1), DailyActivity(kind: .ear, minutes: 4)]
+        XCTAssertEqual(DailySet.quest(for: .tune, in: quests)?.kind, .tuneAll)
+        XCTAssertEqual(DailySet.quest(for: .ear, in: quests)?.kind, .earCorrect)
+        XCTAssertNil(DailySet.quest(for: .lesson, in: quests))
+        XCTAssertEqual(DailySet.sideQuests(quests, beside: set).map(\.kind), [.bullseyes])
+        // Without ear training today, its quest stands on its own.
+        let noEar = [DailyActivity(kind: .tune, minutes: 1), DailyActivity(kind: .rhythm, minutes: 4)]
+        XCTAssertEqual(DailySet.sideQuests(quests, beside: noEar).map(\.kind), [.earCorrect, .bullseyes])
+        XCTAssertEqual(Quest(kind: .lessons, target: 2, xp: 30).dailyKind, .lesson)
+        XCTAssertNil(Quest(kind: .practiceMinutes, target: 5, xp: 15).dailyKind)
+    }
+
     func testAccessPolicy() throws {
         let catalog = try Catalog()
         let guitar = try XCTUnwrap(catalog.instrument(id: "guitar.acoustic.6"))

@@ -33,6 +33,8 @@ final class AppStore: ObservableObject {
     @Published private(set) var paywallInstrumentId: String?
     /// A practice screen to open on the Practice tab (Siri, Shortcuts, deep links).
     @Published var pendingPracticeRoute: PracticeRoute?
+    /// A lesson for the Learn tab to open (onboarding's placed first lesson); LearnView opens it and clears it.
+    @Published var pendingLessonId: String?
     /// While true, readings target the octave and never count as tuning sessions.
     @Published var intonationMode = false
     /// Ear games set their own target; readings then never count as tuning.
@@ -273,7 +275,13 @@ final class AppStore: ObservableObject {
         }
     }
 
-    func completeOnboarding(instrument: Instrument?, level: String, goal: String) {
+    /// Minutes a day the player committed to on onboarding's plan (5, 10 or 15).
+    static let dailyMinutesKey = "plan.dailyMinutes"
+    var dailyMinutes: Int { UserDefaults.standard.object(forKey: Self.dailyMinutesKey) as? Int ?? 10 }
+
+    /// Ends onboarding: the instrument, the placement and the daily commitment are saved, then Learn opens
+    /// the plan's first lesson (`pendingLessonId`) rather than leaving the player on the tuner.
+    func completeOnboarding(instrument: Instrument?, level: String, goal: String, minutes: Int = 10) {
         if let instrument, canTune(instrument) {
             _ = selectInstrument(instrument, photo: catalog.photo(instrumentId: instrument.id)?.asset)
         } else if let instrument {
@@ -288,11 +296,40 @@ final class AppStore: ObservableObject {
         updateSettings {
             $0.onboardingCompleted = true; $0.playerLevel = level; $0.goal = goal
             if placementChanged { $0.learn = placed }
-            if let id = instrument?.id { $0.recentInstrumentIds = [id] + $0.recentInstrumentIds }
+            if let id = instrument?.id {
+                $0.recentInstrumentIds = Array(([id] + $0.recentInstrumentIds.filter { $0 != id }).prefix(LocalStore.recentInstrumentLimit))
+            }
         }
-        // Learn opens on the course for the instrument (or the goal) chosen in onboarding.
-        if let course = onboardingCourse(instrumentId: instrument?.id, goal: goal) { UserDefaults.standard.set(course.id, forKey: "learn.course") }
+        UserDefaults.standard.set(minutes, forKey: Self.dailyMinutesKey)
+        // Learn opens on the course for the instrument (or the goal) chosen in onboarding, with its first lesson open.
+        if let course = onboardingCourse(instrumentId: instrument?.id, goal: goal) {
+            UserDefaults.standard.set(course.id, forKey: "learn.course")
+            if let lesson = firstLesson(in: course) {
+                pendingLessonId = lesson.id
+                selectedTab = .learn
+            }
+        }
         publishWidgets()
+    }
+
+    /// The lesson onboarding hands to Learn: the placed first lesson, or, when that one is Pro on the free plan,
+    /// the first free lesson still to play (nil leaves Learn on the course without opening one).
+    private func firstLesson(in course: LearnCourse) -> Lesson? {
+        if let next = learn.nextLesson(in: course), canPlay(next) { return next }
+        return course.lessons.first { canPlay($0) && !learn.isFinished($0.id) && learn.isUnlocked($0, in: course) }
+    }
+
+    /// Onboarding's first tune counts like a string locked on the tuner: a tuning record (today starts the streak and
+    /// ticks the daily set's tune-up) and the lock's progress event (XP, the tuning quest, "First in tune").
+    /// Onboarding covers the reward toast, so the step shows what was earned itself.
+    @discardableResult
+    func recordFirstTune(_ tune: FirstTuneResult) -> ProgressUpdate? {
+        save(PracticeRecord(date: tune.started, instrumentId: tune.instrumentId, tuningId: tune.tuningId, kind: "tuning",
+                            count: tune.readings, stableCount: min(tune.stableReadings, tune.readings),
+                            meanAbsoluteCents: tune.meanAbsoluteCents, durationMs: tune.durationMs))
+        markDaily(.tune)
+        return recordProgress(.stringTuned(instrumentId: tune.instrumentId, all: false, course: tune.course, courses: tune.courses,
+                                           precise: settings.precision == .pro), toast: false)
     }
 
     /// The Pro instrument a player chose in onboarding without Pro: it leads the recent instruments but was never
@@ -456,7 +493,10 @@ final class AppStore: ObservableObject {
         }
         // The lock bell (played at a string's pitch) must not pull automatic detection onto another string.
         if automatic, !referenceMode, gameTargetHz == nil, ProcessInfo.processInfo.systemUptime >= autoQuietUntil, let hz, confidence >= settings.confidenceThreshold {
-            let best = courses.min { abs(log(hz / target(for: $0))) < abs(log(hz / target(for: $1))) }
+            let nearest = courses.min { abs(log(hz / target(for: $0))) < abs(log(hz / target(for: $1))) }
+            // Unison partners (a mandolin's pair) tie: stay on the string being tuned, so a pair's second string gets its turn.
+            let active = activeCourse
+            let best = nearest.map { $0.targetMidi == active.targetMidi && $0.anchorId == active.anchorId ? active : $0 }
             if let best {
                 if lastAutoIndex == best.index { autoHits += 1 } else { autoHits = 1; lastAutoIndex = best.index }
                 if autoHits >= 3 && selectedCourse != best.index { selectedCourse = best.index; tracker.reset() }
@@ -523,8 +563,28 @@ final class AppStore: ObservableObject {
     }
 
     func save(_ record: PracticeRecord) {
-        do { try persistence.append(record); records = persistence.records; awardStreakFreezeIfEarned(); publishWidgets() }
+        let before = streak.current
+        do { try persistence.append(record); records = persistence.records; awardStreakFreezeIfEarned(); noteStreakMilestone(from: before, record: record); publishWidgets() }
         catch { self.error = String(localized: "Practice could not be saved: \(error.localizedDescription)") }
+    }
+
+    /// Runs worth a share card: reaching one shows it (lesson results, else `StreakMilestoneOverlay`).
+    static let streakMilestones = [7, 30, 100]
+    /// The milestone today's practice just reached, until a screen shows it (`takeStreakMilestone`).
+    @Published private(set) var streakMilestone: Int?
+
+    /// Only practice saved today reaches a milestone (history written for an earlier day never does).
+    private func noteStreakMilestone(from before: Int, record: PracticeRecord) {
+        guard Calendar.current.isDateInToday(record.date) else { return }
+        let now = streak.current
+        if let reached = Self.streakMilestones.last(where: { before < $0 && $0 <= now }) { streakMilestone = reached }
+    }
+
+    /// Hands the waiting milestone to the screen that will show it, once.
+    func takeStreakMilestone() -> Int? {
+        guard let milestone = streakMilestone else { return nil }
+        streakMilestone = nil
+        return milestone
     }
 
     // MARK: Practice tracking
@@ -587,6 +647,8 @@ final class AppStore: ObservableObject {
     /// Saves the lesson and its XP; returns what was earned so the results screen can show it.
     @discardableResult
     func finishLesson(_ result: LessonResult, courseId: String) -> ProgressUpdate? {
+        // Today's lesson rep, read before this lesson moves the course on.
+        let todayRep = dailyRep(forLesson: result.lessonId)
         var learn = self.learn
         learn.record(result, courseId: courseId)
         guard updateSettings({ $0.learn = learn }) else { return nil }
@@ -594,7 +656,11 @@ final class AppStore: ObservableObject {
         save(PracticeRecord(instrumentId: "learn.\(courseId)", kind: "lesson", count: 3, stableCount: result.stars, durationMs: result.minutes * 60_000))
         Analytics.log("lesson_done", ["lesson": result.lessonId, "stars": String(result.stars)])
         // The results screen celebrates level-ups and badges itself; the toast would sit hidden behind it.
-        return recordProgress(.lessonCompleted(stars: result.stars, xp: result.xp), toast: false)
+        var update = recordProgress(.lessonCompleted(stars: result.stars, xp: result.xp), toast: false)
+        // Ticks off today's lesson rep; when that finishes the set, its bonus joins this lesson's rewards
+        // (`dailySetCompleted`) for the results screen, and the Today card celebrates it on the next visit.
+        if let todayRep, let bonus = markDaily(todayRep, toast: false) { update = update.map { $0.merged(with: bonus) } ?? bonus }
+        return update
     }
 
     // MARK: Progress (XP, quests, badges, string health)
@@ -659,8 +725,10 @@ final class AppStore: ObservableObject {
     }()
     var todayKey: String { Self.dayFormatter.string(from: Date()) }
     func dailyDone(_ kind: DailyActivity.Kind) -> Bool { settings.dailyDone?[todayKey]?.contains(kind.rawValue) ?? false }
-    func markDaily(_ kind: DailyActivity.Kind) {
-        guard !dailyDone(kind) else { return }
+    /// Ticks off an activity of Today; returns the set's bonus when this was its last one.
+    @discardableResult
+    func markDaily(_ kind: DailyActivity.Kind, toast: Bool = true) -> ProgressUpdate? {
+        guard !dailyDone(kind) else { return nil }
         let key = todayKey
         updateSettings { settings in
             var done = settings.dailyDone ?? [:]
@@ -670,10 +738,49 @@ final class AppStore: ObservableObject {
         }
         // The last activity of the set pays its bonus, once a day (each activity already saved a practice record,
         // so the day counts for the streak); the toast and the Play hub's Today card celebrate it.
-        if dailySetComplete { recordProgress(.dailySetCompleted) }
+        return dailySetComplete ? recordProgress(.dailySetCompleted, toast: toast) : nil
     }
-    /// Today's set; on the free plan its Pro tool's minutes go to ear training, so it can always be finished.
-    var dailySet: [DailyActivity] { DailySet.activities(instrument: instrument, goal: settings.goal, pro: isPro) }
+    /// Today, the day's one session: the next lesson of the learner's course, a review when one is due, then two
+    /// tool reps, about as long as the player's daily commitment. On the free plan no Pro tool is picked, so it can
+    /// always be finished.
+    var dailySet: [DailyActivity] {
+        DailySet.activities(instrument: instrument, goal: settings.goal, pro: isPro, lessonMinutes: dailyLesson?.minutes,
+                            reviewMinutes: dailyReviewMinutes, target: dailyMinutes)
+    }
+
+    /// The course Learn shows (its Continue card plays that course's next lesson).
+    var learnCourse: LearnCourse? {
+        curriculum.course(id: UserDefaults.standard.string(forKey: "learn.course") ?? "guitar") ?? curriculum.courses.first
+    }
+
+    /// Today's lesson: once one is done, the lesson finished; before that, the course's next lesson, if this
+    /// player can open it (a locked lesson leaves the slot to a tool rep instead).
+    var dailyLesson: Lesson? {
+        if dailyDone(.lesson), let id = learn.lastLessonId, let finished = curriculum.lesson(id: id) { return finished.lesson }
+        guard let course = learnCourse, let next = learn.nextLesson(in: course), canPlay(next) else { return nil }
+        return next
+    }
+
+    /// Minutes of today's review rep, when Learn has a review due.
+    var dailyReviewMinutes: Int? {
+        guard let course = learnCourse, reviewDue(in: course), let review = weakSpotReview(in: course) else { return nil }
+        return review.minutes
+    }
+
+    /// The rep a finished lesson completes: a review lesson ticks off a due review, any other lesson (a replay or
+    /// another course included) ticks off the lesson; nil when today's set has no such rep left open.
+    private func dailyRep(forLesson id: String) -> DailyActivity.Kind? {
+        let open = Set(dailySet.map(\.kind).filter { !dailyDone($0) })
+        if LearnProgress.isReview(id) || curriculum.lesson(id: id)?.lesson.kind == .review, open.contains(.review) { return .review }
+        return open.contains(.lesson) ? .lesson : nil
+    }
+
+    /// Opens today's lesson in Learn (Learn alone once it's done).
+    func openDailyLesson() {
+        if !dailyDone(.lesson), let lesson = dailyLesson { pendingLessonId = lesson.id }
+        selectedTab = .learn
+        Haptics.shared.selection()
+    }
     /// Every activity of today's set done.
     var dailySetComplete: Bool {
         let set = dailySet

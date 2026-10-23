@@ -26,18 +26,27 @@ struct LessonResults: View {
     @State private var leveled = false
     @State private var badgesShown = 0
     @State private var offerReminder = !UserDefaults.standard.bool(forKey: PracticeReminder.askedKey) && !UserDefaults.standard.bool(forKey: PracticeReminder.enabledKey)
+    /// A streak milestone (7, 30, 100 days) this lesson reached: its card is offered here, not in the app-wide overlay.
+    @State private var milestone: Int?
+    /// The share cards (three stars, a finished song, a milestone) come in after the stars and rewards.
+    @State private var shareShown = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.requestReview) private var requestReview
 
     private static let gold = Color(hex: 0xF0A93B)
 
+    /// "Flawless" only for a clean run (98 % or better); three stars from 90 % read "Great work".
     private var headline: LocalizedStringKey {
-        switch result.stars { case 3: return "Flawless"; case 2: return "Great work"; default: return "Lesson complete" }
+        if result.stars == 3 && result.accuracy >= 0.98 { return "Flawless" }
+        return result.stars >= 2 ? "Great work" : "Lesson complete"
     }
 
+    private var accuracyPercent: Int { Int((result.accuracy * 100).rounded()) }
+
     var body: some View {
+        // The content scrolls inside its own frame: nothing slides under the buttons.
         VStack(spacing: 0) {
-            ScrollView { content }.scrollBounceBehavior(.basedOnSize).scrollIndicators(.hidden).scrollClipDisabled()
+            ScrollView { content }.scrollBounceBehavior(.basedOnSize).scrollIndicators(.hidden)
             buttons
         }
         .task { await reveal() }
@@ -60,7 +69,7 @@ struct LessonResults: View {
             .opacity(appeared ? 1 : 0).offset(y: appeared ? 0 : 12)
             HStack(spacing: 12) {
                 tile(symbol: "sparkles", tint: accent, value: Text("+\(xp)"), label: Text("XP"))
-                tile(symbol: "scope", tint: Palette.amber, value: Text("\(Int((result.accuracy * 100).rounded()))%"), label: Text("accuracy"))
+                tile(symbol: "scope", tint: Palette.amber, value: Text("\(accuracyPercent)%"), label: Text("accuracy"))
                 tile(symbol: "flame.fill", tint: Palette.flame, value: Text("\(store.streak.current)"), label: Text("day streak"))
             }
             .padding(.horizontal, 20)
@@ -70,16 +79,21 @@ struct LessonResults: View {
             }
             if let barLevel { levelBar(barLevel).padding(.horizontal, 20).transition(.opacity) }
             if let reward, badgesShown > 0 { earned(reward) }
+            if shareShown && hasShareCards { shareCards.transition(.move(edge: .bottom).combined(with: .opacity)) }
             if offerReminder && appeared { reminderCard.transition(.move(edge: .bottom).combined(with: .opacity)) }
         }
         .padding(.top, 26).padding(.bottom, 16)
     }
 
+    /// StepButton carries its own 12 pt below; Done sits right under it.
     private var buttons: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 0) {
             if let next, store.canPlay(next) {
-                StepButton(title: "Next lesson", accent: accent) { onNext(next) }.padding(.bottom, -12)
+                StepButton(title: "Next lesson", accent: accent) { onNext(next) }
                     .accessibilityIdentifier("lesson.next")
+            }
+            if !LearnProgress.isReview(lesson.id) {
+                PracticeWeakSpotsButton(course: course) { onNext($0) }.padding(.vertical, 4)
             }
             Button { onContinue() } label: {
                 Text("Done").font(Typeface.label(17)).foregroundStyle(Palette.ink).frame(maxWidth: .infinity, minHeight: 52)
@@ -130,6 +144,10 @@ struct LessonResults: View {
                     rewardRow(symbol: "checkmark", title: Text(quest.title), detail: Text("Quest complete · +\(quest.xp) XP"), gold: false)
                 }
             }
+            // This lesson finished Today's set: its bonus lands here too (the toast would be hidden behind this screen).
+            if reward.dailySetCompleted && reward.achievementsEarned.count + reward.questsCompleted.count < badgesShown {
+                rewardRow(symbol: "sun.max.fill", title: Text("Daily set complete"), detail: Text("+\(XPReward.dailySet) XP"), gold: true)
+            }
         }
         .padding(.horizontal, 20)
     }
@@ -150,6 +168,42 @@ struct LessonResults: View {
         .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
         .transition(.scale(scale: 0.6).combined(with: .opacity))
         .accessibilityElement(children: .combine)
+    }
+
+    // MARK: Share cards
+
+    private var isSong: Bool { lesson.kind == .song }
+    /// Three stars (not in practice mode) or any finished song.
+    private var sharesResult: Bool { isSong || (result.stars == 3 && !practice) }
+    private var hasShareCards: Bool { sharesResult || milestone != nil }
+
+    /// A card for the moment, ready to share: the milestone, then the song or the three stars.
+    private var shareCards: some View {
+        VStack(spacing: 8) {
+            if let milestone {
+                ShareCardRow(title: Text("\(milestone)-day streak"), detail: StreakShareCard.titleText(milestone),
+                             preview: "Practice streak", tint: Palette.flame) {
+                    StreakShareCard(days: milestone)
+                }
+                .accessibilityIdentifier("lesson.share.streak")
+            }
+            if sharesResult { resultShare.accessibilityIdentifier("lesson.share") }
+        }
+        .padding(.horizontal, 20)
+    }
+
+    @ViewBuilder private var resultShare: some View {
+        let courseTitle = course.title.localized
+        let title = lesson.title.localized
+        if isSong {
+            ShareCardRow(title: Text(title), detail: Text("\(result.stars) of 3 stars"), preview: "Timbre", tint: accent) {
+                LessonShareCard(course: courseTitle, title: title, headline: nil, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: true)
+            }
+        } else {
+            ShareCardRow(title: Text(headline), detail: Text(title), preview: headline, tint: accent) {
+                LessonShareCard(course: courseTitle, title: title, headline: headline, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: false)
+            }
+        }
     }
 
     /// After the first lesson: one tap to make practice a daily habit.
@@ -212,6 +266,8 @@ struct LessonResults: View {
     }
 
     private func reveal() async {
+        // Claimed at once, so the app-wide milestone overlay doesn't also show it behind this screen.
+        if milestone == nil { milestone = store.takeStreakMilestone() }
         withAnimation(.easeOut(duration: 0.5)) { appeared = true }
         for i in 0..<3 {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 80 : 380))
@@ -229,12 +285,17 @@ struct LessonResults: View {
             withAnimation(.linear(duration: 0.03)) { xp = result.xp * s / steps }
         }
         await fillLevelBar()
-        guard let reward else { return }
-        for i in 0..<(reward.achievementsEarned.count + reward.questsCompleted.count) {
-            try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 320))
-            withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) { badgesShown = i + 1 }
-            if i < reward.achievementsEarned.count { SoundFX.shared.play(.star); Haptics.shared.lock() }
+        if let reward {
+            for i in 0..<(reward.achievementsEarned.count + reward.questsCompleted.count + (reward.dailySetCompleted ? 1 : 0)) {
+                try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 320))
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) { badgesShown = i + 1 }
+                if i < reward.achievementsEarned.count { SoundFX.shared.play(.star); Haptics.shared.lock() }
+            }
         }
+        guard hasShareCards else { return }
+        try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 280))
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) { shareShown = true }
+        if milestone != nil { SoundFX.shared.play(.levelUp); Haptics.shared.done() }
     }
 
     private func fillLevelBar() async {

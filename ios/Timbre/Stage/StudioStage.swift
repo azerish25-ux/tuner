@@ -102,10 +102,18 @@ struct StudioStage: View {
         return card.anchors.first
     }
 
+    /// The card points of the string being tuned: on a paired course whose card names each string
+    /// ("c4a", "c4b"), that string's own; otherwise the anchor's.
+    private func shownKey(_ card: StageCard, _ state: StageInput, anchor: String) -> String {
+        guard state.activeAnchor == anchor, let peg = state.pegIndex, let letter = CourseGrouping.pegLetter(peg),
+              card.anchors.contains(anchor + letter) else { return anchor }
+        return anchor + letter
+    }
+
     /// The note and turn cue beside the peg, on the side away from the headstock's centre line.
     @ViewBuilder private func pegLabel(card: StageCard, square: CGFloat, origin: CGPoint, size: CGSize, date: Date) -> some View {
         let state = input()
-        if let anchor = shownAnchor(card, state), let peg = card.point("\(anchor).peg") {
+        if let anchor = shownAnchor(card, state), let peg = card.point("\(shownKey(card, state, anchor: anchor)).peg") {
             let center = CGPoint(x: origin.x + peg.x * square, y: origin.y + peg.y * square)
             let cents = state.listening ? motion.cents : nil
             let turn = PegTurn.from(cents: cents, locked: state.locked, listening: state.listening,
@@ -123,9 +131,10 @@ struct StudioStage: View {
         let now = date.timeIntervalSinceReferenceDate
         let (smoothed, phase, e, g) = motion.step(state, now: now)
         guard let anchor = shownAnchor(card, state) else { return }
+        let key = shownKey(card, state, anchor: anchor)
         let still = reduceMotion
         let color = Palette.tuning(smoothed, locked: state.locked)
-        if let a = card.point("\(anchor).saddle"), let b = card.point("\(anchor).nut") {
+        if let a = card.point("\(key).saddle"), let b = card.point("\(key).nut") {
             let p0 = CGPoint(x: origin.x + a.x * side, y: origin.y + a.y * side)
             let p1 = CGPoint(x: origin.x + b.x * side, y: origin.y + b.y * side)
             // The string only lights up while it rings (or holds the in-tune glow); a silent string stays the picture's own.
@@ -134,7 +143,7 @@ struct StudioStage: View {
                 StringDrawing.draw(&context, from: p0, to: p1, color: color, energy: e, glow: g, phase: phase, presence: presence, time: now, still: still)
             }
         }
-        if let peg = card.point("\(anchor).peg") {
+        if let peg = card.point("\(key).peg") {
             let center = CGPoint(x: origin.x + peg.x * side, y: origin.y + peg.y * side)
             let pulse = 15 + (still ? 0 : 5 * sin(now * 3) * (1 - g))
             let halo = pulse + 10

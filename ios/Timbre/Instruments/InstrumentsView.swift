@@ -107,9 +107,9 @@ struct InstrumentsView: View {
     @ViewBuilder private var currentTunings: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .center) {
-                Eyebrow("\(store.instrumentDisplayName) tunings")
+                tuningsHeading
                 Spacer(minLength: 8)
-                customTuningButton
+                customTuningButton.fixedSize().layoutPriority(1)
             }
             EdgeRail(selection: store.referenceMode ? nil : store.tuning.id) {
                 ForEach(store.tunings) { tuning in
@@ -135,6 +135,18 @@ struct InstrumentsView: View {
                 }
             }
         }
+    }
+
+    /// One line beside the Custom button: "Acoustic guitar tunings" when that fits, else just "Tunings" (the
+    /// instrument is named below, under Your instruments). VoiceOver always hears the full heading.
+    private var tuningsHeading: some View {
+        ViewThatFits(in: .horizontal) {
+            Eyebrow("\(store.instrumentDisplayName) tunings").fixedSize()
+            Eyebrow("Tunings").lineLimit(1).minimumScaleFactor(0.8)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("\(store.instrumentDisplayName) tunings"))
+        .accessibilityAddTraits(.isHeader)
     }
 
     /// New custom tuning: in the section header so it's always in reach, not at the far end of the rail.

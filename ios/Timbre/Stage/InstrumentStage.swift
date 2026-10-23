@@ -13,6 +13,9 @@ struct StageInput {
     var focus = false
     /// The note of the string being tuned ("D3"), for the peg label.
     var note = ""
+    /// Which string of the active anchor is being tuned, in course order (0 for the first): on a paired
+    /// course, the one peg to turn. Nil cues every peg of the anchor.
+    var pegIndex: Int?
 }
 
 /// Drives the live 3D instrument: camera framing, peg rotation following measured cents,
@@ -58,6 +61,8 @@ final class StageController {
     private(set) var smoothedCents: Double?
     private var previousLevel: Double = -120
     private var currentAnchor: String?
+    /// The string of `currentAnchor` being tuned (nil: all of them).
+    private var currentPeg: Int?
     var input: () -> StageInput = { StageInput() }
     /// Paywall and onboarding: the instrument sways slowly under the lights.
     var showcase = false
@@ -268,7 +273,7 @@ final class StageController {
     }
 
     struct PegMarker {
-        /// The active course's pegs on screen (both pegs of a pair).
+        /// The pegs of the string being tuned on screen: one, or both of a pair when the input names neither.
         var points: [CGPoint]
         /// The label's side: -1 left of the peg (pegs left of the head's centre), +1 right.
         var side: CGFloat
@@ -282,7 +287,7 @@ final class StageController {
     /// The pegs of the string being tuned, projected for the stage overlay; nil before the model is on stage.
     func pegMarker(in size: CGSize) -> PegMarker? {
         guard let rig, !showcase, let anchor = currentAnchor else { return nil }
-        let strings = rig.strings.filter { $0.anchor == anchor }
+        let strings = Self.tuned(rig, anchor: anchor, peg: currentPeg)
         let points = strings.compactMap { screenPoint($0.pegPoint, in: size) }
         guard let first = strings.first, let lead = points.first else { return nil }
         let head = screenPoint(rig.head, in: size)
@@ -297,11 +302,15 @@ final class StageController {
         applyFraming(dt: dt)
         guard let rig else { return }
         let anchor = state.activeAnchor ?? rig.strings.first?.anchor
-        if anchor != currentAnchor {
+        let peg = state.activeAnchor == nil ? nil : state.pegIndex
+        if anchor != currentAnchor || peg != currentPeg {
             for string in rig.strings where string.anchor == currentAnchor { staticStrings[string.nodeName]?.isEnabled = true }
             currentAnchor = anchor
+            currentPeg = peg
             filter.reset()
         }
+        let tuned = Self.tuned(rig, anchor: anchor, peg: peg)
+        let turning = Set(tuned.map(\.peg))
         // Pluck energy: rises with the input level, decays like a string.
         let rising = state.level > previousLevel + 6 && state.level > -42
         previousLevel = state.level
@@ -313,11 +322,11 @@ final class StageController {
         let phase = strobe.advance(cents: state.locked ? 0 : smoothed, dt: Double(dt))
         glow += ((state.locked ? 1 : 0) - glow) * min(1, dt * (state.locked ? 7 : 2.5))
 
-        // Pegs: the active course's pegs (both of a pair) follow the pitch error; the rest ease home.
+        // Pegs: the peg of the string being tuned follows the pitch error; the rest ease home.
         for string in rig.strings {
             guard let peg = pegs[string.peg] else { continue }
             var goal: Float = 0
-            if string.anchor == anchor, let smoothed {
+            if turning.contains(string.peg), let smoothed {
                 goal = string.slides ? Float(-smoothed) * (string.perCent ?? 0.0003)
                                      : Float(-smoothed) * rig.degPerCent * Float(string.tighten) * .pi / 180
             }
@@ -332,7 +341,15 @@ final class StageController {
             peg.entity.orientation = peg.base * simd_quatf(angle: next, axis: [1, 0, 0])
             if let post = posts[string.peg] { post.entity.orientation = post.base * simd_quatf(angle: next / 6, axis: [0, 0, 1]) }
         }
-        updateString(rig.string(anchor), phase: Float(phase), locked: state.locked, active: state.listening)
+        updateString(tuned.first, phase: Float(phase), locked: state.locked, active: state.listening)
+    }
+
+    /// The rig strings being tuned: on a paired course the one `peg` names (in course order), else every
+    /// string on the anchor (a rig with one string per anchor ignores `peg`).
+    private static func tuned(_ rig: InstrumentRig, anchor: String?, peg: Int?) -> [InstrumentRig.StringRig] {
+        let strings = rig.strings.filter { $0.anchor == anchor }
+        guard let peg, strings.count > 1, strings.indices.contains(peg) else { return strings }
+        return [strings[peg]]
     }
 
     private func updateString(_ string: InstrumentRig.StringRig?, phase: Float, locked: Bool, active: Bool) {

@@ -2,17 +2,24 @@ import SwiftUI
 import TimbreCore
 import UIKit
 
-/// Flame and day count; taps through to Progress.
+/// Flame and day count; taps through to Progress. Around the flame, Today's ring: any activity of it keeps
+/// the streak (the flame lights), finishing them all closes the ring.
 struct StreakChip: View {
     @EnvironmentObject private var store: AppStore
+    /// Draws Today's ring around the flame. Nil decides by tab: not on Play or Learn, whose Today cards show it.
+    var showsToday: Bool? = nil
     var action: () -> Void = {}
+    /// Today's lesson follows Learn's course; reading it here redraws the ring when that changes.
+    @AppStorage("learn.course") private var learnCourseId = "guitar"
+
     var body: some View {
         let streak = store.streak
+        let today = showsToday ?? (store.selectedTab != .practice && store.selectedTab != .learn)
+        let activities = today ? store.dailySet : []
+        let done = Set(activities.map(\.kind).filter { store.dailyDone($0) })
         Button(action: action) {
             HStack(spacing: 5) {
-                Image(systemName: "flame.fill").font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(streak.practicedToday ? Palette.flame : Palette.inkFaint)
-                    .symbolEffect(.bounce, value: streak.current)
+                flame(lit: streak.practicedToday, bounce: streak.current, ring: activities, done: done)
                 Text("\(streak.current)").font(Typeface.label(14)).foregroundStyle(Color(hex: 0xFFD3A8)).monospacedDigit()
                 if store.streakFreezes > 0 {
                     // Banked streak freezes, one flake each.
@@ -25,14 +32,39 @@ struct StreakChip: View {
                     .transition(.scale.combined(with: .opacity))
                 }
             }
-            .padding(.horizontal, 12).frame(height: 36)
+            .padding(.leading, activities.isEmpty ? 12 : 6).padding(.trailing, 12).frame(height: 36)
             .background(Capsule().fill(Palette.flame.opacity(0.10)))
             .overlay(Capsule().strokeBorder(Palette.flame.opacity(0.35), lineWidth: 1))
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text("\(streak.current)-day streak"))
-        .accessibilityValue(store.streakFreezes > 0 ? Text("\(store.streakFreezes) streak freezes") : Text(""))
+        .accessibilityValue(value(done: done.count, total: activities.count))
         .accessibilityIdentifier("streak.chip")
+    }
+
+    /// The flame, lit once today counts; with Today's activities, inside their ring.
+    @ViewBuilder private func flame(lit: Bool, bounce: Int, ring: [DailyActivity], done: Set<DailyActivity.Kind>) -> some View {
+        let icon = Image(systemName: "flame.fill").font(.system(size: ring.isEmpty ? 13 : 11, weight: .semibold))
+            .foregroundStyle(lit ? Palette.flame : Palette.inkFaint)
+            .symbolEffect(.bounce, value: bounce)
+        if ring.isEmpty {
+            icon
+        } else {
+            ZStack {
+                DailySetRing(activities: ring, done: done, lineWidth: 2.5, gap: 0.08)
+                icon
+            }
+            .frame(width: 26, height: 26)
+        }
+    }
+
+    /// "Today: 1 of 3" while the ring shows, and the banked freezes.
+    private func value(done: Int, total: Int) -> Text {
+        var parts: [Text] = []
+        if total > 0 { parts.append(Text("Today") + Text(verbatim: ": ") + Text("\(done) of \(total)")) }
+        if store.streakFreezes > 0 { parts.append(Text("\(store.streakFreezes) streak freezes")) }
+        guard let first = parts.first else { return Text(verbatim: "") }
+        return parts.dropFirst().reduce(first) { (line: Text, part: Text) -> Text in line + Text(verbatim: ", ") + part }
     }
 }
 
@@ -560,7 +592,7 @@ private struct PillLayout {
     static let islandWidth: CGFloat = 126
     static let islandHeight: CGFloat = 37
     /// Kept clear on the trailing side: streak chip, level ring and settings button with the gutter.
-    static let headerControls: CGFloat = 184
+    static let headerControls: CGFloat = 192
     var island: Bool { top >= 51 && width < 500 }
     var docked: Bool { !island && width < 600 }
     /// The island's top edge: about 11 pt below the screen top on a 59 pt band, 14 pt on a 62 pt band.

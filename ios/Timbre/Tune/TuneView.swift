@@ -10,10 +10,13 @@ struct TuneView: View {
     @Environment(\.requestReview) private var requestReview
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
+    @Environment(\.colorSchemeContrast) private var contrast
     /// Settings › Strobe precision: a strobe band in place of the needle meter.
     @AppStorage(TuneView.strobeKey) private var strobeView = false
     static let strobeKey = "tune.strobe"
     @State private var motion = ReadoutMotion()
+    @State private var announcer = TunerAnnouncer()
     @State private var failed3D: String?
     @State private var ready3D: String?
     private static let supports3D = MTLCreateSystemDefaultDevice() != nil
@@ -64,9 +67,55 @@ struct TuneView: View {
             } else {
                 store.autoQuietUntil = ProcessInfo.processInfo.systemUptime + 1.2
                 SoundFX.shared.playLock(frequency: store.target(for: course))
+                advanceInPair(after: index)
+            }
+        }
+        // VoiceOver: the note and cents spoken while a pitch is held, "In tune" on the lock.
+        .task(id: voiceOver) {
+            guard voiceOver else { return }
+            while !Task.isCancelled {
+                announce()
+                try? await Task.sleep(for: .milliseconds(200))
             }
         }
         .sheet(isPresented: $store.showInstrumentPicker) { InstrumentPicker().presentationDetents([.large]).presentationBackground(Palette.stage) }
+    }
+
+    /// One string of a pair just locked: once its bell has rung, the tuner moves on to the other string
+    /// (same chip, its own peg), in automatic and manual detection alike.
+    private func advanceInPair(after index: Int) {
+        let store = self.store
+        guard store.activeCourse.index == index,
+              let group = CourseGrouping.groups(store.courses).first(where: { $0.contains(index) }),
+              let partner = group.partner(after: index, locked: store.lockedCourses) else { return }
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(1.2))
+            guard store.activeCourse.index == index, !store.referenceMode, !store.lockedCourses.contains(partner.index),
+                  store.courses.contains(where: { $0.index == partner.index }) else { return }
+            let automatic = store.automatic
+            store.chooseCourse(partner.index)
+            store.automatic = automatic
+        }
+    }
+
+    /// A peg tapped on the stage: a course's anchor ("c4") tunes its next unlocked string, one peg of a pair ("c4b") that string.
+    private func selectPeg(_ name: String) {
+        let courses = store.courses
+        guard let course = CourseGrouping.course(forPeg: name, in: courses) else { return }
+        if course.anchorId == name, let group = CourseGrouping.groups(courses).first(where: { $0.contains(course.index) }) {
+            store.chooseCourse(group.nextToTune(store.lockedCourses).index)
+        } else {
+            store.chooseCourse(course.index)
+        }
+    }
+
+    /// Feeds the VoiceOver announcer what the readout shows, while the tuner is the screen in front.
+    private func announce() {
+        let front = store.selectedTab == .tune && !store.showSettings && !store.showInstrumentPicker && !store.showPaywall
+        let reading = store.live.reading
+        let heard = front && audio.running && !store.live.preserved && reading.cents != nil
+        let shown = heard ? (motion.shown ?? reading.cents.map { Int($0.rounded()) }) : nil
+        announcer.step(note: store.targetName, shown: shown, locked: reading.inTune, now: ProcessInfo.processInfo.systemUptime)
     }
 
     private func autoListen() {
@@ -108,9 +157,11 @@ struct TuneView: View {
     }
 
     private func stageInput() -> StageInput {
-        StageInput(cents: store.live.reading.cents, level: store.live.level, locked: store.live.reading.inTune,
-                   listening: audio.running, activeAnchor: store.activeAnchor, focus: audio.running && !store.referenceMode,
-                   note: store.targetName)
+        // On a paired course the cue rings the one peg being tuned.
+        let peg = store.referenceMode ? nil : Optional(CourseGrouping.position(of: store.activeCourse, in: store.courses))
+        return StageInput(cents: store.live.reading.cents, level: store.live.level, locked: store.live.reading.inTune,
+                          listening: audio.running, activeAnchor: store.activeAnchor, focus: audio.running && !store.referenceMode,
+                          note: store.targetName, pegIndex: peg)
     }
 
     @ViewBuilder private var stage: some View {
@@ -128,18 +179,18 @@ struct TuneView: View {
                                 .padding(.horizontal, 16)
                                 .transition(.opacity)
                         }
-                        InstrumentStage(modelID: modelID, input: stageInput, onSelect: { store.chooseAnchor($0) },
+                        InstrumentStage(modelID: modelID, input: stageInput, onSelect: { selectPeg($0) },
                                         onFailure: { failed3D = modelID },
                                         onReady: { withAnimation(.easeInOut(duration: 0.6)) { ready3D = modelID } })
                     }
                 } else if ModelLibrary.hasCard(modelID) {
-                    StudioStage(imageName: ModelLibrary.cardImageName(modelID), card: rig.flatMap(StageCard.init(rig:)), input: stageInput) { store.chooseAnchor($0) }
+                    StudioStage(imageName: ModelLibrary.cardImageName(modelID), card: rig.flatMap(StageCard.init(rig:)), input: stageInput) { selectPeg($0) }
                         .padding(.horizontal, 16)
                 } else if let photo = store.photo {
-                    StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: stageInput) { store.chooseAnchor($0) }.padding(28)
+                    StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: stageInput) { selectPeg($0) }.padding(28)
                 }
             } else if let photo = store.photo {
-                StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: stageInput) { store.chooseAnchor($0) }.padding(28)
+                StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: stageInput) { selectPeg($0) }.padding(28)
             }
         }
         .overlay(alignment: .trailing) { sideControls.padding(.trailing, 14) }
@@ -197,7 +248,7 @@ struct TuneView: View {
     }
 
     private func statusColor(_ reading: TuningReading, shown: Int?) -> Color {
-        guard audio.running, !store.live.preserved, reading.cents != nil, let shown else { return Palette.inkSoft }
+        guard audio.running, !store.live.preserved, reading.cents != nil, let shown else { return contrast == .increased ? Palette.ink : Palette.inkSoft }
         return Palette.tuning(Double(shown), locked: reading.inTune)
     }
 
@@ -216,10 +267,14 @@ struct TuneView: View {
         let quest = store.quests.first { $0.kind == .tuneAll }
         let counter = quest.map { store.questCounter($0) }
         let done = counter?.done ?? min(store.lockedCourses.count, store.courses.count), total = counter?.total ?? store.courses.count
-        return HStack {
-            (Text("Daily quest · tune all \(total) ").foregroundStyle(Palette.inkSoft) + Text("\(done) / \(total)").foregroundStyle(Palette.ink).bold())
-                .font(.caption)
-            Spacer()
+        return HStack(alignment: .firstTextBaseline, spacing: 6) {
+            Text("Daily quest · every string").foregroundStyle(contrast == .increased ? Palette.ink : Palette.inkSoft)
+                .font(.caption).lineLimit(1).minimumScaleFactor(0.8)
+            // Strings, not chips: a mandolin's four ×2 chips count as 8.
+            Text(verbatim: "\(done) / \(total)").font(.caption.weight(.bold)).foregroundStyle(Palette.ink).monospacedDigit()
+                .fixedSize()
+                .accessibilityLabel(Text("\(done) of \(total)"))
+            Spacer(minLength: 8)
             if let quest {
                 Text(store.questProgress(quest) >= quest.target ? "Done" : "+\(quest.xp) XP").font(Typeface.label(12)).foregroundStyle(Palette.mint)
             }

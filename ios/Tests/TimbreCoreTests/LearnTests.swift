@@ -32,6 +32,163 @@ final class LearnTests: XCTestCase {
         XCTAssertEqual(judge.combo, 0)
     }
 
+    func testCombosCountOnlyPerfectAndGoodNotes() {
+        // Six notes all played 0.2 s late: every one counts as late/early, so there is no combo at all.
+        var late = PlayAlongJudge(notes: (0..<6).map { note(52 + $0, Double($0)) }, bpm: 60, latency: 0)
+        for i in 0..<6 { _ = late.update(time: Double(i) + 0.2, midi: 52 + i, cents: 0, onset: true) }
+        XCTAssertTrue(late.isFinished)
+        XCTAssertTrue(late.judgments.allSatisfy { $0.grade == .ok })
+        XCTAssertEqual(late.bestCombo, 0)
+        XCTAssertEqual(late.combo, 0)
+
+        // Perfect, good, late, perfect: the late note breaks the run of two.
+        var mixed = PlayAlongJudge(notes: [note(60, 0), note(62, 1), note(64, 2), note(65, 3)], bpm: 60, latency: 0)
+        XCTAssertEqual(mixed.update(time: 0.01, midi: 60, cents: 0).first?.grade, .perfect)
+        XCTAssertEqual(mixed.update(time: 1.1, midi: 62, cents: 0).first?.grade, .good)
+        XCTAssertEqual(mixed.combo, 2)
+        XCTAssertEqual(mixed.update(time: 2.25, midi: 64, cents: 0).first?.grade, .ok)
+        XCTAssertEqual(mixed.combo, 0)
+        XCTAssertEqual(mixed.update(time: 3.0, midi: 65, cents: 0).first?.grade, .perfect)
+        XCTAssertEqual(mixed.combo, 1)
+        XCTAssertEqual(mixed.bestCombo, 2)
+    }
+
+    func testTempoLadderStepsUpAndCapsSlowFinishes() {
+        var ladder = TempoLadder(bpm: 60)
+        XCTAssertEqual(ladder.rung, TempoLadder.lessonRung, "starts at the lesson tempo")
+        XCTAssertEqual(ladder.tempo, 60)
+        XCTAssertNil(ladder.outcome)
+
+        // An easier run: 75 %.
+        ladder.select(0)
+        XCTAssertEqual(ladder.tempo, 45)
+        XCTAssertEqual(ladder.percent, 75)
+        XCTAssertFalse(ladder.record(accuracy: 0.85), "under 90 % stays on the rung")
+        XCTAssertEqual(ladder.outcome, TempoLadder.Outcome(score: 0.85, starCap: TempoLadder.slowStarCap))
+        XCTAssertTrue(ladder.record(accuracy: 0.95))
+        XCTAssertEqual(ladder.percent, 90)
+        XCTAssertEqual(ladder.tempo, 54)
+        XCTAssertTrue(ladder.improvesOutcome(0.96))
+        XCTAssertTrue(ladder.record(accuracy: 0.96))
+        XCTAssertEqual(ladder.rung, TempoLadder.lessonRung)
+        XCTAssertEqual(ladder.outcome?.starCap, TempoLadder.slowStarCap, "nothing at full tempo yet")
+
+        // Any take at the lesson tempo beats the slower ones, even a weaker one.
+        XCTAssertTrue(ladder.improvesOutcome(0.7))
+        XCTAssertFalse(ladder.record(accuracy: 0.7))
+        XCTAssertEqual(ladder.outcome, TempoLadder.Outcome(score: 0.7, starCap: nil))
+        XCTAssertTrue(ladder.record(accuracy: 0.92))
+        XCTAssertEqual(ladder.percent, 110)
+        XCTAssertEqual(ladder.tempo, 66)
+        // A rough take at 110 % doesn't undo the full-tempo result; the top rung stays put.
+        XCTAssertFalse(ladder.improvesOutcome(0.5))
+        XCTAssertFalse(ladder.record(accuracy: 0.5))
+        XCTAssertFalse(ladder.record(accuracy: 1))
+        XCTAssertEqual(ladder.percent, 110)
+        XCTAssertEqual(ladder.outcome, TempoLadder.Outcome(score: 1, starCap: nil))
+    }
+
+    func testRunHonoursAStarCapAndCollectsItems() {
+        var run = LessonRun(lesson: lesson("a"), now: Date(timeIntervalSince1970: 0))
+        let e = PracticeItem.note(midi: 64, at: Fretting(string: 1, fret: 0))
+        let em = PracticeItem.chord(ChordSpec(name: "Em", root: 4, quality: "min", frets: [0, 2, 2, 0, 0, 0]))
+        run.score(e, 1); run.score(e, 0.4); run.score(em, 0.6)
+        run.complete(score: 1); run.complete(score: 1); run.complete(score: 0.95)
+        run.capStars(TempoLadder.slowStarCap)
+        let result = run.result(now: Date(timeIntervalSince1970: 60))
+        XCTAssertEqual(result.stars, 2, "3 stars of accuracy, capped by a slow play-along")
+        XCTAssertEqual(result.xp, 20)
+        XCTAssertEqual(result.items.map(\.item), [em, e], "weakest first")
+        XCTAssertEqual(result.items.last?.score ?? 0, 0.7, accuracy: 1e-9)
+    }
+
+    func testTapAlongCalibrationFindsTheHeardDelay() {
+        let spb = 0.75, first = 100.0
+        // A Bluetooth-like 210 ms with a little human scatter and one stray tap; the warm-up taps don't count.
+        let jitter = [0.0, 0.012, -0.015, 0.02, -0.008, 0.005, 0.01, -0.012, 0.0, 0.018, -0.02]
+        var taps = (0..<11).map { first + Double($0 + 2) * spb + 0.21 + jitter[$0] }
+        taps += [first + 0.05, first + spb + 0.3, first + 7.5 * spb + 0.21]
+        let estimate = try? XCTUnwrap(LatencyCalibration.estimate(taps: taps, firstClick: first, secondsPerBeat: spb))
+        XCTAssertEqual(estimate ?? 0, 0.21, accuracy: 0.012)
+        // On a speaker people tap a touch early: clamped at zero rather than negative.
+        let early = (2..<12).map { first + Double($0) * spb - 0.03 }
+        XCTAssertEqual(LatencyCalibration.estimate(taps: early, firstClick: first, secondsPerBeat: spb), 0)
+        // Too few, or all over the place: no answer.
+        XCTAssertNil(LatencyCalibration.estimate(taps: Array(taps.prefix(4)), firstClick: first, secondsPerBeat: spb))
+        let scattered = (2..<12).map { first + Double($0) * spb + ($0 % 2 == 0 ? 0.0 : 0.35) }
+        XCTAssertNil(LatencyCalibration.estimate(taps: scattered, firstClick: first, secondsPerBeat: spb))
+    }
+
+    func testWeakSpotsAreTrackedAndReviewed() throws {
+        let em = ChordSpec(name: "Em", root: 4, quality: "min", frets: [0, 2, 2, 0, 0, 0], fingers: [0, 2, 3, 0, 0, 0])
+        let c = ChordSpec(name: "C", root: 0, quality: "maj", frets: [-1, 3, 2, 0, 1, 0])
+        let g3 = PracticeItem.note(midi: 55, at: Fretting(string: 3, fret: 0))
+        let b3 = PracticeItem.note(midi: 59, at: Fretting(string: 2, fret: 0))
+        let course = LearnCourse(id: "c", title: LearnText("C"), subtitle: LearnText("s"), instrument: "guitar.acoustic.6", symbol: "guitars.fill", accent: "mint",
+                                 units: [LearnUnit(id: "u", title: LearnText("U"), summary: LearnText("s"), lessons: [lesson("a"), lesson("b"), lesson("c"), lesson("d")])])
+        var progress = LearnProgress()
+        func finish(_ id: String, _ items: [ItemScore], at time: Double) {
+            progress.record(LessonResult(lessonId: id, stars: 2, accuracy: 0.8, xp: 20, minutes: 3, items: items), courseId: "c", now: Date(timeIntervalSince1970: time))
+        }
+        finish("a", [ItemScore(item: g3, score: 0.5), ItemScore(item: b3, score: 1)], at: 10)
+        finish("b", [ItemScore(item: .chord(em), score: 0.6), ItemScore(item: g3, score: 0.7)], at: 20)
+        XCTAssertFalse(progress.reviewDue(in: course), "two lessons: not yet")
+        finish("c", [ItemScore(item: .chord(c), score: 0.3)], at: 30)
+        XCTAssertTrue(progress.reviewDue(in: course))
+        XCTAssertEqual(progress.weakSpots(in: course).map(\.item), [.chord(c), g3, .chord(em)], "weakest first, each once, played-well notes left out")
+        XCTAssertTrue(progress.isValid)
+
+        // The review: notes and chords from the usual steps, an intro first, the play-along through the notes.
+        let text = ReviewText(title: LearnText("Review"), intro: LearnText("i"), notesHint: LearnText("h"), alongTitle: LearnText("t"))
+        let review = try XCTUnwrap(WeakSpotReview.lesson(for: course, progress: progress, text: text, strings: 6, strums: true))
+        XCTAssertEqual(review.kind, .review)
+        XCTAssertTrue(LearnProgress.isReview(review.id))
+        XCTAssertTrue((4...6).contains(review.steps.count), "\(review.steps.count) steps")
+        guard case .explain(_, _, .fretboard(6, let dots, _, _))? = review.steps.first else { return XCTFail("intro shows the notes on the neck") }
+        XCTAssertEqual(dots, [Fretting(string: 3, fret: 0)])
+        XCTAssertTrue(review.steps.contains(.playChord(chord: c)))
+        XCTAssertTrue(review.steps.contains(.playChord(chord: em)))
+        XCTAssertTrue(review.steps.contains { if case .playAlong = $0 { return true } else { return false } })
+        XCTAssertTrue(review.steps.contains { if case .progression = $0 { return true } else { return false } })
+        XCTAssertNil(course.lessons.first { $0.id == review.id }, "never part of the path")
+
+        // Finishing it clears what was played well and keeps no stars or place of its own.
+        let starsBefore = progress.stars
+        progress.record(LessonResult(lessonId: review.id, stars: 3, accuracy: 0.9, xp: 25, minutes: 4,
+                                     items: [ItemScore(item: g3, score: 1), ItemScore(item: .chord(c), score: 0.5), ItemScore(item: .chord(em), score: 0.9)]),
+                        courseId: "c", now: Date(timeIntervalSince1970: 40))
+        XCTAssertEqual(progress.stars, starsBefore)
+        XCTAssertEqual(progress.lastLessonId, "c")
+        XCTAssertEqual(progress.weakSpots(in: course).map(\.item), [.chord(c)])
+        XCTAssertEqual(progress.weakSpots(in: course).first?.score, 0.5)
+        XCTAssertFalse(progress.reviewDue(in: course), "the count starts again")
+        XCTAssertEqual(progress.nextLesson(in: course)?.id, "d", "unlock order untouched")
+
+        // A replay of a lesson replaces what it found weak.
+        finish("c", [ItemScore(item: .chord(c), score: 0.95)], at: 50)
+        XCTAssertTrue(progress.weakSpots(in: course).isEmpty)
+        XCTAssertNil(WeakSpotReview.lesson(for: course, progress: progress, text: text, strings: 6, strums: true))
+
+        // Saves from before weak spots decode; weak spots round-trip.
+        let old = try JSONDecoder().decode(LearnProgress.self, from: Data(#"{"stars":{"a":2},"bestAccuracy":{"a":0.8},"finishedDates":{},"placedThrough":{}}"#.utf8))
+        XCTAssertTrue(old.weakSpots.isEmpty)
+        XCTAssertTrue(old.sinceReview.isEmpty)
+        finish("a", [ItemScore(item: g3, score: 0.4), ItemScore(item: .chord(em), score: 0.2)], at: 60)
+        XCTAssertEqual(try JSONDecoder().decode(LearnProgress.self, from: JSONEncoder().encode(progress)), progress)
+    }
+
+    func testNotesOnlyReviewRepeatsTheNotes() throws {
+        let spots = [55, 57, 59].map { WeakSpot(item: .note(midi: $0, at: nil), score: 0.5, seen: Date(timeIntervalSince1970: 0)) }
+        let text = ReviewText(title: LearnText("Review"), intro: LearnText("i"), notesHint: LearnText("h"), alongTitle: LearnText("t"))
+        let review = try XCTUnwrap(WeakSpotReview.lesson(courseId: "voice", spots: spots, text: text, strings: 0, strums: false))
+        XCTAssertEqual(review.steps.count, 4)
+        guard case .explain(_, _, .staff(let midi, "treble"))? = review.steps.first else { return XCTFail("a staff without a neck") }
+        XCTAssertEqual(midi, [55, 57, 59])
+        guard case .playAlong(let line, _, _, _)? = review.steps.first(where: { if case .playAlong = $0 { return true } else { return false } }) else { return XCTFail() }
+        XCTAssertEqual(line.map(\.midi), [55, 57, 59, 57, 55])
+        XCTAssertEqual(line.map(\.beat), [0, 2, 4, 6, 8])
+    }
+
     func testRepeatedNoteNeedsAFreshAttack() {
         var judge = PlayAlongJudge(notes: [note(60, 0), note(60, 1)], bpm: 60, latency: 0)
         XCTAssertEqual(judge.update(time: 0, midi: 60, cents: 0).count, 1)

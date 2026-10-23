@@ -8,6 +8,8 @@ import UIKit
 /// What the first tune needs: the chosen instrument's thickest string, as the tuner shows it.
 struct FirstTuneSetup {
     let instrument: Instrument
+    /// The instrument's default tuning, whose courses the tuning quest counts.
+    let tuning: Tuning
     let course: Course
     /// The string's note as the tuner names it ("E2").
     let note: String
@@ -23,7 +25,7 @@ struct FirstTuneSetup {
               let course = tuning.courses.min(by: { $0.targetMidi < $1.targetMidi }) else { return nil }
         let photo = store.catalog.photo(instrumentId: id)
         let name = photo.map { NSLocalizedString("timbre_photo_" + $0.asset, bundle: .main, value: $0.label, comment: "") } ?? instrument.name.localized
-        return FirstTuneSetup(instrument: instrument, course: course,
+        return FirstTuneSetup(instrument: instrument, tuning: tuning, course: course,
                               note: TargetLabelFormatter.splitCue(store.courseLabel(course)).main,
                               hz: store.target(for: course), name: name,
                               photoAsset: photo?.asset, modelID: ModelLibrary.modelID(forPhoto: photo?.asset))
@@ -39,6 +41,20 @@ struct FirstTuneSetup {
     }
 }
 
+/// The locked first string, saved as the tuner saves a session (`AppStore.recordFirstTune`).
+struct FirstTuneResult {
+    let instrumentId: String
+    let tuningId: String
+    /// The locked course and every course of the tuning, for the tuning quest.
+    let course: Int
+    let courses: [Int]
+    let started: Date
+    let readings: Int
+    let stableReadings: Int
+    let meanAbsoluteCents: Double?
+    let durationMs: Int
+}
+
 /// Readings for the first tune, kept apart from the view so only the stage and readout redraw with them.
 @Observable
 @MainActor
@@ -50,10 +66,17 @@ final class FirstTuneModel {
     private(set) var lockedIn = false
     private let tracker = TuningTracker()
     @ObservationIgnored private var target: Double = 440
+    /// The session as the tuner counts one: when it began, readings, steady readings and their error.
+    @ObservationIgnored private var started = Date()
+    @ObservationIgnored private var startedUptime: TimeInterval = 0
+    @ObservationIgnored private var readings = 0
+    @ObservationIgnored private var stableReadings = 0
+    @ObservationIgnored private var totalError = 0.0
 
     func begin(target: Double) {
         self.target = target
         tracker.reset()
+        if !listening { started = Date(); startedUptime = ProcessInfo.processInfo.systemUptime }
         listening = true
     }
 
@@ -66,14 +89,30 @@ final class FirstTuneModel {
         var next = tracker.accept(frequency: near, confidence: near == nil ? 0 : 1, target: target, timestampMs: now)
         if near == nil && level > -60 { next = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "uncertain") }
         reading = next
+        if let cents = next.cents, next.frequency != nil {
+            readings += 1
+            if next.stable { stableReadings += 1; totalError += abs(cents) }
+        }
         Haptics.shared.detent(cents: next.stable ? next.cents : nil)
         if next.inTune { lockedIn = true }
+    }
+
+    /// The locked string as a tuning session for `AppStore.recordFirstTune`.
+    func result(_ setup: FirstTuneSetup) -> FirstTuneResult {
+        let count = max(1, readings)
+        let steady = min(count, max(1, stableReadings))
+        let mean = stableReadings > 0 ? totalError / Double(stableReadings) : abs(reading.cents ?? 0)
+        let duration = max(0, Int((ProcessInfo.processInfo.systemUptime - startedUptime) * 1000))
+        return FirstTuneResult(instrumentId: setup.instrument.id, tuningId: setup.tuning.id, course: setup.course.index,
+                               courses: setup.tuning.courses.map(\.index), started: started, readings: count, stableReadings: steady,
+                               meanAbsoluteCents: mean.isFinite ? mean : nil, durationMs: duration)
     }
 }
 
 /// Onboarding's first win: "Pluck your thickest string" on the tuner's own live stage. The stage and
 /// readout follow the microphone (note, cents, which way to turn); when the string locks there is a
-/// burst, a haptic chord and "In tune", then the plan. Skip is always there.
+/// burst, a haptic chord and "In tune", and the lock is saved like a tuner session (streak, XP, "First in
+/// tune"), shown in chips where Skip was; then the plan. Skip is always there until the lock.
 struct FirstTuneStep: View {
     let setup: FirstTuneSetup
     /// Called once: true when the string locked, false when skipped.
@@ -88,6 +127,10 @@ struct FirstTuneStep: View {
     @State private var finished = false
     @State private var failed3D: String? = nil
     @State private var ready3D: String? = nil
+    /// What the lock earned (it counts like a string locked on the tuner), shown where Skip was.
+    @State private var reward: ProgressUpdate? = nil
+    @State private var streakDays = 0
+    @State private var rewardsShown = false
     private static let supports3D = MTLCreateSystemDefaultDevice() != nil
 
     var body: some View {
@@ -101,7 +144,11 @@ struct FirstTuneStep: View {
                 }
                 .frame(maxHeight: .infinity)
                 readout
-                skipButton
+                ZStack {
+                    skipButton
+                    if rewardsShown { rewards.transition(.scale(scale: 0.85).combined(with: .opacity)) }
+                }
+                .animation(Motion.pluck, value: rewardsShown)
             }
         }
         .onAppear(perform: start)
@@ -219,6 +266,45 @@ struct FirstTuneStep: View {
         .accessibilityIdentifier("onboarding.firsttune.skip")
     }
 
+    /// The badge, the XP and day one of the streak, in one row (two when they don't fit).
+    private var rewards: some View {
+        let badge = reward?.achievementsEarned.first
+        let xp = reward?.xpGained ?? 0
+        return ViewThatFits(in: .horizontal) {
+            HStack(spacing: 8) {
+                if let badge { badgeChip(badge) }
+                xpAndStreak(xp)
+            }
+            VStack(spacing: 8) {
+                if let badge { badgeChip(badge) }
+                HStack(spacing: 8) { xpAndStreak(xp) }
+            }
+        }
+        .padding(.horizontal, 16).padding(.bottom, 10)
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("onboarding.firsttune.reward")
+    }
+
+    @ViewBuilder private func xpAndStreak(_ xp: Int) -> some View {
+        if xp > 0 { rewardChip(symbol: "sparkles", tint: Palette.mint, text: Text("+\(xp) XP")) }
+        if streakDays > 0 { rewardChip(symbol: "flame.fill", tint: Palette.flame, text: Text("\(streakDays)-day streak")) }
+    }
+
+    private func badgeChip(_ badge: Achievement) -> some View {
+        rewardChip(symbol: badge.symbol, tint: Palette.amber, text: Text(LocalizedStringKey(badge.title)))
+    }
+
+    private func rewardChip(symbol: String, tint: Color, text: Text) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: symbol).font(.system(size: 12, weight: .bold)).foregroundStyle(tint)
+            text.font(Typeface.label(13)).foregroundStyle(Palette.ink).lineLimit(1)
+        }
+        .padding(.horizontal, 12).frame(minHeight: 34)
+        .background(Capsule().fill(tint.opacity(0.14)))
+        .overlay(Capsule().strokeBorder(tint.opacity(0.4), lineWidth: 1))
+        .fixedSize()
+    }
+
     // MARK: Flow
 
     private func start() {
@@ -247,11 +333,15 @@ struct FirstTuneStep: View {
         burstStart = Date()
         UIAccessibility.post(notification: .announcement, argument: String(localized: "In tune"))
         Analytics.log("onboarding_first_tune", ["result": "locked", "instrument": setup.instrument.id])
+        // It counts: today's practice (the streak starts), the string's XP and the "First in tune" badge.
+        reward = store.recordFirstTune(model.result(setup))
+        streakDays = store.streak.current
         Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(220))
             Haptics.shared.done()
             SoundFX.shared.play(.star)
-            try? await Task.sleep(for: .milliseconds(1700))
+            rewardsShown = reward != nil || streakDays > 0
+            try? await Task.sleep(for: .milliseconds(rewardsShown ? 2300 : 1700))
             finish(locked: true)
         }
     }

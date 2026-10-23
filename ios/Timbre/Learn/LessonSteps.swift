@@ -17,9 +17,10 @@ struct HeardNote: Equatable {
 
 extension LearnCourse {
     /// Fretted or fingerboard instruments draw string/fret positions; voice and any-instrument courses don't.
-    var fretKind: String? {
-        guard let instrument else { return nil }
-        return ["guitar", "ukulele", "bass", "violin", "cello", "mandolin", "banjo"].first { instrument.hasPrefix($0) }
+    var fretKind: String? { Self.fretKind(of: instrument) }
+    static func fretKind(of instrumentId: String?) -> String? {
+        guard let instrumentId else { return nil }
+        return ["guitar", "ukulele", "bass", "violin", "cello", "mandolin", "banjo"].first { instrumentId.hasPrefix($0) }
     }
     var stringCount: Int {
         switch fretKind { case "guitar": return 6; case "banjo": return 5; case .some: return 4; default: return 0 }
@@ -48,6 +49,12 @@ extension LearnCourse {
         }
         return best
     }
+
+    /// A note as a weak-spot item: on fretted courses with where it's played (the lesson's place, else the
+    /// lowest fret), so a note step and a play-along of the same note count as one item.
+    func practiceItem(for note: TimedNote) -> PracticeItem {
+        .note(midi: note.midi, at: fretKind != nil ? note.at ?? fretting(for: note.midi) : nil)
+    }
 }
 
 @MainActor private func frequency(_ midi: Int, _ store: AppStore) -> Double { PitchMath.frequency(midi: Double(midi), reference: store.settings.referencePitchHz) }
@@ -59,6 +66,8 @@ struct NotesStep: View {
     let hint: LearnText?
     let course: LearnCourse
     let accent: Color
+    /// How each note went (for the lesson's weak spots).
+    var onItem: (PracticeItem, Double) -> Void = { _, _ in }
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
     @State private var owner = UUID()
@@ -68,9 +77,12 @@ struct NotesStep: View {
     @State private var burst = 0
     @State private var finished = false
     @State private var canSkip = false
+    /// Wrong notes heard while the current note was the target.
+    @State private var wrongHere = 0
 
-    init(notes: [TimedNote], hint: LearnText?, course: LearnCourse, accent: Color, done: @escaping (Double?) -> Void) {
-        self.notes = notes; self.hint = hint; self.course = course; self.accent = accent; self.done = done
+    init(notes: [TimedNote], hint: LearnText?, course: LearnCourse, accent: Color,
+         onItem: @escaping (PracticeItem, Double) -> Void = { _, _ in }, done: @escaping (Double?) -> Void) {
+        self.notes = notes; self.hint = hint; self.course = course; self.accent = accent; self.onItem = onItem; self.done = done
         _judge = State(initialValue: NoteSequenceJudge(notes: notes.map(\.midi), anyOctave: course.anyOctave))
     }
 
@@ -141,18 +153,40 @@ struct NotesStep: View {
         ZStack {
             HoldRing(progress: finished ? 1 : hold, tint: ringTint)
             VStack(spacing: 4) {
-                let name = NoteName.name(shown?.midi ?? 60)
-                Text(name.dropLast(name.last?.isNumber == true ? 1 : 0)).font(Typeface.note(88)).foregroundStyle(Palette.ink)
-                    .contentTransition(.numericText())
+                noteLetter
                 Text(status).font(.subheadline.weight(.semibold)).foregroundStyle(ringTint).contentTransition(.opacity)
             }
-            SparkBurst(trigger: burst, color: accent)
         }
         // Up to 250 pt, smaller on short phones so the neck below still fits.
         .aspectRatio(1, contentMode: .fit)
         .frame(minWidth: 170, maxWidth: 250, minHeight: 170, maxHeight: 250)
+        .background { ringBurst }
         .layoutPriority(1)
+        // Below its neighbours, so the sparks pass behind the prompt and the chips, never over words.
+        .zIndex(-1)
         .accessibilityElement(children: .combine)
+    }
+
+    /// A shockwave leaving the ring's edge when a note lands: drawn on a canvas twice the ring's size
+    /// (so nothing is cut off) and behind the ring, so it never crosses the note or "Hold it…".
+    private var ringBurst: some View {
+        GeometryReader { geometry in
+            SparkBurst(trigger: burst, color: accent, startFraction: 0.5)
+                .frame(width: geometry.size.width * 2, height: geometry.size.height * 2)
+                .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+        }
+    }
+
+    /// The note to play, popping in as the last one is ticked off (a fresh view each time, so a reading
+    /// arriving mid-change can never leave it half drawn).
+    private var noteLetter: some View {
+        let name = NoteName.name(shown?.midi ?? 60)
+        return ZStack {
+            Text(name.dropLast(name.last?.isNumber == true ? 1 : 0)).font(Typeface.note(88)).foregroundStyle(Palette.ink)
+                .id(judge.index)
+                .transition(.asymmetric(insertion: .scale(scale: 0.7).combined(with: .opacity), removal: .opacity))
+        }
+        .animation(Motion.pluck, value: judge.index)
     }
 
     /// Where to play it: a strip of the neck with the target string and fret lit and breathing (fretted
@@ -161,7 +195,7 @@ struct NotesStep: View {
         if let at = shownFretting {
             VStack(spacing: 6) {
                 FretboardDiagram(strings: course.stringCount, dots: [at], frets: stripFrets, accent: accent, activeString: at.string,
-                                 fretless: course.fretless, rowHeight: 18, pulsing: !finished)
+                                 fretless: course.fretless, rowHeight: 18, pulsing: !finished, edges: StringEdges.of(course))
                     .padding(.horizontal, 18)
                 Text(at.fret == 0 ? LocalizedStringKey("String \(at.string), open") : LocalizedStringKey("String \(at.string), fret \(at.fret)"))
                     .font(Typeface.label(13)).foregroundStyle(accent)
@@ -222,11 +256,17 @@ struct NotesStep: View {
             guard !finished else { return }
             switch judge.update(time: CACurrentMediaTime(), midi: note?.midi, cents: note?.cents) {
             case .holding(let p)?: hold = p
-            case .hit?:
+            case .hit(let index)?:
                 hold = 0; burst += 1
+                // Clean is 1; each wrong note on the way halves, thirds… it (as the step's own accuracy).
+                if notes.indices.contains(index) { onItem(course.practiceItem(for: notes[index]), 1 / Double(1 + wrongHere)) }
+                wrongHere = 0
                 SoundFX.shared.play(.correct); Haptics.shared.lock()
                 if judge.isFinished { finish(score: judge.accuracy) }
                 else if let next = current { store.gameTargetHz = frequency(next.midi, store) }
+            case .wrong?:
+                wrongHere += 1
+                hold = max(0, hold - 0.1)
             default: hold = max(0, hold - 0.1)
             }
         }
@@ -242,6 +282,8 @@ struct NotesStep: View {
     private func finish(score: Double) {
         guard !finished else { return }
         finished = true
+        // Notes the microphone never confirmed ("I played it") count as shaky.
+        for note in notes[min(judge.index, notes.count)...] { onItem(course.practiceItem(for: note), 0.5) }
         store.stopLessonListening(owner: owner)
         Task { try? await Task.sleep(for: .milliseconds(700)); done(score) }
     }
@@ -270,6 +312,8 @@ struct ChordStep: View {
     let chord: ChordSpec
     let course: LearnCourse
     let accent: Color
+    /// How the chord went (for the lesson's weak spots).
+    var onItem: (PracticeItem, Double) -> Void = { _, _ in }
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
     @State private var owner = UUID()
@@ -282,8 +326,9 @@ struct ChordStep: View {
     @State private var matchedFrames = 0
     private let order: [(index: Int, midi: Int)]
 
-    init(chord: ChordSpec, course: LearnCourse, accent: Color, done: @escaping (Double?) -> Void) {
-        self.chord = chord; self.course = course; self.accent = accent; self.done = done
+    init(chord: ChordSpec, course: LearnCourse, accent: Color,
+         onItem: @escaping (PracticeItem, Double) -> Void = { _, _ in }, done: @escaping (Double?) -> Void) {
+        self.chord = chord; self.course = course; self.accent = accent; self.onItem = onItem; self.done = done
         let open = ChordStep.openStrings(course)
         // Lowest string first, muted strings skipped.
         let order = chord.frets.enumerated().compactMap { i, fret -> (index: Int, midi: Int)? in
@@ -295,8 +340,9 @@ struct ChordStep: View {
     }
 
     /// Open-string MIDI lowest string first, matching chord shapes.
-    static func openStrings(_ course: LearnCourse) -> [Int] {
-        switch course.fretKind {
+    static func openStrings(_ course: LearnCourse) -> [Int] { openStrings(kind: course.fretKind) }
+    static func openStrings(kind: String?) -> [Int] {
+        switch kind {
         case "guitar": return [40, 45, 50, 55, 59, 64]
         case "ukulele": return [67, 60, 64, 69]
         case "bass": return [28, 33, 38, 43]
@@ -316,12 +362,13 @@ struct ChordStep: View {
             .padding(.top, 12)
             Spacer(minLength: 0)
             ZStack {
-                ChordDiagram(chord: chord, accent: accent, ringing: verified, landing: true)
+                // Behind the card: the sparks fly out from under its edges, never over the chord's name.
+                SparkBurst(trigger: burst, color: accent, startFraction: 0.6)
+                ChordDiagram(chord: chord, accent: accent, ringing: verified, landing: true, edges: StringEdges.of(course))
                     .frame(maxWidth: 260)
                     .padding(22)
                     .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Palette.stageRaised))
                     .shadow(color: finished ? accent.opacity(0.45) : .clear, radius: 26)
-                SparkBurst(trigger: burst, color: accent)
             }
             if let hearing, !finished {
                 Text("Hearing \(hearing)").font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
@@ -380,6 +427,7 @@ struct ChordStep: View {
     private func finish(_ score: Double) {
         guard !finished else { return }
         finished = true
+        onItem(.chord(chord), score)
         store.stopLessonListening(owner: owner)
         Task { try? await Task.sleep(for: .milliseconds(900)); done(score) }
     }
@@ -401,6 +449,8 @@ struct RhythmStep: View {
     var strums = false
     /// Strings on the course instrument, drawn under the sweep.
     var strings = 0
+    /// The thinnest and thickest strings, named on the sweep and the chord boxes.
+    var edges: StringEdges?
     let accent: Color
     /// Called when the step is passed by tapping because the microphone can't hear the instrument.
     var onPractice: () -> Void = {}
@@ -452,10 +502,10 @@ struct RhythmStep: View {
     var body: some View {
         VStack(spacing: 16) {
             header
-            if case .strum(let chord?) = mode { ChordDiagram(chord: chord, accent: accent, landing: true).frame(maxWidth: 150) }
+            if case .strum(let chord?) = mode { ChordDiagram(chord: chord, accent: accent, landing: true, edges: edges).frame(maxWidth: 150) }
             if case .progression(let chords, let lengths) = mode {
                 TimelineView(.periodic(from: .now, by: 0.1)) { _ in
-                    ProgressionStrip(chords: chords, bars: lengths, current: currentChord(lengths), accent: accent)
+                    ProgressionStrip(chords: chords, bars: lengths, current: currentChord(lengths), accent: accent, edges: edges)
                 }
             }
             meterView
@@ -530,7 +580,7 @@ struct RhythmStep: View {
         } else {
             TimelineView(.animation(paused: reduceMotion)) { _ in
                 StrumSweep(pattern: pattern, beatsPerBar: beatsPerBar, strings: max(1, strings), style: sweepStyle, accent: accent,
-                           secondsPerBeat: spb, time: sweepTime(CACurrentMediaTime()), bars: phase == .playing ? bars : nil)
+                           secondsPerBeat: spb, time: sweepTime(CACurrentMediaTime()), bars: phase == .playing ? bars : nil, edges: edges)
             }
             .frame(maxWidth: .infinity, maxHeight: 250)
             .padding(.horizontal, 24)
@@ -683,14 +733,17 @@ struct TuneCheckStep: View {
                     .padding(.horizontal, 30)
             }
             .padding(.top, 14)
+            // Words and the note stay above the chips' sparks.
+            .zIndex(1)
             stringChips
             Spacer(minLength: 0)
             listeningCluster
+                .zIndex(1)
             Spacer(minLength: 0)
             if let number = stringNumber {
                 // The string to pluck, lit on a strip of the neck.
                 FretboardDiagram(strings: course.stringCount, dots: [Fretting(string: number, fret: 0)], frets: 4, accent: accent,
-                                 activeString: number, fretless: course.fretless, rowHeight: 15, pulsing: true)
+                                 activeString: number, fretless: course.fretless, rowHeight: 15, pulsing: true, edges: StringEdges.of(course))
                     .padding(.horizontal, 24)
                     .transition(.opacity)
             }
@@ -709,9 +762,13 @@ struct TuneCheckStep: View {
     /// Nothing sits on top of the rings.
     private var listeningCluster: some View {
         VStack(spacing: 12) {
-            Text(index < strings.count ? NoteName.name(strings[index]) : "✓").font(Typeface.note(64)).foregroundStyle(Palette.ink)
-                .contentTransition(.numericText())
-                .animation(Motion.quick, value: index)
+            // A fresh view per string that pops in, so a reading landing mid-change can't freeze it half drawn.
+            ZStack {
+                Text(index < strings.count ? NoteName.name(strings[index]) : "✓").font(Typeface.note(64)).foregroundStyle(Palette.ink)
+                    .id(index)
+                    .transition(.asymmetric(insertion: .scale(scale: 0.7).combined(with: .opacity), removal: .opacity))
+            }
+            .animation(Motion.pluck, value: index)
             // Up to 220 pt; on short phones the space gives first, and the rings step aside when it's too small for them.
             Color.clear
                 .aspectRatio(1, contentMode: .fit)
@@ -749,11 +806,12 @@ struct TuneCheckStep: View {
             }
         }
         .animation(Motion.pluck, value: index)
-        .overlay(alignment: .leading) {
-            // Centred on the chip just tuned; outside the animation, so it doesn't slide between chips.
-            SparkBurst(trigger: burst, color: accent)
-                .frame(width: 300, height: 300)
-                .offset(x: CGFloat(max(0, index - 1)) * (Self.chip + 8) + Self.chip / 2 - 150)
+        .background(alignment: .leading) {
+            // Behind the chips, centred on the one just tuned (outside the animation, so it doesn't slide):
+            // sparks leave from the chip's rim, no ring, so nothing reaches across the title or the note.
+            SparkBurst(trigger: burst, color: accent, reach: 70, startFraction: 0.32, ring: false)
+                .frame(width: 140, height: 140)
+                .offset(x: CGFloat(max(0, index - 1)) * (Self.chip + 8) + Self.chip / 2 - 70)
         }
     }
 
@@ -825,10 +883,12 @@ struct ProgressionStrip: View {
     let bars: [Int]
     let current: Int
     let accent: Color
+    /// Names the outer strings under the chord to play now.
+    var edges: StringEdges?
 
     var body: some View {
         HStack(alignment: .bottom, spacing: 14) {
-            ChordDiagram(chord: chords[min(current, chords.count - 1)], accent: accent).frame(width: 140)
+            ChordDiagram(chord: chords[min(current, chords.count - 1)], accent: accent, edges: edges).frame(width: 140)
                 .id(current).transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity), removal: .opacity))
             if current + 1 < chords.count {
                 VStack(spacing: 4) {

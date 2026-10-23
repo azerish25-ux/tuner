@@ -66,6 +66,21 @@ extension View {
         }
     }
 
+    /// VoiceOver: one adjustable element for a value that buttons (or a stepper) change a step at a time, so a
+    /// swipe up or down moves it and VoiceOver reads back `value`. The view's own children are replaced by it.
+    func adjustableValue(_ label: Text, value: Text, increment: @escaping () -> Void, decrement: @escaping () -> Void) -> some View {
+        accessibilityElement(children: .ignore)
+            .accessibilityLabel(label)
+            .accessibilityValue(value)
+            .accessibilityAdjustableAction { direction in
+                switch direction {
+                case .increment: increment()
+                case .decrement: decrement()
+                @unknown default: break
+                }
+            }
+    }
+
     /// For a vertical ScrollView whose content opens with a hero graphic `height` points tall: shrinks or
     /// grows the hero within `range` so the rest of the content ends above the dock (or tab bar) on the
     /// screen it is on, instead of the last controls resting half under it. Content that can't fit even

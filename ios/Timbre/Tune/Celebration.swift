@@ -9,6 +9,8 @@ struct CelebrationOverlay: View {
     @State private var card: Image?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.displayScale) private var displayScale
+    @Environment(\.locale) private var locale
+    @Environment(\.layoutDirection) private var layoutDirection
 
     var body: some View {
         ZStack {
@@ -86,16 +88,80 @@ struct CelebrationOverlay: View {
     private func dismiss() { visible = false }
 
     private func renderCard() {
-        let renderer = ImageRenderer(content: ShareCard(instrument: store.instrumentDisplayName, tuning: store.tuning.name.localized,
-                                                         notes: store.courses.map { TargetLabelFormatter.splitCue(store.courseLabel($0)).main },
-                                                         modelID: store.modelID, photo: store.photo?.asset, streak: store.streak.current, seconds: store.lastTuneSeconds))
-        renderer.scale = displayScale
-        if let image = renderer.uiImage { card = Image(uiImage: image) }
+        let tune = TuneShareCard(instrument: store.instrumentDisplayName, tuning: store.tuning.name.localized,
+                                 notes: store.courses.map { TargetLabelFormatter.splitCue(store.courseLabel($0)).main },
+                                 modelID: store.modelID, photo: store.photo?.asset, streak: store.streak.current, seconds: store.lastTuneSeconds)
+        card = ShareCardRenderer.image(tune, scale: displayScale, locale: locale, direction: layoutDirection)
+    }
+}
+
+/// A run of 7, 30 or 100 days, reached by practice saved outside a lesson (lesson results show their own):
+/// the flame, the number, the badge's name and a card to share. It waits for Done or a tap outside.
+struct StreakMilestoneOverlay: View {
+    @EnvironmentObject private var store: AppStore
+    @State private var days: Int?
+    @State private var started = Date()
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        ZStack {
+            if let days {
+                Color.black.opacity(0.45).ignoresSafeArea().onTapGesture { dismiss() }
+                if !reduceMotion { Burst(started: started, tint: Palette.flame).allowsHitTesting(false) }
+                card(days)
+                    .transition(.scale(scale: 0.92).combined(with: .opacity))
+            }
+        }
+        .animation(Motion.pluck, value: days)
+        .onChange(of: store.streakMilestone) { _, milestone in
+            guard milestone != nil else { return }
+            Task { @MainActor in
+                // A lesson's results claim theirs straight away; this shows only what is still waiting.
+                try? await Task.sleep(for: .seconds(1.2))
+                guard days == nil, let reached = store.takeStreakMilestone() else { return }
+                started = Date()
+                days = reached
+                Haptics.shared.done()
+                SoundFX.shared.play(.levelUp)
+                AccessibilityNotification.Announcement(String(localized: "\(reached)-day streak", bundle: TimbreLocalization.bundle)).post()
+            }
+        }
+    }
+
+    private func dismiss() { days = nil }
+
+    private func card(_ days: Int) -> some View {
+        VStack(spacing: 14) {
+            Image(systemName: "flame.fill").font(.system(size: 30, weight: .heavy))
+                .foregroundStyle(LinearGradient(colors: [Color(hex: 0xFFE29A), Palette.flame], startPoint: .top, endPoint: .bottom))
+                .frame(width: 72, height: 72)
+                .background(Circle().fill(Palette.flame.opacity(0.16)))
+                .overlay(Circle().strokeBorder(Palette.flame.opacity(0.45), lineWidth: 1))
+                .shadow(color: Palette.flame.opacity(0.55), radius: 24)
+                .symbolEffect(.bounce, value: days)
+            Text("\(days)-day streak").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
+                .multilineTextAlignment(.center).accessibilityAddTraits(.isHeader)
+            StreakShareCard.titleText(days).font(.subheadline.weight(.semibold)).foregroundStyle(Color(hex: 0xFFD3A8))
+            HStack(spacing: 12) {
+                ShareCardButton(preview: "Practice streak") { StreakShareCard(days: days) }
+                    .buttonStyle(BrassButtonStyle())
+                    .accessibilityIdentifier("streak.share")
+                Button("Done") { dismiss() }.buttonStyle(BrassButtonStyle(prominent: false))
+                    .accessibilityIdentifier("streak.done")
+            }
+            .padding(.top, 6)
+        }
+        .padding(26)
+        .stillCard(cornerRadius: 30, padding: 22)
+        .padding(.horizontal, 28)
+        .accessibilityAddTraits(.isModal)
     }
 }
 
 private struct Burst: View {
     let started: Date
+    /// The ring and most sparks; the rest are amber.
+    var tint: Color = Palette.mint
     private struct Spark { let angle, speed, size, hue: Double }
     private static let sparks: [Spark] = {
         var g = SystemRandom(seed: 5)
@@ -109,12 +175,12 @@ private struct Burst: View {
                 let center = CGPoint(x: size.width / 2, y: size.height * 0.42)
                 let ring = 40 + t * 380
                 context.stroke(Path(ellipseIn: CGRect(x: center.x - ring, y: center.y - ring, width: ring * 2, height: ring * 2)),
-                               with: .color(Palette.locked.opacity(max(0, 0.5 - t * 0.3))), lineWidth: 2)
+                               with: .color(tint.opacity(max(0, 0.5 - t * 0.3))), lineWidth: 2)
                 for spark in Self.sparks {
                     let d = spark.speed * t * (1 - t / 4)
                     let p = CGPoint(x: center.x + cos(spark.angle) * d, y: center.y + sin(spark.angle) * d + 60 * t * t)
                     let alpha = max(0, 1 - t / 2.2)
-                    let color = spark.hue > 0.6 ? Palette.amber : Palette.mint
+                    let color = spark.hue > 0.6 ? Palette.amber : tint
                     context.fill(Path(ellipseIn: CGRect(x: p.x - spark.size, y: p.y - spark.size, width: spark.size * 2, height: spark.size * 2)), with: .color(color.opacity(alpha)))
                 }
             }
@@ -123,8 +189,154 @@ private struct Burst: View {
     }
 }
 
+// MARK: - Share cards
+
+/// Renders a share card to an image for `ShareLink`, at the screen's scale and in the app's language and direction.
+enum ShareCardRenderer {
+    @MainActor static func image(_ card: some View, scale: CGFloat, locale: Locale, direction: LayoutDirection) -> Image? {
+        let renderer = ImageRenderer(content: card.environment(\.locale, locale).environment(\.layoutDirection, direction))
+        renderer.scale = scale
+        return renderer.uiImage.map { Image(uiImage: $0) }
+    }
+}
+
+/// "Share" for a card: rendered once when it appears, then handed to the share sheet. Style it like a button.
+struct ShareCardButton<Card: View>: View {
+    let preview: LocalizedStringKey
+    let card: Card
+    @State private var image: Image?
+    @Environment(\.displayScale) private var displayScale
+    @Environment(\.locale) private var locale
+    @Environment(\.layoutDirection) private var layoutDirection
+
+    init(preview: LocalizedStringKey, @ViewBuilder card: () -> Card) {
+        self.preview = preview
+        self.card = card()
+    }
+
+    var body: some View {
+        Group {
+            if let image {
+                ShareLink(item: image, preview: SharePreview(preview, image: image)) { label }
+            } else {
+                Button {} label: { label }.disabled(true)
+            }
+        }
+        .task {
+            if image == nil { image = ShareCardRenderer.image(card, scale: displayScale, locale: locale, direction: layoutDirection) }
+        }
+    }
+
+    private var label: some View { Label("Share", systemImage: "square.and.arrow.up") }
+}
+
+/// A share card in a list (lesson results): a tilted thumbnail of the card, two lines and "Share".
+struct ShareCardRow<Card: View>: View {
+    let title: Text
+    let detail: Text
+    let preview: LocalizedStringKey
+    let tint: Color
+    let card: Card
+    @State private var image: Image?
+    @Environment(\.displayScale) private var displayScale
+    @Environment(\.locale) private var locale
+    @Environment(\.layoutDirection) private var layoutDirection
+
+    init(title: Text, detail: Text, preview: LocalizedStringKey, tint: Color = Palette.mint, @ViewBuilder card: () -> Card) {
+        self.title = title
+        self.detail = detail
+        self.preview = preview
+        self.tint = tint
+        self.card = card()
+    }
+
+    var body: some View {
+        HStack(spacing: 14) {
+            thumbnail
+            VStack(alignment: .leading, spacing: 2) {
+                title.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink).lineLimit(1)
+                detail.font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(2)
+            }
+            Spacer(minLength: 8)
+            shareButton
+        }
+        .padding(12)
+        .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Palette.stageRaised))
+        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(tint.opacity(0.25), lineWidth: 1))
+        .task {
+            if image == nil { image = ShareCardRenderer.image(card, scale: displayScale, locale: locale, direction: layoutDirection) }
+        }
+    }
+
+    private var thumbnail: some View {
+        let shape = RoundedRectangle(cornerRadius: 8, style: .continuous)
+        return ZStack {
+            if let image { image.resizable().scaledToFill() } else { Palette.surface }
+        }
+        .frame(width: 50, height: 66)
+        .clipShape(shape)
+        .overlay(shape.strokeBorder(.white.opacity(0.12), lineWidth: 1))
+        .rotationEffect(.degrees(-5))
+        .shadow(color: .black.opacity(0.5), radius: 8, y: 4)
+        .padding(.leading, 4)
+        .accessibilityHidden(true)
+    }
+
+    private var shareLabel: some View {
+        Label("Share", systemImage: "square.and.arrow.up")
+            .font(Typeface.label(14)).foregroundStyle(Palette.onAccent)
+            .padding(.horizontal, 14).frame(minHeight: 38)
+            .background(Capsule().fill(tint))
+            .fixedSize()
+    }
+
+    @ViewBuilder private var shareButton: some View {
+        if let image {
+            ShareLink(item: image, preview: SharePreview(preview, image: image)) { shareLabel }
+                .buttonStyle(PressScaleStyle())
+        } else {
+            shareLabel.opacity(0.5)
+        }
+    }
+}
+
+/// The Studio Noir frame every share card uses: the dark stage under a warm light, TIMBRE across the top
+/// beside an optional tag, and the moment beneath. 400 pt wide. Only the achievement, never personal data.
+struct ShareCardFrame<Tag: View, Content: View>: View {
+    let glow: Color
+    let tag: Tag
+    let content: Content
+
+    init(glow: Color = Color(hex: 0xFFC48C), @ViewBuilder tag: () -> Tag, @ViewBuilder content: () -> Content) {
+        self.glow = glow
+        self.tag = tag()
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(spacing: 16) {
+            HStack {
+                Text("TIMBRE").font(Typeface.label(13)).tracking(6).foregroundStyle(Palette.amber)
+                Spacer(minLength: 12)
+                tag
+            }
+            content
+        }
+        .padding(30)
+        .frame(width: 400)
+        .background(
+            ZStack {
+                Palette.stage
+                RadialGradient(colors: [glow.opacity(0.16), .clear], center: UnitPoint(x: 0.5, y: 0.3), startRadius: 4, endRadius: 320)
+                RadialGradient(colors: [.clear, Palette.stageDeep.opacity(0.8)], center: .center, startRadius: 230, endRadius: 520)
+            }
+        )
+        .environment(\.colorScheme, .dark)
+    }
+}
+
 /// The shareable "in tune" card.
-struct ShareCard: View {
+struct TuneShareCard: View {
     let instrument: String
     let tuning: String
     let notes: [String]
@@ -132,13 +344,11 @@ struct ShareCard: View {
     let photo: String?
     let streak: Int
     var seconds: Int?
+
     var body: some View {
-        VStack(spacing: 16) {
-            HStack {
-                Text("TIMBRE").font(Typeface.label(13)).tracking(6).foregroundStyle(Palette.amber)
-                Spacer()
-                if streak > 1 { Label("\(streak)-day streak", systemImage: "flame.fill").font(Typeface.label(12)).foregroundStyle(Color(hex: 0xFFD3A8)) }
-            }
+        ShareCardFrame {
+            if streak > 1 { Label("\(streak)-day streak", systemImage: "flame.fill").font(Typeface.label(12)).foregroundStyle(Color(hex: 0xFFD3A8)) }
+        } content: {
             if let name = modelID.flatMap({ ModelLibrary.hasCard($0) ? ModelLibrary.cardImageName($0) : nil }) ?? photo {
                 Image(name).resizable().scaledToFit().frame(height: 300).shadow(color: .black.opacity(0.65), radius: 24, y: 14)
                     .background(Ellipse().fill(RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.25), .clear], center: .center, startRadius: 2, endRadius: 160)).frame(width: 300, height: 40).offset(y: 150))
@@ -156,14 +366,125 @@ struct ShareCard: View {
                 }
             }
         }
-        .padding(30)
-        .frame(width: 400)
-        .background(
-            ZStack {
-                Palette.stage
-                RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.14), .clear], center: UnitPoint(x: 0.5, y: 0.3), startRadius: 4, endRadius: 320)
+    }
+}
+
+/// Three stars on a lesson, or a finished song: the stars under a gold light, the headline (or the song's
+/// title) and the accuracy, with the course named in its accent.
+struct LessonShareCard: View {
+    let course: String
+    let title: String
+    /// "Flawless" or "Great work" for a lesson; nil for a song, whose title leads.
+    let headline: LocalizedStringKey?
+    let stars: Int
+    let accuracy: Int
+    let accent: Color
+    let song: Bool
+
+    private static let gold = Color(hex: 0xF0A93B)
+    private static let starFill = LinearGradient(colors: [Color(hex: 0xFFE29A), Color(hex: 0xF0A93B)], startPoint: .top, endPoint: .bottom)
+
+    var body: some View {
+        ShareCardFrame(glow: accent) {
+            Text(course.uppercased()).font(Typeface.label(12)).tracking(1.6).foregroundStyle(accent).lineLimit(1)
+        } content: {
+            hero
+            words
+            accuracyChip
+        }
+    }
+
+    private var hero: some View {
+        ZStack {
+            Circle()
+                .fill(RadialGradient(colors: [Self.gold.opacity(0.26), .clear], center: .center, startRadius: 4, endRadius: 140))
+                .frame(width: 280, height: 280)
+            VStack(spacing: 18) {
+                if song { songDisc }
+                starRow(scale: song ? 0.72 : 1)
             }
-        )
-        .environment(\.colorScheme, .dark)
+        }
+        .frame(height: song ? 230 : 180)
+    }
+
+    private var songDisc: some View {
+        Image(systemName: "music.quarternote.3").font(.system(size: 30, weight: .bold)).foregroundStyle(Palette.onAccent)
+            .frame(width: 76, height: 76)
+            .background(Circle().fill(accent))
+            .shadow(color: accent.opacity(0.55), radius: 18)
+    }
+
+    private func starRow(scale: CGFloat) -> some View {
+        HStack(alignment: .bottom, spacing: 12 * scale) {
+            ForEach(0..<3, id: \.self) { i in
+                let earned = i < stars
+                Image(systemName: "star.fill")
+                    .font(.system(size: (i == 1 ? 86 : 64) * scale, weight: .bold))
+                    .foregroundStyle(earned ? AnyShapeStyle(Self.starFill) : AnyShapeStyle(Color.white.opacity(0.08)))
+                    .shadow(color: earned ? Self.gold.opacity(0.55) : .clear, radius: 16)
+                    .offset(y: i == 1 ? -12 * scale : 0)
+            }
+        }
+    }
+
+    @ViewBuilder private var words: some View {
+        if let headline {
+            Text(headline).font(Typeface.display(52)).tracking(-1.2).foregroundStyle(Palette.ink)
+            Text(title).font(.headline).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
+        } else {
+            Text(title).font(Typeface.display(40)).tracking(-0.8).foregroundStyle(Palette.ink)
+                .multilineTextAlignment(.center).lineLimit(3).fixedSize(horizontal: false, vertical: true)
+            Text("\(stars) of 3 stars").font(.headline).foregroundStyle(Palette.inkSoft)
+        }
+    }
+
+    private var accuracyChip: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "scope").font(.system(size: 13, weight: .bold)).foregroundStyle(Palette.amber)
+            Text("\(accuracy)%").font(Typeface.label(15)).foregroundStyle(Palette.ink)
+            Text("accuracy").font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
+        }
+        .padding(.horizontal, 14).frame(height: 34)
+        .background(Capsule().fill(Palette.amber.opacity(0.12)))
+        .padding(.top, 2)
+    }
+}
+
+/// A streak milestone (7, 30, 100 days): the flame, the number of days and the badge it earns.
+struct StreakShareCard: View {
+    let days: Int
+
+    /// The badge that goes with the milestone ("Perfect week", "Month of music", "Hundred days").
+    static func title(_ days: Int) -> String? { Achievements.all.first { $0.id == "streak_\(days)" }?.title }
+    static func titleText(_ days: Int) -> Text { title(days).map { Text(LocalizedStringKey($0)) } ?? Text("Practice streak") }
+
+    var body: some View {
+        ShareCardFrame(glow: Palette.flame) {
+            Self.titleText(days).font(Typeface.label(12)).tracking(1.2).foregroundStyle(Color(hex: 0xFFD3A8)).lineLimit(1)
+        } content: {
+            ZStack {
+                Circle()
+                    .fill(RadialGradient(colors: [Palette.flame.opacity(0.34), .clear], center: .center, startRadius: 4, endRadius: 140))
+                    .frame(width: 280, height: 280)
+                Image(systemName: "flame.fill").font(.system(size: 116, weight: .bold))
+                    .foregroundStyle(LinearGradient(colors: [Color(hex: 0xFFE29A), Palette.flame], startPoint: .top, endPoint: .bottom))
+                    .shadow(color: Palette.flame.opacity(0.6), radius: 24)
+            }
+            .frame(height: 190)
+            Text(days, format: .number).font(Typeface.number(92)).foregroundStyle(Palette.ink)
+            Text("day streak").font(Typeface.label(18)).tracking(0.6).foregroundStyle(Palette.inkSoft)
+            embers
+        }
+    }
+
+    /// Seven lit embers: the week every run is made of.
+    private var embers: some View {
+        HStack(spacing: 8) {
+            ForEach(0..<7, id: \.self) { _ in
+                Circle().fill(Palette.flame).frame(width: 11, height: 11).shadow(color: Palette.flame.opacity(0.6), radius: 6)
+            }
+        }
+        .padding(.top, 4)
+        .accessibilityHidden(true)
     }
 }

@@ -83,4 +83,16 @@ final class AppStoreIntegrationTests: XCTestCase {
         for _ in 0..<5 { store.accept(store.target(for: a), confidence: 0.95, level: -30) }
         XCTAssertEqual(store.selectedCourse, a.index)
     }
+
+    func testTodayOpensWithTheNextLessonAndAFinishedLessonTicksItOff() throws {
+        let lesson = try XCTUnwrap(store.dailyLesson, "a fresh learner has a free first lesson to play")
+        XCTAssertEqual(store.dailySet.first?.kind, .lesson)
+        let course = try XCTUnwrap(store.curriculum.lesson(id: lesson.id)?.course)
+        store.finishLesson(LessonResult(lessonId: lesson.id, stars: 2, accuracy: 0.8, xp: 20, minutes: 4), courseId: course.id)
+        XCTAssertTrue(store.dailyDone(.lesson))
+        XCTAssertEqual(store.dailyLesson?.id, lesson.id, "Today keeps the lesson that was played, not the next one")
+        XCTAssertEqual(store.dailySet.first?.kind, .lesson)
+        XCTAssertTrue(store.streak.practicedToday, "any activity of Today keeps the streak")
+        XCTAssertFalse(store.dailySetComplete)
+    }
 }

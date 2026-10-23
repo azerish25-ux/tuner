@@ -1,5 +1,6 @@
 import SwiftUI
 import TimbreCore
+import UIKit
 
 /// The Learn tab: pick a course, continue where you left off, and follow the path lesson by lesson.
 struct LearnView: View {
@@ -34,6 +35,8 @@ struct LearnView: View {
                         courses
                         if let course {
                             continueCard(course)
+                            // Shows itself only when a weak-spot review is due.
+                            WeakSpotReviewCard(course: course) { open(course, $0, from: Self.continueSource) }
                             ForEach(Array(course.units.enumerated()), id: \.element.id) { index, unit in
                                 UnitSection(course: course, unit: unit, number: index + 1, zoom: zoom) { course, lesson in
                                     open(course, lesson, from: LessonNode.source(lesson))
@@ -55,6 +58,8 @@ struct LearnView: View {
             }
         }
         .onChange(of: courseId) { _, _ in store.publishWidgets() }
+        .onAppear(perform: openPendingLesson)
+        .onChange(of: store.pendingLessonId) { _, _ in openPendingLesson() }
         .fullScreenCover(item: $playing) { item in
             LessonPlayer(course: item.course, lesson: item.lesson) { next in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { open(item.course, next, from: Self.continueSource) }
@@ -68,6 +73,28 @@ struct LearnView: View {
         guard store.canPlay(lesson) else { store.presentPaywall("lesson", lesson: lesson); return }
         Haptics.shared.selection()
         playing = PlayingLesson(course: course, lesson: lesson, source: source)
+    }
+
+    /// A lesson another screen asked for (`AppStore.pendingLessonId`: onboarding's first lesson, Today's lesson):
+    /// Learn shows its course and opens it out of the Continue card once any covering screen has gone.
+    private func openPendingLesson() {
+        guard let id = store.pendingLessonId else { return }
+        store.pendingLessonId = nil
+        guard let found = store.curriculum.lesson(id: id) else { return }
+        courseId = found.course.id
+        Task { @MainActor in
+            // Presenting while onboarding's cover is still going away would fail: wait for it (at most ~2 s).
+            try? await Task.sleep(for: .milliseconds(300))
+            for _ in 0..<12 where Self.coverShowing { try? await Task.sleep(for: .milliseconds(150)) }
+            guard playing == nil else { return }
+            open(found.course, found.lesson, from: Self.continueSource)
+        }
+    }
+
+    /// Something is presented over the tabs (or still being dismissed).
+    @MainActor private static var coverShowing: Bool {
+        let windows = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.flatMap(\.windows)
+        return (windows.first(where: \.isKeyWindow) ?? windows.first)?.rootViewController?.presentedViewController != nil
     }
 
     /// Keeps the clock and status icons readable over cards scrolling beneath them.

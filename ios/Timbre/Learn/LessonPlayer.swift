@@ -41,7 +41,9 @@ struct LessonPlayer: View {
                         TuneCheckStep(course: course, accent: accent) { withAnimation { tuneChecked = true } }
                             .transition(.opacity)
                     } else if let step = run.step {
-                        StepView(step: step, course: course, accent: accent, onPractice: { practiced = true }, done: { score in advance(score) })
+                        StepView(step: step, course: course, accent: accent, onPractice: { practiced = true },
+                                 onItem: { item, score in run.score(item, score) }, onStarCap: { stars in run.capStars(stars) },
+                                 done: { score in advance(score) })
                             .id(run.index)
                             .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity), removal: .move(edge: .leading).combined(with: .opacity)))
                     }
@@ -97,9 +99,10 @@ struct LessonPlayer: View {
         if practiced && outcome.stars > 1 {
             // Tapping the glass isn't playing: practice mode keeps the lesson at one star (and its XP).
             outcome = LessonResult(lessonId: outcome.lessonId, stars: 1, accuracy: outcome.accuracy,
-                                   xp: Int((Double(lesson.xp) * 0.8).rounded()), minutes: outcome.minutes)
+                                   xp: Int((Double(lesson.xp) * 0.8).rounded()), minutes: outcome.minutes, items: outcome.items)
         }
-        improved = outcome.stars > (store.learn.stars[lesson.id] ?? 0)
+        // A weak-spot review keeps no stars of its own, so it never reads as a new best.
+        improved = !LearnProgress.isReview(lesson.id) && outcome.stars > (store.learn.stars[lesson.id] ?? 0)
         store.stopLessonListening()
         reward = store.finishLesson(outcome, courseId: course.id)
         SoundFX.shared.play(.complete)
@@ -115,6 +118,10 @@ struct StepView: View {
     let accent: Color
     /// A rhythm step fell back to tapping (no microphone): the lesson tops out at one star.
     var onPractice: () -> Void = {}
+    /// How a note or chord went, for the lesson's weak spots.
+    var onItem: (PracticeItem, Double) -> Void = { _, _ in }
+    /// The step limits the lesson's stars (a play-along finished below the lesson tempo).
+    var onStarCap: (Int) -> Void = { _ in }
     let done: (Double?) -> Void
 
     var body: some View {
@@ -122,20 +129,21 @@ struct StepView: View {
         case let .explain(title, body, visual):
             ExplainStep(title: title, text: body, visual: visual, course: course, accent: accent, done: done)
         case let .playNotes(notes, hint):
-            NotesStep(notes: notes, hint: hint, course: course, accent: accent, done: done)
+            NotesStep(notes: notes, hint: hint, course: course, accent: accent, onItem: onItem, done: done)
         case let .playAlong(notes, bpm, beatsPerBar, title):
-            AlongStep(notes: notes, bpm: bpm, beatsPerBar: beatsPerBar, title: title, course: course, accent: accent, done: done)
+            AlongStep(notes: notes, bpm: bpm, beatsPerBar: beatsPerBar, title: title, course: course, accent: accent,
+                      onItem: onItem, onStarCap: onStarCap, done: done)
         case let .playChord(chord):
-            ChordStep(chord: chord, course: course, accent: accent, done: done)
+            ChordStep(chord: chord, course: course, accent: accent, onItem: onItem, done: done)
         case let .strum(chord, pattern, bpm, bars, beatsPerBar):
             RhythmStep(mode: .strum(chord), pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, strums: true, strings: course.stringCount,
-                       accent: accent, onPractice: onPractice, done: done)
+                       edges: StringEdges.of(course), accent: accent, onPractice: onPractice, done: done)
         case let .progression(chords, bars, pattern, bpm, beatsPerBar):
             RhythmStep(mode: .progression(chords, bars), pattern: pattern, bpm: bpm, bars: bars.reduce(0, +), meter: beatsPerBar, strums: true, strings: course.stringCount,
-                       accent: accent, onPractice: onPractice, done: done)
+                       edges: StringEdges.of(course), accent: accent, onPractice: onPractice, done: done)
         case let .tapRhythm(pattern, bpm, bars, beatsPerBar):
             RhythmStep(mode: .tap, pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, hearsInstrument: course.fretKind != nil, strums: course.strums,
-                       strings: course.stringCount, accent: accent, onPractice: onPractice, done: done)
+                       strings: course.stringCount, edges: StringEdges.of(course), accent: accent, onPractice: onPractice, done: done)
         case let .listen(prompt, sound, options, answer):
             ChoiceStep(prompt: prompt, options: options, answer: answer, why: nil, visual: .none, sound: sound, course: course, accent: accent, done: done)
         case let .quiz(prompt, options, answer, why, visual):
@@ -169,28 +177,38 @@ struct StepButton: View {
     }
 }
 
-/// A burst of sparks for right answers and hit notes.
+/// A burst of sparks for right answers and hit notes. Place it behind text: it is decoration.
 struct SparkBurst: View {
     private func draw(_ context: inout GraphicsContext, size: CGSize, t: Double) {
         guard t < 0.9 else { return }
         let center = CGPoint(x: size.width / 2, y: size.height / 2)
         let fade = 1 - t / 0.9
+        // Sparks and ring leave from `startFraction` of the half-size, and travel `reach` (160 pt by default).
+        let origin = Double(min(size.width, size.height) / 2 * startFraction)
+        let scale = Double((reach ?? 160) / 160)
         for i in 0..<22 {
             let angle: Double = Double(i) / 22 * 2 * .pi + Double(trigger) * 0.37
-            let speed: Double = 90 + Double((i * 37) % 60)
-            let d: Double = speed * t * (1 - t / 1.8)
+            let speed: Double = (90 + Double((i * 37) % 60)) * scale
+            let d: Double = origin + speed * t * (1 - t / 1.8)
             let p = CGPoint(x: center.x + CGFloat(cos(angle) * d), y: center.y + CGFloat(sin(angle) * d))
             let r = CGFloat(3.2 * fade)
             let tint: Color = i % 3 == 0 ? Palette.amber : color
             context.fill(Path(ellipseIn: CGRect(x: p.x - r, y: p.y - r, width: r * 2, height: r * 2)), with: .color(tint.opacity(fade)))
         }
-        let ring = CGFloat(20 + 160 * t)
-        let ringRect = CGRect(x: center.x - ring, y: center.y - ring, width: ring * 2, height: ring * 2)
+        guard ring else { return }
+        let radius = CGFloat(origin + (20 + 160 * t) * scale)
+        let ringRect = CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2)
         context.stroke(Path(ellipseIn: ringRect), with: .color(color.opacity(max(0, 0.5 - t * 0.6))), lineWidth: 2)
     }
 
     let trigger: Int
     var color: Color = Palette.mint
+    /// How far sparks and the ring travel (160 pt when nil).
+    var reach: CGFloat?
+    /// Where they start: 0 the centre, 1 the edge of the frame (a shockwave leaving a ring or a card).
+    var startFraction: CGFloat = 0
+    /// The expanding ring; off where it would cross nearby text.
+    var ring = true
     @State private var started = Date.distantPast
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -236,6 +254,18 @@ struct ExplainStep: View {
     @State private var sounding = false
     /// Height of the title and text, to know how much room is left under them.
     @State private var wordsHeight: CGFloat = 0
+    /// Chord cards are a demonstration: the fingers land in order while each note sounds, the chord rings,
+    /// then it's the learner's turn to play it back (heard by the microphone when it's already allowed).
+    @State private var demo = Demo.idle
+    @State private var demoReplay = 0
+    @State private var demoTask: Task<Void, Never>?
+    @State private var owner = UUID()
+    @State private var matchedFrames = 0
+    @State private var burst = 0
+
+    enum Demo { case idle, showing, yourTurn, heard }
+    /// Seconds between fingers in the demonstration (the diagram's landing step and the notes' spacing).
+    private static let demoStep = 0.45
 
     var body: some View {
         VStack(spacing: 0) {
@@ -262,7 +292,11 @@ struct ExplainStep: View {
             }
             StepButton(title: "Continue", accent: accent) { Haptics.shared.selection(); done(nil) }
         }
-        .onAppear { withAnimation(.spring(response: 0.6, dampingFraction: 0.85).delay(0.05)) { shown = true } }
+        .onAppear {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.85).delay(0.05)) { shown = true }
+            if case let .chord(spec) = visual { runDemo(spec, replay: false) }
+        }
+        .onDisappear { demoTask?.cancel(); store.stopLessonListening(owner: owner) }
     }
 
     /// Every explanation gets the same generous picture area, so short steps don't leave the lower half bare.
@@ -304,7 +338,12 @@ struct ExplainStep: View {
         } else {
             VStack(spacing: 16) {
                 picture(height: max(0, height - 40))
-                if case let .chord(spec) = visual { hearButton(spec) }
+                if case let .chord(spec) = visual {
+                    VStack(spacing: 10) {
+                        hearButton(spec)
+                        yourTurn
+                    }
+                }
             }
             .frame(maxWidth: .infinity, minHeight: max(0, height - 36))
             .padding(18)
@@ -318,8 +357,14 @@ struct ExplainStep: View {
         case let .rhythm(pattern, beatsPerBar):
             // The stroke sweeps above the pattern in time with its playhead, filling the card.
             RhythmLoop(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, arrows: course.strums,
-                       sweep: sweepStyle, strings: max(1, course.stringCount))
+                       sweep: sweepStyle, strings: max(1, course.stringCount), edges: StringEdges.of(course))
                 .frame(height: max(180, height))
+        case let .chord(spec):
+            ChordDiagram(chord: spec, accent: accent, landing: true, landingOrder: .fingers, landingStep: Self.demoStep,
+                         replay: demoReplay, edges: StringEdges.of(instrumentId: course.instrument, strings: spec.frets.count))
+                .frame(maxWidth: 220)
+                // Played back right: sparks from behind the box, on a canvas of their own size.
+                .background { SparkBurst(trigger: burst, color: accent, startFraction: 0.45).frame(width: 340, height: 340) }
         case let .instrument(part):
             InstrumentPartView(part: part, instrumentId: course.instrument, accent: accent, height: max(260, height))
         default:
@@ -333,8 +378,85 @@ struct ExplainStep: View {
             .overlay(RadialGradient(colors: [accent.opacity(0.12), .clear], center: .top, startRadius: 4, endRadius: 260).clipShape(shape))
     }
 
+    /// After the demonstration: the learner's cue to play it back, then a tick when the microphone hears it.
+    /// Its row is always there, so the card doesn't grow when it appears.
+    private var yourTurn: some View {
+        Group {
+            if demo == .heard {
+                Label("Nice — that’s right.", systemImage: "checkmark.seal.fill").foregroundStyle(accent)
+            } else {
+                Label("Your turn — play it back", systemImage: "hand.point.up.left.fill").foregroundStyle(Palette.ink)
+            }
+        }
+        .font(Typeface.label(14))
+        .multilineTextAlignment(.center)
+        .frame(minHeight: 20)
+        .opacity(demo == .yourTurn || demo == .heard ? 1 : 0)
+        .animation(Motion.settle, value: demo)
+        .accessibilityHidden(demo == .idle || demo == .showing)
+    }
+
+    /// Fingers land one by one (finger 1 first) as each one's note sounds, then the whole chord rings;
+    /// `replay` lands them again (the Hear it button).
+    private func runDemo(_ chord: ChordSpec, replay: Bool) {
+        demoTask?.cancel()
+        store.stopLessonListening(owner: owner)
+        if replay { demoReplay += 1 }
+        demo = .showing
+        // The diagram starts landing 0.25 s after it appears, 0.05 s after a replay.
+        let lead = replay ? 0.05 : 0.25
+        let notes = demoNotes(chord)
+        demoTask = Task { @MainActor in
+            // One clock for the whole demonstration, so each note meets its finger.
+            let clock = ContinuousClock()
+            let start = clock.now
+            for note in notes {
+                try? await clock.sleep(until: start + .seconds(lead + Double(note.rank) * Self.demoStep))
+                guard !Task.isCancelled else { return }
+                store.audio.playTones([PitchMath.frequency(midi: Double(note.midi), reference: store.settings.referencePitchHz)],
+                                      together: false, noteMs: 380, gapMs: 0)
+            }
+            let ringAt = lead + Double((notes.last?.rank ?? -1) + 1) * Self.demoStep
+            try? await clock.sleep(until: start + .seconds(ringAt))
+            guard !Task.isCancelled else { return }
+            strum(chord)
+            try? await clock.sleep(until: start + .seconds(ringAt + 1.8))
+            guard !Task.isCancelled else { return }
+            demo = .yourTurn
+            listenForPlayback(chord)
+        }
+    }
+
+    /// Each landing's note (the lowest string a finger holds), in landing order.
+    private func demoNotes(_ chord: ChordSpec) -> [(rank: Int, midi: Int)] {
+        let open = ChordStep.openStrings(course)
+        let ranks = ChordDiagram(chord: chord, landingOrder: .fingers).landingRanks
+        var byRank: [Int: Int] = [:]
+        for (i, fret) in chord.frets.enumerated() where fret > 0 && i < open.count && i < ranks.count {
+            if byRank[ranks[i]] == nil { byRank[ranks[i]] = open[i] + fret }
+        }
+        return byRank.keys.sorted().compactMap { rank in byRank[rank].map { (rank: rank, midi: $0) } }
+    }
+
+    /// The learner plays the chord back: three matching readings in a row count. Only when the microphone
+    /// is already allowed; the chord step that follows is where it's required.
+    private func listenForPlayback(_ chord: ChordSpec) {
+        guard LessonMicrophone.granted, let target = ChordTarget(root: chord.root, formulaId: chord.quality) else { return }
+        matchedFrames = 0
+        let analyzer = LessonAnalyzer(chords: true, target: target, onChord: { _, matched in
+            guard demo == .yourTurn else { return }
+            matchedFrames = matched ? matchedFrames + 1 : 0
+            guard matchedFrames >= 3 else { return }
+            demo = .heard
+            burst += 1
+            SoundFX.shared.play(.correct); Haptics.shared.lock()
+            store.stopLessonListening(owner: owner)
+        })
+        store.startLessonListening(owner: owner, analyzer: analyzer) { _, _ in }
+    }
+
     private func hearButton(_ chord: ChordSpec) -> some View {
-        Button { strum(chord) } label: {
+        Button { runDemo(chord, replay: true) } label: {
             Label("Hear it", systemImage: "speaker.wave.2.fill")
                 .font(Typeface.label(15)).foregroundStyle(accent)
                 .symbolEffect(.variableColor.iterative, isActive: sounding)
@@ -420,7 +542,6 @@ struct ChoiceStep: View {
                 done(correct ? 1 : 0)
             }
         }
-        .overlay { SparkBurst(trigger: burst, color: accent) }
         .onAppear { if let sound { play(sound) } }
     }
 
@@ -474,6 +595,12 @@ struct ChoiceStep: View {
         }
         .buttonStyle(PressScaleStyle())
         .disabled(picked != nil && !isPicked && index != answer)
+        // A right answer bursts out from behind its own tile, never over the words.
+        .background {
+            if index == answer {
+                SparkBurst(trigger: burst, color: accent, reach: 120, startFraction: 0.35).frame(width: 260, height: 260)
+            }
+        }
         .accessibilityIdentifier("lesson.option.\(index)")
     }
 
