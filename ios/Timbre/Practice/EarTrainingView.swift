@@ -47,6 +47,7 @@ struct EarTrainingView: View {
             }
             .padding(.horizontal, Metrics.gutter).padding(.vertical, 14)
         }
+        .stageTopShade()
         .background {
             StageBackground(glow: hot ? Palette.flame : Color(hex: 0xFFC48C), intensity: hot ? 1.35 : 1, motes: false)
                 .animation(.easeInOut(duration: 0.5), value: hot)
@@ -180,11 +181,20 @@ struct EarTrainingView: View {
             .frame(height: 232)
             .overlay { SparkBurst(trigger: burst, color: Palette.mint).frame(width: 300, height: 300) }
             .overlay(alignment: .topTrailing) { xpFloat }
-            Text(playing ? LocalizedStringKey("Listening…") : LocalizedStringKey("Tap to play again"))
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(playing ? Palette.mint : Palette.inkFaint)
-                .animation(.easeInOut(duration: 0.2), value: playing)
-                .accessibilityHidden(true)
+            // The app is sounding the tones here, so this reads "Listen" with a speaker, never the
+            // microphone's "Listening…" used by the tuner.
+            Group {
+                if playing {
+                    Label("Listen", systemImage: "speaker.wave.2.fill")
+                        .symbolEffect(.variableColor.iterative, isActive: !reduceMotion)
+                } else {
+                    Text("Tap to play again")
+                }
+            }
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(playing ? Palette.mint : Palette.inkFaint)
+            .animation(.easeInOut(duration: 0.2), value: playing)
+            .accessibilityHidden(true)
         }
     }
 

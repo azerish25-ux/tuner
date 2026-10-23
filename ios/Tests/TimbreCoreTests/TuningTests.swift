@@ -64,6 +64,44 @@ final class TuningTests: XCTestCase {
         XCTAssertEqual(AnalysisWindowPolicy.windowSizeForTuningRange(minFrequencyHz: 20, sampleRateHz: 48000, preferredWindow: 2048), 8192)
         XCTAssertTrue(AnalysisWindowPolicy.covers(minFrequencyHz: 20, sampleRateHz: 48000, windowSize: 8192))
     }
+    func testPrecisionBandDecidesWhereAHoldStarts() {
+        // Four cents sharp settles toward a lock at Beginner (±5¢) but is simply sharp at Standard (±3¢) and Pro (±1¢).
+        let fourSharp = 440 * pow(2, 4.0 / 1200)
+        let expected: [(TuningPrecision, String)] = [(.beginner, "settling"), (.standard, "sharp"), (.pro, "sharp")]
+        for (precision, status) in expected {
+            let tracker = TuningTracker(bandCents: precision.bandCents)
+            XCTAssertEqual(tracker.accept(frequency: fourSharp, confidence: 1, target: 440, timestampMs: 0).status, status, "\(precision)")
+        }
+        // Pro still locks after the full hold inside ±1¢.
+        let pro = TuningTracker(bandCents: TuningPrecision.pro.bandCents)
+        let close = 440 * pow(2, -0.6 / 1200)
+        for ms in stride(from: 0, to: InTuneRule.holdMs, by: 50) {
+            XCTAssertFalse(pro.accept(frequency: close, confidence: 1, target: 440, timestampMs: ms).inTune)
+        }
+        XCTAssertTrue(pro.accept(frequency: close, confidence: 1, target: 440, timestampMs: InTuneRule.holdMs).inTune)
+        // Leaving the band ends the hold.
+        XCTAssertEqual(pro.accept(frequency: 440 * pow(2, 1.5 / 1200), confidence: 1, target: 440, timestampMs: InTuneRule.holdMs + 50).status, "sharp")
+        // A nonsensical band falls back to the default rather than never (or always) locking.
+        let broken = TuningTracker(bandCents: .nan)
+        XCTAssertEqual(broken.accept(frequency: fourSharp, confidence: 1, target: 440, timestampMs: 0).status, "settling")
+    }
+    func testPrecisionSettingIsOptionalAndDefaultsToBeginner() throws {
+        XCTAssertEqual(UserSettings().precision, .beginner)
+        XCTAssertEqual(UserSettings().precision.bandCents, InTuneRule.bandCents)
+        // A save from before the setting existed has no key at all and still decodes.
+        var old = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(UserSettings())) as? [String: Any])
+        old.removeValue(forKey: "tuningPrecision")
+        XCTAssertEqual(try JSONDecoder().decode(UserSettings.self, from: JSONSerialization.data(withJSONObject: old)).precision, .beginner)
+        var settings = UserSettings()
+        settings.precision = .pro
+        let reopened = try JSONDecoder().decode(UserSettings.self, from: JSONEncoder().encode(settings))
+        XCTAssertEqual(reopened.precision, .pro)
+        XCTAssertEqual(reopened.precision.bandCents, 1)
+        XCTAssertEqual(TuningPrecision.standard.bandCents, 3)
+        // A value from a later version reads as Beginner instead of failing.
+        settings.tuningPrecision = "future"
+        XCTAssertEqual(settings.precision, .beginner)
+    }
     func testUnobservedGapCannotCountAsContinuousHold() {
         let tracker = TuningTracker()
         _ = tracker.accept(frequency: 440, confidence: 1, target: 440, timestampMs: 0)

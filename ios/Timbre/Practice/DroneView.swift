@@ -5,11 +5,13 @@ struct DroneView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// The rings give up height so the tonic card and the headphones hint end above the dock.
+    @State private var ringsHeight: CGFloat = 250
 
     var body: some View {
         ScrollView {
             VStack(spacing: 22) {
-                rings.frame(height: 250)
+                rings.frame(height: ringsHeight)
                 VStack(spacing: 4) {
                     Text(PitchMath.noteName(midi: store.droneMidi, notation: store.settings.notation)).font(Typeface.display(72)).foregroundStyle(Palette.ink)
                     Text(String(format: "Sa = %.1f Hz", PitchMath.frequency(midi: Double(store.droneMidi), reference: store.settings.referencePitchHz)))
@@ -39,9 +41,11 @@ struct DroneView: View {
                 .stillCard()
                 Label("Sing or play long notes against the drone. Headphones keep it out of the microphone.", systemImage: "headphones")
                     .font(.footnote).foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .padding(.horizontal, Metrics.gutter).padding(.top, 12).padding(.bottom, 28)
         }
+        .fitsHero($ringsHeight, in: 160...250)
         .stageTopShade()
         .background(StageBackground(motes: false))
         .navigationTitle("Drone")

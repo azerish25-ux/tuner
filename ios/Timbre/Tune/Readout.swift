@@ -2,27 +2,61 @@ import SwiftUI
 import TimbreCore
 
 extension Palette {
+    /// The lock band in cents (Settings › Tuning › Precision). AppStore keeps it equal to the tracker's band,
+    /// so every tuner colour, meter zone and peg cue agrees with where a string can actually lock.
+    static var tuningBand = InTuneRule.bandCents
     /// The tuner's one colour rule, for every live cue (readout digits, meter needle, string chip, status line,
     /// strobe, stage): mint inside the tracker's own lock band, amber out to 20 cents, coral beyond.
-    static func tuning(_ cents: Double?, locked: Bool) -> Color { pitch(cents, locked: locked, band: InTuneRule.bandCents) }
+    static func tuning(_ cents: Double?, locked: Bool) -> Color { pitch(cents, locked: locked, band: tuningBand) }
 }
 
 /// Per-frame smoothing for the readout. A class so frame updates never invalidate views.
+/// The needle and strobe move every frame; the numbers (`shown`, `shownHertz`) hold steady enough to read.
 final class ReadoutMotion {
     /// The smoothing every tuner view uses, so the stage, chip and readout agree on the same value.
     static func makeFilter() -> OneEuroFilter { OneEuroFilter(minCutoff: 1.4, beta: 0.025) }
+    /// The numbers refresh about ten times a second…
+    static let displayInterval = 0.1
+    /// …and a whole cent moves only once the pitch is half a cent past the rounding edge (±0.5¢ hysteresis),
+    /// so a pitch sitting between two values never flickers.
+    static let displayHysteresis = 0.5
     private var filter = ReadoutMotion.makeFilter()
     private var strobe = StrobePhase(bandsPerSecondPerCent: 0.09)
     private var last: Double = 0
+    private var lastDisplay: Double = 0
     private(set) var cents: Double?
     private(set) var phase: Double = 0
-    /// The smoothed cents as every readout shows them: whole cents.
-    var shown: Int? { cents.map { Int($0.rounded()) } }
-    func step(_ raw: Double?, locked: Bool, now: Double) {
+    /// Whole cents as every number on the tuner shows them (digits, status line, chip colour); nil with no pitch.
+    private(set) var shown: Int?
+    /// The hertz beside the cents, sampled with them.
+    private(set) var shownHertz: Double?
+
+    /// - Parameters:
+    ///   - hertz: the measured frequency, shown when the pitch is beyond the smoothed range.
+    ///   - target: the target frequency; the hertz shown follows the smoothed cents against it.
+    func step(_ raw: Double?, locked: Bool, now: Double, hertz: Double? = nil, target: Double? = nil) {
         let dt = last == 0 ? 1.0 / 60 : min(0.1, max(0, now - last))
         last = now
         if let raw { cents = filter.filter(max(-60, min(60, raw)), at: now) } else { filter.reset(); cents = nil }
         phase = strobe.advance(cents: locked ? 0 : cents, dt: dt)
+        updateShown(raw: raw, hertz: hertz, target: target, now: now)
+    }
+
+    private func updateShown(raw: Double?, hertz: Double?, target: Double?, now: Double) {
+        guard let cents else { shown = nil; shownHertz = nil; return }
+        // The first value after silence shows at once; then at most every `displayInterval`.
+        guard shown == nil || now - lastDisplay >= Self.displayInterval || now < lastDisplay else { return }
+        lastDisplay = now
+        if let current = shown, abs(cents - Double(current)) < 0.5 + Self.displayHysteresis {
+            // Still within reach of the number on screen: keep it.
+        } else {
+            shown = Int(cents.rounded())
+        }
+        if let target, target > 0, let raw, abs(raw) < 59.5 {
+            shownHertz = target * pow(2, cents / 1200)
+        } else {
+            shownHertz = hertz
+        }
     }
 }
 
@@ -31,6 +65,8 @@ final class ReadoutMotion {
 /// A faint strobe shimmer runs along the ribbon while the pitch is off, and stands still in tune.
 struct RibbonMeter: View {
     let cents: Double?
+    /// The whole cents the readout shows, for the needle's colour (so needle and digits never disagree).
+    var shown: Int?
     let phase: Double
     let locked: Bool
     var body: some View {
@@ -38,18 +74,18 @@ struct RibbonMeter: View {
             let mid = size.width / 2, baseline = size.height / 2
             let span = size.width / 2
             let scale = (span - 2) / 50
-            let band = CGFloat(InTuneRule.bandCents) * scale
+            let band = CGFloat(Palette.tuningBand) * scale
             let track = Path(CGRect(x: 0, y: baseline - 1, width: size.width, height: 2))
             context.fill(track, with: .linearGradient(Self.track(width: size.width, scale: scale), startPoint: .zero, endPoint: CGPoint(x: size.width, y: 0)))
+            let tone = Palette.tuning(shown.map { Double($0) } ?? cents, locked: locked)
             if let cents, !locked {
                 // Strobe: dots drifting with the pitch error.
                 let step: CGFloat = 14
                 let offset = CGFloat(phase.truncatingRemainder(dividingBy: 1)) * step
-                let dots = Palette.tuning(cents, locked: false)
                 for i in stride(from: -step, through: size.width + step, by: step) {
                     let x = i + offset
                     let fade = 1 - min(1, abs(x - mid) / span)
-                    context.fill(Path(ellipseIn: CGRect(x: x - 1.5, y: baseline - 1.5, width: 3, height: 3)), with: .color(dots.opacity(0.5 * fade * min(1, abs(cents) / 6))))
+                    context.fill(Path(ellipseIn: CGRect(x: x - 1.5, y: baseline - 1.5, width: 3, height: 3)), with: .color(tone.opacity(0.5 * fade * min(1, abs(cents) / 6))))
                 }
             }
             for value in stride(from: -50, through: 50, by: 10) where value != 0 {
@@ -57,15 +93,15 @@ struct RibbonMeter: View {
                 let major = value % 50 == 0 || value % 20 == 0
                 context.fill(Path(CGRect(x: x - 0.5, y: baseline - (major ? 7 : 5), width: 1, height: major ? 14 : 10)), with: .color(Palette.inkFaint.opacity(0.7)))
             }
-            // The lock zone is exactly the band the tracker locks in.
-            let zone = CGRect(x: mid - band, y: baseline - 13, width: band * 2, height: 26)
-            context.fill(Path(roundedRect: zone, cornerRadius: 7), with: .color(Palette.mint.opacity(locked ? 0.25 : 0.12)))
-            context.stroke(Path(roundedRect: zone, cornerRadius: 7), with: .color(Palette.mint.opacity(locked ? 1 : 0.5)), lineWidth: 1)
+            // The lock zone is exactly the band the tracker locks in (it narrows with Precision).
+            let zone = CGRect(x: mid - max(band, 3), y: baseline - 13, width: max(band, 3) * 2, height: 26)
+            let radius = min(7, zone.width / 2)
+            context.fill(Path(roundedRect: zone, cornerRadius: radius), with: .color(Palette.mint.opacity(locked ? 0.25 : 0.12)))
+            context.stroke(Path(roundedRect: zone, cornerRadius: radius), with: .color(Palette.mint.opacity(locked ? 1 : 0.5)), lineWidth: 1)
             guard let cents else { return }
             let x = locked ? mid : mid + CGFloat(max(-50, min(50, cents))) * scale
-            let color = Palette.tuning(cents, locked: locked)
-            context.fill(Path(ellipseIn: CGRect(x: x - 18, y: baseline - 18, width: 36, height: 36)), with: .radialGradient(Gradient(colors: [color.opacity(0.6), .clear]), center: CGPoint(x: x, y: baseline), startRadius: 0, endRadius: 18))
-            context.fill(Path(roundedRect: CGRect(x: x - 2, y: 0, width: 4, height: size.height), cornerRadius: 2), with: .color(color))
+            context.fill(Path(ellipseIn: CGRect(x: x - 18, y: baseline - 18, width: 36, height: 36)), with: .radialGradient(Gradient(colors: [tone.opacity(0.6), .clear]), center: CGPoint(x: x, y: baseline), startRadius: 0, endRadius: 18))
+            context.fill(Path(roundedRect: CGRect(x: x - 2, y: 0, width: 4, height: size.height), cornerRadius: 2), with: .color(tone))
         }
         .accessibilityHidden(true)
     }
@@ -74,7 +110,7 @@ struct RibbonMeter: View {
     private static func track(width: CGFloat, scale: CGFloat) -> Gradient {
         let unit = width > 0 ? scale / width : 0
         func at(_ cents: Double) -> CGFloat { min(1, max(0, 0.5 + CGFloat(cents) * unit)) }
-        let band = InTuneRule.bandCents, near = Palette.nearCents
+        let band = Palette.tuningBand, near = Palette.nearCents
         let coral = Palette.coral.opacity(0.45), amber = Palette.amber.opacity(0.5), mint = Palette.mint.opacity(0.9)
         return Gradient(stops: [
             .init(color: Palette.coral.opacity(0), location: 0), .init(color: coral, location: at(-40)),
@@ -130,9 +166,9 @@ struct CentsScale: View {
             let mid = size.width / 2
             let span = size.width / 2 - 10
             let baseline = size.height / 2
-            let band = CGFloat(InTuneRule.bandCents) / 50 * span
+            let band = CGFloat(Palette.tuningBand) / 50 * span
             let zone = CGRect(x: mid - band, y: baseline - 9, width: band * 2, height: 18)
-            context.fill(Path(roundedRect: zone, cornerRadius: 9), with: .color(Palette.locked.opacity(locked ? 0.22 : 0.08)))
+            context.fill(Path(roundedRect: zone, cornerRadius: min(9, band)), with: .color(Palette.locked.opacity(locked ? 0.22 : 0.08)))
             for value in stride(from: -50, through: 50, by: 5) {
                 let x = mid + CGFloat(value) / 50 * span
                 let major = value % 25 == 0
@@ -153,17 +189,18 @@ struct CentsScale: View {
 }
 
 /// The big note (octave set small and light), then cents and hertz; mint and glowing when in tune.
-/// Cents are whole numbers that roll (numeric transition) rather than cross-fade, so two values never show at once.
+/// The numbers sit in fixed-width monospaced columns and change in place (no rolling digits), at the
+/// steady rate `ReadoutMotion` gives them, so the row never shifts. Cents use the ¢ sign in every language.
 struct NoteReadout: View {
     let note: String
-    let cents: Double?
+    /// Whole cents as the tuner shows them (`ReadoutMotion.shown`); nil with no pitch.
+    let shown: Int?
     let hertz: Double?
     let target: Double
     let locked: Bool
     var compact = false
     var body: some View {
         let parts = Self.split(note)
-        let shown = cents.map { Int($0.rounded()) }
         VStack(spacing: compact ? 2 : 6) {
             HStack(alignment: .lastTextBaseline, spacing: 3) {
                 Text(parts.name).font(Typeface.note(compact ? 84 : 112, relativeTo: .largeTitle)).tracking(compact ? -3 : -5)
@@ -174,7 +211,7 @@ struct NoteReadout: View {
             }
             .shadow(color: locked ? Palette.mint.opacity(0.6) : .clear, radius: 26)
             Group {
-                if locked { lockedBadge(shown) } else { centsRow(shown) }
+                if locked { lockedBadge } else { centsRow }
             }
             .transition(.opacity.combined(with: .scale(scale: 0.96)))
             .animation(Motion.quick, value: locked)
@@ -184,35 +221,52 @@ struct NoteReadout: View {
         .accessibilityValue(Text(Self.spoken(shown, locked: locked)))
     }
 
-    private func lockedBadge(_ shown: Int?) -> some View {
-        let amount = abs(shown ?? 0)
-        return Label {
-            Text("In tune · \(String(amount)) cents")
-                .contentTransition(.numericText(value: Double(amount)))
-                .animation(Motion.quick, value: amount)
+    private var lockedBadge: some View {
+        Label {
+            Text("In tune") + Text(verbatim: " · \(abs(shown ?? 0))¢")
         } icon: { Image(systemName: "checkmark") }
         .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.mint)
+        .monospacedDigit()
         .padding(.horizontal, 12).padding(.vertical, 6)
         .background(Capsule().fill(Palette.mint.opacity(0.12)))
         .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.4), lineWidth: 1))
     }
 
-    private func centsRow(_ shown: Int?) -> some View {
+    /// "−11¢ · 81.99 Hz": each number in its own fixed column, so the separator never moves.
+    private var centsRow: some View {
         HStack(spacing: 10) {
-            Text(verbatim: Self.signed(shown))
-                .font(Typeface.number(15)).foregroundStyle(Palette.tuning(shown.map { Double($0) }, locked: false))
-                .contentTransition(.numericText(value: Double(shown ?? 0)))
-                .animation(Motion.quick, value: shown)
+            Self.column(Self.signed(shown), placeholder: "−00¢", alignment: .trailing)
+                .foregroundStyle(Palette.tuning(shown.map { Double($0) }, locked: false))
             Circle().fill(Palette.inkFaint).frame(width: 3, height: 3)
-            Text(String(format: "%.2f Hz", hertz ?? target)).font(Typeface.number(15)).foregroundStyle(Palette.inkSoft)
+            Self.column(Self.hertzText(hertz ?? target), placeholder: Self.hertzPlaceholder(target), alignment: .leading)
+                .foregroundStyle(Palette.inkSoft)
         }
+        .font(Typeface.number(15))
     }
 
-    /// "−7 cents", "+3 cents", "0 cents"; an em dash with no pitch.
+    /// A number in a column as wide as its widest value, so it changes in place.
+    private static func column(_ text: String, placeholder: String, alignment: Alignment) -> some View {
+        ZStack(alignment: alignment) {
+            Text(verbatim: placeholder).hidden()
+            Text(verbatim: text)
+        }
+        .lineLimit(1)
+        .fixedSize()
+    }
+
+    /// "−7¢", "+3¢", "0¢"; an em dash with no pitch.
     static func signed(_ shown: Int?) -> String {
         guard let shown else { return "—" }
         let sign = shown < 0 ? "−" : (shown > 0 ? "+" : "")
-        return "\(sign)\(abs(shown)) cents"
+        return "\(sign)\(abs(shown))¢"
+    }
+
+    static func hertzText(_ hertz: Double) -> String { String(format: "%.2f Hz", hertz) }
+
+    /// As many digits as the target needs (with room for a sharp reading), e.g. "000.00 Hz" for 146.83 Hz.
+    static func hertzPlaceholder(_ target: Double) -> String {
+        let digits = max(1, String(Int(max(1, target * 1.07))).count)
+        return String(repeating: "0", count: digits) + ".00 Hz"
     }
 
     static func spoken(_ cents: Double?) -> String {

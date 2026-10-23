@@ -12,20 +12,22 @@ struct MetronomeView: View {
     @State private var trainerEvery = 4
     @State private var trainerTarget = 140
     @State private var trainerTask: Task<Void, Never>?
+    /// The pendulum gives up height so tempo, trainer, beats and meter end above the dock.
+    @State private var pendulumHeight: CGFloat = 184
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ScrollView {
-            // Sized so tempo, beats and meter all sit above the dock on a 6.1" phone.
             VStack(spacing: 16) {
-                pendulum.frame(height: 184)
+                pendulum.frame(height: pendulumHeight)
                 tempo
+                trainerControls
                 beatRow
                 meter
-                proControls
             }
             .padding(.horizontal, Metrics.gutter).padding(.bottom, 30)
         }
+        .fitsHero($pendulumHeight, in: 120...184)
         .stageTopShade()
         .background(StageBackground(motes: false))
         .navigationTitle("Metronome")
@@ -159,12 +161,14 @@ struct MetronomeView: View {
                     .accessibilityLabel(Text(["Quarter notes", "Eighth notes", "Triplets", "Sixteenth notes"][value - 1]))
                 }
             }
+            soundPicker.padding(.top, 6)
         }
         .stillCard(padding: 16)
     }
 
-    private var proControls: some View {
-        VStack(alignment: .leading, spacing: 14) {
+    /// Click, wood or beep: part of the meter card, so the whole groove is set in one place.
+    private var soundPicker: some View {
+        VStack(alignment: .leading, spacing: 10) {
             HStack { Eyebrow("Sound"); Spacer(); if !commerce.isPro { ProBadge() } }
             Picker("Sound", selection: Binding(get: { store.metronomeSound }, set: { value in
                 if commerce.isPro { store.setMetronome(sound: value) } else { store.presentPaywall("metronome.sound") }
@@ -174,25 +178,48 @@ struct MetronomeView: View {
                 Text("Beep").tag(MetronomeRenderer.Sound.beep)
             }
             .pickerStyle(.segmented)
-            Divider().overlay(Palette.line)
-            Toggle(isOn: Binding(get: { trainer }, set: { on in
-                guard commerce.isPro else { store.presentPaywall("metronome.trainer"); return }
-                trainer = on
-            })) {
+        }
+    }
+
+    /// The speed trainer sits right under the tempo it drives, so it is never parked under the dock;
+    /// its steps open beneath it when it's on.
+    private var trainerControls: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
+                Image(systemName: "speedometer").font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(trainer ? Palette.mint : Palette.inkSoft)
+                    .frame(width: 28)
+                    .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Speed trainer").font(.headline).foregroundStyle(Palette.ink)
+                    HStack(spacing: 8) {
+                        Text("Speed trainer").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                        if !commerce.isPro { ProBadge() }
+                    }
                     Text("+\(trainerStep) BPM every \(trainerEvery) bars up to \(trainerTarget)").font(.caption).foregroundStyle(Palette.inkSoft)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
+                Spacer(minLength: 8)
+                Toggle("Speed trainer", isOn: Binding(get: { trainer }, set: { on in
+                    guard commerce.isPro else { store.presentPaywall("metronome.trainer"); return }
+                    withAnimation(Motion.settle) { trainer = on }
+                }))
+                .labelsHidden()
+                .tint(Palette.brass)
             }
-            .tint(Palette.brass)
             if trainer {
-                Stepper("Step: \(trainerStep) BPM", value: $trainerStep, in: 1...20)
-                Stepper("Every \(trainerEvery) bars", value: $trainerEvery, in: 1...16)
-                Stepper("Target \(trainerTarget) BPM", value: $trainerTarget, in: 40...300, step: 2)
+                VStack(spacing: 6) {
+                    Stepper("Step: \(trainerStep) BPM", value: $trainerStep, in: 1...20)
+                    Stepper("Every \(trainerEvery) bars", value: $trainerEvery, in: 1...16)
+                    Stepper("Target \(trainerTarget) BPM", value: $trainerTarget, in: 40...300, step: 2)
+                }
+                .font(.subheadline)
+                .foregroundStyle(Palette.ink)
+                .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
-        .foregroundStyle(Palette.ink)
-        .stillCard()
+        .padding(.horizontal, 14).padding(.vertical, 12)
+        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
+        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(trainer ? Palette.mint.opacity(0.35) : .white.opacity(0.06), lineWidth: 1))
     }
 
     private var transport: some View {

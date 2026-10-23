@@ -25,6 +25,7 @@ struct JourneyView: View {
                 }
                 .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
             }
+            .stageTopShade()
             .background(StageBackground(motes: false))
         }
     }

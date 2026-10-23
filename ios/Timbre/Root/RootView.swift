@@ -31,7 +31,8 @@ struct RootView: View {
             }
         }
         .animation(.spring(response: 0.45, dampingFraction: 0.9), value: store.showPaywall)
-        .overlay(alignment: .top) { RewardToast() }
+        // Rewards grow out of the Dynamic Island, inside the status-bar band (RewardToast places itself).
+        .overlay { RewardToast() }
         #if DEBUG
         .overlay(alignment: .topLeading) {
             // UI-test probe (TIMBRE_DEBUG_STATE=1): the presentation flags, readable by XCUITest.

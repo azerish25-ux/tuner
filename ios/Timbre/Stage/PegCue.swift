@@ -11,7 +11,7 @@ enum PegTurn: Equatable {
     static func from(cents: Double?, locked: Bool, listening: Bool, tighten: Int?, slides: Bool) -> PegTurn {
         guard listening, let cents else { return .none }
         if locked { return .locked }
-        guard abs(cents.rounded()) > InTuneRule.bandCents else { return .none }
+        guard abs(cents.rounded()) > Palette.tuningBand else { return .none }
         let tightening = cents < 0
         if slides { return tightening ? .pushIn : .pullOut }
         guard let tighten else { return .none }

@@ -14,6 +14,8 @@ struct LessonPlayer: View {
     @State private var reward: ProgressUpdate?
     @State private var confirmQuit = false
     @State private var tuneChecked = false
+    /// A rhythm step was passed by tapping because the microphone couldn't hear the instrument.
+    @State private var practiced = false
 
     init(course: LearnCourse, lesson: Lesson, onNext: ((Lesson) -> Void)? = nil) {
         self.course = course
@@ -29,7 +31,7 @@ struct LessonPlayer: View {
             Palette.stage.ignoresSafeArea()
             RadialGradient(colors: [accent.opacity(0.16), .clear], center: UnitPoint(x: 0.5, y: 0), startRadius: 10, endRadius: 520).ignoresSafeArea()
             if let result {
-                LessonResults(course: course, lesson: lesson, result: result, improved: improved, reward: reward, accent: accent,
+                LessonResults(course: course, lesson: lesson, result: result, improved: improved, reward: reward, accent: accent, practice: practiced,
                               next: nextLesson, onContinue: { dismiss() }, onNext: { next in dismiss(); onNext?(next) })
                     .transition(.opacity.combined(with: .scale(scale: 0.96)))
             } else {
@@ -39,7 +41,7 @@ struct LessonPlayer: View {
                         TuneCheckStep(course: course, accent: accent) { withAnimation { tuneChecked = true } }
                             .transition(.opacity)
                     } else if let step = run.step {
-                        StepView(step: step, course: course, accent: accent) { score in advance(score) }
+                        StepView(step: step, course: course, accent: accent, onPractice: { practiced = true }, done: { score in advance(score) })
                             .id(run.index)
                             .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity), removal: .move(edge: .leading).combined(with: .opacity)))
                     }
@@ -55,6 +57,8 @@ struct LessonPlayer: View {
         } message: { Text("Your progress in this lesson won’t be saved.") }
         .onDisappear { store.stopLessonListening(); store.audio.stopMetronome() }
         .statusBarHidden(result == nil)
+        // The zoom-in from the Learn tab can be pulled back down; not halfway through (the close button asks first).
+        .interactiveDismissDisabled(run.index > 0 && result == nil)
     }
 
     private var nextLesson: Lesson? {
@@ -89,7 +93,12 @@ struct LessonPlayer: View {
     private func advance(_ score: Double?) {
         run.complete(score: score)
         guard run.isFinished else { return }
-        let outcome = run.result()
+        var outcome = run.result()
+        if practiced && outcome.stars > 1 {
+            // Tapping the glass isn't playing: practice mode keeps the lesson at one star (and its XP).
+            outcome = LessonResult(lessonId: outcome.lessonId, stars: 1, accuracy: outcome.accuracy,
+                                   xp: Int((Double(lesson.xp) * 0.8).rounded()), minutes: outcome.minutes)
+        }
         improved = outcome.stars > (store.learn.stars[lesson.id] ?? 0)
         store.stopLessonListening()
         reward = store.finishLesson(outcome, courseId: course.id)
@@ -104,6 +113,8 @@ struct StepView: View {
     let step: LessonStep
     let course: LearnCourse
     let accent: Color
+    /// A rhythm step fell back to tapping (no microphone): the lesson tops out at one star.
+    var onPractice: () -> Void = {}
     let done: (Double?) -> Void
 
     var body: some View {
@@ -117,11 +128,14 @@ struct StepView: View {
         case let .playChord(chord):
             ChordStep(chord: chord, course: course, accent: accent, done: done)
         case let .strum(chord, pattern, bpm, bars, beatsPerBar):
-            RhythmStep(mode: .strum(chord), pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, accent: accent, done: done)
+            RhythmStep(mode: .strum(chord), pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, strums: true, strings: course.stringCount,
+                       accent: accent, onPractice: onPractice, done: done)
         case let .progression(chords, bars, pattern, bpm, beatsPerBar):
-            RhythmStep(mode: .progression(chords, bars), pattern: pattern, bpm: bpm, bars: bars.reduce(0, +), meter: beatsPerBar, accent: accent, done: done)
+            RhythmStep(mode: .progression(chords, bars), pattern: pattern, bpm: bpm, bars: bars.reduce(0, +), meter: beatsPerBar, strums: true, strings: course.stringCount,
+                       accent: accent, onPractice: onPractice, done: done)
         case let .tapRhythm(pattern, bpm, bars, beatsPerBar):
-            RhythmStep(mode: .tap, pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, hearsInstrument: course.fretKind != nil, strums: course.strums, accent: accent, done: done)
+            RhythmStep(mode: .tap, pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, hearsInstrument: course.fretKind != nil, strums: course.strums,
+                       strings: course.stringCount, accent: accent, onPractice: onPractice, done: done)
         case let .listen(prompt, sound, options, answer):
             ChoiceStep(prompt: prompt, options: options, answer: answer, why: nil, visual: .none, sound: sound, course: course, accent: accent, done: done)
         case let .quiz(prompt, options, answer, why, visual):
@@ -220,16 +234,27 @@ struct ExplainStep: View {
     @EnvironmentObject private var store: AppStore
     @State private var shown = false
     @State private var sounding = false
+    /// Height of the title and text, to know how much room is left under them.
+    @State private var wordsHeight: CGFloat = 0
 
     var body: some View {
         VStack(spacing: 0) {
             GeometryReader { proxy in
+                let base = Self.heroHeight(proxy.size.height)
+                let spare = spareRoom(proxy.size.height, hero: base)
                 ScrollView {
                     VStack(alignment: .leading, spacing: 22) {
-                        hero(height: Self.heroHeight(proxy.size.height))
+                        hero(height: growsHero ? base + spare : base)
                             .scaleEffect(shown ? 1 : 0.94).opacity(shown ? 1 : 0)
                         words
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { wordsHeight = $0 }
                             .offset(y: shown ? 0 : 18).opacity(shown ? 1 : 0)
+                        if !growsHero && spare >= 150 {
+                            // Short text under a fixed picture: the course's instrument or motif fills the rest.
+                            LessonBackdrop(course: course, accent: accent)
+                                .frame(height: spare - 22)
+                                .opacity(shown ? 0.85 : 0)
+                        }
                     }
                     .padding(.horizontal, 22).padding(.top, 18).padding(.bottom, 12)
                 }
@@ -242,6 +267,26 @@ struct ExplainStep: View {
 
     /// Every explanation gets the same generous picture area, so short steps don't leave the lower half bare.
     private static func heroHeight(_ available: CGFloat) -> CGFloat { min(360, max(220, available * 0.46)) }
+
+    /// What the hero and the words leave empty above the button (paddings 18 + 12, spacing 22).
+    private func spareRoom(_ available: CGFloat, hero: CGFloat) -> CGFloat {
+        guard wordsHeight > 0 else { return 0 }
+        return max(0, available - hero - wordsHeight - 22 - 30)
+    }
+
+    /// Pictures that can use any height (the backdrop, a strum sweep, the instrument photo) grow into the room.
+    private var growsHero: Bool {
+        switch visual {
+        case .none, .rhythm, .instrument: return true
+        default: return false
+        }
+    }
+
+    /// The stroke drawn over a rhythm: a pick on strummed instruments, a plucking finger on the others, a tap pad without one.
+    private var sweepStyle: StrumSweep.Style {
+        guard course.fretKind != nil else { return .tap }
+        return course.strums ? .strum : .pluck
+    }
 
     private var words: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -258,7 +303,7 @@ struct ExplainStep: View {
             LessonBackdrop(course: course, accent: accent).frame(height: height)
         } else {
             VStack(spacing: 16) {
-                picture
+                picture(height: max(0, height - 40))
                 if case let .chord(spec) = visual { hearButton(spec) }
             }
             .frame(maxWidth: .infinity, minHeight: max(0, height - 36))
@@ -268,10 +313,16 @@ struct ExplainStep: View {
         }
     }
 
-    @ViewBuilder private var picture: some View {
-        if case let .rhythm(pattern, beatsPerBar) = visual {
-            RhythmLoop(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, arrows: course.strums)
-        } else {
+    @ViewBuilder private func picture(height: CGFloat) -> some View {
+        switch visual {
+        case let .rhythm(pattern, beatsPerBar):
+            // The stroke sweeps above the pattern in time with its playhead, filling the card.
+            RhythmLoop(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, arrows: course.strums,
+                       sweep: sweepStyle, strings: max(1, course.stringCount))
+                .frame(height: max(180, height))
+        case let .instrument(part):
+            InstrumentPartView(part: part, instrumentId: course.instrument, accent: accent, height: max(260, height))
+        default:
             LessonVisualView(visual: visual, accent: accent, instrumentId: course.instrument)
         }
     }

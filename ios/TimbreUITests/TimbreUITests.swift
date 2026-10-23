@@ -67,7 +67,8 @@ final class TimbreUITests: XCTestCase {
     }
 
     func test01Onboarding() throws {
-        launch(onboarded: false, demo: false)
+        // The demo pitch plays the first-tune step's string (it drifts from 14 cents flat into tune).
+        launch(onboarded: false, demo: false, pitch: true)
         let start = element("onboarding.start")
         XCTAssertTrue(start.waitForExistence(timeout: 25))
         settle(); shot("01-onboarding-welcome")
@@ -83,7 +84,16 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(notNow.waitForExistence(timeout: 5))
         shot("05-onboarding-microphone")
         notNow.tap()
+        // "Pluck your thickest string": the stage follows the pitch, locks, and moves on to the plan by itself.
+        let firstTune = element("onboarding.firsttune")
+        XCTAssertTrue(firstTune.waitForExistence(timeout: 10))
+        settle(1.6); shot("05a-onboarding-first-tune")
         let plan = element("onboarding.plan.start")
+        if !plan.waitForExistence(timeout: 15) {
+            // Never stall the tour on the lock: Skip leads to the same plan.
+            let skip = element("onboarding.firsttune.skip")
+            if skip.exists && skip.isHittable { skip.tap() }
+        }
         XCTAssertTrue(plan.waitForExistence(timeout: 10))
         settle(2); shot("05b-onboarding-plan")
         plan.tap()

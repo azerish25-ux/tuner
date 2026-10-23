@@ -71,7 +71,8 @@ struct InstrumentsView: View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 6) {
                 Text("Instruments").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
-                Text("\(store.catalog.instruments.count) instruments · \(store.catalog.tunings.count) tunings · your own").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                Text("\(store.catalog.instruments.count) instruments, each on its own live stage").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .accessibilityElement(children: .combine)
             .accessibilityAddTraits(.isHeader)
@@ -181,17 +182,29 @@ struct InstrumentsView: View {
     /// Rail id of the "All" filter chip.
     private static let allFamilies = "filter.all"
 
+    /// The chromatic tuner: the pitch line wraps to as many lines as it needs instead of truncating.
     private var chromaticCard: some View {
         Button {
             store.selectReference()
             if picker { dismiss() }
         } label: {
-            FeatureRow(symbol: "dot.radiowaves.left.and.right", title: "Chromatic", detail: "A strobe tuner for any note: voice, piano, winds or anything else.") {
+            HStack(spacing: 14) {
+                IconOrb(symbol: "dot.radiowaves.left.and.right", tint: Palette.brass)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Chromatic").font(.headline).foregroundStyle(Palette.ink)
+                    Text("A strobe tuner for any note: voice, piano, winds or anything else.")
+                        .font(.subheadline).foregroundStyle(Palette.inkSoft)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 8)
                 Image(systemName: "arrow.up.right").foregroundStyle(Palette.brass)
+                    .accessibilityHidden(true)
             }
-            .stillCard()
+            .contentShape(Rectangle())
+            .stillCard(tint: store.referenceMode ? Palette.mint : nil)
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(store.referenceMode ? .isSelected : [])
         .accessibilityIdentifier("instruments.chromatic")
     }
 
@@ -207,20 +220,16 @@ struct InstrumentsView: View {
             if open {
                 store.selectInstrument(instrument, photo: photo.asset, tuning: tuningFor(photo, instrument))
                 if picker { dismiss() }
-            } else { store.presentPaywall("instrument") }
+            } else { store.presentPaywall("instrument", instrument: instrument) }
         } label: {
             VStack(alignment: .leading, spacing: 4) {
                 Image(model.flatMap { ModelLibrary.hasCard($0) ? ModelLibrary.cardImageName($0) : nil } ?? photo.thumbnail).resizable().interpolation(.high).scaledToFit()
                     .padding(.vertical, 6)
                     .shadow(color: .black.opacity(0.55), radius: 14, y: 10)
-                    .frame(height: 158)
+                    .frame(height: 148)
                     .frame(maxWidth: .infinity)
                     .padding(.bottom, 8)
-                Text(name(photo)).font(Typeface.display(16)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.8)
-                Group {
-                    if selected { Text("Tuning now · \(tunings) tunings") } else if tunings == 1 { Text("1 tuning") } else { Text("\(tunings) tunings") }
-                }
-                .font(.footnote).foregroundStyle(selected ? Palette.mint : Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.75)
+                cardCaption(name: name(photo), tunings: tunings, selected: selected)
             }
             .padding(14)
             .background {
@@ -234,6 +243,30 @@ struct InstrumentsView: View {
         .buttonStyle(PressScaleStyle())
         .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityIdentifier("instrument." + photo.asset)
+    }
+
+    /// Name (up to two lines, so "7-string electric guitar" reads in full) over the tuning count. Two
+    /// lines are always reserved and the text sits at the bottom, so cards in a row keep one height
+    /// and one-line names still sit right above their count.
+    private func cardCaption(name: String, tunings: Int, selected: Bool) -> some View {
+        ZStack(alignment: .bottomLeading) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(verbatim: "A\nA").font(Typeface.display(16)).lineLimit(2)
+                Text(verbatim: "A").font(.footnote)
+            }
+            .hidden()
+            .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(name).font(Typeface.display(16)).foregroundStyle(Palette.ink)
+                    .lineLimit(2).minimumScaleFactor(0.85)
+                    .fixedSize(horizontal: false, vertical: true)
+                Group {
+                    if selected { Text("Tuning now · \(tunings) tunings") } else if tunings == 1 { Text("1 tuning") } else { Text("\(tunings) tunings") }
+                }
+                .font(.footnote).foregroundStyle(selected ? Palette.mint : Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.75)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func tuningFor(_ photo: InstrumentPhoto, _ instrument: Instrument) -> Tuning? {

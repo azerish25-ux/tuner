@@ -13,17 +13,21 @@ struct PaywallView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var selectedID = TimbreProduct.annual
     @State private var appeared = false
-    /// Visible height of the scroll area above the pinned bar. The hero gives way so the plans stay in view.
-    @State private var viewport: CGFloat = 615
     /// Notifications are off for Timbre: no reminder can arrive, so none is promised.
     @State private var remindersBlocked = false
+    /// The trial track draws itself in from Today.
+    @State private var trackDrawn = false
+    // Measured layout. The plans, the whole trial timeline and the button show without scrolling:
+    // the benefits and then the hero give way to make room, and nothing rests under the pinned bar.
+    @State private var containerHeight: CGFloat = 0
+    @State private var barHeight: CGFloat = 0
+    @State private var headerHeight: CGFloat = 110
+    @State private var benefitsHeight: CGFloat = 92
+    @State private var offerHeight: CGFloat = 230
+    @State private var timelineHeight: CGFloat = 78
 
     /// The yearly plan unless the storefront left it out.
     private var selected: Product? { commerce.products.first { $0.id == selectedID } ?? commerce.products.first }
-
-    /// What the pill, headline, benefits and three plan rows need below the hero at the default text size.
-    private static let contentBelowHero: CGFloat = 448
-    private var heroHeight: CGFloat { min(150, max(108, viewport - Self.contentBelowHero)) }
 
     /// Works both as a presented sheet (dismiss) and as the root overlay (the store flag).
     private func close() {
@@ -32,23 +36,24 @@ struct PaywallView: View {
     }
 
     var body: some View {
+        let pitch = self.pitch
         ZStack(alignment: .topTrailing) {
             Palette.stage.ignoresSafeArea()
             RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.16), .clear], center: UnitPoint(x: 0.5, y: 0.12), startRadius: 10, endRadius: 320)
                 .ignoresSafeArea()
+            // The height between the safe-area edges; the scroll content starts at the top one.
+            Color.clear
+                .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in containerHeight = height }
+                .accessibilityHidden(true)
             ScrollView {
-                content
+                content(pitch)
             }
             .scrollIndicators(.hidden)
             .scrollBounceBehavior(.basedOnSize)
-            // The bar below joins the safe area, so this is the height left for content above it.
-            .onGeometryChange(for: CGFloat.self) { proxy in
-                proxy.size.height - proxy.safeAreaInsets.top - proxy.safeAreaInsets.bottom
-            } action: { height in
-                viewport = height
+            // Pinned and opaque: the fine print scrolls under a short fade, never through the button.
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                bottomBar.onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in barHeight = height }
             }
-            // Pinned and opaque: the plans scroll under a short fade, never through the button.
-            .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
             closeButton
         }
         .preferredColorScheme(.dark)
@@ -63,18 +68,64 @@ struct PaywallView: View {
         .onChange(of: commerce.isPro) { _, pro in if pro { close() } }
     }
 
-    private var content: some View {
-        VStack(spacing: 0) {
-            hero.padding(.top, 6)
-            proPill.padding(.top, 2)
-            headline.padding(.top, 10)
-            benefits.padding(.top, 14)
-            plans.padding(.top, 16).animation(Motion.settle, value: commerce.products.isEmpty)
-            trustRow.padding(.top, 14)
-            if showsTrialTimeline, let annual = commerce.annual {
-                trialTimeline(annual).padding(.top, 28).transition(.opacity)
+    // MARK: Layout
+
+    /// Visible height above the pinned bar.
+    private var viewport: CGFloat { containerHeight > 0 ? max(0, containerHeight - barHeight) : 600 }
+
+    /// A trial is on offer (or may be, while the plans load), so its timeline keeps its place:
+    /// choosing Monthly then never resizes the hero under the finger.
+    private var reservesTimeline: Bool { commerce.products.isEmpty || (commerce.annual != nil && commerce.trialLabel != nil) }
+
+    /// Headline (with its top inset), plans and trust row, and the trial timeline: what must show.
+    private var essentials: CGFloat { headerHeight + 16 + offerHeight + (reservesTimeline ? timelineHeight : 0) }
+
+    /// The Pro pill on its own row, when there is no hero for it to stand on.
+    private static let pillRow: CGFloat = 40
+
+    /// The benefit list shows when it fits beside the essentials (or when nothing fits anyway and the page scrolls).
+    private var showsBenefits: Bool {
+        let room = viewport - essentials - Self.pillRow
+        return room < 0 || room >= benefitsHeight
+    }
+
+    /// The hero takes what is left, the Pro pill standing on it; below 72 points it steps aside.
+    /// A locked lesson's card replaces it.
+    private func heroHeight(_ pitch: Pitch) -> CGFloat {
+        guard pitch.lesson == nil else { return 0 }
+        let room = viewport - essentials - (showsBenefits ? benefitsHeight : 0) - 6
+        return room >= 72 ? min(170, room) : 0
+    }
+
+    private func content(_ pitch: Pitch) -> some View {
+        let heroSpace = heroHeight(pitch)
+        return VStack(spacing: 0) {
+            VStack(spacing: 0) {
+                if heroSpace > 0 {
+                    hero(height: heroSpace, center: pitch.instrumentAsset)
+                        .overlay(alignment: .bottom) { proPill.offset(y: 6) }
+                        .padding(.top, 6)
+                } else {
+                    proPill.padding(.top, 14)
+                }
+                header(pitch)
+                    .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in headerHeight = height }
+                    .padding(.top, heroSpace > 0 ? 16 : 10)
+                if showsBenefits {
+                    benefits.padding(.top, 12)
+                        .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in benefitsHeight = height }
+                }
+                offer
+                    .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in offerHeight = height }
+                if showsTrialTimeline, let annual = commerce.annual {
+                    trialTimeline(annual).padding(.top, 14)
+                        .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in timelineHeight = height }
+                        .transition(.opacity)
+                }
             }
-            finePrint.padding(.top, 24)
+            // Everything that sells rests above the bar; the fine print waits below the fold, past its fade.
+            .frame(minHeight: viewport, alignment: .top)
+            finePrint.padding(.top, 32)
         }
         .padding(.horizontal, 20).padding(.bottom, 12)
         .frame(maxWidth: 520)
@@ -90,16 +141,97 @@ struct PaywallView: View {
         .accessibilityLabel("Close").accessibilityIdentifier("paywall.close")
     }
 
+    // MARK: Pitch
+
+    /// What the paywall leads with: the whole offer, or what the person just tried to open.
+    private struct Pitch {
+        var headline: Text
+        var subhead: Text? = nil
+        var lesson: LockedLesson? = nil
+        /// The instrument to put in the middle of the hero.
+        var instrumentAsset: String? = nil
+    }
+
+    private struct LockedLesson {
+        let course: LearnCourse
+        let unitNumber: Int
+        let unitTitle: String
+        let lesson: Lesson
+    }
+
+    private var pitch: Pitch {
+        let generic = Pitch(headline: Text("Every lesson.\nEvery instrument."))
+        guard context == .standard, let reason = store.paywallReason else { return generic }
+        switch reason {
+        case "lesson":
+            guard let locked = lockedLesson else { return generic }
+            return Pitch(headline: Text("Keep going: \(locked.unitTitle)"), lesson: locked)
+        case "instrument", "tuning":
+            return instrumentPitch
+        case "journey":
+            return Pitch(headline: Text("See yourself improve"), subhead: Text("Accuracy trends and milestones, measured on device"))
+        case "custom_tuning":
+            return Pitch(headline: Text("Unlimited custom tunings and string health"))
+        case "temperament", "capo", "transpose":
+            return Pitch(headline: Text("Temperaments, custom tunings and written pitch"))
+        case "voice":
+            return Pitch(headline: Text("Sing in tune"), subhead: Text("Range test and exercises"))
+        default:
+            break
+        }
+        if reason.hasSuffix("drone") { return Pitch(headline: Text("Unlock the Tanpura drone and every practice tool")) }
+        if reason.hasPrefix("ear.") { return Pitch(headline: Text("Every ear game and practice tool"), subhead: Text("Pitch, intervals, chords")) }
+        if reason.hasPrefix("metronome.") {
+            return Pitch(headline: Text("Every instrument.\nEvery practice tool."), subhead: Text("Accents, odd meters, tap"))
+        }
+        if reason.hasPrefix("practice.") || reason.hasPrefix("daily.") {
+            return Pitch(headline: Text("Every instrument.\nEvery practice tool."), subhead: Text("Chords, scales, intonation and drone"))
+        }
+        return generic
+    }
+
+    /// "Cello and 59 more on their own stage", with that instrument in the spotlight.
+    private var instrumentPitch: Pitch {
+        guard let instrument = store.paywallInstrumentId.flatMap({ store.catalog.instrument(id: $0) }) else {
+            return Pitch(headline: Text("All sixty instruments in 3D"))
+        }
+        let photo = store.catalog.photo(instrumentId: instrument.id)
+        let name = photo.map { NSLocalizedString("timbre_photo_" + $0.asset, bundle: .main, value: $0.label, comment: "") } ?? instrument.name.localized
+        let others = max(0, store.catalog.instruments.count - 1)
+        return Pitch(headline: Text("\(name) and \(others) more on their own stage"), instrumentAsset: photo?.asset)
+    }
+
+    /// The lesson that opened the paywall; without one, the first lesson Pro opens from where
+    /// the learner stands in the course on screen.
+    private var lockedLesson: LockedLesson? {
+        let curriculum = store.curriculum
+        if let id = store.paywallLessonId, let found = curriculum.lesson(id: id) { return locked(found.lesson, in: found.course) }
+        let courseId = UserDefaults.standard.string(forKey: "learn.course") ?? store.learn.lastCourseId ?? "guitar"
+        guard let course = curriculum.course(id: courseId) ?? curriculum.courses.first else { return nil }
+        let lessons = course.lessons
+        let from = store.learn.nextLesson(in: course).flatMap { next in lessons.firstIndex { $0.id == next.id } } ?? 0
+        let lesson = lessons[from...].first { !store.canPlay($0) } ?? lessons.first { !store.canPlay($0) }
+        return lesson.flatMap { locked($0, in: course) }
+    }
+
+    private func locked(_ lesson: Lesson, in course: LearnCourse) -> LockedLesson? {
+        guard let unit = course.units.firstIndex(where: { unit in unit.lessons.contains { $0.id == lesson.id } }) else { return nil }
+        return LockedLesson(course: course, unitNumber: unit + 1, unitTitle: course.units[unit].title.localized, lesson: lesson)
+    }
+
     // MARK: Hero
 
-    /// Three instruments in a spotlight, each floating on its own slow cycle.
-    private var hero: some View {
-        let height = heroHeight
+    /// Three instruments in a spotlight, each floating on its own slow cycle. An instrument the
+    /// person just tried to open takes the middle.
+    private func hero(height: CGFloat, center: String?) -> some View {
         let scale = height / 270
+        let trio = ["17_bowed_strings_violin", "01_guitar_acoustic_guitar", "19_bowed_strings_cello"]
+        let middle = center ?? trio[1]
+        let sides = trio.filter { $0 != middle }
         let picks: [(asset: String, angle: Double, height: CGFloat, x: CGFloat)] = [
-            ("17_bowed_strings_violin", -14, 190 * scale, -128 * scale),
-            ("19_bowed_strings_cello", 12, 210 * scale, 128 * scale),
-            ("01_guitar_acoustic_guitar", 0, 250 * scale, 0),
+            (sides.first ?? trio[0], -14, 190 * scale, -128 * scale),
+            (sides.last ?? trio[2], 12, 210 * scale, 128 * scale),
+            (middle, 0, 250 * scale, 0),
         ]
         return TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion)) { context in
             let t = context.date.timeIntervalSinceReferenceDate
@@ -129,6 +261,25 @@ struct PaywallView: View {
         return store.catalog.photos.first { $0.asset == asset }?.thumbnail ?? asset
     }
 
+    // MARK: Header
+
+    private func header(_ pitch: Pitch) -> some View {
+        VStack(spacing: 0) {
+            pitch.headline.font(Typeface.display(26)).tracking(-0.6)
+                .multilineTextAlignment(.center).foregroundStyle(Palette.ink)
+                .lineLimit(3).minimumScaleFactor(0.8)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
+            if let subhead = pitch.subhead {
+                subhead.font(.subheadline).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 6)
+            }
+            if let lesson = pitch.lesson { lessonCard(lesson).padding(.top, 14) }
+        }
+        .frame(maxWidth: .infinity)
+    }
+
     private var proPill: some View {
         Text("TIMBRE PRO").font(Typeface.label(12)).tracking(2.2).foregroundStyle(Color(hex: 0x1B1206))
             .padding(.horizontal, 14).padding(.vertical, 5)
@@ -136,14 +287,50 @@ struct PaywallView: View {
             .shadow(color: Color(hex: 0xE39A3B).opacity(0.35), radius: 10, y: 3)
     }
 
-    private var headline: some View {
-        Text("Every lesson.\nEvery instrument.").font(Typeface.display(28)).tracking(-0.7)
-            .multilineTextAlignment(.center).foregroundStyle(Palette.ink).fixedSize(horizontal: false, vertical: true)
-            .accessibilityAddTraits(.isHeader)
+    /// The locked lesson: its unit, title and length, behind a gold lock.
+    private func lessonCard(_ locked: LockedLesson) -> some View {
+        let accent = Palette.accent(locked.course.accent)
+        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
+        return HStack(spacing: 14) {
+            lessonArt(locked.course, accent: accent)
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(spacing: 6) {
+                    Image(systemName: locked.course.symbol).font(.system(size: 10, weight: .bold)).accessibilityHidden(true)
+                    Text("UNIT \(locked.unitNumber)").font(Typeface.label(11)).tracking(1.1)
+                }
+                .foregroundStyle(accent)
+                Text(locked.lesson.title.localized).font(.headline).foregroundStyle(Palette.ink)
+                    .lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                Text("\(locked.lesson.minutes) min · +\(locked.lesson.xp) XP").font(.caption).foregroundStyle(Palette.inkSoft)
+            }
+            Spacer(minLength: 8)
+            Image(systemName: "lock.fill").font(.system(size: 13, weight: .bold)).foregroundStyle(Color(hex: 0x1B1206))
+                .frame(width: 30, height: 30)
+                .background(Circle().fill(Palette.proGold))
+                .accessibilityHidden(true)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(shape.fill(LinearGradient(colors: [accent.opacity(0.22), Palette.stageRaised], startPoint: .topLeading, endPoint: .bottomTrailing)))
+        .overlay(shape.strokeBorder(accent.opacity(0.35), lineWidth: 1))
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("paywall.lesson")
+    }
+
+    @ViewBuilder private func lessonArt(_ course: LearnCourse, accent: Color) -> some View {
+        if let asset = course.instrument.flatMap({ store.catalog.photo(instrumentId: $0)?.asset }) {
+            Image(card(asset)).resizable().interpolation(.high).scaledToFit()
+                .frame(width: 40, height: 58)
+                .rotationEffect(.degrees(-10))
+                .shadow(color: .black.opacity(0.55), radius: 8, y: 5)
+                .accessibilityHidden(true)
+        } else {
+            IconOrb(symbol: course.symbol, tint: accent, size: 44)
+        }
     }
 
     private var benefits: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 7) {
             benefit("graduationcap.fill", "\(store.curriculum.lessonCount) lessons across \(store.curriculum.courses.count) courses")
             benefit("guitars.fill", "\(store.catalog.instruments.count) instruments, each on its own live stage")
             benefit("ear.fill", "Every ear game and practice tool")
@@ -165,6 +352,15 @@ struct PaywallView: View {
 
     // MARK: Plans
 
+    /// The plans and the trust line under them.
+    private var offer: some View {
+        VStack(spacing: 0) {
+            // Room above the first row for its tag.
+            plans.padding(.top, 14).animation(Motion.settle, value: commerce.products.isEmpty)
+            trustRow.padding(.top, 10)
+        }
+    }
+
     @ViewBuilder private var plans: some View {
         if commerce.products.isEmpty {
             if commerce.loading {
@@ -174,7 +370,6 @@ struct PaywallView: View {
                     Text(commerce.error ?? String(localized: "Plans are loading.")).font(.subheadline).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
                     Button("Try again") { Task { await commerce.load() } }.buttonStyle(BrassButtonStyle(prominent: false))
                 }
-                .padding(.top, 10)
             }
         } else {
             VStack(spacing: 8) {
@@ -188,7 +383,6 @@ struct PaywallView: View {
                     planRow(lifetime, title: "Lifetime", detail: String(localized: "pay once"), tag: nil, saving: nil)
                 }
             }
-            .padding(.top, 10)
             .transition(.opacity)
         }
     }
@@ -197,11 +391,10 @@ struct PaywallView: View {
     private var planSkeleton: some View {
         VStack(spacing: 8) {
             ForEach(0..<3, id: \.self) { _ in
-                RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised).frame(height: 62)
+                RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised).frame(height: 58)
             }
         }
         .overlay { ProgressView().tint(Palette.mint) }
-        .padding(.top, 10)
     }
 
     private func perMonth(_ product: Product) -> String {
@@ -252,7 +445,7 @@ struct PaywallView: View {
                 Text(product.displayPrice).font(Typeface.number(19)).foregroundStyle(Palette.ink)
                     .lineLimit(1).minimumScaleFactor(0.7)
             }
-            .padding(.horizontal, 14).padding(.vertical, 10)
+            .padding(.horizontal, 14).padding(.vertical, 9)
             .background(shape.fill(isSelected ? Palette.mint.opacity(0.08) : Palette.stageRaised))
             .overlay(shape.strokeBorder(isSelected ? Palette.mint : Palette.line, lineWidth: isSelected ? 2 : 1))
             .overlay(alignment: .topTrailing) {
@@ -308,35 +501,102 @@ struct PaywallView: View {
 
     private var showsTrialTimeline: Bool { selected?.id == TimbreProduct.annual && commerce.trialLabel != nil }
 
-    /// No surprises: what happens on which day of the free trial. The reminder step only
-    /// appears when notifications can reach the person; otherwise the timeline says how to cancel.
+    private struct TrialStep {
+        let symbol: String
+        let title: Text
+        let detail: Text
+    }
+
+    /// The reminder step only appears when notifications can reach the person.
+    private func trialSteps(_ annual: Product, days: Int) -> [TrialStep] {
+        var steps = [TrialStep(symbol: "lock.open.fill", title: Text("Today"), detail: Text("Everything unlocked"))]
+        if !remindersBlocked { steps.append(TrialStep(symbol: "bell.fill", title: Text("Day \(max(1, days - 2))"), detail: Text("We remind you"))) }
+        steps.append(TrialStep(symbol: "creditcard.fill", title: Text("Day \(days)"), detail: Text("\(annual.displayPrice)/year")))
+        return steps
+    }
+
+    /// No surprises, in one compact strip: what happens on which day of the free trial.
+    /// Without notifications the strip says how to cancel instead of promising a reminder.
     private func trialTimeline(_ annual: Product) -> some View {
         let days = trialDays(annual)
-        var steps: [(symbol: String, title: Text, detail: Text)] = [("lock.open.fill", Text("Today"), Text("Everything unlocked"))]
-        if !remindersBlocked { steps.append(("bell.fill", Text("Day \(max(1, days - 2))"), Text("We remind you"))) }
-        steps.append(("creditcard.fill", Text("Day \(days)"), Text("\(annual.displayPrice)/year")))
-        return VStack(spacing: 12) {
-            HStack(alignment: .top, spacing: 0) {
-                ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
-                    if index > 0 { Rectangle().fill(Palette.mint.opacity(0.3)).frame(width: 18, height: 2).padding(.top, 14) }
-                    VStack(spacing: 6) {
-                        Image(systemName: step.symbol).font(.system(size: 13, weight: .bold)).foregroundStyle(index == 0 ? Palette.onAccent : Palette.mint)
-                            .frame(width: 30, height: 30)
-                            .background(Circle().fill(index == 0 ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(Palette.mint.opacity(0.14))))
-                        step.title.font(Typeface.label(13)).foregroundStyle(Palette.ink)
-                        step.detail.font(.caption).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
-                    }
-                    .frame(maxWidth: .infinity)
+        let steps = trialSteps(annual, days: days)
+        let last = steps.count - 1
+        return VStack(spacing: 6) {
+            HStack(spacing: 6) {
+                ForEach(steps.indices, id: \.self) { index in
+                    steps[index].title.font(Typeface.label(12)).foregroundStyle(index == 0 ? Palette.mint : Palette.ink)
+                        .lineLimit(1).minimumScaleFactor(0.8)
+                        .frame(maxWidth: .infinity, alignment: Self.edge(index, last))
+                }
+            }
+            trialTrack(steps)
+            HStack(alignment: .top, spacing: 6) {
+                ForEach(steps.indices, id: \.self) { index in
+                    steps[index].detail.font(.caption).foregroundStyle(Palette.inkSoft)
+                        .multilineTextAlignment(Self.textEdge(index, last))
+                        .lineLimit(2).minimumScaleFactor(0.85)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: Self.edge(index, last))
                 }
             }
             if remindersBlocked {
                 Text("Cancel anytime in Settings before day \(days).")
                     .font(.footnote).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 2)
             }
         }
-        .accessibilityElement(children: .combine)
-        .padding(.vertical, 4)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(trialSpoken(steps))
+        .onAppear { withAnimation(reduceMotion ? nil : Animation.easeOut(duration: 0.9).delay(0.25)) { trackDrawn = true } }
+        .onDisappear { trackDrawn = false }
+    }
+
+    /// Nodes on a line from Today to the first charge; the line draws itself in and each node pops as it passes.
+    private func trialTrack(_ steps: [TrialStep]) -> some View {
+        let drawn = trackDrawn || reduceMotion
+        return HStack(spacing: 0) {
+            ForEach(steps.indices, id: \.self) { index in
+                if index > 0 { Spacer(minLength: 12) }
+                trialNode(steps[index].symbol, first: index == 0)
+                    .scaleEffect(drawn ? 1 : 0.6)
+                    .opacity(drawn ? 1 : 0.3)
+                    .animation(reduceMotion ? nil : Motion.pluck.delay(0.25 + Double(index) * 0.28), value: trackDrawn)
+            }
+        }
+        .background {
+            ZStack(alignment: .leading) {
+                Capsule().fill(Palette.mint.opacity(0.16))
+                Capsule().fill(LinearGradient(colors: [Palette.mint, Palette.mint.opacity(0.3)], startPoint: .leading, endPoint: .trailing))
+                    .scaleEffect(x: drawn ? 1 : 0.001, anchor: .leading)
+            }
+            .frame(height: 2)
+            .padding(.horizontal, 12)
+        }
+    }
+
+    private func trialNode(_ symbol: String, first: Bool) -> some View {
+        Image(systemName: symbol).font(.system(size: 10, weight: .bold))
+            .foregroundStyle(first ? Palette.onAccent : Palette.mint)
+            .frame(width: 24, height: 24)
+            .background(Circle().fill(first ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(Palette.stageRaised)))
+            .overlay(Circle().strokeBorder(Palette.mint.opacity(first ? 0 : 0.45), lineWidth: 1))
+            .shadow(color: Palette.mint.opacity(first ? 0.45 : 0), radius: 8)
+    }
+
+    /// "Today: Everything unlocked. Day 12: We remind you. …" in reading order.
+    private func trialSpoken(_ steps: [TrialStep]) -> Text {
+        steps.reduce(Text(verbatim: "")) { (label: Text, step: TrialStep) -> Text in
+            label + step.title + Text(verbatim: ": ") + step.detail + Text(verbatim: ". ")
+        }
+    }
+
+    private static func edge(_ index: Int, _ last: Int) -> Alignment {
+        index == 0 ? .leading : (index == last ? .trailing : .center)
+    }
+
+    private static func textEdge(_ index: Int, _ last: Int) -> TextAlignment {
+        index == 0 ? .leading : (index == last ? .trailing : .center)
     }
 
     private func trialDays(_ product: Product) -> Int {
@@ -432,9 +692,10 @@ struct PaywallView: View {
         guard let selected else { return }
         let wasTrial = selected.id == TimbreProduct.annual && commerce.trialLabel != nil
         let days = trialDays(selected)
+        let reason = context == .onboarding ? "onboarding" : (store.paywallReason ?? "unknown")
         Task {
             if await commerce.purchase(selected) {
-                Analytics.log("purchase", ["product": selected.id])
+                Analytics.log("purchase", ["product": selected.id, "reason": reason])
                 // Notification permission is asked here, after the trial has started, never before.
                 if wasTrial { await TrialReminder.schedule(afterDays: days) }
             }

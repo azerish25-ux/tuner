@@ -42,6 +42,11 @@ final class StageController {
     private var glow: Float = 0
     private var angles: [String: Float] = [:]
     private(set) var framing: Float = 0     // 0 = whole instrument, 1 = headstock close-up
+    /// The dolly's speed along `framing` (a critically damped spring: it eases out and settles without overshoot).
+    private var framingVelocity: Float = 0
+    /// A freshly loaded model holds the whole-instrument framing until this time, so it cross-fades with the
+    /// studio placeholder (also the whole instrument) before the camera dollies in: never a double image.
+    private var holdWholeUntil: Double = 0
     private var yaw: Float = -0.32
     private var aimPoint: SIMD3<Float>?
     private var aimDistance: Float?
@@ -63,6 +68,10 @@ final class StageController {
     private static let nutClearance: Float = 30
     private static let controlsInset: Float = 26
     private static let closeYaw: Float = -0.54
+    /// Dolly stiffness (rad/s): about a second from the whole instrument to the headstock.
+    private static let dolly: Float = 4.2
+    /// Long enough for the host's placeholder cross-fade to finish.
+    private static let revealHold = 0.9
 
     init() {
         camera.camera.fieldOfViewInDegrees = 30
@@ -122,6 +131,8 @@ final class StageController {
         }
         addLights()
         receiveImageBasedLight(holder)
+        holdWholeUntil = time + Self.revealHold
+        framingVelocity = 0
         applyFraming(immediately: true)
         let box = holder.visualBounds(relativeTo: nil)
         func fmt(_ v: SIMD3<Float>) -> String { String(format: "%.2f,%.2f,%.2f", v.x, v.y, v.z) }
@@ -163,8 +174,8 @@ final class StageController {
     private func applyFraming(immediately: Bool = false, dt: Float = 0) {
         guard let rig, let model else { return }
         let snap = immediately || reduceMotion
-        let target: Float = input().focus ? 1 : 0
-        framing = snap ? target : framing + (target - framing) * min(1, dt * 2.6)
+        let target: Float = input().focus && time >= holdWholeUntil ? 1 : 0
+        if snap { framing = target; framingVelocity = 0 } else { dollyFraming(toward: target, dt: dt) }
         let fov = Float(camera.camera.fieldOfViewInDegrees) * .pi / 180
         let height = rig.upper.y - rig.lower.y
         let center = (rig.lower + rig.upper) / 2
@@ -177,8 +188,11 @@ final class StageController {
         let previousDistance = aimDistance ?? close.distance
         let focusDistance = snap ? close.distance : previousDistance + (close.distance - previousDistance) * min(1, dt * 3)
         aimDistance = focusDistance
-        let point = simd_mix(center, focusPoint, SIMD3(repeating: framing))
-        let distance = wholeDistance + (focusDistance - wholeDistance) * framing
+        // A dolly rather than a cross-fade: the distance moves geometrically (even apparent zoom) and the aim
+        // slides so the headstock travels to its close-up spot in step with the zoom.
+        let distance = wholeDistance * pow(focusDistance / max(wholeDistance, 0.001), framing)
+        let slide = 1 - (1 - framing) * distance / max(wholeDistance, 0.001)
+        let point = simd_mix(center, focusPoint, SIMD3(repeating: max(0, min(1, slide))))
         let sway: Float = showcase && !reduceMotion ? 0.5 * Float(sin(time * 0.32)) : 0
         let targetYaw: Float = showcase ? -0.18 + sway : -0.32 + (Self.closeYaw + 0.32) * framing
         yaw = snap ? targetYaw : yaw + (targetYaw - yaw) * min(1, dt * 2.6)
@@ -188,6 +202,20 @@ final class StageController {
         // In close-up the headstock centres in the room left of the side controls.
         let shift = Self.controlsInset * metresPerPoint(distance: distance, fov: fov) * framing
         model.position = -rotation.act(point) + SIMD3<Float>(-shift, 0, -distance)
+    }
+
+    /// Advances the dolly: a critically damped spring on `framing`, in small steps so a long frame can't overshoot.
+    private func dollyFraming(toward target: Float, dt: Float) {
+        let omega = Self.dolly
+        var remaining = max(0, min(dt, 0.25))
+        while remaining > 0 {
+            let h = min(remaining, 1 / 120)
+            let acceleration = omega * omega * (target - framing) - 2 * omega * framingVelocity
+            framingVelocity += acceleration * h
+            framing += framingVelocity * h
+            remaining -= h
+        }
+        if framing < 0 || framing > 1 { framing = max(0, min(1, framing)); framingVelocity = 0 }
     }
 
     /// World metres one point spans at `distance` in front of the camera (0 before the view has a size).

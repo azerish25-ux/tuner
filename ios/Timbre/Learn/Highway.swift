@@ -135,7 +135,8 @@ struct AlongStep: View {
     private var summary: some View {
         let counts = Dictionary(grouping: grades.values, by: { $0 }).mapValues(\.count)
         return VStack(spacing: 10) {
-            Text("\(Int((judge.accuracy * 100).rounded()))%").font(Typeface.note(56)).foregroundStyle(accent)
+            // Coloured by the result: mint from 90 %, gold from 70 %, coral below.
+            Text("\(Int((judge.accuracy * 100).rounded()))%").font(Typeface.note(56)).foregroundStyle(ScoreTint.color(judge.accuracy))
             HStack(spacing: 18) {
                 stat("Perfect", counts[.perfect] ?? 0, accent)
                 stat("Good", counts[.good] ?? 0, Palette.ink)

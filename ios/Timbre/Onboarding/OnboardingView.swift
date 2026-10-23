@@ -15,7 +15,8 @@ struct OnboardingView: View {
     @State private var restoreMessage: String?
     @State private var floating = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    private let steps = 5
+    /// Welcome, experience, goal, microphone, first tune, plan.
+    private let steps = 6
 
     var body: some View {
         ZStack {
@@ -34,6 +35,7 @@ struct OnboardingView: View {
                     case 1: experience
                     case 2: goals
                     case 3: microphone
+                    case 4: firstTune
                     default: plan
                     }
                 }
@@ -50,8 +52,27 @@ struct OnboardingView: View {
 
     private func next() { Haptics.shared.selection(); step += 1 }
 
-    /// After the microphone question comes the plan built from the answers.
-    private func afterMicrophone() { next() }
+    /// After the microphone question: the first tune when Timbre can hear the instrument, then the plan.
+    /// "Not now", a denial, or "Voice or other" go straight to the plan.
+    private func afterMicrophone() {
+        if FirstTuneSetup.canListen, FirstTuneSetup.make(store: store, instrumentID: instrumentID) != nil {
+            next()
+        } else {
+            Haptics.shared.selection()
+            step = Self.planStep
+        }
+    }
+
+    private static let planStep = 5
+
+    /// "Pluck your thickest string" on the live stage; locking it (or Skip) leads to the plan.
+    @ViewBuilder private var firstTune: some View {
+        if let setup = FirstTuneSetup.make(store: store, instrumentID: instrumentID) {
+            FirstTuneStep(setup: setup) { _ in step = Self.planStep }
+        } else {
+            plan
+        }
+    }
 
     /// Pro members skip the offer.
     private func startPlan() {
@@ -118,7 +139,7 @@ struct OnboardingView: View {
                 .padding(.horizontal, 28)
             }
             .padding(.top, 18)
-            Button("Start tuning") { next() }.buttonStyle(BrassButtonStyle()).padding(.horizontal, 22).padding(.top, 22)
+            Button("Get started") { next() }.buttonStyle(BrassButtonStyle()).padding(.horizontal, 22).padding(.top, 22)
                 .accessibilityIdentifier("onboarding.start")
             Button {
                 restoring = true
@@ -201,12 +222,11 @@ struct OnboardingView: View {
         }
     }
 
-    /// Continue stays dimmed and disabled until a question is answered.
+    /// Continue waits, neutral and clearly inactive but readable, until a question is answered.
     private func continueButton(enabled: Bool) -> some View {
         Button("Continue") { next() }
-            .buttonStyle(BrassButtonStyle())
+            .buttonStyle(ContinueButtonStyle(enabled: enabled))
             .disabled(!enabled)
-            .opacity(enabled ? 1 : 0.4)
             .animation(Motion.quick, value: enabled)
             .accessibilityIdentifier("onboarding.continue")
     }
@@ -454,6 +474,25 @@ private struct PlanStep: View {
             }
         }
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// The mint primary button once enabled; before that a graphite capsule with grey text
+/// (about 4.8:1 against its fill), so it reads as waiting rather than as a dim green button.
+private struct ContinueButtonStyle: ButtonStyle {
+    let enabled: Bool
+    @ViewBuilder func makeBody(configuration: Configuration) -> some View {
+        if enabled {
+            BrassButtonStyle().makeBody(configuration: configuration)
+        } else {
+            configuration.label
+                .font(.headline)
+                .foregroundStyle(Palette.inkFaint)
+                .frame(maxWidth: .infinity, minHeight: 54)
+                .padding(.horizontal, 18)
+                .background(Capsule().fill(Palette.surface))
+                .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
+        }
     }
 }
 

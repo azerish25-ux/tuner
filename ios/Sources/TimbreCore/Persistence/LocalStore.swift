@@ -42,7 +42,17 @@ public struct UserSettings: Codable, Equatable, Sendable {
     public var progress: ProgressState?
     /// Stars and position in the Learn courses.
     public var learn: LearnProgress?
+    /// The lock tolerance (`TuningPrecision` raw value); unset means Beginner, the original ±5¢.
+    public var tuningPrecision: String?
     public init() {}
+}
+
+extension UserSettings {
+    /// The lock tolerance; an unset or unknown value reads as Beginner.
+    public var precision: TuningPrecision {
+        get { tuningPrecision.flatMap(TuningPrecision.init(rawValue:)) ?? .beginner }
+        set { tuningPrecision = newValue.rawValue }
+    }
 }
 
 public struct PracticeRecord: Codable, Identifiable, Equatable, Sendable {

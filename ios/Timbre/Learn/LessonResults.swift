@@ -10,6 +10,8 @@ struct LessonResults: View {
     /// What finishing the lesson earned (XP, level-up, badges, quests); nil if it could not be saved.
     let reward: ProgressUpdate?
     let accent: Color
+    /// A rhythm was tapped instead of played (no microphone): the stars stop at one, and it says why.
+    var practice = false
     let next: Lesson?
     let onContinue: () -> Void
     let onNext: (Lesson) -> Void
@@ -53,6 +55,7 @@ struct LessonResults: View {
             VStack(spacing: 8) {
                 Text(headline).font(Typeface.display(36)).tracking(-0.8).foregroundStyle(Palette.ink)
                 Text(lesson.title.localized).font(.headline).foregroundStyle(Palette.inkSoft)
+                if practice { PracticeModeTag().padding(.top, 4) }
             }
             .opacity(appeared ? 1 : 0).offset(y: appeared ? 0 : 12)
             HStack(spacing: 12) {
@@ -151,27 +154,34 @@ struct LessonResults: View {
 
     /// After the first lesson: one tap to make practice a daily habit.
     private var reminderCard: some View {
-        HStack(spacing: 12) {
+        // The words get the card's full width (no orphan wraps); the button sits under them.
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "bell.badge.fill").font(.title3).foregroundStyle(accent)
                 .frame(width: 44, height: 44).background(Circle().fill(accent.opacity(0.14)))
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Make it a habit").font(Typeface.label(15)).foregroundStyle(Palette.ink)
-                Text("A reminder each evening at 7 pm.").font(.footnote).foregroundStyle(Palette.inkSoft)
+            VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Make it a habit").font(Typeface.label(15)).foregroundStyle(Palette.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text("A reminder each evening at 7 pm.").font(.footnote).foregroundStyle(Palette.inkSoft)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Button("Remind me") {
+                    UserDefaults.standard.set(true, forKey: PracticeReminder.askedKey)
+                    Task { await PracticeReminder.enable(at: PracticeReminder.minutes); withAnimation { offerReminder = false } }
+                }
+                .font(Typeface.label(14)).foregroundStyle(Palette.onAccent).lineLimit(1).fixedSize()
+                .padding(.horizontal, 16).frame(height: 36).background(Capsule().fill(accent))
+                .accessibilityIdentifier("lesson.reminder")
             }
-            Spacer(minLength: 4)
-            Button("Remind me") {
-                UserDefaults.standard.set(true, forKey: PracticeReminder.askedKey)
-                Task { await PracticeReminder.enable(at: PracticeReminder.minutes); withAnimation { offerReminder = false } }
-            }
-            .font(Typeface.label(14)).foregroundStyle(Palette.onAccent).lineLimit(1).fixedSize()
-            .padding(.horizontal, 14).frame(height: 36).background(Capsule().fill(accent))
-            .accessibilityIdentifier("lesson.reminder")
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, 2)
             Button { UserDefaults.standard.set(true, forKey: PracticeReminder.askedKey); withAnimation { offerReminder = false } } label: {
-                Image(systemName: "xmark").font(.footnote.weight(.bold)).foregroundStyle(Palette.inkFaint).frame(width: 28, height: 36)
+                Image(systemName: "xmark").font(.footnote.weight(.bold)).foregroundStyle(Palette.inkFaint).frame(width: 32, height: 32)
+                    .contentShape(Rectangle())
             }
             .accessibilityLabel("Not now")
         }
-        .padding(12)
+        .padding(14)
         .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Palette.stageRaised))
         .padding(.horizontal, 20)
     }

@@ -88,7 +88,14 @@ public struct Quest: Identifiable, Equatable, Sendable {
 }
 
 public enum Quests {
+    /// Quest kinds that count tuning. Only `tuneAll` is ever offered: one tuning quest, one counter, so the
+    /// Play hub, the tuner's quest line and the reward toast all describe the same thing. `holdInTune`
+    /// stays a kind (and keeps counting) so progress saved under its id still decodes.
+    public static let tuningKinds: Set<Quest.Kind> = [.tuneAll, .holdInTune]
+
     /// Three quests a day: always "tune every string", plus two from the pool, stable for the date.
+    /// The pool shuffles exactly as it always has; a retired tuning quest is skipped rather than removed,
+    /// so every other day keeps the quests it had.
     public static func daily(for date: Date, calendar: Calendar = .current) -> [Quest] {
         let day = UInt64(calendar.ordinality(of: .day, in: .era, for: date) ?? 0)
         var rng = SplitMix64(seed: day &* 2_654_435_761)
@@ -98,7 +105,16 @@ public enum Quests {
             Quest(kind: .holdInTune, target: 3, xp: 15), Quest(kind: .lessons, target: 2, xp: 30),
         ]
         pool.shuffle(using: &rng)
-        return [Quest(kind: .tuneAll, target: 1, xp: 20)] + pool.prefix(2)
+        return [Quest(kind: .tuneAll, target: 1, xp: 20)] + pool.filter { !tuningKinds.contains($0.kind) }.prefix(2)
+    }
+
+    /// The one counter a quest shows. The tuning quest counts in strings, like the tuner's quest line
+    /// ("4 / 6": strings locked this session out of the instrument's strings) and reads full once it has
+    /// paid out today; every other quest counts its own progress toward its target.
+    public static func counter(for quest: Quest, progress: Int, lockedStrings: Int, strings: Int) -> (done: Int, total: Int) {
+        let claimed = progress >= quest.target
+        guard quest.kind == .tuneAll, strings > 0 else { return (done: min(max(0, progress), quest.target), total: quest.target) }
+        return (done: claimed ? strings : min(max(0, lockedStrings), strings), total: strings)
     }
 
     public static func dayKey(_ date: Date, calendar: Calendar = .current) -> String {

@@ -27,6 +27,9 @@ final class AppStore: ObservableObject {
     @Published private(set) var celebrate = 0
     @Published var requestReviewNow = false
     @Published var paywallReason: String?
+    /// The locked lesson or instrument that opened the paywall, when one did: the paywall names it.
+    @Published private(set) var paywallLessonId: String?
+    @Published private(set) var paywallInstrumentId: String?
     /// A practice screen to open on the Practice tab (Siri, Shortcuts, deep links).
     @Published var pendingPracticeRoute: PracticeRoute?
     /// While true, readings target the octave and never count as tuning sessions.
@@ -61,6 +64,8 @@ final class AppStore: ObservableObject {
     private var stableCount = 0
     private var totalError = 0.0
     private var lastAutoIndex: Int?
+    /// Automatic string detection pauses until then (while the lock bell rings).
+    var autoQuietUntil: TimeInterval = 0
     private var autoHits = 0
     private var lastTaps: [TimeInterval] = []
     private var voiceStarted: TimeInterval = 0
@@ -76,6 +81,7 @@ final class AppStore: ObservableObject {
         voiceLevel = settings.selectedVoiceLevel ?? 1
         TimbreLocalization.language = settings.language
         tracker.confidenceThreshold = settings.confidenceThreshold
+        applyPrecision()
         Haptics.shared.enabled = settings.hapticsEnabled
         audio.onReading = { [weak self] hz, confidence, level in self?.accept(hz, confidence: confidence, level: level) }
         publishWidgets()
@@ -229,6 +235,12 @@ final class AppStore: ObservableObject {
 
     // MARK: Settings
 
+    /// Settings › Precision: the tracker's lock band, and the band every tuner colour, meter and peg cue draws.
+    private func applyPrecision() {
+        tracker.bandCents = settings.precision.bandCents
+        Palette.tuningBand = settings.precision.bandCents
+    }
+
     @discardableResult func updateSettings(_ mutation: (inout UserSettings) -> Void) -> Bool {
         let previous = settings
         var next = settings; mutation(&next)
@@ -237,6 +249,7 @@ final class AppStore: ObservableObject {
             TimbreLocalization.language = settings.language
             Haptics.shared.enabled = settings.hapticsEnabled
             tracker.confidenceThreshold = settings.confidenceThreshold
+            applyPrecision()
             // Only a change that affects listening restarts the microphone; output keeps playing.
             let listeningChanged = previous.referencePitchHz != settings.referencePitchHz || previous.temperamentId != settings.temperamentId
                 || previous.micSensitivity != settings.micSensitivity || previous.confidenceThreshold != settings.confidenceThreshold
@@ -297,12 +310,16 @@ final class AppStore: ObservableObject {
         }
     }
 
-    func presentPaywall(_ reason: String) { paywallReason = reason; showPaywall = true; Analytics.log("paywall_shown", ["reason": reason]) }
+    func presentPaywall(_ reason: String, lesson: Lesson? = nil, instrument: Instrument? = nil) {
+        paywallReason = reason; paywallLessonId = lesson?.id; paywallInstrumentId = instrument?.id
+        showPaywall = true
+        Analytics.log("paywall_shown", ["reason": reason])
+    }
 
     // MARK: Instrument selection
 
     @discardableResult func selectInstrument(_ instrument: Instrument, photo: String? = nil, tuning: Tuning? = nil) -> Bool {
-        guard canTune(instrument) else { presentPaywall("instrument"); return false }
+        guard canTune(instrument) else { presentPaywall("instrument", instrument: instrument); return false }
         if let tuning, tuning.instrumentId != instrument.id { return false }
         endTuningSession()
         let saved = updateSettings {
@@ -320,7 +337,7 @@ final class AppStore: ObservableObject {
 
     func selectTuning(_ tuning: Tuning) {
         guard tuning.instrumentId == instrument.id else { return }
-        guard AccessPolicy.canUse(tuning: tuning, of: instrument, pro: isPro) else { presentPaywall("tuning"); return }
+        guard AccessPolicy.canUse(tuning: tuning, of: instrument, pro: isPro) else { presentPaywall("tuning", instrument: instrument); return }
         endTuningSession()
         guard updateSettings({ $0.lastTuningIds[instrument.id] = tuning.id }) else { return }
         resetTuningMeasurements()
@@ -350,7 +367,7 @@ final class AppStore: ObservableObject {
 
     func startListening() {
         guard !audio.running else { return }
-        guard canListen else { presentPaywall("instrument"); return }
+        guard canListen else { presentPaywall("instrument", instrument: instrument); return }
         tracker.reset(); live.clear()
         if sessionStarted == nil { sessionStarted = Date(); sessionStartedUptime = ProcessInfo.processInfo.systemUptime }
         #if DEBUG
@@ -379,7 +396,7 @@ final class AppStore: ObservableObject {
     func toggleTone() {
         if audio.tonePlaying { audio.stopTone(); tracker.reset() }
         else {
-            guard canListen else { presentPaywall("instrument"); return }
+            guard canListen else { presentPaywall("instrument", instrument: instrument); return }
             tracker.reset()
             audio.playTone(targetHz)
         }
@@ -413,7 +430,8 @@ final class AppStore: ObservableObject {
             if live.trace.count > 600 { live.trace.removeFirst(live.trace.count - 600) }
             return
         }
-        if automatic, !referenceMode, gameTargetHz == nil, let hz, confidence >= settings.confidenceThreshold {
+        // The lock bell (played at a string's pitch) must not pull automatic detection onto another string.
+        if automatic, !referenceMode, gameTargetHz == nil, ProcessInfo.processInfo.systemUptime >= autoQuietUntil, let hz, confidence >= settings.confidenceThreshold {
             let best = courses.min { abs(log(hz / target(for: $0))) < abs(log(hz / target(for: $1))) }
             if let best {
                 if lastAutoIndex == best.index { autoHits += 1 } else { autoHits = 1; lastAutoIndex = best.index }

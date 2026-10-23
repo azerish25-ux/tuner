@@ -9,6 +9,10 @@ struct TuneView: View {
     @EnvironmentObject private var audio: AudioService
     @Environment(\.requestReview) private var requestReview
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Settings › Strobe precision: a strobe band in place of the needle meter.
+    @AppStorage(TuneView.strobeKey) private var strobeView = false
+    static let strobeKey = "tune.strobe"
     @State private var motion = ReadoutMotion()
     @State private var failed3D: String?
     @State private var ready3D: String?
@@ -46,6 +50,15 @@ struct TuneView: View {
         .onChange(of: scenePhase) { _, phase in if phase == .active && store.selectedTab == .tune { autoListen() } }
         .onChange(of: store.requestReviewNow) { _, now in
             if now { requestReview(); store.requestReviewNow = false }
+        }
+        .task(id: "\(store.tuning.id) \(store.settings.referencePitchHz) \(store.settings.temperamentId)") {
+            SoundFX.shared.prepareLocks(store.courses.map { store.target(for: $0) })
+        }
+        .onChange(of: store.lockedCourses) { old, new in
+            // A string just locked: a soft bell at its own pitch (an octave up when it's low).
+            guard let index = new.subtracting(old).first, let course = store.courses.first(where: { $0.index == index }) else { return }
+            store.autoQuietUntil = ProcessInfo.processInfo.systemUptime + 1.2
+            SoundFX.shared.playLock(frequency: store.target(for: course))
         }
         .sheet(isPresented: $store.showInstrumentPicker) { InstrumentPicker().presentationDetents([.large]).presentationBackground(Palette.stage) }
     }
@@ -132,22 +145,33 @@ struct TuneView: View {
     private var readout: some View {
         TimelineView(.animation) { timeline in
             let reading = store.live.reading
-            let _ = motion.step(audio.running ? reading.cents : (store.live.preserved ? reading.cents : nil), locked: reading.inTune, now: timeline.date.timeIntervalSinceReferenceDate)
+            let heard = audio.running || store.live.preserved
+            let _ = motion.step(heard ? reading.cents : nil, locked: reading.inTune, now: timeline.date.timeIntervalSinceReferenceDate,
+                                hertz: reading.frequency, target: store.targetHz)
             let shown = motion.shown
             VStack(spacing: 14) {
-                NoteReadout(note: store.targetName, cents: motion.cents, hertz: reading.frequency, target: store.targetHz, locked: reading.inTune)
-                RibbonMeter(cents: motion.cents, phase: motion.phase, locked: reading.inTune)
-                    .frame(height: 38).padding(.horizontal, 32)
-                // Same whole cents, same colour rule and the same single animation as the readout above,
-                // so the two never disagree mid-transition.
+                NoteReadout(note: store.targetName, shown: shown, hertz: motion.shownHertz, target: store.targetHz, locked: reading.inTune)
+                meter(locked: reading.inTune, shown: shown)
+                // The same steady whole cents and colour rule as the digits above, changing in place
+                // (no rolling digits), so the two never disagree.
                 Text(statusLine(reading, shown: shown)).font(.footnote.weight(.semibold))
                     .foregroundStyle(statusColor(reading, shown: shown))
-                    .contentTransition(.numericText(value: Double(shown ?? 0)))
-                    .animation(Motion.quick, value: shown)
+                    .monospacedDigit()
                     .accessibilityIdentifier("tune.status")
             }
         }
         .padding(.bottom, 4)
+    }
+
+    /// The needle meter, or with Strobe precision on, a strobe band that drifts with the error and stands still in tune.
+    @ViewBuilder private func meter(locked: Bool, shown: Int?) -> some View {
+        if strobeView {
+            StrobeBand(cents: shown.map { Double($0) }, phase: reduceMotion ? 0 : motion.phase, locked: locked, active: motion.cents != nil)
+                .frame(height: 26).padding(.vertical, 6).padding(.horizontal, 32)
+        } else {
+            RibbonMeter(cents: motion.cents, shown: shown, phase: motion.phase, locked: locked)
+                .frame(height: 38).padding(.horizontal, 32)
+        }
     }
 
     /// The status under the meter reads the readout's own whole cents against the tracker's lock band:
@@ -156,7 +180,7 @@ struct TuneView: View {
         guard audio.running, !store.live.preserved, reading.cents != nil, let shown else { return store.statusText }
         if reading.inTune { return String(localized: "In tune") }
         let amount = abs(shown)
-        if Double(amount) <= InTuneRule.bandCents { return String(localized: "Hold it…") }
+        if Double(amount) <= Palette.tuningBand { return String(localized: "Hold it…") }
         return shown < 0 ? String(localized: "Tighten · \(amount)¢ flat") : String(localized: "Loosen · \(amount)¢ sharp")
     }
 
@@ -177,9 +201,10 @@ struct TuneView: View {
     /// Today's tuning quest: every string of this instrument, with its XP.
     private var questLine: some View {
         let quest = store.quests.first { $0.kind == .tuneAll }
-        let done = store.lockedCourses.count, total = store.courses.count
+        let counter = quest.map { Quests.counter(for: $0, progress: store.questProgress($0), lockedStrings: store.lockedCourses.count, strings: store.courses.count) }
+        let done = counter?.done ?? min(store.lockedCourses.count, store.courses.count), total = counter?.total ?? store.courses.count
         return HStack {
-            (Text("Daily quest · tune all \(total) ").foregroundStyle(Palette.inkSoft) + Text("\(min(done, total)) / \(total)").foregroundStyle(Palette.ink).bold())
+            (Text("Daily quest · tune all \(total) ").foregroundStyle(Palette.inkSoft) + Text("\(done) / \(total)").foregroundStyle(Palette.ink).bold())
                 .font(.caption)
             Spacer()
             if let quest {

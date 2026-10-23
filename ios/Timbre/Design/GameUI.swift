@@ -18,6 +18,7 @@ struct StreakChip: View {
                     HStack(spacing: 1) {
                         ForEach(0..<store.streakFreezes, id: \.self) { _ in
                             Image(systemName: "snowflake").font(.system(size: 10, weight: .bold)).foregroundStyle(Color(hex: 0x9FD8FF))
+                                .symbolEffect(.bounce, value: store.streakPulse)
                         }
                     }
                     .transition(.scale.combined(with: .opacity))
@@ -180,77 +181,224 @@ struct AchievementMedal: View {
     }
 }
 
-/// XP, quest, badge and level-up announcements: a pill that rises from the top and fades.
+/// One announcement for the reward pill.
+struct RewardBanner: Identifiable {
+    enum Tone { case gold, mint, frost }
+    let id = UUID()
+    let symbol: String
+    let title: Text
+    /// Nil for the compact "+XP" pill.
+    let detail: Text?
+    let tone: Tone
+    /// How long it stays open.
+    let seconds: Double
+    /// What VoiceOver announces.
+    let announcement: String
+    /// XP-only banners merge while they wait in the queue.
+    var xp: Int?
+
+    static func experience(_ amount: Int) -> RewardBanner {
+        RewardBanner(symbol: "sparkles", title: Text("+\(amount) XP"), detail: nil, tone: .mint, seconds: 1.8,
+                     announcement: String(localized: "+\(amount) XP", bundle: TimbreLocalization.bundle), xp: amount)
+    }
+}
+
+/// XP, quest, badge, level-up and streak announcements: a black pill that grows out of the Dynamic Island,
+/// one banner at a time from a queue. It stays inside the status-bar band, so it never covers a screen's
+/// header; without a Dynamic Island it drops in just below the status bar. Reduce Motion fades it in place.
+/// It never takes taps; VoiceOver hears each banner as an announcement.
 struct RewardToast: View {
     @EnvironmentObject private var store: AppStore
-    @State private var shown: ProgressUpdate?
-    @State private var notice: AppStore.StreakNotice?
-    @State private var token = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var queue: [RewardBanner] = []
+    @State private var current: RewardBanner?
+    @State private var open = false
+    @State private var presenting = false
+
     var body: some View {
-        VStack(spacing: 8) {
-            switch notice {
-            case .earned: banner(symbol: "snowflake", title: Text("Streak freeze earned"), detail: Text("Keeps your streak if you miss a day"), gold: false)
-            case .saved(let days): banner(symbol: "snowflake", title: Text("Streak saved"), detail: Text("Streak freezes used: \(days)"), gold: false)
-            case nil: EmptyView()
-            }
-            if let shown {
-                if let level = shown.levelUp {
-                    banner(symbol: "star.fill", title: Text("Level \(level.number)"), detail: Text(LocalizedStringKey(level.name)), gold: true)
-                }
-                ForEach(shown.achievementsEarned) { a in
-                    banner(symbol: a.symbol, title: Text(LocalizedStringKey(a.title)), detail: Text("Achievement unlocked"), gold: true)
-                }
-                ForEach(shown.questsCompleted) { q in
-                    banner(symbol: "checkmark", title: Text(q.title), detail: Text("Quest complete · +\(q.xp) XP"), gold: false)
-                }
-                if shown.levelUp == nil && shown.achievementsEarned.isEmpty && shown.questsCompleted.isEmpty && shown.xpGained > 0 {
-                    Text("+\(shown.xpGained) XP").font(Typeface.label(13)).foregroundStyle(Palette.onAccent)
-                        .padding(.horizontal, 12).padding(.vertical, 6)
-                        .background(Capsule().fill(Palette.mint))
-                        .shadow(color: Palette.mint.opacity(0.5), radius: 12)
-                }
+        GeometryReader { proxy in
+            let layout = PillLayout(width: proxy.size.width, top: proxy.safeAreaInsets.top)
+            if let current {
+                pill(current, layout: layout)
+                    .position(x: proxy.size.width / 2, y: layout.centerY)
             }
         }
-        .padding(.top, 6)
-        .transition(.move(edge: .top).combined(with: .opacity))
+        .ignoresSafeArea()
         .allowsHitTesting(false)
         .onChange(of: store.rewardPulse) { _, _ in
-            guard let reward = store.lastReward else { return }
-            token += 1
-            let mine = token
-            withAnimation(Motion.pluck) { shown = reward }
-            let long = reward.levelUp != nil || !reward.achievementsEarned.isEmpty || !reward.questsCompleted.isEmpty
-            Task { @MainActor in
-                try? await Task.sleep(for: .seconds(long ? 2.6 : 1.2))
-                if mine == token { withAnimation(.easeOut(duration: 0.3)) { shown = nil } }
-            }
+            if let reward = store.lastReward { enqueue(Self.banners(for: reward)) }
         }
         .onChange(of: store.streakPulse) { _, _ in
-            guard let next = store.streakNotice else { return }
-            withAnimation(Motion.pluck) { notice = next }
-            Task { @MainActor in
-                try? await Task.sleep(for: .seconds(3))
-                withAnimation(.easeOut(duration: 0.3)) { notice = nil }
-            }
+            if let notice = store.streakNotice { enqueue([Self.banner(for: notice)]) }
         }
-        .accessibilityElement(children: .combine)
     }
 
-    private func banner(symbol: String, title: Text, detail: Text, gold: Bool) -> some View {
-        HStack(spacing: 10) {
-            Image(systemName: symbol).font(.system(size: 15, weight: .bold)).foregroundStyle(gold ? Color(hex: 0x1B1206) : Palette.onAccent)
-                .frame(width: 32, height: 32)
-                .background(Circle().fill(gold ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.mint)))
-            VStack(alignment: .leading, spacing: 1) {
-                title.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
-                detail.font(.caption).foregroundStyle(Palette.inkSoft)
+    // MARK: Queue
+
+    private func enqueue(_ banners: [RewardBanner]) {
+        for banner in banners {
+            if let amount = banner.xp, let last = queue.last, let waiting = last.xp {
+                queue[queue.count - 1] = .experience(waiting + amount)
+            } else {
+                queue.append(banner)
             }
-            Spacer(minLength: 0)
         }
-        .padding(10)
-        .frame(maxWidth: 340)
-        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.surface))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(.white.opacity(0.1), lineWidth: 1))
-        .shadow(color: .black.opacity(0.5), radius: 20, y: 8)
+        if queue.count > 6 { queue.removeFirst(queue.count - 6) }
+        guard !presenting else { return }
+        presenting = true
+        Task { @MainActor in
+            await presentQueue()
+            presenting = false
+        }
+    }
+
+    /// Shows the queue one banner at a time: grow out of the island, hold, shrink back in.
+    private func presentQueue() async {
+        while !queue.isEmpty {
+            let next = queue.removeFirst()
+            current = next
+            open = false
+            AccessibilityNotification.Announcement(next.announcement).post()
+            // Let the closed pill appear at the island's size, so it can grow from there.
+            try? await Task.sleep(for: .milliseconds(30))
+            withAnimation(reduceMotion ? .easeOut(duration: 0.2) : Motion.island) { open = true }
+            try? await Task.sleep(for: .seconds(queue.count > 1 ? next.seconds * 0.8 : next.seconds))
+            withAnimation(reduceMotion ? .easeIn(duration: 0.2) : .spring(response: 0.34, dampingFraction: 1)) { open = false }
+            try? await Task.sleep(for: .milliseconds(reduceMotion ? 220 : 360))
+            current = nil
+            try? await Task.sleep(for: .milliseconds(90))
+        }
+    }
+
+    private static func banners(for reward: ProgressUpdate) -> [RewardBanner] {
+        var list: [RewardBanner] = []
+        if let level = reward.levelUp {
+            list.append(RewardBanner(symbol: "star.fill", title: Text("Level \(level.number)"), detail: Text(LocalizedStringKey(level.name)), tone: .gold, seconds: 2.6,
+                                     announcement: String(localized: "Level \(level.number)", bundle: TimbreLocalization.bundle) + ", " + NSLocalizedString(level.name, comment: "")))
+        }
+        for a in reward.achievementsEarned {
+            list.append(RewardBanner(symbol: a.symbol, title: Text(LocalizedStringKey(a.title)), detail: Text("Achievement unlocked"), tone: .gold, seconds: 2.6,
+                                     announcement: NSLocalizedString(a.title, comment: "") + ", " + String(localized: "Achievement unlocked", bundle: TimbreLocalization.bundle)))
+        }
+        for q in reward.questsCompleted {
+            list.append(RewardBanner(symbol: "checkmark", title: Text(q.title), detail: Text("Quest complete · +\(q.xp) XP"), tone: .mint, seconds: 2.2,
+                                     announcement: String(localized: "Quest complete · +\(q.xp) XP", bundle: TimbreLocalization.bundle)))
+        }
+        if list.isEmpty && reward.xpGained > 0 { list.append(.experience(reward.xpGained)) }
+        return list
+    }
+
+    private static func banner(for notice: AppStore.StreakNotice) -> RewardBanner {
+        switch notice {
+        case .earned:
+            return RewardBanner(symbol: "snowflake", title: Text("Streak freeze earned"), detail: Text("Keeps your streak if you miss a day"), tone: .frost, seconds: 2.4,
+                                announcement: String(localized: "Streak freeze earned", bundle: TimbreLocalization.bundle))
+        case .saved(let days):
+            return RewardBanner(symbol: "snowflake", title: Text("Streak saved"), detail: Text("Streak freezes used: \(days)"), tone: .frost, seconds: 2.4,
+                                announcement: String(localized: "Streak saved", bundle: TimbreLocalization.bundle))
+        }
+    }
+
+    // MARK: Pill
+
+    private func pill(_ banner: RewardBanner, layout: PillLayout) -> some View {
+        let compact = banner.detail == nil
+        let grown = open || reduceMotion
+        let size = layout.size(compact: compact, grown: grown)
+        return ZStack {
+            Capsule(style: .continuous).fill(layout.island ? Color.black : Palette.surface)
+            Capsule(style: .continuous).strokeBorder(.white.opacity(open ? (layout.island ? 0.08 : 0.12) : 0), lineWidth: 1)
+            content(banner, layout: layout, compact: compact)
+                .opacity(open ? 1 : 0)
+                .blur(radius: open || reduceMotion ? 0 : 5)
+                .animation(.easeOut(duration: 0.2).delay(open && !reduceMotion ? 0.1 : 0), value: open)
+        }
+        .frame(width: size.width, height: size.height)
+        .clipShape(Capsule(style: .continuous))
+        .shadow(color: .black.opacity(open ? 0.45 : 0), radius: 16, y: 6)
+        // On an island the closed pill is the island itself; elsewhere it fades and drops in.
+        .opacity(layout.island && !reduceMotion ? 1 : (open ? 1 : 0))
+        .scaleEffect(layout.island || reduceMotion || open ? 1 : 0.86, anchor: .top)
+        .offset(y: layout.island || reduceMotion || open ? 0 : -10)
+        .dynamicTypeSize(...DynamicTypeSize.large)
+        .environment(\.colorScheme, .dark)
+        .accessibilityHidden(true)
+    }
+
+    @ViewBuilder private func content(_ banner: RewardBanner, layout: PillLayout, compact: Bool) -> some View {
+        if layout.island {
+            // Icon left of the camera cutout, words right of it.
+            HStack(spacing: 0) {
+                icon(banner, size: compact ? 22 : 28)
+                    .padding(.leading, compact ? 8 : 9)
+                    .frame(width: layout.side(compact: compact), alignment: .leading)
+                Color.clear.frame(width: layout.cutout)
+                words(banner)
+                    .padding(.trailing, 12)
+                    .frame(width: layout.side(compact: compact), alignment: .leading)
+            }
+            .frame(width: layout.size(compact: compact, grown: true).width)
+        } else {
+            HStack(spacing: 10) {
+                icon(banner, size: compact ? 24 : 30)
+                words(banner)
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 9)
+            .frame(width: layout.size(compact: compact, grown: true).width)
+        }
+    }
+
+    private func words(_ banner: RewardBanner) -> some View {
+        VStack(alignment: .leading, spacing: 1) {
+            banner.title.font(Typeface.label(13))
+                .foregroundStyle(banner.detail == nil ? Palette.mint : Palette.ink)
+                .lineLimit(1).minimumScaleFactor(0.7)
+            if let detail = banner.detail {
+                detail.font(.system(size: 11)).foregroundStyle(Palette.inkSoft)
+                    .lineLimit(2).minimumScaleFactor(0.8)
+            }
+        }
+    }
+
+    private func icon(_ banner: RewardBanner, size: CGFloat) -> some View {
+        Image(systemName: banner.symbol).font(.system(size: size * 0.46, weight: .bold))
+            .foregroundStyle(banner.tone == .mint ? Palette.onAccent : Color(hex: 0x1B1206))
+            .frame(width: size, height: size)
+            .background(Circle().fill(Self.fill(banner.tone)))
+            .symbolEffect(.bounce, value: open)
+    }
+
+    private static func fill(_ tone: RewardBanner.Tone) -> AnyShapeStyle {
+        switch tone {
+        case .gold: return AnyShapeStyle(Palette.proGold)
+        case .mint: return AnyShapeStyle(Palette.mint)
+        case .frost: return AnyShapeStyle(Color(hex: 0x9FD8FF))
+        }
+    }
+}
+
+/// Where the reward pill sits. Phones with a Dynamic Island have a status band of 54 pt or more, with the
+/// island (about 126 × 37 pt) near its top; the pill grows from the island and stays inside the band.
+private struct PillLayout {
+    let width: CGFloat
+    let top: CGFloat
+    static let islandWidth: CGFloat = 126
+    static let islandHeight: CGFloat = 37
+    var island: Bool { top >= 51 && width < 500 }
+    /// The island's top edge: about 11 pt below the screen top on a 59 pt band, 14 pt on a 62 pt band.
+    var islandTop: CGFloat { max(10, min(14, top - 48)) }
+    /// The camera cutout plus a little air.
+    var cutout: CGFloat { Self.islandWidth + 6 }
+    var centerY: CGFloat { island ? islandTop + Self.islandHeight / 2 : top + 6 + 24 }
+    func side(compact: Bool) -> CGFloat { compact ? 64 : min(136, (width - 16 - cutout) / 2) }
+    func size(compact: Bool, grown: Bool) -> CGSize {
+        if island {
+            guard grown else { return CGSize(width: Self.islandWidth, height: Self.islandHeight) }
+            // Taller than the island but still inside the status band (its bottom stays above `top`).
+            let height = compact ? Self.islandHeight : min(46, 2 * (top - 3 - centerY))
+            return CGSize(width: cutout + 2 * side(compact: compact), height: height)
+        }
+        return CGSize(width: compact ? 150 : min(width - 32, 360), height: compact ? 40 : 52)
     }
 }

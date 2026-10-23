@@ -1,9 +1,23 @@
 import Foundation
 
 public enum InTuneRule {
+    /// The default lock band (Beginner); `TuningPrecision` offers tighter ones.
     public static let bandCents = 5.0
     public static let holdMs = 650
-    public static func isWithinBand(_ cents: Double) -> Bool { cents.isFinite && abs(cents) <= bandCents }
+    public static func isWithinBand(_ cents: Double, band: Double = InTuneRule.bandCents) -> Bool { cents.isFinite && abs(cents) <= band }
+}
+
+/// How close a string has to hold to lock (Settings › Tuning › Precision).
+public enum TuningPrecision: String, CaseIterable, Codable, Sendable {
+    case beginner, standard, pro
+    /// The lock band in cents either side of the target.
+    public var bandCents: Double {
+        switch self {
+        case .beginner: return InTuneRule.bandCents
+        case .standard: return 3
+        case .pro: return 1
+        }
+    }
 }
 
 public struct TuningReading: Equatable, Sendable {
@@ -49,7 +63,12 @@ public final class TuningTracker {
     private var previousTarget: Double?
     private var previousTimestampMs: Int?
     public var confidenceThreshold: Double
-    public init(confidenceThreshold: Double = 0.75) { self.confidenceThreshold = confidenceThreshold }
+    /// The lock band in cents (see `TuningPrecision`); a hold starts and continues only inside it.
+    public var bandCents: Double
+    public init(confidenceThreshold: Double = 0.75, bandCents: Double = InTuneRule.bandCents) {
+        self.confidenceThreshold = confidenceThreshold; self.bandCents = bandCents
+    }
+    private var band: Double { bandCents.isFinite && bandCents > 0 ? bandCents : InTuneRule.bandCents }
     public func reset() {
         stability.reset(); bandEntryMs = nil; previousTarget = nil; previousTimestampMs = nil
     }
@@ -72,7 +91,7 @@ public final class TuningTracker {
             stability.reset(); bandEntryMs = nil
             return TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "uncertain")
         }
-        if !InTuneRule.isWithinBand(cents) {
+        if !InTuneRule.isWithinBand(cents, band: band) {
             bandEntryMs = nil
             return TuningReading(frequency: frequency, cents: cents, stable: stable, inTune: false, status: cents > 0 ? "sharp" : "flat")
         }

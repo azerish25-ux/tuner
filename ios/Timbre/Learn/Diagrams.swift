@@ -37,61 +37,93 @@ struct FretboardDiagram: View {
     var activeString: Int?
     /// Violin and cello: an ebony fingerboard with finger-position tapes instead of frets.
     var fretless = false
+    /// Height per string; lessons draw a compact strip under the note ring.
+    var rowHeight: CGFloat = 26
+    /// The dots (and the lit string) breathe: the target to play right now.
+    var pulsing = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        Canvas { context, size in
-            let left: CGFloat = 26, right = size.width - 10, top: CGFloat = 14, bottom = size.height - 14
-            let fretWidth = (right - left) / CGFloat(frets)
-            let gap = strings > 1 ? (bottom - top) / CGFloat(strings - 1) : 0
-            let board = Path(roundedRect: CGRect(x: left, y: top - 10, width: right - left, height: bottom - top + 20), cornerRadius: 8)
-            context.fill(board, with: .linearGradient(Gradient(colors: fretless ? [Color(hex: 0x1C1C1E), Color(hex: 0x0E0E10)] : [Color(hex: 0x2A1E17), Color(hex: 0x1A120E)]), startPoint: CGPoint(x: 0, y: top), endPoint: CGPoint(x: 0, y: bottom)))
-            for marker in [3, 5, 7, 9, 12, 15] where marker >= start && marker < start + frets && !fretless {
-                let x = left + (CGFloat(marker - start + 1) - 0.5) * fretWidth
-                context.fill(Path(ellipseIn: CGRect(x: x - 4, y: (top + bottom) / 2 - 4, width: 8, height: 8)), with: .color(.white.opacity(0.18)))
-            }
-            if start <= 1 {
-                context.fill(Path(CGRect(x: left - 3, y: top - 10, width: 6, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3)))
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: !pulsing || reduceMotion)) { timeline in
+            let beat = pulsing && !reduceMotion ? 0.5 + 0.5 * sin(timeline.date.timeIntervalSinceReferenceDate * 2 * .pi / 1.2) : 0
+            Canvas { context, size in draw(&context, size: size, beat: beat) }
+        }
+        .frame(height: CGFloat(max(4, strings)) * rowHeight + 10)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(accessibility))
+    }
+
+    /// Strings get thicker toward the bass (string 1, the highest, is the thinnest); the lower ones are wound.
+    private func gauge(_ string: Int) -> CGFloat {
+        strings > 1 ? CGFloat(string - 1) / CGFloat(strings - 1) : 0.5
+    }
+
+    private func draw(_ context: inout GraphicsContext, size: CGSize, beat: Double) {
+        let left: CGFloat = 26, right = size.width - 10, top: CGFloat = 14, bottom = size.height - 14
+        let fretWidth = (right - left) / CGFloat(frets)
+        let gap = strings > 1 ? (bottom - top) / CGFloat(strings - 1) : 0
+        let board = Path(roundedRect: CGRect(x: left, y: top - 10, width: right - left, height: bottom - top + 20), cornerRadius: 8)
+        context.fill(board, with: .linearGradient(Gradient(colors: fretless ? [Color(hex: 0x1C1C1E), Color(hex: 0x0E0E10)] : [Color(hex: 0x2A1E17), Color(hex: 0x1A120E)]), startPoint: CGPoint(x: 0, y: top), endPoint: CGPoint(x: 0, y: bottom)))
+        for marker in [3, 5, 7, 9, 12, 15] where marker >= start && marker < start + frets && !fretless {
+            let x = left + (CGFloat(marker - start + 1) - 0.5) * fretWidth
+            context.fill(Path(ellipseIn: CGRect(x: x - 4, y: (top + bottom) / 2 - 4, width: 8, height: 8)), with: .color(.white.opacity(0.18)))
+        }
+        if start <= 1 {
+            context.fill(Path(CGRect(x: left - 3, y: top - 10, width: 6, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3)))
+        } else {
+            context.draw(Text("\(start)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: left + fretWidth / 2, y: bottom + 16))
+        }
+        for fret in 1...frets {
+            let x = left + CGFloat(fret) * fretWidth
+            if fretless {
+                // Tapes where first-position fingers land (whole tone, major third, fourth, fifth).
+                guard [2, 4, 5, 7].contains(fret) else { continue }
+                let tape = left + (CGFloat(fret) - 0.5) * fretWidth
+                context.fill(Path(CGRect(x: tape - 1.5, y: top - 10, width: 3, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3).opacity(0.35)))
             } else {
-                context.draw(Text("\(start)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: left + fretWidth / 2, y: bottom + 16))
+                context.fill(Path(CGRect(x: x - 1, y: top - 10, width: 2, height: bottom - top + 20)), with: .color(Color(hex: 0xB9B2A6).opacity(0.8)))
             }
-            for fret in 1...frets {
-                let x = left + CGFloat(fret) * fretWidth
-                if fretless {
-                    // Tapes where first-position fingers land (whole tone, major third, fourth, fifth).
-                    guard [2, 4, 5, 7].contains(fret) else { continue }
-                    let tape = left + (CGFloat(fret) - 0.5) * fretWidth
-                    context.fill(Path(CGRect(x: tape - 1.5, y: top - 10, width: 3, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3).opacity(0.35)))
-                } else {
-                    context.fill(Path(CGRect(x: x - 1, y: top - 10, width: 2, height: bottom - top + 20)), with: .color(Color(hex: 0xB9B2A6).opacity(0.8)))
+        }
+        for string in 1...max(1, strings) {
+            let y = top + CGFloat(string - 1) * gap
+            let g = gauge(string)
+            let thickness = 1 + g * 2.4
+            let wound = strings >= 4 && g > 0.45
+            let lit = activeString == string
+            if lit {
+                let glow = 0.14 + 0.16 * beat
+                context.fill(Path(CGRect(x: left, y: y - 5, width: right - left, height: 10)), with: .color(accent.opacity(pulsing ? glow : 0.22)))
+            }
+            let tone = wound ? Color(hex: 0xCDB892) : Color(hex: 0xE2DDD3)
+            context.fill(Path(CGRect(x: left, y: y - thickness / 2, width: right - left, height: thickness)),
+                         with: .color(lit ? accent : tone.opacity(0.88)))
+            if wound && !lit {
+                // A thin highlight along the top of a wound string.
+                context.fill(Path(CGRect(x: left, y: y - thickness / 2, width: right - left, height: 0.6)), with: .color(.white.opacity(0.28)))
+            }
+        }
+        for dot in dots where dot.string >= 1 && dot.string <= strings {
+            let y = top + CGFloat(dot.string - 1) * gap
+            let swell = CGFloat(beat) * 5
+            if dot.fret == 0 {
+                let center = CGPoint(x: left - 14, y: y)
+                if pulsing {
+                    let halo = 8 + 3 + swell
+                    context.fill(Path(ellipseIn: CGRect(x: center.x - halo, y: center.y - halo, width: halo * 2, height: halo * 2)), with: .color(accent.opacity(0.18 + 0.14 * beat)))
                 }
-            }
-            for string in 1...max(1, strings) {
-                let y = top + CGFloat(string - 1) * gap
-                let thickness = 0.8 + CGFloat(string - 1) * 0.35
-                let lit = activeString == string
-                context.fill(Path(CGRect(x: left, y: y - thickness / 2, width: right - left, height: thickness)),
-                             with: .color(lit ? accent : Color(hex: 0xD8D2C6).opacity(0.85)))
-                if lit { context.fill(Path(CGRect(x: left, y: y - 4, width: right - left, height: 8)), with: .color(accent.opacity(0.22))) }
-            }
-            for dot in dots where dot.string >= 1 && dot.string <= strings {
-                let y = top + CGFloat(dot.string - 1) * gap
-                if dot.fret == 0 {
-                    let ring = Path(ellipseIn: CGRect(x: left - 22, y: y - 8, width: 16, height: 16))
-                    context.stroke(ring, with: .color(accent), lineWidth: 2.5)
-                } else {
-                    let x = left + (CGFloat(min(max(1, dot.fret - start + 1), frets)) - 0.5) * fretWidth
-                    let r: CGFloat = min(15, gap * 0.48 + 4)
-                    context.fill(Path(ellipseIn: CGRect(x: x - r - 4, y: y - r - 4, width: (r + 4) * 2, height: (r + 4) * 2)), with: .color(accent.opacity(0.25)))
-                    context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))
-                    if let finger = dot.finger, finger > 0 {
-                        context.draw(Text("\(finger)").font(.system(size: r, weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent), at: CGPoint(x: x, y: y))
-                    }
+                let ring = Path(ellipseIn: CGRect(x: center.x - 8, y: center.y - 8, width: 16, height: 16))
+                context.stroke(ring, with: .color(accent), lineWidth: 2.5)
+            } else {
+                let x = left + (CGFloat(min(max(1, dot.fret - start + 1), frets)) - 0.5) * fretWidth
+                let r: CGFloat = min(15, gap * 0.48 + 4)
+                let halo = r + 4 + (pulsing ? swell : 0)
+                context.fill(Path(ellipseIn: CGRect(x: x - halo, y: y - halo, width: halo * 2, height: halo * 2)), with: .color(accent.opacity(pulsing ? 0.2 + 0.15 * beat : 0.25)))
+                context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))
+                if let finger = dot.finger, finger > 0 {
+                    context.draw(Text("\(finger)").font(.system(size: r, weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent), at: CGPoint(x: x, y: y))
                 }
             }
         }
-        .frame(height: CGFloat(max(4, strings)) * 26 + 10)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(accessibility))
     }
 
     private var accessibility: String {
@@ -142,7 +174,9 @@ struct ChordDiagram: View {
                 for i in 0..<count {
                     let x = left + CGFloat(i) * gap
                     let lit = ringing.contains(i)
-                    context.fill(Path(CGRect(x: x - 0.9, y: top, width: 1.8, height: bottom - top)), with: .color(lit ? accent : Palette.inkSoft.opacity(0.75)))
+                    // Lowest string (left) thickest, like the real set.
+                    let thickness = count > 1 ? 1.1 + 2.1 * CGFloat(count - 1 - i) / CGFloat(count - 1) : 1.8
+                    context.fill(Path(CGRect(x: x - thickness / 2, y: top, width: thickness, height: bottom - top)), with: .color(lit ? accent : Palette.inkSoft.opacity(0.75)))
                     let fret = chord.frets[i]
                     if fret < 0 {
                         context.draw(Text("×").font(.system(size: 15, weight: .bold)).foregroundStyle(Palette.inkFaint), at: CGPoint(x: x, y: 10))
@@ -349,6 +383,8 @@ struct InstrumentPartView: View {
     let part: String
     let instrumentId: String?
     var accent: Color = Palette.mint
+    /// Explanations give the photograph whatever room the card has.
+    var height: CGFloat = 260
     @EnvironmentObject private var store: AppStore
     @State private var pulse = false
 
@@ -384,7 +420,7 @@ struct InstrumentPartView: View {
                 }
             }
         }
-        .frame(height: 260)
+        .frame(height: height)
         .onAppear { withAnimation(.easeInOut(duration: 1.1).repeatForever(autoreverses: true)) { pulse = true } }
         .accessibilityHidden(true)
     }
@@ -545,14 +581,27 @@ struct RhythmLoop: View {
     var accent: Color = Palette.mint
     var arrows = false
     var bpm: Double = 76
+    /// The stroke itself above the bar (a pick sweeping the strings, a finger plucking, a tap pad),
+    /// on the same clock as the playhead; give the loop a height to fill.
+    var sweep: StrumSweep.Style?
+    var strings = 6
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var start = Date()
 
     var body: some View {
         TimelineView(.animation(paused: reduceMotion)) { timeline in
-            let bar = Double(max(1, beatsPerBar)) * 60 / bpm
-            let through = (timeline.date.timeIntervalSince(start) / bar).truncatingRemainder(dividingBy: 1)
-            RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: reduceMotion ? nil : max(0, through), arrows: arrows)
+            let secondsPerBeat = 60 / bpm
+            let bar = Double(max(1, beatsPerBar)) * secondsPerBeat
+            let elapsed = max(0, timeline.date.timeIntervalSince(start))
+            let through = (elapsed / bar).truncatingRemainder(dividingBy: 1)
+            VStack(spacing: 10) {
+                if let sweep {
+                    StrumSweep(pattern: pattern, beatsPerBar: beatsPerBar, strings: strings, style: sweep, accent: accent,
+                               secondsPerBeat: secondsPerBeat, time: reduceMotion ? nil : elapsed)
+                        .frame(maxHeight: .infinity)
+                }
+                RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: reduceMotion ? nil : through, arrows: arrows)
+            }
         }
     }
 }

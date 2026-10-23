@@ -10,6 +10,7 @@ struct SettingsView: View {
     @State private var confirmClear = false
     @State private var manageSubscriptions = false
     @FocusState private var referenceFocused: Bool
+    @AppStorage(TuneView.strobeKey) private var strobeView = false
 
     private func setting<Value>(_ keyPath: WritableKeyPath<UserSettings, Value>) -> Binding<Value> {
         Binding(get: { store.settings[keyPath: keyPath] }, set: { value in store.updateSettings { $0[keyPath: keyPath] = value } })
@@ -95,6 +96,12 @@ struct SettingsView: View {
                 if value != "equal" && !commerce.isPro { store.presentPaywall("temperament"); return }
                 store.updateSettings { $0.temperamentId = value }
             })) { ForEach(Temperament.all) { Text($0.name).tag($0.id) } }
+            precisionPicker
+            Toggle(isOn: Binding(get: { strobeView }, set: { on in
+                if on && !commerce.isPro { store.presentPaywall("precision"); return }
+                strobeView = on
+            })) { Text("Strobe precision") }
+            .accessibilityIdentifier("settings.strobe")
             Picker("Note names", selection: setting(\.notation)) {
                 Text("Letters").tag("english"); Text("Solfège").tag("solfege"); Text("Sargam").tag("sargam"); Text("Numbers").tag("numbered")
             }
@@ -106,7 +113,32 @@ struct SettingsView: View {
                 guard commerce.isPro || v == 0 else { store.presentPaywall("transpose"); return }
                 store.updateSettings { $0.transposition = v }
             }), in: -12...12)
-        } header: { Text("Tuning") } footer: { Text("Capo and transposition change the names you see, never the pitch Timbre measures.") }
+        } header: { Text("Tuning") } footer: {
+            Text("Capo and transposition change the names you see, never the pitch Timbre measures.")
+                .font(.footnote).foregroundStyle(Palette.inkSoft)
+        }
+    }
+
+    /// How close a string must hold to lock: Beginner ±5¢ (the original), Standard ±3¢, Pro ±1¢ (Timbre Pro).
+    /// The tracker, the colours and the meter's green zone all follow it.
+    private var precisionPicker: some View {
+        Picker("Precision", selection: Binding(get: { store.settings.precision }, set: { value in
+            if value == .pro && !commerce.isPro { store.presentPaywall("precision"); return }
+            store.updateSettings { $0.precision = value }
+        })) {
+            ForEach(TuningPrecision.allCases, id: \.self) { precision in
+                (Self.precisionName(precision) + Text(verbatim: " ±\(Int(precision.bandCents))¢")).tag(precision)
+            }
+        }
+        .accessibilityIdentifier("settings.precision")
+    }
+
+    private static func precisionName(_ precision: TuningPrecision) -> Text {
+        switch precision {
+        case .beginner: return Text("Beginner")
+        case .standard: return Text("Standard")
+        case .pro: return Text("Pro")
+        }
     }
 
     @AppStorage(PracticeReminder.enabledKey) private var reminderOn = false
@@ -127,7 +159,7 @@ struct SettingsView: View {
                     Task { await PracticeReminder.enable(at: reminderMinutes) }
                 }), displayedComponents: .hourAndMinute)
             }
-        } header: { Text("Reminders") } footer: { Text("One gentle nudge a day, at a time you choose.") }
+        } header: { Text("Reminders") } footer: { Text("One gentle nudge a day, at a time you choose.").font(.footnote).foregroundStyle(Palette.inkSoft) }
     }
 
     private var displaySection: some View {
@@ -157,6 +189,7 @@ struct SettingsView: View {
             Button("Clear practice history", role: .destructive) { confirmClear = true }
         } header: { Text("Privacy") } footer: {
             Text("Timbre \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "")")
+                .font(.footnote).foregroundStyle(Palette.inkSoft)
         }
     }
 
@@ -179,7 +212,10 @@ private struct AdvancedListening: View {
                     Text("Automatic").tag(Int?.none)
                     ForEach([2048, 4096, 8192], id: \.self) { Text("\($0) samples").tag(Optional($0)) }
                 }
-            } footer: { Text("Strict confidence asks for a clearer note before showing a reading. Larger windows read lower notes with a little more delay.") }
+            } footer: {
+                Text("Strict confidence asks for a clearer note before showing a reading. Larger windows read lower notes with a little more delay.")
+                    .font(.footnote).foregroundStyle(Palette.inkSoft)
+            }
         }
         .scrollContentBackground(.hidden)
         .background(StageBackground(motes: false))
@@ -203,7 +239,7 @@ private struct Acknowledgements: View {
                     }
                     .padding(.vertical, 2)
                 }
-            } header: { Text("Instruments") } footer: { Text("Instruments without a credit are modelled and rendered from code for Timbre.") }
+            } header: { Text("Instruments") } footer: { Text("Instruments without a credit are modelled and rendered from code for Timbre.").font(.footnote).foregroundStyle(Palette.inkSoft) }
         }
         .scrollContentBackground(.hidden)
         .background(StageBackground(motes: false))

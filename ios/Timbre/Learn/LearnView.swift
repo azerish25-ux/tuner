@@ -6,12 +6,20 @@ struct LearnView: View {
     @EnvironmentObject private var store: AppStore
     @AppStorage("learn.course") private var courseId = "guitar"
     @State private var playing: PlayingLesson?
+    /// Content has scrolled under the status bar: a scrim fades in behind it.
+    @State private var scrolled = false
+    /// Lessons zoom open out of the card or node that was tapped (and back into it on close).
+    @Namespace private var zoom
 
     struct PlayingLesson: Identifiable {
         let course: LearnCourse
         let lesson: Lesson
+        /// The matched transition source the lesson zooms out of.
+        let source: String
         var id: String { lesson.id }
     }
+
+    private static let continueSource = "learn.continue"
 
     private var course: LearnCourse? { store.curriculum.course(id: courseId) ?? store.curriculum.courses.first }
 
@@ -25,7 +33,9 @@ struct LearnView: View {
                         if let course {
                             continueCard(course)
                             ForEach(Array(course.units.enumerated()), id: \.element.id) { index, unit in
-                                UnitSection(course: course, unit: unit, number: index + 1, onPlay: open)
+                                UnitSection(course: course, unit: unit, number: index + 1, zoom: zoom) { course, lesson in
+                                    open(course, lesson, from: LessonNode.source(lesson))
+                                }
                             }
                             Text("More lessons arrive with every update.").font(.footnote).foregroundStyle(Palette.inkFaint)
                                 .frame(maxWidth: .infinity).padding(.vertical, 24)
@@ -33,22 +43,40 @@ struct LearnView: View {
                     }
                     .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
                 }
+                .onScrollGeometryChange(for: Bool.self) { geometry in
+                    geometry.contentOffset.y + geometry.contentInsets.top > 4
+                } action: { _, isScrolled in
+                    scrolled = isScrolled
+                }
                 .background(StageBackground(motes: false))
+                .overlay(alignment: .top) { topScrim }
             }
         }
         .onChange(of: courseId) { _, _ in store.publishWidgets() }
         .fullScreenCover(item: $playing) { item in
             LessonPlayer(course: item.course, lesson: item.lesson) { next in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { open(item.course, next) }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { open(item.course, next, from: Self.continueSource) }
             }
             .environmentObject(store)
+            .navigationTransition(.zoom(sourceID: item.source, in: zoom))
         }
     }
 
-    private func open(_ course: LearnCourse, _ lesson: Lesson) {
-        guard store.canPlay(lesson) else { store.presentPaywall("lesson"); return }
+    private func open(_ course: LearnCourse, _ lesson: Lesson, from source: String) {
+        guard store.canPlay(lesson) else { store.presentPaywall("lesson", lesson: lesson); return }
         Haptics.shared.selection()
-        playing = PlayingLesson(course: course, lesson: lesson)
+        playing = PlayingLesson(course: course, lesson: lesson, source: source)
+    }
+
+    /// Keeps the clock and status icons readable over cards scrolling beneath them.
+    private var topScrim: some View {
+        LinearGradient(colors: [Palette.stage, Palette.stage.opacity(0.85), Palette.stage.opacity(0)], startPoint: .top, endPoint: .bottom)
+            .frame(height: 20)
+            .ignoresSafeArea(edges: .top)
+            .opacity(scrolled ? 1 : 0)
+            .animation(Motion.quick, value: scrolled)
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
     }
 
     private var header: some View {
@@ -104,7 +132,7 @@ struct LearnView: View {
         let unitNumber = unit.flatMap { u in course.units.firstIndex { $0.id == u.id } }.map { $0 + 1 }
         let photo = course.instrument.flatMap { store.catalog.photo(instrumentId: $0)?.asset }
         let image = photo.map { asset in ModelLibrary.modelID(forPhoto: asset).map { ModelLibrary.hasCard($0) ? ModelLibrary.cardImageName($0) : asset } ?? asset }
-        Button { if let next { open(course, next) } } label: {
+        Button { if let next { open(course, next, from: Self.continueSource) } } label: {
             HStack(alignment: .center, spacing: 0) {
                 VStack(alignment: .leading, spacing: 8) {
                     if let next, let unit, let unitNumber {
@@ -142,6 +170,7 @@ struct LearnView: View {
             .contentShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
         }
         .buttonStyle(PressScaleStyle())
+        .matchedTransitionSource(id: Self.continueSource, in: zoom)
         .accessibilityIdentifier("learn.continue")
     }
 }
@@ -151,6 +180,8 @@ struct UnitSection: View {
     let course: LearnCourse
     let unit: LearnUnit
     let number: Int
+    /// The Learn tab's zoom namespace: each node is a source the lesson zooms out of.
+    let zoom: Namespace.ID
     let onPlay: (LearnCourse, Lesson) -> Void
     @EnvironmentObject private var store: AppStore
 
@@ -201,7 +232,7 @@ struct UnitSection: View {
                         .stroke(Palette.line, style: StrokeStyle(lineWidth: 5, lineCap: .round, dash: [0.1, 13]))
                     }
                     ForEach(Array(unit.lessons.enumerated()), id: \.element.id) { i, lesson in
-                        LessonNode(course: course, lesson: lesson, accent: accent, current: lesson.id == next?.id) { onPlay(course, lesson) }
+                        LessonNode(course: course, lesson: lesson, accent: accent, current: lesson.id == next?.id, zoom: zoom) { onPlay(course, lesson) }
                             .position(points[i])
                             .id(lesson.id)
                     }
@@ -218,9 +249,13 @@ struct LessonNode: View {
     let lesson: Lesson
     let accent: Color
     let current: Bool
+    let zoom: Namespace.ID
     let action: () -> Void
     @EnvironmentObject private var store: AppStore
     @State private var pulse = false
+
+    /// The matched transition source id of a lesson's node.
+    static func source(_ lesson: Lesson) -> String { "learn.node.\(lesson.id)" }
     @State private var shake = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -234,7 +269,7 @@ struct LessonNode: View {
         let lit = unlocked && !pro
         Button {
             if lit || stars > 0 { action() }
-            else if pro { store.presentPaywall("lesson") }
+            else if pro { store.presentPaywall("lesson", lesson: lesson) }
             else { withAnimation(.default) { shake += 1 }; Haptics.shared.selection() }
         } label: {
             VStack(spacing: 6) {
@@ -271,6 +306,7 @@ struct LessonNode: View {
             }
         }
         .buttonStyle(PressScaleStyle())
+        .matchedTransitionSource(id: Self.source(lesson), in: zoom)
         .modifier(Shake(amount: shake))
         .onAppear { guard current, !reduceMotion else { return }; withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true)) { pulse = true } }
         .accessibilityLabel(Text(lesson.title.localized))

@@ -1,7 +1,8 @@
 import SwiftUI
 
-// Scroll chrome shared by the practice tools and the instrument screens: edge-to-edge chip rails,
-// a soft shade where content slides under the status bar, and a dock for pinned controls.
+// Scroll chrome shared by the practice tools, the instrument screens and the Play and Progress tabs:
+// edge-to-edge chip rails, a soft shade where content slides under the status bar, a dock for pinned
+// controls, and a hero that sizes itself so a screen's controls end above that dock.
 
 /// A horizontal rail of chips or cards that runs past its container's padding to the edge, so items
 /// scroll under the edge instead of being cut at the padding. `bleed` is that padding (the screen gutter,
@@ -64,6 +65,41 @@ extension View {
                 .background { StageDockBackdrop() }
         }
     }
+
+    /// For a vertical ScrollView whose content opens with a hero graphic `height` points tall: shrinks or
+    /// grows the hero within `range` so the rest of the content ends above the dock (or tab bar) on the
+    /// screen it is on, instead of the last controls resting half under it. Content that can't fit even
+    /// with the smallest hero (large text sizes) simply scrolls.
+    func fitsHero(_ height: Binding<CGFloat>, in range: ClosedRange<CGFloat>) -> some View {
+        modifier(HeroFit(height: height, range: range))
+    }
+}
+
+/// Visible height of a scroll view and the height of its content.
+private struct HeroRoom: Equatable {
+    var visible: CGFloat
+    var content: CGFloat
+}
+
+private struct HeroFit: ViewModifier {
+    @Binding var height: CGFloat
+    let range: ClosedRange<CGFloat>
+    /// The first fit lands before anything is seen; later ones (a section opening) ease.
+    @State private var measured = false
+
+    func body(content: Content) -> some View {
+        content.onScrollGeometryChange(for: HeroRoom.self) { geometry in
+            HeroRoom(visible: geometry.containerSize.height - geometry.contentInsets.top - geometry.contentInsets.bottom,
+                     content: geometry.contentSize.height)
+        } action: { _, room in
+            // Everything but the hero keeps its height, so one step lands on the fit.
+            let rest = room.content - height
+            let fit = min(range.upperBound, max(range.lowerBound, (room.visible - rest).rounded(.down)))
+            guard abs(fit - height) > 1 else { measured = true; return }
+            if measured { withAnimation(Motion.settle) { height = fit } } else { height = fit }
+            measured = true
+        }
+    }
 }
 
 /// Which ends of a horizontal rail have content hidden past them.
@@ -100,21 +136,26 @@ private struct RailBleed: ViewModifier {
             .padding(.trailing, -trailing)
     }
 
+    /// Each edge fades over a little more than its bleed, easing out, so a chip running past the edge
+    /// dissolves instead of reading as cut mid-word.
     private var fadeMask: some View {
         HStack(spacing: 0) {
-            ZStack {
-                LinearGradient(colors: [.clear, .black], startPoint: .leading, endPoint: .trailing)
-                Color.black.opacity(hidden.leading ? 0 : 1)
-            }
-            .frame(width: max(24, leading + 12))
+            edgeFade(hidden: hidden.leading, from: .leading).frame(width: max(36, leading + 20))
             Color.black
-            ZStack {
-                LinearGradient(colors: [.black, .clear], startPoint: .leading, endPoint: .trailing)
-                Color.black.opacity(hidden.trailing ? 0 : 1)
-            }
-            .frame(width: max(24, trailing + 12))
+            edgeFade(hidden: hidden.trailing, from: .trailing).frame(width: max(36, trailing + 20))
         }
         .animation(Motion.quick, value: hidden)
+    }
+
+    private func edgeFade(hidden: Bool, from edge: UnitPoint) -> some View {
+        ZStack {
+            LinearGradient(stops: [
+                .init(color: .clear, location: 0),
+                .init(color: .black.opacity(0.4), location: 0.45),
+                .init(color: .black, location: 1),
+            ], startPoint: edge, endPoint: edge == .leading ? .trailing : .leading)
+            Color.black.opacity(hidden ? 0 : 1)
+        }
     }
 }
 
@@ -129,19 +170,23 @@ private struct StageTopShade: ViewModifier {
                 scrolled = value
             }
             .overlay(alignment: .top) {
-                GeometryReader { proxy in
-                    LinearGradient(stops: [
-                        .init(color: Palette.stage, location: 0),
-                        .init(color: Palette.stage.opacity(0.88), location: 0.55),
-                        .init(color: Palette.stage.opacity(0), location: 1),
-                    ], startPoint: .top, endPoint: .bottom)
-                    .frame(width: proxy.size.width, height: proxy.safeAreaInsets.top + 14)
-                }
-                .ignoresSafeArea(edges: .top)
-                .opacity(scrolled ? 1 : 0)
-                .animation(Motion.quick, value: scrolled)
-                .allowsHitTesting(false)
-                .accessibilityHidden(true)
+                // A strip just below the top safe-area edge; its gradient reaches up through the status bar
+                // (and a navigation bar) by ignoring the safe area, the way bar backgrounds do.
+                Color.clear
+                    .frame(height: 18)
+                    .frame(maxWidth: .infinity)
+                    .background(alignment: .top) {
+                        LinearGradient(stops: [
+                            .init(color: Palette.stage, location: 0),
+                            .init(color: Palette.stage.opacity(0.9), location: 0.62),
+                            .init(color: Palette.stage.opacity(0), location: 1),
+                        ], startPoint: .top, endPoint: .bottom)
+                        .ignoresSafeArea(edges: .top)
+                    }
+                    .opacity(scrolled ? 1 : 0)
+                    .animation(Motion.quick, value: scrolled)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
             }
     }
 }

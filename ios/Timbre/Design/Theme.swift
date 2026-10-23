@@ -46,7 +46,7 @@ enum Palette {
 
     /// The pitch colour rule: mint inside `band` (or once locked), amber out to `nearCents`, coral beyond.
     /// Cents are judged to the whole cent, as every readout shows them, so a digit and its colour never disagree.
-    /// The tuner passes the tracker's own lock band (see `Palette.tuning`), so the colour turns mint exactly where it can lock.
+    /// The tuner passes the tracker's own lock band (`Palette.tuningBand`, set by Precision in Settings), so the colour turns mint exactly where it can lock.
     static func pitch(_ cents: Double?, locked: Bool, band: Double) -> Color {
         guard let cents, cents.isFinite else { return inkSoft }
         let shown = abs(cents.rounded())
@@ -107,4 +107,6 @@ enum Motion {
     static let pluck = Animation.spring(response: 0.42, dampingFraction: 0.72)
     static let settle = Animation.spring(response: 0.6, dampingFraction: 0.9)
     static let quick = Animation.snappy(duration: 0.22)
+    /// The reward pill growing out of the Dynamic Island: quick, with a little overshoot.
+    static let island = Animation.spring(response: 0.46, dampingFraction: 0.7)
 }

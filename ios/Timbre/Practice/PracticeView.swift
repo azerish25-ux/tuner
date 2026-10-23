@@ -31,6 +31,7 @@ struct PracticeView: View {
                 }
                 .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
             }
+            .stageTopShade()
             .background(StageBackground(motes: false))
             .onAppear(perform: consumePendingRoute)
             .onChange(of: store.pendingPracticeRoute) { _, _ in consumePendingRoute() }
@@ -87,11 +88,18 @@ struct PracticeView: View {
                 Text("resets in \(hoursToMidnight) h").font(.caption).foregroundStyle(Palette.inkSoft)
             }
             ForEach(store.quests) { quest in
-                Button { open(quest) } label: { QuestRow(quest: quest) }
+                let count = counter(quest)
+                Button { open(quest) } label: { HubQuestRow(quest: quest, done: count.done, total: count.total, claimed: store.questProgress(quest) >= quest.target) }
                     .buttonStyle(PressScaleStyle())
                     .accessibilityIdentifier("quest.\(quest.id)")
             }
         }
+    }
+
+    /// The quest's one counter (Quests.counter): tuning counts strings exactly like the tuner's quest line.
+    private func counter(_ quest: Quest) -> (done: Int, total: Int) {
+        let strings = store.referenceMode ? 0 : store.courses.count
+        return Quests.counter(for: quest, progress: store.questProgress(quest), lockedStrings: store.lockedCourses.count, strings: strings)
     }
 
     private var hoursToMidnight: Int {
@@ -130,7 +138,8 @@ struct PracticeView: View {
                     .symbolEffect(.pulse, options: .repeating.speed(0.4))
                 VStack(alignment: .leading, spacing: 3) {
                     Text(title).font(Typeface.display(16)).foregroundStyle(Palette.ink)
-                    Text(detail).font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1)
+                    Text(detail).font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .padding(14)
             }
@@ -226,5 +235,55 @@ struct ProgressRing: View {
         }
         .animation(Motion.settle, value: progress)
         .accessibilityElement().accessibilityLabel(Text("\(Int((progress * 100).rounded())) percent done"))
+    }
+}
+
+/// A daily quest on the Play hub: icon, title, a bar with its one counter ("4 / 6") and the XP it pays.
+/// Drawn like the shared QuestRow, but with the counter handed in, so the tuning quest counts strings
+/// the way the tuner does instead of "0 / 1".
+private struct HubQuestRow: View {
+    let quest: Quest
+    let done: Int
+    let total: Int
+    let claimed: Bool
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: claimed ? "checkmark" : quest.symbol).font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(claimed ? Palette.onAccent : quest.tint)
+                .frame(width: 34, height: 34)
+                .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(claimed ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(quest.tint.opacity(0.14))))
+            VStack(alignment: .leading, spacing: 7) {
+                Text(quest.title).font(.subheadline.weight(.semibold)).foregroundStyle(claimed ? Palette.inkSoft : Palette.ink)
+                    .strikethrough(claimed, color: Palette.inkFaint)
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 10) {
+                    ProgressLine(value: Double(done) / Double(max(1, total)), color: claimed ? Palette.mint : quest.tint, height: 5)
+                    Text("\(done) / \(total)").font(Typeface.number(12)).foregroundStyle(claimed ? Palette.mint : Palette.inkSoft)
+                        .contentTransition(.numericText())
+                        .fixedSize()
+                }
+            }
+            reward
+        }
+        .padding(.horizontal, 14).padding(.vertical, 12)
+        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
+        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
+        .animation(Motion.settle, value: done)
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(Text(claimed ? "Done" : "\(done) of \(total)"))
+    }
+
+    /// "+20 XP" in a mint pill while open; "Done" once claimed.
+    @ViewBuilder private var reward: some View {
+        if claimed {
+            Text("Done").font(Typeface.label(12)).foregroundStyle(Palette.mint)
+        } else {
+            Text("+\(quest.xp) XP").font(Typeface.label(12)).foregroundStyle(Palette.mint)
+                .padding(.horizontal, 9).padding(.vertical, 5)
+                .background(Capsule().fill(Palette.mint.opacity(0.12)))
+                .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.25), lineWidth: 1))
+                .fixedSize()
+        }
     }
 }
