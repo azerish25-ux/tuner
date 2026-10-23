@@ -1,0 +1,64 @@
+05:36:03 | INFO: Data are loaded, start creating Blender stuff
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: Blender create Mesh node defaultMaterial
+05:36:03 | INFO: glTF import finished in 0.10s
+retouched 108067 ink px in blinn1_baseColor.jpeg
+retouched 289403 ink px in blinn1_baseColor.jpeg
+Blender 4.5.15 LTS (hash 5afeabba6097 built 2026-10-22 01:33:47)
+Saved: 'build/convert/violin_calib_whole.png'
+Time: 00:25.94 (Saving: 00:00.24)
+
+Saved: 'build/convert/violin_calib_head.png'
+Time: 00:26.65 (Saving: 00:00.16)
+
+Saved: 'build/convert/violin_calib_ids.png'
+Time: 00:15.62 (Saving: 00:00.14)
+
+rigged s4: peg 5 parts, post 0 parts, scale 0.3307 m, tighten 1
+rigged s3: peg 5 parts, post 0 parts, scale 0.3308 m, tighten 1
+rigged s2: peg 5 parts, post 0 parts, scale 0.3308 m, tighten -1
+rigged s1: peg 5 parts, post 0 parts, scale 0.3308 m, tighten -1
+optimised: 137 meshes / 39354 triangles -> 11 meshes / 39354 triangles
+   part_blinn1: 27866 tris, uv ['UVMap'], colours []
+   peg_s1_mesh: 2764 tris, uv ['UVMap'], colours []
+   peg_s2_mesh: 2764 tris, uv ['UVMap'], colours []
+   peg_s3_mesh: 2764 tris, uv ['UVMap'], colours []
+   peg_s4_mesh: 2764 tris, uv ['UVMap'], colours []
+   part_timbre_string_wound: 216 tris, uv ['UVMap'], colours []
+   part_timbre_string_plain: 72 tris, uv ['UVMap'], colours []
+   string_s1: 36 tris, uv ['UVMap'], colours []
+   string_s2: 36 tris, uv ['UVMap'], colours []
+   string_s3: 36 tris, uv ['UVMap'], colours []
+   string_s4: 36 tris, uv ['UVMap'], colours []
+texture blinn1_baseColor_clean.png: 4096x4096 -> 2048x2048 JPEG 621 KB
+texture blinn1_metallicRoughness.png: 4096x4096 -> 2048x2048 JPEG 829 KB
+texture blinn1_normal.png: 4096x4096 -> 2048x2048 JPEG 558 KB
+USD export of 'build/convert/violin.usdz' took 150.86 ms
+Saved: 'build/convert/violin_hero.png'
+Time: 01:18.58 (Saving: 00:00.17)
+
+Saved: 'build/convert/violin_head.png'
+Time: 01:55.87 (Saving: 00:00.18)
+
+converted violin
+
+Blender quit
