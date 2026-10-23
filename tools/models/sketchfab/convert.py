@@ -3,15 +3,22 @@
 blender -b --factory-startup --python tools/models/sketchfab/convert.py -- build/import tools/models/sketchfab/rigs build/convert [model,model]
 
 Each rigs/<model>.json names its download folder and how to read it:
-  {"model": "violin", "source": "violin_museum", "length": 0.59, "headEnd": "A", "face": "front",
-   "remove": [objects deleted (stands, cases)], "hide": [original strings, hidden],
-   "rig": "FRICTION_PEG", "degPerCent": 1.2,
-   "strings": [{"anchor": "s4", "peg": [object names], "axis": null | [x,y,z], "tighten": 1,
-                "nut": [x, z], "saddle": [x, z], "gauge": 0.0008, "wound": true}]}
-Coordinates in "nut"/"saddle" are metres in the normalised frame (head up +Z, face toward -Y,
-centred on the model): read them off the calibration renders, which carry a centimetre grid.
-Without "strings" the run only calibrates. Outputs per model: <model>.usdz, <model>.rig.json,
-<model>_hero.png and <model>_head.png (transparent studio renders), calibration renders + json.
+  {"model": "violin", "source": "violin_queenrose", "length": 0.59, "headEnd": "A", "face": "back",
+   "separate": true (split merged meshes into loose parts), "tilt": degrees about the face normal,
+   "remove": [objects deleted (bows, stands)], "hide": [objects hidden],
+   "materials": {name: {"metallic": 0, ...}}, "coat": [object name prefixes given a clear coat],
+   "rig": "FRICTION_PEG", "degPerCent": 1.2, "stringKind": "steel" | "bronze" | "nylon" | "gut",
+   "nutZ" / "saddleZ": a height or parts whose mean height it is, "stringEnds": "rings" (low-poly strings),
+   "originalStrings": "cut" (delete their speaking length) | "hide" (rebuild them thin) | "keep",
+   "strings": [{"anchor": "s4", "string": [original string parts], "peg": parts, "post": parts,
+                "pegAxis": "post" | "pca" | [x,y,z], "postAxis": "front" | "pca" | [x,y,z], "tighten": 1,
+                "nut": [x, z], "saddle": [x, z] (when there is no "string"), "gauge": 0.0008, "wound": true}]}
+Parts are a list of object names or a filter {"re", "box": [x0,x1,y0,y1,z0,z1], "maxExtent", "exclude"}.
+Coordinates are metres in the normalised frame (head up +Z, face toward -Y, centred on the model): read
+them off the calibration renders (centimetre grid) or the <model>.parts.npz dump. "auto" instead of
+"strings" rigs machine heads modelled as named parts (see guitar_acoustic.json). Without either the run
+only calibrates. Outputs per model: <model>.usdz, <model>.rig.json (with card2D: saddle, nut and peg of
+each string on the hero render), <model>_hero.png and <model>_head.png, calibration renders + json.
 """
 import json
 import math
@@ -283,7 +290,7 @@ def lacquer(prefixes):
 
 def fix_materials(fixes):
     """Per-material corrections, e.g. {"wood": {"metallic": 0, "roughness": 0.4}} for wood exported as metal."""
-    keys = {"metallic": "Metallic", "roughness": "Roughness", "baseColor": "Base Color", "coat": "Coat Weight"}
+    keys = {"metallic": "Metallic", "roughness": "Roughness", "baseColor": "Base Color", "coat": "Coat Weight", "alpha": "Alpha"}
     for name, values in fixes.items():
         mat = bpy.data.materials.get(name)
         bsdf = mat and mat.use_nodes and next((n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
@@ -295,6 +302,8 @@ def fix_materials(fixes):
             for link in list(socket.links):  # a texture driving the value would override it
                 mat.node_tree.links.remove(link)
             socket.default_value = (*value, 1) if key == "baseColor" else value
+        if "alpha" in values and values["alpha"] >= 1 and hasattr(mat, "surface_render_method"):
+            mat.surface_render_method = "DITHERED"
 
 
 def persp_camera(scene, target, height, azimuth, elevation, lens, fill=1.08, focus=None, fstop=None):
@@ -589,6 +598,79 @@ def string_end(objs, top=True):
     return v[np.abs(v[:, 2] - edge) < 0.002].mean(0)
 
 
+def anchor_point(spec, radius):
+    """A point given as [x, y, z], or the centre of some parts ({"parts": [...], "front": true} puts it on
+    their front face, where a string winding onto them touches)."""
+    if isinstance(spec, list) and len(spec) == 3 and all(isinstance(v, (int, float)) for v in spec):
+        return np.array(spec, dtype=float)
+    parts = spec["parts"] if isinstance(spec, dict) else spec
+    v = np.concatenate([verts(o) for o in select(parts)])
+    point = v.mean(0)
+    if isinstance(spec, dict) and spec.get("front"):
+        point[1] = v[:, 1].min() - radius
+    return point
+
+
+def obstacle_tree(objs):
+    """One BVH over the given parts in world space."""
+    from mathutils.bvhtree import BVHTree
+    points, polys = [], []
+    for obj in objs:
+        mw = obj.matrix_world
+        base = len(points)
+        points.extend(mw @ v.co for v in obj.data.vertices)
+        polys.extend([base + i for i in p.vertices] for p in obj.data.polygons)
+    return BVHTree.FromPolygons(points, polys) if polys else None
+
+
+def route(a, b, radius, tree, depth=0):
+    """Bends that keep the string a→b in front of the pegs it passes on its way to its own (a string to a
+    peg near the scroll runs over the shafts of the pegs nearer the nut)."""
+    if tree is None or depth > 3:
+        return []
+    d = Vector(b - a)
+    hit = None
+    for lift in (0.0, radius + 0.0005):  # the string's centre line and its back
+        origin = Vector(a) + Vector((0, lift, 0))
+        found = tree.ray_cast(origin, d.normalized(), d.length)
+        if found[0] is not None and (hit is None or (found[0] - origin).length < (hit - Vector(a)).length):
+            hit = found[0]
+    if hit is None:
+        return []
+    t = (hit - Vector(a)).length / d.length
+    p = a + (b - a) * t
+    fronts = []
+    for dz in np.linspace(-0.005, 0.005, 11):  # the obstacle's front face around the crossing
+        found = tree.ray_cast(Vector((p[0], p[1] - 0.2, p[2] + dz)), Vector((0, 1, 0)), 0.4)
+        if found[0] is not None:
+            fronts.append(found[0].y)
+    if not fronts:
+        return []
+    via = np.array([p[0], min(fronts) - radius - 0.001, p[2]])
+    return route(a, via, radius, tree, depth + 1) + [via] + route(via, b, radius, tree, depth + 1)
+
+
+def even_out(rows, key, layout):
+    """Space the strings evenly across the nut or saddle (some artists' strings bunch up): courses evenly
+    between the outer ones, the two strings of a paired course "pairGap" apart, outer string to outer
+    string "span" (default: as modelled). Heights and depths stay as modelled."""
+    courses = []
+    for row in rows:
+        if not courses or courses[-1][0] != row["item"]["anchor"]:
+            courses.append((row["item"]["anchor"], []))
+        courses[-1][1].append(row)
+    xs = [r[key][0] for r in rows]
+    gap = layout.get("pairGap", 0.0) if any(len(c[1]) > 1 for c in courses) else 0.0
+    span = layout.get("span", max(xs) - min(xs))
+    mid = (max(xs) + min(xs)) / 2
+    first, last = mid - (span - gap) / 2, mid + (span - gap) / 2
+    for k, (_, course) in enumerate(courses):
+        c = first + (last - first) * k / max(1, len(courses) - 1)
+        for j, row in enumerate(course):
+            row[key] = row[key].copy()
+            row[key][0] = c + (j - (len(course) - 1) / 2) * gap
+
+
 def principal_axis(points, which=2):
     _, vecs = np.linalg.eigh(np.cov((points - points.mean(0)).T))
     return vecs[:, which] / np.linalg.norm(vecs[:, which])
@@ -601,7 +683,7 @@ def rig_model(scene, root, cfg, lo, hi, pts):
     key's shaft as seen from its post (machine heads) or the peg's long axis (friction pegs), pointing outward;
     "tighten" defaults to +1 on the bass (-x) side and -1 on the treble side, the mirror image."""
     plain, wound = string_materials(cfg.get("stringKind", "steel"))
-    nut_z = level(cfg["nutZ"]) if cfg.get("nutZ") is not None else None
+    nut_z = level(cfg["nutZ"], cfg.get("nutAt", "mean")) if cfg.get("nutZ") is not None else None
     saddle_z = level(cfg["saddleZ"], cfg.get("saddleAt", "mean")) if cfg.get("saddleZ") is not None else None
     originals = cfg.get("originalStrings", "keep")
     rows = []
@@ -624,15 +706,20 @@ def rig_model(scene, root, cfg, lo, hi, pts):
         row["saddle"] = row["saddle"] - np.array([0, item.get("saddleLift", cfg.get("saddleLift", 0)), 0])
         row["nut"] = row["nut"] - np.array([0, item.get("nutLift", cfg.get("nutLift", 0)), 0])
         rows.append(row)
+    for key in ("nut", "saddle"):
+        if cfg.get(f"{key}Even") is not None:
+            even_out(rows, key, cfg[f"{key}Even"])
     centre_x = float(np.mean([r["nut"][0] for r in rows]))
     anchors = [r["item"]["anchor"] for r in rows]
+    for row in rows:
+        row["pegs"] = select(row["item"]["peg"])
     strings = []
     for k, row in enumerate(rows):
         item = row["item"]
         anchor = item["anchor"]
         # A paired course uses its anchor twice: its strings become <anchor>a and <anchor>b.
         name = item.get("name", anchor + "ab"[anchors[:k].count(anchor)] if anchors.count(anchor) > 1 else anchor)
-        peg_objs, post_objs = select(item["peg"]), select(item.get("post"))
+        peg_objs, post_objs = row["pegs"], select(item.get("post"))
         if not peg_objs:
             raise ValueError(f"{name}: no peg parts selected")
         center = np.concatenate([verts(o) for o in peg_objs]).mean(0)
@@ -686,8 +773,13 @@ def rig_model(scene, root, cfg, lo, hi, pts):
             top, bottom = string_end(row["objs"], True), string_end(row["objs"], False)
             for obj in row["objs"]:
                 obj.hide_render = obj.hide_viewport = True
-            cylinder_between(f"wrap_{name}", nut, item.get("head", top), radius, mat, root)
-            cylinder_between(f"tail_{name}", item.get("tail", bottom), saddle, radius, mat, root)
+            head = anchor_point(item["head"], radius) if item.get("head") else top
+            tail = anchor_point(item["tail"], radius) if item.get("tail") else bottom
+            tree = obstacle_tree([o for r in rows if r is not row for o in r["pegs"]]) if cfg.get("routeHeads") else None
+            path = [nut] + route(nut, head, radius, tree) + [head]
+            for j, (a, b) in enumerate(zip(path, path[1:])):
+                cylinder_between(f"wrap_{name}" + (f"_{j}" if j else ""), a, b, radius, mat, root)
+            cylinder_between(f"tail_{name}", tail, saddle, radius, mat, root)
         tighten = item.get("tighten", 1 if center[0] < centre_x else -1)
         strings.append({"anchor": anchor, "saddle": to_usd(saddle), "nut": to_usd(nut), "radius": round(radius, 6),
                         "wound": bool(item.get("wound")), "peg": f"peg_{name}", "post": f"post_{name}", "node": f"string_{name}",

@@ -5,20 +5,34 @@
  "headEnd": "B",
  "face": "front",
  "separate": true,
- "dumpTextures": [
-  "headstock_mat"
- ],
- "rig": "MACHINE_HEAD",
- "degPerCent": 1.4,
- "stringKind": "bronze",
- "originalStrings": "cut",
- "stringEnds": "rings",
+ "materials": {
+  "headstock_mat": {
+   "baseColor": [
+    0.012,
+    0.012,
+    0.012
+   ],
+   "roughness": 0.18,
+   "alpha": 1.0
+  }
+ },
  "coat": [
   "polySurface42_top_mat",
   "polySurface42_sides_mat",
   "polySurface42_back_mat",
   "polySurface42_headstock_mat"
  ],
+ "rig": "MACHINE_HEAD",
+ "degPerCent": 1.4,
+ "stringKind": "bronze",
+ "originalStrings": "hide",
+ "stringEnds": "rings",
+ "nutEven": {
+  "pairGap": 0.0025
+ },
+ "saddleEven": {
+  "pairGap": 0.0032
+ },
  "strings": [
   {
    "anchor": "c4",

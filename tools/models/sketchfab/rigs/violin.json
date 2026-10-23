@@ -24,14 +24,19 @@
  "rig": "FRICTION_PEG",
  "degPerCent": 1.2,
  "stringKind": "steel",
- "originalStrings": "cut",
+ "originalStrings": "hide",
+ "routeHeads": true,
  "nutZ": [
-  "defaultMaterial.031"
+  "defaultMaterial.011"
  ],
+ "nutAt": "top",
  "saddleZ": [
   "defaultMaterial.010",
   "defaultMaterial.051"
  ],
+ "nutEven": {
+  "span": 0.0165
+ },
  "strings": [
   {
    "anchor": "s4",
@@ -46,7 +51,13 @@
     "defaultMaterial.004"
    ],
    "gauge": 0.0008,
-   "wound": true
+   "wound": true,
+   "head": {
+    "parts": [
+     "defaultMaterial.004"
+    ],
+    "front": true
+   }
   },
   {
    "anchor": "s3",
@@ -61,7 +72,13 @@
     "defaultMaterial.002"
    ],
    "gauge": 0.0007,
-   "wound": true
+   "wound": true,
+   "head": {
+    "parts": [
+     "defaultMaterial.002"
+    ],
+    "front": true
+   }
   },
   {
    "anchor": "s2",
@@ -76,7 +93,13 @@
     "defaultMaterial.006"
    ],
    "gauge": 0.0006,
-   "wound": true
+   "wound": true,
+   "head": {
+    "parts": [
+     "defaultMaterial.006"
+    ],
+    "front": true
+   }
   },
   {
    "anchor": "s1",
@@ -91,7 +114,13 @@
     "defaultMaterial.005"
    ],
    "gauge": 0.00026,
-   "wound": false
+   "wound": false,
+   "head": {
+    "parts": [
+     "defaultMaterial.005"
+    ],
+    "front": true
+   }
   }
  ]
 }

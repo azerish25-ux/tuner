@@ -14,13 +14,16 @@
    "metallic": 0.0
   },
   "wood2": {
-   "metallic": 0.0
+   "metallic": 0.0,
+   "roughness": 0.12
   },
   "Neck": {
-   "metallic": 0.0
+   "metallic": 0.0,
+   "roughness": 0.12
   },
   "Neck2": {
-   "metallic": 0.0
+   "metallic": 0.0,
+   "roughness": 0.12
   }
  },
  "coat": [
@@ -38,6 +41,7 @@
  "saddleZ": [
   "pCube64_SilverLace_0.053"
  ],
+ "nutEven": {},
  "saddleLift": 0.0028,
  "strings": [
   {
