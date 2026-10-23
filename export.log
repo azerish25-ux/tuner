@@ -1,0 +1,40 @@
+
+ExtractAppIntentsMetadata (in target 'Timbre' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.3.7003.10.dRgFJB/Metal.xctoolchain --module-name Timbre --sdk-root /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.2.sdk --xcode-version 17C529 --platform-family iOS --deployment-target 18.0 --bundle-identifier com.shahradazerisharghi.timbre --output /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Products/Debug-iphoneos/Timbre.app --target-triple arm64-apple-ios18.0 --binary-file /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Products/Debug-iphoneos/Timbre.app/Timbre --dependency-file /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphoneos/Timbre.build/Objects-normal/arm64/Timbre_dependency_info.dat --stringsdata-file /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphoneos/Timbre.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphoneos/Timbre.build/Objects-normal/arm64/Timbre.SwiftFileList --metadata-file-list /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphoneos/Timbre.build/Timbre.DependencyMetadataFileList --static-metadata-file-list /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphoneos/Timbre.build/Timbre.DependencyStaticMetadataFileList --swift-const-vals-list /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Intermediates.noindex/Timbre.build/Debug-iphoneos/Timbre.build/Objects-normal/arm64/Timbre.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --validate-assistant-intents
+2026-10-23 04:20:30.008 appintentsmetadataprocessor[3785:14963] Starting appintentsmetadataprocessor export
+2026-10-23 04:20:30.248 appintentsmetadataprocessor[3785:14963] Writing Metadata.appintents
+2026-10-23 04:20:30.248 appintentsmetadataprocessor[3785:14963] Metadata root: /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Products/Debug-iphoneos/Timbre.app/Metadata.appintents
+
+Touch /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Products/Debug-iphoneos/Timbre.app (in target 'Timbre' from project 'Timbre')
+    cd /Users/runner/work/tuner/tuner/ios
+    /usr/bin/touch -c /Users/runner/Library/Developer/Xcode/DerivedData/Timbre-cknyeiepldxacbcnkmthbuqlkdpv/Build/Products/Debug-iphoneos/Timbre.app
+
+2026-10-23 04:20:30 --- WARNING: Users/runner/work/tuner/tuner/ios/Timbre/Services/AppStore.swift:150:46:26 Skipping extraction of localizable string with non-literal key
+2026-10-23 04:20:30 --- WARNING: Users/runner/work/tuner/tuner/ios/Timbre/Instruments/InstrumentsView.swift:241:27:29 Skipping extraction of localizable string with non-literal key
+2026-10-23 04:20:30 --- WARNING: Users/runner/work/tuner/tuner/ios/Timbre/Services/Localization.swift:6:34:3 Skipping extraction of localizable string with non-literal key
+2026-10-23 04:20:30 --- WARNING: Users/runner/work/tuner/tuner/ios/Timbre/Services/Localization.swift:17:34:3 Skipping extraction of localizable string with non-literal key
+2026-10-23 04:20:30 --- WARNING: Users/runner/work/tuner/tuner/ios/Timbre/Practice/VoiceView.swift:13:88:3 Skipping extraction of localizable string with non-literal key
+2026-10-23 04:20:30 --- WARNING: Users/runner/work/tuner/tuner/ios/Timbre/Services/AppStore.swift:150:46:26 Skipping extraction of localizable string with non-literal key
+2026-10-23 04:20:30 --- WARNING: Users/runner/work/tuner/tuner/ios/Timbre/Instruments/InstrumentsView.swift:241:27:29 Skipping extraction of localizable string with non-literal key
+2026-10-23 04:20:30 --- WARNING: Users/runner/work/tuner/tuner/ios/Timbre/Services/Localization.swift:6:34:3 Skipping extraction of localizable string with non-literal key
+2026-10-23 04:20:30 --- WARNING: Users/runner/work/tuner/tuner/ios/Timbre/Services/Localization.swift:17:34:3 Skipping extraction of localizable string with non-literal key
+2026-10-23 04:20:30 --- WARNING: Users/runner/work/tuner/tuner/ios/Timbre/Practice/VoiceView.swift:13:88:3 Skipping extraction of localizable string with non-literal key
+2026-10-23 04:20:30 Extracting strings from localizable files
+2026-10-23 04:20:30 Copying source language files
+2026-10-23 04:20:30 Exporting Timbre/Resources/en.lproj/Localizable.strings to en.xliff...
+2026-10-23 04:20:30 Exporting Timbre/en.lproj/AppShortcuts.strings to en.xliff...
+2026-10-23 04:20:30 --- WARNING: Key "timbre_voice_retry_save" used with multiple values. Value "Retry save" kept. Value "timbre_voice_retry_save" ignored.
+2026-10-23 04:20:30 --- WARNING: Key "timbre_voice_score_interval" used with multiple values. Value "The interval came out %1$d¢ from the target, across %2$d readings. It is measured against the note you started on, so it does not depend on your key." kept. Value "timbre_voice_score_interval" ignored.
+2026-10-23 04:20:30 Exporting Timbre/en.lproj/InfoPlist.strings to en.xliff...
+2026-10-23 04:20:30 --- WARNING: Key "timbre_voice_score_melody" used with multiple values. Value "You were %1$d¢ from the target on average, across %2$d readings, and the band we asked for was ±%3$d¢." kept. Value "timbre_voice_score_melody" ignored.
+2026-10-23 04:20:30 Exporting TimbreWidgets/en.lproj/InfoPlist.strings to en.xliff...
+2026-10-23 04:20:30 --- WARNING: Key "timbre_voice_score_steadiness_proxy" used with multiple values. Value "Your pitch variation was %1$d¢ (standard deviation) while you held it, which is a proxy for steady breath support rather than a measurement of your breathing." kept. Value "timbre_voice_score_steadiness_proxy" ignored.
+2026-10-23 04:20:30 --- WARNING: Key "timbre_voice_score_pitch" used with multiple values. Value "You were %1$d¢ from the target on average, across %2$d readings. The band we asked for was ±%3$d¢." kept. Value "timbre_voice_score_pitch" ignored.
+2026-10-23 04:20:30 --- WARNING: Key "timbre_voice_score_steadiness_unknown" used with multiple values. Value "We did not measure steadiness for this attempt — the note was not held long enough for that figure to mean anything." kept. Value "timbre_voice_score_steadiness_unknown" ignored.
+2026-10-23 04:20:30 --- WARNING: Key "timbre_voice_score_saved" used with multiple values. Value "Saved exercise measurements." kept. Value "timbre_voice_score_saved" ignored.
+2026-10-23 04:20:30 Exporting Timbre/Resources/en.lproj/Localizable.stringsdict to en.xliff...
+2026-10-23 04:20:30 --- WARNING: Key "timbre_voice_score_sustain" used with multiple values. Value "You were %1$d¢ from the target on average while you held the note. The band we asked for was ±%2$d¢." kept. Value "timbre_voice_score_sustain" ignored.
+2026-10-23 04:20:30 Exporting Timbre/Resources/Assets.xcassets to en.xcloc...
+2026-10-23 04:20:30 Writing
+2026-10-23 04:20:31 An xcloc was created at /Users/runner/work/tuner/tuner/ci-out/l10n/en.xcloc
