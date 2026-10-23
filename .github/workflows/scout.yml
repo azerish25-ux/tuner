@@ -1,0 +1,29 @@
+name: Asset scout
+# Searches public model libraries for commercially usable instrument models and
+# publishes contact sheets to ci-results/scout for review. Downloads nothing.
+on:
+  push:
+    branches: ["scout/**"]
+    paths:
+      - "tools/scout/**"
+      - ".github/workflows/scout.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: scout-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  scout:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m pip install --quiet pillow
+      - name: Search model libraries
+        run: python3 tools/scout/scout.py build/scout
+      - name: Publish results
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash tools/ci/publish-results.sh ci-results/scout build/scout
