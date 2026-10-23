@@ -18,6 +18,9 @@ struct InstrumentRig: Decodable, Sendable {
         let pegCenter: [Float]
         let pegAxis: [Float]
         let tighten: Int
+        /// Scene node of the speaking string; course pairs name each string (default string_<anchor>).
+        let node: String?
+        var nodeName: String { node ?? "string_\(anchor)" }
         var saddlePoint: SIMD3<Float> { SIMD3(rig: saddle) }
         var nutPoint: SIMD3<Float> { SIMD3(rig: nut) }
         var pegPoint: SIMD3<Float> { SIMD3(rig: pegCenter) }

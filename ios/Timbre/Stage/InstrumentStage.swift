@@ -82,12 +82,12 @@ final class StageController {
         loadedModel = modelID
         for string in rig.strings {
             if let peg = entity.findEntity(named: string.peg) {
-                pegs[string.anchor] = (peg, peg.orientation)
+                pegs[string.peg] = (peg, peg.orientation)
                 peg.components.set(CollisionComponent(shapes: [.generateSphere(radius: 0.024)]))
                 peg.components.set(InputTargetComponent())
             }
-            if let post = entity.findEntity(named: string.post) { posts[string.anchor] = (post, post.orientation) }
-            if let line = entity.findEntity(named: "string_\(string.anchor)") { staticStrings[string.anchor] = line }
+            if let post = entity.findEntity(named: string.post) { posts[string.peg] = (post, post.orientation) }
+            if let line = entity.findEntity(named: string.nodeName) { staticStrings[string.nodeName] = line }
         }
         let mesh = MeshResource.generateCylinder(height: 1, radius: 1)
         var metal = PhysicallyBasedMaterial()
@@ -179,7 +179,7 @@ final class StageController {
         guard let rig else { return }
         let anchor = state.activeAnchor ?? rig.strings.first?.anchor
         if anchor != currentAnchor {
-            if let previous = currentAnchor { staticStrings[previous]?.isEnabled = true }
+            for string in rig.strings where string.anchor == currentAnchor { staticStrings[string.nodeName]?.isEnabled = true }
             currentAnchor = anchor
             filter.reset()
         }
@@ -192,18 +192,18 @@ final class StageController {
         let phase = strobe.advance(cents: state.locked ? 0 : smoothed, dt: Double(dt))
         glow += ((state.locked ? 1 : 0) - glow) * min(1, dt * (state.locked ? 7 : 2.5))
 
-        // Pegs: the active one follows the pitch error; the rest ease home.
+        // Pegs: the active course's pegs (both of a pair) follow the pitch error; the rest ease home.
         for string in rig.strings {
-            guard let peg = pegs[string.anchor] else { continue }
+            guard let peg = pegs[string.peg] else { continue }
             var goal: Float = 0
             if string.anchor == anchor, let smoothed {
                 goal = Float(-smoothed) * rig.degPerCent * Float(string.tighten) * .pi / 180
             }
-            let current = angles[string.anchor] ?? 0
+            let current = angles[string.peg] ?? 0
             let next = current + (goal - current) * min(1, dt * 9)
-            angles[string.anchor] = next
+            angles[string.peg] = next
             peg.entity.orientation = peg.base * simd_quatf(angle: next, axis: [1, 0, 0])
-            if let post = posts[string.anchor] { post.entity.orientation = post.base * simd_quatf(angle: next / 6, axis: [0, 0, 1]) }
+            if let post = posts[string.peg] { post.entity.orientation = post.base * simd_quatf(angle: next / 6, axis: [0, 0, 1]) }
         }
         updateString(rig.string(anchor), phase: Float(phase), locked: state.locked, active: state.listening)
     }
@@ -211,7 +211,7 @@ final class StageController {
     private func updateString(_ string: InstrumentRig.StringRig?, phase: Float, locked: Bool, active: Bool) {
         guard let string else { return }
         let visible = active && (energy > 0.02 || glow > 0.05)
-        staticStrings[string.anchor]?.isEnabled = !visible
+        staticStrings[string.nodeName]?.isEnabled = !visible
         let a = string.saddlePoint, b = string.nutPoint
         let axis = simd_normalize(b - a)
         let lateral = simd_normalize(simd_cross(axis, [0, 0, 1]) + SIMD3<Float>(0, 0, 0.35))
