@@ -1,0 +1,109 @@
+{
+ "id": "mandolin_croatian",
+ "source": "scene.gltf",
+ "objects": [
+  {
+   "name": "Object_2",
+   "parent": "1.obj.cleaner.materialmerger.gles",
+   "vertices": 65532,
+   "min": [
+    -0.1565,
+    -0.3968,
+    0.0037
+   ],
+   "max": [
+    0.1565,
+    0.3767,
+    0.1145
+   ],
+   "center": [
+    -0.0,
+    -0.0101,
+    0.0591
+   ],
+   "materials": [
+    "Material__95"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.15
+   ]
+  },
+  {
+   "name": "Object_3",
+   "parent": "1.obj.cleaner.materialmerger.gles",
+   "vertices": 714,
+   "min": [
+    -0.0269,
+    -0.3754,
+    0.0795
+   ],
+   "max": [
+    0.0134,
+    0.3111,
+    0.1145
+   ],
+   "center": [
+    -0.0067,
+    -0.0321,
+    0.097
+   ],
+   "materials": [
+    "Material__95"
+   ],
+   "color": [
+    0.4,
+    0.575,
+    1.0
+   ]
+  }
+ ],
+ "axes": {
+  "mean": [
+   0.0001,
+   0.2618,
+   0.0777
+  ],
+  "long": [
+   0.0009,
+   -1.0,
+   0.0051
+  ],
+  "mid": [
+   -1.0,
+   -0.0009,
+   -0.0017
+  ],
+  "thin": [
+   -0.0017,
+   0.0051,
+   1.0
+  ],
+  "extent": [
+   0.7734,
+   0.3132,
+   0.1117
+  ]
+ },
+ "ends": {
+  "A": {
+   "center": [
+    0.0,
+    -0.2819,
+    0.059
+   ],
+   "scale": 0.3508,
+   "objects": []
+  },
+  "B": {
+   "center": [
+    0.0,
+    0.2678,
+    0.08
+   ],
+   "scale": 0.244,
+   "objects": []
+  }
+ }
+}
