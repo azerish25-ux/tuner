@@ -5,7 +5,7 @@ import AVFoundation
 @MainActor
 final class SoundFX {
     static let shared = SoundFX()
-    enum Cue: CaseIterable { case correct, wrong, star, click, accent, complete, hit }
+    enum Cue: CaseIterable { case correct, wrong, star, click, accent, complete, hit, levelUp }
     var enabled = true
     private var players: [Cue: AVAudioPlayer] = [:]
 
@@ -35,6 +35,7 @@ final class SoundFX {
         case .accent: return [(103, 0, 0.04)]
         case .complete: return [(72, 0, 0.4), (76, 0.1, 0.4), (79, 0.2, 0.4), (84, 0.3, 0.8)]
         case .hit: return [(91, 0, 0.12)]
+        case .levelUp: return [(72, 0, 0.3), (76, 0.08, 0.3), (79, 0.16, 0.3), (84, 0.24, 0.35), (88, 0.32, 0.45), (91, 0.4, 0.9)]
         }
     }
 

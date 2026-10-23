@@ -7,6 +7,8 @@ struct LessonResults: View {
     let lesson: Lesson
     let result: LessonResult
     let improved: Bool
+    /// What finishing the lesson earned (XP, level-up, badges, quests); nil if it could not be saved.
+    let reward: ProgressUpdate?
     let accent: Color
     let next: Lesson?
     let onContinue: () -> Void
@@ -16,17 +18,31 @@ struct LessonResults: View {
     @State private var xp = 0
     @State private var burst = 0
     @State private var appeared = false
+    /// The level bar: fills from the XP before the lesson to after it, rolling over on a level-up.
+    @State private var barLevel: Level?
+    @State private var barValue = 0.0
+    @State private var leveled = false
+    @State private var badgesShown = 0
     @State private var offerReminder = !UserDefaults.standard.bool(forKey: PracticeReminder.askedKey) && !UserDefaults.standard.bool(forKey: PracticeReminder.enabledKey)
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.requestReview) private var requestReview
+
+    private static let gold = Color(hex: 0xF0A93B)
 
     private var headline: LocalizedStringKey {
         switch result.stars { case 3: return "Flawless"; case 2: return "Great work"; default: return "Lesson complete" }
     }
 
     var body: some View {
-        VStack(spacing: 26) {
-            Spacer(minLength: 10)
+        VStack(spacing: 0) {
+            ScrollView { content }.scrollBounceBehavior(.basedOnSize).scrollIndicators(.hidden).scrollClipDisabled()
+            buttons
+        }
+        .task { await reveal() }
+    }
+
+    private var content: some View {
+        VStack(spacing: 24) {
             ZStack {
                 SparkBurst(trigger: burst, color: Palette.amber).frame(width: 320, height: 320)
                 HStack(alignment: .bottom, spacing: 14) {
@@ -49,22 +65,88 @@ struct LessonResults: View {
             if improved && result.stars == 3 {
                 Label("New best on this lesson", systemImage: "arrow.up.circle.fill").font(.subheadline.weight(.semibold)).foregroundStyle(accent)
             }
+            if let barLevel { levelBar(barLevel).padding(.horizontal, 20).transition(.opacity) }
+            if let reward, badgesShown > 0 { earned(reward) }
             if offerReminder && appeared { reminderCard.transition(.move(edge: .bottom).combined(with: .opacity)) }
-            Spacer()
-            VStack(spacing: 10) {
-                if let next, store.canPlay(next) {
-                    StepButton(title: "Next lesson", accent: accent) { onNext(next) }.padding(.bottom, -12)
-                        .accessibilityIdentifier("lesson.next")
-                }
-                Button { onContinue() } label: {
-                    Text("Done").font(Typeface.label(17)).foregroundStyle(Palette.ink).frame(maxWidth: .infinity, minHeight: 52)
-                }
-                .accessibilityIdentifier("lesson.done")
-                .padding(.horizontal, 20)
-            }
-            .padding(.bottom, 8)
         }
-        .task { await reveal() }
+        .padding(.top, 26).padding(.bottom, 16)
+    }
+
+    private var buttons: some View {
+        VStack(spacing: 10) {
+            if let next, store.canPlay(next) {
+                StepButton(title: "Next lesson", accent: accent) { onNext(next) }.padding(.bottom, -12)
+                    .accessibilityIdentifier("lesson.next")
+            }
+            Button { onContinue() } label: {
+                Text("Done").font(Typeface.label(17)).foregroundStyle(Palette.ink).frame(maxWidth: .infinity, minHeight: 52)
+            }
+            .accessibilityIdentifier("lesson.done")
+            .padding(.horizontal, 20)
+        }
+        .padding(.top, 8).padding(.bottom, 8)
+    }
+
+    /// Level N and a bar that fills with this lesson's XP; on a level-up it fills, bursts and rolls over.
+    private func levelBar(_ level: Level) -> some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle().fill(leveled ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.mint.opacity(0.16)))
+                Text("\(level.number)").font(Typeface.label(17)).foregroundStyle(leveled ? Color(hex: 0x1B1206) : Palette.ink)
+                    .contentTransition(.numericText())
+            }
+            .frame(width: 40, height: 40)
+            .scaleEffect(leveled ? 1.12 : 1)
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Text("Level \(level.number)").font(Typeface.label(15)).foregroundStyle(leveled ? Self.gold : Palette.ink)
+                    if leveled { Image(systemName: "arrow.up.circle.fill").font(.subheadline.weight(.bold)).foregroundStyle(Self.gold).transition(.scale.combined(with: .opacity)) }
+                    Text(LocalizedStringKey(level.name)).font(.footnote).foregroundStyle(Palette.inkSoft).lineLimit(1)
+                    Spacer(minLength: 0)
+                }
+                ProgressLine(value: barValue, color: leveled ? Self.gold : Palette.mint, height: 8)
+            }
+        }
+        .padding(12)
+        .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Palette.stageRaised))
+        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(leveled ? Self.gold.opacity(0.6) : .clear, lineWidth: 1.5))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("Level \(level.number)"))
+    }
+
+    /// Badges and quests this lesson completed, popping in one by one.
+    private func earned(_ reward: ProgressUpdate) -> some View {
+        VStack(spacing: 8) {
+            ForEach(Array(reward.achievementsEarned.enumerated()), id: \.element.id) { index, badge in
+                if index < badgesShown {
+                    rewardRow(symbol: badge.symbol, title: Text(LocalizedStringKey(badge.title)), detail: Text("Achievement unlocked"), gold: true)
+                }
+            }
+            ForEach(Array(reward.questsCompleted.enumerated()), id: \.element.id) { index, quest in
+                if reward.achievementsEarned.count + index < badgesShown {
+                    rewardRow(symbol: "checkmark", title: Text(quest.title), detail: Text("Quest complete · +\(quest.xp) XP"), gold: false)
+                }
+            }
+        }
+        .padding(.horizontal, 20)
+    }
+
+    private func rewardRow(symbol: String, title: Text, detail: Text, gold: Bool) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: symbol).font(.system(size: 16, weight: .bold)).foregroundStyle(gold ? Color(hex: 0x1B1206) : Palette.onAccent)
+                .frame(width: 36, height: 36)
+                .background(Circle().fill(gold ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.mint)))
+                .shadow(color: (gold ? Self.gold : Palette.mint).opacity(0.5), radius: 10)
+            VStack(alignment: .leading, spacing: 1) {
+                title.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                detail.font(.caption).foregroundStyle(Palette.inkSoft)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(10)
+        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
+        .transition(.scale(scale: 0.6).combined(with: .opacity))
+        .accessibilityElement(children: .combine)
     }
 
     /// After the first lesson: one tap to make practice a daily habit.
@@ -135,6 +217,34 @@ struct LessonResults: View {
         for s in 1...steps {
             try? await Task.sleep(for: .milliseconds(30))
             withAnimation(.linear(duration: 0.03)) { xp = result.xp * s / steps }
+        }
+        await fillLevelBar()
+        guard let reward else { return }
+        for i in 0..<(reward.achievementsEarned.count + reward.questsCompleted.count) {
+            try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 320))
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) { badgesShown = i + 1 }
+            if i < reward.achievementsEarned.count { SoundFX.shared.play(.star); Haptics.shared.lock() }
+        }
+    }
+
+    private func fillLevelBar() async {
+        guard let reward else { return }
+        let after = store.progress.xp
+        let before = max(0, after - reward.xpGained)
+        let start = Progression.level(for: before)
+        barValue = start.progress(before)
+        withAnimation(.easeOut(duration: 0.3)) { barLevel = start }
+        try? await Task.sleep(for: .milliseconds(250))
+        if let next = reward.levelUp {
+            withAnimation(.easeInOut(duration: 0.6)) { barValue = 1 }
+            try? await Task.sleep(for: .milliseconds(650))
+            SoundFX.shared.play(.levelUp); Haptics.shared.done(); burst += 1
+            withAnimation(.spring(response: 0.45, dampingFraction: 0.55)) { barLevel = next; leveled = true; barValue = 0 }
+            try? await Task.sleep(for: .milliseconds(200))
+            withAnimation(.easeOut(duration: 0.5)) { barValue = next.progress(after) }
+        } else {
+            withAnimation(.easeOut(duration: 0.7)) { barValue = start.progress(after) }
+            try? await Task.sleep(for: .milliseconds(700))
         }
     }
 }

@@ -462,14 +462,17 @@ final class AppStore: ObservableObject {
     }
 
     /// Saves a finished lesson: stars, XP, quests and badges, and a practice record for the streak.
-    func finishLesson(_ result: LessonResult, courseId: String) {
+    /// Saves the lesson and its XP; returns what was earned so the results screen can show it.
+    @discardableResult
+    func finishLesson(_ result: LessonResult, courseId: String) -> ProgressUpdate? {
         var learn = self.learn
         learn.record(result, courseId: courseId)
-        guard updateSettings({ $0.learn = learn }) else { return }
+        guard updateSettings({ $0.learn = learn }) else { return nil }
         // count = stars possible, stableCount = stars earned (records require stableCount <= count).
         save(PracticeRecord(instrumentId: "learn.\(courseId)", kind: "lesson", count: 3, stableCount: result.stars, durationMs: result.minutes * 60_000))
-        recordProgress(.lessonCompleted(stars: result.stars, xp: result.xp))
         Analytics.log("lesson_done", ["lesson": result.lessonId, "stars": String(result.stars)])
+        // The results screen celebrates level-ups and badges itself; the toast would sit hidden behind it.
+        return recordProgress(.lessonCompleted(stars: result.stars, xp: result.xp), toast: false)
     }
 
     // MARK: Progress (XP, quests, badges, string health)
@@ -483,17 +486,19 @@ final class AppStore: ObservableObject {
     var stringDrift: [StringDrift] { StringHealth.drift(progress.stringSamples, instrumentId: instrument.id, since: progress.restrung[instrument.id]) }
 
     /// Applies an event to the saved progress; announces XP, quests, badges and level-ups.
-    func recordProgress(_ event: ProgressEvent, announce: Bool = true) {
+    @discardableResult
+    func recordProgress(_ event: ProgressEvent, announce: Bool = true, toast: Bool = true) -> ProgressUpdate? {
         var state = progress
         let update = state.record(event, streakBest: streak.best, customTunings: settings.customTunings?.count ?? 0)
-        guard updateSettings({ $0.progress = state }) else { return }
-        if update.levelUp != nil || !update.achievementsEarned.isEmpty { Haptics.shared.done() }
-        if announce || update.levelUp != nil || !update.questsCompleted.isEmpty || !update.achievementsEarned.isEmpty {
+        guard updateSettings({ $0.progress = state }) else { return nil }
+        if toast, update.levelUp != nil || !update.achievementsEarned.isEmpty { Haptics.shared.done() }
+        if toast, announce || update.levelUp != nil || !update.questsCompleted.isEmpty || !update.achievementsEarned.isEmpty {
             lastReward = update
             rewardPulse += 1
         }
         for quest in update.questsCompleted { Analytics.log("quest_done", ["quest": quest.id]) }
         if let level = update.levelUp { Analytics.log("level_up", ["level": String(level.number)]) }
+        return update
     }
 
     func markRestrung() {

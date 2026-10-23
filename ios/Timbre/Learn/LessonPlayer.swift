@@ -11,6 +11,7 @@ struct LessonPlayer: View {
     @State private var run: LessonRun
     @State private var result: LessonResult?
     @State private var improved = false
+    @State private var reward: ProgressUpdate?
     @State private var confirmQuit = false
     @State private var tuneChecked = false
 
@@ -28,7 +29,7 @@ struct LessonPlayer: View {
             Palette.stage.ignoresSafeArea()
             RadialGradient(colors: [accent.opacity(0.16), .clear], center: UnitPoint(x: 0.5, y: 0), startRadius: 10, endRadius: 520).ignoresSafeArea()
             if let result {
-                LessonResults(course: course, lesson: lesson, result: result, improved: improved, accent: accent,
+                LessonResults(course: course, lesson: lesson, result: result, improved: improved, reward: reward, accent: accent,
                               next: nextLesson, onContinue: { dismiss() }, onNext: { next in dismiss(); onNext?(next) })
                     .transition(.opacity.combined(with: .scale(scale: 0.96)))
             } else {
@@ -91,7 +92,7 @@ struct LessonPlayer: View {
         let outcome = run.result()
         improved = outcome.stars > (store.learn.stars[lesson.id] ?? 0)
         store.stopLessonListening()
-        store.finishLesson(outcome, courseId: course.id)
+        reward = store.finishLesson(outcome, courseId: course.id)
         SoundFX.shared.play(.complete)
         Haptics.shared.done()
         result = outcome
