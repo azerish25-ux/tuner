@@ -45,7 +45,7 @@ struct AlongStep: View {
                 let now = CACurrentMediaTime()
                 let elapsed = phase == .ready ? -countIn : now - startTime - countIn
                 ZStack {
-                    HighwayCanvas(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: now,
+                    HighwayCanvas(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: phase == .done ? now + 10 : now,
                                   lanes: fretted ? course.stringCount : 0, accent: accent, trail: fretted ? [] : trail, startTime: startTime + countIn)
                     if phase == .playing, elapsed < 0 {
                         Text("\(Int(-elapsed / spb) + 1)").font(Typeface.note(96)).foregroundStyle(Palette.ink)
@@ -94,21 +94,25 @@ struct AlongStep: View {
         .padding(.horizontal, 22).padding(.top, 8)
     }
 
+    /// The next note by name, and where to play it.
     @ViewBuilder private var upcoming: some View {
         let index = min(judge.nextIndex, notes.count - 1)
         if notes.indices.contains(index) {
             let note = notes[index]
-            HStack(spacing: 14) {
-                Text(NoteName.name(note.midi)).font(Typeface.display(26)).foregroundStyle(Palette.ink).frame(minWidth: 64, alignment: .leading)
+            HStack(spacing: 10) {
+                Text("Next").font(Typeface.label(13)).foregroundStyle(Palette.inkFaint)
+                Text(NoteName.name(note.midi)).font(Typeface.display(22)).foregroundStyle(Palette.ink)
                 if fretted, let at = note.at {
-                    FretboardDiagram(strings: course.stringCount, dots: [at], frets: max(5, at.fret + 1), accent: accent, activeString: at.string, fretless: course.fretless)
-                        .frame(height: CGFloat(course.stringCount) * 16 + 10)
-                        .scaleEffect(0.62, anchor: .leading)
-                        .frame(height: CGFloat(course.stringCount) * 11)
+                    Text(at.fret == 0 ? LocalizedStringKey("String \(at.string), open") : LocalizedStringKey("String \(at.string), fret \(at.fret)"))
+                        .font(Typeface.label(14)).foregroundStyle(accent)
+                        .padding(.horizontal, 12).padding(.vertical, 6)
+                        .background(Capsule().fill(accent.opacity(0.12)))
                 }
+                Spacer()
             }
             .padding(.horizontal, 24)
             .animation(Motion.quick, value: index)
+            .contentTransition(.numericText())
         }
     }
 
@@ -279,7 +283,7 @@ struct HighwayCanvas: View {
                 guard x0 + width > -40, x0 < size.width + 40 else { continue }
                 let y = laneY(note)
                 let grade = grades[i]
-                let age = hitTimes[i].map { now - $0 } ?? 0
+                let age = min(1, hitTimes[i].map { now - $0 } ?? 0)
                 var rect = CGRect(x: x0, y: y - 15, width: width, height: 30)
                 var alpha = 1.0
                 var fill = accent

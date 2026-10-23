@@ -462,7 +462,8 @@ final class AppStore: ObservableObject {
         var learn = self.learn
         learn.record(result, courseId: courseId)
         guard updateSettings({ $0.learn = learn }) else { return }
-        save(PracticeRecord(instrumentId: "learn.\(courseId)", kind: "lesson", count: 1, stableCount: result.stars, durationMs: result.minutes * 60_000))
+        // count = stars possible, stableCount = stars earned (records require stableCount <= count).
+        save(PracticeRecord(instrumentId: "learn.\(courseId)", kind: "lesson", count: 3, stableCount: result.stars, durationMs: result.minutes * 60_000))
         recordProgress(.lessonCompleted(stars: result.stars, xp: result.xp))
         Analytics.log("lesson_done", ["lesson": result.lessonId, "stars": String(result.stars)])
     }
