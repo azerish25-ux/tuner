@@ -10,6 +10,7 @@ struct TuneView: View {
     @Environment(\.requestReview) private var requestReview
     @Environment(\.scenePhase) private var scenePhase
     @State private var motion = ReadoutMotion()
+    @State private var failed3D: String?
     private static let supports3D = MTLCreateSystemDefaultDevice() != nil
 
     var body: some View {
@@ -104,8 +105,8 @@ struct TuneView: View {
                 ChromaticStage(input: stageInput, note: store.targetName).padding(24)
             } else if let modelID = store.modelID {
                 let rig = ModelLibrary.rig(modelID)
-                if Self.supports3D && store.settings.stageMode != "studio" {
-                    InstrumentStage(modelID: modelID, input: stageInput) { store.chooseAnchor($0) }
+                if Self.supports3D && store.settings.stageMode != "studio" && failed3D != modelID {
+                    InstrumentStage(modelID: modelID, input: stageInput, onSelect: { store.chooseAnchor($0) }, onFailure: { failed3D = modelID })
                 } else {
                     StudioStage(imageName: ModelLibrary.cardImageName(modelID), rig: rig, input: stageInput) { store.chooseAnchor($0) }
                         .padding(.horizontal, 16)

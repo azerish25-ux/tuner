@@ -23,6 +23,7 @@ final class StageController {
     private var loading: String?
     /// Plain-text load state for diagnostics (shown only when TIMBRE_STAGE_DEBUG is set in debug builds).
     private(set) var status = "idle"
+    private(set) var failed = false
     private var model: Entity?
     private var rig: InstrumentRig?
     private var pegs: [String: (entity: Entity, base: simd_quatf)] = [:]
@@ -60,13 +61,14 @@ final class StageController {
 
     func load(modelID: String) async {
         guard loadedModel != modelID, loading != modelID else { return }
-        guard let url = ModelLibrary.url(modelID) else { status = "no usdz for \(modelID)"; return }
-        guard let rig = ModelLibrary.rig(modelID) else { status = "no rig for \(modelID)"; return }
+        guard let url = ModelLibrary.url(modelID) else { status = "no usdz for \(modelID)"; failed = true; return }
+        guard let rig = ModelLibrary.rig(modelID) else { status = "no rig for \(modelID)"; failed = true; return }
         loading = modelID
         defer { loading = nil }
         status = "loading \(modelID)"
         let entity: Entity
-        do { entity = try await Entity(contentsOf: url) } catch { status = "load failed: \(error.localizedDescription)"; return }
+        do { entity = try await Entity(contentsOf: url) } catch { status = "load failed: \(error.localizedDescription)"; failed = true; return }
+        failed = false
         model?.removeFromParent()
         pegs = [:]; posts = [:]; staticStrings = [:]; angles = [:]
         segments.forEach { $0.removeFromParent() }; halo.forEach { $0.removeFromParent() }
@@ -242,6 +244,8 @@ struct InstrumentStage: View {
     let modelID: String
     let input: () -> StageInput
     var onSelect: (String) -> Void = { _ in }
+    /// Called when the model cannot be shown, so the host can fall back to the studio stage.
+    var onFailure: () -> Void = {}
     @State private var controller = StageController()
     @State private var ready = false
     @State private var status = "make"
@@ -259,6 +263,7 @@ struct InstrumentStage: View {
             status = "attached"
             await controller.load(modelID: modelID)
             status = controller.status
+            if controller.failed { onFailure() }
             ready = true
         } update: { _ in
             controller.input = input
@@ -268,7 +273,11 @@ struct InstrumentStage: View {
             while let current = entity, !current.name.hasPrefix("peg_") { entity = current.parent }
             if let name = entity?.name { onSelect(String(name.dropFirst(4))) }
         })
-        .task(id: modelID) { await controller.load(modelID: modelID); status = controller.status }
+        .task(id: modelID) {
+            await controller.load(modelID: modelID)
+            status = controller.status
+            if controller.failed { onFailure() }
+        }
         .mask {
             // Feather the edges so the stage melts into the screen whatever the renderer clears to.
             let edge: [Gradient.Stop] = [.init(color: .clear, location: 0), .init(color: .black, location: 0.06), .init(color: .black, location: 0.94), .init(color: .clear, location: 1)]
