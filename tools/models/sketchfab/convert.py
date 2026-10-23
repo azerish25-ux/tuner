@@ -992,21 +992,22 @@ def _weld_seams(obj):
     return before - len(mesh.vertices)
 
 
-def _guard_normals(mesh):
-    """Corners whose normal faces away from their own face (a transfer that hit the far side of a thin
-    shell) fall back to the mesh's own smooth normal."""
+def _corner_normals(mesh):
     corners = getattr(mesh, "corner_normals", None)
     if corners is None or not len(mesh.loops):
-        return 0
+        return None
     normal = np.empty(len(mesh.loops) * 3, dtype=np.float32)
     corners.foreach_get("vector", normal)
-    normal = normal.reshape(-1, 3)
-    face = np.empty(len(mesh.polygons) * 3, dtype=np.float32)
-    mesh.polygons.foreach_get("normal", face)
-    totals = np.empty(len(mesh.polygons), dtype=np.int64)
-    mesh.polygons.foreach_get("loop_total", totals)
-    face_of = np.repeat(np.arange(len(mesh.polygons)), totals)
-    bad = (normal * face.reshape(-1, 3)[face_of]).sum(1) < 0.0
+    return normal.reshape(-1, 3)
+
+
+def _guard_normals(mesh, reference):
+    """Transferred normals more than 60 degrees off the thinned mesh's own normal (a projection that hit
+    another part: the far side of a thin shell, a saddle standing on a plate) fall back to its own."""
+    normal = _corner_normals(mesh)
+    if normal is None or reference is None or len(reference) != len(normal):
+        return 0
+    bad = (normal * reference).sum(1) < 0.5
     if bad.any():
         normal[bad] = 0.0  # zero: the mesh's own normal
         mesh.normals_split_custom_set([tuple(v) for v in normal])
@@ -1040,15 +1041,16 @@ def thin(obj, ratio):
         mesh.normals_split_custom_set([(0.0, 0.0, 0.0)] * len(mesh.loops))
         if hasattr(mesh, "set_sharp_from_angle"):
             mesh.set_sharp_from_angle(angle=math.radians(50))
+        own = _corner_normals(mesh)
         move = obj.modifiers.new("normals", "DATA_TRANSFER")
         move.object = src
         move.use_loop_data = True
         move.data_types_loops = {"CUSTOM_NORMAL"}
         move.loop_mapping = "POLYINTERP_LNORPROJ"
         mesh = _apply(obj)
-        flipped = _guard_normals(mesh)
-        if flipped:
-            print(f"   {obj.name}: {flipped} transferred normals faced away, reset", flush=True)
+        stray = _guard_normals(mesh, own)
+        if stray:
+            print(f"   {obj.name}: {stray} of {len(mesh.loops)} transferred normals strayed, reset", flush=True)
         data = src.data
         bpy.data.objects.remove(src)
         bpy.data.meshes.remove(data)
