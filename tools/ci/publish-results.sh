@@ -6,6 +6,9 @@
 set -euo pipefail
 branch="$1"
 source_dir="$2"
+# Side branches publish next to the main evidence (ci-results/core--dsp-chords) instead of over it.
+ref="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-}}"
+case "$ref" in ""|main|v2/foundations) ;; *) branch="${branch}--${ref//\//-}" ;; esac
 [ -d "$source_dir" ] || { echo "No results directory: $source_dir"; exit 0; }
 work=$(mktemp -d)
 cp -R "$source_dir"/. "$work"/
