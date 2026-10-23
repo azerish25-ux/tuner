@@ -86,7 +86,8 @@ def build(spec: Spec):
     hollow = spec.kind in ("acoustic", "ukulele", "mandolin")
     if hollow:
         prism("body_shell", offset_outline(outline, -0.0006), y_top + 0.003, -y_top, P[spec.back_wood], root, bevel=0.004)
-        prism("body_top", outline, y_top, y_top + 0.0035, P[spec.finish], root, bevel=0.0012, uv=box_uv(4.0))
+        burst = spec.finish in ("sunburst", "cherry")
+        prism("body_top", outline, y_top, y_top + 0.0035, P[spec.finish], root, bevel=0.0012, uv=fit_uv(bounds) if burst else box_uv(4.0))
         ring("binding_front", offset_outline(outline, 0.0011), offset_outline(outline, -0.0004), y_top - 0.0002, y_top + 0.004, P["cream"], root)
         ring("binding_back", offset_outline(outline, 0.0011), offset_outline(outline, -0.0004), -y_top - 0.004, -y_top + 0.0002, P["cream"], root)
         if spec.soundhole == "oval":
