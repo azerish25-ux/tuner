@@ -1,0 +1,25 @@
+name: Benchmark
+# Collects competitor App Store screenshots and facts for design review (never shipped).
+on:
+  push:
+    branches: ["bench/**"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: bench-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  bench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m pip install --quiet pillow
+      - name: Collect store screenshots
+        run: python3 tools/scout/benchmark.py build/bench
+      - name: Publish results
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash tools/ci/publish-results.sh ci-results/bench build/bench
