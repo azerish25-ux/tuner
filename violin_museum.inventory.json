@@ -1,0 +1,193 @@
+{
+ "id": "violin_museum",
+ "source": "scene.gltf",
+ "objects": [
+  {
+   "name": "Object_2",
+   "parent": "MT_E_3270_Skrzypce_8_FIN2.OBJ.cleaner.materialmerger.gles",
+   "vertices": 65532,
+   "min": [
+    0.0224,
+    -0.181,
+    -0.0341
+   ],
+   "max": [
+    0.283,
+    0.4301,
+    0.0488
+   ],
+   "center": [
+    0.1527,
+    0.1245,
+    0.0073
+   ],
+   "materials": [
+    "defaultMat"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.15
+   ]
+  },
+  {
+   "name": "Object_3",
+   "parent": "MT_E_3270_Skrzypce_8_FIN2.OBJ.cleaner.materialmerger.gles",
+   "vertices": 65532,
+   "min": [
+    0.0461,
+    -0.1808,
+    -0.0341
+   ],
+   "max": [
+    0.2832,
+    0.4277,
+    -0.0181
+   ],
+   "center": [
+    0.1646,
+    0.1234,
+    -0.0261
+   ],
+   "materials": [
+    "defaultMat"
+   ],
+   "color": [
+    0.4,
+    0.575,
+    1.0
+   ]
+  },
+  {
+   "name": "Object_4",
+   "parent": "MT_E_3270_Skrzypce_8_FIN2.OBJ.cleaner.materialmerger.gles",
+   "vertices": 65532,
+   "min": [
+    0.0241,
+    -0.1471,
+    -0.0315
+   ],
+   "max": [
+    0.1867,
+    0.3555,
+    0.0376
+   ],
+   "center": [
+    0.1054,
+    0.1042,
+    0.0031
+   ],
+   "materials": [
+    "defaultMat"
+   ],
+   "color": [
+    0.452,
+    0.7,
+    0.105
+   ]
+  },
+  {
+   "name": "Object_5",
+   "parent": "MT_E_3270_Skrzypce_8_FIN2.OBJ.cleaner.materialmerger.gles",
+   "vertices": 65532,
+   "min": [
+    0.0046,
+    -0.1531,
+    -0.0362
+   ],
+   "max": [
+    0.1862,
+    0.3972,
+    0.0482
+   ],
+   "center": [
+    0.0954,
+    0.1221,
+    0.006
+   ],
+   "materials": [
+    "defaultMat"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.925
+   ]
+  },
+  {
+   "name": "Object_6",
+   "parent": "MT_E_3270_Skrzypce_8_FIN2.OBJ.cleaner.materialmerger.gles",
+   "vertices": 17973,
+   "min": [
+    0.0002,
+    -0.15,
+    -0.0318
+   ],
+   "max": [
+    0.2414,
+    0.4298,
+    0.0397
+   ],
+   "center": [
+    0.1208,
+    0.1399,
+    0.0039
+   ],
+   "materials": [
+    "defaultMat"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.858
+   ]
+  }
+ ],
+ "axes": {
+  "mean": [
+   0.1546,
+   0.08,
+   -0.0095
+  ],
+  "long": [
+   0.0837,
+   0.9963,
+   -0.0179
+  ],
+  "mid": [
+   0.9766,
+   -0.0856,
+   -0.1972
+  ],
+  "thin": [
+   -0.198,
+   -0.0009,
+   -0.9802
+  ],
+  "extent": [
+   0.6039,
+   0.2931,
+   0.0914
+  ]
+ },
+ "ends": {
+  "A": {
+   "center": [
+    0.1616,
+    0.3443,
+    -0.0157
+   ],
+   "scale": 0.2046,
+   "objects": []
+  },
+  "B": {
+   "center": [
+    0.1471,
+    -0.0786,
+    -0.0068
+   ],
+   "scale": 0.3282,
+   "objects": []
+  }
+ }
+}

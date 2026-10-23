@@ -1,0 +1,213 @@
+{
+ "id": "violin_museum2",
+ "source": "scene.gltf",
+ "objects": [
+  {
+   "name": "Object_2",
+   "parent": "MT_E_2325_Skrzypce.obj.cleaner.materialmerger.gles",
+   "vertices": 12683,
+   "min": [
+    -0.9775,
+    -7.7812,
+    -2.0627
+   ],
+   "max": [
+    2.9425,
+    -5.938,
+    19.335
+   ],
+   "center": [
+    0.9825,
+    -6.8596,
+    8.6362
+   ],
+   "materials": [
+    "MT_E_2325_Skrzypce_Material_u1_v1"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.15
+   ]
+  },
+  {
+   "name": "Object_3",
+   "parent": "MT_E_2325_Skrzypce.obj.cleaner.materialmerger.gles",
+   "vertices": 65532,
+   "min": [
+    -2.4816,
+    -14.1146,
+    -9.2432
+   ],
+   "max": [
+    1.6752,
+    0.1042,
+    10.3099
+   ],
+   "center": [
+    -0.4032,
+    -7.0052,
+    0.5333
+   ],
+   "materials": [
+    "MT_E_2325_Skrzypce_Material_u1_v2"
+   ],
+   "color": [
+    0.4,
+    0.575,
+    1.0
+   ]
+  },
+  {
+   "name": "Object_4",
+   "parent": "MT_E_2325_Skrzypce.obj.cleaner.materialmerger.gles",
+   "vertices": 38336,
+   "min": [
+    -2.4815,
+    -14.2017,
+    -9.6099
+   ],
+   "max": [
+    1.7952,
+    0.0633,
+    10.3099
+   ],
+   "center": [
+    -0.3431,
+    -7.0692,
+    0.35
+   ],
+   "materials": [
+    "MT_E_2325_Skrzypce_Material_u1_v2"
+   ],
+   "color": [
+    0.452,
+    0.7,
+    0.105
+   ]
+  },
+  {
+   "name": "Object_5",
+   "parent": "MT_E_2325_Skrzypce.obj.cleaner.materialmerger.gles",
+   "vertices": 51984,
+   "min": [
+    -1.7956,
+    -9.4828,
+    3.7526
+   ],
+   "max": [
+    2.758,
+    -5.3515,
+    21.3168
+   ],
+   "center": [
+    0.4812,
+    -7.4172,
+    12.5347
+   ],
+   "materials": [
+    "MT_E_2325_Skrzypce_Material_u2_v1"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.925
+   ]
+  },
+  {
+   "name": "Object_6",
+   "parent": "MT_E_2325_Skrzypce.obj.cleaner.materialmerger.gles",
+   "vertices": 13359,
+   "min": [
+    -0.412,
+    -8.1212,
+    -9.6414
+   ],
+   "max": [
+    2.9511,
+    -5.3404,
+    -1.8906
+   ],
+   "center": [
+    1.2696,
+    -6.7308,
+    -5.766
+   ],
+   "materials": [
+    "MT_E_2325_Skrzypce_Material_u2_v2"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.858
+   ]
+  }
+ ],
+ "axes": {
+  "mean": [
+   0.2736,
+   -7.2111,
+   4.9412
+  ],
+  "long": [
+   -0.0091,
+   -0.0014,
+   1.0
+  ],
+  "mid": [
+   -0.0125,
+   0.9999,
+   0.0013
+  ],
+  "thin": [
+   0.9999,
+   0.0124,
+   0.0091
+  ],
+  "extent": [
+   30.9602,
+   14.2789,
+   5.3921
+  ]
+ },
+ "ends": {
+  "A": {
+   "center": [
+    0.0302,
+    -7.4048,
+    16.6774
+   ],
+   "scale": 10.4025,
+   "objects": [
+    {
+     "name": "Object_5",
+     "color": [
+      1.0,
+      0.4,
+      0.925
+     ],
+     "vertices": 51984
+    }
+   ]
+  },
+  "B": {
+   "center": [
+    0.2861,
+    -7.0374,
+    -4.9929
+   ],
+   "scale": 15.9924,
+   "objects": [
+    {
+     "name": "Object_6",
+     "color": [
+      0.15,
+      1.0,
+      0.858
+     ],
+     "vertices": 13359
+    }
+   ]
+  }
+ }
+}

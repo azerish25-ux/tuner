@@ -1,0 +1,380 @@
+{
+ "id": "mandolin_fstyle",
+ "source": "scene.gltf",
+ "objects": [
+  {
+   "name": "polySurface42_back_mat_0",
+   "parent": "polySurface42",
+   "vertices": 9730,
+   "min": [
+    -127.735,
+    -175.5627,
+    -11.6385
+   ],
+   "max": [
+    124.8208,
+    172.658,
+    2.7059
+   ],
+   "center": [
+    -1.4571,
+    -1.4523,
+    -4.4663
+   ],
+   "materials": [
+    "back_mat"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.15
+   ]
+  },
+  {
+   "name": "polySurface42_binding_mat_0",
+   "parent": "polySurface42",
+   "vertices": 6894,
+   "min": [
+    -129.9608,
+    -526.6987,
+    -39.1925
+   ],
+   "max": [
+    126.5867,
+    174.429,
+    65.9637
+   ],
+   "center": [
+    -1.6871,
+    -176.1348,
+    13.3856
+   ],
+   "materials": [
+    "binding_mat"
+   ],
+   "color": [
+    0.4,
+    0.575,
+    1.0
+   ]
+  },
+  {
+   "name": "polySurface42_blinn10_0",
+   "parent": "polySurface42",
+   "vertices": 1138,
+   "min": [
+    -51.2973,
+    -334.2464,
+    18.9102
+   ],
+   "max": [
+    51.6379,
+    183.4781,
+    72.228
+   ],
+   "center": [
+    0.1703,
+    -75.3841,
+    45.5691
+   ],
+   "materials": [
+    "blinn10"
+   ],
+   "color": [
+    0.452,
+    0.7,
+    0.105
+   ]
+  },
+  {
+   "name": "polySurface42_frets_mat_0",
+   "parent": "polySurface42",
+   "vertices": 29297,
+   "min": [
+    -53.0491,
+    -474.9477,
+    -35.5036
+   ],
+   "max": [
+    52.5052,
+    23.5196,
+    72.9137
+   ],
+   "center": [
+    -0.272,
+    -225.7141,
+    18.705
+   ],
+   "materials": [
+    "frets_mat"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.925
+   ]
+  },
+  {
+   "name": "polySurface42_headstock_mat_0",
+   "parent": "polySurface42",
+   "vertices": 847,
+   "min": [
+    -48.9502,
+    -524.499,
+    -34.6554
+   ],
+   "max": [
+    45.3263,
+    -339.191,
+    34.6811
+   ],
+   "center": [
+    -1.8119,
+    -431.845,
+    0.0128
+   ],
+   "materials": [
+    "headstock_mat"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.858
+   ]
+  },
+  {
+   "name": "polySurface42_sides_mat_0",
+   "parent": "polySurface42",
+   "vertices": 9909,
+   "min": [
+    -126.1877,
+    -177.266,
+    -3.1315
+   ],
+   "max": [
+    126.5864,
+    174.4459,
+    45.0784
+   ],
+   "center": [
+    0.1993,
+    -1.4101,
+    20.9734
+   ],
+   "materials": [
+    "sides_mat"
+   ],
+   "color": [
+    0.7,
+    0.507,
+    0.28
+   ]
+  },
+  {
+   "name": "polySurface42_strings_mat_0",
+   "parent": "polySurface42",
+   "vertices": 45096,
+   "min": [
+    -22.4413,
+    -482.7858,
+    -35.8248
+   ],
+   "max": [
+    23.1281,
+    139.3168,
+    72.9289
+   ],
+   "center": [
+    0.3434,
+    -171.7345,
+    18.5521
+   ],
+   "materials": [
+    "strings_mat"
+   ],
+   "color": [
+    0.362,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "polySurface42_tailpiece_mat_0",
+   "parent": "polySurface42",
+   "vertices": 722,
+   "min": [
+    -26.4941,
+    109.0125,
+    13.6318
+   ],
+   "max": [
+    26.4941,
+    175.4945,
+    57.6501
+   ],
+   "center": [
+    0.0,
+    142.2535,
+    35.641
+   ],
+   "materials": [
+    "tailpiece_mat"
+   ],
+   "color": [
+    0.426,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "polySurface42_top_mat_0",
+   "parent": "polySurface42",
+   "vertices": 12305,
+   "min": [
+    -128.7468,
+    -526.6987,
+    -51.4603
+   ],
+   "max": [
+    124.6821,
+    172.4968,
+    56.0389
+   ],
+   "center": [
+    -2.0324,
+    -177.1009,
+    2.2893
+   ],
+   "materials": [
+    "top_mat"
+   ],
+   "color": [
+    0.7,
+    0.105,
+    0.304
+   ]
+  },
+  {
+   "name": "polySurface42_tuners_mat_0",
+   "parent": "polySurface42",
+   "vertices": 2072,
+   "min": [
+    -65.8662,
+    -483.7526,
+    -39.2938
+   ],
+   "max": [
+    65.4103,
+    -382.4943,
+    2.8664
+   ],
+   "center": [
+    -0.2279,
+    -433.1235,
+    -18.2137
+   ],
+   "materials": [
+    "tuners_mat"
+   ],
+   "color": [
+    0.4,
+    0.776,
+    1.0
+   ]
+  }
+ ],
+ "axes": {
+  "mean": [
+   0.2558,
+   -299.0329,
+   3.4549
+  ],
+  "long": [
+   -0.0069,
+   0.9958,
+   0.0916
+  ],
+  "mid": [
+   0.9996,
+   0.0044,
+   0.0273
+  ],
+  "thin": [
+   -0.0268,
+   -0.0918,
+   0.9954
+  ],
+  "extent": [
+   714.1727,
+   257.2547,
+   88.3226
+  ]
+ },
+ "ends": {
+  "A": {
+   "center": [
+    -2.0064,
+    75.1253,
+    34.3543
+   ],
+   "scale": 288.1253,
+   "objects": [
+    {
+     "name": "polySurface42_back_mat_0",
+     "color": [
+      1.0,
+      0.15,
+      0.15
+     ],
+     "vertices": 9730
+    },
+    {
+     "name": "polySurface42_sides_mat_0",
+     "color": [
+      0.7,
+      0.507,
+      0.28
+     ],
+     "vertices": 9909
+    },
+    {
+     "name": "polySurface42_tailpiece_mat_0",
+     "color": [
+      0.426,
+      1.0,
+      0.4
+     ],
+     "vertices": 722
+    }
+   ]
+  },
+  "B": {
+   "center": [
+    -1.1827,
+    -426.2288,
+    -5.7887
+   ],
+   "scale": 233.2551,
+   "objects": [
+    {
+     "name": "polySurface42_headstock_mat_0",
+     "color": [
+      0.15,
+      1.0,
+      0.858
+     ],
+     "vertices": 847
+    },
+    {
+     "name": "polySurface42_tuners_mat_0",
+     "color": [
+      0.4,
+      0.776,
+      1.0
+     ],
+     "vertices": 2072
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,464 @@
+{
+ "id": "cello_slidon",
+ "source": "scene.gltf",
+ "objects": [
+  {
+   "name": "Object_10",
+   "parent": "sketchfab.obj.cleaner.gles",
+   "vertices": 2474,
+   "min": [
+    -140.8171,
+    -4.9219,
+    0.3464
+   ],
+   "max": [
+    132.5952,
+    3.4817,
+    40.6681
+   ],
+   "center": [
+    -4.1109,
+    -0.7201,
+    20.5072
+   ],
+   "materials": [
+    "String"
+   ],
+   "color": [
+    1.0,
+    0.15,
+    0.15
+   ]
+  },
+  {
+   "name": "Object_11",
+   "parent": "sketchfab.obj.cleaner.gles",
+   "vertices": 7008,
+   "min": [
+    -80.2318,
+    -5.7955,
+    -2.6942
+   ],
+   "max": [
+    135.8434,
+    0.5301,
+    53.9375
+   ],
+   "center": [
+    27.8058,
+    -2.6327,
+    25.6217
+   ],
+   "materials": [
+    "String"
+   ],
+   "color": [
+    0.4,
+    0.575,
+    1.0
+   ]
+  },
+  {
+   "name": "Object_12",
+   "parent": "sketchfab.obj.cleaner.gles",
+   "vertices": 7008,
+   "min": [
+    -80.5224,
+    -0.2164,
+    7.3768
+   ],
+   "max": [
+    118.6137,
+    6.9111,
+    53.4234
+   ],
+   "center": [
+    19.0457,
+    3.3474,
+    30.4001
+   ],
+   "materials": [
+    "String"
+   ],
+   "color": [
+    0.452,
+    0.7,
+    0.105
+   ]
+  },
+  {
+   "name": "Object_13",
+   "parent": "sketchfab.obj.cleaner.gles",
+   "vertices": 7008,
+   "min": [
+    -82.3584,
+    -2.902,
+    6.6718
+   ],
+   "max": [
+    124.5864,
+    2.0249,
+    54.376
+   ],
+   "center": [
+    21.114,
+    -0.4386,
+    30.5239
+   ],
+   "materials": [
+    "String"
+   ],
+   "color": [
+    1.0,
+    0.4,
+    0.925
+   ]
+  },
+  {
+   "name": "Object_14",
+   "parent": "sketchfab.obj.cleaner.gles",
+   "vertices": 7008,
+   "min": [
+    -80.2697,
+    -0.3859,
+    1.621
+   ],
+   "max": [
+    129.7931,
+    3.2081,
+    54.3929
+   ],
+   "center": [
+    24.7617,
+    1.4111,
+    28.007
+   ],
+   "materials": [
+    "String"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.858
+   ]
+  },
+  {
+   "name": "Object_2",
+   "parent": "sketchfab.obj.cleaner.gles",
+   "vertices": 12133,
+   "min": [
+    -140.3437,
+    -53.3828,
+    -15.0773
+   ],
+   "max": [
+    44.6394,
+    53.3828,
+    32.3831
+   ],
+   "center": [
+    -47.8521,
+    -0.0,
+    8.6529
+   ],
+   "materials": [
+    "Body"
+   ],
+   "color": [
+    0.7,
+    0.507,
+    0.28
+   ]
+  },
+  {
+   "name": "Object_3",
+   "parent": "sketchfab.obj.cleaner.gles",
+   "vertices": 108,
+   "min": [
+    33.914,
+    -5.787,
+    7.4416
+   ],
+   "max": [
+    44.6324,
+    5.787,
+    28.8211
+   ],
+   "center": [
+    39.2732,
+    0.0,
+    18.1313
+   ],
+   "materials": [
+    "Body_NONE"
+   ],
+   "color": [
+    0.362,
+    0.15,
+    1.0
+   ]
+  },
+  {
+   "name": "Object_4",
+   "parent": "sketchfab.obj.cleaner.gles",
+   "vertices": 2849,
+   "min": [
+    -56.4215,
+    -9.4698,
+    30.3386
+   ],
+   "max": [
+    -52.6495,
+    9.1338,
+    54.0846
+   ],
+   "center": [
+    -54.5355,
+    -0.168,
+    42.2116
+   ],
+   "materials": [
+    "Bridge"
+   ],
+   "color": [
+    0.426,
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "name": "Object_5",
+   "parent": "sketchfab.obj.cleaner.gles",
+   "vertices": 470,
+   "min": [
+    -23.7346,
+    -7.515,
+    16.2268
+   ],
+   "max": [
+    111.2716,
+    7.5151,
+    46.8882
+   ],
+   "center": [
+    43.7685,
+    0.0,
+    31.5575
+   ],
+   "materials": [
+    "Fingerboard"
+   ],
+   "color": [
+    0.7,
+    0.105,
+    0.304
+   ]
+  },
+  {
+   "name": "Object_6",
+   "parent": "sketchfab.obj.cleaner.gles",
+   "vertices": 23003,
+   "min": [
+    40.2986,
+    -6.7188,
+    -14.5674
+   ],
+   "max": [
+    154.1787,
+    6.7188,
+    30.2658
+   ],
+   "center": [
+    97.2387,
+    -0.0,
+    7.8492
+   ],
+   "materials": [
+    "Neck"
+   ],
+   "color": [
+    0.4,
+    0.776,
+    1.0
+   ]
+  },
+  {
+   "name": "Object_7",
+   "parent": "sketchfab.obj.cleaner.gles",
+   "vertices": 1408,
+   "min": [
+    113.5873,
+    -19.3534,
+    -3.8469
+   ],
+   "max": [
+    138.4094,
+    18.7672,
+    13.1872
+   ],
+   "center": [
+    125.9984,
+    -0.2931,
+    4.6702
+   ],
+   "materials": [
+    "Pegs"
+   ],
+   "color": [
+    0.93,
+    1.0,
+    0.15
+   ]
+  },
+  {
+   "name": "Object_8",
+   "parent": "sketchfab.obj.cleaner.gles",
+   "vertices": 704,
+   "min": [
+    -82.8219,
+    -4.0567,
+    44.3328
+   ],
+   "max": [
+    -79.9749,
+    5.6223,
+    47.8353
+   ],
+   "center": [
+    -81.3984,
+    0.7828,
+    46.084
+   ],
+   "materials": [
+    "Screws"
+   ],
+   "color": [
+    0.612,
+    0.28,
+    0.7
+   ]
+  },
+  {
+   "name": "Object_9",
+   "parent": "sketchfab.obj.cleaner.gles",
+   "vertices": 594,
+   "min": [
+    -136.3829,
+    -9.1872,
+    29.3833
+   ],
+   "max": [
+    -73.0528,
+    9.1872,
+    46.5591
+   ],
+   "center": [
+    -104.7179,
+    0.0,
+    37.9712
+   ],
+   "materials": [
+    "Tailpiece"
+   ],
+   "color": [
+    0.15,
+    1.0,
+    0.574
+   ]
+  }
+ ],
+ "axes": {
+  "mean": [
+   46.9044,
+   0.0977,
+   16.9533
+  ],
+  "long": [
+   -0.9915,
+   0.0043,
+   0.1304
+  ],
+  "mid": [
+   0.1304,
+   0.0474,
+   0.9903
+  ],
+  "thin": [
+   0.0019,
+   -0.9989,
+   0.0476
+  ],
+  "extent": [
+   295.7013,
+   78.075,
+   108.3677
+  ]
+ },
+ "ends": {
+  "A": {
+   "center": [
+    -96.9233,
+    0.5983,
+    20.6747
+   ],
+   "scale": 99.287,
+   "objects": [
+    {
+     "name": "Object_4",
+     "color": [
+      0.426,
+      1.0,
+      0.4
+     ],
+     "vertices": 2849
+    },
+    {
+     "name": "Object_8",
+     "color": [
+      0.612,
+      0.28,
+      0.7
+     ],
+     "vertices": 704
+    },
+    {
+     "name": "Object_9",
+     "color": [
+      0.15,
+      1.0,
+      0.574
+     ],
+     "vertices": 594
+    }
+   ]
+  },
+  "B": {
+   "center": [
+    110.4672,
+    -0.0809,
+    8.8262
+   ],
+   "scale": 99.0314,
+   "objects": [
+    {
+     "name": "Object_6",
+     "color": [
+      0.4,
+      0.776,
+      1.0
+     ],
+     "vertices": 23003
+    },
+    {
+     "name": "Object_7",
+     "color": [
+      0.93,
+      1.0,
+      0.15
+     ],
+     "vertices": 1408
+    }
+   ]
+  }
+ }
+}
