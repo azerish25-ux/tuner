@@ -2,20 +2,22 @@ import Charts
 import SwiftUI
 import TimbreCore
 
-/// Progress as a trophy room: streak, a twelve-week heat map, accuracy over time, milestones.
+/// Progress: streak, level and accuracy, the practice calendar, string health, achievements, history.
 struct JourneyView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
+    @State private var confirmRestring = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    ScreenTitle(title: "Journey", subtitle: "Every tune-up and practice session, measured on your device.")
-                    hero
-                    heatmap
+                    Text("Progress").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+                    stats
+                    calendar
+                    stringHealth
                     if commerce.isPro { accuracy } else { lockedInsights }
-                    milestones
+                    achievements
                     recent
                 }
                 .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
@@ -24,56 +26,139 @@ struct JourneyView: View {
         }
     }
 
-    private var hero: some View {
+    private var stats: some View {
         let streak = store.streak
-        return HStack(spacing: 0) {
-            stat("\(streak.current)", "day streak", "flame.fill", Palette.ember)
-            Divider().frame(height: 50).overlay(Palette.line)
-            stat("\(streak.best)", "best run", "trophy.fill", Palette.brass)
-            Divider().frame(height: 50).overlay(Palette.line)
-            stat("\(streak.totalMinutes)", "minutes", "clock.fill", Palette.flat)
+        let level = store.level
+        let recent = tuningSessions.suffix(10).compactMap(\.meanAbsoluteCents)
+        let average = recent.isEmpty ? nil : recent.reduce(0, +) / Double(recent.count)
+        return HStack(spacing: 10) {
+            stat("flame.fill", Palette.flame, Text("\(streak.current)"), Text("day streak"))
+            stat("star", Palette.mint, Text("\(level.number)"), Text(LocalizedStringKey(level.name)))
+            stat("scope", Palette.amber, Text(average.map { String(format: "%.1f¢", $0) } ?? "—"), Text("avg accuracy"))
         }
-        .stillCard(padding: 14)
     }
 
-    private func stat(_ value: String, _ label: LocalizedStringKey, _ symbol: String, _ tint: Color) -> some View {
-        VStack(spacing: 4) {
-            Image(systemName: symbol).foregroundStyle(tint)
-            Text(value).font(Typeface.display(34)).foregroundStyle(Palette.ink)
-            Text(label).font(.caption).foregroundStyle(Palette.inkSoft)
+    private func stat(_ symbol: String, _ tint: Color, _ value: Text, _ label: Text) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Image(systemName: symbol).font(.system(size: 15, weight: .semibold)).foregroundStyle(tint)
+            value.font(Typeface.number(22)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.7)
+            label.font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.8)
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .stillCard(cornerRadius: 18, padding: 12)
         .accessibilityElement(children: .combine)
     }
 
-    private var heatmap: some View {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let weeks = 12
+    /// Last five weeks, one tile per day: brighter for more practice; today is outlined until you play.
+    private var calendar: some View {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
         let days = store.streak.activeDays
-        let minutesByDay = Dictionary(grouping: store.records, by: { calendar.startOfDay(for: $0.date) }).mapValues { $0.compactMap(\.durationMs).reduce(0, +) / 60000 }
-        let start = calendar.date(byAdding: .day, value: -(weeks * 7 - 1), to: today)!
-        return VStack(alignment: .leading, spacing: 10) {
-            Eyebrow("Last twelve weeks")
-            HStack(alignment: .top, spacing: 4) {
-                ForEach(0..<weeks, id: \.self) { week in
-                    VStack(spacing: 4) {
-                        ForEach(0..<7, id: \.self) { day in
-                            let date = calendar.date(byAdding: .day, value: week * 7 + day, to: start)!
-                            let minutes = minutesByDay[date] ?? 0
-                            let active = days.contains(date)
-                            RoundedRectangle(cornerRadius: 4, style: .continuous)
-                                .fill(active ? Palette.brass.opacity(min(1, 0.35 + Double(minutes) / 20)) : Palette.stageRaised)
-                                .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(date == today ? Palette.ink.opacity(0.6) : .clear, lineWidth: 1))
-                                .aspectRatio(1, contentMode: .fit)
+        let minutesByDay = Dictionary(grouping: store.records, by: { cal.startOfDay(for: $0.date) }).mapValues { $0.compactMap(\.durationMs).reduce(0, +) / 60000 }
+        let start = cal.date(byAdding: .day, value: -34, to: today)!
+        let active = (0..<35).filter { days.contains(cal.date(byAdding: .day, value: $0, to: start)!) }.count
+        return VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Last five weeks").font(Typeface.display(16)).foregroundStyle(Palette.ink)
+                Spacer()
+                Text("\(active) of 35 days").font(.caption).foregroundStyle(Palette.inkSoft)
+            }
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 7), spacing: 6) {
+                ForEach(0..<35, id: \.self) { offset in
+                    let date = cal.date(byAdding: .day, value: offset, to: start)!
+                    let played = days.contains(date)
+                    let minutes = minutesByDay[date] ?? 0
+                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                        .fill(played ? Palette.mint.opacity(min(1, 0.35 + Double(minutes) / 15)) : .white.opacity(0.06))
+                        .frame(height: 26)
+                        .overlay {
+                            if date == today && !played {
+                                RoundedRectangle(cornerRadius: 7, style: .continuous).strokeBorder(Palette.amber.opacity(0.7), style: StrokeStyle(lineWidth: 1.5, dash: [3, 3]))
+                            }
                         }
-                    }
                 }
             }
         }
         .stillCard()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Practised on \(days.count) days in the last twelve weeks"))
+        .accessibilityLabel(Text("Practised on \(active) of the last 35 days"))
+    }
+
+    /// How each string of this instrument drifts between sessions, and when to restring.
+    private var stringHealth: some View {
+        let drift = store.stringDrift
+        let restrung = store.progress.restrung[store.instrument.id]
+        let advice = StringHealth.needsRestring(drift, restrung: restrung)
+        let anchors = store.courses.compactMap(\.anchorId).reduce(into: [String]()) { if !$0.contains($1) { $0.append($1) } }
+        let worst = drift.first
+        let labels = Dictionary(store.courses.compactMap { c in c.anchorId.map { ($0, NoteReadout.split(TargetLabelFormatter.splitCue(store.courseLabel(c)).main).name) } }, uniquingKeysWith: { a, _ in a })
+        return VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("String health").font(Typeface.display(16)).foregroundStyle(Palette.ink)
+                Spacer()
+                if advice { Text("Restring soon").font(.caption.weight(.semibold)).foregroundStyle(Color(hex: 0xFFC977)) }
+            }
+            Group {
+                if let worst, abs(worst.centsPerDay) >= 1 {
+                    Text("Your \(labels[worst.anchor] ?? worst.anchor) string drifts \(worst.centsPerDay < 0 ? String(localized: "flat") : String(localized: "sharp")) about \(Int(abs(worst.centsPerDay).rounded())) cents a day.")
+                } else if !drift.isEmpty {
+                    Text("Your strings are holding their pitch well.")
+                } else {
+                    Text("Tune on a few different days and Timbre learns how each string drifts.")
+                }
+            }
+            .font(.subheadline).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
+            if !drift.isEmpty {
+                let peak = max(4, drift.map { abs($0.centsPerDay) }.max() ?? 4)
+                HStack(alignment: .bottom, spacing: 10) {
+                    ForEach(anchors, id: \.self) { anchor in
+                        let rate = drift.first { $0.anchor == anchor }?.centsPerDay ?? 0
+                        let bad = abs(rate) >= 4
+                        VStack(spacing: 4) {
+                            RoundedRectangle(cornerRadius: 4).fill(bad ? Palette.amber : Palette.mint.opacity(0.6))
+                                .frame(height: max(6, 40 * abs(rate) / peak))
+                            Text(labels[anchor] ?? anchor).font(.caption2.weight(bad ? .bold : .regular)).foregroundStyle(bad ? Color(hex: 0xFFC977) : Palette.inkSoft)
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                }
+                .frame(height: 58, alignment: .bottom)
+                .accessibilityHidden(true)
+            }
+            Button { confirmRestring = true } label: {
+                Label(restrung.map { String(localized: "Restrung \($0.formatted(.relative(presentation: .named)))") } ?? String(localized: "I just restrung"), systemImage: "arrow.triangle.2.circlepath")
+                    .font(.footnote.weight(.semibold)).foregroundStyle(Palette.mint)
+            }
+            .buttonStyle(.plain)
+            .confirmationDialog("Mark new strings on \(store.instrumentDisplayName)?", isPresented: $confirmRestring, titleVisibility: .visible) {
+                Button("I just restrung") { store.markRestrung() }
+            }
+            .accessibilityIdentifier("journey.restrung")
+        }
+        .stillCard(tint: advice ? Palette.amber : nil)
+    }
+
+    private var achievements: some View {
+        let state = store.progress
+        let earned = Set(state.achievements)
+        return VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Achievements").font(Typeface.display(16)).foregroundStyle(Palette.ink)
+                Spacer()
+                Text("\(earned.count) of \(Achievements.all.count)").font(.caption).foregroundStyle(Palette.inkSoft)
+            }
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 92), spacing: 10)], spacing: 14) {
+                ForEach(Achievements.all.sorted { earned.contains($0.id) && !earned.contains($1.id) }) { a in
+                    VStack(spacing: 6) {
+                        AchievementMedal(achievement: a, earned: earned.contains(a.id))
+                        Text(LocalizedStringKey(a.title)).font(.caption.weight(.semibold)).foregroundStyle(earned.contains(a.id) ? Palette.ink : Palette.inkFaint)
+                            .multilineTextAlignment(.center).lineLimit(2)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+            }
+        }
+        .stillCard()
     }
 
     private var tuningSessions: [PracticeRecord] {
@@ -82,14 +167,14 @@ struct JourneyView: View {
 
     private var accuracy: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Eyebrow("Tuning accuracy")
+            Text("Tuning accuracy").font(Typeface.display(16)).foregroundStyle(Palette.ink)
             if tuningSessions.count < 2 {
                 Text("Tune a few times to see how close you land.").font(.subheadline).foregroundStyle(Palette.inkSoft)
             } else {
                 Chart(tuningSessions) { record in
                     LineMark(x: .value("Date", record.date), y: .value("Cents", record.meanAbsoluteCents ?? 0))
-                        .interpolationMethod(.catmullRom).foregroundStyle(Palette.brass)
-                    PointMark(x: .value("Date", record.date), y: .value("Cents", record.meanAbsoluteCents ?? 0)).foregroundStyle(Palette.brass)
+                        .interpolationMethod(.catmullRom).foregroundStyle(Palette.mint)
+                    PointMark(x: .value("Date", record.date), y: .value("Cents", record.meanAbsoluteCents ?? 0)).foregroundStyle(Palette.mint)
                 }
                 .chartYAxisLabel("Average ¢ off")
                 .frame(height: 160)
@@ -107,46 +192,10 @@ struct JourneyView: View {
         .buttonStyle(.plain)
     }
 
-    private struct Milestone: Identifiable { let id: String; let symbol: String; let title: LocalizedStringKey; let earned: Bool }
-    private var milestoneList: [Milestone] {
-        let tunes = store.settings.fullTunes ?? 0
-        let streak = store.streak
-        let ear = store.records.filter { $0.kind == "ear" }.count
-        return [
-            Milestone(id: "first", symbol: "tuningfork", title: "First full tune", earned: tunes >= 1),
-            Milestone(id: "ten", symbol: "10.circle.fill", title: "Ten full tunes", earned: tunes >= 10),
-            Milestone(id: "week", symbol: "flame.fill", title: "Seven-day streak", earned: streak.best >= 7),
-            Milestone(id: "month", symbol: "calendar", title: "Thirty-day streak", earned: streak.best >= 30),
-            Milestone(id: "ear", symbol: "ear.fill", title: "Ten ear sessions", earned: ear >= 10),
-            Milestone(id: "voice", symbol: "music.mic", title: "Range measured", earned: store.records.contains { $0.tuningId?.hasPrefix("voice.range") == true || $0.tuningId == VoiceExercise(level: 7).id }),
-        ]
-    }
-
-    private var milestones: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Eyebrow("Milestones")
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 96), spacing: 10)], spacing: 10) {
-                ForEach(milestoneList) { m in
-                    VStack(spacing: 8) {
-                        Image(systemName: m.symbol).font(.title2).foregroundStyle(m.earned ? Palette.brass : Palette.inkFaint)
-                            .frame(width: 52, height: 52)
-                            .background(Circle().fill(m.earned ? Palette.brass.opacity(0.16) : Palette.stageRaised))
-                        Text(m.title).font(.caption.weight(.semibold)).foregroundStyle(m.earned ? Palette.ink : Palette.inkFaint).multilineTextAlignment(.center)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .opacity(m.earned ? 1 : 0.7)
-                    .accessibilityElement(children: .combine)
-                    .accessibilityValue(m.earned ? Text("Earned") : Text("Not yet"))
-                }
-            }
-        }
-        .stillCard()
-    }
-
     private var recent: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Eyebrow("Recent")
+                Text("Recent").font(Typeface.display(16)).foregroundStyle(Palette.ink)
                 Spacer()
                 if !store.records.isEmpty { Text("\(store.records.count) sessions").font(.caption).foregroundStyle(Palette.inkFaint) }
             }

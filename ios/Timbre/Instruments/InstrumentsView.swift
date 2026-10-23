@@ -1,7 +1,7 @@
 import SwiftUI
 import TimbreCore
 
-/// Gallery of every instrument, grouped by family, rendered in the studio.
+/// Every instrument, grouped by family, as studio cards.
 struct InstrumentsView: View {
     var picker = false
     @EnvironmentObject private var store: AppStore
@@ -11,6 +11,8 @@ struct InstrumentsView: View {
     @State private var family: String?
     @State private var creating = false
     @State private var editing: CustomTuning?
+    @State private var searching = false
+    @FocusState private var searchFocused: Bool
 
     private var photos: [InstrumentPhoto] {
         store.catalog.photos.filter { photo in
@@ -22,16 +24,16 @@ struct InstrumentsView: View {
 
     var body: some View {
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 22, pinnedViews: []) {
-                if picker { currentTunings } else { ScreenTitle(title: "Instruments", subtitle: "Sixty instruments, each with its own tuning mechanism.") }
-                search
+            LazyVStack(alignment: .leading, spacing: 20, pinnedViews: []) {
+                if picker { currentTunings } else { header }
+                if searching || picker { search }
                 filters
                 if query.isEmpty && family == nil {
                     chromaticCard
                     if !recents.isEmpty {
-                        Eyebrow("Your instruments")
+                        section("Your instruments", count: nil)
                         ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) { ForEach(recents, id: \.asset) { photo in card(photo).frame(width: 150) } }
+                            HStack(spacing: 12) { ForEach(recents, id: \.asset) { photo in card(photo).frame(width: 164) } }
                         }
                     }
                 }
@@ -39,12 +41,8 @@ struct InstrumentsView: View {
                     let items = photos.filter { store.catalog.instrument(id: $0.instrumentId)?.familyId == group.id }
                         .sorted { rank($0) < rank($1) }
                     if !items.isEmpty {
-                        HStack {
-                            Text(group.name.localized).font(Typeface.display(26, relativeTo: .title2)).foregroundStyle(Palette.ink)
-                            Spacer()
-                            Text("\(items.count)").font(Typeface.number(13)).foregroundStyle(Palette.inkFaint)
-                        }
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
+                        section(group.name.localized, count: items.count)
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 156), spacing: 12)], spacing: 12) {
                             ForEach(items, id: \.asset) { card($0) }
                         }
                     }
@@ -66,6 +64,38 @@ struct InstrumentsView: View {
                 CustomTuningEditor(base: base, editing: custom).presentationBackground(Palette.stage)
             }
         }
+    }
+
+    private var header: some View {
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Instruments").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
+                Text("\(store.catalog.instruments.count) instruments · \(store.catalog.tunings.count) tunings · your own").font(.subheadline).foregroundStyle(Palette.inkSoft)
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isHeader)
+            Spacer()
+            Button {
+                withAnimation(Motion.quick) { searching.toggle(); if !searching { query = "" } }
+            } label: {
+                Image(systemName: searching ? "xmark" : "magnifyingglass").font(.system(size: 17, weight: .semibold)).foregroundStyle(Palette.ink)
+                    .frame(width: 44, height: 44)
+                    .background(Circle().fill(Palette.stageRaised)).overlay(Circle().strokeBorder(Palette.line, lineWidth: 1))
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(searching ? "Close search" : "Search instruments")
+            .accessibilityIdentifier("instruments.searchToggle")
+        }
+    }
+
+    private func section(_ title: String, count: Int?) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(title).font(Typeface.display(20)).foregroundStyle(Palette.ink)
+            Spacer()
+            if let count { Text("\(count)").font(Typeface.number(13)).foregroundStyle(Palette.inkFaint) }
+        }
+        .padding(.top, 6)
+        .accessibilityAddTraits(.isHeader)
     }
 
     private var recents: [InstrumentPhoto] {
@@ -119,11 +149,14 @@ struct InstrumentsView: View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass").foregroundStyle(Palette.inkSoft)
             TextField("Search instruments", text: $query).textInputAutocapitalization(.never).autocorrectionDisabled()
+                .focused($searchFocused)
+                .onAppear { if searching { searchFocused = true } }
                 .accessibilityIdentifier("instruments.search")
             if !query.isEmpty { Button { query = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(Palette.inkFaint) }.accessibilityLabel("Clear search") }
         }
         .padding(.horizontal, 16).padding(.vertical, 13)
-        .glassCapsule(interactive: false)
+        .background(Capsule().fill(Palette.stageRaised))
+        .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
     }
 
     private var filters: some View {
@@ -156,6 +189,8 @@ struct InstrumentsView: View {
         let model = ModelLibrary.modelID(forPhoto: photo.asset)
         let open = instrument.map { store.canTune($0) } ?? false
         let selected = !store.referenceMode && store.photo?.asset == photo.asset
+        let tunings = instrument?.supportedTuningIds.count ?? 0
+        let shape = RoundedRectangle(cornerRadius: 22, style: .continuous)
         return Button {
             guard let instrument else { return }
             if open {
@@ -163,26 +198,30 @@ struct InstrumentsView: View {
                 if picker { dismiss() }
             } else { store.presentPaywall("instrument") }
         } label: {
-            VStack(alignment: .leading, spacing: 8) {
-                ZStack {
-                    RadialGradient(colors: [Palette.ember.opacity(0.18), .clear], center: .center, startRadius: 4, endRadius: 110)
-                    Image(model.flatMap { ModelLibrary.hasCard($0) ? ModelLibrary.cardImageName($0) : nil } ?? photo.thumbnail).resizable().interpolation(.high).scaledToFit()
-                        .padding(model == nil ? 14 : 4)
-                        .shadow(color: .black.opacity(0.5), radius: 12, y: 8)
+            VStack(alignment: .leading, spacing: 4) {
+                Image(model.flatMap { ModelLibrary.hasCard($0) ? ModelLibrary.cardImageName($0) : nil } ?? photo.thumbnail).resizable().interpolation(.high).scaledToFit()
+                    .padding(.vertical, 6)
+                    .shadow(color: .black.opacity(0.55), radius: 14, y: 10)
+                    .frame(height: 158)
+                    .frame(maxWidth: .infinity)
+                    .padding(.bottom, 8)
+                Text(name(photo)).font(Typeface.display(16)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.8)
+                Group {
+                    if selected { Text("Tuning now · \(tunings) tunings") } else if tunings == 1 { Text("1 tuning") } else { Text("\(tunings) tunings") }
                 }
-                .frame(height: 150)
-                .frame(maxWidth: .infinity)
-                HStack(alignment: .top) {
-                    Text(name(photo)).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink).lineLimit(2).multilineTextAlignment(.leading)
-                    Spacer(minLength: 4)
-                    if !open { ProBadge() } else if model != nil { Image(systemName: "cube.transparent").font(.caption).foregroundStyle(Palette.brass).accessibilityLabel("3D") }
-                }
+                .font(.footnote).foregroundStyle(selected ? Palette.mint : Palette.inkSoft).lineLimit(1)
             }
-            .padding(12)
-            .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised.opacity(0.85)))
-            .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(selected ? Palette.brass : Palette.line, lineWidth: selected ? 1.5 : 1))
+            .padding(14)
+            .background {
+                shape.fill(Palette.stageRaised)
+                    .overlay(RadialGradient(colors: [(selected ? Palette.mint : Color(hex: 0xFFC48C)).opacity(selected ? 0.10 : 0.06), .clear], center: UnitPoint(x: 0.5, y: 0.3), startRadius: 4, endRadius: 140).clipShape(shape))
+            }
+            .overlay(shape.strokeBorder(selected ? Palette.mint : Palette.line, lineWidth: selected ? 1.5 : 1))
+            .overlay(alignment: .topTrailing) { if !open { ProBadge().padding(12) } }
+            .contentShape(shape)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressScaleStyle())
+        .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityIdentifier("instrument." + photo.asset)
     }
 

@@ -10,7 +10,11 @@ struct OnboardingView: View {
     @State private var level = "beginner"
     @State private var goal = "tune"
     @State private var showPaywall = false
-    private let steps = 5
+    @State private var restoring = false
+    @State private var restoreMessage: String?
+    @State private var floating = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private let steps = 4
 
     var body: some View {
         ZStack {
@@ -18,7 +22,7 @@ struct OnboardingView: View {
             VStack(spacing: 0) {
                 HStack(spacing: 6) {
                     ForEach(0..<steps, id: \.self) { index in
-                        Capsule().fill(index <= step ? Palette.brass : Palette.line).frame(height: 4)
+                        Capsule().fill(index <= step ? Palette.mint : Palette.line).frame(height: 4)
                     }
                 }
                 .padding(.horizontal, 28).padding(.top, 12)
@@ -26,9 +30,8 @@ struct OnboardingView: View {
                 Group {
                     switch step {
                     case 0: welcome
-                    case 1: instrument
-                    case 2: experience
-                    case 3: goals
+                    case 1: experience
+                    case 2: goals
                     default: microphone
                     }
                 }
@@ -45,6 +48,11 @@ struct OnboardingView: View {
 
     private func next() { Haptics.shared.selection(); step += 1 }
 
+    /// Pro members skip the offer.
+    private func afterMicrophone() {
+        if store.commerce.isPro { finish() } else { showPaywall = true }
+    }
+
     private func finish() {
         let instrument = instrumentID.flatMap { store.catalog.instrument(id: $0) }
         store.completeOnboarding(instrument: instrument, level: level, goal: goal)
@@ -52,24 +60,91 @@ struct OnboardingView: View {
         Analytics.log("onboarding_complete", ["instrument": instrumentID ?? "chromatic", "goal": goal, "level": level])
     }
 
+    /// Spotlit instrument, the promise, and the instrument picker in one screen.
     private var welcome: some View {
-        VStack(spacing: 24) {
-            Spacer()
-            ZStack {
-                ChromaticStage(input: { StageInput(cents: 0, level: -30, locked: true, listening: true) }, note: "")
-                    .frame(width: 300, height: 300).opacity(0.75)
-                Image(ModelLibrary.cardImageName("guitar_acoustic")).resizable().scaledToFit().frame(height: 300)
-                    .shadow(color: Palette.ember.opacity(0.35), radius: 40, y: 10)
+        VStack(alignment: .leading, spacing: 0) {
+            ZStack(alignment: .top) {
+                Spotlight().fill(LinearGradient(colors: [Color(hex: 0xFFC48C).opacity(0.16), Color(hex: 0xFFC48C).opacity(0.03)], startPoint: .top, endPoint: .bottom))
+                    .blur(radius: 6)
+                    .ignoresSafeArea(edges: .top)
+                Text("TIMBRE").font(Typeface.label(15)).tracking(9).foregroundStyle(Palette.amber).padding(.top, 34)
+                    .frame(maxWidth: .infinity)
+                Ellipse().fill(RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.22), .clear], center: .center, startRadius: 2, endRadius: 170))
+                    .frame(width: 320, height: 46).frame(maxHeight: .infinity, alignment: .bottom).padding(.bottom, 6)
+                Image(heroImage(selectedChoice)).resizable().interpolation(.high).scaledToFit()
+                    .id(instrumentID ?? "voice")
+                    .transition(.asymmetric(insertion: .scale(scale: 0.92).combined(with: .opacity), removal: .opacity))
+                    .shadow(color: .black.opacity(0.65), radius: 26, y: 18)
+                    .rotationEffect(.degrees(floating ? -9 : -13))
+                    .offset(y: floating ? -6 : 6)
+                    .padding(.top, 70).padding(.bottom, 26)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityHidden(true)
             }
-            VStack(spacing: 10) {
-                Text("TIMBRE").font(.system(size: 14, weight: .bold)).tracking(8).foregroundStyle(Palette.brass)
-                Text("Tune until it\nstands still.").font(Typeface.display(46)).multilineTextAlignment(.center).foregroundStyle(Palette.ink)
-                Text("A precision tuner for sixty instruments, with the practice that keeps you in tune.").font(.body).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center).padding(.horizontal, 30)
+            .frame(maxHeight: .infinity)
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Tune until it\nstands still.").font(Typeface.display(40)).tracking(-1).foregroundStyle(Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
+                Text("A precision tuner with your instrument on a live stage, ear games that sharpen you, and a daily quest to keep you playing.")
+                    .font(.body).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
             }
-            Spacer()
-            Button("Get started") { next() }.buttonStyle(BrassButtonStyle()).padding(.horizontal, 28).accessibilityIdentifier("onboarding.start")
-            Spacer().frame(height: 14)
+            .padding(.horizontal, 28)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(choices) { choice in
+                        let selected = instrumentID == choice.id
+                        Button {
+                            withAnimation(Motion.pluck) { instrumentID = choice.id }
+                            Haptics.shared.selection()
+                        } label: {
+                            Text(choice.title).font(.subheadline.weight(.semibold))
+                                .foregroundStyle(selected ? Color(hex: 0xC9FFEC) : Palette.ink)
+                                .padding(.horizontal, 18).frame(height: 44)
+                                .background(Capsule().fill(selected ? Palette.mint.opacity(0.10) : Palette.stageRaised))
+                                .overlay(Capsule().strokeBorder(selected ? Palette.mint : Palette.line, lineWidth: selected ? 1.5 : 1))
+                        }
+                        .buttonStyle(PressScaleStyle())
+                        .accessibilityAddTraits(selected ? .isSelected : [])
+                        .accessibilityIdentifier("onboarding.instrument.\(choice.id ?? "voice")")
+                    }
+                }
+                .padding(.horizontal, 28)
+            }
+            .padding(.top, 18)
+            Button("Start tuning") { next() }.buttonStyle(BrassButtonStyle()).padding(.horizontal, 22).padding(.top, 22)
+                .accessibilityIdentifier("onboarding.start")
+            Button {
+                restoring = true
+                restoreMessage = nil
+                Task {
+                    await store.commerce.restore()
+                    restoring = false
+                    if store.commerce.isPro { next() } else { restoreMessage = store.commerce.error }
+                }
+            } label: {
+                if restoring { ProgressView().tint(Palette.inkSoft) } else { Text("I already have Timbre Pro").underline() }
+            }
+            .font(.footnote).foregroundStyle(Palette.inkSoft).frame(maxWidth: .infinity).frame(height: 44).padding(.bottom, 4)
+            .disabled(restoring)
+            .accessibilityIdentifier("onboarding.restore")
+            if let restoreMessage {
+                Text(restoreMessage).font(.caption).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity).padding(.horizontal, 28).padding(.bottom, 6)
+            }
         }
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.easeInOut(duration: 3.2).repeatForever(autoreverses: true)) { floating = true }
+        }
+    }
+
+    private var selectedChoice: Choice { choices.first { $0.id == instrumentID } ?? choices[0] }
+
+    private func heroImage(_ choice: Choice) -> String {
+        guard let photo = choice.photo else { return ModelLibrary.cardImageName("guitar_acoustic") }
+        if UIImage(named: ModelLibrary.cardImageName(photo)) != nil { return ModelLibrary.cardImageName(photo) }
+        if let model = ModelLibrary.modelID(forPhoto: photo), ModelLibrary.hasCard(model) { return ModelLibrary.cardImageName(model) }
+        return UIImage(named: "thumb_" + photo) != nil ? "thumb_" + photo : photo
     }
 
     private struct Choice: Identifiable { let id: String?; let title: LocalizedStringKey; let photo: String?; let symbol: String? }
@@ -82,38 +157,6 @@ struct OnboardingView: View {
          Choice(id: "mandolin.standard.8", title: "Mandolin", photo: "13_mandolin_mandolin", symbol: nil),
          Choice(id: "banjo.five.5", title: "Banjo", photo: "22_folk_world_strings_banjo_5_string", symbol: nil),
          Choice(id: nil, title: "Voice or other", photo: nil, symbol: "dot.radiowaves.left.and.right")]
-    }
-
-    private var instrument: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            question("What do you play?", "We'll set up your tuner and practice around it.")
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
-                    ForEach(choices) { choice in
-                        let selected = instrumentID == choice.id
-                        Button { instrumentID = choice.id; Haptics.shared.selection() } label: {
-                            VStack(spacing: 8) {
-                                Group {
-                                    if let photo = choice.photo {
-                                        let name = UIImage(named: ModelLibrary.cardImageName(photo)) != nil ? ModelLibrary.cardImageName(photo) : (UIImage(named: "thumb_" + photo) != nil ? "thumb_" + photo : photo)
-                                        Image(name).resizable().scaledToFit()
-                                    } else if let symbol = choice.symbol { Image(systemName: symbol).font(.system(size: 44)).foregroundStyle(Palette.brass) }
-                                }
-                                .frame(height: 96)
-                                Text(choice.title).font(.headline).foregroundStyle(Palette.ink)
-                            }
-                            .frame(maxWidth: .infinity).padding(12)
-                            .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(selected ? Palette.brass.opacity(0.16) : Palette.stageRaised.opacity(0.8)))
-                            .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(selected ? Palette.brass : Palette.line, lineWidth: selected ? 1.5 : 1))
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityAddTraits(selected ? .isSelected : [])
-                    }
-                }
-            }
-            Button("Continue") { next() }.buttonStyle(BrassButtonStyle()).accessibilityIdentifier("onboarding.continue")
-        }
-        .padding(.horizontal, 24).padding(.vertical, 18)
     }
 
     private func options(_ items: [(String, LocalizedStringKey, String)], selection: Binding<String>) -> some View {
@@ -165,26 +208,39 @@ struct OnboardingView: View {
                 Image(systemName: "mic.fill").font(.system(size: 54)).foregroundStyle(Palette.brass)
             }
             .frame(height: 260)
-            Text("Timbre listens\nto your instrument").font(Typeface.display(40)).multilineTextAlignment(.center).foregroundStyle(Palette.ink)
+            Text("Timbre listens\nto your instrument").font(Typeface.display(34)).tracking(-0.6).multilineTextAlignment(.center).foregroundStyle(Palette.ink)
             Text("Pitch is measured on your iPhone. Recordings are never saved or uploaded.").multilineTextAlignment(.center).foregroundStyle(Palette.inkSoft).padding(.horizontal, 30)
             Spacer()
             Button("Allow microphone") {
                 Task {
                     _ = await AVAudioApplication.requestRecordPermission()
-                    showPaywall = true
+                    afterMicrophone()
                 }
             }
             .buttonStyle(BrassButtonStyle()).padding(.horizontal, 28)
             .accessibilityIdentifier("onboarding.microphone")
-            Button("Not now") { showPaywall = true }.font(.subheadline).foregroundStyle(Palette.inkSoft).padding(.bottom, 14)
+            Button("Not now") { afterMicrophone() }.font(.subheadline).foregroundStyle(Palette.inkSoft).padding(.bottom, 14)
         }
     }
 
     private func question(_ title: LocalizedStringKey, _ detail: LocalizedStringKey) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(title).font(Typeface.display(38)).foregroundStyle(Palette.ink)
+            Text(title).font(Typeface.display(32)).tracking(-0.6).foregroundStyle(Palette.ink).fixedSize(horizontal: false, vertical: true)
             Text(detail).font(.subheadline).foregroundStyle(Palette.inkSoft)
         }
         .padding(.top, 8)
+    }
+}
+
+/// A soft cone of light falling from the top edge.
+private struct Spotlight: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.midX - rect.width * 0.09, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.midX + rect.width * 0.09, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.midX + rect.width * 0.32, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.midX - rect.width * 0.32, y: rect.maxY))
+        path.closeSubpath()
+        return path
     }
 }

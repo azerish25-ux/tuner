@@ -1,4 +1,3 @@
-import Metal
 import StoreKit
 import SwiftUI
 import TimbreCore
@@ -12,9 +11,7 @@ struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedID = TimbreProduct.annual
     @State private var appeared = false
-    @State private var hero3D = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    private static let supports3D = MTLCreateSystemDefaultDevice() != nil
 
     private var selected: Product? { commerce.products.first { $0.id == selectedID } }
 
@@ -26,87 +23,94 @@ struct PaywallView: View {
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            StageBackground()
+            Palette.stage.ignoresSafeArea()
+            RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.16), .clear], center: UnitPoint(x: 0.5, y: 0.18), startRadius: 10, endRadius: 360)
+                .ignoresSafeArea()
             ScrollView {
-                VStack(spacing: 22) {
+                VStack(spacing: 18) {
                     hero
-                    VStack(spacing: 8) {
-                        Eyebrow("Timbre Pro")
-                        Text("Every instrument.\nEvery practice tool.").font(Typeface.display(40)).multilineTextAlignment(.center).foregroundStyle(Palette.ink)
-                    }
+                    Text("TIMBRE PRO").font(Typeface.label(13)).tracking(2.2).foregroundStyle(Color(hex: 0x1B1206))
+                        .padding(.horizontal, 16).padding(.vertical, 6)
+                        .background(Capsule().fill(Palette.proGold))
+                    Text("Every instrument.\nEvery practice tool.").font(Typeface.display(32)).tracking(-0.8)
+                        .multilineTextAlignment(.center).foregroundStyle(Palette.ink).fixedSize(horizontal: false, vertical: true)
+                        .accessibilityAddTraits(.isHeader)
                     benefits
-                    plans
-                    if selectedID == TimbreProduct.annual, commerce.trialLabel != nil, let annual = commerce.annual { timeline(annual) }
+                    plans.padding(.top, 8)
                     cta
                     finePrint
                 }
-                .padding(.horizontal, 22).padding(.top, 36).padding(.bottom, 30)
+                .padding(.horizontal, 20).padding(.top, 24).padding(.bottom, 30)
+                .frame(maxWidth: 520)
+                .frame(maxWidth: .infinity)
             }
             Button { close() } label: {
-                Image(systemName: "xmark").font(.body.weight(.bold)).foregroundStyle(Palette.inkSoft).frame(width: 40, height: 40).glassCapsule()
+                Image(systemName: "xmark").font(.body.weight(.bold)).foregroundStyle(Palette.ink)
+                    .frame(width: 44, height: 44).background(Circle().fill(Palette.surface))
             }
-            .padding(.trailing, 18).padding(.top, 10)
+            .padding(.trailing, 18).padding(.top, 8)
             .accessibilityLabel("Close").accessibilityIdentifier("paywall.close")
         }
+        .preferredColorScheme(.dark)
         .task { await commerce.load() }
-        .onAppear { withAnimation(.easeOut(duration: 1.2)) { appeared = true } }
+        .onAppear { appeared = true }
         .onChange(of: commerce.isPro) { _, pro in if pro { close() } }
     }
 
-    private var heroImage: String {
-        if let model = store.modelID, ModelLibrary.hasCard(model) { return ModelLibrary.cardImageName(model) }
-        return ModelLibrary.cardImageName("guitar_acoustic")
-    }
-
-    private var heroModel: String? {
-        guard let model = store.modelID ?? ModelLibrary.modelID(forPhoto: "01_guitar_acoustic_guitar") else { return nil }
-        return ModelLibrary.hasCard(model) ? model : nil
-    }
-
-    /// The player's instrument sways in a spotlight (3D); the studio render holds the spot while it loads.
+    /// Three instruments in a spotlight, each floating on its own slow cycle.
     private var hero: some View {
-        ZStack {
-            Circle().fill(RadialGradient(colors: [Palette.ember.opacity(0.35), .clear], center: .center, startRadius: 10, endRadius: 170)).frame(width: 340, height: 340)
-            if !hero3D {
-                Image(heroImage).resizable().scaledToFit().frame(height: 230)
-                    .rotationEffect(.degrees(appeared ? -8 : -14))
-                    .offset(y: appeared ? 0 : 16)
-                    .shadow(color: .black.opacity(0.6), radius: 28, y: 18)
-                    .transition(.opacity)
-            }
-            if let model = heroModel, Self.supports3D, !reduceMotion {
-                InstrumentStage(modelID: model, input: { StageInput() }, onReady: { withAnimation(.easeInOut(duration: 0.8)) { hero3D = true } }, showcase: true)
-                    .frame(height: 260)
+        let picks: [(asset: String, angle: Double, height: CGFloat, x: CGFloat)] = [
+            ("17_bowed_strings_violin", -14, 190, -112), ("19_bowed_strings_cello", 12, 210, 112), ("01_guitar_acoustic_guitar", 0, 250, 0),
+        ]
+        return TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion)) { context in
+            let t = context.date.timeIntervalSinceReferenceDate
+            ZStack {
+                Ellipse().fill(.black.opacity(0.55)).frame(width: 300, height: 26).blur(radius: 14).offset(y: 128)
+                ForEach(Array(picks.enumerated()), id: \.offset) { index, pick in
+                    let bob = reduceMotion ? 0 : sin(t * 0.9 + Double(index) * 2.1)
+                    Image(card(pick.asset)).resizable().interpolation(.high).scaledToFit()
+                        .frame(height: pick.height)
+                        .rotationEffect(.degrees(pick.angle + bob * 1.6))
+                        .offset(x: pick.x, y: CGFloat(bob) * 5 + (index == 2 ? 0 : 8))
+                        .shadow(color: .black.opacity(0.6), radius: 18, y: 14)
+                        .opacity(appeared ? 1 : 0)
+                        .offset(y: appeared ? 0 : 24)
+                        .animation(.spring(response: 0.9, dampingFraction: 0.8).delay(Double(index) * 0.08), value: appeared)
+                }
             }
         }
-        .frame(height: 260)
+        .frame(height: 270)
         .accessibilityHidden(true)
     }
 
-    private var benefits: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            benefit("cube.transparent.fill", "All sixty instruments in 3D", "Live pegs, slides and strings for every tuning mechanism")
-            benefit("dot.radiowaves.left.and.right", "Strobe precision", "Temperaments, custom tunings and written pitch")
-            benefit("calendar.badge.clock", "A daily practice set", "Ear training, chords, scales, drone and voice coaching")
-            benefit("chart.xyaxis.line", "See yourself improve", "Accuracy trends and milestones, measured on device")
-        }
-        .stillCard()
+    /// Studio render when the instrument has one, otherwise its photograph.
+    private func card(_ asset: String) -> String {
+        if let model = ModelLibrary.modelID(forPhoto: asset), ModelLibrary.hasCard(model) { return ModelLibrary.cardImageName(model) }
+        return store.catalog.photos.first { $0.asset == asset }?.thumbnail ?? asset
     }
 
-    private func benefit(_ symbol: String, _ title: LocalizedStringKey, _ detail: LocalizedStringKey) -> some View {
-        HStack(alignment: .top, spacing: 14) {
-            Image(systemName: symbol).font(.title3).foregroundStyle(Palette.brass).frame(width: 28)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.headline).foregroundStyle(Palette.ink)
-                Text(detail).font(.subheadline).foregroundStyle(Palette.inkSoft)
-            }
+    private var benefits: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            benefit("\(store.catalog.instruments.count) instruments, live 3D on the stage")
+            benefit("All ear games and double XP quests")
+            benefit("Chords, scales, intonation and drone")
+            benefit("Unlimited custom tunings and string health")
         }
-        .accessibilityElement(children: .combine)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 8)
+    }
+
+    private func benefit(_ title: LocalizedStringKey) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "checkmark").font(.system(size: 11, weight: .heavy)).foregroundStyle(Palette.mint)
+                .frame(width: 22, height: 22).background(Circle().fill(Palette.mint.opacity(0.16)))
+            Text(title).font(.body).foregroundStyle(Palette.ink).fixedSize(horizontal: false, vertical: true)
+        }
     }
 
     @ViewBuilder private var plans: some View {
         if commerce.products.isEmpty {
-            if commerce.loading { ProgressView().tint(Palette.brass).frame(height: 120) }
+            if commerce.loading { ProgressView().tint(Palette.mint).frame(height: 96) }
             else {
                 VStack(spacing: 10) {
                     Text(commerce.error ?? String(localized: "Plans are loading.")).font(.subheadline).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
@@ -114,54 +118,47 @@ struct PaywallView: View {
                 }
             }
         } else {
-            VStack(spacing: 10) {
-                if let annual = commerce.annual { plan(annual, title: "Yearly", detail: perMonth(annual), badge: commerce.trialLabel ?? String(localized: "Best value")) }
-                if let monthly = commerce.monthly { plan(monthly, title: "Monthly", detail: String(localized: "Cancel anytime"), badge: nil) }
-                if let lifetime = commerce.lifetime { plan(lifetime, title: "Lifetime", detail: String(localized: "Pay once, keep forever"), badge: nil) }
+            HStack(alignment: .top, spacing: 12) {
+                if let annual = commerce.annual {
+                    plan(annual, title: "Yearly", detail: perMonth(annual), tag: commerce.trialLabel != nil ? String(localized: "\(trialDays(annual)) days free") : String(localized: "Best value"))
+                }
+                if let monthly = commerce.monthly { plan(monthly, title: "Monthly", detail: String(localized: "cancel anytime"), tag: nil) }
             }
+            .padding(.top, 10)
         }
     }
 
     private func perMonth(_ product: Product) -> String {
-        let monthly = product.price / 12
-        return String(localized: "\(monthly.formatted(product.priceFormatStyle)) per month, billed yearly")
+        String(localized: "\((product.price / 12).formatted(product.priceFormatStyle)) a month")
     }
 
-    private func plan(_ product: Product, title: LocalizedStringKey, detail: String, badge: String?) -> some View {
+    private func plan(_ product: Product, title: LocalizedStringKey, detail: String, tag: String?) -> some View {
         let isSelected = selectedID == product.id
-        return Button { selectedID = product.id; Haptics.shared.selection() } label: {
-            HStack(spacing: 14) {
-                Image(systemName: isSelected ? "largecircle.fill.circle" : "circle").font(.title3).foregroundStyle(isSelected ? Palette.brass : Palette.inkFaint)
-                VStack(alignment: .leading, spacing: 3) {
-                    HStack(spacing: 8) {
-                        Text(title).font(.headline).foregroundStyle(Palette.ink)
-                        if let badge {
-                            Text(badge).font(.caption2.weight(.bold)).padding(.horizontal, 8).padding(.vertical, 3)
-                                .foregroundStyle(Palette.onAccent).background(Capsule().fill(Palette.brass))
-                        }
-                    }
-                    Text(detail).font(.caption).foregroundStyle(Palette.inkSoft)
-                }
-                Spacer()
-                Text(product.displayPrice).font(Typeface.number(16)).foregroundStyle(Palette.ink)
+        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
+        return Button { withAnimation(Motion.quick) { selectedID = product.id }; Haptics.shared.selection() } label: {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title).font(.subheadline).foregroundStyle(Palette.inkSoft)
+                Text(product.displayPrice).font(Typeface.number(22)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.7)
+                Text(detail).font(.footnote).foregroundStyle(isSelected ? Palette.mint : Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.8)
             }
-            .padding(16)
-            .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(isSelected ? Palette.brass.opacity(0.14) : Palette.stageRaised.opacity(0.85)))
-            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(isSelected ? Palette.brass : Palette.line, lineWidth: isSelected ? 1.5 : 1))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 16).padding(.vertical, 16)
+            .background(shape.fill(isSelected ? Palette.mint.opacity(0.07) : Palette.stageRaised))
+            .overlay(shape.strokeBorder(isSelected ? Palette.mint : Palette.line, lineWidth: isSelected ? 2 : 1))
+            .overlay(alignment: .topLeading) {
+                if let tag {
+                    Text(tag.uppercased()).font(.system(size: 10, weight: .heavy)).tracking(0.6).foregroundStyle(Palette.onAccent)
+                        .padding(.horizontal, 9).padding(.vertical, 4)
+                        .background(Capsule().fill(Palette.mint))
+                        .offset(x: 14, y: -11)
+                }
+            }
+            .contentShape(shape)
         }
         .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("paywall.plan.\(product.id)")
-    }
-
-    private func timeline(_ annual: Product) -> some View {
-        let days = trialDays(annual)
-        return VStack(alignment: .leading, spacing: 12) {
-            row("lock.open.fill", "Today", "Full access to everything in Timbre Pro.", Palette.brass)
-            row("bell.fill", "Day \(max(1, days - 2))", "We remind you before the trial ends.", Palette.flat)
-            row("star.fill", "Day \(days)", "\(annual.displayPrice) per year starts, unless you cancel.", Palette.ember)
-        }
-        .stillCard()
     }
 
     private func trialDays(_ product: Product) -> Int {
@@ -174,21 +171,23 @@ struct PaywallView: View {
         }
     }
 
-    private func row(_ symbol: String, _ title: LocalizedStringKey, _ detail: LocalizedStringKey, _ tint: Color) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: symbol).foregroundStyle(tint).frame(width: 26, height: 26).background(Circle().fill(tint.opacity(0.15)))
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
-                Text(detail).font(.caption).foregroundStyle(Palette.inkSoft)
-            }
-        }
-    }
-
     private var ctaTitle: String {
         guard let selected else { return String(localized: "Continue") }
         if selected.id == TimbreProduct.annual, let trial = commerce.trialLabel { return String(localized: "Start \(trial)") }
         if selected.id == TimbreProduct.lifetime { return String(localized: "Unlock for \(selected.displayPrice)") }
         return String(localized: "Subscribe for \(selected.displayPrice)")
+    }
+
+    /// What happens after the purchase, stated next to the button.
+    private var terms: String? {
+        guard let selected else { return nil }
+        switch selected.id {
+        case TimbreProduct.annual where commerce.trialLabel != nil:
+            return String(localized: "Free for \(trialDays(selected)) days, then \(selected.displayPrice) a year. We remind you two days before it ends.")
+        case TimbreProduct.annual: return String(localized: "\(selected.displayPrice) a year, renews automatically.")
+        case TimbreProduct.monthly: return String(localized: "\(selected.displayPrice) a month, renews automatically.")
+        default: return String(localized: "One payment. Yours to keep, no subscription.")
+        }
     }
 
     private var cta: some View {
@@ -204,11 +203,12 @@ struct PaywallView: View {
                     }
                 }
             } label: {
-                if commerce.purchasing != nil { ProgressView().tint(Palette.onAccent) } else { Text(ctaTitle) }
+                if commerce.purchasing != nil { ProgressView().tint(Palette.onAccent) } else { Text(ctaTitle).font(Typeface.label(18)) }
             }
             .buttonStyle(BrassButtonStyle())
             .disabled(selected == nil || commerce.purchasing != nil || commerce.pending)
             .accessibilityIdentifier("paywall.purchase")
+            if let terms { Text(terms).font(.footnote).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true) }
             if commerce.pending { Text("Waiting for approval. Access unlocks when the App Store confirms.").font(.caption).foregroundStyle(Palette.inkSoft) }
             if let error = commerce.error, !commerce.products.isEmpty { Text(error).font(.caption).foregroundStyle(Palette.danger).accessibilityIdentifier("commerceError") }
             if context == .onboarding {
@@ -219,15 +219,22 @@ struct PaywallView: View {
     }
 
     private var finePrint: some View {
-        VStack(spacing: 10) {
-            Text("Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The free tuner for guitar, bass and ukulele stays free.")
-                .font(.caption2).foregroundStyle(Palette.inkFaint).multilineTextAlignment(.center)
+        VStack(spacing: 14) {
             HStack(spacing: 18) {
-                Button("Restore purchases") { Task { await commerce.restore() } }
+                if let lifetime = commerce.lifetime {
+                    Button("Lifetime \(lifetime.displayPrice)") { withAnimation(Motion.quick) { selectedID = lifetime.id }; Haptics.shared.selection() }
+                        .foregroundStyle(selectedID == lifetime.id ? Palette.mint : Palette.inkSoft)
+                        .accessibilityAddTraits(selectedID == lifetime.id ? .isSelected : [])
+                        .accessibilityIdentifier("paywall.plan.\(lifetime.id)")
+                }
+                Button("Restore") { Task { await commerce.restore() } }
                 Link("Terms", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
                 Link("Privacy", destination: URL(string: "https://azerish25-ux.github.io/tuner/privacy.html")!)
             }
-            .font(.caption.weight(.semibold)).foregroundStyle(Palette.inkSoft)
+            .font(.footnote.weight(.semibold)).underline().foregroundStyle(Palette.inkSoft)
+            .buttonStyle(.plain)
+            Text("Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The tuner for guitar, bass and ukulele stays free.")
+                .font(.caption2).foregroundStyle(Palette.inkFaint).multilineTextAlignment(.center)
         }
     }
 }

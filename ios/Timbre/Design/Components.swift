@@ -110,7 +110,7 @@ struct BrassButtonStyle: ButtonStyle {
                 if prominent {
                     Capsule().fill(Palette.mint)
                         .overlay(Capsule().strokeBorder(.white.opacity(0.35), lineWidth: 1).blendMode(.overlay))
-                        .shadow(color: Palette.ember.opacity(configuration.isPressed ? 0.15 : 0.35), radius: configuration.isPressed ? 6 : 18, y: 6)
+                        .shadow(color: Palette.mint.opacity(configuration.isPressed ? 0.15 : 0.4), radius: configuration.isPressed ? 6 : 22, y: 6)
                 } else {
                     Capsule().fill(Palette.stageRaised).overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
                 }
@@ -126,10 +126,19 @@ struct ChipButtonStyle: ButtonStyle {
         configuration.label
             .font(.subheadline.weight(.medium))
             .padding(.horizontal, 14).padding(.vertical, 9)
-            .foregroundStyle(selected ? Palette.onAccent : Palette.ink)
-            .background(Capsule().fill(selected ? AnyShapeStyle(Palette.brass) : AnyShapeStyle(Palette.stageRaised)))
+            .foregroundStyle(selected ? Palette.stage : Palette.ink)
+            .background(Capsule().fill(selected ? AnyShapeStyle(Palette.ink) : AnyShapeStyle(Palette.stageRaised)))
             .overlay(Capsule().strokeBorder(selected ? .clear : Palette.line, lineWidth: 1))
             .scaleEffect(configuration.isPressed ? 0.96 : 1)
+            .animation(Motion.quick, value: configuration.isPressed)
+    }
+}
+
+/// Plain button that gives a little under the finger.
+struct PressScaleStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.97 : 1)
             .animation(Motion.quick, value: configuration.isPressed)
     }
 }

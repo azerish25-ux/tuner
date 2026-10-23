@@ -45,7 +45,7 @@ final class ProgressionTests: XCTestCase {
         XCTAssertTrue(update.achievementsEarned.contains { $0.id == "full_tune" })
         // The same quest pays once a day, and again tomorrow.
         update = state.record(.stringTuned(instrumentId: "guitar", all: true), now: day(5), calendar: calendar)
-        XCTAssertTrue(update.questsCompleted.isEmpty)
+        XCTAssertFalse(update.questsCompleted.contains { $0.kind == .tuneAll })
         update = state.record(.stringTuned(instrumentId: "guitar", all: true), now: day(6), calendar: calendar)
         XCTAssertEqual(update.questsCompleted.map(\.kind), [.tuneAll])
         XCTAssertEqual(state.stats["stringsTuned"], 4)
