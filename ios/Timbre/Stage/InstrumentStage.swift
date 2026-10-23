@@ -90,13 +90,13 @@ final class StageController {
         var metal = PhysicallyBasedMaterial()
         metal.baseColor = .init(tint: UIColor(white: 0.86, alpha: 1))
         metal.metallic = 1.0; metal.roughness = 0.28
-        var light = UnlitMaterial(color: UIColor(red: 1, green: 0.86, blue: 0.62, alpha: 0.32))
-        light.blending = .transparent(opacity: 0.32)
+        var glowMaterial = UnlitMaterial(color: UIColor(red: 1, green: 0.86, blue: 0.62, alpha: 0.32))
+        glowMaterial.blending = .transparent(opacity: 0.32)
         for _ in 0..<Self.segmentCount {
             let segment = ModelEntity(mesh: mesh, materials: [metal])
             segment.isEnabled = false
             holder.addChild(segment); segments.append(segment)
-            let glowSegment = ModelEntity(mesh: mesh, materials: [light])
+            let glowSegment = ModelEntity(mesh: mesh, materials: [glowMaterial])
             glowSegment.isEnabled = false
             holder.addChild(glowSegment); halo.append(glowSegment)
         }

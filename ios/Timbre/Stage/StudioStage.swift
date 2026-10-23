@@ -62,9 +62,11 @@ struct StudioStage: View {
             if i == 0 { path.move(to: point) } else { path.addLine(to: point) }
         }
         let color = Palette.pitch(smoothed, locked: state.locked)
-        if state.listening {
-            context.stroke(path, with: .color(color.opacity(0.25 + 0.35 * g)), style: StrokeStyle(lineWidth: 7 + 10 * g, lineCap: .round))
-            context.stroke(path, with: .color(Color.white.opacity(0.85)), style: StrokeStyle(lineWidth: 1.4 + g, lineCap: .round))
+        // The string only lights up while it rings (or holds the in-tune glow); a silent string stays the render's own.
+        let presence = max(g, min(1, e * 2.5))
+        if state.listening, presence > 0.02 {
+            context.stroke(path, with: .color(color.opacity((0.25 + 0.35 * g) * presence)), style: StrokeStyle(lineWidth: 7 + 10 * g, lineCap: .round))
+            context.stroke(path, with: .color(Color.white.opacity(0.85 * presence)), style: StrokeStyle(lineWidth: 1.4 + g, lineCap: .round))
         }
         if let peg = rig.card("\(anchor).peg") {
             let center = CGPoint(x: origin.x + peg.x * side, y: origin.y + peg.y * side)

@@ -88,7 +88,11 @@ final class AppStore: ObservableObject {
     var photo: InstrumentPhoto? { catalog.photo(instrumentId: instrument.id, tuningId: tuning.id, preferredAsset: settings.selectedPhotoAsset) }
     var modelID: String? { referenceMode ? nil : ModelLibrary.modelID(forPhoto: photo?.asset) }
     var instrumentDisplayName: String {
-        if referenceMode { return catalog.referenceMode?.name.localized ?? String(localized: "Chromatic") }
+        if referenceMode {
+            // "Chromatic / reference pitch" in every locale: the header keeps the first half.
+            let name = catalog.referenceMode?.name.localized ?? String(localized: "Chromatic")
+            return name.components(separatedBy: " / ").first ?? name
+        }
         return photo.map { NSLocalizedString("timbre_photo_" + $0.asset, bundle: .main, value: $0.label, comment: "") } ?? instrument.name.localized
     }
     var activeAnchor: String? { referenceMode ? nil : activeCourse.anchorId }
