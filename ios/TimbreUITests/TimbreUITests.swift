@@ -41,6 +41,8 @@ final class TimbreUITests: XCTestCase {
     private func scrollTo(_ target: XCUIElement) {
         var swiped = false
         for _ in 0..<10 where !(target.exists && target.isHittable) { app.swipeUp(velocity: .slow); swiped = true }
+        // The list may have been left scrolled past the target: search back up.
+        for _ in 0..<20 where !(target.exists && target.isHittable) { app.swipeDown(velocity: .slow); swiped = true }
         if swiped { settle(1.2) }
     }
 
