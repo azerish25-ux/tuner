@@ -1,0 +1,36 @@
+{
+ "Details": {
+  "images": [
+   "Details_baseColor.png",
+   "Details_metallicRoughness.png",
+   "Details_normal.png"
+  ],
+  "baseColor": [
+   0.8,
+   0.8,
+   0.8,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.5,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ },
+ "Main": {
+  "images": [
+   "Main_baseColor.png",
+   "Main_metallicRoughness.png",
+   "Main_normal.png"
+  ],
+  "baseColor": [
+   0.8,
+   0.8,
+   0.8,
+   1.0
+  ],
+  "metallic": 0.0,
+  "roughness": 0.5,
+  "alpha": 1.0,
+  "blend": "DITHERED"
+ }
+}
