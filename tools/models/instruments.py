@@ -44,10 +44,25 @@ class Spec:
     button: str = "pearl"     # pearl | metal | white | clover
     guard: str = ""           # tortoise | white | black
     deg_per_cent: float = 1.4
+    pickups: str = "p"        # p (split coil) | jj (two single coils)
 
 
 def fret_distance(scale, n):
     return scale * (1 - 2 ** (-n / 12))
+
+
+def guard_outline(outline, inset, cut_treble, cut_bass, lower):
+    """Pickguard: the body outline inset by `inset` above two cut heights (treble side x > 0,
+    bass side x <= 0), closed below by `lower` points listed from the bass side to the treble side."""
+    pts = offset_outline(outline, -inset)
+    keep = [(x > 0 and z >= cut_treble) or (x <= 0 and z >= cut_bass) for x, z in pts]
+    n = len(pts)
+    start = next(i for i in range(n) if keep[i] and not keep[i - 1])
+    chain, i = [], start
+    while keep[i % n] and len(chain) < n:
+        chain.append(pts[i % n]); i += 1
+    tail = lower if chain[0][0] > 0 else list(reversed(lower))
+    return catmull_rom(chain[::3] + tail, 4, closed=True)
 
 
 def build(spec: Spec):
@@ -138,15 +153,29 @@ def build(spec: Spec):
 
     # ---------------------------------------------------------------- electric hardware
     if spec.kind == "electric_bass":
-        z_pick = saddle_z + 0.13
-        guard_pts = catmull_rom([(-0.115, 0.22), (-0.125, 0.3), (-0.12, 0.37), (-0.1, 0.415), (-0.078, 0.398), (-0.056, 0.35),
-                                 (-0.03, 0.336), (0.036, 0.334), (0.062, 0.346), (0.088, 0.372), (0.108, 0.37), (0.118, 0.32),
-                                 (0.104, 0.24), (0.07, 0.19), (0.0, 0.17), (-0.07, 0.18)], 8, closed=True)
+        guard_pts = guard_outline(outline, 0.011, cut_treble=0.235, cut_bass=0.175,
+                                  lower=[(-0.128, 0.168), (-0.09, 0.156), (-0.035, 0.158), (0.02, 0.17), (0.07, 0.192), (0.11, 0.222)])
         prism("pickguard", guard_pts, y_top - 0.0025, y_top + 0.0002, P[spec.guard or "white_guard"], root, bevel=0.0012)
-        for k, dx in enumerate((-0.018, 0.018)):
-            cube(f"pickup_{k}", (0.036, 0.012, 0.022), P["pickup_black"], root, location=(dx - 0.004 + 0.008 * k, y_top - 0.006, z_pick + (0.01 if k else -0.01)), bevel=0.004)
-        for k in range(2):
-            cylinder(f"knob_{k}", 0.010, 0.016, P["chrome"], root, location=(0.10, y_top - 0.009, saddle_z + 0.015 + 0.04 * k), rotation=(math.pi / 2, 0, 0), vertices=32)
+        spread = spec.saddle_width
+        if spec.pickups == "p":
+            # Split coil: the E/A half sits nearer the neck than the D/G half.
+            z_pick = saddle_z + 0.13
+            for k, dx in enumerate((-0.019, 0.019)):
+                cube(f"pickup_{k}", (0.04, 0.012, 0.021), P["pickup_black"], root,
+                     location=(dx, y_top - 0.006, z_pick + (0.011 if k == 0 else -0.011)), bevel=0.004)
+        else:
+            for k, dz in enumerate((0.045, 0.135)):
+                cube(f"pickup_{k}", (spread + 0.024, 0.012, 0.019), P["pickup_black"], root,
+                     location=(0, y_top - 0.006, saddle_z + dz), bevel=0.005)
+        knobs = 2 if spec.pickups == "p" else 3
+        plate_len = 0.03 + 0.035 * knobs
+        plate_z = saddle_z + 0.02
+        plate = [(0.1 + 0.017 * math.cos(a), plate_z + (plate_len / 2 - 0.017) * (1 if math.sin(a) > 0 else -1) + 0.017 * math.sin(a))
+                 for a in [math.pi * 2 * k / 48 for k in range(48)]]
+        prism("control_plate", plate, y_top - 0.0014, y_top + 0.0002, P["chrome"], root, bevel=0.0006)
+        for k in range(knobs):
+            z = plate_z - plate_len / 2 + 0.032 + 0.035 * k
+            cylinder(f"knob_{k}", 0.0105, 0.017, P["chrome"], root, location=(0.1, y_top - 0.0095, z), rotation=(math.pi / 2, 0, 0), vertices=40)
 
     # ---------------------------------------------------------------- headstock
     tilt = math.radians(spec.head_tilt)
@@ -164,7 +193,7 @@ def build(spec: Spec):
         head_half = [(0.0, 0.0), (hw0, 0.0), (hw0 + 0.006, L * 0.3), (hw0 + 0.012, L * 0.75), (hw0 + 0.01, L * 0.95), (hw0 * 0.5, L * 1.02), (0.0, L * 0.98)]
         head_outline = mirrored_outline(head_half, 10)
     prism("headstock", head_outline, 0.0, head_t, P[spec.neck_wood], head, bevel=0.0025)
-    prism("head_veneer", offset_outline(head_outline, -0.0006), -0.0016, 0.0004, P["black" if spec.kind == "electric_bass" else spec.board], head, bevel=0.0004, segments=2)
+    prism("head_veneer", offset_outline(head_outline, -0.0006), -0.0016, 0.0004, P[spec.neck_wood if spec.kind == "electric_bass" else "ebony"], head, bevel=0.0004, segments=2)
 
     # ---------------------------------------------------------------- strings, posts, tuners
     def string_x(i, width):
@@ -251,11 +280,23 @@ DREAD = [(0.0, 0.0), (0.105, 0.008), (0.168, 0.043), (0.196, 0.11), (0.191, 0.18
          (0.141, 0.345), (0.149, 0.4), (0.133, 0.455), (0.094, 0.492), (0.042, 0.505), (0.0, 0.506)]
 UKE = [(0.0, 0.0), (0.05, 0.005), (0.078, 0.034), (0.083, 0.072), (0.072, 0.11), (0.06, 0.132), (0.063, 0.162),
        (0.066, 0.196), (0.051, 0.226), (0.022, 0.239), (0.0, 0.24)]
-PBASS = [(0.0, 0.0), (0.09, 0.008), (0.145, 0.04), (0.168, 0.10), (0.165, 0.165), (0.145, 0.215), (0.128, 0.255),
-         (0.133, 0.295), (0.138, 0.335), (0.128, 0.37), (0.112, 0.388), (0.094, 0.38), (0.078, 0.352), (0.06, 0.332),
-         (0.034, 0.326), (-0.034, 0.326), (-0.052, 0.34), (-0.068, 0.372), (-0.082, 0.41), (-0.096, 0.438),
-         (-0.112, 0.448), (-0.128, 0.44), (-0.138, 0.41), (-0.14, 0.36), (-0.134, 0.30), (-0.128, 0.255),
-         (-0.148, 0.21), (-0.168, 0.15), (-0.168, 0.095), (-0.146, 0.04), (-0.09, 0.008)]
+# Offset-waist bass bodies, x > 0 is the treble side, listed counter-clockwise from the
+# bottom centre. The neck pocket sits at the 17th fret; the bass horn reaches the 12th.
+PBASS = [(0.0, 0.0), (0.08, 0.004), (0.13, 0.022), (0.158, 0.055), (0.168, 0.1), (0.166, 0.15), (0.152, 0.2),
+         (0.136, 0.238), (0.13, 0.268), (0.134, 0.298), (0.141, 0.33), (0.144, 0.365), (0.14, 0.4), (0.132, 0.428),
+         (0.122, 0.443), (0.11, 0.44), (0.098, 0.424), (0.084, 0.404), (0.066, 0.396), (0.05, 0.4), (0.034, 0.405),
+         (-0.034, 0.405), (-0.05, 0.412), (-0.065, 0.43), (-0.078, 0.458), (-0.09, 0.488), (-0.101, 0.505),
+         (-0.114, 0.508), (-0.128, 0.497), (-0.141, 0.468), (-0.15, 0.425), (-0.152, 0.375), (-0.146, 0.325),
+         (-0.139, 0.285), (-0.142, 0.248), (-0.156, 0.2), (-0.166, 0.15), (-0.168, 0.1), (-0.158, 0.055),
+         (-0.13, 0.022), (-0.08, 0.004)]
+# Jazz: narrower, more offset waist and slimmer horns.
+JBASS = [(0.0, 0.0), (0.08, 0.004), (0.128, 0.022), (0.155, 0.055), (0.165, 0.1), (0.162, 0.145), (0.146, 0.188),
+         (0.126, 0.222), (0.118, 0.252), (0.122, 0.285), (0.132, 0.32), (0.137, 0.36), (0.133, 0.398), (0.124, 0.426),
+         (0.114, 0.44), (0.103, 0.437), (0.093, 0.42), (0.08, 0.402), (0.064, 0.395), (0.049, 0.399), (0.034, 0.405),
+         (-0.034, 0.405), (-0.049, 0.413), (-0.062, 0.432), (-0.074, 0.461), (-0.085, 0.49), (-0.096, 0.507),
+         (-0.108, 0.511), (-0.121, 0.5), (-0.133, 0.47), (-0.141, 0.428), (-0.143, 0.38), (-0.136, 0.335),
+         (-0.128, 0.3), (-0.13, 0.262), (-0.146, 0.212), (-0.16, 0.16), (-0.165, 0.105), (-0.156, 0.056),
+         (-0.128, 0.022), (-0.08, 0.004)]
 
 
 def scaled(points, sx, sz):
@@ -283,13 +324,13 @@ MODELS = {
         wound=[True] * 4, scale=0.864, nut_width=0.042, saddle_width=0.076, frets=20, body_fret=21, body_len=0.335,
         body_depth=0.045, body_full=PBASS, head="inline", head_tilt=0, head_len=0.2, post_s=[0.05, 0.088, 0.126, 0.164],
         finish="sunburst", neck_wood="maple", board="rosewood", string_material="nickel_wound", wound_material="nickel_wound",
-        button="clover", guard="tortoise", deg_per_cent=1.0),
+        button="clover", guard="white_guard", deg_per_cent=1.0),
     "bass_j5": Spec(
         id="bass_j5", kind="electric_bass", strings=["s5", "s4", "s3", "s2", "s1"], gauges=[0.0016, 0.00133, 0.00108, 0.00083, 0.00057],
         wound=[True] * 5, scale=0.864, nut_width=0.047, saddle_width=0.09, frets=20, body_fret=21, body_len=0.335,
-        body_depth=0.045, body_full=PBASS, head="inline", head_tilt=0, head_len=0.235, post_s=[0.05, 0.085, 0.12, 0.155, 0.19],
+        body_depth=0.045, body_full=JBASS, head="inline", head_tilt=0, head_len=0.235, post_s=[0.05, 0.085, 0.12, 0.155, 0.19],
         finish="cherry", neck_wood="maple", board="rosewood", string_material="nickel_wound", wound_material="nickel_wound",
-        button="clover", guard="white_guard", deg_per_cent=1.0),
+        button="clover", guard="tortoise", pickups="jj", deg_per_cent=1.0),
     "ukulele_soprano": uke("ukulele_soprano", 0.33, 1.0, 15),
     "ukulele_concert": uke("ukulele_concert", 0.38, 1.12, 18),
     "ukulele_tenor": uke("ukulele_tenor", 0.43, 1.26, 18),
