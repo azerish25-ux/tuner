@@ -17,7 +17,7 @@ struct LearnView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollViewReader { reader in
+            Group {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 22) {
                         header
@@ -34,11 +34,6 @@ struct LearnView: View {
                     .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
                 }
                 .background(StageBackground(motes: false))
-                .onAppear {
-                    if let next = course.flatMap({ store.learn.nextLesson(in: $0) }) {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { withAnimation { reader.scrollTo(next.id, anchor: .center) } }
-                    }
-                }
             }
         }
         .fullScreenCover(item: $playing) { item in

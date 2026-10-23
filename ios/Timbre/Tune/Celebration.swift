@@ -50,6 +50,19 @@ struct CelebrationOverlay: View {
                         Button("Done") { dismiss() }.buttonStyle(BrassButtonStyle(prominent: false))
                     }
                     .padding(.top, 6)
+                    // Tuned up: the natural moment to play something.
+                    if let course = store.curriculum.courses.first(where: { $0.instrument == store.instrument.id }), let next = store.learn.nextLesson(in: course) {
+                        Button {
+                            dismiss()
+                            UserDefaults.standard.set(course.id, forKey: "learn.course")
+                            store.selectedTab = .learn
+                        } label: {
+                            Label("Ready to play: \(next.title.localized)", systemImage: "graduationcap.fill")
+                                .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.mint).lineLimit(1)
+                        }
+                        .padding(.top, 2)
+                        .accessibilityIdentifier("celebration.lesson")
+                    }
                 }
                 .padding(26)
                 .stillCard(cornerRadius: 30, padding: 22)

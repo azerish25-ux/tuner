@@ -13,6 +13,7 @@ struct AlongStep: View {
     let accent: Color
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
+    @State private var owner = UUID()
     @State private var phase = Phase.ready
     @State private var slow = false
     @State private var judge: PlayAlongJudge
@@ -69,7 +70,7 @@ struct AlongStep: View {
             MicrophoneHint()
             controls
         }
-        .onDisappear { store.audio.stopMetronome(); store.stopLessonListening() }
+        .onDisappear { store.audio.stopMetronome(); store.stopLessonListening(owner: owner) }
     }
 
     // MARK: Pieces
@@ -178,7 +179,7 @@ struct AlongStep: View {
         phase = .playing
         store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
         store.gameTargetHz = notes.first.map { PitchMath.frequency(midi: Double($0.midi), reference: store.settings.referencePitchHz) }
-        store.startLessonListening { hz, level in
+        store.startLessonListening(owner: owner) { hz, level in
             let now = CACurrentMediaTime()
             let heard = HeardNote(hz: hz, reference: store.settings.referencePitchHz)
             let onset = level - lastLevel > 6 && level > -50
@@ -209,7 +210,7 @@ struct AlongStep: View {
     private func finish() {
         guard phase == .playing else { return }
         store.audio.stopMetronome()
-        store.stopLessonListening()
+        store.stopLessonListening(owner: owner)
         withAnimation(Motion.settle) { phase = .done }
         SoundFX.shared.play(judge.accuracy >= 0.7 ? .star : .wrong)
     }

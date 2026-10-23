@@ -39,6 +39,7 @@ struct NotesStep: View {
     let accent: Color
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
+    @State private var owner = UUID()
     @State private var judge: NoteSequenceJudge
     @State private var heard: HeardNote?
     @State private var hold = 0.0
@@ -91,7 +92,7 @@ struct NotesStep: View {
             .padding(.horizontal, 24).padding(.bottom, 18)
         }
         .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(8)); canSkip = true } }
-        .onDisappear { store.stopLessonListening() }
+        .onDisappear { store.stopLessonListening(owner: owner) }
     }
 
     private var ringTint: Color {
@@ -125,7 +126,7 @@ struct NotesStep: View {
 
     private func listen() {
         if let current { store.gameTargetHz = frequency(current.midi, store) }
-        store.startLessonListening { hz, _ in
+        store.startLessonListening(owner: owner) { hz, _ in
             let note = HeardNote(hz: hz, reference: store.settings.referencePitchHz)
             heard = note
             guard !finished else { return }
@@ -143,7 +144,7 @@ struct NotesStep: View {
 
     private func hear() {
         guard let current else { return }
-        store.stopLessonListening()
+        store.stopLessonListening(owner: owner)
         store.audio.playTones([frequency(current.midi, store)], together: false, noteMs: 900, gapMs: 0)
         Task { try? await Task.sleep(for: .milliseconds(1100)); if !finished { listen() } }
     }
@@ -151,7 +152,7 @@ struct NotesStep: View {
     private func finish(score: Double) {
         guard !finished else { return }
         finished = true
-        store.stopLessonListening()
+        store.stopLessonListening(owner: owner)
         Task { try? await Task.sleep(for: .milliseconds(700)); done(score) }
     }
 }
@@ -181,6 +182,7 @@ struct ChordStep: View {
     let accent: Color
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
+    @State private var owner = UUID()
     @State private var judge: NoteSequenceJudge
     @State private var verified: Set<Int> = []
     @State private var burst = 0
@@ -240,12 +242,12 @@ struct ChordStep: View {
             .padding(.horizontal, 24).padding(.bottom, 18)
         }
         .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(10)); canSkip = true } }
-        .onDisappear { store.stopLessonListening() }
+        .onDisappear { store.stopLessonListening(owner: owner) }
     }
 
     private func listen() {
         if let first = judge.current { store.gameTargetHz = frequency(first, store) }
-        store.startLessonListening { hz, _ in
+        store.startLessonListening(owner: owner) { hz, _ in
             guard !finished else { return }
             let note = HeardNote(hz: hz, reference: store.settings.referencePitchHz)
             if case .hit(let i)? = judge.update(time: CACurrentMediaTime(), midi: note?.midi, cents: note?.cents) {
@@ -258,7 +260,7 @@ struct ChordStep: View {
     }
 
     private func strumIt() {
-        store.stopLessonListening()
+        store.stopLessonListening(owner: owner)
         store.audio.playTones(order.map { frequency($0.midi, store) }, together: false, noteMs: 380, gapMs: 30)
         Task { try? await Task.sleep(for: .milliseconds(order.count * 410 + 300)); if !finished { listen() } }
     }
@@ -266,7 +268,7 @@ struct ChordStep: View {
     private func finish(_ score: Double) {
         guard !finished else { return }
         finished = true
-        store.stopLessonListening()
+        store.stopLessonListening(owner: owner)
         Task { try? await Task.sleep(for: .milliseconds(900)); done(score) }
     }
 }
@@ -284,6 +286,7 @@ struct RhythmStep: View {
     let accent: Color
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
+    @State private var owner = UUID()
     @State private var phase = Phase.ready
     @State private var startTime: CFTimeInterval = 0
     @State private var hits: [Double] = []
@@ -362,7 +365,7 @@ struct RhythmStep: View {
                 .padding(.horizontal, 20)
             }
         }
-        .onDisappear { store.audio.stopMetronome(); store.stopLessonListening() }
+        .onDisappear { store.audio.stopMetronome(); store.stopLessonListening(owner: owner) }
     }
 
     /// Which chord of a progression is under the playhead (by bar).
@@ -381,7 +384,7 @@ struct RhythmStep: View {
         phase = .playing
         store.audio.setMetronome(bpm: Int(bpm), beats: beatsPerBar, subdivision: 1, accents: true)
         if !isTap {
-            store.startLessonListening(lowHz: 60, highHz: 1400) { _, level in
+            store.startLessonListening(owner: owner, lowHz: 60, highHz: 1400) { _, level in
                 // A strum is a sudden jump in loudness; ignore jumps within 120 ms of the last one.
                 let now = CACurrentMediaTime()
                 if level > -48, level - lastLevel > 8, now - lastOnset > 0.12 { lastOnset = now; register(now - 0.06) }
@@ -416,7 +419,7 @@ struct RhythmStep: View {
 
     private func finish() {
         store.audio.stopMetronome()
-        store.stopLessonListening()
+        store.stopLessonListening(owner: owner)
         let points = grades.values.reduce(0.0) { $0 + ($1 == .perfect ? 1 : $1 == .good ? 0.8 : $1 == .ok ? 0.5 : 0) }
         score = expected.isEmpty ? 1 : points / Double(expected.count)
         phase = .done
@@ -433,6 +436,7 @@ struct TuneCheckStep: View {
     let accent: Color
     let done: () -> Void
     @EnvironmentObject private var store: AppStore
+    @State private var owner = UUID()
     @State private var index = 0
     @State private var cents: Double?
     @State private var holdStart: CFTimeInterval?
@@ -480,7 +484,7 @@ struct TuneCheckStep: View {
                 .accessibilityIdentifier("lesson.tunecheck.skip")
         }
         .onAppear { listen() }
-        .onDisappear { store.stopLessonListening() }
+        .onDisappear { store.stopLessonListening(owner: owner) }
     }
 
     private var meterColor: Color {
@@ -517,7 +521,7 @@ struct TuneCheckStep: View {
     private func listen() {
         guard index < strings.count else { return finish() }
         store.gameTargetHz = frequency(strings[index], store)
-        store.startLessonListening { hz, _ in
+        store.startLessonListening(owner: owner) { hz, _ in
             guard index < strings.count, let hz else { cents = nil; holdStart = nil; return }
             let target = frequency(strings[index], store)
             let off = PitchMath.cents(target: target, measured: hz)
@@ -537,7 +541,7 @@ struct TuneCheckStep: View {
     }
 
     private func finish() {
-        store.stopLessonListening()
+        store.stopLessonListening(owner: owner)
         if let instrument = course.instrument { UserDefaults.standard.set(Quests.dayKey(Date()), forKey: "tunecheck.\(instrument)") }
         done()
     }

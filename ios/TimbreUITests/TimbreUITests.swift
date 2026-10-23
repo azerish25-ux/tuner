@@ -51,10 +51,13 @@ final class TimbreUITests: XCTestCase {
         settle(); shot("01-onboarding-welcome")
         element("onboarding.instrument.bass.electric.4").tap(); settle(); shot("02-onboarding-instrument")
         element("onboarding.instrument.guitar.acoustic.6").tap()
-        start.tap(); settle(); shot("03-onboarding-experience")
-        element("onboarding.continue").tap(); settle(); shot("04-onboarding-goal")
-        element("onboarding.continue").tap(); settle(); shot("05-onboarding-microphone")
-        app.buttons["Not now"].tap()
+        start.tap(); settle(1.5); shot("03-onboarding-experience")
+        element("onboarding.continue").tap(); settle(1.5); shot("04-onboarding-goal")
+        let notNow = app.buttons["Not now"]
+        for _ in 0..<3 where !notNow.exists { element("onboarding.continue").tap(); settle(1.5) }
+        XCTAssertTrue(notNow.waitForExistence(timeout: 5))
+        shot("05-onboarding-microphone")
+        notNow.tap()
         let free = element("paywall.free")
         XCTAssertTrue(free.waitForExistence(timeout: 15))
         settle(2); shot("06-paywall-onboarding")

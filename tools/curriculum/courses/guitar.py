@@ -1,5 +1,5 @@
 """Guitar: from the first open string to barre chords. Unit 1 is the style reference for every course."""
-from lib import along, chord, course, explain, fretboard, fretted, lesson, listen, notes, part, play_chord, quiz, rhythm, strum, tap, unit
+from lib import along, chord, course, explain, fretboard, fretted, lesson, listen, notes, part, play_chord, progression, quiz, rhythm, strum, tap, unit
 
 G = "guitar"
 
@@ -65,7 +65,7 @@ CLEM = (CLEM_1.replace("A3:3", "A3:2 A3:0.5 B3:0.5")
         + " C4:1 C4:1 B3:0.5 A3:0.5 B3:1 G3:1 G3:0.5 B3:0.5 A3:1 D3:1 F#3:0.5 A3:0.5 G3:3")   # Clementine (1884)
 
 # Original material.
-RIFF_A = "E2:0.5 E2:0.5 G2:0.5 E2:0.5 A2:0.5 E2:0.5 G2:1"
+RIFF_A = "E2:0.5 E2:0.5 G2:0.5 E2:0.5 A2@5:0.5 E2:0.5 G2:1"
 RIFF_B = "E2:0.5 E2:0.5 B2:0.5 E2:0.5 D3@5:0.5 B2:0.5 E2:1"
 RIFF = f"{RIFF_A} {RIFF_B}"
 BOX_LOW = "A2@6:1 C3@6:1 D3@5:1 E3@5:1 D3@5:1 C3@6:1 A2@6:2"
@@ -78,6 +78,15 @@ BOX_DOTS = [(6, 5, 1), (6, 8, 4), (5, 5, 1), (5, 7, 3), (4, 5, 1), (4, 7, 3),
 SOLO_Q = "A4@1:1 C5@1:1 A4@1:1 G4@2:1 E4@2:3 r:1"
 SOLO_A = "G4@2:0.5 A4@1:0.5 G4@2:0.5 E4@2:0.5 D4@3:1 C4@3:1 A3@4:4"
 SOLO = f"{SOLO_Q} {SOLO_A}"
+
+# Chord plans: (chord, bars).
+GREEN_VERSE = [(Am, 1), (C, 1), (G_MAJ, 1), (Em, 1), (Am, 1), (F_MINI, 1), (E, 2),
+               (Am, 1), (C, 1), (G_MAJ, 1), (Em, 1), (Am, 1), (E, 1), (Am, 2)]
+GREEN_CHORUS = [(C, 2), (G_MAJ, 1), (Em, 1), (Am, 1), (F_MINI, 1), (E, 2),
+                (C, 2), (G_MAJ, 1), (Em, 1), (Am, 1), (E, 1), (Am, 2)]
+CLEM_CHORDS = [(G_MAJ, 3), (D7, 2), (G_MAJ, 1), (D7, 1), (G_MAJ, 1)]
+TWELVE_BAR = [(E7, 4), (A7, 2), (E7, 2), (B7, 1), (A7, 1), (E7, 1), (B7, 1)]
+WALTZ = [0, 1, 2]
 
 # ---------------------------------------------------------------- shared text (translated once)
 ONE_FINGER = "One finger per fret: fret 1 gets finger 1, fret 2 gets finger 2, fret 3 gets finger 3."
@@ -94,15 +103,6 @@ def shape(spec):
 def tones(spec):
     """The notes a chord shape sounds, lowest first, for listen steps."""
     return [fretted(G, 6 - i, f) for i, f in enumerate(spec["frets"]) if f >= 0]
-
-
-def in_position(step, first_fret):
-    """One finger per fret from first_fret. lib.position suggests fingers for first position only."""
-    for n in step["notes"]:
-        at = n.get("at")
-        if at and at["f"] > 0:
-            at["g"] = max(1, min(4, at["f"] - first_fret + 1))
-    return step
 
 
 def with_fingers(step, fingers):
@@ -295,8 +295,7 @@ UNIT_3 = unit("gtr-3", "First chords", "E minor, E, A minor and A, played cleanl
         strum(Am, ONCE, bpm=60, bars=2),
         quiz("How should your fingers travel between chords?", ["One at a time", "As high as possible", "Together, as one shape"], 2,
              "Moving the fingers as a unit is faster and lands cleaner. Keep them low, just above the strings."),
-        strum(Em, HALVES, bpm=60, bars=2),
-        strum(Am, HALVES, bpm=60, bars=2),
+        progression([(Em, 1), (Am, 1), (Em, 1), (Am, 1)], HALVES, bpm=60),
     ], minutes=5, xp=25),
     lesson("gtr-3-6", "From A to E", [
         explain("See the shape first", "Every finger moves from A to E. Picture the E shape before you lift, "
@@ -306,8 +305,7 @@ UNIT_3 = unit("gtr-3", "First chords", "E minor, E, A minor and A, played cleanl
         strum(A, ONCE, bpm=60, bars=2),
         strum(E, ONCE, bpm=60, bars=2),
         listen("Which chord is minor?", [tones(Am), tones(A)], FIRST_SECOND, 0),
-        strum(A, HALVES, bpm=60, bars=2),
-        strum(E, HALVES, bpm=60, bars=2),
+        progression([(A, 1), (E, 1), (A, 1), (E, 1)], HALVES, bpm=60),
     ], minutes=5, xp=25),
     lesson("gtr-3-7", "Chord-change challenge", [
         explain("Four chords, clean changes", "No new ideas: E minor, E, A minor and A. Land each shape cleanly, "
@@ -317,10 +315,9 @@ UNIT_3 = unit("gtr-3", "First chords", "E minor, E, A minor and A, played cleanl
         listen("Major or minor?", [tones(Em)], MAJOR_MINOR, 1),
         play_chord(Am),
         play_chord(A),
-        strum(Em, HALVES, bpm=66, bars=2),
-        strum(Am, HALVES, bpm=66, bars=2),
-        strum(A, HALVES, bpm=66, bars=2),
-        strum(E, QUARTERS, bpm=66, bars=2),
+        progression([(Em, 1), (Am, 1), (Em, 1), (Am, 1)], HALVES, bpm=66),
+        progression([(A, 1), (E, 1), (A, 1), (E, 1)], HALVES, bpm=66),
+        progression([(Em, 2), (Am, 2), (A, 2), (E, 2)], QUARTERS, bpm=66),
     ], minutes=5, xp=35, kind="challenge"),
 ])
 
@@ -391,8 +388,7 @@ UNIT_4 = unit("gtr-4", "Strumming", "Downstrokes, down-up eighths, accents and a
         strum(Am, EIGHTHS, bpm=70, bars=2),
         quiz("Down-up eighths: where are the up strums?", ["On every and", "On every number", "Only on two and four"], 0),
         strum(E, FOLK, bpm=70, bars=2),
-        strum(A, FOLK, bpm=70, bars=2),
-        strum(Em, FOLK, bpm=76, bars=4),
+        progression([(Em, 2), (A, 2), (Am, 2), (E, 2)], FOLK, bpm=70),
     ], minutes=5, xp=35, kind="challenge"),
 ])
 
@@ -408,8 +404,7 @@ UNIT_5 = unit("gtr-5", "More open chords", "C, G, D and D minor, two classic pro
         strum(C, QUARTERS, bpm=66, bars=2),
         explain("A minor to C: one finger", "Fingers 1 and 2 stay exactly where they are. Only finger 3 moves, "
                 "from string 3 to string 5, fret 3.", shape(C)),
-        strum(Am, HALVES, bpm=60, bars=2),
-        strum(C, HALVES, bpm=60, bars=2),
+        progression([(Am, 1), (C, 1), (Am, 1), (C, 1)], HALVES, bpm=60),
     ], minutes=4, xp=20),
     lesson("gtr-5-2", "G major", [
         explain("Wide and bright", "G spreads out: finger 2 on string 6, fret 3; finger 1 on string 5, fret 2; "
@@ -419,8 +414,7 @@ UNIT_5 = unit("gtr-5", "More open chords", "C, G, D and D minor, two classic pro
         strum(G_MAJ, QUARTERS, bpm=66, bars=2),
         explain("Lead with the bass", "When you change, land the finger for the lowest string first. It's the first note "
                 "your strum hits, which buys a moment for the rest."),
-        strum(G_MAJ, HALVES, bpm=60, bars=2),
-        strum(C, HALVES, bpm=60, bars=2),
+        progression([(G_MAJ, 1), (C, 1), (G_MAJ, 1), (C, 1)], HALVES, bpm=60),
     ], minutes=4, xp=20),
     lesson("gtr-5-3", "D and D minor", [
         explain("A small triangle", "D lives on the thinnest three strings: finger 1 on string 3, fret 2; finger 3 on string 2, "
@@ -439,39 +433,30 @@ UNIT_5 = unit("gtr-5", "More open chords", "C, G, D and D minor, two classic pro
         explain("Three chords, endless songs", "A key is a song's home base. In the key of G, the chords G, C and D do most "
                 "of the work. Countless folk and rock songs use only these three."),
         listen("Does this end at home?", [tones(G_MAJ), tones(C), tones(D)], HOME, 1),
-        strum(G_MAJ, HALVES, bpm=60, bars=2),
-        strum(C, HALVES, bpm=60, bars=2),
-        strum(D, HALVES, bpm=60, bars=2),
+        progression([(G_MAJ, 1), (C, 1), (D, 1), (G_MAJ, 1)], HALVES, bpm=60),
         quiz("You keep landing late on a change. What helps most?", ["Strumming harder", "Skipping that chord", "Slowing down and moving early"], 2,
              "Slow, early changes build the habit. Speed follows on its own."),
-        strum(C, QUARTERS, bpm=66, bars=2),
-        strum(D, QUARTERS, bpm=66, bars=2),
-        strum(G_MAJ, QUARTERS, bpm=66, bars=2),
+        progression([(G_MAJ, 2), (C, 2), (D, 2), (G_MAJ, 2)], QUARTERS, bpm=66),
+        progression([(G_MAJ, 1), (C, 1), (D, 1), (G_MAJ, 1)], FOLK, bpm=66),
     ], minutes=5, xp=25),
     lesson("gtr-5-5", "A minor, C, G, D", [
         explain("Four chords in a row", "A progression is a chord sequence that repeats. A minor, C, G, D starts dark "
                 "and brightens as it climbs."),
-        strum(Am, HALVES, bpm=60, bars=2),
-        strum(C, HALVES, bpm=60, bars=2),
-        strum(G_MAJ, HALVES, bpm=60, bars=2),
-        strum(D, HALVES, bpm=60, bars=2),
+        progression([(Am, 1), (C, 1), (G_MAJ, 1), (D, 1)], HALVES, bpm=60),
+        progression([(Am, 1), (C, 1), (G_MAJ, 1), (D, 1)], QUARTERS, bpm=66),
         explain("The one-minute change", "Away from the app, pick two chords and switch for one minute, one strum each. "
                 "Count your clean changes and beat that score tomorrow. Start with D and D minor."),
         quiz("In a one-minute change, what do you count?", ["Clean changes", "Strings that buzz", "Seconds per chord"], 0),
-        strum(D, QUARTERS, bpm=66, bars=2),
-        strum(Dm, QUARTERS, bpm=66, bars=2),
+        progression([(D, 1), (Dm, 1), (D, 1), (Dm, 1)], QUARTERS, bpm=66),
     ], minutes=5, xp=25),
     lesson("gtr-5-6", "Open-chord challenge", [
         explain("Eight open chords", "No new ideas: C, G, D and D minor join E minor, E, A minor and A. "
                 "Change early, strum steady and let each chord ring."),
         quiz("Which chord skips strings 5 and 6?", ["C", "G", "Am", "D"], 3),
         listen("Major or minor?", [tones(Dm)], MAJOR_MINOR, 1),
-        strum(G_MAJ, FOLK, bpm=66, bars=2),
-        strum(C, FOLK, bpm=66, bars=2),
-        strum(D, FOLK, bpm=66, bars=2),
-        strum(Am, EIGHTHS, bpm=70, bars=2),
+        progression([(G_MAJ, 2), (C, 2), (D, 2), (G_MAJ, 2)], FOLK, bpm=66),
         strum(Dm, QUARTERS, bpm=70, bars=2),
-        strum(G_MAJ, QUARTERS, bpm=76, bars=2),
+        progression([(Am, 1), (C, 1), (G_MAJ, 1), (D, 1)], EIGHTHS, bpm=70),
     ], minutes=5, xp=35, kind="challenge"),
 ])
 
@@ -530,6 +515,7 @@ UNIT_6 = unit("gtr-6", "Melodies on strings 3 and 4", "G and A on string 3, D, E
                 "Its notes sit on strings 4, 3 and 2.", rhythm([0, 1, 2], beats_per_bar=3)),
         quiz("How many beats are in each bar here?", ["Two", "Three", "Four"], 1,
              "A bar of three feels like a gentle sway: strong, weak, weak."),
+        tap(WALTZ, bpm=66, bars=2, beats_per_bar=3),
         notes(G, ["D3", "G3", "B3", "G3", "B3", "A3"], hint="The opening: D, G, B G, B, A. Open strings 4, 3 and 2, plus A."),
         notes(G, ["G3", "E3", "D3", "D3"], hint="Then down: G, E, D, D."),
         along(G, AMAZING_1, bpm=66, beats_per_bar=3, title="First half"),
@@ -561,24 +547,20 @@ UNIT_7 = unit("gtr-7", "Songs with chords", "A mini F, D7, and two traditional s
         strum(F_MINI, QUARTERS, bpm=63, bars=2),
         explain("A minor, C, D, F", "This progression climbs step by step from A minor and lands on your new F. "
                 "Strum twice per chord and change early."),
-        strum(Am, HALVES, bpm=60, bars=2),
-        strum(C, HALVES, bpm=60, bars=2),
-        strum(D, HALVES, bpm=60, bars=2),
-        strum(F_MINI, HALVES, bpm=60, bars=2),
+        progression([(Am, 1), (C, 1), (D, 1), (F_MINI, 1)], HALVES, bpm=60),
+        progression([(Am, 1), (C, 1), (D, 1), (F_MINI, 1)], QUARTERS, bpm=66),
     ], minutes=5, xp=25),
     lesson("gtr-7-2", "Greensleeves: the chords", [
         explain("Greensleeves", "This English tune is over 400 years old. Its chords are all ones you know: A minor, C, G, "
-                "E minor, F and E. Strum once per chord and let it ring.", rhythm(ONCE)),
+                "E minor, F and E. It's in three: strum once per bar, then on every beat.", rhythm(WALTZ, beats_per_bar=3)),
         quiz("Which strings does the mini F leave silent?", ["Strings 5 and 6", "Strings 1 and 2", "Only string 3"], 0,
              "The mini F starts on string 4. Begin your strum there and skip strings 5 and 6."),
-        strum(Am, ONCE, bpm=60, bars=1),
-        strum(C, ONCE, bpm=60, bars=1),
-        strum(G_MAJ, ONCE, bpm=60, bars=1),
-        strum(Em, ONCE, bpm=60, bars=1),
-        strum(Am, ONCE, bpm=60, bars=1),
-        strum(F_MINI, ONCE, bpm=60, bars=1),
-        strum(E, ONCE, bpm=60, bars=2),
-    ], minutes=4, xp=30, kind="song"),
+        tap(WALTZ, bpm=63, bars=2, beats_per_bar=3),
+        progression(GREEN_VERSE[:7], ONCE, bpm=60, beats_per_bar=3),
+        progression(GREEN_VERSE, ONCE, bpm=63, beats_per_bar=3),
+        progression(GREEN_CHORUS, ONCE, bpm=63, beats_per_bar=3),
+        progression(GREEN_VERSE, WALTZ, bpm=66, beats_per_bar=3),
+    ], minutes=5, xp=30, kind="song"),
     lesson("gtr-7-3", "Greensleeves: the melody", [
         explain("Sharps: one fret higher", "A sharp raises a note by one fret. Greensleeves uses G sharp on string 3, fret 1, "
                 "and F sharp on string 4, fret 4. Reach that one with your little finger.", fretboard(G, [(3, 1, 1), (4, 4, 4)])),
@@ -596,13 +578,11 @@ UNIT_7 = unit("gtr-7", "Songs with chords", "A mini F, D7, and two traditional s
                 "Fingers: 2 on string 3, fret 2; 1 on string 2, fret 1; 3 on string 1, fret 2.", shape(D7)),
         play_chord(D7),
         listen("Does this end at home?", [tones(G_MAJ), tones(D7)], HOME, 1),
+        strum(D7, QUARTERS, bpm=66, bars=2),
         explain("Clementine", "This American ballad from the 1880s needs only G and D7. It's in three, like Amazing Grace. "
-                "Strum once per chord and let it ring."),
-        strum(G_MAJ, ONCE, bpm=60, bars=2),
-        strum(D7, ONCE, bpm=60, bars=2),
-        strum(G_MAJ, ONCE, bpm=60, bars=1),
-        strum(D7, ONCE, bpm=60, bars=1),
-        strum(G_MAJ, ONCE, bpm=60, bars=1),
+                "Strum once per bar, then on every beat."),
+        progression(CLEM_CHORDS, ONCE, bpm=60, beats_per_bar=3),
+        progression(CLEM_CHORDS, WALTZ, bpm=66, beats_per_bar=3),
     ], minutes=4, xp=25),
     lesson("gtr-7-5", "Clementine", [
         explain("Three strings and a stretch", "Clementine's melody sits on strings 4, 3 and 2. Its last line uses F sharp again: "
@@ -618,10 +598,11 @@ UNIT_7 = unit("gtr-7", "Songs with chords", "A mini F, D7, and two traditional s
         explain("Two songs, start to finish", "No new ideas: the mini F, D7 and both songs from this unit. "
                 "Change chords early and let the melodies sing."),
         quiz("Which chord pulls hardest toward G?", ["E minor", "C", "D7"], 2),
-        strum(F_MINI, QUARTERS, bpm=70, bars=2),
-        strum(D7, QUARTERS, bpm=70, bars=2),
+        progression([(Am, 1), (C, 1), (D, 1), (F_MINI, 1)], QUARTERS, bpm=70),
         listen("Major or minor?", [tones(F_MINI)], MAJOR_MINOR, 0),
+        progression(GREEN_VERSE, WALTZ, bpm=72, beats_per_bar=3),
         along(G, GREEN_A, bpm=76, beats_per_bar=3, title="Greensleeves, verse"),
+        progression(CLEM_CHORDS, WALTZ, bpm=76, beats_per_bar=3),
         along(G, CLEM, bpm=80, beats_per_bar=3, title="Clementine, up to speed"),
     ], minutes=6, xp=40, kind="challenge"),
 ])
@@ -651,7 +632,7 @@ UNIT_8 = unit("gtr-8", "Seventh and sus chords", "E7, A7, G7 and B7, sus chords,
         quiz("Which chord does B7 lead to most naturally?", ["D", "C", "E minor"], 2,
              "B7 pulls toward E. Its tension melts into E minor or E."),
         strum(B7, QUARTERS, bpm=60, bars=2),
-        strum(Em, QUARTERS, bpm=60, bars=2),
+        progression([(B7, 1), (Em, 1), (B7, 1), (Em, 1)], QUARTERS, bpm=60),
     ], minutes=5, xp=25),
     lesson("gtr-8-3", "The shuffle", [
         explain("Long-short, long-short", "A shuffle splits each beat unevenly: a long strum down, a short one up. "
@@ -667,26 +648,24 @@ UNIT_8 = unit("gtr-8", "Seventh and sus chords", "E7, A7, G7 and B7, sus chords,
         explain("Twelve bars of blues", "Many blues songs follow one 12-bar plan. In E: four bars of E7, two of A7, "
                 "two of E7, then one each of B7, A7, E7 and B7."),
         quiz("How many bars of E7 open the 12-bar blues?", ["Two", "Four", "Twelve"], 1),
-        strum(E7, SHUFFLE, bpm=66, bars=4),
-        strum(A7, SHUFFLE, bpm=66, bars=2),
-        strum(E7, SHUFFLE, bpm=66, bars=2),
-        strum(B7, SHUFFLE, bpm=66, bars=1),
-        strum(A7, SHUFFLE, bpm=66, bars=1),
-        strum(E7, SHUFFLE, bpm=66, bars=1),
-        strum(B7, SHUFFLE, bpm=66, bars=1),
+        progression([(E7, 2), (A7, 2), (E7, 2), (A7, 2)], SHUFFLE, bpm=60),
+        explain("The turnaround", "The last four bars move faster: B7, A7, E7, then B7, which turns you around "
+                "to the top. Change early and keep the shuffle going."),
+        progression(TWELVE_BAR[3:], SHUFFLE, bpm=60),
+        progression(TWELVE_BAR, SHUFFLE, bpm=63),
+        progression(TWELVE_BAR, SHUFFLE, bpm=72),
     ], minutes=5, xp=25),
     lesson("gtr-8-5", "Sus chords", [
         explain("Suspended chords", "A sus chord swaps the note that makes it major or minor for a neighbor. "
                 "It sounds open and unresolved until it settles home.", shape(Dsus4)),
         play_chord(Dsus4),
         listen("Which chord sounds settled?", [tones(Dsus4), tones(D)], FIRST_SECOND, 1),
-        strum(Dsus4, QUARTERS, bpm=66, bars=1),
-        strum(D, QUARTERS, bpm=66, bars=1),
+        progression([(Dsus4, 1), (D, 1), (Dsus4, 1), (D, 1)], QUARTERS, bpm=66),
         explain("Dsus2 and Asus4", "Lift finger 2 off string 1 to get Dsus2. For Asus4, play A and add your little finger "
                 "on string 2, fret 3.", shape(Dsus2)),
         play_chord(Dsus2),
-        strum(Asus4, QUARTERS, bpm=66, bars=1),
-        strum(A, QUARTERS, bpm=66, bars=1),
+        play_chord(Asus4),
+        progression([(Asus4, 1), (A, 1), (Dsus2, 1), (D, 1)], QUARTERS, bpm=66),
     ], minutes=5, xp=25),
     lesson("gtr-8-6", "Blues challenge", [
         explain("Sevenths, sus and shuffle", "No new ideas: seventh chords, sus chords and the 12-bar shuffle. "
@@ -694,11 +673,8 @@ UNIT_8 = unit("gtr-8", "Seventh and sus chords", "E7, A7, G7 and B7, sus chords,
         listen("Which chord has the seventh?", [tones(A), tones(A7)], FIRST_SECOND, 1),
         quiz("Which chord uses all four fingers?", ["E7", "A7", "B7"], 2),
         strum(G7, QUARTERS, bpm=70, bars=2),
-        strum(Dsus4, QUARTERS, bpm=70, bars=1),
-        strum(E7, SHUFFLE, bpm=72, bars=4),
-        strum(A7, SHUFFLE, bpm=72, bars=2),
-        strum(B7, SHUFFLE, bpm=72, bars=1),
-        strum(E7, SHUFFLE, bpm=72, bars=1),
+        progression([(Dsus4, 1), (D, 1), (Asus4, 1), (A, 1)], QUARTERS, bpm=70),
+        progression(TWELVE_BAR, SHUFFLE, bpm=76),
     ], minutes=5, xp=35, kind="challenge"),
 ])
 
@@ -737,33 +713,32 @@ UNIT_9 = unit("gtr-9", "Power chords and riffs", "Power chords, open and movable
         explain("Root on string 5", "The same shape works from string 5. Finger 1 on string 5, fret 3 gives C5. "
                 "Let the tip of finger 1 touch string 6 to keep it quiet.", shape(C5)),
         play_chord(C5),
-        strum(G5, QUARTERS, bpm=72, bars=1),
-        strum(A5_UP, QUARTERS, bpm=72, bars=1),
-        strum(C5, QUARTERS, bpm=72, bars=2),
+        progression([(G5, 1), (A5_UP, 1), (C5, 1), (A5_UP, 1)], QUARTERS, bpm=72),
     ], minutes=5, xp=25),
     lesson("gtr-9-4", "Your first riff", [
         explain("A riff is a hook", "A riff is a short, catchy phrase that repeats. This one bounces off open low E. "
                 "Rest your palm at the bridge to keep it tight.",
                 fretboard(G, [(6, 0), (6, 3, 2), (5, 0), (5, 2, 1), (5, 5, 4)])),
-        in_position(notes(G, [("E2", 6), ("G2", 6), ("A2", 5)], hint="Open E, string 6 at fret 3, then open A."), 2),
-        in_position(along(G, f"{RIFF_A} {RIFF_A}", bpm=66, max_fret=7, title="First bar, twice"), 2),
+        notes(G, [("E2", 6), ("G2", 6), ("A2", 5)], hint="Open E, string 6 at fret 3, then open A.", first_fret=2),
+        along(G, f"{RIFF_A} {RIFF_A}", bpm=66, title="First bar, twice", max_fret=7, first_fret=2),
         explain("Reach for fret 5", "The second bar climbs string 5: fret 2, then fret 5 with your little finger, "
                 "then back to fret 2. Keep finger 1 parked near fret 2."),
-        in_position(along(G, f"{RIFF_B} {RIFF_B}", bpm=66, max_fret=7, title="Second bar, twice"), 2),
+        notes(G, [("B2", 5), ("D3", 5), ("B2", 5)], hint="String 5: fret 2, fret 5 with your little finger, fret 2 again.",
+              max_fret=7, first_fret=2),
+        along(G, f"{RIFF_B} {RIFF_B}", bpm=66, title="Second bar, twice", max_fret=7, first_fret=2),
         quiz("What makes a riff a riff?", ["It repeats", "It's played once", "It uses only chords"], 0),
-        in_position(along(G, f"{RIFF} {RIFF}", bpm=72, max_fret=7, title="The whole riff"), 2),
+        along(G, f"{RIFF} {RIFF}", bpm=72, title="The whole riff", max_fret=7, first_fret=2),
     ], minutes=5, xp=25),
     lesson("gtr-9-5", "Riffs and power chords", [
         explain("Answer the riff", "Songs often answer a riff with power chords. Play the riff, then hit the chords "
                 "on one, the and of two, and four.", rhythm(PUSH)),
-        in_position(along(G, RIFF, bpm=72, max_fret=7, title="The riff"), 2),
+        along(G, RIFF, bpm=72, title="The riff", max_fret=7, first_fret=2),
         tap(PUSH, bpm=72, bars=2),
         strum(G5, PUSH, bpm=72, bars=2),
-        strum(A5_UP, PUSH, bpm=72, bars=2),
         quiz("Slide G5 up two frets. What do you get?", ["F5", "B5", "A5"], 2,
              "Two frets above G is A. The chord's name moves with its root."),
-        strum(C5, PUSH, bpm=76, bars=2),
-        in_position(along(G, f"{RIFF} {RIFF}", bpm=76, max_fret=7, title="Riff, up to speed"), 2),
+        progression([(G5, 1), (A5_UP, 1), (C5, 1), (A5_UP, 1)], PUSH, bpm=72),
+        along(G, f"{RIFF} {RIFF}", bpm=76, title="Riff, up to speed", max_fret=7, first_fret=2),
     ], minutes=5, xp=25),
     lesson("gtr-9-6", "Riff challenge", [
         explain("Power and precision", "No new ideas: power chords, open and movable, palm muting and your riff. "
@@ -771,11 +746,9 @@ UNIT_9 = unit("gtr-9", "Power chords and riffs", "Power chords, open and movable
         quiz("Your root is on string 5, fret 3. Which power chord is it?", ["C5", "D5", "B5"], 0,
              "String 5 counts up from A: B at 2, C at 3."),
         listen("Which one is a power chord?", [tones(E5), tones(E)], FIRST_SECOND, 0),
-        strum(E5, EIGHTHS, bpm=84, bars=2),
-        strum(A5, EIGHTHS, bpm=84, bars=2),
-        strum(G5, PUSH, bpm=84, bars=2),
-        strum(C5, PUSH, bpm=84, bars=2),
-        in_position(along(G, f"{RIFF} {RIFF}", bpm=84, max_fret=7, title="The riff, full speed"), 2),
+        progression([(E5, 1), (A5, 1), (E5, 1), (A5, 1)], EIGHTHS, bpm=84),
+        progression([(G5, 1), (A5_UP, 1), (C5, 1), (A5_UP, 1)], PUSH, bpm=84),
+        along(G, f"{RIFF} {RIFF}", bpm=84, title="The riff, full speed", max_fret=7, first_fret=2),
     ], minutes=5, xp=35, kind="challenge"),
 ])
 
@@ -793,8 +766,7 @@ UNIT_10 = unit("gtr-10", "Barre chords and the pentatonic", "The F barre and B m
         quiz("Barre chords feel hard at first. What helps most?", ["A few minutes every day", "Squeezing as hard as you can", "Skipping them for now"], 0,
              "Strength and feel build slowly. Short, daily practice beats one long, painful session."),
         strum(F_FIVE, QUARTERS, bpm=63, bars=2),
-        strum(C, QUARTERS, bpm=63, bars=2),
-        strum(F_FIVE, QUARTERS, bpm=63, bars=2),
+        progression([(C, 1), (F_FIVE, 1), (C, 1), (F_FIVE, 1)], QUARTERS, bpm=63),
     ], minutes=5, xp=25),
     lesson("gtr-10-2", "The full F barre", [
         explain("One finger, six strings", "Lay finger 1 flat across all six strings at fret 1. Fingers 2, 3 and 4 make "
@@ -806,8 +778,7 @@ UNIT_10 = unit("gtr-10", "Barre chords and the pentatonic", "The F barre and B m
                      [1, 3, 4, 2, 1, 1]),
         quiz("The F barre is which open shape, moved up a fret?", ["A minor", "D", "E"], 2),
         strum(F_BARRE, QUARTERS, bpm=60, bars=2),
-        strum(C, QUARTERS, bpm=60, bars=2),
-        strum(F_BARRE, HALVES, bpm=60, bars=2),
+        progression([(C, 1), (F_BARRE, 1), (C, 1), (F_BARRE, 1)], HALVES, bpm=60),
     ], minutes=5, xp=25),
     lesson("gtr-10-3", "B minor", [
         explain("B minor: barre at fret 2", "Finger 1 barres strings 1 to 5 at fret 2. Fingers 2, 3 and 4 build an A minor "
@@ -818,40 +789,41 @@ UNIT_10 = unit("gtr-10", "Barre chords and the pentatonic", "The F barre and B m
         play_chord(Bm),
         listen("Major or minor?", [tones(Bm)], MAJOR_MINOR, 1),
         quiz("Which chord is E moved up one fret with a barre?", ["G", "Bm", "F"], 2),
-        strum(D, HALVES, bpm=60, bars=2),
-        strum(Bm, HALVES, bpm=60, bars=2),
-        strum(G_MAJ, HALVES, bpm=60, bars=2),
+        strum(Bm, QUARTERS, bpm=60, bars=2),
+        progression([(D, 1), (Bm, 1), (G_MAJ, 1), (A, 1)], HALVES, bpm=60),
     ], minutes=5, xp=25),
     lesson("gtr-10-4", "The A minor pentatonic", [
         explain("Five notes for soloing", "The minor pentatonic scale has five notes. In A minor they're A, C, D, E and G. "
                 "It's the sound of countless blues and rock solos."),
         explain("Box 1 at fret 5", "Finger 1 covers fret 5 on every string. Fingers 3 and 4 take frets 7 and 8. "
-                "Two notes per string, one finger per fret.", fretboard(G, BOX_DOTS, frets=8)),
-        in_position(along(G, BOX_LOW, bpm=60, max_fret=8, title="Strings 6 and 5"), 5),
+                "Two notes per string, one finger per fret.", fretboard(G, BOX_DOTS, frets=4, start=5)),
+        notes(G, [("A2", 6), ("C3", 6), ("D3", 5), ("E3", 5)], hint="Fret 5, fret 8 on string 6, then fret 5, fret 7 on string 5.",
+              max_fret=8, first_fret=5),
+        along(G, BOX_LOW, bpm=60, title="Strings 6 and 5", max_fret=8, first_fret=5),
         quiz("Which notes are in A minor pentatonic?", ["A B C D E", "A C E G B", "A B D E G", "A C D E G"], 3),
-        in_position(along(G, BOX_MID, bpm=60, max_fret=8, title="Strings 4 and 3"), 5),
-        in_position(along(G, BOX_TOP, bpm=60, max_fret=8, title="Strings 2 and 1"), 5),
-        in_position(along(G, BOX, bpm=63, max_fret=8, title="Box 1, up and down"), 5),
+        along(G, BOX_MID, bpm=60, title="Strings 4 and 3", max_fret=8, first_fret=5),
+        along(G, BOX_TOP, bpm=60, title="Strings 2 and 1", max_fret=8, first_fret=5),
+        along(G, BOX, bpm=63, title="Box 1, up and down", max_fret=8, first_fret=5),
     ], minutes=5, xp=25),
     lesson("gtr-10-5", "Your first solo", [
         explain("Phrase like you speak", "A solo is a melody built from short phrases. Play a few notes, leave a gap, "
                 "then answer. Ending on A, the root, sounds like a full stop."),
-        in_position(along(G, SOLO_Q.replace("E4@2:3 r:1", "E4@2:4"), bpm=63, max_fret=8, title="The question"), 5),
-        in_position(along(G, SOLO_A, bpm=63, max_fret=8, title="The answer"), 5),
+        along(G, SOLO_Q.replace("E4@2:3 r:1", "E4@2:4"), bpm=63, title="The question", max_fret=8, first_fret=5),
+        along(G, SOLO_A, bpm=63, title="The answer", max_fret=8, first_fret=5),
         quiz("Which note sounds most like a full stop in A minor?", ["A", "D", "G"], 0,
              "A is the root, the home of A minor. Ending a phrase on it sounds finished."),
         listen("Does this end at home?", [["E4"], ["D4"], ["C4"], ["A3"]], HOME, 0),
-        in_position(along(G, SOLO, bpm=66, max_fret=8, title="Your first solo"), 5),
+        along(G, SOLO, bpm=66, title="Your first solo", max_fret=8, first_fret=5),
     ], minutes=5, xp=25),
     lesson("gtr-10-6", "Final challenge", [
         explain("Everything together", "No new ideas: barre chords, B minor, the pentatonic box and your solo. "
                 "Breathe, keep the beat, and play it like you mean it."),
         quiz("Which finger covers fret 5 in box 1?", ["Finger 3", "Finger 1", "Finger 4"], 1),
-        strum(F_BARRE, QUARTERS, bpm=66, bars=2),
-        strum(Bm, QUARTERS, bpm=66, bars=2),
+        progression([(Am, 1), (F_BARRE, 1), (C, 1), (G_MAJ, 1)], QUARTERS, bpm=66),
+        progression([(D, 1), (Bm, 1), (G_MAJ, 1), (A, 1)], QUARTERS, bpm=66),
         listen("Major or minor?", [tones(F_BARRE)], MAJOR_MINOR, 0),
-        in_position(along(G, BOX, bpm=72, max_fret=8, title="Box 1, up and down"), 5),
-        in_position(along(G, SOLO, bpm=72, max_fret=8, title="Your solo, with feeling"), 5),
+        along(G, BOX, bpm=72, title="Box 1, up and down", max_fret=8, first_fret=5),
+        along(G, SOLO, bpm=72, title="Your solo, with feeling", max_fret=8, first_fret=5),
     ], minutes=6, xp=40, kind="challenge"),
 ])
 

@@ -1,0 +1,206 @@
+{
+ "model": "cello",
+ "rig": "FRICTION_PEG",
+ "degPerCent": 1.2,
+ "strings": [
+  {
+   "anchor": "s4",
+   "saddle": [
+    -0.02527,
+    0.57515,
+    0.13111
+   ],
+   "nut": [
+    -0.01164,
+    1.26399,
+    0.06052
+   ],
+   "radius": 0.001062,
+   "wound": true,
+   "peg": "peg_s4",
+   "post": "post_s4",
+   "node": "string_s4",
+   "pegCenter": [
+    -0.02964,
+    1.34827,
+    -0.01422
+   ],
+   "pegAxis": [
+    -1.0,
+    -0.00229,
+    -0.00026
+   ],
+   "tighten": 1
+  },
+  {
+   "anchor": "s3",
+   "saddle": [
+    -0.00962,
+    0.57515,
+    0.13578
+   ],
+   "nut": [
+    -0.00508,
+    1.26399,
+    0.06083
+   ],
+   "radius": 0.000812,
+   "wound": true,
+   "peg": "peg_s3",
+   "post": "post_s3",
+   "node": "string_s3",
+   "pegCenter": [
+    -0.03033,
+    1.29349,
+    0.02141
+   ],
+   "pegAxis": [
+    -0.99991,
+    -0.00018,
+    0.01375
+   ],
+   "tighten": 1
+  },
+  {
+   "anchor": "s2",
+   "saddle": [
+    0.00875,
+    0.57515,
+    0.13581
+   ],
+   "nut": [
+    0.00208,
+    1.26399,
+    0.06087
+   ],
+   "radius": 0.000656,
+   "wound": true,
+   "peg": "peg_s2",
+   "post": "post_s2",
+   "node": "string_s2",
+   "pegCenter": [
+    0.02725,
+    1.32042,
+    0.01002
+   ],
+   "pegAxis": [
+    0.99995,
+    -0.00214,
+    0.00942
+   ],
+   "tighten": -1
+  },
+  {
+   "anchor": "s1",
+   "saddle": [
+    0.02441,
+    0.57515,
+    0.13119
+   ],
+   "nut": [
+    0.00858,
+    1.26399,
+    0.06049
+   ],
+   "radius": 0.000531,
+   "wound": true,
+   "peg": "peg_s1",
+   "post": "post_s1",
+   "node": "string_s1",
+   "pegCenter": [
+    0.02803,
+    1.37065,
+    -0.0332
+   ],
+   "pegAxis": [
+    1.0,
+    0.0014,
+    0.00252
+   ],
+   "tighten": -1
+  }
+ ],
+ "headCenter": [
+  6e-05,
+  1.22403,
+  -0.00431
+ ],
+ "bodyCenter": [
+  0.0,
+  0.72,
+  -0.0
+ ],
+ "length": 1.44,
+ "boundsMin": [
+  -0.2446,
+  0.0,
+  -0.13781
+ ],
+ "boundsMax": [
+  0.2446,
+  1.44,
+  0.13781
+ ],
+ "credit": {
+  "id": "cello_vm",
+  "uid": "ece053225f3a42f1939528b9c9014775",
+  "title": "Cello",
+  "author": "VM-Models",
+  "authorUrl": "https://sketchfab.com/vm-models",
+  "license": "by",
+  "licenseLabel": "CC Attribution",
+  "url": "https://sketchfab.com/3d-models/cello-ece053225f3a42f1939528b9c9014775",
+  "faces": 22761,
+  "archiveBytes": 17089627
+ },
+ "card2D": {
+  "s4.saddle": [
+   0.45,
+   0.6017
+  ],
+  "s4.nut": [
+   0.4769,
+   0.1487
+  ],
+  "s4.peg": [
+   0.4862,
+   0.0935
+  ],
+  "s3.saddle": [
+   0.458,
+   0.6026
+  ],
+  "s3.nut": [
+   0.4807,
+   0.1487
+  ],
+  "s3.peg": [
+   0.4763,
+   0.1292
+  ],
+  "s2.saddle": [
+   0.469,
+   0.6033
+  ],
+  "s2.nut": [
+   0.485,
+   0.1487
+  ],
+  "s2.peg": [
+   0.5136,
+   0.1116
+  ],
+  "s1.saddle": [
+   0.4796,
+   0.6035
+  ],
+  "s1.nut": [
+   0.489,
+   0.1487
+  ],
+  "s1.peg": [
+   0.5254,
+   0.0789
+  ]
+ }
+}

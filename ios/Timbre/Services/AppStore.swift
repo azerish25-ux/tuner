@@ -428,8 +428,12 @@ final class AppStore: ObservableObject {
 
     func canPlay(_ lesson: Lesson) -> Bool { lesson.free || isPro }
 
+    /// The step that owns the lesson microphone; a step leaving must not stop the one that just arrived.
+    private var lessonOwner: UUID?
+
     /// Opens the microphone for a lesson over a pitch range; the demo pitch (UI tests) follows `gameTargetHz`.
-    func startLessonListening(lowHz: Double = 60, highHz: Double = 1400, listener: @escaping (Double?, Double) -> Void) {
+    func startLessonListening(owner: UUID, lowHz: Double = 60, highHz: Double = 1400, listener: @escaping (Double?, Double) -> Void) {
+        lessonOwner = owner
         lessonListener = listener
         guard !audio.running else { return }
         #if DEBUG
@@ -441,7 +445,10 @@ final class AppStore: ObservableObject {
         Task { await audio.start(minimum: lowHz, maximum: highHz, micSensitivity: microphoneGain, analysisWindowOverride: settings.analysisWindowOverride, confidenceThreshold: settings.confidenceThreshold) }
     }
 
-    func stopLessonListening() {
+    /// Stops the lesson microphone; with an owner, only if that step still owns it.
+    func stopLessonListening(owner: UUID? = nil) {
+        if let owner, owner != lessonOwner { return }
+        lessonOwner = nil
         lessonListener = nil
         gameTargetHz = nil
         if audio.running { audio.stopCapture() }

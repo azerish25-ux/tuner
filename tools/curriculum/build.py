@@ -69,6 +69,8 @@ def check_note(n: dict, kind: str | None, where: str):
     if at and kind:
         if not 1 <= at["s"] <= len(TUNINGS[kind]):
             errors.append(f"{where}: string {at['s']} doesn't exist")
+        elif kind == "banjo" and at["s"] == 5 and at["f"] > 0:
+            errors.append(f"{where}: the banjo's short fifth string is played open only")
         elif fretted(kind, at["s"], at["f"]) != n["m"]:
             errors.append(f"{where}: string {at['s']} fret {at['f']} is {name(fretted(kind, at['s'], at['f']))}, not {name(n['m'])}")
 
