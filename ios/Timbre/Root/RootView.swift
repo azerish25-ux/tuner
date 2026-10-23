@@ -30,6 +30,16 @@ struct RootView: View {
             }
         }
         .animation(.spring(response: 0.45, dampingFraction: 0.9), value: store.showPaywall)
+        #if DEBUG
+        .overlay(alignment: .topLeading) {
+            // UI-test probe (TIMBRE_DEBUG_STATE=1): the presentation flags, readable by XCUITest.
+            if ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1" {
+                Text("paywall=\(store.showPaywall) settings=\(store.showSettings) picker=\(store.showInstrumentPicker) reason=\(store.paywallReason ?? "-") pro=\(commerce.isPro) tab=\(String(describing: store.selectedTab))")
+                    .font(.system(size: 9, design: .monospaced)).foregroundStyle(.white).padding(4).background(.black.opacity(0.6))
+                    .accessibilityIdentifier("debug.state")
+            }
+        }
+        #endif
         .background {
             Color.clear.sheet(isPresented: $store.showSettings) {
                 SettingsView().environmentObject(store).environmentObject(commerce).presentationBackground(Palette.stage)

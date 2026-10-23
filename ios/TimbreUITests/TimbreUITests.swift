@@ -109,12 +109,16 @@ final class TimbreUITests: XCTestCase {
     }
 
     func test06PurchaseUnlocksPro() throws {
+        app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
         launch()
         tab("Practice"); settle()
         scrollTo(element("practice.drone"))
+        print("STATE before: \(element("debug.state").label)")
         element("practice.drone").tap()
         let purchase = element("paywall.purchase")
-        XCTAssertTrue(purchase.waitForExistence(timeout: 15))
+        let found = purchase.waitForExistence(timeout: 15)
+        print("STATE after: \(element("debug.state").label) hittable=\(element("practice.drone").isHittable) frame=\(element("practice.drone").frame)")
+        XCTAssertTrue(found)
         settle(2); shot("40-paywall")
         scrollTo(purchase)
         purchase.tap()
