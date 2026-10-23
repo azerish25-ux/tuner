@@ -442,7 +442,12 @@ def convert(src: Path, cfg: dict, out: Path):
         rig, hc, hs = auto_rig(scene, root, cfg, lo, hi, pts)
     elif cfg.get("strings"):
         rig, hc, hs = rig_model(scene, root, cfg, lo, hi, pts)
-    else:
+    else:  # calibration only: grids plus studio renders to judge the model
+        persp_camera(scene, (lo + hi) / 2, float(hi[2] - lo[2]), 24, 6, 85)
+        render(scene, out / f"{model}_hero.png", 1200, 64)
+        hc, hs = head_region(pts)
+        persp_camera(scene, hc, hs, 18, 10, 100, fill=1.0)
+        render(scene, out / f"{model}_head.png", 1200, 64)
         print("calibrated", model, "bounds", lo.round(3).tolist(), hi.round(3).tolist(), flush=True)
         return
     meta = src / cfg["source"] / "meta.json"
