@@ -180,8 +180,10 @@ def ring(name, outer, inner, y_front, y_back, material, parent=None, uv=None):
     return _finish(bm, name, material, parent, uv=uv or box_uv(), sharp_angle=50)
 
 
-def loft(name, stations, material, parent=None, closed=True, uv=None, sharp_angle=50.0):
-    """stations: list of rings (lists of 3D points, equal counts) along a path."""
+def loft(name, stations, material, parent=None, closed=True, uv=None, sharp_angle=50.0, caps=None, flip=False):
+    """stations: list of rings (lists of 3D points, equal counts) along a path.
+    closed: rings are loops; caps: close both ends (defaults to closed); flip: inward normals."""
+    caps = closed if caps is None else caps
     bm = bmesh.new()
     rings = [[bm.verts.new(p) for p in ring_pts] for ring_pts in stations]
     m = len(rings[0])
@@ -189,11 +191,36 @@ def loft(name, stations, material, parent=None, closed=True, uv=None, sharp_angl
         for i in range(m if closed else m - 1):
             j = (i + 1) % m
             bm.faces.new([a[i], a[j], b[j], b[i]])
-    if closed:
+    if caps:
         bm.faces.new(list(reversed(rings[0])))
         bm.faces.new(rings[-1])
-    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    if flip:
+        bmesh.ops.reverse_faces(bm, faces=bm.faces)
     return _finish(bm, name, material, parent, uv=uv or box_uv(), sharp_angle=sharp_angle)
+
+
+def tube(name, path, radius, material, parent=None, sides=20, caps=True, flip=False):
+    """Sweep a circle along a 3D polyline (parallel-transport frames). radius: number or per-point list."""
+    pts = [Vector(p) for p in path]
+    radii = list(radius) if isinstance(radius, (list, tuple)) else [radius] * len(pts)
+    tangents = [(pts[min(len(pts) - 1, i + 1)] - pts[max(0, i - 1)]).normalized() for i in range(len(pts))]
+    up = Vector((0, 1, 0)) if abs(tangents[0].y) < 0.9 else Vector((1, 0, 0))
+    normal = tangents[0].cross(up).normalized()
+    stations = []
+    for i, p in enumerate(pts):
+        t = tangents[i]
+        normal = (normal - t * normal.dot(t)).normalized()
+        binormal = t.cross(normal).normalized()
+        stations.append([tuple(p + (normal * math.cos(a) + binormal * math.sin(a)) * radii[i])
+                         for a in [2 * math.pi * k / sides for k in range(sides)]])
+    return loft(name, stations, material, parent, caps=caps, flip=flip, sharp_angle=80)
+
+
+def arc_xz(center, radius, a0, a1, steps=16, y=0.0):
+    """Points on a circle in the XZ plane, angles in degrees (0 = +X, 90 = +Z)."""
+    return [(center[0] + radius * math.cos(math.radians(a0 + (a1 - a0) * k / steps)), y,
+             center[1] + radius * math.sin(math.radians(a0 + (a1 - a0) * k / steps))) for k in range(steps + 1)]
 
 
 def cylinder(name, radius, depth, material, parent=None, location=(0, 0, 0), rotation=(0, 0, 0), vertices=24, radius_top=None, smooth=True):
@@ -328,6 +355,12 @@ def palette():
         "pickup_black": material("Pickup", color=(0.02, 0.02, 0.022), roughness=0.4),
         "satin_black": material("Satin Black", color=(0.03, 0.03, 0.032), roughness=0.55),
         "fret": material("Fret Wire", color=(0.86, 0.84, 0.8), metallic=1.0, roughness=0.15),
+        "lacquer": material("Lacquered Brass", color=(0.93, 0.74, 0.38), metallic=1.0, roughness=0.14),
+        "brass_throat": material("Bell Throat", color=(0.42, 0.3, 0.14), metallic=1.0, roughness=0.35),
+        "silver_plate": material("Silver Plate", color=(0.92, 0.92, 0.94), metallic=1.0, roughness=0.1),
+        "grenadilla": material("Grenadilla", color=(0.035, 0.03, 0.03), roughness=0.3, coat=0.6),
+        "cork": material("Cork", color=(0.62, 0.47, 0.32), roughness=0.85),
+        "pad": material("Key Pad", color=(0.86, 0.8, 0.66), roughness=0.7),
         "drumhead": material("Frosted Head", color=(0.93, 0.91, 0.86), roughness=0.78),
         "maple_neck": material("Neck Maple", texture="maple_plain_color.jpg", roughness=0.3, coat=0.6),
         "ebony_satin": material("Satin Ebony", texture="ebony_color.jpg", roughness=0.55),
