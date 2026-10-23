@@ -76,7 +76,10 @@ struct StudioStage: View {
         let state = input()
         let now = date.timeIntervalSinceReferenceDate
         let (smoothed, phase, e, g) = motion.step(state, now: now)
-        guard let anchor = state.activeAnchor.flatMap({ card.anchors.contains($0) ? $0 : nil }) ?? card.anchors.first else { return }
+        // A string the picture doesn't show (a fifth string on a four-string photo) gets no overlay.
+        let anchor: String?
+        if let active = state.activeAnchor { anchor = card.anchors.contains(active) ? active : nil } else { anchor = card.anchors.first }
+        guard let anchor else { return }
         let color = Palette.pitch(smoothed, locked: state.locked)
         if let a = card.point("\(anchor).saddle"), let b = card.point("\(anchor).nut") {
             let p0 = CGPoint(x: origin.x + a.x * side, y: origin.y + a.y * side)

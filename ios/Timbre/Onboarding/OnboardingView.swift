@@ -140,18 +140,18 @@ struct OnboardingView: View {
 
     private var selectedChoice: Choice { choices.first { $0.id == instrumentID } ?? choices[0] }
 
+    /// The studio render when the instrument has an artist model, otherwise its photograph.
     private func heroImage(_ choice: Choice) -> String {
-        guard let photo = choice.photo else { return ModelLibrary.cardImageName("guitar_acoustic") }
-        if UIImage(named: ModelLibrary.cardImageName(photo)) != nil { return ModelLibrary.cardImageName(photo) }
+        let photo = choice.photo ?? "01_guitar_acoustic_guitar"
         if let model = ModelLibrary.modelID(forPhoto: photo), ModelLibrary.hasCard(model) { return ModelLibrary.cardImageName(model) }
-        return UIImage(named: "thumb_" + photo) != nil ? "thumb_" + photo : photo
+        return photo
     }
 
     private struct Choice: Identifiable { let id: String?; let title: LocalizedStringKey; let photo: String?; let symbol: String? }
     private var choices: [Choice] {
-        [Choice(id: "guitar.acoustic.6", title: "Guitar", photo: "guitar_acoustic", symbol: nil),
-         Choice(id: "bass.electric.4", title: "Bass", photo: "bass_p4", symbol: nil),
-         Choice(id: "ukulele.soprano.4", title: "Ukulele", photo: "ukulele_soprano", symbol: nil),
+        [Choice(id: "guitar.acoustic.6", title: "Guitar", photo: "01_guitar_acoustic_guitar", symbol: nil),
+         Choice(id: "bass.electric.4", title: "Bass", photo: "06_bass_4_string_p_bass", symbol: nil),
+         Choice(id: "ukulele.soprano.4", title: "Ukulele", photo: "10_ukulele_soprano_ukulele", symbol: nil),
          Choice(id: "violin.standard.4", title: "Violin", photo: "17_bowed_strings_violin", symbol: nil),
          Choice(id: "cello.standard.4", title: "Cello", photo: "19_bowed_strings_cello", symbol: nil),
          Choice(id: "mandolin.standard.8", title: "Mandolin", photo: "13_mandolin_mandolin", symbol: nil),

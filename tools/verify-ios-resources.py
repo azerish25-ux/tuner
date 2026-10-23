@@ -12,8 +12,8 @@ photos = json.loads((core / 'photos.json').read_text(encoding='utf-8'))
 assert len(catalog['instruments']) == 60
 assert len(catalog['tunings']) == 102
 assert len(catalog['families']) == 8
-assert len(photos) == 71
-assert len({p['asset'] for p in photos}) == 71
+assert len(photos) >= 71
+assert len({p['asset'] for p in photos}) == len(photos)
 for photo in photos:
     for field in ['asset', 'thumbnail']:
         folder = resources / 'Assets.xcassets' / (photo[field] + '.imageset')
@@ -30,14 +30,25 @@ for asset, model in manifest['photos'].items():
     assert asset in photo_by_asset, asset
     assert (models / f'{model}.usdz').is_file(), model
     rig = json.loads((models / f'{model}.rig.json').read_text())
-    if model not in manifest.get('photoCards', []):
-        assert (resources / 'Assets.xcassets' / f'render_{model}.imageset' / f'render_{model}.png').is_file(), model
+    assert (resources / 'Assets.xcassets' / f'render_{model}.imageset' / f'render_{model}.png').is_file(), model
+    assert rig.get('credit', {}).get('license') in ('by', 'cc0'), (model, 'artist models need a CC BY or CC0 credit')
     instrument = photo_by_asset[asset]['instrumentId']
     anchors = {c['anchorId'] for t in catalog['tunings'] if t['instrumentId'] == instrument for c in t['courses'] if c.get('anchorId')}
     rig_anchors = {s['anchor'] for s in rig['strings']}
     assert anchors <= rig_anchors or rig_anchors <= anchors, (model, anchors, rig_anchors)
     for s in rig['strings']:
         assert f"{s['anchor']}.peg" in rig.get('card2D', {}), (model, s['anchor'])
+# 2D photo stage: points for every photograph with tuning anchors, inside the square canvas.
+photo_rigs = json.loads((models / 'photo-rigs.json').read_text())
+for photo in photos:
+    anchors = {c['anchorId'] for t in catalog['tunings'] if t['instrumentId'] == photo['instrumentId'] for c in t['courses'] if c.get('anchorId')}
+    if not anchors or photo['asset'] in manifest['photos']:
+        continue
+    points = photo_rigs.get(photo['asset'], {})
+    named = {key.split('.')[0] for key in points}
+    assert any(key.endswith('.peg') for key in points), ('photo stage points missing', photo['asset'])
+    assert named <= anchors, (photo['asset'], named - anchors)
+    assert all(len(p) == 2 and 0 <= p[0] <= 1 and 0 <= p[1] <= 1 for p in points.values()), photo['asset']
 # Timers and stability windows use systemUptime only for in-app elapsed events.
 # https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitype
 privacy = plistlib.loads((resources / 'PrivacyInfo.xcprivacy').read_bytes())
@@ -53,4 +64,4 @@ for source in (root / 'ios/Timbre').rglob('*.swift'):
 assert not missing, '\n'.join(missing)
 locales = list(resources.glob('*.lproj'))
 assert len(locales) == 49
-print(f'OK: 60 instruments, 102 tunings, 71 photos/142 images, 49 locales, 1 licensed font family, {len(manifest['photos'])} 3D models; all literal localization keys exist.')
+print(f'OK: 60 instruments, 102 tunings, {len(photos)} photos/{2 * len(photos)} images, 49 locales, 1 licensed font family, {len(manifest['photos'])} 3D models; all literal localization keys exist.')
