@@ -128,6 +128,15 @@ final class TimbreUITests: XCTestCase {
         element("practice.scales").tap(); settle(1.5); shot("44-scales")
         app.navigationBars.buttons.firstMatch.tap(); settle()
         tab("Journey"); settle(2); shot("45-journey-pro")
+        tab("Practice"); settle()
+        scrollTo(element("practice.intonation"))
+        element("practice.intonation").tap(); settle(1.5); shot("46-intonation")
+        app.navigationBars.buttons.firstMatch.tap(); settle()
+        tab("Tune"); settle()
+        element("tune.instrument").tap(); settle(1.5)
+        element("tunings.custom").tap(); settle(1.5); shot("47-custom-tuning")
+        XCTAssertTrue(element("custom.save").waitForExistence(timeout: 10))
+        element("custom.save").tap(); settle(1.5); shot("48-custom-tuning-saved")
     }
 
     func test07StageDiagnostics() throws {
