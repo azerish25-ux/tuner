@@ -1,0 +1,121 @@
+# Manual only: records the App Store App Preview (iPhone 6.9" display, portrait) from the real app.
+# AppPreviewUITests plays a tour with the demo pitch while the simulator screen is recorded; the test marks
+# the stretches worth showing, and tools/marketing/preview.py cuts them into preview.mp4 (886x1920, 30 fps,
+# H.264 High, silent stereo AAC 44.1 kHz, 15-30 s) and poster.png, published to the ci-results/preview branch.
+name: App Preview
+on:
+  # Also runs on a push to preview/** (dispatch needs the file on the default branch first).
+  push:
+    branches: ["preview/**"]
+  workflow_dispatch:
+    inputs:
+      sync_offset:
+        description: Seconds to shift every cut if they look early or late (positive = later)
+        required: false
+        default: "0"
+        type: string
+permissions:
+  contents: write
+concurrency:
+  group: app-preview-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  preview:
+    runs-on: macos-15
+    timeout-minutes: 50
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      OUT: preview-out
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen and ffmpeg
+        run: |
+          brew install xcodegen
+          command -v ffmpeg >/dev/null || brew install ffmpeg
+          ffmpeg -version | head -1
+      - name: Generate Xcode project
+        working-directory: ios
+        run: xcodegen generate
+      - name: Pick a 6.9-inch iPhone simulator
+        run: |
+          set -o pipefail
+          python3 tools/marketing/preview.py device | tee -a "$GITHUB_ENV"
+      - name: Build app and UI tests
+        run: |
+          set -o pipefail
+          mkdir -p "$OUT"
+          xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$OUT/build.log"
+      - name: Record the tour
+        run: |
+          set -o pipefail
+          # Apple's marketing status bar: 9:41, full battery, full signal.
+          status_bar() {
+            xcrun simctl status_bar "$DEVICE_ID" override --time 9:41 --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100 \
+              || xcrun simctl status_bar "$DEVICE_ID" override --time 9:41 --batteryState charged --batteryLevel 100 --cellularBars 4 --wifiBars 3
+          }
+          tour() {
+            xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -only-testing:TimbreUITests/AppPreviewUITests -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd -resultBundlePath ios/build/AppPreview.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee -a "$OUT/test.log"
+          }
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          status_bar
+          xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre || true
+          python3 tools/marketing/preview.py record --device "$DEVICE_ID" --out "$OUT"
+          status=0
+          tour || status=$?
+          # The hosted simulator sometimes fails to bring up accessibility for the test runner: reboot, record again.
+          if [ "$status" -ne 0 ] && grep -q "failed to initialize for UI testing" "$OUT/test.log"; then
+            echo "The test runner failed to start; rebooting the simulator and recording again"
+            python3 tools/marketing/preview.py stop --out "$OUT" || true
+            xcrun simctl shutdown "$DEVICE_ID" || true
+            xcrun simctl bootstatus "$DEVICE_ID" -b
+            status_bar
+            rm -rf ios/build/AppPreview.xcresult
+            python3 tools/marketing/preview.py record --device "$DEVICE_ID" --out "$OUT"
+            status=0
+            tour || status=$?
+          fi
+          python3 tools/marketing/preview.py stop --out "$OUT"
+          exit "$status"
+      - name: Export the test's attachments
+        if: always()
+        run: |
+          if [ -d ios/build/AppPreview.xcresult ]; then
+            xcrun xcresulttool export attachments --path ios/build/AppPreview.xcresult --output-path "$OUT/attachments" || true
+          fi
+      - name: Cut the App Preview
+        if: always()
+        env:
+          SYNC_OFFSET: ${{ inputs.sync_offset }}
+        run: python3 tools/marketing/preview.py render --out "$OUT" --log "$OUT/test.log" --attachments "$OUT/attachments" --offset "${SYNC_OFFSET:-0}"
+      - name: Publish the preview
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p ci-preview
+          for file in preview.mp4 poster.png PREVIEW.txt raw-small.mp4 record.log; do
+            if [ -f "$OUT/$file" ]; then cp "$OUT/$file" ci-preview/; fi
+          done
+          if [ -d "$OUT/attachments" ]; then cp -R "$OUT/attachments" ci-preview/attachments; fi
+          for log in build test; do
+            if [ -f "$OUT/$log.log" ]; then
+              python3 tools/ci/summarize-log.py "$OUT/$log.log" "ci-preview/$log.summary.txt"
+              gzip -c "$OUT/$log.log" > "ci-preview/$log.log.gz"
+            fi
+          done
+          if [ -f "$OUT/PREVIEW.txt" ]; then { echo '```'; cat "$OUT/PREVIEW.txt"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"; fi
+          bash tools/ci/publish-results.sh ci-results/preview ci-preview
+      # The full-size recording, to re-cut locally: tools/marketing/preview.py render --out <folder> --log <folder>/test.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: preview-recording
+          path: |
+            ${{ env.OUT }}/raw.mp4
+            ${{ env.OUT }}/record.json
+            ${{ env.OUT }}/test.log
+            ${{ env.OUT }}/preview.mp4
+            ${{ env.OUT }}/poster.png
+            ${{ env.OUT }}/PREVIEW.txt
+          if-no-files-found: ignore
+          retention-days: 7

@@ -69,14 +69,22 @@ Welcome to Timbre: a precise tuner for 60 instruments and 499 lessons that liste
 
 ## Screenshots (6.9" and 13" iPad)
 
-Make them with `python3 tools/marketing/screenshots.py`, from the CI simulator captures. Captions, in order:
+Make them with `python3 tools/marketing/screenshots.py`, from the CI simulator captures. Each caption names what the player gets, not the feature; the supporting line under it backs it up. Captions, in order:
 
-1. **Tune anything in seconds**: the tuner with a string locking in
-2. **Lessons that listen to you**: a chord lesson that has just heard the chord
-3. **Play along, note by note**: the note highway
-4. **499 lessons. 13 courses.**: Learn home
-5. **60 instruments, each on its own stage**: the studio stage
-6. **A streak worth keeping**: the Progress screen
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | **In tune in seconds** | 60 instruments, to the cent | a string locking on the 3D stage (`10b-tune-locked`) |
+| 2 | **Hear exactly how you played** | Pitch and timing on every note | the play-along highway mid-take (`60-along-playing`) |
+| 3 | **Play your first chord today** | Timbre hears every string | the chord step as every string lights up |
+| 4 | **Play songs, start to finish** | Originals and timeless classics | the Songs tab (`63-songs`) |
+| 5 | **Five minutes a day adds up** | Stars, streaks and daily quests | lesson results with their stars (`62-lesson-results`) |
+| 6 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) |
+
+Every caption fits in 30 characters. The 13" iPad set uses captions 1, 4 and 5 over its tune, Songs and Play captures.
+
+### App Preview (6.9")
+
+Run the **App Preview** workflow by hand (Actions → App Preview → Run workflow). It records the `AppPreviewUITests` tour on a Pro Max simulator with the status bar at 9:41, and publishes `preview.mp4` (886×1920, 30 fps, H.264, a silent audio track, 15–30 s) and `poster.png` to the `ci-results/preview` branch. The tour: a string locking on the 3D stage, the all-strings celebration, a chord lesson hearing the chord, the play-along highway, the lesson's stars, the Songs tab. `PREVIEW.txt` on that branch gives the poster frame's time; set it as the preview's poster frame in App Store Connect.
 
 ## In-app purchase display names
 

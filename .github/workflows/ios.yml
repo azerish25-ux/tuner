@@ -65,7 +65,7 @@ jobs:
       - name: Run app, StoreKit and UI flows
         run: |
           set -o pipefail
-          xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -skip-testing:TimbreUITests/TabletScreenshotsUITests -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
+          xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -skip-testing:TimbreUITests/TabletScreenshotsUITests -skip-testing:TimbreUITests/AppPreviewUITests -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
       - name: Archive unsigned iOS app
         run: |
           set -o pipefail

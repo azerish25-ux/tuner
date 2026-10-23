@@ -120,9 +120,8 @@ final class AppPreviewUITests: XCTestCase {
         let next = element("learn.continue")
         XCTAssertTrue(next.waitForExistence(timeout: 15))
         pause(1)
-        next.tap()
         // The lesson zooms open on an explanation; the chord follows the day's quick tune check (skipped).
-        let explained = try XCTUnwrap(press("Continue", timeout: 20), "The lesson's first step never offered Continue")
+        let explained = try XCTUnwrap(openLesson(next), "The chord lesson never opened")
         var shown = explained
         let skip = element("lesson.tunecheck.skip")
         if skip.waitForExistence(timeout: 3) {
@@ -157,8 +156,7 @@ final class AppPreviewUITests: XCTestCase {
         let node = element("learn.lesson.gtr-1-2")
         XCTAssertTrue(node.waitForExistence(timeout: 15))
         reveal(node)
-        node.tap()
-        XCTAssertNotNil(press("Continue", timeout: 20), "The play-along lesson never opened")
+        XCTAssertNotNil(openLesson(node), "The play-along lesson never opened")
         let skip = element("lesson.tunecheck.skip")
         if skip.waitForExistence(timeout: 2) { skip.tap() }
         // The note steps finish on their own with the demo pitch.
@@ -281,6 +279,17 @@ final class AppPreviewUITests: XCTestCase {
             element("lesson.continue").tap()
             let tapped = Date()
             if firstSeen(3, { !lessonButtonReads(title) }) != nil { return tapped }
+        }
+        return nil
+    }
+
+    /// Opens a lesson from Learn and taps through its first explanation; opens it again if that tap was lost
+    /// (the Learn entry is still on screen). Returns when the explanation's Continue was tapped.
+    private func openLesson(_ entry: XCUIElement) -> Date? {
+        for _ in 0..<2 {
+            entry.tap()
+            if let tapped = press("Continue", timeout: 12) { return tapped }
+            guard entry.exists && entry.isHittable else { return nil }
         }
         return nil
     }
