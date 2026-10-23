@@ -137,7 +137,7 @@ struct PaywallView: View {
                         Text(title).font(.headline).foregroundStyle(Palette.ink)
                         if let badge {
                             Text(badge).font(.caption2.weight(.bold)).padding(.horizontal, 8).padding(.vertical, 3)
-                                .foregroundStyle(Color(hex: 0x1A1206)).background(Capsule().fill(Palette.brass))
+                                .foregroundStyle(Palette.onAccent).background(Capsule().fill(Palette.brass))
                         }
                     }
                     Text(detail).font(.caption).foregroundStyle(Palette.inkSoft)
@@ -204,7 +204,7 @@ struct PaywallView: View {
                     }
                 }
             } label: {
-                if commerce.purchasing != nil { ProgressView().tint(Color(hex: 0x1A1206)) } else { Text(ctaTitle) }
+                if commerce.purchasing != nil { ProgressView().tint(Palette.onAccent) } else { Text(ctaTitle) }
             }
             .buttonStyle(BrassButtonStyle())
             .disabled(selected == nil || commerce.purchasing != nil || commerce.pending)

@@ -1,16 +1,16 @@
 import SwiftUI
 
-/// Warm, dark stage lit from above. Optional floating motes catch the light.
+/// Near-black stage under a warm spotlight. Optional floating motes catch the light.
 struct StageBackground: View {
-    var glow: Color = Palette.ember
+    var glow: Color = Color(hex: 0xFFC48C)
     var intensity: Double = 1
     var motes = true
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var body: some View {
         ZStack {
             Palette.stage
-            RadialGradient(colors: [glow.opacity(0.22 * intensity), .clear], center: UnitPoint(x: 0.5, y: 0.18), startRadius: 10, endRadius: 520)
-            RadialGradient(colors: [.clear, Palette.stageDeep.opacity(0.9)], center: .center, startRadius: 240, endRadius: 760)
+            RadialGradient(colors: [glow.opacity(0.15 * intensity), .clear], center: UnitPoint(x: 0.5, y: 0.26), startRadius: 10, endRadius: 330)
+            RadialGradient(colors: [.clear, Palette.stageDeep.opacity(0.9)], center: .center, startRadius: 260, endRadius: 760)
             if motes && !reduceMotion { MoteField().opacity(0.55 * intensity).allowsHitTesting(false) }
         }
         .ignoresSafeArea()
@@ -33,7 +33,7 @@ private struct MoteField: View {
                     let xx = m.x * size.width + sin(t * 0.3 + m.phase) * 14
                     let twinkle = 0.35 + 0.65 * (0.5 + 0.5 * sin(t * 0.8 + m.phase * 3))
                     let rect = CGRect(x: xx - m.r, y: yy - m.r, width: m.r * 2, height: m.r * 2)
-                    context.fill(Path(ellipseIn: rect), with: .color(Palette.brass.opacity(0.35 * twinkle)))
+                    context.fill(Path(ellipseIn: rect), with: .color(Palette.amber.opacity(0.22 * twinkle)))
                 }
             }
         }
@@ -51,21 +51,17 @@ struct SystemRandom {
 }
 
 extension View {
-    /// Raised glass panel. Liquid Glass on iOS 26, material on iOS 18.
-    @ViewBuilder func stillCard(cornerRadius: CGFloat = Metrics.corner, padding: CGFloat = 18, tint: Color? = nil) -> some View {
+    /// Raised surface: solid graphite with a hairline, optionally washed with a tint from its corner.
+    func stillCard(cornerRadius: CGFloat = Metrics.corner, padding: CGFloat = 18, tint: Color? = nil) -> some View {
         let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-        let padded = self.padding(padding).frame(maxWidth: .infinity, alignment: .leading)
-        // contentShape: the glass alone is not hit-testable, so a tap on an empty part of a
-        // card-styled button (between its icon and title) would otherwise do nothing.
-        if #available(iOS 26.0, *) {
-            padded.glassEffect(tint.map { Glass.regular.tint($0.opacity(0.18)) } ?? Glass.regular, in: shape)
-                .contentShape(shape)
-        } else {
-            padded
-                .background(.ultraThinMaterial, in: shape)
-                .overlay(shape.strokeBorder(Palette.line.opacity(0.9), lineWidth: 0.5))
-                .contentShape(shape)
-        }
+        // contentShape keeps the whole card tappable when it styles a button (not just its text).
+        return self.padding(padding).frame(maxWidth: .infinity, alignment: .leading)
+            .background {
+                shape.fill(Palette.stageRaised)
+                    .overlay { if let tint { shape.fill(LinearGradient(colors: [tint.opacity(0.16), .clear], startPoint: .topLeading, endPoint: .center)) } }
+            }
+            .overlay(shape.strokeBorder(tint?.opacity(0.28) ?? .white.opacity(0.06), lineWidth: 1))
+            .contentShape(shape)
     }
 
     /// Floating control capsule over the stage.
@@ -92,7 +88,7 @@ struct ScreenTitle: View {
     var subtitle: LocalizedStringKey?
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(title).font(Typeface.display(40)).foregroundStyle(Palette.ink)
+            Text(title).font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
             if let subtitle { Text(subtitle).font(.subheadline).foregroundStyle(Palette.inkSoft) }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -107,12 +103,12 @@ struct BrassButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.headline)
-            .foregroundStyle(prominent ? Color(hex: 0x1A1206) : Palette.ink)
+            .foregroundStyle(prominent ? Palette.onAccent : Palette.ink)
             .frame(maxWidth: .infinity, minHeight: 54)
             .padding(.horizontal, 18)
             .background {
                 if prominent {
-                    Capsule().fill(LinearGradient(colors: [Color(hex: 0xF1D69E), Color(hex: 0xD3A65C), Color(hex: 0xB0823F)], startPoint: .top, endPoint: .bottom))
+                    Capsule().fill(Palette.mint)
                         .overlay(Capsule().strokeBorder(.white.opacity(0.35), lineWidth: 1).blendMode(.overlay))
                         .shadow(color: Palette.ember.opacity(configuration.isPressed ? 0.15 : 0.35), radius: configuration.isPressed ? 6 : 18, y: 6)
                 } else {
@@ -130,7 +126,7 @@ struct ChipButtonStyle: ButtonStyle {
         configuration.label
             .font(.subheadline.weight(.medium))
             .padding(.horizontal, 14).padding(.vertical, 9)
-            .foregroundStyle(selected ? Color(hex: 0x1A1206) : Palette.ink)
+            .foregroundStyle(selected ? Palette.onAccent : Palette.ink)
             .background(Capsule().fill(selected ? AnyShapeStyle(Palette.brass) : AnyShapeStyle(Palette.stageRaised)))
             .overlay(Capsule().strokeBorder(selected ? .clear : Palette.line, lineWidth: 1))
             .scaleEffect(configuration.isPressed ? 0.96 : 1)
@@ -142,8 +138,8 @@ struct ProBadge: View {
     var body: some View {
         Text("PRO").font(.system(size: 10, weight: .heavy)).tracking(1.4)
             .padding(.horizontal, 7).padding(.vertical, 3)
-            .foregroundStyle(Color(hex: 0x1A1206))
-            .background(Capsule().fill(LinearGradient(colors: [Color(hex: 0xF1D69E), Color(hex: 0xC8954A)], startPoint: .top, endPoint: .bottom)))
+            .foregroundStyle(Palette.onAccent)
+            .background(Capsule().fill(Palette.proGold))
             .accessibilityLabel("Pro")
     }
 }

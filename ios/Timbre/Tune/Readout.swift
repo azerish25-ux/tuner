@@ -16,6 +16,50 @@ final class ReadoutMotion {
     }
 }
 
+/// ±50 cent ribbon: fine ticks, a mint target zone and a glowing needle that turns mint when locked.
+/// A faint strobe shimmer runs along the ribbon while the pitch is off, and stands still in tune.
+struct RibbonMeter: View {
+    let cents: Double?
+    let phase: Double
+    let locked: Bool
+    var body: some View {
+        Canvas { context, size in
+            let mid = size.width / 2, baseline = size.height / 2
+            let span = size.width / 2
+            // Track: amber at the edges, mint in the middle.
+            let track = Path(CGRect(x: 0, y: baseline - 1, width: size.width, height: 2))
+            context.fill(track, with: .linearGradient(Gradient(stops: [
+                .init(color: Palette.amber.opacity(0), location: 0), .init(color: Palette.amber.opacity(0.45), location: 0.3),
+                .init(color: Palette.mint.opacity(0.9), location: 0.5), .init(color: Palette.amber.opacity(0.45), location: 0.7),
+                .init(color: Palette.amber.opacity(0), location: 1)]), startPoint: .zero, endPoint: CGPoint(x: size.width, y: 0)))
+            if let cents, !locked {
+                // Strobe: dots drifting with the pitch error.
+                let step: CGFloat = 14
+                let offset = CGFloat(phase.truncatingRemainder(dividingBy: 1)) * step
+                for i in stride(from: -step, through: size.width + step, by: step) {
+                    let x = i + offset
+                    let fade = 1 - min(1, abs(x - mid) / span)
+                    context.fill(Path(ellipseIn: CGRect(x: x - 1.5, y: baseline - 1.5, width: 3, height: 3)), with: .color(Palette.amber.opacity(0.5 * fade * min(1, abs(cents) / 6))))
+                }
+            }
+            for value in stride(from: -50, through: 50, by: 10) where value != 0 {
+                let x = mid + CGFloat(value) / 50 * (span - 2)
+                let major = value % 50 == 0 || value % 20 == 0
+                context.fill(Path(CGRect(x: x - 0.5, y: baseline - (major ? 7 : 5), width: 1, height: major ? 14 : 10)), with: .color(Palette.inkFaint.opacity(0.7)))
+            }
+            let zone = CGRect(x: mid - 7, y: baseline - 13, width: 14, height: 26)
+            context.fill(Path(roundedRect: zone, cornerRadius: 7), with: .color(Palette.mint.opacity(locked ? 0.25 : 0.12)))
+            context.stroke(Path(roundedRect: zone, cornerRadius: 7), with: .color(Palette.mint.opacity(locked ? 1 : 0.5)), lineWidth: 1)
+            guard let cents else { return }
+            let x = locked ? mid : mid + CGFloat(max(-50, min(50, cents))) / 50 * (span - 2)
+            let color = locked ? Palette.mint : Palette.amber
+            context.fill(Path(ellipseIn: CGRect(x: x - 18, y: baseline - 18, width: 36, height: 36)), with: .radialGradient(Gradient(colors: [color.opacity(0.6), .clear]), center: CGPoint(x: x, y: baseline), startRadius: 0, endRadius: 18))
+            context.fill(Path(roundedRect: CGRect(x: x - 2, y: 0, width: 4, height: size.height), cornerRadius: 2), with: .color(color))
+        }
+        .accessibilityHidden(true)
+    }
+}
+
 /// Strobe band: segments drift left when flat, right when sharp, and stand still in tune.
 struct StrobeBand: View {
     let cents: Double?
@@ -81,27 +125,45 @@ struct CentsScale: View {
     }
 }
 
-/// Note name in the display serif with its octave set small, plus cents and hertz.
+/// The big note (octave set small and light), then cents and hertz; mint and glowing when in tune.
 struct NoteReadout: View {
     let note: String
     let cents: Double?
     let hertz: Double?
     let target: Double
     let locked: Bool
+    var compact = false
     var body: some View {
         let parts = Self.split(note)
-        VStack(spacing: 2) {
-            HStack(alignment: .firstTextBaseline, spacing: 2) {
-                Text(parts.name).font(Typeface.display(92, relativeTo: .largeTitle)).foregroundStyle(locked ? Palette.locked : Palette.ink)
+        VStack(spacing: compact ? 2 : 6) {
+            HStack(alignment: .lastTextBaseline, spacing: 3) {
+                Text(parts.name).font(Typeface.note(compact ? 84 : 112, relativeTo: .largeTitle)).tracking(compact ? -3 : -5)
+                    .foregroundStyle(locked ? Color(hex: 0xEFFFF8) : Palette.ink)
                     .contentTransition(.numericText())
-                Text(parts.octave).font(Typeface.display(34)).foregroundStyle(Palette.inkSoft)
+                    .minimumScaleFactor(0.6).lineLimit(1)
+                Text(parts.octave).font(Typeface.displayLight(30)).foregroundStyle(locked ? Palette.mint.opacity(0.8) : Palette.inkFaint)
             }
-            .shadow(color: locked ? Palette.locked.opacity(0.55) : .clear, radius: 22)
-            HStack(spacing: 14) {
-                Text(cents.map { String(format: "%+.1f¢", $0) } ?? "—").font(Typeface.number(17)).foregroundStyle(Palette.pitch(cents, locked: locked))
-                    .monospacedDigit()
-                Text(String(format: "%.2f Hz", hertz ?? target)).font(Typeface.number(13)).foregroundStyle(Palette.inkFaint).monospacedDigit()
+            .shadow(color: locked ? Palette.mint.opacity(0.6) : .clear, radius: 26)
+            Group {
+                if locked {
+                    Label {
+                        Text("In tune · \(String(format: "%.1f", abs(cents ?? 0))) cents")
+                    } icon: { Image(systemName: "checkmark") }
+                    .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.mint)
+                    .padding(.horizontal, 12).padding(.vertical, 6)
+                    .background(Capsule().fill(Palette.mint.opacity(0.12)))
+                    .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.4), lineWidth: 1))
+                } else {
+                    HStack(spacing: 10) {
+                        Text(cents.map { String(format: "%+.0f cents", $0).replacingOccurrences(of: "-", with: "−") } ?? "—")
+                            .font(Typeface.number(15)).foregroundStyle(Palette.pitch(cents, locked: false))
+                        Circle().fill(Palette.inkFaint).frame(width: 3, height: 3)
+                        Text(String(format: "%.2f Hz", hertz ?? target)).font(Typeface.number(15)).foregroundStyle(Palette.inkSoft)
+                    }
+                }
             }
+            .transition(.opacity.combined(with: .scale(scale: 0.96)))
+            .animation(Motion.quick, value: locked)
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Target \(note)"))

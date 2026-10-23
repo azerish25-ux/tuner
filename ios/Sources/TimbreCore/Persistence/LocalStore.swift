@@ -38,6 +38,8 @@ public struct UserSettings: Codable, Equatable, Sendable {
     public var dailyDone: [String: [String]]?
     public var earLevels: [String: Int]?
     public var customTunings: [CustomTuning]?
+    /// XP, quests, achievements and string-health samples.
+    public var progress: ProgressState?
     public init() {}
 }
 
@@ -147,7 +149,8 @@ public final class LocalStore {
               settings.recentInstrumentIds.count <= recentInstrumentLimit,
               settings.analysisWindowOverride.map({ $0 > 0 && $0 <= 65536 }) ?? true,
               (settings.customTunings ?? []).count <= 200,
-              (settings.customTunings ?? []).allSatisfy({ !$0.midis.isEmpty && $0.midis.count <= 48 && $0.midis.allSatisfy { (0...127).contains($0) } && $0.name.count <= 60 }) else {
+              (settings.customTunings ?? []).allSatisfy({ !$0.midis.isEmpty && $0.midis.count <= 48 && $0.midis.allSatisfy { (0...127).contains($0) } && $0.name.count <= 60 }),
+              settings.progress?.isValid ?? true else {
             throw LocalStoreError.invalidState("Invalid settings")
         }
         guard Set(value.records.map(\.id)).count == value.records.count,

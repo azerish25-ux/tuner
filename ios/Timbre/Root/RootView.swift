@@ -11,12 +11,12 @@ struct RootView: View {
     var body: some View {
         TabView(selection: $store.selectedTab) {
             Tab("Tune", systemImage: "tuningfork", value: AppTab.tune) { TuneView() }
-            Tab("Practice", systemImage: "music.note.list", value: AppTab.practice) { PracticeView() }
-            Tab("Instruments", systemImage: "square.grid.2x2.fill", value: AppTab.instruments) { NavigationStack { InstrumentsView() } }
-            Tab("Journey", systemImage: "chart.line.uptrend.xyaxis", value: AppTab.journey) { JourneyView() }
+            Tab("Play", systemImage: "gamecontroller", value: AppTab.practice) { PracticeView() }
+            Tab("Instruments", systemImage: "square.grid.2x2", value: AppTab.instruments) { NavigationStack { InstrumentsView() } }
+            Tab("Progress", systemImage: "chart.line.uptrend.xyaxis", value: AppTab.journey) { JourneyView() }
         }
         .tint(Palette.brass)
-        .preferredColorScheme(store.settings.theme == "system" ? nil : store.settings.theme == "light" ? .light : .dark)
+        .preferredColorScheme(.dark)  // Studio Noir is a dark design
         .environment(\.locale, Locale(identifier: store.settings.language == "system" ? Locale.current.identifier : store.settings.language))
         .environment(\.layoutDirection, Locale.Language(identifier: store.settings.language == "system" ? Locale.current.identifier : store.settings.language).characterDirection == .rightToLeft ? .rightToLeft : .leftToRight)
         .fullScreenCover(isPresented: Binding(get: { store.settings.onboardingCompleted != true }, set: { _ in })) {
@@ -30,6 +30,7 @@ struct RootView: View {
             }
         }
         .animation(.spring(response: 0.45, dampingFraction: 0.9), value: store.showPaywall)
+        .overlay(alignment: .top) { RewardToast() }
         #if DEBUG
         .overlay(alignment: .topLeading) {
             // UI-test probe (TIMBRE_DEBUG_STATE=1): the presentation flags, readable by XCUITest.

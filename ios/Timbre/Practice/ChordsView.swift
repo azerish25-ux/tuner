@@ -139,7 +139,7 @@ struct ChordDiagram: View {
                 } else {
                     let y = top + (CGFloat(fret - base) + 0.5) * dy
                     context.fill(Path(ellipseIn: CGRect(x: x - 8, y: y - 8, width: 16, height: 16)),
-                                 with: .linearGradient(Gradient(colors: [Color(hex: 0xF1D69E), Color(hex: 0xB0823F)]), startPoint: CGPoint(x: x, y: y - 8), endPoint: CGPoint(x: x, y: y + 8)))
+                                 with: .linearGradient(Gradient(colors: [Color(hex: 0x8BF7D2), Palette.mintDeep]), startPoint: CGPoint(x: x, y: y - 8), endPoint: CGPoint(x: x, y: y + 8)))
                 }
             }
         }
@@ -178,7 +178,7 @@ struct Fretboard: View {
                 let cy = top + height - CGFloat(p.string) * dy
                 let r: CGFloat = p.isRoot ? 11 : 9
                 context.fill(Path(ellipseIn: CGRect(x: cx - r, y: cy - r, width: r * 2, height: r * 2)), with: .color(p.isRoot ? Palette.ember : Palette.brass.opacity(0.85)))
-                context.draw(Text("\(p.degree)").font(.system(size: 10, weight: .bold)).foregroundStyle(Color(hex: 0x1A1206)), at: CGPoint(x: cx, y: cy))
+                context.draw(Text("\(p.degree)").font(.system(size: 10, weight: .bold)).foregroundStyle(Palette.onAccent), at: CGPoint(x: cx, y: cy))
             }
         }
         .accessibilityHidden(true)

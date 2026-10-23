@@ -42,7 +42,7 @@ targets:
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
         UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
         ITSAppUsesNonExemptEncryption: false
-        UIAppFonts: [InstrumentSerif-Regular.ttf, InstrumentSerif-Italic.ttf, ibm_plex_mono.ttf]
+        UIAppFonts: [Sora-Light.ttf, Sora-Medium.ttf, Sora-SemiBold.ttf, Sora-Bold.ttf]
         CFBundleURLTypes:
           - CFBundleURLName: com.shahradazerisharghi.timbre
             CFBundleURLSchemes: [timbre]
@@ -74,7 +74,7 @@ targets:
         CFBundleDisplayName: Timbre
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
-        UIAppFonts: [InstrumentSerif-Regular.ttf, InstrumentSerif-Italic.ttf, ibm_plex_mono.ttf]
+        UIAppFonts: [Sora-Light.ttf, Sora-Medium.ttf, Sora-SemiBold.ttf, Sora-Bold.ttf]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre.widgets

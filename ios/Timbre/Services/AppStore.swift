@@ -31,6 +31,9 @@ final class AppStore: ObservableObject {
     @Published var pendingPracticeRoute: PracticeRoute?
     /// While true, readings target the octave and never count as tuning sessions.
     @Published var intonationMode = false
+    /// The latest XP / quest / badge result, for the reward toast; `rewardPulse` ticks on each.
+    @Published private(set) var lastReward: ProgressUpdate?
+    @Published private(set) var rewardPulse = 0
     // Voice
     @Published var voiceLevel = 1 {
         didSet { if voiceLevel != oldValue && !updateSettings({ $0.selectedVoiceLevel = voiceLevel }) { voiceLevel = oldValue } }
@@ -55,6 +58,8 @@ final class AppStore: ObservableObject {
     private var lastTaps: [TimeInterval] = []
     private var voiceStarted: TimeInterval = 0
     private var practiceStarted: [String: TimeInterval] = [:]
+    /// Courses whose first reading this session has gone into the string-health log.
+    private var sampledCourses: Set<Int> = []
 
     init(directory: URL? = nil) throws {
         catalog = try Catalog()
@@ -300,7 +305,7 @@ final class AppStore: ObservableObject {
     }
 
     private var microphoneGain: Double { pow(10, Double(settings.micSensitivity - 60) / 40) }
-    private func resetTuningMeasurements() { sessionCount = 0; stableCount = 0; totalError = 0; sessionStarted = nil; sessionStartedUptime = nil; autoHits = 0; lastAutoIndex = nil; lockedCourses = [] }
+    private func resetTuningMeasurements() { sessionCount = 0; stableCount = 0; totalError = 0; sessionStarted = nil; sessionStartedUptime = nil; autoHits = 0; lastAutoIndex = nil; lockedCourses = []; sampledCourses = [] }
     func target(for course: Course) -> Double { Temperament.byId(settings.temperamentId).frequency(midi: course.targetMidi, reference: settings.referencePitchHz, letterName: course.label) }
 
     func accept(_ hz: Double?, confidence: Double, level: Double) {
@@ -339,12 +344,21 @@ final class AppStore: ObservableObject {
         if hz == nil && level > -60 && !audio.tonePlaying { reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "uncertain") }
         live.reading = reading
         Haptics.shared.detent(cents: reading.stable ? reading.cents : nil)
+        if !referenceMode, !intonationMode, reading.stable, let cents = reading.cents, abs(cents) <= 100,
+           !sampledCourses.contains(activeCourse.index), let anchor = activeCourse.anchorId {
+            sampledCourses.insert(activeCourse.index)
+            var state = progress
+            state.sample(StringSample(instrumentId: instrument.id, anchor: anchor, date: Date(), cents: cents))
+            updateSettings { $0.progress = state }
+        }
         if reading.inTune && !wasInTune && !intonationMode {
             Haptics.shared.lock()
             if !referenceMode {
                 let before = allCoursesLocked
-                lockedCourses.insert(activeCourse.index)
-                if !before && allCoursesLocked { completedFullTune() }
+                let fresh = lockedCourses.insert(activeCourse.index).inserted
+                let completed = !before && allCoursesLocked
+                if completed { completedFullTune() }
+                if fresh { recordProgress(.stringTuned(instrumentId: instrument.id, all: completed)) }
             }
         }
         if !intonationMode, let cents = reading.cents, reading.frequency != nil {
@@ -389,6 +403,38 @@ final class AppStore: ObservableObject {
         guard duration >= 10_000 || questions > 0 else { return }
         save(PracticeRecord(instrumentId: "practice.\(kind.rawValue)", kind: kind.rawValue, count: questions, stableCount: min(correct, questions), durationMs: duration))
         markDaily(kind)
+        if kind == .ear { for _ in 0..<min(correct, questions) { recordProgress(.earCorrect, announce: false) } }
+        recordProgress(.practiceMinutes(max(1, duration / 60_000)))
+    }
+
+    // MARK: Progress (XP, quests, badges, string health)
+
+    var progress: ProgressState { settings.progress ?? ProgressState() }
+    var level: Level { Progression.level(for: progress.xp) }
+    var quests: [Quest] { Quests.daily(for: Date()) }
+    func questProgress(_ quest: Quest) -> Int {
+        progress.questDay == Quests.dayKey(Date()) ? min(quest.target, progress.questProgress[quest.id] ?? 0) : 0
+    }
+    var stringDrift: [StringDrift] { StringHealth.drift(progress.stringSamples, instrumentId: instrument.id, since: progress.restrung[instrument.id]) }
+
+    /// Applies an event to the saved progress; announces XP, quests, badges and level-ups.
+    func recordProgress(_ event: ProgressEvent, announce: Bool = true) {
+        var state = progress
+        let update = state.record(event, streakBest: streak.best, customTunings: settings.customTunings?.count ?? 0)
+        guard updateSettings({ $0.progress = state }) else { return }
+        if update.levelUp != nil || !update.achievementsEarned.isEmpty { Haptics.shared.done() }
+        if announce || update.levelUp != nil || !update.questsCompleted.isEmpty || !update.achievementsEarned.isEmpty {
+            lastReward = update
+            rewardPulse += 1
+        }
+        for quest in update.questsCompleted { Analytics.log("quest_done", ["quest": quest.id]) }
+        if let level = update.levelUp { Analytics.log("level_up", ["level": String(level.number)]) }
+    }
+
+    func markRestrung() {
+        var state = progress
+        state.restrung[instrument.id] = Date()
+        updateSettings { $0.progress = state }
     }
 
     private static let dayFormatter: DateFormatter = {

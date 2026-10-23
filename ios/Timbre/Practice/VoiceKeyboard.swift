@@ -32,8 +32,8 @@ struct VoiceKeyboard: View {
                                 Text(label(midi)).font(.caption).lineLimit(1).minimumScaleFactor(0.55).padding(.bottom, 10)
                             }
                             .frame(maxWidth: .infinity).frame(height: 102)
-                            .foregroundStyle(Color(hex: 0x1A1206))
-                            .background(selected ? AnyShapeStyle(LinearGradient(colors: [Color(hex: 0xF1D69E), Color(hex: 0xC8954A)], startPoint: .top, endPoint: .bottom)) : AnyShapeStyle(Color(hex: 0xF4EEE4).opacity(allowed ? 1 : 0.35)), in: RoundedRectangle(cornerRadius: 6))
+                            .foregroundStyle(Palette.onAccent)
+                            .background(selected ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(Color(hex: 0xF4EEE4).opacity(allowed ? 1 : 0.35)), in: RoundedRectangle(cornerRadius: 6))
                             .contentShape(RoundedRectangle(cornerRadius: 4))
                         }
                         .buttonStyle(.plain)
@@ -55,7 +55,7 @@ struct VoiceKeyboard: View {
                             if selected { Text("♯").font(.caption.weight(.semibold)).padding(.bottom, 4) }
                         }
                         .frame(width: blackWidth, height: 60)
-                        .foregroundStyle(Color(hex: 0x1A1206))
+                        .foregroundStyle(Palette.onAccent)
                         .background(selected ? Palette.brass : Color(hex: 0x141110), in: RoundedRectangle(cornerRadius: 5))
                         .overlay(RoundedRectangle(cornerRadius: 5).stroke(Palette.line, lineWidth: 1))
                         .contentShape(RoundedRectangle(cornerRadius: 4))

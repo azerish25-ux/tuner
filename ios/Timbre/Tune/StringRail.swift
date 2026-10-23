@@ -22,29 +22,24 @@ struct StringRail: View {
                 let label = TargetLabelFormatter.splitCue(store.courseLabel(course))
                 let selected = store.activeCourse.index == course.index
                 let tuned = store.lockedCourses.contains(course.index)
+                let parts = NoteReadout.split(label.main)
+                // Amber ring: the string you are tuning. Mint: tuned (solid once the selected one locks).
+                let solid = selected && tuned
+                let ring: Color = solid ? Palette.mint : tuned ? Palette.mint.opacity(0.45) : selected ? Palette.amber : .white.opacity(0.12)
+                let fill: Color = solid ? Palette.mint : tuned ? Palette.mint.opacity(0.08) : selected ? Palette.amber.opacity(0.12) : .white.opacity(0.03)
                 Button { store.chooseCourse(course.index) } label: {
-                    VStack(spacing: 2) {
-                        Text(NoteReadout.split(label.main).name).font(Typeface.display(24, relativeTo: .title2))
-                        Text(label.cue ?? NoteReadout.split(label.main).octave).font(.caption2.weight(.semibold)).foregroundStyle(selected ? Color(hex: 0x1A1206).opacity(0.7) : Palette.inkFaint)
+                    HStack(alignment: .firstTextBaseline, spacing: 1) {
+                        Text(parts.name).font(Typeface.label(17))
+                        Text(label.cue ?? parts.octave).font(Typeface.label(10))
+                            .foregroundStyle(solid ? Palette.onAccent.opacity(0.75) : tuned ? Palette.mint : selected ? Palette.amber : Palette.inkFaint)
                     }
-                    .frame(minWidth: 50, minHeight: 58)
-                    .padding(.horizontal, 4)
-                    .foregroundStyle(selected ? Color(hex: 0x1A1206) : Palette.ink)
-                    .background {
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .fill(selected ? AnyShapeStyle(LinearGradient(colors: [Color(hex: 0xF1D69E), Color(hex: 0xC8954A)], startPoint: .top, endPoint: .bottom)) : AnyShapeStyle(Palette.stageRaised.opacity(0.9)))
-                    }
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .strokeBorder(tuned ? Palette.locked.opacity(0.9) : Palette.line, lineWidth: tuned ? 1.5 : 1)
-                    }
-                    .overlay(alignment: .topTrailing) {
-                        if tuned {
-                            Image(systemName: "checkmark.circle.fill").font(.caption).foregroundStyle(Palette.locked, Palette.stage)
-                                .offset(x: 4, y: -4).transition(.scale.combined(with: .opacity))
-                        }
-                    }
-                    .scaleEffect(selected ? 1.06 : 1)
+                    .foregroundStyle(solid ? Palette.onAccent : tuned ? Color(hex: 0xCFFBEA) : selected ? Color(hex: 0xFFE2B3) : Palette.ink)
+                    .frame(minWidth: 50, minHeight: 50)
+                    .padding(.horizontal, label.cue == nil ? 0 : 6)
+                    .background(Capsule().fill(fill))
+                    .overlay(Capsule().strokeBorder(ring, lineWidth: selected || solid ? 1.5 : 1))
+                    .shadow(color: solid ? Palette.mint.opacity(0.55) : .clear, radius: 12)
+                    .scaleEffect(selected ? 1.05 : 1)
                     .animation(Motion.pluck, value: selected)
                     .animation(Motion.pluck, value: tuned)
                 }

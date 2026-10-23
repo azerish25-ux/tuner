@@ -20,7 +20,7 @@ for photo in photos:
         manifest = json.loads((folder / 'Contents.json').read_text())
         assert all((folder / image['filename']).is_file() for image in manifest['images'])
     assert photo['source'] and photo['sha256'] and photo['origin']
-for name in ['InstrumentSerif-Regular.ttf', 'InstrumentSerif-Italic.ttf', 'ibm_plex_mono.ttf', 'InstrumentSerif-OFL.txt', 'IBMPlexMono-OFL.txt']:
+for name in ['Sora-Light.ttf', 'Sora-Medium.ttf', 'Sora-SemiBold.ttf', 'Sora-Bold.ttf', 'Sora-OFL.txt']:
     assert (resources / 'Fonts' / name).is_file(), name
 # 3D models: every installed model has its rig, render and anchors matching the catalogue.
 models = resources / 'Models'
@@ -53,4 +53,4 @@ for source in (root / 'ios/Timbre').rglob('*.swift'):
 assert not missing, '\n'.join(missing)
 locales = list(resources.glob('*.lproj'))
 assert len(locales) == 49
-print(f'OK: 60 instruments, 102 tunings, 71 photos/142 images, 49 locales, 2 licensed font families, {len(manifest['photos'])} 3D models; all literal localization keys exist.')
+print(f'OK: 60 instruments, 102 tunings, 71 photos/142 images, 49 locales, 1 licensed font family, {len(manifest['photos'])} 3D models; all literal localization keys exist.')

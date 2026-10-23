@@ -67,7 +67,7 @@ struct MetronomeView: View {
                 context.fill(Path(ellipseIn: CGRect(x: bob.x - r * 2, y: bob.y - r * 2, width: r * 4, height: r * 4)),
                              with: .radialGradient(Gradient(colors: [glowColor.opacity(0.45 * flash + 0.08), .clear]), center: bob, startRadius: 0, endRadius: r * 2))
                 context.fill(Path(ellipseIn: CGRect(x: bob.x - 22, y: bob.y - 22, width: 44, height: 44)),
-                             with: .linearGradient(Gradient(colors: [Color(hex: 0xF1D69E), Color(hex: 0xA67C3D)]), startPoint: CGPoint(x: bob.x, y: bob.y - 22), endPoint: CGPoint(x: bob.x, y: bob.y + 22)))
+                             with: .linearGradient(Gradient(colors: [Color(hex: 0x8BF7D2), Palette.mintDeep]), startPoint: CGPoint(x: bob.x, y: bob.y - 22), endPoint: CGPoint(x: bob.x, y: bob.y + 22)))
                 context.fill(Path(ellipseIn: CGRect(x: pivot.x - 6, y: pivot.y - 6, width: 12, height: 12)), with: .color(Palette.brass))
             }
         }

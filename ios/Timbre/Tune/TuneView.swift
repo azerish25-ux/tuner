@@ -57,39 +57,32 @@ struct TuneView: View {
     }
 
     private var header: some View {
-        HStack(alignment: .center, spacing: 10) {
+        HStack(alignment: .center, spacing: 8) {
             Button { store.showInstrumentPicker = true } label: {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
-                        Text(store.instrumentDisplayName).font(Typeface.display(28, relativeTo: .title)).foregroundStyle(Palette.ink).lineLimit(1)
-                        Image(systemName: "chevron.down").font(.caption.weight(.bold)).foregroundStyle(Palette.brass)
+                        Text(store.instrumentDisplayName).font(.title3.weight(.semibold)).foregroundStyle(Palette.ink).lineLimit(1)
+                        Image(systemName: "chevron.down").font(.caption.weight(.bold)).foregroundStyle(Palette.inkSoft)
                     }
-                    if !store.referenceMode {
-                        Text(store.tuning.name.localized).font(.subheadline).foregroundStyle(Palette.inkSoft).lineLimit(1)
-                    } else {
-                        Text("Any note, any instrument").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                    Group {
+                        if store.referenceMode { Text("Any note · A4 \(Int(store.settings.referencePitchHz)) Hz") }
+                        else { Text("\(store.tuning.name.localized) · A4 \(Int(store.settings.referencePitchHz)) Hz") }
                     }
+                    .font(.footnote).foregroundStyle(Palette.inkSoft).lineLimit(1)
                 }
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier("tune.instrument")
             Spacer(minLength: 4)
-            Menu {
-                ForEach([415.0, 432, 435, 440, 442, 443], id: \.self) { hz in
-                    Button { store.updateSettings { $0.referencePitchHz = hz } } label: {
-                        if store.settings.referencePitchHz == hz { Label("A4 = \(Int(hz)) Hz", systemImage: "checkmark") } else { Text("A4 = \(Int(hz)) Hz") }
-                    }
-                }
-                Button("More in Settings…") { store.showSettings = true }
-            } label: {
-                Text("A\(Text("4").font(.caption2)) \(Int(store.settings.referencePitchHz))").font(Typeface.number(14))
-                    .foregroundStyle(Palette.ink).padding(.horizontal, 12).padding(.vertical, 8).glassCapsule()
-            }
-            .accessibilityLabel(Text("Reference pitch A4 \(Int(store.settings.referencePitchHz)) hertz"))
+            StreakChip { store.selectedTab = .journey }
+            LevelRing(size: 36) { store.selectedTab = .journey }
             Button { store.showSettings = true } label: {
-                Image(systemName: "slider.horizontal.3").font(.body.weight(.semibold)).foregroundStyle(Palette.ink)
-                    .frame(width: 40, height: 40).glassCapsule()
+                Image(systemName: "slider.horizontal.3").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                    .frame(width: 36, height: 36)
+                    .background(Circle().fill(.white.opacity(0.04)))
+                    .overlay(Circle().strokeBorder(.white.opacity(0.12), lineWidth: 1))
             }
+            .buttonStyle(.plain)
             .accessibilityLabel(Text("Settings")).accessibilityIdentifier("settings.open")
         }
         .padding(.horizontal, Metrics.gutter).padding(.top, 6)
@@ -127,8 +120,9 @@ struct TuneView: View {
             } else if let photo = store.photo {
                 StudioStage(imageName: photo.asset, rig: nil, input: stageInput).padding(28)
             }
-            TurnHint().padding(.top, 8)
+            TurnHint().padding(.top, 8).frame(maxWidth: .infinity, alignment: .leading).padding(.leading, 14)
         }
+        .overlay(alignment: .trailing) { sideControls.padding(.trailing, 14) }
         // A container element keeps its children's own identifiers (stage.debug, the hint).
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("tune.stage")
@@ -138,62 +132,77 @@ struct TuneView: View {
         TimelineView(.animation) { timeline in
             let reading = store.live.reading
             let _ = motion.step(audio.running ? reading.cents : (store.live.preserved ? reading.cents : nil), locked: reading.inTune, now: timeline.date.timeIntervalSinceReferenceDate)
-            VStack(spacing: 10) {
+            VStack(spacing: 14) {
                 NoteReadout(note: store.targetName, cents: motion.cents, hertz: reading.frequency, target: store.targetHz, locked: reading.inTune)
-                StrobeBand(cents: motion.cents, phase: motion.phase, locked: reading.inTune, active: motion.cents != nil)
-                    .frame(height: 22).padding(.horizontal, 36)
-                CentsScale(cents: motion.cents, locked: reading.inTune).frame(height: 34).padding(.horizontal, 28)
-                Text(store.statusText).font(.subheadline.weight(.semibold))
-                    .foregroundStyle(reading.inTune ? Palette.locked : Palette.inkSoft)
+                RibbonMeter(cents: motion.cents, phase: motion.phase, locked: reading.inTune)
+                    .frame(height: 38).padding(.horizontal, 32)
+                Text(store.statusText).font(.footnote.weight(.semibold))
+                    .foregroundStyle(reading.inTune ? Palette.mint : Palette.inkSoft)
                     .contentTransition(.opacity)
                     .animation(Motion.quick, value: store.statusText)
                     .accessibilityIdentifier("tune.status")
             }
         }
-        .padding(.bottom, 6)
+        .padding(.bottom, 4)
     }
 
     private var tuningPanel: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 6) {
             readout
+            if !store.referenceMode { questLine }
             StringRail().opacity(store.referenceMode ? 0 : 1).frame(height: store.referenceMode ? 8 : nil)
-            controls
         }
+        .padding(.bottom, 8)
     }
 
-    private var controls: some View {
-        HStack(spacing: 18) {
-            Button { store.automatic.toggle(); Haptics.shared.selection() } label: {
-                VStack(spacing: 3) {
-                    Image(systemName: store.automatic ? "wand.and.stars" : "hand.tap").font(.title3)
-                    Text(store.automatic ? "Auto" : "Manual").font(.caption2.weight(.semibold))
-                }
-                .foregroundStyle(store.automatic ? Palette.brass : Palette.inkSoft)
-                .frame(width: 64, height: 56)
-                .glassCapsule()
+    /// Today's tuning quest: every string of this instrument, with its XP.
+    private var questLine: some View {
+        let quest = store.quests.first { $0.kind == .tuneAll }
+        let done = store.lockedCourses.count, total = store.courses.count
+        return HStack {
+            (Text("Daily quest · tune all \(total) ").foregroundStyle(Palette.inkSoft) + Text("\(min(done, total)) / \(total)").foregroundStyle(Palette.ink).bold())
+                .font(.caption)
+            Spacer()
+            if let quest {
+                Text(store.questProgress(quest) >= quest.target ? "Done" : "+\(quest.xp) XP").font(Typeface.label(12)).foregroundStyle(Palette.mint)
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text(store.automatic ? "Automatic string detection on" : "Manual string selection"))
-            .accessibilityIdentifier("tune.auto")
-            ListenOrb()
-            Button { store.toggleTone() } label: {
-                VStack(spacing: 3) {
-                    Image(systemName: audio.tonePlaying ? "speaker.slash.fill" : "speaker.wave.2.fill").font(.title3)
-                    Text(audio.tonePlaying ? "Stop" : "Hear").font(.caption2.weight(.semibold))
-                }
-                .foregroundStyle(audio.tonePlaying ? Palette.brass : Palette.inkSoft)
-                .frame(width: 64, height: 56)
-                .glassCapsule()
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text(audio.tonePlaying ? "Stop reference tone" : "Play reference tone"))
-            .accessibilityIdentifier("tune.tone")
         }
-        .padding(.top, 6).padding(.bottom, 10)
+        .padding(.horizontal, Metrics.gutter + 2)
+        .accessibilityElement(children: .combine)
+    }
+
+    /// Hear the target, automatic string detection and listening, stacked beside the instrument.
+    private var sideControls: some View {
+        VStack(spacing: 12) {
+            StageControl(symbol: audio.tonePlaying ? "speaker.slash.fill" : "speaker.wave.2.fill", active: audio.tonePlaying) { store.toggleTone() }
+                .accessibilityLabel(Text(audio.tonePlaying ? "Stop reference tone" : "Play reference tone"))
+                .accessibilityIdentifier("tune.tone")
+            StageControl(symbol: store.automatic ? "wand.and.stars" : "hand.tap", active: store.automatic) { store.automatic.toggle(); Haptics.shared.selection() }
+                .accessibilityLabel(Text(store.automatic ? "Automatic string detection on" : "Manual string selection"))
+                .accessibilityIdentifier("tune.auto")
+            ListenOrb()
+        }
     }
 }
 
-/// The main listen control: gold when listening, its halo breathing with the input level.
+/// Round 44-point control floating over the stage.
+struct StageControl: View {
+    let symbol: String
+    var active = false
+    let action: () -> Void
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: symbol).font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(active ? Palette.mint : Palette.ink)
+                .frame(width: 44, height: 44)
+                .background(Circle().fill(active ? Palette.mint.opacity(0.12) : .white.opacity(0.05)))
+                .overlay(Circle().strokeBorder(active ? Palette.mint.opacity(0.45) : .white.opacity(0.12), lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+/// Listening on and off: mint when listening, its halo breathing with the input level.
 struct ListenOrb: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService
@@ -201,14 +210,14 @@ struct ListenOrb: View {
         let level = audio.running ? max(0, min(1, (store.live.level + 60) / 45)) : 0
         Button { store.toggleListening(); Haptics.shared.selection() } label: {
             ZStack {
-                Circle().fill(Palette.brass.opacity(0.18)).frame(width: 96, height: 96).scaleEffect(1 + level * 0.28).opacity(audio.running ? 1 : 0)
-                Circle().fill(audio.running ? AnyShapeStyle(LinearGradient(colors: [Color(hex: 0xF1D69E), Color(hex: 0xC8954A)], startPoint: .top, endPoint: .bottom)) : AnyShapeStyle(Palette.stageRaised))
-                    .frame(width: 78, height: 78)
-                    .overlay(Circle().strokeBorder(audio.running ? .white.opacity(0.35) : Palette.line, lineWidth: 1))
-                    .shadow(color: Palette.ember.opacity(audio.running ? 0.45 : 0), radius: 20, y: 6)
-                Image(systemName: audio.running ? "pause.fill" : "mic.fill").font(.title2.weight(.bold))
-                    .foregroundStyle(audio.running ? Color(hex: 0x1A1206) : Palette.brass)
+                Circle().fill(Palette.mint.opacity(0.2)).frame(width: 52, height: 52).scaleEffect(1 + level * 0.35).opacity(audio.running ? 1 : 0)
+                Circle().fill(audio.running ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(Color.white.opacity(0.05)))
+                    .frame(width: 44, height: 44)
+                    .overlay(Circle().strokeBorder(audio.running ? .clear : .white.opacity(0.12), lineWidth: 1))
+                Image(systemName: audio.running ? "pause.fill" : "mic.fill").font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(audio.running ? Palette.onAccent : Palette.ink)
             }
+            .frame(width: 52, height: 52)
             .animation(.easeOut(duration: 0.12), value: level)
             .animation(Motion.pluck, value: audio.running)
         }
@@ -247,10 +256,11 @@ struct TurnHint: View {
                     Label(tighten ? "Tighten" : "Loosen", systemImage: clockwise ? "arrow.clockwise" : "arrow.counterclockwise")
                 }
             }
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(tighten ? Palette.flat : Palette.sharp)
-                .padding(.horizontal, 14).padding(.vertical, 8)
-                .glassCapsule(interactive: false)
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(Color(hex: 0xFFC977))
+                .padding(.horizontal, 10).padding(.vertical, 7)
+                .background(Capsule().fill(Palette.amber.opacity(0.14)))
+                .overlay(Capsule().strokeBorder(Palette.amber.opacity(0.35), lineWidth: 1))
                 .symbolEffect(.rotate, options: .repeating, isActive: true)
                 .transition(.move(edge: .top).combined(with: .opacity))
                 .accessibilityHidden(true)

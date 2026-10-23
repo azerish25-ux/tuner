@@ -25,7 +25,7 @@ final class TabletScreenshotsUITests: XCTestCase {
         shot("ipad-landscape-tune")
         app.buttons["Instruments"].firstMatch.tap()
         shot("ipad-landscape-instruments")
-        app.buttons["Practice"].firstMatch.tap()
+        app.buttons["Play"].firstMatch.tap()
         shot("ipad-landscape-practice")
         XCUIDevice.shared.orientation = .portrait
     }

@@ -145,7 +145,7 @@ struct StreakView: View {
                         Text("Last 7 days").font(.caption2.weight(.semibold)).foregroundStyle(Palette.inkFaint)
                         HStack(spacing: 6) {
                             ForEach(Array(snapshot.week.enumerated()), id: \.offset) { index, done in
-                                Capsule().fill(done ? AnyShapeStyle(LinearGradient(colors: [Color(hex: 0xF1D69E), Color(hex: 0xC8954A)], startPoint: .top, endPoint: .bottom)) : AnyShapeStyle(Palette.line))
+                                Capsule().fill(done ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(Palette.line))
                                     .frame(width: 12, height: index == snapshot.week.count - 1 ? 44 : 34)
                             }
                         }

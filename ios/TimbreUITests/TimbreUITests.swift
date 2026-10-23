@@ -89,7 +89,7 @@ final class TimbreUITests: XCTestCase {
 
     func test04PracticeTour() throws {
         launch()
-        tab("Practice"); settle(1.5); shot("20-practice-hub")
+        tab("Play"); settle(1.5); shot("20-practice-hub")
         element("practice.metronome").tap(); settle(1.2); shot("21-metronome")
         element("metronome.start").tap(); settle(1.0); shot("22-metronome-running")
         element("metronome.start").tap()
@@ -104,14 +104,14 @@ final class TimbreUITests: XCTestCase {
         launch()
         tab("Instruments"); settle(2); shot("30-instruments")
         app.swipeUp(); settle(); shot("31-instruments-scrolled")
-        tab("Journey"); settle(2); shot("32-journey")
+        tab("Progress"); settle(2); shot("32-journey")
         app.swipeUp(); settle(); shot("33-journey-scrolled")
     }
 
     func test06PurchaseUnlocksPro() throws {
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
         launch()
-        tab("Practice"); settle()
+        tab("Play"); settle()
         scrollTo(element("practice.drone"))
         element("practice.drone").tap()
         let purchase = element("paywall.purchase")
@@ -134,8 +134,8 @@ final class TimbreUITests: XCTestCase {
         scrollTo(element("practice.scales"))
         element("practice.scales").tap(); settle(1.5); shot("44-scales")
         app.navigationBars.buttons.firstMatch.tap(); settle()
-        tab("Journey"); settle(2); shot("45-journey-pro")
-        tab("Practice"); settle()
+        tab("Progress"); settle(2); shot("45-journey-pro")
+        tab("Play"); settle()
         scrollTo(element("practice.intonation"))
         element("practice.intonation").tap(); settle(1.5); shot("46-intonation")
         app.navigationBars.buttons.firstMatch.tap(); settle()

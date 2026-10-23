@@ -110,10 +110,6 @@ struct SettingsView: View {
 
     private var displaySection: some View {
         Section("Display") {
-            Picker("Appearance", selection: setting(\.theme)) {
-                Text("Dark").tag("dark"); Text("Light").tag("light"); Text("System").tag("system")
-            }
-            .accessibilityIdentifier("settings.theme")
             Picker("Handedness", selection: setting(\.handedness)) { Text("Right-handed").tag("right"); Text("Left-handed").tag("left") }
         }
     }
@@ -173,8 +169,7 @@ private struct Acknowledgements: View {
     var body: some View {
         List {
             Section("Fonts") {
-                license("Instrument Serif", file: "InstrumentSerif-OFL")
-                license("IBM Plex Mono", file: "IBMPlexMono-OFL")
+                license("Sora", file: "Sora-OFL")
             }
             Section("Music") { Text("The song exercise uses a phrase from Beethoven's public-domain Ode to Joy.") }
             Section("Instruments") { Text("3D instruments, materials and renders are generated from code for Timbre.") }
