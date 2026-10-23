@@ -66,7 +66,8 @@ final class AppPreviewUITests: XCTestCase {
         pause(2)
         let listen = listenButton()
         if listen.label != "Listen" { listen.tap(); pause(0.6) }
-        listen.tap()
+        // Resume; a tap while the audio session is still stopping can be dropped, so check and retry.
+        for _ in 0..<4 where listen.label == "Listen" { listen.tap(); pause(0.5) }
         let resumed = Date()
         let status = (try? element("tune.status").snapshot())?.label ?? ""
         let read = resumed.addingTimeInterval(Date().timeIntervalSince(resumed) / 2)
