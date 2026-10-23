@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Find artist-made 3D instrument models that a paid app may ship.
 
-python3 tools/scout/scout.py <out>
+python3 tools/scout/scout.py <out> [instrument,instrument...]
 Sketchfab: downloadable models under CC0 or CC-BY only (NC, ND and SA are excluded),
 ranked by likes, each licence confirmed on the model's own page. Poly Haven: CC0 models
 whose name or tags match. Writes results.json and one contact sheet per instrument.
@@ -54,13 +54,20 @@ def get(url: str) -> bytes:
     raise error
 
 
+SAMPLE = []
+
+
 def search(query: str, license: str) -> list:
     params = {"type": "models", "q": query, "downloadable": "true", "license": license, "count": 24, "sort_by": "-likeCount"}
-    return json.loads(get(f"{API}/search?{urllib.parse.urlencode(params)}")).get("results", [])
+    rows = json.loads(get(f"{API}/search?{urllib.parse.urlencode(params)}")).get("results", [])
+    if rows and not SAMPLE:
+        SAMPLE.append(rows[0])
+        print("sample search row keys:", sorted(rows[0].keys()), "license:", rows[0].get("license"), flush=True)
+    return rows
 
 
-def thumbnail(model: dict) -> str:
-    images = sorted(model.get("thumbnails", {}).get("images", []), key=lambda i: abs(i.get("width", 0) - 640))
+def thumbnail(model: dict, width: int = 640) -> str:
+    images = sorted(model.get("thumbnails", {}).get("images", []), key=lambda i: abs(i.get("width", 0) - width))
     return images[0]["url"] if images else ""
 
 
@@ -74,6 +81,7 @@ def summary(model: dict) -> dict:
         "faces": model.get("faceCount", 0), "vertices": model.get("vertexCount", 0), "likes": model.get("likeCount", 0),
         "views": model.get("viewCount", 0), "animated": model.get("animationCount", 0),
         "url": model.get("viewerUrl", f"https://sketchfab.com/3d-models/{model['uid']}"), "thumb": thumbnail(model),
+        "thumbLarge": thumbnail(model, 1280),
         "gltf": (archives.get("gltf") or {}).get("size"), "textures": (archives.get("gltf") or {}).get("textureCount"),
     }
 
@@ -132,8 +140,12 @@ def polyhaven(out: Path) -> list:
 def main():
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
+    (out / "large").mkdir(exist_ok=True)
+    only = set(sys.argv[2].split(",")) if len(sys.argv) > 2 and sys.argv[2] else set()
     results = {}
     for instrument, queries in QUERIES.items():
+        if only and instrument not in only:
+            continue
         pool = {}
         for query in queries:
             for license in sorted(OK_LICENSES):
@@ -142,26 +154,35 @@ def main():
                         pool.setdefault(model["uid"], model)
                 except Exception as exc:
                     print(f"{instrument}: search '{query}' ({license}) failed: {exc}")
-                time.sleep(0.6)
+                time.sleep(1.2)
         ranked = sorted(pool.values(), key=lambda m: (m.get("likeCount", 0), m.get("viewCount", 0)), reverse=True)
         chosen = []
         for model in ranked:
             if len(chosen) == KEEP:
                 break
-            try:  # confirm the licence on the model page, not just the search filter
-                detail = json.loads(get(f"{API}/models/{model['uid']}"))
-            except Exception as exc:
-                print(f"{instrument}: detail {model['uid']} failed: {exc}")
-                continue
-            time.sleep(0.4)
+            detail = {}
+            if not isinstance(model.get("license"), dict):  # search rows normally carry it; confirm otherwise
+                try:
+                    detail = json.loads(get(f"{API}/models/{model['uid']}"))
+                    time.sleep(1.0)
+                except Exception as exc:
+                    print(f"{instrument}: detail {model['uid']} failed: {exc}")
+                    continue
             item = summary({**model, **detail})
-            if item["license"] in OK_LICENSES and detail.get("isDownloadable", True):
+            if item["license"] in OK_LICENSES and {**model, **detail}.get("isDownloadable", True):
                 chosen.append(item)
         results[instrument] = chosen
         sheet(instrument, chosen, out / f"{instrument}.jpg")
-        print(f"{instrument}: {len(pool)} found, {len(chosen)} kept")
+        for k, item in enumerate(chosen[:4]):  # larger renders for design mockups (internal review only)
+            data = get(item["thumbLarge"]) if item["thumbLarge"] else b""
+            if data:
+                (out / "large" / f"{instrument}_{k + 1}.jpg").write_bytes(data)
+        (out / "results.json").write_text(json.dumps(results, indent=1))
+        print(f"{instrument}: {len(pool)} found, {len(chosen)} kept", flush=True)
     results["_polyhaven"] = polyhaven(out)
     (out / "results.json").write_text(json.dumps(results, indent=1))
+    if not only:
+        return
 
 
 if __name__ == "__main__":

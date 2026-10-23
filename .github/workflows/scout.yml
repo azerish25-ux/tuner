@@ -16,12 +16,12 @@ concurrency:
 jobs:
   scout:
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
       - run: python3 -m pip install --quiet pillow
       - name: Search model libraries
-        run: python3 tools/scout/scout.py build/scout
+        run: python3 -u tools/scout/scout.py build/scout "$(cat tools/scout/ONLY 2>/dev/null)"
       - name: Publish results
         if: always()
         env:
