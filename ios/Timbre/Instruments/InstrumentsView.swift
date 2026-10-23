@@ -33,7 +33,7 @@ struct InstrumentsView: View {
                     if !recents.isEmpty {
                         section("Your instruments", count: nil)
                         ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) { ForEach(recents, id: \.asset) { photo in card(photo).frame(width: 164) } }
+                            HStack(spacing: 12) { ForEach(recents, id: \.asset) { photo in card(photo).frame(width: 180) } }
                         }
                     }
                 }
@@ -209,7 +209,7 @@ struct InstrumentsView: View {
                 Group {
                     if selected { Text("Tuning now · \(tunings) tunings") } else if tunings == 1 { Text("1 tuning") } else { Text("\(tunings) tunings") }
                 }
-                .font(.footnote).foregroundStyle(selected ? Palette.mint : Palette.inkSoft).lineLimit(1)
+                .font(.footnote).foregroundStyle(selected ? Palette.mint : Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.75)
             }
             .padding(14)
             .background {

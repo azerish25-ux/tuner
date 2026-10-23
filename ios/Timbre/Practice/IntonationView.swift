@@ -59,20 +59,26 @@ struct IntonationView: View {
     }
 
     private var picker: some View {
-        HStack(spacing: 8) {
+        // Equal-width chips that always fit the row, however many strings the instrument has.
+        HStack(spacing: 6) {
             ForEach(strings) { string in
                 let done = offsets[string.index] != nil
+                let selected = string.index == course
                 Button { select(string.index) } label: {
-                    VStack(spacing: 1) {
-                        Text(NoteReadout.split(store.courseLabel(string)).name).font(Typeface.display(20))
+                    VStack(spacing: 2) {
+                        Text(NoteReadout.split(store.courseLabel(string)).name).font(Typeface.display(18)).lineLimit(1).minimumScaleFactor(0.6)
                         Image(systemName: done ? "checkmark" : "circle.dotted").font(.caption2.weight(.bold))
                     }
-                    .frame(minWidth: 40)
+                    .foregroundStyle(selected ? Palette.stage : Palette.ink)
+                    .frame(maxWidth: .infinity, minHeight: 52)
+                    .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(selected ? AnyShapeStyle(Palette.ink) : AnyShapeStyle(Palette.stageRaised)))
+                    .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(selected ? .clear : Palette.line, lineWidth: 1))
+                    .contentShape(Rectangle())
                 }
-                .buttonStyle(ChipButtonStyle(selected: string.index == course))
+                .buttonStyle(PressScaleStyle())
+                .accessibilityAddTraits(selected ? .isSelected : [])
             }
         }
-        .frame(maxWidth: .infinity)
     }
 
     private var instruction: some View {
