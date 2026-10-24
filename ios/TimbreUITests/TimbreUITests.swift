@@ -409,7 +409,7 @@ final class TimbreUITests: XCTestCase {
         element("tunings.custom").tap(); settle(1.5); shot("47-custom-tuning")
         XCTAssertTrue(element("custom.save").waitForExistence(timeout: 10))
         element("custom.save").tap(); settle(1.5); shot("48-custom-tuning-saved")
-        // Pro instruments on their 3D stage.
+        // Instruments on their 3D stage: the mandolin (Pro, open now), then the violin and cello (free on any plan).
         for (asset, search, name) in [("13_mandolin_mandolin", "Mandolin", "49-tune-mandolin-3d"), ("17_bowed_strings_violin", "Violin", "49b-tune-violin-3d"), ("19_bowed_strings_cello", "Cello", "49c-tune-cello-3d")] {
             // The picker is still up after saving the custom tuning; later rounds open it from the tuner.
             openPicker()

@@ -32,7 +32,8 @@ public enum AccessPolicy {
         }
     }
 
-    /// Free users tune the free instruments in every preset tuning. Pro opens everything.
+    /// Free users tune the free instruments in every preset tuning. Pro opens everything. The free set is the
+    /// catalogue's `isFree` flag: guitar, bass, ukulele, violin and cello (viola, double bass and the rest are Pro).
     public static func canTune(instrument: Instrument, pro: Bool) -> Bool { pro || instrument.isFree }
 
     public static func canUse(tuning: Tuning, of instrument: Instrument, pro: Bool) -> Bool {

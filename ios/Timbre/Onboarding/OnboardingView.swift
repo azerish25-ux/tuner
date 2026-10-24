@@ -243,7 +243,8 @@ struct OnboardingView: View {
 
     private var selectedChoice: Choice { choices.first { $0.id == instrumentID } ?? choices[0] }
 
-    /// A Pro instrument for a free player (`AccessPolicy`): the welcome chip wears the Pro badge.
+    /// A Pro instrument for a free player (`AccessPolicy`): the welcome chip wears the Pro badge. Of the chips, that is
+    /// mandolin and banjo; guitar, bass, ukulele, violin and cello tune free.
     private func needsPro(_ choice: Choice) -> Bool {
         guard let id = choice.id, let instrument = store.catalog.instrument(id: id) else { return false }
         return !AccessPolicy.canTune(instrument: instrument, pro: commerce.isPro)

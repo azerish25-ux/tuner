@@ -44,7 +44,8 @@ struct ChromaticStandInHint: View {
         .padding(.top, 4)
     }
 
-    /// "Tuning your violin in Chromatic · violin stage in Pro", beside the instrument.
+    /// "Tuning your mandolin in Chromatic · mandolin stage in Pro", beside the instrument. Never for violin or cello,
+    /// which tune free on their own stage (`Instrument.isFree`).
     private func pitch(_ instrument: Instrument) -> some View {
         let name = displayName(instrument)
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)

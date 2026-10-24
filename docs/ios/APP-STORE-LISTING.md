@@ -54,7 +54,7 @@ PRACTICE TOOLS
 • Home Screen and Lock Screen widgets, plus Siri shortcuts
 
 FREE TO START
-The tuner for guitar, bass and ukulele is free, with a chromatic tuner for anything else, and so is the first unit of every course. Timbre Pro unlocks every lesson, every instrument and the full practice set. The trial timeline is on the paywall, and, with notifications on, Timbre reminds you two days before the trial ends.
+The tuner for guitar, bass, ukulele, violin and cello is free, with a chromatic tuner for anything else, and so is the first unit of every course. Timbre Pro unlocks every lesson, every instrument and the full practice set. The trial timeline is on the paywall, and, with notifications on, Timbre reminds you two days before the trial ends.
 
 Private by design: audio is analysed on your iPhone and never recorded or uploaded. No account and no ads.
 
@@ -119,7 +119,8 @@ Run the **App Preview** workflow by hand (Actions → App Preview → Run workfl
 
 ```
 Timbre needs the microphone to tune and to hear lessons. With no instrument to hand, a 440 Hz tone from another device works for the tuner.
-The paywall opens from any locked lesson (Learn tab → a lesson in unit 2 or later) and from the Play tab → Tools → Drone. It shows the price, the trial timeline, auto-renewal terms, Restore, Terms and Privacy.
+Guitar, bass, ukulele, violin and cello tune free in every preset tuning; the other instruments are part of Timbre Pro.
+The paywall opens from any locked lesson (Learn tab → a lesson in unit 2 or later), from the Play tab → Tools → Drone, and from a Pro instrument (Tune tab → tap the instrument name → Mandolin). It shows the price, the trial timeline, auto-renewal terms, Restore, Terms and Privacy.
 No account or login is needed.
 ```
 

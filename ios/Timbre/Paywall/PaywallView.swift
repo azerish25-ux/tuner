@@ -339,7 +339,7 @@ struct PaywallView: View {
         return generic
     }
 
-    /// "Tune your cello, and 59 more instruments", with that instrument in the spotlight.
+    /// "Tune your mandolin, and 59 more instruments", with that instrument in the spotlight.
     private var instrumentPitch: Pitch {
         let others = max(0, store.catalog.instruments.count - 1)
         guard let instrument = store.paywallInstrumentId.flatMap({ store.catalog.instrument(id: $0) }) else {
@@ -637,9 +637,9 @@ struct PaywallView: View {
         let pro: Cell
     }
 
-    /// Free against Pro as the app enforces it: instruments and lessons by `AccessPolicy` (free instruments, free
-    /// lessons), the tools by their own locks (the metronome's basics and Pitch Sniper are free; interval and chord
-    /// ear drills, the Pro tools, strobe, temperaments and custom tunings are Pro).
+    /// Free against Pro as the app enforces it: instruments and lessons by `AccessPolicy` (free instruments, 5 of 60:
+    /// guitar, bass, ukulele, violin, cello; free lessons), the tools by their own locks (the metronome's basics and
+    /// Pitch Sniper are free; interval and chord ear drills, the Pro tools, strobe, temperaments and custom tunings are Pro).
     private var proRows: [ProRow] {
         let instruments = store.catalog.instruments
         let lessons = store.curriculum.courses.flatMap(\.lessons)
@@ -1357,7 +1357,7 @@ struct PaywallView: View {
     }
 
     private var finePrint: some View {
-        Text("Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The tuner for guitar, bass and ukulele stays free.")
+        Text("Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The tuner for guitar, bass, ukulele, violin and cello stays free.")
             .font(.caption2).foregroundStyle(Palette.inkFaint).multilineTextAlignment(.center)
             .fixedSize(horizontal: false, vertical: true)
     }

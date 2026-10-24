@@ -30,9 +30,21 @@ final class AppStoreIntegrationTests: XCTestCase {
         XCTAssertEqual(store.courses.first?.label, "D2")
     }
 
-    func testProInstrumentShowsPaywallForFreeUser() throws {
+    func testViolinAndCelloTuneFree() throws {
         let violin = try XCTUnwrap(store.catalog.instrument(id: "violin.standard.4"))
-        XCTAssertFalse(store.selectInstrument(violin))
+        XCTAssertTrue(store.selectInstrument(violin))
+        let fiddle = try XCTUnwrap(store.catalog.tuning(id: "violin.standard.4.cross_ae"))
+        store.selectTuning(fiddle)
+        XCTAssertEqual(store.tuning.id, fiddle.id)
+        let cello = try XCTUnwrap(store.catalog.instrument(id: "cello.standard.4"))
+        XCTAssertTrue(store.selectInstrument(cello))
+        XCTAssertEqual(store.instrument.id, cello.id)
+        XCTAssertFalse(store.showPaywall)
+    }
+
+    func testProInstrumentShowsPaywallForFreeUser() throws {
+        let viola = try XCTUnwrap(store.catalog.instrument(id: "viola.standard.4"))
+        XCTAssertFalse(store.selectInstrument(viola))
         XCTAssertTrue(store.showPaywall)
         XCTAssertEqual(store.instrument.id, "guitar.acoustic.6")
     }

@@ -985,6 +985,10 @@ UNIT_4 = unit("orig-4", "Barres and big finishes", "Indie pop, a power ballad, h
     ], minutes=6, xp=40, kind="challenge"),
 ])
 
-UNITS = [UNIT_1, UNIT_2, UNIT_3, UNIT_4]
+# Part 2's thirty songs sit between these four units, so the course still climbs one step at a time: three chords, then
+# four-chord pop, sevenths, grooves, riffs, power-chord rock, story songs in three and six, barres, barre-chord pop.
+from courses.originals_part2 import UNIT_SINGALONG, UNIT_POP, UNIT_GROOVE, UNIT_ROCK, UNIT_STORY, UNIT_BARRE  # noqa: E402
+
+UNITS = [UNIT_1, UNIT_SINGALONG, UNIT_POP, UNIT_2, UNIT_GROOVE, UNIT_3, UNIT_ROCK, UNIT_STORY, UNIT_4, UNIT_BARRE]
 
 COURSE = course("originals", "Originals", "Original songs in today's styles", "guitar.acoustic.6", "sparkles", "sky", UNITS)
