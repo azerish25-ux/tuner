@@ -17,7 +17,9 @@ final class TimbreUITests: XCTestCase {
         app.terminate()
     }
 
-    private func launch(onboarded: Bool = true, demo: Bool = true, studio: Bool = false, pitch: Bool = false, stageDebug: Bool = false) {
+    /// `scene`: a store screenshot's hero moment (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift; it needs `pitch`).
+    private func launch(onboarded: Bool = true, demo: Bool = true, studio: Bool = false, pitch: Bool = false, stageDebug: Bool = false, scene: String? = nil) {
+        if let scene { app.launchEnvironment["TIMBRE_SCENE"] = scene }
         if stageDebug { app.launchEnvironment["TIMBRE_STAGE_DEBUG"] = "1" }
         if pitch { app.launchEnvironment["TIMBRE_DEMO_PITCH"] = "1" }
         if onboarded { app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1" }
@@ -98,12 +100,23 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(next.exists)
     }
 
-    // MARK: Timed shots (the tuner's lock, the chord step, the instrument shelf)
+    // MARK: App Store frames
+    //
+    // The captures the listing's screenshot table names (docs/ios/APP-STORE-LISTING.md, rendered by
+    // tools/marketing/screenshots.py) must show what their captions say, every run. The tuner's lock and the chord
+    // come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift) that put the app into that moment
+    // through its own code paths, so no shot races the demo pitch's clock; the others are plain navigation.
 
-    /// A screenshot taken now and attached only once it has been chosen (`keep`).
-    private func capture(at moment: Date) -> XCUIScreenshot {
-        hold(until: moment)
-        return XCUIScreen.main.screenshot()
+    /// Keeps a store frame under its own name when it shows what its caption says. Otherwise the test fails and the
+    /// picture is kept as "<name>-wrong" (for the log), so screenshots.py never frames it.
+    private func storeFrame(_ name: String, _ picture: XCUIScreenshot? = nil, ok: Bool, _ problem: @autoclosure () -> String) {
+        let picture = picture ?? XCUIScreen.main.screenshot()
+        if ok {
+            keep(picture, as: name)
+        } else {
+            XCTFail("\(name): \(problem())")
+            keep(picture, as: name + "-wrong")
+        }
     }
 
     private func keep(_ screenshot: XCUIScreenshot, as name: String) {
@@ -113,31 +126,33 @@ final class TimbreUITests: XCTestCase {
         add(attachment)
     }
 
+    /// Every node of the app's accessibility tree from one snapshot: one query, so one stall of the app's main thread
+    /// (separate queries over the 3D stage cost about a second each).
+    private func appNodes() -> [XCUIElementSnapshot] {
+        guard let root = try? app.snapshot() else { return [] }
+        var nodes: [XCUIElementSnapshot] = []
+        var pending: [XCUIElementSnapshot] = [root]
+        while let node = pending.popLast() {
+            nodes.append(node)
+            pending.append(contentsOf: node.children)
+        }
+        return nodes
+    }
+
+    // MARK: Tuner
+
     /// Sleeps until `moment` (no-op once it has passed): pacing follows the clock, not query times.
     private func hold(until moment: Date) {
         let seconds = moment.timeIntervalSinceNow
         if seconds > 0 { Thread.sleep(forTimeInterval: seconds) }
     }
 
-    /// Polls `condition` until it holds (true) or `timeout` passes (false).
-    private func waitUntil(_ timeout: TimeInterval, _ condition: () -> Bool) -> Bool {
-        let deadline = Date().addingTimeInterval(timeout)
-        while true {
-            if condition() { return true }
-            if Date() >= deadline { return false }
-            Thread.sleep(forTimeInterval: 0.1)
-        }
-    }
-
     /// The demo pitch's clock (AudioService.startDemo): from when listening started, 6 s cycles that drift in from
     /// 14 cents flat, are inside the 5-cent lock band from 2.7 s and lock 0.65 s later, at 3.35 s.
     private enum Demo {
         static let cycle = 6.0
-        static let inBand = 2.7
         /// About 9 cents flat: "Tighten", the peg's turn arrow up.
         static let drifting = 1.4
-        /// 0.9 s after the lock: the badge, the solid chip and the peg's tick have landed.
-        static let lockShot = 4.25
     }
 
     /// The start of the first demo cycle (counted from `origin`) whose `offset` second is at least `lead` from now.
@@ -178,36 +193,82 @@ final class TimbreUITests: XCTestCase {
         return tunerProbe()
     }
 
-    /// The tuner is showing a lock: its status line ("Hold it…", "Tighten…") steps aside for the In tune badge.
-    private func lockShown() -> Bool {
-        guard let status = try? element("tune.status").snapshot() else { return true }
-        return status.label == "In tune"
+    /// Whether the tuner shows a lock, read from one snapshot: at least `strings` chips read "Tuned" (the ✓ on the
+    /// ones not being tuned), the selected chip among them, and the status line ("Hold it…", "Tighten…") has stepped
+    /// aside for the readout's In tune badge. `summary` says what was seen.
+    private func tunerLock(strings: Int) -> (shown: Bool, summary: String) {
+        var chips: [String: (selected: Bool, tuned: Bool)] = [:]
+        var status: String?
+        var stage = false
+        for node in appNodes() {
+            if node.identifier.hasPrefix("string.") {
+                let seen = chips[node.identifier] ?? (selected: false, tuned: false)
+                chips[node.identifier] = (selected: seen.selected || node.isSelected, tuned: seen.tuned || (node.value as? String) == "Tuned")
+            }
+            if node.identifier == "tune.status" { status = node.label }
+            if node.identifier == "tune.stage" { stage = true }
+        }
+        let tuned = chips.values.filter { $0.tuned }.count
+        let selectedTuned = chips.values.contains { $0.selected && $0.tuned }
+        let badge = status == nil || status == "In tune"
+        let summary = "stage shown \(stage), \(tuned) of \(chips.count) strings tuned, selected tuned \(selectedTuned), status '\(status ?? "hidden: the In tune badge")'"
+        return (stage && tuned >= strings && selectedTuned && badge, summary)
     }
 
-    /// Scrolls the instrument browser until `firstCard` (the first card of a shelf) sits under the title bar with
-    /// room above it for the shelf's heading. Each drag holds still before it lifts, so the list never flings.
-    private func showShelf(firstCard card: XCUIElement) {
+    // MARK: Instrument browser
+
+    /// Scrolls the instrument browser until `card` (in the first row of a shelf) sits under the title bar with room
+    /// above it for the shelf's heading, and says whether it got there with nothing over the browser. Every drag starts
+    /// in the list's leading margin, outside every card, chip and button, and holds still before it lifts so the list
+    /// never flings: a short drag that never turns into a scroll lands as a tap, and on a Pro card that tap opened the
+    /// paywall (round 8: shots 31 to 33 were the paywall).
+    private func showShelf(firstCard card: XCUIElement) -> Bool {
         let height = app.frame.height
         let title = app.navigationBars["Choose instrument"]
         let top = (title.exists ? title.frame.maxY : height * 0.15) + 62
-        for _ in 0..<5 {
+        for _ in 0..<8 {
+            closePaywall()
             let frame = card.exists ? card.frame : .zero
             let gap = frame.isEmpty ? height * 0.45 : frame.minY - top
-            if abs(gap) < 8 { break }
-            // Drag inside the list, never from its top edge: a downward drag that starts there pulls the
-            // whole sheet down and dismisses it.
+            if abs(gap) <= 16 { break }
+            // Inside the list, never from its top edge: a downward drag that starts there pulls the whole sheet down.
             let from = gap > 0 ? height * 0.85 : height * 0.45
             drag(fromY: from, toY: max(top - 40, min(height - 60, from - gap)))
         }
         settle(0.8)
+        closePaywall()
+        guard title.exists, !element("paywall.purchase").exists, card.exists, card.isHittable else { return false }
+        return abs(card.frame.minY - top) <= 40
     }
 
+    /// A vertical drag in the leading margin (the 20 pt gutter, clear of every card), held still before it lifts.
     private func drag(fromY: CGFloat, toY: CGFloat) {
         let origin = app.coordinate(withNormalizedOffset: .zero)
-        let x = app.frame.width / 2
+        let x: CGFloat = 10
         origin.withOffset(CGVector(dx: x, dy: fromY))
             .press(forDuration: 0.15, thenDragTo: origin.withOffset(CGVector(dx: x, dy: toY)), withVelocity: .slow, thenHoldForDuration: 0.4)
         settle(0.5)
+    }
+
+    /// Closes a paywall sheet that opened over the browser.
+    private func closePaywall() {
+        let close = element("paywall.close")
+        guard close.exists else { return }
+        tapIfPresent(close)
+        _ = element("paywall.purchase").waitForNonExistence(timeout: 5)
+        settle(0.8)
+    }
+
+    /// Closes the instrument browser (and a paywall over it) and waits for the sheet to go.
+    private func closePicker() {
+        closePaywall()
+        let picker = app.navigationBars["Choose instrument"]
+        for _ in 0..<3 where picker.exists {
+            let done = app.buttons["Done"].firstMatch
+            if done.exists { done.tap() }
+            _ = picker.waitForNonExistence(timeout: 4)
+        }
+        settle(0.8)
     }
 
     func test01Onboarding() throws {
@@ -269,21 +330,12 @@ final class TimbreUITests: XCTestCase {
             element("listenButton").tap(); settle(0.5)
             probe = tunerProbe()
         }
-        // App Store shot #1 must show a real lock. The demo pitch runs in 6 s cycles from when listening started
-        // (14 cents flat, inside the lock band from 2.7 s, locked at 3.35 s), so both shots are timed from that
-        // clock, hands off: every query holds the app's main thread, and a gap of more than 150 ms in the readings
-        // restarts the 0.65 s hold. Screenshots come from the simulator and never touch the app.
+        // A string drifting in, about 9 cents flat: "Tighten" and the peg's turn arrow. The demo pitch runs in 6 s
+        // cycles from when listening started, so the shot is timed from that clock. (The lock, App Store frame #1,
+        // comes from its own scene: test11StoreTunerLock.)
         let origin = probe.listening ?? Date()
-        var cycle = nextCycle(from: origin, reaching: Demo.drifting, lead: 0.4)
+        let cycle = nextCycle(from: origin, reaching: Demo.drifting, lead: 0.4)
         hold(until: cycle.addingTimeInterval(Demo.drifting)); shot("10-tune-3d")
-        var locked = capture(at: cycle.addingTimeInterval(Demo.lockShot))
-        if !lockShown() {
-            // Something broke the hold: the next cycle, still hands off until its lock has been shot.
-            cycle = nextCycle(from: origin, reaching: Demo.inBand, lead: 0.4)
-            locked = capture(at: cycle.addingTimeInterval(Demo.lockShot))
-            if !lockShown() { print("10b-tune-locked: the lock wasn't on screen when it was due") }
-        }
-        keep(locked, as: "10b-tune-locked")
         element("string.3").tap(); settle(1.5); shot("11-tune-string-selected")
         element("tune.instrument").tap(); settle(1.5); shot("12-instrument-picker")
         app.buttons["Done"].firstMatch.tap(); settle()
@@ -333,12 +385,15 @@ final class TimbreUITests: XCTestCase {
         launch()
         // The instrument browser is the tuner's picker sheet (the Songs tab took the Instruments tab's place).
         openPicker(); settle(0.8); shot("30-instruments")
-        // The store shot: the Guitar shelf right under the title bar, two full rows of instruments below it.
-        showShelf(firstCard: element("instrument.guitar_classical"))
-        shot("31-instruments-scrolled")
-        let done = app.buttons["Done"].firstMatch
-        if done.exists { done.tap(); settle() }
-        tab("Progress"); settle(2); shot("32-journey")
+        // App Store frame #7: the Guitar shelf right under the title bar, two full rows of instruments below it.
+        let shelf = showShelf(firstCard: element("instrument.guitar_classical"))
+        storeFrame("31-instruments-scrolled", ok: shelf, "the Guitar shelf isn't under the title bar, or a paywall is over the browser")
+        closePicker()
+        // App Store frame #8: Progress, with nothing over it.
+        tab("Progress"); settle(2)
+        let progress = app.tabBars.buttons["Progress"].firstMatch
+        let front = progress.exists && progress.isSelected && !element("paywall.purchase").exists && !app.navigationBars["Choose instrument"].exists
+        storeFrame("32-journey", ok: front, "Progress isn't the screen in front (the browser or a paywall is still up)")
         app.swipeUp(); settle(); shot("33-journey-scrolled")
     }
 

@@ -10,8 +10,8 @@ struct BeatCall: Equatable {
 
 /// The rhythm step's beat row: one bar's strokes on a line with the beat numbers under it and the playhead
 /// sweeping through. Each stroke is called as it passes, mint on the beat, amber when loose, red when missed,
-/// and a loose or missed stroke says why under its number ("120 ms late", "Missed"). Drawn like `RhythmBar`,
-/// which explanations keep.
+/// and a loose or missed stroke says why under its number ("120 ms late", "Missed"); each one swells as the
+/// playhead reaches it. Drawn like `RhythmBar`, which explanations keep.
 struct LessonBeatRow: View {
     let pattern: [Double]
     var beatsPerBar = 4
@@ -52,7 +52,10 @@ struct LessonBeatRow: View {
             let onBeat = hit.truncatingRemainder(dividingBy: 1) == 0
             let call = calls[i]
             let color = tint(call, onBeat: onBeat)
-            let r: CGFloat = onBeat ? 11 : 8
+            // Each stroke swells and sends out a ring as the playhead reaches it, in time with the pick.
+            let strike = BeatStrike.amount(playhead: playhead, at: hit / Double(meter))
+            let r: CGFloat = (onBeat ? 11 : 8) * (1 + 0.22 * CGFloat(strike))
+            BeatStrike.draw(&context, at: CGPoint(x: x, y: mid), radius: r, color: color, strike: strike)
             let halo = r + 4
             context.fill(Path(ellipseIn: CGRect(x: x - halo, y: mid - halo, width: halo * 2, height: halo * 2)), with: .color(color.opacity(call == nil ? 0.18 : 0.3)))
             context.fill(Path(ellipseIn: CGRect(x: x - r, y: mid - r, width: r * 2, height: r * 2)), with: .color(color))

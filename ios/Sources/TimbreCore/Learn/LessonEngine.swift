@@ -359,22 +359,28 @@ public struct LearnProgress: Codable, Equatable, Sendable {
 
     // MARK: Placement
 
-    /// The unit a self-reported level starts past (0-based), nil to start at lesson 1:
-    /// "intermediate" skips unit 1, "advanced" and "pro" skip units 1–3; at least one unit always stays ahead.
+    /// The unit a self-reported level starts past (0-based) in a course, nil to start at lesson 1: the course's own
+    /// start for the level (`CoursePlacement`: after the basics, the mid-course chord and song units, the barre and
+    /// lead units), never past its last unit.
+    public static func placementUnit(level: String, in course: LearnCourse) -> Int? {
+        let start = CoursePlacement.startUnit(level: level, courseId: course.id, unitIds: course.units.map(\.id))
+        return start > 0 ? start - 1 : nil
+    }
+
+    /// A course without its own starts: "novice" skips unit 1, then "intermediate", "advanced" and "pro" start
+    /// 40 %, 60 % and 80 % of the way in (never before unit 2, never past the last); nil for beginners, unknown
+    /// answers and one-unit courses.
     public static func placementUnit(level: String, unitCount: Int) -> Int? {
-        let target: Int
-        switch level {
-        case "intermediate": target = 0
-        case "advanced", "pro": target = 2
-        default: return nil
-        }
-        let cap = unitCount - 2
-        return cap >= 0 ? min(target, cap) : nil
+        let rung = CoursePlacement.rung(of: level)
+        guard unitCount >= 2, rung > 0 else { return nil }
+        let shares = [0, 0, 0.4, 0.6, 0.8]
+        let start = rung == 1 ? 1 : max(1, Int((Double(unitCount - 1) * shares[min(rung, shares.count - 1)]).rounded()))
+        return min(start, unitCount - 1) - 1
     }
 
     /// Applies (or clears, for beginners) a course placement from the onboarding answer.
     public mutating func place(level: String, in course: LearnCourse) {
-        placedThrough[course.id] = Self.placementUnit(level: level, unitCount: course.units.count)
+        placedThrough[course.id] = Self.placementUnit(level: level, in: course)
     }
 
     /// Lessons a placement opened: every lesson of the placed units.

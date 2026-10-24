@@ -16,6 +16,8 @@ struct OnboardingView: View {
     @State private var restoring = false
     @State private var restoreMessage: String?
     @State private var floating = false
+    /// Instrument chips past the welcome row's edges (it starts with more to the right).
+    @State private var chipOverflow = ChipOverflow(leading: false, trailing: true)
     /// The plan's commitment: minutes a day and the reminder time ("Remind me" turns it on there).
     @State private var dailyMinutes = 10
     @State private var reminderTime = PlanCommitment.defaultTime
@@ -152,6 +154,14 @@ struct OnboardingView: View {
                 }
                 .padding(.horizontal, 28)
             }
+            // A chip running off either edge fades out rather than being cut through (the Violin PRO badge).
+            .onScrollGeometryChange(for: ChipOverflow.self) { geometry in
+                ChipOverflow(leading: geometry.contentOffset.x > 1,
+                             trailing: geometry.contentOffset.x + geometry.containerSize.width < geometry.contentSize.width - 1)
+            } action: { _, overflow in
+                withAnimation(Motion.quick) { chipOverflow = overflow }
+            }
+            .mask { ChipFade(overflow: chipOverflow) }
             .padding(.top, 18)
             Button("Get started") { next() }.buttonStyle(BrassButtonStyle()).padding(.horizontal, 22).padding(.top, 22)
                 .accessibilityIdentifier("onboarding.start")
@@ -208,7 +218,10 @@ struct OnboardingView: View {
     }
 
     private var levelOptions: [(String, LocalizedStringKey, String)] {
-        [("beginner", "Just starting", "leaf.fill"), ("intermediate", "A few years", "music.note"), ("advanced", "Many years", "star.fill"), ("pro", "I play professionally", "crown.fill")]
+        // Each answer starts the course at its own unit (`CoursePlacement`): unit 1, after the basics, the mid-course
+        // chords and songs, the barre and lead units, and past them.
+        [("beginner", "Just starting", "leaf.fill"), ("novice", "A few months", "music.note"), ("intermediate", "A few years", "music.quarternote.3"),
+         ("advanced", "Many years", "star.fill"), ("pro", "I play professionally", "crown.fill")]
     }
 
     private var goalOptions: [(String, LocalizedStringKey, String)] {
@@ -692,6 +705,26 @@ private extension View {
         return opacity(shown ? 1 : 0)
             .offset(y: shown || reduceMotion ? 0 : 18)
             .animation(reduceMotion ? Animation.easeOut(duration: 0.3) : rise, value: shown)
+    }
+}
+
+/// Whether the welcome chips run past the row's leading or trailing edge.
+private struct ChipOverflow: Equatable {
+    var leading: Bool
+    var trailing: Bool
+}
+
+/// The welcome row's mask: solid, fading out over the last stretch of an edge that has more chips past it.
+private struct ChipFade: View {
+    let overflow: ChipOverflow
+    var body: some View {
+        HStack(spacing: 0) {
+            LinearGradient(colors: [.clear, .black], startPoint: .leading, endPoint: .trailing)
+                .frame(width: overflow.leading ? 36 : 0)
+            Rectangle().fill(.black)
+            LinearGradient(colors: [.black, .clear], startPoint: .leading, endPoint: .trailing)
+                .frame(width: overflow.trailing ? 64 : 0)
+        }
     }
 }
 

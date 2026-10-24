@@ -2,9 +2,10 @@ import QuartzCore
 import SwiftUI
 import TimbreCore
 
-/// The metronome: a long pendulum swinging across the hero in time with the click (through the centre on each
-/// beat, where a beam lights), a ring round the tempo that pulses with every click, the speed trainer, the meter
-/// card, and the bar's beats right above Start, lit as they sound. Accents flash amber everywhere at once.
+/// The metronome: a long pendulum swinging in time with the click (through the centre on each beat, where a beam
+/// lights), a ring round the tempo that pulses with every click, the speed trainer and the meter card; then the
+/// hero, the bar itself: full-width beat cells docked right above Tap and Start, flooding with light as they
+/// sound, with a sweep and subdivision ticks between clicks. Accents flash amber everywhere at once.
 /// Every light follows one beat clock, moved onto the audio's own click clock once the first click is heard.
 struct MetronomeView: View {
     @EnvironmentObject private var store: AppStore
@@ -17,7 +18,7 @@ struct MetronomeView: View {
     @State private var trainerEvery = 4
     @State private var trainerTarget = 140
     @State private var trainerTask: Task<Void, Never>?
-    /// The pendulum gives up height so tempo, trainer and the meter card end above the dock.
+    /// The pendulum gives up (or takes) height so tempo, trainer and the meter card end right above the dock.
     @State private var pendulumHeight: CGFloat = 184
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -29,10 +30,12 @@ struct MetronomeView: View {
                 trainerControls
                 meter
             }
-            // Clears the dock's fade, so the sound control rests fully above the bar.
-            .padding(.horizontal, Metrics.gutter).padding(.bottom, 24)
+            // Only the meter card's own margin meets the dock's fade: the sound control rests fully above it, and
+            // the beat row follows close below.
+            .padding(.horizontal, Metrics.gutter).padding(.bottom, 16)
         }
-        .fitsHero($pendulumHeight, in: 100...200)
+        // The pendulum takes whatever the controls and the beat row leave, so nothing sits empty above the bar.
+        .fitsHero($pendulumHeight, in: 96...230)
         .stageTopShade()
         .background {
             ZStack {
@@ -43,8 +46,8 @@ struct MetronomeView: View {
         .navigationTitle("Metronome")
         .navigationBarTitleDisplayMode(.inline)
         .stageDock {
-            VStack(spacing: 10) {
-                beatStrip
+            VStack(spacing: 12) {
+                beatRow
                 transport
             }
         }
@@ -210,41 +213,30 @@ struct MetronomeView: View {
 
     // MARK: Beats
 
-    /// The bar's beats in the band above Start: they light as they click (the beat pops, an accent flares
-    /// amber), and a tap cycles a beat between accent, normal and silent (Pro).
-    private var beatStrip: some View {
+    /// The bar, the screen's hero right above Tap and Start: a full-width cell per beat whose fill is its level (an
+    /// accent fills it, a normal beat most of it, a silent one is an empty outline). Each cell floods with light as
+    /// it clicks, amber on an accent; a line of light sweeps across it to the next click, over subdivision ticks
+    /// that catch as they sound. A tap cycles a beat between accent, normal and silent (Pro).
+    private var beatRow: some View {
         TimelineView(.animation(minimumInterval: reduceMotion ? 1.0 / 30 : nil, paused: !audio.metronomeRunning)) { timeline in
             let position = audio.metronomeRunning ? beatPosition(at: timeline.date) : -1
             let count = max(1, store.beats)
             let current = position < 0 ? -1 : Int(floor(position)) % count
-            let flash = position < 0 ? 0 : max(0, 1 - (position - floor(position)) * 3.5)
-            HStack(spacing: count > 8 ? 4 : 8) {
-                ForEach(0..<store.beats, id: \.self) { beat in
-                    beatCell(beat, lit: beat == current, flash: flash)
+            let fraction = position < 0 ? 0 : position - floor(position)
+            HStack(spacing: count > 8 ? 4 : 6) {
+                ForEach(0..<count, id: \.self) { beat in
+                    beatCell(beat, lit: beat == current, fraction: fraction)
                 }
             }
         }
-        .frame(height: 50)
+        .frame(height: BeatCell.height)
     }
 
-    private func beatCell(_ beat: Int, lit: Bool, flash: Double) -> some View {
+    private func beatCell(_ beat: Int, lit: Bool, fraction: Double) -> some View {
         let level = store.beatLevels.indices.contains(beat) ? store.beatLevels[beat] : 1
-        let tint = level == 2 ? Palette.ember : Palette.brass
-        let height: CGFloat = level == 2 ? 30 : (level == 1 ? 20 : 8)
-        let pop: CGFloat = lit && !reduceMotion ? CGFloat(1 + 0.16 * flash) : 1
         return Button { if commerce.isPro { store.cycleBeatLevel(beat) } else { store.presentPaywall("metronome.accents") } } label: {
-            VStack(spacing: 4) {
-                RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(level == 0 ? Palette.line : tint)
-                    .frame(maxWidth: 44)
-                    .frame(height: height)
-                    .opacity(lit ? 1 : 0.42)
-                    .scaleEffect(x: 1, y: pop, anchor: .bottom)
-                    .shadow(color: tint.opacity(lit ? 0.35 + 0.5 * flash : 0), radius: 10)
-                Text("\(beat + 1)").font(Typeface.number(11)).foregroundStyle(lit ? Palette.ink : Palette.inkFaint)
-            }
-            .frame(maxWidth: .infinity, minHeight: 50, alignment: .bottom)
-            .contentShape(Rectangle())
+            BeatCell(number: beat + 1, level: level, lit: lit, fraction: lit ? fraction : 0,
+                     subdivision: store.subdivision, still: reduceMotion)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text("Beat \(beat + 1), \(levelName(level))"))
@@ -409,24 +401,143 @@ private struct BeatMoment {
     var running = false
 }
 
-/// A ring round the tempo that pulses with the click: a hairline at rest; on each click it lights and a second
-/// ring swells out and fades, amber and bolder on an accent. Reduce Motion: it only lights.
+/// A ring round the tempo that pulses with the click: a hairline at rest; on each click it lights and two rings
+/// swell out and fade, amber and bolder on an accent. Reduce Motion: it only lights.
 private struct TempoRing: View {
     let moment: BeatMoment
     let still: Bool
 
     var body: some View {
         let flash = moment.flash
+        let spread = CGFloat(1 - flash)
         let tint = moment.accent ? Palette.ember : Palette.brass
         ZStack {
-            Capsule().strokeBorder(Color.white.opacity(0.08), lineWidth: 1.5)
-            Capsule().strokeBorder(tint.opacity(0.85 * flash), lineWidth: moment.accent ? 3 : 2)
+            Capsule().strokeBorder(Color.white.opacity(0.1), lineWidth: 1.5)
+            Capsule().strokeBorder(tint.opacity(0.9 * flash), lineWidth: moment.accent ? 3.5 : 2.5)
             if !still && flash > 0 {
-                Capsule().stroke(tint.opacity(0.55 * flash), lineWidth: moment.accent ? 2 : 1.5)
-                    .scaleEffect(x: CGFloat(1 + 0.14 * (1 - flash)), y: CGFloat(1 + 0.28 * (1 - flash)))
+                Capsule().stroke(tint.opacity(0.6 * flash), lineWidth: moment.accent ? 2.5 : 1.5)
+                    .scaleEffect(x: 1 + 0.16 * spread, y: 1 + 0.32 * spread)
+                Capsule().stroke(tint.opacity(0.28 * flash), lineWidth: 1)
+                    .scaleEffect(x: 1 + 0.3 * spread, y: 1 + 0.6 * spread)
             }
         }
-        .shadow(color: tint.opacity(0.45 * flash), radius: 10)
+        .shadow(color: tint.opacity(0.5 * flash), radius: 12)
+    }
+}
+
+/// One beat of the bar. Its level is a fill from the floor (an accent fills the cell in amber, a normal beat 60 % of
+/// it in mint, a silent beat is a dashed outline). On its click the cell floods with its colour, glows and pops;
+/// through the beat a line of light sweeps across it over the subdivision ticks, each catching as it sounds.
+/// Reduce Motion: no pop and no sweep; the lights still keep time.
+private struct BeatCell: View {
+    static let height: CGFloat = 76
+
+    let number: Int
+    /// 2 accent, 1 normal, 0 silent.
+    let level: Int
+    let lit: Bool
+    /// Through this beat, 0 on its click (0 unless lit).
+    let fraction: Double
+    let subdivision: Int
+    let still: Bool
+
+    private var tint: Color {
+        switch level {
+        case 2: return Palette.ember
+        case 1: return Palette.brass
+        default: return Palette.inkSoft
+        }
+    }
+
+    /// 1 on the click, gone within a third of the beat; a silent beat never flashes.
+    private var flash: Double { lit && level > 0 ? max(0, 1 - fraction * 3.5) : 0 }
+
+    var body: some View {
+        let shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
+        let flash = self.flash
+        let tint = self.tint
+        let lit = self.lit
+        let parts = subdivision
+        let fraction = self.fraction
+        let sweep = lit && !still
+        return ZStack(alignment: .top) {
+            shape.fill(Palette.stageRaised)
+            levelFill.clipShape(shape)
+            shape.fill(tint.opacity(0.78 * flash))
+            Canvas { context, size in
+                BeatCellArt.draw(&context, size: size, subdivision: parts, fraction: fraction, lit: lit, sweep: sweep, tint: tint)
+            }
+            numberLabel.padding(.top, 9).padding(.horizontal, 2)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: Self.height)
+        .overlay { border(shape) }
+        .shadow(color: tint.opacity(0.55 * flash), radius: 16)
+        .scaleEffect(still ? 1 : CGFloat(1 + 0.05 * flash), anchor: .bottom)
+        .contentShape(shape)
+    }
+
+    /// The beat's level, rising from the floor with a bright edge on top.
+    @ViewBuilder private var levelFill: some View {
+        if level > 0 {
+            let share: CGFloat = level == 2 ? 1 : 0.6
+            VStack(spacing: 0) {
+                Spacer(minLength: 0)
+                LinearGradient(colors: [tint.opacity(level == 2 ? 0.36 : 0.22), tint.opacity(level == 2 ? 0.1 : 0.05)],
+                               startPoint: .bottom, endPoint: .top)
+                    .overlay(alignment: .top) {
+                        if level == 1 { Rectangle().fill(tint.opacity(0.55)).frame(height: 2) }
+                    }
+                    .frame(height: Self.height * share)
+            }
+            .opacity(lit ? 1 : 0.8)
+        }
+    }
+
+    private var numberLabel: some View {
+        let color: Color = flash > 0.45 ? Palette.onAccent : (lit ? Palette.ink : (level == 0 ? Palette.inkFaint : Palette.inkSoft))
+        return Text("\(number)").font(Typeface.number(14)).foregroundStyle(color)
+            .lineLimit(1).minimumScaleFactor(0.7)
+            .accessibilityHidden(true)
+    }
+
+    @ViewBuilder private func border(_ shape: RoundedRectangle) -> some View {
+        if level == 0 {
+            shape.strokeBorder(Palette.line, style: StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
+        } else {
+            shape.strokeBorder(lit ? tint.opacity(0.45 + 0.55 * flash) : Color.white.opacity(0.07), lineWidth: lit ? 1.5 : 1)
+        }
+    }
+}
+
+/// The drawn part of a beat cell: subdivision ticks along its floor and the sweep across the lit one.
+private enum BeatCellArt {
+    static func draw(_ context: inout GraphicsContext, size: CGSize, subdivision: Int, fraction: Double, lit: Bool, sweep: Bool, tint: Color) {
+        guard size.width > 8, size.height > 24 else { return }
+        // Inside the cell's corners: the sweep's glow never spills past its edge.
+        context.clip(to: Path(roundedRect: CGRect(origin: .zero, size: size), cornerRadius: min(16, size.width / 2), style: .continuous))
+        let parts = max(1, subdivision)
+        if parts > 1 {
+            // Where the click is among the beat's subdivisions, and how fresh the last one is.
+            let step = fraction * Double(parts)
+            let passed = Int(floor(step))
+            for k in 1..<parts {
+                let x = size.width * CGFloat(k) / CGFloat(parts)
+                let glow = lit && k == passed ? max(0, 1 - (step - Double(k)) * 3.5) : 0
+                let tick = Path(roundedRect: CGRect(x: x - 1, y: size.height - 20, width: 2, height: 11), cornerRadius: 1)
+                let color = glow > 0 ? tint.opacity(0.4 + 0.6 * glow) : Color.white.opacity(lit ? 0.3 : 0.16)
+                context.fill(tick, with: .color(color))
+            }
+        }
+        guard sweep else { return }
+        // The sweep: a line of light crossing the lit cell from its click to the next, fading as it goes.
+        let x = size.width * CGFloat(min(1, max(0, fraction)))
+        let fade = 1 - 0.55 * fraction
+        var soft = context
+        soft.addFilter(.blur(radius: 6))
+        soft.fill(Path(CGRect(x: x - 5, y: 8, width: 10, height: size.height - 16)), with: .color(tint.opacity(0.35 * fade)))
+        context.fill(Path(roundedRect: CGRect(x: x - 1, y: 10, width: 2, height: size.height - 20), cornerRadius: 1),
+                     with: .color(tint.opacity(0.85 * fade)))
     }
 }
 

@@ -189,6 +189,7 @@ struct StrumSweep: View {
         }
         drawBridge(&context, x: bridgeX, top: top, gap: gap, count: count)
         drawFlash(&context, center: CGPoint(x: pickX, y: area.midY), size: size, t: t, nearby: nearby, moving: moving)
+        if style == .strum { drawLane(&context, x: pickX, above: above, below: below, down: state.down) }
 
         for index in 0..<count {
             let y = top + CGFloat(index) * gap
@@ -205,8 +206,8 @@ struct StrumSweep: View {
         }
         drawTrail(&context, x: pickX, above: above, below: below, t: t, nearby: nearby, moving: moving, state: state)
         var y = above + (below - above) * CGFloat(state.position)
-        if moving, t < 0 {
-            // Counting in: the pick bobs on each click, ready to go.
+        if moving, t < 0, bars != nil {
+            // Counting in: the pick bobs on each click, ready to go (a loop just turns on through the bar before).
             let beat = t / secondsPerBeat
             y -= CGFloat(6 * exp(-(beat - beat.rounded(.down)) * 8))
         }
@@ -319,6 +320,24 @@ struct StrumSweep: View {
             context.stroke(path, with: .color(.black.opacity(0.22)), style: StrokeStyle(lineWidth: thickness, dash: [1, 1.5]))
         }
         context.stroke(path.offsetBy(dx: 0, dy: -thickness * 0.25), with: .color(.white.opacity(0.22)), style: StrokeStyle(lineWidth: max(0.5, thickness * 0.3), lineCap: .round))
+    }
+
+    /// The pick's path across the strings, faint under them: a lane with chevrons pointing the way the next stroke
+    /// goes, so even a still frame shows where and which way the pick sweeps.
+    private func drawLane(_ context: inout GraphicsContext, x: CGFloat, above: CGFloat, below: CGFloat, down: Bool) {
+        guard below - above > 30 else { return }
+        let lane = CGRect(x: x - 13, y: above, width: 26, height: below - above)
+        context.fill(Path(roundedRect: lane, cornerRadius: 13), with: .color(accent.opacity(0.07)))
+        context.stroke(Path(roundedRect: lane, cornerRadius: 13), with: .color(accent.opacity(0.12)), lineWidth: 1)
+        let s: CGFloat = down ? 1 : -1
+        for k in 0..<3 {
+            let y = above + (below - above) * (0.3 + 0.2 * CGFloat(k))
+            var chevron = Path()
+            chevron.move(to: CGPoint(x: x - 5, y: y - 3 * s))
+            chevron.addLine(to: CGPoint(x: x, y: y + 2 * s))
+            chevron.addLine(to: CGPoint(x: x + 5, y: y - 3 * s))
+            context.stroke(chevron, with: .color(accent.opacity(0.3)), style: StrokeStyle(lineWidth: 1.6, lineCap: .round, lineJoin: .round))
+        }
     }
 
     /// The sweep itself: a streak from where the stroke began to the pick, fading once it lands.

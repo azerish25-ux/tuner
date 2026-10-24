@@ -137,13 +137,18 @@ struct FirstTuneStep: View {
         ZStack {
             FirstTuneAura(model: model)
             VStack(spacing: 0) {
+                // The header and readout are measured first and keep their full height; the stage takes what's left,
+                // so a two-line title never runs over the note line under it.
                 header
+                    .fixedSize(horizontal: false, vertical: true)
+                    .layoutPriority(1)
                 ZStack {
                     stage
                     if let burstStart, !reduceMotion { FirstTuneBurst(started: burstStart).allowsHitTesting(false) }
                 }
                 .frame(maxHeight: .infinity)
                 readout
+                    .layoutPriority(1)
                 ZStack {
                     skipButton
                     if rewardsShown { rewards.transition(.scale(scale: 0.85).combined(with: .opacity)) }

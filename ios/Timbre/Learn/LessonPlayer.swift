@@ -22,6 +22,10 @@ struct LessonPlayer: View {
         self.lesson = lesson
         self.onNext = onNext
         _run = State(initialValue: LessonRun(lesson: lesson))
+        #if DEBUG
+        // A store scene (Root/DemoScenes.swift) opens on the step it shows, the tune check already done.
+        if let start = DemoScene.lessonStart(lesson) { _run = State(initialValue: start); _tuneChecked = State(initialValue: true) }
+        #endif
     }
 
     private var accent: Color { Palette.accent(course.accent) }
@@ -97,6 +101,9 @@ struct LessonPlayer: View {
     }
 
     private func advance(_ score: Double?) {
+        #if DEBUG
+        if DemoScene.holds(run.step) { return }  // the store scene's picture is this step, finished
+        #endif
         run.complete(score: score)
         guard run.isFinished else { return }
         var outcome = run.result()

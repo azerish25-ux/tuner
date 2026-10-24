@@ -2,7 +2,8 @@ import SwiftUI
 import TimbreCore
 
 /// The end of a lesson: stars land one by one, XP counts up, then the next lesson is one tap away. Two stars or
-/// more bring a poster to share; a streak milestone takes the screen with its own celebration.
+/// more (or a finished song) put a Share pill for its poster under the tiles from the first frame; a streak
+/// milestone takes the screen with its own celebration, and its card waits below.
 struct LessonResults: View {
     let course: LearnCourse
     let lesson: Lesson
@@ -33,7 +34,7 @@ struct LessonResults: View {
     /// A streak milestone (3, 7, 30, 100 days) this lesson reached: celebrated full screen and its card offered here,
     /// not in the app-wide overlay.
     @State private var milestone: Int?
-    /// The share cards (two or three stars, a finished song, a milestone) come in after the stars and rewards.
+    /// The milestone's share card comes in after the stars, the rewards and its celebration.
     @State private var shareShown = false
     /// The milestone's full-screen celebration, over the results until Continue.
     @State private var celebrating: Int?
@@ -72,8 +73,8 @@ struct LessonResults: View {
         }
     }
 
-    /// Stars, headline, the reminder row (until asked once), the tiles, the level bar, rewards, then the share
-    /// cards: on a phone everything up to the first share card fits above the pinned buttons.
+    /// Stars, headline, the reminder row (until asked once), the tiles, "New best" and Share, the level bar, rewards,
+    /// then the milestone's card: on a phone everything down to the level bar fits above the pinned buttons.
     private var content: some View {
         VStack(spacing: 16) {
             ZStack {
@@ -101,9 +102,7 @@ struct LessonResults: View {
             }
             .padding(.horizontal, 20)
             .opacity(appeared ? 1 : 0)
-            if improved && result.stars == 3 {
-                Label("New best on this lesson", systemImage: "arrow.up.circle.fill").font(.subheadline.weight(.semibold)).foregroundStyle(accent)
-            }
+            if newBest || sharesResult { bestAndShare }
             if let barLevel { levelBar(barLevel).padding(.horizontal, 20).transition(.opacity) }
             if let reward, badgesShown > 0 { earned(reward) }
             if shareShown && hasShareCards { shareCards.transition(.move(edge: .bottom).combined(with: .opacity)) }
@@ -196,14 +195,28 @@ struct LessonResults: View {
         .accessibilityElement(children: .combine)
     }
 
-    // MARK: Share cards
+    // MARK: Share
 
     private var isSong: Bool { lesson.kind == .song }
+    private var newBest: Bool { improved && result.stars == 3 }
     /// Two or three stars (not in practice mode) or any finished song.
     private var sharesResult: Bool { isSong || (result.stars >= 2 && !practice) }
-    private var hasShareCards: Bool { sharesResult || milestone != nil }
+    /// Only the milestone's card waits below; the result's poster is the Share pill up top.
+    private var hasShareCards: Bool { milestone != nil }
 
-    /// A card for the moment, ready to share: the milestone, then the song or the three stars.
+    /// "New best" with Share right under it, in the first frame: the poster renders as the screen opens, so the
+    /// pill is live before the stars have finished landing.
+    private var bestAndShare: some View {
+        VStack(spacing: 10) {
+            if newBest {
+                Label("New best on this lesson", systemImage: "arrow.up.circle.fill").font(.subheadline.weight(.semibold)).foregroundStyle(accent)
+            }
+            if sharesResult { resultShare.accessibilityIdentifier("lesson.share") }
+        }
+        .opacity(appeared ? 1 : 0)
+    }
+
+    /// The milestone's card, once its celebration has been seen.
     private var shareCards: some View {
         VStack(spacing: 8) {
             if let milestone {
@@ -213,21 +226,21 @@ struct LessonResults: View {
                 }
                 .accessibilityIdentifier("lesson.share.streak")
             }
-            if sharesResult { resultShare.accessibilityIdentifier("lesson.share") }
         }
         .padding(.horizontal, 20)
     }
 
+    /// The song's poster (its title leads) or the lesson's (the headline leads).
     @ViewBuilder private var resultShare: some View {
         let courseTitle = course.title.localized
         let title = lesson.title.localized
         if isSong {
-            ShareCardRow(title: Text(title), detail: Text("\(result.stars) of 3 stars"), preview: "Timbre", tint: accent) {
+            SharePill(preview: "Timbre", tint: accent) {
                 LessonShareCard(course: courseTitle, title: title, headline: nil, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: true,
                                 streak: store.streak.current)
             }
         } else {
-            ShareCardRow(title: Text(headline), detail: Text(title), preview: headline, tint: accent) {
+            SharePill(preview: headline, tint: accent) {
                 LessonShareCard(course: courseTitle, title: title, headline: headline, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: false,
                                 streak: store.streak.current)
             }
@@ -432,5 +445,67 @@ struct LessonResults: View {
             withAnimation(.easeOut(duration: 0.7)) { barValue = start.progress(after) }
             try? await Task.sleep(for: .milliseconds(700))
         }
+    }
+}
+
+/// "Share" as a pill in the accent: a small tilted copy of the poster beside the word, so it says what it shares.
+/// The poster renders as the pill appears (no wait for the rest of the screen); until then the pill rests dimmed.
+/// Used on the lesson results and on a play-along take of 90 % or more.
+struct SharePill<Card: View>: View {
+    let preview: LocalizedStringKey
+    let tint: Color
+    let card: Card
+    @State private var image: Image?
+    @Environment(\.displayScale) private var displayScale
+    @Environment(\.locale) private var locale
+    @Environment(\.layoutDirection) private var layoutDirection
+
+    init(preview: LocalizedStringKey, tint: Color = Palette.mint, @ViewBuilder card: () -> Card) {
+        self.preview = preview
+        self.tint = tint
+        self.card = card()
+    }
+
+    var body: some View {
+        Group {
+            if let image {
+                ShareLink(item: image, preview: SharePreview(preview, image: image)) { face(image) }
+                    .buttonStyle(PressScaleStyle())
+            } else {
+                face(nil).opacity(0.55)
+            }
+        }
+        .task {
+            if image == nil { image = ShareCardRenderer.image(card, scale: displayScale, locale: locale, direction: layoutDirection) }
+        }
+    }
+
+    private func face(_ poster: Image?) -> some View {
+        HStack(spacing: 8) {
+            thumbnail(poster)
+            Image(systemName: "square.and.arrow.up").font(.system(size: 13, weight: .bold)).accessibilityHidden(true)
+            Text("Share")
+        }
+        .font(Typeface.label(14))
+        .foregroundStyle(tint)
+        .padding(.leading, 9).padding(.trailing, 16)
+        .frame(minHeight: 40)
+        .background(Capsule().fill(tint.opacity(0.14)))
+        .overlay(Capsule().strokeBorder(tint.opacity(0.4), lineWidth: 1))
+        .fixedSize()
+        .contentShape(Capsule())
+    }
+
+    private func thumbnail(_ poster: Image?) -> some View {
+        let shape = RoundedRectangle(cornerRadius: 4, style: .continuous)
+        return ZStack {
+            if let poster { poster.resizable().scaledToFill() } else { Palette.surface }
+        }
+        .frame(width: 20, height: 27)
+        .clipShape(shape)
+        .overlay(shape.strokeBorder(.white.opacity(0.18), lineWidth: 0.5))
+        .rotationEffect(.degrees(-8))
+        .shadow(color: .black.opacity(0.45), radius: 3, y: 2)
+        .accessibilityHidden(true)
     }
 }

@@ -24,11 +24,21 @@ struct StageInput {
 final class StageController {
     let root = Entity()
     let camera = PerspectiveCamera()
+    /// The model on stage (nil while the wanted one loads).
     private(set) var loadedModel: String?
-    private var loading: String?
+    /// The model the host asked for last. A load that finishes for any other model is dropped, never shown.
+    private(set) var wanted: String?
+    /// Bumped by every new request; a load compares it after its await, so a superseded load can't land.
+    private var generation = 0
+    /// The wanted model's load: one per model, joined by every later request for the same model.
+    private var loadTask: Task<Void, Never>?
     /// Plain-text load state for diagnostics (shown only when TIMBRE_STAGE_DEBUG is set in debug builds).
     private(set) var status = "idle"
+    /// The wanted model could not be loaded.
     private(set) var failed = false
+    /// The host's placeholder dollies to the peg as well: a new model's dolly runs from the moment it is asked
+    /// for, so the model appears at the placeholder's framing instead of holding the whole instrument first.
+    var revealClose = false
     private var model: Entity?
     private var rig: InstrumentRig?
     private var pegs: [String: (entity: Entity, base: simd_quatf, position: SIMD3<Float>)] = [:]
@@ -47,8 +57,9 @@ final class StageController {
     private(set) var framing: Float = 0     // 0 = whole instrument, 1 = headstock close-up
     /// The dolly's speed along `framing` (a critically damped spring: it eases out and settles without overshoot).
     private var framingVelocity: Float = 0
-    /// A freshly loaded model holds the whole-instrument framing until this time, so it cross-fades with the
-    /// studio placeholder (also the whole instrument) before the camera dollies in: never a double image.
+    /// A freshly loaded model holds the whole-instrument framing until this time, so it cross-fades with a
+    /// placeholder that shows the whole instrument before the camera dollies in: never a double image.
+    /// (With `revealClose` there is no hold: the placeholder dollies in too.)
     private var holdWholeUntil: Double = 0
     private var yaw: Float = -0.32
     private var aimPoint: SIMD3<Float>?
@@ -91,20 +102,69 @@ final class StageController {
         }
     }
 
-    func load(modelID: String) async {
-        guard loadedModel != modelID, loading != modelID else { return }
-        guard let url = ModelLibrary.url(modelID) else { status = "no usdz for \(modelID)"; failed = true; return }
-        guard let rig = ModelLibrary.rig(modelID) else { status = "no rig for \(modelID)"; failed = true; return }
-        loading = modelID
-        defer { loading = nil }
-        status = "loading \(modelID)"
-        let entity: Entity
-        do { entity = try await Entity(contentsOf: url) } catch { status = "load failed: \(error.localizedDescription)"; failed = true; return }
+    /// Asks for `modelID` on stage. A model other than the last one asked for clears the stage at once (the old
+    /// instrument never lingers while the new one loads), cancels the superseded load and starts this one. Asking
+    /// again for the same model joins its load, so each model loads once.
+    func request(_ modelID: String) {
+        guard wanted != modelID else { return }
+        wanted = modelID
+        generation += 1
+        loadTask?.cancel()
+        loadTask = nil
         failed = false
+        clearModel()
+        // The new instrument starts whole, as its placeholder does, and the dolly runs from here.
+        framing = 0
+        framingVelocity = 0
+        status = "loading \(modelID)"
+        let ticket = generation
+        loadTask = Task { [weak self] in await self?.load(modelID, ticket: ticket) }
+    }
+
+    /// Requests `modelID` and returns once its load has finished: at once when it is already on stage (or failed).
+    func show(_ modelID: String) async {
+        request(modelID)
+        await loadTask?.value
+    }
+
+    private func load(_ modelID: String, ticket: Int) async {
+        guard let url = ModelLibrary.url(modelID) else { fail("no usdz for \(modelID)", ticket: ticket); return }
+        guard let rig = ModelLibrary.rig(modelID) else { fail("no rig for \(modelID)", ticket: ticket); return }
+        let entity: Entity
+        do { entity = try await Entity(contentsOf: url) } catch {
+            fail("load failed: \(error.localizedDescription)", ticket: ticket)
+            return
+        }
+        // Another instrument was asked for while this one loaded (its task was cancelled then): drop this model.
+        guard ticket == generation, wanted == modelID, !Task.isCancelled else { return }
+        install(entity, rig: rig, modelID: modelID)
+    }
+
+    /// A load that failed while still wanted; a superseded (cancelled) one fails silently.
+    private func fail(_ reason: String, ticket: Int) {
+        guard ticket == generation else { return }
+        status = reason
+        failed = true
+    }
+
+    /// Takes the model off the stage, with everything that animates it.
+    private func clearModel() {
         model?.removeFromParent()
+        model = nil
+        rig = nil
+        loadedModel = nil
         pegs = [:]; posts = [:]; staticStrings = [:]; angles = [:]
-        segments.forEach { $0.removeFromParent() }; halo.forEach { $0.removeFromParent() }
         segments = []; halo = []
+        currentAnchor = nil
+        currentPeg = nil
+        aimPoint = nil
+        aimDistance = nil
+        smoothedCents = nil
+        filter.reset()
+    }
+
+    private func install(_ entity: Entity, rig: InstrumentRig, modelID: String) {
+        clearModel()
         let holder = Entity()
         holder.addChild(entity)
         root.addChild(holder)
@@ -136,9 +196,14 @@ final class StageController {
         }
         addLights()
         receiveImageBasedLight(holder)
-        holdWholeUntil = time + Self.revealHold
-        framingVelocity = 0
-        applyFraming(immediately: true)
+        if revealClose {
+            // The dolly has been running since the request, as the placeholder's has: carry on from there.
+            holdWholeUntil = 0
+            applyFraming(snapCamera: true)
+        } else {
+            holdWholeUntil = time + Self.revealHold
+            applyFraming(snapFraming: true)
+        }
         let box = holder.visualBounds(relativeTo: nil)
         func fmt(_ v: SIMD3<Float>) -> String { String(format: "%.2f,%.2f,%.2f", v.x, v.y, v.z) }
         status = "loaded \(modelID) pegs=\(pegs.count) strings=\(staticStrings.count) c=\(fmt(box.center)) e=\(fmt(box.extents)) ibl=\(light.components.has(ImageBasedLightComponent.self))"
@@ -176,11 +241,14 @@ final class StageController {
 
     /// The camera stays at the origin looking down -Z; the instrument moves to be framed.
     /// This keeps framing correct whichever camera the view ends up using.
-    private func applyFraming(immediately: Bool = false, dt: Float = 0) {
-        guard let rig, let model else { return }
-        let snap = immediately || reduceMotion
+    /// `snapFraming` cuts the dolly to its target; `snapCamera` places the aim, distance and turn at once (a model
+    /// just put on stage). The dolly advances even with no model on stage, so a model that arrives mid-move
+    /// appears where its placeholder's dolly has got to.
+    private func applyFraming(dt: Float = 0, snapFraming: Bool = false, snapCamera: Bool = false) {
         let target: Float = input().focus && time >= holdWholeUntil ? 1 : 0
-        if snap { framing = target; framingVelocity = 0 } else { dollyFraming(toward: target, dt: dt) }
+        if snapFraming || reduceMotion { framing = target; framingVelocity = 0 } else { dollyFraming(toward: target, dt: dt) }
+        guard let rig, let model else { return }
+        let snap = snapFraming || snapCamera || reduceMotion
         let fov = Float(camera.camera.fieldOfViewInDegrees) * .pi / 180
         let height = rig.upper.y - rig.lower.y
         let center = (rig.lower + rig.upper) / 2

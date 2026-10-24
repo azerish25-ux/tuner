@@ -47,6 +47,7 @@ final class Bootstrap: ObservableObject {
             if environment["TIMBRE_SKIP_ONBOARDING"] == "1" { store.updateSettings { $0.onboardingCompleted = true; $0.goal = "practice" } }
             if environment["TIMBRE_STAGE_MODE"] == "studio" { store.updateSettings { $0.stageMode = "studio" } }
             if environment["TIMBRE_DEMO_DATA"] == "1", store.records.isEmpty { DemoData.seed(store) }
+            DemoScene.start(store)  // TIMBRE_SCENE: an App Store screenshot's hero moment (Root/DemoScenes.swift)
             #endif
             self.store = store; error = nil
         }

@@ -82,7 +82,11 @@ struct SongsView: View {
                             .id(hero.id)
                             .transition(.opacity.combined(with: .scale(scale: 0.97)))
                     }
-                    ForEach(shelves(songs)) { shelf in shelfView(shelf) }
+                    // The featured song isn't repeated on its shelf: that rail starts with the song after it.
+                    ForEach(shelves(songs)) { shelf in
+                        let rail = shelf.songs.filter { $0.id != hero?.id }
+                        if !rail.isEmpty { shelfView(shelf, rail: rail) }
+                    }
                     Text("More lessons arrive with every update.").font(.footnote).foregroundStyle(Palette.inkFaint)
                         .frame(maxWidth: .infinity).padding(.vertical, 24)
                 }
@@ -96,7 +100,8 @@ struct SongsView: View {
         .onDisappear { stopPreview() }
         .fullScreenCover(item: $playing) { item in
             LessonPlayer(course: item.course, lesson: item.lesson) { next in
-                let source = next.kind == .song ? Self.tileSource(next) : Self.heroSource
+                // The featured song has no tile: it zooms from the hero.
+                let source = next.kind == .song && next.id != hero?.id ? Self.tileSource(next) : Self.heroSource
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { open(item.course, next, from: source) }
             }
             .environmentObject(store)
@@ -469,11 +474,12 @@ struct SongsView: View {
 
     // MARK: Shelves
 
-    private func shelfView(_ shelf: Shelf) -> some View {
+    /// A course's songs: the stars count every one of them, the rail shows `rail` (all but the featured song).
+    private func shelfView(_ shelf: Shelf, rail: [Song]) -> some View {
         let progress = store.learn
         let earned = shelf.songs.reduce(0) { $0 + (progress.stars[$1.lesson.id] ?? 0) }
         // The rail opens on the next song to play in it.
-        let next = shelf.songs.first { !progress.isFinished($0.lesson.id) && LessonAccess.of($0.lesson, in: $0.course, store: store) == .play }
+        let next = rail.first { !progress.isFinished($0.lesson.id) && LessonAccess.of($0.lesson, in: $0.course, store: store) == .play }
         return VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .center, spacing: 10) {
                 CourseArt(course: shelf.course, size: 32)
@@ -483,7 +489,7 @@ struct SongsView: View {
                 Label("\(earned)/\(shelf.songs.count * 3)", systemImage: "star.fill").font(Typeface.number(12)).foregroundStyle(Palette.amber)
             }
             EdgeRail(spacing: 14, selection: next?.id) {
-                ForEach(shelf.songs) { song in tile(song).id(song.id) }
+                ForEach(rail) { song in tile(song).id(song.id) }
             }
         }
     }
@@ -499,8 +505,7 @@ struct SongsView: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(song.lesson.title.localized).font(Typeface.display(15, relativeTo: .headline)).foregroundStyle(Palette.ink)
                         .lineLimit(2, reservesSpace: true)
-                    Text("\(song.lesson.minutes) min · \(song.course.title.localized)").font(.footnote)
-                        .foregroundStyle(accent.mix(with: Palette.inkSoft, by: 0.45)).lineLimit(1)
+                    tileDetail(song, stars: stars, accent: accent)
                 }
             }
             .frame(width: tileWidth, alignment: .leading)
@@ -518,22 +523,58 @@ struct SongsView: View {
         .accessibilityIdentifier("songs.song.\(song.id)")
     }
 
-    /// The sleeve with its state, all in the corner its title leaves free: Pro songs keep their colour under a
-    /// PRO badge, songs not yet reached dim under a lock, finished songs wear their stars.
+    /// Under the title (the shelf already names the course): the stars once played, else the time and the XP.
+    @ViewBuilder private func tileDetail(_ song: Song, stars: Int, accent: Color) -> some View {
+        if stars > 0 {
+            Text("\(stars) of 3 stars").font(.footnote).foregroundStyle(Palette.amber.mix(with: Palette.inkSoft, by: 0.3)).lineLimit(1)
+        } else {
+            Text("\(song.lesson.minutes) min · +\(song.lesson.xp) XP").font(.footnote)
+                .foregroundStyle(accent.mix(with: Palette.inkSoft, by: 0.45)).lineLimit(1)
+        }
+    }
+
+    /// The sleeve with its state, in the corner its title leaves free: Pro songs keep their colour under a PRO
+    /// badge, songs not yet reached dim under a lock, and every open song shows its progress: its stars (empty
+    /// ones still to win) and, once played, a bar along its foot filled to its best accuracy.
     private func tileCover(_ song: Song, access: LessonAccess, stars: Int) -> some View {
         let art = CoverArt(song)
+        let best = access == .locked ? nil : store.learn.bestAccuracy[song.lesson.id]
         return SongCover(art: art, locked: access == .locked)
             .frame(width: tileWidth, height: tileWidth)
-            .overlay(alignment: art.freeCorner) { if access == .pro { ProBadge().padding(10) } }
+            .overlay(alignment: .bottom) { if let best { progressBar(best) } }
             .overlay(alignment: art.freeCorner) {
-                if stars > 0 {
-                    StarRow(stars: stars, size: 10)
-                        .padding(.horizontal, 8).padding(.vertical, 5)
-                        .background(Capsule().fill(.black.opacity(0.55)))
-                        .padding(10)
+                if access == .pro {
+                    ProBadge().padding(10)
+                } else if access == .play {
+                    starPlate(stars)
                 }
             }
             .shadow(color: .black.opacity(0.45), radius: 12, y: 8)
+    }
+
+    /// The stars a song has earned on a dark plate; unplayed, three faint ones show what there is to win.
+    private func starPlate(_ stars: Int) -> some View {
+        StarRow(stars: stars, size: 10)
+            .padding(.horizontal, 8).padding(.vertical, 5)
+            .background(Capsule().fill(.black.opacity(stars > 0 ? 0.55 : 0.4)))
+            .overlay(Capsule().strokeBorder(.white.opacity(stars > 0 ? 0 : 0.1), lineWidth: 1))
+            .padding(10)
+    }
+
+    /// How much of the song has landed (its best accuracy), as a bar along the sleeve's foot.
+    private func progressBar(_ best: Double) -> some View {
+        let share = CGFloat(min(1, max(0, best)))
+        return GeometryReader { proxy in
+            ZStack(alignment: .leading) {
+                Capsule().fill(.black.opacity(0.45))
+                Capsule().fill(Palette.amber)
+                    .frame(width: max(4, proxy.size.width * share))
+                    .shadow(color: Palette.amber.opacity(0.6), radius: 4)
+            }
+        }
+        .frame(height: 4)
+        .padding(.horizontal, 10).padding(.bottom, 5)
+        .accessibilityHidden(true)
     }
 
     private func accessValue(_ access: LessonAccess, stars: Int) -> Text {

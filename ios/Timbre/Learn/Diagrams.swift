@@ -1,31 +1,49 @@
 import SwiftUI
 import TimbreCore
 
-/// The picture on a lesson card.
+/// The picture on a lesson card. Given `room` (a quiz's card), it grows to fill it: the neck's rows, the chord
+/// box's frets, the staff and the keys get as big as the card allows; without it, each is drawn at its plain size.
 struct LessonVisualView: View {
     let visual: LessonVisual
     var accent: Color = Palette.mint
     var instrumentId: String?
+    /// The room the picture may fill; nil draws it at its plain size.
+    var room: CGSize?
 
     var body: some View {
         switch visual {
         case .none: EmptyView()
         case let .fretboard(strings, dots, frets, start):
-            FretboardDiagram(strings: strings, dots: dots, frets: frets, accent: accent, start: start,
-                             fretless: ["violin", "cello"].contains { instrumentId?.hasPrefix($0) == true },
-                             edges: StringEdges.of(instrumentId: instrumentId, strings: strings))
+            FretboardDiagram(strings: strings, dots: dots, frets: frets, accent: accent, start: start, fretless: fretless,
+                             rowHeight: neckRowHeight(strings: strings, frets: frets, start: start),
+                             edges: StringEdges.of(instrumentId: instrumentId, strings: strings), fretNumbers: !fretless)
         case let .chord(spec):
-            ChordDiagram(chord: spec, accent: accent, landing: true, edges: StringEdges.of(instrumentId: instrumentId, strings: spec.frets.count))
-                .frame(maxWidth: 220)
-        case let .staff(midi, clef): StaffView(notes: midi, clef: clef, accent: accent)
+            chord(spec)
+        case let .staff(midi, clef): StaffView(notes: midi, clef: clef, accent: accent, lineGap: staffGap)
         case let .rhythm(pattern, beatsPerBar): RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, arrows: strums)
-        case let .keyboard(midi): KeyboardView(highlighted: Set(midi), accent: accent)
-        case let .instrument(part): InstrumentPartView(part: part, instrumentId: instrumentId, accent: accent)
+        case let .keyboard(midi): KeyboardView(highlighted: Set(midi), accent: accent, height: keysHeight)
+        case let .instrument(part): InstrumentPartView(part: part, instrumentId: instrumentId, accent: accent, height: room.map { max(200, $0.height) } ?? 260)
         }
     }
 
     /// Strummed instruments read rhythm patterns as down and up strokes.
     private var strums: Bool { LearnCourse.strummed(instrumentId) }
+    private var fretless: Bool { ["violin", "cello"].contains { instrumentId?.hasPrefix($0) == true } }
+
+    private func neckRowHeight(strings: Int, frets: Int, start: Int) -> CGFloat {
+        guard let room else { return 26 }
+        return FretboardDiagram.rowHeight(filling: room, strings: strings, frets: frets, start: start, named: strings >= 2, numbered: !fretless)
+    }
+
+    private func chord(_ spec: ChordSpec) -> some View {
+        let fit = room.map { ChordDiagram.fit(spec, room: $0) } ?? (width: CGFloat(220), stretch: CGFloat(1))
+        return ChordDiagram(chord: spec, accent: accent, landing: true, edges: StringEdges.of(instrumentId: instrumentId, strings: spec.frets.count),
+                            fretNumbers: room != nil, stretch: fit.stretch)
+            .frame(maxWidth: fit.width)
+    }
+
+    private var staffGap: CGFloat { room.map { StaffView.lineGap(filling: $0.height) } ?? 11 }
+    private var keysHeight: CGFloat { room.map { min(170, max(110, $0.height)) } ?? 110 }
 }
 
 /// Which string sits on top wherever a neck is drawn lying down (the fretboard strips, the intonation neck,
@@ -109,7 +127,8 @@ struct StringEdges: Equatable {
 /// A stretch of neck, nut on the left, dots where to press, its strings in the player's string order
 /// (string 1 on top by default, as in tab; the thickest on top with Settings › String order › Mirror).
 /// Every string is numbered beside the nut, and the top and bottom edges are named ("Thinnest (1)",
-/// "Thickest (6)"), so the orientation never has to be guessed.
+/// "Thickest (6)"), so the orientation never has to be guessed. Lessons number the frets under their
+/// columns too, as the Scales neck does, the frets holding a dot lit.
 struct FretboardDiagram: View {
     let strings: Int
     var dots: [Fretting] = []
@@ -130,6 +149,9 @@ struct FretboardDiagram: View {
     /// A demonstration: per dot (in `dots` order), 0 before it lands, then dropping onto its string as it grows
     /// to 1 (a spring may overshoot). Nil draws every dot in place.
     var landing: [Double]?
+    /// Numbers every fret under its column (the ones holding a dot lit), standing in for the "5fr" label.
+    /// Fretless boards have no frets to number.
+    var fretNumbers = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
 
@@ -144,22 +166,45 @@ struct FretboardDiagram: View {
         .accessibilityLabel(Text(accessibility))
     }
 
-    /// Room above the first string and below the last: the board's edge plus a whole finger dot and its
-    /// halo, so a dot on an outer string is never cut off.
-    private static let pad: CGFloat = 22
     /// The row under the board for the "5fr" position label.
     private static let positionRow: CGFloat = 16
+    /// The row under the board for the fret numbers.
+    private static let numberRow: CGFloat = 16
     /// Centre of the string-number column, left of the open-string rings.
     private static let numberX: CGFloat = 8
     /// The nut's x: the number column and the open-string rings sit left of it.
     private static let nutX: CGFloat = 44
     /// A row above and below the board for the edge names.
     private static let edgeRow: CGFloat = 14
+    /// Rows from this tall are a big neck (an explanation's or a quiz's card): bigger dots, more room around them.
+    private static let tallRow: CGFloat = 36
 
+    /// Room above the first string and below the last: the board's edge plus a whole finger dot and its
+    /// halo, so a dot on an outer string is never cut off.
+    private var pad: CGFloat { rowHeight >= Self.tallRow ? 28 : 22 }
+    /// The finger dots' largest radius: 15 on the compact strips, growing with the rows on a big neck.
+    private var dotCap: CGFloat { rowHeight >= Self.tallRow ? min(22, rowHeight * 0.4) : 15 }
+    private var tall: Bool { rowHeight >= Self.tallRow }
+    private var numbered: Bool { fretNumbers && !fretless }
     private var edgeLift: CGFloat { edges != nil && strings >= 2 ? Self.edgeRow : 0 }
+    /// The row under the board: the fret numbers, else the "5fr" label when the neck starts up the board.
+    private var footRow: CGFloat { numbered ? Self.numberRow : (start > 1 ? Self.positionRow : 0) }
 
     private var height: CGFloat {
-        CGFloat(max(4, strings)) * rowHeight + 10 + 2 * (Self.pad - 14) + (start > 1 ? Self.positionRow : 0) + 2 * edgeLift
+        CGFloat(max(4, strings)) * rowHeight + 10 + 2 * (pad - 14) + footRow + 2 * edgeLift
+    }
+
+    /// The row height that fills `room` with a neck: the rows grow (up to 54 pt) until the drawing is as tall as
+    /// the room, but a fret's cell never gets much taller than it is wide. `named`: the edges are named;
+    /// `numbered`: the frets are numbered.
+    static func rowHeight(filling room: CGSize, strings: Int, frets: Int, start: Int, named: Bool, numbered: Bool) -> CGFloat {
+        let rows = CGFloat(max(4, strings))
+        let extras = (named ? 2 * edgeRow : 0) + (numbered ? numberRow : (start > 1 ? positionRow : 0))
+        // The drawing is rows × row + 10 + 2 × (pad − 14) + extras tall, its pad 28 on tall rows and 22 below them.
+        let roomy = (room.height - 10 - 28 - extras) / rows
+        let fill = roomy >= tallRow ? roomy : min(tallRow - 0.5, (room.height - 10 - 16 - extras) / rows)
+        let fretWidth = (room.width - nutX - 10) / CGFloat(max(1, frets))
+        return min(54, max(22, min(fill, max(26, fretWidth * 1.1))))
     }
 
     /// Strings get thicker toward the bass (string 1, the highest, is the thinnest); the lower ones are wound.
@@ -169,8 +214,8 @@ struct FretboardDiagram: View {
 
     private func draw(_ context: inout GraphicsContext, size: CGSize, beat: Double, order: StringOrder) {
         let lift = edgeLift
-        let left = Self.nutX, right = size.width - 10, top = Self.pad + lift
-        let bottom = size.height - Self.pad - (start > 1 ? Self.positionRow : 0) - lift
+        let left = Self.nutX, right = size.width - 10, top = pad + lift
+        let bottom = size.height - pad - footRow - lift
         let count = max(1, strings)
         if let edges, lift > 0 {
             // The top string's name over its number ("Thinnest (1)" in tab order), the bottom string's under its own.
@@ -190,9 +235,10 @@ struct FretboardDiagram: View {
         }
         if start <= 1 {
             context.fill(Path(CGRect(x: left - 3, y: top - 10, width: 6, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3)))
-        } else {
+        } else if !numbered {
             context.draw(Text("\(start)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: left + fretWidth / 2, y: size.height - lift - 13))
         }
+        if numbered { drawFretNumbers(&context, left: left, fretWidth: fretWidth, y: bottom + pad + Self.numberRow / 2 - 2) }
         for fret in 1...frets {
             let x = left + CGFloat(fret) * fretWidth
             if fretless {
@@ -212,7 +258,8 @@ struct FretboardDiagram: View {
             let lit = activeString == string
             if lit {
                 let glow = 0.14 + 0.16 * beat
-                context.fill(Path(CGRect(x: left, y: y - 5, width: right - left, height: 10)), with: .color(accent.opacity(pulsing ? glow : 0.22)))
+                let band = tall ? max(10, gap * 0.24) : 10
+                context.fill(Path(CGRect(x: left, y: y - band / 2, width: right - left, height: band)), with: .color(accent.opacity(pulsing ? glow : 0.22)))
             }
             let tone = wound ? Color(hex: 0xCDB892) : Color(hex: 0xE2DDD3)
             context.fill(Path(CGRect(x: left, y: y - thickness / 2, width: right - left, height: thickness)),
@@ -235,14 +282,15 @@ struct FretboardDiagram: View {
                     let halo = 8 + 3 + swell
                     context.fill(Path(ellipseIn: CGRect(x: center.x - halo, y: center.y - halo, width: halo * 2, height: halo * 2)), with: .color(accent.opacity(0.18 + 0.14 * beat)))
                 }
-                let side = 8 * land
+                let side = (tall ? 10 : 8) * land
                 let ring = Path(ellipseIn: CGRect(x: center.x - side, y: center.y - side, width: side * 2, height: side * 2))
-                context.stroke(ring, with: .color(accent), lineWidth: 2.5)
+                context.stroke(ring, with: .color(accent), lineWidth: tall ? 3 : 2.5)
             } else {
                 let x = left + (CGFloat(min(max(1, dot.fret - start + 1), frets)) - 0.5) * fretWidth
-                let r: CGFloat = min(15, gap * 0.48 + 4) * land
+                // Never wider than its fret's cell, so a dot doesn't sit on the fret wires.
+                let r: CGFloat = min(dotCap, gap * 0.48 + 4, fretWidth * 0.42) * land
                 // Capped by the padding, so the halo of a dot on string 1 stays inside the drawing.
-                let halo = min(Self.pad - 1, r + 4 + (pulsing ? swell : 0))
+                let halo = min(pad - 1, r + 4 + (pulsing ? swell : 0))
                 context.fill(Path(ellipseIn: CGRect(x: x - halo, y: y - halo, width: halo * 2, height: halo * 2)), with: .color(accent.opacity(pulsing ? 0.2 + 0.15 * beat : 0.25)))
                 context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))
                 if land > 0.6, let finger = dot.finger, finger > 0 {
@@ -254,10 +302,24 @@ struct FretboardDiagram: View {
 
     /// The string's number in the column left of the nut; the string being played lights with it.
     private func drawNumber(_ context: inout GraphicsContext, string: Int, y: CGFloat, gap: CGFloat, lit: Bool) {
-        let size = min(11, max(8, gap * 0.62))
+        let size = min(tall ? 13 : 11, max(8, gap * 0.62))
         let label = Text("\(string)").font(.system(size: size, weight: .bold, design: .rounded))
             .foregroundStyle(lit ? accent : Palette.inkSoft.opacity(0.85))
         context.draw(label, at: CGPoint(x: Self.numberX, y: y))
+    }
+
+    /// Each fret's number under its column, as on the Scales neck; the frets holding a landed dot light up.
+    private func drawFretNumbers(_ context: inout GraphicsContext, left: CGFloat, fretWidth: CGFloat, y: CGFloat) {
+        var held = Set<Int>()
+        for (k, dot) in dots.enumerated() where dot.fret > 0 && (landing?[safe: k] ?? 1) > 0.6 { held.insert(dot.fret) }
+        let size: CGFloat = tall ? 12 : 10
+        for column in 0..<max(1, frets) {
+            let fret = start + column
+            let lit = held.contains(fret)
+            let label = Text("\(fret)").font(.system(size: size, weight: lit ? .heavy : .semibold, design: .rounded))
+                .foregroundStyle(lit ? accent : Palette.inkFaint)
+            context.draw(label, at: CGPoint(x: left + (CGFloat(column) + 0.5) * fretWidth, y: y))
+        }
     }
 
     private var accessibility: String {
@@ -285,6 +347,10 @@ struct ChordDiagram: View {
     var replay = 0
     /// Names the outer strings under the box ("Thickest (6)" … "Thinnest (1)"); nil leaves just the numbers.
     var edges: StringEdges?
+    /// Numbers each fret beside its row, left of the box (lit where a finger sits), standing in for the "5fr" label.
+    var fretNumbers = false
+    /// How much taller than plain the frets are drawn (1 to 1.5), so a lesson's box can fill its card.
+    var stretch: CGFloat = 1
     @State private var landStart: Date?
     @State private var landed = false
     @State private var landGeneration = 0
@@ -292,13 +358,40 @@ struct ChordDiagram: View {
 
     enum LandingOrder { case strings, fingers }
 
+    /// Its name over the box and the edge names under it, with the gaps between them.
+    static let chrome: CGFloat = 62
+
+    /// The width and stretch that fill `room` with a chord's box: its name and edge names (`chrome`) around a box
+    /// 5.4 rows tall for every string gap across at plain proportions, the frets drawn up to half as tall again
+    /// when there's height to spare, and narrower than `maxWidth` only when the room is short.
+    static func fit(_ chord: ChordSpec, room: CGSize, maxWidth: CGFloat = 340, minWidth: CGFloat = 170) -> (width: CGFloat, stretch: CGFloat) {
+        let count = CGFloat(max(2, chord.frets.count))
+        let boxRoom = max(0, room.height - chrome)
+        let width = max(minWidth, min(maxWidth, room.width))
+        let plain = width * 5.4 / count
+        if boxRoom >= plain { return (width, min(1.45, boxRoom / plain)) }
+        return (max(minWidth, min(width, boxRoom * count / 5.4)), 1)
+    }
+
+    /// The column left of the box for the fret numbers or the "5fr" label.
+    private var labelColumn: CGFloat { (reservesFretLabel || fretNumbers || (chord.baseFret ?? 1) > 1) ? 20 : 0 }
+
+    /// Where each string's line runs across a box `width` wide (lowest string first), so a row drawn over the
+    /// box (the lesson's string checks) lines up with it.
+    func stringPositions(width: CGFloat) -> [CGFloat] {
+        let count = chord.frets.count
+        let left = 22 + labelColumn, right = width - 22 + labelColumn / 4
+        let gap = (right - left) / CGFloat(max(1, count - 1))
+        return (0..<count).map { left + CGFloat($0) * gap }
+    }
+
     var body: some View {
         VStack(spacing: 8) {
             if showName { Text(chord.name).font(Typeface.display(28)).foregroundStyle(Palette.ink) }
             TimelineView(.animation(paused: !landing || landed || reduceMotion)) { timeline in
                 let landScale = landScales(at: timeline.date)
                 Canvas { context, size in draw(&context, size: size, land: landScale) }
-                    .aspectRatio(CGFloat(chord.frets.count) / 5.4, contentMode: .fit)
+                    .aspectRatio(CGFloat(chord.frets.count) / (5.4 * min(1.5, max(1, stretch))), contentMode: .fit)
             }
             if let edges, chord.frets.count >= 2 { edgeNames(edges) }
         }
@@ -353,8 +446,8 @@ struct ChordDiagram: View {
         let count = chord.frets.count
         let rows = 4
         let base = chord.baseFret ?? 1
-        // The "5fr" label gets its own column left of the grid instead of sitting on its edge.
-        let labelColumn: CGFloat = (reservesFretLabel || base > 1) ? 20 : 0
+        // The "5fr" label (or the fret numbers) get their own column left of the grid instead of sitting on its edge.
+        let labelColumn = self.labelColumn
         let left: CGFloat = 22 + labelColumn, right = size.width - 22 + labelColumn / 4
         let gap = (right - left) / CGFloat(max(1, count - 1))
         // String numbers under the box when there's room (not on the small "next chord" preview).
@@ -364,9 +457,12 @@ struct ChordDiagram: View {
         let radius = min(gap, rowHeight) * 0.38
         if base == 1 {
             context.fill(Path(roundedRect: CGRect(x: left - 2, y: top - 5, width: right - left + 4, height: 6), cornerRadius: 2), with: .color(Palette.ink))
-        } else {
+        } else if !fretNumbers {
             context.draw(Text("\(base)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft),
                          at: CGPoint(x: left - radius - 4, y: top + rowHeight / 2), anchor: .trailing)
+        }
+        if fretNumbers {
+            drawFretNumbers(&context, base: base, rows: rows, top: top, rowHeight: rowHeight, x: left - radius - 6, land: land)
         }
         for row in 0...rows {
             let y = top + CGFloat(row) * rowHeight
@@ -404,6 +500,18 @@ struct ChordDiagram: View {
         }
         for barre in barres {
             drawBarre(&context, barre, left: left, gap: gap, top: top, rowHeight: rowHeight, radius: radius, base: base, scale: land(barre.first))
+        }
+    }
+
+    /// Each row's fret beside it, right-aligned left of the box; a fret with a landed finger on it in the accent.
+    private func drawFretNumbers(_ context: inout GraphicsContext, base: Int, rows: Int, top: CGFloat, rowHeight: CGFloat, x: CGFloat, land: (Int) -> CGFloat) {
+        let frets = chord.frets
+        for row in 0..<rows {
+            let fret = base + row
+            let held = frets.indices.contains { frets[$0] == fret && land($0) > 0.6 }
+            let label = Text("\(fret)").font(.system(size: 11, weight: held ? .heavy : .semibold, design: .rounded))
+                .foregroundStyle(held ? accent : Palette.inkFaint)
+            context.draw(label, at: CGPoint(x: x, y: top + (CGFloat(row) + 0.5) * rowHeight), anchor: .trailing)
         }
     }
 
@@ -489,12 +597,20 @@ extension Array {
     subscript(safe index: Int) -> Element? { indices.contains(index) ? self[index] : nil }
 }
 
-/// Five lines with note heads; ledger lines and sharps as needed.
+/// Five lines with note heads; ledger lines and sharps as needed. Everything scales with `lineGap`.
 struct StaffView: View {
     let notes: [Int]
     var clef: String = "treble"
     var accent: Color = Palette.mint
     var activeIndex: Int?
+    /// Space between the lines: 11 pt on steps and small cards, up to 17 on a big card.
+    var lineGap: CGFloat = 11
+
+    /// The drawing's height for a line gap (120 pt at the plain 11).
+    static func height(lineGap: CGFloat) -> CGFloat { 120 * lineGap / 11 }
+
+    /// The line gap that fills `height`, between the plain 11 pt and 17 pt.
+    static func lineGap(filling height: CGFloat) -> CGFloat { min(17, max(11, height * 11 / 120)) }
 
     /// Diatonic step of a MIDI note counted from C0 and its accidental, spelled like NoteName (C♯ E♭ F♯ A♭ B♭).
     private static func step(_ midi: Int) -> (Int, String?) {
@@ -504,43 +620,55 @@ struct StaffView: View {
     }
 
     var body: some View {
-        Canvas { context, size in
-            let gap: CGFloat = 11
-            let middle = size.height / 2
-            let bottomLine = middle + 2 * gap
-            // The bottom line is E4 in treble clef and G2 in bass clef.
-            let reference = Self.step(clef == "bass" ? 43 : 64).0
-            for line in 0..<5 {
-                let y = bottomLine - CGFloat(line) * gap
-                context.fill(Path(CGRect(x: 8, y: y - 0.6, width: size.width - 16, height: 1.2)), with: .color(Palette.inkSoft.opacity(0.7)))
-            }
-            context.draw(Text(clef == "bass" ? "𝄢" : "𝄞").font(.system(size: clef == "bass" ? 40 : 58)).foregroundStyle(Palette.ink),
-                         at: CGPoint(x: 26, y: clef == "bass" ? middle - 4 : middle + 2))
-            let start: CGFloat = 64
-            let spacing = notes.count > 1 ? min(56, (size.width - start - 24) / CGFloat(notes.count - 1)) : 0
-            for (i, midi) in notes.enumerated() {
-                let (position, accidental) = Self.step(midi)
-                let offset = position - reference
-                let x = start + CGFloat(i) * spacing
-                let y = bottomLine - CGFloat(offset) * gap / 2
-                if offset < -1 { for ledger in stride(from: -2, through: offset, by: -2) { line(&context, x: x, y: bottomLine - CGFloat(ledger) * gap / 2) } }
-                if offset > 9 { for ledger in stride(from: 10, through: offset, by: 2) { line(&context, x: x, y: bottomLine - CGFloat(ledger) * gap / 2) } }
-                let color = activeIndex == nil || activeIndex == i ? accent : Palette.inkSoft
-                var head = Path(ellipseIn: CGRect(x: -6.5, y: -4.8, width: 13, height: 9.6))
-                head = head.applying(CGAffineTransform(rotationAngle: -0.35)).applying(CGAffineTransform(translationX: x, y: y))
-                context.fill(head, with: .color(color))
-                let up = offset < 4
-                context.fill(Path(CGRect(x: up ? x + 5 : x - 6.3, y: up ? y - 32 : y, width: 1.4, height: 32)), with: .color(color))
-                if let accidental { context.draw(Text(accidental).font(.system(size: 17, weight: .semibold)).foregroundStyle(color), at: CGPoint(x: x - 15, y: y)) }
-            }
-        }
-        .frame(height: 120)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(notes.map(NoteName.name).joined(separator: ", ")))
+        Canvas { context, size in draw(&context, size: size) }
+            .frame(height: Self.height(lineGap: lineGap))
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(notes.map(NoteName.name).joined(separator: ", ")))
     }
 
-    private func line(_ context: inout GraphicsContext, x: CGFloat, y: CGFloat) {
-        context.fill(Path(CGRect(x: x - 11, y: y - 0.6, width: 22, height: 1.2)), with: .color(Palette.inkSoft.opacity(0.7)))
+    private func draw(_ context: inout GraphicsContext, size: CGSize) {
+        let gap = lineGap
+        let s = gap / 11
+        let middle = size.height / 2
+        let bottomLine = middle + 2 * gap
+        // The bottom line is E4 in treble clef and G2 in bass clef.
+        let reference = Self.step(clef == "bass" ? 43 : 64).0
+        let lineWeight = 1.2 * min(1.4, s)
+        for line in 0..<5 {
+            let y = bottomLine - CGFloat(line) * gap
+            context.fill(Path(CGRect(x: 8, y: y - lineWeight / 2, width: size.width - 16, height: lineWeight)), with: .color(Palette.inkSoft.opacity(0.7)))
+        }
+        context.draw(Text(clef == "bass" ? "𝄢" : "𝄞").font(.system(size: (clef == "bass" ? 40 : 58) * s)).foregroundStyle(Palette.ink),
+                     at: CGPoint(x: 26 * s, y: clef == "bass" ? middle - 4 * s : middle + 2 * s))
+        let start = 64 * s
+        let spacing = notes.count > 1 ? min(56 * s, (size.width - start - 24 * s) / CGFloat(notes.count - 1)) : 0
+        for (i, midi) in notes.enumerated() {
+            let (position, accidental) = Self.step(midi)
+            let offset = position - reference
+            let x = start + CGFloat(i) * spacing
+            let y = bottomLine - CGFloat(offset) * gap / 2
+            if offset < -1 { for ledger in stride(from: -2, through: offset, by: -2) { line(&context, x: x, y: bottomLine - CGFloat(ledger) * gap / 2, scale: s) } }
+            if offset > 9 { for ledger in stride(from: 10, through: offset, by: 2) { line(&context, x: x, y: bottomLine - CGFloat(ledger) * gap / 2, scale: s) } }
+            let color = activeIndex == nil || activeIndex == i ? accent : Palette.inkSoft
+            var head = Path(ellipseIn: CGRect(x: -6.5 * s, y: -4.8 * s, width: 13 * s, height: 9.6 * s))
+            head = head.applying(CGAffineTransform(rotationAngle: -0.35)).applying(CGAffineTransform(translationX: x, y: y))
+            if activeIndex == i {
+                // The note sounding now glows.
+                let glow = 16 * s
+                context.fill(Path(ellipseIn: CGRect(x: x - glow, y: y - glow, width: glow * 2, height: glow * 2)),
+                             with: .radialGradient(Gradient(colors: [accent.opacity(0.4), .clear]), center: CGPoint(x: x, y: y), startRadius: 0, endRadius: glow))
+            }
+            context.fill(head, with: .color(color))
+            let up = offset < 4
+            let stem = 32 * s
+            context.fill(Path(CGRect(x: up ? x + 5 * s : x - 6.3 * s, y: up ? y - stem : y, width: 1.4 * s, height: stem)), with: .color(color))
+            if let accidental { context.draw(Text(accidental).font(.system(size: 17 * s, weight: .semibold)).foregroundStyle(color), at: CGPoint(x: x - 15 * s, y: y)) }
+        }
+    }
+
+    private func line(_ context: inout GraphicsContext, x: CGFloat, y: CGFloat, scale s: CGFloat) {
+        let weight = 1.2 * min(1.4, s)
+        context.fill(Path(CGRect(x: x - 11 * s, y: y - weight / 2, width: 22 * s, height: weight)), with: .color(Palette.inkSoft.opacity(0.7)))
     }
 }
 
@@ -555,6 +683,8 @@ enum NoteName {
 struct KeyboardView: View {
     let highlighted: Set<Int>
     var accent: Color = Palette.mint
+    /// The keys' length: 110 pt, longer on a big card.
+    var height: CGFloat = 110
 
     var body: some View {
         let low = max(36, ((highlighted.min() ?? 60) / 12) * 12)
@@ -574,7 +704,7 @@ struct KeyboardView: View {
                 context.fill(Path(roundedRect: rect, cornerRadius: 4), with: .color(highlighted.contains(black) ? accent : Color(hex: 0x16181C)))
             }
         }
-        .frame(height: 110)
+        .frame(height: height)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(highlighted.sorted().map(NoteName.name).joined(separator: ", ")))
     }
@@ -607,7 +737,9 @@ struct RhythmBar: View {
                 let x = left + width * CGFloat(hit) / CGFloat(beatsPerBar)
                 let grade = judged[i]
                 let color: Color = grade == .miss ? Palette.danger : grade != nil ? accent : (hit.truncatingRemainder(dividingBy: 1) == 0 ? accent : Palette.amber)
-                let r: CGFloat = hit.truncatingRemainder(dividingBy: 1) == 0 ? 11 : 8
+                let strike = BeatStrike.amount(playhead: playhead, at: hit / Double(max(1, beatsPerBar)))
+                let r: CGFloat = (hit.truncatingRemainder(dividingBy: 1) == 0 ? 11 : 8) * (1 + 0.22 * CGFloat(strike))
+                BeatStrike.draw(&context, at: CGPoint(x: x, y: mid), radius: r, color: color, strike: strike)
                 context.fill(Path(ellipseIn: CGRect(x: x - r - 4, y: mid - r - 4, width: (r + 4) * 2, height: (r + 4) * 2)), with: .color(color.opacity(0.18)))
                 context.fill(Path(ellipseIn: CGRect(x: x - r, y: mid - r, width: r * 2, height: r * 2)), with: .color(color))
                 if arrows {
@@ -824,6 +956,26 @@ struct RingMotif: View {
     }
 }
 
+/// A stroke on a beat row lighting up as the playhead reaches it: the dot swells and a ring leaves it.
+enum BeatStrike {
+    /// 1 as the playhead reaches `position` (both 0…1 through the bar), fading to 0 a tenth of a bar later.
+    static func amount(playhead: Double?, at position: Double) -> Double {
+        guard let playhead else { return 0 }
+        let since = playhead - position
+        return since >= 0 && since < 0.1 ? 1 - since / 0.1 : 0
+    }
+
+    static func draw(_ context: inout GraphicsContext, at center: CGPoint, radius r: CGFloat, color: Color, strike: Double) {
+        guard strike > 0 else { return }
+        let ring = r + 4 + 16 * CGFloat(1 - strike)
+        context.stroke(Path(ellipseIn: CGRect(x: center.x - ring, y: center.y - ring, width: ring * 2, height: ring * 2)),
+                       with: .color(color.opacity(0.6 * strike)), lineWidth: 2)
+        let glow = r + 12
+        context.fill(Path(ellipseIn: CGRect(x: center.x - glow, y: center.y - glow, width: glow * 2, height: glow * 2)),
+                     with: .radialGradient(Gradient(colors: [color.opacity(0.4 * strike), .clear]), center: center, startRadius: r * 0.5, endRadius: glow))
+    }
+}
+
 /// A rhythm pattern with the playhead sweeping it on a loop (explanations); still with Reduce Motion.
 struct RhythmLoop: View {
     let pattern: [Double]
@@ -837,6 +989,9 @@ struct RhythmLoop: View {
     var strings = 6
     /// Names the top and bottom strings of the sweep.
     var edges: StringEdges?
+    /// When a bar's beat 1 falls (the loop turns before and after it), so a demonstration's strokes can sound
+    /// with the pick; nil starts the loop as it appears.
+    var origin: Date?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var start = Date()
 
@@ -844,8 +999,9 @@ struct RhythmLoop: View {
         TimelineView(.animation(paused: reduceMotion)) { timeline in
             let secondsPerBeat = 60 / bpm
             let bar = Double(max(1, beatsPerBar)) * secondsPerBeat
-            let elapsed = max(0, timeline.date.timeIntervalSince(start))
-            let through = (elapsed / bar).truncatingRemainder(dividingBy: 1)
+            let elapsed = timeline.date.timeIntervalSince(origin ?? start)
+            let into = (elapsed / bar).truncatingRemainder(dividingBy: 1)
+            let through = into < 0 ? into + 1 : into
             VStack(spacing: 10) {
                 if let sweep {
                     StrumSweep(pattern: pattern, beatsPerBar: beatsPerBar, strings: strings, style: sweep, accent: accent,

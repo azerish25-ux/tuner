@@ -442,7 +442,8 @@ final class AppStore: ObservableObject {
         if sessionStarted == nil { sessionStarted = Date(); sessionStartedUptime = ProcessInfo.processInfo.systemUptime }
         #if DEBUG
         if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" {
-            audio.startDemo { [weak self] in self?.targetHz ?? 440 }
+            // A store scene (Root/DemoScenes.swift) holds the string in tune; otherwise it drifts in every six seconds.
+            audio.startDemo(target: { [weak self] in self?.targetHz ?? 440 }, cued: { DemoScene.steadyPitch })
             return
         }
         #endif

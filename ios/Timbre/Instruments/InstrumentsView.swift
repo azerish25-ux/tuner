@@ -23,36 +23,34 @@ struct InstrumentsView: View {
     }
 
     var body: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: 20, pinnedViews: []) {
-                if picker { currentTunings } else { header }
-                if searching || picker { search }
-                filters
-                if query.isEmpty && family == nil {
-                    chromaticCard
-                    if !recents.isEmpty {
+        ScrollViewReader { scroller in
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 20, pinnedViews: []) {
+                    if picker { currentTunings.id(Self.top) } else { header.id(Self.top) }
+                    if searching || picker { search }
+                    filters
+                    if query.isEmpty && family == nil {
+                        chromaticCard
                         section("Your instruments", count: nil)
-                        EdgeRail(spacing: 12, selection: store.referenceMode ? nil : store.photo?.asset) {
-                            ForEach(recents, id: \.asset) { photo in card(photo).frame(width: 180).id(photo.asset) }
+                        shelf { browse(scroller) }
+                    }
+                    ForEach(store.catalog.families) { group in
+                        let items = photos.filter { store.catalog.instrument(id: $0.instrumentId)?.familyId == group.id }
+                            .sorted { rank($0) < rank($1) }
+                        if !items.isEmpty {
+                            section(group.name.localized, count: items.count)
+                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 156), spacing: 12)], spacing: 12) {
+                                ForEach(items, id: \.asset) { card($0) }
+                            }
                         }
                     }
+                    if photos.isEmpty { Text("No instrument matches “\(query)”.").foregroundStyle(Palette.inkSoft).padding(.vertical, 30) }
                 }
-                ForEach(store.catalog.families) { group in
-                    let items = photos.filter { store.catalog.instrument(id: $0.instrumentId)?.familyId == group.id }
-                        .sorted { rank($0) < rank($1) }
-                    if !items.isEmpty {
-                        section(group.name.localized, count: items.count)
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 156), spacing: 12)], spacing: 12) {
-                            ForEach(items, id: \.asset) { card($0) }
-                        }
-                    }
-                }
-                if photos.isEmpty { Text("No instrument matches “\(query)”.").foregroundStyle(Palette.inkSoft).padding(.vertical, 30) }
+                .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
             }
-            .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+            .stageTopShade()
+            .scrollDismissesKeyboard(.interactively)
         }
-        .stageTopShade()
-        .scrollDismissesKeyboard(.interactively)
         .background(StageBackground(motes: false))
         .toolbar { if picker { ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() } } } }
         .sheet(isPresented: $creating) {
@@ -102,6 +100,126 @@ struct InstrumentsView: View {
 
     private var recents: [InstrumentPhoto] {
         store.recentInstrumentIds.compactMap { id in store.catalog.photo(instrumentId: id) }
+    }
+
+    // MARK: Your instruments
+
+    /// Scroll id of the screen's first row (the Add card scrolls back up to the search).
+    private static let top = "instruments.top"
+    /// Rail id of the Add card.
+    private static let addID = "instruments.add"
+    private static let shelfCardWidth: CGFloat = 180
+
+    /// The shelf: the person's instruments, then two to try next, then a ghost card that opens search. It always
+    /// reads as a collection with room to grow, never one lonely card.
+    private func shelf(browse: @escaping () -> Void) -> some View {
+        EdgeRail(spacing: 12, selection: store.referenceMode ? nil : store.photo?.asset) {
+            ForEach(mine, id: \.asset) { photo in
+                card(photo).frame(width: Self.shelfCardWidth).id(photo.asset)
+            }
+            ForEach(suggestions, id: \.asset) { photo in
+                card(photo, suggested: true).frame(width: Self.shelfCardWidth).id(photo.asset)
+            }
+            addCard(action: browse).frame(width: Self.shelfCardWidth).id(Self.addID)
+        }
+    }
+
+    /// The instruments this person plays, most recent first; the one on the tuner wears the photo it is tuned as
+    /// and leads when it has no practice yet.
+    private var mine: [InstrumentPhoto] {
+        var list = recents
+        guard !store.referenceMode, let current = store.photo else { return list }
+        if let index = list.firstIndex(where: { $0.instrumentId == current.instrumentId }) {
+            list[index] = current
+        } else {
+            list.insert(current, at: 0)
+        }
+        return list
+    }
+
+    /// Two instruments to try next, picked from what this person plays: a guitarist's ukulele and bass, a
+    /// violinist's viola and cello. Ones that need Pro wear its badge.
+    private var suggestions: [InstrumentPhoto] {
+        let owned = mine.map(\.instrumentId)
+        let base = store.referenceMode ? (owned.first ?? store.instrument.id) : store.instrument.id
+        let family = store.catalog.instrument(id: base)?.familyId ?? ""
+        let ideas = (Self.nextUp[base] ?? []) + (Self.nextUp[family] ?? []) + (Self.nextUp["guitar"] ?? [])
+        var seen = Set(owned + [base])
+        var picks: [InstrumentPhoto] = []
+        for id in ideas {
+            if picks.count == 2 { break }
+            guard seen.insert(id).inserted, let photo = store.catalog.photo(instrumentId: id) else { continue }
+            picks.append(photo)
+        }
+        return picks
+    }
+
+    /// Natural next instruments, by instrument and then by family, nearest first.
+    private static let nextUp: [String: [String]] = [
+        "guitar.acoustic.6": ["ukulele.soprano.4", "bass.electric.4", "mandolin.standard.8"],
+        "bass.electric.4": ["guitar.acoustic.6", "bass.double.4", "ukulele.bass.4"],
+        "ukulele.soprano.4": ["guitar.acoustic.6", "ukulele.baritone.4", "mandolin.standard.8"],
+        "violin.standard.4": ["viola.standard.4", "cello.standard.4", "mandolin.standard.8"],
+        "viola.standard.4": ["violin.standard.4", "cello.standard.4"],
+        "cello.standard.4": ["bass.double.4", "violin.standard.4", "viola.standard.4"],
+        "bass.double.4": ["cello.standard.4", "bass.electric.4"],
+        "guitar": ["ukulele.soprano.4", "bass.electric.4", "guitar.acoustic.12", "mandolin.standard.8"],
+        "ukulele": ["guitar.acoustic.6", "ukulele.soprano.4", "charango.standard.10"],
+        "mandolin": ["banjo.five.5", "guitar.acoustic.6", "violin.standard.4", "mandola.standard.8"],
+        "bowed_strings": ["violin.standard.4", "cello.standard.4", "mandolin.standard.8"],
+        "folk_world_strings": ["mandolin.standard.8", "guitar.acoustic.6", "bouzouki.irish.8"],
+        "keys": ["ukulele.soprano.4", "guitar.acoustic.6", "keys.accordion.0"],
+        "winds": ["recorder.standard.0", "flute.concert.0", "tin_whistle.d.0"],
+        "mallet_percussion_hand": ["kalimba.standard.17", "handpan.standard.0", "ukulele.soprano.4"],
+    ]
+
+    /// The Add card: back up to the search, opened and focused, with every instrument listed below it.
+    private func browse(_ scroller: ScrollViewProxy) {
+        Haptics.shared.selection()
+        withAnimation(Motion.settle) {
+            searching = true
+            scroller.scrollTo(Self.top, anchor: .top)
+        }
+        searchFocused = true
+    }
+
+    /// The shelf's last card: the outline of a card with a plus, the same size as the others.
+    private func addCard(action: @escaping () -> Void) -> some View {
+        let shape = RoundedRectangle(cornerRadius: 22, style: .continuous)
+        return Button(action: action) {
+            VStack(alignment: .leading, spacing: 4) {
+                ZStack {
+                    Circle().fill(Palette.mint.opacity(0.12))
+                    Circle().strokeBorder(Palette.mint.opacity(0.35), lineWidth: 1)
+                    Image(systemName: "plus").font(.system(size: 24, weight: .semibold)).foregroundStyle(Palette.mint)
+                }
+                .frame(width: 64, height: 64)
+                .frame(height: 148)
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 8)
+                .accessibilityHidden(true)
+                captionBlock(Text("Add instrument"), detail: Text("Browse all \(store.catalog.instruments.count)"), tint: Palette.inkSoft)
+            }
+            .padding(14)
+            .background(shape.fill(Palette.stageRaised.opacity(0.35)))
+            .overlay(shape.strokeBorder(Palette.inkFaint.opacity(0.5), style: StrokeStyle(lineWidth: 1.5, dash: [6, 5])))
+            .contentShape(shape)
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityIdentifier(Self.addID)
+    }
+
+    /// "Try next" over a suggested card's photo.
+    private var tryNextTag: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "sparkles").font(.system(size: 9, weight: .bold))
+            Text("Try next").lineLimit(1)
+        }
+        .font(Typeface.label(11))
+        .foregroundStyle(Palette.mint)
+        .padding(.horizontal, 8).padding(.vertical, 4)
+        .background(Capsule().fill(Palette.stage.opacity(0.6)))
+        .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.35), lineWidth: 1))
     }
 
     @ViewBuilder private var currentTunings: some View {
@@ -220,7 +338,9 @@ struct InstrumentsView: View {
         .accessibilityIdentifier("instruments.chromatic")
     }
 
-    private func card(_ photo: InstrumentPhoto) -> some View {
+    /// An instrument card. A suggested one (the shelf's "Try next") wears the tag over its photo and its own id,
+    /// so `instrument.<asset>` always finds the card in the family grid.
+    private func card(_ photo: InstrumentPhoto, suggested: Bool = false) -> some View {
         let instrument = store.catalog.instrument(id: photo.instrumentId)
         let model = ModelLibrary.modelID(forPhoto: photo.asset)
         let open = instrument.map { store.canTune($0) } ?? false
@@ -250,17 +370,27 @@ struct InstrumentsView: View {
             }
             .overlay(shape.strokeBorder(selected ? Palette.mint : Palette.line, lineWidth: selected ? 1.5 : 1))
             .overlay(alignment: .topTrailing) { if !open { ProBadge().padding(12) } }
+            .overlay(alignment: .topLeading) { if suggested { tryNextTag.padding(12) } }
             .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityAddTraits(selected ? .isSelected : [])
-        .accessibilityIdentifier("instrument." + photo.asset)
+        .accessibilityIdentifier((suggested ? "instruments.next." : "instrument.") + photo.asset)
     }
 
-    /// Name (up to two lines, so "7-string electric guitar" reads in full) over the tuning count. Two
-    /// lines are always reserved and the text sits at the bottom, so cards in a row keep one height
-    /// and one-line names still sit right above their count.
+    /// Name (up to two lines, so "7-string electric guitar" reads in full) over the tuning count.
     private func cardCaption(name: String, tunings: Int, selected: Bool) -> some View {
+        captionBlock(Text(name), detail: tuningLine(tunings, selected: selected), tint: selected ? Palette.mint : Palette.inkSoft)
+    }
+
+    private func tuningLine(_ tunings: Int, selected: Bool) -> Text {
+        if selected { return Text("Tuning now · \(tunings) tunings") }
+        return tunings == 1 ? Text("1 tuning") : Text("\(tunings) tunings")
+    }
+
+    /// A card's two lines. Two title lines are always reserved and the text sits at the bottom, so cards in a
+    /// row keep one height and one-line names still sit right above their detail.
+    private func captionBlock(_ title: Text, detail: Text, tint: Color) -> some View {
         ZStack(alignment: .bottomLeading) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(verbatim: "A\nA").font(Typeface.display(16)).lineLimit(2)
@@ -269,13 +399,10 @@ struct InstrumentsView: View {
             .hidden()
             .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 4) {
-                Text(name).font(Typeface.display(16)).foregroundStyle(Palette.ink)
+                title.font(Typeface.display(16)).foregroundStyle(Palette.ink)
                     .lineLimit(2).minimumScaleFactor(0.85)
                     .fixedSize(horizontal: false, vertical: true)
-                Group {
-                    if selected { Text("Tuning now · \(tunings) tunings") } else if tunings == 1 { Text("1 tuning") } else { Text("\(tunings) tunings") }
-                }
-                .font(.footnote).foregroundStyle(selected ? Palette.mint : Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.75)
+                detail.font(.footnote).foregroundStyle(tint).lineLimit(1).minimumScaleFactor(0.75)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

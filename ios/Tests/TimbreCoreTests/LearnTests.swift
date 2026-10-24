@@ -267,20 +267,22 @@ final class LearnTests: XCTestCase {
         XCTAssertEqual(progress.finishedCount(in: course), 0, "placed lessons are not finished")
         XCTAssertTrue(progress.stars.isEmpty)
 
-        // Many years or professional: units 1–3 open.
+        // Professional, in a course without its own starts: 80 % of the way in, so units 1–2 open.
         progress.place(level: "pro", in: course)
-        XCTAssertEqual(progress.placedThrough["c"], 2)
-        XCTAssertEqual(open(progress), ["a", "b", "c", "d", "e", "f"])
+        XCTAssertEqual(progress.placedThrough["c"], 1)
+        XCTAssertEqual(open(progress), ["a", "b", "c", "d", "e"])
+        XCTAssertEqual(progress.nextLesson(in: course)?.id, "e")
+        progress.record(LessonResult(lessonId: "e", stars: 3, accuracy: 1, xp: 20, minutes: 3), courseId: "c", now: Date(timeIntervalSince1970: 1_000))
         XCTAssertEqual(progress.nextLesson(in: course)?.id, "f")
-        progress.record(LessonResult(lessonId: "f", stars: 3, accuracy: 1, xp: 20, minutes: 3), courseId: "c", now: Date(timeIntervalSince1970: 1_000))
-        XCTAssertEqual(progress.nextLesson(in: course)?.id, "g")
-        progress.record(LessonResult(lessonId: "g", stars: 3, accuracy: 1, xp: 20, minutes: 3), courseId: "c", now: Date(timeIntervalSince1970: 2_000))
+        progress.record(LessonResult(lessonId: "f", stars: 3, accuracy: 1, xp: 20, minutes: 3), courseId: "c", now: Date(timeIntervalSince1970: 2_000))
+        progress.record(LessonResult(lessonId: "g", stars: 3, accuracy: 1, xp: 20, minutes: 3), courseId: "c", now: Date(timeIntervalSince1970: 3_000))
         XCTAssertEqual(progress.nextLesson(in: course)?.id, "a", "placed lessons are still there to play")
         XCTAssertTrue(progress.isValid)
 
-        // Always at least one unit ahead.
-        XCTAssertEqual(LearnProgress.placementUnit(level: "advanced", unitCount: 3), 1)
-        XCTAssertEqual(LearnProgress.placementUnit(level: "advanced", unitCount: 2), 0)
+        // By share, always at least one unit ahead (courses with their own starts: PlacementTests).
+        XCTAssertEqual(LearnProgress.placementUnit(level: "advanced", unitCount: 3), 0)
+        XCTAssertEqual(LearnProgress.placementUnit(level: "pro", unitCount: 3), 1)
+        XCTAssertEqual(LearnProgress.placementUnit(level: "pro", unitCount: 2), 0)
         XCTAssertNil(LearnProgress.placementUnit(level: "intermediate", unitCount: 1))
 
         // Saves from before placement still decode; placement round-trips.

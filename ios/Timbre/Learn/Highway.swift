@@ -284,6 +284,7 @@ struct AlongStep: View {
             } else if judge.bestCombo >= 2 {
                 Text("Best combo \(judge.bestCombo)").font(.footnote).foregroundStyle(Palette.inkSoft)
             }
+            if percent >= 90 { takeShare.padding(.top, 2) }
             if judge.accuracy < 0.8 && ladder.rung > 0 {
                 Button { ladder.select(0); reset() } label: { Label("Try it at \(Int(ladder.tempo(at: 0))) BPM", systemImage: "tortoise.fill") }
                     .font(Typeface.label(14)).foregroundStyle(accent).padding(.top, 2)
@@ -305,6 +306,17 @@ struct AlongStep: View {
         .background(Capsule().fill(rungTint(ladder.rung).opacity(0.14)))
         .transition(.scale.combined(with: .opacity))
         .accessibilityElement(children: .combine)
+    }
+
+    /// A take of 90 % or more: its poster, a tap from the share sheet (three stars at the lesson tempo, else two).
+    private var takeShare: some View {
+        let full = (steppedUp ? ladder.rung - 1 : ladder.rung) >= TempoLadder.lessonRung
+        return SharePill(preview: "Great work", tint: accent) {
+            LessonShareCard(course: course.title.localized, title: title?.localized ?? String(localized: "Play along"), headline: "Great work",
+                            stars: full ? 3 : TempoLadder.slowStarCap, accuracy: percent, accent: accent, song: false,
+                            streak: store.streak.current)
+        }
+        .accessibilityIdentifier("along.share")
     }
 
     /// The take's offsets lean one way by 90 ms or more on average.
