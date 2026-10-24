@@ -3,13 +3,22 @@ import TimbreCore
 import UIKit
 
 /// Generative single-sleeve art for a song, so a shelf of songs reads like a rack of records with no image assets.
-/// Everything comes from the song: its id seeds the layout (a song always wears the same sleeve), its unit gives it
-/// a genre (a palette and a family of motifs), its course stands in for the artist, and its title is set in Sora.
-/// A sleeve is either dark (a deep gradient, the motif in the song's colours, light type) or, now and then, a bright
-/// colour field with the motif and the type in ink.
+/// Everything comes from the song: its id seeds the colours and the type (a song always wears the same sleeve), its
+/// unit gives it a genre (a palette, a family of motifs, a typeface), its course stands in for the artist, and its
+/// title is set in Sora. A sleeve is either dark (a deep gradient, the motif in the song's colours, light type) or,
+/// now and then, a bright colour field with the motif and the type in ink.
+///
+/// Motifs are dealt along each course in turn (`assignedMotif`), skipping any of the last six dealt, so a course's
+/// shelf never shows the same motif twice within seven sleeves; the type is set five ways (top or foot, left, centred
+/// or right, or on a band of colour) in one of four weights.
 struct CoverArt {
     enum Genre: CaseIterable { case nursery, folk, classical, americana, holiday, swing, rock, anthem }
-    enum Motif: CaseIterable { case sunset, waveform, orbits, grid, ridges, stripes, sparkle, contour }
+    enum Motif: CaseIterable {
+        case sunset, waveform, orbits, grid, ridges, stripes, sparkle, contour
+        case pulse, halftone, rays, blocks, rosette, keys, horizon, strings
+    }
+    /// How the title lines up across the sleeve.
+    enum Align { case leading, center, trailing }
 
     let seed: UInt64
     let genre: Genre
@@ -19,8 +28,13 @@ struct CoverArt {
     let secondary: Color
     /// A bright colour field with ink type and motif, rather than a dark sleeve.
     let field: Bool
-    /// The title sits at the top-left (the motif below it), else at the bottom-left (the motif above).
+    /// The title sits at the top (the motif below it), else at the foot (the motif above).
     let titleOnTop: Bool
+    let align: Align
+    /// The title sits on a band of the song's colour across the foot of the sleeve.
+    let banner: Bool
+    /// The title's Sora face.
+    let face: String
     /// The title as set on the sleeve: the main title (no subtitle), in capitals for some genres.
     let title: String
     /// The small line over the title: the course, as the artist.
@@ -32,8 +46,9 @@ struct CoverArt {
     /// Where the glow sits, as a fraction of the sleeve.
     let glow: UnitPoint
 
-    /// `title` is the title as shown, so the sleeve matches it in every language.
-    init(id: String, title: String, accent: String, genre: Genre, label: String, number: Int) {
+    /// `title` is the title as shown, so the sleeve matches it in every language. `motif` is the one its course dealt
+    /// it (`assignedMotif`); without it the sleeve takes its turn in its genre's motifs by `number`.
+    init(id: String, title: String, accent: String, genre: Genre, label: String, number: Int, motif: Motif? = nil) {
         let seed = Self.hash(id)
         var random = SystemRandom(seed: seed)
         self.seed = seed
@@ -46,14 +61,14 @@ struct CoverArt {
         let second = others.isEmpty ? (first == "mint" ? "violet" : "mint") : others[Self.index(random.next(), others.count)]
         primary = Palette.accent(first)
         secondary = Palette.accent(second)
-        let motifs = genre.motifs
-        let chosen = motifs[Self.index(random.next(), motifs.count)]
-        motif = chosen
+        _ = random.next()
+        let chosen = motif ?? Self.turn(id: id, number: number, genre: genre)
+        self.motif = chosen
         let fieldRoll = random.next()
-        field = genre.allowsField && fieldRoll < 0.28
+        field = genre.allowsField && chosen.allowsField && fieldRoll < 0.28
         let coin = random.next() < 0.5
-        // A sun or ridges sit low, so their title goes on top.
-        titleOnTop = (chosen == .ridges || chosen == .sunset) ? true : coin
+        // A sun, a horizon or ridges sit low, so their title goes on top.
+        titleOnTop = chosen.sitsLow ? true : coin
         let capitalRoll = random.next()
         let capitals = genre.capitals ?? (capitalRoll < 0.25)
         let main = Self.mainTitle(title)
@@ -62,17 +77,59 @@ struct CoverArt {
         self.number = number
         angle = 200 + 140 * random.next()
         glow = UnitPoint(x: CGFloat(0.2 + 0.6 * random.next()), y: CGFloat(0.12 + 0.5 * random.next()))
+        let alignRoll = random.next()
+        align = alignRoll < 0.56 ? .leading : alignRoll < 0.8 ? .trailing : .center
+        let bannerRoll = random.next()
+        banner = !field && !titleOnTop && bannerRoll < 0.3
+        let faces = genre.faces(short: main.count <= 16)
+        face = faces[Self.index(random.next(), faces.count)]
     }
 
     private static func index(_ value: Double, _ count: Int) -> Int { min(max(0, count - 1), Int(value * Double(count))) }
+
+    /// A sleeve's turn in its genre's motifs without its course's deal: the course (the id's prefix) sets where the
+    /// count starts, so songs of different courses with the same number don't match.
+    private static func turn(id: String, number: Int, genre: Genre) -> Motif {
+        let list = genre.motifs
+        let prefix = id.split(separator: "-").first.map(String.init) ?? id
+        let start = Int(hash(prefix, salt: dealSalt) % UInt64(list.count))
+        return list[(max(0, number - 1) + start) % list.count]
+    }
+
+    /// Tunes where each course's deal starts, so the mixed "3 chords or fewer" shelf repeats as little as it can.
+    private static let dealSalt: UInt64 = 181
+
+    /// The motif a course deals its song `lessonId`: song by song in course order, each takes its turn in its unit's
+    /// genre list, passing over any of the six dealt before it. Nil for a lesson that isn't one of the course's songs.
+    static func assignedMotif(_ lessonId: String, in course: LearnCourse) -> Motif? {
+        var recent: [Motif] = []
+        var number = 0
+        let start = Int(hash(course.id, salt: dealSalt) % 8)
+        for unit in course.units {
+            let list = genre(unit: unit.title.defaultValue, instrument: course.instrument).motifs
+            for lesson in unit.lessons where lesson.kind == .song {
+                number += 1
+                let first = (number - 1 + start) % list.count
+                var pick = list[first]
+                for step in 0..<list.count {
+                    let candidate = list[(first + step) % list.count]
+                    if !recent.contains(candidate) { pick = candidate; break }
+                }
+                if lesson.id == lessonId { return pick }
+                recent.append(pick)
+                if recent.count > 6 { recent.removeFirst() }
+            }
+        }
+        return nil
+    }
 
     // MARK: Colour
 
     /// The sleeve's gradient ends.
     var deep: Color { field ? primary.mix(with: .white, by: 0.08) : primary.mix(with: .black, by: 0.62) }
     var far: Color { field ? primary.mix(with: secondary, by: 0.35).mix(with: .black, by: 0.16) : secondary.mix(with: .black, by: 0.8) }
-    /// Type: light on a dark sleeve, ink on a colour field.
-    var ink: Color { field ? Palette.stage : Palette.ink }
+    /// Type: light on a dark sleeve, ink on a colour field or a band.
+    var ink: Color { field || banner ? Palette.stage : Palette.ink }
     var start: UnitPoint {
         let radians = angle * Double.pi / 180
         return UnitPoint(x: CGFloat(0.5 - 0.5 * cos(radians)), y: CGFloat(0.5 - 0.5 * sin(radians)))
@@ -121,9 +178,14 @@ struct CoverArt {
     func draw(in context: inout GraphicsContext, size: CGSize, region: CGRect) {
         guard size.width > 1, size.height > 1, region.width > 1, region.height > 1 else { return }
         var random = SystemRandom(seed: seed &+ 7)
+        let ground = GraphicsContext.Shading.linearGradient(
+            Gradient(colors: [deep, far]),
+            startPoint: CGPoint(x: start.x * size.width, y: start.y * size.height),
+            endPoint: CGPoint(x: end.x * size.width, y: end.y * size.height))
         let ink = MotifInk(main: field ? Palette.stage : primary,
                            second: field ? Color.white : secondary,
-                           line: field ? Color.black : Color.white)
+                           line: field ? Color.black : Color.white,
+                           ground: ground)
         switch motif {
         case .sunset: Motifs.sunset(&context, size: size, region: region, ink: ink, random: &random)
         case .waveform: Motifs.waveform(&context, size: size, region: region, ink: ink, random: &random)
@@ -133,9 +195,24 @@ struct CoverArt {
         case .stripes: Motifs.stripes(&context, size: size, region: region, ink: ink, random: &random)
         case .sparkle: Motifs.sparkle(&context, region: region, ink: ink, random: &random)
         case .contour: Motifs.contour(&context, region: region, ink: ink, random: &random)
+        case .pulse: Motifs.pulse(&context, region: region, ink: ink, random: &random)
+        case .halftone: Motifs.halftone(&context, region: region, ink: ink, random: &random)
+        case .rays: Motifs.rays(&context, size: size, region: region, ink: ink, random: &random)
+        case .blocks: Motifs.blocks(&context, region: region, ink: ink, random: &random)
+        case .rosette: Motifs.rosette(&context, region: region, ink: ink, random: &random)
+        case .keys: Motifs.keys(&context, region: region, ink: ink, random: &random)
+        case .horizon: Motifs.horizon(&context, size: size, region: region, ink: ink, random: &random)
+        case .strings: Motifs.strings(&context, size: size, region: region, ink: ink, random: &random)
         }
         Motifs.grain(&context, size: size, random: &random)
     }
+}
+
+extension CoverArt.Motif {
+    /// Drawn low in its room (a sun or a grid on the horizon, ridges), so the title goes above it.
+    var sitsLow: Bool { self == .sunset || self == .ridges || self == .horizon }
+    /// Piano keys need a dark sleeve to read as keys.
+    var allowsField: Bool { self != .keys }
 }
 
 private extension CoverArt.Genre {
@@ -153,16 +230,17 @@ private extension CoverArt.Genre {
         }
     }
 
+    /// Eight motifs per genre, its own family first: dealt in this order along a course.
     var motifs: [CoverArt.Motif] {
         switch self {
-        case .nursery: return [.sparkle, .grid, .sunset]
-        case .folk: return [.ridges, .waveform, .sunset]
-        case .classical: return [.orbits, .contour, .grid]
-        case .americana: return [.sunset, .stripes, .ridges]
-        case .holiday: return [.sparkle, .orbits, .grid]
-        case .swing: return [.grid, .orbits, .stripes]
-        case .rock: return [.stripes, .sunset, .waveform]
-        case .anthem: return [.contour, .waveform, .sparkle]
+        case .nursery: return [.sparkle, .blocks, .halftone, .grid, .rays, .orbits, .keys, .sunset]
+        case .folk: return [.ridges, .strings, .waveform, .rays, .halftone, .sunset, .contour, .blocks]
+        case .classical: return [.rosette, .orbits, .keys, .contour, .halftone, .grid, .pulse, .sparkle]
+        case .americana: return [.rays, .stripes, .strings, .ridges, .sunset, .halftone, .blocks, .waveform]
+        case .holiday: return [.sparkle, .rosette, .rays, .orbits, .grid, .halftone, .blocks, .keys]
+        case .swing: return [.keys, .grid, .stripes, .blocks, .orbits, .halftone, .pulse, .rays]
+        case .rock: return [.horizon, .stripes, .pulse, .waveform, .rays, .strings, .blocks, .sunset]
+        case .anthem: return [.horizon, .contour, .pulse, .waveform, .sparkle, .rays, .orbits, .halftone]
         }
     }
 
@@ -177,12 +255,26 @@ private extension CoverArt.Genre {
         default: return nil
         }
     }
+
+    /// The faces its titles are set in: classical in Sora Light when the title is short enough to be set large,
+    /// swing in Medium, rock and anthem always Bold.
+    func faces(short: Bool) -> [String] {
+        switch self {
+        case .classical: return short ? ["Sora-Light", "Sora-Light", "Sora-SemiBold"] : ["Sora-SemiBold"]
+        case .swing: return ["Sora-Medium", "Sora-Bold"]
+        case .rock, .anthem: return ["Sora-Bold"]
+        case .americana: return ["Sora-Bold", "Sora-SemiBold"]
+        case .nursery, .folk, .holiday: return ["Sora-Bold", "Sora-SemiBold", "Sora-Medium"]
+        }
+    }
 }
 
 private struct MotifInk {
     let main: Color
     let second: Color
     let line: Color
+    /// The sleeve's own gradient, to hide what lies behind a shape.
+    let ground: GraphicsContext.Shading
 }
 
 /// The sleeve motifs, each drawn to fit the region the type leaves (some run to the sleeve's edges).
@@ -427,6 +519,284 @@ private enum Motifs {
         }
     }
 
+    /// Stacked pulse lines, each hiding the ones behind it, rising into a signal in the middle; one line lit.
+    static func pulse(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let lines = 12
+        let gap = region.height / CGFloat(lines + 3)
+        let rise = gap * 3
+        let samples = 48
+        let lit = 3 + Int(random.next() * Double(lines - 5))
+        let middle = 0.5 + (random.next() - 0.5) * 0.24
+        let weight = max(1, min(region.width, region.height) * 0.011)
+        for k in 0..<lines {
+            let base = region.minY + gap * CGFloat(k + 3)
+            let p1 = random.next() * 6.28
+            let p2 = random.next() * 6.28
+            var crest: [CGPoint] = []
+            for s in 0...samples {
+                let t = Double(s) / Double(samples)
+                let envelope = exp(-pow((t - middle) / 0.16, 2))
+                let jitter = 0.6 + 0.25 * sin(t * 41 + p1) + 0.15 * sin(t * 67 + p2)
+                let lift = 0.05 * (1 + sin(t * 29 + p2)) + envelope * jitter
+                crest.append(CGPoint(x: region.minX + region.width * CGFloat(t), y: base - rise * CGFloat(lift)))
+            }
+            var body = Path()
+            body.move(to: CGPoint(x: region.minX, y: base + gap * 1.2))
+            for point in crest { body.addLine(to: point) }
+            body.addLine(to: CGPoint(x: region.maxX, y: base + gap * 1.2))
+            body.closeSubpath()
+            context.fill(body, with: ink.ground)
+            var line = Path()
+            line.addLines(crest)
+            context.stroke(line, with: .color(k == lit ? ink.main : ink.line.opacity(0.7)),
+                           style: StrokeStyle(lineWidth: k == lit ? weight * 1.8 : weight, lineJoin: .round))
+        }
+    }
+
+    /// A sphere in halftone, its dots swelling toward the light, ringed by one orbit in the second colour.
+    static func halftone(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        let radius = unit * 0.44
+        let room = max(0, region.width - radius * 2)
+        let center = CGPoint(x: region.midX + (value(&random) - 0.5) * room * 0.8, y: region.midY)
+        // Light from the upper left (a unit vector).
+        let light = (x: -0.52, y: -0.58, z: 0.63)
+        let step = max(2.5, radius * 2 / 15)
+        var y = center.y - radius + step / 2
+        var row = 0
+        while y < center.y + radius {
+            var x = center.x - radius + step / 2 + (row % 2 == 0 ? 0 : step / 2)
+            while x < center.x + radius {
+                let dx = Double((x - center.x) / radius)
+                let dy = Double((y - center.y) / radius)
+                let squared = dx * dx + dy * dy
+                if squared < 1 {
+                    let dz = (1 - squared).squareRoot()
+                    let shade = max(0, dx * light.x + dy * light.y + dz * light.z)
+                    let dot = step * 0.5 * CGFloat(0.12 + 0.88 * shade)
+                    context.fill(circle(CGPoint(x: x, y: y), dot), with: .color(ink.main))
+                }
+                x += step
+            }
+            y += step
+            row += 1
+        }
+        var ring = context
+        ring.translateBy(x: center.x, y: center.y)
+        ring.rotate(by: .degrees(-14 - 12 * random.next()))
+        ring.stroke(Path(ellipseIn: CGRect(x: -radius * 1.32, y: -radius * 0.3, width: radius * 2.64, height: radius * 0.6)),
+                    with: .color(ink.second.opacity(0.9)), lineWidth: max(1.2, unit * 0.016))
+    }
+
+    /// A sunburst from the foot of the motif: alternating rays, fading as they go, a half sun at their source.
+    static func rays(_ context: inout GraphicsContext, size: CGSize, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        let origin = CGPoint(x: region.minX + region.width * (0.3 + 0.4 * value(&random)), y: region.maxY)
+        let reach = hypot(region.width, region.height) * 1.2
+        let count = 18
+        let turn = random.next() * Double.pi / Double(count)
+        var burst = context
+        burst.clip(to: Path(CGRect(x: 0, y: region.minY, width: size.width, height: region.height)))
+        let fade = GraphicsContext.Shading.radialGradient(Gradient(colors: [ink.main.opacity(0.9), ink.main.opacity(0.08)]),
+                                                         center: origin, startRadius: unit * 0.1, endRadius: reach * 0.8)
+        for i in stride(from: 0, to: count, by: 2) {
+            let from = Double.pi + turn + Double(i) / Double(count) * Double.pi
+            let to = from + Double.pi / Double(count)
+            var wedge = Path()
+            wedge.move(to: origin)
+            wedge.addLine(to: CGPoint(x: origin.x + CGFloat(cos(from)) * reach, y: origin.y + CGFloat(sin(from)) * reach))
+            wedge.addLine(to: CGPoint(x: origin.x + CGFloat(cos(to)) * reach, y: origin.y + CGFloat(sin(to)) * reach))
+            wedge.closeSubpath()
+            burst.fill(wedge, with: fade)
+        }
+        let sun = unit * 0.24
+        burst.fill(circle(origin, sun * 1.25), with: ink.ground)
+        burst.fill(circle(origin, sun), with: .color(ink.second))
+        burst.stroke(circle(origin, sun * 1.25), with: .color(ink.line.opacity(0.35)), lineWidth: 1)
+    }
+
+    /// A Swiss composition: a grid of colour blocks, some left open, a disc across one of its joints and a rule.
+    static func blocks(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        let columns = 3
+        let rows = 2
+        let gutter = max(1.5, unit * 0.025)
+        let width = region.width / CGFloat(columns)
+        let height = region.height / CGFloat(rows)
+        let fills: [Color?] = [ink.main, ink.second, ink.line.opacity(0.85), ink.main.opacity(0.45), nil, nil]
+        var painted = 0
+        for row in 0..<rows {
+            for column in 0..<columns {
+                let box = CGRect(x: region.minX + CGFloat(column) * width, y: region.minY + CGFloat(row) * height, width: width, height: height)
+                    .insetBy(dx: gutter / 2, dy: gutter / 2)
+                let pick = Int(random.next() * Double(fills.count)) % fills.count
+                // At least two blocks take colour, the last ones if the dice didn't.
+                let forced = painted < 2 && row * columns + column >= columns * rows - (2 - painted)
+                var fill = fills[pick]
+                if fill == nil && forced { fill = ink.main }
+                if let fill {
+                    context.fill(Path(box), with: .color(fill))
+                    painted += 1
+                } else {
+                    context.stroke(Path(box), with: .color(ink.line.opacity(0.18)), lineWidth: 1)
+                }
+            }
+        }
+        let joint = CGPoint(x: region.minX + width * CGFloat(1 + Int(random.next() * 2) % 2), y: region.minY + height)
+        let disc = min(width, height) * 0.62
+        context.fill(circle(joint, disc), with: .color(ink.second))
+        context.fill(circle(joint, disc * 0.34), with: ink.ground)
+        let ruleY = region.minY + region.height * CGFloat(0.15 + 0.7 * random.next())
+        context.stroke(segment(CGPoint(x: region.minX, y: ruleY), CGPoint(x: region.maxX, y: ruleY)),
+                       with: .color(ink.line.opacity(0.55)), lineWidth: max(1, unit * 0.01))
+    }
+
+    /// A guilloché rosette: three rolling-circle curves laid over one another, one in the song's colour.
+    static func rosette(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        let center = CGPoint(x: region.midX + (value(&random) - 0.5) * region.width * 0.25, y: region.midY)
+        let outer = Double(unit) * 0.48
+        let lobes = 5 + Int(random.next() * 5) % 5
+        let roll = Double(lobes - 1)
+        let reaches = [2.4, 1.5, 3.2]
+        let lit = Int(random.next() * 3) % 3
+        for layer in 0..<3 {
+            let d = reaches[layer]
+            let scale = outer / (roll + d)
+            let phase = Double(layer) * Double.pi / Double(lobes)
+            var curve = Path()
+            let steps = 320
+            for s in 0...steps {
+                let t = Double(s) / Double(steps) * 2 * Double.pi
+                let x = roll * cos(t) + d * cos(roll * t)
+                let y = roll * sin(t) - d * sin(roll * t)
+                let rx = x * cos(phase) - y * sin(phase)
+                let ry = x * sin(phase) + y * cos(phase)
+                let point = CGPoint(x: center.x + CGFloat(rx * scale), y: center.y + CGFloat(ry * scale))
+                if s == 0 { curve.move(to: point) } else { curve.addLine(to: point) }
+            }
+            curve.closeSubpath()
+            let featured = layer == lit
+            context.stroke(curve, with: .color(featured ? ink.main : ink.line.opacity(0.32)),
+                           lineWidth: featured ? max(1.3, unit * 0.013) : max(0.7, unit * 0.005))
+        }
+        context.fill(circle(center, unit * 0.06), with: .color(ink.second))
+    }
+
+    /// Piano keys on a slant across the motif's room, three of them lit as a chord.
+    static func keys(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        var board = context
+        board.clip(to: Path(roundedRect: region, cornerRadius: unit * 0.04))
+        board.translateBy(x: region.midX, y: region.midY)
+        board.rotate(by: .degrees(-10 - 12 * random.next()))
+        let white = max(4, unit * 0.15)
+        let length = hypot(region.width, region.height) * 0.62
+        let count = Int((hypot(region.width, region.height) / white).rounded(.up)) + 2
+        let left = -CGFloat(count) * white / 2
+        let octave = Int(random.next() * 7) % 7
+        let root = count / 2 - 2 + Int(random.next() * 3) % 3
+        let lit: Set<Int> = [root, root + 2, root + 4]
+        for i in 0..<count {
+            let rect = CGRect(x: left + CGFloat(i) * white + white * 0.04, y: -length / 2, width: white * 0.92, height: length)
+            board.fill(Path(roundedRect: rect, cornerRadius: white * 0.14),
+                       with: .color(lit.contains(i) ? ink.main : Color.white.opacity(0.86)))
+        }
+        // Black keys after C, D, F, G and A.
+        for i in 0..<(count - 1) where [0, 1, 3, 4, 5].contains((i + octave) % 7) {
+            let rect = CGRect(x: left + CGFloat(i + 1) * white - white * 0.31, y: -length / 2, width: white * 0.62, height: length * 0.6)
+            board.fill(Path(roundedRect: rect, cornerRadius: white * 0.1), with: .color(Palette.stage))
+        }
+        board.fill(Path(CGRect(x: left, y: -length / 2, width: CGFloat(count) * white, height: white * 0.18)), with: .color(ink.second.opacity(0.9)))
+    }
+
+    /// A banded sun on the horizon over a grid running away to it.
+    static func horizon(_ context: inout GraphicsContext, size: CGSize, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        let line = region.minY + region.height * 0.56
+        let vanish = CGPoint(x: region.midX + (value(&random) - 0.5) * region.width * 0.24, y: line)
+        let radius = max(4, min(unit * 0.36, (line - region.minY) * 0.92))
+        let center = CGPoint(x: vanish.x, y: line - radius * 0.32)
+        context.fill(circle(center, radius * 1.6),
+                     with: .radialGradient(Gradient(colors: [ink.main.opacity(0.28), ink.main.opacity(0)]),
+                                           center: center, startRadius: radius * 0.5, endRadius: radius * 1.6))
+        var sun = context
+        sun.clip(to: Path(CGRect(x: 0, y: 0, width: size.width, height: line)))
+        sun.clip(to: circle(center, radius))
+        sun.fill(Path(CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2)),
+                 with: .linearGradient(Gradient(colors: [ink.second, ink.main]),
+                                       startPoint: CGPoint(x: center.x, y: center.y - radius),
+                                       endPoint: CGPoint(x: center.x, y: center.y + radius)))
+        var slot = center.y - radius * 0.1
+        var height = radius * 0.035
+        while slot < line {
+            sun.fill(Path(CGRect(x: center.x - radius, y: slot, width: radius * 2, height: height)), with: ink.ground)
+            slot += radius * 0.17
+            height *= 1.4
+        }
+        var floor = context
+        floor.clip(to: Path(CGRect(x: 0, y: line, width: size.width, height: size.height - line)))
+        let weight = max(0.8, unit * 0.008)
+        for i in -9...9 {
+            let foot = CGPoint(x: vanish.x + CGFloat(i) * size.width * 0.16, y: size.height)
+            floor.stroke(segment(vanish, foot), with: .color(ink.main.opacity(0.5)), lineWidth: weight)
+        }
+        for k in 1...7 {
+            let t = pow(Double(k) / 7, 2)
+            let y = line + (size.height - line) * CGFloat(t)
+            floor.stroke(segment(CGPoint(x: 0, y: y), CGPoint(x: size.width, y: y)),
+                         with: .color(ink.main.opacity(0.25 + 0.45 * t)), lineWidth: weight)
+        }
+        context.stroke(segment(CGPoint(x: 0, y: line), CGPoint(x: size.width, y: line)),
+                       with: .color(ink.line.opacity(0.55)), lineWidth: weight * 1.4)
+    }
+
+    /// Strings across the sleeve on a slant, one plucked and still ringing, with a bridge in the second colour.
+    static func strings(_ context: inout GraphicsContext, size: CGSize, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        let count = random.next() < 0.5 ? 6 : 4
+        let plucked = 1 + Int(random.next() * Double(count - 2))
+        var board = context
+        board.clip(to: Path(CGRect(x: 0, y: region.minY, width: size.width, height: region.height)))
+        board.translateBy(x: region.midX, y: region.midY)
+        board.rotate(by: .degrees(-(6 + 10 * random.next())))
+        let spread = region.height * 0.7
+        let reach = hypot(size.width, size.height)
+        let bridge = -reach / 2 + reach * CGFloat(0.22 + 0.08 * random.next())
+        board.fill(Path(roundedRect: CGRect(x: bridge - unit * 0.03, y: -spread * 0.62, width: unit * 0.06, height: spread * 1.24),
+                        cornerRadius: unit * 0.02), with: .color(ink.second.opacity(0.9)))
+        for i in 0..<count {
+            let y = -spread / 2 + spread * CGFloat(i) / CGFloat(count - 1)
+            let weight = max(0.8, unit * (0.005 + 0.0035 * CGFloat(i)))
+            guard i == plucked else {
+                board.stroke(segment(CGPoint(x: -reach / 2, y: y), CGPoint(x: reach / 2, y: y)),
+                             with: .color(ink.line.opacity(0.6)), lineWidth: weight)
+                continue
+            }
+            let swing = spread / CGFloat(count) * 0.42
+            for side in [-1.0, 1.0] {
+                var blur = Path()
+                for s in 0...80 {
+                    let t = Double(s) / 80
+                    let x = bridge + (reach / 2 - bridge) * CGFloat(t)
+                    let point = CGPoint(x: x, y: y + CGFloat(side) * swing * CGFloat(sin(Double.pi * t)))
+                    if s == 0 { blur.move(to: point) } else { blur.addLine(to: point) }
+                }
+                board.stroke(blur, with: .color(ink.main.opacity(0.35)), lineWidth: weight)
+            }
+            var wave = Path()
+            for s in 0...160 {
+                let t = Double(s) / 160
+                let x = bridge + (reach / 2 - bridge) * CGFloat(t)
+                let point = CGPoint(x: x, y: y + swing * CGFloat(sin(Double.pi * t) * sin(t * Double.pi * 9)))
+                if s == 0 { wave.move(to: point) } else { wave.addLine(to: point) }
+            }
+            board.stroke(wave, with: .color(ink.main.opacity(0.3)), lineWidth: weight * 5)
+            board.stroke(wave, with: .color(ink.main), lineWidth: weight * 1.5)
+            board.stroke(segment(CGPoint(x: -reach / 2, y: y), CGPoint(x: bridge, y: y)), with: .color(ink.main), lineWidth: weight * 1.5)
+        }
+    }
+
     /// A fine print grain over the whole sleeve.
     static func grain(_ context: inout GraphicsContext, size: CGSize, random: inout SystemRandom) {
         let dot = max(0.6, min(size.width, size.height) * 0.006)
@@ -438,13 +808,13 @@ private enum Motifs {
 }
 
 /// A song's sleeve, drawn from its `CoverArt`: gradient, glow, motif, the course and title in Sora with a catalogue
-/// number, and a sheen. A song not reached yet dims under a lock in the sleeve's free corner.
+/// number, and a sheen. A song that doesn't play yet calms: its art loses some colour, its type stays crisp.
 struct SongCover: View {
     let art: CoverArt
     var corner: CGFloat = 14
     /// The type on the sleeve; off for a backdrop made from it.
     var titled = true
-    /// Not reached yet: the sleeve dims and a lock sits in its free corner.
+    /// Doesn't play yet (Pro, or further on in its course): the art quietens, the title stays readable.
     var locked = false
     /// The glow drifts slowly (the featured song), unless Reduce Motion is on.
     var drift = false
@@ -471,34 +841,57 @@ struct SongCover: View {
         let region = layout.region
         let art = self.art
         return ZStack {
-            LinearGradient(colors: [art.deep, art.far], startPoint: art.start, endPoint: art.end)
-            glow(side: layout.side)
-                .position(x: size.width * art.glow.x, y: size.height * art.glow.y)
-            Canvas { context, canvasSize in art.draw(in: &context, size: canvasSize, region: region) }
+            ZStack {
+                LinearGradient(colors: [art.deep, art.far], startPoint: art.start, endPoint: art.end)
+                glow(side: layout.side)
+                    .position(x: size.width * art.glow.x, y: size.height * art.glow.y)
+                Canvas { context, canvasSize in art.draw(in: &context, size: canvasSize, region: region) }
+            }
+            .saturation(locked ? 0.42 : 1)
+            .brightness(locked ? -0.07 : 0)
             if titled {
+                if art.banner { band(layout) }
                 typeBlock(layout)
                 catalogue(layout)
             }
             LinearGradient(colors: [.white.opacity(art.field ? 0.18 : 0.12), .clear], startPoint: .topLeading, endPoint: .center)
-            if locked { lock }
         }
         .frame(width: size.width, height: size.height)
     }
 
-    /// The course over the title, in the corner the layout gives them.
+    private var horizontal: HorizontalAlignment {
+        switch art.align {
+        case .leading: return .leading
+        case .center: return .center
+        case .trailing: return .trailing
+        }
+    }
+
+    /// The colour band a bannered title sits on, across the foot of the sleeve.
+    private func band(_ layout: SleeveLayout) -> some View {
+        VStack(spacing: 0) {
+            Spacer(minLength: 0)
+            Rectangle().fill(art.primary)
+                .frame(height: layout.bandHeight)
+                .overlay(alignment: .top) { Rectangle().fill(.black.opacity(0.18)).frame(height: max(1, layout.side * 0.006)) }
+        }
+    }
+
+    /// The course over the title, in the corner and alignment the sleeve gives them.
     private func typeBlock(_ layout: SleeveLayout) -> some View {
         let points = layout.fit.points
-        let block = VStack(alignment: .leading, spacing: 0) {
+        let align = horizontal
+        let block = VStack(alignment: align, spacing: 0) {
             Text(verbatim: art.label)
                 .font(.custom("Sora-SemiBold", fixedSize: layout.labelSize))
                 .tracking(layout.labelSize * 0.16)
                 .foregroundStyle(art.ink.opacity(0.72))
                 .lineLimit(1)
                 .padding(.bottom, layout.labelSize * 0.35)
-            VStack(alignment: .leading, spacing: -points * 0.27) {
+            VStack(alignment: align, spacing: -points * 0.27) {
                 ForEach(Array(layout.fit.lines.enumerated()), id: \.offset) { _, line in
                     Text(verbatim: line)
-                        .font(.custom(TitleFit.font, fixedSize: points))
+                        .font(.custom(art.face, fixedSize: points))
                         .tracking(-points * 0.02)
                         .foregroundStyle(art.ink)
                         .lineLimit(1)
@@ -506,12 +899,13 @@ struct SongCover: View {
                 }
             }
         }
-        .shadow(color: .black.opacity(art.field ? 0 : 0.35), radius: layout.side * 0.03, y: layout.side * 0.01)
-        return ZStack(alignment: art.titleOnTop ? .topLeading : .bottomLeading) {
+        .shadow(color: .black.opacity(art.field || art.banner ? 0 : 0.35), radius: layout.side * 0.03, y: layout.side * 0.01)
+        return ZStack(alignment: Alignment(horizontal: align, vertical: art.titleOnTop ? .top : .bottom)) {
             Color.clear
             block
         }
-        .padding(layout.pad)
+        .padding(.horizontal, layout.pad)
+        .padding(.vertical, art.banner ? layout.bandInset : layout.pad)
     }
 
     /// The catalogue number, small, in the left corner the title leaves free.
@@ -520,25 +914,13 @@ struct SongCover: View {
         return ZStack(alignment: art.titleOnTop ? .bottomLeading : .topLeading) {
             Color.clear
             HStack(spacing: size * 0.4) {
-                Capsule().fill(art.ink.opacity(0.5)).frame(width: size * 1.2, height: max(1, size * 0.1))
+                Capsule().fill((art.field ? Palette.stage : Palette.ink).opacity(0.5)).frame(width: size * 1.2, height: max(1, size * 0.1))
                 Text(verbatim: String(format: "%02d", art.number))
                     .font(.custom("Sora-Medium", fixedSize: size)).monospacedDigit()
-                    .foregroundStyle(art.ink.opacity(0.62))
+                    .foregroundStyle((art.field ? Palette.stage : Palette.ink).opacity(0.62))
             }
         }
         .padding(layout.pad)
-    }
-
-    /// The dim over a song not reached yet, and its lock in the free corner.
-    private var lock: some View {
-        ZStack(alignment: art.freeCorner) {
-            Color.black.opacity(0.5)
-            Image(systemName: "lock.fill").font(.system(size: 15, weight: .bold)).foregroundStyle(Palette.ink.opacity(0.9))
-                .frame(width: 36, height: 36)
-                .background(Circle().fill(.black.opacity(0.45)))
-                .overlay(Circle().strokeBorder(.white.opacity(0.16), lineWidth: 1))
-                .padding(10)
-        }
     }
 
     private func glow(side: CGFloat) -> some View {
@@ -558,6 +940,9 @@ struct SongCover: View {
     let pad: CGFloat
     let labelSize: CGFloat
     let fit: TitleFit
+    /// A bannered title's band, and the type's inset from its edges.
+    let bandHeight: CGFloat
+    let bandInset: CGFloat
     /// The motif's room: the sleeve less its margins and the type block.
     let region: CGRect
 
@@ -568,21 +953,26 @@ struct SongCover: View {
         let width = max(1, size.width - pad * 2)
         guard titled else {
             fit = TitleFit(lines: [], points: 0)
+            bandHeight = 0
+            bandInset = 0
             region = CGRect(x: pad, y: pad, width: width, height: max(1, size.height - pad * 2))
             return
         }
-        fit = TitleFit.make(art.title, width: width, maxHeight: side * 0.4, largest: side * 0.17, smallest: side * 0.075)
+        fit = TitleFit.make(art.title, width: width, maxHeight: side * 0.4, largest: side * 0.17, smallest: side * 0.075, font: art.face)
         let block = labelSize * 1.26 + labelSize * 0.35 + fit.height
         let gap = side * 0.05
-        let room = max(side * 0.2, size.height - pad * 2 - block - gap)
+        bandInset = pad * 0.7
+        bandHeight = art.banner ? block + bandInset * 2 : 0
+        let used = art.banner ? bandHeight + pad + gap : pad * 2 + block + gap
+        let room = max(side * 0.2, size.height - used)
         let top = art.titleOnTop ? pad + block + gap : pad
         region = CGRect(x: pad, y: top, width: width, height: room)
     }
 }
 
-/// A sleeve title broken into lines at the largest size (Sora Bold) that fits `width` in at most three lines and
-/// `maxHeight`, measured from the glyphs with UIKit. Titles in scripts without spaces (Chinese, Japanese) break
-/// between characters; a word too long for the smallest size breaks too. Results are cached per title and width.
+/// A sleeve title broken into lines at the largest size (in its Sora face) that fits `width` in at most three lines
+/// and `maxHeight`, measured from the glyphs with UIKit. Titles in scripts without spaces (Chinese, Japanese) break
+/// between characters; a word too long for the smallest size breaks too. Results are cached per title, face and width.
 struct TitleFit {
     let lines: [String]
     let points: CGFloat
@@ -595,10 +985,11 @@ struct TitleFit {
 
     @MainActor private static var cache: [String: TitleFit] = [:]
 
-    @MainActor static func make(_ text: String, width: CGFloat, maxHeight: CGFloat, largest: CGFloat, smallest: CGFloat) -> TitleFit {
-        let key = "\(text)|\(Int(width.rounded()))|\(Int(maxHeight.rounded()))|\(Int(largest.rounded()))"
+    @MainActor static func make(_ text: String, width: CGFloat, maxHeight: CGFloat, largest: CGFloat, smallest: CGFloat,
+                                font: String = TitleFit.font) -> TitleFit {
+        let key = "\(text)|\(font)|\(Int(width.rounded()))|\(Int(maxHeight.rounded()))|\(Int(largest.rounded()))"
         if let hit = cache[key] { return hit }
-        let result = compute(text, width: width, maxHeight: maxHeight, largest: largest, smallest: min(smallest, largest))
+        let result = compute(text, width: width, maxHeight: maxHeight, largest: largest, smallest: min(smallest, largest), font: font)
         if cache.count > 500 { cache.removeAll() }
         cache[key] = result
         return result
@@ -610,13 +1001,14 @@ struct TitleFit {
         let joined: Bool
     }
 
-    private static func compute(_ text: String, width: CGFloat, maxHeight: CGFloat, largest: CGFloat, smallest: CGFloat) -> TitleFit {
+    private static func compute(_ text: String, width: CGFloat, maxHeight: CGFloat, largest: CGFloat, smallest: CGFloat,
+                                font: String) -> TitleFit {
         let words = tokens(text)
         guard !words.isEmpty, width > 4, largest > 1 else { return TitleFit(lines: [], points: 0) }
         var points = largest
         while points > smallest {
             let size = points
-            let face = uiFont(size)
+            let face = uiFont(font, size)
             let measure: (String) -> CGFloat = { Self.measure($0, face, size) }
             let lines = wrap(words, width: width, measure: measure)
             let height = size * (1.26 + 0.99 * CGFloat(lines.count - 1))
@@ -625,7 +1017,7 @@ struct TitleFit {
             }
             points *= 0.93
         }
-        let face = uiFont(smallest)
+        let face = uiFont(font, smallest)
         let measure: (String) -> CGFloat = { Self.measure($0, face, smallest) }
         let pieces = words.flatMap { split($0, width: width, measure: measure) }
         var lines = wrap(pieces, width: width, measure: measure)
@@ -636,8 +1028,8 @@ struct TitleFit {
         return TitleFit(lines: lines, points: smallest)
     }
 
-    private static func uiFont(_ points: CGFloat) -> UIFont {
-        UIFont(name: font, size: points) ?? UIFont.systemFont(ofSize: points, weight: .bold)
+    private static func uiFont(_ name: String, _ points: CGFloat) -> UIFont {
+        UIFont(name: name, size: points) ?? UIFont.systemFont(ofSize: points, weight: .bold)
     }
 
     private static func measure(_ text: String, _ face: UIFont, _ points: CGFloat) -> CGFloat {
@@ -689,6 +1081,61 @@ struct TitleFit {
         }
         if !piece.isEmpty { pieces.append(Token(text: piece, joined: pieces.isEmpty ? token.joined : true)) }
         return pieces
+    }
+}
+
+// MARK: - The sleeve's light
+
+/// A song's colours as a mesh of light (iOS 18 `MeshGradient`), for the backdrop behind its sleeve: the featured
+/// card, the song sheet's head, the poster. Its middle drifts slowly unless Reduce Motion is on or `animated` is off
+/// (the poster is drawn still). Unlike a blur of the sleeve it stays smooth at any width.
+struct CoverMesh: View {
+    let art: CoverArt
+    var animated = true
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        Group {
+            if animated && !reduceMotion {
+                TimelineView(.animation(minimumInterval: 1.0 / 24)) { timeline in
+                    mesh(at: timeline.date.timeIntervalSinceReferenceDate)
+                }
+            } else {
+                mesh(at: 0)
+            }
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+
+    private func mesh(at time: Double) -> MeshGradient {
+        MeshGradient(width: 3, height: 3, points: Self.points(at: time, glow: art.glow), colors: colors)
+    }
+
+    /// The sleeve's glow sets where the light gathers; the middle and the edges' midpoints sway around it.
+    private static func points(at time: Double, glow: UnitPoint) -> [SIMD2<Float>] {
+        let t = time.truncatingRemainder(dividingBy: 3600)
+        let cx = Float(0.3 + 0.4 * glow.x) + Float(0.1 * sin(t * 0.21))
+        let cy = Float(0.32 + 0.3 * glow.y) + Float(0.08 * cos(t * 0.17))
+        let top = Float(0.5 + 0.18 * sin(t * 0.13 + 1))
+        let left = Float(0.5 + 0.14 * cos(t * 0.16))
+        let right = Float(0.45 + 0.14 * sin(t * 0.19 + 2))
+        let bottom = Float(0.5 + 0.16 * cos(t * 0.11 + 3))
+        return [
+            SIMD2<Float>(0, 0), SIMD2<Float>(top, 0), SIMD2<Float>(1, 0),
+            SIMD2<Float>(0, left), SIMD2<Float>(cx, cy), SIMD2<Float>(1, right),
+            SIMD2<Float>(0, 1), SIMD2<Float>(bottom, 1), SIMD2<Float>(1, 1),
+        ]
+    }
+
+    /// Dark at the edges and foot, the song's colour lit in the middle, its second colour along one side.
+    private var colors: [Color] {
+        let lit = art.primary.mix(with: .black, by: art.field ? 0.15 : 0.22)
+        return [
+            art.far, art.primary.mix(with: .black, by: 0.45), art.secondary.mix(with: .black, by: 0.55),
+            art.secondary.mix(with: .black, by: 0.42), lit, art.deep,
+            Palette.stageDeep, art.far.mix(with: .black, by: 0.4), Palette.stage,
+        ]
     }
 }
 

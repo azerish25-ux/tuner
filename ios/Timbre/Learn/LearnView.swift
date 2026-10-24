@@ -2,9 +2,11 @@ import SwiftUI
 import TimbreCore
 import UIKit
 
-/// The Learn tab: pick a course, continue where you left off, and follow the path lesson by lesson.
+/// The Learn tab: pick a course, continue where you left off, and follow the path lesson by lesson. On an iPad's
+/// regular width the path and a Today panel (the day's set, the next lesson, a due review) sit side by side.
 struct LearnView: View {
     @EnvironmentObject private var store: AppStore
+    @Environment(\.horizontalSizeClass) private var sizeClass
     @AppStorage("learn.course") private var courseId = "guitar"
     @State private var playing: PlayingLesson?
     /// Content has scrolled under the status bar: a scrim fades in behind it.
@@ -27,34 +29,14 @@ struct LearnView: View {
     var body: some View {
         NavigationStack {
             Group {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 22) {
-                        header
-                        // Today's practice set in one line; a tap opens it on the Play hub.
-                        DailySetCompactCard()
-                        courses
-                        if let course {
-                            continueCard(course)
-                            // Shows itself only when a weak-spot review is due.
-                            WeakSpotReviewCard(course: course) { open(course, $0, from: Self.continueSource) }
-                            ForEach(Array(course.units.enumerated()), id: \.element.id) { index, unit in
-                                UnitSection(course: course, unit: unit, number: index + 1, zoom: zoom) { course, lesson in
-                                    open(course, lesson, from: LessonNode.source(lesson))
-                                }
-                            }
-                            Text("More lessons arrive with every update.").font(.footnote).foregroundStyle(Palette.inkFaint)
-                                .frame(maxWidth: .infinity).padding(.vertical, 24)
-                        }
+                if sizeClass == .regular {
+                    GeometryReader { proxy in
+                        let columns = CardColumns(width: proxy.size.width - 2 * Metrics.gutter)
+                        if columns.count > 1 { wide(columns) } else { pathScroll { compactContent } }
                     }
-                    .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+                } else {
+                    pathScroll { compactContent }
                 }
-                .onScrollGeometryChange(for: Bool.self) { geometry in
-                    geometry.contentOffset.y + geometry.contentInsets.top > 4
-                } action: { _, isScrolled in
-                    scrolled = isScrolled
-                }
-                .background(StageBackground(motes: false))
-                .overlay(alignment: .top) { topScrim }
             }
         }
         .onChange(of: courseId) { _, _ in store.publishWidgets() }
@@ -75,18 +57,26 @@ struct LearnView: View {
         playing = PlayingLesson(course: course, lesson: lesson, source: source)
     }
 
-    /// A lesson another screen asked for (`AppStore.pendingLessonId`: onboarding's first lesson, Today's lesson):
-    /// Learn shows its course and opens it out of the Continue card once any covering screen has gone.
+    /// A lesson another screen asked for (`AppStore.pendingLessonId`: onboarding's first lesson, Today's lesson, a
+    /// Siri, Spotlight or widget link): Learn shows its course and opens it out of the Continue card once any covering
+    /// screen has gone. When one is still up after the wait (a lesson open here, from Songs or from Progress, a
+    /// paywall), the link is dropped and the course left as it was: switching the course under that screen, or
+    /// presenting a second cover over it (which UIKit refuses), would only leave Learn out of step.
     private func openPendingLesson() {
         guard let id = store.pendingLessonId else { return }
         store.pendingLessonId = nil
         guard let found = store.curriculum.lesson(id: id) else { return }
-        courseId = found.course.id
         Task { @MainActor in
-            // Presenting while onboarding's cover is still going away would fail: wait for it (at most ~2 s).
+            // A cover still going away (onboarding's, a lesson's) would refuse the presentation: wait for it (at most ~2 s).
             try? await Task.sleep(for: .milliseconds(300))
-            for _ in 0..<12 where Self.coverShowing { try? await Task.sleep(for: .milliseconds(150)) }
-            guard playing == nil else { return }
+            for _ in 0..<12 where playing != nil || Self.coverShowing { try? await Task.sleep(for: .milliseconds(150)) }
+            guard playing == nil, !Self.coverShowing else { return }
+            if courseId != found.course.id {
+                courseId = found.course.id
+                // The Continue card shows the lesson's course before the lesson zooms out of it.
+                try? await Task.sleep(for: .milliseconds(120))
+                guard playing == nil, !Self.coverShowing else { return }
+            }
             open(found.course, found.lesson, from: Self.continueSource)
         }
     }
@@ -95,6 +85,112 @@ struct LearnView: View {
     @MainActor private static var coverShowing: Bool {
         let windows = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.flatMap(\.windows)
         return (windows.first(where: \.isKeyWindow) ?? windows.first)?.rootViewController?.presentedViewController != nil
+    }
+
+    // MARK: Layout
+
+    /// The path's scroll view: its own stage background on a phone (`backed`), the screen's in the iPad's columns.
+    private func pathScroll<Content: View>(backed: Bool = true, @ViewBuilder _ content: () -> Content) -> some View {
+        ScrollView {
+            content()
+                .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+        }
+        .onScrollGeometryChange(for: Bool.self) { geometry in
+            geometry.contentOffset.y + geometry.contentInsets.top > 4
+        } action: { _, isScrolled in
+            scrolled = isScrolled
+        }
+        .background { if backed { StageBackground(motes: false) } }
+        .overlay(alignment: .top) { topScrim }
+    }
+
+    /// One column: Today in one line, the courses, the next lesson, then the path. Lazy, so a store change rebuilds
+    /// only the units on screen rather than every lesson of the course.
+    private var compactContent: some View {
+        LazyVStack(alignment: .leading, spacing: 22) {
+            header
+            // Today's practice set in one line; a tap opens it on the Play hub.
+            DailySetCompactCard()
+            courses
+            if let course {
+                continueCard(course)
+                // Shows itself only when a weak-spot review is due.
+                WeakSpotReviewCard(course: course) { open(course, $0, from: Self.continueSource) }
+                unitPath(course)
+            }
+        }
+    }
+
+    /// iPad: the title across the top, then the courses and the path, with the Today panel beside them. The panel
+    /// takes one column of three (landscape), at most 400 points of two (portrait); the path has the rest.
+    private func wide(_ columns: CardColumns) -> some View {
+        let panel = columns.count >= 3 ? columns.unit : min(columns.unit, 400)
+        return VStack(spacing: 0) {
+            header
+                .padding(.horizontal, Metrics.gutter).padding(.top, 12).padding(.bottom, 6)
+            HStack(alignment: .top, spacing: 0) {
+                pathScroll(backed: false) {
+                    LazyVStack(alignment: .leading, spacing: 22) {
+                        courses
+                        if let course { unitPath(course) }
+                    }
+                }
+                todayPanel
+                    .frame(width: panel + Metrics.gutter)
+            }
+        }
+        .background(StageBackground(motes: false))
+    }
+
+    /// The units of the course as a winding path, each lesson's access worked out once for the whole course.
+    @ViewBuilder private func unitPath(_ course: LearnCourse) -> some View {
+        let path = PathState(course: course, progress: store.learn)
+        ForEach(Array(course.units.enumerated()), id: \.element.id) { index, unit in
+            UnitSection(course: course, unit: unit, number: index + 1, zoom: zoom, path: path) { course, lesson in
+                open(course, lesson, from: LessonNode.source(lesson))
+            }
+        }
+        Text("More lessons arrive with every update.").font(.footnote).foregroundStyle(Palette.inkFaint)
+            .frame(maxWidth: .infinity).padding(.vertical, 24)
+    }
+
+    /// Beside the path on iPad: the day's set in full, the next lesson and a due weak-spot review.
+    private var todayPanel: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 22) {
+                DailySetCard { openToday($0) }
+                if let course {
+                    continueCard(course)
+                    WeakSpotReviewCard(course: course) { open(course, $0, from: Self.continueSource) }
+                }
+            }
+            .padding(.trailing, Metrics.gutter).padding(.vertical, 12)
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .stageTopShade()
+    }
+
+    /// An activity of Today opened from the panel: the lesson and a review here, the tuner on its tab, a tool on the
+    /// Play hub (the paywall for a Pro tool on a free plan), as the Play hub's own card opens them.
+    private func openToday(_ kind: DailyActivity.Kind) {
+        if kind.needsPro && !store.isPro { store.presentPaywall("daily.\(kind.rawValue)"); return }
+        switch kind {
+        case .lesson: store.openDailyLesson()
+        case .review:
+            if let course, let review = store.weakSpotReview(in: course) { open(course, review, from: Self.continueSource) }
+        case .tune: store.selectedTab = .tune
+        case .ear: openTool(.ear)
+        case .chord: openTool(.chords)
+        case .scale: openTool(.scales)
+        case .rhythm: openTool(.metronome)
+        case .voice: openTool(.voice)
+        case .drone: openTool(.drone)
+        }
+    }
+
+    private func openTool(_ route: PracticeRoute) {
+        store.pendingPracticeRoute = route
+        store.selectedTab = .practice
     }
 
     /// Keeps the clock and status icons readable over cards scrolling beneath them.
@@ -214,6 +310,18 @@ struct LearnView: View {
     }
 }
 
+/// Where the learner stands on a course's path, worked out once per render for the whole course rather than by
+/// every node: the next lesson and which lessons are open.
+struct PathState {
+    let nextId: String?
+    let unlocked: Set<String>
+
+    init(course: LearnCourse, progress: LearnProgress) {
+        nextId = progress.nextLesson(in: course)?.id
+        unlocked = Set(course.lessons.lazy.filter { progress.isUnlocked($0, in: course) }.map(\.id))
+    }
+}
+
 /// A unit banner and its lessons as a winding path of nodes.
 struct UnitSection: View {
     let course: LearnCourse
@@ -221,6 +329,7 @@ struct UnitSection: View {
     let number: Int
     /// The Learn tab's zoom namespace: each node is a source the lesson zooms out of.
     let zoom: Namespace.ID
+    let path: PathState
     let onPlay: (LearnCourse, Lesson) -> Void
     @EnvironmentObject private var store: AppStore
 
@@ -230,7 +339,7 @@ struct UnitSection: View {
         let accent = Palette.accent(course.accent)
         let progress = store.learn
         let finished = unit.lessons.filter { progress.isFinished($0.id) }.count
-        let next = progress.nextLesson(in: course)
+        let nextId = path.nextId
         VStack(alignment: .leading, spacing: 18) {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 5) {
@@ -271,7 +380,8 @@ struct UnitSection: View {
                         .stroke(Palette.line, style: StrokeStyle(lineWidth: 5, lineCap: .round, dash: [0.1, 13]))
                     }
                     ForEach(Array(unit.lessons.enumerated()), id: \.element.id) { i, lesson in
-                        LessonNode(course: course, lesson: lesson, accent: accent, current: lesson.id == next?.id, zoom: zoom) { onPlay(course, lesson) }
+                        LessonNode(course: course, lesson: lesson, accent: accent, current: lesson.id == nextId,
+                                   unlocked: path.unlocked.contains(lesson.id), zoom: zoom) { onPlay(course, lesson) }
                             .position(points[i])
                             .id(lesson.id)
                     }
@@ -299,6 +409,8 @@ struct LessonNode: View {
     let lesson: Lesson
     let accent: Color
     let current: Bool
+    /// Open on the path (`PathState`, worked out once for the course).
+    let unlocked: Bool
     let zoom: Namespace.ID
     let action: () -> Void
     @EnvironmentObject private var store: AppStore
@@ -312,7 +424,6 @@ struct LessonNode: View {
     var body: some View {
         let progress = store.learn
         let stars = progress.stars[lesson.id] ?? 0
-        let unlocked = progress.isUnlocked(lesson, in: course)
         let pro = !store.canPlay(lesson)
         let size: CGFloat = current ? 78 : lesson.kind == .challenge ? 72 : 64
         let symbol = lesson.kind == .song ? "music.quarternote.3" : lesson.kind == .challenge ? "crown.fill" : lesson.kind == .review ? "arrow.clockwise" : stars > 0 ? "checkmark" : "music.note"

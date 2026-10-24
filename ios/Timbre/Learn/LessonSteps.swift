@@ -70,6 +70,7 @@ struct NotesStep: View {
     var onItem: (PracticeItem, Double) -> Void = { _, _ in }
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
+    @Environment(\.scenePhase) private var scenePhase
     @State private var owner = UUID()
     @State private var judge: NoteSequenceJudge
     @State private var heard: HeardNote?
@@ -81,6 +82,10 @@ struct NotesStep: View {
     @State private var sounding = false
     /// Wrong notes heard while the current note was the target.
     @State private var wrongHere = 0
+    /// "Hear it" listening again after its note, and the hand-over to the next step: both end with the step, so
+    /// neither reopens the microphone (or finishes the lesson) after it has closed.
+    @State private var hearTask: Task<Void, Never>?
+    @State private var finishTask: Task<Void, Never>?
 
     init(notes: [TimedNote], hint: LearnText?, course: LearnCourse, accent: Color,
          onItem: @escaping (PracticeItem, Double) -> Void = { _, _ in }, done: @escaping (Double?) -> Void) {
@@ -115,7 +120,9 @@ struct NotesStep: View {
             LessonStepBar(canSkip: canSkip, accent: accent, sounding: sounding, skip: { finish(score: 0.6) }, hear: { hear() })
         }
         .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(6)); withAnimation(Motion.settle) { canSkip = true } } }
-        .onDisappear { store.stopLessonListening(owner: owner) }
+        .onDisappear { hearTask?.cancel(); finishTask?.cancel(); store.stopLessonListening(owner: owner) }
+        // The microphone stops in the background; pick the note up again on return.
+        .onChange(of: scenePhase) { _, phase in if phase == .active && !finished && !sounding { listen() } }
     }
 
     private var isSequence: Bool { notes.count > 1 }
@@ -170,17 +177,11 @@ struct NotesStep: View {
         }
     }
 
-    /// The note to play, handing over as the last one is ticked off: the old letter fades out before the new
-    /// one fades in, so two never overlap (a fresh view each time, so a reading arriving mid-change can never
-    /// leave it half drawn).
+    /// The note to play, handing over as the last one is ticked off: the old letter is fully gone before the new one
+    /// fades in (`NoteHandover`), so two never overlap and none is left half drawn.
     private var noteLetter: some View {
         let name = NoteName.name(shown?.midi ?? 60)
-        return ZStack {
-            Text(name.dropLast(name.last?.isNumber == true ? 1 : 0)).font(Typeface.note(88)).foregroundStyle(Palette.ink)
-                .id(judge.index)
-                .transition(.noteHandover)
-        }
-        .animation(Motion.pluck, value: judge.index)
+        return NoteHandover(String(name.dropLast(name.last?.isNumber == true ? 1 : 0)), font: Typeface.note(88))
     }
 
     /// Where to play it: a strip of the neck with the target string and fret lit and breathing (fretted
@@ -268,11 +269,13 @@ struct NotesStep: View {
 
     private func hear() {
         guard let current else { return }
+        hearTask?.cancel()
         store.stopLessonListening(owner: owner)
         store.audio.playTones([frequency(current.midi, store)], together: false, noteMs: 900, gapMs: 0)
         sounding = true
-        Task { @MainActor in
+        hearTask = Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(1100))
+            guard !Task.isCancelled else { return }
             sounding = false
             if !finished { listen() }
         }
@@ -281,10 +284,56 @@ struct NotesStep: View {
     private func finish(score: Double) {
         guard !finished else { return }
         finished = true
+        hearTask?.cancel()
         // Notes the microphone never confirmed ("I played it") count as shaky.
         for note in notes[min(judge.index, notes.count)...] { onItem(course.practiceItem(for: note), 0.5) }
         store.stopLessonListening(owner: owner)
-        Task { try? await Task.sleep(for: .milliseconds(700)); done(score) }
+        finishTask = Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(700))
+            guard !Task.isCancelled else { return }
+            done(score)
+        }
+    }
+}
+
+/// A big note name handing over to the next one in two beats: the old name fades out completely, then the new one
+/// fades in. It stays one view throughout (no insertion or removal), so a reading landing mid-change can never
+/// strand a half-faded name on screen (bug 52).
+struct NoteHandover: View {
+    let name: String
+    let font: Font
+    var color: Color = Palette.ink
+    @State private var shown: String
+    @State private var visible = true
+    @State private var swap: Task<Void, Never>?
+
+    init(_ name: String, font: Font, color: Color = Palette.ink) {
+        self.name = name
+        self.font = font
+        self.color = color
+        _shown = State(initialValue: name)
+    }
+
+    var body: some View {
+        Text(verbatim: shown)
+            .font(font)
+            .foregroundStyle(color)
+            .contentTransition(.identity)
+            .opacity(visible ? 1 : 0)
+            .onChange(of: name) { _, next in handOver(to: next) }
+            .onDisappear { swap?.cancel() }
+    }
+
+    private func handOver(to next: String) {
+        swap?.cancel()
+        withAnimation(.easeIn(duration: 0.12)) { visible = false }
+        swap = Task { @MainActor in
+            // Past the fade-out: the old name is gone before the new one is set.
+            try? await Task.sleep(for: .milliseconds(150))
+            guard !Task.isCancelled else { return }
+            shown = next
+            withAnimation(.easeOut(duration: 0.2)) { visible = true }
+        }
     }
 }
 
@@ -328,6 +377,9 @@ struct ChordStep: View {
     @State private var sounding = false
     @State private var demoString: Int?
     @State private var hearTask: Task<Void, Never>?
+    /// The hand-over to the next step, a beat after the chord rings; it ends with the step.
+    @State private var finishTask: Task<Void, Never>?
+    @Environment(\.scenePhase) private var scenePhase
     private let order: [(index: Int, midi: Int)]
 
     init(chord: ChordSpec, course: LearnCourse, accent: Color,
@@ -380,7 +432,9 @@ struct ChordStep: View {
             LessonStepBar(canSkip: canSkip && !finished, accent: accent, sounding: sounding, skip: { finish(0.6) }, hear: { strumIt() })
         }
         .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(6)); withAnimation(Motion.settle) { canSkip = true } } }
-        .onDisappear { hearTask?.cancel(); store.stopLessonListening(owner: owner) }
+        .onDisappear { hearTask?.cancel(); finishTask?.cancel(); store.stopLessonListening(owner: owner) }
+        // The microphone stops in the background; listen again on return.
+        .onChange(of: scenePhase) { _, phase in if phase == .active && !finished && !sounding { listen() } }
     }
 
     /// The chord box's width and stretch: as wide as the screen allows, its frets drawn taller to fill the height.
@@ -495,7 +549,11 @@ struct ChordStep: View {
         finished = true
         onItem(.chord(chord), score)
         store.stopLessonListening(owner: owner)
-        Task { try? await Task.sleep(for: .milliseconds(900)); done(score) }
+        finishTask = Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(900))
+            guard !Task.isCancelled else { return }
+            done(score)
+        }
     }
 }
 

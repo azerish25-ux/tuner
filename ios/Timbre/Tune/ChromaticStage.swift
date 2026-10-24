@@ -8,12 +8,21 @@ import TimbreCore
 struct ChromaticStage: View {
     let input: () -> StageInput
     let note: String
+    /// The host isn't listening and holds no reading: with no pitch the rings stand still, so the disc draws once
+    /// and stops redrawing until the host listens again.
+    var resting = false
     @State private var motion = ReadoutMotion()
+    /// The moment the pitch locks, for the ring of light it sends across the disc.
+    @State private var flash = LockFlash()
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var body: some View {
-        TimelineView(.animation(minimumInterval: reduceMotion ? 0.1 : nil)) { timeline in
+        TimelineView(.animation(minimumInterval: reduceMotion ? 0.1 : nil, paused: resting)) { timeline in
             let state = input()
-            let _ = motion.step(state.listening ? state.cents : nil, locked: state.locked, now: timeline.date.timeIntervalSinceReferenceDate)
+            let now = timeline.date.timeIntervalSinceReferenceDate
+            let _ = motion.step(state.listening ? state.cents : nil, locked: state.locked, now: now)
+            let shock = flash.step(locked: state.listening && state.locked, key: "chromatic", now: now, duration: StrobeRipple.shock)
+            // The disc ripples as deep as the pitch is far off (full at 20¢), and stands still in tune.
+            let depth = state.listening && !state.locked ? min(1, abs(motion.cents ?? 0) / 20) : 0
             Canvas { context, size in
                 let side = min(size.width, size.height) * 0.86
                 let center = CGPoint(x: size.width / 2, y: size.height / 2)
@@ -33,12 +42,20 @@ struct ChromaticStage: View {
                         context.stroke(arc, with: .color(color.opacity(state.listening ? 0.25 + 0.6 * lift : 0.12)), lineWidth: width)
                     }
                 }
-                let tick = Path(roundedRect: CGRect(x: center.x - 2, y: center.y - side * 0.56, width: 4, height: side * 0.06), cornerRadius: 2)
-                context.fill(tick, with: .color(Palette.ink))
                 if state.locked {
                     context.fill(Path(ellipseIn: CGRect(x: center.x - side * 0.3, y: center.y - side * 0.3, width: side * 0.6, height: side * 0.6)),
                                  with: .radialGradient(Gradient(colors: [Palette.locked.opacity(0.28), .clear]), center: center, startRadius: 0, endRadius: side * 0.3))
                 }
+            }
+            // The rings as a liquid surface (Shaders.metal): ripples out when sharp, in when flat, a ring of light on the lock.
+            .strobeRipple(phase: motion.phase, depth: depth, shock: shock, enabled: ShaderFX.allowed(reduceMotion: reduceMotion))
+        }
+        .overlay {
+            // The reference tick stays still over the rippling rings.
+            Canvas { context, size in
+                let side = min(size.width, size.height) * 0.86
+                let tick = Path(roundedRect: CGRect(x: size.width / 2 - 2, y: size.height / 2 - side * 0.56, width: 4, height: side * 0.06), cornerRadius: 2)
+                context.fill(tick, with: .color(Palette.ink))
             }
         }
         .overlay {

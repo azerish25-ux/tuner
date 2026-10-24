@@ -306,15 +306,16 @@ struct FretboardDiagram: View {
             // Landing: hidden until its turn, then it falls the last few points onto the string as it grows.
             let land = CGFloat(landing?[safe: k] ?? 1)
             guard land > 0.01 else { continue }
-            let y = rowY(dot.string) - (1 - min(1, land)) * 14
+            // A landing dot falls the last 14 points onto its string, never from above the drawing's top edge.
+            let drop = (1 - min(1, land)) * 14
             let swell = CGFloat(beat) * 5
             if dot.fret == 0 {
-                let center = CGPoint(x: left - 14, y: y)
-                if pulsing {
-                    let halo = 8 + 3 + swell
-                    context.fill(Path(ellipseIn: CGRect(x: center.x - halo, y: center.y - halo, width: halo * 2, height: halo * 2)), with: .color(accent.opacity(0.18 + 0.14 * beat)))
-                }
                 let side = (tall ? 10 : 8) * land
+                let glow = pulsing ? 8 + 3 + swell : side
+                let center = CGPoint(x: left - 14, y: max(rowY(dot.string) - drop, glow + 1))
+                if pulsing {
+                    context.fill(Path(ellipseIn: CGRect(x: center.x - glow, y: center.y - glow, width: glow * 2, height: glow * 2)), with: .color(accent.opacity(0.18 + 0.14 * beat)))
+                }
                 let ring = Path(ellipseIn: CGRect(x: center.x - side, y: center.y - side, width: side * 2, height: side * 2))
                 context.stroke(ring, with: .color(accent), lineWidth: tall ? 3 : 2.5)
             } else {
@@ -323,6 +324,7 @@ struct FretboardDiagram: View {
                 let r: CGFloat = min(dotCap, gap * 0.48 + 4, fretWidth * 0.42) * land
                 // Capped by the padding, so the halo of a dot on string 1 stays inside the drawing.
                 let halo = min(pad - 1, r + 4 + (pulsing ? swell : 0))
+                let y = max(rowY(dot.string) - drop, halo + 1)
                 context.fill(Path(ellipseIn: CGRect(x: x - halo, y: y - halo, width: halo * 2, height: halo * 2)), with: .color(accent.opacity(pulsing ? 0.2 + 0.15 * beat : 0.25)))
                 context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))
                 if land > 0.6, let finger = dot.finger, finger > 0 {
@@ -410,13 +412,36 @@ struct ChordDiagram: View {
     /// The column left of the box for the fret numbers or the "5fr" label.
     private var labelColumn: CGFloat { (reservesFretLabel || fretNumbers || (chord.baseFret ?? 1) > 1) ? 20 : 0 }
 
+    /// A finger dot's radius is at most 0.38 of the string gap, and a landing dot overshoots it by up to 9 %.
+    private static let dotReach: CGFloat = 0.38 * 1.09
+    /// Past the dot: its halo (3) and two points of air.
+    private static let dotAir: CGFloat = 5
+    /// The least margin beside an outer string: room for its open ring or muted cross over the nut.
+    private static let sideFloor: CGFloat = 10
+
+    /// The lowest string's x and the gap between strings across a canvas `width` wide. Each side keeps exactly
+    /// the room a whole finger dot needs on an outer string (its radius at the largest, its halo and its landing
+    /// overshoot; a barre's rounded end the same), so a dot on string 1 or the lowest string is never cut off at
+    /// any size (bug 06b); the fret-number column sits left of that. The margins grow with the box, so a big box
+    /// keeps its dots inside and a small one doesn't waste its width on empty margins.
+    private func stringSpan(width: CGFloat) -> (first: CGFloat, gap: CGFloat) {
+        let count = chord.frets.count
+        let room = max(0, width - labelColumn)
+        guard count > 1 else { return (labelColumn + room / 2, 0) }
+        let spans = CGFloat(count - 1)
+        // Both margins are `dotReach × gap + dotAir`: solve for the gap that fills the rest.
+        var gap = (room - 2 * Self.dotAir) / (spans + 2 * Self.dotReach)
+        if Self.dotReach * gap + Self.dotAir < Self.sideFloor { gap = (room - 2 * Self.sideFloor) / spans }
+        gap = max(0, gap)
+        let side = max(Self.sideFloor, Self.dotReach * gap + Self.dotAir)
+        return (labelColumn + side, gap)
+    }
+
     /// Where each string's line runs across a box `width` wide (lowest string first), so a row drawn over the
     /// box (the lesson's string checks) lines up with it.
     func stringPositions(width: CGFloat) -> [CGFloat] {
-        let count = chord.frets.count
-        let left = 22 + labelColumn, right = width - 22 + labelColumn / 4
-        let gap = (right - left) / CGFloat(max(1, count - 1))
-        return (0..<count).map { left + CGFloat($0) * gap }
+        let span = stringSpan(width: width)
+        return (0..<chord.frets.count).map { span.first + CGFloat($0) * span.gap }
     }
 
     var body: some View {
@@ -495,10 +520,11 @@ struct ChordDiagram: View {
         let count = chord.frets.count
         let rows = 4
         let base = chord.baseFret ?? 1
-        // The "5fr" label (or the fret numbers) get their own column left of the grid instead of sitting on its edge.
-        let labelColumn = self.labelColumn
-        let left: CGFloat = 22 + labelColumn, right = size.width - 22 + labelColumn / 4
-        let gap = (right - left) / CGFloat(max(1, count - 1))
+        // The "5fr" label (or the fret numbers) get their own column left of the grid instead of sitting on its edge,
+        // and each outer string keeps room for a whole dot beside it (`stringSpan`).
+        let span = stringSpan(width: size.width)
+        let left = span.first, gap = span.gap
+        let right = left + gap * CGFloat(max(0, count - 1))
         // String numbers under the box when there's room (not on the small "next chord" preview).
         let numbered = gap >= 13
         let top: CGFloat = 24, bottom = size.height - (numbered ? 20 : 6)
@@ -762,7 +788,9 @@ struct KeyboardView: View {
     }
 }
 
-/// One bar: beat numbers and the hits of a pattern; the playhead sweeps while it plays.
+/// One bar of a pattern as the explanations and quizzes draw it: the rhythm step's own beat lane (`LessonBeatRow`)
+/// without its calls, so a pattern looks the same wherever it's taught. On a strummed instrument that's every
+/// down and up stroke with the pick riding the lane; otherwise dots with a playhead.
 struct RhythmBar: View {
     let pattern: [Double]
     var beatsPerBar: Int = 4
@@ -774,40 +802,8 @@ struct RhythmBar: View {
     var arrows = false
 
     var body: some View {
-        Canvas { context, size in
-            // Inset by the largest dot and its halo (15) plus air, so the first hit isn't clipped.
-            let left: CGFloat = 22, right = size.width - 14
-            let width = right - left
-            let mid = size.height / 2 - 8
-            context.fill(Path(roundedRect: CGRect(x: left, y: mid - 1, width: width, height: 2), cornerRadius: 1), with: .color(Palette.line))
-            for beat in 0..<beatsPerBar {
-                let x = left + width * CGFloat(beat) / CGFloat(beatsPerBar)
-                context.fill(Path(CGRect(x: x - 0.5, y: mid - 14, width: 1, height: 28)), with: .color(Palette.inkFaint.opacity(0.5)))
-                context.draw(Text("\(beat + 1)").font(Typeface.label(13)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: x, y: size.height - 10))
-            }
-            for (i, hit) in pattern.enumerated() {
-                let x = left + width * CGFloat(hit) / CGFloat(beatsPerBar)
-                let grade = judged[i]
-                let color: Color = grade == .miss ? Palette.danger : grade != nil ? accent : (hit.truncatingRemainder(dividingBy: 1) == 0 ? accent : Palette.amber)
-                let strike = BeatStrike.amount(playhead: playhead, at: hit / Double(max(1, beatsPerBar)))
-                let r: CGFloat = (hit.truncatingRemainder(dividingBy: 1) == 0 ? 11 : 8) * (1 + 0.22 * CGFloat(strike))
-                BeatStrike.draw(&context, at: CGPoint(x: x, y: mid), radius: r, color: color, strike: strike)
-                context.fill(Path(ellipseIn: CGRect(x: x - r - 4, y: mid - r - 4, width: (r + 4) * 2, height: (r + 4) * 2)), with: .color(color.opacity(0.18)))
-                context.fill(Path(ellipseIn: CGRect(x: x - r, y: mid - r, width: r * 2, height: r * 2)), with: .color(color))
-                if arrows {
-                    let down = hit.truncatingRemainder(dividingBy: 1) == 0
-                    let arrow = Text(Image(systemName: down ? "arrow.down" : "arrow.up")).font(.system(size: r * 1.15, weight: .black)).foregroundStyle(Palette.onAccent)
-                    context.draw(arrow, at: CGPoint(x: x, y: mid))
-                }
-            }
-            if let playhead {
-                let x = left + width * CGFloat(playhead)
-                context.fill(Path(roundedRect: CGRect(x: x - 1.5, y: mid - 22, width: 3, height: 44), cornerRadius: 1.5), with: .color(Palette.ink))
-            }
-        }
-        .frame(height: 86)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Rhythm pattern"))
+        LessonBeatRow(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: playhead,
+                      calls: judged.mapValues { BeatCall(grade: $0, offset: nil) }, arrows: arrows, callRows: false)
     }
 }
 
@@ -968,26 +964,38 @@ struct RingMotif: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var period: Double { beat ? 60.0 / 76 : 2.6 }
+    private var moving: Bool { active && !reduceMotion }
 
+    /// The rings ripple on the timeline; the orb sits outside it (unless it pulses with a beat), so a new symbol
+    /// or colour lands the moment the caller changes it, never a frame of the old one late.
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion || !active)) { timeline in
-            let t = timeline.date.timeIntervalSinceReferenceDate
-            let moving = active && !reduceMotion
-            let beatPhase = (t / period).truncatingRemainder(dividingBy: 1)
-            let pulse: CGFloat = moving && beat ? CGFloat(1 + 0.07 * exp(-7 * beatPhase)) : 1
-            ZStack {
+        ZStack {
+            TimelineView(.animation(minimumInterval: 1 / 30, paused: !moving)) { timeline in
+                let t = timeline.date.timeIntervalSinceReferenceDate
                 Canvas { context, size in draw(&context, size: size, t: t, moving: moving) }
-                if let symbol {
-                    Image(systemName: symbol).font(.system(size: 30, weight: .semibold)).foregroundStyle(Palette.onAccent)
-                        .contentTransition(.symbolEffect(.replace))
-                        .frame(width: 76, height: 76)
-                        .background(Circle().fill(accent))
-                        .shadow(color: accent.opacity(0.55), radius: 20)
-                        .scaleEffect(pulse)
+            }
+            if let symbol {
+                if beat && moving {
+                    TimelineView(.animation(minimumInterval: 1 / 30)) { timeline in
+                        let beatPhase = (timeline.date.timeIntervalSinceReferenceDate / period).truncatingRemainder(dividingBy: 1)
+                        orb(symbol).scaleEffect(CGFloat(1 + 0.07 * exp(-7 * beatPhase)))
+                    }
+                } else {
+                    orb(symbol)
                 }
             }
         }
         .accessibilityHidden(true)
+    }
+
+    /// The centre orb: the symbol on the accent. The symbol swaps outright (no replace effect that could lag a
+    /// reading behind), so the orb always says what the words beside it say.
+    private func orb(_ symbol: String) -> some View {
+        Image(systemName: symbol).font(.system(size: 30, weight: .semibold)).foregroundStyle(Palette.onAccent)
+            .contentTransition(.identity)
+            .frame(width: 76, height: 76)
+            .background(Circle().fill(accent))
+            .shadow(color: accent.opacity(0.55), radius: 20)
     }
 
     private func draw(_ context: inout GraphicsContext, size: CGSize, t: Double, moving: Bool) {

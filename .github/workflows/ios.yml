@@ -53,6 +53,8 @@ jobs:
         run: |
           DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,re,sys; d=json.load(sys.stdin); runtimes=sorted(d["devices"].items(),key=lambda pair:tuple(map(int,re.findall(r"\d+",pair[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if "iPhone" in x["name"]))')
           echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
       - name: Build app and tests
         run: |
           set -o pipefail
@@ -133,6 +135,8 @@ jobs:
           else:
               raise SystemExit('No available 13-inch iPad simulator; tablet verification cannot use a smaller device.')
           PY
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
       - name: Run real iPad portrait and landscape screenshots
         run: |
           set -o pipefail

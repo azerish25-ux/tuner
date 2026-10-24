@@ -45,6 +45,9 @@ final class StageController {
     private var rig: InstrumentRig?
     private var pegs: [String: (entity: Entity, base: simd_quatf, position: SIMD3<Float>)] = [:]
     private var posts: [String: (entity: Entity, base: simd_quatf)] = [:]
+    /// Each post's centre in model space (by peg name), measured once as the model goes on stage: where the string
+    /// leaves the head, for the lock shimmer (`lockPath`).
+    private var postCenters: [String: SIMD3<Float>] = [:]
     private var staticStrings: [String: Entity] = [:]
     private var segments: [ModelEntity] = []
     private var halo: [ModelEntity] = []
@@ -159,7 +162,7 @@ final class StageController {
         model = nil
         rig = nil
         loadedModel = nil
-        pegs = [:]; posts = [:]; staticStrings = [:]; angles = [:]
+        pegs = [:]; posts = [:]; postCenters = [:]; staticStrings = [:]; angles = [:]
         segments = []; halo = []
         currentAnchor = nil
         currentPeg = nil
@@ -183,7 +186,11 @@ final class StageController {
                 peg.components.set(CollisionComponent(shapes: [.generateSphere(radius: 0.024)]))
                 peg.components.set(InputTargetComponent())
             }
-            if let post = entity.findEntity(named: string.post) { posts[string.peg] = (post, post.orientation) }
+            if let post = entity.findEntity(named: string.post) {
+                posts[string.peg] = (post, post.orientation)
+                let center = post.visualBounds(relativeTo: holder).center
+                if center.x.isFinite && center.y.isFinite && center.z.isFinite { postCenters[string.peg] = center }
+            }
             if let line = entity.findEntity(named: string.nodeName) { staticStrings[string.nodeName] = line }
         }
         let mesh = MeshResource.generateCylinder(height: 1, radius: 1)
@@ -394,6 +401,43 @@ final class StageController {
         return PegMarker(points: points, side: left ? -1 : 1, tighten: first.tighten, slides: first.slides, closeUp: framing)
     }
 
+    /// The string being tuned on screen, for the lock shimmer (`LockShimmer`).
+    struct LockPath {
+        var peg: CGPoint
+        /// Where the string leaves the head: its post (its peg when the model has no post for it).
+        var post: CGPoint
+        var nut: CGPoint
+        var saddle: CGPoint
+        /// The headstock: the box around every peg and nut on screen.
+        var head: CGRect?
+    }
+
+    /// The lead string of the anchor being tuned, projected like `pegMarker`; nil before the model is on stage. Read
+    /// only while the shimmer runs. A string with no length of its own (a wind joint) shimmers at its peg alone.
+    func lockPath(in size: CGSize) -> LockPath? {
+        guard let rig, !showcase, let anchor = currentAnchor,
+              let string = Self.tuned(rig, anchor: anchor, peg: currentPeg).first,
+              let peg = screenPoint(string.pegPoint, in: size) else { return nil }
+        guard string.radius > 0, let nut = screenPoint(string.nutPoint, in: size) else {
+            return LockPath(peg: peg, post: peg, nut: peg, saddle: peg, head: nil)
+        }
+        let post = postCenters[string.peg].flatMap { screenPoint($0, in: size) } ?? peg
+        // Past the nut the string runs on to its saddle (straight on from the head, should the saddle be off camera).
+        let saddle = screenPoint(string.saddlePoint, in: size)
+            ?? CGPoint(x: nut.x + (nut.x - post.x) * 6, y: nut.y + (nut.y - post.y) * 6)
+        var low = CGPoint(x: CGFloat.greatestFiniteMagnitude, y: CGFloat.greatestFiniteMagnitude)
+        var high = CGPoint(x: -CGFloat.greatestFiniteMagnitude, y: -CGFloat.greatestFiniteMagnitude)
+        for each in rig.strings {
+            for point in [each.pegPoint, each.nutPoint] {
+                guard let p = screenPoint(point, in: size) else { continue }
+                low = CGPoint(x: min(low.x, p.x), y: min(low.y, p.y))
+                high = CGPoint(x: max(high.x, p.x), y: max(high.y, p.y))
+            }
+        }
+        let head = high.x >= low.x ? CGRect(x: low.x, y: low.y, width: high.x - low.x, height: high.y - low.y) : nil
+        return LockPath(peg: peg, post: post, nut: nut, saddle: saddle, head: head)
+    }
+
     func tick(_ dt: Float) {
         guard dt > 0 else { return }
         time += Double(dt)
@@ -503,6 +547,8 @@ struct InstrumentStage: View {
     /// The host's placeholder (a `StudioStage` with card points) dollies to the peg as well: the model then
     /// appears at the placeholder's framing instead of holding the whole instrument first.
     var revealClose = false
+    /// The host isn't listening and holds no reading: the peg cue settles and stops redrawing (`StagePegCue.resting`).
+    var resting = false
     @State private var box = StageBox()
     @State private var ready = false
     @State private var status = "make"
@@ -555,7 +601,7 @@ struct InstrumentStage: View {
         // Feather the edges so the stage melts into the screen whatever the renderer clears to.
         .mask { StageFeather(close: 1) }
         .overlay {
-            if !showcase { StagePegCue(controller: controller, input: input, reduceMotion: reduceMotion) }
+            if !showcase { StagePegCue(controller: controller, input: input, reduceMotion: reduceMotion, resting: resting, loaded: ready) }
         }
         .opacity(ready ? 1 : 0)
         .animation(Motion.settle, value: ready)

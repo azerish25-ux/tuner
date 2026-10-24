@@ -66,6 +66,8 @@ targets:
       - path: Timbre/Intents/SharedIntents.swift
       # The configurable widgets' instruments and song shelves, written by the app (WidgetLibraryPublisher.swift).
       - path: Timbre/Intents/WidgetLibrary.swift
+      # The streak carried forward to the moment shown (`StreakStatus`, as Siri reads it), so the widget resets after midnight.
+      - path: Timbre/Intents/StreakSnippet.swift
       - path: Timbre/Services/WidgetBridge.swift
       - path: Timbre/Services/PracticeActivityAttributes.swift
       - path: Timbre/Design/Theme.swift

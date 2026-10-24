@@ -18,6 +18,9 @@ struct MetronomeView: View {
     @State private var trainerEvery = 4
     @State private var trainerTarget = 140
     @State private var trainerTask: Task<Void, Never>?
+    /// The tempo under the slider while a finger drags it; committed (saved, and the click changed) on release.
+    @State private var slidingBpm: Double?
+    @State private var sliding = false
     /// The pendulum gives up (or takes) height so tempo, trainer and the meter card end right above the dock.
     @State private var pendulumHeight: CGFloat = 184
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -181,7 +184,7 @@ struct MetronomeView: View {
             HStack(alignment: .firstTextBaseline, spacing: 18) {
                 Button { store.setMetronome(bpm: store.bpm - 1) } label: { Image(systemName: "minus").frame(width: 44, height: 44) }
                     .buttonStyle(.plain).foregroundStyle(Palette.inkSoft).accessibilityLabel("Slower")
-                Text("\(store.bpm)").font(Typeface.display(80)).foregroundStyle(Palette.ink).contentTransition(.numericText()).monospacedDigit()
+                Text("\(shownBpm)").font(Typeface.display(80)).foregroundStyle(Palette.ink).contentTransition(.numericText()).monospacedDigit()
                     .background { tempoRing.padding(.horizontal, -16).padding(.vertical, -2) }
                     // VoiceOver: swipe up or down to change the tempo a beat per minute at a time.
                     .adjustableValue(Text("Tempo"), value: Text(verbatim: "\(store.bpm), \(tempoName)"),
@@ -193,15 +196,30 @@ struct MetronomeView: View {
             }
             .background { tempoGlow }
             Text("\(tempoName) · beats per minute").font(.subheadline).foregroundStyle(Palette.inkSoft)
-            Slider(value: Binding(get: { Double(store.bpm) }, set: { store.setMetronome(bpm: Int($0)) }), in: 30...300, step: 1)
+            Slider(value: sliderBpm, in: 30...300, step: 1, onEditingChanged: { editing in
+                sliding = editing
+                // One save and one change of the click when the finger lets go, not one per step of the drag.
+                if !editing, let value = slidingBpm { slidingBpm = nil; store.setMetronome(bpm: Int(value.rounded())) }
+            })
                 .tint(Palette.brass).padding(.horizontal, 8)
                 .accessibilityLabel("Tempo")
         }
         .animation(Motion.quick, value: store.bpm)
     }
 
+    /// The number over the slider: the dragged tempo while a finger is on it.
+    private var shownBpm: Int { slidingBpm.map { Int($0.rounded()) } ?? store.bpm }
+
+    /// While dragging, the slider moves only its own value; a change without a drag (VoiceOver's adjust, a keyboard)
+    /// is committed at once.
+    private var sliderBpm: Binding<Double> {
+        Binding(get: { slidingBpm ?? Double(store.bpm) }, set: { value in
+            if sliding { slidingBpm = value } else { store.setMetronome(bpm: Int(value.rounded())) }
+        })
+    }
+
     private var tempoName: String {
-        switch store.bpm {
+        switch shownBpm {
         case ..<60: return String(localized: "Largo")
         case ..<76: return String(localized: "Adagio")
         case ..<108: return String(localized: "Andante")

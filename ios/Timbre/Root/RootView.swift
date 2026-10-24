@@ -8,6 +8,16 @@ struct RootView: View {
     @EnvironmentObject private var commerce: CommerceService
     @Environment(\.scenePhase) private var scenePhase
 
+    /// The paywall drawn over the tabs (Settings and the instrument picker host their own).
+    private var rootPaywall: Bool { store.showPaywall && !store.showSettings && !store.showInstrumentPicker }
+
+    /// Hands are on the instrument while the tuner or a lesson listens, a click or the drone plays, or a reference
+    /// note sounds: the screen stays on, since Auto-Lock would send the app to the background and stop the
+    /// microphone mid-take. Only while Timbre is in front; Auto-Lock is back the moment all of it stops.
+    private var keepAwake: Bool {
+        scenePhase == .active && (audio.running || audio.metronomeRunning || audio.droneRunning || audio.tonePlaying)
+    }
+
     var body: some View {
         TabView(selection: $store.selectedTab) {
             Tab("Tune", systemImage: "tuningfork", value: AppTab.tune) { TuneView() }
@@ -18,6 +28,8 @@ struct RootView: View {
             Tab("Play", systemImage: "gamecontroller", value: AppTab.practice) { PracticeView() }
             Tab("Progress", systemImage: "chart.line.uptrend.xyaxis", value: AppTab.journey) { JourneyView() }
         }
+        // VoiceOver stays on the paywall while it covers the tabs, rather than reaching the controls behind it.
+        .accessibilityHidden(rootPaywall)
         .tint(Palette.brass)
         .preferredColorScheme(.dark)  // Studio Noir is a dark design
         .environment(\.locale, Locale(identifier: store.settings.language == "system" ? Locale.current.identifier : store.settings.language))
@@ -28,7 +40,7 @@ struct RootView: View {
         // The root paywall is a plain overlay rather than a UIKit presentation: UI tests never saw a sheet
         // anchored at the root appear over the tabs. Settings and the instrument picker host their own sheet.
         .overlay {
-            if store.showPaywall && !store.showSettings && !store.showInstrumentPicker {
+            if rootPaywall {
                 PaywallView().transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
@@ -63,8 +75,11 @@ struct RootView: View {
         .onChange(of: store.selectedTab) { old, _ in if old == .tune { store.stopActivity() } }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { store.stopActivity() }
+            // Settings writes are coalesced (`AppStore.updateSettings`): what is waiting is saved before the app can be suspended.
+            if phase != .active { store.flushSettings() }
             if phase == .active { store.applyStreakFreezes(); store.syncAchievements() }
         }
+        .onChange(of: keepAwake, initial: true) { _, awake in UIApplication.shared.isIdleTimerDisabled = awake }
         .task { store.applyStreakFreezes(); store.syncAchievements() }
         .onChange(of: commerce.isPro) { _, pro in if pro { Analytics.log("pro_active") } }
         // timbre://… from widgets and links, and from App Intents through `IntentRouter.link` (routes: Intents/DeepLink.swift).

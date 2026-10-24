@@ -41,7 +41,10 @@ struct CoachVoice {
         switch note.fact {
         case let .change(from, to, milliseconds, beat, missed, count, bpm):
             return changeText(from: Self.name(from), to: Self.name(to), milliseconds: milliseconds, beat: beat, missed: missed, count: count,
-                              loop: loopTempo(note) ?? bpm)
+                              loop: loopTempo(note) ?? bpm, chords: Coach.changesChord(from: from, to: to))
+        case let .nextLevel(from, to, milliseconds, beat):
+            return nextLevelText(from: Self.name(from), to: Self.name(to), milliseconds: milliseconds, beat: beat,
+                                 chords: Coach.changesChord(from: from, to: to))
         case let .lean(milliseconds, _, bpm):
             if milliseconds >= 0 {
                 return String(localized: "Your notes sat about \(milliseconds) ms behind the click. Play along with the metronome at \(bpm) BPM and land right on it.")
@@ -76,14 +79,38 @@ struct CoachVoice {
         }
     }
 
-    private func changeText(from: String, to: String, milliseconds: Int?, beat: Int, missed: Int, count: Int, loop: Int) -> String {
+    /// Between chords it is a "change"; between single notes, a "move".
+    private func changeText(from: String, to: String, milliseconds: Int?, beat: Int, missed: Int, count: Int, loop: Int, chords: Bool) -> String {
         guard let milliseconds else {
-            return String(localized: "\(from) → \(to) didn’t land (\(missed) of \(count)). Practice the change at \(loop) BPM until your hand knows the way.")
+            if chords {
+                return String(localized: "\(from) → \(to) didn’t land (\(missed) of \(count)). Practice the change at \(loop) BPM until your hand knows the way.")
+            }
+            return String(localized: "\(from) → \(to) didn’t land (\(missed) of \(count)). Practice the move at \(loop) BPM until your hand knows the way.")
         }
         if milliseconds >= 0 {
-            return String(localized: "\(from) → \(to) was \(milliseconds) ms late on beat \(beat). Practice the change at \(loop) BPM until it lands.")
+            if chords {
+                return String(localized: "\(from) → \(to) was \(milliseconds) ms late on beat \(beat). Practice the change at \(loop) BPM until it lands.")
+            }
+            return String(localized: "\(from) → \(to) was \(milliseconds) ms late on beat \(beat). Practice the move at \(loop) BPM until it lands.")
         }
-        return String(localized: "\(from) → \(to) came in \(abs(milliseconds)) ms early on beat \(beat). Practice the change at \(loop) BPM and wait for the click.")
+        if chords {
+            return String(localized: "\(from) → \(to) came in \(abs(milliseconds)) ms early on beat \(beat). Practice the change at \(loop) BPM and wait for the click.")
+        }
+        return String(localized: "\(from) → \(to) came in \(abs(milliseconds)) ms early on beat \(beat). Practice the move at \(loop) BPM and wait for the click.")
+    }
+
+    /// A flawless run's tip: the one change (or move) still off the beat, as the next level rather than a fix.
+    private func nextLevelText(from: String, to: String, milliseconds: Int, beat: Int, chords: Bool) -> String {
+        if milliseconds >= 0 {
+            if chords {
+                return String(localized: "Next level: \(from) → \(to) came \(milliseconds) ms late on beat \(beat). Land that change right on the click.")
+            }
+            return String(localized: "Next level: \(from) → \(to) came \(milliseconds) ms late on beat \(beat). Land that move right on the click.")
+        }
+        if chords {
+            return String(localized: "Next level: \(from) → \(to) came \(abs(milliseconds)) ms early on beat \(beat). Let that change wait for the click.")
+        }
+        return String(localized: "Next level: \(from) → \(to) came \(abs(milliseconds)) ms early on beat \(beat). Let that move wait for the click.")
     }
 
     private func slippedText(_ names: [String], percent: Int, drill: Bool) -> String {
@@ -156,7 +183,7 @@ struct CoachVoice {
 
     static func symbol(_ note: CoachNote) -> String {
         switch note.fact {
-        case .change, .lean: return "metronome.fill"
+        case .change, .lean, .nextLevel: return "metronome.fill"
         case .slipped: return "scope"
         case .clean: return "checkmark.seal.fill"
         case .split: return "chart.bar.fill"
@@ -210,6 +237,7 @@ struct CoachVoice {
     func names(_ note: CoachNote) -> [String] {
         switch note.fact {
         case let .change(from, to, _, _, _, _, _): return [Self.name(from), Self.name(to)]
+        case let .nextLevel(from, to, _, _): return [Self.name(from), Self.name(to)]
         case let .slipped(items, _): return items.map(Self.name)
         case let .drift(anchor, _): return [stringName(anchor)]
         default: return []

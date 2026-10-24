@@ -20,6 +20,10 @@ struct LessonResults: View {
     let onNext: (Lesson) -> Void
     @EnvironmentObject private var store: AppStore
     @State private var shownStars = 0
+    /// When each earned star landed, for its heat glow (`StarHeat`).
+    @State private var landed: [Int: Date] = [:]
+    /// The result's poster renders once the reveal has settled (after the level bar), never under the stars' landing.
+    @State private var shareReady = false
     @State private var xp = 0
     @State private var burst = 0
     @State private var appeared = false
@@ -49,9 +53,10 @@ struct LessonResults: View {
 
     private static let gold = Color(hex: 0xF0A93B)
 
-    /// "Flawless" only for a clean run (98 % or better); three stars from 90 % read "Great work".
+    /// "Flawless" only for a clean run (98 % or better); three stars from 90 % read "Great work". The coach goes by the
+    /// same rule (`Coach.isFlawless`), so under "Flawless" it never sends you to fix something.
     private var headline: LocalizedStringKey {
-        if result.stars == 3 && result.accuracy >= 0.98 { return "Flawless" }
+        if Coach.isFlawless(result) { return "Flawless" }
         return result.stars >= 2 ? "Great work" : "Lesson complete"
     }
 
@@ -303,12 +308,12 @@ struct LessonResults: View {
         let courseTitle = course.title.localized
         let title = lesson.title.localized
         if isSong {
-            SharePill(preview: "Timbre", tint: accent) {
+            SharePill(preview: "Timbre", tint: accent, armed: shareReady, wait: .zero) {
                 LessonShareCard(course: courseTitle, title: title, headline: nil, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: true,
                                 streak: store.streak.current)
             }
         } else {
-            SharePill(preview: headline, tint: accent) {
+            SharePill(preview: headline, tint: accent, armed: shareReady, wait: .zero) {
                 LessonShareCard(course: courseTitle, title: title, headline: headline, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: false,
                                 streak: store.streak.current)
             }
@@ -439,6 +444,8 @@ struct LessonResults: View {
         return Image(systemName: "star.fill")
             .font(.system(size: size, weight: .bold))
             .foregroundStyle(earned && shown ? AnyShapeStyle(LinearGradient(colors: [Color(hex: 0xFFE29A), Color(hex: 0xF0A93B)], startPoint: .top, endPoint: .bottom)) : AnyShapeStyle(Color.white.opacity(0.08)))
+            // Lands white-hot and cools to gold, a glint crossing it (Shaders.metal).
+            .modifier(StarHeat(landed: earned ? landed[i] : nil))
             .shadow(color: earned && shown ? Color(hex: 0xF0A93B).opacity(0.6) : .clear, radius: 18)
             .scaleEffect(shown ? 1 : 0.3)
             .rotationEffect(.degrees(shown ? 0 : -40))
@@ -466,7 +473,7 @@ struct LessonResults: View {
         for i in 0..<3 {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 80 : 380))
             withAnimation(.spring(response: 0.45, dampingFraction: 0.55)) { shownStars = i + 1 }
-            if i < result.stars { SoundFX.shared.play(.star); Haptics.shared.lock(); burst += 1 }
+            if i < result.stars { landed[i] = Date(); SoundFX.shared.play(.star); Haptics.shared.lock(); burst += 1 }
         }
         if coach != nil {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 200))
@@ -484,6 +491,8 @@ struct LessonResults: View {
             withAnimation(.linear(duration: 0.03)) { xp = result.xp * s / steps }
         }
         await fillLevelBar()
+        // The lull after the level bar: the poster renders here (a few frames of work), not as the stars land.
+        shareReady = true
         if let reward {
             for i in 0..<(reward.achievementsEarned.count + reward.questsCompleted.count + (reward.dailySetCompleted ? 1 : 0)) {
                 try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 320))
@@ -529,15 +538,22 @@ struct LessonResults: View {
 struct SharePill<Card: View>: View {
     let preview: LocalizedStringKey
     let tint: Color
+    /// The poster renders only once armed, and `wait` after that: rendering takes the main thread for a few frames,
+    /// so it never runs while a reward moment is still landing.
+    let armed: Bool
+    let wait: Duration
     let card: Card
     @State private var image: Image?
     @Environment(\.displayScale) private var displayScale
     @Environment(\.locale) private var locale
     @Environment(\.layoutDirection) private var layoutDirection
 
-    init(preview: LocalizedStringKey, tint: Color = Palette.mint, @ViewBuilder card: () -> Card) {
+    init(preview: LocalizedStringKey, tint: Color = Palette.mint, armed: Bool = true, wait: Duration = ShareCardRenderer.entrance,
+         @ViewBuilder card: () -> Card) {
         self.preview = preview
         self.tint = tint
+        self.armed = armed
+        self.wait = wait
         self.card = card()
     }
 
@@ -546,12 +562,17 @@ struct SharePill<Card: View>: View {
             if let image {
                 ShareLink(item: image, preview: SharePreview(preview, image: image)) { face(image) }
                     .buttonStyle(PressScaleStyle())
+                    .transition(.opacity)
             } else {
                 face(nil).opacity(0.55)
             }
         }
-        .task {
-            if image == nil { image = ShareCardRenderer.image(card, scale: displayScale, locale: locale, direction: layoutDirection) }
+        .animation(.easeOut(duration: 0.25), value: image == nil)
+        .task(id: armed) {
+            guard armed, image == nil else { return }
+            if wait > .zero { try? await Task.sleep(for: wait) }
+            guard !Task.isCancelled, image == nil else { return }
+            image = ShareCardRenderer.image(card, scale: displayScale, locale: locale, direction: layoutDirection)
         }
     }
 

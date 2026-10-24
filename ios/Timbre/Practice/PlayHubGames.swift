@@ -45,6 +45,8 @@ struct GameChallenge {
     let xp: Int
     let done: Int
     let total: Int
+    /// The game whose card this is: its leaderboard chip, and Pitch Sniper's challenge to a friend.
+    var game: PlayGame? = nil
     var complete: Bool { done >= total }
     var fraction: Double { Double(min(done, total)) / Double(max(1, total)) }
 
@@ -60,20 +62,21 @@ struct GameChallenge {
         if let quest = store.quests.first(where: { $0.kind == .sniperWin || $0.kind == .bullseyes }) {
             let count = store.questCounter(quest)
             let title = quest.kind == .sniperWin ? Text("Win a round") : Text("Hit \(quest.target) bullseyes")
-            return GameChallenge(title: title, xp: quest.xp, done: count.done, total: count.total)
+            return GameChallenge(title: title, xp: quest.xp, done: count.done, total: count.total, game: .sniper)
         }
-        return GameChallenge(title: Text("Win a round"), xp: XPReward.sniperWin, done: min(1, today(.sniperWin, in: store)), total: 1)
+        return GameChallenge(title: Text("Win a round"), xp: XPReward.sniperWin, done: min(1, today(.sniperWin, in: store)), total: 1,
+                             game: .sniper)
     }
 
     /// Ten right answers, a full round's worth (or today's ear quest).
     @MainActor static func ear(_ store: AppStore) -> GameChallenge {
         if let quest = store.quests.first(where: { $0.kind == .earCorrect }) {
             let count = store.questCounter(quest)
-            return GameChallenge(title: Text("Get \(quest.target) right"), xp: quest.xp, done: count.done, total: count.total)
+            return GameChallenge(title: Text("Get \(quest.target) right"), xp: quest.xp, done: count.done, total: count.total, game: .ear)
         }
         let round = 10
         return GameChallenge(title: Text("Get \(round) right"), xp: round * XPReward.earCorrect,
-                             done: min(round, today(.earCorrect, in: store)), total: round)
+                             done: min(round, today(.earCorrect, in: store)), total: round, game: .ear)
     }
 }
 

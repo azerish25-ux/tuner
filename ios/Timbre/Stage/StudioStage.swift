@@ -77,16 +77,33 @@ struct StudioStage: View {
     let card: StageCard?
     let input: () -> StageInput
     var onSelect: (String) -> Void = { _ in }
+    /// The host isn't listening and holds no reading: once the dolly, the string's glow and the ring have settled,
+    /// the stage stops redrawing (and its ring stops pulsing) until something changes.
+    var resting = false
     @State private var motion = Motion2D()
+    /// A change at rest (a new picture or string, the close-up, the window's size, listening stopping) still moves:
+    /// the stage keeps drawing for `StageSettle.window` before it holds still.
+    @State private var settling = true
+    /// The moment the string locks, for its shimmer.
+    @State private var flash = LockFlash()
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         GeometryReader { geometry in
             let size = geometry.size
             if let card {
-                // Every frame: the dolly moves the picture, its rings and its tap targets together.
-                TimelineView(.animation(minimumInterval: reduceMotion ? 0.1 : nil)) { timeline in
-                    live(card: card, size: size, date: timeline.date)
+                // Read only at rest (the reading doesn't change then), so a live pitch never re-runs this closure.
+                let key = resting ? StageSettle.key(input(), picture: imageName, size: size) : nil
+                let still = resting && !settling
+                // Every frame while anything moves: the dolly moves the picture, its rings and its tap targets together.
+                TimelineView(.animation(minimumInterval: reduceMotion ? 0.1 : nil, paused: still)) { timeline in
+                    live(card: card, size: size, date: timeline.date, idle: still)
+                }
+                .task(id: key) {
+                    settling = true
+                    guard key != nil else { return }
+                    try? await Task.sleep(for: StageSettle.window)
+                    if !Task.isCancelled { settling = false }
                 }
             } else {
                 picture(StageFrame.whole(in: size))
@@ -101,7 +118,9 @@ struct StudioStage: View {
             .position(x: frame.origin.x + frame.side / 2, y: frame.origin.y + frame.side / 2)
     }
 
-    @ViewBuilder private func live(card: StageCard, size: CGSize, date: Date) -> some View {
+    /// - Parameter idle: the stage has settled at rest and this is its last frame until something changes: the
+    ///   peg's ring is drawn still rather than frozen mid-pulse.
+    @ViewBuilder private func live(card: StageCard, size: CGSize, date: Date, idle: Bool = false) -> some View {
         let state = input()
         let key = shownAnchor(card, state).map { shownKey(card, state, anchor: $0) }
         let frame = motion.frame(picture: imageName, head: card.head, peg: key.flatMap { card.point("\($0).peg") },
@@ -109,16 +128,30 @@ struct StudioStage: View {
         ZStack {
             ZStack {
                 picture(frame)
-                Canvas { context, _ in draw(&context, card: card, frame: frame, date: date) }
+                Canvas { context, _ in draw(&context, card: card, frame: frame, date: date, idle: idle) }
                     .allowsHitTesting(false)
                     .accessibilityHidden(true)
             }
             // A zoomed picture melts into the screen at the stage's edges, as the 3D stage does.
             .mask { StageFeather(close: frame.close) }
+            lockShimmer(card: card, key: key, state: state, frame: frame, date: date)
             pegLabel(card: card, frame: frame, size: size, date: date)
                 .allowsHitTesting(false)
                 .accessibilityHidden(true)
             pegTargets(card: card, frame: frame, size: size)
+        }
+    }
+
+    /// The lock shimmer (`LockShimmer`) as the string being tuned locks: from its peg along the string, from the nut
+    /// down, and across the head. The picture has no post, so the string's light starts at the peg.
+    @ViewBuilder private func lockShimmer(card: StageCard, key: String?, state: StageInput, frame: StageFrame, date: Date) -> some View {
+        let shimmer = flash.step(locked: state.listening && state.locked, key: key ?? "-", now: date.timeIntervalSinceReferenceDate,
+                                 duration: LockShimmer.duration)
+        if let shimmer, let key, ShaderFX.allowed(reduceMotion: reduceMotion), let peg = card.point("\(key).peg") {
+            let nut = card.point("\(key).nut").map { frame.point($0) } ?? frame.point(peg)
+            let saddle = card.point("\(key).saddle").map { frame.point($0) } ?? nut
+            let head = card.head.map { CGRect(origin: frame.point($0.origin), size: CGSize(width: $0.width * frame.side, height: $0.height * frame.side)) }
+            LockShimmer(peg: frame.point(peg), post: frame.point(peg), nut: nut, saddle: saddle, head: head, elapsed: shimmer)
         }
     }
 
@@ -170,13 +203,13 @@ struct StudioStage: View {
         }
     }
 
-    private func draw(_ context: inout GraphicsContext, card: StageCard, frame: StageFrame, date: Date) {
+    private func draw(_ context: inout GraphicsContext, card: StageCard, frame: StageFrame, date: Date, idle: Bool) {
         let state = input()
         let now = date.timeIntervalSinceReferenceDate
         let (smoothed, phase, e, g) = motion.step(state, now: now)
         guard let anchor = shownAnchor(card, state) else { return }
         let key = shownKey(card, state, anchor: anchor)
-        let still = reduceMotion
+        let still = reduceMotion || idle
         let color = Palette.tuning(smoothed, locked: state.locked)
         if let a = card.point("\(key).saddle"), let b = card.point("\(key).nut") {
             let p0 = frame.point(a)
@@ -207,6 +240,19 @@ struct StudioStage: View {
                 context.fill(Path(ellipseIn: CGRect(x: center.x - 4, y: center.y - 4, width: 8, height: 8)), with: .color(color))
             }
         }
+    }
+}
+
+/// When a stage at rest may stop redrawing (`StudioStage.resting`, `StagePegCue.resting`): only once everything a
+/// change set moving has come to rest.
+enum StageSettle {
+    /// Long enough for the dolly (about a second and a half), the glide to another peg and a fading glow to finish.
+    static let window: Duration = .seconds(2.5)
+
+    /// What, changing at rest, sets the stage moving again: the picture or model, the close-up, the string and peg
+    /// being tuned, and the stage's size.
+    static func key(_ state: StageInput, picture: String, size: CGSize) -> String {
+        "\(picture)|\(state.focus)|\(state.activeAnchor ?? "-")|\(state.pegIndex ?? -1)|\(Int(size.width))x\(Int(size.height))"
     }
 }
 

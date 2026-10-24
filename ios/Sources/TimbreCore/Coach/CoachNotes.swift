@@ -59,6 +59,9 @@ public enum CoachFact: Equatable, Sendable {
     /// bar, on average over the changes heard; `missed` of `count` weren't heard at all (`milliseconds` is nil when
     /// none was). `bpm` is the take's tempo.
     case change(from: PracticeItem, to: PracticeItem, milliseconds: Int?, beat: Int, missed: Int, count: Int, bpm: Int)
+    /// On a flawless run (`Coach.isFlawless`) the change that still came in off the beat, as the next level to reach
+    /// rather than a fix: `milliseconds` late (negative: early) on `beat` of its bar, on average.
+    case nextLevel(from: PracticeItem, to: PracticeItem, milliseconds: Int, beat: Int)
     /// The notes sat `milliseconds` behind (negative: ahead of) the click on average, over `notes` notes at `bpm`.
     case lean(milliseconds: Int, notes: Int, bpm: Int)
     /// These slipped, weakest first (one or two of a kind); the weakest came out `percent` % clean.
@@ -101,7 +104,7 @@ public struct CoachNote: Identifiable, Equatable, Sendable {
 
     public var topic: Topic {
         switch fact {
-        case .change, .lean: return .timing
+        case .change, .lean, .nextLevel: return .timing
         case .slipped, .clean: return .items
         case .split: return .skills
         case .belowTempo: return .tempo
@@ -114,7 +117,7 @@ public struct CoachNote: Identifiable, Equatable, Sendable {
 
     public var tone: Tone {
         switch fact {
-        case .clean, .moreTime, .closerTuning: return .praise
+        case .clean, .moreTime, .closerTuning, .nextLevel: return .praise
         case .streak, .today: return .habit
         default: return .fix
         }
@@ -124,6 +127,7 @@ public struct CoachNote: Identifiable, Equatable, Sendable {
     public var id: String {
         switch fact {
         case let .change(from, to, _, _, _, _, _): return "change.\(from.key)>\(to.key)"
+        case let .nextLevel(from, to, _, _): return "next.\(from.key)>\(to.key)"
         case .lean: return "lean"
         case let .slipped(items, _): return "slipped." + items.map(\.key).joined(separator: "+")
         case let .split(strong, _, weak, _): return "split.\(strong.rawValue)>\(weak.rawValue)"
@@ -161,6 +165,20 @@ public enum Coach {
     public static let steadySpread = 0.025
     /// Notes a card shows at most.
     public static let limit = 3
+    /// Three stars at this accuracy or better is "Flawless" on the results.
+    public static let flawlessAbove = 0.98
+
+    /// A run the results call "Flawless" (three stars, 98 % or better). The coach agrees with the headline then: it
+    /// has nothing to fix, only praise or the next level to reach.
+    public static func isFlawless(_ result: LessonResult) -> Bool {
+        result.stars >= 3 && result.accuracy >= flawlessAbove
+    }
+
+    /// Going from one chord to another is a "change"; between single notes it is a "move" (a melody has no chord to
+    /// change), which is how the coach words it.
+    public static func changesChord(from: PracticeItem, to: PracticeItem) -> Bool {
+        CoachSkill.of(from) == .chords || CoachSkill.of(to) == .chords
+    }
 
     // MARK: After a lesson
 
@@ -181,19 +199,34 @@ public enum Coach {
         }
     }
 
-    /// What to say at the end of a lesson, best first (empty when there is nothing specific).
+    /// What to say at the end of a lesson, best first (empty when there is nothing specific). Under "Flawless" the
+    /// coach agrees with the headline: no fixes, and a change still off the beat comes as the next level to reach.
     public static func lessonNotes(_ context: LessonContext) -> [CoachNote] {
+        let flawless = isFlawless(context.result)
         var notes: [CoachNote] = []
         if !context.tapped {
-            notes += timingNotes(context.takes, weight: 1)
-            if let note = belowTempoNote(context) { notes.append(note) }
+            if flawless {
+                if let tip = nextLevelNote(context.takes) { notes.append(tip) }
+            } else {
+                notes += timingNotes(context.takes, weight: 1)
+                if let note = belowTempoNote(context) { notes.append(note) }
+            }
         }
         // A weak-spot review is the drill itself: it doesn't send you to it again.
         let review = context.canReview && !LearnProgress.isReview(context.lesson.id) ? CoachAction.review(courseId: context.courseId) : nil
         let scores = context.result.items.map { (item: $0.item, score: $0.score) }
         notes += itemNotes(scores, review: review, base: 0.6)
         if let note = splitNote(scores, review: review) { notes.append(note) }
-        return rank(notes)
+        return rank(flawless ? notes.filter { $0.tone != .fix } : notes)
+    }
+
+    /// On a flawless run: the change that kept coming in off the beat (heard every time, and off on average by at
+    /// least `lateChange`), as a tip with no slower tempo to practise it at. It leads the clean-run praise.
+    static func nextLevelNote(_ takes: [CoachTake]) -> CoachNote? {
+        guard let change = worstChange(in: takes), change.missed == 0, let offset = change.meanOffset,
+              abs(offset) >= lateChange else { return nil }
+        return CoachNote(fact: .nextLevel(from: change.from, to: change.to, milliseconds: milliseconds(offset), beat: change.beat),
+                         action: nil, priority: 0.3)
     }
 
     /// Timing notes from takes: the change that kept landing late, then a lean behind or ahead of the click.

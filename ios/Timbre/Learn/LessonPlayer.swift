@@ -27,6 +27,9 @@ struct LessonPlayer: View {
     @State private var opening: Bool
     /// The presentation that brought the lesson in has finished.
     @State private var arrived = false
+    /// The Metronome tool was clicking when the lesson opened and nothing has stopped it since (a take restarts the
+    /// click fresh, which ends the tool's): closing the lesson then leaves the tool's click alone.
+    @State private var toolClick = false
 
     init(course: LearnCourse, lesson: Lesson, onNext: ((Lesson) -> Void)? = nil) {
         self.course = course
@@ -84,8 +87,17 @@ struct LessonPlayer: View {
             Button("Leave", role: .destructive) { dismiss() }
             Button("Keep going", role: .cancel) {}
         } message: { Text("Your progress in this lesson won’t be saved.") }
-        .onAppear { LiveActivityController.shared.lessonOpened(lesson.id, title: lesson.title.localized, symbol: course.symbol) }
-        .onDisappear { store.stopLessonListening(); store.audio.stopMetronome(); LiveActivityController.shared.lessonClosed(lesson.id) }
+        .onAppear {
+            toolClick = store.audio.metronomeRunning
+            LiveActivityController.shared.lessonOpened(lesson.id, title: lesson.title.localized, symbol: course.symbol)
+        }
+        .onReceive(store.audio.$metronomeRunning) { running in if !running { toolClick = false } }
+        .onDisappear {
+            store.stopLessonListening()
+            // Only the lesson's own click stops with it; the Metronome tool's keeps going.
+            if !toolClick { store.audio.stopMetronome() }
+            LiveActivityController.shared.lessonClosed(lesson.id)
+        }
         .statusBarHidden(result == nil)
         // The zoom-in from the Learn tab can be pulled back down; not halfway through (the close button asks first).
         .interactiveDismissDisabled(run.index > 0 && result == nil)
@@ -158,30 +170,25 @@ struct LessonPlayer: View {
         return practiced ? min(1, stars) : stars
     }
 
+    /// The close button beside the lesson's compact header: its name, "Step 2 of 7" and a track with a segment
+    /// per step, all in one 44 pt row.
     private var topBar: some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 8) {
             Button { if run.index == 0 { dismiss() } else { confirmQuit = true } } label: {
-                Image(systemName: "xmark").font(.system(size: 17, weight: .bold)).foregroundStyle(Palette.inkSoft)
+                Image(systemName: "xmark").font(.system(size: 14, weight: .bold)).foregroundStyle(Palette.inkSoft)
+                    .frame(width: 34, height: 34)
+                    .background(Circle().fill(Color.white.opacity(0.07)))
+                    .overlay(Circle().strokeBorder(Color.white.opacity(0.06), lineWidth: 1))
                     .frame(width: 44, height: 44).contentShape(Rectangle())
             }
+            .buttonStyle(PressScaleStyle())
             .accessibilityLabel("Close lesson").accessibilityIdentifier("lesson.close")
-            GeometryReader { proxy in
-                ZStack(alignment: .leading) {
-                    Capsule().fill(.white.opacity(0.09))
-                    Capsule().fill(LinearGradient(colors: [accent.opacity(0.85), accent], startPoint: .leading, endPoint: .trailing))
-                        .frame(width: max(14, proxy.size.width * run.progress))
-                        .overlay(alignment: .top) { Capsule().fill(.white.opacity(0.35)).frame(height: 3).padding(.horizontal, 6).padding(.top, 2) }
-                        .shadow(color: accent.opacity(0.5), radius: 8)
-                }
-            }
-            .frame(height: 14)
-            .animation(.spring(response: 0.6, dampingFraction: 0.75), value: run.progress)
-            // A song's sheet comes before its steps: the bar shows once they start.
-            .opacity(opening ? 0 : 1)
-            .accessibilityElement().accessibilityLabel(Text("Step \(run.index + 1) of \(lesson.steps.count)"))
-            .accessibilityHidden(opening)
+            LessonHeader(title: lesson.title.localized, index: run.index, steps: lesson.steps.count, accent: accent)
+                // A song's sheet comes before its steps (and names the song itself): the header shows once they start.
+                .opacity(opening ? 0 : 1)
+                .accessibilityHidden(opening)
         }
-        .padding(.horizontal, 12).padding(.top, 6).padding(.bottom, 4)
+        .padding(.leading, 8).padding(.trailing, 20).padding(.top, 4).padding(.bottom, 6)
     }
 
     private func advance(_ score: Double?) {
@@ -250,6 +257,87 @@ struct StepView: View {
 }
 
 // MARK: - Shared pieces
+
+/// A lesson's compact header beside its close button: the lesson's name and "Step 2 of 7" on one line, over a track
+/// with a segment per step. VoiceOver reads it as one element.
+struct LessonHeader: View {
+    let title: String
+    /// The step on screen, from 0.
+    let index: Int
+    let steps: Int
+    let accent: Color
+
+    private var shown: Int { min(index + 1, max(1, steps)) }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 7) {
+            HStack(alignment: .firstTextBaseline, spacing: 10) {
+                Text(verbatim: title)
+                    .font(Typeface.label(14, relativeTo: .subheadline))
+                    .foregroundStyle(Palette.ink)
+                    .lineLimit(1)
+                Spacer(minLength: 0)
+                Text("Step \(shown) of \(steps)")
+                    .font(Typeface.number(12, relativeTo: .caption))
+                    .foregroundStyle(Palette.inkSoft)
+                    .lineLimit(1)
+                    .fixedSize()
+                    .contentTransition(.numericText(value: Double(shown)))
+            }
+            LessonProgressTrack(index: index, steps: steps, accent: accent)
+        }
+        // One row beside the 44 pt close button: the words stop growing before they'd crowd it.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        .animation(.spring(response: 0.5, dampingFraction: 0.82), value: index)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: title))
+        .accessibilityValue(Text("Step \(shown) of \(steps)"))
+    }
+}
+
+/// The lesson's progress: a segment per step, the steps done filled in the accent, the one on screen lit softly with
+/// a glow, the rest dim. A long lesson (over 16 steps) would make slivers, so it gets one continuous bar instead.
+struct LessonProgressTrack: View {
+    /// The step on screen, from 0 (`steps` once every step is done).
+    let index: Int
+    let steps: Int
+    let accent: Color
+    private static let thickness: CGFloat = 6
+
+    var body: some View {
+        Group {
+            if steps >= 2 && steps <= 16 { segments } else { bar }
+        }
+        .frame(height: Self.thickness)
+        .accessibilityHidden(true)
+    }
+
+    private var fill: LinearGradient {
+        LinearGradient(colors: [accent.opacity(0.85), accent], startPoint: .leading, endPoint: .trailing)
+    }
+
+    private var segments: some View {
+        HStack(spacing: 4) {
+            ForEach(0..<steps, id: \.self) { k in
+                Capsule().fill(Color.white.opacity(0.09))
+                    .overlay(Capsule().fill(fill).opacity(k < index ? 1 : k == index ? 0.4 : 0))
+                    .shadow(color: accent.opacity(k == index ? 0.55 : 0), radius: 5)
+            }
+        }
+    }
+
+    private var bar: some View {
+        GeometryReader { proxy in
+            let share = steps > 0 ? CGFloat(min(index, steps)) / CGFloat(steps) : 1
+            ZStack(alignment: .leading) {
+                Capsule().fill(Color.white.opacity(0.09))
+                Capsule().fill(fill)
+                    .frame(width: max(Self.thickness, proxy.size.width * share))
+                    .shadow(color: accent.opacity(0.5), radius: 6)
+            }
+        }
+    }
+}
 
 /// The big bottom button every step ends with.
 struct StepButton: View {
@@ -370,15 +458,27 @@ struct SparkBurst: View {
     /// The expanding ring; off where it would cross nearby text.
     var ring = true
     @State private var started = Date.distantPast
+    /// A burst is in the air: the timeline only runs for its 0.9 s, so an idle burst (most of the time, on most
+    /// screens) costs nothing and doesn't hold the display at its full rate.
+    @State private var live = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        TimelineView(.animation(paused: reduceMotion)) { timeline in
+        TimelineView(.animation(paused: reduceMotion || !live)) { timeline in
             let t = timeline.date.timeIntervalSince(started)
             Canvas { context, size in draw(&context, size: size, t: t) }
         }
         .allowsHitTesting(false)
-        .onChange(of: trigger) { _, _ in started = Date() }
+        .onChange(of: trigger) { _, _ in
+            let launched = Date()
+            started = launched
+            live = true
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(0.95))
+                // A later burst keeps the timeline running for its own 0.9 s.
+                if started == launched { live = false }
+            }
+        }
         .accessibilityHidden(true)
     }
 }
@@ -421,6 +521,9 @@ struct ChoiceStep: View {
     @State private var shake = 0
     @State private var burst = 0
     @State private var playing = false
+    /// The question's notes as they play: one sequence at a time, and none outlives the step (a stale one would
+    /// sound over the next question and switch off the next step's microphone).
+    @State private var playTask: Task<Void, Never>?
     /// The question's and the answers' heights, to know how much room the picture between them can take.
     @State private var promptHeight: CGFloat = 0
     @State private var answersHeight: CGFloat = 0
@@ -458,6 +561,7 @@ struct ChoiceStep: View {
             }
         }
         .onAppear { if let sound { play(sound) } }
+        .onDisappear { playTask?.cancel(); playTask = nil }
     }
 
     private var answers: some View {
@@ -590,14 +694,18 @@ struct ChoiceStep: View {
         .transition(.move(edge: .bottom).combined(with: .opacity))
     }
 
+    /// Plays the question's notes group by group; a replay stops the sequence already playing first.
     private func play(_ sound: [[Int]]) {
+        playTask?.cancel()
         playing = true
-        Task { @MainActor in
+        playTask = Task { @MainActor in
             for group in sound {
+                guard !Task.isCancelled else { return }
                 let hz = group.map { PitchMath.frequency(midi: Double($0), reference: store.settings.referencePitchHz) }
                 store.audio.playTones(hz, together: group.count > 1, noteMs: group.count > 1 ? 900 : 650, gapMs: 120)
                 try? await Task.sleep(for: .milliseconds(group.count > 1 ? 1350 : 800))
             }
+            guard !Task.isCancelled else { return }
             playing = false
         }
     }

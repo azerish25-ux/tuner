@@ -46,14 +46,21 @@ struct CelebrationOverlay: View {
                     }
                     .font(Typeface.label(13))
                     HStack(spacing: 12) {
+                        // The card renders once the burst has landed; until then Share rests, dimmed, where it will be.
                         if let card {
                             ShareLink(item: card, preview: SharePreview("In tune with Timbre", image: card)) {
                                 Label("Share", systemImage: "square.and.arrow.up")
                             }
                             .buttonStyle(BrassButtonStyle())
+                        } else {
+                            Button {} label: { Label("Share", systemImage: "square.and.arrow.up") }
+                                .buttonStyle(BrassButtonStyle())
+                                .disabled(true)
+                                .opacity(0.5)
                         }
                         Button("Done") { dismiss() }.buttonStyle(BrassButtonStyle(prominent: false))
                     }
+                    .animation(.easeOut(duration: 0.25), value: card == nil)
                     .padding(.top, 6)
                     // Tuned up: the natural moment to play something.
                     if let course = store.curriculum.courses.first(where: { $0.instrument == store.instrument.id }), let next = store.learn.nextLesson(in: course) {
@@ -78,9 +85,16 @@ struct CelebrationOverlay: View {
         }
         .animation(Motion.pluck, value: visible)
         .onChange(of: store.celebrate) { _, _ in
-            started = Date()
+            let start = Date()
+            started = start
+            card = nil
             visible = true
-            renderCard()
+            // Rendering the card holds the main thread for a few frames: after the entrance, never under it.
+            Task { @MainActor in
+                try? await Task.sleep(for: ShareCardRenderer.entrance)
+                guard visible, started == start else { return }
+                renderCard()
+            }
             Task { try? await Task.sleep(for: .seconds(6)); if visible { dismiss() } }
         }
     }
@@ -155,7 +169,11 @@ private struct Burst: View {
 // MARK: - Share cards
 
 /// Renders a share card to an image for `ShareLink`, at the screen's scale and in the app's language and direction.
+/// Rendering holds the main thread for a few frames, so the reward screens start it after their entrance.
 enum ShareCardRenderer {
+    /// How long a reward moment's entrance runs before its card may render.
+    static let entrance: Duration = .milliseconds(900)
+
     @MainActor static func image(_ card: some View, scale: CGFloat, locale: Locale, direction: LayoutDirection) -> Image? {
         let renderer = ImageRenderer(content: card.environment(\.locale, locale).environment(\.layoutDirection, direction))
         renderer.scale = scale
@@ -186,7 +204,10 @@ struct ShareCardButton<Card: View>: View {
             }
         }
         .task {
-            if image == nil { image = ShareCardRenderer.image(card, scale: displayScale, locale: locale, direction: layoutDirection) }
+            guard image == nil else { return }
+            try? await Task.sleep(for: ShareCardRenderer.entrance)
+            guard !Task.isCancelled, image == nil else { return }
+            image = ShareCardRenderer.image(card, scale: displayScale, locale: locale, direction: layoutDirection)
         }
     }
 
@@ -227,7 +248,10 @@ struct ShareCardRow<Card: View>: View {
         .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Palette.stageRaised))
         .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(tint.opacity(0.25), lineWidth: 1))
         .task {
-            if image == nil { image = ShareCardRenderer.image(card, scale: displayScale, locale: locale, direction: layoutDirection) }
+            guard image == nil else { return }
+            try? await Task.sleep(for: ShareCardRenderer.entrance)
+            guard !Task.isCancelled, image == nil else { return }
+            image = ShareCardRenderer.image(card, scale: displayScale, locale: locale, direction: layoutDirection)
         }
     }
 

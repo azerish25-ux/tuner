@@ -12,6 +12,8 @@ struct TuneView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     /// Settings › Strobe precision: a strobe band in place of the needle meter.
     @AppStorage(TuneView.strobeKey) private var strobeView = false
     static let strobeKey = "tune.strobe"
@@ -37,23 +39,18 @@ struct TuneView: View {
             StageBackground()
             PitchAura().allowsHitTesting(false)
             GeometryReader { proxy in
-                // Landscape and large iPad windows: the stage takes the left, tuning controls the right.
-                let wide = proxy.size.width > proxy.size.height * 1.15
+                let arrangement = TuneArrangement(size: proxy.size, regular: horizontalSizeClass == .regular && verticalSizeClass == .regular)
                 VStack(spacing: 0) {
                     header
-                    if wide {
-                        HStack(spacing: 20) {
-                            stage.frame(maxWidth: .infinity, maxHeight: .infinity)
-                            VStack(spacing: 0) {
-                                Spacer(minLength: 0)
-                                tuningPanel
-                                Spacer(minLength: 0)
-                            }
-                            .frame(width: min(560, proxy.size.width * 0.44))
-                        }
-                    } else {
-                        stage.frame(maxHeight: .infinity)
-                        tuningPanel.frame(maxWidth: 680)
+                    // One layout that changes shape rather than two branches: the stage keeps its identity when the
+                    // window turns or resizes, so the 3D instrument carries on instead of being rebuilt, losing its
+                    // loaded model and showing the studio stand-in (or nothing) while it loads again.
+                    arrangement.layout {
+                        stage(controls: arrangement != .columns)
+                            .frame(width: arrangement == .columns ? TuneArrangement.stageWidth(in: proxy.size.width) : nil)
+                            .frame(maxWidth: arrangement == .beside ? CGFloat.infinity : nil, maxHeight: .infinity)
+                        panel(arrangement, width: proxy.size.width)
+                        if arrangement == .columns { controlRail }
                     }
                 }
                 .frame(width: proxy.size.width, height: proxy.size.height)
@@ -91,7 +88,11 @@ struct TuneView: View {
         }
         .onChange(of: store.allCoursesLocked) { _, all in showWhole = all }
         .onChange(of: store.selectedCourse) { _, _ in showWhole = false }
-        .sheet(isPresented: $store.showInstrumentPicker) { InstrumentPicker().presentationDetents([.large]).presentationBackground(Palette.stage) }
+        // A page sheet on iPad: tall enough for the tunings, filters and the shelf of cards in full (a form sheet cut
+        // the cards in half); a phone's sheet is unchanged.
+        .sheet(isPresented: $store.showInstrumentPicker) {
+            InstrumentPicker().presentationDetents([.large]).presentationSizing(.page).presentationBackground(Palette.stage)
+        }
         .fullScreenCover(isPresented: $strumOpen) { StrumTuneView().environmentObject(store).environmentObject(audio) }
         #if DEBUG
         .overlay(alignment: .bottomLeading) { if Self.probe { stageProbe } }
@@ -205,11 +206,17 @@ struct TuneView: View {
                           note: store.targetName, pegIndex: peg)
     }
 
-    @ViewBuilder private var stage: some View {
+    /// Nothing drives the stage (not listening, no reading held): its animations settle, then stop redrawing.
+    private var resting: Bool { !audio.running && !store.live.preserved }
+
+    /// - Parameter controls: the side controls stand on the stage's trailing edge (in the iPad's landscape columns
+    ///   they have a rail of their own instead).
+    @ViewBuilder private func stage(controls: Bool) -> some View {
+        let resting = self.resting
         ZStack(alignment: .top) {
             if store.referenceMode {
                 // The note name lives in the readout below; the strobe ring stays clear of the side buttons.
-                ChromaticStage(input: stageInput, note: "").padding(.vertical, 20).padding(.horizontal, 64)
+                ChromaticStage(input: stageInput, note: "", resting: resting).padding(.vertical, 20).padding(.horizontal, 64)
             } else if let modelID = store.modelID {
                 let rig = ModelLibrary.rig(modelID)
                 if Self.supports3D && store.settings.stageMode != "studio" && failed3D != modelID {
@@ -221,33 +228,71 @@ struct TuneView: View {
                         // the tuner on a wide shot without its cue; the model then picks the dolly up where it got to.
                         if ready3D != modelID {
                             StudioStage(imageName: rendered ? ModelLibrary.cardImageName(modelID) : (store.photo?.asset ?? ""),
-                                        card: card, input: stageInput) { selectPeg($0) }
+                                        card: card, input: stageInput, onSelect: { selectPeg($0) }, resting: resting)
                                 .padding(.horizontal, 16)
                                 .transition(.opacity)
                         }
                         InstrumentStage(modelID: modelID, input: stageInput, onSelect: { selectPeg($0) },
                                         onFailure: { failed3D = modelID },
                                         onReady: { withAnimation(.easeInOut(duration: 0.6)) { ready3D = modelID } },
-                                        revealClose: card?.head != nil)
+                                        revealClose: card?.head != nil, resting: resting)
                     }
                 } else if ModelLibrary.hasCard(modelID) {
-                    StudioStage(imageName: ModelLibrary.cardImageName(modelID), card: rig.flatMap(StageCard.init(rig:)), input: stageInput) { selectPeg($0) }
+                    StudioStage(imageName: ModelLibrary.cardImageName(modelID), card: rig.flatMap(StageCard.init(rig:)), input: stageInput,
+                                onSelect: { selectPeg($0) }, resting: resting)
                         .padding(.horizontal, 16)
                 } else if let photo = store.photo {
-                    StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: stageInput) { selectPeg($0) }.padding(28)
+                    StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: stageInput,
+                                onSelect: { selectPeg($0) }, resting: resting).padding(28)
                 }
             } else if let photo = store.photo {
-                StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: stageInput) { selectPeg($0) }.padding(28)
+                StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: stageInput,
+                            onSelect: { selectPeg($0) }, resting: resting).padding(28)
             }
         }
-        .overlay(alignment: .trailing) { sideControls.padding(.trailing, 14) }
+        .overlay(alignment: .trailing) {
+            if controls { sideControls.padding(.trailing, 14) }
+        }
         // A container element keeps its children's own identifiers (stage.debug).
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("tune.stage")
     }
 
+    /// The readout, quest line and string rail, placed for the arrangement: under the stage, beside it in a
+    /// column (a phone on its side), or as the iPad's middle column, centred between the instrument and the controls.
+    @ViewBuilder private func panel(_ arrangement: TuneArrangement, width: CGFloat) -> some View {
+        switch arrangement {
+        case .stacked:
+            tuningPanel.frame(maxWidth: 680)
+        case .beside:
+            VStack(spacing: 0) {
+                Spacer(minLength: 0)
+                tuningPanel
+                Spacer(minLength: 0)
+            }
+            .frame(width: min(560, width * 0.44))
+        case .columns:
+            VStack(spacing: 0) {
+                Spacer(minLength: 0)
+                tuningPanel.frame(maxWidth: 560)
+                Spacer(minLength: 0)
+            }
+            .frame(maxWidth: .infinity)
+        }
+    }
+
+    /// The iPad's landscape columns: the side controls as a rail of their own on the trailing edge, where a phone
+    /// has them, beside the readout rather than floating over the middle of the stage.
+    private var controlRail: some View {
+        sideControls
+            .padding(.leading, 6).padding(.trailing, 18)
+            .frame(maxHeight: .infinity)
+    }
+
     private var readout: some View {
-        TimelineView(.animation) { timeline in
+        // Every frame while a pitch can move it; at rest (not listening, nothing held) the readout has no pitch and
+        // nothing to animate, so it draws once and stops instead of redrawing at the display rate.
+        TimelineView(.animation(minimumInterval: nil, paused: resting)) { timeline in
             let reading = store.live.reading
             let heard = audio.running || store.live.preserved
             let _ = motion.step(heard ? reading.cents : nil, locked: reading.inTune, now: timeline.date.timeIntervalSinceReferenceDate,
@@ -263,6 +308,8 @@ struct TuneView: View {
                 Text(statusLine(reading, shown: shown)).font(.footnote.weight(.semibold))
                     .foregroundStyle(statusColor(reading, shown: shown))
                     .monospacedDigit()
+                    // The words swap in one frame; only the fade is animated, so two lines never blend into one.
+                    .contentTransition(.identity)
                     .opacity(badgeSaysIt ? 0 : 1)
                     .animation(Motion.quick, value: badgeSaysIt)
                     .accessibilityHidden(badgeSaysIt)
@@ -385,6 +432,36 @@ struct ListenOrb: View {
         .accessibilityLabel(Text(audio.running ? "Pause listening" : "Listen"))
         .accessibilityIdentifier("listenButton")
     }
+}
+
+/// How the tuner places its stage, readout and controls for the window it has, chosen by shape and size class
+/// (never by device), so a phone, an iPad, Split View and Stage Manager windows each get the one that fits.
+enum TuneArrangement: Equatable {
+    /// Portrait: the stage over the readout and string rail, the controls on the stage's trailing edge.
+    case stacked
+    /// A short wide window (a phone on its side): the stage beside the readout, the controls on the stage.
+    case beside
+    /// A wide window at regular width and height (iPad landscape): the instrument, then the readout and string
+    /// rail in the middle column, then a rail of controls on the trailing edge.
+    case columns
+
+    init(size: CGSize, regular: Bool) {
+        guard size.width > size.height * 1.15 else { self = .stacked; return }
+        self = regular && size.width >= 900 ? .columns : .beside
+    }
+
+    /// The same container in every arrangement, so the children (the stage first) keep their identity.
+    var layout: AnyLayout {
+        switch self {
+        case .stacked: return AnyLayout(VStackLayout(spacing: 0))
+        case .beside: return AnyLayout(HStackLayout(spacing: 20))
+        case .columns: return AnyLayout(HStackLayout(spacing: 0))
+        }
+    }
+
+    /// The instrument's column: enough for the headstock close-up with its peg label either side, the rest of the
+    /// width going to the readout.
+    static func stageWidth(in width: CGFloat) -> CGFloat { min(640, max(420, width * 0.42)) }
 }
 
 /// Warm or cool light behind the stage that follows the pitch.

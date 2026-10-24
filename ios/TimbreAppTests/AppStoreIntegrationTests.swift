@@ -57,6 +57,8 @@ final class AppStoreIntegrationTests: XCTestCase {
     func testMetronomeAndDroneSettingsPersist() throws {
         store.setMetronome(bpm: 132, beats: 7, subdivision: 2, sound: .wood)
         store.cycleBeatLevel(3)
+        // Settings writes are coalesced; the app writes what is waiting when it leaves the foreground.
+        store.flushSettings()
         let reopened = try AppStore(directory: directory)
         XCTAssertEqual(reopened.bpm, 132)
         XCTAssertEqual(reopened.beats, 7)
@@ -64,7 +66,15 @@ final class AppStoreIntegrationTests: XCTestCase {
         XCTAssertEqual(reopened.metronomeSound, .wood)
         XCTAssertEqual(reopened.beatLevels[3], 0)
         reopened.setDrone(midi: 55, voice: .pure)
+        reopened.flushSettings()
         XCTAssertEqual(try AppStore(directory: directory).droneMidi, 55)
+    }
+
+    func testSettingsWaitingForTheirWriteRideAlongWithAPracticeRecord() throws {
+        store.setDrone(midi: 57)
+        store.finishPractice(.ear, questions: 4, correct: 3)
+        // The record's write carries the drone setting changed just before it.
+        XCTAssertEqual(try AppStore(directory: directory).droneMidi, 57)
     }
 
     func testTuningSessionSavesOnPauseAndCountsTowardStreak() throws {

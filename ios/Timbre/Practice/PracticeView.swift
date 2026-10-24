@@ -7,6 +7,7 @@ enum PracticeRoute: Hashable { case metronome, ear, chords, scales, drone, voice
 struct PracticeView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
+    @Environment(\.horizontalSizeClass) private var sizeClass
     @State private var path: [PracticeRoute] = []
 
     /// German capitalises every noun, so the instrument name keeps its capital there.
@@ -16,42 +17,98 @@ struct PracticeView: View {
 
     var body: some View {
         NavigationStack(path: $path) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 22) {
-                    HStack(alignment: .center) {
-                        Text("Play").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
-                            .accessibilityAddTraits(.isHeader)
-                        Spacer()
-                        // Today's ring is the card right below, so the chip shows just the streak.
-                        StreakChip(showsToday: false) { store.selectedTab = .journey }
+            hub
+                .onAppear(perform: consumePendingRoute)
+                .onChange(of: store.pendingPracticeRoute) { _, _ in consumePendingRoute() }
+                .navigationDestination(for: PracticeRoute.self) { route in
+                    Group {
+                        switch route {
+                        case .metronome: MetronomeView()
+                        case .ear: EarTrainingView()
+                        case .chords: ChordsView(mode: .chords)
+                        case .scales: ChordsView(mode: .scales)
+                        case .drone: DroneView()
+                        case .voice: VoiceView()
+                        case .intonation: IntonationView()
+                        case .sniper: PitchSniperView()
+                        }
                     }
-                    DailySetCard { open($0) }
-                    levelCard
-                    let sideQuests = DailySet.sideQuests(store.quests, beside: store.dailySet)
-                    if !sideQuests.isEmpty { questSection(sideQuests) }
-                    gamesSection
-                    toolsSection
+                    .toolbar(.hidden, for: .tabBar)
                 }
-                .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+        }
+    }
+
+    /// A phone (or any compact width) gets one column; an iPad's regular width a grid of cards (`CardColumns`).
+    @ViewBuilder private var hub: some View {
+        if sizeClass == .regular {
+            GeometryReader { proxy in
+                let columns = CardColumns(width: proxy.size.width - 2 * Metrics.gutter)
+                scroller {
+                    if columns.count > 1 { wideHub(columns) } else { compactHub }
+                }
             }
-            .stageTopShade()
-            .background(StageBackground(motes: false))
-            .onAppear(perform: consumePendingRoute)
-            .onChange(of: store.pendingPracticeRoute) { _, _ in consumePendingRoute() }
-            .navigationDestination(for: PracticeRoute.self) { route in
-                Group {
-                switch route {
-                case .metronome: MetronomeView()
-                case .ear: EarTrainingView()
-                case .chords: ChordsView(mode: .chords)
-                case .scales: ChordsView(mode: .scales)
-                case .drone: DroneView()
-                case .voice: VoiceView()
-                case .intonation: IntonationView()
-                case .sniper: PitchSniperView()
+        } else {
+            scroller { compactHub }
+        }
+    }
+
+    private func scroller<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        ScrollView {
+            content()
+                .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+        }
+        .stageTopShade()
+        .background(StageBackground(motes: false))
+    }
+
+    private var header: some View {
+        HStack(alignment: .center) {
+            Text("Play").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
+                .accessibilityAddTraits(.isHeader)
+            Spacer()
+            // Today's ring is the card right below, so the chip shows just the streak.
+            StreakChip(showsToday: false) { store.selectedTab = .journey }
+        }
+    }
+
+    private var sideQuests: [Quest] { DailySet.sideQuests(store.quests, beside: store.dailySet) }
+
+    private var compactHub: some View {
+        VStack(alignment: .leading, spacing: 22) {
+            header
+            DailySetCard { open($0) }
+            levelCard
+            let sideQuests = self.sideQuests
+            if !sideQuests.isEmpty { questSection(sideQuests) }
+            gamesSection
+            toolsSection
+        }
+    }
+
+    /// iPad: Today beside your level and quests, then the ear games side by side. Three columns put the tools in
+    /// the third column beside the games; two columns give the tools a row of their own.
+    private func wideHub(_ columns: CardColumns) -> some View {
+        let wide = columns.count >= 3
+        let sideQuests = self.sideQuests
+        return VStack(alignment: .leading, spacing: 26) {
+            header
+            HStack(alignment: .top, spacing: CardColumns.spacing) {
+                DailySetCard { open($0) }
+                    .frame(width: columns.span(wide ? 2 : 1))
+                VStack(alignment: .leading, spacing: 22) {
+                    levelCard
+                    if !sideQuests.isEmpty { questSection(sideQuests) }
                 }
+                .frame(width: columns.unit)
+            }
+            if wide {
+                HStack(alignment: .top, spacing: CardColumns.spacing) {
+                    gamesRow(width: columns.span(2))
+                    toolsSection.frame(width: columns.unit)
                 }
-                .toolbar(.hidden, for: .tabBar)
+            } else {
+                gamesRow(width: columns.span(2))
+                toolsRow
             }
         }
     }
@@ -116,21 +173,45 @@ struct PracticeView: View {
 
     /// The ear games as live cards: each idles in a preview of itself beside its best, its level and today's challenge.
     private var gamesSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionTitle("Ear games")
+            sniperCard
+            earCard
+        }
+    }
+
+    /// iPad: the two ear games side by side, `width` across.
+    private func gamesRow(width: CGFloat) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionTitle("Ear games")
+            HStack(alignment: .top, spacing: CardColumns.spacing) {
+                sniperCard
+                earCard
+            }
+        }
+        .frame(width: width)
+    }
+
+    private func sectionTitle(_ title: LocalizedStringKey) -> some View {
+        Text(title).font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+    }
+
+    private var sniperCard: some View {
         let stats = store.progress.stats
         let best = stats["sniperBest"] ?? 0
         let sniperLevel = SniperRank.level(bullseyes: stats["bullseyes"] ?? 0)
-        let earLevel = (EarDrill.allCases.map { store.settings.earLevels?[$0.rawValue] ?? 0 }.max() ?? 0) + 1
-        let correct = stats["earCorrect"] ?? 0
         let sniperStats = statsLine(best > 0 ? Text("Best \(best)") : nil, level: sniperLevel)
+        return gameCard(.sniper, title: "Pitch Sniper", stats: sniperStats, challenge: .sniper(store), tint: Palette.mint) { live in
+            SniperScopePreview(live: live)
+        }
+    }
+
+    private var earCard: some View {
+        let earLevel = (EarDrill.allCases.map { store.settings.earLevels?[$0.rawValue] ?? 0 }.max() ?? 0) + 1
+        let correct = store.progress.stats["earCorrect"] ?? 0
         let earStats = statsLine(Text("\(correct) correct"), level: earLevel)
-        return VStack(alignment: .leading, spacing: 10) {
-            Text("Ear games").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
-            gameCard(.sniper, title: "Pitch Sniper", stats: sniperStats, challenge: .sniper(store), tint: Palette.mint) { live in
-                SniperScopePreview(live: live)
-            }
-            gameCard(.ear, title: "Ear trainer", stats: earStats, challenge: .ear(store), tint: Palette.amber) { live in
-                IntervalStairsPreview(live: live)
-            }
+        return gameCard(.ear, title: "Ear trainer", stats: earStats, challenge: .ear(store), tint: Palette.amber) { live in
+            IntervalStairsPreview(live: live)
         }
     }
 
@@ -154,22 +235,37 @@ struct PracticeView: View {
     /// even while it is scrolled below the Today card.
     private var toolsSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Tools").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+            sectionTitle("Tools")
             VStack(spacing: 10) {
-                HStack(spacing: 10) {
-                    tool(.metronome, "metronome", "Metronome", pro: false)
-                    tool(.drone, "waveform.path", "Drone", pro: true)
-                    tool(.voice, "music.mic", "Voice", pro: false)
-                }
+                HStack(spacing: 10) { firstTools }
                 if fretted {
-                    HStack(spacing: 10) {
-                        tool(.chords, "hand.raised.fingers.spread", "Chords", pro: true)
-                        tool(.scales, "point.3.connected.trianglepath.dotted", "Scales", pro: true)
-                        tool(.intonation, "ruler", "Intonation", pro: true)
-                    }
+                    HStack(spacing: 10) { frettedTools }
                 }
             }
         }
+    }
+
+    /// iPad, two columns: every tool in one row across the width.
+    private var toolsRow: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionTitle("Tools")
+            HStack(spacing: 10) {
+                firstTools
+                if fretted { frettedTools }
+            }
+        }
+    }
+
+    @ViewBuilder private var firstTools: some View {
+        tool(.metronome, "metronome", "Metronome", pro: false)
+        tool(.drone, "waveform.path", "Drone", pro: true)
+        tool(.voice, "music.mic", "Voice", pro: false)
+    }
+
+    @ViewBuilder private var frettedTools: some View {
+        tool(.chords, "hand.raised.fingers.spread", "Chords", pro: true)
+        tool(.scales, "point.3.connected.trianglepath.dotted", "Scales", pro: true)
+        tool(.intonation, "ruler", "Intonation", pro: true)
     }
 
     private func tool(_ route: PracticeRoute, _ symbol: String, _ title: LocalizedStringKey, pro: Bool) -> some View {

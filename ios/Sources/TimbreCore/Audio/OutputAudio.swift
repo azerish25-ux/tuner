@@ -79,9 +79,12 @@ public final class ReferenceToneRenderer {
 }
 
 public struct MetronomePattern: Equatable, Sendable {
+    /// Every tempo a click plays: the lessons' slowest rungs and bar loops (down to 20) included, so the click never
+    /// runs faster than the runway it counts. The Metronome tool offers 30 and up.
+    public static let tempoRange = 20...300
     public let bpm: Int, beatsPerBar: Int, subdivision: Int
     public init(bpm: Int = 96, beatsPerBar: Int = 4, subdivision: Int = 1) {
-        precondition((30...300).contains(bpm) && (1...12).contains(beatsPerBar) && (1...4).contains(subdivision))
+        precondition(Self.tempoRange.contains(bpm) && (1...12).contains(beatsPerBar) && (1...4).contains(subdivision))
         self.bpm = bpm; self.beatsPerBar = beatsPerBar; self.subdivision = subdivision
     }
 }

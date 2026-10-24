@@ -10,7 +10,7 @@ import UIKit
 /// play-along names stay plain ("Bars 5–8"), and a song with none shows its phrases of four bars. A song that ends
 /// on a chord progression maps its chords instead. Built once per lesson (`of`).
 struct SongSheet {
-    struct Section: Identifiable {
+    struct Section: Identifiable, Equatable {
         let id: Int
         /// The play-along that names these bars; nil for plain bars.
         let title: LearnText?

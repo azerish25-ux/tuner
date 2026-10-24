@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 import TimbreCore
 
@@ -80,6 +81,12 @@ final class AppStore: ObservableObject {
     private var practiceStarted: [String: TimeInterval] = [:]
     /// Courses whose first reading this session has gone into the string-health log.
     private var sampledCourses: Set<Int> = []
+    private var subscriptions: Set<AnyCancellable> = []
+    /// The coalesced settings write (`updateSettings`), while one is waiting.
+    private var settingsWrite: Task<Void, Never>?
+    private var widgetRepublishQueued = false
+    /// What the widget library was last built from (`publishWidgetLibrary`).
+    private var widgetLibraryInputs: WidgetLibraryInputs?
 
     init(directory: URL? = nil) throws {
         catalog = try Catalog()
@@ -101,6 +108,56 @@ final class AppStore: ObservableObject {
         audio.instrumentVoice = { [weak self] in self.map { InstrumentVoice(instrument: $0.instrument) } ?? .guitar }
         publishWidgets()
         LiveActivityController.shared.attach(self)  // Lock Screen / Dynamic Island while the metronome, drone, tuner or a lesson runs
+        // The widgets' song access follows Pro, which is unknown until StoreKit answers: once it does (and whenever Pro
+        // changes) they are published again, so a paying player's songs never stay marked PRO or locked.
+        commerce.$entitlementResolved.combineLatest(commerce.$isPro)
+            .dropFirst()
+            .sink { [weak self] _ in self?.republishWidgetsSoon() }
+            .store(in: &subscriptions)
+        // A rhythm session the Metronome tool opened ends when the tool's click does, however it stops (a lesson
+        // taking the click over included), so its minutes reach the streak and history.
+        audio.$metronomeOwnedByTool.dropFirst().removeDuplicates()
+            .sink { [weak self] owned in if !owned { self?.finishToolRhythmSoon() } }
+            .store(in: &subscriptions)
+    }
+
+    /// Published values change after their publisher fires: the widgets are rebuilt on the next turn, once.
+    private func republishWidgetsSoon() {
+        guard !widgetRepublishQueued else { return }
+        widgetRepublishQueued = true
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            self.widgetRepublishQueued = false
+            self.publishWidgets()
+        }
+    }
+
+    private func finishToolRhythmSoon() {
+        Task { @MainActor [weak self] in
+            guard let self, !self.audio.metronomeOwnedByTool, self.practiceStarted[DailyActivity.Kind.rhythm.rawValue] != nil else { return }
+            self.finishPractice(.rhythm)
+        }
+    }
+
+    /// What the widget library (Quick tune's instruments, Next song's shelves) is built from.
+    private struct WidgetLibraryInputs: Equatable {
+        let language: String
+        let notation: String
+        let pro: Bool
+        let learn: LearnProgress
+        let level: Int
+        let day: Int
+    }
+
+    /// Rebuilds the widget library only when something it shows can have changed, and never before the entitlements
+    /// are known (until then every Pro song would read as locked).
+    private func publishWidgetLibrary() {
+        guard commerce.entitlementResolved else { return }
+        let inputs = WidgetLibraryInputs(language: TimbreLocalization.language, notation: settings.notation, pro: isPro, learn: learn,
+                                         level: level.number, day: Calendar.current.ordinality(of: .day, in: .era, for: Date()) ?? 0)
+        guard inputs != widgetLibraryInputs else { return }
+        widgetLibraryInputs = inputs
+        WidgetLibrary.publish(self)  // Quick tune's instruments and Next song's shelves (Intents/WidgetLibraryPublisher.swift)
     }
 
     /// Keeps the home-screen widgets in step with practice history.
@@ -117,7 +174,7 @@ final class AppStore: ObservableObject {
                                           minutes: $0.minutes, xp: $0.xp, done: learn.finishedCount(in: course), total: course.lessons.count)
             }
         }
-        WidgetLibrary.publish(self)  // Quick tune's instruments and Next song's shelves (Intents/WidgetLibraryPublisher.swift)
+        publishWidgetLibrary()
         WidgetSnapshot.write(WidgetSnapshot(streak: summary.current, best: summary.best, practicedToday: summary.practicedToday,
                                             week: week, instrument: instrumentDisplayName, updated: Date(), lesson: lesson))
         PracticeReminder.update(.init(streak: summary.current, practicedToday: summary.practicedToday, nextLesson: lesson?.title))
@@ -259,11 +316,17 @@ final class AppStore: ObservableObject {
         Palette.tuningBand = settings.precision.bandCents
     }
 
+    /// Applies a settings change at once and saves it shortly after: a burst of changes (a finished lesson's stars, XP,
+    /// quests and Today; the metronome's controls) costs one write, off the moment it happens. Invalid settings are
+    /// refused here and now; whatever is waiting is written when the app leaves the foreground (`flushSettings`), and
+    /// any practice record saved in the meantime carries it too.
     @discardableResult func updateSettings(_ mutation: (inout UserSettings) -> Void) -> Bool {
         let previous = settings
         var next = settings; mutation(&next)
+        guard next != previous else { return true }
         do {
-            try persistence.saveSettings(next); settings = persistence.settings
+            try persistence.stageSettings(next); settings = persistence.settings
+            scheduleSettingsWrite()
             TimbreLocalization.language = settings.language
             NoteNames.active = settings.notation
             Haptics.shared.enabled = settings.hapticsEnabled
@@ -281,6 +344,23 @@ final class AppStore: ObservableObject {
         } catch {
             self.error = String(localized: "Settings could not be saved: \(error.localizedDescription)")
             return false
+        }
+    }
+
+    private func scheduleSettingsWrite() {
+        guard settingsWrite == nil else { return }
+        settingsWrite = Task { @MainActor [weak self] in
+            do { try await Task.sleep(for: .milliseconds(400)) } catch { return }
+            self?.flushSettings()
+        }
+    }
+
+    /// Writes settings changes still waiting (the app leaving the foreground; tests before reopening the store).
+    func flushSettings() {
+        settingsWrite?.cancel(); settingsWrite = nil
+        guard persistence.hasUnsavedChanges else { return }
+        do { try persistence.flush() } catch {
+            self.error = String(localized: "Settings could not be saved: \(error.localizedDescription)")
         }
     }
 
@@ -900,7 +980,8 @@ final class AppStore: ObservableObject {
             if let sound { s.metronomeSound = sound.rawValue }
             if let levels { s.metronomeBeatLevels = levels }
         }
-        if audio.metronomeRunning { applyMetronome() }
+        // Only the tool's own click follows its settings; a lesson's click keeps the tempo its take counts in.
+        if audio.metronomeRunning && audio.metronomeOwnedByTool { applyMetronome() }
     }
 
     func cycleBeatLevel(_ beat: Int) {
@@ -917,7 +998,8 @@ final class AppStore: ObservableObject {
     }
 
     func applyMetronome() {
-        audio.setMetronome(bpm: bpm, beats: beats, subdivision: subdivision, accents: true, beatLevels: beatLevels, sound: metronomeSound)
+        // The tool's click: a tempo or meter change keeps its phase, and it plays on in the background.
+        audio.setMetronome(bpm: bpm, beats: beats, subdivision: subdivision, accents: true, beatLevels: beatLevels, sound: metronomeSound, tool: true)
         LiveActivityController.shared.metronomeChanged()
     }
 
@@ -1004,8 +1086,15 @@ extension AppStore {
         // A session long enough to save itself (`endTuningSession`) already covers today's practice.
         if sessionCount < 3 {
             let duration = sessionStartedUptime.map { Int(max(0, ProcessInfo.processInfo.systemUptime - $0) * 1000) }
-            save(PracticeRecord(instrumentId: instrument.id, tuningId: tuning.id, kind: "tuning", count: all.count, stableCount: all.count,
+            save(PracticeRecord(date: sessionStarted ?? Date(), instrumentId: instrument.id, tuningId: tuning.id, kind: "tuning",
+                                count: all.count, stableCount: all.count,
                                 meanAbsoluteCents: meanCents.isFinite ? max(0, meanCents) : nil, durationMs: duration))
+            // That record covers the session so far: the tuner starts a new one from here (the strings stay locked), so
+            // `endTuningSession` never counts these minutes a second time.
+            let locked = lockedCourses, sampled = sampledCourses
+            resetTuningMeasurements()
+            lockedCourses = locked; sampledCourses = sampled
+            if audio.running { sessionStarted = Date(); sessionStartedUptime = ProcessInfo.processInfo.systemUptime }
         }
         markDaily(.tune)
         Analytics.log("strum_tune", ["instrument": instrument.id, "strings": String(all.count)])

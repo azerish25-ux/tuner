@@ -69,7 +69,8 @@ enum CanvasNoise {
 /// the thinnest, on top in tab order, so a down stroke rises from the thickest string at the bottom; the thickest
 /// on top in mirror order, so it falls. Each string is numbered and the outer two are named ("Thinnest (1)",
 /// "Thickest (6)"), and the pick's tip, its lane's chevrons and its trail all point the way it travels.
-/// The strings run over a strip of the instrument's top, from the sound hole to the bridge.
+/// The strings run over the instrument's top, from the sound hole to the bridge; the wood fills the whole frame and
+/// the strings spread to fill its height (up to a comfortable spacing), so a tall stage is all guitar, never bare.
 /// What comes next is the beat row's job (`RhythmBar`, `LessonBeatRow`), so the sweep draws only the stroke
 /// itself. `.pluck` plucks the lowest string on each hit; `.tap` pulses a pad for courses without an instrument.
 /// With no time (Reduce Motion) it holds still, showing the first stroke.
@@ -201,13 +202,23 @@ struct StrumSweep: View {
 
     // MARK: Strings and pick
 
+    /// The widest the strings spread (a tall stage centres them on more wood rather than spacing them further).
+    private static func widestGap(_ count: Int) -> CGFloat { count <= 4 ? 72 : 56 }
+    /// The wood showing past the pick's reach, above the top string and below the bottom one.
+    private static let boardEdge: CGFloat = 12
+
     private func drawStrings(_ context: inout GraphicsContext, size: CGSize, order: StringOrder, scale: CGFloat) {
         let area = CGRect(origin: .zero, size: size)
         let count = max(1, strings)
-        let band = min(area.height * 0.6, CGFloat(count) * (count <= 4 ? 40 : 32))
+        // The strings fill the stage: the pick's reach and a rim of wood aside, every string gets an even share of
+        // the height, up to a comfortable spread.
+        let reach = max(10, min(30, size.height * 0.08))
+        let room = max(0, size.height - 2 * (reach + Self.boardEdge))
+        let band = count > 1 ? min(room, Self.widestGap(count) * CGFloat(count - 1)) : 0
         let gap = count > 1 ? band / CGFloat(count - 1) : 0
-        let top = area.minY + (area.height - band) / 2
-        let reach = max(8, min(26, top - area.minY - 6))
+        let top = area.midY - band / 2
+        // The pick, its lane and the finger grow a little with the strings on a big stage.
+        let grow = min(1.35, max(1, gap / 36))
         let frame = Frame(above: top - reach, below: top + band + reach, thickOnTop: !order.thinnestOnTop)
         let pickX = size.width * 0.62
         // The strings run from the neck end on the left to the bridge's saddle on the right.
@@ -217,7 +228,8 @@ struct StrumSweep: View {
         let nearby = moving ? strokes(near: t) : []
         let state = moving ? pick(at: t, nearby) : PickState(position: 0, touching: false, down: pattern.first.map { $0.truncatingRemainder(dividingBy: 1) == 0 } ?? true, lift: 0)
 
-        drawSoundboard(&context, size: size, from: frame.above - 12, to: frame.below + 12)
+        // The wood fills the whole stage, edge to edge.
+        drawSoundboard(&context, size: size, from: 0, to: size.height)
         if style == .strum {
             let radius = min(band * 0.5 + 20, size.width * 0.26, area.height / 2 - 8)
             // Far enough in that the rosette clears the string numbers at the left edge.
@@ -225,7 +237,9 @@ struct StrumSweep: View {
         }
         drawBridge(&context, x: bridgeX, top: top, gap: gap, count: count)
         drawFlash(&context, center: CGPoint(x: pickX, y: area.midY), size: size, t: t, nearby: nearby, moving: moving)
-        if style == .strum { drawLane(&context, x: pickX, above: frame.above, below: frame.below, falling: frame.fallsOnScreen(down: state.down)) }
+        if style == .strum {
+            drawLane(&context, x: pickX, above: frame.above, below: frame.below, falling: frame.fallsOnScreen(down: state.down), width: 26 * grow)
+        }
 
         for row in 0..<count {
             let y = top + CGFloat(row) * gap
@@ -239,11 +253,11 @@ struct StrumSweep: View {
         if style == .pluck {
             // The lowest string, wherever the order puts it; the fingertip comes at it from outside the strings.
             let lowest = top + CGFloat(order.row(ofString: count, count: count)) * gap
-            drawFinger(&context, x: pickX, stringY: lowest, fromAbove: frame.thickOnTop, t: t, nearby: nearby, moving: moving)
+            drawFinger(&context, x: pickX, stringY: lowest, fromAbove: frame.thickOnTop, t: t, nearby: nearby, moving: moving, grow: grow)
             return
         }
         var y = frame.y(state.position)
-        drawTrail(&context, x: pickX, frame: frame, pickY: y, t: t, nearby: nearby, moving: moving, state: state)
+        drawTrail(&context, x: pickX, frame: frame, pickY: y, t: t, nearby: nearby, moving: moving, state: state, width: 26 * grow)
         if moving, t < 0, bars != nil {
             // Counting in: the pick bobs on each click, away from the strings, ready to go (a loop just turns on
             // through the bar before).
@@ -251,9 +265,9 @@ struct StrumSweep: View {
             let away: CGFloat = y < (frame.above + frame.below) / 2 ? -1 : 1
             y += away * CGFloat(6 * exp(-(beat - beat.rounded(.down)) * 8))
         }
-        let x = pickX + CGFloat(state.lift) * 24
+        let x = pickX + CGFloat(state.lift) * 24 * grow
         let alpha = state.touching || !moving ? 1 : 0.75 - 0.3 * state.lift
-        drawPick(&context, center: CGPoint(x: x, y: y), pointsDown: frame.fallsOnScreen(down: state.down), scale: state.touching ? 1 : 0.9, alpha: alpha)
+        drawPick(&context, center: CGPoint(x: x, y: y), pointsDown: frame.fallsOnScreen(down: state.down), scale: (state.touching ? 1 : 0.9) * grow, alpha: alpha)
     }
 
     /// The top string's name just above it and the bottom string's just below, at the right end, clear of
@@ -371,11 +385,11 @@ struct StrumSweep: View {
 
     /// The pick's path across the strings, faint under them: a lane with chevrons pointing the way the next stroke
     /// goes on screen (`falling`: down the screen), so even a still frame shows where and which way the pick sweeps.
-    private func drawLane(_ context: inout GraphicsContext, x: CGFloat, above: CGFloat, below: CGFloat, falling: Bool) {
+    private func drawLane(_ context: inout GraphicsContext, x: CGFloat, above: CGFloat, below: CGFloat, falling: Bool, width: CGFloat) {
         guard below - above > 30 else { return }
-        let lane = CGRect(x: x - 13, y: above, width: 26, height: below - above)
-        context.fill(Path(roundedRect: lane, cornerRadius: 13), with: .color(accent.opacity(0.07)))
-        context.stroke(Path(roundedRect: lane, cornerRadius: 13), with: .color(accent.opacity(0.12)), lineWidth: 1)
+        let lane = CGRect(x: x - width / 2, y: above, width: width, height: below - above)
+        context.fill(Path(roundedRect: lane, cornerRadius: width / 2), with: .color(accent.opacity(0.07)))
+        context.stroke(Path(roundedRect: lane, cornerRadius: width / 2), with: .color(accent.opacity(0.12)), lineWidth: 1)
         let s: CGFloat = falling ? 1 : -1
         for k in 0..<3 {
             let y = above + (below - above) * (0.3 + 0.2 * CGFloat(k))
@@ -390,7 +404,7 @@ struct StrumSweep: View {
     /// The sweep itself: a streak from where the stroke began (the thickest side for a down stroke) to the pick at
     /// `pickY`, fading once it lands.
     private func drawTrail(_ context: inout GraphicsContext, x: CGFloat, frame: Frame, pickY: CGFloat, t: Double, nearby: [Stroke],
-                           moving: Bool, state: PickState) {
+                           moving: Bool, state: PickState, width: CGFloat) {
         let half = sweepSeconds / 2
         let from: CGFloat, to: CGFloat, fade: Double
         if moving {
@@ -407,9 +421,9 @@ struct StrumSweep: View {
             to = frame.start(down: !state.down)
         }
         guard abs(to - from) > 1 else { return }
-        let rect = CGRect(x: x - 13, y: min(from, to), width: 26, height: abs(to - from))
+        let rect = CGRect(x: x - width / 2, y: min(from, to), width: width, height: abs(to - from))
         let shade = Gradient(colors: [accent.opacity(0), accent.opacity(0.45 * fade)])
-        context.fill(Path(roundedRect: rect, cornerRadius: 13), with: .linearGradient(shade, startPoint: CGPoint(x: x, y: from), endPoint: CGPoint(x: x, y: to)))
+        context.fill(Path(roundedRect: rect, cornerRadius: width / 2), with: .linearGradient(shade, startPoint: CGPoint(x: x, y: from), endPoint: CGPoint(x: x, y: to)))
     }
 
     /// A guitar pick, tip first in the direction of the stroke on screen (`pointsDown`: down the screen).
@@ -433,15 +447,16 @@ struct StrumSweep: View {
 
     /// Plucked instruments: a fingertip dips onto the lowest string on each hit, from outside the strings (from
     /// above when that string is on top, from below when it's at the bottom).
-    private func drawFinger(_ context: inout GraphicsContext, x: CGFloat, stringY: CGFloat, fromAbove: Bool, t: Double, nearby: [Stroke], moving: Bool) {
+    private func drawFinger(_ context: inout GraphicsContext, x: CGFloat, stringY: CGFloat, fromAbove: Bool, t: Double, nearby: [Stroke], moving: Bool,
+                            grow: CGFloat) {
         let nearest = nearby.min { abs($0.time - t) < abs($1.time - t) }
         let bump = moving ? nearest.map { exp(-pow(($0.time - t) / 0.07, 2)) } ?? 0 : 0
         let side: CGFloat = fromAbove ? -1 : 1
-        let center = CGPoint(x: x, y: stringY + side * (20 - CGFloat(bump) * 15))
-        let halo: CGFloat = 22
+        let center = CGPoint(x: x, y: stringY + side * (20 - CGFloat(bump) * 15) * grow)
+        let halo: CGFloat = 22 * grow
         context.fill(Path(ellipseIn: CGRect(x: center.x - halo, y: center.y - halo, width: halo * 2, height: halo * 2)),
                      with: .radialGradient(Gradient(colors: [accent.opacity(0.2 + 0.3 * bump), .clear]), center: center, startRadius: 0, endRadius: halo))
-        let r: CGFloat = 10
+        let r: CGFloat = 10 * grow
         context.fill(Path(ellipseIn: CGRect(x: center.x - r, y: center.y - r, width: r * 2, height: r * 2)), with: .color(accent))
         context.stroke(Path(ellipseIn: CGRect(x: center.x - r, y: center.y - r, width: r * 2, height: r * 2)), with: .color(.white.opacity(0.35)), lineWidth: 1)
     }

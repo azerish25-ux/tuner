@@ -377,8 +377,11 @@ enum StrumWords {
         }
     }
 
-    /// "String 2, A2"; a pair "Strings 3 and 4, D4", as the string rail names them.
+    /// "String 5, A2": the number on the lane's chip (from the peg-head anchor, 1 the thinnest, as lessons count
+    /// strings). A unison pair shares its anchor and so its chip's number. Only a lane without one (never on the
+    /// instruments strum mode opens for) falls back to the course order, a pair "Strings 3 and 4, D4".
     static func name(_ meter: StrumBoard.Meter) -> Text {
+        if let number = meter.number { return Text("String \(number), \(meter.note)") }
         if meter.courses.count == 2 { return Text("Strings \(meter.courses[0]) and \(meter.courses[1]), \(meter.note)") }
         return Text("String \(meter.id), \(meter.note)")
     }

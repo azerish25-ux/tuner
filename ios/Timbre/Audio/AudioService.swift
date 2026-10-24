@@ -11,6 +11,10 @@ final class AudioService: ObservableObject {
     @Published private(set) var error: String?
     @Published private(set) var permissionDenied = false
     @Published private(set) var metronomeRunning = false
+    /// The Metronome tool started the running click (`setMetronome(…, tool: true)`): it keeps its phase through
+    /// tempo and meter changes and plays on in the background. Any other click (a lesson take, the tap-along check,
+    /// a song preview) counts in fresh from its first beat and stops when the app leaves the foreground.
+    @Published private(set) var metronomeOwnedByTool = false
     @Published private(set) var droneRunning = false
     @Published private(set) var tonePlaying = false
     /// Headphones (wired, Bluetooth A2DP or LE, AirPods) carry the output: the backing band may play.
@@ -68,8 +72,14 @@ final class AudioService: ObservableObject {
             }
         })
         observers.append(NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { [weak self] _ in
-            // The microphone stops in the background; metronome and drone keep playing, the lesson band stops.
-            Task { @MainActor in self?.stopBand(); self?.stopCapture() }
+            // The microphone stops in the background, and so do the lesson band and a lesson's click (its take can't
+            // go on unseen, and nothing would stop it from the pocket). The Metronome tool's click and the drone play on.
+            Task { @MainActor in
+                guard let self else { return }
+                self.stopBand()
+                if self.metronomeRunning && !self.metronomeOwnedByTool { self.stopMetronome() }
+                self.stopCapture()
+            }
         })
         observers.append(NotificationCenter.default.addObserver(forName: UIApplication.didReceiveMemoryWarningNotification, object: nil, queue: .main) { [weak self] _ in
             // Rendered bands are a few MB each; the one playing stays alive with its player (tones likewise).
@@ -203,7 +213,7 @@ final class AudioService: ObservableObject {
         generation += 1
         if tapInstalled { engine.inputNode.removeTap(onBus: 0); tapInstalled = false }
         renderer.stop()
-        running = false; metronomeRunning = false; tonePlaying = false; droneRunning = false
+        running = false; metronomeRunning = false; metronomeOwnedByTool = false; tonePlaying = false; droneRunning = false
         bandRequest = nil; bandPlaying = false
         outroTask?.cancel(); outroTask = nil; bandOutro = false
         onReading?(nil, 0, -120)
@@ -348,11 +358,18 @@ final class AudioService: ObservableObject {
         } else if !running && !outputActive { shutdown() }
     }
 
-    func setMetronome(bpm: Int, beats: Int, subdivision: Int, accents: Bool, beatLevels: [Int]? = nil, sound: MetronomeRenderer.Sound = .click) {
+    /// Starts the click. Only the Metronome tool changing its own running click (`tool`) keeps the phase; every other
+    /// call is a fresh count from its first click (bar counter, played frames and clock start again), so a lesson's
+    /// count-in, runway and judging start with the click they assume, even over the tool's click left running.
+    func setMetronome(bpm: Int, beats: Int, subdivision: Int, accents: Bool, beatLevels: [Int]? = nil, sound: MetronomeRenderer.Sound = .click, tool: Bool = false) {
         do {
             try ensureOutput()
-            renderer.setMetronome(bpm: bpm, beats: beats, subdivision: subdivision, accents: accents, beatLevels: beatLevels, sound: sound)
+            let continuing = tool && metronomeOwnedByTool && metronomeRunning
+            // A fresh count takes the old band with it; the new owner asks for its own (`playBand`).
+            if !continuing { bandRequest = nil; bandPlaying = false }
+            renderer.setMetronome(bpm: bpm, beats: beats, subdivision: subdivision, accents: accents, beatLevels: beatLevels, sound: sound, restart: !continuing)
             metronomeRunning = bpm > 0
+            metronomeOwnedByTool = tool && bpm > 0
         } catch { suspend(); self.error = String(localized: "Could not start the metronome: \(error.localizedDescription)") }
     }
 
@@ -360,6 +377,7 @@ final class AudioService: ObservableObject {
     func stopMetronome() {
         renderer.setMetronome(bpm: 0, beats: 4, subdivision: 1, accents: true, beatLevels: nil, sound: .click)
         metronomeRunning = false
+        metronomeOwnedByTool = false
         bandRequest = nil; bandPlaying = false
         if !running && !outputActive { shutdown() }
     }
@@ -703,19 +721,24 @@ private final class OutputRenderer: @unchecked Sendable {
     }
     /// Damps the tone sounding over 30 ms, like a hand on the strings.
     func stopClip() { lock.lock(); clip?.stop(fadeFrames: sampleRate * 3 / 100); lock.unlock() }
-    func setMetronome(bpm: Int, beats: Int, subdivision: Int, accents: Bool, beatLevels: [Int]?, sound: MetronomeRenderer.Sound) {
+    /// `restart`: a fresh count even when a click is already running (a new owner); otherwise a running click keeps
+    /// its phase and only changes tempo, meter and sound.
+    func setMetronome(bpm: Int, beats: Int, subdivision: Int, accents: Bool, beatLevels: [Int]?, sound: MetronomeRenderer.Sound, restart: Bool = false) {
         lock.lock(); defer { lock.unlock() }
         guard bpm > 0 else {
             // The band fades with the click; a final chord already ringing is left to finish.
             metronome = nil; band?.stop(force: false); clock.set(nil)
             return
         }
-        let pattern = MetronomePattern(bpm: min(300, max(30, bpm)), beatsPerBar: min(12, max(1, beats)), subdivision: min(4, max(1, subdivision)))
+        // The lessons' own floor (slowest rungs, bar loops) is the pattern's: the click never runs ahead of the runway.
+        let tempo = min(MetronomePattern.tempoRange.upperBound, max(MetronomePattern.tempoRange.lowerBound, bpm))
+        let pattern = MetronomePattern(bpm: tempo, beatsPerBar: min(12, max(1, beats)), subdivision: min(4, max(1, subdivision)))
         let renderer: MetronomeRenderer
-        if let metronome {
+        if let metronome, !restart {
             renderer = metronome
         } else {
-            // A fresh count from its first click; an older band can't follow it.
+            // A fresh count from its first click: the bar counter, frame count and clock start again, and an older
+            // band can't follow it.
             renderer = MetronomeRenderer(sampleRate: sampleRate, initial: pattern)
             bar = -1; metronomeFrames = 0; band?.stop(); clock.set(nil)
         }

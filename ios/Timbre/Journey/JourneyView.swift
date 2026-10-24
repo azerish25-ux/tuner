@@ -24,31 +24,92 @@ struct JourneyView: View {
     /// Ids of the earned badges already shown here (comma-separated).
     @AppStorage("journey.badgesSeen") private var badgesSeen = ""
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.horizontalSizeClass) private var sizeClass
 
     var body: some View {
         NavigationStack {
-            ScrollView {
+            board
+                .fullScreenCover(item: $coachLesson) { item in
+                    LessonPlayer(course: item.course, lesson: item.lesson) { next in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { openCoachLesson(item.course, next) }
+                    }
+                    .environmentObject(store)
+                    .navigationTransition(.zoom(sourceID: Self.coachSource, in: zoom))
+                }
+        }
+    }
+
+    // MARK: Layout
+
+    /// A phone (or any compact width) gets one column; an iPad's regular width two columns of cards (`CardColumns`).
+    @ViewBuilder private var board: some View {
+        if sizeClass == .regular {
+            GeometryReader { proxy in
+                let columns = CardColumns(width: proxy.size.width - 2 * Metrics.gutter)
+                scroller {
+                    if columns.count > 1 { wideBoard(columns) } else { compactBoard }
+                }
+            }
+        } else {
+            scroller { compactBoard }
+        }
+    }
+
+    /// The tab's scroll view. Its top shade comes in once content slides under the status bar (and, on iPad, the
+    /// tab bar), so a heading never runs under the clock.
+    private func scroller<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        ScrollView {
+            content()
+                .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+        }
+        .stageTopShade()
+        .background(StageBackground(motes: false))
+    }
+
+    private var title: some View {
+        Text("Progress").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+    }
+
+    @ViewBuilder private var insights: some View {
+        if commerce.isPro { accuracy } else { lockedInsights }
+    }
+
+    private var compactBoard: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            title
+            stats()
+            coach
+            weekCard
+            calendar
+            stringHealth
+            insights
+            achievements
+            recent
+        }
+    }
+
+    /// iPad: the stats across the top, then two columns. The wide one carries the story (the coach, the week, the
+    /// badges); the narrow one the numbers (the calendar, string health, accuracy, recent sessions), so no bar or
+    /// calendar row is stretched across the whole screen. Three columns give the story two of them.
+    private func wideBoard(_ columns: CardColumns) -> some View {
+        let story = columns.count >= 3 ? columns.span(2) : columns.unit
+        return VStack(alignment: .leading, spacing: 20) {
+            title
+            stats(spacing: CardColumns.spacing)
+            HStack(alignment: .top, spacing: CardColumns.spacing) {
                 VStack(alignment: .leading, spacing: 20) {
-                    Text("Progress").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
-                    stats
                     coach
                     weekCard
+                    achievements
+                }
+                .frame(width: story)
+                VStack(alignment: .leading, spacing: 20) {
                     calendar
                     stringHealth
-                    if commerce.isPro { accuracy } else { lockedInsights }
-                    achievements
+                    insights
                     recent
                 }
-                .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
-            }
-            .stageTopShade()
-            .background(StageBackground(motes: false))
-            .fullScreenCover(item: $coachLesson) { item in
-                LessonPlayer(course: item.course, lesson: item.lesson) { next in
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { openCoachLesson(item.course, next) }
-                }
-                .environmentObject(store)
-                .navigationTransition(.zoom(sourceID: Self.coachSource, in: zoom))
+                .frame(width: columns.unit)
             }
         }
     }
@@ -106,12 +167,13 @@ struct JourneyView: View {
         coachLesson = CoachLesson(course: course, lesson: lesson)
     }
 
-    private var stats: some View {
+    /// - Parameter spacing: between the tiles (the iPad's grid spacing, so they line up with the columns below).
+    private func stats(spacing: CGFloat = 10) -> some View {
         let streak = store.streak
         let level = store.level
         let recent = tuningSessions.suffix(10).compactMap(\.meanAbsoluteCents)
         let average = recent.isEmpty ? nil : recent.reduce(0, +) / Double(recent.count)
-        return HStack(spacing: 10) {
+        return HStack(spacing: spacing) {
             stat("flame.fill", Palette.flame, Text("\(streak.current)"), Text("day streak"))
             stat("star", Palette.mint, levelValue(level.number), Text(LocalizedStringKey(level.name)))
                 .accessibilityLabel(Text("Level \(level.number)") + Text(verbatim: ", ") + Text(LocalizedStringKey(level.name)))

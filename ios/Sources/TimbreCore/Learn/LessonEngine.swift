@@ -134,7 +134,8 @@ public struct TempoLadder: Equatable, Sendable {
     public var tempo: Double { tempo(at: rung) }
     public func tempo(at rung: Int) -> Double {
         let index = min(Self.rungs.count - 1, max(0, rung))
-        return max(20, (bpm * Self.rungs[index]).rounded())
+        // Never below the slowest click the metronome plays, so the runway, the judge and the click agree.
+        return max(Double(MetronomePattern.tempoRange.lowerBound), (bpm * Self.rungs[index]).rounded())
     }
     public var isFullTempo: Bool { rung >= Self.lessonRung }
 
@@ -392,9 +393,9 @@ public struct LearnProgress: Codable, Equatable, Sendable {
     /// Lessons open in order: the first of each course, the placed units and the lesson after them,
     /// then each one after a finished lesson.
     public func isUnlocked(_ lesson: Lesson, in course: LearnCourse) -> Bool {
-        let all = course.lessons
-        guard let position = all.firstIndex(where: { $0.id == lesson.id }) else { return false }
-        return position == 0 || position <= placedCount(in: course) || isFinished(all[position - 1].id) || isFinished(lesson.id)
+        // The course's own index: no lesson list is rebuilt or searched per node.
+        guard let position = course.position(of: lesson.id) else { return false }
+        return position == 0 || position <= placedCount(in: course) || isFinished(course.lessons[position - 1].id) || isFinished(lesson.id)
     }
 
     /// The next lesson to play in a course: the first unfinished one after the placement

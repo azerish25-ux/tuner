@@ -40,6 +40,8 @@ jobs:
         run: |
           set -o pipefail
           python3 tools/marketing/preview.py device | tee -a "$GITHUB_ENV"
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
       - name: Build app and UI tests
         run: |
           set -o pipefail

@@ -93,6 +93,8 @@ jobs:
                      'teamID': os.environ['APPLE_TEAM_ID'], 'manageAppVersionAndBuildNumber': False, 'uploadSymbols': True}
           (directory / 'ExportOptions.plist').write_bytes(plistlib.dumps(options))
           PY
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
       - name: Archive Release with automatic signing
         shell: bash
         run: |

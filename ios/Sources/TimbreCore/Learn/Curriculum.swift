@@ -16,8 +16,46 @@ public struct LearnText: Codable, Equatable, Hashable, Sendable, CustomStringCon
 public struct Curriculum: Codable, Sendable {
     public let version: Int
     public let courses: [LearnCourse]
+    /// Where each lesson sits, built once: `lesson(id:)` is a lookup rather than a walk through every course.
+    private let locations: [String: Location]
 
-    public init(version: Int = 1, courses: [LearnCourse]) { self.version = version; self.courses = courses }
+    private struct Location: Sendable {
+        let course: Int
+        let unit: Int
+        let lesson: Int
+    }
+
+    enum CodingKeys: String, CodingKey { case version, courses }
+
+    public init(version: Int = 1, courses: [LearnCourse]) {
+        self.version = version
+        self.courses = courses
+        locations = Self.locate(courses)
+    }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        self.init(version: try c.decode(Int.self, forKey: .version), courses: try c.decode([LearnCourse].self, forKey: .courses))
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(version, forKey: .version)
+        try c.encode(courses, forKey: .courses)
+    }
+
+    /// The first place each lesson id appears (course, then unit order), as a scan would find it.
+    private static func locate(_ courses: [LearnCourse]) -> [String: Location] {
+        var result: [String: Location] = [:]
+        for (c, course) in courses.enumerated() {
+            for (u, unit) in course.units.enumerated() {
+                for (l, lesson) in unit.lessons.enumerated() where result[lesson.id] == nil {
+                    result[lesson.id] = Location(course: c, unit: u, lesson: l)
+                }
+            }
+        }
+        return result
+    }
 
     public static func bundled() throws -> Curriculum {
         guard let url = Bundle.module.url(forResource: "curriculum", withExtension: "json") else { throw CurriculumError.missing }
@@ -27,8 +65,10 @@ public struct Curriculum: Codable, Sendable {
 
     public func course(id: String) -> LearnCourse? { courses.first { $0.id == id } }
     public func lesson(id: String) -> (course: LearnCourse, unit: LearnUnit, lesson: Lesson)? {
-        for course in courses { for unit in course.units { if let lesson = unit.lessons.first(where: { $0.id == id }) { return (course, unit, lesson) } } }
-        return nil
+        guard let at = locations[id] else { return nil }
+        let course = courses[at.course]
+        let unit = course.units[at.unit]
+        return (course, unit, unit.lessons[at.lesson])
     }
     public var lessonCount: Int { courses.reduce(0) { $0 + $1.lessons.count } }
 }
@@ -43,7 +83,48 @@ public struct LearnCourse: Codable, Identifiable, Sendable {
     public let symbol: String
     public let accent: String
     public let units: [LearnUnit]
-    public var lessons: [Lesson] { units.flatMap(\.lessons) }
+    /// Every lesson in path order, built once with the course (the Learn path, Songs and the widgets read it for
+    /// each of their nodes).
+    public let lessons: [Lesson]
+    /// Each lesson's place in `lessons` (its first, should an id repeat).
+    private let positions: [String: Int]
+
+    enum CodingKeys: String, CodingKey { case id, title, subtitle, instrument, symbol, accent, units }
+
+    public init(id: String, title: LearnText, subtitle: LearnText, instrument: String?, symbol: String, accent: String, units: [LearnUnit]) {
+        self.id = id; self.title = title; self.subtitle = subtitle; self.instrument = instrument
+        self.symbol = symbol; self.accent = accent; self.units = units
+        let lessons = units.flatMap(\.lessons)
+        self.lessons = lessons
+        var positions: [String: Int] = [:]
+        for (index, lesson) in lessons.enumerated() where positions[lesson.id] == nil { positions[lesson.id] = index }
+        self.positions = positions
+    }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        self.init(id: try c.decode(String.self, forKey: .id),
+                  title: try c.decode(LearnText.self, forKey: .title),
+                  subtitle: try c.decode(LearnText.self, forKey: .subtitle),
+                  instrument: try c.decodeIfPresent(String.self, forKey: .instrument),
+                  symbol: try c.decode(String.self, forKey: .symbol),
+                  accent: try c.decode(String.self, forKey: .accent),
+                  units: try c.decode([LearnUnit].self, forKey: .units))
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(id, forKey: .id)
+        try c.encode(title, forKey: .title)
+        try c.encode(subtitle, forKey: .subtitle)
+        try c.encodeIfPresent(instrument, forKey: .instrument)
+        try c.encode(symbol, forKey: .symbol)
+        try c.encode(accent, forKey: .accent)
+        try c.encode(units, forKey: .units)
+    }
+
+    /// Where a lesson sits in `lessons` (0 first); nil when it is not in this course.
+    public func position(of lessonId: String) -> Int? { positions[lessonId] }
 }
 
 public struct LearnUnit: Codable, Identifiable, Sendable {

@@ -93,19 +93,38 @@ struct StagePegCue: View {
     let controller: StageController
     let input: () -> StageInput
     let reduceMotion: Bool
+    /// The host isn't listening and holds no reading: once the camera has settled on the close-up, the cue stops
+    /// tracking every frame (nothing moves the peg then) and its ring stops pulsing, until something changes.
+    var resting = false
+    /// The model is on stage (the cue appears with it and follows the camera's dolly in).
+    var loaded = true
+    @State private var settling = true
+    /// The moment the string locks, for its shimmer.
+    @State private var flash = LockFlash()
 
     var body: some View {
         GeometryReader { geometry in
-            // Runs every frame even with Reduce Motion: it tracks the peg, and only the pulse is decorative.
-            TimelineView(.animation) { timeline in
-                cue(size: geometry.size, now: timeline.date.timeIntervalSinceReferenceDate)
+            // Read only at rest, so a live pitch never re-runs this closure. The whole-instrument shot breathes, so it
+            // never rests.
+            let state: StageInput? = resting ? input() : nil
+            let key: String? = state.flatMap { $0.focus && loaded ? StageSettle.key($0, picture: controller.wanted ?? "", size: geometry.size) : nil }
+            let still = key != nil && !settling
+            // Every frame while anything moves, even with Reduce Motion: it tracks the peg, and only the pulse is decorative.
+            TimelineView(.animation(minimumInterval: nil, paused: still)) { timeline in
+                cue(size: geometry.size, now: timeline.date.timeIntervalSinceReferenceDate, idle: still)
+            }
+            .task(id: key) {
+                settling = true
+                guard key != nil else { return }
+                try? await Task.sleep(for: StageSettle.window)
+                if !Task.isCancelled { settling = false }
             }
         }
         .allowsHitTesting(false)
         .accessibilityHidden(true)
     }
 
-    @ViewBuilder private func cue(size: CGSize, now: Double) -> some View {
+    @ViewBuilder private func cue(size: CGSize, now: Double, idle: Bool = false) -> some View {
         let state = input()
         if let marker = controller.pegMarker(in: size), let lead = marker.points.first {
             let cents = state.listening ? controller.smoothedCents : nil
@@ -114,11 +133,17 @@ struct StagePegCue: View {
             // Listening with nothing heard yet: the label asks for the string and a ring swells out of the peg.
             let calling = state.listening && cents == nil && !state.locked
             let close = Double(max(0, min(1, marker.closeUp)))
-            let pulse = reduceMotion || state.locked ? 0 : 2.5 * sin(now * 3)
+            let pulse = reduceMotion || idle || state.locked ? 0 : 2.5 * sin(now * 3)
             let radius = CGFloat(12 + 10 * close + pulse)
             let gap = radius + 10
             let side = PegLabel.side(for: lead, preferred: marker.side, gap: gap, in: size, width: calling ? PegLabel.callWidth : 60)
+            let shimmer = flash.step(locked: state.listening && state.locked, key: "\(state.activeAnchor ?? "-")|\(state.pegIndex ?? -1)",
+                                     now: now, duration: LockShimmer.duration)
             ZStack {
+                // The lock: light leaves the peg, sweeps the headstock and runs down the string (under the ring and label).
+                if let shimmer, ShaderFX.allowed(reduceMotion: reduceMotion), let path = controller.lockPath(in: size) {
+                    LockShimmer(peg: path.peg, post: path.post, nut: path.nut, saddle: path.saddle, head: path.head, elapsed: shimmer)
+                }
                 Canvas { context, _ in
                     for point in marker.points {
                         PegRing.draw(&context, at: point, radius: radius, color: color, glow: state.locked ? 1 : 0)

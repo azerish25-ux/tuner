@@ -36,9 +36,15 @@ struct SnapshotProvider: TimelineProvider {
         completion(context.isPreview ? placeholder(in: context) : SnapshotEntry(date: Date(), snapshot: WidgetSnapshot.read()))
     }
     func getTimeline(in context: Context, completion: @escaping (Timeline<SnapshotEntry>) -> Void) {
-        // Redraw just after midnight so "practised today" resets without opening the app.
-        let tomorrow = Calendar.current.startOfDay(for: Date().addingTimeInterval(86_400)).addingTimeInterval(60)
-        completion(Timeline(entries: [SnapshotEntry(date: Date(), snapshot: WidgetSnapshot.read())], policy: .after(tomorrow)))
+        // A second entry just after midnight, so "practised today" resets and the week moves on without opening the
+        // app: the streak widget ages the snapshot to each entry's date (`StreakStatus`).
+        let now = Date()
+        let snapshot = WidgetSnapshot.read()
+        let calendar = Calendar.current
+        let midnight = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now)) ?? now.addingTimeInterval(86_400)
+        let tomorrow = midnight.addingTimeInterval(60)
+        let entries = [SnapshotEntry(date: now, snapshot: snapshot), SnapshotEntry(date: tomorrow, snapshot: snapshot)]
+        completion(Timeline(entries: entries, policy: .after(tomorrow)))
     }
 }
 
@@ -177,37 +183,39 @@ struct StreakWidget: Widget {
 struct StreakView: View {
     @Environment(\.widgetFamily) private var family
     let entry: SnapshotEntry
-    private var snapshot: WidgetSnapshot { entry.snapshot }
+    /// The streak as of this entry's moment, not as the app last saved it: after midnight "practised today" resets
+    /// and the week moves on, and a run with a whole day missed is over (as Siri reads it).
+    private var status: StreakStatus { StreakStatus(entry.snapshot, now: entry.date) }
 
     var body: some View {
         switch family {
         case .accessoryRectangular:
             VStack(alignment: .leading, spacing: 2) {
-                Label("\(snapshot.streak)-day streak", systemImage: "flame.fill").font(.headline)
-                Text(snapshot.practicedToday ? "Practised today" : "Keep it alive today").font(.caption)
+                Label("\(status.days)-day streak", systemImage: "flame.fill").font(.headline)
+                Text(status.practicedToday ? "Practised today" : "Keep it alive today").font(.caption)
             }
             .containerBackground(for: .widget) { Color.clear }
         default:
             HStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Image(systemName: "flame.fill").font(.title2).foregroundStyle(snapshot.practicedToday ? Palette.ember : Palette.inkFaint)
-                    Text("\(snapshot.streak)").font(Typeface.display(44)).foregroundStyle(Palette.ink).contentTransition(.numericText())
+                    Image(systemName: "flame.fill").font(.title2).foregroundStyle(status.practicedToday ? Palette.ember : Palette.inkFaint)
+                    Text("\(status.days)").font(Typeface.display(44)).foregroundStyle(Palette.ink).contentTransition(.numericText())
                     Text("day streak").font(.caption.weight(.semibold)).foregroundStyle(Palette.inkSoft)
                     Spacer(minLength: 0)
-                    Text(snapshot.practicedToday ? "Practised today" : "Ten minutes keeps it alive")
-                        .font(.caption2).foregroundStyle(snapshot.practicedToday ? Palette.success : Palette.brass).lineLimit(2)
+                    Text(status.practicedToday ? "Practised today" : "Ten minutes keeps it alive")
+                        .font(.caption2).foregroundStyle(status.practicedToday ? Palette.success : Palette.brass).lineLimit(2)
                 }
                 if family == .systemMedium {
                     Spacer(minLength: 0)
                     VStack(alignment: .trailing, spacing: 10) {
                         Text("Last 7 days").font(.caption2.weight(.semibold)).foregroundStyle(Palette.inkFaint)
                         HStack(spacing: 6) {
-                            ForEach(Array(snapshot.week.enumerated()), id: \.offset) { index, done in
+                            ForEach(Array(status.week.enumerated()), id: \.offset) { index, done in
                                 Capsule().fill(done ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(Palette.line))
-                                    .frame(width: 12, height: index == snapshot.week.count - 1 ? 44 : 34)
+                                    .frame(width: 12, height: index == status.week.count - 1 ? 44 : 34)
                             }
                         }
-                        Text("Best \(snapshot.best)").font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                        Text("Best \(status.best)").font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
                     }
                 }
             }

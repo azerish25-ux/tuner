@@ -87,6 +87,53 @@ final class CoachNotesTests: XCTestCase {
         XCTAssertEqual(full.map(\.fact), [.clean(items: 3)])
     }
 
+    /// The open strings (E2 A2 D3 G3 B3 E4) played along at 80 BPM, on the beat except the move from D3 into G3,
+    /// `late` seconds behind it.
+    private func openStrings(late: Double) -> CoachTake {
+        let hits = [40, 45, 50, 55, 59, 64].enumerated().map { index, midi in
+            CoachHit(item: note(midi), beat: Double(index), offset: midi == 55 ? late : 0.01)
+        }
+        return CoachTake(kind: .melody, hits: hits, bpm: 80, beatsPerBar: 4)
+    }
+
+    func testAFlawlessRunGetsTheNextLevelNotAFix() {
+        let along = lesson("g-1-1", [.playAlong(notes: [timed(40)], bpm: 80, beatsPerBar: 4, title: nil)])
+        let items = [40, 45, 50, 55, 59, 64].map { ItemScore(item: note($0), score: 0.98) }
+        let takes = [openStrings(late: 0.2), openStrings(late: 0.2)]
+        // "Flawless · 98 %": the late move is the next level to reach, praised in the accent, with no slower tempo to drill.
+        let flawless = Coach.lessonNotes(Coach.LessonContext(lesson: along, courseId: "guitar", result: result("g-1-1", stars: 3, accuracy: 0.98, items: items),
+                                                             takes: takes, canReview: true))
+        XCTAssertEqual(flawless.first?.fact, .nextLevel(from: note(50), to: note(55), milliseconds: 200, beat: 4))
+        XCTAssertEqual(flawless.first?.tone, .praise)
+        XCTAssertNil(flawless.first?.action)
+        XCTAssertEqual(flawless.dropFirst().first?.fact, .clean(items: 6), "and the clean run after it")
+        XCTAssertFalse(flawless.contains { $0.tone == .fix })
+        // Something that slipped is no fix to make under "Flawless" either.
+        let slipped = items + [ItemScore(item: note(52), score: 0.5)]
+        let quiet = Coach.lessonNotes(Coach.LessonContext(lesson: along, courseId: "guitar", result: result("g-1-1", stars: 3, accuracy: 0.98, items: slipped),
+                                                          takes: takes, canReview: true))
+        XCTAssertEqual(quiet.map(\.fact), [.nextLevel(from: note(50), to: note(55), milliseconds: 200, beat: 4)])
+        // "Great work" at 95 %: the same take is a fix, with the tempo to practise the move at.
+        let great = Coach.lessonNotes(Coach.LessonContext(lesson: along, courseId: "guitar", result: result("g-1-1", stars: 3, accuracy: 0.95, items: items),
+                                                          takes: takes, canReview: true))
+        XCTAssertEqual(great.first?.fact, .change(from: note(50), to: note(55), milliseconds: 200, beat: 4, missed: 0, count: 2, bpm: 80))
+        XCTAssertEqual(great.first?.action, .metronome(bpm: 60))
+        XCTAssertEqual(great.first?.tone, .fix)
+    }
+
+    func testFlawlessIsThreeStarsAtNinetyEightPercent() {
+        XCTAssertTrue(Coach.isFlawless(result("a", stars: 3, accuracy: 0.98)))
+        XCTAssertTrue(Coach.isFlawless(result("a", stars: 3, accuracy: 1)))
+        XCTAssertFalse(Coach.isFlawless(result("a", stars: 3, accuracy: 0.97)))
+        XCTAssertFalse(Coach.isFlawless(result("a", stars: 2, accuracy: 1)))
+    }
+
+    func testSingleNotesMoveAndChordsChange() {
+        XCTAssertFalse(Coach.changesChord(from: note(50), to: note(55)), "a melody moves")
+        XCTAssertTrue(Coach.changesChord(from: .chord(em), to: .chord(c)))
+        XCTAssertTrue(Coach.changesChord(from: note(52), to: .chord(c)))
+    }
+
     func testAReviewDoesNotSendYouBackToTheDrill() {
         let id = LearnProgress.reviewId(courseId: "guitar")
         let notes = Coach.lessonNotes(Coach.LessonContext(lesson: lesson(id, []), courseId: "guitar",
