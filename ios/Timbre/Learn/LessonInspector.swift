@@ -5,7 +5,8 @@ import TimbreCore
 /// what it is (unit, kind, minutes, XP, stars; a song's sleeve) with Start, Continue or Play again (Timbre Pro for a Pro
 /// lesson, the open lesson on the way for one not reached yet); then what's in it step by step, and a still preview of
 /// what you'll play: its chords, its first picture, its notes on the neck or a staff, or its rhythm. `wide` sets the
-/// card and steps beside the preview and `companion` (Learn's Today); otherwise everything stacks in one column.
+/// card, its steps and `companion` (Learn's Today) in one column with the preview beside them, as tall as that column;
+/// otherwise everything stacks in one column.
 struct LessonInspector<Companion: View>: View {
     let course: LearnCourse
     let lesson: Lesson
@@ -25,40 +26,47 @@ struct LessonInspector<Companion: View>: View {
     private var accent: Color { Palette.accent(course.accent) }
 
     var body: some View {
-        let transition: AnyTransition = reduceMotion
-            ? .opacity
-            : .asymmetric(insertion: .opacity.combined(with: .offset(x: 14)), removal: .opacity)
-        // Both cards overlap while one lesson hands over to the next, rather than stacking for the moment.
-        ZStack(alignment: .top) {
-            columns
-                .id(lesson.id)
-                .transition(transition)
-        }
-        .accessibilityElement(children: .contain)
-        .accessibilityIdentifier("learn.inspector")
+        columns
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("learn.inspector")
     }
 
     @ViewBuilder private var columns: some View {
         if wide {
+            // The card, its steps and the companion in one column; the preview beside them as a stage as tall as
+            // that column, so both end level.
             HStack(alignment: .top, spacing: CardColumns.spacing) {
                 VStack(alignment: .leading, spacing: CardColumns.spacing) {
-                    hero
-                    steps
-                }
-                .frame(maxWidth: .infinity, alignment: .top)
-                VStack(alignment: .leading, spacing: CardColumns.spacing) {
-                    preview
+                    handing(hero)
+                    handing(steps)
                     companion()
                 }
                 .frame(maxWidth: .infinity, alignment: .top)
+                handing(preview)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
+            .fixedSize(horizontal: false, vertical: true)
         } else {
             VStack(alignment: .leading, spacing: CardColumns.spacing) {
-                hero
-                preview
-                steps
+                handing(hero)
+                handing(preview)
+                handing(steps)
                 companion()
             }
+        }
+    }
+
+    /// A card of the lesson's own: when another lesson is picked, the new card fades in a little from the side over the
+    /// old one fading out (the two overlap rather than stack for the moment); just a cross-fade with Reduce Motion.
+    /// The companion stays put.
+    private func handing<Card: View>(_ card: Card) -> some View {
+        let transition: AnyTransition = reduceMotion
+            ? .opacity
+            : .asymmetric(insertion: .opacity.combined(with: .offset(x: 14)), removal: .opacity)
+        return ZStack(alignment: .top) {
+            card
+                .id(lesson.id)
+                .transition(transition)
         }
     }
 
@@ -271,14 +279,20 @@ struct LessonInspector<Companion: View>: View {
     // MARK: Preview
 
     /// What you'll play, drawn still: the lesson's chords (fingers landing), its first picture, its notes on the course's
-    /// neck (or a staff for the voice), its rhythm; the course's instrument when it has none of these.
+    /// neck (or a staff for the voice), its rhythm; the course's instrument when it has none of these. Stacked, it is
+    /// 250 points tall; beside the card (`wide`) it grows to the column's height and the drawing with it.
     private var preview: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Preview").font(Typeface.eyebrow).tracking(1.6).textCase(.uppercase).foregroundStyle(Palette.inkSoft)
                 .accessibilityAddTraits(.isHeader)
             previewBody
                 .frame(maxWidth: .infinity)
-                .frame(height: wide ? 300 : 250)
+                .frame(minHeight: wide ? 300 : 250, maxHeight: wide ? CGFloat.infinity : 250)
+                .background {
+                    // A soft light on the stage, in the course's colour.
+                    RadialGradient(colors: [accent.opacity(0.12), .clear], center: .center, startRadius: 0, endRadius: 260)
+                        .allowsHitTesting(false)
+                }
         }
         .stillCard()
     }

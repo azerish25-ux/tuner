@@ -147,8 +147,8 @@ struct LearnView: View {
     }
 
     /// iPad: the title across the top, then the courses and the path in one card column (`CardColumns`), and the
-    /// lesson inspector across the rest with Today under it. In landscape (three columns) the inspector sets its card
-    /// and steps beside its preview and Today; in portrait (two) it stacks. Each side scrolls on its own.
+    /// lesson inspector across the rest with Today under it. In landscape (three columns) the inspector sets its card,
+    /// steps and Today beside a full-height preview; in portrait (two) it stacks. Each side scrolls on its own.
     private func wide(_ columns: CardColumns) -> some View {
         let half = CardColumns.spacing / 2
         let inspectorWidth = columns.span(columns.count - 1)

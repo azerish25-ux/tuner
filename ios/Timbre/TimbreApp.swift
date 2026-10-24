@@ -29,6 +29,10 @@ struct TimbreApp: App {
             .onContinueUserActivity(CSSearchableItemActionType) { activity in
                 if let store = bootstrap.store { SpotlightIndex.open(activity, store: store) }
             }
+            // "Start today's practice" handed over from Apple Watch: Today (Services/WatchBridge.swift).
+            .onContinueUserActivity(WatchBridge.todayActivity) { _ in
+                if let store = bootstrap.store { DeepLink.open(WatchBridge.todayLink, store: store) }
+            }
         }
     }
 }

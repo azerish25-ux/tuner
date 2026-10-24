@@ -284,6 +284,6 @@ enum NotationGlyphs {
         let sign: CGFloat = down ? 1 : -1
         let points: [CGPoint] = [CGPoint(x: 0.02, y: 0.12 * sign), CGPoint(x: 0.22, y: 0.75 * sign), CGPoint(x: 0.78, y: 1.42 * sign),
                                  CGPoint(x: 0.98, y: 2.2 * sign), CGPoint(x: 0.66, y: 3.0 * sign)]
-        return stroke(points.map { CGPoint(x: $0.x, y: -$0.y) }, widths: [0.34, 0.30, 0.22, 0.12, 0.04], samples: 14)
+        return stroke(points, widths: [0.34, 0.30, 0.22, 0.12, 0.04], samples: 14)
     }
 }

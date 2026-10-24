@@ -177,6 +177,7 @@ final class AppStore: ObservableObject {
         publishWidgetLibrary()
         WidgetSnapshot.write(WidgetSnapshot(streak: summary.current, best: summary.best, practicedToday: summary.practicedToday,
                                             week: week, instrument: instrumentDisplayName, updated: Date(), lesson: lesson))
+        WatchBridge.shared.publish(self)  // Apple Watch: streak, Today, quest and complication (Services/WatchBridge.swift)
         PracticeReminder.update(.init(streak: summary.current, practicedToday: summary.practicedToday, nextLesson: lesson?.title,
                                       minutesByDay: PracticeReminder.minutesByDay(records)))
     }

@@ -127,19 +127,26 @@ struct JourneyView: View {
         }
     }
 
+    /// One column of cards, as wide as `BalancedColumns` makes it.
     private func column<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 20) { content() }
+            .frame(maxWidth: .infinity, alignment: .topLeading)
     }
 
     /// iPad: Recent with as many sessions as the column has room for beside the others (twelve at most, two at least),
     /// its card reaching down to where they end.
     private var fittedRecent: some View {
+        // One session at a time, so the card ends less than a row short of the columns beside it.
         ViewThatFits(in: .vertical) {
             recentList(limit: 12).stillCard()
             recentList(limit: 10).stillCard()
+            recentList(limit: 9).stillCard()
             recentList(limit: 8).stillCard()
+            recentList(limit: 7).stillCard()
             recentList(limit: 6).stillCard()
+            recentList(limit: 5).stillCard()
             recentList(limit: 4).stillCard()
+            recentList(limit: 3).stillCard()
             recentList(limit: 2).stillCard()
         }
     }

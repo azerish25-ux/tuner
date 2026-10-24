@@ -134,7 +134,7 @@ struct GlassActionButtonStyle: ButtonStyle {
         configuration.label
             .font(.headline)
             .foregroundStyle(Palette.onAccent)
-            .frame(minWidth: 54, maxWidth: collapsed ? 54 : .infinity, minHeight: 54)
+            .frame(minWidth: 54, maxWidth: collapsed ? CGFloat(54) : .infinity, minHeight: 54)
             .padding(.horizontal, collapsed ? 0 : 18)
             .modifier(ActionGlass(tint: tint, pressed: configuration.isPressed))
             // The bead stays centred where the bar was.
