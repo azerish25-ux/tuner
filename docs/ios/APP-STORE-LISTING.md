@@ -67,20 +67,39 @@ Privacy: <privacy policy URL>
 Welcome to Timbre: a precise tuner for 60 instruments and 499 lessons that listen as you play.
 ```
 
-## Screenshots (6.9" and 13" iPad)
+## Screenshots (6.9" iPhone and 13" iPad)
 
-Make them with `python3 tools/marketing/screenshots.py`, from the CI simulator captures. Each caption names what the player gets, not the feature; the supporting line under it backs it up. Captions, in order:
+The two tables below are the only place the screenshot captions live: `tools/marketing/screenshots.py` reads them and renders each capture under its caption. To change a caption, edit it here and render again:
+
+```
+python3 tools/marketing/screenshots.py <ci-out/screenshots> <out folder>          # iPhone, 1320x2868
+python3 tools/marketing/screenshots.py <ci-out/ipad-screenshots> <out folder> --ipad   # iPad, 2064x2752
+python3 tools/marketing/screenshots.py --check                                    # the tables only
+```
+
+The script stops if a caption runs past 30 characters, if a row names a capture the UI tests never take, or if a count no longer matches the build (lessons and courses from `curriculum.json`, instruments and tunings from `catalog.json`). Each caption names what the player gets, not the feature; the supporting line under it backs it up.
+
+### iPhone 6.9"
 
 | # | Caption | Supporting line | Capture |
 |---|---|---|---|
-| 1 | **In tune in seconds** | 60 instruments, to the cent | a string locking on the 3D stage (`10b-tune-locked`) |
+| 1 | **In tune in seconds** | 60 instruments, to the cent | a string locked on the 3D headstock, its peg ringed and ticked (`10b-tune-locked`) |
 | 2 | **Hear exactly how you played** | Pitch and timing on every note | the play-along highway mid-take (`60-along-playing`) |
-| 3 | **Play your first chord today** | Timbre hears every string | the chord step as every string lights up |
+| 3 | **Play your first chord today** | Timbre hears every string | the chord step with every string lit (`52b-lesson-chord`) |
 | 4 | **Play songs, start to finish** | Originals and timeless classics | the Songs tab (`63-songs`) |
-| 5 | **Five minutes a day adds up** | Stars, streaks and daily quests | lesson results with their stars (`62-lesson-results`) |
-| 6 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) |
+| 5 | **Learn at your own pace** | 499 lessons in 13 courses | Learn, with the next lesson up (`50-learn`) |
+| 6 | **Five minutes a day adds up** | Stars, streaks and daily quests | lesson results with their stars (`62-lesson-results`) |
+| 7 | **Tune whatever you play** | Guitar to violin, oud to erhu | the instrument browser's Guitar shelf (`31-instruments-scrolled`) |
+| 8 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) |
 
-Every caption fits in 30 characters. The 13" iPad set uses captions 1, 4 and 5 over its tune, Songs and Play captures.
+### iPad 13"
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | **In tune in seconds** | 60 instruments, to the cent | the tuner in landscape (`ipad-landscape-tune`) |
+| 2 | **Tune whatever you play** | Guitar to violin, oud to erhu | the instrument browser (`ipad-landscape-instruments`) |
+| 3 | **Play songs, start to finish** | Originals and timeless classics | the Songs tab (`ipad-landscape-songs`) |
+| 4 | **Five minutes a day adds up** | A daily set, quests and ear games | the Play tab (`ipad-landscape-practice`) |
 
 ### App Preview (6.9")
 

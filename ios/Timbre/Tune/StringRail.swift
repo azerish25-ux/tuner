@@ -3,9 +3,10 @@ import TimbreCore
 
 /// One chip per course, in physical order. Unison partners (a mandolin's pair) share one chip marked ×2,
 /// with a pip per string that lights as that string locks; the chip turns solid once both have.
-/// Tuned courses keep a lit ring; the course being tuned shows the live pitch in the tuner's colour rule
-/// (mint in the lock band, amber close, coral far). Increase Contrast strengthens rings and labels;
-/// Differentiate Without Colour adds a symbol (▲ sharp, ▼ flat, ✓ in tune).
+/// The course being tuned is the one raised, filled chip, showing the live pitch in the tuner's colour rule
+/// (mint in the lock band, amber close, coral far) and blooming solid mint as it locks. Tuned courses stay
+/// quiet with a small ✓ on the shoulder. Increase Contrast strengthens rings and labels; Differentiate
+/// Without Colour adds a symbol (▲ sharp, ▼ flat, ✓ in tune).
 struct StringRail: View {
     /// The readout's smoothing, so the selected chip shows the same value as the digits.
     let motion: ReadoutMotion
@@ -19,6 +20,8 @@ struct StringRail: View {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) { row(ordered) }
                     .contentMargins(.horizontal, Metrics.gutter, for: .scrollContent)
+                    // The raised chip's shadow and the ✓ badges reach past the row: let them show.
+                    .scrollClipDisabled()
                     .onChange(of: store.selectedCourse) { _, index in
                         let chip = groups.first { $0.contains(index) }?.id ?? index
                         withAnimation(Motion.settle) { proxy.scrollTo(chip, anchor: .center) }
@@ -80,17 +83,24 @@ private struct CourseChip: View {
         let face = Face(name: parts.name, cue: label.cue ?? parts.octave, padded: label.cue != nil,
                         pips: pipColors(locked: locked, active: selected ? active : nil, live: style.ring),
                         mark: withoutColor ? style.mark : nil)
+        // The string being tuned stands up off the rail (until it blooms solid on the lock); a tuned string you
+        // are not tuning carries the ✓ instead.
+        let raised = selected && !style.solid
+        let lift: Color = raised ? Color.black.opacity(0.6) : Color.clear
+        let halo: Color = style.solid ? Palette.mint.opacity(0.55) : (raised ? style.ring.opacity(0.3) : Color.clear)
+        let change: Animation = reduceMotion ? .easeInOut(duration: 0.2) : Motion.pluck
         Button { store.chooseCourse(group.nextToTune(store.lockedCourses).index) } label: {
             content(face, text: style.text, cueColor: style.cue)
-                .background(Capsule().fill(style.fill))
+                .background { chipFill(style.fill, raised: raised) }
                 .overlay { solidLayer(face, solid: style.solid) }
-                .overlay(Capsule().strokeBorder(style.ring, lineWidth: (selected || style.solid ? 1.5 : 1) + (strong ? 0.5 : 0)))
-                .overlay(alignment: .topTrailing) { pairBadge(tuned: tuned, ring: style.ring) }
-                .shadow(color: style.solid ? Palette.mint.opacity(0.55) : .clear, radius: 12)
-                .scaleEffect(selected ? 1.05 : 1)
-                .animation(Motion.pluck, value: selected)
-                .animation(Motion.pluck, value: tuned)
-                .animation(reduceMotion ? .easeInOut(duration: 0.2) : Motion.pluck, value: style.solid)
+                .overlay(Capsule().strokeBorder(style.ring, lineWidth: ringWidth(selected: selected, solid: style.solid)))
+                .overlay(alignment: .topTrailing) { shoulderBadge(tuned: tuned, done: tuned && !selected, ring: style.ring) }
+                .shadow(color: lift, radius: 10, y: 6)
+                .shadow(color: halo, radius: 12)
+                .scaleEffect(selected ? 1.1 : 1)
+                .animation(change, value: selected)
+                .animation(change, value: tuned)
+                .animation(change, value: style.solid)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(accessibilityName(label.main))
@@ -139,17 +149,45 @@ private struct CourseChip: View {
         }
     }
 
-    /// "×2" on the chip's shoulder for a pair; mint once both strings are tuned.
-    @ViewBuilder private func pairBadge(tuned: Bool, ring: Color) -> some View {
+    /// The chip's body: the raised chip lifts onto a lighter surface with a soft top light; the rest sit in the rail.
+    private func chipFill(_ fill: Color, raised: Bool) -> some View {
+        ZStack {
+            if raised {
+                Capsule().fill(Palette.surface)
+                Capsule().fill(LinearGradient(colors: [.white.opacity(0.12), .clear], startPoint: .top, endPoint: .center))
+            }
+            Capsule().fill(fill)
+        }
+    }
+
+    private func ringWidth(selected: Bool, solid: Bool) -> CGFloat {
+        (selected && !solid ? 2 : (solid ? 1.5 : 1)) + (strong ? 0.5 : 0)
+    }
+
+    /// The chip's shoulder: "×2" for a pair (mint, with a ✓, once both strings are tuned); for a single string
+    /// you are not tuning, a small mint ✓ once it is tuned.
+    @ViewBuilder private func shoulderBadge(tuned: Bool, done: Bool, ring: Color) -> some View {
         if group.count > 1 {
-            Text(verbatim: "×\(group.count)")
-                .font(Typeface.label(9))
-                .foregroundStyle(tuned ? Palette.onAccent : (strong ? Palette.ink : Palette.inkSoft))
-                .padding(.horizontal, 4).padding(.vertical, 1.5)
-                .background(Capsule().fill(tuned ? Palette.mint : Palette.stageRaised))
-                .overlay(Capsule().strokeBorder(tuned ? Color.clear : ring, lineWidth: 1))
-                .fixedSize()
-                .offset(x: 4, y: -3)
+            HStack(spacing: 2) {
+                if tuned { Image(systemName: "checkmark").font(.system(size: 7, weight: .heavy)) }
+                Text(verbatim: "×\(group.count)").font(Typeface.label(9))
+            }
+            .foregroundStyle(tuned ? Palette.onAccent : (strong ? Palette.ink : Palette.inkSoft))
+            .padding(.horizontal, 4).padding(.vertical, 1.5)
+            .background(Capsule().fill(tuned ? Palette.mint : Palette.stageRaised))
+            .overlay(Capsule().strokeBorder(tuned ? Color.clear : ring, lineWidth: 1))
+            .fixedSize()
+            .offset(x: 4, y: -3)
+            .accessibilityHidden(true)
+        } else if done {
+            Image(systemName: "checkmark")
+                .font(.system(size: 8, weight: .heavy))
+                .foregroundStyle(Palette.onAccent)
+                .frame(width: 16, height: 16)
+                .background(Circle().fill(Palette.mint))
+                .overlay(Circle().strokeBorder(Palette.stage, lineWidth: 1.5))
+                .offset(x: 2, y: -2)
+                .transition(reduceMotion ? AnyTransition.opacity : AnyTransition.scale(scale: 0.3).combined(with: .opacity))
                 .accessibilityHidden(true)
         }
     }
@@ -169,26 +207,27 @@ private struct CourseChip: View {
             .accessibilityHidden(true)
     }
 
-    /// Strings you are not tuning: mint once tuned, quiet otherwise.
+    /// Strings you are not tuning stay quiet in the rail; a tuned one keeps a faint mint edge and its octave in
+    /// mint, and its ✓ badge says it is done (so it never outshines the string being tuned).
     private func restingStyle(tuned: Bool) -> Style {
-        tuned ? Style(ring: Palette.mint.opacity(strong ? 0.9 : 0.45), fill: Palette.mint.opacity(0.08), text: Color(hex: 0xCFFBEA), cue: Palette.mint, mark: .inTune)
+        tuned ? Style(ring: Palette.mint.opacity(strong ? 0.7 : 0.22), fill: Palette.mint.opacity(0.04), text: Palette.ink, cue: Palette.mint)
               : Style(ring: .white.opacity(strong ? 0.45 : 0.12), fill: .white.opacity(0.03), text: Palette.ink, cue: strong ? Palette.inkSoft : Palette.inkFaint)
     }
 
-    /// The string being tuned follows the live pitch with the readout's colour rule (the same steady whole
-    /// cents as the digits); solid mint while locked. With no pitch it is solid mint if already tuned,
-    /// otherwise a plain bright ring.
+    /// The string being tuned is the raised, filled chip: it follows the live pitch with the readout's colour rule
+    /// (the same steady whole cents as the digits) and turns solid mint while locked. With no pitch it is solid
+    /// mint if already tuned, otherwise a bright ring on the raised fill.
     private func selectedStyle(tuned: Bool) -> Style {
         // Only this chip reads the live reading, so only it redraws with the pitch.
         let reading = store.live.reading
         let live = audio.running && reading.cents != nil ? motion.shown : nil
         let solid = Style(ring: Palette.mint, fill: Palette.mint.opacity(0.12), text: Palette.ink, cue: Palette.mint, solid: true, mark: .inTune)
         guard let live else {
-            return tuned ? solid : Style(ring: strong ? Palette.ink : Palette.ink.opacity(0.75), fill: .white.opacity(0.08), text: Palette.ink, cue: strong ? Palette.ink : Palette.inkSoft)
+            return tuned ? solid : Style(ring: strong ? Palette.ink : Palette.ink.opacity(0.85), fill: .white.opacity(0.06), text: Palette.ink, cue: strong ? Palette.ink : Palette.inkSoft)
         }
         if reading.inTune { return solid }
         let tint = Palette.tuning(Double(live), locked: false)
-        return Style(ring: tint, fill: tint.opacity(0.12), text: Palette.ink, cue: tint, mark: PitchMark(shown: live, locked: false))
+        return Style(ring: tint, fill: tint.opacity(0.2), text: Palette.ink, cue: tint, mark: PitchMark(shown: live, locked: false))
     }
 
     /// "String 3, D3"; a pair reads "Strings 1 and 2, G3".

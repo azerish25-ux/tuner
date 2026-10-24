@@ -61,7 +61,7 @@ SAINTS = f"{SAINTS_A} {SAINTS_B}"
 UNIT_1 = unit("songs-1", "First songs", "Six famous tunes, one note at a time, on the top strings. Slow tempos, big wins.", [
     lesson("song-mary", "Mary Had a Little Lamb", [
         explain("Edison's first recording", "In 1877, Thomas Edison recited this rhyme to test his new phonograph. "
-                "The tune uses C and D on string 2, then open E and G on string 1.",
+                "The tune uses C and D on string 2, then open E, and G at fret 3 on string 1.",
                 fretboard(G, [(2, 1, 1), (2, 3, 3), (1, 0), (1, 3, 3)])),
         notes(G, ["E4", "D4", "C4", "D4", "E4", "E4", "E4"], hint="E D C D E E E: open string 1, then string 2 at frets 3 and 1, and back."),
         notes(G, ["D4", "D4", "D4", "E4", "G4", "G4"], hint="D D D at fret 3 on string 2. Then open E, and G at fret 3 on string 1."),
@@ -189,7 +189,7 @@ UNIT_2 = unit("songs-2", "Folk favorites", "Campfire songs and a sea shanty, wit
         explain("A Gold Rush anthem", "Stephen Foster published this song in 1848, and gold seekers heading to California "
                 "made it their anthem. The verse sits on strings 3, 2 and 1.",
                 fretboard(G, [(3, 0), (3, 2, 2), (2, 0), (2, 3, 3), (1, 0)])),
-        notes(G, ["B3", "D4", "D4", "E4", "D4", "B3", "G3", "A3"], hint="Open B, D at fret 3, open E, then back down to open G and A."),
+        notes(G, ["B3", "D4", "D4", "E4", "D4", "B3", "G3", "A3"], hint="Open B, D at fret 3, open E, then back down to open G and A at fret 2."),
         along(G, SUSANNA_1.replace("A3:2", "A3:4"), bpm=60, title=FIRST_HALF),
         notes(G, ["B3", "B3", "A3", "A3", "G3"], hint="The last bar: B B A A, then home to open G."),
         along(G, SUSANNA, bpm=66, title="Oh! Susanna"),
@@ -250,7 +250,7 @@ UNIT_2 = unit("songs-2", "Folk favorites", "Campfire songs and a sea shanty, wit
                 "This one is in a minor key, which sounds darker.",
                 fretboard(G, [(5, 3, 3), (4, 0), (4, 2, 2), (4, 3, 3), (3, 0), (3, 2, 2), (2, 0), (2, 1, 1), (2, 3, 3)])),
         notes(G, ["A3", "D3", "F3", "A3", "G3", "C3", "E3", "G3"],
-              hint="A, down to open D, F and A. Then G, down to C on string 5, E and G."),
+              hint="A, down to open D, then F at fret 3 and A. Then G, down to C on string 5, E and G."),
         explain("Long, short-short", "The verse opens on one repeated note: long, short-short, long, short-short. "
                 "Tap it before you play it.", rhythm([0, 1, 1.5, 2, 3, 3.5])),
         tap([0, 1, 1.5, 2, 3, 3.5], bpm=66, bars=2),

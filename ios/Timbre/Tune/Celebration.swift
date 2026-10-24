@@ -95,66 +95,29 @@ struct CelebrationOverlay: View {
     }
 }
 
-/// A run of 7, 30 or 100 days, reached by practice saved outside a lesson (lesson results show their own):
-/// the flame, the number, the badge's name and a card to share. It waits for Done or a tap outside.
+/// A run of 3, 7, 30 or 100 days, reached by practice saved outside a lesson (lesson results show their own):
+/// the full-screen `StreakCelebration`, with its poster to share. It waits for Continue.
 struct StreakMilestoneOverlay: View {
     @EnvironmentObject private var store: AppStore
     @State private var days: Int?
-    @State private var started = Date()
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ZStack {
             if let days {
-                Color.black.opacity(0.45).ignoresSafeArea().onTapGesture { dismiss() }
-                if !reduceMotion { Burst(started: started, tint: Palette.flame).allowsHitTesting(false) }
-                card(days)
-                    .transition(.scale(scale: 0.92).combined(with: .opacity))
+                StreakCelebration(days: days) { self.days = nil }
+                    .transition(.opacity)
             }
         }
-        .animation(Motion.pluck, value: days)
+        .animation(.easeOut(duration: 0.3), value: days)
         .onChange(of: store.streakMilestone) { _, milestone in
             guard milestone != nil else { return }
             Task { @MainActor in
                 // A lesson's results claim theirs straight away; this shows only what is still waiting.
                 try? await Task.sleep(for: .seconds(1.2))
                 guard days == nil, let reached = store.takeStreakMilestone() else { return }
-                started = Date()
                 days = reached
-                Haptics.shared.done()
-                SoundFX.shared.play(.levelUp)
-                AccessibilityNotification.Announcement(String(localized: "\(reached)-day streak", bundle: TimbreLocalization.bundle)).post()
             }
         }
-    }
-
-    private func dismiss() { days = nil }
-
-    private func card(_ days: Int) -> some View {
-        VStack(spacing: 14) {
-            Image(systemName: "flame.fill").font(.system(size: 30, weight: .heavy))
-                .foregroundStyle(LinearGradient(colors: [Color(hex: 0xFFE29A), Palette.flame], startPoint: .top, endPoint: .bottom))
-                .frame(width: 72, height: 72)
-                .background(Circle().fill(Palette.flame.opacity(0.16)))
-                .overlay(Circle().strokeBorder(Palette.flame.opacity(0.45), lineWidth: 1))
-                .shadow(color: Palette.flame.opacity(0.55), radius: 24)
-                .symbolEffect(.bounce, value: days)
-            Text("\(days)-day streak").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
-                .multilineTextAlignment(.center).accessibilityAddTraits(.isHeader)
-            StreakShareCard.titleText(days).font(.subheadline.weight(.semibold)).foregroundStyle(Color(hex: 0xFFD3A8))
-            HStack(spacing: 12) {
-                ShareCardButton(preview: "Practice streak") { StreakShareCard(days: days) }
-                    .buttonStyle(BrassButtonStyle())
-                    .accessibilityIdentifier("streak.share")
-                Button("Done") { dismiss() }.buttonStyle(BrassButtonStyle(prominent: false))
-                    .accessibilityIdentifier("streak.done")
-            }
-            .padding(.top, 6)
-        }
-        .padding(26)
-        .stillCard(cornerRadius: 30, padding: 22)
-        .padding(.horizontal, 28)
-        .accessibilityAddTraits(.isModal)
     }
 }
 
@@ -302,13 +265,16 @@ struct ShareCardRow<Card: View>: View {
 
 /// The Studio Noir frame every share card uses: the dark stage under a warm light, TIMBRE across the top
 /// beside an optional tag, and the moment beneath. 400 pt wide. Only the achievement, never personal data.
+/// With `signature`, a poster's sign-off closes it: hairlines either side of the tuning fork and "In tune with Timbre".
 struct ShareCardFrame<Tag: View, Content: View>: View {
     let glow: Color
+    let signature: Bool
     let tag: Tag
     let content: Content
 
-    init(glow: Color = Color(hex: 0xFFC48C), @ViewBuilder tag: () -> Tag, @ViewBuilder content: () -> Content) {
+    init(glow: Color = Color(hex: 0xFFC48C), signature: Bool = false, @ViewBuilder tag: () -> Tag, @ViewBuilder content: () -> Content) {
         self.glow = glow
+        self.signature = signature
         self.tag = tag()
         self.content = content()
     }
@@ -321,6 +287,7 @@ struct ShareCardFrame<Tag: View, Content: View>: View {
                 tag
             }
             content
+            if signature { signatureLine }
         }
         .padding(30)
         .frame(width: 400)
@@ -332,6 +299,19 @@ struct ShareCardFrame<Tag: View, Content: View>: View {
             }
         )
         .environment(\.colorScheme, .dark)
+    }
+
+    private var signatureLine: some View {
+        HStack(spacing: 10) {
+            Rectangle().fill(Color.white.opacity(0.12)).frame(height: 1)
+            HStack(spacing: 6) {
+                Image(systemName: "tuningfork").font(.system(size: 11, weight: .bold)).foregroundStyle(Palette.mint)
+                Text("In tune with Timbre").font(Typeface.label(11)).tracking(0.4).foregroundStyle(Palette.inkSoft)
+            }
+            .fixedSize()
+            Rectangle().fill(Color.white.opacity(0.12)).frame(height: 1)
+        }
+        .padding(.top, 6)
     }
 }
 
@@ -380,18 +360,34 @@ struct LessonShareCard: View {
     let accuracy: Int
     let accent: Color
     let song: Bool
+    /// The streak beside the accuracy (from two days on).
+    var streak = 0
 
     private static let gold = Color(hex: 0xF0A93B)
     private static let starFill = LinearGradient(colors: [Color(hex: 0xFFE29A), Color(hex: 0xF0A93B)], startPoint: .top, endPoint: .bottom)
 
     var body: some View {
-        ShareCardFrame(glow: accent) {
+        ShareCardFrame(glow: accent, signature: true) {
             Text(course.uppercased()).font(Typeface.label(12)).tracking(1.6).foregroundStyle(accent).lineLimit(1)
         } content: {
             hero
             words
-            accuracyChip
+            HStack(spacing: 8) {
+                accuracyChip
+                if streak > 1 { streakChip }
+            }
         }
+    }
+
+    private var streakChip: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "flame.fill").font(.system(size: 13, weight: .bold)).foregroundStyle(Palette.flame)
+            Text("\(streak)-day streak").font(Typeface.label(14)).foregroundStyle(Color(hex: 0xFFD3A8))
+                .lineLimit(1).minimumScaleFactor(0.7)
+        }
+        .padding(.horizontal, 14).frame(height: 34)
+        .background(Capsule().fill(Palette.flame.opacity(0.12)))
+        .padding(.top, 2)
     }
 
     private var hero: some View {
@@ -459,16 +455,14 @@ struct StreakShareCard: View {
     static func titleText(_ days: Int) -> Text { title(days).map { Text(LocalizedStringKey($0)) } ?? Text("Practice streak") }
 
     var body: some View {
-        ShareCardFrame(glow: Palette.flame) {
+        ShareCardFrame(glow: Palette.flame, signature: true) {
             Self.titleText(days).font(Typeface.label(12)).tracking(1.2).foregroundStyle(Color(hex: 0xFFD3A8)).lineLimit(1)
         } content: {
             ZStack {
                 Circle()
                     .fill(RadialGradient(colors: [Palette.flame.opacity(0.34), .clear], center: .center, startRadius: 4, endRadius: 140))
                     .frame(width: 280, height: 280)
-                Image(systemName: "flame.fill").font(.system(size: 116, weight: .bold))
-                    .foregroundStyle(LinearGradient(colors: [Color(hex: 0xFFE29A), Palette.flame], startPoint: .top, endPoint: .bottom))
-                    .shadow(color: Palette.flame.opacity(0.6), radius: 24)
+                StreakFlame(size: 150, animated: false)
             }
             .frame(height: 190)
             Text(days, format: .number).font(Typeface.number(92)).foregroundStyle(Palette.ink)
@@ -477,11 +471,13 @@ struct StreakShareCard: View {
         }
     }
 
-    /// Seven lit embers: the week every run is made of.
+    /// A week of embers, one lit for each day of the run (all seven from a week on).
     private var embers: some View {
         HStack(spacing: 8) {
-            ForEach(0..<7, id: \.self) { _ in
-                Circle().fill(Palette.flame).frame(width: 11, height: 11).shadow(color: Palette.flame.opacity(0.6), radius: 6)
+            ForEach(0..<7, id: \.self) { index in
+                let lit = index < min(days, 7)
+                Circle().fill(lit ? Palette.flame : Color.white.opacity(0.12)).frame(width: 11, height: 11)
+                    .shadow(color: lit ? Palette.flame.opacity(0.6) : .clear, radius: 6)
             }
         }
         .padding(.top, 4)

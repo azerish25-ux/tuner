@@ -217,12 +217,13 @@ final class AppPreviewUITests: XCTestCase {
 
         // A one-bar count-in at 60 BPM, then each note runs down its string to the line and lights as it is played.
         let started = soft(press("Start"), "The play-along never started")
-        hold(until: started.addingTimeInterval(4.5))
+        // The count-in fills the first 4 s (60 BPM): the clip opens on its last beat, as the first gem lands.
+        hold(until: started.addingTimeInterval(5.5))
         sync("highway")
-        hold(until: started.addingTimeInterval(7.0))
+        hold(until: started.addingTimeInterval(8.0))
         sync("highway-2")
-        hold(until: started.addingTimeInterval(8.8))
-        clip("highway", from: started.addingTimeInterval(1.5), to: started.addingTimeInterval(8.6), keep: .head)
+        hold(until: started.addingTimeInterval(10.2))
+        clip("highway", from: started.addingTimeInterval(3.0), to: started.addingTimeInterval(10.0), keep: .head)
         XCTAssertTrue(element("along.again").waitForExistence(timeout: 30))
         pause(0.6)
 

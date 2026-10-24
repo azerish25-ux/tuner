@@ -594,7 +594,7 @@ UNIT_16 = unit("gtr-16", "Putting it together", "A capo, G and D shapes on capo 
         explain("Verse, then chorus", "Most songs alternate two sections. The verse tells the story; the chorus repeats the hook. "
                 "Stephen Foster's Oh! Susanna (1848) has both. Capo off: it's in G.",
                 fretboard(G, [(3, 0), (3, 2, 2), (2, 0), (2, 3, 3), (1, 0)])),
-        notes(G, ["G3", "A3", "B3", "D4", "D4", "E4"], hint="The pickup and first bar: open G, A, then open B, D, D and open E."),
+        notes(G, ["G3", "A3", "B3", "D4", "D4", "E4"], hint="The pickup and first bar: open G, A at fret 2, then open B, D at fret 3 twice, and open E."),
         along(G, SUS_V1, bpm=66, beats_per_bar=2, title="First line"),
         quiz("Which section usually comes back with the same words?", ["The verse", "The chorus", "The intro"], 1,
              "Verses change their words as the story moves on. The chorus returns unchanged, and that's what people sing along to."),

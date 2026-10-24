@@ -86,6 +86,116 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(next.exists)
     }
 
+    // MARK: Timed shots (the tuner's lock, the chord step, the instrument shelf)
+
+    /// A screenshot taken now and attached only once it has been chosen (`keep`).
+    private func capture(at moment: Date) -> XCUIScreenshot {
+        hold(until: moment)
+        return XCUIScreen.main.screenshot()
+    }
+
+    private func keep(_ screenshot: XCUIScreenshot, as name: String) {
+        let attachment = XCTAttachment(screenshot: screenshot)
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    /// Sleeps until `moment` (no-op once it has passed): pacing follows the clock, not query times.
+    private func hold(until moment: Date) {
+        let seconds = moment.timeIntervalSinceNow
+        if seconds > 0 { Thread.sleep(forTimeInterval: seconds) }
+    }
+
+    /// Polls `condition` until it holds (true) or `timeout` passes (false).
+    private func waitUntil(_ timeout: TimeInterval, _ condition: () -> Bool) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        while true {
+            if condition() { return true }
+            if Date() >= deadline { return false }
+            Thread.sleep(forTimeInterval: 0.1)
+        }
+    }
+
+    /// The demo pitch's clock (AudioService.startDemo): from when listening started, 6 s cycles that drift in from
+    /// 14 cents flat, are inside the 5-cent lock band from 2.7 s and lock 0.65 s later, at 3.35 s.
+    private enum Demo {
+        static let cycle = 6.0
+        static let inBand = 2.7
+        /// About 9 cents flat: "Tighten", the peg's turn arrow up.
+        static let drifting = 1.4
+        /// 0.9 s after the lock: the badge, the solid chip and the peg's tick have landed.
+        static let lockShot = 4.25
+    }
+
+    /// The start of the first demo cycle (counted from `origin`) whose `offset` second is at least `lead` from now.
+    private func nextCycle(from origin: Date, reaching offset: TimeInterval, lead: TimeInterval) -> Date {
+        let needed = Date().addingTimeInterval(lead).timeIntervalSince(origin) - offset
+        let cycles = max(0, (needed / Demo.cycle).rounded(.up))
+        return origin.addingTimeInterval(cycles * Demo.cycle)
+    }
+
+    /// The tuner's UI-test probe (TIMBRE_DEBUG_STATE=1, never drawn): "stage=<3d|loading|2d> listening=<epoch s, 0 if not>".
+    private func tunerProbe() -> (stage: String, listening: Date?) {
+        guard let label = (try? element("stage.state").snapshot())?.label else { return ("", nil) }
+        var stage = ""
+        var listening: Date?
+        for field in label.split(separator: " ") {
+            let parts = field.split(separator: "=", maxSplits: 1).map(String.init)
+            guard parts.count == 2 else { continue }
+            if parts[0] == "stage" { stage = parts[1] }
+            if parts[0] == "listening", let seconds = Double(parts[1]), seconds > 0 { listening = Date(timeIntervalSince1970: seconds) }
+        }
+        return (stage, listening)
+    }
+
+    /// Waits for the 3D model to take over from the studio render that holds the stage while it loads (the first
+    /// model on a fresh simulator can take 20 s or more), then for the camera's dolly in to the headstock.
+    private func waitForStage(timeout: TimeInterval = 90) -> (stage: String, listening: Date?) {
+        var probe = tunerProbe()
+        let started = Date()
+        let deadline = started.addingTimeInterval(timeout)
+        while probe.stage != "3d" && probe.stage != "2d" && Date() < deadline {
+            // No probe at all (not a debug build): don't wait out the whole timeout for it.
+            if probe.stage.isEmpty && Date().timeIntervalSince(started) > 15 { break }
+            settle(0.5)
+            probe = tunerProbe()
+        }
+        if probe.stage != "3d" { print("The tuner's stage is '\(probe.stage)', not 3D") }
+        settle(2.5)
+        return tunerProbe()
+    }
+
+    /// The tuner is showing a lock: its status line ("Hold it…", "Tighten…") steps aside for the In tune badge.
+    private func lockShown() -> Bool {
+        guard let status = try? element("tune.status").snapshot() else { return true }
+        return status.label == "In tune"
+    }
+
+    /// Scrolls the instrument browser until `firstCard` (the first card of a shelf) sits under the title bar with
+    /// room above it for the shelf's heading. Each drag holds still before it lifts, so the list never flings.
+    private func showShelf(firstCard card: XCUIElement) {
+        let height = app.frame.height
+        let title = app.navigationBars["Choose instrument"]
+        let top = (title.exists ? title.frame.maxY : height * 0.15) + 62
+        for _ in 0..<5 {
+            let frame = card.exists ? card.frame : .zero
+            let gap = frame.isEmpty ? height * 0.45 : frame.minY - top
+            if abs(gap) < 8 { break }
+            let from = gap > 0 ? height * 0.85 : top + 20
+            drag(fromY: from, toY: max(top - 40, min(height - 60, from - gap)))
+        }
+        settle(0.8)
+    }
+
+    private func drag(fromY: CGFloat, toY: CGFloat) {
+        let origin = app.coordinate(withNormalizedOffset: .zero)
+        let x = app.frame.width / 2
+        origin.withOffset(CGVector(dx: x, dy: fromY))
+            .press(forDuration: 0.15, thenDragTo: origin.withOffset(CGVector(dx: x, dy: toY)), withVelocity: .slow, thenHoldForDuration: 0.4)
+        settle(0.5)
+    }
+
     func test01Onboarding() throws {
         // The demo pitch plays the first-tune step's string (it drifts from 14 cents flat into tune).
         launch(onboarded: false, demo: false, pitch: true)
@@ -136,11 +246,30 @@ final class TimbreUITests: XCTestCase {
     }
 
     func test02TuneScreen() throws {
+        // The tuner's probe (stage.state) says when the 3D model is up and when listening started.
+        app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
         launch(pitch: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
-        // The demo pitch drifts into tune over four seconds and re-plucks every six.
-        settle(8); shot("10-tune-3d")
-        settle(2.5); shot("10b-tune-locked")
+        var probe = waitForStage()
+        if probe.listening == nil {
+            element("listenButton").tap(); settle(0.5)
+            probe = tunerProbe()
+        }
+        // App Store shot #1 must show a real lock. The demo pitch runs in 6 s cycles from when listening started
+        // (14 cents flat, inside the lock band from 2.7 s, locked at 3.35 s), so both shots are timed from that
+        // clock, hands off: every query holds the app's main thread, and a gap of more than 150 ms in the readings
+        // restarts the 0.65 s hold. Screenshots come from the simulator and never touch the app.
+        let origin = probe.listening ?? Date()
+        var cycle = nextCycle(from: origin, reaching: Demo.drifting, lead: 0.4)
+        hold(until: cycle.addingTimeInterval(Demo.drifting)); shot("10-tune-3d")
+        var locked = capture(at: cycle.addingTimeInterval(Demo.lockShot))
+        if !lockShown() {
+            // Something broke the hold: the next cycle, still hands off until its lock has been shot.
+            cycle = nextCycle(from: origin, reaching: Demo.inBand, lead: 0.4)
+            locked = capture(at: cycle.addingTimeInterval(Demo.lockShot))
+            if !lockShown() { print("10b-tune-locked: the lock wasn't on screen when it was due") }
+        }
+        keep(locked, as: "10b-tune-locked")
         element("string.3").tap(); settle(1.5); shot("11-tune-string-selected")
         element("tune.instrument").tap(); settle(1.5); shot("12-instrument-picker")
         app.buttons["Done"].firstMatch.tap(); settle()
@@ -179,7 +308,9 @@ final class TimbreUITests: XCTestCase {
         launch()
         // The instrument browser is the tuner's picker sheet (the Songs tab took the Instruments tab's place).
         openPicker(); settle(0.8); shot("30-instruments")
-        app.swipeUp(); settle(); shot("31-instruments-scrolled")
+        // The store shot: the Guitar shelf right under the title bar, two full rows of instruments below it.
+        showShelf(firstCard: element("instrument.guitar_classical"))
+        shot("31-instruments-scrolled")
         app.buttons["Done"].firstMatch.tap(); settle()
         tab("Progress"); settle(2); shot("32-journey")
         app.swipeUp(); settle(); shot("33-journey-scrolled")
@@ -262,10 +393,20 @@ final class TimbreUITests: XCTestCase {
         // The tune check is covered by its own screenshot; skip the rest of it to keep the run short. The demo
         // pitch tunes each string in turn, so the check can finish on its own while the tap is on its way.
         tapIfPresent(skip)
-        // The demo pitch plays the chord's strings straight away: shoot as soon as the chord step is up,
-        // before it rings through and hands over to the strum explainer.
+        // The demo pitch plays the chord's strings straight away. The shot wants every string lit ("Every string
+        // rings"), which holds for about a second before the step hands over to the strum explainer: the picture
+        // taken as the step comes up stays as the fallback, and a later one replaces it only if the step was
+        // still on screen after it was taken.
         let chord = element("lesson.chord")
-        if chord.waitForExistence(timeout: 15) { shot("52b-lesson-chord") } else { print("The chord step went by before it was seen") }
+        if chord.waitForExistence(timeout: 15) {
+            var picture = XCUIScreen.main.screenshot()
+            let rings = app.staticTexts["Every string rings"]
+            if waitUntil(8, { rings.exists }) {
+                let lit = XCUIScreen.main.screenshot()
+                if chord.exists { picture = lit } else { print("52b: every string lit, but the step had gone by the shot") }
+            }
+            keep(picture, as: "52b-lesson-chord")
+        } else { print("The chord step went by before it was seen") }
         let next = element("lesson.continue")
         XCTAssertTrue(next.waitForExistence(timeout: 30))
         settle(1.5); shot("53-lesson-strum-explain")

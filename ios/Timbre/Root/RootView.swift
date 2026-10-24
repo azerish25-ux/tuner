@@ -39,10 +39,12 @@ struct RootView: View {
         .overlay { RewardToast() }
         #if DEBUG
         .overlay(alignment: .topLeading) {
-            // UI-test probe (TIMBRE_DEBUG_STATE=1): the presentation flags, readable by XCUITest.
+            // UI-test probe (TIMBRE_DEBUG_STATE=1): the presentation flags, readable by XCUITest. Drawn in clear ink
+            // and never touched, so it stays out of the screenshots (and off the title) while its label stays readable.
             if ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1" {
-                Text("paywall=\(store.showPaywall) settings=\(store.showSettings) picker=\(store.showInstrumentPicker) reason=\(store.paywallReason ?? "-") pro=\(commerce.isPro) tab=\(String(describing: store.selectedTab))")
-                    .font(.system(size: 9, design: .monospaced)).foregroundStyle(.white).padding(4).background(.black.opacity(0.6))
+                Text(verbatim: "paywall=\(store.showPaywall) settings=\(store.showSettings) picker=\(store.showInstrumentPicker) reason=\(store.paywallReason ?? "-") pro=\(commerce.isPro) tab=\(String(describing: store.selectedTab))")
+                    .font(.system(size: 9, design: .monospaced)).foregroundStyle(Color.clear)
+                    .allowsHitTesting(false)
                     .accessibilityIdentifier("debug.state")
             }
         }

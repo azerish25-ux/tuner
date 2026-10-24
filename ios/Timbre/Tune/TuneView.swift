@@ -19,7 +19,16 @@ struct TuneView: View {
     @State private var announcer = TunerAnnouncer()
     @State private var failed3D: String?
     @State private var ready3D: String?
+    /// Every string has locked: the camera pulls back to the whole instrument for the celebration. Choosing a
+    /// string (by tap or by playing it) or starting a new round brings the headstock close-up straight back.
+    @State private var showWhole = false
     private static let supports3D = MTLCreateSystemDefaultDevice() != nil
+    #if DEBUG
+    /// UI-test probe (TIMBRE_DEBUG_STATE=1), see `stageProbe`.
+    private static let probe = ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1"
+    /// When listening last started, in seconds since 1970 (0 while not listening): the demo pitch's cycles count from it.
+    @State private var listeningSince: Double = 0
+    #endif
 
     var body: some View {
         ZStack {
@@ -78,8 +87,33 @@ struct TuneView: View {
                 try? await Task.sleep(for: .milliseconds(200))
             }
         }
+        .onChange(of: store.allCoursesLocked) { _, all in showWhole = all }
+        .onChange(of: store.selectedCourse) { _, _ in showWhole = false }
         .sheet(isPresented: $store.showInstrumentPicker) { InstrumentPicker().presentationDetents([.large]).presentationBackground(Palette.stage) }
+        #if DEBUG
+        .overlay(alignment: .bottomLeading) { if Self.probe { stageProbe } }
+        .onChange(of: audio.running, initial: true) { _, running in listeningSince = running ? Date().timeIntervalSince1970 : 0 }
+        #endif
     }
+
+    #if DEBUG
+    /// For XCUITest only: which stage is up ("3d" once the model has replaced its studio render, "loading" before,
+    /// "2d" for the studio and photo stages) and when listening started. Drawn in clear ink and never touched, so it
+    /// stays out of every screenshot while its label stays readable.
+    private var stageProbe: some View {
+        Text(verbatim: "stage=\(stageState) listening=\(String(format: "%.3f", listeningSince))")
+            .font(.system(size: 9, design: .monospaced))
+            .foregroundStyle(Color.clear)
+            .allowsHitTesting(false)
+            .accessibilityIdentifier("stage.state")
+    }
+
+    private var stageState: String {
+        guard !store.referenceMode, let modelID = store.modelID,
+              Self.supports3D, store.settings.stageMode != "studio", failed3D != modelID else { return "2d" }
+        return ready3D == modelID ? "3d" : "loading"
+    }
+    #endif
 
     /// One string of a pair just locked: once its bell has rung, the tuner moves on to the other string
     /// (same chip, its own peg), in automatic and manual detection alike.
@@ -159,8 +193,11 @@ struct TuneView: View {
     private func stageInput() -> StageInput {
         // On a paired course the cue rings the one peg being tuned.
         let peg = store.referenceMode ? nil : Optional(CourseGrouping.position(of: store.activeCourse, in: store.courses))
+        // The 3D camera holds the headstock close-up, with the peg ring and its turn arrow, whenever a string is
+        // being tuned, listening or paused alike: the peg to turn is the tuner's hero. It pulls back to the whole
+        // instrument only for the all-strings celebration (Reduce Motion cuts rather than glides).
         return StageInput(cents: store.live.reading.cents, level: store.live.level, locked: store.live.reading.inTune,
-                          listening: audio.running, activeAnchor: store.activeAnchor, focus: audio.running && !store.referenceMode,
+                          listening: audio.running, activeAnchor: store.activeAnchor, focus: !store.referenceMode && !showWhole,
                           note: store.targetName, pegIndex: peg)
     }
 
@@ -173,9 +210,13 @@ struct TuneView: View {
                 let rig = ModelLibrary.rig(modelID)
                 if Self.supports3D && store.settings.stageMode != "studio" && failed3D != modelID {
                     ZStack {
-                        // The studio render holds the stage while the 3D model loads, then cross-fades out.
+                        // The studio render holds the stage while the 3D model loads, then cross-fades out. It
+                        // already rings the peg to turn, so a slow load never leaves the tuner without its cue.
                         if ready3D != modelID {
-                            StudioStage(imageName: ModelLibrary.hasCard(modelID) ? ModelLibrary.cardImageName(modelID) : (store.photo?.asset ?? ""), card: nil, input: stageInput)
+                            let rendered = ModelLibrary.hasCard(modelID)
+                            StudioStage(imageName: rendered ? ModelLibrary.cardImageName(modelID) : (store.photo?.asset ?? ""),
+                                        card: rendered ? rig.flatMap(StageCard.init(rig:)) : ModelLibrary.photoCard(store.photo?.asset),
+                                        input: stageInput) { selectPeg($0) }
                                 .padding(.horizontal, 16)
                                 .transition(.opacity)
                         }

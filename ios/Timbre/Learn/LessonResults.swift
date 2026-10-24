@@ -1,7 +1,8 @@
 import SwiftUI
 import TimbreCore
 
-/// The end of a lesson: stars land one by one, XP counts up, then the next lesson is one tap away.
+/// The end of a lesson: stars land one by one, XP counts up, then the next lesson is one tap away. Two stars or
+/// more bring a poster to share; a streak milestone takes the screen with its own celebration.
 struct LessonResults: View {
     let course: LearnCourse
     let lesson: Lesson
@@ -26,10 +27,16 @@ struct LessonResults: View {
     @State private var leveled = false
     @State private var badgesShown = 0
     @State private var offerReminder = !UserDefaults.standard.bool(forKey: PracticeReminder.askedKey) && !UserDefaults.standard.bool(forKey: PracticeReminder.enabledKey)
-    /// A streak milestone (7, 30, 100 days) this lesson reached: its card is offered here, not in the app-wide overlay.
+    /// The reminder was just switched on here: the row stays, showing the time it is set for.
+    @State private var reminderOn = false
+    @State private var askingReminder = false
+    /// A streak milestone (3, 7, 30, 100 days) this lesson reached: celebrated full screen and its card offered here,
+    /// not in the app-wide overlay.
     @State private var milestone: Int?
-    /// The share cards (three stars, a finished song, a milestone) come in after the stars and rewards.
+    /// The share cards (two or three stars, a finished song, a milestone) come in after the stars and rewards.
     @State private var shareShown = false
+    /// The milestone's full-screen celebration, over the results until Continue.
+    @State private var celebrating: Int?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.requestReview) private var requestReview
 
@@ -57,23 +64,36 @@ struct LessonResults: View {
             buttons
         }
         .task { await reveal() }
+        .overlay {
+            if let days = celebrating {
+                StreakCelebration(days: days) { withAnimation(.easeOut(duration: 0.3)) { celebrating = nil } }
+                    .transition(.opacity)
+            }
+        }
     }
 
+    /// Stars, headline, the reminder row (until asked once), the tiles, the level bar, rewards, then the share
+    /// cards: on a phone everything up to the first share card fits above the pinned buttons.
     private var content: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 16) {
             ZStack {
                 SparkBurst(trigger: burst, color: Palette.amber).frame(width: 320, height: 320)
                 HStack(alignment: .bottom, spacing: 14) {
                     ForEach(0..<3, id: \.self) { i in star(i) }
                 }
             }
-            .frame(height: 150)
+            .frame(height: 136)
             VStack(spacing: 8) {
                 Text(headline).font(Typeface.display(36)).tracking(-0.8).foregroundStyle(Palette.ink)
                 Text(lesson.title.localized).font(.headline).foregroundStyle(Palette.inkSoft)
                 if practice { PracticeModeTag().padding(.top, 4) }
             }
             .opacity(appeared ? 1 : 0).offset(y: appeared ? 0 : 12)
+            if offerReminder {
+                reminderRow
+                    .opacity(appeared ? 1 : 0)
+                    .transition(.scale(scale: 0.95).combined(with: .opacity))
+            }
             HStack(spacing: 12) {
                 tile(symbol: "sparkles", tint: accent, value: Text("+\(xp)"), label: Text("XP"))
                 tile(symbol: "scope", tint: Palette.amber, value: Text("\(accuracyPercent)%"), label: Text("accuracy"))
@@ -87,9 +107,8 @@ struct LessonResults: View {
             if let barLevel { levelBar(barLevel).padding(.horizontal, 20).transition(.opacity) }
             if let reward, badgesShown > 0 { earned(reward) }
             if shareShown && hasShareCards { shareCards.transition(.move(edge: .bottom).combined(with: .opacity)) }
-            if offerReminder && appeared { reminderCard.transition(.move(edge: .bottom).combined(with: .opacity)) }
         }
-        .padding(.top, 26).padding(.bottom, 16)
+        .padding(.top, 8).padding(.bottom, 16)
     }
 
     /// StepButton carries its own 12 pt below; Done sits right under it.
@@ -180,8 +199,8 @@ struct LessonResults: View {
     // MARK: Share cards
 
     private var isSong: Bool { lesson.kind == .song }
-    /// Three stars (not in practice mode) or any finished song.
-    private var sharesResult: Bool { isSong || (result.stars == 3 && !practice) }
+    /// Two or three stars (not in practice mode) or any finished song.
+    private var sharesResult: Bool { isSong || (result.stars >= 2 && !practice) }
     private var hasShareCards: Bool { sharesResult || milestone != nil }
 
     /// A card for the moment, ready to share: the milestone, then the song or the three stars.
@@ -204,60 +223,145 @@ struct LessonResults: View {
         let title = lesson.title.localized
         if isSong {
             ShareCardRow(title: Text(title), detail: Text("\(result.stars) of 3 stars"), preview: "Timbre", tint: accent) {
-                LessonShareCard(course: courseTitle, title: title, headline: nil, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: true)
+                LessonShareCard(course: courseTitle, title: title, headline: nil, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: true,
+                                streak: store.streak.current)
             }
         } else {
             ShareCardRow(title: Text(headline), detail: Text(title), preview: headline, tint: accent) {
-                LessonShareCard(course: courseTitle, title: title, headline: headline, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: false)
+                LessonShareCard(course: courseTitle, title: title, headline: headline, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: false,
+                                streak: store.streak.current)
             }
         }
     }
 
-    /// After the first lesson: one tap to make practice a daily habit.
-    private var reminderCard: some View {
-        // The words get the card's full width (no orphan wraps); the button sits under them.
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: "bell.badge.fill").font(.title3).foregroundStyle(accent)
-                .frame(width: 44, height: 44).background(Circle().fill(accent.opacity(0.14)))
-            VStack(alignment: .leading, spacing: 10) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Make it a habit").font(Typeface.label(15)).foregroundStyle(Palette.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text("A reminder each evening at 7 pm.").font(.footnote).foregroundStyle(Palette.inkSoft)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Button("Remind me") {
-                    UserDefaults.standard.set(true, forKey: PracticeReminder.askedKey)
-                    Task { await PracticeReminder.enable(at: PracticeReminder.minutes); withAnimation { offerReminder = false } }
-                }
-                .font(Typeface.label(14)).foregroundStyle(Palette.onAccent).lineLimit(1).fixedSize()
-                .padding(.horizontal, 16).frame(height: 36).background(Capsule().fill(accent))
-                .accessibilityIdentifier("lesson.reminder")
+    // MARK: Reminder
+
+    /// Until the reminder has been offered once: one row, above the tiles and clear of the pinned buttons, with
+    /// the time inline ("Remind me · 7 PM", the plan's time). Where the words don't fit beside the pill (long
+    /// languages, large type) the pill moves under them. On, it stays as a confirmation; × asks no more.
+    private var reminderRow: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 8) {
+                reminderIcon
+                reminderTitle.lineLimit(1)
+                Spacer(minLength: 4)
+                reminderPill
+                reminderClose
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.top, 2)
-            Button { UserDefaults.standard.set(true, forKey: PracticeReminder.askedKey); withAnimation { offerReminder = false } } label: {
-                Image(systemName: "xmark").font(.footnote.weight(.bold)).foregroundStyle(Palette.inkFaint).frame(width: 32, height: 32)
-                    .contentShape(Rectangle())
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(spacing: 8) {
+                    reminderIcon
+                    reminderTitle.fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 4)
+                    reminderClose
+                }
+                reminderPill
+            }
+        }
+        .padding(.leading, 10).padding(.trailing, reminderOn ? 10 : 4).padding(.vertical, 8)
+        .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Palette.stageRaised))
+        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(accent.opacity(0.22), lineWidth: 1))
+        .padding(.horizontal, 20)
+    }
+
+    private var reminderIcon: some View {
+        Image(systemName: reminderOn ? "bell.badge.fill" : "bell.fill")
+            .font(.system(size: 14, weight: .semibold)).foregroundStyle(accent)
+            .frame(width: 30, height: 30).background(Circle().fill(accent.opacity(0.14)))
+            .contentTransition(.symbolEffect(.replace))
+            .accessibilityHidden(true)
+    }
+
+    private var reminderTitle: Text {
+        Text(reminderOn ? LocalizedStringKey("Daily practice reminder") : LocalizedStringKey("Make it a habit"))
+            .font(Typeface.label(14))
+            .foregroundStyle(Palette.ink)
+    }
+
+    @ViewBuilder private var reminderClose: some View {
+        if !reminderOn {
+            Button {
+                UserDefaults.standard.set(true, forKey: PracticeReminder.askedKey)
+                withAnimation(Motion.settle) { offerReminder = false }
+            } label: {
+                Image(systemName: "xmark").font(.footnote.weight(.bold)).foregroundStyle(Palette.inkFaint)
+                    .frame(width: 28, height: 36).contentShape(Rectangle())
             }
             .accessibilityLabel("Not now")
         }
-        .padding(14)
-        .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Palette.stageRaised))
-        .padding(.horizontal, 20)
+    }
+
+    /// "Remind me · 7 PM" in the accent; once on, "✓ 7 PM" in an outline.
+    private var reminderPill: some View {
+        let time = Self.reminderTime
+        return Button(action: enableReminder) {
+            HStack(spacing: 5) {
+                if askingReminder {
+                    ProgressView().controlSize(.mini).tint(Palette.onAccent)
+                } else if reminderOn {
+                    Image(systemName: "checkmark").font(.system(size: 11, weight: .heavy)).transition(.scale.combined(with: .opacity))
+                } else {
+                    Text("Remind me")
+                    Text(verbatim: "·").opacity(0.6)
+                }
+                Text(time, format: Self.timeFormat)
+            }
+            .font(Typeface.label(13)).lineLimit(1)
+            .foregroundStyle(reminderOn ? accent : Palette.onAccent)
+            .padding(.horizontal, 12).frame(minHeight: 36)
+            .background(Capsule().fill(reminderOn ? AnyShapeStyle(accent.opacity(0.12)) : AnyShapeStyle(accent)))
+            .overlay(Capsule().strokeBorder(accent.opacity(reminderOn ? 0.45 : 0), lineWidth: 1))
+            .fixedSize()
+            .contentShape(Capsule())
+        }
+        .buttonStyle(PressScaleStyle())
+        .disabled(askingReminder || reminderOn)
+        .animation(Motion.quick, value: reminderOn)
+        .accessibilityLabel(Text("Remind me") + Text(verbatim: ", ") + Text(time, format: Self.timeFormat))
+        .accessibilityAddTraits(reminderOn ? .isSelected : [])
+        .accessibilityIdentifier("lesson.reminder")
+    }
+
+    /// Today at the reminder's time: the one chosen on the plan or in Settings, 7 pm by default.
+    private static var reminderTime: Date {
+        let minutes = PracticeReminder.minutes
+        return Calendar.current.date(bySettingHour: minutes / 60, minute: minutes % 60, second: 0, of: Date()) ?? Date()
+    }
+
+    /// "7 PM" on the hour, "7:30 PM" otherwise (24-hour where the locale uses it).
+    private static var timeFormat: Date.FormatStyle {
+        let hour = Date.FormatStyle.dateTime.hour()
+        return PracticeReminder.minutes % 60 == 0 ? hour : hour.minute()
+    }
+
+    /// Asks for notifications (once) and plans the reminders through `PracticeReminder`; a refusal hides the row.
+    private func enableReminder() {
+        Haptics.shared.selection()
+        UserDefaults.standard.set(true, forKey: PracticeReminder.askedKey)
+        askingReminder = true
+        Task { @MainActor in
+            let on = await PracticeReminder.enable(at: PracticeReminder.minutes)
+            askingReminder = false
+            if on {
+                Haptics.shared.lock()
+                withAnimation(Motion.pluck) { reminderOn = true }
+            } else {
+                withAnimation(Motion.settle) { offerReminder = false }
+            }
+        }
     }
 
     private func star(_ i: Int) -> some View {
         let earned = i < result.stars
         let shown = i < shownStars
-        let size: CGFloat = i == 1 ? 96 : 72
+        let size: CGFloat = i == 1 ? 90 : 68
         return Image(systemName: "star.fill")
             .font(.system(size: size, weight: .bold))
             .foregroundStyle(earned && shown ? AnyShapeStyle(LinearGradient(colors: [Color(hex: 0xFFE29A), Color(hex: 0xF0A93B)], startPoint: .top, endPoint: .bottom)) : AnyShapeStyle(Color.white.opacity(0.08)))
             .shadow(color: earned && shown ? Color(hex: 0xF0A93B).opacity(0.6) : .clear, radius: 18)
             .scaleEffect(shown ? 1 : 0.3)
             .rotationEffect(.degrees(shown ? 0 : -40))
-            .offset(y: i == 1 ? -14 : 0)
+            .offset(y: i == 1 ? -12 : 0)
             .accessibilityHidden(true)
     }
 
@@ -299,10 +403,14 @@ struct LessonResults: View {
                 if i < reward.achievementsEarned.count { SoundFX.shared.play(.star); Haptics.shared.lock() }
             }
         }
+        // A streak milestone takes the whole screen once the results have landed; its share card waits below.
+        if let milestone {
+            try? await Task.sleep(for: .milliseconds(reduceMotion ? 100 : 600))
+            withAnimation(.easeOut(duration: 0.35)) { celebrating = milestone }
+        }
         guard hasShareCards else { return }
         try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 280))
         withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) { shareShown = true }
-        if milestone != nil { SoundFX.shared.play(.levelUp); Haptics.shared.done() }
     }
 
     private func fillLevelBar() async {

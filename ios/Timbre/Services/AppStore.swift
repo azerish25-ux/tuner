@@ -577,8 +577,8 @@ final class AppStore: ObservableObject {
         catch { self.error = String(localized: "Practice could not be saved: \(error.localizedDescription)") }
     }
 
-    /// Runs worth a share card: reaching one shows it (lesson results, else `StreakMilestoneOverlay`).
-    static let streakMilestones = [7, 30, 100]
+    /// Runs worth a full-screen celebration and a share card: reaching one shows it (lesson results, else `StreakMilestoneOverlay`).
+    static let streakMilestones = [3, 7, 30, 100]
     /// The milestone today's practice just reached, until a screen shows it (`takeStreakMilestone`).
     @Published private(set) var streakMilestone: Int?
 

@@ -127,6 +127,9 @@ struct FretboardDiagram: View {
     var pulsing = false
     /// Names the top and bottom edges in words; nil leaves just the numbers.
     var edges: StringEdges?
+    /// A demonstration: per dot (in `dots` order), 0 before it lands, then dropping onto its string as it grows
+    /// to 1 (a spring may overshoot). Nil draws every dot in place.
+    var landing: [Double]?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
 
@@ -220,8 +223,11 @@ struct FretboardDiagram: View {
             }
             drawNumber(&context, string: string, y: y, gap: gap, lit: lit)
         }
-        for dot in dots where dot.string >= 1 && dot.string <= strings {
-            let y = rowY(dot.string)
+        for (k, dot) in dots.enumerated() where dot.string >= 1 && dot.string <= strings {
+            // Landing: hidden until its turn, then it falls the last few points onto the string as it grows.
+            let land = CGFloat(landing?[safe: k] ?? 1)
+            guard land > 0.01 else { continue }
+            let y = rowY(dot.string) - (1 - min(1, land)) * 14
             let swell = CGFloat(beat) * 5
             if dot.fret == 0 {
                 let center = CGPoint(x: left - 14, y: y)
@@ -229,16 +235,17 @@ struct FretboardDiagram: View {
                     let halo = 8 + 3 + swell
                     context.fill(Path(ellipseIn: CGRect(x: center.x - halo, y: center.y - halo, width: halo * 2, height: halo * 2)), with: .color(accent.opacity(0.18 + 0.14 * beat)))
                 }
-                let ring = Path(ellipseIn: CGRect(x: center.x - 8, y: center.y - 8, width: 16, height: 16))
+                let side = 8 * land
+                let ring = Path(ellipseIn: CGRect(x: center.x - side, y: center.y - side, width: side * 2, height: side * 2))
                 context.stroke(ring, with: .color(accent), lineWidth: 2.5)
             } else {
                 let x = left + (CGFloat(min(max(1, dot.fret - start + 1), frets)) - 0.5) * fretWidth
-                let r: CGFloat = min(15, gap * 0.48 + 4)
+                let r: CGFloat = min(15, gap * 0.48 + 4) * land
                 // Capped by the padding, so the halo of a dot on string 1 stays inside the drawing.
                 let halo = min(Self.pad - 1, r + 4 + (pulsing ? swell : 0))
                 context.fill(Path(ellipseIn: CGRect(x: x - halo, y: y - halo, width: halo * 2, height: halo * 2)), with: .color(accent.opacity(pulsing ? 0.2 + 0.15 * beat : 0.25)))
                 context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))
-                if let finger = dot.finger, finger > 0 {
+                if land > 0.6, let finger = dot.finger, finger > 0 {
                     context.draw(Text("\(finger)").font(.system(size: r, weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent), at: CGPoint(x: x, y: y))
                 }
             }

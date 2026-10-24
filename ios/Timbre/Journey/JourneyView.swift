@@ -2,7 +2,7 @@ import Charts
 import SwiftUI
 import TimbreCore
 
-/// Progress: streak, level and accuracy, the practice calendar, string health, achievements, history.
+/// Progress: streak, level and accuracy, the week in review, the practice calendar, string health, achievements, history.
 struct JourneyView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
@@ -27,6 +27,7 @@ struct JourneyView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     Text("Progress").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
                     stats
+                    weekCard
                     calendar
                     stringHealth
                     if commerce.isPro { accuracy } else { lockedInsights }
@@ -47,9 +48,21 @@ struct JourneyView: View {
         let average = recent.isEmpty ? nil : recent.reduce(0, +) / Double(recent.count)
         return HStack(spacing: 10) {
             stat("flame.fill", Palette.flame, Text("\(streak.current)"), Text("day streak"))
-            stat("star", Palette.mint, Text("\(level.number)"), Text(LocalizedStringKey(level.name)))
-            stat("scope", Palette.amber, Text(average.map { String(format: "%.1f¢", $0) } ?? "—"), Text("avg accuracy"))
+            stat("star", Palette.mint, levelValue(level.number), Text(LocalizedStringKey(level.name)))
+                .accessibilityLabel(Text("Level \(level.number)") + Text(verbatim: ", ") + Text(LocalizedStringKey(level.name)))
+            stat("scope", Palette.amber, WeekRecap.centsText(average), Text("avg accuracy"))
         }
+    }
+
+    /// "LV 5": the level reads as a level, not a count (the caption the level rings use).
+    private func levelValue(_ number: Int) -> Text {
+        Text("LV").font(Typeface.label(13)).foregroundStyle(Palette.mint) + Text(verbatim: " ") + Text(number, format: .number)
+    }
+
+    /// The last seven days with a poster to share; hidden until there is practice in them.
+    @ViewBuilder private var weekCard: some View {
+        let recap = WeekRecap(records: store.records, streak: store.streak)
+        if !recap.isEmpty { WeekRecapCard(recap: recap) }
     }
 
     private func stat(_ symbol: String, _ tint: Color, _ value: Text, _ label: Text) -> some View {
@@ -63,7 +76,8 @@ struct JourneyView: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// Last five weeks, one tile per day: brighter for more practice; today is outlined until you play.
+    /// Last five weeks, one tile per day under its weekday's initial: brighter for more practice. Today is the
+    /// last tile (its initial mint with a dot), outlined dashed until you play and ringed once you have.
     private var calendar: some View {
         let cal = Calendar.current
         let today = cal.startOfDay(for: Date())
@@ -77,6 +91,7 @@ struct JourneyView: View {
                 Spacer()
                 Text("\(active) of 35 days").font(.caption).foregroundStyle(Palette.inkSoft)
             }
+            weekdayHeader(start: start)
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 7), spacing: 6) {
                 ForEach(0..<35, id: \.self) { offset in
                     let date = cal.date(byAdding: .day, value: offset, to: start)!
@@ -88,6 +103,9 @@ struct JourneyView: View {
                         .overlay {
                             if date == today && !played {
                                 RoundedRectangle(cornerRadius: 7, style: .continuous).strokeBorder(Palette.amber.opacity(0.7), style: StrokeStyle(lineWidth: 1.5, dash: [3, 3]))
+                            } else if date == today {
+                                RoundedRectangle(cornerRadius: 7, style: .continuous).strokeBorder(Palette.ink.opacity(0.9), lineWidth: 2)
+                                    .shadow(color: Palette.mint.opacity(0.6), radius: 6)
                             }
                         }
                 }
@@ -96,6 +114,23 @@ struct JourneyView: View {
         .stillCard()
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Practiced on \(active) of the last 35 days"))
+    }
+
+    /// The calendar's column heads: each weekday's initial, the last column today's (mint, with a dot).
+    private func weekdayHeader(start: Date) -> some View {
+        HStack(spacing: 6) {
+            ForEach(0..<7, id: \.self) { column in
+                let date = Calendar.current.date(byAdding: .day, value: column, to: start) ?? start
+                let today = column == 6
+                VStack(spacing: 3) {
+                    Text(date, format: .dateTime.weekday(.narrow))
+                        .font(Typeface.label(11)).foregroundStyle(today ? Palette.mint : Palette.inkFaint)
+                    Circle().fill(today ? Palette.mint : .clear).frame(width: 4, height: 4)
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .accessibilityHidden(true)
     }
 
     /// How each string of this instrument drifts between sessions, and when to restring.

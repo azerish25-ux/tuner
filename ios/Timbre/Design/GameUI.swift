@@ -68,6 +68,58 @@ struct StreakChip: View {
     }
 }
 
+/// The streak's flame, alive: a warm halo, the gradient body and a white-hot core that sway and flicker out of
+/// step. Still under Reduce Motion, and when `animated` is off (share cards rendered to an image).
+struct StreakFlame: View {
+    var size: CGFloat = 120
+    var lit = true
+    var animated = true
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        Group {
+            if animated && !reduceMotion {
+                TimelineView(.animation(minimumInterval: 1 / 60)) { timeline in
+                    flame(timeline.date.timeIntervalSinceReferenceDate)
+                }
+            } else {
+                flame(0)
+            }
+        }
+        .frame(width: size, height: size)
+        .accessibilityHidden(true)
+    }
+
+    private static let bodyFill = LinearGradient(colors: [Color(hex: 0xFFE29A), Palette.flame, Color(hex: 0xE2542C)], startPoint: .top, endPoint: .bottom)
+    private static let coreFill = LinearGradient(colors: [.white, Color(hex: 0xFFE29A)], startPoint: .top, endPoint: .bottom)
+    private static let unlitFill = LinearGradient(colors: [Palette.inkFaint, Palette.line], startPoint: .top, endPoint: .bottom)
+
+    private func flame(_ t: Double) -> some View {
+        let sway = sin(t * 2.3) * 3 + sin(t * 5.1) * 1.2
+        let stretch = 1 + 0.035 * sin(t * 6.7) + 0.02 * sin(t * 11.3)
+        let pulse = 1 + 0.06 * sin(t * 8.9 + 1)
+        return ZStack {
+            Circle()
+                .fill(RadialGradient(colors: [Palette.flame.opacity(lit ? 0.42 : 0.08), .clear], center: .center, startRadius: 2, endRadius: size * 0.62))
+                .frame(width: size * 1.5, height: size * 1.5)
+                .scaleEffect(pulse)
+            Image(systemName: "flame.fill").font(.system(size: size * 0.78, weight: .bold))
+                .foregroundStyle(lit ? Self.bodyFill : Self.unlitFill)
+                .scaleEffect(x: 1, y: stretch, anchor: .bottom)
+                .rotationEffect(.degrees(sway), anchor: .bottom)
+                .shadow(color: Palette.flame.opacity(lit ? 0.6 : 0), radius: size * 0.16)
+            if lit {
+                Image(systemName: "flame.fill").font(.system(size: size * 0.34, weight: .bold))
+                    .foregroundStyle(Self.coreFill)
+                    .opacity(0.9)
+                    .scaleEffect(x: 1, y: pulse, anchor: .bottom)
+                    .rotationEffect(.degrees(-sway * 0.6), anchor: .bottom)
+                    .offset(y: size * 0.17)
+            }
+        }
+    }
+}
+
 /// Level number inside a ring that fills with XP toward the next level, captioned "LV" on the small
 /// header rings and "LEVEL" on the large one, so the number always says what it counts.
 struct LevelRing: View {

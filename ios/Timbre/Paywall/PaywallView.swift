@@ -18,19 +18,20 @@ struct PaywallView: View {
     @State private var appeared = false
     /// Notifications are off for Timbre: no reminder can arrive, so none is promised.
     @State private var remindersBlocked = false
-    /// The trial track draws itself in from Today.
+    /// The plan track draws itself in from Today.
     @State private var trackDrawn = false
-    // Measured layout. The plans, the whole trial timeline and the button show without scrolling; the
-    // outcomes, the preview, the milestones and the counts line fill what is left, in that order, and what
-    // does not fit waits just below the fold. Nothing rests under the pinned bar.
+    // Measured layout. The headline, the plans, the whole plan track and the button show without scrolling;
+    // the outcomes, the hero and the counts line fill what is left, in that order, and what does not fit
+    // waits just below the fold. Nothing rests under the pinned bar.
     @State private var containerHeight: CGFloat = 0
     @State private var barHeight: CGFloat = 0
-    @State private var headerHeight: CGFloat = 66
+    @State private var headerHeight: CGFloat = 34
     @State private var outcomesHeight: CGFloat = 92
-    @State private var milestonesHeight: CGFloat = 46
     @State private var countsHeight: CGFloat = 16
     @State private var offerHeight: CGFloat = 230
-    @State private var timelineHeight: CGFloat = 78
+    /// The track with the free trial on it, and the plan's own track (no trial selected), each as last measured.
+    @State private var trialTrackHeight: CGFloat = 96
+    @State private var planTrackHeight: CGFloat = 92
 
     /// The yearly plan unless the storefront left it out.
     private var selected: Product? { commerce.products.first { $0.id == selectedID } ?? commerce.products.first }
@@ -43,7 +44,7 @@ struct PaywallView: View {
 
     var body: some View {
         let pitch = self.pitch
-        let plan = PaywallPlan.make(store: store, answers: answers, horizon: planHorizon)
+        let plan = PaywallPlan.make(store: store, answers: answers, horizon: planHorizon, reason: context == .standard ? store.paywallReason : nil)
         ZStack(alignment: .topTrailing) {
             Palette.stage.ignoresSafeArea()
             RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.16), .clear], center: UnitPoint(x: 0.5, y: 0.12), startRadius: 10, endRadius: 320)
@@ -80,50 +81,51 @@ struct PaywallView: View {
     /// Visible height above the pinned bar.
     private var viewport: CGFloat { containerHeight > 0 ? max(0, containerHeight - barHeight) : 600 }
 
-    /// A trial is on offer (or may be, while the plans load), so its timeline keeps its place:
-    /// choosing Monthly then never resizes the hero under the finger.
-    private var reservesTimeline: Bool { commerce.products.isEmpty || (commerce.annual != nil && commerce.trialLabel != nil) }
+    /// The track's room. While a trial is on offer (or may be, while the plans load) the trial's track keeps its
+    /// place, so choosing Monthly never resizes the hero under the finger; otherwise the plan's own track.
+    private func trackReserve(_ plan: PaywallPlan) -> CGFloat {
+        let trial = commerce.products.isEmpty || trialOffered ? trialTrackHeight : 0
+        return max(trial, plan.milestones.isEmpty ? 0 : planTrackHeight)
+    }
 
-    /// Headline (with its top inset), plans and trust row, and the trial timeline: what must show.
-    private var essentials: CGFloat { headerHeight + 16 + offerHeight + (reservesTimeline ? timelineHeight : 0) }
+    /// Headline (with its top inset), plans and trust row, and the plan track: what must show.
+    private func essentials(_ plan: PaywallPlan) -> CGFloat { headerHeight + Self.headerTop + offerHeight + trackReserve(plan) }
 
-    /// The Pro pill on its own row, when there is no preview for it to stand on.
+    /// The Pro pill on its own row, when there is no hero for it to stand in.
     private static let pillRow: CGFloat = 40
     private static let previewTop: CGFloat = 6
-    /// Below this the preview steps aside for the pill alone; above it, it grows to `previewMax`.
-    private static let previewMin: CGFloat = 84
-    private static let previewMax: CGFloat = 156
+    /// Below this the hero steps aside for the pill alone; above it, it grows to `previewMax`.
+    private static let previewMin: CGFloat = 88
+    private static let previewMax: CGFloat = 220
+    private static let headerTop: CGFloat = 12
     private static let outcomesTop: CGFloat = 12
     private static let countsTop: CGFloat = 6
-    private static let milestonesTop: CGFloat = 12
+    private static let trackTop: CGFloat = 14
 
     /// Where each part of the pitch goes: above the fold when it fits, else just below it.
     private struct Fold {
-        /// 0: no preview, the Pro pill stands on its own row.
+        /// 0: no hero, the Pro pill stands on its own row.
         var preview: CGFloat = 0
         var outcomes = true
         var counts = true
-        var milestones = true
     }
 
-    /// The room beside the essentials goes to the outcomes, then the preview's minimum, the milestones, the
-    /// preview's growth and the counts line. When not even the pill fits, the page scrolls anyway and
-    /// everything stays in reading order above the fine print. A locked lesson's card replaces the preview.
+    /// The room beside the essentials goes to the outcomes, then the hero (its minimum, then its growth) and the
+    /// counts line. When not even the pill fits, the page scrolls anyway and everything stays in reading order
+    /// above the fine print. A locked lesson's card replaces the hero.
     private func fold(_ pitch: Pitch, plan: PaywallPlan) -> Fold {
-        var left = viewport - essentials
+        var left = viewport - essentials(plan)
         guard left >= Self.pillRow else { return Fold() }
         var result = Fold()
         result.outcomes = left - Self.pillRow >= Self.outcomesTop + outcomesHeight
         if result.outcomes { left -= Self.outcomesTop + outcomesHeight }
-        let previewFloor = Self.previewTop + Self.previewMin
-        let previews = pitch.lesson == nil && left >= previewFloor
-        left -= previews ? previewFloor : Self.pillRow
-        result.milestones = !plan.milestones.isEmpty && left >= Self.milestonesTop + milestonesHeight
-        if result.milestones { left -= Self.milestonesTop + milestonesHeight }
-        if previews {
-            let growth = max(0, min(left, Self.previewMax - Self.previewMin))
+        let heroFloor = Self.previewTop + Self.previewMin
+        if pitch.lesson == nil && left >= heroFloor {
+            let growth = min(left - heroFloor, Self.previewMax - Self.previewMin)
             result.preview = Self.previewMin + growth
-            left -= growth
+            left -= heroFloor + growth
+        } else {
+            left -= Self.pillRow
         }
         result.counts = result.outcomes && left >= Self.countsTop + countsHeight
         return result
@@ -134,31 +136,30 @@ struct PaywallView: View {
 
     private func content(_ pitch: Pitch, plan: PaywallPlan) -> some View {
         let layout = fold(pitch, plan: plan)
+        let steps = trackSteps(plan)
+        let trial = showsTrial
         return VStack(spacing: 0) {
             VStack(spacing: 0) {
                 if layout.preview > 0 {
-                    preview(pitch, plan: plan, height: layout.preview)
-                        .overlay(alignment: .bottom) { proPill.offset(y: 6) }
-                        .padding(.top, Self.previewTop)
+                    preview(pitch, plan: plan, height: layout.preview).padding(.top, Self.previewTop)
                 } else {
-                    proPill.padding(.top, 14)
+                    PaywallProPill().padding(.top, 14)
                 }
                 header(pitch)
                     .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in headerHeight = height }
-                    .padding(.top, layout.preview > 0 ? 16 : 10)
+                    .padding(.top, layout.preview > 0 ? Self.headerTop : 10)
                 if layout.outcomes {
                     outcomeList(plan).padding(.top, Self.outcomesTop)
                     if layout.counts { countsLine.padding(.top, Self.countsTop) }
                 }
                 offer
                     .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in offerHeight = height }
-                // The plan's first days, right above the trial's: what you reach while it is free.
-                if layout.milestones, !plan.milestones.isEmpty {
-                    milestoneStrip(plan).padding(.top, Self.milestonesTop)
-                }
-                if showsTrialTimeline, let annual = commerce.annual {
-                    trialTimeline(annual).padding(.top, 14)
-                        .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in timelineHeight = height }
+                // Today, the plan's first days and, with a free trial, its reminder and first charge: one track.
+                if !steps.isEmpty {
+                    planTrack(steps).padding(.top, Self.trackTop)
+                        .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in
+                            if trial { trialTrackHeight = height } else { planTrackHeight = height }
+                        }
                         .transition(.opacity)
                 }
             }
@@ -172,19 +173,12 @@ struct PaywallView: View {
         .frame(maxWidth: .infinity)
     }
 
-    /// What did not fit above the fold: the milestones first, then the outcomes with their counts line.
-    /// A counts line that alone found no room is left out.
+    /// The outcomes with their counts line, when they did not fit above the fold.
     @ViewBuilder private func belowFold(_ plan: PaywallPlan, layout: Fold) -> some View {
-        let milestones = !layout.milestones && !plan.milestones.isEmpty
-        if milestones || !layout.outcomes {
-            VStack(spacing: 20) {
-                if milestones { milestoneStrip(plan) }
-                if !layout.outcomes {
-                    VStack(spacing: Self.countsTop) {
-                        outcomeList(plan)
-                        countsLine
-                    }
-                }
+        if !layout.outcomes {
+            VStack(spacing: Self.countsTop) {
+                outcomeList(plan)
+                countsLine
             }
             .padding(.top, 28)
         }

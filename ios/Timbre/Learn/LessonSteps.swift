@@ -177,14 +177,15 @@ struct NotesStep: View {
         }
     }
 
-    /// The note to play, popping in as the last one is ticked off (a fresh view each time, so a reading
-    /// arriving mid-change can never leave it half drawn).
+    /// The note to play, handing over as the last one is ticked off: the old letter fades out before the new
+    /// one fades in, so two never overlap (a fresh view each time, so a reading arriving mid-change can never
+    /// leave it half drawn).
     private var noteLetter: some View {
         let name = NoteName.name(shown?.midi ?? 60)
         return ZStack {
             Text(name.dropLast(name.last?.isNumber == true ? 1 : 0)).font(Typeface.note(88)).foregroundStyle(Palette.ink)
                 .id(judge.index)
-                .transition(.asymmetric(insertion: .scale(scale: 0.7).combined(with: .opacity), removal: .opacity))
+                .transition(.noteHandover)
         }
         .animation(Motion.pluck, value: judge.index)
     }
@@ -316,6 +317,7 @@ struct ChordStep: View {
     var onItem: (PracticeItem, Double) -> Void = { _, _ in }
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var owner = UUID()
     @State private var judge: NoteSequenceJudge
     @State private var verified: Set<Int> = []
@@ -361,22 +363,18 @@ struct ChordStep: View {
                 Text("Fingers in place, then let it ring.").font(.subheadline).foregroundStyle(Palette.inkFaint)
             }
             .padding(.top, 12)
-            Spacer(minLength: 0)
-            ZStack {
-                // Behind the card: the sparks fly out from under its edges, never over the chord's name.
-                SparkBurst(trigger: burst, color: accent, startFraction: 0.6)
-                ChordDiagram(chord: chord, accent: accent, ringing: verified, landing: true, edges: StringEdges.of(course))
-                    .frame(maxWidth: 260)
-                    .padding(22)
-                    .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Palette.stageRaised))
-                    .shadow(color: finished ? accent.opacity(0.45) : .clear, radius: 26)
+            // The string checks over the box and the box itself, as big as the room allows, together in the middle.
+            GeometryReader { geometry in
+                let width = diagramWidth(geometry.size)
+                VStack(spacing: 14) {
+                    Spacer(minLength: 0)
+                    stringChecks(width: width)
+                    diagramCard(width: width)
+                    hearingPill
+                    Spacer(minLength: 0)
+                }
+                .frame(maxWidth: .infinity)
             }
-            if let hearing, !finished {
-                Text("Hearing \(hearing)").font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
-                    .padding(.horizontal, 14).padding(.vertical, 7).background(Capsule().fill(Palette.stageRaised))
-                    .transition(.opacity)
-            }
-            Spacer(minLength: 0)
             MicrophoneHint()
             HStack {
                 Button("I played it") { finish(0.6) }.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft).opacity(canSkip ? 1 : 0).disabled(!canSkip)
@@ -389,6 +387,64 @@ struct ChordStep: View {
         }
         .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(6)); canSkip = true } }
         .onDisappear { store.stopLessonListening(owner: owner) }
+    }
+
+    /// The chord box's width: up to 300 pt, less when the screen is narrow or short. Around the box's own
+    /// height (5.4 rows for every string gap across) go the checks (44), the card's padding (44), the
+    /// chord's name and edge names (65), "Hearing" (34) and the gaps between them (28).
+    private func diagramWidth(_ room: CGSize) -> CGFloat {
+        let fromHeight = (room.height - 215) * CGFloat(max(2, chord.frets.count)) / 5.4
+        let fromWidth = room.width - 40 - 44
+        return max(170, min(300, fromWidth, fromHeight))
+    }
+
+    private func diagramCard(width: CGFloat) -> some View {
+        ChordDiagram(chord: chord, accent: accent, ringing: verified, landing: true, edges: StringEdges.of(course))
+            .frame(width: width)
+            .padding(22)
+            .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Palette.stageRaised))
+            .shadow(color: finished ? accent.opacity(0.45) : .clear, radius: 26)
+            // Behind the card: the sparks fly out from under its edges, never over the chord's name.
+            .background { SparkBurst(trigger: burst, color: accent, startFraction: 0.6).frame(width: width * 1.7, height: width * 1.7) }
+    }
+
+    /// One check per string over its line in the box (lowest string first, as drawn): the note it should ring,
+    /// a ring on the one to pluck next, filled with a tick once heard. A strummed chord ticks them all in a ripple.
+    private func stringChecks(width: CGFloat) -> some View {
+        let open = ChordStep.openStrings(course)
+        let count = chord.frets.count
+        // The box's string lines (`ChordDiagram`): 22 pt in from each side, past the "5fr" column when it has one.
+        let labelColumn: CGFloat = (chord.baseFret ?? 1) > 1 ? 20 : 0
+        let left = 22 + labelColumn, right = width - 22 + labelColumn / 4
+        let gap = (right - left) / CGFloat(max(1, count - 1))
+        let side = min(40, max(26, gap - 8))
+        let next: Int? = order.indices.contains(judge.index) && !finished ? order[judge.index].index : nil
+        return ZStack {
+            ForEach(0..<count, id: \.self) { i in
+                LessonStringCheck(note: i < open.count ? NoteName.pitchClass(open[i] + max(0, chord.frets[i])) : "",
+                                  number: count - i, mark: mark(i, next: next, open: open), accent: accent, side: side)
+                    .position(x: left + CGFloat(i) * gap, y: 22)
+                    .animation(reduceMotion ? .easeOut(duration: 0.2) : Motion.pluck.delay(Double(i) * 0.04), value: verified.contains(i))
+            }
+        }
+        .frame(width: width, height: 44)
+        .animation(Motion.quick, value: judge.index)
+    }
+
+    private func mark(_ i: Int, next: Int?, open: [Int]) -> LessonStringCheck.Mark {
+        if chord.frets[i] < 0 || i >= open.count { return .muted }
+        if verified.contains(i) { return .heard }
+        return next == i ? .next : .waiting
+    }
+
+    /// What the microphone hears as a chord; its row is kept while hidden, so the box doesn't jump.
+    private var hearingPill: some View {
+        let showing = hearing != nil && !finished
+        return Text("Hearing \(hearing ?? chord.name)").font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
+            .padding(.horizontal, 14).padding(.vertical, 7).background(Capsule().fill(Palette.stageRaised))
+            .opacity(showing ? 1 : 0)
+            .animation(Motion.quick, value: showing)
+            .accessibilityHidden(!showing)
     }
 
     private func listen() {
@@ -434,6 +490,71 @@ struct ChordStep: View {
     }
 }
 
+/// One string of a chord in the row over its box: the note it should ring in soft ink, ringed in the accent when
+/// it's the one to pluck next, filled with a tick once heard; a muted string is a faint cross.
+struct LessonStringCheck: View {
+    enum Mark { case muted, waiting, next, heard }
+    let note: String
+    /// String number (1 is the thinnest), for VoiceOver.
+    let number: Int
+    let mark: Mark
+    let accent: Color
+    var side: CGFloat = 40
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        Text(mark == .muted ? "×" : note)
+            .font(Typeface.label(side >= 36 ? 15 : 13))
+            .foregroundStyle(ink)
+            .frame(width: side, height: side)
+            .background(Circle().fill(fill))
+            .overlay(Circle().strokeBorder(rim, lineWidth: mark == .next ? 2 : 1))
+            .overlay(alignment: .topTrailing) { tick }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("String \(number), \(note)"))
+            .accessibilityValue(mark == .heard ? String(localized: "Got it") : "")
+            .accessibilityHidden(mark == .muted)
+    }
+
+    /// The tick, popping onto the chip's shoulder as the string is heard.
+    @ViewBuilder private var tick: some View {
+        if mark == .heard {
+            Image(systemName: "checkmark")
+                .font(.system(size: 8, weight: .black))
+                .foregroundStyle(Palette.onAccent)
+                .frame(width: 15, height: 15)
+                .background(Circle().fill(Palette.ink))
+                .offset(x: 3, y: -3)
+                .transition(reduceMotion ? .opacity : .scale(scale: 0.3).combined(with: .opacity))
+        }
+    }
+
+    private var ink: Color {
+        switch mark {
+        case .muted: return Palette.inkFaint
+        case .waiting: return Palette.inkSoft
+        case .next: return Palette.ink
+        case .heard: return Palette.onAccent
+        }
+    }
+
+    private var fill: Color {
+        switch mark {
+        case .muted: return Palette.surface.opacity(0.5)
+        case .waiting, .next: return Palette.surface
+        case .heard: return accent
+        }
+    }
+
+    private var rim: Color {
+        switch mark {
+        case .muted, .heard: return .clear
+        case .waiting: return Color.white.opacity(0.14)
+        case .next: return accent
+        }
+    }
+}
+
 // MARK: - Rhythm: tap or strum on the pattern
 
 struct RhythmStep: View {
@@ -464,6 +585,10 @@ struct RhythmStep: View {
     @State private var appeared = CACurrentMediaTime()
     @State private var hits: [Double] = []
     @State private var grades: [Int: PlayAlongJudge.Grade] = [:]
+    /// How far off each judged stroke was, in seconds (negative early).
+    @State private var offsets: [Int: Double] = [:]
+    /// The nearest stroke heard outside a beat's window: the reason it's missed ("240 ms early").
+    @State private var strays: [Int: Double] = [:]
     @State private var pulse = 0
     @State private var score = 0.0
     /// No microphone (refused, or it failed to start): the screen stands in for the instrument.
@@ -544,34 +669,70 @@ struct RhythmStep: View {
         .animation(Motion.quick, value: micOff)
     }
 
-    /// The bar counter (or the count-in) over the pattern with its playhead and judged hits.
+    /// The bar counter (or the big count-in) over the beat row, its playhead and each stroke's call.
     private var meterView: some View {
         TimelineView(.animation(paused: phase != .playing)) { _ in
             let now = CACurrentMediaTime()
             let running = phase == .playing
             let elapsed = running ? now - startTime - countIn : 0
-            // Ready shows bar 1 (the clock hasn't started), done the last bar with its grades.
+            // Ready shows bar 1 (the clock hasn't started), done the last bar with its calls.
             let bar = phase == .done ? max(0, bars - 1) : min(max(0, bars - 1), max(0, Int(elapsed / barLength)))
             let within: Double? = running && elapsed >= 0 ? min(1, (elapsed - Double(bar) * barLength) / barLength) : nil
-            let barGrades = Dictionary(uniqueKeysWithValues: grades.compactMap { i, g in i / pattern.count == bar ? (i % pattern.count, g) : nil })
             VStack(spacing: 10) {
-                if running, elapsed < 0 {
-                    Text("\(Int(-elapsed / spb) + 1)").font(Typeface.note(64)).foregroundStyle(accent).contentTransition(.numericText())
-                } else if phase == .done {
-                    Color.clear.frame(height: 18)
-                } else {
-                    Text("Bar \(bar + 1) of \(bars)").font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
-                }
-                RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: within, judged: barGrades, arrows: !isTap || strums)
+                meterHeading(counting: running && elapsed < 0, elapsed: elapsed, bar: bar)
+                    .frame(height: 64, alignment: .bottom)
+                LessonBeatRow(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: within, calls: calls(inBar: bar), arrows: !isTap || strums)
                     .padding(.horizontal, 16)
                     .onChange(of: Int(now * 30)) { _, _ in expire(now: now) }
             }
         }
-        .frame(height: 170)
+    }
+
+    @ViewBuilder private func meterHeading(counting: Bool, elapsed: Double, bar: Int) -> some View {
+        if counting {
+            countInRow(elapsed: elapsed)
+        } else if phase == .done {
+            Color.clear
+        } else {
+            Text("Bar \(bar + 1) of \(bars)").font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
+        }
+    }
+
+    /// The count-in, big: "1 2 3 4" (one numeral per click of the bar before the first stroke), each lighting
+    /// in the accent as its click sounds; the ones gone by stay lit softly. With Reduce Motion they don't pop.
+    private func countInRow(elapsed: Double) -> some View {
+        let into = max(0, elapsed + countIn) / spb
+        let beat = min(beatsPerBar - 1, Int(into))
+        let through = max(0, into - Double(beat))
+        let size: CGFloat = beatsPerBar <= 4 ? 56 : beatsPerBar <= 6 ? 44 : 30
+        return HStack(spacing: size * 0.36) {
+            ForEach(0..<beatsPerBar, id: \.self) { k in
+                Text("\(k + 1)")
+                    .font(Typeface.note(size))
+                    .foregroundStyle(k == beat ? accent : k < beat ? Palette.inkSoft : Palette.inkFaint.opacity(0.5))
+                    .scaleEffect(k == beat ? (reduceMotion ? 1 : 1 + 0.22 * exp(-through * 7)) : 0.78)
+                    .shadow(color: k == beat ? accent.opacity(0.5) : .clear, radius: 14)
+            }
+        }
+        .lineLimit(1)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("\(beat + 1)"))
+    }
+
+    /// How each stroke of `bar` went, by its place in the pattern: a judged stroke with its timing, a miss with
+    /// the nearest stroke heard outside its window (or none).
+    private func calls(inBar bar: Int) -> [Int: BeatCall] {
+        guard !pattern.isEmpty else { return [:] }
+        var out: [Int: BeatCall] = [:]
+        for (i, grade) in grades where i / pattern.count == bar {
+            out[i % pattern.count] = BeatCall(grade: grade, offset: grade == .miss ? strays[i] : offsets[i])
+        }
+        return out
     }
 
     /// The middle of the screen: the score when done, the tap pad when tapping, else the stroke to make,
-    /// a pick sweeping the strings in time with the click.
+    /// a pick sweeping the strings in time with the click (the beat row above already shows what comes next).
     @ViewBuilder private var stage: some View {
         if phase == .done {
             Text("\(Int((score * 100).rounded()))% on the beat").font(Typeface.display(28)).foregroundStyle(ScoreTint.color(score))
@@ -583,8 +744,8 @@ struct RhythmStep: View {
                 StrumSweep(pattern: pattern, beatsPerBar: beatsPerBar, strings: max(1, strings), style: sweepStyle, accent: accent,
                            secondsPerBeat: spb, time: sweepTime(CACurrentMediaTime()), bars: phase == .playing ? bars : nil, edges: edges)
             }
-            // Tall enough for the stroke rail above the strings (`StrumSweep`), filling the room under the bar.
-            .frame(maxWidth: .infinity, maxHeight: 360)
+            // The strings and the pick, filling the room under the beat row.
+            .frame(maxWidth: .infinity, maxHeight: 300)
             .padding(.horizontal, 24)
             .layoutPriority(1)
         }
@@ -644,7 +805,7 @@ struct RhythmStep: View {
     }
 
     private func start() {
-        hits = []; grades = [:]; score = 0
+        hits = []; grades = [:]; offsets = [:]; strays = [:]; score = 0
         startTime = CACurrentMediaTime()
         withAnimation(Motion.quick) { phase = .playing }
         store.audio.setMetronome(bpm: Int(bpm), beats: beatsPerBar, subdivision: 1, accents: true)
@@ -668,11 +829,19 @@ struct RhythmStep: View {
         guard phase == .playing else { return }
         let t = time - startTime
         let times = expected
-        guard let index = times.indices.filter({ grades[$0] == nil }).min(by: { abs(times[$0] - t) < abs(times[$1] - t) }) else { return }
-        let offset = abs(times[index] - t)
-        guard offset <= 0.18 else { return }
-        grades[index] = offset <= 0.05 ? .perfect : offset <= 0.1 ? .good : .ok
-        SoundFX.shared.play(.hit)
+        let open = times.indices.filter { grades[$0] == nil }
+        if let index = open.min(by: { abs(times[$0] - t) < abs(times[$1] - t) }), abs(times[index] - t) <= 0.18 {
+            let offset = abs(times[index] - t)
+            grades[index] = offset <= 0.05 ? .perfect : offset <= 0.1 ? .good : .ok
+            offsets[index] = t - times[index]
+            SoundFX.shared.play(.hit)
+            return
+        }
+        // Outside every window: kept as the reason the nearest stroke is missed, unless it's played after all.
+        guard let nearest = times.indices.min(by: { abs(times[$0] - t) < abs(times[$1] - t) }),
+              grades[nearest] == nil || grades[nearest] == .miss else { return }
+        let off = t - times[nearest]
+        if abs(off) <= 0.45, abs(off) < abs(strays[nearest] ?? .infinity) { strays[nearest] = off }
     }
 
     private func expire(now: CFTimeInterval) {
@@ -680,8 +849,19 @@ struct RhythmStep: View {
         // Beats are where the click is heard (after engine start and output latency), not where Start was tapped.
         if let heard = store.audio.heardStart(near: startTime) { startTime = heard }
         let t = now - startTime
+        if LessonMicrophone.demo, instrumentStep, !micOff { demoStrokes(at: t) }
         for (i, time) in expected.enumerated() where grades[i] == nil && t > time + 0.2 { grades[i] = .miss }
         if t > (expected.last ?? 0) + 0.4 { finish() }
+    }
+
+    /// Screenshot and App Preview runs (the demo pitch has no strokes to hear): the player strums on time,
+    /// a little human, and one stroke in eight lands a touch late, so the beat row shows its call.
+    private func demoStrokes(at t: Double) {
+        let jitter = [0.012, -0.018, 0.026, -0.008]
+        for (i, time) in expected.enumerated() where grades[i] == nil {
+            let off = i % 8 == 1 ? 0.12 : jitter[i % jitter.count]
+            if t >= time + off { register(startTime + time + off) }
+        }
     }
 
     private func finish() {
@@ -710,6 +890,13 @@ struct TuneCheckStep: View {
     @State private var holdStart: CFTimeInterval?
     @State private var burst = 0
     @State private var ringSide: CGFloat = 220
+    /// Strings ticked off. It runs one ahead of `index` for a beat after a string locks: that string shows
+    /// done (chip filled, note in the accent) before the next one takes over.
+    @State private var tuned = 0
+    @State private var finished = false
+
+    /// A string just locked and is showing done before the check moves on.
+    private var settling: Bool { tuned > index }
 
     private var strings: [Int] { ChordStep.openStrings(course).enumerated().filter { !(course.fretKind == "banjo" && $0.offset == 0) }.map(\.element) }
 
@@ -764,13 +951,16 @@ struct TuneCheckStep: View {
     /// Nothing sits on top of the rings.
     private var listeningCluster: some View {
         VStack(spacing: 12) {
-            // A fresh view per string that pops in, so a reading landing mid-change can't freeze it half drawn.
+            // A fresh view per string, so a reading landing mid-change can't freeze it half drawn. The locked
+            // note turns to the accent, then fades out before the next one fades in: never two at once.
             ZStack {
-                Text(index < strings.count ? NoteName.name(strings[index]) : "✓").font(Typeface.note(64)).foregroundStyle(Palette.ink)
+                Text(index < strings.count ? NoteName.name(strings[index]) : "✓").font(Typeface.note(64))
+                    .foregroundStyle(settling ? accent : Palette.ink)
                     .id(index)
-                    .transition(.asymmetric(insertion: .scale(scale: 0.7).combined(with: .opacity), removal: .opacity))
+                    .transition(.noteHandover)
             }
             .animation(Motion.pluck, value: index)
+            .animation(Motion.quick, value: tuned)
             // Up to 220 pt; on short phones the space gives first, and the rings step aside when it's too small for them.
             Color.clear
                 .aspectRatio(1, contentMode: .fit)
@@ -778,7 +968,7 @@ struct TuneCheckStep: View {
                 .onGeometryChange(for: CGFloat.self) { min($0.size.width, $0.size.height) } action: { ringSide = $0 }
                 .overlay {
                     if ringSide >= 110 {
-                        RingMotif(accent: cents == nil ? accent : meterColor, symbol: orbSymbol, active: cents != nil)
+                        RingMotif(accent: cents == nil || settling ? accent : meterColor, symbol: orbSymbol, active: cents != nil && !settling)
                             .opacity(0.9)
                     }
                 }
@@ -790,41 +980,48 @@ struct TuneCheckStep: View {
 
     /// The orb in the rings: which way to turn the peg, a check in tune, a waveform while waiting for a pluck.
     private var orbSymbol: String {
+        if settling { return "checkmark" }
         guard let cents else { return "waveform" }
         if abs(cents) <= 8 { return "checkmark" }
         return cents < 0 ? "arrow.up" : "arrow.down"
     }
 
     /// Done strings filled, the current one ringed; the ones still to come in soft ink on a raised chip
-    /// with a hairline (readable on the green wash, well over 3:1). A string bursts as it's ticked off.
+    /// with a hairline (readable on the green wash, well over 3:1). A string fills and bursts the moment it
+    /// locks; the ring moves on to the next a beat later, with the note and the neck.
     private var stringChips: some View {
         HStack(spacing: 8) {
             ForEach(Array(strings.enumerated()), id: \.offset) { i, midi in
+                let isDone = i < tuned
+                let isCurrent = i == index && !isDone
                 Text(NoteName.pitchClass(midi)).font(Typeface.label(15))
-                    .foregroundStyle(i < index ? Palette.onAccent : i == index ? Palette.ink : Palette.inkSoft)
+                    .foregroundStyle(isDone ? Palette.onAccent : isCurrent ? Palette.ink : Palette.inkSoft)
                     .frame(width: Self.chip, height: Self.chip)
-                    .background(Circle().fill(i < index ? AnyShapeStyle(accent) : AnyShapeStyle(Palette.surface)))
-                    .overlay(Circle().strokeBorder(i == index ? accent : i > index ? Color.white.opacity(0.14) : .clear, lineWidth: i == index ? 2 : 1))
+                    .background(Circle().fill(isDone ? AnyShapeStyle(accent) : AnyShapeStyle(Palette.surface)))
+                    .overlay(Circle().strokeBorder(isCurrent ? accent : isDone ? .clear : Color.white.opacity(0.14), lineWidth: isCurrent ? 2 : 1))
             }
         }
         .animation(Motion.pluck, value: index)
+        .animation(Motion.pluck, value: tuned)
         .background(alignment: .leading) {
             // Behind the chips, centred on the one just tuned (outside the animation, so it doesn't slide):
             // sparks leave from the chip's rim, no ring, so nothing reaches across the title or the note.
             SparkBurst(trigger: burst, color: accent, reach: 70, startFraction: 0.32, ring: false)
                 .frame(width: 140, height: 140)
-                .offset(x: CGFloat(max(0, index - 1)) * (Self.chip + 8) + Self.chip / 2 - 70)
+                .offset(x: CGFloat(max(0, tuned - 1)) * (Self.chip + 8) + Self.chip / 2 - 70)
         }
     }
 
     private static let chip: CGFloat = 44
 
     private var meterColor: Color {
+        if settling { return accent }
         guard let cents else { return Palette.inkSoft }
         return abs(cents) <= 8 ? accent : Palette.amber
     }
 
     private var hint: LocalizedStringKey {
+        if settling { return "In tune" }
         guard let cents else { return "Pluck the string" }
         if abs(cents) <= 8 { return "In tune — hold it" }
         return cents < 0 ? "Tune up a little" : "Tune down a little"
@@ -854,6 +1051,8 @@ struct TuneCheckStep: View {
         guard index < strings.count else { return finish() }
         store.gameTargetHz = frequency(strings[index], store)
         store.startLessonListening(owner: owner) { hz, _ in
+            // While a locked string shows done, readings wait for the next one.
+            guard !finished, !settling else { return }
             guard index < strings.count, let hz else { cents = nil; holdStart = nil; return }
             let target = frequency(strings[index], store)
             let off = PitchMath.cents(target: target, measured: hz)
@@ -862,17 +1061,29 @@ struct TuneCheckStep: View {
             let now = CACurrentMediaTime()
             if abs(off) <= 8 {
                 if holdStart == nil { holdStart = now }
-                if now - (holdStart ?? now) >= 0.5 {
-                    holdStart = nil; cents = nil
-                    SoundFX.shared.play(.hit); Haptics.shared.lock(); burst += 1
-                    index += 1
-                    if index >= strings.count { finish() } else { store.gameTargetHz = frequency(strings[index], store) }
-                }
+                if now - (holdStart ?? now) >= 0.5 { lock() }
             } else { holdStart = nil }
         }
     }
 
+    /// The string is in tune: it shows done at once (chip filled, sparks, the note in the accent, "In tune"),
+    /// and a beat later the next string takes over, so the chips, the note and the neck move on together.
+    private func lock() {
+        holdStart = nil; cents = 0
+        SoundFX.shared.play(.hit); Haptics.shared.lock(); burst += 1
+        tuned = index + 1
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(450))
+            guard !finished else { return }
+            cents = nil
+            index = tuned
+            if index >= strings.count { finish() } else { store.gameTargetHz = frequency(strings[index], store) }
+        }
+    }
+
     private func finish() {
+        guard !finished else { return }
+        finished = true
         store.stopLessonListening(owner: owner)
         if let instrument = course.instrument { UserDefaults.standard.set(Quests.dayKey(Date()), forKey: "tunecheck.\(instrument)") }
         done()
