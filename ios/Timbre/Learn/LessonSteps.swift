@@ -157,9 +157,10 @@ struct NotesStep: View {
                 Text(status).font(.subheadline.weight(.semibold)).foregroundStyle(ringTint).contentTransition(.opacity)
             }
         }
-        // Up to 250 pt, smaller on short phones so the neck and the bar below still fit.
+        // As big as the room between the words and the neck allows (up to 290 pt on the tallest phones, so no band of
+        // empty stage is left around it), smaller on short phones so the neck and the bar below still fit.
         .aspectRatio(1, contentMode: .fit)
-        .frame(minWidth: 150, maxWidth: 250, minHeight: 150, maxHeight: 250)
+        .frame(minWidth: 150, maxWidth: 290, minHeight: 150, maxHeight: 290)
         .background { ringBurst }
         .layoutPriority(1)
         // Below its neighbours, so the sparks pass behind the prompt and the chips, never over words.
@@ -181,7 +182,7 @@ struct NotesStep: View {
     /// fades in (`NoteHandover`), so two never overlap and none is left half drawn.
     private var noteLetter: some View {
         let name = NoteName.name(shown?.midi ?? 60)
-        return NoteHandover(String(name.dropLast(name.last?.isNumber == true ? 1 : 0)), font: Typeface.note(88))
+        return NoteHandover(String(name.dropLast(name.last?.isNumber == true ? 1 : 0)), font: Typeface.note(88), turn: judge.index)
     }
 
     /// Where to play it: a strip of the neck with the target string and fret lit and breathing (fretted
@@ -303,14 +304,17 @@ struct NoteHandover: View {
     let name: String
     let font: Font
     var color: Color = Palette.ink
+    /// Which note of a run this is: a change hands over even to the same name (E, then E again).
+    var turn = 0
     @State private var shown: String
     @State private var visible = true
     @State private var swap: Task<Void, Never>?
 
-    init(_ name: String, font: Font, color: Color = Palette.ink) {
+    init(_ name: String, font: Font, color: Color = Palette.ink, turn: Int = 0) {
         self.name = name
         self.font = font
         self.color = color
+        self.turn = turn
         _shown = State(initialValue: name)
     }
 
@@ -321,6 +325,7 @@ struct NoteHandover: View {
             .contentTransition(.identity)
             .opacity(visible ? 1 : 0)
             .onChange(of: name) { _, next in handOver(to: next) }
+            .onChange(of: turn) { _, _ in handOver(to: name) }
             .onDisappear { swap?.cancel() }
     }
 
@@ -834,11 +839,11 @@ struct RhythmStep: View {
 
     /// The count-in, big: "1 2 3 4" (one numeral per click of the bar before the first stroke), each lighting
     /// in the accent as its click sounds; the ones gone by stay lit softly. With Reduce Motion they don't pop.
-    private func countInRow(elapsed: Double) -> some View {
+    private func countInRow(elapsed: Double, largest: CGFloat = 56) -> some View {
         let into = max(0, elapsed + countIn) / spb
         let beat = min(beatsPerBar - 1, Int(into))
         let through = max(0, into - Double(beat))
-        let size: CGFloat = beatsPerBar <= 4 ? 56 : beatsPerBar <= 6 ? 44 : 30
+        let size: CGFloat = min(largest, beatsPerBar <= 4 ? 56 : beatsPerBar <= 6 ? 44 : 30)
         return HStack(spacing: size * 0.36) {
             ForEach(0..<beatsPerBar, id: \.self) { k in
                 Text("\(k + 1)")
@@ -880,8 +885,9 @@ struct RhythmStep: View {
                 } else if proxy.size.height >= Self.smallestStage {
                     strumStage.opacity(phase == .done ? 0.35 : 1)
                 }
-                if counting { countInBadge.transition(.opacity) }
-                if phase == .done { scoreBadge.transition(.scale(scale: 0.9).combined(with: .opacity)) }
+                // Both badges shrink to a short stage (a small phone under a progression's chords).
+                if counting { countInBadge(largest: min(56, max(24, proxy.size.height * 0.5))).transition(.opacity) }
+                if phase == .done { scoreBadge(compact: proxy.size.height < 90).transition(.scale(scale: 0.9).combined(with: .opacity)) }
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
         }
@@ -900,11 +906,11 @@ struct RhythmStep: View {
     }
 
     /// The count-in over the strings, on a dark pill so it reads over the wood.
-    private var countInBadge: some View {
+    private func countInBadge(largest: CGFloat) -> some View {
         TimelineView(.animation) { _ in
-            countInRow(elapsed: CACurrentMediaTime() - startTime - countIn)
+            countInRow(elapsed: CACurrentMediaTime() - startTime - countIn, largest: largest)
         }
-        .padding(.horizontal, 26).padding(.vertical, 12)
+        .padding(.horizontal, 26).padding(.vertical, largest < 40 ? 4 : 12)
         .background(Capsule().fill(Palette.stage.opacity(0.8)))
         .overlay(Capsule().strokeBorder(Color.white.opacity(0.08), lineWidth: 1))
         .shadow(color: .black.opacity(0.4), radius: 20, y: 8)
@@ -912,12 +918,12 @@ struct RhythmStep: View {
     }
 
     /// The take's score over the dimmed strings, in its grade's colour.
-    private var scoreBadge: some View {
+    private func scoreBadge(compact: Bool) -> some View {
         let tint = ScoreTint.color(score)
         return Text("\(Int((score * 100).rounded()))% on the beat")
-            .font(Typeface.display(28)).foregroundStyle(tint)
+            .font(Typeface.display(compact ? 22 : 28)).foregroundStyle(tint)
             .multilineTextAlignment(.center)
-            .padding(.horizontal, 24).padding(.vertical, 14)
+            .padding(.horizontal, 24).padding(.vertical, compact ? 6 : 14)
             .background(Capsule().fill(Palette.stage.opacity(0.85)))
             .overlay(Capsule().strokeBorder(tint.opacity(0.45), lineWidth: 1.5))
             .shadow(color: tint.opacity(0.35), radius: 18)

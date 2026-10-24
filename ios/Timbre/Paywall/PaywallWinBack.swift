@@ -160,8 +160,12 @@ struct ExitOfferCard: View {
         }
         .padding(.horizontal, 22).padding(.top, 24).padding(.bottom, 14)
         .frame(maxWidth: 480)
-        .background(shape.fill(Palette.stageRaised))
-        .background(shape.fill(RadialGradient(colors: [Palette.amber.opacity(0.16), .clear], center: .top, startRadius: 0, endRadius: 260)))
+        .background {
+            ZStack {
+                shape.fill(Palette.stageRaised)
+                shape.fill(RadialGradient(colors: [Palette.amber.opacity(0.16), .clear], center: .top, startRadius: 0, endRadius: 260))
+            }
+        }
         .overlay(shape.strokeBorder(Palette.amber.opacity(0.22), lineWidth: 1))
         .shadow(color: .black.opacity(0.5), radius: 30, y: 10)
         .padding(.horizontal, 12).padding(.bottom, 8)

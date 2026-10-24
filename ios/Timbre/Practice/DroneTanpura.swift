@@ -43,7 +43,10 @@ struct TanpuraMoment {
 /// neck to the bridge on the gourd and are plucked in turn exactly when the drone plucks them (the audio's own
 /// clock), each shimmering as it rings and settling as it fades, a ripple leaving the gourd with every pluck.
 /// The gourd is a dial of the twelve tonics, turned so the chosen one rests at the bottom, with its name and
-/// Sa's frequency inside. Reduce Motion: the strings stay straight and only light as they sound.
+/// Sa's frequency inside. With `onSelect` the dial turns by hand: a drag round the ring rotates it under the
+/// finger, clicking into a detent at every note (a tick and a selection haptic each) and settling on the
+/// nearest when let go; a tap on a note brings that one round. Reduce Motion: the strings stay straight and
+/// only light as they sound, and the dial moves without springing.
 struct TanpuraHero: View {
     let tonicPc: Int
     /// The tonic with its octave ("D3"), and the note names the dial is written in.
@@ -57,14 +60,19 @@ struct TanpuraHero: View {
     /// The drone's clock: when it was first heard, on the CACurrentMediaTime clock (nil until its first buffer
     /// plays). Without one (a preview with no drone behind it) the strings keep their own time.
     let clock: (() -> TimeInterval?)?
+    /// Turning the dial picks this pitch class (0 = C), at each detent as it passes; nil leaves the dial fixed.
+    let onSelect: ((Int) -> Void)?
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var visible = true
     @State private var localStart = CACurrentMediaTime()
     /// The dial's turn in semitones, counted on rather than wrapped, so a change takes the short way round.
     @State private var turn: Double
+    /// A turn in progress: the dial follows the finger.
+    @State private var drag: DialDrag?
 
-    init(tonicPc: Int, tonicName: String, notation: String = "english", saHz: Double, fifth: Bool, pure: Bool, running: Bool, clock: (() -> TimeInterval?)? = nil) {
+    init(tonicPc: Int, tonicName: String, notation: String = "english", saHz: Double, fifth: Bool, pure: Bool, running: Bool,
+         clock: (() -> TimeInterval?)? = nil, onSelect: ((Int) -> Void)? = nil) {
         self.tonicPc = tonicPc
         self.tonicName = tonicName
         self.notation = notation
@@ -73,6 +81,7 @@ struct TanpuraHero: View {
         self.pure = pure
         self.running = running
         self.clock = clock
+        self.onSelect = onSelect
         _turn = State(initialValue: Double(tonicPc))
     }
 
@@ -83,16 +92,26 @@ struct TanpuraHero: View {
                 strings(layout)
                 dial(layout)
                 center(layout)
+                if onSelect != nil { grip(layout) }
             }
         }
         .liveWhileVisible($visible)
         .onChange(of: tonicPc) { _, next in
+            // A hand on the dial has already turned it there.
+            guard drag == nil else { return }
             let shown = ((Int(turn.rounded()) % 12) + 12) % 12
             var delta = next - shown
             if delta > 6 { delta -= 12 } else if delta < -6 { delta += 12 }
-            turn += Double(delta)
+            withAnimation(reduceMotion ? nil : Motion.settle) { turn += Double(delta) }
         }
         .onChange(of: running) { _, now in if now { localStart = CACurrentMediaTime() } }
+    }
+
+    /// The dial's angle as drawn, in semitones: while a finger turns it, the finger's turn eased into a detent
+    /// at every note (slow through each note, quicker between), else where it rests.
+    private var shownTurn: Double {
+        guard let drag else { return turn }
+        return DialDrag.detented(drag.turn)
     }
 
     private func strings(_ layout: TanpuraLayout) -> some View {
@@ -136,17 +155,113 @@ struct TanpuraHero: View {
     /// The twelve tonics round the gourd, the chosen one at the bottom; the one under the strings stays hidden.
     private func dial(_ layout: TanpuraLayout) -> some View {
         let anchor = UnitPoint(x: layout.center.x / max(1, layout.size.width), y: layout.center.y / max(1, layout.size.height))
+        let shown = shownTurn
         return ZStack {
             ForEach(0..<12, id: \.self) { pc in
                 dialLabel(pc)
-                    .rotationEffect(.degrees(-turn * 30))
+                    .rotationEffect(.degrees(-shown * 30))
                     .position(layout.dialPoint(pc))
             }
         }
         .frame(width: layout.size.width, height: layout.size.height)
-        .rotationEffect(.degrees(turn * 30), anchor: anchor)
-        .animation(reduceMotion ? nil : Motion.settle, value: turn)
+        .rotationEffect(.degrees(shown * 30), anchor: anchor)
         .accessibilityHidden(true)
+    }
+
+    // MARK: Turning the dial
+
+    /// The ring's handle: a band round the gourd (its middle and the space beside it still scroll the page)
+    /// that lights while held, with a chevron either side of the chosen note saying it turns.
+    private func grip(_ layout: TanpuraLayout) -> some View {
+        let outer = layout.labelRadius + 20
+        let side = outer * 2
+        let middle = CGPoint(x: outer, y: outer)
+        let held = drag != nil
+        return ZStack {
+            Circle()
+                .stroke(Palette.mint.opacity(held ? 0.09 : 0), lineWidth: 26)
+                .frame(width: layout.labelRadius * 2, height: layout.labelRadius * 2)
+                .allowsHitTesting(false)
+            HStack(spacing: 44) {
+                Image(systemName: "chevron.compact.left")
+                Image(systemName: "chevron.compact.right")
+            }
+            .font(.system(size: 12, weight: .semibold))
+            .foregroundStyle(Palette.inkFaint)
+            .opacity(held ? 0 : 0.8)
+            .offset(y: layout.labelRadius)
+            .allowsHitTesting(false)
+            Color.clear
+                .contentShape(DialBand(inner: layout.radius * 0.55), eoFill: true)
+                .gesture(turnGesture(around: middle))
+                .onTapGesture(coordinateSpace: .local) { location in
+                    tap(at: location, around: middle, labelRadius: layout.labelRadius)
+                }
+        }
+        .frame(width: side, height: side)
+        .animation(Motion.quick, value: held)
+        .position(layout.center)
+        .accessibilityHidden(true)
+    }
+
+    private func turnGesture(around middle: CGPoint) -> some Gesture {
+        DragGesture(minimumDistance: 6, coordinateSpace: .local)
+            .onChanged { value in turnChanged(value, around: middle) }
+            .onEnded { _ in turnEnded() }
+    }
+
+    /// The finger's travel round the middle, in semitones (30° each), added to the dial's turn; each note it
+    /// passes clicks and is picked at once, so the name in the gourd and the drone follow the hand.
+    private func turnChanged(_ value: DragGesture.Value, around middle: CGPoint) {
+        let angle = DialDrag.angle(of: value.location, around: middle)
+        var current = drag ?? DialDrag(angle: DialDrag.angle(of: value.startLocation, around: middle), turn: turn, detent: Int(turn.rounded()))
+        var delta = angle - current.angle
+        if delta > Double.pi { delta -= 2 * Double.pi } else if delta < -Double.pi { delta += 2 * Double.pi }
+        current.angle = angle
+        // Right by the middle a small move swings the angle wildly: only the ring turns the dial.
+        let reach = hypot(value.location.x - middle.x, value.location.y - middle.y)
+        if reach > 18 { current.turn += delta * 6 / Double.pi }
+        let detent = Int(current.turn.rounded())
+        let passed = detent != current.detent
+        current.detent = detent
+        drag = current
+        if passed {
+            click()
+            onSelect?(((detent % 12) + 12) % 12)
+        }
+    }
+
+    /// Let go: the dial springs into the detent it last clicked into.
+    private func turnEnded() {
+        guard let current = drag else { return }
+        withAnimation(reduceMotion ? nil : Motion.pluck) {
+            turn = Double(current.detent)
+            drag = nil
+        }
+    }
+
+    /// A tap on a note (the one hidden under the strings aside) brings it round to the bottom.
+    private func tap(at location: CGPoint, around middle: CGPoint, labelRadius: CGFloat) {
+        guard drag == nil else { return }
+        var nearest: (pc: Int, distance: CGFloat)?
+        for pc in 0..<12 {
+            let step = ((pc - tonicPc) % 12 + 12) % 12
+            guard step != 0, step != 6 else { continue }
+            // Where the label is drawn: its place on the dial, turned with it.
+            let angle = (180 - (Double(pc) - turn) * 30) * Double.pi / 180
+            let point = CGPoint(x: middle.x + labelRadius * CGFloat(sin(angle)), y: middle.y - labelRadius * CGFloat(cos(angle)))
+            let distance = hypot(location.x - point.x, location.y - point.y)
+            if distance < (nearest?.distance ?? 26) { nearest = (pc, distance) }
+        }
+        guard let nearest else { return }
+        click()
+        onSelect?(nearest.pc)
+    }
+
+    /// The detent's feel: a tick and a selection haptic.
+    private func click() {
+        Haptics.shared.selection()
+        SoundFX.shared.play(.click)
     }
 
     private func dialLabel(_ pc: Int) -> some View {
@@ -179,6 +294,37 @@ struct TanpuraHero: View {
         .position(x: layout.center.x, y: layout.center.y + layout.radius * 0.2)
         .animation(Motion.quick, value: tonicName)
         .accessibilityHidden(true)
+    }
+}
+
+/// A turn of the tonic dial in progress.
+private struct DialDrag {
+    /// The finger's last angle round the dial's middle (radians, clockwise from 3 o'clock, as drawn).
+    var angle: Double
+    /// The dial's turn under the finger, in semitones, counted on rather than wrapped.
+    var turn: Double
+    /// The note the dial last clicked into (its turn, rounded).
+    var detent: Int
+
+    static func angle(of point: CGPoint, around middle: CGPoint) -> Double {
+        atan2(Double(point.y - middle.y), Double(point.x - middle.x))
+    }
+
+    /// The finger's turn eased toward the notes: on each note exactly at every whole semitone, slower through
+    /// a note and quicker between two, so the dial seems to catch in each detent.
+    static func detented(_ turn: Double) -> Double {
+        turn - 0.42 * sin(2 * Double.pi * turn) / (2 * Double.pi)
+    }
+}
+
+/// The dial's handle: a band round the gourd, open in the middle.
+private struct DialBand: Shape {
+    let inner: CGFloat
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path(ellipseIn: rect)
+        path.addEllipse(in: CGRect(x: rect.midX - inner, y: rect.midY - inner, width: inner * 2, height: inner * 2))
+        return path
     }
 }
 

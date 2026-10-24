@@ -93,7 +93,7 @@ struct StudioStage: View {
             let size = geometry.size
             if let card {
                 // Read only at rest (the reading doesn't change then), so a live pitch never re-runs this closure.
-                let key = resting ? StageSettle.key(input(), picture: imageName, size: size) : nil
+                let key: String? = resting ? StageSettle.key(input(), picture: imageName, size: size) : nil
                 let still = resting && !settling
                 // Every frame while anything moves: the dolly moves the picture, its rings and its tap targets together.
                 TimelineView(.animation(minimumInterval: reduceMotion ? 0.1 : nil, paused: still)) { timeline in

@@ -10,7 +10,7 @@ struct PaywallAnswers: Equatable {
     var minutes: Int
 }
 
-/// The person's plan as the paywall tells it: three outcomes, led by what they just tried to open and then
+/// The person's plan as the paywall tells it: three outcomes (two in onboarding), led by what they just tried to open and then
 /// their goal and course, and what the plan reaches next on its pace of one lesson a day (Today's set holds one
 /// lesson): the first song it gets to, and the units after today's whose names don't just repeat today's lesson.
 struct PaywallPlan {
@@ -81,20 +81,23 @@ struct PaywallPlan {
         // One lesson a day from the first one: the day the plan reaches its first song.
         let songDay = first.flatMap { from in lessons[from...].firstIndex { $0.kind == .song }.map { $0 - from + 1 } }
         let planned = plannedOutcomes(goal: goal, course: course, songDay: songDay, minutes: minutes, instrumentId: instrumentId, store: store)
+        // Onboarding's plan screen has just set the daily minutes, so its paywall keeps the two outcomes before them and
+        // gives the room to the hero.
+        let limit = answers == nil ? 3 : 2
         return PaywallPlan(course: course,
                            instrumentId: instrumentId,
-                           outcomes: merged(reasonOutcomes(reason, course: course, instrumentId: instrumentId, store: store), planned),
+                           outcomes: merged(reasonOutcomes(reason, course: course, instrumentId: instrumentId, store: store), planned, limit: limit),
                            firstLesson: start?.title.localized,
                            milestones: plannedMilestones(course: course, start: start, horizon: horizon))
     }
 
-    /// What was tapped first, then the plan's own outcomes, three in all and each promise once.
-    private static func merged(_ lead: [Outcome], _ planned: [Outcome]) -> [Outcome] {
+    /// What was tapped first, then the plan's own outcomes, `limit` in all and each promise once.
+    private static func merged(_ lead: [Outcome], _ planned: [Outcome], limit: Int = 3) -> [Outcome] {
         var list: [Outcome] = []
         for outcome in lead + planned where !list.contains(where: { $0.id == outcome.id }) {
             list.append(outcome)
         }
-        return Array(list.prefix(3))
+        return Array(list.prefix(limit))
     }
 
     /// The first song after today's lesson and the units after today's, within the horizon: up to two, in order,

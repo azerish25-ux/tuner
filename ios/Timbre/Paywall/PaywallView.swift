@@ -40,6 +40,12 @@ struct PaywallView: View {
     /// The track with the free trial on it, and the plan's own track (no trial selected), each as last measured.
     @State private var trialTrackHeight: CGFloat = 96
     @State private var planTrackHeight: CGFloat = 92
+    /// The App Store's own offer to make if this paywall is turned down for the second time (`PaywallWinBack.swift`),
+    /// and whether it is on screen.
+    @State private var exitOffer: ExitOffer?
+    @State private var exitOfferShown = false
+    /// The App Store's offer-code sheet ("Redeem code").
+    @State private var redeeming = false
 
     /// The yearly plan unless the storefront left it out.
     private var selected: Product? { commerce.products.first { $0.id == selectedID } ?? commerce.products.first }
@@ -49,6 +55,36 @@ struct PaywallView: View {
         if context == .standard { store.showPaywall = false }
         dismiss()
     }
+
+    /// The person turned the paywall down (the close button, or "Continue with the free tuner"). The second time any
+    /// paywall is turned down (onboarding's is the first), the App Store's own offer for them is made, once, if there is
+    /// one; otherwise, and every other time, the paywall closes.
+    private func decline() {
+        let due = PaywallDeclines.offerDue
+        PaywallDeclines.record()
+        guard due, let offer = exitOffer, !commerce.isPro else { close(); return }
+        PaywallDeclines.markOffered()
+        withAnimation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle) { exitOfferShown = true }
+        Analytics.log("exit_offer_shown", ["kind": offer.kind.rawValue, "reason": analyticsReason])
+    }
+
+    /// Looks up the exit offer while the person reads, only when the next decline would make it.
+    private func prepareExitOffer() async {
+        guard PaywallDeclines.offerDue, !commerce.isPro, exitOffer == nil else { return }
+        exitOffer = await commerce.exitOffer()
+    }
+
+    private func acceptExitOffer(_ offer: ExitOffer) {
+        let reason = analyticsReason
+        Task {
+            guard await commerce.purchase(offer.product, options: offer.options) else { return }
+            Analytics.log("purchase", ["product": offer.product.id, "reason": reason, "offer": offer.kind.rawValue])
+            // As with the yearly trial, notification permission is asked only once the free days have started.
+            if let days = offer.freeDays, days >= 3 { await TrialReminder.schedule(afterDays: days) }
+        }
+    }
+
+    private var analyticsReason: String { context == .onboarding ? "onboarding" : (store.paywallReason ?? "unknown") }
 
     var body: some View {
         let pitch = self.pitch
@@ -71,9 +107,25 @@ struct PaywallView: View {
                 bottomBar.onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in barHeight = height }
             }
             closeButton
+            if exitOfferShown, let offer = exitOffer {
+                ExitOfferCard(offer: offer, purchasing: commerce.purchasing != nil,
+                              accept: { acceptExitOffer(offer) }, decline: { close() })
+                    .transition(.opacity)
+                    .zIndex(2)
+            }
         }
         .preferredColorScheme(.dark)
-        .task { await commerce.load() }
+        // Drawn over the tabs as an overlay: VoiceOver stays inside it, as it would in a presented sheet.
+        .accessibilityAddTraits(.isModal)
+        .offerCodeRedemption(isPresented: $redeeming) { result in
+            // The redeemed code arrives as a transaction too; checking now unlocks without waiting for it.
+            if case .success = result { Task { await commerce.refreshEntitlements() } }
+            Analytics.log("offer_code_closed", ["reason": analyticsReason])
+        }
+        .task {
+            await commerce.load()
+            await prepareExitOffer()
+        }
         .task { remindersBlocked = await TrialReminder.isBlocked() }
         .onAppear { appeared = true }
         .onChange(of: scenePhase) { _, phase in
@@ -127,9 +179,17 @@ struct PaywallView: View {
         var result = Fold()
         result.outcomes = left - Self.pillRow >= Self.outcomesTop + outcomesHeight
         if result.outcomes { left -= Self.outcomesTop + outcomesHeight }
+        let heroFloor = Self.previewTop + hero.minHeight
+        // Onboarding's hero takes the room before "What's in Pro" (which waits below the fold unless room is left): the
+        // scene is the plan just built, and a taller stage keeps its runway and hit line well below the close button.
+        if context == .onboarding && pitch.lesson == nil && left >= heroFloor {
+            result.preview = hero.minHeight + min(left - heroFloor, Self.previewMax - hero.minHeight)
+            left -= Self.previewTop + result.preview
+            result.details = result.outcomes && left >= Self.detailsTop + detailsHeight
+            return result
+        }
         result.details = result.outcomes && left - Self.pillRow >= Self.detailsTop + detailsHeight
         if result.details { left -= Self.detailsTop + detailsHeight }
-        let heroFloor = Self.previewTop + hero.minHeight
         if pitch.lesson == nil && left >= heroFloor {
             let growth = min(left - heroFloor, Self.previewMax - hero.minHeight)
             result.preview = hero.minHeight + growth
@@ -173,7 +233,8 @@ struct PaywallView: View {
             // Everything that sells rests above the bar; the rest waits below the fold, past its fade.
             .frame(minHeight: viewport, alignment: .top)
             belowFold(plan, layout: layout)
-            finePrint.padding(.top, 32)
+            redeemLink.padding(.top, 24)
+            finePrint.padding(.top, 8)
         }
         .padding(.horizontal, 20).padding(.bottom, 12)
         .frame(maxWidth: 520)
@@ -194,7 +255,7 @@ struct PaywallView: View {
     }
 
     private var closeButton: some View {
-        Button { close() } label: {
+        Button { decline() } label: {
             Image(systemName: "xmark").font(.body.weight(.bold)).foregroundStyle(Palette.ink)
                 .frame(width: 44, height: 44).background(Circle().fill(Palette.surface))
         }
@@ -628,7 +689,7 @@ struct PaywallView: View {
         } else {
             VStack(spacing: 8) {
                 if let annual = commerce.annual {
-                    planRow(annual, title: "Yearly", detail: perMonth(annual), tag: annualTag(annual), saving: annualSaving, anchor: annualAnchor)
+                    planRow(annual, title: "Yearly", detail: perWeek(annual), tag: annualTag(annual), saving: annualSaving, anchor: annualAnchor)
                 }
                 if let monthly = commerce.monthly {
                     planRow(monthly, title: "Monthly", detail: String(localized: "cancel anytime"), tag: nil, saving: nil)
@@ -651,8 +712,9 @@ struct PaywallView: View {
         .overlay { ProgressView().tint(Palette.mint) }
     }
 
-    private func perMonth(_ product: Product) -> String {
-        String(localized: "\((product.price / 12).formatted(product.priceFormatStyle)) a month")
+    /// The yearly price as a week of it ("$0.67 a week"): the product's own price over 52, in the storefront's currency.
+    private func perWeek(_ product: Product) -> String {
+        String(localized: "\((product.price / 52).formatted(product.priceFormatStyle)) a week")
     }
 
     private func annualTag(_ annual: Product) -> String {
@@ -1102,12 +1164,16 @@ struct PaywallView: View {
                     .accessibilityIdentifier("commerceError")
             }
             if let terms {
+                // The price after the trial is never cut short (Guideline 3.1.2): at the accessibility sizes, and in
+                // longer languages, the bar grows to fit it.
                 Text(terms).font(.footnote).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
-                    .lineLimit(2).minimumScaleFactor(0.85)
+                    .lineLimit(typeSize.isAccessibilitySize ? nil : 3)
+                    .minimumScaleFactor(typeSize.isAccessibilitySize ? 1 : 0.9)
+                    .fixedSize(horizontal: false, vertical: true)
                     .padding(.top, 8)
             }
             if context == .onboarding {
-                Button { close() } label: {
+                Button { decline() } label: {
                     Text("Continue with the free tuner").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft)
                         .padding(.horizontal, 12).padding(.vertical, 6).contentShape(Rectangle())
                 }
@@ -1124,7 +1190,13 @@ struct PaywallView: View {
             if commerce.purchasing != nil {
                 ProgressView().tint(Palette.onAccent)
             } else {
-                Text(ctaTitle).font(Typeface.label(18)).lineLimit(1).minimumScaleFactor(0.7)
+                // One line at the usual sizes; two at the accessibility sizes rather than an unreadable shrink.
+                Text(ctaTitle).font(Typeface.label(18))
+                    .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
+                    .minimumScaleFactor(typeSize.isAccessibilitySize ? 0.9 : 0.7)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.vertical, typeSize.isAccessibilitySize ? 6 : 0)
             }
         }
         .buttonStyle(BrassButtonStyle())
@@ -1163,6 +1235,23 @@ struct PaywallView: View {
         Text(title).foregroundStyle(Palette.inkSoft)
             .padding(.horizontal, 8).padding(.vertical, 6)
             .contentShape(Rectangle())
+    }
+
+    /// "Have an offer code? Redeem code": the App Store's own redemption sheet (codes are set up in App Store Connect).
+    private var redeemLink: some View {
+        Button {
+            redeeming = true
+            Analytics.log("offer_code_opened", ["reason": analyticsReason])
+        } label: {
+            (Text("Have an offer code?").foregroundStyle(Palette.inkFaint) + Text(verbatim: " ") + Text("Redeem code").foregroundStyle(Palette.mint))
+                .font(.footnote.weight(.semibold))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 12).padding(.vertical, 10)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .disabled(commerce.purchasing != nil)
+        .accessibilityIdentifier("paywall.redeem")
     }
 
     private var finePrint: some View {
