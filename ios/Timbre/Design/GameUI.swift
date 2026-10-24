@@ -4,6 +4,8 @@ import UIKit
 
 /// Flame and day count; taps through to Progress. Around the flame, Today's ring: any activity of it keeps
 /// the streak (the flame lights), finishing them all closes the ring.
+/// The capsule is at least 36 pt and grows with its text; the target is at least 44 pt. Like a bar item it stops
+/// growing at AX1 and offers the Large Content Viewer.
 struct StreakChip: View {
     @EnvironmentObject private var store: AppStore
     /// Draws Today's ring around the flame. Nil decides by tab: not on Play or Learn, whose Today cards show it.
@@ -11,6 +13,8 @@ struct StreakChip: View {
     var action: () -> Void = {}
     /// Today's lesson follows Learn's course; reading it here redraws the ring when that changes.
     @AppStorage("learn.course") private var learnCourseId = "guitar"
+    /// The capsule's side inset, growing with the count's text.
+    @ScaledMetric(relativeTo: .subheadline) private var inset: CGFloat = 12
 
     var body: some View {
         let streak = store.streak
@@ -20,23 +24,29 @@ struct StreakChip: View {
         Button(action: action) {
             HStack(spacing: 5) {
                 flame(lit: streak.practicedToday, bounce: streak.current, ring: activities, done: done)
-                Text("\(streak.current)").font(Typeface.label(14)).foregroundStyle(Color(hex: 0xFFD3A8)).monospacedDigit()
+                Text("\(streak.current)").font(Typeface.label(14, relativeTo: .subheadline)).foregroundStyle(Palette.flameInk).monospacedDigit()
                 if store.streakFreezes > 0 {
                     // Banked streak freezes, one flake each.
                     HStack(spacing: 1) {
                         ForEach(0..<store.streakFreezes, id: \.self) { _ in
-                            Image(systemName: "snowflake").font(.system(size: 10, weight: .bold)).foregroundStyle(Color(hex: 0x9FD8FF))
+                            Image(systemName: "snowflake").font(.caption2.weight(.bold)).foregroundStyle(Palette.frost)
                                 .symbolEffect(.bounce, value: store.streakPulse)
                         }
                     }
                     .transition(.scale.combined(with: .opacity))
                 }
             }
-            .padding(.leading, activities.isEmpty ? 12 : 6).padding(.trailing, 12).frame(height: 36)
+            .padding(.leading, activities.isEmpty ? inset : inset / 2).padding(.trailing, inset)
+            .padding(.vertical, 4)
+            .frame(minHeight: 36)
             .background(Capsule().fill(Palette.flame.opacity(0.10)))
             .overlay(Capsule().strokeBorder(Palette.flame.opacity(0.35), lineWidth: 1))
+            .frame(minHeight: Metrics.minTarget)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        .accessibilityShowsLargeContentViewer()
         .accessibilityLabel(Text("\(streak.current)-day streak"))
         .accessibilityValue(value(done: done.count, total: activities.count))
         .accessibilityIdentifier("streak.chip")
@@ -120,13 +130,16 @@ struct StreakFlame: View {
     }
 }
 
-/// Level number inside a ring that fills with XP toward the next level, captioned "LV" on the small
-/// header rings and "LEVEL" on the large one, so the number always says what it counts.
+/// Level number inside a ring that fills with XP toward the next level, captioned "LV" on mid-size rings and
+/// "LEVEL" on the large one, so the number always says what it counts. Under 44 pt there is no room for a legible
+/// caption, so the header ring shows the number alone (VoiceOver says "Level 5"). The ring is a fixed-size
+/// graphic: its type stops growing at xxxLarge, and as a button its target is at least 44 pt.
 struct LevelRing: View {
     @EnvironmentObject private var store: AppStore
     var size: CGFloat = 36
     var action: (() -> Void)?
     private var large: Bool { size >= 50 }
+    private var captioned: Bool { size >= Metrics.minTarget }
     var body: some View {
         let xp = store.progress.xp
         let level = store.level
@@ -137,19 +150,25 @@ struct LevelRing: View {
                 .rotationEffect(.degrees(-90))
                 .animation(Motion.settle, value: xp)
             VStack(spacing: large ? 1 : -1) {
-                caption
-                Text("\(level.number)").font(Typeface.label(size * (large ? 0.34 : 0.33))).foregroundStyle(Palette.ink)
+                if captioned { caption }
+                Text("\(level.number)").font(Typeface.label(size * (large ? 0.34 : captioned ? 0.33 : 0.4))).foregroundStyle(Palette.ink)
                     .contentTransition(.numericText())
                     .lineLimit(1).minimumScaleFactor(0.5)
             }
             .frame(maxWidth: size * 0.66)
-            .offset(y: size * 0.015)
+            .offset(y: captioned ? size * 0.015 : 0)
         }
         .frame(width: size, height: size)
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Level \(level.number), \(xp - level.floor) of \(level.next - level.floor) XP"))
         if let action {
-            Button(action: action) { ring }.buttonStyle(.plain).accessibilityIdentifier("level.ring")
+            Button(action: action) {
+                ring.frame(minWidth: Metrics.minTarget, minHeight: Metrics.minTarget).contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityShowsLargeContentViewer()
+            .accessibilityIdentifier("level.ring")
         } else { ring }
     }
 
@@ -206,34 +225,42 @@ extension Quest {
 }
 
 /// One daily quest: icon, title, a bar with its count ("3 / 10", the tuning quest in strings) and the XP it pays.
+/// The Play hub's quest rows are this row too (`HubQuestRow` is gone).
 struct QuestRow: View {
     @EnvironmentObject private var store: AppStore
     let quest: Quest
+    /// The counter to show when the caller already has it; nil reads the one saved counter
+    /// (`AppStore.questCounter`: the tuning quest counts today's strings, as the tuner's quest line does).
+    var count: (done: Int, total: Int)? = nil
     var body: some View {
-        let count = store.questCounter(quest)
-        let progress = count.done, target = count.total
+        let counter = count ?? store.questCounter(quest)
+        let progress = counter.done, target = counter.total
         let done = store.questProgress(quest) >= quest.target
+        let tile = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         HStack(spacing: 12) {
             Image(systemName: done ? "checkmark" : quest.symbol).font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(done ? Palette.onAccent : quest.tint)
                 .frame(width: 34, height: 34)
-                .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(done ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(quest.tint.opacity(0.14))))
+                .background(RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous).fill(done ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(quest.tint.opacity(0.14))))
             VStack(alignment: .leading, spacing: 7) {
                 Text(quest.title).font(.subheadline.weight(.semibold)).foregroundStyle(done ? Palette.inkSoft : Palette.ink)
                     .strikethrough(done, color: Palette.inkFaint)
                     .fixedSize(horizontal: false, vertical: true)
                 HStack(spacing: 10) {
                     ProgressLine(value: Double(progress) / Double(max(1, target)), color: done ? Palette.mint : quest.tint, height: 5)
-                    Text("\(progress) / \(target)").font(Typeface.number(12)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
+                    Text.fraction(progress, target).font(Typeface.number(12)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
                         .contentTransition(.numericText())
                         .fixedSize()
+                        // The row's value says it ("3 of 10").
+                        .accessibilityHidden(true)
                 }
             }
             reward(done)
         }
         .padding(.horizontal, 14).padding(.vertical, 12)
-        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
+        .background(tile.fill(Palette.stageRaised))
+        .overlay(tile.strokeBorder(Palette.hairline, lineWidth: 1))
+        .animation(Motion.settle, value: progress)
         .accessibilityElement(children: .combine)
         .accessibilityValue(Text(done ? "Done" : "\(progress) of \(target)"))
     }
@@ -505,9 +532,9 @@ struct RewardToast: View {
             AccessibilityNotification.Announcement(next.announcement).post()
             // Let the closed pill appear at the island's size, so it can grow from there.
             try? await Task.sleep(for: .milliseconds(30))
-            withAnimation(reduceMotion ? .easeOut(duration: 0.2) : Motion.island) { open = true }
+            withMotion(Motion.island, reduceMotion: reduceMotion) { open = true }
             try? await Task.sleep(for: .seconds(queue.count > 1 ? next.seconds * 0.8 : next.seconds))
-            withAnimation(reduceMotion ? .easeIn(duration: 0.2) : .spring(response: 0.34, dampingFraction: 1)) { open = false }
+            withMotion(Motion.islandClose, reduceMotion: reduceMotion) { open = false }
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 220 : 360))
             current = nil
             try? await Task.sleep(for: .milliseconds(90))
@@ -521,8 +548,8 @@ struct RewardToast: View {
                                      announcement: String(localized: "Level \(level.number)", bundle: TimbreLocalization.bundle) + ", " + NSLocalizedString(level.name, comment: "")))
         }
         if reward.dailySetCompleted {
-            list.append(RewardBanner(symbol: "sun.max.fill", title: Text("Daily set complete"), detail: Text("+\(XPReward.dailySet) XP"), tone: .gold, seconds: 2.6,
-                                     announcement: String(localized: "Daily set complete", bundle: TimbreLocalization.bundle)))
+            list.append(RewardBanner(symbol: "sun.max.fill", title: Text("Today complete"), detail: Text("+\(XPReward.dailySet) XP"), tone: .gold, seconds: 2.6,
+                                     announcement: String(localized: "Today complete", bundle: TimbreLocalization.bundle)))
         }
         let badges = reward.achievementsEarned
         if badges.count >= 3 {
@@ -567,7 +594,7 @@ struct RewardToast: View {
             content(banner, layout: layout, compact: compact)
                 .opacity(open ? 1 : 0)
                 .blur(radius: open || reduceMotion ? 0 : 5)
-                .animation(.easeOut(duration: 0.2).delay(open && !reduceMotion ? 0.1 : 0), value: open)
+                .animation(Motion.fade.delay(open && !reduceMotion ? 0.1 : 0), value: open)
         }
         .frame(width: size.width, height: size.height)
         .clipShape(Capsule(style: .continuous))
@@ -611,7 +638,7 @@ struct RewardToast: View {
                 .foregroundStyle(banner.detail == nil ? Palette.mint : Palette.ink)
                 .lineLimit(1).minimumScaleFactor(0.7)
             if let detail = banner.detail {
-                detail.font(.system(size: 11)).foregroundStyle(Palette.inkSoft)
+                detail.font(.caption2).foregroundStyle(Palette.inkSoft)
                     .lineLimit(2).minimumScaleFactor(0.75)
             }
         }
@@ -619,7 +646,7 @@ struct RewardToast: View {
 
     private func icon(_ banner: RewardBanner, size: CGFloat) -> some View {
         Image(systemName: banner.symbol).font(.system(size: size * 0.46, weight: .bold))
-            .foregroundStyle(banner.tone == .mint ? Palette.onAccent : Color(hex: 0x1B1206))
+            .foregroundStyle(banner.tone == .mint ? Palette.onAccent : Palette.onGold)
             .frame(width: size, height: size)
             .background(Circle().fill(Self.fill(banner.tone)))
             .symbolEffect(.bounce, value: open)
@@ -629,7 +656,7 @@ struct RewardToast: View {
         switch tone {
         case .gold: return AnyShapeStyle(Palette.proGold)
         case .mint: return AnyShapeStyle(Palette.mint)
-        case .frost: return AnyShapeStyle(Color(hex: 0x9FD8FF))
+        case .frost: return AnyShapeStyle(Palette.frost)
         }
     }
 }
@@ -643,8 +670,8 @@ private struct PillLayout {
     let top: CGFloat
     static let islandWidth: CGFloat = 126
     static let islandHeight: CGFloat = 37
-    /// Kept clear on the trailing side: streak chip, level ring and settings button with the gutter.
-    static let headerControls: CGFloat = 192
+    /// Kept clear on the trailing side: streak chip, level ring and settings button (44 pt targets) with the gutter.
+    static let headerControls: CGFloat = 200
     var island: Bool { top >= 51 && width < 500 }
     var docked: Bool { !island && width < 600 }
     /// The island's top edge: about 11 pt below the screen top on a 59 pt band, 14 pt on a 62 pt band.

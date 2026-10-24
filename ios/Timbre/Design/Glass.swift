@@ -124,19 +124,37 @@ struct TimbreGlassPlate<S: InsettableShape>: View {
 }
 
 /// The main action as a capsule of tinted glass that answers the finger (iOS 26), with dark type and a soft glow of
-/// its colour under it; before iOS 26 the solid capsule of `BrassButtonStyle`. `collapsed` folds it into a round bead
-/// (a purchase in flight, its label a spinner) and back, the glass flowing with it.
+/// its colour under it; before iOS 26 the solid capsule of `PrimaryButtonStyle`. `collapsed` folds it into a round
+/// bead (a purchase in flight, its label a spinner) and back, the glass flowing with it.
+/// Disabled, it is dark glass (graphite before iOS 26) with faint type and no glow, like a disabled
+/// `PrimaryButtonStyle`; while `collapsed` or `busy` (a purchase in flight, the button disabled meanwhile) it keeps
+/// its colour, so the spinner reads as work, not as a dead button.
 struct GlassActionButtonStyle: ButtonStyle {
     var tint: Color = Palette.mint
     var collapsed = false
+    var busy = false
 
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.headline)
-            .foregroundStyle(Palette.onAccent)
-            .frame(minWidth: 54, maxWidth: collapsed ? CGFloat(54) : .infinity, minHeight: 54)
+        GlassActionBody(configuration: configuration, tint: tint, collapsed: collapsed, busy: busy)
+    }
+}
+
+/// Reads `isEnabled` (a ButtonStyle can't reliably).
+private struct GlassActionBody: View {
+    let configuration: ButtonStyleConfiguration
+    let tint: Color
+    let collapsed: Bool
+    let busy: Bool
+    @Environment(\.isEnabled) private var isEnabled
+
+    var body: some View {
+        let live = isEnabled || collapsed || busy
+        return configuration.label
+            .font(Typeface.button)
+            .foregroundStyle(live ? Palette.onAccent : Palette.inkFaint)
+            .frame(minWidth: 54, maxWidth: collapsed ? CGFloat(54) : .infinity, minHeight: Metrics.buttonHeight)
             .padding(.horizontal, collapsed ? 0 : 18)
-            .modifier(ActionGlass(tint: tint, pressed: configuration.isPressed))
+            .modifier(ActionGlass(tint: tint, live: live, pressed: configuration.isPressed && isEnabled))
             // The bead stays centred where the bar was.
             .frame(maxWidth: .infinity)
             .animation(Motion.morph, value: collapsed)
@@ -145,15 +163,17 @@ struct GlassActionButtonStyle: ButtonStyle {
 
 private struct ActionGlass: ViewModifier {
     let tint: Color
+    /// False: disabled, so dark and unlit.
+    let live: Bool
     let pressed: Bool
 
     @ViewBuilder func body(content: Content) -> some View {
         if #available(iOS 26.0, *) {
             content
-                .glassEffect(Glass.regular.tint(tint).interactive(), in: Capsule())
+                .glassEffect(Glass.regular.tint(live ? tint : Palette.surface).interactive(live), in: Capsule())
                 // Behind the glass, which gathers it: the button reads lit, as the solid one did.
                 .background {
-                    Capsule().fill(tint.opacity(pressed ? 0.12 : 0.3))
+                    Capsule().fill(tint.opacity(live ? (pressed ? 0.12 : 0.3) : 0))
                         .blur(radius: 14)
                         .offset(y: 6)
                         .allowsHitTesting(false)
@@ -162,9 +182,13 @@ private struct ActionGlass: ViewModifier {
         } else {
             content
                 .background {
-                    Capsule().fill(tint)
-                        .overlay(Capsule().strokeBorder(.white.opacity(0.35), lineWidth: 1).blendMode(.overlay))
-                        .shadow(color: tint.opacity(pressed ? 0.15 : 0.4), radius: pressed ? 6 : 22, y: 6)
+                    if live {
+                        Capsule().fill(tint)
+                            .overlay(Capsule().strokeBorder(.white.opacity(0.35), lineWidth: 1).blendMode(.overlay))
+                            .shadow(color: tint.opacity(pressed ? 0.15 : 0.4), radius: pressed ? 6 : 22, y: 6)
+                    } else {
+                        Capsule().fill(Palette.surface).overlay(Capsule().strokeBorder(Palette.controlLine, lineWidth: 1))
+                    }
                 }
                 .scaleEffect(pressed ? 0.97 : 1)
                 .animation(Motion.quick, value: pressed)
