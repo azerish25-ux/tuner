@@ -1,0 +1,72 @@
+# Errors
+
+# Matches
+--- line 53
+2026-10-24 18:02:43.424811+0000 Timbre[8265:28718] [Assets] Could not resolve material name 'engine:BuiltinRenderGraphResources/AR/arInPlacePostProcessCombinedPermute15.rematerial' in bundle at '/Users/runner/Library/Developer/CoreSimulator/Devices/E952A9B0-CC78-435C-BF08-06AD47FE1076/data/Containers/Bundle/Application/CF99D6D7-F9A0-470B-99F6-39BE93464205/Timbre.app'. Loading via asset path.
+IOSurfaceClientSetSurfaceNotify failed e00002c7
+2026-10-24 18:02:44.902620+0000 Timbre[8265:30034] [Metadata] Failed to refresh AppShortcut parameters with error: Error Domain=LinkDaemon.ApplicationServiceInstance.Errors Code=2 "(null)"
+2026-10-24 18:02:45.899484+0000 Timbre[8265:29784] [tbbmain] TBB Global TLS count is not == 1, instead it is: 2
+Test Suite 'All tests' started at 2026-10-24 18:02:56.202.
+Test Suite 'TimbreAppTests.xctest' started at 2026-10-24 18:02:56.217.
+
+# Tail
+    t =     6.24s Waiting 25.0s for "tune.stage" Any to exist
+    t =     7.26s     Checking `Expect predicate `existsNoRetry == 1` for object "tune.stage" Any`
+    t =     7.26s         Checking existence of `"tune.stage" Any`
+    t =     7.63s Find the "stage.state" Any
+    t =     8.53s Find the "stage.state" Any
+    t =     9.32s Find the "stage.state" Any
+    t =    10.34s Find the "stage.state" Any
+    t =    11.44s Find the "stage.state" Any
+    t =    12.43s Find the "stage.state" Any
+    t =    13.55s Find the "stage.state" Any
+    t =    14.40s Find the "stage.state" Any
+    t =    15.56s Find the "stage.state" Any
+    t =    16.36s Find the "stage.state" Any
+    t =    20.78s Find the "stage.state" Any
+    t =    28.80s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =    29.18s Added attachment named '10b-tune-locked'
+    t =    29.19s Tear Down
+    t =    29.20s     Terminate com.shahradazerisharghi.timbre:44793
+Test Case '-[TimbreUITests.TimbreUITests test11StoreTunerLock]' passed (30.477 seconds).
+Test Case '-[TimbreUITests.TimbreUITests test12StoreChord]' started.
+    t =     0.00s Start Test at 2026-10-24 18:19:25.902
+    t =     0.05s Set Up
+    t =     0.05s Open com.shahradazerisharghi.timbre
+    t =     0.05s     Launch com.shahradazerisharghi.timbre
+    t =     0.54s         Setting up automation session
+Resolve Package Graph
+
+    t =     2.29s         Wait for com.shahradazerisharghi.timbre to idle
+    t =     5.09s Waiting 45.0s for Any (First Match) to exist
+    t =     6.17s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =     6.18s         Checking existence of `Any (First Match)`
+    t =     6.77s         Capturing element debug description
+    t =     7.17s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =     7.17s         Checking existence of `Any (First Match)`
+    t =     7.54s         Capturing element debug description
+    t =     8.17s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =     8.17s         Checking existence of `Any (First Match)`
+    t =     9.61s Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =     9.75s Added attachment named '52b-lesson-chord'
+    t =     9.75s Tear Down
+    t =     9.75s     Terminate com.shahradazerisharghi.timbre:45833
+Test Case '-[TimbreUITests.TimbreUITests test12StoreChord]' passed (10.872 seconds).
+Test Suite 'TimbreUITests' passed at 2026-10-24 18:19:36.774.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 952.297 (952.327) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-10-24 18:19:36.775.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 952.297 (952.329) seconds
+Test Suite 'Selected tests' passed at 2026-10-24 18:19:36.776.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 952.297 (952.331) seconds
+Resolve Package Graph
+2026-10-24 18:19:39.078 xcodebuild[5309:20098] [MT] IDETestOperationsObserverDebug: 1047.010 elapsed -- Testing started completed.
+2026-10-24 18:19:39.078 xcodebuild[5309:20098] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-24 18:19:39.078 xcodebuild[5309:20098] [MT] IDETestOperationsObserverDebug: 1047.010 sec, +1047.010 sec -- end
+
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/UITests.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started
