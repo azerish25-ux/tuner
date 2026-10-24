@@ -21,11 +21,15 @@ struct IntonationView: View {
     enum Step { case harmonic, fretted }
     private static let needed = 24
 
-    /// One entry per physical course (pairs share a check).
+    /// One entry per physical course (pairs share a check), lowest course first.
     private var strings: [Course] {
         var seen = Set<String>()
         return store.courses.filter { seen.insert($0.anchorId ?? "\($0.index)").inserted }
     }
+
+    /// The same in the order the chips, the results and the check run: the string the neck draws on top first
+    /// (Settings › String order), so the row reads like the neck under it and the lessons' string rails.
+    private var rail: [Course] { stringOrder.thinnestOnTop ? Array(strings.reversed()) : strings }
 
     var body: some View {
         ScrollView {
@@ -58,7 +62,7 @@ struct IntonationView: View {
             restoreAutomatic = store.automatic
             store.automatic = false
             store.intonationMode = true
-            select(strings.first?.index ?? 0)
+            select(rail.first?.index ?? 0)
         }
         .onDisappear {
             store.pauseListening()
@@ -71,7 +75,7 @@ struct IntonationView: View {
     private var picker: some View {
         // Equal-width chips that always fit the row, however many strings the instrument has.
         HStack(spacing: 6) {
-            ForEach(strings) { string in
+            ForEach(rail) { string in
                 let done = offsets[string.index] != nil
                 let selected = string.index == course
                 Button { select(string.index) } label: {
@@ -197,7 +201,7 @@ struct IntonationView: View {
     private var results: some View {
         VStack(alignment: .leading, spacing: 12) {
             Eyebrow("Results")
-            ForEach(strings.filter { offsets[$0.index] != nil }) { string in
+            ForEach(rail.filter { offsets[$0.index] != nil }) { string in
                 let cents = offsets[string.index] ?? 0
                 HStack(spacing: 12) {
                     Text(NoteReadout.split(store.courseLabel(string)).name).font(Typeface.display(24)).foregroundStyle(Palette.ink).frame(width: 34)
@@ -249,7 +253,7 @@ struct IntonationView: View {
         case .fretted:
             guard let reference = harmonic[course] else { step = .harmonic; return }
             withAnimation(Motion.settle) { offsets[course] = 1200 * log2(median / reference) }
-            if let next = strings.first(where: { offsets[$0.index] == nil }) {
+            if let next = rail.first(where: { offsets[$0.index] == nil }) {
                 select(next.index)
             } else {
                 store.pauseListening()
@@ -332,6 +336,10 @@ private struct IntonationNeck: View {
     let thinnestOnTop: Bool
     let animate: Bool
 
+    /// The neck's names and numbers (the string names, "12"): 11 pt like `.caption2` and growing with it, held at
+    /// the xxLarge size (`body`) so the drawing keeps its layout.
+    private static let label = Typeface.label(11, relativeTo: .caption2)
+
     var body: some View {
         GeometryReader { geometry in
             let layout = NeckLayout(size: geometry.size, strings: labels.count, reversed: thinnestOnTop)
@@ -343,6 +351,7 @@ private struct IntonationNeck: View {
                     .position(measuringHarmonic ? layout.harmonicPoint(selected) : layout.frettedPoint(selected))
             }
         }
+        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
         .accessibilityHidden(true)
     }
 
@@ -378,13 +387,16 @@ private struct IntonationNeck: View {
         octave.addLine(to: CGPoint(x: twelve, y: edgeBottom + 3))
         context.stroke(octave, with: .color(Palette.ink.opacity(fretted ? 0.75 : 0.4)),
                        style: StrokeStyle(lineWidth: fretted ? 2.2 : 1.2, lineCap: .round, dash: fretted ? [] : [3, 3]))
-        context.draw(Text(verbatim: "12").font(Typeface.label(11)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: twelve, y: edgeTop - 12))
-        context.draw(Text("Saddle").font(.caption2.weight(.semibold)).foregroundStyle(Palette.inkFaint), at: CGPoint(x: layout.saddle, y: edgeBottom + 13))
+        context.draw(Text(verbatim: "12").font(Self.label).foregroundStyle(Palette.inkSoft), at: CGPoint(x: twelve, y: edgeTop - 12))
+        // A word every language translates: the system face, at `.caption2` like the names.
+        context.draw(Text("Saddle").font(.caption2.weight(.semibold)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: layout.saddle, y: edgeBottom + 13))
         // Nut.
         context.fill(Path(roundedRect: CGRect(x: layout.nut - 3, y: edgeTop - 1, width: 5, height: edgeBottom - edgeTop + 2), cornerRadius: 1.5),
                      with: .color(Palette.ink.opacity(0.82)))
-        // Strings, thick to thin, the one being checked lit.
-        let named = layout.spacing >= 11
+        // Strings, thick to thin, the one being checked lit; every string named while the rows have room for the
+        // names at the current text size, else just the one being checked.
+        let nameHeight = context.resolve(Text(verbatim: "E").font(Self.label)).measure(in: CGSize(width: 100, height: 100)).height
+        let named = layout.spacing >= max(11, nameHeight * 0.8)
         for i in 0..<count {
             let y = layout.y(i)
             let thickness = count > 1 ? 2.2 - 1.2 * CGFloat(i) / CGFloat(count - 1) : 1.6
@@ -398,7 +410,7 @@ private struct IntonationNeck: View {
                 context.stroke(line, with: .color(Palette.inkSoft.opacity(0.32)), lineWidth: thickness)
             }
             if named || i == selected {
-                context.draw(Text(verbatim: labels[i]).font(Typeface.label(10)).foregroundStyle(i == selected ? Palette.ink : Palette.inkFaint),
+                context.draw(Text(verbatim: labels[i]).font(Self.label).foregroundStyle(i == selected ? Palette.ink : Palette.inkSoft),
                              at: CGPoint(x: layout.nut - 9, y: y), anchor: .trailing)
             }
         }

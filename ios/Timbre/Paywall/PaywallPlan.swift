@@ -30,7 +30,8 @@ struct PaywallPlan {
     }
 
     struct Milestone: Identifiable {
-        /// A song to play ("Play “Ode to Joy”"), or a unit to start, by its name.
+        /// A song to play ("Play “Ode to Joy”", the song's name without its lesson's subtitle), or a unit to start,
+        /// by its name.
         enum Kind { case song, unit }
         let day: Int
         let title: String
@@ -117,7 +118,8 @@ struct PaywallPlan {
         let lessons = course.lessons
         let songIndex = lessons.indices.first { $0 > first && lessons[$0].kind == .song }
         guard let index = songIndex, index - first + 1 <= horizon else { return Array(units.prefix(2)) }
-        let song = Milestone(day: index - first + 1, title: lessons[index].title.localized, kind: .song)
+        // The song by its name, not its lesson's: "Greensleeves", not "Greensleeves: the chords".
+        let song = Milestone(day: index - first + 1, title: CoverArt.mainTitle(lessons[index].title.localized), kind: .song)
         let unit = units.first { $0.day != song.day }
         return ([song] + (unit.map { [$0] } ?? [])).sorted { $0.day < $1.day }
     }

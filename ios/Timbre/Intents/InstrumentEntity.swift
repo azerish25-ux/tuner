@@ -11,12 +11,16 @@ struct InstrumentEntity: AppEntity {
     /// Shorter names people say: "Ukulele" for "Ukulele (soprano / concert / tenor)", "Piano" and "digital piano"
     /// for "Piano / digital piano", "Guitar" and "Bass" for the two most-tuned instruments.
     let spokenNames: [String]
+    /// Its photograph's thumbnail in the asset catalog (Spotlight's and Shortcuts' picture), when it has one.
+    var thumbnail: String?
 
     static let typeDisplayRepresentation: TypeDisplayRepresentation = "Instrument"
     static let defaultQuery = InstrumentQuery()
 
     var displayRepresentation: DisplayRepresentation {
-        DisplayRepresentation(title: Self.resource(name), subtitle: Self.resource(family), image: nil, synonyms: spokenNames.map(Self.resource))
+        let image = thumbnail.map { DisplayRepresentation.Image(named: $0, isTemplate: false) }
+            ?? DisplayRepresentation.Image(systemName: "tuningfork", isTemplate: true)
+        return DisplayRepresentation(title: Self.resource(name), subtitle: Self.resource(family), image: image, synonyms: spokenNames.map(Self.resource))
     }
 
     private static func resource(_ text: String) -> LocalizedStringResource { "\(text)" }
@@ -29,7 +33,8 @@ struct InstrumentEntity: AppEntity {
             let name = InstrumentEntity.localized(instrument.name)
             let family = families[instrument.familyId].map { InstrumentEntity.localized($0.name) } ?? ""
             return InstrumentEntity(id: instrument.id, name: name, family: family,
-                                    spokenNames: InstrumentEntity.aliases(for: instrument.id, name: name))
+                                    spokenNames: InstrumentEntity.aliases(for: instrument.id, name: name),
+                                    thumbnail: catalog.photo(instrumentId: instrument.id)?.thumbnail)
         }
     }()
 

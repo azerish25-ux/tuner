@@ -2,10 +2,14 @@ import Charts
 import SwiftUI
 import TimbreCore
 
-/// Progress: streak, level and accuracy, the week in review, the practice calendar, string health, achievements, history.
+/// Progress: streak, level and accuracy, the coach, the week in review, the practice calendar, string health,
+/// achievements, history.
 struct JourneyView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
+    /// A lesson the coach opened (the weak-spot drill, or a lesson to replay), zooming out of its card.
+    @State private var coachLesson: CoachLesson?
+    @Namespace private var zoom
     @State private var confirmRestring = false
     /// The string-health bars grow from the baseline once.
     @State private var driftShown = false
@@ -27,6 +31,7 @@ struct JourneyView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     Text("Progress").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
                     stats
+                    coach
                     weekCard
                     calendar
                     stringHealth
@@ -38,7 +43,67 @@ struct JourneyView: View {
             }
             .stageTopShade()
             .background(StageBackground(motes: false))
+            .fullScreenCover(item: $coachLesson) { item in
+                LessonPlayer(course: item.course, lesson: item.lesson) { next in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { openCoachLesson(item.course, next) }
+                }
+                .environmentObject(store)
+                .navigationTransition(.zoom(sourceID: Self.coachSource, in: zoom))
+            }
         }
+    }
+
+    // MARK: Coach
+
+    private static let coachSource = "journey.coach"
+
+    /// What the coach makes of everything Progress shows: string drift, what slipped in the course Learn shows,
+    /// the streak and Today, the week, and the timing of lessons played in the last hours.
+    private var coachNotes: [CoachNote] {
+        let course = store.learnCourse
+        let today = store.dailySet.map { Coach.TodayStep(activity: $0, done: store.dailyDone($0.kind)) }
+        let streak = store.streak
+        let context = Coach.JourneyContext(records: store.records, streakDays: streak.current, practicedToday: streak.practicedToday,
+                                           drift: store.stringDrift, restrung: store.progress.restrung[store.instrument.id],
+                                           course: course, learn: store.learn,
+                                           canReview: course.map { store.weakSpotReview(in: $0) != nil } ?? false,
+                                           today: today, takes: CoachTakes.shared.takes(since: Date().addingTimeInterval(-12 * 3600)))
+        return Coach.journeyNotes(context)
+    }
+
+    private var coachVoice: CoachVoice {
+        let labels = stringLabels
+        let curriculum = store.curriculum
+        let drill = store.learnCourse.flatMap { store.weakSpotReview(in: $0) }?.minutes ?? 4
+        return CoachVoice(stringName: { labels[$0] ?? $0 },
+                          lessonTitle: { curriculum.lesson(id: $0)?.lesson.title.localized },
+                          drillMinutes: drill)
+    }
+
+    private var coach: some View {
+        CoachPanel(notes: coachNotes, voice: coachVoice) { action in performCoach(action) }
+            .matchedTransitionSource(id: Self.coachSource, in: zoom)
+    }
+
+    /// Lessons and the drill open here, out of the card; the metronome, the tuner and Today on their tabs.
+    private func performCoach(_ action: CoachAction) {
+        Haptics.shared.selection()
+        CoachRoute.log(action, screen: "progress")
+        switch action {
+        case let .review(courseId):
+            guard let course = store.curriculum.course(id: courseId), let review = store.weakSpotReview(in: course) else { return }
+            openCoachLesson(course, review)
+        case let .lesson(id):
+            guard let found = store.curriculum.lesson(id: id) else { return }
+            openCoachLesson(found.course, found.lesson)
+        default:
+            CoachRoute.open(action, store: store)
+        }
+    }
+
+    private func openCoachLesson(_ course: LearnCourse, _ lesson: Lesson) {
+        guard store.canPlay(lesson) else { store.presentPaywall("lesson", lesson: lesson); return }
+        coachLesson = CoachLesson(course: course, lesson: lesson)
     }
 
     private var stats: some View {
@@ -140,7 +205,7 @@ struct JourneyView: View {
         let advice = StringHealth.needsRestring(drift, restrung: restrung)
         let anchors = store.courses.compactMap(\.anchorId).reduce(into: [String]()) { if !$0.contains($1) { $0.append($1) } }
         let worst = drift.first
-        let labels = Dictionary(store.courses.compactMap { c in c.anchorId.map { ($0, NoteReadout.split(TargetLabelFormatter.splitCue(store.courseLabel(c)).main).name) } }, uniquingKeysWith: { a, _ in a })
+        let labels = stringLabels
         return VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
                 Text("String health").font(Typeface.display(16)).foregroundStyle(Palette.ink)
@@ -171,6 +236,12 @@ struct JourneyView: View {
             .accessibilityIdentifier("journey.restrung")
         }
         .stillCard(tint: advice ? Palette.amber : nil)
+    }
+
+    /// Each string's name as the tuner labels it ("G"), by its anchor id.
+    private var stringLabels: [String: String] {
+        Dictionary(store.courses.compactMap { c in c.anchorId.map { ($0, NoteReadout.split(TargetLabelFormatter.splitCue(store.courseLabel(c)).main).name) } },
+                   uniquingKeysWith: { a, _ in a })
     }
 
     /// Drift per string as bars of one width on a shared baseline, signed ¢/day above each,
@@ -531,6 +602,13 @@ struct JourneyView: View {
         }
         return NSLocalizedString("timbre_photo_" + photo.asset, bundle: .main, value: photo.label, comment: "")
     }
+}
+
+/// A lesson opened from the coach card.
+private struct CoachLesson: Identifiable {
+    let course: LearnCourse
+    let lesson: Lesson
+    var id: String { lesson.id }
 }
 
 /// An achievement with its live metric, for the grid.

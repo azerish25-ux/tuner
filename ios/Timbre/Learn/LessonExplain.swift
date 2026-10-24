@@ -16,6 +16,10 @@ struct ExplainStep: View {
     let course: LearnCourse
     let accent: Color
     let done: (Double?) -> Void
+    /// The card and the words rise in as the step appears. Off for a lesson's first screen, which arrives inside the
+    /// zoom out of the tapped card: a reveal started under that zoom could be cut off part-way and leave the step
+    /// at about 30 % opacity (bug 64), so there the step is simply there and the zoom is its entrance.
+    var entrance = true
     @EnvironmentObject private var store: AppStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
@@ -54,6 +58,9 @@ struct ExplainStep: View {
     /// The demonstration plays by itself as the step appears; with Reduce Motion or VoiceOver it waits for "Hear it".
     private var autoPlays: Bool { !reduceMotion && !voiceOver }
 
+    /// The card and the words are in place: once revealed, or from the start without an entrance.
+    private var revealed: Bool { shown || !entrance }
+
     var body: some View {
         VStack(spacing: 0) {
             GeometryReader { proxy in
@@ -65,15 +72,15 @@ struct ExplainStep: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 22) {
                         hero(height: cardHeight, inner: inner)
-                            .scaleEffect(shown ? 1 : 0.94).opacity(shown ? 1 : 0)
+                            .scaleEffect(revealed ? 1 : 0.94).opacity(revealed ? 1 : 0)
                         words
                             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { wordsHeight = $0 }
-                            .offset(y: shown ? 0 : 18).opacity(shown ? 1 : 0)
+                            .offset(y: revealed ? 0 : 18).opacity(revealed ? 1 : 0)
                         if base + spare - cardHeight >= 150 {
                             // Only on very tall screens, past the card's limit: the course's instrument or motif.
                             LessonBackdrop(course: course, accent: accent)
                                 .frame(height: base + spare - cardHeight - 22)
-                                .opacity(shown ? 0.85 : 0)
+                                .opacity(revealed ? 0.85 : 0)
                         }
                     }
                     .padding(.horizontal, 22).padding(.top, 18).padding(.bottom, 12)
@@ -83,7 +90,11 @@ struct ExplainStep: View {
             actionBar
         }
         .onAppear {
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.85).delay(0.05)) { shown = true }
+            if entrance {
+                withAnimation(.spring(response: 0.6, dampingFraction: 0.85).delay(0.05)) { shown = true }
+            } else {
+                shown = true
+            }
             if autoPlays { play(replay: false) }
         }
         .onDisappear { demoTask?.cancel(); store.stopLessonListening(owner: owner) }

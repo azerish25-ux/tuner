@@ -6,11 +6,19 @@ import TimbreCore
 /// or early); a missed note is a coral cross on the line. A gold band marks perfect timing and a fainter one good;
 /// a dashed amber line marks the average lean when it is off the beat. The dots land one by one (all at once with
 /// Reduce Motion). Its words are in the timing note under it, so VoiceOver skips the drawing.
+///
+/// Given `onLoop`, the misses are ringed and tapping one (anywhere in its column) hands its index over, so the
+/// play-along can loop that note's bar at a slower tempo; a line under the strip says so, and VoiceOver then reads
+/// the strip as the count of misses with an action per bar that has one.
 struct HighwayTimingStrip: View {
     let count: Int
     let judgments: [PlayAlongJudge.Judgment]
     let accent: Color
     var calm = false
+    /// Takes a missed note's index when it is tapped; nil leaves the strip still.
+    var onLoop: ((Int) -> Void)?
+    /// The bar (0 first) each note falls in, for the VoiceOver actions.
+    var bar: (Int) -> Int = { $0 }
     @State private var landed = false
 
     /// Offsets this far either way reach the edge (the judge takes a note up to 0.2 s early and 0.32 s late).
@@ -18,7 +26,32 @@ struct HighwayTimingStrip: View {
     /// The average lean worth a line, as in "About 160 ms early on average".
     private static let lean = 0.035
 
+    private var misses: [PlayAlongJudge.Judgment] { judgments.filter { $0.grade == .miss } }
+    private var loops: Bool { onLoop != nil && !misses.isEmpty }
+
     var body: some View {
+        VStack(spacing: 6) {
+            strip
+            if loops {
+                Label("Tap a miss to loop its bar", systemImage: "repeat")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(Palette.inkSoft)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityHidden(!loops)
+        .accessibilityLabel(Text("Missed"))
+        .accessibilityValue(Text(misses.count, format: .number))
+        .accessibilityActions {
+            ForEach(missedBars, id: \.self) { which in
+                Button { loopBar(which) } label: { Text("Loop bar \(which + 1)") }
+            }
+        }
+    }
+
+    private var strip: some View {
         HStack(spacing: 8) {
             axis
             GeometryReader { proxy in
@@ -35,6 +68,8 @@ struct HighwayTimingStrip: View {
                             .position(point(judgment, in: proxy.size))
                     }
                 }
+                .contentShape(Rectangle())
+                .onTapGesture { location in tap(at: location, in: proxy.size) }
             }
         }
         .frame(height: 56)
@@ -42,7 +77,6 @@ struct HighwayTimingStrip: View {
         .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Palette.stageRaised.opacity(0.75)))
         .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(Palette.line, lineWidth: 1))
         .onAppear { landed = true }
-        .accessibilityHidden(true)
     }
 
     /// Early over late, beside the strip.
@@ -76,6 +110,14 @@ struct HighwayTimingStrip: View {
             Image(systemName: "xmark")
                 .font(.system(size: dot, weight: .heavy))
                 .foregroundStyle(Palette.danger)
+                // Ringed when it can be tapped to loop its bar.
+                .background {
+                    if onLoop != nil {
+                        Circle().fill(Palette.danger.opacity(0.12))
+                            .overlay(Circle().strokeBorder(Palette.danger.opacity(0.5), lineWidth: 1.2))
+                            .frame(width: dot + 12, height: dot + 12)
+                    }
+                }
         } else {
             let tint = TakeRibbon.color(judgment.grade, accent: accent)
             Circle()
@@ -85,6 +127,30 @@ struct HighwayTimingStrip: View {
                 .shadow(color: tint.opacity(judgment.grade == .perfect ? 0.7 : 0), radius: 4)
         }
     }
+
+    // MARK: Looping a missed bar
+
+    /// The bars with a missed note, in order.
+    private var missedBars: [Int] {
+        guard onLoop != nil else { return [] }
+        return Array(Set(misses.map { bar($0.index) })).sorted()
+    }
+
+    /// A tap picks the missed note nearest across, within its column (at least a finger's width).
+    private func tap(at location: CGPoint, in size: CGSize) {
+        guard let onLoop else { return }
+        let reach = max(22, size.width / CGFloat(max(1, count)))
+        let nearest = misses.min { abs(point($0, in: size).x - location.x) < abs(point($1, in: size).x - location.x) }
+        guard let nearest, abs(point(nearest, in: size).x - location.x) <= reach else { return }
+        onLoop(nearest.index)
+    }
+
+    private func loopBar(_ which: Int) {
+        guard let onLoop, let first = misses.sorted(by: { $0.index < $1.index }).first(where: { bar($0.index) == which }) else { return }
+        onLoop(first.index)
+    }
+
+    // MARK: Drawing
 
     /// The good and perfect windows round the beat, and the beat itself.
     private func drawBands(_ context: inout GraphicsContext, size: CGSize) {

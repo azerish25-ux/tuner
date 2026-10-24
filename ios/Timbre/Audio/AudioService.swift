@@ -548,8 +548,21 @@ final class AudioService: ObservableObject {
         do {
             try ensureOutput()
             renderer.setDrone(tonic: tonic, voice: voice, fifth: fifth)
+            droneFifth = fifth
             droneRunning = true
         } catch { self.error = String(localized: "Could not start the drone: \(error.localizedDescription)") }
+    }
+
+    /// The drone's first string as it was last set: Pa, a fifth below Sa (true), or Ma, a fourth (false).
+    private(set) var droneFifth = true
+
+    /// When the running drone's first sample reached the ears, on the CACurrentMediaTime clock: the render host
+    /// time of its first frame plus how late this route is heard. Its plucks fall on a fixed grid from there
+    /// (`DroneCycle`), so the tanpura on screen plucks its strings with the sound, engine restarts (the
+    /// microphone starting) included. Nil until the first buffer plays.
+    func droneOrigin() -> TimeInterval? {
+        guard droneRunning, let anchor = renderer.droneClock.read() else { return nil }
+        return anchor + heardLatency
     }
 
     func stopDrone() {
@@ -651,6 +664,10 @@ private final class OutputRenderer: @unchecked Sendable {
     private var metronomeFrames: Int64 = 0
     /// Host-clock seconds of the current metronome's first frame (render time, before output latency).
     let clock = ClockSlot()
+    /// Frames the current drone has played, and host-clock seconds of its first frame (render time), so the
+    /// screen can follow its pluck cycle.
+    private var droneFrames: Int64 = 0
+    let droneClock = ClockSlot()
     private let secondsPerTick: Double
 
     init() {
@@ -666,7 +683,7 @@ private final class OutputRenderer: @unchecked Sendable {
         lock.lock(); defer { lock.unlock() }
         let next = max(40, Int(rate.rounded()))
         let kept = keepState && next == sampleRate
-        if !kept { clip = nil; fadingClip = nil; metronome = nil; drone = nil; band = nil; clock.set(nil) }
+        if !kept { clip = nil; fadingClip = nil; metronome = nil; drone = nil; band = nil; clock.set(nil); droneClock.set(nil) }
         sampleRate = next
         return kept
     }
@@ -723,9 +740,10 @@ private final class OutputRenderer: @unchecked Sendable {
     func setDrone(tonic: Double, voice: DroneRenderer.Voice, fifth: Bool) {
         lock.lock(); defer { lock.unlock() }
         drone = DroneRenderer(tonic: tonic, fifth: fifth, voice: voice, sampleRate: sampleRate)
+        droneFrames = 0; droneClock.set(nil)
     }
     func stopDrone() { lock.lock(); drone?.stop(); lock.unlock() }
-    func stop() { lock.lock(); clip = nil; fadingClip = nil; metronome = nil; drone = nil; band = nil; clock.set(nil); lock.unlock() }
+    func stop() { lock.lock(); clip = nil; fadingClip = nil; metronome = nil; drone = nil; band = nil; clock.set(nil); droneClock.set(nil); lock.unlock() }
     func render(frameCount: Int, audio: UnsafeMutablePointer<AudioBufferList>, timestamp: UnsafePointer<AudioTimeStamp>) {
         let buffers = UnsafeMutableAudioBufferListPointer(audio)
         guard lock.try() else {
@@ -739,6 +757,13 @@ private final class OutputRenderer: @unchecked Sendable {
             let stamp = timestamp.pointee
             let host = stamp.mFlags.contains(.hostTimeValid) ? stamp.mHostTime : mach_absolute_time()
             clock.publish(Double(host) * secondsPerTick - Double(metronomeFrames) / Double(sampleRate))
+        }
+        if drone != nil {
+            // The drone's first frame on the host clock, as for the metronome; its plucks sit on a fixed grid from there.
+            let stamp = timestamp.pointee
+            let host = stamp.mFlags.contains(.hostTimeValid) ? stamp.mHostTime : mach_absolute_time()
+            droneClock.publish(Double(host) * secondsPerTick - Double(droneFrames) / Double(sampleRate))
+            droneFrames += Int64(frameCount)
         }
         for frame in 0..<frameCount {
             var value = (clip?.nextSample() ?? 0) + (fadingClip?.nextSample() ?? 0) + (drone?.nextSample() ?? 0)

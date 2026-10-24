@@ -1,61 +1,105 @@
 import SwiftUI
 import TimbreCore
 
+/// The drone as a tanpura: its four strings plucked in turn on the drone's own clock around a dial of tonics, and
+/// with the microphone on, your sung or played pitch traced against the nearest swara inside a ±5¢ band.
 struct DroneView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    /// The rings give up height so the tonic card and the headphones hint end above the dock.
-    @State private var ringsHeight: CGFloat = 250
+    /// The tanpura gives up height so the controls end above the dock where they can.
+    @State private var heroHeight: CGFloat = 290
     /// The selected tonic's highlight moves between keys.
     @Namespace private var tonics
+    /// The first string: Pa (a fifth below Sa, most ragas) or Ma (a fourth, for ragas without Pa).
+    @AppStorage("drone.firstString") private var firstString = "pa"
+    @StateObject private var singAlong = DroneSingAlong()
+    /// The microphone is on for this screen (the store's lesson microphone, owned by `owner`).
+    @State private var listening = false
+    @State private var owner = UUID()
+
+    private var fifth: Bool { firstString != "ma" }
+    private var saHz: Double { PitchMath.frequency(midi: Double(store.droneMidi), reference: store.settings.referencePitchHz) }
+    private var notation: String { store.settings.notation }
+    /// The app's one spelling (D♭ E♭ A♭ B♭ flat, F♯ sharp) in the player's note names.
+    private var tonicName: String { VoiceNoteName.name(store.droneMidi, notation: notation) }
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 22) {
-                rings.frame(height: ringsHeight)
-                VStack(spacing: 4) {
-                    Text(PitchMath.noteName(midi: store.droneMidi, notation: store.settings.notation)).font(Typeface.display(72)).foregroundStyle(Palette.ink)
-                    Text(String(format: "Sa = %.1f Hz", PitchMath.frequency(midi: Double(store.droneMidi), reference: store.settings.referencePitchHz)))
-                        .font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
-                }
-                // VoiceOver: swipe up or down to move the tonic a semitone, across both octaves of the picker.
-                .adjustableValue(Text("Tonic"), value: Text(verbatim: PitchMath.noteName(midi: store.droneMidi, notation: store.settings.notation) + ", "
-                                     + String(format: "Sa = %.1f Hz", PitchMath.frequency(midi: Double(store.droneMidi), reference: store.settings.referencePitchHz))),
-                                 increment: { store.setDrone(midi: min(71, store.droneMidi + 1)) },
-                                 decrement: { store.setDrone(midi: max(48, store.droneMidi - 1)) })
-                VStack(alignment: .leading, spacing: 12) {
-                    Eyebrow("Tonic")
-                    tonicGrid
-                    Picker("Octave", selection: Binding(get: { store.droneMidi >= 60 ? 1 : 0 }, set: { store.setDrone(midi: store.droneMidi % 12 + ($0 == 1 ? 60 : 48)) })) {
-                        Text("Low").tag(0); Text("High").tag(1)
-                    }
-                    .pickerStyle(.segmented)
-                    Picker("Voice", selection: Binding(get: { store.droneVoice }, set: { store.setDrone(voice: $0) })) {
-                        Text("Tanpura").tag(DroneRenderer.Voice.tanpura)
-                        Text("Pure").tag(DroneRenderer.Voice.pure)
-                    }
-                    .pickerStyle(.segmented)
-                }
-                .stillCard()
+            VStack(spacing: 18) {
+                hero
+                DroneSingAlongCard(model: singAlong, listening: listening && audio.running, tonicPc: store.droneMidi % 12, notation: notation,
+                                   headphones: audio.headphones, permissionDenied: audio.permissionDenied, toggle: toggleListening)
+                settings
                 Label("Sing or play long notes against the drone. Headphones keep it out of the microphone.", systemImage: "headphones")
-                    .font(.footnote).foregroundStyle(Palette.inkSoft)
+                    .font(.footnote).foregroundStyle(listening && !audio.headphones ? Palette.amber : Palette.inkSoft)
                     .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.horizontal, Metrics.gutter).padding(.top, 12).padding(.bottom, 28)
+            .padding(.horizontal, Metrics.gutter).padding(.top, 4).padding(.bottom, 28)
         }
-        .fitsHero($ringsHeight, in: 160...250)
+        .fitsHero($heroHeight, in: 260...290)
         .stageTopShade()
         .background(StageBackground(motes: false))
         .navigationTitle("Drone")
         .navigationBarTitleDisplayMode(.inline)
         .stageDock {
-            Button { store.toggleDrone() } label: {
+            Button { toggleDrone() } label: {
                 Label(audio.droneRunning ? "Stop drone" : "Start drone", systemImage: audio.droneRunning ? "stop.fill" : "play.fill")
             }
             .buttonStyle(BrassButtonStyle())
             .accessibilityIdentifier("drone.start")
         }
+        .onAppear(perform: conform)
+        .onChange(of: audio.droneRunning) { _, _ in conform() }
+        .onChange(of: store.droneMidi) { _, _ in
+            singAlong.reset()
+            if listening { store.gameTargetHz = saHz }
+        }
+        .onChange(of: audio.running) { _, running in
+            // The microphone stopped on its own (the app went to the background, an interruption).
+            if !running && listening { stopListening() }
+        }
+        .onDisappear(perform: stopListening)
+    }
+
+    // MARK: Hero
+
+    private var hero: some View {
+        TanpuraHero(tonicPc: store.droneMidi % 12, tonicName: tonicName, notation: notation, saHz: saHz, fifth: fifth,
+                    pure: store.droneVoice == .pure, running: audio.droneRunning, clock: { audio.droneOrigin() })
+            .frame(height: heroHeight)
+            // VoiceOver: swipe up or down to move the tonic a semitone, across both octaves of the picker.
+            .adjustableValue(Text("Tonic"), value: Text(verbatim: tonicName + ", " + String(format: "Sa = %.1f Hz", saHz)),
+                             increment: { setTonic(min(71, store.droneMidi + 1)) },
+                             decrement: { setTonic(max(48, store.droneMidi - 1)) })
+    }
+
+    // MARK: Settings
+
+    private var settings: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Eyebrow("Tonic")
+            tonicGrid
+            Picker("Octave", selection: Binding(get: { store.droneMidi >= 60 ? 1 : 0 }, set: { setTonic(store.droneMidi % 12 + ($0 == 1 ? 60 : 48)) })) {
+                Text("Low").tag(0); Text("High").tag(1)
+            }
+            .pickerStyle(.segmented)
+            HStack(spacing: 10) {
+                Picker("Voice", selection: Binding(get: { store.droneVoice }, set: { setVoice($0) })) {
+                    Text("Tanpura").tag(DroneRenderer.Voice.tanpura)
+                    Text("Pure").tag(DroneRenderer.Voice.pure)
+                }
+                .pickerStyle(.segmented)
+                Picker("First string", selection: Binding(get: { fifth }, set: { setFirstString(fifth: $0) })) {
+                    Text(verbatim: "Pa").tag(true)
+                    Text(verbatim: "Ma").tag(false)
+                }
+                .pickerStyle(.segmented)
+                .frame(maxWidth: 132)
+            }
+        }
+        .stillCard()
     }
 
     /// All twelve tonics at once, two rows of six in chromatic order (nothing hides past an edge); the
@@ -70,8 +114,8 @@ struct DroneView: View {
 
     private func tonicKey(_ pc: Int) -> some View {
         let selected = store.droneMidi % 12 == pc
-        let name = NoteNames.name(pc, preferFlats: [1, 3, 8, 10].contains(pc))
-        return Button { store.setDrone(midi: 48 + pc + (store.droneMidi >= 60 ? 12 : 0)) } label: {
+        let name = VoiceNoteName.pitchClass(pc, notation: notation)
+        return Button { setTonic(48 + pc + (store.droneMidi >= 60 ? 12 : 0)) } label: {
             Text(verbatim: name)
                 .font(.subheadline.weight(.semibold))
                 .lineLimit(1).minimumScaleFactor(0.6)
@@ -91,33 +135,61 @@ struct DroneView: View {
         .accessibilityAddTraits(selected ? .isSelected : [])
     }
 
-    private var rings: some View {
-        TimelineView(.animation(paused: !audio.droneRunning || reduceMotion)) { timeline in
-            let t = timeline.date.timeIntervalSinceReferenceDate
-            Canvas { context, size in
-                let center = CGPoint(x: size.width / 2, y: size.height / 2)
-                // Rings travel from the core to just inside the canvas (half its short side, less the
-                // line), so none is ever cut flat by the frame, however short the hero gets.
-                let inner: CGFloat = 30
-                let outer = max(inner, min(size.width, size.height) / 2 - 2)
-                if audio.droneRunning {
-                    for i in 0..<7 {
-                        let phase = (t * 0.22 + Double(i) / 7).truncatingRemainder(dividingBy: 1)
-                        let r = inner + CGFloat(phase) * (outer - inner)
-                        // Eases in as it leaves the core and out as it reaches the edge.
-                        let alpha = min(1, phase * 6) * (1 - phase) * 0.55
-                        context.stroke(Path(ellipseIn: CGRect(x: center.x - r, y: center.y - r, width: r * 2, height: r * 2)), with: .color(Palette.locked.opacity(alpha)), lineWidth: 1.5)
-                    }
-                } else {
-                    // At rest: one quiet ring, well inside the frame.
-                    let r = inner + 0.78 * (outer - inner)
-                    context.stroke(Path(ellipseIn: CGRect(x: center.x - r, y: center.y - r, width: r * 2, height: r * 2)), with: .color(Palette.locked.opacity(0.25)), lineWidth: 1.5)
-                }
-                let core = 46 + (audio.droneRunning ? 6 * sin(t * 2.1) : 0)
-                context.fill(Path(ellipseIn: CGRect(x: center.x - core, y: center.y - core, width: core * 2, height: core * 2)),
-                             with: .radialGradient(Gradient(colors: [Palette.brass.opacity(0.9), Palette.ember.opacity(0.2), .clear]), center: center, startRadius: 0, endRadius: core))
-            }
+    // MARK: Actions
+
+    private func toggleDrone() {
+        store.toggleDrone()
+        conform()
+    }
+
+    private func setTonic(_ midi: Int) {
+        store.setDrone(midi: midi)
+        conform()
+    }
+
+    private func setVoice(_ voice: DroneRenderer.Voice) {
+        store.setDrone(voice: voice)
+        conform()
+    }
+
+    private func setFirstString(fifth: Bool) {
+        firstString = fifth ? "pa" : "ma"
+        Haptics.shared.selection()
+        conform()
+    }
+
+    /// The store starts and retunes the drone with Pa on its first string: with Ma chosen, the running drone is
+    /// retuned at once (in the same turn, before it is heard).
+    private func conform() {
+        guard audio.droneRunning, audio.droneFifth != fifth else { return }
+        audio.setDrone(tonic: saHz, voice: store.droneVoice, fifth: fifth)
+    }
+
+    // MARK: Microphone
+
+    private func toggleListening() {
+        if listening && audio.running { stopListening() } else { startListening() }
+    }
+
+    /// The tuner's own pitch pipeline (the store's lesson microphone): readings arrive here instead of the tuner.
+    private func startListening() {
+        singAlong.reset()
+        listening = true
+        let model = singAlong
+        // The demo pitch (UI tests, screenshots) sings Sa.
+        store.gameTargetHz = saHz
+        store.startLessonListening(owner: owner, lowHz: 55, highHz: 1600) { [weak store] hz, _ in
+            guard let store else { return }
+            let sa = PitchMath.frequency(midi: Double(store.droneMidi), reference: store.settings.referencePitchHz)
+            model.accept(hz, sa: sa)
         }
-        .accessibilityHidden(true)
+        Haptics.shared.selection()
+    }
+
+    private func stopListening() {
+        guard listening else { return }
+        listening = false
+        store.stopLessonListening(owner: owner)
+        singAlong.reset()
     }
 }

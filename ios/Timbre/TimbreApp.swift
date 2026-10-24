@@ -1,9 +1,12 @@
+import CoreSpotlight
 import SwiftUI
 import TimbreCore
 
 @main
 struct TimbreApp: App {
     @StateObject private var bootstrap = Bootstrap()
+    /// Coach marks load before any screen can show one (Tips/TimbreTips.swift).
+    init() { TimbreTips.configure() }
     var body: some Scene {
         WindowGroup {
             Group {
@@ -22,6 +25,10 @@ struct TimbreApp: App {
             }
             .font(.body)
             .foregroundStyle(Palette.ink)
+            // A Spotlight result handed over as an activity (its open intent normally runs instead): Intents/SpotlightIndex.swift.
+            .onContinueUserActivity(CSSearchableItemActionType) { activity in
+                if let store = bootstrap.store { SpotlightIndex.open(activity, store: store) }
+            }
         }
     }
 }
@@ -50,6 +57,7 @@ final class Bootstrap: ObservableObject {
             DemoScene.start(store)  // TIMBRE_SCENE: an App Store screenshot's hero moment (Root/DemoScenes.swift)
             #endif
             self.store = store; error = nil
+            SpotlightIndex.refresh(store)  // instruments, lessons and songs in Spotlight, only when they changed
         }
         catch { self.error = error.localizedDescription }
     }

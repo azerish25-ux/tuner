@@ -37,7 +37,7 @@ struct HighwayHUD: View {
                 .contentTransition(.numericText(value: Double(combo)))
                 .shadow(color: tint.opacity(level >= 2 ? 0.6 : 0), radius: 10)
             Text("Combo")
-                .font(Typeface.label(10))
+                .font(Typeface.label(11, relativeTo: .caption2))
                 .tracking(1.2)
                 .textCase(.uppercase)
                 .foregroundStyle(level >= 2 ? tint : Palette.inkSoft)

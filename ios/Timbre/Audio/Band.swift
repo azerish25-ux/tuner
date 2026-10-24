@@ -105,6 +105,53 @@ enum KeyEstimate {
         return best
     }
 
+    /// The key a song is in (its song sheet), from its melody and its chords, each chord with the bars it lasts:
+    /// Krumhansl–Schmuckler over both, less the share of the music a key can't spell (minor may raise its sixth
+    /// and seventh), and a lean to the key the chords open and close on. "Jingle Bells" stays in C (its F rules
+    /// out E minor), "Drunken Sailor" in D minor (its chords start and end there). Nil with neither.
+    static func key(of notes: [TimedNote], chords: [(chord: ChordSpec, bars: Int)] = []) -> (tonic: Int, minor: Bool)? {
+        var weights = [Double](repeating: 0, count: 12)
+        var last: TimedNote?
+        for note in notes {
+            weights[PitchMath.pitchClass(midi: note.midi)] += max(0.25, note.beats)
+            if note.beat >= (last?.beat ?? -Double.infinity) { last = note }
+        }
+        if let last { weights[PitchMath.pitchClass(midi: last.midi)] += max(0.5, last.beats) }
+        for entry in chords {
+            let tones = ChordTarget(root: entry.chord.root, formulaId: entry.chord.quality)?.quality.intervals ?? [0, 7]
+            for tone in tones { weights[PitchMath.pitchClass(midi: entry.chord.root + tone)] += Double(max(1, entry.bars)) }
+        }
+        let total = weights.reduce(0, +)
+        guard total > 0 else { return nil }
+        let ends = [chords.first?.chord, chords.last?.chord].compactMap { $0 }
+        var best: (score: Double, tonic: Int, minor: Bool)?
+        for tonic in 0..<12 {
+            for isMinor in [false, true] {
+                let scale = isMinor ? minorScale : majorScale
+                var outside = 0.0
+                for pc in 0..<12 where !scale.contains((pc - tonic + 12) % 12) { outside += weights[pc] }
+                var score = correlation(weights, isMinor ? minor : major, tonic: tonic) - 2 * outside / total
+                for chord in ends where PitchMath.pitchClass(midi: chord.root) == tonic {
+                    let mode = chordIsMinor(chord)
+                    if mode == nil || mode == isMinor { score += 0.15 }
+                }
+                if score > (best?.score ?? -Double.infinity) { best = (score: score, tonic: tonic, minor: isMinor) }
+            }
+        }
+        return best.map { (tonic: $0.tonic, minor: $0.minor) }
+    }
+
+    /// Degrees of a major scale, and of minor with its raised sixth and seventh (melodic and harmonic minor).
+    private static let majorScale: Set<Int> = [0, 2, 4, 5, 7, 9, 11]
+    private static let minorScale: Set<Int> = [0, 2, 3, 5, 7, 8, 9, 10, 11]
+
+    /// True for a minor chord, false for a major one, nil for one without a third (sus, power chords).
+    private static func chordIsMinor(_ chord: ChordSpec) -> Bool? {
+        guard let intervals = ChordTarget(root: chord.root, formulaId: chord.quality)?.quality.intervals else { return nil }
+        if intervals.contains(3) { return true }
+        return intervals.contains(4) ? false : nil
+    }
+
     private static func correlation(_ weights: [Double], _ profile: [Double], tonic: Int) -> Double {
         let meanX = weights.reduce(0, +) / 12
         let meanY = profile.reduce(0, +) / 12

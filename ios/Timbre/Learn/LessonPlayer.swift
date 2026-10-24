@@ -1,7 +1,14 @@
 import SwiftUI
 import TimbreCore
 
-/// A lesson, full screen: progress bar on top, one step at a time, results at the end.
+/// A lesson, full screen: progress bar on top, one step at a time, results at the end. A song opens on its song
+/// sheet (`SongOpener`) and ends on a full performance over the band (`SongPerformStep`, or `SongEncoreStep` for a
+/// song that ends on its chords), with a finale and a poster before the results.
+///
+/// Lessons zoom open out of the card that was tapped (Learn's path, the Songs shelves). Until that presentation has
+/// landed (`ArrivalProbe`), nothing on screen animates: an entrance started inside the zoom could be cut off with
+/// the view left part-way (bug 64, a song's first step stuck at about 30 % opacity), so the first screen is simply
+/// there and the zoom is its entrance.
 struct LessonPlayer: View {
     let course: LearnCourse
     let lesson: Lesson
@@ -16,15 +23,24 @@ struct LessonPlayer: View {
     @State private var tuneChecked = false
     /// A rhythm step was passed by tapping because the microphone couldn't hear the instrument.
     @State private var practiced = false
+    /// A song shows its song sheet before its first step.
+    @State private var opening: Bool
+    /// The presentation that brought the lesson in has finished.
+    @State private var arrived = false
 
     init(course: LearnCourse, lesson: Lesson, onNext: ((Lesson) -> Void)? = nil) {
         self.course = course
         self.lesson = lesson
         self.onNext = onNext
         _run = State(initialValue: LessonRun(lesson: lesson))
+        _opening = State(initialValue: lesson.kind == .song)
         #if DEBUG
         // A store scene (Root/DemoScenes.swift) opens on the step it shows, the tune check already done.
-        if let start = DemoScene.lessonStart(lesson) { _run = State(initialValue: start); _tuneChecked = State(initialValue: true) }
+        if let start = DemoScene.lessonStart(lesson) {
+            _run = State(initialValue: start)
+            _tuneChecked = State(initialValue: true)
+            _opening = State(initialValue: false)
+        }
         #endif
     }
 
@@ -41,18 +57,22 @@ struct LessonPlayer: View {
             } else {
                 VStack(spacing: 0) {
                     topBar
-                    if let step = run.step, step.usesMicrophone, !tuneChecked, TuneCheckStep.needed(for: course) {
-                        TuneCheckStep(course: course, accent: accent) { withAnimation { tuneChecked = true } }
-                            .transition(.opacity)
-                    } else if let step = run.step {
-                        StepView(step: step, course: course, accent: accent, onPractice: { practiced = true },
-                                 onItem: { item, score in run.score(item, score) }, onStarCap: { stars in run.capStars(stars) },
-                                 done: { score in advance(score) })
-                            .id(run.index)
-                            .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity), removal: .move(edge: .leading).combined(with: .opacity)))
-                    }
+                    StringOrderTipSlot(step: opening ? nil : run.step, course: course)  // "String 1 = thinnest, on top", once (Tips/TimbreTips.swift)
+                    stage
+                }
+                // Inside the zoom that brings the lesson in, changes land without animating (see the type's note).
+                .transaction { transaction in
+                    guard !arrived else { return }
+                    transaction.animation = nil
+                    transaction.disablesAnimations = true
                 }
             }
+        }
+        .background { ArrivalProbe { arrived = true } }
+        .task {
+            // Should the presentation never report (no coordinator to ask), the lesson counts as arrived anyway.
+            try? await Task.sleep(for: .seconds(1.2))
+            arrived = true
         }
         .animation(.spring(response: 0.5, dampingFraction: 0.86), value: run.index)
         .animation(.easeInOut(duration: 0.4), value: result != nil)
@@ -77,6 +97,67 @@ struct LessonPlayer: View {
         return all[i + 1]
     }
 
+    /// Under the bar: a song's sheet, the tune check before the first step that listens, or the step.
+    @ViewBuilder private var stage: some View {
+        if opening {
+            SongOpener(lesson: lesson, course: course, accent: accent, arrived: arrived) {
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.86)) { opening = false }
+            }
+            .transition(.asymmetric(insertion: .opacity, removal: .move(edge: .leading).combined(with: .opacity)))
+        } else if let step = run.step, step.usesMicrophone, !tuneChecked, TuneCheckStep.needed(for: course) {
+            TuneCheckStep(course: course, accent: accent) { withAnimation { tuneChecked = true } }
+                .transition(.opacity)
+        } else if let step = run.step {
+            stepView(step)
+                .id(run.index)
+                .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity), removal: .move(edge: .leading).combined(with: .opacity)))
+        }
+    }
+
+    /// A song's last step is its performance; every other step plays as it is. A step arriving inside the zoom
+    /// (the lesson's first screen) skips its own entrance: the zoom is its entrance.
+    @ViewBuilder private func stepView(_ step: LessonStep) -> some View {
+        switch songFinale(step) {
+        case let .along(notes, bpm, beatsPerBar)?:
+            SongPerformStep(notes: notes, bpm: bpm, beatsPerBar: beatsPerBar, lesson: lesson, course: course, accent: accent,
+                            onItem: { item, score in run.score(item, score) }, onStarCap: { stars in run.capStars(stars) },
+                            projectedStars: { score, cap in projectedStars(score, cap: cap) }, done: { score in advance(score) })
+        case .chords?:
+            SongEncoreStep(step: step, lesson: lesson, course: course, accent: accent, onPractice: { practiced = true },
+                           onItem: { item, score in run.score(item, score) }, onStarCap: { stars in run.capStars(stars) },
+                           projectedStars: { score, cap in projectedStars(score, cap: cap) }, done: { score in advance(score) })
+        case nil:
+            StepView(step: step, course: course, accent: accent, onPractice: { practiced = true },
+                     onItem: { item, score in run.score(item, score) }, onStarCap: { stars in run.capStars(stars) },
+                     done: { score in advance(score) }, entrance: arrived)
+        }
+    }
+
+    private enum SongFinale {
+        case along([TimedNote], Double, Int)
+        case chords
+    }
+
+    /// The step on screen is a song's last, played as its performance.
+    private func songFinale(_ step: LessonStep) -> SongFinale? {
+        guard lesson.kind == .song, run.index == lesson.steps.count - 1 else { return nil }
+        switch step {
+        case let .playAlong(notes, bpm, beatsPerBar, _): return .along(notes, bpm, beatsPerBar)
+        case .progression: return .chords
+        default: return nil
+        }
+    }
+
+    /// The stars the lesson records if the step on screen ends with `score` (`cap`: a take below the song's tempo),
+    /// so a song's finale shows the stars its results will.
+    private func projectedStars(_ score: Double, cap: Int?) -> Int {
+        var preview = run
+        if let cap { preview.capStars(cap) }
+        preview.complete(score: score)
+        let stars = preview.result().stars
+        return practiced ? min(1, stars) : stars
+    }
+
     private var topBar: some View {
         HStack(spacing: 14) {
             Button { if run.index == 0 { dismiss() } else { confirmQuit = true } } label: {
@@ -95,7 +176,10 @@ struct LessonPlayer: View {
             }
             .frame(height: 14)
             .animation(.spring(response: 0.6, dampingFraction: 0.75), value: run.progress)
+            // A song's sheet comes before its steps: the bar shows once they start.
+            .opacity(opening ? 0 : 1)
             .accessibilityElement().accessibilityLabel(Text("Step \(run.index + 1) of \(lesson.steps.count)"))
+            .accessibilityHidden(opening)
         }
         .padding(.horizontal, 12).padding(.top, 6).padding(.bottom, 4)
     }
@@ -134,11 +218,13 @@ struct StepView: View {
     /// The step limits the lesson's stars (a play-along finished below the lesson tempo).
     var onStarCap: (Int) -> Void = { _ in }
     let done: (Double?) -> Void
+    /// Off for a lesson's first screen, which arrives inside the zoom that opens the lesson: no entrance of its own.
+    var entrance = true
 
     var body: some View {
         switch step {
         case let .explain(title, body, visual):
-            ExplainStep(title: title, text: body, visual: visual, course: course, accent: accent, done: done)
+            ExplainStep(title: title, text: body, visual: visual, course: course, accent: accent, done: done, entrance: entrance)
         case let .playNotes(notes, hint):
             NotesStep(notes: notes, hint: hint, course: course, accent: accent, onItem: onItem, done: done)
         case let .playAlong(notes, bpm, beatsPerBar, title):

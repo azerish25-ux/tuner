@@ -1,6 +1,27 @@
 import SwiftUI
 import TimbreCore
 
+/// Voice names notes as the rest of the app does: the drone's tonics, the chord and scale tools and the Live
+/// Activity all spell through `NoteNames.name` with D♭ E♭ A♭ B♭ as flats and F♯ as a sharp. Here the same letters
+/// are respelled in the player's system (Settings › Note names: B natural is H and B♭ is B in German, Re♭ in
+/// solfège, Sa Re Ga in sargam), then the octave in scientific pitch ("Eb4", "H3").
+enum VoiceNoteName {
+    /// Pitch classes spelled flat (D♭ E♭ A♭ B♭); the others, F♯ among them, keep their sharp.
+    static let flatClasses: Set<Int> = [1, 3, 8, 10]
+
+    /// "Eb4": the pitch class, then the octave.
+    static func name(_ midi: Int, notation: String) -> String {
+        pitchClass(midi, notation: notation) + String(Int(floor(Double(midi) / 12)) - 1)
+    }
+
+    /// "Eb", "F#", "H": the pitch class alone, in `notation`.
+    static func pitchClass(_ midi: Int, notation: String) -> String {
+        let pc = PitchMath.pitchClass(midi: midi)
+        let letter = (flatClasses.contains(pc) ? NoteNames.flats : NoteNames.sharps)[pc]
+        return NoteNames.spell(letter, system: notation.lowercased())
+    }
+}
+
 /// Android's one-octave target keyboard, including the same allowed singing range.
 struct VoiceKeyboard: View {
     let targetMidi: Int
@@ -12,7 +33,7 @@ struct VoiceKeyboard: View {
     private let naturals = [0, 2, 4, 5, 7, 9, 11]
     private let accidentals = [0, 1, 3, 4, 5]
     private var base: Int { Int(floor(Double(targetMidi) / 12)) * 12 }
-    private func label(_ midi: Int) -> String { PitchMath.noteName(midi: midi, notation: notation) }
+    private func label(_ midi: Int) -> String { VoiceNoteName.name(midi, notation: notation) }
     private func accessibleLabel(_ midi: Int) -> String {
         String(format: NSLocalizedString("timbre_voice_keyboard_target", value: "Target %1$@", comment: ""), label(midi))
     }
@@ -52,7 +73,13 @@ struct VoiceKeyboard: View {
                     Button { onSelect(midi) } label: {
                         VStack {
                             Spacer(minLength: 0)
-                            if selected { Text("♯").font(.caption.weight(.semibold)).padding(.bottom, 4) }
+                            // The selected black key names itself as the target above does ("Eb", "F#", "B" in German).
+                            if selected {
+                                Text(verbatim: VoiceNoteName.pitchClass(midi, notation: notation))
+                                    .font(.caption2.weight(.semibold))
+                                    .lineLimit(1).minimumScaleFactor(0.5)
+                                    .padding(.horizontal, 2).padding(.bottom, 5)
+                            }
                         }
                         .frame(width: blackWidth, height: 60)
                         .foregroundStyle(Palette.onAccent)

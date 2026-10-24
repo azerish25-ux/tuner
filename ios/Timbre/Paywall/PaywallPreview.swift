@@ -8,11 +8,11 @@ import TimbreCore
 /// the paywall opens, counted as the play-along counts it (×2 from 4 notes, ×3 from 8, ×4 from 16), and holds at ×4.
 /// The Timbre Pro pill stands on the stage floor below. Everything stays inside the runway's width, clear of the
 /// close button. One Canvas on the display clock; with Reduce Motion it holds a single frame mid-song.
+/// A paywall opened from a tool shows that tool's own scene on the same stage instead (`ToolScene`): the Tanpura,
+/// the sniper's scope, the interval staircase or the metronome.
 struct PaywallPreview: View {
-    let figure: PaywallFigure
+    let hero: PaywallHero
     let accent: Color
-    /// The instrument's strings (pairs count once): one lane each.
-    let lanes: Int
     let height: CGFloat
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// The lanes follow the diagrams' and the lesson highway's string order.
@@ -22,15 +22,28 @@ struct PaywallPreview: View {
     /// When the scene appeared: the combo counts from here.
     @State private var start = Date()
 
+    /// Reduce Motion's single frame.
+    private var still: Double {
+        switch hero {
+        case .runway: return PaywallScene.still
+        case .tool(let tool): return ToolScene.still(tool)
+        }
+    }
+
+    /// A course emblem standing in for the instrument, drawn once as a Canvas symbol.
+    private var emblem: CourseGlyph? {
+        if case .runway(let figure, _) = hero { return figure.glyph }
+        return nil
+    }
+
     var body: some View {
         ZStack(alignment: .bottom) {
             TimelineView(.animation(minimumInterval: 1 / 60, paused: reduceMotion)) { timeline in
-                let elapsed = reduceMotion ? PaywallScene.still : max(0, timeline.date.timeIntervalSince(start))
+                let elapsed = reduceMotion ? still : max(0, timeline.date.timeIntervalSince(start))
                 Canvas { context, size in
-                    PaywallScene(figure: figure, lanes: max(1, lanes), order: stringOrder, accent: accent, elapsed: elapsed,
-                                 calm: reduceMotion, pill: pill).draw(&context, size: size)
+                    render(&context, size: size, elapsed: elapsed)
                 } symbols: {
-                    if let glyph = figure.glyph {
+                    if let glyph = emblem {
                         CourseEmblemTile(glyph: glyph, accent: accent, size: PaywallScene.emblemSide)
                             .tag(PaywallScene.emblemTag)
                     }
@@ -44,6 +57,16 @@ struct PaywallPreview: View {
         }
         .frame(height: height)
         .frame(maxWidth: .infinity)
+    }
+
+    private func render(_ context: inout GraphicsContext, size: CGSize, elapsed: Double) {
+        switch hero {
+        case .runway(let figure, let lanes):
+            PaywallScene(figure: figure, lanes: max(1, lanes), order: stringOrder, accent: accent, elapsed: elapsed,
+                         calm: reduceMotion, pill: pill).draw(&context, size: size)
+        case .tool(let tool):
+            ToolScene(tool: tool, elapsed: elapsed, calm: reduceMotion, pill: pill).draw(&context, size: size)
+        }
     }
 }
 

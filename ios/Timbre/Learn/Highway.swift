@@ -34,11 +34,51 @@ struct AlongStep: View {
     @State private var lastLevel = -120.0
     @State private var lastOnset: CFTimeInterval = 0
     @State private var calibrating = false
+    /// A bar practised on its own from the results (tap a missed note on the timing strip): its notes over and over
+    /// at a slower tempo. Nil plays the whole tune.
+    @State private var loop: BarLoop?
+    /// The tempo of the last whole-tune take, so a loop from its results runs slower than that take did.
+    @State private var takeTempo: Double?
+    /// When the multiplier last stepped up (×2, ×3, ×4): the board's new colour rolls up it from the hit line.
+    @State private var tierUp: CFTimeInterval?
+    /// The whole-tune results a loop was started from: Done goes back to them (Try again or Continue from there).
+    @State private var parked: ParkedTake?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// The runway's lanes follow the diagrams' string order (Settings › String order).
     @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
 
     enum Phase { case ready, playing, done }
+
+    /// A finished whole-tune take, kept while a bar loops.
+    private struct ParkedTake {
+        let judge: PlayAlongJudge
+        let grades: [Int: PlayAlongJudge.Grade]
+        let hitTimes: [Int: CFTimeInterval]
+        let offsets: [Int: Double]
+    }
+
+    /// One bar of the tune on repeat: its notes `passes` times back to back (each held no longer than the bar), at `bpm`.
+    struct BarLoop: Equatable {
+        /// The bar, 0 first.
+        let bar: Int
+        let notes: [TimedNote]
+        let bpm: Double
+        static let passes = 4
+        /// Three quarters of the take's tempo.
+        static let rate = 0.75
+
+        /// The notes of `tune` that start in `bar`, moved to start at beat 0 and repeated `passes` times.
+        static func looping(_ tune: [TimedNote], bar: Int, beatsPerBar: Int) -> [TimedNote] {
+            let meter = Double(max(1, beatsPerBar))
+            let from = Double(bar) * meter, to = from + meter
+            let inBar = tune.filter { $0.beat >= from - 0.001 && $0.beat < to - 0.001 }
+            return (0..<passes).flatMap { pass -> [TimedNote] in
+                inBar.map { note in
+                    TimedNote(midi: note.midi, beat: note.beat - from + Double(pass) * meter, beats: min(note.beats, to - note.beat), at: note.at)
+                }
+            }
+        }
+    }
 
     init(notes: [TimedNote], bpm: Double, beatsPerBar: Int, title: LearnText?, course: LearnCourse, accent: Color,
          onItem: @escaping (PracticeItem, Double) -> Void = { _, _ in }, onStarCap: @escaping (Int) -> Void = { _ in },
@@ -51,13 +91,25 @@ struct AlongStep: View {
         _judge = State(initialValue: PlayAlongJudge(notes: notes, bpm: bpm, anyOctave: course.anyOctave))
     }
 
-    private var tempo: Double { ladder.tempo }
+    /// What a take plays: the whole tune, or the bar on repeat.
+    private var take: [TimedNote] { loop?.notes ?? notes }
+    private var tempo: Double { loop?.bpm ?? ladder.tempo }
     private var spb: Double { 60 / tempo }
     private var countIn: Double { Double(beatsPerBar) * spb }
     private var fretted: Bool { course.fretKind != nil && notes.allSatisfy { $0.at != nil } }
     /// Drums and a bass on the key of the tune (no band bass when the player is the bass).
     private var band: BandArrangement {
-        .melody(notes, bpm: tempo, beatsPerBar: beatsPerBar, reference: store.settings.referencePitchHz, bass: course.fretKind != "bass")
+        .melody(take, bpm: tempo, beatsPerBar: beatsPerBar, reference: store.settings.referencePitchHz, bass: course.fretKind != "bass")
+    }
+    /// The bar (0 first) note `index` of the tune starts in.
+    private func bar(of index: Int) -> Int {
+        guard notes.indices.contains(index) else { return 0 }
+        return Int((notes[index].beat / Double(max(1, beatsPerBar))).rounded(.down))
+    }
+    /// The results' timing strip loops a missed note's bar; not while a bar is already looping.
+    private var loopAction: ((Int) -> Void)? {
+        guard loop == nil else { return nil }
+        return { index in enterLoop(noteIndex: index) }
     }
     /// Slower rungs in amber, the lesson tempo and up in the course colour.
     private func rungTint(_ rung: Int) -> Color { rung >= TempoLadder.lessonRung ? accent : Palette.amber }
@@ -86,7 +138,7 @@ struct AlongStep: View {
                 .onChange(of: Int(now * 20)) { _, _ in tick(now: now) }
             }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text("Play-along, \(notes.count) notes"))
+            .accessibilityLabel(Text("Play-along, \(take.count) notes"))
             // Shrinks on short phones rather than pushing the header off the top; the controls keep one height
             // through ready, playing and done, so the stage never changes size when a take starts or ends.
             .frame(minHeight: 220, maxHeight: fretted ? 420 : 300)
@@ -114,6 +166,7 @@ struct AlongStep: View {
         }
         .onAppear { store.audio.prepareBand(band) }
         .onChange(of: ladder.rung) { _, _ in store.audio.prepareBand(band) }
+        .onChange(of: loop) { _, _ in store.audio.prepareBand(band) }
         .onDisappear {
             store.audio.stopMetronome(); store.audio.stopBand(); store.stopLessonListening(owner: owner)
             #if DEBUG
@@ -136,9 +189,9 @@ struct AlongStep: View {
             // The combo lives in the stage's HUD; the row keeps its height so the stage never shifts.
             .frame(minHeight: 36)
             HStack(spacing: 8) {
-                Text("\(Int(tempo)) BPM · \(notes.count) notes").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                Text("\(Int(tempo)) BPM · \(take.count) notes").font(.subheadline).foregroundStyle(Palette.inkSoft)
                     .lineLimit(1).minimumScaleFactor(0.8)
-                tempoBadge
+                if let loop { loopBadge(loop) } else { tempoBadge }
                 Spacer(minLength: 8)
                 CalibrateButton(audio: store.audio, accent: accent) { calibrating = true }
                     .disabled(phase == .playing)
@@ -165,14 +218,70 @@ struct AlongStep: View {
             .accessibilityValue(Text("\(ladder.percent)%"))
     }
 
+    /// In the tempo badge's place while a bar loops: the bar, in amber with the repeat glyph; tapping it (or its ×)
+    /// ends the loop, back to the whole tune.
+    private func loopBadge(_ loop: BarLoop) -> some View {
+        Button { exitLoop() } label: {
+            HStack(spacing: 5) {
+                Image(systemName: "repeat").font(.system(size: 11, weight: .bold))
+                Text("Bar \(loop.bar + 1)").font(Typeface.label(12))
+                Image(systemName: "xmark").font(.system(size: 9, weight: .heavy)).opacity(0.7)
+            }
+            .foregroundStyle(Palette.amber)
+            .padding(.horizontal, 9).padding(.vertical, 4)
+            .background(Capsule().fill(Palette.amber.opacity(0.14)))
+            // A full-size target without growing the row.
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
+            .padding(.vertical, -9)
+        }
+        .buttonStyle(PressScaleStyle())
+        .disabled(phase == .playing)
+        .transition(.scale(scale: 0.8).combined(with: .opacity))
+        .accessibilityLabel(Text("Bar \(loop.bar + 1)"))
+        .accessibilityHint(Text("Done"))
+        .accessibilityIdentifier("along.loop.badge")
+    }
+
+    /// In the ladder's place while a bar loops: which bar, how fast and for how long, and (before a take) Done, back
+    /// to the whole tune.
+    private func loopPanel(_ loop: BarLoop) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "repeat")
+                .font(.system(size: 17, weight: .bold))
+                .foregroundStyle(Palette.amber)
+                .frame(width: 44, height: 44)
+                .background(Circle().fill(Palette.amber.opacity(0.14)))
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Bar \(loop.bar + 1)").font(Typeface.label(16)).foregroundStyle(Palette.ink)
+                Text("\(Int(loop.bpm)) BPM · \(BarLoop.passes) bars").font(.caption).foregroundStyle(Palette.inkSoft)
+            }
+            .lineLimit(1)
+            Spacer(minLength: 8)
+            if phase == .ready {
+                Button { exitLoop() } label: {
+                    Text("Done").font(Typeface.label(14)).foregroundStyle(accent)
+                        .padding(.horizontal, 14)
+                        .frame(minHeight: 44)
+                        .background(Capsule().fill(accent.opacity(0.12)))
+                        .contentShape(Capsule())
+                }
+                .buttonStyle(PressScaleStyle())
+                .accessibilityIdentifier("along.loop.exit")
+            }
+        }
+        .padding(.horizontal, 20)
+        .accessibilityElement(children: .contain)
+    }
+
     /// The fretboard runway on fretted courses, pitch lanes otherwise.
     @ViewBuilder private func runway(elapsed: Double, now: CFTimeInterval) -> some View {
         if fretted {
-            HighwayRunway(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: now,
+            HighwayRunway(notes: take, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: now,
                           strings: course.stringCount, edges: StringEdges.of(course), beatsPerBar: beatsPerBar,
-                          heat: multiplier, calm: reduceMotion, order: stringOrder, offsets: offsets)
+                          heat: multiplier, calm: reduceMotion, order: stringOrder, offsets: offsets, tierUp: tierUp)
         } else {
-            HighwayCanvas(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: now,
+            HighwayCanvas(notes: take, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: now,
                           lanes: 0, accent: accent, trail: trail, startTime: startTime + countIn, calm: reduceMotion, offsets: offsets)
         }
     }
@@ -194,11 +303,13 @@ struct AlongStep: View {
         }
     }
 
-    /// The next note by name and where to play it, then the notes after it on a rail.
+    /// The next note by name and where to play it (with the finger to use, on the same white tag the gems wear),
+    /// then the notes after it on a rail.
     @ViewBuilder private var upcoming: some View {
-        let index = min(judge.nextIndex, notes.count - 1)
-        if notes.indices.contains(index) {
-            let note = notes[index]
+        let take = self.take
+        let index = min(judge.nextIndex, take.count - 1)
+        if take.indices.contains(index) {
+            let note = take[index]
             VStack(alignment: .leading, spacing: 10) {
                 HStack(spacing: 10) {
                     Text("Next").font(Typeface.label(13)).foregroundStyle(Palette.inkFaint)
@@ -208,15 +319,29 @@ struct AlongStep: View {
                             .font(Typeface.label(14)).foregroundStyle(nextTint(note))
                             .padding(.horizontal, 12).padding(.vertical, 6)
                             .background(Capsule().fill(nextTint(note).opacity(0.12)))
+                        if at.fret > 0, let finger = at.finger, finger > 0 { fingerTag(finger, tint: nextTint(note)) }
                     }
                     Spacer()
                 }
                 .contentTransition(.numericText())
-                UpNextRail(notes: notes, from: index + 1, fretted: fretted, strings: course.stringCount, accent: accent)
+                UpNextRail(notes: take, from: index + 1, fretted: fretted, strings: course.stringCount, accent: accent)
             }
             .padding(.horizontal, 24)
             .animation(reduceMotion ? nil : Motion.quick, value: index)
         }
+    }
+
+    /// The finger to fret the next note with: a white tag with its number, as pinned to the gem's corner.
+    private func fingerTag(_ finger: Int, tint: Color) -> some View {
+        Text(verbatim: "\(finger)")
+            .font(Typeface.number(14, relativeTo: .caption))
+            .foregroundStyle(tint.mix(with: .black, by: 0.62))
+            .frame(width: 26, height: 26)
+            .background(Circle().fill(Color.white.opacity(0.95)))
+            .overlay(Circle().strokeBorder(tint.mix(with: .black, by: 0.3), lineWidth: 1.5))
+            .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("Finger \(finger)"))
     }
 
     /// The next note's string colour on the runway (the course colour on pitch lanes).
@@ -272,8 +397,9 @@ struct AlongStep: View {
                 stat("Missed", counts[.miss] ?? 0, TakeRibbon.color(.miss, accent: accent))
             }
             if !compact {
-                // A dot per note, early above the line and late below.
-                HighwayTimingStrip(count: notes.count, judgments: judge.judgments, accent: accent, calm: reduceMotion)
+                // A dot per note, early above the line and late below; tapping a missed note loops its bar, slower.
+                HighwayTimingStrip(count: take.count, judgments: judge.judgments, accent: accent, calm: reduceMotion,
+                                   onLoop: loopAction, bar: { bar(of: $0) })
             }
             Text(timingNote).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink).multilineTextAlignment(.center)
             if timingIsOff {
@@ -284,8 +410,8 @@ struct AlongStep: View {
             } else if judge.bestCombo >= 2 {
                 Text("Best combo \(judge.bestCombo)").font(.footnote).foregroundStyle(Palette.inkSoft)
             }
-            if percent >= 90 { takeShare.padding(.top, 2) }
-            if judge.accuracy < 0.8 && ladder.rung > 0 {
+            if percent >= 90 && loop == nil { takeShare.padding(.top, 2) }
+            if loop == nil && judge.accuracy < 0.8 && ladder.rung > 0 {
                 Button { ladder.select(0); reset() } label: { Label("Try it at \(Int(ladder.tempo(at: 0))) BPM", systemImage: "tortoise.fill") }
                     .font(Typeface.label(14)).foregroundStyle(accent).padding(.top, 2)
                     .accessibilityIdentifier("along.slower")
@@ -347,7 +473,7 @@ struct AlongStep: View {
         switch phase {
         case .ready:
             VStack(spacing: 12) {
-                ladderPicker
+                ladderOrLoop
                 StepButton(title: "Start", accent: accent) { start() }
             }
         case .playing:
@@ -356,21 +482,42 @@ struct AlongStep: View {
                 ladderPicker
                     .hidden()
                     .accessibilityHidden(true)
-                    .overlay { TakeRibbon(count: notes.count, grades: grades, current: judge.nextIndex, accent: accent) }
+                    .overlay { TakeRibbon(count: take.count, grades: grades, current: judge.nextIndex, accent: accent) }
                 StepButton(title: "Listening…", accent: accent, enabled: false) {}
             }
         case .done:
             VStack(spacing: 12) {
-                ladderPicker
-                // A weak take puts another go first: Try again takes the filled button, Continue steps back.
+                ladderOrLoop
                 HStack(spacing: 10) {
-                    doneButton("Try again", primary: retryFirst) { reset() }
-                        .accessibilityIdentifier("along.again")
-                    doneButton("Continue", primary: !retryFirst) { complete() }
-                        .accessibilityIdentifier("lesson.continue")
+                    if loop != nil {
+                        // The loop again until it's clean; then Done (back to the whole tune's results) comes first.
+                        let clean = judge.accuracy >= TempoLadder.stepUpAccuracy
+                        doneButton("Try again", primary: !clean) { reset() }
+                            .accessibilityIdentifier("along.again")
+                        doneButton("Done", primary: clean) { exitLoop() }
+                            .accessibilityIdentifier("along.loop.exit")
+                    } else {
+                        // A weak take puts another go first: Try again takes the filled button, Continue steps back.
+                        doneButton("Try again", primary: retryFirst) { reset() }
+                            .accessibilityIdentifier("along.again")
+                        doneButton("Continue", primary: !retryFirst) { complete() }
+                            .accessibilityIdentifier("lesson.continue")
+                    }
                 }
                 .padding(.horizontal, 20).padding(.bottom, 12)
             }
+        }
+    }
+
+    /// The tempo ladder, or while a bar loops, the loop in its place (the hidden ladder keeps the height).
+    @ViewBuilder private var ladderOrLoop: some View {
+        if let loop {
+            ladderPicker
+                .hidden()
+                .accessibilityHidden(true)
+                .overlay { loopPanel(loop) }
+        } else {
+            ladderPicker
         }
     }
 
@@ -439,25 +586,65 @@ struct AlongStep: View {
 
     // MARK: Flow
 
-    private func reset() {
-        judge = PlayAlongJudge(notes: notes, bpm: tempo, anyOctave: course.anyOctave)
+    /// A fresh judge for what the next take plays (the whole tune or the looped bar), nothing judged yet.
+    private func clearTake() {
+        judge = PlayAlongJudge(notes: take, bpm: tempo, anyOctave: course.anyOctave)
         grades = [:]; hitTimes = [:]; offsets = [:]; trail = []
         steppedUp = false
+        tierUp = nil
+    }
+
+    private func reset() {
+        clearTake()
         phase = .ready
     }
 
+    /// From the results: the bar holding missed note `noteIndex`, on repeat at three quarters of the take's tempo,
+    /// ready to start (four times through after the count-in). Whole-tune takes keep the ladder and the outcome.
+    private func enterLoop(noteIndex: Int) {
+        let missedBar = bar(of: noteIndex)
+        let looped = BarLoop.looping(notes, bar: missedBar, beatsPerBar: beatsPerBar)
+        guard !looped.isEmpty else { return }
+        let bpm = max(20, ((takeTempo ?? ladder.tempo) * BarLoop.rate).rounded())
+        if loop == nil { parked = ParkedTake(judge: judge, grades: grades, hitTimes: hitTimes, offsets: offsets) }
+        Haptics.shared.selection()
+        withAnimation(reduceMotion ? nil : Motion.settle) {
+            loop = BarLoop(bar: missedBar, notes: looped, bpm: bpm)
+            clearTake()
+            phase = .ready
+        }
+    }
+
+    /// Back to the whole tune: the results the loop was started from (to try the tune again or continue), or the
+    /// ready state when there are none.
+    private func exitLoop() {
+        guard phase != .playing else { return }
+        Haptics.shared.selection()
+        withAnimation(reduceMotion ? nil : Motion.settle) {
+            loop = nil
+            if let parked {
+                judge = parked.judge; grades = parked.grades; hitTimes = parked.hitTimes; offsets = parked.offsets
+                trail = []; steppedUp = false; tierUp = nil
+                phase = .done
+            } else {
+                clearTake()
+                phase = .ready
+            }
+            parked = nil
+        }
+    }
+
     private func start() {
-        judge = PlayAlongJudge(notes: notes, bpm: tempo, anyOctave: course.anyOctave)
-        grades = [:]; hitTimes = [:]; offsets = [:]; trail = []
-        steppedUp = false
+        clearTake()
+        if loop == nil { takeTempo = tempo }
         startTime = CACurrentMediaTime()
         phase = .playing
         store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
         // The band rides the metronome from the bar after the count-in (headphones only; else the click).
         store.audio.playBand(band, firstBar: 1)
-        store.gameTargetHz = notes.first.map { PitchMath.frequency(midi: Double($0.midi), reference: store.settings.referencePitchHz) }
+        store.gameTargetHz = take.first.map { PitchMath.frequency(midi: Double($0.midi), reference: store.settings.referencePitchHz) }
         #if DEBUG
-        store.demoNoteDue = { judge.nextIndex < notes.count && CACurrentMediaTime() - startTime - countIn >= judge.time(of: judge.nextIndex) - 0.02 }
+        store.demoNoteDue = { judge.nextIndex < take.count && CACurrentMediaTime() - startTime - countIn >= judge.time(of: judge.nextIndex) - 0.02 }
         #endif
         // Re-attacks of a repeated note come from the onset detector (a jump in loudness as a fallback).
         let analyzer = LessonAnalyzer(chords: false, onOnset: { time in lastOnset = time })
@@ -488,15 +675,19 @@ struct AlongStep: View {
             if let offset = j.offset { offsets[j.index] = offset }
             if j.grade == .perfect { Haptics.shared.selection() }
         }
-        // The multiplier steps up at 4, 8 and 16 in a row: a firmer tap with the badge's pulse.
+        // The multiplier steps up at 4, 8 and 16 in a row: a firmer tap with the badge's pulse, and the board's
+        // colour rolls up to the next tier.
         if let last = judgments.last, last.grade == .perfect || last.grade == .good {
             switch judge.combo {
-            case 4, 8, 16: Haptics.shared.beat(accent: true)
+            case 4, 8, 16:
+                Haptics.shared.beat(accent: true)
+                tierUp = now
             default: break
             }
         }
-        if !judgments.isEmpty, judge.nextIndex < notes.count {
-            store.gameTargetHz = PitchMath.frequency(midi: Double(notes[judge.nextIndex].midi), reference: store.settings.referencePitchHz)
+        let take = self.take
+        if !judgments.isEmpty, judge.nextIndex < take.count {
+            store.gameTargetHz = PitchMath.frequency(midi: Double(take[judge.nextIndex].midi), reference: store.settings.referencePitchHz)
         }
         if judge.isFinished { finish() }
     }
@@ -504,9 +695,15 @@ struct AlongStep: View {
     private func finish() {
         guard phase == .playing else { return }
         let accuracy = judge.accuracy
-        // The take that counts keeps its grades for the lesson's weak spots.
-        if ladder.improvesOutcome(accuracy) { countedGrades = grades }
-        let up = ladder.record(accuracy: accuracy)
+        var up = false
+        // A looped bar is practice: the ladder and the lesson's outcome come from whole-tune takes only.
+        if loop == nil {
+            // The take that counts keeps its grades for the lesson's weak spots.
+            if ladder.improvesOutcome(accuracy) { countedGrades = grades }
+            up = ladder.record(accuracy: accuracy)
+            // The coach reads timing from whole takes only.
+            CoachTakes.shared.record(CoachTake(judge: judge, beatsPerBar: beatsPerBar, item: { course.practiceItem(for: $0) }))
+        }
         // A good take ends on the band's final chord; otherwise it fades with the click.
         store.audio.finishBand(celebrate: accuracy >= 0.7)
         store.stopLessonListening(owner: owner)
@@ -654,8 +851,14 @@ struct HighwayCanvas: View {
     var calm = false
     /// Seconds early (negative) or late of each note played, for the "Early" and "Late" pops.
     var offsets: [Int: Double] = [:]
+    /// String lanes lie in the necks' string order (Settings › String order), string 1 on top in tab order.
+    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
+    /// Lane numbers grow with Dynamic Type from the 11 pt floor (`DiagramType`).
+    @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
 
     var body: some View {
+        let order = stringOrder
+        let scale = typeScale
         Canvas { context, size in
             let hitX = size.width * 0.24
             let pps: CGFloat = 150
@@ -667,7 +870,9 @@ struct HighwayCanvas: View {
             }
             let low = Double(lowest - 2), high = Double(highest + 2)
             func laneY(_ note: TimedNote) -> CGFloat {
-                if lanes > 0, let at = note.at { return top + (bottom - top) * CGFloat(at.string - 1) / CGFloat(max(1, lanes - 1)) }
+                if lanes > 0, let at = note.at {
+                    return top + (bottom - top) * CGFloat(order.row(ofString: at.string, count: lanes)) / CGFloat(max(1, lanes - 1))
+                }
                 return pitchY(Double(note.midi))
             }
             func pitchY(_ midi: Double) -> CGFloat { bottom - (bottom - top) * CGFloat((midi - low) / max(1, high - low)) }
@@ -676,8 +881,11 @@ struct HighwayCanvas: View {
             if lanes > 0 {
                 for lane in 0..<lanes {
                     let y = top + (bottom - top) * CGFloat(lane) / CGFloat(max(1, lanes - 1))
-                    context.fill(Path(CGRect(x: 0, y: y - 0.6 - CGFloat(lane) * 0.15, width: size.width, height: 1.2 + CGFloat(lane) * 0.3)), with: .color(.white.opacity(0.13)))
-                    context.draw(Text("\(lane + 1)").font(.system(size: 10, weight: .bold)).foregroundStyle(Palette.inkFaint), at: CGPoint(x: 10, y: y))
+                    let string = order.string(atRow: lane, count: lanes)
+                    // Thicker toward the bass, whichever way up the strings lie.
+                    let gauge = CGFloat(string - 1)
+                    context.fill(Path(CGRect(x: 0, y: y - 0.6 - gauge * 0.15, width: size.width, height: 1.2 + gauge * 0.3)), with: .color(.white.opacity(0.13)))
+                    context.draw(Text("\(string)").font(DiagramType.font(11, scale: scale)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: 10, y: y))
                 }
             } else {
                 for midi in stride(from: Int(low.rounded(.up)), through: Int(high), by: 1) where [0, 2, 4, 5, 7, 9, 11].contains(((midi % 12) + 12) % 12) {
@@ -832,10 +1040,13 @@ enum HitBurst {
 /// Fretted play-along as a runway down a fretboard: a lane per string in the player's string order (the string
 /// the diagrams draw on top takes the left lane: string 1 in tab order, the lowest string in mirror order)
 /// over dark rosewood whose fret wires and inlays scroll toward you out of the fog, two bars or more of them in
-/// view. Notes ride their lane as big glossy gems in the string's colour, the fret over the note name, long ones
-/// trailing a sustain tail; a hit bursts on the hit line (a perfect one in a bigger white-gold flash that runs the
-/// whole line), its verdict pops over the line ("Perfect", "Good", "Early", "Late", "Missed"), and the line runs
-/// hotter as the combo multiplier climbs.
+/// view. Each lane ends in a target ring carrying its string's number, the outer two named underneath
+/// ("Thinnest", "Thickest"). Notes ride their lane as big glossy gems in the string's colour, the fret over the
+/// note name and the finger to use on a white tag at the corner, long ones trailing a sustain tail; a hit bursts on
+/// the hit line, and a perfect one lights its whole lane white-gold and sends a burst racing both ways along the
+/// line. Its verdict pops over the line ("Perfect", "Good", "Early", "Late", "Missed"). The board warms through
+/// colour tiers with the combo multiplier (the HUD's flame at ×2, amber at ×3, white-gold at ×4), each new tier
+/// rolling up the board from the hit line.
 struct HighwayRunway: View {
     let notes: [TimedNote]
     let secondsPerBeat: Double
@@ -856,6 +1067,10 @@ struct HighwayRunway: View {
     var order: StringOrder = .tab
     /// Seconds early (negative) or late of each note played, for the "Early" and "Late" pops.
     var offsets: [Int: Double] = [:]
+    /// When the multiplier last stepped up (on the `now` clock): the new tier's colour rolls up the board.
+    var tierUp: CFTimeInterval?
+    /// The string numbers and edge names grow with Dynamic Type from the 11 pt floor (`DiagramType`).
+    @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
 
     /// Seconds of music in view ahead of the hit line: two bars (eight beats at least, twelve at most), never
     /// under 2.8 s on a fast tune, so three or four notes are on the board whatever the tempo.
@@ -872,10 +1087,12 @@ struct HighwayRunway: View {
     /// Notes this long (in beats) and longer trail a sustain tail.
     private static let sustainBeats = 1.5
     /// A gem's width as a share of its lane, and its height at the hit line (points).
-    private static let gemWidth: CGFloat = 0.9
-    private static let gemHeight: CGFloat = 46
-    /// Gems this far scaled down (toward the horizon) drop the note name under the fret.
+    private static let gemWidth: CGFloat = 0.96
+    private static let gemHeight: CGFloat = 56
+    /// Gems this far scaled down (toward the horizon) drop the note name under the fret, and the finger tag.
     private static let nameScale: CGFloat = 0.5
+    /// How long a perfect note's lane stays lit, and its burst runs along the hit line.
+    private static let perfectFlash = 0.45
 
     /// Lowest string warm, highest cool.
     private static let palette: [Color] = [Palette.violet, Palette.sky, Palette.mint, Color(hex: 0xFFE066), Palette.amber, Palette.coral]
@@ -896,7 +1113,8 @@ struct HighwayRunway: View {
     private static let hitLine = Color(hex: 0xFFF4DE)
 
     var body: some View {
-        Canvas { context, size in draw(&context, size: size) }
+        let scale = typeScale
+        Canvas { context, size in draw(&context, size: size, scale: scale) }
             .accessibilityHidden(true)
     }
 
@@ -938,19 +1156,20 @@ struct HighwayRunway: View {
         func clarity(_ d: Double) -> Double { d < 0.55 ? 1 : max(0.15, 1 - (d - 0.55) / 0.45 * 0.85) }
     }
 
-    private func draw(_ context: inout GraphicsContext, size: CGSize) {
+    private func draw(_ context: inout GraphicsContext, size: CGSize, scale: CGFloat) {
         let g = Lanes(size: size, strings: strings, order: order)
         drawBoard(&context, g, size: size)
+        drawTierWave(&context, g)
         drawFrets(&context, g)
         drawLanes(&context, g)
         drawFog(&context, g, size: size)
-        drawTargets(&context, g)
+        drawTargets(&context, g, scale: scale)
         // Far notes first, so near ones draw on top.
         for i in notes.indices.reversed() { drawNote(&context, g, index: i) }
         drawHits(&context, g)
         drawVignette(&context, size: size)
         drawPops(&context, g, size: size)
-        drawLabels(&context, g)
+        drawLabels(&context, g, scale: scale)
     }
 
     // MARK: Board
@@ -981,6 +1200,15 @@ struct HighwayRunway: View {
             grain.stroke(line, with: .color(tone), lineWidth: 0.7 + 1.6 * CGFloat(CanvasNoise.value(i + 420)))
         }
         grain.fill(board, with: .linearGradient(Self.roll, startPoint: CGPoint(x: g.left(0), y: 0), endPoint: CGPoint(x: g.right(0), y: 0)))
+        if let tier = tierTint {
+            // The combo's tier warms the wood from the hit line up, and the glow at the vanishing point with it.
+            var glow = context
+            glow.blendMode = .plusLighter
+            glow.fill(board, with: .linearGradient(Gradient(colors: [tier.opacity(0), tier.opacity(tierStrength)]),
+                                                   startPoint: CGPoint(x: 0, y: g.y(0.75)), endPoint: CGPoint(x: 0, y: g.y(Self.near))))
+            glow.fill(circle(vanish, haze * 0.7), with: .radialGradient(Gradient(colors: [tier.opacity(tierStrength * 0.9), tier.opacity(0)]),
+                                                                       center: vanish, startRadius: 0, endRadius: haze * 0.7))
+        }
         var binding = Path()
         binding.move(to: CGPoint(x: g.left(1), y: g.horizonY))
         binding.addLine(to: CGPoint(x: g.left(Self.near), y: g.y(Self.near)))
@@ -999,6 +1227,45 @@ struct HighwayRunway: View {
         case 3: return Palette.amber
         default: return Self.bone
         }
+    }
+
+    /// The board's colour tier: none at ×1, then the HUD dial's colour (flame ×2, amber ×3, white-gold ×4).
+    private var tierTint: Color? { heat >= 2 ? ComboBadge.tint(heat) : nil }
+    /// How strongly the tier tints the board, stronger each step.
+    private var tierStrength: Double {
+        switch heat {
+        case 4...: return 0.2
+        case 3: return 0.15
+        default: return 0.1
+        }
+    }
+
+    /// A tier just reached: a band of its colour rolls from the hit line up to the horizon, and the binding flares.
+    private func drawTierWave(_ context: inout GraphicsContext, _ g: Lanes) {
+        guard !calm, let tierUp, let tier = tierTint else { return }
+        let age = now - tierUp
+        let life = 0.8
+        guard age >= 0, age < life else { return }
+        let p = age / life
+        let eased = 1 - pow(1 - p, 2)
+        let front = Self.near + (1 - Self.near) * eased
+        let back = max(Self.near, front - 0.18)
+        var band = Path()
+        band.move(to: CGPoint(x: g.left(back), y: g.y(back)))
+        band.addLine(to: CGPoint(x: g.right(back), y: g.y(back)))
+        band.addLine(to: CGPoint(x: g.right(front), y: g.y(front)))
+        band.addLine(to: CGPoint(x: g.left(front), y: g.y(front)))
+        band.closeSubpath()
+        var light = context
+        light.blendMode = .plusLighter
+        light.fill(band, with: .linearGradient(Gradient(colors: [tier.opacity(0), tier.opacity(0.5 * (1 - p))]),
+                                               startPoint: CGPoint(x: 0, y: g.y(back)), endPoint: CGPoint(x: 0, y: g.y(front))))
+        var sides = Path()
+        sides.move(to: CGPoint(x: g.left(1), y: g.horizonY))
+        sides.addLine(to: CGPoint(x: g.left(Self.near), y: g.y(Self.near)))
+        sides.move(to: CGPoint(x: g.right(1), y: g.horizonY))
+        sides.addLine(to: CGPoint(x: g.right(Self.near), y: g.y(Self.near)))
+        light.stroke(sides, with: .color(tier.opacity(0.7 * (1 - p))), lineWidth: 4)
     }
 
     /// Fret wires scrolling toward you, one per beat with the bar lines heavier, and a pearl inlay mid-bar.
@@ -1037,18 +1304,29 @@ struct HighwayRunway: View {
     }
 
     /// The strings, a lane each: a coloured glow under a metal core, brighter toward you, flaring for a moment
-    /// when one of its notes is hit. The low strings are the thicker ones.
+    /// when one of its notes is hit; a perfect note lights the whole lane white-gold, horizon to hit line. The low
+    /// strings are the thicker ones.
     private func drawLanes(_ context: inout GraphicsContext, _ g: Lanes) {
+        var light = context
+        light.blendMode = .plusLighter
         for s in 1...g.strings {
             let tint = Self.color(string: s, of: strings)
             let gauge = g.strings > 1 ? CGFloat(s - 1) / CGFloat(g.strings - 1) : 0.5
             let half = 0.8 + gauge * 1.1
-            let lit = target(string: s).flash
+            let state = target(string: s)
+            let lit = state.flash
             let from = CGPoint(x: 0, y: g.horizonY), to = CGPoint(x: 0, y: g.hitY)
             context.fill(lane(g, string: s, half: half * 5 + CGFloat(lit) * 10),
                          with: .linearGradient(Gradient(colors: [tint.opacity(0.02), tint.opacity(0.16 + 0.3 * lit)]), startPoint: from, endPoint: to))
             context.fill(lane(g, string: s, half: half),
                          with: .linearGradient(Gradient(colors: [tint.opacity(0.15), tint.mix(with: .white, by: 0.35).opacity(0.9)]), startPoint: from, endPoint: to))
+            let flash = state.perfect
+            guard flash > 0, !calm else { continue }
+            // Perfect: the lane flashes white-gold its whole length, brightest at the line, and its core burns white.
+            light.fill(lane(g, string: s, half: g.gap * 0.42),
+                       with: .linearGradient(Gradient(colors: [Self.perfectGold.opacity(0.08 * flash), Self.perfectGold.opacity(0.42 * flash)]),
+                                             startPoint: from, endPoint: to))
+            light.fill(lane(g, string: s, half: half + 1.5), with: .color(Color.white.opacity(0.75 * flash)))
         }
     }
 
@@ -1076,6 +1354,8 @@ struct HighwayRunway: View {
     private struct TargetState {
         /// 1 → 0 over the moment after one of the string's notes is hit.
         var flash = 0.0
+        /// 1 → 0 over the moment after one of its notes is hit perfectly: the lane's white-gold flash.
+        var perfect = 0.0
         /// One of its notes was just missed.
         var missed = false
         /// 0 → 1 as its next note closes in on the line.
@@ -1088,7 +1368,12 @@ struct HighwayRunway: View {
             if let grade = grades[i] {
                 guard let time = hitTimes[i] else { continue }
                 let age = now - time
-                guard age >= 0, age < 0.35 else { continue }
+                guard age >= 0 else { continue }
+                if grade == .perfect, age < Self.perfectFlash {
+                    let f = 1 - age / Self.perfectFlash
+                    state.perfect = max(state.perfect, f * f)
+                }
+                guard age < 0.35 else { continue }
                 if grade == .miss { state.missed = true } else { state.flash = max(state.flash, 1 - age / 0.35) }
             } else {
                 // Fills over the last 0.45 s before its note, whatever the tempo.
@@ -1102,9 +1387,9 @@ struct HighwayRunway: View {
     /// A target ring's radius: sized to the gems, within its lane.
     private static func targetRadius(_ g: Lanes) -> CGFloat { min(21, g.gap * 0.38) }
 
-    /// The hit line across the board and a target ring per string: recessed, filling as a note comes in,
-    /// flashing in the string's colour on a hit (coral on a miss).
-    private func drawTargets(_ context: inout GraphicsContext, _ g: Lanes) {
+    /// The hit line across the board and a target ring per string, its number inside: recessed, filling as a note
+    /// comes in, flashing in the string's colour on a hit (coral on a miss).
+    private func drawTargets(_ context: inout GraphicsContext, _ g: Lanes, scale: CGFloat) {
         let from = g.left(0) - 6, to = g.right(0) + 6
         let line = heat >= 3 ? heatTint : Self.hitLine
         let band = CGRect(x: from, y: g.hitY - 13, width: to - from, height: 26)
@@ -1125,6 +1410,11 @@ struct HighwayRunway: View {
             var shine = Path()
             shine.addRelativeArc(center: center, radius: max(1, r - 3.5), startAngle: .degrees(205), delta: .degrees(130))
             context.stroke(shine, with: .color(.white.opacity(0.28)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round))
+            // The string's number, in its colour, brightening as its note closes in.
+            let lift = max(state.approach, state.flash)
+            let number = Text(verbatim: "\(s)").font(DiagramType.font(13, weight: .heavy, scale: scale))
+                .foregroundStyle(tint.mix(with: .white, by: 0.55 + 0.35 * lift).opacity(0.75 + 0.25 * lift))
+            context.draw(number, at: center)
         }
     }
 
@@ -1145,7 +1435,8 @@ struct HighwayRunway: View {
             let gap = 0.2 * secondsPerBeat / ahead
             drawTail(&context, g, string: at.string, start: start, end: end - gap, tint: tint, grade: grade)
         }
-        drawGem(&context, g, string: at.string, fret: at.fret, midi: note.midi, start: start, tint: tint, grade: grade, age: age)
+        drawGem(&context, g, string: at.string, fret: at.fret, finger: at.fret > 0 ? at.finger : nil, midi: note.midi, start: start,
+                tint: tint, grade: grade, age: age)
     }
 
     /// A long note's sustain tail up its lane to where the note ends: a ribbon in the string's colour, edged darker
@@ -1196,17 +1487,18 @@ struct HighwayRunway: View {
         return p
     }
 
-    /// A note gem: a big glossy tile in its string's colour (nine tenths of its lane), the fret over the note's
-    /// name, standing on its own darker edge with its shadow on the wood, and lighting the board as it nears the
-    /// line. A hit pops white for an instant (its burst takes over); a miss runs on past, hollow and coral.
-    private func drawGem(_ context: inout GraphicsContext, _ g: Lanes, string s: Int, fret: Int, midi: Int, start: Double, tint: Color,
-                         grade: PlayAlongJudge.Grade?, age: Double) {
+    /// A note gem: a big glossy tile in its string's colour (nearly its whole lane), the fret over the note's
+    /// name and the finger to fret it with on a white tag at its top corner, standing on its own darker edge with
+    /// its shadow on the wood, and lighting the board as it nears the line. A hit pops white for an instant (its
+    /// burst takes over); a miss runs on past, hollow and coral.
+    private func drawGem(_ context: inout GraphicsContext, _ g: Lanes, string s: Int, fret: Int, finger: Int?, midi: Int, start: Double,
+                         tint: Color, grade: PlayAlongJudge.Grade?, age: Double) {
         let hit = grade != nil && grade != .miss
         if hit && (calm || age > 0.16) { return }
         let d = hit ? 0 : start
         let sc = g.scale(d)
         var w = g.gap * Self.gemWidth * sc
-        var h = min(Self.gemHeight, g.gap * 0.95) * sc
+        var h = min(Self.gemHeight, g.gap * 1.02) * sc
         var alpha = (start > 0.85 ? max(0, (1.05 - start) / 0.2) : 1) * g.clarity(d)
         if hit {
             let pop = 1 + CGFloat(age / 0.16) * 0.5
@@ -1222,7 +1514,7 @@ struct HighwayRunway: View {
         if grade == .miss {
             context.fill(face, with: .color(Palette.danger.opacity(0.12 * alpha)))
             context.stroke(face, with: .color(Palette.danger.opacity(0.8 * alpha)), lineWidth: 2)
-            context.draw(fretLabel(fret, size: 20 * sc, color: Palette.danger.opacity(alpha)), at: center)
+            context.draw(fretLabel(fret, size: 23 * sc, color: Palette.danger.opacity(alpha)), at: center)
             return
         }
         if grade == nil, d < 0.35 {
@@ -1253,14 +1545,29 @@ struct HighwayRunway: View {
         guard !hit else { return }
         // The fret, and under it the note's name once the gem is near enough to read it.
         if sc >= Self.nameScale {
-            context.draw(fretLabel(fret, size: 21 * sc, color: Palette.onAccent.opacity(alpha)), at: CGPoint(x: center.x, y: center.y - h * 0.13))
+            context.draw(fretLabel(fret, size: 25 * sc, color: Palette.onAccent.opacity(alpha)), at: CGPoint(x: center.x, y: center.y - h * 0.12))
             let name = Text(verbatim: NoteName.pitchClass(midi))
-                .font(.system(size: max(8, 12 * sc), weight: .bold, design: .rounded))
+                .font(.system(size: max(8, 13 * sc), weight: .bold, design: .rounded))
                 .foregroundStyle(Palette.onAccent.opacity(0.7 * alpha))
-            context.draw(name, at: CGPoint(x: center.x, y: center.y + h * 0.28))
+            context.draw(name, at: CGPoint(x: center.x, y: center.y + h * 0.29))
+            if grade == nil, let finger, finger > 0 {
+                drawFingerTag(&context, finger, at: CGPoint(x: rect.maxX - 3 * sc, y: rect.minY + 3 * sc), scale: sc, tint: tint, alpha: alpha)
+            }
         } else {
-            context.draw(fretLabel(fret, size: 21 * sc, color: Palette.onAccent.opacity(alpha)), at: CGPoint(x: center.x, y: center.y + 0.5 * sc))
+            context.draw(fretLabel(fret, size: 25 * sc, color: Palette.onAccent.opacity(alpha)), at: CGPoint(x: center.x, y: center.y + 0.5 * sc))
         }
+    }
+
+    /// The finger to fret a note with (1 index … 4 little) on a white tag pinned to the gem's top corner, as the
+    /// "Next" row under the stage shows it.
+    private func drawFingerTag(_ context: inout GraphicsContext, _ finger: Int, at center: CGPoint, scale sc: CGFloat, tint: Color, alpha: Double) {
+        let r = 10.5 * sc
+        context.fill(circle(CGPoint(x: center.x, y: center.y + 2 * sc), r), with: .color(.black.opacity(0.35 * alpha)))
+        context.fill(circle(center, r), with: .color(Color.white.opacity(0.96 * alpha)))
+        context.stroke(circle(center, r), with: .color(tint.mix(with: .black, by: 0.3).opacity(alpha)), lineWidth: max(1, 1.6 * sc))
+        let label = Text(verbatim: "\(finger)").font(.system(size: max(8, 14 * sc), weight: .heavy, design: .rounded))
+            .foregroundStyle(tint.mix(with: .black, by: 0.62).opacity(alpha))
+        context.draw(label, at: center)
     }
 
     private func fretLabel(_ fret: Int, size: CGFloat, color: Color) -> Text {
@@ -1304,6 +1611,7 @@ struct HighwayRunway: View {
                            with: .linearGradient(Gradient(colors: [tint.opacity(0), tint.opacity(0.4 * f), tint.opacity(0)]),
                                                  startPoint: CGPoint(x: 0, y: band.minY), endPoint: CGPoint(x: 0, y: band.maxY)))
             }
+            if perfect { drawLineBurst(&light, g, from: cx, age: age) }
             if age < 0.3 {
                 let f = 1 - age / 0.3
                 let reach: CGFloat = perfect ? 150 : 100
@@ -1313,6 +1621,36 @@ struct HighwayRunway: View {
                                                  startPoint: CGPoint(x: streak.minX, y: 0), endPoint: CGPoint(x: streak.maxX, y: 0)))
             }
             HitBurst.draw(&light, at: CGPoint(x: cx, y: g.hitY), tint: tint, perfect: perfect, age: age, seed: i, upward: true)
+        }
+    }
+
+    /// A perfect note's burst along the hit line: a white-gold shock ring opening flat on the board around the
+    /// target, and two sparks racing out from it to the ends of the line, each trailing a streak that lights it.
+    /// Drawn into an additive context.
+    private func drawLineBurst(_ light: inout GraphicsContext, _ g: Lanes, from cx: CGFloat, age: Double) {
+        let life = Self.perfectFlash
+        guard age >= 0, age < life else { return }
+        let p = age / life
+        let eased = CGFloat(1 - pow(1 - p, 3))
+        let gold = Self.perfectGold
+        // The shock ring, lying on the board (flattened by the runway's tilt).
+        let radius = 22 + eased * 120
+        let ring = CGRect(x: cx - radius, y: g.hitY - radius * 0.28, width: radius * 2, height: radius * 0.56)
+        light.stroke(Path(ellipseIn: ring), with: .color(gold.opacity(0.75 * (1 - p))), lineWidth: 1 + 3 * CGFloat(1 - p))
+        // Sparks to either end, a touch quicker than the ring.
+        let run = min(1, eased * 1.25)
+        let ends = [g.left(0) - 6, g.right(0) + 6]
+        for end in ends {
+            let head = cx + (end - cx) * run
+            let fade = 1 - p
+            let streak = CGRect(x: min(cx, head), y: g.hitY - 2.5, width: abs(head - cx), height: 5)
+            light.fill(Path(roundedRect: streak, cornerRadius: 2.5),
+                       with: .linearGradient(Gradient(colors: [gold.opacity(0.15 * fade), gold.opacity(0.85 * fade)]),
+                                             startPoint: CGPoint(x: cx, y: 0), endPoint: CGPoint(x: head, y: 0)))
+            let glow: CGFloat = 16
+            light.fill(circle(CGPoint(x: head, y: g.hitY), glow),
+                       with: .radialGradient(Gradient(colors: [Color.white.opacity(0.9 * fade), gold.opacity(0.5 * fade), gold.opacity(0)]),
+                                             center: CGPoint(x: head, y: g.hitY), startRadius: 0, endRadius: glow))
         }
     }
 
@@ -1338,22 +1676,21 @@ struct HighwayRunway: View {
                      with: .linearGradient(Self.vignette, startPoint: CGPoint(x: size.width, y: 0), endPoint: CGPoint(x: size.width - 36, y: 0)))
     }
 
-    /// The string numbers under the targets, and the outer lanes named in words, each on a dark plate so the
-    /// strings running under them never cut through the letters.
-    private func drawLabels(_ context: inout GraphicsContext, _ g: Lanes) {
-        let plate = Palette.stageDeep.opacity(0.75)
-        for s in 1...g.strings {
-            let p = CGPoint(x: g.x(s, 0), y: g.hitY + 28)
-            context.fill(Path(roundedRect: CGRect(x: p.x - 8, y: p.y - 7, width: 16, height: 14), cornerRadius: 7), with: .color(plate))
-            context.draw(Text("\(s)").font(.system(size: 10, weight: .bold)).foregroundStyle(Palette.inkSoft), at: p)
-        }
+    /// The outer lanes named in words under their targets ("Thinnest" and "Thickest": the numbers are in the
+    /// rings, so they aren't said twice), each on a dark plate so the strings running under it never cut through
+    /// the letters.
+    private func drawLabels(_ context: inout GraphicsContext, _ g: Lanes, scale: CGFloat) {
         guard let edges, g.strings >= 2 else { return }
-        // Under the outer lanes' numbers, reading inward, and always whole on the stage.
-        if let name = edges.canvasLabel(g.leftString, size: 9) {
-            edgeLabel(&context, name, from: g.laneX(0, 0) - 16, leading: true, y: g.hitY + 43, width: g.width, plate: plate)
+        let plate = Palette.stageDeep.opacity(0.8)
+        let points = DiagramType.size(DiagramType.floor, scale: scale)
+        let y = g.hitY + Self.targetRadius(g) + 7 + points * 0.6
+        func styled(_ word: Text) -> Text { word.font(DiagramType.font(points, weight: .semibold)).foregroundStyle(Palette.inkSoft) }
+        // Reading inward from the outer lanes, and always whole on the stage.
+        if let word = edges.word(g.leftString) {
+            edgeLabel(&context, styled(word), from: g.laneX(0, 0) - 16, leading: true, y: y, width: g.width, plate: plate)
         }
-        if let name = edges.canvasLabel(g.rightString, size: 9) {
-            edgeLabel(&context, name, from: g.laneX(g.strings - 1, 0) + 16, leading: false, y: g.hitY + 43, width: g.width, plate: plate)
+        if let word = edges.word(g.rightString) {
+            edgeLabel(&context, styled(word), from: g.laneX(g.strings - 1, 0) + 16, leading: false, y: y, width: g.width, plate: plate)
         }
     }
 
@@ -1477,7 +1814,7 @@ struct UpNextRail: View {
         return VStack(spacing: 0) {
             if fretted, let at = note.at {
                 Text(at.fret, format: .number).font(Typeface.number(16)).foregroundStyle(Palette.ink)
-                Text(NoteName.pitchClass(note.midi)).font(Typeface.label(9)).foregroundStyle(tint)
+                Text(NoteName.pitchClass(note.midi)).font(Typeface.label(11, relativeTo: .caption2)).foregroundStyle(tint)
             } else {
                 Text(NoteName.pitchClass(note.midi)).font(Typeface.label(15)).foregroundStyle(Palette.ink)
             }

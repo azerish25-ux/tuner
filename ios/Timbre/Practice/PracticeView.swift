@@ -114,36 +114,39 @@ struct PracticeView: View {
         }
     }
 
+    /// The ear games as live cards: each idles in a preview of itself beside its best, its level and today's challenge.
     private var gamesSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        let stats = store.progress.stats
+        let best = stats["sniperBest"] ?? 0
+        let sniperLevel = SniperRank.level(bullseyes: stats["bullseyes"] ?? 0)
+        let earLevel = (EarDrill.allCases.map { store.settings.earLevels?[$0.rawValue] ?? 0 }.max() ?? 0) + 1
+        let correct = stats["earCorrect"] ?? 0
+        let sniperStats = statsLine(best > 0 ? Text("Best \(best)") : nil, level: sniperLevel)
+        let earStats = statsLine(Text("\(correct) correct"), level: earLevel)
+        return VStack(alignment: .leading, spacing: 10) {
             Text("Ear games").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
-            HStack(spacing: 12) {
-                gameCard(.sniper, title: "Pitch Sniper", detail: (store.progress.stats["sniperBest"]).map { "Best \($0.formatted())" } ?? String(localized: "Hit the note dead center"), tint: Palette.mint, symbol: "scope")
-                gameCard(.ear, title: "Ear trainer", detail: String(localized: "Pitch, intervals, chords"), tint: Palette.amber, symbol: "ear")
+            gameCard(.sniper, title: "Pitch Sniper", stats: sniperStats, challenge: .sniper(store), tint: Palette.mint) { live in
+                SniperScopePreview(live: live)
+            }
+            gameCard(.ear, title: "Ear trainer", stats: earStats, challenge: .ear(store), tint: Palette.amber) { live in
+                IntervalStairsPreview(live: live)
             }
         }
     }
 
-    private func gameCard(_ route: PracticeRoute, title: LocalizedStringKey, detail: String, tint: Color, symbol: String) -> some View {
+    /// "Best 1840 · Level 3": the game's score, when it has one, then its level.
+    private func statsLine(_ score: Text?, level: Int) -> Text {
+        let levelText = Text("Level \(level)")
+        guard let score else { return levelText }
+        return score + Text(verbatim: " · ") + levelText
+    }
+
+    private func gameCard<Preview: View>(_ route: PracticeRoute, title: LocalizedStringKey, stats: Text, challenge: GameChallenge, tint: Color,
+                                         @ViewBuilder preview: @escaping (Bool) -> Preview) -> some View {
         Button { path.append(route) } label: {
-            ZStack(alignment: .bottomLeading) {
-                RoundedRectangle(cornerRadius: 22, style: .continuous)
-                    .fill(RadialGradient(colors: [tint.opacity(0.22), Palette.stageRaised], center: UnitPoint(x: 0.75, y: 0.2), startRadius: 0, endRadius: 150))
-                Image(systemName: symbol).font(.system(size: 46, weight: .light)).foregroundStyle(tint)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing).padding(16)
-                    .symbolEffect(.pulse, options: .repeating.speed(0.4))
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(title).font(Typeface.display(16)).foregroundStyle(Palette.ink)
-                    Text(detail).font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(2)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .padding(14)
-            }
-            .frame(height: 150)
-            .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
-            .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+            PlayGameCard(title: title, stats: stats, challenge: challenge, tint: tint, preview: preview)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressScaleStyle())
         .accessibilityIdentifier("practice.\(route)")
     }
 
@@ -174,10 +177,11 @@ struct PracticeView: View {
             if pro && !commerce.isPro { store.presentPaywall("practice.\(route)") } else { path.append(route) }
         } label: {
             VStack(spacing: 6) {
-                Image(systemName: symbol).font(.system(size: 18, weight: .medium)).foregroundStyle(Palette.ink)
+                // The metronome ticks and the drone ripples, live; the other tools keep their symbol.
+                PlayToolGlyph(route: route, symbol: symbol)
                 Text(title).font(.caption.weight(.semibold)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.8)
             }
-            .frame(maxWidth: .infinity, minHeight: 66)
+            .frame(maxWidth: .infinity, minHeight: 74)
             .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Palette.stageRaised))
             .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
             .overlay(alignment: .topTrailing) { if pro && !commerce.isPro { ProBadge().scaleEffect(0.8).padding(4) } }

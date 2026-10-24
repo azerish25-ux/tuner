@@ -47,9 +47,11 @@ struct LessonVisualView: View {
 }
 
 /// Which string sits on top wherever a neck is drawn lying down (the fretboard strips, the intonation neck,
-/// the strum sweep, the highway's lanes), one choice for the whole app (Settings › String order): tab order,
-/// string 1 (the thinnest) on top as tablature writes it, or the mirror, the thickest on top as you see the
-/// neck looking down at it while playing. Chord boxes stand upright and keep their own convention.
+/// the strum and sound-hole stage, the tune check's string rail, the highway's lanes), one choice for the whole
+/// app (Settings › String order): tab order, string 1 (the thinnest) on top as tablature writes it, or the
+/// mirror, the thickest on top as you see the neck looking down at it while playing. Where strings run side by
+/// side instead (the highway's lanes, the tune check's rail), the string drawn on top takes the left. Chord
+/// boxes stand upright and keep their own convention (the lowest string on the left).
 ///
 /// In a view: `@AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab`, then
 /// `stringOrder.row(ofString:count:)` for where string n goes; elsewhere `StringOrder.current`.
@@ -118,9 +120,34 @@ struct StringEdges: Equatable {
         return nil
     }
 
-    /// The same, styled for drawing into a Canvas.
-    func canvasLabel(_ string: Int, size: CGFloat = 10) -> Text? {
-        label(string)?.font(.system(size: size, weight: .semibold, design: .rounded)).foregroundStyle(Palette.inkSoft)
+    /// Just the word, for a place that already shows the string's number beside it (the highway's targets).
+    func word(_ string: Int) -> Text? {
+        if string == thinnest { return Text("Thinnest") }
+        if string == thickest { return Text("Thickest") }
+        return nil
+    }
+
+    /// The same, styled for drawing into a Canvas: never under the diagrams' 11 pt floor (`DiagramType`).
+    func canvasLabel(_ string: Int, size: CGFloat = DiagramType.floor) -> Text? {
+        label(string)?.font(DiagramType.font(size, weight: .semibold)).foregroundStyle(Palette.inkSoft)
+    }
+}
+
+/// The smallest type a diagram draws (string names and numbers, fret numbers, edge and lane names): never under
+/// 11 pt, the size of `.caption2`, and growing with Dynamic Type as `.caption2` does, up to `cap` times, so a
+/// drawing keeps its layout at the largest sizes. A view reads its scale with
+/// `@ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1` and passes it in.
+enum DiagramType {
+    static let floor: CGFloat = 11
+    static let cap: CGFloat = 1.3
+
+    /// `points` (raised to the floor) grown by the Dynamic Type `scale`, within the cap.
+    static func size(_ points: CGFloat, scale: CGFloat = 1) -> CGFloat {
+        max(Self.floor, points) * min(Self.cap, max(1, scale))
+    }
+
+    static func font(_ points: CGFloat = DiagramType.floor, weight: Font.Weight = .bold, scale: CGFloat = 1) -> Font {
+        .system(size: size(points, scale: scale), weight: weight, design: .rounded)
     }
 }
 
@@ -154,12 +181,15 @@ struct FretboardDiagram: View {
     var fretNumbers = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
+    /// String numbers, fret numbers and edge names grow with Dynamic Type from the 11 pt floor (`DiagramType`).
+    @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
 
     var body: some View {
         let order = stringOrder
+        let scale = typeScale
         TimelineView(.animation(minimumInterval: 1 / 30, paused: !pulsing || reduceMotion)) { timeline in
             let beat = pulsing && !reduceMotion ? 0.5 + 0.5 * sin(timeline.date.timeIntervalSinceReferenceDate * 2 * .pi / 1.2) : 0
-            Canvas { context, size in draw(&context, size: size, beat: beat, order: order) }
+            Canvas { context, size in draw(&context, size: size, beat: beat, order: order, scale: scale) }
         }
         .frame(height: height)
         .accessibilityElement(children: .ignore)
@@ -212,7 +242,7 @@ struct FretboardDiagram: View {
         strings > 1 ? CGFloat(string - 1) / CGFloat(strings - 1) : 0.5
     }
 
-    private func draw(_ context: inout GraphicsContext, size: CGSize, beat: Double, order: StringOrder) {
+    private func draw(_ context: inout GraphicsContext, size: CGSize, beat: Double, order: StringOrder, scale: CGFloat) {
         let lift = edgeLift
         let left = Self.nutX, right = size.width - 10, top = pad + lift
         let bottom = size.height - pad - footRow - lift
@@ -220,8 +250,9 @@ struct FretboardDiagram: View {
         if let edges, lift > 0 {
             // The top string's name over its number ("Thinnest (1)" in tab order), the bottom string's under its own.
             let topString = order.string(atRow: 0, count: count), bottomString = order.string(atRow: count - 1, count: count)
-            if let name = edges.canvasLabel(topString) { context.draw(name, at: CGPoint(x: 2, y: lift / 2 + 1), anchor: .leading) }
-            if let name = edges.canvasLabel(bottomString) { context.draw(name, at: CGPoint(x: 2, y: size.height - lift / 2 - 1), anchor: .leading) }
+            let points = DiagramType.size(DiagramType.floor, scale: scale)
+            if let name = edges.canvasLabel(topString, size: points) { context.draw(name, at: CGPoint(x: 2, y: lift / 2 + 1), anchor: .leading) }
+            if let name = edges.canvasLabel(bottomString, size: points) { context.draw(name, at: CGPoint(x: 2, y: size.height - lift / 2 - 1), anchor: .leading) }
         }
         let fretWidth = (right - left) / CGFloat(frets)
         let gap = strings > 1 ? (bottom - top) / CGFloat(strings - 1) : 0
@@ -236,9 +267,10 @@ struct FretboardDiagram: View {
         if start <= 1 {
             context.fill(Path(CGRect(x: left - 3, y: top - 10, width: 6, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3)))
         } else if !numbered {
-            context.draw(Text("\(start)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: left + fretWidth / 2, y: size.height - lift - 13))
+            context.draw(Text("\(start)fr").font(DiagramType.font(11, weight: .semibold, scale: scale)).foregroundStyle(Palette.inkSoft),
+                         at: CGPoint(x: left + fretWidth / 2, y: size.height - lift - 13))
         }
-        if numbered { drawFretNumbers(&context, left: left, fretWidth: fretWidth, y: bottom + pad + Self.numberRow / 2 - 2) }
+        if numbered { drawFretNumbers(&context, left: left, fretWidth: fretWidth, y: bottom + pad + Self.numberRow / 2 - 2, scale: scale) }
         for fret in 1...frets {
             let x = left + CGFloat(fret) * fretWidth
             if fretless {
@@ -268,7 +300,7 @@ struct FretboardDiagram: View {
                 // A thin highlight along the top of a wound string.
                 context.fill(Path(CGRect(x: left, y: y - thickness / 2, width: right - left, height: 0.6)), with: .color(.white.opacity(0.28)))
             }
-            drawNumber(&context, string: string, y: y, gap: gap, lit: lit)
+            drawNumber(&context, string: string, y: y, lit: lit, scale: scale)
         }
         for (k, dot) in dots.enumerated() where dot.string >= 1 && dot.string <= strings {
             // Landing: hidden until its turn, then it falls the last few points onto the string as it grows.
@@ -300,23 +332,23 @@ struct FretboardDiagram: View {
         }
     }
 
-    /// The string's number in the column left of the nut; the string being played lights with it.
-    private func drawNumber(_ context: inout GraphicsContext, string: Int, y: CGFloat, gap: CGFloat, lit: Bool) {
-        let size = min(tall ? 13 : 11, max(8, gap * 0.62))
-        let label = Text("\(string)").font(.system(size: size, weight: .bold, design: .rounded))
+    /// The string's number in the column left of the nut; the string being played lights with it. Never under the
+    /// 11 pt floor, even on the tune check's compact strip (its rows are 15 pt apart, room for an 11 pt numeral).
+    private func drawNumber(_ context: inout GraphicsContext, string: Int, y: CGFloat, lit: Bool, scale: CGFloat) {
+        let label = Text("\(string)").font(DiagramType.font(tall ? 13 : 11, scale: scale))
             .foregroundStyle(lit ? accent : Palette.inkSoft.opacity(0.85))
         context.draw(label, at: CGPoint(x: Self.numberX, y: y))
     }
 
     /// Each fret's number under its column, as on the Scales neck; the frets holding a landed dot light up.
-    private func drawFretNumbers(_ context: inout GraphicsContext, left: CGFloat, fretWidth: CGFloat, y: CGFloat) {
+    private func drawFretNumbers(_ context: inout GraphicsContext, left: CGFloat, fretWidth: CGFloat, y: CGFloat, scale: CGFloat) {
         var held = Set<Int>()
         for (k, dot) in dots.enumerated() where dot.fret > 0 && (landing?[safe: k] ?? 1) > 0.6 { held.insert(dot.fret) }
-        let size: CGFloat = tall ? 12 : 10
+        let size: CGFloat = tall ? 12 : 11
         for column in 0..<max(1, frets) {
             let fret = start + column
             let lit = held.contains(fret)
-            let label = Text("\(fret)").font(.system(size: size, weight: lit ? .heavy : .semibold, design: .rounded))
+            let label = Text("\(fret)").font(DiagramType.font(size, weight: lit ? .heavy : .semibold, scale: scale))
                 .foregroundStyle(lit ? accent : Palette.inkFaint)
             context.draw(label, at: CGPoint(x: left + (CGFloat(column) + 0.5) * fretWidth, y: y))
         }
@@ -355,6 +387,8 @@ struct ChordDiagram: View {
     @State private var landed = false
     @State private var landGeneration = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// String and fret numbers grow with Dynamic Type from the 11 pt floor (`DiagramType`).
+    @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
 
     enum LandingOrder { case strings, fingers }
 
@@ -390,7 +424,8 @@ struct ChordDiagram: View {
             if showName { Text(chord.name).font(Typeface.display(28)).foregroundStyle(Palette.ink) }
             TimelineView(.animation(paused: !landing || landed || reduceMotion)) { timeline in
                 let landScale = landScales(at: timeline.date)
-                Canvas { context, size in draw(&context, size: size, land: landScale) }
+                let scale = typeScale
+                Canvas { context, size in draw(&context, size: size, land: landScale, scale: scale) }
                     .aspectRatio(CGFloat(chord.frets.count) / (5.4 * min(1.5, max(1, stretch))), contentMode: .fit)
             }
             if let edges, chord.frets.count >= 2 { edgeNames(edges) }
@@ -401,18 +436,32 @@ struct ChordDiagram: View {
         .onChange(of: replay) { _, _ in startLanding(delay: 0.05) }
     }
 
-    /// The lowest string's name under the left of the box, string 1's under the right.
+    /// The lowest string's name under the left of the box, string 1's under the right, at `.caption2` (11 pt and
+    /// up). A narrow box (the progression strip's) puts them on two lines rather than shrinking them.
     private func edgeNames(_ edges: StringEdges) -> some View {
-        HStack(spacing: 6) {
-            edges.label(chord.frets.count)
-            Spacer(minLength: 0)
-            edges.label(1)
+        let low = edges.label(chord.frets.count), high = edges.label(1)
+        return ViewThatFits(in: .horizontal) {
+            HStack(spacing: 4) {
+                low
+                Spacer(minLength: 0)
+                high
+            }
+            VStack(spacing: 1) {
+                HStack(spacing: 0) {
+                    low
+                    Spacer(minLength: 0)
+                }
+                HStack(spacing: 0) {
+                    Spacer(minLength: 0)
+                    high
+                }
+            }
         }
-        .font(.system(size: 10, weight: .semibold, design: .rounded))
+        .font(.system(.caption2, design: .rounded).weight(.semibold))
         .foregroundStyle(Palette.inkSoft)
         .lineLimit(1)
-        .minimumScaleFactor(0.75)
-        .padding(.horizontal, 6)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        .padding(.horizontal, 2)
         .padding(.top, -4)
     }
 
@@ -442,7 +491,7 @@ struct ChordDiagram: View {
         return found
     }
 
-    private func draw(_ context: inout GraphicsContext, size: CGSize, land: (Int) -> CGFloat) {
+    private func draw(_ context: inout GraphicsContext, size: CGSize, land: (Int) -> CGFloat, scale: CGFloat) {
         let count = chord.frets.count
         let rows = 4
         let base = chord.baseFret ?? 1
@@ -458,11 +507,11 @@ struct ChordDiagram: View {
         if base == 1 {
             context.fill(Path(roundedRect: CGRect(x: left - 2, y: top - 5, width: right - left + 4, height: 6), cornerRadius: 2), with: .color(Palette.ink))
         } else if !fretNumbers {
-            context.draw(Text("\(base)fr").font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.inkSoft),
+            context.draw(Text("\(base)fr").font(DiagramType.font(11, weight: .semibold, scale: scale)).foregroundStyle(Palette.inkSoft),
                          at: CGPoint(x: left - radius - 4, y: top + rowHeight / 2), anchor: .trailing)
         }
         if fretNumbers {
-            drawFretNumbers(&context, base: base, rows: rows, top: top, rowHeight: rowHeight, x: left - radius - 6, land: land)
+            drawFretNumbers(&context, base: base, rows: rows, top: top, rowHeight: rowHeight, x: left - radius - 6, land: land, scale: scale)
         }
         for row in 0...rows {
             let y = top + CGFloat(row) * rowHeight
@@ -477,7 +526,7 @@ struct ChordDiagram: View {
             context.fill(Path(CGRect(x: x - thickness / 2, y: top, width: thickness, height: bottom - top)), with: .color(lit ? accent : Palette.inkSoft.opacity(0.75)))
             if numbered {
                 // String numbers run from the lowest string (left) down to 1.
-                context.draw(Text("\(count - i)").font(.system(size: 10, weight: .bold, design: .rounded)).foregroundStyle(lit ? accent : Palette.inkFaint),
+                context.draw(Text("\(count - i)").font(DiagramType.font(11, scale: scale)).foregroundStyle(lit ? accent : Palette.inkFaint),
                              at: CGPoint(x: x, y: size.height - 8))
             }
             let fret = chord.frets[i]
@@ -504,12 +553,13 @@ struct ChordDiagram: View {
     }
 
     /// Each row's fret beside it, right-aligned left of the box; a fret with a landed finger on it in the accent.
-    private func drawFretNumbers(_ context: inout GraphicsContext, base: Int, rows: Int, top: CGFloat, rowHeight: CGFloat, x: CGFloat, land: (Int) -> CGFloat) {
+    private func drawFretNumbers(_ context: inout GraphicsContext, base: Int, rows: Int, top: CGFloat, rowHeight: CGFloat, x: CGFloat,
+                                 land: (Int) -> CGFloat, scale: CGFloat) {
         let frets = chord.frets
         for row in 0..<rows {
             let fret = base + row
             let held = frets.indices.contains { frets[$0] == fret && land($0) > 0.6 }
-            let label = Text("\(fret)").font(.system(size: 11, weight: held ? .heavy : .semibold, design: .rounded))
+            let label = Text("\(fret)").font(DiagramType.font(11, weight: held ? .heavy : .semibold, scale: scale))
                 .foregroundStyle(held ? accent : Palette.inkFaint)
             context.draw(label, at: CGPoint(x: x, y: top + (CGFloat(row) + 0.5) * rowHeight), anchor: .trailing)
         }
@@ -695,7 +745,9 @@ struct KeyboardView: View {
                 let rect = CGRect(x: CGFloat(i) * w + 1, y: 0, width: w - 2, height: size.height)
                 context.fill(Path(roundedRect: rect, cornerRadius: 5), with: .color(highlighted.contains(midi) ? accent : Color(hex: 0xEDEBE6)))
                 if midi % 12 == 0 {
-                    context.draw(Text("C\(midi / 12 - 1)").font(.system(size: 9, weight: .semibold)).foregroundStyle(Color.black.opacity(0.45)), at: CGPoint(x: rect.midX, y: size.height - 10))
+                    // The diagrams' 11 pt floor; a white key is wide enough for "C4" at that size, not more.
+                    context.draw(Text("C\(midi / 12 - 1)").font(DiagramType.font(11, weight: .semibold)).foregroundStyle(Color.black.opacity(0.5)),
+                                 at: CGPoint(x: rect.midX, y: size.height - 11))
                 }
             }
             for (i, midi) in whites.enumerated() where [0, 2, 5, 7, 9].contains(midi % 12) && i < whites.count - 1 {

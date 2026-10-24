@@ -333,7 +333,7 @@ struct TuneView: View {
     /// Hear the target, automatic string detection and listening, stacked beside the instrument.
     private var sideControls: some View {
         VStack(spacing: 12) {
-            StrumToggle { strumOpen = true }
+            StrumToggle { strumOpen = true }.strumTuneTip()  // TipKit coach mark, Tips/TimbreTips.swift
             StageControl(symbol: audio.tonePlaying ? "speaker.slash.fill" : "speaker.wave.2.fill", active: audio.tonePlaying) { store.toggleTone() }
                 .accessibilityLabel(Text(audio.tonePlaying ? "Stop reference tone" : "Play reference tone"))
                 .accessibilityIdentifier("tune.tone")

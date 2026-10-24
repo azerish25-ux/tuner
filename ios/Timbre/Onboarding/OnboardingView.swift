@@ -15,7 +15,6 @@ struct OnboardingView: View {
     @State private var showPaywall = false
     @State private var restoring = false
     @State private var restoreMessage: String?
-    @State private var floating = false
     /// Instrument chips past the welcome row's edges (it starts with more to the right).
     @State private var chipOverflow = ChipOverflow(leading: false, trailing: true)
     /// The plan's commitment: minutes a day and the reminder time ("Remind me" turns it on there).

@@ -11,7 +11,8 @@ struct VoiceView: View {
     private var exercise: VoiceExercise { store.voiceExercise }
     private var targetMidi: Int { store.voiceRunning && store.countdown == 0 ? store.voiceTargetMidi : store.voiceRoot }
     private func text(_ key: String, _ fallback: String) -> String { NSLocalizedString(key, value: fallback, comment: "") }
-    private func note(_ midi: Int) -> String { PitchMath.noteName(midi: midi, notation: store.settings.notation) }
+    /// Spelled as the tuner, drone and chords spell notes (E♭ not D♯), in the player's note names.
+    private func note(_ midi: Int) -> String { VoiceNoteName.name(midi, notation: store.settings.notation) }
     private func exerciseName(_ level: Int) -> String {
         let suffix = ["1", "2", "3", "4", "interval", "melody", "range", "song"][level - 1]
         return text("timbre_voice_exercise_" + suffix, VoiceExercise(level: level).name)
@@ -179,7 +180,7 @@ private struct LiveVoiceReading: View {
         let reading = store.live.reading
         VStack(alignment: .trailing, spacing: 2) {
             if let cents = reading.cents {
-                Text(String(format: "%+.0f¢", cents)).font(Typeface.number(28))
+                Text(verbatim: NoteReadout.signed(cents.isFinite ? Int(cents.rounded()) : nil)).font(Typeface.number(28))
                     .foregroundStyle(abs(cents) <= tolerance ? Palette.locked : Palette.pitch(cents, locked: false))
                 Text(reading.stable ? "Clear pitch" : "Settling").font(.caption).foregroundStyle(Palette.inkSoft)
             } else {
@@ -260,7 +261,7 @@ private struct VoiceTrace: View {
             let held = (size.width - inset * 2) * CGFloat(min(1, max(0.08, hold ?? 0.3)))
             context.fill(Path(roundedRect: CGRect(x: size.width / 2 - held / 2, y: center - 4, width: held, height: 8), cornerRadius: 4),
                          with: .color(Palette.brass.opacity(0.6)))
-            context.draw(Text(verbatim: PitchMath.noteName(midi: midi, notation: notation)).font(Typeface.label(11)).foregroundStyle(Palette.inkSoft),
+            context.draw(Text(verbatim: VoiceNoteName.name(midi, notation: notation)).font(Typeface.label(11)).foregroundStyle(Palette.inkSoft),
                          at: CGPoint(x: inset, y: center - 16), anchor: .leading)
             return
         }
@@ -278,7 +279,7 @@ private struct VoiceTrace: View {
             }
             context.fill(Path(roundedRect: CGRect(x: x0, y: level - 4, width: width, height: 8), cornerRadius: 4),
                          with: .color(Palette.brass.opacity(i == 0 ? 0.75 : 0.32)))
-            context.draw(Text(verbatim: PitchMath.noteName(midi: midi, notation: notation)).font(Typeface.label(10)).foregroundStyle(i == 0 ? Palette.ink : Palette.inkFaint),
+            context.draw(Text(verbatim: VoiceNoteName.name(midi, notation: notation)).font(Typeface.label(10)).foregroundStyle(i == 0 ? Palette.ink : Palette.inkFaint),
                          at: CGPoint(x: x0 + width / 2, y: level - 13))
             previous = CGPoint(x: x0 + width, y: level)
         }
@@ -332,7 +333,7 @@ private struct RangeLadder: View {
                 tick.move(to: CGPoint(x: x(midi), y: rail - 8))
                 tick.addLine(to: CGPoint(x: x(midi), y: rail + 8))
                 context.stroke(tick, with: .color(Palette.inkFaint.opacity(0.6)), lineWidth: 1)
-                context.draw(Text(verbatim: PitchMath.noteName(midi: midi, notation: notation)).font(Typeface.label(10)).foregroundStyle(Palette.inkFaint),
+                context.draw(Text(verbatim: VoiceNoteName.name(midi, notation: notation)).font(Typeface.label(10)).foregroundStyle(Palette.inkFaint),
                              at: CGPoint(x: x(midi), y: size.height - 7))
             }
             let from = x(min(low, high)), to = x(max(low, high))

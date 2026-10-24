@@ -1,6 +1,7 @@
 import StoreKit
 import SwiftUI
 import TimbreCore
+import UIKit
 import UserNotifications
 
 struct PaywallView: View {
@@ -22,14 +23,19 @@ struct PaywallView: View {
     @State private var remindersBlocked = false
     /// The plan track draws itself in from Today.
     @State private var trackDrawn = false
+    /// "What's in Pro" is open: the Free and Pro table shows under it.
+    @State private var detailsOpen = false
+    /// The table's Free and Pro columns grow with the text.
+    @ScaledMetric(relativeTo: .caption) private var cellWidth: CGFloat = 50
     // Measured layout. The headline, the plans, the whole plan track and the button show without scrolling;
-    // the outcomes, the hero and the counts line fill what is left, in that order, and what does not fit
+    // the outcomes, "What's in Pro" and the hero fill what is left, in that order, and what does not fit
     // waits just below the fold. Nothing rests under the pinned bar.
     @State private var containerHeight: CGFloat = 0
     @State private var barHeight: CGFloat = 0
     @State private var headerHeight: CGFloat = 34
     @State private var outcomesHeight: CGFloat = 92
-    @State private var countsHeight: CGFloat = 16
+    /// "What's in Pro" closed: the table opens below what is measured, so opening it never reshuffles the fold.
+    @State private var detailsHeight: CGFloat = 16
     @State private var offerHeight: CGFloat = 230
     /// The track with the free trial on it, and the plan's own track (no trial selected), each as last measured.
     @State private var trialTrackHeight: CGFloat = 96
@@ -96,13 +102,11 @@ struct PaywallView: View {
     /// The Pro pill on its own row, when there is no hero for it to stand in.
     private static let pillRow: CGFloat = 40
     private static let previewTop: CGFloat = 6
-    /// Below this the hero steps aside for the pill alone (the instrument, the runway, the combo and the pill no
-    /// longer fit one above another); above it, it grows to `previewMax`.
-    private static let previewMin: CGFloat = 98
+    /// The hero grows to this; below its own minimum (`PaywallHero.minHeight`) it steps aside for the pill alone.
     private static let previewMax: CGFloat = 236
     private static let headerTop: CGFloat = 12
     private static let outcomesTop: CGFloat = 12
-    private static let countsTop: CGFloat = 6
+    private static let detailsTop: CGFloat = 6
     private static let trackTop: CGFloat = 14
 
     /// Where each part of the pitch goes: above the fold when it fits, else just below it.
@@ -110,27 +114,26 @@ struct PaywallView: View {
         /// 0: no hero, the Pro pill stands on its own row.
         var preview: CGFloat = 0
         var outcomes = true
-        var counts = true
+        /// "What's in Pro", under the outcomes.
+        var details = true
     }
 
-    /// The room beside the essentials goes to the outcomes, then the hero (its minimum, then its growth) and the
-    /// counts line. When not even the pill fits, the page scrolls anyway and everything stays in reading order
-    /// above the fine print. A locked lesson's card replaces the hero.
-    private func fold(_ pitch: Pitch, plan: PaywallPlan) -> Fold {
+    /// The room beside the essentials goes to the outcomes, then "What's in Pro" under them, then the hero (its
+    /// minimum, then its growth). When not even the pill fits, the page scrolls anyway and everything stays in
+    /// reading order above the fine print. A locked lesson's card replaces the hero.
+    private func fold(_ pitch: Pitch, plan: PaywallPlan, hero: PaywallHero) -> Fold {
         var left = viewport - essentials(plan)
         guard left >= Self.pillRow else { return Fold() }
         var result = Fold()
         result.outcomes = left - Self.pillRow >= Self.outcomesTop + outcomesHeight
         if result.outcomes { left -= Self.outcomesTop + outcomesHeight }
-        let heroFloor = Self.previewTop + Self.previewMin
+        result.details = result.outcomes && left - Self.pillRow >= Self.detailsTop + detailsHeight
+        if result.details { left -= Self.detailsTop + detailsHeight }
+        let heroFloor = Self.previewTop + hero.minHeight
         if pitch.lesson == nil && left >= heroFloor {
-            let growth = min(left - heroFloor, Self.previewMax - Self.previewMin)
-            result.preview = Self.previewMin + growth
-            left -= heroFloor + growth
-        } else {
-            left -= Self.pillRow
+            let growth = min(left - heroFloor, Self.previewMax - hero.minHeight)
+            result.preview = hero.minHeight + growth
         }
-        result.counts = result.outcomes && left >= Self.countsTop + countsHeight
         return result
     }
 
@@ -138,13 +141,14 @@ struct PaywallView: View {
     private var planHorizon: Int { commerce.annual.map { trialDays($0) } ?? 14 }
 
     private func content(_ pitch: Pitch, plan: PaywallPlan) -> some View {
-        let layout = fold(pitch, plan: plan)
+        let hero = self.hero(pitch, plan: plan)
+        let layout = fold(pitch, plan: plan, hero: hero)
         let steps = trackSteps(plan)
         let trial = showsTrial
         return VStack(spacing: 0) {
             VStack(spacing: 0) {
                 if layout.preview > 0 {
-                    preview(pitch, plan: plan, height: layout.preview).padding(.top, Self.previewTop)
+                    preview(hero, plan: plan, height: layout.preview).padding(.top, Self.previewTop)
                 } else {
                     PaywallProPill().padding(.top, 14)
                 }
@@ -153,7 +157,7 @@ struct PaywallView: View {
                     .padding(.top, layout.preview > 0 ? Self.headerTop : 10)
                 if layout.outcomes {
                     outcomeList(plan).padding(.top, Self.outcomesTop)
-                    if layout.counts && showsCounts(plan) { countsLine.padding(.top, Self.countsTop) }
+                    if layout.details { proDetails.padding(.top, Self.detailsTop) }
                 }
                 offer
                     .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in offerHeight = height }
@@ -176,14 +180,16 @@ struct PaywallView: View {
         .frame(maxWidth: .infinity)
     }
 
-    /// The outcomes with their counts line, when they did not fit above the fold.
+    /// The outcomes and "What's in Pro", or just "What's in Pro", when they did not fit above the fold.
     @ViewBuilder private func belowFold(_ plan: PaywallPlan, layout: Fold) -> some View {
         if !layout.outcomes {
-            VStack(spacing: Self.countsTop) {
+            VStack(spacing: Self.detailsTop) {
                 outcomeList(plan)
-                if showsCounts(plan) { countsLine }
+                proDetails
             }
             .padding(.top, 28)
+        } else if !layout.details {
+            proDetails.padding(.top, 28)
         }
     }
 
@@ -235,7 +241,8 @@ struct PaywallView: View {
         default:
             break
         }
-        if reason.hasSuffix("drone") { return Pitch(headline: Text("Unlock the Tanpura drone and every practice tool")) }
+        // One line: the outcomes under it already promise every practice tool.
+        if reason.hasSuffix("drone") { return Pitch(headline: Text("Unlock the Tanpura drone")) }
         if reason.hasPrefix("ear.") { return Pitch(headline: Text("Every ear game and practice tool")) }
         if reason.hasPrefix("metronome.") { return Pitch(headline: Text("Keep better time")) }
         if reason.hasPrefix("practice.") || reason.hasPrefix("daily.") {
@@ -285,14 +292,47 @@ struct PaywallView: View {
 
     // MARK: Hero
 
-    /// One scene across the full width, looping: the person's instrument (or the one they just tried to open) with
-    /// its strings running on as a play-along runway, a lane per string, the combo and the Timbre Pro pill under it.
-    private func preview(_ pitch: Pitch, plan: PaywallPlan, height: CGFloat) -> some View {
-        let hero = heroFigure(pitch, plan: plan)
-        return PaywallPreview(figure: hero.figure, accent: plan.accent, lanes: lanes(hero.instrumentId), height: height)
+    /// One scene across the full width, looping, with the Timbre Pro pill under it: the person's instrument (or the
+    /// one they just tried to open) with its strings running on as a play-along runway, a lane per string, and the
+    /// combo; or the scene of the tool that opened the paywall.
+    private func preview(_ hero: PaywallHero, plan: PaywallPlan, height: CGFloat) -> some View {
+        PaywallPreview(hero: hero, accent: plan.accent, height: height)
             .opacity(appeared ? 1 : 0)
             .offset(y: appeared || reduceMotion ? 0 : 12)
             .animation(.spring(response: 0.9, dampingFraction: 0.85), value: appeared)
+    }
+
+    /// The tool's own scene when a tool opened the paywall, else the instrument and its runway (lessons, songs,
+    /// instruments and the plan).
+    private func hero(_ pitch: Pitch, plan: PaywallPlan) -> PaywallHero {
+        if let tool = heroTool { return .tool(tool) }
+        let figure = heroFigure(pitch, plan: plan)
+        return .runway(figure.figure, lanes: lanes(figure.instrumentId))
+    }
+
+    /// The tool that opened the paywall: the drone (the Tanpura), an ear game (the interval staircase), Pitch
+    /// Sniper or the tuner's precision (the scope), the metronome (its beat). Onboarding's ear and rhythm goals
+    /// show their tool too; every other plan keeps the instrument.
+    private var heroTool: PaywallTool? {
+        guard context == .standard else {
+            switch answers?.goal {
+            case "ear": return .staircase
+            case "rhythm": return .beat(bpm: store.bpm, beats: store.beats)
+            default: return nil
+            }
+        }
+        guard let reason = store.paywallReason else { return nil }
+        if reason.hasSuffix("drone") { return .drone(tonic: droneTonic) }
+        if reason.hasPrefix("ear.") || reason == "daily.ear" { return .staircase }
+        if reason.contains("sniper") || reason == "precision" { return .scope }
+        if reason.hasPrefix("metronome.") || reason == "daily.rhythm" { return .beat(bpm: store.bpm, beats: store.beats) }
+        return nil
+    }
+
+    /// The drone's tonic as its key on the Drone screen names it (flats for the black keys).
+    private var droneTonic: String {
+        let pitchClass = store.droneMidi % 12
+        return NoteNames.name(pitchClass, preferFlats: [1, 3, 8, 10].contains(pitchClass))
     }
 
     /// The instrument they just tried to open, else their own (onboarding's answer, or the one they tune), as the
@@ -426,17 +466,143 @@ struct PaywallView: View {
         }
     }
 
-    /// The counts line, unless an outcome already says it.
-    private func showsCounts(_ plan: PaywallPlan) -> Bool { !plan.outcomes.contains { $0.id == "catalog" } }
+    // MARK: What's in Pro
 
-    /// What Pro holds in all, small, under the outcomes (lined up with their text) when there is room.
-    private var countsLine: some View {
-        Text("\(store.curriculum.lessonCount) lessons across \(store.curriculum.courses.count) courses")
-            .font(.caption).foregroundStyle(Palette.inkFaint)
-            .lineLimit(2).fixedSize(horizontal: false, vertical: true)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.leading, 6 + Self.benefitArt + 10)
-            .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in countsHeight = height }
+    /// "What's in Pro" under the outcomes, lined up with their text; it opens the Free and Pro table in place.
+    private var proDetails: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            detailsToggle
+                .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in detailsHeight = height }
+            if detailsOpen {
+                proTable
+                    .transition(.asymmetric(insertion: .opacity.combined(with: .scale(scale: 0.97, anchor: .top)), removal: .opacity))
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var detailsToggle: some View {
+        Button(action: toggleDetails) {
+            HStack(spacing: 5) {
+                Text("What’s in Pro")
+                Image(systemName: "chevron.down").font(.system(size: 10, weight: .bold))
+                    .rotationEffect(.degrees(detailsOpen ? 180 : 0))
+                    .accessibilityHidden(true)
+            }
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(Palette.mint)
+            .lineLimit(1).minimumScaleFactor(0.8)
+            // A full-size target without taking more room in the fold.
+            .padding(.vertical, 12).padding(.trailing, 16)
+            .contentShape(Rectangle())
+            .padding(.vertical, -12).padding(.trailing, -16)
+        }
+        .buttonStyle(.plain)
+        .padding(.leading, 6 + Self.benefitArt + 10)
+        .accessibilityValue(detailsOpen ? Text("Expanded") : Text("Collapsed"))
+        .accessibilityIdentifier("paywall.details")
+    }
+
+    private func toggleDetails() {
+        withAnimation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle) { detailsOpen.toggle() }
+        Haptics.shared.selection()
+        if detailsOpen { Analytics.log("paywall_details", ["reason": context == .onboarding ? "onboarding" : (store.paywallReason ?? "unknown")]) }
+    }
+
+    /// A row of the table: what it is, and what Free and Pro each give.
+    private struct ProRow: Identifiable {
+        enum Cell { case count(Int), included, excluded }
+        let id: String
+        let label: Text
+        let free: Cell
+        let pro: Cell
+    }
+
+    /// Free against Pro as the app enforces it: instruments and lessons by `AccessPolicy` (free instruments, free
+    /// lessons), the tools by their own locks (the metronome's basics and Pitch Sniper are free; interval and chord
+    /// ear drills, the Pro tools, strobe, temperaments and custom tunings are Pro).
+    private var proRows: [ProRow] {
+        let instruments = store.catalog.instruments
+        let lessons = store.curriculum.courses.flatMap(\.lessons)
+        return [
+            ProRow(id: "instruments", label: Text("Instruments to tune"),
+                   free: .count(instruments.filter(\.isFree).count), pro: .count(instruments.count)),
+            ProRow(id: "lessons", label: Text("Lessons in \(store.curriculum.courses.count) courses"),
+                   free: .count(lessons.filter(\.free).count), pro: .count(lessons.count)),
+            ProRow(id: "free", label: Text("Metronome and Pitch Sniper"), free: .included, pro: .included),
+            ProRow(id: "ear", label: Text("Name intervals and chords by ear"), free: .excluded, pro: .included),
+            ProRow(id: "tools", label: Text("Chords, scales, intonation and drone"), free: .excluded, pro: .included),
+            ProRow(id: "precision", label: Text("Strobe, temperaments and custom tunings"), free: .excluded, pro: .included),
+        ]
+    }
+
+    /// The table: a header, six rows on hairlines, the Pro column on a gold wash; the free chromatic tuner under it.
+    private var proTable: some View {
+        let shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
+        return VStack(alignment: .leading, spacing: 8) {
+            VStack(spacing: 0) {
+                HStack(spacing: 0) {
+                    Spacer(minLength: 0)
+                    Text("Free").font(.caption.weight(.semibold)).foregroundStyle(Palette.inkSoft)
+                        .lineLimit(1).minimumScaleFactor(0.7)
+                        .frame(width: cellWidth)
+                    ProBadge().frame(width: cellWidth)
+                }
+                .padding(.vertical, 8)
+                .accessibilityHidden(true)
+                ForEach(proRows) { row in
+                    Rectangle().fill(Palette.line).frame(height: 1).accessibilityHidden(true)
+                    proRow(row)
+                }
+            }
+            .padding(.horizontal, 12).padding(.bottom, 2)
+            .background(alignment: .trailing) {
+                RoundedRectangle(cornerRadius: 10, style: .continuous).fill(Color(hex: 0xFFD08A).opacity(0.07))
+                    .frame(width: cellWidth)
+                    .padding(.trailing, 12).padding(.vertical, 4)
+            }
+            .background(shape.fill(Palette.stageRaised))
+            .overlay(shape.strokeBorder(Palette.line, lineWidth: 1))
+            Text("The chromatic tuner stays free for any instrument.")
+                .font(.caption2).foregroundStyle(Palette.inkFaint)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 4)
+        }
+        .accessibilityIdentifier("paywall.table")
+    }
+
+    private func proRow(_ row: ProRow) -> some View {
+        HStack(spacing: 0) {
+            row.label.font(.footnote).foregroundStyle(Palette.ink)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 8)
+            proCell(row.free, pro: false).frame(width: cellWidth)
+            proCell(row.pro, pro: true).frame(width: cellWidth)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(row.label)
+        .accessibilityValue(Text("Free: \(spoken(row.free)), Pro: \(spoken(row.pro))"))
+    }
+
+    @ViewBuilder private func proCell(_ cell: ProRow.Cell, pro: Bool) -> some View {
+        switch cell {
+        case .count(let value):
+            Text(value, format: .number).font(Typeface.number(14)).foregroundStyle(pro ? Palette.ink : Palette.inkSoft)
+                .lineLimit(1).minimumScaleFactor(0.7)
+        case .included:
+            Image(systemName: "checkmark").font(.system(size: 12, weight: .heavy)).foregroundStyle(pro ? Palette.mint : Palette.inkSoft)
+        case .excluded:
+            Image(systemName: "minus").font(.system(size: 12, weight: .bold)).foregroundStyle(Palette.inkFaint)
+        }
+    }
+
+    private func spoken(_ cell: ProRow.Cell) -> Text {
+        switch cell {
+        case .count(let value): return Text(value, format: .number)
+        case .included: return Text("Included")
+        case .excluded: return Text("Not included")
+        }
     }
 
     // MARK: Plans
@@ -463,7 +629,7 @@ struct PaywallView: View {
         } else {
             VStack(spacing: 8) {
                 if let annual = commerce.annual {
-                    planRow(annual, title: "Yearly", detail: perMonth(annual), tag: annualTag(annual), saving: annualSaving)
+                    planRow(annual, title: "Yearly", detail: perMonth(annual), tag: annualTag(annual), saving: annualSaving, anchor: annualAnchor)
                 }
                 if let monthly = commerce.monthly {
                     planRow(monthly, title: "Monthly", detail: String(localized: "cancel anytime"), tag: nil, saving: nil)
@@ -506,13 +672,20 @@ struct PaywallView: View {
         return value >= 10 ? value : nil
     }
 
+    /// The year at the monthly price, struck through over the yearly price: twelve of the storefront's own monthly
+    /// payments in its own currency, never a made-up figure. Shown only beside the saving it backs up.
+    private var annualAnchor: String? {
+        guard annualSaving != nil, let monthly = commerce.monthly else { return nil }
+        return (monthly.price * 12).formatted(monthly.priceFormatStyle)
+    }
+
     private func select(_ product: Product) {
         guard selected?.id != product.id else { return }
         withAnimation(Motion.quick) { selectedID = product.id }
         Haptics.shared.selection()
     }
 
-    private func planRow(_ product: Product, title: LocalizedStringKey, detail: String, tag: String?, saving: Int?) -> some View {
+    private func planRow(_ product: Product, title: LocalizedStringKey, detail: String, tag: String?, saving: Int?, anchor: String? = nil) -> some View {
         let isSelected = selected?.id == product.id
         let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
         return Button { select(product) } label: {
@@ -531,8 +704,11 @@ struct PaywallView: View {
                         .lineLimit(1).minimumScaleFactor(0.8)
                 }
                 Spacer(minLength: 8)
-                Text(product.displayPrice).font(Typeface.number(19)).foregroundStyle(Palette.ink)
-                    .lineLimit(1).minimumScaleFactor(0.7)
+                VStack(alignment: .trailing, spacing: 0) {
+                    if let anchor { anchorPrice(anchor) }
+                    Text(product.displayPrice).font(Typeface.number(19)).foregroundStyle(Palette.ink)
+                        .lineLimit(1).minimumScaleFactor(0.7)
+                }
             }
             .padding(.horizontal, 14).padding(.vertical, 9)
             .background(shape.fill(isSelected ? Palette.mint.opacity(0.08) : Palette.stageRaised))
@@ -547,6 +723,14 @@ struct PaywallView: View {
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("paywall.plan.\(product.id)")
+    }
+
+    /// "$83.88", struck through, over the yearly price; VoiceOver says what it is.
+    private func anchorPrice(_ anchor: String) -> some View {
+        Text(verbatim: anchor).strikethrough(true, color: Palette.inkFaint)
+            .font(Typeface.number(12)).foregroundStyle(Palette.inkFaint)
+            .lineLimit(1).minimumScaleFactor(0.7)
+            .accessibilityLabel(Text("\(anchor) if paid monthly"))
     }
 
     private func planTag(_ text: String) -> some View {
@@ -601,6 +785,8 @@ struct PaywallView: View {
         let title: Text
         /// Under the node. Today's is the first lesson, under "Everything unlocked".
         let detail: Text?
+        /// What sizes the column: the detail as shown (Today: "Everything unlocked").
+        let plain: String
     }
 
     /// The plan and the free trial on one track. Today unlocks everything and starts the first lesson; the next
@@ -609,7 +795,8 @@ struct PaywallView: View {
     /// reach the person) and the first charge, at the product's own trial length and price. Without a trial the
     /// plan's milestones fill the track; without those there is no track.
     private func trackSteps(_ plan: PaywallPlan) -> [TrackStep] {
-        let today = TrackStep(id: "today", kind: .today, title: Text("Today"), detail: plan.firstLesson.map { Text(verbatim: $0) })
+        let today = TrackStep(id: "today", kind: .today, title: Text("Today"), detail: plan.firstLesson.map { Text(verbatim: $0) },
+                              plain: String(localized: "Everything unlocked"))
         guard showsTrial, let product = selected else {
             guard !plan.milestones.isEmpty else { return [] }
             return [today] + plan.milestones.map { milestoneStep($0) }
@@ -621,19 +808,73 @@ struct PaywallView: View {
         let ahead = plan.milestones.filter { $0.day > 1 && $0.day < next }
         if let milestone = ahead.first(where: { $0.kind == .song }) ?? ahead.last { steps.append(milestoneStep(milestone)) }
         if !remindersBlocked {
-            steps.append(TrackStep(id: "reminder", kind: .reminder, title: Text("Day \(reminder)"), detail: Text("We remind you")))
+            let remind = String(localized: "We remind you")
+            steps.append(TrackStep(id: "reminder", kind: .reminder, title: Text("Day \(reminder)"), detail: Text(verbatim: remind), plain: remind))
         }
-        steps.append(TrackStep(id: "billing", kind: .billing, title: Text("Day \(days)"), detail: Text("\(product.displayPrice)/year")))
+        let price = String(localized: "\(product.displayPrice)/year")
+        steps.append(TrackStep(id: "billing", kind: .billing, title: Text("Day \(days)"), detail: Text(verbatim: price), plain: price))
         return steps
     }
 
-    /// "Day 6 · Play “Ode to Joy”", or a unit by its name.
+    /// "Day 2 · Play “Greensleeves”" (the song by its name, not its lesson's), or a unit by its name.
     private func milestoneStep(_ milestone: PaywallPlan.Milestone) -> TrackStep {
+        let day = Text("Day \(milestone.day)")
         switch milestone.kind {
         case .song:
-            return TrackStep(id: "day\(milestone.day)", kind: .song, title: Text("Day \(milestone.day)"), detail: Text("Play “\(milestone.title)”"))
+            let play = String(localized: "Play “\(milestone.title)”")
+            return TrackStep(id: "day\(milestone.day)", kind: .song, title: day, detail: Text(verbatim: play), plain: play)
         case .unit:
-            return TrackStep(id: "day\(milestone.day)", kind: .milestone, title: Text("Day \(milestone.day)"), detail: Text(verbatim: milestone.title))
+            return TrackStep(id: "day\(milestone.day)", kind: .milestone, title: day, detail: Text(verbatim: milestone.title), plain: milestone.title)
+        }
+    }
+
+    /// The narrowest each column of the track may get, at the caption size its text uses: a milestone, a song
+    /// and the reminder fit two lines without a word split across them; Today and the price keep their one line
+    /// with little shrinking. `TrackColumns` widens a column to its minimum from those with room to spare.
+    private func trackMinimums(_ steps: [TrackStep]) -> [CGFloat] {
+        let traits = UITraitCollection(preferredContentSizeCategory: Self.sizeCategory(typeSize))
+        let font = UIFont.preferredFont(forTextStyle: .caption1, compatibleWith: traits)
+        return steps.map { step in
+            switch step.kind {
+            case .today, .billing: return Self.textWidth(step.plain, font: font) * 0.8
+            case .milestone, .song, .reminder: return Self.twoLineWidth(step.plain, font: font) + 2
+            }
+        }
+    }
+
+    private static func textWidth(_ text: String, font: UIFont) -> CGFloat {
+        ceil((text as NSString).size(withAttributes: [.font: font]).width)
+    }
+
+    /// The narrowest width that sets `text` on two lines without splitting a word: its best break between words.
+    private static func twoLineWidth(_ text: String, font: UIFont) -> CGFloat {
+        let words = text.split(whereSeparator: \.isWhitespace).map(String.init)
+        guard words.count > 1 else { return textWidth(text, font: font) }
+        var best = CGFloat.greatestFiniteMagnitude
+        for split in 1..<words.count {
+            let first = words[..<split].joined(separator: " ")
+            let rest = words[split...].joined(separator: " ")
+            best = min(best, max(textWidth(first, font: font), textWidth(rest, font: font)))
+        }
+        return best
+    }
+
+    /// The UIKit size category for the environment's text size, to measure as SwiftUI will draw.
+    private static func sizeCategory(_ size: DynamicTypeSize) -> UIContentSizeCategory {
+        switch size {
+        case .xSmall: return .extraSmall
+        case .small: return .small
+        case .medium: return .medium
+        case .large: return .large
+        case .xLarge: return .extraLarge
+        case .xxLarge: return .extraExtraLarge
+        case .xxxLarge: return .extraExtraExtraLarge
+        case .accessibility1: return .accessibilityMedium
+        case .accessibility2: return .accessibilityLarge
+        case .accessibility3: return .accessibilityExtraLarge
+        case .accessibility4: return .accessibilityExtraExtraLarge
+        case .accessibility5: return .accessibilityExtraExtraExtraLarge
+        @unknown default: return .large
         }
     }
 
@@ -644,19 +885,20 @@ struct PaywallView: View {
         let last = steps.count - 1
         let days = selected.map { trialDays($0) } ?? 14
         let cancelNote = showsTrial && remindersBlocked
+        let minimums = typeSize.isAccessibilitySize ? [] : trackMinimums(steps)
         return VStack(spacing: 5) {
             if typeSize.isAccessibilitySize {
                 trackRows(steps)
             } else {
-                TrackColumns(lead: lead) {
+                TrackColumns(lead: lead, minimums: minimums) {
                     ForEach(Array(steps.enumerated()), id: \.element.id) { index, step in
                         step.title.font(Typeface.label(12)).foregroundStyle(trackTint(step.kind, title: true))
                             .lineLimit(1).minimumScaleFactor(0.8)
                             .frame(maxWidth: .infinity, alignment: Self.edge(index, last))
                     }
                 }
-                trackLine(steps, lead: lead)
-                TrackColumns(lead: lead) {
+                trackLine(steps, lead: lead, minimums: minimums)
+                TrackColumns(lead: lead, minimums: minimums) {
                     ForEach(Array(steps.enumerated()), id: \.element.id) { index, step in
                         trackDetail(step)
                             .multilineTextAlignment(Self.textEdge(index, last))
@@ -698,9 +940,9 @@ struct PaywallView: View {
             (step.detail ?? Text(verbatim: "")).font(.caption).foregroundStyle(Palette.inkSoft)
                 .lineLimit(1).minimumScaleFactor(0.7)
         case .milestone, .song:
-            // Two lines held, like the reminder's; a long song name may take a third rather than lose its end.
+            // Two lines at most, like the reminder's; the column is wide enough that no word splits across them.
             (step.detail ?? Text(verbatim: "")).font(.caption).foregroundStyle(Palette.inkSoft)
-                .lineLimit(2...3).minimumScaleFactor(0.85)
+                .lineLimit(2).minimumScaleFactor(0.8)
         case .reminder:
             (step.detail ?? Text(verbatim: "")).font(.caption).foregroundStyle(Palette.inkSoft)
                 .lineLimit(2, reservesSpace: true).minimumScaleFactor(0.85)
@@ -735,10 +977,10 @@ struct PaywallView: View {
     }
 
     /// The nodes on a line from Today to the last step; the line draws itself in and each node pops as it passes.
-    private func trackLine(_ steps: [TrackStep], lead: CGFloat) -> some View {
+    private func trackLine(_ steps: [TrackStep], lead: CGFloat, minimums: [CGFloat]) -> some View {
         let drawn = trackDrawn || reduceMotion
         let last = steps.count - 1
-        return TrackColumns(lead: lead) {
+        return TrackColumns(lead: lead, minimums: minimums) {
             ForEach(Array(steps.enumerated()), id: \.element.id) { index, step in
                 trackNode(step.kind)
                     .scaleEffect(drawn ? 1 : 0.6)
@@ -952,16 +1194,33 @@ private struct SymbolTile: View {
 }
 
 /// The plan track's columns: the first takes `lead` of the width (Today, with the first lesson under it), the
-/// others share the rest equally. The titles, the nodes and the details each use one, so they line up.
+/// others share the rest equally. The titles, the nodes and the details each use one, so they line up. A column
+/// narrower than its minimum (a song name on two lines, the price on one) takes the room it needs from the columns
+/// with some to spare, in proportion to what they spare; none claims more than two fifths of the track.
 private struct TrackColumns: Layout {
     var lead: CGFloat
+    /// Each column's narrowest, in points; empty for the plain shares.
+    var minimums: [CGFloat] = []
     var spacing: CGFloat = 8
 
     private func widths(_ total: CGFloat, count: Int) -> [CGFloat] {
         guard count > 1 else { return [total] }
         let room = max(0, total - spacing * CGFloat(count - 1))
         let first = room * lead
-        return [first] + Array(repeating: (room - first) / CGFloat(count - 1), count: count - 1)
+        var columns = [first] + Array(repeating: (room - first) / CGFloat(count - 1), count: count - 1)
+        guard minimums.count == count else { return columns }
+        let floors = minimums.map { min($0, room * 0.4) }
+        let short = zip(columns, floors).reduce(CGFloat(0)) { sum, pair in sum + max(0, pair.1 - pair.0) }
+        guard short > 0 else { return columns }
+        let spare = zip(columns, floors).map { pair in max(0, pair.0 - pair.1) }
+        let spareTotal = spare.reduce(0, +)
+        let share = spareTotal > 0 ? min(1, short / spareTotal) : 0
+        for index in columns.indices {
+            columns[index] = max(floors[index], columns[index] - spare[index] * share)
+        }
+        // Not enough to spare: everything gives way alike, and the text shrinks a little.
+        let sum = columns.reduce(0, +)
+        return sum > room ? columns.map { $0 * room / sum } : columns
     }
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {

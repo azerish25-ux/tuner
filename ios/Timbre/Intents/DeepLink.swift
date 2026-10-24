@@ -9,10 +9,12 @@ import TimbreCore
 ///     timbre://metronome[?bpm=120&start=1]
 ///     timbre://drone[?key=0…11&start=1] key is the pitch class, C = 0
 ///     timbre://lesson                   the next lesson of the course Learn shows
+///     timbre://lesson?id=<id>           that lesson or song (Spotlight, Siri, the Next song widget)
 ///     timbre://practice  timbre://ear  timbre://learn  timbre://songs
 ///
 /// Access stays where it is: a Pro instrument on the free plan opens the paywall naming it (as the picker does), the
-/// Drone tool opens its paywall, and a locked lesson opens the lesson paywall from Learn.
+/// Drone tool opens its paywall, and a locked lesson opens the lesson paywall from Learn. A lesson further on in its
+/// course than the player has reached shows where it sits instead (its course in Learn, a song on its Songs shelf).
 enum DeepLink {
     static let scheme = "timbre"
 
@@ -35,6 +37,8 @@ enum DeepLink {
     }
 
     static var lesson: URL { url("lesson") }
+
+    static func lesson(id: String) -> URL { url("lesson", [URLQueryItem(name: "id", value: id)]) }
 
     private static func url(_ host: String, _ items: [URLQueryItem] = []) -> URL {
         var components = URLComponents()
@@ -66,7 +70,11 @@ enum DeepLink {
             let pitchClass = value("key").flatMap { Int($0) }
             afterEntitlements(store) { DeepLink.openDrone(pitchClass: pitchClass, start: start, store: store) }
         case "lesson":
-            afterEntitlements(store) { DeepLink.openNextLesson(store: store) }
+            if let id = value("id") {
+                afterEntitlements(store) { DeepLink.openLesson(id: id, store: store) }
+            } else {
+                afterEntitlements(store) { DeepLink.openNextLesson(store: store) }
+            }
         case "practice": store.open(.daily)
         case "ear": store.open(.ear)
         case "learn": store.open(.learn)
@@ -108,6 +116,43 @@ enum DeepLink {
         }
         store.selectedTab = .learn
         Analytics.log("shortcut", ["destination": "lesson"])
+    }
+
+    /// One lesson or song by id, with Learn's access (`LessonAccess`): Learn opens it when it plays, or its paywall
+    /// naming it when it needs Pro (`pendingLessonId`, as Today's lesson). One the player hasn't reached yet shows
+    /// where it sits: a song on the Songs tab, a lesson on its course's path. An unknown id opens Learn.
+    @MainActor private static func openLesson(id: String, store: AppStore) {
+        Analytics.log("shortcut", ["destination": "lesson_by_id"])
+        guard let found = store.curriculum.lesson(id: id) else { store.selectedTab = .learn; return }
+        switch LessonAccess.of(found.lesson, in: found.course, store: store) {
+        case .play, .pro:
+            let ownCourse = UserDefaults.standard.string(forKey: "learn.course") ?? "guitar"
+            store.pendingLessonId = found.lesson.id
+            store.selectedTab = .learn
+            if found.lesson.kind == .song && ownCourse != found.course.id {
+                keepLearnCourse(ownCourse, replacing: found.course.id, store: store)
+            }
+        case .locked:
+            if found.lesson.kind == .song {
+                store.selectedTab = .songs
+            } else {
+                UserDefaults.standard.set(found.course.id, forKey: "learn.course")
+                store.selectedTab = .learn
+            }
+        }
+    }
+
+    /// A song is a detour, as it is from the Songs tab, not a change of course: Learn shows the song's course while it
+    /// opens it (`LearnView.openPendingLesson`), then goes back to the player's own once the song is on screen, so
+    /// Today's lesson and the Next lesson widget stay where they were.
+    @MainActor private static func keepLearnCourse(_ own: String, replacing songCourse: String, store: AppStore) {
+        Task { @MainActor in
+            for _ in 0..<30 where store.pendingLessonId != nil { try? await Task.sleep(for: .milliseconds(100)) }
+            // Past Learn's own wait for covering screens, so the switch happens behind the open song.
+            try? await Task.sleep(for: .milliseconds(2500))
+            guard UserDefaults.standard.string(forKey: "learn.course") == songCourse else { return }
+            UserDefaults.standard.set(own, forKey: "learn.course")
+        }
     }
 
     /// Runs `action` once StoreKit has said whether this player is Pro (at most about three seconds after a cold

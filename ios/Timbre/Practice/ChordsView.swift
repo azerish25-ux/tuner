@@ -1,76 +1,79 @@
 import SwiftUI
 import TimbreCore
 
+/// The Chords and Scales tools (Play › Tools, Pro: the Play hub opens them).
 struct ChordsView: View {
     enum Mode { case chords, scales }
     let mode: Mode
-    @EnvironmentObject private var store: AppStore
-    @EnvironmentObject private var audio: AudioService
-    @State private var root = 0
-    @State private var formula = ChordFormula.all[0]
-    @State private var scale = ScaleFormula.all[3]
-    /// The voicing that is sounding: its card lights and its strings glow until the strum fades.
-    @State private var ringing: ChordShape?
-    /// Scales: note names on the neck instead of intervals (R ♭3 4 5 ♭7).
-    @State private var noteNames = false
-    /// Scales: the note of the run sounding now while "Hear the scale" plays.
-    @State private var runStep: Int?
-    @State private var runTask: Task<Void, Never>?
-
-    /// Frets drawn on the scale neck (it scrolls sideways) and its width.
-    private static let neckFrets = 15
-    private static let neckWidth: CGFloat = 900
-    /// One sequence note and the gap after it, as AudioService.playTones plays them.
-    private static let noteMs = 380
-    private static let gapMs = 40
-
-    /// Open-string pitches for the current tuning, one per physical string group (paired courses count once).
-    private var openMidi: [Int] {
-        var seen = Set<String>()
-        return store.courses.compactMap { course in
-            let key = course.anchorId ?? "\(course.index)"
-            return seen.insert(key).inserted ? course.targetMidi : nil
-        }
-    }
-
-    private var preferFlats: Bool { [1, 3, 8, 10].contains(root) }
-    private var rootName: String { NoteNames.name(root, preferFlats: preferFlats) }
 
     var body: some View {
+        switch mode {
+        case .chords: ChordLibraryView()
+        case .scales: ScaleLibraryView()
+        }
+    }
+}
+
+// MARK: - Chords
+
+/// Chords: a root and a quality, the chord spelled in its key with its formula, and every shape for it in a card
+/// that names it ("Barre · 3fr"), rates how hard it is to hold and strums it on a tap: a glint of light crosses the
+/// box low to high as each string lights with the sound. "Check it" listens with the lessons' chord recognizer
+/// (any shape and any inversion count, as in a lesson's chord step) and says when the chord rings true.
+struct ChordLibraryView: View {
+    @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var audio: AudioService
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var root = 0
+    @State private var formula = ChordFormula.all[0]
+    /// The shape sounding now and the strings its strum has crossed so far (lit on its box).
+    @State private var ringing: ChordShape?
+    @State private var ringStrings: Set<Int> = []
+    /// Strums per shape: a change replays that card's glint.
+    @State private var strums: [ChordShape: Int] = [:]
+    @State private var strumTask: Task<Void, Never>?
+    /// Check it: idle, listening (with what the microphone hears as a chord) or heard.
+    @State private var check = ChordCheck.idle
+    @State private var heard: String?
+    @State private var matchedFrames = 0
+    @State private var owner = UUID()
+    @State private var celebrate = 0
+
+    var body: some View {
+        let strings = OpenStrings(store)
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 Text(store.tuning.name.localized + " · " + store.instrumentDisplayName).font(.subheadline).foregroundStyle(Palette.inkSoft)
-                rootPicker
-                if mode == .chords { chordContent } else { scaleContent }
+                RootRail(root: $root) { pitchClass in
+                    Spelling.name(Spelling.chord(root: pitchClass, intervals: formula.intervals).root)
+                }
+                qualityRail
+                header
+                voicings(strings)
             }
             .padding(.horizontal, Metrics.gutter).padding(.top, 12).padding(.bottom, 28)
         }
         .stageTopShade()
         .background(StageBackground(motes: false))
-        .navigationTitle(mode == .chords ? "Chords" : "Scales")
+        .navigationTitle("Chords")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear { store.beginPractice(mode == .chords ? DailyActivity.Kind.chord.rawValue : DailyActivity.Kind.scale.rawValue) }
+        .stageDock { checkDock }
+        .onAppear { store.beginPractice(DailyActivity.Kind.chord.rawValue) }
         .onDisappear {
-            stopRun()
-            store.finishPractice(mode == .chords ? .chord : .scale)
+            strumTask?.cancel()
+            store.stopLessonListening(owner: owner)
+            store.finishPractice(.chord)
         }
-        .onChange(of: root) { _, _ in stopRun() }
-        .onChange(of: scale) { _, _ in stopRun() }
+        .onChange(of: root) { _, _ in chordChanged() }
+        .onChange(of: formula) { _, _ in chordChanged() }
     }
 
-    private var rootPicker: some View {
-        EdgeRail(spacing: 6, selection: root) {
-            ForEach(0..<12, id: \.self) { pc in
-                Button(NoteNames.name(pc, preferFlats: [1, 3, 8, 10].contains(pc))) { root = pc; Haptics.shared.selection() }
-                    .buttonStyle(ChipButtonStyle(selected: root == pc))
-                    .id(pc)
-            }
-        }
+    /// The chord as written in its key: "C♯m" (not "D♭m"), "E♭7".
+    private var chordName: String {
+        Spelling.name(Spelling.chord(root: root, intervals: formula.intervals).root) + formula.suffix
     }
 
-    // MARK: Chords
-
-    @ViewBuilder private var chordContent: some View {
+    private var qualityRail: some View {
         EdgeRail(spacing: 6, selection: formula.id) {
             ForEach(ChordFormula.all) { f in
                 Button(f.suffix.isEmpty ? String(localized: "Major") : f.suffix) { formula = f; Haptics.shared.selection() }
@@ -78,51 +81,60 @@ struct ChordsView: View {
                     .id(f.id)
             }
         }
-        let name = rootName + formula.suffix
-        HStack(alignment: .firstTextBaseline) {
-            Text(name).font(Typeface.display(56)).foregroundStyle(Palette.ink)
-            Text(formula.name).font(.subheadline).foregroundStyle(Palette.inkSoft)
-            Spacer()
-        }
-        // Curated open and barre shapes in standard guitar tuning; playable finder shapes elsewhere.
-        let shapes = ChordLibrary.voicings(root: root, formula: formula, openMidi: openMidi, limit: 6)
-        if shapes.isEmpty {
-            Text("No comfortable shape for this chord in this tuning.").foregroundStyle(Palette.inkSoft).stillCard()
-        }
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
-            ForEach(shapes, id: \.self) { shape in voicingCard(shape, name: name) }
-        }
+        .edgeFade(bleed: Metrics.gutter)
     }
 
-    /// One voicing: the chord box with suggested fingers, its fret notation and a play button.
-    /// The whole card strums it; while it rings, the card lights and the sounding strings glow.
-    private func voicingCard(_ shape: ChordShape, name: String) -> some View {
-        let lit = ringing == shape
-        return Button { strum(shape) } label: {
-            VStack(spacing: 10) {
-                ChordDiagram(chord: spec(for: shape), showName: false, ringing: lit ? soundingStrings(shape) : [], reservesFretLabel: true)
-                    .frame(height: 150)
-                HStack(spacing: 8) {
-                    Text(shape.notation).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
-                        .lineLimit(1).minimumScaleFactor(0.6)
-                    Spacer(minLength: 4)
-                    playGlyph(lit: lit)
+    /// The name large with the quality beside it, and the chord's notes over their degrees (C E G over 1 3 5).
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .firstTextBaseline, spacing: 10) {
+                Text(chordName).font(Typeface.display(56)).foregroundStyle(Palette.ink)
+                    .lineLimit(1).minimumScaleFactor(0.6)
+                    .shadow(color: Palette.mint.opacity(check == .heard ? 0.55 : 0), radius: 18)
+                Text(formula.name).font(.subheadline).foregroundStyle(Palette.inkSoft)
+                Spacer(minLength: 0)
+                if check == .heard {
+                    Image(systemName: "checkmark.seal.fill").font(.title2).foregroundStyle(Palette.mint)
+                        .symbolEffect(.bounce, value: celebrate)
+                        .transition(.scale(scale: 0.4).combined(with: .opacity))
+                        .accessibilityLabel(Text("Nice — that’s right."))
                 }
             }
-            .stillCard(cornerRadius: 22, padding: 12, tint: lit ? Palette.mint : nil)
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isHeader)
+            ToneStrip(tones: chordTones)
         }
-        .buttonStyle(PressScaleStyle())
-        .accessibilityLabel(Text("\(name), \(shape.notation). Double tap to hear."))
+        .animation(Motion.pluck, value: check)
     }
 
-    private func playGlyph(lit: Bool) -> some View {
-        Image(systemName: lit ? "speaker.wave.2.fill" : "play.fill")
-            .font(.system(size: 11, weight: .bold))
-            .foregroundStyle(lit ? Palette.onAccent : Palette.mint)
-            .contentTransition(.symbolEffect(.replace))
-            .frame(width: 30, height: 30)
-            .background(Circle().fill(lit ? Palette.mint : Palette.mint.opacity(0.14)))
-            .overlay(Circle().strokeBorder(Palette.mint.opacity(lit ? 0 : 0.3), lineWidth: 1))
+    private var chordTones: [ToneStrip.Tone] {
+        let intervals = formula.intervals
+        let spelled = Spelling.chord(root: root, intervals: intervals)
+        var rows: [(order: Int, tone: ToneStrip.Tone)] = []
+        for (interval, note) in zip(intervals, spelled.tones) {
+            let degree = Spelling.chordDegree(interval, in: intervals)
+            rows.append((order: degree.order, tone: ToneStrip.Tone(name: Spelling.name(note), degree: degree.label, isRoot: interval == 0)))
+        }
+        return rows.sorted { $0.order < $1.order }.map { $0.tone }
+    }
+
+    // MARK: Shapes
+
+    /// Curated open and barre shapes in standard guitar tuning; playable finder shapes elsewhere.
+    @ViewBuilder private func voicings(_ strings: OpenStrings) -> some View {
+        let shapes = ChordLibrary.voicings(root: root, formula: formula, openMidi: strings.midi, limit: 6)
+        if shapes.isEmpty {
+            Text("No comfortable shape for this chord in this tuning.").foregroundStyle(Palette.inkSoft).stillCard()
+        } else {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
+                ForEach(shapes, id: \.self) { shape in
+                    VoicingCard(shape: shape, spec: spec(for: shape), profile: VoicingProfile(shape, formulaId: formula.id),
+                                chordName: chordName, lit: ringing == shape ? ringStrings : [], strums: strums[shape] ?? 0) {
+                        strum(shape, strings: strings)
+                    }
+                }
+            }
+        }
     }
 
     private func spec(for shape: ChordShape) -> ChordSpec {
@@ -130,226 +142,409 @@ struct ChordsView: View {
                   fingers: shape.fingers, baseFret: shape.highestFret <= 4 ? nil : shape.lowestFret)
     }
 
-    private func soundingStrings(_ shape: ChordShape) -> Set<Int> {
-        Set(shape.frets.indices.filter { shape.frets[$0] != nil })
-    }
-
-    private func strum(_ shape: ChordShape) {
-        let frequencies = shape.frets.enumerated().compactMap { index, fret in
-            fret.map { PitchMath.frequency(midi: Double(openMidi[index] + $0), reference: store.settings.referencePitchHz) }
+    /// Strums the shape (the sound runs low to high, about 25 ms a string) and lights its strings in the same
+    /// order, a little slower so the eye can follow; they ring lit until the chord fades. A check in progress
+    /// pauses while it sounds, so the microphone doesn't take the strum for the player.
+    private func strum(_ shape: ChordShape, strings: OpenStrings) {
+        let reference = store.settings.referencePitchHz
+        var sounding: [(string: Int, midi: Int)] = []
+        for (index, fret) in shape.frets.enumerated() {
+            guard let fret, index < strings.midi.count else { continue }
+            sounding.append((string: index, midi: strings.midi[index] + fret))
         }
-        audio.playTones(frequencies, together: true, noteMs: 1500)
+        guard !sounding.isEmpty else { return }
+        let resume = check == .listening
+        if resume { store.stopLessonListening(owner: owner) }
+        audio.playTones(sounding.map { PitchMath.frequency(midi: Double($0.midi), reference: reference) }, together: true, noteMs: 1500)
         Haptics.shared.selection()
-        withAnimation(Motion.quick) { ringing = shape }
-        Task { @MainActor in
-            try? await Task.sleep(for: .milliseconds(1800))
-            if ringing == shape { withAnimation(Motion.settle) { ringing = nil } }
-        }
-    }
-
-    // MARK: Scales
-
-    /// Chip names are sentence case ("Minor pentatonic"); after the note name they read in lower case
-    /// ("C minor pentatonic"), except the modes, which keep their capital ("C Dorian").
-    private var scaleTitle: String {
-        let name = ["dorian", "mixolydian"].contains(scale.id) ? scale.name : scale.name.prefix(1).lowercased() + String(scale.name.dropFirst())
-        return rootName + " " + name
-    }
-
-    /// The scale once up an octave, in one hand position: what "Hear the scale" plays and lights.
-    private var scaleRun: [FretPosition] {
-        ScaleMap.run(root: root, scale: scale, openMidi: openMidi, frets: 0...Self.neckFrets)
-    }
-
-    @ViewBuilder private var scaleContent: some View {
-        EdgeRail(spacing: 6, selection: scale.id) {
-            ForEach(ScaleFormula.all) { s in
-                Button(s.name) { scale = s; Haptics.shared.selection() }
-                    .buttonStyle(ChipButtonStyle(selected: scale == s))
-                    .id(s.id)
+        strums[shape, default: 0] += 1
+        strumTask?.cancel()
+        ringing = shape
+        ringStrings = []
+        let order = sounding.sorted { $0.midi < $1.midi }.map { $0.string }
+        let step = reduceMotion ? 0 : 40
+        strumTask = Task { @MainActor in
+            for string in order {
+                withAnimation(Motion.quick) { _ = ringStrings.insert(string) }
+                if step > 0 { try? await Task.sleep(for: .milliseconds(step)) }
+                if Task.isCancelled { return }
             }
+            try? await Task.sleep(for: .milliseconds(1500))
+            if Task.isCancelled { return }
+            withAnimation(Motion.settle) { ringing = nil; ringStrings = [] }
+            if resume, check == .listening { listen() }
         }
-        Text(scaleTitle).font(Typeface.display(36)).foregroundStyle(Palette.ink)
-            .fixedSize(horizontal: false, vertical: true)
-        Picker("Note names", selection: $noteNames) {
-            Text("Intervals").tag(false)
-            Text("Note names").tag(true)
-        }
-        .pickerStyle(.segmented)
-        scaleBoard
-        Button(action: playScale) {
-            Label("Hear the scale", systemImage: "speaker.wave.2.fill")
-                .symbolEffect(.variableColor.iterative, isActive: runStep != nil)
-        }
-        .buttonStyle(BrassButtonStyle())
     }
 
-    /// String names stay pinned in their own column while the neck scrolls beside them, running on
-    /// under the card's edge. While the scale plays, the neck follows the lit note.
-    private var scaleBoard: some View {
-        let height = CGFloat(openMidi.count) * 30 + 40
-        let run = scaleRun
-        let step = runStep.flatMap { run.indices.contains($0) ? $0 : nil }
-        return HStack(spacing: 0) {
-            FretboardStringNames(openMidi: openMidi)
-                .frame(width: 24, height: height)
-            ScrollViewReader { proxy in
-                ScrollView(.horizontal, showsIndicators: false) {
-                    Fretboard(openMidi: openMidi,
-                              positions: ScaleMap.positions(root: root, scale: scale, openMidi: openMidi, frets: 0...Self.neckFrets),
-                              frets: Self.neckFrets, lit: step.map { run[$0] }, trail: step.map { Array(run.prefix($0)) } ?? [],
-                              noteNames: noteNames, preferFlats: preferFlats)
-                        .frame(width: Self.neckWidth, height: height)
-                        .overlay(alignment: .topLeading) { fretAnchors(height: height) }
+    // MARK: Check it
+
+    /// The chord as the recognizer knows it; nil for qualities it doesn't hear (6, m6, add9, 9, dim, aug).
+    private var target: ChordTarget? { ChordTarget(root: root, formulaId: formula.id) }
+
+    private func startCheck() {
+        guard target != nil else { return }
+        heard = nil
+        withAnimation(Motion.settle) { check = .listening }
+        Haptics.shared.selection()
+        listen()
+    }
+
+    /// The microphone with the lessons' chord listener (`LessonAnalyzer`, `ChordRecognizer`) on the chord on screen:
+    /// three matching readings in a row and it's heard.
+    private func listen() {
+        guard let target else { return }
+        matchedFrames = 0
+        let analyzer = LessonAnalyzer(chords: true, target: target, onChord: { estimate, matched in
+            guard check == .listening else { return }
+            let name = estimate.map { heardName($0) }
+            if name != heard { withAnimation(Motion.quick) { heard = name } }
+            matchedFrames = matched ? matchedFrames + 1 : 0
+            if matchedFrames >= 3 { succeed() }
+        })
+        store.startLessonListening(owner: owner, analyzer: analyzer) { _, _ in }
+    }
+
+    private func succeed() {
+        store.stopLessonListening(owner: owner)
+        withAnimation(Motion.pluck) { check = .heard }
+        celebrate += 1
+        SoundFX.shared.play(.correct)
+        Haptics.shared.lock()
+    }
+
+    private func stopCheck() {
+        store.stopLessonListening(owner: owner)
+        withAnimation(Motion.settle) { check = .idle; heard = nil }
+    }
+
+    /// A new chord: the strum's lights go; a check listens for the new chord (or stops, if it can't hear that kind).
+    private func chordChanged() {
+        strumTask?.cancel()
+        ringing = nil
+        ringStrings = []
+        switch check {
+        case .idle: break
+        case .heard: withAnimation(Motion.settle) { check = .idle; heard = nil }
+        case .listening:
+            if target == nil { stopCheck() } else { heard = nil; listen() }
+        }
+    }
+
+    /// What the recognizer hears, spelled in its own key ("Hearing C♯m").
+    private func heardName(_ estimate: ChordEstimate) -> String {
+        Spelling.name(Spelling.chord(root: estimate.root, intervals: estimate.quality.intervals).root) + estimate.quality.suffix
+    }
+
+    @ViewBuilder private var checkDock: some View {
+        VStack(spacing: 10) {
+            if audio.permissionDenied && check == .listening {
+                MicrophoneHint().padding(.horizontal, -Metrics.gutter)
+            }
+            if target == nil {
+                Label("Check it hears major, minor, 7th, sus and power chords.", systemImage: "waveform")
+                    .font(.footnote).foregroundStyle(Palette.inkSoft)
+                    .frame(maxWidth: .infinity, minHeight: 54)
+            } else {
+                switch check {
+                case .idle:
+                    Button(action: startCheck) { Label("Check it", systemImage: "mic.fill") }
+                        .buttonStyle(BrassButtonStyle())
+                        .accessibilityIdentifier("chords.check")
+                        .accessibilityHint(Text("Listens while you play the chord."))
+                case .listening: listeningBar
+                case .heard: heardBar
                 }
-                .railBleed(leading: 0, trailing: 12)
-                .onChange(of: runStep) { _, value in
-                    guard let value, run.indices.contains(value) else { return }
-                    withAnimation(Motion.settle) { proxy.scrollTo(Self.anchor(run[value].fret), anchor: .center) }
-                }
             }
         }
-        .stillCard(padding: 12)
+        .animation(Motion.settle, value: check)
     }
 
-    /// Invisible marks over each fret so the neck can scroll a lit note into view.
-    private func fretAnchors(height: CGFloat) -> some View {
-        ZStack(alignment: .topLeading) {
-            ForEach(0...Self.neckFrets, id: \.self) { fret in
-                Color.clear.frame(width: 1, height: 1)
-                    .position(x: Fretboard.centerX(fret: fret, frets: Self.neckFrets, width: Self.neckWidth), y: height / 2)
-                    .id(Self.anchor(fret))
+    /// Listening: what to strum, and what the microphone hears (amber until it is the chord).
+    private var listeningBar: some View {
+        let right = heard == chordName
+        return HStack(spacing: 12) {
+            HStack(spacing: 12) {
+                Image(systemName: "waveform").font(.system(size: 18, weight: .semibold)).foregroundStyle(Palette.mint)
+                    .symbolEffect(.variableColor.iterative, isActive: !reduceMotion)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Strum \(chordName)").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                    Group {
+                        if let heard { Text("Hearing \(heard)") } else { Text("Listening…") }
+                    }
+                    .font(.footnote).foregroundStyle(heard == nil ? Palette.inkSoft : (right ? Palette.mint : Palette.amber))
+                    .contentTransition(.opacity)
+                }
+                Spacer(minLength: 0)
             }
+            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity, minHeight: 54)
+            .background(Capsule().fill(Palette.stageRaised))
+            .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.35), lineWidth: 1))
+            .accessibilityElement(children: .combine)
+            Button("Stop", action: stopCheck)
+                .buttonStyle(BrassButtonStyle(prominent: false))
+                .frame(width: 104)
+                .accessibilityIdentifier("chords.stop")
         }
-        .frame(width: Self.neckWidth, height: height)
+    }
+
+    /// Heard: a seal and the word, a ring of light leaving the capsule, and Check again.
+    private var heardBar: some View {
+        HStack(spacing: 12) {
+            HStack(spacing: 12) {
+                Image(systemName: "checkmark.seal.fill").font(.system(size: 20, weight: .semibold)).foregroundStyle(Palette.mint)
+                    .symbolEffect(.bounce, value: celebrate)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Nice — that’s right.").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                    Text(chordName).font(.footnote).foregroundStyle(Palette.mint)
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity, minHeight: 54)
+            .background(Capsule().fill(Palette.mint.opacity(0.12)))
+            .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.5), lineWidth: 1))
+            .background { HeardRing(trigger: celebrate) }
+            .accessibilityElement(children: .combine)
+            Button("Check again", action: startCheck)
+                .buttonStyle(BrassButtonStyle(prominent: false))
+                .frame(width: 132)
+                .accessibilityIdentifier("chords.check")
+        }
+    }
+}
+
+enum ChordCheck: Equatable { case idle, listening, heard }
+
+/// A capsule of mint light swelling out from behind the heard capsule and fading, once per success.
+private struct HeardRing: View {
+    let trigger: Int
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        Capsule().strokeBorder(Palette.mint, lineWidth: 2)
+            .keyframeAnimator(initialValue: RingFrame(), trigger: trigger) { ring, frame in
+                ring.scaleEffect(x: frame.scale, y: 1 + (frame.scale - 1) * 3).opacity(frame.opacity)
+            } keyframes: { _ in
+                KeyframeTrack(\.scale) {
+                    LinearKeyframe(1, duration: 0.01)
+                    CubicKeyframe(1.08, duration: 0.55)
+                }
+                KeyframeTrack(\.opacity) {
+                    LinearKeyframe(0.8, duration: 0.01)
+                    LinearKeyframe(0, duration: 0.55)
+                }
+            }
+            .opacity(reduceMotion ? 0 : 1)
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+    }
+
+    private struct RingFrame {
+        var scale: CGFloat = 1
+        var opacity: Double = 0
+    }
+}
+
+/// One shape: its name and how hard it is over the box, the fret notation and a play glyph under it. A tap strums
+/// it; the strings it rings light low to high, a glint sweeps the box, and the card glows mint while it sounds.
+private struct VoicingCard: View {
+    let shape: ChordShape
+    let spec: ChordSpec
+    let profile: VoicingProfile
+    let chordName: String
+    let lit: Set<Int>
+    let strums: Int
+    let action: () -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        let sounding = !lit.isEmpty
+        return Button(action: action) {
+            VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(profile.title).font(Typeface.label(13, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
+                        .lineLimit(1).minimumScaleFactor(0.8)
+                    DifficultyMeter(level: profile.level)
+                }
+                ChordDiagram(chord: spec, showName: false, ringing: lit, reservesFretLabel: true)
+                    .frame(height: 150)
+                    .frame(maxWidth: .infinity)
+                    .overlay { if !reduceMotion { StrumGlint(trigger: strums) } }
+                HStack(spacing: 8) {
+                    Text(shape.notation).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
+                        .lineLimit(1).minimumScaleFactor(0.6)
+                    Spacer(minLength: 4)
+                    playGlyph(sounding)
+                }
+            }
+            .stillCard(cornerRadius: 22, padding: 12, tint: sounding ? Palette.mint : nil)
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityLabel(Text("\(chordName), \(profile.title), \(profile.level.name), \(shape.notation)"))
+        .accessibilityHint(Text("Double tap to hear it."))
+    }
+
+    private func playGlyph(_ sounding: Bool) -> some View {
+        Image(systemName: sounding ? "speaker.wave.2.fill" : "play.fill")
+            .font(.system(size: 11, weight: .bold))
+            .foregroundStyle(sounding ? Palette.onAccent : Palette.mint)
+            .contentTransition(.symbolEffect(.replace))
+            .symbolEffect(.variableColor.iterative, isActive: sounding && !reduceMotion)
+            .frame(width: 30, height: 30)
+            .background(Circle().fill(sounding ? Palette.mint : Palette.mint.opacity(0.14)))
+            .overlay(Circle().strokeBorder(Palette.mint.opacity(sounding ? 0 : 0.3), lineWidth: 1))
+    }
+}
+
+/// The pick crossing the strings: a narrow band of mint light sweeping the box from the lowest string to the
+/// highest in about a third of a second, each time `trigger` changes.
+private struct StrumGlint: View {
+    let trigger: Int
+
+    var body: some View {
+        GeometryReader { geometry in
+            let width = geometry.size.width
+            LinearGradient(colors: [.clear, Palette.mint.opacity(0.5), .clear], startPoint: .leading, endPoint: .trailing)
+                .frame(width: 36)
+                .blendMode(.plusLighter)
+                .keyframeAnimator(initialValue: GlintFrame(), trigger: trigger) { glint, frame in
+                    glint.offset(x: -36 + frame.progress * (width + 36)).opacity(frame.opacity)
+                } keyframes: { _ in
+                    KeyframeTrack(\.progress) {
+                        LinearKeyframe(0, duration: 0.01)
+                        CubicKeyframe(1, duration: 0.32)
+                    }
+                    KeyframeTrack(\.opacity) {
+                        LinearKeyframe(1, duration: 0.04)
+                        LinearKeyframe(1, duration: 0.2)
+                        LinearKeyframe(0, duration: 0.12)
+                    }
+                }
+        }
+        .clipped()
         .allowsHitTesting(false)
         .accessibilityHidden(true)
     }
 
-    private static func anchor(_ fret: Int) -> String { "fret.\(fret)" }
-
-    /// Plays the run and lights each note as it sounds.
-    private func playScale() {
-        let run = scaleRun
-        guard !run.isEmpty else { return }
-        let reference = store.settings.referencePitchHz
-        let notes = run.map { PitchMath.frequency(midi: Double(openMidi[$0.string] + $0.fret), reference: reference) }
-        audio.playTones(notes, together: false, noteMs: Self.noteMs, gapMs: Self.gapMs)
-        Haptics.shared.selection()
-        runTask?.cancel()
-        runTask = Task { @MainActor in
-            for index in run.indices {
-                withAnimation(Motion.quick) { runStep = index }
-                try? await Task.sleep(for: .milliseconds(Self.noteMs + Self.gapMs))
-                if Task.isCancelled { return }
-            }
-            withAnimation(Motion.settle) { runStep = nil }
-        }
-    }
-
-    private func stopRun() {
-        runTask?.cancel()
-        runTask = nil
-        runStep = nil
+    private struct GlintFrame {
+        var progress: CGFloat = 0
+        var opacity: Double = 0
     }
 }
 
-/// Horizontal fretboard with scale tones labelled as intervals (R ♭3 4 5 ♭7) or note names; roots glow
-/// amber. The note sounding now is lit, with the notes already played ringed behind it. Open-string tones
-/// sit left of the nut; the string names are drawn beside the board by `FretboardStringNames`.
-struct Fretboard: View {
-    let openMidi: [Int]
-    let positions: [FretPosition]
-    let frets: Int
-    var lit: FretPosition?
-    var trail: [FretPosition] = []
-    var noteNames = false
-    var preferFlats = false
-
-    static let top: CGFloat = 20
-    static let bottom: CGFloat = 20
-    static let left: CGFloat = 30
-    static let right: CGFloat = 10
-
-    /// Vertical centre of a string (row 0 is the lowest string, drawn at the bottom).
-    static func rowY(_ row: Int, rows: Int, height: CGFloat) -> CGFloat {
-        let span = height - top - bottom
-        return top + span - CGFloat(row) * span / CGFloat(max(1, rows - 1))
-    }
-
-    /// Horizontal centre of the space for a fret (fret 0 sits left of the nut).
-    static func centerX(fret: Int, frets: Int, width: CGFloat) -> CGFloat {
-        let usable = width - left - right
-        func x(_ f: Int) -> CGFloat { left + usable * CGFloat(f) / CGFloat(max(1, frets)) }
-        return fret == 0 ? x(0) - 15 : (x(fret) + x(fret - 1)) / 2
-    }
-
-    private func label(_ p: FretPosition) -> String {
-        noteNames ? NoteNames.name((openMidi[p.string] + p.fret) % 12, preferFlats: preferFlats) : p.intervalName
-    }
+/// Easy, Medium or Hard: three rising bars, as many lit as the level, and the word, in mint, amber or coral.
+struct DifficultyMeter: View {
+    let level: VoicingProfile.Level
 
     var body: some View {
-        Canvas { context, size in
-            let top = Self.top, left = Self.left
-            let width = size.width - left - Self.right, height = size.height - top - Self.bottom
-            let rows = openMidi.count
-            let dy = height / CGFloat(max(1, rows - 1))
-            func x(_ fret: Int) -> CGFloat { left + width * CGFloat(fret) / CGFloat(frets) }
-            context.fill(Path(roundedRect: CGRect(x: left, y: top - 8, width: width, height: height + 16), cornerRadius: 6), with: .color(Color(hex: 0x2A1A12)))
-            // Inlays: one dot at 3, 5, 7, 9 and 15, two at 12.
-            for fret in [3, 5, 7, 9, 12, 15] where fret <= frets {
-                let cx = (x(fret) + x(fret - 1)) / 2
-                let ys: [CGFloat] = fret == 12 ? [top + height / 3, top + height * 2 / 3] : [top + height / 2]
-                for y in ys { context.fill(Path(ellipseIn: CGRect(x: cx - 5, y: y - 5, width: 10, height: 10)), with: .color(.white.opacity(0.10))) }
-            }
-            for fret in 0...frets {
-                var line = Path(); line.move(to: CGPoint(x: x(fret), y: top - 8)); line.addLine(to: CGPoint(x: x(fret), y: top + height + 8))
-                context.stroke(line, with: .color(fret == 0 ? Palette.ink : Color(hex: 0xC9C2B6).opacity(0.7)), lineWidth: fret == 0 ? 4 : 1.5)
-                if [3, 5, 7, 9, 12, 15].contains(fret) {
-                    context.draw(Text("\(fret)").font(.caption2).foregroundStyle(Palette.inkFaint), at: CGPoint(x: (x(fret) + x(fret - 1)) / 2, y: top + height + 16))
+        HStack(spacing: 6) {
+            HStack(alignment: .bottom, spacing: 2) {
+                ForEach(1...3, id: \.self) { bar in
+                    Capsule()
+                        .fill(bar <= level.rawValue ? level.tint : Palette.line)
+                        .frame(width: 3, height: 4 + CGFloat(bar) * 3)
                 }
             }
-            for row in 0..<rows {
-                let y = top + height - CGFloat(row) * dy
-                var line = Path(); line.move(to: CGPoint(x: left, y: y)); line.addLine(to: CGPoint(x: left + width, y: y))
-                context.stroke(line, with: .color(Color(hex: 0xD8CFC2).opacity(0.75)), lineWidth: 1 + CGFloat(rows - row) * 0.25)
-            }
-            for p in positions {
-                let center = CGPoint(x: p.fret == 0 ? x(0) - 15 : (x(p.fret) + x(p.fret - 1)) / 2, y: top + height - CGFloat(p.string) * dy)
-                let isLit = lit.map { $0.string == p.string && $0.fret == p.fret } ?? false
-                let played = trail.contains { $0.string == p.string && $0.fret == p.fret }
-                let tint = p.isRoot ? Palette.ember : Palette.brass
-                let r: CGFloat = isLit ? 13 : (p.isRoot ? 11 : 10)
-                if isLit {
-                    context.fill(Path(ellipseIn: CGRect(x: center.x - 22, y: center.y - 22, width: 44, height: 44)),
-                                 with: .radialGradient(Gradient(colors: [tint.opacity(0.55), .clear]), center: center, startRadius: 0, endRadius: 22))
-                }
-                let dot = Path(ellipseIn: CGRect(x: center.x - r, y: center.y - r, width: r * 2, height: r * 2))
-                context.fill(dot, with: .color(isLit ? tint : tint.opacity(p.isRoot ? 1 : 0.85)))
-                if isLit {
-                    context.stroke(dot, with: .color(Palette.ink), lineWidth: 2)
-                } else if played {
-                    context.stroke(Path(ellipseIn: CGRect(x: center.x - r - 3, y: center.y - r - 3, width: (r + 3) * 2, height: (r + 3) * 2)),
-                                   with: .color(Palette.ink.opacity(0.45)), lineWidth: 1.5)
-                }
-                context.draw(Text(label(p)).font(.system(size: isLit ? 11 : 10, weight: .bold)).foregroundStyle(Palette.onAccent), at: center)
-            }
+            Text(level.name).font(.caption2.weight(.semibold)).foregroundStyle(level.tint)
         }
-        .accessibilityHidden(true)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(level.name))
     }
 }
 
-/// The open-string names for `Fretboard`, lined up with its strings.
-struct FretboardStringNames: View {
-    let openMidi: [Int]
+// MARK: - Shared by Chords and Scales
+
+/// The tuning's open strings, one per physical string (paired courses count once), lowest-numbered course first,
+/// with their names as the tuning spells them (E♭ standard reads E♭ A♭ D♭ G♭ B♭ E♭).
+struct OpenStrings: Equatable {
+    let midi: [Int]
+    let names: [String]
+
+    @MainActor init(_ store: AppStore) {
+        var seen = Set<String>()
+        var midi: [Int] = []
+        var names: [String] = []
+        for course in store.courses where seen.insert(course.anchorId ?? "\(course.index)").inserted {
+            midi.append(course.targetMidi)
+            names.append(Self.name(label: course.label, midi: course.targetMidi))
+        }
+        self.midi = midi
+        self.names = names
+    }
+
+    /// The letter and accidentals of a course label ("Eb2", "F#3") with proper signs, in the player's naming system.
+    static func name(label: String, midi: Int) -> String {
+        guard let letter = label.first, "ABCDEFG".contains(letter) else { return NoteNames.name(midi % 12, preferFlats: true) }
+        let marks = label.dropFirst().prefix { "#b♯♭".contains($0) }
+        let signs = marks.map { mark -> String in
+            if mark == "#" { return "♯" }
+            if mark == "b" { return "♭" }
+            return String(mark)
+        }
+        return NoteNames.spell(String(letter) + signs.joined(), system: Spelling.system)
+    }
+}
+
+/// The twelve roots as chips, each written the way the chord or scale on screen is spelled in its key (C♯ for C♯
+/// minor, D♭ for D♭ major). The rail runs under the screen's edges and fades there while more chips wait.
+struct RootRail: View {
+    @Binding var root: Int
+    let name: (Int) -> String
+
     var body: some View {
-        Canvas { context, size in
-            for row in openMidi.indices {
-                let y = Fretboard.rowY(row, rows: openMidi.count, height: size.height)
-                context.draw(Text(NoteNames.name(openMidi[row] % 12)).font(.caption2.weight(.semibold)).foregroundStyle(Palette.inkSoft),
-                             at: CGPoint(x: size.width / 2 - 2, y: y))
+        EdgeRail(spacing: 6, selection: root) {
+            ForEach(0..<12, id: \.self) { pitchClass in
+                Button {
+                    root = pitchClass
+                    Haptics.shared.selection()
+                } label: {
+                    Text(name(pitchClass)).contentTransition(.opacity)
+                }
+                .buttonStyle(ChipButtonStyle(selected: root == pitchClass))
+                .accessibilityAddTraits(root == pitchClass ? .isSelected : [])
+                .id(pitchClass)
             }
         }
-        .accessibilityHidden(true)
+        .edgeFade(bleed: Metrics.gutter)
+    }
+}
+
+/// The notes of a chord or scale in tiles, each over its degree (C E G over 1 3 5; E♭ over ♭3); the root's tile amber,
+/// as roots are on the neck.
+struct ToneStrip: View {
+    struct Tone: Hashable {
+        let name: String
+        let degree: String
+        let isRoot: Bool
+    }
+
+    let tones: [Tone]
+
+    var body: some View {
+        HStack(spacing: 6) {
+            ForEach(Array(tones.enumerated()), id: \.offset) { _, tone in tile(tone) }
+            Spacer(minLength: 0)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(tones.map(\.name).joined(separator: ", ")))
+    }
+
+    private func tile(_ tone: Tone) -> some View {
+        let shape = RoundedRectangle(cornerRadius: 12, style: .continuous)
+        return VStack(spacing: 2) {
+            Text(tone.name).font(Typeface.label(15, relativeTo: .subheadline))
+                .foregroundStyle(tone.isRoot ? Palette.amber : Palette.ink)
+                .lineLimit(1).minimumScaleFactor(0.6)
+            Text(tone.degree).font(.caption2.weight(.semibold)).foregroundStyle(Palette.inkFaint)
+                .lineLimit(1).minimumScaleFactor(0.8)
+        }
+        .padding(.vertical, 8).padding(.horizontal, 4)
+        .frame(minWidth: 0, maxWidth: 54)
+        .background(shape.fill(tone.isRoot ? Palette.amber.opacity(0.12) : Palette.stageRaised))
+        .overlay(shape.strokeBorder(tone.isRoot ? Palette.amber.opacity(0.4) : Palette.line, lineWidth: 1))
+        .contentTransition(.opacity)
     }
 }

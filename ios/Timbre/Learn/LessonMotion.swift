@@ -64,8 +64,12 @@ enum CanvasNoise {
 // MARK: - Strum sweep
 
 /// A pick sweeping the strings on every stroke of a rhythm pattern, in time with the beat: down strokes
-/// run from the thickest string (top, named "Thickest") to the thinnest, up strokes back, and each string shimmers as the
-/// pick crosses it. The strings run over a strip of the instrument's top, from the sound hole to the bridge.
+/// run from the thickest string to the thinnest, up strokes back, and each string shimmers as the pick crosses it.
+/// The strings lie in the player's string order like every neck in the lesson (Settings › String order): string 1,
+/// the thinnest, on top in tab order, so a down stroke rises from the thickest string at the bottom; the thickest
+/// on top in mirror order, so it falls. Each string is numbered and the outer two are named ("Thinnest (1)",
+/// "Thickest (6)"), and the pick's tip, its lane's chevrons and its trail all point the way it travels.
+/// The strings run over a strip of the instrument's top, from the sound hole to the bridge.
 /// What comes next is the beat row's job (`RhythmBar`, `LessonBeatRow`), so the sweep draws only the stroke
 /// itself. `.pluck` plucks the lowest string on each hit; `.tap` pulses a pad for courses without an instrument.
 /// With no time (Reduce Motion) it holds still, showing the first stroke.
@@ -82,8 +86,13 @@ struct StrumSweep: View {
     let time: Double?
     /// Bars the strokes run for; nil repeats the bar forever.
     var bars: Int?
-    /// Names the top and bottom strings in words ("Thickest (6)" over the top, "Thinnest (1)" under the bottom).
+    /// Names the top and bottom strings in words ("Thinnest (1)" over the top and "Thickest (6)" under the bottom
+    /// in tab order, the other way round in mirror order).
     var edges: StringEdges?
+    /// Which string lies on top, as on the fretboards (Settings › String order).
+    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
+    /// The string numbers and names grow with Dynamic Type from the 11 pt floor (`DiagramType`).
+    @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
 
     private struct Stroke {
         let time: Double
@@ -91,7 +100,7 @@ struct StrumSweep: View {
     }
 
     private struct PickState {
-        /// 0 above the thickest string, 1 below the thinnest.
+        /// 0 on the thickest string's side of the strings, 1 past the thinnest (whichever way up they are drawn).
         var position: Double
         var touching: Bool
         var down: Bool
@@ -99,9 +108,35 @@ struct StrumSweep: View {
         var lift: Double
     }
 
+    /// Where the strings sit on the stage and which way up they lie.
+    private struct Frame {
+        /// The pick's travel from just outside the top string to just outside the bottom one.
+        let above: CGFloat
+        let below: CGFloat
+        /// The thickest string is the top one (mirror order).
+        let thickOnTop: Bool
+
+        /// The pick's y for a `PickState.position`.
+        func y(_ position: Double) -> CGFloat {
+            let p = CGFloat(position)
+            return thickOnTop ? above + (below - above) * p : below - (below - above) * p
+        }
+        /// How far a string at `y` lies from the thickest side (0…1), so the pick reaches it on time either way up.
+        func share(_ y: CGFloat) -> Double {
+            let u = Double((y - above) / max(1, below - above))
+            return thickOnTop ? u : 1 - u
+        }
+        /// The edge a stroke starts from: the thickest side for a down stroke.
+        func start(down: Bool) -> CGFloat { down == thickOnTop ? above : below }
+        /// A stroke travels down the screen: a down stroke when the thickest string is on top, an up stroke otherwise.
+        func fallsOnScreen(down: Bool) -> Bool { down == thickOnTop }
+    }
+
     var body: some View {
+        let order = stringOrder
+        let scale = typeScale
         Canvas { context, size in
-            if style == .tap { drawPad(&context, size: size) } else { drawStrings(&context, size: size) }
+            if style == .tap { drawPad(&context, size: size) } else { drawStrings(&context, size: size, order: order, scale: scale) }
         }
         .accessibilityHidden(true)
     }
@@ -146,13 +181,14 @@ struct StrumSweep: View {
         return PickState(position: 0, touching: false, down: true, lift: 0)
     }
 
-    /// When the pick (or the plucking finger) last set string `index` ringing, at or before `t`.
-    private func lastExcitation(of index: Int, share: Double, at t: Double, _ strokes: [Stroke]) -> Double? {
+    /// When the pick (or the plucking finger, on the lowest string) last set string `number` of `count` ringing, at or
+    /// before `t`. `share`: how far across the strings it lies from the thickest side.
+    private func lastExcitation(ofString number: Int, count: Int, share: Double, at t: Double, _ strokes: [Stroke]) -> Double? {
         var latest: Double?
         for stroke in strokes {
             let time: Double
             if style == .pluck {
-                guard index == 0 else { return nil }
+                guard number == count else { return nil }
                 time = stroke.time
             } else {
                 let start = stroke.time - sweepSeconds / 2
@@ -165,14 +201,14 @@ struct StrumSweep: View {
 
     // MARK: Strings and pick
 
-    private func drawStrings(_ context: inout GraphicsContext, size: CGSize) {
+    private func drawStrings(_ context: inout GraphicsContext, size: CGSize, order: StringOrder, scale: CGFloat) {
         let area = CGRect(origin: .zero, size: size)
         let count = max(1, strings)
         let band = min(area.height * 0.6, CGFloat(count) * (count <= 4 ? 40 : 32))
         let gap = count > 1 ? band / CGFloat(count - 1) : 0
         let top = area.minY + (area.height - band) / 2
         let reach = max(8, min(26, top - area.minY - 6))
-        let above = top - reach, below = top + band + reach
+        let frame = Frame(above: top - reach, below: top + band + reach, thickOnTop: !order.thinnestOnTop)
         let pickX = size.width * 0.62
         // The strings run from the neck end on the left to the bridge's saddle on the right.
         let bridgeX = size.width - 22
@@ -181,7 +217,7 @@ struct StrumSweep: View {
         let nearby = moving ? strokes(near: t) : []
         let state = moving ? pick(at: t, nearby) : PickState(position: 0, touching: false, down: pattern.first.map { $0.truncatingRemainder(dividingBy: 1) == 0 } ?? true, lift: 0)
 
-        drawSoundboard(&context, size: size, from: above - 12, to: below + 12)
+        drawSoundboard(&context, size: size, from: frame.above - 12, to: frame.below + 12)
         if style == .strum {
             let radius = min(band * 0.5 + 20, size.width * 0.26, area.height / 2 - 8)
             // Far enough in that the rosette clears the string numbers at the left edge.
@@ -189,40 +225,51 @@ struct StrumSweep: View {
         }
         drawBridge(&context, x: bridgeX, top: top, gap: gap, count: count)
         drawFlash(&context, center: CGPoint(x: pickX, y: area.midY), size: size, t: t, nearby: nearby, moving: moving)
-        if style == .strum { drawLane(&context, x: pickX, above: above, below: below, down: state.down) }
+        if style == .strum { drawLane(&context, x: pickX, above: frame.above, below: frame.below, falling: frame.fallsOnScreen(down: state.down)) }
 
-        for index in 0..<count {
-            let y = top + CGFloat(index) * gap
-            let share = Double((y - above) / max(1, below - above))
-            let crossed = moving ? lastExcitation(of: index, share: share, at: t, nearby) : nil
+        for row in 0..<count {
+            let y = top + CGFloat(row) * gap
+            let number = order.string(atRow: row, count: count)
+            let crossed = moving ? lastExcitation(ofString: number, count: count, share: frame.share(y), at: t, nearby) : nil
             let amplitude = crossed.map { CGFloat(5 * exp(-(t - $0) * 4.5)) } ?? 0
-            drawString(&context, index: index, of: count, y: y, right: bridgeX, amplitude: amplitude, t: t)
+            drawString(&context, number: number, of: count, y: y, right: bridgeX, amplitude: amplitude, t: t, scale: scale)
         }
-        drawEdgeNames(&context, size: size, top: top, bottom: top + band, count: count)
+        drawEdgeNames(&context, size: size, top: top, bottom: top + band, count: count, order: order, scale: scale)
 
         if style == .pluck {
-            drawFinger(&context, x: pickX, stringY: top, t: t, nearby: nearby, moving: moving)
+            // The lowest string, wherever the order puts it; the fingertip comes at it from outside the strings.
+            let lowest = top + CGFloat(order.row(ofString: count, count: count)) * gap
+            drawFinger(&context, x: pickX, stringY: lowest, fromAbove: frame.thickOnTop, t: t, nearby: nearby, moving: moving)
             return
         }
-        drawTrail(&context, x: pickX, above: above, below: below, t: t, nearby: nearby, moving: moving, state: state)
-        var y = above + (below - above) * CGFloat(state.position)
+        var y = frame.y(state.position)
+        drawTrail(&context, x: pickX, frame: frame, pickY: y, t: t, nearby: nearby, moving: moving, state: state)
         if moving, t < 0, bars != nil {
-            // Counting in: the pick bobs on each click, ready to go (a loop just turns on through the bar before).
+            // Counting in: the pick bobs on each click, away from the strings, ready to go (a loop just turns on
+            // through the bar before).
             let beat = t / secondsPerBeat
-            y -= CGFloat(6 * exp(-(beat - beat.rounded(.down)) * 8))
+            let away: CGFloat = y < (frame.above + frame.below) / 2 ? -1 : 1
+            y += away * CGFloat(6 * exp(-(beat - beat.rounded(.down)) * 8))
         }
         let x = pickX + CGFloat(state.lift) * 24
         let alpha = state.touching || !moving ? 1 : 0.75 - 0.3 * state.lift
-        drawPick(&context, center: CGPoint(x: x, y: y), down: state.down, scale: state.touching ? 1 : 0.9, alpha: alpha)
+        drawPick(&context, center: CGPoint(x: x, y: y), pointsDown: frame.fallsOnScreen(down: state.down), scale: state.touching ? 1 : 0.9, alpha: alpha)
     }
 
     /// The top string's name just above it and the bottom string's just below, at the right end, clear of
     /// the pick (which crosses at 62 % of the width) and the numbers on the left.
-    private func drawEdgeNames(_ context: inout GraphicsContext, size: CGSize, top: CGFloat, bottom: CGFloat, count: Int) {
+    private func drawEdgeNames(_ context: inout GraphicsContext, size: CGSize, top: CGFloat, bottom: CGFloat, count: Int,
+                               order: StringOrder, scale: CGFloat) {
         guard let edges, count >= 2, top >= 22 else { return }
         let x = size.width - 4
-        if let name = edges.canvasLabel(count) { context.draw(name, at: CGPoint(x: x, y: top - 14), anchor: .trailing) }
-        if let name = edges.canvasLabel(1) { context.draw(name, at: CGPoint(x: x, y: bottom + 14), anchor: .trailing) }
+        let points = DiagramType.size(DiagramType.floor, scale: scale)
+        let lift = 8 + points * 0.55
+        if let name = edges.canvasLabel(order.string(atRow: 0, count: count), size: points) {
+            context.draw(name, at: CGPoint(x: x, y: top - lift), anchor: .trailing)
+        }
+        if let name = edges.canvasLabel(order.string(atRow: count - 1, count: count), size: points) {
+            context.draw(name, at: CGPoint(x: x, y: bottom + lift), anchor: .trailing)
+        }
     }
 
     /// A strip of the instrument's top under the strings: dark tonewood with its grain, a sheen across the
@@ -285,24 +332,24 @@ struct StrumSweep: View {
         context.stroke(circle(center, 18 + CGFloat(age / 0.4) * 46), with: .color(accent.mix(with: .white, by: 0.4).opacity(0.55 * fade)), lineWidth: 0.5 + 2 * CGFloat(fade))
     }
 
-    /// One string, thicker toward the bass, bowing in a standing wave while it rings: a shadow on the top under
-    /// it, the winding on the wound strings and a thin highlight along it.
-    private func drawString(_ context: inout GraphicsContext, index: Int, of count: Int, y: CGFloat, right: CGFloat, amplitude: CGFloat, t: Double) {
-        let gauge = count > 1 ? CGFloat(count - 1 - index) / CGFloat(count - 1) : 0.5
+    /// String `number` (1 the thinnest), thicker toward the bass, bowing in a standing wave while it rings: a shadow
+    /// on the top under it, the winding on the wound strings and a thin highlight along it.
+    private func drawString(_ context: inout GraphicsContext, number: Int, of count: Int, y: CGFloat, right: CGFloat, amplitude: CGFloat,
+                            t: Double, scale: CGFloat) {
+        let gauge = count > 1 ? CGFloat(number - 1) / CGFloat(count - 1) : 0.5
         let thickness = 1 + gauge * 2.6
         let wound = count >= 4 && gauge > 0.45
         let base = wound ? Color(hex: 0xCDB892) : Color(hex: 0xE4DFD6)
         let tint = base.mix(with: accent, by: Double(min(1, amplitude / 3.5)))
-        // The string's number at the left edge (the thickest, on top, is the highest number), so this
-        // player's-eye view never reads as upside down next to the tab-style neck diagrams.
-        let number = Text("\(count - index)").font(.system(size: 10, weight: .bold, design: .rounded))
+        // The string's number at the left edge, as beside the nut on the fretboards, lit while it rings.
+        let label = Text("\(number)").font(DiagramType.font(11, scale: scale))
             .foregroundStyle(amplitude > 0.5 ? accent : Palette.inkSoft.opacity(0.85))
-        context.draw(number, at: CGPoint(x: 8, y: y))
+        context.draw(label, at: CGPoint(x: 8, y: y))
         let left: CGFloat = 20
         var path = Path()
         path.move(to: CGPoint(x: left, y: y))
         if amplitude > 0.2 {
-            let wobble = amplitude * CGFloat(sin(t * 2 * .pi * 9 + Double(index)))
+            let wobble = amplitude * CGFloat(sin(t * 2 * .pi * 9 + Double(number)))
             let segments = 28
             for k in 1...segments {
                 let u = CGFloat(k) / CGFloat(segments)
@@ -323,13 +370,13 @@ struct StrumSweep: View {
     }
 
     /// The pick's path across the strings, faint under them: a lane with chevrons pointing the way the next stroke
-    /// goes, so even a still frame shows where and which way the pick sweeps.
-    private func drawLane(_ context: inout GraphicsContext, x: CGFloat, above: CGFloat, below: CGFloat, down: Bool) {
+    /// goes on screen (`falling`: down the screen), so even a still frame shows where and which way the pick sweeps.
+    private func drawLane(_ context: inout GraphicsContext, x: CGFloat, above: CGFloat, below: CGFloat, falling: Bool) {
         guard below - above > 30 else { return }
         let lane = CGRect(x: x - 13, y: above, width: 26, height: below - above)
         context.fill(Path(roundedRect: lane, cornerRadius: 13), with: .color(accent.opacity(0.07)))
         context.stroke(Path(roundedRect: lane, cornerRadius: 13), with: .color(accent.opacity(0.12)), lineWidth: 1)
-        let s: CGFloat = down ? 1 : -1
+        let s: CGFloat = falling ? 1 : -1
         for k in 0..<3 {
             let y = above + (below - above) * (0.3 + 0.2 * CGFloat(k))
             var chevron = Path()
@@ -340,8 +387,10 @@ struct StrumSweep: View {
         }
     }
 
-    /// The sweep itself: a streak from where the stroke began to the pick, fading once it lands.
-    private func drawTrail(_ context: inout GraphicsContext, x: CGFloat, above: CGFloat, below: CGFloat, t: Double, nearby: [Stroke], moving: Bool, state: PickState) {
+    /// The sweep itself: a streak from where the stroke began (the thickest side for a down stroke) to the pick at
+    /// `pickY`, fading once it lands.
+    private func drawTrail(_ context: inout GraphicsContext, x: CGFloat, frame: Frame, pickY: CGFloat, t: Double, nearby: [Stroke],
+                           moving: Bool, state: PickState) {
         let half = sweepSeconds / 2
         let from: CGFloat, to: CGFloat, fade: Double
         if moving {
@@ -349,13 +398,13 @@ struct StrumSweep: View {
             let end = stroke.time + half
             fade = t <= end ? 1 : max(0, 1 - (t - end) / 0.28)
             guard fade > 0 else { return }
-            from = stroke.down ? above : below
-            let landed: CGFloat = stroke.down ? below : above
-            to = t <= end ? above + (below - above) * CGFloat(state.position) : landed
+            from = frame.start(down: stroke.down)
+            let landed = frame.start(down: !stroke.down)
+            to = t <= end ? pickY : landed
         } else {
             fade = 0.5
-            from = state.down ? above : below
-            to = state.down ? below : above
+            from = frame.start(down: state.down)
+            to = frame.start(down: !state.down)
         }
         guard abs(to - from) > 1 else { return }
         let rect = CGRect(x: x - 13, y: min(from, to), width: 26, height: abs(to - from))
@@ -363,10 +412,10 @@ struct StrumSweep: View {
         context.fill(Path(roundedRect: rect, cornerRadius: 13), with: .linearGradient(shade, startPoint: CGPoint(x: x, y: from), endPoint: CGPoint(x: x, y: to)))
     }
 
-    /// A guitar pick, tip first in the direction of the stroke.
-    private func drawPick(_ context: inout GraphicsContext, center: CGPoint, down: Bool, scale: CGFloat, alpha: Double) {
+    /// A guitar pick, tip first in the direction of the stroke on screen (`pointsDown`: down the screen).
+    private func drawPick(_ context: inout GraphicsContext, center: CGPoint, pointsDown: Bool, scale: CGFloat, alpha: Double) {
         let w = 28 * scale, h = 32 * scale
-        let s: CGFloat = down ? 1 : -1
+        let s: CGFloat = pointsDown ? 1 : -1
         var shape = Path()
         let tip = CGPoint(x: center.x, y: center.y + s * h / 2)
         shape.move(to: tip)
@@ -382,11 +431,13 @@ struct StrumSweep: View {
         context.stroke(shape, with: .color(.white.opacity(0.35 * alpha)), lineWidth: 1)
     }
 
-    /// Plucked instruments: a fingertip dips onto the lowest string on each hit.
-    private func drawFinger(_ context: inout GraphicsContext, x: CGFloat, stringY: CGFloat, t: Double, nearby: [Stroke], moving: Bool) {
+    /// Plucked instruments: a fingertip dips onto the lowest string on each hit, from outside the strings (from
+    /// above when that string is on top, from below when it's at the bottom).
+    private func drawFinger(_ context: inout GraphicsContext, x: CGFloat, stringY: CGFloat, fromAbove: Bool, t: Double, nearby: [Stroke], moving: Bool) {
         let nearest = nearby.min { abs($0.time - t) < abs($1.time - t) }
         let bump = moving ? nearest.map { exp(-pow(($0.time - t) / 0.07, 2)) } ?? 0 : 0
-        let center = CGPoint(x: x, y: stringY - 20 + CGFloat(bump) * 15)
+        let side: CGFloat = fromAbove ? -1 : 1
+        let center = CGPoint(x: x, y: stringY + side * (20 - CGFloat(bump) * 15))
         let halo: CGFloat = 22
         context.fill(Path(ellipseIn: CGRect(x: center.x - halo, y: center.y - halo, width: halo * 2, height: halo * 2)),
                      with: .radialGradient(Gradient(colors: [accent.opacity(0.2 + 0.3 * bump), .clear]), center: center, startRadius: 0, endRadius: halo))

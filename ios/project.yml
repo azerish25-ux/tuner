@@ -64,6 +64,8 @@ targets:
       - path: TimbreWidgets/PrivacyInfo.xcprivacy
         buildPhase: resources
       - path: Timbre/Intents/SharedIntents.swift
+      # The configurable widgets' instruments and song shelves, written by the app (WidgetLibraryPublisher.swift).
+      - path: Timbre/Intents/WidgetLibrary.swift
       - path: Timbre/Services/WidgetBridge.swift
       - path: Timbre/Services/PracticeActivityAttributes.swift
       - path: Timbre/Design/Theme.swift

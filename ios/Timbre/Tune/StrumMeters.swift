@@ -15,6 +15,9 @@ struct StrumRing: Equatable {
     /// Something is ringing: the canvases redraw every frame only then.
     var active: Bool
 
+    /// Nothing ringing (the zoomed lane rings from the live input instead).
+    static let still = StrumRing(hint: false, hintStart: 0, attackAt: nil, active: false)
+
     /// One hint: a pause, then the sweep.
     static let cycle = 3.2
     /// The hint's pick crosses the strings between these seconds of the cycle.
@@ -53,12 +56,32 @@ enum StrumScale {
     }
 }
 
+// MARK: - Colour
+
+/// Colour on the strum screen says one thing, status: mint inside the lock band, amber outside it, quiet ink
+/// before a string is heard. The lanes and strings themselves are neutral steel, and which string is which reads
+/// from its label chip (its number and note), never from a colour, so an in-tune low E is never drawn red.
+enum StrumTone {
+    /// The strings: plain steel, as on the instrument.
+    static let steel = Color(hex: 0xC9CED6)
+
+    /// Whole cents against the lock band: mint inside it (or once locked), amber outside, faint with no pitch.
+    static func status(_ shown: Int?, band: Double, locked: Bool = false) -> Color {
+        if locked { return Palette.mint }
+        guard let shown else { return Palette.inkFaint }
+        return Double(abs(shown)) <= band ? Palette.mint : Palette.amber
+    }
+
+    static func status(_ meter: StrumBoard.Meter, band: Double) -> Color { status(meter.shown, band: band) }
+}
+
 // MARK: - Column (regular sizes)
 
-/// A string's meter: the ±50¢ scale with the string running down its middle in the string's colour, the bead where
-/// the strum heard it (hollow when approximate) pulled toward the target line, the turn it needs on top (↑ tune up
-/// when flat, ↓ down when sharp, ✓ in tune) and its note and cents below. A string not heard stays dim, marked
-/// "Not heard"; the string to tune first is framed. One element for VoiceOver.
+/// A string's meter: the ±50¢ scale with a steel string down its middle, the bead where the strum heard it (hollow,
+/// with an "≈ estimate" badge, when approximate) pulled toward the target line, the turn it needs on top (↑ tune up
+/// when flat, ↓ down when sharp, ✓ in tune) and its label chip and cents below. Bead, turn, chip and cents carry
+/// the status colour; nothing else is coloured. A string not heard stays dim, marked "Not heard"; the string to
+/// tune first is framed in amber. One element for VoiceOver.
 struct StrumMeterColumn: View {
     let meter: StrumBoard.Meter
     /// Left-to-right place on screen: the sweep, the strum's spread and the beads' landing follow it.
@@ -76,10 +99,13 @@ struct StrumMeterColumn: View {
     private var strong: Bool { contrast == .increased }
     private var inTune: Bool { meter.inTune(band: band) }
     private var dim: Bool { !waiting && !meter.heard }
+    private var tone: Color { StrumTone.status(meter, band: band) }
+    /// Lanes too narrow for the string number and the estimate's word (more than seven strings on a phone).
+    private var narrow: Bool { count > 7 }
 
     var body: some View {
         VStack(spacing: 8) {
-            StrumTurnBadge(meter: meter, band: band, pulse: pulse)
+            StrumTurnBadge(shown: meter.shown, band: band, pulse: pulse)
             track
             label
         }
@@ -106,7 +132,7 @@ struct StrumMeterColumn: View {
             let centre = size.height / 2
             let y = StrumScale.y(meter.cents, height: size.height)
             ZStack {
-                StrumStringTrack(color: meter.color, gauge: meter.gauge, lit: !dim, inTune: inTune, band: band,
+                StrumStringTrack(gauge: meter.gauge, lit: !dim, inTune: inTune, band: band,
                                  ring: ring, position: position, count: count, strong: strong)
                 tension(from: centre, to: y, width: size.width)
                 bead.position(x: size.width / 2, y: y)
@@ -117,12 +143,11 @@ struct StrumMeterColumn: View {
         .frame(minHeight: 120)
     }
 
-    /// The pull from the bead to the target line, in the tuner's colour rule, while a string is out.
+    /// The pull from the bead to the target line, in amber, while a string is out.
     private func tension(from centre: CGFloat, to y: CGFloat, width: CGFloat) -> some View {
         let out = meter.heard && !inTune
-        let tone = Palette.tuning(meter.shown.map { Double($0) }, locked: false)
         return Capsule()
-            .fill(LinearGradient(colors: [tone.opacity(0.05), tone.opacity(0.55)],
+            .fill(LinearGradient(colors: [Palette.amber.opacity(0.05), Palette.amber.opacity(0.55)],
                                  startPoint: y > centre ? .top : .bottom, endPoint: y > centre ? .bottom : .top))
             .frame(width: 4, height: max(0, abs(y - centre)))
             .position(x: width / 2, y: (centre + y) / 2)
@@ -136,15 +161,15 @@ struct StrumMeterColumn: View {
             if meter.approximate {
                 // Hollow: read from a peak another string's overtone shares.
                 Circle().fill(Palette.stage)
-                Circle().strokeBorder(meter.color, lineWidth: 2.5)
+                Circle().strokeBorder(tone, lineWidth: 2.5)
             } else {
-                Circle().fill(meter.color)
+                Circle().fill(tone)
                 Circle().fill(LinearGradient(colors: [.white.opacity(0.5), .clear], startPoint: .top, endPoint: .center))
             }
             Circle().strokeBorder(Palette.mint, lineWidth: 2).padding(-4).opacity(inTune ? 1 : 0)
         }
         .frame(width: 18, height: 18)
-        .shadow(color: (inTune ? Palette.mint : meter.color).opacity(0.6), radius: inTune ? 10 : 6)
+        .shadow(color: tone.opacity(0.6), radius: inTune ? 10 : 6)
         .opacity(meter.heard ? 1 : 0)
         .scaleEffect(meter.heard ? 1 : 0.4)
         .animation(landing, value: meter.heard)
@@ -163,85 +188,185 @@ struct StrumMeterColumn: View {
             .transition(.opacity)
     }
 
+    /// The chip names the string; the cents and, for an approximate reading, the "≈ estimate" badge follow. The
+    /// badge keeps its place when hidden, so every lane's numbers line up.
     private var label: some View {
-        VStack(spacing: 2) {
-            HStack(alignment: .firstTextBaseline, spacing: 1) {
-                Text(verbatim: meter.name).font(Typeface.label(16, relativeTo: .headline)).foregroundStyle(Palette.ink)
-                Text(verbatim: meter.cue).font(Typeface.label(10, relativeTo: .caption2))
-                    .foregroundStyle(strong ? Palette.inkSoft : meter.color.opacity(0.85))
-            }
-            Text(verbatim: meter.count > 1 ? "×\(meter.count)" : " ")
-                .font(Typeface.label(9, relativeTo: .caption2)).foregroundStyle(Palette.inkSoft)
+        VStack(spacing: 5) {
+            StrumLaneChip(meter: meter, tone: meter.heard ? tone : nil, focus: focus, compact: narrow)
             Text(verbatim: StrumWords.cents(meter))
                 .font(Typeface.number(12, relativeTo: .caption))
-                .foregroundStyle(meter.heard ? Palette.tuning(meter.shown.map { Double($0) }, locked: false) : Palette.inkFaint)
+                .foregroundStyle(meter.heard ? tone : Palette.inkFaint)
                 .contentTransition(.numericText(value: meter.cents ?? 0))
                 .animation(landing, value: meter.cents)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+            StrumEstimateBadge(compact: narrow)
+                .opacity(meter.heard && meter.approximate ? 1 : 0)
+                .scaleEffect(meter.heard && meter.approximate ? 1 : 0.8)
+                .animation(landing, value: meter.heard && meter.approximate)
         }
-        .lineLimit(1)
-        .minimumScaleFactor(0.6)
         .padding(.horizontal, 2)
     }
 
-    /// The string to tune first: a soft frame in the colour of its offset.
+    /// The string to tune first: a soft amber frame (it is always one that is off).
     @ViewBuilder private var halo: some View {
         if focus {
-            let tone = Palette.tuning(meter.shown.map { Double($0) }, locked: false)
             let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
-            shape.fill(tone.opacity(0.08))
-                .overlay(shape.strokeBorder(tone.opacity(strong ? 0.9 : 0.45), lineWidth: 1))
+            shape.fill(Palette.amber.opacity(0.07))
+                .overlay(shape.strokeBorder(Palette.amber.opacity(strong ? 0.9 : 0.4), lineWidth: 1))
                 .padding(.horizontal, 2)
                 .transition(.opacity)
         }
     }
 }
 
+// MARK: - Label chip and badges
+
+/// A string's name on its lane: the number players call it by (1 the thinnest) in a small ring, then its note and
+/// octave as the tuner's string rail writes them, and "×2" for a unison pair. The chip's ring takes the lane's
+/// status: mint in tune, amber when off (filled for the string to tune first), quiet before it is heard.
+struct StrumLaneChip: View {
+    let meter: StrumBoard.Meter
+    /// The status colour; nil before the string is heard.
+    let tone: Color?
+    var focus = false
+    /// Narrow lanes: the note alone.
+    var compact = false
+    /// The note's point size (the zoomed lane's chip is larger).
+    var size: CGFloat = 16
+    @Environment(\.colorSchemeContrast) private var contrast
+
+    private var strong: Bool { contrast == .increased }
+
+    var body: some View {
+        let ring = tone.map { $0.opacity(focus || strong ? 0.9 : 0.45) } ?? Color.white.opacity(strong ? 0.45 : 0.12)
+        let fill = tone.map { $0.opacity(focus ? 0.16 : 0.06) } ?? Color.white.opacity(0.03)
+        HStack(spacing: max(3, size * 0.22)) {
+            if let number = meter.number, !compact { numberMark(number) }
+            note
+        }
+        .lineLimit(1)
+        .minimumScaleFactor(0.6)
+        .padding(.horizontal, compact ? 4 : size * 0.42)
+        .padding(.vertical, size * 0.28)
+        .background(Capsule().fill(fill))
+        .overlay(Capsule().strokeBorder(ring, lineWidth: focus ? 1.5 : 1))
+        .animation(Motion.quick, value: focus)
+    }
+
+    private var note: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 1) {
+            Text(verbatim: meter.name)
+                .font(Typeface.label(size, relativeTo: .headline))
+                .foregroundStyle(Palette.ink)
+            Text(verbatim: meter.cue)
+                .font(Typeface.label(max(10, size * 0.62), relativeTo: .caption2))
+                .foregroundStyle(tone ?? (strong ? Palette.inkSoft : Palette.inkFaint))
+            if meter.count > 1 && !compact {
+                Text(verbatim: "×\(meter.count)")
+                    .font(Typeface.label(max(9, size * 0.56), relativeTo: .caption2))
+                    .foregroundStyle(strong ? Palette.ink : Palette.inkSoft)
+                    .padding(.leading, 2)
+            }
+        }
+    }
+
+    /// The string number in a small ring, as chord charts and tab write it.
+    private func numberMark(_ number: Int) -> some View {
+        let side = max(15, size * 1.05)
+        return Text(verbatim: "\(number)")
+            .font(Typeface.label(max(9, size * 0.58), relativeTo: .caption2))
+            .foregroundStyle(strong ? Palette.ink : Palette.inkSoft)
+            .padding(.horizontal, 3)
+            .frame(minWidth: side, minHeight: side)
+            .background(Capsule().fill(Color.white.opacity(0.06)))
+            .overlay(Capsule().strokeBorder(Color.white.opacity(strong ? 0.5 : 0.2), lineWidth: 1))
+    }
+}
+
+/// "≈ estimate": the reading came from a peak another string's overtone shares (B3 under the low E's third
+/// harmonic), good to a few cents; fine-tuning the string alone settles it. Its dashed edge matches the hollow
+/// bead. Narrow lanes show the sign alone. Decorative: the lane's VoiceOver value says "estimate".
+struct StrumEstimateBadge: View {
+    var compact = false
+    @Environment(\.colorSchemeContrast) private var contrast
+
+    var body: some View {
+        let strong = contrast == .increased
+        Group {
+            if compact { Text(verbatim: "≈") } else { Text("≈ estimate") }
+        }
+        .font(Typeface.label(10, relativeTo: .caption2))
+        .foregroundStyle(strong ? Palette.ink : Palette.inkSoft)
+        .lineLimit(1)
+        .minimumScaleFactor(0.75)
+        .padding(.horizontal, 5).padding(.vertical, 2)
+        .background(Capsule().fill(Color.white.opacity(0.05)))
+        .overlay(Capsule().strokeBorder(Color.white.opacity(strong ? 0.55 : 0.22), style: StrokeStyle(lineWidth: 1, dash: [2.5, 2])))
+        .dynamicTypeSize(...DynamicTypeSize.xLarge)
+        .accessibilityHidden(true)
+    }
+}
+
 /// The turn a string needs, over its meter: ↑ tune up (flat), ↓ tune down (sharp), ✓ in tune; nothing before
 /// it is heard. It bounces once as each strum lands.
-private struct StrumTurnBadge: View {
-    let meter: StrumBoard.Meter
+struct StrumTurnBadge: View {
+    let shown: Int?
     let band: Double
     let pulse: Int
+    var size: CGFloat = 22
+    /// The tuner has locked the string (the zoomed lane): ✓ whatever the cents.
+    var locked = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    /// 0 nothing, 1 in tune, 2 tune up, 3 tune down: the badge animates only when this changes.
+    private var state: Int {
+        if locked { return 1 }
+        guard let shown else { return 0 }
+        if Double(abs(shown)) <= band { return 1 }
+        return shown < 0 ? 2 : 3
+    }
 
     var body: some View {
         ZStack {
-            if let shown = meter.shown {
-                if Double(abs(shown)) <= band {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 10, weight: .heavy))
-                        .foregroundStyle(Palette.onAccent)
-                        .frame(width: 22, height: 22)
-                        .background(Circle().fill(Palette.mint))
-                        .shadow(color: Palette.mint.opacity(0.5), radius: 6)
-                        .transition(.scale(scale: 0.4).combined(with: .opacity))
-                } else {
-                    arrow(up: shown < 0, tone: Palette.tuning(Double(shown), locked: false))
-                        .transition(.scale(scale: 0.4).combined(with: .opacity))
-                }
+            switch state {
+            case 1:
+                Image(systemName: "checkmark")
+                    .font(.system(size: size * 0.46, weight: .heavy))
+                    .foregroundStyle(Palette.onAccent)
+                    .frame(width: size, height: size)
+                    .background(Circle().fill(Palette.mint))
+                    .shadow(color: Palette.mint.opacity(0.5), radius: size * 0.27)
+                    .transition(.scale(scale: 0.4).combined(with: .opacity))
+            case 2, 3:
+                arrow(up: state == 2)
+                    .transition(.scale(scale: 0.4).combined(with: .opacity))
+            default:
+                EmptyView()
             }
         }
-        .frame(height: 24)
-        .animation(reduceMotion ? .easeInOut(duration: 0.2) : Motion.pluck, value: meter.shown)
+        .frame(height: size + 2)
+        .animation(reduceMotion ? .easeInOut(duration: 0.2) : Motion.pluck, value: state)
         .accessibilityHidden(true)
     }
 
-    private func arrow(up: Bool, tone: Color) -> some View {
+    private func arrow(up: Bool) -> some View {
         Image(systemName: up ? "arrow.up" : "arrow.down")
-            .font(.system(size: 11, weight: .heavy))
-            .foregroundStyle(tone)
-            .frame(width: 22, height: 22)
-            .background(Circle().fill(tone.opacity(0.16)))
-            .overlay(Circle().strokeBorder(tone.opacity(0.6), lineWidth: 1))
+            .font(.system(size: size * 0.5, weight: .heavy))
+            .foregroundStyle(Palette.amber)
+            .frame(width: size, height: size)
+            .background(Circle().fill(Palette.amber.opacity(0.16)))
+            .overlay(Circle().strokeBorder(Palette.amber.opacity(0.6), lineWidth: 1))
             .symbolEffect(.bounce, value: reduceMotion ? 0 : pulse)
     }
 }
 
+// MARK: - Track
+
 /// The meter's scale and its string. Ticks every 10¢ either side of the string, the lock band (Settings ›
-/// Precision) in mint around the target line, and the string itself, its width by gauge, swinging as `ring` says.
-/// Decorative: the column speaks for it.
-private struct StrumStringTrack: View {
-    let color: Color
+/// Precision) in mint around the target line, and the string itself in steel, its width by gauge (wound strings
+/// show their winding), swinging as `ring` says. Decorative: the column speaks for it.
+struct StrumStringTrack: View {
     let gauge: Double
     let lit: Bool
     let inTune: Bool
@@ -250,14 +375,20 @@ private struct StrumStringTrack: View {
     let position: Int
     let count: Int
     let strong: Bool
+    /// The zoomed lane: a string ringing on its own, this many points either way (nil: as `ring` says).
+    var steady: Double? = nil
+    /// The zoomed lane draws its scale, lock band and string larger, with the ±10, ±20 and ±50 marks named.
+    var magnify: CGFloat = 1
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 60, paused: reduceMotion || !ring.active)) { timeline in
+        let still = reduceMotion || (steady.map { $0 < 0.05 } ?? !ring.active)
+        TimelineView(.animation(minimumInterval: 1.0 / 60, paused: still)) { timeline in
             Canvas { context, size in
                 let now = timeline.date.timeIntervalSinceReferenceDate
                 scale(&context, size: size)
-                string(&context, size: size, now: now, swing: reduceMotion ? 0 : ring.swing(at: now, position: position, of: count))
+                let swing = reduceMotion ? 0 : (steady ?? ring.swing(at: now, position: position, of: count))
+                string(&context, size: size, now: now, swing: swing)
             }
         }
         .accessibilityHidden(true)
@@ -266,32 +397,37 @@ private struct StrumStringTrack: View {
     private func scale(_ context: inout GraphicsContext, size: CGSize) {
         let mid = size.width / 2, centre = size.height / 2
         let unit = StrumScale.unit(size.height)
-        let zoneWidth = min(22, size.width - 4)
+        let zoneWidth = min(22 * magnify, size.width - 4)
+        let tick = strong ? Palette.inkSoft : Palette.inkFaint.opacity(0.55)
         if size.width >= 34 {
-            let tick = strong ? Palette.inkSoft : Palette.inkFaint.opacity(0.55)
             for value in stride(from: -50, through: 50, by: 10) where value != 0 {
                 let y = centre - CGFloat(value) * unit
-                let length: CGFloat = value % 50 == 0 ? 7 : 4
+                let length: CGFloat = (value % 50 == 0 ? 7 : 4) * magnify
                 let gap = zoneWidth / 2 + 3
                 context.fill(Path(CGRect(x: mid - gap - length, y: y - 0.5, width: length, height: 1)), with: .color(tick))
                 context.fill(Path(CGRect(x: mid + gap, y: y - 0.5, width: length, height: 1)), with: .color(tick))
+                if magnify > 1.5 && [10, 20, 50].contains(abs(value)) {
+                    let name = (value > 0 ? "+" : "−") + "\(abs(value))"
+                    context.draw(Text(verbatim: name).font(Typeface.number(10, relativeTo: .caption2)).foregroundStyle(tick),
+                                 at: CGPoint(x: mid - gap - length - 5, y: y), anchor: .trailing)
+                }
             }
         }
         // The lock band: exactly where the tuner would lock.
         let half = max(3, CGFloat(band) * unit)
         let zone = CGRect(x: mid - zoneWidth / 2, y: centre - half, width: zoneWidth, height: half * 2)
-        let radius = min(6, half)
+        let radius = min(6 * magnify, half)
         context.fill(Path(roundedRect: zone, cornerRadius: radius), with: .color(Palette.mint.opacity(inTune ? 0.28 : 0.1)))
         context.stroke(Path(roundedRect: zone, cornerRadius: radius),
                        with: .color(Palette.mint.opacity(inTune || strong ? 0.95 : 0.45)), lineWidth: 1)
         // The target line.
-        let line = min(28, size.width - 2)
+        let line = min(28 * magnify, size.width - 2)
         context.fill(Path(CGRect(x: mid - line / 2, y: centre - 0.75, width: line, height: 1.5)), with: .color(Palette.ink.opacity(0.75)))
     }
 
     private func string(_ context: inout GraphicsContext, size: CGSize, now: Double, swing: Double) {
         let mid = size.width / 2
-        let width = CGFloat(1.1 + 1.9 * gauge)
+        let width = CGFloat(1.1 + 1.9 * gauge) * (1 + (magnify - 1) * 0.5)
         var path = Path()
         if swing < 0.05 {
             path.move(to: CGPoint(x: mid, y: 0))
@@ -306,9 +442,14 @@ private struct StrumStringTrack: View {
                 if step == 0 { path.move(to: point) } else { path.addLine(to: point) }
             }
             // The blur of a string in motion.
-            context.stroke(path, with: .color(color.opacity(0.22 * min(1, swing / 4))), lineWidth: width + 6)
+            context.stroke(path, with: .color(StrumTone.steel.opacity(0.18 * min(1, swing / 4))), lineWidth: width + 6)
         }
-        context.stroke(path, with: .color(color.opacity(lit ? 0.95 : 0.4)), style: StrokeStyle(lineWidth: width, lineCap: .round))
+        context.stroke(path, with: .color(StrumTone.steel.opacity(lit ? 0.85 : 0.35)), style: StrokeStyle(lineWidth: width, lineCap: .round))
+        // Wound strings: the winding catches the light in fine bands.
+        if gauge >= 0.45 && width >= 2.4 {
+            context.stroke(path, with: .color(Color.black.opacity(lit ? 0.3 : 0.15)),
+                           style: StrokeStyle(lineWidth: width, lineCap: .butt, dash: [0.9, 1.4]))
+        }
     }
 }
 
@@ -364,7 +505,7 @@ struct StrumPickSweep: View {
 // MARK: - Row (accessibility text sizes)
 
 /// A string's meter as a row, for the largest text sizes where a dozen columns cannot hold their words: the
-/// note and its cents and turn on top, a horizontal scale (flat left, sharp right) beneath. One element for VoiceOver.
+/// label chip and its turn on top, a horizontal scale (flat left, sharp right) beneath. One element for VoiceOver.
 struct StrumMeterRow: View {
     let meter: StrumBoard.Meter
     let band: Double
@@ -375,29 +516,28 @@ struct StrumMeterRow: View {
 
     var body: some View {
         let inTune = meter.inTune(band: band)
-        let tone = Palette.tuning(meter.shown.map { Double($0) }, locked: false)
+        let tone = StrumTone.status(meter, band: band)
         let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
         VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .firstTextBaseline, spacing: 10) {
-                Circle().fill(meter.color).frame(width: 10, height: 10)
-                Text(verbatim: meter.count > 1 ? "\(meter.note) ×\(meter.count)" : meter.note)
-                    .font(Typeface.label(18, relativeTo: .headline)).foregroundStyle(Palette.ink)
+            HStack(alignment: .center, spacing: 10) {
+                StrumLaneChip(meter: meter, tone: meter.heard ? tone : nil, focus: focus, size: 18)
                 Spacer(minLength: 8)
                 if waiting {
                     EmptyView()
                 } else if meter.heard {
                     Text(verbatim: inTune ? String(localized: "In tune") : StrumWords.turn(meter))
-                        .font(.body.weight(.semibold)).foregroundStyle(inTune ? Palette.mint : tone)
+                        .font(.body.weight(.semibold)).foregroundStyle(tone)
                         .multilineTextAlignment(.trailing)
                 } else {
                     Text("Not heard").font(.body).foregroundStyle(Palette.inkSoft)
                 }
             }
+            if meter.heard && meter.approximate { StrumEstimateBadge() }
             StrumRowScale(meter: meter, band: band).frame(height: 30)
         }
         .padding(14)
         .background(shape.fill(Palette.stageRaised))
-        .overlay(shape.strokeBorder(focus ? tone.opacity(0.7) : Color.white.opacity(contrast == .increased ? 0.3 : 0.06), lineWidth: 1))
+        .overlay(shape.strokeBorder(focus ? Palette.amber.opacity(0.7) : Color.white.opacity(contrast == .increased ? 0.3 : 0.06), lineWidth: 1))
         .opacity(!waiting && !meter.heard ? 0.6 : 1)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(StrumWords.name(meter))
@@ -406,7 +546,8 @@ struct StrumMeterRow: View {
     }
 }
 
-/// The row's ±50¢ scale: the string across it in its colour, the lock band in mint, the bead where it was heard.
+/// The row's ±50¢ scale: the string across it in steel, the lock band in mint, the bead where it was heard in the
+/// status colour (hollow when approximate).
 private struct StrumRowScale: View {
     let meter: StrumBoard.Meter
     let band: Double
@@ -415,20 +556,21 @@ private struct StrumRowScale: View {
         Canvas { context, size in
             let mid = size.width / 2, centre = size.height / 2
             let unit = max(0.5, (size.width / 2 - 12) / 50)
-            context.fill(Path(CGRect(x: 0, y: centre - 1, width: size.width, height: 2)), with: .color(meter.color.opacity(meter.heard ? 0.8 : 0.35)))
+            context.fill(Path(CGRect(x: 0, y: centre - 1, width: size.width, height: 2)), with: .color(StrumTone.steel.opacity(meter.heard ? 0.7 : 0.3)))
             let half = max(3, CGFloat(band) * unit)
             let zone = CGRect(x: mid - half, y: centre - 11, width: half * 2, height: 22)
             context.fill(Path(roundedRect: zone, cornerRadius: min(6, half)), with: .color(Palette.mint.opacity(meter.inTune(band: band) ? 0.28 : 0.1)))
             context.stroke(Path(roundedRect: zone, cornerRadius: min(6, half)), with: .color(Palette.mint.opacity(0.6)), lineWidth: 1)
             context.fill(Path(CGRect(x: mid - 0.75, y: centre - 13, width: 1.5, height: 26)), with: .color(Palette.ink.opacity(0.75)))
             guard let cents = meter.cents else { return }
+            let tone = StrumTone.status(meter, band: band)
             let x = mid + CGFloat(max(-50, min(50, cents))) * unit
             let dot = CGRect(x: x - 9, y: centre - 9, width: 18, height: 18)
             if meter.approximate {
                 context.fill(Path(ellipseIn: dot), with: .color(Palette.stageRaised))
-                context.stroke(Path(ellipseIn: dot.insetBy(dx: 1.25, dy: 1.25)), with: .color(meter.color), lineWidth: 2.5)
+                context.stroke(Path(ellipseIn: dot.insetBy(dx: 1.25, dy: 1.25)), with: .color(tone), lineWidth: 2.5)
             } else {
-                context.fill(Path(ellipseIn: dot), with: .color(meter.color))
+                context.fill(Path(ellipseIn: dot), with: .color(tone))
             }
         }
         .accessibilityHidden(true)

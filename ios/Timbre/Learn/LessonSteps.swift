@@ -893,6 +893,17 @@ struct RhythmStep: View {
     private func finish() {
         let points = grades.values.reduce(0.0) { $0 + ($1 == .perfect ? 1 : $1 == .good ? 0.8 : $1 == .ok ? 0.5 : 0) }
         score = expected.isEmpty ? 1 : points / Double(expected.count)
+        // The coach reads chord-change timing from strummed takes heard on the instrument.
+        if instrumentStep && !micOff {
+            switch mode {
+            case .strum(let chord?):
+                CoachTakes.shared.record(CoachTake.strummed(chords: [chord], bars: [bars], pattern: pattern, beatsPerBar: beatsPerBar, bpm: bpm, offsets: offsets, strays: strays))
+            case .progression(let chords, let lengths):
+                CoachTakes.shared.record(CoachTake.strummed(chords: chords, bars: lengths, pattern: pattern, beatsPerBar: beatsPerBar, bpm: bpm, offsets: offsets, strays: strays))
+            default:
+                break
+            }
+        }
         // A good take ends on the band's final chord; otherwise it fades with the click.
         store.audio.finishBand(celebrate: score >= 0.7)
         store.stopLessonListening(owner: owner)
@@ -920,17 +931,40 @@ struct TuneCheckStep: View {
     /// done (chip filled, note in the accent) before the next one takes over.
     @State private var tuned = 0
     @State private var finished = false
+    /// The rail runs in the necks' string order (Settings › String order).
+    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
 
     /// A string just locked and is showing done before the check moves on.
     private var settling: Bool { tuned > index }
 
-    private var strings: [Int] { ChordStep.openStrings(course).enumerated().filter { !(course.fretKind == "banjo" && $0.offset == 0) }.map(\.element) }
+    /// One open string on the rail: its number (1 is the thinnest) and its note.
+    private struct RailString {
+        let number: Int
+        let midi: Int
+    }
 
-    /// String number (1 is the highest) of the string being checked; the open strings run lowest first.
+    /// The open strings in the order the check runs and the rail shows them: the string the neck strip draws on
+    /// top comes first, on the left, as the play-along's lanes put it (string 1 first in tab order, the lowest
+    /// string first in mirror order), so the rail, the strip under it and the lanes all read the same way.
+    /// A banjo's short drone string is left out.
+    private var rail: [RailString] {
+        let open = ChordStep.openStrings(course)
+        let count = open.count
+        // The open strings run lowest first: the one at `offset` is string `count - offset`.
+        let all = open.enumerated()
+            .filter { !(course.fretKind == "banjo" && $0.offset == 0) }
+            .map { RailString(number: count - $0.offset, midi: $0.element) }
+        let order = stringOrder
+        return all.sorted { order.row(ofString: $0.number, count: count) < order.row(ofString: $1.number, count: count) }
+    }
+
+    /// The notes to check, in rail order.
+    private var strings: [Int] { rail.map(\.midi) }
+
+    /// String number (1 is the thinnest) of the string being checked.
     private var stringNumber: Int? {
-        guard index < strings.count else { return nil }
-        let skipped = course.fretKind == "banjo" ? 1 : 0
-        return ChordStep.openStrings(course).count - (index + skipped)
+        let rail = self.rail
+        return index < rail.count ? rail[index].number : nil
     }
 
     static func needed(for course: LearnCourse) -> Bool {
@@ -1013,20 +1047,17 @@ struct TuneCheckStep: View {
     }
 
     /// Done strings filled, the current one ringed; the ones still to come in soft ink on a raised chip
-    /// with a hairline (readable on the green wash, well over 3:1). A string fills and bursts the moment it
-    /// locks; the ring moves on to the next a beat later, with the note and the neck.
+    /// with a hairline (readable on the green wash, well over 3:1). Each chip carries its string's number under
+    /// the note, as the neck strip numbers its rows (the two E strings never look alike). A string fills and
+    /// bursts the moment it locks; the ring moves on to the next a beat later, with the note and the neck.
     private var stringChips: some View {
         HStack(spacing: 8) {
-            ForEach(Array(strings.enumerated()), id: \.offset) { i, midi in
-                let isDone = i < tuned
-                let isCurrent = i == index && !isDone
-                Text(NoteName.pitchClass(midi)).font(Typeface.label(15))
-                    .foregroundStyle(isDone ? Palette.onAccent : isCurrent ? Palette.ink : Palette.inkSoft)
-                    .frame(width: Self.chip, height: Self.chip)
-                    .background(Circle().fill(isDone ? AnyShapeStyle(accent) : AnyShapeStyle(Palette.surface)))
-                    .overlay(Circle().strokeBorder(isCurrent ? accent : isDone ? .clear : Color.white.opacity(0.14), lineWidth: isCurrent ? 2 : 1))
+            ForEach(Array(rail.enumerated()), id: \.offset) { i, string in
+                stringChip(string, done: i < tuned, current: i == index && i >= tuned)
             }
         }
+        // The chips keep their size: the note and the number stop growing before they would crowd the chip.
+        .dynamicTypeSize(...DynamicTypeSize.xLarge)
         .animation(Motion.pluck, value: index)
         .animation(Motion.pluck, value: tuned)
         .background(alignment: .leading) {
@@ -1039,6 +1070,23 @@ struct TuneCheckStep: View {
     }
 
     private static let chip: CGFloat = 44
+
+    private func stringChip(_ string: RailString, done: Bool, current: Bool) -> some View {
+        let ink = done ? Palette.onAccent : current ? Palette.ink : Palette.inkSoft
+        return VStack(spacing: -1) {
+            Text(NoteName.pitchClass(string.midi)).font(Typeface.label(15))
+            Text(verbatim: "\(string.number)").font(Typeface.number(11, relativeTo: .caption2)).opacity(0.75)
+        }
+        .foregroundStyle(ink)
+        .lineLimit(1)
+        .frame(width: Self.chip, height: Self.chip)
+        .background(Circle().fill(done ? AnyShapeStyle(accent) : AnyShapeStyle(Palette.surface)))
+        .overlay(Circle().strokeBorder(current ? accent : done ? .clear : Color.white.opacity(0.14), lineWidth: current ? 2 : 1))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("String \(string.number)"))
+        .accessibilityValue(Text(verbatim: NoteName.pitchClass(string.midi)))
+        .accessibilityAddTraits(current ? .isSelected : [])
+    }
 
     private var meterColor: Color {
         if settling { return accent }

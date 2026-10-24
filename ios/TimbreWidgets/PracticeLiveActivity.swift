@@ -68,12 +68,16 @@ private extension PracticeActivityAttributes.ContentState {
 
 private struct SessionBanner: View {
     @Environment(\.activityFamily) private var family
+    /// StandBy: the phone on its side, charging, read from across the room.
+    @Environment(\.isActivityFullscreen) private var fullscreen
     let state: SessionState
     let stale: Bool
 
     var body: some View {
         if family == .small {
             SmallStack(state: state, stale: stale)
+        } else if fullscreen {
+            StandByStage(state: state, stale: stale)
         } else {
             banner
         }
@@ -126,6 +130,88 @@ private struct SmallStack: View {
         case .metronome: Text(verbatim: "♩ \(state.bpm) · \(state.meter)")
         case .drone: Text(verbatim: state.drone)
         case .practice, .done: SessionClock(state: state, stale: stale)
+        }
+    }
+}
+
+// MARK: - StandBy
+
+/// StandBy (the Lock Screen view, scaled up to fill the screen, its tint extended behind it): one number big enough
+/// to read from the music stand. The metronome's tempo and meter over its bar, the drone's tonic, or the session
+/// clock; what runs, its glyph and the streak at the side. Kept inside the Lock Screen's 160 pt height.
+private struct StandByStage: View {
+    let state: SessionState
+    let stale: Bool
+
+    private var ink: Color { stale ? Palette.inkFaint : Palette.ink }
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 16) {
+            VStack(alignment: .leading, spacing: 6) {
+                SessionHeading(state: state)
+                hero
+                footnote
+            }
+            Spacer(minLength: 8)
+            VStack(alignment: .trailing, spacing: 10) {
+                SessionGlyph(state: state, stale: stale, size: 40)
+                if state.mode == .metronome || state.mode == .drone {
+                    SessionClock(state: state, stale: stale)
+                        .font(Typeface.number(20, relativeTo: .title3))
+                        .foregroundStyle(stale ? Palette.inkFaint : Palette.inkSoft)
+                        .multilineTextAlignment(.trailing)
+                        .frame(maxWidth: 100, alignment: .trailing)
+                }
+                StreakMark(streak: state.streak)
+            }
+        }
+        .padding(.horizontal, 22)
+        .padding(.vertical, 16)
+        .accessibilityElement(children: .combine)
+    }
+
+    /// The one big number.
+    @ViewBuilder private var hero: some View {
+        switch state.mode {
+        case .metronome:
+            HStack(alignment: .firstTextBaseline, spacing: 10) {
+                Text(verbatim: "♩ \(state.bpm)").font(Typeface.display(56, relativeTo: .largeTitle)).foregroundStyle(ink)
+                Text(verbatim: state.meter).font(Typeface.number(24, relativeTo: .title2)).foregroundStyle(Palette.inkSoft)
+            }
+            .lineLimit(1)
+            .minimumScaleFactor(0.6)
+        case .drone:
+            HStack(alignment: .firstTextBaseline, spacing: 10) {
+                Text(verbatim: state.drone).font(Typeface.display(56, relativeTo: .largeTitle)).foregroundStyle(ink)
+                Text("Tonic").font(Typeface.label(20, relativeTo: .title3)).foregroundStyle(Palette.inkSoft)
+            }
+            .lineLimit(1)
+            .minimumScaleFactor(0.6)
+        case .practice, .done:
+            SessionClock(state: state, stale: stale)
+                .font(Typeface.number(52, relativeTo: .largeTitle))
+                .foregroundStyle(ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+        }
+    }
+
+    /// Under it: the bar (and the drone sounding with the metronome), or what is being practised.
+    @ViewBuilder private var footnote: some View {
+        switch state.mode {
+        case .metronome:
+            HStack(spacing: 12) {
+                BeatDots(levels: state.beatLevels, size: 10)
+                if !state.drone.isEmpty { DroneChip(note: state.drone) }
+            }
+        case .drone:
+            EmptyView()
+        case .practice, .done:
+            Text(verbatim: state.detail)
+                .font(Typeface.display(17, relativeTo: .headline))
+                .foregroundStyle(Palette.inkSoft)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
         }
     }
 }

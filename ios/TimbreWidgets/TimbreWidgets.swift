@@ -7,6 +7,7 @@ struct TimbreWidgets: WidgetBundle {
     var body: some Widget {
         QuickTuneWidget()
         NextLessonWidget()
+        NextSongWidget()
         StreakWidget()
         TunerControl()
         MetronomeControl()
@@ -21,10 +22,15 @@ struct SnapshotEntry: TimelineEntry {
     let snapshot: WidgetSnapshot
 }
 
+extension WidgetSnapshot {
+    /// The widget gallery's example.
+    static let sample = WidgetSnapshot(streak: 7, best: 12, practicedToday: true, week: [true, true, false, true, true, true, true], instrument: "Acoustic guitar",
+                                       lesson: .init(course: "Guitar", symbol: "guitars.fill", accent: "mint", title: "Your first chord: E minor", minutes: 4, xp: 20, done: 3, total: 60))
+}
+
 struct SnapshotProvider: TimelineProvider {
     func placeholder(in context: Context) -> SnapshotEntry {
-        SnapshotEntry(date: Date(), snapshot: WidgetSnapshot(streak: 7, best: 12, practicedToday: true, week: [true, true, false, true, true, true, true], instrument: "Acoustic guitar",
-                                                             lesson: .init(course: "Guitar", symbol: "guitars.fill", accent: "mint", title: "Your first chord: E minor", minutes: 4, xp: 20, done: 3, total: 60)))
+        SnapshotEntry(date: Date(), snapshot: .sample)
     }
     func getSnapshot(in context: Context, completion: @escaping (SnapshotEntry) -> Void) {
         completion(context.isPreview ? placeholder(in: context) : SnapshotEntry(date: Date(), snapshot: WidgetSnapshot.read()))
@@ -67,10 +73,40 @@ struct StrobeRing: View {
     }
 }
 
+struct QuickTuneEntry: TimelineEntry {
+    let date: Date
+    let snapshot: WidgetSnapshot
+    /// The instrument this widget opens the tuner on; nil follows the one last tuned.
+    let instrument: WidgetLibrary.Instrument?
+}
+
+/// Quick tune's timeline: the snapshot (for the instrument last tuned) and the instrument chosen in the widget's
+/// settings, renamed when the app's language changes. The app redraws it whenever either changes.
+struct QuickTuneProvider: AppIntentTimelineProvider {
+    func placeholder(in context: Context) -> QuickTuneEntry {
+        QuickTuneEntry(date: Date(), snapshot: .sample, instrument: nil)
+    }
+
+    func snapshot(for configuration: QuickTuneConfiguration, in context: Context) async -> QuickTuneEntry {
+        context.isPreview && configuration.instrument == nil ? placeholder(in: context) : entry(for: configuration)
+    }
+
+    func timeline(for configuration: QuickTuneConfiguration, in context: Context) async -> Timeline<QuickTuneEntry> {
+        Timeline(entries: [entry(for: configuration)], policy: .never)
+    }
+
+    private func entry(for configuration: QuickTuneConfiguration) -> QuickTuneEntry {
+        let chosen = configuration.instrument.map { WidgetLibrary.read().instrument(id: $0.id) ?? $0.instrument }
+        return QuickTuneEntry(date: Date(), snapshot: WidgetSnapshot.read(), instrument: chosen)
+    }
+}
+
+/// One tap to the tuner: on the instrument chosen in the widget's settings (a Pro instrument on the free plan opens
+/// its paywall, as the picker does), else on the one last tuned.
 struct QuickTuneWidget: Widget {
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: "timbre.quicktune", provider: SnapshotProvider()) { entry in
-            QuickTuneView(entry: entry).widgetURL(URL(string: "timbre://tune"))
+        AppIntentConfiguration(kind: WidgetLibrary.quickTuneKind, intent: QuickTuneConfiguration.self, provider: QuickTuneProvider()) { entry in
+            QuickTuneView(entry: entry).widgetURL(WidgetLibrary.tuneURL(instrument: entry.instrument?.id))
         }
         .configurationDisplayName("Quick tune")
         .description("Open Timbre already listening.")
@@ -80,26 +116,44 @@ struct QuickTuneWidget: Widget {
 
 struct QuickTuneView: View {
     @Environment(\.widgetFamily) private var family
-    let entry: SnapshotEntry
+    let entry: QuickTuneEntry
+
+    /// The chosen instrument's name, else the one last tuned.
+    private var name: String {
+        if let instrument = entry.instrument { return instrument.name }
+        return entry.snapshot.instrument.isEmpty ? String(localized: "Timbre") : entry.snapshot.instrument
+    }
+
     var body: some View {
         switch family {
         case .accessoryCircular:
-            ZStack { AccessoryWidgetBackground(); Image(systemName: "tuningfork").font(.title3.weight(.semibold)) }
-                .containerBackground(for: .widget) { Color.clear }
+            ZStack {
+                AccessoryWidgetBackground()
+                Image(systemName: entry.instrument?.symbol ?? "tuningfork").font(.title3.weight(.semibold))
+            }
+            .accessibilityLabel(Text(verbatim: name))
+            .containerBackground(for: .widget) { Color.clear }
         case .accessoryRectangular:
             HStack(spacing: 8) {
                 Image(systemName: "tuningfork").font(.title2)
                 VStack(alignment: .leading, spacing: 1) {
                     Text("Tune").font(.headline)
-                    Text(entry.snapshot.instrument.isEmpty ? String(localized: "Timbre") : entry.snapshot.instrument).font(.caption).lineLimit(1)
+                    Text(verbatim: name).font(.caption).lineLimit(1)
                 }
             }
             .containerBackground(for: .widget) { Color.clear }
         default:
-            VStack(spacing: 8) {
+            VStack(spacing: entry.instrument == nil ? 8 : 4) {
                 StrobeRing().frame(maxWidth: .infinity, maxHeight: .infinity)
-                Text("Tune").font(Typeface.display(22)).foregroundStyle(Palette.ink)
+                Text("Tune").font(Typeface.display(22)).foregroundStyle(Palette.ink).widgetAccentable()
+                // A widget set to one instrument names it, so a row of them reads at a glance.
+                if let instrument = entry.instrument {
+                    Text(verbatim: instrument.name)
+                        .font(.caption2.weight(.semibold)).foregroundStyle(Palette.inkSoft)
+                        .lineLimit(1).minimumScaleFactor(0.7)
+                }
             }
+            .accessibilityElement(children: .combine)
             .containerBackground(for: .widget) {
                 RadialGradient(colors: [Color(hex: 0x2A2016), Palette.stage], center: .center, startRadius: 4, endRadius: 120)
             }

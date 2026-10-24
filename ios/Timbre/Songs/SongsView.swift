@@ -54,9 +54,21 @@ struct SongsView: View {
         let token: Int
     }
 
+    /// A shelf picked from the learner's progress or the songs themselves ("Because you learned E minor",
+    /// "3 chords or fewer"), above the course shelves.
+    struct Pick: Identifiable {
+        let id: String
+        let symbol: String
+        let title: Text
+        let songs: [Song]
+    }
+
     private static let all = "all"
     private static let heroSource = "songs.hero"
-    private static func tileSource(_ lesson: Lesson) -> String { "songs.tile.\(lesson.id)" }
+    /// A tile's zoom source; a song on a picked shelf has its own, so the lesson zooms back into the tile it came from.
+    private static func tileSource(_ lesson: Lesson, shelf: String? = nil) -> String {
+        shelf.map { "songs.tile.\($0).\(lesson.id)" } ?? "songs.tile.\(lesson.id)"
+    }
     private var tileWidth: CGFloat { sizeClass == .regular ? 176 : 148 }
     private var sleeveSide: CGFloat { sizeClass == .regular ? 168 : 128 }
     private var heroHeight: CGFloat { sizeClass == .regular ? 380 : 330 }
@@ -71,6 +83,7 @@ struct SongsView: View {
         let active = chips.contains { $0.id == filter } ? filter : Self.all
         let songs = allSongs.filter { Self.matches($0, filter: active) }
         let hero = featured(songs)
+        let curated = picks(songs, hero: hero)
         let glow: Color = hero.map { CoverArt($0).primary } ?? Color(hex: 0xFFC48C)
         NavigationStack {
             ScrollView {
@@ -82,6 +95,7 @@ struct SongsView: View {
                             .id(hero.id)
                             .transition(.opacity.combined(with: .scale(scale: 0.97)))
                     }
+                    ForEach(curated) { pick in pickShelf(pick) }
                     // The featured song isn't repeated on its shelf: that rail starts with the song after it.
                     ForEach(shelves(songs)) { shelf in
                         let rail = shelf.songs.filter { $0.id != hero?.id }
@@ -194,6 +208,73 @@ struct SongsView: View {
         case .pro: return store.learn.isUnlocked(song.lesson, in: song.course) ? .pro : .locked
         case .locked: return .locked
         }
+    }
+
+    // MARK: Picked shelves
+
+    /// From the songs under the filter (the featured one aside): songs not played yet that use the chord the learner
+    /// learned last ("Because you learned E minor"), then every song of one to three chords. Songs that play now
+    /// come first, the easiest of them first.
+    private func picks(_ songs: [Song], hero: Song?) -> [Pick] {
+        let pool = songs.filter { $0.id != hero?.id }
+        var out: [Pick] = []
+        if let chord = lastLearnedChord {
+            let using = pool.filter { song in
+                !store.learn.isFinished(song.lesson.id) && SongSheet.of(song.lesson).chords.contains { $0.symbol == chord.symbol }
+            }
+            if !using.isEmpty {
+                out.append(Pick(id: "because", symbol: "sparkles", title: Text("Because you learned \(SongSheet.spoken(chord))"),
+                                songs: Array(easiestFirst(using).prefix(10))))
+            }
+        }
+        let few = pool.filter { (1...3).contains(SongSheet.of($0.lesson).chords.count) }
+        if few.count >= 2 {
+            out.append(Pick(id: "few", symbol: "3.circle.fill", title: Text("3 chords or fewer"), songs: Array(easiestFirst(few).prefix(12))))
+        }
+        return out
+    }
+
+    /// The chord of the lesson finished most recently that taught one (a chord to play, or one on an explanation's card).
+    private var lastLearnedChord: ChordSpec? {
+        let recent = store.learn.finishedDates.sorted { $0.value > $1.value }
+        for entry in recent.prefix(40) {
+            guard let found = store.curriculum.lesson(id: entry.key), let chord = Self.taughtChord(found.lesson) else { continue }
+            return chord
+        }
+        return nil
+    }
+
+    private static func taughtChord(_ lesson: Lesson) -> ChordSpec? {
+        var taught: ChordSpec?
+        for step in lesson.steps {
+            switch step {
+            case let .playChord(chord): taught = chord
+            case let .explain(_, _, .chord(chord)): taught = chord
+            default: break
+            }
+        }
+        return taught
+    }
+
+    private struct Ranked {
+        let order: Int
+        let song: Song
+        let open: Bool
+        let level: Int
+    }
+
+    private func easiestFirst(_ songs: [Song]) -> [Song] {
+        let ranked = songs.enumerated().map { item -> Ranked in
+            let song = item.element
+            let level = SongSheet.of(song.lesson).difficulty(unit: song.unitIndex, of: song.course.units.count)
+            return Ranked(order: item.offset, song: song, open: LessonAccess.of(song.lesson, in: song.course, store: store) == .play, level: level)
+        }
+        let sorted = ranked.sorted { a, b in
+            if a.open != b.open { return a.open }
+            if a.level != b.level { return a.level < b.level }
+            return a.order < b.order
+        }
+        return sorted.map(\.song)
     }
 
     // MARK: Actions
@@ -451,6 +532,12 @@ struct SongsView: View {
                 Text("\(song.lesson.minutes) min · +\(song.lesson.xp) XP").foregroundStyle(.white.opacity(0.72))
             }
             .font(.subheadline).lineLimit(1)
+            // What the song asks for, at a glance: its chords (its key, for a melody) and how hard it is.
+            HStack(spacing: 8) {
+                let sheet = SongSheet.of(song.lesson)
+                DifficultyDots(level: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count), tint: .white)
+                ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent, limit: 5)
+            }
             HStack(spacing: 12) {
                 heroButton(access, finished: stars > 0, accent: accent)
                 if stars > 0 { StarRow(stars: stars, size: 13) }
@@ -494,43 +581,90 @@ struct SongsView: View {
         }
     }
 
-    private func tile(_ song: Song) -> some View {
+    /// A picked shelf: its reason as the header, then its songs' tiles (each zooming from this shelf's own tile).
+    private func pickShelf(_ pick: Pick) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .center, spacing: 10) {
+                Image(systemName: pick.symbol).font(.system(size: 15, weight: .bold)).foregroundStyle(Palette.amber)
+                    .frame(width: 32, height: 32)
+                    .background(RoundedRectangle(cornerRadius: 10, style: .continuous).fill(Palette.amber.opacity(0.14)))
+                    .accessibilityHidden(true)
+                pick.title.font(Typeface.display(20)).foregroundStyle(Palette.ink)
+                    .lineLimit(1).minimumScaleFactor(0.75)
+                    .accessibilityAddTraits(.isHeader)
+                Spacer(minLength: 0)
+            }
+            EdgeRail(spacing: 14, selection: nil as String?) {
+                ForEach(pick.songs) { song in tile(song, shelf: pick.id).id(song.id) }
+            }
+        }
+    }
+
+    /// `shelf` names a picked shelf; nil is the song's own course shelf.
+    private func tile(_ song: Song, shelf: String? = nil) -> some View {
         let access = LessonAccess.of(song.lesson, in: song.course, store: store)
         let stars = store.learn.stars[song.lesson.id] ?? 0
         let accent = Palette.accent(song.course.accent)
+        let sheet = SongSheet.of(song.lesson)
+        let source = Self.tileSource(song.lesson, shelf: shelf)
         let shrink: CGFloat = reduceMotion ? 0 : 0.08
-        return Button { open(song.course, song.lesson, from: Self.tileSource(song.lesson)) } label: {
+        return Button { open(song.course, song.lesson, from: source) } label: {
             VStack(alignment: .leading, spacing: 10) {
                 tileCover(song, access: access, stars: stars)
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(song.lesson.title.localized).font(Typeface.display(15, relativeTo: .headline)).foregroundStyle(Palette.ink)
-                        .lineLimit(2, reservesSpace: true)
-                    tileDetail(song, stars: stars, accent: accent)
-                }
+                tileCaption(song, sheet: sheet, accent: accent)
             }
             .frame(width: tileWidth, alignment: .leading)
             .contentShape(Rectangle())
         }
         .buttonStyle(PressScaleStyle())
-        .matchedTransitionSource(id: Self.tileSource(song.lesson), in: zoom)
+        .matchedTransitionSource(id: source, in: zoom)
         .modifier(Shake(amount: shakes[song.id] ?? 0))
         // Sleeves ease back and dim as they slide off the rail's edge.
         .scrollTransition(.interactive, axis: .horizontal) { content, phase in
             content.scaleEffect(1 - shrink * CGFloat(abs(phase.value))).opacity(1 - 0.35 * abs(phase.value))
         }
         .accessibilityLabel(Text(verbatim: "\(song.lesson.title.localized), \(song.course.title.localized)"))
-        .accessibilityValue(accessValue(access, stars: stars))
-        .accessibilityIdentifier("songs.song.\(song.id)")
+        .accessibilityValue(tileValue(song, sheet: sheet, access: access, stars: stars))
+        .accessibilityIdentifier(shelf.map { "songs.\($0).\(song.id)" } ?? "songs.song.\(song.id)")
     }
 
-    /// Under the title (the shelf already names the course): the stars once played, else the time and the XP.
-    @ViewBuilder private func tileDetail(_ song: Song, stars: Int, accent: Color) -> some View {
-        if stars > 0 {
-            Text("\(stars) of 3 stars").font(.footnote).foregroundStyle(Palette.amber.mix(with: Palette.inkSoft, by: 0.3)).lineLimit(1)
-        } else {
-            Text("\(song.lesson.minutes) min · +\(song.lesson.xp) XP").font(.footnote)
-                .foregroundStyle(accent.mix(with: Palette.inkSoft, by: 0.45)).lineLimit(1)
+    /// Under the sleeve, which already carries the title: the part of the title it leaves off ("The chords"), else the
+    /// song's chords ("G D Em C"; its key for a melody), then how hard it is, how long it runs and its XP.
+    private func tileCaption(_ song: Song, sheet: SongSheet, accent: Color) -> some View {
+        VStack(alignment: .leading, spacing: 7) {
+            Group {
+                if let subtitle = Self.subtitle(song.lesson.title.localized) {
+                    Text(verbatim: subtitle).font(Typeface.label(13, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
+                        .lineLimit(1).minimumScaleFactor(0.8)
+                } else {
+                    ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent)
+                }
+            }
+            .frame(height: 24, alignment: .leading)
+            HStack(spacing: 7) {
+                DifficultyDots(level: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count), tint: accent)
+                Text(verbatim: sheet.length).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                Text("+\(song.lesson.xp) XP").font(.footnote).foregroundStyle(accent.mix(with: Palette.inkSoft, by: 0.45))
+            }
+            .lineLimit(1)
         }
+    }
+
+    /// The part of a title after its main title, which the sleeve leaves off: "Greensleeves: the chords" is "The chords".
+    private static func subtitle(_ title: String) -> String? {
+        let main = CoverArt.mainTitle(title)
+        guard main != title, let range = title.range(of: main) else { return nil }
+        let rest = title[range.upperBound...].trimmingCharacters(in: CharacterSet(charactersIn: " :()（）：").union(.whitespaces))
+        guard let first = rest.first else { return nil }
+        return first.uppercased() + rest.dropFirst()
+    }
+
+    /// Open, Pro or locked (or the stars), how hard, and the chords, for VoiceOver.
+    private func tileValue(_ song: Song, sheet: SongSheet, access: LessonAccess, stars: Int) -> Text {
+        let level = sheet.difficulty(unit: song.unitIndex, of: song.course.units.count)
+        var value = accessValue(access, stars: stars) + Text(verbatim: ", ") + Text(DifficultyDots.name(level))
+        if !sheet.chords.isEmpty { value = value + Text(verbatim: ", " + sheet.chords.map(\.name).joined(separator: " ")) }
+        return value
     }
 
     /// The sleeve with its state, in the corner its title leaves free: Pro songs keep their colour under a PRO
@@ -625,6 +759,91 @@ extension CoverArt {
         self.init(id: song.lesson.id, title: song.lesson.title.localized, accent: song.course.accent,
                   genre: CoverArt.genre(unit: song.unit.title.defaultValue, instrument: song.course.instrument),
                   label: song.course.title.localized, number: song.number)
+    }
+
+    /// A song lesson's sleeve wherever it shows (its song sheet, its poster): the same art as its tile on the shelf,
+    /// numbered by its place among its course's songs.
+    static func of(_ lesson: Lesson, in course: LearnCourse) -> CoverArt {
+        var number = 0
+        for (index, unit) in course.units.enumerated() {
+            for item in unit.lessons where item.kind == .song {
+                number += 1
+                if item.id == lesson.id {
+                    return CoverArt(SongsView.Song(course: course, unit: unit, unitIndex: index, lesson: item, number: number))
+                }
+            }
+        }
+        let unit = course.units.first { $0.lessons.contains { $0.id == lesson.id } }
+        return CoverArt(id: lesson.id, title: lesson.title.localized, accent: course.accent,
+                        genre: CoverArt.genre(unit: unit?.title.defaultValue ?? "", instrument: course.instrument),
+                        label: course.title.localized, number: 1)
+    }
+}
+
+/// A song's chords as small chips ("G" "D" "Em" "C"), as many as fit, "+2" for the rest; its key for a song
+/// without chords. VoiceOver reads them with the tile.
+private struct ChordChips: View {
+    let chords: [ChordSpec]
+    let key: String?
+    let tint: Color
+    var limit = 4
+
+    var body: some View {
+        Group {
+            if chords.isEmpty {
+                if let key { keyLabel(key) }
+            } else {
+                ViewThatFits(in: .horizontal) {
+                    row(min(limit, chords.count))
+                    row(min(3, chords.count))
+                    row(min(2, chords.count))
+                }
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
+    private func row(_ shown: Int) -> some View {
+        HStack(spacing: 4) {
+            ForEach(chords.prefix(shown), id: \.symbol) { chord in chip(chord.name) }
+            if chords.count > shown {
+                Text(verbatim: "+\(chords.count - shown)").font(Typeface.label(11)).foregroundStyle(Palette.inkSoft).fixedSize()
+            }
+        }
+    }
+
+    private func chip(_ name: String) -> some View {
+        Text(verbatim: name).font(Typeface.label(12)).foregroundStyle(Palette.ink)
+            .padding(.horizontal, 7).frame(height: 22)
+            .background(Capsule().fill(tint.opacity(0.16)))
+            .overlay(Capsule().strokeBorder(tint.opacity(0.4), lineWidth: 1))
+            .fixedSize()
+    }
+
+    private func keyLabel(_ key: String) -> some View {
+        HStack(spacing: 5) {
+            Image(systemName: "music.note").font(.system(size: 10, weight: .bold)).foregroundStyle(tint)
+            Text(verbatim: key).font(Typeface.label(12)).foregroundStyle(Palette.inkSoft)
+        }
+        .lineLimit(1)
+    }
+}
+
+/// How hard a song is (`SongSheet.difficulty`): three dots, the earned ones lit.
+private struct DifficultyDots: View {
+    let level: Int
+    let tint: Color
+
+    static func name(_ level: Int) -> LocalizedStringKey { level <= 1 ? "Easy" : level == 2 ? "Medium" : "Hard" }
+
+    var body: some View {
+        HStack(spacing: 3) {
+            ForEach(0..<3, id: \.self) { index in
+                Circle().fill(index < level ? tint : Color.white.opacity(0.18)).frame(width: 6, height: 6)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(Self.name(level)))
     }
 }
 

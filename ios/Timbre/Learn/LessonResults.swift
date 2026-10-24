@@ -1,9 +1,10 @@
 import SwiftUI
 import TimbreCore
 
-/// The end of a lesson: stars land one by one, XP counts up, then the next lesson is one tap away. Two stars or
-/// more (or a finished song) put a Share pill for its poster under the tiles from the first frame; a streak
-/// milestone takes the screen with its own celebration, and its card waits below.
+/// The end of a lesson: stars land one by one, XP counts up, then the next lesson is one tap away. Under the tiles
+/// the coach says one specific thing about this take (a late chord change, what slipped, the tempo to beat) with
+/// its one action. Two stars or more (or a finished song) put a Share pill for its poster under the tiles from the
+/// first frame; a streak milestone takes the screen with its own celebration, and its card waits below.
 struct LessonResults: View {
     let course: LearnCourse
     let lesson: Lesson
@@ -38,6 +39,11 @@ struct LessonResults: View {
     @State private var shareShown = false
     /// The milestone's full-screen celebration, over the results until Continue.
     @State private var celebrating: Int?
+    /// The coach's note on this lesson (`Coach.lessonNotes`), worked out as the screen opens; nil: nothing specific.
+    @State private var coach: CoachNote?
+    @State private var coachDecided = false
+    /// It slides in once the stars have landed.
+    @State private var coachShown = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.requestReview) private var requestReview
 
@@ -102,6 +108,11 @@ struct LessonResults: View {
             }
             .padding(.horizontal, 20)
             .opacity(appeared ? 1 : 0)
+            if let coach = shownCoach {
+                coachCard(coach)
+                    .opacity(coachShown ? 1 : 0)
+                    .offset(y: coachShown || reduceMotion ? 0 : 14)
+            }
             if newBest || sharesResult { bestAndShare }
             if let barLevel { levelBar(barLevel).padding(.horizontal, 20).transition(.opacity) }
             if let reward, badgesShown > 0 { earned(reward) }
@@ -117,7 +128,7 @@ struct LessonResults: View {
                 StepButton(title: "Next lesson", accent: accent) { onNext(next) }
                     .accessibilityIdentifier("lesson.next")
             }
-            if !LearnProgress.isReview(lesson.id) {
+            if !LearnProgress.isReview(lesson.id) && !coachOffersDrill {
                 PracticeWeakSpotsButton(course: course) { onNext($0) }.padding(.vertical, 4)
             }
             Button { onContinue() } label: {
@@ -193,6 +204,63 @@ struct LessonResults: View {
         .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
         .transition(.scale(scale: 0.6).combined(with: .opacity))
         .accessibilityElement(children: .combine)
+    }
+
+    // MARK: Coach
+
+    /// What the coach makes of this lesson: the timing of its takes (heard since it began), how each note and chord
+    /// went, and a tempo still to beat. The best note only.
+    private func coachNote() -> CoachNote? {
+        let since = Date().addingTimeInterval(-Double(result.minutes + 1) * 60)
+        let context = Coach.LessonContext(lesson: lesson, courseId: course.id, result: result,
+                                          takes: CoachTakes.shared.takes(since: since), tapped: practice,
+                                          canReview: store.weakSpotReview(in: course) != nil)
+        return Coach.lessonNotes(context).first
+    }
+
+    private var coachVoice: CoachVoice {
+        let lessons = course.lessons
+        return CoachVoice(lessonTitle: { id in lessons.first { $0.id == id }?.title.localized },
+                          drillMinutes: store.weakSpotReview(in: course)?.minutes ?? 4)
+    }
+
+    /// The note, worked out once (`reveal`) so it holds still while the screen is open; before that, the same note
+    /// fresh, so its room and the buttons are right from the first frame.
+    private var shownCoach: CoachNote? { coachDecided ? coach : coachNote() }
+
+    /// The coach already offers the weak-spot drill: the button below would say it twice.
+    private var coachOffersDrill: Bool {
+        guard let action = shownCoach?.action, case .review = action else { return false }
+        return true
+    }
+
+    /// The note in a card of its own under the tiles: "Coach" over the words, the action as a pill.
+    private func coachCard(_ note: CoachNote) -> some View {
+        let tint = CoachVoice.tint(note, accent: accent)
+        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
+        return CoachNoteView(note: note, voice: coachVoice, tint: tint, eyebrow: true, actionId: "lesson.coach.action") { action in
+            perform(action)
+        }
+        .padding(14)
+        .background(shape.fill(Palette.stageRaised))
+        .overlay(shape.strokeBorder(tint.opacity(0.24), lineWidth: 1))
+        .padding(.horizontal, 20)
+        .accessibilityIdentifier("lesson.coach")
+    }
+
+    /// The drill and a replay open as the next lesson; the metronome, the tuner and Today close the results first.
+    private func perform(_ action: CoachAction) {
+        Haptics.shared.selection()
+        CoachRoute.log(action, screen: "results")
+        switch action {
+        case .review:
+            if let review = store.weakSpotReview(in: course) { onNext(review) }
+        case let .lesson(id):
+            if let target = course.lessons.first(where: { $0.id == id }) { onNext(target) }
+        default:
+            onContinue()
+            CoachRoute.open(action, store: store)
+        }
     }
 
     // MARK: Share
@@ -392,11 +460,18 @@ struct LessonResults: View {
     private func reveal() async {
         // Claimed at once, so the app-wide milestone overlay doesn't also show it behind this screen.
         if milestone == nil { milestone = store.takeStreakMilestone() }
+        // Held from here on; its room was kept from the first frame (it fades in), so nothing below jumps.
+        if !coachDecided { coach = coachNote(); coachDecided = true }
         withAnimation(.easeOut(duration: 0.5)) { appeared = true }
         for i in 0..<3 {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 80 : 380))
             withAnimation(.spring(response: 0.45, dampingFraction: 0.55)) { shownStars = i + 1 }
             if i < result.stars { SoundFX.shared.play(.star); Haptics.shared.lock(); burst += 1 }
+        }
+        if coach != nil {
+            try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 200))
+            let entrance = reduceMotion ? Animation.easeOut(duration: 0.25) : Animation.spring(response: 0.5, dampingFraction: 0.82)
+            withAnimation(entrance) { coachShown = true }
         }
         // Ask for a rating right after a flawless lesson, a couple of times in the app's life.
         if result.stars == 3, [2, 10].contains(store.progress.stats["lessons"] ?? 0) {
