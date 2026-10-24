@@ -40,7 +40,7 @@ struct PaywallPlan {
 
     let course: LearnCourse?
     /// The person's instrument: onboarding's answer, else the one they tune (or the Pro one they chose and tune
-    /// in Chromatic until Pro opens it). Nil when they sing or play none.
+    /// in Chromatic until Pro opens it). Nil when they sing, or tune by ear in Chromatic with none chosen.
     let instrumentId: String?
     let outcomes: [Outcome]
     /// Today's lesson, the plan's first.
@@ -70,7 +70,7 @@ struct PaywallPlan {
             minutes = answers.minutes
         } else {
             goal = store.settings.goal ?? "practice"
-            instrumentId = (store.chromaticStandIn ?? store.instrument).id
+            instrumentId = store.chromaticStandIn?.id ?? (store.referenceMode ? nil : store.instrument.id)
             course = store.learnCourse
             start = course.flatMap { store.learn.nextLesson(in: $0) }
             minutes = store.dailyMinutes
@@ -115,11 +115,9 @@ struct PaywallPlan {
             if keywords(title).isDisjoint(with: today) { units.append(Milestone(day: day, title: title)) }
         }
         let lessons = course.lessons
-        var song: Milestone?
-        if let index = lessons.indices.first(where: { $0 > first && lessons[$0].kind == .song }), index - first + 1 <= horizon {
-            song = Milestone(day: index - first + 1, title: lessons[index].title.localized, kind: .song)
-        }
-        guard let song else { return Array(units.prefix(2)) }
+        let songIndex = lessons.indices.first { $0 > first && lessons[$0].kind == .song }
+        guard let index = songIndex, index - first + 1 <= horizon else { return Array(units.prefix(2)) }
+        let song = Milestone(day: index - first + 1, title: lessons[index].title.localized, kind: .song)
         let unit = units.first { $0.day != song.day }
         return ([song] + (unit.map { [$0] } ?? [])).sorted { $0.day < $1.day }
     }

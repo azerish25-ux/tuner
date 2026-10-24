@@ -79,7 +79,7 @@ struct PaywallFigure {
 
     let art: Art
     let closeUp: Bool
-    /// Where the lanes leave the picture, in its square: the saddles' middle, or the foot of a whole picture.
+    /// Where the lanes leave the picture, in its square: the saddles' middle, or low behind a whole picture.
     let bridge: CGPoint
     /// Degrees to turn the picture about `bridge` so its strings stand upright.
     let turn: Double
@@ -105,12 +105,14 @@ struct PaywallFigure {
 
     /// A course emblem (singing, theory and the like), standing whole.
     static func emblem(_ glyph: CourseGlyph) -> PaywallFigure {
-        // The tile takes two thirds of its square, so its foot is at 0.83.
-        PaywallFigure(art: .emblem(glyph), closeUp: false, bridge: CGPoint(x: 0.5, y: 0.83), turn: 0, reach: 0, wires: [])
+        PaywallFigure(art: .emblem(glyph), closeUp: false, bridge: whole, turn: 0, reach: 0, wires: [])
     }
 
+    /// Where the lanes meet behind a whole picture: low in its square, hidden by it.
+    private static let whole = CGPoint(x: 0.5, y: 0.72)
+
     private static func make(image: String, card: StageCard?) -> PaywallFigure {
-        let whole = PaywallFigure(art: .picture(image), closeUp: false, bridge: CGPoint(x: 0.5, y: 0.86), turn: 0, reach: 0, wires: [])
+        let whole = PaywallFigure(art: .picture(image), closeUp: false, bridge: Self.whole, turn: 0, reach: 0, wires: [])
         guard let card else { return whole }
         var wires: [Wire] = []
         for anchor in card.anchors {
@@ -145,7 +147,9 @@ struct PaywallFigure {
 // MARK: - The scene
 
 /// The scene at one moment. `d` is how far a note still has to travel, in lookaheads: 1 at the bridge, 0 on the
-/// hit line. Every note is hit: a demo plays clean.
+/// hit line. Every note is hit: a demo plays clean. On the main actor, like the highway whose colours and combo
+/// it borrows; it is drawn in the view's Canvas.
+@MainActor
 private struct PaywallScene {
     let figure: PaywallFigure
     let lanes: Int
@@ -349,7 +353,8 @@ private struct PaywallScene {
     /// A soft pool of the course colour behind the instrument, breathing slowly.
     private func drawSpotlight(_ context: GraphicsContext, _ g: Stage) {
         let breathe = calm ? 0 : 0.04 * sin(elapsed * 0.8)
-        let radius = min(g.size.width * 0.42, 170)
+        // Gone before the close button's column.
+        let radius = min(g.size.width * 0.38, 160)
         let squash = max(0.3, min(1, g.hitY * 0.8 / radius))
         var light = context
         light.translateBy(x: g.bridge.x, y: g.bridge.y * 0.75)
@@ -385,8 +390,9 @@ private struct PaywallScene {
             art.draw(picture, in: Self.fitted(picture.size, in: square))
         case .emblem:
             if let tile = art.resolveSymbol(id: Self.emblemTag) {
+                // The tile takes two thirds of the square, as on the course cards.
                 var scaled = art
-                let k = side / Self.emblemSide
+                let k = side * 0.66 / Self.emblemSide
                 scaled.scaleBy(x: k, y: k)
                 scaled.draw(tile, at: CGPoint(x: square.midX / k, y: square.midY / k), anchor: .center)
             }
@@ -518,7 +524,7 @@ private struct PaywallScene {
     /// A glossy gem in the string's colour, born at the bridge and growing as it nears.
     private func drawGem(_ context: GraphicsContext, _ g: Stage, _ gem: Gem) {
         let depth = g.depth(gem.d), scale = g.scale(depth)
-        let width = g.gap * 0.66 * scale
+        let width = min(g.gap * 0.66, 34) * scale
         let height = max(1, min(g.gap * 0.34, 11) * scale)
         let center = CGPoint(x: g.x(lane: lane(gem.string), depth), y: g.y(depth))
         let rect = CGRect(x: center.x - width / 2, y: center.y - height / 2, width: width, height: height)

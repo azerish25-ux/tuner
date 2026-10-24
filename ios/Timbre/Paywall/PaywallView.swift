@@ -98,7 +98,7 @@ struct PaywallView: View {
     private static let previewTop: CGFloat = 6
     /// Below this the hero steps aside for the pill alone (the instrument, the runway, the combo and the pill no
     /// longer fit one above another); above it, it grows to `previewMax`.
-    private static let previewMin: CGFloat = 104
+    private static let previewMin: CGFloat = 98
     private static let previewMax: CGFloat = 236
     private static let headerTop: CGFloat = 12
     private static let outcomesTop: CGFloat = 12
@@ -604,7 +604,7 @@ struct PaywallView: View {
     }
 
     /// The plan and the free trial on one track. Today unlocks everything and starts the first lesson; the next
-    /// thing the plan brings before the reminder follows (its first song, else the furthest unit, never a repeat of
+    /// thing the plan brings before the reminder follows (its first song, else a unit it starts, never a repeat of
     /// today's lesson). Only when the selected plan has a free trial come the reminder (when notifications can
     /// reach the person) and the first charge, at the product's own trial length and price. Without a trial the
     /// plan's milestones fill the track; without those there is no track.
@@ -698,9 +698,9 @@ struct PaywallView: View {
             (step.detail ?? Text(verbatim: "")).font(.caption).foregroundStyle(Palette.inkSoft)
                 .lineLimit(1).minimumScaleFactor(0.7)
         case .milestone, .song:
-            // A song's name may take a third line rather than lose its end.
+            // Two lines held, like the reminder's; a long song name may take a third rather than lose its end.
             (step.detail ?? Text(verbatim: "")).font(.caption).foregroundStyle(Palette.inkSoft)
-                .lineLimit(3).minimumScaleFactor(0.85)
+                .lineLimit(2...3).minimumScaleFactor(0.85)
         case .reminder:
             (step.detail ?? Text(verbatim: "")).font(.caption).foregroundStyle(Palette.inkSoft)
                 .lineLimit(2, reservesSpace: true).minimumScaleFactor(0.85)
