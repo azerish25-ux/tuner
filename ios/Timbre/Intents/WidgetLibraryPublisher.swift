@@ -143,6 +143,11 @@ extension WidgetLibrary {
     private static func chords(_ lesson: Lesson) -> [String] {
         var names: [String] = []
         func add(_ chord: ChordSpec) { if !names.contains(chord.name) { names.append(chord.name) } }
+        // A full arrangement charts the whole song; its shapes come in the order the song first asks for them.
+        if let shapes = lesson.arrangement?.shapes, !shapes.isEmpty {
+            shapes.forEach(add)
+            return Array(names.prefix(4))
+        }
         for step in lesson.steps {
             switch step {
             case let .progression(chords, _, _, _, _): chords.forEach(add)
@@ -154,8 +159,9 @@ extension WidgetLibrary {
         return Array(names.prefix(4))
     }
 
-    /// The tempo it is played at: its play-along's, else its strumming's.
+    /// The tempo it is played at: the full arrangement's, else its play-along's, else its strumming's.
     private static func bpm(_ lesson: Lesson) -> Int? {
+        if let arrangement = lesson.arrangement { return Int(arrangement.bpm.rounded()) }
         for step in lesson.steps {
             switch step {
             case let .playAlong(_, bpm, _, _): return Int(bpm.rounded())
