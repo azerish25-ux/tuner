@@ -75,7 +75,7 @@ The two tables below are the only place the screenshot captions live: `tools/mar
 
 ```
 python3 tools/marketing/screenshots.py <ci-out/screenshots> <out folder>          # iPhone, 1320x2868
-python3 tools/marketing/screenshots.py <ci-out/ipad-screenshots> <out folder> --ipad   # iPad, 2064x2752
+python3 tools/marketing/screenshots.py <ci-out/ipad-screenshots> <out folder> --ipad   # iPad, 2064x2752 portrait / 2752x2064 landscape (follows each capture)
 python3 tools/marketing/screenshots.py --check                                    # the tables only
 ```
 

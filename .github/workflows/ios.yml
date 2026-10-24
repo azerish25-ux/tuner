@@ -64,6 +64,13 @@ jobs:
         run: |
           xcrun simctl boot "$DEVICE_ID" || true
           xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre || true
+      - name: Marketing status bar (9:41, full battery and signal)
+        run: |
+          # The store frames come from these captures: Apple's 9:41 status bar, not the runner's clock.
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcrun simctl status_bar "$DEVICE_ID" override --time 9:41 --batteryState charged --batteryLevel 100 --cellularBars 4 --wifiBars 3 \
+            || xcrun simctl status_bar "$DEVICE_ID" override --time 9:41 \
+            || echo "::warning::Could not override the simulator status bar; the captures show the real time"
       - name: Run app, StoreKit and UI flows
         run: |
           set -o pipefail
@@ -137,16 +144,31 @@ jobs:
           PY
       - name: Ensure Metal toolchain
         run: bash tools/ci/ensure-metal.sh
+      - name: Boot the iPad with the marketing status bar (9:41, full battery and signal)
+        run: |
+          # The iPad store frames come from these captures: Apple's 9:41 status bar, not the runner's clock.
+          xcrun simctl boot "$IPAD_DEVICE_ID" || true
+          xcrun simctl bootstatus "$IPAD_DEVICE_ID" -b
+          xcrun simctl status_bar "$IPAD_DEVICE_ID" override --time 9:41 --batteryState charged --batteryLevel 100 --cellularBars 4 --wifiBars 3 \
+            || xcrun simctl status_bar "$IPAD_DEVICE_ID" override --time 9:41 \
+            || echo "::warning::Could not override the simulator status bar; the captures show the real time"
       - name: Run real iPad portrait and landscape screenshots
         run: |
           set -o pipefail
           mkdir -p ci-out
+          # A reboot drops the status bar override: set it again after one.
+          status_bar() {
+            xcrun simctl bootstatus "$IPAD_DEVICE_ID" -b
+            xcrun simctl status_bar "$IPAD_DEVICE_ID" override --time 9:41 --batteryState charged --batteryLevel 100 --cellularBars 4 --wifiBars 3 \
+              || xcrun simctl status_bar "$IPAD_DEVICE_ID" override --time 9:41 || true
+          }
           run() { xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -only-testing:TimbreUITests/TabletScreenshotsUITests -destination "platform=iOS Simulator,id=$IPAD_DEVICE_ID" -resultBundlePath ios/build/TabletScreenshots.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee -a ci-out/ipad-test.log; }
           # The hosted simulator sometimes fails to bring up accessibility for the test runner; that is not a test failure.
           if ! run; then
             grep -q "failed to initialize for UI testing" ci-out/ipad-test.log || exit 1
             echo "Test runner failed to start; rebooting the simulator and retrying once"
             xcrun simctl shutdown "$IPAD_DEVICE_ID" || true; xcrun simctl boot "$IPAD_DEVICE_ID" || true
+            status_bar
             rm -rf ios/build/TabletScreenshots.xcresult
             run
           fi

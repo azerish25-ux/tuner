@@ -49,16 +49,22 @@ final class ReadoutMotion {
     /// …and a whole cent moves only once the pitch is half a cent past the rounding edge (±0.5¢ hysteresis),
     /// so a pitch sitting between two values never flickers.
     static let displayHysteresis = 0.5
+    /// How fast the strobe `phase` runs: cycles a second for each cent off (the chromatic disc turns by it too).
+    static let strobeRate = 0.09
     private var filter = ReadoutMotion.makeFilter()
-    private var strobe = StrobePhase(bandsPerSecondPerCent: 0.09)
+    private var strobe = StrobePhase(bandsPerSecondPerCent: ReadoutMotion.strobeRate)
     private var last: Double = 0
     private var lastDisplay: Double = 0
     private(set) var cents: Double?
     private(set) var phase: Double = 0
     /// Whole cents as every number on the tuner shows them (digits, status line, chip colour); nil with no pitch.
     private(set) var shown: Int?
-    /// The hertz beside the cents, sampled with them.
+    /// The hertz beside the cents. Within the smoothed range it is sampled only when the cents on screen change
+    /// (or the target does), from the pitch measured then, so "−11¢ · 81.88 Hz" always agree: the hysteresis that
+    /// holds the cents holds the hertz with them (it used to track the filter and could read a cent apart).
     private(set) var shownHertz: Double?
+    /// The cents and target `shownHertz` was last sampled for (nil: it shows the measured hertz, or nothing).
+    private var hertzKey: (shown: Int, target: Double)?
 
     /// - Parameters:
     ///   - hertz: the measured frequency, shown when the pitch is beyond the smoothed range.
@@ -72,20 +78,34 @@ final class ReadoutMotion {
     }
 
     private func updateShown(raw: Double?, hertz: Double?, target: Double?, now: Double) {
-        guard let cents else { shown = nil; shownHertz = nil; return }
+        guard let cents else { shown = nil; shownHertz = nil; hertzKey = nil; return }
         // The first value after silence shows at once; then at most every `displayInterval`.
         guard shown == nil || now - lastDisplay >= Self.displayInterval || now < lastDisplay else { return }
         lastDisplay = now
+        let whole: Int
         if let current = shown, abs(cents - Double(current)) < 0.5 + Self.displayHysteresis {
             // Still within reach of the number on screen: keep it.
+            whole = current
         } else {
-            shown = Int(cents.rounded())
+            whole = Int(cents.rounded())
         }
-        if let target, target > 0, let raw, abs(raw) < 59.5 {
-            shownHertz = target * pow(2, cents / 1200)
-        } else {
+        shown = whole
+        guard let target, target > 0, let raw, abs(raw) < 59.5 else {
+            // Beyond the smoothed range the cents stand at their limit, and the hertz is the pitch measured.
             shownHertz = hertz
+            hertzKey = nil
+            return
         }
+        if let key = hertzKey, key.shown == whole, key.target == target { return }
+        shownHertz = Self.hertz(shown: whole, cents: cents, target: target)
+        hertzKey = (whole, target)
+    }
+
+    /// The hertz to print beside `shown` whole cents: the pitch the tuner measured (`cents`), kept within 0.2¢ of
+    /// the number on screen so that, even after rounding to 0.01 Hz on a low B (0.28¢), it reads back to `shown`.
+    static func hertz(shown: Int, cents: Double, target: Double) -> Double {
+        let near = min(Double(shown) + 0.2, max(Double(shown) - 0.2, cents))
+        return target * pow(2, near / 1200)
     }
 }
 

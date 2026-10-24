@@ -76,11 +76,16 @@ enum DemoData {
                 store.save(PracticeRecord(date: date.addingTimeInterval(600), instrumentId: "practice.ear", kind: "ear", count: 10, stableCount: 7 + day % 3, durationMs: 240_000))
             }
         }
-        // A learner a few lessons in, level 5, with a G string that drifts flat.
+        // A learner a few lessons in, level 5, with a G string that drifts flat. The three lessons were finished on three
+        // days of this week's streak, each with the practice record a finished lesson saves (`AppStore.finishLesson`),
+        // so Learn's three finished lessons, "Your week" and the stats below agree.
         var learn = LearnProgress()
         let first = store.curriculum.course(id: "guitar")?.lessons.prefix(3) ?? []
         for (i, lesson) in first.enumerated() {
-            learn.record(LessonResult(lessonId: lesson.id, stars: [3, 2, 3][i], accuracy: [0.96, 0.81, 0.93][i], xp: 20, minutes: 4), courseId: "guitar", now: now)
+            let stars = [3, 2, 3][i]
+            let date = now.addingTimeInterval(-Double([3, 2, 1][i]) * 86400 - 1800)
+            learn.record(LessonResult(lessonId: lesson.id, stars: stars, accuracy: [0.96, 0.81, 0.93][i], xp: 20, minutes: 4), courseId: "guitar", now: date)
+            store.save(PracticeRecord(date: date, instrumentId: "learn.guitar", kind: "lesson", count: 3, stableCount: stars, durationMs: 4 * 60_000))
         }
         var progress = ProgressState()
         progress.xp = 1240

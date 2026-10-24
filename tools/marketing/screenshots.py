@@ -16,9 +16,13 @@ says (`storeFrame`); otherwise the test fails and keeps the picture as "<name>-w
 the chord come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift), not from timed shots.
 
 Rendering reads the xcresult attachment manifest written by the iOS workflow, picks the captures the
-table names and lays each one on a "Still Point" stage under its caption. iPhone output is 1320x2868
-(6.9-inch); --ipad output is 2064x2752 (13-inch). It renders what it can, then exits non-zero if any frame
-is missing, was flagged wrong by its test, or was captured more than once.
+table names and lays each one on a "Still Point" stage under its caption. A capture is turned upright from
+its EXIF orientation first (XCUIScreen stores a landscape iPad capture as a portrait bitmap tagged
+orientation 8), and the frame takes the capture's orientation: iPhone output is 1320x2868 (6.9-inch;
+2868x1320 in landscape), --ipad output is 2064x2752 (13-inch portrait) or 2752x2064 (landscape). Every
+written frame is read back and checked against those sizes. It renders what it can, then exits non-zero
+if any frame is missing, was flagged wrong by its test, was captured more than once, or came out at a size
+App Store Connect would refuse.
 """
 import json
 import re
@@ -34,6 +38,8 @@ UI_TESTS = ROOT / "ios/TimbreUITests"
 CAPTION_LIMIT = 30
 INK, SOFT, MINT, AMBER, STAGE = (245, 243, 239), (163, 168, 177), (76, 242, 184), (255, 181, 71), (6, 7, 8)
 COUNT = re.compile(r"(\d[\d,]*)(\+?)\s+(lessons|courses|instruments|tunings)\b", re.IGNORECASE)
+# App Store Connect's sizes for the 6.9-inch iPhone and the 13-inch iPad, portrait (width, height); landscape swaps them.
+SIZES = {"iphone": (1320, 2868), "ipad": (2064, 2752)}
 
 
 def plan(device: str) -> list:
@@ -129,14 +135,35 @@ def wrap(text: str, font, width: float) -> list:
     return min(splits, key=lambda lines: max(font.getlength(line) for line in lines)) if splits else [text]
 
 
-def compose(shot_path: Path, title: str, subtitle: str, size, out: Path, portrait=True):
+def upright(shot_path: Path):
+    """The capture as it appears on screen: its EXIF orientation applied (a landscape iPad capture is stored as a
+    portrait bitmap tagged orientation 8, which would otherwise be laid on the frame on its side)."""
+    from PIL import Image, ImageOps
+    with Image.open(shot_path) as image:
+        return ImageOps.exif_transpose(image).convert("RGB")
+
+
+def frame_size(device: str, shot) -> tuple:
+    """The store size for this device in the capture's orientation."""
+    w, h = SIZES[device]
+    return (h, w) if shot.width > shot.height else (w, h)
+
+
+def compose(shot_path: Path, title: str, subtitle: str, device: str, out: Path) -> tuple:
+    """Lays the capture under its caption on a frame of the device's store size, in the capture's orientation;
+    returns the frame's size."""
     from PIL import Image, ImageDraw, ImageFilter, ImageFont
+    shot = upright(shot_path)
+    size = frame_size(device, shot)
     w, h = size
+    phone = device == "iphone"
+    # Type scales with the frame's short side, so a landscape iPad frame sets its caption as the portrait one does.
+    base = min(w, h)
     canvas = stage(size).convert("RGBA")
     draw = ImageDraw.Draw(canvas)
-    display = ImageFont.truetype(str(FONTS / "Sora-SemiBold.ttf"), int(w * (0.074 if portrait else 0.04)))
-    small = ImageFont.truetype(str(FONTS / "Sora-Medium.ttf"), int(w * (0.03 if portrait else 0.016)))
-    eyebrow = ImageFont.truetype(str(FONTS / "Sora-SemiBold.ttf"), int(w * (0.024 if portrait else 0.013)))
+    display = ImageFont.truetype(str(FONTS / "Sora-SemiBold.ttf"), int(base * (0.074 if phone else 0.04)))
+    small = ImageFont.truetype(str(FONTS / "Sora-Medium.ttf"), int(base * (0.03 if phone else 0.016)))
+    eyebrow = ImageFont.truetype(str(FONTS / "Sora-SemiBold.ttf"), int(base * (0.024 if phone else 0.013)))
     top = int(h * 0.055)
     line_height = int(display.size * 1.02)
     draw.text((w / 2, top), "T I M B R E", font=eyebrow, fill=AMBER, anchor="ma")
@@ -150,12 +177,12 @@ def compose(shot_path: Path, title: str, subtitle: str, size, out: Path, portrai
     draw.text((w / 2, y + int(h * 0.012)), subtitle, font=small, fill=SOFT, anchor="ma")
     shot_top = top + int(h * 0.035) + 2 * line_height + int(h * 0.05)
 
-    shot = Image.open(shot_path).convert("RGB")
     # As wide as the design allows, but never taller than the room left: every corner of the device stays on the image.
-    target_w = int(min(w * (0.8 if portrait else 0.84), (h - shot_top - h * 0.012) * shot.width / shot.height))
+    target_w = int(min(w * (0.8 if phone else 0.84), (h - shot_top - h * 0.012) * shot.width / shot.height))
     scale = target_w / shot.width
     shot = shot.resize((target_w, int(shot.height * scale)), Image.LANCZOS)
-    radius = int(target_w * (0.11 if portrait else 0.03))
+    # The screen's own corners: a phone's are deep; an iPad's are gentle, measured on its short side.
+    radius = int(target_w * 0.11) if phone else int(min(shot.width, shot.height) * 0.035)
     framed = rounded(shot, radius)
     shadow = Image.new("RGBA", (framed.width + 160, framed.height + 160), (0, 0, 0, 0))
     ImageDraw.Draw(shadow).rounded_rectangle([80, 100, framed.width + 80, framed.height + 80], radius=int(target_w * 0.1), fill=(0, 0, 0, 170))
@@ -166,6 +193,22 @@ def compose(shot_path: Path, title: str, subtitle: str, size, out: Path, portrai
     ImageDraw.Draw(canvas).rounded_rectangle([x, shot_top, x + framed.width - 1, shot_top + framed.height - 1],
                                              radius=radius, outline=(46, 50, 58), width=3)
     canvas.convert("RGB").save(out, quality=95)
+    return size
+
+
+def size_problem(device: str, path: Path, shot_path: Path):
+    """Why the written frame can't go to App Store Connect (a size it doesn't take, or the capture's orientation
+    lost on the way), or None."""
+    from PIL import Image
+    with Image.open(path) as image:
+        size = image.size
+    w, h = SIZES[device]
+    if size not in ((w, h), (h, w)):
+        return f"{path.name} is {size[0]}x{size[1]}; App Store Connect takes {w}x{h} or {h}x{w}"
+    shot = upright(shot_path)
+    if (size[0] > size[1]) != (shot.width > shot.height):
+        return f"{path.name} is {size[0]}x{size[1]} but its capture is {shot.width}x{shot.height} upright"
+    return None
 
 
 def main():
@@ -192,7 +235,6 @@ def main():
         sys.exit("The listing's screenshot table needs fixing first:\n" + "\n".join(found))
     out.mkdir(parents=True, exist_ok=True)
     captures = attachments(folder)
-    size = (2064, 2752) if ipad else (1320, 2868)
     unusable = []
     for number, (name, title, subtitle) in enumerate(rows, 1):
         where = f"{device} #{number} ({name})"
@@ -206,8 +248,12 @@ def main():
             unusable.append(f"{where}: captured {len(captures[name])} times in this run, so the frame is ambiguous")
             continue
         target = out / f"{device}-{number:02d}.jpg"
-        compose(captures[name][0], title, subtitle, size, target, portrait=not ipad)
-        print("wrote", target)
+        size = compose(captures[name][0], title, subtitle, device, target)
+        problem = size_problem(device, target, captures[name][0])
+        if problem:
+            unusable.append(f"{where}: {problem}")
+            continue
+        print("wrote", target, f"{size[0]}x{size[1]}")
     if unusable:
         sys.exit("Store frames that need a good run first:\n" + "\n".join(unusable))
 
