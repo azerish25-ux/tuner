@@ -4,6 +4,8 @@ import TimbreCore
 // The Play hub's ear games as live cards: each game idles in a small preview of itself (Pitch Sniper's scope,
 // the ear trainer's interval staircase) beside its best score, its level and today's challenge with the XP it
 // pays, all read from saved progress. One timeline per card, paused off screen, still under Reduce Motion.
+// In each card's corner: the game's Game Center leaderboard (Services/GameCenter.swift) and, on Pitch Sniper, a
+// "Beat my score" card to send a friend; a friend's score to beat shows on the card and in the game.
 
 // MARK: - Liveness
 
