@@ -5,9 +5,9 @@ import TimbreCore
 
 /// A tool the paywall was opened from, pictured in the hero in place of the instrument and its runway.
 enum PaywallTool: Equatable {
-    /// The Tanpura drone, as the Drone screen draws it: four strings (Pa and three Sa) plucked in turn in the
-    /// drone's rhythm over the gourd, which names the tonic.
-    case drone(tonic: String)
+    /// The Tanpura drone, as the Drone screen draws it: four strings (Pa, or Ma without `fifth`, then three Sa)
+    /// plucked in turn in the drone's rhythm over the gourd, which names the tonic.
+    case drone(tonic: String, fifth: Bool)
     /// Pitch Sniper's scope, as on the Play tab, also the picture of the tuner's ±1¢ precision: the game's rings at
     /// 50, 20 and 5 cents and a pitch homing in on the bullseye.
     case scope
@@ -63,7 +63,7 @@ struct ToolScene {
         context.clip(to: Path(CGRect(origin: .zero, size: size)))
         let floor = max(30, size.height - pill.height - 8)
         switch tool {
-        case .drone(let tonic): drawTanpura(context, size: size, floor: floor, tonic: tonic)
+        case .drone(let tonic, let fifth): drawTanpura(context, size: size, floor: floor, tonic: tonic, fifth: fifth)
         case .scope: drawScope(context, size: size, floor: floor)
         case .staircase: drawStaircase(context, size: size, floor: floor)
         case .beat(let bpm, let beats): drawBeat(context, size: size, floor: floor, bpm: bpm, beats: beats)
@@ -98,8 +98,6 @@ extension ToolScene {
     /// then a rest of two before Pa comes round again.
     private static let pluckInterval = 1.05
     private static let pluckCycle = 5.25
-    /// Left to right, as the tanpura is played; a dot under Pa and the last Sa marks the lower octave.
-    private static let tanpuraNames = ["Pa", "Sa", "Sa", "Sa"]
     private static let steel = Color(hex: 0xC9CED6)
     private static let bronze = Color(hex: 0xD49C5E)
     private static let ivory = Color(hex: 0xEFE6D6)
@@ -122,7 +120,7 @@ extension ToolScene {
     /// strings plucked in turn in the drone's own rhythm, each shimmering in mint as it rings and settling as it
     /// fades, a ripple leaving the gourd with every pluck, the gourd glowing as they ring together. The tonic's
     /// name sits in the gourd, marked at the bottom of its dial.
-    private func drawTanpura(_ context: GraphicsContext, size: CGSize, floor: CGFloat, tonic: String) {
+    private func drawTanpura(_ context: GraphicsContext, size: CGSize, floor: CGFloat, tonic: String, fifth: Bool) {
         let cx = size.width / 2
         let radius = max(16, min(50, floor * 0.29))
         let gourd = CGPoint(x: cx, y: floor - radius - 7)
@@ -147,7 +145,7 @@ extension ToolScene {
             let foot = CGPoint(x: cx + offset * bridgeGap, y: bridgeY)
             drawString(context, index: index, nut: nut, foot: foot, ring: rings[index])
         }
-        if named { drawSargam(context, cx: cx, nutY: nutY, nutGap: nutGap, rings: rings) }
+        if named { drawSargam(context, names: [fifth ? "Pa" : "Ma", "Sa", "Sa", "Sa"], cx: cx, nutY: nutY, nutGap: nutGap, rings: rings) }
     }
 
     /// The neck in dark wood, fading in from the top edge, and the nut under the strings' names.
@@ -271,10 +269,11 @@ extension ToolScene {
         }
     }
 
-    /// Pa, Sa, Sa, Sa over the nut, each lit mint while it sounds; a dot under the lower-octave ones.
-    private func drawSargam(_ context: GraphicsContext, cx: CGFloat, nutY: CGFloat, nutGap: CGFloat, rings: [Double]) {
+    /// Pa (or Ma), Sa, Sa, Sa over the nut, left to right as the tanpura is played, each lit mint while it sounds;
+    /// a dot under the first and the last marks the lower octave, as sargam writes it.
+    private func drawSargam(_ context: GraphicsContext, names: [String], cx: CGFloat, nutY: CGFloat, nutGap: CGFloat, rings: [Double]) {
         let spacing = max(17, nutGap)
-        for (index, name) in Self.tanpuraNames.enumerated() {
+        for (index, name) in names.enumerated() {
             let x = cx + (CGFloat(index) - 1.5) * spacing
             let lit = rings[index] > 0.45
             let color = lit ? Palette.mint : Palette.inkSoft
@@ -326,8 +325,8 @@ extension ToolScene {
             hairs.addLine(to: CGPoint(x: center.x + dx * radius * 0.8, y: center.y + dy * radius * 0.8))
         }
         context.stroke(hairs, with: .color(Color.white.opacity(0.2)), lineWidth: 1)
-        guard radius >= 56 else { return }
-        // Each ring's cents, just inside it on the lower right.
+        guard radius >= 80 else { return }
+        // Each ring's cents, just inside it on the lower right, once the scope is large enough to keep them apart.
         for ring in Self.scopeRings {
             let r = radius * ring.share
             caption(context, "\(Int(ring.cents))¢", at: CGPoint(x: center.x + r * 0.7, y: center.y + r * 0.7), color: Palette.inkFaint, anchor: .bottomTrailing)

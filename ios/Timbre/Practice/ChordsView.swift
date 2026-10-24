@@ -388,7 +388,7 @@ private struct VoicingCard: View {
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityLabel(Text("\(chordName), \(profile.title), \(profile.level.name), \(shape.notation)"))
-        .accessibilityHint(Text("Double tap to hear it."))
+        .accessibilityHint(Text("Plays the chord."))
     }
 
     private func playGlyph(_ sounding: Bool) -> some View {

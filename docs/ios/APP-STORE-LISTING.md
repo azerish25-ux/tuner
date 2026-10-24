@@ -15,10 +15,12 @@ Paste into App Store Connect → the app → the version's page and App Informat
 ## Keywords (100/100)
 
 ```
-chromatic,cello,mandolin,banjo,metronome,chord,ear training,strobe,fiddle,music,songs,pitch,uke,sing
+chromatic,cello,mandolin,banjo,metronome,chord,ear training,strobe,fiddle,pitch,uke,sing,song,tuning
 ```
 
-Apple already indexes words from the name and subtitle (guitar, tuner, lessons, learn, violin, ukulele, bass), so the keywords don't repeat them. The name carries "guitar tuner", the category's highest-volume search. Use singular forms; Apple matches plurals.
+Apple already indexes words from the name and subtitle (guitar, tuner, lessons, learn, violin, ukulele, bass), so the keywords don't repeat them. The name carries "guitar tuner", the category's highest-volume search. Use singular forms; Apple matches plurals. Leave out category names too ("music"): the app is already found under its category.
+
+The 12 characters that "music" and "songs" used now hold "song" (singular, so it still matches "guitar songs" and "ukulele songs") and "tuning". "Tuning" catches the searches that name a tuning ("drop D tuning", "open G tuning", "cello tuning"), which "tuner" in the name does not match, and Timbre ships 102 tunings plus custom ones.
 
 ## Promotional text (170 max; can change without a review)
 
@@ -117,7 +119,7 @@ Run the **App Preview** workflow by hand (Actions → App Preview → Run workfl
 
 ```
 Timbre needs the microphone to tune and to hear lessons. With no instrument to hand, a 440 Hz tone from another device works for the tuner.
-The paywall opens from any locked lesson (Learn tab → a lesson in unit 2 or later) and from Practice → Drone. It shows the price, the trial timeline, auto-renewal terms, Restore, Terms and Privacy.
+The paywall opens from any locked lesson (Learn tab → a lesson in unit 2 or later) and from the Play tab → Tools → Drone. It shows the price, the trial timeline, auto-renewal terms, Restore, Terms and Privacy.
 No account or login is needed.
 ```
 

@@ -322,17 +322,15 @@ struct PaywallView: View {
             }
         }
         guard let reason = store.paywallReason else { return nil }
-        if reason.hasSuffix("drone") { return .drone(tonic: droneTonic) }
+        if reason.hasSuffix("drone") {
+            // As the Drone screen names them: the tonic in the player's note names, Pa or Ma on the first string.
+            let fifth = UserDefaults.standard.string(forKey: "drone.firstString") != "ma"
+            return .drone(tonic: VoiceNoteName.name(store.droneMidi, notation: store.settings.notation), fifth: fifth)
+        }
         if reason.hasPrefix("ear.") || reason == "daily.ear" { return .staircase }
         if reason.contains("sniper") || reason == "precision" { return .scope }
         if reason.hasPrefix("metronome.") || reason == "daily.rhythm" { return .beat(bpm: store.bpm, beats: store.beats) }
         return nil
-    }
-
-    /// The drone's tonic as its key on the Drone screen names it (flats for the black keys).
-    private var droneTonic: String {
-        let pitchClass = store.droneMidi % 12
-        return NoteNames.name(pitchClass, preferFlats: [1, 3, 8, 10].contains(pitchClass))
     }
 
     /// The instrument they just tried to open, else their own (onboarding's answer, or the one they tune), as the
@@ -475,7 +473,8 @@ struct PaywallView: View {
                 .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in detailsHeight = height }
             if detailsOpen {
                 proTable
-                    .transition(.asymmetric(insertion: .opacity.combined(with: .scale(scale: 0.97, anchor: .top)), removal: .opacity))
+                    .transition(reduceMotion ? AnyTransition.opacity
+                                : AnyTransition.asymmetric(insertion: .opacity.combined(with: .scale(scale: 0.97, anchor: .top)), removal: .opacity))
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -504,7 +503,7 @@ struct PaywallView: View {
     }
 
     private func toggleDetails() {
-        withAnimation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle) { detailsOpen.toggle() }
+        withAnimation(reduceMotion ? Animation.easeOut(duration: 0.2) : Motion.settle) { detailsOpen.toggle() }
         Haptics.shared.selection()
         if detailsOpen { Analytics.log("paywall_details", ["reason": context == .onboarding ? "onboarding" : (store.paywallReason ?? "unknown")]) }
     }
