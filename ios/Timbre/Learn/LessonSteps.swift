@@ -182,7 +182,7 @@ struct NotesStep: View {
     /// fades in (`NoteHandover`), so two never overlap and none is left half drawn.
     private var noteLetter: some View {
         let name = NoteName.name(shown?.midi ?? 60)
-        return NoteHandover(String(name.dropLast(name.last?.isNumber == true ? 1 : 0)), font: Typeface.note(88), turn: judge.index)
+        return NoteHandover(String(name.dropLast(name.last?.isNumber == true ? 1 : 0)), font: Typeface.note(88), turn: min(judge.index, max(0, notes.count - 1)))
     }
 
     /// Where to play it: a strip of the neck with the target string and fret lit and breathing (fretted
