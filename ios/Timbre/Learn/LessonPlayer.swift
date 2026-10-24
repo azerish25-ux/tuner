@@ -449,26 +449,35 @@ struct StepButton: View {
 
 /// The row pinned to the bottom of a step: its own actions ("Hear it", "I played it") side by side, beside the
 /// main button when there is one; stacked at the largest text sizes, so no label is squeezed.
+/// One glass group (iOS 26): the step's own actions are Liquid Glass beside the solid main button, and an action
+/// arriving ("I played it" after a few seconds) flows out of the glass beside it rather than popping in.
 struct LessonActionBar<Content: View>: View {
     private let content: Content
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Namespace private var glass
 
     init(@ViewBuilder content: () -> Content) { self.content = content() }
 
     var body: some View {
         let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 10)) : AnyLayout(HStackLayout(spacing: 10))
-        layout { content }
-            .padding(.horizontal, 20).padding(.bottom, 12)
+        // The group's reach matches the gap: neighbours stay apart at rest and meet only while one comes or goes.
+        TimbreGlassGroup(spacing: 10) {
+            layout { content }
+        }
+        .environment(\.timbreGlassSpace, glass)
+        .padding(.horizontal, 20).padding(.bottom, 12)
     }
 }
 
 /// "Hear it" in a step's bottom bar: a tinted button in the step's accent, its speaker waving while it sounds.
+/// On iOS 26 it is glass washed in the accent (`LessonActionBar`'s group).
 struct HearItButton: View {
     var accent: Color = Palette.mint
     var sounding = false
     /// Takes the bar's width (a playing step, where listening is the main thing); otherwise it hugs its label.
     var expands = false
     let action: () -> Void
+    @Environment(\.timbreGlassSpace) private var glass
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
@@ -479,8 +488,9 @@ struct HearItButton: View {
                 .lineLimit(1).minimumScaleFactor(0.75)
                 .padding(.horizontal, 22)
                 .frame(maxWidth: expands ? .infinity : nil, minHeight: 56)
-                .background(shape.fill(accent.opacity(0.12)))
                 .overlay(shape.strokeBorder(accent.opacity(0.4), lineWidth: 1))
+                .timbreGlass(accent.opacity(0.16), in: shape) { shape.fill(accent.opacity(0.12)) }
+                .timbreGlassID("lesson.hear", in: glass)
                 .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())
@@ -488,10 +498,11 @@ struct HearItButton: View {
     }
 }
 
-/// A quieter button for a step's bottom bar ("I played it", "My strings are tuned — skip").
+/// A quieter button for a step's bottom bar ("I played it", "My strings are tuned — skip"); clear glass on iOS 26.
 struct LessonBarButton: View {
     let title: LocalizedStringKey
     let action: () -> Void
+    @Environment(\.timbreGlassSpace) private var glass
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
@@ -500,8 +511,9 @@ struct LessonBarButton: View {
                 .lineLimit(1).minimumScaleFactor(0.75)
                 .padding(.horizontal, 18)
                 .frame(maxWidth: .infinity, minHeight: 56)
-                .background(shape.fill(Palette.stageRaised))
                 .overlay(shape.strokeBorder(Palette.line, lineWidth: 1))
+                .timbreGlass(in: shape) { shape.fill(Palette.stageRaised) }
+                .timbreGlassID("lesson.secondary", in: glass)
                 .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())

@@ -179,8 +179,8 @@ struct DroneSingAlongCard: View {
     @ViewBuilder private var readout: some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
             if listening, let degree = model.degree, let cents = model.shownCents {
-                Text(verbatim: Swara.names[degree]).font(Typeface.display(30)).foregroundStyle(Palette.ink)
-                Text(verbatim: noteName(degree) + " · " + Swara.ratios[degree]).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                NoteGlyphs.text(Swara.names[degree], size: 30).font(Typeface.display(30)).foregroundStyle(Palette.ink)
+                NoteGlyphs.text(noteName(degree) + " · " + Swara.ratios[degree], size: 12, weight: .medium).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
                     .lineLimit(1)
                 Spacer(minLength: 8)
                 Text(verbatim: centsText(cents)).font(Typeface.number(24)).foregroundStyle(Palette.pitch(Double(cents), locked: false, band: DroneSingAlong.band))

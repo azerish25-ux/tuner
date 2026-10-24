@@ -65,10 +65,11 @@ enum CanvasNoise {
 
 /// A pick sweeping the strings on every stroke of a rhythm pattern, in time with the beat: down strokes
 /// run from the thickest string to the thinnest, up strokes back, and each string shimmers as the pick crosses it.
-/// The strings lie in the player's string order like every neck in the lesson (Settings › String order): string 1,
-/// the thinnest, on top in tab order, so a down stroke rises from the thickest string at the bottom; the thickest
-/// on top in mirror order, so it falls. Each string is numbered and the outer two are named ("Thinnest (1)",
-/// "Thickest (6)"), and the pick's tip, its lane's chevrons and its trail all point the way it travels.
+/// The stage is always the player's view, the instrument's top as you look down at it while you play: the thickest
+/// string on top whatever Settings › String order says for the tab-style necks, so a down stroke falls down the
+/// screen, as "Strum down" says and the beat row's ↓ and its pick show (an up stroke rises, as ↑). A "Player view"
+/// tag says so over the strings. Each string is numbered and the outer two are named ("Thickest (6)" on top,
+/// "Thinnest (1)" underneath), and the pick's tip, its lane's chevrons and its trail all point the way it travels.
 /// The strings run over the instrument's top, from the sound hole to the bridge; the wood fills the whole frame and
 /// the strings spread to fill its height (up to a comfortable spacing), so a tall stage is all guitar, never bare.
 /// What comes next is the beat row's job (`RhythmBar`, `LessonBeatRow`), so the sweep draws only the stroke
@@ -87,11 +88,11 @@ struct StrumSweep: View {
     let time: Double?
     /// Bars the strokes run for; nil repeats the bar forever.
     var bars: Int?
-    /// Names the top and bottom strings in words ("Thinnest (1)" over the top and "Thickest (6)" under the bottom
-    /// in tab order, the other way round in mirror order).
+    /// Names the top and bottom strings in words ("Thickest (6)" over the top, "Thinnest (1)" under the bottom).
     var edges: StringEdges?
-    /// Which string lies on top, as on the fretboards (Settings › String order).
-    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
+    /// The player's view: the thickest string on top, so down strokes travel down the screen (never flipped by
+    /// Settings › String order, which is about reading tab).
+    static let order: StringOrder = .mirror
     /// The string numbers and names grow with Dynamic Type from the 11 pt floor (`DiagramType`).
     @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
 
@@ -134,7 +135,7 @@ struct StrumSweep: View {
     }
 
     var body: some View {
-        let order = stringOrder
+        let order = Self.order
         let scale = typeScale
         Canvas { context, size in
             if style == .tap { drawPad(&context, size: size) } else { drawStrings(&context, size: size, order: order, scale: scale) }
@@ -251,6 +252,7 @@ struct StrumSweep: View {
             drawString(&context, number: number, of: count, y: y, right: bridgeX, amplitude: amplitude, t: t, scale: scale)
         }
         drawEdgeNames(&context, size: size, top: top, bottom: top + band, count: count, order: order, scale: scale)
+        drawViewTag(&context, top: top, scale: scale)
 
         if style == .pluck {
             // The lowest string, wherever the order puts it; the fingertip comes at it from outside the strings.
@@ -286,6 +288,21 @@ struct StrumSweep: View {
         if let name = edges.canvasLabel(order.string(atRow: count - 1, count: count), size: points) {
             context.draw(name, at: CGPoint(x: x, y: bottom + lift), anchor: .trailing)
         }
+    }
+
+    /// "Player view" over the strings' top-left corner, level with the top string's name and on a dark plate (it can
+    /// sit over the rosette): this stage is the instrument as you see it playing, which is why the thickest string is
+    /// on top here even when the tab-style necks put string 1 there.
+    private func drawViewTag(_ context: inout GraphicsContext, top: CGFloat, scale: CGFloat) {
+        let points = DiagramType.size(DiagramType.floor, scale: scale)
+        let text = Text("Player view").font(DiagramType.font(points, weight: .semibold)).foregroundStyle(Palette.inkSoft)
+        let resolved = context.resolve(text)
+        let size = resolved.measure(in: CGSize(width: 200, height: 40))
+        let y = top - 10 - points * 0.55
+        let plate = CGRect(x: 2, y: y - size.height / 2 - 2, width: size.width + 12, height: size.height + 4)
+        guard plate.minY >= 2 else { return }
+        context.fill(Path(roundedRect: plate, cornerRadius: plate.height / 2), with: .color(Palette.stageDeep.opacity(0.75)))
+        context.draw(resolved, at: CGPoint(x: plate.minX + 6, y: y), anchor: .leading)
     }
 
     /// A strip of the instrument's top under the strings: dark tonewood with its grain, a sheen across the

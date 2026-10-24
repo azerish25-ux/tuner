@@ -49,6 +49,10 @@ struct PaywallPlan {
     /// Up to two days ahead within the horizon, in order: the first song the plan reaches, and the first unit
     /// after today's whose name doesn't echo today's lesson.
     let milestones: [Milestone]
+    /// The first song the plan reaches (today's lesson, when that is a song), however far off, and the day it comes
+    /// at one lesson a day (1: today). The plan's hero shows its sleeve.
+    let firstSong: Lesson?
+    let songDay: Int?
 
     var accent: Color { course.map { Palette.accent($0.accent) } ?? Palette.mint }
 
@@ -79,7 +83,8 @@ struct PaywallPlan {
         let lessons = course?.lessons ?? []
         let first = start.flatMap { lesson in lessons.firstIndex { $0.id == lesson.id } }
         // One lesson a day from the first one: the day the plan reaches its first song.
-        let songDay = first.flatMap { from in lessons[from...].firstIndex { $0.kind == .song }.map { $0 - from + 1 } }
+        let songIndex = first.flatMap { from in lessons[from...].firstIndex { $0.kind == .song } }
+        let songDay = first.flatMap { from in songIndex.map { $0 - from + 1 } }
         let planned = plannedOutcomes(goal: goal, course: course, songDay: songDay, minutes: minutes, instrumentId: instrumentId, store: store)
         // Onboarding's plan screen has just set the daily minutes, so its paywall keeps the two outcomes before them and
         // gives the room to the hero.
@@ -88,7 +93,9 @@ struct PaywallPlan {
                            instrumentId: instrumentId,
                            outcomes: merged(reasonOutcomes(reason, course: course, instrumentId: instrumentId, store: store), planned, limit: limit),
                            firstLesson: start?.title.localized,
-                           milestones: plannedMilestones(course: course, start: start, horizon: horizon))
+                           milestones: plannedMilestones(course: course, start: start, horizon: horizon),
+                           firstSong: songIndex.map { lessons[$0] },
+                           songDay: songDay)
     }
 
     /// What was tapped first, then the plan's own outcomes, `limit` in all and each promise once.

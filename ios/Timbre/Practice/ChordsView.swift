@@ -537,7 +537,8 @@ struct ToneStrip: View {
     private func tile(_ tone: Tone) -> some View {
         let shape = RoundedRectangle(cornerRadius: 12, style: .continuous)
         return VStack(spacing: 2) {
-            Text(tone.name).font(Typeface.label(15, relativeTo: .subheadline))
+            // The sign in the system face: Sora's fallback sets ♭ full width ("E ♭").
+            NoteGlyphs.text(tone.name, sign: .system(.subheadline, weight: .semibold)).font(Typeface.label(15, relativeTo: .subheadline))
                 .foregroundStyle(tone.isRoot ? Palette.amber : Palette.ink)
                 .lineLimit(1).minimumScaleFactor(0.6)
             Text(tone.degree).font(.caption2.weight(.semibold)).foregroundStyle(Palette.inkFaint)

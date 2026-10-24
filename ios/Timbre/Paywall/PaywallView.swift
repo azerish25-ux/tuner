@@ -46,6 +46,8 @@ struct PaywallView: View {
     @State private var exitOfferShown = false
     /// The App Store's offer-code sheet ("Redeem code").
     @State private var redeeming = false
+    /// The chosen plan's glass (iOS 26) flows from card to card as the choice moves.
+    @Namespace private var planGlass
 
     /// The yearly plan unless the storefront left it out.
     private var selected: Product? { commerce.products.first { $0.id == selectedID } ?? commerce.products.first }
@@ -89,6 +91,8 @@ struct PaywallView: View {
     var body: some View {
         let pitch = self.pitch
         let plan = PaywallPlan.make(store: store, answers: answers, horizon: planHorizon, reason: context == .standard ? store.paywallReason : nil)
+        let hero = self.hero(pitch, plan: plan)
+        let layout = self.layout(pitch, plan: plan, hero: hero)
         ZStack(alignment: .topTrailing) {
             Palette.stage.ignoresSafeArea()
             RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.16), .clear], center: UnitPoint(x: 0.5, y: 0.12), startRadius: 10, endRadius: 320)
@@ -98,7 +102,7 @@ struct PaywallView: View {
                 .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in containerHeight = height }
                 .accessibilityHidden(true)
             ScrollView {
-                content(pitch, plan: plan)
+                content(pitch, plan: plan, hero: hero, layout: layout)
             }
             .scrollIndicators(.hidden)
             .scrollBounceBehavior(.basedOnSize)
@@ -106,7 +110,8 @@ struct PaywallView: View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 bottomBar.onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in barHeight = height }
             }
-            closeButton
+            // Glass only where nothing under its corner redraws every frame (the runway and the tools' scenes do).
+            closeButton(glass: layout.preview == 0 || hero.isStill || reduceMotion)
             if exitOfferShown, let offer = exitOffer {
                 ExitOfferCard(offer: offer, purchasing: commerce.purchasing != nil,
                               accept: { acceptExitOffer(offer) }, decline: { close() })
@@ -143,14 +148,17 @@ struct PaywallView: View {
     private var viewport: CGFloat { containerHeight > 0 ? max(0, containerHeight - barHeight) : 600 }
 
     /// The track's room. While a trial is on offer (or may be, while the plans load) the trial's track keeps its
-    /// place, so choosing Monthly never resizes the hero under the finger; otherwise the plan's own track.
-    private func trackReserve(_ plan: PaywallPlan) -> CGFloat {
+    /// place, so choosing Monthly never resizes the hero under the finger; otherwise the plan's own track. With the
+    /// plan's road in the hero (`road`) the track is the trial's alone: its milestones are up there.
+    private func trackReserve(_ plan: PaywallPlan, road: Bool) -> CGFloat {
         let trial = commerce.products.isEmpty || trialOffered ? trialTrackHeight : 0
-        return max(trial, plan.milestones.isEmpty ? 0 : planTrackHeight)
+        return max(trial, plan.milestones.isEmpty || road ? 0 : planTrackHeight)
     }
 
     /// Headline (with its top inset), plans and trust row, and the plan track: what must show.
-    private func essentials(_ plan: PaywallPlan) -> CGFloat { headerHeight + Self.headerTop + offerHeight + trackReserve(plan) }
+    private func essentials(_ plan: PaywallPlan, road: Bool) -> CGFloat {
+        headerHeight + Self.headerTop + offerHeight + trackReserve(plan, road: road)
+    }
 
     /// The Pro pill on its own row, when there is no hero for it to stand in.
     private static let pillRow: CGFloat = 40
@@ -169,13 +177,25 @@ struct PaywallView: View {
         var outcomes = true
         /// "What's in Pro", under the outcomes.
         var details = true
+        /// The plan's hero is up, with the road to the first song in it: the track leaves the plan's milestones out.
+        var road = false
+    }
+
+    /// The fold for this hero. The plan's hero carries the road to the first song, so the track below can do without
+    /// it; when its picture doesn't fit, the track keeps the milestones (and the room they take).
+    private func layout(_ pitch: Pitch, plan: PaywallPlan, hero: PaywallHero) -> Fold {
+        guard case .plan = hero else { return fold(pitch, plan: plan, hero: hero, road: false) }
+        var result = fold(pitch, plan: plan, hero: hero, road: true)
+        if result.preview == 0 { result = fold(pitch, plan: plan, hero: hero, road: false) }
+        result.road = result.preview > 0
+        return result
     }
 
     /// The room beside the essentials goes to the outcomes, then "What's in Pro" under them, then the hero (its
     /// minimum, then its growth). When not even the pill fits, the page scrolls anyway and everything stays in
     /// reading order above the fine print. A locked lesson's card replaces the hero.
-    private func fold(_ pitch: Pitch, plan: PaywallPlan, hero: PaywallHero) -> Fold {
-        var left = viewport - essentials(plan)
+    private func fold(_ pitch: Pitch, plan: PaywallPlan, hero: PaywallHero, road: Bool) -> Fold {
+        var left = viewport - essentials(plan, road: road)
         guard left >= Self.pillRow else { return Fold() }
         var result = Fold()
         result.outcomes = left - Self.pillRow >= Self.outcomesTop + outcomesHeight

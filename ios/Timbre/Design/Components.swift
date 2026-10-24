@@ -64,12 +64,10 @@ extension View {
             .contentShape(shape)
     }
 
-    /// Floating control capsule over the stage.
-    @ViewBuilder func glassCapsule(interactive: Bool = true) -> some View {
-        if #available(iOS 26.0, *) {
-            self.glassEffect(interactive ? Glass.regular.interactive() : Glass.regular, in: Capsule())
-        } else {
-            self.background(.ultraThinMaterial, in: Capsule()).overlay(Capsule().strokeBorder(Palette.line, lineWidth: 0.5))
+    /// Floating control capsule over the stage (Liquid Glass on iOS 26, a material with a hairline before).
+    func glassCapsule(interactive: Bool = true) -> some View {
+        timbreGlass(interactive: interactive, in: Capsule()) {
+            Capsule().fill(.ultraThinMaterial).overlay(Capsule().strokeBorder(Palette.line, lineWidth: 0.5))
         }
     }
 }
@@ -120,15 +118,26 @@ struct BrassButtonStyle: ButtonStyle {
     }
 }
 
+/// A chip: graphite with a hairline, or chosen, a pill of light. On iOS 26 the chosen pill is Liquid Glass washed in
+/// ink, and inside an `EdgeRail` (which shares its glass namespace) it flows from chip to chip as the choice moves.
 struct ChipButtonStyle: ButtonStyle {
     var selected: Bool
+    /// The rail's glass namespace, when the chip sits in one.
+    @Environment(\.timbreGlassSpace) private var rail
+
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
+        let id: String? = selected ? "chip.selected" : nil
+        return configuration.label
             .font(.subheadline.weight(.medium))
             .padding(.horizontal, 14).padding(.vertical, 9)
             .foregroundStyle(selected ? Palette.stage : Palette.ink)
-            .background(Capsule().fill(selected ? AnyShapeStyle(Palette.ink) : AnyShapeStyle(Palette.stageRaised)))
-            .overlay(Capsule().strokeBorder(selected ? .clear : Palette.line, lineWidth: 1))
+            .background {
+                if !selected {
+                    Capsule().fill(Palette.stageRaised).overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
+                }
+            }
+            .timbreGlass(Palette.ink, isOn: selected, in: Capsule()) { Capsule().fill(Palette.ink) }
+            .timbreGlassID(id, in: rail)
             .scaleEffect(configuration.isPressed ? 0.96 : 1)
             .animation(Motion.quick, value: configuration.isPressed)
     }

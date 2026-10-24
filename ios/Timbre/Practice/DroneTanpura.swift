@@ -42,10 +42,11 @@ struct TanpuraMoment {
 /// The drone's hero: a tanpura seen from the front. Four strings, Pa (or Ma), Sa, Sa and low Sa, run down the
 /// neck to the bridge on the gourd and are plucked in turn exactly when the drone plucks them (the audio's own
 /// clock), each shimmering as it rings and settling as it fades, a ripple leaving the gourd with every pluck.
-/// The gourd is a dial of the twelve tonics, turned so the chosen one rests at the bottom, with its name and
-/// Sa's frequency inside. With `onSelect` the dial turns by hand: a drag round the ring rotates it under the
-/// finger, clicking into a detent at every note (a tick and a selection haptic each) and settling on the
-/// nearest when let go; a tap on a note brings that one round. Reduce Motion: the strings stay straight and
+/// The gourd is a dial of the twelve tonics, rising clockwise like a clock face and turned so the chosen one rests
+/// at the bottom, with its name and Sa's frequency inside; the note at the top, on the neck, sits on a small plate
+/// over the strings so they never hide it. With `onSelect` the dial turns by hand: a drag round the ring rotates
+/// it under the finger, clicking into a detent at every note (a tick and a selection haptic each) and settling on
+/// the nearest when let go; a tap on a note brings that one round. Reduce Motion: the strings stay straight and
 /// only light as they sound, and the dial moves without springing.
 struct TanpuraHero: View {
     let tonicPc: Int
@@ -152,19 +153,20 @@ struct TanpuraHero: View {
         return moment
     }
 
-    /// The twelve tonics round the gourd, the chosen one at the bottom; the one under the strings stays hidden.
+    /// The twelve tonics round the gourd, rising clockwise, the chosen one at the bottom. The dial turns back by the
+    /// tonic (anticlockwise) to bring it there; each name turns the other way to stay upright.
     private func dial(_ layout: TanpuraLayout) -> some View {
         let anchor = UnitPoint(x: layout.center.x / max(1, layout.size.width), y: layout.center.y / max(1, layout.size.height))
         let shown = shownTurn
         return ZStack {
             ForEach(0..<12, id: \.self) { pc in
-                dialLabel(pc)
-                    .rotationEffect(.degrees(-shown * 30))
+                dialLabel(pc, turn: shown)
+                    .rotationEffect(.degrees(shown * 30))
                     .position(layout.dialPoint(pc))
             }
         }
         .frame(width: layout.size.width, height: layout.size.height)
-        .rotationEffect(.degrees(shown * 30), anchor: anchor)
+        .rotationEffect(.degrees(-shown * 30), anchor: anchor)
         .accessibilityHidden(true)
     }
 
@@ -210,8 +212,9 @@ struct TanpuraHero: View {
             .onEnded { _ in turnEnded() }
     }
 
-    /// The finger's travel round the middle, in semitones (30° each), added to the dial's turn; each note it
-    /// passes clicks and is picked at once, so the name in the gourd and the drone follow the hand.
+    /// The finger's travel round the middle, in semitones (30° each), turning the dial with it: clockwise brings
+    /// the lower notes round to the bottom, so it takes away from the dial's turn. Each note it passes clicks and
+    /// is picked at once, so the name in the gourd and the drone follow the hand.
     private func turnChanged(_ value: DragGesture.Value, around middle: CGPoint) {
         let angle = DialDrag.angle(of: value.location, around: middle)
         var current = drag ?? DialDrag(angle: DialDrag.angle(of: value.startLocation, around: middle), turn: turn, detent: Int(turn.rounded()))
@@ -220,7 +223,7 @@ struct TanpuraHero: View {
         current.angle = angle
         // Right by the middle a small move swings the angle wildly: only the ring turns the dial.
         let reach = hypot(value.location.x - middle.x, value.location.y - middle.y)
-        if reach > 18 { current.turn += delta * 6 / Double.pi }
+        if reach > 18 { current.turn -= delta * 6 / Double.pi }
         let detent = Int(current.turn.rounded())
         let passed = detent != current.detent
         current.detent = detent
@@ -240,15 +243,15 @@ struct TanpuraHero: View {
         }
     }
 
-    /// A tap on a note (the one hidden under the strings aside) brings it round to the bottom.
+    /// A tap on a note (the one on the neck too) brings it round to the bottom.
     private func tap(at location: CGPoint, around middle: CGPoint, labelRadius: CGFloat) {
         guard drag == nil else { return }
         var nearest: (pc: Int, distance: CGFloat)?
         for pc in 0..<12 {
             let step = ((pc - tonicPc) % 12 + 12) % 12
-            guard step != 0, step != 6 else { continue }
+            guard step != 0 else { continue }
             // Where the label is drawn: its place on the dial, turned with it.
-            let angle = (180 - (Double(pc) - turn) * 30) * Double.pi / 180
+            let angle = (180 + (Double(pc) - turn) * 30) * Double.pi / 180
             let point = CGPoint(x: middle.x + labelRadius * CGFloat(sin(angle)), y: middle.y - labelRadius * CGFloat(cos(angle)))
             let distance = hypot(location.x - point.x, location.y - point.y)
             if distance < (nearest?.distance ?? 26) { nearest = (pc, distance) }
@@ -264,24 +267,33 @@ struct TanpuraHero: View {
         SoundFX.shared.play(.click)
     }
 
-    private func dialLabel(_ pc: Int) -> some View {
+    /// A tonic's name ("E♭", "F♯"), the chosen one in mint. Near the top it sits on the neck, across the strings:
+    /// a plate the colour of the stage fades in under it there so the strings run beneath the name, not through it.
+    private func dialLabel(_ pc: Int, turn shown: Double) -> some View {
         let step = ((pc - tonicPc) % 12 + 12) % 12
         let selected = step == 0
         let firstString = step == (fifth ? 7 : 5)
         let name = VoiceNoteName.pitchClass(pc, notation: notation)
-        return Text(verbatim: name)
+        let plate = TanpuraLayout.onNeck(pc, turn: shown)
+        return NoteGlyphs.text(name, size: selected ? 13 : 11, weight: selected ? .semibold : .medium)
             .font(selected ? Typeface.label(13, relativeTo: .caption2) : .system(size: 11, weight: .medium))
             .foregroundStyle(selected ? Palette.mint : (firstString ? Palette.inkSoft : Palette.inkFaint))
             .fixedSize()
+            .padding(.horizontal, 5).padding(.vertical, 2)
+            .background {
+                Capsule().fill(Palette.stage)
+                    .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
+                    .opacity(plate)
+            }
             .dynamicTypeSize(...DynamicTypeSize.large)
-            .opacity(step == 6 ? 0 : 1)
             .animation(Motion.quick, value: step)
     }
 
     /// The tonic and Sa's frequency inside the gourd, under the bridge.
     private func center(_ layout: TanpuraLayout) -> some View {
-        VStack(spacing: 1) {
-            Text(verbatim: tonicName).font(Typeface.display(min(46, layout.radius * 0.48)))
+        let size = min(46, layout.radius * 0.48)
+        return VStack(spacing: 1) {
+            NoteGlyphs.text(tonicName, size: size).font(Typeface.display(size))
                 .foregroundStyle(Palette.ink)
                 .contentTransition(.numericText())
                 .lineLimit(1).minimumScaleFactor(0.6)
@@ -341,7 +353,8 @@ struct TanpuraLayout {
 
     init(size: CGSize) {
         self.size = size
-        let r = max(44, min((size.height - 74) / 2, size.width * 0.27, 96))
+        // Room above the dial for the nut and the strings' names, so the note at the top of the dial clears the nut.
+        let r = max(44, min((size.height - 86) / 2, size.width * 0.27, 96))
         radius = r
         center = CGPoint(x: size.width / 2, y: size.height - r - 22)
         nutY = 28
@@ -358,11 +371,20 @@ struct TanpuraLayout {
         return center.x + (CGFloat(string) - 1.5) * (spreadNut + (spreadBridge - spreadNut) * f)
     }
 
-    /// A tonic's place on the dial before it turns: C at the bottom, rising clockwise toward the top. The dial
-    /// turns by the chosen tonic so that one comes to rest at the bottom.
+    /// A tonic's place on the dial before it turns: C at the bottom, then C♯, D … rising clockwise (up the left,
+    /// over the top, down the right), as a clock reads. The dial turns back by the chosen tonic so that one comes
+    /// to rest at the bottom. Angles run clockwise from the top.
     func dialPoint(_ pc: Int) -> CGPoint {
-        let angle = (180 - Double(pc) * 30) * Double.pi / 180
+        let angle = (180 + Double(pc) * 30) * Double.pi / 180
         return CGPoint(x: center.x + labelRadius * CGFloat(sin(angle)), y: center.y - labelRadius * CGFloat(cos(angle)))
+    }
+
+    /// How far a tonic's label sits on the neck, the dial turned by `turn` semitones: 1 at the top, where the
+    /// strings run, easing to 0 a semitone either side.
+    static func onNeck(_ pc: Int, turn: Double) -> Double {
+        let angle = (180 + (Double(pc) - turn) * 30).truncatingRemainder(dividingBy: 360)
+        let fromTop = min(abs(angle), 360 - abs(angle))
+        return max(0, 1 - fromTop / 30)
     }
 }
 

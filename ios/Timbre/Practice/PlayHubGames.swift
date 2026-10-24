@@ -99,6 +99,9 @@ struct PlayGameCard<Preview: View>: View {
     let stats: Text
     let challenge: GameChallenge
     let tint: Color
+    /// iPad: the card stands tall, the game idling across its top at this height and the words under it. Nil: the
+    /// phone's card, the game beside the words.
+    var heroHeight: CGFloat? = nil
     /// The live preview; its argument says whether it may move (on screen).
     @ViewBuilder let preview: (Bool) -> Preview
     @State private var visible = false
@@ -107,19 +110,14 @@ struct PlayGameCard<Preview: View>: View {
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: 24, style: .continuous)
-        // The preview rides behind the words at the card's full height, on the side the words leave free.
-        return info
-            .padding(.trailing, Self.previewWidth)
-            .frame(maxWidth: .infinity, minHeight: 158, alignment: .leading)
-            .background(alignment: .trailing) {
-                preview(visible)
-                    .frame(width: Self.previewWidth)
-                    .accessibilityHidden(true)
-            }
+        let tall = heroHeight != nil
+        return face
             .background {
                 ZStack {
                     shape.fill(Palette.stageRaised)
-                    shape.fill(RadialGradient(colors: [tint.opacity(0.2), .clear], center: UnitPoint(x: 0.84, y: 0.45), startRadius: 0, endRadius: 180))
+                    shape.fill(RadialGradient(colors: [tint.opacity(tall ? 0.22 : 0.2), .clear],
+                                              center: tall ? UnitPoint(x: 0.5, y: 0.3) : UnitPoint(x: 0.84, y: 0.45),
+                                              startRadius: 0, endRadius: tall ? 280 : 180))
                 }
             }
             .overlay(shape.strokeBorder(tint.opacity(0.16), lineWidth: 1))
@@ -136,6 +134,31 @@ struct PlayGameCard<Preview: View>: View {
 
     private static var previewWidth: CGFloat { 148 }
 
+    @ViewBuilder private var face: some View {
+        if let heroHeight {
+            // Tall: the game across the top, the words under it, the card as tall as its row.
+            VStack(alignment: .leading, spacing: 0) {
+                preview(visible)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: heroHeight)
+                    .padding(.top, 12)
+                    .accessibilityHidden(true)
+                info
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        } else {
+            // The preview rides behind the words at the card's full height, on the side the words leave free.
+            info
+                .padding(.trailing, Self.previewWidth)
+                .frame(maxWidth: .infinity, minHeight: 158, alignment: .leading)
+                .background(alignment: .trailing) {
+                    preview(visible)
+                        .frame(width: Self.previewWidth)
+                        .accessibilityHidden(true)
+                }
+        }
+    }
+
     private var info: some View {
         VStack(alignment: .leading, spacing: 5) {
             Text(title).font(Typeface.display(19)).foregroundStyle(Palette.ink)
@@ -148,7 +171,7 @@ struct PlayGameCard<Preview: View>: View {
             Spacer(minLength: 12)
             ChallengeChip(challenge: challenge)
         }
-        .padding(.leading, 16).padding(.trailing, 4).padding(.vertical, 16)
+        .padding(.leading, 16).padding(.trailing, heroHeight == nil ? 4 : 16).padding(.vertical, 16)
         .accessibilityElement(children: .combine)
     }
 }

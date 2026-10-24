@@ -47,11 +47,13 @@ struct LessonVisualView: View {
 }
 
 /// Which string sits on top wherever a neck is drawn lying down (the fretboard strips, the intonation neck,
-/// the strum and sound-hole stage, the tune check's string rail, the highway's lanes), one choice for the whole
-/// app (Settings › String order): tab order, string 1 (the thinnest) on top as tablature writes it, or the
-/// mirror, the thickest on top as you see the neck looking down at it while playing. Where strings run side by
-/// side instead (the highway's lanes, the tune check's rail), the string drawn on top takes the left. Chord
-/// boxes stand upright and keep their own convention (the lowest string on the left).
+/// the tune check's string rail, the highway's lanes), one choice for the whole app (Settings › String order):
+/// tab order, string 1 (the thinnest) on top as tablature writes it, or the mirror, the thickest on top as you
+/// see the neck looking down at it while playing. Where strings run side by side instead (the highway's lanes,
+/// the tune check's rail, the player's-view chord neck `PlayerNeck`), the string drawn on top takes the left.
+/// Chord boxes stand upright and keep their own convention (the lowest string on the left). The strum stage
+/// (`StrumSweep`) is the one picture that never flips: it is the instrument's top as you look down at it while
+/// you play, the thickest string on top, so a down strum travels down the screen as its arrows and words say.
 ///
 /// In a view: `@AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab`, then
 /// `stringOrder.row(ofString:count:)` for where string n goes; elsewhere `StringOrder.current`.
@@ -457,42 +459,29 @@ struct ChordDiagram: View {
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(chord.name) chord"))
+        .accessibilityValue(Text(ChordWords.shape(chord)))
         .onAppear { if landStart == nil { startLanding() } }
         .onChange(of: replay) { _, _ in startLanding(delay: 0.05) }
     }
 
-    /// The lowest string's name under the left of the box, string 1's under the right, at `.caption2` (11 pt and
-    /// up). A narrow box (the progression strip's) puts them on two lines rather than shrinking them.
+    /// The lowest string's name under the left of the box, string 1's under the right (`EdgeNamesRow`).
     private func edgeNames(_ edges: StringEdges) -> some View {
-        let low = edges.label(chord.frets.count), high = edges.label(1)
-        return ViewThatFits(in: .horizontal) {
-            HStack(spacing: 4) {
-                low
-                Spacer(minLength: 0)
-                high
-            }
-            VStack(spacing: 1) {
-                HStack(spacing: 0) {
-                    low
-                    Spacer(minLength: 0)
-                }
-                HStack(spacing: 0) {
-                    Spacer(minLength: 0)
-                    high
-                }
-            }
-        }
-        .font(.system(.caption2, design: .rounded).weight(.semibold))
-        .foregroundStyle(Palette.inkSoft)
-        .lineLimit(1)
-        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-        .padding(.horizontal, 2)
-        .padding(.top, -4)
+        EdgeNamesRow(leading: edges.label(chord.frets.count), trailing: edges.label(1))
+            .padding(.top, -4)
+    }
+
+    /// The box's height without its name (the frets and string numbers at a `width` and `stretch`, and the edge
+    /// names under it when `named`): the room a picture that swaps with it (`PlayerNeck`) is given, so the card
+    /// holds still as the learner flips between them.
+    static func boxHeight(_ chord: ChordSpec, width: CGFloat, stretch: CGFloat, named: Bool) -> CGFloat {
+        let grid = width * 5.4 * min(1.5, max(1, stretch)) / CGFloat(max(1, chord.frets.count))
+        return grid + (named ? 22 : 0)
     }
 
     /// One finger laid flat across several strings at one fret (an index-finger barre, or finger 3
-    /// across strings 4, 3 and 2): drawn as one rounded bar instead of a row of separate dots.
-    private struct Barre {
+    /// across strings 4, 3 and 2): drawn as one rounded bar instead of a row of separate dots. The player's view
+    /// (`PlayerNeck`) and the spoken shape (`ChordWords`) read them too.
+    struct Barre {
         let fret: Int
         /// Lowest and highest string index it spans (lowest string first, as `frets`).
         let first: Int
@@ -502,7 +491,7 @@ struct ChordDiagram: View {
 
     /// Barres in the suggested fingering: the same finger on two or more strings at the same fret, with
     /// every string between them fretted at or above it (an open, muted or lower string can't sit under a barre).
-    private var barres: [Barre] {
+    var barres: [Barre] {
         guard let fingers = chord.fingers else { return [] }
         let frets = chord.frets
         var found: [Barre] = []
@@ -671,6 +660,87 @@ struct ChordDiagram: View {
 
 extension Array {
     subscript(safe index: Int) -> Element? { indices.contains(index) ? self[index] : nil }
+}
+
+/// A diagram's outer strings named under it, one at each side ("Thickest (6)" … "Thinnest (1)"), at `.caption2`
+/// (11 pt and up). A narrow diagram (the progression strip's) puts them on two lines rather than shrinking them.
+struct EdgeNamesRow: View {
+    let leading: Text?
+    let trailing: Text?
+
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 4) {
+                leading
+                Spacer(minLength: 0)
+                trailing
+            }
+            VStack(spacing: 1) {
+                HStack(spacing: 0) {
+                    leading
+                    Spacer(minLength: 0)
+                }
+                HStack(spacing: 0) {
+                    Spacer(minLength: 0)
+                    trailing
+                }
+            }
+        }
+        .font(.system(.caption2, design: .rounded).weight(.semibold))
+        .foregroundStyle(Palette.inkSoft)
+        .lineLimit(1)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        .padding(.horizontal, 2)
+    }
+}
+
+/// A chord's shape in words for VoiceOver, said once by whichever picture shows it (the chart or the player's
+/// view): the fingers in the order they go down, then the open and the muted strings ("Finger 2 on string 5,
+/// fret 2; Finger 3 on string 4, fret 2; Strings 6, 3, 2 and 1 open").
+@MainActor
+enum ChordWords {
+    static func shape(_ chord: ChordSpec) -> String {
+        let frets = chord.frets
+        let count = frets.count
+        let barres = ChordDiagram(chord: chord).barres
+        var placed: [(order: Int, words: String)] = []
+        for barre in barres {
+            let strings = (barre.first...barre.last).map { count - $0 }
+            placed.append((order: barre.finger, words: String(localized: "Finger \(barre.finger) across strings \(list(strings)) at fret \(barre.fret)")))
+        }
+        for i in frets.indices where frets[i] > 0 {
+            if barres.contains(where: { $0.fret == frets[i] && $0.first <= i && i <= $0.last }) { continue }
+            let string = count - i
+            let fret = frets[i]
+            if let finger = chord.fingers?[safe: i], finger > 0 {
+                placed.append((order: finger, words: String(localized: "Finger \(finger) on string \(string), fret \(fret)")))
+            } else {
+                placed.append((order: 9, words: String(localized: "String \(string), fret \(fret)")))
+            }
+        }
+        // Finger order, ties as the strings run.
+        let sorted = placed.enumerated().sorted { a, b in
+            a.element.order != b.element.order ? a.element.order < b.element.order : a.offset < b.offset
+        }
+        var parts = sorted.map { $0.element.words }
+        let open = frets.indices.filter { frets[$0] == 0 }.map { count - $0 }
+        let muted = frets.indices.filter { frets[$0] < 0 }.map { count - $0 }
+        if open.count == 1, let only = open.first {
+            parts.append(String(localized: "String \(only) open"))
+        } else if open.count > 1 {
+            parts.append(String(localized: "Strings \(list(open)) open"))
+        }
+        if muted.count == 1, let only = muted.first {
+            parts.append(String(localized: "String \(only) muted"))
+        } else if muted.count > 1 {
+            parts.append(String(localized: "Strings \(list(muted)) muted"))
+        }
+        return parts.joined(separator: "; ")
+    }
+
+    private static func list(_ strings: [Int]) -> String {
+        ListFormatter.localizedString(byJoining: strings.map { "\($0)" })
+    }
 }
 
 /// Five lines with note heads; ledger lines and sharps as needed. Everything scales with `lineGap`.

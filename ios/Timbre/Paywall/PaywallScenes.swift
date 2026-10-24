@@ -18,20 +18,55 @@ enum PaywallTool: Equatable {
     case beat(bpm: Int, beats: Int)
 }
 
-/// The paywall's hero: the instrument with its strings running on as a play-along runway (lessons, songs,
-/// instruments and the plan), or the scene of the tool that opened the paywall.
+/// The paywall's hero: the person's plan (onboarding, and Pro from Settings: their instrument, the sleeve of the first
+/// song the plan reaches and the road there), the instrument with its strings running on as a play-along runway
+/// (lessons, songs, instruments), or the scene of the tool that opened the paywall.
 enum PaywallHero {
+    case plan(PaywallPlanScene)
     case runway(PaywallFigure, lanes: Int)
     case tool(PaywallTool)
 
     /// Below this height the hero steps aside for the Pro pill alone. A tool's scene still reads smaller than the
-    /// runway, which needs the instrument, the lanes, the combo and the pill one above another.
+    /// runway, which needs the instrument, the lanes, the combo and the pill one above another; the plan needs its
+    /// picture, its road and the pill.
     var minHeight: CGFloat {
         switch self {
+        case .plan: return 140
         case .runway: return 98
         case .tool: return 84
         }
     }
+
+    /// Nothing under the close button's corner redraws every frame, so glass there needn't resample each frame: the
+    /// plan's picture (its turning record stands clear of the corner). The runway and the tools draw on a Canvas that
+    /// spans the width.
+    var isStill: Bool {
+        if case .plan = self { return true }
+        return false
+    }
+}
+
+/// What the plan's hero shows, all from the person's plan (`PaywallPlan`): their instrument as the app pictures it,
+/// the sleeve of the first song the plan reaches (as the Songs shelf draws it), and the road to it.
+struct PaywallPlanScene {
+    /// A stop on the road: today, the first song, the next unit.
+    struct Stop: Identifiable {
+        enum Kind { case today, song, unit }
+        let id: String
+        /// 1 is today.
+        let day: Int
+        /// The song's or the unit's name; nil for a bare "Today".
+        let title: String?
+        let kind: Kind
+    }
+
+    /// The studio render (standing upright in a square) or the photograph (already leaning); nil without an instrument.
+    let instrument: (name: String, render: Bool)?
+    let sleeve: CoverArt
+    /// The course's colour, for the light behind the picture.
+    let accent: Color
+    /// In day order, two or three.
+    let stops: [Stop]
 }
 
 // MARK: - The scenes

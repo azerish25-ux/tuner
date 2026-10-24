@@ -9,7 +9,8 @@ import TimbreCore
 /// The Timbre Pro pill stands on the stage floor below. Everything stays inside the runway's width, clear of the
 /// close button. One Canvas on the display clock; with Reduce Motion it holds a single frame mid-song.
 /// A paywall opened from a tool shows that tool's own scene on the same stage instead (`ToolScene`): the Tanpura,
-/// the sniper's scope, the interval staircase or the metronome.
+/// the sniper's scope, the interval staircase or the metronome. The plan's paywall (onboarding, Pro from Settings)
+/// shows the plan itself instead (`PaywallPlanHero`): the instrument, the first song's sleeve and the road there.
 struct PaywallPreview: View {
     let hero: PaywallHero
     let accent: Color
@@ -25,6 +26,7 @@ struct PaywallPreview: View {
     /// Reduce Motion's single frame.
     private var still: Double {
         switch hero {
+        case .plan: return 0
         case .runway: return PaywallScene.still
         case .tool(let tool): return ToolScene.still(tool)
         }
@@ -37,6 +39,15 @@ struct PaywallPreview: View {
     }
 
     var body: some View {
+        if case .plan(let scene) = hero {
+            PaywallPlanHero(scene: scene, height: height)
+        } else {
+            stage
+        }
+    }
+
+    /// The runway or a tool's scene: one Canvas on the display clock, the Pro pill on its floor.
+    private var stage: some View {
         ZStack(alignment: .bottom) {
             TimelineView(.animation(minimumInterval: 1 / 60, paused: reduceMotion)) { timeline in
                 let elapsed = reduceMotion ? still : max(0, timeline.date.timeIntervalSince(start))
@@ -61,6 +72,8 @@ struct PaywallPreview: View {
 
     private func render(_ context: inout GraphicsContext, size: CGSize, elapsed: Double) {
         switch hero {
+        case .plan:
+            break
         case .runway(let figure, let lanes):
             PaywallScene(figure: figure, lanes: max(1, lanes), order: stringOrder, accent: accent, elapsed: elapsed,
                          calm: reduceMotion, pill: pill).draw(&context, size: size)

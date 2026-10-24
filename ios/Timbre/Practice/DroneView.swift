@@ -19,8 +19,9 @@ struct DroneView: View {
     private var fifth: Bool { firstString != "ma" }
     private var saHz: Double { PitchMath.frequency(midi: Double(store.droneMidi), reference: store.settings.referencePitchHz) }
     private var notation: String { store.settings.notation }
-    /// The app's one spelling (D♭ E♭ A♭ B♭ flat, F♯ sharp) in the player's note names.
-    private var tonicName: String { VoiceNoteName.name(store.droneMidi, notation: notation) }
+    /// The app's one spelling (D♭ E♭ A♭ B♭ flat, F♯ sharp) in the player's note names, with its signs ("E♭3", which
+    /// VoiceOver reads "E flat 3").
+    private var tonicName: String { NoteNames.glyphs(VoiceNoteName.name(store.droneMidi, notation: notation)) }
 
     var body: some View {
         ScrollView {

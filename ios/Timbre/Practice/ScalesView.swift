@@ -27,6 +27,8 @@ struct ScaleLibraryView: View {
     /// Counts finished runs: the seal bounces.
     @State private var cheers = 0
     @State private var owner = UUID()
+    /// The title's size as Dynamic Type grows it, for its ♯ and ♭ (set in the system face beside Sora).
+    @ScaledMetric(relativeTo: .largeTitle) private var titleSize: CGFloat = 36
 
     /// One sequence note and the gap after it, as `AudioService.playTones` plays them.
     private static let noteMs = 380
@@ -42,7 +44,7 @@ struct ScaleLibraryView: View {
                 }
                 scaleRail
                 VStack(alignment: .leading, spacing: 12) {
-                    Text(sheet.title).font(Typeface.display(36)).foregroundStyle(Palette.ink)
+                    NoteGlyphs.text(sheet.title, size: titleSize).font(Typeface.display(36)).foregroundStyle(Palette.ink)
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                     ToneStrip(tones: sheet.tones)

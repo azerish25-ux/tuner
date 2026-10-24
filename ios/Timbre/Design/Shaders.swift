@@ -1,7 +1,7 @@
 import SwiftUI
 
-// Timbre's signature Metal effects (Design/Shaders.metal): the lock shimmer over the tuner's stage, the ripple on the
-// chromatic strobe and the heat glow on reward stars. Each one decorates a view that already says everything on its
+// Timbre's signature Metal effects (Design/Shaders.metal): the lock shimmer over the tuner's stage, the lamp and the
+// lock's ring of light on the chromatic strobe and the heat glow on reward stars. Each one decorates a view that already says everything on its
 // own, runs only for its moment (no idle frames) and steps aside under Reduce Motion and in Low Power Mode.
 
 enum ShaderFX {
@@ -87,6 +87,24 @@ extension View {
                                                      .float(shock ?? StrobeRipple.shock), .color(tint)),
                     maxSampleOffset: CGSize(width: 12, height: 12),
                     isEnabled: enabled && (depth > 0.02 || shock != nil))
+    }
+}
+
+enum StrobeLamp {
+    /// The widest smear, in radians: a disc racing 50 cents off blurs its finest band through, as a real one does.
+    static let maxSpin = 0.12
+}
+
+extension View {
+    /// The chromatic strobe disc's lamp (`timbreStrobeLamp`): light blooming through the lit slots (`glow`, 0…1) and,
+    /// while the disc turns, its slots smeared along their circles by `spin` radians (the disc's turn in a glance).
+    /// Off when `enabled` is false and whenever there is nothing to show (unlit and still), so the disc reads the
+    /// same without it (Reduce Motion, Low Power Mode), only flatter.
+    func strobeLamp(spin: Double, glow: Double, enabled: Bool) -> some View {
+        let smear = min(StrobeLamp.maxSpin, abs(spin))
+        return layerEffect(ShaderLibrary.timbreStrobeLamp(.boundingRect, .float(smear), .float(glow)),
+                           maxSampleOffset: CGSize(width: 14, height: 14),
+                           isEnabled: enabled && (glow > 0.01 || smear > 0.002))
     }
 }
 

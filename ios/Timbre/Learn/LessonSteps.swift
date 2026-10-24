@@ -385,6 +385,8 @@ struct ChordStep: View {
     /// The hand-over to the next step, a beat after the chord rings; it ends with the step.
     @State private var finishTask: Task<Void, Never>?
     @Environment(\.scenePhase) private var scenePhase
+    /// The chord chart or the player's view (the switch on the card; remembered).
+    @AppStorage(ChordPicture.storageKey) private var chordView: ChordPicture = .player
     private let order: [(index: Int, midi: Int)]
 
     init(chord: ChordSpec, course: LearnCourse, accent: Color,
@@ -422,15 +424,19 @@ struct ChordStep: View {
                 Text("Fingers in place, then let it ring.").font(.subheadline).foregroundStyle(Palette.inkFaint)
             }
             .padding(.top, 12)
-            // The string checks over the box and the box itself, filling the room between the words and the bar.
+            // The string checks over the chart (under the player's view, where its lanes are widest, as the runway's
+            // targets) and the chord itself, filling the room between the words and the bar.
             GeometryReader { geometry in
                 let fit = diagramFit(geometry.size)
+                let player = chordView == .player
                 VStack(spacing: 14) {
-                    stringChecks(width: fit.width)
-                    diagramCard(fit)
+                    if !player { stringChecks(width: fit.width, player: false) }
+                    diagramCard(fit, player: player)
+                    if player { stringChecks(width: fit.width, player: true) }
                     hearingPill
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .animation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle, value: player)
             }
             MicrophoneHint()
             // Once every string rings, the step is done: no way round it is offered any more.
@@ -452,8 +458,24 @@ struct ChordStep: View {
     /// The strings to light on the box: the ones heard, and the one "Hear it" is sounding.
     private var ringing: Set<Int> { demoString.map { verified.union([$0]) } ?? verified }
 
-    private func diagramCard(_ fit: (width: CGFloat, stretch: CGFloat)) -> some View {
-        ChordDiagram(chord: chord, accent: accent, ringing: ringing, landing: true, edges: StringEdges.of(course), fretNumbers: true, stretch: fit.stretch)
+    /// The chord's name with the chart / player's-view switch, over the chart or the neck in the same room (the card
+    /// holds still as they flip); either lights the strings heard, and the neck shimmers each as it starts to ring.
+    private func diagramCard(_ fit: (width: CGFloat, stretch: CGFloat), player: Bool) -> some View {
+        let edges = StringEdges.of(course)
+        return VStack(spacing: 8) {
+            ChordCardHeader(name: chord.name, accent: accent)
+            ZStack {
+                if player {
+                    PlayerNeck(chord: chord, accent: accent, ringing: ringing, edges: edges)
+                        .transition(ChordFlip.transition(toPlayer: true, reduceMotion: reduceMotion))
+                } else {
+                    ChordDiagram(chord: chord, accent: accent, showName: false, ringing: ringing, landing: true, edges: edges,
+                                 fretNumbers: true, stretch: fit.stretch)
+                        .transition(ChordFlip.transition(toPlayer: false, reduceMotion: reduceMotion))
+                }
+            }
+            .frame(width: fit.width, height: ChordDiagram.boxHeight(chord, width: fit.width, stretch: fit.stretch, named: edges != nil))
+        }
             .frame(width: fit.width)
             .padding(22)
             .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Palette.stageRaised))

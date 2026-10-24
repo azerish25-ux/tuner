@@ -44,7 +44,7 @@ struct PracticeView: View {
             GeometryReader { proxy in
                 let columns = CardColumns(width: proxy.size.width - 2 * Metrics.gutter)
                 scroller {
-                    if columns.count > 1 { wideHub(columns) } else { compactHub }
+                    if columns.count > 1 { wideHub(columns, height: proxy.size.height) } else { compactHub }
                 }
             }
         } else {
@@ -85,30 +85,94 @@ struct PracticeView: View {
         }
     }
 
-    /// iPad: Today beside your level and quests, then the ear games side by side. Three columns put the tools in
-    /// the third column beside the games; two columns give the tools a row of their own.
-    private func wideHub(_ columns: CardColumns) -> some View {
-        let wide = columns.count >= 3
-        let sideQuests = self.sideQuests
+    /// iPad: a dashboard. Landscape (three columns): Today, your level and the day's quests share the top row at one
+    /// height; under them the ear games stand as tall tiles side by side, the tools beside them as a grid of the same
+    /// height. Portrait (two columns): Today beside the level, the quests two by two, the games side by side, then the
+    /// tools as a grid of large tiles. The games' previews grow with the window's height (`gameStage`), so the hub
+    /// reaches the fold instead of stopping halfway down it.
+    private func wideHub(_ columns: CardColumns, height: CGFloat) -> some View {
+        let three = columns.count >= 3
+        let quests = sideQuests
+        let stage = gameStage(three: three, quests: quests.count, height: height)
         return VStack(alignment: .leading, spacing: 26) {
             header
-            HStack(alignment: .top, spacing: CardColumns.spacing) {
-                DailySetCard { open($0) }
-                    .frame(width: columns.span(wide ? 2 : 1))
-                VStack(alignment: .leading, spacing: 22) {
-                    levelCard
-                    if !sideQuests.isEmpty { questSection(sideQuests) }
-                }
-                .frame(width: columns.unit)
-            }
-            if wide {
+            if three {
                 HStack(alignment: .top, spacing: CardColumns.spacing) {
-                    gamesRow(width: columns.span(2))
-                    toolsSection.frame(width: columns.unit)
+                    DailySetCard { open($0) }
+                        .frame(width: columns.unit)
+                    levelTile
+                        .frame(width: quests.isEmpty ? columns.span(2) : columns.unit)
+                    if !quests.isEmpty {
+                        questSection(quests)
+                            .frame(width: columns.unit)
+                            .frame(maxHeight: .infinity, alignment: .top)
+                    }
                 }
+                .fixedSize(horizontal: false, vertical: true)
+                HStack(alignment: .top, spacing: CardColumns.spacing) {
+                    gamesRow(width: columns.span(2), stage: stage)
+                    toolsPanel(columns: fretted ? 2 : 1, tileHeight: 92)
+                        .frame(width: columns.unit)
+                }
+                .fixedSize(horizontal: false, vertical: true)
             } else {
-                gamesRow(width: columns.span(2))
-                toolsRow
+                HStack(alignment: .top, spacing: CardColumns.spacing) {
+                    DailySetCard { open($0) }
+                        .frame(width: columns.unit)
+                    levelTile
+                        .frame(width: columns.unit)
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                if !quests.isEmpty { questGrid(quests) }
+                gamesRow(width: columns.span(2), stage: stage)
+                toolsPanel(columns: 3, tileHeight: 116)
+            }
+        }
+    }
+
+    /// The ear games' preview height on iPad: what the window has left under the rest of the hub (its header, Today's
+    /// row, the section titles, the cards' words; in portrait the quests and the tools too), so the hub ends near the
+    /// fold. Never under 180 points (the window scrolls a little instead) nor over 300.
+    private func gameStage(three: Bool, quests: Int, height: CGFloat) -> CGFloat {
+        let questRows = quests == 0 ? 0 : (quests + 1) / 2
+        let rest: CGFloat = three ? 520 : 800 + (questRows == 0 ? 0 : 50 + 74 * CGFloat(questRows))
+        return min(300, max(180, height - rest))
+    }
+
+    /// iPad: the level as a tile as tall as Today beside it: the ring large, the level's name, how far to the next
+    /// one, and the bar along its foot.
+    private var levelTile: some View {
+        let xp = store.progress.xp
+        let level = store.level
+        let next = Progression.level(for: level.next)
+        return VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .center, spacing: 16) {
+                LevelRing(size: 92)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(LocalizedStringKey(level.name)).font(Typeface.display(22)).foregroundStyle(Palette.ink)
+                        .lineLimit(2).minimumScaleFactor(0.8)
+                    Text("\(xp - level.floor) / \(level.next - level.floor) XP · next: \(Text(LocalizedStringKey(next.name)))")
+                        .font(.subheadline).foregroundStyle(Palette.inkSoft)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            Spacer(minLength: 0)
+            ProgressLine(value: level.progress(xp), height: 8)
+        }
+        .frame(maxHeight: .infinity, alignment: .topLeading)
+        .stillCard(cornerRadius: 24, padding: 18, tint: Palette.mint)
+        .accessibilityElement(children: .combine)
+    }
+
+    /// iPad, two columns: the day's quests two by two (a last one alone takes the width).
+    private func questGrid(_ quests: [Quest]) -> some View {
+        let pairs = stride(from: 0, to: quests.count, by: 2).map { Array(quests[$0..<min($0 + 2, quests.count)]) }
+        return VStack(alignment: .leading, spacing: 10) {
+            questHeader
+            ForEach(pairs.indices, id: \.self) { index in
+                HStack(alignment: .top, spacing: CardColumns.spacing) {
+                    ForEach(pairs[index]) { quest in questButton(quest) }
+                }
             }
         }
     }
@@ -140,19 +204,27 @@ struct PracticeView: View {
     /// The daily quests Today doesn't cover; the rest ride on Today's rows as XP side goals.
     private func questSection(_ quests: [Quest]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("Today’s quests").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
-                Spacer()
-                Text("resets in \(hoursToMidnight) h").font(.caption).foregroundStyle(Palette.inkSoft)
-            }
-            ForEach(quests) { quest in
-                // The one saved counter (AppStore.questCounter): tuning counts today's strings, like the tuner's quest line.
-                let count = store.questCounter(quest)
-                Button { open(quest) } label: { HubQuestRow(quest: quest, done: count.done, total: count.total, claimed: store.questProgress(quest) >= quest.target) }
-                    .buttonStyle(PressScaleStyle())
-                    .accessibilityIdentifier("quest.\(quest.id)")
-            }
+            questHeader
+            ForEach(quests) { quest in questButton(quest) }
         }
+    }
+
+    private var questHeader: some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text("Today’s quests").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+            Spacer()
+            Text("resets in \(hoursToMidnight) h").font(.caption).foregroundStyle(Palette.inkSoft)
+        }
+    }
+
+    private func questButton(_ quest: Quest) -> some View {
+        // The one saved counter (AppStore.questCounter): tuning counts today's strings, like the tuner's quest line.
+        let count = store.questCounter(quest)
+        return Button { open(quest) } label: {
+            HubQuestRow(quest: quest, done: count.done, total: count.total, claimed: store.questProgress(quest) >= quest.target)
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityIdentifier("quest.\(quest.id)")
     }
 
     private var hoursToMidnight: Int {
@@ -175,19 +247,21 @@ struct PracticeView: View {
     private var gamesSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             sectionTitle("Ear games")
-            sniperCard
-            earCard
+            sniperCard()
+            earCard()
         }
     }
 
-    /// iPad: the two ear games side by side, `width` across.
-    private func gamesRow(width: CGFloat) -> some View {
+    /// iPad: the two ear games side by side as tall tiles, `width` across, each game idling `stage` points tall across
+    /// the top of its card; the two cards share one height.
+    private func gamesRow(width: CGFloat, stage: CGFloat) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             sectionTitle("Ear games")
             HStack(alignment: .top, spacing: CardColumns.spacing) {
-                sniperCard
-                earCard
+                sniperCard(stage: stage)
+                earCard(stage: stage)
             }
+            .fixedSize(horizontal: false, vertical: true)
         }
         .frame(width: width)
     }
@@ -196,21 +270,22 @@ struct PracticeView: View {
         Text(title).font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
     }
 
-    private var sniperCard: some View {
+    /// `stage`: the tall iPad card's preview height; nil for the phone's card.
+    private func sniperCard(stage: CGFloat? = nil) -> some View {
         let stats = store.progress.stats
         let best = stats["sniperBest"] ?? 0
         let sniperLevel = SniperRank.level(bullseyes: stats["bullseyes"] ?? 0)
         let sniperStats = statsLine(best > 0 ? Text("Best \(best)") : nil, level: sniperLevel)
-        return gameCard(.sniper, title: "Pitch Sniper", stats: sniperStats, challenge: .sniper(store), tint: Palette.mint) { live in
+        return gameCard(.sniper, title: "Pitch Sniper", stats: sniperStats, challenge: .sniper(store), tint: Palette.mint, stage: stage) { live in
             SniperScopePreview(live: live)
         }
     }
 
-    private var earCard: some View {
+    private func earCard(stage: CGFloat? = nil) -> some View {
         let earLevel = (EarDrill.allCases.map { store.settings.earLevels?[$0.rawValue] ?? 0 }.max() ?? 0) + 1
         let correct = store.progress.stats["earCorrect"] ?? 0
         let earStats = statsLine(Text("\(correct) correct"), level: earLevel)
-        return gameCard(.ear, title: "Ear trainer", stats: earStats, challenge: .ear(store), tint: Palette.amber) { live in
+        return gameCard(.ear, title: "Ear trainer", stats: earStats, challenge: .ear(store), tint: Palette.amber, stage: stage) { live in
             IntervalStairsPreview(live: live)
         }
     }
@@ -223,9 +298,9 @@ struct PracticeView: View {
     }
 
     private func gameCard<Preview: View>(_ route: PracticeRoute, title: LocalizedStringKey, stats: Text, challenge: GameChallenge, tint: Color,
-                                         @ViewBuilder preview: @escaping (Bool) -> Preview) -> some View {
+                                         stage: CGFloat?, @ViewBuilder preview: @escaping (Bool) -> Preview) -> some View {
         Button { path.append(route) } label: {
-            PlayGameCard(title: title, stats: stats, challenge: challenge, tint: tint, preview: preview)
+            PlayGameCard(title: title, stats: stats, challenge: challenge, tint: tint, heroHeight: stage, preview: preview)
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityIdentifier("practice.\(route)")
@@ -245,15 +320,75 @@ struct PracticeView: View {
         }
     }
 
-    /// iPad, two columns: every tool in one row across the width.
-    private var toolsRow: some View {
-        VStack(alignment: .leading, spacing: 10) {
+    /// iPad: the tools as large tiles, `columns` to a row, at least `tileHeight` tall and taller when the panel is given
+    /// more (beside the games in landscape, the rows share the games' height). Built eagerly, like the phone's rows.
+    private func toolsPanel(columns: Int, tileHeight: CGFloat) -> some View {
+        let all = tools
+        let count = max(1, columns)
+        let rows = stride(from: 0, to: all.count, by: count).map { Array(all[$0..<min($0 + count, all.count)]) }
+        return VStack(alignment: .leading, spacing: 10) {
             sectionTitle("Tools")
-            HStack(spacing: 10) {
-                firstTools
-                if fretted { frettedTools }
+            VStack(spacing: 10) {
+                ForEach(rows.indices, id: \.self) { index in
+                    HStack(spacing: 10) {
+                        ForEach(rows[index]) { tool in toolTile(tool, minHeight: tileHeight) }
+                        // A short last row keeps the columns' width.
+                        ForEach(rows[index].count..<count, id: \.self) { _ in
+                            Color.clear.frame(maxWidth: .infinity)
+                        }
+                    }
+                }
             }
         }
+        .frame(maxHeight: .infinity, alignment: .top)
+    }
+
+    /// One of the Play hub's tools, as the iPad grid shows it.
+    private struct Tool: Identifiable {
+        let route: PracticeRoute
+        let symbol: String
+        let title: LocalizedStringKey
+        let pro: Bool
+        var id: PracticeRoute { route }
+    }
+
+    /// The same tools as the phone's rows, in the same order (the fretted ones only on a fretted instrument).
+    private var tools: [Tool] {
+        var list = [Tool(route: .metronome, symbol: "metronome", title: "Metronome", pro: false),
+                    Tool(route: .drone, symbol: "waveform.path", title: "Drone", pro: true),
+                    Tool(route: .voice, symbol: "music.mic", title: "Voice", pro: false)]
+        if fretted {
+            list += [Tool(route: .chords, symbol: "hand.raised.fingers.spread", title: "Chords", pro: true),
+                     Tool(route: .scales, symbol: "point.3.connected.trianglepath.dotted", title: "Scales", pro: true),
+                     Tool(route: .intonation, symbol: "ruler", title: "Intonation", pro: true)]
+        }
+        return list
+    }
+
+    /// A large tool tile: the live glyph in its well at the top, the name at the foot, PRO in the corner on a free plan.
+    private func toolTile(_ tool: Tool, minHeight: CGFloat) -> some View {
+        let locked = tool.pro && !commerce.isPro
+        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
+        return Button {
+            if locked { store.presentPaywall("practice.\(tool.route)") } else { path.append(tool.route) }
+        } label: {
+            VStack(alignment: .leading, spacing: 10) {
+                PlayToolGlyph(route: tool.route, symbol: tool.symbol)
+                    .frame(width: 44, height: 44)
+                    .background(RoundedRectangle(cornerRadius: 13, style: .continuous).fill(.white.opacity(0.06)))
+                Spacer(minLength: 0)
+                Text(tool.title).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                    .lineLimit(1).minimumScaleFactor(0.8)
+            }
+            .padding(14)
+            .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: .infinity, alignment: .topLeading)
+            .background(shape.fill(Palette.stageRaised))
+            .overlay(shape.strokeBorder(.white.opacity(0.06), lineWidth: 1))
+            .overlay(alignment: .topTrailing) { if locked { ProBadge().padding(10) } }
+            .contentShape(shape)
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityIdentifier("practice.\(tool.route)")
     }
 
     @ViewBuilder private var firstTools: some View {

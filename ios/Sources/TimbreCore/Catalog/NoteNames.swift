@@ -6,6 +6,7 @@ import Foundation
 /// German, Czech, Slovak, Polish, Hungarian and the Nordic languages), "solfege" (Do Re Mi), "sargam" (Sa Re Ga)
 /// and "numbered" (1 2 3).
 public enum NoteNames {
+    /// Spellings as data, in ASCII ("C#", "Bb"): parsed, stored and compared. On screen they go through `glyphs`.
     public static let sharps = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
     public static let flats = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
     /// Every system the Note names setting offers, in menu order.
@@ -81,5 +82,88 @@ public enum NoteNames {
     /// The system chord symbols use under `system`: sargam and numbers fall back to letters.
     static func chordSystem(_ system: String) -> String {
         system == "german" || system == "solfege" ? system : "english"
+    }
+
+    // MARK: - On screen
+
+    /// The signs a note is shown with.
+    public static let sharpSign: Character = "♯"
+    public static let flatSign: Character = "♭"
+
+    /// What a written accidental can follow: solfège and sargam syllables (longest first, so "Dha#" is not read as
+    /// "D"), the letters with German H, and the numbered system's degrees.
+    private static let stems = ["Sol", "Dha", "Do", "Re", "Mi", "Fa", "La", "Si", "Sa", "Ga", "Ma", "Pa", "Ni",
+                                "A", "B", "C", "D", "E", "F", "G", "H", "1", "2", "3", "4", "5", "6", "7"]
+    /// What may follow a letter's accidental inside one chord symbol ("Ebmaj7", "F#m", "Bbsus4", "Abdim", "EbM7").
+    private static let chordSuffixes = ["m", "M", "dim", "aug", "sus", "add"]
+
+    /// The one way notes are written on screen and read to VoiceOver ("E flat"): ASCII accidentals in note names
+    /// become signs. "Bb3" → "B♭3", "F#m7" → "F♯m7", "D/F#" → "D/F♯", "Sib" → "Si♭", "Dha#" → "Dha♯", "1#4" → "1♯4",
+    /// "Eb standard" → "E♭ standard", "Key of Bb" → "Key of B♭", "Ebスタンダード" → "E♭スタンダード". A # or b counts only
+    /// right after a note that starts a word, and only where the word ends there (or a chord's suffix follows), so
+    /// other words ("Abend", "Bass", "Tonart Es"), German letters ("B", "H") and interval names ("b3") stay as they
+    /// are. Names, chord symbols and labels stay ASCII as data; this is for text that names notes, not prose.
+    public static func glyphs(_ text: String) -> String {
+        guard text.contains(where: { $0 == "#" || $0 == "b" }) else { return text }
+        let characters = Array(text)
+        var result = ""
+        result.reserveCapacity(text.utf8.count)
+        var index = 0
+        while index < characters.count {
+            if let note = signedNote(characters, at: index) {
+                result += note.text
+                index = note.end
+            } else {
+                result.append(characters[index])
+                index += 1
+            }
+        }
+        return result
+    }
+
+    /// The note starting a word at `start` with its accidentals as signs, and where it ends; nil when there is no
+    /// note there or it carries no accidental.
+    private static func signedNote(_ characters: [Character], at start: Int) -> (text: String, end: Int)? {
+        if start > 0 && isWordCharacter(characters[start - 1]) { return nil }
+        for stem in stems where matches(stem, in: characters, at: start) {
+            var end = start + stem.count
+            var signs = ""
+            while end < characters.count, let sign = sign(characters[end]) {
+                signs.append(sign)
+                end += 1
+            }
+            guard !signs.isEmpty, endsNote(characters, at: end, letter: stem.count == 1 && stem.first?.isLetter == true) else { return nil }
+            return (stem + signs, end)
+        }
+        return nil
+    }
+
+    private static func matches(_ stem: String, in characters: [Character], at start: Int) -> Bool {
+        guard start + stem.count <= characters.count else { return false }
+        return zip(stem, characters[start...]).allSatisfy { $0 == $1 }
+    }
+
+    private static func sign(_ character: Character) -> Character? {
+        switch character {
+        case "#", sharpSign: return sharpSign
+        case "b", flatSign: return flatSign
+        default: return nil
+        }
+    }
+
+    /// Whether the note's accidentals end the word at `index`: the text ends, or what follows is not a Latin letter
+    /// (an octave, a space, "/", "-", "(", a Japanese or Korean word), or a letter's chord suffix follows.
+    private static func endsNote(_ characters: [Character], at index: Int, letter: Bool) -> Bool {
+        guard index < characters.count, isLatinLetter(characters[index]) else { return true }
+        guard letter else { return false }
+        let rest = String(characters[index...])
+        return chordSuffixes.contains { rest.hasPrefix($0) }
+    }
+
+    private static func isWordCharacter(_ character: Character) -> Bool { character.isLetter || character.isNumber }
+
+    private static func isLatinLetter(_ character: Character) -> Bool {
+        guard character.isLetter, let scalar = character.unicodeScalars.first else { return false }
+        return scalar.value < 0x0250
     }
 }

@@ -209,14 +209,19 @@ struct TuneView: View {
     /// Nothing drives the stage (not listening, no reading held): its animations settle, then stop redrawing.
     private var resting: Bool { !audio.running && !store.live.preserved }
 
-    /// - Parameter controls: the side controls stand on the stage's trailing edge (in the iPad's landscape columns
-    ///   they have a rail of their own instead).
+    /// - Parameter controls: Strum and listening stand on the stage's trailing edge (in the iPad's landscape columns
+    ///   they have a rail of their own instead). The bar under the stage stands on it in every arrangement.
     @ViewBuilder private func stage(controls: Bool) -> some View {
         let resting = self.resting
         ZStack(alignment: .top) {
             if store.referenceMode {
-                // The note name lives in the readout below; the strobe ring stays clear of the side buttons.
-                ChromaticStage(input: stageInput, note: "", resting: resting).padding(.vertical, 20).padding(.horizontal, 64)
+                // The note name lives in the readout below; the strobe dial stays clear of the side controls. A tap on
+                // its note wheel holds that note (Manual).
+                let settings = store.settings
+                ChromaticStage(input: stageInput, midi: store.activeMidi + settings.transposition - settings.capo,
+                               notation: settings.notation, resting: resting,
+                               onPick: { store.chooseReferenceNote($0 - settings.transposition + settings.capo) })
+                    .padding(.top, 8).padding(.bottom, 4).padding(.horizontal, controls ? 64 : 20)
             } else if let modelID = store.modelID {
                 let rig = ModelLibrary.rig(modelID)
                 if Self.supports3D && store.settings.stageMode != "studio" && failed3D != modelID {
@@ -250,9 +255,9 @@ struct TuneView: View {
                             onSelect: { selectPeg($0) }, resting: resting).padding(28)
             }
         }
-        .overlay(alignment: .trailing) {
-            if controls { sideControls.padding(.trailing, 14) }
-        }
+        // The bar under the stage has a strip of its own, so it never covers the nut and strings the lock runs down.
+        .padding(.bottom, Self.stageBarClearance)
+        .overlay { stageControls(rail: controls) }
         // A container element keeps its children's own identifiers (stage.debug).
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("tune.stage")
@@ -377,18 +382,38 @@ struct TuneView: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// Hear the target, automatic string detection and listening, stacked beside the instrument.
+    /// Strum to tune and listening, stacked beside the instrument (in the iPad's landscape columns, on their own rail).
     private var sideControls: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 14) {
             StrumToggle { strumOpen = true }.strumTuneTip()  // TipKit coach mark, Tips/TimbreTips.swift
-            StageControl(symbol: audio.tonePlaying ? "speaker.slash.fill" : "speaker.wave.2.fill", active: audio.tonePlaying) { store.toggleTone() }
-                .accessibilityLabel(Text(audio.tonePlaying ? "Stop reference tone" : "Play reference tone"))
-                .accessibilityIdentifier("tune.tone")
-            StageControl(symbol: store.automatic ? "wand.and.stars" : "hand.tap", active: store.automatic) { store.automatic.toggle(); Haptics.shared.selection() }
-                .accessibilityLabel(Text(store.automatic ? "Automatic string detection on" : "Manual string selection"))
-                .accessibilityIdentifier("tune.auto")
             ListenOrb()
         }
+    }
+
+    /// The strip under the stage that the bar stands in: the bar (44), a gap above it and its margin below.
+    static let stageBarClearance: CGFloat = 54
+
+    /// The controls standing on the stage: the bar in its strip under it (AUTO | MANUAL and the reference tone) and,
+    /// when `rail`, Strum and listening on the stage's trailing edge, centred in the height above the bar.
+    private func stageControls(rail: Bool) -> some View {
+        VStack(spacing: 4) {
+            if rail {
+                sideControls
+                    .padding(.trailing, 14)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+            } else {
+                Spacer(minLength: 0)
+            }
+            stageBar.padding(.horizontal, 12).padding(.bottom, 6)
+        }
+    }
+
+    /// AUTO | MANUAL and the reference tone, on glass under the stage (TunerControls.swift).
+    private var stageBar: some View {
+        TunerStageBar(automatic: store.automatic, chromatic: store.referenceMode, listening: audio.running,
+                      tonePlaying: audio.tonePlaying,
+                      setAutomatic: { store.automatic = $0 },
+                      toggleTone: { store.toggleTone() })
     }
 }
 

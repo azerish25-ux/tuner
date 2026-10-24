@@ -225,8 +225,8 @@ struct StrobeReading {
 /// The slotted disc, turning (`ChromaticStage`). Sizes are fractions of the dial's radius.
 enum StrobeDisc {
     /// Outside in: each band's radius and its lit slots round the disc, half as many as the band outside it.
-    static let bands: [(radius: CGFloat, slots: Int)] = [(0.545, 96), (0.458, 48), (0.371, 24), (0.284, 12)]
-    static let bandWidth: CGFloat = 0.072
+    static let bands: [(radius: CGFloat, slots: Int)] = [(0.548, 96), (0.455, 48), (0.362, 24), (0.269, 12)]
+    static let bandWidth: CGFloat = 0.066
     /// The disc's well, which the bands sit in.
     static let well: CGFloat = 0.61
     /// The disc turns a twelfth for each cycle of the strobe phase: a whole number of slots in every band, so a phase
@@ -253,11 +253,11 @@ enum StrobeDisc {
 
     private static func drawBand(index: Int, radius r: CGFloat, slots: Int, width: CGFloat, center: CGPoint,
                                  reading: StrobeReading, in context: inout GraphicsContext) {
-        let fade = 1 - 0.08 * Double(index)
+        let fade = 1 - 0.1 * Double(index)
         if reading.lit {
             // The lamp's light along the band's track, glimpsed between the slots.
             let track = Path(ellipseIn: CGRect(x: center.x - r, y: center.y - r, width: r * 2, height: r * 2))
-            context.stroke(track, with: .color(reading.tone.opacity((0.07 + 0.05 * reading.lamp) * fade)), lineWidth: width)
+            context.stroke(track, with: .color(reading.tone.opacity((0.04 + 0.03 * reading.lamp) * fade)), lineWidth: width)
         }
         // Lit slots and dark bars of equal width, every slot an arc stroked across the band with square ends, so its
         // edges run straight out from the centre.
@@ -271,7 +271,7 @@ enum StrobeDisc {
         }
         let ink: Color
         if reading.lit {
-            ink = reading.tone.opacity((reading.locked ? 0.95 : 0.58 + 0.32 * reading.lamp) * fade)
+            ink = reading.tone.opacity((reading.locked ? 0.95 : 0.5 + 0.3 * reading.lamp) * fade)
         } else {
             ink = Palette.inkFaint.opacity(0.17 * fade)
         }
@@ -317,14 +317,18 @@ enum StrobeNeedle {
         var line = Path()
         line.move(to: point(a, radius * inner, from: center))
         line.addLine(to: tip)
+        // Weights grow with the dial (an iPad's is twice a phone's).
+        let core = max(2.5, radius * 0.017)
         if reading.heard {
-            context.stroke(line, with: .color(reading.tone.opacity(0.26)), style: StrokeStyle(lineWidth: 9, lineCap: .round))
-            context.fill(Path(ellipseIn: CGRect(x: tip.x - 14, y: tip.y - 14, width: 28, height: 28)),
-                         with: .radialGradient(Gradient(colors: [reading.tone.opacity(0.55), .clear]), center: tip, startRadius: 0, endRadius: 14))
+            let halo = max(14, radius * 0.1)
+            context.stroke(line, with: .color(reading.tone.opacity(0.26)), style: StrokeStyle(lineWidth: core * 3.5, lineCap: .round))
+            context.fill(Path(ellipseIn: CGRect(x: tip.x - halo, y: tip.y - halo, width: halo * 2, height: halo * 2)),
+                         with: .radialGradient(Gradient(colors: [reading.tone.opacity(0.55), .clear]), center: tip, startRadius: 0, endRadius: halo))
         }
         let ink: Color = reading.heard ? reading.tone : Palette.inkFaint.opacity(0.55)
-        context.stroke(line, with: .color(ink), style: StrokeStyle(lineWidth: 2.6, lineCap: .round))
-        context.fill(Path(ellipseIn: CGRect(x: tip.x - 3, y: tip.y - 3, width: 6, height: 6)), with: .color(ink))
+        context.stroke(line, with: .color(ink), style: StrokeStyle(lineWidth: core, lineCap: .round))
+        let dot = core * 1.2
+        context.fill(Path(ellipseIn: CGRect(x: tip.x - dot, y: tip.y - dot, width: dot * 2, height: dot * 2)), with: .color(ink))
     }
 
     private static func drawHub(_ reading: StrobeReading, center: CGPoint, radius: CGFloat, in context: inout GraphicsContext) {
@@ -334,8 +338,8 @@ enum StrobeNeedle {
         let light = CGPoint(x: center.x - r * 0.35, y: center.y - r * 0.45)
         context.fill(cap, with: .radialGradient(metal, center: light, startRadius: 0, endRadius: r * 1.5))
         context.stroke(cap, with: .color(.white.opacity(0.13)), lineWidth: 1)
-        let inner = r * 0.68
-        context.stroke(Path(ellipseIn: CGRect(x: center.x - inner, y: center.y - inner, width: inner * 2, height: inner * 2)),
+        let ring = r * 0.68
+        context.stroke(Path(ellipseIn: CGRect(x: center.x - ring, y: center.y - ring, width: ring * 2, height: ring * 2)),
                        with: .color(.white.opacity(0.05)), lineWidth: 1)
         // The lamp's pilot light: the pitch's colour while heard, glowing on the lock.
         if reading.lit {
@@ -392,11 +396,15 @@ struct StrobeDialFace: View {
 
     private func drawScale(center: CGPoint, radius: CGFloat, in context: inout GraphicsContext) {
         let tick = strong ? Palette.inkSoft : Palette.inkFaint
+        // Hairlines grow with the dial (an iPad's is twice a phone's).
+        let hair = max(1, radius * 0.007)
         // Round the bottom, where the arc doesn't reach: a fine dotted track.
-        for degrees in stride(from: 76.0, through: 284.0, by: 6.0) {
-            let a = (degrees - 90) * Double.pi / 180 + Double.pi
+        for bearing in stride(from: 76.0, through: 284.0, by: 6.0) {
+            // Clockwise from the top, as a canvas angle (from three o'clock).
+            let a = (bearing - 90) * Double.pi / 180
             let p = StrobeNeedle.point(a, radius * 0.7, from: center)
-            context.fill(Path(ellipseIn: CGRect(x: p.x - 0.7, y: p.y - 0.7, width: 1.4, height: 1.4)), with: .color(tick.opacity(0.35)))
+            let dot = hair * 0.7
+            context.fill(Path(ellipseIn: CGRect(x: p.x - dot, y: p.y - dot, width: dot * 2, height: dot * 2)), with: .color(tick.opacity(0.35)))
         }
         // The colour rule along the arc, hard-edged where it changes.
         let near = Palette.nearCents
@@ -408,7 +416,7 @@ struct StrobeDialFace: View {
             var arc = Path()
             arc.addArc(center: center, radius: radius * 0.64, startAngle: .radians(StrobeNeedle.angle(cents: span.from)),
                        endAngle: .radians(StrobeNeedle.angle(cents: span.to)), clockwise: false)
-            context.stroke(arc, with: .color(span.color), style: StrokeStyle(lineWidth: 2.5, lineCap: .butt))
+            context.stroke(arc, with: .color(span.color), style: StrokeStyle(lineWidth: hair * 2.5, lineCap: .butt))
         }
         // The lock zone: exactly the band the tracker locks in.
         var lock = Path()
@@ -420,7 +428,7 @@ struct StrobeDialFace: View {
             var line = Path()
             line.move(to: StrobeNeedle.point(a, radius * 0.645, from: center))
             line.addLine(to: StrobeNeedle.point(a, radius * 0.755, from: center))
-            context.stroke(line, with: .color(Palette.mint.opacity(strong ? 0.9 : 0.5)), lineWidth: 1)
+            context.stroke(line, with: .color(Palette.mint.opacity(strong ? 0.9 : 0.5)), lineWidth: hair)
         }
         // Ticks every 5 cents, longer every 10, zero in full ink.
         for cents in stride(from: -50, through: 50, by: 5) {
@@ -430,7 +438,7 @@ struct StrobeDialFace: View {
             line.move(to: StrobeNeedle.point(a, radius * (major ? 0.665 : 0.69), from: center))
             line.addLine(to: StrobeNeedle.point(a, radius * 0.745, from: center))
             let ink: Color = cents == 0 ? Palette.ink : tick.opacity(major ? 0.9 : 0.5)
-            context.stroke(line, with: .color(ink), lineWidth: cents == 0 ? 2 : 1)
+            context.stroke(line, with: .color(ink), lineWidth: cents == 0 ? hair * 2 : hair)
         }
         // Flat and sharp at the arc's ends.
         let glyph = Font.system(size: max(10, radius * 0.085), weight: .semibold)

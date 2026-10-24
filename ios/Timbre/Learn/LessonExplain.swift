@@ -6,7 +6,8 @@ import TimbreCore
 /// An explanation: the lesson's picture on a card, then the words, with "Hear it" beside Continue in the bar at the
 /// bottom. A picture of notes is a demonstration that plays once as the step appears (with Reduce Motion or VoiceOver
 /// it waits for "Hear it"): a chord's fingers land in finger order, each string lighting as its note sounds, then the
-/// chord rings across them; a neck's dots drop in note by note, each string lit as it sounds; a staff or a keyboard
+/// chord rings across them (on the chord chart, or on the player's-view neck where the strings shimmer as they ring:
+/// the switch on the card, remembered); a neck's dots drop in note by note, each string lit as it sounds; a staff or a keyboard
 /// lights each note as it sounds; a rhythm's strokes sound as the pick sweeps the strings in time with the beat row.
 /// "Hear it" plays it again. The card takes the room the words leave and its picture grows to fill it.
 struct ExplainStep: View {
@@ -36,6 +37,11 @@ struct ExplainStep: View {
     /// The chord's strings lit in the demonstration (lowest string first): each finger's as its note sounds, then
     /// every string as the chord rings across them.
     @State private var lit: Set<Int> = []
+    /// When the demonstration's first finger lands: the player's view presses its fingertips on this clock, so each
+    /// meets its note (the chart keeps its own, started the same way).
+    @State private var chordLandStart: Date?
+    /// The chord chart or the player's view (the switch on the card; remembered).
+    @AppStorage(ChordPicture.storageKey) private var chordView: ChordPicture = .player
     /// When the neck's first dot lands (nil: still, every dot in place).
     @State private var neckStart: Date?
     /// The staff or keyboard note sounding now, while the notes play one by one.
@@ -238,16 +244,33 @@ struct ExplainStep: View {
 
     // MARK: Chord: the fingers land, the strings ring, your turn
 
-    /// The chord box as big as the card allows, its frets numbered, its fingers landing in finger order on the
-    /// demonstration's clock and its strings lighting as they sound.
+    /// The chord as big as the card allows, under its name and the switch between the chart and the player's view.
+    /// The chart's fingers land in finger order on the demonstration's clock, its frets numbered; the player's view
+    /// presses its fingertips in the same order on the same clock, fading the muted strings and lighting the open
+    /// ones. Either way each string lights (and on the neck shimmers) as it sounds. Both take the same room, so the
+    /// card holds still as they flip.
     private func chordBox(_ spec: ChordSpec, room: CGSize) -> some View {
         let fit = ChordDiagram.fit(spec, room: room, minWidth: 220)
-        return ChordDiagram(chord: spec, accent: accent, ringing: lit, landing: landsFingers, landingOrder: .fingers, landingStep: Self.demoStep,
-                            replay: demoReplay, edges: StringEdges.of(instrumentId: course.instrument, strings: spec.frets.count),
-                            fretNumbers: true, stretch: fit.stretch)
-            .frame(maxWidth: fit.width)
-            // Played back right: sparks from behind the box, on a canvas of their own size.
-            .background { SparkBurst(trigger: burst, color: accent, startFraction: 0.45).frame(width: fit.width * 1.55, height: fit.width * 1.55) }
+        let edges = StringEdges.of(instrumentId: course.instrument, strings: spec.frets.count)
+        let player = chordView == .player
+        return VStack(spacing: 8) {
+            ChordCardHeader(name: spec.name, accent: accent)
+            ZStack {
+                if player {
+                    PlayerNeck(chord: spec, accent: accent, ringing: lit, landStart: chordLandStart, landingStep: Self.demoStep, edges: edges)
+                        .transition(ChordFlip.transition(toPlayer: true, reduceMotion: reduceMotion))
+                } else {
+                    ChordDiagram(chord: spec, accent: accent, showName: false, ringing: lit, landing: landsFingers, landingOrder: .fingers,
+                                 landingStep: Self.demoStep, replay: demoReplay, edges: edges, fretNumbers: true, stretch: fit.stretch)
+                        .transition(ChordFlip.transition(toPlayer: false, reduceMotion: reduceMotion))
+                }
+            }
+            .frame(width: fit.width, height: ChordDiagram.boxHeight(spec, width: fit.width, stretch: fit.stretch, named: edges != nil))
+            .animation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle, value: player)
+        }
+        .frame(maxWidth: fit.width)
+        // Played back right: sparks from behind the box, on a canvas of their own size.
+        .background { SparkBurst(trigger: burst, color: accent, startFraction: 0.45).frame(width: fit.width * 1.55, height: fit.width * 1.55) }
     }
 
     /// The fingers land as the demonstration plays: from the start when it plays by itself, else from the first
@@ -283,6 +306,7 @@ struct ExplainStep: View {
         sounding = true
         // The diagram starts landing 0.25 s after it appears, 0.05 s after a replay.
         let lead = replay ? 0.05 : 0.25
+        chordLandStart = Date().addingTimeInterval(lead)
         let notes = demoNotes(chord)
         let strings = chord.frets.indices.filter { chord.frets[$0] >= 0 }
         demoTask = Task { @MainActor in

@@ -3,7 +3,9 @@ import TimbreCore
 import UIKit
 
 /// The Learn tab: pick a course, continue where you left off, and follow the path lesson by lesson. On an iPad's
-/// regular width the path and a Today panel (the day's set, the next lesson, a due review) sit side by side.
+/// regular width the path takes one card column and a lesson inspector (`LessonInspector`) the rest: a tap on a node
+/// shows that lesson there (its steps, a preview, Start), a second tap starts it. Narrower windows (Split View, Slide
+/// Over) get the phone's single column.
 struct LearnView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.horizontalSizeClass) private var sizeClass
@@ -11,6 +13,12 @@ struct LearnView: View {
     @State private var playing: PlayingLesson?
     /// Content has scrolled under the status bar: a scrim fades in behind it.
     @State private var scrolled = false
+    /// iPad: the lesson picked on the path for the inspector; nil follows the course's next lesson.
+    @State private var selectedId: String?
+    /// iPad: a lesson the path scrolls to (picked from the inspector, or the next one when the course opens).
+    @State private var reveal: Reveal?
+    /// iPad: the course whose next lesson the path has already scrolled to, so coming back to the tab keeps the place.
+    @State private var revealedCourse: String?
     /// Lessons zoom open out of the card or node that was tapped (and back into it on close).
     @Namespace private var zoom
 
@@ -22,9 +30,17 @@ struct LearnView: View {
         var id: String { lesson.id }
     }
 
+    struct Reveal: Equatable {
+        let lessonId: String
+        let token: Int
+    }
+
     private static let continueSource = "learn.continue"
 
     private var course: LearnCourse? { store.curriculum.course(id: courseId) ?? store.curriculum.courses.first }
+
+    /// The course's next lesson, which the inspector follows until another is picked.
+    private var nextId: String? { course.flatMap { store.learn.nextLesson(in: $0)?.id } }
 
     var body: some View {
         NavigationStack {
@@ -39,7 +55,12 @@ struct LearnView: View {
                 }
             }
         }
-        .onChange(of: courseId) { _, _ in store.publishWidgets() }
+        .onChange(of: courseId) { _, _ in
+            store.publishWidgets()
+            selectedId = nil
+        }
+        // A lesson finished moves the inspector on to the new next lesson.
+        .onChange(of: nextId) { _, _ in selectedId = nil }
         .onAppear(perform: openPendingLesson)
         .onChange(of: store.pendingLessonId) { _, _ in openPendingLesson() }
         .fullScreenCover(item: $playing) { item in
@@ -89,11 +110,13 @@ struct LearnView: View {
 
     // MARK: Layout
 
-    /// The path's scroll view: its own stage background on a phone (`backed`), the screen's in the iPad's columns.
-    private func pathScroll<Content: View>(backed: Bool = true, @ViewBuilder _ content: () -> Content) -> some View {
+    /// The path's scroll view: its own stage background on a phone (`backed`), the screen's in the iPad's columns,
+    /// where it keeps half the column spacing on its `trailing` side.
+    private func pathScroll<Content: View>(backed: Bool = true, trailing: CGFloat = Metrics.gutter,
+                                           @ViewBuilder _ content: () -> Content) -> some View {
         ScrollView {
             content()
-                .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+                .padding(.leading, Metrics.gutter).padding(.trailing, trailing).padding(.vertical, 12)
         }
         .onScrollGeometryChange(for: Bool.self) { geometry in
             geometry.contentOffset.y + geometry.contentInsets.top > 4
@@ -121,32 +144,51 @@ struct LearnView: View {
         }
     }
 
-    /// iPad: the title across the top, then the courses and the path, with the Today panel beside them. The panel
-    /// takes one column of three (landscape), at most 400 points of two (portrait); the path has the rest.
+    /// iPad: the title across the top, then the courses and the path in one card column (`CardColumns`), and the
+    /// lesson inspector across the rest with Today under it. In landscape (three columns) the inspector sets its card
+    /// and steps beside its preview and Today; in portrait (two) it stacks. Each side scrolls on its own.
     private func wide(_ columns: CardColumns) -> some View {
-        let panel = columns.count >= 3 ? columns.unit : min(columns.unit, 400)
+        let half = CardColumns.spacing / 2
+        let inspectorWidth = columns.span(columns.count - 1)
         return VStack(spacing: 0) {
             header
                 .padding(.horizontal, Metrics.gutter).padding(.top, 12).padding(.bottom, 6)
             HStack(alignment: .top, spacing: 0) {
-                pathScroll(backed: false) {
-                    LazyVStack(alignment: .leading, spacing: 22) {
-                        courses
-                        if let course { unitPath(course) }
+                ScrollViewReader { reader in
+                    pathScroll(backed: false, trailing: half) {
+                        LazyVStack(alignment: .leading, spacing: 22) {
+                            courses
+                            if let course {
+                                // Shows itself only when a weak-spot review is due.
+                                WeakSpotReviewCard(course: course) { open(course, $0, from: Self.continueSource) }
+                                unitPath(course, selecting: true)
+                            }
+                        }
+                    }
+                    .onChange(of: reveal) { _, request in
+                        guard let request, let course else { return }
+                        scroll(reader, to: request.lessonId, in: course)
                     }
                 }
-                todayPanel
-                    .frame(width: panel + Metrics.gutter)
+                .frame(width: columns.unit + Metrics.gutter + half)
+                inspectorPane(roomy: inspectorWidth >= 640)
+                    .frame(width: inspectorWidth + half + Metrics.gutter)
             }
         }
         .background(StageBackground(motes: false))
+        .onAppear(perform: revealNextOnce)
+        .onChange(of: courseId) { _, _ in revealNextOnce() }
     }
 
-    /// The units of the course as a winding path, each lesson's access worked out once for the whole course.
-    @ViewBuilder private func unitPath(_ course: LearnCourse) -> some View {
+    /// The units of the course as a winding path, each lesson's access worked out once for the whole course. With
+    /// `selecting` (iPad), a tap on a node shows it in the inspector and a second tap starts it.
+    @ViewBuilder private func unitPath(_ course: LearnCourse, selecting: Bool = false) -> some View {
         let path = PathState(course: course, progress: store.learn)
+        let shown = selecting ? inspected(in: course)?.id : nil
+        let pick: ((Lesson) -> Void)? = selecting ? { lesson in select(lesson) } : nil
         ForEach(Array(course.units.enumerated()), id: \.element.id) { index, unit in
-            UnitSection(course: course, unit: unit, number: index + 1, zoom: zoom, path: path) { course, lesson in
+            UnitSection(course: course, unit: unit, number: index + 1, zoom: zoom, path: path, selectedId: shown,
+                        onSelect: pick) { course, lesson in
                 open(course, lesson, from: LessonNode.source(lesson))
             }
         }
@@ -154,20 +196,60 @@ struct LearnView: View {
             .frame(maxWidth: .infinity).padding(.vertical, 24)
     }
 
-    /// Beside the path on iPad: the day's set in full, the next lesson and a due weak-spot review.
-    private var todayPanel: some View {
+    // MARK: Inspector (iPad)
+
+    /// The lesson the inspector shows: the one picked on the path, else the next one (the last once the course is done).
+    private func inspected(in course: LearnCourse) -> Lesson? {
+        if let selectedId, let position = course.position(of: selectedId) { return course.lessons[position] }
+        return store.learn.nextLesson(in: course) ?? course.lessons.last
+    }
+
+    /// Beside the path on iPad: the picked lesson, then the day's set in full.
+    private func inspectorPane(roomy: Bool) -> some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 22) {
-                DailySetCard { openToday($0) }
-                if let course {
-                    continueCard(course)
-                    WeakSpotReviewCard(course: course) { open(course, $0, from: Self.continueSource) }
+            if let course, let lesson = inspected(in: course) {
+                LessonInspector(course: course, lesson: lesson, isNext: lesson.id == nextId, wide: roomy, zoom: zoom,
+                                source: Self.continueSource,
+                                onStart: { open(course, lesson, from: Self.continueSource) },
+                                onSelect: { select($0, reveal: true) }) {
+                    DailySetCard { openToday($0) }
                 }
+                .padding(.leading, CardColumns.spacing / 2).padding(.trailing, Metrics.gutter).padding(.vertical, 12)
             }
-            .padding(.trailing, Metrics.gutter).padding(.vertical, 12)
         }
         .scrollBounceBehavior(.basedOnSize)
         .stageTopShade()
+    }
+
+    /// Shows `lesson` in the inspector (and, from the inspector, brings its node into view on the path).
+    private func select(_ lesson: Lesson, reveal shows: Bool = false) {
+        if lesson.id != (selectedId ?? nextId) {
+            Haptics.shared.selection()
+            withAnimation(Motion.settle) { selectedId = lesson.id }
+        }
+        if shows { reveal = Reveal(lessonId: lesson.id, token: (reveal?.token ?? 0) + 1) }
+    }
+
+    /// The first time a course shows on iPad, its path scrolls to the next lesson when that is past the first unit.
+    private func revealNextOnce() {
+        guard let course, revealedCourse != course.id else { return }
+        revealedCourse = course.id
+        guard let next = store.learn.nextLesson(in: course) else { return }
+        let inFirstUnit = course.units.first?.lessons.contains(where: { $0.id == next.id }) ?? true
+        guard !inFirstUnit else { return }
+        reveal = Reveal(lessonId: next.id, token: (reveal?.token ?? 0) + 1)
+    }
+
+    /// Scrolls the path to a lesson's unit (it may not be built yet: the path is lazy), then centres its node.
+    private func scroll(_ reader: ScrollViewProxy, to lessonId: String, in course: LearnCourse) {
+        guard let unit = course.units.first(where: { $0.lessons.contains { $0.id == lessonId } }) else { return }
+        Task { @MainActor in
+            // The path may still be laying out (the tab just appeared, the course just changed).
+            try? await Task.sleep(for: .milliseconds(150))
+            withAnimation(Motion.settle) { reader.scrollTo(unit.id, anchor: .top) }
+            try? await Task.sleep(for: .milliseconds(200))
+            withAnimation(Motion.settle) { reader.scrollTo(lessonId, anchor: .center) }
+        }
     }
 
     /// An activity of Today opened from the panel: the lesson and a review here, the tuner on its tab, a tool on the
@@ -330,6 +412,10 @@ struct UnitSection: View {
     /// The Learn tab's zoom namespace: each node is a source the lesson zooms out of.
     let zoom: Namespace.ID
     let path: PathState
+    /// iPad: the lesson the inspector shows, ringed on the path.
+    var selectedId: String? = nil
+    /// iPad: a tap on a node not yet picked picks it for the inspector (nil on a phone: the tap plays).
+    var onSelect: ((Lesson) -> Void)? = nil
     let onPlay: (LearnCourse, Lesson) -> Void
     @EnvironmentObject private var store: AppStore
 
@@ -363,6 +449,12 @@ struct UnitSection: View {
                 let points = unit.lessons.indices.map { i in
                     CGPoint(x: geometry.size.width / 2 + sin(Double(i) * 1.15 + Double(number)) * swing, y: rowHeight * (CGFloat(i) + 0.5))
                 }
+                // START sits beside its node, clear of the stars of the node above: off the neck on the side the node
+                // leans to, or toward the middle on the open path, where a node can swing near the edge.
+                let sides = points.map { point -> HorizontalEdge in
+                    let right = point.x >= geometry.size.width / 2
+                    return neck == right ? .trailing : .leading
+                }
                 ZStack {
                     if neck {
                         // The path is a stretch of fingerboard: frets between lessons, strings running through.
@@ -381,7 +473,9 @@ struct UnitSection: View {
                     }
                     ForEach(Array(unit.lessons.enumerated()), id: \.element.id) { i, lesson in
                         LessonNode(course: course, lesson: lesson, accent: accent, current: lesson.id == nextId,
-                                   unlocked: path.unlocked.contains(lesson.id), zoom: zoom) { onPlay(course, lesson) }
+                                   unlocked: path.unlocked.contains(lesson.id), zoom: zoom,
+                                   selected: lesson.id == selectedId, startSide: sides[i],
+                                   onSelect: picker(lesson)) { onPlay(course, lesson) }
                             .position(points[i])
                             .id(lesson.id)
                     }
@@ -389,6 +483,12 @@ struct UnitSection: View {
             }
             .frame(height: rowHeight * CGFloat(unit.lessons.count))
         }
+    }
+
+    /// iPad: what a tap on a node not yet picked does (pick it); nil on a phone.
+    private func picker(_ lesson: Lesson) -> (() -> Void)? {
+        guard let onSelect else { return nil }
+        return { onSelect(lesson) }
     }
 }
 
@@ -403,7 +503,8 @@ enum LessonAccess {
     }
 }
 
-/// One stop on the path: raised disc, kind icon, stars when finished, lock when not yet open.
+/// One stop on the path: raised disc, kind icon, stars when finished, lock when not yet open. The next lesson pulses
+/// with START beside it; on iPad the lesson the inspector shows wears a ring.
 struct LessonNode: View {
     let course: LearnCourse
     let lesson: Lesson
@@ -412,12 +513,20 @@ struct LessonNode: View {
     /// Open on the path (`PathState`, worked out once for the course).
     let unlocked: Bool
     let zoom: Namespace.ID
+    /// iPad: the inspector shows this lesson.
+    var selected = false
+    /// The side START sits on, beside the disc (never above it, where the node before keeps its stars).
+    var startSide: HorizontalEdge = .trailing
+    /// iPad: a tap picks the node for the inspector until it is picked; then a tap plays it.
+    var onSelect: (() -> Void)? = nil
     let action: () -> Void
     @EnvironmentObject private var store: AppStore
     @State private var pulse = false
 
     /// The matched transition source id of a lesson's node.
     static func source(_ lesson: Lesson) -> String { "learn.node.\(lesson.id)" }
+    /// Between the current node's halo and START.
+    private static let startGap: CGFloat = 10
     @State private var shake = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -429,6 +538,7 @@ struct LessonNode: View {
         let symbol = lesson.kind == .song ? "music.quarternote.3" : lesson.kind == .challenge ? "crown.fill" : lesson.kind == .review ? "arrow.clockwise" : stars > 0 ? "checkmark" : "music.note"
         let lit = unlocked && !pro
         Button {
+            if let onSelect, !selected { onSelect(); return }
             switch LessonAccess.of(lesson, in: course, store: store) {
             case .play: action()
             case .pro: store.presentPaywall("lesson", lesson: lesson)
@@ -450,21 +560,23 @@ struct LessonNode: View {
                         .foregroundStyle(lit ? Palette.onAccent : Palette.inkFaint)
                 }
                 .shadow(color: current ? accent.opacity(0.5) : .clear, radius: 18)
+                .overlay {
+                    if selected {
+                        Circle().strokeBorder(Palette.ink.opacity(0.9), lineWidth: 2.5)
+                            .frame(width: size + 14, height: size + 14)
+                            .shadow(color: accent.opacity(0.6), radius: 8)
+                            .transition(.scale(scale: 0.85).combined(with: .opacity))
+                    }
+                }
+                .overlay(alignment: startSide == .trailing ? .trailing : .leading) {
+                    if current { startPill }
+                }
                 if stars > 0 {
                     HStack(spacing: 2) {
                         ForEach(0..<3, id: \.self) { i in
                             Image(systemName: "star.fill").font(.system(size: 10, weight: .bold)).foregroundStyle(i < stars ? Palette.amber : .white.opacity(0.15))
                         }
                     }
-                }
-            }
-            .overlay(alignment: .top) {
-                if current {
-                    Text("START").font(Typeface.label(12)).tracking(1.2).foregroundStyle(accent)
-                        .padding(.horizontal, 12).padding(.vertical, 6)
-                        .background(Capsule().fill(Palette.stageRaised))
-                        .overlay(Capsule().strokeBorder(accent.opacity(0.5), lineWidth: 1))
-                        .offset(y: pulse ? -44 : -38)
                 }
             }
         }
@@ -474,7 +586,33 @@ struct LessonNode: View {
         .onAppear { guard current, !reduceMotion else { return }; withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true)) { pulse = true } }
         .accessibilityLabel(Text(lesson.title.localized))
         .accessibilityValue(Text(stars > 0 ? LocalizedStringKey("\(stars) of 3 stars") : lit ? LocalizedStringKey("Open") : LocalizedStringKey("Locked")))
+        .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityIdentifier("learn.lesson.\(lesson.id)")
+    }
+
+    /// START beside the disc, just past its halo, a small chevron pointing at the node; it nudges toward it and back.
+    private var startPill: some View {
+        let trailing = startSide == .trailing
+        let edge: HorizontalAlignment = trailing ? .trailing : .leading
+        let gap = Self.startGap
+        return HStack(spacing: 4) {
+            if trailing { chevron("chevron.backward") }
+            Text("START").font(Typeface.label(12)).tracking(1.2)
+            if !trailing { chevron("chevron.forward") }
+        }
+        .foregroundStyle(accent)
+        .padding(.horizontal, 10).padding(.vertical, 6)
+        .background(Capsule().fill(Palette.stageRaised))
+        .overlay(Capsule().strokeBorder(accent.opacity(0.5), lineWidth: 1))
+        .fixedSize()
+        .offset(x: pulse ? (trailing ? -3 : 3) : 0)
+        // Its near edge sits `gap` outside the disc's halo: the trailing guide is its leading edge (or the other way).
+        .alignmentGuide(edge) { d in trailing ? d[.leading] - gap : d[.trailing] + gap }
+        .accessibilityHidden(true)
+    }
+
+    private func chevron(_ name: String) -> some View {
+        Image(systemName: name).font(.system(size: 9, weight: .heavy))
     }
 }
 

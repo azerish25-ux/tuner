@@ -10,6 +10,8 @@ import SwiftUI
 /// while more is hidden past it (measured from the chips themselves, so a rail resting at either end is
 /// solid there), and the selected item glides to the middle when the rail appears and whenever the
 /// selection changes, clear of both fades (at either end it simply rests against the margin).
+/// The rail is one glass group: a selected chip's glass pill (`ChipButtonStyle`, iOS 26) flows from chip to chip as
+/// the selection moves.
 /// Give each item `.id(value)` with the same type as `selection`.
 struct EdgeRail<ID: Hashable, Content: View>: View {
     var bleed: CGFloat = Metrics.gutter
@@ -20,30 +22,49 @@ struct EdgeRail<ID: Hashable, Content: View>: View {
     @State private var position: ID?
     @State private var revealed = false
     @State private var overflow = EdgeOverflow()
+    @Namespace private var glass
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: spacing) { content }
-                .scrollTargetLayout()
-                .onGeometryChange(for: EdgeOverflow.self) { proxy in
-                    EdgeOverflow(content: proxy)
-                } action: { value in
-                    overflow = value
+        ScrollViewReader { scroller in
+            ScrollView(.horizontal, showsIndicators: false) {
+                TimbreGlassGroup(spacing: spacing + 16) {
+                    HStack(spacing: spacing) { content }
+                        .scrollTargetLayout()
+                        .onGeometryChange(for: EdgeOverflow.self) { proxy in
+                            EdgeOverflow(content: proxy)
+                        } action: { value in
+                            overflow = value
+                            // The chips have their frames now: the selected one can be brought into view.
+                            reveal(scroller)
+                        }
+                        .animation(reduceMotion ? Motion.quick : Motion.morph, value: selection)
                 }
-        }
-        .scrollPosition(id: $position, anchor: .center)
-        .modifier(RailBleed(leading: bleed, trailing: bleed, measured: overflow))
-        .onAppear(perform: reveal)
-        .onChange(of: selection) { _, value in
-            guard let value else { return }
-            withAnimation(Motion.settle) { position = value }
+                .environment(\.timbreGlassSpace, glass)
+            }
+            .scrollPosition(id: $position, anchor: .center)
+            .modifier(RailBleed(leading: bleed, trailing: bleed, measured: overflow))
+            // Bug: set as the rail appeared, before its chips were laid out, the position was dropped and a selection
+            // past the edge stayed hidden ("Minor pentatonic" off the right of Scales). It is set once the chips have
+            // frames: on their first measure, or (when nothing overflows, so no measure changes) on the next turn.
+            .onAppear {
+                DispatchQueue.main.async { reveal(scroller) }
+            }
+            .onChange(of: selection) { _, value in
+                guard let value else { return }
+                withAnimation(Motion.settle) { position = value }
+            }
         }
     }
 
-    private func reveal() {
-        guard !revealed else { return }
+    /// Brings the selection into view once, after the first layout pass. The position binding alone can still be
+    /// dropped while the scroll view settles its first frame, so the reader then scrolls to the laid-out chip
+    /// directly, a turn later, without animation (the rail opens there rather than gliding).
+    private func reveal(_ scroller: ScrollViewProxy) {
+        guard !revealed, let selection else { return }
         revealed = true
         position = selection
+        DispatchQueue.main.async { scroller.scrollTo(selection, anchor: .center) }
     }
 }
 

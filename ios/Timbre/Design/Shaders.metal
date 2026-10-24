@@ -90,7 +90,8 @@ inline float softBox(float2 p, float4 box, float margin) {
 /// The chromatic strobe disc as a liquid surface (`strobeRipple`): ripples run out through its rings when the pitch
 /// is sharp (the strobe's `phase`, 0..<1, climbs) and in when it is flat, `depth` (0…1) deep as it is far off, still
 /// in tune. `shock` (seconds since the lock; 0.9 or more: none) rolls one ring of `tint` light out across the disc.
-/// The disc's outer ring sits at 0.43 of the shorter side from the centre (`ChromaticStage`).
+/// The disc's outer ring sits at 0.43 of the shorter side from the centre. (`ChromaticStage`'s dial now takes only
+/// the lock's ring from it, depth 0: from the hub out to the note wheel.)
 [[ stitchable ]] half4 timbreStrobeRipple(float2 position, SwiftUI::Layer layer, float4 bounds,
                                           float phase, float depth, float shock, half4 tint) {
     float2 center = bounds.xy + bounds.zw * 0.5;
@@ -112,6 +113,39 @@ inline float softBox(float2 p, float4 box, float margin) {
     float glow = ring * 0.6;
     float alpha = min(1.0, float(sampled.a) + glow);
     float3 rgb = float3(sampled.rgb) * (1.0 + 0.45 * ripple * wave) + float3(tint.rgb) * glow;
+    return half4(half3(min(rgb, float3(alpha))), half(alpha));
+}
+
+/// The chromatic strobe disc's lamp (`strobeLamp`, ChromaticStage): the light behind the slotted disc spills a few
+/// points round every lit slot (`glow`, 0…1), and while the disc turns its slots smear along their own circles as a
+/// real strobe's do when it races, over `spin` radians centred on each point (a still disc: no smear). The disc turns
+/// about the centre of `bounds`. Seven taps along the circle, sixteen for the bloom.
+[[ stitchable ]] half4 timbreStrobeLamp(float2 position, SwiftUI::Layer layer, float4 bounds, float spin, float glow) {
+    float2 center = bounds.xy + bounds.zw * 0.5;
+    float2 offset = position - center;
+
+    // The smear: the layer averaged along this point's circle.
+    half4 base = half4(0.0h);
+    for (int i = 0; i < 7; i++) {
+        float a = spin * (float(i) / 6.0 - 0.5);
+        float c = cos(a);
+        float s = sin(a);
+        base += layer.sample(center + float2(offset.x * c - offset.y * s, offset.x * s + offset.y * c));
+    }
+    base = base / 7.0h;
+
+    // The bloom: two rings of taps round the point, near and (fainter) far.
+    half4 halo = half4(0.0h);
+    for (int i = 0; i < 8; i++) {
+        float a = float(i) * (M_PI_F * 0.25) + 0.39;
+        float2 d = float2(cos(a), sin(a));
+        halo += layer.sample(position + d * 3.0) + layer.sample(position + d * 7.5) * 0.5h;
+    }
+    halo = halo / 12.0h;
+
+    float g = saturate(glow) * 0.8;
+    float alpha = min(1.0, float(base.a) + float(halo.a) * g);
+    float3 rgb = float3(base.rgb) + float3(halo.rgb) * g;
     return half4(half3(min(rgb, float3(alpha))), half(alpha));
 }
 

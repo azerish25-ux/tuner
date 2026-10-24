@@ -3,8 +3,14 @@ import Foundation
 public struct LocalizedText: Codable, Equatable, Hashable, Sendable, CustomStringConvertible {
     public let key: String
     public let defaultValue: String
+    /// A name that names notes (a tuning's: "Eb standard", "Key of Bb"): shown with ♯ and ♭ (`NoteNames.glyphs`),
+    /// "E♭ standard". The key and the authored default stay as they are.
+    public var namesNotes = false
     public var description: String { defaultValue }
-    public var localized: String { key.isEmpty ? defaultValue : NSLocalizedString(key, bundle: TimbreLocalization.bundle, value: defaultValue, comment: "") }
+    public var localized: String {
+        let text = key.isEmpty ? defaultValue : NSLocalizedString(key, bundle: TimbreLocalization.bundle, value: defaultValue, comment: "")
+        return namesNotes ? NoteNames.glyphs(text) : text
+    }
     enum CodingKeys: String, CodingKey { case key; case defaultValue = "default" }
     public init(key: String = "", defaultValue: String) { self.key = key; self.defaultValue = defaultValue }
     public init(from decoder: Decoder) throws {
@@ -69,6 +75,13 @@ public struct Tuning: Codable, Identifiable, Equatable, Sendable {
         self.id = id; self.instrumentId = instrumentId; self.name = name; self.isDefault = isDefault; self.isFree = isFree
         self.a4Hz = a4Hz; self.temperamentId = temperamentId; self.provenance = provenance; self.courses = courses
     }
+    /// The same tuning, its name shown with ♯ and ♭ (`LocalizedText.namesNotes`).
+    func namingNotes() -> Tuning {
+        var shown = name
+        shown.namesNotes = true
+        return Tuning(id: id, instrumentId: instrumentId, name: shown, isDefault: isDefault, isFree: isFree, a4Hz: a4Hz,
+                      temperamentId: temperamentId, provenance: provenance, courses: courses)
+    }
 }
 
 /// A player-made tuning: one target per course of the instrument's default tuning, so
@@ -131,7 +144,9 @@ public struct Catalog: Sendable {
     public init() throws {
         guard let url = Bundle.module.url(forResource: "catalog", withExtension: "json"), let photosURL = Bundle.module.url(forResource: "photos", withExtension: "json") else { throw CatalogError.missingResources }
         let document = try JSONDecoder().decode(Document.self, from: Data(contentsOf: url))
-        families = document.families.sorted { $0.ordering < $1.ordering }; instruments = document.instruments; tunings = document.tunings; referenceMode = document.referenceMode; referencePitch = document.referencePitch
+        families = document.families.sorted { $0.ordering < $1.ordering }; instruments = document.instruments; referenceMode = document.referenceMode; referencePitch = document.referencePitch
+        // Tuning names name notes: on screen "Eb standard" reads "E♭ standard" (ids and keys unchanged).
+        tunings = document.tunings.map { $0.namingNotes() }
         photos = try JSONDecoder().decode([InstrumentPhoto].self, from: Data(contentsOf: photosURL))
         let ids = Set(instruments.map(\.id)); let tuningIDs = Set(tunings.map(\.id)); let familyIDs = Set(families.map(\.id))
         guard ids.count == instruments.count, tuningIDs.count == tunings.count, familyIDs.count == families.count else { throw CatalogError.invalid("Duplicate identifier") }

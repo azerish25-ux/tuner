@@ -4,7 +4,8 @@ import TimbreCore
 /// Voice names notes as the rest of the app does: the drone's tonics, the chord and scale tools and the Live
 /// Activity all spell through `NoteNames.name` with D♭ E♭ A♭ B♭ as flats and F♯ as a sharp. Here the same letters
 /// are respelled in the player's system (Settings › Note names: B natural is H and B♭ is B in German, Re♭ in
-/// solfège, Sa Re Ga in sargam), then the octave in scientific pitch ("Eb4", "H3").
+/// solfège, Sa Re Ga in sargam), then the octave in scientific pitch ("Eb4", "H3"). These are ASCII, as data; the
+/// screen shows them through the app's one formatter, `NoteNames.glyphs` (`NoteGlyphs` beside a Sora face): "E♭4".
 enum VoiceNoteName {
     /// Pitch classes spelled flat (D♭ E♭ A♭ B♭); the others, F♯ among them, keep their sharp.
     static let flatClasses: Set<Int> = [1, 3, 8, 10]
@@ -33,7 +34,8 @@ struct VoiceKeyboard: View {
     private let naturals = [0, 2, 4, 5, 7, 9, 11]
     private let accidentals = [0, 1, 3, 4, 5]
     private var base: Int { Int(floor(Double(targetMidi) / 12)) * 12 }
-    private func label(_ midi: Int) -> String { VoiceNoteName.name(midi, notation: notation) }
+    /// "E♭3": as shown and read by VoiceOver ("E flat 3").
+    private func label(_ midi: Int) -> String { NoteNames.glyphs(VoiceNoteName.name(midi, notation: notation)) }
     private func accessibleLabel(_ midi: Int) -> String {
         String(format: NSLocalizedString("timbre_voice_keyboard_target", value: "Target %1$@", comment: ""), label(midi))
     }
@@ -73,9 +75,9 @@ struct VoiceKeyboard: View {
                     Button { onSelect(midi) } label: {
                         VStack {
                             Spacer(minLength: 0)
-                            // The selected black key names itself as the target above does ("Eb", "F#", "B" in German).
+                            // The selected black key names itself as the target above does ("E♭", "F♯", "B" in German).
                             if selected {
-                                Text(verbatim: VoiceNoteName.pitchClass(midi, notation: notation))
+                                Text(verbatim: NoteNames.glyphs(VoiceNoteName.pitchClass(midi, notation: notation)))
                                     .font(.caption2.weight(.semibold))
                                     .lineLimit(1).minimumScaleFactor(0.5)
                                     .padding(.horizontal, 2).padding(.bottom, 5)

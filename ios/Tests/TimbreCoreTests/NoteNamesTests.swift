@@ -77,6 +77,96 @@ final class NoteNamesTests: XCTestCase {
         XCTAssertEqual(NoteNames.spellNote("B-1", system: "german"), "H-1")
     }
 
+    func testNotesShowWithSharpAndFlatSigns() {
+        XCTAssertEqual(NoteNames.glyphs("Bb3"), "B♭3")
+        XCTAssertEqual(NoteNames.glyphs("C#4"), "C♯4")
+        XCTAssertEqual(NoteNames.glyphs("F#"), "F♯")
+        XCTAssertEqual(NoteNames.glyphs("Eb"), "E♭")
+        XCTAssertEqual(NoteNames.glyphs("Bbb"), "B♭♭")
+        XCTAssertEqual(NoteNames.glyphs("C#-1"), "C♯-1")
+        XCTAssertEqual(NoteNames.glyphs("A"), "A")
+        XCTAssertEqual(NoteNames.glyphs(""), "")
+        // Signs already there stay; the formatter can run twice.
+        XCTAssertEqual(NoteNames.glyphs("E♭"), "E♭")
+        XCTAssertEqual(NoteNames.glyphs("Eb♭"), "E♭♭")
+        XCTAssertEqual(NoteNames.glyphs(NoteNames.glyphs("Ab4")), "A♭4")
+    }
+
+    func testChordSymbolsShowWithSigns() {
+        XCTAssertEqual(NoteNames.glyphs("Ebmaj7"), "E♭maj7")
+        XCTAssertEqual(NoteNames.glyphs("F#m7"), "F♯m7")
+        XCTAssertEqual(NoteNames.glyphs("Bbsus4"), "B♭sus4")
+        XCTAssertEqual(NoteNames.glyphs("Abdim"), "A♭dim")
+        XCTAssertEqual(NoteNames.glyphs("EbM7"), "E♭M7")
+        XCTAssertEqual(NoteNames.glyphs("D/F#"), "D/F♯")
+        XCTAssertEqual(NoteNames.glyphs("Bb/D"), "B♭/D")
+        XCTAssertEqual(NoteNames.glyphs("Bb Eb Ab"), "B♭ E♭ A♭")
+        XCTAssertEqual(NoteNames.glyphs(ChordTarget(root: 10, quality: .major7).symbol), "A♯maj7")
+    }
+
+    func testEveryNamingSystemShowsSigns() {
+        XCTAssertEqual(NoteNames.glyphs(NoteNames.spell("Bb", system: "solfege")), "Si♭")
+        XCTAssertEqual(NoteNames.glyphs(NoteNames.spell("Eb", system: "sargam")), "Ga♭")
+        XCTAssertEqual(NoteNames.glyphs(NoteNames.spell("Bb", system: "numbered")), "7♭")
+        XCTAssertEqual(NoteNames.glyphs("Sol#3"), "Sol♯3")
+        XCTAssertEqual(NoteNames.glyphs("Dha#4"), "Dha♯4")
+        XCTAssertEqual(NoteNames.glyphs("Do#"), "Do♯")
+        XCTAssertEqual(NoteNames.glyphs("1#4"), "1♯4")
+        // German keeps its letters: B is B♭ and needs no sign, H is B natural, H♯ its sharp.
+        XCTAssertEqual(NoteNames.glyphs(NoteNames.spell("Bb", system: "german")), "B")
+        XCTAssertEqual(NoteNames.glyphs(NoteNames.spell("B", system: "german")), "H")
+        XCTAssertEqual(NoteNames.glyphs(NoteNames.spell("B#", system: "german")), "H♯")
+        XCTAssertEqual(NoteNames.glyphs(NoteNames.spell("Eb", system: "german")), "E♭")
+        XCTAssertEqual(NoteNames.glyphs(NoteNames.spell("F#", system: "german")), "F♯")
+    }
+
+    func testTunerNamesShowWithSigns() {
+        XCTAssertEqual(PitchMath.displayName(midi: 70), "A♯4")
+        XCTAssertEqual(PitchMath.displayName(midi: 69), "A4")
+        XCTAssertEqual(PitchMath.displayName(midi: 61, notation: "solfege"), "Do♯4")
+        XCTAssertEqual(PitchMath.displayName(midi: 61, notation: "sargam"), "Sa♯4")
+        XCTAssertEqual(PitchMath.displayName(midi: 61, notation: "numbered"), "1♯4")
+        XCTAssertEqual(PitchMath.displayName(midi: 59, notation: "german"), "H3")
+        XCTAssertEqual(PitchMath.displayName(midi: 58, notation: "german"), "A♯3")
+        XCTAssertEqual(PitchMath.displayName(midi: -1), "B-2")
+        // The data names stay ASCII, so they still parse.
+        XCTAssertEqual(PitchMath.noteName(midi: 70), "A#4")
+        XCTAssertEqual(PitchMath.parseNote(PitchMath.noteName(midi: 70)), 70)
+    }
+
+    func testNamesThatNameNotesShowSigns() {
+        XCTAssertEqual(NoteNames.glyphs("Eb standard"), "E♭ standard")
+        XCTAssertEqual(NoteNames.glyphs("Key of Bb"), "Key of B♭")
+        XCTAssertEqual(NoteNames.glyphs("Eb-Standard"), "E♭-Standard")
+        XCTAssertEqual(NoteNames.glyphs("Ebスタンダード"), "E♭スタンダード")
+        XCTAssertEqual(NoteNames.glyphs("キー：Bb"), "キー：B♭")
+        XCTAssertEqual(NoteNames.glyphs("Tonalité de Mib"), "Tonalité de Mi♭")
+        XCTAssertEqual(NoteNames.glyphs("Tonalidad de Sib"), "Tonalidad de Si♭")
+        XCTAssertEqual(NoteNames.glyphs("Clarinet (Bb / A)"), "Clarinet (B♭ / A)")
+        XCTAssertEqual(NoteNames.glyphs("Saxophone (alto Eb / tenor Bb)"), "Saxophone (alto E♭ / tenor B♭)")
+        // Words, German letters and interval names are left alone.
+        for text in ["Standard", "Drop D", "DADGAD", "Open G", "Tonart B", "Tonart Es", "Abend", "Bass", "Bebop", "b3", "#1",
+                     "dB", "Ebbe", "Mi bémol standard", "Eb7b9"] {
+            XCTAssertEqual(NoteNames.glyphs(text), text == "Eb7b9" ? "E♭7b9" : text, text)
+        }
+    }
+
+    func testTuningNamesShowSignsButKeepTheirData() throws {
+        let catalog = try Catalog()
+        let eFlat = try XCTUnwrap(catalog.tuning(id: "guitar.acoustic.6.eb_std"))
+        XCTAssertEqual(eFlat.name.localized, "E♭ standard")
+        XCTAssertEqual(eFlat.name.defaultValue, "Eb standard")
+        XCTAssertEqual(eFlat.name.key, "timbre_catalog_tuning_guitar_acoustic_6_eb_std")
+        XCTAssertEqual(eFlat.courses.first?.label, "Eb2")
+        let harmonica = try XCTUnwrap(catalog.tuning(id: "harmonica.diatonic.0.key_bb"))
+        XCTAssertEqual(harmonica.name.localized, "Key of B♭")
+        XCTAssertEqual(try XCTUnwrap(catalog.tuning(id: "guitar.acoustic.6.standard")).name.localized, "Standard")
+        // Catalog names that aren't tunings, and a player's own tuning name, show as written.
+        XCTAssertEqual(LocalizedText(defaultValue: "Eb standard").localized, "Eb standard")
+        let custom = CustomTuning(instrumentId: "guitar.acoustic.6", name: "Open Eb", midis: [39, 46, 51, 55, 58, 63])
+        XCTAssertEqual(custom.tuning(base: eFlat).name.localized, "Open Eb")
+    }
+
     func testDefaultSystemFollowsTheLanguageUntilChosen() {
         XCTAssertEqual(NoteNames.defaultSystem(language: "de"), "german")
         XCTAssertEqual(NoteNames.defaultSystem(language: "de-AT"), "german")
