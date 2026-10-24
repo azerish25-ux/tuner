@@ -48,19 +48,19 @@ struct BeatRing: View {
     }
 
     private func arc(_ index: Int, line: CGFloat) -> some View {
-        let span = span(index)
+        let range = span(index)
         let width = dimmed ? line * 0.45 : line
         return Circle().inset(by: line / 2)
-            .trim(from: span.from, to: span.to)
+            .trim(from: range.from, to: range.to)
             .stroke(tint(index).opacity(dimmed ? 0.35 : level(index)), style: StrokeStyle(lineWidth: width, lineCap: .round))
             .rotationEffect(.degrees(-90))
             .animation(.easeOut(duration: 0.12), value: current)
     }
 
     private func glow(_ index: Int, line: CGFloat) -> some View {
-        let span = span(index)
+        let range = span(index)
         return Circle().inset(by: line / 2)
-            .trim(from: span.from, to: span.to)
+            .trim(from: range.from, to: range.to)
             .stroke(tint(index), style: StrokeStyle(lineWidth: line * 1.3, lineCap: .round))
             .rotationEffect(.degrees(-90))
             .blur(radius: line * 0.7)

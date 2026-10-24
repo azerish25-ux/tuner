@@ -26,8 +26,8 @@ struct MetronomeScreen: View {
         .digitalCrownRotation($metronome.crownTempo, from: Double(WristMetronome.tempoRange.lowerBound),
                               through: Double(WristMetronome.tempoRange.upperBound), by: 1, sensitivity: .medium,
                               isContinuous: false, isHapticFeedbackEnabled: !metronome.running)
-        .onAppear { if selected { crownFocused = true } }
-        .onChange(of: selected) { _, now in if now { crownFocused = true } }
+        .onAppear { crownFocused = selected }
+        .onChange(of: selected) { _, now in crownFocused = now }
         .containerBackground(Self.background, for: .tabView)
     }
 

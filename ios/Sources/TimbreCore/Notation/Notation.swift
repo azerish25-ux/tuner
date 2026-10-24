@@ -230,10 +230,15 @@ public struct Clef: Equatable, Hashable, Sendable {
 public struct NotationMeter: Equatable, Hashable, Sendable {
     /// Beats in a bar, as `TimedNote.beat` counts them.
     public let beats: Int
+    /// Eighths felt in threes (6/8, 9/8, 12/8) rather than quarters.
+    public let compound: Bool
 
-    public init(beatsPerBar: Int) { beats = max(1, beatsPerBar) }
+    /// A bar of `beatsPerBar` beats: six, nine or twelve are eighths in compound time unless `compound` says otherwise.
+    public init(beatsPerBar: Int, compound: Bool? = nil) {
+        beats = max(1, beatsPerBar)
+        self.compound = compound ?? (beats >= 6 && beats % 3 == 0)
+    }
 
-    public var compound: Bool { beats >= 6 && beats % 3 == 0 }
     /// The time signature's lower number.
     public var unit: Int { compound ? 8 : 4 }
     /// Sixteenths in a beat.

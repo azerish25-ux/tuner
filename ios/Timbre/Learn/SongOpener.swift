@@ -28,8 +28,8 @@ struct SongOpener: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @AppStorage(BandArrangement.preferenceKey) private var bandOn = true
     @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
-    /// The lead sheet shows tab rather than the melody's shape (fretted courses).
-    @AppStorage("songsheet.tab") private var showTab = false
+    /// What the lead sheet writes the melody as on a fretted course: staff, tab or both.
+    @AppStorage(NotationMode.storageKey) private var notationMode: NotationMode = .both
     @State private var unfolded = false
     @State private var width: CGFloat = 390
     /// "Preview with band" is playing.
@@ -299,7 +299,7 @@ struct SongOpener: View {
                 BandControls(audio: store.audio, accent: accent)
             }
             SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent,
-                           progress: position.map { $0 / Double(max(1, sheet.bars)) }, selected: selected) { section in
+                           progress: position.map { $0 / Double(max(1, sheet.bars)) }, bleed: Self.margin, selected: selected) { section in
                 pick(section)
                 withAnimation(reduceMotion ? nil : Motion.settle) { proxy.scrollTo(section.anchor, anchor: .center) }
             }
@@ -310,13 +310,15 @@ struct SongOpener: View {
     // MARK: Lead sheet
 
     @ViewBuilder private func leadSheet(_ position: Double?) -> some View {
-        let chart = self.chart
-        let tab = tabLayout
+        let tabbed = EngravedSheet.hasTab(lesson: lesson, course: course)
+        let inner = max(120, min(width, Self.measure) - Self.margin * 2 - EngravedSheet.cardInset * 2)
+        let engraved = EngravedSheet.of(lesson: lesson, course: course, mode: tabbed ? notationMode : .staff, width: inner,
+                                        textScale: textScale, thinnestOnTop: stringOrder.thinnestOnTop)
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
-                heading("Lead sheet", detail: Text(verbatim: sheet.meterName))
+                heading("Lead sheet", detail: engraved.swing ? Text("\(sheet.meterName) · Swing") : Text(verbatim: sheet.meterName))
                 Spacer(minLength: 8)
-                if tab != nil { notationSwitch }
+                if tabbed { NotationModePicker(mode: $notationMode) }
             }
             if let words = sheet.arrangement?.words {
                 // Who wrote the words the sheet sets under the melody.
@@ -325,47 +327,23 @@ struct SongOpener: View {
                     .lineLimit(2).fixedSize(horizontal: false, vertical: true)
                     .padding(.top, -6)
             }
-            LeadSheetView(chart: chart, sections: sheet.sections, accent: accent, tab: showTab ? tab : nil,
-                          width: min(width, Self.measure) - Self.margin * 2, position: position, selected: selected,
-                          onSelect: { section in pick(section) },
+            LeadSheetView(chart: chart, sections: sheet.sections, accent: accent, engraved: engraved, position: position,
+                          selected: selected, onSelect: { section in pick(section) },
                           controls: { section in loopControls(section) })
+                .animation(reduceMotion ? nil : Motion.settle, value: notationMode)
         }
         .accessibilityIdentifier("song.leadsheet")
     }
 
-    /// Fret numbers for every note, where the lesson places it (else the lowest fret), on fretted courses only.
-    private var tabLayout: LeadTab? {
-        guard course.fretKind != nil, !course.fretless, course.stringCount > 0, !chart.notes.isEmpty else { return nil }
-        let frets = chart.notes.map { $0.at ?? course.fretting(for: $0.midi) }
-        guard frets.contains(where: { $0 != nil }) else { return nil }
-        return LeadTab(frets: frets, strings: course.stringCount, thinnestOnTop: stringOrder.thinnestOnTop)
-    }
-
-    /// Notes (the melody's shape) or Tab.
-    private var notationSwitch: some View {
-        HStack(spacing: 2) {
-            notationOption("Notes", on: !showTab) { showTab = false }
-            notationOption("Tab", on: showTab) { showTab = true }
+    /// The words and chord symbols grow a little with the reader's text size (the staff keeps its scale).
+    private var textScale: CGFloat {
+        switch typeSize {
+        case .xSmall, .small, .medium, .large: return 1
+        case .xLarge: return 1.08
+        case .xxLarge: return 1.16
+        case .xxxLarge: return 1.24
+        default: return 1.32
         }
-        .padding(2)
-        .background(Capsule().fill(Palette.stageRaised))
-        .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
-        .animation(reduceMotion ? nil : Motion.quick, value: showTab)
-    }
-
-    private func notationOption(_ title: LocalizedStringKey, on: Bool, action: @escaping () -> Void) -> some View {
-        Button {
-            guard !on else { return }
-            Haptics.shared.selection()
-            action()
-        } label: {
-            Text(title).font(Typeface.label(12)).foregroundStyle(on ? Palette.stage : Palette.inkSoft)
-                .padding(.horizontal, 12).frame(minHeight: 28)
-                .background { if on { Capsule().fill(Palette.ink) } }
-                .contentShape(Capsule())
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(on ? .isSelected : [])
     }
 
     /// Under the picked section: loop or stop, the speed, and (when the host takes it on) practice this part.

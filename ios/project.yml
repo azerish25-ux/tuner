@@ -25,6 +25,10 @@ targets:
     dependencies:
       - package: TimbreCore
       - target: TimbreWidgets
+      # The Apple Watch companion, embedded in Timbre.app/Watch ("Embed Watch Content"); it signs itself, as Xcode's
+      # own watch template does. Building Timbre for an iOS simulator builds it for the watch simulator.
+      - target: TimbreWatch
+        codeSign: false
     entitlements:
       path: Timbre/Timbre.entitlements
       properties:
@@ -33,6 +37,12 @@ targets:
       path: Timbre/Info.plist
       properties:
         CFBundleDisplayName: Timbre
+        # The version and build every bundle carries (app, widgets, watch app, complications): App Store Connect needs a
+        # new build number per upload (apple-delivery.yml sets both), and the watch app's must equal the app's.
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # "Start today's practice" handed over from Apple Watch (TimbreApp continues it on Today).
+        NSUserActivityTypes: [com.shahradazerisharghi.timbre.today]
         NSMicrophoneUsageDescription: Timbre listens to your instrument or voice to measure pitch. Audio is processed on your device and is never saved or uploaded.
         UILaunchScreen:
           UIColorName: LaunchBackground
@@ -90,6 +100,8 @@ targets:
       path: TimbreWidgets/Info.plist
       properties:
         CFBundleDisplayName: Timbre
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
         UIAppFonts: [Sora-Light.ttf, Sora-Medium.ttf, Sora-SemiBold.ttf, Sora-Bold.ttf]
@@ -97,6 +109,84 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre.widgets
         TARGETED_DEVICE_FAMILY: "1,2"
+  # Apple Watch companion (watchOS 11+): the haptic wrist metronome, today's streak and set, and "Start today's practice"
+  # on the iPhone. A single-target SwiftUI watch app embedded in Timbre.app/Watch, fed over WatchConnectivity by
+  # Timbre/Services/WatchBridge.swift. Same App Group id as the iPhone (each device has its own container): the watch app
+  # keeps the iPhone's last snapshot there for its complications.
+  TimbreWatch:
+    type: application
+    platform: watchOS
+    deploymentTarget: "11.0"
+    sources:
+      - path: TimbreWatch
+        excludes: [PrivacyInfo.xcprivacy]
+      - path: TimbreWatch/PrivacyInfo.xcprivacy
+        buildPhase: resources
+      - path: Timbre/Services/WatchSnapshot.swift
+      - path: Timbre/Resources/Fonts/Sora-Medium.ttf
+        buildPhase: resources
+      - path: Timbre/Resources/Fonts/Sora-SemiBold.ttf
+        buildPhase: resources
+      - path: Timbre/Resources/Fonts/Sora-OFL.txt
+        buildPhase: resources
+      # The watch's own labels ("day streak", "Tempo", "Start today's practice") read the app's string tables.
+      - path: Timbre/Resources
+        includes: ["*.lproj/Localizable.strings", "*.lproj/Localizable.stringsdict"]
+        buildPhase: resources
+    dependencies:
+      - target: TimbreWatchWidgets
+        codeSign: false
+    entitlements:
+      path: TimbreWatch/TimbreWatch.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.shahradazerisharghi.timbre]
+    info:
+      path: TimbreWatch/Info.plist
+      properties:
+        CFBundleDisplayName: Timbre
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # A single-target watch app, installed with (and only beside) the iPhone app.
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: com.shahradazerisharghi.timbre
+        WKRunsIndependentlyOfCompanionApp: false
+        NSUserActivityTypes: [com.shahradazerisharghi.timbre.today]
+        UIAppFonts: [Sora-Medium.ttf, Sora-SemiBold.ttf]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre.watchkitapp
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+  # The watch complications (accessoryCircular, Rectangular, Corner, Inline): the streak flame and count with today's set.
+  TimbreWatchWidgets:
+    type: app-extension
+    platform: watchOS
+    deploymentTarget: "11.0"
+    sources:
+      - path: TimbreWatchWidgets
+        excludes: [PrivacyInfo.xcprivacy]
+      - path: TimbreWatchWidgets/PrivacyInfo.xcprivacy
+        buildPhase: resources
+      - path: Timbre/Services/WatchSnapshot.swift
+      - path: TimbreWatch/Shared/SnapshotStore.swift
+      - path: TimbreWatch/Shared/WatchTheme.swift
+      - path: Timbre/Resources
+        includes: ["*.lproj/Localizable.strings", "*.lproj/Localizable.stringsdict"]
+        buildPhase: resources
+    entitlements:
+      path: TimbreWatchWidgets/TimbreWatchWidgets.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.shahradazerisharghi.timbre]
+    info:
+      path: TimbreWatchWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Timbre
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre.watchkitapp.widgets
   TimbreUITests:
     type: bundle.ui-testing
     platform: iOS
@@ -131,3 +221,10 @@ schemes:
     test:
       targets: [TimbreAppTests, TimbreUITests]
       parallelizeBuild: false
+  # Runs the watch app on its own (a watch simulator paired with an iPhone one, or a watch).
+  TimbreWatch:
+    build:
+      targets:
+        TimbreWatch: all
+    run:
+      config: Debug

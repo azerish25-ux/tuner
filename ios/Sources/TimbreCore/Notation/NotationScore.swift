@@ -76,9 +76,11 @@ public struct NotationScore: Equatable, Sendable {
     public let swing: Bool
     public let slashes: Bool
 
-    /// `notes` (in beats from the top of the song, `beatsPerBar` to a bar) over at least `bars` bars.
-    public init(notes: [TimedNote], beatsPerBar: Int, bars: Int, key: KeySignature, clef: Clef, slashes: Bool = false) {
-        let meter = NotationMeter(beatsPerBar: beatsPerBar)
+    /// `notes` (in beats from the top of the song, `beatsPerBar` to a bar) over at least `bars` bars. `compound` forces
+    /// the meter's reading (a phrase of six quarters is not 6/8).
+    public init(notes: [TimedNote], beatsPerBar: Int, bars: Int, key: KeySignature, clef: Clef, slashes: Bool = false,
+                compound: Bool? = nil) {
+        let meter = NotationMeter(beatsPerBar: beatsPerBar, compound: compound)
         let swing = !meter.compound && Self.swings(notes)
         self.meter = meter
         self.key = key

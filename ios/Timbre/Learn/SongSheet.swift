@@ -433,34 +433,51 @@ extension SongSheet {
     }
 }
 
-/// The song's sections as one bar across the screen, each as wide as its bars: named by the arrangement ("Verse 1",
-/// "Chorus") or the lesson's play-along ("The hook") over its bars, or plain bars, or the chord it holds. While the
-/// song plays, `progress` (0…1 of the
-/// song) fills the sections behind a playhead. Given `onSelect`, each section is a button (the song sheet loops it)
-/// and `selected` stands out with a loop mark.
+/// The song's sections as one row of tiles, each named and nothing more ("Verse 1", "Chorus", the chord it holds; a
+/// glyph for the band's intro and outro), its bars on a long press and to VoiceOver. A tile is as wide as its share of
+/// the bars, but never narrower than its name: when the names need more room than the screen has, the row scrolls
+/// (to `bleed` past its edges), keeping the section playing, or the one picked, in view. While the song plays,
+/// `progress` (0…1 of the song) fills the sections behind a playhead. Given `onSelect`, each section is a button (the
+/// song sheet loops it) and `selected` stands out with a loop mark.
 struct SongSectionMap: View {
     let sections: [SongSheet.Section]
     let bars: Int
     var accent: Color = Palette.mint
     var progress: Double?
     var height: CGFloat = 50
+    /// How far the row may scroll past its own edges (to the screen's), resting aligned with them.
+    var bleed: CGFloat = 0
     /// The section looping on the song sheet.
     var selected: Int?
     var onSelect: ((SongSheet.Section) -> Void)?
 
-    private static let spacing: CGFloat = 3
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// The tile held down (shrunk under the finger), and the one showing its bars.
+    @State private var pressed: Int?
+    @State private var peek: Int?
+
+    private static let spacing: CGFloat = 4
 
     var body: some View {
         GeometryReader { proxy in
-            let layout = Spans(sections: sections, bars: bars, width: proxy.size.width)
-            ZStack(alignment: .topLeading) {
-                ForEach(Array(sections.enumerated()), id: \.element.id) { index, section in
-                    segmentSlot(section, width: layout.widths[index])
-                        .offset(x: layout.lefts[index])
+            ScrollViewReader { reader in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    SectionRow(available: proxy.size.width, weights: sections.map { max(1, $0.bars) }, spacing: Self.spacing) {
+                        ForEach(sections) { section in
+                            tile(section).id(section.id)
+                        }
+                    }
+                    .frame(height: proxy.size.height)
                 }
-                if let progress {
-                    playhead
-                        .offset(x: layout.x(for: progress) - 1.5)
+                .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+                .railBleed(leading: bleed, trailing: bleed)
+                .onAppear {
+                    guard let focus else { return }
+                    reader.scrollTo(focus, anchor: .center)
+                }
+                .onChange(of: focus) { _, value in
+                    guard let value else { return }
+                    withAnimation(reduceMotion ? nil : Motion.settle) { reader.scrollTo(value, anchor: .center) }
                 }
             }
         }
@@ -468,106 +485,45 @@ struct SongSectionMap: View {
         .modifier(MapAccessibility(interactive: onSelect != nil, summary: spokenSections))
     }
 
-    /// Where each section sits across `width`, with a little air between them.
-    private struct Spans {
-        let lefts: [CGFloat]
-        let widths: [CGFloat]
-        let sections: [SongSheet.Section]
-        let bars: Int
-
-        init(sections: [SongSheet.Section], bars: Int, width: CGFloat) {
-            self.sections = sections
-            self.bars = max(1, bars)
-            let gaps = SongSectionMap.spacing * CGFloat(max(0, sections.count - 1))
-            let unit = max(0, width - gaps) / CGFloat(max(1, bars))
-            var lefts: [CGFloat] = []
-            var widths: [CGFloat] = []
-            var x: CGFloat = 0
-            for section in sections {
-                lefts.append(x)
-                let w = unit * CGFloat(section.bars)
-                widths.append(w)
-                x += w + SongSectionMap.spacing
-            }
-            self.lefts = lefts
-            self.widths = widths
+    /// The section to keep in view: the one the playhead is in, else the one picked.
+    private var focus: Int? {
+        if let progress {
+            let bar = progress * Double(max(1, bars))
+            if let playing = sections.first(where: { bar < Double($0.start + $0.bars) }) { return playing.id }
         }
-
-        /// The playhead's x for `progress` of the song.
-        func x(for progress: Double) -> CGFloat {
-            let bar = min(Double(bars), max(0, progress * Double(bars)))
-            for (index, section) in sections.enumerated() where bar <= Double(section.start + section.bars) {
-                let within = (bar - Double(section.start)) / Double(max(1, section.bars))
-                return lefts[index] + widths[index] * CGFloat(max(0, min(1, within)))
-            }
-            return (lefts.last ?? 0) + (widths.last ?? 0)
-        }
+        return selected
     }
 
-    /// A section, as a button when the map picks loops.
-    @ViewBuilder private func segmentSlot(_ section: SongSheet.Section, width: CGFloat) -> some View {
+    /// A section: tapped, it loops; held, it shows its bars until let go.
+    @ViewBuilder private func tile(_ section: SongSheet.Section) -> some View {
+        let tint = Self.tint(of: section, in: sections, accent: accent)
+        let content = SectionTile(section: section, tint: tint, fill: fill(of: section), selected: selected == section.id,
+                                  peeking: peek == section.id, pressed: pressed == section.id, playing: progress != nil)
         if let onSelect {
-            Button { onSelect(section) } label: { segment(section, width: width) }
-                .buttonStyle(PressScaleStyle())
+            content
+                .contentShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+                .onTapGesture { onSelect(section) }
+                .onLongPressGesture(minimumDuration: 0.35) {
+                    Haptics.shared.selection()
+                    withAnimation(reduceMotion ? nil : Motion.quick) { peek = section.id }
+                } onPressingChanged: { pressing in
+                    withAnimation(reduceMotion ? nil : Motion.quick) { pressed = pressing ? section.id : nil }
+                    guard !pressing else { return }
+                    Task { @MainActor in
+                        // Let go: the bars stay a beat, then the name comes back.
+                        try? await Task.sleep(for: .seconds(0.9))
+                        guard peek == section.id, pressed != section.id else { return }
+                        withAnimation(reduceMotion ? nil : Motion.settle) { peek = nil }
+                    }
+                }
+                .accessibilityElement(children: .ignore)
                 .accessibilityLabel(Text(verbatim: Self.spoken(section)))
                 .accessibilityHint(Text("Loops this part"))
-                .accessibilityAddTraits(selected == section.id ? .isSelected : [])
+                .accessibilityAddTraits(selected == section.id ? [.isButton, .isSelected] : [.isButton])
+                .accessibilityAction { onSelect(section) }
         } else {
-            segment(section, width: width)
+            content
         }
-    }
-
-    private func segment(_ section: SongSheet.Section, width: CGFloat) -> some View {
-        let tint = Self.tint(of: section, in: sections, accent: accent)
-        let shape = RoundedRectangle(cornerRadius: 11, style: .continuous)
-        let filled = fill(of: section)
-        let on = selected == section.id
-        let plain = (section.title == nil && section.chord == nil) || section.isBookend
-        let base = plain ? 0.08 : 0.16
-        return ZStack(alignment: .leading) {
-            shape.fill(tint.opacity(on ? 0.3 : base))
-            Rectangle().fill(tint.opacity(0.42)).frame(width: max(0, width * CGFloat(filled)))
-            if width >= 34 { label(section, tint: tint).padding(.horizontal, 8) }
-        }
-        .frame(width: max(0, width), height: height, alignment: .leading)
-        .overlay(alignment: .topTrailing) {
-            if on && width >= 64 {
-                Image(systemName: "repeat").font(.system(size: 10, weight: .bold)).foregroundStyle(tint).padding(6)
-            }
-        }
-        .clipShape(shape)
-        .overlay(shape.strokeBorder(tint.opacity(on ? 0.95 : filled > 0 ? 0.7 : 0.35), lineWidth: on ? 2 : 1))
-        .contentShape(shape)
-    }
-
-    @ViewBuilder private func label(_ section: SongSheet.Section, tint: Color) -> some View {
-        VStack(alignment: .leading, spacing: 1) {
-            if let title = section.title {
-                Text(title.localized).font(Typeface.label(12)).foregroundStyle(Palette.ink)
-                barsText(section).font(.caption2.weight(.semibold)).foregroundStyle(tint)
-            } else if let chord = section.chord {
-                Text(verbatim: chord.name).font(Typeface.display(15, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
-                barsText(section).font(.caption2.weight(.semibold)).foregroundStyle(Palette.inkSoft)
-            } else {
-                barsText(section).font(Typeface.label(12)).foregroundStyle(Palette.inkSoft)
-            }
-        }
-        .lineLimit(1)
-        .minimumScaleFactor(0.6)
-        .dynamicTypeSize(...DynamicTypeSize.xLarge)
-    }
-
-    private func barsText(_ section: SongSheet.Section) -> Text {
-        section.bars == 1 ? Text("Bar \(section.start + 1)") : Text("Bars \(section.start + 1)–\(section.start + section.bars)")
-    }
-
-    /// A white playhead with a glow in the accent.
-    private var playhead: some View {
-        Capsule().fill(Color.white)
-            .frame(width: 3, height: height + 8)
-            .offset(y: -4)
-            .shadow(color: accent.opacity(0.9), radius: 6)
-            .allowsHitTesting(false)
     }
 
     /// The hook (or chorus) always in amber, the other named sections in the accent and the colours after it (the
@@ -624,6 +580,133 @@ struct SongSectionMap: View {
 
     private var spokenSections: String {
         sections.map(Self.spoken).joined(separator: "; ")
+    }
+}
+
+/// The map's tiles side by side: each its bars' share of the width, never narrower than its own label (a tile that
+/// needs more keeps its label's width and the rest share what is left). When even the labels need more room than
+/// there is, the row is as wide as they make it, and scrolls.
+private struct SectionRow: Layout {
+    let available: CGFloat
+    let weights: [Int]
+    let spacing: CGFloat
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let widths = widths(subviews)
+        let total = widths.reduce(0, +) + spacing * CGFloat(max(0, subviews.count - 1))
+        let tallest = subviews.map { $0.sizeThatFits(.unspecified).height }.max() ?? 0
+        return CGSize(width: total, height: proposal.height ?? tallest)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let widths = widths(subviews)
+        var x = bounds.minX
+        for (index, subview) in subviews.enumerated() {
+            let width = index < widths.count ? widths[index] : 0
+            subview.place(at: CGPoint(x: x, y: bounds.minY), anchor: .topLeading,
+                          proposal: ProposedViewSize(width: width, height: bounds.height))
+            x += width + spacing
+        }
+    }
+
+    private func widths(_ subviews: Subviews) -> [CGFloat] {
+        let minimums = subviews.map { ceil($0.sizeThatFits(.unspecified).width) }
+        guard minimums.count == weights.count, !minimums.isEmpty else { return minimums }
+        let room = available - spacing * CGFloat(max(0, minimums.count - 1))
+        guard room > minimums.reduce(0, +) else { return minimums }
+        var held = Set<Int>()
+        var unit: CGFloat = 0
+        while true {
+            let freeWeight = weights.indices.filter { !held.contains($0) }.reduce(Int(0)) { $0 + weights[$1] }
+            let freeRoom = room - held.reduce(CGFloat(0)) { $0 + minimums[$1] }
+            guard freeWeight > 0 else { break }
+            unit = freeRoom / CGFloat(freeWeight)
+            let short = weights.indices.filter { !held.contains($0) && unit * CGFloat(weights[$0]) < minimums[$0] }
+            if short.isEmpty { break }
+            held.formUnion(short)
+        }
+        return weights.indices.map { held.contains($0) ? minimums[$0] : unit * CGFloat(weights[$0]) }
+    }
+}
+
+/// One tile of the map: the section's name (a chord's symbol; for a section without one, its bars; a glyph for an
+/// intro or outro) or, held down, its bars; filled behind the playhead while the song plays.
+private struct SectionTile: View {
+    let section: SongSheet.Section
+    let tint: Color
+    let fill: Double
+    let selected: Bool
+    let peeking: Bool
+    let pressed: Bool
+    let playing: Bool
+
+    var body: some View {
+        let shape = RoundedRectangle(cornerRadius: 11, style: .continuous)
+        let plain = (section.title == nil && section.chord == nil) || section.isBookend
+        let base = plain ? 0.08 : 0.16
+        ZStack {
+            name.opacity(peeking ? 0 : 1)
+            barsLabel.opacity(peeking ? 1 : 0)
+        }
+        .padding(.horizontal, 12)
+        .frame(minWidth: 44)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background {
+            ZStack(alignment: .leading) {
+                shape.fill(tint.opacity(selected ? 0.3 : base))
+                GeometryReader { proxy in
+                    ZStack(alignment: .leading) {
+                        Rectangle().fill(tint.opacity(0.42)).frame(width: proxy.size.width * CGFloat(fill))
+                        if playing && fill > 0 && fill < 1 {
+                            Capsule().fill(Color.white)
+                                .frame(width: 3)
+                                .shadow(color: tint.opacity(0.9), radius: 5)
+                                .offset(x: proxy.size.width * CGFloat(fill) - 1.5)
+                        }
+                    }
+                }
+            }
+        }
+        .clipShape(shape)
+        .overlay(shape.strokeBorder(tint.opacity(selected ? 0.95 : fill > 0 ? 0.7 : 0.35), lineWidth: selected ? 2 : 1))
+        .overlay(alignment: .topTrailing) {
+            if selected {
+                Image(systemName: "repeat").font(.system(size: 8, weight: .heavy)).foregroundStyle(tint).padding(5)
+            }
+        }
+        .scaleEffect(pressed ? 0.95 : 1)
+        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+    }
+
+    @ViewBuilder private var name: some View {
+        if section.isBookend, let kind = section.part?.kind {
+            Image(systemName: kind == .intro ? "arrow.right.to.line" : "flag.checkered")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(Palette.inkSoft)
+        } else if let title = section.title {
+            Text(title.localized).font(Typeface.label(12)).foregroundStyle(Palette.ink).lineLimit(1).fixedSize()
+        } else if let chord = section.chord {
+            Text(verbatim: chord.name).font(Typeface.display(15, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
+                .lineLimit(1).fixedSize()
+        } else {
+            Text(verbatim: range).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft).lineLimit(1).fixedSize()
+        }
+    }
+
+    /// "BARS" over "5–12".
+    private var barsLabel: some View {
+        VStack(spacing: 0) {
+            Text(section.bars == 1 ? LocalizedStringKey("Bar") : LocalizedStringKey("Bars"))
+                .font(.system(size: 9, weight: .semibold)).tracking(0.6).textCase(.uppercase)
+                .foregroundStyle(tint == Palette.inkSoft ? Palette.inkSoft : tint)
+            Text(verbatim: range).font(Typeface.number(13)).foregroundStyle(Palette.ink)
+        }
+        .lineLimit(1)
+        .fixedSize()
+    }
+
+    private var range: String {
+        section.bars == 1 ? "\(section.start + 1)" : "\(section.start + 1)–\(section.start + section.bars)"
     }
 }
 
@@ -859,34 +942,23 @@ struct LeadChart {
     }
 }
 
-/// How the lead sheet draws the melody: its shape with note names, or fret numbers on the strings (tab).
-struct LeadTab: Equatable {
-    /// Where each of the chart's notes is played, in order.
-    let frets: [Fretting?]
-    let strings: Int
-    /// String 1 (the thinnest) on the top line, else the thickest.
-    let thinnestOnTop: Bool
-}
-
-/// The lead sheet, section by section: each a card headed by its name and bars (the hook marked), its bars in rows
-/// (four to a row on a phone, up to eight on a wide screen; fewer when the words need the room), the chord symbols
-/// over them, the melody, or tab, in them and the words under them. Tapping a section picks it (`onSelect`); the
+/// The lead sheet, section by section: each a card headed by its name and bars (the hook marked), its music engraved
+/// in lines (`EngravedSheet`: a staff with clef, key and time, beamed rhythms, rests and ties, the tab under it or
+/// either alone, the chord symbols over them and the words under them). Tapping a section picks it (`onSelect`); the
 /// picked one shows `controls`. While the song or a loop plays, `position` (bars from the start) moves a playhead
-/// through the bars and lights the notes and syllables it has passed.
+/// through the bars and lights the notes and syllables it reaches.
 struct LeadSheetView<Controls: View>: View {
     let chart: LeadChart
     let sections: [SongSheet.Section]
     let accent: Color
-    var tab: LeadTab?
-    let width: CGFloat
+    let engraved: EngravedSheet
     var position: Double?
     var selected: Int?
     let onSelect: (SongSheet.Section) -> Void
     @ViewBuilder let controls: (SongSheet.Section) -> Controls
 
-    private static var inset: CGFloat { 12 }
-    /// The width a syllable of the words takes under its note, gap included.
-    private static var syllableRoom: CGFloat { 24 }
+    /// The card's inset: the sheet is engraved for the width inside it.
+    private static var inset: CGFloat { EngravedSheet.cardInset }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -894,33 +966,8 @@ struct LeadSheetView<Controls: View>: View {
         }
     }
 
-    /// Bars to a row: four (eight in 2/4) on a phone, twice that on a wide screen, as many as leave a busy bar's
-    /// words room to read, and never more than the longest section.
-    private var perRow: Int {
-        let base = chart.meter <= 2 ? 8 : 4
-        let capacity = width >= 700 ? base * 2 : base
-        let longest = sections.map(\.bars).max() ?? capacity
-        var fit = capacity
-        if chart.syllablesPerBar > 0 {
-            let room = max(1, width - Self.inset * 2)
-            fit = max(1, Int(room / (CGFloat(chart.syllablesPerBar) * Self.syllableRoom)))
-        }
-        return max(1, min(capacity, fit, longest))
-    }
-
     /// The first hook: only it wears the Hook badge (an arrangement's later choruses are the same part again).
     private var firstHook: Int? { sections.first { $0.isHook }?.id }
-
-    private struct Row: Identifiable {
-        let start: Int
-        let count: Int
-        var id: Int { start }
-    }
-
-    private func rows(_ section: SongSheet.Section) -> [Row] {
-        let end = section.start + section.bars
-        return stride(from: section.start, to: end, by: perRow).map { Row(start: $0, count: min(perRow, end - $0)) }
-    }
 
     private func block(_ section: SongSheet.Section) -> some View {
         let tint = SongSectionMap.tint(of: section, in: sections, accent: accent)
@@ -928,12 +975,12 @@ struct LeadSheetView<Controls: View>: View {
         let shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
         let wash = on ? 0.13 : section.isHook ? 0.07 : 0.035
         let edge = on ? 0.7 : section.isHook ? 0.34 : 0.1
-        return VStack(alignment: .leading, spacing: 8) {
+        return VStack(alignment: .leading, spacing: 4) {
             header(section, tint: tint, on: on)
-            ForEach(rows(section)) { row in
-                rowView(row, section: section, tint: tint)
+            ForEach(engraved.lines(for: section.id)) { line in
+                lineView(line, section: section)
             }
-            if on { controls(section) }
+            if on { controls(section).padding(.top, 4) }
         }
         .padding(Self.inset)
         .background(shape.fill(tint.opacity(wash)))
@@ -941,6 +988,15 @@ struct LeadSheetView<Controls: View>: View {
         .contentShape(shape)
         .onTapGesture { onSelect(section) }
         .id(section.anchor)
+    }
+
+    private func lineView(_ line: EngravedLine, section: SongSheet.Section) -> some View {
+        var highlight = NotationHighlight.none
+        if let position, line.bars.contains(where: { $0.index == Int(position.rounded(.down)) }) {
+            highlight = .playhead(position)
+        }
+        return EngravedLineView(line: line, tint: SongSectionMap.noteTint(of: section, in: sections, accent: accent), highlight: highlight)
+            .equatable()
     }
 
     private func header(_ section: SongSheet.Section, tint: Color, on: Bool) -> some View {
@@ -1001,261 +1057,6 @@ struct LeadSheetView<Controls: View>: View {
             last = chord.symbol
         }
         return names.joined(separator: ", ")
-    }
-
-    /// The chord changes in beats `from..<to`, led by the chord already sounding at `from` when none changes there.
-    private func marks(from: Double, to: Double) -> [LeadChart.Mark] {
-        var inside = chart.marks.filter { $0.beat >= from - 1e-6 && $0.beat < to - 1e-6 }
-        let opens = inside.first.map { abs($0.beat - from) < 1e-6 } ?? false
-        if !opens, let carried = chart.chord(atBeat: from) {
-            inside.insert(LeadChart.Mark(beat: from, chord: carried), at: 0)
-        }
-        return inside
-    }
-
-    private func rowView(_ row: Row, section: SongSheet.Section, tint: Color) -> some View {
-        let from = Double(row.start * chart.meter)
-        let to = Double((row.start + row.count) * chart.meter)
-        var notes: [TimedNote] = []
-        var frets: [Fretting?] = []
-        var words: [String?] = []
-        for (index, note) in chart.notes.enumerated() where note.beat >= from - 1e-6 && note.beat < to - 1e-6 {
-            notes.append(note)
-            words.append(index < chart.lyrics.count ? chart.lyrics[index] : nil)
-            if let tab { frets.append(index < tab.frets.count ? tab.frets[index] : nil) }
-        }
-        let inRow = position.map { $0 >= Double(row.start) && $0 < Double(row.start + row.count) } ?? false
-        let lead = LeadRow(start: row.start, count: row.count, perRow: perRow, meter: chart.meter, notes: notes,
-                           frets: tab == nil ? nil : frets, marks: marks(from: from, to: to), showChords: chart.hasChords,
-                           strokes: chart.strokes, low: chart.low, high: chart.high,
-                           tint: SongSectionMap.noteTint(of: section, in: sections, accent: accent),
-                           strings: tab?.strings ?? 0, thinnestOnTop: tab?.thinnestOnTop ?? true,
-                           position: inRow ? position : nil, closes: row.start + row.count == section.start + section.bars,
-                           lyrics: words, showLyrics: chart.hasLyrics)
-        return lead.equatable()
-            .frame(height: lead.height)
-            .accessibilityHidden(true)
-    }
-}
-
-/// One row of the lead sheet, drawn in one Canvas: bar lines (a double one closing its section), chord symbols where
-/// the chord changes (on the beat it changes), then the melody as its shape (each note a bar as long as it lasts, at
-/// its pitch, named above), as tab (fret numbers on the strings), or, for a strummed song, slashes on the strokes;
-/// under it the words, a syllable under each note and a line under a held one. Equatable, so only the row the
-/// playhead is in redraws while a song plays.
-struct LeadRow: View, Equatable {
-    let start: Int
-    let count: Int
-    let perRow: Int
-    let meter: Int
-    let notes: [TimedNote]
-    let frets: [Fretting?]?
-    /// The chord changes in the row, the chord sounding at its start first.
-    let marks: [LeadChart.Mark]
-    let showChords: Bool
-    let strokes: [Double]
-    let low: Int
-    let high: Int
-    let tint: Color
-    let strings: Int
-    let thinnestOnTop: Bool
-    let position: Double?
-    let closes: Bool
-    /// The syllable under each note, and whether the song has words at all (a lane for them under every row).
-    let lyrics: [String?]
-    let showLyrics: Bool
-
-    private static let chordLane: CGFloat = 24
-    private static let lyricLane: CGFloat = 18
-    private static let labelFace = "Sora-SemiBold"
-
-    var height: CGFloat {
-        let lane = (showChords ? Self.chordLane : 0) + (showLyrics ? Self.lyricLane : 0)
-        if frets != nil { return lane + CGFloat(max(1, strings - 1)) * 12 + 18 }
-        if notes.isEmpty { return lane + 34 }
-        return lane + 64
-    }
-
-    var body: some View {
-        Canvas { context, size in draw(&context, size: size) }
-    }
-
-    private func draw(_ context: inout GraphicsContext, size: CGSize) {
-        let bar = size.width / CGFloat(max(1, perRow))
-        let top = showChords ? Self.chordLane : 0
-        let words = showLyrics ? Self.lyricLane : 0
-        let lane = CGRect(x: 0, y: top, width: bar * CGFloat(count), height: max(1, size.height - top - words))
-        drawBarLines(&context, bar: bar, lane: lane)
-        if showChords { drawChords(&context, bar: bar) }
-        if frets != nil {
-            drawTab(&context, bar: bar, lane: lane)
-        } else if notes.isEmpty {
-            drawStrokes(&context, bar: bar, lane: lane)
-        } else {
-            drawMelody(&context, bar: bar, lane: lane)
-        }
-        if showLyrics { drawLyrics(&context, bar: bar, baseline: size.height - 3, width: lane.maxX) }
-        if let position { drawPlayhead(&context, x: CGFloat(position - Double(start)) * bar, lane: lane) }
-    }
-
-    /// x of a beat (from the song's start) in this row.
-    private func x(_ beat: Double, bar: CGFloat) -> CGFloat { CGFloat(beat / Double(max(1, meter)) - Double(start)) * bar }
-
-    private func drawBarLines(_ context: inout GraphicsContext, bar: CGFloat, lane: CGRect) {
-        for i in 0...count {
-            let final = i == count && closes
-            let x = min(lane.maxX - (final ? 2.5 : 1), max(0, CGFloat(i) * bar - 0.5))
-            context.fill(Path(CGRect(x: x, y: lane.minY, width: 1, height: lane.height)),
-                         with: .color(Palette.inkFaint.opacity(final ? 0.75 : 0.35)))
-            if final {
-                context.fill(Path(CGRect(x: lane.maxX - 2.5, y: lane.minY, width: 2.5, height: lane.height)),
-                             with: .color(Palette.inkFaint.opacity(0.75)))
-            }
-        }
-    }
-
-    /// Each chord symbol over the beat it comes in on: smaller where the chart changes every beat or two, and nudged
-    /// along rather than over the one before.
-    private func drawChords(_ context: inout GraphicsContext, bar: CGFloat) {
-        let named = marks.filter { $0.chord != nil }
-        guard !named.isEmpty else { return }
-        var gap = CGFloat.infinity
-        for i in 1..<max(1, named.count) {
-            gap = min(gap, x(named[i].beat, bar: bar) - x(named[i - 1].beat, bar: bar))
-        }
-        let size: CGFloat = gap >= 44 ? 15 : gap >= 30 ? 13 : 11
-        var lastEnd = -CGFloat.infinity
-        for mark in named {
-            guard let chord = mark.chord else { continue }
-            let label = context.resolve(Text(verbatim: chord.name).font(.custom(Self.labelFace, fixedSize: size)).foregroundStyle(Palette.ink))
-            let left = max(x(mark.beat, bar: bar) + 6, lastEnd + 4)
-            context.draw(label, at: CGPoint(x: left, y: Self.chordLane / 2 - 1), anchor: .leading)
-            lastEnd = left + label.measure(in: CGSize(width: 90, height: Self.chordLane)).width
-        }
-    }
-
-    /// Three faint guide lines, the melody's contour under its notes, each note a bar at its pitch, its name above.
-    private func drawMelody(_ context: inout GraphicsContext, bar: CGFloat, lane: CGRect) {
-        for k in 1...3 {
-            let y = lane.minY + 14 + (lane.height - 20) * CGFloat(k) / 4
-            context.fill(Path(CGRect(x: 0, y: y, width: lane.width, height: 0.5)), with: .color(Palette.inkFaint.opacity(0.14)))
-        }
-        let span = CGFloat(max(1, high - low))
-        let floor = lane.maxY - 6
-        let reach = lane.height - 28
-        func y(_ midi: Int) -> CGFloat { floor - reach * CGFloat(midi - low) / span }
-        var contour = Path()
-        var lastLabelEnd = -CGFloat.infinity
-        let playing = position != nil
-        for (index, note) in notes.enumerated() {
-            let left = x(note.beat, bar: bar) + 2
-            let right = min(lane.maxX - 2, x(note.beat + note.beats, bar: bar) - 2)
-            let width = max(5, right - left)
-            let level = y(note.midi)
-            if index == 0 { contour.move(to: CGPoint(x: left, y: level)) } else { contour.addLine(to: CGPoint(x: left, y: level)) }
-            contour.addLine(to: CGPoint(x: left + width, y: level))
-            let passed = playing && Double(note.beat) / Double(max(1, meter)) <= (position ?? 0)
-            let sounding = passed && (note.beat + note.beats) / Double(max(1, meter)) > (position ?? 0)
-            let rect = CGRect(x: left, y: level - 3.5, width: width, height: 7)
-            if sounding {
-                context.fill(Path(roundedRect: rect.insetBy(dx: -3, dy: -3), cornerRadius: 6.5), with: .color(tint.opacity(0.35)))
-            }
-            let shade = playing && !passed ? tint.opacity(0.5) : tint
-            context.fill(Path(roundedRect: rect, cornerRadius: 3.5), with: .color(sounding ? Color.white : shade))
-            let name = context.resolve(Text(verbatim: NoteName.pitchClass(note.midi))
-                .font(.custom(Self.labelFace, fixedSize: 11)).foregroundStyle(Palette.inkSoft))
-            let measured = name.measure(in: CGSize(width: 60, height: 20))
-            if left >= lastLabelEnd + 3 {
-                context.draw(name, at: CGPoint(x: left, y: level - 6), anchor: .bottomLeading)
-                lastLabelEnd = left + measured.width
-            }
-        }
-        context.stroke(contour, with: .color(tint.opacity(0.22)), style: StrokeStyle(lineWidth: 1.2, lineCap: .round, lineJoin: .round))
-    }
-
-    /// The strings as lines, each note's fret on its string (a dash after it while it rings).
-    private func drawTab(_ context: inout GraphicsContext, bar: CGFloat, lane: CGRect) {
-        let count = max(1, strings)
-        let gap: CGFloat = 12
-        let first = lane.minY + 9
-        for r in 0..<count {
-            let y = first + CGFloat(r) * gap
-            context.fill(Path(CGRect(x: 0, y: y - 0.25, width: lane.width, height: 0.5)), with: .color(Palette.inkFaint.opacity(0.45)))
-        }
-        let playing = position != nil
-        for (index, note) in notes.enumerated() {
-            guard let frets, index < frets.count, let fret = frets[index] else { continue }
-            let number = max(1, min(count, fret.string))
-            let row = thinnestOnTop ? number - 1 : count - number
-            let y = first + CGFloat(row) * gap
-            let left = x(note.beat, bar: bar) + 3
-            let passed = playing && note.beat / Double(max(1, meter)) <= (position ?? 0)
-            let color = playing && !passed ? tint.opacity(0.5) : tint
-            let label = context.resolve(Text(verbatim: "\(fret.fret)").font(.custom(Self.labelFace, fixedSize: 11)).foregroundStyle(color))
-            let size = label.measure(in: CGSize(width: 40, height: 20))
-            let chip = CGRect(x: left - 2, y: y - 7, width: size.width + 4, height: 14)
-            context.fill(Path(roundedRect: chip, cornerRadius: 3), with: .color(Palette.stage))
-            context.draw(label, at: CGPoint(x: left, y: y), anchor: .leading)
-            let right = min(lane.maxX - 3, x(note.beat + note.beats, bar: bar) - 3)
-            if right - chip.maxX > 6 {
-                context.fill(Path(CGRect(x: chip.maxX + 2, y: y - 1, width: right - chip.maxX - 2, height: 2)), with: .color(color.opacity(0.35)))
-            }
-        }
-    }
-
-    /// A strummed song: a slash on every stroke, down-strokes (on the beat) full height, up-strokes shorter.
-    private func drawStrokes(_ context: inout GraphicsContext, bar: CGFloat, lane: CGRect) {
-        let middle = lane.midY
-        for i in 0..<count {
-            for stroke in strokes {
-                let x = CGFloat(i) * bar + bar * CGFloat(stroke / Double(max(1, meter))) + 8
-                guard x < CGFloat(i + 1) * bar - 4 else { continue }
-                let down = abs(stroke - stroke.rounded()) < 0.01
-                let half: CGFloat = down ? 8 : 5
-                var slash = Path()
-                slash.move(to: CGPoint(x: x - half * 0.45, y: middle + half))
-                slash.addLine(to: CGPoint(x: x + half * 0.45, y: middle - half))
-                context.stroke(slash, with: .color(tint.opacity(down ? 1 : 0.6)), style: StrokeStyle(lineWidth: down ? 3 : 2, lineCap: .round))
-            }
-        }
-    }
-
-    /// Each syllable under the start of its note (nudged along when the one before runs long, never over it), a line
-    /// under a note that holds the syllable before it. While the song plays, the words the playhead has passed are
-    /// lit and the syllable sounding takes the section's colour.
-    private func drawLyrics(_ context: inout GraphicsContext, bar: CGFloat, baseline: CGFloat, width: CGFloat) {
-        var lastEnd = -CGFloat.infinity
-        let at = position.map { $0 * Double(max(1, meter)) }
-        for (index, note) in notes.enumerated() {
-            guard index < lyrics.count, let syllable = lyrics[index] else { continue }
-            if syllable == TimedNote.held {
-                let left = max(lastEnd + 2, x(note.beat, bar: bar))
-                let right = min(width - 2, x(note.beat + note.beats, bar: bar) - 3)
-                if right - left > 4 {
-                    context.fill(Path(CGRect(x: left, y: baseline - 3, width: right - left, height: 1)),
-                                 with: .color(Palette.inkFaint.opacity(0.7)))
-                }
-                continue
-            }
-            let left = max(x(note.beat, bar: bar) + 2, lastEnd + 3)
-            guard left < width - 4 else { continue }
-            let text = context.resolve(Text(verbatim: syllable).font(.system(size: 12)).foregroundStyle(lyricStyle(note, at: at)))
-            context.draw(text, at: CGPoint(x: left, y: baseline), anchor: .bottomLeading)
-            lastEnd = left + text.measure(in: CGSize(width: 120, height: 20)).width
-        }
-    }
-
-    /// A syllable's colour: plain at rest; while playing, the sounding one in the tint, those passed bright, the rest dim.
-    private func lyricStyle(_ note: TimedNote, at beat: Double?) -> Color {
-        guard let beat else { return Palette.ink.opacity(0.82) }
-        if note.beat > beat + 1e-6 { return Palette.ink.opacity(0.45) }
-        return note.beat + note.beats > beat ? tint : Palette.ink
-    }
-
-    private func drawPlayhead(_ context: inout GraphicsContext, x: CGFloat, lane: CGRect) {
-        let rect = CGRect(x: x - 1, y: 0, width: 2, height: lane.maxY)
-        context.fill(Path(roundedRect: rect.insetBy(dx: -3, dy: 0), cornerRadius: 3), with: .color(tint.opacity(0.3)))
-        context.fill(Path(roundedRect: rect, cornerRadius: 1), with: .color(Color.white))
     }
 }
 

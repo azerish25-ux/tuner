@@ -9,7 +9,9 @@ What the owner sets up in Apple's portals and GitHub before the first App Store 
 | App | **Timbre** |
 | Bundle ID (app) | `com.shahradazerisharghi.timbre` |
 | Bundle ID (widgets) | `com.shahradazerisharghi.timbre.widgets` |
-| App Group | `group.com.shahradazerisharghi.timbre` (widgets read the practice streak from it) |
+| Bundle ID (Apple Watch app) | `com.shahradazerisharghi.timbre.watchkitapp` (ships inside the iPhone app, [section 7](#7-apple-watch-companion-owner-steps)) |
+| Bundle ID (watch complications) | `com.shahradazerisharghi.timbre.watchkitapp.widgets` |
+| App Group | `group.com.shahradazerisharghi.timbre` (widgets read the practice streak from it; on the watch, the complications read the watch app's copy) |
 | Minimum iOS | 18.0, iPhone and iPad |
 | Privacy policy URL | https://azerish25-ux.github.io/tuner/privacy.html |
 | Terms | Apple standard EULA: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/ |
@@ -56,7 +58,7 @@ The delivery workflow signs automatically with an App Store Connect API key, whi
 
 Never paste these into chat, issues, commits or logs. Revoke the key in App Store Connect if it is ever exposed.
 
-4. Run **Actions → Apple delivery → Run workflow** on `main` with a version (2.0.0), a new build number, and the confirmation box ticked. It runs the core tests, archives the Release build, signs it and uploads it to App Store Connect, where it appears under TestFlight after processing.
+4. Run **Actions → Apple delivery → Run workflow** on `main` with a version (2.0.0), a new build number, and the confirmation box ticked. It runs the core tests, archives the Release build, signs it and uploads it to App Store Connect, where it appears under TestFlight after processing. The version and build number go into every bundle (app, widgets, watch app, complications); App Store Connect refuses a build number it has already seen for that version.
 
 ## 4. Listing
 
@@ -151,3 +153,67 @@ The second time anyone turns a paywall down (onboarding's paywall counts as the 
 1. **Lapsed subscribers.** Under App Store Connect → Subscriptions → Timbre Pro → each plan → **Win-Back Offers**, create one or more offers (for example 1 month free, for people whose subscription ended 1–6 months ago). The app offers the best one the App Store lists for the person (`eligibleWinBackOfferIDs`) and buys it with that offer applied. StoreKit may also show Apple's own win-back sheet at launch to eligible people. That needs no code.
 2. **Never subscribed.** Give `timbre_pro_monthly` an **Introductory Offer** (for example a 1-week free trial for new subscribers). Introductory-offer eligibility covers the whole group, so someone who already used the yearly trial isn't offered it. The card shows the offer as Apple holds it ("Try Pro free for 7 days"), then the monthly price and how it renews. Leave the monthly plan without an introductory offer to switch this off.
 3. To test locally, add an introductory offer to the monthly plan in `ios/Tests/Fixtures/Timbre.storekit` (in a scratch copy, not the committed fixture the UI tests use). Turn down the paywall twice. The exit offer never shows under the UI tests or the demo modes.
+
+
+## 7. Apple Watch companion: owner steps
+
+The iPhone build carries a watch app (`ios/TimbreWatch`, watchOS 11 or later) and its complications (`ios/TimbreWatchWidgets`). They install with the iPhone app and are submitted with it. There is no separate App Store Connect record and nothing extra to buy.
+
+- **Wrist metronome.** Haptic taps, strong on the downbeat and light on the other beats. 30–240 BPM on the Digital Crown or by Tap, in 2/4 to 7/4. It starts at the iPhone metronome's tempo until the player sets their own.
+- **Today.** The streak flame inside today's set ring, then the set, the open quest and the next lesson, as the iPhone last sent them. After midnight the flame goes out and the ring clears.
+- **Start today's practice.** If Timbre is on the iPhone's screen, Today opens on the Play tab. If it isn't, the watch offers Handoff: Timbre appears in the iPhone's App Switcher and opens on Today. Opening Timbre within ten minutes also lands on Today. watchOS can't bring an iPhone app to the front by itself.
+- **Complications.** Circular (the set ring around the flame and count), rectangular (also in the Smart Stack), corner and inline.
+
+### 7.1 Signing: the two new bundle IDs
+
+On its first run, the delivery workflow's automatic signing (`-allowProvisioningUpdates`) does the following:
+
+- Registers `com.shahradazerisharghi.timbre.watchkitapp` and `com.shahradazerisharghi.timbre.watchkitapp.widgets`.
+- Turns on App Groups for them, with `group.com.shahradazerisharghi.timbre`.
+- Makes their App Store profiles.
+
+The API key must be allowed to create identifiers and profiles. The **Admin** key from section 3 can. A key with a narrower role fails with "No profiles for 'com.shahradazerisharghi.timbre.watchkitapp' were found". In that case, switch to an Admin key, or register the IDs by hand and run the workflow again:
+
+1. Certificates, Identifiers & Profiles → Identifiers → **+** → App IDs → App. Enter the explicit bundle ID `com.shahradazerisharghi.timbre.watchkitapp` and tick the **App Groups** capability. Do the same for `com.shahradazerisharghi.timbre.watchkitapp.widgets`.
+2. Open each one, then App Groups → Configure, and tick `group.com.shahradazerisharghi.timbre`.
+
+Handoff and WatchConnectivity need no capability. The watch app's version and build always match the iPhone app's, because `project.yml` gives every bundle the workflow's version and build number. App Store Connect rejects a watch app whose numbers differ.
+
+### 7.2 App Store Connect
+
+- **Apple Watch screenshots are required.** Once a build with the watch app has processed, the version page gets an Apple Watch section, and it can't be submitted without them. Pick one size and use it for every localization:
+
+  | Size (pixels) | Watches |
+  |---|---|
+  | 422 × 514 | Ultra 3/4 |
+  | 410 × 502 | Ultra and Ultra 2 |
+  | 416 × 496 | Series 10–12 |
+  | 396 × 484 | Series 7–9 |
+  | 368 × 448 | Series 4–6, SE |
+  | 312 × 390 | Series 3 and earlier |
+
+  To take them on a simulator, run the **TimbreWatch** scheme on an Apple Watch simulator paired with an iPhone one, then use File → Save Screen. To take them on a watch, turn on Watch app → General → Enable Screenshots, then press the side button and the Digital Crown together. Suggested frames:
+  - the metronome mid-bar;
+  - Today with a lit flame and a part-done ring;
+  - a face with the circular and rectangular complications.
+- **App Privacy** is unchanged (Data Not Collected). The watch gets the streak and today's set from the player's own iPhone over WatchConnectivity, and nothing leaves their devices.
+- **Review notes.** Add: "The Apple Watch app is a companion. Its metronome works on its own. The streak and Today come from the iPhone app, so open it once after installing."
+- **Icon.** The watch icon is a copy of the iPhone icon (`ios/TimbreWatch/Assets.xcassets/AppIcon.appiconset/icon.png`), which watchOS masks to a circle. Replace it along with the new layered icon. It must stay 1024 × 1024 with no transparency.
+
+### 7.3 Check on a real watch (TestFlight)
+
+The simulator plays no haptics and has no Handoff. Check these on hardware:
+
+1. **Install.** The watch app arrives with the TestFlight build. If it doesn't, open the Watch app on the iPhone and go to Available Apps → Install.
+2. **Feel.** Try 60, 120 and 200 BPM, and 240 for distinct taps. The downbeat must stand out in 3/4 and 7/4. Check the crown detents and Tap. With Silent Mode off, watchOS plays each haptic's sound as well, so turn Silent Mode on for taps alone.
+3. **Wrist down.** Taps pause, because watchOS plays haptics only for the app on screen and awake. They resume in the bar when the wrist comes up. Leaving the app stops the beat.
+4. **Sync.** Practise on the iPhone. Today updates while open, and the complication redraws shortly after.
+5. **Start today's practice.** Check all three cases:
+   - Timbre open on the iPhone: Today opens.
+   - iPhone locked: the watch says "Open Timbre on your iPhone", and the App Switcher offers Timbre from the watch. Handoff must be on in iPhone Settings → General → AirPlay & Continuity, and in the Watch app → General.
+   - Timbre opened within ten minutes: lands on Today.
+6. **Midnight.** The flame goes out and the ring empties without opening anything.
+
+### 7.4 Why the metronome stops tapping with the screen off
+
+watchOS keeps an app running with the screen off only in a workout, an audio session or an extended runtime session. The extended runtime types are self care, mindfulness, physical therapy and smart alarm. Apple asks that the type match the app's purpose, and a practice metronome is none of these, so Timbre doesn't start one. The beat holds its place in the bar while the wrist is down. To keep Timbre as the app that comes back during practice, set the watch's Settings → General → Return to Clock to **After 1 hour**, or customize it for Timbre there.

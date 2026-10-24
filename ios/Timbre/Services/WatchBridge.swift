@@ -21,8 +21,7 @@ final class WatchBridge: NSObject, WCSessionDelegate {
 
     private weak var store: AppStore?
     private var started = false
-    /// The latest snapshot built, and the last one the watch was sent.
-    private var latest: WatchSnapshot?
+    /// The last snapshot the watch was sent.
     private var sent: WatchSnapshot?
     /// When the watch asked for Today while Timbre was not on screen.
     private var todayAsked: Date?
@@ -31,14 +30,13 @@ final class WatchBridge: NSObject, WCSessionDelegate {
 
     private override init() { super.init() }
 
-    /// Builds the snapshot from the store and sends it when it differs from what the watch has. Phones without a
-    /// paired watch (and iPads) send nothing.
+    /// Builds the snapshot from the store and sends it when it differs from what the watch has. Without a paired
+    /// watch that has Timbre (the simulator, an iPad) nothing is built or sent.
     func publish(_ store: AppStore) {
         guard WCSession.isSupported() else { return }
         self.store = store
         start()
-        latest = Self.snapshot(of: store)
-        flush()
+        send()
     }
 
     private func start() {
@@ -52,10 +50,11 @@ final class WatchBridge: NSObject, WCSessionDelegate {
         WCSession.default.activate()
     }
 
-    private func flush() {
-        guard var next = latest else { return }
+    private func send() {
         let session = WCSession.default
-        guard session.activationState == .activated, session.isPaired, session.isWatchAppInstalled, !next.sameContent(as: sent) else { return }
+        guard session.activationState == .activated, session.isPaired, session.isWatchAppInstalled, let store else { return }
+        var next = Self.snapshot(of: store)
+        guard !next.sameContent(as: sent) else { return }
         next.sent = Date()
         guard let data = try? JSONEncoder().encode(next) else { return }
         do {
@@ -101,10 +100,10 @@ final class WatchBridge: NSObject, WCSessionDelegate {
         }
         let quests = store.quests
         let shown = quests.first { store.questProgress($0) < $0.target } ?? quests.first
-        let quest = shown.map { quest -> WatchSnapshot.QuestLine in
-            let count = store.questCounter(quest)
-            return WatchSnapshot.QuestLine(title: title(quest), symbol: quest.symbol, done: count.done, total: count.total, xp: quest.xp,
-                                           claimed: store.questProgress(quest) >= quest.target)
+        let quest = shown.map { item -> WatchSnapshot.QuestLine in
+            let count = store.questCounter(item)
+            return WatchSnapshot.QuestLine(title: title(item), symbol: item.symbol, done: count.done, total: count.total, xp: item.xp,
+                                           claimed: store.questProgress(item) >= item.target)
         }
         let lesson = store.learnCourse.flatMap { course in
             store.learn.nextLesson(in: course).map {
@@ -159,7 +158,7 @@ final class WatchBridge: NSObject, WCSessionDelegate {
     // MARK: WCSessionDelegate (called on WatchConnectivity's queue)
 
     nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: (any Error)?) {
-        Task { @MainActor in self.flush() }
+        Task { @MainActor in self.send() }
     }
 
     nonisolated func sessionDidBecomeInactive(_ session: WCSession) {}
@@ -176,7 +175,7 @@ final class WatchBridge: NSObject, WCSessionDelegate {
     nonisolated func sessionWatchStateDidChange(_ session: WCSession) {
         Task { @MainActor in
             self.sent = nil
-            self.flush()
+            self.send()
         }
     }
 

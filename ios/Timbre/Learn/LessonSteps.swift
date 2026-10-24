@@ -110,7 +110,7 @@ struct NotesStep: View {
     var body: some View {
         VStack(spacing: 16) {
             header
-            if isSequence { sequenceChips }
+            if readsStaff { stepStaff } else if isSequence { sequenceChips }
             Spacer(minLength: 0)
             if isSequence { prompt }
             noteRing
@@ -126,6 +126,21 @@ struct NotesStep: View {
     }
 
     private var isSequence: Bool { notes.count > 1 }
+
+    /// Violin, cello and mandolin players learn to read: their notes are written on a staff (treble clef, bass clef
+    /// for cello) rather than spelled out in letters.
+    private var readsStaff: Bool { ["violin", "cello", "mandolin"].contains(course.fretKind ?? "") && !notes.isEmpty }
+
+    /// The step's notes engraved, the one to play glowing and those played in the accent.
+    private var stepStaff: some View {
+        NotationPhrase(notes: notes, clef: Clef.reading(instrument: course.instrument, midis: notes.map(\.midi)), accent: accent,
+                       current: finished ? nil : min(judge.index, notes.count - 1), done: finished ? notes.count : judge.index)
+            .padding(.horizontal, 12)
+            .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
+            .padding(.horizontal, 20)
+            .animation(Motion.quick, value: judge.index)
+            .accessibilityIdentifier("lesson.notes.staff")
+    }
 
     /// "Play this note" names the note in the ring: over a single note it heads the step; in a sequence it
     /// sits right on the ring (the one to play now), and the lesson's hint heads the whole run instead.

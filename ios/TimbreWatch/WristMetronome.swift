@@ -88,6 +88,7 @@ final class WristMetronome: ObservableObject {
     func cycleMeter() {
         beatsPerBar = beatsPerBar >= Self.meterRange.upperBound ? Self.meterRange.lowerBound : beatsPerBar + 1
         count = 0
+        beat = nil
         UserDefaults.standard.set(beatsPerBar, forKey: Keys.meter)
     }
 
