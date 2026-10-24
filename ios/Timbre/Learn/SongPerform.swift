@@ -6,7 +6,8 @@ import TimbreCore
 /// stage (the sleeve under a light with its record turning, the song map, the tempo: the song's own, or 75 % for at
 /// most two stars), then the take, on the play-along's own runway and judge (`HighwayRunway`, `HighwayCanvas`,
 /// `PlayAlongJudge`) with its count-in and combo HUD, a running score (each note's credit times the combo
-/// multiplier) and the song map's playhead, then the finale (`SongFinaleView`): the lesson's stars, the score, the
+/// multiplier), the words under the runway karaoke style (`HighwayLyrics`, with the section playing) and the song
+/// map's playhead, then the finale (`SongFinaleView`): the lesson's stars, the score, the
 /// timing strip and a story-sized poster. The best take at the song's tempo counts, as in every play-along.
 struct SongPerformStep: View {
     let notes: [TimedNote]
@@ -25,6 +26,7 @@ struct SongPerformStep: View {
 
     @EnvironmentObject private var store: AppStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.scenePhase) private var scenePhase
     /// The runway's lanes follow the diagrams' string order (Settings › String order).
     @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
     @State private var owner = UUID()
@@ -46,6 +48,10 @@ struct SongPerformStep: View {
     @State private var take: SongTake?
     @State private var bestPercent: Int?
     @State private var calibrating = false
+    /// The take started the click (so leaving stops it, unless the Metronome tool has taken it over since).
+    @State private var ownsClick = false
+    /// The song's words by line, from the notes' syllables (empty for an instrumental).
+    private let lyrics: LyricSheet
 
     enum Phase { case stage, playing, finale }
 
@@ -54,6 +60,7 @@ struct SongPerformStep: View {
          projectedStars: @escaping (Double, Int?) -> Int = { _, _ in 1 }, done: @escaping (Double?) -> Void) {
         let sorted = notes.sorted { $0.beat < $1.beat }
         self.notes = sorted
+        self.lyrics = LyricSheet(notes: sorted)
         self.bpm = bpm
         self.beatsPerBar = max(1, beatsPerBar)
         self.lesson = lesson
@@ -94,8 +101,12 @@ struct SongPerformStep: View {
         }
         .onAppear { store.audio.prepareBand(band) }
         .onChange(of: ladder.rung) { _, _ in store.audio.prepareBand(band) }
+        // A take can't go on in the pocket: the app going to the background ends it, nothing counted.
+        .onChange(of: scenePhase) { _, now in if now == .background { stopTake() } }
         .onDisappear {
-            store.audio.stopMetronome(); store.audio.stopBand(); store.stopLessonListening(owner: owner)
+            if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
+            ownsClick = false
+            store.audio.stopBand(); store.stopLessonListening(owner: owner)
             #if DEBUG
             store.demoNoteDue = nil
             #endif
@@ -214,6 +225,9 @@ struct SongPerformStep: View {
         VStack(spacing: 12) {
             takeHeader
             runwayStage
+            if !lyrics.isEmpty {
+                lyricRow
+            }
             TimelineView(.animation(minimumInterval: 1.0 / 30, paused: phase != .playing)) { _ in
                 SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent,
                                progress: songProgress(CACurrentMediaTime()), height: 34)
@@ -274,6 +288,28 @@ struct SongPerformStep: View {
         .layoutPriority(1)
     }
 
+    /// The words under the runway: the line being sung lit syllable by syllable, the next one dim, and over them the
+    /// section playing ("Verse 2"). Before the first word, the first line waits.
+    private var lyricRow: some View {
+        TimelineView(.animation(minimumInterval: 1.0 / 30, paused: phase != .playing)) { _ in
+            let beat = lyricBeat(CACurrentMediaTime())
+            HighwayLyrics(sheet: lyrics, beat: beat, accent: accent, section: sectionName(atBeat: beat))
+        }
+        .padding(.horizontal, 20)
+    }
+
+    /// Where the take is, in beats from the song's first bar (nil before it starts, negative through the count-in).
+    private func lyricBeat(_ now: CFTimeInterval) -> Double? {
+        guard phase == .playing else { return nil }
+        return (now - startTime - countIn) / spb
+    }
+
+    /// The section of the arrangement playing (the first through the count-in).
+    private func sectionName(atBeat beat: Double?) -> String? {
+        guard let arrangement = lesson.arrangement else { return nil }
+        return arrangement.section(atBeat: max(0, beat ?? 0))?.name.localized
+    }
+
     /// The fretboard runway on fretted courses, pitch lanes otherwise.
     @ViewBuilder private func runway(elapsed: Double, now: CFTimeInterval) -> some View {
         if fretted {
@@ -329,7 +365,10 @@ struct SongPerformStep: View {
         withAnimation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle) { phase = .playing }
         Haptics.shared.selection()
         Analytics.log("song_perform", ["lesson": lesson.id, "tempo": String(ladder.percent)])
+        // A fresh count from the first click (a lesson's click restarts even over the Metronome tool's), so the
+        // count-in, the runway and the judging start together; this take owns it until it ends.
         store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
+        ownsClick = true
         // The band rides the metronome from the bar after the count-in (headphones only; else the click).
         store.audio.playBand(band, firstBar: 1)
         store.gameTargetHz = notes.first.map { PitchMath.frequency(midi: Double($0.midi), reference: store.settings.referencePitchHz) }
@@ -394,6 +433,7 @@ struct SongPerformStep: View {
         ladder.select(rung)
         // A good take ends on the band's final chord; otherwise it fades with the click.
         store.audio.finishBand(celebrate: accuracy >= 0.7)
+        ownsClick = false
         store.stopLessonListening(owner: owner)
         #if DEBUG
         store.demoNoteDue = nil
@@ -407,10 +447,12 @@ struct SongPerformStep: View {
         Haptics.shared.done()
     }
 
-    /// Stop mid-take: back to the stage, nothing counted.
+    /// Stop mid-take (or the app went to the background): back to the stage, nothing counted. The click stops if
+    /// the take started it and the Metronome tool hasn't taken it over.
     private func stopTake() {
         guard phase == .playing else { return }
-        store.audio.stopMetronome()
+        if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
+        ownsClick = false
         store.audio.stopBand()
         store.stopLessonListening(owner: owner)
         #if DEBUG

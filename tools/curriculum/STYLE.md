@@ -29,7 +29,20 @@ built with the helpers in `lib.py` and checked by `python3 tools/curriculum/buil
 - Chord shapes are strings lowest string first (`"x32010"` = guitar C); the builder rejects shapes whose
   notes aren't in the chord. Fingers: 1 index … 4 little, 0 for open/muted.
 - Only public-domain or traditional melodies (composer died before 1930, or traditional and published
-  before 1929). No lyrics. Name the song plainly ("Ode to Joy", "Greensleeves", "Shenandoah").
+  before 1929). Name the song plainly ("Ode to Joy", "Greensleeves", "Shenandoah").
+
+## Songs (the Songs and Originals courses)
+- Every song lesson is a full arrangement built with `songbook.song(...)` from `Part`s (intro, verses,
+  choruses, a bridge where the tune has one, a solo, an outro): 90–180 seconds at its tempo, checked by
+  `build.py --check`. Its last step is `SONG.take(...)` (the whole song) and the lesson passes
+  `arrangement=SONG.meta()` and `minutes=SONG.minutes()`. Earlier steps teach parts with `SONG.along(...)`.
+- Write the arrangement from the real tune and its real harmony: one chord token per bar ("C,G" splits a
+  bar). Each part's melody fills whole bars after its `pickup`. Keep a song inside its unit's range and
+  difficulty; vary a second verse or the last chorus rather than adding harder technique.
+- Lyrics only where the text is in the public domain (written before 1929), or our own for Originals
+  (credit `words="Timbre"`). Never quote modern or copyrighted lyrics, not even a line. Instrumental
+  pieces have no words. One lyric token per note; `songbook.py` documents "-", "~", "_" and "/".
+- Lyric lines are short enough to read under the highway (about 40 characters) and stay inside one section.
 - Rhythm patterns are beat positions inside one bar: `[0, 1, 2, 3]` quarters, `[0, 0.5, 1, 1.5, ...]` eighths.
 - `listen` sounds are groups of notes played in order; a group with several notes sounds as a chord.
 
