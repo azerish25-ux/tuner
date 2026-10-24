@@ -107,7 +107,7 @@ final class YourSongsStore: ObservableObject {
     /// The file types a chart can come in: ChordPro (declared in Info.plist as an imported type) and plain text.
     static let chordProType = UTType(importedAs: "org.chordpro.chordpro", conformingTo: .plainText)
     static var chartTypes: [UTType] { [chordProType, .plainText, .utf8PlainText, .text] }
-    static let chartExtensions: Set<String> = ["cho", "chordpro", "chopro", "crd", "chord", "pro", "txt", "text"]
+    static let chartExtensions: Set<String> = ["cho", "chordpro", "chopro", "crd", "txt", "text"]
 
     /// Reads a chart file (a security-scoped URL from Files, or a copy another app handed over) and saves it as a song.
     /// The title is the chart's own, else the file's name.
@@ -176,7 +176,7 @@ final class YourSongsStore: ObservableObject {
     /// A file another app handed to Timbre: a chart is imported and opened on the Songs tab. False for anything else
     /// (the caller then treats the URL as a link).
     func receive(_ url: URL, store: AppStore) -> Bool {
-        guard url.isFileURL, Self.chartExtensions.contains(url.pathExtension.lowercased()) || url.pathExtension.isEmpty else { return false }
+        guard url.isFileURL, Self.chartExtensions.contains(url.pathExtension.lowercased()) else { return false }
         Analytics.log("yoursongs_open_in")
         defer { Self.removeIfInbox(url) }
         if !canAdd(pro: store.isPro) {
