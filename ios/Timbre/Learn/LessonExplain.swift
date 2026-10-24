@@ -158,8 +158,17 @@ struct ExplainStep: View {
             if hearable {
                 HearItButton(accent: accent, sounding: sounding) { play(replay: true) }
             }
-            StepButton(title: "Continue", accent: accent, inset: false) { Haptics.shared.selection(); done(nil) }
+            StepButton(title: "Continue", accent: accent, inset: false) { Haptics.shared.selection(); leave(); done(nil) }
         }
+    }
+
+    /// Continue: the demonstration stops now, not when the step's slide-out ends (`onDisappear`). The next step
+    /// opens the microphone as it slides in; a note the demonstration sounded meanwhile would close it again
+    /// (`playTones` pauses capture), and a chord's "your turn" would take it over, leaving that step deaf.
+    private func leave() {
+        demoTask?.cancel()
+        demoTask = nil
+        store.stopLessonListening(owner: owner)
     }
 
     /// The picture has something to play.

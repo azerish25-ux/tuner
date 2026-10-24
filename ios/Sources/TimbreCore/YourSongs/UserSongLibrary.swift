@@ -52,7 +52,9 @@ public struct UserSong: Codable, Equatable, Identifiable, Sendable {
     }
 }
 
-/// A recording a chart plays along with: an Apple Music catalog song or an audio file the player imported.
+/// A recording linked to a chart: an audio file the player imported (the chart follows it, `timings`), or an Apple
+/// Music catalog song, which is only ever listened to: it never carries timings, since nothing may be synchronised to
+/// Apple Music content (`YourSongsPolicy`).
 public struct SongRecording: Codable, Equatable, Identifiable, Sendable {
     public enum Kind: String, Codable, Sendable { case appleMusic, file }
 
@@ -62,8 +64,11 @@ public struct SongRecording: Codable, Equatable, Identifiable, Sendable {
     public var title: String
     public var artist: String?
     public var duration: Double?
-    /// When each chord of the chart changes, in seconds (`ChartTimeline`); empty until synced.
-    public var timings: [Double]
+    /// When each chord of the chart changes, in seconds (`ChartTimeline`); empty until synced, and always empty for
+    /// Apple Music.
+    public var timings: [Double] {
+        didSet { if kind == .appleMusic && !timings.isEmpty { timings = [] } }
+    }
     /// The tempo found in the recording, when it was analysed.
     public var bpm: Double?
 
@@ -72,7 +77,7 @@ public struct SongRecording: Codable, Equatable, Identifiable, Sendable {
     public init(kind: Kind, reference: String, title: String, artist: String? = nil, duration: Double? = nil,
                 timings: [Double] = [], bpm: Double? = nil) {
         self.kind = kind; self.reference = reference; self.title = title; self.artist = artist
-        self.duration = duration; self.timings = timings; self.bpm = bpm
+        self.duration = duration; self.timings = kind == .appleMusic ? [] : timings; self.bpm = bpm
     }
 
     enum CodingKeys: String, CodingKey { case kind, reference, title, artist, duration, timings, bpm }
@@ -84,7 +89,8 @@ public struct SongRecording: Codable, Equatable, Identifiable, Sendable {
         title = (try? c.decodeIfPresent(String.self, forKey: .title)) ?? ""
         artist = (try? c.decodeIfPresent(String.self, forKey: .artist)).flatMap { $0 }
         duration = (try? c.decodeIfPresent(Double.self, forKey: .duration)).flatMap { $0 }
-        timings = ((try? c.decodeIfPresent([Double].self, forKey: .timings)) ?? []).filter(\.isFinite)
+        let decoded = ((try? c.decodeIfPresent([Double].self, forKey: .timings)) ?? []).filter(\.isFinite)
+        timings = kind == .appleMusic ? [] : decoded
         bpm = (try? c.decodeIfPresent(Double.self, forKey: .bpm)).flatMap { $0 }
     }
 }

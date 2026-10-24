@@ -248,13 +248,19 @@ public enum ChartPractice {
 
 /// Your songs on the free plan and with Timbre Pro, in the manner of `AccessPolicy`: three charts free, as many as you
 /// like with Pro. Charts already saved always open, play and edit (they are the player's own); only adding past the
-/// limit asks for Pro. Playing along with your own recording (loop, slow-down, tap-along sync) is free; playing along
-/// with Apple Music and detecting the chords of a recording are Pro.
+/// limit asks for Pro. With the player's own recording, playing along (the chart following it) and syncing it by
+/// tapping along are free; slowing it down, looping a part and detecting its chords are Pro.
+///
+/// Apple Music is only ever a plain "Listen on Apple Music" player, free for everyone: Apple's MusicKit terms forbid
+/// charging for it, modifying it (no loop, no slow-down) and synchronising anything to it, so no chart, chord or scroll
+/// is ever timed to an Apple Music track, and its DRM audio is never analysed.
 public enum YourSongsPolicy {
     public static let freeChartLimit = 3
 
     public static func canAddChart(existing: Int, pro: Bool) -> Bool { pro || existing < freeChartLimit }
     public static func canPlayAlongWithRecording(pro: Bool) -> Bool { true }
-    public static func canPlayAlongWithAppleMusic(pro: Bool) -> Bool { pro }
+    public static func canSlowDownAndLoop(pro: Bool) -> Bool { pro }
     public static func canDetectChords(pro: Bool) -> Bool { pro }
+    /// Never behind the paywall, whatever the plan.
+    public static func canListenOnAppleMusic(pro: Bool) -> Bool { true }
 }

@@ -103,8 +103,9 @@ final class ChartPlaybackTests: XCTestCase {
         XCTAssertFalse(YourSongsPolicy.canAddChart(existing: 3, pro: false))
         XCTAssertTrue(YourSongsPolicy.canAddChart(existing: 300, pro: true))
         XCTAssertTrue(YourSongsPolicy.canPlayAlongWithRecording(pro: false))
-        XCTAssertFalse(YourSongsPolicy.canPlayAlongWithAppleMusic(pro: false))
-        XCTAssertTrue(YourSongsPolicy.canPlayAlongWithAppleMusic(pro: true))
+        XCTAssertFalse(YourSongsPolicy.canSlowDownAndLoop(pro: false))
+        XCTAssertTrue(YourSongsPolicy.canSlowDownAndLoop(pro: true))
         XCTAssertFalse(YourSongsPolicy.canDetectChords(pro: false))
+        XCTAssertTrue(YourSongsPolicy.canListenOnAppleMusic(pro: false), "Apple Music is never behind the paywall")
     }
 }
