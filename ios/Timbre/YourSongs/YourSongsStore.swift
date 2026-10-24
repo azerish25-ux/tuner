@@ -220,9 +220,14 @@ final class YourSongsStore: ObservableObject {
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
         do {
             let name = try library.importAudio(from: url, for: song.id)
+            // Only audio Timbre can play (not copy-protected, not damaged) is kept.
+            guard let duration = RecordingPlayer.duration(of: library.audioURL(named: name)), duration > 0 else {
+                library.removeAudio(named: name)
+                problem = String(localized: "Timbre can't play that file. Use an audio file of your own that isn't copy-protected.", bundle: TimbreLocalization.bundle)
+                return nil
+            }
             var changed = song
             if let old = song.recording(.file), old.reference != name { library.removeAudio(named: old.reference) }
-            let duration = RecordingPlayer.duration(of: library.audioURL(named: name))
             changed.attach(SongRecording(kind: .file, reference: name, title: title ?? url.deletingPathExtension().lastPathComponent,
                                          duration: duration, timings: timings, bpm: bpm))
             update(changed)

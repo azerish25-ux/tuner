@@ -29,16 +29,17 @@ public struct ChordSymbol: Equatable, Hashable, Sendable, CustomStringConvertibl
         let trimmed = text.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty, trimmed.count <= 16 else { return nil }
         let characters = Array(trimmed)
-        guard let (root, rootName, afterRoot) = Self.note(characters, at: 0) else { return nil }
+        guard let head = Self.note(characters, at: 0) else { return nil }
+        let (root, rootName, afterRoot) = head
         var rest = String(characters[afterRoot...])
         var bass: Int?
         var bassName: String?
         // A slash bass is a note after the last slash ("D/F#"); "G6/9" keeps its slash in the suffix.
         if let slash = rest.lastIndex(of: "/") {
             let tail = Array(rest[rest.index(after: slash)...])
-            if let (pitch, name, end) = Self.note(tail, at: 0), end == tail.count {
-                bass = pitch
-                bassName = name
+            if let found = Self.note(tail, at: 0), found.2 == tail.count {
+                bass = found.0
+                bassName = found.1
                 rest = String(rest[..<slash])
             }
         }
@@ -208,8 +209,9 @@ public enum ChordSpelling {
     public static func key(_ text: String) -> (tonic: Int, minor: Bool)? {
         let trimmed = text.trimmingCharacters(in: .whitespaces)
         let characters = Array(trimmed)
-        guard let (tonic, _, end) = ChordSymbol.note(characters, at: 0) else { return nil }
-        let rest = String(characters[end...]).trimmingCharacters(in: .whitespaces).lowercased()
+        guard let found = ChordSymbol.note(characters, at: 0) else { return nil }
+        let tonic = found.0
+        let rest = String(characters[found.2...]).trimmingCharacters(in: .whitespaces).lowercased()
         switch rest {
         case "", "maj", "major", "dur": return (tonic, false)
         case "m", "min", "minor", "moll": return (tonic, true)

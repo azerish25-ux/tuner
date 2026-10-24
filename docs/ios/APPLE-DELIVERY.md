@@ -217,3 +217,55 @@ The simulator plays no haptics and has no Handoff. Check these on hardware:
 ### 7.4 Why the metronome stops tapping with the screen off
 
 watchOS keeps an app running with the screen off only in a workout, an audio session or an extended runtime session. The extended runtime types are self care, mindfulness, physical therapy and smart alarm. Apple asks that the type match the app's purpose, and a practice metronome is none of these, so Timbre doesn't start one. The beat holds its place in the bar while the wrist is down. To keep Timbre as the app that comes back during practice, set the watch's Settings → General → Return to Clock to **After 1 hour**, or customize it for Timbre there.
+
+## 8. Your songs and Apple Music (MusicKit): owner steps
+
+"Your songs" on the Songs tab is the licensing-safe way to play real songs: **the player brings the chart and the recording, and Timbre ships neither.** Charts come from Files (ChordPro `.cho`, `.chordpro`, `.chopro`, `.crd`, or text with the chords over the words), the clipboard, another app's share sheet ("Open in Timbre") or the in-app editor. Recordings are the player's own audio files. Everything stays on the device, in the app's Application Support folder; nothing is uploaded or synced. See [SONG-LICENSING-PLAYBOOK.md](../content/SONG-LICENSING-PLAYBOOK.md), sections 2 and "Next 30 days".
+
+| | Free | Timbre Pro |
+|---|---|---|
+| Charts kept (`YourSongsPolicy.freeChartLimit`) | 3 (charts already saved always open, play and edit) | Unlimited |
+| Song sheet: transpose, capo (and the easiest capo on guitar), chord boxes, auto-scroll, Practice | Yes | Yes |
+| Your own recording: play along, tap-along sync, the chart following it | Yes | Yes |
+| Your own recording: slow down (pitch kept), A–B loop, detect the chords (draft chart) | — | Yes |
+| Listen on Apple Music | Yes | Yes (never behind the paywall) |
+
+### 8.1 What Apple Music does, and what it deliberately doesn't
+
+Apple's MusicKit terms and App Review Guideline 4.5.2 allow a **user-started, unmodified, free** player and nothing timed to it. So, in code (`ios/Timbre/YourSongs/AppleMusicListen.swift`):
+
+- The song view has a plain "Listen on Apple Music" card: the player searches the catalog, picks the song, and plays, pauses or restarts it in Apple's own `ApplicationMusicPlayer`. Playback starts only from their tap. The artwork appears only on that player and in the search results.
+- It is free on every plan: `YourSongsPolicy.canListenOnAppleMusic` is always true and no Apple Music control shows a Pro badge.
+- Nothing is synchronised with the track. The chart's auto-scroll and its following of a recording run on their own clocks (`ChartFollower`), which never read Apple Music's position. An Apple Music link (`SongRecording` of kind `.appleMusic`) can't hold chord timings (the model drops them).
+- The track is never modified: no loop, no slow-down, no pitch change (`playbackRate` is never set).
+- Its audio is DRM-protected and plays outside the app's audio graph, so it is never analysed. Chord detection works only on the player's own files.
+
+Get Apple's written answer before adding anything beyond this (playbook section 2).
+
+### 8.2 Turn on MusicKit for the App ID
+
+1. Certificates, Identifiers & Profiles → Identifiers → `com.shahradazerisharghi.timbre` → **App Services** tab → tick **MusicKit** → Save. That's all: MusicKit on iOS mints its developer token automatically for an App ID with the service on. There is no key to download, no entitlement to add to `project.yml`, and the provisioning profile doesn't change.
+2. The Apple Music permission prompt uses `NSAppleMusicUsageDescription` (already in `project.yml`): "Timbre plays the Apple Music songs you choose, so you can listen to them beside your own chord charts." Add its translation to each `InfoPlist.strings` with the next localisation pass.
+3. Until the service is on (and in the simulator without an Apple Music account), the card says "Apple Music isn't available in this version of Timbre" (`MusicTokenRequestError.developerTokenRequestFailed`). Nothing else in Your songs depends on it, nothing crashes, and no prompt appears until the player taps "Find this song on Apple Music".
+
+### 8.3 Charts from other apps ("Open in Timbre")
+
+`project.yml` declares the ChordPro type as an imported type (`org.chordpro.chordpro`, extensions `cho`, `chordpro`, `chopro`, `crd`, conforming to plain text) and two document types, ChordPro and plain text, both as Viewer with handler rank Alternate, with `LSSupportsOpeningDocumentsInPlace` set to false. The system hands Timbre a copy of the file (in Documents/Inbox). Timbre imports it as a chart, deletes the copy, and opens it on the Songs tab. On the free plan with three charts already saved, it opens the paywall instead. PDFs aren't accepted: a chart must be text.
+
+### 8.4 App Store Connect
+
+- **App Privacy** stays "Data Not Collected". Charts and recordings never leave the device. Apple Music requests go to Apple under the player's own account, and Timbre stores only the catalog song's id with the chart.
+- **Review notes.** Add: "Your songs (Songs tab → Add a song) plays charts and recordings the user supplies; the app includes no copyrighted songs. Listen on Apple Music is a plain player for subscribers, started by the user, free, and not synchronised with anything. To try it, add a song (paste any chord chart), then tap Find this song on Apple Music."
+- **Terms.** Add a clause to the Terms that users import only charts and recordings they have the right to use (playbook, "Next 30 days"). The Add a song sheet says the same.
+
+### 8.5 Check on a device (TestFlight)
+
+1. **Import.** Import `.cho` and `.txt` files from Files, including a chord sheet with the chords over the words, and paste one. Check the section names, the chords over the right syllables, and the title. AirDrop or share a `.cho` file to Timbre from another app: the Songs tab opens it.
+2. **Free limit.** On a free account, a fourth chart opens the paywall from the Songs tab, from the Add sheet and from "Open in Timbre". The first three still open, edit and play.
+3. **Song view.** Transpose up and down: the chord names and boxes follow, and flat keys use flats. Change the capo, and on guitar check the easiest-capo tip (try a chart in B♭). Tap the chord boxes to hear them. Change the text size from the menu.
+4. **Auto-scroll.** Check that the tempo buttons scroll at about a bar a chord, the chord lights a beat early, and dragging the sheet pauses the following.
+5. **Your recording.** Add an `.m4a` or `.mp3`. Check play, ±5 s and the scrubber. Tap Sync, tap through a verse and tap Done: replay it and the chart follows. With Pro, check Speed at 50% (the pitch stays the same), loop A–B (gapless), and transpose (the recording follows the key). A copy-protected file is refused with a message.
+6. **Detect chords (Pro).** Use a recording with a steady beat. It shows the progress, then the tempo, key and first bars. Make the chart: it opens synced to the recording. Analysing a 4-minute song should take seconds, not minutes, on a recent iPhone.
+7. **Practice.** Check that each chord step hears a strum, then the progression is strummed in time.
+8. **Apple Music**, with a subscriber account: find, play, pause and restart. Without a subscription it says so and offers Try Apple Music. Check that nothing scrolls or lights with Apple Music and that the card has no Pro badge on a free account. Before MusicKit is enabled, check that the card shows the "isn't available" message.
+9. **Audio session.** Play your recording, then open Practice. The recording pauses and the microphone works. Back on the song, Play carries on from where it paused. Take a phone call mid-song: playback pauses. Close the song while something plays in another app's background audio: that app can resume.

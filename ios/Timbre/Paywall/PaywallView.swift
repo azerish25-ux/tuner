@@ -652,6 +652,9 @@ struct PaywallView: View {
             ProRow(id: "ear", label: Text("Name intervals and chords by ear"), free: .excluded, pro: .included),
             ProRow(id: "tools", label: Text("Chords, scales, intonation and drone"), free: .excluded, pro: .included),
             ProRow(id: "precision", label: Text("Strobe, temperaments and custom tunings"), free: .excluded, pro: .included),
+            // Your songs (`YourSongsPolicy`): three charts free; Apple Music listening is free on both plans, so it has no row.
+            ProRow(id: "yoursongs", label: Text("Your own song charts"), free: .count(YourSongsPolicy.freeChartLimit), pro: .included),
+            ProRow(id: "yoursongs.tools", label: Text("Slow down, loop and find chords in your recordings"), free: .excluded, pro: .included),
         ]
     }
 

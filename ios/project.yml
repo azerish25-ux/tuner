@@ -44,6 +44,26 @@ targets:
         # "Start today's practice" handed over from Apple Watch (TimbreApp continues it on Today).
         NSUserActivityTypes: [com.shahradazerisharghi.timbre.today]
         NSMicrophoneUsageDescription: Timbre listens to your instrument or voice to measure pitch. Audio is processed on your device and is never saved or uploaded.
+        # Your songs: "Listen on Apple Music" beside a chart the player brought (YourSongs/AppleMusicListen.swift).
+        # Needs the MusicKit App Service on the App ID (docs/ios/APPLE-DELIVERY.md, section 8).
+        NSAppleMusicUsageDescription: Timbre plays the Apple Music songs you choose, so you can listen to them beside your own chord charts.
+        # Your songs: chord charts shared to Timbre ("Open in Timbre", Files) are imported as a copy kept on this device.
+        LSSupportsOpeningDocumentsInPlace: false
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: ChordPro chart
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [org.chordpro.chordpro]
+          - CFBundleTypeName: Text chord chart
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [public.plain-text]
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: org.chordpro.chordpro
+            UTTypeDescription: ChordPro chart
+            UTTypeConformsTo: [public.plain-text]
+            UTTypeTagSpecification:
+              public.filename-extension: [cho, chordpro, chopro, crd]
         UILaunchScreen:
           UIColorName: LaunchBackground
         UIBackgroundModes: [audio]

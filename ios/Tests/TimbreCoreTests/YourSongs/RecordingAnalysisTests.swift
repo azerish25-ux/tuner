@@ -82,7 +82,7 @@ final class RecordingAnalysisTests: XCTestCase {
                 for note in notes {
                     guard let note else { continue }
                     Synth.pluck(note, at: start + Double(k) * 0.01, into: &samples, sampleRate: rate, rng: &rng,
-                                level: step == 0 ? 0.9 : 0.7, decayScale: 5)
+                                level: step == 0 ? 0.9 : 0.7, decayScale: 4)
                     k += 1
                 }
             }

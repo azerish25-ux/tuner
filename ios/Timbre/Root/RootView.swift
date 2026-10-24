@@ -85,7 +85,8 @@ struct RootView: View {
         .task { store.applyStreakFreezes(); store.syncAchievements() }
         .onChange(of: commerce.isPro) { _, pro in if pro { Analytics.log("pro_active") } }
         // timbre://… from widgets and links, and from App Intents through `IntentRouter.link` (routes: Intents/DeepLink.swift).
-        .onOpenURL { url in DeepLink.open(url, store: store) }
+        // A chord chart shared to Timbre ("Open in Timbre") goes to Your songs (YourSongs/YourSongsStore.swift).
+        .onOpenURL { url in if !YourSongsStore.shared.receive(url, store: store) { DeepLink.open(url, store: store) } }
         .onReceive(IntentRouter.shared.$link) { url in
             guard let url else { return }
             // Cleared after this change has landed, so the link is followed once.

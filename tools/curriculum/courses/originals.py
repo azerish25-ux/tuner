@@ -7,6 +7,7 @@ eighths (beats_per_bar=6). Swung melodies write L and S for the long and short h
 sus chords, power chords and barres in the order the guitar course teaches them.
 Each song lesson ends on the whole song (songbook.song): intro, verse and chorus twice, a bridge, the last chorus and an
 outro, with words written for Timbre in one voice: plain, concrete, warm.
+courses/originals_part2.py adds thirty more in six units; UNITS at the bottom interleaves them with these four by difficulty.
 """
 from lib import along, chord, course, explain, fretboard, fretted, lesson, listen, midi, name, notes, play_chord, progression, quiz, rhythm, strum, tap, unit
 from songbook import Part, song

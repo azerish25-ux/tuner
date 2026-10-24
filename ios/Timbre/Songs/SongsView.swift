@@ -110,6 +110,8 @@ struct SongsView: View {
                             .id(hero.id)
                             .transition(.adaptive(.opacity.combined(with: .scale(scale: 0.97)), reduceMotion: reduceMotion))
                     }
+                    // The player's own charts and "Add a song" (YourSongs/YourSongsShelf.swift).
+                    YourSongsShelf()
                     ForEach(layout.picks) { pick in pickShelf(pick) }
                     // The featured song isn't repeated on its shelf: that rail starts with the song after it.
                     ForEach(layout.rails) { rail in shelfView(rail.shelf, rail: rail.songs) }
