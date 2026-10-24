@@ -578,7 +578,13 @@ private struct AdvancedListening: View {
         ScrollView {
             SettingsGroup(footer: Text("Strict confidence asks for a clearer note before showing a reading. Larger windows read lower notes with a little more delay.")) {
                 VStack(alignment: .leading, spacing: 8) {
-                    RowLabel(symbol: "mic", title: Text("Microphone sensitivity: \(store.settings.micSensitivity)%"))
+                    HStack(spacing: 12) {
+                        RowLabel(symbol: "mic", title: Text("Microphone sensitivity"))
+                        Spacer(minLength: 8)
+                        Text(Double(store.settings.micSensitivity) / 100, format: .percent.precision(.fractionLength(0)))
+                            .font(Typeface.number(17)).foregroundStyle(Palette.ink)
+                            .fixedSize()
+                    }
                     Slider(value: Binding(get: { Double(store.settings.micSensitivity) }, set: { v in store.updateSettings { $0.micSensitivity = Int(v.rounded()) } }), in: 0...100, step: 1)
                         .padding(.leading, RowDivider.inset - 16)
                 }

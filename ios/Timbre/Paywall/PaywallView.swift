@@ -116,6 +116,7 @@ struct PaywallView: View {
         }
         .preferredColorScheme(.dark)
         // Drawn over the tabs as an overlay: VoiceOver stays inside it, as it would in a presented sheet.
+        .accessibilityElement(children: .contain)
         .accessibilityAddTraits(.isModal)
         .offerCodeRedemption(isPresented: $redeeming) { result in
             // The redeemed code arrives as a transaction too; checking now unlocks without waiting for it.

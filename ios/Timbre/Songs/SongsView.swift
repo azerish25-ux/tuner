@@ -6,16 +6,23 @@ import TimbreCore
 /// Sleeves are generated from each song (`CoverArt`), so there are no image assets. Songs open the
 /// same full-screen lesson flow as Learn and follow Learn's rules (`LessonAccess`) for Pro and order locks.
 /// The featured song (`SongOfTheDay`) suits the learner's level, and its sleeve plays the opening bars.
+/// A song that doesn't play yet says why under its sleeve ("Finish Kite Weather", "Timbre Pro"), the same way on
+/// every shelf, and offers twenty seconds of itself ("Hear it", over the band in headphones).
+/// What every song's standing is, and so each shelf, is worked out by `SongsCatalog` once per change of progress,
+/// Pro, level or day, not on every store change.
 struct SongsView: View {
     @EnvironmentObject private var store: AppStore
     /// Instrument filter: a catalogue instrument id, or "all".
     @AppStorage("songs.instrument") private var filter = "all"
+    @AppStorage(BandArrangement.preferenceKey) private var bandOn = true
+    @State private var catalog = SongsCatalog()
     @State private var playing: LearnView.PlayingLesson?
     /// Shake counters for order-locked tiles, by lesson id.
     @State private var shakes: [String: Int] = [:]
     /// After a tap on an order-locked song: the open lesson on the way to it.
     @State private var hint: Hint?
-    /// The song whose opening is playing from the featured sleeve, when it started and how long it runs.
+    /// The song playing from its sleeve (the featured opening, or a locked song's twenty seconds), when it started
+    /// and how long it runs.
     @State private var previewing: String?
     @State private var previewStart = Date()
     @State private var previewLength = 0.0
@@ -63,8 +70,10 @@ struct SongsView: View {
         let songs: [Song]
     }
 
-    private static let all = "all"
+    static let all = "all"
     private static let heroSource = "songs.hero"
+    /// A locked song's "Hear it": at most this many seconds of it.
+    private static let sampleSeconds = 20.0
     /// A tile's zoom source; a song on a picked shelf has its own, so the lesson zooms back into the tile it came from.
     private static func tileSource(_ lesson: Lesson, shelf: String? = nil) -> String {
         shelf.map { "songs.tile.\($0).\(lesson.id)" } ?? "songs.tile.\(lesson.id)"
@@ -79,12 +88,11 @@ struct SongsView: View {
     }
 
     var body: some View {
-        let chips = instrumentChips
+        let chips = catalog.chips(store)
         let active = chips.contains { $0.id == filter } ? filter : Self.all
-        let songs = allSongs.filter { Self.matches($0, filter: active) }
-        let hero = featured(songs)
-        let curated = picks(songs, hero: hero)
-        let glow: Color = hero.map { CoverArt($0).primary } ?? Color(hex: 0xFFC48C)
+        let layout = catalog.layout(filter: active, store: store)
+        let hero = layout.hero
+        let glow: Color = hero.map { catalog.art($0).primary } ?? Color(hex: 0xFFC48C)
         NavigationStack {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 24) {
@@ -95,12 +103,9 @@ struct SongsView: View {
                             .id(hero.id)
                             .transition(.opacity.combined(with: .scale(scale: 0.97)))
                     }
-                    ForEach(curated) { pick in pickShelf(pick) }
+                    ForEach(layout.picks) { pick in pickShelf(pick) }
                     // The featured song isn't repeated on its shelf: that rail starts with the song after it.
-                    ForEach(shelves(songs)) { shelf in
-                        let rail = shelf.songs.filter { $0.id != hero?.id }
-                        if !rail.isEmpty { shelfView(shelf, rail: rail) }
-                    }
+                    ForEach(layout.rails) { rail in shelfView(rail.shelf, rail: rail.songs) }
                     Text("More lessons arrive with every update.").font(.footnote).foregroundStyle(Palette.inkFaint)
                         .frame(maxWidth: .infinity).padding(.vertical, 24)
                 }
@@ -121,160 +126,6 @@ struct SongsView: View {
             .environmentObject(store)
             .navigationTransition(.zoom(sourceID: item.source, in: zoom))
         }
-    }
-
-    // MARK: Data
-
-    /// Every song in the curriculum, in course order.
-    private var allSongs: [Song] {
-        store.curriculum.courses.flatMap { course -> [Song] in
-            var found: [Song] = []
-            for (index, unit) in course.units.enumerated() {
-                for lesson in unit.lessons where lesson.kind == .song {
-                    found.append(Song(course: course, unit: unit, unitIndex: index, lesson: lesson, number: found.count + 1))
-                }
-            }
-            return found
-        }
-    }
-
-    /// Songs for any instrument (a course without one) show under every filter.
-    private static func matches(_ song: Song, filter: String) -> Bool {
-        filter == all || song.course.instrument == nil || song.course.instrument == filter
-    }
-
-    /// A course that is mostly songs (Songs, Originals) rather than an instrument's path.
-    private static func isCollection(_ course: LearnCourse) -> Bool {
-        course.lessons.filter { $0.kind == .song }.count * 2 >= course.lessons.count
-    }
-
-    private static func isOriginals(_ course: LearnCourse) -> Bool {
-        course.id.hasPrefix("original") || course.title.defaultValue.lowercased().hasPrefix("original")
-    }
-
-    /// Originals first, then the song collections, then each instrument's songs in curriculum order.
-    private static func rank(_ course: LearnCourse) -> Int {
-        if isOriginals(course) { return 0 }
-        return isCollection(course) ? 1 : 2
-    }
-
-    /// One chip per instrument that has songs, named after its own course (Guitar, Ukulele, Singing…).
-    private var instrumentChips: [Chip] {
-        var seen = Set<String>()
-        var chips: [Chip] = []
-        for course in store.curriculum.courses {
-            guard let instrument = course.instrument, !seen.contains(instrument),
-                  course.lessons.contains(where: { $0.kind == .song }) else { continue }
-            seen.insert(instrument)
-            let candidates = store.curriculum.courses.filter { $0.instrument == instrument }
-            let own = candidates.first { !Self.isCollection($0) } ?? course
-            chips.append(Chip(id: instrument, title: own.title.localized, course: own))
-        }
-        return chips
-    }
-
-    private func shelves(_ songs: [Song]) -> [Shelf] {
-        var found: [Shelf] = []
-        for course in store.curriculum.courses {
-            let items = songs.filter { $0.course.id == course.id }
-            if !items.isEmpty { found.append(Shelf(course: course, songs: items)) }
-        }
-        let ranked = found.enumerated().sorted { a, b in
-            let left = Self.rank(a.element.course), right = Self.rank(b.element.course)
-            return left != right ? left < right : a.offset < b.offset
-        }
-        return ranked.map { $0.element }
-    }
-
-    /// The song of the day (`SongOfTheDay`): an unfinished song at the learner's level, an Original ahead of the
-    /// traditional tunes once past the beginner units, the same all day.
-    private func featured(_ songs: [Song]) -> Song? {
-        let progress = store.learn
-        let candidates = songs.map { song in
-            SongOfTheDay.Candidate(id: song.id, original: Self.isOriginals(song.course), unit: song.unitIndex,
-                                   finished: progress.isFinished(song.lesson.id), access: dayAccess(song))
-        }
-        let day = Calendar.current.ordinality(of: .day, in: .era, for: Date()) ?? 0
-        let placed = progress.placedThrough.values.contains { $0 >= 0 }
-        guard let id = SongOfTheDay.pick(candidates, level: store.level.number, finishedLessons: progress.stars.count,
-                                         placed: placed, day: day) else { return nil }
-        return songs.first { $0.id == id }
-    }
-
-    /// Learn's access, with Pro songs split into the next one in order (worth featuring) and later ones.
-    private func dayAccess(_ song: Song) -> SongOfTheDay.Access {
-        switch LessonAccess.of(song.lesson, in: song.course, store: store) {
-        case .play: return .open
-        case .pro: return store.learn.isUnlocked(song.lesson, in: song.course) ? .pro : .locked
-        case .locked: return .locked
-        }
-    }
-
-    // MARK: Picked shelves
-
-    /// From the songs under the filter (the featured one aside): songs not played yet that use the chord the learner
-    /// learned last ("Because you learned E minor"), then every song of one to three chords. Songs that play now
-    /// come first, the easiest of them first.
-    private func picks(_ songs: [Song], hero: Song?) -> [Pick] {
-        let pool = songs.filter { $0.id != hero?.id }
-        var out: [Pick] = []
-        if let chord = lastLearnedChord {
-            let using = pool.filter { song in
-                !store.learn.isFinished(song.lesson.id) && SongSheet.of(song.lesson).chords.contains { $0.symbol == chord.symbol }
-            }
-            if !using.isEmpty {
-                out.append(Pick(id: "because", symbol: "sparkles", title: Text("Because you learned \(SongSheet.spoken(chord))"),
-                                songs: Array(easiestFirst(using).prefix(10))))
-            }
-        }
-        let few = pool.filter { (1...3).contains(SongSheet.of($0.lesson).chords.count) }
-        if few.count >= 2 {
-            out.append(Pick(id: "few", symbol: "3.circle.fill", title: Text("3 chords or fewer"), songs: Array(easiestFirst(few).prefix(12))))
-        }
-        return out
-    }
-
-    /// The chord of the lesson finished most recently that taught one (a chord to play, or one on an explanation's card).
-    private var lastLearnedChord: ChordSpec? {
-        let recent = store.learn.finishedDates.sorted { $0.value > $1.value }
-        for entry in recent.prefix(40) {
-            guard let found = store.curriculum.lesson(id: entry.key), let chord = Self.taughtChord(found.lesson) else { continue }
-            return chord
-        }
-        return nil
-    }
-
-    private static func taughtChord(_ lesson: Lesson) -> ChordSpec? {
-        var taught: ChordSpec?
-        for step in lesson.steps {
-            switch step {
-            case let .playChord(chord): taught = chord
-            case let .explain(_, _, .chord(chord)): taught = chord
-            default: break
-            }
-        }
-        return taught
-    }
-
-    private struct Ranked {
-        let order: Int
-        let song: Song
-        let open: Bool
-        let level: Int
-    }
-
-    private func easiestFirst(_ songs: [Song]) -> [Song] {
-        let ranked = songs.enumerated().map { item -> Ranked in
-            let song = item.element
-            let level = SongSheet.of(song.lesson).difficulty(unit: song.unitIndex, of: song.course.units.count)
-            return Ranked(order: item.offset, song: song, open: LessonAccess.of(song.lesson, in: song.course, store: store) == .play, level: level)
-        }
-        let sorted = ranked.sorted { a, b in
-            if a.open != b.open { return a.open }
-            if a.level != b.level { return a.level < b.level }
-            return a.order < b.order
-        }
-        return sorted.map(\.song)
     }
 
     // MARK: Actions
@@ -299,10 +150,7 @@ struct SongsView: View {
 
     /// Points at the nearest open lesson before a locked song in its course: finishing it moves toward the song.
     private func showHint(toward lesson: Lesson, in course: LearnCourse) {
-        let progress = store.learn
-        let all = course.lessons
-        guard let position = all.firstIndex(where: { $0.id == lesson.id }),
-              let step = all[..<position].last(where: { progress.isUnlocked($0, in: course) && !progress.isFinished($0.id) }) else { return }
+        guard let step = SongsCatalog.gate(lesson, in: course, lessons: course.lessons, progress: store.learn) else { return }
         withAnimation(Motion.pluck) { hint = Hint(lessonId: step.id, token: (hint?.token ?? 0) + 1) }
         AccessibilityNotification.Announcement(String(localized: "Next up: \(step.title.localized)", bundle: TimbreLocalization.bundle)).post()
     }
@@ -315,32 +163,61 @@ struct SongsView: View {
 
     // MARK: Preview
 
-    /// Plays (or stops) the song's opening bars in its course's instrument voice, one note at a time on one
-    /// clock, the way a lesson's "Hear it" lands its notes.
-    private func togglePreview(_ song: Song) {
+    /// What a sleeve plays: notes from beat 0 at a tempo, in a meter, for so long.
+    private struct Clip {
+        let notes: [TimedNote]
+        let bpm: Double
+        let meter: Int
+        let seconds: Double
+        /// Bars it runs (the band under a sample is exactly as long).
+        let bars: Int
+    }
+
+    /// The featured sleeve's opening bars (`SongPreview`).
+    private static func opening(of lesson: Lesson) -> Clip? {
+        guard let phrase = SongPreview.opening(of: lesson) else { return nil }
+        return Clip(notes: phrase.notes, bpm: phrase.bpm, meter: 4, seconds: phrase.duration, bars: 0)
+    }
+
+    /// A locked song's "Hear it": the song itself (its final take, else its melody) from the top, up to twenty
+    /// seconds, cut at a bar line, at a whole tempo so the band's click and the notes keep together.
+    @MainActor private static func sample(of lesson: Lesson) -> Clip? {
+        let sheet = SongSheet.of(lesson)
+        guard !sheet.melody.isEmpty else { return opening(of: lesson) }
+        let meter = max(1, sheet.melodyMeter)
+        let bpm = max(30, sheet.melodyBpm.rounded())
+        let barSeconds = Double(meter) * 60 / bpm
+        let end = sheet.melody.map { $0.beat + $0.beats }.max() ?? Double(meter)
+        let whole = max(1, Int((end / Double(meter) - 1e-6).rounded(.up)))
+        let bars = max(1, min(whole, Int((sampleSeconds / barSeconds).rounded(.down))))
+        let notes = sheet.melody.filter { $0.beat < Double(bars * meter) - 1e-6 }
+        guard !notes.isEmpty else { return opening(of: lesson) }
+        return Clip(notes: notes, bpm: bpm, meter: meter, seconds: Double(bars) * barSeconds, bars: bars)
+    }
+
+    /// Plays (or stops) a sleeve's clip in its course's instrument voice, one note at a time on one clock, the way a
+    /// lesson's "Hear it" lands its notes; a locked song's sample (`full`) plays over the band in headphones.
+    private func togglePreview(_ song: Song, full: Bool) {
         if previewing == song.id { stopPreview(); return }
         stopPreview()
-        guard let phrase = SongPreview.opening(of: song.lesson) else { return }
+        guard let clip = full ? Self.sample(of: song.lesson) : Self.opening(of: song.lesson) else { return }
         let audio = store.audio
-        let voice = InstrumentVoice(instrumentId: song.course.instrument)
         let reference = store.settings.referencePitchHz
+        var band: BandArrangement?
+        if full, bandOn, audio.headphones, clip.bars > 0 {
+            let chart = LeadChart.of(song.lesson)
+            let chords = chart.notes.isEmpty ? [] : chart.filledChords(from: 0, count: clip.bars)
+            band = SongPlayback.band(notes: clip.notes, chords: chords, bars: clip.bars, bpm: clip.bpm, meter: clip.meter,
+                                     reference: reference, bass: song.course.fretKind != "bass")
+        }
         Haptics.shared.selection()
-        Analytics.log("song_preview", ["lesson": song.id])
+        Analytics.log(full ? "song_sample" : "song_preview", ["lesson": song.id, "band": band == nil ? "0" : "1"])
         previewStart = Date()
-        previewLength = phrase.duration
+        previewLength = clip.seconds
         withAnimation(Motion.pluck) { previewing = song.id }
-        previewTask = Task { @MainActor in
-            let clock = ContinuousClock()
-            let start = clock.now
-            for (index, note) in phrase.notes.enumerated() {
-                try? await clock.sleep(until: start + .seconds(phrase.time(of: index)))
-                guard !Task.isCancelled else { return }
-                let ms = Int(min(1600, max(160, note.beats * phrase.secondsPerBeat * 950)))
-                audio.playTones([PitchMath.frequency(midi: Double(note.midi), reference: reference)],
-                                together: false, noteMs: ms, gapMs: 0, voice: voice)
-            }
-            try? await clock.sleep(until: start + .seconds(phrase.duration + 0.3))
-            guard !Task.isCancelled else { return }
+        previewTask = SongPlayback.start(SongPlayback.hits(clip.notes), bpm: clip.bpm, meter: clip.meter, length: clip.seconds,
+                                         band: band, loop: false, audio: audio,
+                                         voice: InstrumentVoice(instrumentId: song.course.instrument), reference: reference) {
             previewTask = nil
             withAnimation(Motion.settle) { previewing = nil }
         }
@@ -350,7 +227,7 @@ struct SongsView: View {
         previewTask?.cancel()
         previewTask = nil
         guard previewing != nil else { return }
-        store.audio.stopTone()
+        SongPlayback.stop(store.audio)
         withAnimation(Motion.settle) { previewing = nil }
     }
 
@@ -396,12 +273,12 @@ struct SongsView: View {
 
     // MARK: Featured song
 
-    /// The song of the day: its sleeve (with the record peeking out) over a backdrop made from the same art,
-    /// the title and Play below. The preview button sits on the sleeve's free corner, outside the card's button.
+    /// The song of the day: its sleeve (with the record peeking out) over a mesh of the sleeve's own colours, the
+    /// title and Play below. The preview button sits on the sleeve's free corner, outside the card's button.
     private func heroCard(_ song: Song) -> some View {
-        let art = CoverArt(song)
+        let art = catalog.art(song)
         let accent = art.primary
-        let access = LessonAccess.of(song.lesson, in: song.course, store: store)
+        let access = catalog.standing(song).access
         let stars = store.learn.stars[song.lesson.id] ?? 0
         let shape = RoundedRectangle(cornerRadius: 28, style: .continuous)
         let canPreview = SongPreview.opening(of: song.lesson) != nil
@@ -422,9 +299,13 @@ struct SongsView: View {
         .accessibilityIdentifier("songs.hero")
         .overlay(alignment: .topTrailing) {
             if canPreview {
-                previewButton(song, art: art)
-                    .padding(.trailing, 18 + 4)
-                    .padding(.top, art.titleOnTop ? 18 + sleeveSide - 4 - 44 : 18 + 4)
+                PreviewDisc(active: previewing == song.id, ring: art.field ? Palette.stage : art.primary.mix(with: .black, by: 0.25),
+                            start: previewStart, length: previewLength, side: 38) {
+                    togglePreview(song, full: false)
+                }
+                .accessibilityIdentifier("songs.hero.preview")
+                .padding(.trailing, 18 + 4)
+                .padding(.top, art.titleOnTop ? 18 + sleeveSide - 4 - 44 : 18 + 4)
             }
         }
     }
@@ -458,52 +339,15 @@ struct SongsView: View {
             }
     }
 
-    /// The same art, blurred into light behind the card, darkening toward the title.
+    /// The sleeve's colours as a slow mesh of light (smooth at any width, where a blur of the sleeve smudged on
+    /// iPad), darkening toward the title.
     private func heroBackdrop(_ art: CoverArt) -> some View {
         ZStack {
             art.far
-            SongCover(art: art, corner: 0, titled: false, drift: true, outlined: false)
-                .blur(radius: 22)
-                .opacity(0.85)
-            LinearGradient(colors: [.black.opacity(0.1), .black.opacity(0.35), .black.opacity(0.85)], startPoint: .top, endPoint: .bottom)
-        }
-    }
-
-    /// Play (or stop) on the sleeve: white disc, a ring that fills as the opening plays.
-    private func previewButton(_ song: Song, art: CoverArt) -> some View {
-        let active = previewing == song.id
-        let ring = art.field ? Palette.stage : art.primary.mix(with: .black, by: 0.25)
-        return Button { togglePreview(song) } label: {
-            ZStack {
-                Circle().fill(.white.opacity(0.94))
-                if active {
-                    previewRing(color: ring)
-                }
-                Image(systemName: active ? "stop.fill" : "play.fill")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(Palette.stage)
-                    .offset(x: active ? 0 : 1)
-                    .contentTransition(.symbolEffect(.replace))
-            }
-            .frame(width: 38, height: 38)
-            .shadow(color: .black.opacity(0.35), radius: 8, y: 3)
-            .frame(width: 44, height: 44)
-            .contentShape(Circle())
-        }
-        .buttonStyle(PressScaleStyle())
-        .accessibilityLabel(active ? Text("Stop") : Text("Hear it"))
-        .accessibilityIdentifier("songs.hero.preview")
-    }
-
-    private func previewRing(color: Color) -> some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 30)) { timeline in
-            let elapsed = timeline.date.timeIntervalSince(previewStart)
-            let fraction = previewLength > 0 ? min(1, max(0, elapsed / previewLength)) : 0
-            Circle()
-                .trim(from: 0, to: CGFloat(fraction))
-                .stroke(color, style: StrokeStyle(lineWidth: 3, lineCap: .round))
-                .rotationEffect(.degrees(-90))
-                .padding(2.5)
+            CoverMesh(art: art)
+            RadialGradient(colors: [art.primary.opacity(0.22), .clear], center: UnitPoint(x: 0.82, y: 0.18), startRadius: 4, endRadius: 320)
+                .blendMode(.screen)
+            LinearGradient(colors: [.black.opacity(0.05), .black.opacity(0.32), .black.opacity(0.84)], startPoint: .top, endPoint: .bottom)
         }
     }
 
@@ -522,19 +366,20 @@ struct SongsView: View {
     }
 
     private func heroText(_ song: Song, accent: Color, access: LessonAccess, stars: Int) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        let sheet = SongSheet.of(song.lesson)
+        return VStack(alignment: .leading, spacing: 8) {
             Text(song.lesson.title.localized).font(Typeface.display(30)).tracking(-0.6).foregroundStyle(.white)
                 .lineLimit(2).minimumScaleFactor(0.8).fixedSize(horizontal: false, vertical: true)
                 .shadow(color: .black.opacity(0.4), radius: 8, y: 2)
             HStack(spacing: 6) {
                 CourseArt(course: song.course, size: 18)
                 Text(song.course.title.localized).foregroundStyle(.white)
-                Text("\(song.lesson.minutes) min · +\(song.lesson.xp) XP").foregroundStyle(.white.opacity(0.72))
+                // How long the song runs (not the lesson's minutes, which the song sheet gives beside it).
+                Text("Song \(sheet.length) · +\(song.lesson.xp) XP").foregroundStyle(.white.opacity(0.72))
             }
             .font(.subheadline).lineLimit(1)
             // What the song asks for, at a glance: its chords (its key, for a melody) and how hard it is.
             HStack(spacing: 8) {
-                let sheet = SongSheet.of(song.lesson)
                 DifficultyDots(level: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count), tint: .white)
                 ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent, limit: 5)
             }
@@ -566,7 +411,7 @@ struct SongsView: View {
         let progress = store.learn
         let earned = shelf.songs.reduce(0) { $0 + (progress.stars[$1.lesson.id] ?? 0) }
         // The rail opens on the next song to play in it.
-        let next = rail.first { !progress.isFinished($0.lesson.id) && LessonAccess.of($0.lesson, in: $0.course, store: store) == .play }
+        let next = rail.first { !progress.isFinished($0.lesson.id) && catalog.standing($0).access == .play }
         return VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .center, spacing: 10) {
                 CourseArt(course: shelf.course, size: 32)
@@ -600,40 +445,66 @@ struct SongsView: View {
         }
     }
 
-    /// `shelf` names a picked shelf; nil is the song's own course shelf.
+    /// `shelf` names a picked shelf; nil is the song's own course shelf. A song that doesn't play yet carries
+    /// "Hear it" on its sleeve's free corner, outside the tile's own button.
     private func tile(_ song: Song, shelf: String? = nil) -> some View {
-        let access = LessonAccess.of(song.lesson, in: song.course, store: store)
+        let standing = catalog.standing(song)
+        let access = standing.access
         let stars = store.learn.stars[song.lesson.id] ?? 0
         let accent = Palette.accent(song.course.accent)
         let sheet = SongSheet.of(song.lesson)
+        let art = catalog.art(song)
         let source = Self.tileSource(song.lesson, shelf: shelf)
         let shrink: CGFloat = reduceMotion ? 0 : 0.08
         return Button { open(song.course, song.lesson, from: source) } label: {
             VStack(alignment: .leading, spacing: 10) {
-                tileCover(song, access: access, stars: stars)
-                tileCaption(song, sheet: sheet, accent: accent)
+                tileCover(song, art: art, access: access, stars: stars)
+                tileCaption(song, sheet: sheet, accent: accent, standing: standing)
             }
             .frame(width: tileWidth, alignment: .leading)
             .contentShape(Rectangle())
         }
         .buttonStyle(PressScaleStyle())
+        .accessibilityLabel(Text(verbatim: "\(song.lesson.title.localized), \(song.course.title.localized)"))
+        .accessibilityValue(tileValue(song, sheet: sheet, standing: standing))
+        .accessibilityIdentifier(shelf.map { "songs.\($0).\(song.id)" } ?? "songs.song.\(song.id)")
+        .overlay(alignment: .top) {
+            if access != .play {
+                Color.clear
+                    .frame(width: tileWidth, height: tileWidth)
+                    .allowsHitTesting(false)
+                    .overlay(alignment: art.freeCorner) { sampleButton(song, art: art) }
+            }
+        }
         .matchedTransitionSource(id: source, in: zoom)
         .modifier(Shake(amount: shakes[song.id] ?? 0))
         // Sleeves ease back and dim as they slide off the rail's edge.
         .scrollTransition(.interactive, axis: .horizontal) { content, phase in
             content.scaleEffect(1 - shrink * CGFloat(abs(phase.value))).opacity(1 - 0.35 * abs(phase.value))
         }
-        .accessibilityLabel(Text(verbatim: "\(song.lesson.title.localized), \(song.course.title.localized)"))
-        .accessibilityValue(tileValue(song, sheet: sheet, access: access, stars: stars))
-        .accessibilityIdentifier(shelf.map { "songs.\($0).\(song.id)" } ?? "songs.song.\(song.id)")
     }
 
-    /// Under the sleeve, which already carries the title: the part of the title it leaves off ("The chords"), else the
-    /// song's chords ("G D Em C"; its key for a melody), then how hard it is, how long it runs and its XP.
-    private func tileCaption(_ song: Song, sheet: SongSheet, accent: Color) -> some View {
+    /// Twenty seconds of a song that doesn't play yet.
+    private func sampleButton(_ song: Song, art: CoverArt) -> some View {
+        PreviewDisc(active: previewing == song.id, ring: art.primary.mix(with: .black, by: 0.25),
+                    start: previewStart, length: previewLength, side: 32) {
+            togglePreview(song, full: true)
+        }
+        .padding(4)
+        .accessibilityLabel(previewing == song.id ? Text("Stop") : Text("Hear it"))
+        .accessibilityValue(Text(verbatim: song.lesson.title.localized))
+        .accessibilityIdentifier("songs.sample.\(song.id)")
+    }
+
+    /// Under the sleeve, which already carries the title: why it doesn't play yet ("Finish Kite Weather", "Timbre
+    /// Pro"); else the part of the title it leaves off ("The chords"), else the song's chords ("G D Em C"; its key for
+    /// a melody); then how hard it is, how long it runs and its XP.
+    private func tileCaption(_ song: Song, sheet: SongSheet, accent: Color, standing: SongsCatalog.Standing) -> some View {
         VStack(alignment: .leading, spacing: 7) {
             Group {
-                if let subtitle = Self.subtitle(song.lesson.title.localized) {
+                if standing.access != .play {
+                    LockReason(access: standing.access, gate: standing.gate)
+                } else if let subtitle = Self.subtitle(song.lesson.title.localized) {
                     Text(verbatim: subtitle).font(Typeface.label(13, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
                         .lineLimit(1).minimumScaleFactor(0.8)
                 } else {
@@ -659,29 +530,30 @@ struct SongsView: View {
         return first.uppercased() + rest.dropFirst()
     }
 
-    /// Open, Pro or locked (or the stars), how hard, and the chords, for VoiceOver.
-    private func tileValue(_ song: Song, sheet: SongSheet, access: LessonAccess, stars: Int) -> Text {
+    /// Open, Pro or locked (and why), or the stars, how hard, and the chords, for VoiceOver.
+    private func tileValue(_ song: Song, sheet: SongSheet, standing: SongsCatalog.Standing) -> Text {
+        let stars = store.learn.stars[song.lesson.id] ?? 0
         let level = sheet.difficulty(unit: song.unitIndex, of: song.course.units.count)
-        var value = accessValue(access, stars: stars) + Text(verbatim: ", ") + Text(DifficultyDots.name(level))
+        var value = accessValue(standing.access, stars: stars)
+        if standing.access == .locked, let gate = standing.gate {
+            value = value + Text(verbatim: ", ") + Text("Finish \(gate.title.localized)")
+        }
+        value = value + Text(verbatim: ", ") + Text(DifficultyDots.name(level))
         if !sheet.chords.isEmpty { value = value + Text(verbatim: ", " + sheet.chords.map(\.name).joined(separator: " ")) }
         return value
     }
 
-    /// The sleeve with its state, in the corner its title leaves free: Pro songs keep their colour under a PRO
-    /// badge, songs not yet reached dim under a lock, and every open song shows its progress: its stars (empty
-    /// ones still to win) and, once played, a bar along its foot filled to its best accuracy.
-    private func tileCover(_ song: Song, access: LessonAccess, stars: Int) -> some View {
-        let art = CoverArt(song)
-        let best = access == .locked ? nil : store.learn.bestAccuracy[song.lesson.id]
-        return SongCover(art: art, locked: access == .locked)
+    /// The sleeve with its state: songs that play show their progress in the corner the title leaves free (their
+    /// stars, empty ones still to win, and once played a bar along the foot filled to the best accuracy); songs that
+    /// don't play yet, Pro or further on alike, calm under the same muted colour (the type stays crisp) and say why
+    /// underneath, with "Hear it" in that corner instead.
+    private func tileCover(_ song: Song, art: CoverArt, access: LessonAccess, stars: Int) -> some View {
+        let best = access == .play ? store.learn.bestAccuracy[song.lesson.id] : nil
+        return SongCover(art: art, locked: access != .play)
             .frame(width: tileWidth, height: tileWidth)
             .overlay(alignment: .bottom) { if let best { progressBar(best) } }
             .overlay(alignment: art.freeCorner) {
-                if access == .pro {
-                    ProBadge().padding(10)
-                } else if access == .play {
-                    starPlate(stars)
-                }
+                if access == .play { starPlate(stars) }
             }
             .shadow(color: .black.opacity(0.45), radius: 12, y: 8)
     }
@@ -753,12 +625,289 @@ struct SongsView: View {
     }
 }
 
+// MARK: - The catalogue, worked out once per change
+
+/// The Songs tab's songs and where each one stands. The catalogue, its filter chips and its sleeves are read once
+/// from the curriculum; each song's access (and, for one further on in its course, the open lesson on the way to it)
+/// once per change of the learner's progress, Pro, level or day; each filter's featured song, picked shelves and
+/// course shelves once per such change too. Bodies then only look things up, so a settings save, the reward pulse or
+/// a slider step elsewhere in the app no longer re-runs some hundred access checks, sorts and lesson scans (QA M15).
+@MainActor final class SongsCatalog {
+    struct Standing {
+        let access: LessonAccess
+        /// For a song further on in its course: the open lesson to finish on the way to it.
+        let gate: Lesson?
+    }
+
+    /// A course shelf and the songs its rail shows (all but the featured song).
+    struct Rail: Identifiable {
+        let shelf: SongsView.Shelf
+        let songs: [SongsView.Song]
+        var id: String { shelf.id }
+    }
+
+    struct Layout {
+        let hero: SongsView.Song?
+        let picks: [SongsView.Pick]
+        let rails: [Rail]
+    }
+
+    private struct Key: Equatable {
+        let learn: LearnProgress
+        let pro: Bool
+        let level: Int
+        let day: Int
+    }
+
+    private var built = false
+    private var songs: [SongsView.Song] = []
+    private var chipList: [SongsView.Chip] = []
+    private var arts: [String: CoverArt] = [:]
+    private var lessonsByCourse: [String: [Lesson]] = [:]
+    private var key: Key?
+    private var standings: [String: Standing] = [:]
+    private var layouts: [String: Layout] = [:]
+
+    // MARK: Lookups
+
+    func chips(_ store: AppStore) -> [SongsView.Chip] {
+        build(store.curriculum)
+        return chipList
+    }
+
+    func layout(filter: String, store: AppStore) -> Layout {
+        refresh(store)
+        if let known = layouts[filter] { return known }
+        let made = makeLayout(filter: filter, store: store)
+        layouts[filter] = made
+        return made
+    }
+
+    func standing(_ song: SongsView.Song) -> Standing {
+        standings[song.id] ?? Standing(access: .locked, gate: nil)
+    }
+
+    /// The song's sleeve, its motif as its course deals it.
+    func art(_ song: SongsView.Song) -> CoverArt {
+        if let known = arts[song.id] { return known }
+        let made = CoverArt(song)
+        arts[song.id] = made
+        return made
+    }
+
+    // MARK: Building
+
+    private func build(_ curriculum: Curriculum) {
+        guard !built else { return }
+        built = true
+        var found: [SongsView.Song] = []
+        for course in curriculum.courses {
+            lessonsByCourse[course.id] = course.lessons
+            var number = 0
+            for (index, unit) in course.units.enumerated() {
+                for lesson in unit.lessons where lesson.kind == .song {
+                    number += 1
+                    found.append(SongsView.Song(course: course, unit: unit, unitIndex: index, lesson: lesson, number: number))
+                }
+            }
+        }
+        songs = found
+        // One chip per instrument that has songs, named after its own course (Guitar, Ukulele, Singing…).
+        var seen = Set<String>()
+        for course in curriculum.courses {
+            guard let instrument = course.instrument, !seen.contains(instrument),
+                  course.lessons.contains(where: { $0.kind == .song }) else { continue }
+            seen.insert(instrument)
+            let candidates = curriculum.courses.filter { $0.instrument == instrument }
+            let own = candidates.first { !Self.isCollection($0) } ?? course
+            chipList.append(SongsView.Chip(id: instrument, title: own.title.localized, course: own))
+        }
+    }
+
+    private func refresh(_ store: AppStore) {
+        build(store.curriculum)
+        let day = Calendar.current.ordinality(of: .day, in: .era, for: Date()) ?? 0
+        let next = Key(learn: store.learn, pro: store.isPro, level: store.level.number, day: day)
+        guard next != key else { return }
+        key = next
+        layouts = [:]
+        var made: [String: Standing] = [:]
+        for song in songs {
+            let access = LessonAccess.of(song.lesson, in: song.course, store: store)
+            let gate = access == .locked
+                ? Self.gate(song.lesson, in: song.course, lessons: lessonsByCourse[song.course.id] ?? [], progress: next.learn)
+                : nil
+            made[song.id] = Standing(access: access, gate: gate)
+        }
+        standings = made
+    }
+
+    /// The nearest open, unfinished lesson before `lesson` in its course: finishing it moves toward the song.
+    static func gate(_ lesson: Lesson, in course: LearnCourse, lessons: [Lesson], progress: LearnProgress) -> Lesson? {
+        guard let position = lessons.firstIndex(where: { $0.id == lesson.id }) else { return nil }
+        return lessons[..<position].last { progress.isUnlocked($0, in: course) && !progress.isFinished($0.id) }
+    }
+
+    // MARK: Layout
+
+    private func makeLayout(filter: String, store: AppStore) -> Layout {
+        let pool = songs.filter { Self.matches($0, filter: filter) }
+        let hero = featured(pool, store: store)
+        let picks = self.picks(pool, hero: hero, store: store)
+        var rails: [Rail] = []
+        for shelf in shelves(pool, curriculum: store.curriculum) {
+            let rail = shelf.songs.filter { $0.id != hero?.id }
+            if !rail.isEmpty { rails.append(Rail(shelf: shelf, songs: rail)) }
+        }
+        return Layout(hero: hero, picks: picks, rails: rails)
+    }
+
+    /// Songs for any instrument (a course without one) show under every filter.
+    private static func matches(_ song: SongsView.Song, filter: String) -> Bool {
+        filter == SongsView.all || song.course.instrument == nil || song.course.instrument == filter
+    }
+
+    /// A course that is mostly songs (Songs, Originals) rather than an instrument's path.
+    static func isCollection(_ course: LearnCourse) -> Bool {
+        course.lessons.filter { $0.kind == .song }.count * 2 >= course.lessons.count
+    }
+
+    static func isOriginals(_ course: LearnCourse) -> Bool {
+        course.id.hasPrefix("original") || course.title.defaultValue.lowercased().hasPrefix("original")
+    }
+
+    /// Originals first, then the song collections, then each instrument's songs in curriculum order.
+    private static func rank(_ course: LearnCourse) -> Int {
+        if isOriginals(course) { return 0 }
+        return isCollection(course) ? 1 : 2
+    }
+
+    private func shelves(_ songs: [SongsView.Song], curriculum: Curriculum) -> [SongsView.Shelf] {
+        var found: [SongsView.Shelf] = []
+        for course in curriculum.courses {
+            let items = songs.filter { $0.course.id == course.id }
+            if !items.isEmpty { found.append(SongsView.Shelf(course: course, songs: items)) }
+        }
+        let ranked = found.enumerated().sorted { a, b in
+            let left = Self.rank(a.element.course), right = Self.rank(b.element.course)
+            return left != right ? left < right : a.offset < b.offset
+        }
+        return ranked.map { $0.element }
+    }
+
+    /// The song of the day (`SongOfTheDay`): an unfinished song at the learner's level, an Original ahead of the
+    /// traditional tunes once past the beginner units, the same all day.
+    private func featured(_ songs: [SongsView.Song], store: AppStore) -> SongsView.Song? {
+        let progress = key?.learn ?? store.learn
+        let candidates = songs.map { song in
+            SongOfTheDay.Candidate(id: song.id, original: Self.isOriginals(song.course), unit: song.unitIndex,
+                                   finished: progress.isFinished(song.lesson.id), access: dayAccess(song, progress: progress))
+        }
+        let placed = progress.placedThrough.values.contains { $0 >= 0 }
+        guard let id = SongOfTheDay.pick(candidates, level: key?.level ?? store.level.number, finishedLessons: progress.stars.count,
+                                         placed: placed, day: key?.day ?? 0) else { return nil }
+        return songs.first { $0.id == id }
+    }
+
+    /// Learn's access, with Pro songs split into the next one in order (worth featuring) and later ones.
+    private func dayAccess(_ song: SongsView.Song, progress: LearnProgress) -> SongOfTheDay.Access {
+        switch standing(song).access {
+        case .play: return .open
+        case .pro: return progress.isUnlocked(song.lesson, in: song.course) ? .pro : .locked
+        case .locked: return .locked
+        }
+    }
+
+    /// From the songs under the filter (the featured one aside): songs not played yet that use the chord the learner
+    /// learned last ("Because you learned E minor"), then every song of one to three chords. Songs that play now
+    /// come first, the easiest of them first, and a sleeve whose motif the shelf already shows moves along it.
+    private func picks(_ songs: [SongsView.Song], hero: SongsView.Song?, store: AppStore) -> [SongsView.Pick] {
+        let progress = key?.learn ?? store.learn
+        let pool = songs.filter { $0.id != hero?.id }
+        var out: [SongsView.Pick] = []
+        if let chord = lastLearnedChord(progress, curriculum: store.curriculum) {
+            let using = pool.filter { song in
+                !progress.isFinished(song.lesson.id) && SongSheet.of(song.lesson).chords.contains { $0.symbol == chord.symbol }
+            }
+            if !using.isEmpty {
+                out.append(SongsView.Pick(id: "because", symbol: "sparkles", title: Text("Because you learned \(SongSheet.spoken(chord))"),
+                                          songs: Array(varied(easiestFirst(using)).prefix(10))))
+            }
+        }
+        let few = pool.filter { (1...3).contains(SongSheet.of($0.lesson).chords.count) }
+        if few.count >= 2 {
+            out.append(SongsView.Pick(id: "few", symbol: "3.circle.fill", title: Text("3 chords or fewer"),
+                                      songs: Array(varied(easiestFirst(few)).prefix(12))))
+        }
+        return out
+    }
+
+    /// The chord of the lesson finished most recently that taught one (a chord to play, or one on an explanation's card).
+    private func lastLearnedChord(_ progress: LearnProgress, curriculum: Curriculum) -> ChordSpec? {
+        let recent = progress.finishedDates.sorted { $0.value > $1.value }
+        for entry in recent.prefix(40) {
+            guard let found = curriculum.lesson(id: entry.key), let chord = Self.taughtChord(found.lesson) else { continue }
+            return chord
+        }
+        return nil
+    }
+
+    private static func taughtChord(_ lesson: Lesson) -> ChordSpec? {
+        var taught: ChordSpec?
+        for step in lesson.steps {
+            switch step {
+            case let .playChord(chord): taught = chord
+            case let .explain(_, _, .chord(chord)): taught = chord
+            default: break
+            }
+        }
+        return taught
+    }
+
+    private struct Ranked {
+        let order: Int
+        let song: SongsView.Song
+        let open: Bool
+        let level: Int
+    }
+
+    private func easiestFirst(_ songs: [SongsView.Song]) -> [SongsView.Song] {
+        let ranked = songs.enumerated().map { item -> Ranked in
+            let song = item.element
+            let level = SongSheet.of(song.lesson).difficulty(unit: song.unitIndex, of: song.course.units.count)
+            return Ranked(order: item.offset, song: song, open: standing(song).access == .play, level: level)
+        }
+        let sorted = ranked.sorted { a, b in
+            if a.open != b.open { return a.open }
+            if a.level != b.level { return a.level < b.level }
+            return a.order < b.order
+        }
+        return sorted.map(\.song)
+    }
+
+    /// The same order, but a sleeve whose motif is already on the shelf waits until the end, so a shelf drawn from
+    /// several courses doesn't show one motif twice where it can help it.
+    private func varied(_ songs: [SongsView.Song]) -> [SongsView.Song] {
+        var seen = Set<CoverArt.Motif>()
+        var first: [SongsView.Song] = []
+        var later: [SongsView.Song] = []
+        for song in songs {
+            if seen.insert(art(song).motif).inserted { first.append(song) } else { later.append(song) }
+        }
+        return first + later
+    }
+}
+
+// MARK: - Sleeves
+
 extension CoverArt {
-    /// The title as shown sets the sleeve's type; colour, motif and layout follow the lesson id and its unit's genre.
+    /// The title as shown sets the sleeve's type; colour and type follow the lesson id and its unit's genre, the
+    /// motif its course's deal (`assignedMotif`).
     init(_ song: SongsView.Song) {
         self.init(id: song.lesson.id, title: song.lesson.title.localized, accent: song.course.accent,
                   genre: CoverArt.genre(unit: song.unit.title.defaultValue, instrument: song.course.instrument),
-                  label: song.course.title.localized, number: song.number)
+                  label: song.course.title.localized, number: song.number,
+                  motif: CoverArt.assignedMotif(song.lesson.id, in: song.course))
     }
 
     /// A song lesson's sleeve wherever it shows (its song sheet, its poster): the same art as its tile on the shelf,
@@ -777,6 +926,78 @@ extension CoverArt {
         return CoverArt(id: lesson.id, title: lesson.title.localized, accent: course.accent,
                         genre: CoverArt.genre(unit: unit?.title.defaultValue ?? "", instrument: course.instrument),
                         label: course.title.localized, number: 1)
+    }
+}
+
+// MARK: - Pieces
+
+/// Play (or stop) on a sleeve: a white disc, and a ring that fills as the clip plays.
+private struct PreviewDisc: View {
+    let active: Bool
+    let ring: Color
+    let start: Date
+    let length: Double
+    var side: CGFloat = 38
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            ZStack {
+                Circle().fill(.white.opacity(0.94))
+                if active { progress }
+                Image(systemName: active ? "stop.fill" : "play.fill")
+                    .font(.system(size: side * 0.37, weight: .bold))
+                    .foregroundStyle(Palette.stage)
+                    .offset(x: active ? 0 : 1)
+                    .contentTransition(.symbolEffect(.replace))
+            }
+            .frame(width: side, height: side)
+            .shadow(color: .black.opacity(0.35), radius: 8, y: 3)
+            .frame(width: 44, height: 44)
+            .contentShape(Circle())
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityLabel(active ? Text("Stop") : Text("Hear it"))
+    }
+
+    private var progress: some View {
+        TimelineView(.animation(minimumInterval: 1.0 / 30)) { timeline in
+            let elapsed = timeline.date.timeIntervalSince(start)
+            let fraction = length > 0 ? min(1, max(0, elapsed / length)) : 0
+            Circle()
+                .trim(from: 0, to: CGFloat(fraction))
+                .stroke(ring, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+                .padding(2.5)
+        }
+    }
+}
+
+/// Why a song doesn't play yet, the same plate on every shelf: a lock, then "Finish Kite Weather" (the open lesson
+/// on the way to it) or "Timbre Pro" in gold.
+private struct LockReason: View {
+    let access: LessonAccess
+    let gate: Lesson?
+
+    var body: some View {
+        let pro = access == .pro
+        HStack(spacing: 5) {
+            Image(systemName: "lock.fill").font(.system(size: 10, weight: .bold))
+                .foregroundStyle(pro ? Palette.amber : Palette.inkSoft)
+            reason
+                .font(Typeface.label(12, relativeTo: .subheadline))
+                .foregroundStyle(pro ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.ink.opacity(0.88)))
+                .lineLimit(1).minimumScaleFactor(0.8).truncationMode(.tail)
+        }
+        .padding(.horizontal, 8).frame(height: 24)
+        .background(Capsule().fill(pro ? Palette.amber.opacity(0.1) : Color.white.opacity(0.06)))
+        .overlay(Capsule().strokeBorder(pro ? Palette.amber.opacity(0.35) : Color.white.opacity(0.1), lineWidth: 1))
+    }
+
+    private var reason: Text {
+        if access == .pro { return Text("Timbre Pro") }
+        if let gate { return Text("Finish \(gate.title.localized)") }
+        return Text("Locked")
     }
 }
 

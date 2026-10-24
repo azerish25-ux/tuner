@@ -180,7 +180,7 @@ struct SongFinaleView: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// The poster, tilted beside Share, rendered as the finale opens.
+    /// The poster, tilted beside Share, rendered once the stars have landed.
     private var shareRow: some View {
         HStack(spacing: 16) {
             posterThumb
@@ -260,8 +260,10 @@ struct SongFinaleView: View {
 
     // MARK: Reveal
 
+    /// The stars land first; the poster (a 1080 × 1920 render on the main thread) is drawn only once they have
+    /// and the burst has settled, so the take → finale transition and the stars never hitch on it (QA M11). Share
+    /// waits, dimmed, the moment it takes.
     private func reveal() async {
-        poster = ShareCardRenderer.image(storyCard, scale: displayScale, locale: locale, direction: layoutDirection)
         withAnimation(.easeOut(duration: 0.45)) { appeared = true }
         for index in 0..<3 {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 80 : 340))
@@ -269,6 +271,10 @@ struct SongFinaleView: View {
             withAnimation(reduceMotion ? .easeOut(duration: 0.15) : .spring(response: 0.45, dampingFraction: 0.55)) { shownStars = index + 1 }
             if index < stars { SoundFX.shared.play(.star); Haptics.shared.lock(); burst += 1 }
         }
+        try? await Task.sleep(for: .milliseconds(reduceMotion ? 120 : 520))
+        guard !Task.isCancelled, poster == nil else { return }
+        let image = ShareCardRenderer.image(storyCard, scale: displayScale, locale: locale, direction: layoutDirection)
+        withAnimation(reduceMotion ? nil : .easeOut(duration: 0.3)) { poster = image }
     }
 
     private var storyCard: SongStoryCard {
@@ -316,17 +322,16 @@ struct SongStoryCard: View {
         .environment(\.colorScheme, .dark)
     }
 
-    /// The sleeve's own light, blurred across the top, darkening toward the sign-off. Overlays only, so the poster
-    /// keeps its 9:16 frame.
+    /// The sleeve's colours as a still mesh of light across the top (cheaper to render than a blur of the sleeve, and
+    /// smooth at 3×), darkening toward the sign-off. Overlays only, so the poster keeps its 9:16 frame.
     private var backdrop: some View {
         Palette.stage
             .overlay(art.far.opacity(0.55))
             .overlay(alignment: .top) {
-                SongCover(art: art, corner: 0, titled: false, outlined: false)
-                    .frame(width: 520, height: 520)
-                    .blur(radius: 60)
-                    .opacity(0.55)
-                    .offset(y: -90)
+                CoverMesh(art: art, animated: false)
+                    .frame(width: 360, height: 460)
+                    .opacity(0.7)
+                    .mask(LinearGradient(colors: [.black, .black, .black.opacity(0)], startPoint: .top, endPoint: .bottom))
             }
             .overlay(LinearGradient(colors: [.clear, Palette.stage.opacity(0.75), Palette.stage], startPoint: .center, endPoint: .bottom))
             .overlay(RadialGradient(colors: [.clear, Palette.stageDeep.opacity(0.85)], center: .center, startRadius: 220, endRadius: 520))

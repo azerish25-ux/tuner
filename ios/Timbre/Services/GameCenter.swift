@@ -90,7 +90,7 @@ final class GameCenter: ObservableObject {
         let signedIn = GKLocalPlayer.local.isAuthenticated
         guard signedIn != active else { return }
         active = signedIn
-        guard signedIn, let store else {
+        guard signedIn, let store = self.store else {
             boards = []
             weeklyRank = nil
             watcher = nil
