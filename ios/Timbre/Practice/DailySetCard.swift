@@ -408,6 +408,25 @@ struct DailySetCard: View {
     }
 }
 
+/// The XP pill's ground: a faint mint capsule, filled from the leading end as far as the quest has got.
+private struct QuestPillFill: View {
+    let progress: Double
+
+    var body: some View {
+        GeometryReader { proxy in
+            ZStack(alignment: .leading) {
+                Capsule().fill(Palette.mint.opacity(0.1))
+                Rectangle().fill(Palette.mint.opacity(0.2))
+                    .frame(width: proxy.size.width * CGFloat(max(0, min(1, progress))))
+            }
+            .clipShape(Capsule())
+        }
+        .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.28), lineWidth: 1))
+        .animation(Motion.settle, value: progress)
+        .accessibilityHidden(true)
+    }
+}
+
 // MARK: - Compact card (Learn)
 
 /// Today in one line, for the Learn tab's header area: the small ring with how many are done, "Today", and
