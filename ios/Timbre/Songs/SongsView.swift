@@ -171,17 +171,26 @@ struct SongsView: View {
         let seconds: Double
         /// Bars it runs (the band under a sample is exactly as long).
         let bars: Int
+        /// The song's bar it starts at (the band takes the chart's chords from there).
+        var firstBar = 0
     }
 
-    /// The featured sleeve's opening bars (`SongPreview`).
+    /// The featured sleeve's opening bars (`SongPreview`: a whole arrangement's first verse, not its intro).
     private static func opening(of lesson: Lesson) -> Clip? {
         guard let phrase = SongPreview.opening(of: lesson) else { return nil }
         return Clip(notes: phrase.notes, bpm: phrase.bpm, meter: 4, seconds: phrase.duration, bars: 0)
     }
 
-    /// A locked song's "Hear it": the song itself (its final take, else its melody) from the top, up to twenty
-    /// seconds, cut at a bar line, at a whole tempo so the band's click and the notes keep together.
+    /// A locked song's "Hear it": a whole arrangement from its first verse or chorus (`SongPreview.excerpt`, the
+    /// intro passed over); else the song itself (its final take, else its melody) from the top. Up to twenty seconds,
+    /// cut at a bar line, at a whole tempo so the band's click and the notes keep together.
     @MainActor private static func sample(of lesson: Lesson) -> Clip? {
+        if let excerpt = SongPreview.excerpt(of: lesson, maxSeconds: sampleSeconds) {
+            let bpm = max(30, excerpt.bpm.rounded())
+            let meter = max(1, excerpt.beatsPerBar)
+            return Clip(notes: excerpt.notes, bpm: bpm, meter: meter, seconds: Double(excerpt.bars * meter) * 60 / bpm,
+                        bars: excerpt.bars, firstBar: excerpt.firstBar)
+        }
         let sheet = SongSheet.of(lesson)
         guard !sheet.melody.isEmpty else { return opening(of: lesson) }
         let meter = max(1, sheet.melodyMeter)
@@ -200,16 +209,18 @@ struct SongsView: View {
     private func togglePreview(_ song: Song, full: Bool) {
         if previewing == song.id { stopPreview(); return }
         stopPreview()
-        guard let clip = full ? Self.sample(of: song.lesson) : Self.opening(of: song.lesson) else { return }
+        guard let found = full ? Self.sample(of: song.lesson) : Self.opening(of: song.lesson) else { return }
         let audio = store.audio
         let reference = store.settings.referencePitchHz
         var band: BandArrangement?
-        if full, bandOn, audio.headphones, clip.bars > 0 {
+        if full, bandOn, audio.headphones, found.bars > 0 {
             let chart = LeadChart.of(song.lesson)
-            let chords = chart.notes.isEmpty ? [] : chart.filledChords(from: 0, count: clip.bars)
-            band = SongPlayback.band(notes: clip.notes, chords: chords, bars: clip.bars, bpm: clip.bpm, meter: clip.meter,
+            let chords = chart.notes.isEmpty ? [] : chart.filledChords(from: found.firstBar, count: found.bars)
+            band = SongPlayback.band(notes: found.notes, chords: chords, bars: found.bars, bpm: found.bpm, meter: found.meter,
                                      reference: reference, bass: song.course.fretKind != "bass")
         }
+        // Without the band, a sample starts on its first note rather than a lead-in bar's rest.
+        let clip = band == nil ? Self.trimmed(found) : found
         Haptics.shared.selection()
         Analytics.log(full ? "song_sample" : "song_preview", ["lesson": song.id, "band": band == nil ? "0" : "1"])
         previewStart = Date()
@@ -221,6 +232,14 @@ struct SongsView: View {
             previewTask = nil
             withAnimation(Motion.settle) { previewing = nil }
         }
+    }
+
+    /// `clip` from its first note: the rest before it cut, and the length shortened to match.
+    private static func trimmed(_ clip: Clip) -> Clip {
+        guard let lead = clip.notes.first?.beat, lead > 0.01 else { return clip }
+        let notes = clip.notes.map { TimedNote(midi: $0.midi, beat: $0.beat - lead, beats: $0.beats, at: $0.at) }
+        return Clip(notes: notes, bpm: clip.bpm, meter: clip.meter, seconds: max(0.5, clip.seconds - lead * 60 / max(1, clip.bpm)),
+                    bars: clip.bars, firstBar: clip.firstBar)
     }
 
     private func stopPreview() {

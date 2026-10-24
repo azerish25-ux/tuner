@@ -4,12 +4,14 @@ import TimbreCore
 /// The first screen of a song lesson, a song sheet. The zoom out of the song's sleeve (on the Songs shelf, Learn's
 /// path) lands on that sleeve full size; once the screen has arrived, the sleeve settles into the sheet's head and
 /// the sheet unfolds under it: key, tempo, meter and level; the chords the song asks for as small boxes that strum
-/// when tapped (a melody's notes, for a song without chords); the song map; and the lead sheet, bar by bar, with the
-/// chord symbols over the melody (or its tab) and the hook marked. Tapping a section, on the map or the lead sheet,
-/// loops it, at 50, 75 or 100 % of the song's tempo, with a playhead through its bars; `practice`, when the host
-/// gives one, takes that loop on to be played. "Preview with band" plays the opening of the take the lesson ends on:
-/// over the band in headphones, the melody alone on the speaker (the band only ever plays in headphones, where it
-/// can't reach the microphone). Start goes on to the lesson.
+/// when tapped (a melody's notes, for a song without chords); the song map (a whole arrangement's sections: intro,
+/// verses, choruses, bridge, outro); and the lead sheet, bar by bar, with the chord symbols over the melody (or its
+/// tab), the words under it and the hook marked. Tapping a section, on the map or the lead sheet, loops it, at 50, 75
+/// or 100 % of the song's tempo, with a playhead through its bars; `practice`, when the host gives one, takes that
+/// loop on to be played. "Preview with band" plays the song from its first verse (a whole arrangement's intro is
+/// passed over, `SongPreview.excerpt`), else the opening of the take the lesson ends on: over the band in headphones,
+/// the melody alone on the speaker (the band only ever plays in headphones, where it can't reach the microphone).
+/// Start goes on to the lesson.
 struct SongOpener: View {
     let lesson: Lesson
     let course: LearnCourse
@@ -19,6 +21,8 @@ struct SongOpener: View {
     let start: () -> Void
     /// A section picked on the sheet, to practise on its own at its loop's speed; nil hides "Practice this part".
     var practice: ((SongSheet.Loop) -> Void)?
+    /// Back from practising a part: it is picked again (at the same speed) and in view.
+    var returning: SongSheet.Loop?
     @EnvironmentObject private var store: AppStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -35,6 +39,9 @@ struct SongOpener: View {
     @State private var playTask: Task<Void, Never>?
     @State private var playStart = Date()
     @State private var previewSeconds = 0.0
+    /// Where the preview starts, in bars from the top of the song, and how long a bar of it lasts.
+    @State private var previewFrom = 0.0
+    @State private var previewBarSeconds = 2.0
     /// The section picked on the map or the lead sheet, its loop's speed and how long one pass lasts.
     @State private var selected: Int?
     @State private var loopSpeed = 0.75
@@ -67,14 +74,24 @@ struct SongOpener: View {
                     }
                     .scrollBounceBehavior(.basedOnSize)
                     .scrollIndicators(.hidden)
+                    .task {
+                        // Back from practising a part: its card in view once the sheet has laid out.
+                        guard let returning else { return }
+                        try? await Task.sleep(for: .milliseconds(80))
+                        proxy.scrollTo(returning.section.anchor, anchor: .center)
+                    }
                 }
                 actionBar
             }
         }
         .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
         .onAppear {
-            store.audio.prepareBand(band)
+            if let clip = previewClip { store.audio.prepareBand(previewBand(clip)) }
             if arrived || reduceMotion { unfolded = true }
+            if let returning, selected == nil {
+                selected = returning.section.id
+                loopSpeed = returning.speed
+            }
         }
         .onChange(of: arrived) { _, landed in
             guard landed, !unfolded else { return }
@@ -301,6 +318,13 @@ struct SongOpener: View {
                 Spacer(minLength: 8)
                 if tab != nil { notationSwitch }
             }
+            if let words = sheet.arrangement?.words {
+                // Who wrote the words the sheet sets under the melody.
+                Text("Words: \(words.localized)")
+                    .font(.footnote).foregroundStyle(Palette.inkFaint)
+                    .lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, -6)
+            }
             LeadSheetView(chart: chart, sections: sheet.sections, accent: accent, tab: showTab ? tab : nil,
                           width: min(width, Self.measure) - Self.margin * 2, position: position, selected: selected,
                           onSelect: { section in pick(section) },
@@ -353,7 +377,7 @@ struct SongOpener: View {
                 Spacer(minLength: 4)
                 speedPicker(section, tint: tint)
             }
-            if let practice {
+            if let practice, section.part != nil, !sheet.loopMelody(section).isEmpty {
                 Button {
                     let loop = SongSheet.Loop(section: section, speed: loopSpeed, bpm: (baseBpm * loopSpeed).rounded())
                     stopPlayback()
@@ -475,7 +499,7 @@ struct SongOpener: View {
         }
         .buttonStyle(PressScaleStyle())
         .fixedSize(horizontal: true, vertical: false)
-        .disabled(previewPhrase == nil)
+        .disabled(previewClip == nil)
         .accessibilityLabel(previewing ? Text("Stop") : Text("Preview with band"))
         .accessibilityIdentifier("song.preview")
     }
@@ -497,7 +521,8 @@ struct SongOpener: View {
     private var baseBpm: Double { sheet.finale.isEmpty && !chart.notes.isEmpty ? sheet.melodyBpm : sheet.bpm }
 
     /// Bars from the top of the song: through the picked section, round and round, while it loops; through the
-    /// opening while the preview plays (a song mapped by its chords previews its melody instead, so it has none).
+    /// stretch the preview plays while it plays (a song mapped by its chords previews its melody instead, so it has
+    /// none).
     private func position(at date: Date) -> Double? {
         let elapsed = max(0, date.timeIntervalSince(playStart))
         if looping, let id = selected, let section = sheet.sections.first(where: { $0.id == id }), loopPass > 0 {
@@ -505,8 +530,7 @@ struct SongOpener: View {
             return Double(section.start) + within * Double(section.bars)
         }
         guard previewing, !chart.notes.isEmpty else { return nil }
-        let barSeconds = Double(chart.meter) * 60 / max(20, sheet.melodyBpm)
-        let bar = elapsed / barSeconds
+        let bar = previewFrom + elapsed / max(0.1, previewBarSeconds)
         return bar < Double(chart.bars) ? bar : nil
     }
 
@@ -515,40 +539,61 @@ struct SongOpener: View {
     /// The course instrument's voice (nil: the app's selected instrument, as `playTones` falls back).
     private var voice: InstrumentVoice? { InstrumentVoice(instrumentId: course.instrument) }
 
-    /// The band the final take plays over (the same arrangement, so it is rendered once for both).
-    private var band: BandArrangement {
-        let sheet = self.sheet
-        return .melody(sheet.melody, bpm: sheet.melodyBpm, beatsPerBar: sheet.melodyMeter,
-                       reference: store.settings.referencePitchHz, bass: course.fretKind != "bass")
+    /// What "Preview with band" plays: notes from beat 0 of bar `firstBar`, `bars` whole bars, at `bpm`.
+    private struct PreviewClip {
+        let notes: [TimedNote]
+        let firstBar: Int
+        let bars: Int
+        let bpm: Double
+        let meter: Int
     }
 
-    /// The preview: the take's first four bars (eight when they hold few notes), at its tempo.
-    private var previewPhrase: SongPreview.Phrase? {
+    /// A whole arrangement from its first verse (`SongPreview.excerpt`): four bars, eight when they hold few notes,
+    /// twenty seconds at most. Without one, the take's first four bars (eight when they hold few notes), at its tempo.
+    private var previewClip: PreviewClip? {
         let sheet = self.sheet
-        let meter = Double(max(1, sheet.melodyMeter))
+        if sheet.arrangement != nil, let four = SongPreview.excerpt(of: lesson, bars: 4) {
+            let clip = four.notes.count >= 5 ? four : (SongPreview.excerpt(of: lesson, bars: 8) ?? four)
+            return PreviewClip(notes: clip.notes, firstBar: clip.firstBar, bars: clip.bars, bpm: clip.bpm, meter: clip.beatsPerBar)
+        }
+        let meter = max(1, sheet.melodyMeter)
         guard !sheet.melody.isEmpty else { return nil }
-        let four = sheet.melody.filter { $0.beat < 4 * meter }
-        let notes = four.count >= 5 ? four : sheet.melody.filter { $0.beat < 8 * meter }
+        let four = sheet.melody.filter { $0.beat < 4 * Double(meter) }
+        let notes = four.count >= 5 ? four : sheet.melody.filter { $0.beat < 8 * Double(meter) }
         guard !notes.isEmpty else { return nil }
-        return SongPreview.Phrase(notes: notes, bpm: sheet.melodyBpm)
+        let end = notes.map { $0.beat + $0.beats }.max() ?? Double(meter)
+        let bars = max(1, Int((end / Double(meter) - 1e-6).rounded(.up)))
+        return PreviewClip(notes: notes, firstBar: 0, bars: bars, bpm: sheet.melodyBpm, meter: meter)
+    }
+
+    /// The band under the preview, exactly its bars long: the chart's chords over them where it has them.
+    private func previewBand(_ clip: PreviewClip) -> BandArrangement {
+        let chords = chart.notes.isEmpty ? [] : chart.filledChords(from: clip.firstBar, count: clip.bars)
+        return SongPlayback.band(notes: clip.notes, chords: chords, bars: clip.bars, bpm: clip.bpm, meter: clip.meter,
+                                 reference: store.settings.referencePitchHz, bass: course.fretKind != "bass")
     }
 
     private func togglePreview() {
         if previewing { stopPlayback(); return }
         stopPlayback()
-        guard let phrase = previewPhrase else { return }
-        let meter = max(1, sheet.melodyMeter)
+        guard let clip = previewClip else { return }
         let withBand = bandOn && store.audio.headphones
-        // With the band, through the end of the last bar it plays, so it lands on its final chord.
-        let bars = ((phrase.notes.map { $0.beat + $0.beats }.max() ?? Double(meter)) / Double(meter)).rounded(.up)
-        let length = withBand ? max(phrase.duration, bars * Double(meter) * phrase.secondsPerBeat) : phrase.duration
+        let spb = 60 / max(20, clip.bpm)
+        // Over the band, whole bars from the clip's first, landing on its final chord; alone, from its first note
+        // (no lead-in rest before an upbeat).
+        let offset = withBand ? 0 : (clip.notes.first?.beat ?? 0)
+        let notes = clip.notes.map { TimedNote(midi: $0.midi, beat: $0.beat - offset, beats: $0.beats, at: $0.at) }
+        let end = notes.map { $0.beat + $0.beats }.max() ?? 0
+        let length = (withBand ? max(end, Double(clip.bars * clip.meter)) : end) * spb
         Haptics.shared.selection()
         Analytics.log("song_sheet_preview", ["lesson": lesson.id, "band": withBand ? "1" : "0"])
         playStart = Date()
         previewSeconds = length
+        previewBarSeconds = Double(clip.meter) * spb
+        previewFrom = Double(clip.firstBar) + offset / Double(max(1, clip.meter))
         withAnimation(Motion.pluck) { previewing = true; sounding = nil }
-        playTask = SongPlayback.start(SongPlayback.hits(phrase.notes), bpm: phrase.bpm, meter: meter, length: length,
-                                      band: withBand ? band : nil, loop: false, audio: store.audio, voice: voice,
+        playTask = SongPlayback.start(SongPlayback.hits(notes), bpm: clip.bpm, meter: clip.meter, length: length,
+                                      band: withBand ? previewBand(clip) : nil, loop: false, audio: store.audio, voice: voice,
                                       reference: store.settings.referencePitchHz) {
             playTask = nil
             withAnimation(Motion.settle) { previewing = false }
@@ -567,15 +612,15 @@ struct SongOpener: View {
     }
 
     /// The section round and round at `loopSpeed` (a whole tempo, so the click and the notes keep together): its
-    /// melody, or its chords strummed on the song's pattern, over the band (on its own chords where the chart has
-    /// them) in headphones.
+    /// melody (an arrangement's section with the upbeat it starts on closing each pass), or its chords strummed on
+    /// the song's pattern, over the band (on its own chords where the chart has them) in headphones.
     private func startLoop(_ section: SongSheet.Section) {
         stopPlayback()
         let chart = self.chart
         let meter = chart.meter
         let bpm = max(30, (baseBpm * loopSpeed).rounded())
         let chords = chart.filledChords(from: section.start, count: section.bars)
-        let melody = chart.melody(from: section.start, count: section.bars)
+        let melody = section.part != nil ? sheet.loopMelody(section) : chart.melody(from: section.start, count: section.bars)
         let hits = chart.notes.isEmpty ? strums(chords, meter: meter, pattern: chart.strokes) : SongPlayback.hits(melody)
         guard !hits.isEmpty else { return }
         let pass = Double(section.bars * meter) * 60 / bpm

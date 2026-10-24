@@ -204,19 +204,23 @@ final class SongOfTheDayTests: XCTestCase {
                 guard let arrangement = lesson.arrangement, let take = lesson.songTake else { continue }
                 checked += 1
                 let section = try XCTUnwrap(SongPreview.openingSection(of: arrangement, notes: take.notes), lesson.id)
-                XCTAssertTrue(section.kind.isSung, "\(lesson.id) opens on \(section.name.defaultValue)")
+                XCTAssertNotEqual(section.kind, .intro, "\(lesson.id) opens on its intro")
+                if arrangement.sections.contains(where: { $0.kind.isSung }) {
+                    XCTAssertTrue(section.kind.isSung, "\(lesson.id) opens on \(section.name.defaultValue)")
+                }
                 // The cover's few seconds start on that section's first note.
                 let first = take.notes.first { $0.beat >= arrangement.startBeat(of: section) - 1e-6 }
                 XCTAssertEqual(SongPreview.opening(of: lesson)?.notes.first?.midi, first?.midi, lesson.id)
-                // "Hear it": whole bars, twenty seconds at most, with the words when the song has them.
+                // "Hear it": whole bars, twenty seconds at most (long enough to hear the tune, unless the song ends
+                // first), at most a bar of rest before the first note, with the words when the song has them.
                 let sample = try XCTUnwrap(SongPreview.excerpt(of: lesson, maxSeconds: 20), lesson.id)
                 XCTAssertLessThanOrEqual(sample.seconds, 20 + 1e-6, lesson.id)
-                XCTAssertGreaterThanOrEqual(sample.seconds, 12, "\(lesson.id): long enough to hear the tune")
-                XCTAssertGreaterThanOrEqual(sample.notes.count, 5, lesson.id)
+                XCTAssertTrue(sample.seconds >= 12 || sample.firstBar + sample.bars == arrangement.bars, lesson.id)
+                XCTAssertGreaterThanOrEqual(sample.notes.count, 3, lesson.id)
                 XCTAssertLessThan(sample.lead, Double(sample.beatsPerBar), "\(lesson.id): at most a bar of rest first")
                 XCTAssertEqual(LyricSheet(notes: sample.notes).isEmpty, LyricSheet(notes: take.notes).isEmpty, "\(lesson.id): the words come along")
             }
         }
-        XCTAssertEqual(checked, 52)
+        XCTAssertGreaterThanOrEqual(checked, 52, "the Songs and Originals courses at least")
     }
 }

@@ -1,9 +1,13 @@
-"""Full-length song arrangements for the Songs and Originals courses.
+"""Full-length song arrangements for the Songs and Originals courses and the song lessons of every instrument course.
 
 A song is a list of parts (intro, verses, choruses, a bridge, a solo, an outro) played back to back. Each part
 is a melody in lib.along's "note:beats" notation, optional lyrics and a chord per bar. `song(...)` joins the parts
 into the lesson's final take (one play-along with every note, each carrying its lyric syllable) and the lesson's
 `arrangement` (tempo, meter, bars, the sections with their bar ranges, the chord chart and the chord shapes).
+
+Melody tokens are "note:beats", "note@string:beats" (fix the string) or "note~finger:beats" (suggest another finger,
+e.g. a shift on a fretless instrument); "r:beats" is a rest. `transpose` and `transpose_chords` move a tune and its
+chart to another key, so one tune serves several instruments.
 
 Parts
 - `pickup`: beats of melody before the part's first full bar (an upbeat). The pickup sounds in the last bar of the
@@ -27,7 +31,7 @@ from __future__ import annotations
 
 import math
 
-from lib import T, Text, midi, name, position
+from lib import T, Text, midi, name, parse_chord_name, position
 
 KINDS = {"intro", "verse", "chorus", "bridge", "solo", "interlude", "outro"}
 HIDDEN_HYPHEN = "-"
@@ -60,17 +64,45 @@ class Part:
 
 
 def tokens(melody):
-    """(note or None for a rest, string or None, beats) for each token of a melody string."""
+    """(note or None for a rest, string or None, beats, finger or None) for each token of a melody string."""
     out = []
     for token in melody.split():
         n, _, length = token.partition(":")
         beats = float(length or 1)
         if n.lower() == "r":
-            out.append((None, None, beats))
+            out.append((None, None, beats, None))
         else:
+            n, _, g = n.partition("~")
             n, _, s = n.partition("@")
-            out.append((n, int(s) if s else None, beats))
+            out.append((n, int(s) if s else None, beats, int(g) if g else None))
     return out
+
+
+def transpose(melody, semitones):
+    """A melody moved by `semitones`. String and finger marks are dropped: the new key has its own places."""
+    out = []
+    for n, _, beats, _ in tokens(melody):
+        length = f"{beats:g}"
+        out.append(f"r:{length}" if n is None else f"{name(midi(n) + semitones)}:{length}")
+    return " ".join(out)
+
+
+SHARP_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+FLAT_NAMES = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
+
+
+def transpose_chords(chart, semitones, flats=False):
+    """A chord chart ("C G7 Am,F N") moved by `semitones`, spelled with flats for flat keys (F, Bb)."""
+    names = FLAT_NAMES if flats else SHARP_NAMES
+
+    def move(symbol):
+        if symbol == "N":
+            return symbol
+        root, _ = parse_chord_name(symbol)
+        rest = symbol[2:] if len(symbol) > 1 and symbol[1] in "#b" else symbol[1:]
+        return names[(root + semitones) % 12] + rest
+
+    return " ".join(",".join(move(s) for s in cell.split(",")) for cell in chart.split())
 
 
 def syllables(lyrics, where):
@@ -106,8 +138,9 @@ def syllables(lyrics, where):
 
 
 class Song:
-    def __init__(self, instrument, bpm, parts, beats_per_bar, shapes, words, max_fret, first_fret):
+    def __init__(self, instrument, bpm, parts, beats_per_bar, shapes, words, max_fret, first_fret, fingers=None):
         self.instrument = instrument
+        self.fingers = fingers
         self.bpm = bpm
         self.bpb = beats_per_bar
         self.parts = parts
@@ -127,6 +160,8 @@ class Song:
         at = position(self.instrument, note, max_fret=max_fret, prefer_string=string, first_fret=first_fret)
         if string and at["s"] != string:
             raise ValueError(f"{part.label}: {note} can't be played on string {string} within fret {max_fret}")
+        if self.fingers and at["f"] in self.fingers:
+            at["g"] = self.fingers[at["f"]]
         return at
 
     def _part_notes(self, part, start):
@@ -134,9 +169,11 @@ class Song:
         where = f"{part.label}"
         beat = start
         notes = []
-        for n, s, beats in tokens(part.melody):
+        for n, s, beats, g in tokens(part.melody):
             if n is not None:
                 at = self._place(part, n, s)
+                if at and g and at["f"]:
+                    at["g"] = g
                 notes.append({"m": midi(n), "b": round(beat, 4), "d": beats, **({"at": at} if at else {})})
             beat += beats
         length = beat - start
@@ -225,7 +262,8 @@ class Song:
             if not found:
                 raise ValueError(f"no part named {label!r}")
             parts.append(found[0])
-        excerpt = Song(self.instrument, bpm or self.bpm, parts, self.bpb, self.shapes, None, self.max_fret, self.first_fret)
+        excerpt = Song(self.instrument, bpm or self.bpm, parts, self.bpb, self.shapes, None, self.max_fret, self.first_fret,
+                       self.fingers)
         return excerpt.take(title)
 
     def meta(self):
@@ -246,9 +284,10 @@ class Song:
         return f"{self.bars} bars, {len(self.notes)} notes, {lyric} sung, {self.seconds:.0f} s"
 
 
-def song(instrument, bpm, parts, beats_per_bar=4, shapes=None, words=None, max_fret=4, first_fret=None):
-    """A full arrangement. shapes: {"G": chord spec, ...} for every chord the parts name. words: who wrote the lyrics."""
-    return Song(instrument, bpm, parts, beats_per_bar, shapes, words, max_fret, first_fret)
+def song(instrument, bpm, parts, beats_per_bar=4, shapes=None, words=None, max_fret=4, first_fret=None, fingers=None):
+    """A full arrangement. shapes: {"G": chord spec, ...} for every chord the parts name. words: who wrote the lyrics.
+    fingers: {fret: finger} for instruments whose hand doesn't give one finger per fret (violin, mandolin)."""
+    return Song(instrument, bpm, parts, beats_per_bar, shapes, words, max_fret, first_fret, fingers)
 
 
 def lyric_text(notes):

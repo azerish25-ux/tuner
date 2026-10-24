@@ -3,7 +3,9 @@ import TimbreCore
 
 /// A lesson, full screen: progress bar on top, one step at a time, results at the end. A song opens on its song
 /// sheet (`SongOpener`) and ends on a full performance over the band (`SongPerformStep`, or `SongEncoreStep` for a
-/// song that ends on its chords), with a finale and a poster before the results.
+/// song that ends on its chords), with a finale and a poster before the results. From the sheet of a whole
+/// arrangement, "Practice this part" plays one section along on its own (`SongArrangement.practice`, on the
+/// play-along's own runway at the loop's speed), then goes back to the sheet; it counts toward nothing.
 ///
 /// Lessons zoom open out of the card that was tapped (Learn's path, the Songs shelves). Until that presentation has
 /// landed (`ArrivalProbe`), nothing on screen animates: an entrance started inside the zoom could be cut off with
@@ -27,6 +29,16 @@ struct LessonPlayer: View {
     @State private var opening: Bool
     /// The presentation that brought the lesson in has finished.
     @State private var arrived = false
+    /// A part of the song picked on its sheet, being played along on its own.
+    @State private var part: PartTake?
+    /// The part last practised: the sheet picks it again on the way back.
+    @State private var lastPart: SongSheet.Loop?
+
+    /// A section of the song set up to play along with on its own: the loop picked on the sheet and its notes.
+    private struct PartTake: Equatable {
+        let loop: SongSheet.Loop
+        let plan: SongArrangement.Practice
+    }
 
     init(course: LearnCourse, lesson: Lesson, onNext: ((Lesson) -> Void)? = nil) {
         self.course = course
@@ -93,8 +105,9 @@ struct LessonPlayer: View {
             LiveActivityController.shared.lessonClosed(lesson.id)
         }
         .statusBarHidden(result == nil)
-        // The zoom-in from the Learn tab can be pulled back down; not halfway through (the close button asks first).
-        .interactiveDismissDisabled(run.index > 0 && result == nil)
+        // The zoom-in from the Learn tab can be pulled back down; not halfway through (the close button asks first),
+        // nor while a part of the song is being practised.
+        .interactiveDismissDisabled((run.index > 0 || part != nil) && result == nil)
     }
 
     private var nextLesson: Lesson? {
@@ -103,12 +116,17 @@ struct LessonPlayer: View {
         return all[i + 1]
     }
 
-    /// Under the bar: a song's sheet, the tune check before the first step that listens, or the step.
+    /// Under the bar: a song's sheet (or a part of it being practised), the tune check before the first step that
+    /// listens, or the step.
     @ViewBuilder private var stage: some View {
-        if opening {
-            SongOpener(lesson: lesson, course: course, accent: accent, arrived: arrived) {
-                withAnimation(.spring(response: 0.5, dampingFraction: 0.86)) { opening = false }
-            }
+        if opening, let part {
+            partStage(part)
+                .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
+                                        removal: .move(edge: .trailing).combined(with: .opacity)))
+        } else if opening {
+            SongOpener(lesson: lesson, course: course, accent: accent, arrived: arrived,
+                       start: { withAnimation(.spring(response: 0.5, dampingFraction: 0.86)) { opening = false } },
+                       practice: practiceAction, returning: lastPart)
             .transition(.asymmetric(insertion: .opacity, removal: .move(edge: .leading).combined(with: .opacity)))
         } else if let step = run.step, step.usesMicrophone, !tuneChecked, TuneCheckStep.needed(for: course) {
             TuneCheckStep(course: course, accent: accent) { withAnimation { tuneChecked = true } }
@@ -118,6 +136,66 @@ struct LessonPlayer: View {
                 .id(run.index)
                 .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity), removal: .move(edge: .leading).combined(with: .opacity)))
         }
+    }
+
+    // MARK: Practising a part
+
+    /// "Practice this part" on the sheet: offered for a whole arrangement, whose sections it can loop.
+    private var practiceAction: ((SongSheet.Loop) -> Void)? {
+        guard lesson.arrangement != nil, lesson.songTake != nil else { return nil }
+        return { loop in openPart(loop) }
+    }
+
+    /// The section as a play-along of its own at the loop's speed, a few times through (`SongSheet.passes`).
+    private func partPlan(for loop: SongSheet.Loop) -> SongArrangement.Practice? {
+        guard let arrangement = lesson.arrangement, let take = lesson.songTake, let section = loop.section.part else { return nil }
+        let practice = arrangement.practice(section, in: take.notes, speed: loop.speed, passes: SongSheet.passes(bars: section.bars))
+        return practice.notes.isEmpty ? nil : practice
+    }
+
+    private func openPart(_ loop: SongSheet.Loop) {
+        guard let plan = partPlan(for: loop) else { return }
+        lastPart = loop
+        Analytics.log("song_part_practice", ["lesson": lesson.id, "speed": "\(Int((loop.speed * 100).rounded()))"])
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.86)) { part = PartTake(loop: loop, plan: plan) }
+    }
+
+    private func closePart() {
+        Haptics.shared.selection()
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.86)) { part = nil }
+    }
+
+    /// The part on the play-along's runway (after the tune check, as any step that listens); Continue, or the back
+    /// button, returns to the sheet. Its takes touch neither the lesson's score nor its weak spots.
+    @ViewBuilder private func partStage(_ part: PartTake) -> some View {
+        if !tuneChecked, TuneCheckStep.needed(for: course) {
+            TuneCheckStep(course: course, accent: accent) { withAnimation { tuneChecked = true } }
+                .transition(.opacity)
+        } else {
+            AlongStep(notes: part.plan.notes, bpm: part.plan.bpm, beatsPerBar: part.plan.beatsPerBar, title: part.plan.section.name,
+                      course: course, accent: accent, done: { _ in closePart() })
+        }
+    }
+
+    /// In the lesson header's place while a part is practised: the song, and which bars at what speed.
+    private func partHeader(_ part: PartTake) -> some View {
+        let section = part.loop.section
+        let tint = SongSectionMap.tint(of: section, in: SongSheet.of(lesson).sections, accent: accent)
+        let bars = section.bars == 1 ? Text("Bar \(section.start + 1)") : Text("Bars \(section.start + 1)–\(section.start + section.bars)")
+        return VStack(alignment: .leading, spacing: 3) {
+            HStack(spacing: 6) {
+                Image(systemName: "repeat").font(.system(size: 11, weight: .bold)).foregroundStyle(tint)
+                Text(verbatim: lesson.title.localized)
+                    .font(Typeface.label(14, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
+                    .lineLimit(1)
+            }
+            (bars + Text(verbatim: " · \(Int((part.loop.speed * 100).rounded()))% · \(Int(part.plan.bpm.rounded())) BPM"))
+                .font(Typeface.number(12, relativeTo: .caption)).foregroundStyle(Palette.inkSoft)
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        .accessibilityElement(children: .combine)
     }
 
     /// A song's last step is its performance; every other step plays as it is. A step arriving inside the zoom
@@ -168,21 +246,32 @@ struct LessonPlayer: View {
     /// per step, all in one 44 pt row.
     private var topBar: some View {
         HStack(spacing: 8) {
-            Button { if run.index == 0 { dismiss() } else { confirmQuit = true } } label: {
-                Image(systemName: "xmark").font(.system(size: 14, weight: .bold)).foregroundStyle(Palette.inkSoft)
-                    .frame(width: 34, height: 34)
-                    .background(Circle().fill(Color.white.opacity(0.07)))
-                    .overlay(Circle().strokeBorder(Color.white.opacity(0.06), lineWidth: 1))
-                    .frame(width: 44, height: 44).contentShape(Rectangle())
+            if opening, let part {
+                // Practising a part: back to the sheet, not out of the lesson.
+                Button { closePart() } label: { barGlyph("chevron.backward") }
+                    .buttonStyle(PressScaleStyle())
+                    .accessibilityLabel(Text("Back to the song sheet")).accessibilityIdentifier("song.practice.back")
+                partHeader(part)
+            } else {
+                Button { if run.index == 0 { dismiss() } else { confirmQuit = true } } label: { barGlyph("xmark") }
+                    .buttonStyle(PressScaleStyle())
+                    .accessibilityLabel("Close lesson").accessibilityIdentifier("lesson.close")
+                LessonHeader(title: lesson.title.localized, index: run.index, steps: lesson.steps.count, accent: accent)
+                    // A song's sheet comes before its steps (and names the song itself): the header shows once they start.
+                    .opacity(opening ? 0 : 1)
+                    .accessibilityHidden(opening)
             }
-            .buttonStyle(PressScaleStyle())
-            .accessibilityLabel("Close lesson").accessibilityIdentifier("lesson.close")
-            LessonHeader(title: lesson.title.localized, index: run.index, steps: lesson.steps.count, accent: accent)
-                // A song's sheet comes before its steps (and names the song itself): the header shows once they start.
-                .opacity(opening ? 0 : 1)
-                .accessibilityHidden(opening)
         }
         .padding(.leading, 8).padding(.trailing, 20).padding(.top, 4).padding(.bottom, 6)
+    }
+
+    /// The top bar's round button face (close, or back from a part).
+    private func barGlyph(_ symbol: String) -> some View {
+        Image(systemName: symbol).font(.system(size: 14, weight: .bold)).foregroundStyle(Palette.inkSoft)
+            .frame(width: 34, height: 34)
+            .background(Circle().fill(Color.white.opacity(0.07)))
+            .overlay(Circle().strokeBorder(Color.white.opacity(0.06), lineWidth: 1))
+            .frame(width: 44, height: 44).contentShape(Rectangle())
     }
 
     private func advance(_ score: Double?) {

@@ -410,15 +410,30 @@ struct SongStoryCard: View {
         .minimumScaleFactor(0.6)
     }
 
-    /// The take note by note, in its grades' colours.
+    /// The take note by note, in its grades' colours; a whole song's take (two hundred notes and more) folded into
+    /// 96 marks end to end, so the poster shows all of it rather than its opening.
     private var ribbon: some View {
-        let grades = Array(take.grades.prefix(96))
+        let grades = Self.folded(take.grades, into: 96)
         return HStack(spacing: grades.count > 48 ? 1 : 2) {
             ForEach(Array(grades.enumerated()), id: \.offset) { _, grade in
                 Capsule().fill(SongTake.color(grade, accent: accent)).frame(height: grade == .perfect ? 10 : 7)
             }
         }
         .frame(height: 10)
+    }
+
+    /// `grades` as at most `count` marks: each a run of neighbouring notes, graded by their average credit.
+    static func folded(_ grades: [PlayAlongJudge.Grade], into count: Int) -> [PlayAlongJudge.Grade] {
+        guard count > 0, grades.count > count else { return grades }
+        return (0..<count).map { index -> PlayAlongJudge.Grade in
+            let lower = index * grades.count / count
+            let upper = min(grades.count, max(lower + 1, (index + 1) * grades.count / count))
+            let run = grades[lower..<upper]
+            let credit = run.reduce(0.0) { $0 + PlayAlongJudge.credit($1) } / Double(max(1, run.count))
+            if credit >= 0.95 { return .perfect }
+            if credit >= 0.7 { return .good }
+            return credit >= 0.35 ? .ok : .miss
+        }
     }
 
     private var signature: some View {

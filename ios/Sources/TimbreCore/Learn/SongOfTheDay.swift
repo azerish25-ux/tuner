@@ -153,9 +153,9 @@ public enum SongPreview {
 
     // MARK: Whole arrangements
 
-    /// Where a whole song's previews start: its first section with words in it (the first verse, or the chorus it
-    /// opens on), else (a piece without words) its first part after the intro, else its first section with notes.
-    /// Sections without a note in `notes` (the take) are passed over. Nil when no section has notes.
+    /// Where a whole song's previews start: its first sung section (the first verse, or the chorus or bridge it opens
+    /// on), else its first part after the intro, else its first section with notes. Sections without a note in
+    /// `notes` (the take) are passed over. Nil when no section has notes.
     public static func openingSection(of arrangement: SongArrangement, notes: [TimedNote]) -> SongArrangement.Section? {
         let playing = arrangement.sections.filter { section in
             let from = arrangement.startBeat(of: section)
@@ -172,7 +172,8 @@ public enum SongPreview {
         public let notes: [TimedNote]
         /// The section it opens on.
         public let section: SongArrangement.Section
-        /// The bar it starts at (0-based): the section's first, or the bar before when it starts on an upbeat.
+        /// The bar it starts at (0-based): the section's first, the bar before when it starts on an upbeat, or the
+        /// bar its first note comes in when the section opens on a bar's rest.
         public let firstBar: Int
         public let bars: Int
         public let bpm: Double
@@ -193,11 +194,13 @@ public enum SongPreview {
         let meter = max(1, arrangement.beatsPerBar)
         let tempo = max(1, arrangement.bpm)
         let barSeconds = Double(meter) * 60 / tempo
-        let firstBar = max(0, section.bar - (section.pickup > 0 ? 1 : 0))
+        let from = arrangement.startBeat(of: section)
+        // The bar the section's first note sounds in: the bar before for an upbeat, a later one past a bar's rest.
+        let entry = take.notes.first { $0.beat >= from - 1e-6 }?.beat ?? from
+        let firstBar = max(0, section.bar - (section.pickup > 0 ? 1 : 0), Int((entry / Double(meter) + 1e-6).rounded(.down)))
         let room = max(1, arrangement.bars - firstBar)
         let fit = max(1, Int((maxSeconds / barSeconds + 1e-9).rounded(.down)))
         let count = max(1, min(room, fit, bars ?? fit))
-        let from = arrangement.startBeat(of: section)
         let origin = Double(firstBar * meter)
         let end = Double((firstBar + count) * meter)
         let notes = take.notes
