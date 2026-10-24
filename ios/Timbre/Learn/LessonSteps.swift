@@ -476,22 +476,25 @@ struct ChordStep: View {
             }
             .frame(width: fit.width, height: ChordDiagram.boxHeight(chord, width: fit.width, stretch: fit.stretch, named: edges != nil))
         }
-            .frame(width: fit.width)
-            .padding(22)
-            .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Palette.stageRaised))
-            .shadow(color: finished ? accent.opacity(0.45) : .clear, radius: 26)
-            // Behind the card: the sparks fly out from under its edges, never over the chord's name.
-            .background { SparkBurst(trigger: burst, color: accent, startFraction: 0.6).frame(width: fit.width * 1.7, height: fit.width * 1.7) }
+        .frame(width: fit.width)
+        .padding(22)
+        .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Palette.stageRaised))
+        .shadow(color: finished ? accent.opacity(0.45) : .clear, radius: 26)
+        // Behind the card: the sparks fly out from under its edges, never over the chord's name.
+        .background { SparkBurst(trigger: burst, color: accent, startFraction: 0.6).frame(width: fit.width * 1.7, height: fit.width * 1.7) }
     }
 
-    /// One check per string over its line in the box (lowest string first, as drawn): the note it should ring,
-    /// a ring on the one to pluck next, filled with a tick once heard. A strummed chord ticks them all in a ripple.
-    private func stringChecks(width: CGFloat) -> some View {
+    /// One check per string over its line in the box (lowest string first, as drawn), or under its lane on the
+    /// player's view: the note it should ring, a ring on the one to pluck next, filled with a tick once heard. A
+    /// strummed chord ticks them all in a ripple.
+    private func stringChecks(width: CGFloat, player: Bool) -> some View {
         let open = ChordStep.openStrings(course)
         let count = chord.frets.count
-        // Right over the box's string lines, wherever `ChordDiagram` draws them (past its fret-number column).
-        let xs = ChordDiagram(chord: chord, fretNumbers: true).stringPositions(width: width)
-        let gap = count > 1 ? (xs[count - 1] - xs[0]) / CGFloat(count - 1) : 40
+        // Right over the box's string lines, wherever `ChordDiagram` draws them (past its fret-number column), or
+        // where the neck's lanes meet its near edge (in the runway's order, so they may run high to low).
+        let xs = player ? PlayerNeck.stringPositions(chord, width: width)
+                        : ChordDiagram(chord: chord, fretNumbers: true).stringPositions(width: width)
+        let gap = count > 1 ? abs(xs[count - 1] - xs[0]) / CGFloat(count - 1) : 40
         let side = min(40, max(26, gap - 8))
         let next: Int? = order.indices.contains(judge.index) && !finished ? order[judge.index].index : nil
         return ZStack {

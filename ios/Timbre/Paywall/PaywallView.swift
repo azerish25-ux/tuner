@@ -221,11 +221,10 @@ struct PaywallView: View {
     /// Days the milestones may reach: the free trial's, else two weeks.
     private var planHorizon: Int { commerce.annual.map { trialDays($0) } ?? 14 }
 
-    private func content(_ pitch: Pitch, plan: PaywallPlan) -> some View {
-        let hero = self.hero(pitch, plan: plan)
-        let layout = fold(pitch, plan: plan, hero: hero)
-        let steps = trackSteps(plan)
+    private func content(_ pitch: Pitch, plan: PaywallPlan, hero: PaywallHero, layout: Fold) -> some View {
+        let steps = trackSteps(plan, road: layout.road)
         let trial = showsTrial
+        let outcomes = shownOutcomes(plan, hero: hero)
         return VStack(spacing: 0) {
             VStack(spacing: 0) {
                 if layout.preview > 0 {
@@ -237,7 +236,7 @@ struct PaywallView: View {
                     .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in headerHeight = height }
                     .padding(.top, layout.preview > 0 ? Self.headerTop : 10)
                 if layout.outcomes {
-                    outcomeList(plan).padding(.top, Self.outcomesTop)
+                    outcomeList(outcomes).padding(.top, Self.outcomesTop)
                     if layout.details { proDetails.padding(.top, Self.detailsTop) }
                 }
                 offer
