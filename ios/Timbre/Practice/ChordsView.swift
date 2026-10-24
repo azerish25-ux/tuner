@@ -207,9 +207,13 @@ struct ChordLibraryView: View {
     private func succeed() {
         store.stopLessonListening(owner: owner)
         withAnimation(Motion.pluck) { check = .heard }
-        celebrate += 1
         SoundFX.shared.play(.correct)
         Haptics.shared.lock()
+        // A beat later, once the seal and the heard capsule are on screen, so their bounce and ring play.
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(80))
+            celebrate += 1
+        }
     }
 
     private func stopCheck() {

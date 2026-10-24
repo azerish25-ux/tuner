@@ -99,7 +99,7 @@ struct SongOpener: View {
     /// The sleeve with its record peeking out, turning while the preview plays.
     private var sleeve: some View {
         let side = Self.side
-        let out = unfolded ? side * (previewing && !reduceMotion ? 0.3 : 0.18) : 0
+        let out = unfolded ? side * (previewing && !reduceMotion ? 0.26 : 0.18) : 0
         return SongCover(art: art, corner: 10)
             .frame(width: side, height: side)
             .shadow(color: .black.opacity(0.5), radius: 16, y: 10)
@@ -237,9 +237,10 @@ struct SongOpener: View {
         }
     }
 
-    /// Where the preview has got to in the song, while it plays.
+    /// Where the preview has got to in the song, while it plays (a song mapped by its chords plays its melody instead,
+    /// so its map has no playhead).
     private func mapProgress(at date: Date) -> Double? {
-        guard previewing, sheet.seconds > 0 else { return nil }
+        guard previewing, !sheet.finale.isEmpty, sheet.seconds > 0 else { return nil }
         let into = date.timeIntervalSince(previewStart) - previewLead
         return min(1, max(0, into / sheet.seconds))
     }

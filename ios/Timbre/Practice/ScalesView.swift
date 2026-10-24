@@ -24,6 +24,8 @@ struct ScaleLibraryView: View {
     /// "Play along": the run being played, and a count that sends a ripple from each note hit.
     @State private var along: PlayAlong?
     @State private var hits = 0
+    /// Counts finished runs: the seal bounces.
+    @State private var cheers = 0
     @State private var owner = UUID()
 
     /// One sequence note and the gap after it, as `AudioService.playTones` plays them.
@@ -205,7 +207,7 @@ struct ScaleLibraryView: View {
     private func playingBar(_ run: PlayAlong) -> some View {
         let index = run.judge.index
         let next = run.midis.indices.contains(index) ? run.name(of: run.midis[index]) : ""
-        let wrong = run.heard.map { $0 != run.judge.current } ?? false
+        let wrong = run.heard.map { run.isSlip($0) } ?? false
         return HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 8) {
@@ -236,15 +238,15 @@ struct ScaleLibraryView: View {
 
     /// The run is done: a seal, how clean it was (notes asked for over notes played), and Play again.
     private func finishedBar(_ run: PlayAlong, sheet: ScaleSheet) -> some View {
-        let percent = Int((run.judge.accuracy * 100).rounded())
+        let percent = Int((run.accuracy * 100).rounded())
         return HStack(spacing: 12) {
             HStack(spacing: 12) {
                 Image(systemName: "checkmark.seal.fill").font(.system(size: 20, weight: .semibold)).foregroundStyle(Palette.mint)
-                    .symbolEffect(.bounce, value: hits)
+                    .symbolEffect(.bounce, value: cheers)
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Nice — that’s right.").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
-                    Text("\(percent)% clean").font(.footnote).foregroundStyle(ScoreTint.color(run.judge.accuracy))
+                    Text("\(percent)% clean").font(.footnote).foregroundStyle(ScoreTint.color(run.accuracy))
                 }
                 Spacer(minLength: 0)
             }
@@ -327,6 +329,8 @@ struct ScaleLibraryView: View {
         let event = run.judge.update(time: CACurrentMediaTime(), midi: note?.midi, cents: note?.cents)
         run.heard = note?.midi
         switch event {
+        case .wrong(let midi)?:
+            if run.isSlip(midi) { run.slips += 1 }
         case .hit(let index)?:
             run.lastHit = run.spots.indices.contains(index) ? run.spots[index] : nil
             hits += 1
@@ -347,6 +351,11 @@ struct ScaleLibraryView: View {
         store.stopLessonListening(owner: owner)
         SoundFX.shared.play(.complete)
         Haptics.shared.done()
+        // A beat later, once the finished bar is on screen, so its seal bounces.
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(80))
+            cheers += 1
+        }
     }
 
     private func stopAlong() {
@@ -405,8 +414,20 @@ struct PlayAlong {
     var judge: NoteSequenceJudge
     var heard: Int?
     var lastHit: NeckSpot?
+    /// Wrong notes played on the way (not the last note still ringing, nor the tracker hearing an octave out).
+    var slips = 0
 
     var finished: Bool { judge.isFinished }
+    /// The note just hit, which may still be ringing.
+    var previous: Int? { judge.index > 0 && judge.index <= midis.count ? midis[judge.index - 1] : nil }
+    /// Notes asked for over notes played.
+    var accuracy: Double { midis.isEmpty ? 1 : Double(midis.count) / Double(midis.count + slips) }
+
+    /// Whether `midi` is a slip: neither the note to play (in any octave) nor the one still ringing.
+    func isSlip(_ midi: Int) -> Bool {
+        guard let current = judge.current else { return false }
+        return (midi - current) % 12 != 0 && midi != previous
+    }
 
     /// A heard note named in the scale's key when it belongs to it ("E♭" in C minor), else as lessons name it.
     func name(of midi: Int) -> String {
@@ -491,7 +512,8 @@ struct ScaleNeck: View {
                 .id(focusKey)
                 .transition(.opacity)
             if target, let lit { TargetPulse(center: point(lit), radius: radius, still: reduceMotion) }
-            if let hit, !reduceMotion { ripple(at: point(hit)) }
+            // Waiting at the target before the first hit, so that one ripples too.
+            if !reduceMotion, let spot = hit ?? (target ? lit : nil) { ripple(at: point(spot)) }
             anchors
         }
         .animation(Motion.settle, value: focusKey)

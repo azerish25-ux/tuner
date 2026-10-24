@@ -24,7 +24,6 @@ struct OnboardingView: View {
     /// The placement check is up, and the answer it started from once it has run.
     @State private var checking = false
     @State private var checkedFrom: String?
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// Welcome, experience, goal, microphone, first tune, plan.
     private let steps = 6
 
@@ -114,15 +113,16 @@ struct OnboardingView: View {
                     .frame(maxWidth: .infinity)
                 Ellipse().fill(RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.22), .clear], center: .center, startRadius: 2, endRadius: 170))
                     .frame(width: 320, height: 46).frame(maxHeight: .infinity, alignment: .bottom).padding(.bottom, 6)
-                Image(heroImage(selectedChoice)).resizable().interpolation(.high).scaledToFit()
-                    .id(instrumentID ?? "voice")
-                    .transition(.asymmetric(insertion: .scale(scale: 0.92).combined(with: .opacity), removal: .opacity))
-                    .shadow(color: .black.opacity(0.65), radius: 26, y: 18)
-                    .rotationEffect(.degrees(floating ? -9 : -13))
-                    .offset(y: floating ? -6 : 6)
-                    .padding(.top, 70).padding(.bottom, 26)
-                    .frame(maxWidth: .infinity)
-                    .accessibilityHidden(true)
+                ZStack {
+                    Image(heroImage(selectedChoice)).resizable().interpolation(.high).scaledToFit()
+                        .id(instrumentID ?? "voice")
+                        .transition(.asymmetric(insertion: .scale(scale: 0.92).combined(with: .opacity), removal: .opacity))
+                }
+                .shadow(color: .black.opacity(0.65), radius: 26, y: 18)
+                .floating(rest: -13, raised: -9, rise: 6)
+                .padding(.top, 70).padding(.bottom, 26)
+                .frame(maxWidth: .infinity)
+                .accessibilityHidden(true)
             }
             .frame(maxHeight: .infinity)
             VStack(alignment: .leading, spacing: 12) {
@@ -186,10 +186,6 @@ struct OnboardingView: View {
                 Text(restoreMessage).font(.caption).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity).padding(.horizontal, 28).padding(.bottom, 6)
             }
-        }
-        .onAppear {
-            guard !reduceMotion else { return }
-            withAnimation(.easeInOut(duration: 3.2).repeatForever(autoreverses: true)) { floating = true }
         }
     }
 
@@ -385,7 +381,6 @@ private struct PlanStep: View {
     let onStart: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var shown = false
-    @State private var floating = false
 
     private var accent: Color { Palette.accent(course.accent) }
 
@@ -420,21 +415,22 @@ private struct PlanStep: View {
                 .planReveal(shown, 7, reduceMotion)
                 .accessibilityIdentifier("onboarding.plan.start")
         }
-        .onAppear {
-            shown = true
-            guard !reduceMotion else { return }
-            withAnimation(.easeInOut(duration: 3.2).repeatForever(autoreverses: true)) { floating = true }
-        }
+        // The rows rise in on their own scoped animation (`planReveal`); the art floats on its own phase animator.
+        // Nothing here starts a repeating `withAnimation`, which caught the first layout pass and kept the header
+        // and the lesson title sliding over their subtitles.
+        .onAppear { shown = true }
     }
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Your plan").font(Typeface.display(34)).tracking(-0.6).foregroundStyle(Palette.ink)
+                .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
             subtitle.font(.subheadline).foregroundStyle(Palette.inkSoft)
                 .fixedSize(horizontal: false, vertical: true)
                 .contentTransition(.opacity)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, 8)
     }
 
@@ -497,9 +493,12 @@ private struct PlanStep: View {
                 }
                 if let startUnit {
                     Text("UNIT \(startUnit + 1) · \(course.units[startUnit].title.localized.uppercased())")
-                        .font(Typeface.label(11)).tracking(1.1).foregroundStyle(Palette.inkSoft).lineLimit(1)
+                        .font(Typeface.label(11)).tracking(1.1).foregroundStyle(Palette.inkSoft)
+                        .lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                        .contentTransition(.opacity)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             Spacer(minLength: 8)
             art
         }
@@ -510,25 +509,25 @@ private struct PlanStep: View {
                 .fill(LinearGradient(colors: [accent.opacity(0.26), Palette.stageRaised], startPoint: .topLeading, endPoint: .bottomTrailing))
         )
         .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(accent.opacity(0.35), lineWidth: 1))
-        // A placement check that moves the start swaps the lesson in place.
-        .animation(Motion.settle, value: start?.id)
+        // A placement check that moves the start swaps the lesson in place: the check's answer arrives in
+        // `withAnimation`, and the title and unit cross-fade. No implicit animation sits on the card, so nothing
+        // else that changes it (its first layout included) is ever animated.
         .accessibilityElement(children: .combine)
     }
 
+    /// The art floats: a slow sway and rise, scoped to the art (a geometry effect, never its layout).
     @ViewBuilder private var art: some View {
         switch artwork {
         case .instrument(let name, _):
             Image(name).resizable().interpolation(.high).scaledToFit().frame(width: 96, height: 150)
-                .rotationEffect(.degrees(floating ? -9 : -13))
-                .offset(y: floating ? -4 : 4)
+                .floating(rest: -13, raised: -9, rise: 4)
                 .shadow(color: .black.opacity(0.6), radius: 16, y: 10)
                 .padding(.trailing, -6)
                 .accessibilityHidden(true)
         case .emblem(let glyph):
             CourseEmblemTile(glyph: glyph, accent: accent, size: 80)
-                .rotationEffect(.degrees(floating ? -5 : -9))
+                .floating(rest: -9, raised: -5, rise: 0, breathe: 0.03)
                 .shadow(color: accent.opacity(0.45), radius: 18)
-                .scaleEffect(floating ? 1.03 : 0.97)
                 .padding(.trailing, 4)
         }
     }
@@ -538,7 +537,7 @@ private struct PlanStep: View {
             Eyebrow("Milestones", color: accent).planReveal(shown, 3, reduceMotion)
             VStack(alignment: .leading, spacing: 0) {
                 ForEach(Array(milestones.enumerated()), id: \.element) { position, index in
-                    milestoneRow(index, last: position == milestones.count - 1)
+                    milestoneRow(index, last: position == milestones.count - 1, order: 4 + position)
                         .planReveal(shown, 4 + position, reduceMotion)
                 }
             }
@@ -546,7 +545,7 @@ private struct PlanStep: View {
         .padding(.top, 6)
     }
 
-    private func milestoneRow(_ index: Int, last: Bool) -> some View {
+    private func milestoneRow(_ index: Int, last: Bool, order: Int) -> some View {
         let unit = course.units[index]
         return HStack(alignment: .top, spacing: 14) {
             ZStack {
@@ -573,6 +572,7 @@ private struct PlanStep: View {
                     .padding(.top, 26).padding(.bottom, 2)
                     .offset(x: 10)
                     .scaleEffect(x: 1, y: shown ? 1 : 0, anchor: .top)
+                    .animation(reduceMotion ? nil : Animation.easeOut(duration: 0.6).delay(0.2 + Double(order) * 0.11), value: shown)
             }
         }
         .accessibilityElement(children: .combine)
@@ -784,12 +784,48 @@ private struct ContinueButtonStyle: ButtonStyle {
 }
 
 private extension View {
-    /// Plan rows fade and rise in one after another; with Reduce Motion they only fade.
+    /// Plan rows fade and rise in one after another; with Reduce Motion they only fade. The animation is scoped
+    /// to the fade and the rise, so a row's own layout settling at the same moment is never animated with it.
     func planReveal(_ shown: Bool, _ order: Int, _ reduceMotion: Bool) -> some View {
         let rise = Animation.spring(response: 0.62, dampingFraction: 0.86).delay(0.08 + Double(order) * 0.11)
-        return opacity(shown ? 1 : 0)
-            .offset(y: shown || reduceMotion ? 0 : 18)
-            .animation(reduceMotion ? Animation.easeOut(duration: 0.3) : rise, value: shown)
+        return animation(reduceMotion ? Animation.easeOut(duration: 0.3) : rise) { content in
+            content
+                .opacity(shown ? 1 : 0)
+                .offset(y: shown || reduceMotion ? 0 : 18)
+        }
+    }
+
+    /// A slow float for hero art: it sways between two tilts and rises and sinks a little (and, for an emblem,
+    /// breathes). It loops on its own phase animator and moves only by geometry effects, so it can never leak into
+    /// the layout around it. Still, at rest, with Reduce Motion.
+    func floating(rest: Double, raised: Double, rise: CGFloat, breathe: CGFloat = 0) -> some View {
+        modifier(Floating(rest: rest, raised: raised, rise: rise, breathe: breathe))
+    }
+}
+
+private struct Floating: ViewModifier {
+    let rest: Double
+    let raised: Double
+    let rise: CGFloat
+    let breathe: CGFloat
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    @ViewBuilder func body(content: Content) -> some View {
+        if reduceMotion {
+            content
+                .rotationEffect(.degrees(rest))
+                .offset(y: rise)
+                .scaleEffect(1 - breathe)
+        } else {
+            content.phaseAnimator([false, true]) { view, up in
+                view
+                    .rotationEffect(.degrees(up ? raised : rest))
+                    .offset(y: up ? -rise : rise)
+                    .scaleEffect(up ? 1 + breathe : 1 - breathe)
+            } animation: { _ in
+                Animation.easeInOut(duration: 3.2)
+            }
+        }
     }
 }
 
