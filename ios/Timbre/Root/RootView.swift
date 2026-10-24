@@ -7,6 +7,7 @@ struct RootView: View {
     @EnvironmentObject private var audio: AudioService
     @EnvironmentObject private var commerce: CommerceService
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// The paywall drawn over the tabs (Settings and the instrument picker host their own).
     private var rootPaywall: Bool { store.showPaywall && !store.showSettings && !store.showInstrumentPicker }
@@ -30,7 +31,7 @@ struct RootView: View {
         }
         // VoiceOver stays on the paywall while it covers the tabs, rather than reaching the controls behind it.
         .accessibilityHidden(rootPaywall)
-        .tint(Palette.brass)
+        .tint(Palette.mint)
         .preferredColorScheme(.dark)  // Studio Noir is a dark design
         .environment(\.locale, Locale(identifier: store.settings.language == "system" ? Locale.current.identifier : store.settings.language))
         .environment(\.layoutDirection, Locale.Language(identifier: store.settings.language == "system" ? Locale.current.identifier : store.settings.language).characterDirection == .rightToLeft ? .rightToLeft : .leftToRight)
@@ -41,10 +42,11 @@ struct RootView: View {
         // anchored at the root appear over the tabs. Settings and the instrument picker host their own sheet.
         .overlay {
             if rootPaywall {
-                PaywallView().transition(.move(edge: .bottom).combined(with: .opacity))
+                // Rises from the bottom; a plain fade under Reduce Motion.
+                PaywallView().transition(AnyTransition.adaptive(.move(edge: .bottom).combined(with: .opacity), reduceMotion: reduceMotion))
             }
         }
-        .animation(.spring(response: 0.45, dampingFraction: 0.9), value: store.showPaywall)
+        .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: store.showPaywall)
         // A 7/30/100-day run reached outside a lesson: its share card (lesson results show their own).
         .overlay { StreakMilestoneOverlay() }
         // Rewards grow out of the Dynamic Island, inside the status-bar band (RewardToast places itself).

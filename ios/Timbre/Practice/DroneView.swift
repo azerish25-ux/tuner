@@ -48,7 +48,7 @@ struct DroneView: View {
             Button { toggleDrone() } label: {
                 Label(audio.droneRunning ? "Stop drone" : "Start drone", systemImage: audio.droneRunning ? "stop.fill" : "play.fill")
             }
-            .buttonStyle(BrassButtonStyle())
+            .buttonStyle(PrimaryButtonStyle())
             .accessibilityIdentifier("drone.start")
         }
         .onAppear(perform: conform)

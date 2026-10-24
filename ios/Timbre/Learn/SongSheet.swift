@@ -501,7 +501,7 @@ struct SongSectionMap: View {
                                   peeking: peek == section.id, pressed: pressed == section.id, playing: progress != nil)
         if let onSelect {
             content
-                .contentShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+                .contentShape(RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous))
                 .onTapGesture { onSelect(section) }
                 .onLongPressGesture(minimumDuration: 0.35) {
                     Haptics.shared.selection()
@@ -641,7 +641,7 @@ private struct SectionTile: View {
     let playing: Bool
 
     var body: some View {
-        let shape = RoundedRectangle(cornerRadius: 11, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous)
         let plain = (section.title == nil && section.chord == nil) || section.isBookend
         let base = plain ? 0.08 : 0.16
         ZStack {
@@ -686,7 +686,7 @@ private struct SectionTile: View {
         } else if let title = section.title {
             Text(title.localized).font(Typeface.label(12)).foregroundStyle(Palette.ink).lineLimit(1).fixedSize()
         } else if let chord = section.chord {
-            Text(verbatim: chord.name).font(Typeface.display(15, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
+            Text(verbatim: chord.name).font(Typeface.display(15)).foregroundStyle(Palette.ink)
                 .lineLimit(1).fixedSize()
         } else {
             Text(verbatim: range).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft).lineLimit(1).fixedSize()
@@ -697,7 +697,7 @@ private struct SectionTile: View {
     private var barsLabel: some View {
         VStack(spacing: 0) {
             Text(section.bars == 1 ? LocalizedStringKey("Bar") : LocalizedStringKey("Bars"))
-                .font(.system(size: 9, weight: .semibold)).tracking(0.6).textCase(.uppercase)
+                .font(Typeface.label(9)).tracking(0.6).textCase(.uppercase)
                 .foregroundStyle(tint == Palette.inkSoft ? Palette.inkSoft : tint)
             Text(verbatim: range).font(Typeface.number(13)).foregroundStyle(Palette.ink)
         }
@@ -972,7 +972,7 @@ struct LeadSheetView<Controls: View>: View {
     private func block(_ section: SongSheet.Section) -> some View {
         let tint = SongSectionMap.tint(of: section, in: sections, accent: accent)
         let on = selected == section.id
-        let shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         let wash = on ? 0.13 : section.isHook ? 0.07 : 0.035
         let edge = on ? 0.7 : section.isHook ? 0.34 : 0.1
         return VStack(alignment: .leading, spacing: 4) {
@@ -1002,7 +1002,7 @@ struct LeadSheetView<Controls: View>: View {
     private func header(_ section: SongSheet.Section, tint: Color, on: Bool) -> some View {
         Button { onSelect(section) } label: {
             HStack(spacing: 8) {
-                name(section).font(Typeface.label(14, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
+                name(section).font(Typeface.label(14)).foregroundStyle(Palette.ink)
                 if section.title != nil || section.chord != nil {
                     bars(section).font(Typeface.label(12)).foregroundStyle(tint)
                 }

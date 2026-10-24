@@ -111,13 +111,13 @@ struct ExitOfferCard: View {
                 .opacity(shown ? 1 : 0)
         }
         .onAppear {
-            withAnimation(reduceMotion ? .easeOut(duration: 0.2) : Motion.pluck) { shown = true }
+            withMotion(Motion.pluck, reduceMotion: reduceMotion) { shown = true }
             Haptics.shared.selection()
         }
     }
 
     private var card: some View {
-        let shape = RoundedRectangle(cornerRadius: 28, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
         return VStack(spacing: 12) {
             Image(systemName: offer.kind == .winBack ? "arrow.uturn.backward.circle.fill" : "gift.fill")
                 .font(.system(size: 26, weight: .semibold))
@@ -127,8 +127,7 @@ struct ExitOfferCard: View {
                 .overlay(Circle().strokeBorder(Palette.amber.opacity(0.3), lineWidth: 1))
                 .symbolEffect(.bounce, value: shown)
                 .accessibilityHidden(true)
-            Text(offer.kind == .winBack ? "Welcome back" : "Before you go")
-                .font(Typeface.eyebrow).tracking(1.4).textCase(.uppercase).foregroundStyle(Palette.amber)
+            Eyebrow(Text(offer.kind == .winBack ? "Welcome back" : "Before you go"), color: Palette.amber)
             Text(verbatim: headline)
                 .font(Typeface.display(26)).tracking(-0.5).foregroundStyle(Palette.ink)
                 .multilineTextAlignment(.center)
@@ -138,21 +137,23 @@ struct ExitOfferCard: View {
                 .font(.subheadline).foregroundStyle(Palette.inkSoft)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
+            // The paywall's own action button and label font (the style's). While the purchase runs it is disabled but
+            // stays lit (`busy`), so its spinner reads as work, never as a dead grey button.
             Button(action: accept) {
                 if purchasing {
                     ProgressView().tint(Palette.onAccent)
                 } else {
                     Text(offer.offer.paymentMode == .freeTrial ? "Start free trial" : "Claim offer")
-                        .font(Typeface.label(18)).lineLimit(2).multilineTextAlignment(.center)
+                        .lineLimit(2).multilineTextAlignment(.center)
                 }
             }
-            .buttonStyle(BrassButtonStyle())
+            .buttonStyle(GlassActionButtonStyle(busy: purchasing))
             .disabled(purchasing)
             .padding(.top, 6)
             .accessibilityIdentifier("paywall.exitOffer.accept")
             Button(action: decline) {
                 Text("No thanks").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft)
-                    .padding(.horizontal, 16).padding(.vertical, 8).contentShape(Rectangle())
+                    .padding(.horizontal, 16).tapTarget()
             }
             .buttonStyle(.plain)
             .disabled(purchasing)

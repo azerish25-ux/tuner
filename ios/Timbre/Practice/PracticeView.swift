@@ -8,6 +8,7 @@ struct PracticeView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var path: [PracticeRoute] = []
 
     /// German capitalises every noun, so the instrument name keeps its capital there.
@@ -61,14 +62,10 @@ struct PracticeView: View {
         .background(StageBackground(motes: false))
     }
 
+    /// The tab's title with the shared streak chip and level ring. Today's ring is the card right below, so the chip
+    /// shows just the streak.
     private var header: some View {
-        HStack(alignment: .center) {
-            Text("Play").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
-                .accessibilityAddTraits(.isHeader)
-            Spacer()
-            // Today's ring is the card right below, so the chip shows just the streak.
-            StreakChip(showsToday: false) { store.selectedTab = .journey }
-        }
+        TabHeader(title: "Play", showsToday: false)
     }
 
     private var sideQuests: [Quest] { DailySet.sideQuests(store.quests, beside: store.dailySet) }
@@ -160,7 +157,7 @@ struct PracticeView: View {
             ProgressLine(value: level.progress(xp), height: 8)
         }
         .frame(maxHeight: .infinity, alignment: .topLeading)
-        .stillCard(cornerRadius: 24, padding: 18, tint: Palette.mint)
+        .stillCard(tint: Palette.mint)
         .accessibilityElement(children: .combine)
     }
 
@@ -192,12 +189,14 @@ struct PracticeView: View {
         return HStack(spacing: 14) {
             LevelRing(size: 62)
             VStack(alignment: .leading, spacing: 6) {
-                Text(LocalizedStringKey(level.name)).font(Typeface.display(17)).foregroundStyle(Palette.ink)
+                Text(LocalizedStringKey(level.name)).font(Typeface.cardTitle).foregroundStyle(Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true)
                 ProgressLine(value: level.progress(xp))
                 Text("\(xp - level.floor) / \(level.next - level.floor) XP · next: \(Text(LocalizedStringKey(next.name)))").font(.caption).foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .stillCard(cornerRadius: 24, padding: 16, tint: Palette.mint)
+        .stillCard(tint: Palette.mint)
         .accessibilityElement(children: .combine)
     }
 
@@ -210,21 +209,17 @@ struct PracticeView: View {
     }
 
     private var questHeader: some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text("Today’s quests").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
-            Spacer()
+        SectionHeader("Today’s quests") {
             Text("resets in \(hoursToMidnight) h").font(.caption).foregroundStyle(Palette.inkSoft)
         }
     }
 
+    /// The shared quest row: it reads the one saved counter itself (AppStore.questCounter), so the tuning quest
+    /// counts today's strings, like the tuner's quest line.
     private func questButton(_ quest: Quest) -> some View {
-        // The one saved counter (AppStore.questCounter): tuning counts today's strings, like the tuner's quest line.
-        let count = store.questCounter(quest)
-        return Button { open(quest) } label: {
-            HubQuestRow(quest: quest, done: count.done, total: count.total, claimed: store.questProgress(quest) >= quest.target)
-        }
-        .buttonStyle(PressScaleStyle())
-        .accessibilityIdentifier("quest.\(quest.id)")
+        Button { open(quest) } label: { QuestRow(quest: quest) }
+            .buttonStyle(PressScaleStyle())
+            .accessibilityIdentifier("quest.\(quest.id)")
     }
 
     private var hoursToMidnight: Int {
@@ -267,7 +262,7 @@ struct PracticeView: View {
     }
 
     private func sectionTitle(_ title: LocalizedStringKey) -> some View {
-        Text(title).font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+        SectionHeader(title)
     }
 
     /// `stage`: the tall iPad card's preview height; nil for the phone's card.
@@ -285,7 +280,7 @@ struct PracticeView: View {
         let earLevel = (EarDrill.allCases.map { store.settings.earLevels?[$0.rawValue] ?? 0 }.max() ?? 0) + 1
         let correct = store.progress.stats["earCorrect"] ?? 0
         let earStats = statsLine(Text("\(correct) correct"), level: earLevel)
-        return gameCard(.ear, title: "Ear trainer", stats: earStats, challenge: .ear(store), tint: Palette.amber, stage: stage) { live in
+        return gameCard(.ear, title: "Ear training", stats: earStats, challenge: .ear(store), tint: Palette.amber, stage: stage) { live in
             IntervalStairsPreview(live: live)
         }
     }
@@ -307,14 +302,19 @@ struct PracticeView: View {
     }
 
     /// Three equal columns, built eagerly (not lazily) so every tool exists for VoiceOver and UI tests
-    /// even while it is scrolled below the Today card.
+    /// even while it is scrolled below the Today card. At the accessibility sizes, one full-width row per tool,
+    /// so no name is cut short.
     private var toolsSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             sectionTitle("Tools")
-            VStack(spacing: 10) {
-                HStack(spacing: 10) { firstTools }
-                if fretted {
-                    HStack(spacing: 10) { frettedTools }
+            if typeSize.isAccessibilitySize {
+                toolList
+            } else {
+                VStack(spacing: 10) {
+                    HStack(spacing: 10) { firstTools }
+                    if fretted {
+                        HStack(spacing: 10) { frettedTools }
+                    }
                 }
             }
         }
@@ -322,25 +322,63 @@ struct PracticeView: View {
 
     /// iPad: the tools as large tiles, `columns` to a row, at least `tileHeight` tall and taller when the panel is given
     /// more (beside the games in landscape, the rows share the games' height). Built eagerly, like the phone's rows.
+    /// At the accessibility sizes, the phone's single column of rows.
     private func toolsPanel(columns: Int, tileHeight: CGFloat) -> some View {
         let all = tools
         let count = max(1, columns)
         let rows = stride(from: 0, to: all.count, by: count).map { Array(all[$0..<min($0 + count, all.count)]) }
         return VStack(alignment: .leading, spacing: 10) {
             sectionTitle("Tools")
-            VStack(spacing: 10) {
-                ForEach(rows.indices, id: \.self) { index in
-                    HStack(spacing: 10) {
-                        ForEach(rows[index]) { tool in toolTile(tool, minHeight: tileHeight) }
-                        // A short last row keeps the columns' width.
-                        ForEach(rows[index].count..<count, id: \.self) { _ in
-                            Color.clear.frame(maxWidth: .infinity)
+            if typeSize.isAccessibilitySize {
+                toolList
+            } else {
+                VStack(spacing: 10) {
+                    ForEach(rows.indices, id: \.self) { index in
+                        HStack(spacing: 10) {
+                            ForEach(rows[index]) { tool in toolTile(tool, minHeight: tileHeight) }
+                            // A short last row keeps the columns' width.
+                            ForEach(rows[index].count..<count, id: \.self) { _ in
+                                Color.clear.frame(maxWidth: .infinity)
+                            }
                         }
                     }
                 }
             }
         }
         .frame(maxHeight: .infinity, alignment: .top)
+    }
+
+    /// The tools one per row, as `FeatureRow` lays out a row: the live glyph in its well, the name taking the rest of
+    /// the line (wrapping freely), PRO on a free plan and a chevron.
+    private var toolList: some View {
+        VStack(spacing: 10) {
+            ForEach(tools) { tool in toolRow(tool) }
+        }
+    }
+
+    private func toolRow(_ tool: Tool) -> some View {
+        let locked = tool.pro && !commerce.isPro
+        return Button { openTool(tool.route, pro: tool.pro) } label: {
+            HStack(spacing: 14) {
+                PlayToolGlyph(route: tool.route, symbol: tool.symbol)
+                    .frame(width: 44, height: 44)
+                    .background(RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous).fill(.white.opacity(0.06)))
+                Text(tool.title).font(.headline).foregroundStyle(Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                if locked { ProBadge() }
+                Image(systemName: "chevron.right").font(.footnote.weight(.bold)).foregroundStyle(Palette.inkFaint)
+                    .accessibilityHidden(true)
+            }
+            .stillCard(cornerRadius: Metrics.cornerTile, padding: Metrics.tilePadding)
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityIdentifier("practice.\(tool.route)")
+    }
+
+    /// A tool's tap: the tool, or the paywall for a Pro tool on a free plan.
+    private func openTool(_ route: PracticeRoute, pro: Bool) {
+        if pro && !commerce.isPro { store.presentPaywall("practice.\(route)") } else { path.append(route) }
     }
 
     /// One of the Play hub's tools, as the iPad grid shows it.
@@ -368,14 +406,12 @@ struct PracticeView: View {
     /// A large tool tile: the live glyph in its well at the top, the name at the foot, PRO in the corner on a free plan.
     private func toolTile(_ tool: Tool, minHeight: CGFloat) -> some View {
         let locked = tool.pro && !commerce.isPro
-        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
-        return Button {
-            if locked { store.presentPaywall("practice.\(tool.route)") } else { path.append(tool.route) }
-        } label: {
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
+        return Button { openTool(tool.route, pro: tool.pro) } label: {
             VStack(alignment: .leading, spacing: 10) {
                 PlayToolGlyph(route: tool.route, symbol: tool.symbol)
                     .frame(width: 44, height: 44)
-                    .background(RoundedRectangle(cornerRadius: 13, style: .continuous).fill(.white.opacity(0.06)))
+                    .background(RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous).fill(.white.opacity(0.06)))
                 Spacer(minLength: 0)
                 Text(tool.title).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
                     .lineLimit(1).minimumScaleFactor(0.8)
@@ -383,7 +419,7 @@ struct PracticeView: View {
             .padding(14)
             .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: .infinity, alignment: .topLeading)
             .background(shape.fill(Palette.stageRaised))
-            .overlay(shape.strokeBorder(.white.opacity(0.06), lineWidth: 1))
+            .overlay(shape.strokeBorder(Palette.hairline, lineWidth: 1))
             .overlay(alignment: .topTrailing) { if locked { ProBadge().padding(10) } }
             .contentShape(shape)
         }
@@ -404,19 +440,18 @@ struct PracticeView: View {
     }
 
     private func tool(_ route: PracticeRoute, _ symbol: String, _ title: LocalizedStringKey, pro: Bool) -> some View {
-        Button {
-            if pro && !commerce.isPro { store.presentPaywall("practice.\(route)") } else { path.append(route) }
-        } label: {
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
+        return Button { openTool(route, pro: pro) } label: {
             VStack(spacing: 6) {
                 // The metronome ticks and the drone ripples, live; the other tools keep their symbol.
                 PlayToolGlyph(route: route, symbol: symbol)
                 Text(title).font(.caption.weight(.semibold)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.8)
             }
             .frame(maxWidth: .infinity, minHeight: 74)
-            .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Palette.stageRaised))
-            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
-            .overlay(alignment: .topTrailing) { if pro && !commerce.isPro { ProBadge().scaleEffect(0.8).padding(4) } }
-            .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .background(shape.fill(Palette.stageRaised))
+            .overlay(shape.strokeBorder(Palette.hairline, lineWidth: 1))
+            .overlay(alignment: .topTrailing) { if pro && !commerce.isPro { ProBadge().padding(5) } }
+            .contentShape(shape)
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("practice.\(route)")
@@ -445,60 +480,10 @@ struct ProgressRing: View {
     var body: some View {
         ZStack {
             Circle().stroke(Palette.line, lineWidth: 5)
-            Circle().trim(from: 0, to: max(0.001, progress)).stroke(Palette.brass, style: StrokeStyle(lineWidth: 5, lineCap: .round)).rotationEffect(.degrees(-90))
+            Circle().trim(from: 0, to: max(0.001, progress)).stroke(Palette.mint, style: StrokeStyle(lineWidth: 5, lineCap: .round)).rotationEffect(.degrees(-90))
             Text("\(Int((progress * 100).rounded()))%").font(Typeface.number(11)).foregroundStyle(Palette.inkSoft)
         }
         .animation(Motion.settle, value: progress)
         .accessibilityElement().accessibilityLabel(Text("\(Int((progress * 100).rounded())) percent done"))
-    }
-}
-
-/// A daily quest on the Play hub: icon, title, a bar with its one counter ("4 / 6") and the XP it pays.
-/// Drawn like the shared QuestRow, but with the counter handed in, so the tuning quest counts strings
-/// the way the tuner does instead of "0 / 1".
-private struct HubQuestRow: View {
-    let quest: Quest
-    let done: Int
-    let total: Int
-    let claimed: Bool
-
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: claimed ? "checkmark" : quest.symbol).font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(claimed ? Palette.onAccent : quest.tint)
-                .frame(width: 34, height: 34)
-                .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(claimed ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(quest.tint.opacity(0.14))))
-            VStack(alignment: .leading, spacing: 7) {
-                Text(quest.title).font(.subheadline.weight(.semibold)).foregroundStyle(claimed ? Palette.inkSoft : Palette.ink)
-                    .strikethrough(claimed, color: Palette.inkFaint)
-                    .fixedSize(horizontal: false, vertical: true)
-                HStack(spacing: 10) {
-                    ProgressLine(value: Double(done) / Double(max(1, total)), color: claimed ? Palette.mint : quest.tint, height: 5)
-                    Text("\(done) / \(total)").font(Typeface.number(12)).foregroundStyle(claimed ? Palette.mint : Palette.inkSoft)
-                        .contentTransition(.numericText())
-                        .fixedSize()
-                }
-            }
-            reward
-        }
-        .padding(.horizontal, 14).padding(.vertical, 12)
-        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
-        .animation(Motion.settle, value: done)
-        .accessibilityElement(children: .combine)
-        .accessibilityValue(Text(claimed ? "Done" : "\(done) of \(total)"))
-    }
-
-    /// "+20 XP" in a mint pill while open; "Done" once claimed.
-    @ViewBuilder private var reward: some View {
-        if claimed {
-            Text("Done").font(Typeface.label(12)).foregroundStyle(Palette.mint)
-        } else {
-            Text("+\(quest.xp) XP").font(Typeface.label(12)).foregroundStyle(Palette.mint)
-                .padding(.horizontal, 9).padding(.vertical, 5)
-                .background(Capsule().fill(Palette.mint.opacity(0.12)))
-                .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.25), lineWidth: 1))
-                .fixedSize()
-        }
     }
 }

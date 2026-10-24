@@ -107,10 +107,15 @@ struct PlayGameCard<Preview: View>: View {
     @State private var visible = false
     @EnvironmentObject private var store: AppStore
     @ObservedObject private var center = GameCenter.shared
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    /// The tall card's preview height: iPad's, or on a phone at the accessibility sizes, where the words need the
+    /// card's full width (the preview moves above them).
+    private var stageHeight: CGFloat? { heroHeight ?? (typeSize.isAccessibilitySize ? 132 : nil) }
 
     var body: some View {
-        let shape = RoundedRectangle(cornerRadius: 24, style: .continuous)
-        let tall = heroHeight != nil
+        let shape = RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous)
+        let tall = stageHeight != nil
         return face
             .background {
                 ZStack {
@@ -135,12 +140,12 @@ struct PlayGameCard<Preview: View>: View {
     private static var previewWidth: CGFloat { 148 }
 
     @ViewBuilder private var face: some View {
-        if let heroHeight {
+        if let stageHeight {
             // Tall: the game across the top, the words under it, the card as tall as its row.
             VStack(alignment: .leading, spacing: 0) {
                 preview(visible)
                     .frame(maxWidth: .infinity)
-                    .frame(height: heroHeight)
+                    .frame(height: stageHeight)
                     .padding(.top, 12)
                     .accessibilityHidden(true)
                 info
@@ -160,18 +165,19 @@ struct PlayGameCard<Preview: View>: View {
     }
 
     private var info: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Text(title).font(Typeface.display(19)).foregroundStyle(Palette.ink)
-                .lineLimit(1).minimumScaleFactor(0.75)
+        let large = typeSize.isAccessibilitySize
+        return VStack(alignment: .leading, spacing: 5) {
+            CardTitle(title)
             stats.font(.caption).foregroundStyle(Palette.inkSoft)
-                .lineLimit(1).minimumScaleFactor(0.75)
+                .lineLimit(large ? nil : 1).minimumScaleFactor(large ? 1 : 0.75)
             if challenge.game == .sniper, let friend = center.challenge {
                 FriendTargetLine(challenge: friend)
             }
             Spacer(minLength: 12)
             ChallengeChip(challenge: challenge)
         }
-        .padding(.leading, 16).padding(.trailing, heroHeight == nil ? 4 : 16).padding(.vertical, 16)
+        .padding(.leading, Metrics.cardPadding).padding(.trailing, stageHeight == nil ? 4 : Metrics.cardPadding)
+        .padding(.vertical, Metrics.cardPadding)
         .accessibilityElement(children: .combine)
     }
 }
@@ -207,15 +213,18 @@ private struct GameCardCorner: View {
     let game: PlayGame
     @EnvironmentObject private var store: AppStore
     @ObservedObject private var center = GameCenter.shared
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         let best = game == .sniper ? (store.progress.stats["sniperBest"] ?? 0) : 0
         let board = center.leaderboard(for: game)
-        HStack(spacing: 6) {
+        // Each button's 44 pt target holds its 32 pt face, so the faces sit 10 pt in from the card's corner and
+        // the targets never overlap.
+        HStack(spacing: 0) {
             if best > 0 { ChallengeShareButton(score: best) }
             if board != nil { leaderboardButton }
         }
-        .padding(10)
+        .padding(4)
         .animation(Motion.settle, value: board)
     }
 
@@ -235,10 +244,10 @@ private struct GameCardCorner: View {
             .frame(minWidth: 32, minHeight: 32)
             .background(Capsule().fill(Palette.stage.opacity(0.78)))
             .overlay(Capsule().strokeBorder(Palette.amber.opacity(0.32), lineWidth: 1))
-            .contentShape(Capsule().inset(by: -6))
+            .tapTarget()
         }
         .buttonStyle(PressScaleStyle())
-        .transition(.scale(scale: 0.6).combined(with: .opacity))
+        .transition(.adaptive(.scale(scale: 0.6).combined(with: .opacity), reduceMotion: reduceMotion))
         .accessibilityLabel(Text("Leaderboard"))
         .accessibilityValue(rank.map { Text("Rank \($0) this week") } ?? Text(verbatim: ""))
         .accessibilityIdentifier("practice.\(game.rawValue).leaderboard")
@@ -279,7 +288,7 @@ private struct ChallengeShareButton: View {
             .frame(width: 32, height: 32)
             .background(Circle().fill(Palette.stage.opacity(0.78)))
             .overlay(Circle().strokeBorder(Palette.mint.opacity(0.32), lineWidth: 1))
-            .contentShape(Circle().inset(by: -6))
+            .tapTarget()
     }
 }
 
@@ -374,7 +383,7 @@ struct SniperChallengeResult: View {
                           preview: SharePreview("Beat my score", image: card)) {
                     Label("Send it back", systemImage: "paperplane.fill")
                         .font(Typeface.label(14)).foregroundStyle(Palette.onAccent)
-                        .padding(.horizontal, 16).frame(minHeight: 40)
+                        .padding(.horizontal, 16).frame(minHeight: Metrics.minTarget)
                         .background(Capsule().fill(Palette.mint))
                 }
                 .buttonStyle(PressScaleStyle())
@@ -393,8 +402,7 @@ private struct ChallengeChip: View {
     var body: some View {
         let complete = challenge.complete
         VStack(alignment: .leading, spacing: 5) {
-            Text("Today’s challenge").font(Typeface.eyebrow).tracking(1.2).textCase(.uppercase)
-                .foregroundStyle(complete ? Palette.mint : Palette.amber)
+            Eyebrow("Today’s challenge", color: complete ? Palette.mint : Palette.amber)
                 .lineLimit(1).minimumScaleFactor(0.7)
             HStack(spacing: 8) {
                 ring(complete: complete)
@@ -407,8 +415,8 @@ private struct ChallengeChip: View {
                 xp(complete: complete)
             }
             .padding(.leading, 8).padding(.trailing, 6).padding(.vertical, 7)
-            .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(.white.opacity(0.05)))
-            .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(.white.opacity(0.07), lineWidth: 1))
+            .background(RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous).fill(.white.opacity(0.05)))
+            .overlay(RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous).strokeBorder(Palette.hairline, lineWidth: 1))
         }
         .accessibilityElement(children: .combine)
         .accessibilityValue(Text("\(min(challenge.done, challenge.total)) of \(challenge.total)"))

@@ -66,8 +66,9 @@ struct JourneyView: View {
         .background(StageBackground(motes: false))
     }
 
+    /// The tab's title. No streak or level controls beside it: this is the screen they lead to.
     private var title: some View {
-        Text("Progress").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+        ScreenTitle(title: "Progress")
     }
 
     @ViewBuilder private var insights: some View {
@@ -204,17 +205,20 @@ struct JourneyView: View {
         coachLesson = CoachLesson(course: course, lesson: lesson)
     }
 
+    /// Streak, level and how close tune-ups land: three tiles across, stacked one per row at the accessibility sizes
+    /// (`StatTileRow`), so "day streak" and the level's name never truncate.
+    /// The third is a distance in cents, so it says "¢ off" rather than "accuracy" (a percentage everywhere else).
     /// - Parameter spacing: between the tiles (the iPad's grid spacing, so they line up with the columns below).
     private func stats(spacing: CGFloat = 10) -> some View {
         let streak = store.streak
         let level = store.level
         let recent = tuningSessions.suffix(10).compactMap(\.meanAbsoluteCents)
         let average = recent.isEmpty ? nil : recent.reduce(0, +) / Double(recent.count)
-        return HStack(spacing: spacing) {
-            stat("flame.fill", Palette.flame, Text("\(streak.current)"), Text("day streak"))
-            stat("star", Palette.mint, levelValue(level.number), Text(LocalizedStringKey(level.name)))
+        return StatTileRow(spacing: spacing) {
+            StatTile(symbol: "flame.fill", tint: Palette.flame, value: Text("\(streak.current)"), label: "day streak")
+            StatTile(symbol: "star", tint: Palette.mint, value: levelValue(level.number), label: Text(LocalizedStringKey(level.name)))
                 .accessibilityLabel(Text("Level \(level.number)") + Text(verbatim: ", ") + Text(LocalizedStringKey(level.name)))
-            stat("scope", Palette.amber, WeekRecap.centsText(average), Text("avg accuracy"))
+            StatTile(symbol: "scope", tint: Palette.amber, value: WeekRecap.centsText(average), label: "Average ¢ off")
         }
     }
 
@@ -229,17 +233,6 @@ struct JourneyView: View {
         if !recap.isEmpty { WeekRecapCard(recap: recap) }
     }
 
-    private func stat(_ symbol: String, _ tint: Color, _ value: Text, _ label: Text) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Image(systemName: symbol).font(.system(size: 15, weight: .semibold)).foregroundStyle(tint)
-            value.font(Typeface.number(22)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.7)
-            label.font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.8)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .stillCard(cornerRadius: 18, padding: 12)
-        .accessibilityElement(children: .combine)
-    }
-
     /// Last five weeks, one tile per day under its weekday's initial: brighter for more practice. Today is the
     /// last tile (its initial mint with a dot), outlined dashed until you play and ringed once you have.
     private var calendar: some View {
@@ -250,9 +243,7 @@ struct JourneyView: View {
         let start = cal.date(byAdding: .day, value: -34, to: today)!
         let active = (0..<35).filter { days.contains(cal.date(byAdding: .day, value: $0, to: start)!) }.count
         return VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("Last five weeks").font(Typeface.display(16)).foregroundStyle(Palette.ink)
-                Spacer()
+            JourneyCardHeading("Last five weeks") {
                 Text("\(active) of 35 days").font(.caption).foregroundStyle(Palette.inkSoft)
             }
             weekdayHeader(start: start)
@@ -306,17 +297,16 @@ struct JourneyView: View {
         let worst = drift.first
         let labels = stringLabels
         return VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("String health").font(Typeface.display(16)).foregroundStyle(Palette.ink)
-                Spacer()
-                if advice { Text("Restring soon").font(.caption.weight(.semibold)).foregroundStyle(Color(hex: 0xFFC977)) }
+            JourneyCardHeading("String health") {
+                if advice { Text("Restring soon").font(.caption.weight(.semibold)).foregroundStyle(Palette.amber) }
             }
             Group {
                 if let worst, abs(worst.centsPerDay) >= 1, coachSaysDrift(of: worst.anchor) {
                     // The coach card already says it, with its tune-up: here the chart speaks for itself.
                     Text("Each string’s drift, in cents a day.")
                 } else if let worst, abs(worst.centsPerDay) >= 1 {
-                    Text("Your \(labels[worst.anchor] ?? worst.anchor) string drifts \(worst.centsPerDay < 0 ? String(localized: "flat") : String(localized: "sharp")) about \(Int(abs(worst.centsPerDay).rounded())) cents a day.")
+                    // ¢, as the coach above it says it ("drifts 7¢ flat a day").
+                    Text("Your \(labels[worst.anchor] ?? worst.anchor) string drifts \(worst.centsPerDay < 0 ? String(localized: "flat") : String(localized: "sharp")) about \(Int(abs(worst.centsPerDay).rounded()))¢ a day.")
                 } else if !drift.isEmpty {
                     Text("Your strings are holding their pitch well.")
                 } else {
@@ -330,6 +320,9 @@ struct JourneyView: View {
             Button { confirmRestring = true } label: {
                 Label(restrung.map { String(localized: "Restrung \($0.formatted(.relative(presentation: .named)))") } ?? String(localized: "I just restrung"), systemImage: "arrow.triangle.2.circlepath")
                     .font(.footnote.weight(.semibold)).foregroundStyle(Palette.mint)
+                    // A text link: a 44 pt target, its look unchanged.
+                    .frame(minHeight: Metrics.minTarget, alignment: .leading)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .confirmationDialog("Mark new strings on \(store.instrumentDisplayName)?", isPresented: $confirmRestring, titleVisibility: .visible) {
@@ -372,12 +365,12 @@ struct JourneyView: View {
                 DriftThresholdLine().stroke(Palette.amber.opacity(0.4), style: StrokeStyle(lineWidth: 1, dash: [3, 4]))
                     .frame(height: 1).offset(y: -threshold)
             }
-            .overlay(alignment: .bottom) { Rectangle().fill(.white.opacity(0.16)).frame(height: 1) }
+            .overlay(alignment: .bottom) { Hairline() }
             HStack(spacing: 0) {
                 ForEach(anchors, id: \.self) { anchor in
                     let bad = abs(drift.first { $0.anchor == anchor }?.centsPerDay ?? 0) >= 4
                     Text(labels[anchor] ?? anchor).font(.caption2.weight(bad ? .bold : .medium))
-                        .foregroundStyle(bad ? Color(hex: 0xFFC977) : Palette.inkSoft)
+                        .foregroundStyle(bad ? Palette.amber : Palette.inkSoft)
                         .lineLimit(1).minimumScaleFactor(0.7)
                         .frame(maxWidth: .infinity)
                 }
@@ -396,7 +389,7 @@ struct JourneyView: View {
         let top = UnevenRoundedRectangle(topLeadingRadius: 5, topTrailingRadius: 5, style: .continuous)
         return VStack(spacing: 5) {
             Text(verbatim: rate.map(Self.signed) ?? "–").font(Typeface.number(10))
-                .foregroundStyle(bad ? Color(hex: 0xFFC977) : Palette.inkFaint)
+                .foregroundStyle(bad ? Palette.amber : Palette.inkFaint)
             ZStack(alignment: .bottom) {
                 top.fill(.white.opacity(0.05)).frame(height: height)
                 top.fill(LinearGradient(colors: [tint, tint.opacity(bad ? 0.7 : 0.45)], startPoint: .top, endPoint: .bottom))
@@ -432,16 +425,15 @@ struct JourneyView: View {
         let earnedCount = badges.filter(\.earned).count
         let shown = allBadges ? badges : Array(badges.prefix(collapsed))
         return VStack(alignment: .leading, spacing: 14) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("Achievements").font(Typeface.display(16)).foregroundStyle(Palette.ink)
-                Spacer()
-                Text("\(earnedCount) of \(Achievements.all.count)").font(.caption).foregroundStyle(Palette.inkSoft)
+            JourneyCardHeading("Achievements") {
+                // The same counter as under each medal ("3 / 10"), read "9 of 42".
+                Text.fraction(earnedCount, Achievements.all.count).font(.caption).foregroundStyle(Palette.inkSoft)
             }
             badgeGrid(shown, columns: columns)
                 .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.width } action: { width in badgeGridWidth = width }
             if badges.count > collapsed {
                 Button {
-                    withAnimation(Motion.settle) { allBadges.toggle() }
+                    withMotion(Motion.settle, reduceMotion: reduceMotion) { allBadges.toggle() }
                     Haptics.shared.selection()
                 } label: {
                     HStack(spacing: 6) {
@@ -449,7 +441,7 @@ struct JourneyView: View {
                         Image(systemName: "chevron.down").rotationEffect(.degrees(allBadges ? 180 : 0))
                     }
                     .font(.footnote.weight(.semibold)).foregroundStyle(Palette.mint)
-                    .frame(maxWidth: .infinity, minHeight: 36)
+                    .frame(maxWidth: .infinity, minHeight: Metrics.minTarget)
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -563,7 +555,7 @@ struct JourneyView: View {
             Text("Earned").font(Typeface.label(11)).foregroundStyle(badge.achievement.tier.ink)
                 .lineLimit(1).minimumScaleFactor(0.8)
         } else {
-            Text(verbatim: "\(shown.formatted()) / \(badge.achievement.goal.formatted())").font(Typeface.number(11))
+            Text.fraction(shown, badge.achievement.goal).font(Typeface.number(11))
                 .foregroundStyle(shown > 0 ? badge.achievement.category.tint : Palette.inkFaint)
                 .lineLimit(1).minimumScaleFactor(0.8)
         }
@@ -583,7 +575,7 @@ struct JourneyView: View {
                 } else {
                     HStack(spacing: 8) {
                         ProgressLine(value: badge.fraction, color: a.category.tint, height: 5).frame(width: 110)
-                        Text(verbatim: "\(shown.formatted()) / \(a.goal.formatted())").font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                        Text.fraction(shown, a.goal).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
                     }
                 }
             }
@@ -601,7 +593,7 @@ struct JourneyView: View {
 
     private var accuracy: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Tuning accuracy").font(Typeface.display(16)).foregroundStyle(Palette.ink)
+            CardTitle("Tuning accuracy")
             if tuningSessions.count < 2 {
                 Text("Tune a few times to see how close you land.").font(.subheadline).foregroundStyle(Palette.inkSoft)
             } else {
@@ -634,7 +626,7 @@ struct JourneyView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 4)
-                Image(systemName: "chevron.right").font(.footnote.weight(.bold)).foregroundStyle(Palette.inkFaint)
+                Image(systemName: "chevron.forward").font(.footnote.weight(.bold)).foregroundStyle(Palette.inkFaint)
                     .accessibilityHidden(true)
             }
             .contentShape(Rectangle())
@@ -651,9 +643,7 @@ struct JourneyView: View {
     /// columns beside it; on a phone it takes no room.
     private func recentList(limit: Int) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text("Recent").font(Typeface.display(16)).foregroundStyle(Palette.ink)
-                Spacer()
+            JourneyCardHeading("Recent") {
                 if !store.records.isEmpty { Text("\(store.records.count) sessions").font(.caption).foregroundStyle(Palette.inkFaint) }
             }
             if store.records.isEmpty {
@@ -661,7 +651,7 @@ struct JourneyView: View {
             }
             ForEach(store.records.prefix(limit)) { record in
                 HStack(spacing: 12) {
-                    Image(systemName: symbol(record)).foregroundStyle(Palette.brass).frame(width: 26)
+                    Image(systemName: symbol(record)).foregroundStyle(Palette.mint).frame(width: 26)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(title(record)).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
                         Text(record.date, format: .dateTime.month(.abbreviated).day().hour().minute()).font(.caption).foregroundStyle(Palette.inkFaint)
@@ -672,7 +662,7 @@ struct JourneyView: View {
                     } else if record.kind == "lesson" {
                         Text(String(repeating: "★", count: max(1, min(3, record.stableCount)))).font(.footnote).foregroundStyle(Palette.amber)
                     } else if record.kind == "ear", record.count > 0 {
-                        Text("\(record.stableCount)/\(record.count)").font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
+                        Text.fraction(record.stableCount, record.count).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
                     } else if let accuracy = record.voiceResult?.accuracy {
                         Text("\(accuracy)%").font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
                     }
@@ -749,6 +739,30 @@ private struct BadgeProgress: Identifiable {
     /// Locked badges: the closest to its goal first.
     static func closer(_ lhs: BadgeProgress, _ rhs: BadgeProgress) -> Bool {
         lhs.fraction != rhs.fraction ? lhs.fraction > rhs.fraction : lhs.order < rhs.order
+    }
+}
+
+/// A card's title (`CardTitle`: a heading for VoiceOver's rotor) with a count or a note on its baseline at the
+/// trailing edge; at the accessibility sizes the note moves under the title so neither is squeezed.
+private struct JourneyCardHeading<Trailing: View>: View {
+    private let title: LocalizedStringKey
+    private let trailing: Trailing
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    init(_ title: LocalizedStringKey, @ViewBuilder trailing: () -> Trailing) {
+        self.title = title
+        self.trailing = trailing()
+    }
+
+    var body: some View {
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
+            : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 8))
+        layout {
+            CardTitle(title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            trailing
+        }
     }
 }
 

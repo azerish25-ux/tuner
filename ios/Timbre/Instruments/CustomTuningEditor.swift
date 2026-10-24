@@ -38,7 +38,7 @@ struct CustomTuningEditor: View {
                         let groups = self.groups
                         ForEach(Array(groups.enumerated()), id: \.offset) { number, group in
                             row(number: groups.count - number, group: group)
-                            if number < groups.count - 1 { Divider().overlay(Palette.line) }
+                            if number < groups.count - 1 { Hairline() }
                         }
                     }
                     .stillCard(padding: 6)
@@ -470,7 +470,7 @@ private struct PegBadge: View {
         .animation(Motion.pluck, value: shift)
         .phaseAnimator([1.0, 1.12], trigger: shift) { content, scale in
             content.scaleEffect(CGFloat(animate ? scale : 1))
-        } animation: { _ in Animation.spring(response: 0.22, dampingFraction: 0.55) }
+        } animation: { _ in Motion.pop }
     }
 }
 

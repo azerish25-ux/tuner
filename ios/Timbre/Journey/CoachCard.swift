@@ -36,14 +36,14 @@ struct CoachNoteView: View {
         .task(id: template) {
             reworded = nil
             guard let text = await CoachPolish.polish(template, names: voice.names(note)) else { return }
-            withAnimation(.easeInOut(duration: 0.35)) { reworded = text }
+            withAnimation(Motion.fade) { reworded = text }
         }
     }
 
-    /// The action in the note's colour, with where it goes ("Metronome · 45 BPM"). A capsule on one line; a long
-    /// title at large text sizes wraps to a second rather than being cut.
+    /// The action in the note's colour, with where it goes ("Metronome · 45 BPM"). A pill on one line; a long
+    /// title at large text sizes wraps to a second rather than being cut. The pill is 36 pt tall; its target is 44.
     private func pill(_ action: CoachAction) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return Button { onAction(action) } label: {
             HStack(spacing: 6) {
                 Image(systemName: CoachVoice.symbol(action)).font(.system(size: 12, weight: .bold)).accessibilityHidden(true)
@@ -57,7 +57,8 @@ struct CoachNoteView: View {
             .padding(.horizontal, 12).padding(.vertical, 8).frame(minHeight: 36)
             .background(shape.fill(tint.opacity(0.14)))
             .overlay(shape.strokeBorder(tint.opacity(0.4), lineWidth: 1))
-            .contentShape(shape)
+            .frame(minHeight: Metrics.minTarget)
+            .contentShape(Rectangle())
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityIdentifier(actionId)
@@ -86,7 +87,7 @@ struct CoachPanel: View {
             if notes.isEmpty { waiting } else { pages }
         }
         .stillCard(tint: tint)
-        .animation(reduceMotion ? nil : Motion.settle, value: shown?.id)
+        .adaptiveAnimation(Motion.settle, value: shown?.id)
         .onChange(of: notes.map(\.id)) { _, ids in
             if let current, !ids.contains(current) { self.current = nil }
         }
@@ -96,8 +97,7 @@ struct CoachPanel: View {
 
     private var header: some View {
         HStack(alignment: .center, spacing: 10) {
-            Text("Coach").font(Typeface.display(16)).foregroundStyle(Palette.ink)
-                .accessibilityAddTraits(.isHeader)
+            CardTitle("Coach")
             Spacer(minLength: 8)
             if notes.count > 1 {
                 dots
@@ -118,22 +118,15 @@ struct CoachPanel: View {
         .accessibilityHidden(true)
     }
 
+    /// The arrow to the next note: the app's compact icon button (a 34 pt disc in a 44 pt target).
     private var nextButton: some View {
-        Button(action: advance) {
-            Image(systemName: "arrow.forward")
-                .font(.system(size: 13, weight: .bold)).foregroundStyle(Palette.inkSoft)
-                .frame(width: 32, height: 32)
-                .background(Circle().fill(Color.white.opacity(0.06)))
-                .contentShape(Circle())
-        }
-        .buttonStyle(PressScaleStyle())
-        .accessibilityLabel("Next tip")
-        .accessibilityValue(Text("\(shownIndex + 1) of \(notes.count)"))
-        .accessibilityIdentifier("journey.coach.next")
+        IconButton(symbol: "arrow.forward", size: .compact, tint: Palette.inkSoft, label: "Next tip") { advance() }
+            .accessibilityValue(Text("\(shownIndex + 1) of \(notes.count)"))
+            .accessibilityIdentifier("journey.coach.next")
     }
 
     /// The notes side by side, a page each: swiping moves the dots and the card's colour with it. The pages run
-    /// out to the card's edges (its 18 pt padding is theirs), so a page slides under the edge, not mid-card.
+    /// out to the card's edges (its padding is theirs), so a page slides under the edge, not mid-card.
     private var pages: some View {
         ScrollView(.horizontal) {
             HStack(alignment: .top, spacing: 0) {
@@ -152,7 +145,7 @@ struct CoachPanel: View {
     }
 
     /// The card's own padding (`stillCard`'s default).
-    private static let inset: CGFloat = 18
+    private static let inset: CGFloat = Metrics.cardPadding
 
     private var waiting: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -168,7 +161,7 @@ struct CoachPanel: View {
         guard !notes.isEmpty else { return }
         Haptics.shared.selection()
         let next = notes[(shownIndex + 1) % notes.count].id
-        withAnimation(reduceMotion ? nil : Motion.settle) { current = next }
+        withMotion(Motion.settle, reduceMotion: reduceMotion) { current = next }
     }
 }
 

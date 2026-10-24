@@ -23,7 +23,7 @@ struct PaywallView: View {
     @State private var remindersBlocked = false
     /// The plan track draws itself in from Today.
     @State private var trackDrawn = false
-    /// "What's in Pro" is open: the Free and Pro table shows under it.
+    /// "What's in Timbre Pro" is open: the Free and Pro table shows under it.
     @State private var detailsOpen = false
     /// The table's Free and Pro columns grow with the text.
     @ScaledMetric(relativeTo: .caption) private var cellWidth: CGFloat = 50
@@ -66,7 +66,7 @@ struct PaywallView: View {
         PaywallDeclines.record()
         guard due, let offer = exitOffer, !commerce.isPro else { close(); return }
         PaywallDeclines.markOffered()
-        withAnimation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle) { exitOfferShown = true }
+        withMotion(Motion.settle, reduceMotion: reduceMotion) { exitOfferShown = true }
         Analytics.log("exit_offer_shown", ["kind": offer.kind.rawValue, "reason": analyticsReason])
     }
 
@@ -95,7 +95,7 @@ struct PaywallView: View {
         let layout = self.layout(pitch, plan: plan, hero: hero)
         ZStack(alignment: .topTrailing) {
             Palette.stage.ignoresSafeArea()
-            RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.16), .clear], center: UnitPoint(x: 0.5, y: 0.12), startRadius: 10, endRadius: 320)
+            RadialGradient(colors: [Palette.spotlight.opacity(0.16), .clear], center: UnitPoint(x: 0.5, y: 0.12), startRadius: 10, endRadius: 320)
                 .ignoresSafeArea()
             // The height between the safe-area edges; the scroll content starts at the top one.
             Color.clear
@@ -282,17 +282,12 @@ struct PaywallView: View {
         return plan.outcomes.filter { $0.id != "song" }
     }
 
-    /// The sheet's close button: Liquid Glass (iOS 26) when nothing under its corner redraws every frame, else the
-    /// solid disc it always was.
+    /// The sheet's close button, the app's one `CloseButton`: Liquid Glass (iOS 26) when nothing under its corner
+    /// redraws every frame, else the graphite disc. Its 34 pt disc sits on the content's 20 pt edge; the target is 44.
     private func closeButton(glass: Bool) -> some View {
-        Button { decline() } label: {
-            Image(systemName: "xmark").font(.body.weight(.bold)).foregroundStyle(Palette.ink)
-                .frame(width: 44, height: 44)
-                .background { if !glass { Circle().fill(Palette.surface) } }
-                .timbreGlass(interactive: true, isOn: glass, in: Circle()) { Circle().fill(Palette.surface) }
-        }
-        .padding(.trailing, 18).padding(.top, 8)
-        .accessibilityLabel("Close").accessibilityIdentifier("paywall.close")
+        CloseButton(label: "Close", glass: glass) { decline() }
+            .accessibilityIdentifier("paywall.close")
+            .padding(.trailing, 15).padding(.top, 8)
     }
 
     // MARK: Pitch
@@ -392,7 +387,7 @@ struct PaywallView: View {
         PaywallPreview(hero: hero, accent: plan.accent, height: height)
             .opacity(appeared ? 1 : 0)
             .offset(y: appeared || reduceMotion ? 0 : 12)
-            .animation(.spring(response: 0.9, dampingFraction: 0.85), value: appeared)
+            .animation(Motion.hero, value: appeared)
     }
 
     /// The tool's own scene when a tool opened the paywall; the plan itself for onboarding and Pro from Settings;
@@ -507,26 +502,26 @@ struct PaywallView: View {
     /// The locked lesson: its unit, title and length, behind a gold lock.
     private func lessonCard(_ locked: LockedLesson) -> some View {
         let accent = Palette.accent(locked.course.accent)
-        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return HStack(spacing: 14) {
             lessonArt(locked.course, accent: accent)
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 6) {
-                    Image(systemName: locked.course.symbol).font(.system(size: 10, weight: .bold)).accessibilityHidden(true)
-                    Text("UNIT \(locked.unitNumber)").font(Typeface.label(11)).tracking(1.1)
+                    Image(systemName: locked.course.symbol).font(.caption2.weight(.bold)).foregroundStyle(accent)
+                        .accessibilityHidden(true)
+                    Eyebrow(Text("UNIT \(locked.unitNumber)"), color: accent, style: .display)
                 }
-                .foregroundStyle(accent)
                 Text(locked.lesson.title.localized).font(.headline).foregroundStyle(Palette.ink)
                     .lineLimit(2).fixedSize(horizontal: false, vertical: true)
                 Text("\(locked.lesson.minutes) min · +\(locked.lesson.xp) XP").font(.caption).foregroundStyle(Palette.inkSoft)
             }
             Spacer(minLength: 8)
-            Image(systemName: "lock.fill").font(.system(size: 13, weight: .bold)).foregroundStyle(Color(hex: 0x1B1206))
+            Image(systemName: "lock.fill").font(.system(size: 13, weight: .bold)).foregroundStyle(Palette.onGold)
                 .frame(width: 30, height: 30)
                 .background(Circle().fill(Palette.proGold))
                 .accessibilityHidden(true)
         }
-        .padding(12)
+        .padding(Metrics.tilePadding)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(shape.fill(LinearGradient(colors: [accent.opacity(0.22), Palette.stageRaised], startPoint: .topLeading, endPoint: .bottomTrailing)))
         .overlay(shape.strokeBorder(accent.opacity(0.35), lineWidth: 1))
@@ -564,7 +559,7 @@ struct PaywallView: View {
                 }
                 .opacity(appeared ? 1 : 0)
                 .offset(x: appeared || reduceMotion ? 0 : -10)
-                .animation(.spring(response: 0.6, dampingFraction: 0.85).delay(0.12 + Double(index) * 0.09), value: appeared)
+                .animation(Motion.page.delay(0.12 + Double(index) * 0.09), value: appeared)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -608,7 +603,7 @@ struct PaywallView: View {
     private var detailsToggle: some View {
         Button(action: toggleDetails) {
             HStack(spacing: 5) {
-                Text("What’s in Pro")
+                Text("What’s in Timbre Pro")
                 Image(systemName: "chevron.down").font(.system(size: 10, weight: .bold))
                     .rotationEffect(.degrees(detailsOpen ? 180 : 0))
                     .accessibilityHidden(true)
@@ -628,7 +623,7 @@ struct PaywallView: View {
     }
 
     private func toggleDetails() {
-        withAnimation(reduceMotion ? Animation.easeOut(duration: 0.2) : Motion.settle) { detailsOpen.toggle() }
+        withMotion(Motion.settle, reduceMotion: reduceMotion) { detailsOpen.toggle() }
         Haptics.shared.selection()
         if detailsOpen { Analytics.log("paywall_details", ["reason": context == .onboarding ? "onboarding" : (store.paywallReason ?? "unknown")]) }
     }
@@ -662,7 +657,7 @@ struct PaywallView: View {
 
     /// The table: a header, six rows on hairlines, the Pro column on a gold wash; the free chromatic tuner under it.
     private var proTable: some View {
-        let shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return VStack(alignment: .leading, spacing: 8) {
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
@@ -675,18 +670,19 @@ struct PaywallView: View {
                 .padding(.vertical, 8)
                 .accessibilityHidden(true)
                 ForEach(proRows) { row in
-                    Rectangle().fill(Palette.line).frame(height: 1).accessibilityHidden(true)
+                    Hairline()
                     proRow(row)
                 }
             }
             .padding(.horizontal, 12).padding(.bottom, 2)
             .background(alignment: .trailing) {
-                RoundedRectangle(cornerRadius: 10, style: .continuous).fill(Color(hex: 0xFFD08A).opacity(0.07))
+                // Inset 4 pt in the tile, so its corners follow the tile's.
+                RoundedRectangle(cornerRadius: Metrics.cornerTile - 4, style: .continuous).fill(Color(hex: 0xFFD08A).opacity(0.07))
                     .frame(width: cellWidth)
                     .padding(.trailing, 12).padding(.vertical, 4)
             }
             .background(shape.fill(Palette.stageRaised))
-            .overlay(shape.strokeBorder(Palette.line, lineWidth: 1))
+            .overlay(shape.strokeBorder(Palette.hairline, lineWidth: 1))
             Text("The chromatic tuner stays free for any instrument.")
                 .font(.caption2).foregroundStyle(Palette.inkFaint)
                 .fixedSize(horizontal: false, vertical: true)
@@ -747,7 +743,7 @@ struct PaywallView: View {
             } else {
                 VStack(spacing: 10) {
                     Text(commerce.error ?? String(localized: "Plans are loading.")).font(.subheadline).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
-                    Button("Try again") { Task { await commerce.load() } }.buttonStyle(BrassButtonStyle(prominent: false))
+                    Button("Try again") { Task { await commerce.load() } }.buttonStyle(SecondaryButtonStyle())
                 }
             }
         } else {
@@ -758,10 +754,10 @@ struct PaywallView: View {
                         planRow(annual, title: "Yearly", detail: perWeek(annual), tag: annualTag(annual), saving: annualSaving, anchor: annualAnchor)
                     }
                     if let monthly = commerce.monthly {
-                        planRow(monthly, title: "Monthly", detail: String(localized: "cancel anytime"), tag: nil, saving: nil)
+                        planRow(monthly, title: "Monthly", detail: String(localized: "Cancel anytime"), tag: nil, saving: nil)
                     }
                     if let lifetime = commerce.lifetime {
-                        planRow(lifetime, title: "Lifetime", detail: String(localized: "pay once"), tag: nil, saving: nil)
+                        planRow(lifetime, title: "Lifetime", detail: String(localized: "Pay once"), tag: nil, saving: nil)
                     }
                 }
             }
@@ -769,15 +765,15 @@ struct PaywallView: View {
         }
     }
 
-    /// Holds the plans' place while StoreKit answers, so nothing jumps when they arrive.
+    /// The stage's spinner, holding the three plans' place while StoreKit answers, so nothing jumps when they arrive.
     private var planSkeleton: some View {
-        VStack(spacing: 8) {
-            ForEach(0..<3, id: \.self) { _ in
-                RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised).frame(height: 58)
-            }
-        }
-        .overlay { ProgressView().tint(Palette.mint) }
+        StageSpinner("Plans are loading.")
+            .frame(maxWidth: .infinity)
+            .frame(height: Self.plansHeight)
     }
+
+    /// Three plan cards and the gaps between them.
+    private static let plansHeight: CGFloat = 3 * 58 + 2 * 8
 
     /// The yearly price as a week of it ("$0.67 a week"): the product's own price over 52, in the storefront's currency.
     private func perWeek(_ product: Product) -> String {
@@ -815,7 +811,7 @@ struct PaywallView: View {
 
     private func planRow(_ product: Product, title: LocalizedStringKey, detail: String, tag: String?, saving: Int?, anchor: String? = nil) -> some View {
         let isSelected = selected?.id == product.id
-        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return Button { select(product) } label: {
             HStack(spacing: 12) {
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
@@ -859,19 +855,15 @@ struct PaywallView: View {
             .accessibilityLabel(Text("\(anchor) if paid monthly"))
     }
 
+    /// "14 days free" on the yearly card's top edge, in mint.
     private func planTag(_ text: String) -> some View {
-        Text(text.uppercased()).font(.system(size: 10, weight: .heavy)).tracking(0.6).foregroundStyle(Palette.onAccent)
-            .padding(.horizontal, 9).padding(.vertical, 4)
-            .background(Capsule().fill(Palette.mint))
-            .offset(x: -14, y: -11)
+        Badge(Text(verbatim: text), style: .solid(Palette.mint))
+            .offset(x: -14, y: -10)
     }
 
+    /// "Save 58%" beside the yearly plan's name, in Pro gold.
     private func saveChip(_ percent: Int) -> some View {
-        Text(String(localized: "Save \(percent)%").uppercased())
-            .font(.system(size: 10, weight: .heavy)).tracking(0.5).foregroundStyle(Palette.onAccent)
-            .padding(.horizontal, 7).padding(.vertical, 3)
-            .background(Capsule().fill(Palette.proGold))
-            .lineLimit(1).fixedSize()
+        Badge(Text(verbatim: String(localized: "Save \(percent)%")), style: .pro)
     }
 
     /// Under the plans. With a free trial selected (and a reminder that can arrive): how easy it is to stop, and when
@@ -1268,7 +1260,7 @@ struct PaywallView: View {
             if context == .onboarding {
                 Button { decline() } label: {
                     Text("Continue with the free tuner").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft)
-                        .padding(.horizontal, 12).padding(.vertical, 6).contentShape(Rectangle())
+                        .padding(.horizontal, 12).tapTarget()
                 }
                 .buttonStyle(.plain)
                 .padding(.top, 4)
@@ -1288,7 +1280,8 @@ struct PaywallView: View {
                     ProgressView().tint(Palette.onAccent)
                 } else {
                     // One line at the usual sizes; two at the accessibility sizes rather than an unreadable shrink.
-                    Text(ctaTitle).font(Typeface.label(18))
+                    // The font is the button style's (`Typeface.button`), as on every primary action.
+                    Text(ctaTitle)
                         .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
                         .minimumScaleFactor(typeSize.isAccessibilitySize ? 0.9 : 0.7)
                         .multilineTextAlignment(.center)
@@ -1296,7 +1289,8 @@ struct PaywallView: View {
                         .padding(.vertical, typeSize.isAccessibilitySize ? 6 : 0)
                 }
             }
-            .buttonStyle(GlassActionButtonStyle(collapsed: purchasing && !reduceMotion))
+            // Busy, it stays mint while its spinner turns (Reduce Motion doesn't fold it into a bead).
+            .buttonStyle(GlassActionButtonStyle(collapsed: purchasing && !reduceMotion, busy: purchasing))
             .disabled(selected == nil || purchasing || commerce.pending)
             .accessibilityIdentifier("paywall.purchase")
         }
@@ -1316,23 +1310,33 @@ struct PaywallView: View {
         }
     }
 
+    /// "Restore purchases · Terms · Privacy", each a 44 pt target. "Restore purchases" as Settings words it; where
+    /// the row can't hold it (a long translation at a large size), "Restore", read as "Restore purchases".
     private var links: some View {
+        ViewThatFits(in: .horizontal) {
+            linkRow(restore: "Restore purchases")
+            linkRow(restore: "Restore")
+        }
+        .font(.footnote.weight(.semibold))
+    }
+
+    private func linkRow(restore: LocalizedStringKey) -> some View {
         HStack(spacing: 0) {
-            Button { Task { await commerce.restore() } } label: { linkLabel("Restore") }
+            Button { Task { await commerce.restore() } } label: { linkLabel(restore) }
                 .buttonStyle(.plain)
                 .disabled(commerce.loading)
+                .accessibilityLabel(Text("Restore purchases"))
             separator
             Link(destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!) { linkLabel("Terms") }
             separator
             Link(destination: URL(string: "https://azerish25-ux.github.io/tuner/privacy.html")!) { linkLabel("Privacy") }
         }
-        .font(.footnote.weight(.semibold))
     }
 
     private func linkLabel(_ title: LocalizedStringKey) -> some View {
         Text(title).foregroundStyle(Palette.inkSoft)
-            .padding(.horizontal, 8).padding(.vertical, 6)
-            .contentShape(Rectangle())
+            .padding(.horizontal, 8)
+            .tapTarget()
     }
 
     /// "Have an offer code? Redeem code": the App Store's own redemption sheet (codes are set up in App Store Connect).
@@ -1344,8 +1348,8 @@ struct PaywallView: View {
             (Text("Have an offer code?").foregroundStyle(Palette.inkFaint) + Text(verbatim: " ") + Text("Redeem code").foregroundStyle(Palette.mint))
                 .font(.footnote.weight(.semibold))
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 12).padding(.vertical, 10)
-                .contentShape(Rectangle())
+                .padding(.horizontal, 12)
+                .tapTarget()
         }
         .buttonStyle(.plain)
         .disabled(commerce.purchasing != nil)
@@ -1359,7 +1363,7 @@ struct PaywallView: View {
     }
 }
 
-/// A plan card's face. Unchosen: graphite with a hairline. Chosen: a mint border over mint-washed Liquid Glass (iOS 26),
+/// A plan card's face. Unchosen: graphite with a control's edge. Chosen: a mint border over mint-washed Liquid Glass (iOS 26),
 /// one glass shape named in the plans' group, so choosing another plan moves it there as liquid rather than switching
 /// two cards; before iOS 26 a mint wash with a soft mint glow, as it always was.
 private struct PlanPlate: ViewModifier {
@@ -1367,13 +1371,14 @@ private struct PlanPlate: ViewModifier {
     let glass: Namespace.ID
 
     func body(content: Content) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         let id: String? = selected ? "paywall.plan.selected" : nil
         return content
             .background {
                 if !selected { shape.fill(Palette.stageRaised) }
             }
-            .overlay(shape.strokeBorder(selected ? Palette.mint : Palette.line, lineWidth: selected ? 2 : 1))
+            // An unchosen plan is a control: its edge is `controlLine`, which holds 3:1 with Increase Contrast.
+            .overlay(shape.strokeBorder(selected ? Palette.mint : Palette.controlLine, lineWidth: selected ? 2 : 1))
             .timbreGlass(Palette.mint.opacity(0.22), isOn: selected, in: shape) {
                 ZStack {
                     shape.fill(Palette.mint.opacity(0.08))

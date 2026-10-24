@@ -41,7 +41,7 @@ struct EarTrainingView: View {
                 drillPicker
                 if finished, let session {
                     results(session)
-                        .transition(.scale(scale: 0.94).combined(with: .opacity))
+                        .transition(.adaptive(.scale(scale: 0.94).combined(with: .opacity), reduceMotion: reduceMotion))
                 } else if let question {
                     hud
                     card(question)
@@ -53,8 +53,8 @@ struct EarTrainingView: View {
         }
         .stageTopShade()
         .background {
-            StageBackground(glow: hot ? Palette.flame : Color(hex: 0xFFC48C), intensity: hot ? 1.35 : 1, motes: false)
-                .animation(.easeInOut(duration: 0.5), value: hot)
+            StageBackground(glow: hot ? Palette.flame : Palette.spotlight, intensity: hot ? 1.35 : 1, motes: false)
+                .animation(Motion.reveal, value: hot)
         }
         .navigationTitle("Ear training")
         .navigationBarTitleDisplayMode(.inline)
@@ -119,8 +119,8 @@ struct EarTrainingView: View {
                 .symbolEffect(.bounce, value: combo)
                 .phaseAnimator([1.0, 1.16], trigger: combo) { content, scale in
                     content.scaleEffect(CGFloat(reduceMotion ? 1 : scale))
-                } animation: { _ in Animation.spring(response: 0.22, dampingFraction: 0.55) }
-                .transition(.scale(scale: 0.6).combined(with: .opacity))
+                } animation: { _ in Motion.pop }
+                .transition(.adaptive(.scale(scale: 0.6).combined(with: .opacity), reduceMotion: reduceMotion))
         } else if let session {
             Text("\(session.correct) correct").font(.caption).foregroundStyle(Palette.inkSoft)
         }
@@ -166,7 +166,7 @@ struct EarTrainingView: View {
             listenOrb(question)
             answers(question)
         }
-        .stillCard(padding: 22)
+        .stillCard()
         .animation(Motion.pluck, value: picked)
     }
 
@@ -179,25 +179,25 @@ struct EarTrainingView: View {
                     .frame(width: 232, height: 232)
                 Button { play(question) } label: { orbFace(playing) }
                     .buttonStyle(PressScaleStyle())
-                    .accessibilityLabel("Play again")
+                    .accessibilityLabel("Hear again")
                     .accessibilityIdentifier("ear.play")
             }
             .frame(height: 232)
             .overlay { SparkBurst(trigger: burst, color: Palette.mint).frame(width: 300, height: 300) }
             .overlay(alignment: .topTrailing) { xpFloat }
-            // The app is sounding the tones here, so this reads "Listen" with a speaker, never the
-            // microphone's "Listening…" used by the tuner.
+            // The app is sounding the tones here, so this reads "Hear it" with a speaker, as lessons do: "Listen"
+            // is kept for the microphone.
             Group {
                 if playing {
-                    Label("Listen", systemImage: "speaker.wave.2.fill")
+                    Label("Hear it", systemImage: "speaker.wave.2.fill")
                         .symbolEffect(.variableColor.iterative, isActive: !reduceMotion)
                 } else {
-                    Text("Tap to play again")
+                    Text("Hear again")
                 }
             }
             .font(.footnote.weight(.semibold))
             .foregroundStyle(playing ? Palette.mint : Palette.inkFaint)
-            .animation(.easeInOut(duration: 0.2), value: playing)
+            .animation(Motion.quick, value: playing)
             .accessibilityHidden(true)
         }
     }
@@ -227,8 +227,8 @@ struct EarTrainingView: View {
                 .background(Capsule().fill(Palette.mint))
                 .shadow(color: Palette.mint.opacity(0.5), radius: 10)
                 .padding(.top, 8)
-                .transition(.asymmetric(insertion: .move(edge: .bottom).combined(with: .opacity),
-                                        removal: .opacity.combined(with: .offset(y: -18))))
+                .transition(.adaptive(.asymmetric(insertion: .move(edge: .bottom).combined(with: .opacity),
+                                                  removal: .opacity.combined(with: .offset(y: -18))), reduceMotion: reduceMotion))
                 .accessibilityHidden(true)
         }
     }
@@ -251,7 +251,7 @@ struct EarTrainingView: View {
     /// says what will land there, in a slot the chips' height so nothing jumps when they arrive.
     private var recentStrip: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Eyebrow("Recent", color: Palette.inkSoft)
+            SectionHeader("Recent")
             if history.isEmpty {
                 recentHint
                     .transition(.opacity)
@@ -281,7 +281,7 @@ struct EarTrainingView: View {
         .foregroundStyle(Palette.inkFaint)
         .padding(.horizontal, 14).padding(.vertical, 6)
         .frame(maxWidth: .infinity, minHeight: 38, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 19, style: .continuous).strokeBorder(Palette.line, style: StrokeStyle(lineWidth: 1, dash: [3, 4])))
+        .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).strokeBorder(Palette.line, style: StrokeStyle(lineWidth: 1, dash: [3, 4])))
     }
 
     private func recentChip(_ record: EarAnswerRecord) -> some View {
@@ -301,17 +301,18 @@ struct EarTrainingView: View {
             }
             .font(.footnote.weight(.semibold))
             .lineLimit(1)
-            .padding(.horizontal, 12).frame(height: 38)
+            .padding(.horizontal, 12).padding(.vertical, 4).frame(minHeight: 38)
             .background(Capsule().fill(Palette.stageRaised))
             .overlay(Capsule().strokeBorder(tint.opacity(0.35), lineWidth: 1))
-            .contentShape(Capsule())
+            // The chip stays 38 pt; the finger gets 44.
+            .tapTarget()
         }
         .buttonStyle(PressScaleStyle())
         .disabled(picked != nil)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(LocalizedStringKey(record.question.answer)))
         .accessibilityValue(record.right ? Text(verbatim: "") : Text("Not quite."))
-        .accessibilityHint(Text("Play again"))
+        .accessibilityHint(Text("Hear again"))
         .accessibilityAddTraits(.isButton)
     }
 
@@ -336,23 +337,24 @@ struct EarTrainingView: View {
                 Text("\(session.correct) of \(session.asked) right · now level \(session.level + 1)")
                     .font(.subheadline).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
             }
-            HStack(spacing: 10) {
-                tile(symbol: "sparkles", tint: Palette.mint, value: Text("+\(shownXP)"), label: Text("XP"))
-                tile(symbol: "scope", tint: Palette.amber, value: Text("\(accuracy)%"), label: Text("accuracy"))
-                tile(symbol: "flame.fill", tint: Palette.flame, value: Text(verbatim: "×" + bestCombo.formatted()), label: Text("best run"))
+            StatTileRow {
+                StatTile(symbol: "sparkles", tint: Palette.mint, value: Text("+\(shownXP)"), label: "XP", alignment: .center)
+                StatTile(symbol: "scope", tint: Palette.amber, value: Text("\(accuracy)%"), label: "accuracy", alignment: .center)
+                StatTile(symbol: "flame.fill", tint: Palette.flame, value: Text(verbatim: "×" + bestCombo.formatted()), label: "best run",
+                         alignment: .center)
             }
             roundDots.allowsHitTesting(false)
             VStack(spacing: 10) {
                 Button("Go again") { start() }
-                    .buttonStyle(BrassButtonStyle())
+                    .buttonStyle(PrimaryButtonStyle())
                     .accessibilityIdentifier("ear.again")
                 Button("Done") { dismiss() }
-                    .buttonStyle(BrassButtonStyle(prominent: false))
+                    .buttonStyle(SecondaryButtonStyle())
                     .accessibilityIdentifier("ear.done")
             }
             .padding(.top, 4)
         }
-        .stillCard(padding: 22, tint: Palette.mint)
+        .stillCard(tint: Palette.mint)
     }
 
     private func headline(_ accuracy: Int) -> LocalizedStringKey {
@@ -370,23 +372,14 @@ struct EarTrainingView: View {
                 .stroke(Palette.mint, style: StrokeStyle(lineWidth: 12, lineCap: .round))
                 .rotationEffect(.degrees(-90))
                 .shadow(color: Palette.mint.opacity(0.5), radius: 10)
-            Text("\(session.correct)/\(session.asked)").font(Typeface.number(40)).foregroundStyle(Palette.ink)
+            // A fixed ring: the score shrinks to fit its hole rather than growing past it.
+            Text.fraction(session.correct, session.asked).font(Typeface.hero(40)).foregroundStyle(Palette.ink)
+                .heroNumeral()
+                .frame(maxWidth: 120)
         }
         .frame(width: 156, height: 156)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(session.correct) of \(session.asked)"))
-    }
-
-    private func tile(symbol: String, tint: Color, value: Text, label: Text) -> some View {
-        VStack(spacing: 4) {
-            Image(systemName: symbol).font(.system(size: 15, weight: .semibold)).foregroundStyle(tint)
-            value.font(Typeface.number(22)).foregroundStyle(Palette.ink).contentTransition(.numericText())
-                .lineLimit(1).minimumScaleFactor(0.7)
-            label.font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.8)
-        }
-        .frame(maxWidth: .infinity).padding(.vertical, 14)
-        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.surface))
-        .accessibilityElement(children: .combine)
     }
 
     // MARK: Flow
@@ -416,7 +409,7 @@ struct EarTrainingView: View {
         let right = current.answer(choice, for: question)
         session = current
         outcomes.append(right)
-        withAnimation(reduceMotion ? Animation.easeInOut(duration: 0.2) : Motion.pluck) {
+        withMotion(Motion.pluck, reduceMotion: reduceMotion) {
             history.insert(EarAnswerRecord(id: answered, question: question, picked: choice), at: 0)
             if history.count > 12 { history.removeLast() }
         }
@@ -438,7 +431,7 @@ struct EarTrainingView: View {
         Task { @MainActor in
             if right {
                 try? await Task.sleep(for: .milliseconds(520))
-                withAnimation(.easeOut(duration: 0.25)) { showXP = false }
+                withAnimation(Motion.fade) { showXP = false }
                 try? await Task.sleep(for: .milliseconds(130))
             } else {
                 try? await Task.sleep(for: .milliseconds(1300))
@@ -470,7 +463,7 @@ struct EarTrainingView: View {
         Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(300))
             guard token == round else { return }
-            withAnimation(.easeOut(duration: reduceMotion ? 0.2 : 0.9)) { ringShown = true }
+            withAnimation(reduceMotion ? Motion.reduced : .easeOut(duration: 0.9)) { ringShown = true }
             if great { resultBurst += 1 }
             guard total > 0 else { return }
             let steps = 20
@@ -505,7 +498,7 @@ private struct EarChoiceButton: View {
         switch state {
         case .right: return Palette.mint
         case .wrong: return Palette.coral
-        case .idle, .faded: return Palette.line
+        case .idle, .faded: return Palette.controlLine
         }
     }
 
@@ -540,11 +533,11 @@ private struct EarChoiceButton: View {
             }
             .padding(.horizontal, 12)
             .frame(maxWidth: .infinity, minHeight: 58)
-            .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(fill))
-            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(tint, lineWidth: revealed ? 2 : 1))
+            .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(fill))
+            .overlay(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).strokeBorder(tint, lineWidth: revealed ? 2 : 1))
             .shadow(color: glow, radius: 14)
             .opacity(state == .faded ? 0.45 : 1)
-            .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous))
         }
         .buttonStyle(PressScaleStyle())
         .phaseAnimator([false, true], trigger: state) { content, flashing in
@@ -552,7 +545,7 @@ private struct EarChoiceButton: View {
                 .brightness(flashing && revealed ? 0.2 : 0)
                 .scaleEffect(flashing && state == .right ? 1.05 : 1)
         } animation: { flashing in
-            flashing ? Animation.easeOut(duration: 0.12) : Animation.spring(response: 0.4, dampingFraction: 0.6)
+            flashing ? Animation.easeOut(duration: 0.12) : Motion.reward
         }
         .animation(Motion.pluck, value: state)
     }

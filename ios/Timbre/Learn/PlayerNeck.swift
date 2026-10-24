@@ -49,7 +49,7 @@ struct ChordPictureToggle: View {
         }
         .padding(3)
         .background(Capsule().fill(Palette.surface))
-        .overlay(Capsule().strokeBorder(Color.white.opacity(0.08), lineWidth: 1))
+        .overlay(Capsule().strokeBorder(Palette.controlLine, lineWidth: 1))
         .fixedSize()
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text("Chord view"))
@@ -60,7 +60,7 @@ struct ChordPictureToggle: View {
         return Button {
             guard picture != option else { return }
             Haptics.shared.selection()
-            withAnimation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle) { picture = option }
+            withMotion(Motion.settle, reduceMotion: reduceMotion) { picture = option }
         } label: {
             Text(option.title)
                 .font(Typeface.label(12))

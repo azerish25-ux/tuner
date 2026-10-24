@@ -91,13 +91,13 @@ struct LessonInspector<Companion: View>: View {
     /// The lesson's card: its unit, title, kind, minutes and XP, stars once played, and the button; a song's sleeve
     /// (its record peeking out) or the course's instrument on the right. The lesson zooms out of it.
     private var hero: some View {
-        let shape = RoundedRectangle(cornerRadius: 28, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
         let stars = store.learn.stars[lesson.id] ?? 0
         return HStack(alignment: .center, spacing: 10) {
             VStack(alignment: .leading, spacing: 8) {
                 if let place = unitPlace {
-                    Text("UNIT \(place.number) · \(place.unit.title.localized.uppercased())")
-                        .font(Typeface.label(11)).tracking(1.2).foregroundStyle(accent).lineLimit(1)
+                    Eyebrow(Text("Unit \(place.number) · \(place.unit.title.localized)"), color: accent, style: .display)
+                        .lineLimit(1)
                 }
                 Text(lesson.title.localized).font(Typeface.display(24)).tracking(-0.4).foregroundStyle(Palette.ink)
                     .lineLimit(3).fixedSize(horizontal: false, vertical: true)
@@ -150,7 +150,7 @@ struct LessonInspector<Companion: View>: View {
             Text(name)
         }
         .font(Typeface.label(11)).foregroundStyle(accent)
-        .padding(.horizontal, 8).frame(height: 22)
+        .padding(.horizontal, 8).frame(minHeight: 22)
         .background(Capsule().fill(accent.opacity(0.14)))
         .overlay(Capsule().strokeBorder(accent.opacity(0.3), lineWidth: 1))
         .fixedSize()
@@ -190,13 +190,14 @@ struct LessonInspector<Companion: View>: View {
         }
     }
 
+    /// The primary button's type on a capsule at least 44 pt tall (it grows with the text), as Learn's Continue card.
     private func capsule(symbol: String, title: Text, ink: Color, fill: AnyShapeStyle, glow: Color?) -> some View {
         HStack(spacing: 6) {
             Image(systemName: symbol).accessibilityHidden(true)
             title.lineLimit(1).minimumScaleFactor(0.8)
         }
-        .font(Typeface.label(15)).foregroundStyle(ink)
-        .padding(.horizontal, 18).frame(height: 44)
+        .font(Typeface.button).foregroundStyle(ink)
+        .padding(.horizontal, 18).frame(minHeight: Metrics.minTarget)
         .background(Capsule().fill(fill))
         .shadow(color: (glow ?? .clear).opacity(0.45), radius: 12, y: 4)
         .contentShape(Capsule())
@@ -234,7 +235,7 @@ struct LessonInspector<Companion: View>: View {
         let played = store.learn.isFinished(lesson.id)
         let all = lesson.steps
         return VStack(alignment: .leading, spacing: 14) {
-            Text("In this lesson").font(Typeface.display(16)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+            CardTitle("In this lesson")
             VStack(alignment: .leading, spacing: 0) {
                 ForEach(Array(all.enumerated()), id: \.offset) { index, step in
                     stepRow(StepSummary(step), played: played, last: index == all.count - 1)
@@ -283,7 +284,7 @@ struct LessonInspector<Companion: View>: View {
     /// 250 points tall; beside the card (`wide`) it grows to the column's height and the drawing with it.
     private var preview: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Preview").font(Typeface.eyebrow).tracking(1.6).textCase(.uppercase).foregroundStyle(Palette.inkSoft)
+            Eyebrow("Preview", color: Palette.inkSoft)
                 .accessibilityAddTraits(.isHeader)
             previewBody
                 .frame(maxWidth: .infinity)

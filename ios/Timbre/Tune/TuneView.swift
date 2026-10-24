@@ -180,16 +180,13 @@ struct TuneView: View {
             .buttonStyle(.plain)
             .accessibilityIdentifier("tune.instrument")
             Spacer(minLength: 4)
-            StreakChip { store.selectedTab = .journey }
-            LevelRing(size: 36) { store.selectedTab = .journey }
-            Button { store.showSettings = true } label: {
-                Image(systemName: "slider.horizontal.3").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
-                    .frame(width: 36, height: 36)
-                    .background(Circle().fill(.white.opacity(0.04)))
-                    .overlay(Circle().strokeBorder(.white.opacity(0.12), lineWidth: 1))
+            // The cluster every tab shares (streak and level, both to Progress), then the tuner's own settings:
+            // 44 pt targets throughout.
+            HStack(spacing: 2) {
+                HeaderControls()
+                IconButton(symbol: "slider.horizontal.3", size: .compact, label: "Settings") { store.showSettings = true }
+                    .accessibilityIdentifier("settings.open")
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text("Settings")).accessibilityIdentifier("settings.open")
         }
         .padding(.horizontal, Metrics.gutter).padding(.top, 6)
     }
@@ -239,7 +236,7 @@ struct TuneView: View {
                         }
                         InstrumentStage(modelID: modelID, input: stageInput, onSelect: { selectPeg($0) },
                                         onFailure: { failed3D = modelID },
-                                        onReady: { withAnimation(.easeInOut(duration: 0.6)) { ready3D = modelID } },
+                                        onReady: { withAnimation(Motion.reveal) { ready3D = modelID } },
                                         revealClose: card?.head != nil, resting: resting)
                     }
                 } else if ModelLibrary.hasCard(modelID) {
@@ -367,12 +364,12 @@ struct TuneView: View {
         let counter = quest.map { store.questCounter($0) }
         let done = counter?.done ?? min(store.lockedCourses.count, store.courses.count), total = counter?.total ?? store.courses.count
         return HStack(alignment: .firstTextBaseline, spacing: 6) {
-            Text("Daily quest · every string").foregroundStyle(contrast == .increased ? Palette.ink : Palette.inkSoft)
+            // "Quest" is a side goal; "Today" is the three-activity set.
+            Text("Quest · tune every string").foregroundStyle(contrast == .increased ? Palette.ink : Palette.inkSoft)
                 .font(.caption).lineLimit(1).minimumScaleFactor(0.8)
-            // Strings, not chips: a mandolin's four ×2 chips count as 8.
-            Text(verbatim: "\(done) / \(total)").font(.caption.weight(.bold)).foregroundStyle(Palette.ink).monospacedDigit()
+            // Strings, not chips: a mandolin's four ×2 chips count as 8. Reads "3 of 6".
+            Text.fraction(done, total).font(.caption.weight(.bold)).foregroundStyle(Palette.ink).monospacedDigit()
                 .fixedSize()
-                .accessibilityLabel(Text("\(done) of \(total)"))
             Spacer(minLength: 8)
             if let quest {
                 Text(store.questProgress(quest) >= quest.target ? "Done" : "+\(quest.xp) XP").font(Typeface.label(12)).foregroundStyle(Palette.mint)
@@ -382,11 +379,12 @@ struct TuneView: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// Strum to tune and listening, stacked beside the instrument (in the iPad's landscape columns, on their own rail).
+    /// Strum to tune and listening, stacked beside the instrument (in the iPad's landscape columns, on their own rail),
+    /// each captioned the same way. AUTO | MANUAL and the reference tone carry their words on the bar under the stage.
     private var sideControls: some View {
         VStack(spacing: 14) {
             StrumToggle { strumOpen = true }.strumTuneTip()  // TipKit coach mark, Tips/TimbreTips.swift
-            ListenOrb()
+            ListenOrb(captioned: true)
         }
     }
 
@@ -427,35 +425,85 @@ struct StageControl: View {
             Image(systemName: symbol).font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(active ? Palette.mint : Palette.ink)
                 .frame(width: 44, height: 44)
-                .background(Circle().fill(active ? Palette.mint.opacity(0.12) : .white.opacity(0.05)))
-                .overlay(Circle().strokeBorder(active ? Palette.mint.opacity(0.45) : .white.opacity(0.12), lineWidth: 1))
+                .stageControlDisc(active: active)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressScaleStyle())
     }
 }
 
-/// Listening on and off: mint when listening, its halo breathing with the input level.
+/// The caption under a stage control ("Strum", "Listen"): Sora 10 on the caption2 curve (`Typeface.badge`), mint while
+/// the control is on. It stops growing at xLarge so the column of controls keeps its shape over the instrument; the
+/// control's own VoiceOver label carries the words.
+struct StageCaption: View {
+    let text: Text
+    var active = false
+
+    var body: some View {
+        text.font(Typeface.badge)
+            .foregroundStyle(active ? Palette.mint : Palette.inkSoft)
+            .lineLimit(1)
+            .fixedSize()
+            .dynamicTypeSize(...DynamicTypeSize.xLarge)
+            .accessibilityHidden(true)
+    }
+}
+
+extension View {
+    /// The disc behind a 44 pt stage control: a breath of white with a light rim (brighter with Increase Contrast),
+    /// washed mint while the control is on.
+    func stageControlDisc(active: Bool = false) -> some View {
+        modifier(StageControlDisc(active: active))
+    }
+}
+
+private struct StageControlDisc: ViewModifier {
+    let active: Bool
+    @Environment(\.colorSchemeContrast) private var contrast
+
+    func body(content: Content) -> some View {
+        let strong = contrast == .increased
+        let rim: Color = active ? Palette.mint.opacity(strong ? 0.9 : 0.45) : Color.white.opacity(strong ? 0.4 : 0.12)
+        return content
+            .background(Circle().fill(active ? Palette.mint.opacity(0.12) : Color.white.opacity(0.05)))
+            .overlay(Circle().strokeBorder(rim, lineWidth: 1))
+    }
+}
+
+/// Listening on and off: mint when listening, its halo breathing with the input level. On the stage it is captioned
+/// like Strum ("Listen", then "Pause" while it listens); in a header it stands alone.
 struct ListenOrb: View {
+    var captioned = false
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService
     var body: some View {
         let level = audio.running ? max(0, min(1, (store.live.level + 60) / 45)) : 0
         Button { store.toggleListening(); Haptics.shared.selection() } label: {
-            ZStack {
-                Circle().fill(Palette.mint.opacity(0.2)).frame(width: 52, height: 52).scaleEffect(1 + level * 0.35).opacity(audio.running ? 1 : 0)
-                Circle().fill(audio.running ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(Color.white.opacity(0.05)))
-                    .frame(width: 44, height: 44)
-                    .overlay(Circle().strokeBorder(audio.running ? .clear : .white.opacity(0.12), lineWidth: 1))
-                Image(systemName: audio.running ? "pause.fill" : "mic.fill").font(.system(size: 16, weight: .bold))
-                    .foregroundStyle(audio.running ? Palette.onAccent : Palette.ink)
+            // The orb's frame leaves room for its halo; the caption tucks under the disc as Strum's does.
+            VStack(spacing: -1) {
+                orb(level: level)
+                if captioned {
+                    StageCaption(text: audio.running ? Text("Pause") : Text("Listen"), active: audio.running)
+                }
             }
-            .frame(width: 52, height: 52)
-            .animation(.easeOut(duration: 0.12), value: level)
-            .animation(Motion.pluck, value: audio.running)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text(audio.running ? "Pause listening" : "Listen"))
         .accessibilityIdentifier("listenButton")
+    }
+
+    private func orb(level: Double) -> some View {
+        ZStack {
+            Circle().fill(Palette.mint.opacity(0.2)).frame(width: 52, height: 52).scaleEffect(1 + level * 0.35).opacity(audio.running ? 1 : 0)
+            // At rest the stage controls' disc; listening, solid mint over it.
+            Color.clear.frame(width: 44, height: 44).stageControlDisc().opacity(audio.running ? 0 : 1)
+            Circle().fill(Palette.mint).frame(width: 44, height: 44).opacity(audio.running ? 1 : 0)
+            Image(systemName: audio.running ? "pause.fill" : "mic.fill").font(.system(size: 16, weight: .bold))
+                .foregroundStyle(audio.running ? Palette.onAccent : Palette.ink)
+        }
+        .frame(width: 52, height: 52)
+        .animation(.easeOut(duration: 0.12), value: level)
+        .animation(Motion.pluck, value: audio.running)
     }
 }
 
@@ -497,6 +545,6 @@ struct PitchAura: View {
         let color = Palette.tuning(reading.cents, locked: reading.inTune)
         RadialGradient(colors: [color.opacity(reading.cents == nil ? 0 : (reading.inTune ? 0.28 : 0.14)), .clear], center: UnitPoint(x: 0.5, y: 0.42), startRadius: 20, endRadius: 360)
             .ignoresSafeArea()
-            .animation(.easeOut(duration: 0.35), value: reading.inTune)
+            .animation(Motion.fade, value: reading.inTune)
     }
 }

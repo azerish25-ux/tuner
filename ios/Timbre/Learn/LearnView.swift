@@ -9,6 +9,7 @@ import UIKit
 struct LearnView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.dynamicTypeSize) private var typeSize
     @AppStorage("learn.course") private var courseId = "guitar"
     @State private var playing: PlayingLesson?
     /// Content has scrolled under the status bar: a scrim fades in behind it.
@@ -288,18 +289,14 @@ struct LearnView: View {
             .accessibilityHidden(true)
     }
 
+    /// The tab's title with the shared streak and level controls.
     private var header: some View {
-        HStack(alignment: .center) {
-            Text("Learn").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
-            Spacer()
-            StreakChip { store.selectedTab = .journey }
-            LevelRing(size: 36) { store.selectedTab = .journey }
-        }
+        TabHeader(title: "Learn")
     }
 
     private var courses: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
+            HStack(alignment: .top, spacing: 10) {
                 ForEach(store.curriculum.courses) { item in
                     courseCard(item, selected: item.id == course?.id)
                 }
@@ -311,34 +308,42 @@ struct LearnView: View {
 
     /// One course in the carousel: its own art in the top corner (the instrument leaning into the card,
     /// or the course emblem), the title and progress beneath. The chosen course glows in its accent.
+    /// At the accessibility sizes the art gives its room to the words: the card widens, its title wraps and it grows
+    /// as tall as they need.
     private func courseCard(_ item: LearnCourse, selected: Bool) -> some View {
         let accent = Palette.accent(item.accent)
         let done = store.learn.finishedCount(in: item)
         let total = item.lessons.count
-        let shape = RoundedRectangle(cornerRadius: 22, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous)
+        let roomy = typeSize.isAccessibilitySize
         return Button { withAnimation(Motion.settle) { courseId = item.id }; Haptics.shared.selection() } label: {
             ZStack(alignment: .bottomLeading) {
-                CourseHeroArt(artwork: CourseArtwork.of(item, catalog: store.catalog), accent: accent, size: 104, lean: -14)
-                    .scaleEffect(selected ? 1.05 : 1, anchor: .center)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                    .offset(x: 14, y: -6)
-                // Keeps the title readable where the art reaches down.
-                LinearGradient(colors: [Palette.stageRaised.opacity(0), Palette.stageRaised.opacity(0.94)], startPoint: .center, endPoint: .bottom)
-                    .allowsHitTesting(false)
+                if !roomy {
+                    CourseHeroArt(artwork: CourseArtwork.of(item, catalog: store.catalog), accent: accent, size: 104, lean: -14)
+                        .scaleEffect(selected ? 1.05 : 1, anchor: .center)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                        .offset(x: 14, y: -6)
+                    // Keeps the title readable where the art reaches down.
+                    LinearGradient(colors: [Palette.stageRaised.opacity(0), Palette.stageRaised.opacity(0.94)], startPoint: .center, endPoint: .bottom)
+                        .allowsHitTesting(false)
+                }
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(item.title.localized).font(Typeface.display(16)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.8)
-                    Text("\(done)/\(total)").font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                    Text(item.title.localized).font(Typeface.display(16)).foregroundStyle(Palette.ink)
+                        .lineLimit(roomy ? 3 : 1).minimumScaleFactor(roomy ? 1 : 0.8)
+                    Text.lessonCount(done, total).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                        .lineLimit(1).minimumScaleFactor(0.8)
                     ProgressLine(value: total == 0 ? 0 : Double(done) / Double(total), color: accent, height: 4)
                 }
                 .padding(14)
             }
-            .frame(width: 136, height: 170)
+            .frame(width: roomy ? 220 : 136)
+            .frame(minHeight: 170, maxHeight: roomy ? nil : 170, alignment: .bottomLeading)
             .background {
                 shape.fill(Palette.stageRaised)
                     .overlay(RadialGradient(colors: [accent.opacity(selected ? 0.32 : 0.12), .clear], center: .topTrailing, startRadius: 4, endRadius: 170))
             }
             .clipShape(shape)
-            .overlay(shape.strokeBorder(selected ? accent : Palette.line, lineWidth: selected ? 1.5 : 1))
+            .overlay(shape.strokeBorder(selected ? accent : Palette.controlLine, lineWidth: selected ? 1.5 : 1))
             .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())
@@ -356,15 +361,16 @@ struct LearnView: View {
             HStack(alignment: .center, spacing: 0) {
                 VStack(alignment: .leading, spacing: 8) {
                     if let next, let unit, let unitNumber {
-                        Text("UNIT \(unitNumber) · \(unit.title.localized.uppercased())").font(Typeface.label(11)).tracking(1.2).foregroundStyle(accent).lineLimit(1)
+                        Eyebrow(Text("Unit \(unitNumber) · \(unit.title.localized)"), color: accent, style: .display).lineLimit(1)
                         Text(next.title.localized).font(Typeface.display(24)).tracking(-0.4).foregroundStyle(Palette.ink).lineLimit(2).fixedSize(horizontal: false, vertical: true)
                         Text("\(next.minutes) min · +\(next.xp) XP").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                        // The primary button's face and type (the whole card is the button), at least 44 pt tall.
                         HStack(spacing: 6) {
                             Image(systemName: store.canPlay(next) ? "play.fill" : "lock.fill")
                             Text(store.learn.finishedCount(in: course) == 0 ? LocalizedStringKey("Start") : LocalizedStringKey("Continue"))
                         }
-                        .font(Typeface.label(15)).foregroundStyle(Palette.onAccent)
-                        .padding(.horizontal, 18).frame(height: 42)
+                        .font(Typeface.button).foregroundStyle(Palette.onAccent)
+                        .padding(.horizontal, 18).frame(minHeight: Metrics.minTarget)
                         .background(Capsule().fill(accent))
                         .shadow(color: accent.opacity(0.45), radius: 12, y: 4)
                         .padding(.top, 4)
@@ -382,11 +388,11 @@ struct LearnView: View {
             .padding(20)
             .frame(maxWidth: .infinity, minHeight: 190, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 28, style: .continuous)
+                RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
                     .fill(LinearGradient(colors: [accent.opacity(0.26), Palette.stageRaised], startPoint: .topLeading, endPoint: .bottomTrailing))
             )
-            .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(accent.opacity(0.35), lineWidth: 1))
-            .contentShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous).strokeBorder(accent.opacity(0.35), lineWidth: 1))
+            .contentShape(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous))
         }
         .buttonStyle(PressScaleStyle())
         .matchedTransitionSource(id: Self.continueSource, in: zoom)
@@ -431,19 +437,19 @@ struct UnitSection: View {
         VStack(alignment: .leading, spacing: 18) {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("UNIT \(number)").font(Typeface.label(11)).tracking(1.4).foregroundStyle(accent)
-                    Text(unit.title.localized).font(Typeface.display(20)).foregroundStyle(Palette.ink)
+                    Eyebrow(Text("Unit \(number)"), color: accent, style: .display)
+                    SectionHeader(Text(unit.title.localized))
                     Text(unit.summary.localized).font(.subheadline).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 8)
                 VStack(alignment: .trailing, spacing: 6) {
                     if unit.lessons.contains(where: { !$0.free }) && !store.isPro { ProBadge() }
-                    Label("\(progress.stars(in: unit))/\(unit.lessons.count * 3)", systemImage: "star.fill").font(Typeface.number(12)).foregroundStyle(Palette.amber)
-                    Text("\(finished)/\(unit.lessons.count)").font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                    starCount(progress.stars(in: unit), of: unit.lessons.count * 3)
+                    Text.lessonCount(finished, unit.lessons.count).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                        .multilineTextAlignment(.trailing)
                 }
             }
-            .padding(16)
-            .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
+            .stillCard()
             .overlay(alignment: .leading) { Capsule().fill(accent).frame(width: 4).padding(.vertical, 18) }
             GeometryReader { geometry in
                 let neck = course.fretKind != nil
@@ -491,6 +497,22 @@ struct UnitSection: View {
     private func picker(_ lesson: Lesson) -> (() -> Void)? {
         guard let onSelect else { return nil }
         return { onSelect(lesson) }
+    }
+
+    /// "★ 8 / 15", read "8 of 15 stars".
+    private func starCount(_ stars: Int, of total: Int) -> some View {
+        Label { Text.fraction(stars, total) } icon: { Image(systemName: "star.fill") }
+            .font(Typeface.number(12)).foregroundStyle(Palette.amber)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("\(stars) of \(total) stars"))
+    }
+}
+
+extension Text {
+    /// A course's or a unit's lessons finished, "3 / 5 lessons", read "3 of 5 lessons".
+    fileprivate static func lessonCount(_ done: Int, _ total: Int) -> Text {
+        (Text.fraction(done, total) + Text(verbatim: " ") + Text("lessons"))
+            .accessibilityLabel(Text("\(done) of \(total)") + Text(verbatim: " ") + Text("lessons"))
     }
 }
 
@@ -573,7 +595,10 @@ struct LessonNode: View {
                 .overlay(alignment: startSide == .trailing ? .trailing : .leading) {
                     if current { startPill }
                 }
-                if stars > 0 {
+                if pro {
+                    // A Pro lesson says so (a lesson not reached yet has the lock alone).
+                    ProBadge()
+                } else if stars > 0 {
                     HStack(spacing: 2) {
                         ForEach(0..<3, id: \.self) { i in
                             Image(systemName: "star.fill").font(.system(size: 10, weight: .bold)).foregroundStyle(i < stars ? Palette.amber : .white.opacity(0.15))
@@ -587,9 +612,18 @@ struct LessonNode: View {
         .modifier(Shake(amount: shake))
         .onAppear { guard current, !reduceMotion else { return }; withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true)) { pulse = true } }
         .accessibilityLabel(Text(lesson.title.localized))
-        .accessibilityValue(Text(stars > 0 ? LocalizedStringKey("\(stars) of 3 stars") : lit ? LocalizedStringKey("Open") : LocalizedStringKey("Locked")))
+        .accessibilityValue(spokenState(stars: stars, pro: pro, lit: lit))
         .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityIdentifier("learn.lesson.\(lesson.id)")
+    }
+
+    /// What VoiceOver says of the node: a Pro lesson as Timbre Pro (not "Locked", which is a lesson not reached yet),
+    /// the next lesson as such (START beside it is only drawn), else its stars, open or locked.
+    private func spokenState(stars: Int, pro: Bool, lit: Bool) -> Text {
+        if pro { return Text("Timbre Pro") }
+        if current { return Text("Next lesson") }
+        if stars > 0 { return Text("\(stars) of 3 stars") }
+        return Text(lit ? LocalizedStringKey("Open") : LocalizedStringKey("Locked"))
     }
 
     /// START beside the disc, just past its halo, a small chevron pointing at the node; it nudges toward it and back.
@@ -599,7 +633,7 @@ struct LessonNode: View {
         let gap = Self.startGap
         return HStack(spacing: 4) {
             if trailing { chevron("chevron.backward") }
-            Text("START").font(Typeface.label(12)).tracking(1.2)
+            Text("Start").font(Typeface.label(12)).tracking(1.2).textCase(.uppercase)
             if !trailing { chevron("chevron.forward") }
         }
         .foregroundStyle(accent)

@@ -68,7 +68,7 @@ struct SettingsView: View {
             if commerce.isPro {
                 proStatus
                 if commerce.activeProductID != TimbreProduct.lifetime {
-                    RowDivider()
+                    Hairline(leading: SettingsRowMetrics.inset)
                     Button { manageSubscriptions = true } label: {
                         SettingRow(symbol: "creditcard", title: Text("Manage subscription")) { RowGlyph(symbol: "chevron.right") }
                     }
@@ -82,7 +82,7 @@ struct SettingsView: View {
                 .buttonStyle(RowButtonStyle())
                 .accessibilityIdentifier("settings.pro")
             }
-            RowDivider()
+            Hairline(leading: SettingsRowMetrics.inset)
             Button { Task { await commerce.restore() } } label: {
                 SettingRow(symbol: "arrow.clockwise", title: Text("Restore purchases"))
             }
@@ -113,17 +113,17 @@ struct SettingsView: View {
     private var tuningSection: some View {
         SettingsGroup(title: "Tuning", footer: Text("Capo and transposition change the names you see, never the pitch Timbre measures.")) {
             referenceRow
-            RowDivider()
+            Hairline(leading: SettingsRowMetrics.inset)
             temperamentPicker
-            RowDivider()
+            Hairline(leading: SettingsRowMetrics.inset)
             precisionPicker
-            RowDivider()
+            Hairline(leading: SettingsRowMetrics.inset)
             strobeToggle
-            RowDivider()
+            Hairline(leading: SettingsRowMetrics.inset)
             notationPicker
-            RowDivider()
+            Hairline(leading: SettingsRowMetrics.inset)
             capoStepper
-            RowDivider()
+            Hairline(leading: SettingsRowMetrics.inset)
             transposeStepper
         }
     }
@@ -197,7 +197,7 @@ struct SettingsView: View {
                 }
                 .padding(.horizontal, 12).padding(.vertical, 7)
                 .background(Capsule().fill(Palette.surface))
-                .overlay(Capsule().strokeBorder(referenceFocused ? Palette.mint.opacity(0.6) : Palette.line, lineWidth: 1))
+                .overlay(Capsule().strokeBorder(referenceFocused ? Palette.mint.opacity(0.6) : Palette.controlLine, lineWidth: 1))
             }
             .settingsRow()
             referenceStatus
@@ -210,17 +210,17 @@ struct SettingsView: View {
             Text("Enter a value from 415 to 466 Hz.")
                 .font(.footnote).foregroundStyle(Palette.danger)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, RowDivider.inset).padding(.trailing, 16).padding(.bottom, 12)
+                .padding(.leading, SettingsRowMetrics.inset).padding(.trailing, 16).padding(.bottom, 12)
         } else if parsedReference != store.settings.referencePitchHz {
             Button("Apply \(referenceInput) Hz") { referenceFocused = false; if let v = parsedReference { store.updateSettings { $0.referencePitchHz = v } } }
                 .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.mint)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, RowDivider.inset).padding(.trailing, 16).padding(.bottom, 12)
+                .padding(.leading, SettingsRowMetrics.inset).padding(.trailing, 16).padding(.bottom, 12)
                 .accessibilityIdentifier("settings.applyReference")
         }
     }
 
-    /// How close a string must hold to lock: Beginner ±5¢ (the original), Standard ±3¢, Pro ±1¢ (Timbre Pro).
+    /// How close a string must hold to lock: Beginner ±5¢ (the original), Standard ±3¢, Expert ±1¢ (Timbre Pro).
     /// The tracker, the colours and the meter's green zone all follow it.
     private var precisionPicker: some View {
         MenuRow(title: "Precision", symbol: "scope", id: "settings.precision", selection: Binding(get: { store.settings.precision }, set: { value in
@@ -237,7 +237,8 @@ struct SettingsView: View {
         switch precision {
         case .beginner: return Text("Beginner")
         case .standard: return Text("Standard")
-        case .pro: return Text("Pro")
+        // "Expert", not "Pro": the level is a Timbre Pro feature, so "Pro" read as the plan, not the precision.
+        case .pro: return Text("Expert")
         }
     }
 
@@ -265,7 +266,7 @@ struct SettingsView: View {
             MenuRow(title: "Handedness", symbol: "hand.raised", id: "settings.handedness", selection: setting(\.handedness)) {
                 Text("Right-handed").tag("right"); Text("Left-handed").tag("left")
             }
-            RowDivider()
+            Hairline(leading: SettingsRowMetrics.inset)
             stringOrderChoice
         }
     }
@@ -278,7 +279,7 @@ struct SettingsView: View {
                 .settingsRow()
                 .accessibilityAddTraits(.isHeader)
             ForEach(StringOrder.allCases) { order in
-                RowDivider()
+                Hairline(leading: SettingsRowMetrics.inset)
                 stringOrderOption(order)
             }
         }
@@ -311,7 +312,7 @@ struct SettingsView: View {
         SettingsGroup(title: "Feedback") {
             Toggle(isOn: setting(\.hapticsEnabled)) { RowLabel(symbol: "iphone.radiowaves.left.and.right", title: Text("Haptics")) }
                 .settingsRow()
-            RowDivider()
+            Hairline(leading: SettingsRowMetrics.inset)
             MenuRow(title: "Stage", symbol: "cube.transparent", id: "settings.stage",
                     selection: Binding(get: { store.settings.stageMode ?? "3d" }, set: { v in store.updateSettings { $0.stageMode = v } })) {
                 Text("Real-time 3D").tag("3d"); Text("Studio (lighter)").tag("studio")
@@ -332,7 +333,7 @@ struct SettingsView: View {
             .settingsRow()
             .accessibilityIdentifier("settings.reminder")
             if reminderOn {
-                RowDivider()
+                Hairline(leading: SettingsRowMetrics.inset)
                 DatePicker(selection: Binding(get: {
                     Calendar.current.date(bySettingHour: reminderMinutes / 60, minute: reminderMinutes % 60, second: 0, of: Date()) ?? Date()
                 }, set: { date in
@@ -382,17 +383,17 @@ struct SettingsView: View {
                     .padding(.top, 5)
             }
             .settingsRow()
-            RowDivider()
+            Hairline(leading: SettingsRowMetrics.inset)
             Link(destination: URL(string: "https://azerish25-ux.github.io/tuner/privacy.html")!) {
                 SettingRow(symbol: "doc.text", title: Text("Privacy policy")) { RowGlyph(symbol: "arrow.up.right") }
             }
             .buttonStyle(RowButtonStyle())
-            RowDivider()
+            Hairline(leading: SettingsRowMetrics.inset)
             NavigationLink { Acknowledgements() } label: {
                 SettingRow(symbol: "heart", title: Text("Acknowledgements")) { RowGlyph(symbol: "chevron.right") }
             }
             .buttonStyle(RowButtonStyle())
-            RowDivider()
+            Hairline(leading: SettingsRowMetrics.inset)
             Button(role: .destructive) { confirmClear = true } label: {
                 SettingRow(symbol: "trash", title: Text("Clear practice history"), tint: Palette.danger, titleColor: Palette.danger)
             }
@@ -544,13 +545,10 @@ private struct RowGlyph: View {
     }
 }
 
-/// Hairline between rows, inset to line up with the titles (never full width).
-private struct RowDivider: View {
+/// Where a row's title starts: the dividers between rows (`Hairline`) are inset to it, never full width.
+private enum SettingsRowMetrics {
     /// Row padding + icon orb + spacing.
     static let inset: CGFloat = 16 + 30 + 12
-    var body: some View {
-        Divider().overlay(Palette.line).padding(.leading, Self.inset)
-    }
 }
 
 /// Rows that act as buttons light up softly under the finger.
@@ -586,15 +584,15 @@ private struct AdvancedListening: View {
                             .fixedSize()
                     }
                     Slider(value: Binding(get: { Double(store.settings.micSensitivity) }, set: { v in store.updateSettings { $0.micSensitivity = Int(v.rounded()) } }), in: 0...100, step: 1)
-                        .padding(.leading, RowDivider.inset - 16)
+                        .padding(.leading, SettingsRowMetrics.inset - 16)
                 }
                 .padding(.horizontal, 16).padding(.vertical, 12)
-                RowDivider()
+                Hairline(leading: SettingsRowMetrics.inset)
                 MenuRow(title: "Confidence", symbol: "checkmark.circle", id: "settings.confidence",
                         selection: Binding(get: { store.settings.confidenceThreshold }, set: { v in store.updateSettings { $0.confidenceThreshold = v } })) {
                     Text("Responsive").tag(0.60); Text("Balanced").tag(0.75); Text("Strict").tag(0.90)
                 }
-                RowDivider()
+                Hairline(leading: SettingsRowMetrics.inset)
                 MenuRow(title: "Analysis window", symbol: "waveform", id: "settings.window",
                         selection: Binding(get: { store.settings.analysisWindowOverride }, set: { v in store.updateSettings { $0.analysisWindowOverride = v } })) {
                     Text("Automatic").tag(Int?.none)
@@ -625,7 +623,7 @@ private struct Acknowledgements: View {
                 }
                 SettingsGroup(title: "Instruments", footer: Text("Instruments without a credit are modelled and rendered from code for Timbre.")) {
                     ForEach(Array(ModelLibrary.credits().enumerated()), id: \.element.id) { index, credit in
-                        if index > 0 { Divider().overlay(Palette.line).padding(.leading, 16) }
+                        if index > 0 { Hairline(leading: 16) }
                         VStack(alignment: .leading, spacing: 4) {
                             Link(destination: credit.link) { Text("“\(credit.title)” by \(credit.author)").font(.subheadline.weight(.semibold)) }
                             Text("\(credit.licenseName) · rigged, relit and rendered for Timbre").font(.caption).foregroundStyle(Palette.inkSoft)

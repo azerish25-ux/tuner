@@ -114,7 +114,7 @@ struct StrumMeterColumn: View {
         .background { halo }
         .opacity(dim ? 0.5 : 1)
         .animation(Motion.quick, value: dim)
-        .animation(reduceMotion ? .easeInOut(duration: 0.2) : Motion.settle, value: focus)
+        .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: focus)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(StrumWords.name(meter))
         .accessibilityValue(StrumWords.state(meter, band: band, waiting: waiting))
@@ -123,7 +123,7 @@ struct StrumMeterColumn: View {
 
     /// Beads land one after another, low string first, like the strum that played them.
     private var landing: Animation {
-        reduceMotion ? .easeOut(duration: 0.2) : Motion.pluck.delay(Double(position) * 0.035)
+        reduceMotion ? Motion.reduced : Motion.pluck.delay(Double(position) * 0.035)
     }
 
     private var track: some View {
@@ -211,7 +211,7 @@ struct StrumMeterColumn: View {
     /// The string to tune first: a soft amber frame (it is always one that is off).
     @ViewBuilder private var halo: some View {
         if focus {
-            let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
+            let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
             shape.fill(Palette.amber.opacity(0.07))
                 .overlay(shape.strokeBorder(Palette.amber.opacity(strong ? 0.9 : 0.4), lineWidth: 1))
                 .padding(.horizontal, 2)
@@ -346,7 +346,7 @@ struct StrumTurnBadge: View {
             }
         }
         .frame(height: size + 2)
-        .animation(reduceMotion ? .easeInOut(duration: 0.2) : Motion.pluck, value: state)
+        .animation(Motion.adaptive(Motion.pluck, reduceMotion: reduceMotion), value: state)
         .accessibilityHidden(true)
     }
 
@@ -517,7 +517,7 @@ struct StrumMeterRow: View {
     var body: some View {
         let inTune = meter.inTune(band: band)
         let tone = StrumTone.status(meter, band: band)
-        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .center, spacing: 10) {
                 StrumLaneChip(meter: meter, tone: meter.heard ? tone : nil, focus: focus, size: 18)
@@ -537,13 +537,16 @@ struct StrumMeterRow: View {
         }
         .padding(14)
         .background(shape.fill(Palette.stageRaised))
-        .overlay(shape.strokeBorder(focus ? Palette.amber.opacity(0.7) : Color.white.opacity(contrast == .increased ? 0.3 : 0.06), lineWidth: 1))
+        .overlay(shape.strokeBorder(focus ? Palette.amber.opacity(0.7) : rim, lineWidth: 1))
         .opacity(!waiting && !meter.heard ? 0.6 : 1)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(StrumWords.name(meter))
         .accessibilityValue(StrumWords.state(meter, band: band, waiting: waiting))
         .accessibilityAddTraits(focus ? .isSelected : [])
     }
+
+    /// A card's hairline; brighter than the token with Increase Contrast, as the lanes' own rims are.
+    private var rim: Color { contrast == .increased ? Color.white.opacity(0.3) : Palette.hairline }
 }
 
 /// The row's ±50¢ scale: the string across it in steel, the lock band in mint, the bead where it was heard in the

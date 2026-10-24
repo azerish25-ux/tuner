@@ -169,7 +169,7 @@ extension ToolScene {
         let bridgeGap = max(5.5, min(12, radius * 0.26))
         let rings = (0..<4).map { ring($0) }
         let resonance = min(1, rings.enumerated().reduce(0.0) { $0 + $1.element * ($1.offset == 3 ? 0.45 : 0.32) })
-        pool(context, at: CGPoint(x: cx, y: gourd.y - floor * 0.25), radius: min(size.width * 0.38, 160), color: Color(hex: 0xFFC48C), strength: 0.12)
+        pool(context, at: CGPoint(x: cx, y: gourd.y - floor * 0.25), radius: min(size.width * 0.38, 160), color: Palette.spotlight, strength: 0.12)
         drawNeck(context, cx: cx, nutY: nutY, gourd: gourd, radius: radius, nutGap: nutGap, bridgeGap: bridgeGap)
         drawGourd(context, gourd: gourd, radius: radius, resonance: resonance, tonic: tonic)
         let bridgeWidth = bridgeGap * 3 + 14

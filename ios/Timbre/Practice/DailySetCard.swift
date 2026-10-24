@@ -187,6 +187,7 @@ struct DailySetCard: View {
     @State private var burst = 0
     @State private var pop = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
     /// One row's height: a name line and the line under it, so every row matches the lesson row.
     @ScaledMetric(relativeTo: .subheadline) private var rowHeight: CGFloat = 40
 
@@ -194,27 +195,40 @@ struct DailySetCard: View {
         let activities = store.dailySet
         let done = Set(activities.map(\.kind).filter { store.dailyDone($0) })
         let complete = store.dailySetComplete
-        let quests = store.quests
         VStack(alignment: .leading, spacing: 14) {
             header(complete: complete)
-            HStack(alignment: .center, spacing: 16) {
-                ring(activities, done: done, complete: complete)
-                VStack(spacing: 2) {
-                    ForEach(activities) { activity in
-                        row(activity, done: done.contains(activity.kind), quest: DailySet.quest(for: activity.kind, in: quests))
-                    }
+            // At the accessibility sizes the rows need the card's full width: the ring moves above them.
+            if typeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 14) {
+                    ring(activities, done: done, complete: complete)
+                        .frame(maxWidth: .infinity)
+                    rows(activities, done: done)
+                }
+            } else {
+                HStack(alignment: .center, spacing: 16) {
+                    ring(activities, done: done, complete: complete)
+                    rows(activities, done: done)
                 }
             }
         }
-        .stillCard(cornerRadius: 24, padding: 16, tint: complete ? Palette.amber : Palette.mint)
+        .stillCard(tint: complete ? Palette.amber : Palette.mint)
         .onAppear { visible = true; celebrateIfNeeded(complete) }
         .onDisappear { visible = false }
         .onChange(of: complete) { _, now in if visible { celebrateIfNeeded(now) } }
     }
 
+    private func rows(_ activities: [DailyActivity], done: Set<DailyActivity.Kind>) -> some View {
+        let quests = store.quests
+        return VStack(spacing: 2) {
+            ForEach(activities) { activity in
+                row(activity, done: done.contains(activity.kind), quest: DailySet.quest(for: activity.kind, in: quests))
+            }
+        }
+    }
+
     private func header(complete: Bool) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
-            Text("Today").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+            CardTitle("Today")
             Spacer()
             if complete {
                 Label { Text("Done") } icon: { Image(systemName: "flame.fill") }
@@ -270,16 +284,23 @@ struct DailySetCard: View {
                     Text("\(store.streak.current)").font(Typeface.number(12))
                 }
                 .foregroundStyle(Palette.flame)
+                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             }
             .allowsHitTesting(false)
             .accessibilityHidden(true)
         } else {
+            // The ring is a fixed 112 pt with a 90 pt hole: its words shrink to fit rather than grow past it
+            // (VoiceOver and the rows carry the same facts at any size).
             VStack(spacing: 0) {
-                Text(verbatim: "\(done.count)/\(activities.count)").font(Typeface.number(22)).foregroundStyle(Palette.ink)
+                Text.fraction(done.count, activities.count).font(Typeface.hero(22)).foregroundStyle(Palette.ink)
                     .contentTransition(.numericText())
+                    .heroNumeral(cap: .xxxLarge)
                 minutesText(activities.filter { !done.contains($0.kind) }.reduce(0) { $0 + $1.minutes })
                     .font(.caption2).foregroundStyle(Palette.inkSoft)
+                    .lineLimit(1).minimumScaleFactor(0.7)
             }
+            .frame(maxWidth: 80)
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             .allowsHitTesting(false)
             // The count and minutes left, read once for the whole card.
             .accessibilityElement(children: .ignore)
@@ -326,7 +347,7 @@ struct DailySetCard: View {
                 if xpBesideName, let quest { xpTag(quest) }
                 Spacer(minLength: 4)
                 if locked {
-                    ProBadge().scaleEffect(0.8)
+                    ProBadge()
                 } else {
                     minutesText(activity.minutes).font(Typeface.number(12)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
                         .lineLimit(1).fixedSize()
@@ -451,9 +472,10 @@ struct DailySetCompactCard: View {
                     if complete {
                         Image(systemName: "checkmark").font(.system(size: 13, weight: .heavy)).foregroundStyle(Palette.amber)
                     } else {
-                        Text(verbatim: "\(done.count)/\(activities.count)").font(Typeface.number(10)).foregroundStyle(Palette.ink)
-                            .lineLimit(1).minimumScaleFactor(0.7)
-                            .frame(width: 26)
+                        // Inside a 40 pt ring: shrinks to fit rather than growing past it.
+                        Text.fraction(done.count, activities.count).font(Typeface.number(10)).foregroundStyle(Palette.ink)
+                            .heroNumeral(cap: .xxxLarge, minimumScale: 0.6)
+                            .frame(width: 28)
                     }
                 }
                 .frame(width: 40, height: 40)
@@ -467,7 +489,7 @@ struct DailySetCompactCard: View {
                 Image(systemName: "chevron.right").font(.footnote.weight(.bold)).foregroundStyle(Palette.inkFaint)
                     .accessibilityHidden(true)
             }
-            .stillCard(cornerRadius: 18, padding: 12, tint: complete ? Palette.amber : nil)
+            .stillCard(cornerRadius: Metrics.cornerTile, padding: Metrics.tilePadding, tint: complete ? Palette.amber : nil)
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityElement(children: .combine)

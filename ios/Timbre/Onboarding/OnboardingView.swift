@@ -24,6 +24,7 @@ struct OnboardingView: View {
     /// The placement check is up, and the answer it started from once it has run.
     @State private var checking = false
     @State private var checkedFrom: String?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// Welcome, experience, goal, microphone, first tune, plan.
     private let steps = 6
 
@@ -36,7 +37,7 @@ struct OnboardingView: View {
                         Capsule().fill(index <= step ? Palette.mint : Palette.line).frame(height: 4)
                     }
                 }
-                .padding(.horizontal, 28).padding(.top, 12)
+                .padding(.horizontal, Metrics.gutter).padding(.top, 12)
                 .opacity(step == 0 ? 0 : 1)
                 Group {
                     switch step {
@@ -48,12 +49,14 @@ struct OnboardingView: View {
                     default: plan
                     }
                 }
-                .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity), removal: .move(edge: .leading).combined(with: .opacity)))
+                .transition(.adaptive(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
+                                                  removal: .move(edge: .leading).combined(with: .opacity)),
+                                      reduceMotion: reduceMotion))
                 .id(step)
                 .frame(maxHeight: .infinity)
             }
         }
-        .animation(Motion.settle, value: step)
+        .animation(Motion.adaptive(Motion.page, reduceMotion: reduceMotion), value: step)
         .fullScreenCover(isPresented: $showPaywall, onDismiss: finish) {
             PaywallView(context: .onboarding, answers: PaywallAnswers(instrumentId: instrumentID, level: level ?? "beginner", goal: goal ?? "tune", minutes: dailyMinutes))
                 .environmentObject(store).environmentObject(store.commerce)
@@ -106,17 +109,18 @@ struct OnboardingView: View {
     private var welcome: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .top) {
-                Spotlight().fill(LinearGradient(colors: [Color(hex: 0xFFC48C).opacity(0.16), Color(hex: 0xFFC48C).opacity(0.03)], startPoint: .top, endPoint: .bottom))
+                Spotlight().fill(LinearGradient(colors: [Palette.spotlight.opacity(0.16), Palette.spotlight.opacity(0.03)], startPoint: .top, endPoint: .bottom))
                     .blur(radius: 6)
                     .ignoresSafeArea(edges: .top)
                 Text("TIMBRE").font(Typeface.label(15)).tracking(9).foregroundStyle(Palette.amber).padding(.top, 34)
                     .frame(maxWidth: .infinity)
-                Ellipse().fill(RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.22), .clear], center: .center, startRadius: 2, endRadius: 170))
+                Ellipse().fill(RadialGradient(colors: [Palette.spotlight.opacity(0.22), .clear], center: .center, startRadius: 2, endRadius: 170))
                     .frame(width: 320, height: 46).frame(maxHeight: .infinity, alignment: .bottom).padding(.bottom, 6)
                 ZStack {
                     Image(heroImage(selectedChoice)).resizable().interpolation(.high).scaledToFit()
                         .id(instrumentID ?? "voice")
-                        .transition(.asymmetric(insertion: .scale(scale: 0.92).combined(with: .opacity), removal: .opacity))
+                        .transition(.adaptive(.asymmetric(insertion: .scale(scale: 0.92).combined(with: .opacity), removal: .opacity),
+                                              reduceMotion: reduceMotion))
                 }
                 .shadow(color: .black.opacity(0.65), radius: 26, y: 18)
                 .floating(rest: -13, raised: -9, rise: 6)
@@ -128,13 +132,14 @@ struct OnboardingView: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text("Tune until it\nstands still.").font(Typeface.display(40)).tracking(-1).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
-                Text("A precision tuner, hundreds of lessons that listen as you play, and a daily quest to keep you going.")
+                // "Today" is the daily three-activity set everywhere; "quest" means a side goal.
+                Text("A precision tuner, hundreds of lessons that listen as you play, and a Today plan to keep you going.")
                     .font(.body).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
             }
-            .padding(.horizontal, 28)
+            .padding(.horizontal, Metrics.gutter)
             instrumentPicker
                 .padding(.top, 18)
-            Button("Get started") { next() }.buttonStyle(BrassButtonStyle()).padding(.horizontal, 22).padding(.top, 22)
+            Button("Get started") { next() }.buttonStyle(PrimaryButtonStyle()).padding(.horizontal, Metrics.gutter).padding(.top, 22)
                 .accessibilityIdentifier("onboarding.start")
             Button {
                 restoring = true
@@ -152,22 +157,22 @@ struct OnboardingView: View {
             .accessibilityIdentifier("onboarding.restore")
             if let restoreMessage {
                 Text(restoreMessage).font(.caption).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity).padding(.horizontal, 28).padding(.bottom, 6)
+                    .frame(maxWidth: .infinity).padding(.horizontal, Metrics.gutter + Metrics.proseInset).padding(.bottom, 6)
             }
         }
     }
 
     // MARK: Instruments
 
-    /// The instrument chips, none ever cut at the screen's edge: as many as fit whole on one line, then a round
+    /// The instrument chips, none ever cut at the screen's edge: as many as fit whole on one line, then a
     /// "more" chip that opens every instrument in rows (the art above gives up the room). Where not even two fit (the
     /// largest text sizes) they scroll on one line instead, fading where they run under the edge.
     @ViewBuilder private var instrumentPicker: some View {
         if allInstruments {
-            ChipFlow(spacing: 8) {
+            ChipFlow(spacing: 8, rowSpacing: 0) {
                 ForEach(choices) { choice in instrumentChip(choice) }
             }
-            .padding(.horizontal, 28)
+            .padding(.horizontal, Metrics.gutter)
             .transition(.opacity)
         } else {
             ViewThatFits(in: .horizontal) {
@@ -190,58 +195,48 @@ struct OnboardingView: View {
             ForEach(Array(choices.prefix(count))) { choice in instrumentChip(choice) }
             if count < choices.count { moreChip }
         }
-        .padding(.horizontal, 28)
+        .padding(.horizontal, Metrics.gutter)
     }
 
     /// Every chip on one line that scrolls, for text too large to fit two: the edge fade dissolves a chip passing
-    /// under either edge over the 28 pt inset and a chip's worth inside it.
+    /// under either edge over the gutter and a chip's worth inside it.
     private var scrollingChips: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(choices) { choice in instrumentChip(choice) }
             }
-            .padding(.horizontal, 28)
+            .padding(.horizontal, Metrics.gutter)
         }
-        .edgeFade(width: 28 + 40)
+        .edgeFade(width: Metrics.gutter + 40)
     }
 
+    /// The app's chip: graphite with a control edge, the chosen one a pill of light (36 pt, a 44 pt target).
     private func instrumentChip(_ choice: Choice) -> some View {
         let selected = instrumentID == choice.id
         return Button {
-            withAnimation(Motion.pluck) { instrumentID = choice.id }
+            withMotion(Motion.pluck, reduceMotion: reduceMotion) { instrumentID = choice.id }
             Haptics.shared.selection()
         } label: {
             HStack(spacing: 7) {
-                Text(choice.title).font(.subheadline.weight(.semibold))
-                    .foregroundStyle(selected ? Color(hex: 0xC9FFEC) : Palette.ink)
-                    .lineLimit(1)
+                Text(choice.title).lineLimit(1)
                 // Tuned in Chromatic on the free plan; its own stage is Pro.
                 if needsPro(choice) { ProBadge() }
             }
-            .padding(.horizontal, 18).frame(height: 44)
-            .background(Capsule().fill(selected ? Palette.mint.opacity(0.10) : Palette.stageRaised))
-            .overlay(Capsule().strokeBorder(selected ? Palette.mint : Palette.line, lineWidth: selected ? 1.5 : 1))
         }
-        .buttonStyle(PressScaleStyle())
+        .buttonStyle(ChipButtonStyle(selected: selected))
         .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityIdentifier("onboarding.instrument.\(choice.id ?? "voice")")
     }
 
-    /// Opens every instrument in rows: a round chip with an ellipsis, so it fits where a word would not.
+    /// Opens every instrument in rows: a chip with an ellipsis, so it fits where a word would not.
     private var moreChip: some View {
         Button {
-            withAnimation(Motion.settle) { allInstruments = true }
+            withMotion(Motion.settle, reduceMotion: reduceMotion) { allInstruments = true }
             Haptics.shared.selection()
         } label: {
-            Image(systemName: "ellipsis")
-                .font(.system(size: 15, weight: .bold))
-                .foregroundStyle(Palette.ink)
-                .frame(width: 44, height: 44)
-                .background(Circle().fill(Palette.stageRaised))
-                .overlay(Circle().strokeBorder(Palette.line, lineWidth: 1))
-                .contentShape(Circle())
+            Image(systemName: "ellipsis").fontWeight(.bold)
         }
-        .buttonStyle(PressScaleStyle())
+        .buttonStyle(ChipButtonStyle(selected: false))
         .accessibilityLabel(Text("More instruments"))
         .accessibilityIdentifier("onboarding.instrument.more")
     }
@@ -288,6 +283,7 @@ struct OnboardingView: View {
         VStack(spacing: 10) {
             ForEach(items, id: \.0) { item in
                 let selected = selection.wrappedValue == item.0
+                let row = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
                 Button {
                     withAnimation(Motion.pluck) { selection.wrappedValue = item.0 }
                     Haptics.shared.selection()
@@ -296,13 +292,13 @@ struct OnboardingView: View {
                         IconOrb(symbol: item.2, size: 40)
                         Text(item.1).font(.headline).foregroundStyle(Palette.ink)
                         Spacer()
-                        Image(systemName: selected ? "checkmark.circle.fill" : "circle").foregroundStyle(selected ? Palette.brass : Palette.inkFaint)
+                        Image(systemName: selected ? "checkmark.circle.fill" : "circle").foregroundStyle(selected ? Palette.mint : Palette.inkFaint)
                             .contentTransition(.symbolEffect(.replace))
                     }
                     .padding(14)
-                    .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(selected ? Palette.brass.opacity(0.14) : Palette.stageRaised.opacity(0.8)))
-                    .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(selected ? Palette.brass : Palette.line, lineWidth: 1))
-                    .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    .background(row.fill(selected ? Palette.mint.opacity(0.14) : Palette.stageRaised.opacity(0.8)))
+                    .overlay(row.strokeBorder(selected ? Palette.mint : Palette.controlLine, lineWidth: 1))
+                    .contentShape(row)
                 }
                 .buttonStyle(PressScaleStyle())
                 .accessibilityAddTraits(selected ? .isSelected : [])
@@ -311,10 +307,11 @@ struct OnboardingView: View {
         }
     }
 
-    /// Continue waits, neutral and clearly inactive but readable, until a question is answered.
+    /// Continue waits, neutral and clearly inactive but readable (the primary button's disabled look), until a
+    /// question is answered.
     private func continueButton(enabled: Bool) -> some View {
         Button("Continue") { next() }
-            .buttonStyle(ContinueButtonStyle(enabled: enabled))
+            .buttonStyle(PrimaryButtonStyle())
             .disabled(!enabled)
             .animation(Motion.quick, value: enabled)
             .accessibilityIdentifier("onboarding.continue")
@@ -327,17 +324,17 @@ struct OnboardingView: View {
             Spacer()
             continueButton(enabled: level != nil)
         }
-        .padding(.horizontal, 24).padding(.vertical, 18)
+        .padding(.horizontal, Metrics.gutter).padding(.vertical, 18)
     }
 
     private var goals: some View {
         VStack(alignment: .leading, spacing: 18) {
-            question("What matters most?", "Your daily set is built around it.")
+            question("What matters most?", "Your Today plan is built around it.")
             options(goalOptions, selection: $goal)
             Spacer()
             continueButton(enabled: goal != nil)
         }
-        .padding(.horizontal, 24).padding(.vertical, 18)
+        .padding(.horizontal, Metrics.gutter).padding(.vertical, 18)
     }
 
     private var microphone: some View {
@@ -345,13 +342,14 @@ struct OnboardingView: View {
             Spacer()
             ZStack {
                 ForEach(0..<3, id: \.self) { ring in
-                    Circle().strokeBorder(Palette.brass.opacity(0.3 - Double(ring) * 0.08), lineWidth: 1.5).frame(width: 130 + CGFloat(ring) * 60, height: 130 + CGFloat(ring) * 60)
+                    Circle().strokeBorder(Palette.mint.opacity(0.3 - Double(ring) * 0.08), lineWidth: 1.5).frame(width: 130 + CGFloat(ring) * 60, height: 130 + CGFloat(ring) * 60)
                 }
-                Image(systemName: "mic.fill").font(.system(size: 54)).foregroundStyle(Palette.brass)
+                Image(systemName: "mic.fill").font(.system(size: 54)).foregroundStyle(Palette.mint)
             }
             .frame(height: 260)
             Text("Timbre listens\nto your instrument").font(Typeface.display(34)).tracking(-0.6).multilineTextAlignment(.center).foregroundStyle(Palette.ink)
-            Text("Pitch is measured on your iPhone. Recordings are never saved or uploaded.").multilineTextAlignment(.center).foregroundStyle(Palette.inkSoft).padding(.horizontal, 30)
+            Text("Pitch is measured on your iPhone. Recordings are never saved or uploaded.").multilineTextAlignment(.center).foregroundStyle(Palette.inkSoft)
+                .padding(.horizontal, Metrics.gutter + Metrics.proseInset)
             Spacer()
             Button("Allow microphone") {
                 Task {
@@ -359,9 +357,14 @@ struct OnboardingView: View {
                     afterMicrophone()
                 }
             }
-            .buttonStyle(BrassButtonStyle()).padding(.horizontal, 28)
+            .buttonStyle(PrimaryButtonStyle()).padding(.horizontal, Metrics.gutter)
             .accessibilityIdentifier("onboarding.microphone")
-            Button("Not now") { afterMicrophone() }.font(.subheadline).foregroundStyle(Palette.inkSoft).padding(.bottom, 14)
+            Button { afterMicrophone() } label: {
+                Text("Not now").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                    .frame(maxWidth: .infinity, minHeight: Metrics.minTarget).contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .padding(.bottom, 4)
         }
     }
 
@@ -389,7 +392,7 @@ struct OnboardingView: View {
         } else {
             VStack {
                 Spacer()
-                Button("Start my plan") { startPlan() }.buttonStyle(BrassButtonStyle()).padding(.horizontal, 24).padding(.bottom, 14)
+                Button("Start my plan") { startPlan() }.buttonStyle(PrimaryButtonStyle()).padding(.horizontal, Metrics.gutter).padding(.bottom, 14)
                     .accessibilityIdentifier("onboarding.plan.start")
             }
         }
@@ -409,12 +412,13 @@ struct OnboardingView: View {
         guard let checked else { return }
         checkedFrom = answered
         guard checked != answered else { return }
-        withAnimation(Motion.settle) { level = checked }
+        withMotion(Motion.settle, reduceMotion: reduceMotion) { level = checked }
     }
 
     private func question(_ title: LocalizedStringKey, _ detail: LocalizedStringKey) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title).font(Typeface.display(32)).tracking(-0.6).foregroundStyle(Palette.ink).fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
             Text(detail).font(.subheadline).foregroundStyle(Palette.inkSoft)
         }
         .padding(.top, 8)
@@ -463,12 +467,12 @@ private struct PlanStep: View {
                         .planReveal(shown, 2, reduceMotion)
                     if !milestones.isEmpty { milestoneList }
                 }
-                .padding(.horizontal, 24).padding(.top, 18).padding(.bottom, 16)
+                .padding(.horizontal, Metrics.gutter).padding(.top, 18).padding(.bottom, 16)
             }
             .scrollBounceBehavior(.basedOnSize)
             Button("Start my plan") { Haptics.shared.selection(); onStart() }
-                .buttonStyle(BrassButtonStyle())
-                .padding(.horizontal, 24).padding(.top, 8).padding(.bottom, 14)
+                .buttonStyle(PrimaryButtonStyle())
+                .padding(.horizontal, Metrics.gutter).padding(.top, 8).padding(.bottom, 14)
                 .planReveal(shown, 7, reduceMotion)
                 .accessibilityIdentifier("onboarding.plan.start")
         }
@@ -519,7 +523,7 @@ private struct PlanStep: View {
                         .accessibilityHidden(true)
                 }
             }
-            .stillCard(padding: 14, tint: accent)
+            .stillCard(tint: accent)
         }
         .buttonStyle(PressScaleStyle())
         .disabled(state == .done)
@@ -544,7 +548,7 @@ private struct PlanStep: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 8) {
                     CourseArt(course: course, size: 20)
-                    Text(course.title.localized.uppercased()).font(Typeface.label(12)).tracking(1.2).lineLimit(1)
+                    Eyebrow(Text(course.title.localized), color: accent, style: .display).lineLimit(1)
                 }
                 .foregroundStyle(accent)
                 Text("First lesson").font(.subheadline).foregroundStyle(Palette.inkSoft).padding(.top, 6)
@@ -554,8 +558,7 @@ private struct PlanStep: View {
                         .contentTransition(.opacity)
                 }
                 if let startUnit {
-                    Text("UNIT \(startUnit + 1) · \(course.units[startUnit].title.localized.uppercased())")
-                        .font(Typeface.label(11)).tracking(1.1).foregroundStyle(Palette.inkSoft)
+                    Eyebrow(Text("Unit \(startUnit + 1) · \(course.units[startUnit].title.localized)"), color: Palette.inkSoft, style: .display)
                         .lineLimit(2).fixedSize(horizontal: false, vertical: true)
                         .contentTransition(.opacity)
                 }
@@ -567,10 +570,10 @@ private struct PlanStep: View {
         .padding(20)
         .frame(maxWidth: .infinity, minHeight: 170, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
+            RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
                 .fill(LinearGradient(colors: [accent.opacity(0.26), Palette.stageRaised], startPoint: .topLeading, endPoint: .bottomTrailing))
         )
-        .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(accent.opacity(0.35), lineWidth: 1))
+        .overlay(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous).strokeBorder(accent.opacity(0.35), lineWidth: 1))
         // A placement check that moves the start swaps the lesson in place: the check's answer arrives in
         // `withAnimation`, and the title and unit cross-fade. No implicit animation sits on the card, so nothing
         // else that changes it (its first layout included) is ever animated.
@@ -596,7 +599,7 @@ private struct PlanStep: View {
 
     private var milestoneList: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Eyebrow("Milestones", color: accent).planReveal(shown, 3, reduceMotion)
+            Eyebrow("Milestones", color: accent, style: .display).planReveal(shown, 3, reduceMotion)
             VStack(alignment: .leading, spacing: 0) {
                 ForEach(Array(milestones.enumerated()), id: \.element) { position, index in
                     milestoneRow(index, last: position == milestones.count - 1, order: 4 + position)
@@ -617,8 +620,7 @@ private struct PlanStep: View {
             }
             .frame(width: 22, height: 22)
             VStack(alignment: .leading, spacing: 3) {
-                Text("UNIT \(index + 1) · \(unit.title.localized.uppercased())")
-                    .font(Typeface.label(11)).tracking(1.1).foregroundStyle(accent).lineLimit(1)
+                Eyebrow(Text("Unit \(index + 1) · \(unit.title.localized)"), color: accent, style: .display).lineLimit(1)
                 Text(unit.lessons.first?.title.localized ?? unit.title.localized)
                     .font(.body.weight(.semibold)).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true)
@@ -649,7 +651,6 @@ private struct PlanCommitment: View {
     @Binding var reminder: Date
     @Binding var reminderOn: Bool
     @State private var asking = false
-    @Namespace private var pill
 
     static let choices = [5, 10, 15]
 
@@ -668,12 +669,12 @@ private struct PlanCommitment: View {
         VStack(alignment: .leading, spacing: 14) {
             if let goal {
                 goalRow(goal)
-                Rectangle().fill(Palette.line).frame(height: 1).accessibilityHidden(true)
+                Hairline()
             }
             minutesRow
             reminderRow
         }
-        .stillCard(padding: 14)
+        .stillCard()
     }
 
     private func goalRow(_ goal: (String, LocalizedStringKey, String)) -> some View {
@@ -704,36 +705,13 @@ private struct PlanCommitment: View {
         }
     }
 
-    /// A segmented capsule as wide as the card, three equal segments; the mint pill slides to the chosen length.
+    /// The app's segmented pill as wide as the card, three equal segments; the chosen length is the chips' pill of
+    /// light and slides to the next choice.
     private var minutePicker: some View {
-        HStack(spacing: 2) {
-            ForEach(Self.choices, id: \.self) { value in minuteChip(value) }
-        }
-        .padding(3)
-        .frame(maxWidth: .infinity)
-        .background(Capsule().fill(Palette.surface))
-        .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
-    }
-
-    private func minuteChip(_ value: Int) -> some View {
-        let selected = minutes == value
-        return Button {
-            withAnimation(Motion.pluck) { minutes = value }
-            Haptics.shared.selection()
-        } label: {
+        SegmentedPill(options: Self.choices, selection: $minutes, identifier: { "onboarding.minutes.\($0)" }) { value in
             Text(Duration.seconds(value * 60), format: .units(allowed: [.minutes], width: .abbreviated))
-                .font(Typeface.label(13)).monospacedDigit()
-                .foregroundStyle(selected ? Palette.onAccent : Palette.inkSoft)
-                .lineLimit(1)
-                .padding(.horizontal, 11).frame(maxWidth: .infinity, minHeight: 36)
-                .background {
-                    if selected { Capsule().fill(Palette.mint).matchedGeometryEffect(id: "minutes", in: pill) }
-                }
-                .contentShape(Capsule())
+                .font(Typeface.label(14)).monospacedDigit()
         }
-        .buttonStyle(PressScaleStyle())
-        .accessibilityAddTraits(selected ? .isSelected : [])
-        .accessibilityIdentifier("onboarding.minutes.\(value)")
     }
 
     // MARK: Reminder
@@ -785,8 +763,9 @@ private struct PlanCommitment: View {
             .padding(.horizontal, 14).frame(minHeight: 38)
             .background(Capsule().fill(reminderOn ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(Palette.mint.opacity(0.12))))
             .overlay(Capsule().strokeBorder(Palette.mint.opacity(reminderOn ? 0 : 0.45), lineWidth: 1))
-            .contentShape(Capsule())
             .fixedSize()
+            // The capsule stays 38 pt; the finger gets 44.
+            .tapTarget()
         }
         .buttonStyle(PressScaleStyle())
         .disabled(asking)
@@ -826,31 +805,12 @@ private struct PlanCommitment: View {
 /// The plan's placement check row: on offer, or done.
 private enum PlanCheck { case offer, done }
 
-/// The mint primary button once enabled; before that a graphite capsule with grey text
-/// (about 4.8:1 against its fill), so it reads as waiting rather than as a dim green button.
-private struct ContinueButtonStyle: ButtonStyle {
-    let enabled: Bool
-    @ViewBuilder func makeBody(configuration: Configuration) -> some View {
-        if enabled {
-            BrassButtonStyle().makeBody(configuration: configuration)
-        } else {
-            configuration.label
-                .font(.headline)
-                .foregroundStyle(Palette.inkFaint)
-                .frame(maxWidth: .infinity, minHeight: 54)
-                .padding(.horizontal, 18)
-                .background(Capsule().fill(Palette.surface))
-                .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
-        }
-    }
-}
-
 private extension View {
     /// Plan rows fade and rise in one after another; with Reduce Motion they only fade. The animation is scoped
     /// to the fade and the rise, so a row's own layout settling at the same moment is never animated with it.
     func planReveal(_ shown: Bool, _ order: Int, _ reduceMotion: Bool) -> some View {
-        let rise = Animation.spring(response: 0.62, dampingFraction: 0.86).delay(0.08 + Double(order) * 0.11)
-        return animation(reduceMotion ? Animation.easeOut(duration: 0.3) : rise) { content in
+        let rise = Motion.page.delay(0.08 + Double(order) * 0.11)
+        return animation(reduceMotion ? Motion.fade : rise) { content in
             content
                 .opacity(shown ? 1 : 0)
                 .offset(y: shown || reduceMotion ? 0 : 18)

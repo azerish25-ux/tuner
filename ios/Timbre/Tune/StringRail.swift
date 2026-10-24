@@ -88,7 +88,7 @@ private struct CourseChip: View {
         let raised = selected && !style.solid
         let lift: Color = raised ? Color.black.opacity(0.6) : Color.clear
         let halo: Color = style.solid ? Palette.mint.opacity(0.55) : (raised ? style.ring.opacity(0.3) : Color.clear)
-        let change: Animation = reduceMotion ? .easeInOut(duration: 0.2) : Motion.pluck
+        let change = Motion.adaptive(Motion.pluck, reduceMotion: reduceMotion)
         Button { store.chooseCourse(group.nextToTune(store.lockedCourses).index) } label: {
             content(face, text: style.text, cueColor: style.cue)
                 .background { chipFill(style.fill, raised: raised) }

@@ -139,7 +139,7 @@ struct MetronomeView: View {
     private var accentWash: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 30, paused: !audio.metronomeRunning)) { timeline in
             let now = moment(at: timeline.date)
-            let tint = now.accent ? Palette.ember : Palette.brass
+            let tint = now.accent ? Palette.amber : Palette.mint
             RadialGradient(colors: [tint.opacity((now.accent ? 0.2 : 0.05) * now.flash), .clear],
                            center: UnitPoint(x: 0.5, y: 0.18), startRadius: 10, endRadius: 440)
         }
@@ -154,7 +154,7 @@ struct MetronomeView: View {
             let now = moment(at: timeline.date)
             Canvas { context, size in
                 guard now.flash > 0, size.height > 0 else { return }
-                let tint = now.accent ? Palette.ember : Palette.brass
+                let tint = now.accent ? Palette.amber : Palette.mint
                 // A circle of light stretched to the canvas, so it fades out before every edge.
                 let radius = size.height / 2
                 var glow = context
@@ -184,7 +184,9 @@ struct MetronomeView: View {
             HStack(alignment: .firstTextBaseline, spacing: 18) {
                 Button { store.setMetronome(bpm: store.bpm - 1) } label: { Image(systemName: "minus").frame(width: 44, height: 44) }
                     .buttonStyle(.plain).foregroundStyle(Palette.inkSoft).accessibilityLabel("Slower")
-                Text("\(shownBpm)").font(Typeface.display(80)).foregroundStyle(Palette.ink).contentTransition(.numericText()).monospacedDigit()
+                // One line between the steppers at any text size: it shrinks to fit rather than clipping.
+                Text("\(shownBpm)").font(Typeface.hero(80)).foregroundStyle(Palette.ink).contentTransition(.numericText())
+                    .heroNumeral()
                     .background { tempoRing.padding(.horizontal, -16).padding(.vertical, -2) }
                     // VoiceOver: swipe up or down to change the tempo a beat per minute at a time.
                     .adjustableValue(Text("Tempo"), value: Text(verbatim: "\(store.bpm), \(tempoName)"),
@@ -201,7 +203,7 @@ struct MetronomeView: View {
                 // One save and one change of the click when the finger lets go, not one per step of the drag.
                 if !editing, let value = slidingBpm { slidingBpm = nil; store.setMetronome(bpm: Int(value.rounded())) }
             })
-                .tint(Palette.brass).padding(.horizontal, 8)
+                .tint(Palette.mint).padding(.horizontal, 8)
                 .accessibilityLabel("Tempo")
         }
         .animation(Motion.quick, value: store.bpm)
@@ -290,7 +292,7 @@ struct MetronomeView: View {
             }
             soundPicker.padding(.top, 4)
         }
-        .stillCard(padding: 16)
+        .stillCard()
     }
 
     /// Click, wood or beep: part of the meter card, so the whole groove is set in one place. Its name and
@@ -341,16 +343,16 @@ struct MetronomeView: View {
                         Text("Speed trainer").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
                         if !commerce.isPro { ProBadge() }
                     }
-                    Text("+\(trainerStep) BPM every \(trainerEvery) bars up to \(trainerTarget)").font(.caption).foregroundStyle(Palette.inkSoft)
+                    Text("+\(trainerStep) BPM every \(trainerEvery) bars up to \(trainerTarget) BPM").font(.caption).foregroundStyle(Palette.inkSoft)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 8)
                 Toggle("Speed trainer", isOn: Binding(get: { trainer }, set: { on in
                     guard commerce.isPro else { store.presentPaywall("metronome.trainer"); return }
-                    withAnimation(Motion.settle) { trainer = on }
+                    withMotion(Motion.settle, reduceMotion: reduceMotion) { trainer = on }
                 }))
                 .labelsHidden()
-                .tint(Palette.brass)
+                .tint(Palette.mint)
             }
             if trainer {
                 VStack(spacing: 6) {
@@ -366,18 +368,18 @@ struct MetronomeView: View {
                 }
                 .font(.subheadline)
                 .foregroundStyle(Palette.ink)
-                .transition(.opacity.combined(with: .move(edge: .top)))
+                .transition(.adaptive(.opacity.combined(with: .move(edge: .top)), reduceMotion: reduceMotion))
             }
         }
         .padding(.horizontal, 14).padding(.vertical, 12)
-        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(trainer ? Palette.mint.opacity(0.35) : .white.opacity(0.06), lineWidth: 1))
+        .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.stageRaised))
+        .overlay(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).strokeBorder(trainer ? Palette.mint.opacity(0.35) : Palette.hairline, lineWidth: 1))
     }
 
     private var transport: some View {
         HStack(spacing: 12) {
             Button { store.tapTempo() } label: { Label("Tap", systemImage: "hand.tap.fill") }
-                .buttonStyle(BrassButtonStyle(prominent: false)).frame(width: 120)
+                .buttonStyle(SecondaryButtonStyle()).frame(width: 120)
                 .accessibilityIdentifier("metronome.tap")
             Button {
                 store.toggleMetronome()
@@ -385,7 +387,7 @@ struct MetronomeView: View {
             } label: {
                 Label(audio.metronomeRunning ? "Stop" : "Start", systemImage: audio.metronomeRunning ? "stop.fill" : "play.fill")
             }
-            .buttonStyle(BrassButtonStyle())
+            .buttonStyle(PrimaryButtonStyle())
             .accessibilityIdentifier("metronome.start")
         }
     }
@@ -428,7 +430,7 @@ private struct TempoRing: View {
     var body: some View {
         let flash = moment.flash
         let spread = CGFloat(1 - flash)
-        let tint = moment.accent ? Palette.ember : Palette.brass
+        let tint = moment.accent ? Palette.amber : Palette.mint
         ZStack {
             Capsule().strokeBorder(Color.white.opacity(0.1), lineWidth: 1.5)
             Capsule().strokeBorder(tint.opacity(0.9 * flash), lineWidth: moment.accent ? 3.5 : 2.5)
@@ -461,8 +463,8 @@ private struct BeatCell: View {
 
     private var tint: Color {
         switch level {
-        case 2: return Palette.ember
-        case 1: return Palette.brass
+        case 2: return Palette.amber
+        case 1: return Palette.mint
         default: return Palette.inkSoft
         }
     }
@@ -471,7 +473,7 @@ private struct BeatCell: View {
     private var flash: Double { lit && level > 0 ? max(0, 1 - fraction * 3.5) : 0 }
 
     var body: some View {
-        let shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         let flash = self.flash
         let tint = self.tint
         let lit = self.lit
@@ -521,9 +523,10 @@ private struct BeatCell: View {
 
     @ViewBuilder private func border(_ shape: RoundedRectangle) -> some View {
         if level == 0 {
-            shape.strokeBorder(Palette.line, style: StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
+            // A silent beat is still a control (a tap brings it back): its only edge is a control's.
+            shape.strokeBorder(Palette.controlLine, style: StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
         } else {
-            shape.strokeBorder(lit ? tint.opacity(0.45 + 0.55 * flash) : Color.white.opacity(0.07), lineWidth: lit ? 1.5 : 1)
+            shape.strokeBorder(lit ? tint.opacity(0.45 + 0.55 * flash) : Palette.hairline, lineWidth: lit ? 1.5 : 1)
         }
     }
 }
@@ -533,7 +536,7 @@ private enum BeatCellArt {
     static func draw(_ context: inout GraphicsContext, size: CGSize, subdivision: Int, fraction: Double, lit: Bool, sweep: Bool, tint: Color) {
         guard size.width > 8, size.height > 24 else { return }
         // Inside the cell's corners: the sweep's glow never spills past its edge.
-        context.clip(to: Path(roundedRect: CGRect(origin: .zero, size: size), cornerRadius: min(16, size.width / 2), style: .continuous))
+        context.clip(to: Path(roundedRect: CGRect(origin: .zero, size: size), cornerRadius: min(Metrics.cornerTile, size.width / 2), style: .continuous))
         let parts = max(1, subdivision)
         if parts > 1 {
             // Where the click is among the beat's subdivisions, and how fresh the last one is.
@@ -605,14 +608,14 @@ private enum PendulumArt {
         let angle = angleAt(moment.position)
         let here = g.point(angle)
         let flash = moment.flash
-        let tint = moment.accent ? Palette.ember : Palette.brass
+        let tint = moment.accent ? Palette.amber : Palette.mint
         let scale = g.bob / 22
 
         // An accent warms the hero round the click.
         if moment.accent && flash > 0 {
             let center = CGPoint(x: size.width / 2, y: g.rest)
             let r = size.width * 0.5
-            context.fill(circle(center, r), with: .radialGradient(Gradient(colors: [Palette.ember.opacity(0.18 * flash), .clear]),
+            context.fill(circle(center, r), with: .radialGradient(Gradient(colors: [Palette.amber.opacity(0.18 * flash), .clear]),
                                                                   center: center, startRadius: 0, endRadius: r))
         }
 
@@ -632,13 +635,13 @@ private enum PendulumArt {
                                                                   center: here, startRadius: 0, endRadius: r * 1.5))
         // An accent sends a ring out from the bob.
         if moment.accent && flash > 0 && !still {
-            context.stroke(circle(here, g.bob + 2 + 22 * scale * CGFloat(1 - flash)), with: .color(Palette.ember.opacity(0.75 * flash)), lineWidth: 2)
+            context.stroke(circle(here, g.bob + 2 + 22 * scale * CGFloat(1 - flash)), with: .color(Palette.amber.opacity(0.75 * flash)), lineWidth: 2)
         }
         context.fill(circle(here, g.bob), with: .linearGradient(Gradient(colors: [Color(hex: 0x8BF7D2), Palette.mintDeep]),
                                                                 startPoint: CGPoint(x: here.x, y: here.y - g.bob), endPoint: CGPoint(x: here.x, y: here.y + g.bob)))
         // The bob itself flushes amber on an accent.
         if moment.accent && flash > 0 {
-            context.fill(circle(here, g.bob), with: .color(Palette.ember.opacity(0.55 * flash)))
+            context.fill(circle(here, g.bob), with: .color(Palette.amber.opacity(0.55 * flash)))
         }
         context.fill(circle(CGPoint(x: here.x - g.bob * 0.32, y: here.y - g.bob * 0.36), g.bob * 0.27),
                      with: .color(.white.opacity(0.16 + 0.2 * flash)))
@@ -684,7 +687,7 @@ private enum PendulumArt {
         var path = Path()
         path.move(to: entry)
         path.addLine(to: bob)
-        context.stroke(path, with: .linearGradient(Gradient(colors: [Palette.brassDeep.opacity(0.2), Palette.brass]), startPoint: entry, endPoint: bob),
+        context.stroke(path, with: .linearGradient(Gradient(colors: [Palette.mintDeep.opacity(0.2), Palette.mint]), startPoint: entry, endPoint: bob),
                        lineWidth: 3)
     }
 
@@ -702,7 +705,7 @@ private enum PendulumArt {
         layer.rotate(by: .radians(-angle))
         let body = Path(roundedRect: CGRect(x: -6, y: -9, width: 12, height: 18), cornerRadius: 3)
         layer.fill(body, with: .linearGradient(Gradient(colors: [Palette.ink, Palette.inkSoft]), startPoint: CGPoint(x: -6, y: 0), endPoint: CGPoint(x: 6, y: 0)))
-        layer.stroke(body, with: .color(Palette.brassDeep), lineWidth: 1)
+        layer.stroke(body, with: .color(Palette.mintDeep), lineWidth: 1)
         var notch = Path()
         notch.move(to: CGPoint(x: -6, y: 0))
         notch.addLine(to: CGPoint(x: 6, y: 0))

@@ -47,8 +47,8 @@ struct StrumTuneView: View {
         let done = zoomed.map { isDone($0) } ?? false
         let allInTune = board.verdict == .allInTune || done
         ZStack {
-            StageBackground(glow: allInTune ? Palette.mint : Color(hex: 0xFFC48C), intensity: allInTune ? 1.3 : 1)
-                .animation(.easeInOut(duration: 0.6), value: allInTune)
+            StageBackground(glow: allInTune ? Palette.mint : Palette.spotlight, intensity: allInTune ? 1.3 : 1)
+                .animation(Motion.reveal, value: allInTune)
             VStack(spacing: 0) {
                 header
                 if typeSize.isAccessibilitySize {
@@ -94,16 +94,10 @@ struct StrumTuneView: View {
 
     private var header: some View {
         HStack(spacing: 12) {
-            Button { close() } label: {
-                Image(systemName: "xmark").font(.body.weight(.bold)).foregroundStyle(Palette.ink)
-                    .frame(width: 44, height: 44)
-                    .background(Circle().fill(Palette.surface))
-                    .overlay(Circle().strokeBorder(.white.opacity(0.08), lineWidth: 1))
-                    .frame(width: 52, height: 52)
-            }
-            .buttonStyle(PressScaleStyle())
-            .accessibilityLabel(Text("Close"))
-            .accessibilityIdentifier("strum.close")
+            // The app's one close button, in a column as wide as the listen orb opposite so the title stays centred.
+            CloseButton { close() }
+                .frame(width: 52, alignment: .leading)
+                .accessibilityIdentifier("strum.close")
             Spacer(minLength: 8)
             VStack(spacing: 2) {
                 Text("Strum to tune").font(Typeface.display(18, relativeTo: .headline)).foregroundStyle(Palette.ink)
@@ -133,7 +127,7 @@ struct StrumTuneView: View {
                         .frame(width: 30, height: 30)
                         .background(Circle().fill(Palette.mint))
                         .shadow(color: Palette.mint.opacity(0.6), radius: 14)
-                        .transition(.scale(scale: 0.3).combined(with: .opacity))
+                        .transition(.adaptive(.scale(scale: 0.3).combined(with: .opacity), reduceMotion: reduceMotion))
                         .accessibilityHidden(true)
                 }
                 Text(verbatim: title)
@@ -150,7 +144,7 @@ struct StrumTuneView: View {
         }
         .frame(maxWidth: .infinity)
         .fixedSize(horizontal: false, vertical: true)
-        .animation(reduceMotion ? .easeInOut(duration: 0.2) : Motion.pluck, value: title)
+        .animation(Motion.adaptive(Motion.pluck, reduceMotion: reduceMotion), value: title)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("strum.summary")
     }
@@ -221,7 +215,7 @@ struct StrumTuneView: View {
     }
 
     private var zoom: Animation {
-        reduceMotion ? .easeInOut(duration: 0.25) : .spring(response: 0.58, dampingFraction: 0.86)
+        Motion.adaptive(Motion.page, reduceMotion: reduceMotion)
     }
 
     @ViewBuilder private func stage(_ board: StrumBoard, zoomed: StrumBoard.Meter?, done: Bool, band: Double) -> some View {
@@ -268,7 +262,8 @@ struct StrumTuneView: View {
     }
 
     private func entrance(_ position: Int) -> Animation {
-        reduceMotion ? .easeOut(duration: 0.25) : Motion.settle.delay(0.04 * Double(position))
+        // Under Reduce Motion the lanes only fade in (they don't rise).
+        reduceMotion ? Motion.fade : Motion.settle.delay(0.04 * Double(position))
     }
 
     /// The largest text sizes: rows instead of lanes, the zoomed lane on top of the rest while it is up.
@@ -303,8 +298,8 @@ struct StrumTuneView: View {
             }
         }
         .frame(minHeight: typeSize.isAccessibilitySize ? nil : 100, alignment: .bottom)
-        .animation(reduceMotion ? .easeInOut(duration: 0.2) : Motion.settle, value: board.focus)
-        .animation(reduceMotion ? .easeInOut(duration: 0.2) : Motion.settle, value: finale)
+        .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: board.focus)
+        .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: finale)
     }
 
     @ViewBuilder private func action(_ board: StrumBoard) -> some View {
@@ -313,10 +308,10 @@ struct StrumTuneView: View {
                 Button {
                     if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
                 } label: { Label("Open Settings", systemImage: "gear") }
-                .buttonStyle(BrassButtonStyle())
+                .buttonStyle(PrimaryButtonStyle())
             } else {
                 Button { store.startListening(); Haptics.shared.selection() } label: { Label("Listen", systemImage: "mic.fill") }
-                    .buttonStyle(BrassButtonStyle())
+                    .buttonStyle(PrimaryButtonStyle())
             }
         } else {
             switch board.verdict {
@@ -325,13 +320,13 @@ struct StrumTuneView: View {
                 Button { if board.lastString?.id == meter.id { zoomIn(meter.id) } else { fineTune(meter) } } label: {
                     Label { Text("Fine-tune \(meter.note)") } icon: { Image(systemName: "tuningfork") }
                 }
-                .buttonStyle(BrassButtonStyle())
+                .buttonStyle(PrimaryButtonStyle())
                 .accessibilityHint(Text("Tunes this string on its own"))
                 .accessibilityIdentifier("strum.finetune")
-                .transition(.opacity.combined(with: .move(edge: .bottom)))
+                .transition(.adaptive(.opacity.combined(with: .move(edge: .bottom)), reduceMotion: reduceMotion))
             case .allInTune:
                 Button { close() } label: { Text("Done") }
-                    .buttonStyle(BrassButtonStyle(prominent: false))
+                    .buttonStyle(SecondaryButtonStyle())
                     .accessibilityIdentifier("strum.done")
             case .missing:
                 Text("Turn a peg, then strum again")
@@ -349,7 +344,7 @@ struct StrumTuneView: View {
     @ViewBuilder private func zoomedAction(_ meter: StrumBoard.Meter, done: Bool) -> some View {
         if done {
             Button { close() } label: { Text("Done") }
-                .buttonStyle(BrassButtonStyle(prominent: false))
+                .buttonStyle(SecondaryButtonStyle())
                 .accessibilityIdentifier("strum.done")
         } else {
             HStack(spacing: 12) {
@@ -361,11 +356,11 @@ struct StrumTuneView: View {
                 Button { zoomOut() } label: {
                     Label("Strum again", systemImage: "arrow.uturn.backward")
                 }
-                .buttonStyle(BrassButtonStyle(prominent: false))
+                .buttonStyle(SecondaryButtonStyle())
                 .accessibilityHint(Text("Shows every string again"))
                 .accessibilityIdentifier("strum.again")
             }
-            .transition(.opacity.combined(with: .move(edge: .bottom)))
+            .transition(.adaptive(.opacity.combined(with: .move(edge: .bottom)), reduceMotion: reduceMotion))
         }
     }
 
@@ -538,14 +533,8 @@ struct StrumToggle: View {
                     StrumGlyph()
                         .frame(width: 22, height: 22)
                         .frame(width: 44, height: 44)
-                        .background(Circle().fill(.white.opacity(0.05)))
-                        .overlay(Circle().strokeBorder(.white.opacity(0.12), lineWidth: 1))
-                    Text("Strum")
-                        .font(Typeface.label(10, relativeTo: .caption2))
-                        .foregroundStyle(Palette.inkSoft)
-                        .lineLimit(1)
-                        .fixedSize()
-                        .dynamicTypeSize(...DynamicTypeSize.xLarge)
+                        .stageControlDisc()
+                    StageCaption(text: Text("Strum"))
                 }
                 .contentShape(Rectangle())
             }

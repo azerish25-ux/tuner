@@ -36,15 +36,11 @@ struct HighwayHUD: View {
                 .foregroundStyle(combo > 0 ? Palette.ink : Palette.inkFaint)
                 .contentTransition(.numericText(value: Double(combo)))
                 .shadow(color: tint.opacity(level >= 2 ? 0.6 : 0), radius: 10)
-            Text("Combo")
-                .font(Typeface.label(11, relativeTo: .caption2))
-                .tracking(1.2)
-                .textCase(.uppercase)
-                .foregroundStyle(level >= 2 ? tint : Palette.inkSoft)
+            Eyebrow("Combo", color: level >= 2 ? tint : Palette.inkSoft, style: .display)
         }
         .phaseAnimator([1.0, 1.16], trigger: combo) { content, scale in
             content.scaleEffect(calm || combo == 0 ? 1 : CGFloat(scale), anchor: .leading)
-        } animation: { _ in .spring(response: 0.2, dampingFraction: 0.6) }
+        } animation: { _ in Motion.pop }
         .animation(calm ? nil : Motion.quick, value: combo)
     }
 
@@ -66,7 +62,7 @@ struct HighwayHUD: View {
                     .stroke(tint, style: StrokeStyle(lineWidth: 3, lineCap: .round))
                     .rotationEffect(.degrees(-90))
                 Text(verbatim: "×\(level)")
-                    .font(Typeface.number(17, relativeTo: .headline))
+                    .font(Typeface.number(17))
                     .foregroundStyle(level >= 2 ? tint : Palette.inkSoft)
                     .contentTransition(.numericText(value: Double(level)))
                     .lineLimit(1)
@@ -77,8 +73,8 @@ struct HighwayHUD: View {
         }
         .phaseAnimator([1.0, 1.22], trigger: level) { content, scale in
             content.scaleEffect(calm ? 1 : CGFloat(scale), anchor: .trailing)
-        } animation: { _ in .spring(response: 0.22, dampingFraction: 0.55) }
-        .animation(calm ? nil : .easeOut(duration: 0.2), value: combo)
+        } animation: { _ in Motion.pop }
+        .animation(calm ? nil : Motion.quick, value: combo)
         .animation(calm ? nil : Motion.pluck, value: level)
     }
 }

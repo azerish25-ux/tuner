@@ -37,7 +37,7 @@ struct PaywallPlanHero: View {
         if reduceMotion {
             shown = true
         } else {
-            withAnimation(.spring(response: 0.8, dampingFraction: 0.82).delay(0.2)) { shown = true }
+            withAnimation(Motion.hero.delay(0.2)) { shown = true }
         }
     }
 

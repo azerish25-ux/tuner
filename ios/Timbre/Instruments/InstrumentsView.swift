@@ -31,20 +31,20 @@ struct InstrumentsView: View {
                     filters
                     if query.isEmpty && family == nil {
                         chromaticCard
-                        section("Your instruments", count: nil)
+                        section(Text("Your instruments"), count: nil)
                         shelf { browse(scroller) }
                     }
                     ForEach(store.catalog.families) { group in
                         let items = photos.filter { store.catalog.instrument(id: $0.instrumentId)?.familyId == group.id }
                             .sorted { rank($0) < rank($1) }
                         if !items.isEmpty {
-                            section(group.name.localized, count: items.count)
+                            section(Text(verbatim: group.name.localized), count: items.count)
                             LazyVGrid(columns: [GridItem(.adaptive(minimum: 156), spacing: 12)], spacing: 12) {
                                 ForEach(items, id: \.asset) { card($0) }
                             }
                         }
                     }
-                    if photos.isEmpty { Text("No instrument matches “\(query)”.").foregroundStyle(Palette.inkSoft).padding(.vertical, 30) }
+                    if photos.isEmpty { noMatches }
                 }
                 .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
             }
@@ -65,37 +65,33 @@ struct InstrumentsView: View {
         }
     }
 
+    /// The tab's header, its trailing control the search (a 44 pt disc, as a header's search is everywhere).
     private var header: some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Instruments").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
-                Text("\(store.catalog.instruments.count) instruments, each on its own live stage").font(.subheadline).foregroundStyle(Palette.inkSoft)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .accessibilityElement(children: .combine)
-            .accessibilityAddTraits(.isHeader)
-            Spacer()
-            Button {
-                withAnimation(Motion.quick) { searching.toggle(); if !searching { query = "" } }
-            } label: {
-                Image(systemName: searching ? "xmark" : "magnifyingglass").font(.system(size: 17, weight: .semibold)).foregroundStyle(Palette.ink)
-                    .frame(width: 44, height: 44)
-                    .background(Circle().fill(Palette.stageRaised)).overlay(Circle().strokeBorder(Palette.line, lineWidth: 1))
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(searching ? "Close search" : "Search instruments")
-            .accessibilityIdentifier("instruments.searchToggle")
+        TabHeader(title: Text("Instruments"),
+                  subtitle: Text("\(store.catalog.instruments.count) instruments, each on its own live stage")) {
+            searchToggle
         }
     }
 
-    private func section(_ title: String, count: Int?) -> some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text(title).font(Typeface.display(20)).foregroundStyle(Palette.ink)
-            Spacer()
+    private var searchToggle: some View {
+        IconButton(symbol: searching ? "xmark" : "magnifyingglass", size: .regular,
+                   label: searching ? LocalizedStringKey("Close search") : LocalizedStringKey("Search instruments")) {
+            withAnimation(Motion.quick) { searching.toggle(); if !searching { query = "" } }
+        }
+        .accessibilityIdentifier("instruments.searchToggle")
+    }
+
+    /// A family's section between the grids: its name, and how many instruments it holds on the baseline.
+    private func section(_ title: Text, count: Int?) -> some View {
+        SectionHeader(title) {
             if let count { Text("\(count)").font(Typeface.number(13)).foregroundStyle(Palette.inkFaint) }
         }
         .padding(.top, 6)
-        .accessibilityAddTraits(.isHeader)
+    }
+
+    /// Nothing matches the search: the reason, in the stage's empty-state style.
+    private var noMatches: some View {
+        EmptyState(symbol: "magnifyingglass", title: Text("No instrument matches “\(query)”."))
     }
 
     private var recents: [InstrumentPhoto] {
@@ -185,7 +181,7 @@ struct InstrumentsView: View {
 
     /// The shelf's last card: the outline of a card with a plus, the same size as the others.
     private func addCard(action: @escaping () -> Void) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 22, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous)
         return Button(action: action) {
             VStack(alignment: .leading, spacing: 4) {
                 ZStack {
@@ -284,18 +280,28 @@ struct InstrumentsView: View {
         }
     }
 
+    /// The search field: a capsule with a control's edge. Its clear button is a full 44 pt target inside the
+    /// capsule's height, so the field never grows when it appears.
     private var search: some View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass").foregroundStyle(Palette.inkSoft)
+                .accessibilityHidden(true)
             TextField("Search instruments", text: $query).textInputAutocapitalization(.never).autocorrectionDisabled()
                 .focused($searchFocused)
                 .onAppear { if searching { searchFocused = true } }
                 .accessibilityIdentifier("instruments.search")
-            if !query.isEmpty { Button { query = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(Palette.inkFaint) }.accessibilityLabel("Clear search") }
+            if !query.isEmpty {
+                Button { query = "" } label: {
+                    Image(systemName: "xmark.circle.fill").foregroundStyle(Palette.inkFaint).tapTarget()
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Clear search")
+            }
         }
-        .padding(.horizontal, 16).padding(.vertical, 13)
+        .padding(.leading, 16).padding(.trailing, query.isEmpty ? 16 : 2)
+        .frame(minHeight: 48)
         .background(Capsule().fill(Palette.stageRaised))
-        .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
+        .overlay(Capsule().strokeBorder(Palette.controlLine, lineWidth: 1))
     }
 
     private var filters: some View {
@@ -319,7 +325,7 @@ struct InstrumentsView: View {
             if picker { dismiss() }
         } label: {
             HStack(spacing: 14) {
-                IconOrb(symbol: "dot.radiowaves.left.and.right", tint: Palette.brass)
+                IconOrb(symbol: "dot.radiowaves.left.and.right", tint: Palette.mint)
                 VStack(alignment: .leading, spacing: 3) {
                     Text("Chromatic").font(.headline).foregroundStyle(Palette.ink)
                     Text("A strobe tuner for any note: voice, piano, winds or anything else.")
@@ -327,7 +333,7 @@ struct InstrumentsView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 8)
-                Image(systemName: "arrow.up.right").foregroundStyle(Palette.brass)
+                Image(systemName: "arrow.up.right").foregroundStyle(Palette.mint)
                     .accessibilityHidden(true)
             }
             .contentShape(Rectangle())
@@ -346,7 +352,7 @@ struct InstrumentsView: View {
         let open = instrument.map { store.canTune($0) } ?? false
         let selected = !store.referenceMode && store.photo?.asset == photo.asset
         let tunings = instrument?.supportedTuningIds.count ?? 0
-        let shape = RoundedRectangle(cornerRadius: 22, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous)
         return Button {
             guard let instrument else { return }
             if open {
@@ -366,9 +372,9 @@ struct InstrumentsView: View {
             .padding(14)
             .background {
                 shape.fill(Palette.stageRaised)
-                    .overlay(RadialGradient(colors: [(selected ? Palette.mint : Color(hex: 0xFFC48C)).opacity(selected ? 0.10 : 0.06), .clear], center: UnitPoint(x: 0.5, y: 0.3), startRadius: 4, endRadius: 140).clipShape(shape))
+                    .overlay(RadialGradient(colors: [(selected ? Palette.mint : Palette.spotlight).opacity(selected ? 0.10 : 0.06), .clear], center: UnitPoint(x: 0.5, y: 0.3), startRadius: 4, endRadius: 140).clipShape(shape))
             }
-            .overlay(shape.strokeBorder(selected ? Palette.mint : Palette.line, lineWidth: selected ? 1.5 : 1))
+            .overlay(shape.strokeBorder(selected ? Palette.mint : Palette.hairline, lineWidth: selected ? 1.5 : 1))
             .overlay(alignment: .topTrailing) { if !open { ProBadge().padding(12) } }
             .overlay(alignment: .topLeading) { if suggested { tryNextTag.padding(12) } }
             .contentShape(shape)

@@ -55,7 +55,7 @@ struct IntonationView: View {
             Button { audio.running ? store.pauseListening() : store.startListening() } label: {
                 Label(audio.running ? "Pause" : "Listen", systemImage: audio.running ? "pause.fill" : "mic.fill")
             }
-            .buttonStyle(BrassButtonStyle())
+            .buttonStyle(PrimaryButtonStyle())
             .accessibilityIdentifier("intonation.listen")
         }
         .onAppear {
@@ -85,8 +85,8 @@ struct IntonationView: View {
                     }
                     .foregroundStyle(selected ? Palette.stage : Palette.ink)
                     .frame(maxWidth: .infinity, minHeight: 52)
-                    .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(selected ? AnyShapeStyle(Palette.ink) : AnyShapeStyle(Palette.stageRaised)))
-                    .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(selected ? .clear : Palette.line, lineWidth: 1))
+                    .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(selected ? AnyShapeStyle(Palette.ink) : AnyShapeStyle(Palette.stageRaised)))
+                    .overlay(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).strokeBorder(selected ? .clear : Palette.controlLine, lineWidth: 1))
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(PressScaleStyle())
@@ -98,7 +98,7 @@ struct IntonationView: View {
     private var instruction: some View {
         let label = store.courseLabel(store.activeCourse)
         return HStack(alignment: .top, spacing: 14) {
-            IconOrb(symbol: step == .harmonic ? "hand.point.up.left" : "hand.raised.fingers.spread", tint: step == .harmonic ? Palette.flat : Palette.ember)
+            IconOrb(symbol: step == .harmonic ? "hand.point.up.left" : "hand.raised.fingers.spread", tint: step == .harmonic ? Palette.flat : Palette.amber)
             VStack(alignment: .leading, spacing: 4) {
                 if step == .harmonic {
                     Eyebrow("Step 1 of 2")
@@ -150,7 +150,7 @@ struct IntonationView: View {
                 }
             }
         }
-        .stillCard(padding: 16)
+        .stillCard()
     }
 
     /// "Harmonic" or "Fretted" with its marker, lit while it is the note being measured.
@@ -181,16 +181,17 @@ struct IntonationView: View {
         return HStack(spacing: 16) {
             ZStack {
                 Circle().stroke(Palette.line, lineWidth: 5)
-                Circle().trim(from: 0, to: progress).stroke(Palette.brass, style: StrokeStyle(lineWidth: 5, lineCap: .round)).rotationEffect(.degrees(-90))
-                Image(systemName: audio.running ? "waveform" : "mic.slash").font(.title3).foregroundStyle(audio.running ? Palette.brass : Palette.inkFaint)
+                Circle().trim(from: 0, to: progress).stroke(Palette.mint, style: StrokeStyle(lineWidth: 5, lineCap: .round)).rotationEffect(.degrees(-90))
+                Image(systemName: audio.running ? "waveform" : "mic.slash").font(.title3).foregroundStyle(audio.running ? Palette.mint : Palette.inkFaint)
                     .symbolEffect(.variableColor.iterative, isActive: audio.running && reading.frequency != nil)
             }
             .frame(width: 60, height: 60)
             .animation(Motion.quick, value: samples.count)
             VStack(alignment: .leading, spacing: 4) {
                 Text(reading.frequency.map { String(format: "%.2f Hz", $0) } ?? "—").font(Typeface.number(20)).foregroundStyle(Palette.ink)
-                Text(audio.running ? (reading.stable ? String(localized: "Hold it…") : String(localized: "Listening")) : String(localized: "Tap Listen to start"))
-                    .font(.subheadline).foregroundStyle(Palette.inkSoft)
+                // The microphone's status, set as every practice tool sets it.
+                Text(audio.running ? (reading.stable ? String(localized: "Hold it…") : String(localized: "Listening…")) : String(localized: "Tap Listen to start"))
+                    .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft)
             }
             Spacer()
         }

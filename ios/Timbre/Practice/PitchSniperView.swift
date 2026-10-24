@@ -39,7 +39,7 @@ struct PitchSniperView: View {
         switch flash {
         case .bullseye: return Palette.mint
         case .near: return Palette.amber
-        default: return Color(hex: 0xFFC48C)
+        default: return Palette.spotlight
         }
     }
 
@@ -49,11 +49,7 @@ struct PitchSniperView: View {
         let now = ProcessInfo.processInfo.systemUptime
         return VStack(spacing: 0) {
             HStack {
-                Button { dismiss() } label: {
-                    Image(systemName: "xmark").font(.system(size: 15, weight: .bold)).foregroundStyle(Palette.ink)
-                        .frame(width: 44, height: 44).background(Circle().fill(.white.opacity(0.06)))
-                }
-                .buttonStyle(.plain).accessibilityLabel(Text("Leave game"))
+                CloseButton(label: "Leave game") { dismiss() }
                 Spacer()
                 VStack(spacing: 3) {
                     Text("Round \(min(game.index + 1, game.rounds.count)) of \(game.rounds.count)").font(.footnote.weight(.semibold)).foregroundStyle(Palette.inkSoft)
@@ -74,7 +70,7 @@ struct PitchSniperView: View {
             if let round = game.current {
                 let parts = NoteReadout.split(PitchMath.noteName(midi: round.midi, notation: store.settings.notation))
                 VStack(spacing: 2) {
-                    Text("Play or sing").font(.caption.weight(.semibold)).tracking(1.4).textCase(.uppercase).foregroundStyle(Palette.inkSoft)
+                    Eyebrow("Play or sing", color: Palette.inkSoft)
                     HStack(alignment: .lastTextBaseline, spacing: 2) {
                         Text(parts.name).font(Typeface.note(64)).foregroundStyle(Palette.ink)
                         Text(parts.octave).font(Typeface.displayLight(26)).foregroundStyle(Palette.inkFaint)
@@ -90,12 +86,16 @@ struct PitchSniperView: View {
             Group {
                 if let cents {
                     Text(abs(cents) <= PitchSniper.bullseyeCents ? String(localized: "Hold it…") : cents < 0 ? String(localized: "\(Int(abs(cents).rounded())) cents flat") : String(localized: "\(Int(abs(cents).rounded())) cents sharp"))
+                        .font(Typeface.label(18))
                         .foregroundStyle(abs(cents) <= PitchSniper.bullseyeCents ? Palette.mint : Palette.amber)
                 } else {
-                    Text(audio.running ? "Listening…" : "Tap Listen to start").foregroundStyle(Palette.inkSoft)
+                    // The microphone's status, set as every practice tool sets it.
+                    Text(audio.running ? "Listening…" : "Tap Listen to start")
+                        .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft)
                 }
             }
-            .font(Typeface.label(18)).padding(.top, 14)
+            .frame(minHeight: 24)
+            .padding(.top, 14)
             Text("Hold inside the green ring for a bullseye").font(.footnote).foregroundStyle(Palette.inkSoft).padding(.top, 4)
 
             HStack(spacing: 8) {
@@ -113,11 +113,11 @@ struct PitchSniperView: View {
                 Button { store.toggleTone() } label: {
                     Label(audio.tonePlaying ? "Stop" : "Hear it", systemImage: audio.tonePlaying ? "speaker.slash.fill" : "speaker.wave.2.fill")
                 }
-                .buttonStyle(BrassButtonStyle(prominent: false))
+                .buttonStyle(SecondaryButtonStyle())
                 Button { if !audio.running { store.startListening() } else { advance(self.game?.skip()) } } label: {
                     Text(audio.running ? "Skip" : "Listen")
                 }
-                .buttonStyle(BrassButtonStyle(prominent: !audio.running))
+                .buttonStyle(PrimaryButtonStyle(prominent: !audio.running))
                 .accessibilityIdentifier("sniper.action")
             }
             .padding(.horizontal, Metrics.gutter).padding(.bottom, 12)
@@ -143,7 +143,8 @@ struct PitchSniperView: View {
                 .foregroundStyle(game.won ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.mint))
                 .symbolEffect(.bounce, value: finished)
             Text(game.won ? "Round won" : "Good shooting").font(Typeface.display(30)).foregroundStyle(Palette.ink)
-            Text(game.score.formatted()).font(Typeface.number(56)).foregroundStyle(Palette.ink)
+            Text(game.score.formatted()).font(Typeface.hero(56)).foregroundStyle(Palette.ink)
+                .heroNumeral()
             HStack(spacing: 24) {
                 stat("\(game.bullseyes)", "bullseyes")
                 stat(best.formatted(), "best")
@@ -151,8 +152,8 @@ struct PitchSniperView: View {
             if !game.won { Text("Hit \(PitchSniper.winBullseyes) bullseyes to win the round.").font(.footnote).foregroundStyle(Palette.inkSoft) }
             SniperChallengeResult(score: game.score)
             Spacer()
-            Button("Play again") { start() }.buttonStyle(BrassButtonStyle()).accessibilityIdentifier("sniper.again")
-            Button("Done") { dismiss() }.buttonStyle(BrassButtonStyle(prominent: false))
+            Button("Play again") { start() }.buttonStyle(PrimaryButtonStyle()).accessibilityIdentifier("sniper.again")
+            Button("Done") { dismiss() }.buttonStyle(SecondaryButtonStyle())
         }
         .padding(.horizontal, Metrics.gutter).padding(.bottom, 12)
     }
@@ -206,7 +207,7 @@ struct PitchSniperView: View {
         store.recordProgress(.sniperRound(bullseye: { if case .bullseye = outcome { return true } else { return false } }()), announce: false)
         flashToken += 1
         let token = flashToken
-        withAnimation(.easeOut(duration: 0.2)) { flash = outcome }
+        withAnimation(Motion.fade) { flash = outcome }
         Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(650))
             if token == flashToken { withAnimation(.easeOut(duration: 0.4)) { flash = nil } }

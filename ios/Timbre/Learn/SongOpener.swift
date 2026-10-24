@@ -51,7 +51,7 @@ struct SongOpener: View {
 
     /// The sleeve's side once settled in the sheet's head.
     private static let side: CGFloat = 112
-    private static let margin: CGFloat = 22
+    private static let margin: CGFloat = Metrics.gutter
     /// The sheet keeps to a readable measure on a wide screen.
     private static let measure: CGFloat = 860
     private static let speeds: [Double] = [0.5, 0.75, 1]
@@ -98,7 +98,7 @@ struct SongOpener: View {
         }
         .onChange(of: arrived) { _, landed in
             guard landed, !unfolded else { return }
-            withAnimation(.spring(response: 0.62, dampingFraction: 0.84)) { unfolded = true }
+            withAnimation(Motion.page) { unfolded = true }
         }
         .onDisappear { stopPlayback() }
     }
@@ -165,17 +165,17 @@ struct SongOpener: View {
     }
 
     /// The course, the title, then how long the song runs beside how long the lesson takes (they are different
-    /// things: "Song 0:22 · lesson 6 min"), and its XP.
+    /// things: "Song 0:22 · Lesson 6 min"), and its XP.
     private var titleBlock: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 6) {
                 CourseArt(course: course, size: 16)
-                Text(course.title.localized.uppercased()).font(Typeface.label(11)).tracking(1.2).foregroundStyle(accent).lineLimit(1)
+                Eyebrow(Text(course.title.localized), color: accent, style: .display).lineLimit(1)
             }
             Text(lesson.title.localized).font(Typeface.display(26)).tracking(-0.5).foregroundStyle(Palette.ink)
                 .lineLimit(3).minimumScaleFactor(0.75).fixedSize(horizontal: false, vertical: true)
             HStack(spacing: 8) {
-                Text("Song \(sheet.length) · lesson \(lesson.minutes) min")
+                Text("Song \(sheet.length) · Lesson \(lesson.minutes) min")
                     .font(.subheadline).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.8)
                 Text("+\(lesson.xp) XP").font(Typeface.label(12)).foregroundStyle(Palette.amber)
                     .padding(.horizontal, 7).padding(.vertical, 2)
@@ -207,17 +207,17 @@ struct SongOpener: View {
     }
 
     private func fact(_ label: LocalizedStringKey, _ value: Text) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return VStack(alignment: .leading, spacing: 3) {
-            Text(label).font(Typeface.label(11)).tracking(1).textCase(.uppercase).foregroundStyle(Palette.inkFaint)
+            Eyebrow(label, color: Palette.inkFaint, style: .display)
                 .lineLimit(1).minimumScaleFactor(0.7)
-            value.font(Typeface.display(16, relativeTo: .headline)).foregroundStyle(Palette.ink)
+            value.font(Typeface.display(16)).foregroundStyle(Palette.ink)
                 .lineLimit(1).minimumScaleFactor(0.6)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 11).padding(.vertical, 10)
+        .padding(Metrics.tilePadding)
         .background(shape.fill(Palette.stageRaised.opacity(0.9)))
-        .overlay(shape.strokeBorder(.white.opacity(0.06), lineWidth: 1))
+        .overlay(shape.strokeBorder(Palette.hairline, lineWidth: 1))
         .accessibilityElement(children: .combine)
     }
 
@@ -244,18 +244,18 @@ struct SongOpener: View {
 
     private func chordCard(_ chord: ChordSpec) -> some View {
         let lit = sounding == chord.symbol
-        let shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return Button { strum(chord) } label: {
             VStack(spacing: 8) {
                 MiniChordGlyph(chord: chord, accent: accent, lit: lit)
                     .frame(width: 54, height: 64)
-                Text(verbatim: chord.name).font(Typeface.display(17, relativeTo: .headline))
+                Text(verbatim: chord.name).font(Typeface.display(17))
                     .foregroundStyle(lit ? accent : Palette.ink).lineLimit(1).minimumScaleFactor(0.7)
             }
             .frame(minWidth: 62)
             .padding(.horizontal, 12).padding(.top, 12).padding(.bottom, 10)
             .background(shape.fill(lit ? accent.opacity(0.16) : Palette.stageRaised))
-            .overlay(shape.strokeBorder(lit ? accent.opacity(0.6) : .white.opacity(0.06), lineWidth: 1))
+            .overlay(shape.strokeBorder(lit ? accent.opacity(0.6) : Palette.hairline, lineWidth: 1))
             .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())
@@ -266,7 +266,7 @@ struct SongOpener: View {
 
     private func noteChip(_ midi: Int) -> some View {
         let lit = sounding == "\(midi)"
-        let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return Button { pluck(midi) } label: {
             HStack(alignment: .firstTextBaseline, spacing: 1) {
                 Text(verbatim: NoteName.pitchClass(midi)).font(Typeface.display(18, relativeTo: .headline))
@@ -276,7 +276,7 @@ struct SongOpener: View {
             .frame(minWidth: 46, minHeight: 46)
             .padding(.horizontal, 6)
             .background(shape.fill(lit ? accent.opacity(0.16) : Palette.stageRaised))
-            .overlay(shape.strokeBorder(lit ? accent.opacity(0.6) : .white.opacity(0.06), lineWidth: 1))
+            .overlay(shape.strokeBorder(lit ? accent.opacity(0.6) : Palette.hairline, lineWidth: 1))
             .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())
@@ -367,8 +367,8 @@ struct SongOpener: View {
                 } label: {
                     Label("Practice this part", systemImage: "music.mic")
                         .font(Typeface.label(14)).foregroundStyle(Palette.onAccent)
-                        .frame(maxWidth: .infinity, minHeight: 44)
-                        .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(tint))
+                        .frame(maxWidth: .infinity, minHeight: Metrics.minTarget)
+                        .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(tint))
                 }
                 .buttonStyle(PressScaleStyle())
                 .accessibilityIdentifier("song.section.practice")
@@ -388,7 +388,7 @@ struct SongOpener: View {
             Label(on ? LocalizedStringKey("Stop") : LocalizedStringKey("Loop"), systemImage: on ? "stop.fill" : "repeat")
                 .font(Typeface.label(14)).foregroundStyle(on ? Palette.onAccent : tint)
                 .contentTransition(.symbolEffect(.replace))
-                .padding(.horizontal, 14).frame(minHeight: 40)
+                .padding(.horizontal, 14).frame(minHeight: Metrics.minTarget)
                 .background(Capsule().fill(on ? AnyShapeStyle(tint) : AnyShapeStyle(tint.opacity(0.14))))
                 .overlay(Capsule().strokeBorder(tint.opacity(on ? 0 : 0.45), lineWidth: 1))
                 .fixedSize()
@@ -397,37 +397,26 @@ struct SongOpener: View {
         .accessibilityIdentifier("song.section.loop")
     }
 
-    /// 50 %, 75 % and 100 % of the song's tempo; changing it restarts a running loop at the new speed.
+    /// 50 %, 75 % and 100 % of the song's tempo, as a segmented pill; changing it restarts a running loop at the new
+    /// speed. Each segment reads as its tempo ("60 BPM").
     private func speedPicker(_ section: SongSheet.Section, tint: Color) -> some View {
-        HStack(spacing: 2) {
-            ForEach(Self.speeds, id: \.self) { speed in
-                let on = abs(loopSpeed - speed) < 0.01
-                Button {
-                    guard !on else { return }
-                    Haptics.shared.selection()
-                    loopSpeed = speed
-                    if looping { startLoop(section) }
-                } label: {
-                    Text(verbatim: "\(Int((speed * 100).rounded()))%")
-                        .font(Typeface.number(12)).foregroundStyle(on ? Palette.stage : Palette.inkSoft)
-                        .padding(.horizontal, 9).frame(minHeight: 32)
-                        .background { if on { Capsule().fill(Palette.ink) } }
-                        .contentShape(Capsule())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(Text("\(Int((baseBpm * speed).rounded())) BPM"))
-                .accessibilityAddTraits(on ? .isSelected : [])
-            }
+        let speed = Binding<Double>(
+            get: { loopSpeed },
+            set: { value in
+                loopSpeed = value
+                if looping { startLoop(section) }
+            })
+        return SegmentedPill(options: Self.speeds, selection: speed) { value in
+            Text(verbatim: "\(Int((value * 100).rounded()))%")
+                .font(Typeface.number(12))
+                .accessibilityLabel(Text("\(Int((baseBpm * value).rounded())) BPM"))
         }
-        .padding(2)
-        .background(Capsule().fill(Palette.stage.opacity(0.6)))
-        .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
         .fixedSize()
     }
 
     private func heading(_ title: LocalizedStringKey, detail: Text?) -> some View {
         HStack(spacing: 8) {
-            Text(title).font(Typeface.label(12)).tracking(1.4).textCase(.uppercase).foregroundStyle(accent)
+            Eyebrow(title, color: accent, style: .display)
             if let detail { detail.font(Typeface.label(12)).foregroundStyle(Palette.inkFaint) }
         }
         .lineLimit(1)
@@ -449,9 +438,10 @@ struct SongOpener: View {
     }
 
     /// One line at its own width (Start takes the rest), as wide for "Stop" as for its label, so it never wraps or
-    /// jumps; "Preview" alone at the largest text sizes.
+    /// jumps; "Preview" alone at the largest text sizes. The secondary button's capsule, height and type, washed in
+    /// the accent.
     private var previewButton: some View {
-        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        let shape = Capsule()
         let label: LocalizedStringKey = typeSize >= .xxLarge ? "Preview" : "Preview with band"
         return Button(action: togglePreview) {
             HStack(spacing: 8) {
@@ -471,9 +461,9 @@ struct SongOpener: View {
                 .lineLimit(1)
                 .fixedSize()
             }
-            .font(Typeface.label(15)).foregroundStyle(accent)
+            .font(Typeface.button).foregroundStyle(accent)
             .padding(.horizontal, 14)
-            .frame(minHeight: 56)
+            .frame(minHeight: Metrics.buttonHeight)
             .background(shape.fill(accent.opacity(0.12)))
             .overlay(shape.strokeBorder(accent.opacity(0.4), lineWidth: 1))
             .contentShape(shape)
@@ -686,6 +676,6 @@ private struct Unfold: ViewModifier {
         content
             .opacity(shown ? 1 : 0)
             .offset(y: shown || calm ? 0 : 26)
-            .animation(calm ? nil : .spring(response: 0.6, dampingFraction: 0.86).delay(0.08 * Double(order)), value: shown)
+            .animation(calm ? nil : Motion.page.delay(0.08 * Double(order)), value: shown)
     }
 }

@@ -44,8 +44,8 @@ struct PlacementCheckView: View {
                 content.frame(maxHeight: .infinity)
             }
         }
-        .animation(Motion.settle, value: phase)
-        .animation(.spring(response: 0.5, dampingFraction: 0.86), value: index)
+        .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: phase)
+        .animation(Motion.adaptive(Motion.page, reduceMotion: reduceMotion), value: index)
         .preferredColorScheme(.dark)
         // "Hear it" and the strum's band sound like the course's instrument, as in a lesson.
         .onAppear { store.audio.courseVoice = InstrumentVoice(instrumentId: course.instrument) }
@@ -58,17 +58,14 @@ struct PlacementCheckView: View {
 
     // MARK: Pieces
 
-    /// Close, and one segment per step filling as the check goes.
+    /// Close, and one segment per step filling as the check goes. The close disc's edge sits on the gutter (its
+    /// 44 pt target reaches 5 pt past the 34 pt disc).
     private var topBar: some View {
         HStack(spacing: 14) {
-            Button { close() } label: {
-                Image(systemName: "xmark").font(.system(size: 17, weight: .bold)).foregroundStyle(Palette.inkSoft)
-                    .frame(width: 44, height: 44).contentShape(Rectangle())
-            }
-            .accessibilityLabel("Close")
-            .accessibilityIdentifier("placement.close")
-            .opacity(phase == .result ? 0 : 1)
-            .disabled(phase == .result)
+            CloseButton { close() }
+                .accessibilityIdentifier("placement.close")
+                .opacity(phase == .result ? 0 : 1)
+                .disabled(phase == .result)
             HStack(spacing: 6) {
                 ForEach(0..<steps.count, id: \.self) { step in
                     Capsule().fill(segmentFilled(step) ? accent : Palette.line).frame(height: 4)
@@ -78,7 +75,7 @@ struct PlacementCheckView: View {
             .accessibilityLabel(Text("Step \(min(index + 1, steps.count)) of \(steps.count)"))
             Color.clear.frame(width: 44, height: 44)
         }
-        .padding(.horizontal, 12).padding(.top, 6)
+        .padding(.horizontal, Metrics.gutter - 5).padding(.top, 6)
     }
 
     private func segmentFilled(_ step: Int) -> Bool {
@@ -96,10 +93,11 @@ struct PlacementCheckView: View {
         case .playing:
             StepView(step: steps[index], course: course, accent: accent, onPractice: { tapped = true }, done: { score in advance(score) })
                 .id(index)
-                .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
-                                        removal: .move(edge: .leading).combined(with: .opacity)))
+                .transition(.adaptive(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
+                                                  removal: .move(edge: .leading).combined(with: .opacity)),
+                                      reduceMotion: reduceMotion))
         case .result:
-            result.transition(.opacity.combined(with: .scale(scale: 0.96)))
+            result.transition(.adaptive(.opacity.combined(with: .scale(scale: 0.96)), reduceMotion: reduceMotion))
         }
     }
 
@@ -123,7 +121,7 @@ struct PlacementCheckView: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
-                    Eyebrow("Placement check", color: accent)
+                    Eyebrow("Placement check", color: accent, style: .display)
                     Text("Show us how you play").font(Typeface.display(32)).tracking(-0.6).foregroundStyle(Palette.ink)
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
@@ -133,12 +131,12 @@ struct PlacementCheckView: View {
                     chordRow
                     strumCard
                 }
-                .padding(.horizontal, 24).padding(.top, 18).padding(.bottom, 16)
+                .padding(.horizontal, Metrics.gutter).padding(.top, 18).padding(.bottom, 16)
             }
             .scrollBounceBehavior(.basedOnSize)
             Button("Start the check") { begin() }
-                .buttonStyle(BrassButtonStyle())
-                .padding(.horizontal, 24).padding(.top, 8)
+                .buttonStyle(PrimaryButtonStyle())
+                .padding(.horizontal, Metrics.gutter).padding(.top, 8)
                 .accessibilityIdentifier("placement.start")
             Button("Not now") { close() }
                 .font(.subheadline).foregroundStyle(Palette.inkSoft)
@@ -151,10 +149,8 @@ struct PlacementCheckView: View {
         HStack(spacing: 10) {
             ForEach(Array(chords.enumerated()), id: \.offset) { _, chord in
                 ChordDiagram(chord: chord, accent: accent, landing: !reduceMotion)
-                    .padding(12)
                     .frame(maxWidth: .infinity)
-                    .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Palette.stageRaised))
-                    .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Palette.line, lineWidth: 1))
+                    .stillCard(cornerRadius: Metrics.cornerTile, padding: Metrics.tilePadding)
             }
         }
     }
@@ -169,7 +165,7 @@ struct PlacementCheckView: View {
                 }
                 Spacer(minLength: 0)
             }
-            .stillCard(padding: 14)
+            .stillCard()
         }
     }
 
@@ -192,19 +188,19 @@ struct PlacementCheckView: View {
                             .font(.subheadline).foregroundStyle(Palette.inkSoft)
                             .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
                     }
-                    .padding(.horizontal, 8)
+                    .padding(.horizontal, Metrics.proseInset)
                     scoreChips
                     unitCard(unit)
                 }
-                .padding(.horizontal, 24).padding(.bottom, 16)
+                .padding(.horizontal, Metrics.gutter).padding(.bottom, 16)
                 .frame(maxWidth: .infinity)
             }
             .scrollBounceBehavior(.basedOnSize)
             // The burst flies out past the ring, over the top of the scroll area.
             .scrollClipDisabled()
             Button("See my plan") { Haptics.shared.selection(); finishWith(checkedLevel) }
-                .buttonStyle(BrassButtonStyle())
-                .padding(.horizontal, 24).padding(.top, 8)
+                .buttonStyle(PrimaryButtonStyle())
+                .padding(.horizontal, Metrics.gutter).padding(.top, 8)
                 .padding(.bottom, moved == 0 ? 14 : 0)
                 .accessibilityIdentifier("placement.done")
             if moved != 0 {
@@ -224,7 +220,7 @@ struct PlacementCheckView: View {
             Circle().fill(accent.opacity(0.12))
             Circle().strokeBorder(accent, lineWidth: 3).shadow(color: accent.opacity(0.5), radius: 18)
             VStack(spacing: 0) {
-                Text("Unit").font(Typeface.label(13)).tracking(1.4).textCase(.uppercase).foregroundStyle(accent)
+                Eyebrow("Unit", color: accent, style: .display)
                 Text(shownUnit, format: .number).font(Typeface.number(64, relativeTo: .largeTitle)).foregroundStyle(Palette.ink)
                     .contentTransition(.numericText(value: Double(shownUnit)))
             }
@@ -239,7 +235,7 @@ struct PlacementCheckView: View {
         }
         .frame(width: 160, height: 160)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("UNIT \(toUnit + 1) · \(course.units[min(toUnit, course.units.count - 1)].title.localized.uppercased())"))
+        .accessibilityLabel(Text("Unit \(toUnit + 1) · \(course.units[min(toUnit, course.units.count - 1)].title.localized)"))
     }
 
     @ViewBuilder private var resultTitle: some View {
@@ -288,7 +284,7 @@ struct PlacementCheckView: View {
                 .font(Typeface.label(13)).foregroundStyle(Palette.ink).lineLimit(1)
                 .padding(.horizontal, 12).frame(minHeight: 34)
                 .background(Capsule().fill(Palette.stageRaised))
-                .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
+                .overlay(Capsule().strokeBorder(Palette.hairline, lineWidth: 1))
                 .fixedSize()
         }
     }
@@ -304,22 +300,21 @@ struct PlacementCheckView: View {
         }
         .padding(.horizontal, 10).frame(minHeight: 34)
         .background(Capsule().fill(Palette.stageRaised))
-        .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
+        .overlay(Capsule().strokeBorder(Palette.hairline, lineWidth: 1))
         .fixedSize()
     }
 
     /// The unit the plan now starts at and its first lesson.
     private func unitCard(_ unit: LearnUnit) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("UNIT \(toUnit + 1) · \(unit.title.localized.uppercased())")
-                .font(Typeface.label(11)).tracking(1.1).foregroundStyle(accent).lineLimit(1)
+            Eyebrow(Text("Unit \(toUnit + 1) · \(unit.title.localized)"), color: accent, style: .display).lineLimit(1)
             Text("First lesson").font(.subheadline).foregroundStyle(Palette.inkSoft)
             if let first = unit.lessons.first {
                 Text(first.title.localized).font(Typeface.display(22)).tracking(-0.3).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .stillCard(padding: 16, tint: accent)
+        .stillCard(tint: accent)
         .accessibilityElement(children: .combine)
     }
 
@@ -369,7 +364,7 @@ struct PlacementCheckView: View {
         guard toUnit != fromUnit else { return }
         Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 0 : 450))
-            withAnimation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle) { shownUnit = toUnit + 1 }
+            withMotion(Motion.settle, reduceMotion: reduceMotion) { shownUnit = toUnit + 1 }
             if toUnit > fromUnit {
                 burst += 1
                 SoundFX.shared.play(.levelUp)

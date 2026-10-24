@@ -59,7 +59,7 @@ struct HighwayTimingStrip: View {
                     Canvas { context, size in drawBands(&context, size: size) }
                     Canvas { context, size in drawTrend(&context, size: size) }
                         .opacity(landed || calm ? 1 : 0)
-                        .animation(calm ? nil : Animation.easeIn(duration: 0.3).delay(landingDelay(count)), value: landed)
+                        .animation(calm ? nil : Motion.fade.delay(landingDelay(count)), value: landed)
                     ForEach(judgments, id: \.index) { judgment in
                         mark(judgment)
                             .scaleEffect(landed || calm ? 1 : 0.2)
@@ -74,8 +74,8 @@ struct HighwayTimingStrip: View {
         }
         .frame(height: 56)
         .padding(.horizontal, 12).padding(.vertical, 8)
-        .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Palette.stageRaised.opacity(0.75)))
-        .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(Palette.line, lineWidth: 1))
+        .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.stageRaised.opacity(0.75)))
+        .overlay(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).strokeBorder(Palette.hairline, lineWidth: 1))
         .onAppear { landed = true }
     }
 

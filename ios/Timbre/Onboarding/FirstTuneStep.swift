@@ -151,9 +151,11 @@ struct FirstTuneStep: View {
                     .layoutPriority(1)
                 ZStack {
                     skipButton
-                    if rewardsShown { rewards.transition(.scale(scale: 0.85).combined(with: .opacity)) }
+                    if rewardsShown {
+                        rewards.transition(.adaptive(.scale(scale: 0.85).combined(with: .opacity), reduceMotion: reduceMotion))
+                    }
                 }
-                .animation(Motion.pluck, value: rewardsShown)
+                .adaptiveAnimation(Motion.pluck, value: rewardsShown)
             }
         }
         .onAppear(perform: start)
@@ -168,20 +170,31 @@ struct FirstTuneStep: View {
     // MARK: Pieces
 
     private var header: some View {
-        // Locked: the readout's badge says "In tune"; the title cheers instead of repeating it.
-        let title: LocalizedStringKey = model.lockedIn ? "Great work" : "Pluck your thickest string"
+        // Locked: the readout's badge says "In tune"; the title cheers instead of repeating it. Both titles are laid
+        // out, one on top of the other, and cross-fade in place: the block is always as tall as the longer one, so the
+        // line under it never moves and the two never overlap it (the two-line title used to run over it).
+        let locked = model.lockedIn
         return VStack(alignment: .leading, spacing: 6) {
-            Text(title).font(Typeface.display(32)).tracking(-0.6)
-                .foregroundStyle(model.lockedIn ? Palette.mint : Palette.ink)
-                .fixedSize(horizontal: false, vertical: true)
-                .contentTransition(.opacity)
-                .animation(Motion.quick, value: model.lockedIn)
-                .accessibilityAddTraits(.isHeader)
-                .accessibilityIdentifier("onboarding.firsttune")
+            ZStack(alignment: .topLeading) {
+                title("Pluck your thickest string", color: Palette.ink).opacity(locked ? 0 : 1)
+                title("Great work", color: Palette.mint).opacity(locked ? 1 : 0)
+            }
+            .animation(Motion.fade, value: locked)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(locked ? Text("Great work") : Text("Pluck your thickest string"))
+            .accessibilityAddTraits(.isHeader)
+            .accessibilityIdentifier("onboarding.firsttune")
             Text(verbatim: "\(setup.note) · \(setup.name)").font(.subheadline).foregroundStyle(Palette.inkSoft)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 24).padding(.top, 18)
+        .padding(.horizontal, Metrics.gutter).padding(.top, 18)
+    }
+
+    private func title(_ text: LocalizedStringKey, color: Color) -> some View {
+        Text(text).font(Typeface.display(32)).tracking(-0.6)
+            .foregroundStyle(color)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     /// The same stage the Tune tab draws: the 3D instrument (its studio render while it loads), else the 2D one.
@@ -196,7 +209,7 @@ struct FirstTuneStep: View {
                     }
                     InstrumentStage(modelID: modelID, input: stageInput,
                                     onFailure: { failed3D = modelID },
-                                    onReady: { withAnimation(.easeInOut(duration: 0.6)) { ready3D = modelID } })
+                                    onReady: { withAnimation(Motion.reveal) { ready3D = modelID } })
                 }
             } else if ModelLibrary.hasCard(modelID) {
                 StudioStage(imageName: ModelLibrary.cardImageName(modelID), card: ModelLibrary.rig(modelID).flatMap(StageCard.init(rig:)), input: stageInput)
@@ -285,7 +298,7 @@ struct FirstTuneStep: View {
                 HStack(spacing: 8) { xpAndStreak(xp) }
             }
         }
-        .padding(.horizontal, 16).padding(.bottom, 10)
+        .padding(.horizontal, Metrics.gutter).padding(.bottom, 10)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("onboarding.firsttune.reward")
     }
@@ -370,7 +383,7 @@ private struct FirstTuneAura: View {
         RadialGradient(colors: [color.opacity(reading.cents == nil && !locked ? 0 : (locked ? 0.3 : 0.14)), .clear],
                        center: UnitPoint(x: 0.5, y: 0.42), startRadius: 20, endRadius: 360)
             .ignoresSafeArea()
-            .animation(.easeOut(duration: 0.35), value: locked)
+            .animation(Motion.fade, value: locked)
             .allowsHitTesting(false)
             .accessibilityHidden(true)
     }

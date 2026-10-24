@@ -53,7 +53,7 @@ struct VoiceView: View {
                 } label: {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
-                            Image(systemName: level == 7 ? "arrow.up.and.down" : "music.note").foregroundStyle(Palette.brass)
+                            Image(systemName: level == 7 ? "arrow.up.and.down" : "music.note").foregroundStyle(Palette.mint)
                             Spacer()
                             if store.demonstratedLevels.contains(level) { Image(systemName: "checkmark.seal.fill").foregroundStyle(Palette.success) }
                             else if locked(level) { ProBadge() }
@@ -68,8 +68,8 @@ struct VoiceView: View {
                             .frame(width: 66, height: 16)
                             .padding(12)
                     }
-                    .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(store.voiceLevel == level ? Palette.brass.opacity(0.16) : Palette.stageRaised))
-                    .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(store.voiceLevel == level ? Palette.brass : Palette.line, lineWidth: 1))
+                    .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(store.voiceLevel == level ? Palette.mint.opacity(0.16) : Palette.stageRaised))
+                    .overlay(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).strokeBorder(store.voiceLevel == level ? Palette.mint : Palette.controlLine, lineWidth: 1))
                 }
                 .buttonStyle(.plain)
                 .disabled(store.voiceRunning)
@@ -85,10 +85,12 @@ struct VoiceView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Eyebrow("Target")
                     NoteGlyphs.text(note(targetMidi), size: 64).font(Typeface.display(64)).foregroundStyle(Palette.ink).contentTransition(.numericText())
+                        .heroNumeral()
                 }
                 Spacer()
                 if store.voiceRunning && store.countdown > 0 {
-                    Text("\(store.countdown)").font(Typeface.display(64)).foregroundStyle(Palette.brass).contentTransition(.numericText())
+                    Text("\(store.countdown)").font(Typeface.display(64)).foregroundStyle(Palette.mint).contentTransition(.numericText())
+                        .heroNumeral()
                 } else if store.voiceRunning {
                     LiveVoiceReading(tolerance: exercise.toleranceCents)
                 }
@@ -100,12 +102,13 @@ struct VoiceView: View {
             if store.voiceRunning && store.countdown == 0 { VoiceProgress(duration: exercise.durationMs, hold: exercise.notes.count == 1 ? exercise.holdMs : nil) }
             if store.voiceRunning {
                 Button(role: .destructive) { store.cancelVoice() } label: { Label("Stop", systemImage: "stop.fill") }
-                    .buttonStyle(BrassButtonStyle(prominent: false))
+                    .buttonStyle(SecondaryButtonStyle())
             } else {
                 Button { hidePreviousResult = false; store.startVoice() } label: {
                     Label(store.voiceResult == nil ? text("timbre_voice_start_practice", "Start practice") : text("timbre_voice_try_again", "Try again"), systemImage: "mic.fill")
                 }
-                .buttonStyle(BrassButtonStyle()).disabled(audio.tonePlaying)
+                // Waits while the target tone sounds; the style shows it disabled (graphite, faint type, no glow).
+                .buttonStyle(PrimaryButtonStyle()).disabled(audio.tonePlaying)
                 .accessibilityIdentifier("voice.start")
             }
         }
@@ -114,7 +117,8 @@ struct VoiceView: View {
 
     private var target: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(String(format: text("timbre_voice_hold_requirement", "%1$@ s hold · ±%2$d cents"), String(format: "%.1f", Double(exercise.holdMs) / 1000), Int(exercise.toleranceCents)))
+            // ¢ in visible copy, as everywhere else (the English value of this key is the l10n owner's to match).
+            Text(String(format: text("timbre_voice_hold_requirement", "%1$@ s hold · ±%2$d¢"), String(format: "%.1f", Double(exercise.holdMs) / 1000), Int(exercise.toleranceCents)))
                 .font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
             VoiceKeyboard(targetMidi: targetMidi, notation: store.settings.notation, editable: !store.voiceRunning) { store.voiceRoot = $0 }
             if exercise.notes.count > 1 {
@@ -122,7 +126,7 @@ struct VoiceView: View {
                     ForEach(Array(exercise.notes.enumerated()), id: \.offset) { index, midi in
                         NoteGlyphs.text(note(midi), size: 13, weight: .medium).font(Typeface.number(13)).padding(.vertical, 10).frame(maxWidth: .infinity)
                             .foregroundStyle(Palette.ink)
-                            .background(RoundedRectangle(cornerRadius: 10).fill(Palette.stageRaised))
+                            .background(RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous).fill(Palette.stageRaised))
                             .accessibilityLabel(Text("Note \(index + 1), \(note(midi))"))
                     }
                 }
@@ -132,6 +136,7 @@ struct VoiceView: View {
                     if audio.tonePlaying { audio.stopTone() }
                     else { audio.playTone(PitchMath.frequency(midi: Double(store.voiceRoot), reference: store.settings.referencePitchHz), durationMs: 1500) }
                 } label: { Label(text("timbre_voice_hear_target", "Hear target"), systemImage: "speaker.wave.2.fill") }
+                // Off during a take; the chip dims to show it.
                 .buttonStyle(ChipButtonStyle(selected: audio.tonePlaying)).disabled(store.voiceRunning)
                 Spacer()
             }
@@ -158,7 +163,7 @@ struct VoiceView: View {
             }
             if result.demonstrated { Label("Skill demonstrated", systemImage: "checkmark.seal.fill").foregroundStyle(Palette.success) }
             if store.voiceSaveFailed {
-                Button(LocalizedStringKey("timbre_voice_retry_save")) { store.retryVoiceSave() }.buttonStyle(BrassButtonStyle(prominent: false))
+                Button(LocalizedStringKey("timbre_voice_retry_save")) { store.retryVoiceSave() }.buttonStyle(SecondaryButtonStyle())
             }
         }
         .stillCard()
@@ -168,6 +173,7 @@ struct VoiceView: View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title).font(.caption).foregroundStyle(Palette.inkSoft)
             Text(value.map { "\($0)" } ?? "—").font(Typeface.display(44)).foregroundStyle(Palette.ink)
+                .heroNumeral()
         }
         .accessibilityElement(children: .combine)
     }
@@ -197,7 +203,7 @@ private struct VoiceProgress: View {
     @EnvironmentObject private var store: AppStore
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            ProgressView(value: Double(store.live.voiceElapsed), total: Double(duration)).tint(Palette.brass)
+            ProgressView(value: Double(store.live.voiceElapsed), total: Double(duration)).tint(Palette.mint)
             if let hold {
                 ProgressView(value: Double(min(store.live.voiceLiveHoldMs, hold)), total: Double(hold)).tint(Palette.locked)
                     .accessibilityIdentifier("voice.holdProgress")
@@ -239,10 +245,10 @@ private struct VoiceTrace: View {
                 if connected { path.addLine(to: CGPoint(x: x, y: y)) } else { path.move(to: CGPoint(x: x, y: y)) }
                 connected = true
             }
-            context.stroke(path, with: .color(Palette.brass.opacity(0.35)), style: StrokeStyle(lineWidth: 8, lineCap: .round, lineJoin: .round))
-            context.stroke(path, with: .color(Palette.brass), style: StrokeStyle(lineWidth: 2.2, lineCap: .round, lineJoin: .round))
+            context.stroke(path, with: .color(Palette.mint.opacity(0.35)), style: StrokeStyle(lineWidth: 8, lineCap: .round, lineJoin: .round))
+            context.stroke(path, with: .color(Palette.mint), style: StrokeStyle(lineWidth: 2.2, lineCap: .round, lineJoin: .round))
         }
-        .background(RoundedRectangle(cornerRadius: 16).fill(Palette.stageDeep.opacity(0.6)))
+        .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.stageDeep.opacity(0.6)))
         .accessibilityLabel(Text("Your pitch relative to the target"))
     }
 
@@ -257,10 +263,10 @@ private struct VoiceTrace: View {
         if plan.count == 1, let midi = plan.first {
             // One note: the whole take at the target, the stretch to hold lit in the middle.
             let bar = CGRect(x: inset, y: center - 4, width: size.width - inset * 2, height: 8)
-            context.fill(Path(roundedRect: bar, cornerRadius: 4), with: .color(Palette.brass.opacity(0.18)))
+            context.fill(Path(roundedRect: bar, cornerRadius: 4), with: .color(Palette.mint.opacity(0.18)))
             let held = (size.width - inset * 2) * CGFloat(min(1, max(0.08, hold ?? 0.3)))
             context.fill(Path(roundedRect: CGRect(x: size.width / 2 - held / 2, y: center - 4, width: held, height: 8), cornerRadius: 4),
-                         with: .color(Palette.brass.opacity(0.6)))
+                         with: .color(Palette.mint.opacity(0.6)))
             context.draw(NoteGlyphs.text(VoiceNoteName.name(midi, notation: notation), size: 11).font(Typeface.label(11)).foregroundStyle(Palette.inkSoft),
                          at: CGPoint(x: inset, y: center - 16), anchor: .leading)
             return
@@ -275,10 +281,10 @@ private struct VoiceTrace: View {
                 var step = Path()
                 step.move(to: previous)
                 step.addLine(to: CGPoint(x: x0, y: level))
-                context.stroke(step, with: .color(Palette.brass.opacity(0.2)), lineWidth: 1.5)
+                context.stroke(step, with: .color(Palette.mint.opacity(0.2)), lineWidth: 1.5)
             }
             context.fill(Path(roundedRect: CGRect(x: x0, y: level - 4, width: width, height: 8), cornerRadius: 4),
-                         with: .color(Palette.brass.opacity(i == 0 ? 0.75 : 0.32)))
+                         with: .color(Palette.mint.opacity(i == 0 ? 0.75 : 0.32)))
             context.draw(NoteGlyphs.text(VoiceNoteName.name(midi, notation: notation), size: 10).font(Typeface.label(10)).foregroundStyle(i == 0 ? Palette.ink : Palette.inkFaint),
                          at: CGPoint(x: x0 + width / 2, y: level - 13))
             previous = CGPoint(x: x0 + width, y: level)
@@ -305,7 +311,7 @@ private struct NoteContour: View {
                 if i == 0 { path.move(to: a) } else { path.addLine(to: a) }
                 path.addLine(to: b)
             }
-            context.stroke(path, with: .color(Palette.brass.opacity(lit ? 0.9 : 0.4)), style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+            context.stroke(path, with: .color(Palette.mint.opacity(lit ? 0.9 : 0.4)), style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
         }
         .allowsHitTesting(false)
         .accessibilityHidden(true)

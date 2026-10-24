@@ -51,8 +51,6 @@ struct LessonResults: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.requestReview) private var requestReview
 
-    private static let gold = Color(hex: 0xF0A93B)
-
     /// "Flawless" only for a clean run (98 % or better); three stars from 90 % read "Great work". The coach goes by the
     /// same rule (`Coach.isFlawless`), so under "Flawless" it never sends you to fix something.
     private var headline: LocalizedStringKey {
@@ -78,7 +76,7 @@ struct LessonResults: View {
         .task { await reveal() }
         .overlay {
             if let days = celebrating {
-                StreakCelebration(days: days) { withAnimation(.easeOut(duration: 0.3)) { celebrating = nil } }
+                StreakCelebration(days: days) { withAnimation(Motion.fade) { celebrating = nil } }
                     .transition(.opacity)
             }
         }
@@ -97,6 +95,8 @@ struct LessonResults: View {
             .frame(height: 136)
             VStack(spacing: 8) {
                 Text(headline).font(Typeface.display(36)).tracking(-0.8).foregroundStyle(Palette.ink)
+                    .multilineTextAlignment(.center)
+                    .accessibilityAddTraits(.isHeader)
                 Text(lesson.title.localized).font(.headline).foregroundStyle(Palette.inkSoft)
                 if practice { PracticeModeTag().padding(.top, 4) }
             }
@@ -106,12 +106,13 @@ struct LessonResults: View {
                     .opacity(appeared ? 1 : 0)
                     .transition(.scale(scale: 0.95).combined(with: .opacity))
             }
-            HStack(spacing: 12) {
-                tile(symbol: "sparkles", tint: accent, value: Text("+\(xp)"), label: Text("XP"))
-                tile(symbol: "scope", tint: Palette.amber, value: Text("\(accuracyPercent)%"), label: Text("accuracy"))
-                tile(symbol: "flame.fill", tint: Palette.flame, value: Text("\(store.streak.current)"), label: Text("day streak"))
+            // Side by side; one per row at the accessibility sizes, so "day streak" never truncates.
+            StatTileRow(spacing: 12) {
+                StatTile(symbol: "sparkles", tint: accent, value: Text("+\(xp)"), label: Text("XP"), alignment: .center)
+                StatTile(symbol: "scope", tint: Palette.amber, value: Text("\(accuracyPercent)%"), label: Text("accuracy"), alignment: .center)
+                StatTile(symbol: "flame.fill", tint: Palette.flame, value: Text("\(store.streak.current)"), label: Text("day streak"), alignment: .center)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, Metrics.gutter)
             .opacity(appeared ? 1 : 0)
             if let coach = shownCoach {
                 coachCard(coach)
@@ -119,14 +120,14 @@ struct LessonResults: View {
                     .offset(y: coachShown || reduceMotion ? 0 : 14)
             }
             if newBest || sharesResult { bestAndShare }
-            if let barLevel { levelBar(barLevel).padding(.horizontal, 20).transition(.opacity) }
+            if let barLevel { levelBar(barLevel).padding(.horizontal, Metrics.gutter).transition(.opacity) }
             if let reward, badgesShown > 0 { earned(reward) }
             if shareShown && hasShareCards { shareCards.transition(.move(edge: .bottom).combined(with: .opacity)) }
         }
         .padding(.top, 8).padding(.bottom, 16)
     }
 
-    /// StepButton carries its own 12 pt below; Done sits right under it.
+    /// StepButton carries its own 12 pt below; Done (the secondary button) sits right under it.
     private var buttons: some View {
         VStack(spacing: 0) {
             if let next, store.canPlay(next) {
@@ -134,13 +135,12 @@ struct LessonResults: View {
                     .accessibilityIdentifier("lesson.next")
             }
             if !LearnProgress.isReview(lesson.id) && !coachOffersDrill {
-                PracticeWeakSpotsButton(course: course) { onNext($0) }.padding(.vertical, 4)
+                PracticeWeakSpotsButton(course: course) { onNext($0) }.padding(.bottom, 8)
             }
-            Button { onContinue() } label: {
-                Text("Done").font(Typeface.label(17)).foregroundStyle(Palette.ink).frame(maxWidth: .infinity, minHeight: 52)
-            }
-            .accessibilityIdentifier("lesson.done")
-            .padding(.horizontal, 20)
+            Button { onContinue() } label: { Text("Done") }
+                .buttonStyle(SecondaryButtonStyle())
+                .accessibilityIdentifier("lesson.done")
+                .padding(.horizontal, Metrics.gutter)
         }
         .padding(.top, 8).padding(.bottom, 8)
     }
@@ -150,24 +150,24 @@ struct LessonResults: View {
         HStack(spacing: 12) {
             ZStack {
                 Circle().fill(leveled ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.mint.opacity(0.16)))
-                Text("\(level.number)").font(Typeface.label(17)).foregroundStyle(leveled ? Color(hex: 0x1B1206) : Palette.ink)
+                Text("\(level.number)").font(Typeface.label(17)).foregroundStyle(leveled ? Palette.onGold : Palette.ink)
                     .contentTransition(.numericText())
             }
             .frame(width: 40, height: 40)
             .scaleEffect(leveled ? 1.12 : 1)
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
-                    Text("Level \(level.number)").font(Typeface.label(15)).foregroundStyle(leveled ? Self.gold : Palette.ink)
-                    if leveled { Image(systemName: "arrow.up.circle.fill").font(.subheadline.weight(.bold)).foregroundStyle(Self.gold).transition(.scale.combined(with: .opacity)) }
+                    Text("Level \(level.number)").font(Typeface.label(15)).foregroundStyle(leveled ? Palette.starGold : Palette.ink)
+                    if leveled { Image(systemName: "arrow.up.circle.fill").font(.subheadline.weight(.bold)).foregroundStyle(Palette.starGold).transition(.scale.combined(with: .opacity)) }
                     Text(LocalizedStringKey(level.name)).font(.footnote).foregroundStyle(Palette.inkSoft).lineLimit(1)
                     Spacer(minLength: 0)
                 }
-                ProgressLine(value: barValue, color: leveled ? Self.gold : Palette.mint, height: 8)
+                ProgressLine(value: barValue, color: leveled ? Palette.starGold : Palette.mint, height: 8)
             }
         }
-        .padding(12)
-        .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Palette.stageRaised))
-        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(leveled ? Self.gold.opacity(0.6) : .clear, lineWidth: 1.5))
+        .padding(Metrics.tilePadding)
+        .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.stageRaised))
+        .overlay(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).strokeBorder(leveled ? Palette.starGold.opacity(0.6) : .clear, lineWidth: 1.5))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Level \(level.number)"))
     }
@@ -187,18 +187,18 @@ struct LessonResults: View {
             }
             // This lesson finished Today's set: its bonus lands here too (the toast would be hidden behind this screen).
             if reward.dailySetCompleted && reward.achievementsEarned.count + reward.questsCompleted.count < badgesShown {
-                rewardRow(symbol: "sun.max.fill", title: Text("Daily set complete"), detail: Text("+\(XPReward.dailySet) XP"), gold: true)
+                rewardRow(symbol: "sun.max.fill", title: Text("Today complete"), detail: Text("+\(XPReward.dailySet) XP"), gold: true)
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, Metrics.gutter)
     }
 
     private func rewardRow(symbol: String, title: Text, detail: Text, gold: Bool) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: symbol).font(.system(size: 16, weight: .bold)).foregroundStyle(gold ? Color(hex: 0x1B1206) : Palette.onAccent)
+            Image(systemName: symbol).font(.system(size: 16, weight: .bold)).foregroundStyle(gold ? Palette.onGold : Palette.onAccent)
                 .frame(width: 36, height: 36)
                 .background(Circle().fill(gold ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.mint)))
-                .shadow(color: (gold ? Self.gold : Palette.mint).opacity(0.5), radius: 10)
+                .shadow(color: (gold ? Palette.starGold : Palette.mint).opacity(0.5), radius: 10)
             VStack(alignment: .leading, spacing: 1) {
                 title.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
                 detail.font(.caption).foregroundStyle(Palette.inkSoft)
@@ -206,8 +206,8 @@ struct LessonResults: View {
             Spacer(minLength: 0)
         }
         .padding(10)
-        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
-        .transition(.scale(scale: 0.6).combined(with: .opacity))
+        .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.stageRaised))
+        .transition(.adaptive(.scale(scale: 0.6).combined(with: .opacity), reduceMotion: reduceMotion))
         .accessibilityElement(children: .combine)
     }
 
@@ -242,14 +242,11 @@ struct LessonResults: View {
     /// The note in a card of its own under the tiles: "Coach" over the words, the action as a pill.
     private func coachCard(_ note: CoachNote) -> some View {
         let tint = CoachVoice.tint(note, accent: accent)
-        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
         return CoachNoteView(note: note, voice: coachVoice, tint: tint, eyebrow: true, actionId: "lesson.coach.action") { action in
             perform(action)
         }
-        .padding(14)
-        .background(shape.fill(Palette.stageRaised))
-        .overlay(shape.strokeBorder(tint.opacity(0.24), lineWidth: 1))
-        .padding(.horizontal, 20)
+        .stillCard(padding: Metrics.tilePadding, tint: tint)
+        .padding(.horizontal, Metrics.gutter)
         .accessibilityIdentifier("lesson.coach")
     }
 
@@ -300,7 +297,7 @@ struct LessonResults: View {
                 .accessibilityIdentifier("lesson.share.streak")
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, Metrics.gutter)
     }
 
     /// The song's poster (its title leads) or the lesson's (the headline leads).
@@ -344,10 +341,11 @@ struct LessonResults: View {
                 reminderPill
             }
         }
-        .padding(.leading, 10).padding(.trailing, reminderOn ? 10 : 4).padding(.vertical, 8)
-        .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Palette.stageRaised))
-        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(accent.opacity(0.22), lineWidth: 1))
-        .padding(.horizontal, 20)
+        // 44 pt controls (the pill's target, the close button) with 4 pt above and below: the row keeps its 52 pt.
+        .padding(.leading, 10).padding(.trailing, reminderOn ? 10 : 4).padding(.vertical, 4)
+        .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.stageRaised))
+        .overlay(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).strokeBorder(accent.opacity(0.22), lineWidth: 1))
+        .padding(.horizontal, Metrics.gutter)
     }
 
     private var reminderIcon: some View {
@@ -364,16 +362,13 @@ struct LessonResults: View {
             .foregroundStyle(Palette.ink)
     }
 
+    /// The app's close button (a 44 pt target), read "Not now".
     @ViewBuilder private var reminderClose: some View {
         if !reminderOn {
-            Button {
+            CloseButton(label: "Not now") {
                 UserDefaults.standard.set(true, forKey: PracticeReminder.askedKey)
                 withAnimation(Motion.settle) { offerReminder = false }
-            } label: {
-                Image(systemName: "xmark").font(.footnote.weight(.bold)).foregroundStyle(Palette.inkFaint)
-                    .frame(width: 28, height: 36).contentShape(Rectangle())
             }
-            .accessibilityLabel("Not now")
         }
     }
 
@@ -396,6 +391,8 @@ struct LessonResults: View {
             .foregroundStyle(reminderOn ? accent : Palette.onAccent)
             .padding(.horizontal, 12).frame(minHeight: 36)
             .background(Capsule().fill(reminderOn ? AnyShapeStyle(accent.opacity(0.12)) : AnyShapeStyle(accent)))
+            // The pill stays 36 pt; the finger gets 44.
+            .frame(minHeight: Metrics.minTarget)
             .overlay(Capsule().strokeBorder(accent.opacity(reminderOn ? 0.45 : 0), lineWidth: 1))
             .fixedSize()
             .contentShape(Capsule())
@@ -443,25 +440,14 @@ struct LessonResults: View {
         let size: CGFloat = i == 1 ? 90 : 68
         return Image(systemName: "star.fill")
             .font(.system(size: size, weight: .bold))
-            .foregroundStyle(earned && shown ? AnyShapeStyle(LinearGradient(colors: [Color(hex: 0xFFE29A), Color(hex: 0xF0A93B)], startPoint: .top, endPoint: .bottom)) : AnyShapeStyle(Color.white.opacity(0.08)))
+            .foregroundStyle(earned && shown ? AnyShapeStyle(Palette.starFill) : AnyShapeStyle(Color.white.opacity(0.08)))
             // Lands white-hot and cools to gold, a glint crossing it (Shaders.metal).
             .modifier(StarHeat(landed: earned ? landed[i] : nil))
-            .shadow(color: earned && shown ? Color(hex: 0xF0A93B).opacity(0.6) : .clear, radius: 18)
+            .shadow(color: earned && shown ? Palette.starGold.opacity(0.6) : .clear, radius: 18)
             .scaleEffect(shown ? 1 : 0.3)
             .rotationEffect(.degrees(shown ? 0 : -40))
             .offset(y: i == 1 ? -12 : 0)
             .accessibilityHidden(true)
-    }
-
-    private func tile(symbol: String, tint: Color, value: Text, label: Text) -> some View {
-        VStack(spacing: 4) {
-            Image(systemName: symbol).font(.system(size: 15, weight: .semibold)).foregroundStyle(tint)
-            value.font(Typeface.number(24)).foregroundStyle(Palette.ink).contentTransition(.numericText())
-            label.font(.caption).foregroundStyle(Palette.inkSoft)
-        }
-        .frame(maxWidth: .infinity).padding(.vertical, 14)
-        .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Palette.stageRaised))
-        .accessibilityElement(children: .combine)
     }
 
     private func reveal() async {
@@ -469,16 +455,16 @@ struct LessonResults: View {
         if milestone == nil { milestone = store.takeStreakMilestone() }
         // Held from here on; its room was kept from the first frame (it fades in), so nothing below jumps.
         if !coachDecided { coach = coachNote(); coachDecided = true }
-        withAnimation(.easeOut(duration: 0.5)) { appeared = true }
+        withAnimation(Motion.fade) { appeared = true }
         for i in 0..<3 {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 80 : 380))
-            withAnimation(.spring(response: 0.45, dampingFraction: 0.55)) { shownStars = i + 1 }
+            withMotion(Motion.reward, reduceMotion: reduceMotion) { shownStars = i + 1 }
             if i < result.stars { landed[i] = Date(); SoundFX.shared.play(.star); Haptics.shared.lock(); burst += 1 }
         }
         if coach != nil {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 200))
-            let entrance = reduceMotion ? Animation.easeOut(duration: 0.25) : Animation.spring(response: 0.5, dampingFraction: 0.82)
-            withAnimation(entrance) { coachShown = true }
+            // A fade under Reduce Motion, where it doesn't move.
+            withAnimation(reduceMotion ? Motion.fade : Motion.page) { coachShown = true }
         }
         // Ask for a rating right after a flawless lesson, a couple of times in the app's life.
         if result.stars == 3, [2, 10].contains(store.progress.stats["lessons"] ?? 0) {
@@ -496,18 +482,18 @@ struct LessonResults: View {
         if let reward {
             for i in 0..<(reward.achievementsEarned.count + reward.questsCompleted.count + (reward.dailySetCompleted ? 1 : 0)) {
                 try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 320))
-                withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) { badgesShown = i + 1 }
+                withMotion(Motion.reward, reduceMotion: reduceMotion) { badgesShown = i + 1 }
                 if i < reward.achievementsEarned.count { SoundFX.shared.play(.star); Haptics.shared.lock() }
             }
         }
         // A streak milestone takes the whole screen once the results have landed; its share card waits below.
         if let milestone {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 100 : 600))
-            withAnimation(.easeOut(duration: 0.35)) { celebrating = milestone }
+            withAnimation(Motion.fade) { celebrating = milestone }
         }
         guard hasShareCards else { return }
         try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 280))
-        withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) { shareShown = true }
+        withMotion(Motion.page, reduceMotion: reduceMotion) { shareShown = true }
     }
 
     private func fillLevelBar() async {
@@ -516,13 +502,13 @@ struct LessonResults: View {
         let before = max(0, after - reward.xpGained)
         let start = Progression.level(for: before)
         barValue = start.progress(before)
-        withAnimation(.easeOut(duration: 0.3)) { barLevel = start }
+        withAnimation(Motion.fade) { barLevel = start }
         try? await Task.sleep(for: .milliseconds(250))
         if let next = reward.levelUp {
-            withAnimation(.easeInOut(duration: 0.6)) { barValue = 1 }
+            withAnimation(Motion.reveal) { barValue = 1 }
             try? await Task.sleep(for: .milliseconds(650))
             SoundFX.shared.play(.levelUp); Haptics.shared.done(); burst += 1
-            withAnimation(.spring(response: 0.45, dampingFraction: 0.55)) { barLevel = next; leveled = true; barValue = 0 }
+            withMotion(Motion.reward, reduceMotion: reduceMotion) { barLevel = next; leveled = true; barValue = 0 }
             try? await Task.sleep(for: .milliseconds(200))
             withAnimation(.easeOut(duration: 0.5)) { barValue = next.progress(after) }
         } else {
@@ -567,7 +553,7 @@ struct SharePill<Card: View>: View {
                 face(nil).opacity(0.55)
             }
         }
-        .animation(.easeOut(duration: 0.25), value: image == nil)
+        .animation(Motion.fade, value: image == nil)
         .task(id: armed) {
             guard armed, image == nil else { return }
             if wait > .zero { try? await Task.sleep(for: wait) }
@@ -585,7 +571,7 @@ struct SharePill<Card: View>: View {
         .font(Typeface.label(14))
         .foregroundStyle(tint)
         .padding(.leading, 9).padding(.trailing, 16)
-        .frame(minHeight: 40)
+        .frame(minHeight: Metrics.minTarget)
         .background(Capsule().fill(tint.opacity(0.14)))
         .overlay(Capsule().strokeBorder(tint.opacity(0.4), lineWidth: 1))
         .fixedSize()

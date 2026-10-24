@@ -18,7 +18,7 @@ struct ChordsView: View {
 
 /// Chords: a root and a quality, the chord spelled in its key with its formula, and every shape for it in a card
 /// that names it ("Barre · 3fr"), rates how hard it is to hold and strums it on a tap: a glint of light crosses the
-/// box low to high as each string lights with the sound. "Check it" listens with the lessons' chord recognizer
+/// box low to high as each string lights with the sound. "Check" listens with the lessons' chord recognizer
 /// (any shape and any inversion count, as in a lesson's chord step) and says when the chord rings true.
 struct ChordLibraryView: View {
     @EnvironmentObject private var store: AppStore
@@ -32,7 +32,7 @@ struct ChordLibraryView: View {
     /// Strums per shape: a change replays that card's glint.
     @State private var strums: [ChordShape: Int] = [:]
     @State private var strumTask: Task<Void, Never>?
-    /// Check it: idle, listening (with what the microphone hears as a chord) or heard.
+    /// Check: idle, listening (with what the microphone hears as a chord) or heard.
     @State private var check = ChordCheck.idle
     @State private var heard: String?
     @State private var matchedFrames = 0
@@ -88,7 +88,7 @@ struct ChordLibraryView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .firstTextBaseline, spacing: 10) {
                 Text(chordName).font(Typeface.display(56)).foregroundStyle(Palette.ink)
-                    .lineLimit(1).minimumScaleFactor(0.6)
+                    .heroNumeral(minimumScale: 0.6)
                     .shadow(color: Palette.mint.opacity(check == .heard ? 0.55 : 0), radius: 18)
                 Text(formula.name).font(.subheadline).foregroundStyle(Palette.inkSoft)
                 Spacer(minLength: 0)
@@ -123,7 +123,8 @@ struct ChordLibraryView: View {
     @ViewBuilder private func voicings(_ strings: OpenStrings) -> some View {
         let shapes = ChordLibrary.voicings(root: root, formula: formula, openMidi: strings.midi, limit: 6)
         if shapes.isEmpty {
-            Text("No comfortable shape for this chord in this tuning.").foregroundStyle(Palette.inkSoft).stillCard()
+            EmptyState(symbol: "hand.raised.fingers.spread", title: "No comfortable shape for this chord in this tuning.")
+                .stillCard()
         } else {
             VStack(alignment: .trailing, spacing: 12) {
                 // Chart or player's view, as in the lessons (one remembered choice).
@@ -179,7 +180,7 @@ struct ChordLibraryView: View {
         }
     }
 
-    // MARK: Check it
+    // MARK: Check
 
     /// The chord as the recognizer knows it; nil for qualities it doesn't hear (6, m6, add9, 9, dim, aug).
     private var target: ChordTarget? { ChordTarget(root: root, formulaId: formula.id) }
@@ -248,14 +249,15 @@ struct ChordLibraryView: View {
                 MicrophoneHint().padding(.horizontal, -Metrics.gutter)
             }
             if target == nil {
-                Label("Check it hears major, minor, 7th, sus and power chords.", systemImage: "waveform")
+                Label("Check listens for major, minor, 7th, sus and power chords.", systemImage: "waveform")
                     .font(.footnote).foregroundStyle(Palette.inkSoft)
                     .frame(maxWidth: .infinity, minHeight: 54)
             } else {
                 switch check {
                 case .idle:
-                    Button(action: startCheck) { Label("Check it", systemImage: "mic.fill") }
-                        .buttonStyle(BrassButtonStyle())
+                    // One verb for it, as in the lessons: "Check".
+                    Button(action: startCheck) { Label("Check", systemImage: "mic.fill") }
+                        .buttonStyle(PrimaryButtonStyle())
                         .accessibilityIdentifier("chords.check")
                         .accessibilityHint(Text("Listens while you play the chord."))
                 case .listening: listeningBar
@@ -290,7 +292,7 @@ struct ChordLibraryView: View {
             .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.35), lineWidth: 1))
             .accessibilityElement(children: .combine)
             Button("Stop", action: stopCheck)
-                .buttonStyle(BrassButtonStyle(prominent: false))
+                .buttonStyle(SecondaryButtonStyle())
                 .frame(width: 104)
                 .accessibilityIdentifier("chords.stop")
         }
@@ -316,7 +318,7 @@ struct ChordLibraryView: View {
             .background { HeardRing(trigger: celebrate) }
             .accessibilityElement(children: .combine)
             Button("Check again", action: startCheck)
-                .buttonStyle(BrassButtonStyle(prominent: false))
+                .buttonStyle(SecondaryButtonStyle())
                 .frame(width: 132)
                 .accessibilityIdentifier("chords.check")
         }
@@ -390,7 +392,7 @@ private struct VoicingCard: View {
                     playGlyph(sounding)
                 }
             }
-            .stillCard(cornerRadius: 22, padding: 12, tint: sounding ? Palette.mint : nil)
+            .stillCard(padding: Metrics.tilePadding, tint: sounding ? Palette.mint : nil)
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityLabel(Text("\(chordName), \(profile.title), \(profile.level.name), \(shape.notation)"))
@@ -553,7 +555,7 @@ struct ToneStrip: View {
     }
 
     private func tile(_ tone: Tone) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 12, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous)
         return VStack(spacing: 2) {
             // The sign in the system face: Sora's fallback sets ♭ full width ("E ♭").
             NoteGlyphs.text(tone.name, sign: .system(.subheadline, weight: .semibold)).font(Typeface.label(15, relativeTo: .subheadline))
@@ -565,7 +567,7 @@ struct ToneStrip: View {
         .padding(.vertical, 8).padding(.horizontal, 4)
         .frame(minWidth: 0, maxWidth: 54)
         .background(shape.fill(tone.isRoot ? Palette.amber.opacity(0.12) : Palette.stageRaised))
-        .overlay(shape.strokeBorder(tone.isRoot ? Palette.amber.opacity(0.4) : Palette.line, lineWidth: 1))
+        .overlay(shape.strokeBorder(tone.isRoot ? Palette.amber.opacity(0.4) : Palette.hairline, lineWidth: 1))
         .contentTransition(.opacity)
     }
 }

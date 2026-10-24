@@ -83,14 +83,18 @@ struct PaywallPreview: View {
     }
 }
 
-/// "TIMBRE PRO" in gold: on the hero's stage floor, or on its own row above the headline.
+/// "TIMBRE PRO" in gold: on the hero's stage floor, or on its own row above the headline. The large sibling of
+/// `Badge(.pro)`: the same gold and dark-on-gold ink, capitals for the reader's locale, growing no further than xxxLarge.
 struct PaywallProPill: View {
     var body: some View {
-        Text("TIMBRE PRO").font(Typeface.label(12)).tracking(2.2).foregroundStyle(Color(hex: 0x1B1206))
+        Text("Timbre Pro").font(Typeface.label(12)).tracking(2.2)
+            .textCase(.uppercase)
+            .foregroundStyle(Palette.onGold)
             .lineLimit(1)
             .padding(.horizontal, 14).padding(.vertical, 5)
             .background(Capsule().fill(Palette.proGold))
-            .shadow(color: Color(hex: 0xE39A3B).opacity(0.35), radius: 10, y: 3)
+            .shadow(color: Palette.proGoldDeep.opacity(0.35), radius: 10, y: 3)
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
     }
 }
 

@@ -17,6 +17,7 @@ struct LessonPlayer: View {
     var onNext: ((Lesson) -> Void)?
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var run: LessonRun
     @State private var result: LessonResult?
     @State private var improved = false
@@ -86,8 +87,8 @@ struct LessonPlayer: View {
             try? await Task.sleep(for: .seconds(1.2))
             arrived = true
         }
-        .animation(.spring(response: 0.5, dampingFraction: 0.86), value: run.index)
-        .animation(.easeInOut(duration: 0.4), value: result != nil)
+        .adaptiveAnimation(Motion.page, value: run.index)
+        .animation(Motion.reveal, value: result != nil)
         .preferredColorScheme(.dark)
         // "Hear it", chords and listen steps sound like the course's instrument (theory, ear, rhythm: the selected one).
         .onAppear { store.audio.courseVoice = InstrumentVoice(instrumentId: course.instrument) }
@@ -121,21 +122,28 @@ struct LessonPlayer: View {
     @ViewBuilder private var stage: some View {
         if opening, let part {
             partStage(part)
-                .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
-                                        removal: .move(edge: .trailing).combined(with: .opacity)))
+                .transition(slide(in: .trailing, out: .trailing))
         } else if opening {
             SongOpener(lesson: lesson, course: course, accent: accent, arrived: arrived,
-                       start: { withAnimation(.spring(response: 0.5, dampingFraction: 0.86)) { opening = false } },
+                       start: { withMotion(Motion.page, reduceMotion: reduceMotion) { opening = false } },
                        practice: practiceAction, returning: lastPart)
-            .transition(.asymmetric(insertion: .opacity, removal: .move(edge: .leading).combined(with: .opacity)))
+            .transition(.adaptive(.asymmetric(insertion: .opacity, removal: .move(edge: .leading).combined(with: .opacity)),
+                                  reduceMotion: reduceMotion))
         } else if let step = run.step, step.usesMicrophone, !tuneChecked, TuneCheckStep.needed(for: course) {
             TuneCheckStep(course: course, accent: accent) { withAnimation { tuneChecked = true } }
                 .transition(.opacity)
         } else if let step = run.step {
             stepView(step)
                 .id(run.index)
-                .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity), removal: .move(edge: .leading).combined(with: .opacity)))
+                .transition(slide(in: .trailing, out: .leading))
         }
+    }
+
+    /// A step or a part sliding in from `from` and out toward `to`; a fade under Reduce Motion.
+    private func slide(in from: Edge, out to: Edge) -> AnyTransition {
+        .adaptive(.asymmetric(insertion: .move(edge: from).combined(with: .opacity),
+                              removal: .move(edge: to).combined(with: .opacity)),
+                  reduceMotion: reduceMotion)
     }
 
     // MARK: Practising a part
@@ -157,12 +165,12 @@ struct LessonPlayer: View {
         guard let plan = partPlan(for: loop) else { return }
         lastPart = loop
         Analytics.log("song_part_practice", ["lesson": lesson.id, "speed": "\(Int((loop.speed * 100).rounded()))"])
-        withAnimation(.spring(response: 0.5, dampingFraction: 0.86)) { part = PartTake(loop: loop, plan: plan) }
+        withMotion(Motion.page, reduceMotion: reduceMotion) { part = PartTake(loop: loop, plan: plan) }
     }
 
     private func closePart() {
         Haptics.shared.selection()
-        withAnimation(.spring(response: 0.5, dampingFraction: 0.86)) { part = nil }
+        withMotion(Motion.page, reduceMotion: reduceMotion) { part = nil }
     }
 
     /// The part on the play-along's runway (after the tune check, as any step that listens); Continue, or the back
@@ -186,11 +194,11 @@ struct LessonPlayer: View {
             HStack(spacing: 6) {
                 Image(systemName: "repeat").font(.system(size: 11, weight: .bold)).foregroundStyle(tint)
                 Text(verbatim: lesson.title.localized)
-                    .font(Typeface.label(14, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
+                    .font(Typeface.label(14)).foregroundStyle(Palette.ink)
                     .lineLimit(1)
             }
             (bars + Text(verbatim: " · \(Int((part.loop.speed * 100).rounded()))% · \(Int(part.plan.bpm.rounded())) BPM"))
-                .font(Typeface.number(12, relativeTo: .caption)).foregroundStyle(Palette.inkSoft)
+                .font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -248,30 +256,20 @@ struct LessonPlayer: View {
         HStack(spacing: 8) {
             if opening, let part {
                 // Practising a part: back to the sheet, not out of the lesson.
-                Button { closePart() } label: { barGlyph("chevron.backward") }
-                    .buttonStyle(PressScaleStyle())
-                    .accessibilityLabel(Text("Back to the song sheet")).accessibilityIdentifier("song.practice.back")
+                BackButton(label: "Back to the song sheet") { closePart() }
+                    .accessibilityIdentifier("song.practice.back")
                 partHeader(part)
             } else {
-                Button { if run.index == 0 { dismiss() } else { confirmQuit = true } } label: { barGlyph("xmark") }
-                    .buttonStyle(PressScaleStyle())
-                    .accessibilityLabel("Close lesson").accessibilityIdentifier("lesson.close")
+                CloseButton(label: "Close lesson") { if run.index == 0 { dismiss() } else { confirmQuit = true } }
+                    .accessibilityIdentifier("lesson.close")
                 LessonHeader(title: lesson.title.localized, index: run.index, steps: lesson.steps.count, accent: accent)
                     // A song's sheet comes before its steps (and names the song itself): the header shows once they start.
                     .opacity(opening ? 0 : 1)
                     .accessibilityHidden(opening)
             }
         }
-        .padding(.leading, 8).padding(.trailing, 20).padding(.top, 4).padding(.bottom, 6)
-    }
-
-    /// The top bar's round button face (close, or back from a part).
-    private func barGlyph(_ symbol: String) -> some View {
-        Image(systemName: symbol).font(.system(size: 14, weight: .bold)).foregroundStyle(Palette.inkSoft)
-            .frame(width: 34, height: 34)
-            .background(Circle().fill(Color.white.opacity(0.07)))
-            .overlay(Circle().strokeBorder(Color.white.opacity(0.06), lineWidth: 1))
-            .frame(width: 44, height: 44).contentShape(Rectangle())
+        // The button's 34 pt disc sits 5 pt inside its 44 pt target.
+        .padding(.leading, 8).padding(.trailing, Metrics.gutter).padding(.top, 4).padding(.bottom, 6)
     }
 
     private func advance(_ score: Double?) {
@@ -356,12 +354,12 @@ struct LessonHeader: View {
         VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .firstTextBaseline, spacing: 10) {
                 Text(verbatim: title)
-                    .font(Typeface.label(14, relativeTo: .subheadline))
+                    .font(Typeface.label(14))
                     .foregroundStyle(Palette.ink)
                     .lineLimit(1)
                 Spacer(minLength: 0)
                 Text("Step \(shown) of \(steps)")
-                    .font(Typeface.number(12, relativeTo: .caption))
+                    .font(Typeface.number(12))
                     .foregroundStyle(Palette.inkSoft)
                     .lineLimit(1)
                     .fixedSize()
@@ -371,7 +369,7 @@ struct LessonHeader: View {
         }
         // One row beside the 44 pt close button: the words stop growing before they'd crowd it.
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-        .animation(.spring(response: 0.5, dampingFraction: 0.82), value: index)
+        .adaptiveAnimation(Motion.page, value: index)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: title))
         .accessibilityValue(Text("Step \(shown) of \(steps)"))
@@ -422,7 +420,26 @@ struct LessonProgressTrack: View {
     }
 }
 
-/// The big bottom button every step ends with.
+/// Every step's title, the same on every kind of step (an explanation, a quiz, a strum, the tune check, a play-along):
+/// Sora 28 on the title curve, leading, wrapping onto as many lines as it needs, and a heading for VoiceOver. The
+/// title never changes size or alignment from one step to the next.
+struct StepTitle: View {
+    private let text: Text
+
+    init(_ text: Text) { self.text = text }
+    init(_ key: LocalizedStringKey) { self.text = Text(key) }
+
+    var body: some View {
+        text.font(Typeface.stepTitle).tracking(-0.4).foregroundStyle(Palette.ink)
+            .multilineTextAlignment(.leading)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityAddTraits(.isHeader)
+    }
+}
+
+/// The big bottom button every step ends with: the app's one primary button (`PrimaryButtonStyle`) in the step's
+/// accent, disabled looking disabled.
 struct StepButton: View {
     let title: LocalizedStringKey
     var accent: Color = Palette.mint
@@ -431,19 +448,11 @@ struct StepButton: View {
     var inset = true
     let action: () -> Void
     var body: some View {
-        Button(action: action) {
-            Text(title).font(Typeface.label(18)).foregroundStyle(enabled ? Palette.onAccent : Palette.inkFaint)
-                .frame(maxWidth: .infinity, minHeight: 56)
-                .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(enabled ? AnyShapeStyle(accent) : AnyShapeStyle(Palette.stageRaised)))
-                .overlay(alignment: .bottom) {
-                    if enabled { RoundedRectangle(cornerRadius: 18, style: .continuous).fill(.black.opacity(0.18)).frame(height: 5).offset(y: 5).mask(RoundedRectangle(cornerRadius: 18, style: .continuous).offset(y: 5)) }
-                }
-                .shadow(color: enabled ? accent.opacity(0.35) : .clear, radius: 16, y: 6)
-        }
-        .buttonStyle(PressScaleStyle())
-        .disabled(!enabled)
-        .padding(.horizontal, inset ? 20 : 0).padding(.bottom, inset ? 12 : 0)
-        .accessibilityIdentifier("lesson.continue")
+        Button(action: action) { Text(title) }
+            .buttonStyle(PrimaryButtonStyle(accent: accent))
+            .disabled(!enabled)
+            .padding(.horizontal, inset ? Metrics.gutter : 0).padding(.bottom, inset ? 12 : 0)
+            .accessibilityIdentifier("lesson.continue")
     }
 }
 
@@ -465,12 +474,13 @@ struct LessonActionBar<Content: View>: View {
             layout { content }
         }
         .environment(\.timbreGlassSpace, glass)
-        .padding(.horizontal, 20).padding(.bottom, 12)
+        .padding(.horizontal, Metrics.gutter).padding(.bottom, 12)
     }
 }
 
-/// "Hear it" in a step's bottom bar: a tinted button in the step's accent, its speaker waving while it sounds.
-/// On iOS 26 it is glass washed in the accent (`LessonActionBar`'s group).
+/// "Hear it" in a step's bottom bar: a tinted button in the step's accent, its speaker waving while it sounds. The
+/// secondary button's capsule, height and type (`SecondaryButtonStyle(tint:)`), so it sits level with the step's
+/// primary button; on iOS 26 it is glass washed in the accent (`LessonActionBar`'s group).
 struct HearItButton: View {
     var accent: Color = Palette.mint
     var sounding = false
@@ -480,14 +490,14 @@ struct HearItButton: View {
     @Environment(\.timbreGlassSpace) private var glass
 
     var body: some View {
-        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        let shape = Capsule()
         Button(action: action) {
             Label("Hear it", systemImage: "speaker.wave.2.fill")
-                .font(Typeface.label(17)).foregroundStyle(accent)
+                .font(Typeface.button).foregroundStyle(accent)
                 .symbolEffect(.variableColor.iterative, isActive: sounding)
                 .lineLimit(1).minimumScaleFactor(0.75)
                 .padding(.horizontal, 22)
-                .frame(maxWidth: expands ? .infinity : nil, minHeight: 56)
+                .frame(maxWidth: expands ? .infinity : nil, minHeight: Metrics.buttonHeight)
                 .overlay(shape.strokeBorder(accent.opacity(0.4), lineWidth: 1))
                 .timbreGlass(accent.opacity(0.16), in: shape) { shape.fill(accent.opacity(0.12)) }
                 .timbreGlassID("lesson.hear", in: glass)
@@ -498,20 +508,21 @@ struct HearItButton: View {
     }
 }
 
-/// A quieter button for a step's bottom bar ("I played it", "My strings are tuned — skip"); clear glass on iOS 26.
+/// A quieter button for a step's bottom bar ("I played it", "My strings are tuned — skip"): the secondary button's
+/// capsule, height, type and control outline (`SecondaryButtonStyle`); clear glass on iOS 26.
 struct LessonBarButton: View {
     let title: LocalizedStringKey
     let action: () -> Void
     @Environment(\.timbreGlassSpace) private var glass
 
     var body: some View {
-        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        let shape = Capsule()
         Button(action: action) {
-            Text(title).font(Typeface.label(16)).foregroundStyle(Palette.inkSoft)
+            Text(title).font(Typeface.button).foregroundStyle(Palette.ink)
                 .lineLimit(1).minimumScaleFactor(0.75)
                 .padding(.horizontal, 18)
-                .frame(maxWidth: .infinity, minHeight: 56)
-                .overlay(shape.strokeBorder(Palette.line, lineWidth: 1))
+                .frame(maxWidth: .infinity, minHeight: Metrics.buttonHeight)
+                .overlay(shape.strokeBorder(Palette.controlLine, lineWidth: 1))
                 .timbreGlass(in: shape) { shape.fill(Palette.stageRaised) }
                 .timbreGlassID("lesson.secondary", in: glass)
                 .contentShape(shape)
@@ -588,9 +599,9 @@ struct MicrophoneHint: View {
                 Button("Open Settings") { if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) } }
                     .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.mint)
             }
-            .padding(14).frame(maxWidth: .infinity)
-            .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Palette.stageRaised))
-            .padding(.horizontal, 20)
+            .padding(Metrics.tilePadding).frame(maxWidth: .infinity)
+            .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.stageRaised))
+            .padding(.horizontal, Metrics.gutter)
         }
     }
 }
@@ -639,14 +650,13 @@ struct ChoiceStep: View {
                 let room = middleRoom(proxy.size)
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
-                        Text(prompt.localized).font(Typeface.display(26)).tracking(-0.4).foregroundStyle(Palette.ink)
-                            .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
+                        StepTitle(Text(prompt.localized))
                             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { promptHeight = $0 }
                         middle(room)
                         answers
                             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { answersHeight = $0 }
                     }
-                    .padding(.horizontal, 22).padding(.top, 18).padding(.bottom, 12)
+                    .padding(.horizontal, Metrics.gutter).padding(.top, 18).padding(.bottom, 12)
                 }
                 .scrollBounceBehavior(.basedOnSize)
             }
@@ -675,12 +685,12 @@ struct ChoiceStep: View {
         .modifier(Shake(amount: shake))
     }
 
-    /// The room between the question and the answers (the paddings, 18 + 12, and the two 20 pt gaps aside);
-    /// nil until both are measured, or when it's too small to fill.
+    /// The room between the question and the answers (the paddings, 18 + 12, the two 20 pt gaps and the gutters
+    /// aside); nil until both are measured, or when it's too small to fill.
     private func middleRoom(_ size: CGSize) -> CGSize? {
         guard promptHeight > 0, answersHeight > 0 else { return nil }
         let height = size.height - 30 - 40 - promptHeight - answersHeight
-        return height >= Self.smallestFill ? CGSize(width: max(0, size.width - 44), height: height) : nil
+        return height >= Self.smallestFill ? CGSize(width: max(0, size.width - 2 * Metrics.gutter), height: height) : nil
     }
 
     /// The listen card and the picture, filling `room` together; with neither, the course's instrument or motif
@@ -708,7 +718,7 @@ struct ChoiceStep: View {
         return LessonVisualView(visual: visual, accent: accent, instrumentId: course.instrument, room: inner)
             .padding(16)
             .frame(maxWidth: .infinity, minHeight: room?.height ?? 0)
-            .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
+            .background(RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous).fill(Palette.stageRaised))
     }
 
     /// A big play button with sound rings that ripple while the question plays; given `fill`, it grows to that
@@ -732,8 +742,8 @@ struct ChoiceStep: View {
             }
             .frame(maxWidth: .infinity, minHeight: max(0, (fill ?? 0) - 32))
             .padding(.vertical, 16)
-            .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
-            .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .background(RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous).fill(Palette.stageRaised))
+            .contentShape(RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous))
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityIdentifier("lesson.hear")
@@ -742,7 +752,7 @@ struct ChoiceStep: View {
     private func optionRow(_ index: Int, _ option: LearnText) -> some View {
         let isPicked = picked == index
         let reveal = picked != nil
-        let tint: Color = reveal && index == answer ? accent : reveal && isPicked ? Palette.danger : Palette.line
+        let tint: Color = reveal && index == answer ? accent : reveal && isPicked ? Palette.danger : Palette.controlLine
         return Button {
             guard picked == nil else { return }
             // The feedback slides in and the picture above makes room for it.
@@ -758,8 +768,8 @@ struct ChoiceStep: View {
                 else if reveal && isPicked { Image(systemName: "xmark.circle.fill").foregroundStyle(Palette.danger) }
             }
             .padding(.horizontal, 18).frame(minHeight: compact ? 84 : 58)
-            .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(reveal && (index == answer || isPicked) ? tint.opacity(0.12) : Palette.stageRaised))
-            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(tint, lineWidth: reveal && (index == answer || isPicked) ? 2 : 1))
+            .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(reveal && (index == answer || isPicked) ? tint.opacity(0.12) : Palette.stageRaised))
+            .overlay(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).strokeBorder(tint, lineWidth: reveal && (index == answer || isPicked) ? 2 : 1))
             .contentShape(Rectangle())
         }
         .buttonStyle(PressScaleStyle())
@@ -784,8 +794,8 @@ struct ChoiceStep: View {
             Spacer(minLength: 0)
         }
         .padding(16)
-        .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill((correct ? accent : Palette.amber).opacity(0.10)))
-        .padding(.horizontal, 20).padding(.bottom, 10)
+        .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill((correct ? accent : Palette.amber).opacity(0.10)))
+        .padding(.horizontal, Metrics.gutter).padding(.bottom, 10)
         .transition(.move(edge: .bottom).combined(with: .opacity))
     }
 

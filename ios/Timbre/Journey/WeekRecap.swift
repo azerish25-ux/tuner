@@ -57,6 +57,13 @@ struct WeekRecapCard: View {
     @Environment(\.displayScale) private var displayScale
     @Environment(\.locale) private var locale
     @Environment(\.layoutDirection) private var layoutDirection
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    private var statsLayout: AnyLayout {
+        typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
+            : AnyLayout(HStackLayout(spacing: 6))
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -68,8 +75,9 @@ struct WeekRecapCard: View {
                     .frame(maxWidth: 210)
                     .accessibilityHidden(true)
             }
-            Rectangle().fill(Palette.line).frame(height: 1).accessibilityHidden(true)
-            HStack(spacing: 6) {
+            Hairline()
+            // Three across; one per row at the accessibility sizes, where three would truncate.
+            statsLayout {
                 WeekStat(symbol: "scope", tint: Palette.amber, value: WeekRecap.centsText(recap.bestCents), label: Text("best"))
                 WeekStat(symbol: "graduationcap.fill", tint: Palette.violet, value: Text(recap.lessons, format: .number), label: Text("lessons"))
                 WeekStat(symbol: "flame.fill", tint: Palette.flame, value: Text(recap.streak, format: .number), label: Text("day streak"))
@@ -84,8 +92,7 @@ struct WeekRecapCard: View {
     private var header: some View {
         HStack(alignment: .center, spacing: 10) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Your week").font(Typeface.display(16)).foregroundStyle(Palette.ink)
-                    .accessibilityAddTraits(.isHeader)
+                CardTitle("Your week")
                 recap.rangeText.font(.caption).foregroundStyle(Palette.inkSoft)
             }
             Spacer(minLength: 8)
@@ -96,15 +103,16 @@ struct WeekRecapCard: View {
     private var minutesBlock: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(recap.minutes, format: .number)
-                .font(Typeface.number(40, relativeTo: .largeTitle)).foregroundStyle(Palette.ink)
+                .font(Typeface.hero(40)).foregroundStyle(Palette.ink)
                 .contentTransition(.numericText(value: Double(recap.minutes)))
-                .lineLimit(1).minimumScaleFactor(0.6)
+                .heroNumeral(minimumScale: 0.6)
             Text("minutes").font(.caption).foregroundStyle(Palette.inkSoft)
         }
         .fixedSize(horizontal: false, vertical: true)
         .accessibilityElement(children: .combine)
     }
 
+    /// A 36 pt pill in a 44 pt target.
     private var shareLabel: some View {
         Label("Share", systemImage: "square.and.arrow.up")
             .font(Typeface.label(13)).foregroundStyle(Palette.mint)
@@ -112,7 +120,8 @@ struct WeekRecapCard: View {
             .background(Capsule().fill(Palette.mint.opacity(0.12)))
             .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.35), lineWidth: 1))
             .fixedSize()
-            .contentShape(Capsule())
+            .frame(minHeight: Metrics.minTarget)
+            .contentShape(Rectangle())
     }
 
     @ViewBuilder private var shareButton: some View {
@@ -212,7 +221,7 @@ struct WeekShareCard: View {
     }
 
     private func tile(_ symbol: String, _ tint: Color, _ value: Text, _ label: Text) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return VStack(spacing: 5) {
             Image(systemName: symbol).font(.system(size: 14, weight: .bold)).foregroundStyle(tint)
             value.font(Typeface.number(22)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.6)

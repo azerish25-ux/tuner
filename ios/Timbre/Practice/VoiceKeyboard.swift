@@ -85,7 +85,7 @@ struct VoiceKeyboard: View {
                         }
                         .frame(width: blackWidth, height: 60)
                         .foregroundStyle(Palette.onAccent)
-                        .background(selected ? Palette.brass : Color(hex: 0x141110), in: RoundedRectangle(cornerRadius: 5))
+                        .background(selected ? Palette.mint : Color(hex: 0x141110), in: RoundedRectangle(cornerRadius: 5))
                         .overlay(RoundedRectangle(cornerRadius: 5).stroke(Palette.line, lineWidth: 1))
                         .contentShape(RoundedRectangle(cornerRadius: 4))
                     }

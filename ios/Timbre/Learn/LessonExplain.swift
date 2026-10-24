@@ -75,8 +75,8 @@ struct ExplainStep: View {
                 let base = Self.heroHeight(proxy.size.height)
                 let spare = spareRoom(proxy.size.height, hero: base)
                 let cardHeight = heroHeight(base: base, spare: spare)
-                // Inside the card: the margins (22 a side) and the card's padding (18 a side) aside.
-                let inner = CGSize(width: max(0, proxy.size.width - 80), height: max(0, cardHeight - 36))
+                // Inside the card: the gutters and the card's padding (18 a side) aside.
+                let inner = CGSize(width: max(0, proxy.size.width - 2 * Metrics.gutter - 36), height: max(0, cardHeight - 36))
                 ScrollView {
                     VStack(alignment: .leading, spacing: 22) {
                         hero(height: cardHeight, inner: inner)
@@ -91,7 +91,7 @@ struct ExplainStep: View {
                                 .opacity(revealed ? 0.85 : 0)
                         }
                     }
-                    .padding(.horizontal, 22).padding(.top, 18).padding(.bottom, 12)
+                    .padding(.horizontal, Metrics.gutter).padding(.top, 18).padding(.bottom, 12)
                 }
                 .scrollBounceBehavior(.basedOnSize)
             }
@@ -99,7 +99,7 @@ struct ExplainStep: View {
         }
         .onAppear {
             if entrance {
-                withAnimation(.spring(response: 0.6, dampingFraction: 0.85).delay(0.05)) { shown = true }
+                withAnimation(Motion.adaptive(Motion.page, reduceMotion: reduceMotion).delay(0.05)) { shown = true }
             } else {
                 shown = true
             }
@@ -144,8 +144,7 @@ struct ExplainStep: View {
 
     private var words: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(title.localized).font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
-                .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
+            StepTitle(Text(title.localized))
             Text(text.localized).font(.title3).foregroundStyle(Palette.inkSoft).lineSpacing(3)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -198,7 +197,7 @@ struct ExplainStep: View {
             .frame(maxWidth: .infinity, minHeight: max(0, height - 36))
             .padding(18)
             .background(card)
-            .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
+            .overlay(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous).strokeBorder(Palette.hairline, lineWidth: 1))
         }
     }
 
@@ -232,7 +231,7 @@ struct ExplainStep: View {
     }
 
     private var card: some View {
-        let shape = RoundedRectangle(cornerRadius: 26, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
         return shape.fill(Palette.stageRaised)
             .overlay(RadialGradient(colors: [accent.opacity(0.12), .clear], center: .top, startRadius: 4, endRadius: 260).clipShape(shape))
     }
@@ -267,7 +266,7 @@ struct ExplainStep: View {
                 }
             }
             .frame(width: fit.width, height: ChordDiagram.boxHeight(spec, width: fit.width, stretch: fit.stretch, named: edges != nil))
-            .animation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle, value: player)
+            .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: player)
         }
         .frame(maxWidth: fit.width)
         // Played back right: sparks from behind the box, on a canvas of their own size.

@@ -133,9 +133,9 @@ struct SongPerformStep: View {
                     .contentTransition(.numericText(value: tempo))
                     .animation(reduceMotion ? nil : Motion.quick, value: tempo)
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, Metrics.gutter)
             SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent, height: 44)
-                .padding(.horizontal, 20)
+                .padding(.horizontal, Metrics.gutter)
             Spacer(minLength: 0)
             MicrophoneHint()
             tempoChoice
@@ -145,13 +145,13 @@ struct SongPerformStep: View {
 
     private var stageHeader: some View {
         HStack(spacing: 8) {
-            Label("Final take", systemImage: "music.mic").font(Typeface.label(12)).tracking(1.2).textCase(.uppercase)
-                .foregroundStyle(accent).lineLimit(1)
+            Label { Eyebrow("Final take", color: accent, style: .display) } icon: { Image(systemName: "music.mic") }
+                .font(Typeface.eyebrowDisplay).foregroundStyle(accent).lineLimit(1)
             Spacer(minLength: 8)
             CalibrateButton(audio: store.audio, accent: accent) { calibrating = true }
             BandControls(audio: store.audio, accent: accent)
         }
-        .padding(.horizontal, 22).padding(.top, 8)
+        .padding(.horizontal, Metrics.gutter).padding(.top, 8)
     }
 
     /// The sleeve under a pool of light, its record out and turning: the song is on.
@@ -188,7 +188,7 @@ struct SongPerformStep: View {
                 .opacity(ladder.isFullTempo ? 0 : 1)
                 .accessibilityHidden(ladder.isFullTempo)
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, Metrics.gutter)
         .animation(reduceMotion ? nil : Motion.pluck, value: ladder.rung)
     }
 
@@ -196,7 +196,7 @@ struct SongPerformStep: View {
         let selected = ladder.rung == rung
         let full = rung >= TempoLadder.lessonRung
         let tint = full ? accent : Palette.amber
-        let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return Button {
             guard ladder.rung != rung else { return }
             ladder.select(rung)
@@ -210,7 +210,7 @@ struct SongPerformStep: View {
             .foregroundStyle(selected ? Palette.onAccent : Palette.ink)
             .frame(maxWidth: .infinity, minHeight: 48)
             .background(shape.fill(selected ? AnyShapeStyle(tint) : AnyShapeStyle(Palette.stageRaised)))
-            .overlay(shape.strokeBorder(selected ? Color.clear : Palette.line, lineWidth: 1))
+            .overlay(shape.strokeBorder(selected ? Color.clear : Palette.controlLine, lineWidth: 1))
             .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())
@@ -232,11 +232,11 @@ struct SongPerformStep: View {
                 SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent,
                                progress: songProgress(CACurrentMediaTime()), height: 34)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, Metrics.gutter)
             TakeRibbon(count: notes.count, grades: grades, current: judge.nextIndex, accent: accent)
             Spacer(minLength: 0)
             LessonBarButton(title: "Stop") { stopTake() }
-                .padding(.horizontal, 20).padding(.bottom, 12)
+                .padding(.horizontal, Metrics.gutter).padding(.bottom, 12)
                 .accessibilityIdentifier("song.stop")
         }
     }
@@ -254,11 +254,11 @@ struct SongPerformStep: View {
                 Text(points, format: .number).font(Typeface.number(26, relativeTo: .title2)).foregroundStyle(Palette.ink)
                     .contentTransition(.numericText(value: Double(points)))
                     .animation(reduceMotion ? nil : Motion.quick, value: points)
-                Text("Score").font(Typeface.label(11)).tracking(1.2).textCase(.uppercase).foregroundStyle(accent)
+                Eyebrow("Score", color: accent, style: .display)
             }
             .accessibilityElement(children: .combine)
         }
-        .padding(.horizontal, 22).padding(.top, 8)
+        .padding(.horizontal, Metrics.gutter).padding(.top, 8)
     }
 
     /// The play-along's stage: the runway (pitch lanes without a neck), the count-in over it, the combo HUD.
@@ -281,9 +281,9 @@ struct SongPerformStep: View {
         .accessibilityLabel(Text("Play-along, \(notes.count) notes"))
         .frame(minHeight: 240, maxHeight: fretted ? 460 : 340)
         .overlay(alignment: .top) { HighwayHUD(combo: judge.combo, calm: reduceMotion) }
-        .background(RoundedRectangle(cornerRadius: 26, style: .continuous).fill(Palette.stageDeep))
-        .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
-        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .background(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous).fill(Palette.stageDeep))
+        .overlay(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous).strokeBorder(Palette.hairline, lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous))
         .padding(.horizontal, 12)
         .layoutPriority(1)
     }
@@ -295,7 +295,7 @@ struct SongPerformStep: View {
             let beat = lyricBeat(CACurrentMediaTime())
             HighwayLyrics(sheet: lyrics, beat: beat, accent: accent, section: sectionName(atBeat: beat))
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, Metrics.gutter)
     }
 
     /// Where the take is, in beats from the song's first bar (nil before it starts, negative through the count-in).
@@ -362,7 +362,7 @@ struct SongPerformStep: View {
         judge = PlayAlongJudge(notes: notes, bpm: tempo, anyOctave: course.anyOctave)
         grades = [:]; hitTimes = [:]; offsets = [:]; trail = []; points = 0; tierUp = nil
         startTime = CACurrentMediaTime()
-        withAnimation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle) { phase = .playing }
+        withMotion(Motion.settle, reduceMotion: reduceMotion) { phase = .playing }
         Haptics.shared.selection()
         Analytics.log("song_perform", ["lesson": lesson.id, "tempo": String(ladder.percent)])
         // A fresh count from the first click (a lesson's click restarts even over the Metronome tool's), so the
@@ -442,7 +442,7 @@ struct SongPerformStep: View {
         take = SongTake(accuracy: accuracy, points: points, bestCombo: judge.bestCombo,
                         grades: notes.indices.map { grades[$0] ?? .miss }, judgments: judge.judgments,
                         notes: notes.count, tempo: Int(tempo), full: ladder.isFullTempo)
-        withAnimation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle) { phase = .finale }
+        withMotion(Motion.settle, reduceMotion: reduceMotion) { phase = .finale }
         if accuracy >= 0.7 { SoundFX.shared.play(.complete) }
         Haptics.shared.done()
     }
@@ -459,7 +459,7 @@ struct SongPerformStep: View {
         store.demoNoteDue = nil
         #endif
         store.audio.prepareBand(band)
-        withAnimation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle) { phase = .stage }
+        withMotion(Motion.settle, reduceMotion: reduceMotion) { phase = .stage }
     }
 
     /// Continue: the best take at the song's tempo or faster counts; only slower takes cap the lesson's stars.

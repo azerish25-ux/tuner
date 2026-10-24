@@ -242,37 +242,17 @@ struct NotationPhrase: View {
 
 // MARK: - Staff, Tab or Both
 
-/// The lead sheet's choice of notation, as a segmented capsule.
+/// The lead sheet's choice of notation (Staff, Tab, Both): the app's segmented pill, hugging its labels, with a 44 pt
+/// target on every segment.
 struct NotationModePicker: View {
     @Binding var mode: NotationMode
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Namespace private var pill
 
     var body: some View {
-        HStack(spacing: 2) {
-            ForEach(NotationMode.allCases) { option in
-                Button {
-                    guard option != mode else { return }
-                    Haptics.shared.selection()
-                    withAnimation(reduceMotion ? nil : Motion.quick) { mode = option }
-                } label: {
-                    Text(option.title)
-                        .font(Typeface.label(12)).foregroundStyle(option == mode ? Palette.stage : Palette.inkSoft)
-                        .lineLimit(1).fixedSize()
-                        .padding(.horizontal, 11).frame(minHeight: 28)
-                        .background {
-                            if option == mode { Capsule().fill(Palette.ink).matchedGeometryEffect(id: "pill", in: pill) }
-                        }
-                        .contentShape(Capsule())
-                }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(option == mode ? .isSelected : [])
-                .accessibilityIdentifier("song.notation.\(option.rawValue)")
-            }
+        SegmentedPill(options: NotationMode.allCases, selection: $mode,
+                      identifier: { "song.notation.\($0.rawValue)" }) { option in
+            Text(option.title).font(Typeface.label(12)).lineLimit(1).fixedSize()
         }
-        .padding(2)
-        .background(Capsule().fill(Palette.stageRaised))
-        .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
+        .fixedSize()
         .dynamicTypeSize(...DynamicTypeSize.xxLarge)
     }
 }

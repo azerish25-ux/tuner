@@ -261,7 +261,7 @@ struct NoteReadout: View {
         VStack(spacing: compact ? 2 : 6) {
             HStack(alignment: .lastTextBaseline, spacing: 3) {
                 Text(parts.name).font(Typeface.note(compact ? 84 : 112, relativeTo: .largeTitle)).tracking(compact ? -3 : -5)
-                    .foregroundStyle(locked ? Color(hex: 0xEFFFF8) : Palette.ink)
+                    .foregroundStyle(Palette.ink)
                     .contentTransition(.numericText())
                     .minimumScaleFactor(0.6).lineLimit(1)
                 Text(parts.octave).font(Typeface.displayLight(30)).foregroundStyle(octaveColor)

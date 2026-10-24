@@ -25,7 +25,7 @@ struct SongTake: Equatable {
     /// White-gold perfect, the course colour good, amber late or early, coral missed (as on the play-along's ribbon).
     static func color(_ grade: PlayAlongJudge.Grade, accent: Color) -> Color {
         switch grade {
-        case .perfect: return Color(hex: 0xFFE7A3)
+        case .perfect: return HighwayRunway.perfectGold
         case .good: return accent
         case .ok: return Palette.amber
         case .miss: return Palette.danger
@@ -83,7 +83,7 @@ struct SongFinaleView: View {
                     numbers.opacity(appeared ? 1 : 0)
                     if !take.judgments.isEmpty {
                         HighwayTimingStrip(count: take.notes, judgments: take.judgments, accent: accent, calm: reduceMotion)
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, Metrics.gutter)
                             .opacity(appeared ? 1 : 0)
                     }
                     shareRow.opacity(appeared ? 1 : 0)
@@ -114,11 +114,10 @@ struct SongFinaleView: View {
     private func star(_ index: Int) -> some View {
         let earned = index < stars
         let shown = index < shownStars
-        let fill = LinearGradient(colors: [Color(hex: 0xFFE29A), Color(hex: 0xF0A93B)], startPoint: .top, endPoint: .bottom)
         return Image(systemName: "star.fill")
             .font(.system(size: index == 1 ? 78 : 58, weight: .bold))
-            .foregroundStyle(earned && shown ? AnyShapeStyle(fill) : AnyShapeStyle(Color.white.opacity(0.08)))
-            .shadow(color: earned && shown ? Color(hex: 0xF0A93B).opacity(0.6) : .clear, radius: 16)
+            .foregroundStyle(earned && shown ? AnyShapeStyle(Palette.starFill) : AnyShapeStyle(Color.white.opacity(0.08)))
+            .shadow(color: earned && shown ? Palette.starGold.opacity(0.6) : .clear, radius: 16)
             .scaleEffect(shown ? 1 : 0.3)
             .rotationEffect(.degrees(shown ? 0 : -40))
             .offset(y: index == 1 ? -10 : 0)
@@ -137,39 +136,34 @@ struct SongFinaleView: View {
             }
         }
         .multilineTextAlignment(.center)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, Metrics.gutter)
         .accessibilityElement(children: .combine)
     }
 
-    /// Points, best combo and the tempo it was played at; then the grades counted.
+    /// Points, best combo and the tempo it was played at (stat tiles, stacked at the accessibility sizes); then the
+    /// grades counted.
     private var numbers: some View {
         VStack(spacing: 12) {
-            HStack(spacing: 10) {
-                if let points = take.points { tile(Text(points, format: .number), label: "Score", symbol: "sparkles", tint: accent) }
-                if let combo = take.bestCombo, combo > 1 { tile(Text("×\(combo)"), label: "Best combo", symbol: "flame.fill", tint: Palette.flame) }
-                tile(Text("\(take.tempo)"), label: "BPM", symbol: take.full ? "metronome.fill" : "tortoise.fill", tint: take.full ? Palette.amber : Palette.inkSoft)
+            StatTileRow {
+                if let points = take.points {
+                    StatTile(symbol: "sparkles", tint: accent, value: Text(points, format: .number), label: "Score", alignment: .center)
+                }
+                if let combo = take.bestCombo, combo > 1 {
+                    StatTile(symbol: "flame.fill", tint: Palette.flame, value: Text("×\(combo)"), label: "Best combo", alignment: .center)
+                }
+                StatTile(symbol: take.full ? "metronome.fill" : "tortoise.fill", tint: take.full ? Palette.amber : Palette.inkSoft,
+                         value: Text("\(take.tempo)"), label: "BPM", alignment: .center)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, Metrics.gutter)
             if !take.grades.isEmpty {
                 HStack(spacing: 18) {
                     stat("Perfect", take.count(.perfect), SongTake.color(.perfect, accent: accent))
                     stat("Good", take.count(.good), SongTake.color(.good, accent: accent))
-                    stat("Late/early", take.count(.ok), SongTake.color(.ok, accent: accent))
+                    stat("Early/late", take.count(.ok), SongTake.color(.ok, accent: accent))
                     stat("Missed", take.count(.miss), SongTake.color(.miss, accent: accent))
                 }
             }
         }
-    }
-
-    private func tile(_ value: Text, label: LocalizedStringKey, symbol: String, tint: Color) -> some View {
-        VStack(spacing: 3) {
-            Image(systemName: symbol).font(.system(size: 14, weight: .semibold)).foregroundStyle(tint)
-            value.font(Typeface.number(20)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.6)
-            Text(label).font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.8)
-        }
-        .frame(maxWidth: .infinity).padding(.vertical, 12)
-        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
-        .accessibilityElement(children: .combine)
     }
 
     private func stat(_ label: LocalizedStringKey, _ value: Int, _ color: Color) -> some View {
@@ -197,10 +191,8 @@ struct SongFinaleView: View {
             }
             Spacer(minLength: 0)
         }
-        .padding(14)
-        .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
-        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(accent.opacity(0.25), lineWidth: 1))
-        .padding(.horizontal, 20)
+        .stillCard(padding: Metrics.tilePadding, tint: accent)
+        .padding(.horizontal, Metrics.gutter)
     }
 
     private var posterThumb: some View {
@@ -220,7 +212,7 @@ struct SongFinaleView: View {
     private var shareLabel: some View {
         Label("Share", systemImage: "square.and.arrow.up")
             .font(Typeface.label(14)).foregroundStyle(Palette.onAccent)
-            .padding(.horizontal, 16).frame(minHeight: 40)
+            .padding(.horizontal, 16).frame(minHeight: Metrics.minTarget)
             .background(Capsule().fill(accent))
             .fixedSize()
     }
@@ -230,7 +222,7 @@ struct SongFinaleView: View {
             if let slower, let slowerTempo {
                 Button(action: slower) { Label("Try it at \(slowerTempo) BPM", systemImage: "tortoise.fill") }
                     .font(Typeface.label(14)).foregroundStyle(accent)
-                    .frame(minHeight: 36)
+                    .tapTarget()
                     .accessibilityIdentifier("song.slower")
             }
             HStack(spacing: 10) {
@@ -239,23 +231,20 @@ struct SongFinaleView: View {
                 finaleButton("Continue", primary: !retryFirst, action: proceed)
                     .accessibilityIdentifier("lesson.continue")
             }
-            .padding(.horizontal, 20).padding(.bottom, 12)
+            .padding(.horizontal, Metrics.gutter).padding(.bottom, 12)
         }
         .padding(.top, 6)
     }
 
-    private func finaleButton(_ title: LocalizedStringKey, primary: Bool, action: @escaping () -> Void) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
-        return Button(action: action) {
-            Text(title)
-                .font(Typeface.label(primary ? 18 : 16))
-                .foregroundStyle(primary ? Palette.onAccent : Palette.ink)
-                .lineLimit(1).minimumScaleFactor(0.75)
-                .frame(maxWidth: .infinity, minHeight: 56)
-                .background(shape.fill(primary ? AnyShapeStyle(accent) : AnyShapeStyle(Palette.stageRaised)))
-                .contentShape(shape)
+    /// The finale's pair: the one to do next as the primary button in the course colour, the other as the secondary.
+    @ViewBuilder private func finaleButton(_ title: LocalizedStringKey, primary: Bool, action: @escaping () -> Void) -> some View {
+        if primary {
+            Button(action: action) { Text(title).lineLimit(1).minimumScaleFactor(0.75) }
+                .buttonStyle(PrimaryButtonStyle(accent: accent))
+        } else {
+            Button(action: action) { Text(title).lineLimit(1).minimumScaleFactor(0.75) }
+                .buttonStyle(SecondaryButtonStyle())
         }
-        .buttonStyle(PressScaleStyle())
     }
 
     // MARK: Reveal
@@ -264,17 +253,17 @@ struct SongFinaleView: View {
     /// and the burst has settled, so the take → finale transition and the stars never hitch on it (QA M11). Share
     /// waits, dimmed, the moment it takes.
     private func reveal() async {
-        withAnimation(.easeOut(duration: 0.45)) { appeared = true }
+        withAnimation(Motion.fade) { appeared = true }
         for index in 0..<3 {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 80 : 340))
             guard !Task.isCancelled else { return }
-            withAnimation(reduceMotion ? .easeOut(duration: 0.15) : .spring(response: 0.45, dampingFraction: 0.55)) { shownStars = index + 1 }
+            withMotion(Motion.reward, reduceMotion: reduceMotion) { shownStars = index + 1 }
             if index < stars { SoundFX.shared.play(.star); Haptics.shared.lock(); burst += 1 }
         }
         try? await Task.sleep(for: .milliseconds(reduceMotion ? 120 : 520))
         guard !Task.isCancelled, poster == nil else { return }
         let image = ShareCardRenderer.image(storyCard, scale: displayScale, locale: locale, direction: layoutDirection)
-        withAnimation(reduceMotion ? nil : .easeOut(duration: 0.3)) { poster = image }
+        withAnimation(reduceMotion ? nil : Motion.fade) { poster = image }
     }
 
     private var storyCard: SongStoryCard {
@@ -297,16 +286,13 @@ struct SongStoryCard: View {
     let accent: Color
     var streak = 0
 
-    private static let gold = Color(hex: 0xF0A93B)
-    private static let starFill = LinearGradient(colors: [Color(hex: 0xFFE29A), Color(hex: 0xF0A93B)], startPoint: .top, endPoint: .bottom)
-
     var body: some View {
         VStack(spacing: 0) {
             topRow
             Spacer(minLength: 12)
             sleeve
             Spacer(minLength: 18)
-            Text(course.uppercased()).font(Typeface.label(12)).tracking(1.8).foregroundStyle(accent).lineLimit(1)
+            Text(verbatim: course).font(Typeface.label(12)).tracking(1.8).textCase(.uppercase).foregroundStyle(accent).lineLimit(1)
             Text(verbatim: title).font(Typeface.display(34)).tracking(-0.8).foregroundStyle(Palette.ink)
                 .multilineTextAlignment(.center).lineLimit(2).minimumScaleFactor(0.6)
                 .padding(.top, 6)
@@ -344,7 +330,7 @@ struct SongStoryCard: View {
             Spacer(minLength: 12)
             HStack(spacing: 6) {
                 Circle().fill(Palette.danger).frame(width: 7, height: 7)
-                Text("Live take").font(Typeface.label(11)).tracking(1.2).textCase(.uppercase).foregroundStyle(Palette.ink)
+                Eyebrow("Live take", color: Palette.ink, style: .display)
             }
             .padding(.horizontal, 10).frame(height: 26)
             .background(Capsule().fill(.black.opacity(0.4)))
@@ -378,8 +364,8 @@ struct SongStoryCard: View {
                 let earned = index < stars
                 Image(systemName: "star.fill")
                     .font(.system(size: index == 1 ? 50 : 38, weight: .bold))
-                    .foregroundStyle(earned ? AnyShapeStyle(Self.starFill) : AnyShapeStyle(Color.white.opacity(0.1)))
-                    .shadow(color: earned ? Self.gold.opacity(0.55) : .clear, radius: 12)
+                    .foregroundStyle(earned ? AnyShapeStyle(Palette.starFill) : AnyShapeStyle(Color.white.opacity(0.1)))
+                    .shadow(color: earned ? Palette.starGold.opacity(0.55) : .clear, radius: 12)
                     .offset(y: index == 1 ? -8 : 0)
             }
         }
@@ -392,14 +378,14 @@ struct SongStoryCard: View {
                 Text("accuracy").font(Typeface.label(12)).foregroundStyle(Palette.inkSoft)
             }
             if let points = take.points {
-                Rectangle().fill(.white.opacity(0.14)).frame(width: 1, height: 44)
+                Hairline(vertical: true).frame(height: 44)
                 VStack(spacing: 0) {
                     Text(points, format: .number).font(Typeface.note(30)).foregroundStyle(Palette.ink)
                     Text("Score").font(Typeface.label(12)).foregroundStyle(Palette.inkSoft)
                 }
             }
             if let combo = take.bestCombo, combo > 1 {
-                Rectangle().fill(.white.opacity(0.14)).frame(width: 1, height: 44)
+                Hairline(vertical: true).frame(height: 44)
                 VStack(spacing: 0) {
                     Text("×\(combo)").font(Typeface.note(30)).foregroundStyle(Palette.flame)
                     Text("Best combo").font(Typeface.label(12)).foregroundStyle(Palette.inkSoft)
@@ -439,16 +425,16 @@ struct SongStoryCard: View {
     private var signature: some View {
         VStack(spacing: 10) {
             if streak > 1 {
-                Label("\(streak)-day streak", systemImage: "flame.fill").font(Typeface.label(13)).foregroundStyle(Color(hex: 0xFFD3A8))
+                Label("\(streak)-day streak", systemImage: "flame.fill").font(Typeface.label(13)).foregroundStyle(Palette.flameInk)
             }
             HStack(spacing: 10) {
-                Rectangle().fill(Color.white.opacity(0.12)).frame(height: 1)
+                Hairline()
                 HStack(spacing: 6) {
                     Image(systemName: "tuningfork").font(.system(size: 11, weight: .bold)).foregroundStyle(Palette.mint)
                     Text("In tune with Timbre").font(Typeface.label(11)).tracking(0.4).foregroundStyle(Palette.inkSoft)
                 }
                 .fixedSize()
-                Rectangle().fill(Color.white.opacity(0.12)).frame(height: 1)
+                Hairline()
             }
         }
     }

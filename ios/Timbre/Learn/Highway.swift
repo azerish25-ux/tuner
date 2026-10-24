@@ -158,9 +158,9 @@ struct AlongStep: View {
             }
             // The results take the stage's place, so nothing above or below moves when they arrive.
             .overlay { if phase == .done { resultsPanel } }
-            .background(RoundedRectangle(cornerRadius: 26, style: .continuous).fill(Palette.stageDeep))
-            .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
-            .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
+            .background(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous).fill(Palette.stageDeep))
+            .overlay(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous).strokeBorder(Palette.hairline, lineWidth: 1))
+            .clipShape(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous))
             .padding(.horizontal, 12)
             .layoutPriority(1)
             if !lyrics.isEmpty { lyricRow }
@@ -194,12 +194,12 @@ struct AlongStep: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 4) {
-            HStack(alignment: .center) {
-                Text(title?.localized ?? String(localized: "Play along")).font(Typeface.display(24)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.7)
-                Spacer(minLength: 8)
-            }
-            // The combo lives in the stage's HUD; the row keeps its height so the stage never shifts.
-            .frame(minHeight: 36)
+            // The step's title, as on every step: two lines at most here, so the stage keeps its room.
+            StepTitle(Text(title?.localized ?? String(localized: "Play along")))
+                .lineLimit(2)
+                .minimumScaleFactor(0.85)
+                // The combo lives in the stage's HUD; the row keeps its height so the stage never shifts.
+                .frame(minHeight: 36)
             HStack(spacing: 8) {
                 Text("\(Int(tempo)) BPM · \(take.count) notes").font(.subheadline).foregroundStyle(Palette.inkSoft)
                     .lineLimit(1).minimumScaleFactor(0.8)
@@ -211,7 +211,7 @@ struct AlongStep: View {
                 BandControls(audio: store.audio, accent: accent)
             }
         }
-        .padding(.horizontal, 22).padding(.top, 8)
+        .padding(.horizontal, Metrics.gutter).padding(.top, 8)
         // Always its full height: the title never shrinks to make room below.
         .fixedSize(horizontal: false, vertical: true)
     }
@@ -242,10 +242,9 @@ struct AlongStep: View {
             .foregroundStyle(Palette.amber)
             .padding(.horizontal, 9).padding(.vertical, 4)
             .background(Capsule().fill(Palette.amber.opacity(0.14)))
-            // A full-size target without growing the row.
-            .frame(minHeight: 44)
+            // A full-size target: the row is as tall as its round buttons anyway.
+            .frame(minHeight: Metrics.minTarget)
             .contentShape(Rectangle())
-            .padding(.vertical, -9)
         }
         .buttonStyle(PressScaleStyle())
         .disabled(phase == .playing)
@@ -282,7 +281,7 @@ struct AlongStep: View {
                 .accessibilityIdentifier("along.loop.exit")
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, Metrics.gutter)
         .accessibilityElement(children: .contain)
     }
 
@@ -321,7 +320,7 @@ struct AlongStep: View {
         TimelineView(.animation(minimumInterval: 1.0 / 30, paused: phase != .playing)) { _ in
             HighwayLyrics(sheet: lyrics, beat: lyricBeat(CACurrentMediaTime()), accent: accent)
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, Metrics.gutter)
         .opacity(loop == nil && phase != .done ? 1 : 0)
         .accessibilityHidden(loop != nil || phase == .done)
     }
@@ -355,7 +354,7 @@ struct AlongStep: View {
                 .contentTransition(.numericText())
                 UpNextRail(notes: take, from: index + 1, fretted: fretted, strings: course.stringCount, accent: accent)
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, Metrics.gutter)
             .animation(reduceMotion ? nil : Motion.quick, value: index)
         }
     }
@@ -422,7 +421,7 @@ struct AlongStep: View {
             HStack(spacing: 18) {
                 stat("Perfect", counts[.perfect] ?? 0, TakeRibbon.color(.perfect, accent: accent))
                 stat("Good", counts[.good] ?? 0, TakeRibbon.color(.good, accent: accent))
-                stat("Late/early", counts[.ok] ?? 0, TakeRibbon.color(.ok, accent: accent))
+                stat("Early/late", counts[.ok] ?? 0, TakeRibbon.color(.ok, accent: accent))
                 stat("Missed", counts[.miss] ?? 0, TakeRibbon.color(.miss, accent: accent))
             }
             if !compact {
@@ -533,7 +532,7 @@ struct AlongStep: View {
                             .accessibilityIdentifier("lesson.continue")
                     }
                 }
-                .padding(.horizontal, 20).padding(.bottom, 12)
+                .padding(.horizontal, Metrics.gutter).padding(.bottom, 12)
             }
         }
     }
@@ -550,17 +549,15 @@ struct AlongStep: View {
         }
     }
 
-    private func doneButton(_ title: LocalizedStringKey, primary: Bool, action: @escaping () -> Void) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
-        return Button(action: action) {
-            Text(title)
-                .font(Typeface.label(primary ? 18 : 16))
-                .foregroundStyle(primary ? Palette.onAccent : Palette.ink)
-                .frame(maxWidth: .infinity, minHeight: 56)
-                .background(shape.fill(primary ? AnyShapeStyle(accent) : AnyShapeStyle(Palette.stageRaised)))
-                .contentShape(shape)
+    /// The results' pair: the one to do next as the primary button in the course colour, the other as the secondary.
+    @ViewBuilder private func doneButton(_ title: LocalizedStringKey, primary: Bool, action: @escaping () -> Void) -> some View {
+        if primary {
+            Button(action: action) { Text(title) }
+                .buttonStyle(PrimaryButtonStyle(accent: accent))
+        } else {
+            Button(action: action) { Text(title) }
+                .buttonStyle(SecondaryButtonStyle())
         }
-        .buttonStyle(PressScaleStyle())
     }
 
     /// The four tempo rungs, the current one filled; below the lesson tempo a note that full tempo earns three stars.
@@ -575,14 +572,14 @@ struct AlongStep: View {
                 .opacity(ladder.isFullTempo ? 0 : 1)
                 .accessibilityHidden(ladder.isFullTempo)
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, Metrics.gutter)
         .animation(Motion.pluck, value: ladder.rung)
     }
 
     private func rungButton(_ rung: Int) -> some View {
         let selected = ladder.rung == rung
         let tint = rungTint(rung)
-        let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return Button {
             guard ladder.rung != rung else { return }
             ladder.select(rung)
@@ -596,7 +593,7 @@ struct AlongStep: View {
             .foregroundStyle(selected ? Palette.onAccent : Palette.ink)
             .frame(maxWidth: .infinity, minHeight: 48)
             .background(shape.fill(selected ? AnyShapeStyle(tint) : AnyShapeStyle(Palette.stageRaised)))
-            .overlay(shape.strokeBorder(selected ? Color.clear : Palette.line, lineWidth: 1))
+            .overlay(shape.strokeBorder(selected ? Color.clear : Palette.controlLine, lineWidth: 1))
             .overlay(alignment: .topTrailing) {
                 if rung == TempoLadder.lessonRung {
                     // The lesson's own tempo.
@@ -776,7 +773,8 @@ struct AlongStep: View {
 }
 
 /// The header's timing button: opens the tap-along calibration. A dot asks for it on a wireless route that
-/// has never been calibrated (Bluetooth lag is the usual reason good playing scores late).
+/// has never been calibrated (Bluetooth lag is the usual reason good playing scores late). A compact `IconButton`:
+/// a 34 pt disc in a 44 pt target that never overlaps its neighbour's.
 struct CalibrateButton: View {
     @ObservedObject var audio: AudioService
     let accent: Color
@@ -785,23 +783,16 @@ struct CalibrateButton: View {
     private var needsIt: Bool { audio.route == .bluetooth && AudioService.calibratedLatency(for: .bluetooth) == nil }
 
     var body: some View {
-        Button(action: action) {
-            ZStack {
-                Circle().fill(Palette.stageRaised)
-                Circle().strokeBorder(Palette.line, lineWidth: 1)
-                Image(systemName: "metronome").font(.system(size: 12, weight: .bold)).foregroundStyle(Palette.inkSoft)
-            }
-            .frame(width: 28, height: 28)
+        IconButton(symbol: "metronome", size: .compact, tint: Palette.inkSoft, label: "Calibrate timing", action: action)
             .overlay(alignment: .topTrailing) {
-                if needsIt { Circle().fill(Palette.amber).frame(width: 8, height: 8).offset(x: 1, y: -1) }
+                // On the disc's shoulder (the disc sits 5 pt inside the target).
+                if needsIt {
+                    Circle().fill(Palette.amber).frame(width: 8, height: 8).offset(x: -5, y: 5)
+                        .allowsHitTesting(false)
+                        .accessibilityHidden(true)
+                }
             }
-            .frame(width: 44, height: 44)
-            .contentShape(Rectangle())
-            .padding(-8)
-        }
-        .buttonStyle(PressScaleStyle())
-        .accessibilityLabel(Text("Calibrate timing"))
-        .accessibilityIdentifier("along.calibrate")
+            .accessibilityIdentifier("along.calibrate")
     }
 }
 
@@ -844,7 +835,7 @@ struct BandControls: View {
             .padding(.horizontal, 10).padding(.vertical, 5)
             .frame(minHeight: 26)
             .background(Capsule().fill(Palette.stageRaised))
-            .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
+            .overlay(Capsule().strokeBorder(Palette.controlLine, lineWidth: 1))
     }
 
     private var toggle: some View {
@@ -853,10 +844,10 @@ struct BandControls: View {
             Haptics.shared.selection()
             audio.refreshBand()
         } label: {
+            // A 44 pt target with no negative padding, so it never overlaps the calibrate button beside it.
             toggleFace
-                .frame(width: 44, height: 44)
+                .frame(minWidth: Metrics.minTarget, minHeight: Metrics.minTarget)
                 .contentShape(Rectangle())
-                .padding(-8)
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityLabel(Text("Backing band"))
@@ -864,20 +855,21 @@ struct BandControls: View {
         .accessibilityIdentifier("along.band")
     }
 
-    /// A note in a ring: tinted when on, struck through when off; it hops when the band comes in.
+    /// A note in a ring, as big as the compact icon buttons beside it: tinted when on, struck through when off; it
+    /// hops when the band comes in.
     private var toggleFace: some View {
         ZStack {
-            Circle().fill(bandOn ? accent.opacity(0.16) : Palette.stageRaised)
-            Circle().strokeBorder(bandOn ? accent.opacity(0.45) : Palette.line, lineWidth: 1)
+            Circle().fill(bandOn ? accent.opacity(0.16) : Palette.surface)
+            Circle().strokeBorder(bandOn ? accent.opacity(0.45) : Palette.hairline, lineWidth: 1)
             Image(systemName: "music.quarternote.3")
-                .font(.system(size: 12, weight: .bold))
+                .font(.system(size: 14, weight: .bold))
                 .foregroundStyle(bandOn ? accent : Palette.inkFaint)
                 .symbolEffect(.bounce, value: reduceMotion ? false : audio.bandPlaying)
             if !bandOn {
-                Capsule().fill(Palette.inkFaint).frame(width: 1.5, height: 20).rotationEffect(.degrees(-45))
+                Capsule().fill(Palette.inkFaint).frame(width: 1.5, height: 24).rotationEffect(.degrees(-45))
             }
         }
-        .frame(width: 28, height: 28)
+        .frame(width: 34, height: 34)
     }
 }
 
@@ -1888,7 +1880,7 @@ struct ComboBadge: View {
                     .lineLimit(1).minimumScaleFactor(0.6)
             }
             .frame(width: 26, height: 26)
-            .animation(calm ? nil : .easeOut(duration: 0.2), value: combo)
+            .animation(calm ? nil : Motion.quick, value: combo)
             HStack(spacing: 2) {
                 Image(systemName: "flame.fill").font(.system(size: 13, weight: .bold))
                     .symbolEffect(.bounce, value: calm ? 0 : level)
@@ -1903,7 +1895,7 @@ struct ComboBadge: View {
         .shadow(color: tint.opacity(level >= 3 ? 0.5 : 0), radius: 10)
         .phaseAnimator([1.0, 1.24], trigger: level) { content, scale in
             content.scaleEffect(CGFloat(calm ? 1 : scale))
-        } animation: { _ in Animation.spring(response: 0.22, dampingFraction: 0.55) }
+        } animation: { _ in Motion.pop }
         .animation(calm ? nil : Motion.pluck, value: level)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Combo ×\(combo)"))
@@ -1942,11 +1934,11 @@ struct UpNextRail: View {
 
     private func tile(_ note: TimedNote, rank: Int) -> some View {
         let tint = color(note)
-        let shape = RoundedRectangle(cornerRadius: 12, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous)
         return VStack(spacing: 0) {
             if fretted, let at = note.at {
                 Text(at.fret, format: .number).font(Typeface.number(16)).foregroundStyle(Palette.ink)
-                Text(NoteName.pitchClass(note.midi)).font(Typeface.label(11, relativeTo: .caption2)).foregroundStyle(tint)
+                Text(NoteName.pitchClass(note.midi)).font(Typeface.label(11)).foregroundStyle(tint)
             } else {
                 Text(NoteName.pitchClass(note.midi)).font(Typeface.label(15)).foregroundStyle(Palette.ink)
             }
@@ -1993,7 +1985,7 @@ struct TakeRibbon: View {
             HStack(spacing: 16) {
                 stat(.perfect, symbol: "star.fill", name: "Perfect")
                 stat(.good, symbol: "checkmark", name: "Good")
-                stat(.ok, symbol: "clock", name: "Late/early")
+                stat(.ok, symbol: "clock", name: "Early/late")
                 stat(.miss, symbol: "xmark", name: "Missed")
             }
             HStack(spacing: shown.count > 32 ? 1 : 2) {
@@ -2007,7 +1999,7 @@ struct TakeRibbon: View {
             .animation(reduceMotion ? nil : Motion.quick, value: grades.count)
             .animation(reduceMotion ? nil : Motion.quick, value: shown.lowerBound)
         }
-        .padding(.horizontal, 24)
+        .padding(.horizontal, Metrics.gutter)
     }
 
     private func segment(_ index: Int) -> Color {

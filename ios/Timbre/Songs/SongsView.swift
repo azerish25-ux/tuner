@@ -34,6 +34,7 @@ struct SongsView: View {
     /// Songs zoom open out of the tile or hero that was tapped (and back into it on close).
     @Namespace private var zoom
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.horizontalSizeClass) private var sizeClass
     /// The page's width, for the iPad's card columns (`CardColumns`) under the featured song.
     @State private var pageWidth: CGFloat = 0
@@ -98,7 +99,7 @@ struct SongsView: View {
         let active = chips.contains { $0.id == filter } ? filter : Self.all
         let layout = catalog.layout(filter: active, course: learnCourseId, store: store)
         let hero = layout.hero
-        let glow: Color = hero.map { catalog.art($0).primary } ?? Color(hex: 0xFFC48C)
+        let glow: Color = hero.map { catalog.art($0).primary } ?? Palette.spotlight
         NavigationStack {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 24) {
@@ -107,7 +108,7 @@ struct SongsView: View {
                     if let hero {
                         featured(hero, layout: layout)
                             .id(hero.id)
-                            .transition(.opacity.combined(with: .scale(scale: 0.97)))
+                            .transition(.adaptive(.opacity.combined(with: .scale(scale: 0.97)), reduceMotion: reduceMotion))
                     }
                     ForEach(layout.picks) { pick in pickShelf(pick) }
                     // The featured song isn't repeated on its shelf: that rail starts with the song after it.
@@ -259,20 +260,10 @@ struct SongsView: View {
 
     // MARK: Header and filters
 
+    /// The tab's header, as on every tab: the Songs course's title and line, with the streak and level beside them.
     private var header: some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(Self.title(in: store.curriculum)).font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
-                if let subtitle = store.curriculum.course(id: "songs")?.subtitle.localized {
-                    Text(subtitle).font(.subheadline).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
-                }
-            }
-            .accessibilityElement(children: .combine)
-            .accessibilityAddTraits(.isHeader)
-            Spacer(minLength: 8)
-            StreakChip { store.selectedTab = .journey }
-            LevelRing(size: 36) { store.selectedTab = .journey }
-        }
+        let subtitle: Text? = store.curriculum.course(id: "songs").map { Text($0.subtitle.localized) }
+        return TabHeader(title: Text(Self.title(in: store.curriculum)), subtitle: subtitle)
     }
 
     private func filterRail(_ chips: [Chip], active: String) -> some View {
@@ -338,20 +329,18 @@ struct SongsView: View {
     }
 
     /// "Up next": as many of the songs as the hero's height holds, each a row of sleeve, title, course and length.
+    /// A card at the hero's height and radius beside it.
     private func upNextPanel(_ songs: [Song]) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 28, style: .continuous)
-        return VStack(alignment: .leading, spacing: 14) {
-            Text("Up next").font(Typeface.display(20)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+        VStack(alignment: .leading, spacing: 14) {
+            CardTitle("Up next")
             ViewThatFits(in: .vertical) {
                 upNextList(songs, limit: 4)
                 upNextList(songs, limit: 3)
                 upNextList(songs, limit: 2)
             }
         }
-        .padding(18)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(shape.fill(Palette.stageRaised))
-        .overlay(shape.strokeBorder(.white.opacity(0.06), lineWidth: 1))
+        .stillCard(cornerRadius: Metrics.cornerHero)
     }
 
     private func upNextList(_ songs: [Song], limit: Int) -> some View {
@@ -366,7 +355,7 @@ struct SongsView: View {
         let access = catalog.standing(song).access
         let stars = store.learn.stars[song.lesson.id] ?? 0
         let source = Self.tileSource(song.lesson, shelf: "next")
-        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         let playable = access == .play
         return Button { open(song.course, song.lesson, from: source) } label: {
             HStack(spacing: 12) {
@@ -407,7 +396,7 @@ struct SongsView: View {
         let accent = art.primary
         let access = catalog.standing(song).access
         let stars = store.learn.stars[song.lesson.id] ?? 0
-        let shape = RoundedRectangle(cornerRadius: 28, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
         let canPreview = SongPreview.opening(of: song.lesson) != nil
         return Button { open(song.course, song.lesson, from: Self.heroSource) } label: {
             // The ideal height is proposed to the face, so its spacer puts the title at the bottom.
@@ -431,8 +420,8 @@ struct SongsView: View {
                     togglePreview(song, full: false)
                 }
                 .accessibilityIdentifier("songs.hero.preview")
-                .padding(.trailing, 18 + 4)
-                .padding(.top, art.titleOnTop ? 18 + sleeveSide - 4 - 44 : 18 + 4)
+                .padding(.trailing, Metrics.cardPadding + 4)
+                .padding(.top, art.titleOnTop ? Metrics.cardPadding + sleeveSide - 4 - 44 : Metrics.cardPadding + 4)
             }
         }
     }
@@ -447,8 +436,26 @@ struct SongsView: View {
             }
             Spacer(minLength: 0)
             heroText(song, accent: art.primary, access: access, stars: stars)
+                .background(alignment: .bottom) { heroScrim }
         }
-        .padding(18)
+        .padding(Metrics.cardPadding)
+    }
+
+    /// The stage behind the title and its details, solid under the words (and denser with Reduce Transparency) and
+    /// fading in above them, so the text keeps its contrast over any sleeve's colours. It runs out to the card's edges.
+    private var heroScrim: some View {
+        let tone = Palette.stage.opacity(reduceTransparency ? 0.8 : 0.55)
+        let fade: CGFloat = 40
+        return VStack(spacing: 0) {
+            LinearGradient(colors: [Palette.stage.opacity(0), tone], startPoint: .top, endPoint: .bottom)
+                .frame(height: fade)
+            Rectangle().fill(tone)
+        }
+        .padding(.top, -fade)
+        .padding(.horizontal, -Metrics.cardPadding)
+        .padding(.bottom, -Metrics.cardPadding)
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 
     /// The sleeve, square and crisp, with its record peeking from the left; the record slides out and turns
@@ -478,36 +485,36 @@ struct SongsView: View {
         }
     }
 
+    /// "SONG OF THE DAY": the app's display eyebrow in ink, on a dark pill over the art.
     private func heroEyebrow(accent: Color) -> some View {
         HStack(spacing: 6) {
-            Image(systemName: "waveform").foregroundStyle(accent)
+            Image(systemName: "waveform").font(Typeface.eyebrowDisplay).foregroundStyle(accent)
                 .symbolEffect(.variableColor.iterative, options: .repeating, isActive: !reduceMotion)
-            Text("Song of the day").tracking(1.2).textCase(.uppercase)
+            Eyebrow("Song of the day", color: Palette.ink, style: .display)
                 .lineLimit(1).minimumScaleFactor(0.7)
         }
-        .font(Typeface.label(11))
-        .foregroundStyle(.white)
         .padding(.horizontal, 10).padding(.vertical, 6)
         .background(Capsule().fill(.black.opacity(0.4)))
         .overlay(Capsule().strokeBorder(.white.opacity(0.14), lineWidth: 1))
     }
 
+    /// The title and details in the app's inks (on `heroScrim`), not white at partial opacity over the art.
     private func heroText(_ song: Song, accent: Color, access: LessonAccess, stars: Int) -> some View {
         let sheet = SongSheet.of(song.lesson)
         return VStack(alignment: .leading, spacing: 8) {
-            Text(song.lesson.title.localized).font(Typeface.display(30)).tracking(-0.6).foregroundStyle(.white)
+            Text(song.lesson.title.localized).font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
                 .lineLimit(2).minimumScaleFactor(0.8).fixedSize(horizontal: false, vertical: true)
                 .shadow(color: .black.opacity(0.4), radius: 8, y: 2)
             HStack(spacing: 6) {
                 CourseArt(course: song.course, size: 18)
-                Text(song.course.title.localized).foregroundStyle(.white)
+                Text(song.course.title.localized).foregroundStyle(Palette.ink)
                 // How long the song runs (not the lesson's minutes, which the song sheet gives beside it).
-                Text("Song \(sheet.length) · +\(song.lesson.xp) XP").foregroundStyle(.white.opacity(0.72))
+                Text("Song \(sheet.length) · +\(song.lesson.xp) XP").foregroundStyle(Palette.inkSoft)
             }
             .font(.subheadline).lineLimit(1)
             // What the song asks for, at a glance: its chords (its key, for a melody) and how hard it is.
             HStack(spacing: 8) {
-                DifficultyDots(level: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count), tint: .white)
+                DifficultyDots(level: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count), tint: Palette.ink)
                 ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent, limit: 5)
             }
             HStack(spacing: 12) {
@@ -520,14 +527,18 @@ struct SongsView: View {
         }
     }
 
+    /// Play, drawn as the app's primary button in the song's colour (its label font, a capsule at least 44 pt tall).
+    /// It is part of the hero's own button, so it is a look, not a second button.
     private func heroButton(_ access: LessonAccess, finished: Bool, accent: Color) -> some View {
         HStack(spacing: 6) {
             Image(systemName: access == .play ? "play.fill" : "lock.fill")
             Text(finished ? LocalizedStringKey("Play again") : LocalizedStringKey("Play"))
         }
-        .font(Typeface.label(15)).foregroundStyle(Palette.onAccent)
-        .padding(.horizontal, 18).frame(height: 42)
+        .font(Typeface.button).foregroundStyle(Palette.onAccent)
+        .padding(.horizontal, 18).padding(.vertical, 8)
+        .frame(minHeight: Metrics.minTarget)
         .background(Capsule().fill(accent))
+        .overlay(Capsule().strokeBorder(.white.opacity(0.35), lineWidth: 1).blendMode(.overlay))
         .shadow(color: accent.opacity(0.45), radius: 12, y: 4)
     }
 
@@ -542,10 +553,10 @@ struct SongsView: View {
         return VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .center, spacing: 10) {
                 CourseArt(course: shelf.course, size: 32)
-                Text(shelf.course.title.localized).font(Typeface.display(20)).foregroundStyle(Palette.ink)
-                    .accessibilityAddTraits(.isHeader)
-                Spacer(minLength: 8)
-                Label("\(earned)/\(shelf.songs.count * 3)", systemImage: "star.fill").font(Typeface.number(12)).foregroundStyle(Palette.amber)
+                SectionHeader(Text(shelf.course.title.localized)) {
+                    Label { Text.fraction(earned, shelf.songs.count * 3) } icon: { Image(systemName: "star.fill") }
+                        .font(Typeface.number(12)).foregroundStyle(Palette.amber)
+                }
             }
             EdgeRail(spacing: 14, selection: next?.id) {
                 ForEach(rail) { song in tile(song).id(song.id) }
@@ -559,12 +570,10 @@ struct SongsView: View {
             HStack(alignment: .center, spacing: 10) {
                 Image(systemName: pick.symbol).font(.system(size: 15, weight: .bold)).foregroundStyle(Palette.amber)
                     .frame(width: 32, height: 32)
-                    .background(RoundedRectangle(cornerRadius: 10, style: .continuous).fill(Palette.amber.opacity(0.14)))
+                    .background(RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous).fill(Palette.amber.opacity(0.14)))
                     .accessibilityHidden(true)
-                pick.title.font(Typeface.display(20)).foregroundStyle(Palette.ink)
-                    .lineLimit(1).minimumScaleFactor(0.75)
-                    .accessibilityAddTraits(.isHeader)
-                Spacer(minLength: 0)
+                // Wraps rather than shrinking a long reason ("Because you learned E minor").
+                SectionHeader(pick.title)
             }
             EdgeRail(spacing: 14, selection: nil as String?) {
                 ForEach(pick.songs) { song in tile(song, shelf: pick.id).id(song.id) }
@@ -607,6 +616,9 @@ struct SongsView: View {
         .scrollTransition(.interactive, axis: .horizontal) { content, phase in
             content.scaleEffect(1 - shrink * CGFloat(abs(phase.value))).opacity(1 - 0.35 * abs(phase.value))
         }
+        // The rail centres its items: lined up by their tops instead, the sleeves stay level when one caption runs
+        // to two lines (a lock plate's "Finish …").
+        .alignmentGuide(VerticalAlignment.center) { dimensions in dimensions[.top] }
     }
 
     /// The sleeve's controls, the same on every sleeve: the tune's other versions when it has some (instrument badges),
@@ -701,7 +713,8 @@ struct SongsView: View {
                     ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent)
                 }
             }
-            .frame(height: 24, alignment: .leading)
+            // At least a plate's height, so captions line up; a two-line plate or larger text grows it.
+            .frame(minHeight: 24, alignment: .leading)
             HStack(spacing: 7) {
                 DifficultyDots(level: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count), tint: accent)
                 Text(verbatim: sheet.length).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
@@ -789,13 +802,14 @@ struct SongsView: View {
                         .accessibilityHidden(true)
                 }
                 .padding(.leading, 16).padding(.trailing, 6).padding(.vertical, 6)
+                .frame(minHeight: Metrics.minTarget)
                 .background(Capsule().fill(Palette.surface))
                 .overlay(Capsule().strokeBorder(accent.opacity(0.45), lineWidth: 1))
                 .shadow(color: .black.opacity(0.5), radius: 16, y: 6)
             }
             .buttonStyle(PressScaleStyle())
             .padding(.horizontal, Metrics.gutter).padding(.bottom, 12)
-            .transition(.move(edge: .bottom).combined(with: .opacity))
+            .transition(.adaptive(.move(edge: .bottom).combined(with: .opacity), reduceMotion: reduceMotion))
             .accessibilityIdentifier("songs.hint")
             .task(id: hint) {
                 try? await Task.sleep(for: .seconds(4))
@@ -1220,24 +1234,29 @@ private struct PreviewDisc: View {
 }
 
 /// Why a song doesn't play yet, the same plate on every shelf: a lock, then "Finish Kite Weather" (the open lesson
-/// on the way to it) or "Timbre Pro" in gold.
+/// on the way to it) or "Timbre Pro" in gold. A long lesson name runs to a second line rather than being cut
+/// ("Finish Mary Had a Littl…"); on one line the plate is a 24 pt capsule.
 private struct LockReason: View {
     let access: LessonAccess
     let gate: Lesson?
 
     var body: some View {
         let pro = access == .pro
-        HStack(spacing: 5) {
+        // Half a one-line plate's height: a capsule on one line, a rounded plate on two.
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous)
+        HStack(alignment: .firstTextBaseline, spacing: 5) {
             Image(systemName: "lock.fill").font(.system(size: 10, weight: .bold))
                 .foregroundStyle(pro ? Palette.amber : Palette.inkSoft)
             reason
                 .font(Typeface.label(12, relativeTo: .subheadline))
                 .foregroundStyle(pro ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.ink.opacity(0.88)))
-                .lineLimit(1).minimumScaleFactor(0.8).truncationMode(.tail)
+                .lineLimit(2).minimumScaleFactor(0.85)
+                .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(.horizontal, 8).frame(height: 24)
-        .background(Capsule().fill(pro ? Palette.amber.opacity(0.1) : Color.white.opacity(0.06)))
-        .overlay(Capsule().strokeBorder(pro ? Palette.amber.opacity(0.35) : Color.white.opacity(0.1), lineWidth: 1))
+        .padding(.horizontal, 8).padding(.vertical, 4)
+        .frame(minHeight: 24)
+        .background(shape.fill(pro ? Palette.amber.opacity(0.1) : Color.white.opacity(0.06)))
+        .overlay(shape.strokeBorder(pro ? Palette.amber.opacity(0.35) : Color.white.opacity(0.1), lineWidth: 1))
     }
 
     private var reason: Text {
@@ -1281,7 +1300,7 @@ private struct ChordChips: View {
 
     private func chip(_ name: String) -> some View {
         Text(verbatim: name).font(Typeface.label(12)).foregroundStyle(Palette.ink)
-            .padding(.horizontal, 7).frame(height: 22)
+            .padding(.horizontal, 7).frame(minHeight: 22)
             .background(Capsule().fill(tint.opacity(0.16)))
             .overlay(Capsule().strokeBorder(tint.opacity(0.4), lineWidth: 1))
             .fixedSize()
@@ -1331,7 +1350,7 @@ private struct VersionBadges: View {
                 }
             }
             if extra > 0 {
-                Text(verbatim: "+\(extra)").font(Typeface.label(11)).foregroundStyle(.white).fixedSize()
+                Text(verbatim: "+\(extra)").font(Typeface.label(11)).foregroundStyle(Palette.ink).fixedSize()
             }
         }
         .padding(.leading, 3).padding(.trailing, extra > 0 ? 6 : 3)

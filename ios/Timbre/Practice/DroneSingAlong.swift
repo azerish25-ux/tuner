@@ -163,13 +163,14 @@ struct DroneSingAlongCard: View {
             }
             Spacer()
             Button(action: toggle) {
+                // A 36 pt pill in a 44 pt target.
                 Label(listening ? "Pause" : "Listen", systemImage: listening ? "pause.fill" : "mic.fill")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(listening ? Palette.ink : Palette.onAccent)
                     .padding(.horizontal, 14).frame(minHeight: 36)
                     .background(Capsule().fill(listening ? AnyShapeStyle(Palette.surface) : AnyShapeStyle(Palette.mint)))
-                    .overlay(Capsule().strokeBorder(listening ? Palette.line : .clear, lineWidth: 1))
-                    .contentShape(Capsule())
+                    .overlay(Capsule().strokeBorder(listening ? Palette.controlLine : .clear, lineWidth: 1))
+                    .tapTarget()
             }
             .buttonStyle(PressScaleStyle())
             .accessibilityIdentifier("drone.listen")
@@ -190,7 +191,8 @@ struct DroneSingAlongCard: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 0)
             } else {
-                Text(listening ? "Listening…" : "Tap Listen to start").font(Typeface.label(15)).foregroundStyle(Palette.inkSoft)
+                // The microphone's status, set as every practice tool sets it.
+                Text(listening ? "Listening…" : "Tap Listen to start").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft)
                 Spacer(minLength: 0)
             }
         }
@@ -230,7 +232,7 @@ struct DroneSingAlongCard: View {
                 }
             }
             .frame(width: 26, height: 26)
-            .animation(.easeOut(duration: 0.3), value: model.held)
+            .animation(Motion.fade, value: model.held)
             .symbolEffect(.bounce, value: model.reached)
             Text("Held \(model.held) s").font(Typeface.label(14)).foregroundStyle(reached ? Palette.amber : (model.held > 0 ? Palette.mint : Palette.inkSoft))
                 .contentTransition(.numericText())

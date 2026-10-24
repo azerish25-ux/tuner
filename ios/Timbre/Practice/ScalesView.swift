@@ -158,7 +158,7 @@ struct ScaleLibraryView: View {
             }
             .frame(height: height)
         }
-        .stillCard(padding: 12)
+        .stillCard(padding: Metrics.tilePadding)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(sheet.title). \(caption(sheet))"))
     }
@@ -190,11 +190,11 @@ struct ScaleLibraryView: View {
                         Label("Hear it", systemImage: "speaker.wave.2.fill")
                             .symbolEffect(.variableColor.iterative, isActive: heardStep != nil && !reduceMotion)
                     }
-                    .buttonStyle(BrassButtonStyle(prominent: false))
+                    .buttonStyle(SecondaryButtonStyle())
                     .frame(width: 136)
                     .accessibilityIdentifier("scales.hear")
                     Button { startAlong(sheet) } label: { Label("Play along", systemImage: "mic.fill") }
-                        .buttonStyle(BrassButtonStyle())
+                        .buttonStyle(PrimaryButtonStyle())
                         .accessibilityIdentifier("scales.playAlong")
                         .accessibilityHint(Text("Listens and lights each note as you play it."))
                 }
@@ -219,19 +219,19 @@ struct ScaleLibraryView: View {
                             .transition(.opacity)
                     }
                     Spacer(minLength: 0)
-                    Text("\(index) / \(run.midis.count)").font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
+                    Text.fraction(index, run.midis.count).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
                         .contentTransition(.numericText())
                 }
                 ProgressLine(value: Double(index) / Double(max(1, run.midis.count)), color: Palette.mint, height: 4)
             }
             .padding(.horizontal, 16).padding(.vertical, 10)
             .frame(maxWidth: .infinity, minHeight: 54)
-            .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
-            .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(Palette.mint.opacity(0.35), lineWidth: 1))
+            .background(RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous).fill(Palette.stageRaised))
+            .overlay(RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous).strokeBorder(Palette.mint.opacity(0.35), lineWidth: 1))
             .animation(Motion.quick, value: index)
             .accessibilityElement(children: .combine)
             Button("Stop") { stopAlong() }
-                .buttonStyle(BrassButtonStyle(prominent: false))
+                .buttonStyle(SecondaryButtonStyle())
                 .frame(width: 96)
                 .accessibilityIdentifier("scales.stop")
         }
@@ -257,7 +257,7 @@ struct ScaleLibraryView: View {
             .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.5), lineWidth: 1))
             .accessibilityElement(children: .combine)
             Button("Play again") { startAlong(sheet) }
-                .buttonStyle(BrassButtonStyle())
+                .buttonStyle(PrimaryButtonStyle())
                 .frame(width: 132)
                 .accessibilityIdentifier("scales.playAlong")
         }
@@ -580,7 +580,7 @@ struct ScaleNeck: View {
         for note in notes {
             let spot = NeckSpot(string: note.string, fret: note.fret)
             let center = point(spot)
-            let tint = note.isRoot ? Palette.ember : Palette.brass
+            let tint = note.isRoot ? Palette.amber : Palette.mint
             if let focus, !focus.contains(spot) {
                 // In the scale, outside the position: a faint mark keeps the neck's map without crowding the box.
                 let mark = r * 0.5

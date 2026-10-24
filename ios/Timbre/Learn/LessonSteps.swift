@@ -136,8 +136,8 @@ struct NotesStep: View {
         NotationPhrase(notes: notes, clef: Clef.reading(instrument: course.instrument, midis: notes.map(\.midi)), accent: accent,
                        current: finished ? nil : min(judge.index, notes.count - 1), done: finished ? notes.count : judge.index)
             .padding(.horizontal, 12)
-            .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
-            .padding(.horizontal, 20)
+            .background(RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous).fill(Palette.stageRaised))
+            .padding(.horizontal, Metrics.gutter)
             .animation(Motion.quick, value: judge.index)
             .accessibilityIdentifier("lesson.notes.staff")
     }
@@ -158,7 +158,7 @@ struct NotesStep: View {
                     .foregroundStyle(isSequence ? Palette.ink : Palette.inkFaint)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, 30)
+                    .padding(.horizontal, Metrics.gutter + Metrics.proseInset)
             }
         }
         .padding(.top, 10)
@@ -216,8 +216,8 @@ struct NotesStep: View {
         } else if course.fretKind == nil, !notes.isEmpty {
             StaffView(notes: notes.map(\.midi), clef: staffClef, accent: accent, activeIndex: finished ? nil : min(judge.index, notes.count - 1))
                 .padding(.horizontal, 12)
-                .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
-                .padding(.horizontal, 20)
+                .background(RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous).fill(Palette.stageRaised))
+                .padding(.horizontal, Metrics.gutter)
                 .animation(Motion.quick, value: judge.index)
         }
     }
@@ -253,7 +253,7 @@ struct NotesStep: View {
                     .foregroundStyle(state == 2 ? Palette.onAccent : state == 1 ? Palette.ink : Palette.inkSoft)
                     .frame(minWidth: 38, minHeight: 34)
                     .background(Capsule().fill(state == 2 ? AnyShapeStyle(accent) : AnyShapeStyle(Palette.surface)))
-                    .overlay(Capsule().strokeBorder(state == 1 ? accent : state == 0 ? Color.white.opacity(0.14) : .clear, lineWidth: state == 1 ? 1.5 : 1))
+                    .overlay(Capsule().strokeBorder(state == 1 ? accent : state == 0 ? Palette.controlLine : .clear, lineWidth: state == 1 ? 1.5 : 1))
             }
         }
         .animation(Motion.pluck, value: judge.index)
@@ -352,7 +352,7 @@ struct NoteHandover: View {
             try? await Task.sleep(for: .milliseconds(150))
             guard !Task.isCancelled else { return }
             shown = next
-            withAnimation(.easeOut(duration: 0.2)) { visible = true }
+            withAnimation(Motion.fade) { visible = true }
         }
     }
 }
@@ -451,7 +451,7 @@ struct ChordStep: View {
                     hearingPill
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .animation(reduceMotion ? .easeOut(duration: 0.2) : Motion.settle, value: player)
+                .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: player)
             }
             MicrophoneHint()
             // Once every string rings, the step is done: no way round it is offered any more.
@@ -493,7 +493,7 @@ struct ChordStep: View {
         }
         .frame(width: fit.width)
         .padding(22)
-        .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Palette.stageRaised))
+        .background(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous).fill(Palette.stageRaised))
         .shadow(color: finished ? accent.opacity(0.45) : .clear, radius: 26)
         // Behind the card: the sparks fly out from under its edges, never over the chord's name.
         .background { SparkBurst(trigger: burst, color: accent, startFraction: 0.6).frame(width: fit.width * 1.7, height: fit.width * 1.7) }
@@ -517,7 +517,7 @@ struct ChordStep: View {
                 LessonStringCheck(note: i < open.count ? NoteName.pitchClass(open[i] + max(0, chord.frets[i])) : "",
                                   number: count - i, mark: mark(i, next: next, open: open), accent: accent, side: side)
                     .position(x: xs[i], y: 22)
-                    .animation(reduceMotion ? .easeOut(duration: 0.2) : Motion.pluck.delay(Double(i) * 0.04), value: verified.contains(i))
+                    .animation(reduceMotion ? Motion.reduced : Motion.pluck.delay(Double(i) * 0.04), value: verified.contains(i))
             }
         }
         .frame(width: width, height: 44)
@@ -661,7 +661,7 @@ struct LessonStringCheck: View {
     private var rim: Color {
         switch mark {
         case .muted, .heard: return .clear
-        case .waiting: return Color.white.opacity(0.14)
+        case .waiting: return Palette.controlLine
         case .next: return accent
         }
     }
@@ -808,24 +808,22 @@ struct RhythmStep: View {
     @ViewBuilder private var header: some View {
         if case .strum(let chord?) = mode {
             HStack(alignment: .center, spacing: 16) {
-                headerWords(centred: false)
-                Spacer(minLength: 0)
+                headerWords
                 ChordDiagram(chord: chord, accent: accent, landing: true).frame(width: 112)
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, Metrics.gutter)
             .padding(.top, 10)
         } else {
-            headerWords(centred: true)
-                .padding(.horizontal, 20)
+            headerWords
+                .padding(.horizontal, Metrics.gutter)
                 .padding(.top, 14)
         }
     }
 
-    private func headerWords(centred: Bool) -> some View {
-        VStack(alignment: centred ? .center : .leading, spacing: 6) {
-            Text(title).font(Typeface.display(26)).foregroundStyle(Palette.ink)
-                .multilineTextAlignment(centred ? .center : .leading)
-                .fixedSize(horizontal: false, vertical: true)
+    /// The step's title (leading, as on every step), the tempo and the band.
+    private var headerWords: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            StepTitle(title)
             Text("\(Int(bpm)) BPM · \(bars) bars").font(.subheadline).foregroundStyle(Palette.inkSoft)
             if practice || !isTap {
                 HStack(spacing: 8) {
@@ -931,7 +929,7 @@ struct RhythmStep: View {
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, Metrics.gutter)
     }
 
     /// Below this the strings would be cramped.
@@ -952,7 +950,7 @@ struct RhythmStep: View {
         }
         .padding(.horizontal, 26).padding(.vertical, largest < 40 ? 4 : 12)
         .background(Capsule().fill(Palette.stage.opacity(0.8)))
-        .overlay(Capsule().strokeBorder(Color.white.opacity(0.08), lineWidth: 1))
+        .overlay(Capsule().strokeBorder(Palette.hairline, lineWidth: 1))
         .shadow(color: .black.opacity(0.4), radius: 20, y: 8)
         .allowsHitTesting(false)
     }
@@ -1191,13 +1189,12 @@ struct TuneCheckStep: View {
 
     var body: some View {
         VStack(spacing: 14) {
-            VStack(spacing: 6) {
-                Text("Quick tune check").font(Typeface.display(28)).foregroundStyle(Palette.ink)
+            VStack(alignment: .leading, spacing: 6) {
+                StepTitle("Quick tune check")
                 Text("Pluck each open string. In-tune strings help Timbre hear you right.").font(.subheadline).foregroundStyle(Palette.inkSoft)
-                    .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, 30)
             }
+            .padding(.horizontal, Metrics.gutter)
             .padding(.top, 14)
             // Words and the note stay above the chips' sparks.
             .zIndex(1)
@@ -1210,7 +1207,7 @@ struct TuneCheckStep: View {
                 // The string to pluck, lit on a strip of the neck.
                 FretboardDiagram(strings: course.stringCount, dots: [Fretting(string: number, fret: 0)], frets: 4, accent: accent,
                                  activeString: number, fretless: course.fretless, rowHeight: 15, pulsing: true, edges: StringEdges.of(course))
-                    .padding(.horizontal, 24)
+                    .padding(.horizontal, Metrics.gutter)
                     .transition(.opacity)
             }
             MicrophoneHint()
@@ -1316,13 +1313,13 @@ struct TuneCheckStep: View {
         let ink = done ? Palette.onAccent : current ? Palette.ink : Palette.inkSoft
         return VStack(spacing: -1) {
             Text(NoteName.pitchClass(string.midi)).font(Typeface.label(15))
-            Text(verbatim: "\(string.number)").font(Typeface.number(11, relativeTo: .caption2)).opacity(0.75)
+            Text(verbatim: "\(string.number)").font(Typeface.number(11)).opacity(0.75)
         }
         .foregroundStyle(ink)
         .lineLimit(1)
         .frame(width: Self.chip, height: Self.chip)
         .background(Circle().fill(done ? AnyShapeStyle(accent) : AnyShapeStyle(Palette.surface)))
-        .overlay(Circle().strokeBorder(current ? accent : done ? .clear : Color.white.opacity(0.14), lineWidth: current ? 2 : 1))
+        .overlay(Circle().strokeBorder(current ? accent : done ? .clear : Palette.controlLine, lineWidth: current ? 2 : 1))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("String \(string.number)"))
         .accessibilityValue(Text(verbatim: NoteName.pitchClass(string.midi)))
@@ -1404,7 +1401,7 @@ struct TuneCheckStep: View {
             index = tuned
             if index >= strings.count { finish(); return }
             store.gameTargetHz = frequency(strings[index], store)
-            withAnimation(.easeOut(duration: 0.22)) { noteVisible = true }
+            withAnimation(Motion.fade) { noteVisible = true }
         }
     }
 

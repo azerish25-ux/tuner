@@ -36,19 +36,19 @@ struct WeakSpotReviewCard: View {
 
     var body: some View {
         if always || store.reviewDue(in: course), let lesson = store.weakSpotReview(in: course) {
-            let shape = RoundedRectangle(cornerRadius: 22, style: .continuous)
+            let shape = RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous)
             Button { Haptics.shared.selection(); onStart(lesson) } label: {
                 HStack(spacing: 14) {
                     IconOrb(symbol: "scope", tint: Palette.amber, size: 48)
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Weak-spot review").font(Typeface.display(18)).foregroundStyle(Palette.ink)
+                        Text("Weak-spot review").font(Typeface.cardTitle).foregroundStyle(Palette.ink)
                         WeakSpotChips(spots: store.learn.weakSpots(in: course))
                         Text("\(lesson.minutes) min · +\(lesson.xp) XP").font(.subheadline).foregroundStyle(Palette.inkSoft)
                     }
                     Spacer(minLength: 0)
                     Image(systemName: "chevron.right").font(.system(size: 14, weight: .bold)).foregroundStyle(Palette.inkFaint)
                 }
-                .padding(16)
+                .padding(Metrics.cardPadding)
                 .background(shape.fill(Palette.stageRaised).overlay(LinearGradient(colors: [Palette.amber.opacity(0.14), .clear], startPoint: .leading, endPoint: .trailing).clipShape(shape)))
                 .overlay(shape.strokeBorder(Palette.amber.opacity(0.35), lineWidth: 1))
                 .contentShape(shape)

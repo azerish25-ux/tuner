@@ -74,19 +74,19 @@ struct StreakCelebration: View {
             }
             .frame(height: compact ? 158 : 210)
             Text(shownDays, format: .number)
-                .font(Typeface.number(compact ? 84 : 104, relativeTo: .largeTitle)).foregroundStyle(Palette.ink)
+                .font(Typeface.hero(compact ? 84 : 104)).foregroundStyle(Palette.ink)
                 .contentTransition(.numericText(value: Double(shownDays)))
                 .shadow(color: Palette.flame.opacity(0.35), radius: 18)
-                .lineLimit(1).minimumScaleFactor(0.5)
+                .heroNumeral()
             Text("day streak").font(Typeface.display(24, relativeTo: .title2)).tracking(-0.3).foregroundStyle(Palette.ink)
-            StreakShareCard.titleText(days)
-                .font(Typeface.label(14, relativeTo: .subheadline)).tracking(1.2).textCase(.uppercase)
-                .foregroundStyle(Color(hex: 0xFFD3A8))
-                .padding(.horizontal, 12).frame(minHeight: 28)
+            // The milestone's name as the app's display eyebrow, in a pill of the flame's light.
+            Eyebrow(StreakShareCard.titleText(days), color: Palette.flameInk, style: .display)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 12).padding(.vertical, 6).frame(minHeight: 28)
                 .background(Capsule().fill(Palette.flame.opacity(0.14)))
                 .overlay(Capsule().strokeBorder(Palette.flame.opacity(0.35), lineWidth: 1))
                 .padding(.top, 8)
-                .opacity(wordsIn ? 1 : 0).offset(y: wordsIn ? 0 : 10)
+                .opacity(wordsIn ? 1 : 0).offset(y: wordsIn || reduceMotion ? 0 : 10)
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(days)-day streak"))
@@ -109,8 +109,8 @@ struct StreakCelebration: View {
             }
         }
         .padding(.horizontal, 12).padding(.vertical, 14)
-        .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised.opacity(0.85)))
-        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(Palette.flame.opacity(0.22), lineWidth: 1))
+        .background(RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous).fill(Palette.stageRaised.opacity(0.85)))
+        .overlay(RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous).strokeBorder(Palette.flame.opacity(0.22), lineWidth: 1))
         .opacity(wordsIn ? 1 : 0)
         .accessibilityHidden(true)
     }
@@ -134,10 +134,10 @@ struct StreakCelebration: View {
     private var actions: some View {
         VStack(spacing: 10) {
             Button(action: onDone) { Text("Continue") }
-                .buttonStyle(BrassButtonStyle())
+                .buttonStyle(PrimaryButtonStyle())
                 .accessibilityIdentifier("streak.done")
             ShareCardButton(preview: "Practice streak") { StreakShareCard(days: days) }
-                .buttonStyle(BrassButtonStyle(prominent: false))
+                .buttonStyle(SecondaryButtonStyle())
                 .accessibilityIdentifier("streak.share")
         }
         .opacity(wordsIn ? 1 : 0)
@@ -149,15 +149,16 @@ struct StreakCelebration: View {
         Haptics.shared.done()
         SoundFX.shared.play(.levelUp)
         AccessibilityNotification.Announcement(String(localized: "\(days)-day streak", bundle: TimbreLocalization.bundle)).post()
-        withAnimation(reduceMotion ? .easeOut(duration: 0.2) : .spring(response: 0.55, dampingFraction: 0.58)) { flameIn = true }
+        withMotion(Motion.reward, reduceMotion: reduceMotion) { flameIn = true }
         if !reduceMotion { burst += 1 }
         try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 420))
-        withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) { shownDays = days }
-        withAnimation(.easeOut(duration: 0.4).delay(reduceMotion ? 0 : 0.15)) { wordsIn = true }
+        withMotion(Motion.reward, reduceMotion: reduceMotion) { shownDays = days }
+        // The words fade in (kept under Reduce Motion), rising a little only with motion on.
+        withAnimation(Motion.fade.delay(reduceMotion ? 0 : 0.15)) { wordsIn = true }
         try? await Task.sleep(for: .milliseconds(reduceMotion ? 0 : 320))
         for step in 0..<min(max(days, 0), 7) {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 0 : 110))
-            withAnimation(reduceMotion ? nil : .spring(response: 0.32, dampingFraction: 0.55)) { lit = step + 1 }
+            withMotion(Motion.pop, reduceMotion: reduceMotion) { lit = step + 1 }
             if !reduceMotion { Haptics.shared.selection() }
         }
     }

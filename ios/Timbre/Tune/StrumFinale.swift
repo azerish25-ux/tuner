@@ -53,7 +53,7 @@ struct StrumFinaleLane: View {
     private func lane(shown: Int?, bead: Double?, locked: Bool, swing: Double) -> some View {
         let tone = StrumTone.status(shown, band: band, locked: locked)
         let quiet = shown == nil && !locked
-        let shape = RoundedRectangle(cornerRadius: 26, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
         return VStack(spacing: 12) {
             StrumTurnBadge(shown: shown, band: band, pulse: 0, size: 30, locked: locked)
             scale(shown: shown, bead: bead, locked: locked, swing: swing, tone: tone)
@@ -76,7 +76,7 @@ struct StrumFinaleLane: View {
         .overlay(shape.strokeBorder(quiet ? Color.white.opacity(strong ? 0.3 : 0.08) : tone.opacity(locked || strong ? 0.75 : 0.35),
                                     lineWidth: locked ? 1.5 : 1))
         .shadow(color: Palette.mint.opacity(locked ? 0.28 : 0), radius: 24)
-        .animation(reduceMotion ? .easeInOut(duration: 0.2) : Motion.pluck, value: locked)
+        .animation(Motion.adaptive(Motion.pluck, reduceMotion: reduceMotion), value: locked)
     }
 
     private func scale(shown: Int?, bead: Double?, locked: Bool, swing: Double, tone: Color) -> some View {

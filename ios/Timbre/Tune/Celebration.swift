@@ -41,26 +41,26 @@ struct CelebrationOverlay: View {
                         }
                         Label("+\(XPReward.fullTune) XP", systemImage: "sparkles").foregroundStyle(Palette.mint)
                         if store.streak.current > 0 {
-                            Label("\(store.streak.current)-day streak", systemImage: "flame.fill").foregroundStyle(Color(hex: 0xFFD3A8))
+                            Label("\(store.streak.current)-day streak", systemImage: "flame.fill").foregroundStyle(Palette.flameInk)
                         }
                     }
                     .font(Typeface.label(13))
                     HStack(spacing: 12) {
-                        // The card renders once the burst has landed; until then Share rests, dimmed, where it will be.
+                        // The card renders once the burst has landed; until then Share rests where it will be, in the
+                        // primary button's disabled look.
                         if let card {
                             ShareLink(item: card, preview: SharePreview("In tune with Timbre", image: card)) {
                                 Label("Share", systemImage: "square.and.arrow.up")
                             }
-                            .buttonStyle(BrassButtonStyle())
+                            .buttonStyle(PrimaryButtonStyle())
                         } else {
                             Button {} label: { Label("Share", systemImage: "square.and.arrow.up") }
-                                .buttonStyle(BrassButtonStyle())
+                                .buttonStyle(PrimaryButtonStyle())
                                 .disabled(true)
-                                .opacity(0.5)
                         }
-                        Button("Done") { dismiss() }.buttonStyle(BrassButtonStyle(prominent: false))
+                        Button("Done") { dismiss() }.buttonStyle(SecondaryButtonStyle())
                     }
-                    .animation(.easeOut(duration: 0.25), value: card == nil)
+                    .animation(Motion.fade, value: card == nil)
                     .padding(.top, 6)
                     // Tuned up: the natural moment to play something.
                     if let course = store.curriculum.courses.first(where: { $0.instrument == store.instrument.id }), let next = store.learn.nextLesson(in: course) {
@@ -71,19 +71,21 @@ struct CelebrationOverlay: View {
                         } label: {
                             Label("Ready to play: \(next.title.localized)", systemImage: "graduationcap.fill")
                                 .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.mint).lineLimit(1)
+                                .tapTarget()
                         }
                         .padding(.top, 2)
                         .accessibilityIdentifier("celebration.lesson")
                     }
                 }
-                .padding(26)
-                .stillCard(cornerRadius: 30, padding: 22)
-                .padding(.horizontal, 28)
-                .transition(.scale(scale: 0.92).combined(with: .opacity))
+                // A hero card: the hero radius, the card inset with a little extra air around the moment.
+                .padding(.horizontal, Metrics.proseInset).padding(.vertical, 12)
+                .stillCard(cornerRadius: Metrics.cornerHero)
+                .padding(.horizontal, Metrics.gutter + Metrics.proseInset)
+                .transition(.adaptive(.scale(scale: 0.92).combined(with: .opacity), reduceMotion: reduceMotion))
                 .accessibilityAddTraits(.isModal)
             }
         }
-        .animation(Motion.pluck, value: visible)
+        .adaptiveAnimation(Motion.pluck, value: visible)
         .onChange(of: store.celebrate) { _, _ in
             let start = Date()
             started = start
@@ -122,7 +124,7 @@ struct StreakMilestoneOverlay: View {
                     .transition(.opacity)
             }
         }
-        .animation(.easeOut(duration: 0.3), value: days)
+        .animation(Motion.fade, value: days)
         .onChange(of: store.streakMilestone) { _, milestone in
             guard milestone != nil else { return }
             Task { @MainActor in
@@ -245,8 +247,8 @@ struct ShareCardRow<Card: View>: View {
             shareButton
         }
         .padding(12)
-        .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Palette.stageRaised))
-        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(tint.opacity(0.25), lineWidth: 1))
+        .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.stageRaised))
+        .overlay(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).strokeBorder(tint.opacity(0.25), lineWidth: 1))
         .task {
             guard image == nil else { return }
             try? await Task.sleep(for: ShareCardRenderer.entrance)
@@ -296,7 +298,7 @@ struct ShareCardFrame<Tag: View, Content: View>: View {
     let tag: Tag
     let content: Content
 
-    init(glow: Color = Color(hex: 0xFFC48C), signature: Bool = false, @ViewBuilder tag: () -> Tag, @ViewBuilder content: () -> Content) {
+    init(glow: Color = Palette.spotlight, signature: Bool = false, @ViewBuilder tag: () -> Tag, @ViewBuilder content: () -> Content) {
         self.glow = glow
         self.signature = signature
         self.tag = tag()
@@ -327,13 +329,13 @@ struct ShareCardFrame<Tag: View, Content: View>: View {
 
     private var signatureLine: some View {
         HStack(spacing: 10) {
-            Rectangle().fill(Color.white.opacity(0.12)).frame(height: 1)
+            Hairline()
             HStack(spacing: 6) {
                 Image(systemName: "tuningfork").font(.system(size: 11, weight: .bold)).foregroundStyle(Palette.mint)
                 Text("In tune with Timbre").font(Typeface.label(11)).tracking(0.4).foregroundStyle(Palette.inkSoft)
             }
             .fixedSize()
-            Rectangle().fill(Color.white.opacity(0.12)).frame(height: 1)
+            Hairline()
         }
         .padding(.top, 6)
     }
@@ -351,11 +353,11 @@ struct TuneShareCard: View {
 
     var body: some View {
         ShareCardFrame {
-            if streak > 1 { Label("\(streak)-day streak", systemImage: "flame.fill").font(Typeface.label(12)).foregroundStyle(Color(hex: 0xFFD3A8)) }
+            if streak > 1 { Label("\(streak)-day streak", systemImage: "flame.fill").font(Typeface.label(12)).foregroundStyle(Palette.flameInk) }
         } content: {
             if let name = modelID.flatMap({ ModelLibrary.hasCard($0) ? ModelLibrary.cardImageName($0) : nil }) ?? photo {
                 Image(name).resizable().scaledToFit().frame(height: 300).shadow(color: .black.opacity(0.65), radius: 24, y: 14)
-                    .background(Ellipse().fill(RadialGradient(colors: [Color(hex: 0xFFC48C).opacity(0.25), .clear], center: .center, startRadius: 2, endRadius: 160)).frame(width: 300, height: 40).offset(y: 150))
+                    .background(Ellipse().fill(RadialGradient(colors: [Palette.spotlight.opacity(0.25), .clear], center: .center, startRadius: 2, endRadius: 160)).frame(width: 300, height: 40).offset(y: 150))
             }
             Text("In tune").font(Typeface.display(52)).tracking(-1.2).foregroundStyle(Palette.ink)
             if let seconds, seconds > 0 {
@@ -387,12 +389,9 @@ struct LessonShareCard: View {
     /// The streak beside the accuracy (from two days on).
     var streak = 0
 
-    private static let gold = Color(hex: 0xF0A93B)
-    private static let starFill = LinearGradient(colors: [Color(hex: 0xFFE29A), Color(hex: 0xF0A93B)], startPoint: .top, endPoint: .bottom)
-
     var body: some View {
         ShareCardFrame(glow: accent, signature: true) {
-            Text(course.uppercased()).font(Typeface.label(12)).tracking(1.6).foregroundStyle(accent).lineLimit(1)
+            Eyebrow(Text(course), color: accent, style: .display).lineLimit(1)
         } content: {
             hero
             words
@@ -406,7 +405,7 @@ struct LessonShareCard: View {
     private var streakChip: some View {
         HStack(spacing: 6) {
             Image(systemName: "flame.fill").font(.system(size: 13, weight: .bold)).foregroundStyle(Palette.flame)
-            Text("\(streak)-day streak").font(Typeface.label(14)).foregroundStyle(Color(hex: 0xFFD3A8))
+            Text("\(streak)-day streak").font(Typeface.label(14)).foregroundStyle(Palette.flameInk)
                 .lineLimit(1).minimumScaleFactor(0.7)
         }
         .padding(.horizontal, 14).frame(height: 34)
@@ -417,7 +416,7 @@ struct LessonShareCard: View {
     private var hero: some View {
         ZStack {
             Circle()
-                .fill(RadialGradient(colors: [Self.gold.opacity(0.26), .clear], center: .center, startRadius: 4, endRadius: 140))
+                .fill(RadialGradient(colors: [Palette.starGold.opacity(0.26), .clear], center: .center, startRadius: 4, endRadius: 140))
                 .frame(width: 280, height: 280)
             VStack(spacing: 18) {
                 if song { songDisc }
@@ -440,8 +439,8 @@ struct LessonShareCard: View {
                 let earned = i < stars
                 Image(systemName: "star.fill")
                     .font(.system(size: (i == 1 ? 86 : 64) * scale, weight: .bold))
-                    .foregroundStyle(earned ? AnyShapeStyle(Self.starFill) : AnyShapeStyle(Color.white.opacity(0.08)))
-                    .shadow(color: earned ? Self.gold.opacity(0.55) : .clear, radius: 16)
+                    .foregroundStyle(earned ? AnyShapeStyle(Palette.starFill) : AnyShapeStyle(Color.white.opacity(0.08)))
+                    .shadow(color: earned ? Palette.starGold.opacity(0.55) : .clear, radius: 16)
                     .offset(y: i == 1 ? -12 * scale : 0)
             }
         }
@@ -480,7 +479,7 @@ struct StreakShareCard: View {
 
     var body: some View {
         ShareCardFrame(glow: Palette.flame, signature: true) {
-            Self.titleText(days).font(Typeface.label(12)).tracking(1.2).foregroundStyle(Color(hex: 0xFFD3A8)).lineLimit(1)
+            Eyebrow(Self.titleText(days), color: Palette.flameInk, style: .display).lineLimit(1)
         } content: {
             ZStack {
                 Circle()

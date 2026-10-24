@@ -51,14 +51,11 @@ struct LatencyCalibrationSheet: View {
         HStack {
             Text("Calibrate timing").font(Typeface.display(24)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
             Spacer()
-            Button { dismiss() } label: {
-                Image(systemName: "xmark").font(.system(size: 15, weight: .bold)).foregroundStyle(Palette.inkSoft)
-                    .frame(width: 44, height: 44).contentShape(Rectangle())
-            }
-            .accessibilityLabel(Text("Close"))
-            .accessibilityIdentifier("calibrate.close")
+            CloseButton { dismiss() }
+                .accessibilityIdentifier("calibrate.close")
         }
-        .padding(.horizontal, 22)
+        // The close button's 44 pt target keeps its disc 5 pt in, on the gutter's line.
+        .padding(.leading, Metrics.gutter).padding(.trailing, Metrics.gutter - 5)
     }
 
     /// Which route this measures, and what it holds now.
@@ -75,7 +72,7 @@ struct LatencyCalibrationSheet: View {
         .foregroundStyle(Palette.inkSoft)
         .padding(.horizontal, 14).padding(.vertical, 8)
         .background(Capsule().fill(Palette.stageRaised))
-        .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
+        .overlay(Capsule().strokeBorder(Palette.controlLine, lineWidth: 1))
         .accessibilityElement(children: .combine)
     }
 
@@ -109,7 +106,7 @@ struct LatencyCalibrationSheet: View {
                 .overlay(Circle().strokeBorder(accent.opacity(0.6), lineWidth: 2))
                 .padding(18)
                 .scaleEffect(reduceMotion || pulse % 2 == 0 ? 1 : 0.95)
-                .animation(.spring(response: 0.18, dampingFraction: 0.5), value: pulse)
+                .animation(Motion.pop, value: pulse)
             Image(systemName: "hand.tap.fill").font(.system(size: 46, weight: .semibold)).foregroundStyle(accent)
                 .accessibilityHidden(true)
             TimedTapPad { time in tapped(at: time) }
@@ -132,7 +129,7 @@ struct LatencyCalibrationSheet: View {
         case .ready, .running:
             Text("Tap the pad with every click, for 10 seconds.")
                 .font(.body).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
-                .padding(.horizontal, 30)
+                .padding(.horizontal, Metrics.gutter + Metrics.proseInset)
         case .done:
             if let result {
                 Text(milliseconds(result), format: .measurement(width: .abbreviated, usage: .asProvided))
@@ -142,7 +139,7 @@ struct LatencyCalibrationSheet: View {
         case .failed:
             Text("Those taps were too uneven. Try again.")
                 .font(.body.weight(.semibold)).foregroundStyle(Palette.amber).multilineTextAlignment(.center)
-                .padding(.horizontal, 30)
+                .padding(.horizontal, Metrics.gutter + Metrics.proseInset)
         }
     }
 
@@ -155,13 +152,11 @@ struct LatencyCalibrationSheet: View {
             StepButton(title: "Start", accent: accent, enabled: false) {}.opacity(0).accessibilityHidden(true)
         case .done:
             HStack(spacing: 10) {
-                Button("Try again") { start() }.font(Typeface.label(16)).foregroundStyle(Palette.ink)
-                    .frame(maxWidth: .infinity, minHeight: 56)
-                    .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
-                StepButton(title: "Done", accent: accent) { dismiss() }
-                    .padding(.horizontal, -20).frame(maxWidth: .infinity)
+                Button("Try again") { start() }
+                    .buttonStyle(SecondaryButtonStyle())
+                StepButton(title: "Done", accent: accent, inset: false) { dismiss() }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, Metrics.gutter).padding(.bottom, 12)
         case .failed:
             StepButton(title: "Try again", accent: accent) { start() }
         }

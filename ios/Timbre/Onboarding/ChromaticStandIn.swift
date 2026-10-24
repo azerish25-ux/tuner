@@ -47,7 +47,7 @@ struct ChromaticStandInHint: View {
     /// "Tuning your violin in Chromatic · violin stage in Pro", beside the instrument.
     private func pitch(_ instrument: Instrument) -> some View {
         let name = displayName(instrument)
-        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return HStack(spacing: 10) {
             if let image = CourseArtwork.instrumentImage(instrument.id, catalog: store.catalog) {
                 InstrumentTile(image: image.name, render: image.render, accent: Palette.amber, size: 32)
@@ -64,11 +64,11 @@ struct ChromaticStandInHint: View {
         }
         .padding(.leading, 8).padding(.trailing, 12).padding(.vertical, 8)
         .background(shape.fill(Palette.stageRaised))
-        .overlay(shape.strokeBorder(Color(hex: 0xE39A3B).opacity(0.4), lineWidth: 1))
+        .overlay(shape.strokeBorder(Palette.proGoldDeep.opacity(0.4), lineWidth: 1))
         .contentShape(shape)
     }
 
-    /// The instrument's open strings as chips; the one the readout is on is lit.
+    /// The instrument's open strings as the app's chips (note names in Sora); the one the readout is on is chosen.
     private func strings(_ targets: [Target]) -> some View {
         HStack(spacing: 8) {
             ForEach(targets) { target in
@@ -78,14 +78,10 @@ struct ChromaticStandInHint: View {
                     Haptics.shared.selection()
                 } label: {
                     Text(verbatim: target.name).font(Typeface.label(14)).monospacedDigit()
-                        .foregroundStyle(current ? Palette.mint : Palette.ink)
-                        .frame(minWidth: 44, minHeight: 34)
-                        .padding(.horizontal, 6)
-                        .background(Capsule().fill(current ? Palette.mint.opacity(0.14) : Palette.stageRaised))
-                        .overlay(Capsule().strokeBorder(current ? Palette.mint : Palette.line, lineWidth: current ? 1.5 : 1))
-                        .animation(Motion.quick, value: current)
+                        .lineLimit(1)
                 }
-                .buttonStyle(PressScaleStyle())
+                .buttonStyle(ChipButtonStyle(selected: current))
+                .animation(Motion.quick, value: current)
                 .accessibilityAddTraits(current ? .isSelected : [])
             }
         }
