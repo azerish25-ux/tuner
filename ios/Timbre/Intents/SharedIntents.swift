@@ -1,14 +1,18 @@
 import AppIntents
 import SwiftUI
 
-// Shared by the app and the widget extension (Control Center control).
+// Shared by the app and the widget extension. A Control Center or Lock Screen control's intent must exist in both
+// targets; because these intents open the app, the system performs them in the app's process.
 
-/// Where a Siri or Shortcuts request should land once the app is in front.
+/// Where a Siri, Shortcuts or control request should land once the app is in front. RootView follows both:
+/// `pending` for the plain destinations, `link` for a `timbre://` link that carries a choice (an instrument, a
+/// tempo, a key), so intents and links take one route (DeepLink.swift).
 @MainActor
 final class IntentRouter: ObservableObject {
     enum Destination: String { case tune, metronome, ear, daily, learn }
     static let shared = IntentRouter()
     @Published var pending: Destination?
+    @Published var link: URL?
 }
 
 struct OpenTunerIntent: AppIntent {
