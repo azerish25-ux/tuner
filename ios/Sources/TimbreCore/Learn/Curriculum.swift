@@ -144,6 +144,9 @@ public struct Lesson: Codable, Identifiable, Sendable {
     /// Free lessons are open to everyone; the rest need Timbre Pro.
     public let free: Bool
     public let steps: [LessonStep]
+    /// A song's whole arrangement (sections, chord chart, lyric credit); its last step is then the whole song with its
+    /// words (`songTake`). Nil for every other lesson.
+    public var arrangement: SongArrangement?
 }
 
 /// A position on a fretted instrument: string 1 is the highest-pitched string, fret 0 is open.
@@ -156,14 +159,57 @@ public struct Fretting: Codable, Equatable, Hashable, Sendable {
     enum CodingKeys: String, CodingKey { case string = "s", fret = "f", finger = "g" }
 }
 
-/// One note of a play-along: when (in beats from the start), how long, what, and where to play it.
+/// One note of a play-along: when (in beats from the start), how long, what, and where to play it, and in a song with
+/// words, the syllable sung on it (`LyricSheet` reads them as lines).
 public struct TimedNote: Codable, Equatable, Sendable {
     public let midi: Int
     public let beat: Double
     public let beats: Double
     public let at: Fretting?
-    public init(midi: Int, beat: Double, beats: Double, at: Fretting? = nil) { self.midi = midi; self.beat = beat; self.beats = beats; self.at = at }
-    enum CodingKeys: String, CodingKey { case midi = "m", beat = "b", beats = "d", at }
+    /// The syllable sung on this note: ending in "-" when it joins the next into a word ("Twin-", "kle,"), or
+    /// `TimedNote.held` for a note that holds the syllable before it. Nil for a note outside the words.
+    public let lyric: String?
+    /// The syllable starts a new lyric line.
+    public let startsLine: Bool
+
+    /// The `lyric` of a note that holds the syllable before it (a melisma).
+    public static let held = "_"
+
+    public init(midi: Int, beat: Double, beats: Double, at: Fretting? = nil, lyric: String? = nil, startsLine: Bool = false) {
+        self.midi = midi; self.beat = beat; self.beats = beats; self.at = at; self.lyric = lyric; self.startsLine = startsLine
+    }
+
+    /// The syllable as read ("Twin", "kle,"), without its joining hyphen; nil for a held or wordless note.
+    public var syllable: String? {
+        guard let lyric, lyric != Self.held else { return nil }
+        return lyric.hasSuffix("-") ? String(lyric.dropLast()) : lyric
+    }
+    /// The syllable runs on into the next one with no space ("Twin-" + "kle").
+    public var joinsNextSyllable: Bool { lyric.map { $0 != Self.held && $0.hasSuffix("-") } ?? false }
+    /// The note carries on the syllable before it.
+    public var holdsSyllable: Bool { lyric == Self.held }
+
+    enum CodingKeys: String, CodingKey { case midi = "m", beat = "b", beats = "d", at, lyric = "y", startsLine = "yl" }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        midi = try c.decode(Int.self, forKey: .midi)
+        beat = try c.decode(Double.self, forKey: .beat)
+        beats = try c.decode(Double.self, forKey: .beats)
+        at = try c.decodeIfPresent(Fretting.self, forKey: .at)
+        lyric = try c.decodeIfPresent(String.self, forKey: .lyric)
+        startsLine = (try c.decodeIfPresent(Int.self, forKey: .startsLine) ?? 0) != 0
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(midi, forKey: .midi)
+        try c.encode(beat, forKey: .beat)
+        try c.encode(beats, forKey: .beats)
+        try c.encodeIfPresent(at, forKey: .at)
+        try c.encodeIfPresent(lyric, forKey: .lyric)
+        if startsLine { try c.encode(1, forKey: .startsLine) }
+    }
 }
 
 /// A chord a lesson asks for: root pitch class, quality, and the shape to show.

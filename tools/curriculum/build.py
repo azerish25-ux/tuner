@@ -188,12 +188,16 @@ def check_arrangement(lesson: dict, where: str):
     if not SONG_SECONDS[0] <= seconds <= SONG_SECONDS[1]:
         errors.append(f"{where}: the song runs {clock(seconds)} (1:30 to 3:00)")
     song_lengths.append(seconds)
-    sung = [n for n in take["notes"] if "y" in n]
+    sung = [n for n in take["notes"] if n.get("y") not in (None, "_")]
+    held = None
     for n in take["notes"]:
-        if "yl" in n and "y" not in n:
+        if "yl" in n and n.get("y") in (None, "_"):
             errors.append(f"{where}: a lyric line starts on a note without a syllable")
         if "y" in n and (not isinstance(n["y"], str) or not n["y"].strip("-")):
             errors.append(f"{where}: empty syllable")
+        if n.get("y") == "_" and held is None:
+            errors.append(f"{where}: a held note with no syllable before it")
+        held = n.get("y")
     if sung:
         lyric_songs.append(lesson["id"])
         if not sung[0].get("yl"):

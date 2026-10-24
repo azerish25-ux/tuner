@@ -18,8 +18,10 @@ Lyrics (one token per note, in order)
 - "_" holds the previous syllable over the next note (a melisma), or marks a note with no word.
 - "/" starts a new lyric line (the first syllable of a part always starts one).
 - "~" is a hyphen that shows: "one~horse" sings "one-" and "horse" on two notes and reads "one-horse".
-In the curriculum each note carries "y" (its syllable, ending in "-" when it joins the next) and "yl": 1 on the first
-syllable of a line.
+- "al- _ read-y": a hyphen at the end of a word followed by "_" holds the syllable, then the word goes on.
+In the curriculum each sung note carries "y": its syllable (ending in "-" when it joins the next into a word), or "_"
+for a note that holds the syllable before it; "yl": 1 marks the first syllable of a line. Notes outside the words
+(intro, solo) have no "y".
 """
 from __future__ import annotations
 
@@ -29,6 +31,7 @@ from lib import T, Text, midi, name, position
 
 KINDS = {"intro", "verse", "chorus", "bridge", "solo", "interlude", "outro"}
 HIDDEN_HYPHEN = "-"
+HELD = "_"                  # a note that holds the syllable before it
 SHOWN_HYPHEN = "‑"     # non-breaking hyphen: kept in the text, never split onto two lines
 
 
@@ -92,7 +95,8 @@ def syllables(lyrics, where):
                 current = ""
             else:
                 current += ch
-        pieces.append(current)
+        if current or not pieces:
+            pieces.append(current)            # "al-" then "_": the word goes on after a held note
         for piece in pieces:
             if not piece.strip(HIDDEN_HYPHEN + SHOWN_HYPHEN):
                 raise ValueError(f"{where}: empty syllable in {word!r}")
@@ -151,6 +155,8 @@ class Song:
                         note["yl"] = 1
                 elif line:
                     raise ValueError(f"{where}: a line can't start on a held note")
+                else:
+                    note["y"] = HELD
         return notes, int(round(body / self.bpb))
 
     def _chords(self, part, bar, bars):
@@ -231,6 +237,10 @@ class Song:
                 "chords": self.changes, "shapes": [self.shapes[n] for n in used],
                 **({"words": T(self.words)} if self.words else {})}
 
+    def minutes(self, practice=5):
+        """The lesson's length: the steps that teach the song, then the whole song."""
+        return int(round(practice + self.seconds / 60))
+
     def report(self):
         lyric = sum(1 for n in self.notes if "y" in n)
         return f"{self.bars} bars, {len(self.notes)} notes, {lyric} sung, {self.seconds:.0f} s"
@@ -246,7 +256,7 @@ def lyric_text(notes):
     lines, line = [], ""
     for n in notes:
         y = n.get("y")
-        if y is None:
+        if y is None or y == HELD:
             continue
         if n.get("yl") and line:
             lines.append(line)
