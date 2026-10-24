@@ -16,6 +16,7 @@ from __future__ import annotations
 import hashlib
 import importlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -75,6 +76,34 @@ def check_note(n: dict, kind: str | None, where: str):
             errors.append(f"{where}: string {at['s']} fret {at['f']} is {name(fretted(kind, at['s'], at['f']))}, not {name(n['m'])}")
 
 
+# Answers that name a direction ("Up", "Going down", "It climbs", "It falls").
+UP = re.compile(r"(going )?up|it (climbs|rises)|higher", re.I)
+DOWN = re.compile(r"(going )?down|it (falls|drops)|lower", re.I)
+
+
+def check_direction(step: dict, at: str):
+    """A listen step's answer must match what its sound does: up/down answers follow the first move between
+    the note groups (a chord counts at its average pitch); "Which is higher/lower?" over two sounds, with one
+    option per sound in playing order ("The first", "String 5"), must pick the higher or lower one."""
+    levels = [sum(group) / len(group) for group in step["sound"] if group]
+    texts = [o.text for o in step["options"]]
+    answer = texts[step["answer"]]
+    moves = [b - a for a, b in zip(levels, levels[1:]) if b != a]
+    ups = [t for t in texts if UP.fullmatch(t)]
+    downs = [t for t in texts if DOWN.fullmatch(t)]
+    if len(texts) == 2 and len(ups) == 1 and len(downs) == 1 and moves:
+        heard = "up" if moves[0] > 0 else "down"
+        said = "up" if answer in ups else "down"
+        if heard != said:
+            errors.append(f"{at}: the sound goes {heard} first, but the answer is {answer!r}")
+    prompt = step["prompt"].text.lower()
+    asks = re.search(r"\b(higher|lower)\b", prompt)
+    if asks and not ups and len(texts) == 2 and len(levels) == 2 and levels[0] != levels[1]:
+        first_wins = (levels[0] > levels[1]) == (asks.group(1) == "higher")
+        if step["answer"] != (0 if first_wins else 1):
+            errors.append(f"{at}: asks which is {asks.group(1)}, but the answer is {answer!r}")
+
+
 def check_lesson(lesson: dict, kind: str | None, where: str):
     steps = lesson["steps"]
     if not 3 <= len(steps) <= 16:
@@ -99,6 +128,8 @@ def check_lesson(lesson: dict, kind: str | None, where: str):
                 errors.append(f"{at}: duplicate options")
         if t == "listen" and not all(step["sound"]):
             errors.append(f"{at}: empty sound")
+        elif t == "listen" and 0 <= step["answer"] < len(step["options"]):
+            check_direction(step, at)
         if t == "progression" and (not step["chords"] or len(step["chords"]) != len(step["bars"]) or any(n < 1 for n in step["bars"])):
             errors.append(f"{at}: chords and bars")
         if t in ("strum", "tap", "progression"):

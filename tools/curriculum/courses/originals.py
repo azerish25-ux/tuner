@@ -138,7 +138,8 @@ UNIT_1 = unit("orig-1", "Open-chord originals", "Five new songs on the open chor
     lesson("orig-kite-weather", "Kite Weather", [
         explain("Campfire pop", "Kite Weather is bright, easy pop: four chords on a loop, G, D, E minor and C, at a relaxed "
                 "88 beats per minute. Listen for the hook jumping up to F sharp in its second bar.", rhythm(FOLK)),
-        listen("Does the hook climb or fall at first?", [["D4"], ["B3"], ["D4"], ["E4"], ["F#4"]], CLIMB_FALL, 0),
+        # D down to B first, then the climb to F sharp: it falls at first.
+        listen("Does the hook climb or fall at first?", [["D4"], ["B3"], ["D4"], ["E4"], ["F#4"]], CLIMB_FALL, 1),
         progression(KITE_CHORDS, FOLK, bpm=76),
         notes(G, ["D4", "B3", "D4", "E4", "F#4", "E4", "D4"],
               hint="D at fret 3 on string 2, open B and back, then open E and F sharp at fret 2 on string 1."),
