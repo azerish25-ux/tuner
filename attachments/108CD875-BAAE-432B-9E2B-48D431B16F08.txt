@@ -1,0 +1,5 @@
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  ↪︎Find: Descendants matching type Any
+    ↪︎Find: Elements matching predicate '"lesson.tunecheck.skip" IN identifiers'
+      ↪︎Find: First Match

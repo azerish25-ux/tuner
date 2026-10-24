@@ -1,0 +1,5 @@
+Query chain:
+ →Find: Target Application 'com.shahradazerisharghi.timbre'
+  ↪︎Find: Descendants matching type Button
+    ↪︎Find: Elements matching predicate '"Done" IN identifiers'
+      ↪︎Find: First Match

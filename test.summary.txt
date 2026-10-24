@@ -1,0 +1,128 @@
+# Errors
+
+# Matches
+--- line 489
+    t =   271.10s Collecting debug information to assist test failure triage
+    t =   271.10s     Requesting snapshot of accessibility hierarchy for app with pid 9133
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/AppPreviewUITests.swift:210: error: -[TimbreUITests.AppPreviewUITests testAppPreview] : XCTAssertTrue failed
+    t =   273.78s Waiting 10.0s for "lesson.option.0" Any to exist
+    t =   274.81s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.option.0" Any`
+    t =   274.81s         Checking existence of `"lesson.option.0" Any`
+--- line 509
+    t =   286.06s Collecting debug information to assist test failure triage
+    t =   286.06s     Requesting snapshot of accessibility hierarchy for app with pid 9133
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/AppPreviewUITests.swift:212: error: -[TimbreUITests.AppPreviewUITests testAppPreview] : XCTAssertTrue failed - Could not answer the quiz
+    t =   286.54s Checking existence of `"lesson.continue" Any`
+    t =   288.19s Checking existence of `"lesson.continue" Any`
+    t =   289.70s Checking existence of `"lesson.continue" Any`
+--- line 519
+    t =   298.60s Checking existence of `"lesson.continue" Any`
+    t =   300.36s Checking existence of `"lesson.continue" Any`
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/AppPreviewUITests.swift:213: error: -[TimbreUITests.AppPreviewUITests testAppPreview] : XCTAssertNotNil failed
+    t =   303.23s Waiting 10.0s for "lesson.option.1" Any to exist
+    t =   304.32s     Checking `Expect predicate `existsNoRetry == 1` for object "lesson.option.1" Any`
+    t =   304.32s         Checking existence of `"lesson.option.1" Any`
+--- line 542
+    t =   314.36s Collecting debug information to assist test failure triage
+    t =   314.37s     Requesting snapshot of accessibility hierarchy for app with pid 9133
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/AppPreviewUITests.swift:215: error: -[TimbreUITests.AppPreviewUITests testAppPreview] : XCTAssertTrue failed - Could not answer the listening question
+    t =   314.81s Checking existence of `"lesson.continue" Any`
+    t =   315.91s Checking existence of `"lesson.continue" Any`
+    t =   317.03s Checking existence of `"lesson.continue" Any`
+--- line 556
+    t =   328.81s Checking existence of `"lesson.continue" Any`
+    t =   329.88s Checking existence of `"lesson.continue" Any`
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/AppPreviewUITests.swift:216: error: -[TimbreUITests.AppPreviewUITests testAppPreview] : XCTAssertNotNil failed
+    t =   330.84s Checking existence of `"lesson.continue" Any`
+    t =   332.21s Checking existence of `"lesson.continue" Any`
+    t =   333.73s Checking existence of `"lesson.continue" Any`
+--- line 636
+    t =   388.81s Collecting debug information to assist test failure triage
+    t =   388.81s     Requesting snapshot of accessibility hierarchy for app with pid 9133
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/AppPreviewUITests.swift:227: error: -[TimbreUITests.AppPreviewUITests testAppPreview] : XCTAssertTrue failed
+    t =   389.85s Checking existence of `"lesson.continue" Any`
+    t =   390.95s Checking existence of `"lesson.continue" Any`
+    t =   391.99s Checking existence of `"lesson.continue" Any`
+--- line 700
+    t =   435.80s Collecting debug information to assist test failure triage
+    t =   435.80s     Requesting snapshot of accessibility hierarchy for app with pid 9133
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/AppPreviewUITests.swift:400: error: -[TimbreUITests.AppPreviewUITests testAppPreview] : XCTAssertTrue failed - No way out of the lesson results
+    t =   437.24s Tap "Done" Button
+    t =   437.24s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   437.25s     Find the "Done" Button
+--- line 707
+    t =   440.65s         Find the "Done" Button (retry 2)
+    t =   441.34s Requesting snapshot of accessibility hierarchy for app with pid 9133
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/AppPreviewUITests.swift:402: error: -[TimbreUITests.AppPreviewUITests testAppPreview] : Failed to tap "Done" Button: No matches found for first query match sequence: `Descendants matching type Button` -> `Elements matching predicate '"Done" IN identifiers'`, given input App element pid: 9133
+    t =   441.75s Tear Down
+PREVIEW-END failed
+    t =   441.75s     Added attachment named 'preview-clips'
+--- line 713
+    t =   441.95s     Added attachment named 'preview-failure'
+    t =   441.96s     Terminate com.shahradazerisharghi.timbre:9133
+Test Case '-[TimbreUITests.AppPreviewUITests testAppPreview]' failed (443.733 seconds).
+Test Suite 'AppPreviewUITests' failed at 2026-10-24 17:25:55.054.
+	 Executed 1 test, with 8 failures (0 unexpected) in 443.733 (443.734) seconds
+Test Suite 'TimbreUITests.xctest' failed at 2026-10-24 17:25:55.054.
+
+# Tail
+    t =   434.97s         Capturing element debug description
+    t =   434.97s     Checking existence of `"Done" Button`
+    t =   435.80s Collecting debug information to assist test failure triage
+    t =   435.80s     Requesting snapshot of accessibility hierarchy for app with pid 9133
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/AppPreviewUITests.swift:400: error: -[TimbreUITests.AppPreviewUITests testAppPreview] : XCTAssertTrue failed - No way out of the lesson results
+    t =   437.24s Tap "Done" Button
+    t =   437.24s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   437.25s     Find the "Done" Button
+    t =   438.89s         Find the "Done" Button (retry 1)
+    t =   440.65s         Find the "Done" Button (retry 2)
+    t =   441.34s Requesting snapshot of accessibility hierarchy for app with pid 9133
+/Users/runner/work/tuner/tuner/ios/TimbreUITests/AppPreviewUITests.swift:402: error: -[TimbreUITests.AppPreviewUITests testAppPreview] : Failed to tap "Done" Button: No matches found for first query match sequence: `Descendants matching type Button` -> `Elements matching predicate '"Done" IN identifiers'`, given input App element pid: 9133
+    t =   441.75s Tear Down
+PREVIEW-END failed
+    t =   441.75s     Added attachment named 'preview-clips'
+    t =   441.95s     Added attachment named 'preview-failure'
+    t =   441.96s     Terminate com.shahradazerisharghi.timbre:9133
+Test Case '-[TimbreUITests.AppPreviewUITests testAppPreview]' failed (443.733 seconds).
+Test Suite 'AppPreviewUITests' failed at 2026-10-24 17:25:55.054.
+	 Executed 1 test, with 8 failures (0 unexpected) in 443.733 (443.734) seconds
+Test Suite 'TimbreUITests.xctest' failed at 2026-10-24 17:25:55.054.
+	 Executed 1 test, with 8 failures (0 unexpected) in 443.733 (443.735) seconds
+Test Suite 'Selected tests' failed at 2026-10-24 17:25:55.055.
+	 Executed 1 test, with 8 failures (0 unexpected) in 443.733 (443.737) seconds
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+2026-10-24 17:26:19.695 xcodebuild[6570:22413] [MT] IDETestOperationsObserverDebug: 488.368 elapsed -- Testing started completed.
+2026-10-24 17:26:19.695 xcodebuild[6570:22413] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-24 17:26:19.695 xcodebuild[6570:22413] [MT] IDETestOperationsObserverDebug: 488.368 sec, +488.368 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/AppPreview.xcresult
+
+** TEST EXECUTE FAILED **
+
+Testing started

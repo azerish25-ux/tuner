@@ -1,0 +1,26 @@
+App Store App Preview: iPhone 6.9" display, portrait
+preview.mp4: 886x1920, 30 fps, H.264 High, silent stereo AAC 44.1 kHz, 23.93 s, 3.7 MB
+poster.png: the frame at 00:00:04.15. In App Store Connect, set the preview's poster frame to this time.
+recording: iPhone 17 Pro Max, 440.6 s; start simctl reported 'Recording started'; manual offset +0.00 s
+syncs vs the recorder's clock: +0.15 s (median of 4 pinned syncs)
+
+clips (seconds into the recording -> into the preview; placed by):
+  tune-lock    46.43-  50.90 ->  0.00- 4.47  keep tail  (syncs drift, lock, celebration)
+  tune-all    146.33- 151.93 ->  4.13- 9.73  keep tail  (syncs lock, celebration, chord)
+  chord       174.37- 178.57 ->  9.40-13.60  keep tail  (syncs lock, celebration, chord)
+  highway     344.20- 351.20 -> 13.27-20.27  keep head  (syncs lock, celebration, chord)
+  results     402.70- 406.70 -> 19.93-23.93  keep tail  (syncs lock, celebration, chord)
+
+syncs (the test's screenshots, found in the recording; sync.png shows each beside its frame):
+  tuner          at   33.73 s  diff   0.7 (next   0.7)  vs clock   +6.33 s  found, not distinctive
+  drift          at   46.80 s  diff   0.7 (next   1.0)  vs clock   +0.15 s  pinned
+  lock           at   51.60 s  diff   0.6 (next   3.0)  vs clock   +0.48 s  pinned
+  celebration    at  150.07 s  diff   4.3 (next   5.9)  vs clock   -2.77 s  pinned
+  chord          at  178.13 s  diff   0.9 (next   8.6)  vs clock   -2.97 s  pinned
+  highway        at  370.53 s  diff   1.3 (next   1.3)  vs clock  +20.97 s  found, not distinctive
+  highway-2      at  318.40 s  diff   1.3 (next   1.3)  vs clock  -33.67 s  found, not distinctive
+  results        at  424.80 s  diff   1.3 (next   1.3)  vs clock  +18.61 s  found, not distinctive
+  results-2      at  425.87 s  diff   1.3 (next   1.3)  vs clock  +17.48 s  found, not distinctive
+
+WARNING: the tour test failed; check the cut before using it
+Meets the App Preview spec.
