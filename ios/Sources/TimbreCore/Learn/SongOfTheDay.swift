@@ -84,8 +84,11 @@ public enum SongOfTheDay {
     }
 }
 
-/// The few seconds a song's cover plays before the lesson opens: the opening bars of its first play-along (or,
-/// without one, of its first note step), at the fastest tempo the lesson reaches, its performance tempo.
+/// The few seconds a song's cover plays before the lesson opens: for a whole arrangement, the opening bars of the
+/// part it is known by (its first verse, or the chorus it starts on; never a long intro, `openingSection`); else the
+/// opening bars of its first play-along (or, without one, of its first note step); at the fastest tempo the lesson
+/// reaches, its performance tempo. `excerpt` gives a longer stretch from the same place, in whole bars, for a sample
+/// over the band.
 public enum SongPreview {
     public struct Phrase: Equatable, Sendable {
         /// Notes from beat 0.
@@ -102,7 +105,8 @@ public enum SongPreview {
     }
 
     /// `bars` bars of the opening (twice that when it holds fewer than five notes), cut at `maxSeconds`, at the
-    /// lesson's fastest play-along tempo (kept within 40…`maxBpm`; 92 without one). Nil for a lesson with no notes.
+    /// lesson's fastest play-along tempo (kept within 40…`maxBpm`; 92 without one). A whole arrangement opens on its
+    /// `openingSection` (an upbeat into it first), not on its intro. Nil for a lesson with no notes.
     public static func opening(of lesson: Lesson, bars: Int = 2, maxSeconds: Double = 8, maxBpm: Double = 132) -> Phrase? {
         var alongs: [(notes: [TimedNote], bpm: Double, beatsPerBar: Int)] = []
         var firstNotes: [TimedNote]?
@@ -120,7 +124,12 @@ public enum SongPreview {
         let tempo = min(max(40, maxBpm), max(40, fastest))
         let source: [TimedNote]
         let perBar: Int
-        if let first = alongs.first {
+        if let arrangement = lesson.arrangement, let take = lesson.songTake,
+           let section = openingSection(of: arrangement, notes: take.notes) {
+            let from = arrangement.startBeat(of: section)
+            source = take.notes.filter { $0.beat >= from - 1e-6 }
+            perBar = max(1, arrangement.beatsPerBar)
+        } else if let first = alongs.first {
             source = first.notes
             perBar = max(1, first.beatsPerBar)
         } else if let notes = firstNotes {
@@ -140,5 +149,64 @@ public enum SongPreview {
             .map { TimedNote(midi: $0.midi, beat: $0.beat - start, beats: max(0.25, $0.beats), at: $0.at) }
         guard !notes.isEmpty else { return nil }
         return Phrase(notes: notes, bpm: tempo)
+    }
+
+    // MARK: Whole arrangements
+
+    /// Where a whole song's previews start: its first section with words in it (the first verse, or the chorus it
+    /// opens on), else (a piece without words) its first part after the intro, else its first section with notes.
+    /// Sections without a note in `notes` (the take) are passed over. Nil when no section has notes.
+    public static func openingSection(of arrangement: SongArrangement, notes: [TimedNote]) -> SongArrangement.Section? {
+        let playing = arrangement.sections.filter { section in
+            let from = arrangement.startBeat(of: section)
+            let to = arrangement.endBeat(of: section)
+            return notes.contains { $0.beat >= from - 1e-6 && $0.beat < to - 1e-6 }
+        }
+        return playing.first { $0.kind.isSung } ?? playing.first { $0.kind != .intro } ?? playing.first
+    }
+
+    /// A stretch of a whole song from its `openingSection`, in whole bars so a band can play under it.
+    public struct Excerpt: Equatable, Sendable {
+        /// The take's notes from beat 0 of `firstBar`, words kept; nothing from before the section (an intro's notes
+        /// in its lead-in bar), and nothing ringing past the last bar.
+        public let notes: [TimedNote]
+        /// The section it opens on.
+        public let section: SongArrangement.Section
+        /// The bar it starts at (0-based): the section's first, or the bar before when it starts on an upbeat.
+        public let firstBar: Int
+        public let bars: Int
+        public let bpm: Double
+        public let beatsPerBar: Int
+
+        public var secondsPerBeat: Double { 60 / max(1, bpm) }
+        /// Its whole bars, in seconds.
+        public var seconds: Double { Double(bars * max(1, beatsPerBar)) * secondsPerBeat }
+        /// Beats of silence before its first note (a lead-in bar's rest before the upbeat).
+        public var lead: Double { notes.first?.beat ?? 0 }
+    }
+
+    /// `bars` bars of a whole song (as many as fit when nil) from its `openingSection`, at its own tempo, never more
+    /// than `maxSeconds` (at least one bar) nor past its end. Nil for a lesson without an arrangement or notes.
+    public static func excerpt(of lesson: Lesson, bars: Int? = nil, maxSeconds: Double = 20) -> Excerpt? {
+        guard let arrangement = lesson.arrangement, let take = lesson.songTake,
+              let section = openingSection(of: arrangement, notes: take.notes) else { return nil }
+        let meter = max(1, arrangement.beatsPerBar)
+        let tempo = max(1, arrangement.bpm)
+        let barSeconds = Double(meter) * 60 / tempo
+        let firstBar = max(0, section.bar - (section.pickup > 0 ? 1 : 0))
+        let room = max(1, arrangement.bars - firstBar)
+        let fit = max(1, Int((maxSeconds / barSeconds + 1e-9).rounded(.down)))
+        let count = max(1, min(room, fit, bars ?? fit))
+        let from = arrangement.startBeat(of: section)
+        let origin = Double(firstBar * meter)
+        let end = Double((firstBar + count) * meter)
+        let notes = take.notes
+            .filter { $0.beat >= from - 1e-6 && $0.beat < end - 1e-6 }
+            .map { note in
+                TimedNote(midi: note.midi, beat: note.beat - origin, beats: max(0.05, min(note.beats, end - note.beat)),
+                          at: note.at, lyric: note.lyric, startsLine: note.startsLine)
+            }
+        guard !notes.isEmpty else { return nil }
+        return Excerpt(notes: notes, section: section, firstBar: firstBar, bars: count, bpm: tempo, beatsPerBar: meter)
     }
 }

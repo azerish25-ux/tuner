@@ -107,6 +107,68 @@ final class SongOfTheDayTests: XCTestCase {
         XCTAssertNil(SongPreview.opening(of: lesson([.explain(title: LearnText("T"), body: LearnText("B"), visual: .none)])))
     }
 
+    /// A whole song: a two-bar intro with a riff of its own, a verse from an upbeat on the intro's last beat, a chorus.
+    private func arranged() -> Lesson {
+        let arrangement = SongArrangement(
+            bpm: 60, beatsPerBar: 4, bars: 8,
+            sections: [SongArrangement.Section(name: LearnText("Intro"), kind: .intro, bar: 0, bars: 2),
+                       SongArrangement.Section(name: LearnText("Verse 1"), kind: .verse, bar: 2, bars: 4, pickup: 1),
+                       SongArrangement.Section(name: LearnText("Chorus"), kind: .chorus, bar: 6, bars: 2)])
+        let riff = (0..<7).map { TimedNote(midi: 40 + $0, beat: Double($0), beats: 1) }
+        let upbeat = TimedNote(midi: 60, beat: 7, beats: 1, lyric: "The", startsLine: true)
+        let verse = (8..<24).map { TimedNote(midi: 62 + $0 % 5, beat: Double($0), beats: 1, lyric: "la") }
+        let chorus = (24..<32).map { TimedNote(midi: 70, beat: Double($0), beats: 1, lyric: "hey") }
+        let fragment = Array(verse.prefix(4))
+        return Lesson(id: "whole", title: LearnText("Whole"), kind: .song, minutes: 6, xp: 40, free: true,
+                      steps: [.playAlong(notes: fragment, bpm: 50, beatsPerBar: 4, title: LearnText("The verse")),
+                              .playAlong(notes: riff + [upbeat] + verse + chorus, bpm: 60, beatsPerBar: 4, title: nil)],
+                      arrangement: arrangement)
+    }
+
+    func testAWholeSongPreviewsItsFirstVerseNotItsIntro() throws {
+        let phrase = try XCTUnwrap(SongPreview.opening(of: arranged()))
+        XCTAssertEqual(phrase.bpm, 60)
+        XCTAssertEqual(phrase.notes.first?.midi, 60, "it opens on the verse's upbeat")
+        XCTAssertEqual(phrase.notes.first?.beat, 0)
+        XCTAssertEqual(phrase.notes.count, 8, "two bars from the upbeat")
+        XCTAssertTrue(phrase.notes.allSatisfy { $0.midi >= 60 }, "nothing of the intro's riff")
+    }
+
+    func testAWholeSongExcerptRunsInWholeBarsFromItsOpening() throws {
+        let song = arranged()
+        let sample = try XCTUnwrap(SongPreview.excerpt(of: song, maxSeconds: 20))
+        XCTAssertEqual(sample.section.kind, .verse)
+        XCTAssertEqual(sample.firstBar, 1, "the bar before the verse holds its upbeat")
+        XCTAssertEqual(sample.bars, 5, "four-second bars, twenty seconds at most")
+        XCTAssertEqual(sample.seconds, 20, accuracy: 1e-9)
+        XCTAssertEqual(sample.notes.first?.beat, 3, "the upbeat on the lead-in bar's last beat")
+        XCTAssertEqual(sample.lead, 3)
+        XCTAssertEqual(sample.notes.first?.lyric, "The", "the words come along")
+        XCTAssertEqual(sample.notes.count, 17)
+        XCTAssertLessThanOrEqual(sample.notes.map { $0.beat + $0.beats }.max() ?? 0, 20 + 1e-9)
+
+        let short = try XCTUnwrap(SongPreview.excerpt(of: song, bars: 2))
+        XCTAssertEqual(short.bars, 2)
+        XCTAssertEqual(short.notes.map(\.beat), [3, 4, 5, 6, 7])
+        // Never past the end of the song.
+        XCTAssertEqual(SongPreview.excerpt(of: song, bars: 40, maxSeconds: 600)?.bars, 7)
+        // A song without an arrangement has no excerpt (its sample plays from the top).
+        XCTAssertNil(SongPreview.excerpt(of: lesson([.playAlong(notes: [TimedNote(midi: 60, beat: 0, beats: 1)], bpm: 80, beatsPerBar: 4, title: nil)])))
+    }
+
+    func testTheOpeningSectionPassesOverSilentSections() {
+        let arrangement = SongArrangement(
+            bpm: 80, beatsPerBar: 4, bars: 3,
+            sections: [SongArrangement.Section(name: LearnText("Intro"), kind: .intro, bar: 0, bars: 1),
+                       SongArrangement.Section(name: LearnText("Verse 1"), kind: .verse, bar: 1, bars: 1),
+                       SongArrangement.Section(name: LearnText("Solo"), kind: .solo, bar: 2, bars: 1)])
+        let intro = [TimedNote(midi: 60, beat: 0, beats: 1)]
+        let solo = [TimedNote(midi: 67, beat: 8, beats: 1)]
+        XCTAssertEqual(SongPreview.openingSection(of: arrangement, notes: intro + solo)?.kind, .solo, "a verse with no notes is passed over")
+        XCTAssertEqual(SongPreview.openingSection(of: arrangement, notes: intro)?.kind, .intro, "an intro is better than nothing")
+        XCTAssertNil(SongPreview.openingSection(of: arrangement, notes: []))
+    }
+
     func testEverySongWithAMelodyHasAShortPreview() throws {
         let curriculum = try Curriculum.bundled()
         for course in curriculum.courses {
@@ -132,5 +194,29 @@ final class SongOfTheDayTests: XCTestCase {
                 XCTAssertNotNil(SongPreview.opening(of: lesson), lesson.id)
             }
         }
+    }
+
+    func testWholeSongsPreviewTheirFirstVerseOrHook() throws {
+        let curriculum = try Curriculum.bundled()
+        var checked = 0
+        for course in curriculum.courses {
+            for lesson in course.lessons {
+                guard let arrangement = lesson.arrangement, let take = lesson.songTake else { continue }
+                checked += 1
+                let section = try XCTUnwrap(SongPreview.openingSection(of: arrangement, notes: take.notes), lesson.id)
+                XCTAssertTrue(section.kind.isSung, "\(lesson.id) opens on \(section.name.defaultValue)")
+                // The cover's few seconds start on that section's first note.
+                let first = take.notes.first { $0.beat >= arrangement.startBeat(of: section) - 1e-6 }
+                XCTAssertEqual(SongPreview.opening(of: lesson)?.notes.first?.midi, first?.midi, lesson.id)
+                // "Hear it": whole bars, twenty seconds at most, with the words when the song has them.
+                let sample = try XCTUnwrap(SongPreview.excerpt(of: lesson, maxSeconds: 20), lesson.id)
+                XCTAssertLessThanOrEqual(sample.seconds, 20 + 1e-6, lesson.id)
+                XCTAssertGreaterThanOrEqual(sample.seconds, 12, "\(lesson.id): long enough to hear the tune")
+                XCTAssertGreaterThanOrEqual(sample.notes.count, 5, lesson.id)
+                XCTAssertLessThan(sample.lead, Double(sample.beatsPerBar), "\(lesson.id): at most a bar of rest first")
+                XCTAssertEqual(LyricSheet(notes: sample.notes).isEmpty, LyricSheet(notes: take.notes).isEmpty, "\(lesson.id): the words come along")
+            }
+        }
+        XCTAssertEqual(checked, 52)
     }
 }

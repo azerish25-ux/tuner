@@ -5,20 +5,24 @@ import UIKit
 // MARK: - The song, read from its lesson
 
 /// A song lesson read as a song: the take it ends on (tempo, meter, bars, length), its key, every chord it asks for,
-/// its melody and its sections. Nothing is made up: sections come from the lesson's own play-alongs, each one whose
-/// notes run, in order, inside the final take naming that stretch of bars ("The verse", "The hook"); bars no
-/// play-along names stay plain ("Bars 5–8"), and a song with none shows its phrases of four bars. A song that ends
-/// on a chord progression maps its chords instead. Built once per lesson (`of`).
+/// its melody and its sections. A whole arrangement (`Lesson.arrangement`) gives all of it: its sections in playing
+/// order ("Intro", "Verse 1", "Chorus"), its length in bars and seconds, and the chords of its chart. Without one,
+/// nothing is made up: sections come from the lesson's own play-alongs, each one whose notes run, in order, inside the
+/// final take naming that stretch of bars ("The verse", "The hook"); bars no play-along names stay plain ("Bars
+/// 5–8"), and a song with none shows its phrases of four bars. A song that ends on a chord progression maps its
+/// chords instead. Built once per lesson (`of`).
 struct SongSheet {
     struct Section: Identifiable, Equatable {
         let id: Int
-        /// The play-along that names these bars; nil for plain bars.
+        /// The arrangement's name for the section, or the play-along that names these bars; nil for plain bars.
         let title: LearnText?
         /// The chord the bars hold (a song that ends on a progression).
         let chord: ChordSpec?
         /// First bar (0-based) and how many bars it runs.
         let start: Int
         let bars: Int
+        /// The arrangement's own section (its kind, the upbeat it starts on); nil for a song without one.
+        var part: SongArrangement.Section? = nil
     }
 
     /// The final take's tempo and meter.
@@ -40,6 +44,8 @@ struct SongSheet {
     let sections: [Section]
     /// Notes per second of the final take (strokes per second for a progression).
     let density: Double
+    /// The whole arrangement the sheet is read from, when the lesson ends on the whole song with one.
+    let arrangement: SongArrangement?
 
     @MainActor private static var cache: [String: SongSheet] = [:]
 
@@ -79,7 +85,16 @@ struct SongSheet {
                 break
             }
         }
+        // A whole arrangement's chart names the song's own chords first, in the order they come.
+        let arrangement = lesson.songTake != nil ? lesson.arrangement : nil
+        if let arrangement {
+            var charted = arrangement.shapes
+            for chord in chords where !charted.contains(where: { $0.symbol == chord.symbol }) { charted.append(chord) }
+            chords = charted
+            timeline = Self.runs(arrangement.chordPerBar)
+        }
         self.chords = chords
+        self.arrangement = arrangement
 
         var bpm = parts.last?.bpm ?? 80
         var meter = parts.last?.meter ?? 4
@@ -117,7 +132,15 @@ struct SongSheet {
         melodyMeter = melodyBar
         key = KeyEstimate.key(of: melody, chords: timeline)
 
-        if !finale.isEmpty {
+        if let arrangement, !finale.isEmpty {
+            // The arrangement's own bars and length (an outro's last chord rings past its last note).
+            let count = max(1, arrangement.bars)
+            let length = arrangement.seconds
+            bars = count
+            seconds = length
+            density = length > 0 ? Double(finale.count) / length : 0
+            sections = Self.sections(of: arrangement)
+        } else if !finale.isEmpty {
             let end = finale.map { $0.beat + $0.beats }.max() ?? Double(meter)
             let count = max(1, Int((end / Double(meter) - 1e-6).rounded(.up)))
             let length = end * 60 / tempo
