@@ -57,16 +57,16 @@ enum DeepLink {
         switch host {
         case "tune":
             guard let id = value("instrument"), let instrument = store.catalog.instrument(id: id) else { store.open(.tune); return }
-            afterEntitlements(store) { tune(instrument, store: store) }
+            afterEntitlements(store) { DeepLink.openTuner(on: instrument, store: store) }
         case "metronome":
             if let bpm = value("bpm").flatMap({ Int($0) }) { store.setMetronome(bpm: bpm) }
             store.open(.metronome)
             if start { startSoon { if !store.audio.metronomeRunning { store.toggleMetronome() } } }
         case "drone":
             let pitchClass = value("key").flatMap { Int($0) }
-            afterEntitlements(store) { drone(pitchClass: pitchClass, start: start, store: store) }
+            afterEntitlements(store) { DeepLink.openDrone(pitchClass: pitchClass, start: start, store: store) }
         case "lesson":
-            afterEntitlements(store) { continueLesson(store: store) }
+            afterEntitlements(store) { DeepLink.openNextLesson(store: store) }
         case "practice": store.open(.daily)
         case "ear": store.open(.ear)
         case "learn": store.open(.learn)
@@ -77,7 +77,7 @@ enum DeepLink {
 
     /// The tuner on `instrument`. Picking it goes through `selectInstrument`, which opens the paywall naming a Pro
     /// instrument on the free plan, exactly as the instrument picker does.
-    @MainActor private static func tune(_ instrument: Instrument, store: AppStore) {
+    @MainActor private static func openTuner(on instrument: Instrument, store: AppStore) {
         store.open(.tune)
         guard store.referenceMode || store.instrument.id != instrument.id else { return }
         store.selectInstrument(instrument)
@@ -85,7 +85,7 @@ enum DeepLink {
 
     /// The Drone tool in `pitchClass` (kept in the octave the player last used). It is a Pro tool: on the free plan
     /// the Play tab shows its paywall, as tapping the tool there does.
-    @MainActor private static func drone(pitchClass: Int?, start: Bool, store: AppStore) {
+    @MainActor private static func openDrone(pitchClass: Int?, start: Bool, store: AppStore) {
         store.selectedTab = .practice
         Analytics.log("shortcut", ["destination": "drone"])
         guard store.isPro else { store.presentPaywall("practice.drone"); return }
@@ -102,7 +102,7 @@ enum DeepLink {
 
     /// The next lesson of the course Learn shows; Learn opens it (or its paywall when it is locked). Learn alone
     /// once that course is complete.
-    @MainActor private static func continueLesson(store: AppStore) {
+    @MainActor private static func openNextLesson(store: AppStore) {
         if let course = store.learnCourse, let next = store.learn.nextLesson(in: course) {
             store.pendingLessonId = next.id
         }

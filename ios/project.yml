@@ -63,7 +63,7 @@ targets:
         excludes: [PrivacyInfo.xcprivacy]
       - path: TimbreWidgets/PrivacyInfo.xcprivacy
         buildPhase: resources
-      - path: Timbre/Services/Intents.swift
+      - path: Timbre/Intents/SharedIntents.swift
       - path: Timbre/Services/WidgetBridge.swift
       - path: Timbre/Services/PracticeActivityAttributes.swift
       - path: Timbre/Design/Theme.swift

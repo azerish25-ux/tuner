@@ -67,22 +67,20 @@ struct RootView: View {
         }
         .task { store.applyStreakFreezes(); store.syncAchievements() }
         .onChange(of: commerce.isPro) { _, pro in if pro { Analytics.log("pro_active") } }
-        .onOpenURL { url in
-            // timbre://tune, timbre://practice, timbre://metronome, timbre://ear, timbre://learn, timbre://songs (widgets and links)
-            switch url.host {
-            case "tune": IntentRouter.shared.pending = .tune
-            case "practice": IntentRouter.shared.pending = .daily
-            case "metronome": IntentRouter.shared.pending = .metronome
-            case "ear": IntentRouter.shared.pending = .ear
-            case "learn": IntentRouter.shared.pending = .learn
-            case "songs": store.selectedTab = .songs; Analytics.log("shortcut", ["destination": "songs"])
-            default: break
-            }
+        // timbre://… from widgets and links, and from App Intents through `IntentRouter.link` (routes: Intents/DeepLink.swift).
+        .onOpenURL { url in DeepLink.open(url, store: store) }
+        .onReceive(IntentRouter.shared.$link) { url in
+            guard let url else { return }
+            // Cleared after this change has landed, so the link is followed once.
+            Task { @MainActor in if IntentRouter.shared.link == url { IntentRouter.shared.link = nil } }
+            DeepLink.open(url, store: store)
         }
         .onReceive(IntentRouter.shared.$pending) { destination in
             guard let destination else { return }
             IntentRouter.shared.pending = nil
             store.open(destination)
         }
+        // Teaches Siri the catalog's instruments for "Tune my … with Timbre".
+        .task { TimbreShortcuts.updateAppShortcutParameters() }
     }
 }

@@ -9,6 +9,7 @@ struct TimbreWidgets: WidgetBundle {
         NextLessonWidget()
         StreakWidget()
         TunerControl()
+        MetronomeControl()
         PracticeLiveActivity()
     }
 }
@@ -248,7 +249,10 @@ struct NextLessonView: View {
     }
 }
 
-// MARK: - Control Center
+// MARK: - Control Center, Lock Screen and Action button
+
+// Each control runs an intent from Timbre/Intents/SharedIntents.swift, which is built into both the app and this
+// extension: the intent opens Timbre, so the system performs it in the app and RootView routes it.
 
 struct TunerControl: ControlWidget {
     var body: some ControlWidgetConfiguration {
@@ -259,5 +263,17 @@ struct TunerControl: ControlWidget {
         }
         .displayName("Timbre tuner")
         .description("Open Timbre listening.")
+    }
+}
+
+struct MetronomeControl: ControlWidget {
+    var body: some ControlWidgetConfiguration {
+        StaticControlConfiguration(kind: "timbre.control.metronome") {
+            ControlWidgetButton(action: OpenMetronomeIntent()) {
+                Label("Metronome", systemImage: "metronome.fill")
+            }
+        }
+        .displayName("Metronome")
+        .description("Open the metronome")
     }
 }
