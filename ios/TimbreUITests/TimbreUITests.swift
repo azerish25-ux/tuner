@@ -471,20 +471,8 @@ final class TimbreUITests: XCTestCase {
         // The tune check is covered by its own screenshot; skip the rest of it to keep the run short. The demo
         // pitch tunes each string in turn, so the check can finish on its own while the tap is on its way.
         tapIfPresent(skip)
-        // The demo pitch plays the chord's strings straight away. The shot wants every string lit ("Every string
-        // rings"), which holds for about a second before the step hands over to the strum explainer: the picture
-        // taken as the step comes up stays as the fallback, and a later one replaces it only if the step was
-        // still on screen after it was taken.
-        let chord = element("lesson.chord")
-        if chord.waitForExistence(timeout: 15) {
-            var picture = XCUIScreen.main.screenshot()
-            let rings = app.staticTexts["Every string rings"]
-            if waitUntil(8, { rings.exists }) {
-                let lit = XCUIScreen.main.screenshot()
-                if chord.exists { picture = lit } else { print("52b: every string lit, but the step had gone by the shot") }
-            }
-            keep(picture, as: "52b-lesson-chord")
-        } else { print("The chord step went by before it was seen") }
+        // The demo pitch plays the chord's strings and the step hands over to the strum explainer by itself. (The
+        // chord with every string lit, App Store frame #3, comes from its own scene: test12StoreChord.)
         let next = element("lesson.continue")
         XCTAssertTrue(next.waitForExistence(timeout: 30))
         settle(1.5); shot("53-lesson-strum-explain")
@@ -523,6 +511,48 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(element("along.again").waitForExistence(timeout: 30))
         settle(1); shot("61-along-done")
         element("lesson.continue").tap(); settle(3.5); shot("62-lesson-results")
+    }
+
+    /// App Store frame #1 through the `tune-locked` scene (ios/Timbre/Root/DemoScenes.swift): the demo pitch plays the
+    /// selected string steadily in tune, so the tuner's own tracker locks the two lowest strings (✓ on their chips), then
+    /// the third, which stays locked: solid chip, In tune badge, its peg ringed and ticked on the 3D headstock. Nothing
+    /// races a clock. The test only keeps its hands off while the holds run: a query stalls the app's main thread, and a
+    /// gap of more than 150 ms in the readings starts the 0.65 s hold again (the scene waits for each lock).
+    func test11StoreTunerLock() throws {
+        app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
+        launch(pitch: true, scene: "tune-locked")
+        XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
+        let stage = waitForStage().stage
+        var picture = XCUIScreen.main.screenshot()
+        var problem = "the 3D headstock never replaced its studio render (stage '\(stage)')"
+        if stage == "3d" {
+            for attempt in 0..<3 {
+                // Hands off: the scene's locks land, the camera settles on the third peg and the reward banner clears.
+                settle(attempt == 0 ? 7 : 3)
+                picture = XCUIScreen.main.screenshot()
+                let lock = tunerLock(strings: 3)
+                if lock.shown { problem = ""; break }
+                problem = "no lock on screen: " + lock.summary
+            }
+        }
+        storeFrame("10b-tune-locked", picture, ok: problem.isEmpty, problem)
+    }
+
+    /// App Store frame #3 through the `lesson-chord` scene (DemoScenes.swift): "Your first chord: E minor" opens on its
+    /// chord step, the demo pitch plays the chord string by string, and the step stays on "Every string rings" with
+    /// every string lit instead of handing over to the next step.
+    func test12StoreChord() throws {
+        launch(pitch: true, scene: "lesson-chord")
+        let finished = NSPredicate(format: "identifier == %@ AND label == %@", "lesson.chord", "Every string rings")
+        let ringing = app.descendants(matching: .any).matching(finished).firstMatch.waitForExistence(timeout: 45)
+        // The last string's tick and the burst land.
+        settle(1.2)
+        let picture = XCUIScreen.main.screenshot()
+        // Each string's check over the box reads "Got it" once heard; a muted string has none.
+        let checks = appNodes().filter { $0.label.hasPrefix("String ") && $0.identifier.isEmpty }
+        let unheard = checks.filter { ($0.value as? String) != "Got it" }.count
+        storeFrame("52b-lesson-chord", picture, ok: ringing && unheard == 0,
+                   ringing ? "\(unheard) of \(checks.count) strings not lit" : "the chord step never heard every string")
     }
 
     func test07StageDiagnostics() throws {

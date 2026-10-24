@@ -10,9 +10,15 @@ Before rendering (and with --check, instead of rendering) it checks the tables: 
 30 characters, a capture the UI tests really take, and every count a caption or supporting line quotes
 (lessons, courses, instruments, tunings) equal to the build's own (curriculum.json, catalog.json).
 
+Each store frame must come from exactly one capture in the UI tests, and that capture must be deterministic:
+TimbreUITests keeps a frame under its own name only when it checked that the screen shows what the caption
+says (`storeFrame`); otherwise the test fails and keeps the picture as "<name>-wrong". The tuner's lock and
+the chord come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift), not from timed shots.
+
 Rendering reads the xcresult attachment manifest written by the iOS workflow, picks the captures the
 table names and lays each one on a "Still Point" stage under its caption. iPhone output is 1320x2868
-(6.9-inch); --ipad output is 2064x2752 (13-inch).
+(6.9-inch); --ipad output is 2064x2752 (13-inch). It renders what it can, then exits non-zero if any frame
+is missing, was flagged wrong by its test, or was captured more than once.
 """
 import json
 import re
@@ -66,10 +72,13 @@ def problems(device: str, rows: list, counts: dict) -> list:
     tests = "\n".join(path.read_text(encoding="utf-8") for path in sorted(UI_TESTS.glob("*.swift")))
     for number, (capture, caption, line) in enumerate(rows, 1):
         where = f"{device} #{number}"
+        taken = tests.count(f'"{capture}"') if capture else 0
         if not capture:
             found.append(f"{where}: the Capture column names no capture (`name`)")
-        elif f'"{capture}"' not in tests:
+        elif not taken:
             found.append(f"{where}: no UI test takes a capture named {capture}")
+        elif taken > 1:
+            found.append(f"{where}: {capture} is named in {taken} places in the UI tests; a store frame comes from one capture")
         if len(caption) > CAPTION_LIMIT:
             found.append(f"{where}: “{caption}” is {len(caption)} characters (at most {CAPTION_LIMIT})")
         for text in (caption, line):
@@ -81,10 +90,12 @@ def problems(device: str, rows: list, counts: dict) -> list:
 
 
 def attachments(folder: Path) -> dict:
+    """Capture name -> every exported file attached under that name (more than one means it was taken twice)."""
     found = {}
     for test in json.loads((folder / "manifest.json").read_text()):
         for item in test["attachments"]:
-            found[item["suggestedHumanReadableName"].split("_0_")[0]] = folder / item["exportedFileName"]
+            name = re.sub(r"_\d+_[0-9A-Fa-f-]{36}(\.\w+)?$", "", item["suggestedHumanReadableName"]).split("_0_")[0]
+            found.setdefault(name, []).append(folder / item["exportedFileName"])
     return found
 
 
@@ -182,13 +193,23 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     captures = attachments(folder)
     size = (2064, 2752) if ipad else (1320, 2868)
+    unusable = []
     for number, (name, title, subtitle) in enumerate(rows, 1):
+        where = f"{device} #{number} ({name})"
+        if name + "-wrong" in captures:
+            unusable.append(f"{where}: its UI test found the screen didn't show the caption (see the test log and {name}-wrong)")
+            continue
         if name not in captures:
-            print("missing", name)
+            unusable.append(f"{where}: no capture in this run")
+            continue
+        if len(captures[name]) > 1:
+            unusable.append(f"{where}: captured {len(captures[name])} times in this run, so the frame is ambiguous")
             continue
         target = out / f"{device}-{number:02d}.jpg"
-        compose(captures[name], title, subtitle, size, target, portrait=not ipad)
+        compose(captures[name][0], title, subtitle, size, target, portrait=not ipad)
         print("wrote", target)
+    if unusable:
+        sys.exit("Store frames that need a good run first:\n" + "\n".join(unusable))
 
 
 if __name__ == "__main__":

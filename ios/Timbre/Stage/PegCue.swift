@@ -37,17 +37,25 @@ enum PegTurn: Equatable {
     }
 }
 
-/// The note of the string being tuned and its turn cue, in a small capsule beside the peg ("D3 ↻").
+/// The note of the string being tuned and its turn cue, in a small capsule beside the peg ("D3 ↻"). Listening
+/// with nothing heard yet (`prompt`), it asks for the string instead, as the status line does ("Play G3").
 struct PegLabel: View {
     let note: String
     let turn: PegTurn
     let color: Color
+    var prompt = false
     var nudge: Double = 0
+    /// About how wide the prompt reads, for `side(for:…)`.
+    static let callWidth: CGFloat = 96
 
     var body: some View {
         let parts = NoteReadout.split(note)
         HStack(spacing: 5) {
-            Text(parts.name).font(Typeface.label(15)) + Text(parts.octave).font(Typeface.label(10))
+            if prompt {
+                Text("Play \(note)").font(Typeface.label(13))
+            } else {
+                Text(parts.name).font(Typeface.label(15)) + Text(parts.octave).font(Typeface.label(10))
+            }
             if let symbol = turn.symbol {
                 Image(systemName: symbol).font(.system(size: 12, weight: .bold))
                     .rotationEffect(.degrees(nudge))
@@ -103,19 +111,22 @@ struct StagePegCue: View {
             let cents = state.listening ? controller.smoothedCents : nil
             let color = Palette.tuning(cents, locked: state.locked)
             let turn = PegTurn.from(cents: cents, locked: state.locked, listening: state.listening, tighten: marker.tighten, slides: marker.slides)
+            // Listening with nothing heard yet: the label asks for the string and a ring swells out of the peg.
+            let calling = state.listening && cents == nil && !state.locked
             let close = Double(max(0, min(1, marker.closeUp)))
             let pulse = reduceMotion || state.locked ? 0 : 2.5 * sin(now * 3)
             let radius = CGFloat(12 + 10 * close + pulse)
             let gap = radius + 10
-            let side = PegLabel.side(for: lead, preferred: marker.side, gap: gap, in: size)
+            let side = PegLabel.side(for: lead, preferred: marker.side, gap: gap, in: size, width: calling ? PegLabel.callWidth : 60)
             ZStack {
                 Canvas { context, _ in
                     for point in marker.points {
                         PegRing.draw(&context, at: point, radius: radius, color: color, glow: state.locked ? 1 : 0)
+                        if calling && !reduceMotion { PegRing.drawCall(&context, at: point, radius: radius, color: color, now: now) }
                     }
                 }
                 .opacity(0.55 + 0.45 * close)
-                PegLabel(note: state.note, turn: turn, color: color, nudge: turn.nudge(at: now, reduceMotion: reduceMotion))
+                PegLabel(note: state.note, turn: turn, color: color, prompt: calling, nudge: turn.nudge(at: now, reduceMotion: reduceMotion))
                     .placedBeside(lead, side: side, gap: gap)
                     .opacity(close)
             }
@@ -131,5 +142,14 @@ enum PegRing {
                      with: .color(color.opacity(0.10 + 0.12 * glow)))
         context.stroke(Path(ellipseIn: CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2)),
                        with: .color(color.opacity(0.9)), lineWidth: 2)
+    }
+
+    /// The call to play the string: a ring that swells out of the peg's ring and fades, every 1.6 seconds.
+    /// Callers skip it with Reduce Motion.
+    static func drawCall(_ context: inout GraphicsContext, at center: CGPoint, radius: CGFloat, color: Color, now: Double) {
+        let t = (now / 1.6).truncatingRemainder(dividingBy: 1)
+        let r = radius + 4 + CGFloat(t) * 18
+        context.stroke(Path(ellipseIn: CGRect(x: center.x - r, y: center.y - r, width: r * 2, height: r * 2)),
+                       with: .color(color.opacity(0.6 * (1 - t) * (1 - t))), lineWidth: 1.5)
     }
 }

@@ -30,10 +30,10 @@ enum DemoScene: String {
     @MainActor static func start(_ store: AppStore) {
         switch current {
         case .tuneLocked?:
-            Task { @MainActor in await lockStrings(store) }
+            Task { @MainActor in await DemoScene.lockStrings(store) }
         case .lessonChord?:
             // Learn opens it out of its Continue card, as it opens onboarding's first lesson.
-            guard let lesson = chordLesson(store) else { return }
+            guard let lesson = DemoScene.chordLesson(store) else { return }
             store.pendingLessonId = lesson.id
             store.selectedTab = .learn
         case nil:

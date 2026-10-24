@@ -91,7 +91,10 @@ final class PlacementTests: XCTestCase {
     // MARK: The placement check
 
     private func chords(_ steps: [LessonStep]) -> [String] {
-        steps.compactMap { step in if case let .playChord(chord) = step { return chord.symbol } else { return nil } }
+        steps.compactMap { step -> String? in
+            if case let .playChord(chord) = step { return chord.symbol }
+            return nil
+        }
     }
 
     func testCheckPlaysGCAndDThenAStrumFromTheCourse() throws {

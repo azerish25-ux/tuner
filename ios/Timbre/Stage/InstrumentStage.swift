@@ -32,6 +32,8 @@ final class StageController {
     private var generation = 0
     /// The wanted model's load: one per model, joined by every later request for the same model.
     private var loadTask: Task<Void, Never>?
+    /// When the wanted model was asked for (system uptime): a model revealed mid-dolly picks up from there.
+    private var requestedAt: TimeInterval = 0
     /// Plain-text load state for diagnostics (shown only when TIMBRE_STAGE_DEBUG is set in debug builds).
     private(set) var status = "idle"
     /// The wanted model could not be loaded.
@@ -116,6 +118,7 @@ final class StageController {
         // The new instrument starts whole, as its placeholder does, and the dolly runs from here.
         framing = 0
         framingVelocity = 0
+        requestedAt = ProcessInfo.processInfo.systemUptime
         status = "loading \(modelID)"
         let ticket = generation
         loadTask = Task { [weak self] in await self?.load(modelID, ticket: ticket) }
@@ -124,7 +127,7 @@ final class StageController {
     /// Requests `modelID` and returns once its load has finished: at once when it is already on stage (or failed).
     func show(_ modelID: String) async {
         request(modelID)
-        await loadTask?.value
+        if let loadTask { await loadTask.value }
     }
 
     private func load(_ modelID: String, ticket: Int) async {
@@ -196,9 +199,20 @@ final class StageController {
         }
         addLights()
         receiveImageBasedLight(holder)
+        // Aim at the string being tuned from the first frame, not at the first string and then glide across.
+        let state = input()
+        currentAnchor = state.activeAnchor ?? rig.strings.first?.anchor
+        currentPeg = state.activeAnchor == nil ? nil : state.pegIndex
         if revealClose {
-            // The dolly has been running since the request, as the placeholder's has: carry on from there.
+            // The placeholder has been dollying in since the request: carry on from where it has got to (worked out
+            // from the clock, since a hidden stage may not have ticked), and place the camera at once.
             holdWholeUntil = 0
+            if state.focus {
+                let t = Float(max(0, ProcessInfo.processInfo.systemUptime - requestedAt))
+                let w = Self.dolly
+                framing = min(1, 1 - (1 + w * t) * exp(-w * t))
+                framingVelocity = w * w * t * exp(-w * t)
+            }
             applyFraming(snapCamera: true)
         } else {
             holdWholeUntil = time + Self.revealHold
@@ -469,12 +483,17 @@ struct InstrumentStage: View {
     /// Called once the model is on stage (the host can retire its placeholder).
     var onReady: () -> Void = {}
     var showcase = false
-    @State private var controller = StageController()
+    /// The host's placeholder (a `StudioStage` with card points) dollies to the peg as well: the model then
+    /// appears at the placeholder's framing instead of holding the whole instrument first.
+    var revealClose = false
+    @State private var box = StageBox()
     @State private var ready = false
     @State private var status = "make"
     @State private var attached = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private let debug = ProcessInfo.processInfo.environment["TIMBRE_STAGE_DEBUG"] == "1"
+
+    private var controller: StageController { box.controller }
 
     var body: some View {
         RealityView { content in
@@ -483,14 +502,13 @@ struct InstrumentStage: View {
                let resource = try? await EnvironmentResource(equirectangular: image, withName: "timbre.stage") {
                 controller.setEnvironment(resource)
             }
-            controller.input = input
-            controller.showcase = showcase
+            configure()
             controller.reduceMotion = reduceMotion
             controller.attach(&content)
+            // The model task loads and reports; attaching reports through `attached` (this closure's copy of the
+            // view keeps the model id it was made with, so it never reports a model itself).
             attached = true
             status = "attached"
-            await controller.load(modelID: modelID)
-            reportLoad()
         } update: { _ in
             controller.input = input
         }
@@ -499,18 +517,26 @@ struct InstrumentStage: View {
             while let current = entity, !current.name.hasPrefix("peg_") { entity = current.parent }
             if let name = entity?.name { onSelect(String(name.dropFirst(4))) }
         })
+        // One load per model, owned by the controller: a newer instrument cancels it, and only the model the host
+        // still wants is ever put on stage or reported ready.
         .task(id: modelID) {
-            await controller.load(modelID: modelID)
+            configure()
+            await controller.show(modelID)
+            guard !Task.isCancelled else { return }
             reportLoad()
         }
+        .onChange(of: modelID) { _, id in
+            // The old instrument leaves the scene at once and the stage turns clear until the new one is in, so the
+            // host's placeholder shows through instead of the last model.
+            ready = false
+            configure()
+            controller.request(id)
+        }
+        .onChange(of: attached) { _, _ in reportLoad() }
         .onChange(of: reduceMotion, initial: true) { _, value in controller.reduceMotion = value }
         .onGeometryChange(for: CGSize.self) { proxy in proxy.size } action: { size in controller.viewSize = size }
-        .mask {
-            // Feather the edges so the stage melts into the screen whatever the renderer clears to.
-            let edge: [Gradient.Stop] = [.init(color: .clear, location: 0), .init(color: .black, location: 0.06), .init(color: .black, location: 0.94), .init(color: .clear, location: 1)]
-            LinearGradient(stops: edge, startPoint: .top, endPoint: .bottom)
-                .mask(LinearGradient(stops: edge, startPoint: .leading, endPoint: .trailing))
-        }
+        // Feather the edges so the stage melts into the screen whatever the renderer clears to.
+        .mask { StageFeather(close: 1) }
         .overlay {
             if !showcase { StagePegCue(controller: controller, input: input, reduceMotion: reduceMotion) }
         }
@@ -527,14 +553,27 @@ struct InstrumentStage: View {
         }
     }
 
-    /// The make closure and the model task both load, and a load already in flight returns at once.
-    /// So the stage reports ready (and the host retires its placeholder) only once this model is loaded
-    /// and the scene is attached; reporting on the early return left a blank stage while the model loaded.
+    private func configure() {
+        controller.input = input
+        controller.showcase = showcase
+        controller.revealClose = revealClose
+    }
+
+    /// Ready (the host retires its placeholder) only once the model this view shows is on stage and the scene is
+    /// attached; failed only when the model it shows could not load. A superseded model never reports.
     private func reportLoad() {
         status = controller.status
+        guard controller.wanted == modelID else { return }
         if controller.failed { onFailure() }
         else if attached && controller.loadedModel == modelID { ready = true; onReady() }
     }
+}
+
+/// Holds the stage's controller, made on first use: `@State` evaluates its initial value each time the view is
+/// initialised, and a controller makes RealityKit entities, so the box keeps that to once per stage.
+@MainActor
+final class StageBox {
+    private(set) lazy var controller = StageController()
 }
 
 /// Procedural equirectangular environment: dark warm stage with a key softbox and a cool rim.

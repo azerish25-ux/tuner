@@ -9,6 +9,8 @@ final class TabletScreenshotsUITests: XCTestCase {
         app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
         app.launchEnvironment["TIMBRE_DEMO_DATA"] = "1"
         app.launchEnvironment["TIMBRE_DEMO_PITCH"] = "1"
+        // The tuner holds a real lock (ios/Timbre/Root/DemoScenes.swift): two strings ticked, the third locked in tune.
+        app.launchEnvironment["TIMBRE_SCENE"] = "tune-locked"
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         XCUIDevice.shared.orientation = .portrait
         app.launch()
@@ -19,7 +21,7 @@ final class TabletScreenshotsUITests: XCTestCase {
             attachment.name = name; attachment.lifetime = .keepAlways
             add(attachment)
         }
-        Thread.sleep(forTimeInterval: 8)  // let the 3D stage load and the demo string settle in tune
+        Thread.sleep(forTimeInterval: 8)  // hands off: the 3D stage loads and the scene's strings lock
         shot("ipad-portrait-tune")
         XCUIDevice.shared.orientation = .landscapeLeft
         shot("ipad-landscape-tune")

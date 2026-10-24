@@ -22,6 +22,9 @@ struct OnboardingView: View {
     @State private var dailyMinutes = 10
     @State private var reminderTime = PlanCommitment.defaultTime
     @State private var reminderOn = false
+    /// The placement check is up, and the answer it started from once it has run.
+    @State private var checking = false
+    @State private var checkedFrom: String?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// Welcome, experience, goal, microphone, first tune, plan.
     private let steps = 6
@@ -97,7 +100,8 @@ struct OnboardingView: View {
         if instrumentID == nil { store.selectReference() }
         store.completeOnboarding(instrument: instrument, level: answeredLevel, goal: answeredGoal, minutes: dailyMinutes)
         Analytics.log("onboarding_complete", ["instrument": instrumentID ?? "chromatic", "goal": answeredGoal, "level": answeredLevel,
-                                              "minutes": String(dailyMinutes), "reminder": reminderOn ? "on" : "off"])
+                                              "minutes": String(dailyMinutes), "reminder": reminderOn ? "on" : "off",
+                                              "placement_check": checkedFrom == nil ? "no" : "yes"])
     }
 
     /// Spotlit instrument, the promise, and the instrument picker in one screen.
@@ -315,10 +319,21 @@ struct OnboardingView: View {
         let answeredGoal = goal ?? "tune"
         let goalOption = goalOptions.first { $0.0 == answeredGoal }
         if let course = store.onboardingCourse(instrumentId: instrument, goal: answeredGoal) {
-            let progress = store.onboardingProgress(level: level ?? "beginner", instrumentId: instrument, goal: answeredGoal)
+            let answered = level ?? "beginner"
+            // The same placement the paywall's "Today" and the lesson Learn opens use (`AppStore.onboardingProgress`).
+            let progress = store.onboardingProgress(level: answered, instrumentId: instrument, goal: answeredGoal)
             let start = progress.nextLesson(in: course)
+            let checkSteps = placementCheckSteps(course)
             PlanStep(course: course, start: start, goal: goalOption, artwork: CourseArtwork.of(course, catalog: store.catalog),
-                     minutes: $dailyMinutes, reminder: $reminderTime, reminderOn: $reminderOn, onStart: { startPlan() })
+                     check: checkSteps == nil ? nil : (checkedFrom == nil ? PlanCheck.offer : PlanCheck.done),
+                     minutes: $dailyMinutes, reminder: $reminderTime, reminderOn: $reminderOn,
+                     onCheck: { checking = true }, onStart: { startPlan() })
+                .fullScreenCover(isPresented: $checking) {
+                    if let checkSteps {
+                        PlacementCheckView(course: course, steps: checkSteps, level: answered) { checked in finishCheck(from: answered, to: checked) }
+                            .environmentObject(store)
+                    }
+                }
         } else {
             VStack {
                 Spacer()
@@ -326,6 +341,23 @@ struct OnboardingView: View {
                     .accessibilityIdentifier("onboarding.plan.start")
             }
         }
+    }
+
+    /// The 45-second placement check, for players who said a few years or more, when Timbre can hear them and the
+    /// plan's course has chords to change between (`PlacementCheck.steps`). Still shown, as done, once it has run.
+    private func placementCheckSteps(_ course: LearnCourse) -> [LessonStep]? {
+        guard let level, PlacementCheck.offered(level: level) || checkedFrom != nil, FirstTuneSetup.canListen else { return nil }
+        return PlacementCheck.steps(in: course)
+    }
+
+    /// The check's answer replaces the experience answer: the plan, the paywall and Learn all follow it.
+    /// Closed early (nil), nothing changes and the plan still offers it.
+    private func finishCheck(from answered: String, to checked: String?) {
+        checking = false
+        guard let checked else { return }
+        checkedFrom = answered
+        guard checked != answered else { return }
+        withAnimation(Motion.settle) { level = checked }
     }
 
     private func question(_ title: LocalizedStringKey, _ detail: LocalizedStringKey) -> some View {
@@ -345,9 +377,12 @@ private struct PlanStep: View {
     let goal: (String, LocalizedStringKey, String)?
     /// The course's art, as on the Learn tab: the instrument's render or photograph, or the course emblem.
     let artwork: CourseArtwork
+    /// The 45-second placement check: on offer, done, or not for this player (nil).
+    let check: PlanCheck?
     @Binding var minutes: Int
     @Binding var reminder: Date
     @Binding var reminderOn: Bool
+    let onCheck: () -> Void
     let onStart: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var shown = false
@@ -372,6 +407,7 @@ private struct PlanStep: View {
                 VStack(alignment: .leading, spacing: 16) {
                     header.planReveal(shown, 0, reduceMotion)
                     courseCard.planReveal(shown, 1, reduceMotion)
+                    if let check { checkRow(check).planReveal(shown, 2, reduceMotion) }
                     PlanCommitment(goal: goal, minutes: $minutes, reminder: $reminder, reminderOn: $reminderOn)
                         .planReveal(shown, 2, reduceMotion)
                     if !milestones.isEmpty { milestoneList }
@@ -396,10 +432,54 @@ private struct PlanStep: View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Your plan").font(Typeface.display(34)).tracking(-0.6).foregroundStyle(Palette.ink)
                 .accessibilityAddTraits(.isHeader)
-            Text(course.subtitle.localized).font(.subheadline).foregroundStyle(Palette.inkSoft)
+            subtitle.font(.subheadline).foregroundStyle(Palette.inkSoft)
                 .fixedSize(horizontal: false, vertical: true)
+                .contentTransition(.opacity)
         }
         .padding(.top, 8)
+    }
+
+    /// Placed players read what the placement skips (the course card names where they start); beginners, the course.
+    @ViewBuilder private var subtitle: some View {
+        if let startUnit, startUnit > 1 {
+            Text("You skip Units 1–\(startUnit). They stay open for a refresher.")
+        } else if startUnit == 1 {
+            Text("You skip Unit 1. It stays open for a refresher.")
+        } else {
+            Text(course.subtitle.localized)
+        }
+    }
+
+    /// "Not sure? Take a 45-second check", or, once it has run, that the first lesson follows how they played.
+    private func checkRow(_ state: PlanCheck) -> some View {
+        Button(action: onCheck) {
+            HStack(spacing: 14) {
+                IconOrb(symbol: state == .done ? "checkmark.seal.fill" : "gauge.with.dots.needle.67percent", tint: accent, size: 40)
+                VStack(alignment: .leading, spacing: 2) {
+                    checkTitle(state).font(.headline).foregroundStyle(Palette.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                    checkDetail(state).font(.subheadline).foregroundStyle(Palette.inkSoft)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 8)
+                if state == .offer {
+                    Image(systemName: "chevron.right").font(.system(size: 14, weight: .bold)).foregroundStyle(Palette.inkFaint)
+                        .accessibilityHidden(true)
+                }
+            }
+            .stillCard(padding: 14, tint: accent)
+        }
+        .buttonStyle(PressScaleStyle())
+        .disabled(state == .done)
+        .accessibilityIdentifier("onboarding.plan.check")
+    }
+
+    @ViewBuilder private func checkTitle(_ state: PlanCheck) -> some View {
+        if state == .done { Text("Placement checked") } else { Text("Not sure? Take a 45-second check") }
+    }
+
+    @ViewBuilder private func checkDetail(_ state: PlanCheck) -> some View {
+        if state == .done { Text("Your first lesson follows how you played.") } else { Text("Change between three chords, then strum.") }
     }
 
     private var courseCard: some View {
@@ -414,6 +494,7 @@ private struct PlanStep: View {
                 if let start {
                     Text(start.title.localized).font(Typeface.display(24)).tracking(-0.4).foregroundStyle(Palette.ink)
                         .lineLimit(3).fixedSize(horizontal: false, vertical: true)
+                        .contentTransition(.opacity)
                 }
                 if let startUnit {
                     Text("UNIT \(startUnit + 1) · \(course.units[startUnit].title.localized.uppercased())")
@@ -430,6 +511,8 @@ private struct PlanStep: View {
                 .fill(LinearGradient(colors: [accent.opacity(0.26), Palette.stageRaised], startPoint: .topLeading, endPoint: .bottomTrailing))
         )
         .overlay(RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(accent.opacity(0.35), lineWidth: 1))
+        // A placement check that moves the start swaps the lesson in place.
+        .animation(Motion.settle, value: start?.id)
         .accessibilityElement(children: .combine)
     }
 
@@ -678,6 +761,9 @@ private struct PlanCommitment: View {
         }
     }
 }
+
+/// The plan's placement check row: on offer, or done.
+private enum PlanCheck { case offer, done }
 
 /// The mint primary button once enabled; before that a graphite capsule with grey text
 /// (about 4.8:1 against its fill), so it reads as waiting rather than as a dim green button.

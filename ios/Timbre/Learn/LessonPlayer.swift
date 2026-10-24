@@ -170,6 +170,8 @@ struct StepButton: View {
     let title: LocalizedStringKey
     var accent: Color = Palette.mint
     var enabled = true
+    /// Off inside a `LessonActionBar`, which keeps the margins for the whole row.
+    var inset = true
     let action: () -> Void
     var body: some View {
         Button(action: action) {
@@ -183,8 +185,69 @@ struct StepButton: View {
         }
         .buttonStyle(PressScaleStyle())
         .disabled(!enabled)
-        .padding(.horizontal, 20).padding(.bottom, 12)
+        .padding(.horizontal, inset ? 20 : 0).padding(.bottom, inset ? 12 : 0)
         .accessibilityIdentifier("lesson.continue")
+    }
+}
+
+/// The row pinned to the bottom of a step: its own actions ("Hear it", "I played it") side by side, beside the
+/// main button when there is one; stacked at the largest text sizes, so no label is squeezed.
+struct LessonActionBar<Content: View>: View {
+    private let content: Content
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    init(@ViewBuilder content: () -> Content) { self.content = content() }
+
+    var body: some View {
+        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 10)) : AnyLayout(HStackLayout(spacing: 10))
+        layout { content }
+            .padding(.horizontal, 20).padding(.bottom, 12)
+    }
+}
+
+/// "Hear it" in a step's bottom bar: a tinted button in the step's accent, its speaker waving while it sounds.
+struct HearItButton: View {
+    var accent: Color = Palette.mint
+    var sounding = false
+    /// Takes the bar's width (a playing step, where listening is the main thing); otherwise it hugs its label.
+    var expands = false
+    let action: () -> Void
+
+    var body: some View {
+        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        Button(action: action) {
+            Label("Hear it", systemImage: "speaker.wave.2.fill")
+                .font(Typeface.label(17)).foregroundStyle(accent)
+                .symbolEffect(.variableColor.iterative, isActive: sounding)
+                .lineLimit(1).minimumScaleFactor(0.75)
+                .padding(.horizontal, 22)
+                .frame(maxWidth: expands ? .infinity : nil, minHeight: 56)
+                .background(shape.fill(accent.opacity(0.12)))
+                .overlay(shape.strokeBorder(accent.opacity(0.4), lineWidth: 1))
+                .contentShape(shape)
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityIdentifier("lesson.hear")
+    }
+}
+
+/// A quieter button for a step's bottom bar ("I played it", "My strings are tuned — skip").
+struct LessonBarButton: View {
+    let title: LocalizedStringKey
+    let action: () -> Void
+
+    var body: some View {
+        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        Button(action: action) {
+            Text(title).font(Typeface.label(16)).foregroundStyle(Palette.inkSoft)
+                .lineLimit(1).minimumScaleFactor(0.75)
+                .padding(.horizontal, 18)
+                .frame(maxWidth: .infinity, minHeight: 56)
+                .background(shape.fill(Palette.stageRaised))
+                .overlay(shape.strokeBorder(Palette.line, lineWidth: 1))
+                .contentShape(shape)
+        }
+        .buttonStyle(PressScaleStyle())
     }
 }
 
@@ -272,37 +335,36 @@ struct ChoiceStep: View {
     @State private var shake = 0
     @State private var burst = 0
     @State private var playing = false
+    /// The question's and the answers' heights, to know how much room the picture between them can take.
+    @State private var promptHeight: CGFloat = 0
+    @State private var answersHeight: CGFloat = 0
 
     private var correct: Bool { picked == answer }
     private var compact: Bool { options.count >= 3 && options.allSatisfy { $0.localized.count <= 8 } }
+    /// The listen card at its plain size: the rings (156), the words under them (54) and its padding (32).
+    private static let listenHeight: CGFloat = 242
+    /// Below this the picture keeps its plain size and the step scrolls instead.
+    private static let smallestFill: CGFloat = 120
 
+    /// The question on top, the answers anchored at the bottom over the button, and the picture (or the listen
+    /// card) growing to fill the room between them, so nothing floats mid-screen. When the feedback slides in,
+    /// the picture gives up the room it needs.
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    Text(prompt.localized).font(Typeface.display(26)).tracking(-0.4).foregroundStyle(Palette.ink)
-                        .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
-                    if let sound { listenButton(sound) }
-                    if visual != .none {
-                        LessonVisualView(visual: visual, accent: accent, instrumentId: course.instrument)
-                            .padding(16).frame(maxWidth: .infinity)
-                            .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
+            GeometryReader { proxy in
+                let room = middleRoom(proxy.size)
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        Text(prompt.localized).font(Typeface.display(26)).tracking(-0.4).foregroundStyle(Palette.ink)
+                            .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { promptHeight = $0 }
+                        middle(room)
+                        answers
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { answersHeight = $0 }
                     }
-                    Group {
-                        if compact {
-                            // Short answers (notes, numbers) as big tiles.
-                            LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
-                                ForEach(Array(options.enumerated()), id: \.offset) { index, option in optionRow(index, option) }
-                            }
-                        } else {
-                            VStack(spacing: 10) {
-                                ForEach(Array(options.enumerated()), id: \.offset) { index, option in optionRow(index, option) }
-                            }
-                        }
-                    }
-                    .modifier(Shake(amount: shake))
+                    .padding(.horizontal, 22).padding(.top, 18).padding(.bottom, 12)
                 }
-                .padding(.horizontal, 22).padding(.top, 18)
+                .scrollBounceBehavior(.basedOnSize)
             }
             if let picked { feedback(picked) }
             StepButton(title: picked == nil ? "Check" : "Continue", accent: picked == nil || correct ? accent : Palette.danger, enabled: picked != nil) {
@@ -312,9 +374,59 @@ struct ChoiceStep: View {
         .onAppear { if let sound { play(sound) } }
     }
 
-    /// A big play button with sound rings that ripple while the question plays.
-    private func listenButton(_ sound: [[Int]]) -> some View {
-        Button { play(sound) } label: {
+    private var answers: some View {
+        Group {
+            if compact {
+                // Short answers (notes, numbers) as big tiles.
+                LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
+                    ForEach(Array(options.enumerated()), id: \.offset) { index, option in optionRow(index, option) }
+                }
+            } else {
+                VStack(spacing: 10) {
+                    ForEach(Array(options.enumerated()), id: \.offset) { index, option in optionRow(index, option) }
+                }
+            }
+        }
+        .modifier(Shake(amount: shake))
+    }
+
+    /// The room between the question and the answers (the paddings, 18 + 12, and the two 20 pt gaps aside);
+    /// nil until both are measured, or when it's too small to fill.
+    private func middleRoom(_ size: CGSize) -> CGSize? {
+        guard promptHeight > 0, answersHeight > 0 else { return nil }
+        let height = size.height - 30 - 40 - promptHeight - answersHeight
+        return height >= Self.smallestFill ? CGSize(width: max(0, size.width - 44), height: height) : nil
+    }
+
+    /// The listen card and the picture, filling `room` together; with neither, the room stays empty, so the
+    /// answers still sit at the bottom.
+    private func middle(_ room: CGSize?) -> some View {
+        VStack(spacing: 20) {
+            if let sound { listenButton(sound, fill: visual == .none ? room?.height : nil) }
+            if visual != .none { visualCard(room.flatMap { visualRoom($0) }) }
+        }
+        .frame(maxWidth: .infinity, minHeight: room?.height ?? 0)
+    }
+
+    /// The picture's share of the room: all of it, or what a listen card above it leaves.
+    private func visualRoom(_ room: CGSize) -> CGSize? {
+        let height = sound == nil ? room.height : room.height - Self.listenHeight - 20
+        return height >= Self.smallestFill ? CGSize(width: room.width, height: height) : nil
+    }
+
+    private func visualCard(_ room: CGSize?) -> some View {
+        let inner = room.map { CGSize(width: max(0, $0.width - 32), height: max(0, $0.height - 32)) }
+        return LessonVisualView(visual: visual, accent: accent, instrumentId: course.instrument, room: inner)
+            .padding(16)
+            .frame(maxWidth: .infinity, minHeight: room?.height ?? 0)
+            .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
+    }
+
+    /// A big play button with sound rings that ripple while the question plays; given `fill`, it grows to that
+    /// height, the rings up to 280 pt.
+    private func listenButton(_ sound: [[Int]], fill: CGFloat?) -> some View {
+        let rings = fill.map { min(280, max(156, $0 - 86)) } ?? 156
+        return Button { play(sound) } label: {
             VStack(spacing: 8) {
                 ZStack {
                     RingMotif(accent: accent, active: playing)
@@ -323,13 +435,13 @@ struct ChoiceStep: View {
                         .background(Circle().fill(accent)).shadow(color: accent.opacity(0.5), radius: 16)
                         .symbolEffect(.variableColor.iterative, isActive: playing)
                 }
-                .frame(height: 156)
+                .frame(height: rings)
                 VStack(spacing: 2) {
                     Text("Hear it").font(Typeface.label(17)).foregroundStyle(Palette.ink)
                     Text("Tap to play again").font(.subheadline).foregroundStyle(Palette.inkSoft)
                 }
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, minHeight: max(0, (fill ?? 0) - 32))
             .padding(.vertical, 16)
             .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.stageRaised))
             .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
@@ -344,7 +456,8 @@ struct ChoiceStep: View {
         let tint: Color = reveal && index == answer ? accent : reveal && isPicked ? Palette.danger : Palette.line
         return Button {
             guard picked == nil else { return }
-            picked = index
+            // The feedback slides in and the picture above makes room for it.
+            withAnimation(Motion.settle) { picked = index }
             if index == answer { SoundFX.shared.play(.correct); Haptics.shared.lock(); burst += 1 }
             else { SoundFX.shared.play(.wrong); Haptics.shared.selection(); withAnimation(.default) { shake += 1 } }
         } label: {
