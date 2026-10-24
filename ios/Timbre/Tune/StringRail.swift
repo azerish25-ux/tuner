@@ -230,10 +230,12 @@ private struct CourseChip: View {
         return Style(ring: tint, fill: tint.opacity(0.2), text: Palette.ink, cue: tint, mark: PitchMark(shown: live, locked: false))
     }
 
-    /// "String 3, D3"; a pair reads "Strings 1 and 2, G3".
+    /// "String 4, D3": the number players call the string by, 1 the thinnest (the digits its peg-head anchor ends in,
+    /// "s4"), as lessons and Strum to tune count. A pair shares its anchor, so it reads as one string; its state says
+    /// "1 of 2". Only a course without an anchor falls back to its index.
     private func accessibilityName(_ note: String) -> Text {
-        if group.count == 2 { return Text("Strings \(group.courses[0].index) and \(group.courses[1].index), \(note)") }
-        return Text("String \(group.lead.index), \(note)")
+        let digits = String((group.lead.anchorId ?? "").reversed().prefix { $0.isNumber }.reversed())
+        return Text("String \(Int(digits) ?? group.lead.index), \(note)")
     }
 
     /// "Tuned"; a pair part way: "1 of 2".
