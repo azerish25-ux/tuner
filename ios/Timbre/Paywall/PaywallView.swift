@@ -14,6 +14,7 @@ struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var selectedID = TimbreProduct.annual
     @State private var appeared = false
     /// Notifications are off for Timbre: no reminder can arrive, so none is promised.
@@ -150,7 +151,7 @@ struct PaywallView: View {
                     .padding(.top, layout.preview > 0 ? Self.headerTop : 10)
                 if layout.outcomes {
                     outcomeList(plan).padding(.top, Self.outcomesTop)
-                    if layout.counts { countsLine.padding(.top, Self.countsTop) }
+                    if layout.counts && showsCounts(plan) { countsLine.padding(.top, Self.countsTop) }
                 }
                 offer
                     .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in offerHeight = height }
@@ -178,7 +179,7 @@ struct PaywallView: View {
         if !layout.outcomes {
             VStack(spacing: Self.countsTop) {
                 outcomeList(plan)
-                countsLine
+                if showsCounts(plan) { countsLine }
             }
             .padding(.top, 28)
         }
@@ -408,6 +409,9 @@ struct PaywallView: View {
         }
     }
 
+    /// The counts line, unless an outcome already says it.
+    private func showsCounts(_ plan: PaywallPlan) -> Bool { !plan.outcomes.contains { $0.id == "catalog" } }
+
     /// What Pro holds in all, small, under the outcomes (lined up with their text) when there is room.
     private var countsLine: some View {
         Text("\(store.curriculum.lessonCount) lessons across \(store.curriculum.courses.count) courses")
@@ -416,52 +420,6 @@ struct PaywallView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading, 6 + Self.benefitArt + 10)
             .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in countsHeight = height }
-    }
-
-    // MARK: Milestones
-
-    /// The plan's first days beside the trial's: today's lesson and the units the plan reaches while the
-    /// trial is free, after the course's own art.
-    private func milestoneStrip(_ plan: PaywallPlan) -> some View {
-        HStack(alignment: .top, spacing: 10) {
-            if let course = plan.course { CourseArt(course: course, size: 28) }
-            HStack(alignment: .top, spacing: 8) {
-                ForEach(Array(plan.milestones.enumerated()), id: \.element.id) { index, milestone in
-                    milestoneColumn(milestone, first: index == 0)
-                        .opacity(appeared ? 1 : 0)
-                        .offset(y: appeared || reduceMotion ? 0 : 6)
-                        .animation(.spring(response: 0.6, dampingFraction: 0.85).delay(0.3 + Double(index) * 0.12), value: appeared)
-                }
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 2)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(milestonesSpoken(plan.milestones))
-        .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in milestonesHeight = height }
-    }
-
-    private func milestoneColumn(_ milestone: PaywallPlan.Milestone, first: Bool) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            HStack(spacing: 4) {
-                Image(systemName: first ? "play.fill" : "flag.fill").font(.system(size: 8, weight: .bold))
-                milestoneDay(milestone.day).font(Typeface.label(11)).lineLimit(1)
-            }
-            .foregroundStyle(Palette.amber)
-            Text(milestone.title).font(.caption).foregroundStyle(Palette.ink)
-                .lineLimit(2).minimumScaleFactor(0.85)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    private func milestoneDay(_ day: Int) -> Text { day == 1 ? Text("Today") : Text("Day \(day)") }
-
-    /// "Your plan. Today: Three notes on string 2. Day 7: First chords. …"
-    private func milestonesSpoken(_ milestones: [PaywallPlan.Milestone]) -> Text {
-        milestones.reduce(Text("Your plan") + Text(verbatim: ". ")) { (label: Text, milestone: PaywallPlan.Milestone) -> Text in
-            label + milestoneDay(milestone.day) + Text(verbatim: ": \(milestone.title). ")
-        }
     }
 
     // MARK: Plans
@@ -611,49 +569,78 @@ struct PaywallView: View {
         Text(verbatim: "·").foregroundStyle(Palette.inkFaint).accessibilityHidden(true)
     }
 
-    // MARK: Trial
+    // MARK: Track
 
-    private var showsTrialTimeline: Bool { selected?.id == TimbreProduct.annual && commerce.trialLabel != nil }
+    /// The selected plan has a free trial: only then does the track promise a reminder and a charge.
+    private var showsTrial: Bool { selected?.id == TimbreProduct.annual && commerce.trialLabel != nil }
 
-    private struct TrialStep {
-        let symbol: String
+    /// The yearly plan has a free trial for this person.
+    private var trialOffered: Bool { commerce.annual != nil && commerce.trialLabel != nil }
+
+    private struct TrackStep: Identifiable {
+        enum Kind { case today, milestone, reminder, billing }
+        let id: String
+        let kind: Kind
         let title: Text
-        let detail: Text
+        /// Under the node. Today's is the first lesson, under "Everything unlocked".
+        let detail: Text?
     }
 
-    /// The reminder step only appears when notifications can reach the person.
-    private func trialSteps(_ annual: Product, days: Int) -> [TrialStep] {
-        var steps = [TrialStep(symbol: "lock.open.fill", title: Text("Today"), detail: Text("Everything unlocked"))]
-        if !remindersBlocked { steps.append(TrialStep(symbol: "bell.fill", title: Text("Day \(max(1, days - 2))"), detail: Text("We remind you"))) }
-        steps.append(TrialStep(symbol: "creditcard.fill", title: Text("Day \(days)"), detail: Text("\(annual.displayPrice)/year")))
+    /// The plan and the free trial on one track. Today unlocks everything and starts the first lesson, and the
+    /// plan's furthest milestone before the reminder follows. Only when the selected plan has a free trial come
+    /// the reminder (when notifications can reach the person) and the first charge, at the product's own trial
+    /// length and price. Without a trial the plan's milestones fill the track; without those there is no track.
+    private func trackSteps(_ plan: PaywallPlan) -> [TrackStep] {
+        let today = TrackStep(id: "today", kind: .today, title: Text("Today"), detail: plan.firstLesson.map { Text(verbatim: $0) })
+        guard showsTrial, let product = selected else {
+            guard !plan.milestones.isEmpty else { return [] }
+            return [today] + plan.milestones.map { milestoneStep($0) }
+        }
+        let days = trialDays(product)
+        let reminder = max(1, days - 2)
+        var steps = [today]
+        let next = remindersBlocked ? days : reminder
+        if let milestone = plan.milestones.last(where: { $0.day > 1 && $0.day < next }) { steps.append(milestoneStep(milestone)) }
+        if !remindersBlocked {
+            steps.append(TrackStep(id: "reminder", kind: .reminder, title: Text("Day \(reminder)"), detail: Text("We remind you")))
+        }
+        steps.append(TrackStep(id: "billing", kind: .billing, title: Text("Day \(days)"), detail: Text("\(product.displayPrice)/year")))
         return steps
     }
 
-    /// No surprises, in one compact strip: what happens on which day of the free trial.
-    /// Without notifications the strip says how to cancel instead of promising a reminder.
-    private func trialTimeline(_ annual: Product) -> some View {
-        let days = trialDays(annual)
-        let steps = trialSteps(annual, days: days)
+    private func milestoneStep(_ milestone: PaywallPlan.Milestone) -> TrackStep {
+        TrackStep(id: "day\(milestone.day)", kind: .milestone, title: Text("Day \(milestone.day)"), detail: Text(verbatim: milestone.title))
+    }
+
+    /// Days on top, nodes on a line, what happens under each. Today's column is wider: it holds the first lesson.
+    /// Without notifications the track says how to cancel instead of promising a reminder.
+    private func planTrack(_ steps: [TrackStep]) -> some View {
+        let lead: CGFloat = steps.count >= 4 ? 0.4 : (steps.count == 3 ? 0.42 : 0.5)
         let last = steps.count - 1
-        return VStack(spacing: 6) {
-            HStack(spacing: 6) {
-                ForEach(steps.indices, id: \.self) { index in
-                    steps[index].title.font(Typeface.label(12)).foregroundStyle(index == 0 ? Palette.mint : Palette.ink)
-                        .lineLimit(1).minimumScaleFactor(0.8)
-                        .frame(maxWidth: .infinity, alignment: Self.edge(index, last))
+        let days = selected.map { trialDays($0) } ?? 14
+        let cancelNote = showsTrial && remindersBlocked
+        return VStack(spacing: 5) {
+            if typeSize.isAccessibilitySize {
+                trackRows(steps)
+            } else {
+                TrackColumns(lead: lead) {
+                    ForEach(Array(steps.enumerated()), id: \.element.id) { index, step in
+                        step.title.font(Typeface.label(12)).foregroundStyle(trackTint(step.kind, title: true))
+                            .lineLimit(1).minimumScaleFactor(0.8)
+                            .frame(maxWidth: .infinity, alignment: Self.edge(index, last))
+                    }
                 }
-            }
-            trialTrack(steps)
-            HStack(alignment: .top, spacing: 6) {
-                ForEach(steps.indices, id: \.self) { index in
-                    steps[index].detail.font(.caption).foregroundStyle(Palette.inkSoft)
-                        .multilineTextAlignment(Self.textEdge(index, last))
-                        .lineLimit(2).minimumScaleFactor(0.85)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .frame(maxWidth: .infinity, alignment: Self.edge(index, last))
+                trackLine(steps, lead: lead)
+                TrackColumns(lead: lead) {
+                    ForEach(Array(steps.enumerated()), id: \.element.id) { index, step in
+                        trackDetail(step)
+                            .multilineTextAlignment(Self.textEdge(index, last))
+                            .frame(maxWidth: .infinity, alignment: Self.edge(index, last))
+                    }
                 }
+                .padding(.top, 1)
             }
-            if remindersBlocked {
+            if cancelNote {
                 Text("Cancel anytime in Settings before day \(days).")
                     .font(.footnote).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
@@ -661,21 +648,74 @@ struct PaywallView: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(trialSpoken(steps))
+        .accessibilityLabel(trackSpoken(steps, cancelNote: cancelNote, days: days))
         .onAppear { withAnimation(reduceMotion ? nil : Animation.easeOut(duration: 0.9).delay(0.25)) { trackDrawn = true } }
         .onDisappear { trackDrawn = false }
     }
 
-    /// Nodes on a line from Today to the first charge; the line draws itself in and each node pops as it passes.
-    private func trialTrack(_ steps: [TrialStep]) -> some View {
+    /// Today: "Everything unlocked" over the first lesson, a line each at the usual text sizes (VoiceOver reads
+    /// the whole title). The price stays on one line. The others keep two lines, so the track keeps its height.
+    @ViewBuilder private func trackDetail(_ step: TrackStep) -> some View {
+        switch step.kind {
+        case .today:
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Everything unlocked").foregroundStyle(Palette.ink)
+                    .lineLimit(1).minimumScaleFactor(0.75)
+                if let lesson = step.detail {
+                    (Text(Image(systemName: "play.fill")).font(.system(size: 8, weight: .bold)).foregroundStyle(Palette.amber) + Text(verbatim: " ") + lesson)
+                        .foregroundStyle(Palette.inkSoft)
+                        .lineLimit(typeSize > .large ? 2 : 1).minimumScaleFactor(0.75)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .font(.caption)
+        case .billing:
+            (step.detail ?? Text(verbatim: "")).font(.caption).foregroundStyle(Palette.inkSoft)
+                .lineLimit(1).minimumScaleFactor(0.7)
+        case .milestone, .reminder:
+            (step.detail ?? Text(verbatim: "")).font(.caption).foregroundStyle(Palette.inkSoft)
+                .lineLimit(2, reservesSpace: true).minimumScaleFactor(0.85)
+        }
+    }
+
+    /// At the accessibility text sizes the track stands as a list, a row per day, so nothing is cut short.
+    private func trackRows(_ steps: [TrackStep]) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(steps) { step in
+                HStack(alignment: .top, spacing: 12) {
+                    trackNode(step.kind)
+                    VStack(alignment: .leading, spacing: 2) {
+                        step.title.font(Typeface.label(12)).foregroundStyle(trackTint(step.kind, title: true))
+                        if step.kind == .today { Text("Everything unlocked").font(.caption).foregroundStyle(Palette.ink) }
+                        if let detail = step.detail { detail.font(.caption).foregroundStyle(Palette.inkSoft) }
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    /// Mint for today and the trial's days, amber for the plan's milestones (titles of the trial's days in ink).
+    private func trackTint(_ kind: TrackStep.Kind, title: Bool) -> Color {
+        switch kind {
+        case .today: return Palette.mint
+        case .milestone: return Palette.amber
+        case .reminder, .billing: return title ? Palette.ink : Palette.mint
+        }
+    }
+
+    /// The nodes on a line from Today to the last step; the line draws itself in and each node pops as it passes.
+    private func trackLine(_ steps: [TrackStep], lead: CGFloat) -> some View {
         let drawn = trackDrawn || reduceMotion
-        return HStack(spacing: 0) {
-            ForEach(steps.indices, id: \.self) { index in
-                if index > 0 { Spacer(minLength: 12) }
-                trialNode(steps[index].symbol, first: index == 0)
+        let last = steps.count - 1
+        return TrackColumns(lead: lead) {
+            ForEach(Array(steps.enumerated()), id: \.element.id) { index, step in
+                trackNode(step.kind)
                     .scaleEffect(drawn ? 1 : 0.6)
                     .opacity(drawn ? 1 : 0.3)
-                    .animation(reduceMotion ? nil : Motion.pluck.delay(0.25 + Double(index) * 0.28), value: trackDrawn)
+                    .animation(reduceMotion ? nil : Motion.pluck.delay(0.25 + Double(index) * 0.22), value: trackDrawn)
+                    .frame(maxWidth: .infinity, alignment: Self.edge(index, last))
             }
         }
         .background {
@@ -689,20 +729,39 @@ struct PaywallView: View {
         }
     }
 
-    private func trialNode(_ symbol: String, first: Bool) -> some View {
-        Image(systemName: symbol).font(.system(size: 10, weight: .bold))
-            .foregroundStyle(first ? Palette.onAccent : Palette.mint)
+    private func trackNode(_ kind: TrackStep.Kind) -> some View {
+        let symbol: String
+        switch kind {
+        case .today: symbol = "lock.open.fill"
+        case .milestone: symbol = "flag.fill"
+        case .reminder: symbol = "bell.fill"
+        case .billing: symbol = "creditcard.fill"
+        }
+        let first = kind == .today
+        let tint = trackTint(kind, title: false)
+        return Image(systemName: symbol).font(.system(size: 10, weight: .bold))
+            .foregroundStyle(first ? Palette.onAccent : tint)
             .frame(width: 24, height: 24)
             .background(Circle().fill(first ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(Palette.stageRaised)))
-            .overlay(Circle().strokeBorder(Palette.mint.opacity(first ? 0 : 0.45), lineWidth: 1))
+            .overlay(Circle().strokeBorder(tint.opacity(first ? 0 : 0.45), lineWidth: 1))
             .shadow(color: Palette.mint.opacity(first ? 0.45 : 0), radius: 8)
     }
 
-    /// "Today: Everything unlocked. Day 12: We remind you. …" in reading order.
-    private func trialSpoken(_ steps: [TrialStep]) -> Text {
-        steps.reduce(Text(verbatim: "")) { (label: Text, step: TrialStep) -> Text in
-            label + step.title + Text(verbatim: ": ") + step.detail + Text(verbatim: ". ")
+    /// "Today: Everything unlocked, Three notes on string 2. Day 9: First chords. Day 12: We remind you. …" in reading order.
+    private func trackSpoken(_ steps: [TrackStep], cancelNote: Bool, days: Int) -> Text {
+        var label = Text(verbatim: "")
+        for step in steps {
+            label = label + step.title + Text(verbatim: ": ")
+            if step.kind == .today {
+                label = label + Text("Everything unlocked")
+                if let lesson = step.detail { label = label + Text(verbatim: ", ") + lesson }
+            } else if let detail = step.detail {
+                label = label + detail
+            }
+            label = label + Text(verbatim: ". ")
         }
+        if cancelNote { label = label + Text("Cancel anytime in Settings before day \(days).") }
+        return label
     }
 
     private static func edge(_ index: Int, _ last: Int) -> Alignment {
@@ -859,6 +918,39 @@ private struct SymbolTile: View {
             .overlay(shape.fill(LinearGradient(colors: [.white.opacity(0.24), .white.opacity(0)], startPoint: .top, endPoint: .center)))
             .overlay(shape.strokeBorder(.white.opacity(0.28), lineWidth: 0.5))
             .accessibilityHidden(true)
+    }
+}
+
+/// The plan track's columns: the first takes `lead` of the width (Today, with the first lesson under it), the
+/// others share the rest equally. The titles, the nodes and the details each use one, so they line up.
+private struct TrackColumns: Layout {
+    var lead: CGFloat
+    var spacing: CGFloat = 8
+
+    private func widths(_ total: CGFloat, count: Int) -> [CGFloat] {
+        guard count > 1 else { return [total] }
+        let room = max(0, total - spacing * CGFloat(count - 1))
+        let first = room * lead
+        return [first] + Array(repeating: (room - first) / CGFloat(count - 1), count: count - 1)
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let width = proposal.replacingUnspecifiedDimensions().width
+        let columns = widths(width, count: subviews.count)
+        var height: CGFloat = 0
+        for (subview, column) in zip(subviews, columns) {
+            height = max(height, subview.sizeThatFits(ProposedViewSize(width: column, height: nil)).height)
+        }
+        return CGSize(width: width, height: height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let columns = widths(bounds.width, count: subviews.count)
+        var x = bounds.minX
+        for (subview, column) in zip(subviews, columns) {
+            subview.place(at: CGPoint(x: x, y: bounds.minY), anchor: .topLeading, proposal: ProposedViewSize(width: column, height: nil))
+            x += column + spacing
+        }
     }
 }
 

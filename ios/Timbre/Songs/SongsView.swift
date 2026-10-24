@@ -2,9 +2,10 @@ import SwiftUI
 import TimbreCore
 
 /// The Songs tab: every song in the curriculum, wherever it lives (Originals, the public-domain Songs
-/// course, and the songs inside each instrument course), as album shelves under a daily featured song.
-/// Covers are generated from each song's id (`CoverArt`), so there are no image assets. Songs open the
+/// course, and the songs inside each instrument course), as record shelves under a daily featured song.
+/// Sleeves are generated from each song (`CoverArt`), so there are no image assets. Songs open the
 /// same full-screen lesson flow as Learn and follow Learn's rules (`LessonAccess`) for Pro and order locks.
+/// The featured song (`SongOfTheDay`) suits the learner's level, and its sleeve plays the opening bars.
 struct SongsView: View {
     @EnvironmentObject private var store: AppStore
     /// Instrument filter: a catalogue instrument id, or "all".
@@ -14,15 +15,23 @@ struct SongsView: View {
     @State private var shakes: [String: Int] = [:]
     /// After a tap on an order-locked song: the open lesson on the way to it.
     @State private var hint: Hint?
+    /// The song whose opening is playing from the featured sleeve, when it started and how long it runs.
+    @State private var previewing: String?
+    @State private var previewStart = Date()
+    @State private var previewLength = 0.0
+    @State private var previewTask: Task<Void, Never>?
     /// Songs zoom open out of the tile or hero that was tapped (and back into it on close).
     @Namespace private var zoom
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.horizontalSizeClass) private var sizeClass
 
-    /// A song and the course it belongs to.
+    /// A song, its course and unit, and its place among the course's songs (1-based).
     struct Song: Identifiable {
         let course: LearnCourse
+        let unit: LearnUnit
+        let unitIndex: Int
         let lesson: Lesson
+        let number: Int
         var id: String { lesson.id }
     }
 
@@ -49,6 +58,8 @@ struct SongsView: View {
     private static let heroSource = "songs.hero"
     private static func tileSource(_ lesson: Lesson) -> String { "songs.tile.\(lesson.id)" }
     private var tileWidth: CGFloat { sizeClass == .regular ? 176 : 148 }
+    private var sleeveSide: CGFloat { sizeClass == .regular ? 168 : 128 }
+    private var heroHeight: CGFloat { sizeClass == .regular ? 380 : 330 }
 
     /// The tab's title: the Songs course's own, translated with the curriculum.
     static func title(in curriculum: Curriculum) -> String {
@@ -60,7 +71,7 @@ struct SongsView: View {
         let active = chips.contains { $0.id == filter } ? filter : Self.all
         let songs = allSongs.filter { Self.matches($0, filter: active) }
         let hero = featured(songs)
-        let glow: Color = hero.map { Palette.accent($0.course.accent) } ?? Color(hex: 0xFFC48C)
+        let glow: Color = hero.map { CoverArt($0).primary } ?? Color(hex: 0xFFC48C)
         NavigationStack {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 24) {
@@ -81,6 +92,8 @@ struct SongsView: View {
             .background(StageBackground(glow: glow, motes: false))
             .overlay(alignment: .bottom) { hintPill }
         }
+        .onChange(of: filter) { _, _ in stopPreview() }
+        .onDisappear { stopPreview() }
         .fullScreenCover(item: $playing) { item in
             LessonPlayer(course: item.course, lesson: item.lesson) { next in
                 let source = next.kind == .song ? Self.tileSource(next) : Self.heroSource
@@ -95,8 +108,14 @@ struct SongsView: View {
 
     /// Every song in the curriculum, in course order.
     private var allSongs: [Song] {
-        store.curriculum.courses.flatMap { course in
-            course.lessons.filter { $0.kind == .song }.map { Song(course: course, lesson: $0) }
+        store.curriculum.courses.flatMap { course -> [Song] in
+            var found: [Song] = []
+            for (index, unit) in course.units.enumerated() {
+                for lesson in unit.lessons where lesson.kind == .song {
+                    found.append(Song(course: course, unit: unit, unitIndex: index, lesson: lesson, number: found.count + 1))
+                }
+            }
+            return found
         }
     }
 
@@ -110,9 +129,13 @@ struct SongsView: View {
         course.lessons.filter { $0.kind == .song }.count * 2 >= course.lessons.count
     }
 
+    private static func isOriginals(_ course: LearnCourse) -> Bool {
+        course.id.hasPrefix("original") || course.title.defaultValue.lowercased().hasPrefix("original")
+    }
+
     /// Originals first, then the song collections, then each instrument's songs in curriculum order.
     private static func rank(_ course: LearnCourse) -> Int {
-        if course.id.hasPrefix("original") || course.title.defaultValue.lowercased().hasPrefix("original") { return 0 }
+        if isOriginals(course) { return 0 }
         return isCollection(course) ? 1 : 2
     }
 
@@ -144,21 +167,35 @@ struct SongsView: View {
         return ranked.map { $0.element }
     }
 
-    /// The song of the day: one the learner can play and hasn't yet (else any open one), picked by a
-    /// hash of the day so it changes daily and stays put within the day.
+    /// The song of the day (`SongOfTheDay`): an unfinished song at the learner's level, an Original ahead of the
+    /// traditional tunes once past the beginner units, the same all day.
     private func featured(_ songs: [Song]) -> Song? {
         let progress = store.learn
-        let open = songs.filter { LessonAccess.of($0.lesson, in: $0.course, store: store) == .play }
-        let fresh = open.filter { !progress.isFinished($0.lesson.id) }
-        let pool = !fresh.isEmpty ? fresh : (!open.isEmpty ? open : songs)
-        let day = UInt64(Calendar.current.ordinality(of: .day, in: .era, for: Date()) ?? 0)
-        return pool.min { CoverArt.hash($0.id, salt: day) < CoverArt.hash($1.id, salt: day) }
+        let candidates = songs.map { song in
+            SongOfTheDay.Candidate(id: song.id, original: Self.isOriginals(song.course), unit: song.unitIndex,
+                                   finished: progress.isFinished(song.lesson.id), access: dayAccess(song))
+        }
+        let day = Calendar.current.ordinality(of: .day, in: .era, for: Date()) ?? 0
+        let placed = progress.placedThrough.values.contains { $0 >= 0 }
+        guard let id = SongOfTheDay.pick(candidates, level: store.level.number, finishedLessons: progress.stars.count,
+                                         placed: placed, day: day) else { return nil }
+        return songs.first { $0.id == id }
+    }
+
+    /// Learn's access, with Pro songs split into the next one in order (worth featuring) and later ones.
+    private func dayAccess(_ song: Song) -> SongOfTheDay.Access {
+        switch LessonAccess.of(song.lesson, in: song.course, store: store) {
+        case .play: return .open
+        case .pro: return store.learn.isUnlocked(song.lesson, in: song.course) ? .pro : .locked
+        case .locked: return .locked
+        }
     }
 
     // MARK: Actions
 
     /// Learn's path: play, the paywall for Pro, or a shake (and the way there) for a song not yet reached.
     private func open(_ course: LearnCourse, _ lesson: Lesson, from source: String) {
+        stopPreview()
         switch LessonAccess.of(lesson, in: course, store: store) {
         case .play:
             Haptics.shared.selection()
@@ -188,6 +225,47 @@ struct SongsView: View {
         guard id != filter else { return }
         Haptics.shared.selection()
         withAnimation(Motion.settle) { filter = id; hint = nil }
+    }
+
+    // MARK: Preview
+
+    /// Plays (or stops) the song's opening bars in its course's instrument voice, one note at a time on one
+    /// clock, the way a lesson's "Hear it" lands its notes.
+    private func togglePreview(_ song: Song) {
+        if previewing == song.id { stopPreview(); return }
+        stopPreview()
+        guard let phrase = SongPreview.opening(of: song.lesson) else { return }
+        let audio = store.audio
+        let voice = InstrumentVoice(instrumentId: song.course.instrument)
+        let reference = store.settings.referencePitchHz
+        Haptics.shared.selection()
+        Analytics.log("song_preview", ["lesson": song.id])
+        previewStart = Date()
+        previewLength = phrase.duration
+        withAnimation(Motion.pluck) { previewing = song.id }
+        previewTask = Task { @MainActor in
+            let clock = ContinuousClock()
+            let start = clock.now
+            for (index, note) in phrase.notes.enumerated() {
+                try? await clock.sleep(until: start + .seconds(phrase.time(of: index)))
+                guard !Task.isCancelled else { return }
+                let ms = Int(min(1600, max(160, note.beats * phrase.secondsPerBeat * 950)))
+                audio.playTones([PitchMath.frequency(midi: Double(note.midi), reference: reference)],
+                                together: false, noteMs: ms, gapMs: 0, voice: voice)
+            }
+            try? await clock.sleep(until: start + .seconds(phrase.duration + 0.3))
+            guard !Task.isCancelled else { return }
+            previewTask = nil
+            withAnimation(Motion.settle) { previewing = nil }
+        }
+    }
+
+    private func stopPreview() {
+        previewTask?.cancel()
+        previewTask = nil
+        guard previewing != nil else { return }
+        store.audio.stopTone()
+        withAnimation(Motion.settle) { previewing = nil }
     }
 
     // MARK: Header and filters
@@ -232,25 +310,20 @@ struct SongsView: View {
 
     // MARK: Featured song
 
+    /// The song of the day: its sleeve (with the record peeking out) over a backdrop made from the same art,
+    /// the title and Play below. The preview button sits on the sleeve's free corner, outside the card's button.
     private func heroCard(_ song: Song) -> some View {
-        let accent = Palette.accent(song.course.accent)
+        let art = CoverArt(song)
+        let accent = art.primary
         let access = LessonAccess.of(song.lesson, in: song.course, store: store)
         let stars = store.learn.stars[song.lesson.id] ?? 0
         let shape = RoundedRectangle(cornerRadius: 28, style: .continuous)
+        let canPreview = SongPreview.opening(of: song.lesson) != nil
         return Button { open(song.course, song.lesson, from: Self.heroSource) } label: {
-            heroText(song, accent: accent, access: access, stars: stars)
-                .padding(20)
-                .padding(.top, 120)
-                .frame(maxWidth: .infinity, minHeight: sizeClass == .regular ? 340 : 300, alignment: .bottomLeading)
-                .background {
-                    ZStack {
-                        // The monogram sits whole at the right, below the eyebrow and above the title.
-                        SongCover(art: CoverArt(song), corner: 28, monogramAnchor: UnitPoint(x: 0.84, y: 0.27), monogramSize: 0.44,
-                                  monogramBounds: CGRect(x: 0.42, y: 0.15, width: 0.53, height: 0.29), drift: true, outlined: false)
-                        LinearGradient(colors: [.clear, .black.opacity(0.3), .black.opacity(0.82)], startPoint: .top, endPoint: .bottom)
-                    }
-                }
-                .overlay(alignment: .topLeading) { heroEyebrow(accent: accent).padding(16) }
+            // The ideal height is proposed to the face, so its spacer puts the title at the bottom.
+            heroFace(song, art: art, access: access, stars: stars)
+                .frame(maxWidth: .infinity, minHeight: heroHeight, idealHeight: heroHeight, alignment: .topLeading)
+                .background { heroBackdrop(art) }
                 .clipShape(shape)
                 .overlay(shape.strokeBorder(accent.opacity(0.4), lineWidth: 1))
                 .shadow(color: accent.opacity(0.28), radius: 26, y: 12)
@@ -261,6 +334,91 @@ struct SongsView: View {
         .accessibilityLabel(Text("Song of the day") + Text(verbatim: ", \(song.lesson.title.localized), \(song.course.title.localized)"))
         .accessibilityValue(accessValue(access, stars: stars))
         .accessibilityIdentifier("songs.hero")
+        .overlay(alignment: .topTrailing) {
+            if canPreview {
+                previewButton(song, art: art)
+                    .padding(.trailing, 18 + 4)
+                    .padding(.top, art.titleOnTop ? 18 + sleeveSide - 4 - 44 : 18 + 4)
+            }
+        }
+    }
+
+    private func heroFace(_ song: Song, art: CoverArt, access: LessonAccess, stars: Int) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(alignment: .top, spacing: 12) {
+                // Above the record as it slides out.
+                heroEyebrow(accent: art.primary).zIndex(1)
+                Spacer(minLength: 0)
+                sleeve(art, playing: previewing == song.id)
+            }
+            Spacer(minLength: 0)
+            heroText(song, accent: art.primary, access: access, stars: stars)
+        }
+        .padding(18)
+    }
+
+    /// The sleeve, square and crisp, with its record peeking from the left; the record slides out and turns
+    /// while the opening plays (it stays put with Reduce Motion).
+    private func sleeve(_ art: CoverArt, playing: Bool) -> some View {
+        let side = sleeveSide
+        let out = playing && !reduceMotion ? side * 0.3 : side * 0.14
+        return SongCover(art: art, corner: 8)
+            .frame(width: side, height: side)
+            .shadow(color: .black.opacity(0.5), radius: 14, y: 8)
+            .background(alignment: .leading) {
+                VinylRecord(color: art.primary, spinning: playing && !reduceMotion)
+                    .frame(width: side * 0.94, height: side * 0.94)
+                    .offset(x: -out)
+            }
+    }
+
+    /// The same art, blurred into light behind the card, darkening toward the title.
+    private func heroBackdrop(_ art: CoverArt) -> some View {
+        ZStack {
+            art.far
+            SongCover(art: art, corner: 0, titled: false, drift: true, outlined: false)
+                .blur(radius: 22)
+                .opacity(0.85)
+            LinearGradient(colors: [.black.opacity(0.1), .black.opacity(0.35), .black.opacity(0.85)], startPoint: .top, endPoint: .bottom)
+        }
+    }
+
+    /// Play (or stop) on the sleeve: white disc, a ring that fills as the opening plays.
+    private func previewButton(_ song: Song, art: CoverArt) -> some View {
+        let active = previewing == song.id
+        let ring = art.field ? Palette.stage : art.primary.mix(with: .black, by: 0.25)
+        return Button { togglePreview(song) } label: {
+            ZStack {
+                Circle().fill(.white.opacity(0.94))
+                if active {
+                    previewRing(color: ring)
+                }
+                Image(systemName: active ? "stop.fill" : "play.fill")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(Palette.stage)
+                    .offset(x: active ? 0 : 1)
+                    .contentTransition(.symbolEffect(.replace))
+            }
+            .frame(width: 38, height: 38)
+            .shadow(color: .black.opacity(0.35), radius: 8, y: 3)
+            .frame(width: 44, height: 44)
+            .contentShape(Circle())
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityLabel(active ? Text("Stop") : Text("Hear it"))
+        .accessibilityIdentifier("songs.hero.preview")
+    }
+
+    private func previewRing(color: Color) -> some View {
+        TimelineView(.animation(minimumInterval: 1.0 / 30)) { timeline in
+            let elapsed = timeline.date.timeIntervalSince(previewStart)
+            let fraction = previewLength > 0 ? min(1, max(0, elapsed / previewLength)) : 0
+            Circle()
+                .trim(from: 0, to: CGFloat(fraction))
+                .stroke(color, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+                .padding(2.5)
+        }
     }
 
     private func heroEyebrow(accent: Color) -> some View {
@@ -268,6 +426,7 @@ struct SongsView: View {
             Image(systemName: "waveform").foregroundStyle(accent)
                 .symbolEffect(.variableColor.iterative, options: .repeating, isActive: !reduceMotion)
             Text("Song of the day").tracking(1.2).textCase(.uppercase)
+                .lineLimit(1).minimumScaleFactor(0.7)
         }
         .font(Typeface.label(11))
         .foregroundStyle(.white)
@@ -350,7 +509,7 @@ struct SongsView: View {
         .buttonStyle(PressScaleStyle())
         .matchedTransitionSource(id: Self.tileSource(song.lesson), in: zoom)
         .modifier(Shake(amount: shakes[song.id] ?? 0))
-        // Covers ease back and dim as they slide off the rail's edge.
+        // Sleeves ease back and dim as they slide off the rail's edge.
         .scrollTransition(.interactive, axis: .horizontal) { content, phase in
             content.scaleEffect(1 - shrink * CGFloat(abs(phase.value))).opacity(1 - 0.35 * abs(phase.value))
         }
@@ -359,13 +518,14 @@ struct SongsView: View {
         .accessibilityIdentifier("songs.song.\(song.id)")
     }
 
-    /// The cover with its state: Pro songs keep their colour under a PRO badge, songs not yet reached
-    /// dim under a lock (in the corner clear of the monogram), finished songs wear their stars.
+    /// The sleeve with its state, all in the corner its title leaves free: Pro songs keep their colour under a
+    /// PRO badge, songs not yet reached dim under a lock, finished songs wear their stars.
     private func tileCover(_ song: Song, access: LessonAccess, stars: Int) -> some View {
-        SongCover(art: CoverArt(song), locked: access == .locked)
+        let art = CoverArt(song)
+        return SongCover(art: art, locked: access == .locked)
             .frame(width: tileWidth, height: tileWidth)
-            .overlay(alignment: .topTrailing) { if access == .pro { ProBadge().padding(10) } }
-            .overlay(alignment: .bottomLeading) {
+            .overlay(alignment: art.freeCorner) { if access == .pro { ProBadge().padding(10) } }
+            .overlay(alignment: art.freeCorner) {
                 if stars > 0 {
                     StarRow(stars: stars, size: 10)
                         .padding(.horizontal, 8).padding(.vertical, 5)
@@ -419,9 +579,11 @@ struct SongsView: View {
 }
 
 extension CoverArt {
-    /// The monogram follows the title as shown; colour and pattern follow the lesson id.
+    /// The title as shown sets the sleeve's type; colour, motif and layout follow the lesson id and its unit's genre.
     init(_ song: SongsView.Song) {
-        self.init(id: song.lesson.id, title: song.lesson.title.localized, accent: song.course.accent)
+        self.init(id: song.lesson.id, title: song.lesson.title.localized, accent: song.course.accent,
+                  genre: CoverArt.genre(unit: song.unit.title.defaultValue, instrument: song.course.instrument),
+                  label: song.course.title.localized, number: song.number)
     }
 }
 

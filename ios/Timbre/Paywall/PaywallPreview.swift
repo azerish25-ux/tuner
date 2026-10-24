@@ -16,9 +16,10 @@ struct PaywallPreview: View {
     /// The pill's measured size: the runway fades out above it.
     @State private var pill = CGSize(width: 128, height: 26)
 
-    /// The square the instrument stands in. Photographs lean across their whole square, so they stand smaller.
+    /// The square the instrument stands in. Photographs lean across their whole square and emblems fill two
+    /// thirds of it, so they stand smaller and leave the runway its width.
     private var artSize: CGFloat {
-        let cap: CGFloat = footprint.right > 0.8 ? 84 : 112
+        let cap: CGFloat = footprint.right > 0.8 ? 84 : (footprint.right > 0.6 ? 92 : 112)
         return max(44, min(height - 8, cap))
     }
 
@@ -26,8 +27,8 @@ struct PaywallPreview: View {
     /// both as shares of `artSize`. Studio renders stand narrow in the middle of their square; emblems take two thirds.
     private var footprint: (inset: CGFloat, right: CGFloat) {
         switch artwork {
-        case .instrument(_, let render): return render ? (0.26, 0.52) : (0, 0.96)
-        case .emblem: return (0.12, 0.74)
+        case .instrument(_, let render): return render ? (inset: 0.26, right: 0.52) : (inset: 0, right: 0.96)
+        case .emblem: return (inset: 0.12, right: 0.74)
         }
     }
 
@@ -107,7 +108,7 @@ private struct PreviewRunway {
     /// The combo builds over two loops, then the tune starts over.
     static let loopsPerRound = 2.0
     /// How far a burst's ring grows past its target, in lanes.
-    static let burstReach = 0.7
+    static let burstReach: CGFloat = 0.7
 
     /// A little riff: single notes, two chords (beats 4 and 12) and two held notes.
     static let tune: [Note] = [
@@ -367,7 +368,7 @@ private struct Road {
         let room = max(0, size.width / 2 - clear - 6)
         let byFloor = room / (spread / 2)
         // An outer burst reaches past its lane by the target ring plus its growth (see `PreviewRunway.burstReach`).
-        let byBursts = (room - 11) / (0.5 + CGFloat(PreviewRunway.burstReach - 0.5) / CGFloat(max(1, lanes)))
+        let byBursts = (room - 11) / (0.5 + (PreviewRunway.burstReach - 0.5) / CGFloat(max(1, lanes)))
         let width = min(300, max(110, min(byFloor, byBursts)))
         return Road(size: size, lanes: lanes, hitY: hitY, horizonY: horizonY, width: width)
     }
