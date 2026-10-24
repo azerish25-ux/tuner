@@ -948,3 +948,65 @@ final class AppStore: ObservableObject {
         if audio.droneRunning { applyDrone() }
     }
 }
+
+// MARK: - Strum to tune
+
+extension AppStore {
+    /// Strum to tune reads plucked and bowed strings (not keys, winds or percussion) with 3 to 12 strings, on an
+    /// instrument this player may tune (the tuner's own rule), never in Chromatic.
+    var canStrumTune: Bool {
+        guard !referenceMode, canTune(instrument),
+              ["guitar", "ukulele", "mandolin", "bowed_strings", "folk_world_strings"].contains(instrument.familyId) else { return false }
+        let strings = courses
+        return (3...12).contains(strings.count) && strings.allSatisfy { $0.anchorId != nil }
+    }
+
+    /// Each string's open pitch in `courses` order, as `PolyTuner` takes them.
+    var strumTargets: [Double] { courses.map { target(for: $0) } }
+
+    /// Strum mode opens: the polyphonic tuner takes the microphone's raw frames (delivered on the analysis queue)
+    /// and the single-string tuner stands aside, as it does for a lesson: readings only move the input level, so
+    /// nothing locks, rings or changes string while the player strums. Listening starts if it was off. A lesson
+    /// that owns the microphone keeps it.
+    func beginStrum(frames handler: @escaping @Sendable ([Float], Double) -> Void) {
+        guard lessonOwner == nil else { return }
+        lessonListener = { [weak self] _, level in self?.live.level = level }
+        audio.frames.set(handler)
+        tracker.reset(); live.clear()
+        startListening()
+    }
+
+    /// Strum mode closes: the frames stop and the tuner has the microphone back, still listening.
+    func endStrum() {
+        guard lessonOwner == nil else { return }
+        audio.frames.set(nil)
+        lessonListener = nil
+        tracker.reset(); live.clear()
+    }
+
+    /// A strum read every string inside the lock band: the strings count as locked, as if tuned one by one (the
+    /// tuner's lock handler rings the resolving chord), and the full tune is celebrated (`celebrate`), rewarded and
+    /// saved for today like one tuned string by string. False when every string had already locked this session.
+    @discardableResult
+    func completeStrumTune(meanCents: Double) -> Bool {
+        guard !referenceMode, measuringTuning, canStrumTune else { return false }
+        let all = courses.map(\.index)
+        let fresh = all.filter { !lockedCourses.contains($0) }
+        guard !fresh.isEmpty else { return false }
+        lockedCourses.formUnion(fresh)
+        completedFullTune()
+        for (offset, index) in fresh.enumerated() {
+            recordProgress(.stringTuned(instrumentId: instrument.id, all: offset == fresh.count - 1, course: index,
+                                        courses: all, precise: settings.precision == .pro))
+        }
+        // A session long enough to save itself (`endTuningSession`) already covers today's practice.
+        if sessionCount < 3 {
+            let duration = sessionStartedUptime.map { Int(max(0, ProcessInfo.processInfo.systemUptime - $0) * 1000) }
+            save(PracticeRecord(instrumentId: instrument.id, tuningId: tuning.id, kind: "tuning", count: all.count, stableCount: all.count,
+                                meanAbsoluteCents: meanCents.isFinite ? max(0, meanCents) : nil, durationMs: duration))
+        }
+        markDaily(.tune)
+        Analytics.log("strum_tune", ["instrument": instrument.id, "strings": String(all.count)])
+        return true
+    }
+}

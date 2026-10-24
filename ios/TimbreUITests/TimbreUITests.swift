@@ -292,6 +292,17 @@ final class TimbreUITests: XCTestCase {
         element("settings.pro").tap()
         XCTAssertTrue(element("paywall.purchase").waitForExistence(timeout: 15))
         settle(1.5); shot("16-paywall-from-settings")
+        // Strum to tune, back on the tuner: under the demo pitch one strum is heard as the screen opens (A2 12 cents
+        // flat first, B3 approximate), so the shot waits for its "Fine-tune" button.
+        tapIfPresent(element("paywall.close")); settle(1.2)
+        let settingsDone = app.navigationBars.buttons["Done"].firstMatch
+        if settingsDone.exists { settingsDone.tap(); settle(1.2) }
+        let strum = element("tune.strum")
+        XCTAssertTrue(strum.waitForExistence(timeout: 10))
+        strum.tap()
+        XCTAssertTrue(element("strum.finetune").waitForExistence(timeout: 8))
+        settle(1.2); shot("11b-tune-strum")
+        element("strum.close").tap(); settle()
     }
 
     func test03StudioStage() throws {

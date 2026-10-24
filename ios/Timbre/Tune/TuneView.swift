@@ -22,6 +22,8 @@ struct TuneView: View {
     /// Every string has locked: the camera pulls back to the whole instrument for the celebration. Choosing a
     /// string (by tap or by playing it) or starting a new round brings the headstock close-up straight back.
     @State private var showWhole = false
+    /// Strum to tune is open (`StrumTuneView`).
+    @State private var strumOpen = false
     private static let supports3D = MTLCreateSystemDefaultDevice() != nil
     #if DEBUG
     /// UI-test probe (TIMBRE_DEBUG_STATE=1), see `stageProbe`.
@@ -90,6 +92,7 @@ struct TuneView: View {
         .onChange(of: store.allCoursesLocked) { _, all in showWhole = all }
         .onChange(of: store.selectedCourse) { _, _ in showWhole = false }
         .sheet(isPresented: $store.showInstrumentPicker) { InstrumentPicker().presentationDetents([.large]).presentationBackground(Palette.stage) }
+        .fullScreenCover(isPresented: $strumOpen) { StrumTuneView().environmentObject(store).environmentObject(audio) }
         #if DEBUG
         .overlay(alignment: .bottomLeading) { if Self.probe { stageProbe } }
         .onChange(of: audio.running, initial: true) { _, running in listeningSince = running ? Date().timeIntervalSince1970 : 0 }
@@ -327,6 +330,7 @@ struct TuneView: View {
     /// Hear the target, automatic string detection and listening, stacked beside the instrument.
     private var sideControls: some View {
         VStack(spacing: 12) {
+            StrumToggle { strumOpen = true }
             StageControl(symbol: audio.tonePlaying ? "speaker.slash.fill" : "speaker.wave.2.fill", active: audio.tonePlaying) { store.toggleTone() }
                 .accessibilityLabel(Text(audio.tonePlaying ? "Stop reference tone" : "Play reference tone"))
                 .accessibilityIdentifier("tune.tone")
