@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+    t =   176.55s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   176.55s     Find the "Learn" Button
+    t =   176.62s     Check for interrupting elements affecting "graduationcap" Button
+    t =   177.00s         Wait for com.apple.springboard to idle
+    t =   177.08s Ignoring failure to get hierarchy for remote element in process 20183 (Error getting main window kAXErrorServerNotFound)
+    t =   177.09s Ignoring failure to get hierarchy for remote element in process 20183 (Error getting main window kAXErrorServerNotFound)
+    t =   177.10s     Synthesize event
+    t =   177.53s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   181.10s Waiting 6.0s for "learn.continue" Any to exist
+    t =   182.11s     Checking `Expect predicate `existsNoRetry == 1` for object "learn.continue" Any`
+    t =   182.11s         Checking existence of `"learn.continue" Any`
+    t =   182.33s Checking existence of `"learn.continue" Any`
+    t =   184.76s Added attachment named 'ipad-portrait-learn'
+    t =   184.77s Tear Down
+    t =   184.77s     Setting device orientation to Portrait
+    t =   184.78s         Wait for com.shahradazerisharghi.timbre to idle
+    t =   184.79s         Wait for com.apple.springboard to idle
+Test Case '-[TimbreUITests.TabletScreenshotsUITests testTabletLayouts]' passed (185.933 seconds).
+Test Suite 'TabletScreenshotsUITests' passed at 2026-10-24 18:08:53.855.
+	 Executed 1 test, with 0 failures (0 unexpected) in 185.933 (185.935) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-10-24 18:08:53.858.
+	 Executed 1 test, with 0 failures (0 unexpected) in 185.933 (185.938) seconds
+Test Suite 'Selected tests' passed at 2026-10-24 18:08:53.858.
+	 Executed 1 test, with 0 failures (0 unexpected) in 185.933 (185.939) seconds
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+Resolve Package Graph
+
+2026-10-24 18:09:36.326 xcodebuild[1664:8230] [MT] IDETestOperationsObserverDebug: 555.189 elapsed -- Testing started completed.
+2026-10-24 18:09:36.326 xcodebuild[1664:8230] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-24 18:09:36.326 xcodebuild[1664:8230] [MT] IDETestOperationsObserverDebug: 555.189 sec, +555.189 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/TabletScreenshots.xcresult
+
+** TEST SUCCEEDED **
+
+Testing started
