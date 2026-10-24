@@ -6,7 +6,9 @@ above the open string (1 = 2, 2 = 3, 3 = 4, 4 = 5 half steps up), which is exact
 numbering. Fourth position moves the same hand frame up so first finger sits five half steps up.
 Notes a half step outside the frame need an extension; this course chooses keys that avoid them.
 """
-from lib import along, course, explain, fretboard, lesson, listen, notes, part, quiz, rhythm, staff, tap, unit
+from lib import along, chord, course, explain, fretboard, lesson, listen, notes, part, quiz, rhythm, staff, tap, unit
+from songbook import Part, song
+import tunes
 
 C = "cello"
 FIRST, FOURTH = 2, 5  # where first finger falls, in half steps above the open string
@@ -106,9 +108,122 @@ MOON_B = "D3 D3 D3 D3 | A2:2 A2:2 | D3 C3 B2 A2 | G2:4"
 SWAN = "G3:3 F#3 B2:2 | E3:3 D3 G2:2 | A2:5 B2 | C3:6"
 # Amazing Grace (New Britain), 3/4. The high D after the open A shifts to fourth position (first finger),
 # then the hand returns to first position for the rest.
-GRACE_1 = "r:2 D3 | G3:2 B3:0.5 G3:0.5 | B3:2 A3 | G3:2 E3 | D3:2 D3 | G3:2 B3:0.5 G3:0.5 | B3:2 A3 | D4~1:3 | D4~1:2 B3"
+GRACE_1 = "r:2 D3 | G3:2 B3:0.5 G3:0.5 | B3:2 A3 | G3:2 E3 | D3:2 D3 | G3:2 B3:0.5 G3:0.5 | B3:2 A3 | D4~1:5 B3"
 GRACE_2 = "D4:2 B3:0.5 G3:0.5 | B3:2 A3 | G3:2 E3 | D3:2 D3 | G3:2 B3:0.5 G3:0.5 | B3:2 A3 | G3:3"
 UP_AND_BACK_4 = "A3@1 B3 D4 E4 | F4 E4 D4:2 | D4 B3 A3@1:2 | A3@1:4"
+
+# ---------------------------------------------------------------- whole songs (songbook)
+# Each song lesson ends on its whole song, in first position (fourth position only where its unit shifts). Songs
+# with public-domain words carry them; Brahms and Saint-Saëns stay instrumental. Chart shapes are the chord's notes
+# on the four strings, C string first.
+SHAPES = {c["name"]: c for c in [
+    chord(C, "D", "2x00"), chord(C, "A", "x224"), chord(C, "A7", "x254"), chord(C, "G", "x002"), chord(C, "C", "0023"),
+    chord(C, "F", "5233"), chord(C, "Am", "x223"), chord(C, "Em", "x022"), chord(C, "D7", "0x00"), chord(C, "G7", "x032"),
+]}
+THE_VERSE = "The verse"
+
+
+def bars(melody):
+    """A melody with its "|" bar marks dropped, for songbook."""
+    return " ".join(melody.replace("|", " ").split())
+
+
+def cello_song(bpm, parts, beats_per_bar=4, words=None):
+    return song(C, bpm, parts, beats_per_bar=beats_per_bar, shapes=SHAPES, words=words, max_fret=4, first_fret=FIRST)
+
+
+# Twinkle, unit 3: D and A strings. Jane Taylor's verses, the refrain, and a first variation.
+C_TW_A, C_TW_B = tunes.transpose(tunes.TWINKLE_A, -10), tunes.transpose(tunes.TWINKLE_B, -10)
+C_TW_CA, C_TW_CB = tunes.transpose_chords(tunes.TWINKLE_CHORDS_A, 2), tunes.transpose_chords(tunes.TWINKLE_CHORDS_B, 2)
+C_TW_V = Part("Verse 1", "verse", f"{C_TW_A} {C_TW_B}", chords=f"{C_TW_CA} {C_TW_CB}", lyrics=tunes.TWINKLE_WORDS_1)
+C_TW_C = Part("Chorus", "chorus", C_TW_A, chords=C_TW_CA, lyrics=tunes.TWINKLE_REFRAIN)
+TWINKLE_SONG = cello_song(72, [
+    Part("Intro", "intro", "G3 G3 F#3 F#3 E3 E3 D3:2", chords="G,D A,D"),
+    C_TW_V, C_TW_C,
+    Part("Variation 1", "solo", tunes.doubled(C_TW_A), chords=C_TW_CA),
+    C_TW_V.with_lyrics("Verse 2", tunes.TWINKLE_WORDS_2), C_TW_C,
+    C_TW_V.with_lyrics("Verse 3", tunes.TWINKLE_WORDS_3), C_TW_C,
+    Part("Outro", "outro", "F#3 F#3 E3 E3 D3:4", chords="D,A D"),
+], words=tunes.TWINKLE_CREDIT)
+
+# Lightly Row, unit 3: both verses of the English words, a variation between them.
+LIGHTLY_TUNE = bars(" ".join([LIGHTLY_A, LIGHTLY_END, LIGHTLY_B, LIGHTLY_END]))
+LIGHTLY_CHART = "D A7 D D D A7 D D A7 A7 D D D A7 D D"
+LIGHTLY_V = Part("Verse 1", "verse", LIGHTLY_TUNE, chords=LIGHTLY_CHART, lyrics=tunes.LIGHTLY_WORDS_1)
+LIGHTLY_SONG = cello_song(76, [
+    Part("Intro", "intro", "D3 F#3 A3 A3 D3:4", chords="D D"),
+    LIGHTLY_V,
+    Part("Variation 1", "solo", tunes.doubled(bars(f"{LIGHTLY_A} {LIGHTLY_END}")), chords="D A7 D D D A7 D D"),
+    LIGHTLY_V.with_lyrics("Verse 2", tunes.LIGHTLY_WORDS_2),
+    Part("Outro", "outro", "D3 F#3 A3 A3 D3:4", chords="D D"),
+], words=tunes.LIGHTLY_CREDIT)
+
+# Ode to Joy, unit 4: the first verse low on the C and G strings, the second an octave up on G and D. The low
+# middle section ends on the open G (the G below is under the C string).
+O_LOW = tunes.ode(-24, low_g="G2")
+O_UP = tunes.ode(-12)
+ODE_LOW = Part("Verse 1", "verse", f"{O_LOW[0]} {O_LOW[1]} {O_LOW[2]} {O_LOW[1]}", chords=tunes.ODE_CHORDS, lyrics=tunes.ODE_WORDS_1)
+ODE_SONG = cello_song(72, [
+    Part("Intro", "intro", O_LOW[3], chords="C G,C"),
+    ODE_LOW,
+    Part("Solo", "solo", f"{O_UP[0]} {O_UP[1]}", chords=f"{tunes.ODE_CHORDS_A1} {tunes.ODE_CHORDS_A2}"),
+    Part("Verse 2", "verse", f"{O_UP[0]} {O_UP[1]} {O_UP[2]} {O_UP[1]}", chords=tunes.ODE_CHORDS, lyrics=tunes.ODE_WORDS_2),
+    Part("Outro", "outro", O_UP[1], chords=tunes.ODE_CHORDS_A2, lyrics=tunes.ODE_WORDS_END),
+], words=tunes.ODE_CREDIT)
+
+# Brahms' Lullaby (Wiegenlied, 1868), unit 4: both halves twice, rocking G-string arpeggios between them.
+LULLABY_A = Part("Part A", "verse", bars(LULLABY_1).replace("r:2 ", "", 1).rsplit(" ", 1)[0] + " G3:3", pickup=1,
+                 chords="G G G C,D7 D7 D7 D7 G")
+LULLABY_B = Part("Part B", "chorus", bars(LULLABY_2), pickup=1, chords="C G D7 G C G D7 G")
+LULLABY_SONG = cello_song(72, [
+    Part("Intro", "intro", "C3 B2 A2 G2:3", chords="D7 G"),
+    LULLABY_A, LULLABY_B,
+    Part("Interlude", "interlude", "G2 B2 D3 G3:3 C3 E3 G3 D3:3", chords="G G C D7"),
+    LULLABY_A, LULLABY_B,
+    Part("Outro", "outro", "D3:3 G2:3", chords="D7 G"),
+], beats_per_bar=3)
+
+# Au clair de la lune, unit 4: two verses of the French words (18th century), the tune alone between them.
+MOON_TUNE = bars(" ".join([MOON_A, MOON_A, MOON_B, MOON_A]))
+MOON_CHART_A = "C C,G C,G C"
+MOON_CHART_B = "G D G,D7 G"
+MOON_V = Part("Verse 1", "verse", MOON_TUNE, chords=f"{MOON_CHART_A} {MOON_CHART_A} {MOON_CHART_B} {MOON_CHART_A}", lyrics=(
+    "Au clair de la lu-ne, / mon a-mi Pier-rot, / prê-te-moi ta plu-me / pour é-crire un mot. / "
+    "Ma chan-delle est mor-te, / je n'ai plus de feu; / ou-vre-moi ta por-te / pour l'a-mour de Dieu."))
+MOON_SONG = cello_song(80, [
+    Part("Intro", "intro", "C3 E3 D3 D3 C3:4", chords="C,G C"),
+    MOON_V,
+    Part("Solo", "solo", bars(f"{MOON_B} {MOON_A}"), chords=f"{MOON_CHART_B} {MOON_CHART_A}"),
+    MOON_V.with_lyrics("Verse 2", "Au clair de la lu-ne, / Pier-rot ré-pon-dit: / je n'ai pas de plu-me, / je suis dans mon lit. / "
+                                  "Va chez la voi-si-ne, / je crois qu'elle y est, / car dans sa cui-si-ne / on bat le bri-quet."),
+    Part("Outro", "outro", "C3 E3 D3 D3 C3:4", chords="C,G C"),
+], words="Traditional (France, 18th century)")
+
+# The Swan (Saint-Saëns, 1886), unit 5: its opening phrase twice, each answered and closed, over rippling broken
+# chords like the piano's. Slow bows; every note in first position.
+RIPPLE_G = "G2 D3 G3 B3 G3 D3"
+SWAN_ANSWER = "B3:3 A3 D3:2 G3:3 F#3 B2:2 C3:3 A2 D3:2 G2:6"
+SWAN_SONG = cello_song(72, [
+    Part("Intro", "intro", f"{RIPPLE_G} {RIPPLE_G}", chords="G G"),
+    Part("Theme", "verse", bars(SWAN), chords="G Em Am C"),
+    Part("Part B", "chorus", SWAN_ANSWER, chords="G Em D7 G"),
+    Part("Interlude", "interlude", "C2 G2 E3 G3 E3 G2 D2 A2 F#3 A3 F#3 A2", chords="C D"),
+    Part("Theme", "verse", bars(SWAN), chords="G Em Am C"),
+    Part("Coda", "outro", "B3:3 A3 D3:2 E3:3 D3 G2:2 A2:3 D3:3 G2:6", chords="G C D7 G"),
+], beats_per_bar=6)
+
+# Amazing Grace, unit 5: in G; the high D after the open A is a shift to fourth position, first finger, as the
+# lesson teaches. Three of Newton's verses and a solo.
+VC_AMAZING = f"{tunes.AMAZING_LINE_1.replace('D4:5', 'D4~1:5')} {tunes.AMAZING_LINE_2}"
+VC_AMAZING_V = Part("Verse 1", "verse", VC_AMAZING, pickup=1, chords=tunes.AMAZING_CHORDS, lyrics=tunes.AMAZING_WORDS_1)
+AMAZING_SONG = cello_song(76, [
+    Part("Intro", "intro", "G3:2 B3:0.5 G3:0.5 B3:2 A3 G3:3 G3:3", chords="G G,D7 G G"),
+    VC_AMAZING_V,
+    VC_AMAZING_V.with_lyrics("Verse 2", tunes.AMAZING_WORDS_2),
+    VC_AMAZING_V.instrumental("Solo"),
+    VC_AMAZING_V.with_lyrics("Verse 3", tunes.AMAZING_WORDS_3),
+    Part("Outro", "outro", tunes.AMAZING_TAIL, pickup=1, chords=tunes.AMAZING_TAIL_CHORDS, lyrics=tunes.AMAZING_WORDS_END),
+], beats_per_bar=3, words=tunes.AMAZING_CREDIT)
 
 
 UNIT_1 = unit("vc-1", "Hello, cello", "Sit, set the endpin, hold the bow and play the four open strings.", [
@@ -320,14 +435,16 @@ UNIT_3 = unit("vc-3", "First position: D and A", "One finger per half step: play
                ["The middle line", "The opening line"], 0),
         quiz("Which finger plays B on the A string?", ["First", "Second", "Third"], 0),
         tune(" ".join([TWINKLE_1, TWINKLE_2, TWINKLE_1]), bpm=72, title="Twinkle, Twinkle, Little Star"),
-    ], minutes=5, xp=30, kind="song"),
+        TWINKLE_SONG.take("Twinkle, Twinkle, Little Star"),
+    ], minutes=TWINKLE_SONG.minutes(), xp=30, kind="song", arrangement=TWINKLE_SONG.meta()),
     lesson("vc-3-6", "Lightly Row", [
         explain("A German folk song", FOLK_LIGHTLY, bass(["A3", "F#3", "F#3", "G3", "E3", "E3"])),
         tune(LIGHTLY_A + " " + LIGHTLY_END, bpm=66, title="First part"),
         quiz("Which finger plays the F sharps?", ["Third, on the D string", "Second, on the D string", "First, on the A string"], 0),
         tune(LIGHTLY_B + " " + LIGHTLY_END, bpm=66, title="Second part"),
         tune(" ".join([LIGHTLY_A, LIGHTLY_END, LIGHTLY_B, LIGHTLY_END]), bpm=76, title="Lightly Row"),
-    ], minutes=5, xp=30, kind="song"),
+        LIGHTLY_SONG.take("Lightly Row"),
+    ], minutes=LIGHTLY_SONG.minutes(), xp=30, kind="song", arrangement=LIGHTLY_SONG.meta()),
     lesson("vc-3-7", "D and A checkup", [
         explain("Keep the frame",
                 "Open, 1, 3, 4 on the D and A strings. Keep the hand's shape, land each note in tune, and let the "
@@ -394,7 +511,8 @@ UNIT_4 = unit("vc-4", "G and C strings", "Two low strings, C major and G major s
         tune(ODE_2, bpm=66, title="Second line"),
         tune(ODE_1 + " " + ODE_2, bpm=72, title="Ode to Joy"),
         tune(ODE_UP, bpm=72, title="Ode to Joy, an octave up"),
-    ], minutes=6, xp=35, kind="song"),
+        ODE_SONG.take("Ode to Joy"),
+    ], minutes=ODE_SONG.minutes(), xp=35, kind="song", arrangement=ODE_SONG.meta()),
     lesson("vc-4-5", "Brahms' Lullaby", [
         explain("A cradle song from 1868",
                 "Brahms wrote this lullaby in 1868. It rocks in three on the G and D strings. Use long, slow bows "
@@ -405,7 +523,8 @@ UNIT_4 = unit("vc-4", "G and C strings", "Two low strings, C major and G major s
         play([("G3", 2), ("F#3", 2), ("E3", 2)], hint="G, F sharp, E: fingers 4, 3, 1. This is the lullaby's high point."),
         tune("r:2 " + LULLABY_2, bpm=66, beats_per_bar=3, title="Second half"),
         tune(LULLABY_1 + " " + LULLABY_2, bpm=72, beats_per_bar=3, title="Brahms' Lullaby"),
-    ], minutes=5, xp=30, kind="song"),
+        LULLABY_SONG.take("Brahms' Lullaby"),
+    ], minutes=LULLABY_SONG.minutes(), xp=30, kind="song", arrangement=LULLABY_SONG.meta()),
     lesson("vc-4-6", "Au clair de la lune", [
         explain("A French folk song",
                 "Au clair de la lune is a French folk song from the 1700s. It lives on the G and D strings, with C "
@@ -416,7 +535,8 @@ UNIT_4 = unit("vc-4", "G and C strings", "Two low strings, C major and G major s
         tune(MOON_B + " " + MOON_A, bpm=72, title="Second part"),
         quiz("Which notes in this tune are open strings?", ["D and G", "C and A", "E and B"], 0),
         tune(" ".join([MOON_A, MOON_A, MOON_B, MOON_A]), bpm=80, title="Au clair de la lune"),
-    ], minutes=5, xp=30, kind="song"),
+        MOON_SONG.take("Au clair de la lune"),
+    ], minutes=MOON_SONG.minutes(), xp=30, kind="song", arrangement=MOON_SONG.meta()),
     lesson("vc-4-7", "Low strings checkup", [
         explain("Four strings, one hand",
                 "Open, 1, 3, 4 on every string, with second finger for F and C natural. Slow, heavy bows on the "
@@ -483,7 +603,8 @@ UNIT_5 = unit("vc-5", "Shifting basics", "Slide to fourth position, check it by 
         tune("A2:5 B2 | C3:6", bpm=72, beats_per_bar=6, title="Bars 3 and 4"),
         quiz("How do you keep a long note from fading?", ["Spread the bow evenly", "Press harder at the end", "Use a quick bow"], 0),
         tune(SWAN, bpm=72, beats_per_bar=6, title="The Swan"),
-    ], minutes=5, xp=30, kind="song"),
+        SWAN_SONG.take("The Swan"),
+    ], minutes=SWAN_SONG.minutes(), xp=30, kind="song", arrangement=SWAN_SONG.meta()),
     lesson("vc-5-5", "Amazing Grace", [
         explain("Shift on the open string",
                 "In Amazing Grace, the high D comes right after open A. While the A rings, slide your hand up to "
@@ -495,7 +616,8 @@ UNIT_5 = unit("vc-5", "Shifting basics", "Slide to fourth position, check it by 
              "While an open string sounds, your left hand is free, so the shift can't be heard."),
         tune("r:2 B3 | " + GRACE_2, bpm=72, beats_per_bar=3, title="Second phrase"),
         tune(GRACE_1 + " " + GRACE_2, bpm=76, beats_per_bar=3, title="Amazing Grace"),
-    ], minutes=6, xp=35, kind="song"),
+        AMAZING_SONG.take("Amazing Grace"),
+    ], minutes=AMAZING_SONG.minutes(), xp=35, kind="song", arrangement=AMAZING_SONG.meta()),
     lesson("vc-5-6", "Shifting checkup", [
         explain("Light, together, in tune",
                 "Lighten the finger, move hand and thumb together, and check where you land. The open strings will "

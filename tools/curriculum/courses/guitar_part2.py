@@ -9,9 +9,11 @@ sounds; strings held by the capo get finger 0. Bends are taught as a concept: th
 only bend step is hearing the target note at its own fret.
 """
 from lib import along, chord, explain, fretboard, lesson, listen, notes, play_chord, progression, quiz, rhythm, strum, tap, unit
+from songbook import Part, song
+import tunes
 from courses.guitar import (
     A, A7, B7, BOX, BOX_DOTS, C, D, D7, E, E7, EIGHTHS, F_MINI, FIRST_SECOND, FOLK, G, G_MAJ, HALVES, HOME, MAJOR_MINOR,
-    QUARTERS, SHUFFLE, SOLO, UP_DOWN, Am, Bm, Em, shape, tones,
+    QUARTERS, SHAPES, SHUFFLE, SOLO, UP_DOWN, Am, Bm, Em, shape, tones,
 )
 
 
@@ -563,6 +565,47 @@ SUS_CHORUS = [(C, 2), (G_MAJ, 1), (D7, 1), (G_MAJ, 2), (D7, 1), (G_MAJ, 1)]
 BOOM_2 = [0, 1]                                                                # 2/4 boom-chick: bass on one, strum on two
 INTRO = [(G_MAJ, eighths("G2@6 B3@2 D3@4 G3@3"))] * 2 + [(D7, eighths("D3@4 C4@2 A2@5 A3@3")), (G_MAJ, eighths("G2@6 B3@2 D3@4 G3@3"))]
 
+# The whole song, three ways (songbook): the verses alone (gtr-16-3), verse and chorus (gtr-16-4), and the learner's
+# arrangement with Travis-picked intro, break and ending (gtr-16-5). A verse is two eight-bar halves, each with its
+# two-eighth pickup; the words are two of Foster's verses and his chorus.
+PICKUP = "G3:0.5 A3:0.5"
+SUS_TO_KNEE = f"{SUS_LINE} B3:0.5 B3:0.5 A3:0.5 G3:0.5 A3:1"       # "...with my banjo on my knee": half way
+SUS_TO_SEE = f"{SUS_LINE} B3:0.5 B3:0.5 A3:0.5 A3:0.5"             # "...my true love for to see", home on G next
+SUS_HALF = "G G G D7 G G G,D7 G"
+SUS_TRAVIS_HALF = "G G G D7 G G D7 G"                               # the Travis break holds each bar's chord
+SUS_VERSE_TUNE = f"{PICKUP} {SUS_TO_KNEE} {PICKUP} {SUS_TO_SEE} G3:1 {PICKUP} {SUS_TO_KNEE} {PICKUP} {SUS_TO_SEE} G3:2"
+SUS_VERSE_1 = Part("Verse 1", "verse", SUS_VERSE_TUNE, pickup=1, chords=f"{SUS_HALF} {SUS_HALF}",
+              lyrics=f"{tunes.SUSANNA_WORDS_1A} / {tunes.SUSANNA_WORDS_1B}")
+SUS_VERSE_2 = SUS_VERSE_1.with_lyrics("Verse 2", f"{tunes.SUSANNA_WORDS_2A} / {tunes.SUSANNA_WORDS_2B}")
+SUS_CH = Part("Chorus", "chorus", SUS_C, chords="C C G D7 G G G,D7 G", lyrics=tunes.SUSANNA_CHORUS)
+SUS_INTRO = Part("Intro", "intro", f"{SUS_LINE} B3:0.5 B3:0.5 A3:0.5 A3:0.5 G3:2", chords="G G G,D7 G")
+SUS_TAG = f"{PICKUP} {SUS_TO_SEE} G3:2"
+# Travis picking, one bar of 2/4 per chord: thumb on the beat, fingers on the ands. A bar before a verse ends on a
+# held bass note so the verse's pickup has room.
+TRAVIS_G2 = "G2@6~2:0.5 B3@2:0.5 D3@4:0.5 G3@3:0.5"
+TRAVIS_D7_2 = "D3@4:0.5 C4@2:0.5 A2@5:0.5 A3@3:0.5"
+TRAVIS_END = "G2@6~2:2"
+
+SUS_VERSES = song(G, 69, [
+    SUS_INTRO, SUS_VERSE_1, SUS_VERSE_2,
+    Part("Solo", "solo", tunes.transpose(SUS_VERSE_TUNE, -12), pickup=1, chords=f"{SUS_HALF} {SUS_HALF}"),
+    Part("Outro", "outro", SUS_TAG, pickup=1, chords="G G G,D7 G",
+         lyrics="the sun so hot I froze to death; Su-san-na, _ don't you cry."),
+], beats_per_bar=2, shapes=SHAPES, words=tunes.SUSANNA_CREDIT)
+SUS_SONG = song(G, 72, [
+    SUS_INTRO, SUS_VERSE_1, SUS_CH, SUS_VERSE_2, SUS_CH, SUS_CH,
+    Part("Outro", "outro", SUS_TAG, pickup=1, chords="G G G,D7 G",
+         lyrics="for I come from Al-a-bam-a with my ban-jo on my knee."),
+], beats_per_bar=2, shapes=SHAPES, words=tunes.SUSANNA_CREDIT)
+SUS_ARRANGED = song(G, 72, [
+    Part("Intro", "intro", f"{TRAVIS_G2} {TRAVIS_G2} {TRAVIS_D7_2} {TRAVIS_END}", chords="G G D7 G"),
+    SUS_VERSE_1, SUS_CH,
+    Part("Solo", "solo", f"{TRAVIS_G2} {TRAVIS_G2} {TRAVIS_G2} {TRAVIS_D7_2} {TRAVIS_G2} {TRAVIS_G2} {TRAVIS_D7_2} {TRAVIS_END}",
+         chords=SUS_TRAVIS_HALF),
+    SUS_VERSE_2, SUS_CH,
+    Part("Outro", "outro", f"{TRAVIS_G2} {TRAVIS_D7_2} {TRAVIS_G2} {TRAVIS_END}", chords="G D7 G G"),
+], beats_per_bar=2, shapes=SHAPES, words=tunes.SUSANNA_CREDIT)
+
 UNIT_16 = unit("gtr-16", "Putting it together", "A capo, G and D shapes on capo 2, and Oh! Susanna arranged with a verse "
                "and a chorus.", [
     lesson("gtr-16-1", "The capo", [
@@ -603,7 +646,8 @@ UNIT_16 = unit("gtr-16", "Putting it together", "A capo, G and D shapes on capo 
                 "Three bars of G, one of D7, two of G, then D7 and G.", shape(D7)),
         progression(SUS_VERSE, BOOM_2, bpm=72, beats_per_bar=2),
         along(G, SUS_V, bpm=72, beats_per_bar=2, title="The verse, flowing"),
-    ], minutes=6, xp=35, kind="song"),
+        SUS_VERSES.take("Oh! Susanna"),
+    ], minutes=SUS_VERSES.minutes(), xp=35, kind="song", arrangement=SUS_VERSES.meta()),
     lesson("gtr-16-4", "Oh! Susanna: the chorus", [
         explain("The hook starts higher", "The chorus opens on C, string 2, fret 1, then jumps to open E. Its chords are C, G and "
                 "D7, and its second half matches the verse's ending.",
@@ -616,7 +660,8 @@ UNIT_16 = unit("gtr-16", "Putting it together", "A capo, G and D shapes on capo 
         along(G, SUS_C, bpm=66, beats_per_bar=2, title="The chorus"),
         progression(SUS_CHORUS, BOOM_2, bpm=72, beats_per_bar=2),
         along(G, SUS, bpm=69, beats_per_bar=2, title="Oh! Susanna"),
-    ], minutes=6, xp=35, kind="song"),
+        SUS_SONG.take("Oh! Susanna"),
+    ], minutes=SUS_SONG.minutes(), xp=35, kind="song", arrangement=SUS_SONG.meta()),
     lesson("gtr-16-5", "Your arrangement", [
         explain("Plan the song", "An arrangement decides what you play, and when. Yours: a Travis-picked intro, the verse as "
                 "melody, the chorus strummed boom-chick, then the chorus melody to finish."),
@@ -629,7 +674,8 @@ UNIT_16 = unit("gtr-16", "Putting it together", "A capo, G and D shapes on capo 
                 "heard feels complete."),
         listen("Does this end at home?", [tones(D7), tones(G_MAJ)], HOME, 0),
         along(G, SUS_C, bpm=72, beats_per_bar=2, title="Chorus: the melody"),
-    ], minutes=6, xp=35, kind="song"),
+        SUS_ARRANGED.take("Oh! Susanna"),
+    ], minutes=SUS_ARRANGED.minutes(), xp=35, kind="song", arrangement=SUS_ARRANGED.meta()),
     lesson("gtr-16-6", "Final showcase", [
         explain("Your showcase", "No new ideas: the capo, G and D shapes, and your Oh! Susanna arrangement. "
                 "Play it as if someone's listening. Maybe someone is."),

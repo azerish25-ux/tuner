@@ -6,6 +6,7 @@ below G4 so lib.position never puts a note on a fretted fifth string; G4 itself 
 Rolls are written note by note with every string fixed ("G3@3"), so the app hears each pluck in order.
 """
 from lib import along, chord, course, explain, fretboard, lesson, listen, notes, part, play_chord, progression, quiz, rhythm, strum, tap, unit
+from songbook import Part, song
 
 B = "banjo"
 
@@ -104,6 +105,94 @@ DOWN_STRINGS = "G3@3:1 G4@5:1 B3@2:1 G4@5:1 D4@1:1 G4@5:1 G3@3:2"
 BUM_G = claw("B3", "D4", "B3", "G3")
 BUM_C = claw("C4", "E4", "C4", "E3")
 BUM_TUNE = f"{claw('B3', 'D4', 'C4', 'E4', 'D4', 'B3')} G3:4"
+
+# ---------------------------------------------------------------- whole songs (songbook)
+# Each song lesson ends on its whole tune the way pickers play it: the melody, each part twice, with roll breaks
+# (the backup rolls from unit 3, through the tune's chords) between the times through, and a roll to end on.
+# The tunes stay instrumental. Chart shapes: the chords above, plus A minor and F for the mountain-minor and old-time
+# tunes ([5th, 4th, 3rd, 2nd, 1st]).
+Am = chord(B, "Am", "x2212", "x2312")
+F = chord(B, "F", "x3213", "x3214")
+SHAPES = {c["name"]: c for c in [G, C, D7, Em, Am, F]}
+FWD_AM = eighths("A3@3", "C4@2", "E4@1", "G4@5", "C4@2", "E4@1", "A3@3", "C4@2")
+FWD_F = eighths("A3@3", "C4@2", "F4@1", "F3@4", "C4@2", "F4@1", "A3@3", "C4@2")   # the drone's G sits out under F
+FORWARD = {"G": FWD_G, "C": FWD_C, "D7": FWD_D7, "Em": FWD_EM, "Am": FWD_AM, "F": FWD_F}
+ALTERNATING = {"G": ALT_G, "C": ALT_C, "D7": ALT_D7}
+
+
+def rolls(chart, kind=FORWARD):
+    """A roll break: one bar of the roll per chord of the chart."""
+    return " ".join(kind[c] for c in chart.split())
+
+
+def banjo_song(bpm, parts):
+    return song(B, bpm, parts, shapes=SHAPES)
+
+
+def tune_twice(part_a, part_b, break_chart, ending="G", break_kind=FORWARD, dressed_a=None):
+    """Kick-off roll, AABB, a roll break, AABB again (the first part dressed up, if given), and a roll to end on."""
+    a, b = part_a, part_b
+    a2 = dressed_a or a
+    start = "Am Am" if ending == "Am" else "G D7"
+    return [Part("Intro", "intro", rolls(start), chords=start), a, a, b, b,
+            Part("Solo", "solo", rolls(break_chart, break_kind), chords=break_chart), a2, a2, b, b,
+            Part("Outro", "outro", f"{FORWARD[ending]} {'A3' if ending == 'Am' else 'G3'}@3:4", chords=f"{ending} {ending}")]
+
+
+# Boil Them Cabbage Down: melody, forward-roll break, melody, alternating-thumb break, melody.
+CABBAGE_CHART = "G C G D7 G C G,D7 G"
+CABBAGE_A = Part("Part A", "verse", CABBAGE, chords=CABBAGE_CHART)
+CABBAGE_SONG = banjo_song(80, [
+    Part("Intro", "intro", f"{FWD_G} {FWD_D7}", chords="G D7"),
+    CABBAGE_A,
+    Part("Solo", "solo", rolls("G C G D7 G C D7 G"), chords="G C G D7 G C D7 G"),
+    CABBAGE_A,
+    Part("Solo", "solo", rolls("G C G D7 G C D7 G", ALTERNATING), chords="G C G D7 G C D7 G"),
+    CABBAGE_A,
+    Part("Outro", "outro", f"{FWD_G} G3@3:4", chords="G G"),
+])
+
+# Cripple Creek: the high part and the low part, each twice, around a forward-roll break.
+CRIPPLE_SONG = banjo_song(72, tune_twice(Part("Part A", "verse", CRIPPLE_HIGH, chords="G C,G G G"),
+                                         Part("Part B", "chorus", CRIPPLE_LOW, chords="G G G D7,G"),
+                                         "G C G D7 G C D7 G"))
+
+# Cumberland Gap: both parts twice around a roll break.
+CUMBERLAND_SONG = banjo_song(76, tune_twice(Part("Part A", "verse", CUMBERLAND_1, chords="G Em G C,G"),
+                                            Part("Part B", "chorus", CUMBERLAND_2, chords="G Em G C,G"),
+                                            "G Em G D7 G Em D7 G"))
+
+# Shady Grove: mountain minor, so the rolls ring over A minor with the high G drone on top.
+SHADY_SONG = banjo_song(78, [
+    Part("Intro", "intro", f"{FWD_AM} {FWD_AM}", chords="Am Am"),
+    Part("Part A", "verse", SHADY_1, chords="Am G Am Am Am G G Am"),
+    Part("Part B", "chorus", SHADY_2, chords="G Am,G G Am G Am,G Am Am"),
+    Part("Solo", "solo", rolls("Am G Am Am Am G G Am"), chords="Am G Am Am Am G G Am"),
+    Part("Part A", "verse", SHADY_1, chords="Am G Am Am Am G G Am"),
+    Part("Part B", "chorus", SHADY_2, chords="G Am,G G Am G Am,G Am Am"),
+    Part("Outro", "outro", f"{FWD_AM} A3@3:4", chords="Am Am"),
+])
+
+# Old Joe Clark, unit 5: the second time through, the first part's opening Gs become G-A-G, a hammer-on and a
+# pull-off on string 3.
+OJC_DRESSED_A = ("G3:0.5 A3:0.5 G3:1 D4:0.5 C4:0.5 B3:1 G3:0.5 B3:0.5 A3:0.5 F#3:0.5 D3:1.5 D3:0.5 "
+                 "G3:0.5 A3:0.5 G3:1 D4:0.5 C4:0.5 B3:1 G3:0.5 B3:0.5 A3:0.5 D3:0.5 G3:2")
+OJC_SONG = banjo_song(78, tune_twice(Part("Part A", "verse", OJC_A, chords="G G,D7 G G"),
+                                     Part("Part B", "chorus", OJC_B, chords="G,F G G G"),
+                                     "G D7 G D7 G F D7 G",
+                                     dressed_a=Part("Part A", "verse", OJC_DRESSED_A, chords="G G,D7 G G")))
+
+# Skip to My Lou, clawhammer: the tune four times, with a bum-ditty break through its chords in the middle.
+SKIP_CHART = "G G D7 D7 G G D7,G G"
+SKIP_A = Part("Part A", "verse", SKIP_CLAW, chords=SKIP_CHART)
+SKIP_SONG = banjo_song(72, [
+    Part("Intro", "intro", BUM_G, chords="G G"),
+    SKIP_A, SKIP_A,
+    Part("Solo", "solo", claw("B3", "D4", "B3", "G3", "A3", "C4", "A3", "F#3", "B3", "D4", "B3", "G3", "A3", "C4", "D4", "B3"),
+         chords="G G D7 D7 G G D7 G"),
+    SKIP_A, SKIP_A,
+    Part("Outro", "outro", "D4:1.5 G4@5:0.5 B3:1.5 G4@5:0.5 G3:4", chords="G G"),
+])
 
 # ================================================================ 1. Hello, banjo
 
@@ -281,7 +370,8 @@ UNIT_4 = unit("bjo-4", "First melodies", "Four traditional tunes, with the drone
              "Tunes in G come home to G, here the open third string."),
         along(B, CABBAGE_2, bpm=72, title="Second half"),
         along(B, CABBAGE, bpm=80, title="Boil Them Cabbage Down"),
-    ], minutes=5, xp=30, kind="song"),
+        CABBAGE_SONG.take("Boil Them Cabbage Down"),
+    ], minutes=CABBAGE_SONG.minutes(), xp=30, kind="song", arrangement=CABBAGE_SONG.meta()),
     lesson("bjo-4-2", "Cripple Creek", [
         explain("High part, low part", "Cripple Creek has a high part that uses the fifth string as a melody note, and a low "
                 "part down on strings 3 and 4. Take each part slowly first."),
@@ -291,7 +381,8 @@ UNIT_4 = unit("bjo-4", "First melodies", "Four traditional tunes, with the drone
              "The drone doubles as a melody note here. Your thumb plays it, right on the beat."),
         along(B, CRIPPLE_LOW, bpm=66, title="Low part"),
         along(B, CRIPPLE, bpm=72, title="Cripple Creek"),
-    ], minutes=5, xp=30, kind="song"),
+        CRIPPLE_SONG.take("Cripple Creek"),
+    ], minutes=CRIPPLE_SONG.minutes(), xp=30, kind="song", arrangement=CRIPPLE_SONG.meta()),
     lesson("bjo-4-3", "Cumberland Gap", [
         explain("A tune named for a mountain pass", "Cumberland Gap is the pass early settlers took into Kentucky. "
                 "The tune climbs to E and F♯ on string 1, so your second and fourth fingers get busy."),
@@ -301,7 +392,8 @@ UNIT_4 = unit("bjo-4", "First melodies", "Four traditional tunes, with the drone
              "F♯ is four frets above the open D of string 1. The fifth string is never fretted here."),
         along(B, CUMBERLAND_2, bpm=70, title="Second part"),
         along(B, CUMBERLAND, bpm=76, title="Cumberland Gap"),
-    ], minutes=5, xp=30, kind="song"),
+        CUMBERLAND_SONG.take("Cumberland Gap"),
+    ], minutes=CUMBERLAND_SONG.minutes(), xp=30, kind="song", arrangement=CUMBERLAND_SONG.meta()),
     lesson("bjo-4-4", "Shady Grove", [
         explain("Mountain minor", "Shady Grove has the dark, old sound players call mountain minor. "
                 "It comes to rest on A instead of G, and the high G of the fifth string sings against it."),
@@ -310,7 +402,8 @@ UNIT_4 = unit("bjo-4", "First melodies", "Four traditional tunes, with the drone
         listen("Which sounds darker?", [["A3", "C4", "E4"], ["G3", "B3", "D4"]], ["The first", "The second"], 0),
         along(B, SHADY_2, bpm=72, title="Second part"),
         along(B, SHADY, bpm=78, title="Shady Grove"),
-    ], minutes=5, xp=30, kind="song"),
+        SHADY_SONG.take("Shady Grove"),
+    ], minutes=SHADY_SONG.minutes(), xp=30, kind="song", arrangement=SHADY_SONG.meta()),
     lesson("bjo-4-5", "Tune challenge", [
         explain("Four tunes, steady time", "Play each tune through at a steady tempo. If a note slips, keep your picking hand "
                 "moving and catch the next beat. That is how real jams work."),
@@ -363,7 +456,8 @@ UNIT_5 = unit("bjo-5", "Hammer-ons, pull-offs, slides", "Sound notes with the fr
              "G major uses F♯. Lowering it to F gives the mixolydian sound that runs through old-time and bluegrass music."),
         along(B, OJC_B, bpm=70, title="Second part"),
         along(B, OJC, bpm=78, title="Old Joe Clark"),
-    ], minutes=6, xp=35, kind="song"),
+        OJC_SONG.take("Old Joe Clark"),
+    ], minutes=OJC_SONG.minutes(), xp=35, kind="song", arrangement=OJC_SONG.meta()),
     lesson("bjo-5-5", "Left-hand challenge", [
         explain("Left hand, meet right hand", "Hammer-ons, pull-offs and slides, then Old Joe Clark. "
                 "Pick only where you need to and let your fretting hand do the rest."),
@@ -416,7 +510,8 @@ UNIT_6 = unit("bjo-6", "Clawhammer", "A different right hand: strike down with a
              "Bum, dit, ty: the ty is always the thumb on the short fifth string."),
         along(B, SKIP_CLAW_1, bpm=66, title="First half, clawhammer"),
         along(B, SKIP_CLAW, bpm=72, title="Skip to My Lou"),
-    ], minutes=5, xp=30, kind="song"),
+        SKIP_SONG.take("Skip to My Lou"),
+    ], minutes=SKIP_SONG.minutes(), xp=30, kind="song", arrangement=SKIP_SONG.meta()),
     lesson("bjo-6-5", "Clawhammer challenge", [
         explain("Strike, brush, thumb", "Everything in clawhammer comes back to bum-ditty. "
                 "Keep the motion loose and the thumb ready, and the melody takes care of itself."),

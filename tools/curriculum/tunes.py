@@ -17,7 +17,7 @@ ODE_B = "D4 D4 E4 C4 D4 E4:0.5 F4:0.5 E4 C4 D4 E4:0.5 F4:0.5 E4 D4 C4 D4 G3:2"
 ODE_TAIL = "C4 C4 D4 E4 D4:1.5 C4:0.5 C4:2"           # the last line: an intro and an ending
 ODE_CHORDS_A1 = "C G C G"
 ODE_CHORDS_A2 = "C G C G,C"
-ODE_CHORDS_B = "G C G G"
+ODE_CHORDS_B = "G C G C,G"
 ODE_CHORDS = f"{ODE_CHORDS_A1} {ODE_CHORDS_A2} {ODE_CHORDS_B} {ODE_CHORDS_A2}"
 ODE_WORDS_1 = ("Freu-de, schö-ner Göt-ter-fun-ken, / Toch-ter aus E-ly-si-um, / wir be-tre-ten feu-er-trun-ken, / "
                "Himm-li-sche, dein Hei-lig-tum! / Dei-ne Zau-ber bin-den _ wie-der, / was die _ Mo-de streng ge-teilt; / "
@@ -39,15 +39,15 @@ def ode(shift, low_g=None):
 
 
 def doubled(melody):
-    """Every note as repeated eighths (a quarter becomes two, a half four): the bowing and picking variation."""
+    """Every quarter note played twice as two eighths (down-up with the bow or the pick); longer and shorter notes
+    stay as they are. The first variation string players learn on a tune they know."""
     out = []
     for token in melody.split():
         n, _, length = token.partition(":")
-        beats = float(length or 1)
-        if beats < 1:
+        if float(length or 1) == 1 and n.lower() != "r":
+            out += [f"{n}:0.5", f"{n}:0.5"]
+        else:
             out.append(token)
-            continue
-        out += [f"{n}:0.5"] * int(round(beats * 2))
     return " ".join(out)
 
 
@@ -106,7 +106,7 @@ SUSANNA_WORDS_1A = ("I come from Al-a-bam-a with my ban-jo on my knee, _ / "
 SUSANNA_WORDS_1B = ("It rained all night the day I left, the weath-er it was dry, _ / "
                     "the sun so hot I froze to death; Su-san-na, _ don't you cry.")
 SUSANNA_WORDS_2A = ("I had a dream the oth-er night, when ev-ery-thing was still; _ / "
-                    "I thought I saw Su-san-na _ dear, a-com-ing down the hill.")
+                    "I thought I saw Su-san-na _ dear, a~com-ing down the hill.")
 SUSANNA_WORDS_2B = ("The buck-wheat cake was in her mouth, the tear was in her eye; _ / "
                     "says I, I'm com-ing from the South, Su-san-na, _ don't you cry.")
 SUSANNA_CHORUS = "Oh! Su-san-na, oh don't you cry for me, / for I come from Al-a-bam-a with my ban-jo on my knee."
@@ -115,7 +115,10 @@ SUSANNA_CREDIT = "Stephen Foster (1848)"
 # ================================================================ Lightly Row
 # German children's song ("Hänschen klein"), English words from 19th-century American school songbooks.
 # Four-bar phrases: A, END, B, END.
-LIGHTLY_WORDS = ("Light-ly row, light-ly row, / o'er the glass-y waves we go; / smooth-ly glide, smooth-ly glide / "
-                 "on the si-lent tide. / Let the winds and wa-ters be / min-gled with our mel-o-dy; / "
-                 "sing and float, sing and float / in our lit-tle boat.")
-LIGHTLY_CREDIT = "Traditional (19th century)"
+LIGHTLY_WORDS_1 = ("Light-ly row, light-ly row, / o'er the glass-y waves we go; / smooth-ly glide, smooth-ly glide / "
+                   "on the si-lent tide. / Let the winds and wa-ters be / min-gled with our mel-o-dy; / "
+                   "sing and float, sing and float / in our lit-tle boat.")
+LIGHTLY_WORDS_2 = ("Far a-way, far a-way, / ech-o in the rocks at play / call-eth not, call-eth not / "
+                   "to this lone-ly spot. / On-ly with the sea-bird's note / shall our dy-ing mu-sic float; / "
+                   "light-ly row, light-ly row, / ech-o's voice is low.")
+LIGHTLY_CREDIT = "Traditional"

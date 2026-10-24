@@ -5,7 +5,9 @@ fretboard visuals draw it as tape marks. Everything stays in first position, whe
 fall a whole step (1), two or three half steps more (low 2 / high 2), a fifth step (3) and a
 seventh (4) above the open string.
 """
-from lib import along, course, explain, fretboard, lesson, listen, notes, part, quiz, rhythm, staff, tap, unit
+from lib import along, chord, course, explain, fretboard, lesson, listen, notes, part, quiz, rhythm, staff, tap, unit
+from songbook import Part, song
+import tunes
 
 V = "violin"
 REACH = 7  # first position: fourth finger stops the string seven half steps above open
@@ -94,7 +96,7 @@ SOLDIER_1 = SOLDIER_ROCK + " | A4 D5 D5 C#5:0.5 B4:0.5 | " + SOLDIER_ROCK + " | 
 SOLDIER_2 = (SOLDIER_ROCK + " | A4 D5 D5 F#5:0.5 G5:0.5 | "
              "A5:0.5 F#5:0.5 D5:0.5 F#5:0.5 G5:0.5 E5:0.5 C#5:0.5 E5:0.5 | D5 D4:2 r")
 # Amazing Grace (New Britain), 3/4, with a two-beat rest before the pickup.
-GRACE_1 = "r:2 D4 | G4:2 B4:0.5 G4:0.5 | B4:2 A4 | G4:2 E4 | D4:2 D4 | G4:2 B4:0.5 G4:0.5 | B4:2 A4 | D5:3 | D5:2 B4"
+GRACE_1 = "r:2 D4 | G4:2 B4:0.5 G4:0.5 | B4:2 A4 | G4:2 E4 | D4:2 D4 | G4:2 B4:0.5 G4:0.5 | B4:2 A4 | D5:5 B4"
 GRACE_2 = "D5:2 B4:0.5 G4:0.5 | B4:2 A4 | G4:2 E4 | D4:2 D4 | G4:2 B4:0.5 G4:0.5 | B4:2 A4 | G4:3"
 # Arkansas Traveler, after an 1852 manuscript; one beat here is an eighth note of the 2/4 original.
 TRAVELER_OPEN = "D4:0.5 E4:0.5 F#4:0.5 D4:0.5 B3 B3:0.5 D4:0.5"
@@ -105,6 +107,127 @@ TRAVELER_HIGH = ("A5:0.5 G5:0.5 F#5:0.5 A5:0.5 G5:0.5 F#5:0.5 E5:0.5 G5:0.5 | "
                  "F#5:0.5 E5:0.5 D5:0.5 F#5:0.5 E5:0.5 C#5:0.5 A4")
 TRAVELER_2 = (TRAVELER_HIGH + " | D5:0.5 D5:0.5 D5 E5:0.5 E5:0.5 E5 | F#5:0.5 E5:0.5 D5:0.5 F#5:0.5 E5:2 | "
               + TRAVELER_HIGH + " | " + TRAVELER_CADENCE)
+
+
+# ---------------------------------------------------------------- whole songs (songbook)
+# Each song lesson ends on its whole song, in first position with the fingers of its unit. Songs with public-domain
+# words carry them; fiddle tunes stay instrumental and take the fiddler's form: a kick-off, each part twice (AABB),
+# once more through, and the "shave and a haircut" tag. Chart shapes are the chord's notes on the four strings.
+SHAPES = {c["name"]: c for c in [
+    chord(V, "A", "2240"), chord(V, "D", "x002"), chord(V, "E", "x224"), chord(V, "G", "0023"), chord(V, "C", "5233"),
+    chord(V, "A7", "2243"), chord(V, "D7", "x032"), chord(V, "Em", "0220"), chord(V, "Am", "2230"), chord(V, "E7", "x254"),
+]}
+THE_VERSE = "The verse"
+
+
+def bars(melody):
+    """A melody with its "|" bar marks dropped, for songbook."""
+    return " ".join(melody.replace("|", " ").split())
+
+
+def fiddle_song(bpm, part_a, part_b, chart_a, chart_b, kick_off, kick_chords, tag, tag_chords):
+    """A fiddle tune as it's played at a jam: kick-off, AABB, then AB, and a tag."""
+    a = Part("Part A", "verse", bars(part_a), chords=chart_a)
+    b = Part("Part B", "chorus", bars(part_b), chords=chart_b)
+    return song(V, bpm, [Part("Intro", "intro", kick_off, chords=kick_chords), a, a, b, b, a, b,
+                         Part("Outro", "outro", tag, chords=tag_chords)], shapes=SHAPES, max_fret=REACH, fingers=FINGER)
+
+
+SHAVE_D = "D5 A4:0.5 A4:0.5 B4 A4 r C#5 D5:2"          # "shave and a haircut, two bits" (1899), the fiddler's tag
+KICK_A = "A4:0.5 A4:0.5 A4 A4:0.5 A4:0.5 A4 A4:2 r:2"  # two bars on the open A to count the band in
+
+# Twinkle, unit 3: A and E strings only. Jane Taylor's verses, the refrain, and a first variation.
+V_TW_A, V_TW_B = tunes.transpose(tunes.TWINKLE_A, 9), tunes.transpose(tunes.TWINKLE_B, 9)
+V_TW_CA, V_TW_CB = tunes.transpose_chords(tunes.TWINKLE_CHORDS_A, 9), tunes.transpose_chords(tunes.TWINKLE_CHORDS_B, 9)
+V_TW_V = Part("Verse 1", "verse", f"{V_TW_A} {V_TW_B}", chords=f"{V_TW_CA} {V_TW_CB}", lyrics=tunes.TWINKLE_WORDS_1)
+V_TW_C = Part("Chorus", "chorus", V_TW_A, chords=V_TW_CA, lyrics=tunes.TWINKLE_REFRAIN)
+TWINKLE_SONG = song(V, 72, [
+    Part("Intro", "intro", "D5 D5 C#5 C#5 B4 B4 A4:2", chords="D,A E,A"),
+    V_TW_V, V_TW_C,
+    Part("Variation 1", "solo", tunes.doubled(V_TW_A), chords=V_TW_CA),
+    V_TW_V.with_lyrics("Verse 2", tunes.TWINKLE_WORDS_2), V_TW_C,
+    V_TW_V.with_lyrics("Verse 3", tunes.TWINKLE_WORDS_3), V_TW_C,
+    Part("Outro", "outro", "C#5 C#5 B4 B4 A4:4", chords="A,E A"),
+], shapes=SHAPES, words=tunes.TWINKLE_CREDIT, max_fret=REACH, fingers=FINGER)
+
+# Lightly Row, unit 4: both verses of the English words, a variation between them.
+LIGHTLY_TUNE = bars(" ".join([LIGHTLY_A, LIGHTLY_END, LIGHTLY_B, LIGHTLY_END]))
+LIGHTLY_CHART = "D A7 D D D A7 D D A7 A7 D D D A7 D D"
+LIGHTLY_V = Part("Verse 1", "verse", LIGHTLY_TUNE, chords=LIGHTLY_CHART, lyrics=tunes.LIGHTLY_WORDS_1)
+LIGHTLY_SONG = song(V, 76, [
+    Part("Intro", "intro", "D4 F#4 A4 A4 D4:4", chords="D D"),
+    LIGHTLY_V,
+    Part("Variation 1", "solo", tunes.doubled(bars(f"{LIGHTLY_A} {LIGHTLY_END}")), chords="D A7 D D D A7 D D"),
+    LIGHTLY_V.with_lyrics("Verse 2", tunes.LIGHTLY_WORDS_2),
+    Part("Outro", "outro", "D4 F#4 A4 A4 D4:4", chords="D D"),
+], shapes=SHAPES, words=tunes.LIGHTLY_CREDIT, max_fret=REACH, fingers=FINGER)
+
+# Ode to Joy, unit 4: D major; the middle section dips to A on the G string.
+V_A1, V_A2, V_B, V_TAIL = tunes.ode(2)
+V_ODE_CHART = tunes.transpose_chords(tunes.ODE_CHORDS, 2)
+V_ODE_V = Part("Verse 1", "verse", f"{V_A1} {V_A2} {V_B} {V_A2}", chords=V_ODE_CHART, lyrics=tunes.ODE_WORDS_1)
+ODE_SONG = song(V, 76, [
+    Part("Intro", "intro", V_TAIL, chords="D A,D"),
+    V_ODE_V,
+    Part("Variation 1", "solo", tunes.doubled(f"{V_A1} {V_A2}"), chords="D A D A D A D A,D"),
+    V_ODE_V.with_lyrics("Verse 2", tunes.ODE_WORDS_2),
+    Part("Outro", "outro", V_A2, chords="D A D A,D", lyrics=tunes.ODE_WORDS_END),
+], shapes=SHAPES, words=tunes.ODE_CREDIT, max_fret=REACH, fingers=FINGER)
+
+# Boil Them Cabbage Down, unit 4: the eight-bar tune four times, the third as a sawing variation.
+CABBAGE_TUNE = bars(f"{CABBAGE_1} {CABBAGE_2}")
+CABBAGE_CHART = "D G D A D G A D"
+CABBAGE_A = Part("Part A", "verse", CABBAGE_TUNE, chords=CABBAGE_CHART)
+CABBAGE_SONG = song(V, 80, [
+    Part("Intro", "intro", KICK_A, chords="A A"),
+    CABBAGE_A, CABBAGE_A,
+    Part("Variation 1", "solo", tunes.doubled(CABBAGE_TUNE), chords=CABBAGE_CHART),
+    CABBAGE_A,
+    Part("Outro", "outro", SHAVE_D, chords="D A7,D"),
+], shapes=SHAPES, max_fret=REACH, fingers=FINGER)
+
+# Minuet in G, unit 5: the A section, Petzold's second half (it opens high, fourth finger on B), and the A section
+# again, as dancers would have heard it.
+MINUET_PART_B = ("B5 G5:0.5 A5:0.5 B5:0.5 G5:0.5 | A5 D5:0.5 E5:0.5 F#5:0.5 D5:0.5 | G5 E5:0.5 F#5:0.5 G5:0.5 D5:0.5 | "
+                 "C#5 B4:0.5 C#5:0.5 A4 | A4:0.5 B4:0.5 C#5:0.5 D5:0.5 E5:0.5 F#5:0.5 | G5 F#5 E5 | F#5 A4 C#5 | D5:3 | "
+                 "D5 G4:0.5 F#4:0.5 G4 | E5 G4:0.5 F#4:0.5 G4 | D5 C5 B4 | A4:0.5 G4:0.5 F#4:0.5 G4:0.5 A4 | "
+                 "D4:0.5 E4:0.5 F#4:0.5 G4:0.5 A4:0.5 B4:0.5 | C5 B4 A4 | B4:0.5 D5:0.5 G4 F#4 | G4:3")
+MINUET_A_PART = Part("Part A", "verse", bars(" ".join([MINUET_A, MINUET_B, MINUET_A, MINUET_C])),
+                     chords="G G C G C G D7 D G G C G C G D7 G")
+MINUET_SONG = song(V, 72, [
+    Part("Intro", "intro", "A4 B4:0.5 A4:0.5 G4:0.5 F#4:0.5 G4:3", chords="D7 G"),
+    MINUET_A_PART,
+    Part("Part B", "chorus", bars(MINUET_PART_B), chords="G D G A7 D A7 D,A7 D G C G D G Am G,D7 G"),
+    MINUET_A_PART,
+], beats_per_bar=3, shapes=SHAPES, max_fret=REACH, fingers=FINGER)
+
+# Old Joe Clark, unit 5: in A, with the old-time G natural.
+JOE_SONG = fiddle_song(80, f"{JOE_A1} {JOE_A2}", f"{JOE_B1} {JOE_B2}", "A A A E A A A,G A", "A A A G A A A,G A",
+                       "E5:0.5 E5:0.5 E5 E5:0.5 E5:0.5 E5 E5:2 r:2", "E E", "A5 E5:0.5 E5:0.5 F#5 E5 r G5 A5:2", "A G,A")
+
+# Soldier's Joy, unit 5: the first part as the lesson plays it, and the second part, which climbs to A on the E string
+# and steps down in pairs.
+SOLDIER_B = ("A5 F#5 G5 E5 | F#5 D5 D5 F#5:0.5 G5:0.5 | A5 F#5 G5 E5 | F#5 A4 A4 F#5:0.5 G5:0.5 | "
+             "A5 F#5 G5 E5 | F#5 D5 D5 F#5:0.5 G5:0.5 | A5:0.5 F#5:0.5 G5:0.5 E5:0.5 F#5:0.5 D5:0.5 E5:0.5 C#5:0.5 | D5 D4:2 r")
+SOLDIER_SONG = fiddle_song(72, f"{SOLDIER_1} {SOLDIER_2}", SOLDIER_B, "D D D A7 D D D,A7 D",
+                           "D,A7 D D,A7 D D,A7 D D,A7 D", KICK_A, "A7 A7", SHAVE_D, "D A7,D")
+
+# Amazing Grace, unit 6: in G an octave above the guitar's, three of Newton's verses and a solo.
+V_AMAZING = tunes.transpose(tunes.AMAZING, 12)
+V_AMAZING_V = Part("Verse 1", "verse", V_AMAZING, pickup=1, chords=tunes.AMAZING_CHORDS, lyrics=tunes.AMAZING_WORDS_1)
+AMAZING_SONG = song(V, 76, [
+    Part("Intro", "intro", "G4:2 B4:0.5 G4:0.5 B4:2 A4 G4:3 G4:3", chords="G G,D7 G G"),
+    V_AMAZING_V,
+    V_AMAZING_V.with_lyrics("Verse 2", tunes.AMAZING_WORDS_2),
+    V_AMAZING_V.instrumental("Solo"),
+    V_AMAZING_V.with_lyrics("Verse 3", tunes.AMAZING_WORDS_3),
+    Part("Outro", "outro", tunes.transpose(tunes.AMAZING_TAIL, 12), pickup=1, chords=tunes.AMAZING_TAIL_CHORDS,
+         lyrics=tunes.AMAZING_WORDS_END),
+], beats_per_bar=3, shapes=SHAPES, words=tunes.AMAZING_CREDIT, max_fret=REACH, fingers=FINGER)
+
+# Arkansas Traveler, unit 6: the low part and the high part, slurred pairs and all.
+TRAVELER_SONG = fiddle_song(80, f"{TRAVELER_1} {TRAVELER_CADENCE}", TRAVELER_2, "D D A7,D D D D D,A7 D",
+                            "D D,A7 D,A7 D,A7 D D,A7 D,A7 D", KICK_A, "A7 A7", SHAVE_D, "D A7,D")
 
 
 UNIT_1 = unit("vln-1", "Hello, violin", "Hold it, bow it, tune it, and play the four open strings.", [
@@ -323,7 +446,8 @@ UNIT_3 = unit("vln-3", "First fingers: A and E", "Place fingers 1, 2 and 3, play
                ["The middle line", "The opening line"], 0),
         quiz("Which finger plays F sharp on the E string?", ["First", "Second", "Third"], 0),
         tune(" ".join([TWINKLE_1, TWINKLE_2, TWINKLE_1]), bpm=72, title="Twinkle, Twinkle, Little Star"),
-    ], minutes=5, xp=30, kind="song"),
+        TWINKLE_SONG.take("Twinkle, Twinkle, Little Star"),
+    ], minutes=TWINKLE_SONG.minutes(), xp=30, kind="song", arrangement=TWINKLE_SONG.meta()),
     lesson("vln-3-6", "A and E checkup", [
         explain("Fingers 1, 2, 3",
                 "Whole step, whole step, half step: that's the pattern on A and E. Land each note in tune and let "
@@ -371,7 +495,8 @@ UNIT_4 = unit("vln-4", "D and G strings", "The same finger pattern on two lower 
         quiz("Which finger plays the F sharps?", ["High 2 on the D string", "First finger on the A string", "Third finger on the D string"], 0),
         tune(LIGHTLY_B + " " + LIGHTLY_END, bpm=66, title="Second part"),
         tune(" ".join([LIGHTLY_A, LIGHTLY_END, LIGHTLY_B, LIGHTLY_END]), bpm=76, title="Lightly Row"),
-    ], minutes=5, xp=30, kind="song"),
+        LIGHTLY_SONG.take("Lightly Row"),
+    ], minutes=LIGHTLY_SONG.minutes(), xp=30, kind="song", arrangement=LIGHTLY_SONG.meta()),
     lesson("vln-4-4", "The G string", [
         explain("The lowest string",
                 "On the G string, first finger plays A, high second B, and third C. Same shape again. Raise your "
@@ -394,7 +519,9 @@ UNIT_4 = unit("vln-4", "D and G strings", "The same finger pattern on two lower 
         tap([0, 1.5, 2], bpm=66, bars=2),
         tune(ODE_2, bpm=66, title="Second line"),
         tune(ODE_1 + " " + ODE_2, bpm=76, title="Ode to Joy"),
-    ], minutes=5, xp=30, kind="song"),
+        ODE_SONG.along("Verse 1", bpm=66, title=THE_VERSE),
+        ODE_SONG.take("Ode to Joy"),
+    ], minutes=ODE_SONG.minutes(), xp=30, kind="song", arrangement=ODE_SONG.meta()),
     lesson("vln-4-6", "Boil Them Cabbage Down", [
         explain("Your first fiddle tune",
                 "This old American fiddle tune rides the rhythm you bowed on open strings: long, short-short, long, "
@@ -405,7 +532,8 @@ UNIT_4 = unit("vln-4", "D and G strings", "The same finger pattern on two lower 
         tune(CABBAGE_2, bpm=70, title="Second half"),
         quiz("Which string does this tune never use?", ["G", "D", "A", "E"], 0, "It lives on the D, A and E strings."),
         tune(" ".join([CABBAGE_1, CABBAGE_2, CABBAGE_1, CABBAGE_2]), bpm=80, title="Boil Them Cabbage Down"),
-    ], minutes=5, xp=30, kind="song"),
+        CABBAGE_SONG.take("Boil Them Cabbage Down"),
+    ], minutes=CABBAGE_SONG.minutes(), xp=30, kind="song", arrangement=CABBAGE_SONG.meta()),
     lesson("vln-4-7", "D and G checkup", [
         explain("Four strings, one shape",
                 "Whole step, whole step, half step works on every string so far. Raise your bow arm for the low "
@@ -471,7 +599,9 @@ UNIT_5 = unit("vln-5", "Low 2 and high 2", "Move second finger to change keys: G
         tune(MINUET_B, bpm=66, beats_per_bar=3, title="Bars 5 to 8"),
         play([("F#4", 3), ("G4", 3), ("F#4", 3)], hint="F sharp is high 2 on the D string: low on A, high on D."),
         tune(" ".join([MINUET_A, MINUET_B, MINUET_A, MINUET_C]), bpm=72, beats_per_bar=3, title="Minuet in G"),
-    ], minutes=6, xp=35, kind="song"),
+        play([("B5", 1), ("A5", 1), ("G5", 1)], hint="The second half starts high: fourth finger reaches B on the E string. Then third, then low 2."),
+        MINUET_SONG.take("Minuet in G"),
+    ], minutes=MINUET_SONG.minutes(), xp=35, kind="song", arrangement=MINUET_SONG.meta()),
     lesson("vln-5-5", "Old Joe Clark", [
         explain("High 2 and low 2 together",
                 "Old Joe Clark is an Appalachian fiddle tune. It's in A but uses G natural: high 2 for C sharp on "
@@ -482,7 +612,8 @@ UNIT_5 = unit("vln-5", "Low 2 and high 2", "Move second finger to change keys: G
              "G natural instead of G sharp gives Old Joe Clark its old-time sound."),
         tune(JOE_B1 + " " + JOE_B2, bpm=70, title="Second part"),
         tune(" ".join([JOE_A1, JOE_A2, JOE_B1, JOE_B2]), bpm=80, title="Old Joe Clark"),
-    ], minutes=5, xp=30, kind="song"),
+        JOE_SONG.take("Old Joe Clark"),
+    ], minutes=JOE_SONG.minutes(), xp=30, kind="song", arrangement=JOE_SONG.meta()),
     lesson("vln-5-6", "Soldier's Joy", [
         explain("A tune from the 1700s",
                 "Soldier's Joy was printed in Scotland in the 1700s and is still played at dances across America. "
@@ -493,7 +624,9 @@ UNIT_5 = unit("vln-5", "Low 2 and high 2", "Move second finger to change keys: G
         quiz("Which finger plays G on the E string?", ["Low 2", "High 2", "Third"], 0,
              "Soldier's Joy is in D major, so G is natural: high 2 for F sharp on D, low 2 for G on E."),
         tune(SOLDIER_1 + " " + SOLDIER_2, bpm=66, title="Soldier's Joy"),
-    ], minutes=6, xp=35, kind="song"),
+        SOLDIER_SONG.along("Part B", bpm=60, title="Second part"),
+        SOLDIER_SONG.take("Soldier's Joy"),
+    ], minutes=SOLDIER_SONG.minutes(), xp=35, kind="song", arrangement=SOLDIER_SONG.meta()),
     lesson("vln-5-7", "Second finger checkup", [
         explain("Low or high?",
                 "Every key sets your second finger. Before you play, ask: high 2 or low 2, and on which string?"),
@@ -559,7 +692,8 @@ UNIT_6 = unit("vln-6", "Expression", "Loud and soft, slurs, your fourth finger, 
              "They're slurred, so they share one bow."),
         tune("r:2 B4 | " + GRACE_2, bpm=72, beats_per_bar=3, title="Second phrase"),
         tune(GRACE_1 + " " + GRACE_2, bpm=76, beats_per_bar=3, title="Amazing Grace"),
-    ], minutes=6, xp=35, kind="song"),
+        AMAZING_SONG.take("Amazing Grace"),
+    ], minutes=AMAZING_SONG.minutes(), xp=35, kind="song", arrangement=AMAZING_SONG.meta()),
     lesson("vln-6-5", "Getting ready for vibrato", [
         explain("What vibrato is",
                 "Vibrato is a small, even wave in pitch that makes long notes glow. The fingertip rolls slightly back "
@@ -584,7 +718,8 @@ UNIT_6 = unit("vln-6", "Expression", "Loud and soft, slurs, your fourth finger, 
         play([("A5", 1), ("G5", 1), ("F#5", 1), ("A5", 1)], hint="A, G, F sharp, A on the E string: third finger, low 2, first, third."),
         tune(TRAVELER_2, bpm=72, title="Second part"),
         tune(" ".join([TRAVELER_1, TRAVELER_CADENCE, TRAVELER_2]), bpm=80, title="Arkansas Traveler"),
-    ], minutes=6, xp=35, kind="song"),
+        TRAVELER_SONG.take("Arkansas Traveler"),
+    ], minutes=TRAVELER_SONG.minutes(), xp=35, kind="song", arrangement=TRAVELER_SONG.meta()),
     lesson("vln-6-7", "Recital: Ode to Joy", [
         explain("Your recital",
                 "Put it all together: in-tune fingers, straight bows, slurs and dynamics. Start piano, grow through "

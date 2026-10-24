@@ -1,9 +1,12 @@
 """Singing: posture and breath, pitch matching, scales, intervals, five public-domain melodies, and control.
 
 Timbre accepts the right note in any octave from a voice, so melodies are written around C4-C5 and
-low and high voices both sing them where they're comfortable. No lyrics: sing on "ah", "loo" or "da".
+low and high voices both sing them where they're comfortable. Exercises and practice phrases are sung on "ah",
+"loo" or "da"; each song lesson ends on its whole song with its public-domain words, the band playing the intro.
 """
-from lib import along, course, explain, keyboard, lesson, listen, notes, quiz, staff, unit
+from lib import along, chord, course, explain, keyboard, lesson, listen, notes, quiz, staff, unit
+from songbook import Part, song
+import tunes
 
 V = None  # no instrument: no fret positions
 
@@ -40,6 +43,92 @@ AG = ("r:2 C4 F4:2 A4:0.5 F4:0.5 A4:2 G4 F4:2 D4 C4:2 C4 F4:2 A4:0.5 F4:0.5 A4:2
 SHEN_A = "r:3 G3 C4 C4 C4:2 D4 E4 F4 A4 G4:3 C5 B4 A4:2 G4 A4 G4 E4:2"
 SHEN_B = "r:3 G4 A4 A4 A4:2 E4 G4 E4 D4 C4:3 D4 E4 C4 E4 A4 G4:3 C4 D4 E4 C4 D4 C4:4"
 SHEN = f"{SHEN_A} {SHEN_B}"
+
+# ---------------------------------------------------------------- whole songs (songbook)
+# Each song lesson ends on its whole song: two bars of band to breathe in, the verses with their words, and a last
+# line to finish. A voice has no shapes, so the charts carry guitar shapes for whoever accompanies.
+GTR = "guitar"
+SHAPES = {c["name"]: c for c in [
+    chord(GTR, "C", "x32010"), chord(GTR, "F", "xx3211"), chord(GTR, "G", "320003"), chord(GTR, "G7", "320001"),
+    chord(GTR, "C7", "x32310"), chord(GTR, "Bb", "x13331"), chord(GTR, "Am", "x02210"), chord(GTR, "Dm", "xx0231"),
+]}
+BAND_IN = "r:4 r:4"            # two bars of the band before the first verse
+THE_VERSE = "The verse"
+
+
+def voice_song(bpm, parts, beats_per_bar=4, words=None):
+    return song(V, bpm, parts, beats_per_bar=beats_per_bar, shapes=SHAPES, words=words)
+
+
+# Twinkle Twinkle Little Star: Jane Taylor's verses (1806), each with the opening lines as a refrain.
+TW_V = Part("Verse 1", "verse", f"{TWINKLE_A} {TWINKLE_B}", chords=f"{tunes.TWINKLE_CHORDS_A} {tunes.TWINKLE_CHORDS_B}",
+            lyrics=tunes.TWINKLE_WORDS_1)
+TW_C = Part("Chorus", "chorus", TWINKLE_A, chords=tunes.TWINKLE_CHORDS_A, lyrics=tunes.TWINKLE_REFRAIN)
+TWINKLE_SONG = voice_song(72, [
+    Part("Intro", "intro", BAND_IN, chords="C G"),
+    TW_V, TW_C,
+    TW_V.with_lyrics("Verse 2", tunes.TWINKLE_WORDS_2), TW_C,
+    TW_V.with_lyrics("Verse 3", tunes.TWINKLE_WORDS_3), TW_C,
+    Part("Outro", "outro", "F4 F4 E4 E4 D4 D4 C4:2", chords="F,C G,C", lyrics="how I won-der what you are!"),
+], words=tunes.TWINKLE_CREDIT)
+
+# Ode to Joy, in F: two stanzas of Schiller's An die Freude (1785), the words Beethoven set.
+VO_A1, VO_A2, VO_B, _ = tunes.ode(5)
+VO_CHART = tunes.transpose_chords(tunes.ODE_CHORDS, 5, flats=True)
+VO_ODE_V = Part("Verse 1", "verse", f"{VO_A1} {VO_A2} {VO_B} {VO_A2}", chords=VO_CHART, lyrics=tunes.ODE_WORDS_1)
+ODE_SONG = voice_song(76, [
+    Part("Intro", "intro", BAND_IN, chords="F C"),
+    VO_ODE_V,
+    VO_ODE_V.with_lyrics("Verse 2", tunes.ODE_WORDS_2),
+    Part("Outro", "outro", VO_A2, chords="F C F C,F", lyrics=tunes.ODE_WORDS_END),
+], words=tunes.ODE_CREDIT)
+
+# Auld Lang Syne, in F: Burns's first verse and the chorus (1788), the verse again on "loo", the chorus once more.
+ALS_VERSE = f"{ALS_A.replace('r:3 ', '', 1)} {ALS_B.rsplit(' ', 1)[0]} F4:4"
+ALS_CHORUS = ("D5 C5:1.5 A4:0.5 A4 F4 G4:1.5 F4:0.5 G4 D5 C5:1.5 A4:0.5 A4 C5 D5:3"
+              " F5 C5:1.5 A4:0.5 A4 F4 G4:1.5 F4:0.5 G4 A4 F4:1.5 D4:0.5 D4 C4 F4:4")
+ALS_V = Part("Verse 1", "verse", ALS_VERSE, pickup=1, chords="F C7 F Bb F C7 Bb F", lyrics=(
+    "Should auld ac-quain-tance be for-got, / and nev-er brought to mind? / Should auld ac-quain-tance be for-got, / "
+    "and days of auld lang syne?"))
+ALS_C = Part("Chorus", "chorus", ALS_CHORUS, pickup=1, chords="F C7 F Bb F C7 Bb F", lyrics=(
+    "For auld lang syne, my dear, _ / for auld lang _ syne, _ _ / we'll take a cup o' kind-ness yet / for days of auld lang syne."))
+ALS_SONG = voice_song(72, [
+    Part("Intro", "intro", BAND_IN, chords="Bb F"),
+    ALS_V, ALS_C,
+    ALS_V.instrumental("Solo"),
+    ALS_C,
+    Part("Outro", "outro", "A4 F4:1.5 D4:0.5 D4 C4 F4:4", pickup=1, chords="Bb F", lyrics="for days of auld lang syne."),
+], words="Robert Burns (1788)")
+
+# Amazing Grace, in F: four of John Newton's verses (1779), with a breath after "me".
+VO_AMAZING = tunes.transpose(tunes.AMAZING, 10).replace("C5:5", "C5:4 r:1", 1)
+VO_AMAZING_CHART = tunes.transpose_chords(tunes.AMAZING_CHORDS, 10, flats=True)
+VO_AMAZING_V = Part("Verse 1", "verse", VO_AMAZING, pickup=1, chords=VO_AMAZING_CHART, lyrics=tunes.AMAZING_WORDS_1)
+AMAZING_SONG = voice_song(72, [
+    Part("Intro", "intro", "r:3 r:3", chords="F C7"),
+    VO_AMAZING_V,
+    VO_AMAZING_V.with_lyrics("Verse 2", tunes.AMAZING_WORDS_2),
+    VO_AMAZING_V.with_lyrics("Verse 3", tunes.AMAZING_WORDS_3),
+    VO_AMAZING_V.with_lyrics("Verse 4", tunes.AMAZING_WORDS_4),
+    Part("Outro", "outro", tunes.transpose(tunes.AMAZING_TAIL, 10), pickup=1,
+         chords=tunes.transpose_chords(tunes.AMAZING_TAIL_CHORDS, 10, flats=True), lyrics=tunes.AMAZING_WORDS_END),
+], beats_per_bar=3, words=tunes.AMAZING_CREDIT)
+
+# Shenandoah: three traditional verses (sung by the 1800s), "Shenandoah" in three syllables as sailors sang it.
+SHEN_V = Part("Verse 1", "verse", f"{SHEN_A.replace('r:3 ', '', 1)} {SHEN_B}", pickup=1,
+              chords="C Dm C G Am C F C C Am C G C", lyrics=(
+    "Oh Shen-an-doah, I long to see you, / a-way, you roll-ing riv-er. / Oh Shen-an-doah, I long to see you, / "
+    "a-way, I'm bound a-way, 'cross the wide Mis-sou-ri."))
+SHEN_SONG = voice_song(66, [
+    Part("Intro", "intro", BAND_IN, chords="C G"),
+    SHEN_V,
+    SHEN_V.with_lyrics("Verse 2", "Oh Shen-an-doah, I love your daugh-ter, / a-way, you roll-ing riv-er. / For her I'd cross "
+                                  "your roam-ing wa-ters, / a-way, I'm bound a-way, 'cross the wide Mis-sou-ri."),
+    SHEN_V.with_lyrics("Verse 3", "'Tis sev-en years since last I saw you, / a-way, you roll-ing riv-er. / 'Tis sev-en years "
+                                  "since last I saw you, / a-way, we're bound a-way, 'cross the wide Mis-sou-ri."),
+    Part("Outro", "outro", "D4 E4 C4 E4 A4 G4:3 C4 D4 E4 C4 D4 C4:4", pickup=1, chords="Am C G C",
+         lyrics="a-way, I'm bound a-way, 'cross the wide Mis-sou-ri."),
+], words="Traditional (19th century)")
 
 # Hints shared across lessons (identical text translates once).
 HUM = "Hum C, E and G, one at a time. Keep it light."
@@ -249,7 +338,8 @@ UNIT_5 = unit("voc-5", "Melodies", "Five public-domain tunes, melody only, at an
         listen("The middle phrase: does it go up or down?", [["G4"], ["G4"], ["F4"], ["F4"], ["E4"], ["E4"], ["D4"]], ["Up", "Down"], 1),
         along(V, TWINKLE_B, bpm=66, title="Middle phrase"),
         along(V, TWINKLE, bpm=72, title="Twinkle Twinkle Little Star"),
-    ], minutes=5, xp=30, kind="song"),
+        TWINKLE_SONG.take("Twinkle Twinkle Little Star"),
+    ], minutes=TWINKLE_SONG.minutes(), xp=30, kind="song", arrangement=TWINKLE_SONG.meta()),
     lesson("voc-5-2", "Ode to Joy", [
         explain("Beethoven's famous tune", "This melody from Beethoven's Ninth Symphony moves almost entirely by step. Keep it smooth and even, like walking up and down a staircase.",
                 staff(["A4", "A4", "Bb4", "C5", "C5", "Bb4", "A4", "G4"])),
@@ -260,7 +350,8 @@ UNIT_5 = unit("voc-5", "Melodies", "Five public-domain tunes, melody only, at an
         along(V, ODE_B, bpm=66, title="Second phrase"),
         along(V, ODE_C, bpm=66, title="Middle phrase"),
         along(V, ODE, bpm=76, title="Ode to Joy"),
-    ], minutes=5, xp=30, kind="song"),
+        ODE_SONG.take("Ode to Joy"),
+    ], minutes=ODE_SONG.minutes(), xp=30, kind="song", arrangement=ODE_SONG.meta()),
     lesson("voc-5-3", "Auld Lang Syne", [
         explain("Start with a pickup", "This traditional Scottish melody starts with a pickup, a note before the first full bar. Sing it lightly, then lean on the next note.",
                 staff(["C4", "F4", "F4", "F4", "A4"])),
@@ -270,7 +361,8 @@ UNIT_5 = unit("voc-5", "Melodies", "Five public-domain tunes, melody only, at an
              "A pickup leads into beat 1 of the first full bar."),
         along(V, f"r:3 {ALS_B}", bpm=60, title="Second half"),
         along(V, ALS, bpm=72, title="Auld Lang Syne"),
-    ], minutes=5, xp=30, kind="song"),
+        ALS_SONG.take("Auld Lang Syne"),
+    ], minutes=ALS_SONG.minutes(), xp=30, kind="song", arrangement=ALS_SONG.meta()),
     lesson("voc-5-4", "Amazing Grace", [
         explain("Three beats to a bar", "This American hymn tune from the early 1800s is in 3/4: count 1, 2, 3. Long notes often turn into a quick pair, so keep the pair light.",
                 staff(["C4", "F4", "A4", "F4", "A4", "G4"])),
@@ -280,7 +372,8 @@ UNIT_5 = unit("voc-5", "Melodies", "Five public-domain tunes, melody only, at an
              "It's in 3/4: three beats per bar, with the weight on 1."),
         along(V, AG_B, bpm=60, beats_per_bar=3, title="Second half"),
         along(V, AG, bpm=72, beats_per_bar=3, title="Amazing Grace"),
-    ], minutes=5, xp=35, kind="song"),
+        AMAZING_SONG.take("Amazing Grace"),
+    ], minutes=AMAZING_SONG.minutes(), xp=35, kind="song", arrangement=AMAZING_SONG.meta()),
     lesson("voc-5-5", "Shenandoah", [
         explain("A slow river song", "This American folk song from the 1800s moves slowly, with wide leaps. Breathe at each rest, and hear every leap before you sing it."),
         notes(V, ["G3", "C4"], hint="The opening leap: low G up to C. Any octave counts."),
@@ -290,7 +383,8 @@ UNIT_5 = unit("voc-5", "Melodies", "Five public-domain tunes, melody only, at an
         quiz("Where should you breathe in this song?", ["In the middle of a long note", "At the rests between phrases", "Never; sing it in one breath"], 1,
              "The rests mark the ends of phrases. Breathe there so each line has full support."),
         along(V, SHEN, bpm=66, title="Shenandoah"),
-    ], minutes=6, xp=40, kind="song"),
+        SHEN_SONG.take("Shenandoah"),
+    ], minutes=SHEN_SONG.minutes(), xp=40, kind="song", arrangement=SHEN_SONG.meta()),
     lesson("voc-5-6", "Medley", [
         explain("Put it together", "Five tunes back to back, one phrase each. Breathe at every rest, and give repeated notes a fresh start."),
         along(V, TWINKLE_A, bpm=72, title="Twinkle Twinkle Little Star"),

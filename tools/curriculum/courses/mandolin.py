@@ -5,6 +5,8 @@ two frets (index 1-2, middle 3-4, ring 5-6, little 7-8). lib.position numbers fi
 `play` and `tune` below re-number the suggested finger of every fretted note. Strings and frets are untouched.
 """
 from lib import along, chord, course, explain, fretboard, lesson, listen, notes, part, play_chord, progression, quiz, rhythm, staff, strum, tap, unit
+from songbook import Part, song
+import tunes
 
 M = "mandolin"
 FINGER = {1: 1, 2: 1, 3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4}
@@ -128,6 +130,83 @@ RIPPLE_G = eighths("D4", "B4", "G5", "D4", "B4", "G5", "D4", "B4")
 RIPPLE_C = eighths("E4", "C5", "E5", "E4", "C5", "E5", "E4", "C5")
 RIPPLE_D = eighths("D4", "A4", "F#5", "D4", "A4", "F#5", "D4", "A4")
 
+# ---------------------------------------------------------------- whole songs (songbook)
+# Each song lesson ends on its whole song in first position (frets 0-7). Fiddle tunes take the jam's form: a kick-off
+# on the open A pair, each part twice (AABB), once more through, and the "shave and a haircut" tag; slow tunes leave
+# long notes for tremolo. Chart shapes are the chords above plus a few the charts need.
+SHAPES = {c["name"]: c for c in [G, D, C, Em, A, chord(M, "A7", "2243"), chord(M, "D7", "2032"), chord(M, "E", "1224")]}
+THE_VERSE = "The verse"
+KICK_A = "A4:0.5 A4:0.5 A4 A4:0.5 A4:0.5 A4 A4:2 r:2"     # two bars on the open A pair to count the band in
+SHAVE_D = "D5 A4:0.5 A4:0.5 B4 A4 r C#5 D5:2"             # "shave and a haircut, two bits" (1899), the jam's tag
+
+
+def mando_song(bpm, parts, beats_per_bar=4, words=None):
+    return song(M, bpm, parts, beats_per_bar=beats_per_bar, shapes=SHAPES, words=words, max_fret=7, fingers=FINGER)
+
+
+def fiddle_tune(bpm, part_a, part_b, chart_a, chart_b, kick=KICK_A, kick_chords="A7 A7", tag=SHAVE_D, tag_chords="D A7,D",
+                twice=False):
+    """Kick-off, AABB, then AB (or AABB again), and the tag."""
+    a = Part("Part A", "verse", part_a, chords=chart_a)
+    b = Part("Part B", "chorus", part_b, chords=chart_b)
+    body = [a, a, b, b, a, a, b, b] if twice else [a, a, b, b, a, b]
+    return mando_song(bpm, [Part("Intro", "intro", kick, chords=kick_chords), *body, Part("Outro", "outro", tag, chords=tag_chords)])
+
+
+# Ode to Joy, unit 2: D major on pairs 3 and 2. The middle section's low A isn't taught yet, so it ends on the open
+# A pair; between the verses, every quarter note picked down-up as two eighths.
+M_A1, M_A2, M_B, M_TAIL = tunes.ode(2, low_g="A4")
+M_ODE_CHART = tunes.transpose_chords(tunes.ODE_CHORDS, 2)
+M_ODE_V = Part("Verse 1", "verse", f"{M_A1} {M_A2} {M_B} {M_A2}", chords=M_ODE_CHART, lyrics=tunes.ODE_WORDS_1)
+ODE_SONG = mando_song(76, [
+    Part("Intro", "intro", M_TAIL, chords="D A,D"),
+    M_ODE_V,
+    Part("Variation 1", "solo", tunes.doubled(f"{M_A1} {M_A2}"), chords="D A D A D A D A,D"),
+    M_ODE_V.with_lyrics("Verse 2", tunes.ODE_WORDS_2),
+    Part("Outro", "outro", M_A2, chords="D A D A,D", lyrics=tunes.ODE_WORDS_END),
+], words=tunes.ODE_CREDIT)
+
+# Amazing Grace, unit 3: in D, two of Newton's verses with tremolo on the long notes, then the tune an octave up on
+# the E pair.
+M_AMAZING = tunes.transpose(tunes.AMAZING, 7)
+M_AMAZING_CHART = tunes.transpose_chords(tunes.AMAZING_CHORDS, 7)
+M_AMAZING_V = Part("Verse 1", "verse", M_AMAZING, pickup=1, chords=M_AMAZING_CHART, lyrics=tunes.AMAZING_WORDS_1)
+AMAZING_SONG = mando_song(66, [
+    Part("Intro", "intro", "D4:2 F#4:0.5 D4:0.5 F#4:2 E4 D4:3 D4:3", chords="D D,A7 D D"),
+    M_AMAZING_V,
+    M_AMAZING_V.with_lyrics("Verse 2", tunes.AMAZING_WORDS_2),
+    Part("Solo", "solo", tunes.transpose(tunes.AMAZING, 19), pickup=1, chords=M_AMAZING_CHART),
+    Part("Outro", "outro", tunes.transpose(tunes.AMAZING_TAIL, 7), pickup=1, chords="D D,A7 D", lyrics=tunes.AMAZING_WORDS_END),
+], beats_per_bar=3, words=tunes.AMAZING_CREDIT)
+
+# Boil Them Cabbage Down, unit 5: up on the E pair, then an octave down on pairs 3 and 2.
+CABBAGE_CHART = "D G D A D G D,A D"
+CABBAGE_SONG = mando_song(80, [
+    Part("Intro", "intro", KICK_A, chords="A7 A7"),
+    Part("Part A", "verse", CABBAGE, chords=CABBAGE_CHART),
+    Part("Part A", "verse", CABBAGE, chords=CABBAGE_CHART),
+    Part("Variation 1", "solo", tunes.transpose(CABBAGE, -12), chords=CABBAGE_CHART),
+    Part("Part A", "verse", CABBAGE, chords=CABBAGE_CHART),
+    Part("Outro", "outro", SHAVE_D, chords="D A7,D"),
+])
+
+# Angeline the Baker, unit 5: both parts end on A, so the tag brings it home to D.
+ANGELINE_SONG = fiddle_tune(84, ANGELINE_LOW, ANGELINE_HIGH, "D G D G D D D A", "D D D G D D D A")
+
+# Soldier's Joy, unit 5: the first part as the lesson plays it, and the second part, which climbs to A on the E pair
+# and steps down in pairs.
+SOLDIERS_B = ("A5 F#5 G5 E5 F#5 D5 D5 F#5:0.5 G5:0.5 A5 F#5 G5 E5 F#5 A4 A4 F#5:0.5 G5:0.5 "
+              f"A5 F#5 G5 E5 F#5 D5 D5 F#5:0.5 G5:0.5 {eighths('A5', 'F#5', 'G5', 'E5', 'F#5', 'D5', 'E5', 'C#5')} D5:2 D4:2")
+SOLDIERS_SONG = fiddle_tune(76, SOLDIERS, SOLDIERS_B, "D D D A7 D D D,A7 D", "D,A7 D D,A7 D D,A7 D D,A7 D")
+
+# Arkansas Traveler, unit 5: the low part from the G pair, the high part tumbling down the E pair.
+TRAVELER_SONG = fiddle_tune(76, TRAVELER_LOW, TRAVELER_HIGH, "D D A7,D D D D D,A7 D", "D D,A7 D,A7 D,A7 D D,A7 D,A7 D")
+
+# Old Joe Clark, unit 5: in A, four bars a part, so AABB twice; the kick-off on E and the tag in A.
+OJC_SONG = fiddle_tune(80, OJC_A, OJC_B, "A A,E A A", "A,G A A A",
+                       kick="E5:0.5 E5:0.5 E5 E5:0.5 E5:0.5 E5 E5:2 r:2", kick_chords="E E",
+                       tag="A5 E5:0.5 E5:0.5 F#5 E5 r G5 A5:2", tag_chords="A G,A", twice=True)
+
 # ================================================================ 1. Hello, mandolin
 
 UNIT_1 = unit("man-1", "Hello, mandolin", "Meet the paired strings, tune them and play all four open notes.", [
@@ -234,7 +313,8 @@ UNIT_2 = unit("man-2", "First notes", "Fret notes cleanly, learn two frets per f
              "The first phrase stops on E and sounds unfinished. The second lands on D and sounds like home."),
         tune(ODE_2, bpm=72, title="Second phrase"),
         tune(ODE, bpm=76, title="Ode to Joy"),
-    ], minutes=5, xp=30, kind="song"),
+        ODE_SONG.take("Ode to Joy"),
+    ], minutes=ODE_SONG.minutes(), xp=30, kind="song", arrangement=ODE_SONG.meta()),
     lesson("man-2-5", "Up to the E pair", [
         explain("Pair 1, same fingers", "On the E pair, fret 2 is F♯, fret 3 is G and fret 5 is A. "
                 "First, second and third fingers, just as before.",
@@ -303,7 +383,9 @@ UNIT_3 = unit("man-3", "Down, up and tremolo", "Alternate your pick in eighth no
              "A single pick fades long before three beats are up. Tremolo keeps it ringing to the end of the bar."),
         tune(f"r:2 {AMAZING_2}", bpm=66, beats_per_bar=3, title="Second line"),
         tune(AMAZING, bpm=66, beats_per_bar=3, title="Amazing Grace"),
-    ], minutes=5, xp=30, kind="song"),
+        AMAZING_SONG.along("Verse 1", bpm=60, title=THE_VERSE),
+        AMAZING_SONG.take("Amazing Grace"),
+    ], minutes=AMAZING_SONG.minutes(), xp=30, kind="song", arrangement=AMAZING_SONG.meta()),
     lesson("man-3-5", "Picking challenge", [
         explain("Steady hand, singing notes", "Down on the beat, up in between, and tremolo whenever a note needs to last. "
                 "Keep every stroke small."),
@@ -401,7 +483,8 @@ UNIT_5 = unit("man-5", "Fiddle tunes", "Five traditional jam tunes, simplified, 
              "Like most tunes in D, it ends on D, the home note."),
         tune(CABBAGE_2, bpm=70, title="Second half"),
         tune(CABBAGE, bpm=76, title="Boil Them Cabbage Down"),
-    ], minutes=5, xp=30, kind="song"),
+        CABBAGE_SONG.take("Boil Them Cabbage Down"),
+    ], minutes=CABBAGE_SONG.minutes(), xp=30, kind="song", arrangement=CABBAGE_SONG.meta()),
     lesson("man-5-2", "Angeline the Baker", [
         explain("Five notes, one sweet tune", "The low part of Angeline the Baker uses only D, E, F♯, A and B. "
                 "Both parts end on A instead of D, which sends the tune around again."),
@@ -412,7 +495,8 @@ UNIT_5 = unit("man-5", "Fiddle tunes", "Five traditional jam tunes, simplified, 
         tune(ANGELINE_LOW, bpm=84, title="Low part"),
         tune(ANGELINE_HIGH, bpm=80, title="High part"),
         tune(ANGELINE, bpm=84, title="Angeline the Baker"),
-    ], minutes=6, xp=35, kind="song"),
+        ANGELINE_SONG.take("Angeline the Baker"),
+    ], minutes=ANGELINE_SONG.minutes(), xp=35, kind="song", arrangement=ANGELINE_SONG.meta()),
     lesson("man-5-3", "Soldier's Joy", [
         explain("A very old favorite", "Soldier's Joy was in print in Scotland by 1780 and has filled American jams ever since. "
                 "Its first part bounces between D, F♯ and A."),
@@ -422,7 +506,9 @@ UNIT_5 = unit("man-5", "Fiddle tunes", "Five traditional jam tunes, simplified, 
              "D, F♯ and A are the three notes of D major. Fiddle tunes often trace their chords like this."),
         tune(SOLDIERS_2, bpm=70, title="Second phrase"),
         tune(SOLDIERS, bpm=76, title="Soldier's Joy, first part"),
-    ], minutes=5, xp=35, kind="song"),
+        SOLDIERS_SONG.along("Part B", bpm=66, title="Second part"),
+        SOLDIERS_SONG.take("Soldier's Joy"),
+    ], minutes=SOLDIERS_SONG.minutes(), xp=35, kind="song", arrangement=SOLDIERS_SONG.meta()),
     lesson("man-5-4", "Arkansas Traveler", [
         explain("Low part, high part", "Arkansas Traveler starts low, down on the G pair, then jumps up to the E pair "
                 "for a part that tumbles down the scale. It was in print by the 1840s."),
@@ -433,7 +519,8 @@ UNIT_5 = unit("man-5", "Fiddle tunes", "Five traditional jam tunes, simplified, 
         tune(TRAVELER_HIGH_1, bpm=70, title="High part, first half"),
         tune(TRAVELER_HIGH, bpm=72, title="High part"),
         tune(TRAVELER, bpm=76, title="Arkansas Traveler"),
-    ], minutes=6, xp=35, kind="song"),
+        TRAVELER_SONG.take("Arkansas Traveler"),
+    ], minutes=TRAVELER_SONG.minutes(), xp=35, kind="song", arrangement=TRAVELER_SONG.meta()),
     lesson("man-5-5", "Old Joe Clark", [
         explain("A new key and a twist", "Old Joe Clark is in A, so you use C♯ and G♯. In the second part, G♯ drops to "
                 "plain G on fret 3 of the E pair. That one note gives the tune its old-time sound."),
@@ -443,7 +530,8 @@ UNIT_5 = unit("man-5", "Fiddle tunes", "Five traditional jam tunes, simplified, 
              "A major uses G♯. Lowering it to G gives the mixolydian sound that runs through old-time and bluegrass music."),
         tune(OJC_B, bpm=72, title="Second part"),
         tune(OJC, bpm=80, title="Old Joe Clark"),
-    ], minutes=5, xp=35, kind="song"),
+        OJC_SONG.take("Old Joe Clark"),
+    ], minutes=OJC_SONG.minutes(), xp=35, kind="song", arrangement=OJC_SONG.meta()),
     lesson("man-5-6", "Jam-session challenge", [
         explain("Call the tunes", "Play each tune through at a steady tempo. If a note slips, keep your picking hand "
                 "moving and catch the next beat. That is how real jams work."),

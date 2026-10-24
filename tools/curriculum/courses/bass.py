@@ -1,5 +1,7 @@
 """Bass: from the four open strings to walking lines and grooves. Strings: 1 G2, 2 D2, 3 A1, 4 E1."""
-from lib import along, course, explain, fretboard, lesson, listen, notes, part, quiz, rhythm, tap, unit
+from lib import along, chord, course, explain, fretboard, lesson, listen, notes, part, quiz, rhythm, tap, unit
+from songbook import Part, song
+import tunes
 
 B = "bass"
 
@@ -45,6 +47,45 @@ BOUNCE = "E1:0.5 E1:0.5 r:1 G1:0.5 A1:0.5 r:1 E1:0.5 E1:0.5 r:1 D2:0.5 B1:0.5 r:
 MOTOWN_1 = "C2 r:0.5 C2:0.5 E2:0.5 G2:0.5 E2:0.5 Bb1:0.5 A1 r:0.5 A1:0.5 C2:0.5 E2:0.5 C2:0.5 C#2:0.5"
 MOTOWN_2 = "D2 r:0.5 D2:0.5 F2:0.5 A2:0.5 F2:0.5 F#1:0.5 G1 r:0.5 G1:0.5 B1:0.5 D2:0.5 G2:0.5 B1:0.5"
 MOTOWN = f"{MOTOWN_1} {MOTOWN_2}"
+
+# ---------------------------------------------------------------- whole songs (songbook)
+# Chord-chart shapes, string 4 (E) first: the notes a bassist can stack under each chord.
+SHAPES = {c["name"]: c for c in [
+    chord(B, "G", "3200", "2100"), chord(B, "D", "x542", "x431"), chord(B, "C", "x320", "x210"),
+    chord(B, "A7", "x020", "x010"), chord(B, "D7", "x545", "x324"), chord(B, "E7", "0201", "0201"),
+]}
+
+
+def roots(*chords):
+    """A bar of the chord's root on every beat, for each chord: the bassist's first job."""
+    return " ".join(" ".join([{"G": "G1", "D": "D2", "C": "C2"}[c]] * 4) for c in chords)
+
+
+# Ode to Joy on bass, unit 3: the melody in G in the scale shape, roots under the band between the verses. The
+# middle section's low D is under the E string, so it lands on the D an octave up.
+B_A1, B_A2, B_B, B_TAIL = tunes.ode(-29, low_g="D2")
+B_ODE_CHART = tunes.transpose_chords(tunes.ODE_CHORDS, 7)
+B_ODE_V = Part("Verse 1", "verse", f"{B_A1} {B_A2} {B_B} {B_A2}", chords=B_ODE_CHART, lyrics=tunes.ODE_WORDS_1)
+ODE_SONG = song(B, 72, [
+    Part("Intro", "intro", f"{roots('G', 'D', 'G')} D2 D2 G1:2", chords="G D G D,G"),
+    B_ODE_V,
+    Part("Interlude", "interlude", f"{roots('G', 'D', 'G', 'D', 'G', 'D', 'G')} D2 D2 G1 G1", chords="G D G D G D G D,G"),
+    B_ODE_V.with_lyrics("Verse 2", tunes.ODE_WORDS_2),
+    Part("Outro", "outro", B_A2, chords=tunes.transpose_chords(tunes.ODE_CHORDS_A2, 7), lyrics=tunes.ODE_WORDS_END),
+], shapes=SHAPES, words=tunes.ODE_CREDIT, max_fret=5, first_fret=2)
+
+# Walking the blues in A: three times through the form (blues players call each one a chorus), the second a boogie
+# line that climbs to the seventh and walks back down.
+BLUES_CHART = "A7 A7 A7 A7 D7 D7 A7 A7 E7 D7 A7 E7"
+BOOGIE_A, BOOGIE_D = "A1 C#2 E2 F#2 G2 F#2 E2 C#2", "D2 F#2 A2 B2 C3 B2 A2 F#2"
+BOOGIE_BLUES = f"{BOOGIE_A} {BOOGIE_A} {BOOGIE_D} {BOOGIE_A} E1 G#1 B1 C#2 D2 F#2 A2 G#1 A1 C#2 E2 F1 E1 G#1 B1 G#1"
+BLUES_SONG = song(B, 72, [
+    Part("Intro", "intro", BLUES_A_3, chords="E7 D7 A7 E7"),
+    Part("Chorus", "chorus", BLUES_A, chords=BLUES_CHART),
+    Part("Solo", "solo", BOOGIE_BLUES, chords=BLUES_CHART),
+    Part("Chorus", "chorus", BLUES_A, chords=BLUES_CHART),
+    Part("Outro", "outro", "A1 C#2 E2 G2 A1:4", chords="A7 A7"),
+], shapes=SHAPES, max_fret=5)
 
 UNIT_1 = unit("bass-1", "Hello, bass", "Meet E A D G, pluck with two fingers, play your first notes.", [
     lesson("bass-1-1", "Meet your bass", [
@@ -191,7 +232,8 @@ UNIT_3 = unit("bass-3", "The E and A strings", "Every note from fret 0 to 5 on s
              "Same start, different finish. The second line comes home to G."),
         along(B, ODE_2, bpm=66, max_fret=5, first_fret=2, title="Ode to Joy, second line"),
         along(B, f"{ODE_1} {ODE_2}", bpm=72, max_fret=5, first_fret=2, title="Ode to Joy"),
-    ], minutes=5, xp=30, kind="song"),
+        ODE_SONG.take("Ode to Joy"),
+    ], minutes=ODE_SONG.minutes(), xp=30, kind="song", arrangement=ODE_SONG.meta()),
     lesson("bass-3-6", "Challenge: E and A strings", [
         explain("Name it, find it, play it", "Frets 0 to 5 on strings 4 and 3 give you every note from E up to D. Say each note's name as you play it."),
         quiz("What is fret 3 on string 4?", ["A", "F", "G"], 2, visual=fretboard(B, [(4, 3)])),
@@ -294,7 +336,8 @@ UNIT_5 = unit("bass-5", "Walking bass", "The 12-bar blues, walking lines and chr
         quiz("Why does bar 12 end on G sharp?", ["It's the root of E", "It leads back to A at the top", "It ends the song"], 1,
              "Bar 12 turns the form around. G sharp sits one fret below A, the chord that starts the next time through."),
         along(B, BLUES_A, bpm=72, title="Walking blues in A"),
-    ], minutes=6, xp=30, kind="song"),
+        BLUES_SONG.take("Walking the blues in A"),
+    ], minutes=BLUES_SONG.minutes(), xp=30, kind="song", arrangement=BLUES_SONG.meta()),
     lesson("bass-5-5", "Challenge: walking blues in E", [
         explain("Same form, new key", "The 12-bar blues works in any key. In E the chords are E, A and B. Walk with roots, thirds, fifths and sixths, and approach each change."),
         quiz("In the key of E, which chord comes in bar 9?", ["B", "A", "E"], 0),

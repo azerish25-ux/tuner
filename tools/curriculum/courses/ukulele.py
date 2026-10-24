@@ -1,5 +1,7 @@
 """Ukulele: from the four open strings (G C E A, re-entrant) to a first set of public-domain songs."""
 from lib import along, chord, course, explain, fretboard, lesson, listen, notes, part, play_chord, progression, quiz, rhythm, staff, strum, tap, unit
+from songbook import Part, song
+import tunes
 
 U = "ukulele"
 
@@ -15,6 +17,11 @@ Em = chord(U, "Em", "0432", "0321")
 D = chord(U, "D", "2220", "1230")
 A = chord(U, "A", "2100", "2100")
 E7 = chord(U, "E7", "1202", "1203")
+# Chart-only shapes (the songs' chord charts).
+A7 = chord(U, "A7", "0100", "0100")
+B7 = chord(U, "B7", "2322", "1211")
+Bb = chord(U, "Bb", "3211", "3211")
+SHAPES = {c["name"]: c for c in [C, Am, F, G, G7, C7, Dm, Em, D, A, E7, A7, B7, Bb]}
 
 # Strum patterns (beats in one 4/4 bar).
 DOWNS = [0, 1, 2, 3]
@@ -57,6 +64,140 @@ SUSANNA = f"r:1 {SUSANNA_1} D4:1 {SUSANNA_2}"
 CAMPTOWN = f"{CAMPTOWN_1} {CAMPTOWN_2}"
 CLEMENTINE = f"r:2 {CLEMENTINE_1} G4@2:2 {CLEMENTINE_2}"
 RIVER = f"r:2 {RIVER_1} {RIVER_2.replace('G4@2:4', 'G4@2:6')} {RIVER_3} {RIVER_4}"
+
+# ---------------------------------------------------------------- whole songs (songbook)
+# Each song lesson ends on its whole song: the melody on strings 1 to 3 (G on string 2, fret 3, as above), the
+# public-domain words, and fingerpicked chords between the verses: the thumb walks the chord from string 4 to
+# string 1, the classic ukulele picking pattern.
+PICKED = {  # each chord shape, string 4 to string 1
+    "C": "G4@4 C4@3 E4@2 C5@1", "G7": "G4@4 D4@3 F4@2 B4@1", "G": "G4@4 D4@3 G4@2 B4@1", "F": "A4@4 C4@3 F4@2 A4@1",
+    "Am": "A4@4 C4@3 E4@2 A4@1", "C7": "G4@4 C4@3 E4@2 Bb4@1", "D": "A4@4 D4@3 F#4@2 A4@1", "Bb": "Bb4@4 D4@3 F4@2 Bb4@1",
+}
+
+
+def picked(*chords, beat=1.0):
+    """The chords picked string by string, one note per beat (beat=0.5 for eighths in 2/4)."""
+    return " ".join(f"{n}:{beat:g}" for c in chords for n in PICKED[c].split())
+
+
+def on_two(melody):
+    """Moved melodies keep G on string 2, fret 3, like every tune in this course."""
+    return melody.replace("G4:", "G4@2:")
+
+
+THE_VERSE = "The verse"
+THE_CHORUS = "The chorus"
+
+# Ode to Joy, unit 4. The middle section's low G is out of the ukulele's range, so it ends on the G above.
+U_A1, U_A2, U_B, U_TAIL = (on_two(m) for m in tunes.ode(0, low_g="G4"))
+U_ODE_V = Part("Verse 1", "verse", f"{U_A1} {U_A2} {U_B} {U_A2}", chords=tunes.ODE_CHORDS, lyrics=tunes.ODE_WORDS_1)
+ODE_SONG = song(U, 72, [
+    Part("Intro", "intro", picked("C", "G7"), chords="C G7"),
+    U_ODE_V,
+    Part("Interlude", "interlude", picked("C", "G7", "C", "G7", "C", "G7", "C", "C"), chords="C G7 C G7 C G7 C C"),
+    U_ODE_V.with_lyrics("Verse 2", tunes.ODE_WORDS_2),
+    Part("Outro", "outro", U_A2, chords=tunes.ODE_CHORDS_A2, lyrics=tunes.ODE_WORDS_END),
+], shapes=SHAPES, words=tunes.ODE_CREDIT)
+
+# Twinkle, Twinkle, Little Star: Jane Taylor's verses (1806), each with the opening lines as a refrain.
+U_TW_A, U_TW_B = on_two(tunes.TWINKLE_A), on_two(tunes.TWINKLE_B)
+U_TW_V = Part("Verse 1", "verse", f"{U_TW_A} {U_TW_B}", chords=f"{tunes.TWINKLE_CHORDS_A} {tunes.TWINKLE_CHORDS_B}",
+              lyrics=tunes.TWINKLE_WORDS_1)
+U_TW_C = Part("Chorus", "chorus", U_TW_A, chords=tunes.TWINKLE_CHORDS_A, lyrics=tunes.TWINKLE_REFRAIN)
+TWINKLE_SONG = song(U, 76, [
+    Part("Intro", "intro", picked("C", "G7"), chords="C G7"),
+    U_TW_V, U_TW_C,
+    U_TW_V.with_lyrics("Verse 2", tunes.TWINKLE_WORDS_2), U_TW_C,
+    Part("Interlude", "interlude", picked("F", "C", "G7", "C"), chords="F C G7 C"),
+    U_TW_V.with_lyrics("Verse 3", tunes.TWINKLE_WORDS_3), U_TW_C,
+    Part("Outro", "outro", f"{picked('C')} C4:4", chords="C C"),
+], shapes=SHAPES, words=tunes.TWINKLE_CREDIT)
+
+# Aura Lee (George R. Poulton, 1861), in G: both of W. W. Fosdick's verses, each with its chorus.
+AURA_CHORUS = ("B4 B4 B4:2 B4 B4 B4:2 B4 A4 G4@2 A4 B4:4"
+               " B4 B4 C5 B4 A4 E4 A4:2 G4@2 F#4 E4 F#4 G4@2:4")
+AURA_V = Part("Verse 1", "verse", f"{AURA_LEE} {AURA_LEE}", chords="G A7 D G G A7 D G", lyrics=(
+    "As the black-bird in the spring, / 'neath the wil-low tree, / sat and piped, I heard him sing, / sing of Au-ra Lee."))
+AURA_C = Part("Chorus", "chorus", AURA_CHORUS, chords="G B7 Em G G A7 D G", lyrics=(
+    "Au-ra Lee, Au-ra Lee, / maid of gold-en hair; / sun-shine came a-long with thee, / swal-lows in the air."))
+AURA_SONG = song(U, 66, [
+    Part("Intro", "intro", f"{PICKED['G']} {PICKED['D']}", chords="G D"),
+    AURA_V, AURA_C,
+    AURA_V.instrumental("Solo"),
+    AURA_V.with_lyrics("Verse 2", "In thy blush the rose was born; / mu-sic, when you spake, / through thine az-ure eye the morn, / "
+                                  "spark-ling, seemed to break."),
+    AURA_C.with_lyrics("Chorus", "Au-ra Lee, Au-ra Lee, / birds of crim-son wing / nev-er song have sung to me / as in that sweet spring."),
+    Part("Outro", "outro", "G4@2 F#4 E4 F#4 G4@2:4", chords="D G", lyrics="sing of Au-ra Lee."),
+], shapes=SHAPES, words="W. W. Fosdick (1861)")
+
+# Oh! Susanna, in C, 2/4: two of Foster's verses (two eight-bar halves each, with a two-eighth pickup) and his chorus.
+PICKUP = "C4:0.5 D4:0.5"
+SUS_RUN = "E4:0.5 G4@2:0.5 G4@2:0.5 A4:0.5 G4@2:0.5 E4:0.5 C4:0.5 D4:0.5"
+SUS_TO_KNEE = f"{SUS_RUN} E4:0.5 E4:0.5 D4:0.5 C4:0.5 D4:1"
+SUS_TO_SEE = f"{SUS_RUN} E4:0.5 E4:0.5 D4:0.5 D4:0.5"
+SUS_HALF = "C C C G7 C C C,G7 C"
+SUS_V = Part("Verse 1", "verse", f"{PICKUP} {SUS_TO_KNEE} {PICKUP} {SUS_TO_SEE} C4:1 {PICKUP} {SUS_TO_KNEE} {PICKUP} {SUS_TO_SEE} C4:2",
+             pickup=1, chords=f"{SUS_HALF} {SUS_HALF}", lyrics=f"{tunes.SUSANNA_WORDS_1A} / {tunes.SUSANNA_WORDS_1B}")
+SUS_C = Part("Chorus", "chorus", f"F4:1 F4:1 A4:0.5 A4:1 A4:0.5 G4@2:0.5 G4@2:0.5 E4:0.5 C4:0.5 D4:1 {PICKUP} {SUS_TO_SEE} C4:2",
+             chords="F F C G7 C C C,G7 C", lyrics=tunes.SUSANNA_CHORUS)
+SUSANNA_SONG = song(U, 76, [
+    Part("Intro", "intro", f"{SUS_RUN} E4:0.5 E4:0.5 D4:0.5 D4:0.5 C4:2", chords="C C C,G7 C"),
+    SUS_V, SUS_C,
+    SUS_V.with_lyrics("Verse 2", f"{tunes.SUSANNA_WORDS_2A} / {tunes.SUSANNA_WORDS_2B}"), SUS_C,
+    Part("Interlude", "interlude", picked("F", "F", "C", "G7", "C", "C", "G7", "C", beat=0.5), chords="F F C G7 C C G7 C"),
+    SUS_C,
+    Part("Outro", "outro", f"{PICKUP} {SUS_TO_SEE} C4:2", pickup=1, chords="C C C,G7 C",
+         lyrics="for I come from Al-a-bam-a with my ban-jo on my knee."),
+], beats_per_bar=2, shapes=SHAPES, words=tunes.SUSANNA_CREDIT)
+
+# Camptown Races (Stephen Foster, 1850), in C, 2/4: the verse, the "Gonna run all night" chorus, a solo and the
+# chorus again.
+CAMP_V = Part("Verse 1", "verse", CAMPTOWN, chords="C C C C C C G7 C", lyrics=(
+    "Camp-town la-dies sing this song, / doo~dah! doo~dah! / Camp-town race-track's five miles long, / oh, doo~dah day!"))
+CAMP_C = Part("Chorus", "chorus", "C4:1.5 C4:0.5 E4 G4@2 C5:4 A4:1.5 A4:0.5 C5 A4 G4@2:4 G4@2:0.5 G4@2:0.5 G4@2 E4 G4@2 A4 "
+                                  "G4@2:0.5 G4@2:0.5 E4 E4 D4 D4 E4 D4:0.5 D4:0.5 D4 C4:3",
+              chords="C C C C F F C C C C C C G7 C,G7 G7,C C", lyrics=(
+    "Gon-na run all night! / Gon-na run all day! / I'll bet my mon-ey on the bob-tail nag, / some-bod-y bet on the bay."))
+CAMP_SONG = song(U, 76, [
+    Part("Intro", "intro", CAMPTOWN_2, chords="C C G7 C"),
+    CAMP_V, CAMP_C,
+    CAMP_V.instrumental("Solo"),
+    Part("Interlude", "interlude", picked("F", "C", "G7", "C", beat=0.5), chords="F C G7 C"),
+    CAMP_C,
+    Part("Outro", "outro", "D4 D4 E4 D4:0.5 D4:0.5 D4 C4:3", chords="G7 C,G7 G7,C C", lyrics="some-bod-y bet on the bay."),
+], beats_per_bar=2, shapes=SHAPES, words="Stephen Foster (1850)")
+
+# Clementine, in F, 3/4: three verses, each with the chorus, and a solo.
+CLEM_TUNE = f"{CLEMENTINE_1} G4@2:2 {CLEMENTINE_2}"
+CLEM_CHART = "F F F C7 C7 F C7 F"
+CLEM_V = Part("Verse 1", "verse", CLEM_TUNE, pickup=1, chords=CLEM_CHART, lyrics=tunes.CLEM_WORDS_1)
+CLEM_C = Part("Chorus", "chorus", CLEM_TUNE, pickup=1, chords=CLEM_CHART, lyrics=tunes.CLEM_CHORUS)
+CLEM_SONG = song(U, 80, [
+    Part("Intro", "intro", "G4@2:1.5 C4:0.5 E4:0.5 G4@2:0.5 F4:3", chords="C7 F"),
+    CLEM_V, CLEM_C,
+    CLEM_V.with_lyrics("Verse 2", tunes.CLEM_WORDS_2), CLEM_C,
+    CLEM_V.instrumental("Solo"),
+    CLEM_V.with_lyrics("Verse 3", tunes.CLEM_WORDS_3), CLEM_C,
+    Part("Outro", "outro", "F4:0.5 A4:0.5 G4@2:1.5 C4:0.5 E4:0.5 G4@2:0.5 F4:3", pickup=1, chords="C7 F", lyrics=tunes.CLEM_WORDS_END),
+], beats_per_bar=3, shapes=SHAPES, words=tunes.CLEM_CREDIT)
+
+# Red River Valley, in F: the verse (in print by 1896), the chorus, picked chords, and the chorus again. Every line
+# starts on a two-beat pickup, so the bar before one ends on a held note.
+RIVER_TUNE = RIVER.replace("r:2 ", "", 1)
+RIVER_CHART = "F F F F F F C7 C7 F F Bb Bb F F,C7 F"
+RIVER_V = Part("Verse 1", "verse", RIVER_TUNE, pickup=2, chords=RIVER_CHART, lyrics=(
+    "From this val-ley they say you are go-ing, / we will miss your bright eyes and sweet smile, / "
+    "for they say you are tak-ing the sun-shine / that has bright-ened our path-way a while."))
+RIVER_C = Part("Chorus", "chorus", RIVER_TUNE, pickup=2, chords=RIVER_CHART, lyrics=(
+    "Come and sit by my side if you love me, / do not has-ten to bid me a-dieu, / "
+    "but re-mem-ber the Red Riv-er Val-ley / and the one that has loved you so true."))
+RIVER_SONG = song(U, 84, [
+    Part("Intro", "intro", f"{PICKED['F']} G4@4 C4@3:3", chords="F C7"),
+    RIVER_V, RIVER_C,
+    Part("Interlude", "interlude", f"{picked('F', 'F', 'C7', 'C7', 'F', 'Bb', 'C7')} A4@4 C4@3:3", chords="F F C7 C7 F Bb C7 F"),
+    RIVER_C,
+    Part("Outro", "outro", f"{picked('F')} F4@2:4", chords="F F"),
+], shapes=SHAPES, words="Traditional (in print by 1896)")
 
 UNIT_1 = unit("uke-1", "Hello, ukulele", "Hold it, meet G C E A, play your first notes.", [
     lesson("uke-1-1", "Meet your ukulele", [
@@ -265,7 +406,8 @@ UNIT_4 = unit("uke-4", "Melodies", "Play tunes note by note on strings 1 to 3.",
         along(U, ODE_2, bpm=66, title="Ode to Joy, second line"),
         progression([(C, 1), (G, 1), (C, 1), (G, 1), (C, 1), (G, 1), (C, 2)], DOWNS, bpm=72),
         along(U, f"{ODE_1} {ODE_2}", bpm=72, title="Ode to Joy"),
-    ], minutes=5, xp=30, kind="song"),
+        ODE_SONG.take("Ode to Joy"),
+    ], minutes=ODE_SONG.minutes(), xp=30, kind="song", arrangement=ODE_SONG.meta()),
     lesson("uke-4-3", "Twinkle, Twinkle, Little Star", [
         explain("A leap, then steps down", "This traditional tune leaps from C up to G, then walks back down one note at a time. Every line ends on a longer note.",
                 staff(["C4", "C4", "G4", "G4", "A4", "A4", "G4"])),
@@ -274,7 +416,8 @@ UNIT_4 = unit("uke-4", "Melodies", "Play tunes note by note on strings 1 to 3.",
         listen("Does this phrase go up or down?", [["G4"], ["F4"], ["E4"], ["D4"]], ["Up", "Down"], 1),
         along(U, TWINKLE_B, bpm=70, title="Middle line"),
         along(U, f"{TWINKLE_A} {TWINKLE_B} {TWINKLE_A}", bpm=76, title="Twinkle, Twinkle, Little Star"),
-    ], minutes=5, xp=30, kind="song"),
+        TWINKLE_SONG.take("Twinkle, Twinkle, Little Star"),
+    ], minutes=TWINKLE_SONG.minutes(), xp=30, kind="song", arrangement=TWINKLE_SONG.meta()),
     lesson("uke-4-4", "Long notes and short notes", [
         explain("Notes have length", "A quarter note lasts one beat, a half note two, a whole note four. Hold each one until the next note starts.",
                 rhythm([0, 1, 2])),
@@ -294,7 +437,9 @@ UNIT_4 = unit("uke-4", "Melodies", "Play tunes note by note on strings 1 to 3.",
         along(U, AURA_LEE, bpm=66, title="First phrase"),
         quiz("A sharp sign raises a note by how much?", ["One fret", "Two frets", "One string"], 0),
         along(U, f"{AURA_LEE} {AURA_LEE}", bpm=70, title="Aura Lee"),
-    ], minutes=5, xp=30, kind="song"),
+        AURA_SONG.along("Chorus", bpm=60, title=THE_CHORUS),
+        AURA_SONG.take("Aura Lee"),
+    ], minutes=AURA_SONG.minutes(), xp=30, kind="song", arrangement=AURA_SONG.meta()),
     lesson("uke-4-6", "Challenge: three tunes", [
         explain("Scales, steps and leaps", "Watch the note highway and keep your place, even if you miss a note. The beat goes on, so you do too."),
         notes(U, ["C4", "D4", "E4", "F4", ("G4", 2), "A4", "B4", "C5"], hint="The C major scale, up."),
@@ -382,7 +527,9 @@ UNIT_6 = unit("uke-6", "Songs", "Four public-domain songs with melody and chords
         along(U, f"r:1 {SUSANNA_2}", bpm=66, beats_per_bar=2, title="Second line"),
         progression([(C, 3), (G7, 1), (C, 2), (G7, 1), (C, 1)], [0, 1], bpm=72, beats_per_bar=2),
         along(U, SUSANNA, bpm=76, beats_per_bar=2, title="Oh! Susanna"),
-    ], minutes=6, xp=35, kind="song"),
+        SUSANNA_SONG.along("Chorus", bpm=66, title=THE_CHORUS),
+        SUSANNA_SONG.take("Oh! Susanna"),
+    ], minutes=SUSANNA_SONG.minutes(), xp=35, kind="song", arrangement=SUSANNA_SONG.meta()),
     lesson("uke-6-2", "Camptown Races", [
         explain("Call and answer", "Another Foster song, from 1850. The melody bounces between G and E, and a short two-note call answers each line."),
         notes(U, [("G4", 2), ("G4", 2), "E4", ("G4", 2), "A4", ("G4", 2), "E4"], hint="G G E G A G E."),
@@ -391,7 +538,9 @@ UNIT_6 = unit("uke-6", "Songs", "Four public-domain songs with melody and chords
         quiz("Which note ends the song?", ["D", "G", "C"], 2, "Like most songs in C, it comes home to C."),
         progression([(C, 6), (G7, 1), (C, 1)], [0, 1, 1.5], bpm=72, beats_per_bar=2),
         along(U, CAMPTOWN, bpm=76, beats_per_bar=2, title="Camptown Races"),
-    ], minutes=5, xp=35, kind="song"),
+        CAMP_SONG.along("Chorus", bpm=66, title=THE_CHORUS),
+        CAMP_SONG.take("Camptown Races"),
+    ], minutes=CAMP_SONG.minutes(), xp=35, kind="song", arrangement=CAMP_SONG.meta()),
     lesson("uke-6-3", "Clementine", [
         explain("Three beats to a bar", "Count 1 2 3, 1 2 3, with the weight on 1. This is waltz time. \"Clementine\", first printed in 1884, sways in three.",
                 rhythm([0, 1, 2], beats_per_bar=3)),
@@ -403,7 +552,8 @@ UNIT_6 = unit("uke-6", "Songs", "Four public-domain songs with melody and chords
                 {"type": "chord", "chord": C7}),
         progression([(F, 3), (C7, 2), (F, 1), (C7, 1), (F, 1)], [0, 1, 2], bpm=80, beats_per_bar=3),
         along(U, CLEMENTINE, bpm=80, beats_per_bar=3, title="Clementine"),
-    ], minutes=6, xp=35, kind="song"),
+        CLEM_SONG.take("Clementine"),
+    ], minutes=CLEM_SONG.minutes(), xp=35, kind="song", arrangement=CLEM_SONG.meta()),
     lesson("uke-6-4", "Red River Valley", [
         explain("A slow cowboy song", "This traditional tune was in print by 1896. Each line ends on a long note, so count it out before the next one."),
         notes(U, ["C4", "F4", "A4", ("G4", 2), "Bb4", "C5"], hint="Open 3, string 2 fret 1, open 1, string 2 fret 3, string 1 frets 1 and 3."),
@@ -413,7 +563,8 @@ UNIT_6 = unit("uke-6", "Songs", "Four public-domain songs with melody and chords
              "Each note is one fret lower on string 3: fret 2, fret 1, open."),
         progression([(F, 6), (C7, 2)], D_DU, bpm=72),
         along(U, RIVER, bpm=84, title="Red River Valley"),
-    ], minutes=6, xp=35, kind="song"),
+        RIVER_SONG.take("Red River Valley"),
+    ], minutes=RIVER_SONG.minutes(), xp=35, kind="song", arrangement=RIVER_SONG.meta()),
     lesson("uke-6-5", "Back a song with chords", [
         explain("Chords under the tune", "When you strum a song, the melody lives in your head or in a friend's voice. Change chords where the tune leans, and keep the strum steady."),
         progression([(C, 3), (G7, 1), (C, 2), (G7, 1), (C, 1)], ISLAND, bpm=76),

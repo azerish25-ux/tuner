@@ -1,5 +1,7 @@
 """Guitar: from the first open string to barre chords. Unit 1 is the style reference for every course."""
 from lib import along, chord, course, explain, fretboard, fretted, lesson, listen, notes, part, play_chord, progression, quiz, rhythm, strum, tap, unit
+from songbook import Part, song
+import tunes
 
 G = "guitar"
 
@@ -49,10 +51,10 @@ MARY_1 = "E4:1 D4:1 C4:1 D4:1 E4:1 E4:1 E4:2 D4:1 D4:1 D4:2 E4:1 G4:1 G4:2"
 MARY_2 = "E4:1 D4:1 C4:1 D4:1 E4:1 E4:1 E4:1 E4:1 D4:1 D4:1 E4:1 D4:1 C4:4"
 MARY = f"{MARY_1} {MARY_2}"              # Lowell Mason (1830)
 SAINTS_1 = "r:1 C3:1 E3:1 F3:1 G3:4 r:1 C3:1 E3:1 F3:1 G3:4 r:1 C3:1 E3:1 F3:1 G3:2 E3:2 C3:2 E3:2 D3:4"
-SAINTS_2 = "r:1 E3:1 E3:1 D3:1 C3:3 C3:1 E3:2 G3:1 G3:1 F3:2 E3:1 F3:1 G3:2 E3:2 C3:2 D3:2 C3:4"
+SAINTS_2 = "r:1 E3:1 E3:1 D3:1 C3:3 C3:1 E3:2 G3:1 G3:1 G3:1 F3:3 r:2 E3:1 F3:1 G3:2 E3:2 C3:2 D3:2 C3:4"
 SAINTS = f"{SAINTS_1} {SAINTS_2}"        # traditional spiritual, recorded 1923
 AMAZING_1 = "r:2 D3:1 G3:2 B3:0.5 G3:0.5 B3:2 A3:1 G3:2 E3:1 D3:2 D3:1 G3:2 B3:0.5 G3:0.5 B3:2 A3:1 D4:6"
-AMAZING_2 = "B3:1 D4:2 B3:0.5 D4:0.5 B3:2 G3:1 D3:2 E3:1 G3:2 E3:1 D3:2 D3:1 G3:2 B3:0.5 G3:0.5 B3:2 A3:1 G3:6"
+AMAZING_2 = "B3:1 D4:2 B3:0.5 G3:0.5 B3:2 A3:1 G3:2 E3:1 D3:2 D3:1 G3:2 B3:0.5 G3:0.5 B3:2 A3:1 G3:6"
 AMAZING = AMAZING_1.replace("D4:6", "D4:5") + " " + AMAZING_2   # "New Britain" (1829)
 GREEN_1 = "r:2 A3:1 C4:2 D4:1 E4:1.5 F4:0.5 E4:1 D4:2 B3:1 G3:1.5 A3:0.5 B3:1 C4:2 A3:1 A3:1.5 G#3:0.5 A3:1 B3:2 G#3:1 E3:3"
 GREEN_A = (GREEN_1.replace("E3:3", "E3:2 A3:1")
@@ -112,6 +114,105 @@ def with_fingers(step, fingers):
     for at, g in zip(held, fingers):
         at["g"] = g
     return step
+
+
+# ---------------------------------------------------------------- whole songs (songbook)
+# Each song lesson ends on its whole song: the tune the lesson teaches, with an intro, verses (the public-domain
+# words, where the tune has them), a solo and an outro, on the strings its unit has taught. Charts use the shapes
+# above; the mini F stands in for F.
+SHAPES = {c["name"]: c for c in [Em, E, Am, A, C, G_MAJ, D, Dm, F_MINI, D7, E7, A7, G7, B7]}
+THE_VERSE = "The verse"
+THE_CHORUS = "The chorus"
+
+# Ode to Joy, unit 2: strings 1 and 2, plus the open G that ends the middle section.
+O_A1, O_A2, O_B, O_TAIL = tunes.ode(0)
+ODE_V = Part("Verse 1", "verse", f"{O_A1} {O_A2} {O_B} {O_A2}", chords=tunes.ODE_CHORDS, lyrics=tunes.ODE_WORDS_1)
+ODE_SONG = song(G, 72, [
+    Part("Intro", "intro", O_TAIL, chords="C G,C"),
+    ODE_V,
+    Part("Solo", "solo", f"{O_A1} {O_A2}", chords=f"{tunes.ODE_CHORDS_A1} {tunes.ODE_CHORDS_A2}"),
+    ODE_V.with_lyrics("Verse 2", tunes.ODE_WORDS_2),
+    Part("Outro", "outro", O_A2, chords=tunes.ODE_CHORDS_A2, lyrics=tunes.ODE_WORDS_END),
+], shapes=SHAPES, words=tunes.ODE_CREDIT)
+
+# Mary Had a Little Lamb: four verses of Sarah Josepha Hale's rhyme (1830), a solo between the second and third.
+MARY_V = Part("Verse 1", "verse", MARY, chords="C C G C C C G C", lyrics=(
+    "Ma-ry had a lit-tle lamb, / lit-tle lamb, lit-tle lamb, / Ma-ry had a lit-tle lamb, its / fleece was white as snow."))
+MARY_SONG = song(G, 76, [
+    Part("Intro", "intro", "D4 D4 E4 D4 C4:4", chords="G C"),
+    MARY_V,
+    MARY_V.with_lyrics("Verse 2", "Ev-ery-where that Ma-ry went, / Ma-ry went, Ma-ry went, / ev-ery-where that Ma-ry went, the / "
+                                  "lamb was sure to go."),
+    MARY_V.instrumental("Solo"),
+    MARY_V.with_lyrics("Verse 3", "Fol-lowed her to school one day, / school one day, school one day, / fol-lowed her to school one day, "
+                                  "which / was a-gainst the rule."),
+    MARY_V.with_lyrics("Verse 4", "Made the chil-dren laugh and play, / laugh and play, laugh and play, / made the chil-dren laugh and "
+                                  "play to / see a lamb at school."),
+    Part("Outro", "outro", "E4 D4 C4 D4 E4 E4 E4:2 D4 D4 E4 D4 C4:4", chords="C C G C",
+         lyrics="Ma-ry had a lit-tle lamb, / fleece was white as snow."),
+], shapes=SHAPES, words="Sarah Josepha Hale (1830)")
+
+# When the Saints Go Marching In, unit 6: low on strings 5, 4 and 3; the solo takes the verse up an octave, onto
+# strings 2 and 1 from unit 2.
+SAINTS_TAG = "r:2 E3 F3 G3:2 E3:2 C3:2 D3:2 C3:4"
+SAINTS_V = Part("Verse 1", "verse", SAINTS_1, chords="C C C C C C C G",
+                lyrics="Oh when the saints / go march-ing in, / oh when the saints go march-ing in,")
+SAINTS_C = Part("Chorus", "chorus", SAINTS_2, chords="C C C F C C C,G C",
+                lyrics="Oh Lord, I want to be in that num-ber, / when the saints go march-ing in.")
+SAINTS_SONG = song(G, 80, [
+    Part("Intro", "intro", SAINTS_TAG, chords="C C C,G C"),
+    SAINTS_V, SAINTS_C,
+    SAINTS_V.with_lyrics("Verse 2", "Oh when the sun / re-fuse to shine, / oh when the sun re-fuse to shine,"),
+    SAINTS_C,
+    Part("Solo", "solo", tunes.transpose(SAINTS_1, 12), chords="C C C C C C C G"),
+    SAINTS_C,
+    Part("Outro", "outro", SAINTS_TAG, chords="C C C,G C", lyrics="when the saints go march-ing in."),
+], shapes=SHAPES, words="Traditional spiritual")
+
+# Amazing Grace, unit 6: in G on strings 4, 3 and 2, three of Newton's verses and a solo.
+AMAZING_V = Part("Verse 1", "verse", tunes.AMAZING, pickup=1, chords=tunes.AMAZING_CHORDS, lyrics=tunes.AMAZING_WORDS_1)
+AMAZING_SONG = song(G, 72, [
+    Part("Intro", "intro", "G3:2 B3:0.5 G3:0.5 B3:2 A3 G3:3 G3:3", chords="G G,D7 G G"),
+    AMAZING_V,
+    AMAZING_V.with_lyrics("Verse 2", tunes.AMAZING_WORDS_2),
+    AMAZING_V.instrumental("Solo"),
+    AMAZING_V.with_lyrics("Verse 3", tunes.AMAZING_WORDS_3),
+    Part("Outro", "outro", tunes.AMAZING_TAIL, pickup=1, chords=tunes.AMAZING_TAIL_CHORDS, lyrics=tunes.AMAZING_WORDS_END),
+], beats_per_bar=3, shapes=SHAPES, words=tunes.AMAZING_CREDIT)
+
+# Greensleeves, unit 7: A minor, two verses (the second from the 1584 broadside), each with the chorus. Chords as
+# the lesson strums them.
+GREEN_V = Part("Verse 1", "verse", GREEN_A.replace("r:2 ", "", 1), pickup=1,
+               chords="Am C G Em Am F E E Am C G Em Am E Am", lyrics=(
+    "A-las, my love, _ you do me wrong, _ / to cast me off dis-cour-teous- _ ly, / for I have lov-ed you well and long, _ / "
+    "de-light-ing in your com-pa-ny."))
+GREEN_C = Part("Chorus", "chorus", GREEN_B, chords="C C G Em Am F E E C C G Em Am E Am", lyrics=(
+    "Green-sleeves was all my joy, / and Green-sleeves was my de- _ _ light, _ _ / Green-sleeves was my heart of gold, _ / "
+    "and who but my La-dy Green-sleeves."))
+GREEN_SONG = song(G, 72, [
+    Part("Intro", "intro", "G3:1.5 A3:0.5 B3 C4:1.5 B3:0.5 A3 G#3:1.5 F#3:0.5 G#3 A3:3", chords="Em Am E Am"),
+    GREEN_V, GREEN_C,
+    GREEN_V.with_lyrics("Verse 2", "I have been read- _ y at your hand, _ / to grant what-ev-er you would _ crave; / I have both "
+                                   "wa-ged life and land, / your _ love and good-will for to _ have."),
+    GREEN_C,
+    Part("Outro", "outro", "G#3:1.5 F#3:0.5 G#3 A3:3", chords="E Am"),
+], beats_per_bar=3, shapes=SHAPES, words="Traditional (England, 1580s)")
+# The strummed song (gtr-7-2): verse, chorus, verse, chorus, once per bar in three.
+GREEN_WHOLE = GREEN_VERSE + GREEN_CHORUS + GREEN_VERSE + GREEN_CHORUS
+
+# Clementine, unit 7: in G on strings 4, 3 and 2, three verses with the chorus and a solo.
+CLEM_TUNE = CLEM.replace("r:2 ", "", 1)
+CLEM_CHART = "G G G D7 D7 G D7 G"
+CLEM_V = Part("Verse 1", "verse", CLEM_TUNE, pickup=1, chords=CLEM_CHART, lyrics=tunes.CLEM_WORDS_1)
+CLEM_C = Part("Chorus", "chorus", CLEM_TUNE, pickup=1, chords=CLEM_CHART, lyrics=tunes.CLEM_CHORUS)
+CLEM_SONG = song(G, 72, [
+    Part("Intro", "intro", "A3 D3 F#3:0.5 A3:0.5 G3:3", chords="D7 G"),
+    CLEM_V, CLEM_C,
+    CLEM_V.with_lyrics("Verse 2", tunes.CLEM_WORDS_2), CLEM_C,
+    CLEM_V.instrumental("Solo"),
+    CLEM_V.with_lyrics("Verse 3", tunes.CLEM_WORDS_3), CLEM_C,
+    Part("Outro", "outro", "G3:0.5 B3:0.5 A3 D3 F#3:0.5 A3:0.5 G3:3", pickup=1, chords="D7 G", lyrics=tunes.CLEM_WORDS_END),
+], beats_per_bar=3, shapes=SHAPES, words=tunes.CLEM_CREDIT)
 
 
 # ================================================================ 1. Hello, guitar
@@ -213,7 +314,9 @@ UNIT_2 = unit("gtr-2", "First melodies", "Notes on strings 1 and 2, reading tab,
         tap([0, 1.5, 2], bpm=66, bars=2),
         along(G, ODE_1, bpm=66, title="First line"),
         along(G, ODE, bpm=72, title="Ode to Joy"),
-    ], minutes=5, xp=30, kind="song"),
+        ODE_SONG.along("Verse 1", bpm=66, title=THE_VERSE),
+        ODE_SONG.take("Ode to Joy"),
+    ], minutes=ODE_SONG.minutes(), xp=30, kind="song", arrangement=ODE_SONG.meta()),
     lesson("gtr-2-5", "Mary Had a Little Lamb", [
         explain("Three notes and a jump", "This nursery tune walks on C, D and E, then jumps up to G. "
                 "The jump is open string 1 to fret 3.", fretboard(G, [(2, 1, 1), (2, 3, 3), (1, 0), (1, 3, 3)])),
@@ -222,7 +325,8 @@ UNIT_2 = unit("gtr-2", "First melodies", "Notes on strings 1 and 2, reading tab,
         quiz("Which note is this?", ["G", "C", "D", "F"], 2, visual=fretboard(G, [(2, 3, 3)])),
         along(G, MARY_1, bpm=66, title="First half"),
         along(G, MARY, bpm=72, title="Mary Had a Little Lamb"),
-    ], minutes=5, xp=30, kind="song"),
+        MARY_SONG.take("Mary Had a Little Lamb"),
+    ], minutes=MARY_SONG.minutes(), xp=30, kind="song", arrangement=MARY_SONG.meta()),
     lesson("gtr-2-6", "Melody challenge", [
         explain("Six notes, two strings", "No new ideas: E, F and G on string 1, B, C and D on string 2. "
                 "Start slow, then hold a steady tempo.",
@@ -506,10 +610,11 @@ UNIT_6 = unit("gtr-6", "Melodies on strings 3 and 4", "G and A on string 3, D, E
                 "and C, E and F lead into a long G.", rhythm([1, 2, 3])),
         tap([1, 2, 3], bpm=72, bars=2),
         along(G, SAINTS_1, bpm=72, title="First half"),
-        notes(G, ["E3", "E3", "D3", "C3", "C3", "E3", "G3", "G3", "F3"], hint="The middle: E E D C, then C E G G F."),
+        notes(G, ["E3", "E3", "D3", "C3", "C3", "E3", "G3", "G3", "G3", "F3"], hint="The chorus: E E D C, then C E G G G F."),
         along(G, SAINTS_2, bpm=72, title="Second half"),
         along(G, SAINTS, bpm=80, title="When the Saints Go Marching In"),
-    ], minutes=6, xp=35, kind="song"),
+        SAINTS_SONG.take("When the Saints Go Marching In"),
+    ], minutes=SAINTS_SONG.minutes(), xp=35, kind="song", arrangement=SAINTS_SONG.meta()),
     lesson("gtr-6-5", "Amazing Grace", [
         explain("Three beats to a bar", "Amazing Grace is in three: count one, two, three, with the weight on one. "
                 "Its notes sit on strings 4, 3 and 2.", rhythm([0, 1, 2], beats_per_bar=3)),
@@ -519,9 +624,10 @@ UNIT_6 = unit("gtr-6", "Melodies on strings 3 and 4", "G and A on string 3, D, E
         notes(G, ["D3", "G3", "B3", "G3", "B3", "A3"], hint="The opening: D, G, B G, B, A. Open strings 4, 3 and 2, plus A."),
         notes(G, ["G3", "E3", "D3", "D3"], hint="Then down: G, E, D, D."),
         along(G, AMAZING_1, bpm=66, beats_per_bar=3, title="First half"),
-        notes(G, ["D4", "B3", "D4", "B3", "D4", "B3", "G3"], hint="The high part: D on string 2, fret 3, around open B."),
+        notes(G, ["B3", "D4", "B3", "G3", "B3", "A3", "G3"], hint="The high part: open B up to D at fret 3, then down through B, G and A."),
         along(G, AMAZING, bpm=72, beats_per_bar=3, title="Amazing Grace"),
-    ], minutes=5, xp=35, kind="song"),
+        AMAZING_SONG.take("Amazing Grace"),
+    ], minutes=AMAZING_SONG.minutes(), xp=35, kind="song", arrangement=AMAZING_SONG.meta()),
     lesson("gtr-6-6", "Lower-strings challenge", [
         explain("From string 5 to string 1", "No new ideas: every note from C on string 5 up to G on string 1, plus both tunes. "
                 "Keep your thumb low and your fingers arched."),
@@ -560,7 +666,8 @@ UNIT_7 = unit("gtr-7", "Songs with chords", "A mini F, D7, and two traditional s
         progression(GREEN_VERSE, ONCE, bpm=63, beats_per_bar=3),
         progression(GREEN_CHORUS, ONCE, bpm=63, beats_per_bar=3),
         progression(GREEN_VERSE, WALTZ, bpm=66, beats_per_bar=3),
-    ], minutes=5, xp=30, kind="song"),
+        progression(GREEN_WHOLE, WALTZ, bpm=66, beats_per_bar=3),
+    ], minutes=8, xp=30, kind="song"),
     lesson("gtr-7-3", "Greensleeves: the melody", [
         explain("Sharps: one fret higher", "A sharp raises a note by one fret. Greensleeves uses G sharp on string 3, fret 1, "
                 "and F sharp on string 4, fret 4. Reach that one with your little finger.", fretboard(G, [(3, 1, 1), (4, 4, 4)])),
@@ -572,7 +679,8 @@ UNIT_7 = unit("gtr-7", "Songs with chords", "A mini F, D7, and two traditional s
         notes(G, ["G4", "F#4", "E4", "D4", "B3"], hint="The chorus starts high: G on string 1, fret 3, then F sharp at fret 2."),
         along(G, GREEN_A, bpm=72, beats_per_bar=3, title="Greensleeves, verse"),
         along(G, GREEN, bpm=72, beats_per_bar=3, title="Greensleeves"),
-    ], minutes=6, xp=35, kind="song"),
+        GREEN_SONG.take("Greensleeves"),
+    ], minutes=GREEN_SONG.minutes(), xp=35, kind="song", arrangement=GREEN_SONG.meta()),
     lesson("gtr-7-4", "D7 and the Clementine chords", [
         explain("D7 leans toward G", "A seventh chord adds a note that pulls toward home. D7 wants to move to G. "
                 "Fingers: 2 on string 3, fret 2; 1 on string 2, fret 1; 3 on string 1, fret 2.", shape(D7)),
@@ -593,7 +701,8 @@ UNIT_7 = unit("gtr-7", "Songs with chords", "A mini F, D7, and two traditional s
         along(G, CLEM_1, bpm=66, beats_per_bar=3, title="First half"),
         notes(G, ["A3", "D3", "F#3", "A3", "G3"], hint="The last line: A, open D, F sharp at fret 4, A, then home to G."),
         along(G, CLEM, bpm=72, beats_per_bar=3, title="Clementine"),
-    ], minutes=5, xp=35, kind="song"),
+        CLEM_SONG.take("Clementine"),
+    ], minutes=CLEM_SONG.minutes(), xp=35, kind="song", arrangement=CLEM_SONG.meta()),
     lesson("gtr-7-6", "Songbook challenge", [
         explain("Two songs, start to finish", "No new ideas: the mini F, D7 and both songs from this unit. "
                 "Change chords early and let the melodies sing."),

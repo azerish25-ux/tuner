@@ -31,18 +31,31 @@ built with the helpers in `lib.py` and checked by `python3 tools/curriculum/buil
 - Only public-domain or traditional melodies (composer died before 1930, or traditional and published
   before 1929). Name the song plainly ("Ode to Joy", "Greensleeves", "Shenandoah").
 
-## Songs (the Songs and Originals courses)
-- Every song lesson is a full arrangement built with `songbook.song(...)` from `Part`s (intro, verses,
-  choruses, a bridge where the tune has one, a solo, an outro): 90–180 seconds at its tempo, checked by
-  `build.py --check`. Its last step is `SONG.take(...)` (the whole song) and the lesson passes
+## Songs (every course)
+- Every song lesson (`kind="song"`, in any course) is a full arrangement built with `songbook.song(...)` from
+  `Part`s (intro, verses, choruses, a bridge where the tune has one, a solo, an outro): 90–180 seconds at its
+  tempo, checked by `build.py --check`. Its last step is `SONG.take(...)` (the whole song) and the lesson passes
   `arrangement=SONG.meta()` and `minutes=SONG.minutes()`. Earlier steps teach parts with `SONG.along(...)`.
+  The one exception is a strummed song (chords only, like guitar's "Greensleeves: the chords"): it ends on the
+  whole song's `progression`, also 90–180 seconds, and has no arrangement.
 - Write the arrangement from the real tune and its real harmony: one chord token per bar ("C,G" splits a
   bar). Each part's melody fills whole bars after its `pickup`. Keep a song inside its unit's range and
   difficulty; vary a second verse or the last chorus rather than adding harder technique.
+- In an instrument course, arrange for the instrument: roots under the band on bass, a first variation
+  (`tunes.doubled`) on violin, cello and mandolin, fiddle tunes as a jam plays them (kick-off, AABB, the tag),
+  roll breaks on banjo where the course has taught rolls, picked chords between ukulele verses, a band intro
+  for voice. Pass the course's `max_fret`/`first_fret`, and `fingers` where the hand isn't one finger per fret
+  (violin, mandolin); mark a shift with "note~finger".
+- A take is one line: no two notes at once, at least 0.15 s apart at the song's tempo. Chart chords stay in
+  the recognizer's set (major, minor, 7, maj7, m7, sus2, sus4, 5), with shapes for the course's own instrument
+  (guitar shapes for voice).
+- Tunes several courses share (Ode to Joy, Twinkle, Amazing Grace, Clementine, Oh! Susanna, Lightly Row) live
+  in `tunes.py` with their words, in one key; courses move them with `tunes.transpose`/`transpose_chords`.
 - Lyrics only where the text is in the public domain (written before 1929), or our own for Originals
   (credit `words="Timbre"`). Never quote modern or copyrighted lyrics, not even a line. Instrumental
   pieces have no words. One lyric token per note; `songbook.py` documents "-", "~", "_" and "/".
 - Lyric lines are short enough to read under the highway (about 40 characters) and stay inside one section.
+  Sung words carry their credit (`words=`); a song credits no words it doesn't sing.
 - Rhythm patterns are beat positions inside one bar: `[0, 1, 2, 3]` quarters, `[0, 0.5, 1, 1.5, ...]` eighths.
 - `listen` sounds are groups of notes played in order; a group with several notes sounds as a chord.
 

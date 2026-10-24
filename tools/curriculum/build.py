@@ -23,7 +23,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
-from lib import TUNINGS, Text, fretted, name  # noqa: E402
+from lib import QUALITIES, TUNINGS, Text, fretted, name  # noqa: E402
 
 COURSES = ["guitar", "ukulele", "bass", "violin", "cello", "mandolin", "banjo", "ear", "theory", "rhythm", "voice", "songs", "originals"]
 LIMITS = {"title": 42, "body": 300, "prompt": 140, "option": 48, "hint": 120, "why": 220, "summary": 120, "subtitle": 80}
@@ -138,22 +138,45 @@ def check_lesson(lesson: dict, kind: str | None, where: str):
                 errors.append(f"{at}: pattern outside its {bar}-beat bar")
 
 
-# Songs (kind "song") in these courses are full arrangements: intro, verses, choruses, outro.
-FULL_SONGS = {"songs", "originals"}
+# Every song lesson (kind "song") is a full arrangement: intro, verses, choruses, outro, 1.5 to 3 minutes, ending on
+# the whole song. One exception: an instrument course's strummed song (its chords, no melody) ends on the whole
+# song's chord progression, as long, because a take is a play-along and a strum isn't judged note by note. The
+# Songs tab's own courses have no exception.
+SONG_TAB_COURSES = {"songs", "originals"}
 SONG_SECONDS = (90, 180)
 SECTION_KINDS = {"intro", "verse", "chorus", "bridge", "solo", "interlude", "outro"}
-song_lengths: list[float] = []
-lyric_songs: list[str] = []
+# Chord qualities the chord recognizer (TimbreCore ChordRecognizer.Quality) can hear; a song's chart stays inside them.
+RECOGNIZED = {"maj", "min", "7", "maj7", "m7", "sus2", "sus4", "5"}
+# A take's notes must start at least this far apart at the song's tempo, so the play-along judge can tell them apart.
+MIN_GAP_SECONDS = 0.15
+song_lengths: dict[str, list[float]] = {}
+lyric_songs: dict[str, list[str]] = {}
 
 
 def clock(seconds: float) -> str:
     return f"{int(seconds // 60)}:{int(round(seconds % 60)):02d}"
 
 
-def check_arrangement(lesson: dict, where: str):
+def check_shape(shape: dict, kind: str | None, where: str):
+    """A chart's chord shape: a quality the recognizer hears, one fret per string of the course's instrument (a
+    course without one charts for guitar), and only notes of the chord, root included."""
+    if shape["quality"] not in RECOGNIZED:
+        errors.append(f"{where}: {shape['name']} ({shape['quality']}) isn't a chord the recognizer hears")
+    instrument = kind or "guitar"
+    frets = shape["frets"]
+    if len(frets) != len(TUNINGS[instrument]):
+        errors.append(f"{where}: {shape['name']} has {len(frets)} strings, not a {instrument} shape")
+        return
+    played = {fretted(instrument, len(frets) - i, f) % 12 for i, f in enumerate(frets) if f >= 0}
+    tones = {(shape["root"] + i) % 12 for i in QUALITIES[shape["quality"]]}
+    if not played <= tones or shape["root"] % 12 not in played:
+        errors.append(f"{where}: the {shape['name']} shape {frets} doesn't spell {shape['name']} on {instrument}")
+
+
+def check_arrangement(lesson: dict, kind: str | None, course_id: str, where: str):
     """A song's arrangement agrees with its last step (the whole song): same tempo and meter, bars that hold every
-    note, sections that cover the bars in order, a chord chart inside them with a shape for each chord, lyrics only
-    on notes, and a length of 1.5 to 3 minutes."""
+    note, one note at a time (the judge follows a single line), sections that cover the bars in order, a chord chart
+    inside them with a recognizable shape for each chord, lyrics only on notes, and a length of 1.5 to 3 minutes."""
     arr = lesson["arrangement"]
     take = lesson["steps"][-1]
     if take["type"] != "along":
@@ -175,6 +198,16 @@ def check_arrangement(lesson: dict, where: str):
         cursor = section["bar"] + section["bars"]
     if cursor != bars:
         errors.append(f"{where}: sections cover {cursor} of {bars} bars")
+    notes_ = sorted(take["notes"], key=lambda n: n["b"])
+    for a, b in zip(notes_, notes_[1:]):
+        if b["b"] < a["b"] + a["d"] - 1e-6:
+            errors.append(f"{where}: notes overlap at beat {b['b']:g}; a take is one line")
+            break
+        if (b["b"] - a["b"]) * 60 / arr["bpm"] < MIN_GAP_SECONDS - 1e-9:
+            errors.append(f"{where}: notes {b['b'] - a['b']:g} beats apart at beat {b['b']:g}, too quick to judge")
+            break
+    for shape in arr["shapes"]:
+        check_shape(shape, kind, where)
     names = {shape["name"] for shape in arr["shapes"]}
     last = (-1, -1.0)
     for change in arr["chords"]:
@@ -187,7 +220,7 @@ def check_arrangement(lesson: dict, where: str):
     seconds = bars * bpb * 60 / arr["bpm"]
     if not SONG_SECONDS[0] <= seconds <= SONG_SECONDS[1]:
         errors.append(f"{where}: the song runs {clock(seconds)} (1:30 to 3:00)")
-    song_lengths.append(seconds)
+    song_lengths.setdefault(course_id, []).append(seconds)
     sung = [n for n in take["notes"] if n.get("y") not in (None, "_")]
     held = None
     for n in take["notes"]:
@@ -199,9 +232,50 @@ def check_arrangement(lesson: dict, where: str):
             errors.append(f"{where}: a held note with no syllable before it")
         held = n.get("y")
     if sung:
-        lyric_songs.append(lesson["id"])
+        lyric_songs.setdefault(course_id, []).append(lesson["id"])
         if not sung[0].get("yl"):
             errors.append(f"{where}: the first sung syllable must start a line")
+        if not arr.get("words"):
+            errors.append(f"{where}: sung words need their credit")
+    elif arr.get("words"):
+        errors.append(f"{where}: words credited but none sung")
+    # A lyric line (read as the app's LyricSheet reads it) is sung inside one section; a section starts at its bar,
+    # less its upbeat.
+    starts = [s["bar"] * bpb - s.get("pickup", 0) for s in arr["sections"]]
+
+    def section_at(beat):
+        return max((i for i, start in enumerate(starts) if start <= beat + 1e-6), default=0)
+
+    line = None
+    for n in sorted(take["notes"], key=lambda n: n["b"]) + [{"b": float("inf"), "d": 0}]:
+        if "y" not in n or n.get("yl") or (line is None and n["y"] != "_"):
+            if line and section_at(line[0]) != section_at(line[1] - 0.01):
+                errors.append(f"{where}: a lyric line at beat {line[0]:g} crosses into the next section")
+            line = [n["b"], n["b"] + n["d"]] if "y" in n and n["y"] != "_" else None
+        elif line:
+            line[1] = n["b"] + n["d"]
+
+
+def check_strummed_song(lesson: dict, kind: str | None, course_id: str, where: str):
+    """A strummed song (no arrangement) ends on the whole song's chord progression: 1.5 to 3 minutes of recognizable
+    chords."""
+    last = lesson["steps"][-1]
+    if last["type"] != "progression" or kind is None or course_id in SONG_TAB_COURSES:
+        errors.append(f"{where}: a song needs its full arrangement")
+        return
+    bpb = last.get("beatsPerBar") or max(4, int(max(last["pattern"] or [0])) + 1)
+    seconds = sum(last["bars"]) * bpb * 60 / last["bpm"]
+    if not SONG_SECONDS[0] <= seconds <= SONG_SECONDS[1]:
+        errors.append(f"{where}: the strummed song runs {clock(seconds)} (1:30 to 3:00)")
+    for shape in last["chords"]:
+        check_shape(shape, kind, where)
+    song_lengths.setdefault(course_id, []).append(seconds)
+
+
+def median(values: list[float]) -> float:
+    ordered = sorted(values)
+    half = len(ordered) // 2
+    return ordered[half] if len(ordered) % 2 else (ordered[half - 1] + ordered[half]) / 2
 
 
 def main() -> int:
@@ -232,9 +306,9 @@ def main() -> int:
                     lesson["free"] = True
                 check_lesson(lesson, kind, where)
                 if "arrangement" in lesson:
-                    check_arrangement(lesson, where)
-                elif lesson["kind"] == "song" and module in FULL_SONGS:
-                    errors.append(f"{where}: a song needs its full arrangement")
+                    check_arrangement(lesson, kind, course["id"], where)
+                elif lesson["kind"] == "song":
+                    check_strummed_song(lesson, kind, course["id"], where)
         courses.append(encode(course, course["id"]))
     total = sum(len(u["lessons"]) for c in courses for u in c["units"])
     if errors:
@@ -243,11 +317,13 @@ def main() -> int:
         return 1
     print(f"OK: {len(courses)} courses, {total} lessons, {len(strings)} strings")
     if song_lengths:
-        ordered = sorted(song_lengths)
-        middle = ordered[len(ordered) // 2] if len(ordered) % 2 else (ordered[len(ordered) // 2 - 1] + ordered[len(ordered) // 2]) / 2
-        sung = sum(1 for _ in lyric_songs)
-        print(f"Songs: {len(ordered)} full arrangements, {sung} with lyrics, "
-              f"{clock(ordered[0])} min / {clock(middle)} median / {clock(ordered[-1])} max")
+        every = [s for lengths in song_lengths.values() for s in lengths]
+        sung = sum(len(ids) for ids in lyric_songs.values())
+        print(f"Songs: {len(every)} whole songs, {sung} with lyrics, "
+              f"{clock(min(every))} min / {clock(median(every))} median / {clock(max(every))} max")
+        for course_id, lengths in song_lengths.items():
+            print(f"  {course_id:10} {len(lengths):3} songs, {len(lyric_songs.get(course_id, [])):2} with lyrics, "
+                  f"{clock(min(lengths))} / {clock(median(lengths))} / {clock(max(lengths))}")
     if "--check" in sys.argv:
         return 0
     out = ROOT / "ios/Sources/TimbreCore/Resources/curriculum.json"
