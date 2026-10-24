@@ -32,63 +32,97 @@ struct YourSongsShelf: View {
 
     private var tileWidth: CGFloat { sizeClass == .regular ? 176 : 148 }
 
+    // The modifier chain is split into stages so the type checker handles each in reasonable time.
     var body: some View {
+        dialogs(sheets(importer(shelf)))
+            .onAppear {
+                library.collectInbox(store: store)
+                openPending()
+            }
+            .onChange(of: library.pendingOpen) { _, _ in openPending() }
+    }
+
+    private var shelf: some View {
         VStack(alignment: .leading, spacing: 12) {
             header
             if library.songs.isEmpty { invitation } else { rail }
         }
         .accessibilityIdentifier("yoursongs.shelf")
-        .fileImporter(isPresented: Binding(get: { importing != nil }, set: { if !$0 { importing = nil } }),
-                      allowedContentTypes: importing == .recording ? [.audio] : YourSongsStore.chartTypes) { result in
+    }
+
+    private var importingBinding: Binding<Bool> {
+        Binding(get: { importing != nil }, set: { if !$0 { importing = nil } })
+    }
+
+    private var importTypes: [UTType] { importing == .recording ? [.audio] : YourSongsStore.chartTypes }
+
+    private func importer<Content: View>(_ content: Content) -> some View {
+        content.fileImporter(isPresented: importingBinding, allowedContentTypes: importTypes) { result in
             let kind = importing
             importing = nil
             guard case let .success(url) = result else { return }
             imported(url, as: kind ?? .chart)
         }
-        .background {
-            Color.clear.sheet(isPresented: $adding, onDismiss: runNext) {
-                AddSongSheet(canAdd: library.canAdd(pro: store.isPro), pro: store.isPro) { choice in
-                    next = choice
-                    adding = false
-                }
-                .environmentObject(store).environmentObject(store.commerce)
+    }
+
+    private func sheets<Content: View>(_ content: Content) -> some View {
+        content
+            .background { addSheet }
+            .background { editorSheet }
+            .background { draftSheet }
+            .fullScreenCover(item: $open) { item in
+                ChartSongView(songId: item.id)
+                    .environmentObject(store).environmentObject(store.audio).environmentObject(store.commerce)
+            }
+    }
+
+    private var addSheet: some View {
+        Color.clear.sheet(isPresented: $adding, onDismiss: runNext) {
+            AddSongSheet(canAdd: library.canAdd(pro: store.isPro), pro: store.isPro) { choice in
+                next = choice
+                adding = false
+            }
+            .environmentObject(store).environmentObject(store.commerce)
+        }
+    }
+
+    private var editorSheet: some View {
+        Color.clear.sheet(isPresented: $writing) {
+            ChartEditorView(source: ChordProEdit.newChart(title: String(localized: "New song", bundle: TimbreLocalization.bundle), artist: nil, lyrics: ""),
+                            isNew: true) { source in
+                if let song = library.add(source: source) { show(song.id) }
             }
         }
-        .background {
-            Color.clear.sheet(isPresented: $writing) {
-                ChartEditorView(source: ChordProEdit.newChart(title: String(localized: "New song", bundle: TimbreLocalization.bundle), artist: nil, lyrics: ""),
-                                isNew: true) { source in
-                    if let song = library.add(source: source) { show(song.id) }
-                }
+    }
+
+    private var draftSheet: some View {
+        Color.clear.sheet(item: $drafting) { draft in
+            RecordingDraftSheet(url: draft.url, name: draft.name) { song in show(song.id) }
+                .environmentObject(store)
+        }
+    }
+
+    private var deletingBinding: Binding<Bool> {
+        Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } })
+    }
+
+    private var problemBinding: Binding<Bool> {
+        Binding(get: { library.problem != nil && open == nil }, set: { if !$0 { library.problem = nil } })
+    }
+
+    private func dialogs<Content: View>(_ content: Content) -> some View {
+        content
+            .confirmationDialog("Delete this song?", isPresented: deletingBinding, titleVisibility: .visible, presenting: deleting) { song in
+                Button("Delete", role: .destructive) { library.delete(song) }
+                Button("Cancel", role: .cancel) {}
+            } message: { _ in
+                Text("The chart and the recording you added go from this iPhone.")
             }
-        }
-        .background {
-            Color.clear.sheet(item: $drafting) { draft in
-                RecordingDraftSheet(url: draft.url, name: draft.name) { song in show(song.id) }
-                    .environmentObject(store)
+            .alert("Timbre", isPresented: problemBinding) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(verbatim: library.problem ?? "")
             }
-        }
-        .fullScreenCover(item: $open) { item in
-            ChartSongView(songId: item.id)
-                .environmentObject(store).environmentObject(store.audio).environmentObject(store.commerce)
-        }
-        .confirmationDialog("Delete this song?", isPresented: Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } }),
-                            titleVisibility: .visible, presenting: deleting) { song in
-            Button("Delete", role: .destructive) { library.delete(song) }
-            Button("Cancel", role: .cancel) {}
-        } message: { _ in
-            Text("The chart and the recording you added go from this iPhone.")
-        }
-        .alert("Timbre", isPresented: Binding(get: { library.problem != nil && open == nil }, set: { if !$0 { library.problem = nil } })) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(verbatim: library.problem ?? "")
-        }
-        .onAppear {
-            library.collectInbox(store: store)
-            openPending()
-        }
-        .onChange(of: library.pendingOpen) { _, _ in openPending() }
     }
 
     // MARK: Header
