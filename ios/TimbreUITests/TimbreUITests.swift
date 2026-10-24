@@ -441,11 +441,12 @@ final class TimbreUITests: XCTestCase {
             // The picker is still up after saving the custom tuning; later rounds open it from the tuner.
             openPicker()
             let card = findInstrument(asset, search: search)
-            card.tap(); settle(6); shot(name)
+            card.tap(); _ = waitForStage(); shot(name)
         }
     }
 
     func test08PhotoStage() throws {
+        app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
         launch(pitch: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
         openPicker()
@@ -456,7 +457,7 @@ final class TimbreUITests: XCTestCase {
         element("string.2").tap(); settle(3); shot("18-tune-photo-stage-string")
         openPicker()
         let bass = findInstrument("06_bass_4_string_p_bass", search: "4-string")
-        bass.tap(); settle(6); shot("19-tune-bass-3d")
+        bass.tap(); _ = waitForStage(); shot("19-tune-bass-3d")
     }
 
     func test09LearnChordLesson() throws {
