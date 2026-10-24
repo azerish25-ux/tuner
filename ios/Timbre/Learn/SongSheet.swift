@@ -340,6 +340,9 @@ extension SongSheet.Section {
         guard let name = title?.defaultValue.lowercased() else { return false }
         return ["hook", "chorus", "refrain"].contains { name.contains($0) }
     }
+
+    /// The lead sheet's card for the section, to scroll to (a string, apart from the map's own section ids).
+    var anchor: String { "leadsheet.section.\(id)" }
 }
 
 extension SongSheet {
@@ -743,7 +746,7 @@ struct LeadSheetView<Controls: View>: View {
         .overlay(shape.strokeBorder(tint.opacity(edge), lineWidth: on ? 1.5 : 1))
         .contentShape(shape)
         .onTapGesture { onSelect(section) }
-        .id(section.id)
+        .id(section.anchor)
     }
 
     private func header(_ section: SongSheet.Section, tint: Color, on: Bool) -> some View {
@@ -893,9 +896,10 @@ struct LeadRow: View, Equatable {
 
     private func drawChords(_ context: inout GraphicsContext, bar: CGFloat) {
         var previous: String?
-        for (i, chord) in chords.enumerated() {
-            defer { previous = chord?.symbol }
-            guard let chord, i == 0 || chord.symbol != previous else { continue }
+        for (i, entry) in chords.enumerated() {
+            let changed = i == 0 || entry?.symbol != previous
+            previous = entry?.symbol
+            guard let chord = entry, changed else { continue }
             let label = Text(verbatim: chord.name).font(.custom(Self.labelFace, fixedSize: 15)).foregroundStyle(Palette.ink)
             context.draw(label, at: CGPoint(x: CGFloat(i) * bar + 6, y: Self.chordLane / 2 - 1), anchor: .leading)
         }

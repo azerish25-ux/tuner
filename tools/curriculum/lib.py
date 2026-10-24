@@ -227,8 +227,10 @@ def quiz(prompt, options, answer, why=None, visual=None):
 
 # ---------------------------------------------------------------- structure
 
-def lesson(lid, title, steps, minutes=4, xp=20, kind="lesson", free=False):
-    return {"id": lid, "title": T(title), "kind": kind, "minutes": minutes, "xp": xp, "free": free, "steps": steps}
+def lesson(lid, title, steps, minutes=4, xp=20, kind="lesson", free=False, arrangement=None):
+    """arrangement: a song's full arrangement (songbook.Song.meta()); its last step is then the whole song."""
+    return {"id": lid, "title": T(title), "kind": kind, "minutes": minutes, "xp": xp, "free": free, "steps": steps,
+            **({"arrangement": arrangement} if arrangement else {})}
 
 
 def unit(uid, title, summary, lessons):

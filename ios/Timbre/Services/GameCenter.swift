@@ -78,11 +78,11 @@ final class GameCenter: ObservableObject {
         self.store = store
         guard !started else { return }
         started = true
-        GKLocalPlayer.local.authenticateHandler = { [weak self] _, _ in
+        GKLocalPlayer.local.authenticateHandler = { _, _ in
             // GameKit hands over a sign-in screen when nobody is signed in: it is never shown, and Game Center stays off
             // until the player signs in from Settings (GameKit calls this again then). An app App Store Connect doesn't
             // know yet arrives here with an error and stays off the same way.
-            Task { @MainActor in self?.authenticationChanged() }
+            Task { @MainActor in GameCenter.shared.authenticationChanged() }
         }
     }
 
@@ -162,22 +162,22 @@ final class GameCenter: ObservableObject {
 
     private func submit(_ score: Int, to ids: [String], refreshRank: Bool) {
         guard active, score > 0, !ids.isEmpty else { return }
-        GKLeaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local, leaderboardIDs: ids) { [weak self] error in
+        GKLeaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local, leaderboardIDs: ids) { error in
             guard error == nil, refreshRank else { return }
-            Task { @MainActor in self?.loadBoards() }
+            Task { @MainActor in GameCenter.shared.loadBoards() }
         }
     }
 
     /// Which of the app's leaderboards exist, and the player's rank on this week's Pitch Sniper board.
     private func loadBoards() {
-        GKLeaderboard.loadLeaderboards(IDs: GameCenterIDs.leaderboards) { [weak self] found, _ in
+        GKLeaderboard.loadLeaderboards(IDs: GameCenterIDs.leaderboards) { found, _ in
             let list = found ?? []
             let ids = Set(list.map(\.baseLeaderboardID))
-            Task { @MainActor in self?.boards = ids }
+            Task { @MainActor in GameCenter.shared.boards = ids }
             guard let weekly = list.first(where: { $0.baseLeaderboardID == GameCenterIDs.sniperWeekly }) else { return }
             weekly.loadEntries(for: [GKLocalPlayer.local], timeScope: .allTime) { local, _, _ in
                 let rank = local?.rank
-                Task { @MainActor in self?.weeklyRank = rank }
+                Task { @MainActor in GameCenter.shared.weeklyRank = rank }
             }
         }
     }

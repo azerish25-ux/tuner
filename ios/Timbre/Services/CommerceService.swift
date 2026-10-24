@@ -40,7 +40,10 @@ final class CommerceService: ObservableObject {
         }
         Task { [weak self] in await self?.refreshEntitlements() }
         foreground = NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
-            .sink { [weak self] _ in Task { await self?.refreshEntitlements() } }
+            .sink { [weak self] _ in
+                guard let self else { return }
+                Task { await self.refreshEntitlements() }
+            }
     }
 
     deinit {

@@ -284,7 +284,7 @@ struct SongOpener: View {
             SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent,
                            progress: position.map { $0 / Double(max(1, sheet.bars)) }, selected: selected) { section in
                 pick(section)
-                withAnimation(reduceMotion ? nil : Motion.settle) { proxy.scrollTo(section.id, anchor: .center) }
+                withAnimation(reduceMotion ? nil : Motion.settle) { proxy.scrollTo(section.anchor, anchor: .center) }
             }
             .accessibilityIdentifier("song.map")
         }
@@ -369,6 +369,9 @@ struct SongOpener: View {
                 .accessibilityIdentifier("song.section.practice")
             }
         }
+        // A tap between the controls stays here rather than reaching the card (which would stop the loop).
+        .contentShape(Rectangle())
+        .onTapGesture {}
         .transition(.opacity.combined(with: .move(edge: .top)))
     }
 

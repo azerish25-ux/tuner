@@ -150,7 +150,7 @@ struct SongsView: View {
 
     /// Points at the nearest open lesson before a locked song in its course: finishing it moves toward the song.
     private func showHint(toward lesson: Lesson, in course: LearnCourse) {
-        guard let step = SongsCatalog.gate(lesson, in: course, lessons: course.lessons, progress: store.learn) else { return }
+        guard let step = SongsCatalog.gate(lesson, in: course, progress: store.learn) else { return }
         withAnimation(Motion.pluck) { hint = Hint(lessonId: step.id, token: (hint?.token ?? 0) + 1) }
         AccessibilityNotification.Announcement(String(localized: "Next up: \(step.title.localized)", bundle: TimbreLocalization.bundle)).post()
     }
@@ -663,7 +663,6 @@ struct SongsView: View {
     private var songs: [SongsView.Song] = []
     private var chipList: [SongsView.Chip] = []
     private var arts: [String: CoverArt] = [:]
-    private var lessonsByCourse: [String: [Lesson]] = [:]
     private var key: Key?
     private var standings: [String: Standing] = [:]
     private var layouts: [String: Layout] = [:]
@@ -702,7 +701,6 @@ struct SongsView: View {
         built = true
         var found: [SongsView.Song] = []
         for course in curriculum.courses {
-            lessonsByCourse[course.id] = course.lessons
             var number = 0
             for (index, unit) in course.units.enumerated() {
                 for lesson in unit.lessons where lesson.kind == .song {
@@ -734,18 +732,16 @@ struct SongsView: View {
         var made: [String: Standing] = [:]
         for song in songs {
             let access = LessonAccess.of(song.lesson, in: song.course, store: store)
-            let gate = access == .locked
-                ? Self.gate(song.lesson, in: song.course, lessons: lessonsByCourse[song.course.id] ?? [], progress: next.learn)
-                : nil
+            let gate = access == .locked ? Self.gate(song.lesson, in: song.course, progress: next.learn) : nil
             made[song.id] = Standing(access: access, gate: gate)
         }
         standings = made
     }
 
     /// The nearest open, unfinished lesson before `lesson` in its course: finishing it moves toward the song.
-    static func gate(_ lesson: Lesson, in course: LearnCourse, lessons: [Lesson], progress: LearnProgress) -> Lesson? {
-        guard let position = lessons.firstIndex(where: { $0.id == lesson.id }) else { return nil }
-        return lessons[..<position].last { progress.isUnlocked($0, in: course) && !progress.isFinished($0.id) }
+    static func gate(_ lesson: Lesson, in course: LearnCourse, progress: LearnProgress) -> Lesson? {
+        guard let position = course.position(of: lesson.id) else { return nil }
+        return course.lessons[..<position].last { progress.isUnlocked($0, in: course) && !progress.isFinished($0.id) }
     }
 
     // MARK: Layout
