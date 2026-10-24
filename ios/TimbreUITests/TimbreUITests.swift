@@ -64,6 +64,18 @@ final class TimbreUITests: XCTestCase {
         }
         settle(1.2)
     }
+    /// An instrument card in the open picker, found through its search field: scrolling the long sheet is
+    /// flaky (a downward swipe at the top of the list dismisses the sheet).
+    private func findInstrument(_ asset: String, search: String) -> XCUIElement {
+        let card = element("instrument." + asset)
+        let field = element("instruments.search")
+        if field.waitForExistence(timeout: 5) {
+            field.tap(); field.typeText(search); settle(1)
+        }
+        if !(card.exists && card.isHittable) { scrollTo(card) }
+        return card
+    }
+
     /// Swipes until the element is on screen, then lets the scroll come to rest: a tap during
     /// momentum only stops the scroll and never reaches the button.
     private func scrollTo(_ target: XCUIElement) {
@@ -359,11 +371,10 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(element("custom.save").waitForExistence(timeout: 10))
         element("custom.save").tap(); settle(1.5); shot("48-custom-tuning-saved")
         // Pro instruments on their 3D stage.
-        for (asset, name) in [("13_mandolin_mandolin", "49-tune-mandolin-3d"), ("17_bowed_strings_violin", "49b-tune-violin-3d"), ("19_bowed_strings_cello", "49c-tune-cello-3d")] {
+        for (asset, search, name) in [("13_mandolin_mandolin", "Mandolin", "49-tune-mandolin-3d"), ("17_bowed_strings_violin", "Violin", "49b-tune-violin-3d"), ("19_bowed_strings_cello", "Cello", "49c-tune-cello-3d")] {
             // The picker is still up after saving the custom tuning; later rounds open it from the tuner.
             openPicker()
-            let card = element("instrument." + asset)
-            scrollTo(card)
+            let card = findInstrument(asset, search: search)
             card.tap(); settle(6); shot(name)
         }
     }
@@ -372,15 +383,13 @@ final class TimbreUITests: XCTestCase {
         launch(pitch: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
         openPicker()
-        let ukulele = element("instrument.10_ukulele_soprano_ukulele")
-        scrollTo(ukulele)
+        let ukulele = findInstrument("10_ukulele_soprano_ukulele", search: "Soprano")
         ukulele.tap()
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 15))
         settle(7); shot("17-tune-photo-stage")
         element("string.2").tap(); settle(3); shot("18-tune-photo-stage-string")
         openPicker()
-        let bass = element("instrument.06_bass_4_string_p_bass")
-        scrollTo(bass)
+        let bass = findInstrument("06_bass_4_string_p_bass", search: "4-string")
         bass.tap(); settle(6); shot("19-tune-bass-3d")
     }
 
