@@ -1,0 +1,60 @@
+name: 3D assets
+on:
+  push:
+    branches: ["assets/**"]
+    paths:
+      - "tools/models/**"
+      - ".github/workflows/assets.yml"
+  workflow_dispatch:
+    inputs:
+      models:
+        description: "Comma-separated model ids (empty = all)"
+        required: false
+        default: ""
+permissions:
+  contents: write
+concurrency:
+  group: assets-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  blender:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      BLENDER_SERIES: "4.5"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Locate Blender LTS
+        run: |
+          VERSION=$(curl -fsSL "https://download.blender.org/release/Blender${BLENDER_SERIES}/" | grep -o "blender-${BLENDER_SERIES}\.[0-9]*-linux-x64\.tar\.xz" | sort -V | tail -1)
+          echo "BLENDER_TARBALL=$VERSION" >> "$GITHUB_ENV"
+          echo "Using $VERSION"
+      - uses: actions/cache@v4
+        with:
+          path: ~/blender
+          key: ${{ env.BLENDER_TARBALL }}
+      - name: Install Blender
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libxi6 libxxf86vm1 libxfixes3 libxrender1 libgl1 libegl1 libxkbcommon0 libsm6 libice6 > /dev/null
+          if [ ! -x ~/blender/blender ]; then
+            mkdir -p ~/blender
+            curl -fsSL "https://download.blender.org/release/Blender${BLENDER_SERIES}/${BLENDER_TARBALL}" | tar -xJ -C ~/blender --strip-components=1
+          fi
+          ~/blender/blender --version | head -1
+          python3 -m pip install --quiet pillow numpy scipy
+      - name: Regenerate procedural textures
+        run: python3 tools/models/textures.py
+      - name: Build models, rigs and renders
+        run: |
+          mkdir -p build/assets
+          set -o pipefail
+          ~/blender/blender -b --factory-startup --python-exit-code 1 --python tools/models/build_assets.py -- --out build/assets --models "${{ github.event.inputs.models }}" --samples 64 --res 1024 2>&1 | tee build/assets/blender.log
+      - name: Thumbnails and contact sheet
+        if: always()
+        run: python3 tools/models/postprocess.py build/assets
+      - name: Publish results
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash tools/ci/publish-results.sh ci-results/assets build/assets

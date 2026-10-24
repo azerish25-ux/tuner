@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- lt plural forms (CLDR categories used: one, few, other). Keys match en.lproj/Localizable.stringsdict; wording follows this locale's Localizable.strings. -->
+<plist version="1.0">
+<dict>
+	<key>%lld cents flat</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Per žemai, centai: %lld</string>
+			<key>few</key>
+			<string>Per žemai, centai: %lld</string>
+			<key>other</key>
+			<string>Per žemai, centai: %lld</string>
+		</dict>
+	</dict>
+	<key>%lld cents sharp</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Per aukštai, centai: %lld</string>
+			<key>few</key>
+			<string>Per aukštai, centai: %lld</string>
+			<key>other</key>
+			<string>Per aukštai, centai: %lld</string>
+		</dict>
+	</dict>
+	<key>%lld minutes</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld min.</string>
+			<key>few</key>
+			<string>%lld min.</string>
+			<key>other</key>
+			<string>%lld min.</string>
+		</dict>
+	</dict>
+	<key>%lld sessions</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Sesijos: %lld</string>
+			<key>few</key>
+			<string>Sesijos: %lld</string>
+			<key>other</key>
+			<string>Sesijos: %lld</string>
+		</dict>
+	</dict>
+	<key>Every %lld bars</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Kas taktą</string>
+			<key>few</key>
+			<string>Kas %lld taktus</string>
+			<key>other</key>
+			<string>Kas %lld taktų</string>
+		</dict>
+	</dict>
+	<key>Practised on %lld days in the last twelve weeks</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Praktikos dienos per pastarąsias dvylika savaičių: %lld</string>
+			<key>few</key>
+			<string>Praktikos dienos per pastarąsias dvylika savaičių: %lld</string>
+			<key>other</key>
+			<string>Praktikos dienos per pastarąsias dvylika savaičių: %lld</string>
+		</dict>
+	</dict>
+	<key>Practised today. Best run %lld days.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Šiandien jau praktikavotės. Ilgiausia serija: %lld d.</string>
+			<key>few</key>
+			<string>Šiandien jau praktikavotės. Ilgiausia serija: %lld d.</string>
+			<key>other</key>
+			<string>Šiandien jau praktikavotės. Ilgiausia serija: %lld d.</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

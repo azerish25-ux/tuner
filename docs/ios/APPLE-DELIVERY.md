@@ -1,67 +1,153 @@
-# Timbre iOS — Apple delivery handoff
+# Timbre for iOS — Apple delivery handoff
 
-This document describes the remaining Apple-account and release work. It is not evidence that the current revision's tests, archive, App Store product, live advertising or submission have succeeded. Inspect the latest GitHub Actions results and release artifact before delivery.
+What the owner sets up in Apple's portals and GitHub before the first App Store build. Nothing here has been executed yet: no signing, upload or App Store product exists until the owner does these steps.
 
-## Application identity
+## Identity
 
-- Repository: https://github.com/azerish25-ux/tuner
-- Application: **Timbre**
-- Current XcodeGen bundle identifier: **com.shahradazerisharghi.timbre** (`ios/project.yml`)
-- Deployment target: **iOS 17.0**, iPhone and iPad
-- Owner/support: **Shahrad Azeri Sharghi**, **azerish25@gmail.com**
-- Non-consumable purchase identifier: **timbre_plus_lifetime**
-- Intended privacy URL after these files are merged to publicly accessible `main`: **https://github.com/azerish25-ux/tuner/blob/main/docs/ios/PRIVACY.md**
-- Standard Apple EULA: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
-
-Verify that the privacy URL opens without authentication after merge. A file on an unmerged branch or a private repository is not a public metadata URL. The previous linked Worker privacy site must not be assumed available. If this repository is private, publish this same approved policy at a publicly reachable location before submission.
-
-## Owner's Apple setup
-
-1. Register the exact bundle ID in Certificates, Identifiers & Profiles and create the matching iOS app in App Store Connect. Confirm the owner has accepted applicable agreements and configured required paid-app banking/tax information.
-2. Create **timbre_plus_lifetime** as a **non-consumable** in-app purchase. Add its localized display name/description, chosen real price and availability, and review screenshot/information. This is a permanent unlock with no renewal. The StoreKit fixture's 7.99 is strictly local test data and is not a production price decision. The app uses Apple's `displayPrice`.
-3. Add App Store metadata, support contact, privacy URL, category, age-rating questionnaire, export-compliance answers, and required iPhone/iPad screenshots. Complete App Privacy against the actual release SDK/configuration, including third-party partners; the on-device microphone design does not justify declaring all third-party data collection absent. Apple requires disclosure of integrated partners' practices. [Apple's privacy guidance][apple-privacy] and [Google's iOS SDK disclosure][google-disclosure] are the starting evidence.
-4. Establish signing for this bundle ID: Apple distribution certificate/private key and App Store provisioning profile, or an authorized automatic-signing workflow with appropriately scoped credentials. The current unsigned archive cannot be installed or uploaded as a signed App Store build.
-5. Create a scoped App Store Connect API key for the approved CI upload process and retain its issuer ID/key ID. The owner must authorize the signed delivery/upload step. Do not place credentials in chat, repository files, issues, logs or build artifacts.
-
-## GitHub Actions signing secrets
-
-The `apple-delivery` GitHub environment is configured for deployments from `main` with required review by `azerish25-ux`. Add credentials through [repository environments](https://github.com/azerish25-ux/tuner/settings/environments), selecting `apple-delivery` and its environment secrets. The manual `.github/workflows/apple-delivery.yml` workflow uses the following exact names in the `apple-delivery` environment:
-
-| Secret | Contents/use |
+| | |
 |---|---|
-| `APPLE_TEAM_ID` | Apple Developer team identifier used for signing |
-| `APPLE_CERTIFICATE_P12_BASE64` | Base64 transport of distribution certificate and private key; remains a secret, not encryption |
-| `APPLE_CERTIFICATE_PASSWORD` | Password protecting that certificate export |
-| `APPLE_PROVISIONING_PROFILE_BASE64` | App Store provisioning profile matching bundle ID and certificate |
-| `APP_STORE_CONNECT_KEY_ID` | Upload API key identifier |
-| `APP_STORE_CONNECT_ISSUER_ID` | API issuer identifier |
-| `APP_STORE_CONNECT_API_KEY_P8` | Complete raw PEM contents of the downloaded `.p8` private key, including BEGIN/END lines; do not Base64-encode this secret |
+| App | **Timbre** |
+| Bundle ID (app) | `com.shahradazerisharghi.timbre` |
+| Bundle ID (widgets) | `com.shahradazerisharghi.timbre.widgets` |
+| App Group | `group.com.shahradazerisharghi.timbre` (widgets read the practice streak from it) |
+| Minimum iOS | 18.0, iPhone and iPad |
+| Privacy policy URL | https://azerish25-ux.github.io/tuner/privacy.html |
+| Terms | Apple standard EULA: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/ |
 
-Alternative signing methods can avoid a manually supplied profile, but must be concretely configured and verified before replacing these inputs. Use an ephemeral CI keychain, temporary files with restrictive permissions, and cleanup that runs even on failure. Do not echo secret values, enable shell tracing around secrets, or upload keychains, `.p12`, `.p8`, profiles or temporary credential directories. Rotate/revoke exposed credentials. Follow [Apple's API-key guidance][apple-keys] and [GitHub's secrets guidance][github-secrets].
+## 1. App Store Connect app
 
-## Optional iOS advertising configuration
+1. Accept the Paid Apps agreement and complete banking and tax (Business → Agreements). Subscriptions cannot go live without it.
+2. Enrol in the **App Store Small Business Program** (15% commission instead of 30%).
+3. Create the app: **Apps → + → New App**, platform iOS, name Timbre, bundle ID `com.shahradazerisharghi.timbre` (register it under Certificates, Identifiers & Profiles if it is not offered; automatic signing in step 3 can also register it).
 
-To retain free-edition monetization, the owner must create/confirm an **iOS** AdMob app and interstitial ad unit. Android identifiers do not identify the iOS app. Supply production GitHub repository or `apple-delivery` environment variables `TIMBRE_ADMOB_APP_ID` and `TIMBRE_ADMOB_INTERSTITIAL_ID`; the delivery workflow forwards them as build settings and selects `ios/project-ads.yml` only when both are valid. `GADApplicationIdentifier` resolves from the former. The baseline `ios/project.yml` does not link the advertising SDKs, avoiding SDK startup without an application identifier. Configure privacy messages in AdMob, verify required privacy-options access, and review the actual SDK privacy manifests and App Store privacy answers. If any proposed advertising behavior constitutes tracking, implement and validate Apple's applicable permission requirements before enabling it. [Google's UMP documentation][google-ump] and [Apple's tracking guidance][apple-tracking] describe separate responsibilities.
+## 2. In-app purchases (exact identifiers — the app looks these up)
 
-When identifiers are absent, the delivery workflow selects the baseline build without advertising SDKs. Malformed, incomplete or Google demo identifier pairs fail delivery validation instead of producing a release with invalid advertising configuration. Test identifiers/debug opt-in are not production monetization. Do not claim live iOS ads or consent-region behavior were verified until the configured release has been tested. If shipping without advertising, make that release decision explicit and ensure policy/metadata match the delivered build.
+Create a subscription group named **Timbre Pro** with two auto-renewable subscriptions at the same level:
 
-## Signed delivery workflow outline
+| Product ID | Type | Duration | Suggested US price | Introductory offer |
+|---|---|---|---|---|
+| `timbre_pro_annual` | Auto-renewable | 1 year | $34.99 | Free trial, 2 weeks, new subscribers |
+| `timbre_pro_monthly` | Auto-renewable | 1 month | $6.99 | none |
 
-The existing `.github/workflows/ios.yml` builds/tests on hosted macOS and creates an **unsigned** archive. Signing and uploading use the separate manual `.github/workflows/apple-delivery.yml` workflow. It runs only through `workflow_dispatch`, requires `confirm_delivery=true`, the approved `marketing_version` and a unique positive `build_number`, and targets the `apple-delivery` environment. Do not dispatch it before the owner authorizes Apple delivery. Its steps are:
+And one non-consumable:
 
-1. Select an exact reviewed commit; require successful latest core, application integration/StoreKit and UI flow jobs. Inspect simulator screenshots and test artifacts, rather than inferring feature parity from a compile alone.
-2. Resolve dependencies and generate `ios/Timbre.xcodeproj` with XcodeGen. Set the approved Apple team, bundle/version/build values and optional advertising configuration.
-3. Import signing inputs into the ephemeral keychain and install the correct profile. Archive for `generic/platform=iOS` with distribution signing enabled; do not use `CODE_SIGNING_ALLOWED=NO` for this archive.
-4. Export with an App Store Connect distribution ExportOptions file for the same team/bundle. Check the signed app's identity, entitlements, version and resources. Local `.storekit` fixtures belong to test resources and must not be included in the release app.
-5. Upload the approved exported build using an Apple-supported upload tool authenticated with the scoped App Store Connect key. Preserve upload/processing results and report failures accurately.
-6. After Apple processes the build, select it in App Store Connect, attach the in-app purchase as required, finish review notes/metadata, and obtain owner authorization for the intended TestFlight or App Store submission action.
-7. Remove temporary credentials/keychain/profile copies from the runner. Retain useful test/archive/export evidence without secrets.
+| Product ID | Type | Suggested US price |
+|---|---|---|
+| `timbre_plus_lifetime` | Non-consumable | $89.99 |
 
-TestFlight distribution and App Store submission are distinct choices. This handoff imposes no recruited tester count; it also does not claim Apple's review is waived. Simulator checks cannot establish actual iPhone microphone latency, routing or acoustic accuracy. Those hardware measurements remain explicitly unverified until performed.
+The paywall shows the yearly plan's weekly cost ("$0.67 a week"), worked out from the yearly price Apple returns, so it always matches the storefront. The paywall's offer codes and its one-time exit offer are set up in [section 6](#6-growth-features-owner-steps).
 
-[apple-privacy]: https://developer.apple.com/app-store/app-privacy-details/
-[apple-keys]: https://developer.apple.com/documentation/appstoreconnectapi/creating-api-keys-for-app-store-connect-api
-[github-secrets]: https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions
-[google-disclosure]: https://developers.google.com/admob/ios/privacy/data-disclosure
-[google-ump]: https://developers.google.com/admob/ios/privacy
-[apple-tracking]: https://developer.apple.com/app-store/user-privacy-and-data-use/
+`timbre_plus_lifetime` keeps the identifier of the earlier lifetime purchase, so anyone who bought it keeps Pro. Prices are suggestions: the app shows whatever Apple returns (`displayPrice`), including the trial length. Give each product a display name and description, a review screenshot of the paywall, and review notes saying the trial and plans are on the paywall reached from any locked lesson or Practice → Drone. Ready-to-paste names, descriptions, listing text, keywords, review notes and a pricing note are in [APP-STORE-LISTING.md](APP-STORE-LISTING.md). Submit the products with the first app version.
+
+## 3. Signing and upload from GitHub Actions
+
+The delivery workflow signs automatically with an App Store Connect API key, which provisions the app, the widget extension and the App Group without certificates or profiles to export.
+
+1. App Store Connect → Users and Access → Integrations → **App Store Connect API** → Team Keys → generate a key with the **Admin** role (automatic signing needs to create a distribution certificate). Download the `.p8` once; note the Key ID and Issuer ID.
+2. Find the Team ID under Membership details at developer.apple.com.
+3. GitHub → repository Settings → Environments → **apple-delivery** → add these environment secrets:
+
+| Secret | Value |
+|---|---|
+| `APPLE_TEAM_ID` | 10-character Team ID |
+| `APP_STORE_CONNECT_KEY_ID` | Key ID |
+| `APP_STORE_CONNECT_ISSUER_ID` | Issuer ID |
+| `APP_STORE_CONNECT_API_KEY_P8` | Entire `.p8` file contents including the BEGIN/END lines (not Base64) |
+
+Never paste these into chat, issues, commits or logs. Revoke the key in App Store Connect if it is ever exposed.
+
+4. Run **Actions → Apple delivery → Run workflow** on `main` with a version (2.0.0), a new build number, and the confirmation box ticked. It runs the core tests, archives the Release build, signs it and uploads it to App Store Connect, where it appears under TestFlight after processing.
+
+## 4. Listing
+
+- Category: Music. Secondary: Education.
+- Age rating: 4+.
+- App Privacy: **Data Not Collected** matches this version (pitch analysis and history stay on the device, no analytics SDK, no ads). Revisit if analytics or a paywall service is added. Game Center (section 6) does not change this: scores and achievements go to Apple's Game Center under the player's own Game Center account, and the app keeps no player ID, name or friend list.
+- Encryption: the app uses only Apple's standard encryption (`ITSAppUsesNonExemptEncryption = false`).
+- Screenshots: the CI tour produces 6.9" iPhone and 13" iPad captures (`ci-results/app`, `ci-results/ipad`) as a starting point.
+- Subscription disclosures are on the paywall (price, period, auto-renewal, cancel in Settings, Terms and Privacy links), as App Review Guideline 3.1.2 requires.
+
+## 5. Analytics (optional, off until you switch it on)
+
+Timbre can send anonymous product events (onboarding finished, paywall shown, trial started, lesson done, streaks) to [TelemetryDeck](https://telemetrydeck.com), which is privacy-first: no IDFA, no personal data, and a random install ID hashed on the device. With no app ID, nothing leaves the device.
+
+1. Create a TelemetryDeck app and copy its App ID.
+2. GitHub → repository Settings → Secrets and variables → Actions → **Variables** → add `TELEMETRYDECK_APP_ID`. Delivery builds pick it up and debug builds stay in test mode.
+3. Before submitting, update the App Privacy label in App Store Connect to "Product Interaction → Analytics, not linked to the user, not used for tracking" (the app's privacy manifest already declares this), and update the "Analytics and advertising" section of PRIVACY.md.
+
+
+## 6. Growth features: owner steps
+
+The app ships with all of these switched on in code, and each works as soon as its App Store Connect setup exists. Until then it stays out of sight: no Leaderboard chips, no exit offer, and an offer-code sheet with nothing to redeem. Nothing crashes or prompts. The identifiers below are also in `ios/Timbre/Services/GameCenterIDs.swift`, and they must match exactly.
+
+### 6.1 Game Center
+
+1. **Capability.** Under Certificates, Identifiers & Profiles → Identifiers → `com.shahradazerisharghi.timbre`, check that **Game Center** is ticked. It is on by default for explicit App IDs.
+2. **Entitlement.** This is a one-line change to `ios/project.yml`. Under `targets → Timbre → entitlements → properties`, add `com.apple.developer.game-center: true` beside the App Group. The delivery workflow signs automatically, and its Admin API key can update the provisioning profile. The entitlement was left out of the repo on purpose, so CI never signs with a capability the App ID might not have yet. Without it, Game Center may refuse to sign in on TestFlight and App Store builds; the app then carries on without it. Do not add `gamekit` to `UIRequiredDeviceCapabilities`.
+3. **Turn on Game Center for the app version.** Go to App Store Connect → the app → Features → **Game Center** → enable it. Then, on the version page, add the leaderboards and achievements below under Game Center.
+4. **Leaderboards.** Create all three. Each uses score format **Integer**, submission type **Best score**, and is sorted **High to low**.
+
+| Leaderboard ID | Type | Name (English) | Score range | Notes |
+|---|---|---|---|---|
+| `timbre.sniper.best` | Classic | Pitch Sniper | 0 – 25,000 | All-time best game |
+| `timbre.sniper.weekly` | Recurring | Pitch Sniper this week | 0 – 25,000 | Starts on a Monday at 00:00, lasts 1 week, repeats every week. This is the weekly league; the Leaderboard chip opens it first. |
+| `timbre.ear.level` | Classic | Ear trainer level | 1 – 100 | The level the Play tab shows |
+
+5. **Achievements.** Create these 31 achievements, worth 895 points in all (the cap is 1,000). For every one, set Hidden to No and Achievable more than once to No. Add a 1024 × 1024 image. Use the badge's title as the title. Use its detail for both descriptions, before and after it is earned. The per-instrument course badges and the Pro-only badges (custom tuning, Pro-precision locks) are left out on purpose.
+
+| Achievement ID | Title | Description | Points |
+|---|---|---|---|
+| `timbre.badge.first_tune` | First in tune | Tune your first string | 5 |
+| `timbre.badge.full_tune` | All six | Tune every string of an instrument | 10 |
+| `timbre.badge.strings_100` | Hundred strings | Tune 100 strings | 20 |
+| `timbre.badge.full_25` | Tune-up habit | Tune every string 25 times | 25 |
+| `timbre.badge.multi` | Multi-instrumentalist | Tune three different instruments | 20 |
+| `timbre.badge.strings_1000` | Thousand strings | Tune 1,000 strings | 50 |
+| `timbre.badge.streak_3` | Warming up | Play three days in a row | 10 |
+| `timbre.badge.streak_7` | Perfect week | Play seven days in a row | 25 |
+| `timbre.badge.streak_30` | Month of music | Play thirty days in a row | 50 |
+| `timbre.badge.streak_100` | Hundred days | Play 100 days in a row | 100 |
+| `timbre.badge.level_5` | Rising star | Reach level 5 | 25 |
+| `timbre.badge.minutes_60` | First hour | Practice for an hour in all | 10 |
+| `timbre.badge.minutes_600` | Ten hours | Practice for ten hours in all | 50 |
+| `timbre.badge.daily_1` | Daily set | Finish a daily set | 5 |
+| `timbre.badge.daily_30` | Creature of habit | Finish 30 daily sets | 50 |
+| `timbre.badge.bullseye` | Bullseye | Hit a bullseye in Pitch Sniper | 5 |
+| `timbre.badge.sniper_win` | Marksman | Win a round of Pitch Sniper | 10 |
+| `timbre.badge.bullseyes_50` | Dead center | Hit 50 bullseyes | 25 |
+| `timbre.badge.sharpshooter` | Sharpshooter | Score 2,000 in Pitch Sniper | 50 |
+| `timbre.badge.golden_ear` | Golden ear | Answer 50 ear questions right | 25 |
+| `timbre.badge.ear_perfect` | Clean sweep | Get all ten right in an ear round | 25 |
+| `timbre.badge.ear_500` | Master listener | Answer 500 ear questions right | 50 |
+| `timbre.badge.first_lesson` | First lesson | Finish your first lesson | 5 |
+| `timbre.badge.units_1` | Unit cleared | Finish every lesson in a unit | 10 |
+| `timbre.badge.songs_1` | First song | Play your first song | 10 |
+| `timbre.badge.lessons_25` | Regular | Finish 25 lessons | 25 |
+| `timbre.badge.perfect_10` | Flawless | Earn three stars on 10 lessons | 25 |
+| `timbre.badge.units_10` | Ten units | Finish ten units | 25 |
+| `timbre.badge.lessons_100` | Scholar | Finish 100 lessons | 50 |
+| `timbre.badge.course_done` | Graduate | Finish a whole course | 50 |
+| `timbre.badge.songs_25` | Songbook | Play 25 songs | 50 |
+
+6. **Test** with a sandbox Apple Account signed in to Game Center on a TestFlight build. Open the Play tab. The welcome banner appears once, and a trophy chip appears on each game card when its board exists. Badges earned before sign-in are reported then.
+
+How the app behaves: it signs in quietly the first time the Play tab's game cards show, or when a challenge link opens, and never during onboarding. It never shows GameKit's sign-in sheet. When a player isn't signed in, the app isn't recognised yet, or Game Center is restricted, everything stays hidden. Game Center's own achievement banner is off, because the app announces badges itself.
+
+### 6.2 "Beat my score" challenge links
+
+The paper-plane chip on the Pitch Sniper card shares a "Beat my score" card. It comes with the link `timbre://challenge?game=sniper&score=N`, which opens Pitch Sniper with that score to beat. A player who beats it gets "Send it back" on the results screen.
+
+- A `timbre://` link only works where Timbre is installed, and some apps don't make custom-scheme links tappable. Once the app has an App Store page, set `SniperChallenge.appStoreLink` in `ios/Timbre/Services/GameCenter.swift` to `https://apps.apple.com/app/id<Apple ID>`, so the shared message also says where to get Timbre.
+- Optional, later: host a small https page that forwards to the `timbre://` link and falls back to the App Store, and share that page instead. Universal Links would need an Associated Domains entitlement and an `apple-app-site-association` file on a domain you control.
+
+### 6.3 Offer codes ("Redeem code" on the paywall)
+
+App Store Connect → the app → Subscriptions → Timbre Pro → the plan → **Offer Codes** → create a campaign: one-time-use codes or a custom code, the offer (free or discounted months), eligibility and dates. The paywall's "Have an offer code? Redeem code" link opens Apple's own redemption sheet, and the code unlocks Pro through the usual transaction. The App Store also accepts codes outside the app (App Store → account → Redeem Gift Card or Code). Nothing in the app needs to change per campaign.
+
+### 6.4 The paywall's one-time exit offer
+
+The second time anyone turns a paywall down (onboarding's paywall counts as the first), the paywall makes one offer, once per install. It only uses offers that exist in App Store Connect, at Apple's prices; the app never invents a discount. If nothing below is set up, the paywall simply closes.
+
+1. **Lapsed subscribers.** Under App Store Connect → Subscriptions → Timbre Pro → each plan → **Win-Back Offers**, create one or more offers (for example 1 month free, for people whose subscription ended 1–6 months ago). The app offers the best one the App Store lists for the person (`eligibleWinBackOfferIDs`) and buys it with that offer applied. StoreKit may also show Apple's own win-back sheet at launch to eligible people. That needs no code.
+2. **Never subscribed.** Give `timbre_pro_monthly` an **Introductory Offer** (for example a 1-week free trial for new subscribers). Introductory-offer eligibility covers the whole group, so someone who already used the yearly trial isn't offered it. The card shows the offer as Apple holds it ("Try Pro free for 7 days"), then the monthly price and how it renews. Leave the monthly plan without an introductory offer to switch this off.
+3. To test locally, add an introductory offer to the monthly plan in `ios/Tests/Fixtures/Timbre.storekit` (in a scratch copy, not the committed fixture the UI tests use). Turn down the paywall twice. The exit offer never shows under the UI tests or the demo modes.

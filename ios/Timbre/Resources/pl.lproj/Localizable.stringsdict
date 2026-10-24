@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- pl plural forms (CLDR categories used: one, few, many, other). Keys match en.lproj/Localizable.stringsdict; wording follows this locale's Localizable.strings. -->
+<plist version="1.0">
+<dict>
+	<key>%lld cents flat</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld¢ za nisko</string>
+			<key>few</key>
+			<string>%lld¢ za nisko</string>
+			<key>many</key>
+			<string>%lld¢ za nisko</string>
+			<key>other</key>
+			<string>%lld¢ za nisko</string>
+		</dict>
+	</dict>
+	<key>%lld cents sharp</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld¢ za wysoko</string>
+			<key>few</key>
+			<string>%lld¢ za wysoko</string>
+			<key>many</key>
+			<string>%lld¢ za wysoko</string>
+			<key>other</key>
+			<string>%lld¢ za wysoko</string>
+		</dict>
+	</dict>
+	<key>%lld minutes</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld min</string>
+			<key>few</key>
+			<string>%lld min</string>
+			<key>many</key>
+			<string>%lld min</string>
+			<key>other</key>
+			<string>%lld min</string>
+		</dict>
+	</dict>
+	<key>%lld sessions</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Sesje: %lld</string>
+			<key>few</key>
+			<string>Sesje: %lld</string>
+			<key>many</key>
+			<string>Sesje: %lld</string>
+			<key>other</key>
+			<string>Sesje: %lld</string>
+		</dict>
+	</dict>
+	<key>Every %lld bars</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Co takt</string>
+			<key>few</key>
+			<string>Co %lld takty</string>
+			<key>many</key>
+			<string>Co %lld taktów</string>
+			<key>other</key>
+			<string>Co %lld taktów</string>
+		</dict>
+	</dict>
+	<key>Practised on %lld days in the last twelve weeks</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Dni z ćwiczeniami w ostatnich dwunastu tygodniach: %lld</string>
+			<key>few</key>
+			<string>Dni z ćwiczeniami w ostatnich dwunastu tygodniach: %lld</string>
+			<key>many</key>
+			<string>Dni z ćwiczeniami w ostatnich dwunastu tygodniach: %lld</string>
+			<key>other</key>
+			<string>Dni z ćwiczeniami w ostatnich dwunastu tygodniach: %lld</string>
+		</dict>
+	</dict>
+	<key>Practised today. Best run %lld days.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Dziś ćwiczone. Najdłuższa seria dni: %lld.</string>
+			<key>few</key>
+			<string>Dziś ćwiczone. Najdłuższa seria dni: %lld.</string>
+			<key>many</key>
+			<string>Dziś ćwiczone. Najdłuższa seria dni: %lld.</string>
+			<key>other</key>
+			<string>Dziś ćwiczone. Najdłuższa seria dni: %lld.</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

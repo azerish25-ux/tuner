@@ -1,20 +1,22 @@
 {
   "identifier" : "86A2AA9F",
-  "nonRenewingSubscriptions" : [],
+  "nonRenewingSubscriptions" : [
+
+  ],
   "products" : [
     {
-      "displayPrice" : "7.99",
+      "displayPrice" : "89.99",
       "familyShareable" : false,
       "internalID" : "80657001",
       "localizations" : [
         {
-          "description" : "Every instrument, alternate tuning, singing practice and Studio. One-time purchase.",
-          "displayName" : "Timbre Plus Lifetime",
+          "description" : "Every Timbre Pro feature, forever. One-time purchase.",
+          "displayName" : "Timbre Pro Lifetime",
           "locale" : "en_US"
         }
       ],
       "productID" : "timbre_plus_lifetime",
-      "referenceName" : "Timbre Plus Lifetime - LOCAL TEST FIXTURE ONLY",
+      "referenceName" : "Timbre Pro Lifetime - LOCAL TEST FIXTURE ONLY",
       "type" : "NonConsumable"
     }
   ],
@@ -29,6 +31,72 @@
     "_storefront" : "USA",
     "_timeRate" : 0
   },
-  "subscriptionGroups" : [],
-  "version" : { "major" : 3, "minor" : 0 }
+  "subscriptionGroups" : [
+    {
+      "id" : "21482456",
+      "localizations" : [
+
+      ],
+      "name" : "Timbre Pro",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "34.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6475000001",
+          "introductoryOffer" : {
+            "internalID" : "6475000011",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P2W"
+          },
+          "localizations" : [
+            {
+              "description" : "All of Timbre Pro, billed yearly.",
+              "displayName" : "Timbre Pro Yearly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "timbre_pro_annual",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Timbre Pro Yearly - LOCAL TEST FIXTURE ONLY",
+          "subscriptionGroupID" : "21482456",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "6.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6475000002",
+          "localizations" : [
+            {
+              "description" : "All of Timbre Pro, billed monthly.",
+              "displayName" : "Timbre Pro Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "timbre_pro_monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Timbre Pro Monthly - LOCAL TEST FIXTURE ONLY",
+          "subscriptionGroupID" : "21482456",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
 }

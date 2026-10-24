@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(Accelerate)
+import Accelerate
+#endif
 
 public struct DetectedPitch: Equatable, Sendable {
     public let frequencyHz: Double
@@ -79,31 +82,78 @@ public final class Autocorrelation {
     public private(set) var acf: [Double]
     public private(set) var head: [Double]
     public private(set) var tail: [Double]
-    public var transformSize: Int { fft.size }
+    public var transformSize: Int { size }
+    private let size: Int
+    private var prefix: [Double]
+    #if canImport(Accelerate)
+    private let log2n: vDSP_Length
+    private let setup: FFTSetupD
+    private let packed: UnsafeMutablePointer<Double>
+    private let real: UnsafeMutablePointer<Double>
+    private let imaginary: UnsafeMutablePointer<Double>
+    #else
     private let fft: Fft
     private var real: [Double]
     private var imaginary: [Double]
-    private var prefix: [Double]
+    #endif
     public init(windowSize: Int) {
         precondition(windowSize >= 8)
         self.windowSize = windowSize
-        fft = Fft(size: Fft.nextPowerOfTwo(2 * windowSize))
-        real = .init(repeating: 0, count: fft.size); imaginary = real
+        size = Fft.nextPowerOfTwo(2 * windowSize)
         acf = .init(repeating: 0, count: windowSize); head = acf; tail = acf
         prefix = .init(repeating: 0, count: windowSize + 1)
+        #if canImport(Accelerate)
+        log2n = vDSP_Length(size.trailingZeroBitCount)
+        setup = vDSP_create_fftsetupD(log2n, FFTRadix(kFFTRadix2))!
+        packed = .allocate(capacity: size)
+        real = .allocate(capacity: size / 2)
+        imaginary = .allocate(capacity: size / 2)
+        #else
+        fft = Fft(size: size)
+        real = .init(repeating: 0, count: size); imaginary = real
+        #endif
     }
+    #if canImport(Accelerate)
+    deinit {
+        vDSP_destroy_fftsetupD(setup)
+        packed.deallocate(); real.deallocate(); imaginary.deallocate()
+    }
+    #endif
+    /// Linear (zero-padded) autocorrelation via the power spectrum, plus prefix energies for YIN.
     public func compute(_ samples: [Float], offset: Int = 0) {
         precondition(offset >= 0 && offset + windowSize <= samples.count)
-        for j in 0..<fft.size { real[j] = j < windowSize ? Double(samples[offset + j]) : 0; imaginary[j] = 0 }
+        #if canImport(Accelerate)
+        let n = windowSize, half = size / 2
+        samples.withUnsafeBufferPointer { source in
+            vDSP_vspdp(source.baseAddress! + offset, 1, packed, 1, vDSP_Length(n))
+        }
+        (packed + n).update(repeating: 0, count: size - n)
+        var split = DSPDoubleSplitComplex(realp: real, imagp: imaginary)
+        packed.withMemoryRebound(to: DSPDoubleComplex.self, capacity: half) { vDSP_ctozD($0, 2, &split, 1, vDSP_Length(half)) }
+        vDSP_fft_zripD(setup, &split, 1, log2n, FFTDirection(FFT_FORWARD))
+        // Packed format: real[0] = DC, imaginary[0] = Nyquist.
+        let dc = real[0] * real[0], nyquist = imaginary[0] * imaginary[0]
+        vDSP_zvmagsD(&split, 1, real, 1, vDSP_Length(half))
+        imaginary.update(repeating: 0, count: half)
+        real[0] = dc; imaginary[0] = nyquist
+        vDSP_fft_zripD(setup, &split, 1, log2n, FFTDirection(FFT_INVERSE))
+        packed.withMemoryRebound(to: DSPDoubleComplex.self, capacity: half) { vDSP_ztocD(&split, 1, $0, 2, vDSP_Length(half)) }
+        // Forward real FFT is scaled by 2 and the inverse by N, so |2X|^2 returns 4N r.
+        var scale = 1.0 / (4.0 * Double(size))
+        acf.withUnsafeMutableBufferPointer { vDSP_vsmulD(packed, 1, &scale, $0.baseAddress!, 1, vDSP_Length(n)) }
+        #else
+        for j in 0..<size { real[j] = j < windowSize ? Double(samples[offset + j]) : 0; imaginary[j] = 0 }
         fft.transform(real: &real, imaginary: &imaginary)
-        for k in 0..<fft.size { real[k] = real[k] * real[k] + imaginary[k] * imaginary[k]; imaginary[k] = 0 }
+        for k in 0..<size { real[k] = real[k] * real[k] + imaginary[k] * imaginary[k]; imaginary[k] = 0 }
         fft.inverse(real: &real, imaginary: &imaginary)
+        for lag in 0..<windowSize { acf[lag] = real[lag] }
+        #endif
         prefix[0] = 0
         for j in 0..<windowSize {
             let s = Double(samples[offset + j]); prefix[j + 1] = prefix[j] + s * s
         }
         for lag in 0..<windowSize {
-            acf[lag] = real[lag]; head[lag] = prefix[windowSize - lag]; tail[lag] = prefix[windowSize] - prefix[lag]
+            head[lag] = prefix[windowSize - lag]; tail[lag] = prefix[windowSize] - prefix[lag]
         }
     }
 }

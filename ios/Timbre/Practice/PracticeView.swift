@@ -1,0 +1,369 @@
+import SwiftUI
+import TimbreCore
+
+enum PracticeRoute: Hashable { case metronome, ear, chords, scales, drone, voice, intonation, sniper }
+
+/// Play: Today (the day's one session), your level, the quests Today doesn't already cover, ear games and tools.
+struct PracticeView: View {
+    @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var commerce: CommerceService
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    @State private var path: [PracticeRoute] = []
+
+    /// German capitalises every noun, so the instrument name keeps its capital there.
+    static func inSentence(_ name: String) -> String {
+        Locale.current.language.languageCode == .german ? name : name.lowercased()
+    }
+
+    var body: some View {
+        NavigationStack(path: $path) {
+            hub
+                .onAppear(perform: consumePendingRoute)
+                .onChange(of: store.pendingPracticeRoute) { _, _ in consumePendingRoute() }
+                .navigationDestination(for: PracticeRoute.self) { route in
+                    Group {
+                        switch route {
+                        case .metronome: MetronomeView()
+                        case .ear: EarTrainingView()
+                        case .chords: ChordsView(mode: .chords)
+                        case .scales: ChordsView(mode: .scales)
+                        case .drone: DroneView()
+                        case .voice: VoiceView()
+                        case .intonation: IntonationView()
+                        case .sniper: PitchSniperView()
+                        }
+                    }
+                    .toolbar(.hidden, for: .tabBar)
+                }
+        }
+    }
+
+    /// A phone (or any compact width) gets one column; an iPad's regular width a grid of cards (`CardColumns`).
+    @ViewBuilder private var hub: some View {
+        if sizeClass == .regular {
+            GeometryReader { proxy in
+                let columns = CardColumns(width: proxy.size.width - 2 * Metrics.gutter)
+                scroller {
+                    if columns.count > 1 { wideHub(columns) } else { compactHub }
+                }
+            }
+        } else {
+            scroller { compactHub }
+        }
+    }
+
+    private func scroller<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        ScrollView {
+            content()
+                .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+        }
+        .stageTopShade()
+        .background(StageBackground(motes: false))
+    }
+
+    private var header: some View {
+        HStack(alignment: .center) {
+            Text("Play").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
+                .accessibilityAddTraits(.isHeader)
+            Spacer()
+            // Today's ring is the card right below, so the chip shows just the streak.
+            StreakChip(showsToday: false) { store.selectedTab = .journey }
+        }
+    }
+
+    private var sideQuests: [Quest] { DailySet.sideQuests(store.quests, beside: store.dailySet) }
+
+    private var compactHub: some View {
+        VStack(alignment: .leading, spacing: 22) {
+            header
+            DailySetCard { open($0) }
+            levelCard
+            let sideQuests = self.sideQuests
+            if !sideQuests.isEmpty { questSection(sideQuests) }
+            gamesSection
+            toolsSection
+        }
+    }
+
+    /// iPad: Today beside your level and quests, then the ear games side by side. Three columns put the tools in
+    /// the third column beside the games; two columns give the tools a row of their own.
+    private func wideHub(_ columns: CardColumns) -> some View {
+        let wide = columns.count >= 3
+        let sideQuests = self.sideQuests
+        return VStack(alignment: .leading, spacing: 26) {
+            header
+            HStack(alignment: .top, spacing: CardColumns.spacing) {
+                DailySetCard { open($0) }
+                    .frame(width: columns.span(wide ? 2 : 1))
+                VStack(alignment: .leading, spacing: 22) {
+                    levelCard
+                    if !sideQuests.isEmpty { questSection(sideQuests) }
+                }
+                .frame(width: columns.unit)
+            }
+            if wide {
+                HStack(alignment: .top, spacing: CardColumns.spacing) {
+                    gamesRow(width: columns.span(2))
+                    toolsSection.frame(width: columns.unit)
+                }
+            } else {
+                gamesRow(width: columns.span(2))
+                toolsRow
+            }
+        }
+    }
+
+    private func consumePendingRoute() {
+        guard let route = store.pendingPracticeRoute else { return }
+        store.pendingPracticeRoute = nil
+        path = [route]
+    }
+
+    private var fretted: Bool { store.instrument.anchorType == "MACHINE_HEAD" || ["guitar", "ukulele", "mandolin"].contains(store.instrument.familyId) }
+
+    private var levelCard: some View {
+        let xp = store.progress.xp
+        let level = store.level
+        let next = Progression.level(for: level.next)
+        return HStack(spacing: 14) {
+            LevelRing(size: 62)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(LocalizedStringKey(level.name)).font(Typeface.display(17)).foregroundStyle(Palette.ink)
+                ProgressLine(value: level.progress(xp))
+                Text("\(xp - level.floor) / \(level.next - level.floor) XP · next: \(Text(LocalizedStringKey(next.name)))").font(.caption).foregroundStyle(Palette.inkSoft)
+            }
+        }
+        .stillCard(cornerRadius: 24, padding: 16, tint: Palette.mint)
+        .accessibilityElement(children: .combine)
+    }
+
+    /// The daily quests Today doesn't cover; the rest ride on Today's rows as XP side goals.
+    private func questSection(_ quests: [Quest]) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Today’s quests").font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+                Spacer()
+                Text("resets in \(hoursToMidnight) h").font(.caption).foregroundStyle(Palette.inkSoft)
+            }
+            ForEach(quests) { quest in
+                // The one saved counter (AppStore.questCounter): tuning counts today's strings, like the tuner's quest line.
+                let count = store.questCounter(quest)
+                Button { open(quest) } label: { HubQuestRow(quest: quest, done: count.done, total: count.total, claimed: store.questProgress(quest) >= quest.target) }
+                    .buttonStyle(PressScaleStyle())
+                    .accessibilityIdentifier("quest.\(quest.id)")
+            }
+        }
+    }
+
+    private var hoursToMidnight: Int {
+        let calendar = Calendar.current
+        let end = calendar.startOfDay(for: Date()).addingTimeInterval(86_400)
+        return max(1, Int((end.timeIntervalSinceNow / 3600).rounded(.up)))
+    }
+
+    private func open(_ quest: Quest) {
+        switch quest.kind {
+        case .tuneAll, .holdInTune: store.selectedTab = .tune
+        case .sniperWin, .bullseyes: path.append(.sniper)
+        case .earCorrect: path.append(.ear)
+        case .practiceMinutes: path.append(.metronome)
+        case .lessons: store.selectedTab = .learn
+        }
+    }
+
+    /// The ear games as live cards: each idles in a preview of itself beside its best, its level and today's challenge.
+    private var gamesSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionTitle("Ear games")
+            sniperCard
+            earCard
+        }
+    }
+
+    /// iPad: the two ear games side by side, `width` across.
+    private func gamesRow(width: CGFloat) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionTitle("Ear games")
+            HStack(alignment: .top, spacing: CardColumns.spacing) {
+                sniperCard
+                earCard
+            }
+        }
+        .frame(width: width)
+    }
+
+    private func sectionTitle(_ title: LocalizedStringKey) -> some View {
+        Text(title).font(Typeface.display(17)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+    }
+
+    private var sniperCard: some View {
+        let stats = store.progress.stats
+        let best = stats["sniperBest"] ?? 0
+        let sniperLevel = SniperRank.level(bullseyes: stats["bullseyes"] ?? 0)
+        let sniperStats = statsLine(best > 0 ? Text("Best \(best)") : nil, level: sniperLevel)
+        return gameCard(.sniper, title: "Pitch Sniper", stats: sniperStats, challenge: .sniper(store), tint: Palette.mint) { live in
+            SniperScopePreview(live: live)
+        }
+    }
+
+    private var earCard: some View {
+        let earLevel = (EarDrill.allCases.map { store.settings.earLevels?[$0.rawValue] ?? 0 }.max() ?? 0) + 1
+        let correct = store.progress.stats["earCorrect"] ?? 0
+        let earStats = statsLine(Text("\(correct) correct"), level: earLevel)
+        return gameCard(.ear, title: "Ear trainer", stats: earStats, challenge: .ear(store), tint: Palette.amber) { live in
+            IntervalStairsPreview(live: live)
+        }
+    }
+
+    /// "Best 1840 · Level 3": the game's score, when it has one, then its level.
+    private func statsLine(_ score: Text?, level: Int) -> Text {
+        let levelText = Text("Level \(level)")
+        guard let score else { return levelText }
+        return score + Text(verbatim: " · ") + levelText
+    }
+
+    private func gameCard<Preview: View>(_ route: PracticeRoute, title: LocalizedStringKey, stats: Text, challenge: GameChallenge, tint: Color,
+                                         @ViewBuilder preview: @escaping (Bool) -> Preview) -> some View {
+        Button { path.append(route) } label: {
+            PlayGameCard(title: title, stats: stats, challenge: challenge, tint: tint, preview: preview)
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityIdentifier("practice.\(route)")
+    }
+
+    /// Three equal columns, built eagerly (not lazily) so every tool exists for VoiceOver and UI tests
+    /// even while it is scrolled below the Today card.
+    private var toolsSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionTitle("Tools")
+            VStack(spacing: 10) {
+                HStack(spacing: 10) { firstTools }
+                if fretted {
+                    HStack(spacing: 10) { frettedTools }
+                }
+            }
+        }
+    }
+
+    /// iPad, two columns: every tool in one row across the width.
+    private var toolsRow: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            sectionTitle("Tools")
+            HStack(spacing: 10) {
+                firstTools
+                if fretted { frettedTools }
+            }
+        }
+    }
+
+    @ViewBuilder private var firstTools: some View {
+        tool(.metronome, "metronome", "Metronome", pro: false)
+        tool(.drone, "waveform.path", "Drone", pro: true)
+        tool(.voice, "music.mic", "Voice", pro: false)
+    }
+
+    @ViewBuilder private var frettedTools: some View {
+        tool(.chords, "hand.raised.fingers.spread", "Chords", pro: true)
+        tool(.scales, "point.3.connected.trianglepath.dotted", "Scales", pro: true)
+        tool(.intonation, "ruler", "Intonation", pro: true)
+    }
+
+    private func tool(_ route: PracticeRoute, _ symbol: String, _ title: LocalizedStringKey, pro: Bool) -> some View {
+        Button {
+            if pro && !commerce.isPro { store.presentPaywall("practice.\(route)") } else { path.append(route) }
+        } label: {
+            VStack(spacing: 6) {
+                // The metronome ticks and the drone ripples, live; the other tools keep their symbol.
+                PlayToolGlyph(route: route, symbol: symbol)
+                Text(title).font(.caption.weight(.semibold)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.8)
+            }
+            .frame(maxWidth: .infinity, minHeight: 74)
+            .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Palette.stageRaised))
+            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
+            .overlay(alignment: .topTrailing) { if pro && !commerce.isPro { ProBadge().scaleEffect(0.8).padding(4) } }
+            .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("practice.\(route)")
+    }
+
+    /// Opens an activity of Today: the lesson in Learn, a tool here (the paywall for a Pro tool on a free plan).
+    private func open(_ kind: DailyActivity.Kind) {
+        if kind.needsPro && !commerce.isPro { store.presentPaywall("daily.\(kind.rawValue)"); return }
+        switch kind {
+        case .lesson: store.openDailyLesson()
+        // TODO: open the due review itself once the Learn engine offers one.
+        case .review: store.selectedTab = .learn
+        case .tune: store.selectedTab = .tune
+        case .ear: path.append(.ear)
+        case .chord: path.append(.chords)
+        case .scale: path.append(.scales)
+        case .rhythm: path.append(.metronome)
+        case .voice: path.append(.voice)
+        case .drone: path.append(.drone)
+        }
+    }
+}
+
+struct ProgressRing: View {
+    let progress: Double
+    var body: some View {
+        ZStack {
+            Circle().stroke(Palette.line, lineWidth: 5)
+            Circle().trim(from: 0, to: max(0.001, progress)).stroke(Palette.brass, style: StrokeStyle(lineWidth: 5, lineCap: .round)).rotationEffect(.degrees(-90))
+            Text("\(Int((progress * 100).rounded()))%").font(Typeface.number(11)).foregroundStyle(Palette.inkSoft)
+        }
+        .animation(Motion.settle, value: progress)
+        .accessibilityElement().accessibilityLabel(Text("\(Int((progress * 100).rounded())) percent done"))
+    }
+}
+
+/// A daily quest on the Play hub: icon, title, a bar with its one counter ("4 / 6") and the XP it pays.
+/// Drawn like the shared QuestRow, but with the counter handed in, so the tuning quest counts strings
+/// the way the tuner does instead of "0 / 1".
+private struct HubQuestRow: View {
+    let quest: Quest
+    let done: Int
+    let total: Int
+    let claimed: Bool
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: claimed ? "checkmark" : quest.symbol).font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(claimed ? Palette.onAccent : quest.tint)
+                .frame(width: 34, height: 34)
+                .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(claimed ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(quest.tint.opacity(0.14))))
+            VStack(alignment: .leading, spacing: 7) {
+                Text(quest.title).font(.subheadline.weight(.semibold)).foregroundStyle(claimed ? Palette.inkSoft : Palette.ink)
+                    .strikethrough(claimed, color: Palette.inkFaint)
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 10) {
+                    ProgressLine(value: Double(done) / Double(max(1, total)), color: claimed ? Palette.mint : quest.tint, height: 5)
+                    Text("\(done) / \(total)").font(Typeface.number(12)).foregroundStyle(claimed ? Palette.mint : Palette.inkSoft)
+                        .contentTransition(.numericText())
+                        .fixedSize()
+                }
+            }
+            reward
+        }
+        .padding(.horizontal, 14).padding(.vertical, 12)
+        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
+        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(.white.opacity(0.06), lineWidth: 1))
+        .animation(Motion.settle, value: done)
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(Text(claimed ? "Done" : "\(done) of \(total)"))
+    }
+
+    /// "+20 XP" in a mint pill while open; "Done" once claimed.
+    @ViewBuilder private var reward: some View {
+        if claimed {
+            Text("Done").font(Typeface.label(12)).foregroundStyle(Palette.mint)
+        } else {
+            Text("+\(quest.xp) XP").font(Typeface.label(12)).foregroundStyle(Palette.mint)
+                .padding(.horizontal, 9).padding(.vertical, 5)
+                .background(Capsule().fill(Palette.mint.opacity(0.12)))
+                .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.25), lineWidth: 1))
+                .fixedSize()
+        }
+    }
+}

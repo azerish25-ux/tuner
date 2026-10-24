@@ -1,194 +1,164 @@
 import XCTest
 
-/// Actual 13-inch simulator layouts and screenshots; no purchase or audio bypass.
+/// 13-inch iPad captures in portrait and landscape (the iPad App Store frames and the tablet layouts). Every frame waits
+/// for what it shows rather than for a fixed time: the tuner for its 3D stage (the studio render only stands in while
+/// the model loads) and the scene's lock, the other screens for their content and for transitions to settle.
 final class TabletScreenshotsUITests: XCTestCase {
     private var app: XCUIApplication!
 
     override func setUpWithError() throws {
-        continueAfterFailure = false
-        XCUIDevice.shared.orientation = .portrait
+        continueAfterFailure = true
         app = XCUIApplication()
         app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString
+        app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
+        app.launchEnvironment["TIMBRE_DEMO_DATA"] = "1"
+        app.launchEnvironment["TIMBRE_DEMO_PITCH"] = "1"
+        // The tuner holds a real lock (ios/Timbre/Root/DemoScenes.swift): two strings ticked, the third locked in tune.
+        app.launchEnvironment["TIMBRE_SCENE"] = "tune-locked"
+        // The tuner's probe (stage.state) says when the 3D model has replaced its studio render.
+        app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
-        app.launch()
-        XCTAssertTrue(element("bench.photo").waitForExistence(timeout: 20), "The real bundled catalog and initial instrument must load")
-        waitForPortrait(true)
-        XCTAssertGreaterThanOrEqual(app.frame.width, 1000, "Run this case on a real 13-inch iPad simulator, not an iPhone")
     }
 
     override func tearDownWithError() throws {
-        if app != nil, testRun?.hasSucceeded == false { screenshot("iPad failure state") }
-        app?.terminate()
         XCUIDevice.shared.orientation = .portrait
     }
 
-    func testThirteenInchPortraitAndLandscapeScreens() {
-        assertInitialBench()
-        screenshot("iPad 13 inch — Bench portrait")
+    func testTabletLayouts() throws {
+        XCUIDevice.shared.orientation = .portrait
+        app.launch()
+        XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 30))
+
+        // App Store frame (iPad #1 in landscape): the 3D headstock with the scene's lock, never the studio stand-in.
+        waitForStage()
+        // Hands off while the scene's locks land, the camera settles on the third peg and the reward banner clears: a
+        // query stalls the main thread, which restarts a hold.
+        settle(7)
+        tunerFrame("ipad-portrait-tune")
 
         XCUIDevice.shared.orientation = .landscapeLeft
-        waitForPortrait(false)
-        assertInitialBench()
-        assertLandscapeControlsInsideApp()
-        screenshot("iPad 13 inch — Bench landscape")
+        // The rotation, the new layout and the camera's re-aim; the stage keeps its model through the turn.
+        settle(1.5)
+        waitForStage(timeout: 30)
+        settle(1.5)
+        tunerFrame("ipad-landscape-tune")
 
+        // The instrument browser is the tuner's picker sheet (a page sheet on iPad).
+        element("tune.instrument").tap()
+        XCTAssertTrue(element("instruments.search").waitForExistence(timeout: 10))
+        settle(1.5)  // the sheet's presentation and the rails' first reveal
+        shot("ipad-landscape-instruments")
+        closePicker()
+
+        tab("Play", until: "practice.sniper")
+        shot("ipad-landscape-practice")
+        tab("Songs", until: "songs.hero")
+        settle(0.5)
+        shot("ipad-landscape-songs")
+        tab("Learn", until: "learn.continue")
+        shot("ipad-landscape-learn")
+        tab("Progress", until: "journey.restrung")
+        shot("ipad-landscape-progress")
+
+        // Portrait: the same tabs as two-column grids.
         XCUIDevice.shared.orientation = .portrait
-        waitForPortrait(true)
-        selectTab("Browse")
-        let guitar = app.buttons["collection.photo.01_guitar_acoustic_guitar"]
-        scrollTo(guitar)
-        XCTAssertTrue(element("collection.search").exists)
-        XCTAssertTrue(guitar.exists && guitar.isHittable)
-        screenshot("iPad 13 inch — Browse collection")
-
-        selectTab("Singing")
-        let firstExercise = app.buttons["voice.exercise.1"]
-        scrollTo(firstExercise)
-        XCTAssertTrue(firstExercise.isEnabled, "Every exercise must be available to preview")
-        screenshot("iPad 13 inch — Singing exercise preview")
-        let selectedKey = app.buttons["voice.key.57"]
-        scrollTo(selectedKey)
-        XCTAssertTrue(selectedKey.isSelected, "The real default A3 target must be visible on the piano")
-        XCTAssertTrue(element("voice.root").exists)
-        screenshot("iPad 13 inch — Singing target piano")
-
-        selectTab("Studio")
-        let tempo = element("studio.bpm")
-        scrollTo(tempo)
-        XCTAssertEqual(tempo.label, "96 beats per minute")
-        let start = app.buttons["studio.startMetronome"]
-        scrollTo(start)
-        XCTAssertTrue(start.isEnabled)
-        screenshot("iPad 13 inch — Studio rhythm controls")
-
-        let settings = app.buttons["settings.open"]
-        XCTAssertTrue(settings.exists && settings.isHittable)
-        settings.tap()
-        let reference = element("settings.currentReference")
-        scrollTo(reference)
-        XCTAssertEqual(reference.label, "A4 = 440.0 Hz")
-        screenshot("iPad 13 inch — Settings")
+        settle(1.5)
+        shot("ipad-portrait-progress")
+        tab("Play", until: "practice.sniper")
+        shot("ipad-portrait-practice")
+        tab("Learn", until: "learn.continue")
+        shot("ipad-portrait-learn")
     }
 
-    private func assertInitialBench() {
-        XCTAssertTrue(element("bench.photo").exists)
-        XCTAssertEqual(element("bench.targetNote").label, "E2")
-        XCTAssertEqual(element("bench.liveFrequency").label, "— Hz", "An idle simulator must not invent a microphone reading")
-    }
+    // MARK: Helpers
 
-    private func selectTab(_ name: String) {
-        let destinations = ["Browse": "collection.search", "Tune": "bench.targetNote", "Singing": "voice.exercise.1", "Studio": "studio.bpm"]
-        guard let destinationID = destinations[name] else { XCTFail("Unknown destination: \(name)"); return }
-        let destination = element(destinationID)
-        // Rotation can leave a stale native-tab hit region briefly after the app
-        // frame settles. Re-query the real control and prove both selection and
-        // destination before any scrolling in the next screen.
-        for attempt in 1...3 {
-            let available = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in self.nativeTab(name) != nil }, object: app)
-            _ = XCTWaiter.wait(for: [available], timeout: 5)
-            guard let tab = nativeTab(name) else {
-                attachNavigationState("Missing native \(name) tab, attempt \(attempt)")
-                continue
-            }
-            if tab.isSelected && destination.exists && destination.isHittable { return }
-            var previousFrame = CGRect.zero
-            var stableObservations = 0
-            let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-                guard tab.exists && tab.isHittable else { return false }
-                let frame = tab.frame
-                stableObservations = frame == previousFrame ? stableObservations + 1 : 0
-                previousFrame = frame
-                return stableObservations >= 2 && self.app.frame.contains(frame)
-            }, object: tab)
-            guard XCTWaiter.wait(for: [settled], timeout: 10) == .completed else {
-                attachNavigationState("Unsettled native \(name) tab, attempt \(attempt)")
-                continue
-            }
-            tab.tap()
-            let arrived = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-                guard let currentTab = self.nativeTab(name) else { return false }
-                return currentTab.isSelected && destination.exists && destination.isHittable
-            }, object: app)
-            if XCTWaiter.wait(for: [arrived], timeout: 8) == .completed { return }
-            attachNavigationState("Native \(name) tap did not confirm its destination, attempt \(attempt)")
-        }
-        XCTFail("The real \(name) tab must be selected and \(destinationID) visible before continuing")
-    }
+    private func element(_ id: String) -> XCUIElement { app.descendants(matching: .any).matching(identifier: id).firstMatch }
+    private func settle(_ seconds: Double = 1.2) { Thread.sleep(forTimeInterval: seconds) }
 
-    private func nativeTab(_ name: String) -> XCUIElement? {
-        let identifiers = ["Browse": "tab.collection", "Tune": "tab.bench", "Singing": "tab.voice"]
-        let candidates = [
-            app.tabBars.buttons.matching(identifier: name).firstMatch,
-            app.toolbars.buttons.matching(identifier: name).firstMatch,
-            app.buttons.matching(identifier: identifiers[name] ?? name).firstMatch,
-            app.buttons.matching(identifier: name).firstMatch
-        ]
-        return candidates.first { $0.exists && $0.isHittable }
-    }
-
-    private func attachNavigationState(_ name: String) {
-        let state = XCTAttachment(string: app.debugDescription)
-        state.name = name
-        state.lifetime = .keepAlways
-        add(state)
-        screenshot(name)
-    }
-
-    private func element(_ identifier: String) -> XCUIElement {
-        app.descendants(matching: .any).matching(identifier: identifier).firstMatch
-    }
-
-    private func scrollTo(_ target: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
-        for _ in 0..<12 {
-            if target.exists && target.isHittable { return }
-            app.swipeUp()
-        }
-        XCTAssertTrue(target.exists && target.isHittable, "The actual iPad control must be reachable by scrolling", file: file, line: line)
-    }
-
-    private func waitForPortrait(_ portrait: Bool) {
-        let application = app!
-        var previousFrame = CGRect.zero
-        var stableObservations = 0
-        let orientation = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            let frame = application.frame
-            guard frame.width > 0 && (portrait ? frame.height > frame.width : frame.width > frame.height) else {
-                stableObservations = 0
-                previousFrame = frame
-                return false
-            }
-            stableObservations = frame == previousFrame ? stableObservations + 1 : 0
-            previousFrame = frame
-            // The orientation property changes before UIKit finishes rotating its
-            // window. Require repeated stable bounds and the real toolbar layout.
-            let settings = application.buttons["settings.open"]
-            guard settings.exists && settings.isHittable else { return false }
-            return stableObservations >= 3 && frame.insetBy(dx: -1, dy: -1).contains(settings.frame)
-        }, object: application)
-        XCTAssertEqual(XCTWaiter.wait(for: [orientation], timeout: 15), .completed, "The operating system must finish rotating and settle the actual app bounds")
-    }
-
-    private func assertLandscapeControlsInsideApp() {
-        let bounds = app.frame
-        XCTAssertGreaterThan(bounds.width, bounds.height)
-        let controls = [element("settings.open"), element("listenButton")]
-        for control in controls {
-            XCTAssertTrue(control.exists && control.isHittable, "The landscape control must remain reachable")
-            XCTAssertTrue(bounds.insetBy(dx: -1, dy: -1).contains(control.frame), "The complete landscape control must fit inside the actual app bounds: \(control.identifier), \(control.frame), app \(bounds)")
-            XCTAssertLessThanOrEqual(control.frame.maxX, bounds.maxX + 1, "The landscape right edge must not clip an essential control")
-        }
-        let evidence = XCTAttachment(string: "App bounds: \(bounds)\nSettings: \(controls[0].frame)\nListen: \(controls[1].frame)")
-        evidence.name = "Actual iPad landscape layout bounds"
-        evidence.lifetime = .keepAlways
-        add(evidence)
-    }
-
-    private func screenshot(_ name: String) {
-        // Capture the physical display, avoiding application-region crop transforms
-        // during iPad rotation. This is the unmodified OS screenshot.
+    private func shot(_ name: String) {
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
+    }
+
+    /// A tuner frame for the listing: kept under its own name with the 3D stage up and the selected string locked,
+    /// otherwise kept as "<name>-wrong" (and the test fails) so the screenshot tool never frames a studio stand-in or
+    /// a half-lock. Each picture is taken hands off, before the check's own snapshot (which stalls the main thread).
+    private func tunerFrame(_ name: String) {
+        var picture = XCUIScreen.main.screenshot()
+        var problem = ""
+        for attempt in 0..<3 {
+            if attempt > 0 { settle(3); picture = XCUIScreen.main.screenshot() }
+            let stage = tunerStage()
+            let lock = lockedChips()
+            if stage == "3d" && lock.selected { problem = ""; break }
+            problem = "stage '\(stage)', \(lock.tuned) strings tuned, the selected one tuned: \(lock.selected)"
+        }
+        if !problem.isEmpty { XCTFail("\(name): \(problem)") }
+        let attachment = XCTAttachment(screenshot: picture)
+        attachment.name = problem.isEmpty ? name : name + "-wrong"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    /// Taps a tab (the iPad's tab bar sits at the top) until `until` shows, then lets the tab's entrance settle.
+    private func tab(_ name: String, until id: String) {
+        let button = app.buttons[name].firstMatch
+        let target = element(id)
+        for _ in 0..<3 {
+            if button.waitForExistence(timeout: 5) { button.tap() }
+            if target.waitForExistence(timeout: 6) { break }
+        }
+        XCTAssertTrue(target.exists, "\(name) never showed \(id)")
+        settle(1.5)
+    }
+
+    /// Closes the picker sheet and waits for it to go; on iPad it can still be settling, so a swipe is the fallback.
+    private func closePicker() {
+        let search = element("instruments.search")
+        let done = app.buttons["Done"].firstMatch
+        if done.waitForExistence(timeout: 6) { done.tap() } else { app.swipeDown(velocity: .fast) }
+        if !search.waitForNonExistence(timeout: 6) { app.swipeDown(velocity: .fast); _ = search.waitForNonExistence(timeout: 4) }
+        settle(1)
+    }
+
+    /// The tuner's UI-test probe (TIMBRE_DEBUG_STATE=1, never drawn): "stage=<3d|loading|2d> listening=<…>".
+    private func tunerStage() -> String {
+        guard let label = (try? element("stage.state").snapshot())?.label else { return "" }
+        for field in label.split(separator: " ") where field.hasPrefix("stage=") {
+            return String(field.dropFirst("stage=".count))
+        }
+        return ""
+    }
+
+    /// Waits for the 3D model to take over from the studio render that holds the stage while it loads (the first
+    /// model on a fresh simulator can take 20 s or more), then for the cross-fade and the dolly in to the headstock.
+    @discardableResult
+    private func waitForStage(timeout: TimeInterval = 90) -> String {
+        let started = Date()
+        var stage = tunerStage()
+        while stage != "3d" && stage != "2d" && Date().timeIntervalSince(started) < timeout {
+            // No probe at all (not a debug build): don't wait out the whole timeout for it.
+            if stage.isEmpty && Date().timeIntervalSince(started) > 15 { break }
+            settle(0.5)
+            stage = tunerStage()
+        }
+        settle(2.5)
+        return tunerStage()
+    }
+
+    /// The string chips from one snapshot: how many read "Tuned", and whether the selected one does.
+    private func lockedChips() -> (tuned: Int, selected: Bool) {
+        guard let root = try? app.snapshot() else { return (0, false) }
+        var chips: [String: (selected: Bool, tuned: Bool)] = [:]
+        var pending: [XCUIElementSnapshot] = [root]
+        while let node = pending.popLast() {
+            pending.append(contentsOf: node.children)
+            guard node.identifier.hasPrefix("string.") else { continue }
+            let seen = chips[node.identifier] ?? (selected: false, tuned: false)
+            chips[node.identifier] = (selected: seen.selected || node.isSelected, tuned: seen.tuned || (node.value as? String) == "Tuned")
+        }
+        return (chips.values.filter { $0.tuned }.count, chips.values.contains { $0.selected && $0.tuned })
     }
 }

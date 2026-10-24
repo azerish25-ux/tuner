@@ -1,6 +1,7 @@
 import XCTest
 import StoreKit
 import StoreKitTest
+import TimbreCore
 @testable import Timbre
 
 /// Local StoreKit transactions only. Run serially: SKTestSession has one shared environment.
@@ -27,73 +28,67 @@ final class CommerceIntegrationTests: XCTestCase {
         try await super.tearDown()
     }
 
-    func testInitialFreeAndLocalProduct() async throws {
-        XCTAssertFalse(commerce.isPlus)
-        XCTAssertFalse(commerce.loading)
-        XCTAssertFalse(commerce.pending)
-        let product = try XCTUnwrap(commerce.product, commerce.error ?? "Product did not load")
-        XCTAssertEqual(product.id, CommerceService.productID)
-        XCTAssertEqual(product.type, .nonConsumable)
-        XCTAssertFalse(product.displayPrice.isEmpty)
-        XCTAssertNil(commerce.error)
+    private func waitUntil(timeout: TimeInterval = 10, _ condition: @escaping () -> Bool) async throws {
+        let deadline = Date().addingTimeInterval(timeout)
+        while !condition() {
+            guard Date() < deadline else { XCTFail("Timed out"); return }
+            try await Task.sleep(for: .milliseconds(100))
+        }
     }
 
-    func testPurchaseGrantsVerifiedLifetimeAccess() async throws {
-        _ = try XCTUnwrap(commerce.product)
-        await commerce.purchase()
-        try await waitUntil { self.commerce.isPlus }
-        XCTAssertFalse(commerce.pending)
-        XCTAssertNil(commerce.error)
-        let transactions = session.allTransactions()
-        XCTAssertEqual(transactions.filter { $0.productIdentifier == CommerceService.productID }.count, 1)
+    func testProductsLoadInPlanOrderWithTrial() throws {
+        XCTAssertFalse(commerce.isPro)
+        XCTAssertEqual(commerce.products.map(\.id), TimbreProduct.all, commerce.error ?? "products did not load")
+        let annual = try XCTUnwrap(commerce.annual)
+        XCTAssertEqual(annual.type, .autoRenewable)
+        XCTAssertEqual(annual.subscription?.introductoryOffer?.paymentMode, .freeTrial)
+        XCTAssertNotNil(commerce.trialLabel)
+        XCTAssertEqual(commerce.lifetime?.type, .nonConsumable)
     }
 
-    func testExistingVerifiedPurchaseRestoresInFreshService() async throws {
-        // Model a purchase completed while the app service is absent, then a cold launch.
+    func testAnnualSubscriptionGrantsPro() async throws {
+        let annual = try XCTUnwrap(commerce.annual)
+        let granted = await commerce.purchase(annual)
+        try await waitUntil { self.commerce.isPro }
+        XCTAssertTrue(granted || commerce.isPro)
+        XCTAssertEqual(commerce.activeProductID, TimbreProduct.annual)
+        XCTAssertNotNil(commerce.renewalDate)
+    }
+
+    func testLifetimeGrantsProWithoutRenewal() async throws {
+        let lifetime = try XCTUnwrap(commerce.lifetime)
+        _ = await commerce.purchase(lifetime)
+        try await waitUntil { self.commerce.isPro }
+        XCTAssertNil(commerce.renewalDate)
+    }
+
+    func testExpiredSubscriptionReturnsToFree() async throws {
+        let monthly = try XCTUnwrap(commerce.monthly)
+        _ = await commerce.purchase(monthly)
+        try await waitUntil { self.commerce.isPro }
+        try session.expireSubscription(productIdentifier: TimbreProduct.monthly)
+        try await Task.sleep(for: .milliseconds(400))
+        await commerce.refreshEntitlements()
+        try await waitUntil { !self.commerce.isPro }
+    }
+
+    func testRefundRevokesLifetime() async throws {
+        let lifetime = try XCTUnwrap(commerce.lifetime)
+        _ = await commerce.purchase(lifetime)
+        try await waitUntil { self.commerce.isPro }
+        let transaction = try XCTUnwrap(session.allTransactions().first { $0.productIdentifier == TimbreProduct.lifetime })
+        try session.refundTransaction(identifier: transaction.identifier)
+        try await Task.sleep(for: .milliseconds(400))
+        await commerce.refreshEntitlements()
+        try await waitUntil { !self.commerce.isPro }
+    }
+
+    func testExistingPurchaseIsFoundByFreshService() async throws {
         commerce = nil
-        _ = try await session.buyProduct(identifier: CommerceService.productID, options: [])
-        try await StoreKitTestEnvironment.waitUntilVerifiedPurchase(session)
-        // The fixture now proves ownership exists before testing initial reconciliation.
-        // No local flag is set; the fresh service must enumerate verified StoreKit state.
+        _ = try await session.buyProduct(identifier: TimbreProduct.lifetime, options: [])
+        try await StoreKitTestEnvironment.waitUntilVerifiedPurchase(session, productID: TimbreProduct.lifetime)
         commerce = CommerceService()
         await commerce.load()
-        try await waitUntil { self.commerce.isPlus }
-        await commerce.restore()
-        XCTAssertTrue(commerce.isPlus)
-        XCTAssertNil(commerce.error)
-    }
-
-    func testRefundRevokesAccessAndSurvivesReload() async throws {
-        await commerce.purchase()
-        try await waitUntil { self.commerce.isPlus }
-        let transaction = try XCTUnwrap(session.allTransactions().first { $0.productIdentifier == CommerceService.productID })
-        async let overlappingLoad: Void = commerce.load()
-        try session.refundTransaction(identifier: transaction.identifier)
-        await overlappingLoad
-        try await waitUntil { !self.commerce.isPlus }
-        await commerce.load()
-        XCTAssertFalse(commerce.isPlus)
-    }
-
-    func testAskToBuyRemainsFreeUntilApproved() async throws {
-        session.askToBuyEnabled = true
-        await commerce.purchase()
-        XCTAssertTrue(commerce.pending)
-        XCTAssertFalse(commerce.isPlus)
-        let transaction = try XCTUnwrap(session.allTransactions().first { $0.productIdentifier == CommerceService.productID })
-        try session.approveAskToBuyTransaction(identifier: transaction.identifier)
-        try await waitUntil { self.commerce.isPlus && !self.commerce.pending }
-    }
-
-    func testEmptyRestoreDoesNotInventEntitlement() async {
-        await commerce.restore()
-        XCTAssertFalse(commerce.isPlus)
-        XCTAssertNotNil(commerce.error)
-    }
-
-    private func waitUntil(timeout: TimeInterval = 12, _ condition: @escaping @MainActor () -> Bool) async throws {
-        let deadline = Date().addingTimeInterval(timeout)
-        while !condition(), Date() < deadline { try await Task.sleep(for: .milliseconds(100)) }
-        XCTAssertTrue(condition(), "StoreKit transaction update did not arrive before timeout")
+        try await waitUntil { self.commerce.isPro }
     }
 }

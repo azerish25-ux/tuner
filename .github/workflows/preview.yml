@@ -1,0 +1,146 @@
+# Manual only: records the App Store App Preview (iPhone 6.9" display, portrait) from the real app.
+# AppPreviewUITests plays a tour with the demo pitch while the simulator screen is recorded; the test marks
+# the stretches worth showing, and tools/marketing/preview.py cuts them into preview.mp4 (886x1920, 30 fps,
+# H.264 High, silent stereo AAC 44.1 kHz, 15-30 s) and poster.png, published to the ci-results/preview branch.
+name: App Preview
+on:
+  # Also runs on a push to preview/** (dispatch needs the file on the default branch first).
+  push:
+    branches: ["preview/**"]
+  workflow_dispatch:
+    inputs:
+      sync_offset:
+        description: Seconds to shift every cut if they look early or late (positive = later)
+        required: false
+        default: "0"
+        type: string
+permissions:
+  contents: write
+concurrency:
+  group: app-preview-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  preview:
+    runs-on: macos-15
+    timeout-minutes: 75
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      OUT: preview-out
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen and ffmpeg
+        run: |
+          brew install xcodegen
+          command -v ffmpeg >/dev/null || brew install ffmpeg
+          ffmpeg -version | head -1
+      - name: Generate Xcode project
+        working-directory: ios
+        run: xcodegen generate
+      - name: Pick a 6.9-inch iPhone simulator
+        run: |
+          set -o pipefail
+          python3 tools/marketing/preview.py device | tee -a "$GITHUB_ENV"
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
+      - name: Build app and UI tests
+        run: |
+          set -o pipefail
+          mkdir -p "$OUT"
+          xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$OUT/build.log"
+      - name: Record the tour and cut the App Preview
+        env:
+          SYNC_OFFSET: ${{ inputs.sync_offset }}
+        run: |
+          set -o pipefail
+          # Apple's marketing status bar: 9:41, full battery, full signal.
+          status_bar() {
+            xcrun simctl status_bar "$DEVICE_ID" override --time 9:41 --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100 \
+              || xcrun simctl status_bar "$DEVICE_ID" override --time 9:41 --batteryState charged --batteryLevel 100 --cellularBars 4 --wifiBars 3
+          }
+          # One take. The recorder waits in the background until the test says the tour has begun (a folder shared
+          # through TEST_RUNNER_PREVIEW_HANDSHAKE, or PREVIEW-BEGIN in the log), so the recording holds the tour and
+          # not the minutes of home screen while the runner installs.
+          take() {
+            local handshake="$PWD/$OUT/handshake" status=0 waiter
+            rm -rf "$handshake" "$OUT/record.json" "$OUT/attachments" ios/build/AppPreview.xcresult
+            mkdir -p "$handshake"
+            python3 tools/marketing/preview.py record --device "$DEVICE_ID" --out "$OUT" --handshake "$handshake" --log "$OUT/test.log" &
+            waiter=$!
+            TEST_RUNNER_PREVIEW_HANDSHAKE="$handshake" xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -only-testing:TimbreUITests/AppPreviewUITests -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd -resultBundlePath ios/build/AppPreview.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee -a "$OUT/test.log" || status=$?
+            kill "$waiter" 2>/dev/null || true
+            wait "$waiter" 2>/dev/null || true
+            python3 tools/marketing/preview.py stop --out "$OUT" || true
+            if [ -d ios/build/AppPreview.xcresult ]; then
+              xcrun xcresulttool export attachments --path ios/build/AppPreview.xcresult --output-path "$OUT/attachments" || true
+            fi
+            return "$status"
+          }
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          status_bar
+          xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre || true
+          touch "$OUT/test.log"
+          result=1
+          for attempt in 1 2 3; do
+            echo "::group::Take $attempt"
+            lines=$(wc -l < "$OUT/test.log")
+            tour=0
+            take || tour=$?
+            echo "::endgroup::"
+            tail -n +"$((lines + 1))" "$OUT/test.log" > "$OUT/take.log"
+            # The hosted simulator sometimes fails to bring up accessibility for the test runner: reboot, go again.
+            if [ "$tour" -ne 0 ] && grep -q "failed to initialize for UI testing" "$OUT/take.log"; then
+              echo "The test runner failed to start; rebooting the simulator"
+              xcrun simctl shutdown "$DEVICE_ID" || true
+              xcrun simctl bootstatus "$DEVICE_ID" -b
+              status_bar
+              continue
+            fi
+            cut=0
+            python3 tools/marketing/preview.py render --out "$OUT" --log "$OUT/take.log" --attachments "$OUT/attachments" --offset "${SYNC_OFFSET:-0}" || cut=$?
+            # Exit 3: the recording lost the app in a clip (it showed the home screen while the tour went on).
+            if [ "$cut" -eq 3 ] && [ "$attempt" -lt 3 ]; then
+              echo "::warning::The recording lost the app in take $attempt; recording the tour again"
+              continue
+            fi
+            if [ "$tour" -ne 0 ]; then result=$tour; else result=$cut; fi
+            break
+          done
+          exit "$result"
+      - name: Publish the preview
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p ci-preview
+          for file in preview.mp4 poster.png PREVIEW.txt sync.png raw-small.mp4 record.log; do
+            if [ -f "$OUT/$file" ]; then cp "$OUT/$file" ci-preview/; fi
+          done
+          # The clip marks and the manifest; the full-size sync screenshots stay in the artifact.
+          if [ -d "$OUT/attachments" ]; then
+            mkdir -p ci-preview/attachments
+            find "$OUT/attachments" -maxdepth 1 \( -name '*.txt' -o -name 'manifest.json' \) -exec cp {} ci-preview/attachments/ \;
+          fi
+          for log in build test; do
+            if [ -f "$OUT/$log.log" ]; then
+              python3 tools/ci/summarize-log.py "$OUT/$log.log" "ci-preview/$log.summary.txt"
+              gzip -c "$OUT/$log.log" > "ci-preview/$log.log.gz"
+            fi
+          done
+          if [ -f "$OUT/PREVIEW.txt" ]; then { echo '```'; cat "$OUT/PREVIEW.txt"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"; fi
+          bash tools/ci/publish-results.sh ci-results/preview ci-preview
+      # The full-size recording, to re-cut locally: tools/marketing/preview.py render --out <folder> --log <folder>/take.log --attachments <folder>/attachments
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: preview-recording
+          path: |
+            ${{ env.OUT }}/raw.mp4
+            ${{ env.OUT }}/record.json
+            ${{ env.OUT }}/test.log
+            ${{ env.OUT }}/take.log
+            ${{ env.OUT }}/attachments/
+            ${{ env.OUT }}/preview.mp4
+            ${{ env.OUT }}/poster.png
+            ${{ env.OUT }}/PREVIEW.txt
+          if-no-files-found: ignore
+          retention-days: 7
