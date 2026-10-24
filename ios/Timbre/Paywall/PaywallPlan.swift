@@ -11,9 +11,8 @@ struct PaywallAnswers: Equatable {
 }
 
 /// The person's plan as the paywall tells it: three outcomes, led by what they just tried to open and then
-/// their goal and course, and the first milestones of the course, as the onboarding plan screen lists them
-/// (the first lesson, then the units after it), placed on the plan's pace of one lesson a day (Today's set
-/// holds one lesson).
+/// their goal and course, and what the plan reaches next on its pace of one lesson a day (Today's set holds one
+/// lesson): the first song it gets to, and the units after today's whose names don't just repeat today's lesson.
 struct PaywallPlan {
     enum Art {
         case course(LearnCourse)
@@ -31,16 +30,23 @@ struct PaywallPlan {
     }
 
     struct Milestone: Identifiable {
+        /// A song to play ("Play “Ode to Joy”"), or a unit to start, by its name.
+        enum Kind { case song, unit }
         let day: Int
         let title: String
+        var kind = Kind.unit
         var id: Int { day }
     }
 
     let course: LearnCourse?
+    /// The person's instrument: onboarding's answer, else the one they tune (or the Pro one they chose and tune
+    /// in Chromatic until Pro opens it). Nil when they sing or play none.
+    let instrumentId: String?
     let outcomes: [Outcome]
     /// Today's lesson, the plan's first.
     let firstLesson: String?
-    /// The first day of each unit after today's that the plan reaches within the horizon, up to two.
+    /// Up to two days ahead within the horizon, in order: the first song the plan reaches, and the first unit
+    /// after today's whose name doesn't echo today's lesson.
     let milestones: [Milestone]
 
     var accent: Color { course.map { Palette.accent($0.accent) } ?? Palette.mint }
@@ -64,7 +70,7 @@ struct PaywallPlan {
             minutes = answers.minutes
         } else {
             goal = store.settings.goal ?? "practice"
-            instrumentId = store.instrument.id
+            instrumentId = (store.chromaticStandIn ?? store.instrument).id
             course = store.learnCourse
             start = course.flatMap { store.learn.nextLesson(in: $0) }
             minutes = store.dailyMinutes
@@ -75,6 +81,7 @@ struct PaywallPlan {
         let songDay = first.flatMap { from in lessons[from...].firstIndex { $0.kind == .song }.map { $0 - from + 1 } }
         let planned = plannedOutcomes(goal: goal, course: course, songDay: songDay, minutes: minutes, instrumentId: instrumentId, store: store)
         return PaywallPlan(course: course,
+                           instrumentId: instrumentId,
                            outcomes: merged(reasonOutcomes(reason, course: course, instrumentId: instrumentId, store: store), planned),
                            firstLesson: start?.title.localized,
                            milestones: plannedMilestones(course: course, start: start, horizon: horizon))
@@ -89,21 +96,43 @@ struct PaywallPlan {
         return Array(list.prefix(3))
     }
 
-    /// The first day of each unit after today's, up to two within the horizon.
+    /// The first song after today's lesson and the units after today's, within the horizon: up to two, in order,
+    /// the song always among them. A unit named like today's lesson ("Your first chord: E minor", then "First
+    /// chords") would only say the same thing twice, so it is left out.
     private static func plannedMilestones(course: LearnCourse?, start: Lesson?, horizon: Int) -> [Milestone] {
         guard let course, let start, let first = course.lessons.firstIndex(where: { $0.id == start.id }),
               let startUnit = course.units.firstIndex(where: { unit in unit.lessons.contains { $0.id == start.id } }) else { return [] }
-        var list: [Milestone] = []
+        let today = keywords(start.title.localized)
+        var units: [Milestone] = []
         var opening = 0
         for (number, unit) in course.units.enumerated() {
             let unitStart = opening
             opening += unit.lessons.count
             guard number > startUnit else { continue }
             let day = unitStart - first + 1
-            guard day <= horizon, list.count < 2 else { break }
-            list.append(Milestone(day: day, title: unit.title.localized))
+            guard day <= horizon else { break }
+            let title = unit.title.localized
+            if keywords(title).isDisjoint(with: today) { units.append(Milestone(day: day, title: title)) }
         }
-        return list
+        let lessons = course.lessons
+        var song: Milestone?
+        if let index = lessons.indices.first(where: { $0 > first && lessons[$0].kind == .song }), index - first + 1 <= horizon {
+            song = Milestone(day: index - first + 1, title: lessons[index].title.localized, kind: .song)
+        }
+        guard let song else { return Array(units.prefix(2)) }
+        let unit = units.first { $0.day != song.day }
+        return ([song] + (unit.map { [$0] } ?? [])).sorted { $0.day < $1.day }
+    }
+
+    /// The words of a title that carry its meaning, lowercased and without a plural "s": "Your first chord: E minor"
+    /// gives first, chord, minor. Short words ("a", "on", "E") are left out.
+    private static func keywords(_ title: String) -> Set<String> {
+        let words = title.lowercased().split { !$0.isLetter && !$0.isNumber }
+        var set = Set<String>()
+        for word in words where word.count >= 4 && word != "your" && word != "with" && word != "from" {
+            set.insert(word.count > 4 && word.hasSuffix("s") ? String(word.dropLast()) : String(word))
+        }
+        return set
     }
 
     // MARK: Outcomes

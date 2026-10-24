@@ -22,6 +22,7 @@ struct LessonBeatRow: View {
     var calls: [Int: BeatCall] = [:]
     /// Strums: down arrows on the beat, up arrows between beats.
     var arrows = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// Off-beat strokes put their reasons on a second line, so neighbours' words never collide.
     private var hasOffbeats: Bool { pattern.contains { $0.truncatingRemainder(dividingBy: 1) != 0 } }
@@ -53,7 +54,7 @@ struct LessonBeatRow: View {
             let call = calls[i]
             let color = tint(call, onBeat: onBeat)
             // Each stroke swells and sends out a ring as the playhead reaches it, in time with the pick.
-            let strike = BeatStrike.amount(playhead: playhead, at: hit / Double(meter))
+            let strike = reduceMotion ? 0 : BeatStrike.amount(playhead: playhead, at: hit / Double(meter))
             let r: CGFloat = (onBeat ? 11 : 8) * (1 + 0.22 * CGFloat(strike))
             BeatStrike.draw(&context, at: CGPoint(x: x, y: mid), radius: r, color: color, strike: strike)
             let halo = r + 4

@@ -398,12 +398,16 @@ struct ChoiceStep: View {
         return height >= Self.smallestFill ? CGSize(width: max(0, size.width - 44), height: height) : nil
     }
 
-    /// The listen card and the picture, filling `room` together; with neither, the room stays empty, so the
-    /// answers still sit at the bottom.
+    /// The listen card and the picture, filling `room` together; with neither, the course's instrument or motif
+    /// (as on an explanation without a picture), and the answers still sit at the bottom.
     private func middle(_ room: CGSize?) -> some View {
         VStack(spacing: 20) {
             if let sound { listenButton(sound, fill: visual == .none ? room?.height : nil) }
-            if visual != .none { visualCard(room.flatMap { visualRoom($0) }) }
+            if visual != .none {
+                visualCard(room.flatMap { visualRoom($0) })
+            } else if sound == nil, let room {
+                LessonBackdrop(course: course, accent: accent).frame(height: room.height).opacity(0.7)
+            }
         }
         .frame(maxWidth: .infinity, minHeight: room?.height ?? 0)
     }

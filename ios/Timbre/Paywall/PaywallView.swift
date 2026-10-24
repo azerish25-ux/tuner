@@ -15,6 +15,7 @@ struct PaywallView: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(\.locale) private var locale
     @State private var selectedID = TimbreProduct.annual
     @State private var appeared = false
     /// Notifications are off for Timbre: no reminder can arrive, so none is promised.
@@ -95,9 +96,10 @@ struct PaywallView: View {
     /// The Pro pill on its own row, when there is no hero for it to stand in.
     private static let pillRow: CGFloat = 40
     private static let previewTop: CGFloat = 6
-    /// Below this the hero steps aside for the pill alone; above it, it grows to `previewMax`.
-    private static let previewMin: CGFloat = 88
-    private static let previewMax: CGFloat = 220
+    /// Below this the hero steps aside for the pill alone (the instrument, the runway, the combo and the pill no
+    /// longer fit one above another); above it, it grows to `previewMax`.
+    private static let previewMin: CGFloat = 104
+    private static let previewMax: CGFloat = 236
     private static let headerTop: CGFloat = 12
     private static let outcomesTop: CGFloat = 12
     private static let countsTop: CGFloat = 6
@@ -201,7 +203,7 @@ struct PaywallView: View {
     private struct Pitch {
         var headline: Text
         var lesson: LockedLesson? = nil
-        /// The instrument to stand in the hero instead of the course's own.
+        /// The instrument to stand in the hero instead of the person's own.
         var instrumentAsset: String? = nil
     }
 
@@ -242,15 +244,25 @@ struct PaywallView: View {
         return generic
     }
 
-    /// "Cello and 59 more on their own stage", with that instrument in the spotlight.
+    /// "Tune your cello, and 59 more instruments", with that instrument in the spotlight.
     private var instrumentPitch: Pitch {
+        let others = max(0, store.catalog.instruments.count - 1)
         guard let instrument = store.paywallInstrumentId.flatMap({ store.catalog.instrument(id: $0) }) else {
-            return Pitch(headline: Text("All sixty instruments in 3D"))
+            return Pitch(headline: Text("Tune all \(others + 1) instruments"))
         }
         let photo = store.catalog.photo(instrumentId: instrument.id)
         let name = photo.map { NSLocalizedString("timbre_photo_" + $0.asset, bundle: .main, value: $0.label, comment: "") } ?? instrument.name.localized
-        let others = max(0, store.catalog.instruments.count - 1)
-        return Pitch(headline: Text("\(name) and \(others) more on their own stage"), instrumentAsset: photo?.asset)
+        return Pitch(headline: Text("Tune your \(midSentence(name)), and \(others) more instruments"), instrumentAsset: photo?.asset)
+    }
+
+    /// An instrument's name inside an English sentence ("your cello"): its capital goes, unless the name opens on a
+    /// proper word or a note letter ("Greek bouzouki", "B-flat clarinet"). Other languages keep the name as it is.
+    private func midSentence(_ name: String) -> String {
+        guard locale.language.languageCode == .english, let word = name.split(separator: " ").first else { return name }
+        let proper: Set<String> = ["Greek", "Irish", "Arabic", "French", "Renaissance", "Appalachian", "Mexican"]
+        let head = word.split(separator: "-").first ?? word
+        guard !proper.contains(String(word)), head.count > 1, !word.dropFirst().contains(where: \.isUppercase) else { return name }
+        return name.prefix(1).lowercased() + String(name.dropFirst())
     }
 
     /// The lesson that opened the paywall; without one, the first lesson Pro opens from where
@@ -273,22 +285,33 @@ struct PaywallView: View {
 
     // MARK: Hero
 
-    /// A few seconds of a play-along across the full width, looping: the person's instrument (or the one they
-    /// just tried to open) beside a runway with one lane per string, the Timbre Pro pill under it.
+    /// One scene across the full width, looping: the person's instrument (or the one they just tried to open) with
+    /// its strings running on as a play-along runway, a lane per string, the combo and the Timbre Pro pill under it.
     private func preview(_ pitch: Pitch, plan: PaywallPlan, height: CGFloat) -> some View {
-        let artwork: CourseArtwork
-        let instrumentId: String?
-        if let asset = pitch.instrumentAsset {
-            artwork = heroArt(asset)
-            instrumentId = store.paywallInstrumentId
-        } else {
-            artwork = plan.course.map { CourseArtwork.of($0, catalog: store.catalog) } ?? .emblem(.note)
-            instrumentId = plan.course?.instrument
-        }
-        return PaywallPreview(artwork: artwork, accent: plan.accent, lanes: lanes(instrumentId), height: height)
+        let hero = heroFigure(pitch, plan: plan)
+        return PaywallPreview(figure: hero.figure, accent: plan.accent, lanes: lanes(hero.instrumentId), height: height)
             .opacity(appeared ? 1 : 0)
             .offset(y: appeared || reduceMotion ? 0 : 12)
             .animation(.spring(response: 0.9, dampingFraction: 0.85), value: appeared)
+    }
+
+    /// The instrument they just tried to open, else their own (onboarding's answer, or the one they tune), as the
+    /// app pictures it; else the course's instrument; without one (singing), the course's emblem.
+    private func heroFigure(_ pitch: Pitch, plan: PaywallPlan) -> (figure: PaywallFigure, instrumentId: String?) {
+        if let asset = pitch.instrumentAsset { return (PaywallFigure.instrument(asset: asset), store.paywallInstrumentId) }
+        for id in [plan.instrumentId, plan.course?.instrument].compactMap({ $0 }) {
+            if let asset = photoAsset(id) { return (PaywallFigure.instrument(asset: asset), id) }
+        }
+        if let course = plan.course, case .emblem(let glyph) = CourseArtwork.of(course, catalog: store.catalog) {
+            return (PaywallFigure.emblem(glyph), nil)
+        }
+        return (PaywallFigure.emblem(.note), nil)
+    }
+
+    /// The photograph the tuner shows: the variant the person picked for the instrument they tune, else the first.
+    private func photoAsset(_ instrumentId: String) -> String? {
+        if instrumentId == store.instrument.id, let asset = store.photo?.asset { return asset }
+        return store.catalog.photo(instrumentId: instrumentId)?.asset
     }
 
     /// One runway lane per string of the instrument's standard tuning (paired strings count once), four otherwise.
@@ -298,16 +321,10 @@ struct PaywallView: View {
         return min(7, max(3, tuning.coursesByAnchor.count))
     }
 
-    /// Studio render when the instrument has one, otherwise its photograph.
+    /// Studio render when the instrument has one, otherwise its photograph (the locked lesson's card).
     private func card(_ asset: String) -> String {
         if let model = ModelLibrary.modelID(forPhoto: asset), ModelLibrary.hasCard(model) { return ModelLibrary.cardImageName(model) }
         return store.catalog.photos.first { $0.asset == asset }?.thumbnail ?? asset
-    }
-
-    /// The same picture for the hero, telling a render (narrow, upright) from a photograph (leaning across its square).
-    private func heroArt(_ asset: String) -> CourseArtwork {
-        let render = ModelLibrary.modelID(forPhoto: asset).map { ModelLibrary.hasCard($0) } ?? false
-        return .instrument(name: card(asset), render: render)
     }
 
     // MARK: Header
@@ -578,7 +595,7 @@ struct PaywallView: View {
     private var trialOffered: Bool { commerce.annual != nil && commerce.trialLabel != nil }
 
     private struct TrackStep: Identifiable {
-        enum Kind { case today, milestone, reminder, billing }
+        enum Kind { case today, milestone, song, reminder, billing }
         let id: String
         let kind: Kind
         let title: Text
@@ -586,10 +603,11 @@ struct PaywallView: View {
         let detail: Text?
     }
 
-    /// The plan and the free trial on one track. Today unlocks everything and starts the first lesson, and the
-    /// plan's furthest milestone before the reminder follows. Only when the selected plan has a free trial come
-    /// the reminder (when notifications can reach the person) and the first charge, at the product's own trial
-    /// length and price. Without a trial the plan's milestones fill the track; without those there is no track.
+    /// The plan and the free trial on one track. Today unlocks everything and starts the first lesson; the next
+    /// thing the plan brings before the reminder follows (its first song, else the furthest unit, never a repeat of
+    /// today's lesson). Only when the selected plan has a free trial come the reminder (when notifications can
+    /// reach the person) and the first charge, at the product's own trial length and price. Without a trial the
+    /// plan's milestones fill the track; without those there is no track.
     private func trackSteps(_ plan: PaywallPlan) -> [TrackStep] {
         let today = TrackStep(id: "today", kind: .today, title: Text("Today"), detail: plan.firstLesson.map { Text(verbatim: $0) })
         guard showsTrial, let product = selected else {
@@ -600,7 +618,8 @@ struct PaywallView: View {
         let reminder = max(1, days - 2)
         var steps = [today]
         let next = remindersBlocked ? days : reminder
-        if let milestone = plan.milestones.last(where: { $0.day > 1 && $0.day < next }) { steps.append(milestoneStep(milestone)) }
+        let ahead = plan.milestones.filter { $0.day > 1 && $0.day < next }
+        if let milestone = ahead.first(where: { $0.kind == .song }) ?? ahead.last { steps.append(milestoneStep(milestone)) }
         if !remindersBlocked {
             steps.append(TrackStep(id: "reminder", kind: .reminder, title: Text("Day \(reminder)"), detail: Text("We remind you")))
         }
@@ -608,8 +627,14 @@ struct PaywallView: View {
         return steps
     }
 
+    /// "Day 6 · Play “Ode to Joy”", or a unit by its name.
     private func milestoneStep(_ milestone: PaywallPlan.Milestone) -> TrackStep {
-        TrackStep(id: "day\(milestone.day)", kind: .milestone, title: Text("Day \(milestone.day)"), detail: Text(verbatim: milestone.title))
+        switch milestone.kind {
+        case .song:
+            return TrackStep(id: "day\(milestone.day)", kind: .song, title: Text("Day \(milestone.day)"), detail: Text("Play “\(milestone.title)”"))
+        case .unit:
+            return TrackStep(id: "day\(milestone.day)", kind: .milestone, title: Text("Day \(milestone.day)"), detail: Text(verbatim: milestone.title))
+        }
     }
 
     /// Days on top, nodes on a line, what happens under each. Today's column is wider: it holds the first lesson.
@@ -672,7 +697,11 @@ struct PaywallView: View {
         case .billing:
             (step.detail ?? Text(verbatim: "")).font(.caption).foregroundStyle(Palette.inkSoft)
                 .lineLimit(1).minimumScaleFactor(0.7)
-        case .milestone, .reminder:
+        case .milestone, .song:
+            // A song's name may take a third line rather than lose its end.
+            (step.detail ?? Text(verbatim: "")).font(.caption).foregroundStyle(Palette.inkSoft)
+                .lineLimit(3).minimumScaleFactor(0.85)
+        case .reminder:
             (step.detail ?? Text(verbatim: "")).font(.caption).foregroundStyle(Palette.inkSoft)
                 .lineLimit(2, reservesSpace: true).minimumScaleFactor(0.85)
         }
@@ -700,7 +729,7 @@ struct PaywallView: View {
     private func trackTint(_ kind: TrackStep.Kind, title: Bool) -> Color {
         switch kind {
         case .today: return Palette.mint
-        case .milestone: return Palette.amber
+        case .milestone, .song: return Palette.amber
         case .reminder, .billing: return title ? Palette.ink : Palette.mint
         }
     }
@@ -734,6 +763,7 @@ struct PaywallView: View {
         switch kind {
         case .today: symbol = "lock.open.fill"
         case .milestone: symbol = "flag.fill"
+        case .song: symbol = "music.note"
         case .reminder: symbol = "bell.fill"
         case .billing: symbol = "creditcard.fill"
         }
@@ -747,7 +777,7 @@ struct PaywallView: View {
             .shadow(color: Palette.mint.opacity(first ? 0.45 : 0), radius: 8)
     }
 
-    /// "Today: Everything unlocked, Three notes on string 2. Day 9: First chords. Day 12: We remind you. …" in reading order.
+    /// "Today: Everything unlocked, Three notes on string 2. Day 6: Play “Ode to Joy”. Day 12: We remind you. …" in reading order.
     private func trackSpoken(_ steps: [TrackStep], cancelNote: Bool, days: Int) -> Text {
         var label = Text(verbatim: "")
         for step in steps {
