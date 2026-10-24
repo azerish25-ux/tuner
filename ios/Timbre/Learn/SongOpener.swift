@@ -512,7 +512,8 @@ struct SongOpener: View {
 
     // MARK: Sound
 
-    private var voice: InstrumentVoice { InstrumentVoice(instrumentId: course.instrument) }
+    /// The course instrument's voice (nil: the app's selected instrument, as `playTones` falls back).
+    private var voice: InstrumentVoice? { InstrumentVoice(instrumentId: course.instrument) }
 
     /// The band the final take plays over (the same arrangement, so it is rendered once for both).
     private var band: BandArrangement {

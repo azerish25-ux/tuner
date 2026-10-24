@@ -559,11 +559,14 @@ struct LeadChart {
     let chords: [ChordSpec?]
     /// A strummed song's pattern within a bar, in beats.
     let strokes: [Double]
+    /// Each melody note's lyric syllable, nil for a note without words.
+    let lyrics: [String?]
     /// The melody's lowest and highest notes (an octave round middle C without one).
     let low: Int
     let high: Int
 
     var hasChords: Bool { chords.contains { $0 != nil } }
+    var hasLyrics: Bool { lyrics.contains { $0 != nil } }
 
     @MainActor private static var cache: [String: LeadChart] = [:]
 
@@ -597,6 +600,7 @@ struct LeadChart {
             strokes = []
         }
         notes = melody
+        lyrics = Self.syllables(of: melody)
         let pitches = melody.map(\.midi)
         let lowest = pitches.min() ?? 60
         let highest = pitches.max() ?? 72
@@ -647,6 +651,12 @@ struct LeadChart {
             if tones(of: chord).contains(PitchMath.pitchClass(midi: note.midi)) { held += weight }
         }
         return total > 0 ? held / total : 0
+    }
+
+    /// The words under the melody, note by note. The curriculum's notes don't carry the full arrangements' lyric
+    /// syllables in `TimedNote` yet: when they do, they are read here and the lead sheet sets them under each row.
+    private static func syllables(of notes: [TimedNote]) -> [String?] {
+        [String?](repeating: nil, count: notes.count)
     }
 
     /// A chord's pitch classes (root and fifth for a quality the recogniser doesn't know).
@@ -809,8 +819,10 @@ struct LeadSheetView<Controls: View>: View {
         let to = Double((row.start + row.count) * chart.meter)
         var notes: [TimedNote] = []
         var frets: [Fretting?] = []
+        var words: [String?] = []
         for (index, note) in chart.notes.enumerated() where note.beat >= from - 1e-6 && note.beat < to - 1e-6 {
             notes.append(note)
+            words.append(index < chart.lyrics.count ? chart.lyrics[index] : nil)
             if let tab { frets.append(index < tab.frets.count ? tab.frets[index] : nil) }
         }
         let chords = Array(chart.chords[min(chart.chords.count, row.start)..<min(chart.chords.count, row.start + row.count)])
@@ -819,7 +831,8 @@ struct LeadSheetView<Controls: View>: View {
                            frets: tab == nil ? nil : frets, chords: chords, showChords: chart.hasChords, strokes: chart.strokes,
                            low: chart.low, high: chart.high, tint: section.isHook ? Palette.amber : accent,
                            strings: tab?.strings ?? 0, thinnestOnTop: tab?.thinnestOnTop ?? true,
-                           position: inRow ? position : nil, closes: row.start + row.count == section.start + section.bars)
+                           position: inRow ? position : nil, closes: row.start + row.count == section.start + section.bars,
+                           lyrics: words, showLyrics: chart.hasLyrics)
         return lead.equatable()
             .frame(height: lead.height)
             .accessibilityHidden(true)
@@ -847,12 +860,16 @@ struct LeadRow: View, Equatable {
     let thinnestOnTop: Bool
     let position: Double?
     let closes: Bool
+    /// The syllable under each note, and whether the song has words at all (a lane for them under every row).
+    let lyrics: [String?]
+    let showLyrics: Bool
 
     private static let chordLane: CGFloat = 24
+    private static let lyricLane: CGFloat = 18
     private static let labelFace = "Sora-SemiBold"
 
     var height: CGFloat {
-        let lane = showChords ? Self.chordLane : 0
+        let lane = (showChords ? Self.chordLane : 0) + (showLyrics ? Self.lyricLane : 0)
         if frets != nil { return lane + CGFloat(max(1, strings - 1)) * 12 + 18 }
         if notes.isEmpty { return lane + 34 }
         return lane + 64
@@ -865,7 +882,8 @@ struct LeadRow: View, Equatable {
     private func draw(_ context: inout GraphicsContext, size: CGSize) {
         let bar = size.width / CGFloat(max(1, perRow))
         let top = showChords ? Self.chordLane : 0
-        let lane = CGRect(x: 0, y: top, width: bar * CGFloat(count), height: max(1, size.height - top))
+        let words = showLyrics ? Self.lyricLane : 0
+        let lane = CGRect(x: 0, y: top, width: bar * CGFloat(count), height: max(1, size.height - top - words))
         drawBarLines(&context, bar: bar, lane: lane)
         if showChords { drawChords(&context, bar: bar) }
         if frets != nil {
@@ -875,6 +893,7 @@ struct LeadRow: View, Equatable {
         } else {
             drawMelody(&context, bar: bar, lane: lane)
         }
+        if showLyrics { drawLyrics(&context, bar: bar, baseline: size.height - 3, width: lane.maxX) }
         if let position { drawPlayhead(&context, x: CGFloat(position - Double(start)) * bar, lane: lane) }
     }
 
@@ -991,6 +1010,19 @@ struct LeadRow: View, Equatable {
         }
     }
 
+    /// Each syllable under the start of its note, one after another without overlapping.
+    private func drawLyrics(_ context: inout GraphicsContext, bar: CGFloat, baseline: CGFloat, width: CGFloat) {
+        var lastEnd = -CGFloat.infinity
+        for (index, note) in notes.enumerated() {
+            guard index < lyrics.count, let syllable = lyrics[index] else { continue }
+            let left = x(note.beat, bar: bar) + 2
+            guard left >= lastEnd + 2, left < width else { continue }
+            let text = context.resolve(Text(verbatim: syllable).font(.system(size: 12)).foregroundStyle(Palette.ink.opacity(0.82)))
+            context.draw(text, at: CGPoint(x: left, y: baseline), anchor: .bottomLeading)
+            lastEnd = left + text.measure(in: CGSize(width: 120, height: 20)).width
+        }
+    }
+
     private func drawPlayhead(_ context: inout GraphicsContext, x: CGFloat, lane: CGRect) {
         let rect = CGRect(x: x - 1, y: 0, width: 2, height: lane.maxY)
         context.fill(Path(roundedRect: rect.insetBy(dx: -3, dy: 0), cornerRadius: 3), with: .color(tint.opacity(0.3)))
@@ -1012,7 +1044,7 @@ enum SongPlayback {
     }
 
     @MainActor static func start(_ hits: [Hit], bpm: Double, meter: Int, length: Double, band: BandArrangement?, loop: Bool,
-                                 audio: AudioService, voice: InstrumentVoice, reference: Double,
+                                 audio: AudioService, voice: InstrumentVoice?, reference: Double,
                                  finished: @escaping @MainActor () -> Void) -> Task<Void, Never> {
         let spb = 60 / max(20, bpm)
         let cycle = max(0.5, length)
