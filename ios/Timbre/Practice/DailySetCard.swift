@@ -187,6 +187,8 @@ struct DailySetCard: View {
     @State private var burst = 0
     @State private var pop = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// One row's height: a name line and the line under it, so every row matches the lesson row.
+    @ScaledMetric(relativeTo: .subheadline) private var rowHeight: CGFloat = 40
 
     var body: some View {
         let activities = store.dailySet
@@ -197,7 +199,7 @@ struct DailySetCard: View {
             header(complete: complete)
             HStack(alignment: .center, spacing: 16) {
                 ring(activities, done: done, complete: complete)
-                VStack(spacing: 4) {
+                VStack(spacing: 2) {
                     ForEach(activities) { activity in
                         row(activity, done: done.contains(activity.kind), quest: DailySet.quest(for: activity.kind, in: quests))
                     }
@@ -288,28 +290,20 @@ struct DailySetCard: View {
 
     private func row(_ activity: DailyActivity, done: Bool, quest: Quest?) -> some View {
         let kind = activity.kind
-        let locked = kind.needsPro && !commerce.isPro
         return Button { open(kind) } label: {
             HStack(spacing: 10) {
                 rowIcon(kind, done: done)
-                // The activity's name and its minutes share one line; the line under them (the lesson's title,
-                // or the quest riding on the row) gets the row's whole width instead of the name's.
-                VStack(alignment: .leading, spacing: 3) {
-                    HStack(alignment: .firstTextBaseline, spacing: 6) {
-                        rowTitle(kind, done: done)
-                        Spacer(minLength: 4)
-                        if locked {
-                            ProBadge().scaleEffect(0.8)
-                        } else {
-                            minutesText(activity.minutes).font(Typeface.number(12)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
-                                .lineLimit(1).fixedSize()
-                        }
-                    }
-                    rowCaption(kind, quest: quest)
+                // The quest riding on the row shows its XP beside the name when the line has room (it nearly
+                // always does); only at large text sizes does it move to the end of the line below.
+                ViewThatFits(in: .horizontal) {
+                    rowText(activity, done: done, quest: quest, xpBesideName: true)
+                    rowText(activity, done: done, quest: quest, xpBesideName: false)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(minHeight: 32)
+            // Every row is as tall as one with a line under its name, so the three sit evenly beside the ring
+            // whether or not they carry a lesson title.
+            .frame(minHeight: rowHeight)
             .contentShape(Rectangle())
         }
         .buttonStyle(PressScaleStyle())
@@ -317,6 +311,40 @@ struct DailySetCard: View {
         .accessibilityHint(Text(kind.detail))
         .accessibilityValue(rowValue(done: done, quest: quest))
         .accessibilityIdentifier("daily.\(kind.rawValue)")
+    }
+
+    /// The name and minutes on one line (with the quest's XP beside the name when `xpBesideName`), and under
+    /// them the lesson's title for the lesson rep (with the XP at the end of that line otherwise).
+    private func rowText(_ activity: DailyActivity, done: Bool, quest: Quest?, xpBesideName: Bool) -> some View {
+        let kind = activity.kind
+        let locked = kind.needsPro && !commerce.isPro
+        let lesson = kind == .lesson ? store.dailyLesson : nil
+        let belowXP = xpBesideName ? nil : quest
+        return VStack(alignment: .leading, spacing: 2) {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                rowTitle(kind, done: done)
+                if xpBesideName, let quest { xpTag(quest) }
+                Spacer(minLength: 4)
+                if locked {
+                    ProBadge().scaleEffect(0.8)
+                } else {
+                    minutesText(activity.minutes).font(Typeface.number(12)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
+                        .lineLimit(1).fixedSize()
+                }
+            }
+            if lesson != nil || belowXP != nil {
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    if let lesson {
+                        // Takes the line's width without asking for it, so a long title never decides where the XP goes.
+                        Text(lesson.title.localized).font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1)
+                            .frame(minWidth: 0, idealWidth: 0, maxWidth: .infinity, alignment: .leading)
+                    } else {
+                        Spacer(minLength: 0)
+                    }
+                    if let belowXP { xpTag(belowXP) }
+                }
+            }
+        }
     }
 
     /// The kind's symbol, or a check once done (so done reads by shape, not only by fill).
@@ -337,37 +365,19 @@ struct DailySetCard: View {
             .layoutPriority(1)
     }
 
-    /// Under the title: the lesson's name for the lesson rep, and the daily quest riding on this row (its bar
-    /// and its XP) when there is one.
-    @ViewBuilder private func rowCaption(_ kind: DailyActivity.Kind, quest: Quest?) -> some View {
-        let lesson = kind == .lesson ? store.dailyLesson : nil
-        if lesson != nil || quest != nil {
-            HStack(spacing: 6) {
-                if let lesson {
-                    Text(lesson.title.localized).font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1)
-                } else if let quest {
-                    questBar(quest)
-                }
-                if let quest { xpTag(quest) }
-            }
-        }
-    }
-
-    private func questBar(_ quest: Quest) -> some View {
+    /// The quest's XP as a small pill that fills as the quest does (its progress bar and its reward in one),
+    /// ticked once it has paid today.
+    private func xpTag(_ quest: Quest) -> some View {
         let count = store.questCounter(quest)
         let claimed = store.questProgress(quest) >= quest.target
-        return ProgressLine(value: Double(count.done) / Double(max(1, count.total)), color: claimed ? Palette.mint : quest.tint, height: 3)
-            .frame(width: 48)
-    }
-
-    /// The quest's XP: open, or ticked once it has paid today.
-    private func xpTag(_ quest: Quest) -> some View {
-        let claimed = store.questProgress(quest) >= quest.target
+        let progress = claimed ? 1 : min(1, Double(count.done) / Double(max(1, count.total)))
         return HStack(spacing: 2) {
             if claimed { Image(systemName: "checkmark").font(.system(size: 8, weight: .heavy)) }
             Text("+\(quest.xp) XP")
         }
-        .font(Typeface.label(10)).foregroundStyle(Palette.mint.opacity(claimed ? 0.7 : 1))
+        .font(Typeface.label(10)).foregroundStyle(Palette.mint.opacity(claimed ? 0.75 : 1))
+        .padding(.horizontal, 6).padding(.vertical, 2)
+        .background { QuestPillFill(progress: progress) }
         .fixedSize()
     }
 

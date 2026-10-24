@@ -145,19 +145,37 @@ struct SettingsView: View {
     }
 
     private var capoStepper: some View {
-        Stepper(value: Binding(get: { store.settings.capo }, set: { v in
+        let capo = store.settings.capo
+        return Stepper(value: Binding(get: { store.settings.capo }, set: { v in
             guard commerce.isPro || v == 0 else { store.presentPaywall("capo"); return }
             store.updateSettings { $0.capo = v }
-        }), in: 0...12) { RowLabel(symbol: "line.3.horizontal", title: Text("Capo: \(store.settings.capo)")) }
+        }), in: 0...12) {
+            StepperRowLabel(symbol: "line.3.horizontal", title: Text("Capo"), value: Self.capoValue(capo), amount: capo)
+        }
         .settingsRow()
+        .accessibilityValue(Self.capoValue(capo))
     }
 
     private var transposeStepper: some View {
-        Stepper(value: Binding(get: { store.settings.transposition }, set: { v in
+        let semitones = store.settings.transposition
+        return Stepper(value: Binding(get: { store.settings.transposition }, set: { v in
             guard commerce.isPro || v == 0 else { store.presentPaywall("transpose"); return }
             store.updateSettings { $0.transposition = v }
-        }), in: -12...12) { RowLabel(symbol: "arrow.up.arrow.down", title: Text("Transpose: \(store.settings.transposition)")) }
+        }), in: -12...12) {
+            StepperRowLabel(symbol: "arrow.up.arrow.down", title: Text("Transpose"), value: Self.transposeValue(semitones), amount: semitones)
+        }
         .settingsRow()
+        .accessibilityValue(Self.transposeValue(semitones))
+    }
+
+    /// The capo's fret, or Off without one.
+    private static func capoValue(_ fret: Int) -> Text {
+        fret == 0 ? Text("Off") : Text(verbatim: "\(fret)")
+    }
+
+    /// Semitones with their sign (+2, 0, −3; a true minus sign).
+    private static func transposeValue(_ semitones: Int) -> Text {
+        Text(verbatim: semitones > 0 ? "+\(semitones)" : (semitones < 0 ? "\u{2212}\(-semitones)" : "0"))
     }
 
     /// A4 in hertz: typed, checked against 415–466 Hz, and applied on demand.
@@ -423,6 +441,31 @@ private struct RowLabel: View {
         HStack(spacing: 12) {
             IconOrb(symbol: symbol, tint: tint, size: 30)
             title.font(.body).foregroundStyle(titleColor).multilineTextAlignment(.leading)
+        }
+    }
+}
+
+/// A stepper's label: the icon orb and title on the leading side, the current value at the trailing end beside
+/// the − + control, the way every other row shows its value. VoiceOver reads the value from the stepper itself.
+private struct StepperRowLabel: View {
+    let symbol: String
+    let title: Text
+    let value: Text
+    /// The number behind `value`, so a step rolls its digits.
+    let amount: Int
+
+    var body: some View {
+        HStack(spacing: 12) {
+            RowLabel(symbol: symbol, title: title)
+            Spacer(minLength: 8)
+            value
+                .font(Typeface.number(17))
+                .foregroundStyle(Palette.ink)
+                .lineLimit(1)
+                .fixedSize()
+                .contentTransition(.numericText(value: Double(amount)))
+                .animation(Motion.quick, value: amount)
+                .accessibilityHidden(true)
         }
     }
 }

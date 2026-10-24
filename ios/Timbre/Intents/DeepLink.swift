@@ -1,5 +1,6 @@
 import Foundation
 import TimbreCore
+import UIKit
 
 /// Timbre's `timbre://` routes, followed the same way from widgets, links, Siri, Shortcuts, Spotlight and the
 /// Action button (an intent hands its link to `IntentRouter.link`; RootView passes both here).
@@ -10,11 +11,17 @@ import TimbreCore
 ///     timbre://drone[?key=0…11&start=1] key is the pitch class, C = 0
 ///     timbre://lesson                   the next lesson of the course Learn shows
 ///     timbre://lesson?id=<id>           that lesson or song (Spotlight, Siri, the Next song widget)
+///     timbre://challenge?game=sniper&score=<n>
+///                                       Pitch Sniper with a friend's score to beat (a "Beat my score" card)
 ///     timbre://practice  timbre://ear  timbre://learn  timbre://songs
 ///
 /// Access stays where it is: a Pro instrument on the free plan opens the paywall naming it (as the picker does), the
 /// Drone tool opens its paywall, and a locked lesson opens the lesson paywall from Learn. A lesson further on in its
 /// course than the player has reached shows where it sits instead (its course in Learn, a song on its Songs shelf).
+///
+/// Settings and the instrument picker close for a link. A full-screen cover (a lesson, Strum, onboarding, an alert or
+/// a share sheet) is left as it is, since closing it would lose its progress: the link waits until it has gone, and
+/// then lands on screen rather than under it. The latest link wins.
 enum DeepLink {
     static let scheme = "timbre"
 
@@ -40,6 +47,11 @@ enum DeepLink {
 
     static func lesson(id: String) -> URL { url("lesson", [URLQueryItem(name: "id", value: id)]) }
 
+    /// Pitch Sniper with `score` to beat: the link a "Beat my score" card is sent with.
+    static func challenge(score: Int) -> URL {
+        url("challenge", [URLQueryItem(name: "game", value: PlayGame.sniper.rawValue), URLQueryItem(name: "score", value: String(score))])
+    }
+
     private static func url(_ host: String, _ items: [URLQueryItem] = []) -> URL {
         var components = URLComponents()
         components.scheme = scheme
@@ -51,13 +63,54 @@ enum DeepLink {
     // MARK: Following a link
 
     @MainActor static func open(_ url: URL, store: AppStore) {
-        guard url.scheme == scheme, let host = url.host else { return }
-        let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
-        func value(_ name: String) -> String? { items.first { $0.name == name }?.value }
-        let start = value("start") == "1"
+        guard url.scheme == scheme, url.host != nil else { return }
         // A covering sheet would hide where the link lands (the root paywall waits for both to close).
         store.showSettings = false
         store.showInstrumentPicker = false
+        // Anything still presented (those sheets on their way out included) keeps the link waiting.
+        guard !coverShowing else { park(url, store: store); return }
+        follow(url, store: store)
+    }
+
+    /// The link that waits for a cover to close, and whether something is already waiting for it.
+    @MainActor private static var parked: URL?
+    @MainActor private static var waiting = false
+
+    /// Holds `url` until nothing is presented over the tabs (checked a few times a second, for up to fifteen minutes),
+    /// then follows it once the screen has settled. A newer link replaces a waiting one.
+    @MainActor private static func park(_ url: URL, store: AppStore) {
+        parked = url
+        guard !waiting else { return }
+        waiting = true
+        Task { @MainActor in
+            let deadline = Date().addingTimeInterval(15 * 60)
+            while Date() < deadline {
+                if !coverShowing {
+                    // Settled: still clear a moment later (a cover going away can hand over to the next one).
+                    try? await Task.sleep(for: .milliseconds(300))
+                    if !coverShowing { break }
+                }
+                try? await Task.sleep(for: .milliseconds(400))
+            }
+            waiting = false
+            guard let next = parked else { return }
+            parked = nil
+            guard !coverShowing else { return }
+            follow(next, store: store)
+        }
+    }
+
+    /// Something is presented over the tabs (or still on its way out): a lesson, Strum, onboarding, a sheet, an alert.
+    @MainActor private static var coverShowing: Bool {
+        let windows = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.flatMap(\.windows)
+        return (windows.first(where: \.isKeyWindow) ?? windows.first)?.rootViewController?.presentedViewController != nil
+    }
+
+    @MainActor private static func follow(_ url: URL, store: AppStore) {
+        guard let host = url.host else { return }
+        let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        func value(_ name: String) -> String? { items.first { $0.name == name }?.value }
+        let start = value("start") == "1"
         switch host {
         case "tune":
             guard let id = value("instrument"), let instrument = store.catalog.instrument(id: id) else { store.open(.tune); return }
@@ -79,8 +132,20 @@ enum DeepLink {
         case "ear": store.open(.ear)
         case "learn": store.open(.learn)
         case "songs": store.selectedTab = .songs; Analytics.log("shortcut", ["destination": "songs"])
+        case "challenge": openChallenge(game: value("game"), score: value("score"), store: store)
         default: break
         }
+    }
+
+    /// Pitch Sniper (a free game) with a friend's score to beat: shown on its card and in the game's header until a game
+    /// passes it. A link for another game, or with a score no game can reach, opens the Play tab alone.
+    @MainActor private static func openChallenge(game: String?, score: String?, store: AppStore) {
+        store.selectedTab = .practice
+        guard game == PlayGame.sniper.rawValue, let target = score.flatMap({ Int($0) }),
+              (1...SniperChallenge.maxScore).contains(target) else { return }
+        GameCenter.shared.accept(sniperTarget: target)
+        GameCenter.shared.activate(store)
+        store.pendingPracticeRoute = .sniper
     }
 
     /// The tuner on `instrument`. Picking it goes through `selectInstrument`, which opens the paywall naming a Pro

@@ -88,30 +88,47 @@ struct JourneyView: View {
         }
     }
 
-    /// iPad: the stats across the top, then two columns. The wide one carries the story (the coach, the week, the
-    /// badges); the narrow one the numbers (the calendar, string health, accuracy, recent sessions), so no bar or
-    /// calendar row is stretched across the whole screen. Three columns give the story two of them.
+    /// iPad: the stats across the top (one tile per column in landscape), the cards in columns of a phone's
+    /// proportions so no calendar row or bar chart is stretched across the screen, and the badges across the foot,
+    /// where the width shows more of them per row.
     private func wideBoard(_ columns: CardColumns) -> some View {
-        let story = columns.count >= 3 ? columns.span(2) : columns.unit
-        return VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 20) {
             title
             stats(spacing: CardColumns.spacing)
             HStack(alignment: .top, spacing: CardColumns.spacing) {
-                VStack(alignment: .leading, spacing: 20) {
-                    coach
-                    weekCard
-                    achievements
+                if columns.count >= 3 {
+                    column(columns.unit) {
+                        coach
+                        weekCard
+                    }
+                    column(columns.unit) {
+                        calendar
+                        stringHealth
+                    }
+                    column(columns.unit) {
+                        insights
+                        recent
+                    }
+                } else {
+                    column(columns.unit) {
+                        coach
+                        weekCard
+                        calendar
+                    }
+                    column(columns.unit) {
+                        stringHealth
+                        insights
+                        recent
+                    }
                 }
-                .frame(width: story)
-                VStack(alignment: .leading, spacing: 20) {
-                    calendar
-                    stringHealth
-                    insights
-                    recent
-                }
-                .frame(width: columns.unit)
             }
+            achievements
         }
+    }
+
+    private func column<Content: View>(_ width: CGFloat, @ViewBuilder _ content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 20) { content() }
+            .frame(width: width)
     }
 
     // MARK: Coach

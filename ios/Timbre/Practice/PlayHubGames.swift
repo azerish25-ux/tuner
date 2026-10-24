@@ -100,6 +100,8 @@ struct PlayGameCard<Preview: View>: View {
     /// The live preview; its argument says whether it may move (on screen).
     @ViewBuilder let preview: (Bool) -> Preview
     @State private var visible = false
+    @EnvironmentObject private var store: AppStore
+    @ObservedObject private var center = GameCenter.shared
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: 24, style: .continuous)
@@ -119,9 +121,15 @@ struct PlayGameCard<Preview: View>: View {
                 }
             }
             .overlay(shape.strokeBorder(tint.opacity(0.16), lineWidth: 1))
+            // The leaderboard and a challenge to a friend sit in the preview's top corner, clear of the words.
+            .overlay(alignment: .topTrailing) {
+                if let game = challenge.game { GameCardCorner(game: game) }
+            }
             .clipShape(shape)
             .contentShape(shape)
             .liveWhileVisible($visible)
+            // The games are where Game Center belongs: it signs in (quietly) the first time they show.
+            .onAppear { GameCenter.shared.activate(store) }
     }
 
     private static var previewWidth: CGFloat { 148 }
@@ -132,11 +140,224 @@ struct PlayGameCard<Preview: View>: View {
                 .lineLimit(1).minimumScaleFactor(0.75)
             stats.font(.caption).foregroundStyle(Palette.inkSoft)
                 .lineLimit(1).minimumScaleFactor(0.75)
+            if challenge.game == .sniper, let friend = center.challenge {
+                FriendTargetLine(challenge: friend)
+            }
             Spacer(minLength: 12)
             ChallengeChip(challenge: challenge)
         }
         .padding(.leading, 16).padding(.trailing, 4).padding(.vertical, 16)
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// A friend's challenge on the Pitch Sniper card: "Beat 1,650" until a game passes it, then "1,650 beaten".
+private struct FriendTargetLine: View {
+    let challenge: SniperChallenge
+
+    var body: some View {
+        let beaten = challenge.beaten
+        HStack(spacing: 5) {
+            Image(systemName: beaten ? "checkmark.circle.fill" : "flag.checkered")
+                .font(.system(size: 10, weight: .bold))
+                .accessibilityHidden(true)
+            if beaten {
+                Text("\(challenge.target) beaten")
+            } else {
+                Text("Beat \(challenge.target)")
+            }
+        }
+        .font(Typeface.label(12))
+        .foregroundStyle(beaten ? Palette.mint : Palette.amber)
+        .lineLimit(1).minimumScaleFactor(0.8)
+        .padding(.top, 2)
+        .transition(.opacity.combined(with: .scale(scale: 0.9, anchor: .leading)))
+    }
+}
+
+/// The game card's corner: Pitch Sniper's "Challenge" once there is a best to send (the best on a card, with a link that
+/// opens the game with it to beat), and the game's Game Center leaderboard once Game Center is on and has the board,
+/// with this week's rank on Pitch Sniper's.
+private struct GameCardCorner: View {
+    let game: PlayGame
+    @EnvironmentObject private var store: AppStore
+    @ObservedObject private var center = GameCenter.shared
+
+    var body: some View {
+        let best = game == .sniper ? store.progress.stats["sniperBest"] ?? 0 : 0
+        let board = center.leaderboard(for: game)
+        HStack(spacing: 6) {
+            if best > 0 { ChallengeShareButton(score: best) }
+            if board != nil { leaderboardButton }
+        }
+        .padding(10)
+        .animation(Motion.settle, value: board)
+    }
+
+    private var rank: Int? { game == .sniper ? center.weeklyRank : nil }
+
+    private var leaderboardButton: some View {
+        Button {
+            Haptics.shared.selection()
+            center.showLeaderboard(game)
+        } label: {
+            HStack(spacing: 4) {
+                Image(systemName: "trophy.fill").font(.system(size: 11, weight: .bold))
+                if let rank { Text(verbatim: "#\(rank)").font(Typeface.label(11)).monospacedDigit() }
+            }
+            .foregroundStyle(Palette.amber)
+            .padding(.horizontal, 9)
+            .frame(minWidth: 32, minHeight: 32)
+            .background(Capsule().fill(Palette.stage.opacity(0.78)))
+            .overlay(Capsule().strokeBorder(Palette.amber.opacity(0.32), lineWidth: 1))
+            .contentShape(Capsule().inset(by: -6))
+        }
+        .buttonStyle(PressScaleStyle())
+        .transition(.scale(scale: 0.6).combined(with: .opacity))
+        .accessibilityLabel(Text("Leaderboard"))
+        .accessibilityValue(rank.map { Text("Rank \($0) this week") } ?? Text(verbatim: ""))
+        .accessibilityIdentifier("practice.\(game.rawValue).leaderboard")
+    }
+}
+
+/// "Challenge": the best score as a "Beat my score" card for the share sheet, sent with the link that opens Pitch
+/// Sniper with it to beat. The card is drawn a moment after the hub settles, again only when the best changes.
+private struct ChallengeShareButton: View {
+    let score: Int
+    @State private var card: Image?
+    @Environment(\.displayScale) private var displayScale
+    @Environment(\.locale) private var locale
+    @Environment(\.layoutDirection) private var layoutDirection
+
+    var body: some View {
+        Group {
+            if let card {
+                ShareLink(item: card, subject: Text("Beat my score"), message: Text(verbatim: SniperChallenge.message(score: score)),
+                          preview: SharePreview("Beat my score", image: card)) { label }
+                    .buttonStyle(PressScaleStyle())
+            } else {
+                label.opacity(0.45)
+            }
+        }
+        .accessibilityLabel(Text("Challenge a friend"))
+        .accessibilityIdentifier("practice.sniper.challenge")
+        .task(id: score) {
+            try? await Task.sleep(for: ShareCardRenderer.entrance)
+            guard !Task.isCancelled else { return }
+            card = ShareCardRenderer.image(SniperChallengeCard(score: score), scale: displayScale, locale: locale, direction: layoutDirection)
+        }
+    }
+
+    private var label: some View {
+        Image(systemName: "paperplane.fill").font(.system(size: 11, weight: .bold))
+            .foregroundStyle(Palette.mint)
+            .frame(width: 32, height: 32)
+            .background(Circle().fill(Palette.stage.opacity(0.78)))
+            .overlay(Circle().strokeBorder(Palette.mint.opacity(0.32), lineWidth: 1))
+            .contentShape(Circle().inset(by: -6))
+    }
+}
+
+// MARK: - Challenges
+
+/// "Beat my score": a Pitch Sniper best as a poster for the share sheet: the scope with a pitch held in the bullseye,
+/// the score in gold under it. Only the score, never a name.
+struct SniperChallengeCard: View {
+    let score: Int
+
+    var body: some View {
+        ShareCardFrame(glow: Palette.mint, signature: true) {
+            Label("Pitch Sniper", systemImage: "scope").font(Typeface.label(12)).foregroundStyle(Palette.mint)
+        } content: {
+            Canvas { context, size in
+                SniperScopeArt.draw(&context, size: size, t: SniperScopeArt.stillTime)
+            }
+            .frame(width: 210, height: 210)
+            VStack(spacing: 2) {
+                Text("Beat my score").font(Typeface.display(34)).tracking(-0.8).foregroundStyle(Palette.ink)
+                Text(score, format: .number).font(Typeface.number(64)).foregroundStyle(Palette.amber)
+                    .shadow(color: Palette.amber.opacity(0.35), radius: 16)
+            }
+            Text("Play the note. Hold the bullseye.").font(.headline).foregroundStyle(Palette.inkSoft)
+        }
+    }
+}
+
+/// Pitch Sniper's header while a friend's challenge stands: "Beat 1,650" in amber, mint and ticked once this game passes it.
+struct SniperChallengeTarget: View {
+    /// This game's score so far.
+    let score: Int
+    @ObservedObject private var center = GameCenter.shared
+
+    var body: some View {
+        if let challenge = center.challenge {
+            let passed = score > challenge.target
+            HStack(spacing: 4) {
+                Image(systemName: passed ? "checkmark" : "flag.checkered").font(.system(size: 9, weight: .heavy))
+                    .accessibilityHidden(true)
+                if passed {
+                    Text("\(challenge.target) beaten")
+                } else {
+                    Text("Beat \(challenge.target)")
+                }
+            }
+            .font(Typeface.label(11))
+            .foregroundStyle(passed ? Palette.mint : Palette.amber)
+            .lineLimit(1).minimumScaleFactor(0.8)
+            .contentTransition(.opacity)
+            .animation(Motion.quick, value: passed)
+        }
+    }
+}
+
+/// Under Pitch Sniper's result while a friend's challenge stands: "You beat 1,650" and "Send it back" (this game's score
+/// as the next challenge), or how many points it fell short by.
+struct SniperChallengeResult: View {
+    /// The finished game's score.
+    let score: Int
+    @ObservedObject private var center = GameCenter.shared
+    @State private var card: Image?
+    @Environment(\.displayScale) private var displayScale
+    @Environment(\.locale) private var locale
+    @Environment(\.layoutDirection) private var layoutDirection
+
+    var body: some View {
+        if let challenge = center.challenge {
+            Group {
+                if score > challenge.target {
+                    beaten(challenge.target)
+                } else {
+                    Text("\(challenge.target - score + 1) more to beat \(challenge.target)")
+                        .font(.footnote.weight(.semibold)).foregroundStyle(Palette.amber)
+                }
+            }
+            .task(id: score) {
+                guard score > challenge.target else { return }
+                try? await Task.sleep(for: ShareCardRenderer.entrance)
+                guard !Task.isCancelled else { return }
+                card = ShareCardRenderer.image(SniperChallengeCard(score: score), scale: displayScale, locale: locale, direction: layoutDirection)
+            }
+        }
+    }
+
+    private func beaten(_ target: Int) -> some View {
+        VStack(spacing: 10) {
+            Label { Text("You beat \(target)") } icon: { Image(systemName: "flag.checkered") }
+                .font(Typeface.label(16)).foregroundStyle(Palette.mint)
+            if let card {
+                ShareLink(item: card, subject: Text("Beat my score"), message: Text(verbatim: SniperChallenge.message(score: score)),
+                          preview: SharePreview("Beat my score", image: card)) {
+                    Label("Send it back", systemImage: "paperplane.fill")
+                        .font(Typeface.label(14)).foregroundStyle(Palette.onAccent)
+                        .padding(.horizontal, 16).frame(minHeight: 40)
+                        .background(Capsule().fill(Palette.mint))
+                }
+                .buttonStyle(PressScaleStyle())
+                .accessibilityIdentifier("sniper.challenge.reply")
+                .transition(.opacity.combined(with: .scale(scale: 0.9)))
+            }
+        }
+        .animation(Motion.settle, value: card != nil)
     }
 }
 

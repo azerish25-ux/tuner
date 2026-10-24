@@ -23,9 +23,12 @@ struct SnapshotEntry: TimelineEntry {
 }
 
 extension WidgetSnapshot {
-    /// The widget gallery's example.
-    static let sample = WidgetSnapshot(streak: 7, best: 12, practicedToday: true, week: [true, true, false, true, true, true, true], instrument: "Acoustic guitar",
-                                       lesson: .init(course: "Guitar", symbol: "guitars.fill", accent: "mint", title: "Your first chord: E minor", minutes: 4, xp: 20, done: 3, total: 60))
+    /// The widget gallery's example, saved just now (the streak widget ages a snapshot from when it was saved).
+    static var sample: WidgetSnapshot {
+        WidgetSnapshot(streak: 7, best: 12, practicedToday: true, week: [true, true, false, true, true, true, true], instrument: "Acoustic guitar",
+                       updated: Date(),
+                       lesson: .init(course: "Guitar", symbol: "guitars.fill", accent: "mint", title: "Your first chord: E minor", minutes: 4, xp: 20, done: 3, total: 60))
+    }
 }
 
 struct SnapshotProvider: TimelineProvider {

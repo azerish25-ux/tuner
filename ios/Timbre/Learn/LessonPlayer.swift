@@ -27,9 +27,6 @@ struct LessonPlayer: View {
     @State private var opening: Bool
     /// The presentation that brought the lesson in has finished.
     @State private var arrived = false
-    /// The Metronome tool was clicking when the lesson opened and nothing has stopped it since (a take restarts the
-    /// click fresh, which ends the tool's): closing the lesson then leaves the tool's click alone.
-    @State private var toolClick = false
 
     init(course: LearnCourse, lesson: Lesson, onNext: ((Lesson) -> Void)? = nil) {
         self.course = course
@@ -87,15 +84,12 @@ struct LessonPlayer: View {
             Button("Leave", role: .destructive) { dismiss() }
             Button("Keep going", role: .cancel) {}
         } message: { Text("Your progress in this lesson won’t be saved.") }
-        .onAppear {
-            toolClick = store.audio.metronomeRunning
-            LiveActivityController.shared.lessonOpened(lesson.id, title: lesson.title.localized, symbol: course.symbol)
-        }
-        .onReceive(store.audio.$metronomeRunning) { running in if !running { toolClick = false } }
+        .onAppear { LiveActivityController.shared.lessonOpened(lesson.id, title: lesson.title.localized, symbol: course.symbol) }
         .onDisappear {
             store.stopLessonListening()
-            // Only the lesson's own click stops with it; the Metronome tool's keeps going.
-            if !toolClick { store.audio.stopMetronome() }
+            // Only a lesson's own click stops with it: the Metronome tool's (left running when the lesson opened, and
+            // never restarted by a take) keeps going.
+            if store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
             LiveActivityController.shared.lessonClosed(lesson.id)
         }
         .statusBarHidden(result == nil)

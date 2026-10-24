@@ -15,8 +15,6 @@ struct OnboardingView: View {
     @State private var showPaywall = false
     @State private var restoring = false
     @State private var restoreMessage: String?
-    /// Instrument chips past the welcome row's edges (it starts with more to the right).
-    @State private var chipOverflow = ChipOverflow(leading: false, trailing: true)
     /// The plan's commitment: minutes a day and the reminder time ("Remind me" turns it on there).
     @State private var dailyMinutes = 10
     @State private var reminderTime = PlanCommitment.defaultTime
@@ -157,14 +155,9 @@ struct OnboardingView: View {
                 }
                 .padding(.horizontal, 28)
             }
-            // A chip running off either edge fades out rather than being cut through (the Violin PRO badge).
-            .onScrollGeometryChange(for: ChipOverflow.self) { geometry in
-                ChipOverflow(leading: geometry.contentOffset.x > 1,
-                             trailing: geometry.contentOffset.x + geometry.containerSize.width < geometry.contentSize.width - 1)
-            } action: { _, overflow in
-                withAnimation(Motion.quick) { chipOverflow = overflow }
-            }
-            .mask { ChipFade(overflow: chipOverflow) }
+            // A chip running off either edge dissolves (the app's one edge fade) rather than being cut through
+            // (the Violin PRO badge): over the 28 pt inset and a chip's worth inside it.
+            .edgeFade(width: 28 + 40)
             .padding(.top, 18)
             Button("Get started") { next() }.buttonStyle(BrassButtonStyle()).padding(.horizontal, 22).padding(.top, 22)
                 .accessibilityIdentifier("onboarding.start")
@@ -470,7 +463,12 @@ private struct PlanStep: View {
     }
 
     @ViewBuilder private func checkTitle(_ state: PlanCheck) -> some View {
-        if state == .done { Text("Placement checked") } else { Text("Not sure? Take a 45-second check") }
+        if state == .done {
+            Text("Placement checked")
+        } else {
+            // The same key, shown with non-breaking hyphens (U+2011) so "45-second" never splits across lines.
+            Text(verbatim: String(localized: "Not sure? Take a 45-second check").replacingOccurrences(of: "-", with: "\u{2011}"))
+        }
     }
 
     @ViewBuilder private func checkDetail(_ state: PlanCheck) -> some View {
@@ -825,26 +823,6 @@ private struct Floating: ViewModifier {
             } animation: { _ in
                 Animation.easeInOut(duration: 3.2)
             }
-        }
-    }
-}
-
-/// Whether the welcome chips run past the row's leading or trailing edge.
-private struct ChipOverflow: Equatable {
-    var leading: Bool
-    var trailing: Bool
-}
-
-/// The welcome row's mask: solid, fading out over the last stretch of an edge that has more chips past it.
-private struct ChipFade: View {
-    let overflow: ChipOverflow
-    var body: some View {
-        HStack(spacing: 0) {
-            LinearGradient(colors: [.clear, .black], startPoint: .leading, endPoint: .trailing)
-                .frame(width: overflow.leading ? 36 : 0)
-            Rectangle().fill(.black)
-            LinearGradient(colors: [.black, .clear], startPoint: .leading, endPoint: .trailing)
-                .frame(width: overflow.trailing ? 64 : 0)
         }
     }
 }

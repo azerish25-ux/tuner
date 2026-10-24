@@ -334,15 +334,38 @@ struct MiniChordGlyph: View {
 
 // MARK: - The song map
 
+extension SongSheet.Section {
+    /// The part a song is known by: a section its lesson names the hook, the chorus or the refrain.
+    var isHook: Bool {
+        guard let name = title?.defaultValue.lowercased() else { return false }
+        return ["hook", "chorus", "refrain"].contains { name.contains($0) }
+    }
+}
+
+extension SongSheet {
+    /// A section picked on the song sheet to practise on its own, at a share of the song's tempo.
+    struct Loop: Equatable {
+        let section: Section
+        /// 0.5, 0.75 or 1 of the song's tempo.
+        let speed: Double
+        /// The tempo that makes, in beats per minute.
+        let bpm: Double
+    }
+}
+
 /// The song's sections as one bar across the screen, each as wide as its bars: named by the lesson's play-along
 /// ("The hook") over its bars, or plain bars, or the chord it holds. While the song plays, `progress` (0…1 of the
-/// song) fills the sections behind a playhead.
+/// song) fills the sections behind a playhead. Given `onSelect`, each section is a button (the song sheet loops it)
+/// and `selected` stands out with a loop mark.
 struct SongSectionMap: View {
     let sections: [SongSheet.Section]
     let bars: Int
     var accent: Color = Palette.mint
     var progress: Double?
     var height: CGFloat = 50
+    /// The section looping on the song sheet.
+    var selected: Int?
+    var onSelect: ((SongSheet.Section) -> Void)?
 
     private static let spacing: CGFloat = 3
 
@@ -351,7 +374,7 @@ struct SongSectionMap: View {
             let layout = Spans(sections: sections, bars: bars, width: proxy.size.width)
             ZStack(alignment: .topLeading) {
                 ForEach(Array(sections.enumerated()), id: \.element.id) { index, section in
-                    segment(section, index: index, width: layout.widths[index])
+                    segmentSlot(section, width: layout.widths[index])
                         .offset(x: layout.lefts[index])
                 }
                 if let progress {
@@ -361,9 +384,7 @@ struct SongSectionMap: View {
             }
         }
         .frame(height: height)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Song map"))
-        .accessibilityValue(Text(verbatim: spokenSections))
+        .modifier(MapAccessibility(interactive: onSelect != nil, summary: spokenSections))
     }
 
     /// Where each section sits across `width`, with a little air between them.
@@ -402,18 +423,39 @@ struct SongSectionMap: View {
         }
     }
 
-    private func segment(_ section: SongSheet.Section, index: Int, width: CGFloat) -> some View {
-        let tint = color(of: section)
+    /// A section, as a button when the map picks loops.
+    @ViewBuilder private func segmentSlot(_ section: SongSheet.Section, width: CGFloat) -> some View {
+        if let onSelect {
+            Button { onSelect(section) } label: { segment(section, width: width) }
+                .buttonStyle(PressScaleStyle())
+                .accessibilityLabel(Text(verbatim: Self.spoken(section)))
+                .accessibilityHint(Text("Loops this part"))
+                .accessibilityAddTraits(selected == section.id ? .isSelected : [])
+        } else {
+            segment(section, width: width)
+        }
+    }
+
+    private func segment(_ section: SongSheet.Section, width: CGFloat) -> some View {
+        let tint = Self.tint(of: section, in: sections, accent: accent)
         let shape = RoundedRectangle(cornerRadius: 11, style: .continuous)
         let filled = fill(of: section)
+        let on = selected == section.id
+        let base = section.title == nil && section.chord == nil ? 0.08 : 0.16
         return ZStack(alignment: .leading) {
-            shape.fill(tint.opacity(section.title == nil && section.chord == nil ? 0.08 : 0.16))
+            shape.fill(tint.opacity(on ? 0.3 : base))
             Rectangle().fill(tint.opacity(0.42)).frame(width: max(0, width * CGFloat(filled)))
             if width >= 34 { label(section, tint: tint).padding(.horizontal, 8) }
         }
         .frame(width: max(0, width), height: height, alignment: .leading)
+        .overlay(alignment: .topTrailing) {
+            if on && width >= 64 {
+                Image(systemName: "repeat").font(.system(size: 10, weight: .bold)).foregroundStyle(tint).padding(6)
+            }
+        }
         .clipShape(shape)
-        .overlay(shape.strokeBorder(tint.opacity(filled > 0 ? 0.7 : 0.35), lineWidth: 1))
+        .overlay(shape.strokeBorder(tint.opacity(on ? 0.95 : filled > 0 ? 0.7 : 0.35), lineWidth: on ? 2 : 1))
+        .contentShape(shape)
     }
 
     @ViewBuilder private func label(_ section: SongSheet.Section, tint: Color) -> some View {
@@ -446,15 +488,16 @@ struct SongSectionMap: View {
             .allowsHitTesting(false)
     }
 
-    /// Named sections in the accent and the colours after it (the same name always the same colour), chords in the
-    /// accent, plain bars in grey.
-    private func color(of section: SongSheet.Section) -> Color {
+    /// The hook (or chorus) always in amber, the other named sections in the accent and the colours after it (the
+    /// same name always the same colour), chords in the accent, plain bars in grey. The lead sheet uses the same.
+    static func tint(of section: SongSheet.Section, in sections: [SongSheet.Section], accent: Color) -> Color {
         if section.chord != nil { return accent }
         guard let title = section.title else { return Palette.inkSoft }
-        let names = sections.compactMap { $0.title?.defaultValue }.reduce(into: [String]()) { list, name in
+        if section.isHook { return Palette.amber }
+        let names = sections.filter { !$0.isHook }.compactMap { $0.title?.defaultValue }.reduce(into: [String]()) { list, name in
             if !list.contains(name) { list.append(name) }
         }
-        let tints = [accent, Palette.amber, Palette.violet, Palette.sky, Palette.coral]
+        let tints = [accent, Palette.violet, Palette.sky, Palette.coral]
         let index = names.firstIndex(of: title.defaultValue) ?? 0
         return tints[index % tints.count]
     }
@@ -465,16 +508,561 @@ struct SongSectionMap: View {
         return min(1, max(0, (bar - Double(section.start)) / Double(max(1, section.bars))))
     }
 
+    /// "The hook, Bars 5–8", "G, Bars 1–2", "Bars 1–4".
+    static func spoken(_ section: SongSheet.Section) -> String {
+        let range = section.bars == 1
+            ? String(localized: "Bar \(section.start + 1)", bundle: TimbreLocalization.bundle)
+            : String(localized: "Bars \(section.start + 1)–\(section.start + section.bars)", bundle: TimbreLocalization.bundle)
+        if let title = section.title { return title.localized + ", " + range }
+        if let chord = section.chord { return chord.name + ", " + range }
+        return range
+    }
+
     private var spokenSections: String {
-        sections.map { section in
-            let range = section.bars == 1
-                ? String(localized: "Bar \(section.start + 1)", bundle: TimbreLocalization.bundle)
-                : String(localized: "Bars \(section.start + 1)–\(section.start + section.bars)", bundle: TimbreLocalization.bundle)
-            if let title = section.title { return title.localized + ", " + range }
-            if let chord = section.chord { return chord.name + ", " + range }
-            return range
+        sections.map(Self.spoken).joined(separator: "; ")
+    }
+}
+
+/// The map reads as one element ("Song map", its sections) unless its sections are buttons.
+private struct MapAccessibility: ViewModifier {
+    let interactive: Bool
+    let summary: String
+
+    @ViewBuilder func body(content: Content) -> some View {
+        if interactive {
+            content.accessibilityElement(children: .contain).accessibilityLabel(Text("Song map"))
+        } else {
+            content
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text("Song map"))
+                .accessibilityValue(Text(verbatim: summary))
         }
-        .joined(separator: "; ")
+    }
+}
+
+// MARK: - The lead sheet
+
+/// A song's lead sheet: bar by bar, the chord over it and the melody in it (the final take), so the song reads like
+/// a chart on a music stand. Its chords come from the lesson's own progression when it spells the song bar for bar:
+/// lined up with the melody (a pickup bar shifts it by one) and kept only when its chords hold most of the melody's
+/// notes, so the chart is never a guess; a melody without one shows the melody alone. A song that ends on its
+/// chords is all chords, its strum pattern as slashes. Built once per lesson (`of`).
+struct LeadChart {
+    let bars: Int
+    let meter: Int
+    /// The melody from beat 0 of the first bar; empty for a song that ends on its chords.
+    let notes: [TimedNote]
+    /// The chord over each bar; nil where the lesson names none.
+    let chords: [ChordSpec?]
+    /// A strummed song's pattern within a bar, in beats.
+    let strokes: [Double]
+    /// The melody's lowest and highest notes (an octave round middle C without one).
+    let low: Int
+    let high: Int
+
+    var hasChords: Bool { chords.contains { $0 != nil } }
+
+    @MainActor private static var cache: [String: LeadChart] = [:]
+
+    @MainActor static func of(_ lesson: Lesson) -> LeadChart {
+        if let known = cache[lesson.id] { return known }
+        let chart = LeadChart(lesson: lesson, sheet: SongSheet.of(lesson))
+        if cache.count > 200 { cache.removeAll() }
+        cache[lesson.id] = chart
+        return chart
+    }
+
+    init(lesson: Lesson, sheet: SongSheet) {
+        let bars = max(1, sheet.bars)
+        self.bars = bars
+        var melody: [TimedNote] = []
+        if case let .progression(list, lengths, pattern, _, _)? = lesson.steps.last {
+            meter = max(1, sheet.beatsPerBar)
+            var spread: [ChordSpec?] = []
+            for (index, chord) in list.enumerated() {
+                let count = index < lengths.count ? max(1, lengths[index]) : 1
+                spread += [ChordSpec?](repeating: chord, count: count)
+            }
+            spread += [ChordSpec?](repeating: nil, count: bars)
+            chords = Array(spread.prefix(bars))
+            strokes = pattern.filter { $0 >= 0 && $0 < Double(max(1, sheet.beatsPerBar)) }
+        } else {
+            melody = sheet.finale.isEmpty ? sheet.melody : sheet.finale
+            let beats = max(1, sheet.finale.isEmpty ? sheet.melodyMeter : sheet.beatsPerBar)
+            meter = beats
+            chords = Self.chart(melody, meter: beats, bars: bars, steps: lesson.steps)
+            strokes = []
+        }
+        notes = melody
+        let pitches = melody.map(\.midi)
+        let lowest = pitches.min() ?? 60
+        let highest = pitches.max() ?? 72
+        low = lowest
+        high = max(highest, lowest + 5)
+    }
+
+    /// The best of the lesson's progressions laid over the bars: bar for bar from the first bar or the second (after a
+    /// pickup), or twice through one half the song's length; nil bars where it ends early. Kept only when at least
+    /// 55 % of the melody (by length, downbeats counting extra) sits in the chord over it.
+    private static func chart(_ notes: [TimedNote], meter: Int, bars: Int, steps: [LessonStep]) -> [ChordSpec?] {
+        let none = [ChordSpec?](repeating: nil, count: bars)
+        guard !notes.isEmpty else { return none }
+        var best: (score: Double, chart: [ChordSpec?])?
+        for step in steps {
+            guard case let .progression(list, lengths, _, _, _) = step else { continue }
+            var flat: [ChordSpec] = []
+            for (index, chord) in list.enumerated() {
+                flat += Array(repeating: chord, count: index < lengths.count ? max(1, lengths[index]) : 1)
+            }
+            guard !flat.isEmpty else { continue }
+            for shift in 0...1 where bars - shift > 0 {
+                let room = bars - shift
+                let tiles = room > flat.count ? room / flat.count : 1
+                guard room <= flat.count + 1 || (tiles >= 2 && room - tiles * flat.count <= 1) else { continue }
+                var candidate = none
+                for bar in shift..<bars where bar - shift < flat.count * tiles {
+                    candidate[bar] = flat[(bar - shift) % flat.count]
+                }
+                let score = coverage(notes, chart: candidate, meter: meter)
+                if score > (best?.score ?? 0) { best = (score: score, chart: candidate) }
+            }
+        }
+        guard let best, best.score >= 0.55 else { return none }
+        return best.chart
+    }
+
+    /// The share of the melody (by length, downbeats counting half again) whose notes are tones of the chord over them.
+    private static func coverage(_ notes: [TimedNote], chart: [ChordSpec?], meter: Int) -> Double {
+        var total = 0.0
+        var held = 0.0
+        for note in notes {
+            let bar = Int((note.beat / Double(meter) + 1e-6).rounded(.down))
+            guard bar >= 0, bar < chart.count, let chord = chart[bar] else { continue }
+            let downbeat = abs(note.beat - Double(bar * meter)) < 1e-6
+            let weight = max(0.25, note.beats) * (downbeat ? 1.5 : 1)
+            total += weight
+            if tones(of: chord).contains(PitchMath.pitchClass(midi: note.midi)) { held += weight }
+        }
+        return total > 0 ? held / total : 0
+    }
+
+    /// A chord's pitch classes (root and fifth for a quality the recogniser doesn't know).
+    static func tones(of chord: ChordSpec) -> Set<Int> {
+        let intervals = ChordTarget(root: chord.root, formulaId: chord.quality)?.quality.intervals ?? [0, 7]
+        return Set(intervals.map { PitchMath.pitchClass(midi: chord.root + $0) })
+    }
+
+    /// The melody of bars `start..<start + count`, from beat 0 of its first bar.
+    func melody(from start: Int, count: Int) -> [TimedNote] {
+        let from = Double(start * meter)
+        let to = Double((start + count) * meter)
+        return notes.filter { $0.beat >= from - 1e-6 && $0.beat < to - 1e-6 }
+            .map { TimedNote(midi: $0.midi, beat: $0.beat - from, beats: $0.beats, at: $0.at) }
+    }
+
+    /// The chords of bars `start..<start + count`, a bar without one holding the chord before it (or the next).
+    func filledChords(from start: Int, count: Int) -> [ChordSpec] {
+        let first = min(chords.count, max(0, start))
+        let range = Array(chords[first..<max(first, min(chords.count, start + count))])
+        var out: [ChordSpec] = []
+        var held = range.first { $0 != nil } ?? nil
+        for chord in range {
+            if let chord { held = chord }
+            if let held { out.append(held) }
+        }
+        return out
+    }
+}
+
+/// How the lead sheet draws the melody: its shape with note names, or fret numbers on the strings (tab).
+struct LeadTab: Equatable {
+    /// Where each of the chart's notes is played, in order.
+    let frets: [Fretting?]
+    let strings: Int
+    /// String 1 (the thinnest) on the top line, else the thickest.
+    let thinnestOnTop: Bool
+}
+
+/// The lead sheet, section by section: each a card headed by its name and bars (the hook marked), its bars in rows
+/// (four to a row on a phone, up to eight on a wide screen), the chord symbols over them and the melody, or tab, in
+/// them. Tapping a section picks it (`onSelect`); the picked one shows `controls`. While the song or a loop plays,
+/// `position` (bars from the start) moves a playhead through the bars and lights the notes it has passed.
+struct LeadSheetView<Controls: View>: View {
+    let chart: LeadChart
+    let sections: [SongSheet.Section]
+    let accent: Color
+    var tab: LeadTab?
+    let width: CGFloat
+    var position: Double?
+    var selected: Int?
+    let onSelect: (SongSheet.Section) -> Void
+    @ViewBuilder let controls: (SongSheet.Section) -> Controls
+
+    private static var inset: CGFloat { 12 }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(sections) { section in block(section) }
+        }
+    }
+
+    /// Bars to a row: four (eight in 2/4) on a phone, twice that on a wide screen, never more than the longest section.
+    private var perRow: Int {
+        let base = chart.meter <= 2 ? 8 : 4
+        let capacity = width >= 700 ? base * 2 : base
+        let longest = sections.map(\.bars).max() ?? capacity
+        return max(1, min(capacity, longest))
+    }
+
+    private struct Row: Identifiable {
+        let start: Int
+        let count: Int
+        var id: Int { start }
+    }
+
+    private func rows(_ section: SongSheet.Section) -> [Row] {
+        let end = section.start + section.bars
+        return stride(from: section.start, to: end, by: perRow).map { Row(start: $0, count: min(perRow, end - $0)) }
+    }
+
+    private func block(_ section: SongSheet.Section) -> some View {
+        let tint = SongSectionMap.tint(of: section, in: sections, accent: accent)
+        let on = selected == section.id
+        let shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
+        let wash = on ? 0.13 : section.isHook ? 0.07 : 0.035
+        let edge = on ? 0.7 : section.isHook ? 0.34 : 0.1
+        return VStack(alignment: .leading, spacing: 8) {
+            header(section, tint: tint, on: on)
+            ForEach(rows(section)) { row in
+                rowView(row, section: section, tint: tint)
+            }
+            if on { controls(section) }
+        }
+        .padding(Self.inset)
+        .background(shape.fill(tint.opacity(wash)))
+        .overlay(shape.strokeBorder(tint.opacity(edge), lineWidth: on ? 1.5 : 1))
+        .contentShape(shape)
+        .onTapGesture { onSelect(section) }
+        .id(section.id)
+    }
+
+    private func header(_ section: SongSheet.Section, tint: Color, on: Bool) -> some View {
+        Button { onSelect(section) } label: {
+            HStack(spacing: 8) {
+                name(section).font(Typeface.label(14, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
+                if section.title != nil || section.chord != nil {
+                    bars(section).font(Typeface.label(12)).foregroundStyle(tint)
+                }
+                if section.isHook { hookBadge }
+                Spacer(minLength: 8)
+                Image(systemName: on ? "repeat.circle.fill" : "repeat")
+                    .font(.system(size: on ? 18 : 13, weight: .bold))
+                    .foregroundStyle(on ? tint : Palette.inkFaint)
+                    .contentTransition(.symbolEffect(.replace))
+            }
+            .lineLimit(1)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(verbatim: SongSectionMap.spoken(section)))
+        .accessibilityValue(Text(verbatim: chordsSpoken(section)))
+        .accessibilityHint(Text("Loops this part"))
+        .accessibilityAddTraits(on ? .isSelected : [])
+    }
+
+    private func name(_ section: SongSheet.Section) -> Text {
+        if let title = section.title { return Text(title.localized) }
+        if let chord = section.chord { return Text(verbatim: chord.name) }
+        return bars(section)
+    }
+
+    private func bars(_ section: SongSheet.Section) -> Text {
+        section.bars == 1 ? Text("Bar \(section.start + 1)") : Text("Bars \(section.start + 1)–\(section.start + section.bars)")
+    }
+
+    private var hookBadge: some View {
+        Label("Hook", systemImage: "sparkles")
+            .font(Typeface.label(11)).foregroundStyle(Palette.onAccent)
+            .padding(.horizontal, 7).padding(.vertical, 2)
+            .background(Capsule().fill(Palette.amber))
+            .fixedSize()
+    }
+
+    /// The section's chords as they change, for VoiceOver ("G, D, E minor, C").
+    private func chordsSpoken(_ section: SongSheet.Section) -> String {
+        var names: [String] = []
+        var last: String?
+        let end = max(section.start, min(chart.chords.count, section.start + section.bars))
+        for bar in section.start..<end {
+            guard let chord = chart.chords[bar], chord.symbol != last else { continue }
+            names.append(SongSheet.spoken(chord))
+            last = chord.symbol
+        }
+        return names.joined(separator: ", ")
+    }
+
+    private func rowView(_ row: Row, section: SongSheet.Section, tint: Color) -> some View {
+        let from = Double(row.start * chart.meter)
+        let to = Double((row.start + row.count) * chart.meter)
+        var notes: [TimedNote] = []
+        var frets: [Fretting?] = []
+        for (index, note) in chart.notes.enumerated() where note.beat >= from - 1e-6 && note.beat < to - 1e-6 {
+            notes.append(note)
+            if let tab { frets.append(index < tab.frets.count ? tab.frets[index] : nil) }
+        }
+        let chords = Array(chart.chords[min(chart.chords.count, row.start)..<min(chart.chords.count, row.start + row.count)])
+        let inRow = position.map { $0 >= Double(row.start) && $0 < Double(row.start + row.count) } ?? false
+        let lead = LeadRow(start: row.start, count: row.count, perRow: perRow, meter: chart.meter, notes: notes,
+                           frets: tab == nil ? nil : frets, chords: chords, showChords: chart.hasChords, strokes: chart.strokes,
+                           low: chart.low, high: chart.high, tint: section.isHook ? Palette.amber : accent,
+                           strings: tab?.strings ?? 0, thinnestOnTop: tab?.thinnestOnTop ?? true,
+                           position: inRow ? position : nil, closes: row.start + row.count == section.start + section.bars)
+        return lead.equatable()
+            .frame(height: lead.height)
+            .accessibilityHidden(true)
+    }
+}
+
+/// One row of the lead sheet, drawn in one Canvas: bar lines (a double one closing its section), chord symbols where
+/// the chord changes, then the melody as its shape (each note a bar as long as it lasts, at its pitch, named above),
+/// as tab (fret numbers on the strings), or, for a strummed song, slashes on the strokes. Equatable, so only the row
+/// the playhead is in redraws while a song plays.
+struct LeadRow: View, Equatable {
+    let start: Int
+    let count: Int
+    let perRow: Int
+    let meter: Int
+    let notes: [TimedNote]
+    let frets: [Fretting?]?
+    let chords: [ChordSpec?]
+    let showChords: Bool
+    let strokes: [Double]
+    let low: Int
+    let high: Int
+    let tint: Color
+    let strings: Int
+    let thinnestOnTop: Bool
+    let position: Double?
+    let closes: Bool
+
+    private static let chordLane: CGFloat = 24
+    private static let labelFace = "Sora-SemiBold"
+
+    var height: CGFloat {
+        let lane = showChords ? Self.chordLane : 0
+        if frets != nil { return lane + CGFloat(max(1, strings - 1)) * 12 + 18 }
+        if notes.isEmpty { return lane + 34 }
+        return lane + 64
+    }
+
+    var body: some View {
+        Canvas { context, size in draw(&context, size: size) }
+    }
+
+    private func draw(_ context: inout GraphicsContext, size: CGSize) {
+        let bar = size.width / CGFloat(max(1, perRow))
+        let top = showChords ? Self.chordLane : 0
+        let lane = CGRect(x: 0, y: top, width: bar * CGFloat(count), height: max(1, size.height - top))
+        drawBarLines(&context, bar: bar, lane: lane)
+        if showChords { drawChords(&context, bar: bar) }
+        if frets != nil {
+            drawTab(&context, bar: bar, lane: lane)
+        } else if notes.isEmpty {
+            drawStrokes(&context, bar: bar, lane: lane)
+        } else {
+            drawMelody(&context, bar: bar, lane: lane)
+        }
+        if let position { drawPlayhead(&context, x: CGFloat(position - Double(start)) * bar, lane: lane) }
+    }
+
+    /// x of a beat (from the song's start) in this row.
+    private func x(_ beat: Double, bar: CGFloat) -> CGFloat { CGFloat(beat / Double(max(1, meter)) - Double(start)) * bar }
+
+    private func drawBarLines(_ context: inout GraphicsContext, bar: CGFloat, lane: CGRect) {
+        for i in 0...count {
+            let final = i == count && closes
+            let x = min(lane.maxX - (final ? 2.5 : 1), max(0, CGFloat(i) * bar - 0.5))
+            context.fill(Path(CGRect(x: x, y: lane.minY, width: 1, height: lane.height)),
+                         with: .color(Palette.inkFaint.opacity(final ? 0.75 : 0.35)))
+            if final {
+                context.fill(Path(CGRect(x: lane.maxX - 2.5, y: lane.minY, width: 2.5, height: lane.height)),
+                             with: .color(Palette.inkFaint.opacity(0.75)))
+            }
+        }
+    }
+
+    private func drawChords(_ context: inout GraphicsContext, bar: CGFloat) {
+        var previous: String?
+        for (i, chord) in chords.enumerated() {
+            defer { previous = chord?.symbol }
+            guard let chord, i == 0 || chord.symbol != previous else { continue }
+            let label = Text(verbatim: chord.name).font(.custom(Self.labelFace, fixedSize: 15)).foregroundStyle(Palette.ink)
+            context.draw(label, at: CGPoint(x: CGFloat(i) * bar + 6, y: Self.chordLane / 2 - 1), anchor: .leading)
+        }
+    }
+
+    /// Three faint guide lines, the melody's contour under its notes, each note a bar at its pitch, its name above.
+    private func drawMelody(_ context: inout GraphicsContext, bar: CGFloat, lane: CGRect) {
+        for k in 1...3 {
+            let y = lane.minY + 14 + (lane.height - 20) * CGFloat(k) / 4
+            context.fill(Path(CGRect(x: 0, y: y, width: lane.width, height: 0.5)), with: .color(Palette.inkFaint.opacity(0.14)))
+        }
+        let span = CGFloat(max(1, high - low))
+        let floor = lane.maxY - 6
+        let reach = lane.height - 28
+        func y(_ midi: Int) -> CGFloat { floor - reach * CGFloat(midi - low) / span }
+        var contour = Path()
+        var lastLabelEnd = -CGFloat.infinity
+        let playing = position != nil
+        for (index, note) in notes.enumerated() {
+            let left = x(note.beat, bar: bar) + 2
+            let right = min(lane.maxX - 2, x(note.beat + note.beats, bar: bar) - 2)
+            let width = max(5, right - left)
+            let level = y(note.midi)
+            if index == 0 { contour.move(to: CGPoint(x: left, y: level)) } else { contour.addLine(to: CGPoint(x: left, y: level)) }
+            contour.addLine(to: CGPoint(x: left + width, y: level))
+            let passed = playing && Double(note.beat) / Double(max(1, meter)) <= (position ?? 0)
+            let sounding = passed && (note.beat + note.beats) / Double(max(1, meter)) > (position ?? 0)
+            let rect = CGRect(x: left, y: level - 3.5, width: width, height: 7)
+            if sounding {
+                context.fill(Path(roundedRect: rect.insetBy(dx: -3, dy: -3), cornerRadius: 6.5), with: .color(tint.opacity(0.35)))
+            }
+            let shade = playing && !passed ? tint.opacity(0.5) : tint
+            context.fill(Path(roundedRect: rect, cornerRadius: 3.5), with: .color(sounding ? Color.white : shade))
+            let name = context.resolve(Text(verbatim: NoteName.pitchClass(note.midi))
+                .font(.custom(Self.labelFace, fixedSize: 11)).foregroundStyle(Palette.inkSoft))
+            let measured = name.measure(in: CGSize(width: 60, height: 20))
+            if left >= lastLabelEnd + 3 {
+                context.draw(name, at: CGPoint(x: left, y: level - 6), anchor: .bottomLeading)
+                lastLabelEnd = left + measured.width
+            }
+        }
+        context.stroke(contour, with: .color(tint.opacity(0.22)), style: StrokeStyle(lineWidth: 1.2, lineCap: .round, lineJoin: .round))
+    }
+
+    /// The strings as lines, each note's fret on its string (a dash after it while it rings).
+    private func drawTab(_ context: inout GraphicsContext, bar: CGFloat, lane: CGRect) {
+        let count = max(1, strings)
+        let gap: CGFloat = 12
+        let first = lane.minY + 9
+        for r in 0..<count {
+            let y = first + CGFloat(r) * gap
+            context.fill(Path(CGRect(x: 0, y: y - 0.25, width: lane.width, height: 0.5)), with: .color(Palette.inkFaint.opacity(0.45)))
+        }
+        let playing = position != nil
+        for (index, note) in notes.enumerated() {
+            guard let frets, index < frets.count, let fret = frets[index] else { continue }
+            let number = max(1, min(count, fret.string))
+            let row = thinnestOnTop ? number - 1 : count - number
+            let y = first + CGFloat(row) * gap
+            let left = x(note.beat, bar: bar) + 3
+            let passed = playing && note.beat / Double(max(1, meter)) <= (position ?? 0)
+            let color = playing && !passed ? tint.opacity(0.5) : tint
+            let label = context.resolve(Text(verbatim: "\(fret.fret)").font(.custom(Self.labelFace, fixedSize: 11)).foregroundStyle(color))
+            let size = label.measure(in: CGSize(width: 40, height: 20))
+            let chip = CGRect(x: left - 2, y: y - 7, width: size.width + 4, height: 14)
+            context.fill(Path(roundedRect: chip, cornerRadius: 3), with: .color(Palette.stage))
+            context.draw(label, at: CGPoint(x: left, y: y), anchor: .leading)
+            let right = min(lane.maxX - 3, x(note.beat + note.beats, bar: bar) - 3)
+            if right - chip.maxX > 6 {
+                context.fill(Path(CGRect(x: chip.maxX + 2, y: y - 1, width: right - chip.maxX - 2, height: 2)), with: .color(color.opacity(0.35)))
+            }
+        }
+    }
+
+    /// A strummed song: a slash on every stroke, down-strokes (on the beat) full height, up-strokes shorter.
+    private func drawStrokes(_ context: inout GraphicsContext, bar: CGFloat, lane: CGRect) {
+        let middle = lane.midY
+        for i in 0..<count {
+            for stroke in strokes {
+                let x = CGFloat(i) * bar + bar * CGFloat(stroke / Double(max(1, meter))) + 8
+                guard x < CGFloat(i + 1) * bar - 4 else { continue }
+                let down = abs(stroke - stroke.rounded()) < 0.01
+                let half: CGFloat = down ? 8 : 5
+                var slash = Path()
+                slash.move(to: CGPoint(x: x - half * 0.45, y: middle + half))
+                slash.addLine(to: CGPoint(x: x + half * 0.45, y: middle - half))
+                context.stroke(slash, with: .color(tint.opacity(down ? 1 : 0.6)), style: StrokeStyle(lineWidth: down ? 3 : 2, lineCap: .round))
+            }
+        }
+    }
+
+    private func drawPlayhead(_ context: inout GraphicsContext, x: CGFloat, lane: CGRect) {
+        let rect = CGRect(x: x - 1, y: 0, width: 2, height: lane.maxY)
+        context.fill(Path(roundedRect: rect.insetBy(dx: -3, dy: 0), cornerRadius: 3), with: .color(tint.opacity(0.3)))
+        context.fill(Path(roundedRect: rect, cornerRadius: 1), with: .color(Color.white))
+    }
+}
+
+// MARK: - Playing a stretch of the song
+
+/// Plays part of a song in the course's voice on one clock, each hit (a note, or a chord's tones together) at its
+/// beat: once, or round and round as a loop until the task is cancelled. Given a band (and headphones, with the
+/// band switch on, which `AudioService` checks), the band and a click play under it from the first beat and land on
+/// a final chord when a single pass ends. `stop` silences it all.
+enum SongPlayback {
+    struct Hit {
+        let beat: Double
+        let beats: Double
+        let midis: [Int]
+    }
+
+    @MainActor static func start(_ hits: [Hit], bpm: Double, meter: Int, length: Double, band: BandArrangement?, loop: Bool,
+                                 audio: AudioService, voice: InstrumentVoice, reference: Double,
+                                 finished: @escaping @MainActor () -> Void) -> Task<Void, Never> {
+        let spb = 60 / max(20, bpm)
+        let cycle = max(0.5, length)
+        if let band {
+            audio.setMetronome(bpm: Int(bpm.rounded()), beats: max(1, meter), subdivision: 1, accents: true)
+            audio.playBand(band, firstBar: 0)
+        }
+        return Task { @MainActor in
+            let clock = ContinuousClock()
+            var begin = clock.now
+            repeat {
+                for hit in hits where hit.beat * spb < cycle {
+                    try? await clock.sleep(until: begin + .seconds(hit.beat * spb))
+                    guard !Task.isCancelled else { return }
+                    let ms = Int(min(1600, max(160, hit.beats * spb * 950)))
+                    audio.playTones(hit.midis.map { PitchMath.frequency(midi: Double($0), reference: reference) },
+                                    together: hit.midis.count > 1, noteMs: ms, gapMs: 0, voice: voice)
+                }
+                try? await clock.sleep(until: begin + .seconds(cycle))
+                guard !Task.isCancelled else { return }
+                begin = begin + .seconds(cycle)
+            } while loop
+            if band != nil { audio.finishBand(celebrate: true) }
+            try? await clock.sleep(until: begin + .seconds(0.5))
+            guard !Task.isCancelled else { return }
+            finished()
+        }
+    }
+
+    @MainActor static func stop(_ audio: AudioService) {
+        audio.stopTone()
+        if audio.metronomeRunning { audio.stopMetronome() }
+    }
+
+    /// A melody's notes as hits.
+    static func hits(_ notes: [TimedNote]) -> [Hit] {
+        notes.map { Hit(beat: $0.beat, beats: $0.beats, midis: [$0.midi]) }
+    }
+
+    /// The band under a stretch of `bars` bars: the chords over them when the chart has them (bass on the roots, a
+    /// pad), else drums and a bass on the melody's key; exactly `bars` long, so a loop of it stays on the bar.
+    @MainActor static func band(notes: [TimedNote], chords: [ChordSpec], bars: Int, bpm: Double, meter: Int,
+                                reference: Double, bass: Bool) -> BandArrangement {
+        let base: BandArrangement
+        if chords.count == bars, bars > 0 {
+            base = .chords(chords, bars: Array(repeating: 1, count: bars), pattern: notes.map(\.beat), bpm: bpm,
+                           beatsPerBar: meter, reference: reference)
+        } else {
+            base = .melody(notes, bpm: bpm, beatsPerBar: meter, reference: reference, bass: bass)
+        }
+        var list = Array(base.bars.prefix(max(1, bars)))
+        while list.count < max(1, bars) { list.append(list.last ?? BandArrangement.Bar(root: nil)) }
+        return BandArrangement(bpm: base.bpm, beatsPerBar: base.beatsPerBar, reference: base.reference, bars: list,
+                               bass: base.bass, pad: base.pad, swing: base.swing)
     }
 }
 

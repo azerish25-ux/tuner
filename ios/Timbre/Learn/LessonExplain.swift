@@ -601,12 +601,3 @@ enum LessonSpring {
         return 1 - exp(-zeta * omega * t) * (cos(damped * t) + zeta * omega / damped * sin(damped * t))
     }
 }
-
-extension AnyTransition {
-    /// One note name handing over to the next: the old one fades out first, then the new one fades in,
-    /// so two names never sit on top of each other mid-change.
-    static var noteHandover: AnyTransition {
-        .asymmetric(insertion: AnyTransition.opacity.animation(.easeOut(duration: 0.2).delay(0.12)),
-                    removal: AnyTransition.opacity.animation(.easeIn(duration: 0.1)))
-    }
-}

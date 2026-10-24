@@ -177,7 +177,8 @@ final class AppStore: ObservableObject {
         publishWidgetLibrary()
         WidgetSnapshot.write(WidgetSnapshot(streak: summary.current, best: summary.best, practicedToday: summary.practicedToday,
                                             week: week, instrument: instrumentDisplayName, updated: Date(), lesson: lesson))
-        PracticeReminder.update(.init(streak: summary.current, practicedToday: summary.practicedToday, nextLesson: lesson?.title))
+        PracticeReminder.update(.init(streak: summary.current, practicedToday: summary.practicedToday, nextLesson: lesson?.title,
+                                      minutesByDay: PracticeReminder.minutesByDay(records)))
     }
 
     // MARK: Derived state
@@ -798,6 +799,7 @@ final class AppStore: ObservableObject {
         for quest in update.questsCompleted { Analytics.log("quest_done", ["quest": quest.id]) }
         if let level = update.levelUp { Analytics.log("level_up", ["level": String(level.number)]) }
         if update.dailySetCompleted { Analytics.log("daily_set_done") }
+        GameCenter.shared.recorded(event)  // Pitch Sniper games to the leaderboards and a friend's challenge (Services/GameCenter.swift)
         return update
     }
 

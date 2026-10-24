@@ -2,6 +2,7 @@ import Foundation
 import StoreKit
 import Combine
 import TimbreCore
+import UIKit
 
 /// StoreKit 2 commerce: Timbre Pro annual/monthly subscriptions and the lifetime unlock.
 /// Access comes only from verified, unrevoked, unexpired transactions.
@@ -21,6 +22,11 @@ final class CommerceService: ObservableObject {
     private var refreshInProgress = false
     private var refreshRevision = 0
     private var refreshWaiters: [CheckedContinuation<Void, Never>] = []
+    /// A subscription that lapses without renewing sends no transaction: entitlements are checked again whenever the
+    /// app comes forward, and at the moment the active subscription is due to end.
+    private var foreground: AnyCancellable?
+    private var expiryCheck: Task<Void, Never>?
+    private var expiryDate: Date?
 
     init() {
         updatesTask = Task { [weak self] in
@@ -33,9 +39,33 @@ final class CommerceService: ObservableObject {
             }
         }
         Task { [weak self] in await self?.refreshEntitlements() }
+        foreground = NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
+            .sink { [weak self] _ in Task { await self?.refreshEntitlements() } }
     }
 
-    deinit { updatesTask?.cancel() }
+    deinit {
+        updatesTask?.cancel()
+        expiryCheck?.cancel()
+    }
+
+    /// Checks again a moment after the active subscription's end date, so an expiry without renewal takes Pro away
+    /// while the app stays open (one that renews arrives as a transaction first).
+    private func scheduleExpiryCheck(_ date: Date?) {
+        // Called at the end of every refresh: a check already waiting for this date stays as it is.
+        guard date != expiryDate else { return }
+        expiryDate = date
+        expiryCheck?.cancel()
+        expiryCheck = nil
+        guard let date else { return }
+        let wait = max(1, date.timeIntervalSinceNow + 2)
+        // Further off than this the app will have come forward (and checked) many times before.
+        guard wait < 45 * 86_400 else { return }
+        expiryCheck = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(wait))
+            guard !Task.isCancelled else { return }
+            await self?.refreshEntitlements()
+        }
+    }
 
     var annual: Product? { products.first { $0.id == TimbreProduct.annual } }
     var monthly: Product? { products.first { $0.id == TimbreProduct.monthly } }
@@ -58,6 +88,9 @@ final class CommerceService: ObservableObject {
         guard !loading else { return }
         loading = true
         error = nil
+        // An Ask to Buy request a parent declined never sends a transaction: a paywall opening again starts clear, and a
+        // repeat request is StoreKit's to handle.
+        pending = false
         defer { loading = false }
         await refreshEntitlements()
         do {
@@ -68,15 +101,16 @@ final class CommerceService: ObservableObject {
         } catch { self.error = error.localizedDescription }
     }
 
+    /// Buys `product`; `options` carries an offer to apply (a win-back offer). An introductory offer applies by itself.
     @discardableResult
-    func purchase(_ product: Product) async -> Bool {
+    func purchase(_ product: Product, options: Set<Product.PurchaseOption> = []) async -> Bool {
         guard purchasing == nil else { return false }
         purchasing = product.id
         error = nil
         pending = false
         defer { purchasing = nil }
         do {
-            switch try await product.purchase() {
+            switch try await product.purchase(options: options) {
             case .success(let result):
                 guard case .verified(let transaction) = result, TimbreProduct.all.contains(transaction.productID) else {
                     error = String(localized: "The App Store purchase could not be verified. Restore purchases or try again.")
@@ -100,6 +134,7 @@ final class CommerceService: ObservableObject {
         guard !loading else { return }
         loading = true
         error = nil
+        pending = false
         defer { loading = false }
         do {
             try await StoreKit.AppStore.sync()
@@ -132,6 +167,7 @@ final class CommerceService: ObservableObject {
             activeProductID = active?.0
             renewalDate = active?.1
             entitlementResolved = true
+            scheduleExpiryCheck(active?.1)
             break
         }
         refreshInProgress = false

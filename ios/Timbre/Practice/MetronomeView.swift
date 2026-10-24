@@ -279,7 +279,6 @@ struct MetronomeView: View {
                         .id(value)
                 }
             }
-            .edgeFade(bleed: 16)
             HStack(spacing: 8) {
                 ForEach(1...4, id: \.self) { value in
                     Button { if commerce.isPro || value == 1 { store.setMetronome(subdivision: value) } else { store.presentPaywall("metronome.subdivision") } } label: {

@@ -7,8 +7,10 @@ import SwiftUI
 /// A horizontal rail of chips or cards that runs past its container's padding to the edge, so items
 /// scroll under the edge instead of being cut at the padding. `bleed` is that padding (the screen gutter,
 /// or a card's inset); the first item still lines up with the content around the rail. An edge fades
-/// while more is hidden past it, and the selected item is brought into view when the rail appears and
-/// whenever the selection changes. Give each item `.id(value)` with the same type as `selection`.
+/// while more is hidden past it (measured from the chips themselves, so a rail resting at either end is
+/// solid there), and the selected item glides to the middle when the rail appears and whenever the
+/// selection changes, clear of both fades (at either end it simply rests against the margin).
+/// Give each item `.id(value)` with the same type as `selection`.
 struct EdgeRail<ID: Hashable, Content: View>: View {
     var bleed: CGFloat = Metrics.gutter
     var spacing: CGFloat = 8
@@ -17,15 +19,20 @@ struct EdgeRail<ID: Hashable, Content: View>: View {
 
     @State private var position: ID?
     @State private var revealed = false
+    @State private var overflow = EdgeOverflow()
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: spacing) { content }
                 .scrollTargetLayout()
+                .onGeometryChange(for: EdgeOverflow.self) { proxy in
+                    EdgeOverflow(content: proxy)
+                } action: { value in
+                    overflow = value
+                }
         }
-        // The first reveal centres the selection; later ones scroll only as far as needed.
-        .scrollPosition(id: $position, anchor: revealed ? nil : .center)
-        .railBleed(leading: bleed, trailing: bleed)
+        .scrollPosition(id: $position, anchor: .center)
+        .modifier(RailBleed(leading: bleed, trailing: bleed, measured: overflow))
         .onAppear(perform: reveal)
         .onChange(of: selection) { _, value in
             guard let value else { return }
@@ -35,11 +42,8 @@ struct EdgeRail<ID: Hashable, Content: View>: View {
 
     private func reveal() {
         guard !revealed else { return }
+        revealed = true
         position = selection
-        Task { @MainActor in
-            try? await Task.sleep(for: .milliseconds(400))
-            revealed = true
-        }
     }
 }
 
@@ -117,60 +121,32 @@ private struct HeroFit: ViewModifier {
     }
 }
 
-/// Which ends of a horizontal rail have content hidden past them.
-private struct HiddenEdges: Equatable {
-    var leading = false
-    var trailing = false
-
-    init() {}
-
-    init(_ geometry: ScrollGeometry) {
-        let offset = geometry.contentOffset.x + geometry.contentInsets.leading
-        let range = geometry.contentSize.width + geometry.contentInsets.leading + geometry.contentInsets.trailing - geometry.containerSize.width
-        leading = offset > 1
-        trailing = offset < range - 1
-    }
-}
-
+/// Bleeds a horizontal ScrollView past its container and fades each end (the shared `EdgeFadeMask`) over a
+/// little more than its bleed while content hides past it, so a chip running past the edge dissolves
+/// instead of reading as cut mid-word. `measured` is the overflow read from the row's own content when the
+/// caller has it (`EdgeRail`); otherwise it is read from the scroll geometry.
 private struct RailBleed: ViewModifier {
     let leading: CGFloat
     let trailing: CGFloat
-    @State private var hidden = HiddenEdges()
+    var measured: EdgeOverflow?
+    @State private var scrolled = EdgeOverflow()
 
     func body(content: Content) -> some View {
-        content
+        let overflow = measured ?? scrolled
+        return content
             .contentMargins(.leading, leading, for: .scrollContent)
             .contentMargins(.trailing, trailing, for: .scrollContent)
-            .onScrollGeometryChange(for: HiddenEdges.self) { geometry in
-                HiddenEdges(geometry)
-            } action: { _, edges in
-                hidden = edges
+            .onScrollGeometryChange(for: EdgeOverflow.self) { geometry in
+                EdgeOverflow(geometry)
+            } action: { _, value in
+                scrolled = value
             }
-            .mask { fadeMask }
+            .mask {
+                EdgeFadeMask(overflow: overflow, leading: EdgeFadeMask.width(bleed: leading), trailing: EdgeFadeMask.width(bleed: trailing))
+                    .animation(Motion.quick, value: overflow)
+            }
             .padding(.leading, -leading)
             .padding(.trailing, -trailing)
-    }
-
-    /// Each edge fades over a little more than its bleed, easing out, so a chip running past the edge
-    /// dissolves instead of reading as cut mid-word.
-    private var fadeMask: some View {
-        HStack(spacing: 0) {
-            edgeFade(hidden: hidden.leading, from: .leading).frame(width: max(36, leading + 20))
-            Color.black
-            edgeFade(hidden: hidden.trailing, from: .trailing).frame(width: max(36, trailing + 20))
-        }
-        .animation(Motion.quick, value: hidden)
-    }
-
-    private func edgeFade(hidden: Bool, from edge: UnitPoint) -> some View {
-        ZStack {
-            LinearGradient(stops: [
-                .init(color: .clear, location: 0),
-                .init(color: .black.opacity(0.4), location: 0.45),
-                .init(color: .black, location: 1),
-            ], startPoint: edge, endPoint: edge == .leading ? .trailing : .leading)
-            Color.black.opacity(hidden ? 0 : 1)
-        }
     }
 }
 
@@ -185,17 +161,18 @@ private struct StageTopShade: ViewModifier {
                 scrolled = value
             }
             .overlay(alignment: .top) {
-                // A strip just below the top safe-area edge; its gradient reaches up through the status bar
-                // (and a navigation bar) by ignoring the safe area, the way bar backgrounds do.
+                // A strip just below the top safe-area edge; its shade reaches up through the status bar (and a
+                // navigation or tab bar) by ignoring the safe area, the way bar backgrounds do: solid behind the clock,
+                // so no heading ghosts through it, then fading out over the strip.
                 Color.clear
                     .frame(height: 18)
                     .frame(maxWidth: .infinity)
                     .background(alignment: .top) {
-                        LinearGradient(stops: [
-                            .init(color: Palette.stage, location: 0),
-                            .init(color: Palette.stage.opacity(0.9), location: 0.62),
-                            .init(color: Palette.stage.opacity(0), location: 1),
-                        ], startPoint: .top, endPoint: .bottom)
+                        VStack(spacing: 0) {
+                            Palette.stage
+                            LinearGradient(colors: [Palette.stage, Palette.stage.opacity(0)], startPoint: .top, endPoint: .bottom)
+                                .frame(height: 18)
+                        }
                         .ignoresSafeArea(edges: .top)
                     }
                     .opacity(scrolled ? 1 : 0)

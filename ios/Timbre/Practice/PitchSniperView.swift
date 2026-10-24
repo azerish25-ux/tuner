@@ -55,7 +55,10 @@ struct PitchSniperView: View {
                 }
                 .buttonStyle(.plain).accessibilityLabel(Text("Leave game"))
                 Spacer()
-                Text("Round \(min(game.index + 1, game.rounds.count)) of \(game.rounds.count)").font(.footnote.weight(.semibold)).foregroundStyle(Palette.inkSoft)
+                VStack(spacing: 3) {
+                    Text("Round \(min(game.index + 1, game.rounds.count)) of \(game.rounds.count)").font(.footnote.weight(.semibold)).foregroundStyle(Palette.inkSoft)
+                    SniperChallengeTarget(score: game.score)  // a friend's score to beat, from a challenge link (PlayHubGames.swift)
+                }
                 Spacer()
                 VStack(alignment: .trailing, spacing: 0) {
                     Text(game.score.formatted()).font(Typeface.number(20)).foregroundStyle(Palette.ink).contentTransition(.numericText())
@@ -146,6 +149,7 @@ struct PitchSniperView: View {
                 stat(best.formatted(), "best")
             }
             if !game.won { Text("Hit \(PitchSniper.winBullseyes) bullseyes to win the round.").font(.footnote).foregroundStyle(Palette.inkSoft) }
+            SniperChallengeResult(score: game.score)
             Spacer()
             Button("Play again") { start() }.buttonStyle(BrassButtonStyle()).accessibilityIdentifier("sniper.again")
             Button("Done") { dismiss() }.buttonStyle(BrassButtonStyle(prominent: false))

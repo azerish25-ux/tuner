@@ -83,7 +83,6 @@ struct ScaleLibraryView: View {
                     .id(s.id)
             }
         }
-        .edgeFade(bleed: Metrics.gutter)
     }
 
     // MARK: Positions

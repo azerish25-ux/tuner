@@ -252,7 +252,6 @@ struct InstrumentsView: View {
                     }
                 }
             }
-            .edgeFade(bleed: Metrics.gutter)
         }
     }
 
@@ -308,7 +307,6 @@ struct InstrumentsView: View {
                     .id(group.id)
             }
         }
-        .edgeFade(bleed: Metrics.gutter)
     }
 
     /// Rail id of the "All" filter chip.

@@ -81,7 +81,6 @@ struct ChordLibraryView: View {
                     .id(f.id)
             }
         }
-        .edgeFade(bleed: Metrics.gutter)
     }
 
     /// The name large with the quality beside it, and the chord's notes over their degrees (C E G over 1 3 5).
@@ -512,7 +511,6 @@ struct RootRail: View {
                 .id(pitchClass)
             }
         }
-        .edgeFade(bleed: Metrics.gutter)
     }
 }
 
