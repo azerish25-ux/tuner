@@ -24,8 +24,9 @@ struct EngravedLineView: View, Equatable {
     }
 
     var body: some View {
+        // As wide as its card (the line is engraved for that width), so nothing at its end is cut.
         Canvas { context, _ in draw(&context) }
-            .frame(width: line.width, height: line.height, alignment: .topLeading)
+            .frame(maxWidth: .infinity, minHeight: line.height, maxHeight: line.height, alignment: .topLeading)
             .accessibilityHidden(true)
     }
 

@@ -310,7 +310,7 @@ struct NotationEngraver {
                 if have < need { result.spread(need - have, over: slot..<next) }
             } else {
                 let have = result.widths[slot...].reduce(0, +)
-                let need = label - 0.6 * sp
+                let need = label - 0.2 * sp
                 if have < need { result.spread(need - have, over: slot..<result.widths.count) }
             }
         }
@@ -421,8 +421,9 @@ struct NotationEngraver {
         var rows = NotationRows(half: sp / 2)
         var y: CGFloat = 0
         if hasChords {
-            rows.chordBaseline = type.chord * 1.05
-            y = type.chord * 1.45
+            // The symbols' text boxes sit on this line, clear of the line's top.
+            rows.chordBaseline = type.chord * 1.4
+            y = type.chord * 1.5
         }
         y += 0.25 * sp
         if staffShown {

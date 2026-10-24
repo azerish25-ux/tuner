@@ -55,6 +55,9 @@ struct SongOpener: View {
     /// The sheet keeps to a readable measure on a wide screen.
     private static let measure: CGFloat = 860
     private static let speeds: [Double] = [0.5, 0.75, 1]
+    /// Where a section's card comes to rest when the map (or a return from practice) brings it into view: its top
+    /// near the top of the screen, as an engraved section runs several lines.
+    private static let cardAnchor = UnitPoint(x: 0.5, y: 0.1)
 
     private var sheet: SongSheet { SongSheet.of(lesson) }
     private var chart: LeadChart { LeadChart.of(lesson) }
@@ -78,7 +81,7 @@ struct SongOpener: View {
                         // Back from practising a part: its card in view once the sheet has laid out.
                         guard let returning else { return }
                         try? await Task.sleep(for: .milliseconds(80))
-                        proxy.scrollTo(returning.section.anchor, anchor: .center)
+                        proxy.scrollTo(returning.section.anchor, anchor: Self.cardAnchor)
                     }
                 }
                 actionBar
@@ -301,7 +304,7 @@ struct SongOpener: View {
             SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent,
                            progress: position.map { $0 / Double(max(1, sheet.bars)) }, bleed: Self.margin, selected: selected) { section in
                 pick(section)
-                withAnimation(reduceMotion ? nil : Motion.settle) { proxy.scrollTo(section.anchor, anchor: .center) }
+                withAnimation(reduceMotion ? nil : Motion.settle) { proxy.scrollTo(section.anchor, anchor: Self.cardAnchor) }
             }
             .accessibilityIdentifier("song.map")
         }
