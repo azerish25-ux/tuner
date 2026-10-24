@@ -21,7 +21,7 @@ final class PlacementTests: XCTestCase {
 
     /// Beginner, a few months, a few years, many years, professional.
     private func assertStarts(_ courseId: String, _ expected: [String], file: StaticString = #filePath, line: UInt = #line) throws {
-        let course = try course(courseId)
+        let course = try self.course(courseId)
         let starts = CoursePlacement.levels.map { startUnit($0, in: course) ?? "none" }
         XCTAssertEqual(starts, expected, courseId, file: file, line: line)
     }

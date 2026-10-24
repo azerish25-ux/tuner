@@ -204,15 +204,8 @@ final class StageController {
         currentAnchor = state.activeAnchor ?? rig.strings.first?.anchor
         currentPeg = state.activeAnchor == nil ? nil : state.pegIndex
         if revealClose {
-            // The placeholder has been dollying in since the request: carry on from where it has got to (worked out
-            // from the clock, since a hidden stage may not have ticked), and place the camera at once.
             holdWholeUntil = 0
-            if state.focus {
-                let t = Float(max(0, ProcessInfo.processInfo.systemUptime - requestedAt))
-                let w = Self.dolly
-                framing = min(1, 1 - (1 + w * t) * exp(-w * t))
-                framingVelocity = w * w * t * exp(-w * t)
-            }
+            if state.focus { pickUpPlaceholderDolly(rig) }
             applyFraming(snapCamera: true)
         } else {
             holdWholeUntil = time + Self.revealHold
@@ -221,6 +214,28 @@ final class StageController {
         let box = holder.visualBounds(relativeTo: nil)
         func fmt(_ v: SIMD3<Float>) -> String { String(format: "%.2f,%.2f,%.2f", v.x, v.y, v.z) }
         status = "loaded \(modelID) pegs=\(pegs.count) strings=\(staticStrings.count) c=\(fmt(box.center)) e=\(fmt(box.extents)) ibl=\(light.components.has(ImageBasedLightComponent.self))"
+    }
+
+    /// The placeholder (`StudioStage`) has been dollying in since the request, toward a zoom of at most
+    /// `StageFrame.maxZoom`. The model carries on from the 3D framing with the same apparent zoom, so the cross-fade
+    /// meets the picture at its own scale and the dolly continues to the full close-up. Where it has got to is
+    /// worked out from the clock (the same spring), since a hidden stage may not have ticked while it loaded.
+    private func pickUpPlaceholderDolly(_ rig: InstrumentRig) {
+        let t = Float(max(0, ProcessInfo.processInfo.systemUptime - requestedAt))
+        let w = Self.dolly
+        let progress = min(1, 1 - (1 + w * t) * exp(-w * t))
+        let speed = w * w * t * exp(-w * t)
+        let fov = Float(camera.camera.fieldOfViewInDegrees) * .pi / 180
+        let close = closeUp(rig: rig, anchor: currentAnchor, fov: fov)
+        let span = log(max(1.05, wholeShotDistance(rig, fov: fov) / max(close.distance, 0.001)))
+        let ratio = log(Float(StageFrame.maxZoom)) / span
+        framing = min(1, progress * ratio)
+        framingVelocity = framing < 1 ? speed * ratio : 0
+    }
+
+    /// The camera distance that frames the whole instrument.
+    private func wholeShotDistance(_ rig: InstrumentRig, fov: Float) -> Float {
+        ((rig.upper.y - rig.lower.y) * 0.56) / tan(fov / 2)
     }
 
     /// Image-based light from the procedural stage environment, applied to every model part.
@@ -264,9 +279,8 @@ final class StageController {
         guard let rig, let model else { return }
         let snap = snapFraming || snapCamera || reduceMotion
         let fov = Float(camera.camera.fieldOfViewInDegrees) * .pi / 180
-        let height = rig.upper.y - rig.lower.y
         let center = (rig.lower + rig.upper) / 2
-        let wholeDistance = (height * 0.56) / tan(fov / 2)
+        let wholeDistance = wholeShotDistance(rig, fov: fov)
         // Close-up: the whole headstock, gliding toward the peg being tuned when the string changes.
         let close = closeUp(rig: rig, anchor: currentAnchor ?? rig.strings.first?.anchor, fov: fov)
         let previousAim = aimPoint ?? close.aim

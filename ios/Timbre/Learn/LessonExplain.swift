@@ -3,10 +3,12 @@ import TimbreCore
 
 // MARK: - Explain
 
-/// An explanation: the lesson's picture on a card, then the words. A picture of notes is a demonstration, shown
-/// then played: a chord's fingers land in finger order and a neck's dots drop in note by note, each as its note
-/// sounds; a staff or a keyboard lights each note as it sounds. "Hear it" plays it again. The card grows into
-/// whatever room the words leave, so the lesson's own picture fills the screen instead of decoration.
+/// An explanation: the lesson's picture on a card, then the words, with "Hear it" beside Continue in the bar at the
+/// bottom. A picture of notes is a demonstration that plays once as the step appears (with Reduce Motion or VoiceOver
+/// it waits for "Hear it"): a chord's fingers land in finger order, each string lighting as its note sounds, then the
+/// chord rings across them; a neck's dots drop in note by note, each string lit as it sounds; a staff or a keyboard
+/// lights each note as it sounds; a rhythm's strokes sound as the pick sweeps the strings in time with the beat row.
+/// "Hear it" plays it again. The card takes the room the words leave and its picture grows to fill it.
 struct ExplainStep: View {
     let title: LearnText
     let text: LearnText
@@ -16,6 +18,7 @@ struct ExplainStep: View {
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     @State private var shown = false
     @State private var sounding = false
     /// Height of the title and text, to know how much room is left under them.
@@ -25,10 +28,15 @@ struct ExplainStep: View {
     @State private var demo = Demo.idle
     @State private var demoReplay = 0
     @State private var demoTask: Task<Void, Never>?
+    /// The chord's strings lit in the demonstration (lowest string first): each finger's as its note sounds, then
+    /// every string as the chord rings across them.
+    @State private var lit: Set<Int> = []
     /// When the neck's first dot lands (nil: still, every dot in place).
     @State private var neckStart: Date?
-    /// The staff or keyboard note sounding now, while "Hear it" plays them one by one.
+    /// The staff or keyboard note sounding now, while the notes play one by one.
     @State private var playingIndex: Int?
+    /// Beat 1 of the rhythm loop: the demonstration's strokes sound on its clock, so they meet the pick.
+    @State private var rhythmOrigin = Date()
     @State private var owner = UUID()
     @State private var matchedFrames = 0
     @State private var burst = 0
@@ -40,6 +48,11 @@ struct ExplainStep: View {
     private static let noteStep = 0.42
     /// A diagram card grows into the room under the words up to this height (taller screens keep the rest).
     private static let diagramCardLimit: CGFloat = 600
+    /// The rhythm loop's tempo, its strokes and their sound.
+    private static let rhythmBPM = 76.0
+
+    /// The demonstration plays by itself as the step appears; with Reduce Motion or VoiceOver it waits for "Hear it".
+    private var autoPlays: Bool { !reduceMotion && !voiceOver }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -47,9 +60,11 @@ struct ExplainStep: View {
                 let base = Self.heroHeight(proxy.size.height)
                 let spare = spareRoom(proxy.size.height, hero: base)
                 let cardHeight = heroHeight(base: base, spare: spare)
+                // Inside the card: the margins (22 a side) and the card's padding (18 a side) aside.
+                let inner = CGSize(width: max(0, proxy.size.width - 80), height: max(0, cardHeight - 36))
                 ScrollView {
                     VStack(alignment: .leading, spacing: 22) {
-                        hero(height: cardHeight)
+                        hero(height: cardHeight, inner: inner)
                             .scaleEffect(shown ? 1 : 0.94).opacity(shown ? 1 : 0)
                         words
                             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { wordsHeight = $0 }
@@ -65,15 +80,11 @@ struct ExplainStep: View {
                 }
                 .scrollBounceBehavior(.basedOnSize)
             }
-            StepButton(title: "Continue", accent: accent) { Haptics.shared.selection(); done(nil) }
+            actionBar
         }
         .onAppear {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.85).delay(0.05)) { shown = true }
-            switch visual {
-            case let .chord(spec): runDemo(spec, replay: false)
-            case .fretboard: playNeck(replay: false)
-            default: break
-            }
+            if autoPlays { play(replay: false) }
         }
         .onDisappear { demoTask?.cancel(); store.stopLessonListening(owner: owner) }
     }
@@ -81,7 +92,7 @@ struct ExplainStep: View {
     /// Every explanation gets the same generous picture area, so short steps don't leave the lower half bare.
     private static func heroHeight(_ available: CGFloat) -> CGFloat { min(360, max(220, available * 0.46)) }
 
-    /// What the hero and the words leave empty above the button (paddings 18 + 12, spacing 22).
+    /// What the hero and the words leave empty above the bar (paddings 18 + 12, spacing 22).
     private func spareRoom(_ available: CGFloat, hero: CGFloat) -> CGFloat {
         guard wordsHeight > 0 else { return 0 }
         return max(0, available - hero - wordsHeight - 22 - 30)
@@ -111,17 +122,49 @@ struct ExplainStep: View {
         }
     }
 
+    // MARK: The bar
+
+    /// "Hear it" (when the picture sounds) beside Continue, pinned to the bottom.
+    private var actionBar: some View {
+        LessonActionBar {
+            if hearable {
+                HearItButton(accent: accent, sounding: sounding) { play(replay: true) }
+            }
+            StepButton(title: "Continue", accent: accent, inset: false) { Haptics.shared.selection(); done(nil) }
+        }
+    }
+
+    /// The picture has something to play.
+    private var hearable: Bool {
+        switch visual {
+        case .chord, .staff, .keyboard, .rhythm: return true
+        case .fretboard: return neckMidis.contains { $0 != nil }
+        default: return false
+        }
+    }
+
+    /// Plays the demonstration: once by itself as the step appears, again from "Hear it" (`replay`).
+    private func play(replay: Bool) {
+        switch visual {
+        case let .chord(spec): runDemo(spec, replay: replay)
+        case .fretboard: playNeck(replay: replay)
+        case let .staff(midi, _): playNotes(midi, lead: replay ? 0 : 0.45)
+        case let .keyboard(midi): playNotes(midi.sorted(), lead: replay ? 0 : 0.45)
+        case let .rhythm(pattern, beatsPerBar): playRhythm(pattern, beatsPerBar: beatsPerBar, replay: replay)
+        default: break
+        }
+    }
+
     // MARK: The card
 
     /// The lesson's picture on a card, or (without one) the course instrument or motif on the stage.
-    @ViewBuilder private func hero(height: CGFloat) -> some View {
+    @ViewBuilder private func hero(height: CGFloat, inner: CGSize) -> some View {
         if visual == .none {
             LessonBackdrop(course: course, accent: accent).frame(height: height)
         } else {
-            // The picture and its "Hear it" sit together in the middle of the card.
-            VStack(spacing: 16) {
-                picture(height: max(0, height - 36 - controlsHeight))
-                controls
+            VStack(spacing: 10) {
+                picture(CGSize(width: inner.width, height: max(0, inner.height - turnRow)))
+                if case .chord = visual { yourTurn }
             }
             .frame(maxWidth: .infinity, minHeight: max(0, height - 36))
             .padding(18)
@@ -130,71 +173,33 @@ struct ExplainStep: View {
         }
     }
 
-    /// Room the row under the picture takes ("Hear it", and the chord's "your turn" line), spacing included.
-    private var controlsHeight: CGFloat {
-        switch visual {
-        case .chord: return 16 + 44 + 10 + 20
-        case .fretboard: return neckMidis.contains { $0 != nil } ? 16 + 44 : 0
-        case .staff, .keyboard: return 16 + 44
-        default: return 0
-        }
+    /// The chord's "your turn" line under its box, with its gap.
+    private var turnRow: CGFloat {
+        if case .chord = visual { return 30 }
+        return 0
     }
 
-    @ViewBuilder private var controls: some View {
-        switch visual {
-        case let .chord(spec):
-            VStack(spacing: 10) {
-                hearButton { runDemo(spec, replay: true) }
-                yourTurn
-            }
-        case .fretboard:
-            if neckMidis.contains(where: { $0 != nil }) { hearButton { playNeck(replay: true) } }
-        case let .staff(midi, _):
-            hearButton { playNotes(midi) }
-        case let .keyboard(midi):
-            hearButton { playNotes(midi.sorted()) }
-        default:
-            EmptyView()
-        }
-    }
-
-    @ViewBuilder private func picture(height: CGFloat) -> some View {
+    /// The picture, as big as `room` (inside the card) allows.
+    @ViewBuilder private func picture(_ room: CGSize) -> some View {
         switch visual {
         case let .rhythm(pattern, beatsPerBar):
             // The stroke sweeps above the pattern in time with its playhead, filling the card.
-            RhythmLoop(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, arrows: course.strums,
-                       sweep: sweepStyle, strings: max(1, course.stringCount), edges: StringEdges.of(course))
-                .frame(height: max(180, height))
+            RhythmLoop(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, arrows: course.strums, bpm: Self.rhythmBPM,
+                       sweep: sweepStyle, strings: max(1, course.stringCount), edges: StringEdges.of(course), origin: rhythmOrigin)
+                .frame(height: max(180, room.height))
         case let .chord(spec):
-            chordBox(spec, width: chordWidth(spec, height: height))
+            chordBox(spec, room: room)
         case let .fretboard(strings, dots, frets, start):
-            neck(strings: strings, dots: dots, frets: frets, start: start, height: height)
+            neck(strings: strings, dots: dots, frets: frets, start: start, room: room)
         case let .staff(midi, clef):
-            StaffView(notes: midi, clef: clef, accent: accent, activeIndex: playingIndex)
+            staffPicture(midi, clef: clef, room: room)
         case let .keyboard(midi):
-            KeyboardView(highlighted: keyboardLit(midi), accent: accent)
+            keysPicture(midi.sorted(), room: room)
         case let .instrument(part):
-            InstrumentPartView(part: part, instrumentId: course.instrument, accent: accent, height: max(260, height))
+            InstrumentPartView(part: part, instrumentId: course.instrument, accent: accent, height: max(260, room.height))
         default:
             LessonVisualView(visual: visual, accent: accent, instrumentId: course.instrument)
         }
-    }
-
-    /// The chord box, its fingers landing in finger order on the demonstration's clock.
-    private func chordBox(_ spec: ChordSpec, width: CGFloat) -> some View {
-        ChordDiagram(chord: spec, accent: accent, landing: true, landingOrder: .fingers, landingStep: Self.demoStep,
-                     replay: demoReplay, edges: StringEdges.of(instrumentId: course.instrument, strings: spec.frets.count))
-            .frame(maxWidth: width)
-            // Played back right: sparks from behind the box, on a canvas of their own size.
-            .background { SparkBurst(trigger: burst, color: accent, startFraction: 0.45).frame(width: width * 1.55, height: width * 1.55) }
-    }
-
-    /// The chord box as big as the card allows: its name (about 44 pt), the box (5.4 rows tall for every string
-    /// gap across) and the edge names (about 18 pt), never narrower than it used to be or wider than 320 pt.
-    private func chordWidth(_ chord: ChordSpec, height: CGFloat) -> CGFloat {
-        let count = CGFloat(max(2, chord.frets.count))
-        let fromHeight = (height - 62) * count / 5.4
-        return min(320, max(220, fromHeight))
     }
 
     private var card: some View {
@@ -203,24 +208,132 @@ struct ExplainStep: View {
             .overlay(RadialGradient(colors: [accent.opacity(0.12), .clear], center: .top, startRadius: 4, endRadius: 260).clipShape(shape))
     }
 
-    private func hearButton(_ action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Label("Hear it", systemImage: "speaker.wave.2.fill")
-                .font(Typeface.label(15)).foregroundStyle(accent)
-                .symbolEffect(.variableColor.iterative, isActive: sounding)
-                .padding(.horizontal, 18).frame(minHeight: 44)
-                .background(Capsule().fill(accent.opacity(0.12)))
-                .overlay(Capsule().strokeBorder(accent.opacity(0.35), lineWidth: 1))
-                .contentShape(Capsule())
-        }
-        .buttonStyle(PressScaleStyle())
-        .accessibilityIdentifier("lesson.hear")
-    }
-
     /// One note in the course instrument's voice.
     private func sound(_ midi: Int, ms: Int = 380) {
         store.audio.playTones([PitchMath.frequency(midi: Double(midi), reference: store.settings.referencePitchHz)],
                               together: false, noteMs: ms, gapMs: 0)
+    }
+
+    // MARK: Chord: the fingers land, the strings ring, your turn
+
+    /// The chord box as big as the card allows, its frets numbered, its fingers landing in finger order on the
+    /// demonstration's clock and its strings lighting as they sound.
+    private func chordBox(_ spec: ChordSpec, room: CGSize) -> some View {
+        let fit = ChordDiagram.fit(spec, room: room, minWidth: 220)
+        return ChordDiagram(chord: spec, accent: accent, ringing: lit, landing: landsFingers, landingOrder: .fingers, landingStep: Self.demoStep,
+                            replay: demoReplay, edges: StringEdges.of(instrumentId: course.instrument, strings: spec.frets.count),
+                            fretNumbers: true, stretch: fit.stretch)
+            .frame(maxWidth: fit.width)
+            // Played back right: sparks from behind the box, on a canvas of their own size.
+            .background { SparkBurst(trigger: burst, color: accent, startFraction: 0.45).frame(width: fit.width * 1.55, height: fit.width * 1.55) }
+    }
+
+    /// The fingers land as the demonstration plays: from the start when it plays by itself, else from the first
+    /// "Hear it" (until then, and with Reduce Motion, every finger sits in place).
+    private var landsFingers: Bool { !reduceMotion && (autoPlays || demoReplay > 0) }
+
+    /// After the demonstration: the learner's cue to play it back, then a tick when the microphone hears it.
+    /// Its row is always there, so the card doesn't grow when it appears.
+    private var yourTurn: some View {
+        Group {
+            if demo == .heard {
+                Label("Nice — that’s right.", systemImage: "checkmark.seal.fill").foregroundStyle(accent)
+            } else {
+                Label("Your turn — play it back", systemImage: "hand.point.up.left.fill").foregroundStyle(Palette.ink)
+            }
+        }
+        .font(Typeface.label(14))
+        .multilineTextAlignment(.center)
+        .frame(minHeight: 20)
+        .opacity(demo == .yourTurn || demo == .heard ? 1 : 0)
+        .animation(Motion.settle, value: demo)
+        .accessibilityHidden(demo == .idle || demo == .showing)
+    }
+
+    /// Fingers land one by one (finger 1 first), each string lighting as its finger's note sounds, then the chord
+    /// rings across every string, low to high; `replay` lands them again (the Hear it button).
+    private func runDemo(_ chord: ChordSpec, replay: Bool) {
+        demoTask?.cancel()
+        store.stopLessonListening(owner: owner)
+        if replay { demoReplay += 1 }
+        demo = .showing
+        lit = []
+        sounding = true
+        // The diagram starts landing 0.25 s after it appears, 0.05 s after a replay.
+        let lead = replay ? 0.05 : 0.25
+        let notes = demoNotes(chord)
+        let strings = chord.frets.indices.filter { chord.frets[$0] >= 0 }
+        demoTask = Task { @MainActor in
+            // One clock for the whole demonstration, so each note meets its finger.
+            let clock = ContinuousClock()
+            let start = clock.now
+            for note in notes {
+                try? await clock.sleep(until: start + .seconds(lead + Double(note.rank) * Self.demoStep))
+                guard !Task.isCancelled else { return }
+                sound(note.midi)
+                lit = [note.string]
+            }
+            let ringAt = lead + Double((notes.last?.rank ?? -1) + 1) * Self.demoStep
+            try? await clock.sleep(until: start + .seconds(ringAt))
+            guard !Task.isCancelled else { return }
+            strum(chord)
+            lit = []
+            // The strum crosses the strings low to high, lighting each as it goes.
+            for (k, string) in strings.enumerated() {
+                try? await clock.sleep(until: start + .seconds(ringAt + Double(k) * 0.04))
+                guard !Task.isCancelled else { return }
+                lit.insert(string)
+            }
+            try? await clock.sleep(until: start + .seconds(ringAt + 1.5))
+            guard !Task.isCancelled else { return }
+            lit = []
+            try? await clock.sleep(until: start + .seconds(ringAt + 1.8))
+            guard !Task.isCancelled else { return }
+            sounding = false
+            demo = .yourTurn
+            listenForPlayback(chord)
+        }
+    }
+
+    /// Each landing's note (the lowest string a finger holds) and that string, in landing order.
+    private func demoNotes(_ chord: ChordSpec) -> [(rank: Int, midi: Int, string: Int)] {
+        let open = ChordStep.openStrings(course)
+        let ranks = ChordDiagram(chord: chord, landingOrder: .fingers).landingRanks
+        var byRank: [Int: (midi: Int, string: Int)] = [:]
+        for (i, fret) in chord.frets.enumerated() where fret > 0 && i < open.count && i < ranks.count {
+            if byRank[ranks[i]] == nil { byRank[ranks[i]] = (midi: open[i] + fret, string: i) }
+        }
+        return byRank.keys.sorted().compactMap { rank in byRank[rank].map { (rank: rank, midi: $0.midi, string: $0.string) } }
+    }
+
+    /// The learner plays the chord back: three matching readings in a row count. Only when the microphone
+    /// is already allowed; the chord step that follows is where it's required.
+    private func listenForPlayback(_ chord: ChordSpec) {
+        guard LessonMicrophone.granted, let target = ChordTarget(root: chord.root, formulaId: chord.quality) else { return }
+        matchedFrames = 0
+        let analyzer = LessonAnalyzer(chords: true, target: target, onChord: { _, matched in
+            guard demo == .yourTurn else { return }
+            matchedFrames = matched ? matchedFrames + 1 : 0
+            guard matchedFrames >= 3 else { return }
+            demo = .heard
+            burst += 1
+            SoundFX.shared.play(.correct); Haptics.shared.lock()
+            store.stopLessonListening(owner: owner)
+        })
+        store.startLessonListening(owner: owner, analyzer: analyzer) { _, _ in }
+    }
+
+    /// Sounds the chord as shaped on the course instrument (as the Chords tool does); a plain triad when the course has none.
+    private func strum(_ chord: ChordSpec) {
+        let open = ChordStep.openStrings(course)
+        var midis = chord.frets.enumerated().compactMap { i, fret -> Int? in fret >= 0 && i < open.count ? open[i] + fret : nil }
+        if midis.isEmpty, let target = ChordTarget(root: chord.root, formulaId: chord.quality) {
+            midis = target.quality.intervals.map { 48 + target.root + $0 }
+        }
+        guard !midis.isEmpty else { return }
+        let reference = store.settings.referencePitchHz
+        store.audio.playTones(midis.map { PitchMath.frequency(midi: Double($0), reference: reference) }, together: true, noteMs: 1500)
+        Haptics.shared.selection()
     }
 
     // MARK: Neck: the dots drop in, note by note
@@ -241,18 +354,17 @@ struct ExplainStep: View {
         return midis.indices.sorted { a, b in (midis[a] ?? a, a) < (midis[b] ?? b, b) }
     }
 
-    /// The neck as tall as the card allows (rows of 24 to 36 pt), the dots dropping in on their notes'
-    /// clock and each one's string lit while its note sounds. With Reduce Motion the dots stay in place
-    /// and only the strings light.
-    private func neck(strings: Int, dots: [Fretting], frets: Int, start: Int, height: CGFloat) -> some View {
-        let fixed: CGFloat = 54 + (start > 1 ? 16 : 0)
-        let rowHeight = min(36, max(24, (height - fixed) / CGFloat(max(4, strings))))
+    /// The neck as tall as the card allows, its frets numbered, the dots dropping in on their notes' clock and
+    /// each one's string lit while its note sounds. With Reduce Motion the dots stay in place and only the strings light.
+    private func neck(strings: Int, dots: [Fretting], frets: Int, start: Int, room: CGSize) -> some View {
+        let numbered = !course.fretless
+        let rowHeight = FretboardDiagram.rowHeight(filling: room, strings: strings, frets: frets, start: start, named: strings >= 2, numbered: numbered)
         let order = neckOrder
         return TimelineView(.animation(minimumInterval: 1 / 60, paused: neckStart == nil)) { timeline in
             let state = neckState(at: timeline.date, order: order, dots: dots)
             FretboardDiagram(strings: strings, dots: dots, frets: frets, accent: accent, start: start, activeString: state.active,
                              fretless: course.fretless, rowHeight: rowHeight,
-                             edges: StringEdges.of(instrumentId: course.instrument, strings: strings), landing: state.landing)
+                             edges: StringEdges.of(instrumentId: course.instrument, strings: strings), landing: state.landing, fretNumbers: numbered)
         }
     }
 
@@ -294,18 +406,87 @@ struct ExplainStep: View {
 
     // MARK: Staff and keyboard: each note lights as it sounds
 
-    /// On the keyboard, the key sounding now while the notes play; all of them otherwise.
-    private func keyboardLit(_ midi: [Int]) -> Set<Int> {
-        let sorted = midi.sorted()
-        guard let playingIndex, sorted.indices.contains(playingIndex) else { return Set(midi) }
-        return [sorted[playingIndex]]
+    /// What shares a staff's card when there's room: the notes on the course's neck (fretted and bowed courses,
+    /// when every note has a place on it) or on a keyboard (the others).
+    private enum Partner { case neck([Fretting]), keys, alone }
+
+    private func partner(for midi: [Int]) -> Partner {
+        guard course.fretKind != nil else { return .keys }
+        let spots = midi.compactMap { course.fretting(for: $0) }
+        return !spots.isEmpty && spots.count == midi.count ? .neck(spots) : .alone
+    }
+
+    /// The staff as big as the card allows; with room for two, the same notes again where they're played, under it.
+    @ViewBuilder private func staffPicture(_ midi: [Int], clef: String, room: CGSize) -> some View {
+        let half = (room.height - 18) / 2
+        let shared = half >= 110 ? partner(for: midi) : .alone
+        switch shared {
+        case let .neck(spots):
+            VStack(spacing: 18) {
+                staff(midi, clef: clef, height: half)
+                notesNeck(spots, room: CGSize(width: room.width, height: half))
+            }
+        case .keys:
+            VStack(spacing: 18) {
+                staff(midi, clef: clef, height: half)
+                KeyboardView(highlighted: keysLit(midi), accent: accent, height: min(150, half))
+            }
+        case .alone:
+            staff(midi, clef: clef, height: room.height)
+        }
+    }
+
+    private func staff(_ midi: [Int], clef: String, height: CGFloat) -> some View {
+        StaffView(notes: midi, clef: clef, accent: accent, activeIndex: playingIndex, lineGap: StaffView.lineGap(filling: height))
+    }
+
+    /// The keys as long as the card allows (up to 170 pt); with room for two, the notes on a staff over them.
+    @ViewBuilder private func keysPicture(_ notes: [Int], room: CGSize) -> some View {
+        let half = (room.height - 18) / 2
+        if half >= 110 {
+            VStack(spacing: 18) {
+                staff(notes, clef: Self.clef(for: notes), height: half)
+                KeyboardView(highlighted: keysLit(notes), accent: accent, height: min(170, half))
+            }
+        } else {
+            KeyboardView(highlighted: keysLit(notes), accent: accent, height: min(170, max(110, room.height)))
+        }
+    }
+
+    /// Low notes read in bass clef.
+    private static func clef(for notes: [Int]) -> String {
+        guard !notes.isEmpty else { return "treble" }
+        return Double(notes.reduce(0, +)) / Double(notes.count) < 57 ? "bass" : "treble"
+    }
+
+    /// The staff's notes on the course's neck: while they play, each dot appears as its note sounds, its string lit.
+    private func notesNeck(_ spots: [Fretting], room: CGSize) -> some View {
+        let strings = course.stringCount
+        let frets = min(12, max(4, (spots.map(\.fret).max() ?? 0) + 1))
+        let numbered = !course.fretless
+        let rowHeight = FretboardDiagram.rowHeight(filling: room, strings: strings, frets: frets, start: 1, named: strings >= 2, numbered: numbered)
+        let landing: [Double]? = playingIndex.map { now in spots.indices.map { Double($0 <= now ? 1 : 0) } }
+        let active = playingIndex.flatMap { spots[safe: $0]?.string }
+        return FretboardDiagram(strings: strings, dots: spots, frets: frets, accent: accent, activeString: active, fretless: course.fretless,
+                                rowHeight: rowHeight, edges: StringEdges.of(course), landing: landing, fretNumbers: numbered)
+    }
+
+    /// The keys of `played` (in the order they play): the one sounding now while they play, all of them otherwise.
+    private func keysLit(_ played: [Int]) -> Set<Int> {
+        guard let playingIndex, played.indices.contains(playingIndex) else { return Set(played) }
+        return [played[playingIndex]]
     }
 
     /// The notes one by one, each lit as it sounds; two to four notes (an interval, a chord) then ring together.
-    private func playNotes(_ midi: [Int]) {
+    /// `lead` lets the card settle first.
+    private func playNotes(_ midi: [Int], lead: Double) {
         demoTask?.cancel()
         sounding = true
         demoTask = Task { @MainActor in
+            if lead > 0 {
+                try? await Task.sleep(for: .seconds(lead))
+                guard !Task.isCancelled else { return }
+            }
             for (index, note) in midi.enumerated() {
                 playingIndex = index
                 sound(note, ms: 400)
@@ -323,100 +504,80 @@ struct ExplainStep: View {
         }
     }
 
-    // MARK: Chord: the fingers land, the chord rings, your turn
+    // MARK: Rhythm: the strokes sound as the pick sweeps
 
-    /// After the demonstration: the learner's cue to play it back, then a tick when the microphone hears it.
-    /// Its row is always there, so the card doesn't grow when it appears.
-    private var yourTurn: some View {
-        Group {
-            if demo == .heard {
-                Label("Nice — that’s right.", systemImage: "checkmark.seal.fill").foregroundStyle(accent)
-            } else {
-                Label("Your turn — play it back", systemImage: "hand.point.up.left.fill").foregroundStyle(Palette.ink)
-            }
-        }
-        .font(Typeface.label(14))
-        .multilineTextAlignment(.center)
-        .frame(minHeight: 20)
-        .opacity(demo == .yourTurn || demo == .heard ? 1 : 0)
-        .animation(Motion.settle, value: demo)
-        .accessibilityHidden(demo == .idle || demo == .showing)
-    }
-
-    /// Fingers land one by one (finger 1 first) as each one's note sounds, then the whole chord rings;
-    /// `replay` lands them again (the Hear it button).
-    private func runDemo(_ chord: ChordSpec, replay: Bool) {
+    /// Two bars of the pattern, each stroke sounding as the pick crosses the strings (a strum of the instrument's
+    /// first open chord, its higher strings on an up stroke; the lowest string plucked; a click without an
+    /// instrument). As the step appears the loop lines its beat 1 up with the first stroke; a replay joins the
+    /// loop at its next stroke, so the pick never jumps.
+    private func playRhythm(_ pattern: [Double], beatsPerBar: Int, replay: Bool) {
         demoTask?.cancel()
-        store.stopLessonListening(owner: owner)
-        if replay { demoReplay += 1 }
-        demo = .showing
-        // The diagram starts landing 0.25 s after it appears, 0.05 s after a replay.
-        let lead = replay ? 0.05 : 0.25
-        let notes = demoNotes(chord)
-        demoTask = Task { @MainActor in
-            // One clock for the whole demonstration, so each note meets its finger.
-            let clock = ContinuousClock()
-            let start = clock.now
-            for note in notes {
-                try? await clock.sleep(until: start + .seconds(lead + Double(note.rank) * Self.demoStep))
-                guard !Task.isCancelled else { return }
-                sound(note.midi)
+        guard !pattern.isEmpty else { return }
+        let spb = 60 / Self.rhythmBPM
+        let bar = Double(max(1, beatsPerBar)) * spb
+        let from: Double
+        if replay {
+            from = Date().timeIntervalSince(rhythmOrigin) + 0.15
+        } else {
+            // The loop is already turning as the card arrives; beat 1 lands once the card has settled.
+            rhythmOrigin = Date().addingTimeInterval(0.8)
+            from = 0
+        }
+        let hits = pattern.sorted()
+        let firstBar = Int((from / bar).rounded(.down))
+        var strokes: [(at: Double, down: Bool)] = []
+        for index in firstBar...(firstBar + 2) {
+            for hit in hits {
+                let at = Double(index) * bar + hit * spb
+                if at >= from - 0.0001 { strokes.append((at: at, down: hit.truncatingRemainder(dividingBy: 1) == 0)) }
             }
-            let ringAt = lead + Double((notes.last?.rank ?? -1) + 1) * Self.demoStep
-            try? await clock.sleep(until: start + .seconds(ringAt))
-            guard !Task.isCancelled else { return }
-            strum(chord)
-            try? await clock.sleep(until: start + .seconds(ringAt + 1.8))
-            guard !Task.isCancelled else { return }
-            demo = .yourTurn
-            listenForPlayback(chord)
         }
-    }
-
-    /// Each landing's note (the lowest string a finger holds), in landing order.
-    private func demoNotes(_ chord: ChordSpec) -> [(rank: Int, midi: Int)] {
-        let open = ChordStep.openStrings(course)
-        let ranks = ChordDiagram(chord: chord, landingOrder: .fingers).landingRanks
-        var byRank: [Int: Int] = [:]
-        for (i, fret) in chord.frets.enumerated() where fret > 0 && i < open.count && i < ranks.count {
-            if byRank[ranks[i]] == nil { byRank[ranks[i]] = open[i] + fret }
-        }
-        return byRank.keys.sorted().compactMap { rank in byRank[rank].map { (rank: rank, midi: $0) } }
-    }
-
-    /// The learner plays the chord back: three matching readings in a row count. Only when the microphone
-    /// is already allowed; the chord step that follows is where it's required.
-    private func listenForPlayback(_ chord: ChordSpec) {
-        guard LessonMicrophone.granted, let target = ChordTarget(root: chord.root, formulaId: chord.quality) else { return }
-        matchedFrames = 0
-        let analyzer = LessonAnalyzer(chords: true, target: target, onChord: { _, matched in
-            guard demo == .yourTurn else { return }
-            matchedFrames = matched ? matchedFrames + 1 : 0
-            guard matchedFrames >= 3 else { return }
-            demo = .heard
-            burst += 1
-            SoundFX.shared.play(.correct); Haptics.shared.lock()
-            store.stopLessonListening(owner: owner)
-        })
-        store.startLessonListening(owner: owner, analyzer: analyzer) { _, _ in }
-    }
-
-    /// Sounds the chord as shaped on the course instrument (as the Chords tool does); a plain triad when the course has none.
-    private func strum(_ chord: ChordSpec) {
-        let open = ChordStep.openStrings(course)
-        var midis = chord.frets.enumerated().compactMap { i, fret -> Int? in fret >= 0 && i < open.count ? open[i] + fret : nil }
-        if midis.isEmpty, let target = ChordTarget(root: chord.root, formulaId: chord.quality) {
-            midis = target.quality.intervals.map { 48 + target.root + $0 }
-        }
-        guard !midis.isEmpty else { return }
-        let reference = store.settings.referencePitchHz
-        store.audio.playTones(midis.map { PitchMath.frequency(midi: Double($0), reference: reference) }, together: true, noteMs: 1500)
-        Haptics.shared.selection()
+        let run = Array(strokes.prefix(hits.count * 2))
+        let origin = rhythmOrigin
+        // A strum sounds as the pick reaches the first string, a little before it passes the middle on the beat.
+        let early = sweepStyle == .strum ? 0.09 : 0.02
         sounding = true
-        Task { @MainActor in
-            try? await Task.sleep(for: .milliseconds(1900))
+        demoTask = Task { @MainActor in
+            for stroke in run {
+                let wait = origin.addingTimeInterval(stroke.at - early).timeIntervalSinceNow
+                if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
+                guard !Task.isCancelled else { return }
+                playStroke(down: stroke.down)
+            }
+            try? await Task.sleep(for: .seconds(0.8))
+            guard !Task.isCancelled else { return }
             sounding = false
         }
+    }
+
+    private func playStroke(down: Bool) {
+        let reference = store.settings.referencePitchHz
+        switch sweepStyle {
+        case .tap:
+            SoundFX.shared.play(down ? .accent : .click)
+        case .pluck:
+            guard let low = ChordStep.openStrings(course).min() else { return }
+            store.audio.playTones([PitchMath.frequency(midi: Double(low), reference: reference)], together: false, noteMs: 420, gapMs: 0)
+        case .strum:
+            let chord = strumChord
+            let notes = down ? chord : Array(chord.sorted().suffix(3))
+            guard !notes.isEmpty else { return }
+            store.audio.playTones(notes.map { PitchMath.frequency(midi: Double($0), reference: reference) }, together: true, noteMs: down ? 520 : 320)
+        }
+    }
+
+    /// What the strum demonstration rings, lowest string first: each strummed instrument's first open chord
+    /// (E minor on guitar, C on ukulele, G on mandolin, the open G of a banjo).
+    private var strumChord: [Int] {
+        let open = ChordStep.openStrings(course)
+        let shape: [Int]
+        switch course.fretKind {
+        case "guitar": shape = [0, 2, 2, 0, 0, 0]
+        case "ukulele": shape = [0, 0, 0, 3]
+        case "mandolin": shape = [0, 0, 2, 3]
+        default: shape = Array(repeating: 0, count: open.count)
+        }
+        return zip(open, shape).map { $0 + $1 }
     }
 }
 

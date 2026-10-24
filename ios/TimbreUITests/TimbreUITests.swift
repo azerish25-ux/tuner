@@ -109,7 +109,7 @@ final class TimbreUITests: XCTestCase {
 
     /// Keeps a store frame under its own name when it shows what its caption says. Otherwise the test fails and the
     /// picture is kept as "<name>-wrong" (for the log), so screenshots.py never frames it.
-    private func storeFrame(_ name: String, _ picture: XCUIScreenshot? = nil, ok: Bool, _ problem: @autoclosure () -> String) {
+    private func storeFrame(_ name: String, picture: XCUIScreenshot? = nil, ok: Bool, _ problem: @autoclosure () -> String) {
         let picture = picture ?? XCUIScreen.main.screenshot()
         if ok {
             keep(picture, as: name)
@@ -535,7 +535,7 @@ final class TimbreUITests: XCTestCase {
                 problem = "no lock on screen: " + lock.summary
             }
         }
-        storeFrame("10b-tune-locked", picture, ok: problem.isEmpty, problem)
+        storeFrame("10b-tune-locked", picture: picture, ok: problem.isEmpty, problem)
     }
 
     /// App Store frame #3 through the `lesson-chord` scene (DemoScenes.swift): "Your first chord: E minor" opens on its
@@ -551,7 +551,7 @@ final class TimbreUITests: XCTestCase {
         // Each string's check over the box reads "Got it" once heard; a muted string has none.
         let checks = appNodes().filter { $0.label.hasPrefix("String ") && $0.identifier.isEmpty }
         let unheard = checks.filter { ($0.value as? String) != "Got it" }.count
-        storeFrame("52b-lesson-chord", picture, ok: ringing && unheard == 0,
+        storeFrame("52b-lesson-chord", picture: picture, ok: ringing && unheard == 0,
                    ringing ? "\(unheard) of \(checks.count) strings not lit" : "the chord step never heard every string")
     }
 
