@@ -7,6 +7,8 @@ struct DroneView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// The rings give up height so the tonic card and the headphones hint end above the dock.
     @State private var ringsHeight: CGFloat = 250
+    /// The selected tonic's highlight moves between keys.
+    @Namespace private var tonics
 
     var body: some View {
         ScrollView {
@@ -24,15 +26,7 @@ struct DroneView: View {
                                  decrement: { store.setDrone(midi: max(48, store.droneMidi - 1)) })
                 VStack(alignment: .leading, spacing: 12) {
                     Eyebrow("Tonic")
-                    // Runs to the card's edge (its 18 pt inset) so tonics scroll under it instead of being cut.
-                    EdgeRail(bleed: 18, spacing: 6, selection: store.droneMidi % 12) {
-                        ForEach(0..<12, id: \.self) { pc in
-                            let midi = 48 + pc
-                            Button(NoteNames.name(pc, preferFlats: [1, 3, 8, 10].contains(pc))) { store.setDrone(midi: midi + (store.droneMidi >= 60 ? 12 : 0)) }
-                                .buttonStyle(ChipButtonStyle(selected: store.droneMidi % 12 == pc))
-                                .id(pc)
-                        }
-                    }
+                    tonicGrid
                     Picker("Octave", selection: Binding(get: { store.droneMidi >= 60 ? 1 : 0 }, set: { store.setDrone(midi: store.droneMidi % 12 + ($0 == 1 ? 60 : 48)) })) {
                         Text("Low").tag(0); Text("High").tag(1)
                     }
@@ -62,6 +56,39 @@ struct DroneView: View {
             .buttonStyle(BrassButtonStyle())
             .accessibilityIdentifier("drone.start")
         }
+    }
+
+    /// All twelve tonics at once, two rows of six in chromatic order (nothing hides past an edge); the
+    /// selection slides from key to key (it simply moves with Reduce Motion).
+    private var tonicGrid: some View {
+        let columns = Array(repeating: GridItem(.flexible(), spacing: 6), count: 6)
+        return LazyVGrid(columns: columns, spacing: 8) {
+            ForEach(0..<12, id: \.self) { pc in tonicKey(pc) }
+        }
+        .animation(reduceMotion ? Animation.easeInOut(duration: 0.15) : Motion.pluck, value: store.droneMidi % 12)
+    }
+
+    private func tonicKey(_ pc: Int) -> some View {
+        let selected = store.droneMidi % 12 == pc
+        let name = NoteNames.name(pc, preferFlats: [1, 3, 8, 10].contains(pc))
+        return Button { store.setDrone(midi: 48 + pc + (store.droneMidi >= 60 ? 12 : 0)) } label: {
+            Text(verbatim: name)
+                .font(.subheadline.weight(.semibold))
+                .lineLimit(1).minimumScaleFactor(0.6)
+                .foregroundStyle(selected ? Palette.stage : Palette.ink)
+                .frame(maxWidth: .infinity, minHeight: 40)
+                .background {
+                    if selected {
+                        Capsule().fill(Palette.ink)
+                            .matchedGeometryEffect(id: reduceMotion ? "tonic.\(pc)" : "tonic", in: tonics)
+                    } else {
+                        Capsule().fill(Palette.stageRaised).overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
+                    }
+                }
+                .contentShape(Capsule())
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 
     private var rings: some View {

@@ -247,29 +247,41 @@ struct EarTrainingView: View {
     // MARK: Recent answers
 
     /// Under the card: the latest answers, newest first, each a chip that plays its question again
-    /// (a miss shows what you picked struck through, then the answer). Placeholders until the first answer.
+    /// (a miss shows what you picked struck through, then the answer). Until the first answer, one line
+    /// says what will land there, in a slot the chips' height so nothing jumps when they arrive.
     private var recentStrip: some View {
         VStack(alignment: .leading, spacing: 10) {
             Eyebrow("Recent", color: Palette.inkSoft)
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    if history.isEmpty {
-                        ForEach(0..<4, id: \.self) { _ in
-                            Capsule().strokeBorder(Palette.line, style: StrokeStyle(lineWidth: 1, dash: [3, 4]))
-                                .frame(width: 92, height: 38)
-                        }
-                        .accessibilityHidden(true)
-                    } else {
+            if history.isEmpty {
+                recentHint
+                    .transition(.opacity)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
                         ForEach(history) { record in
                             recentChip(record)
                                 .transition(reduceMotion ? AnyTransition.opacity : AnyTransition.move(edge: .leading).combined(with: .opacity))
                         }
                     }
                 }
+                .railBleed(leading: Metrics.gutter, trailing: Metrics.gutter)
+                .transition(.opacity)
             }
-            .railBleed(leading: Metrics.gutter, trailing: Metrics.gutter)
         }
         .padding(.top, 2)
+    }
+
+    private var recentHint: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "arrow.counterclockwise").font(.caption.weight(.semibold)).accessibilityHidden(true)
+            Text("Answers appear here. Tap one to hear it again.")
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .font(.footnote)
+        .foregroundStyle(Palette.inkFaint)
+        .padding(.horizontal, 14).padding(.vertical, 6)
+        .frame(maxWidth: .infinity, minHeight: 38, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 19, style: .continuous).strokeBorder(Palette.line, style: StrokeStyle(lineWidth: 1, dash: [3, 4])))
     }
 
     private func recentChip(_ record: EarAnswerRecord) -> some View {
