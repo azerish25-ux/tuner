@@ -23,6 +23,7 @@ struct ExplainStep: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
+    @Environment(\.scenePhase) private var scenePhase
     @State private var shown = false
     @State private var sounding = false
     /// Height of the title and text, to know how much room is left under them.
@@ -98,6 +99,16 @@ struct ExplainStep: View {
             if autoPlays { play(replay: false) }
         }
         .onDisappear { demoTask?.cancel(); store.stopLessonListening(owner: owner) }
+        // Leaving the app stops the demonstration where it is; "Hear it" plays it again.
+        .onChange(of: scenePhase) { _, phase in
+            guard phase == .background, sounding else { return }
+            demoTask?.cancel()
+            sounding = false
+            lit = []
+            playingIndex = nil
+            neckStart = nil
+            if demo == .showing { demo = .idle }
+        }
     }
 
     /// Every explanation gets the same generous picture area, so short steps don't leave the lower half bare.

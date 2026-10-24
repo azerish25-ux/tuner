@@ -184,7 +184,7 @@ private struct GameCardCorner: View {
     @ObservedObject private var center = GameCenter.shared
 
     var body: some View {
-        let best = game == .sniper ? store.progress.stats["sniperBest"] ?? 0 : 0
+        let best = game == .sniper ? (store.progress.stats["sniperBest"] ?? 0) : 0
         let board = center.leaderboard(for: game)
         HStack(spacing: 6) {
             if best > 0 { ChallengeShareButton(score: best) }

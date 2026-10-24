@@ -35,6 +35,8 @@ And one non-consumable:
 |---|---|---|
 | `timbre_plus_lifetime` | Non-consumable | $89.99 |
 
+The paywall shows the yearly plan's weekly cost ("$0.67 a week"), worked out from the yearly price Apple returns, so it always matches the storefront. The paywall's offer codes and its one-time exit offer are set up in [section 6](#6-growth-features-owner-steps).
+
 `timbre_plus_lifetime` keeps the identifier of the earlier lifetime purchase, so anyone who bought it keeps Pro. Prices are suggestions: the app shows whatever Apple returns (`displayPrice`), including the trial length. Give each product a display name and description, a review screenshot of the paywall, and review notes saying the trial and plans are on the paywall reached from any locked lesson or Practice → Drone. Ready-to-paste names, descriptions, listing text, keywords, review notes and a pricing note are in [APP-STORE-LISTING.md](APP-STORE-LISTING.md). Submit the products with the first app version.
 
 ## 3. Signing and upload from GitHub Actions
@@ -60,7 +62,7 @@ Never paste these into chat, issues, commits or logs. Revoke the key in App Stor
 
 - Category: Music. Secondary: Education.
 - Age rating: 4+.
-- App Privacy: **Data Not Collected** matches this version (pitch analysis and history stay on the device, no analytics SDK, no ads). Revisit if analytics or a paywall service is added.
+- App Privacy: **Data Not Collected** matches this version (pitch analysis and history stay on the device, no analytics SDK, no ads). Revisit if analytics or a paywall service is added. Game Center (section 6) does not change this: scores and achievements go to Apple's Game Center under the player's own Game Center account, and the app keeps no player ID, name or friend list.
 - Encryption: the app uses only Apple's standard encryption (`ITSAppUsesNonExemptEncryption = false`).
 - Screenshots: the CI tour produces 6.9" iPhone and 13" iPad captures (`ci-results/app`, `ci-results/ipad`) as a starting point.
 - Subscription disclosures are on the paywall (price, period, auto-renewal, cancel in Settings, Terms and Privacy links), as App Review Guideline 3.1.2 requires.
@@ -73,3 +75,79 @@ Timbre can send anonymous product events (onboarding finished, paywall shown, tr
 2. GitHub → repository Settings → Secrets and variables → Actions → **Variables** → add `TELEMETRYDECK_APP_ID`. Delivery builds pick it up and debug builds stay in test mode.
 3. Before submitting, update the App Privacy label in App Store Connect to "Product Interaction → Analytics, not linked to the user, not used for tracking" (the app's privacy manifest already declares this), and update the "Analytics and advertising" section of PRIVACY.md.
 
+
+## 6. Growth features: owner steps
+
+The app ships with all of these switched on in code, and each works as soon as its App Store Connect setup exists. Until then it stays out of sight: no Leaderboard chips, no exit offer, and an offer-code sheet with nothing to redeem. Nothing crashes or prompts. The identifiers below are also in `ios/Timbre/Services/GameCenterIDs.swift`, and they must match exactly.
+
+### 6.1 Game Center
+
+1. **Capability.** Under Certificates, Identifiers & Profiles → Identifiers → `com.shahradazerisharghi.timbre`, check that **Game Center** is ticked. It is on by default for explicit App IDs.
+2. **Entitlement.** This is a one-line change to `ios/project.yml`. Under `targets → Timbre → entitlements → properties`, add `com.apple.developer.game-center: true` beside the App Group. The delivery workflow signs automatically, and its Admin API key can update the provisioning profile. The entitlement was left out of the repo on purpose, so CI never signs with a capability the App ID might not have yet. Without it, Game Center may refuse to sign in on TestFlight and App Store builds; the app then carries on without it. Do not add `gamekit` to `UIRequiredDeviceCapabilities`.
+3. **Turn on Game Center for the app version.** Go to App Store Connect → the app → Features → **Game Center** → enable it. Then, on the version page, add the leaderboards and achievements below under Game Center.
+4. **Leaderboards.** Create all three. Each uses score format **Integer**, submission type **Best score**, and is sorted **High to low**.
+
+| Leaderboard ID | Type | Name (English) | Score range | Notes |
+|---|---|---|---|---|
+| `timbre.sniper.best` | Classic | Pitch Sniper | 0 – 25,000 | All-time best game |
+| `timbre.sniper.weekly` | Recurring | Pitch Sniper this week | 0 – 25,000 | Starts on a Monday at 00:00, lasts 1 week, repeats every week. This is the weekly league; the Leaderboard chip opens it first. |
+| `timbre.ear.level` | Classic | Ear trainer level | 1 – 100 | The level the Play tab shows |
+
+5. **Achievements.** Create these 31 achievements, worth 895 points in all (the cap is 1,000). For every one, set Hidden to No and Achievable more than once to No. Add a 1024 × 1024 image. Use the badge's title as the title. Use its detail for both descriptions, before and after it is earned. The per-instrument course badges and the Pro-only badges (custom tuning, Pro-precision locks) are left out on purpose.
+
+| Achievement ID | Title | Description | Points |
+|---|---|---|---|
+| `timbre.badge.first_tune` | First in tune | Tune your first string | 5 |
+| `timbre.badge.full_tune` | All six | Tune every string of an instrument | 10 |
+| `timbre.badge.strings_100` | Hundred strings | Tune 100 strings | 20 |
+| `timbre.badge.full_25` | Tune-up habit | Tune every string 25 times | 25 |
+| `timbre.badge.multi` | Multi-instrumentalist | Tune three different instruments | 20 |
+| `timbre.badge.strings_1000` | Thousand strings | Tune 1,000 strings | 50 |
+| `timbre.badge.streak_3` | Warming up | Play three days in a row | 10 |
+| `timbre.badge.streak_7` | Perfect week | Play seven days in a row | 25 |
+| `timbre.badge.streak_30` | Month of music | Play thirty days in a row | 50 |
+| `timbre.badge.streak_100` | Hundred days | Play 100 days in a row | 100 |
+| `timbre.badge.level_5` | Rising star | Reach level 5 | 25 |
+| `timbre.badge.minutes_60` | First hour | Practice for an hour in all | 10 |
+| `timbre.badge.minutes_600` | Ten hours | Practice for ten hours in all | 50 |
+| `timbre.badge.daily_1` | Daily set | Finish a daily set | 5 |
+| `timbre.badge.daily_30` | Creature of habit | Finish 30 daily sets | 50 |
+| `timbre.badge.bullseye` | Bullseye | Hit a bullseye in Pitch Sniper | 5 |
+| `timbre.badge.sniper_win` | Marksman | Win a round of Pitch Sniper | 10 |
+| `timbre.badge.bullseyes_50` | Dead center | Hit 50 bullseyes | 25 |
+| `timbre.badge.sharpshooter` | Sharpshooter | Score 2,000 in Pitch Sniper | 50 |
+| `timbre.badge.golden_ear` | Golden ear | Answer 50 ear questions right | 25 |
+| `timbre.badge.ear_perfect` | Clean sweep | Get all ten right in an ear round | 25 |
+| `timbre.badge.ear_500` | Master listener | Answer 500 ear questions right | 50 |
+| `timbre.badge.first_lesson` | First lesson | Finish your first lesson | 5 |
+| `timbre.badge.units_1` | Unit cleared | Finish every lesson in a unit | 10 |
+| `timbre.badge.songs_1` | First song | Play your first song | 10 |
+| `timbre.badge.lessons_25` | Regular | Finish 25 lessons | 25 |
+| `timbre.badge.perfect_10` | Flawless | Earn three stars on 10 lessons | 25 |
+| `timbre.badge.units_10` | Ten units | Finish ten units | 25 |
+| `timbre.badge.lessons_100` | Scholar | Finish 100 lessons | 50 |
+| `timbre.badge.course_done` | Graduate | Finish a whole course | 50 |
+| `timbre.badge.songs_25` | Songbook | Play 25 songs | 50 |
+
+6. **Test** with a sandbox Apple Account signed in to Game Center on a TestFlight build. Open the Play tab. The welcome banner appears once, and a trophy chip appears on each game card when its board exists. Badges earned before sign-in are reported then.
+
+How the app behaves: it signs in quietly the first time the Play tab's game cards show, or when a challenge link opens, and never during onboarding. It never shows GameKit's sign-in sheet. When a player isn't signed in, the app isn't recognised yet, or Game Center is restricted, everything stays hidden. Game Center's own achievement banner is off, because the app announces badges itself.
+
+### 6.2 "Beat my score" challenge links
+
+The paper-plane chip on the Pitch Sniper card shares a "Beat my score" card. It comes with the link `timbre://challenge?game=sniper&score=N`, which opens Pitch Sniper with that score to beat. A player who beats it gets "Send it back" on the results screen.
+
+- A `timbre://` link only works where Timbre is installed, and some apps don't make custom-scheme links tappable. Once the app has an App Store page, set `SniperChallenge.appStoreLink` in `ios/Timbre/Services/GameCenter.swift` to `https://apps.apple.com/app/id<Apple ID>`, so the shared message also says where to get Timbre.
+- Optional, later: host a small https page that forwards to the `timbre://` link and falls back to the App Store, and share that page instead. Universal Links would need an Associated Domains entitlement and an `apple-app-site-association` file on a domain you control.
+
+### 6.3 Offer codes ("Redeem code" on the paywall)
+
+App Store Connect → the app → Subscriptions → Timbre Pro → the plan → **Offer Codes** → create a campaign: one-time-use codes or a custom code, the offer (free or discounted months), eligibility and dates. The paywall's "Have an offer code? Redeem code" link opens Apple's own redemption sheet, and the code unlocks Pro through the usual transaction. The App Store also accepts codes outside the app (App Store → account → Redeem Gift Card or Code). Nothing in the app needs to change per campaign.
+
+### 6.4 The paywall's one-time exit offer
+
+The second time anyone turns a paywall down (onboarding's paywall counts as the first), the paywall makes one offer, once per install. It only uses offers that exist in App Store Connect, at Apple's prices; the app never invents a discount. If nothing below is set up, the paywall simply closes.
+
+1. **Lapsed subscribers.** Under App Store Connect → Subscriptions → Timbre Pro → each plan → **Win-Back Offers**, create one or more offers (for example 1 month free, for people whose subscription ended 1–6 months ago). The app offers the best one the App Store lists for the person (`eligibleWinBackOfferIDs`) and buys it with that offer applied. StoreKit may also show Apple's own win-back sheet at launch to eligible people. That needs no code.
+2. **Never subscribed.** Give `timbre_pro_monthly` an **Introductory Offer** (for example a 1-week free trial for new subscribers). Introductory-offer eligibility covers the whole group, so someone who already used the yearly trial isn't offered it. The card shows the offer as Apple holds it ("Try Pro free for 7 days"), then the monthly price and how it renews. Leave the monthly plan without an introductory offer to switch this off.
+3. To test locally, add an introductory offer to the monthly plan in `ios/Tests/Fixtures/Timbre.storekit` (in a scratch copy, not the committed fixture the UI tests use). Turn down the paywall twice. The exit offer never shows under the UI tests or the demo modes.

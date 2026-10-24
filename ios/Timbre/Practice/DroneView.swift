@@ -1,16 +1,14 @@
 import SwiftUI
 import TimbreCore
 
-/// The drone as a tanpura: its four strings plucked in turn on the drone's own clock around a dial of tonics, and
-/// with the microphone on, your sung or played pitch traced against the nearest swara inside a ±5¢ band.
+/// The drone as a tanpura: its four strings plucked in turn on the drone's own clock around a dial of tonics you
+/// turn by hand, and with the microphone on, your sung or played pitch traced against the nearest swara inside a
+/// ±5¢ band.
 struct DroneView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// The tanpura gives up height so the controls end above the dock where they can.
     @State private var heroHeight: CGFloat = 290
-    /// The selected tonic's highlight moves between keys.
-    @Namespace private var tonics
     /// The first string: Pa (a fifth below Sa, most ragas) or Ma (a fourth, for ragas without Pa).
     @AppStorage("drone.firstString") private var firstString = "pa"
     @StateObject private var singAlong = DroneSingAlong()
@@ -27,10 +25,12 @@ struct DroneView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 18) {
+                // The tonic is the dial itself, at the top; its octave, voice and first string sit right under it,
+                // above the sing-along card, so none of them rests under the Start button.
                 hero
+                settings
                 DroneSingAlongCard(model: singAlong, listening: listening && audio.running, tonicPc: store.droneMidi % 12, notation: notation,
                                    headphones: audio.headphones, permissionDenied: audio.permissionDenied, toggle: toggleListening)
-                settings
                 Label("Sing or play long notes against the drone. Headphones keep it out of the microphone.", systemImage: "headphones")
                     .font(.footnote).foregroundStyle(listening && !audio.headphones ? Palette.amber : Palette.inkSoft)
                     .fixedSize(horizontal: false, vertical: true)
@@ -65,74 +65,62 @@ struct DroneView: View {
 
     // MARK: Hero
 
+    /// The tanpura, whose gourd is the tonic dial: drag round it to turn (a tick at every note), or tap a note.
+    /// The octave stays as picked below; the dial chooses the note within it.
     private var hero: some View {
         TanpuraHero(tonicPc: store.droneMidi % 12, tonicName: tonicName, notation: notation, saHz: saHz, fifth: fifth,
-                    pure: store.droneVoice == .pure, running: audio.droneRunning, clock: { audio.droneOrigin() })
+                    pure: store.droneVoice == .pure, running: audio.droneRunning, clock: { audio.droneOrigin() },
+                    onSelect: { pc in setTonic(48 + pc + (store.droneMidi >= 60 ? 12 : 0)) })
             .frame(height: heroHeight)
-            // VoiceOver: swipe up or down to move the tonic a semitone, across both octaves of the picker.
+            // VoiceOver: swipe up or down to move the tonic a semitone, across both octaves.
             .adjustableValue(Text("Tonic"), value: Text(verbatim: tonicName + ", " + String(format: "Sa = %.1f Hz", saHz)),
                              increment: { setTonic(min(71, store.droneMidi + 1)) },
                              decrement: { setTonic(max(48, store.droneMidi - 1)) })
+            .accessibilityIdentifier("drone.dial")
     }
 
     // MARK: Settings
 
+    /// The rest of the drone, one labelled row each, the controls lined up in one column.
     private var settings: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Eyebrow("Tonic")
-            tonicGrid
-            Picker("Octave", selection: Binding(get: { store.droneMidi >= 60 ? 1 : 0 }, set: { setTonic(store.droneMidi % 12 + ($0 == 1 ? 60 : 48)) })) {
-                Text("Low").tag(0); Text("High").tag(1)
+        VStack(spacing: 12) {
+            settingRow("Octave") {
+                Picker("Octave", selection: Binding(get: { store.droneMidi >= 60 ? 1 : 0 }, set: { setTonic(store.droneMidi % 12 + ($0 == 1 ? 60 : 48)) })) {
+                    Text("Low").tag(0); Text("High").tag(1)
+                }
             }
-            .pickerStyle(.segmented)
-            HStack(spacing: 10) {
+            settingRow("Voice") {
                 Picker("Voice", selection: Binding(get: { store.droneVoice }, set: { setVoice($0) })) {
                     Text("Tanpura").tag(DroneRenderer.Voice.tanpura)
                     Text("Pure").tag(DroneRenderer.Voice.pure)
                 }
-                .pickerStyle(.segmented)
+            }
+            settingRow("First string") {
                 Picker("First string", selection: Binding(get: { fifth }, set: { setFirstString(fifth: $0) })) {
                     Text(verbatim: "Pa").tag(true)
                     Text(verbatim: "Ma").tag(false)
                 }
-                .pickerStyle(.segmented)
-                .frame(maxWidth: 132)
             }
         }
         .stillCard()
     }
 
-    /// All twelve tonics at once, two rows of six in chromatic order (nothing hides past an edge); the
-    /// selection slides from key to key (it simply moves with Reduce Motion).
-    private var tonicGrid: some View {
-        let columns = Array(repeating: GridItem(.flexible(), spacing: 6), count: 6)
-        return LazyVGrid(columns: columns, spacing: 8) {
-            ForEach(0..<12, id: \.self) { pc in tonicKey(pc) }
+    /// A name on the left (the picker carries it for VoiceOver) and its segmented control on the right; large
+    /// text stacks the two.
+    private func settingRow<Control: View>(_ title: LocalizedStringKey, @ViewBuilder control: () -> Control) -> some View {
+        let name = Text(title).font(.subheadline).foregroundStyle(Palette.inkSoft).accessibilityHidden(true)
+        let picker = control().pickerStyle(.segmented)
+        return ViewThatFits(in: .horizontal) {
+            HStack(spacing: 12) {
+                name.lineLimit(1)
+                Spacer(minLength: 8)
+                picker.frame(width: 184)
+            }
+            VStack(alignment: .leading, spacing: 8) {
+                name.fixedSize(horizontal: false, vertical: true)
+                picker
+            }
         }
-        .animation(reduceMotion ? Animation.easeInOut(duration: 0.15) : Motion.pluck, value: store.droneMidi % 12)
-    }
-
-    private func tonicKey(_ pc: Int) -> some View {
-        let selected = store.droneMidi % 12 == pc
-        let name = VoiceNoteName.pitchClass(pc, notation: notation)
-        return Button { setTonic(48 + pc + (store.droneMidi >= 60 ? 12 : 0)) } label: {
-            Text(verbatim: name)
-                .font(.subheadline.weight(.semibold))
-                .lineLimit(1).minimumScaleFactor(0.6)
-                .foregroundStyle(selected ? Palette.stage : Palette.ink)
-                .frame(maxWidth: .infinity, minHeight: 40)
-                .background {
-                    if selected {
-                        Capsule().fill(Palette.ink)
-                            .matchedGeometryEffect(id: reduceMotion ? "tonic.\(pc)" : "tonic", in: tonics)
-                    } else {
-                        Capsule().fill(Palette.stageRaised).overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
-                    }
-                }
-                .contentShape(Capsule())
-        }
-        .buttonStyle(PressScaleStyle())
-        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 
     // MARK: Actions

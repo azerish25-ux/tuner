@@ -204,17 +204,19 @@ struct StrumSweep: View {
 
     /// The widest the strings spread (a tall stage centres them on more wood rather than spacing them further).
     private static func widestGap(_ count: Int) -> CGFloat { count <= 4 ? 72 : 56 }
-    /// The wood showing past the pick's reach, above the top string and below the bottom one.
-    private static let boardEdge: CGFloat = 12
+    /// Past the pick's reach above the top string and below the bottom one: room for the pick itself at the end of
+    /// its stroke (up to 22 pt from its centre on a big stage, a little more as it bobs counting in) and some wood.
+    private static let pickClear: CGFloat = 26
 
     private func drawStrings(_ context: inout GraphicsContext, size: CGSize, order: StringOrder, scale: CGFloat) {
         let area = CGRect(origin: .zero, size: size)
         let count = max(1, strings)
-        // The strings fill the stage: the pick's reach and a rim of wood aside, every string gets an even share of
+        // The strings fill the stage: the pick's reach and the pick itself aside, every string gets an even share of
         // the height, up to a comfortable spread.
         let reach = max(10, min(30, size.height * 0.08))
-        let room = max(0, size.height - 2 * (reach + Self.boardEdge))
-        let band = count > 1 ? min(room, Self.widestGap(count) * CGFloat(count - 1)) : 0
+        let room = max(0, size.height - 2 * (reach + Self.pickClear))
+        // A small stage (an explanation's card on a short phone) keeps the strings at least 60 % of its height.
+        let band = count > 1 ? min(Self.widestGap(count) * CGFloat(count - 1), max(room, size.height * 0.6)) : 0
         let gap = count > 1 ? band / CGFloat(count - 1) : 0
         let top = area.midY - band / 2
         // The pick, its lane and the finger grow a little with the strings on a big stage.
