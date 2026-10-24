@@ -55,6 +55,11 @@ targets:
         TIMBRE_TELEMETRY_APP_ID: ""
         PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre
         TARGETED_DEVICE_FAMILY: "1,2"
+        # The on-device coach (Journey/CoachVoice.swift, `CoachPolish`): FoundationModels is iOS 26+, so it is
+        # weak-linked for the iOS 18 target; every use is behind #available and the model's own availability, and the
+        # coach keeps its templates wherever the model isn't there.
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) COACH_MODEL"
+        OTHER_LDFLAGS: "$(inherited) -weak_framework FoundationModels"
   TimbreWidgets:
     type: app-extension
     platform: iOS

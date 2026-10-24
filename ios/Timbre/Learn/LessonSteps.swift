@@ -449,8 +449,8 @@ struct ChordStep: View {
     }
 
     /// The chord box's width and stretch: as wide as the screen allows, its frets drawn taller to fill the height.
-    /// Around the box's name and edge names go the checks (44), the card's padding (44), "Hearing" (34), the gaps
-    /// between them (28) and a little air for larger text (8).
+    /// Around the box's header (its name and the chart / player switch) and edge names go the checks (44), the
+    /// card's padding (44), "Hearing" (34), the gaps between them (28) and a little air for larger text (8).
     private func diagramFit(_ room: CGSize) -> (width: CGFloat, stretch: CGFloat) {
         ChordDiagram.fit(chord, room: CGSize(width: room.width - 40 - 44, height: room.height - 158))
     }

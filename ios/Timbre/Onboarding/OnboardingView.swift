@@ -9,6 +9,8 @@ struct OnboardingView: View {
     @EnvironmentObject private var commerce: CommerceService
     @State private var step = 0
     @State private var instrumentID: String? = "guitar.acoustic.6"
+    /// The welcome screen shows every instrument in rows, after "more".
+    @State private var allInstruments = false
     /// Unanswered until the player picks; Continue waits for an answer.
     @State private var level: String?
     @State private var goal: String?
@@ -130,35 +132,8 @@ struct OnboardingView: View {
                     .font(.body).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
             }
             .padding(.horizontal, 28)
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(choices) { choice in
-                        let selected = instrumentID == choice.id
-                        Button {
-                            withAnimation(Motion.pluck) { instrumentID = choice.id }
-                            Haptics.shared.selection()
-                        } label: {
-                            HStack(spacing: 7) {
-                                Text(choice.title).font(.subheadline.weight(.semibold))
-                                    .foregroundStyle(selected ? Color(hex: 0xC9FFEC) : Palette.ink)
-                                // Tuned in Chromatic on the free plan; its own stage is Pro.
-                                if needsPro(choice) { ProBadge() }
-                            }
-                            .padding(.horizontal, 18).frame(height: 44)
-                            .background(Capsule().fill(selected ? Palette.mint.opacity(0.10) : Palette.stageRaised))
-                            .overlay(Capsule().strokeBorder(selected ? Palette.mint : Palette.line, lineWidth: selected ? 1.5 : 1))
-                        }
-                        .buttonStyle(PressScaleStyle())
-                        .accessibilityAddTraits(selected ? .isSelected : [])
-                        .accessibilityIdentifier("onboarding.instrument.\(choice.id ?? "voice")")
-                    }
-                }
-                .padding(.horizontal, 28)
-            }
-            // A chip running off either edge dissolves (the app's one edge fade) rather than being cut through
-            // (the Violin PRO badge): over the 28 pt inset and a chip's worth inside it.
-            .edgeFade(width: 28 + 40)
-            .padding(.top, 18)
+            instrumentPicker
+                .padding(.top, 18)
             Button("Get started") { next() }.buttonStyle(BrassButtonStyle()).padding(.horizontal, 22).padding(.top, 22)
                 .accessibilityIdentifier("onboarding.start")
             Button {
@@ -180,6 +155,95 @@ struct OnboardingView: View {
                     .frame(maxWidth: .infinity).padding(.horizontal, 28).padding(.bottom, 6)
             }
         }
+    }
+
+    // MARK: Instruments
+
+    /// The instrument chips, none ever cut at the screen's edge: as many as fit whole on one line, then a round
+    /// "more" chip that opens every instrument in rows (the art above gives up the room). Where not even two fit (the
+    /// largest text sizes) they scroll on one line instead, fading where they run under the edge.
+    @ViewBuilder private var instrumentPicker: some View {
+        if allInstruments {
+            ChipFlow(spacing: 8) {
+                ForEach(choices) { choice in instrumentChip(choice) }
+            }
+            .padding(.horizontal, 28)
+            .transition(.opacity)
+        } else {
+            ViewThatFits(in: .horizontal) {
+                chipLine(choices.count)
+                chipLine(6)
+                chipLine(5)
+                chipLine(4)
+                chipLine(3)
+                chipLine(2)
+                scrollingChips
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .transition(.opacity)
+        }
+    }
+
+    /// The first `count` chips whole on one line, and the "more" chip when some are left.
+    private func chipLine(_ count: Int) -> some View {
+        HStack(spacing: 8) {
+            ForEach(Array(choices.prefix(count))) { choice in instrumentChip(choice) }
+            if count < choices.count { moreChip }
+        }
+        .padding(.horizontal, 28)
+    }
+
+    /// Every chip on one line that scrolls, for text too large to fit two: the edge fade dissolves a chip passing
+    /// under either edge over the 28 pt inset and a chip's worth inside it.
+    private var scrollingChips: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(choices) { choice in instrumentChip(choice) }
+            }
+            .padding(.horizontal, 28)
+        }
+        .edgeFade(width: 28 + 40)
+    }
+
+    private func instrumentChip(_ choice: Choice) -> some View {
+        let selected = instrumentID == choice.id
+        return Button {
+            withAnimation(Motion.pluck) { instrumentID = choice.id }
+            Haptics.shared.selection()
+        } label: {
+            HStack(spacing: 7) {
+                Text(choice.title).font(.subheadline.weight(.semibold))
+                    .foregroundStyle(selected ? Color(hex: 0xC9FFEC) : Palette.ink)
+                    .lineLimit(1)
+                // Tuned in Chromatic on the free plan; its own stage is Pro.
+                if needsPro(choice) { ProBadge() }
+            }
+            .padding(.horizontal, 18).frame(height: 44)
+            .background(Capsule().fill(selected ? Palette.mint.opacity(0.10) : Palette.stageRaised))
+            .overlay(Capsule().strokeBorder(selected ? Palette.mint : Palette.line, lineWidth: selected ? 1.5 : 1))
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityIdentifier("onboarding.instrument.\(choice.id ?? "voice")")
+    }
+
+    /// Opens every instrument in rows: a round chip with an ellipsis, so it fits where a word would not.
+    private var moreChip: some View {
+        Button {
+            withAnimation(Motion.settle) { allInstruments = true }
+            Haptics.shared.selection()
+        } label: {
+            Image(systemName: "ellipsis")
+                .font(.system(size: 15, weight: .bold))
+                .foregroundStyle(Palette.ink)
+                .frame(width: 44, height: 44)
+                .background(Circle().fill(Palette.stageRaised))
+                .overlay(Circle().strokeBorder(Palette.line, lineWidth: 1))
+                .contentShape(Circle())
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityLabel(Text("More instruments"))
+        .accessibilityIdentifier("onboarding.instrument.more")
     }
 
     private var selectedChoice: Choice { choices.first { $0.id == instrumentID } ?? choices[0] }
@@ -837,5 +901,56 @@ private struct Spotlight: Shape {
         path.addLine(to: CGPoint(x: rect.midX - rect.width * 0.32, y: rect.maxY))
         path.closeSubpath()
         return path
+    }
+}
+
+/// Chips in rows, lined up at the leading edge, a chip that wouldn't fit whole starting the next row.
+private struct ChipFlow: Layout {
+    var spacing: CGFloat = 8
+    var rowSpacing: CGFloat = 8
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let rows = Self.rows(subviews, width: proposal.width ?? .infinity, spacing: spacing)
+        let height = rows.reduce(CGFloat(0)) { $0 + $1.height } + rowSpacing * CGFloat(max(0, rows.count - 1))
+        return CGSize(width: proposal.width ?? (rows.map(\.width).max() ?? 0), height: height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        var y = bounds.minY
+        for row in Self.rows(subviews, width: bounds.width, spacing: spacing) {
+            var x = bounds.minX
+            for index in row.items {
+                let size = subviews[index].sizeThatFits(.unspecified)
+                let width = min(size.width, bounds.width)
+                subviews[index].place(at: CGPoint(x: x, y: y + (row.height - size.height) / 2),
+                                      proposal: ProposedViewSize(width: width, height: size.height))
+                x += width + spacing
+            }
+            y += row.height + rowSpacing
+        }
+    }
+
+    private struct Row {
+        var items: [Int] = []
+        var width: CGFloat = 0
+        var height: CGFloat = 0
+    }
+
+    private static func rows(_ subviews: Subviews, width: CGFloat, spacing: CGFloat) -> [Row] {
+        var rows: [Row] = []
+        var row = Row()
+        for index in subviews.indices {
+            let size = subviews[index].sizeThatFits(.unspecified)
+            let chip = min(size.width, width)
+            if !row.items.isEmpty && row.width + spacing + chip > width {
+                rows.append(row)
+                row = Row()
+            }
+            row.width += (row.items.isEmpty ? 0 : spacing) + chip
+            row.height = max(row.height, size.height)
+            row.items.append(index)
+        }
+        if !row.items.isEmpty { rows.append(row) }
+        return rows
     }
 }

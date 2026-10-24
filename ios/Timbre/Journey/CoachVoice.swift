@@ -276,21 +276,44 @@ struct CoachVoice {
 // MARK: - Rewording on device
 
 /// The template, reworded in a warmer voice by the on-device language model where there is one (iOS 26 with
-/// Apple Intelligence on, in a language it speaks), checked to keep every number and name; nil keeps the template.
+/// Apple Intelligence on and ready, in the language the tips are written in), checked to keep every number and
+/// name; nil keeps the template, which carries every fact on its own.
 ///
-/// Built only with the `COACH_MODEL` compilation condition, together with weak-linking FoundationModels for the
-/// iOS 18 deployment target (`OTHER_LDFLAGS: -weak_framework FoundationModels`); without it the coach speaks in its
-/// templates, which carry every fact on their own.
+/// On with the `COACH_MODEL` compilation condition (the Timbre target in project.yml), which also weak-links
+/// FoundationModels for the iOS 18 deployment target (`OTHER_LDFLAGS: -weak_framework FoundationModels`). Every use
+/// of the framework sits behind `canImport`, `@available(iOS 26.0, *)` with its `#available` check, and the model's
+/// own availability, so iOS 18 to 25, devices without Apple Intelligence and unsupported languages keep the templates.
 @MainActor enum CoachPolish {
     private static var cache: [String: String] = [:]
+    /// Tips the model already answered without keeping to the facts (or couldn't answer): not asked again.
+    private static var declined: Set<String> = []
+    /// Off under XCTest, the UI tests, the demo pitch and data and the store scenes (as `TimbreTips`), so every check
+    /// and store picture reads the templates word for word. Release builds never read these values.
+    private static let enabled: Bool = {
+        #if DEBUG
+        let environment = ProcessInfo.processInfo.environment
+        let quiet = ["XCTestConfigurationFilePath", "TIMBRE_TEST_STORAGE_ID", "TIMBRE_DEMO_PITCH", "TIMBRE_DEMO_DATA", "TIMBRE_SCENE"]
+        return !quiet.contains { environment[$0] != nil }
+        #else
+        return true
+        #endif
+    }()
 
     static func polish(_ template: String, names: [String]) async -> String? {
         if let cached = cache[template] { return cached }
         #if canImport(FoundationModels) && COACH_MODEL
+        guard enabled else { return nil }
         guard #available(iOS 26.0, *) else { return nil }
-        guard let reworded = await CoachModel.reword(template) else { return nil }
-        let text = reworded.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines.union(CharacterSet(charactersIn: "\"“”")))
-        guard CoachVoice.faithful(text, to: template, names: names) else { return nil }
+        // Not ready yet (Apple Intelligence off, the model still downloading): ask again another time.
+        guard !declined.contains(template), CoachModel.ready else { return nil }
+        let reworded = await CoachModel.reword(template)
+        // Moved on to another tip before the model answered: nothing learned about this one.
+        if Task.isCancelled { return nil }
+        let quotes = CharacterSet.whitespacesAndNewlines.union(CharacterSet(charactersIn: "\"“”"))
+        guard let text = reworded?.trimmingCharacters(in: quotes), CoachVoice.faithful(text, to: template, names: names) else {
+            declined.insert(template)
+            return nil
+        }
         cache[template] = text
         return text
         #else
@@ -302,11 +325,18 @@ struct CoachVoice {
 #if canImport(FoundationModels) && COACH_MODEL
 @available(iOS 26.0, *)
 private enum CoachModel {
-    static func reword(_ template: String) async -> String? {
+    /// Apple Intelligence is on and its model ready, and it speaks the language the app's tips are written in (the
+    /// app's own strings, which may differ from the device region).
+    static var ready: Bool {
         let model = SystemLanguageModel.default
-        guard case .available = model.availability else { return nil }
-        let language = Locale.current.language.languageCode
-        guard model.supportedLanguages.contains(where: { $0.languageCode == language }) else { return nil }
+        guard case .available = model.availability else { return false }
+        let tips = Locale.Language(identifier: Bundle.main.preferredLocalizations.first ?? "en").languageCode
+        return model.supportedLanguages.contains { $0.languageCode == tips }
+    }
+
+    /// The tip reworded, or nil when the model fails, refuses or the request is cancelled. A fresh session each
+    /// time, so one tip's wording never leans on another's.
+    static func reword(_ template: String) async -> String? {
         let session = LanguageModelSession(instructions: instructions)
         do {
             let response = try await session.respond(to: template, options: GenerationOptions(temperature: 0.4))

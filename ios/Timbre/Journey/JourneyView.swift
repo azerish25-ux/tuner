@@ -90,35 +90,36 @@ struct JourneyView: View {
 
     /// iPad: the stats across the top (one tile per column in landscape), the cards in columns of a phone's
     /// proportions so no calendar row or bar chart is stretched across the screen, and the badges across the foot,
-    /// where the width shows more of them per row.
+    /// where the width shows more of them per row. Recent closes the last column and stops level with the others
+    /// (`BalancedColumns`), showing as many sessions as fit, rather than running on beside an empty stretch.
     private func wideBoard(_ columns: CardColumns) -> some View {
         VStack(alignment: .leading, spacing: 20) {
             title
             stats(spacing: CardColumns.spacing)
-            HStack(alignment: .top, spacing: CardColumns.spacing) {
+            BalancedColumns(width: columns.unit) {
                 if columns.count >= 3 {
-                    column(columns.unit) {
+                    column {
                         coach
                         weekCard
                     }
-                    column(columns.unit) {
+                    column {
                         calendar
                         stringHealth
                     }
-                    column(columns.unit) {
+                    column {
                         insights
-                        recent
+                        fittedRecent
                     }
                 } else {
-                    column(columns.unit) {
+                    column {
                         coach
                         weekCard
                         calendar
                     }
-                    column(columns.unit) {
+                    column {
                         stringHealth
                         insights
-                        recent
+                        fittedRecent
                     }
                 }
             }
@@ -126,9 +127,21 @@ struct JourneyView: View {
         }
     }
 
-    private func column<Content: View>(_ width: CGFloat, @ViewBuilder _ content: () -> Content) -> some View {
+    private func column<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 20) { content() }
-            .frame(width: width)
+    }
+
+    /// iPad: Recent with as many sessions as the column has room for beside the others (twelve at most, two at least),
+    /// its card reaching down to where they end.
+    private var fittedRecent: some View {
+        ViewThatFits(in: .vertical) {
+            recentList(limit: 12).stillCard()
+            recentList(limit: 10).stillCard()
+            recentList(limit: 8).stillCard()
+            recentList(limit: 6).stillCard()
+            recentList(limit: 4).stillCard()
+            recentList(limit: 2).stillCard()
+        }
     }
 
     // MARK: Coach
@@ -292,7 +305,10 @@ struct JourneyView: View {
                 if advice { Text("Restring soon").font(.caption.weight(.semibold)).foregroundStyle(Color(hex: 0xFFC977)) }
             }
             Group {
-                if let worst, abs(worst.centsPerDay) >= 1 {
+                if let worst, abs(worst.centsPerDay) >= 1, coachSaysDrift(of: worst.anchor) {
+                    // The coach card already says it, with its tune-up: here the chart speaks for itself.
+                    Text("Each string’s drift, in cents a day.")
+                } else if let worst, abs(worst.centsPerDay) >= 1 {
                     Text("Your \(labels[worst.anchor] ?? worst.anchor) string drifts \(worst.centsPerDay < 0 ? String(localized: "flat") : String(localized: "sharp")) about \(Int(abs(worst.centsPerDay).rounded())) cents a day.")
                 } else if !drift.isEmpty {
                     Text("Your strings are holding their pitch well.")
@@ -315,6 +331,15 @@ struct JourneyView: View {
             .accessibilityIdentifier("journey.restrung")
         }
         .stillCard(tint: advice ? Palette.amber : nil)
+    }
+
+    /// Whether the coach is telling how this string drifts (its tip on this screen), so String health doesn't print
+    /// the same sentence under it.
+    private func coachSaysDrift(of anchor: String) -> Bool {
+        coachNotes.contains { note in
+            if case let .drift(drifting, _) = note.fact { return drifting == anchor }
+            return false
+        }
     }
 
     /// Each string's name as the tuner labels it ("G"), by its anchor id.
@@ -612,6 +637,12 @@ struct JourneyView: View {
     }
 
     private var recent: some View {
+        recentList(limit: 12).stillCard()
+    }
+
+    /// The latest `limit` sessions under their heading. A `Spacer` at the foot lets the iPad's card reach down to the
+    /// columns beside it; on a phone it takes no room.
+    private func recentList(limit: Int) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text("Recent").font(Typeface.display(16)).foregroundStyle(Palette.ink)
@@ -621,7 +652,7 @@ struct JourneyView: View {
             if store.records.isEmpty {
                 Text("Your sessions appear here after your first tune-up.").font(.subheadline).foregroundStyle(Palette.inkSoft)
             }
-            ForEach(store.records.prefix(12)) { record in
+            ForEach(store.records.prefix(limit)) { record in
                 HStack(spacing: 12) {
                     Image(systemName: symbol(record)).foregroundStyle(Palette.brass).frame(width: 26)
                     VStack(alignment: .leading, spacing: 2) {
@@ -641,8 +672,8 @@ struct JourneyView: View {
                 }
                 .padding(.vertical, 4)
             }
+            Spacer(minLength: 0)
         }
-        .stillCard()
     }
 
     private func symbol(_ record: PracticeRecord) -> String {

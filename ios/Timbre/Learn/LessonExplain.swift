@@ -7,8 +7,9 @@ import TimbreCore
 /// bottom. A picture of notes is a demonstration that plays once as the step appears (with Reduce Motion or VoiceOver
 /// it waits for "Hear it"): a chord's fingers land in finger order, each string lighting as its note sounds, then the
 /// chord rings across them (on the chord chart, or on the player's-view neck where the strings shimmer as they ring:
-/// the switch on the card, remembered); a neck's dots drop in note by note, each string lit as it sounds; a staff or a keyboard
-/// lights each note as it sounds; a rhythm's strokes sound as the pick sweeps the strings in time with the beat row.
+/// the switch on the card, remembered); a neck's dots drop in note by note, each string lit as it sounds; a staff or
+/// a keyboard lights each note as it sounds; a rhythm's strokes sound as the pick sweeps the strings in time with the
+/// beat row.
 /// "Hear it" plays it again. The card takes the room the words leave and its picture grows to fill it.
 struct ExplainStep: View {
     let title: LearnText

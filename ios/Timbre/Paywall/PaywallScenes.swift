@@ -37,13 +37,16 @@ enum PaywallHero {
         }
     }
 
-    /// Nothing under the close button's corner redraws every frame, so glass there needn't resample each frame: the
-    /// plan's picture (its turning record stands clear of the corner). The runway and the tools draw on a Canvas that
-    /// spans the width.
-    var isStill: Bool {
+    /// The person's plan, rather than a runway or a tool.
+    var isPlan: Bool {
         if case .plan = self { return true }
         return false
     }
+
+    /// Nothing under the close button's corner redraws every frame, so glass there needn't resample each frame: the
+    /// plan's picture (its turning record stands clear of the corner). The runway and the tools draw on a Canvas that
+    /// spans the width.
+    var isStill: Bool { isPlan }
 }
 
 /// What the plan's hero shows, all from the person's plan (`PaywallPlan`): their instrument as the app pictures it,

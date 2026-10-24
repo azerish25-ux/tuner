@@ -35,6 +35,8 @@ struct SongsView: View {
     @Namespace private var zoom
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.horizontalSizeClass) private var sizeClass
+    /// The page's width, for the iPad's card columns (`CardColumns`) under the featured song.
+    @State private var pageWidth: CGFloat = 0
 
     /// A song, its course and unit, and its place among the course's songs (1-based).
     struct Song: Identifiable {
@@ -103,7 +105,7 @@ struct SongsView: View {
                     header
                     if chips.count > 1 { filterRail(chips, active: active) }
                     if let hero {
-                        heroCard(hero)
+                        featured(hero, layout: layout)
                             .id(hero.id)
                             .transition(.opacity.combined(with: .scale(scale: 0.97)))
                     }
@@ -115,6 +117,7 @@ struct SongsView: View {
                 }
                 .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
             }
+            .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.width } action: { width in pageWidth = width }
             .stageTopShade()
             .background(StageBackground(glow: glow, motes: false))
             .overlay(alignment: .bottom) { hintPill }
@@ -295,6 +298,107 @@ struct SongsView: View {
     }
 
     // MARK: Featured song
+
+    /// The song of the day. On iPad (two card columns or more, `CardColumns`) it shares its row with the songs up next,
+    /// the hero across all but the last column, so it isn't a band of colour stretched across the screen.
+    @ViewBuilder private func featured(_ hero: Song, layout: SongsCatalog.Layout) -> some View {
+        let columns = CardColumns(width: pageWidth - 2 * Metrics.gutter)
+        let next = sizeClass == .regular && columns.count > 1 ? upNext(layout, hero: hero) : []
+        if next.count >= 2 {
+            HStack(alignment: .top, spacing: CardColumns.spacing) {
+                heroCard(hero)
+                    .frame(width: columns.span(columns.count - 1))
+                upNextPanel(next)
+                    .frame(width: columns.unit, height: heroHeight)
+            }
+        } else {
+            heroCard(hero)
+        }
+    }
+
+    /// iPad, beside the song of the day: the next song on each shelf under the filter (open and not played yet), each
+    /// tune once and the featured tune aside; songs still to unlock fill in when fewer than three are open. Four at most.
+    private func upNext(_ layout: SongsCatalog.Layout, hero: Song) -> [Song] {
+        let progress = store.learn
+        var picked: [Song] = []
+        var tunes: Set<String> = [SongsCatalog.tuneKey(hero.lesson)]
+        func add(_ song: Song?) {
+            guard let song, picked.count < 4, tunes.insert(SongsCatalog.tuneKey(song.lesson)).inserted else { return }
+            picked.append(song)
+        }
+        for rail in layout.rails {
+            add(rail.songs.first { catalog.standing($0).access == .play && !progress.isFinished($0.lesson.id) })
+        }
+        if picked.count < 3 {
+            for rail in layout.rails {
+                add(rail.songs.first { !progress.isFinished($0.lesson.id) && !tunes.contains(SongsCatalog.tuneKey($0.lesson)) })
+            }
+        }
+        return picked
+    }
+
+    /// "Up next": as many of the songs as the hero's height holds, each a row of sleeve, title, course and length.
+    private func upNextPanel(_ songs: [Song]) -> some View {
+        let shape = RoundedRectangle(cornerRadius: 28, style: .continuous)
+        return VStack(alignment: .leading, spacing: 14) {
+            Text("Up next").font(Typeface.display(20)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+            ViewThatFits(in: .vertical) {
+                upNextList(songs, limit: 4)
+                upNextList(songs, limit: 3)
+                upNextList(songs, limit: 2)
+            }
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(shape.fill(Palette.stageRaised))
+        .overlay(shape.strokeBorder(.white.opacity(0.06), lineWidth: 1))
+    }
+
+    private func upNextList(_ songs: [Song], limit: Int) -> some View {
+        VStack(spacing: 8) {
+            ForEach(Array(songs.prefix(limit))) { song in upNextRow(song) }
+        }
+    }
+
+    /// One song up next: its sleeve, title, course and length, and Play (or a lock); a tap opens it as its tile would.
+    private func upNextRow(_ song: Song) -> some View {
+        let art = catalog.art(song)
+        let access = catalog.standing(song).access
+        let stars = store.learn.stars[song.lesson.id] ?? 0
+        let source = Self.tileSource(song.lesson, shelf: "next")
+        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        let playable = access == .play
+        return Button { open(song.course, song.lesson, from: source) } label: {
+            HStack(spacing: 12) {
+                SongCover(art: art, corner: 6, locked: !playable)
+                    .frame(width: 52, height: 52)
+                    .shadow(color: .black.opacity(0.4), radius: 6, y: 3)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(verbatim: song.lesson.title.localized).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                        .lineLimit(1)
+                    HStack(spacing: 6) {
+                        CourseArt(course: song.course, size: 16)
+                        Text(verbatim: song.course.title.localized + " · " + SongSheet.of(song.lesson).length)
+                    }
+                    .font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1)
+                }
+                Spacer(minLength: 6)
+                Image(systemName: playable ? "play.fill" : "lock.fill").font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(playable ? Palette.onAccent : Palette.inkSoft)
+                    .frame(width: 32, height: 32)
+                    .background(Circle().fill(playable ? AnyShapeStyle(art.primary) : AnyShapeStyle(Color.white.opacity(0.08))))
+            }
+            .padding(7)
+            .background(shape.fill(.white.opacity(0.04)))
+            .contentShape(shape)
+        }
+        .buttonStyle(PressScaleStyle())
+        .matchedTransitionSource(id: source, in: zoom)
+        .modifier(Shake(amount: shakes[song.id] ?? 0))
+        .accessibilityLabel(Text(verbatim: "\(song.lesson.title.localized), \(song.course.title.localized)"))
+        .accessibilityValue(accessValue(access, stars: stars))
+        .accessibilityIdentifier("songs.next.\(song.id)")
+    }
 
     /// The song of the day: its sleeve (with the record peeking out) over a mesh of the sleeve's own colours, the
     /// title and Play below. The preview button sits on the sleeve's free corner, outside the card's button.

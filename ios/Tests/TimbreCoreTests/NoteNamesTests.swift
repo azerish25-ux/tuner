@@ -90,6 +90,8 @@ final class NoteNamesTests: XCTestCase {
         XCTAssertEqual(NoteNames.glyphs("E♭"), "E♭")
         XCTAssertEqual(NoteNames.glyphs("Eb♭"), "E♭♭")
         XCTAssertEqual(NoteNames.glyphs(NoteNames.glyphs("Ab4")), "A♭4")
+        XCTAssertEqual(NoteNames.glyphs(NoteNames.glyphs("Eb7b9")), "E♭7b9")
+        XCTAssertEqual(NoteNames.glyphs("F#7b9"), "F♯7b9")
     }
 
     func testChordSymbolsShowWithSigns() {

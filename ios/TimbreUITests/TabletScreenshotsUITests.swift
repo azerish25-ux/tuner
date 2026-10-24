@@ -55,8 +55,18 @@ final class TabletScreenshotsUITests: XCTestCase {
         tab("Songs", until: "songs.hero")
         settle(0.5)
         shot("ipad-landscape-songs")
-        tab("Learn", until: "learn.continue")
+        tab("Learn", until: "learn.inspector")
         shot("ipad-landscape-learn")
+        // The inspector follows a tap on the path: an earlier lesson, its steps and its picture; then back to the next
+        // lesson (Your first chord: E minor), which the portrait frame shows.
+        let earlier = element("learn.lesson.gtr-1-2")
+        if earlier.waitForExistence(timeout: 5), earlier.isHittable {
+            earlier.tap()
+            settle(1.2)
+            shot("ipad-landscape-learn-picked")
+            let next = element("learn.lesson.gtr-1-4")
+            if next.exists, next.isHittable { next.tap(); settle(0.8) }
+        }
         tab("Progress", until: "journey.restrung")
         shot("ipad-landscape-progress")
 
@@ -66,8 +76,11 @@ final class TabletScreenshotsUITests: XCTestCase {
         shot("ipad-portrait-progress")
         tab("Play", until: "practice.sniper")
         shot("ipad-portrait-practice")
-        tab("Learn", until: "learn.continue")
+        tab("Learn", until: "learn.inspector")
         shot("ipad-portrait-learn")
+        tab("Songs", until: "songs.hero")
+        settle(0.5)
+        shot("ipad-portrait-songs")
     }
 
     // MARK: Helpers

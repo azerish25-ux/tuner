@@ -201,9 +201,10 @@ struct PaywallView: View {
         result.outcomes = left - Self.pillRow >= Self.outcomesTop + outcomesHeight
         if result.outcomes { left -= Self.outcomesTop + outcomesHeight }
         let heroFloor = Self.previewTop + hero.minHeight
-        // Onboarding's hero takes the room before "What's in Pro" (which waits below the fold unless room is left): the
-        // scene is the plan just built, and a taller stage keeps its runway and hit line well below the close button.
-        if context == .onboarding && pitch.lesson == nil && left >= heroFloor {
+        // Onboarding's hero, and the plan's anywhere, take the room before "What's in Pro" (which waits below the fold
+        // unless room is left): the scene is the plan itself, and a taller stage keeps its runway and hit line well
+        // below the close button, or its instrument and sleeve large enough to read.
+        if (context == .onboarding || hero.isPlan) && pitch.lesson == nil && left >= heroFloor {
             result.preview = hero.minHeight + min(left - heroFloor, Self.previewMax - hero.minHeight)
             left -= Self.previewTop + result.preview
             result.details = result.outcomes && left >= Self.detailsTop + detailsHeight
@@ -252,7 +253,7 @@ struct PaywallView: View {
             }
             // Everything that sells rests above the bar; the rest waits below the fold, past its fade.
             .frame(minHeight: viewport, alignment: .top)
-            belowFold(plan, layout: layout)
+            belowFold(outcomes, layout: layout)
             redeemLink.padding(.top, 24)
             finePrint.padding(.top, 8)
         }
@@ -262,10 +263,10 @@ struct PaywallView: View {
     }
 
     /// The outcomes and "What's in Pro", or just "What's in Pro", when they did not fit above the fold.
-    @ViewBuilder private func belowFold(_ plan: PaywallPlan, layout: Fold) -> some View {
+    @ViewBuilder private func belowFold(_ outcomes: [PaywallPlan.Outcome], layout: Fold) -> some View {
         if !layout.outcomes {
             VStack(spacing: Self.detailsTop) {
-                outcomeList(plan)
+                outcomeList(outcomes)
                 proDetails
             }
             .padding(.top, 28)
@@ -274,10 +275,21 @@ struct PaywallView: View {
         }
     }
 
-    private var closeButton: some View {
+    /// The plan's outcomes, less the first song when the plan's hero already shows it (its sleeve and the day it
+    /// comes), so the same promise isn't made twice and the picture gets the room.
+    private func shownOutcomes(_ plan: PaywallPlan, hero: PaywallHero) -> [PaywallPlan.Outcome] {
+        guard case .plan = hero else { return plan.outcomes }
+        return plan.outcomes.filter { $0.id != "song" }
+    }
+
+    /// The sheet's close button: Liquid Glass (iOS 26) when nothing under its corner redraws every frame, else the
+    /// solid disc it always was.
+    private func closeButton(glass: Bool) -> some View {
         Button { decline() } label: {
             Image(systemName: "xmark").font(.body.weight(.bold)).foregroundStyle(Palette.ink)
-                .frame(width: 44, height: 44).background(Circle().fill(Palette.surface))
+                .frame(width: 44, height: 44)
+                .background { if !glass { Circle().fill(Palette.surface) } }
+                .timbreGlass(interactive: true, isOn: glass, in: Circle()) { Circle().fill(Palette.surface) }
         }
         .padding(.trailing, 18).padding(.top, 8)
         .accessibilityLabel("Close").accessibilityIdentifier("paywall.close")
@@ -373,9 +385,9 @@ struct PaywallView: View {
 
     // MARK: Hero
 
-    /// One scene across the full width, looping, with the Timbre Pro pill under it: the person's instrument (or the
-    /// one they just tried to open) with its strings running on as a play-along runway, a lane per string, and the
-    /// combo; or the scene of the tool that opened the paywall.
+    /// One scene across the full width with the Timbre Pro pill under it: the plan (the person's instrument, their
+    /// first song's sleeve and the road there); the instrument they just tried to open with its strings running on as
+    /// a play-along runway; or the scene of the tool that opened the paywall.
     private func preview(_ hero: PaywallHero, plan: PaywallPlan, height: CGFloat) -> some View {
         PaywallPreview(hero: hero, accent: plan.accent, height: height)
             .opacity(appeared ? 1 : 0)
@@ -383,12 +395,44 @@ struct PaywallView: View {
             .animation(.spring(response: 0.9, dampingFraction: 0.85), value: appeared)
     }
 
-    /// The tool's own scene when a tool opened the paywall, else the instrument and its runway (lessons, songs,
-    /// instruments and the plan).
+    /// The tool's own scene when a tool opened the paywall; the plan itself for onboarding and Pro from Settings;
+    /// else the instrument and its runway (lessons, songs, instruments).
     private func hero(_ pitch: Pitch, plan: PaywallPlan) -> PaywallHero {
         if let tool = heroTool { return .tool(tool) }
+        if let scene = planScene(pitch, plan: plan) { return .plan(scene) }
         let figure = heroFigure(pitch, plan: plan)
         return .runway(figure.figure, lanes: lanes(figure.instrumentId))
+    }
+
+    /// Onboarding's paywall and Pro from Settings (or the plain upsell) sell the plan: the person's instrument, the
+    /// sleeve of the first song their plan reaches, and the road there (today, that song's day, the next unit the
+    /// plan starts), all from their real plan. Nil when the plan reaches no song (a course without any).
+    private func planScene(_ pitch: Pitch, plan: PaywallPlan) -> PaywallPlanScene? {
+        let reason = store.paywallReason
+        let planned = context == .onboarding || reason == nil || reason == "settings"
+        guard planned, pitch.lesson == nil, pitch.instrumentAsset == nil,
+              let course = plan.course, let song = plan.firstSong, let songDay = plan.songDay else { return nil }
+        var stops: [PaywallPlanScene.Stop] = []
+        if songDay > 1 { stops.append(PaywallPlanScene.Stop(id: "today", day: 1, title: nil, kind: .today)) }
+        // The song by its name, not its lesson's ("Greensleeves", not "Greensleeves: the chords"), as the track names it.
+        stops.append(PaywallPlanScene.Stop(id: "song", day: songDay, title: CoverArt.mainTitle(song.title.localized), kind: .song))
+        if let unit = plan.milestones.first(where: { $0.kind == .unit && $0.day > 1 && $0.day != songDay }) {
+            stops.append(PaywallPlanScene.Stop(id: "unit", day: unit.day, title: unit.title, kind: .unit))
+        }
+        stops.sort { $0.day < $1.day }
+        return PaywallPlanScene(instrument: planInstrument(plan, course: course), sleeve: CoverArt.of(song, in: course),
+                                accent: plan.accent, stops: stops)
+    }
+
+    /// The person's instrument as the plan's hero stands it: its studio render, else its photograph (the variant they
+    /// tune). Nil when they sing, or the course has no instrument.
+    private func planInstrument(_ plan: PaywallPlan, course: LearnCourse) -> (name: String, render: Bool)? {
+        for id in [plan.instrumentId, course.instrument].compactMap({ $0 }) {
+            guard let asset = photoAsset(id) else { continue }
+            if let model = ModelLibrary.modelID(forPhoto: asset), ModelLibrary.hasCard(model) { return (ModelLibrary.cardImageName(model), true) }
+            return (asset, false)
+        }
+        return nil
     }
 
     /// The tool that opened the paywall: the drone (the Tanpura), an ear game (the interval staircase), Pitch
@@ -507,9 +551,9 @@ struct PaywallView: View {
     private static let benefitArt: CGFloat = 26
 
     /// Three results for the person's goal, each with its own art; they slide in one after another.
-    private func outcomeList(_ plan: PaywallPlan) -> some View {
+    private func outcomeList(_ outcomes: [PaywallPlan.Outcome]) -> some View {
         VStack(alignment: .leading, spacing: 7) {
-            ForEach(Array(plan.outcomes.enumerated()), id: \.element.id) { index, outcome in
+            ForEach(Array(outcomes.enumerated()), id: \.element.id) { index, outcome in
                 HStack(spacing: 10) {
                     outcomeArt(outcome.art)
                         .frame(width: Self.benefitArt, height: Self.benefitArt)
@@ -707,15 +751,18 @@ struct PaywallView: View {
                 }
             }
         } else {
-            VStack(spacing: 8) {
-                if let annual = commerce.annual {
-                    planRow(annual, title: "Yearly", detail: perWeek(annual), tag: annualTag(annual), saving: annualSaving, anchor: annualAnchor)
-                }
-                if let monthly = commerce.monthly {
-                    planRow(monthly, title: "Monthly", detail: String(localized: "cancel anytime"), tag: nil, saving: nil)
-                }
-                if let lifetime = commerce.lifetime {
-                    planRow(lifetime, title: "Lifetime", detail: String(localized: "pay once"), tag: nil, saving: nil)
+            // One glass group: the chosen plan's glass flows to the next card as the choice moves.
+            TimbreGlassGroup(spacing: 8) {
+                VStack(spacing: 8) {
+                    if let annual = commerce.annual {
+                        planRow(annual, title: "Yearly", detail: perWeek(annual), tag: annualTag(annual), saving: annualSaving, anchor: annualAnchor)
+                    }
+                    if let monthly = commerce.monthly {
+                        planRow(monthly, title: "Monthly", detail: String(localized: "cancel anytime"), tag: nil, saving: nil)
+                    }
+                    if let lifetime = commerce.lifetime {
+                        planRow(lifetime, title: "Lifetime", detail: String(localized: "pay once"), tag: nil, saving: nil)
+                    }
                 }
             }
             .transition(.opacity)
@@ -762,7 +809,7 @@ struct PaywallView: View {
 
     private func select(_ product: Product) {
         guard selected?.id != product.id else { return }
-        withAnimation(Motion.quick) { selectedID = product.id }
+        withAnimation(reduceMotion ? Motion.quick : Motion.morph) { selectedID = product.id }
         Haptics.shared.selection()
     }
 
@@ -792,12 +839,10 @@ struct PaywallView: View {
                 }
             }
             .padding(.horizontal, 14).padding(.vertical, 9)
-            .background(shape.fill(isSelected ? Palette.mint.opacity(0.08) : Palette.stageRaised))
-            .overlay(shape.strokeBorder(isSelected ? Palette.mint : Palette.line, lineWidth: isSelected ? 2 : 1))
+            .modifier(PlanPlate(selected: isSelected, glass: planGlass))
             .overlay(alignment: .topTrailing) {
                 if let tag { planTag(tag) }
             }
-            .shadow(color: Palette.mint.opacity(isSelected ? 0.16 : 0), radius: 14, y: 4)
             .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())
@@ -829,7 +874,34 @@ struct PaywallView: View {
             .lineLimit(1).fixedSize()
     }
 
-    private var trustRow: some View {
+    /// Under the plans. With a free trial selected (and a reminder that can arrive): how easy it is to stop, and when
+    /// we'll remind them, "Cancel in 2 taps · We remind you on day 12" (Settings › Manage subscription opens the App
+    /// Store's own sheet). Otherwise what Pro never asks of them.
+    @ViewBuilder private var trustRow: some View {
+        if showsTrial && !remindersBlocked, let product = selected {
+            trialTrust(reminder: max(1, trialDays(product) - 2))
+        } else {
+            plainTrust
+        }
+    }
+
+    private func trialTrust(reminder: Int) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: "bell.badge.fill").foregroundStyle(Palette.mint).accessibilityHidden(true)
+            Text("Cancel in 2 taps")
+            separator
+            Text("We remind you on day \(reminder)")
+        }
+        .font(.caption.weight(.medium))
+        .foregroundStyle(Palette.inkSoft)
+        .lineLimit(1)
+        .minimumScaleFactor(0.75)
+        .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("paywall.trust")
+    }
+
+    private var plainTrust: some View {
         let promise: LocalizedStringKey = selected?.id == TimbreProduct.lifetime ? "Pay once, keep forever" : "Cancel anytime"
         return HStack(spacing: 6) {
             Image(systemName: "lock.shield.fill").foregroundStyle(Palette.mint).accessibilityHidden(true)
@@ -874,12 +946,13 @@ struct PaywallView: View {
     /// thing the plan brings before the reminder follows (its first song, else a unit it starts, never a repeat of
     /// today's lesson). Only when the selected plan has a free trial come the reminder (when notifications can
     /// reach the person) and the first charge, at the product's own trial length and price. Without a trial the
-    /// plan's milestones fill the track; without those there is no track.
-    private func trackSteps(_ plan: PaywallPlan) -> [TrackStep] {
+    /// plan's milestones fill the track; without those there is no track. With the plan's road in the hero (`road`),
+    /// the milestones are up there, so the track is the trial's alone (and without a trial there is none).
+    private func trackSteps(_ plan: PaywallPlan, road: Bool) -> [TrackStep] {
         let today = TrackStep(id: "today", kind: .today, title: Text("Today"), detail: plan.firstLesson.map { Text(verbatim: $0) },
                               plain: String(localized: "Everything unlocked"))
         guard showsTrial, let product = selected else {
-            guard !plan.milestones.isEmpty else { return [] }
+            guard !plan.milestones.isEmpty, !road else { return [] }
             return [today] + plan.milestones.map { milestoneStep($0) }
         }
         let days = trialDays(product)
@@ -887,7 +960,7 @@ struct PaywallView: View {
         var steps = [today]
         let next = remindersBlocked ? days : reminder
         let ahead = plan.milestones.filter { $0.day > 1 && $0.day < next }
-        if let milestone = ahead.first(where: { $0.kind == .song }) ?? ahead.last { steps.append(milestoneStep(milestone)) }
+        if !road, let milestone = ahead.first(where: { $0.kind == .song }) ?? ahead.last { steps.append(milestoneStep(milestone)) }
         if !remindersBlocked {
             let remind = String(localized: "We remind you")
             steps.append(TrackStep(id: "reminder", kind: .reminder, title: Text("Day \(reminder)"), detail: Text(verbatim: remind), plain: remind))
@@ -1205,23 +1278,28 @@ struct PaywallView: View {
         }
     }
 
+    /// The main action, on mint glass (iOS 26). While the App Store's sheet is up it folds into a bead with a spinner,
+    /// and opens back out to its title if the purchase is cancelled.
     private var purchaseButton: some View {
-        Button { purchase() } label: {
-            if commerce.purchasing != nil {
-                ProgressView().tint(Palette.onAccent)
-            } else {
-                // One line at the usual sizes; two at the accessibility sizes rather than an unreadable shrink.
-                Text(ctaTitle).font(Typeface.label(18))
-                    .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
-                    .minimumScaleFactor(typeSize.isAccessibilitySize ? 0.9 : 0.7)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.vertical, typeSize.isAccessibilitySize ? 6 : 0)
+        let purchasing = commerce.purchasing != nil
+        return TimbreGlassGroup {
+            Button { purchase() } label: {
+                if purchasing {
+                    ProgressView().tint(Palette.onAccent)
+                } else {
+                    // One line at the usual sizes; two at the accessibility sizes rather than an unreadable shrink.
+                    Text(ctaTitle).font(Typeface.label(18))
+                        .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
+                        .minimumScaleFactor(typeSize.isAccessibilitySize ? 0.9 : 0.7)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.vertical, typeSize.isAccessibilitySize ? 6 : 0)
+                }
             }
+            .buttonStyle(GlassActionButtonStyle(collapsed: purchasing && !reduceMotion))
+            .disabled(selected == nil || purchasing || commerce.pending)
+            .accessibilityIdentifier("paywall.purchase")
         }
-        .buttonStyle(BrassButtonStyle())
-        .disabled(selected == nil || commerce.purchasing != nil || commerce.pending)
-        .accessibilityIdentifier("paywall.purchase")
     }
 
     private func purchase() {
@@ -1278,6 +1356,32 @@ struct PaywallView: View {
         Text("Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The tuner for guitar, bass and ukulele stays free.")
             .font(.caption2).foregroundStyle(Palette.inkFaint).multilineTextAlignment(.center)
             .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+/// A plan card's face. Unchosen: graphite with a hairline. Chosen: a mint border over mint-washed Liquid Glass (iOS 26),
+/// one glass shape named in the plans' group, so choosing another plan moves it there as liquid rather than switching
+/// two cards; before iOS 26 a mint wash with a soft mint glow, as it always was.
+private struct PlanPlate: ViewModifier {
+    let selected: Bool
+    let glass: Namespace.ID
+
+    func body(content: Content) -> some View {
+        let shape = RoundedRectangle(cornerRadius: 18, style: .continuous)
+        let id: String? = selected ? "paywall.plan.selected" : nil
+        return content
+            .background {
+                if !selected { shape.fill(Palette.stageRaised) }
+            }
+            .overlay(shape.strokeBorder(selected ? Palette.mint : Palette.line, lineWidth: selected ? 2 : 1))
+            .timbreGlass(Palette.mint.opacity(0.22), isOn: selected, in: shape) {
+                ZStack {
+                    shape.fill(Palette.mint.opacity(0.08))
+                    shape.strokeBorder(Palette.mint, lineWidth: 2)
+                        .shadow(color: Palette.mint.opacity(0.16), radius: 14, y: 4)
+                }
+            }
+            .timbreGlassID(id, in: glass)
     }
 }
 

@@ -98,6 +98,8 @@ struct LearnView: View {
                 try? await Task.sleep(for: .milliseconds(120))
                 guard playing == nil, !Self.coverShowing else { return }
             }
+            // iPad: the inspector, which the lesson zooms out of, shows it.
+            selectedId = found.lesson.id
             open(found.course, found.lesson, from: Self.continueSource)
         }
     }

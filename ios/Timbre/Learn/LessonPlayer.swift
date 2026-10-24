@@ -449,8 +449,8 @@ struct StepButton: View {
 
 /// The row pinned to the bottom of a step: its own actions ("Hear it", "I played it") side by side, beside the
 /// main button when there is one; stacked at the largest text sizes, so no label is squeezed.
-/// One glass group (iOS 26): the step's own actions are Liquid Glass beside the solid main button, and an action
-/// arriving ("I played it" after a few seconds) flows out of the glass beside it rather than popping in.
+/// One glass group (iOS 26): the step's own actions are Liquid Glass beside the solid main button, rendered in one
+/// pass, and an action arriving ("I played it" after a few seconds) materializes as glass rather than popping in.
 struct LessonActionBar<Content: View>: View {
     private let content: Content
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -460,8 +460,8 @@ struct LessonActionBar<Content: View>: View {
 
     var body: some View {
         let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 10)) : AnyLayout(HStackLayout(spacing: 10))
-        // The group's reach matches the gap: neighbours stay apart at rest and meet only while one comes or goes.
-        TimbreGlassGroup(spacing: 10) {
+        // The group reaches a little less than the gap, so two glass buttons never bridge at rest.
+        TimbreGlassGroup(spacing: 8) {
             layout { content }
         }
         .environment(\.timbreGlassSpace, glass)

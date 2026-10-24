@@ -589,7 +589,9 @@ struct PlayerNeck: View {
             light.fill(lane, with: .linearGradient(Gradient(colors: [tint.opacity(0), tint.opacity(glow * presence)]),
                                                    startPoint: CGPoint(x: 0, y: neck.farY), endPoint: CGPoint(x: 0, y: neck.nearY)))
             let gauge: CGFloat = count > 1 ? CGFloat(number - 1) / CGFloat(count - 1) : 0.5
-            let width = ((compact ? 0.8 : 1.1) + gauge * (compact ? 1.3 : 2.1)) * neck.scale(0.6)
+            let thinnest: CGFloat = compact ? 0.8 : 1.1
+            let extra: CGFloat = compact ? 1.3 : 2.1
+            let width = (thinnest + gauge * extra) * neck.scale(0.6)
             let start: CGFloat = fret > 0 ? l.fingerU(fret) : 0
             let reach: CGFloat = compact ? 2.2 : 3.6
             let swing: CGFloat = (still || muted) ? 0 : sway(i, now: now) * reach
@@ -597,14 +599,14 @@ struct PlayerNeck: View {
             let from = CGPoint(x: 0, y: topY), to = CGPoint(x: 0, y: neck.nearY)
             let bright: Double = (lit || level > 0.3) ? 0.72 : 0.48
             let metal = tint.mix(with: .white, by: bright)
-            let round = StrokeStyle(lineWidth: width, lineCap: .round)
+            let line = StrokeStyle(lineWidth: width, lineCap: .round)
             context.stroke(path.offsetBy(dx: 1.2, dy: 1.4), with: .linearGradient(Self.fading(.black, 0.4 * presence, at: fade), startPoint: from, endPoint: to),
-                           style: round)
+                           style: line)
             if level > 0.02 {
                 light.stroke(path, with: .linearGradient(Self.fading(tint, 0.55 * level, at: fade), startPoint: from, endPoint: to),
                              style: StrokeStyle(lineWidth: width + 5, lineCap: .round))
             }
-            context.stroke(path, with: .linearGradient(Self.fading(metal, 0.9 * presence, at: fade), startPoint: from, endPoint: to), style: round)
+            context.stroke(path, with: .linearGradient(Self.fading(metal, 0.9 * presence, at: fade), startPoint: from, endPoint: to), style: line)
             if count >= 4 && gauge > 0.45 {
                 // The winding on the wound strings.
                 context.stroke(path, with: .linearGradient(Self.fading(.black, 0.22 * presence, at: fade), startPoint: from, endPoint: to),
@@ -659,7 +661,7 @@ struct PlayerNeck: View {
         let neck = l.neck
         let u = neck.u(atY: l.markY)
         let pop: CGFloat = elapsed.map { CGFloat(LessonSpring.value($0 - 0.05)) } ?? 1
-        let r: CGFloat = compact ? 4.5 : 7
+        let r: CGFloat = compact ? 4 : 7
         var light = context
         light.blendMode = .plusLighter
         for i in 0..<count where chord.frets[i] <= 0 {
@@ -673,7 +675,7 @@ struct PlayerNeck: View {
                 mark.opacity = Double(min(1, pop))
                 mark.translateBy(x: center.x, y: center.y)
                 mark.scaleBy(x: pop, y: pop)
-                mark.draw(Text(verbatim: "×").font(.system(size: compact ? 12 : 16, weight: .bold)).foregroundStyle(Palette.inkSoft), at: .zero)
+                mark.draw(Text(verbatim: "×").font(.system(size: compact ? 11 : 16, weight: .bold)).foregroundStyle(Palette.inkSoft), at: .zero)
             } else {
                 let tint = HighwayRunway.color(string: number, of: count)
                 let lit = ringing.contains(i)

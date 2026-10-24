@@ -125,11 +125,15 @@ struct ChordLibraryView: View {
         if shapes.isEmpty {
             Text("No comfortable shape for this chord in this tuning.").foregroundStyle(Palette.inkSoft).stillCard()
         } else {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
-                ForEach(shapes, id: \.self) { shape in
-                    VoicingCard(shape: shape, spec: spec(for: shape), profile: VoicingProfile(shape, formulaId: formula.id),
-                                chordName: chordName, lit: ringing == shape ? ringStrings : [], strums: strums[shape] ?? 0) {
-                        strum(shape, strings: strings)
+            VStack(alignment: .trailing, spacing: 12) {
+                // Chart or player's view, as in the lessons (one remembered choice).
+                ChordPictureToggle()
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
+                    ForEach(shapes, id: \.self) { shape in
+                        VoicingCard(shape: shape, spec: spec(for: shape), profile: VoicingProfile(shape, formulaId: formula.id),
+                                    chordName: chordName, lit: ringing == shape ? ringStrings : [], strums: strums[shape] ?? 0) {
+                            strum(shape, strings: strings)
+                        }
                     }
                 }
             }
@@ -362,6 +366,8 @@ private struct VoicingCard: View {
     let strums: Int
     let action: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @AppStorage(ChordPicture.storageKey) private var picture: ChordPicture = .player
+    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
 
     var body: some View {
         let sounding = !lit.isEmpty
@@ -372,10 +378,11 @@ private struct VoicingCard: View {
                         .lineLimit(1).minimumScaleFactor(0.8)
                     DifficultyMeter(level: profile.level)
                 }
-                ChordDiagram(chord: spec, showName: false, ringing: lit, reservesFretLabel: true)
+                diagram
                     .frame(height: 150)
                     .frame(maxWidth: .infinity)
-                    .overlay { if !reduceMotion { StrumGlint(trigger: strums) } }
+                    // The player's view lays the lowest string on the right (tab order), so its glint runs the other way.
+                    .overlay { if !reduceMotion { StrumGlint(trigger: strums).scaleEffect(x: glintMirrored ? -1 : 1) } }
                 HStack(spacing: 8) {
                     Text(shape.notation).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
                         .lineLimit(1).minimumScaleFactor(0.6)
@@ -389,6 +396,17 @@ private struct VoicingCard: View {
         .accessibilityLabel(Text("\(chordName), \(profile.title), \(profile.level.name), \(shape.notation)"))
         .accessibilityHint(Text("Plays the chord."))
     }
+
+    /// The shape as a chart, or in the player's view (the lessons' switch, over the grid).
+    @ViewBuilder private var diagram: some View {
+        if picture == .player {
+            PlayerNeck(chord: spec, accent: Palette.mint, ringing: lit, compact: true)
+        } else {
+            ChordDiagram(chord: spec, showName: false, ringing: lit, reservesFretLabel: true)
+        }
+    }
+
+    private var glintMirrored: Bool { picture == .player && stringOrder.thinnestOnTop }
 
     private func playGlyph(_ sounding: Bool) -> some View {
         Image(systemName: sounding ? "speaker.wave.2.fill" : "play.fill")

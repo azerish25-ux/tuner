@@ -128,8 +128,8 @@ public enum NoteNames {
         for stem in stems where matches(stem, in: characters, at: start) {
             var end = start + stem.count
             var signs = ""
-            while end < characters.count, let sign = sign(characters[end]) {
-                signs.append(sign)
+            while end < characters.count, let mark = sign(characters[end]) {
+                signs.append(mark)
                 end += 1
             }
             guard !signs.isEmpty, endsNote(characters, at: end, letter: stem.count == 1 && stem.first?.isLetter == true) else { return nil }
@@ -160,7 +160,10 @@ public enum NoteNames {
         return chordSuffixes.contains { rest.hasPrefix($0) }
     }
 
-    private static func isWordCharacter(_ character: Character) -> Bool { character.isLetter || character.isNumber }
+    /// Letters, digits and accidentals: what a note inside a word ("C7b9"'s 7) follows, so it isn't one.
+    private static func isWordCharacter(_ character: Character) -> Bool {
+        character.isLetter || character.isNumber || sign(character) != nil
+    }
 
     private static func isLatinLetter(_ character: Character) -> Bool {
         guard character.isLetter, let scalar = character.unicodeScalars.first else { return false }
