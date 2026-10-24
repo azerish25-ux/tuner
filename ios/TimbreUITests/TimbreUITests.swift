@@ -182,7 +182,9 @@ final class TimbreUITests: XCTestCase {
             let frame = card.exists ? card.frame : .zero
             let gap = frame.isEmpty ? height * 0.45 : frame.minY - top
             if abs(gap) < 8 { break }
-            let from = gap > 0 ? height * 0.85 : top + 20
+            // Drag inside the list, never from its top edge: a downward drag that starts there pulls the
+            // whole sheet down and dismisses it.
+            let from = gap > 0 ? height * 0.85 : height * 0.45
             drag(fromY: from, toY: max(top - 40, min(height - 60, from - gap)))
         }
         settle(0.8)
@@ -311,7 +313,8 @@ final class TimbreUITests: XCTestCase {
         // The store shot: the Guitar shelf right under the title bar, two full rows of instruments below it.
         showShelf(firstCard: element("instrument.guitar_classical"))
         shot("31-instruments-scrolled")
-        app.buttons["Done"].firstMatch.tap(); settle()
+        let done = app.buttons["Done"].firstMatch
+        if done.exists { done.tap(); settle() }
         tab("Progress"); settle(2); shot("32-journey")
         app.swipeUp(); settle(); shot("33-journey-scrolled")
     }
