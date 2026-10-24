@@ -234,9 +234,10 @@ struct StageFrame {
     }
 
     /// `framing` of the way from the whole picture to its headstock close-up, zoomed toward `aim` (a card point).
-    /// The close-up zooms as far as the head fits (at most `maxZoom`) and brings the aim a little above the middle,
-    /// nudged so the pegs clear the top and the nut the bottom. On the way the picture zooms about one fixed point:
-    /// the aim travels to its spot in step with the zoom, which grows geometrically (an even apparent dolly).
+    /// The close-up zooms as far as the head fits (at most `maxZoom`) and lifts the head to just under the top
+    /// clearance, so the neck runs down the stage below it (the 3D close-up's layout), keeping the nut clear of the
+    /// bottom. On the way the picture zooms about one fixed point: the aim travels to its spot in step with the
+    /// zoom, which grows geometrically (an even apparent dolly).
     static func closeUp(in size: CGSize, head: CGRect, aim: CGPoint, framing: Double) -> StageFrame {
         let base = Self.whole(in: size)
         let f = CGFloat(max(0, min(1, framing)))
@@ -248,7 +249,7 @@ struct StageFrame {
         let full = base.side * zoom
         let lowest = pegClearance - (head.minY - aim.y) * full
         let highest = size.height - nutClearance - (head.maxY - aim.y) * full
-        let spot = CGPoint(x: size.width / 2 - controlsInset, y: min(max(size.height * 0.4, lowest), max(lowest, highest)))
+        let spot = CGPoint(x: size.width / 2 - controlsInset, y: min(lowest + 16, max(lowest, highest)))
         let current = CGFloat(pow(Double(zoom), Double(f)))
         let progress = (current - 1) / (zoom - 1)
         let start = base.point(aim)

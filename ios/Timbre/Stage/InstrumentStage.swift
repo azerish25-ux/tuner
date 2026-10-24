@@ -121,7 +121,10 @@ final class StageController {
         requestedAt = ProcessInfo.processInfo.systemUptime
         status = "loading \(modelID)"
         let ticket = generation
-        loadTask = Task { [weak self] in await self?.load(modelID, ticket: ticket) }
+        loadTask = Task { [weak self] in
+            guard let self else { return }
+            await self.load(modelID, ticket: ticket)
+        }
     }
 
     /// Requests `modelID` and returns once its load has finished: at once when it is already on stage (or failed).

@@ -77,6 +77,8 @@ struct NotesStep: View {
     @State private var burst = 0
     @State private var finished = false
     @State private var canSkip = false
+    /// "Hear it" is playing the note.
+    @State private var sounding = false
     /// Wrong notes heard while the current note was the target.
     @State private var wrongHere = 0
 
@@ -110,18 +112,9 @@ struct NotesStep: View {
             Spacer(minLength: 0)
             targetPicture
             MicrophoneHint()
-            HStack {
-                // If the microphone misses a right note, the player's word counts (for fewer stars).
-                Button("I played it") { finish(score: 0.6) }.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft).opacity(canSkip ? 1 : 0).disabled(!canSkip)
-                    .accessibilityIdentifier("lesson.override")
-                Spacer()
-                Button { hear() } label: { Label("Hear it", systemImage: "speaker.wave.2.fill") }
-                    .font(.subheadline.weight(.semibold)).foregroundStyle(accent)
-                    .accessibilityIdentifier("lesson.hear")
-            }
-            .padding(.horizontal, 24).padding(.bottom, 18)
+            LessonStepBar(canSkip: canSkip, accent: accent, sounding: sounding, skip: { finish(score: 0.6) }, hear: { hear() })
         }
-        .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(6)); canSkip = true } }
+        .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(6)); withAnimation(Motion.settle) { canSkip = true } } }
         .onDisappear { store.stopLessonListening(owner: owner) }
     }
 
@@ -157,9 +150,9 @@ struct NotesStep: View {
                 Text(status).font(.subheadline.weight(.semibold)).foregroundStyle(ringTint).contentTransition(.opacity)
             }
         }
-        // Up to 250 pt, smaller on short phones so the neck below still fits.
+        // Up to 250 pt, smaller on short phones so the neck and the bar below still fit.
         .aspectRatio(1, contentMode: .fit)
-        .frame(minWidth: 170, maxWidth: 250, minHeight: 170, maxHeight: 250)
+        .frame(minWidth: 150, maxWidth: 250, minHeight: 150, maxHeight: 250)
         .background { ringBurst }
         .layoutPriority(1)
         // Below its neighbours, so the sparks pass behind the prompt and the chips, never over words.
@@ -196,7 +189,7 @@ struct NotesStep: View {
         if let at = shownFretting {
             VStack(spacing: 6) {
                 FretboardDiagram(strings: course.stringCount, dots: [at], frets: stripFrets, accent: accent, activeString: at.string,
-                                 fretless: course.fretless, rowHeight: 18, pulsing: !finished, edges: StringEdges.of(course))
+                                 fretless: course.fretless, rowHeight: 18, pulsing: !finished, edges: StringEdges.of(course), fretNumbers: true)
                     .padding(.horizontal, 18)
                 Text(at.fret == 0 ? LocalizedStringKey("String \(at.string), open") : LocalizedStringKey("String \(at.string), fret \(at.fret)"))
                     .font(Typeface.label(13)).foregroundStyle(accent)
@@ -277,7 +270,12 @@ struct NotesStep: View {
         guard let current else { return }
         store.stopLessonListening(owner: owner)
         store.audio.playTones([frequency(current.midi, store)], together: false, noteMs: 900, gapMs: 0)
-        Task { try? await Task.sleep(for: .milliseconds(1100)); if !finished { listen() } }
+        sounding = true
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(1100))
+            sounding = false
+            if !finished { listen() }
+        }
     }
 
     private func finish(score: Double) {
@@ -326,6 +324,10 @@ struct ChordStep: View {
     @State private var canSkip = false
     @State private var hearing: String?
     @State private var matchedFrames = 0
+    /// "Hear it" is playing the chord string by string; `demoString` is the one sounding now (lit on the box).
+    @State private var sounding = false
+    @State private var demoString: Int?
+    @State private var hearTask: Task<Void, Never>?
     private let order: [(index: Int, midi: Int)]
 
     init(chord: ChordSpec, course: LearnCourse, accent: Color,
@@ -363,49 +365,42 @@ struct ChordStep: View {
                 Text("Fingers in place, then let it ring.").font(.subheadline).foregroundStyle(Palette.inkFaint)
             }
             .padding(.top, 12)
-            // The string checks over the box and the box itself, as big as the room allows, together in the middle.
+            // The string checks over the box and the box itself, filling the room between the words and the bar.
             GeometryReader { geometry in
-                let width = diagramWidth(geometry.size)
+                let fit = diagramFit(geometry.size)
                 VStack(spacing: 14) {
-                    Spacer(minLength: 0)
-                    stringChecks(width: width)
-                    diagramCard(width: width)
+                    stringChecks(width: fit.width)
+                    diagramCard(fit)
                     hearingPill
-                    Spacer(minLength: 0)
                 }
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             MicrophoneHint()
-            HStack {
-                Button("I played it") { finish(0.6) }.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft).opacity(canSkip ? 1 : 0).disabled(!canSkip)
-                    .accessibilityIdentifier("lesson.override")
-                Spacer()
-                Button { strumIt() } label: { Label("Hear it", systemImage: "speaker.wave.2.fill") }
-                    .font(.subheadline.weight(.semibold)).foregroundStyle(accent)
-            }
-            .padding(.horizontal, 24).padding(.bottom, 18)
+            // Once every string rings, the step is done: no way round it is offered any more.
+            LessonStepBar(canSkip: canSkip && !finished, accent: accent, sounding: sounding, skip: { finish(0.6) }, hear: { strumIt() })
         }
-        .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(6)); canSkip = true } }
-        .onDisappear { store.stopLessonListening(owner: owner) }
+        .onAppear { listen(); Task { try? await Task.sleep(for: .seconds(6)); withAnimation(Motion.settle) { canSkip = true } } }
+        .onDisappear { hearTask?.cancel(); store.stopLessonListening(owner: owner) }
     }
 
-    /// The chord box's width: up to 300 pt, less when the screen is narrow or short. Around the box's own
-    /// height (5.4 rows for every string gap across) go the checks (44), the card's padding (44), the
-    /// chord's name and edge names (65), "Hearing" (34) and the gaps between them (28).
-    private func diagramWidth(_ room: CGSize) -> CGFloat {
-        let fromHeight = (room.height - 215) * CGFloat(max(2, chord.frets.count)) / 5.4
-        let fromWidth = room.width - 40 - 44
-        return max(170, min(300, fromWidth, fromHeight))
+    /// The chord box's width and stretch: as wide as the screen allows, its frets drawn taller to fill the height.
+    /// Around the box's name and edge names go the checks (44), the card's padding (44), "Hearing" (34), the gaps
+    /// between them (28) and a little air for larger text (8).
+    private func diagramFit(_ room: CGSize) -> (width: CGFloat, stretch: CGFloat) {
+        ChordDiagram.fit(chord, room: CGSize(width: room.width - 40 - 44, height: room.height - 158))
     }
 
-    private func diagramCard(width: CGFloat) -> some View {
-        ChordDiagram(chord: chord, accent: accent, ringing: verified, landing: true, edges: StringEdges.of(course))
-            .frame(width: width)
+    /// The strings to light on the box: the ones heard, and the one "Hear it" is sounding.
+    private var ringing: Set<Int> { demoString.map { verified.union([$0]) } ?? verified }
+
+    private func diagramCard(_ fit: (width: CGFloat, stretch: CGFloat)) -> some View {
+        ChordDiagram(chord: chord, accent: accent, ringing: ringing, landing: true, edges: StringEdges.of(course), fretNumbers: true, stretch: fit.stretch)
+            .frame(width: fit.width)
             .padding(22)
             .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Palette.stageRaised))
             .shadow(color: finished ? accent.opacity(0.45) : .clear, radius: 26)
             // Behind the card: the sparks fly out from under its edges, never over the chord's name.
-            .background { SparkBurst(trigger: burst, color: accent, startFraction: 0.6).frame(width: width * 1.7, height: width * 1.7) }
+            .background { SparkBurst(trigger: burst, color: accent, startFraction: 0.6).frame(width: fit.width * 1.7, height: fit.width * 1.7) }
     }
 
     /// One check per string over its line in the box (lowest string first, as drawn): the note it should ring,
@@ -413,17 +408,16 @@ struct ChordStep: View {
     private func stringChecks(width: CGFloat) -> some View {
         let open = ChordStep.openStrings(course)
         let count = chord.frets.count
-        // The box's string lines (`ChordDiagram`): 22 pt in from each side, past the "5fr" column when it has one.
-        let labelColumn: CGFloat = (chord.baseFret ?? 1) > 1 ? 20 : 0
-        let left = 22 + labelColumn, right = width - 22 + labelColumn / 4
-        let gap = (right - left) / CGFloat(max(1, count - 1))
+        // Right over the box's string lines, wherever `ChordDiagram` draws them (past its fret-number column).
+        let xs = ChordDiagram(chord: chord, fretNumbers: true).stringPositions(width: width)
+        let gap = count > 1 ? (xs[count - 1] - xs[0]) / CGFloat(count - 1) : 40
         let side = min(40, max(26, gap - 8))
         let next: Int? = order.indices.contains(judge.index) && !finished ? order[judge.index].index : nil
         return ZStack {
             ForEach(0..<count, id: \.self) { i in
                 LessonStringCheck(note: i < open.count ? NoteName.pitchClass(open[i] + max(0, chord.frets[i])) : "",
                                   number: count - i, mark: mark(i, next: next, open: open), accent: accent, side: side)
-                    .position(x: left + CGFloat(i) * gap, y: 22)
+                    .position(x: xs[i], y: 22)
                     .animation(reduceMotion ? .easeOut(duration: 0.2) : Motion.pluck.delay(Double(i) * 0.04), value: verified.contains(i))
             }
         }
@@ -475,10 +469,25 @@ struct ChordStep: View {
         }
     }
 
+    /// The chord string by string, lowest first, each string lighting on the box as it sounds; then it listens again.
     private func strumIt() {
+        hearTask?.cancel()
         store.stopLessonListening(owner: owner)
         store.audio.playTones(order.map { frequency($0.midi, store) }, together: false, noteMs: 380, gapMs: 30)
-        Task { try? await Task.sleep(for: .milliseconds(order.count * 410 + 300)); if !finished { listen() } }
+        sounding = true
+        let strings = order.map(\.index)
+        hearTask = Task { @MainActor in
+            for string in strings {
+                demoString = string
+                try? await Task.sleep(for: .milliseconds(410))
+                guard !Task.isCancelled else { return }
+            }
+            demoString = nil
+            sounding = false
+            try? await Task.sleep(for: .milliseconds(300))
+            guard !Task.isCancelled else { return }
+            if !finished { listen() }
+        }
     }
 
     private func finish(_ score: Double) {
@@ -551,6 +560,27 @@ struct LessonStringCheck: View {
         case .muted, .heard: return .clear
         case .waiting: return Color.white.opacity(0.14)
         case .next: return accent
+        }
+    }
+}
+
+/// A playing step's bar at the bottom: "Hear it" across it, and after a few seconds "I played it" sliding in beside
+/// it (if the microphone misses a right note, the player's word counts, for fewer stars).
+struct LessonStepBar: View {
+    let canSkip: Bool
+    let accent: Color
+    var sounding = false
+    let skip: () -> Void
+    let hear: () -> Void
+
+    var body: some View {
+        LessonActionBar {
+            if canSkip {
+                LessonBarButton(title: "I played it", action: skip)
+                    .accessibilityIdentifier("lesson.override")
+                    .transition(.move(edge: .leading).combined(with: .opacity))
+            }
+            HearItButton(accent: accent, sounding: sounding, expands: true, action: hear)
         }
     }
 }
@@ -769,17 +799,13 @@ struct RhythmStep: View {
         case .ready: StepButton(title: "Start", accent: accent) { start() }
         case .playing: StepButton(title: "Listening…", accent: accent, enabled: false) {}
         case .done:
-            HStack(spacing: 10) {
-                Button("Try again") { start() }.font(Typeface.label(16)).foregroundStyle(Palette.ink)
-                    .frame(maxWidth: .infinity, minHeight: 56)
-                    .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.stageRaised))
-                StepButton(title: "Continue", accent: accent) {
+            LessonActionBar {
+                LessonBarButton(title: "Try again") { start() }
+                StepButton(title: "Continue", accent: accent, inset: false) {
                     if practice { onPractice() }
                     done(score)
                 }
-                .padding(.horizontal, -20).frame(maxWidth: .infinity)
             }
-            .padding(.horizontal, 20)
         }
     }
 
@@ -937,10 +963,10 @@ struct TuneCheckStep: View {
                     .transition(.opacity)
             }
             MicrophoneHint()
-            Button("My strings are tuned — skip") { finish() }
-                .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft)
-                .padding(.bottom, 18)
-                .accessibilityIdentifier("lesson.tunecheck.skip")
+            LessonActionBar {
+                LessonBarButton(title: "My strings are tuned — skip") { finish() }
+                    .accessibilityIdentifier("lesson.tunecheck.skip")
+            }
         }
         .onAppear { listen() }
         .onDisappear { store.stopLessonListening(owner: owner) }

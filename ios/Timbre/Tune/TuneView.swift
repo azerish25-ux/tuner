@@ -196,9 +196,10 @@ struct TuneView: View {
     private func stageInput() -> StageInput {
         // On a paired course the cue rings the one peg being tuned.
         let peg = store.referenceMode ? nil : Optional(CourseGrouping.position(of: store.activeCourse, in: store.courses))
-        // The 3D camera holds the headstock close-up, with the peg ring and its turn arrow, whenever a string is
-        // being tuned, listening or paused alike: the peg to turn is the tuner's hero. It pulls back to the whole
-        // instrument only for the all-strings celebration (Reduce Motion cuts rather than glides).
+        // The 3D camera (and the 2D studio or photo stage, as far as its picture allows) holds the headstock close-up,
+        // with the peg ring and its turn arrow, whenever a string is being tuned, listening or paused alike: the peg
+        // to turn is the tuner's hero. It pulls back to the whole instrument only for the all-strings celebration
+        // (Reduce Motion cuts rather than glides).
         return StageInput(cents: store.live.reading.cents, level: store.live.level, locked: store.live.reading.inTune,
                           listening: audio.running, activeAnchor: store.activeAnchor, focus: !store.referenceMode && !showWhole,
                           note: store.targetName, pegIndex: peg)
@@ -212,20 +213,22 @@ struct TuneView: View {
             } else if let modelID = store.modelID {
                 let rig = ModelLibrary.rig(modelID)
                 if Self.supports3D && store.settings.stageMode != "studio" && failed3D != modelID {
+                    let rendered = ModelLibrary.hasCard(modelID)
+                    let card = rendered ? rig.flatMap(StageCard.init(rig:)) : ModelLibrary.photoCard(store.photo?.asset)
                     ZStack {
                         // The studio render holds the stage while the 3D model loads, then cross-fades out. It
-                        // already rings the peg to turn, so a slow load never leaves the tuner without its cue.
+                        // already rings the peg to turn and dollies in to the headstock, so a slow load never leaves
+                        // the tuner on a wide shot without its cue; the model then picks the dolly up where it got to.
                         if ready3D != modelID {
-                            let rendered = ModelLibrary.hasCard(modelID)
                             StudioStage(imageName: rendered ? ModelLibrary.cardImageName(modelID) : (store.photo?.asset ?? ""),
-                                        card: rendered ? rig.flatMap(StageCard.init(rig:)) : ModelLibrary.photoCard(store.photo?.asset),
-                                        input: stageInput) { selectPeg($0) }
+                                        card: card, input: stageInput) { selectPeg($0) }
                                 .padding(.horizontal, 16)
                                 .transition(.opacity)
                         }
                         InstrumentStage(modelID: modelID, input: stageInput, onSelect: { selectPeg($0) },
                                         onFailure: { failed3D = modelID },
-                                        onReady: { withAnimation(.easeInOut(duration: 0.6)) { ready3D = modelID } })
+                                        onReady: { withAnimation(.easeInOut(duration: 0.6)) { ready3D = modelID } },
+                                        revealClose: card?.head != nil)
                     }
                 } else if ModelLibrary.hasCard(modelID) {
                     StudioStage(imageName: ModelLibrary.cardImageName(modelID), card: rig.flatMap(StageCard.init(rig:)), input: stageInput) { selectPeg($0) }
