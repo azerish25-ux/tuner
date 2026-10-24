@@ -277,8 +277,8 @@ struct NotationEngraver {
                 guard let event = at[tick], let note = event.note, !event.continued, let words = syllable(note) else { continue }
                 sung.append((slot: slot, width: type.width(words.text, .lyric), joins: words.joins))
             }
-            let hyphen = max(8, type.lyric * 0.8)
-            let gap = type.lyric * 0.45
+            let hyphen = max(7, type.lyric * 0.65)
+            let gap = type.lyric * 0.35
             if sung.count >= 2 {
                 for k in 0..<(sung.count - 1) {
                     let a = sung[k], b = sung[k + 1]
@@ -353,7 +353,8 @@ struct NotationEngraver {
         }
         let spacings = measures.map { spacing($0, chordsHere: chordsByBar[$0.index] ?? []) }
         let firstPrefix = prefix + (opening ? timeWidth : 0)
-        let breaks = NotationLayout.lines(widths: spacings.map { Double($0.natural) }, available: Double(width),
+        // A line may come out a few points tight (squeezed a little rather than leave a bar alone on a line).
+        let breaks = NotationLayout.lines(widths: spacings.map { Double($0.natural) }, available: Double(width) * 1.04,
                                           firstPrefix: Double(firstPrefix), prefix: Double(prefix))
         var lines: [EngravedLine] = []
         for (number, lineRange) in breaks.enumerated() {
@@ -393,9 +394,11 @@ struct NotationEngraver {
         var high: CGFloat = 8
         var low: CGFloat = 0
         if staffShown {
-            high = max(high, score.clef.sign == .treble ? 11.6 : 8.4)
-            low = min(low, score.clef.sign == .treble ? (score.clef.octaveDown ? -6.4 : -3.8) : (score.clef.octaveDown ? -2.4 : 0))
-            if score.key.fifths != 0 { high = max(high, 11.8) }
+            // The clef's tail (and its 8) hang below the staff beside the words, which start after them; with nothing
+            // beside them, the line makes room.
+            if !hasLyrics {
+                low = min(low, score.clef.sign == .treble ? (score.clef.octaveDown ? -6.4 : -4.2) : (score.clef.octaveDown ? -2.4 : 0))
+            }
             for measure in measures {
                 for event in measure.events where !event.isRest {
                     let p = CGFloat(event.position)
@@ -423,7 +426,8 @@ struct NotationEngraver {
         }
         y += 0.25 * sp
         if staffShown {
-            rows.staffTop = y + (high - 8) / 2 * sp
+            // Room above the staff for its highest notes, and at least for the clef's and the key's tops.
+            rows.staffTop = max(y + (high - 8) / 2 * sp, 2.1 * sp)
             rows.bottomLine = rows.staffTop + 4 * sp
             y = rows.bottomLine + (-low) / 2 * sp
         }
@@ -815,7 +819,7 @@ struct NotationEngraver {
                 let nextLeft = k + 1 < sung.count ? sung[k + 1].x - sung[k + 1].width / 2 : end
                 let gap = nextLeft - right
                 if gap >= 4 {
-                    let dash = min(type.lyric * 0.45, gap * 0.6)
+                    let dash = min(type.lyric * 0.36, gap * 0.6)
                     let centre = (right + nextLeft) / 2
                     drawing.rect(CGRect(x: centre - dash / 2, y: middle - rule / 2 + type.lyric * 0.05, width: dash, height: rule),
                                  role: .lyric(syllable.note))

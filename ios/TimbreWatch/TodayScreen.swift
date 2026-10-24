@@ -80,21 +80,23 @@ struct TodayScreen: View {
             Text("day streak")
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(Palette.inkSoft)
-            if day != nil {
-                status(lit: lit, streak: streak)
+            if let line = status(lit: lit, streak: streak) {
+                line
+                    .font(.caption2)
+                    .foregroundStyle(lit ? Palette.mint : Palette.amber)
+                    .multilineTextAlignment(.center)
             }
         }
         .frame(maxWidth: .infinity)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(streak)-day streak"))
-        .accessibilityValue(lit ? Text("Practised today") : Text("Keep it alive today"))
+        .accessibilityValue(status(lit: lit, streak: streak) ?? Text(verbatim: ""))
     }
 
-    private func status(lit: Bool, streak: Int) -> some View {
-        (lit ? Text("Practised today") : Text("Keep it alive today"))
-            .font(.caption2)
-            .foregroundStyle(lit ? Palette.mint : Palette.amber)
-            .multilineTextAlignment(.center)
+    /// Whether today has counted yet, as the streak widget says it; nothing while no run is going.
+    private func status(lit: Bool, streak: Int) -> Text? {
+        if lit { return Text("Practised today") }
+        return streak > 0 ? Text("Keep it alive today") : nil
     }
 
     // MARK: Today's set

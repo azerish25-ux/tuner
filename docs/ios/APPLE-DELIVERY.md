@@ -157,7 +157,7 @@ The second time anyone turns a paywall down (onboarding's paywall counts as the 
 
 ## 7. Apple Watch companion: owner steps
 
-The iPhone build carries a watch app (`ios/TimbreWatch`, watchOS 11 or later) and its complications (`ios/TimbreWatchWidgets`). They install with the iPhone app and are submitted with it. There is no separate App Store Connect record and nothing extra to buy.
+The iPhone build carries a watch app (`ios/TimbreWatch`, watchOS 11 or later) and its complications (`ios/TimbreWatchWidgets`). They install with the iPhone app and are submitted with it. There is no separate App Store Connect record and nothing extra to buy. Every iOS build in CI also builds the watch app (for the watch simulator, or for watchOS when archiving); the macos-15 runner's Xcode 26.3 has the watchOS 26.2 SDK and simulator.
 
 - **Wrist metronome.** Haptic taps, strong on the downbeat and light on the other beats. 30–240 BPM on the Digital Crown or by Tap, in 2/4 to 7/4. It starts at the iPhone metronome's tempo until the player sets their own.
 - **Today.** The streak flame inside today's set ring, then the set, the open quest and the next lesson, as the iPhone last sent them. After midnight the flame goes out and the ring clears.

@@ -154,7 +154,7 @@ struct EngravedSheet {
         }
         let spans = notes.map { NoteSpan(start: $0.beat / Double(meter), end: ($0.beat + $0.beats) / Double(meter)) }
         let space = max(8, min(10, width / 40))
-        let type = NotationType(space: space, lyric: (13 * textScale).rounded(), chord: (14 * textScale).rounded())
+        let type = NotationType(space: space, lyric: ((width >= 600 ? 13 : 12) * textScale).rounded(), chord: (14 * textScale).rounded())
         let engraver = NotationEngraver(score: score, lyrics: slashes ? [] : chart.lyrics, chords: chords, tab: tab, spans: spans,
                                         showStaff: tab == nil || mode.showsStaff, showTab: tab != nil, type: type)
         var lines: [Int: [EngravedLine]] = [:]
