@@ -195,12 +195,12 @@ struct PaywallView: View {
 
     // MARK: Pitch
 
-    /// What the paywall leads with: the person's plan, or what they just tried to open.
+    /// What the paywall leads with: the person's plan, or what they just tried to open. The outcomes under the
+    /// headline follow the same reason (`PaywallPlan`), so the headline stands alone.
     private struct Pitch {
         var headline: Text
-        var subhead: Text? = nil
         var lesson: LockedLesson? = nil
-        /// The instrument to stand beside the preview's runway instead of the course's own.
+        /// The instrument to stand in the hero instead of the course's own.
         var instrumentAsset: String? = nil
     }
 
@@ -222,23 +222,21 @@ struct PaywallView: View {
         case "instrument", "tuning":
             return instrumentPitch
         case "journey":
-            return Pitch(headline: Text("See yourself improve"), subhead: Text("Accuracy trends and milestones, measured on device"))
+            return Pitch(headline: Text("See yourself improve"))
         case "custom_tuning":
             return Pitch(headline: Text("Unlimited custom tunings and string health"))
         case "temperament", "capo", "transpose":
             return Pitch(headline: Text("Temperaments, custom tunings and written pitch"))
         case "voice":
-            return Pitch(headline: Text("Sing in tune"), subhead: Text("Range test and exercises"))
+            return Pitch(headline: Text("Sing in tune"))
         default:
             break
         }
         if reason.hasSuffix("drone") { return Pitch(headline: Text("Unlock the Tanpura drone and every practice tool")) }
-        if reason.hasPrefix("ear.") { return Pitch(headline: Text("Every ear game and practice tool"), subhead: Text("Pitch, intervals, chords")) }
-        if reason.hasPrefix("metronome.") {
-            return Pitch(headline: Text("Every instrument.\nEvery practice tool."), subhead: Text("Accents, odd meters, tap"))
-        }
+        if reason.hasPrefix("ear.") { return Pitch(headline: Text("Every ear game and practice tool")) }
+        if reason.hasPrefix("metronome.") { return Pitch(headline: Text("Keep better time")) }
         if reason.hasPrefix("practice.") || reason.hasPrefix("daily.") {
-            return Pitch(headline: Text("Every instrument.\nEvery practice tool."), subhead: Text("Chords, scales, intonation and drone"))
+            return Pitch(headline: Text("Every instrument.\nEvery practice tool."))
         }
         return generic
     }
@@ -272,15 +270,15 @@ struct PaywallView: View {
         return LockedLesson(course: course, unitNumber: unit + 1, unitTitle: course.units[unit].title.localized, lesson: lesson)
     }
 
-    // MARK: Preview
+    // MARK: Hero
 
-    /// A few seconds of a play-along, looping: the person's instrument (or the one they just tried to open)
-    /// beside a runway with one lane per string.
+    /// A few seconds of a play-along across the full width, looping: the person's instrument (or the one they
+    /// just tried to open) beside a runway with one lane per string, the Timbre Pro pill under it.
     private func preview(_ pitch: Pitch, plan: PaywallPlan, height: CGFloat) -> some View {
         let artwork: CourseArtwork
         let instrumentId: String?
         if let asset = pitch.instrumentAsset {
-            artwork = .instrument(name: card(asset), render: true)
+            artwork = heroArt(asset)
             instrumentId = store.paywallInstrumentId
         } else {
             artwork = plan.course.map { CourseArtwork.of($0, catalog: store.catalog) } ?? .emblem(.note)
@@ -305,6 +303,12 @@ struct PaywallView: View {
         return store.catalog.photos.first { $0.asset == asset }?.thumbnail ?? asset
     }
 
+    /// The same picture for the hero, telling a render (narrow, upright) from a photograph (leaning across its square).
+    private func heroArt(_ asset: String) -> CourseArtwork {
+        let render = ModelLibrary.modelID(forPhoto: asset).map { ModelLibrary.hasCard($0) } ?? false
+        return .instrument(name: card(asset), render: render)
+    }
+
     // MARK: Header
 
     private func header(_ pitch: Pitch) -> some View {
@@ -314,21 +318,9 @@ struct PaywallView: View {
                 .lineLimit(3).minimumScaleFactor(0.8)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
-            if let subhead = pitch.subhead {
-                subhead.font(.subheadline).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.top, 6)
-            }
             if let lesson = pitch.lesson { lessonCard(lesson).padding(.top, 14) }
         }
         .frame(maxWidth: .infinity)
-    }
-
-    private var proPill: some View {
-        Text("TIMBRE PRO").font(Typeface.label(12)).tracking(2.2).foregroundStyle(Color(hex: 0x1B1206))
-            .padding(.horizontal, 14).padding(.vertical, 5)
-            .background(Capsule().fill(Palette.proGold))
-            .shadow(color: Color(hex: 0xE39A3B).opacity(0.35), radius: 10, y: 3)
     }
 
     /// The locked lesson: its unit, title and length, behind a gold lock.
