@@ -1,5 +1,6 @@
 import AVFoundation
 import Combine
+import os
 import UIKit
 import TimbreCore
 
@@ -54,6 +55,8 @@ final class AudioService: ObservableObject {
     private var tappedInput: InputSignature?
     /// The one rebuild a route change and the engine's configuration change share (AirPods connecting posts both).
     private var rebuildTask: Task<Void, Never>?
+    /// Starts waiting on the session's activation (`openMicrophone`); while any does, `shutdown` keeps the session.
+    private var activationsPending = 0
     /// A restart that came while the app wasn't in front: the microphone listens again once it is.
     private var resumeWhenActive: CaptureSettings?
     /// How late a click is heard on the current route: the learner's tap-along calibration for this kind of
@@ -215,19 +218,61 @@ final class AudioService: ObservableObject {
         // Listening alone (the tuner) takes the longer buffers; a lesson's analysers or anything playing keep the short
         // ones, which its timing was calibrated with.
         let ioBuffer = frames.isSet || outputActive ? Self.timedBuffer : Self.listeningBuffer
+        // A start the session or the engine refused for a moment goes once more, quietly (`MicStartRetry`); the alert is
+        // for a failure that stays.
+        var attempt = 0
+        while let failure = await openMicrophone(generation: token, ioBuffer: ioBuffer) {
+            let retrying = MicStartRetry.shouldRetry(after: failure.error, attempt: attempt)
+            Self.logFailure(failure, in: "Microphone start", attempt: attempt, retrying: retrying)
+            guard retrying else {
+                let error = failure.error
+                suspend(); self.error = String(localized: "Could not start audio: \(error.localizedDescription)")
+                return
+            }
+            attempt += 1
+            resetForRetry()
+            try? await Task.sleep(for: MicStartRetry.delay)
+            guard generation == token, captureWanted, !Task.isCancelled else {
+                // Stopped, or another start took over, during the wait.
+                if !running && !outputActive { shutdown() }
+                return
+            }
+            guard UIApplication.shared.applicationState == .active else {
+                // The app left the front during the wait: the microphone listens again once it is back.
+                resumeWhenActive = captureSettings
+                if !running && !outputActive { shutdown() }
+                return
+            }
+        }
+    }
+
+    /// Opens the microphone for a start that has its permission and settings: the session (activated off the main
+    /// thread), the tap, the output and the engine. Nil once it listens, or when it was called off on the way (the
+    /// session goes again then unless something plays); otherwise the step that failed and what it threw.
+    private func openMicrophone(generation token: Int, ioBuffer: TimeInterval) async -> AudioStartFailure? {
+        // With nothing meant to play, an engine still running out a fade stops before the session's buffer duration and
+        // sample rate are set under it.
+        if !outputActive { engine.stop() }
+        activationsPending += 1
         do {
             // Off the main thread: a deactivation still winding down is waited for there, never here.
             try await AudioSessionOwner.shared.activateInBackground(.lessons, ioBuffer: ioBuffer)
+            activationsPending -= 1
         } catch {
-            guard generation == token else { return }
-            suspend(); self.error = String(localized: "Could not start audio: \(error.localizedDescription)")
-            return
+            activationsPending -= 1
+            guard generation == token else {
+                if !running && !outputActive { shutdown() }
+                return nil
+            }
+            return AudioStartFailure(step: .session, error: error)
         }
         guard generation == token, !Task.isCancelled, UIApplication.shared.applicationState == .active else {
-            // Stopped (or the app left) while the session was being set up: it goes again unless something plays.
+            // Stopped (or the app left) while the session was being set up: it goes again unless something plays, or a
+            // newer start is waiting on it (`shutdown`).
             if !running && !outputActive { shutdown() }
-            return
+            return nil
         }
+        var step = AudioStartStep.input
         do {
             // What plays now (the click, the drone, the band) carries on through the restart. Read from this service's
             // own state, not `engine.isRunning`: a configuration change stops the engine with all of it still playing.
@@ -237,8 +282,9 @@ final class AudioService: ObservableObject {
             let input = engine.inputNode
             let format = input.outputFormat(forBus: 0)
             guard format.sampleRate > 0, format.channelCount > 0 else { throw AudioFailure.noInput }
-            let window = AnalysisWindowPolicy.windowSizeForTuningRange(minFrequencyHz: self.minimum, sampleRateHz: Int(format.sampleRate), preferredWindow: analysisWindowOverride)
-            let worker = PitchWorker(rate: format.sampleRate, minimum: self.minimum, maximum: self.maximum, window: window, gain: sensitivity)
+            let window = AnalysisWindowPolicy.windowSizeForTuningRange(minFrequencyHz: minimum, sampleRateHz: Int(format.sampleRate),
+                                                                       preferredWindow: windowOverride)
+            let worker = PitchWorker(rate: format.sampleRate, minimum: minimum, maximum: maximum, window: window, gain: sensitivity)
             let frames = self.frames, rate = format.sampleRate
             let relay = ReadingRelay()
             let gate = SpeechGate.shared
@@ -264,10 +310,27 @@ final class AudioService: ObservableObject {
             }
             tapInstalled = true
             tappedInput = currentInput()
+            step = .output
             try attachOutput(keepPlaying: keepPlaying)
+            step = .engine
             engine.prepare(); try engine.start()
             running = true; error = nil
-        } catch { suspend(); self.error = String(localized: "Could not start audio: \(error.localizedDescription)") }
+            return nil
+        } catch {
+            return AudioStartFailure(step: step, error: error)
+        }
+    }
+
+    /// Clears a microphone start that failed, for its second try: the tap comes off, and a fresh engine stands in for one
+    /// whose input the session may have changed under it. What plays (the click, the drone) carries on through the new
+    /// engine meanwhile; the next try restarts it with the microphone, as any start does.
+    private func resetForRetry() {
+        if tapInstalled { engine.inputNode.removeTap(onBus: 0); tapInstalled = false }
+        tappedInput = nil
+        engine.stop()
+        if let source { engine.disconnectNodeOutput(source); engine.detach(source); self.source = nil }
+        engine = AVAudioEngine()
+        if outputActive { try? ensureOutput() }
     }
 
     /// The readings that arrived since the last hop, in order, for the capture that is still running.
@@ -388,10 +451,14 @@ final class AudioService: ObservableObject {
         shutdown()
     }
 
-    /// Stops the engine and lets the session go (deactivated off the main thread once nothing else holds it).
+    /// Stops the engine and lets the session go (deactivated off the main thread once nothing else holds it). Not while a
+    /// start waits on the session's activation: that start holds the session from then on (or, called off, lets it go
+    /// itself), and letting it go here would turn the session off, and ambient, a second later under the microphone it
+    /// opens. The owner keeps one holder per user, so a stale release can't be told from a real one there.
     private func shutdown() {
         engine.stop()
         if let source { engine.disconnectNodeOutput(source); engine.detach(source); self.source = nil }
+        guard activationsPending == 0 else { return }
         AudioSessionOwner.shared.release(.lessons)
     }
 
@@ -478,13 +545,35 @@ final class AudioService: ObservableObject {
     }
 
     private func restartOutput() {
+        var step = AudioStartStep.session
         do {
             try configureSession()
+            step = .output
             try attachOutput(keepPlaying: true)
+            step = .engine
             engine.prepare(); try engine.start()
         } catch {
+            Self.logFailure(AudioStartFailure(step: step, error: error), in: "Output restart", attempt: 0, retrying: false)
             suspend(); self.error = String(localized: "Could not start audio: \(error.localizedDescription)")
         }
+    }
+
+    #if DEBUG
+    private static let debugLog = Logger(subsystem: "com.shahradazerisharghi.timbre", category: "audio")
+    #endif
+
+    /// Debug builds log which step of bringing the audio up failed, what it threw and how the session stood, so the ways
+    /// to the one alert ("Could not start audio") can be told apart. The alert reads the same for all of them.
+    private static func logFailure(_ failure: AudioStartFailure, in path: String, attempt: Int, retrying: Bool) {
+        #if DEBUG
+        let error = failure.error as NSError
+        let session = AVAudioSession.sharedInstance()
+        let outcome = retrying ? "trying again" : "giving up"
+        let failed = "\(path) failed at \(failure.step.rawValue), try \(attempt + 1), \(outcome): \(error.domain) \(error.code) \(error.userInfo)"
+        let state = "session \(session.category.rawValue) / \(session.mode.rawValue), \(session.sampleRate) Hz, "
+            + "\(session.inputNumberOfChannels) input channels, \(session.currentRoute.inputs.count) input ports"
+        debugLog.error("\(failed, privacy: .public); \(state, privacy: .public)")
+        #endif
     }
 
     /// What is listening and playing now that can come back later: the microphone, the Metronome tool's click and
@@ -903,13 +992,63 @@ final class AudioService: ObservableObject {
             self.shutdown()
         }
     }
+}
 
-    private enum AudioFailure: LocalizedError {
-        case noInput, noOutput
-        var errorDescription: String? {
-            self == .noInput ? String(localized: "No microphone input is available.") : String(localized: "No audio output is available.")
-        }
+/// Why the audio couldn't come up with the session ready: no microphone input, or no output.
+enum AudioFailure: LocalizedError {
+    case noInput, noOutput
+    var errorDescription: String? {
+        self == .noInput ? String(localized: "No microphone input is available.") : String(localized: "No audio output is available.")
     }
+}
+
+/// Whether a microphone start that failed goes once more before the alert. A session or an engine that refuses to start
+/// just after the audio changed under it (another start letting the session go, a route settling, the hardware format
+/// changing) usually starts a moment later, so it gets one more try, `delay` later. What a moment won't change gets
+/// none: no microphone input, recording not allowed (the permission), or a session another app holds at a higher
+/// priority (a call, Siri). A refused permission never gets this far: `AudioService.start` asks first.
+enum MicStartRetry {
+    /// How long the second try waits.
+    static let delay = Duration.milliseconds(300)
+
+    /// Whether try `attempt` (0 the first), which failed with `error`, is followed by another.
+    static func shouldRetry(after error: Error, attempt: Int) -> Bool {
+        attempt == 0 && !isLasting(error)
+    }
+
+    /// A failure a moment won't change.
+    static func isLasting(_ error: Error) -> Bool {
+        if let failure = error as? AudioFailure { return failure == .noInput }
+        return lastingCodes.contains((error as NSError).code)
+    }
+
+    /// The session's error codes (four-character codes) for refusals that last.
+    private static let lastingCodes: Set<Int> = [
+        fourCC("!pri"),  // insufficient priority: a call holds the hardware
+        fourCC("siri"),  // Siri is recording
+        fourCC("!rec"),  // recording can't start: no permission, or the app isn't in front
+        fourCC("!cat"),  // the category doesn't allow it
+        fourCC("ent?"),  // an entitlement is missing
+        -50,             // a parameter is invalid
+    ]
+
+    private static func fourCC(_ code: String) -> Int {
+        code.utf8.reduce(0) { $0 << 8 | Int($1) }
+    }
+}
+
+/// Where bringing the audio up failed, for the debug log (`AudioService.logFailure`).
+private enum AudioStartStep: String {
+    case session = "session activation"
+    case input = "microphone input and tap"
+    case output = "output attach"
+    case engine = "engine start"
+}
+
+/// A start that failed: the step and what it threw.
+private struct AudioStartFailure {
+    let step: AudioStartStep
+    let error: Error
 }
 
 /// One worker per capture generation; queued callbacks can never reconfigure a newer detector.
