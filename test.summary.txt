@@ -1,0 +1,65 @@
+# Errors
+
+# Matches
+
+# Tail
+    t =   405.45s         Wait for com.shahradazerisharghi.timbre to idle
+    t =   407.04s Tap "Songs" Button
+    t =   407.04s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   407.76s     Find the "Songs" Button
+    t =   408.57s     Check for interrupting elements affecting "Songs" Button
+    t =   409.49s     Synthesize event
+    t =   410.37s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   431.09s Find the "Songs" Button
+    t =   431.79s Waiting 15.0s for "songs.hero" Any to exist
+    t =   432.90s     Checking `Expect predicate `existsNoRetry == 1` for object "songs.hero" Any`
+    t =   432.91s         Checking existence of `"songs.hero" Any`
+    t =   441.29s Added attachment named 'sync-songs-ready'
+PREVIEW-SYNC songs-ready 1792957752.928 1792957753.673
+    t =   441.30s Find the "songs.hero.preview" Any
+    t =   447.68s Tap Target Application 'com.shahradazerisharghi.timbre'[0.00, 0.00] -> (380.0, 363.3)
+    t =   447.68s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   447.72s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   453.43s     Check for interrupting elements affecting "Timbre" Application
+    t =   458.83s     Synthesize event
+    t =   458.87s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   464.09s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   466.75s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   468.86s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   517.61s Press Target Application 'com.shahradazerisharghi.timbre'[0.50, 0.70] for 0.1 seconds, then drag to Target Application 'com.shahradazerisharghi.timbre'[0.50, 0.70] -> (0.0, -160.0) with velocity of 250.00 pixels per second, and then hold for 0.1 seconds 
+    t =   517.61s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   517.63s     Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   520.36s     Check for interrupting elements affecting "Timbre" Application
+    t =   523.21s     Synthesize event
+    t =   523.45s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   526.20s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   529.18s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   531.41s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   533.90s         Find the Target Application 'com.shahradazerisharghi.timbre'
+    t =   536.84s     Wait for com.shahradazerisharghi.timbre to idle
+    t =   538.44s Added attachment named 'sync-songs'
+PREVIEW-SYNC songs 1792957849.269 1792957850.823
+PREVIEW-CLIP songs 1792957807.199 1792957809.899 head
+PREVIEW-CARD 1792957851.616 1792957854.236
+    t =   542.38s Tear Down
+PREVIEW-END passed
+    t =   542.38s     Added attachment named 'preview-clips'
+    t =   542.38s     Terminate com.shahradazerisharghi.timbre:45042
+Test Case '-[TimbreUITests.AppPreviewUITests testAppPreview]' passed (545.467 seconds).
+Test Suite 'AppPreviewUITests' passed at 2026-10-25 19:50:57.863.
+	 Executed 1 test, with 0 failures (0 unexpected) in 545.467 (545.473) seconds
+Test Suite 'TimbreUITests.xctest' passed at 2026-10-25 19:50:57.872.
+	 Executed 1 test, with 0 failures (0 unexpected) in 545.467 (545.482) seconds
+Test Suite 'Selected tests' passed at 2026-10-25 19:50:57.873.
+	 Executed 1 test, with 0 failures (0 unexpected) in 545.467 (545.484) seconds
+Resolve Package Graph
+2026-10-25 19:51:00.651 xcodebuild[14043:43485] [MT] IDETestOperationsObserverDebug: 1033.347 elapsed -- Testing started completed.
+2026-10-25 19:51:00.653 xcodebuild[14043:43485] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-25 19:51:00.653 xcodebuild[14043:43485] [MT] IDETestOperationsObserverDebug: 1033.347 sec, +1033.347 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/tuner/tuner/ios/build/AppPreview.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started
