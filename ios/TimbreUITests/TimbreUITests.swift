@@ -230,23 +230,26 @@ final class TimbreUITests: XCTestCase {
         return origin.addingTimeInterval(cycles * Demo.cycle)
     }
 
-    /// The tuner's UI-test probe (TIMBRE_DEBUG_STATE=1, never drawn): "stage=<3d|loading|2d> listening=<epoch s, 0 if not>".
-    private func tunerProbe() -> (stage: String, listening: Date?) {
-        guard let label = (try? element("stage.state").snapshot())?.label else { return ("", nil) }
+    /// The tuner's UI-test probe (TIMBRE_DEBUG_STATE=1, never drawn): "stage=<3d|loading|2d> listening=<epoch s, 0 if not>
+    /// lock=<1 while a lock is on screen, else 0>". `lock` is nil without the field.
+    private func tunerProbe() -> (stage: String, listening: Date?, lock: Bool?) {
+        guard let label = (try? element("stage.state").snapshot())?.label else { return ("", nil, nil) }
         var stage = ""
         var listening: Date?
+        var lock: Bool?
         for field in label.split(separator: " ") {
             let parts = field.split(separator: "=", maxSplits: 1).map(String.init)
             guard parts.count == 2 else { continue }
             if parts[0] == "stage" { stage = parts[1] }
             if parts[0] == "listening", let seconds = Double(parts[1]), seconds > 0 { listening = Date(timeIntervalSince1970: seconds) }
+            if parts[0] == "lock" { lock = parts[1] == "1" }
         }
-        return (stage, listening)
+        return (stage, listening, lock)
     }
 
     /// Waits for the 3D model to take over from the studio render that holds the stage while it loads (the first
     /// model on a fresh simulator can take 20 s or more), then for the camera's dolly in to the headstock.
-    private func waitForStage(timeout: TimeInterval = 90) -> (stage: String, listening: Date?) {
+    private func waitForStage(timeout: TimeInterval = 90) -> (stage: String, listening: Date?, lock: Bool?) {
         var probe = tunerProbe()
         let started = Date()
         let deadline = started.addingTimeInterval(timeout)
@@ -285,6 +288,108 @@ final class TimbreUITests: XCTestCase {
         return (stage && tuned >= strings && selectedTuned && badge, summary)
     }
 
+    /// Whether a lock, once on screen, stays there for `seconds` at a stretch (the tuner's probe reads lock=1 at every
+    /// look), watched for up to `window` seconds: the `comet` scene plucks the held string again every 4 s, which earns
+    /// the lock afresh, so one stretch between plucks is enough. A look stalls the app's main thread for about a second
+    /// over the 3D stage, so the looks are about that far apart; the lock holds over such a pause (LockLatch). A probe
+    /// without a lock field has nothing to check (held). `summary` says what was seen.
+    private func lockHolds(for seconds: TimeInterval = 1.5, window: TimeInterval = 7) -> (held: Bool, summary: String) {
+        let end = Date().addingTimeInterval(window)
+        var since: Date?
+        var longest = 0.0
+        var looks = 0
+        while Date() < end {
+            guard let lock = tunerProbe().lock else { return (true, "the probe has no lock field") }
+            let now = Date()
+            looks += 1
+            if lock {
+                let start = since ?? now
+                since = start
+                longest = max(longest, now.timeIntervalSince(start))
+                if longest >= seconds { return (true, String(format: "the lock held %.1f s", longest)) }
+            } else {
+                since = nil
+            }
+            settle(0.25)
+        }
+        return (false, String(format: "the lock held %.1f s at most (%ld looks over %.0f s)", longest, looks, window))
+    }
+
+    // MARK: Head clearance
+
+    /// The 3D stage's head probe (TIMBRE_DEBUG_STATE=1, never drawn): "framing=<0…1> head=<points under the stage's top
+    /// edge, negative when the stage cuts the head; none before the model frames it>". Nil without the probe.
+    private func headProbe() -> (framing: Double, head: Double?)? {
+        guard let label = (try? element("stage.head").snapshot())?.label else { return nil }
+        var framing = 0.0
+        var head: Double?
+        for field in label.split(separator: " ") {
+            let parts = field.split(separator: "=", maxSplits: 1).map(String.init)
+            guard parts.count == 2 else { continue }
+            if parts[0] == "framing" { framing = Double(parts[1]) ?? 0 }
+            if parts[0] == "head" { head = Double(parts[1]) }
+        }
+        return (framing, head)
+    }
+
+    /// Once the camera has dollied into the close-up (framing 0.99 or more), the whole head stands inside the stage
+    /// (head ≥ 0: the stage's top edge doesn't cut it). Looked at for up to `timeout` seconds; a stage that never
+    /// reaches the close-up (no model, a photo stage) or a run without the probe has nothing to check.
+    private func checkHeadClear(_ name: String, timeout: TimeInterval = 12) {
+        let deadline = Date().addingTimeInterval(timeout)
+        var last: (framing: Double, head: Double?)?
+        while Date() < deadline {
+            guard let probe = headProbe() else { print("\(name): no head probe"); return }
+            last = probe
+            if probe.framing >= 0.99, let head = probe.head {
+                XCTAssertGreaterThanOrEqual(head, 0, "\(name): the stage cuts the head (\(head) pt under its top edge, framing \(probe.framing))")
+                return
+            }
+            settle(0.5)
+        }
+        let head = last?.head.map { String(format: "%.1f", $0) } ?? "none"
+        print("\(name): the close-up never framed the head (framing \(last?.framing ?? 0), head \(head))")
+    }
+
+    // MARK: Reward toast
+
+    /// When the reward toast was last handed something, from the app's probe (`debug.state`, TIMBRE_DEBUG_STATE=1):
+    /// `found` is false without the probe, `latest` nil before any reward.
+    private func rewardProbe() -> (found: Bool, latest: Date?) {
+        guard let label = (try? element("debug.state").snapshot())?.label else { return (false, nil) }
+        for field in label.split(separator: " ") {
+            let parts = field.split(separator: "=", maxSplits: 1).map(String.init)
+            guard parts.count == 2, parts[0] == "reward" else { continue }
+            guard let seconds = Double(parts[1]), seconds > 0 else { return (true, nil) }
+            return (true, Date(timeIntervalSince1970: seconds))
+        }
+        return (false, nil)
+    }
+
+    /// Seconds after the latest reward the toast has surely gone: two of its longest banners (2.8 s each) with their
+    /// entrance and exit (RewardToast in ios/Timbre/Design/GameUI.swift).
+    private static let toastQuiet = 6.5
+
+    /// Waits the reward toast out before a capture: it is hidden from accessibility and takes no taps, so it can't be
+    /// dismissed. A reward handed to it after `since` is waited out (`toastQuiet` after the latest one); with none yet
+    /// and one `due` (a string's first lock earns XP about 0.3 s after the lock), until then for it first. A run without
+    /// the probe waits for nothing. Few looks: each one stalls the app's main thread.
+    private func waitOutRewardToast(since: Date, due: Date? = nil, timeout: TimeInterval = 30) {
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            let probe = rewardProbe()
+            guard probe.found else { return }
+            if let latest = probe.latest, latest >= since {
+                let clear = latest.addingTimeInterval(Self.toastQuiet)
+                if Date() >= clear { return }
+                hold(until: min(clear, deadline))
+            } else {
+                guard let due, Date() < due else { return }
+                hold(until: min(due, deadline))
+            }
+        }
+    }
+
     // MARK: Instrument browser
 
     /// Closes a paywall sheet that opened over the browser.
@@ -309,6 +414,8 @@ final class TimbreUITests: XCTestCase {
     }
 
     func test01Onboarding() throws {
+        // The app's probe (debug.state) dates the rewards, so the tuner's picture can wait out the reward toast.
+        app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
         // The demo pitch plays the first-tune step's string (it drifts from 14 cents flat into tune).
         launch(onboarded: false, demo: false, pitch: true)
         let start = element("onboarding.start")
@@ -334,18 +441,19 @@ final class TimbreUITests: XCTestCase {
         settle(1.6); shot("05a-onboarding-first-tune")
         // The lock counts as practice: the badge, the XP and day one of the streak show where Skip was.
         if element("onboarding.firsttune.reward").waitForExistence(timeout: 15) { settle(0.5); shot("05a2-onboarding-first-tune-reward") }
-        // The streak just started: the reminder card asks once, on a card of its own ("Later" never raises the system prompt).
-        let later = element("onboarding.reminder.later")
-        if later.waitForExistence(timeout: 12) {
-            settle(0.8); shot("05a3-onboarding-reminder")
-            tapIfPresent(later); settle(1)
-        }
-        // A beginner's first chord: the demo pitch plays it string by string, every string lights, then the fact.
-        if element("onboarding.firstchord").waitForExistence(timeout: 10) {
+        // A beginner's first chord follows the first tune: the demo pitch plays it string by string, every string
+        // lights, then the fact, which hands over by itself.
+        if element("onboarding.firstchord").waitForExistence(timeout: 15) {
             settle(1.5); shot("05c-onboarding-first-chord")
             if element("onboarding.firstchord.done").waitForExistence(timeout: 30) {
                 settle(0.8); shot("05c2-onboarding-first-chord-done")
             }
+        }
+        // After both wins the reminder card asks once, on a card of its own ("Later" never raises the system prompt).
+        let later = element("onboarding.reminder.later")
+        if later.waitForExistence(timeout: 12) {
+            settle(0.8); shot("05a3-onboarding-reminder")
+            tapIfPresent(later); settle(1)
         }
         let plan = element("onboarding.plan.start")
         // Never stall the tour on a page that waits for a sound: each has a way on to the same plan.
@@ -367,11 +475,16 @@ final class TimbreUITests: XCTestCase {
         let close = element("lesson.close")
         XCTAssertTrue(close.waitForExistence(timeout: 20))
         settle(2); shot("06b-first-lesson")
+        let closed = Date()
         close.tap(); settle(1.5)
-        // The first tune already counted: the tuner shows day one of the streak.
+        // The first tune already counted: the tuner shows day one of the streak, with no reward toast over it (the
+        // demo pitch's first lock here earns XP within a cycle).
         tab("Tune")
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 15))
-        settle(2.5); shot("07-tune-first-run")
+        let shown = Date()
+        settle(2.5)
+        waitOutRewardToast(since: closed, due: shown.addingTimeInterval(Demo.cycle + 1))
+        shot("07-tune-first-run")
     }
 
     func test02TuneScreen() throws {
@@ -403,9 +516,16 @@ final class TimbreUITests: XCTestCase {
     }
 
     func test03StudioStage() throws {
+        // The app's probe (debug.state) dates the rewards, so the picture can wait out the reward toast.
+        app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
+        let launched = Date()
         launch(studio: true, pitch: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
-        settle(3); shot("14-tune-studio")
+        let shown = Date()
+        // The demo pitch's first lock earns XP within a cycle: its toast leaves before the picture.
+        settle(3)
+        waitOutRewardToast(since: launched, due: shown.addingTimeInterval(Demo.cycle + 1))
+        shot("14-tune-studio")
         openPicker()
         element("instruments.chromatic").tap(); settle(2); shot("15-tune-chromatic")
     }
@@ -495,12 +615,14 @@ final class TimbreUITests: XCTestCase {
         element("tunings.custom").tap(); settle(1.5); shot("47-custom-tuning")
         XCTAssertTrue(element("custom.save").waitForExistence(timeout: 10))
         element("custom.save").tap(); settle(1.5); shot("48-custom-tuning-saved")
-        // Instruments on their 3D stage: the mandolin (Pro, open now), then the violin and cello (free on any plan).
+        // Instruments on their 3D stage: the mandolin (Pro, open now), then the violin and cello (free on any plan). Each
+        // close-up keeps the whole head inside the stage (the head probe, stage.head).
         for (asset, search, name) in [("13_mandolin_mandolin", "Mandolin", "49-tune-mandolin-3d"), ("17_bowed_strings_violin", "Violin", "49b-tune-violin-3d"), ("19_bowed_strings_cello", "Cello", "49c-tune-cello-3d")] {
             // The picker is still up after saving the custom tuning; later rounds open it from the tuner.
             openPicker()
             let card = findInstrument(asset, search: search)
             card.tap(); _ = waitForStage(); shot(name)
+            checkHeadClear(name)
         }
     }
 
@@ -510,10 +632,18 @@ final class TimbreUITests: XCTestCase {
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
         openPicker()
         let ukulele = findInstrument("10_ukulele_soprano_ukulele", search: "Soprano")
+        let picked = Date()
         ukulele.tap()
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 15))
-        settle(7); shot("17-tune-photo-stage")
-        element("string.2").tap(); settle(3); shot("18-tune-photo-stage-string")
+        // A new instrument's first lock earns XP within a demo cycle, and so does a new string's: each picture waits
+        // its toast out.
+        settle(7)
+        waitOutRewardToast(since: picked, due: picked.addingTimeInterval(Demo.cycle + 1.5))
+        shot("17-tune-photo-stage")
+        let selected = Date()
+        element("string.2").tap(); settle(3)
+        waitOutRewardToast(since: selected, due: selected.addingTimeInterval(Demo.cycle + 1.5))
+        shot("18-tune-photo-stage-string")
         openPicker()
         let bass = findInstrument("06_bass_4_string_p_bass", search: "4-string")
         bass.tap(); _ = waitForStage(); shot("19-tune-bass-3d")
@@ -701,8 +831,10 @@ final class TimbreUITests: XCTestCase {
         guard stages.contains(stage) else { return (picture, "the tuner's stage is '\(stage)', not \(stages.sorted().joined(separator: " or "))") }
         var problem = ""
         for attempt in 0..<3 {
-            // Hands off: the scene's locks land, the camera settles on the third peg and the reward banner clears.
+            // Hands off: the scene's locks land and the camera settles on the third peg; then the reward toast (each
+            // string's first lock earns XP) is waited out.
             settle(attempt == 0 ? 7 : 3)
+            if attempt == 0 { waitOutRewardToast(since: .distantPast) }
             if let readout = readoutRegion(), let comet = cometPicture(readout: readout) {
                 picture = comet.picture
                 print("TUNER FRAME: mid-comet, \(comet.note)")
@@ -713,6 +845,11 @@ final class TimbreUITests: XCTestCase {
             let lock = tunerLock(strings: strings)
             if lock.shown { problem = ""; break }
             problem = "no lock on screen: " + lock.summary
+        }
+        // A lock on screen stays there while the string stays in the band (the In tune badge doesn't flicker).
+        if problem.isEmpty {
+            let hold = lockHolds()
+            XCTAssertTrue(hold.held, "the tuner's lock didn't stay on screen for 1.5 s: \(hold.summary)")
         }
         return (picture, problem)
     }

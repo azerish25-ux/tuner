@@ -178,7 +178,7 @@ final class StrumModel {
     #if DEBUG
     /// Screenshots and UI tests (TIMBRE_DEMO_PITCH=1) have no microphone: the screen hears one strum of
     /// `StrumDemo.reading` shortly after it opens.
-    static var demo: Bool { ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" }
+    static var demo: Bool { TestSupport.isOn(.demoPitch) }
 
     private func playDemo() {
         demoTask = Task { [weak self] in

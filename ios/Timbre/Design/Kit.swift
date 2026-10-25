@@ -780,8 +780,11 @@ private struct WhileSeen: ViewModifier {
     @Binding var live: Bool
     @State private var shown = false
     @State private var inView = true
-    @State private var lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
+    @State private var lowPower = WhileSeen.lowPowerNow
     @Environment(\.scenePhase) private var scenePhase
+
+    /// Low Power Mode is on (or the run asked for a resting stage, `TestSupport.stageResting`).
+    nonisolated private static var lowPowerNow: Bool { ProcessInfo.processInfo.isLowPowerModeEnabled || TestSupport.stageResting }
 
     func body(content: Content) -> some View {
         content
@@ -802,7 +805,7 @@ private struct WhileSeen: ViewModifier {
             }
             .onChange(of: scenePhase) { _, _ in update() }
             .onReceive(NotificationCenter.default.publisher(for: .NSProcessInfoPowerStateDidChange).receive(on: DispatchQueue.main)) { _ in
-                lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
+                lowPower = WhileSeen.lowPowerNow
                 update()
             }
     }

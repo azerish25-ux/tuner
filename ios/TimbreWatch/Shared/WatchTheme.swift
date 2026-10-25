@@ -16,11 +16,24 @@ enum Palette {
     static let violet = Color(hex: 0xA592FF)
     static let coral = Color(hex: 0xFF7E6B)
     static let sky = Color(hex: 0x62C9FF)
+    static let orchid = Color(hex: 0xE38ADB)
+    static let lime = Color(hex: 0xC4E86B)
+    /// A category's tint where no course owns it (a Today activity): steel, never in tune, adjust or wrong.
+    static let accentNeutral = Color(hex: 0xB4BECB)
     /// Dark text on mint or gold fills.
     static let onAccent = Color(hex: 0x04130D)
 
+    /// A course's hue by its curriculum name, or a Today arc's ("neutral"), as on the iPhone: the curriculum's older
+    /// names for warm courses ("amber", "coral") map onto course hues, so a course is never drawn in a status colour.
     static func accent(_ name: String) -> Color {
-        switch name { case "amber": return amber; case "violet": return violet; case "coral": return coral; case "sky": return sky; default: return mint }
+        switch name {
+        case "neutral": return accentNeutral
+        case "violet": return violet
+        case "sky": return sky
+        case "orchid", "amber": return orchid
+        case "lime", "coral": return lime
+        default: return mint
+        }
     }
 
     /// The streak flame's body, as on the iPhone (`StreakFlame`).

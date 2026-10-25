@@ -8,6 +8,12 @@ struct RootView: View {
     @EnvironmentObject private var commerce: CommerceService
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    #if DEBUG
+    /// Debug builds with TIMBRE_DEBUG_STATE=1 draw `debug.state`.
+    private static let probe = TestSupport.isOn(.debugState)
+    /// When the reward toast was last handed something (a reward or a streak notice), seconds since 1970; 0 before.
+    @State private var rewardAt: TimeInterval = 0
+    #endif
 
     /// The paywall drawn over the tabs (Settings and the instrument picker host their own).
     private var rootPaywall: Bool { store.showPaywall && !store.showSettings && !store.showInstrumentPicker }
@@ -18,6 +24,15 @@ struct RootView: View {
     private var keepAwake: Bool {
         scenePhase == .active && (audio.running || audio.metronomeRunning || audio.droneRunning || audio.tonePlaying)
     }
+
+    #if DEBUG
+    /// `debug.state`'s label: "paywall=… settings=… picker=… reason=… pro=… tab=… reward=<seconds since 1970, 0 before>".
+    private var probeLabel: String {
+        "paywall=\(store.showPaywall) settings=\(store.showSettings) picker=\(store.showInstrumentPicker) "
+            + "reason=\(store.paywallReason ?? "-") pro=\(commerce.isPro) tab=\(String(describing: store.selectedTab)) "
+            + "reward=\(String(format: "%.3f", rewardAt))"
+    }
+    #endif
 
     var body: some View {
         TabView(selection: $store.selectedTab) {
@@ -65,15 +80,19 @@ struct RootView: View {
         .overlay { RewardToast(placement: .docked) }
         #if DEBUG
         .overlay(alignment: .topLeading) {
-            // Debug builds with TIMBRE_DEBUG_STATE=1: the presentation flags as an element automation can read. Drawn in
-            // clear ink and never touched, so it is never seen (and stays off the title) while its label stays readable.
-            if ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1" {
-                Text(verbatim: "paywall=\(store.showPaywall) settings=\(store.showSettings) picker=\(store.showInstrumentPicker) reason=\(store.paywallReason ?? "-") pro=\(commerce.isPro) tab=\(String(describing: store.selectedTab))")
+            // Debug builds with TIMBRE_DEBUG_STATE=1: the presentation flags, and when the reward toast was last handed
+            // something (`reward=`, so a run can wait the toast out: it is hidden from accessibility and takes no taps),
+            // as an element automation can read. Drawn in clear ink and never touched, so it is never seen (and stays
+            // off the title) while its label stays readable.
+            if Self.probe {
+                Text(verbatim: probeLabel)
                     .font(.system(size: 9, design: .monospaced)).foregroundStyle(Color.clear)
                     .allowsHitTesting(false)
                     .accessibilityIdentifier("debug.state")
             }
         }
+        .onChange(of: store.rewardPulse) { _, _ in if Self.probe { rewardAt = Date().timeIntervalSince1970 } }
+        .onChange(of: store.streakPulse) { _, _ in if Self.probe { rewardAt = Date().timeIntervalSince1970 } }
         #endif
         .background {
             Color.clear.sheet(isPresented: $store.showSettings) {

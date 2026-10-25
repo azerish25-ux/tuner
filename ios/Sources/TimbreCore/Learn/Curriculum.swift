@@ -75,11 +75,10 @@ public struct Curriculum: Codable, Sendable {
     public var lessonCount: Int { courses.reduce(0) { $0 + ($1.isSongbook ? 0 : $1.lessons.count) } }
     /// The courses that teach (songbooks aside), as `lessonCount` counts them.
     public var courseCount: Int { courses.filter { !$0.isSongbook }.count }
-    /// How many different songs the catalogue holds: song lessons counted by title, so a song taught in two lessons or
-    /// arranged for two instruments counts once. The paywall's proof line and the store listing say this number.
-    public var distinctTuneCount: Int {
-        Set(courses.flatMap(\.lessons).filter { $0.kind == .song }.map(\.title.defaultValue)).count
-    }
+    /// How many different songs the catalogue holds (`distinctTunes`): a song taught in two lessons, arranged for
+    /// several instruments or played as a treatment counts once, and exercises don't count. The paywall's proof line
+    /// and the store listing say this number.
+    public var distinctTuneCount: Int { distinctTunes.count }
 }
 
 public struct LearnCourse: Codable, Identifiable, Sendable {

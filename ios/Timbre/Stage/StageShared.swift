@@ -102,10 +102,11 @@ final class StagePower: ObservableObject {
         }
     }
 
-    /// Low Power Mode is on, or the device is hot.
+    /// Low Power Mode is on, or the device is hot (or the run asked for a resting stage, `TestSupport.stageResting`).
     nonisolated static var currentlyReduced: Bool {
         let info = ProcessInfo.processInfo
         return info.isLowPowerModeEnabled || info.thermalState == .serious || info.thermalState == .critical
+            || TestSupport.stageResting
     }
 
     private func refresh() {
