@@ -568,6 +568,8 @@ UNIT_4 = unit("gtr-4", "Strumming", "Downstrokes, down-up eighths, accents and a
 
 # ================================================================ 5. More open chords
 
+KITE_LOOP = [(G_MAJ, 1), (D, 1), (Em, 1), (C, 1)]   # Kite Weather's verse and chorus, one chord a bar
+
 UNIT_5 = unit("gtr-5", "More open chords", "C, G, D and D minor, two classic progressions, and the one-minute change.", [
     lesson("gtr-5-1", "C major", [
         explain("A three-step staircase", "C climbs like a staircase: finger 3 on string 5, fret 3; finger 2 on string 4, fret 2; "
@@ -623,6 +625,19 @@ UNIT_5 = unit("gtr-5", "More open chords", "C, G, D and D minor, two classic pro
         quiz("In a one-minute change, what do you count?", ["Clean changes", "Strings that buzz", "Seconds per chord"], 0),
         progression([(D, 1), (Dm, 1), (D, 1), (Dm, 1)], QUARTERS, bpm=66),
     ], minutes=5, xp=25),
+    # Kite Weather (G, 88 bpm): G, D, E minor and C on a loop, the folk strum; the verse tune adds A on string 3.
+    spotlight("gtr-5", "Kite Weather", [
+        introduce("Four chords, one loop", "Kite Weather is a Timbre Original: bright campfire pop on G, D, E minor and C, "
+                  "around and around. Change early, and land the finger for the lowest string first.", rhythm(FOLK)),
+        progression(KITE_LOOP, HALVES, bpm=60),
+        quiz("Which chord in Kite Weather skips strings 5 and 6?", ["C", "D", "E minor"], 1,
+             "D's root is open string 4, so strings 5 and 6 stay quiet."),
+        progression(KITE_LOOP * 2, FOLK, bpm=66),
+        notes(G, [("G3", 3), ("A3", 3), ("B3", 2)], hint="The verse adds A on string 3, fret 2: the note finger 1 holds in "
+              "D. Open G, A, then open B."),
+        KITE_SONG.along("Verse 1", bpm=66, title=THE_VERSE),
+        progression(KITE_LOOP * 2, FOLK, bpm=76),
+    ]),
     lesson("gtr-5-6", "Open-chord challenge", [
         explain("Eight open chords", "No new ideas: C, G, D and D minor join E minor, E, A minor and A. "
                 "Change early, strum steady and let each chord ring."),
@@ -635,6 +650,9 @@ UNIT_5 = unit("gtr-5", "More open chords", "C, G, D and D minor, two classic pro
 ])
 
 # ================================================================ 6. Melodies on strings 3 and 4
+
+HALO_1 = " ".join(HALO_RIFF.split()[:7])            # Halogen's riff, bar 1: D, F and G on strings 4 and 3
+HALO_2 = " ".join(HALO_RIFF.split()[7:])            # bar 2: down to C on string 5 and home to D
 
 UNIT_6 = unit("gtr-6", "Melodies on strings 3 and 4", "G and A on string 3, D, E and F on string 4, the C major scale "
               "and two traditional tunes.", [
@@ -698,6 +716,21 @@ UNIT_6 = unit("gtr-6", "Melodies on strings 3 and 4", "G and A on string 3, D, E
         along(G, AMAZING, bpm=72, beats_per_bar=3, title="Amazing Grace"),
         AMAZING_SONG.take("Amazing Grace"),
     ], minutes=AMAZING_SONG.minutes(), xp=35, kind="song", arrangement=AMAZING_SONG.meta()),
+    # Halogen (D minor, 104 bpm): the riff is open D, F at fret 3, open G and C on string 5; the verse sits on strings
+    # 4 to 2. No chords yet: its power chords wait for unit 9.
+    spotlight("gtr-6", "Halogen", [
+        introduce("A riff on strings 3, 4 and 5", "Halogen is a Timbre Original: desert rock in D minor. Its riff uses the "
+                  "notes you just learned: open D, F at fret 3, open G, and C on string 5, fret 3.",
+                  fretboard(G, [(5, 3, 3), (4, 0), (4, 3, 3), (3, 0)])),
+        notes(G, [("D3", 4), ("F3", 4), ("G3", 3), ("C3", 5)], hint="Open string 4, F at fret 3, open string 3, then C at "
+              "fret 3 on string 5."),
+        along(G, f"{HALO_1} {HALO_1}", bpm=60, title="First bar, twice"),
+        along(G, f"{HALO_2} {HALO_2}", bpm=60, title="Second bar, twice"),
+        listen("Does this end at home?", [["C3"], ["D3"], ["F3"], ["D3"]], HOME, 0),
+        along(G, f"{HALO_RIFF} {HALO_RIFF}", bpm=66, title=RIFF_TITLE),
+        HALO.along("Verse 1", bpm=66, title=THE_VERSE),
+        along(G, f"{HALO_RIFF} {HALO_RIFF}", bpm=76, title="Riff, up to speed"),
+    ], minutes=6),
     lesson("gtr-6-6", "Lower-strings challenge", [
         explain("From string 5 to string 1", "No new ideas: every note from C on string 5 up to G on string 1, plus both tunes. "
                 "Keep your thumb low and your fingers arched."),

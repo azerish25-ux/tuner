@@ -184,7 +184,7 @@ struct ShowMeProbe: View {
 
     private static let enabled = ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1"
 
-    var body: some View {
+    @ViewBuilder var body: some View {
         if Self.enabled {
             Text(verbatim: "showme=\(ready ? "3d" : "loading") landed=\(String(format: "%.3f", landed)) ringing=\(ringing)")
                 .font(.system(size: 9, design: .monospaced))
