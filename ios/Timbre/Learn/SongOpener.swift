@@ -184,14 +184,15 @@ struct SongOpener: View {
                 CourseArt(course: course, size: 16)
                 Eyebrow(Text(course.title.localized), color: accent, style: .display).lineLimit(1)
             }
-            Text(lesson.title.localized).font(Typeface.display(26)).tracking(-0.5).foregroundStyle(Palette.ink)
+            Text(lesson.title.localized).font(Typeface.display(.title)).tracking(-0.5).foregroundStyle(Palette.ink)
                 .lineLimit(3).minimumScaleFactor(0.75).fixedSize(horizontal: false, vertical: true)
             HStack(spacing: 8) {
                 Text("Song \(sheet.length) · Lesson \(lesson.minutes) min")
                     .font(.subheadline).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.8)
-                Text("+\(lesson.xp) XP").font(Typeface.label(12)).foregroundStyle(Palette.amber)
+                // A reward, in the rewards' gold.
+                Text("+\(lesson.xp) XP").font(Typeface.label(.caption)).foregroundStyle(Palette.starGold)
                     .padding(.horizontal, 7).padding(.vertical, 2)
-                    .background(Capsule().fill(Palette.amber.opacity(0.14)))
+                    .background(Capsule().fill(Palette.starGold.opacity(0.14)))
                     .fixedSize()
             }
         }
@@ -223,7 +224,7 @@ struct SongOpener: View {
         return VStack(alignment: .leading, spacing: 3) {
             Eyebrow(label, color: Palette.inkFaint, style: .display)
                 .lineLimit(1).minimumScaleFactor(0.7)
-            value.font(Typeface.display(16)).foregroundStyle(Palette.ink)
+            value.font(Typeface.display(.body)).foregroundStyle(Palette.ink)
                 .lineLimit(1).minimumScaleFactor(0.6)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -281,9 +282,11 @@ struct SongOpener: View {
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return Button { pluck(midi) } label: {
             HStack(alignment: .firstTextBaseline, spacing: 1) {
-                Text(verbatim: NoteName.pitchClass(midi)).font(Typeface.display(18, relativeTo: .headline))
-                Text(verbatim: "\(midi / 12 - 1)").font(Typeface.label(11)).foregroundStyle(Palette.inkSoft)
+                Text(verbatim: NoteName.pitchClass(midi)).font(Typeface.display(.headline))
+                Text(verbatim: "\(midi / 12 - 1)").font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
             }
+            // The octave after its letter in every language ("E3", never "3E" in Arabic).
+            .environment(\.layoutDirection, .leftToRight)
             .foregroundStyle(lit ? accent : Palette.ink)
             .frame(minWidth: 46, minHeight: 46)
             .padding(.horizontal, 6)
@@ -292,7 +295,7 @@ struct SongOpener: View {
             .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())
-        .accessibilityLabel(Text(verbatim: NoteName.name(midi)))
+        .accessibilityLabel(Text(verbatim: NoteNames.spokenInApp(NoteName.name(midi))))
         .accessibilityHint(Text("Hear it"))
     }
 
@@ -386,7 +389,7 @@ struct SongOpener: View {
                     practice(loop)
                 } label: {
                     Label("Practice this part", systemImage: "music.mic")
-                        .font(Typeface.label(14)).foregroundStyle(Palette.onAccent)
+                        .font(Typeface.label(.body)).foregroundStyle(Palette.onAccent)
                         .frame(maxWidth: .infinity, minHeight: Metrics.minTarget)
                         .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(tint))
                 }
@@ -406,7 +409,7 @@ struct SongOpener: View {
             if on { stopPlayback() } else { startLoop(section) }
         } label: {
             Label(on ? LocalizedStringKey("Stop") : LocalizedStringKey("Loop"), systemImage: on ? "stop.fill" : "repeat")
-                .font(Typeface.label(14)).foregroundStyle(on ? Palette.onAccent : tint)
+                .font(Typeface.label(.body)).foregroundStyle(on ? Palette.onAccent : tint)
                 .contentTransition(.symbolEffect(.replace))
                 .padding(.horizontal, 14).frame(minHeight: Metrics.minTarget)
                 .background(Capsule().fill(on ? AnyShapeStyle(tint) : AnyShapeStyle(tint.opacity(0.14))))
@@ -557,10 +560,11 @@ struct SongOpener: View {
         return PreviewClip(notes: notes, firstBar: 0, bars: bars, bpm: sheet.melodyBpm, meter: meter)
     }
 
-    /// The band under the preview, exactly its bars long: the chart's chords over them where it has them.
+    /// The band under the preview, exactly its bars long: the chart's chords over them, change by change, where it has
+    /// them.
     private func previewBand(_ clip: PreviewClip) -> BandArrangement {
-        let chords = chart.notes.isEmpty ? [] : chart.filledChords(from: clip.firstBar, count: clip.bars)
-        return SongPlayback.band(notes: clip.notes, chords: chords, bars: clip.bars, bpm: clip.bpm, meter: clip.meter,
+        let harmony = chart.notes.isEmpty ? [] : chart.filledBars(from: clip.firstBar, count: clip.bars)
+        return SongPlayback.band(notes: clip.notes, harmony: harmony, bars: clip.bars, bpm: clip.bpm, meter: clip.meter,
                                  reference: store.settings.referencePitchHz, bass: course.fretKind != "bass")
     }
 
@@ -610,13 +614,13 @@ struct SongOpener: View {
         let chart = self.chart
         let meter = chart.meter
         let bpm = max(30, (baseBpm * loopSpeed).rounded())
-        let chords = chart.filledChords(from: section.start, count: section.bars)
+        let harmony = chart.filledBars(from: section.start, count: section.bars)
         let melody = section.part != nil ? sheet.loopMelody(section) : chart.melody(from: section.start, count: section.bars)
-        let hits = chart.notes.isEmpty ? strums(chords, meter: meter, pattern: chart.strokes) : SongPlayback.hits(melody)
+        let hits = chart.notes.isEmpty ? strums(harmony.map(\.downbeat), meter: meter, pattern: chart.strokes) : SongPlayback.hits(melody)
         guard !hits.isEmpty else { return }
         let pass = Double(section.bars * meter) * 60 / bpm
         let withBand = bandOn && store.audio.headphones
-        let loopBand = withBand ? SongPlayback.band(notes: melody, chords: chords, bars: section.bars, bpm: bpm, meter: meter,
+        let loopBand = withBand ? SongPlayback.band(notes: melody, harmony: harmony, bars: section.bars, bpm: bpm, meter: meter,
                                                     reference: store.settings.referencePitchHz, bass: course.fretKind != "bass") : nil
         Analytics.log("song_sheet_loop", ["lesson": lesson.id, "speed": "\(Int((loopSpeed * 100).rounded()))"])
         loopPass = pass

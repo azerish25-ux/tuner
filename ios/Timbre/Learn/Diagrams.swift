@@ -16,7 +16,8 @@ struct LessonVisualView: View {
         case let .fretboard(strings, dots, frets, start):
             FretboardDiagram(strings: strings, dots: dots, frets: frets, accent: accent, start: start, fretless: fretless,
                              rowHeight: neckRowHeight(strings: strings, frets: frets, start: start),
-                             edges: StringEdges.of(instrumentId: instrumentId, strings: strings), fretNumbers: !fretless)
+                             edges: StringEdges.of(instrumentId: instrumentId, strings: strings), fretNumbers: !fretless,
+                             fingerboard: Fingerboard(instrument: instrumentId))
         case let .chord(spec):
             chord(spec)
         case let .staff(midi, clef): StaffView(notes: midi, clef: clef, accent: accent, lineGap: staffGap)
@@ -29,7 +30,7 @@ struct LessonVisualView: View {
 
     /// Strummed instruments read rhythm patterns as down and up strokes.
     private var strums: Bool { LearnCourse.strummed(instrumentId) }
-    private var fretless: Bool { ["violin", "cello"].contains { instrumentId?.hasPrefix($0) == true } }
+    private var fretless: Bool { Fingerboard(instrument: instrumentId) != nil }
 
     private func neckRowHeight(strings: Int, frets: Int, start: Int) -> CGFloat {
         guard let room else { return 26 }
@@ -302,6 +303,9 @@ struct FretboardDiagram: View {
     /// Numbers every fret under its column (the ones holding a dot lit), standing in for the "5fr" label.
     /// Fretless boards have no frets to number.
     var fretNumbers = false
+    /// A fretless board's instrument family (violin, cello): its tapes go where its first-position fingers land, and
+    /// VoiceOver names its notes by finger, low or high. Nil on a fretless board names the finger alone.
+    var fingerboard: Fingerboard?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
     @CurrentHand private var hand
@@ -407,11 +411,13 @@ struct FretboardDiagram: View {
         if numbered {
             drawFretNumbers(&context, left: left, fretWidth: fretWidth, y: bottom + pad + Self.numberRow / 2 - 2, mirror: mirror, scale: scale)
         }
+        let tapes = Set((1...4).map { fingerboard?.home(of: $0) ?? [2, 4, 5, 7][$0 - 1] })
         for fret in 1...frets {
             let x = left + CGFloat(fret) * fretWidth
             if fretless {
-                // Tapes where first-position fingers land (whole tone, major third, fourth, fifth).
-                guard [2, 4, 5, 7].contains(fret) else { continue }
+                // Tapes where first-position fingers land: a violin's whole tone, major third, fourth and fifth; a
+                // cello's four semitones from the whole tone.
+                guard tapes.contains(fret) else { continue }
                 let tape = left + (CGFloat(fret) - 0.5) * fretWidth
                 shapes.fill(Path(CGRect(x: tape - 1.5, y: top - 10, width: 3, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3).opacity(0.35)))
             } else {
@@ -493,8 +499,16 @@ struct FretboardDiagram: View {
         }
     }
 
+    /// The dots in words: a fretted board's strings and frets; a fretless one's strings and fingers, never a fret.
     private var accessibility: String {
-        dots.map { $0.fret == 0 ? String(localized: "string \($0.string) open") : String(localized: "string \($0.string), fret \($0.fret)") }.joined(separator: "; ")
+        dots.map { dot -> String in
+            if let fingerboard { return FingerPlace(dot, on: fingerboard).words }
+            if fretless, dot.fret > 0, let finger = dot.finger {
+                return String(localized: "String \(dot.string), finger \(finger)", bundle: TimbreLocalization.bundle)
+            }
+            return dot.fret == 0 ? String(localized: "string \(dot.string) open") : String(localized: "string \(dot.string), fret \(dot.fret)")
+        }
+        .joined(separator: "; ")
     }
 }
 
@@ -986,7 +1000,8 @@ struct StaffView: View {
         Canvas { context, size in draw(&context, size: size) }
             .frame(height: Self.height(lineGap: lineGap))
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text(notes.map(NoteName.name).joined(separator: ", ")))
+            // As a musician says them ("E flat 4"), in the app's language, never the written glyphs.
+            .accessibilityLabel(Text(verbatim: notes.map { NoteNames.spokenInApp(NoteName.name($0)) }.joined(separator: ", ")))
     }
 
     private func draw(_ context: inout GraphicsContext, size: CGSize) {
@@ -1071,7 +1086,7 @@ struct KeyboardView: View {
         }
         .frame(height: height)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(highlighted.sorted().map(NoteName.name).joined(separator: ", ")))
+        .accessibilityLabel(Text(verbatim: highlighted.sorted().map { NoteNames.spokenInApp(NoteName.name($0)) }.joined(separator: ", ")))
     }
 }
 

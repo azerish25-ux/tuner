@@ -179,6 +179,25 @@ public struct SongArrangement: Codable, Equatable, Sendable {
 
     /// The changes inside `bar` (a bar can hold two chords).
     public func changes(inBar bar: Int) -> [ChordChange] { changes.filter { $0.bar == bar } }
+
+    /// The chords `bar` is played on, in order, as a band or a strummer plays them: the chord sounding on its downbeat
+    /// (held over from an earlier bar when the chart changes nothing there), then each change to another chord inside
+    /// the bar, at its beat. "N" (no chord) changes nothing: the chord before it rings on. Empty for a bar before the
+    /// chart's first chord.
+    public func played(inBar bar: Int) -> [ChordChange] {
+        let start = Double(bar) * meter
+        var out: [ChordChange] = []
+        if let held = changes.last(where: { $0.symbol != "N" && Double($0.bar) * meter + $0.beat <= start + 1e-6 }) {
+            out.append(ChordChange(bar: bar, beat: 0, symbol: held.symbol))
+        }
+        for change in changes where change.bar == bar && change.beat > 1e-6 && change.beat < meter - 1e-6 && change.symbol != "N" {
+            if change.symbol != out.last?.symbol { out.append(change) }
+        }
+        return out
+    }
+
+    /// Every bar's chords as played (`played(inBar:)`), bar by bar from the first.
+    public var playedBars: [[ChordChange]] { (0..<max(0, bars)).map { played(inBar: $0) } }
 }
 
 extension Lesson {

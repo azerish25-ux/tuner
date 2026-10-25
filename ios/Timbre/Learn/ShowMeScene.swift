@@ -360,7 +360,7 @@ final class ShowMeController {
     /// What the stage is doing, or why it gave up, in plain words (the DEBUG probe, `ShowMeProbe`).
     private(set) var status = "idle"
     /// Scene updates since the model went on stage: RealityKit has drawn it. Its first frames, behind the picture, are
-    /// where a fresh device or simulator builds the model's shaders.
+    /// where a fresh device builds the model's shaders.
     private(set) var frames = 0
     /// The host shows the stage on its card: from then `shownFrames` counts the frames drawn, the first at `liveSince`.
     var shown = false {
@@ -510,7 +510,9 @@ final class ShowMeController {
     private func fail(_ reason: String) {
         failed = true
         status = reason
+        #if DEBUG
         ShowMe.lastProblem = reason
+        #endif
     }
 
     private func install(_ model: Entity, rig: InstrumentRig, neck: ShowMeNeck, accent: UIColor) {

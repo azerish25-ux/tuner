@@ -3,16 +3,17 @@ import SwiftUI
 import TimbreCore
 
 /// The last step of a song lesson, played as a performance: the whole song in one take over the band, which plays
-/// the song's own chords (its chart) bar by bar, thins to drums and bass on a miss and crashes in at ×4. First the
+/// the song's own chords (its chart) change by change, thins to drums and bass on a miss and crashes in at ×4. First the
 /// stage (the sleeve under a light with its record turning, the song map, the tempo: the song's own, or 75 % for at
 /// most two stars), then the take, on the play-along's own runway and session (`HighwayRunway`, `HighwayCanvas`,
 /// `PlayAlongSession`) with its count-in and combo HUD, a running score (each note's credit times the combo
 /// multiplier), the words under the runway karaoke style (`HighwayLyrics`, with the section playing) and the song
 /// map's playhead, then the finale (`SongFinaleView`): the lesson's stars, the score, the timing strip with each
 /// section's score under it, and a story-sized poster. The best take at the song's tempo counts, as in every
-/// play-along. With VoiceOver, spoken cues name each note a beat ahead and the result is read out. On a strummed
-/// instrument a song with a chart can be performed as "Chords & words" instead (`SongChordsTake`): its chords strummed
-/// bar by bar with the words, judged for timing and chord.
+/// play-along. With VoiceOver, spoken cues name each note ahead of it (`SpokenCueTiming`) and the result is read out.
+/// On a strummed instrument a song with a chart can be performed as "Chords & words" instead (`SongChordsTake`): its
+/// chords strummed change by change with the words ("C · G" where a bar changes on its third beat), judged for timing
+/// and chord.
 struct SongPerformStep: View {
     let notes: [TimedNote]
     let bpm: Double
@@ -88,6 +89,8 @@ struct SongPerformStep: View {
     private var tempo: Double { ladder.tempo }
     private var spb: Double { 60 / tempo }
     private var fretted: Bool { course.fretKind != nil && notes.allSatisfy { $0.at != nil } }
+    /// A violin's or cello's fingerboard: its notes read as fingers, not frets.
+    private var board: Fingerboard? { fretted ? Fingerboard(instrument: course.instrument) : nil }
     private var multiplier: Int { session.multiplier }
     private var lookahead: Double { HighwayRunway.lookahead(secondsPerBeat: spb, beatsPerBar: beatsPerBar) }
     /// Spoken cues: on while VoiceOver runs, unless turned off.
@@ -99,21 +102,21 @@ struct SongPerformStep: View {
     }
     /// Listening for the first note on the stage.
     private var armed: Bool { strumStarts && phase == .stage }
-    /// The band on the song's own chords, bar by bar from its chart (drums and a bass in its key when the chart names
-    /// none); no band bass when the player is the bass.
+    /// The band on the song's own chords from its chart, change by change (a bar that changes on its third beat changes
+    /// under the melody there too); drums and a bass in its key when the chart names none; no band bass when the player
+    /// is the bass.
     private var band: BandArrangement {
-        let chart = LeadChart.of(lesson)
-        let chords = chart.hasChords ? chart.filledChords(from: 0, count: chart.bars) : nil
-        return SongPlayback.band(take: notes, chords: chords, bpm: tempo, meter: beatsPerBar, reference: store.settings.referencePitchHz,
-                                 bass: course.fretKind != "bass")
+        let bars = chartBars
+        return SongPlayback.band(take: notes, harmony: bars.isEmpty ? nil : bars, bpm: tempo, meter: beatsPerBar,
+                                 reference: store.settings.referencePitchHz, bass: course.fretKind != "bass")
     }
-    /// The chart's chord for every bar, from the top of the song.
-    private var chartChords: [ChordSpec] {
+    /// The chart's chords for every bar from the top of the song, each change inside a bar included.
+    private var chartBars: [ChordBar] {
         let chart = LeadChart.of(lesson)
-        return chart.hasChords ? chart.filledChords(from: 0, count: chart.bars) : []
+        return chart.hasChords ? chart.filledBars(from: 0, count: chart.bars) : []
     }
     /// "Chords & words" is offered: a strummed instrument, and a chart with chords.
-    private var chordsAvailable: Bool { course.strums && !chartChords.isEmpty }
+    private var chordsAvailable: Bool { course.strums && LeadChart.of(lesson).hasChords }
     private var sheet: SongSheet { SongSheet.of(lesson) }
     private var art: CoverArt { CoverArt.of(lesson, in: course) }
     private var songTitle: String { CoverArt.mainTitle(lesson.title.localized) }
@@ -269,7 +272,7 @@ struct SongPerformStep: View {
             }
             Label("Full tempo for 3 stars", systemImage: "star.fill")
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(Palette.amber)
+                .foregroundStyle(Palette.starGold)
                 .opacity(ladder.isFullTempo ? 0 : 1)
                 .accessibilityHidden(ladder.isFullTempo)
         }
@@ -356,7 +359,7 @@ struct SongPerformStep: View {
             ZStack {
                 runway(elapsed: session.runwayClock(at: now, waiting: -0.2 * lookahead, glide: !reduceMotion), now: now)
                 if clock < 0 {
-                    Text("\(Int(-clock / spb) + 1)").font(Typeface.note(96)).foregroundStyle(Palette.ink)
+                    Text("\(Int(-clock / spb) + 1)").font(Typeface.hero(96)).foregroundStyle(Palette.ink)
                         .shadow(color: accent.opacity(0.6), radius: 20)
                         .transition(.scale.combined(with: .opacity))
                 }
@@ -378,7 +381,7 @@ struct SongPerformStep: View {
     private var runwayValue: Text {
         let index = session.nextIndex
         guard notes.indices.contains(index) else { return Text(verbatim: "") }
-        return Text("Next: \(SpokenCues.phrase(notes[index], fretted: fretted, brief: false))")
+        return Text("Next: \(NotePlace.spoken(notes[index], fretted: fretted, board: board))")
     }
 
     /// The words under the runway: the line being sung lit syllable by syllable, the next one dim, and over them the
@@ -409,7 +412,7 @@ struct SongPerformStep: View {
         if fretted {
             HighwayRunway(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: session.grades, hitTimes: session.hitTimes,
                           now: now, strings: course.stringCount, beatsPerBar: beatsPerBar, heat: multiplier, calm: reduceMotion,
-                          mirrored: hand.mirrorsUpright, offsets: session.offsets, tierUp: session.tierUp)
+                          mirrored: hand.mirrorsUpright, offsets: session.offsets, tierUp: session.tierUp, fingerboard: board)
         } else {
             HighwayCanvas(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: session.grades, hitTimes: session.hitTimes,
                           now: now, lanes: 0, accent: accent, trail: session.trail, startTime: session.startTime + session.countIn,
@@ -423,8 +426,8 @@ struct SongPerformStep: View {
     // MARK: Chords & words
 
     private var chordsView: some View {
-        SongChordsTake(lesson: lesson, course: course, accent: accent, tempo: tempo, beatsPerBar: beatsPerBar, chords: chartChords,
-                       lyrics: lyrics, band: band, spoken: spoken,
+        SongChordsTake(sheet: ChordTakeSheet.of(lesson, in: course), accent: accent, tempo: tempo, beatsPerBar: beatsPerBar,
+                       bars: chartBars, lyrics: lyrics, band: band, spoken: spoken,
                        finished: { result in finishChords(result) },
                        stopped: {
                            store.audio.prepareBand(band)
@@ -531,16 +534,18 @@ struct SongPerformStep: View {
             countInBeat = beat
             if let beat { TakeFeedback.countIn(beat) }
         }
-        if spoken, let index = session.cue(at: now, lead: spb) { speak(index) }
+        let lead = SpokenCueTiming.lead(secondsPerBeat: spb)
+        if spoken, let index = session.cue(at: now, lead: lead) { speak(index, lead: lead) }
         react(session.tick(at: now))
     }
 
-    /// Names note `index` ahead of time; just its string and fret when the note before it is close.
-    private func speak(_ index: Int) {
+    /// Names note `index` ahead of time (`SpokenCueTiming`); just its place when the note before it is close. A
+    /// fingerboard's cue keeps to the note's name, so it never names a fret on a violin or a cello.
+    private func speak(_ index: Int, lead: Double) {
         let notes = session.notes
         guard notes.indices.contains(index) else { return }
         let gap = index > 0 ? (notes[index].beat - notes[index - 1].beat) * spb : .infinity
-        SpokenCues.say(SpokenCues.phrase(notes[index], fretted: fretted, brief: gap < 0.9))
+        SpokenCues.schedule(notes[index], fretted: fretted && board == nil, lead: lead, brief: SpokenCueTiming.brief(gap: gap))
     }
 
     private func react(_ update: PlayAlongSession.Update) {
@@ -634,8 +639,9 @@ struct SongPerformStep: View {
             let next = index + 1 < parts.count ? parts[index + 1] : nil
             let to = next.map { Double($0.start) * meter - ($0.part?.pickup ?? 0) } ?? .infinity
             let name = part.title?.localized ?? part.chord?.name ?? SongSectionMap.spoken(part)
+            let count = notes.filter { $0.beat >= from - 1e-6 && $0.beat < to - 1e-6 }.count
             return TakeSection(id: part.id, name: name, start: part.start, bars: part.bars,
-                               score: session.score(fromBeat: from, toBeat: to))
+                               score: session.score(fromBeat: from, toBeat: to), notes: count, short: TakeSection.short(of: part))
         }
     }
 

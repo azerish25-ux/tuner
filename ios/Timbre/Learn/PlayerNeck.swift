@@ -77,22 +77,29 @@ enum ChordPicture: String, CaseIterable, Identifiable {
     }
 }
 
-/// The switch between the chart and the player's view: a small capsule with both, the chosen one filled in the
-/// accent (the fill slides across as it changes). It is Settings › String order itself, so every neck and chord in
-/// the app flips with it.
+/// The switch between the chart and the player's view, and, where the card has a 3D model (`threeD`), the
+/// demonstration on it: one capsule, "Chart · Player view · 3D", the chosen one filled in the accent (the fill slides
+/// across as it changes). Its segments never change their names or places, whatever shows: picking the chart or the
+/// player's view while the model is up brings that picture back. The picture choice is Settings › String order itself,
+/// so every neck and chord in the app flips with it; 3D is the card's own state and never stored.
 struct ChordPictureToggle: View {
     var accent: Color = Palette.mint
     /// What VoiceOver calls the switch: "Chord view" on a chord card, "Neck view" over the Scales neck.
     var label: LocalizedStringKey = "Chord view"
+    /// The card's 3D demonstration is up; nil where the card has no model (no third segment).
+    var threeD: Binding<Bool>?
     @AppStorage(ChordPicture.storageKey) private var picture: ChordPicture = .chart
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Namespace private var thumb
+
+    private var modelUp: Bool { threeD?.wrappedValue ?? false }
 
     var body: some View {
         HStack(spacing: 2) {
             ForEach(ChordPicture.allCases) { option in
                 segment(option)
             }
+            if let threeD { modelSegment(threeD) }
         }
         .padding(3)
         .background(Capsule().fill(Palette.surface))
@@ -103,13 +110,26 @@ struct ChordPictureToggle: View {
     }
 
     private func segment(_ option: ChordPicture) -> some View {
-        let selected = picture == option
-        return Button {
-            guard picture != option else { return }
+        let selected = !modelUp && picture == option
+        return face(Text(option.title), spoken: Text(option.spoken), selected: selected, id: "chord.picture.\(option.rawValue)") {
+            picture = option
+            if let threeD { threeD.wrappedValue = false }
+        }
+    }
+
+    private func modelSegment(_ on: Binding<Bool>) -> some View {
+        face(Text("3D"), spoken: Text("3D model"), selected: on.wrappedValue, id: "lesson.showme.3d") {
+            on.wrappedValue = true
+        }
+    }
+
+    private func face(_ title: Text, spoken: Text, selected: Bool, id: String, action: @escaping () -> Void) -> some View {
+        Button {
+            guard !selected else { return }
             Haptics.shared.selection()
-            withMotion(Motion.settle, reduceMotion: reduceMotion) { picture = option }
+            withMotion(Motion.settle, reduceMotion: reduceMotion) { action() }
         } label: {
-            Text(option.title)
+            title
                 .font(Typeface.label(.caption))
                 .lineLimit(1)
                 .foregroundStyle(selected ? Palette.onAccent : Palette.inkSoft)
@@ -123,29 +143,31 @@ struct ChordPictureToggle: View {
                 .contentShape(Capsule())
         }
         .buttonStyle(PressScaleStyle())
-        .accessibilityLabel(Text(option.spoken))
+        .accessibilityLabel(spoken)
         .accessibilityAddTraits(selected ? .isSelected : [])
-        .accessibilityIdentifier("chord.picture.\(option.rawValue)")
+        .accessibilityIdentifier(id)
     }
 }
 
-/// A chord card's top line: the chord's name on the left, the chart / player's-view switch on the right (under the
-/// name at the largest text sizes). VoiceOver hears the name from the picture below, with its shape, so it isn't
-/// said twice.
+/// A chord card's top line: the chord's name on the left, the chart / player's-view switch on the right (with its 3D
+/// segment where the card has a model; under the name at the largest text sizes). VoiceOver hears the name from the
+/// picture below, with its shape, so it isn't said twice.
 struct ChordCardHeader: View {
     let name: String
     var accent: Color = Palette.mint
+    /// The card's 3D demonstration is up; nil where it has no model.
+    var threeD: Binding<Bool>?
 
     var body: some View {
         ViewThatFits(in: .horizontal) {
             HStack(alignment: .center, spacing: 12) {
                 title
                 Spacer(minLength: 8)
-                ChordPictureToggle(accent: accent)
+                ChordPictureToggle(accent: accent, threeD: threeD)
             }
             VStack(spacing: 8) {
                 title
-                ChordPictureToggle(accent: accent)
+                ChordPictureToggle(accent: accent, threeD: threeD)
             }
         }
     }

@@ -210,7 +210,7 @@ struct NotationPhrase: View {
         .frame(height: line?.height ?? 96)
         .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(verbatim: notes.map { NoteName.name($0.midi) }.joined(separator: ", ")))
+        .accessibilityLabel(Text(verbatim: notes.map { NoteNames.spokenInApp(NoteName.name($0.midi)) }.joined(separator: ", ")))
     }
 
     @MainActor private static func line(_ notes: [TimedNote], clef: Clef, width: CGFloat) -> EngravedLine? {

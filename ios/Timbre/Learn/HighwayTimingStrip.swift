@@ -89,6 +89,8 @@ struct HighwayTimingStrip: View {
         .padding(.horizontal, 12).padding(.vertical, 8)
         .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.stageRaised.opacity(0.75)))
         .overlay(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).strokeBorder(Palette.hairline, lineWidth: 1))
+        // The take runs left to right in every language, as the runway it came from does.
+        .environment(\.layoutDirection, .leftToRight)
         .onAppear { landed = true }
     }
 
@@ -215,8 +217,21 @@ struct TakeSection: Identifiable, Equatable {
     let bars: Int
     /// 0…1 over the notes sung or played in it.
     let score: Double?
+    /// How many notes (chords, on a strummed take) it holds: a section of a handful is never called the strongest.
+    var notes = 0
+    /// The name in brief for a tile too narrow for it ("In", "Out"); nil to show the score alone there.
+    var short: String?
 
     var percent: Int? { score.map { Int(($0 * 100).rounded()) } }
+
+    /// "In" for an intro, "Out" for an outro: the bookends are short, and their tiles narrow.
+    static func short(of section: SongSheet.Section) -> String? {
+        switch section.part?.kind {
+        case .intro?: return String(localized: "In", bundle: TimbreLocalization.bundle, comment: "Short for Intro, on a narrow tile")
+        case .outro?: return String(localized: "Out", bundle: TimbreLocalization.bundle, comment: "Short for Outro, on a narrow tile")
+        default: return nil
+        }
+    }
 }
 
 private struct TakeSectionsKey: EnvironmentKey {
@@ -231,27 +246,34 @@ extension EnvironmentValues {
     }
 }
 
-/// A song's sections side by side, each as long as its bars and lit by how its notes went (mint from 90 %, amber
-/// below, faint without notes), named with its score where there is room ("Chorus 96 %"); under them, the strongest
-/// section and the one with most to gain, in words. The tiles fill in from the left after the timing strip's dots.
+/// A song's sections side by side, each as long as its bars (never too narrow for its score) and lit by how its notes
+/// went (mint from 90 %, amber below, faint without notes), named with its score where there is room ("Chorus 96 %",
+/// an intro "In" on a narrow tile); under them, the strongest section and the one with most to gain, in words. The
+/// tiles fill in from the left after the timing strip's dots, left to right in every language.
 struct SectionRibbon: View {
     let sections: [TakeSection]
     var calm = false
     @State private var shown = false
 
     private static let gap: CGFloat = 3
+    /// Room for a score ("100%") on a tile however short its section.
+    private static let minimumWidth: CGFloat = 38
+    /// Sections with fewer notes than this are too short to be called the strongest or the weakest.
+    private static let telling = 8
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             GeometryReader { proxy in
+                let sizes = widths(in: proxy.size.width)
                 HStack(spacing: Self.gap) {
                     ForEach(Array(sections.enumerated()), id: \.element.id) { index, section in
                         tile(section)
-                            .frame(width: width(of: section, in: proxy.size.width))
+                            .frame(width: index < sizes.count ? sizes[index] : 0)
                             .opacity(shown || calm ? 1 : 0)
                             .animation(calm ? nil : Motion.fade.delay(0.9 + Double(index) * 0.06), value: shown)
                     }
                 }
+                .environment(\.layoutDirection, .leftToRight)
             }
             .frame(height: 44)
             if let summary {
@@ -267,11 +289,17 @@ struct SectionRibbon: View {
         .accessibilityValue(Text(verbatim: spoken))
     }
 
-    private var totalBars: Int { max(1, sections.reduce(0) { $0 + max(1, $1.bars) }) }
-
-    private func width(of section: TakeSection, in total: CGFloat) -> CGFloat {
-        let room = max(0, total - Self.gap * CGFloat(max(0, sections.count - 1)))
-        return room * CGFloat(max(1, section.bars)) / CGFloat(totalBars)
+    /// Each tile's width: its bars' share of the room, every tile given at least `minimumWidth` (or an equal share,
+    /// on a song with more sections than fit at that width) and the rest shared out by bars.
+    private func widths(in total: CGFloat) -> [CGFloat] {
+        let count = sections.count
+        guard count > 0 else { return [] }
+        let room = max(0, total - Self.gap * CGFloat(count - 1))
+        let floor = min(Self.minimumWidth, room / CGFloat(count))
+        let spare = max(0, room - floor * CGFloat(count))
+        let bars = sections.map { CGFloat(max(1, $0.bars)) }
+        let totalBars = max(1, bars.reduce(0, +))
+        return bars.map { floor + spare * $0 / totalBars }
     }
 
     private func tint(_ section: TakeSection) -> Color {
@@ -286,36 +314,61 @@ struct SectionRibbon: View {
             .fill(tint.opacity(section.score == nil ? 0.08 : 0.08 + 0.22 * (section.score ?? 0)))
             .overlay(shape.strokeBorder(tint.opacity(section.score == nil ? 0.25 : 0.6), lineWidth: 1))
             .overlay {
+                // The name, in brief when the tile is narrow, over the score; the score alone; or the score shrunk to
+                // fit: never an empty tile.
                 ViewThatFits(in: .horizontal) {
-                    VStack(spacing: 1) {
-                        Text(verbatim: section.name).font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
-                        percentLabel(section, tint: tint)
-                    }
+                    labelled(section.name, section, tint: tint)
+                    labelled(section.short ?? section.name, section, tint: tint)
                     percentLabel(section, tint: tint)
-                    Color.clear.frame(width: 1, height: 1)
+                    percentLabel(section, tint: tint).minimumScaleFactor(0.5)
                 }
                 .lineLimit(1)
-                .padding(.horizontal, 4)
+                .padding(.horizontal, 3)
             }
+    }
+
+    private func labelled(_ name: String, _ section: TakeSection, tint: Color) -> some View {
+        VStack(spacing: 1) {
+            Text(verbatim: name).font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
+            percentLabel(section, tint: tint)
+        }
     }
 
     @ViewBuilder private func percentLabel(_ section: TakeSection, tint: Color) -> some View {
         if let percent = section.percent {
-            Text(verbatim: "\(percent)%").font(Typeface.number(13)).foregroundStyle(tint == Palette.inkFaint ? Palette.inkSoft : tint)
+            Text(verbatim: "\(percent)%").font(Typeface.number(.footnote)).foregroundStyle(tint == Palette.inkFaint ? Palette.inkSoft : tint)
         } else {
-            Text(verbatim: "–").font(Typeface.number(13)).foregroundStyle(Palette.inkFaint)
+            Text(verbatim: "–").font(Typeface.number(.footnote)).foregroundStyle(Palette.inkFaint)
         }
     }
 
-    /// The strongest and the weakest of the sections with notes ("Strongest: Chorus, 96 % · Most to gain: Bridge,
-    /// 71 %"); just the strongest when every one is 90 % or more, nothing with fewer than two.
+    /// The strongest and the weakest of the sections with enough notes to tell (eight; every scored section on a song
+    /// with fewer than two such): "Strongest: Chorus, 96 % · Most to gain: Bridge, 71 %". A tie goes to the section
+    /// with more notes, the harder part to keep clean. "Every section 90 %+" when none fell below; nothing with fewer
+    /// than two sections scored.
     private var summary: LocalizedStringKey? {
         let scored = sections.filter { $0.score != nil }
-        guard scored.count >= 2, let best = scored.max(by: { ($0.score ?? 0) < ($1.score ?? 0) }),
-              let worst = scored.min(by: { ($0.score ?? 0) < ($1.score ?? 0) }),
-              let high = best.percent, let low = worst.percent else { return nil }
-        if low >= 90 || best.id == worst.id { return "Strongest: \(best.name), \(high)%" }
+        let telling = scored.filter { $0.notes >= Self.telling }
+        let pool = telling.count >= 2 ? telling : scored
+        guard pool.count >= 2 else { return nil }
+        let best = pool.max { Self.ranks($0, below: $1) }
+        let worst = pool.min { Self.ranks($0, aboveForGain: $1) }
+        guard let best, let worst, let high = best.percent, let low = worst.percent else { return nil }
+        if low >= 90 { return "Every section 90%+" }
+        if best.id == worst.id { return "Strongest: \(best.name), \(high)%" }
         return "Strongest: \(best.name), \(high)% · Most to gain: \(worst.name), \(low)%"
+    }
+
+    /// `a` ranks below `b` for strongest: a lower score, or the same score over fewer notes.
+    private static func ranks(_ a: TakeSection, below b: TakeSection) -> Bool {
+        let x = a.score ?? 0, y = b.score ?? 0
+        return x != y ? x < y : a.notes < b.notes
+    }
+
+    /// `a` has more to gain than `b`: a lower score, or the same score over more notes.
+    private static func ranks(_ a: TakeSection, aboveForGain b: TakeSection) -> Bool {
+        let x = a.score ?? 0, y = b.score ?? 0
+        return x != y ? x < y : a.notes > b.notes
     }
 
     /// Every section with its score, for VoiceOver ("Verse 1, 92 %; Chorus, 96 %").
