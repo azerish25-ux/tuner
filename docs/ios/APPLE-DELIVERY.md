@@ -29,7 +29,7 @@ Create a subscription group named **Timbre Pro** with two auto-renewable subscri
 | Product ID | Type | Duration | US price (recommended; the owner decides) | Introductory offer |
 |---|---|---|---|---|
 | `timbre_pro_annual` | Auto-renewable | 1 year | $49.99 (the StoreKit test file still says $34.99) | Free trial, 2 weeks, new subscribers. Keep 14 days: yearly trials of 10–16 days convert at about 43 %, against 33 % for 5–9 |
-| `timbre_pro_monthly` | Auto-renewable | 1 month | $9.99 ($6.99 in the test file) | **None** until a build's paywall discloses a monthly trial on the Monthly card (§6.4): before that build the paywall would show the monthly price while the App Store starts a free week |
+| `timbre_pro_monthly` | Auto-renewable | 1 month | $9.99 ($6.99 in the test file) | None recommended (use win-back offers and offer codes, §6.3–6.4). If you add one, this build's paywall already discloses any plan's trial on its card, button, terms line and reminder |
 
 And one non-consumable:
 
@@ -126,7 +126,7 @@ The app ships with all of these switched on in code, and each works as soon as i
 |---|---|---|---|---|
 | `timbre.sniper.best` | Classic | Bullseye | 0 – 25,000 | All-time best game |
 | `timbre.sniper.weekly` | Recurring | Bullseye this week | 0 – 25,000 | Starts on a Monday at 00:00 UTC, lasts 1 week, restarts every week. This is the weekly league. The Leaderboard chip opens it first, and the Bullseye challenge is built on it. |
-| `timbre.ear.level` | Classic | Ear trainer level | 1 – 100 | The level the Play tab shows |
+| `timbre.ear.level` | Classic | Ear trainer level | 1 – 100 | The level the Practice tab shows |
 | `timbre.streak` | Classic | Practice streak | 0 – 10,000 | **Most recent score.** Days in a row, sent when the streak changes. The friend streak reads it back for friends only. |
 | `timbre.song.twinkle` | Classic | Twinkle, Twinkle, Little Star | 0 – 200,000 | Perform score |
 | `timbre.song.odetojoy` | Classic | Ode to Joy | 0 – 200,000 | Perform score |
@@ -202,12 +202,12 @@ The eight song boards are the "Perform" family: one per featured song (`GameCent
 
    Instead of one activity per song, any activity may carry the property `lesson` set to a lesson ID from `GameCenterIDs.songs` (for example `std-loch-lomond`), and the app opens that lesson. Without activities, a challenge still opens Timbre, just not on the right screen.
 9. **Test** with a sandbox Apple Account signed in to Game Center on a TestFlight build. On iOS, Settings → Developer → **Notify About Score Submissions** shows each score as it is sent.
-   - Open the Play tab. The welcome banner appears once, and a trophy chip appears on each game card when its board exists. Badges earned before sign-in are reported then.
+   - Open the Practice tab. The welcome banner appears once, and a trophy chip appears on each game card when its board exists. Badges earned before sign-in are reported then.
    - Finish a Bullseye game. "Challenge a friend" on the end screen opens Game Center's challenge screen on iOS 26, or a share sheet with the "Beat my score" card on iOS 18–25 or before the challenge exists. With a challenge going on, "Live challenge" appears under it and opens Game Center's challenges.
    - Play a featured song through at full tempo. The results show "Challenge a friend" beside Share.
    - On Progress, "Your week" offers "Compare streaks with friends" once. After a yes, and with a sandbox friend who also plays and allows it, "Streak #2 of 2 among friends" appears on the card and on its poster.
 
-How the app behaves: it signs in quietly the first time the Play tab's game cards or Progress's week card show, or when a challenge link opens, and never during onboarding. On iOS 26 it also signs in at launch when the Games app has handed it an activity or challenge. It never shows GameKit's sign-in sheet. When a player isn't signed in, the app isn't recognised yet, or Game Center is restricted, everything stays hidden, and "Challenge a friend" falls back to its link. Game Center's own achievement banner is off, because the app announces badges itself. Scores go to Game Center only when a game or take ends, because each submission counts as a try in a challenge. While a song challenge is going on, stopping a take part-way counts as a try, with the points so far. A best set while signed out is sent once at the next sign-in. Friends' streaks are read only after the player says yes, stay in memory, and are dropped if the player later says no. The card and poster show a rank and a count, never a friend's name.
+How the app behaves: it signs in quietly the first time the Practice tab's game cards or Progress's week card show, or when a challenge link opens, and never during onboarding. On iOS 26 it also signs in at launch when the Games app has handed it an activity or challenge. It never shows GameKit's sign-in sheet. When a player isn't signed in, the app isn't recognised yet, or Game Center is restricted, everything stays hidden, and "Challenge a friend" falls back to its link. Game Center's own achievement banner is off, because the app announces badges itself. Scores go to Game Center only when a game or take ends, because each submission counts as a try in a challenge. While a song challenge is going on, stopping a take part-way counts as a try, with the points so far. A best set while signed out is sent once at the next sign-in. Friends' streaks are read only after the player says yes, stay in memory, and are dropped if the player later says no. The card and poster show a rank and a count, never a friend's name.
 
 ### 6.2 "Beat my score" challenge links
 
@@ -225,7 +225,7 @@ App Store Connect → the app → Subscriptions → Timbre Pro → the plan → 
 The second time anyone turns a paywall down (onboarding's paywall counts as the first), the paywall makes one offer, once per install. It only uses offers that exist in App Store Connect, at Apple's prices; the app never invents a discount. If nothing below is set up, the paywall simply closes.
 
 1. **Lapsed subscribers.** Under App Store Connect → Subscriptions → Timbre Pro → each plan → **Win-Back Offers**, create one or more offers (for example 1 month free, for people whose subscription ended 1–6 months ago). The app offers the best one the App Store lists for the person (`eligibleWinBackOfferIDs`) and buys it with that offer applied. StoreKit may also show Apple's own win-back sheet at launch to eligible people. That needs no code.
-2. **Never subscribed.** Only with a build whose paywall discloses a monthly trial everywhere it shows the Monthly plan (its own "7 days free", button, terms line and trial reminder): then give `timbre_pro_monthly` an **Introductory Offer** (for example a 1-week free trial for new subscribers). Introductory-offer eligibility covers the whole group, so someone who already used the yearly trial isn't offered it. The card shows the offer as Apple holds it ("Try Pro free for 7 days"), then the monthly price and how it renews. Until that build, leave the monthly plan without an introductory offer (the recommendation is to leave it without one anyway, and use win-back offers and offer codes, §6.3).
+2. **Never subscribed.** The current build's paywall discloses a monthly trial everywhere it shows the Monthly plan (its own "7 days free", button, terms line and trial reminder), so you may give `timbre_pro_monthly` an **Introductory Offer** (for example a 1-week free trial for new subscribers). Introductory-offer eligibility covers the whole group, so someone who already used the yearly trial isn't offered it. The card shows the offer as Apple holds it ("Try Pro free for 7 days"), then the monthly price and how it renews. The recommendation is still to leave the monthly plan without one and use win-back offers and offer codes (§6.3).
 3. To test locally, add an introductory offer to the monthly plan in `ios/Tests/Fixtures/Timbre.storekit` (in a scratch copy, not the committed fixture the UI tests use). Turn down the paywall twice. The exit offer never shows under the UI tests or the demo modes.
 
 
@@ -235,7 +235,7 @@ The iPhone build carries a watch app (`ios/TimbreWatch`, watchOS 11 or later) an
 
 - **Wrist metronome.** Haptic taps, strong on the downbeat and light on the other beats. 30–240 BPM on the Digital Crown or by Tap, in 2/4 to 7/4. It starts at the iPhone metronome's tempo until the player sets their own.
 - **Today.** The streak flame inside today's set ring, then the set, the open quest and the next lesson, as the iPhone last sent them. After midnight the flame goes out and the ring clears.
-- **Start today's practice.** If Timbre is on the iPhone's screen, Today opens on the Play tab. If it isn't, the watch offers Handoff: Timbre appears in the iPhone's App Switcher and opens on Today. Opening Timbre within ten minutes also lands on Today. watchOS can't bring an iPhone app to the front by itself.
+- **Start today's practice.** If Timbre is on the iPhone's screen, Today opens on the Practice tab. If it isn't, the watch offers Handoff: Timbre appears in the iPhone's App Switcher and opens on Today. Opening Timbre within ten minutes also lands on Today. watchOS can't bring an iPhone app to the front by itself.
 - **Complications.** Circular (the set ring around the flame and count), rectangular (also in the Smart Stack), corner and inline.
 
 ### 7.1 Signing: the two new bundle IDs
@@ -324,7 +324,7 @@ Get Apple's written answer before adding anything beyond this (playbook section 
 
 ### 8.3 Charts from other apps ("Open in Timbre")
 
-`project.yml` declares the ChordPro type as an imported type (`org.chordpro.chordpro`, extensions `cho`, `chordpro`, `chopro`, `crd`, conforming to plain text) and two document types, ChordPro and plain text, both as Viewer with handler rank Alternate, with `LSSupportsOpeningDocumentsInPlace` set to false. The system hands Timbre a copy of the file (in Documents/Inbox). Timbre imports it as a chart, deletes the copy, and opens it on the Songs tab. On the free plan with three charts already saved, it opens the paywall instead. PDFs aren't accepted: a chart must be text.
+`project.yml` declares the ChordPro type as an imported type (`org.chordpro.chordpro`, extensions `cho`, `chordpro`, `chopro`, `crd`, conforming to plain text) and two document types, ChordPro and plain text, both as Viewer with handler rank Alternate, with `LSSupportsOpeningDocumentsInPlace` set to false. The system hands Timbre a copy of the file (in Documents/Inbox). Timbre imports it as a chart, deletes the copy, and opens it on the Songs tab. On the free plan with ten charts already saved (`FreeTier`), it opens the paywall instead. PDFs aren't accepted: a chart must be text.
 
 ### 8.4 App Store Connect
 
@@ -350,7 +350,7 @@ What the owner sets up in App Store Connect to turn the listing into installs, i
 
 ### 9.1 Billing Grace Period and Family Sharing
 
-1. **Billing Grace Period** (App Store Connect → the app → Subscriptions → Billing Grace Period: 16 days, all renewals). Only with a build that keeps Pro during grace: the entitlement check that trusts `Transaction.currentEntitlements` and the billing-issue banner. Check it on TestFlight with a sandbox account set to fail renewals before turning it on. Without it, a payer whose card fails loses Pro in exactly the window grace is meant to protect.
+1. **Billing Grace Period** (App Store Connect → the app → Subscriptions → Billing Grace Period: 16 days, all renewals). The current build keeps Pro during grace (its entitlement check trusts `Transaction.currentEntitlements`) and shows a billing-issue banner. Check it on TestFlight with a sandbox account set to fail renewals before turning it on. Without it, a payer whose card fails loses Pro in exactly the window grace is meant to protect.
 2. **Family Sharing** on `timbre_pro_annual` and `timbre_plus_lifetime` (each product → Family Sharing). Apple doesn't let it be turned off again for a product, so decide once. Then turn on the paywall's Family Sharing line.
 
 ### 9.2 Custom Product Pages
