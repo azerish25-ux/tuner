@@ -490,6 +490,8 @@ final class TimbreUITests: XCTestCase {
         settle(1.5); shot("56-lesson-notes")
         // Two note steps finish on their own with the demo pitch, then a quiz and a listening question.
         XCTAssertTrue(element("lesson.option.0").waitForExistence(timeout: 25))
+        // The quiz slides in from the side: a tap resolved mid-slide lands on the tile beside the right answer.
+        settle(1.2)
         element("lesson.option.0").tap(); settle(1); shot("57-lesson-quiz")
         element("lesson.continue").tap(); settle(2)
         element("lesson.option.1").tap(); settle(1); shot("58-lesson-listen")
