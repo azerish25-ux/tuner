@@ -3,8 +3,16 @@ import UIKit
 
 // Also compiled into the widget extension (project.yml): tokens only, SwiftUI and UIKit, nothing app-only.
 
-/// "Studio Noir" design tokens: a near-black stage, one amber cue for "act", mint for "in tune".
+/// "Studio Noir" design tokens: a near-black stage, and colour that only ever means one thing.
 /// The app is dark by design; names are kept from the earlier palette so every screen restyles at once.
+///
+/// The colour rule:
+/// - Status is exclusive. Mint means in tune, correct or go (and so every primary button is mint), amber means
+///   adjust, coral means wrong. Nothing else is drawn in those three: a course, a lane or a sleeve never is.
+/// - Course hues (`accent(_:)`: mint, sky, violet, orchid, lime) only tint what a course owns: its art, its eyebrow,
+///   its progress. Never a primary button, never a status.
+/// - Rewards keep their own: `flame` for the streak, gold (`proGold`, `starFill`) for Timbre Pro and stars.
+/// - Glow means live: listening, locked, playing (`liveGlow`, Kit.swift). A button at rest is flat.
 ///
 /// Contrast: `inkSoft`, `inkFaint`, `line`, `controlLine` and `hairline` follow Increase Contrast (Settings ›
 /// Accessibility › Display & Text Size), so every screen answers it without reading the setting itself. With it on,
@@ -18,8 +26,9 @@ enum Palette {
     /// Dividers between rows and sections (decoration). Increase Contrast: 3:1 on the stage, cards and `surface`.
     static let line = adaptive(0x24272D, high: 0x60666F)
     /// The boundary of a control that sits on the stage or a card: an unselected chip, a search field, a secondary
-    /// button, a segmented track. Brighter than `line` so the control's edge reads (1.8:1, 3.9:1 with Increase Contrast).
-    static let controlLine = adaptive(0x3A3F48, high: 0x6E747E)
+    /// button, a segmented track, a resting string chip. About 3:1 on `surface` and the stage without Increase
+    /// Contrast (WCAG 1.4.11), brighter still with it.
+    static let controlLine = adaptive(0x5A606A, high: 0x7A808A)
     /// A card's border: white at 6% (14% with Increase Contrast). `stillCard` draws it.
     static let hairline = Color(uiColor: UIColor { traits in
         UIColor(white: 1, alpha: traits.accessibilityContrast == .high ? 0.14 : 0.06)
@@ -31,17 +40,28 @@ enum Palette {
     /// Tertiary text (captions, footers, disabled labels): 4.6:1 even on `line`, 5.8:1 on a card
     /// (7.8:1 with Increase Contrast).
     static let inkFaint = adaptive(0x8A9099, high: 0xA3A8B1)
-    // Accents: mint marks success and primary actions, amber asks you to act, flame is the streak.
+    // Status: mint is in tune, correct and go (every primary action), amber is adjust, coral is wrong.
     static let mint = Color(hex: 0x4CF2B8)
     static let mintDeep = Color(hex: 0x1A8F69)
     static let amber = Color(hex: 0xFFB547)
-    static let flame = Color(hex: 0xFF9F43)
-    /// Course accents for Learn.
-    static let violet = Color(hex: 0xA592FF)
     static let coral = Color(hex: 0xFF7E6B)
+    /// The streak's own colour (a habit, not a status).
+    static let flame = Color(hex: 0xFF9F43)
+    /// Course hues: they tint what a course owns, never a status or a primary button.
+    static let violet = Color(hex: 0xA592FF)
     static let sky = Color(hex: 0x62C9FF)
+    static let orchid = Color(hex: 0xE38ADB)
+    static let lime = Color(hex: 0xC4E86B)
+    /// A course's hue by its name in the curriculum. The curriculum's older names for warm courses ("amber",
+    /// "coral") would draw a course in a status colour, so they map onto the course hues instead.
     static func accent(_ name: String) -> Color {
-        switch name { case "amber": return amber; case "violet": return violet; case "coral": return coral; case "sky": return sky; default: return mint }
+        switch name {
+        case "violet": return violet
+        case "sky": return sky
+        case "orchid", "amber": return orchid
+        case "lime", "coral": return lime
+        default: return mint
+        }
     }
     /// Dark text on mint (and the other course accents).
     static let onAccent = Color(hex: 0x04130D)
@@ -73,7 +93,8 @@ enum Palette {
     static let sharp = amber
     static let locked = mint
     static let success = mint
-    static let danger = Color(hex: 0xFF6B6B)
+    /// Wrong, missed, destructive: the one red, so an error never comes in two shades.
+    static let danger = coral
     /// Timbre Pro gold.
     static let proGold = LinearGradient(colors: [Color(hex: 0xFFD08A), proGoldDeep], startPoint: .top, endPoint: .bottom)
 
@@ -135,53 +156,161 @@ extension Font.TextStyle {
     }
 }
 
+/// The type scale: eight steps, plus the hero numeral above them. Every size of type in the app is one of these;
+/// CI rejects a `Typeface` size off the scale (`isOnScale`). Each step grows with Dynamic Type on its own text style's
+/// curve.
+///
+/// | Step       | pt | Curve         | For                                                      |
+/// |------------|----|---------------|----------------------------------------------------------|
+/// | `caption`  | 12 | `.caption`    | badges, eyebrows, counters under a figure                |
+/// | `footnote` | 13 | `.footnote`   | captions, chips, small labels                            |
+/// | `body`     | 15 | `.subheadline`| a row's text, chord names in a strip                     |
+/// | `headline` | 17 | `.headline`   | card titles, buttons, values in a row                    |
+/// | `title3`   | 20 | `.title3`     | section titles, a tile's figure                          |
+/// | `title`    | 28 | `.title`      | screen and step titles, a card's lead line               |
+/// | `display`  | 40 | `.largeTitle` | a celebration's headline, a big note in a card           |
+/// | `hero`     | 64 | `.largeTitle` | the big figures (a score, a note to sing)                |
+///
+/// Above 64 is the hero numeral (`Typeface.hero`, the tuner's note, a count-in), sized to its stage and clamped
+/// with `heroNumeral()`. Art drawn to the size of its picture (a sleeve's title, a dial's ticks) sets its own size
+/// with `Font.custom(_:fixedSize:)`, outside the scale.
+enum TypeStep: CaseIterable, Sendable {
+    case caption, footnote, body, headline, title3, title, display, hero
+
+    var points: CGFloat {
+        switch self {
+        case .caption: return 12
+        case .footnote: return 13
+        case .body: return 15
+        case .headline: return 17
+        case .title3: return 20
+        case .title: return 28
+        case .display: return 40
+        case .hero: return 64
+        }
+    }
+
+    /// The text style whose Dynamic Type curve the step follows.
+    var style: Font.TextStyle {
+        switch self {
+        case .caption: return .caption
+        case .footnote: return .footnote
+        case .body: return .subheadline
+        case .headline: return .headline
+        case .title3: return .title3
+        case .title: return .title
+        case .display, .hero: return .largeTitle
+        }
+    }
+
+    /// Every step's size, smallest first.
+    static let scale: [CGFloat] = allCases.map(\.points)
+
+    /// Whether `size` is a step of the scale, or a hero numeral above it.
+    static func isOnScale(_ size: CGFloat) -> Bool {
+        size > TypeStep.hero.points || scale.contains(size)
+    }
+
+    /// The step nearest `size` (the smaller one on a tie, so nothing grows past the room it was given).
+    static func nearest(_ size: CGFloat) -> TypeStep {
+        var best = TypeStep.caption
+        for step in allCases where abs(step.points - size) < abs(best.points - size) { best = step }
+        return best
+    }
+}
+
 /// Sora for headings, note names, numbers and button labels; body text stays in the system font.
 ///
-/// Every function scales its size with Dynamic Type on the curve of the text style nearest that size
-/// (`Font.TextStyle.matching`) unless `relativeTo:` names one. The size at the default text size never changes.
-/// Prefer a role below to a raw size.
+/// Sizes come from the type scale (`TypeStep`): pass a step (`Typeface.display(.title)`) or use a role below. The
+/// functions taking points remain for the hero numeral and for sizes moving onto the scale; CI rejects a literal off
+/// it. Each scales with Dynamic Type on its step's curve (or the curve of the text style nearest the size, or the one
+/// `relativeTo:` names).
+///
+/// Bold Text: with Settings › Accessibility › Display & Text Size › Bold Text on, every face is drawn one weight
+/// heavier (Light as Medium, Medium as SemiBold, SemiBold as Bold), as the system font bolds. `boldTextAware()`
+/// (Kit.swift) at the root of each window keeps `boldText` in step with the environment's `legibilityWeight`.
 enum Typeface {
+    /// The Sora faces the app bundles, lightest first.
+    enum Face: Sendable {
+        case light, medium, semiBold, bold
+
+        var fontName: String {
+            switch self {
+            case .light: return "Sora-Light"
+            case .medium: return "Sora-Medium"
+            case .semiBold: return "Sora-SemiBold"
+            case .bold: return "Sora-Bold"
+            }
+        }
+
+        /// One weight heavier, for Bold Text (Bold stays Bold: it is the heaviest bundled).
+        var heavier: Face {
+            switch self {
+            case .light: return .medium
+            case .medium: return .semiBold
+            case .semiBold, .bold: return .bold
+            }
+        }
+    }
+
+    /// Bold Text is on. Set on the main thread from the environment (`boldTextAware()`); read while views draw.
+    nonisolated(unsafe) static var boldText = false
+
+    /// `face` at `size`, one weight heavier under Bold Text.
+    static func sora(_ face: Face, _ size: CGFloat, relativeTo style: Font.TextStyle? = nil) -> Font {
+        let shown = boldText ? face.heavier : face
+        return .custom(shown.fontName, size: size, relativeTo: style ?? .matching(size))
+    }
+
     static func display(_ size: CGFloat, relativeTo style: Font.TextStyle? = nil) -> Font {
-        .custom("Sora-SemiBold", size: size, relativeTo: style ?? .matching(size))
+        sora(.semiBold, size, relativeTo: style)
     }
     /// The big note name.
     static func note(_ size: CGFloat, relativeTo style: Font.TextStyle? = nil) -> Font {
-        .custom("Sora-Medium", size: size, relativeTo: style ?? .matching(size))
+        sora(.medium, size, relativeTo: style)
     }
     static func displayLight(_ size: CGFloat, relativeTo style: Font.TextStyle? = nil) -> Font {
-        .custom("Sora-Light", size: size, relativeTo: style ?? .matching(size))
+        sora(.light, size, relativeTo: style)
     }
     /// Earlier name for the light display face.
     static func displayItalic(_ size: CGFloat, relativeTo style: Font.TextStyle? = nil) -> Font { displayLight(size, relativeTo: style) }
     /// Cents, hertz, tempo, scores.
     static func number(_ size: CGFloat, relativeTo style: Font.TextStyle? = nil) -> Font {
-        .custom("Sora-Medium", size: size, relativeTo: style ?? .matching(size)).monospacedDigit()
+        sora(.medium, size, relativeTo: style).monospacedDigit()
     }
     static func label(_ size: CGFloat, relativeTo style: Font.TextStyle? = nil) -> Font {
-        .custom("Sora-SemiBold", size: size, relativeTo: style ?? .matching(size))
+        sora(.semiBold, size, relativeTo: style)
     }
     /// Hero numerals (a score, the BPM, a big counter): Sora Medium on the gentlest curve, `.largeTitle`.
     /// Clamp policy: pair it with `.heroNumeral()` (Kit.swift), which keeps the numeral on one line, lets it
     /// shrink to fit its ring or row, and stops it growing past AX1.
     static func hero(_ size: CGFloat) -> Font { number(size, relativeTo: .largeTitle) }
 
+    // MARK: On the scale
+
+    static func display(_ step: TypeStep) -> Font { display(step.points, relativeTo: step.style) }
+    static func note(_ step: TypeStep) -> Font { note(step.points, relativeTo: step.style) }
+    static func displayLight(_ step: TypeStep) -> Font { displayLight(step.points, relativeTo: step.style) }
+    static func number(_ step: TypeStep) -> Font { number(step.points, relativeTo: step.style) }
+    static func label(_ step: TypeStep) -> Font { label(step.points, relativeTo: step.style) }
+
     // MARK: Roles: one size and one curve per job
 
-    /// A tab's or screen's title ("Learn", "Play"): `TabHeader`, `ScreenTitle`.
-    static let screenTitle = display(30, relativeTo: .largeTitle)
+    /// A tab's or screen's title ("Learn", "Practice"): `TabHeader`, `ScreenTitle`.
+    static var screenTitle: Font { display(TypeStep.title.points, relativeTo: .largeTitle) }
     /// A lesson step's title, the same on every kind of step.
-    static let stepTitle = display(28, relativeTo: .title)
+    static var stepTitle: Font { display(.title) }
     /// A section between cards ("Achievements", "Tunings"): `SectionHeader`.
-    static let sectionTitle = display(20, relativeTo: .title3)
+    static var sectionTitle: Font { display(.title3) }
     /// A title inside a card ("Today", "Coach"): `CardTitle`.
-    static let cardTitle = display(17, relativeTo: .headline)
+    static var cardTitle: Font { display(.headline) }
     /// Every primary and secondary button's label.
-    static let button = label(17, relativeTo: .headline)
+    static var button: Font { label(.headline) }
     /// An eyebrow in the display face (`Eyebrow(style: .display)`).
-    static let eyebrowDisplay = label(11, relativeTo: .caption2)
+    static var eyebrowDisplay: Font { label(.caption) }
     /// Small capitals on a badge ("PRO", "SAVE 58%") and the captions under the tuner's side controls.
-    static let badge = label(10, relativeTo: .caption2)
-    static let eyebrow = Font.system(.caption2, design: .default).weight(.semibold)
+    static var badge: Font { label(TypeStep.caption.points, relativeTo: .caption2) }
+    static var eyebrow: Font { Font.system(.caption, design: .default).weight(.semibold) }
 }
 
 enum Metrics {

@@ -1,9 +1,22 @@
 import Foundation
 import TimbreCore
 
-/// Resolve imperative copy through the same selected language as SwiftUI's Locale.
+// Strings built in code resolve in the app language, as SwiftUI's `Text` does through the root view's locale: both
+// overloads below send a lookup that names no bundle to `TimbreLocalization.bundle`. For "system" that is
+// `Bundle.main`, exactly what Foundation would use; for a language picked in Settings it is that language's .lproj,
+// so a picked language reaches every screen without a relaunch.
+
+/// `NSLocalizedString`, in the app language.
 func NSLocalizedString(_ key: String, tableName: String? = nil, bundle: Bundle = .main, value: String = "", comment: String) -> String {
     Foundation.NSLocalizedString(key, tableName: tableName, bundle: bundle == .main ? TimbreLocalization.bundle : bundle, value: value, comment: comment)
+}
+
+extension String {
+    /// `String(localized:)` without a table, bundle or locale, in the app language. Calls that name a bundle, table or
+    /// locale go to Foundation's own initializer unchanged.
+    init(localized key: String.LocalizationValue, comment: StaticString? = nil) {
+        self.init(localized: key, bundle: TimbreLocalization.bundle, comment: comment)
+    }
 }
 
 func localizedVoiceExplanation(_ result: VoiceResult, level: Int) -> String {

@@ -197,4 +197,56 @@ final class NoteNamesTests: XCTestCase {
         solfege.applyNotationDefault(systemLanguage: nil)
         XCTAssertEqual(solfege.notation, "solfege")
     }
+
+    func testSpokenNamesInEnglish() {
+        XCTAssertEqual(NoteNames.spoken("Eb3", language: "en", system: "english"), "E flat 3")
+        XCTAssertEqual(NoteNames.spoken("F#3", language: "en-GB", system: "english"), "F sharp 3")
+        XCTAssertEqual(NoteNames.spoken("F♯3", language: "en", system: "english"), "F sharp 3")
+        XCTAssertEqual(NoteNames.spoken("E2", language: "en", system: "english"), "E 2")
+        XCTAssertEqual(NoteNames.spoken("C##4", language: "en", system: "english"), "C double sharp 4")
+        XCTAssertEqual(NoteNames.spoken("Bb", language: "en", system: "english"), "B flat")
+        // The German system's letters, read in English: B is B flat, H is B.
+        XCTAssertEqual(NoteNames.spoken("B3", language: "en", system: "german"), "B flat 3")
+        XCTAssertEqual(NoteNames.spoken("H2", language: "en", system: "german"), "B 2")
+        // A system's own syllables stay.
+        XCTAssertEqual(NoteNames.spoken("Fa#3", language: "en", system: "solfege"), "Fa sharp 3")
+        XCTAssertEqual(NoteNames.spoken("Dha#3", language: "en", system: "sargam"), "Dha sharp 3")
+        XCTAssertEqual(NoteNames.spoken("Re3", language: "en", system: "sargam"), "Re 3")
+        XCTAssertEqual(NoteNames.spoken("5#3", language: "en", system: "numbered"), "5 sharp 3")
+    }
+
+    func testSpokenNamesInGermanicLanguages() {
+        XCTAssertEqual(NoteNames.spoken("Eb3", language: "de", system: "english"), "Es 3")
+        XCTAssertEqual(NoteNames.spoken("F#3", language: "de-AT", system: "german"), "Fis 3")
+        XCTAssertEqual(NoteNames.spoken("B3", language: "de", system: "german"), "B 3")
+        XCTAssertEqual(NoteNames.spoken("H2", language: "de", system: "german"), "H 2")
+        XCTAssertEqual(NoteNames.spoken("Ab2", language: "de", system: "english"), "As 2")
+        XCTAssertEqual(NoteNames.spoken("Db4", language: "de", system: "english"), "Des 4")
+        XCTAssertEqual(NoteNames.spoken("Bbb3", language: "de", system: "english"), "Heses 3")
+        XCTAssertEqual(NoteNames.spoken("Bb3", language: "nl", system: "english"), "Bes 3")
+        XCTAssertEqual(NoteNames.spoken("B3", language: "nl", system: "english"), "B 3")
+        XCTAssertEqual(NoteNames.spoken("Eb3", language: "sv", system: "english"), "Ess 3")
+        XCTAssertEqual(NoteNames.spoken("F#3", language: "hu", system: "english"), "Fisz 3")
+    }
+
+    func testSpokenNamesInFixedDoAndOtherLanguages() {
+        XCTAssertEqual(NoteNames.spoken("F#3", language: "fr", system: "english"), "Fa dièse 3")
+        XCTAssertEqual(NoteNames.spoken("Eb3", language: "fr-CA", system: "english"), "Mi bémol 3")
+        XCTAssertEqual(NoteNames.spoken("Re#3", language: "fr", system: "solfege"), "Ré dièse 3")
+        XCTAssertEqual(NoteNames.spoken("Bb2", language: "es", system: "english"), "Si bemol 2")
+        XCTAssertEqual(NoteNames.spoken("F#3", language: "it", system: "english"), "Fa diesis 3")
+        XCTAssertEqual(NoteNames.spoken("F#3", language: "pt-BR", system: "english"), "Fá sustenido 3")
+        XCTAssertEqual(NoteNames.spoken("F#3", language: "ru", system: "english"), "Фа-диез 3")
+        XCTAssertEqual(NoteNames.spoken("F#3", language: "ja", system: "english"), "Fシャープ 3")
+        XCTAssertEqual(NoteNames.spoken("Eb3", language: "zh-Hans", system: "english"), "降E 3")
+        XCTAssertEqual(NoteNames.spoken("F#3", language: "ko", system: "english"), "F 샵 3")
+        // Languages without their own words get the English ones.
+        XCTAssertEqual(NoteNames.spoken("Eb3", language: "id", system: "english"), "E flat 3")
+    }
+
+    func testSpokenLeavesOtherTextAlone() {
+        XCTAssertEqual(NoteNames.spoken("Bass", language: "en", system: "english"), "Bass")
+        XCTAssertEqual(NoteNames.spoken("Drone", language: "en", system: "english"), "Drone")
+        XCTAssertEqual(NoteNames.spoken("", language: "en", system: "english"), "")
+    }
 }

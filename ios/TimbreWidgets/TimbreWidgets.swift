@@ -68,7 +68,7 @@ struct StrobeRing: View {
                     var arc = Path()
                     arc.addArc(center: center, radius: radius, startAngle: .radians(start), endAngle: .radians(start + .pi / Double(count)), clockwise: false)
                     let lift = 0.45 + 0.55 * (0.5 + 0.5 * cos(start + .pi / 2))
-                    context.stroke(arc, with: .color(Palette.brass.opacity(lift)), lineWidth: side * 0.05)
+                    context.stroke(arc, with: .color(Palette.mint.opacity(lift)), lineWidth: side * 0.05)
                 }
             }
             var wave = Path()
@@ -201,12 +201,12 @@ struct StreakView: View {
         default:
             HStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Image(systemName: "flame.fill").font(.title2).foregroundStyle(status.practicedToday ? Palette.ember : Palette.inkFaint)
+                    Image(systemName: "flame.fill").font(.title2).foregroundStyle(status.practicedToday ? Palette.amber : Palette.inkFaint)
                     Text("\(status.days)").font(Typeface.display(44)).foregroundStyle(Palette.ink).contentTransition(.numericText())
                     Text("day streak").font(.caption.weight(.semibold)).foregroundStyle(Palette.inkSoft)
                     Spacer(minLength: 0)
                     Text(status.practicedToday ? "Practised today" : "Ten minutes keeps it alive")
-                        .font(.caption2).foregroundStyle(status.practicedToday ? Palette.success : Palette.brass).lineLimit(2)
+                        .font(.caption2).foregroundStyle(status.practicedToday ? Palette.success : Palette.mint).lineLimit(2)
                 }
                 if family == .systemMedium {
                     Spacer(minLength: 0)

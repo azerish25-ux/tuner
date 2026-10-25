@@ -309,6 +309,14 @@ public struct Achievement: Identifiable, Equatable, Sendable {
     public func isEarned(_ state: ProgressState, streakBest: Int, customTunings: Int, metrics: [String: Int] = [:]) -> Bool {
         value(state, streakBest: streakBest, customTunings: customTunings, metrics: metrics) >= goal
     }
+
+    /// The medal's artwork in the asset catalog ("Medals/medal.first_tune"), drawn in place of `symbol` once an
+    /// illustrator delivers it: one image per badge, square, with a transparent background, framed by the tier's rim.
+    /// Until an image of that name ships, the medal shows `symbol`. Ids never change, so neither do these names.
+    public var artwork: String { Achievement.artworkFolder + "/medal." + id }
+
+    /// The asset catalog folder (with "Provides Namespace" on) that holds every medal's artwork.
+    public static let artworkFolder = "Medals"
 }
 
 public enum Achievements {
@@ -318,8 +326,8 @@ public enum Achievements {
         Achievement(id: "full_tune", title: "All six", detail: "Tune every string of an instrument", symbol: "music.note", metric: "fullTunes", goal: 1, tier: .bronze, category: .tuning),
         Achievement(id: "streak_7", title: "Perfect week", detail: "Play seven days in a row", symbol: "flame.fill", metric: "streakBest", goal: 7, tier: .silver, category: .dedication),
         Achievement(id: "strings_100", title: "Hundred strings", detail: "Tune 100 strings", symbol: "tuningfork", metric: "stringsTuned", goal: 100, tier: .silver, category: .tuning),
-        Achievement(id: "bullseye", title: "Bullseye", detail: "Hit your first bullseye", symbol: "scope", metric: "bullseyes", goal: 1, tier: .bronze, category: .ear),
-        Achievement(id: "sharpshooter", title: "High Scorer", detail: "Score 2,000 in Bullseye", symbol: "target", metric: "sniperBest", goal: 2000, tier: .gold, category: .ear),
+        Achievement(id: "bullseye", title: "Bullseye", detail: "Hit your first bullseye", symbol: "target", metric: "bullseyes", goal: 1, tier: .bronze, category: .ear),
+        Achievement(id: "sharpshooter", title: "High scorer", detail: "Score 2,000 in Bullseye", symbol: "trophy.fill", metric: "sniperBest", goal: 2000, tier: .gold, category: .ear),
         Achievement(id: "golden_ear", title: "Golden ear", detail: "Answer 50 ear questions right", symbol: "ear", metric: "earCorrect", goal: 50, tier: .silver, category: .ear),
         Achievement(id: "level_5", title: "Rising star", detail: "Reach level 5", symbol: "star.fill", metric: "level", goal: 5, tier: .silver, category: .dedication),
         Achievement(id: "multi", title: "Multi-instrumentalist", detail: "Tune three different instruments", symbol: "guitars", metric: "instruments", goal: 3, tier: .silver, category: .tuning),
@@ -342,7 +350,7 @@ public enum Achievements {
         Achievement(id: "daily_1", title: "Daily set", detail: "Finish a daily set", symbol: "sun.max.fill", metric: "dailySets", goal: 1, tier: .bronze, category: .dedication),
         Achievement(id: "daily_30", title: "Creature of habit", detail: "Finish 30 daily sets", symbol: "calendar.badge.checkmark", metric: "dailySets", goal: 30, tier: .gold, category: .dedication),
         // Ear and games
-        Achievement(id: "sniper_win", title: "Round Winner", detail: "Win a round of Bullseye", symbol: "flag.checkered", metric: "sniperWins", goal: 1, tier: .bronze, category: .ear),
+        Achievement(id: "sniper_win", title: "Round winner", detail: "Win a round of Bullseye", symbol: "flag.checkered", metric: "sniperWins", goal: 1, tier: .bronze, category: .ear),
         Achievement(id: "bullseyes_50", title: "Dead center", detail: "Hit 50 bullseyes", symbol: "circle.circle.fill", metric: "bullseyes", goal: 50, tier: .silver, category: .ear),
         Achievement(id: "ear_perfect", title: "Clean sweep", detail: "Get all ten right in an ear round", symbol: "10.circle.fill", metric: "earPerfect", goal: 1, tier: .silver, category: .ear),
         Achievement(id: "ear_500", title: "Master listener", detail: "Answer 500 ear questions right", symbol: "ear.and.waveform", metric: "earCorrect", goal: 500, tier: .gold, category: .ear),

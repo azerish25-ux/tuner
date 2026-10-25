@@ -13,32 +13,42 @@ enum PlayGame: String {
 struct SniperChallenge: Equatable {
     /// The most one game can score: ten rounds of at most 500 points at the ×5 combo. A link claiming more is refused.
     static let maxScore = 25_000
-    /// The App Store page to send with a challenge, once the app has one ("https://apps.apple.com/app/id…"); nil leaves
-    /// it out. Owner step: docs/ios/APPLE-DELIVERY.md § Game Center.
-    static let appStoreLink: String? = nil
+    /// The App Store page to send with a challenge, from the build's `TimbreAppStoreID` (`AppLinks`); nil until the
+    /// app has its page. Owner step: docs/ios/APPLE-DELIVERY.md § Game Center.
+    static var appStoreLink: String? { AppLinks.appStore?.absoluteString }
 
     let target: Int
     /// The best game played since the challenge arrived.
     var best: Int?
     var beaten: Bool { (best ?? 0) > target }
 
-    /// What the share sheet sends with the card: the score and the link that opens Pitch Sniper with it to beat.
+    /// What the share sheet sends with the card: the score and a link that opens Pitch Sniper with it to beat.
     static func message(score: Int) -> String {
-        let link = DeepLink.challenge(score: score).absoluteString
-        let line = String(localized: "Beat my \(score) in Bullseye on Timbre: \(link)")
-        guard let store = appStoreLink else { return line }
-        return line + "\n" + String(localized: "Get Timbre: \(store)")
+        ChallengeMessage.compose(route: DeepLink.challenge(score: score)) { link in
+            String(localized: "Beat my \(score) in Bullseye on Timbre: \(link)")
+        }
     }
 }
 
 /// A song's "Beat my score" when Game Center's own challenge isn't there (before iOS 26, signed out, or no challenge
-/// for the song in App Store Connect): the points and the link that opens the song (`timbre://lesson?id=…`).
+/// for the song in App Store Connect): the points and a link that opens the song.
 enum PerformChallenge {
     static func message(points: Int, title: String, lesson: String) -> String {
-        let link = DeepLink.lesson(id: lesson).absoluteString
-        let line = String(localized: "Beat my \(points) on \(title) in Timbre: \(link)")
-        guard let store = SniperChallenge.appStoreLink else { return line }
-        return line + "\n" + String(localized: "Get Timbre: \(store)")
+        ChallengeMessage.compose(route: DeepLink.lesson(id: lesson)) { link in
+            String(localized: "Beat my \(points) on \(title) in Timbre: \(link)")
+        }
+    }
+}
+
+/// A challenge's words around its link. With a share page (`ShareDestination`) the link is the https one, which also
+/// takes a friend without Timbre to the App Store. Without one, the `timbre://` route, followed by the App Store page
+/// once the app has it.
+private enum ChallengeMessage {
+    static func compose(route: URL, line: (String) -> String) -> String {
+        if AppLinks.share != nil, let web = ShareDestination.link(for: route) { return line(web.absoluteString) }
+        let text = line(route.absoluteString)
+        guard let store = SniperChallenge.appStoreLink else { return text }
+        return text + "\n" + String(localized: "Get Timbre: \(store)")
     }
 }
 

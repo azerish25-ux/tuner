@@ -4,6 +4,7 @@
 python3 tools/curriculum/build.py            # validate and write
 python3 tools/curriculum/build.py --check    # validate only
 python3 tools/curriculum/build.py --check --only ear,theory   # validate some courses
+python3 tools/curriculum/build.py --check --editions          # also list each songbook edition's key
 
 Reads every course module listed in COURSES (tools/curriculum/courses/<name>.py, each
 defining COURSE = course(...)), validates it, assigns string keys, and writes
@@ -25,7 +26,8 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 from lib import QUALITIES, TUNINGS, Text, fretted, name  # noqa: E402
 
-COURSES = ["guitar", "ukulele", "bass", "violin", "cello", "mandolin", "banjo", "ear", "theory", "rhythm", "voice", "songs", "originals", "songs_part3"]
+COURSES = ["guitar", "ukulele", "bass", "violin", "cello", "mandolin", "banjo", "ear", "theory", "rhythm", "voice", "songs", "originals", "songs_part3",
+           "ukulele_songbook", "mandolin_songbook", "violin_songbook"]
 LIMITS = {"title": 42, "body": 300, "prompt": 140, "option": 48, "hint": 120, "why": 220, "summary": 120, "subtitle": 80}
 RANGES = {"guitar": (40, 88), "ukulele": (60, 81), "bass": (28, 67), "violin": (55, 93), "cello": (36, 76),
           "mandolin": (55, 88), "banjo": (50, 79), None: (36, 96)}
@@ -324,6 +326,9 @@ def main() -> int:
         for course_id, lengths in song_lengths.items():
             print(f"  {course_id:10} {len(lengths):3} songs, {len(lyric_songs.get(course_id, [])):2} with lyrics, "
                   f"{clock(min(lengths))} / {clock(median(lengths))} / {clock(max(lengths))}")
+    if "--editions" in sys.argv:
+        from courses.songbook_sources import REPORT
+        print("\n".join(REPORT))
     if "--check" in sys.argv:
         return 0
     out = ROOT / "ios/Sources/TimbreCore/Resources/curriculum.json"

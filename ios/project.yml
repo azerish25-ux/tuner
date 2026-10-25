@@ -87,9 +87,14 @@ targets:
             CFBundleURLSchemes: [timbre]
         # Empty = analytics stay on the device. Set the TELEMETRYDECK_APP_ID repository variable to switch it on in delivery builds.
         TimbreTelemetryAppID: $(TIMBRE_TELEMETRY_APP_ID)
+        # The privacy policy the paywall and Settings link to. Read it with
+        # `Bundle.main.object(forInfoDictionaryKey: "TimbrePrivacyPolicyURL") as? String`; move the policy to the
+        # owner's domain by changing TIMBRE_PRIVACY_POLICY_URL below (one place for every link).
+        TimbrePrivacyPolicyURL: $(TIMBRE_PRIVACY_POLICY_URL)
     settings:
       base:
         TIMBRE_TELEMETRY_APP_ID: ""
+        TIMBRE_PRIVACY_POLICY_URL: "https://azerish25-ux.github.io/tuner/privacy.html"
         PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre
         TARGETED_DEVICE_FAMILY: "1,2"
         # The on-device coach (Journey/CoachVoice.swift, `CoachPolish`): FoundationModels is iOS 26+, so it is

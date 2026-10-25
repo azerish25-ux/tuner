@@ -19,9 +19,13 @@ import UIKit
 /// Drone tool opens its paywall, and a locked lesson opens the lesson paywall from Learn. A lesson further on in its
 /// course than the player has reached shows where it sits instead (its course in Learn, a song on its Songs shelf).
 ///
-/// Settings and the instrument picker close for a link. A full-screen cover (a lesson, Strum, onboarding, an alert or
-/// a share sheet) is left as it is, since closing it would lose its progress: the link waits until it has gone, and
-/// then lands on screen rather than under it. The latest link wins.
+/// Settings and the instrument picker close for a link. A full-screen cover (a lesson, Strum, an alert or a share
+/// sheet) is left as it is, since closing it would lose its progress: the link waits until it has gone, and then lands
+/// on screen rather than under it. The latest link wins.
+///
+/// Before onboarding is done, a `tune?instrument=` link (an instrument's Custom Product Page, say) chooses that
+/// instrument on the welcome screen instead (`OnboardingLink`), so the plan, the first tune and the course follow it.
+/// The share page's https links (`ShareDestination`) open as the route they stand for.
 enum DeepLink {
     static let scheme = "timbre"
 
@@ -62,8 +66,14 @@ enum DeepLink {
 
     // MARK: Following a link
 
-    @MainActor static func open(_ url: URL, store: AppStore) {
+    @MainActor static func open(_ link: URL, store: AppStore) {
+        let url = ShareDestination.route(from: link) ?? link
         guard url.scheme == scheme, url.host != nil else { return }
+        // Onboarding picks the instrument itself: the link chooses it there, and nothing waits for onboarding to close.
+        if store.settings.onboardingCompleted != true, url.host == "tune" {
+            OnboardingLink.shared.offer(url, catalog: store.catalog)
+            return
+        }
         // A covering sheet would hide where the link lands (the root paywall waits for both to close).
         store.showSettings = false
         store.showInstrumentPicker = false
@@ -239,4 +249,24 @@ enum DeepLink {
             action()
         }
     }
+}
+
+/// The instrument a link chose while onboarding is up (or before it has appeared, on a launch from the link): the
+/// welcome screen selects it, adding its chip when it isn't one of the usual ones. Kept until onboarding reads it.
+@MainActor
+final class OnboardingLink: ObservableObject {
+    static let shared = OnboardingLink()
+
+    @Published private(set) var instrumentID: String?
+
+    /// Takes the instrument of a `tune?instrument=<id>` link, when the catalogue knows it.
+    func offer(_ url: URL, catalog: Catalog) {
+        let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        guard let id = items.first(where: { $0.name == "instrument" })?.value, catalog.instrument(id: id) != nil else { return }
+        instrumentID = id
+        Analytics.log("onboarding_link", ["instrument": id])
+    }
+
+    /// Onboarding has chosen the instrument: the link is spent.
+    func consume() { instrumentID = nil }
 }

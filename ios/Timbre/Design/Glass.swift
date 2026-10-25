@@ -123,8 +123,8 @@ struct TimbreGlassPlate<S: InsettableShape>: View {
     }
 }
 
-/// The main action as a capsule of tinted glass that answers the finger (iOS 26), with dark type and a soft glow of
-/// its colour under it; before iOS 26 the solid capsule of `PrimaryButtonStyle`. `collapsed` folds it into a round
+/// The main action as a capsule of mint glass that answers the finger (iOS 26), with dark type; before iOS 26 the flat
+/// mint capsule of `PrimaryButtonStyle`. At rest it doesn't glow (glow means live). `collapsed` folds it into a round
 /// bead (a purchase in flight, its label a spinner) and back, the glass flowing with it.
 /// Disabled, it is dark glass (graphite before iOS 26) with faint type and no glow, like a disabled
 /// `PrimaryButtonStyle`; while `collapsed` or `busy` (a purchase in flight, the button disabled meanwhile) it keeps
@@ -171,21 +171,14 @@ private struct ActionGlass: ViewModifier {
         if #available(iOS 26.0, *) {
             content
                 .glassEffect(Glass.regular.tint(live ? tint : Palette.surface).interactive(live), in: Capsule())
-                // Behind the glass, which gathers it: the button reads lit, as the solid one did.
-                .background {
-                    Capsule().fill(tint.opacity(live ? (pressed ? 0.12 : 0.3) : 0))
-                        .blur(radius: 14)
-                        .offset(y: 6)
-                        .allowsHitTesting(false)
-                }
                 .animation(Motion.quick, value: pressed)
         } else {
             content
                 .background {
                     if live {
-                        Capsule().fill(tint)
-                            .overlay(Capsule().strokeBorder(.white.opacity(0.35), lineWidth: 1).blendMode(.overlay))
-                            .shadow(color: tint.opacity(pressed ? 0.15 : 0.4), radius: pressed ? 6 : 22, y: 6)
+                        Capsule().fill(pressed ? tint.mix(with: .black, by: 0.12) : tint)
+                            .overlay(Capsule().strokeBorder(LinearGradient(colors: [.white.opacity(0.55), .white.opacity(0)],
+                                                                           startPoint: .top, endPoint: .center), lineWidth: 1))
                     } else {
                         Capsule().fill(Palette.surface).overlay(Capsule().strokeBorder(Palette.controlLine, lineWidth: 1))
                     }

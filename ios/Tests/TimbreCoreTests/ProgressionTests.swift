@@ -166,6 +166,19 @@ final class ProgressionTests: XCTestCase {
         XCTAssertEqual(Set(earned.map(\.id)), ["minutes_60", "units_1"])
     }
 
+    func testBadgesReadAsSentencesAndEachHasItsOwnArtwork() {
+        let all = Achievements.all
+        XCTAssertEqual(Set(all.map(\.artwork)).count, all.count, "one artwork name per badge")
+        XCTAssertEqual(all.first { $0.id == "first_tune" }?.artwork, "Medals/medal.first_tune")
+        // Titles are sentence case: only the first word is capitalised.
+        for badge in all {
+            let words = badge.title.split(separator: " ").dropFirst()
+            XCTAssertFalse(words.contains { $0.first?.isUppercase == true }, badge.title)
+        }
+        // Nothing borrows shooting words.
+        XCTAssertFalse(all.contains { $0.symbol.contains("scope") || $0.title.lowercased().contains("shoot") })
+    }
+
     func testLearnMetricsCountCoursesUnitsAndSongs() throws {
         let curriculum = try Curriculum.bundled()
         let guitar = try XCTUnwrap(curriculum.course(id: "guitar"))

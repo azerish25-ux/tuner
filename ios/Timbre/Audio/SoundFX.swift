@@ -1,9 +1,14 @@
 import AVFoundation
+import TimbreCore
 
 /// Short interface sounds (right answer, wrong answer, star, count-in click, lock), synthesized once on
 /// device: Karplus–Strong plucks for notes, soft harmonic bells for rewards, a two-mode woodblock for clicks,
 /// the musical ones in a light baked-in room (`RoomReverb`). They play through AVAudioPlayer so they never
-/// interrupt the microphone capture, and stay quiet. `play(.tuned)` is the full-tune resolution.
+/// interrupt the microphone capture, and stay quiet.
+///
+/// The rewards speak the music they reward: a lock rings the string's own pitch (`playLock`), the whole instrument
+/// in tune strums its own open strings (`playTuned`), and a lesson's stars ring the triad of its key (`playStar`).
+/// `motif` is Timbre's three-note signature (a fifth that resolves to the octave), for welcome, Pro and level-up.
 @MainActor
 final class SoundFX {
     static let shared = SoundFX()
@@ -12,6 +17,10 @@ final class SoundFX {
     private var players: [Cue: AVAudioPlayer] = [:]
     /// Lock bells by pitch (tenths of a hertz), rendered once per string pitch.
     private var bells: [Int: AVAudioPlayer] = [:]
+    /// Star bells by MIDI note, rendered once per note of a key's triad.
+    private var stars: [Int: AVAudioPlayer] = [:]
+    /// The full-tune strum of the strings last prepared (their pitches as a key) and its player.
+    private var tuned: (key: String, player: AVAudioPlayer)?
 
     private init() {
         // Render every cue off the main thread; a cue asked for before then renders on the spot.
@@ -68,6 +77,75 @@ final class SoundFX {
 
     private static func bellKey(_ hz: Double) -> Int { Int((hz * 10).rounded()) }
 
+    // MARK: The whole instrument in tune
+
+    /// Every string in tune: the instrument's own open strings (`frequencies`, in string order), rolled one by one
+    /// with each string's bell, then strummed together and left to ring (`SoundSynth.tuned`). E standard ends on
+    /// E standard, a GCEA ukulele on GCEA. Rendered ahead by `prepareTuned`, else on the spot.
+    func playTuned(frequencies: [Double]) {
+        guard enabled, !frequencies.isEmpty else { return }
+        let key = Self.tunedKey(frequencies)
+        if tuned?.key != key, let player = Self.player(SoundSynth.wav(SoundSynth.tuned(frequencies), rate: SoundSynth.rate), volume: Self.tunedVolume) {
+            tuned = (key, player)
+        }
+        guard let player = tuned?.player else { return }
+        player.currentTime = 0
+        player.play()
+    }
+
+    /// Renders the full-tune strum for these strings in the background, so the last lock never waits on synthesis.
+    func prepareTuned(_ frequencies: [Double]) {
+        let key = Self.tunedKey(frequencies)
+        guard !frequencies.isEmpty, tuned?.key != key else { return }
+        Task.detached(priority: .utility) { [weak self] in
+            let data = SoundSynth.wav(SoundSynth.tuned(frequencies), rate: SoundSynth.rate)
+            await self?.installTuned(data, key: key)
+        }
+    }
+
+    private func installTuned(_ data: Data, key: String) {
+        guard tuned?.key != key, let player = Self.player(data, volume: Self.tunedVolume) else { return }
+        tuned = (key, player)
+    }
+
+    private static let tunedVolume: Float = 0.42
+
+    private static func tunedKey(_ frequencies: [Double]) -> String {
+        frequencies.map { String(Int(($0 * 10).rounded())) }.joined(separator: ",")
+    }
+
+    // MARK: Stars in the key
+
+    /// Star `index` (0, 1, 2, then badges) as a bell on the next note of the key's triad: 1, 3, 5, then the octave.
+    /// Without a key, C major.
+    func playStar(_ index: Int, key: RewardKey?) {
+        guard enabled else { return }
+        let midi = (key ?? .neutral).starMidi(index)
+        if stars[midi] == nil { installStar(SoundSynth.wav(SoundSynth.starBell(SoundSynth.hz(midi)), rate: SoundSynth.rate), midi: midi) }
+        guard let player = stars[midi] else { return }
+        player.currentTime = 0
+        player.play()
+    }
+
+    /// Renders a key's star bells in the background as a results screen opens.
+    func prepareStars(_ key: RewardKey?) {
+        let notes = (0..<4).map { (key ?? .neutral).starMidi($0) }.filter { stars[$0] == nil }
+        guard !notes.isEmpty else { return }
+        Task.detached(priority: .utility) { [weak self] in
+            let rendered = notes.map { ($0, SoundSynth.wav(SoundSynth.starBell(SoundSynth.hz($0)), rate: SoundSynth.rate)) }
+            await self?.installStars(rendered)
+        }
+    }
+
+    private func installStars(_ rendered: [(Int, Data)]) {
+        for (midi, data) in rendered where stars[midi] == nil { installStar(data, midi: midi) }
+    }
+
+    private func installStar(_ data: Data, midi: Int) {
+        if stars.count >= 24 { stars.removeAll() }
+        stars[midi] = Self.player(data, volume: 0.36)
+    }
+
     private static func player(_ data: Data, volume: Float) -> AVAudioPlayer? {
         guard let player = try? AVAudioPlayer(data: data) else { return nil }
         player.volume = volume
@@ -79,16 +157,75 @@ final class SoundFX {
         switch cue {
         case .click, .accent: return 0.5
         case .hit: return 0.32
-        case .wrong: return 0.3
-        case .tuned: return 0.4
+        case .wrong, .near, .wobble: return 0.3
+        case .xpTick: return 0.16
+        case .motif, .streak: return 0.4
         default: return 0.36
         }
     }
 }
 
 /// The interface sounds `SoundFX` plays (kept outside the main-actor class so they render off the main thread).
-/// `tuned` is the whole instrument in tune: a strummed suspended chord resolving to major.
-enum SoundCue: CaseIterable, Sendable { case correct, wrong, star, click, accent, complete, hit, levelUp, tuned }
+enum SoundCue: CaseIterable, Sendable {
+    case correct, wrong, star, click, accent, complete, hit
+    /// A level reached: a rising roll into the motif.
+    case levelUp
+    /// Timbre's signature: a fifth resolving to the octave, plucked and belled (welcome, Pro unlocked).
+    case motif
+    /// One step of an XP count: a soft tick.
+    case xpTick
+    /// A streak milestone: a warm chord swelling up like a stage lamp coming on, a rising sixth over it.
+    case streak
+    /// A right answer in an ear drill, with no pitch of its own to colour the next question: two knocks of a
+    /// woodblock over a brush.
+    case earCorrect
+    /// Nearly (a game's near miss): one soft, muted knock.
+    case near
+    /// A miss: two soft tones a few hertz apart, beating like a string out of tune.
+    case wobble
+}
+
+/// The key a lesson's music sits in, so its stars ring that key's triad.
+struct RewardKey: Equatable, Sendable {
+    /// Pitch class, 0 = C.
+    var tonic: Int
+    var minor: Bool
+
+    static let neutral = RewardKey(tonic: 0, minor: false)
+
+    /// Star `index` as a MIDI note in a bright register: the root (C5…B5), the third, the fifth, then the octave.
+    func starMidi(_ index: Int) -> Int {
+        let root = 72 + ((tonic % 12) + 12) % 12
+        let degrees = [0, minor ? 3 : 4, 7, 12]
+        return root + degrees[min(max(0, index), degrees.count - 1)]
+    }
+
+    /// The key of the music a lesson plays (its notes and chords, `KeyEstimate`); nil for a lesson with neither.
+    static func of(_ lesson: Lesson) -> RewardKey? {
+        var notes: [TimedNote] = []
+        var chords: [(chord: ChordSpec, bars: Int)] = []
+        for step in lesson.steps {
+            switch step {
+            case let .playNotes(list, _):
+                notes += list
+            case let .playAlong(list, _, _, _):
+                notes += list
+            case let .playChord(chord):
+                chords.append((chord: chord, bars: 1))
+            case let .strum(chord, _, _, bars, _):
+                if let chord { chords.append((chord: chord, bars: max(1, bars))) }
+            case let .progression(list, bars, _, _, _):
+                for (index, chord) in list.enumerated() {
+                    chords.append((chord: chord, bars: index < bars.count ? max(1, bars[index]) : 1))
+                }
+            default:
+                break
+            }
+        }
+        guard let key = KeyEstimate.key(of: notes, chords: chords) else { return nil }
+        return RewardKey(tonic: key.tonic, minor: key.minor)
+    }
+}
 
 /// Offline synthesis for `SoundFX`: pure functions over sample buffers, normalised to a gentle peak.
 enum SoundSynth {
@@ -116,12 +253,13 @@ enum SoundSynth {
     /// How much room each cue gets (reverb level against the dry sound, at most 20 %).
     private static func room(_ cue: SoundCue) -> Float {
         switch cue {
-        case .click, .accent: return 0
-        case .hit: return 0.07
-        case .wrong: return 0.1
+        case .click, .accent, .xpTick: return 0
+        case .hit, .near: return 0.07
+        case .earCorrect: return 0.08
+        case .wrong, .wobble: return 0.1
         case .correct: return 0.14
         case .star, .complete: return 0.17
-        case .levelUp, .tuned: return 0.2
+        case .levelUp, .motif, .streak: return 0.2
         }
     }
 
@@ -182,30 +320,113 @@ enum SoundSynth {
             mallet(&b, hz: hz(84), length: 0.18)
             return normalised(b, peak: 0.45)
         case .levelUp:
-            // A rising plucked fanfare crowned by a shimmering bell.
-            var b = buffer(2)
-            for (i, midi) in [72, 76, 79, 84, 88].enumerated() {
-                pluck(&b, hz: hz(midi), at: Double(i) * 0.075, length: 0.75, gain: 0.65, brightness: 0.7, sustain: 0.75)
+            // A soft rising roll that lands on the motif, its octave crowned with a shimmer.
+            var b = buffer(2.3)
+            for (i, midi) in [60, 64, 67].enumerated() {
+                pluck(&b, hz: hz(midi), at: Double(i) * 0.06, length: 0.6, gain: 0.45, brightness: 0.6, sustain: 0.6)
             }
-            pluck(&b, hz: hz(91), at: 0.375, length: 1.4, gain: 0.7, brightness: 0.75, sustain: 1.1)
-            chime(&b, hz: hz(91), at: 0.375, length: 1.5, gain: 0.4, shimmer: true)
-            chime(&b, hz: hz(79), at: 0.375, length: 1.3, gain: 0.25)
+            motif(&b, at: 0.2, gain: 1)
+            chime(&b, hz: hz(91), at: 0.56, length: 1.4, gain: 0.18, shimmer: true)
             return normalised(b, peak: 0.55)
-        case .tuned:
-            // Every string in tune: a quick strum of Csus4 whose fourth falls to the third, the open C major
-            // ringing on under a bell, like the last peg settling.
+        case .motif:
             var b = buffer(2.1)
-            for (i, midi) in [48, 55, 60, 65, 67].enumerated() {
-                pluck(&b, hz: hz(midi), at: Double(i) * 0.024, length: 0.42, gain: 0.55, brightness: 0.55, sustain: 0.5)
-            }
-            let resolve = 0.36
-            for (i, midi) in [48, 55, 60, 64, 67, 72].enumerated() {
-                pluck(&b, hz: hz(midi), at: resolve + Double(i) * 0.02, length: 1.7, gain: 0.62, brightness: 0.68, sustain: 1.3)
-            }
-            chime(&b, hz: hz(76), at: resolve + 0.1, length: 1.6, gain: 0.3, shimmer: true)
-            chime(&b, hz: hz(84), at: resolve + 0.12, length: 1.5, gain: 0.2)
+            motif(&b, at: 0, gain: 1)
             return normalised(b, peak: 0.55)
+        case .xpTick:
+            // A soft, high tick: a counter's detent, quieter than any click that keeps time.
+            var b = buffer(0.03)
+            woodblock(&b, modes: [(4_400, 320, 1), (6_300, 460, 0.35)])
+            return normalised(b, peak: 0.32)
+        case .streak:
+            // The lamp comes on: a warm G6 chord swells up under a plucked rising sixth that rings on as a bell.
+            var b = buffer(2.4)
+            for midi in [55, 62, 67, 71, 76] {
+                swell(&b, hz: hz(midi), at: 0, length: 2.2, gain: 0.28)
+            }
+            pluck(&b, hz: hz(74), at: 0.22, length: 0.7, gain: 0.6, brightness: 0.65, sustain: 0.7)
+            pluck(&b, hz: hz(83), at: 0.4, length: 1.6, gain: 0.65, brightness: 0.7, sustain: 1.3)
+            chime(&b, hz: hz(83), at: 0.404, length: 1.6, gain: 0.32)
+            return normalised(b, peak: 0.55)
+        case .earCorrect:
+            // Tok-tok over a brush: rhythm without pitch, so the ear stays on the question's notes.
+            var b = buffer(0.36)
+            brush(&b, at: 0, length: 0.22, gain: 0.25)
+            woodblock(&b, modes: [(820, 60, 1), (1_420, 110, 0.4)], at: 0.01)
+            woodblock(&b, modes: [(820, 60, 0.9), (1_420, 110, 0.35)], at: 0.13)
+            return normalised(b, peak: 0.5)
+        case .near:
+            var b = buffer(0.16)
+            woodblock(&b, modes: [(640, 70, 1), (1_180, 140, 0.3)])
+            return normalised(b, peak: 0.4)
+        case .wobble:
+            // Two soft bells 7 Hz apart: the beating of a string just off its note.
+            var b = buffer(0.8)
+            chime(&b, hz: hz(57), at: 0, length: 0.7, gain: 0.5)
+            chime(&b, hz: hz(57) + 7, at: 0, length: 0.7, gain: 0.5)
+            return normalised(b, peak: 0.4)
         }
+    }
+
+    /// The motif: a plucked fifth that resolves to the octave (C5, G5, C6), each note with its bell, the last ringing
+    /// over a soft low C. Timbre's three-note signature.
+    static func motif(_ out: inout [Float], at start: Double, gain: Float) {
+        let notes: [(midi: Int, at: Double, length: Double)] = [(72, 0, 0.55), (79, 0.15, 0.65), (84, 0.32, 1.6)]
+        for note in notes {
+            let time = start + note.at
+            pluck(&out, hz: hz(note.midi), at: time, length: note.length, gain: 0.6 * gain, brightness: 0.7, sustain: note.length)
+            chime(&out, hz: hz(note.midi), at: time + 0.004, length: note.length + 0.1, gain: 0.34 * gain)
+        }
+        pluck(&out, hz: hz(60), at: start + 0.32, length: 1.6, gain: 0.32 * gain, brightness: 0.45, sustain: 1.4)
+    }
+
+    // MARK: The whole instrument in tune
+
+    /// Seconds between strings as the full-tune strum rolls across them: slow enough on six strings to hear each one
+    /// ring with its bell, quicker on a twelve-string so the roll stays under a second.
+    static func tunedRoll(count: Int) -> Double { min(0.12, 0.72 / Double(max(1, count))) }
+
+    /// When the roll's strings are struck together again and left to bloom.
+    static func tunedBloom(count: Int) -> Double { Double(max(1, count)) * tunedRoll(count: count) + 0.12 }
+
+    /// The full-tune strum, from the strings' own pitches in string order (`SoundFX.playTuned`): each string plucked
+    /// in turn with its lock bell, then all of them strummed at once and left to ring, the top string's octave as a
+    /// light over it. Strings too low for a phone's speaker sound an octave up at a time, as the lock bells do.
+    static func tuned(_ frequencies: [Double]) -> [Float] {
+        let strings = frequencies.map(strumPitch)
+        let count = strings.count
+        let roll = tunedRoll(count: count)
+        let bloom = tunedBloom(count: count)
+        var b = buffer(bloom + 2.3)
+        for (i, hz) in strings.enumerated() {
+            let at = Double(i) * roll
+            // Rings until the bloom strikes this string again.
+            let length = bloom + Double(i) * 0.016 - at + 0.03
+            pluck(&b, hz: hz, at: at, length: length, gain: 0.5, brightness: 0.62, sustain: 1.4)
+            if let bell = bellPitch(hz) { chime(&b, hz: bell, at: at + 0.004, length: 1.2, gain: 0.2) }
+        }
+        for (i, hz) in strings.enumerated() {
+            pluck(&b, hz: hz, at: bloom + Double(i) * 0.016, length: 2.1, gain: 0.52, brightness: 0.7, sustain: 1.7)
+        }
+        if let top = strings.max(), let light = bellPitch(top * 2) {
+            chime(&b, hz: light, at: bloom + 0.06, length: 1.9, gain: 0.24, shimmer: true)
+        }
+        return reverberant(normalised(b, peak: 0.55), wet: 0.2)
+    }
+
+    /// A string's pitch for the strum: an octave up at a time while it is below what a phone's speaker plays.
+    private static func strumPitch(_ frequency: Double) -> Double {
+        guard frequency.isFinite, frequency > 1 else { return 110 }
+        var hz = frequency
+        while hz < 70 { hz *= 2 }
+        return min(hz, 2_000)
+    }
+
+    /// A reward star's bell: a bright harmonic bell with a glint on top, in the results' room.
+    static func starBell(_ hz: Double) -> [Float] {
+        var b = buffer(1.2)
+        chime(&b, hz: hz, at: 0, length: 1.1, gain: 0.75, shimmer: true)
+        chime(&b, hz: hz * 2, at: 0.012, length: 0.5, gain: 0.12)
+        return reverberant(normalised(b, peak: 0.5), wet: 0.17)
     }
 
     /// The lock bell: a pluck for the attack and a harmonic bell that rings on, like a natural harmonic.
@@ -311,18 +532,57 @@ enum SoundSynth {
         }
     }
 
-    /// A woodblock: a few fast-decaying resonant modes (hertz, decay per second, level) struck by a sub-millisecond noise tick.
-    static func woodblock(_ out: inout [Float], modes: [(Double, Double, Double)]) {
-        let count = out.count
+    /// A woodblock: a few fast-decaying resonant modes (hertz, decay per second, level) struck by a sub-millisecond
+    /// noise tick, `start` seconds in.
+    static func woodblock(_ out: inout [Float], modes: [(Double, Double, Double)], at start: Double = 0) {
+        let first = max(0, Int(start * Double(rate)))
+        let count = out.count - first
+        guard count > 0 else { return }
         var noise = SystemNoise(seed: 7)
         let tick = Int(0.0008 * Double(rate))
-        for n in 0..<min(tick, count) { out[n] += noise.next() * 0.35 * Float(1 - Double(n) / Double(tick)) }
+        for n in 0..<min(tick, count) { out[first + n] += noise.next() * 0.35 * Float(1 - Double(n) / Double(tick)) }
         for (frequency, damping, amplitude) in modes {
             let omega = 2 * Double.pi * frequency / Double(rate)
             for n in 0..<count {
                 let t = Double(n) / Double(rate)
-                out[n] += Float(amplitude * exp(-damping * t) * sin(omega * Double(n)) * min(1, t / 0.0004))
+                out[first + n] += Float(amplitude * exp(-damping * t) * sin(omega * Double(n)) * min(1, t / 0.0004))
             }
+        }
+    }
+
+    /// A slow swell: a few harmonic partials that rise over a fifth of a second and fade over `length` (a lamp
+    /// warming up rather than a string struck).
+    static func swell(_ out: inout [Float], hz: Double, at start: Double, length: Double, gain: Float) {
+        let first = max(0, Int(start * Double(rate)))
+        let count = min(Int(length * Double(rate)), out.count - first)
+        guard count > 0 else { return }
+        let rise = 0.2 * Double(rate)
+        let fade = Double(count)
+        for (ratio, amplitude) in [(1.0, 1.0), (2.0, 0.3), (3.0, 0.12)] {
+            let frequency = hz * ratio
+            guard frequency < Double(rate) / 2.2 else { continue }
+            let omega = 2 * Double.pi * frequency / Double(rate)
+            for n in 0..<count {
+                let x = Double(n)
+                let envelope = min(1, x / rise) * pow(1 - x / fade, 2)
+                out[first + n] += Float(sin(omega * x) * amplitude * envelope) * gain
+            }
+        }
+    }
+
+    /// A brush: soft noise with a quick swell and fall, darkened by a one-pole low-pass (no pitch of its own).
+    static func brush(_ out: inout [Float], at start: Double, length: Double, gain: Float) {
+        let first = max(0, Int(start * Double(rate)))
+        let count = min(Int(length * Double(rate)), out.count - first)
+        guard count > 0 else { return }
+        var noise = SystemNoise(seed: 11)
+        var low: Float = 0
+        let peak = Double(count) * 0.25
+        for n in 0..<count {
+            let x = Double(n)
+            let envelope = x < peak ? x / peak : pow(1 - (x - peak) / (Double(count) - peak), 2)
+            low += (noise.next() - low) * 0.35
+            out[first + n] += low * Float(envelope) * gain
         }
     }
 

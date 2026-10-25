@@ -23,6 +23,7 @@ struct LessonVisualView: View {
         case let .rhythm(pattern, beatsPerBar): RhythmBar(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, arrows: strums)
         case let .keyboard(midi): KeyboardView(highlighted: Set(midi), accent: accent, height: keysHeight)
         case let .instrument(part): InstrumentPartView(part: part, instrumentId: instrumentId, accent: accent, height: room.map { max(200, $0.height) } ?? 260)
+        case let .clip(name): LessonClipView(name: name, height: room.map { max(200, $0.height) } ?? 240)
         }
     }
 
@@ -90,6 +91,138 @@ enum StringOrder: String, CaseIterable, Identifiable {
 
     /// The string number drawn in row `row` (0 at the top): the inverse of `row(ofString:count:)`.
     func string(atRow row: Int, count: Int) -> Int { self == .tab ? row + 1 : count - row }
+
+    /// The other order: the other string on top, or the other string in the left lane.
+    var reversed: StringOrder { self == .tab ? .mirror : .tab }
+
+    /// Strings standing upright side by side for a player holding the instrument as `hand` says: the lowest string on
+    /// the left (`upright`), or on the right on a left-handed instrument. Read as lanes counted from the left.
+    static func lanes(for hand: HandStyle) -> StringOrder { hand.mirrorsUpright ? .tab : .mirror }
+}
+
+// MARK: - The player's hand
+
+/// How the player holds the instrument (Settings › Handedness), as every picture of it reads it:
+/// - `.right`: the pictures as drawn.
+/// - `.left`: a left-handed instrument, the mirror image of a right-handed one. Every neck and chord picture is its mirror
+///   image (a neck lying across the screen has its nut on the right, a chord box its lowest string on the right), and so
+///   is the 3D instrument, its pegs turning the other way.
+/// - `.leftUpsideDown`: a right-handed instrument turned over and played left-handed, string 1 nearest the face. A neck
+///   lying across the screen has its nut on the right and string 1 on top, as the player sees it, and a strum falls from
+///   string 1. Standing up (a chord box, the player's-view neck, the 3D headstock), it is the right-handed instrument it is.
+/// Words are never mirrored, and every string keeps its number (1 is the thinnest) whichever way it is held.
+enum PlayingHand: String, CaseIterable, Identifiable, Sendable {
+    case right
+    case left
+    case leftUpsideDown
+
+    var id: String { rawValue }
+
+    /// From the stored setting, in whichever form it is kept ("left", `.leftUpsideDown`, "left-upside-down").
+    init(setting: Any) {
+        let word = String(describing: setting).lowercased()
+        if word.contains("upside") {
+            self = .leftUpsideDown
+        } else if word.hasPrefix("left") {
+            self = .left
+        } else {
+            self = .right
+        }
+    }
+
+    /// The fretting hand is the right one: a neck lying across the screen has its nut on the right.
+    var nutOnRight: Bool { self != .right }
+    /// The instrument is the mirror image of a right-handed one (strung left-handed).
+    var mirrorsInstrument: Bool { self == .left }
+    /// String 1, the thinnest, lies nearest the face: on top of a neck lying across the screen, and first under a strum.
+    var thinnestOnTop: Bool { self == .leftUpsideDown }
+}
+
+/// The player's hold with Settings › Charts as printed, and what each kind of picture makes of them. Views read it with
+/// `@CurrentHand`; a screen can hand it down with `.handStyle(_:)`.
+struct HandStyle: Equatable, Sendable {
+    var hand: PlayingHand = .right
+    /// Chord charts (the chord box, and the Chart view's necks lying across the screen) stay as songbooks print them.
+    var chartsAsPrinted = false
+
+    static let standard = HandStyle()
+
+    init(hand: PlayingHand = .right, chartsAsPrinted: Bool = false) {
+        self.hand = hand
+        self.chartsAsPrinted = chartsAsPrinted
+    }
+
+    /// From the player's settings.
+    init(_ settings: UserSettings) {
+        self.init(hand: PlayingHand(setting: settings.handedness), chartsAsPrinted: settings.chartsAsPrinted == true)
+    }
+
+    /// The chord box (`ChordDiagram`) is drawn as its mirror image.
+    var mirrorsChordChart: Bool { hand.mirrorsInstrument && !chartsAsPrinted }
+    /// The instrument standing up (the player's-view neck in perspective, a runway's lanes, the 3D and studio stages) is
+    /// drawn as its mirror image.
+    var mirrorsUpright: Bool { hand.mirrorsInstrument }
+
+    /// A neck lying across the screen in the picture choice `picture` (`.tab`, the Chart view; `.mirror`, Player view):
+    /// which string lies on top, and whether the nut is on the right.
+    func lying(_ picture: StringOrder) -> (order: StringOrder, nutOnRight: Bool) {
+        if picture == .tab && chartsAsPrinted { return (picture, false) }
+        return (hand.thinnestOnTop ? .tab : picture, hand.nutOnRight)
+    }
+
+    /// The strum stage's strings (thickest on top as a right-hander holds it, so a down strum falls down the screen):
+    /// string 1 on top for a player holding the instrument upside down, whose down strum falls from string 1.
+    var strumOrder: StringOrder { hand.thinnestOnTop ? .tab : .mirror }
+}
+
+private struct HandStyleKey: EnvironmentKey {
+    static let defaultValue: HandStyle? = nil
+}
+
+extension EnvironmentValues {
+    /// The hold the pictures below are drawn for; nil reads it from the player's settings (`CurrentHand`).
+    var handStyle: HandStyle? {
+        get { self[HandStyleKey.self] }
+        set { self[HandStyleKey.self] = newValue }
+    }
+}
+
+extension View {
+    /// Draws every neck and chord picture inside for `settings`' hold.
+    func handStyle(_ settings: UserSettings) -> some View {
+        environment(\.handStyle, HandStyle(settings))
+    }
+}
+
+/// The hold to draw for: the one handed down (`View.handStyle`), else the player's settings. Redraws when they change.
+@MainActor @propertyWrapper
+struct CurrentHand: DynamicProperty {
+    @Environment(\.handStyle) private var given
+    @EnvironmentObject private var store: AppStore
+
+    init() {}
+
+    var wrappedValue: HandStyle { given ?? HandStyle(store.settings) }
+}
+
+/// Drawing a picture mirrored: its shapes go through a context turned over left to right, its words are set at the
+/// mirrored points (never mirrored themselves).
+struct CanvasMirror {
+    let on: Bool
+    let width: CGFloat
+
+    func x(_ value: CGFloat) -> CGFloat { on ? width - value : value }
+    func point(_ p: CGPoint) -> CGPoint { CGPoint(x: x(p.x), y: p.y) }
+    func anchor(_ anchor: UnitPoint) -> UnitPoint { on ? UnitPoint(x: 1 - anchor.x, y: anchor.y) : anchor }
+
+    /// A copy of `context` that draws mirrored.
+    func shapes(_ context: GraphicsContext) -> GraphicsContext {
+        guard on else { return context }
+        var mirrored = context
+        mirrored.translateBy(x: width, y: 0)
+        mirrored.scaleBy(x: -1, y: 1)
+        return mirrored
+    }
 }
 
 /// Which strings are the thinnest and the thickest, so every diagram can name its edges in words
@@ -156,7 +289,8 @@ enum DiagramType {
 }
 
 /// A stretch of neck, nut on the left, dots where to press, its strings in the player's string order
-/// (string 1 on top in the Chart view, the default, as in tab; the thickest on top in Player view).
+/// (string 1 on top in the Chart view, the default, as in tab; the thickest on top in Player view). For a left-handed
+/// player the nut is on the right, and held upside down string 1 is on top (`HandStyle.lying`).
 /// Every string is numbered beside the nut, and the top and bottom edges are named ("Thinnest (1)",
 /// "Thickest (6)"), so the orientation never has to be guessed. Lessons number the frets under their
 /// columns too, as the Scales neck does, the frets holding a dot lit.
@@ -185,15 +319,18 @@ struct FretboardDiagram: View {
     var fretNumbers = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
+    @CurrentHand private var hand
     /// String numbers, fret numbers and edge names grow with Dynamic Type from the 11 pt floor (`DiagramType`).
     @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
 
     var body: some View {
-        let order = stringOrder
+        let lie = hand.lying(stringOrder)
         let scale = typeScale
         TimelineView(.animation(minimumInterval: 1 / 30, paused: !pulsing || reduceMotion)) { timeline in
             let beat = pulsing && !reduceMotion ? 0.5 + 0.5 * sin(timeline.date.timeIntervalSinceReferenceDate * 2 * .pi / 1.2) : 0
-            Canvas { context, size in draw(&context, size: size, beat: beat, order: order, scale: scale) }
+            Canvas { context, size in
+                draw(&context, size: size, beat: beat, order: lie.order, mirror: CanvasMirror(on: lie.nutOnRight, width: size.width), scale: scale)
+            }
         }
         .frame(height: height)
         .accessibilityElement(children: .ignore)
@@ -246,7 +383,10 @@ struct FretboardDiagram: View {
         strings > 1 ? CGFloat(string - 1) / CGFloat(strings - 1) : 0.5
     }
 
-    private func draw(_ context: inout GraphicsContext, size: CGSize, beat: Double, order: StringOrder, scale: CGFloat) {
+    /// Draws the neck nut-left; `mirror` turns the shapes over for a nut on the right and sets the words at the mirrored
+    /// points, so they read as usual.
+    private func draw(_ context: inout GraphicsContext, size: CGSize, beat: Double, order: StringOrder, mirror: CanvasMirror, scale: CGFloat) {
+        let shapes = mirror.shapes(context)
         let lift = edgeLift
         let left = Self.nutX, right = size.width - 10, top = pad + lift
         let bottom = size.height - pad - footRow - lift
@@ -255,35 +395,41 @@ struct FretboardDiagram: View {
             // The top string's name over its number ("Thinnest (1)" in tab order), the bottom string's under its own.
             let topString = order.string(atRow: 0, count: count), bottomString = order.string(atRow: count - 1, count: count)
             let points = DiagramType.size(DiagramType.floor, scale: scale)
-            if let name = edges.canvasLabel(topString, size: points) { context.draw(name, at: CGPoint(x: 2, y: lift / 2 + 1), anchor: .leading) }
-            if let name = edges.canvasLabel(bottomString, size: points) { context.draw(name, at: CGPoint(x: 2, y: size.height - lift / 2 - 1), anchor: .leading) }
+            if let name = edges.canvasLabel(topString, size: points) {
+                context.draw(name, at: mirror.point(CGPoint(x: 2, y: lift / 2 + 1)), anchor: mirror.anchor(.leading))
+            }
+            if let name = edges.canvasLabel(bottomString, size: points) {
+                context.draw(name, at: mirror.point(CGPoint(x: 2, y: size.height - lift / 2 - 1)), anchor: mirror.anchor(.leading))
+            }
         }
         let fretWidth = (right - left) / CGFloat(frets)
         let gap = strings > 1 ? (bottom - top) / CGFloat(strings - 1) : 0
         // String n's y, in the player's string order.
         func rowY(_ string: Int) -> CGFloat { top + CGFloat(order.row(ofString: string, count: count)) * gap }
         let board = Path(roundedRect: CGRect(x: left, y: top - 10, width: right - left, height: bottom - top + 20), cornerRadius: 8)
-        context.fill(board, with: .linearGradient(Gradient(colors: fretless ? [Color(hex: 0x1C1C1E), Color(hex: 0x0E0E10)] : [Color(hex: 0x2A1E17), Color(hex: 0x1A120E)]), startPoint: CGPoint(x: 0, y: top), endPoint: CGPoint(x: 0, y: bottom)))
+        shapes.fill(board, with: .linearGradient(Gradient(colors: fretless ? [Color(hex: 0x1C1C1E), Color(hex: 0x0E0E10)] : [Color(hex: 0x2A1E17), Color(hex: 0x1A120E)]), startPoint: CGPoint(x: 0, y: top), endPoint: CGPoint(x: 0, y: bottom)))
         for marker in [3, 5, 7, 9, 12, 15] where marker >= start && marker < start + frets && !fretless {
             let x = left + (CGFloat(marker - start + 1) - 0.5) * fretWidth
-            context.fill(Path(ellipseIn: CGRect(x: x - 4, y: (top + bottom) / 2 - 4, width: 8, height: 8)), with: .color(.white.opacity(0.18)))
+            shapes.fill(Path(ellipseIn: CGRect(x: x - 4, y: (top + bottom) / 2 - 4, width: 8, height: 8)), with: .color(.white.opacity(0.18)))
         }
         if start <= 1 {
-            context.fill(Path(CGRect(x: left - 3, y: top - 10, width: 6, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3)))
+            shapes.fill(Path(CGRect(x: left - 3, y: top - 10, width: 6, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3)))
         } else if !numbered {
             context.draw(Text("\(start)fr").font(DiagramType.font(11, weight: .semibold, scale: scale)).foregroundStyle(Palette.inkSoft),
-                         at: CGPoint(x: left + fretWidth / 2, y: size.height - lift - 13))
+                         at: mirror.point(CGPoint(x: left + fretWidth / 2, y: size.height - lift - 13)))
         }
-        if numbered { drawFretNumbers(&context, left: left, fretWidth: fretWidth, y: bottom + pad + Self.numberRow / 2 - 2, scale: scale) }
+        if numbered {
+            drawFretNumbers(&context, left: left, fretWidth: fretWidth, y: bottom + pad + Self.numberRow / 2 - 2, mirror: mirror, scale: scale)
+        }
         for fret in 1...frets {
             let x = left + CGFloat(fret) * fretWidth
             if fretless {
                 // Tapes where first-position fingers land (whole tone, major third, fourth, fifth).
                 guard [2, 4, 5, 7].contains(fret) else { continue }
                 let tape = left + (CGFloat(fret) - 0.5) * fretWidth
-                context.fill(Path(CGRect(x: tape - 1.5, y: top - 10, width: 3, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3).opacity(0.35)))
+                shapes.fill(Path(CGRect(x: tape - 1.5, y: top - 10, width: 3, height: bottom - top + 20)), with: .color(Color(hex: 0xEDE4D3).opacity(0.35)))
             } else {
-                context.fill(Path(CGRect(x: x - 1, y: top - 10, width: 2, height: bottom - top + 20)), with: .color(Color(hex: 0xB9B2A6).opacity(0.8)))
+                shapes.fill(Path(CGRect(x: x - 1, y: top - 10, width: 2, height: bottom - top + 20)), with: .color(Color(hex: 0xB9B2A6).opacity(0.8)))
             }
         }
         for string in 1...count {
@@ -295,16 +441,16 @@ struct FretboardDiagram: View {
             if lit {
                 let glow = 0.14 + 0.16 * beat
                 let band = tall ? max(10, gap * 0.24) : 10
-                context.fill(Path(CGRect(x: left, y: y - band / 2, width: right - left, height: band)), with: .color(accent.opacity(pulsing ? glow : 0.22)))
+                shapes.fill(Path(CGRect(x: left, y: y - band / 2, width: right - left, height: band)), with: .color(accent.opacity(pulsing ? glow : 0.22)))
             }
             let tone = wound ? Color(hex: 0xCDB892) : Color(hex: 0xE2DDD3)
-            context.fill(Path(CGRect(x: left, y: y - thickness / 2, width: right - left, height: thickness)),
-                         with: .color(lit ? accent : tone.opacity(0.88)))
+            shapes.fill(Path(CGRect(x: left, y: y - thickness / 2, width: right - left, height: thickness)),
+                        with: .color(lit ? accent : tone.opacity(0.88)))
             if wound && !lit {
                 // A thin highlight along the top of a wound string.
-                context.fill(Path(CGRect(x: left, y: y - thickness / 2, width: right - left, height: 0.6)), with: .color(.white.opacity(0.28)))
+                shapes.fill(Path(CGRect(x: left, y: y - thickness / 2, width: right - left, height: 0.6)), with: .color(.white.opacity(0.28)))
             }
-            drawNumber(&context, string: string, y: y, lit: lit, scale: scale)
+            drawNumber(&context, string: string, y: y, lit: lit, mirror: mirror, scale: scale)
         }
         for (k, dot) in dots.enumerated() where dot.string >= 1 && dot.string <= strings {
             // Landing: hidden until its turn, then it falls the last few points onto the string as it grows.
@@ -318,10 +464,10 @@ struct FretboardDiagram: View {
                 let glow = pulsing ? 8 + 3 + swell : side
                 let center = CGPoint(x: left - 14, y: max(rowY(dot.string) - drop, glow + 1))
                 if pulsing {
-                    context.fill(Path(ellipseIn: CGRect(x: center.x - glow, y: center.y - glow, width: glow * 2, height: glow * 2)), with: .color(accent.opacity(0.18 + 0.14 * beat)))
+                    shapes.fill(Path(ellipseIn: CGRect(x: center.x - glow, y: center.y - glow, width: glow * 2, height: glow * 2)), with: .color(accent.opacity(0.18 + 0.14 * beat)))
                 }
                 let ring = Path(ellipseIn: CGRect(x: center.x - side, y: center.y - side, width: side * 2, height: side * 2))
-                context.stroke(ring, with: .color(accent), lineWidth: tall ? 3 : 2.5)
+                shapes.stroke(ring, with: .color(accent), lineWidth: tall ? 3 : 2.5)
             } else {
                 let x = left + (CGFloat(min(max(1, dot.fret - start + 1), frets)) - 0.5) * fretWidth
                 // Never wider than its fret's cell, so a dot doesn't sit on the fret wires.
@@ -329,25 +475,26 @@ struct FretboardDiagram: View {
                 // Capped by the padding, so the halo of a dot on string 1 stays inside the drawing.
                 let halo = min(pad - 1, r + 4 + (pulsing ? swell : 0))
                 let y = max(rowY(dot.string) - drop, halo + 1)
-                context.fill(Path(ellipseIn: CGRect(x: x - halo, y: y - halo, width: halo * 2, height: halo * 2)), with: .color(accent.opacity(pulsing ? 0.2 + 0.15 * beat : 0.25)))
-                context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))
+                shapes.fill(Path(ellipseIn: CGRect(x: x - halo, y: y - halo, width: halo * 2, height: halo * 2)), with: .color(accent.opacity(pulsing ? 0.2 + 0.15 * beat : 0.25)))
+                shapes.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))
                 if land > 0.6, let finger = dot.finger, finger > 0 {
-                    context.draw(Text("\(finger)").font(.system(size: r, weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent), at: CGPoint(x: x, y: y))
+                    context.draw(Text("\(finger)").font(.system(size: r, weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent),
+                                 at: mirror.point(CGPoint(x: x, y: y)))
                 }
             }
         }
     }
 
-    /// The string's number in the column left of the nut; the string being played lights with it. Never under the
+    /// The string's number in the column beside the nut; the string being played lights with it. Never under the
     /// 11 pt floor, even on the tune check's compact strip (its rows are 15 pt apart, room for an 11 pt numeral).
-    private func drawNumber(_ context: inout GraphicsContext, string: Int, y: CGFloat, lit: Bool, scale: CGFloat) {
+    private func drawNumber(_ context: inout GraphicsContext, string: Int, y: CGFloat, lit: Bool, mirror: CanvasMirror, scale: CGFloat) {
         let label = Text("\(string)").font(DiagramType.font(tall ? 13 : 11, scale: scale))
             .foregroundStyle(lit ? accent : Palette.inkSoft.opacity(0.85))
-        context.draw(label, at: CGPoint(x: Self.numberX, y: y))
+        context.draw(label, at: mirror.point(CGPoint(x: Self.numberX, y: y)))
     }
 
     /// Each fret's number under its column, as on the Scales neck; the frets holding a landed dot light up.
-    private func drawFretNumbers(_ context: inout GraphicsContext, left: CGFloat, fretWidth: CGFloat, y: CGFloat, scale: CGFloat) {
+    private func drawFretNumbers(_ context: inout GraphicsContext, left: CGFloat, fretWidth: CGFloat, y: CGFloat, mirror: CanvasMirror, scale: CGFloat) {
         var held = Set<Int>()
         for (k, dot) in dots.enumerated() where dot.fret > 0 && (landing?[safe: k] ?? 1) > 0.6 { held.insert(dot.fret) }
         let size: CGFloat = tall ? 12 : 11
@@ -356,7 +503,7 @@ struct FretboardDiagram: View {
             let lit = held.contains(fret)
             let label = Text("\(fret)").font(DiagramType.font(size, weight: lit ? .heavy : .semibold, scale: scale))
                 .foregroundStyle(lit ? accent : Palette.inkFaint)
-            context.draw(label, at: CGPoint(x: left + (CGFloat(column) + 0.5) * fretWidth, y: y))
+            context.draw(label, at: mirror.point(CGPoint(x: left + (CGFloat(column) + 0.5) * fretWidth, y: y)))
         }
     }
 

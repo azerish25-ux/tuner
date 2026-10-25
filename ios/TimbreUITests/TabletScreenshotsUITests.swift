@@ -150,11 +150,15 @@ final class TabletScreenshotsUITests: XCTestCase {
     /// order there, eight cards to a row in landscape, so the three share its second row).
     private static let folkCards = ["30_folk_world_strings_sitar", "33_folk_world_strings_oud_arabic", "37_folk_world_strings_erhu"]
 
-    /// Scrolls the instrument browser down to the Folk & world strings and stops with the row holding sitar, oud and
-    /// erhu as the last whole row, its foot `folkRowFoot` above the screen's bottom edge: just above the page's bottom
-    /// fade, with the bowed strings' row above the shelf and their heading gone under the navigation bar. The next row
-    /// only shows dimming into the fade, so the frame never ends on a row of names cut at the edge. Each drag holds
-    /// still before it lifts, so the page stops where the finger does (no momentum to wait out or overshoot).
+    /// Scrolls the instrument browser down to the Folk & world strings until the row holding sitar, oud and erhu is
+    /// whole on screen, aiming its foot at `folkRowFoot` above the screen's bottom edge: just above the page's bottom
+    /// fade, with the bowed strings' row above the shelf. Any position where the three cards are whole between the
+    /// navigation bar's shade and the bottom fade is accepted; the line is only the aim.
+    ///
+    /// Each move is measured, not assumed. CI 7c8d46c showed five alignment drags of about 200 pt through the screen's
+    /// centre, which starts on a card, leaving the page where it was, while the long lazy-load drags did scroll. So the
+    /// drags now start in the page's side margin (no card under the finger), go further than needed and correct back,
+    /// and when a drag still doesn't move the page, a slow swipe takes over. Every attempt is logged.
     /// True when all three cards are whole on screen.
     private func scrollToFolkShelf() -> Bool {
         let cards = Self.folkCards.map { element("instrument." + $0) }
@@ -163,26 +167,45 @@ final class TabletScreenshotsUITests: XCTestCase {
         for _ in 0..<12 where !cards.allSatisfy({ $0.exists }) {
             drag(by: screen.height * 0.55)
         }
-        // Then the foot of the lowest of them to the line. A drag under the scroll view's slop (about 10 pt) never
-        // starts a scroll, so stop once within that.
-        let line = screen.maxY - Self.folkRowFoot
-        for _ in 0..<5 {
-            guard let bottom = cards.compactMap({ liveFrame($0)?.maxY }).max() else { break }
-            let offset = bottom - line
-            if abs(offset) < 12 { break }
-            drag(by: offset)
-        }
         let top = screen.minY + 96  // under the navigation bar and the page's top shade
         let foot = screen.maxY - 64  // above the bottom fade's darkest stretch
-        let whole = cards.allSatisfy { card in
-            guard let box = liveFrame(card) else { return false }
-            return box.minY >= top && box.maxY <= foot
+        let line = screen.maxY - Self.folkRowFoot
+        var log: [String] = []
+        var stuck = 0
+        for attempt in 0..<10 {
+            guard let span = folkSpan(cards) else { log.append("\(attempt): cards not found"); break }
+            if span.minY >= top && span.maxY <= foot { return true }
+            // Positive: the row sits too low, so the page moves up (content scrolls down the list).
+            let offset = span.maxY - line
+            // Past the line by a little more than the scroll view's slop, then the next round corrects back.
+            let overshoot: CGFloat = attempt == 0 ? 0 : (offset > 0 ? 24 : -24)
+            if stuck >= 2 {
+                if offset > 0 { app.swipeUp(velocity: .slow) } else { app.swipeDown(velocity: .slow) }
+                settle(1.2)  // a swipe carries momentum: let it come to rest before measuring
+            } else {
+                drag(by: offset + overshoot, margin: attempt % 2 == 0 ? .leading : .trailing)
+                settle(0.4)
+            }
+            let after = folkSpan(cards)
+            let moved = after.map { abs($0.maxY - span.maxY) } ?? 0
+            let how = stuck >= 2 ? "swipe" : "drag"
+            log.append("\(attempt): foot \(Int(span.maxY)) -> \(Int(after?.maxY ?? -1)) (aim \(Int(line)), \(how))")
+            stuck = moved < 4 ? stuck + 1 : 0
         }
+        let whole = folkSpan(cards).map { $0.minY >= top && $0.maxY <= foot } ?? false
         if !whole {
             let boxes = cards.map { liveFrame($0).map { "\($0)" } ?? "none" }.joined(separator: ", ")
-            print("FOLK SHELF: screen \(screen) app \(app.frame) window \(app.windows.firstMatch.frame) cards \(boxes)")
+            print("FOLK SHELF: screen \(screen) app \(app.frame) window \(app.windows.firstMatch.frame) cards \(boxes) "
+                  + "moves [\(log.joined(separator: "; "))]")
         }
         return whole
+    }
+
+    /// The top of the highest and the foot of the lowest of `cards`, from their live frames; nil when one is missing.
+    private func folkSpan(_ cards: [XCUIElement]) -> (minY: CGFloat, maxY: CGFloat)? {
+        let boxes = cards.compactMap { liveFrame($0) }
+        guard boxes.count == cards.count else { return nil }
+        return (boxes.map(\.minY).min() ?? 0, boxes.map(\.maxY).max() ?? 0)
     }
 
     /// The screen in the interface's own orientation. On a rotated iPad `app.frame` can still read portrait while the
@@ -208,17 +231,27 @@ final class TabletScreenshotsUITests: XCTestCase {
         return box
     }
 
-    /// Scrolls the page `distance` points further down it (negative: back up) with one drag through the middle of the
-    /// screen that holds still before lifting, so the page stops where the finger does.
-    private func drag(by distance: CGFloat) {
+    /// Where a drag runs across the screen: down the middle (the long lazy-load drags), or down a side margin, outside
+    /// the grid's cards (the browser's cards start 20 pt in from each edge), so the finger never lands on a button.
+    private enum DragLane { case middle, leading, trailing }
+
+    /// Scrolls the page `distance` points further down it (negative: back up) with one drag that holds still before
+    /// lifting, so the page stops where the finger does. The scroll view's slop (about 10 pt) is added to the travel.
+    private func drag(by distance: CGFloat, margin lane: DragLane = .middle) {
         let screen = screenFrame
-        let travel = min(abs(distance), screen.height * 0.6)
+        let travel = min(abs(distance) + 10, screen.height * 0.6)
         let lower = screen.height / 2 + travel / 2
         let upper = screen.height / 2 - travel / 2
+        let x: CGFloat
+        switch lane {
+        case .middle: x = screen.width / 2
+        case .leading: x = 8
+        case .trailing: x = screen.width - 8
+        }
         let origin = app.coordinate(withNormalizedOffset: .zero)
-        let start = origin.withOffset(CGVector(dx: screen.width / 2, dy: distance > 0 ? lower : upper))
-        let end = origin.withOffset(CGVector(dx: screen.width / 2, dy: distance > 0 ? upper : lower))
-        start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .default, thenHoldForDuration: 0.3)
+        let start = origin.withOffset(CGVector(dx: x, dy: distance > 0 ? lower : upper))
+        let end = origin.withOffset(CGVector(dx: x, dy: distance > 0 ? upper : lower))
+        start.press(forDuration: 0.08, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.3)
     }
 
     /// Closes the picker (a full page on iPad) with Done and waits for it to go; a swipe is the fallback.

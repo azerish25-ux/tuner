@@ -6,7 +6,6 @@ import TimbreCore
 // Timbre in Spotlight: every catalog instrument ("cello"), lesson and song ("Kite Weather") is an indexed App
 // Entity. Tapping a result runs its open intent, which hands a `timbre://` link to RootView, so it lands exactly
 // where the same link from a widget would (DeepLink.swift): the tuner on that instrument, the lesson or its paywall.
-
 // MARK: - Instruments
 
 extension InstrumentEntity: IndexedEntity {
@@ -69,9 +68,10 @@ struct LessonEntity: IndexedEntity {
 
     private static func resource(_ text: String) -> LocalizedStringResource { "\(text)" }
 
-    /// Every lesson and song in curriculum order (reviews are made for each learner, so they stay out).
+    /// Every lesson and song in curriculum order (reviews are made for each learner, so they stay out). Read from the
+    /// app's one decoded curriculum (`CurriculumStore`), never decoded again here.
     static let all: [LessonEntity] = {
-        guard let curriculum = try? Curriculum.bundled() else { return [] }
+        let curriculum = CurriculumStore.shared.curriculum
         let songsTitle = curriculum.course(id: "songs").map { LessonEntity.localized($0.title) }
         var found: [LessonEntity] = []
         for course in curriculum.courses {

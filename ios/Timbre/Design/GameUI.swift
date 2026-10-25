@@ -2,29 +2,33 @@ import SwiftUI
 import TimbreCore
 import UIKit
 
-/// Flame and day count; taps through to Progress. Around the flame, Today's ring: any activity of it keeps
-/// the streak (the flame lights), finishing them all closes the ring.
+/// The streak: the flame (lit once today counts), the day count and any banked freezes, in one capsule that is the
+/// same on every tab; it taps through to Progress. Today's set is drawn on its own cards (Learn, Practice) and spoken
+/// here as the chip's value, never drawn as a ring that would change the chip's shape from tab to tab.
 /// The capsule is at least 36 pt and grows with its text; the target is at least 44 pt. Like a bar item it stops
 /// growing at AX1 and offers the Large Content Viewer.
 struct StreakChip: View {
     @EnvironmentObject private var store: AppStore
-    /// Draws Today's ring around the flame. Nil decides by tab: not on Play or Learn, whose Today cards show it.
+    /// Whether VoiceOver hears Today's progress with the streak. Nil decides by tab: not on Practice or Learn, whose
+    /// Today cards say it.
     var showsToday: Bool? = nil
     var action: () -> Void = {}
-    /// Today's lesson follows Learn's course; reading it here redraws the ring when that changes.
-    @AppStorage("learn.course") private var learnCourseId = "guitar"
     /// The capsule's side inset, growing with the count's text.
     @ScaledMetric(relativeTo: .subheadline) private var inset: CGFloat = 12
+    @Environment(\.legibilityWeight) private var legibility
 
     var body: some View {
+        let _ = legibility
         let streak = store.streak
         let today = showsToday ?? (store.selectedTab != .practice && store.selectedTab != .learn)
         let activities = today ? store.dailySet : []
-        let done = Set(activities.map(\.kind).filter { store.dailyDone($0) })
+        let done = activities.filter { store.dailyDone($0.kind) }.count
         Button(action: action) {
             HStack(spacing: 5) {
-                flame(lit: streak.practicedToday, bounce: streak.current, ring: activities, done: done)
-                Text("\(streak.current)").font(Typeface.label(14, relativeTo: .subheadline)).foregroundStyle(Palette.flameInk).monospacedDigit()
+                Image(systemName: "flame.fill").font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(streak.practicedToday ? Palette.flame : Palette.inkFaint)
+                    .symbolEffect(.bounce, value: streak.current)
+                Text("\(streak.current)").font(Typeface.label(.footnote)).foregroundStyle(Palette.flameInk).monospacedDigit()
                 if store.streakFreezes > 0 {
                     // Banked streak freezes, one flake each.
                     HStack(spacing: 1) {
@@ -36,7 +40,7 @@ struct StreakChip: View {
                     .transition(.scale.combined(with: .opacity))
                 }
             }
-            .padding(.leading, activities.isEmpty ? inset : inset / 2).padding(.trailing, inset)
+            .padding(.horizontal, inset)
             .padding(.vertical, 4)
             .frame(minHeight: 36)
             .background(Capsule().fill(Palette.flame.opacity(0.10)))
@@ -48,27 +52,11 @@ struct StreakChip: View {
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .accessibilityShowsLargeContentViewer()
         .accessibilityLabel(Text("\(streak.current)-day streak"))
-        .accessibilityValue(value(done: done.count, total: activities.count))
+        .accessibilityValue(value(done: done, total: activities.count))
         .accessibilityIdentifier("streak.chip")
     }
 
-    /// The flame, lit once today counts; with Today's activities, inside their ring.
-    @ViewBuilder private func flame(lit: Bool, bounce: Int, ring: [DailyActivity], done: Set<DailyActivity.Kind>) -> some View {
-        let icon = Image(systemName: "flame.fill").font(.system(size: ring.isEmpty ? 13 : 11, weight: .semibold))
-            .foregroundStyle(lit ? Palette.flame : Palette.inkFaint)
-            .symbolEffect(.bounce, value: bounce)
-        if ring.isEmpty {
-            icon
-        } else {
-            ZStack {
-                DailySetRing(activities: ring, done: done, lineWidth: 2.5, gap: 0.08)
-                icon
-            }
-            .frame(width: 26, height: 26)
-        }
-    }
-
-    /// "Today: 1 of 3" while the ring shows, and the banked freezes.
+    /// "Today: 1 of 3" where Today isn't on screen, and the banked freezes.
     private func value(done: Int, total: Int) -> Text {
         var parts: [Text] = []
         if total > 0 { parts.append(Text("Today") + Text(verbatim: ": ") + Text("\(done) of \(total)")) }
@@ -79,19 +67,22 @@ struct StreakChip: View {
 }
 
 /// The streak's flame, alive: a warm halo, the gradient body and a white-hot core that sway and flicker out of
-/// step. Still under Reduce Motion, and when `animated` is off (share cards rendered to an image).
+/// step. Still under Reduce Motion, when `animated` is off (share cards rendered to an image), and whenever it can't
+/// be seen (off screen, the app in the background, Low Power Mode: `animatesWhileSeen`), so it costs nothing at rest.
 struct StreakFlame: View {
     var size: CGFloat = 120
     var lit = true
     var animated = true
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var live = false
 
     var body: some View {
         Group {
             if animated && !reduceMotion {
-                TimelineView(.animation(minimumInterval: 1 / 60)) { timeline in
+                TimelineView(.animation(minimumInterval: 1 / 60, paused: !live)) { timeline in
                     flame(timeline.date.timeIntervalSinceReferenceDate)
                 }
+                .animatesWhileSeen($live)
             } else {
                 flame(0)
             }
@@ -130,28 +121,27 @@ struct StreakFlame: View {
     }
 }
 
-/// Level number inside a ring that fills with XP toward the next level, captioned "LV" on mid-size rings and
-/// "LEVEL" on the large one, so the number always says what it counts. Under 44 pt there is no room for a caption
-/// over the number, so the header ring sets the two on one line, "LV 5" (VoiceOver says "Level 5"). The ring is a
+/// The level, drawn one way everywhere: a ring that fills with XP toward the next level around "LV 5" on one line, at
+/// any size (the header's 36 pt ring, the Practice hub's large one). VoiceOver says "Level 5" and the XP. The ring is a
 /// fixed-size graphic: its type stops growing at xxxLarge, and as a button its target is at least 44 pt.
 struct LevelRing: View {
     @EnvironmentObject private var store: AppStore
     var size: CGFloat = 36
     var action: (() -> Void)?
-    private var large: Bool { size >= 50 }
-    private var captioned: Bool { size >= Metrics.minTarget }
+    @Environment(\.legibilityWeight) private var legibility
+
     var body: some View {
+        let _ = legibility
         let xp = store.progress.xp
         let level = store.level
         let ring = ZStack {
-            Circle().stroke(.white.opacity(0.12), lineWidth: size * 0.09)
+            Circle().stroke(Palette.line, lineWidth: size * 0.09)
             Circle().trim(from: 0, to: max(0.02, level.progress(xp)))
                 .stroke(Palette.mint, style: StrokeStyle(lineWidth: size * 0.09, lineCap: .round))
                 .rotationEffect(.degrees(-90))
                 .animation(Motion.settle, value: xp)
-            label(level.number)
-                .frame(maxWidth: size * (captioned ? 0.66 : 0.74))
-                .offset(y: captioned ? size * 0.015 : 0)
+            LevelMark(number: level.number, size: size)
+                .frame(maxWidth: size * 0.74)
         }
         .frame(width: size, height: size)
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
@@ -166,32 +156,19 @@ struct LevelRing: View {
             .accessibilityIdentifier("level.ring")
         } else { ring }
     }
+}
 
-    /// "LEVEL" over the number in a large ring, "LV" over it in a medium one; in a small one (the tab headers') the
-    /// two share a line, "LV 5", so the ring reads as a level rather than a bare count.
-    @ViewBuilder private func label(_ number: Int) -> some View {
-        if captioned {
-            VStack(spacing: large ? 1 : -1) {
-                caption
-                Text("\(number)").font(Typeface.label(size * (large ? 0.34 : 0.33))).foregroundStyle(Palette.ink)
-                    .contentTransition(.numericText())
-                    .lineLimit(1).minimumScaleFactor(0.5)
-            }
-        } else {
-            (Text("LV").font(Typeface.label(size * 0.24)).tracking(0.3).foregroundStyle(Palette.mint)
-                + Text(verbatim: " ")
-                + Text("\(number)").font(Typeface.label(size * 0.36)).foregroundStyle(Palette.ink))
-                .contentTransition(.numericText())
-                .lineLimit(1).minimumScaleFactor(0.5)
-        }
-    }
+/// "LV 5": the level's one mark, inside its ring or beside a figure, sized to `size` (the ring's diameter).
+struct LevelMark: View {
+    let number: Int
+    var size: CGFloat = 36
 
-    private var caption: some View {
-        Text(large ? LocalizedStringKey("LEVEL") : LocalizedStringKey("LV"))
-            .font(.system(size: max(6.5, size * (large ? 0.13 : 0.19)), weight: .heavy))
-            .tracking(large ? 1 : 0.4)
-            .foregroundStyle(Palette.mint)
-            .lineLimit(1).minimumScaleFactor(0.6)
+    var body: some View {
+        (Text("LV").font(Typeface.label(size * 0.24)).tracking(0.3).foregroundStyle(Palette.mint)
+            + Text(verbatim: " ")
+            + Text("\(number)").font(Typeface.label(size * 0.36)).foregroundStyle(Palette.ink))
+            .contentTransition(.numericText())
+            .lineLimit(1).minimumScaleFactor(0.5)
     }
 }
 
@@ -235,11 +212,12 @@ extension Quest {
         case .lessons: return "graduationcap"
         }
     }
-    var tint: Color { [.tuneAll, .holdInTune].contains(kind) ? Palette.amber : kind == .practiceMinutes ? Palette.inkSoft : kind == .lessons ? Palette.violet : Palette.mint }
+    /// One quiet ink for every quest: a quest is not a status, and a row of them shouldn't be a rainbow.
+    var tint: Color { Palette.inkSoft }
 }
 
-/// One daily quest: icon, title, a bar with its count ("3 / 10", the tuning quest in strings) and the XP it pays.
-/// The Play hub's quest rows are this row too (`HubQuestRow` is gone).
+/// One daily quest: its glyph, the title, a bar with its count ("3 / 10", the tuning quest in strings) and the XP it
+/// pays. The Practice hub's quest rows are this row too.
 struct QuestRow: View {
     @EnvironmentObject private var store: AppStore
     let quest: Quest
@@ -252,17 +230,14 @@ struct QuestRow: View {
         let done = store.questProgress(quest) >= quest.target
         let tile = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         HStack(spacing: 12) {
-            Image(systemName: done ? "checkmark" : quest.symbol).font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(done ? Palette.onAccent : quest.tint)
-                .frame(width: 34, height: 34)
-                .background(RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous).fill(done ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(quest.tint.opacity(0.14))))
+            Glyph(done ? "checkmark" : quest.symbol, size: Glyph.lead, tint: done ? Palette.mint : quest.tint)
             VStack(alignment: .leading, spacing: 7) {
                 Text(quest.title).font(.subheadline.weight(.semibold)).foregroundStyle(done ? Palette.inkSoft : Palette.ink)
                     .strikethrough(done, color: Palette.inkFaint)
                     .fixedSize(horizontal: false, vertical: true)
                 HStack(spacing: 10) {
-                    ProgressLine(value: Double(progress) / Double(max(1, target)), color: done ? Palette.mint : quest.tint, height: 5)
-                    Text.fraction(progress, target).font(Typeface.number(12)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
+                    ProgressLine(value: Double(progress) / Double(max(1, target)), color: Palette.mint, height: 5)
+                    Text.fraction(progress, target).font(Typeface.number(.caption)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
                         .contentTransition(.numericText())
                         .fixedSize()
                         // The row's value says it ("3 of 10").
@@ -279,15 +254,12 @@ struct QuestRow: View {
         .accessibilityValue(Text(done ? "Done" : "\(progress) of \(target)"))
     }
 
-    /// "+20 XP" in a mint pill while open; "Done" once claimed.
+    /// "+20 XP" while open, "Done" once claimed: words at the row's end, not a pill.
     @ViewBuilder private func reward(_ done: Bool) -> some View {
         if done {
-            Text("Done").font(Typeface.label(12)).foregroundStyle(Palette.mint)
+            Text("Done").font(Typeface.label(.caption)).foregroundStyle(Palette.mint)
         } else {
-            Text("+\(quest.xp) XP").font(Typeface.label(12)).foregroundStyle(Palette.mint)
-                .padding(.horizontal, 9).padding(.vertical, 5)
-                .background(Capsule().fill(Palette.mint.opacity(0.12)))
-                .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.25), lineWidth: 1))
+            Text("+\(quest.xp) XP").font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
                 .fixedSize()
         }
     }
@@ -323,10 +295,10 @@ extension Achievement.Category {
         case .course: return (Color(hex: 0x4D86AD), Color(hex: 0x0E2234))
         }
     }
-    /// The category's accent: progress arcs and labels.
+    /// The category's hue: progress arcs and labels (never a status colour).
     var tint: Color {
         switch self {
-        case .tuning: return Palette.amber
+        case .tuning: return Palette.starGold
         case .dedication: return Palette.flame
         case .ear: return Palette.mint
         case .learning: return Palette.violet
@@ -498,10 +470,7 @@ struct RewardToast: View {
     }
 
     /// The app's own language direction (the toast sits outside the tab view that carries it).
-    private var rightToLeft: Bool {
-        let language = store.settings.language
-        return Locale.Language(identifier: language == "system" ? Locale.current.identifier : language).characterDirection == .rightToLeft
-    }
+    private var rightToLeft: Bool { TimbreLocalization.isRightToLeft(store.settings.language) }
 
     /// The key window's top safe-area inset: the status band (59–62 pt on phones with a Dynamic Island).
     @MainActor private static var windowTopInset: CGFloat {

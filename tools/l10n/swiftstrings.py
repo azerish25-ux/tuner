@@ -631,6 +631,9 @@ def expr_type(toks: list, path: str, decls: Decls, line: int, owner: tuple, dept
             return "String", False
     if not toks:
         return None, True
+    branch = ternary_branch(toks)
+    if branch is not None:
+        return expr_type(branch, path, decls, line, owner, depth + 1)
     first = toks[0]
     call = len(toks) > 1 and toks[1].kind == "op" and toks[1].value == "("
     if first.kind == "str":
@@ -688,7 +691,13 @@ def expr_type(toks: list, path: str, decls: Decls, line: int, owner: tuple, dept
             k = skip_group(toks, k + 1)
             # A trailing closure: map { … }
         k += 1
-        while k < len(toks) and toks[k].kind == "op" and toks[k].value in ("[", "{"):
+        while k < len(toks) and toks[k].kind == "op" and toks[k].value in ("[", "{", "?", "!"):
+            if toks[k].value in ("?", "!"):
+                # An optional subscript, `fingers?[safe: i]`: the element type, like a plain subscript.
+                if k + 1 < len(toks) and toks[k + 1].kind == "op" and toks[k + 1].value == "[":
+                    k += 1
+                    continue
+                break
             if toks[k].value == "[" and isinstance(typ, str):
                 typ = element_type(typ)
             elif toks[k].value == "{":
@@ -712,6 +721,27 @@ def expr_type(toks: list, path: str, decls: Decls, line: int, owner: tuple, dept
     if arithmetic_int or (last and NAMED_INTS.match(last)):
         return "Int", True
     return None, True
+
+
+def ternary_branch(toks: list):
+    """The first branch of a top-level conditional expression (`c ? a : b` -> the tokens of `a`), or None. Both
+    branches of a Swift conditional have one type, and the condition's own type (often a Double compared with 0)
+    says nothing about it. A `?` followed by `.`, `[`, `)` or `,` is optional chaining, not a conditional."""
+    level, question = 0, None
+    for k, t in enumerate(toks):
+        if t.kind != "op":
+            continue
+        if t.value in ("(", "[", "{"):
+            level += 1
+        elif t.value in (")", "]", "}"):
+            level -= 1
+        elif level == 0 and t.value == "?" and question is None:
+            after = toks[k + 1] if k + 1 < len(toks) else None
+            if after is not None and not (after.kind == "op" and after.value in (".", "[", ")", ",")):
+                question = k
+        elif level == 0 and t.value == ":" and question is not None:
+            return toks[question + 1:k] or None
+    return None
 
 
 def make_key(parts: list, path: str, decls: Decls, shortcut: bool = False, line: int = 0, owner: tuple = (None, 0)):

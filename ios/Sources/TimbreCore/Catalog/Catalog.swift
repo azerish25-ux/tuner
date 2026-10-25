@@ -18,13 +18,6 @@ public struct LocalizedText: Codable, Equatable, Hashable, Sendable, CustomStrin
         else { let c = try decoder.container(keyedBy: CodingKeys.self); key = try c.decode(String.self, forKey: .key); defaultValue = try c.decode(String.self, forKey: .defaultValue) }
     }
 }
-public enum TimbreLocalization {
-    public static var language = "en"
-    public static var bundle: Bundle {
-        guard language != "system", let path = Bundle.main.path(forResource: language, ofType: "lproj"), let selected = Bundle(path: path) else { return .main }
-        return selected
-    }
-}
 public struct InstrumentFamily: Codable, Identifiable, Equatable, Sendable {
     public let id: String
     public let name: LocalizedText

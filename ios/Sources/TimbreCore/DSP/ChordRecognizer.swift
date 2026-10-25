@@ -55,6 +55,32 @@ public struct ChordEstimate: Equatable, Sendable {
     public let bass: Int?
     public var target: ChordTarget { ChordTarget(root: root, quality: quality) }
     public var symbol: String { target.symbol }
+
+    public init(root: Int, quality: ChordRecognizer.Quality, confidence: Double, chroma: [Double], bass: Int?) {
+        self.root = root; self.quality = quality; self.confidence = confidence; self.chroma = chroma; self.bass = bass
+    }
+
+    /// The pitch classes that carry the reading: chroma bins at least `share` of the strongest.
+    public func heardPitchClasses(share: Double = ChordRecognizer.strongShare) -> Set<Int> {
+        guard chroma.count == 12, let strongest = chroma.max(), strongest > 0 else { return [] }
+        return Set(chroma.indices.filter { chroma[$0] > 0 && chroma[$0] >= share * strongest })
+    }
+
+    /// Lesson check: does this reading sound like `target`? Accepts inversions and other voicings of the same chord,
+    /// and readings with the same notes (Asus2 = Esus4). A voicing that leaves one of the target's tones out (the
+    /// banjo's two-finger D7, D A C D, which reads best as D5) still counts when every note heard belongs to the
+    /// target, the notes go beyond the bare reading, and the root is in the bass. Rejects other chords.
+    public func matches(_ target: ChordTarget, minConfidence: Double = 0.5) -> Bool {
+        let confidence = ChordRecognizer.templateConfidence(chroma: chroma, target: target)
+        guard confidence >= minConfidence else { return false }
+        if target.pitchClasses == self.target.pitchClasses { return true }
+        let rank = confidence + (bass == target.root ? ChordRecognizer.bassBonus : 0)
+        let bestRank = self.confidence + (bass == root ? ChordRecognizer.bassBonus : 0)
+        if rank >= bestRank - ChordRecognizer.matchTolerance { return true }
+        let heard = heardPitchClasses()
+        return root == target.root && bass == target.root && heard.isSubset(of: target.pitchClasses)
+            && heard.isStrictSuperset(of: self.target.pitchClasses) && target.pitchClasses.subtracting(heard).count <= 1
+    }
 }
 
 /// Real-time chord recognition for chord lessons: feed mono frames of 4096–8192 samples
@@ -128,6 +154,8 @@ public final class ChordRecognizer {
     static let chromaFloor = 0.1
     /// A level jump this large (dB) between frames is a new strum: smoothing restarts.
     static let restrikeDb = 6.0
+    /// A chroma bin this share of the strongest counts as a note of the chord.
+    public static let strongShare = 0.3
 
     public let sampleRate: Double
     public let minFrequency: Double
@@ -221,7 +249,7 @@ public final class ChordRecognizer {
         chroma = Self.chroma(notes: smoothed, lowestNote: lowestNote)
         bassPitchClass = Self.bass(notes: smoothed, spectrum: smoothedSpectrum ?? spectrum, lowestNote: lowestNote)
         let strongest = chroma.max() ?? 0
-        let strong = chroma.filter { $0 >= 0.3 * strongest && $0 > 0 }.count
+        let strong = chroma.filter { $0 >= Self.strongShare * strongest && $0 > 0 }.count
         guard strong >= 2, let best = Self.bestChord(chroma: chroma, bass: bassPitchClass), best.confidence >= minimumConfidence else {
             current = nil
             return nil
@@ -236,16 +264,10 @@ public final class ChordRecognizer {
         current == nil ? 0 : Self.templateConfidence(chroma: chroma, target: target)
     }
 
-    /// Lesson check: is the player sounding `target`? Accepts inversions and other voicings of the same
-    /// chord, and readings with the same notes (Asus2 = Esus4); rejects other chords, single notes and silence.
+    /// Lesson check: is the player sounding `target`? The current reading's `ChordEstimate.matches`: false for
+    /// single notes and silence.
     public func matches(_ target: ChordTarget, minConfidence: Double = 0.5) -> Bool {
-        guard let current else { return false }
-        let confidence = Self.templateConfidence(chroma: chroma, target: target)
-        guard confidence >= minConfidence else { return false }
-        if target.pitchClasses == current.target.pitchClasses { return true }
-        let rank = confidence + (bassPitchClass == target.root ? Self.bassBonus : 0)
-        let bestRank = current.confidence + (bassPitchClass == current.root ? Self.bassBonus : 0)
-        return rank >= bestRank - Self.matchTolerance
+        current?.matches(target, minConfidence: minConfidence) ?? false
     }
 
     // MARK: - Stages

@@ -86,6 +86,8 @@ struct WeekRecapCard: View {
                 WeekStat(symbol: "flame.fill", tint: Palette.flame, value: Text(recap.streak, format: .number), label: Text("day streak"))
             }
             if friends != nil || center.friendsAccess == .ask { WeekFriendsRow(standing: friends) }
+            // A member can pass a month of Pro on, once the owner has set up the offer code.
+            if store.isPro { FriendOfferLink(screen: "week") }
         }
         .stillCard(tint: Palette.mint)
         .animation(Motion.fade, value: friends)
@@ -140,9 +142,10 @@ struct WeekRecapCard: View {
             .contentShape(Rectangle())
     }
 
+    /// The poster goes with a link that opens Timbre, or its App Store page for a friend without it.
     @ViewBuilder private var shareButton: some View {
         if let poster {
-            ShareLink(item: poster, preview: SharePreview("Your week", image: poster)) { shareLabel }
+            ShareLink(item: poster, message: ShareDestination.message(), preview: SharePreview("Your week", image: poster)) { shareLabel }
                 .buttonStyle(PressScaleStyle())
                 .accessibilityIdentifier("journey.week.share")
         } else {

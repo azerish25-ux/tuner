@@ -68,10 +68,15 @@ enum PracticeReminder {
         UserDefaults.standard.set(false, forKey: enabledKey)
     }
 
-    /// Re-plans the reminders for new state (practice saved, lesson finished, course changed).
+    /// The app's state as last handed over (`update`).
+    @MainActor static var latest: Context { context }
+
+    /// Re-plans the reminders for new state (practice saved, lesson finished, course changed), and rewrites a waiting
+    /// trial reminder with what the trial has been used for.
     @MainActor static func update(_ next: Context) {
         guard next != context else { return }
         context = next
+        Task { await TrialReminder.refresh(next) }
         guard UserDefaults.standard.bool(forKey: enabledKey) else { return }
         Task { await plan(next) }
     }
@@ -127,5 +132,73 @@ enum PracticeReminder {
         guard !week.isEmpty else { return String(localized: "No practice this week yet. Five minutes today gets you going again.") }
         let minutes = week.values.reduce(0, +)
         return String(localized: "\(minutes) min of practice across \(week.count) of 7 days. Keep the run going.")
+    }
+}
+
+/// The local reminder two days before a free trial renews. The paywall promises it only when it can arrive. It names
+/// what the trial has been used for so far ("You've practised 95 min on 8 days with Pro"), rewritten whenever
+/// practice is saved, so the person decides on what they actually did.
+enum TrialReminder {
+    private static let identifier = "timbre.trial.reminder"
+    private static let fireKey = "trial.reminder.fire"
+    private static let startKey = "trial.reminder.start"
+
+    /// True when notifications are turned off for Timbre, so a reminder would never be shown.
+    static func isBlocked() async -> Bool {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        return settings.authorizationStatus == .denied
+    }
+
+    /// Called right after a trial starts. A first-time user is asked for permission here, never before.
+    @MainActor static func schedule(afterDays days: Int) async {
+        let center = UNUserNotificationCenter.current()
+        switch await center.notificationSettings().authorizationStatus {
+        case .denied:
+            return
+        case .notDetermined:
+            guard (try? await center.requestAuthorization(options: [.alert, .sound])) == true else { return }
+        default:
+            break
+        }
+        let start = Date()
+        UserDefaults.standard.set(start, forKey: startKey)
+        UserDefaults.standard.set(start.addingTimeInterval(max(3600, TimeInterval(days - 2) * 86_400)), forKey: fireKey)
+        await plan(PracticeReminder.latest)
+    }
+
+    /// Rewrites a reminder still to come with the practice so far.
+    @MainActor static func refresh(_ context: PracticeReminder.Context) async {
+        guard let fire = UserDefaults.standard.object(forKey: fireKey) as? Date, fire > Date() else { return }
+        await plan(context)
+    }
+
+    @MainActor private static func plan(_ context: PracticeReminder.Context) async {
+        guard let fire = UserDefaults.standard.object(forKey: fireKey) as? Date, fire > Date() else { return }
+        let start = UserDefaults.standard.object(forKey: startKey) as? Date ?? Date()
+        let center = UNUserNotificationCenter.current()
+        let status = await center.notificationSettings().authorizationStatus
+        guard status == .authorized || status == .provisional else { return }
+        let content = UNMutableNotificationContent()
+        content.title = String(localized: "Your Timbre Pro trial ends soon")
+        content.body = body(since: start, context.minutesByDay)
+        content.sound = .default
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(60, fire.timeIntervalSinceNow), repeats: false)
+        // The same identifier: a rewrite replaces the reminder rather than adding a second.
+        try? await center.add(UNNotificationRequest(identifier: identifier, content: content, trigger: trigger))
+    }
+
+    /// The days played since the trial began and their minutes, then when it renews and how to stop it.
+    private static func body(since start: Date, _ minutesByDay: [Date: Int]) -> String {
+        let first = Calendar.current.startOfDay(for: start)
+        let played = minutesByDay.filter { $0.key >= first }
+        let minutes = played.values.reduce(0, +)
+        let renews = String(localized: "It renews in two days; cancel anytime in Settings.")
+        switch (played.count, minutes > 0) {
+        case (0, _): return String(localized: "It renews in two days. Keep playing, or cancel anytime in Settings.")
+        case (1, true): return String(localized: "You've practised \(minutes) min with Pro so far.") + " " + renews
+        case (1, false): return String(localized: "You've played with Pro once so far.") + " " + renews
+        case (_, true): return String(localized: "You've practised \(minutes) min on \(played.count) days with Pro.") + " " + renews
+        default: return String(localized: "You've practised on \(played.count) days with Pro.") + " " + renews
+        }
     }
 }

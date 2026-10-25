@@ -3,8 +3,13 @@ import Combine
 import UIKit
 import TimbreCore
 
-/// Owns the single audio session. Pitch analysis runs on a bounded serial queue at ~60 Hz;
+/// The lessons' audio engine: the microphone, tones, the metronome, the drone and the band. Its session goes through
+/// `AudioSessionOwner`, shared with `RecordingPlayer`. Pitch analysis runs on a bounded serial queue at ~60 Hz;
 /// readings go straight to `onReading` so high-rate values never invalidate unrelated views.
+///
+/// It keeps going through what happens to a phone's audio: headphones in or out (the engine is rebuilt and what was
+/// playing plays on), a call, Siri or an alarm (the tool's click, the drone and the microphone come back when the
+/// interruption ends with "should resume"), and a media services reset.
 @MainActor
 final class AudioService: ObservableObject {
     @Published private(set) var running = false
@@ -66,13 +71,34 @@ final class AudioService: ObservableObject {
     /// The tone asked for last, until it starts; a newer one (or a stop) supersedes it.
     private var pendingTone: PendingTone?
     private var toneToken = 0
+    /// The running click's settings, so it can be brought back after an interruption.
+    private var metronomeSettings: MetronomeSettings?
+    /// The running drone's settings, likewise.
+    private var droneSettings: DroneSettings?
+    /// What was listening and playing when the current interruption began.
+    private var interrupted: Interrupted?
 
     init() {
         observers.append(NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: .main) { [weak self] notification in
-            let began = (notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt) == AVAudioSession.InterruptionType.began.rawValue
+            let info = notification.userInfo
+            let type = (info?[AVAudioSessionInterruptionTypeKey] as? UInt).flatMap(AVAudioSession.InterruptionType.init(rawValue:))
+            let options = AVAudioSession.InterruptionOptions(rawValue: info?[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0)
             Task { @MainActor in
-                guard began, let self else { return }
-                self.suspend()
+                guard let self, let type else { return }
+                switch type {
+                case .began: self.interruptionBegan()
+                case .ended: self.interruptionEnded(resume: options.contains(.shouldResume))
+                @unknown default: break
+                }
+            }
+        })
+        observers.append(NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: nil, queue: .main) { [weak self] notification in
+            // Every engine posts this one (the recording player's too): only this engine's change counts here.
+            guard let engine = notification.object as? AVAudioEngine else { return }
+            let changed = ObjectIdentifier(engine)
+            Task { @MainActor in
+                guard let self, ObjectIdentifier(self.engine) == changed else { return }
+                self.engineConfigurationChanged()
             }
         })
         observers.append(NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { [weak self] _ in
@@ -101,17 +127,19 @@ final class AudioService: ObservableObject {
             guard reason != nil, reason != .categoryChange, reason != .unknown else { return }
             Task { @MainActor in
                 guard let self, self.running else { return }
-                let minimum = self.minimum, maximum = self.maximum, sensitivity = self.sensitivity
-                let window = self.windowOverride, confidence = self.confidenceThreshold
+                let capture = self.captureSettings
                 self.stopCapture()
                 guard UIApplication.shared.applicationState == .active else { return }
-                await self.start(minimum: minimum, maximum: maximum, micSensitivity: sensitivity, analysisWindowOverride: window, confidenceThreshold: confidence)
+                await self.listen(capture)
             }
         })
         observers.append(NotificationCenter.default.addObserver(forName: AVAudioSession.mediaServicesWereResetNotification, object: nil, queue: .main) { [weak self] _ in
+            // The audio server restarted: a new engine and session, and what was going goes on.
             Task { @MainActor in
                 guard let self else { return }
+                let snapshot = self.snapshot()
                 self.suspend(); self.engine = AVAudioEngine()
+                self.restore(snapshot)
             }
         })
         // The band knows a song's style from the curriculum (`BandStyleIndex`): it reads it once, a few seconds after
@@ -149,7 +177,9 @@ final class AudioService: ObservableObject {
         self.confidenceThreshold = confidenceThreshold.isFinite ? min(1, max(0, confidenceThreshold)) : 0.75
         windowOverride = analysisWindowOverride
         do {
-            let wasOutputting = engine.isRunning
+            // What plays now (the click, the drone, the band) carries on through the restart. Read from this service's
+            // own state, not `engine.isRunning`: a configuration change stops the engine with all of it still playing.
+            let keepPlaying = outputActive
             engine.stop()
             try configureSession()
             let input = engine.inputNode
@@ -174,7 +204,7 @@ final class AudioService: ObservableObject {
                 }
             }
             tapInstalled = true
-            try attachOutput(keepState: wasOutputting)
+            try attachOutput(keepPlaying: keepPlaying)
             engine.prepare(); try engine.start()
             running = true; error = nil
         } catch { suspend(); self.error = String(localized: "Could not start audio: \(error.localizedDescription)") }
@@ -228,32 +258,37 @@ final class AudioService: ObservableObject {
         if tapInstalled { engine.inputNode.removeTap(onBus: 0); tapInstalled = false }
         renderer.stop()
         running = false; metronomeRunning = false; metronomeOwnedByTool = false; tonePlaying = false; droneRunning = false
+        metronomeSettings = nil; droneSettings = nil
         bandRequest = nil; bandPlaying = false
         outroTask?.cancel(); outroTask = nil; bandOutro = false
         onReading?(nil, 0, -120)
         shutdown()
     }
 
+    /// Stops the engine and lets the session go (deactivated off the main thread once nothing else holds it).
     private func shutdown() {
         engine.stop()
         if let source { engine.disconnectNodeOutput(source); engine.detach(source); self.source = nil }
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        AudioSessionOwner.shared.release(.lessons)
     }
 
     private func configureSession() throws {
-        let session = AVAudioSession.sharedInstance()
-        try session.setCategory(.playAndRecord, mode: .measurement, options: [.defaultToSpeaker, .allowBluetoothA2DP, .mixWithOthers])
-        try session.setPreferredSampleRate(48000)
-        try session.setPreferredIOBufferDuration(0.005)
-        try session.setActive(true)
+        try AudioSessionOwner.shared.activate(.lessons)
         heardLatency = currentHeardLatency()
     }
 
-    private func attachOutput(keepState: Bool = false) throws {
+    /// Connects the renderer to the engine's mixer. With `keepPlaying`, what sounds now (the click, the drone, the
+    /// band, a tone) carries on in phase at the renderer's own sample rate, which the mixer converts to the hardware's
+    /// (headphones can bring another rate); otherwise the renderer starts clean at the hardware rate.
+    private func attachOutput(keepPlaying: Bool) throws {
         if let source { engine.disconnectNodeOutput(source); engine.detach(source); self.source = nil }
-        let rate = engine.outputNode.inputFormat(forBus: 0).sampleRate
-        guard rate > 0, let format = AVAudioFormat(standardFormatWithSampleRate: rate, channels: 1) else { throw AudioFailure.noOutput }
-        if !renderer.setSampleRate(rate, keepState: keepState) { bandPlaying = false }
+        let hardwareRate = engine.outputNode.inputFormat(forBus: 0).sampleRate
+        guard hardwareRate > 0 else { throw AudioFailure.noOutput }
+        if !keepPlaying {
+            renderer.setSampleRate(hardwareRate, keepState: false)
+            bandPlaying = false
+        }
+        guard let format = AVAudioFormat(standardFormatWithSampleRate: Double(renderer.rate), channels: 1) else { throw AudioFailure.noOutput }
         let source = AVAudioSourceNode { [renderer] _, timestamp, count, audio in
             renderer.render(frameCount: Int(count), audio: audio, timestamp: timestamp)
             return noErr
@@ -262,8 +297,81 @@ final class AudioService: ObservableObject {
         self.source = source
     }
 
+    /// Starts the engine for output when it isn't running; anything still meant to be playing plays on.
     private func ensureOutput() throws {
-        if !engine.isRunning { try configureSession(); try attachOutput(); engine.prepare(); try engine.start() }
+        if !engine.isRunning { try configureSession(); try attachOutput(keepPlaying: outputActive); engine.prepare(); try engine.start() }
+    }
+
+    // MARK: Configuration changes and interruptions
+
+    /// How the microphone was started, to start it again the same way.
+    private var captureSettings: CaptureSettings {
+        CaptureSettings(minimum: minimum, maximum: maximum, sensitivity: sensitivity, window: windowOverride, confidence: confidenceThreshold)
+    }
+
+    private func listen(_ capture: CaptureSettings) async {
+        await start(minimum: capture.minimum, maximum: capture.maximum, micSensitivity: capture.sensitivity,
+                    analysisWindowOverride: capture.window, confidenceThreshold: capture.confidence)
+    }
+
+    /// The hardware format changed under the engine (headphones in or out, a call taking the route) and the engine
+    /// stopped itself. The microphone listens again with a tap in the new input format, and the click, the drone, the
+    /// band or a tone play on from where they were. Taken from this service's own state before anything is stopped.
+    private func engineConfigurationChanged() {
+        guard !engine.isRunning else { return }
+        let capture = running ? captureSettings : nil
+        if capture != nil { stopCapture() }
+        if let capture, UIApplication.shared.applicationState == .active {
+            // `start` brings back the output with the microphone.
+            Task { await self.listen(capture) }
+        } else if outputActive {
+            restartOutput()
+        }
+    }
+
+    private func restartOutput() {
+        do {
+            try configureSession()
+            try attachOutput(keepPlaying: true)
+            engine.prepare(); try engine.start()
+        } catch {
+            suspend(); self.error = String(localized: "Could not start audio: \(error.localizedDescription)")
+        }
+    }
+
+    /// What is listening and playing now that can come back later: the microphone, the Metronome tool's click and
+    /// the drone. A lesson's click and band never come back (their take can't pick up in the middle).
+    private func snapshot() -> Interrupted {
+        Interrupted(capture: running ? captureSettings : nil,
+                    metronome: metronomeRunning && metronomeOwnedByTool ? metronomeSettings : nil,
+                    drone: droneRunning ? droneSettings : nil)
+    }
+
+    /// Brings back what `snapshot` saw, unless it is already going again; the microphone only with the app in front.
+    private func restore(_ snapshot: Interrupted) {
+        if let drone = snapshot.drone, !droneRunning {
+            setDrone(tonic: drone.tonic, voice: drone.voice, fifth: drone.fifth)
+        }
+        if let click = snapshot.metronome, !metronomeRunning {
+            setMetronome(bpm: click.bpm, beats: click.beats, subdivision: click.subdivision, accents: click.accents,
+                         beatLevels: click.beatLevels, sound: click.sound, tool: true)
+        }
+        if let capture = snapshot.capture, !running, UIApplication.shared.applicationState == .active {
+            Task { await self.listen(capture) }
+        }
+    }
+
+    /// A call, Siri or an alarm took the audio: everything stops, and what was going is remembered for the end.
+    private func interruptionBegan() {
+        interrupted = snapshot()
+        suspend()
+    }
+
+    /// The interruption is over. With "should resume" what was going comes back; without it, it stays stopped.
+    private func interruptionEnded(resume: Bool) {
+        guard let snapshot = interrupted else { return }
+        interrupted = nil
+        if resume { restore(snapshot) }
     }
 
     /// The tuner's reference (and other single held notes): the instrument's own voice at exactly `hz`, a string
@@ -394,6 +502,8 @@ final class AudioService: ObservableObject {
             renderer.setMetronome(bpm: bpm, beats: beats, subdivision: subdivision, accents: accents, beatLevels: beatLevels, sound: sound, restart: !continuing)
             metronomeRunning = bpm > 0
             metronomeOwnedByTool = tool && bpm > 0
+            metronomeSettings = bpm > 0 ? MetronomeSettings(bpm: bpm, beats: beats, subdivision: subdivision, accents: accents,
+                                                            beatLevels: beatLevels, sound: sound) : nil
         } catch { suspend(); self.error = String(localized: "Could not start the metronome: \(error.localizedDescription)") }
     }
 
@@ -402,6 +512,7 @@ final class AudioService: ObservableObject {
         renderer.setMetronome(bpm: 0, beats: 4, subdivision: 1, accents: true, beatLevels: nil, sound: .click)
         metronomeRunning = false
         metronomeOwnedByTool = false
+        metronomeSettings = nil
         bandRequest = nil; bandPlaying = false
         if !running && !outputActive { shutdown() }
     }
@@ -592,6 +703,7 @@ final class AudioService: ObservableObject {
             renderer.setDrone(tonic: tonic, voice: voice, fifth: fifth)
             droneFifth = fifth
             droneRunning = true
+            droneSettings = DroneSettings(tonic: tonic, voice: voice, fifth: fifth)
         } catch { self.error = String(localized: "Could not start the drone: \(error.localizedDescription)") }
     }
 
@@ -610,6 +722,7 @@ final class AudioService: ObservableObject {
     func stopDrone() {
         renderer.stopDrone()
         droneRunning = false
+        droneSettings = nil
         Task { [weak self] in
             try? await Task.sleep(for: .milliseconds(320))
             guard let self, !self.running, !self.outputActive else { return }
@@ -672,6 +785,84 @@ private final class PitchWorker: @unchecked Sendable {
     }
 }
 
+/// The app's one owner of the shared audio session: its category, mode and activation. The lessons' engine
+/// (`AudioService`) and the player's own recordings (`RecordingPlayer`) both go through it, so neither turns the session
+/// off under the other, and deactivation (which blocks while the hardware winds down) runs off the main thread.
+final class AudioSessionOwner: @unchecked Sendable {
+    static let shared = AudioSessionOwner()
+
+    enum User: Hashable, Sendable {
+        /// `AudioService`: the microphone, tones, the metronome, the drone and the band (play and record, measurement mode).
+        case lessons
+        /// `RecordingPlayer`: a recording of the player's own (playback, unless the lessons' play-and-record is set).
+        case recording
+    }
+
+    private let lock = NSLock()
+    private var holders: Set<User> = []
+    /// Moves on with every activation and release: a deactivation still waiting goes ahead only if nothing happened since.
+    private var epoch = 0
+    private let queue = DispatchQueue(label: "com.timbre.audio-session", qos: .userInitiated)
+
+    private init() {}
+
+    /// Sets the session up for `user` and activates it, on the main thread just before an engine starts. A
+    /// deactivation still waiting is called off; one already under way is waited for, so it can't land afterwards.
+    func activate(_ user: User) throws {
+        lock.lock()
+        defer { lock.unlock() }
+        epoch &+= 1
+        let session = AVAudioSession.sharedInstance()
+        switch user {
+        case .lessons:
+            try session.setCategory(.playAndRecord, mode: .measurement, options: [.defaultToSpeaker, .allowBluetoothA2DP, .mixWithOthers])
+            // Off by default: iOS would silence every haptic (the tuner's detents and lock, the highway's beats)
+            // while the microphone records.
+            try? session.setAllowHapticsAndSystemSoundsDuringRecording(true)
+            try session.setPreferredSampleRate(48000)
+            try session.setPreferredIOBufferDuration(0.005)
+        case .recording:
+            // The lessons' play-and-record session (held now, or left from before) carries the recording as it is;
+            // otherwise plain playback.
+            if session.category != .playAndRecord {
+                try session.setCategory(.playback, mode: .default, options: [])
+            }
+        }
+        try session.setActive(true)
+        holders.insert(user)
+    }
+
+    /// `user` is done with the session. With `deactivate`, once nobody holds it the session is turned off on a
+    /// background queue and other apps' audio may resume; an activation before that runs calls it off.
+    func release(_ user: User, deactivate: Bool = true) {
+        lock.lock()
+        holders.remove(user)
+        guard deactivate, holders.isEmpty else { lock.unlock(); return }
+        epoch &+= 1
+        let ticket = epoch
+        lock.unlock()
+        queue.async { [self] in
+            lock.lock()
+            defer { lock.unlock() }
+            guard epoch == ticket, holders.isEmpty else { return }
+            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        }
+    }
+}
+
+/// How the microphone was started.
+private struct CaptureSettings { let minimum, maximum, sensitivity: Double; let window: Int?; let confidence: Double }
+/// How the click was started.
+private struct MetronomeSettings {
+    let bpm, beats, subdivision: Int
+    let accents: Bool
+    let beatLevels: [Int]?
+    let sound: MetronomeRenderer.Sound
+}
+/// How the drone was started.
+private struct DroneSettings { let tonic: Double; let voice: DroneRenderer.Voice; let fifth: Bool }
+/// What can come back after an interruption or a media services reset (`AudioService.snapshot`).
+private struct Interrupted { let capture: CaptureSettings?; let metronome: MetronomeSettings?; let drone: DroneSettings? }
 /// The step's band and the metronome bar it starts on.
 private struct BandRequest { let arrangement: BandArrangement; let firstBar: Int }
 /// A tone waiting for its rendering; `reference` tones resume capture when they end.

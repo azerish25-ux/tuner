@@ -21,20 +21,27 @@ struct RootView: View {
 
     var body: some View {
         TabView(selection: $store.selectedTab) {
-            Tab("Tune", systemImage: "tuningfork", value: AppTab.tune) { TuneView().underTabBar() }
+            // One family of five, all solid in the bar (each has a fill form, or is solid already), so no tab reads
+            // lighter than its neighbours: the tuner's needle, the cap, the song list, the metronome, rising bars.
+            Tab("Tune", systemImage: "gauge.with.needle", value: AppTab.tune) { TuneView().underTabBar() }
             Tab("Learn", systemImage: "graduationcap", value: AppTab.learn) { LearnView().underTabBar() }
             // Songs sits beside Learn (both are the curriculum) and takes the centre of the bar. Its title is the
             // Songs course's own, already translated in every language. Instruments are chosen from the tuner's picker.
             Tab(SongsView.title(in: store.curriculum), systemImage: "music.note.list", value: AppTab.songs) { SongsView().underTabBar() }
-            Tab("Play", systemImage: "gamecontroller", value: AppTab.practice) { PracticeView().underTabBar() }
-            Tab("Progress", systemImage: "chart.line.uptrend.xyaxis", value: AppTab.journey) { JourneyView().underTabBar() }
+            // The metronome, drone, chords, scales and ear games: practice, not a game controller's "Play".
+            Tab("Practice", systemImage: "metronome", value: AppTab.practice) { PracticeView().underTabBar() }
+            Tab("Progress", systemImage: "chart.bar", value: AppTab.journey) { JourneyView().underTabBar() }
         }
+        // A subscription whose renewal failed (billing retry, grace period): one line over every tab until it's fixed.
+        .safeAreaInset(edge: .top, spacing: 0) { BillingIssueBanner() }
         // VoiceOver stays on the paywall while it covers the tabs, rather than reaching the controls behind it.
         .accessibilityHidden(rootPaywall)
         .tint(Palette.mint)
         .preferredColorScheme(.dark)  // Studio Noir is a dark design
-        .environment(\.locale, Locale(identifier: store.settings.language == "system" ? Locale.current.identifier : store.settings.language))
-        .environment(\.layoutDirection, Locale.Language(identifier: store.settings.language == "system" ? Locale.current.identifier : store.settings.language).characterDirection == .rightToLeft ? .rightToLeft : .leftToRight)
+        .environment(\.locale, TimbreLocalization.locale(for: store.settings.language))
+        .environment(\.layoutDirection, TimbreLocalization.isRightToLeft(store.settings.language) ? .rightToLeft : .leftToRight)
+        // Every Sora face a weight heavier with Bold Text on (onboarding's cover and the sheets below inherit it).
+        .boldTextAware()
         .fullScreenCover(isPresented: Binding(get: { store.settings.onboardingCompleted != true }, set: { _ in })) {
             OnboardingView().environmentObject(store).environmentObject(audio).environmentObject(commerce)
         }
@@ -54,7 +61,7 @@ struct RootView: View {
         #if DEBUG
         .overlay(alignment: .topLeading) {
             // UI-test probe (TIMBRE_DEBUG_STATE=1): the presentation flags, readable by XCUITest. Drawn in clear ink
-            // and never touched, so it stays out of the screenshots (and off the title) while its label stays readable.
+            // and never touched, so it is never seen (and stays off the title) while its label stays readable.
             if ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1" {
                 Text(verbatim: "paywall=\(store.showPaywall) settings=\(store.showSettings) picker=\(store.showInstrumentPicker) reason=\(store.paywallReason ?? "-") pro=\(commerce.isPro) tab=\(String(describing: store.selectedTab))")
                     .font(.system(size: 9, design: .monospaced)).foregroundStyle(Color.clear)

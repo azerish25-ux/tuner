@@ -1,8 +1,13 @@
+import Combine
 import SwiftUI
 
-// Studio Noir's shared parts (DESIGN11, batch A): headers, buttons, segmented pills, tiles, badges, empty and loading
-// states, and the Dynamic Type, hit-target and Reduce Motion helpers every screen uses. Tokens live in Theme.swift;
-// button styles and `Eyebrow` in Components.swift; streak, level and quest parts in GameUI.swift.
+// Studio Noir's shared parts: headers, icon buttons, segmented pills, stat tiles and the stat bar, badges, empty and
+// loading states, and the helpers every screen uses for Dynamic Type, Bold Text, Button Shapes, the Large Content
+// Viewer, hit targets, Reduce Motion, live glow and decoration that rests off screen. Tokens live in Theme.swift;
+// button styles and `Eyebrow` in Components.swift; glyphs in Glyphs.swift; streak, level and quest parts in GameUI.swift.
+//
+// Selector budget: at most two rows of chips or segmented controls above a screen's content. A third choice goes in a
+// menu ("View", a toolbar menu) or under the content.
 
 // MARK: - Headers
 
@@ -88,7 +93,10 @@ struct SectionHeader<Trailing: View>: View {
         self.init(Text(title), trailing: trailing)
     }
 
+    @Environment(\.legibilityWeight) private var legibility
+
     var body: some View {
+        let _ = legibility
         let layout = typeSize.isAccessibilitySize
             ? AnyLayout(VStackLayout(alignment: .leading, spacing: 6))
             : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 8))
@@ -116,10 +124,13 @@ extension SectionHeader where Trailing == EmptyView {
 struct CardTitle: View {
     private let title: Text
 
+    @Environment(\.legibilityWeight) private var legibility
+
     init(_ title: LocalizedStringKey) { self.title = Text(title) }
     init(_ title: Text) { self.title = title }
 
     var body: some View {
+        let _ = legibility
         title.font(Typeface.cardTitle).foregroundStyle(Palette.ink)
             .fixedSize(horizontal: false, vertical: true)
             .accessibilityAddTraits(.isHeader)
@@ -358,7 +369,7 @@ struct StatTile: View {
     }
 
     private var figure: some View {
-        value.font(Typeface.number(22, relativeTo: .title2)).foregroundStyle(Palette.ink)
+        value.font(Typeface.number(.title3)).foregroundStyle(Palette.ink)
             .lineLimit(1).minimumScaleFactor(0.7)
             .contentTransition(.numericText())
     }
@@ -390,11 +401,68 @@ struct StatTileRow<Content: View>: View {
     }
 }
 
+// MARK: - Stat bar
+
+/// Figures side by side in one card, for a wide screen: each figure's glyph, value and label in a row, centred in its
+/// share and parted by hairlines. Where a phone stacks `StatTile`s, an iPad has one summary bar rather than tiles
+/// stretched across its width with their content huddled in a corner. At the accessibility sizes the figures stack, one
+/// per row.
+struct StatBar: View {
+    struct Figure: Identifiable {
+        let id: String
+        let symbol: String
+        let tint: Color
+        let value: Text
+        let label: Text
+        /// What VoiceOver reads for the figure, when its value and label alone don't say it ("Level 5, Strummer").
+        var spoken: Text? = nil
+    }
+
+    private let figures: [Figure]
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    init(_ figures: [Figure]) {
+        self.figures = figures
+    }
+
+    var body: some View {
+        let stacked = typeSize.isAccessibilitySize
+        let layout = stacked ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12)) : AnyLayout(HStackLayout(alignment: .center, spacing: 0))
+        layout {
+            ForEach(Array(figures.enumerated()), id: \.element.id) { index, figure in
+                if index > 0 && !stacked {
+                    Hairline(vertical: true).frame(height: 40)
+                }
+                cell(figure, stacked: stacked)
+            }
+        }
+        .stillCard(cornerRadius: Metrics.cornerTile, padding: Metrics.tilePadding)
+    }
+
+    private func cell(_ figure: Figure, stacked: Bool) -> some View {
+        HStack(spacing: 12) {
+            Glyph(figure.symbol, size: Glyph.lead, tint: figure.tint)
+            VStack(alignment: .leading, spacing: 2) {
+                figure.value.font(Typeface.number(.title3)).foregroundStyle(Palette.ink)
+                    .lineLimit(1).minimumScaleFactor(0.7)
+                    .contentTransition(.numericText())
+                figure.label.font(.caption).foregroundStyle(Palette.inkSoft)
+                    .lineLimit(2)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: stacked ? .leading : .center)
+        .padding(.vertical, 6)
+        .accessibilityElement(children: .combine)
+        .modifier(SpokenLabel(label: figure.spoken))
+    }
+}
+
 // MARK: - Badges
 
-/// Small capitals in a capsule: "PRO", "NEW", a plan's "SAVE 58%". Sora 10 on the caption2 curve, grows with
-/// Dynamic Type up to xxxLarge and is never scaled down with `scaleEffect`. Write the text in sentence case; the
-/// badge capitalises it.
+/// Small capitals in a capsule: "PRO", "NEW", a plan's "SAVE 58%". Sora 12 (the scale's smallest step) on the
+/// caption2 curve, grows with Dynamic Type up to xxxLarge and is never scaled down with `scaleEffect`. Write the text in
+/// sentence case; the badge capitalises it. Use one where a word must stand out; a locked card says so with a lock
+/// glyph in its corner rather than a badge.
 struct Badge: View {
     enum Style {
         /// Dark type on Timbre Pro gold.
@@ -414,6 +482,7 @@ struct Badge: View {
     private let text: Text
     private let style: Style
     private let spoken: Text?
+    @Environment(\.legibilityWeight) private var legibility
 
     init(_ text: LocalizedStringKey, style: Style = .accent(Palette.mint)) {
         self.text = Text(text)
@@ -437,7 +506,8 @@ struct Badge: View {
     }
 
     var body: some View {
-        text.font(Typeface.badge).tracking(1.2)
+        let _ = legibility
+        return text.font(Typeface.badge).tracking(1)
             .textCase(.uppercase)
             .lineLimit(1)
             .foregroundStyle(ink)
@@ -475,7 +545,7 @@ struct Badge: View {
 
 // MARK: - Empty and loading
 
-/// Nothing to show yet, or nothing matches: a quiet orb, a title and a line of help, centred, with optional actions
+/// Nothing to show yet, or nothing matches: a quiet glyph, a title and a line of help, centred, with optional actions
 /// under them. For a search with no results prefer `ContentUnavailableView.search(text:)`.
 struct EmptyState<Actions: View>: View {
     private let symbol: String
@@ -497,7 +567,7 @@ struct EmptyState<Actions: View>: View {
     var body: some View {
         VStack(spacing: 16) {
             VStack(spacing: 10) {
-                IconOrb(symbol: symbol, tint: Palette.inkSoft, size: 52)
+                Glyph(symbol, size: Glyph.feature, tint: Palette.inkFaint)
                 title.font(Typeface.cardTitle).foregroundStyle(Palette.ink)
                 if let message {
                     message.font(.subheadline).foregroundStyle(Palette.inkSoft)
@@ -612,6 +682,115 @@ private struct AdaptiveAnimation<V: Equatable>: ViewModifier {
 
     func body(content: Content) -> some View {
         content.animation(Motion.adaptive(animation, reduceMotion: reduceMotion), value: value)
+    }
+}
+
+// MARK: - Bold Text, Button Shapes, the Large Content Viewer, live glow, resting decoration
+
+extension View {
+    /// At the root of each window (RootView, a cover outside it): keeps `Typeface.boldText` in step with Bold Text, so
+    /// every Sora face is drawn a weight heavier while it is on.
+    func boldTextAware() -> some View { modifier(BoldTextBridge()) }
+
+    /// A control that stops growing at `cap` to keep its place on a busy stage (the tuner's side controls, a HUD, a
+    /// dock) offers the Large Content Viewer instead: a long press shows `label` and `symbol` magnified, as the tab bar
+    /// does. Give every capped control one.
+    func cappedControl(_ label: Text, symbol: String? = nil, cap: DynamicTypeSize = .accessibility1) -> some View {
+        dynamicTypeSize(...cap)
+            .accessibilityShowsLargeContentViewer {
+                Label {
+                    label
+                } icon: {
+                    if let symbol { Image(systemName: symbol) }
+                }
+            }
+    }
+
+    /// Glow means live: `color` shines under the view while `on` (listening, locked, playing) and nothing at rest. A
+    /// button, a card or a disc at rest never glows.
+    func liveGlow(_ on: Bool, color: Color = Palette.mint, radius: CGFloat = 16) -> some View {
+        shadow(color: color.opacity(on ? 0.5 : 0), radius: on ? radius : 0)
+    }
+
+    /// For decoration that moves on its own (motes, a flame, an idle picture): `live` is true only while the view is on
+    /// screen (appeared, and inside its scroll view's visible bounds), the app is in front and Low Power Mode is off.
+    /// Drive a `TimelineView(.animation(paused: !live))` with it, so nothing redraws at rest.
+    func animatesWhileSeen(_ live: Binding<Bool>) -> some View {
+        modifier(WhileSeen(live: live))
+    }
+}
+
+/// A text button in its colour ("Show all", "I just restrung", a link): with Button Shapes on (Settings ›
+/// Accessibility › Display & Text Size) it is underlined, as the system's text buttons are, so it reads as a button
+/// by more than its colour. It dims under the finger, and its target is at least 44 pt tall.
+struct TextLinkStyle: ButtonStyle {
+    var tint: Color = Palette.mint
+
+    func makeBody(configuration: Configuration) -> some View {
+        TextLinkBody(configuration: configuration, tint: tint)
+    }
+}
+
+private struct TextLinkBody: View {
+    let configuration: ButtonStyleConfiguration
+    let tint: Color
+    @Environment(\.accessibilityShowButtonShapes) private var buttonShapes
+
+    var body: some View {
+        configuration.label
+            .foregroundStyle(tint)
+            .underline(buttonShapes, color: tint)
+            .opacity(configuration.isPressed ? 0.6 : 1)
+            .frame(minHeight: Metrics.minTarget)
+            .contentShape(Rectangle())
+    }
+}
+
+/// Sets `Typeface.boldText` from the environment before the views under it draw.
+private struct BoldTextBridge: ViewModifier {
+    @Environment(\.legibilityWeight) private var legibility
+
+    func body(content: Content) -> some View {
+        let bold = legibility == .bold
+        if Typeface.boldText != bold { Typeface.boldText = bold }
+        return content
+    }
+}
+
+private struct WhileSeen: ViewModifier {
+    @Binding var live: Bool
+    @State private var shown = false
+    @State private var inView = true
+    @State private var lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
+    @Environment(\.scenePhase) private var scenePhase
+
+    func body(content: Content) -> some View {
+        content
+            .onGeometryChange(for: Bool.self) { proxy in
+                guard let viewport = proxy.bounds(of: .scrollView) else { return true }
+                return viewport.intersects(CGRect(origin: .zero, size: proxy.size))
+            } action: { value in
+                inView = value
+                update()
+            }
+            .onAppear {
+                shown = true
+                update()
+            }
+            .onDisappear {
+                shown = false
+                update()
+            }
+            .onChange(of: scenePhase) { _, _ in update() }
+            .onReceive(NotificationCenter.default.publisher(for: .NSProcessInfoPowerStateDidChange).receive(on: DispatchQueue.main)) { _ in
+                lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
+                update()
+            }
+    }
+
+    private func update() {
+        let next = shown && inView && scenePhase == .active && !lowPower
+        if live != next { live = next }
     }
 }
 

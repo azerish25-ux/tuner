@@ -16,6 +16,7 @@ public struct EntitlementEvidence: Equatable, Sendable {
     public let productID: String
     public let isSubscription: Bool
     public let revoked: Bool
+    /// The end of a subscription's paid period, for showing the renewal date; access never depends on it.
     public let expiresAt: Date?
     public init(productID: String, isSubscription: Bool, revoked: Bool, expiresAt: Date?) {
         self.productID = productID; self.isSubscription = isSubscription; self.revoked = revoked; self.expiresAt = expiresAt
@@ -23,21 +24,34 @@ public struct EntitlementEvidence: Equatable, Sendable {
 }
 
 public enum AccessPolicy {
-    /// Pro when any known product is verified, not revoked and (for subscriptions) not expired.
-    public static func isPro(_ evidence: [EntitlementEvidence], now: Date = Date()) -> Bool {
+    /// Pro when any known product's verified transaction is in the entitlements and not revoked. The entitlements
+    /// StoreKit reports (`Transaction.currentEntitlements`) already leave out lapsed subscriptions, and keep one in its
+    /// Billing Grace Period although its expiry date has passed, so no date is checked here.
+    public static func isPro(_ evidence: [EntitlementEvidence]) -> Bool {
         evidence.contains { item in
             guard TimbreProduct.all.contains(item.productID), !item.revoked else { return false }
-            if item.isSubscription { return item.expiresAt.map { $0 > now } ?? true }
-            return item.productID == TimbreProduct.lifetime
+            return item.isSubscription ? TimbreProduct.subscriptions.contains(item.productID) : item.productID == TimbreProduct.lifetime
         }
     }
 
-    /// Free users tune the free instruments in every preset tuning. Pro opens everything. The free set is the
-    /// catalogue's `isFree` flag: guitar, bass, ukulele, violin and cello (viola, double bass and the rest are Pro).
-    public static func canTune(instrument: Instrument, pro: Bool) -> Bool { pro || instrument.isFree }
+    // MARK: Tunings
 
+    /// Whether the player can pick this instrument and tune it: whenever its standard tuning is open, which on the
+    /// free plan it always is.
+    public static func canTune(instrument: Instrument, pro: Bool) -> Bool {
+        isOpen(tuningId: instrument.defaultTuningId, custom: false, of: instrument, pro: pro)
+    }
+
+    /// The free plan tunes every instrument in its standard tuning, and the free instruments (the catalogue's `isFree`:
+    /// guitar, bass, ukulele, violin and cello) in every preset and the player's own tunings too. The other
+    /// instruments' alternate and custom tunings are Pro, as is everything with Pro.
     public static func canUse(tuning: Tuning, of instrument: Instrument, pro: Bool) -> Bool {
-        tuning.instrumentId == instrument.id && canTune(instrument: instrument, pro: pro)
+        tuning.instrumentId == instrument.id && isOpen(tuningId: tuning.id, custom: tuning.isCustom, of: instrument, pro: pro)
+    }
+
+    private static func isOpen(tuningId: String, custom: Bool, of instrument: Instrument, pro: Bool) -> Bool {
+        if pro || instrument.isFree { return true }
+        return !custom && tuningId == instrument.defaultTuningId
     }
 
     // MARK: Lessons

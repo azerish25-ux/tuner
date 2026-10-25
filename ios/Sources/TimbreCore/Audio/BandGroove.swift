@@ -108,9 +108,10 @@ public enum BandCue {
 /// Every song lesson's cues (its play-alongs, its progressions with and without their strum, every four-bar window
 /// of its chart, each section of its whole take) mapped to the lesson's style: an Originals song's own, the standard
 /// groove for every other course's. A cue two songs of different styles share means nothing and is dropped. Built
-/// once, the first time a band needs it, off the main thread.
+/// once, the first time a band needs it, off the main thread, from the app's one decoded curriculum
+/// (`CurriculumStore`): the first band waits for that decode rather than decoding the file again.
 public final class BandStyleIndex: Sendable {
-    public static let shared = BandStyleIndex(curriculum: try? Curriculum.bundled())
+    public static let shared = BandStyleIndex(curriculum: CurriculumStore.shared.curriculum)
     /// The course whose songs are written in today's styles.
     public static let styledCourse = "originals"
 

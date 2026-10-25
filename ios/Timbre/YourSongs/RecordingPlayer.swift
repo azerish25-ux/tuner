@@ -7,8 +7,9 @@ import TimbreCore
 /// looped without a gap (the part read into a buffer the player node loops). Only the player's own files come through
 /// here: Apple Music plays in Apple's own player, untouched (`AppleMusicListener`).
 ///
-/// Its own engine, so the lessons' audio (`AudioService`) is never disturbed; when that engine changes the audio
-/// session (a lesson's microphone, a chord sounded), this one pauses where it was and plays on from there.
+/// Its own engine, so the lessons' audio (`AudioService`) is never disturbed; the session is shared through
+/// `AudioSessionOwner`. When the lessons' engine changes the session (a lesson's microphone, a chord sounded), this
+/// one pauses where it was and plays on from there; after a call it plays on by itself when iOS says it should.
 @MainActor
 final class RecordingPlayer: ObservableObject {
     @Published private(set) var isPlaying = false
@@ -38,6 +39,11 @@ final class RecordingPlayer: ObservableObject {
     private var lastTime = 0.0
     private var generation = 0
     private var observers: [NSObjectProtocol] = []
+    /// A call (or Siri, an alarm) paused the recording while it played: it plays on if the interruption ends with
+    /// "should resume".
+    private var resumeAfterInterruption = false
+    /// This player activated the session and hasn't turned it off since (a pause leaves it active).
+    private var sessionActive = false
 
     init() {
         engine.attach(node)
@@ -47,8 +53,23 @@ final class RecordingPlayer: ObservableObject {
             Task { @MainActor in self?.engineStopped() }
         })
         observers.append(NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: .main) { [weak self] notification in
-            let began = (notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt) == AVAudioSession.InterruptionType.began.rawValue
-            Task { @MainActor in if began { self?.pause() } }
+            let info = notification.userInfo
+            let type = (info?[AVAudioSessionInterruptionTypeKey] as? UInt).flatMap(AVAudioSession.InterruptionType.init(rawValue:))
+            let options = AVAudioSession.InterruptionOptions(rawValue: info?[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0)
+            Task { @MainActor in
+                guard let self, let type else { return }
+                switch type {
+                case .began:
+                    self.resumeAfterInterruption = self.isPlaying
+                    self.pause()
+                case .ended:
+                    let resume = self.resumeAfterInterruption && options.contains(.shouldResume)
+                    self.resumeAfterInterruption = false
+                    if resume && !self.isPlaying { self.play() }
+                @unknown default:
+                    break
+                }
+            }
         })
     }
 
@@ -118,12 +139,16 @@ final class RecordingPlayer: ObservableObject {
         resumeAt = currentTime()
         generation += 1
         node.stop()
-        // The engine lets the session go while paused, so the lessons' microphone can take it.
+        // The engine lets the session go while paused, so the lessons' microphone can take it (it stays active).
         engine.stop()
+        releaseSession(deactivate: false)
         isPlaying = false
     }
 
-    func toggle() { isPlaying ? pause() : play() }
+    func toggle() {
+        resumeAfterInterruption = false
+        isPlaying ? pause() : play()
+    }
 
     func seek(to time: Double) {
         let target = max(0, min(duration, time))
@@ -139,16 +164,16 @@ final class RecordingPlayer: ObservableObject {
 
     func skip(by seconds: Double) { seek(to: currentTime() + seconds) }
 
-    /// Stops and lets the audio session go (when nothing else in the app is using it).
+    /// Stops and lets the audio session go (deactivated off the main thread when nothing else in the app holds it).
     func stop() {
         generation += 1
+        resumeAfterInterruption = false
         node.stop()
         if engine.isRunning { engine.stop() }
         isPlaying = false
         resumeAt = 0
         lastTime = 0
-        let session = AVAudioSession.sharedInstance()
-        if session.category == .playback { try? session.setActive(false, options: .notifyOthersOnDeactivation) }
+        releaseSession(deactivate: true)
     }
 
     /// Where playback is, in seconds.
@@ -235,6 +260,9 @@ final class RecordingPlayer: ObservableObject {
         resumeAt = 0
         lastTime = duration
         node.stop()
+        // Played to the end: the engine and the session go until the next play.
+        engine.stop()
+        releaseSession(deactivate: true)
     }
 
     private func engineStopped() {
@@ -242,15 +270,22 @@ final class RecordingPlayer: ObservableObject {
         resumeAt = lastTime
         generation += 1
         isPlaying = false
+        releaseSession(deactivate: false)
     }
 
-    /// The app's own playback session; left as it is while the lessons' engine holds it for its microphone.
+    /// The app's own playback session, through the one owner (`AudioSessionOwner`); the lessons' play-and-record
+    /// session is left as it is.
     private func activateSession() throws {
-        let session = AVAudioSession.sharedInstance()
-        if session.category != .playAndRecord {
-            try session.setCategory(.playback, mode: .default, options: [])
-        }
-        try session.setActive(true)
+        try AudioSessionOwner.shared.activate(.recording)
+        sessionActive = true
+    }
+
+    /// This player's engine no longer needs the session. `deactivate`: it is turned off too (off the main thread, once
+    /// nothing else in the app holds it); otherwise it stays active for whoever plays next.
+    private func releaseSession(deactivate: Bool) {
+        guard sessionActive else { return }
+        AudioSessionOwner.shared.release(.recording, deactivate: deactivate)
+        if deactivate { sessionActive = false }
     }
 }
 

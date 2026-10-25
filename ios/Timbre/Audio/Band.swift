@@ -184,54 +184,119 @@ enum KeyEstimate {
 
 // MARK: - The rendered band
 
-/// Every distinct bar of an arrangement (plus the ending) rendered once, back to back in one buffer.
-/// Each part runs a bar plus a release tail, so a bar's last notes ring over the next downbeat.
-/// Immutable after init; the render thread only reads it.
+/// Every distinct bar of an arrangement (plus the ending) rendered once, back to back, in two layers: the rhythm
+/// section (drums and bass) and the harmony (the comping chords), so the band can thin to drums and bass and fill
+/// back in without a second rendering. After the bars come two one-shots the take can fire over the band: a crash
+/// (the multiplier reaching ×4) and a choked strum (a run broken). Each part runs a bar plus a release tail, so a
+/// bar's last notes ring over the next downbeat. Immutable after init; the render thread only reads it.
 final class BandTrack: @unchecked Sendable {
     let sampleRate: Int
+    /// The rhythm section, and the one-shots.
     let samples: UnsafeMutableBufferPointer<Float>
+    /// The harmony, at the same offsets as `samples` (silent under the one-shots).
+    let harmony: UnsafeMutableBufferPointer<Float>
     let starts: [Int]
     let lengths: [Int]
     /// Part to start on each bar of the arrangement (repeats when the step runs longer).
     let sequence: [Int]
     /// The final-chord part.
     let ending: Int
+    /// The one-shot parts.
+    let crash: Int
+    let choke: Int
 
-    init(sampleRate: Int, parts: [[Float]], sequence: [Int], ending: Int) {
+    /// `harmony[i]` lies under `rhythm[i]` (a missing or shorter one is silent); `crash` and `choke` are parts of
+    /// `rhythm`.
+    init(sampleRate: Int, rhythm: [[Float]], harmony: [[Float]], sequence: [Int], ending: Int, crash: Int, choke: Int) {
         self.sampleRate = sampleRate
         self.sequence = sequence
         self.ending = ending
+        self.crash = crash
+        self.choke = choke
         var peak: Float = 0
         var total = 0
-        for part in parts {
+        for (index, part) in rhythm.enumerated() {
             total += part.count
-            for value in part { peak = max(peak, abs(value)) }
+            let under = index < harmony.count ? harmony[index] : []
+            for (frame, value) in part.enumerated() {
+                peak = max(peak, abs(value + (frame < under.count ? under[frame] : 0)))
+            }
         }
         // Mixed under the player: the loudest moment of the band stays well below full scale.
         let scale: Float = peak > 0.35 ? 0.35 / peak : 1
         samples = UnsafeMutableBufferPointer<Float>.allocate(capacity: max(1, total))
         samples.initialize(repeating: 0)
+        self.harmony = UnsafeMutableBufferPointer<Float>.allocate(capacity: max(1, total))
+        self.harmony.initialize(repeating: 0)
         var starts: [Int] = []
         var lengths: [Int] = []
         var offset = 0
-        for part in parts {
+        for (index, part) in rhythm.enumerated() {
             starts.append(offset); lengths.append(part.count)
-            for (index, value) in part.enumerated() { samples[offset + index] = value * scale }
+            for (frame, value) in part.enumerated() { samples[offset + frame] = value * scale }
+            if index < harmony.count {
+                for (frame, value) in harmony[index].prefix(part.count).enumerated() { self.harmony[offset + frame] = value * scale }
+            }
             offset += part.count
         }
         self.starts = starts
         self.lengths = lengths
     }
 
-    deinit { samples.deallocate() }
+    deinit {
+        samples.deallocate()
+        harmony.deallocate()
+    }
+}
+
+/// What the take asks of the band as it goes, from the main thread to the render thread: thin to the drums and bass
+/// (a note missed) or play in full (a run of four again), step back under spoken cues (VoiceOver), and the one-shots
+/// over it (a crash at ×4, a choked strum when a run breaks). The band only ever plays in headphones, so these never
+/// reach the microphone. The render thread only ever `try`s the lock (it skips a read rather than wait).
+final class BandFeel: @unchecked Sendable {
+    struct State: Equatable {
+        var thin = false
+        var duck = false
+        /// How many crashes and chokes have been asked for: a player fires each new one once.
+        var crashes = 0
+        var chokes = 0
+    }
+
+    static let shared = BandFeel()
+    private let lock = NSLock()
+    private var state = State()
+
+    /// The state, unless the main thread holds it this moment.
+    func read() -> State? {
+        guard lock.try() else { return nil }
+        defer { lock.unlock() }
+        return state
+    }
+
+    private func change(_ edit: (inout State) -> Void) {
+        lock.lock()
+        edit(&state)
+        lock.unlock()
+    }
+
+    /// The comping drops out (true) or comes back (false).
+    func thin(_ on: Bool) { change { $0.thin = on } }
+    /// The band steps back (true), so spoken cues come through.
+    func duck(_ on: Bool) { change { $0.duck = on } }
+    func crash() { change { $0.crashes &+= 1 } }
+    func choke() { change { $0.chokes &+= 1 } }
+    /// A new take: the full band.
+    func reset(duck: Bool = false) { change { $0.thin = false; $0.duck = duck } }
 }
 
 /// Render-thread side of the band. It never keeps time itself: the metronome's own downbeats start
 /// each bar (`downbeat`), so the band is sample-locked to the click and pauses with it.
-/// Two read heads: the bar now playing and the tail of the one before. Allocates nothing.
+/// Two read heads: the bar now playing and the tail of the one before, each over both layers; a third plays the
+/// one-shots. It follows `BandFeel` every few milliseconds. Allocates nothing.
 final class BandPlayer {
     private enum State { case playing, ending, stopped }
     private let track: BandTrack
+    private let feel: BandFeel
     /// The metronome bar (0 = the count-in bar) on which the band's first bar starts.
     private let firstBar: Int
     private var state = State.playing
@@ -240,15 +305,33 @@ final class BandPlayer {
     private var tailGain: Float = 1, tailFade: Float = 0
     private var gain: Float = 1, target: Float = 1
     private let ramp: Float
+    /// The harmony's level (0 thinned to drums and bass) and the whole band's under spoken cues, each easing to its
+    /// target over about 150 ms.
+    private var harmony: Float = 1, harmonyTarget: Float = 1
+    private var duck: Float = 1, duckTarget: Float = 1
+    private let ease: Float
+    private var shotPosition = 0, shotEnd = 0
+    private var crashes = 0, chokes = 0
+    /// Frames until `BandFeel` is read again (about 5 ms).
+    private var poll = 0
+    private static let pollFrames = 256
+    private static let duckLevel: Float = 0.4
 
-    init(track: BandTrack, firstBar: Int) {
+    init(track: BandTrack, firstBar: Int, feel: BandFeel = .shared) {
         self.track = track
+        self.feel = feel
         self.firstBar = firstBar
         ramp = 1 / Float(max(1, Double(track.sampleRate) * 0.04))
+        ease = 1 / Float(max(1, Double(track.sampleRate) * 0.15))
+        if let now = feel.read() {
+            crashes = now.crashes; chokes = now.chokes
+            harmony = now.thin ? 0 : 1; harmonyTarget = harmony
+            duck = now.duck ? Self.duckLevel : 1; duckTarget = duck
+        }
     }
 
     /// Something is coming out (the click ducks under it).
-    var isSounding: Bool { gain > 0.001 && (position < end || tailPosition < tailEnd) }
+    var isSounding: Bool { gain > 0.001 && (position < end || tailPosition < tailEnd || shotPosition < shotEnd) }
 
     /// A metronome downbeat: bar `bar` counted from the metronome's first click.
     func downbeat(_ bar: Int) {
@@ -258,11 +341,12 @@ final class BandPlayer {
         start(track.sequence[index % track.sequence.count], tailFade: 0)
     }
 
-    /// The final chord now; the bar under it fades out quickly.
+    /// The final chord now, with the whole band; the bar under it fades out quickly.
     func finish() {
         guard state == .playing else { return }
         guard isSounding else { stop(); return }
         state = .ending
+        harmonyTarget = 1
         start(track.ending, tailFade: 1 / Float(max(1, Double(track.sampleRate) * 0.12)))
     }
 
@@ -280,19 +364,59 @@ final class BandPlayer {
         end = position + track.lengths[part]
     }
 
+    /// Reads what the take asks for: the band's thinning and ducking, and any new one-shot.
+    private func follow() {
+        guard let now = feel.read() else { return }
+        duckTarget = now.duck ? Self.duckLevel : 1
+        guard state == .playing else {
+            crashes = now.crashes; chokes = now.chokes
+            return
+        }
+        harmonyTarget = now.thin ? 0 : 1
+        if now.crashes != crashes {
+            crashes = now.crashes
+            shoot(track.crash)
+        }
+        if now.chokes != chokes {
+            chokes = now.chokes
+            shoot(track.choke)
+        }
+    }
+
+    private func shoot(_ part: Int) {
+        guard track.starts.indices.contains(part) else { return }
+        shotPosition = track.starts[part]
+        shotEnd = shotPosition + track.lengths[part]
+    }
+
     func nextSample() -> Float {
+        if poll == 0 {
+            poll = Self.pollFrames
+            follow()
+        } else {
+            poll -= 1
+        }
+        if harmony != harmonyTarget { harmony = harmony < harmonyTarget ? min(harmonyTarget, harmony + ease) : max(harmonyTarget, harmony - ease) }
+        if duck != duckTarget { duck = duck < duckTarget ? min(duckTarget, duck + ease) : max(duckTarget, duck - ease) }
         var value: Float = 0
-        if position < end { value += track.samples[position]; position += 1 }
+        if position < end {
+            value += track.samples[position] + track.harmony[position] * harmony
+            position += 1
+        }
         if tailPosition < tailEnd {
-            value += track.samples[tailPosition] * tailGain
+            value += (track.samples[tailPosition] + track.harmony[tailPosition] * harmony) * tailGain
             tailPosition += 1
             if tailFade > 0 {
                 tailGain = max(0, tailGain - tailFade)
                 if tailGain == 0 { tailPosition = tailEnd }
             }
         }
+        if shotPosition < shotEnd {
+            value += track.samples[shotPosition]
+            shotPosition += 1
+        }
         if gain != target { gain = gain < target ? min(target, gain + ramp) : max(target, gain - ramp) }
-        return value * gain
+        return value * gain * duck
     }
 }
 
@@ -365,10 +489,16 @@ enum BandSynth {
                               keys: samples?.instrument(id: "piano"), guitar: samples?.instrument(id: "eguitar"),
                               chops: samples?.instrument(id: "chops"), samples: samples)
         let recorded = players.kit != nil || players.bass != nil || players.keys != nil
-        var parts: [[Float]] = []
+        // The same small room as the cues, its tail ringing into the release so it carries over the next downbeat;
+        // kick and bass stay dry under its low cut. Recordings bring their own room: less of it.
+        let room = RoomReverb.Settings(wet: recorded ? 0.09 : 0.16, feedback: 0.78, damping: 0.4, lowCut: 280)
+        let fade = Int(0.04 * rate)
+        var rhythm: [[Float]] = []
+        var harmony: [[Float]] = []
         for (number, spec) in specs.enumerated() {
             let sounding = spec.ending ? Int(1.3 * rate) : barLength
             var out = [Float](repeating: 0, count: sounding + tail)
+            var chords = [Float](repeating: 0, count: sounding + tail)
             var noise = Noise(seed: UInt32(truncatingIfNeeded: 0x2545F491 &+ number &* 7919))
             // The drummer's feel, apart from the drums' own noise so their sound stays the same.
             var feel = Noise(seed: UInt32(truncatingIfNeeded: 0x51ED_270B &+ number &* 104_729))
@@ -381,21 +511,68 @@ enum BandSynth {
             if arrangement.bass, let root = spec.root {
                 bassLine(&out, groove.bass, root: root, beat: beat, ending: spec.ending, reference: reference, players: players, rate: rate)
             }
+            var harmonised = false
             if arrangement.pad, let root = spec.root, !spec.tones.isEmpty {
-                let comped = comp(&out, groove.comp, root: root, tones: spec.tones, beat: beat, number: number,
+                harmonised = true
+                let comped = comp(&chords, groove.comp, root: root, tones: spec.tones, beat: beat, number: number,
                                   reference: reference, players: players, rate: rate, feel: &feel)
                 if !comped {
+                    // The piano couldn't play the whole bar: the pad holds the chord instead (nothing half-comped).
+                    chords = [Float](repeating: 0, count: sounding + tail)
                     let voices = padVoicing(root: root, tones: spec.tones).map { PitchMath.frequency(midi: Double($0), reference: reference) }
-                    pad(&out, length: spec.ending ? Int(0.9 * rate) : barLength, frequencies: voices, rate: rate, table: table)
+                    pad(&chords, length: spec.ending ? Int(0.9 * rate) : barLength, frequencies: voices, rate: rate, table: table)
                 }
             }
-            // The same small room as the cues, its tail ringing into the release so it carries over the
-            // next downbeat; kick and bass stay dry under its low cut. Recordings bring their own room: less of it.
-            RoomReverb.apply(&out, rate: rate, settings: RoomReverb.Settings(wet: recorded ? 0.09 : 0.16, feedback: 0.78, damping: 0.4, lowCut: 280))
-            RoomReverb.fadeTail(&out, frames: Int(0.04 * rate))
-            parts.append(out)
+            RoomReverb.apply(&out, rate: rate, settings: room)
+            RoomReverb.fadeTail(&out, frames: fade)
+            if harmonised {
+                RoomReverb.apply(&chords, rate: rate, settings: room)
+                RoomReverb.fadeTail(&chords, frames: fade)
+            }
+            rhythm.append(out)
+            harmony.append(harmonised ? chords : [])
         }
-        return BandTrack(sampleRate: Int(rate), parts: parts, sequence: sequence, ending: specs.count - 1)
+        let ending = specs.count - 1
+        rhythm.append(crashShot(players: players, rate: rate, room: room))
+        rhythm.append(chokeShot(rate: rate))
+        return BandTrack(sampleRate: Int(rate), rhythm: rhythm, harmony: harmony, sequence: sequence, ending: ending,
+                         crash: ending + 1, choke: ending + 2)
+    }
+
+    /// The crash a take fires at ×4: the recorded kit's cymbal, else the synthesized one, in the band's room.
+    private static func crashShot(players: Players, rate: Double, room: RoomReverb.Settings) -> [Float] {
+        var out = [Float](repeating: 0, count: Int(1.8 * rate))
+        let piece = BandGroove.Piece.crash.rawValue
+        var played = false
+        if let kit = players.kit, let samples = players.samples, kit.has(piece: piece) {
+            played = samples.addHit(kit, piece: piece, velocity: 0.85, variation: 3, into: &out, start: 0, rate: rate, gain: drumLevel)
+        }
+        if !played {
+            var noise = Noise(seed: 0x0C2A_5B1D)
+            crash(&out, at: 0, velocity: 0.85, rate: rate, noise: &noise)
+        }
+        RoomReverb.apply(&out, rate: rate, settings: room)
+        RoomReverb.fadeTail(&out, frames: Int(0.08 * rate))
+        return out
+    }
+
+    /// A broken run's choked strum: a short scrape of noise in the guitar's middle register over a soft thump, gone
+    /// in a tenth of a second. Unpitched, so it never sounds like a wrong note.
+    private static func chokeShot(rate: Double) -> [Float] {
+        let count = Int(0.14 * rate)
+        var out = [Float](repeating: 0, count: count)
+        var noise = Noise(seed: 0x7F4A_7C15)
+        var highPass = HighPass(cutoff: 650, rate: rate)
+        let smooth = exp(-2 * Double.pi * 2600 / rate)
+        var low = 0.0
+        for i in 0..<count {
+            let t = Double(i) / rate
+            low = (1 - smooth) * highPass.process(noise.next()) + smooth * low
+            let scrape = low * exp(-t / 0.03) * 1.6
+            let thump = sin(2 * Double.pi * 95 * t) * exp(-t / 0.025) * 0.45
+            out[i] = Float((scrape + thump) * min(1, t / 0.002)) * 0.3
+        }
+        return out
     }
 
     // MARK: Parts

@@ -1,6 +1,7 @@
 import Combine
 import SwiftUI
 import TimbreCore
+import UIKit
 
 /// The instrument browser lives in the tuner's picker sheet (`showInstrumentPicker`), not in a tab.
 enum AppTab: Hashable { case tune, learn, songs, practice, journey }
@@ -15,7 +16,12 @@ final class AppStore: ObservableObject {
     let live = LiveReading()
     private let persistence: LocalStore
     @Published private(set) var settings: UserSettings
-    @Published private(set) var records: [PracticeRecord]
+    @Published private(set) var records: [PracticeRecord] {
+        didSet { recordsRevision &+= 1 }
+    }
+    /// Moves on whenever `records` changes, so the streak is counted again (`streak`).
+    private var recordsRevision = 0
+    private var streakCache = StreakCache()
     @Published var selectedTab: AppTab = .tune
     @Published var showPaywall = false
     @Published var showSettings = false
@@ -46,6 +52,10 @@ final class AppStore: ObservableObject {
     var demoNoteDue: (() -> Bool)?
     #endif
     private var measuringTuning: Bool { !intonationMode && gameTargetHz == nil }
+    /// The tuner's feel: called with every tuner reading (`TunerFrame`), about 60 a second while the tuner listens.
+    /// `TunerFrame.standardFeel` (the cent detents and the lock) until a replacement is installed, as tune by feel's
+    /// haptic beating will be: `store.onTunerFrame = { frame in … }` from main-actor code, capturing the store weakly.
+    var onTunerFrame: @MainActor (TunerFrame) -> Void = TunerFrame.standardFeel
     /// The latest XP / quest / badge result, for the reward toast; `rewardPulse` ticks on each.
     @Published private(set) var lastReward: ProgressUpdate?
     @Published private(set) var rewardPulse = 0
@@ -89,10 +99,17 @@ final class AppStore: ObservableObject {
     private var widgetLibraryInputs: WidgetLibraryInputs?
 
     init(directory: URL? = nil) throws {
+        // The curriculum decodes on a background queue while the catalog and the saved state load here; the launch
+        // waits only for whatever of it is left (none when it was awaited before the store was made).
+        CurriculumStore.shared.preload()
         catalog = try Catalog()
         let storageDirectory = directory ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("Timbre", isDirectory: true)
         persistence = try LocalStore(directory: storageDirectory)
         settings = persistence.settings; records = persistence.records
+        curriculum = CurriculumStore.shared.curriculum
+        #if DEBUG
+        if let failure = CurriculumStore.shared.failure { assertionFailure("curriculum.json did not decode: \(failure)") }
+        #endif
         // A free player tuning their Pro instrument in Chromatic comes back to Chromatic, not to the default guitar.
         referenceMode = Self.standIn(settings: settings, catalog: catalog) != nil
         voiceLevel = settings.selectedVoiceLevel ?? 1
@@ -110,14 +127,32 @@ final class AppStore: ObservableObject {
         LiveActivityController.shared.attach(self)  // Lock Screen / Dynamic Island while the metronome, drone, tuner or a lesson runs
         // The widgets' song access follows Pro, which is unknown until StoreKit answers: once it does (and whenever Pro
         // changes) they are published again, so a paying player's songs never stay marked PRO or locked.
+        // Today's plan is pinned against Pro too (a Pro tool gives way once Pro has lapsed).
         commerce.$entitlementResolved.combineLatest(commerce.$isPro)
             .dropFirst()
-            .sink { [weak self] _ in self?.republishWidgetsSoon() }
+            .sink { [weak self] _ in self?.republishWidgetsSoon(); self?.pinDailyPlanSoon() }
+            .store(in: &subscriptions)
+        commerce.$entitlementResolved.combineLatest(commerce.$isPro)
+            .sink { [weak self] resolved, pro in self?.noteProStatus(resolved: resolved, pro: pro) }
             .store(in: &subscriptions)
         // A rhythm session the Metronome tool opened ends when the tool's click does, however it stops (a lesson
-        // taking the click over included), so its minutes reach the streak and history.
+        // taking the click over, or an interruption, included), so its minutes reach the streak and history; a click
+        // that comes back after an interruption starts a new one.
         audio.$metronomeOwnedByTool.dropFirst().removeDuplicates()
-            .sink { [weak self] owned in if !owned { self?.finishToolRhythmSoon() } }
+            .sink { [weak self] owned in
+                guard let self else { return }
+                if owned {
+                    if self.practiceStarted[DailyActivity.Kind.rhythm.rawValue] == nil { self.beginPractice(DailyActivity.Kind.rhythm.rawValue) }
+                } else {
+                    self.finishToolRhythmSoon()
+                }
+            }
+            .store(in: &subscriptions)
+        // A new day (the app left open past midnight, or brought back the next morning) pins the new day's plan.
+        NotificationCenter.default.publisher(for: .NSCalendarDayChanged)
+            .merge(with: NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification))
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in self?.pinDailyPlanSoon() }
             .store(in: &subscriptions)
     }
 
@@ -130,6 +165,20 @@ final class AppStore: ObservableObject {
             self.widgetRepublishQueued = false
             self.publishWidgets()
         }
+    }
+
+    /// What Pro was the last time StoreKit answered, on this device (`noteProStatus`).
+    private static let proKnownKey = "analytics.proActive"
+
+    /// `pro_active` is logged when Pro turns on against what this device last knew, not on every launch of a
+    /// subscriber; a lapse is remembered so the next activation counts again.
+    private func noteProStatus(resolved: Bool, pro: Bool) {
+        guard resolved else { return }
+        let defaults = UserDefaults.standard
+        let known = defaults.object(forKey: Self.proKnownKey) as? Bool
+        guard known != pro else { return }
+        defaults.set(pro, forKey: Self.proKnownKey)
+        if pro { Analytics.log("pro_active") }
     }
 
     private func finishToolRhythmSoon() {
@@ -248,7 +297,10 @@ final class AppStore: ObservableObject {
     var allCoursesLocked: Bool { !courses.isEmpty && Set(courses.map(\.index)).isSubset(of: lockedCourses) }
     var voiceExercise: VoiceExercise { VoiceExercise(level: voiceLevel, rootMidi: voiceRoot) }
     var voiceTargetMidi: Int { voiceExercise.note(at: live.voiceElapsed) }
-    var streak: StreakSummary { Streaks.summary(records: records, frozen: Set(progress.frozenDays ?? [])) }
+    /// Counted once and kept until the records, the frozen days or the day change.
+    var streak: StreakSummary {
+        streakCache.summary(records: records, revision: recordsRevision, frozen: progress.frozenDays ?? [])
+    }
     var streakFreezes: Int { progress.streakFreezes ?? 0 }
 
     /// Unlocks achievements whose goals are already met (launch and foreground), announcing them like any other reward.
@@ -343,6 +395,7 @@ final class AppStore: ObservableObject {
                 tracker.reset(); live.clear()
                 if audio.running { audio.stopCapture(); startListening() }
             }
+            if Self.shapesToday(previous, settings) { pinDailyPlanSoon() }
             return true
         } catch {
             self.error = String(localized: "Settings could not be saved: \(error.localizedDescription)")
@@ -466,10 +519,10 @@ final class AppStore: ObservableObject {
         }
     }
 
+    /// Opens the paywall; its impression is logged by the paywall itself when it shows.
     func presentPaywall(_ reason: String, lesson: Lesson? = nil, instrument: Instrument? = nil) {
         paywallReason = reason; paywallLessonId = lesson?.id; paywallInstrumentId = instrument?.id
         showPaywall = true
-        Analytics.log("paywall_shown", ["reason": reason])
     }
 
     // MARK: Instrument selection
@@ -603,10 +656,13 @@ final class AppStore: ObservableObject {
             if midi != referenceMidi { referenceMidi = midi }
         }
         let wasInTune = live.reading.inTune
-        var reading = tracker.accept(frequency: hz, confidence: confidence, target: targetHz, timestampMs: now)
+        let tunedTo = targetHz
+        var reading = tracker.accept(frequency: hz, confidence: confidence, target: tunedTo, timestampMs: now)
         if hz == nil && level > -60 && !audio.tonePlaying { reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "uncertain") }
         live.reading = reading
-        Haptics.shared.detent(cents: reading.stable ? reading.cents : nil)
+        // The feel (today: the cent detents and the lock) comes first, ahead of the lock's rewards.
+        onTunerFrame(TunerFrame(reading: reading, targetHz: tunedTo, level: level, enteredTune: reading.inTune && !wasInTune,
+                                measuring: measuringTuning, time: live.updatedAt))
         if !referenceMode, measuringTuning, reading.stable, let cents = reading.cents, abs(cents) <= 100,
            !sampledCourses.contains(activeCourse.index), let anchor = activeCourse.anchorId {
             sampledCourses.insert(activeCourse.index)
@@ -614,18 +670,15 @@ final class AppStore: ObservableObject {
             state.sample(StringSample(instrumentId: instrument.id, anchor: anchor, date: Date(), cents: cents))
             updateSettings { $0.progress = state }
         }
-        if reading.inTune && !wasInTune && measuringTuning {
-            Haptics.shared.lock()
-            if !referenceMode {
-                let before = allCoursesLocked
-                let fresh = lockedCourses.insert(activeCourse.index).inserted
-                let completed = !before && allCoursesLocked
-                if completed { completedFullTune() }
-                if fresh {
-                    // The course goes into today's saved list too, so the tuning quest keeps its count after this session ends.
-                    recordProgress(.stringTuned(instrumentId: instrument.id, all: completed, course: activeCourse.index,
-                                                courses: courses.map(\.index), precise: settings.precision == .pro))
-                }
+        if reading.inTune && !wasInTune && measuringTuning && !referenceMode {
+            let before = allCoursesLocked
+            let fresh = lockedCourses.insert(activeCourse.index).inserted
+            let completed = !before && allCoursesLocked
+            if completed { completedFullTune() }
+            if fresh {
+                // The course goes into today's saved list too, so the tuning quest keeps its count after this session ends.
+                recordProgress(.stringTuned(instrumentId: instrument.id, all: completed, course: activeCourse.index,
+                                            courses: courses.map(\.index), precise: settings.precision == .pro))
             }
         }
         if measuringTuning, let cents = reading.cents, reading.frequency != nil {
@@ -703,7 +756,8 @@ final class AppStore: ObservableObject {
 
     // MARK: Learn
 
-    let curriculum: Curriculum = (try? Curriculum.bundled()) ?? Curriculum(courses: [])
+    /// The app's one decoded curriculum (`CurriculumStore.shared`), the copy Spotlight and the band read too.
+    let curriculum: Curriculum
     var learn: LearnProgress { settings.learn ?? LearnProgress() }
     /// While a lesson listens, raw readings (Hz when confident, level dBFS) go here instead of the tuner.
     var lessonListener: ((Double?, Double) -> Void)?
@@ -746,11 +800,10 @@ final class AppStore: ObservableObject {
         tracker.reset(); live.clear()
     }
 
-    /// Saves a finished lesson: stars, XP, quests and badges, and a practice record for the streak.
-    /// Saves the lesson and its XP; returns what was earned so the results screen can show it.
+    /// Saves a finished lesson: stars, XP, quests and badges, and a practice record for the streak; returns what was
+    /// earned so the results screen can show it. `credits`: what the lesson's steps said about chord changes, rhythms
+    /// and questions (`SpacedReview.credits`), for spaced review alongside the result's note and chord scores.
     @discardableResult
-    /// `credits`: what the lesson's steps said about chord changes, rhythms and questions (`SpacedReview.credits`), for
-    /// spaced review alongside the result's note and chord scores.
     func finishLesson(_ result: LessonResult, courseId: String, credits: [ReviewCredit] = []) -> ProgressUpdate? {
         // Today's lesson rep, read before this lesson moves the course on.
         let todayRep = dailyRep(forLesson: result.lessonId)
@@ -851,35 +904,51 @@ final class AppStore: ObservableObject {
     }
     /// Today, the day's one session: the next lesson of the learner's course, a review when one is due, then two
     /// tool reps, about as long as the player's daily commitment. On the free plan no Pro tool is picked, so it can
-    /// always be finished. The tool reps are pinned for the day once worked out (`UserSettings.dailyPlan`): switching
-    /// the tuner's instrument, or going Pro, never reshuffles a plan the player has seen. They change on a new day,
-    /// or when one can no longer be played (a Pro tool after Pro lapsed).
-    var dailySet: [DailyActivity] {
-        let now = Date()
+    /// always be finished. The tool reps are pinned for the day once worked out (`pinDailyPlan`): switching the
+    /// tuner's instrument, or going Pro, never reshuffles a plan the player has seen. They change on a new day, or
+    /// when one can no longer be played (a Pro tool after Pro lapsed). Reading it changes nothing.
+    var dailySet: [DailyActivity] { dailySet(at: Date()) }
+
+    private func dailySet(at now: Date) -> [DailyActivity] {
         let day = Self.dayFormatter.string(from: now)
         let pinned = settings.dailyPlan?[day]?.compactMap { DailyActivity.Kind(rawValue: $0) }
         let done = Set((settings.dailyDone?[day] ?? []).compactMap { DailyActivity.Kind(rawValue: $0) })
-        let set = DailySet.activities(instrument: instrument, goal: settings.goal, pro: isPro, lessonMinutes: dailyLesson?.minutes,
-                                      reviewMinutes: dailyReviewMinutes, target: dailyMinutes, pinned: pinned, done: done, date: now)
-        pinDailyTools(DailySet.toolReps(in: set), day: day, pinned: pinned)
-        return set
+        return DailySet.activities(instrument: instrument, goal: settings.goal, pro: isPro, lessonMinutes: dailyLesson?.minutes,
+                                   reviewMinutes: dailyReviewMinutes, target: dailyMinutes, pinned: pinned, done: done, date: now)
     }
 
-    /// The plan `pinDailyTools` is saving ("day:tools"), so each is asked for once; one that could not be saved stays
-    /// here, so it is not tried again on every redraw.
-    private var dailyPinRequest: String?
+    /// Saves today's tool reps as the day's plan (`UserSettings.dailyPlan`), once it is the player's own: after
+    /// onboarding (their instrument and goal) and once StoreKit has said whether they have Pro (before that a Pro
+    /// player's plan reads as a free one). Runs after whatever can change the set (settings, Pro, a new day), never
+    /// while views draw (`pinDailyPlanSoon`).
+    func pinDailyPlan() {
+        guard settings.onboardingCompleted == true, commerce.entitlementResolved else { return }
+        let now = Date()
+        let day = Self.dayFormatter.string(from: now)
+        let pinned = settings.dailyPlan?[day]?.compactMap { DailyActivity.Kind(rawValue: $0) }
+        let tools = DailySet.toolReps(in: dailySet(at: now))
+        guard tools != pinned else { return }
+        updateSettings { $0.dailyPlan = [day: tools.map(\.rawValue)] }
+    }
 
-    /// Saves today's tool reps as the day's plan, once it is the player's own: after onboarding (their instrument and
-    /// goal) and once StoreKit has said whether they have Pro (before that a Pro player's plan reads as a free one).
-    private func pinDailyTools(_ tools: [DailyActivity.Kind], day: String, pinned: [DailyActivity.Kind]?) {
-        guard tools != pinned, settings.onboardingCompleted == true, commerce.entitlementResolved else { return }
-        let request = day + ":" + tools.map(\.rawValue).joined(separator: ",")
-        guard request != dailyPinRequest else { return }
-        dailyPinRequest = request
-        // On the next turn: the set is read while views draw, and settings must not change in the middle of that.
+    /// A change to what Today's set is worked out from: the instrument, the goal, onboarding, Learn, the reviews, what
+    /// is done and the pinned plan.
+    private static func shapesToday(_ before: UserSettings, _ after: UserSettings) -> Bool {
+        before.selectedInstrumentId != after.selectedInstrumentId || before.goal != after.goal
+            || before.onboardingCompleted != after.onboardingCompleted || before.learn != after.learn
+            || before.spacedReview != after.spacedReview || before.dailyDone != after.dailyDone || before.dailyPlan != after.dailyPlan
+    }
+
+    private var dailyPinQueued = false
+
+    /// `pinDailyPlan` on the next turn, once however many changes ask for it in this one.
+    private func pinDailyPlanSoon() {
+        guard !dailyPinQueued else { return }
+        dailyPinQueued = true
         Task { @MainActor [weak self] in
-            guard let self, self.todayKey == day, self.updateSettings({ $0.dailyPlan = [day: tools.map(\.rawValue)] }) else { return }
-            self.dailyPinRequest = nil
+            guard let self else { return }
+            self.dailyPinQueued = false
+            self.pinDailyPlan()
         }
     }
 

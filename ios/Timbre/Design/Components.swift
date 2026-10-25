@@ -23,8 +23,11 @@ private struct MoteField: View {
         var g = SystemRandom(seed: 11)
         return (0..<46).map { _ in Mote(x: g.next(), y: g.next(), r: 0.6 + 1.8 * g.next(), speed: 0.004 + 0.012 * g.next(), phase: g.next() * 6.28) }
     }()
+    /// Drifting only while on screen, the app in front and Low Power Mode off (`animatesWhileSeen`).
+    @State private var live = false
+
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1 / 30)) { timeline in
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: !live)) { timeline in
             Canvas { context, size in
                 let t = timeline.date.timeIntervalSinceReferenceDate
                 for m in Self.motes {
@@ -33,10 +36,11 @@ private struct MoteField: View {
                     let xx = m.x * size.width + sin(t * 0.3 + m.phase) * 14
                     let twinkle = 0.35 + 0.65 * (0.5 + 0.5 * sin(t * 0.8 + m.phase * 3))
                     let rect = CGRect(x: xx - m.r, y: yy - m.r, width: m.r * 2, height: m.r * 2)
-                    context.fill(Path(ellipseIn: rect), with: .color(Palette.amber.opacity(0.22 * twinkle)))
+                    context.fill(Path(ellipseIn: rect), with: .color(Palette.spotlight.opacity(0.22 * twinkle)))
                 }
             }
         }
+        .animatesWhileSeen($live)
     }
 }
 
@@ -92,36 +96,56 @@ private struct StillCard: ViewModifier {
     }
 }
 
-/// A small all-caps label over a title or a group: "TUNINGS", "UNIT 1 · HELLO, GUITAR". Only for labels inside
-/// cards and above a group; a section between cards takes a `SectionHeader`. Write the text in sentence case: the
-/// eyebrow capitalises it for the reader's locale (never `uppercased()`).
+/// A small label over a title or a group ("Unit 1 · Hello, guitar", "Tuning"). Capitals are for section level only:
+/// an eyebrow over a group of cards or a list's section (`.section`) is set in small tracked capitals; one inside a
+/// card or over a figure (`.label`, the default) is the same small type in sentence case. Budget: at most one per
+/// card, and none in a card that already has a title. Write the text in sentence case: a section eyebrow capitalises
+/// it for the reader's locale (never `uppercased()`).
 struct Eyebrow: View {
     enum Style {
-        /// SF caption2 semibold, wide tracking: the default.
+        /// SF semibold: the default.
         case system
-        /// Sora, a touch tighter: on the display-type screens (Learn, song sheets, onboarding, celebrations).
+        /// Sora: on the display-type screens (Learn, song sheets, onboarding, celebrations).
         case display
+    }
+
+    /// Where the eyebrow stands, which decides whether it is in capitals.
+    enum Level {
+        /// Over a group of cards or a list's section: small tracked capitals.
+        case section
+        /// Inside a card or over a figure: sentence case, no tracking.
+        case label
     }
 
     let text: Text
     var color: Color = Palette.mint
     var style: Style = .system
+    var level: Level = .label
+    @Environment(\.legibilityWeight) private var legibility
 
-    init(_ text: LocalizedStringKey, color: Color = Palette.mint, style: Style = .system) {
-        self.init(Text(text), color: color, style: style)
+    init(_ text: LocalizedStringKey, color: Color = Palette.mint, style: Style = .system, level: Level = .label) {
+        self.init(Text(text), color: color, style: style, level: level)
     }
 
-    init(_ text: Text, color: Color = Palette.mint, style: Style = .system) {
+    init(_ text: Text, color: Color = Palette.mint, style: Style = .system, level: Level = .label) {
         self.text = text
         self.color = color
         self.style = style
+        self.level = level
     }
 
     var body: some View {
-        text.font(style == .display ? Typeface.eyebrowDisplay : Typeface.eyebrow)
-            .tracking(style == .display ? 1.6 : 2.2)
-            .textCase(.uppercase)
-            .foregroundStyle(color)
+        let _ = legibility
+        switch level {
+        case .section:
+            text.font(style == .display ? Typeface.eyebrowDisplay : Typeface.eyebrow)
+                .tracking(style == .display ? 1.4 : 1.8)
+                .textCase(.uppercase)
+                .foregroundStyle(color)
+        case .label:
+            text.font(style == .display ? Typeface.label(.caption) : Typeface.eyebrow)
+                .foregroundStyle(color)
+        }
     }
 }
 
@@ -141,7 +165,10 @@ struct ScreenTitle: View {
         self.subtitle = subtitle
     }
 
+    @Environment(\.legibilityWeight) private var legibility
+
     var body: some View {
+        let _ = legibility
         VStack(alignment: .leading, spacing: 4) {
             title.font(Typeface.screenTitle).tracking(-0.6).foregroundStyle(Palette.ink)
                 .fixedSize(horizontal: false, vertical: true)
@@ -166,28 +193,38 @@ enum ActionShape {
     case rounded
 }
 
-/// The app's one main action: a capsule of `accent` with dark Sora type, a soft glow under it and a pluck on press.
-/// Disabled, it is a graphite capsule with faint type and no glow, so it never looks tappable.
-/// One label font for every button (`Typeface.button`): don't override it at the call site.
+/// The app's one main action: a mint capsule with dark Sora type and a pluck on press. Every primary action is mint,
+/// whatever the screen's or the course's colour (a course hue never fills a primary button), and at rest it is flat:
+/// a 1 pt highlight along its top edge, no glow (glow means live, `liveGlow`). Disabled, it is a graphite capsule with
+/// faint type, so it never looks tappable. One label font for every button (`Typeface.button`): don't override it at
+/// the call site.
 struct PrimaryButtonStyle: ButtonStyle {
-    var accent: Color = Palette.mint
     var shape: ActionShape = .capsule
     /// False draws the secondary look (the earlier `BrassButtonStyle(prominent: false)`); prefer `SecondaryButtonStyle`.
     var prominent = true
 
-    init(accent: Color = Palette.mint, shape: ActionShape = .capsule) {
-        self.accent = accent
+    init(shape: ActionShape = .capsule) {
+        self.shape = shape
+    }
+
+    /// Every primary action is mint: the accent is not drawn.
+    @available(*, deprecated, message: "Every primary action is mint: drop `accent:`")
+    init(accent: Color, shape: ActionShape = .capsule) {
         self.shape = shape
     }
 
     /// The earlier `BrassButtonStyle(prominent:)`.
-    init(prominent: Bool, accent: Color = Palette.mint) {
+    init(prominent: Bool) {
         self.prominent = prominent
-        self.accent = accent
+    }
+
+    @available(*, deprecated, message: "Every primary action is mint: drop `accent:`")
+    init(prominent: Bool, accent: Color) {
+        self.prominent = prominent
     }
 
     func makeBody(configuration: Configuration) -> some View {
-        ActionButtonBody(configuration: configuration, prominent: prominent, accent: accent, tint: nil, shape: shape)
+        ActionButtonBody(configuration: configuration, prominent: prominent, tint: nil, shape: shape)
     }
 }
 
@@ -203,7 +240,7 @@ struct SecondaryButtonStyle: ButtonStyle {
     }
 
     func makeBody(configuration: Configuration) -> some View {
-        ActionButtonBody(configuration: configuration, prominent: false, accent: Palette.mint, tint: tint, shape: shape)
+        ActionButtonBody(configuration: configuration, prominent: false, tint: tint, shape: shape)
     }
 }
 
@@ -216,12 +253,13 @@ typealias BrassButtonStyle = PrimaryButtonStyle
 private struct ActionButtonBody: View {
     let configuration: ButtonStyleConfiguration
     let prominent: Bool
-    let accent: Color
     let tint: Color?
     let shape: ActionShape
     @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.legibilityWeight) private var legibility
 
     var body: some View {
+        let _ = legibility
         let pressed = configuration.isPressed && isEnabled
         return configuration.label
             .font(Typeface.button)
@@ -244,28 +282,27 @@ private struct ActionButtonBody: View {
     @ViewBuilder private func face(pressed: Bool) -> some View {
         switch shape {
         case .capsule:
-            ActionFace(shape: Capsule(), prominent: prominent, enabled: isEnabled, accent: accent, tint: tint, pressed: pressed)
+            ActionFace(shape: Capsule(), prominent: prominent, enabled: isEnabled, tint: tint, pressed: pressed)
         case .rounded:
             ActionFace(shape: RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous),
-                       prominent: prominent, enabled: isEnabled, accent: accent, tint: tint, pressed: pressed)
+                       prominent: prominent, enabled: isEnabled, tint: tint, pressed: pressed)
         }
     }
 }
 
-/// A button's face in its shape: lit accent, disabled graphite, a tinted wash, or quiet graphite.
+/// A button's face in its shape: flat mint with a highlight on its top edge, disabled graphite, a tinted wash, or
+/// quiet graphite.
 private struct ActionFace<S: InsettableShape>: View {
     let shape: S
     let prominent: Bool
     let enabled: Bool
-    let accent: Color
     let tint: Color?
     let pressed: Bool
 
     var body: some View {
         if prominent && enabled {
-            shape.fill(accent)
-                .overlay(shape.strokeBorder(.white.opacity(0.35), lineWidth: 1).blendMode(.overlay))
-                .shadow(color: accent.opacity(pressed ? 0.15 : 0.4), radius: pressed ? 6 : 22, y: 6)
+            shape.fill(pressed ? Palette.mint.mix(with: .black, by: 0.12) : Palette.mint)
+                .overlay(shape.strokeBorder(Self.highlight, lineWidth: 1))
         } else if prominent {
             shape.fill(Palette.surface).overlay(shape.strokeBorder(Palette.controlLine, lineWidth: 1))
         } else if let tint {
@@ -275,6 +312,9 @@ private struct ActionFace<S: InsettableShape>: View {
             shape.fill(Palette.stageRaised).overlay(shape.strokeBorder(Palette.controlLine, lineWidth: 1))
         }
     }
+
+    /// Light along the top edge, gone by the middle: the one highlight a resting button has.
+    private static let highlight = LinearGradient(colors: [.white.opacity(0.55), .white.opacity(0)], startPoint: .top, endPoint: .center)
 }
 
 /// A chip: graphite with a control outline, or chosen, a pill of light. On iOS 26 the chosen pill is Liquid Glass
@@ -334,22 +374,25 @@ struct ProBadge: View {
     var body: some View { Badge(.pro) }
 }
 
+/// Retired: an SF Symbol in a tinted disc read as a template. It now draws the bare glyph in the box the disc took, so
+/// a screen not yet moved to `Glyph` keeps its layout without the disc. Use `Glyph`.
+@available(*, deprecated, message: "Use Glyph: a bare glyph in its ink, no disc")
 struct IconOrb: View {
     let symbol: String
     var tint: Color = Palette.mint
     var size: CGFloat = 44
     var body: some View {
         Image(systemName: symbol)
-            .font(.system(size: size * 0.42, weight: .semibold))
+            .font(.system(size: size * 0.5, weight: .regular))
+            .symbolRenderingMode(.monochrome)
             .foregroundStyle(tint)
             .frame(width: size, height: size)
-            .background(Circle().fill(tint.opacity(0.14)))
-            .overlay(Circle().strokeBorder(tint.opacity(0.28), lineWidth: 1))
             .accessibilityHidden(true)
     }
 }
 
-/// Large tappable row used across hubs and settings-like lists. At the accessibility sizes the detail wraps freely.
+/// Large tappable row used across hubs and settings-like lists: its glyph bare in `tint`, the title and a line of
+/// detail. At the accessibility sizes the detail wraps freely.
 struct FeatureRow<Trailing: View>: View {
     let symbol: String
     let title: LocalizedStringKey
@@ -359,7 +402,7 @@ struct FeatureRow<Trailing: View>: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     var body: some View {
         HStack(spacing: 14) {
-            IconOrb(symbol: symbol, tint: tint)
+            Glyph(symbol, size: Glyph.lead, tint: tint)
             VStack(alignment: .leading, spacing: 3) {
                 Text(title).font(.headline).foregroundStyle(Palette.ink)
                 Text(detail).font(.subheadline).foregroundStyle(Palette.inkSoft)

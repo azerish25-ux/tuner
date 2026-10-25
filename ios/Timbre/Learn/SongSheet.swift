@@ -654,8 +654,8 @@ private struct SectionTile: View {
         .background {
             ZStack(alignment: .leading) {
                 shape.fill(tint.opacity(selected ? 0.3 : base))
-                // The part played fills the tile under its name, brightest at the playhead's edge: no line drawn across
-                // the name ("Cho|rus", review 14).
+                // The part played fills the tile under its name, brightest at the playhead's edge, so no line is ever
+                // drawn across the name ("Cho|rus").
                 GeometryReader { proxy in
                     LinearGradient(colors: [tint.opacity(0.36), tint.opacity(playing && fill < 1 ? 0.62 : 0.42)],
                                    startPoint: .leading, endPoint: .trailing)
@@ -924,6 +924,42 @@ struct LeadChart {
             .map { TimedNote(midi: $0.midi, beat: $0.beat - from, beats: $0.beats, at: $0.at) }
     }
 
+    /// The chords under a stretch of this song's melody, bar by bar from its beat 0: `notes` as a play-along step or a
+    /// practised part plays them (the verse, the hook), found in the song's take a whole number of bars in, every note
+    /// in its place. Nil when they aren't a stretch of this take, or the chart names no chords.
+    func chords(under notes: [TimedNote], meter: Int) -> [ChordSpec]? {
+        guard hasChords, meter == self.meter, let first = notes.first, !self.notes.isEmpty else { return nil }
+        let beats = Double(max(1, meter))
+        let end = notes.map { $0.beat + $0.beats }.max() ?? beats
+        let count = max(1, Int((end / beats - 1e-6).rounded(.up)))
+        for candidate in self.notes where candidate.midi == first.midi {
+            let shift = candidate.beat - first.beat
+            let barShift = shift / beats
+            guard shift > -1e-6, abs(barShift - barShift.rounded()) < 1e-6 else { continue }
+            let found = notes.allSatisfy { note in
+                self.notes.contains { $0.midi == note.midi && abs($0.beat - (note.beat + shift)) < 1e-3 }
+            }
+            guard found else { continue }
+            let chords = filledChords(from: Int(barShift.rounded()), count: count)
+            return chords.isEmpty ? nil : chords
+        }
+        return nil
+    }
+
+    /// The song lesson of `course` with a play-along step playing exactly `notes` (in play order), and the chords
+    /// under that step from the song's chart; nil for a play-along of no song, or of a song without chords.
+    @MainActor static func chords(underStep notes: [TimedNote], meter: Int, in course: LearnCourse) -> [ChordSpec]? {
+        for lesson in course.lessons where lesson.kind == .song {
+            let plays = lesson.steps.contains { step in
+                guard case let .playAlong(stepNotes, _, _, _) = step, stepNotes.count == notes.count else { return false }
+                return stepNotes.sorted { $0.beat < $1.beat } == notes
+            }
+            guard plays else { continue }
+            return LeadChart.of(lesson).chords(under: notes, meter: meter)
+        }
+        return nil
+    }
+
     /// The chords of bars `start..<start + count`, a bar without one holding the chord before it (or the next).
     func filledChords(from start: Int, count: Int) -> [ChordSpec] {
         let first = min(chords.count, max(0, start))
@@ -1110,8 +1146,9 @@ enum SongPlayback {
         notes.map { Hit(beat: $0.beat, beats: $0.beats, midis: [$0.midi]) }
     }
 
-    /// The band under a stretch of `bars` bars: the chords over them when the chart has them (bass on the roots, a
-    /// pad), else drums and a bass on the melody's key; exactly `bars` long, so a loop of it stays on the bar.
+    /// The band under a stretch of `bars` bars: the chords over them when the chart has them (bass on the roots, the
+    /// comping on the chords), else drums and a bass on the melody's key; exactly `bars` long, so a loop of it stays
+    /// on the bar. No band bass when the player's own instrument is the bass (`bass` false).
     @MainActor static func band(notes: [TimedNote], chords: [ChordSpec], bars: Int, bpm: Double, meter: Int,
                                 reference: Double, bass: Bool) -> BandArrangement {
         let base: BandArrangement
@@ -1124,7 +1161,24 @@ enum SongPlayback {
         var list = Array(base.bars.prefix(max(1, bars)))
         while list.count < max(1, bars) { list.append(list.last ?? BandArrangement.Bar(root: nil)) }
         return BandArrangement(bpm: base.bpm, beatsPerBar: base.beatsPerBar, reference: base.reference, bars: list,
-                               bass: base.bass, pad: base.pad, swing: base.swing)
+                               bass: base.bass && bass, pad: base.pad, swing: base.swing)
+    }
+
+    /// The band under a whole take of `notes` (a lesson's play-along, a song's final take): the chords `chords` names
+    /// bar by bar when there are any (the song's chart under it), else drums and a bass on the melody's key. Bars from
+    /// beat 0, as many as the notes run, at least one.
+    @MainActor static func band(take notes: [TimedNote], chords: [ChordSpec]?, bpm: Double, meter: Int, reference: Double,
+                                bass: Bool) -> BandArrangement {
+        let beats = Double(max(1, meter))
+        let end = notes.map { $0.beat + $0.beats }.max() ?? beats
+        let bars = max(1, Int((end / beats - 1e-6).rounded(.up)))
+        guard var chart = chords, !chart.isEmpty else {
+            return .melody(notes, bpm: bpm, beatsPerBar: meter, reference: reference, bass: bass)
+        }
+        // A last note ringing past the chart's last bar holds its chord.
+        while chart.count < bars, let last = chart.last { chart.append(last) }
+        let count = max(bars, chart.count)
+        return band(notes: notes, chords: Array(chart.prefix(count)), bars: count, bpm: bpm, meter: meter, reference: reference, bass: bass)
     }
 }
 
@@ -1132,8 +1186,8 @@ enum SongPlayback {
 
 /// Calls `action` once the screen it sits in has finished arriving: when the presentation carrying it in (the zoom
 /// out of a Songs sleeve or a Learn node, a slide) completes, or at once when none is running. A reveal started
-/// while a zoom is still in flight can be cut short with the view left part-way (bug 64: a lesson's first step
-/// frozen at about 30 % opacity), so entrances wait for this.
+/// while a zoom is still in flight can be cut short with the view left part-way (a lesson's first step frozen at
+/// about 30 % opacity), so entrances wait for this.
 struct ArrivalProbe: UIViewRepresentable {
     let action: () -> Void
 
