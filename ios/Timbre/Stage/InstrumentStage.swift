@@ -25,6 +25,10 @@ struct StageInput {
     /// How many times wider the live string swings than in use: 1, except in an App Store capture of a moment the
     /// still frame would otherwise miss (`captureScale`). The amplitude only; nothing else on the stage changes.
     var marketingScale: Float = StageInput.defaultMarketingScale
+    /// The host reads right to left: its side controls stand on the stage's left edge, so the close-up leans right
+    /// of them and the peg's label keeps clear of them there, its words set right to left. The instrument itself
+    /// never mirrors for a language.
+    var rightToLeft = false
 
     static var defaultMarketingScale: Float {
         #if DEBUG
@@ -74,6 +78,13 @@ final class StageController {
     /// The corners of every peg's box in model space (the button the player turns, with its shaft), measured once as
     /// the model goes on stage: a whole-headstock close-up keeps every button inside the frame (`wholeHeadCloseUp`).
     private var pegCorners: [SIMD3<Float>] = []
+    /// The corners of the box around the head above its highest peg, in model space: a violin's or cello's scroll, a
+    /// mandolin's curl, the end of a guitar's head. Measured from the mesh itself once per model (`measureCrown`),
+    /// so every close-up keeps the whole of it in frame, however it curls toward the camera. Empty when the mesh
+    /// can't be read; the instrument's top point stands in then.
+    private var crown: [SIMD3<Float>] = []
+    /// Crowns already measured, by model.
+    private static var crowns: [String: [SIMD3<Float>]] = [:]
     private var staticStrings: [String: Entity] = [:]
     private var segments: [ModelEntity] = []
     private var subscription: EventSubscription?
@@ -211,7 +222,7 @@ final class StageController {
         model = nil
         rig = nil
         loadedModel = nil
-        pegs = [:]; posts = [:]; postCenters = [:]; pegCorners = []; staticStrings = [:]; angles = [:]
+        pegs = [:]; posts = [:]; postCenters = [:]; pegCorners = []; crown = []; staticStrings = [:]; angles = [:]
         segments = []; glowTube = nil
         rollStrikes = []; rollBloom = nil; rollGlows = []
         currentAnchor = nil
@@ -243,6 +254,12 @@ final class StageController {
                 if center.x.isFinite && center.y.isFinite && center.z.isFinite { postCenters[string.peg] = center }
             }
             if let line = entity.findEntity(named: string.nodeName) { staticStrings[string.nodeName] = line }
+        }
+        if let known = Self.crowns[modelID] {
+            crown = known
+        } else {
+            crown = Self.measureCrown(of: entity, in: holder, above: rig.strings.map(\.pegPoint.y).max() ?? rig.head.y)
+            Self.crowns[modelID] = crown
         }
         let mesh = MeshResource.generateCylinder(height: 1, radius: 1)
         var metal = PhysicallyBasedMaterial()
@@ -366,11 +383,14 @@ final class StageController {
         let breathing = reduceMotion ? 0 : Float(sin(time * 0.35)) * 0.025 * (1 - framing)
         let rotation = simd_quatf(angle: yaw + breathing, axis: [0, 1, 0]) * simd_quatf(angle: 0.04 * (1 - framing), axis: [1, 0, 0])
         model.orientation = rotation
-        // In close-up the headstock centres in the room left of the side controls (the whole-headstock close-up
-        // centres itself).
+        // In close-up the headstock centres in the room beside the side controls, away from them on screen: left of
+        // them, or right of them where they stand on the left (a right-to-left language). A mirrored stage (a
+        // left-handed instrument) turns the scene over, so the shift turns over with it to land on the same side.
+        // The whole-headstock close-up centres itself.
         let inset: Float = state.wholeHeadstock ? 0 : Self.controlsInset
+        let away: Float = (state.rightToLeft ? 1 : -1) * (flipX ? -1 : 1)
         let shift = inset * metresPerPoint(distance: distance, fov: fov) * framing
-        model.position = -rotation.act(point) + SIMD3<Float>(-shift, 0, -distance)
+        model.position = -rotation.act(point) + SIMD3<Float>(away * shift, 0, -distance)
     }
 
     /// Advances the dolly: a critically damped spring on `framing`, in small steps so a long frame can't overshoot.
@@ -393,10 +413,21 @@ final class StageController {
         return half > 0 ? distance * tan(fov / 2) / half : 0
     }
 
-    /// The close-up target: aimed between the head and the peg being tuned, then raised (and the camera
-    /// backed off if needed) so every tuning peg sits at least `pegClearance` below the top edge while the
-    /// nut stays `nutClearance` above the bottom. A point's height on screen is (y - aim.y) / ((distance - z) * t)
-    /// of the half-height, z being how far the turned instrument brings it toward the camera; the yaw leaves y alone.
+    /// A point the close-up keeps on screen, `clearance` points inside the stage's top (or bottom) edge.
+    private typealias Bound = (point: SIMD3<Float>, clearance: Float)
+
+    /// The feathered edge (`StageFeather` fades the outer 6 % of each side) and a little air: the head's top stays
+    /// under it, whole and lit.
+    private static func featherClearance(_ length: Float) -> Float { 0.06 * length + 10 }
+
+    /// The top of the head the close-up keeps in frame: the measured crown, or the instrument's top point over its head.
+    private func headTops(_ rig: InstrumentRig) -> [SIMD3<Float>] {
+        crown.isEmpty ? [SIMD3<Float>(rig.head.x, rig.upper.y, rig.head.z)] : crown
+    }
+
+    /// The close-up target: aimed between the head and the peg being tuned, then raised (and the camera backed off if
+    /// needed) so every tuning peg sits at least `pegClearance` below the top edge, the whole head above them (a
+    /// scroll, a curl) under the feathered edge, and the nut `nutClearance` above the bottom (`fitVertically`).
     private func closeUp(rig: InstrumentRig, anchor: String?, fov: Float, layout: StageInput) -> (aim: SIMD3<Float>, distance: Float) {
         if layout.wholeHeadstock { return wholeHeadCloseUp(rig: rig, anchor: anchor, fov: fov, reserve: Float(layout.controlsReserve)) }
         let head = rig.head
@@ -404,52 +435,27 @@ final class StageController {
         if let string = rig.string(anchor) {
             aim = head + (string.pegPoint - head) * 0.45 + SIMD3<Float>(0, -0.03, 0)
         }
-        var distance: Float = max(0.34, (rig.upper.y - rig.lower.y) * 0.33)
+        let distance: Float = max(0.34, (rig.upper.y - rig.lower.y) * 0.33)
         let height = Float(viewSize.height)
         guard height > Self.pegClearance + Self.nutClearance + 40, !rig.strings.isEmpty else { return (aim, distance) }
-        let t = tan(fov / 2)
-        let top = 1 - 2 * Self.pegClearance / height
-        let bottom = 1 - 2 * Self.nutClearance / height
-        let turn = simd_quatf(angle: Self.closeYaw, axis: [0, 1, 0])
-        var highest = -Float.greatestFiniteMagnitude
-        var lowest = Float.greatestFiniteMagnitude
-        for string in rig.strings {
-            let peg = string.pegPoint, nut = string.nutPoint
-            highest = max(highest, peg.y + top * turn.act(peg - aim).z * t)
-            lowest = min(lowest, nut.y - bottom * turn.act(nut - aim).z * t)
-        }
-        distance = max(distance, (highest - lowest) / ((top + bottom) * t))
-        let minAim = highest - top * distance * t
-        let maxAim = max(minAim, lowest + bottom * distance * t)
-        aim.y = min(max(aim.y, minAim), maxAim)
-        return (aim, distance)
+        let edge = Self.featherClearance(height)
+        let pegs: [Bound] = rig.strings.map { (point: $0.pegPoint, clearance: Self.pegClearance) }
+        let tops: [Bound] = headTops(rig).map { (point: $0, clearance: edge) }
+        let nuts: [Bound] = rig.strings.map { (point: $0.nutPoint, clearance: Self.nutClearance) }
+        return fitVertically(aim: aim, distance: distance, above: pegs + tops, below: nuts, fov: fov, height: height)
     }
 
-    /// The iPad's close-up (`StageInput.wholeHeadstock`): the whole headstock in the frame, every button and its tip
-    /// clear of the feathered edges, centred across the stage (and clear of `reserve` points of side controls on its trailing
-    /// edge), rather than the phone's tighter shot leaning toward the peg being tuned. Vertically as `closeUp`: aimed a
-    /// little toward the peg's height, the camera backing off until the pegs sit `pegClearance` under the top, the tip
-    /// and buttons under the feather and the nut `nutClearance` above the bottom. Then far enough back that the head
-    /// fits across, and slid sideways to centre it. A point's height on screen is (y - aim.y) / ((distance - z) * t) of
-    /// the half-height, its offset across x / ((distance - z) * t) of it, x and z after the close-up's turn.
-    private func wholeHeadCloseUp(rig: InstrumentRig, anchor: String?, fov: Float, reserve: Float) -> (aim: SIMD3<Float>, distance: Float) {
-        let head = rig.head
-        var aim = head + SIMD3<Float>(0, -0.045, 0)
-        if let string = rig.string(anchor) { aim.y = head.y + (string.pegPoint.y - head.y) * 0.45 - 0.03 }
-        var distance: Float = max(0.34, (rig.upper.y - rig.lower.y) * 0.33)
-        let width = Float(viewSize.width), height = Float(viewSize.height)
-        guard height > Self.pegClearance + Self.nutClearance + 40, width > 160, !rig.strings.isEmpty else { return (aim, distance) }
+    /// Raises the aim, and backs the camera off as far as needed, so every point of `above` sits at least its clearance
+    /// under the stage's top edge and every point of `below` its clearance over the bottom. A point's height on screen
+    /// is (y - aim.y) / ((distance - z) * t) of the half-height, z being how far the close-up's turn brings it toward
+    /// the camera (the turn leaves y alone), so each point bounds the aim's height: one above, aim.y >= a - k·distance·t;
+    /// one below, aim.y <= b + k·distance·t.
+    private func fitVertically(aim start: SIMD3<Float>, distance near: Float, above: [Bound], below: [Bound],
+                               fov: Float, height: Float) -> (aim: SIMD3<Float>, distance: Float) {
+        var aim = start
+        var distance = near
         let t = tan(fov / 2)
         let turn = simd_quatf(angle: Self.closeYaw, axis: [0, 1, 0])
-        // The feather (`StageFeather`) fades the outer 6 % of each side: buttons and the tip stay inside it.
-        let edge = 0.06 * height + 10
-        let tip = SIMD3<Float>(head.x, rig.upper.y, head.z)
-        let buttons = pegCorners.isEmpty ? rig.strings.map { $0.pegPoint + $0.pegDirection * 0.03 } : pegCorners
-        var above: [(point: SIMD3<Float>, clearance: Float)] = rig.strings.map { (point: $0.pegPoint, clearance: Self.pegClearance) }
-        above.append((point: tip, clearance: edge))
-        above += buttons.map { (point: $0, clearance: edge) }
-        let below: [(point: SIMD3<Float>, clearance: Float)] = rig.strings.map { (point: $0.nutPoint, clearance: Self.nutClearance) }
-        // Each point bounds the aim's height: above it, aim.y >= a - k * distance * t; below it, aim.y <= b + k * distance * t.
         let tops: [(a: Float, k: Float)] = above.map { item -> (a: Float, k: Float) in
             let k = 1 - 2 * item.clearance / height
             return (a: item.point.y + k * turn.act(item.point - aim).z * t, k: k)
@@ -466,11 +472,39 @@ final class StageController {
         let minAim = tops.map { $0.a - $0.k * distance * t }.max() ?? aim.y
         let maxAim = max(minAim, bottoms.map { $0.b + $0.k * distance * t }.min() ?? aim.y)
         aim.y = min(max(aim.y, minAim), maxAim)
+        return (aim, distance)
+    }
 
-        // Across: every button, peg, nut and the tip inside the room between the feathered sides and the controls.
+    /// The iPad's close-up (`StageInput.wholeHeadstock`): the whole headstock in the frame, every button and the head
+    /// above them clear of the feathered edges, centred across the stage (and clear of `reserve` points of side
+    /// controls on its trailing edge), rather than the phone's tighter shot leaning toward the peg being tuned.
+    /// Vertically as `closeUp`: aimed a little toward the peg's height, the camera backing off until the pegs sit
+    /// `pegClearance` under the top, the head's crown and the buttons under the feather and the nut `nutClearance`
+    /// above the bottom (`fitVertically`). Then far enough back that the head fits across, and slid sideways to centre
+    /// it. A point's offset across is x / ((distance - z) * t) of the half-height, x and z after the close-up's turn.
+    private func wholeHeadCloseUp(rig: InstrumentRig, anchor: String?, fov: Float, reserve: Float) -> (aim: SIMD3<Float>, distance: Float) {
+        let head = rig.head
+        var aim = head + SIMD3<Float>(0, -0.045, 0)
+        if let string = rig.string(anchor) { aim.y = head.y + (string.pegPoint.y - head.y) * 0.45 - 0.03 }
+        let width = Float(viewSize.width), height = Float(viewSize.height)
+        let near: Float = max(0.34, (rig.upper.y - rig.lower.y) * 0.33)
+        guard height > Self.pegClearance + Self.nutClearance + 40, width > 160, !rig.strings.isEmpty else { return (aim, near) }
+        let t = tan(fov / 2)
+        let turn = simd_quatf(angle: Self.closeYaw, axis: [0, 1, 0])
+        let edge = Self.featherClearance(height)
+        let crownPoints = headTops(rig)
+        let buttons = pegCorners.isEmpty ? rig.strings.map { $0.pegPoint + $0.pegDirection * 0.03 } : pegCorners
+        let pegs: [Bound] = rig.strings.map { (point: $0.pegPoint, clearance: Self.pegClearance) }
+        let tops: [Bound] = (crownPoints + buttons).map { (point: $0, clearance: edge) }
+        let nuts: [Bound] = rig.strings.map { (point: $0.nutPoint, clearance: Self.nutClearance) }
+        let fitted = fitVertically(aim: aim, distance: near, above: pegs + tops, below: nuts, fov: fov, height: height)
+        aim = fitted.aim
+        var distance = fitted.distance
+
+        // Across: every button, peg, nut and the head's crown inside the room between the feathered sides and the controls.
         let side = 0.06 * width + 8
         let room = width - 2 * side - reserve
-        let across = buttons + rig.strings.flatMap { [$0.pegPoint, $0.nutPoint] } + [tip]
+        let across = buttons + rig.strings.flatMap { [$0.pegPoint, $0.nutPoint] } + crownPoints
         let turned = across.map { turn.act($0 - aim) }
         let pointsPerMetre = height / 2 / t
         func extent(_ d: Float) -> (low: Float, high: Float) {
@@ -502,9 +536,15 @@ final class StageController {
 
     /// The eight corners of a peg's box: none when it is empty, not finite, or too big to be one peg.
     private static func corners(_ box: BoundingBox) -> [SIMD3<Float>] {
-        let low = box.min, high = box.max
+        let size = box.max - box.min
+        guard max(size.x, max(size.y, size.z)) < 0.2 else { return [] }
+        return boxCorners(low: box.min, high: box.max)
+    }
+
+    /// The eight corners of the box from `low` to `high`: none when it is empty or not finite.
+    private static func boxCorners(low: SIMD3<Float>, high: SIMD3<Float>) -> [SIMD3<Float>] {
         let size = high - low
-        guard size.x >= 0, size.y >= 0, size.z >= 0, max(size.x, max(size.y, size.z)) < 0.2,
+        guard size.x >= 0, size.y >= 0, size.z >= 0,
               low.x.isFinite, low.y.isFinite, low.z.isFinite, high.x.isFinite, high.y.isFinite, high.z.isFinite else { return [] }
         var points: [SIMD3<Float>] = []
         for x in [low.x, high.x] {
@@ -513,6 +553,47 @@ final class StageController {
             }
         }
         return points
+    }
+
+    /// The corners of the box around every vertex of `entity`'s meshes above `floor` (model space, relative to
+    /// `holder`): the part of the head above its pegs, as the model is built rather than as its overall bounds or a
+    /// single point say. Read once per model as it goes on stage; empty when no mesh has a vertex there.
+    private static func measureCrown(of entity: Entity, in holder: Entity, above floor: Float) -> [SIMD3<Float>] {
+        var low = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
+        var high = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
+        var found = false
+        var pending: [Entity] = [entity]
+        while let current = pending.popLast() {
+            pending.append(contentsOf: current.children)
+            guard let mesh = current.components[ModelComponent.self]?.mesh else { continue }
+            let toHolder = current.transformMatrix(relativeTo: holder)
+            let contents = mesh.contents
+            for instance in contents.instances {
+                guard let model = contents.models[instance.model] else { continue }
+                let transform = toHolder * instance.transform
+                for part in model.parts {
+                    for position in part.positions {
+                        let placed = transform * SIMD4<Float>(position.x, position.y, position.z, 1)
+                        guard placed.y >= floor, placed.x.isFinite, placed.y.isFinite, placed.z.isFinite else { continue }
+                        let point = SIMD3<Float>(placed.x, placed.y, placed.z)
+                        low = simd_min(low, point)
+                        high = simd_max(high, point)
+                        found = true
+                    }
+                }
+            }
+        }
+        return found ? boxCorners(low: low, high: high) : []
+    }
+
+    /// How far below the stage's top edge (points) the highest point of the head's crown stands on screen in a stage
+    /// of `size` (negative when the stage cuts it), and how far into the close-up the camera is; nil before a model
+    /// is on stage.
+    func headClearance(in size: CGSize) -> (top: CGFloat, framing: Float)? {
+        guard let rig else { return nil }
+        let tops = headTops(rig).compactMap { screenPoint($0, in: size) }
+        guard let highest = tops.map(\.y).min() else { return nil }
+        return (top: highest, framing: framing)
     }
 
     /// Where a rig point (model space) lands in a stage view of `size`, in points; the same projection
@@ -790,7 +871,12 @@ struct InstrumentStage: View {
     @EnvironmentObject private var store: AppStore
     @CurrentHand private var hand
     @ObservedObject private var power = StagePower.shared
+    #if DEBUG
+    /// Debug builds launched with TIMBRE_STAGE_DEBUG=1 print the load state over the stage.
     private let debug = ProcessInfo.processInfo.environment["TIMBRE_STAGE_DEBUG"] == "1"
+    /// Debug builds launched with TIMBRE_DEBUG_STATE=1 say how the close-up frames the head (`headProbe`).
+    private static let probe = ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1"
+    #endif
 
     private var controller: StageController { box.controller }
 
@@ -828,6 +914,9 @@ struct InstrumentStage: View {
         .task(id: plan) { await follow(plan) }
         .opacity(ready ? 1 : 0)
         .animation(Motion.settle, value: ready)
+        // An instrument is a picture, not text: it never mirrors for a right-to-left language, and its peg cue is
+        // placed in the same left-to-right space the camera projects into (`StageInput.rightToLeft` sets the words).
+        .environment(\.layoutDirection, .leftToRight)
         .accessibilityHidden(true)
         .accessibilityIgnoresInvertColors()
         .overlay(alignment: .bottomLeading) {
@@ -836,9 +925,28 @@ struct InstrumentStage: View {
                 Text(status).font(.system(size: 10, design: .monospaced)).foregroundStyle(.white.opacity(0.8)).padding(6)
                     .accessibilityIdentifier("stage.debug")
             }
+            if Self.probe { headProbe }
             #endif
         }
     }
+
+    #if DEBUG
+    /// Debug builds only: "framing=<0…1> head=<points>", how far into the close-up the camera is and how far under the
+    /// stage's top edge the head's highest point stands (negative: the stage cuts the head). Clear ink, never touched.
+    private var headProbe: some View {
+        GeometryReader { proxy in
+            TimelineView(.periodic(from: .now, by: 0.25)) { _ in
+                let frame = controller.headClearance(in: proxy.size)
+                let head = frame.map { String(format: "%.1f", Double($0.top)) } ?? "none"
+                Text(verbatim: "framing=\(String(format: "%.2f", Double(frame?.framing ?? 0))) head=\(head)")
+                    .font(.system(size: 9, design: .monospaced))
+                    .foregroundStyle(Color.clear)
+                    .accessibilityIdentifier("stage.head")
+            }
+        }
+        .allowsHitTesting(false)
+    }
+    #endif
 
     /// The model, and its studio picture over it while the stage rests.
     private var layers: some View {
@@ -966,10 +1074,10 @@ struct InstrumentStage: View {
 
     /// The close-up framing at which the model looks as big as the studio picture's close-up does.
     private func restFraming() -> Float? {
-        guard let head = restCard?.head else { return nil }
+        guard let card = restCard, let head = card.head else { return nil }
         let size = controller.viewSize
         let picture = CGSize(width: max(0, size.width - 2 * StageRest.picturePadding), height: size.height)
-        let zoom = StageFrame.closeUpZoom(in: picture, head: head, centred: input().wholeHeadstock)
+        let zoom = StageFrame.closeUpZoom(in: picture, head: head, tip: card.tip ?? StageFrame.tipShare)
         return controller.framing(atZoom: Float(zoom))
     }
 }

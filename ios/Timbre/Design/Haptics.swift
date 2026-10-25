@@ -11,6 +11,8 @@ import UIKit
 @MainActor
 final class Haptics {
     static let shared = Haptics()
+    /// This device can play haptics at all (no iPad can).
+    nonisolated static let hardwareSupported = CHHapticEngine.capabilitiesForHardware().supportsHaptics
     var enabled = true {
         didSet { if !enabled { stopBeating() } }
     }
@@ -24,7 +26,7 @@ final class Haptics {
     private var lastDetent: Int?
 
     private init() {
-        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        guard Self.hardwareSupported else { return }
         engine = try? CHHapticEngine()
         // Haptics only: the engine never claims the audio session the tuner records through.
         engine?.playsHapticsOnly = true
@@ -33,11 +35,15 @@ final class Haptics {
             Task { @MainActor in
                 // A reset invalidates every player: the beat starts again on its next frame.
                 self?.beatPlayer = nil
+                self?.cycleEnds = nil
                 try? self?.engine?.start()
             }
         }
         engine?.stoppedHandler = { [weak self] _ in
-            Task { @MainActor in self?.beatPlayer = nil }
+            Task { @MainActor in
+                self?.beatPlayer = nil
+                self?.cycleEnds = nil
+            }
         }
     }
 
@@ -93,13 +99,17 @@ final class Haptics {
 
     // MARK: - Tune by feel
 
-    /// One continuous event, looped, whose strength the tuner's frames modulate into the beat.
+    /// One continuous event, looped, whose strength each beat's curve shapes.
     private var beatPlayer: CHHapticAdvancedPatternPlayer?
-    /// Where the beat is in its cycle (whole cycles counted), and when it was last advanced.
-    private var beatPhase = 0.0
+    /// When the beat cycle already scheduled ends (system uptime); nil while the beat rests.
+    private var cycleEnds: TimeInterval?
+    /// When the tuner's last frame came.
     private var lastFrame: TimeInterval?
-    /// The strength last sent, so a still beat isn't sent again every frame.
-    private var sentIntensity: Float = -1
+    /// How long before a cycle ends the next one is scheduled: a frame or two of the tuner's readings, so the next
+    /// cycle is always queued before this one runs out, and starts exactly where it ends.
+    static let scheduleLead: TimeInterval = 0.1
+    /// Control points across one cycle's curve (Core Haptics takes at most 16 in a curve).
+    static let curvePoints = 12
 
     /// The slowest and fastest beats the hand is given, in pulses a second.
     static let slowestBeat = 0.5
@@ -135,19 +145,37 @@ final class Haptics {
         throb(cents: cents, target: frame.targetHz, still: frame.reading.inTune, level: frame.level, now: frame.time)
     }
 
-    /// Advances the beat by one frame: `cents` off a `target` (Hz), at input `level` (dBFS), at `now` (uptime
-    /// seconds). In tune (`still`), or with nothing heard, it stands still.
+    /// The beat at one frame: `cents` off a `target` (Hz), at input `level` (dBFS), at `now` (uptime seconds). Each
+    /// beat is one swell scheduled whole on the engine's clock (`scheduleCycle`), so the hand feels a smooth rise and
+    /// fall rather than the frames' steps; the frames only queue the next swell, at the rate the string beats then,
+    /// as the one under way runs out. In tune (`still`), or with nothing heard, it stands still at once.
     private func throb(cents: Double?, target: Double, still: Bool, level: Double, now: TimeInterval) {
-        let dt = lastFrame.map { min(0.1, max(0, now - $0)) } ?? 0
         lastFrame = now
         guard !still, let cents, level > Self.beatFloor else {
-            // Still: in tune, or nothing heard. The carrier stops (so the engine can sleep) and the phase starts
-            // again with the next string.
+            // Still: in tune, or nothing heard. The carrier stops (so the engine can sleep) and the next string's
+            // beat starts from the top of a swell.
             rest()
             return
         }
-        beatPhase += Self.beatRate(cents: cents, target: target) * dt
-        send(intensity: Self.pulse(beatPhase, cents: cents))
+        guard let player = beatPlayer ?? startBeating() else { return }
+        let ends = cycleEnds ?? now
+        guard now >= ends - Self.scheduleLead else { return }
+        let period = 1 / Self.beatRate(cents: cents, target: target)
+        scheduleCycle(on: player, after: max(0, ends - now), period: period, cents: cents)
+        cycleEnds = max(ends, now) + period
+    }
+
+    /// One beat as a curve on the carrier's strength: `period` seconds of swell and fall, starting `delay` seconds
+    /// from now on the engine's clock (where the cycle before it ends).
+    private func scheduleCycle(on player: CHHapticAdvancedPatternPlayer, after delay: TimeInterval, period: TimeInterval, cents: Double) {
+        guard let engine else { return }
+        let steps = Self.curvePoints - 1
+        let points = (0...steps).map { step -> CHHapticParameterCurve.ControlPoint in
+            let phase = Double(step) / Double(steps)
+            return CHHapticParameterCurve.ControlPoint(relativeTime: phase * period, value: Self.pulse(phase, cents: cents))
+        }
+        let curve = CHHapticParameterCurve(parameterID: .hapticIntensityControl, controlPoints: points, relativeTime: 0)
+        try? player.scheduleParameterCurve(curve, atTime: engine.currentTime + delay)
     }
 
     /// The beat's strength at `phase` (cycles): a smooth swell and fall once a cycle, as the loudness of two beating
@@ -177,26 +205,16 @@ final class Haptics {
         }
     }
 
-    private func send(intensity: Float) {
-        let value = max(0, min(1, intensity))
-        guard let player = beatPlayer ?? startBeating() else { return }
-        guard abs(value - sentIntensity) > 0.01 else { return }
-        sentIntensity = value
-        let control = CHHapticDynamicParameter(parameterID: .hapticIntensityControl, value: value, relativeTime: 0)
-        try? player.sendParameters([control], atTime: CHHapticTimeImmediate)
-    }
-
     /// The beat stands still: the carrier stops until a string is heard off its note again.
     private func rest() {
-        guard beatPlayer != nil else { beatPhase = 0; return }
+        cycleEnds = nil
+        guard beatPlayer != nil else { return }
         try? beatPlayer?.stop(atTime: CHHapticTimeImmediate)
         beatPlayer = nil
-        beatPhase = 0
-        sentIntensity = -1
     }
 
     /// The beat's carrier: a soft, low continuous vibration (sharpness 0.25 reads as a throb rather than a buzz),
-    /// looped, at no strength until the frames give it one.
+    /// looped, at no strength until a beat's curve gives it one.
     private func startBeating() -> CHHapticAdvancedPatternPlayer? {
         guard let engine else { return nil }
         do {
@@ -211,7 +229,7 @@ final class Haptics {
                                       atTime: CHHapticTimeImmediate)
             try player.start(atTime: CHHapticTimeImmediate)
             beatPlayer = player
-            sentIntensity = 0
+            cycleEnds = nil
             watch()
             return player
         } catch {
@@ -235,8 +253,7 @@ final class Haptics {
     func stopBeating() {
         try? beatPlayer?.stop(atTime: CHHapticTimeImmediate)
         beatPlayer = nil
-        beatPhase = 0
+        cycleEnds = nil
         lastFrame = nil
-        sentIntensity = -1
     }
 }

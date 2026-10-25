@@ -386,7 +386,7 @@ private struct TuneStringHealthCard: View {
         let length = rate == nil ? 0 : max(4, height * CGFloat(min(1, magnitude / peak)))
         let top = UnevenRoundedRectangle(topLeadingRadius: 4, topTrailingRadius: 4, style: .continuous)
         return VStack(spacing: 4) {
-            Text(verbatim: rate.map(Self.signed) ?? "–").font(Typeface.number(11))
+            Text(verbatim: rate.map(Self.signed) ?? "–").font(Typeface.number(.caption))
                 .foregroundStyle(bad ? Palette.amber : Palette.inkFaint)
                 .lineLimit(1).minimumScaleFactor(0.7)
             ZStack(alignment: .bottom) {

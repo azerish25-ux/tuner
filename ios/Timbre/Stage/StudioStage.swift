@@ -16,6 +16,10 @@ struct StageCard: Sendable {
     var turns: [String: Int] = [:]
     /// Strings tuned by a slide (wind joints) rather than a peg.
     var slides: Set<String> = []
+    /// The wood above the top pegs, as a share of `head`'s height (pegs to nut), from the 3D rig the render was made
+    /// from: a violin's scroll stands nearly as tall again as its pegbox, a guitar's head ends just past its last
+    /// tuner. Nil for a photograph, which has no rig (`StageFrame.tipShare` stands in).
+    var tip: CGFloat?
     func point(_ key: String) -> CGPoint? { points[key] }
     func hasString(_ anchor: String) -> Bool { points["\(anchor).nut"] != nil && points["\(anchor).saddle"] != nil }
 
@@ -57,6 +61,9 @@ struct StageCard: Sendable {
             turns[string.anchor] = string.tighten
             if string.slides { slides.insert(string.anchor) }
         }
+        if let topPeg = rig.strings.map(\.pegPoint.y).max(), let nut = rig.strings.map(\.nutPoint.y).min(), topPeg - nut > 0.001 {
+            tip = CGFloat(min(1.2, max(0.1, (rig.upper.y - topPeg) / (topPeg - nut))))
+        }
     }
 
     /// The same picture turned over left to right (a left-handed instrument): every point mirrored, and every peg
@@ -67,6 +74,7 @@ struct StageCard: Sendable {
         var card = StageCard(points: flipped)
         card.turns = turns.mapValues { -$0 }
         card.slides = slides
+        card.tip = tip
         return card
     }
 
@@ -107,6 +115,9 @@ struct StudioStage: View {
     var body: some View {
         let mirrored = hand.mirrorsUpright
         stage(card: mirrored ? card?.mirrored() : card, mirrored: mirrored)
+            // A picture of an instrument never mirrors for a right-to-left language, and its rings and labels are
+            // placed in the picture's own left-to-right space (`StageInput.rightToLeft` sets the words).
+            .environment(\.layoutDirection, .leftToRight)
             .accessibilityIgnoresInvertColors()
     }
 
@@ -148,7 +159,8 @@ struct StudioStage: View {
         let key = shownAnchor(card, state).map { shownKey(card, state, anchor: $0) }
         let frame = motion.frame(picture: imageName, head: card.head, peg: key.flatMap { card.point("\($0).peg") },
                                  focus: state.focus, size: size, now: date.timeIntervalSinceReferenceDate, still: reduceMotion,
-                                 centred: state.wholeHeadstock, startsClose: startsClose)
+                                 centred: state.wholeHeadstock, startsClose: startsClose,
+                                 tip: card.tip ?? StageFrame.tipShare, controlsOnLeft: state.rightToLeft)
         ZStack {
             ZStack {
                 picture(frame, mirrored: mirrored)
@@ -220,9 +232,10 @@ struct StudioStage: View {
                                     tighten: card.turns[anchor], slides: card.slides.contains(anchor))
             let gap: CGFloat = 30 + 4 * frame.close
             let side = PegLabel.side(for: center, preferred: peg.x < card.centerX ? -1 : 1, gap: gap, in: size,
-                                     width: calling ? PegLabel.callWidth : 60)
+                                     width: calling ? PegLabel.callWidth : 60, controlsOnLeft: state.rightToLeft)
             PegLabel(note: state.note, turn: turn, color: Palette.tuning(cents, locked: state.locked), prompt: calling,
                      nudge: turn.nudge(at: date.timeIntervalSinceReferenceDate, reduceMotion: reduceMotion))
+                .environment(\.layoutDirection, state.rightToLeft ? .rightToLeft : .leftToRight)
                 .placedBeside(center, side: side, gap: gap)
         }
     }
@@ -292,13 +305,14 @@ struct StageFrame {
     func point(_ p: CGPoint) -> CGPoint { CGPoint(x: origin.x + p.x * side, y: origin.y + p.y * side) }
 
     /// Close-up clearances in points, as on the 3D stage: the pegs stay this far below the top (room for the ring),
-    /// the nut this far above the bottom, and the head centres in the room left of the side controls.
+    /// the nut this far above the bottom, and the head centres in the room beside the side controls.
     static let pegClearance: CGFloat = 48
     static let nutClearance: CGFloat = 30
     static let controlsInset: CGFloat = 26
     /// Studio renders and photographs turn soft past about twice their fitted size.
     static let maxZoom: CGFloat = 2
-    /// The wood above the top pegs, as a share of the head box (pegs to nut): a centred close-up keeps it in frame.
+    /// The wood above the top pegs, as a share of the head box (pegs to nut), for a picture without a rig to measure it
+    /// from (a photograph; `StageCard.tip`).
     static let tipShare: CGFloat = 0.35
 
     static func whole(in size: CGSize) -> StageFrame {
@@ -306,38 +320,40 @@ struct StageFrame {
         return StageFrame(side: side, origin: CGPoint(x: (size.width - side) / 2, y: (size.height - side) / 2))
     }
 
-    /// `framing` of the way from the whole picture to its headstock close-up, zoomed toward `aim` (a card point).
-    /// The close-up zooms as far as the head fits (at most `maxZoom`) and lifts the head to just under the top
-    /// clearance, so the neck runs down the stage below it (the 3D close-up's layout), keeping the nut clear of the
-    /// bottom. On the way the picture zooms about one fixed point: the aim travels to its spot in step with the
-    /// zoom, which grows geometrically (an even apparent dolly). `centred` (the iPad, `StageInput.wholeHeadstock`):
-    /// the head centres across the stage, and the wood above its pegs stays clear of the feathered top.
     /// How far the close-up zooms in on `head` (a card box) in a stage of `size`: as far as the head fits between the
-    /// clearances, at most `maxZoom`.
-    static func closeUpZoom(in size: CGSize, head: CGRect, centred: Bool = false) -> CGFloat {
+    /// clearances, the wood above its pegs (`tip`, a share of the head's height) included, at most `maxZoom`.
+    static func closeUpZoom(in size: CGSize, head: CGRect, tip: CGFloat = StageFrame.tipShare) -> CGFloat {
         let base = Self.whole(in: size)
         guard base.side > 1 else { return 1 }
-        let tipRoom = centred ? head.height * tipShare : 0
+        let tipRoom = head.height * tip
         let edge = 0.06 * size.height + 10
-        var fitV = (size.height - pegClearance - nutClearance) / max(head.height * base.side, 1)
-        if centred { fitV = min(fitV, (size.height - edge - nutClearance) / max((head.height + tipRoom) * base.side, 1)) }
+        let pegsFit = (size.height - pegClearance - nutClearance) / max(head.height * base.side, 1)
+        let headFits = (size.height - edge - nutClearance) / max((head.height + tipRoom) * base.side, 1)
         let fitH = (size.width - 160) / max(head.width * base.side, 1)
-        return min(maxZoom, fitV, fitH)
+        return min(maxZoom, pegsFit, headFits, fitH)
     }
 
-    static func closeUp(in size: CGSize, head: CGRect, aim: CGPoint, framing: Double, centred: Bool = false) -> StageFrame {
+    /// `framing` of the way from the whole picture to its headstock close-up, zoomed toward `aim` (a card point).
+    /// The close-up zooms as far as the head fits (at most `maxZoom`) and lifts the head to just under the top
+    /// clearance, the wood above its pegs (`tip`) clear of the feathered top, so the neck runs down the stage below
+    /// it (the 3D close-up's layout), keeping the nut clear of the bottom. On the way the picture zooms about one fixed
+    /// point: the aim travels to its spot in step with the zoom, which grows geometrically (an even apparent dolly).
+    /// `centred` (the iPad, `StageInput.wholeHeadstock`): the head centres across the stage. Otherwise it centres in
+    /// the room beside the side controls, which stand on the right, or on the left (`controlsOnLeft`).
+    static func closeUp(in size: CGSize, head: CGRect, aim: CGPoint, framing: Double, centred: Bool = false,
+                        tip: CGFloat = StageFrame.tipShare, controlsOnLeft: Bool = false) -> StageFrame {
         let base = Self.whole(in: size)
         let f = CGFloat(max(0, min(1, framing)))
         guard f > 0.0005, base.side > 1 else { return base }
-        let tipRoom = centred ? head.height * tipShare : 0
+        let tipRoom = head.height * tip
         let edge = 0.06 * size.height + 10
-        let zoom = closeUpZoom(in: size, head: head, centred: centred)
+        let zoom = closeUpZoom(in: size, head: head, tip: tip)
         guard zoom > 1.05 else { return base }
         let full = base.side * zoom
-        var lowest = pegClearance - (head.minY - aim.y) * full
-        if centred { lowest = max(lowest, edge - (head.minY - tipRoom - aim.y) * full) }
+        let lowest = max(pegClearance - (head.minY - aim.y) * full, edge - (head.minY - tipRoom - aim.y) * full)
         let highest = size.height - nutClearance - (head.maxY - aim.y) * full
-        let spot = CGPoint(x: size.width / 2 - (centred ? 0 : controlsInset), y: min(lowest + 16, max(lowest, highest)))
+        let lean = centred ? 0 : (controlsOnLeft ? controlsInset : -controlsInset)
+        let spot = CGPoint(x: size.width / 2 + lean, y: min(lowest + 16, max(lowest, highest)))
         let current = CGFloat(pow(Double(zoom), Double(f)))
         let progress = (current - 1) / (zoom - 1)
         let start = base.point(aim)
@@ -448,9 +464,11 @@ final class Motion2D {
     /// (the 3D stage's dolly, so a 3D model taking over from its placeholder meets it on the way); `still`
     /// (Reduce Motion) cuts straight to the framing. `centred` (an iPad-sized window) aims at the head's centre line
     /// and centres it across the stage (`StageFrame.closeUp`).
-    /// `startsClose`: a new picture opens on the close-up (when focused) instead of dollying in to it.
+    /// `startsClose`: a new picture opens on the close-up (when focused) instead of dollying in to it. `tip` and
+    /// `controlsOnLeft` as `StageFrame.closeUp` takes them.
     func frame(picture name: String, head: CGRect?, peg: CGPoint?, focus: Bool, size: CGSize, now: Double, still: Bool,
-               centred: Bool = false, startsClose: Bool = false) -> StageFrame {
+               centred: Bool = false, startsClose: Bool = false, tip: CGFloat = StageFrame.tipShare,
+               controlsOnLeft: Bool = false) -> StageFrame {
         if name != picture {
             picture = name
             framing = startsClose && focus ? 1 : 0
@@ -471,7 +489,8 @@ final class Motion2D {
         } else {
             aim = target
         }
-        return StageFrame.closeUp(in: size, head: head, aim: aim ?? target, framing: framing, centred: centred)
+        return StageFrame.closeUp(in: size, head: head, aim: aim ?? target, framing: framing, centred: centred, tip: tip,
+                                  controlsOnLeft: controlsOnLeft)
     }
 
     private func advanceDolly(toward goal: Double, dt: Double) {

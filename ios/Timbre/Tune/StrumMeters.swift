@@ -178,7 +178,7 @@ struct StrumMeterColumn: View {
 
     private var notHeard: some View {
         Text("Not heard")
-            .font(Typeface.label(10, relativeTo: .caption2))
+            .font(Typeface.badge)
             .foregroundStyle(strong ? Palette.ink : Palette.inkSoft)
             .lineLimit(1)
             .fixedSize()
@@ -286,7 +286,8 @@ struct StrumLaneChip: View {
 
 /// "≈ estimate": the reading came from a peak another string's overtone shares (B3 under the low E's third
 /// harmonic), good to a few cents; fine-tuning the string alone settles it. Its dashed edge matches the hollow
-/// bead. Narrow lanes show the sign alone. Decorative: the lane's VoiceOver value says "estimate".
+/// bead. Narrow lanes show the sign alone. Set at the badge size (12 pt, the smallest on the type scale) and growing
+/// with the text size as far as its lane allows. Decorative: the lane's VoiceOver value says "estimate".
 struct StrumEstimateBadge: View {
     var compact = false
     @Environment(\.colorSchemeContrast) private var contrast
@@ -296,14 +297,14 @@ struct StrumEstimateBadge: View {
         Group {
             if compact { Text(verbatim: "≈") } else { Text("≈ estimate") }
         }
-        .font(Typeface.label(10, relativeTo: .caption2))
+        .font(Typeface.badge)
         .foregroundStyle(strong ? Palette.ink : Palette.inkSoft)
         .lineLimit(1)
         .minimumScaleFactor(0.75)
         .padding(.horizontal, 5).padding(.vertical, 2)
         .background(Capsule().fill(Color.white.opacity(0.05)))
         .overlay(Capsule().strokeBorder(Color.white.opacity(strong ? 0.55 : 0.22), style: StrokeStyle(lineWidth: 1, dash: [2.5, 2])))
-        .dynamicTypeSize(...DynamicTypeSize.xLarge)
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .accessibilityHidden(true)
     }
 }
@@ -408,7 +409,7 @@ struct StrumStringTrack: View {
                 context.fill(Path(CGRect(x: mid + gap, y: y - 0.5, width: length, height: 1)), with: .color(tick))
                 if magnify > 1.5 && [10, 20, 50].contains(abs(value)) {
                     let name = (value > 0 ? "+" : "−") + "\(abs(value))"
-                    context.draw(Text(verbatim: name).font(Typeface.number(10, relativeTo: .caption2)).foregroundStyle(tick),
+                    context.draw(Text(verbatim: name).font(Typeface.number(.caption)).foregroundStyle(tick),
                                  at: CGPoint(x: mid - gap - length - 5, y: y), anchor: .trailing)
                 }
             }
@@ -473,14 +474,15 @@ struct StrumPickSweep: View {
                 var trail = Path()
                 trail.move(to: CGPoint(x: x - 46, y: y + 12))
                 trail.addLine(to: CGPoint(x: x - 6, y: y + 1))
-                context.stroke(trail, with: .linearGradient(Gradient(colors: [Palette.amber.opacity(0), Palette.amber.opacity(0.35 * alpha)]),
+                // The pick is warm stage light, not the amber that means a string is out.
+                context.stroke(trail, with: .linearGradient(Gradient(colors: [Palette.spotlight.opacity(0), Palette.spotlight.opacity(0.35 * alpha)]),
                                                             startPoint: CGPoint(x: x - 46, y: y + 12), endPoint: CGPoint(x: x - 6, y: y + 1)),
                                style: StrokeStyle(lineWidth: 3, lineCap: .round))
                 var pick = context
                 pick.translateBy(x: x, y: y)
                 pick.rotate(by: .degrees(-28))
                 pick.opacity = alpha
-                pick.fill(Self.pick, with: .linearGradient(Gradient(colors: [Color(hex: 0xFFD08A), Palette.amber]),
+                pick.fill(Self.pick, with: .linearGradient(Gradient(colors: [Color(hex: 0xFFD08A), Palette.spotlight]),
                                                           startPoint: CGPoint(x: 0, y: -10), endPoint: CGPoint(x: 0, y: 11)))
                 pick.stroke(Self.pick, with: .color(.white.opacity(0.35)), lineWidth: 0.8)
             }

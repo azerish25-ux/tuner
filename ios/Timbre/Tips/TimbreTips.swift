@@ -3,19 +3,11 @@ import TimbreCore
 import TipKit
 
 /// Timbre's coach marks (TipKit): a one-time hint at the moment a feature matters, never over a paywall or a sheet.
-/// Automated and demo runs hide them all, so no test or capture has a tip over it.
+/// Automated and demo runs hide them all, so nothing they record has a tip over it.
 enum TimbreTips {
-    /// False under XCTest, the UI tests (they all set TIMBRE_TEST_STORAGE_ID), the demo pitch, demo data and the
-    /// store scenes. Release builds never read these values.
-    static let enabled: Bool = {
-        #if DEBUG
-        let environment = ProcessInfo.processInfo.environment
-        let quiet = ["XCTestConfigurationFilePath", "TIMBRE_TEST_STORAGE_ID", "TIMBRE_DEMO_PITCH", "TIMBRE_DEMO_DATA", "TIMBRE_SCENE"]
-        return !quiet.contains { environment[$0] != nil }
-        #else
-        return true
-        #endif
-    }()
+    /// Tips show whenever the app isn't being driven by automation (`TestSupport.isAutomated`, always false in a
+    /// release build).
+    static var enabled: Bool { !TestSupport.isAutomated }
 
     /// Once, at launch (TimbreApp), before any screen can show a tip.
     static func configure() {
@@ -72,6 +64,55 @@ private struct StrumTuneTipAnchor: ViewModifier {
 extension View {
     /// The Strum to tune coach mark on the tuner's Strum toggle.
     func strumTuneTip() -> some View { modifier(StrumTuneTipAnchor()) }
+
+    /// The Tune by feel coach mark on the tuner's Feel toggle.
+    func tuneByFeelTip() -> some View { modifier(TuneByFeelTipAnchor()) }
+}
+
+// MARK: - Tune by feel
+
+/// On the tuner's Feel toggle, once: after the player's third full tune, the tuner offers to let them feel the beat
+/// instead of watching the needle. It waits for the tuner to appear after that tune (never over the celebration), and
+/// retires once the toggle is tapped.
+struct TuneByFeelTip: Tip {
+    /// Full tunes so far (`UserSettings.fullTunes`), given by the tuner as it appears.
+    @Parameter static var fullTunes: Int = 0
+
+    var title: Text { Text("Tune by feel") }
+    var message: Text? { Text("Tune by feel pulses at the beat between the string and its note, slower as they meet, still at the lock.") }
+    var image: Image? { Image(systemName: "hand.tap") }
+
+    var rules: [Rule] {
+        #Rule(Self.$fullTunes) { $0 >= 3 }
+    }
+
+    var options: [any TipOption] {
+        Tips.MaxDisplayCount(1)
+    }
+}
+
+/// Anchors the Tune by feel tip on the Feel toggle while the tuner is on screen with nothing over it, and only while
+/// Tune by feel is off (VoiceOver turns it on by itself).
+private struct TuneByFeelTipAnchor: ViewModifier {
+    @EnvironmentObject private var store: AppStore
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
+    @AppStorage(TuneByFeel.chosenKey) private var chosen = false
+    private let tip = TuneByFeelTip()
+
+    private var clear: Bool {
+        TimbreTips.enabled && TuneByFeel.available && store.settings.hapticsEnabled && store.selectedTab == .tune
+            && !TuneByFeel.isOn(store.settings, voiceOver: voiceOver, chosen: chosen)
+            && !store.showPaywall && !store.showSettings && !store.showInstrumentPicker
+            // One coach mark at a time: where the Strum to tune tip can show, it has its turn first.
+            && !(store.canStrumTune && !store.strumPlucks && StrumTuneTip().shouldDisplay)
+    }
+
+    func body(content: Content) -> some View {
+        content
+            .popoverTip(clear ? tip : nil)
+            .simultaneousGesture(TapGesture().onEnded { tip.invalidate(reason: .actionPerformed) })
+            .onAppear { TuneByFeelTip.fullTunes = store.settings.fullTunes ?? 0 }
+    }
 }
 
 // MARK: - String order in lessons

@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// Under the tuner's stage: how it picks its target (AUTO | MANUAL) and the reference tone, side by side on glass.
+/// Under the tuner's stage: how it picks its target (Auto | Manual) and the reference tone, side by side on glass,
+/// their words in sentence case at the body size like every other control (no tracked capitals).
 /// When a language's words don't fit, the reference button keeps only its tuning fork (VoiceOver still names it).
 /// The words grow with Dynamic Type up to the first accessibility size (the compact face takes over when they no
 /// longer fit); beyond it, a long press on any control shows it large (Large Content Viewer).
@@ -34,7 +35,7 @@ struct TunerStageBar: View {
     }
 }
 
-/// AUTO | MANUAL: whether the tuner follows the string (or note) it hears, or stays on the one chosen. One capsule of
+/// Auto | Manual: whether the tuner follows the string (or note) it hears, or stays on the one chosen. One capsule of
 /// glass with a mint thumb that slides to the mode in use; in Auto, while listening, a light beside the word pulses.
 struct DetectionPill: View {
     let automatic: Bool
@@ -68,9 +69,7 @@ struct DetectionPill: View {
             HStack(spacing: 6) {
                 if auto { light(on: selected) }
                 (auto ? Text("Auto") : Text("Manual"))
-                    .font(Typeface.label(12, relativeTo: .caption))
-                    .tracking(1.3)
-                    .textCase(.uppercase)
+                    .font(Typeface.label(.body))
                     .lineLimit(1)
                     .fixedSize()
             }
@@ -125,9 +124,7 @@ struct ReferenceToneButton: View {
                 icon
                 if !compact {
                     Text("Reference")
-                        .font(Typeface.label(12, relativeTo: .caption))
-                        .tracking(1.3)
-                        .textCase(.uppercase)
+                        .font(Typeface.label(.body))
                         .lineLimit(1)
                         .fixedSize()
                 }

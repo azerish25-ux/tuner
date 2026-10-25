@@ -280,6 +280,10 @@ struct NoteReadout: View {
     private var grow: CGFloat { compact ? 1 : max(1, size / 112) }
     /// The cents row and target line: 15 pt on a phone, up to 21 pt beside an iPad's large note.
     private var detailSize: CGFloat { 15 * min(grow, 1.4) }
+    /// The octave beside the note, drawn in proportion to it as part of the hero numeral: 30 pt beside the phone's
+    /// 112 pt note, growing with an iPad's.
+    private var octaveSize: CGFloat { Self.octaveShare * 112 * grow }
+    static let octaveShare: CGFloat = 30.0 / 112.0
 
     /// What the line under the note shows: the In tune badge once locked, the cents and hertz while a pitch is
     /// heard, and the target's hertz until one is.
@@ -290,11 +294,12 @@ struct NoteReadout: View {
         let parts = Self.split(note)
         VStack(spacing: compact ? 2 : 6 * min(grow, 1.6)) {
             HStack(alignment: .lastTextBaseline, spacing: 3 * grow) {
+                // A letter changes by a cross-fade: rolling like a digit would read as a number counting.
                 Text(parts.name).font(Typeface.note(compact ? 84 : size, relativeTo: .largeTitle)).tracking(compact ? -3 : -5 * grow)
                     .foregroundStyle(Palette.ink)
-                    .contentTransition(.numericText())
+                    .contentTransition(.opacity)
                     .minimumScaleFactor(0.6).lineLimit(1)
-                Text(parts.octave).font(Typeface.displayLight(30 * grow)).foregroundStyle(octaveColor)
+                Text(parts.octave).font(Typeface.displayLight(octaveSize, relativeTo: .title)).foregroundStyle(octaveColor)
             }
             // A note name reads left to right in every language: "E₂", never "₂E" in Arabic or Hebrew.
             .environment(\.layoutDirection, .leftToRight)
@@ -326,7 +331,8 @@ struct NoteReadout: View {
         let large = grow > 1
         let font: Font = large ? Font.title3.weight(.semibold) : Font.subheadline.weight(.semibold)
         return Label {
-            Text("In tune") + Text(verbatim: " · \(abs(shown ?? 0))¢")
+            // The cents while the string is still heard; once it has rung out, the lock alone.
+            if let shown { Text("In tune") + Text(verbatim: " · \(abs(shown))¢") } else { Text("In tune") }
         } icon: { Image(systemName: "checkmark") }
         .font(font).foregroundStyle(Palette.mint)
         .monospacedDigit()
@@ -337,7 +343,7 @@ struct NoteReadout: View {
 
     /// "Target 196.00 Hz": what to aim for, before any pitch is heard (no placeholder dash for the cents).
     private var targetLine: some View {
-        Text("Target \(Self.hertzText(target))")
+        Text("Target \(Self.hertzText(target, locale: locale))")
             .font(Typeface.number(detailSize))
             .foregroundStyle(strong ? Palette.ink : Palette.inkSoft)
             .lineLimit(1)
@@ -354,7 +360,8 @@ struct NoteReadout: View {
             }
             .foregroundStyle(Palette.tuning(shown.map { Double($0) }, locked: false))
             Circle().fill(strong ? Palette.inkSoft : Palette.inkFaint).frame(width: 3, height: 3)
-            Self.column(Self.hertzText(hertz ?? target), placeholder: Self.hertzPlaceholder(target), alignment: .leading)
+            Self.column(Self.hertzText(hertz ?? target, locale: locale), placeholder: Self.hertzPlaceholder(target, locale: locale),
+                        alignment: .leading)
                 .foregroundStyle(strong ? Palette.ink : Palette.inkSoft)
         }
         .font(Typeface.number(detailSize))
@@ -377,12 +384,17 @@ struct NoteReadout: View {
         return "\(sign)\(abs(shown))¢"
     }
 
-    static func hertzText(_ hertz: Double) -> String { String(format: "%.2f Hz", hertz) }
+    /// Hertz to the hundredth in the app's language: "82.41 Hz", "82,41 Hz" in German, in Arabic digits in Arabic.
+    static func hertzText(_ hertz: Double, locale: Locale) -> String {
+        hertz.formatted(.number.precision(.fractionLength(2)).grouping(.never).locale(locale)) + " Hz"
+    }
 
-    /// As many digits as the target needs (with room for a sharp reading), e.g. "000.00 Hz" for 146.83 Hz.
-    static func hertzPlaceholder(_ target: Double) -> String {
+    /// As many digits as the target needs (with room for a sharp reading), e.g. "000.00 Hz" for 146.83 Hz, written
+    /// as `hertzText` writes numbers, so the column is as wide as any value it holds.
+    static func hertzPlaceholder(_ target: Double, locale: Locale) -> String {
         let digits = max(1, String(Int(max(1, target * 1.07))).count)
-        return String(repeating: "0", count: digits) + ".00 Hz"
+        let widest = (pow(10, Double(digits)) - 1) + 0.88
+        return hertzText(widest, locale: locale)
     }
 
     static func spoken(_ cents: Double?) -> String {

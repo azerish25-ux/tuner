@@ -16,11 +16,16 @@ struct TuneView: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.locale) private var locale
+    @Environment(\.layoutDirection) private var layoutDirection
     /// Settings › Strobe precision: a strobe band in place of the needle meter.
     @AppStorage(TuneView.strobeKey) private var strobeView = false
     static let strobeKey = "tune.strobe"
+    /// The player has chosen Tune by feel on or off themselves (`TuneByFeel`).
+    @AppStorage(TuneByFeel.chosenKey) private var feelChosen = false
     @State private var motion = ReadoutMotion()
     @State private var announcer = TunerAnnouncer()
+    /// The lock as the screen shows it: the tracker's, held on screen (`LockLatch`).
+    @State private var latch = LockLatch()
     @State private var failed3D: String?
     @State private var ready3D: String?
     /// Every string has locked: the camera pulls back to the whole instrument for the celebration. Choosing a
@@ -30,7 +35,7 @@ struct TuneView: View {
     @State private var strumOpen = false
     private static let supports3D = MTLCreateSystemDefaultDevice() != nil
     #if DEBUG
-    /// UI-test probe (TIMBRE_DEBUG_STATE=1), see `stageProbe`.
+    /// Debug builds launched with TIMBRE_DEBUG_STATE=1 describe the stage in an invisible label (`stageProbe`).
     private static let probe = ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1"
     /// When listening last started, in seconds since 1970 (0 while not listening): the demo pitch's cycles count from it.
     @State private var listeningSince: Double = 0
@@ -39,7 +44,7 @@ struct TuneView: View {
     var body: some View {
         ZStack {
             StageBackground()
-            PitchAura().allowsHitTesting(false)
+            PitchAura(latch: latch, listening: audio.running).allowsHitTesting(false)
             GeometryReader { proxy in
                 let arrangement = TuneArrangement(size: proxy.size, regular: regularWindow)
                 let pane = TuneArrangement.showsPane(arrangement, size: proxy.size, regularWidth: horizontalSizeClass == .regular,
@@ -68,11 +73,21 @@ struct TuneView: View {
             CelebrationOverlay()
         }
         .onAppear {
-            // The tuner's feel, every reading: the detents and lock, or with Tune by feel the beat (Design/Haptics.swift).
-            store.onTunerFrame = { frame in Haptics.shared.feel(frame) }
+            // Every reading: the tuner's feel (the detents and lock, or with Tune by feel the beat, Design/Haptics.swift),
+            // then the lock as the screen holds it.
+            let latch = self.latch
+            store.onTunerFrame = { frame in
+                Haptics.shared.feel(frame)
+                latch.step(frame, band: Palette.tuningBand)
+            }
             autoListen()
         }
-        .onChange(of: store.settings.tuneByFeel, initial: true) { _, on in Haptics.shared.byFeel = on }
+        .onChange(of: feelOn, initial: true) { _, on in Haptics.shared.byFeel = on }
+        // A lock held on screen belongs to this listening: pausing, leaving the tuner or handing the microphone to
+        // Strum to tune ends it, and the next lock is earned afresh.
+        .onChange(of: audio.running) { _, running in if !running { latch.reset() } }
+        .onChange(of: strumOpen) { _, open in if open { latch.reset() } }
+        .onDisappear { latch.reset() }
         .onChange(of: scenePhase) { _, phase in if phase == .active && store.selectedTab == .tune { autoListen() } }
         .onChange(of: store.requestReviewNow) { _, now in
             if now { requestReview(); store.requestReviewNow = false }
@@ -117,11 +132,11 @@ struct TuneView: View {
     }
 
     #if DEBUG
-    /// For XCUITest only: which stage is up ("3d" once the model has replaced its studio render, "loading" before,
-    /// "2d" for the studio and photo stages) and when listening started. Drawn in clear ink and never touched, so it
-    /// stays out of every screenshot while its label stays readable.
+    /// Debug builds only: which stage is up ("3d" once the model has replaced its studio render, "loading" before,
+    /// "2d" for the studio and photo stages), when listening started, and whether a lock is on screen. Drawn in clear
+    /// ink and never touched, so nothing of it is seen while its label stays readable to automation.
     private var stageProbe: some View {
-        Text(verbatim: "stage=\(stageState) listening=\(String(format: "%.3f", listeningSince))")
+        Text(verbatim: "stage=\(stageState) listening=\(String(format: "%.3f", listeningSince)) lock=\(latch.holding || store.live.reading.inTune ? 1 : 0)")
             .font(.system(size: 9, design: .monospaced))
             .foregroundStyle(Color.clear)
             .allowsHitTesting(false)
@@ -171,8 +186,11 @@ struct TuneView: View {
         let shown = heard ? (motion.shown ?? reading.cents.map { Int($0.rounded()) }) : nil
         let note = store.targetName
         announcer.step(note: note, spoken: NoteNames.spoken(note, locale: locale, system: store.settings.notation), shown: shown,
-                       locked: reading.inTune, now: ProcessInfo.processInfo.systemUptime)
+                       locked: latch.shows(reading, listening: audio.running, shown: shown), now: ProcessInfo.processInfo.systemUptime)
     }
+
+    /// Tune by feel as it is in effect: the player's choice, else on while VoiceOver runs (`TuneByFeel`).
+    private var feelOn: Bool { TuneByFeel.isOn(store.settings, voiceOver: voiceOver, chosen: feelChosen) }
 
     private func autoListen() {
         guard store.settings.onboardingCompleted == true, !audio.running, store.canListen,
@@ -221,15 +239,19 @@ struct TuneView: View {
     private func stageInput(controls: Bool) -> StageInput {
         // On a paired course the cue rings the one peg being tuned.
         let peg = store.referenceMode ? nil : Optional(CourseGrouping.position(of: store.activeCourse, in: store.courses))
+        let reading = store.live.reading
         // The 3D camera (and the 2D studio or photo stage, as far as its picture allows) holds the headstock close-up,
         // with the peg ring and its turn arrow, whenever a string is being tuned, listening or paused alike: the peg
         // to turn is the tuner's hero. It pulls back to the whole instrument only for the all-strings celebration
         // (Reduce Motion cuts rather than glides). On an iPad the close-up shows the whole headstock, centred
-        // across the stage.
-        return StageInput(cents: store.live.reading.cents, level: store.live.level, locked: store.live.reading.inTune,
+        // across the stage. The side controls stand on the trailing edge: the left in a right-to-left language, where
+        // the close-up leans the other way to keep clear of them.
+        return StageInput(cents: reading.cents, level: store.live.level,
+                          locked: latch.shows(reading, listening: audio.running, shown: motion.shown),
                           listening: audio.running, activeAnchor: store.activeAnchor, focus: !store.referenceMode && !showWhole,
                           note: store.targetName, pegIndex: peg, wholeHeadstock: wholeHeadstock,
-                          controlsReserve: controls ? Self.controlsReserve : 0)
+                          controlsReserve: controls ? Self.controlsReserve : 0,
+                          rightToLeft: layoutDirection == .rightToLeft)
     }
 
     /// The width the side controls take on the stage's trailing edge: the 52 pt orb, the gutter and a gap.
@@ -354,23 +376,24 @@ struct TuneView: View {
             let reading = store.live.reading
             let heard = audio.running || store.live.preserved
             let now = timeline.date.timeIntervalSinceReferenceDate
-            let _ = motion.step(heard ? reading.cents : nil, locked: reading.inTune, now: now,
-                                hertz: reading.frequency, target: store.targetHz)
+            let _ = motion.step(heard ? reading.cents : nil, locked: latch.shows(reading, listening: audio.running, shown: motion.shown),
+                                now: now, hertz: reading.frequency, target: store.targetHz)
             let shown = motion.shown
-            // The one "in tune" flag: the readout's badge shows from it and the line below goes quiet from it, so
-            // exactly one "In tune" is ever on screen (a paused reading's line still says it is paused).
-            let locked = reading.inTune
-            let badgeSaysIt = locked && !store.live.preserved
             // A gap of a few frames in the pitch holds the numbers rather than blinking to the target.
             let printed = heard ? motion.printed(target: store.targetHz, now: now) : nil
+            // The one "in tune" flag: the readout's badge shows from it and the line below goes quiet from it, so
+            // exactly one "In tune" is ever on screen (a paused reading's line still says it is paused). Once a string
+            // locks, the latch holds it on screen while it stays in tune (`LockLatch`).
+            let locked = latch.shows(reading, listening: audio.running, shown: printed?.shown)
+            let badgeSaysIt = locked && !store.live.preserved
             // The stage's peg label has the call to play ("Play G3") while nothing is heard: said once, there.
             let quiet = badgeSaysIt || (calls && waitingForString(reading))
             VStack(spacing: scale.large ? 18 : 14) {
                 NoteReadout(note: store.targetName, shown: printed?.shown, hertz: printed?.hertz, target: store.targetHz,
                             locked: locked, size: scale.note)
                 meter(locked: locked, shown: shown, scale: scale)
-                statusText(statusLine(reading, shown: shown), color: statusColor(reading, shown: shown), quiet: quiet,
-                           hidden: badgeSaysIt, large: scale.large)
+                statusText(statusLine(reading, shown: shown, locked: locked), color: statusColor(reading, shown: shown, locked: locked),
+                           quiet: quiet, hidden: badgeSaysIt, large: scale.large)
             }
         }
         .padding(.bottom, 4)
@@ -396,7 +419,7 @@ struct TuneView: View {
 
     /// Listening with nothing heard: the moment the status would ask for the string ("Play G3", `AppStore.statusText`).
     private func waitingForString(_ reading: TuningReading) -> Bool {
-        audio.running && !store.live.preserved && reading.cents == nil && reading.status == "noSignal"
+        audio.running && !store.live.preserved && reading.cents == nil && reading.status == .noSignal
     }
 
     /// Whether the stage carries the call to play the string ("Play G3" beside its ringed peg) while nothing is heard,
@@ -432,20 +455,23 @@ struct TuneView: View {
     }
 
     /// The status under the meter reads the readout's own whole cents against the tracker's lock band:
-    /// "Hold it…" inside the band, "Tighten"/"Loosen" outside it, "In tune" once the tracker locks
+    /// "Hold it…" inside the band, "Tighten"/"Loosen" outside it, "In tune" while the lock is on screen
     /// (then the readout's badge says it, and `statusText` leaves the line blank, holding its height). The cents
     /// are the readout's, just above ("−10¢ · 81.92 Hz"), so the line names only the turn.
-    private func statusLine(_ reading: TuningReading, shown: Int?) -> String {
-        guard audio.running, !store.live.preserved, reading.cents != nil, let shown else { return store.statusText }
-        if reading.inTune { return String(localized: "In tune") }
+    private func statusLine(_ reading: TuningReading, shown: Int?, locked: Bool) -> String {
+        let live = audio.running && !store.live.preserved
+        if live && locked { return String(localized: "In tune") }
+        guard live, reading.cents != nil, let shown else { return store.statusText }
         let amount = abs(shown)
         if Double(amount) <= Palette.tuningBand { return String(localized: "Hold it…") }
         return shown < 0 ? String(localized: "Tighten") : String(localized: "Loosen")
     }
 
-    private func statusColor(_ reading: TuningReading, shown: Int?) -> Color {
-        guard audio.running, !store.live.preserved, reading.cents != nil, let shown else { return contrast == .increased ? Palette.ink : Palette.inkSoft }
-        return Palette.tuning(Double(shown), locked: reading.inTune)
+    private func statusColor(_ reading: TuningReading, shown: Int?, locked: Bool) -> Color {
+        let live = audio.running && !store.live.preserved
+        if live && locked { return Palette.mint }
+        guard live, reading.cents != nil, let shown else { return contrast == .increased ? Palette.ink : Palette.inkSoft }
+        return Palette.tuning(Double(shown), locked: false)
     }
 
     private func tuningPanel(_ scale: ReadoutScale) -> some View {
@@ -453,7 +479,7 @@ struct TuneView: View {
             readout(scale)
             // Chromatic has no strings to quest over; the simple tuner has no quest line.
             if !store.referenceMode && !store.settings.simpleTuner { questLine }
-            StringRail(motion: motion).opacity(store.referenceMode ? 0 : 1).frame(height: store.referenceMode ? 8 : nil)
+            StringRail(motion: motion, latch: latch).opacity(store.referenceMode ? 0 : 1).frame(height: store.referenceMode ? 8 : nil)
         }
         .padding(.bottom, 8)
     }
@@ -479,19 +505,32 @@ struct TuneView: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// Strum to tune and listening, stacked beside the instrument (in the iPad's landscape columns, on their own rail),
-    /// each captioned the same way. AUTO | MANUAL and the reference tone carry their words on the bar under the stage.
+    /// Strum to tune, Tune by feel and listening, stacked beside the instrument (in the iPad's landscape columns, on
+    /// their own rail), each captioned the same way. Auto | Manual and the reference tone carry their words on the
+    /// bar under the stage. A short stage (a small phone, a large text size) packs them closer, then drops the
+    /// captions (each control keeps its VoiceOver label and the Large Content Viewer); only where even that can't fit
+    /// does Tune by feel wait in Settings.
     private var sideControls: some View {
-        VStack(spacing: 14) {
-            StrumToggle { strumOpen = true }.strumTuneTip()  // TipKit coach mark, Tips/TimbreTips.swift
-            ListenOrb(captioned: true)
+        ViewThatFits(in: .vertical) {
+            sideColumn(spacing: 14, captioned: true, feel: true)
+            sideColumn(spacing: 6, captioned: true, feel: true)
+            sideColumn(spacing: 6, captioned: false, feel: true)
+            sideColumn(spacing: 14, captioned: true, feel: false)
+        }
+    }
+
+    private func sideColumn(spacing: CGFloat, captioned: Bool, feel: Bool) -> some View {
+        VStack(spacing: spacing) {
+            StrumToggle(captioned: captioned) { strumOpen = true }.strumTuneTip()  // TipKit coach marks, Tips/TimbreTips.swift
+            if feel && TuneByFeel.available { FeelToggle(captioned: captioned).tuneByFeelTip() }
+            ListenOrb(captioned: captioned)
         }
     }
 
     /// The strip under the stage that the bar stands in: the bar (44), a gap above it and its margin below.
     static let stageBarClearance: CGFloat = 54
 
-    /// The controls standing on the stage: the bar in its strip under it (AUTO | MANUAL and the reference tone) and,
+    /// The controls standing on the stage: the bar in its strip under it (Auto | Manual and the reference tone) and,
     /// when `rail`, Strum and listening on the stage's trailing edge, centred in the height above the bar.
     private func stageControls(rail: Bool) -> some View {
         VStack(spacing: 4) {
@@ -507,7 +546,7 @@ struct TuneView: View {
         }
     }
 
-    /// AUTO | MANUAL and the reference tone, on glass under the stage (TunerControls.swift).
+    /// Auto | Manual and the reference tone, on glass under the stage (TunerControls.swift).
     private var stageBar: some View {
         TunerStageBar(automatic: store.automatic, chromatic: store.referenceMode, listening: audio.running,
                       tonePlaying: audio.tonePlaying,
@@ -532,7 +571,7 @@ struct StageControl: View {
     }
 }
 
-/// The caption under a stage control ("Strum", "Listen"): Sora 10 on the caption2 curve (`Typeface.badge`), mint while
+/// The caption under a stage control ("Strum", "Feel", "Listen"): Sora 12 on the caption2 curve (`Typeface.badge`), mint while
 /// the control is on. It grows up to the first accessibility size, then holds so the column of controls keeps its
 /// shape over the instrument; past that a long press shows it large (each control offers the Large Content Viewer).
 /// The control's own VoiceOver label carries the words.
@@ -714,14 +753,18 @@ struct ReadoutScale: Equatable {
     var large: Bool { note > 112 }
 }
 
-/// Warm or cool light behind the stage that follows the pitch.
+/// Warm or cool light behind the stage that follows the pitch, mint and brighter while a lock is on screen.
 struct PitchAura: View {
+    let latch: LockLatch
+    let listening: Bool
     @EnvironmentObject private var store: AppStore
     var body: some View {
         let reading = store.live.reading
-        let color = Palette.tuning(reading.cents, locked: reading.inTune)
-        RadialGradient(colors: [color.opacity(reading.cents == nil ? 0 : (reading.inTune ? 0.28 : 0.14)), .clear], center: UnitPoint(x: 0.5, y: 0.42), startRadius: 20, endRadius: 360)
+        let locked = latch.shows(reading, listening: listening, shown: nil)
+        let color = locked ? Palette.mint : Palette.tuning(reading.cents, locked: false)
+        let strength = locked ? 0.28 : (reading.cents == nil ? 0 : 0.14)
+        RadialGradient(colors: [color.opacity(strength), .clear], center: UnitPoint(x: 0.5, y: 0.42), startRadius: 20, endRadius: 360)
             .ignoresSafeArea()
-            .animation(Motion.fade, value: reading.inTune)
+            .animation(Motion.fade, value: locked)
     }
 }

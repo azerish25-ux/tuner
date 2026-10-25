@@ -528,6 +528,8 @@ struct StrumTuneView: View {
 /// 3 to 12 strings, one the player may tune, never in Chromatic. Bowed strings are plucked, not strummed: there it
 /// reads "Pluck all", with a fingertip on each string (`AppStore.strumPlucks`).
 struct StrumToggle: View {
+    /// "Strum" (or "Pluck all") under the disc; a short stage drops it (`TuneView.sideControls`).
+    var captioned = true
     let action: () -> Void
     @EnvironmentObject private var store: AppStore
 
@@ -543,7 +545,7 @@ struct StrumToggle: View {
                         .frame(width: 22, height: 22)
                         .frame(width: 44, height: 44)
                         .stageControlDisc()
-                    StageCaption(text: Text(plucks ? "Pluck all" : "Strum"))
+                    if captioned { StageCaption(text: Text(plucks ? "Pluck all" : "Strum")) }
                 }
                 .contentShape(Rectangle())
             }
