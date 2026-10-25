@@ -81,6 +81,7 @@ struct PitchSniperView: View {
                         Text(parts.name).font(Typeface.note(64)).foregroundStyle(Palette.ink)
                         Text(parts.octave).font(Typeface.displayLight(26)).foregroundStyle(Palette.inkFaint)
                     }
+                    .environment(\.layoutDirection, .leftToRight)
                 }
                 .padding(.top, 24)
                 .accessibilityElement(children: .combine)

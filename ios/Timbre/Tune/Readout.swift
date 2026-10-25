@@ -296,6 +296,8 @@ struct NoteReadout: View {
                     .minimumScaleFactor(0.6).lineLimit(1)
                 Text(parts.octave).font(Typeface.displayLight(30 * grow)).foregroundStyle(octaveColor)
             }
+            // A note name reads left to right in every language: "E₂", never "₂E" in Arabic or Hebrew.
+            .environment(\.layoutDirection, .leftToRight)
             .shadow(color: locked ? Palette.mint.opacity(0.6) : .clear, radius: 26 * grow)
             Group {
                 switch detail {
