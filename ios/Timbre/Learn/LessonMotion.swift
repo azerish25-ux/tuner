@@ -7,7 +7,7 @@ import TimbreCore
 /// Whether a lesson can hear the instrument at all. Without it (permission refused, or the microphone
 /// failed to start), an instrument's rhythm steps fall back to tapping the screen: practice mode.
 enum LessonMicrophone {
-    /// Screenshot and UI-test runs (TIMBRE_DEMO_PITCH=1, debug builds only) feed a demo pitch instead of the
+    /// UI-test and store-capture runs (TIMBRE_DEMO_PITCH=1, debug builds only) feed a demo pitch instead of the
     /// microphone. It has a pitch but no strokes, so rhythm steps play the strums themselves (`RhythmStep`).
     static var demo: Bool {
         #if DEBUG

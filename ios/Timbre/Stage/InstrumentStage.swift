@@ -65,7 +65,7 @@ final class StageController {
     /// for, so the model appears at the placeholder's framing instead of holding the whole instrument first.
     var revealClose = false
     private var model: Entity?
-    private(set) var rig: InstrumentRig?
+    private var rig: InstrumentRig?
     private var pegs: [String: (entity: Entity, base: simd_quatf, position: SIMD3<Float>)] = [:]
     private var posts: [String: (entity: Entity, base: simd_quatf)] = [:]
     /// Each post's centre in model space (by peg name), measured once as the model goes on stage: where the string
@@ -147,6 +147,13 @@ final class StageController {
         subscription = content.subscribe(to: SceneEvents.Update.self) { [weak self] event in
             MainActor.assumeIsolated { self?.tick(Float(event.deltaTime)) }
         }
+    }
+
+    /// The 3D view is going away (the stage rests on its picture): its frames stop until it attaches again.
+    func detach() {
+        subscription?.cancel()
+        subscription = nil
+        frames = 0
     }
 
     /// Asks for `modelID` on stage. A model other than the last one asked for clears the stage at once (the old
@@ -937,6 +944,7 @@ struct InstrumentStage: View {
             try? await Task.sleep(for: .seconds(0.7))
             guard !Task.isCancelled else { return }
         }
+        controller.detach()
         mounted = false
     }
 
@@ -945,9 +953,8 @@ struct InstrumentStage: View {
     private func wake() async {
         if !mounted {
             mounted = true
-            let start = controller.frames
             var waited = 0.0
-            while controller.frames < start + 3 && waited < 1.5 {
+            while controller.frames < 3 && waited < 1.5 {
                 try? await Task.sleep(for: .milliseconds(50))
                 guard !Task.isCancelled else { return }
                 waited += 0.05

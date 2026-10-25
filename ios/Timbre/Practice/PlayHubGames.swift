@@ -1,10 +1,10 @@
 import SwiftUI
 import TimbreCore
 
-// The Practice hub's ear games as live cards: each game idles in a small preview of itself (Pitch Sniper's scope,
+// The Practice hub's ear games as live cards: each game idles in a small preview of itself (Bullseye's target,
 // the ear trainer's interval staircase) beside its best score, its level and today's challenge with the XP it
 // pays, all read from saved progress. One timeline per card, paused off screen, still under Reduce Motion.
-// In each card's corner: the game's Game Center leaderboard (Services/GameCenter.swift) and, on Pitch Sniper, a
+// In each card's corner: the game's Game Center leaderboard (Services/GameCenter.swift) and, on Bullseye, a
 // "Beat my score" card to send a friend; a friend's score to beat shows on the card and in the game.
 
 // MARK: - Liveness
@@ -47,7 +47,7 @@ struct GameChallenge {
     let xp: Int
     let done: Int
     let total: Int
-    /// The game whose card this is: its leaderboard chip, and Pitch Sniper's challenge to a friend.
+    /// The game whose card this is: its leaderboard chip, and Bullseye's challenge to a friend.
     var game: PlayGame? = nil
     var complete: Bool { done >= total }
     var fraction: Double { Double(min(done, total)) / Double(max(1, total)) }
@@ -100,7 +100,7 @@ struct GameChallenge {
     }
 }
 
-/// Pitch Sniper's level, from lifetime bullseyes: level 2 at the first, then further apart.
+/// Bullseye's level, from lifetime bullseyes: level 2 at the first, then further apart.
 enum SniperRank {
     static let floors = [0, 1, 6, 15, 30, 50, 80, 120, 175, 250, 350, 500]
     static func level(bullseyes: Int) -> Int {
@@ -117,6 +117,8 @@ struct PlayGameCard<Preview: View>: View {
     let stats: Text
     let challenge: GameChallenge
     let tint: Color
+    /// What the game asks, under its name ("Play the note. Hold the bullseye.").
+    var about: Text? = nil
     /// iPad: the card stands tall, the game idling across its top at this height and the words under it. Nil: the
     /// phone's card, the game beside the words.
     var heroHeight: CGFloat? = nil
@@ -186,6 +188,10 @@ struct PlayGameCard<Preview: View>: View {
         let large = typeSize.isAccessibilitySize
         return VStack(alignment: .leading, spacing: 5) {
             CardTitle(title)
+            if let about {
+                about.font(.footnote).foregroundStyle(Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             stats.font(.footnote).foregroundStyle(Palette.inkSoft)
                 .lineLimit(large ? nil : 1).minimumScaleFactor(large ? 1 : 0.8)
             if challenge.game == .sniper, let friend = center.challenge {
@@ -200,7 +206,7 @@ struct PlayGameCard<Preview: View>: View {
     }
 }
 
-/// A friend's challenge on the Pitch Sniper card: "Beat 1,650" until a game passes it, then "1,650 beaten".
+/// A friend's challenge on the Bullseye card: "Beat 1,650" until a game passes it, then "1,650 beaten".
 private struct FriendTargetLine: View {
     let challenge: SniperChallenge
 
@@ -224,9 +230,9 @@ private struct FriendTargetLine: View {
     }
 }
 
-/// The game card's corner: Pitch Sniper's "Challenge" once there is a best to send (the best on a card, with a link that
+/// The game card's corner: Bullseye's "Challenge" once there is a best to send (the best on a card, with a link that
 /// opens the game with it to beat), and the game's Game Center leaderboard once Game Center is on and has the board,
-/// with this week's rank on Pitch Sniper's.
+/// with this week's rank on Bullseye's.
 private struct GameCardCorner: View {
     let game: PlayGame
     @EnvironmentObject private var store: AppStore
@@ -272,8 +278,8 @@ private struct GameCardCorner: View {
     }
 }
 
-/// "Challenge": the best score as a "Beat my score" card for the share sheet, sent with the link that opens Pitch
-/// Sniper with it to beat. The card is drawn a moment after the hub settles, again only when the best changes.
+/// "Challenge": the best score as a "Beat my score" card for the share sheet, sent with the link that opens Bullseye
+/// with it to beat. The card is drawn a moment after the hub settles, again only when the best changes.
 private struct ChallengeShareButton: View {
     let score: Int
     @State private var card: Image?
@@ -312,17 +318,17 @@ private struct ChallengeShareButton: View {
 
 // MARK: - Challenges
 
-/// "Beat my score": a Pitch Sniper best as a poster for the share sheet: the scope with a pitch held in the bullseye,
+/// "Beat my score": a Bullseye best as a poster for the share sheet: the target with a pitch held in the bullseye,
 /// the score in gold under it. Only the score, never a name.
 struct SniperChallengeCard: View {
     let score: Int
 
     var body: some View {
         ShareCardFrame(glow: Palette.mint, signature: true) {
-            Label("Bullseye", systemImage: "scope").font(Typeface.label(12)).foregroundStyle(Palette.mint)
+            Label("Bullseye", systemImage: "target").font(Typeface.label(12)).foregroundStyle(Palette.mint)
         } content: {
             Canvas { context, size in
-                SniperScopeArt.draw(&context, size: size, t: SniperScopeArt.stillTime)
+                BullseyeArt.draw(&context, size: size, t: BullseyeArt.stillTime)
             }
             .frame(width: 210, height: 210)
             VStack(spacing: 2) {
@@ -335,7 +341,7 @@ struct SniperChallengeCard: View {
     }
 }
 
-/// Pitch Sniper's header while a friend's challenge stands: "Beat 1,650" in amber, mint and ticked once this game passes it.
+/// Bullseye's header while a friend's challenge stands: "Beat 1,650" in amber, mint and ticked once this game passes it.
 struct SniperChallengeTarget: View {
     /// This game's score so far.
     let score: Int
@@ -362,7 +368,7 @@ struct SniperChallengeTarget: View {
     }
 }
 
-/// Under Pitch Sniper's result while a friend's challenge stands: "You beat 1,650" and "Send it back" (this game's score
+/// Under Bullseye's result while a friend's challenge stands: "You beat 1,650" and "Send it back" (this game's score
 /// as the next challenge), or how many points it fell short by.
 struct SniperChallengeResult: View {
     /// The finished game's score.
@@ -416,6 +422,7 @@ struct SniperChallengeResult: View {
 /// "Today’s challenge", then its goal, a ring of today's progress toward it and the XP it pays (ticked once done).
 private struct ChallengeChip: View {
     let challenge: GameChallenge
+    @EnvironmentObject private var store: AppStore
 
     var body: some View {
         let complete = challenge.complete
@@ -430,7 +437,8 @@ private struct ChallengeChip: View {
                     .lineLimit(2).minimumScaleFactor(0.85)
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                xp(complete: complete)
+                // Calm mode (`UserSettings.calmMode`): the challenge without its XP.
+                if !store.settings.calmMode { xp(complete: complete) }
             }
             .padding(.leading, 8).padding(.trailing, 6).padding(.vertical, 7)
             .background(RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous).fill(.white.opacity(0.05)))
@@ -469,27 +477,29 @@ private struct ChallengeChip: View {
     }
 }
 
-// MARK: - Pitch Sniper preview
+// MARK: - Bullseye preview
 
-/// Pitch Sniper idling: the scope's cents rings under a slow radar sweep, a pitch dot drifting in from the edge,
-/// settling in the bullseye while the hold arc fills, a flash as it scores; then another from a new angle.
-struct SniperScopePreview: View {
+/// Bullseye idling: the target's cents rings, a pitch drifting in from the edge while rings of sound leave the centre,
+/// settling in the bullseye as the hold arc fills, a flash as it scores; then another from a new side.
+struct BullseyePreview: View {
     var live = true
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 30, paused: !live || reduceMotion)) { timeline in
-            let t = reduceMotion ? SniperScopeArt.stillTime : timeline.date.timeIntervalSinceReferenceDate
+            let t = reduceMotion ? BullseyeArt.stillTime : timeline.date.timeIntervalSinceReferenceDate
             Canvas { context, size in
-                SniperScopeArt.draw(&context, size: size, t: t)
+                BullseyeArt.draw(&context, size: size, t: t)
             }
         }
         .accessibilityHidden(true)
     }
 }
 
-enum SniperScopeArt {
-    /// One shot: in from the edge, held in the bullseye, scored.
+/// The Bullseye game in miniature: the target's rings (50, 20 and 5 cents), a pitch homing in from a new side each
+/// time, held in the bullseye while rings of sound leave it, then scored.
+enum BullseyeArt {
+    /// One note: in from the edge, held in the bullseye, scored.
     static let period = 5.2
     /// Reduce Motion's frame: the dot in the bullseye with its hold arc a third full.
     static let stillTime = period * 0.63
@@ -500,48 +510,52 @@ enum SniperScopeArt {
         let bull = r * 0.15
         context.fill(circle(c, r * 1.2), with: .radialGradient(Gradient(colors: [Palette.mint.opacity(0.13), .clear]),
                                                                 center: c, startRadius: 0, endRadius: r * 1.2))
-        // 50, 20 and 5 cents out from the bullseye: the game's own rings.
+        rings(&context, center: c, radius: r)
+        let note = noteState(t: t)
+        let p = CGPoint(x: c.x + CGFloat(cos(note.angle) * note.distance) * r, y: c.y + CGFloat(sin(note.angle) * note.distance) * r)
+        let inside = note.distance * Double(r) <= Double(bull)
+        resonance(&context, center: c, from: bull, to: r, t: t, strength: note.alpha * max(0, 1 - note.distance / 0.9),
+                  tint: inside ? Palette.mint : Palette.amber)
+        context.fill(circle(c, bull), with: .color(Palette.mint.opacity(0.16 + 0.4 * note.flash)))
+        context.stroke(circle(c, bull), with: .color(Palette.mint), lineWidth: 1.5)
+        if note.flash > 0 {
+            let radius = bull + CGFloat(1 - note.flash) * r * 0.7
+            context.stroke(circle(c, radius), with: .color(Palette.mint.opacity(0.8 * note.flash)), lineWidth: 2)
+        }
+        if note.hold > 0 {
+            var arc = Path()
+            arc.addArc(center: c, radius: bull + 6, startAngle: .degrees(-90), endAngle: .degrees(-90 + 360 * note.hold), clockwise: false)
+            context.stroke(arc, with: .color(Palette.mint), style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
+        }
+        guard note.alpha > 0 else { return }
+        let tint = inside ? Palette.mint : Palette.amber
+        context.fill(circle(p, 15), with: .radialGradient(Gradient(colors: [tint.opacity(0.55 * note.alpha), .clear]),
+                                                          center: p, startRadius: 0, endRadius: 15))
+        context.fill(circle(p, 5.5), with: .color(tint.opacity(note.alpha)))
+    }
+
+    /// The target: rings at 50 and 20 cents in white, the 5-cent ring in amber.
+    static func rings(_ context: inout GraphicsContext, center c: CGPoint, radius r: CGFloat) {
         context.stroke(circle(c, r), with: .color(.white.opacity(0.11)), lineWidth: 1)
         context.stroke(circle(c, r * 0.71), with: .color(.white.opacity(0.09)), lineWidth: 1)
         context.stroke(circle(c, r * 0.4), with: .color(Palette.amber.opacity(0.45)), lineWidth: 1)
-        for (dx, dy) in [(0.0, -1.0), (0.0, 1.0), (-1.0, 0.0), (1.0, 0.0)] {
-            var tick = Path()
-            tick.move(to: CGPoint(x: c.x + CGFloat(dx) * r * 1.06, y: c.y + CGFloat(dy) * r * 1.06))
-            tick.addLine(to: CGPoint(x: c.x + CGFloat(dx) * r * 0.8, y: c.y + CGFloat(dy) * r * 0.8))
-            context.stroke(tick, with: .color(.white.opacity(0.2)), lineWidth: 1)
-        }
-
-        let sweepAngle = t * 1.7
-        sweep(&context, center: c, radius: r, angle: sweepAngle)
-
-        let shot = shotState(t: t)
-        let p = CGPoint(x: c.x + CGFloat(cos(shot.angle) * shot.distance) * r, y: c.y + CGFloat(sin(shot.angle) * shot.distance) * r)
-        let inside = shot.distance * Double(r) <= Double(bull)
-        context.fill(circle(c, bull), with: .color(Palette.mint.opacity(0.16 + 0.4 * shot.flash)))
-        context.stroke(circle(c, bull), with: .color(Palette.mint), lineWidth: 1.5)
-        if shot.flash > 0 {
-            let radius = bull + CGFloat(1 - shot.flash) * r * 0.7
-            context.stroke(circle(c, radius), with: .color(Palette.mint.opacity(0.8 * shot.flash)), lineWidth: 2)
-        }
-        if shot.hold > 0 {
-            var arc = Path()
-            arc.addArc(center: c, radius: bull + 6, startAngle: .degrees(-90), endAngle: .degrees(-90 + 360 * shot.hold), clockwise: false)
-            context.stroke(arc, with: .color(Palette.mint), style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
-        }
-        guard shot.alpha > 0 else { return }
-        // A blip as the sweep passes over the dot.
-        let gap = abs((sweepAngle - shot.angle).remainder(dividingBy: 2 * Double.pi))
-        let blip = shot.distance > 0.08 ? max(0, 1 - gap / 0.7) : 0
-        let tint = inside ? Palette.mint : Palette.amber
-        let halo = CGFloat(15 + 7 * blip)
-        context.fill(circle(p, halo), with: .radialGradient(Gradient(colors: [tint.opacity((0.55 + 0.3 * blip) * shot.alpha), .clear]),
-                                                            center: p, startRadius: 0, endRadius: halo))
-        context.fill(circle(p, 5.5), with: .color(tint.opacity(shot.alpha)))
     }
 
-    /// Where the dot is in its shot: distance from the centre (share of the outer ring), angle, the hold arc,
+    /// Rings of sound leaving the bullseye like a struck bell's, three at a time, brighter as `strength` (0…1, how
+    /// near the pitch is) rises; nothing at all far off.
+    static func resonance(_ context: inout GraphicsContext, center c: CGPoint, from inner: CGFloat, to outer: CGFloat,
+                          t: Double, strength: Double, tint: Color) {
+        guard strength > 0.02 else { return }
+        for k in 0..<3 {
+            let phase = (t * 0.8 + Double(k) / 3).truncatingRemainder(dividingBy: 1)
+            let radius = inner + CGFloat(phase) * (outer - inner)
+            context.stroke(circle(c, radius), with: .color(tint.opacity((1 - phase) * strength * 0.55)), lineWidth: 1.5)
+        }
+    }
+
+    /// Where the pitch is in its note: distance from the centre (share of the outer ring), angle, the hold arc,
     /// the score flash and how visible it is.
-    private struct Shot {
+    private struct Note {
         var distance = 0.0
         var angle = 0.0
         var hold = 0.0
@@ -549,49 +563,30 @@ enum SniperScopeArt {
         var alpha = 1.0
     }
 
-    private static func shotState(t: Double) -> Shot {
+    private static func noteState(t: Double) -> Note {
         let index = floor(t / period)
         let u = (t - index * period) / period
-        // Each shot comes in from a new side (the golden angle apart).
+        // Each note comes in from a new side (the golden angle apart).
         let start = index.truncatingRemainder(dividingBy: 97) * 2.399963
         let approach = 0.55, holdEnd = 0.8
-        var shot = Shot()
+        var note = Note()
         if u < approach {
             let f = u / approach
             let eased = 1 - pow(1 - f, 3)
-            shot.distance = max(0, 0.9 * (1 - eased) + 0.05 * sin(f * 9) * (1 - f))
-            shot.angle = start + 1.1 * f + 0.25 * sin(f * 7)
-            shot.alpha = min(1, f * 6)
+            note.distance = max(0, 0.9 * (1 - eased) + 0.05 * sin(f * 9) * (1 - f))
+            note.angle = start + 1.1 * f + 0.25 * sin(f * 7)
+            note.alpha = min(1, f * 6)
         } else if u < holdEnd {
-            shot.distance = 0.02 + 0.02 * sin(t * 9)
-            shot.angle = start + 1.1 + t * 2
-            shot.hold = (u - approach) / (holdEnd - approach)
+            note.distance = 0.02 + 0.02 * sin(t * 9)
+            note.angle = start + 1.1 + t * 2
+            note.hold = (u - approach) / (holdEnd - approach)
         } else {
             let f = (u - holdEnd) / (1 - holdEnd)
-            shot.flash = 1 - f
-            shot.alpha = max(0, 1 - f * 2.5)
-            shot.angle = start + 1.1
+            note.flash = 1 - f
+            note.alpha = max(0, 1 - f * 2.5)
+            note.angle = start + 1.1
         }
-        return shot
-    }
-
-    /// The radar sweep: a wedge that fades behind its leading edge.
-    private static func sweep(_ context: inout GraphicsContext, center c: CGPoint, radius r: CGFloat, angle: Double) {
-        let steps = 12, span = 0.95
-        for i in 0..<steps {
-            let from = angle - span * Double(i + 1) / Double(steps)
-            let to = angle - span * Double(i) / Double(steps)
-            var wedge = Path()
-            wedge.move(to: c)
-            wedge.addArc(center: c, radius: r, startAngle: .radians(from), endAngle: .radians(to), clockwise: false)
-            wedge.closeSubpath()
-            context.fill(wedge, with: .color(Palette.mint.opacity(0.15 * (1 - Double(i) / Double(steps)))))
-        }
-        let end = CGPoint(x: c.x + CGFloat(cos(angle)) * r, y: c.y + CGFloat(sin(angle)) * r)
-        var edge = Path()
-        edge.move(to: c)
-        edge.addLine(to: end)
-        context.stroke(edge, with: .linearGradient(Gradient(colors: [Palette.mint.opacity(0), Palette.mint.opacity(0.75)]), startPoint: c, endPoint: end), lineWidth: 1.5)
+        return note
     }
 
     static func circle(_ center: CGPoint, _ radius: CGFloat) -> Path {
@@ -691,17 +686,17 @@ enum IntervalStairsArt {
             arc.addQuadCurve(to: note, control: CGPoint(x: (root.x + note.x) / 2, y: min(root.y, note.y) - 24))
             context.stroke(arc, with: .color(Palette.amber.opacity(0.45 * fade)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
         }
-        context.fill(SniperScopeArt.circle(root, 3), with: .color(Palette.amber.opacity(0.6 * fade)))
+        context.fill(BullseyeArt.circle(root, 3), with: .color(Palette.amber.opacity(0.6 * fade)))
 
         let since = u - landing(current)
         if since >= 0 && since < 0.45 {
             let ripple = noteR + CGFloat(since / 0.45) * 14
-            context.stroke(SniperScopeArt.circle(note, ripple), with: .color(Palette.amber.opacity(0.7 * (1 - since / 0.45) * fade)), lineWidth: 1.5)
+            context.stroke(BullseyeArt.circle(note, ripple), with: .color(Palette.amber.opacity(0.7 * (1 - since / 0.45) * fade)), lineWidth: 1.5)
         }
-        context.fill(SniperScopeArt.circle(note, 15), with: .radialGradient(Gradient(colors: [Palette.amber.opacity(0.55 * fade), .clear]),
+        context.fill(BullseyeArt.circle(note, 15), with: .radialGradient(Gradient(colors: [Palette.amber.opacity(0.55 * fade), .clear]),
                                                                            center: note, startRadius: 0, endRadius: 15))
-        context.fill(SniperScopeArt.circle(note, noteR), with: .color(Palette.amber.opacity(fade)))
-        context.fill(SniperScopeArt.circle(CGPoint(x: note.x - 1.5, y: note.y - 1.5), 2), with: .color(.white.opacity(0.8 * fade)))
+        context.fill(BullseyeArt.circle(note, noteR), with: .color(Palette.amber.opacity(fade)))
+        context.fill(BullseyeArt.circle(CGPoint(x: note.x - 1.5, y: note.y - 1.5), 2), with: .color(.white.opacity(0.8 * fade)))
 
         let name = Intervals.short[semitones[current]]
         let label = Text(verbatim: name).font(Typeface.label(12)).foregroundStyle(Palette.amber.opacity(fade))

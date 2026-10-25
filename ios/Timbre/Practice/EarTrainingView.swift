@@ -250,9 +250,9 @@ struct EarTrainingView: View {
         .accessibilityIdentifier("ear.play")
     }
 
-    /// "+2 XP" rising over the staircase's corner on a right answer.
+    /// "+2 XP" rising over the staircase's corner on a right answer (none in Calm mode, `UserSettings.calmMode`).
     @ViewBuilder private var xpFloat: some View {
-        if showXP {
+        if showXP && !store.settings.calmMode {
             Text("+\(XPReward.earCorrect) XP").font(Typeface.label(13)).foregroundStyle(Palette.onAccent)
                 .padding(.horizontal, 10).padding(.vertical, 5)
                 .background(Capsule().fill(Palette.mint))
@@ -405,7 +405,7 @@ struct EarTrainingView: View {
             }
             StatTileRow {
                 StatTile(symbol: "sparkles", tint: Palette.mint, value: Text("+\(shownXP)"), label: "XP", alignment: .center)
-                StatTile(symbol: "scope", tint: Palette.amber, value: Text("\(accuracy)%"), label: "accuracy", alignment: .center)
+                StatTile(symbol: "target", tint: Palette.amber, value: Text("\(accuracy)%"), label: "accuracy", alignment: .center)
                 StatTile(symbol: "flame.fill", tint: Palette.flame, value: Text(verbatim: "×" + bestCombo.formatted()), label: "best run",
                          alignment: .center)
             }
@@ -489,8 +489,9 @@ struct EarTrainingView: View {
         if right {
             combo += 1
             bestCombo = max(bestCombo, combo)
-            SoundFX.shared.play(current.level > levelBefore ? .star : .correct)
-            Haptics.shared.lock()
+            // An unpitched knock: a pitched chime would colour the next question's notes.
+            SoundFX.shared.play(.earCorrect)
+            if current.level > levelBefore { Haptics.shared.done() } else { Haptics.shared.lock() }
             burst += 1
             withAnimation(Motion.pluck) { showXP = true }
         } else {
@@ -684,14 +685,23 @@ private struct EarPicture {
         NoteGlyphs.text(notes, size: 15) + Text(verbatim: "  ·  ") + Text(LocalizedStringKey(answer))
     }
 
-    /// For VoiceOver: "A3, E4, Perfect 5th" (no arrows read aloud).
+    /// For VoiceOver: "A3, E4, Perfect 5th" (no arrows read aloud); higher-or-lower's "A3, 35 cents higher".
     func spoken(answer: String) -> Text {
-        Text(verbatim: Self.spokenNotes(notes) + ", ") + Text(LocalizedStringKey(answer))
+        Text(verbatim: spokenNotes + ", ") + Text(LocalizedStringKey(answer))
     }
 
     /// The same, already in words (`answer` localized), for an announcement.
     func spokenString(answer: String) -> String {
-        Self.spokenNotes(notes) + ", " + answer
+        spokenNotes + ", " + answer
+    }
+
+    /// The notes heard, in words: names with their signs (VoiceOver says "E flat 4"), and a detune as cents higher
+    /// or lower rather than "+35¢".
+    private var spokenNotes: String {
+        guard let cents else { return Self.spokenNotes(notes) }
+        let amount = Int(abs(cents).rounded())
+        let move = cents < 0 ? String(localized: "\(amount) cents lower") : String(localized: "\(amount) cents higher")
+        return Self.spokenNotes(name(root)) + ", " + move
     }
 
     static func spokenNotes(_ notes: String) -> String {
@@ -897,8 +907,7 @@ private enum EarStairsArt {
                 context.stroke(arc, with: .color(Palette.amber.opacity(0.5 * alpha)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
             }
             dot(&context, at: point, energy: 0.6 * p, alpha: alpha)
-            let short = Text(verbatim: Intervals.short[semitones]).font(Typeface.label(12)).foregroundStyle(Palette.amber.opacity(alpha))
-            context.draw(short, at: CGPoint(x: min(size.width - 14, max(14, point.x)), y: max(10, point.y - 18)))
+            intervalLabel(&context, semitones: semitones, inWords: targets.count == 1, at: point, width: size.width, alpha: alpha)
             if semitones > 0 {
                 let x = nameX(centerX(semitones))
                 context.draw(noteText(picture.name(picture.root + semitones), color: Palette.ink.opacity(alpha)), at: CGPoint(x: x, y: nameY(x)))
@@ -1006,18 +1015,18 @@ private enum EarStairsArt {
     /// A note: amber with a soft halo that swells with its tone.
     private static func dot(_ context: inout GraphicsContext, at point: CGPoint, energy: Double, alpha: Double) {
         let halo = 14 + 6 * CGFloat(energy)
-        context.fill(SniperScopeArt.circle(point, halo), with: .radialGradient(
+        context.fill(BullseyeArt.circle(point, halo), with: .radialGradient(
             Gradient(colors: [Palette.amber.opacity((0.3 + 0.45 * energy) * alpha), .clear]), center: point, startRadius: 0, endRadius: halo))
-        context.fill(SniperScopeArt.circle(point, noteR), with: .color(Palette.amber.opacity(alpha)))
-        context.fill(SniperScopeArt.circle(CGPoint(x: point.x - 1.5, y: point.y - 1.5), 2), with: .color(.white.opacity(0.8 * alpha)))
+        context.fill(BullseyeArt.circle(point, noteR), with: .color(Palette.amber.opacity(alpha)))
+        context.fill(BullseyeArt.circle(CGPoint(x: point.x - 1.5, y: point.y - 1.5), 2), with: .color(.white.opacity(0.8 * alpha)))
     }
 
     /// A note out of sight: its glow, drawn before the veil so the veil frosts it over.
     private static func hiddenNote(_ context: inout GraphicsContext, at point: CGPoint, energy: Double, alpha: Double) {
         let halo = 20 + 10 * CGFloat(energy)
-        context.fill(SniperScopeArt.circle(point, halo), with: .radialGradient(
+        context.fill(BullseyeArt.circle(point, halo), with: .radialGradient(
             Gradient(colors: [Palette.amber.opacity((0.4 + 0.4 * energy) * alpha), .clear]), center: point, startRadius: 0, endRadius: halo))
-        context.fill(SniperScopeArt.circle(point, noteR), with: .color(Palette.amber.opacity(0.85 * alpha)))
+        context.fill(BullseyeArt.circle(point, noteR), with: .color(Palette.amber.opacity(0.85 * alpha)))
     }
 
     /// The veil over what is still to name: frosted, finely hatched and edged in a dashed line; it lifts as it goes.
@@ -1040,6 +1049,26 @@ private enum EarStairsArt {
         context.stroke(shape, with: .color(Palette.amber.opacity(0.3 * alpha)), style: StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
     }
 
+    /// An answered note's interval over it: in words for an interval ("Perfect 5th", as the buttons name it), kept
+    /// clear of the edges; a chord's notes, side by side, by their short names (M3, P5).
+    private static func intervalLabel(_ context: inout GraphicsContext, semitones: Int, inWords: Bool, at point: CGPoint,
+                                      width: CGFloat, alpha: Double) {
+        let y = max(10, point.y - 18)
+        guard inWords else {
+            let short = Text(verbatim: Intervals.short[semitones]).font(Typeface.label(12)).foregroundStyle(Palette.amber.opacity(alpha))
+            context.draw(short, at: CGPoint(x: min(width - 14, max(14, point.x)), y: y))
+            return
+        }
+        let words = Text(LocalizedStringKey(Intervals.names[semitones])).font(Typeface.label(12)).foregroundStyle(Palette.amber.opacity(alpha))
+        if point.x < width * 0.3 {
+            context.draw(words, at: CGPoint(x: max(4, point.x - 10), y: y), anchor: .leading)
+        } else if point.x > width * 0.7 {
+            context.draw(words, at: CGPoint(x: min(width - 4, point.x + 10), y: y), anchor: .trailing)
+        } else {
+            context.draw(words, at: CGPoint(x: point.x, y: y))
+        }
+    }
+
     /// A place the hidden note may land: a dashed mark at its height and the answer it would be, named.
     private static func slot(_ context: inout GraphicsContext, from start: CGFloat, to end: CGFloat, y: CGFloat, label: String,
                              at labelPoint: CGPoint, anchor: UnitPoint = .center, alpha: Double) {
@@ -1054,7 +1083,7 @@ private enum EarStairsArt {
     /// The notes still to name: a "?" in a glow that swells with their tone.
     private static func mystery(_ context: inout GraphicsContext, at point: CGPoint, energy: Double, alpha: Double) {
         let halo = 18 + 10 * CGFloat(energy)
-        context.fill(SniperScopeArt.circle(point, halo), with: .radialGradient(
+        context.fill(BullseyeArt.circle(point, halo), with: .radialGradient(
             Gradient(colors: [Palette.amber.opacity((0.12 + 0.35 * energy) * alpha), .clear]), center: point, startRadius: 0, endRadius: halo))
         let mark = Text(verbatim: "?").font(Typeface.display(28)).foregroundStyle(Palette.amber.opacity((0.45 + 0.55 * energy) * alpha))
         context.draw(mark, at: point)

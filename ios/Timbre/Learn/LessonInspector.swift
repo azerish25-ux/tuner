@@ -376,9 +376,12 @@ enum LessonPreview {
         return .art
     }
 
+    /// No picture to draw still: none, or a clip (a moving demonstration, and not bundled for every lesson).
     private static func isBlank(_ visual: LessonVisual) -> Bool {
-        if case .none = visual { return true }
-        return false
+        switch visual {
+        case .none, .clip: return true
+        default: return false
+        }
     }
 
     /// The first notes (up to eight different ones) where they're played: dots on the course's neck, or a staff for a

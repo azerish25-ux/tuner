@@ -353,7 +353,7 @@ struct DailySetCard: View {
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 rowTitle(kind, done: done)
                 if kind == .review && !done { ReviewDueBadge(count: store.dailyReviewDueCount) }  // spaced review (Learn/WeakSpotReview.swift)
-                if xpBesideName, let quest { xpTag(quest) }
+                if xpBesideName, !store.settings.calmMode, let quest { xpTag(quest) }
                 Spacer(minLength: 4)
                 if locked {
                     ProLock(size: 22)
@@ -371,7 +371,7 @@ struct DailySetCard: View {
                     } else {
                         Spacer(minLength: 0)
                     }
-                    if let belowXP { xpTag(belowXP) }
+                    if let belowXP, !store.settings.calmMode { xpTag(belowXP) }
                 }
             }
         }
@@ -396,7 +396,7 @@ struct DailySetCard: View {
     }
 
     /// The quest's XP as a small pill that fills as the quest does (its progress bar and its reward in one),
-    /// ticked once it has paid today. 12 pt like every other XP pill: at 10 it was the hardest text on the card to read.
+    /// ticked once it has paid today. 12 pt like every other XP pill. Calm mode (`UserSettings.calmMode`) shows none.
     private func xpTag(_ quest: Quest) -> some View {
         let count = store.questCounter(quest)
         let claimed = store.questProgress(quest) >= quest.target

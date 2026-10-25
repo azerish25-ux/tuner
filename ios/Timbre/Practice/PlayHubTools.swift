@@ -251,10 +251,10 @@ enum MetronomePreviewArt {
 
         // The light at the foot, on every tick.
         let glow = CGFloat(5 + 9 * flash)
-        context.fill(SniperScopeArt.circle(pivot, glow),
+        context.fill(BullseyeArt.circle(pivot, glow),
                      with: .radialGradient(Gradient(colors: [accent.opacity((running ? 0.8 : 0.55) * flash), .clear]),
                                            center: pivot, startRadius: 0, endRadius: glow))
-        context.fill(SniperScopeArt.circle(pivot, 2.6), with: .color(accent.opacity(0.6 + 0.4 * flash)))
+        context.fill(BullseyeArt.circle(pivot, 2.6), with: .color(accent.opacity(0.6 + 0.4 * flash)))
     }
 }
 
@@ -350,25 +350,25 @@ enum DroneDialArt {
         let lift = running ? 1.0 : 0.65
 
         // The room it fills, and a ripple leaving the gourd with each pluck.
-        context.fill(SniperScopeArt.circle(c, r * 1.55),
+        context.fill(BullseyeArt.circle(c, r * 1.55),
                      with: .radialGradient(Gradient(colors: [Palette.amber.opacity((0.07 + 0.14 * resonance) * lift), .clear]),
                                            center: c, startRadius: r * 0.5, endRadius: r * 1.55))
         if !pure {
             for string in 0..<DroneCycle.strings {
                 guard let age = moment.age[string], age < 1.4 else { continue }
                 let f = age / 1.4
-                context.stroke(SniperScopeArt.circle(c, r + 2 + CGFloat(f) * 12), with: .color(Palette.mint.opacity(0.5 * (1 - f) * lift)),
+                context.stroke(BullseyeArt.circle(c, r + 2 + CGFloat(f) * 12), with: .color(Palette.mint.opacity(0.5 * (1 - f) * lift)),
                                lineWidth: string == 3 ? 1.5 : 1.1)
             }
         }
 
         // The gourd and its dial: twelve ticks, the tonic's at the bottom.
         let wood = Gradient(colors: [Color(hex: 0x30261C), Color(hex: 0x1A1511), Palette.stageRaised])
-        context.fill(SniperScopeArt.circle(c, r), with: .radialGradient(wood, center: CGPoint(x: c.x - r * 0.3, y: c.y - r * 0.35),
+        context.fill(BullseyeArt.circle(c, r), with: .radialGradient(wood, center: CGPoint(x: c.x - r * 0.3, y: c.y - r * 0.35),
                                                                          startRadius: 0, endRadius: r * 1.35))
-        context.fill(SniperScopeArt.circle(c, r), with: .radialGradient(Gradient(colors: [Palette.mint.opacity(0.12 * resonance), .clear]),
+        context.fill(BullseyeArt.circle(c, r), with: .radialGradient(Gradient(colors: [Palette.mint.opacity(0.12 * resonance), .clear]),
                                                                          center: c, startRadius: 0, endRadius: r))
-        context.stroke(SniperScopeArt.circle(c, r), with: .color(Palette.amber.opacity(0.32)), lineWidth: 1.2)
+        context.stroke(BullseyeArt.circle(c, r), with: .color(Palette.amber.opacity(0.32)), lineWidth: 1.2)
         var ticks = Path()
         for i in 0..<12 where i != 6 {
             let a = Double(i) * Double.pi / 6
@@ -593,7 +593,7 @@ enum ChordPreviewArt {
         }
         if fret == 0 {
             let radius: CGFloat = compact ? 1.1 : 3
-            context.stroke(SniperScopeArt.circle(CGPoint(x: x, y: markY), radius),
+            context.stroke(BullseyeArt.circle(CGPoint(x: x, y: markY), radius),
                            with: .color((lit > 0.05 ? tint : Palette.ink.opacity(0.6)).opacity(presence)), lineWidth: compact ? 0.7 : 1.2)
             return
         }
@@ -603,11 +603,11 @@ enum ChordPreviewArt {
         let full = max(compact ? 1.7 : 3, min(gap, fretH) * 0.36)
         let radius = full * CGFloat(0.6 + 0.4 * presence)
         if !compact && lit > 0.05 {
-            context.fill(SniperScopeArt.circle(center, full * 2.6),
+            context.fill(BullseyeArt.circle(center, full * 2.6),
                          with: .radialGradient(Gradient(colors: [tint.opacity(0.5 * lit * presence), .clear]),
                                                center: center, startRadius: 0, endRadius: full * 2.6))
         }
-        context.fill(SniperScopeArt.circle(center, radius), with: .color(tint.opacity(presence)))
+        context.fill(BullseyeArt.circle(center, radius), with: .color(tint.opacity(presence)))
     }
 }
 
@@ -731,16 +731,16 @@ enum ScaleRunArt {
             let tint = box.roots.contains(spot) ? Palette.amber : Palette.mint
             if index == current {
                 if !compact {
-                    context.fill(SniperScopeArt.circle(center, radius * 3),
+                    context.fill(BullseyeArt.circle(center, radius * 3),
                                  with: .radialGradient(Gradient(colors: [tint.opacity(0.55), .clear]), center: center, startRadius: 0, endRadius: radius * 3))
                 }
-                let lit = SniperScopeArt.circle(center, radius + (compact ? 0.8 : 1.5))
+                let lit = BullseyeArt.circle(center, radius + (compact ? 0.8 : 1.5))
                 context.fill(lit, with: .color(tint))
                 context.stroke(lit, with: .color(Palette.ink), lineWidth: compact ? 0.8 : 1.5)
             } else {
-                context.fill(SniperScopeArt.circle(center, radius), with: .color(tint.opacity(compact ? 0.85 : 0.72)))
+                context.fill(BullseyeArt.circle(center, radius), with: .color(tint.opacity(compact ? 0.85 : 0.72)))
                 if let back = trail[index], !compact {
-                    context.stroke(SniperScopeArt.circle(center, radius + 2.5), with: .color(Palette.ink.opacity(0.5 * (1 - Double(back) / 4))), lineWidth: 1.2)
+                    context.stroke(BullseyeArt.circle(center, radius + 2.5), with: .color(Palette.ink.opacity(0.5 * (1 - Double(back) / 4))), lineWidth: 1.2)
                 }
             }
         }
@@ -826,8 +826,8 @@ enum HarmonicNodeArt {
         let rest: CGFloat = compact ? 3 : 5
         let breathe: CGFloat = compact ? 2 : 5
         let ring = rest + CGFloat(pulse) * breathe
-        context.stroke(SniperScopeArt.circle(node, ring), with: .color(Palette.amber.opacity(0.85 - 0.5 * pulse)), lineWidth: compact ? 1 : 1.5)
-        context.fill(SniperScopeArt.circle(node, compact ? 1.6 : 2.6), with: .color(Palette.amber))
+        context.stroke(BullseyeArt.circle(node, ring), with: .color(Palette.amber.opacity(0.85 - 0.5 * pulse)), lineWidth: compact ? 1 : 1.5)
+        context.fill(BullseyeArt.circle(node, compact ? 1.6 : 2.6), with: .color(Palette.amber))
         guard !compact else { return }
         // A harmonic's diamond over it, the fret's number under it.
         let d: CGFloat = 4
@@ -860,7 +860,7 @@ enum HarmonicNodeArt {
         for n in [3, 5, 7, 9, 12, 15, 17] {
             let x = (fretX(n - 1) + fretX(n)) / 2
             let ys: [CGFloat] = n == 12 ? [midY - rect.height * 0.3, midY + rect.height * 0.3] : [midY]
-            for y in ys { context.fill(SniperScopeArt.circle(CGPoint(x: x, y: y), 2), with: .color(.white.opacity(0.12))) }
+            for y in ys { context.fill(BullseyeArt.circle(CGPoint(x: x, y: y), 2), with: .color(.white.opacity(0.12))) }
         }
         var nut = Path()
         nut.move(to: CGPoint(x: x0, y: rect.minY))
@@ -980,9 +980,9 @@ enum VoiceTraceArt {
         let head = CGPoint(x: headX, y: y(now.pitch))
         let tint = abs(now.pitch - Double(now.target)) < 0.3 ? Palette.mint : Palette.sky
         if !compact {
-            context.fill(SniperScopeArt.circle(head, 12), with: .radialGradient(Gradient(colors: [tint.opacity(0.5), .clear]),
+            context.fill(BullseyeArt.circle(head, 12), with: .radialGradient(Gradient(colors: [tint.opacity(0.5), .clear]),
                                                                                 center: head, startRadius: 0, endRadius: 12))
         }
-        context.fill(SniperScopeArt.circle(head, compact ? 2 : 4), with: .color(tint))
+        context.fill(BullseyeArt.circle(head, compact ? 2 : 4), with: .color(tint))
     }
 }

@@ -110,7 +110,7 @@ enum ShowMe {
     static func demoNotes(_ chord: ChordSpec, open: [Int]) -> [(rank: Int, midi: Int, string: Int)] {
         let ranks = ChordDiagram(chord: chord, landingOrder: .fingers).landingRanks
         var byRank: [Int: (midi: Int, string: Int)] = [:]
-        for (i, fret) in chord.frets.enumerated() where fret > 0 && i < open.count && i < ranks.count {
+        for (i, fret) in chord.frets.enumerated() where chord.drawnFingered(i) && i < open.count && i < ranks.count {
             if byRank[ranks[i]] == nil { byRank[ranks[i]] = (midi: open[i] + fret, string: i) }
         }
         return byRank.keys.sorted().compactMap { rank in byRank[rank].map { (rank: rank, midi: $0.midi, string: $0.string) } }
@@ -497,7 +497,8 @@ struct ShowMeButton: View {
             .frame(minHeight: Metrics.minTarget)
             .background { face }
             .overlay(Capsule().strokeBorder(accent.opacity(0.6), lineWidth: 1.2))
-            .shadow(color: accent.opacity(0.28), radius: 12, y: 3)
+            // Glow means live: it lights while the model is on the card.
+            .shadow(color: accent.opacity(showing ? 0.28 : 0), radius: 12, y: 3)
             .contentShape(Capsule())
         }
         .buttonStyle(PressScaleStyle())

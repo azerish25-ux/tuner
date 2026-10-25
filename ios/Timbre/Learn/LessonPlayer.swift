@@ -569,12 +569,12 @@ private struct LessonControlKeys: ViewModifier {
         ZStack {
             switch role {
             case .primary:
-                Button(action: fire) { EmptyView() }.keyboardShortcut(.space, modifiers: [])
-                Button(action: fire) { EmptyView() }.keyboardShortcut(.rightArrow, modifiers: [])
+                Button { fire() } label: { EmptyView() }.keyboardShortcut(.space, modifiers: [])
+                Button { fire() } label: { EmptyView() }.keyboardShortcut(.rightArrow, modifiers: [])
             case .again:
-                Button(action: fire) { EmptyView() }.keyboardShortcut(.leftArrow, modifiers: [])
+                Button { fire() } label: { EmptyView() }.keyboardShortcut(.leftArrow, modifiers: [])
             case .slower:
-                Button(action: fire) { EmptyView() }.keyboardShortcut(.downArrow, modifiers: [])
+                Button { fire() } label: { EmptyView() }.keyboardShortcut(.downArrow, modifiers: [])
             }
         }
         .frame(width: 0, height: 0)

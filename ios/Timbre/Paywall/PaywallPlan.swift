@@ -96,7 +96,7 @@ struct PaywallPlan {
             minutes = answers.minutes
         } else {
             goal = store.settings.goal ?? "practice"
-            instrumentId = store.chromaticStandIn?.id ?? (store.referenceMode ? nil : store.instrument.id)
+            instrumentId = store.referenceMode ? nil : store.instrument.id
             course = store.learnCourse
             start = course.flatMap { store.learn.nextLesson(in: $0) }
             minutes = store.dailyMinutes

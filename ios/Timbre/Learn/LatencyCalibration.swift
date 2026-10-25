@@ -154,6 +154,7 @@ struct LatencyCalibrationSheet: View {
             HStack(spacing: 10) {
                 Button("Try again") { start() }
                     .buttonStyle(SecondaryButtonStyle())
+                    .lessonControl(.again) { start() }
                 StepButton(title: "Done", accent: accent, inset: false) { dismiss() }
             }
             .padding(.horizontal, Metrics.gutter).padding(.bottom, 12)

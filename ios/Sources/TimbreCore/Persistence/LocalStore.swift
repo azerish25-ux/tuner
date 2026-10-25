@@ -21,7 +21,10 @@ public struct UserSettings: Codable, Equatable, Sendable {
     public var lastTuningIds: [String: String] = [:]
     public var selectedInstrumentId = "guitar.acoustic.6"
     public var selectedPhotoAsset: String?
+    /// Never set by any screen; kept so older files still decode. Usage sharing is `shareUsageData`.
     public var telemetryEnabled = false
+    /// Settings › Share anonymous usage data: nil until the player chooses (sharing is on until then, `sharesUsage`).
+    public var shareUsageData: Bool? = nil
     public var selectedVoiceLevel: Int?
     public var onboardingCompleted: Bool?
     public var playerLevel: String?
@@ -127,6 +130,7 @@ extension UserSettings {
         read(&selectedInstrumentId, .selectedInstrumentId)
         read(&selectedPhotoAsset, .selectedPhotoAsset)
         read(&telemetryEnabled, .telemetryEnabled)
+        read(&shareUsageData, .shareUsageData)
         read(&selectedVoiceLevel, .selectedVoiceLevel)
         read(&onboardingCompleted, .onboardingCompleted)
         read(&playerLevel, .playerLevel)
@@ -236,6 +240,11 @@ extension UserSettings {
         guard notationChosen != true, notation == "english" || notation == "german" else { return }
         notation = NoteNames.defaultSystem(language: language == TimbreLocalization.system ? (systemLanguage ?? "en") : language)
     }
+}
+
+extension UserSettings {
+    /// Anonymous usage events leave the device: the player's choice once made, on until then.
+    public var sharesUsage: Bool { shareUsageData ?? true }
 }
 
 extension UserSettings {

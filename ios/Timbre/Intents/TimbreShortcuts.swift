@@ -32,7 +32,7 @@ struct TimbreShortcuts: AppShortcutsProvider {
                     shortTitle: "Ear training", systemImageName: "ear.fill")
         // Mid-lesson, hands on the instrument: "Again in Timbre", "Next in Timbre", "Slower in Timbre".
         AppShortcut(intent: LessonCommandIntent(), phrases: ["\(\.$command) in \(.applicationName)",
-                                                             "\(\.$command) my \(.applicationName) lesson"],
+                                                             "\(\.$command) in my \(.applicationName) lesson"],
                     shortTitle: "Lesson controls", systemImageName: "playpause.fill")
     }
 }

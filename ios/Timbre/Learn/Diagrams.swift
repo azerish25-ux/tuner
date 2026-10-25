@@ -95,9 +95,6 @@ enum StringOrder: String, CaseIterable, Identifiable {
     /// The string number drawn in row `row` (0 at the top): the inverse of `row(ofString:count:)`.
     func string(atRow row: Int, count: Int) -> Int { self == .tab ? row + 1 : count - row }
 
-    /// The other order: the other string on top, or the other string in the left lane.
-    var reversed: StringOrder { self == .tab ? .mirror : .tab }
-
     /// Strings standing upright side by side for a player holding the instrument as `hand` says: the lowest string on
     /// the left (`upright`), or on the right on a left-handed instrument. Read as lanes counted from the left.
     static func lanes(for hand: HandStyle) -> StringOrder { hand.mirrorsUpright ? .tab : .mirror }
@@ -131,6 +128,8 @@ struct HandStyle: Equatable, Sendable {
     /// Chord charts (the chord box, and the Chart view's necks lying across the screen) stay as songbooks print them.
     var chartsAsPrinted = false
 
+    /// A right-hander's pictures; hand it down (`environment(\.handStyle, …)`) where a picture is drawn away from the
+    /// app's store, such as an `ImageRenderer` card.
     static let standard = HandStyle()
 
     init(hand: Handedness = .right, chartsAsPrinted: Bool = false) {

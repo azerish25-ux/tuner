@@ -446,8 +446,9 @@ struct PracticeView: View {
         let best = stats["sniperBest"] ?? 0
         let sniperLevel = SniperRank.level(bullseyes: stats["bullseyes"] ?? 0)
         let sniperStats = statsLine(best > 0 ? Text("Best \(best)") : nil, level: sniperLevel)
-        return gameCard(.sniper, title: "Bullseye", stats: sniperStats, challenge: .sniper(store), tint: Palette.mint, stage: stage) { live in
-            SniperScopePreview(live: live)
+        return gameCard(.sniper, title: "Bullseye", about: Text("Play the note. Hold the bullseye."), stats: sniperStats,
+                        challenge: .sniper(store), tint: Palette.mint, stage: stage) { live in
+            BullseyePreview(live: live)
         }
     }
 
@@ -455,7 +456,8 @@ struct PracticeView: View {
         let earLevel = (EarDrill.allCases.map { store.settings.earLevels?[$0.rawValue] ?? 0 }.max() ?? 0) + 1
         let correct = store.progress.stats["earCorrect"] ?? 0
         let earStats = statsLine(Text("\(correct) correct"), level: earLevel)
-        return gameCard(.ear, title: "Ear training", stats: earStats, challenge: .ear(store), tint: Palette.amber, stage: stage) { live in
+        return gameCard(.ear, title: "Ear training", about: Text("Hear two notes. Name the gap."), stats: earStats,
+                        challenge: .ear(store), tint: Palette.amber, stage: stage) { live in
             IntervalStairsPreview(live: live)
         }
     }
@@ -467,10 +469,10 @@ struct PracticeView: View {
         return score + Text(verbatim: " · ") + levelText
     }
 
-    private func gameCard<Preview: View>(_ route: PracticeRoute, title: LocalizedStringKey, stats: Text, challenge: GameChallenge, tint: Color,
-                                         stage: CGFloat?, @ViewBuilder preview: @escaping (Bool) -> Preview) -> some View {
+    private func gameCard<Preview: View>(_ route: PracticeRoute, title: LocalizedStringKey, about: Text, stats: Text, challenge: GameChallenge,
+                                         tint: Color, stage: CGFloat?, @ViewBuilder preview: @escaping (Bool) -> Preview) -> some View {
         Button { path.append(route) } label: {
-            PlayGameCard(title: title, stats: stats, challenge: challenge, tint: tint, heroHeight: stage, preview: preview)
+            PlayGameCard(title: title, stats: stats, challenge: challenge, tint: tint, about: about, heroHeight: stage, preview: preview)
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityIdentifier("practice.\(route)")

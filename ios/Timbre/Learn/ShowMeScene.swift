@@ -202,6 +202,16 @@ struct ShowMeStrum: Equatable {
     let origin: Date
 }
 
+/// A fretting hand on the model, posed for each moment of a demonstration: given the neck and every press with how far
+/// its fingertip has come down (0 in the air, 1 pressing), it places its fingers. A stylised rigged hand plugs in here
+/// (`ShowMeController.handRig`); until one ships, the fingertips are drawn over the model as pads.
+@MainActor
+protocol ShowMeHandRig: AnyObject {
+    /// The hand's own entity, added to the model's holder so it frames and turns with the instrument.
+    var entity: Entity { get }
+    func pose(on neck: ShowMeNeck, presses: [(press: ShowMeShape.Press, down: Float)])
+}
+
 /// What a stage demonstrates.
 enum ShowMeShot: Equatable {
     case fretting(ShowMeShape)
@@ -388,6 +398,13 @@ final class ShowMeController {
     /// The host shows the stage turned over left to right (and top to bottom): projected marks follow.
     var flipX = false
     var flipY = false
+    /// A rigged fretting hand, posed from the shape's presses as they land (none ships yet: the pads stand in).
+    var handRig: (any ShowMeHandRig)? {
+        didSet {
+            oldValue?.entity.removeFromParent()
+            if let handRig { holder.addChild(handRig.entity) }
+        }
+    }
     var ringing: Set<Int> = []
     var landStart: Date?
     var landingStep: Double = 0.45
@@ -801,6 +818,10 @@ final class ShowMeController {
             var glow: Float = muted ? 0 : max(rung.level * 0.9, lit ? 0.55 : 0)
             if open && !muted { glow = max(glow, 0.28) }
             draw(wire, stop: stop, level: muted ? 0 : rung.level, glow: glow, since: rung.since, curve: 1.7)
+        }
+        if let handRig {
+            let down = shape.presses.map { press in (press: press, down: Float(touchDown(press.rank, now: now))) }
+            handRig.pose(on: neck, presses: down)
         }
     }
 

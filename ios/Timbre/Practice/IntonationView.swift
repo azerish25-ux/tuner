@@ -29,8 +29,8 @@ struct IntonationView: View {
     }
 
     /// The same in the order the chips, the results and the check run: lowest to highest, left to right, as the
-    /// tuner's string rail reads (right to left on a left-handed instrument, as its rail does).
-    private var rail: [Course] { hand.mirrorsUpright ? Array(strings.reversed()) : strings }
+    /// tuner's string rail reads (right to left for a left-handed player, as that rail does).
+    private var rail: [Course] { hand.hand.isLeftHanded ? Array(strings.reversed()) : strings }
 
     var body: some View {
         ScrollView {
@@ -94,6 +94,8 @@ struct IntonationView: View {
                 .accessibilityAddTraits(selected ? .isSelected : [])
             }
         }
+        // The strings' order on the instrument, not reading order: left to right in every language.
+        .environment(\.layoutDirection, .leftToRight)
     }
 
     private var instruction: some View {

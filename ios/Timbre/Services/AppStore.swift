@@ -110,8 +110,6 @@ final class AppStore: ObservableObject {
         #if DEBUG
         if let failure = CurriculumStore.shared.failure { assertionFailure("curriculum.json did not decode: \(failure)") }
         #endif
-        // A free player tuning their Pro instrument in Chromatic comes back to Chromatic, not to the default guitar.
-        referenceMode = Self.standIn(settings: settings, catalog: catalog) != nil
         voiceLevel = settings.selectedVoiceLevel ?? 1
         TimbreLocalization.language = settings.language
         // Note names follow the app language until the player picks a system (German reads B natural as H).
@@ -120,6 +118,8 @@ final class AppStore: ObservableObject {
         tracker.confidenceThreshold = settings.confidenceThreshold
         applyPrecision()
         Haptics.shared.enabled = settings.hapticsEnabled
+        // Settings › Share anonymous usage data, from the saved choice (on until the player chooses).
+        Analytics.setSharing(settings.sharesUsage)
         audio.onReading = { [weak self] hz, confidence, level in self?.accept(hz, confidence: confidence, level: level) }
         // Reference tones, "Hear it" and chord buttons sound like the selected instrument (a lesson's own course instrument while it is open).
         audio.instrumentVoice = { [weak self] in self.map { InstrumentVoice(instrument: $0.instrument) } ?? .guitar }
@@ -387,6 +387,7 @@ final class AppStore: ObservableObject {
             TimbreLocalization.language = settings.language
             NoteNames.active = settings.notation
             Haptics.shared.enabled = settings.hapticsEnabled
+            if previous.sharesUsage != settings.sharesUsage { Analytics.setSharing(settings.sharesUsage) }
             tracker.confidenceThreshold = settings.confidenceThreshold
             applyPrecision()
             // Only a change that affects listening restarts the microphone; output keeps playing.
@@ -429,13 +430,9 @@ final class AppStore: ObservableObject {
     /// Ends onboarding: the instrument, the placement and the daily commitment are saved, then Learn opens
     /// the plan's first lesson (`pendingLessonId`) rather than leaving the player on the tuner.
     func completeOnboarding(instrument: Instrument?, level: String, goal: String, minutes: Int = 10) {
+        // Every instrument tunes free in its standard tuning (`AccessPolicy.canTune`): the chosen one takes the stage.
         if let instrument, canTune(instrument) {
             _ = selectInstrument(instrument, photo: catalog.photo(instrumentId: instrument.id)?.asset)
-        } else if let instrument {
-            // A Pro instrument on the free plan: tune it in Chromatic (free), where the tuner names it and its
-            // strings (`chromaticStandIn`), rather than landing silently on the default guitar.
-            selectReference()
-            Analytics.log("chromatic_stand_in", ["instrument": instrument.id])
         }
         // "How long have you been playing?" places the learner: earlier units open, none counted as finished.
         let placed = onboardingProgress(level: level, instrumentId: instrument?.id, goal: goal)
@@ -480,17 +477,6 @@ final class AppStore: ObservableObject {
         markDaily(.tune)
         return recordProgress(.stringTuned(instrumentId: tune.instrumentId, all: false, course: tune.course, courses: tune.courses,
                                            precise: settings.precision == .pro), toast: false)
-    }
-
-    /// The Pro instrument a player chose in onboarding without Pro: it leads the recent instruments but was never
-    /// selected. They tune it in Chromatic, and the tuner shows its strings and the way to its stage
-    /// (`ChromaticStandInHint`), which selects it once Pro is active.
-    var chromaticStandIn: Instrument? { Self.standIn(settings: settings, catalog: catalog) }
-
-    private static func standIn(settings: UserSettings, catalog: Catalog) -> Instrument? {
-        guard settings.onboardingCompleted == true, let id = settings.recentInstrumentIds.first, id != settings.selectedInstrumentId,
-              let instrument = catalog.instrument(id: id), !AccessPolicy.canTune(instrument: instrument, pro: false) else { return nil }
-        return instrument
     }
 
     /// The course onboarding's plan leads to: the goal's own course (ear, voice, rhythm), else the instrument's, else theory.

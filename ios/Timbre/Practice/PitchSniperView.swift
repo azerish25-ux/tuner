@@ -2,7 +2,9 @@ import Combine
 import SwiftUI
 import TimbreCore
 
-/// Pitch Sniper: play or sing the target note; your pitch is a dot homing in on the bullseye.
+/// Bullseye: play or sing the target note; your pitch is a dot homing in on the bullseye, and rings of sound leave the
+/// centre as it nears, more and brighter the closer it is. A bullseye rings the target's own note, a near miss knocks
+/// softly and a miss wobbles out of tune (`SoundFX`). Every other game hides a tune in its targets and names it at the end.
 struct PitchSniperView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService
@@ -15,6 +17,10 @@ struct PitchSniperView: View {
     @State private var flashToken = 0
     @State private var finished = false
     @State private var restoreAutomatic = true
+    /// Games started on this screen: every second one hides a tune (`PitchSniper.HiddenTune`).
+    @State private var gamesStarted = 0
+    /// Until then (uptime) the microphone's reading is set aside: the bullseye's bell is still ringing in the room.
+    @State private var quietUntil = 0.0
     private let ticker = Timer.publish(every: 1.0 / 30, on: .main, in: .common).autoconnect()
 
     var body: some View {
@@ -80,7 +86,7 @@ struct PitchSniperView: View {
                 .accessibilityElement(children: .combine)
             }
 
-            Reticle(cents: cents, hold: hold, flash: flash, animate: !reduceMotion)
+            BullseyeTarget(cents: cents, hold: hold, flash: flash, animate: !reduceMotion)
                 .frame(width: 300, height: 300).padding(.top, 18)
 
             Group {
@@ -96,7 +102,7 @@ struct PitchSniperView: View {
             }
             .frame(minHeight: 24)
             .padding(.top, 14)
-            Text("Hold inside the green ring for a bullseye").font(.footnote).foregroundStyle(Palette.inkSoft).padding(.top, 4)
+            hint(game).font(.footnote).foregroundStyle(Palette.inkSoft).padding(.top, 4)
 
             HStack(spacing: 8) {
                 ForEach(0..<game.rounds.count, id: \.self) { i in
@@ -124,6 +130,10 @@ struct PitchSniperView: View {
         }
     }
 
+    private func hint(_ game: PitchSniper) -> Text {
+        game.tune == nil ? Text("Hold inside the green ring for a bullseye") : Text("Every note is part of a hidden tune")
+    }
+
     private func dotColor(_ game: PitchSniper, _ i: Int) -> Color {
         guard i < game.outcomes.count else { return .white.opacity(0.08) }
         switch game.outcomes[i] {
@@ -139,10 +149,11 @@ struct PitchSniperView: View {
         let best = store.progress.stats["sniperBest"] ?? game.score
         return VStack(spacing: 18) {
             Spacer()
-            Image(systemName: game.won ? "trophy.fill" : "scope").font(.system(size: 54, weight: .bold))
+            Image(systemName: game.won ? "trophy.fill" : "target").font(.system(size: 54, weight: .bold))
                 .foregroundStyle(game.won ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.mint))
                 .symbolEffect(.bounce, value: finished)
-            Text(game.won ? "Round won" : "Good shooting").font(Typeface.display(30)).foregroundStyle(Palette.ink)
+                .accessibilityHidden(true)
+            Text(game.won ? "Round won" : "Nice ear").font(Typeface.display(28)).foregroundStyle(Palette.ink)
             Text(game.score.formatted()).font(Typeface.hero(56)).foregroundStyle(Palette.ink)
                 .heroNumeral()
             HStack(spacing: 24) {
@@ -150,6 +161,7 @@ struct PitchSniperView: View {
                 stat(best.formatted(), "best")
             }
             if !game.won { Text("Hit \(PitchSniper.winBullseyes) bullseyes to win the round.").font(.footnote).foregroundStyle(Palette.inkSoft) }
+            if let tune = game.tune { reveal(tune, game: game) }
             SniperChallengeResult(score: game.score)
             // "Challenge a friend": Game Center's challenge (iOS 26) or the "Beat my score" card (Services/GameCenterSocial.swift).
             SniperFriendChallenge(score: game.score)
@@ -158,6 +170,32 @@ struct PitchSniperView: View {
             Button("Done") { dismiss() }.buttonStyle(SecondaryButtonStyle())
         }
         .padding(.horizontal, Metrics.gutter).padding(.bottom, 12)
+    }
+
+    /// The hidden tune named, with its notes to hear again in a row.
+    private func reveal(_ tune: PitchSniper.HiddenTune, game: PitchSniper) -> some View {
+        VStack(spacing: 6) {
+            Text("The hidden tune").font(.footnote).foregroundStyle(Palette.inkSoft)
+            Text(verbatim: title(of: tune)).font(Typeface.display(20)).foregroundStyle(Palette.mint)
+                .multilineTextAlignment(.center)
+            Button {
+                audio.playTones(game.rounds.map(\.frequency), together: false, noteMs: 420, gapMs: 60)
+            } label: {
+                Label("Hear it", systemImage: "speaker.wave.2.fill")
+            }
+            .buttonStyle(SecondaryButtonStyle())
+            .frame(maxWidth: 200)
+            .accessibilityIdentifier("sniper.hearTune")
+        }
+        .accessibilityElement(children: .contain)
+    }
+
+    /// The tune's title as its song lesson is titled in the player's language.
+    private func title(of tune: PitchSniper.HiddenTune) -> String {
+        for course in store.curriculum.courses {
+            if let lesson = course.lessons.first(where: { $0.title.defaultValue == tune.title }) { return lesson.title.localized }
+        }
+        return tune.title
     }
 
     private func stat(_ value: String, _ label: LocalizedStringKey) -> some View {
@@ -177,18 +215,23 @@ struct PitchSniperView: View {
         let notes = store.courses.map(\.targetMidi)
         var seed = UInt64(Date().timeIntervalSince1970)
         if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" { seed = 7 }
-        let next = PitchSniper(notes: notes.isEmpty ? [57, 60, 64, 67] : notes, fretted: fretted, referenceHz: store.settings.referencePitchHz, seed: seed)
+        let next = PitchSniper(notes: notes.isEmpty ? [57, 60, 64, 67] : notes, fretted: fretted, referenceHz: store.settings.referencePitchHz,
+                               seed: seed, hiddenTune: gamesStarted % 2 == 1)
+        gamesStarted += 1
         game = next
-        finished = false; hold = 0; flash = nil
+        finished = false; hold = 0; flash = nil; quietUntil = 0
         store.gameTargetHz = next.current?.frequency
         if !audio.running { store.startListening() }
     }
 
     private func tick() {
         guard var game, !finished else { return }
+        let now = ProcessInfo.processInfo.systemUptime
+        // While the last bullseye's bell rings, the next round waits (its clock starts after).
+        guard now >= quietUntil else { cents = nil; hold = 0; return }
         let reading = store.live.reading
         cents = audio.running && reading.frequency != nil ? reading.cents : nil
-        let event = game.update(cents: audio.running ? cents : nil, at: ProcessInfo.processInfo.systemUptime)
+        let event = game.update(cents: audio.running ? cents : nil, at: now)
         self.game = game
         switch event {
         case .holding(let fraction): hold = fraction
@@ -201,10 +244,17 @@ struct PitchSniperView: View {
         guard let game, case .finished(let outcome) = event else { return }
         hold = 0
         audio.stopTone()
+        let finishedRound = game.index > 0 && game.index <= game.rounds.count ? game.rounds[game.index - 1] : nil
         switch outcome {
-        case .bullseye: Haptics.shared.lock()
-        case .near: Haptics.shared.selection()
-        case .miss: break
+        case .bullseye:
+            Haptics.shared.lock()
+            if let finishedRound { SoundFX.shared.playLock(frequency: finishedRound.frequency) }
+            quietUntil = ProcessInfo.processInfo.systemUptime + 0.7
+        case .near:
+            Haptics.shared.selection()
+            SoundFX.shared.play(.near)
+        case .miss:
+            SoundFX.shared.play(.wobble)
         }
         store.recordProgress(.sniperRound(bullseye: { if case .bullseye = outcome { return true } else { return false } }()), announce: false)
         flashToken += 1
@@ -226,54 +276,50 @@ struct PitchSniperView: View {
     }
 }
 
-/// Rings at 50, 20 and 5 cents; the live pitch is a glowing dot that homes in on the centre.
-private struct Reticle: View {
+/// Rings at 50, 20 and 5 cents around the bullseye; the live pitch is a glowing dot homing in on the centre, flat to
+/// the left and sharp to the right, and rings of sound leave the bullseye as it nears (`BullseyeArt.resonance`), more
+/// and brighter the closer it is, mint once it is inside. Reduce Motion: the rings hold still.
+private struct BullseyeTarget: View {
     let cents: Double?
     let hold: Double
     let flash: PitchSniper.Outcome?
     let animate: Bool
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 30, paused: !animate)) { timeline in
-            let t = timeline.date.timeIntervalSinceReferenceDate
+            let t = animate ? timeline.date.timeIntervalSinceReferenceDate : BullseyeArt.stillTime
             Canvas { context, size in
-                let c = CGPoint(x: size.width / 2, y: size.height / 2)
-                let r = min(size.width, size.height) / 2 - 4
-                func ring(_ radius: CGFloat, _ color: Color, _ width: CGFloat = 1) {
-                    context.stroke(Path(ellipseIn: CGRect(x: c.x - radius, y: c.y - radius, width: radius * 2, height: radius * 2)), with: .color(color), lineWidth: width)
-                }
-                ring(r, .white.opacity(0.08)); ring(r * 0.71, .white.opacity(0.10))
-                ring(r * 0.4, Palette.amber.opacity(0.45))
-                let bull = r * 0.15
-                context.fill(Path(ellipseIn: CGRect(x: c.x - bull, y: c.y - bull, width: bull * 2, height: bull * 2)), with: .color(Palette.mint.opacity(flash.map { if case .bullseye = $0 { return 0.5 } else { return 0.16 } } ?? 0.16)))
-                ring(bull, Palette.mint, 1.5)
-                for (dx, dy) in [(0.0, -1.0), (0.0, 1.0), (-1.0, 0.0), (1.0, 0.0)] {
-                    var p = Path()
-                    p.move(to: CGPoint(x: c.x + dx * r, y: c.y + dy * r))
-                    p.addLine(to: CGPoint(x: c.x + dx * r * 0.77, y: c.y + dy * r * 0.77))
-                    context.stroke(p, with: .color(.white.opacity(0.18)), lineWidth: 1)
-                }
-                // Sweep: a slow radar arc, plus the hold progress around the bullseye.
-                var sweep = Path()
-                sweep.addArc(center: c, radius: r, startAngle: .radians(t * 2), endAngle: .radians(t * 2 + 0.7), clockwise: false)
-                context.stroke(sweep, with: .color(Palette.mint.opacity(0.7)), style: StrokeStyle(lineWidth: 2, lineCap: .round))
-                if hold > 0 {
-                    var arc = Path()
-                    arc.addArc(center: c, radius: bull + 7, startAngle: .degrees(-90), endAngle: .degrees(-90 + 360 * hold), clockwise: false)
-                    context.stroke(arc, with: .color(Palette.mint), style: StrokeStyle(lineWidth: 3, lineCap: .round))
-                }
-                guard let cents else { return }
-                // Distance is the error (log-ish, so the last few cents still read); flat sits left, sharp right.
-                let error = min(60, abs(cents))
-                let distance = r * CGFloat(min(1, sqrt(error / 60)))
-                let angle = (cents < 0 ? Double.pi : 0) + sin(t * 1.3) * 0.35
-                let p = CGPoint(x: c.x + cos(angle) * distance, y: c.y - sin(angle) * distance)
-                let color = error <= PitchSniper.bullseyeCents ? Palette.mint : Palette.amber
-                context.fill(Path(ellipseIn: CGRect(x: p.x - 22, y: p.y - 22, width: 44, height: 44)), with: .radialGradient(Gradient(colors: [color.opacity(0.7), .clear]), center: p, startRadius: 0, endRadius: 22))
-                context.fill(Path(ellipseIn: CGRect(x: p.x - 9, y: p.y - 9, width: 18, height: 18)), with: .color(color))
+                draw(&context, size: size, t: t)
             }
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Target"))
         .accessibilityValue(Text(NoteReadout.spoken(cents)))
+    }
+
+    private func draw(_ context: inout GraphicsContext, size: CGSize, t: Double) {
+        let c = CGPoint(x: size.width / 2, y: size.height / 2)
+        let r = min(size.width, size.height) / 2 - 4
+        let bull = r * 0.15
+        BullseyeArt.rings(&context, center: c, radius: r)
+        let error = cents.map { min(60, abs($0)) }
+        let inside = (error ?? .infinity) <= PitchSniper.bullseyeCents
+        let near = error.map { max(0, 1 - $0 / 50) } ?? 0
+        BullseyeArt.resonance(&context, center: c, from: bull, to: r, t: t, strength: near, tint: inside ? Palette.mint : Palette.amber)
+        let lit: Double = flash.map { if case .bullseye = $0 { return 0.5 } else { return 0.16 } } ?? 0.16
+        context.fill(BullseyeArt.circle(c, bull), with: .color(Palette.mint.opacity(lit)))
+        context.stroke(BullseyeArt.circle(c, bull), with: .color(Palette.mint), lineWidth: 1.5)
+        if hold > 0 {
+            var arc = Path()
+            arc.addArc(center: c, radius: bull + 7, startAngle: .degrees(-90), endAngle: .degrees(-90 + 360 * hold), clockwise: false)
+            context.stroke(arc, with: .color(Palette.mint), style: StrokeStyle(lineWidth: 3, lineCap: .round))
+        }
+        guard let cents, let error else { return }
+        // Distance is the error (log-ish, so the last few cents still read); flat sits left, sharp right.
+        let distance = r * CGFloat(min(1, sqrt(error / 60)))
+        let angle = (cents < 0 ? Double.pi : 0) + sin(t * 1.3) * 0.35
+        let p = CGPoint(x: c.x + cos(angle) * distance, y: c.y - sin(angle) * distance)
+        let color = inside ? Palette.mint : Palette.amber
+        context.fill(BullseyeArt.circle(p, 22), with: .radialGradient(Gradient(colors: [color.opacity(0.7), .clear]), center: p, startRadius: 0, endRadius: 22))
+        context.fill(BullseyeArt.circle(p, 9), with: .color(color))
     }
 }
