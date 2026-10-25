@@ -6,7 +6,7 @@ import importlib
 # Unit ids in path order. Originals (today's styles, sung and strummed) belong to the chord instruments' books.
 WITH_ORIGINALS = ["songs-1", "songs-2", "orig-1", "std-1", "orig-5", "std-5", "song-u4", "orig-6", "std-2", "songs-3",
                   "orig-2", "std-6", "std-3", "orig-7", "song-u5", "std-7", "orig-3", "std-4", "orig-8", "song-u6",
-                  "orig-9", "orig-4", "orig-10"]
+                  "std-8", "orig-9", "std-9", "orig-4", "orig-10"]
 TRADITIONAL = [u for u in WITH_ORIGINALS if not u.startswith("orig-")]
 
 # What each edition did with each song (key, octave moves), for `build.py --editions`.

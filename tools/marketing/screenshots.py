@@ -189,9 +189,18 @@ def build_counts() -> dict:
              if lesson.get("kind") == "song"]
     originals = [lesson for course in courses if course.get("id") == "originals" for unit in course.get("units", [])
                  for lesson in unit.get("lessons", []) if lesson.get("kind") == "song"]
+    def lessons_of(course) -> list:
+        return [lesson for unit in course.get("units", []) for lesson in unit.get("lessons", [])]
+
+    def songbook(course) -> bool:
+        # A course of songs and challenges only (Curriculum.isSongbook): its lessons count as songs, by title.
+        kinds = {lesson.get("kind", "lesson") for lesson in lessons_of(course)}
+        return "song" in kinds and "lesson" not in kinds
+
+    teaching = [course for course in courses if not songbook(course)]
     counts = {
-        "lessons": sum(len(unit.get("lessons", [])) for course in courses for unit in course.get("units", [])),
-        "courses": len(courses),
+        "lessons": sum(len(lessons_of(course)) for course in teaching),
+        "courses": len(teaching),
         "instruments": len(catalog["instruments"]),
         "tunings": len(catalog["tunings"]),
         # A song is a title: the same song arranged for two instruments is one song to a buyer.

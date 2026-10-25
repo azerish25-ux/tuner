@@ -115,8 +115,8 @@ public struct DailyActivity: Identifiable, Equatable, Sendable {
 
 /// Today: one session of about ten minutes, the same set on Tune, Learn and Play.
 public enum DailySet {
-    /// Activities that need Timbre Pro (chords, scales, the drone).
-    public static let proKinds: Set<DailyActivity.Kind> = [.chord, .scale, .drone]
+    /// Tools only Pro opens: scales and the drone. Chord practice is free (the open-position chords, `FreeTier`).
+    public static let proKinds: Set<DailyActivity.Kind> = [.scale, .drone]
     /// The lesson's place on the ring: its own estimate, kept within these minutes.
     public static let lessonMinutes = 3...8
     /// A review's place on the ring.

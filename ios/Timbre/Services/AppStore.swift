@@ -256,7 +256,9 @@ final class AppStore: ObservableObject {
     }
     func customTuning(id: String) -> CustomTuning? { settings.customTunings?.first { $0.id == id } }
     func saveCustomTuning(_ custom: CustomTuning) {
-        guard isPro else { presentPaywall("custom_tuning"); return }
+        guard FreeTier.canSaveCustomTuning(id: custom.id, saved: settings.customTunings ?? [], pro: isPro) else {
+            presentPaywall("custom_tuning"); return
+        }
         endTuningSession()
         guard updateSettings({ settings in
             var list = settings.customTunings ?? []

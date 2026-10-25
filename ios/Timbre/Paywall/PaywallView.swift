@@ -530,15 +530,14 @@ struct PaywallView: View {
         .frame(maxWidth: .infinity)
     }
 
-    /// "638 lessons · 120+ songs · 60 instruments": what Pro opens, counted from the curriculum and the catalog as they
-    /// ship (the Free and Pro table counts the same lessons), never a number written down here. Songs count by title,
-    /// so a song taught in two lessons (its chords, its melody) counts once, and round down to the ten as the listing
-    /// says them.
+    /// "518 lessons · 140+ songs · 60 instruments": what Pro opens, counted from the curriculum and the catalog as they
+    /// ship (the Free and Pro table counts the same lessons), never a number written down here. Lessons are the ones
+    /// that teach (`Curriculum.lessonCount`, songbooks aside); songs count by title, so a song taught in two lessons
+    /// or arranged for two instruments counts once, rounded down to the ten as the listing says them.
     private var proofLine: some View {
-        let lessons = store.curriculum.courses.flatMap(\.lessons)
-        let titles = Set(lessons.filter { $0.kind == .song }.map(\.title.defaultValue))
+        let titles = Set(store.curriculum.courses.flatMap(\.lessons).filter { $0.kind == .song }.map(\.title.defaultValue))
         let songs = Self.roundedCount(titles.count)
-        return Text("\(lessons.count) lessons · \(songs) songs · \(store.catalog.instruments.count) instruments")
+        return Text("\(store.curriculum.lessonCount) lessons · \(songs) songs · \(store.catalog.instruments.count) instruments")
             .font(.footnote.weight(.semibold)).monospacedDigit()
             .foregroundStyle(Palette.inkSoft)
             .multilineTextAlignment(.center)

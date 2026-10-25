@@ -11,6 +11,8 @@ Meters: 3/4 counts quarters; 6/8 and 9/8 count eighths (beats_per_bar=6 or 9, bp
 from lib import chord, course, explain, fretboard, lesson, listen, notes, progression, quiz, rhythm, tap, unit
 from songbook import Part, song, transpose
 
+from courses import standards_part2
+
 G = "guitar"
 
 # ---------------------------------------------------------------- chord shapes (lowest string first)
@@ -760,7 +762,7 @@ UNITS = [
     unit("std-4", "Ragtime, marches and the stage", "Joplin, Sousa, Bizet and Grieg: syncopation, six-eight and key changes.", [
         L_ENT, L_BELL, L_CARMEN, L_MORNING, L_MEDLEY_4,
     ]),
-]
+] + standards_part2.UNITS      # 5 to 8: carols, hymns, parlour songs and concert favourites
 
 COURSE = course("standards", "Standards & Classics", "Famous tunes everyone knows, start to finish", "guitar.acoustic.6",
                 "music.note.list", "violet", UNITS)

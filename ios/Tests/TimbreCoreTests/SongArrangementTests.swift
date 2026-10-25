@@ -14,7 +14,7 @@ final class SongArrangementTests: XCTestCase {
 
     func testEverySongIsAWholeArrangementOfOneAndAHalfToThreeMinutes() throws {
         let all = try songs()
-        XCTAssertEqual(all.count, 100)  // Songs 32, Originals 50, Standards & Classics 18
+        XCTAssertEqual(all.count, 120)  // Songs 32, Originals 50, Standards & Classics 38
         var lengths: [Double] = []
         for (_, lesson) in all {
             let arrangement = try XCTUnwrap(lesson.arrangement, "\(lesson.id) has an arrangement")

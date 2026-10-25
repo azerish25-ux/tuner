@@ -408,7 +408,7 @@ struct PaywallPlan {
             return Outcome(id: "lessons", text: Text("\(instrumentCourse.title.localized) lessons that listen as you play"),
                            symbol: symbol)
         }
-        return Outcome(id: "catalog", text: Text("\(store.curriculum.lessonCount) lessons across \(store.curriculum.courses.count) courses"),
+        return Outcome(id: "catalog", text: Text("\(store.curriculum.lessonCount) lessons across \(store.curriculum.courseCount) courses"),
                        symbol: "graduationcap.fill")
     }
 

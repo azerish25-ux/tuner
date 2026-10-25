@@ -70,7 +70,11 @@ public struct Curriculum: Codable, Sendable {
         let unit = course.units[at.unit]
         return (course, unit, unit.lessons[at.lesson])
     }
-    public var lessonCount: Int { courses.reduce(0) { $0 + $1.lessons.count } }
+    /// Lessons that teach: the instrument, ear, theory, rhythm and voice courses. A songbook's lessons are its songs,
+    /// counted as songs (by title) rather than a second time as lessons.
+    public var lessonCount: Int { courses.reduce(0) { $0 + ($1.isSongbook ? 0 : $1.lessons.count) } }
+    /// The courses that teach (songbooks aside), as `lessonCount` counts them.
+    public var courseCount: Int { courses.filter { !$0.isSongbook }.count }
 }
 
 public struct LearnCourse: Codable, Identifiable, Sendable {
