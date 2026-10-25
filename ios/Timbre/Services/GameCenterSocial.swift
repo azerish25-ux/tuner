@@ -113,7 +113,7 @@ struct SniperFriendChallenge: View {
                 .accessibilityIdentifier("sniper.challenge.friend")
                 if live { liveButton }
             }
-            .animation(reduceMotion ? nil : Motion.settle, value: live)
+            .adaptiveAnimation(Motion.settle, value: live)
             .task { center.refreshChallenges() }
         }
     }

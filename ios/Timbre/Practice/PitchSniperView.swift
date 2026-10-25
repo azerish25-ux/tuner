@@ -151,6 +151,8 @@ struct PitchSniperView: View {
             }
             if !game.won { Text("Hit \(PitchSniper.winBullseyes) bullseyes to win the round.").font(.footnote).foregroundStyle(Palette.inkSoft) }
             SniperChallengeResult(score: game.score)
+            // "Challenge a friend": Game Center's challenge (iOS 26) or the "Beat my score" card (Services/GameCenterSocial.swift).
+            SniperFriendChallenge(score: game.score)
             Spacer()
             Button("Play again") { start() }.buttonStyle(PrimaryButtonStyle()).accessibilityIdentifier("sniper.again")
             Button("Done") { dismiss() }.buttonStyle(SecondaryButtonStyle())
