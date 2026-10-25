@@ -12,20 +12,20 @@ These come first in every TODO file (`launch` on the entry says which kind). The
 |---|---:|---:|
 | Purchase terms (legal) | 11 | 528 |
 | Permission prompts | 1 | 48 |
-| VoiceOver | 83 | 3,984 |
-| Onboarding, welcome to paywall | 39 | 1,872 |
-| **All launch-critical** | **134** | **6,432** |
+| VoiceOver | 91 | 4,368 |
+| Onboarding, welcome to paywall | 46 | 2,208 |
+| **All launch-critical** | **149** | **7,152** |
 
 ## What is missing now
 
-- **App interface:** 584 distinct strings are missing somewhere, 28,032 locale-string pairs in all.
+- **App interface:** 626 distinct strings are missing somewhere, 30,048 locale-string pairs in all.
 - **Lessons:** 12,672 locale-string pairs across the 9 lesson languages (German (de), Spanish (es), French (fr), Italian (it), Japanese (ja), Korean (ko), Portuguese (pt), Russian (ru), Chinese (Simplified) (zh-CN)).
-- **Changed English:** 1,203 of these locale-string pairs replace a string whose English was edited. The TODO entry carries the old English and its old translation under `previous`, to update rather than start over.
+- **Changed English:** 1,299 of these locale-string pairs replace a string whose English was edited. The TODO entry carries the old English and its old translation under `previous`, to update rather than start over.
 
 | Locales | App strings missing | Lesson strings missing |
 |---|---:|---:|
-| de, es, fr, it, ja, ko, pt, ru, zh-CN | 584 | 1408 |
-| ar, bg, bn, ca, cs, da, el, et, fa, fi, gu, he, hi, hr, hu, id, is, kn, lt, lv, ml, mr, nl, no, pa, pl, ro, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zu | 584 | — |
+| de, es, fr, it, ja, ko, pt, ru, zh-CN | 626 | 1408 |
+| ar, bg, bn, ca, cs, da, el, et, fa, fi, gu, he, hi, hr, hu, id, is, kn, lt, lv, ml, mr, nl, no, pa, pl, ro, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zu | 626 | — |
 
 Where the missing lesson strings are (the same in every lesson language):
 
