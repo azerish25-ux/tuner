@@ -64,13 +64,24 @@ enum ChordPicture: String, CaseIterable, Identifiable {
         case .player: return "Player view"
         }
     }
+
+    /// What it means, under its name in Settings › String order.
+    var detail: LocalizedStringKey {
+        switch self {
+        case .chart: return "String 1 on top, as tab and chord charts print it"
+        case .player: return "Thickest string on top, as you see it while playing"
+        }
+    }
 }
 
-/// The switch between the chord chart and the player's view: a small capsule with both, the chosen one filled in the
-/// accent (the fill slides across as it changes). Every picture that reads the choice flips with it.
+/// The switch between the chart and the player's view: a small capsule with both, the chosen one filled in the
+/// accent (the fill slides across as it changes). It is Settings › String order itself, so every neck and chord in
+/// the app flips with it.
 struct ChordPictureToggle: View {
     var accent: Color = Palette.mint
-    @AppStorage(ChordPicture.storageKey) private var picture: ChordPicture = .player
+    /// What VoiceOver calls the switch: "Chord view" on a chord card, "Neck view" over the Scales neck.
+    var label: LocalizedStringKey = "Chord view"
+    @AppStorage(ChordPicture.storageKey) private var picture: ChordPicture = .chart
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Namespace private var thumb
 
@@ -85,7 +96,7 @@ struct ChordPictureToggle: View {
         .overlay(Capsule().strokeBorder(Palette.controlLine, lineWidth: 1))
         .fixedSize()
         .accessibilityElement(children: .contain)
-        .accessibilityLabel(Text("Chord view"))
+        .accessibilityLabel(Text(label))
     }
 
     private func segment(_ option: ChordPicture) -> some View {

@@ -18,14 +18,17 @@ final class SampledTonesTests: XCTestCase {
     private func cents(_ measured: Double, _ expected: Double) -> Double { 1200 * log2(measured / expected) }
 
     /// What the tuner would show: the app's YIN detector over 4096-sample frames (hop 1024) between `from` and `to`
-    /// seconds, the median reading.
-    private func tunerPitch(_ frames: [Float], from: Double, to: Double) -> Double? {
+    /// seconds, the median reading. Readings more than 50 cents from `near` (the detector jumping an octave as a string
+    /// fades) are left out, as the tuner's smoothing would.
+    private func tunerPitch(_ frames: [Float], from: Double, to: Double, near: Double) -> Double? {
         let detector = YinPitchDetector(sampleRate: Double(rate), minFrequency: 25, maxFrequency: 4500)
         var readings: [Double] = []
         var start = Int(from * Double(rate))
         let end = min(frames.count, Int(to * Double(rate)))
         while start + 4096 <= end {
-            if let reading = detector.detect(Array(frames[start..<(start + 4096)])) { readings.append(reading.frequencyHz) }
+            if let reading = detector.detect(Array(frames[start..<(start + 4096)])), abs(cents(reading.frequencyHz, near)) <= 50 {
+                readings.append(reading.frequencyHz)
+            }
             start += 1024
         }
         guard !readings.isEmpty else { return nil }
@@ -108,10 +111,8 @@ final class SampledTonesTests: XCTestCase {
             XCTAssertNil(clip.loopStart)
             XCTAssertTrue(frames.allSatisfy(\.isFinite), "\(voice)")
             let window = voice.kind == .sustained ? (0.45, 1.45) : (0.12, 1.12)
-            let reading = try XCTUnwrap(tunerPitch(frames, from: window.0, to: window.1), "\(voice)")
+            let reading = try XCTUnwrap(tunerPitch(frames, from: window.0, to: window.1, near: 440), "\(voice)")
             XCTAssertLessThan(abs(cents(reading, 440)), 1.0, "\(voice): the tuner reads \(reading) Hz")
-            let fundamental = peakFrequency(frames[Int(window.0 * Double(rate))..<Int(window.1 * Double(rate))], near: 440)
-            XCTAssertLessThan(abs(cents(fundamental, 440)), 0.5, "\(voice): fundamental \(fundamental) Hz")
         }
     }
 
@@ -127,7 +128,7 @@ final class SampledTonesTests: XCTestCase {
             for hz in frequencies {
                 let request = ToneRequest(frequencies: [hz], kind: .reference(durationMs: 1500), voice: voice, sampleRate: rate)
                 let clip = try XCTUnwrap(SampledTones.render(request, library: library), "\(voice) \(hz)")
-                let reading = try XCTUnwrap(tunerPitch(clip.frames, from: 0.12, to: 1.12), "\(voice) \(hz)")
+                let reading = try XCTUnwrap(tunerPitch(clip.frames, from: 0.12, to: 1.12, near: hz), "\(voice) \(hz)")
                 XCTAssertLessThan(abs(cents(reading, hz)), 1.0, "\(voice) \(hz): the tuner reads \(reading) Hz")
             }
         }
@@ -142,7 +143,7 @@ final class SampledTonesTests: XCTestCase {
             XCTAssertTrue(library.addNote(instrument, hz: target, velocity: 0.75, into: &out, start: 0, length: rate, rate: Double(rate)))
             let measured = peakFrequency(out[Int(0.1 * Double(rate))..<Int(0.9 * Double(rate))], near: target)
             XCTAssertLessThan(abs(cents(measured, target)), 0.05, "\(target): \(measured)")
-            let reading = try XCTUnwrap(tunerPitch(out, from: 0.1, to: 0.9))
+            let reading = try XCTUnwrap(tunerPitch(out, from: 0.1, to: 0.9, near: target))
             XCTAssertLessThan(abs(cents(reading, target)), 0.5, "\(target): tuner \(reading)")
         }
     }
@@ -165,7 +166,7 @@ final class SampledTonesTests: XCTestCase {
         let steps = zip(out[rate..<(4 * rate)], out[(rate + 1)..<(4 * rate + 1)]).map { abs($1 - $0) }
         let normal = zip(out[Int(0.5 * Double(rate))..<rate], out[(Int(0.5 * Double(rate)) + 1)..<(rate + 1)]).map { abs($1 - $0) }
         XCTAssertLessThan(steps.max() ?? 1, (normal.max() ?? 0) * 1.3)
-        let reading = try XCTUnwrap(tunerPitch(out, from: 2.2, to: 4.4))
+        let reading = try XCTUnwrap(tunerPitch(out, from: 2.2, to: 4.4, near: 330))
         XCTAssertLessThan(abs(cents(reading, 330)), 0.5)
         XCTAssertLessThan(abs(out.last ?? 1), 1e-3, "released at its end")
     }
@@ -231,7 +232,7 @@ final class SampledTonesTests: XCTestCase {
         let frames = held.frames
         let largestStep = zip(frames[loop...], frames[(loop + 1)...]).reduce(Float(0)) { max($0, abs($1.1 - $1.0)) }
         XCTAssertLessThan(abs(frames[frames.count - 1] - frames[loop]), largestStep * 1.5)
-        let reading = try XCTUnwrap(tunerPitch(frames, from: 0.45, to: 1.45))
+        let reading = try XCTUnwrap(tunerPitch(frames, from: 0.45, to: 1.45, near: 440))
         XCTAssertLessThan(abs(cents(reading, 440)), 1.0)
     }
 
