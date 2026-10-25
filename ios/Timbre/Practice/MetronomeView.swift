@@ -187,7 +187,8 @@ struct MetronomeView: View {
     private var tempo: some View {
         VStack(spacing: 4) {
             HStack(alignment: .firstTextBaseline, spacing: 18) {
-                Button { store.setMetronome(bpm: store.bpm - 1) } label: { Image(systemName: "minus").frame(width: 44, height: 44) }
+                // The whole 44 pt square takes the tap, not just the glyph (a plain button's frame is otherwise empty).
+                Button { store.setMetronome(bpm: store.bpm - 1) } label: { Image(systemName: "minus").frame(width: 44, height: 44).contentShape(Rectangle()) }
                     .buttonStyle(.plain).foregroundStyle(Palette.inkSoft).accessibilityLabel("Slower")
                 // One line between the steppers at any text size: it shrinks to fit rather than clipping.
                 Text("\(shownBpm)").font(Typeface.hero(80)).foregroundStyle(Palette.ink).contentTransition(.numericText())
@@ -198,7 +199,7 @@ struct MetronomeView: View {
                                      increment: { store.setMetronome(bpm: store.bpm + 1) },
                                      decrement: { store.setMetronome(bpm: store.bpm - 1) })
                     .accessibilityIdentifier("metronome.bpm")
-                Button { store.setMetronome(bpm: store.bpm + 1) } label: { Image(systemName: "plus").frame(width: 44, height: 44) }
+                Button { store.setMetronome(bpm: store.bpm + 1) } label: { Image(systemName: "plus").frame(width: 44, height: 44).contentShape(Rectangle()) }
                     .buttonStyle(.plain).foregroundStyle(Palette.inkSoft).accessibilityLabel("Faster")
             }
             .background { tempoGlow }

@@ -484,9 +484,7 @@ struct UnitSection: View {
                 VStack(alignment: .trailing, spacing: 6) {
                     // A unit with Pro lessons says so with the corner lock, as every locked card does.
                     if unit.lessons.contains(where: { !$0.free }) && !store.isPro { ProLock(size: 24) }
-                    starCount(progress.stars(in: unit), of: unit.lessons.count * 3)
-                    Text.lessonCount(finished, unit.lessons.count).font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
-                        .multilineTextAlignment(.trailing)
+                    unitTally(stars: progress.stars(in: unit), of: unit.lessons.count * 3, finished: finished, lessons: unit.lessons.count)
                 }
             }
             .stillCard()
@@ -541,12 +539,20 @@ struct UnitSection: View {
         return { onSelect(lesson) }
     }
 
-    /// "★ 8 / 15", read "8 of 15 stars".
-    private func starCount(_ stars: Int, of total: Int) -> some View {
-        Label { Text.fraction(stars, total) } icon: { Image(systemName: "star.fill") }
-            .font(Typeface.number(.caption)).foregroundStyle(Palette.starGold)
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text("\(stars) of \(total) stars"))
+    /// "★ 8 / 15" over "3 / 5 lessons", read as one element, "8 of 15 stars, 3 of 5 lessons", at least 44 pt square
+    /// like every element on screen. The extra height is empty, below the words, so nothing moves.
+    private func unitTally(stars: Int, of total: Int, finished: Int, lessons: Int) -> some View {
+        VStack(alignment: .trailing, spacing: 6) {
+            Label { Text.fraction(stars, total) } icon: { Image(systemName: "star.fill") }
+                .font(Typeface.number(.caption)).foregroundStyle(Palette.starGold)
+            Text.lessonCount(finished, lessons).font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
+                .multilineTextAlignment(.trailing)
+        }
+        .frame(minWidth: Metrics.minTarget, minHeight: Metrics.minTarget, alignment: .topTrailing)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("\(stars) of \(total) stars") + Text(verbatim: ", ") + Text("\(finished) of \(lessons)")
+            + Text(verbatim: " ") + Text("lessons"))
     }
 }
 

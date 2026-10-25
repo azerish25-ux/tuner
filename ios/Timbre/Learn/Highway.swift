@@ -1306,8 +1306,9 @@ struct ComboBadge: View {
 
 /// The notes after the next one, in order: tiles in their string's colour with the fret over the note name (a
 /// fingerboard's finger, "↓2" for a low 2; just the note on pitch lanes). They slide along as each note is played,
-/// fading toward the end of the rail. Music reads left to right in every language, as the runway's lanes do, so the
-/// rail never turns round in Arabic or Hebrew.
+/// their tiles fading toward the end of the rail while the figures and names stay at full strength (every string's
+/// colour reads at 4.5:1 or more on its tile). Music reads left to right in every language, as the runway's lanes do,
+/// so the rail never turns round in Arabic or Hebrew.
 struct UpNextRail: View {
     let notes: [TimedNote]
     /// The first note on the rail (the one after "Next").
@@ -1323,10 +1324,13 @@ struct UpNextRail: View {
 
     var body: some View {
         HStack(spacing: 8) {
+            // VoiceOver skips the rail (the "Next" line says the note); the arrow is still named in words, never by its
+            // symbol's name.
             Image(systemName: "arrow.turn.down.right")
                 .font(.system(size: 12, weight: .bold))
                 .foregroundStyle(Palette.inkFaint)
                 .opacity(shown.isEmpty ? 0 : 1)
+                .accessibilityLabel(Text("Next"))
             ForEach(shown, id: \.self) { index in
                 tile(notes[index], rank: index - from)
                     .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
@@ -1345,9 +1349,12 @@ struct UpNextRail: View {
         return FingerPlace(at, on: fingerboard).shortLabel
     }
 
+    /// A tile fades with its rank (fill, edge and bar); its words never do: faded with it, the second string's blue
+    /// would drop under 4.5:1 from the third tile on.
     private func tile(_ note: TimedNote, rank: Int) -> some View {
         let tint = color(note)
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous)
+        let fade = 1 - Double(rank) * 0.13
         return VStack(spacing: 0) {
             if fretted, let at = note.at {
                 Text(verbatim: figure(at)).font(Typeface.number(.body)).foregroundStyle(Palette.ink)
@@ -1359,10 +1366,9 @@ struct UpNextRail: View {
         .lineLimit(1)
         .minimumScaleFactor(0.6)
         .frame(width: 42, height: 42)
-        .background(shape.fill(tint.opacity(0.16)))
-        .overlay(shape.strokeBorder(tint.opacity(0.55), lineWidth: 1))
-        .overlay(alignment: .bottom) { Capsule().fill(tint).frame(width: 18, height: 3).offset(y: 1.5) }
-        .opacity(1 - Double(rank) * 0.13)
+        .background(shape.fill(tint.opacity(0.16 * fade)))
+        .overlay(shape.strokeBorder(tint.opacity(0.55 * fade), lineWidth: 1))
+        .overlay(alignment: .bottom) { Capsule().fill(tint.opacity(fade)).frame(width: 18, height: 3).offset(y: 1.5) }
     }
 
     private func color(_ note: TimedNote) -> Color {
