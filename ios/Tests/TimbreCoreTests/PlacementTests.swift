@@ -36,7 +36,7 @@ final class PlacementTests: XCTestCase {
         XCTAssertEqual(guitar.units[9].title.defaultValue, "Barre chords and the pentatonic")
     }
 
-    func testUkulele() throws { try assertStarts("ukulele", ["uke-1", "uke-2", "uke-5", "uke-6", "uke-6"]) }
+    func testUkulele() throws { try assertStarts("ukulele", ["uke-1", "uke-2", "uke-5", "uke-6", "uke-7"]) }
     func testBass() throws { try assertStarts("bass", ["bass-1", "bass-2", "bass-4", "bass-5", "bass-6"]) }
     func testViolin() throws { try assertStarts("violin", ["vln-1", "vln-2", "vln-4", "vln-5", "vln-6"]) }
     func testCello() throws { try assertStarts("cello", ["vc-1", "vc-2", "vc-4", "vc-5", "vc-5"]) }

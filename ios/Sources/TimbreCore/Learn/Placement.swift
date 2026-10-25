@@ -19,7 +19,7 @@ public enum CoursePlacement {
         // Hello · First melodies · … · More open chords · … · Songs with chords · … · Barre chords and the pentatonic · … · Lead technique
         "guitar": ["novice": "gtr-2", "intermediate": "gtr-7", "advanced": "gtr-10", "pro": "gtr-13"],
         // Hello · First chords · Strumming · Melodies · More chords · Songs
-        "ukulele": ["novice": "uke-2", "intermediate": "uke-5", "advanced": "uke-6", "pro": "uke-6"],
+        "ukulele": ["novice": "uke-2", "intermediate": "uke-5", "advanced": "uke-6", "pro": "uke-7"],
         // Hello · Roots and timing · E and A strings · Root, fifth, octave · Walking bass · Grooves
         "bass": ["novice": "bass-2", "intermediate": "bass-4", "advanced": "bass-5", "pro": "bass-6"],
         // Hello · Bowing · First fingers · D and G strings · Low 2 and high 2 · Expression
