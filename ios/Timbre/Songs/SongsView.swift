@@ -6,7 +6,9 @@ import UIKit
 /// course, and the songs inside each instrument course), as record shelves under a daily featured song.
 /// Sleeves are generated from each song (`CoverArt`), so there are no image assets. Songs open the
 /// same full-screen lesson flow as Learn and follow Learn's rules (`LessonAccess`) for Pro and order locks.
-/// The featured song (`SongOfTheDay`) suits the learner's level, and its sleeve plays the opening bars.
+/// The featured song (`SongOfTheDay`) suits the learner's level, and its sleeve plays the opening bars. The page is
+/// adult-first: the Originals and the Standards lead the hero, the picked shelves and the course shelves, and nursery
+/// rhymes and campfire rounds have a shelf of their own lower down ("Campfire & kids").
 /// A song that doesn't play yet says why under its sleeve ("Finish Kite Weather", "Timbre Pro"), the same way on
 /// every shelf. Every sleeve offers twenty seconds of its song ("Hear it", over the band in headphones) and, for a tune
 /// several courses teach (Ode to Joy on guitar, violin, cello…), badges of its other versions to choose from; the
@@ -120,9 +122,7 @@ struct SongsView: View {
         let active = chips.contains { $0.id == filter } ? filter : Self.all
         let layout = catalog.layout(filter: active, course: learnCourseId, store: store)
         let hero = layout.hero
-        // The picked shelves, then the course shelves (the featured song isn't repeated on its shelf: that rail starts
-        // with the song after it).
-        let shelves: [ShelfItem] = layout.picks.map { ShelfItem.pick($0) } + layout.rails.map { ShelfItem.rail($0) }
+        let shelves = Self.items(layout)
         let glow: Color = hero.map { catalog.art($0).primary } ?? Palette.spotlight
         NavigationStack {
             ScrollView {
@@ -165,6 +165,19 @@ struct SongsView: View {
             .environmentObject(store)
             .navigationTransition(.zoom(sourceID: item.source, in: zoom))
         }
+    }
+
+    /// The picked shelves, then the course shelves, with "Campfire & kids" (`SongsCatalog.Layout.lower`) after the
+    /// song collections and before the instruments' own. The featured song isn't repeated on its shelf: that rail
+    /// starts with the song after it.
+    private static func items(_ layout: SongsCatalog.Layout) -> [ShelfItem] {
+        var items = layout.picks.map { ShelfItem.pick($0) }
+        let rails = layout.rails.map { ShelfItem.rail($0) }
+        let split = min(max(0, layout.lowerAfter), rails.count)
+        items += rails[..<split]
+        if let lower = layout.lower { items.append(.pick(lower)) }
+        items += rails[split...]
+        return items
     }
 
     // MARK: Actions
@@ -340,21 +353,31 @@ struct SongsView: View {
 
     /// iPad, beside the song of the day: the next song on each shelf under the filter (open and not played yet), each
     /// tune once and the featured tune aside; songs still to unlock fill in when fewer than three are open. Four at most.
+    /// Adult-first and varied: no nursery rhyme and no sleeve repeating a motif already beside it (the featured one's
+    /// included), unless that leaves fewer than two.
     private func upNext(_ layout: SongsCatalog.Layout, hero: Song) -> [Song] {
         let progress = store.learn
         var picked: [Song] = []
         var tunes: Set<String> = [SongsCatalog.tuneKey(hero.lesson)]
+        var motifs: Set<CoverArt.Motif> = [catalog.art(hero).motif]
+        func fits(_ song: Song, strict: Bool) -> Bool {
+            guard !progress.isFinished(song.lesson.id), !tunes.contains(SongsCatalog.tuneKey(song.lesson)) else { return false }
+            return !strict || (!SongsCatalog.isKids(song) && !motifs.contains(catalog.art(song).motif))
+        }
         func add(_ song: Song?) {
-            guard let song, picked.count < 4, tunes.insert(SongsCatalog.tuneKey(song.lesson)).inserted else { return }
+            guard let song, picked.count < 4 else { return }
+            tunes.insert(SongsCatalog.tuneKey(song.lesson))
+            motifs.insert(catalog.art(song).motif)
             picked.append(song)
         }
         for rail in layout.rails {
-            add(rail.songs.first { catalog.standing($0).access == .play && !progress.isFinished($0.lesson.id) })
+            add(rail.songs.first { catalog.standing($0).access == .play && fits($0, strict: true) })
         }
         if picked.count < 3 {
-            for rail in layout.rails {
-                add(rail.songs.first { !progress.isFinished($0.lesson.id) && !tunes.contains(SongsCatalog.tuneKey($0.lesson)) })
-            }
+            for rail in layout.rails { add(rail.songs.first { fits($0, strict: true) }) }
+        }
+        if picked.count < 2 {
+            for rail in layout.rails { add(rail.songs.first { fits($0, strict: false) }) }
         }
         return picked
     }
@@ -1159,8 +1182,12 @@ struct SongsView: View {
 
     struct Layout {
         let hero: SongsView.Song?
+        /// The picked shelves at the top: the adult repertoire.
         let picks: [SongsView.Pick]
         let rails: [Rail]
+        /// "Campfire & kids", lower down: after the first `lowerAfter` rails (the song collections').
+        var lower: SongsView.Pick? = nil
+        var lowerAfter = 0
     }
 
     private struct Key: Equatable {
@@ -1304,7 +1331,9 @@ struct SongsView: View {
             let rail = shelf.songs.filter { $0.id != hero?.id }
             if !rail.isEmpty { rails.append(Rail(shelf: shelf, songs: rail)) }
         }
-        return Layout(hero: hero, picks: picks, rails: rails)
+        // The rails come in rank order: the song collections' (Originals, Standards, Songs) first.
+        let collections = rails.filter { Self.rank($0.shelf.course) < 3 }.count
+        return Layout(hero: hero, picks: picks, rails: rails, lower: campfire(pool, hero: hero, prefer: prefer), lowerAfter: collections)
     }
 
     /// Songs for any instrument (a course without one) show under every filter.
@@ -1317,14 +1346,19 @@ struct SongsView: View {
         course.lessons.filter { $0.kind == .song }.count * 2 >= course.lessons.count
     }
 
-    static func isOriginals(_ course: LearnCourse) -> Bool {
-        course.id.hasPrefix("original") || course.title.defaultValue.lowercased().hasPrefix("original")
-    }
+    static func isOriginals(_ course: LearnCourse) -> Bool { SongOfTheDay.isOriginals(course) }
 
-    /// Originals first, then the song collections, then each instrument's songs in curriculum order.
+    static func isStandards(_ course: LearnCourse) -> Bool { SongOfTheDay.isStandards(course) }
+
+    /// A nursery rhyme, children's song or campfire round (`SongOfTheDay.isCampfireOrKids`), by its English title.
+    static func isKids(_ song: SongsView.Song) -> Bool { SongOfTheDay.isCampfireOrKids(song.lesson.title.defaultValue) }
+
+    /// Adult-first: the Originals, then the Standards, then the other song collections (Songs, which opens on its
+    /// first nursery rhymes), then each instrument's songs in curriculum order.
     private static func rank(_ course: LearnCourse) -> Int {
         if isOriginals(course) { return 0 }
-        return isCollection(course) ? 1 : 2
+        if isStandards(course) { return 1 }
+        return isCollection(course) ? 2 : 3
     }
 
     private func shelves(_ songs: [SongsView.Song], curriculum: Curriculum) -> [SongsView.Shelf] {
@@ -1340,12 +1374,13 @@ struct SongsView: View {
         return ranked.map { $0.element }
     }
 
-    /// The song of the day (`SongOfTheDay`): an unfinished song at the learner's level, an Original ahead of the
-    /// traditional tunes once past the beginner units, the same all day.
+    /// The song of the day (`SongOfTheDay`): an unfinished song at the learner's level, adult-first (the Originals
+    /// and the Standards ahead of the other tunes, nursery rhymes after them), an Original ahead of the traditional
+    /// tunes once past the beginner units, the same all day.
     private func featured(_ songs: [SongsView.Song], store: AppStore) -> SongsView.Song? {
         let progress = key?.learn ?? store.learn
         let candidates = songs.map { song in
-            SongOfTheDay.Candidate(id: song.id, original: Self.isOriginals(song.course), unit: song.unitIndex,
+            SongOfTheDay.Candidate(song: song.lesson, in: song.course, unit: song.unitIndex,
                                    finished: progress.isFinished(song.lesson.id), access: dayAccess(song, progress: progress))
         }
         let placed = progress.placedThrough.values.contains { $0 >= 0 }
@@ -1363,15 +1398,18 @@ struct SongsView: View {
         }
     }
 
-    /// From the songs under the filter (the featured song's tune aside): songs not played yet that use the chord the
-    /// learner learned last ("Because you learned E minor"), then every song of one to three chords. Each tune shows
-    /// once, in its `prefer` instrument's version where it has one (its other versions are a tap away on the sleeve).
-    /// Songs that play now come first, the easiest of them first, and a sleeve whose motif the shelf already shows
-    /// moves along it.
+    /// From the songs under the filter (the featured song's tune and the nursery rhymes aside, which have their own
+    /// shelf further down, `campfire`): songs not played yet that use the chord the learner learned last ("Because you
+    /// learned E minor"), then every song of one to three chords. Each tune shows once, in its `prefer` instrument's
+    /// version where it has one (its other versions are a tap away on the sleeve). Songs that play now come first,
+    /// the Originals and the Standards ahead of the other tunes, the easiest of each first (`adultFirst`); each motif
+    /// shows once on a shelf, never the featured sleeve's nor one the shelf above opens on (`distinct`).
     private func picks(_ songs: [SongsView.Song], hero: SongsView.Song?, prefer: String?, store: AppStore) -> [SongsView.Pick] {
         let progress = key?.learn ?? store.learn
         let heroTune = hero.map { Self.tuneKey($0.lesson) }
-        let pool = songs.filter { Self.tuneKey($0.lesson) != heroTune }
+        let pool = songs.filter { Self.tuneKey($0.lesson) != heroTune && !Self.isKids($0) }
+        var above = Set<CoverArt.Motif>()
+        if let hero { above.insert(art(hero).motif) }
         var out: [SongsView.Pick] = []
         if let chord = lastLearnedChord(progress, curriculum: store.curriculum) {
             // Not played yet in any version.
@@ -1379,18 +1417,32 @@ struct SongsView: View {
             let using = pool.filter { song in
                 !played.contains(Self.tuneKey(song.lesson)) && SongSheet.of(song.lesson).chords.contains { $0.symbol == chord.symbol }
             }
-            let fresh = onePerTune(using, prefer: prefer)
-            if !fresh.isEmpty {
+            let shelf = distinct(adultFirst(onePerTune(using, prefer: prefer)), avoiding: above, limit: 10)
+            if !shelf.isEmpty {
                 out.append(SongsView.Pick(id: "because", symbol: "sparkles", title: Text("Because you learned \(SongSheet.spoken(chord))"),
-                                          songs: Array(varied(easiestFirst(fresh)).prefix(10))))
+                                          songs: shelf))
+                above.formUnion(shelf.prefix(3).map { art($0).motif })
             }
         }
         let few = onePerTune(pool.filter { (1...3).contains(SongSheet.of($0.lesson).chords.count) }, prefer: prefer)
-        if few.count >= 2 {
-            out.append(SongsView.Pick(id: "few", symbol: "3.circle.fill", title: Text("3 chords or fewer"),
-                                      songs: Array(varied(easiestFirst(few)).prefix(12))))
+        let shelf = distinct(adultFirst(few), avoiding: above, limit: 12)
+        if shelf.count >= 2 {
+            out.append(SongsView.Pick(id: "few", symbol: "3.circle.fill", title: Text("3 chords or fewer"), songs: shelf))
         }
         return out
+    }
+
+    /// "Campfire & kids", below the adult repertoire: the nursery rhymes, children's songs and campfire rounds under
+    /// the filter (`isKids`), each tune once, songs that play now first and the easiest first, each motif once. Nil
+    /// for fewer than two.
+    private func campfire(_ songs: [SongsView.Song], hero: SongsView.Song?, prefer: String?) -> SongsView.Pick? {
+        let heroTune = hero.map { Self.tuneKey($0.lesson) }
+        let tunes = onePerTune(songs.filter { Self.isKids($0) && Self.tuneKey($0.lesson) != heroTune }, prefer: prefer)
+        var avoiding = Set<CoverArt.Motif>()
+        if let hero { avoiding.insert(art(hero).motif) }
+        let shelf = distinct(easiestFirst(tunes), avoiding: avoiding, limit: 12)
+        guard shelf.count >= 2 else { return nil }
+        return SongsView.Pick(id: "campfire", symbol: "flame.fill", title: Text("Campfire & kids"), songs: shelf)
     }
 
     /// One song per tune, where its tune first comes: the version on `prefer` (the learner's instrument), then one
@@ -1445,20 +1497,52 @@ struct SongsView: View {
         let song: SongsView.Song
         let open: Bool
         let level: Int
+        /// 0 for the Originals and the Standards, 1 for the other tunes.
+        let repertoire: Int
     }
 
-    private func easiestFirst(_ songs: [SongsView.Song]) -> [SongsView.Song] {
-        let ranked = songs.enumerated().map { item -> Ranked in
+    private func ranked(_ songs: [SongsView.Song]) -> [Ranked] {
+        songs.enumerated().map { item -> Ranked in
             let song = item.element
             let level = SongSheet.of(song.lesson).difficulty(unit: song.unitIndex, of: song.course.units.count)
-            return Ranked(order: item.offset, song: song, open: standing(song).access == .play, level: level)
+            let adult = Self.isOriginals(song.course) || Self.isStandards(song.course)
+            return Ranked(order: item.offset, song: song, open: standing(song).access == .play, level: level, repertoire: adult ? 0 : 1)
         }
-        let sorted = ranked.sorted { a, b in
+    }
+
+    /// Songs that play now first, the easiest of them first.
+    private func easiestFirst(_ songs: [SongsView.Song]) -> [SongsView.Song] {
+        let sorted = ranked(songs).sorted { a, b in
             if a.open != b.open { return a.open }
             if a.level != b.level { return a.level < b.level }
             return a.order < b.order
         }
         return sorted.map(\.song)
+    }
+
+    /// Songs that play now first; among them, and then among the rest, the Originals and the Standards ahead of the
+    /// other tunes, the easiest of each first, so a shelf opens on the adult repertoire and stays beginner-friendly.
+    private func adultFirst(_ songs: [SongsView.Song]) -> [SongsView.Song] {
+        let sorted = ranked(songs).sorted { a, b in
+            if a.open != b.open { return a.open }
+            if a.repertoire != b.repertoire { return a.repertoire < b.repertoire }
+            if a.level != b.level { return a.level < b.level }
+            return a.order < b.order
+        }
+        return sorted.map(\.song)
+    }
+
+    /// `songs` in their order, up to `limit`, each sleeve's motif once and none of `avoiding` (the featured song's,
+    /// those the shelf above opens on): a song that would repeat one is left to its course's shelf. When that leaves
+    /// fewer than two (or than there are songs, for one), the order as it was with repeats moved last (`varied`).
+    private func distinct(_ songs: [SongsView.Song], avoiding: Set<CoverArt.Motif>, limit: Int) -> [SongsView.Song] {
+        var seen = avoiding
+        var kept: [SongsView.Song] = []
+        for song in songs where kept.count < limit {
+            if seen.insert(art(song).motif).inserted { kept.append(song) }
+        }
+        if kept.count >= min(2, songs.count) { return kept }
+        return Array(varied(songs).prefix(limit))
     }
 
     /// The same order, but a sleeve whose motif is already on the shelf waits until the end, so a shelf drawn from

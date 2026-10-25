@@ -12,10 +12,12 @@ Before rendering (and with --check, instead of rendering) it checks the tables: 
 
 Each store frame must come from exactly one capture in the UI tests, and that capture must be deterministic:
 TimbreUITests keeps a frame under its own name only when it checked that the screen shows what the caption
-says (`storeFrame`); otherwise the test fails and keeps the picture as "<name>-wrong". The tuner's lock and
-the chord come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift), and Strum to tune (iPhone
-#7, `11b-tune-strum`, from test13StoreStrum) from the demo pitch's one fixed strum (StrumDemo), not from timed
-shots. Every capture starts from the same seeded player (DemoData in ios/Timbre/TimbreApp.swift: the same
+says (`storeFrame`); otherwise the test fails and keeps the picture as "<name>-wrong". The tuner's lock (#1),
+Kite Weather on the highway mid-chorus (#2, `65-song-perform`, from test14StoreSongPerform) and the chord (#3)
+come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift), Strum to tune (iPhone #7,
+`11b-tune-strum`, from test13StoreStrum) from the demo pitch's one fixed strum (StrumDemo), and the results (#6)
+from a play-along the demo pitch plays clean, kept only with three stars; none from timed shots. On iPad the
+instrument browser (#2) is a full page of its own, never a sheet over the live tuner. Every capture starts from the same seeded player (DemoData in ios/Timbre/TimbreApp.swift: the same
 streak, lit flame, level and XP on every frame) and is taken once its screen has settled (`stillScreenshot`,
 ios/TimbreUITests/StillScreen.swift).
 

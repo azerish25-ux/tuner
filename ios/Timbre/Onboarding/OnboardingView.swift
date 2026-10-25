@@ -382,7 +382,6 @@ struct OnboardingView: View {
             let checkSteps = placementCheckSteps(course)
             PlanStep(course: course, start: start, goal: goalOption, artwork: CourseArtwork.of(course, catalog: store.catalog),
                      check: checkSteps == nil ? nil : (checkedFrom == nil ? PlanCheck.offer : PlanCheck.done),
-                     pro: commerce.isPro,
                      minutes: $dailyMinutes, reminder: $reminderTime, reminderOn: $reminderOn,
                      onCheck: { checking = true }, onStart: { startPlan() })
                 .fullScreenCover(isPresented: $checking) {
@@ -437,8 +436,6 @@ private struct PlanStep: View {
     let artwork: CourseArtwork
     /// The 45-second placement check: on offer, done, or not for this player (nil).
     let check: PlanCheck?
-    /// Timbre Pro is active: every lesson of the units the placement skips is open.
-    let pro: Bool
     @Binding var minutes: Int
     @Binding var reminder: Date
     @Binding var reminderOn: Bool
@@ -499,36 +496,15 @@ private struct PlanStep: View {
         .padding(.top, 8)
     }
 
-    /// Placed players read what the placement skips (the course card names where they start); beginners, the course.
-    /// "They stay open" only where it is true: on Pro, or when every lesson skipped is free (`AccessPolicy.canPlay`).
-    /// On the free plan the skipped Pro lessons stay locked, so the line says Pro opens them, after a lock.
+    /// Placed players read the placement as a head start: the unit they start at (the course card under it names the
+    /// lesson) and that what they know is skipped. Beginners read the course. What Timbre Pro opens is left to the
+    /// paywall's Free and Pro table, one screen on, so the plan never shows a lock.
     @ViewBuilder private var subtitle: some View {
-        if let startUnit, startUnit > 1 {
-            if skippedOpen {
-                Text("You skip Units 1–\(startUnit). They stay open for a refresher.")
-            } else {
-                lockedLine(Text("You skip Units 1–\(startUnit). Revisit them any time with Timbre Pro."))
-            }
-        } else if startUnit == 1 {
-            if skippedOpen {
-                Text("You skip Unit 1. It stays open for a refresher.")
-            } else {
-                lockedLine(Text("You skip Unit 1. Revisit it any time with Timbre Pro."))
-            }
+        if let startUnit, startUnit > 0 {
+            Text("You start at Unit \(startUnit + 1) — skip what you already know.")
         } else {
             Text(course.subtitle.localized)
         }
-    }
-
-    /// Every lesson in the skipped units can be played on this plan.
-    private var skippedOpen: Bool {
-        guard !pro, let startUnit else { return true }
-        return course.units.prefix(startUnit).allSatisfy { unit in unit.lessons.allSatisfy { $0.free } }
-    }
-
-    /// A line about Pro lessons, led by a lock in Pro gold.
-    private func lockedLine(_ line: Text) -> Text {
-        Text(Image(systemName: "lock.fill")).foregroundStyle(Palette.proGoldDeep) + Text(verbatim: " ") + line
     }
 
     /// "Not sure? Take a 45-second check", or, once it has run, that the first lesson follows how they played.

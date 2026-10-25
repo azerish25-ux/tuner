@@ -100,6 +100,14 @@ struct SongPerformStep: View {
             }
         }
         .onAppear { store.audio.prepareBand(band) }
+        #if DEBUG
+        // A store scene (Root/DemoScenes.swift) performs the song by itself, from a chosen bar.
+        .task {
+            guard let beat = DemoScene.performBeat(lesson, beatsPerBar: beatsPerBar) else { return }
+            try? await Task.sleep(for: DemoScene.performDelay)
+            startScene(atBeat: beat)
+        }
+        #endif
         .onChange(of: ladder.rung) { _, _ in store.audio.prepareBand(band) }
         // A take can't go on in the pocket: the app going to the background ends it, nothing counted.
         .onChange(of: scenePhase) { _, now in if now == .background { stopTake() } }
@@ -524,3 +532,25 @@ struct SongEncoreStep: View {
         }
     }
 }
+
+#if DEBUG
+extension SongPerformStep {
+    /// The `song-perform` store scene (Root/DemoScenes.swift): the take starts `beat` beats into the song. Its clock
+    /// moves on to there and every note before it is judged as the demo pitch plays them, on time, so the combo, the
+    /// score, the ribbon, the words and the song map stand where a clean take would; the demo pitch plays on from there.
+    fileprivate func startScene(atBeat beat: Double) {
+        guard phase == .stage else { return }
+        start()
+        startTime -= countIn + beat * spb
+        let now = CACurrentMediaTime()
+        for _ in notes.indices {
+            let index = judge.nextIndex
+            guard index < judge.notes.count, judge.notes[index].beat < beat else { break }
+            let time = judge.time(of: index)
+            let midi = judge.notes[index].midi
+            apply(judge.update(time: time, midi: midi, cents: 0, onset: true), now: now)
+            if judge.nextIndex == index { break }
+        }
+    }
+}
+#endif

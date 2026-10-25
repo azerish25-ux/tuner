@@ -34,6 +34,10 @@ struct TanpuraMoment {
     var fade = 0.0
     var pure = false
     var still = false
+    /// The drone is playing: the gourd's rim lights and its halo breathes.
+    var running = false
+    /// The halo's breath, 0…1: once a cycle, fullest as low Sa is plucked (steady under Reduce Motion).
+    var breath = 0.0
 
     /// The gourd's glow: the strings ringing together.
     var resonance: Double { min(1, ring.enumerated().reduce(0.0) { $0 + $1.element * ($1.offset == 3 ? 0.45 : 0.32) }) }
@@ -46,8 +50,9 @@ struct TanpuraMoment {
 /// at the bottom, with its name and Sa's frequency inside; the note at the top, on the neck, sits on a small plate
 /// over the strings so they never hide it. With `onSelect` the dial turns by hand: a drag round the ring rotates
 /// it under the finger, clicking into a detent at every note (a tick and a selection haptic each) and settling on
-/// the nearest when let go; a tap on a note brings that one round. Reduce Motion: the strings stay straight and
-/// only light as they sound, and the dial moves without springing.
+/// the nearest when let go; a tap on a note brings that one round. While the drone plays it is plainly alive: a halo
+/// breathes round the gourd once a cycle, the rim lights mint, and each string blurs as it swings. Reduce Motion:
+/// the strings stay straight and only light as they sound, the halo holds steady, and the dial moves without springing.
 struct TanpuraHero: View {
     let tonicPc: Int
     /// The tonic with its octave ("D3"), and the note names the dial is written in.
@@ -120,10 +125,33 @@ struct TanpuraHero: View {
         let names = [fifth ? "Pa" : "Ma", "Sa", "Sa", "Sa"]
         return TimelineView(.animation(minimumInterval: still ? 0.1 : nil, paused: !running || !visible)) { _ in
             let moment = self.moment(still: still)
-            Canvas { context, _ in
-                TanpuraArt.draw(&context, layout: layout, moment: moment, names: names)
+            ZStack {
+                halo(layout, moment: moment)
+                Canvas { context, _ in
+                    TanpuraArt.draw(&context, layout: layout, moment: moment, names: names)
+                }
             }
         }
+    }
+
+    /// While the drone plays: a mint halo round the gourd, breathing once a pluck cycle (fullest as low Sa sounds)
+    /// and swelling as the strings ring. A view of its own rather than part of the canvas, so it can spread past the
+    /// hero's frame without a cut edge; it fades in with the drone and out when it stops.
+    private func halo(_ layout: TanpuraLayout, moment: TanpuraMoment) -> some View {
+        let r = layout.radius
+        let breath = CGFloat(moment.breath)
+        let swell = CGFloat(moment.resonance)
+        let reach = r * (1.72 + 0.16 * breath + 0.08 * swell)
+        let strength = 0.12 + 0.16 * moment.breath + 0.1 * moment.resonance
+        return Circle()
+            .fill(RadialGradient(colors: [Palette.mint.opacity(strength), Palette.mint.opacity(strength * 0.4), .clear],
+                                 center: .center, startRadius: r * 0.8, endRadius: reach))
+            .frame(width: reach * 2, height: reach * 2)
+            .position(layout.center)
+            .opacity(running ? 1 : 0)
+            .animation(reduceMotion ? Motion.reduced : Motion.reveal, value: running)
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
     }
 
     private func moment(still: Bool) -> TanpuraMoment {
@@ -140,6 +168,10 @@ struct TanpuraHero: View {
         }
         moment.elapsed = elapsed
         moment.fade = DroneCycle.fadeIn(elapsed: elapsed)
+        moment.running = true
+        // One breath a cycle, at its fullest as low Sa (the fourth pluck) sounds.
+        let crest = DroneCycle.interval * 3
+        moment.breath = still ? 0.6 : 0.5 + 0.5 * cos(2 * Double.pi * (elapsed - crest) / DroneCycle.period)
         for string in 0..<DroneCycle.strings {
             if pure {
                 // The pure voice holds Pa (or Ma), Sa and low Sa steadily; the second Sa is silent.
@@ -408,10 +440,13 @@ enum TanpuraArt {
             amplitudes.append(strength)
             paths.append(Self.path(string, layout: layout, moment: moment, amplitude: strength))
         }
-        // The blur of motion: the envelope a vibrating string sweeps, faint.
+        // The blur of motion: the envelope a vibrating string sweeps, its two extremes caught faintly at its edges,
+        // as a ringing string looks to the eye.
         for string in 0..<DroneCycle.strings where amplitudes[string] > 0.3 {
-            context.fill(lens(string, layout: layout, amplitude: amplitudes[string] * 1.15),
-                         with: .color(Palette.mint.opacity(0.1 * min(1, moment.ring[string] * 1.4))))
+            let ringing = min(1, moment.ring[string] * 1.4)
+            let sweep = lens(string, layout: layout, amplitude: amplitudes[string] * 1.1)
+            context.fill(sweep, with: .color(Palette.mint.opacity(0.14 * ringing)))
+            context.stroke(sweep, with: .color(Palette.mint.opacity(0.24 * ringing)), lineWidth: 0.6)
         }
         // One soft glow layer for every sounding string.
         if moment.resonance > 0.02 {
@@ -460,9 +495,10 @@ enum TanpuraArt {
     private static func gourd(_ context: inout GraphicsContext, layout: TanpuraLayout, moment: TanpuraMoment) {
         let c = layout.center, r = layout.radius
         let resonance = moment.resonance
-        // The room it fills: a mint glow that swells as the strings ring.
+        // The room it fills: a mint glow that swells as the strings ring (and breathes while the drone plays).
         let aura = r * (1.45 + 0.1 * CGFloat(resonance))
-        context.fill(circle(c, aura), with: .radialGradient(Gradient(colors: [Palette.mint.opacity(0.06 + 0.16 * resonance), .clear]),
+        let room = 0.06 + 0.16 * resonance + (moment.running ? 0.06 * moment.breath : 0)
+        context.fill(circle(c, aura), with: .radialGradient(Gradient(colors: [Palette.mint.opacity(room), .clear]),
                                                             center: c, startRadius: r * 0.6, endRadius: aura))
         // A ripple leaves the gourd with each pluck.
         if !moment.still {
@@ -477,6 +513,14 @@ enum TanpuraArt {
         context.fill(circle(c, r), with: .radialGradient(Gradient(colors: [Palette.mint.opacity(0.1 * resonance), .clear]),
                                                          center: c, startRadius: 0, endRadius: r))
         context.stroke(circle(c, r), with: .color(Palette.amber.opacity(0.26)), lineWidth: 1.5)
+        if moment.running {
+            // Playing: the rim lit mint, brightest with the breath and the strings.
+            let lit = min(1, 0.3 + 0.35 * moment.breath + 0.25 * resonance) * max(0.35, moment.fade)
+            var glow = context
+            glow.addFilter(.blur(radius: 3))
+            glow.stroke(circle(c, r), with: .color(Palette.mint.opacity(0.7 * lit)), lineWidth: 3)
+            context.stroke(circle(c, r), with: .color(Palette.mint.opacity(lit)), lineWidth: 1.3)
+        }
         context.stroke(circle(c, r * 0.86), with: .color(.white.opacity(0.05)), lineWidth: 1)
         // The inlay: a ring of small dots, filled as one path.
         var inlay = Path()
@@ -520,12 +564,13 @@ enum TanpuraArt {
 
     // MARK: Strings
 
-    /// How far a string swings: a strong, quickly settling shimmer after the pluck and a faint one while it rings.
+    /// How far a string swings: a strong, quickly settling shimmer after the pluck and a plain one while it rings on,
+    /// so every sounding string is seen to move until it is plucked again.
     private static func amplitude(_ string: Int, moment: TanpuraMoment) -> CGFloat {
         guard !moment.still, let age = moment.age[string], moment.ring[string] > 0 else { return 0 }
-        let peak: CGFloat = string == 3 ? 5.5 : 4.5
-        if moment.pure { return peak * 0.22 * CGFloat(moment.fade) }
-        let decay = 0.72 * exp(-age / 0.55) + 0.28 * exp(-age / 3.2)
+        let peak: CGFloat = string == 3 ? 7.5 : 6.5
+        if moment.pure { return peak * 0.32 * CGFloat(moment.fade) }
+        let decay = 0.6 * exp(-age / 0.6) + 0.4 * exp(-age / 3.0)
         return peak * CGFloat(decay * moment.fade)
     }
 

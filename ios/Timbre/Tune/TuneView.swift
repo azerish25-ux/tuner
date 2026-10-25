@@ -40,9 +40,11 @@ struct TuneView: View {
             StageBackground()
             PitchAura().allowsHitTesting(false)
             GeometryReader { proxy in
-                let arrangement = TuneArrangement(size: proxy.size, regular: horizontalSizeClass == .regular && verticalSizeClass == .regular)
+                let arrangement = TuneArrangement(size: proxy.size, regular: regularWindow)
                 let pane = TuneArrangement.showsPane(arrangement, size: proxy.size, regularWidth: horizontalSizeClass == .regular,
                                                      largeType: dynamicTypeSize.isAccessibilitySize)
+                let scale = TuneArrangement.readout(arrangement, size: proxy.size, regular: regularWindow, pane: pane,
+                                                    largeType: dynamicTypeSize.isAccessibilitySize)
                 VStack(spacing: 0) {
                     header
                     // One layout that changes shape rather than two branches: the stage keeps its identity when the
@@ -52,8 +54,8 @@ struct TuneView: View {
                         stage(controls: arrangement != .columns)
                             .frame(width: arrangement == .columns ? TuneArrangement.stageWidth(in: proxy.size.width, pane: pane) : nil)
                             .frame(maxWidth: arrangement == .beside ? CGFloat.infinity : nil, maxHeight: .infinity)
-                        panel(arrangement, width: proxy.size.width)
-                        if pane { sidePane(arrangement, width: proxy.size.width) }
+                        panel(arrangement, width: proxy.size.width, scale: scale)
+                        if pane { sidePane(arrangement, width: proxy.size.width, scale: scale) }
                         if arrangement == .columns { controlRail }
                     }
                 }
@@ -92,11 +94,8 @@ struct TuneView: View {
         }
         .onChange(of: store.allCoursesLocked) { _, all in showWhole = all }
         .onChange(of: store.selectedCourse) { _, _ in showWhole = false }
-        // A page sheet on iPad: tall enough for the tunings, filters and the shelf of cards in full (a form sheet cut
-        // the cards in half); a phone's sheet is unchanged.
-        .sheet(isPresented: $store.showInstrumentPicker) {
-            InstrumentPicker().presentationDetents([.large]).presentationSizing(.page).presentationBackground(Palette.stage)
-        }
+        // The instrument browser: a sheet on a phone, a full page of its own on iPad (Instruments/InstrumentsView.swift).
+        .instrumentPicker(isPresented: $store.showInstrumentPicker)
         .fullScreenCover(isPresented: $strumOpen) { StrumTuneView().environmentObject(store).environmentObject(audio) }
         #if DEBUG
         .overlay(alignment: .bottomLeading) { if Self.probe { stageProbe } }
@@ -195,17 +194,26 @@ struct TuneView: View {
         .padding(.horizontal, Metrics.gutter).padding(.top, 6)
     }
 
-    private func stageInput() -> StageInput {
+    /// A window of iPad size (regular width and height; never a phone): the larger readout and the roomy close-up.
+    private var regularWindow: Bool { horizontalSizeClass == .regular && verticalSizeClass == .regular }
+
+    /// - Parameter controls: Strum and listening stand on the stage's trailing edge (the roomy close-up keeps clear).
+    private func stageInput(controls: Bool) -> StageInput {
         // On a paired course the cue rings the one peg being tuned.
         let peg = store.referenceMode ? nil : Optional(CourseGrouping.position(of: store.activeCourse, in: store.courses))
         // The 3D camera (and the 2D studio or photo stage, as far as its picture allows) holds the headstock close-up,
         // with the peg ring and its turn arrow, whenever a string is being tuned, listening or paused alike: the peg
         // to turn is the tuner's hero. It pulls back to the whole instrument only for the all-strings celebration
-        // (Reduce Motion cuts rather than glides).
+        // (Reduce Motion cuts rather than glides). In an iPad-sized window the close-up shows the whole headstock,
+        // centred across the stage.
         return StageInput(cents: store.live.reading.cents, level: store.live.level, locked: store.live.reading.inTune,
                           listening: audio.running, activeAnchor: store.activeAnchor, focus: !store.referenceMode && !showWhole,
-                          note: store.targetName, pegIndex: peg)
+                          note: store.targetName, pegIndex: peg, roomy: regularWindow,
+                          controlsReserve: controls ? Self.controlsReserve : 0)
     }
+
+    /// The width the side controls take on the stage's trailing edge: the 52 pt orb, its 14 pt margin and a gap.
+    static let controlsReserve: CGFloat = 76
 
     /// Nothing drives the stage (not listening, no reading held): its animations settle, then stop redrawing.
     private var resting: Bool { !audio.running && !store.live.preserved }
@@ -214,12 +222,13 @@ struct TuneView: View {
     ///   they have a rail of their own instead). The bar under the stage stands on it in every arrangement.
     @ViewBuilder private func stage(controls: Bool) -> some View {
         let resting = self.resting
+        let input: () -> StageInput = { self.stageInput(controls: controls) }
         ZStack(alignment: .top) {
             if store.referenceMode {
                 // The note name lives in the readout below; the strobe dial stays clear of the side controls. A tap on
                 // its note wheel holds that note (Manual).
                 let settings = store.settings
-                ChromaticStage(input: stageInput, midi: store.activeMidi + settings.transposition - settings.capo,
+                ChromaticStage(input: input, midi: store.activeMidi + settings.transposition - settings.capo,
                                notation: settings.notation, resting: resting,
                                onPick: { store.chooseReferenceNote($0 - settings.transposition + settings.capo) })
                     .padding(.top, 8).padding(.bottom, 4).padding(.horizontal, controls ? 64 : 20)
@@ -234,25 +243,25 @@ struct TuneView: View {
                         // the tuner on a wide shot without its cue; the model then picks the dolly up where it got to.
                         if ready3D != modelID {
                             StudioStage(imageName: rendered ? ModelLibrary.cardImageName(modelID) : (store.photo?.asset ?? ""),
-                                        card: card, input: stageInput, onSelect: { selectPeg($0) }, resting: resting)
+                                        card: card, input: input, onSelect: { selectPeg($0) }, resting: resting)
                                 .padding(.horizontal, 16)
                                 .transition(.opacity)
                         }
-                        InstrumentStage(modelID: modelID, input: stageInput, onSelect: { selectPeg($0) },
+                        InstrumentStage(modelID: modelID, input: input, onSelect: { selectPeg($0) },
                                         onFailure: { failed3D = modelID },
                                         onReady: { withAnimation(Motion.reveal) { ready3D = modelID } },
                                         revealClose: card?.head != nil, resting: resting)
                     }
                 } else if ModelLibrary.hasCard(modelID) {
-                    StudioStage(imageName: ModelLibrary.cardImageName(modelID), card: rig.flatMap(StageCard.init(rig:)), input: stageInput,
+                    StudioStage(imageName: ModelLibrary.cardImageName(modelID), card: rig.flatMap(StageCard.init(rig:)), input: input,
                                 onSelect: { selectPeg($0) }, resting: resting)
                         .padding(.horizontal, 16)
                 } else if let photo = store.photo {
-                    StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: stageInput,
+                    StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: input,
                                 onSelect: { selectPeg($0) }, resting: resting).padding(28)
                 }
             } else if let photo = store.photo {
-                StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: stageInput,
+                StudioStage(imageName: photo.asset, card: ModelLibrary.photoCard(photo.asset), input: input,
                             onSelect: { selectPeg($0) }, resting: resting).padding(28)
             }
         }
@@ -266,21 +275,23 @@ struct TuneView: View {
 
     /// The readout, quest line and string rail, placed for the arrangement: under the stage, beside it in a
     /// column (a phone on its side), or as the iPad's middle column, centred between the instrument and the controls.
-    @ViewBuilder private func panel(_ arrangement: TuneArrangement, width: CGFloat) -> some View {
+    /// The readout's size and width come from `TuneArrangement.readout`: the phone's everywhere but an iPad-sized
+    /// window, where the note and meter grow to fill the column.
+    @ViewBuilder private func panel(_ arrangement: TuneArrangement, width: CGFloat, scale: ReadoutScale) -> some View {
         switch arrangement {
         case .stacked:
-            tuningPanel.frame(maxWidth: 680)
+            tuningPanel(scale).frame(maxWidth: scale.width)
         case .beside:
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
-                tuningPanel
+                tuningPanel(scale)
                 Spacer(minLength: 0)
             }
             .frame(width: min(560, width * 0.44))
         case .columns:
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
-                tuningPanel.frame(maxWidth: 560)
+                tuningPanel(scale).frame(maxWidth: scale.width)
                 Spacer(minLength: 0)
             }
             .frame(maxWidth: .infinity)
@@ -291,11 +302,12 @@ struct TuneView: View {
     /// In landscape a column of its own between the readout and the control rail, so the readout stays centred in
     /// its column with the right of the screen put to use; in portrait a row under the string rail, which takes
     /// the height the headstock had spare and lifts the readout to the middle of the screen.
-    private func sidePane(_ arrangement: TuneArrangement, width: CGFloat) -> some View {
+    private func sidePane(_ arrangement: TuneArrangement, width: CGFloat, scale: ReadoutScale) -> some View {
         let column = arrangement == .columns
         return TuneSidePane(column: column)
             .frame(width: column ? TuneArrangement.paneWidth(in: width) : nil)
-            .frame(maxWidth: column ? nil : CGFloat(680))
+            // In portrait as wide as the readout above it.
+            .frame(maxWidth: column ? nil : scale.width)
             .padding(.leading, column ? 4 : Metrics.gutter)
             .padding(.trailing, column ? 0 : Metrics.gutter)
             .padding(.bottom, column ? 0 : 14)
@@ -309,50 +321,92 @@ struct TuneView: View {
             .frame(maxHeight: .infinity)
     }
 
-    private var readout: some View {
+    private func readout(_ scale: ReadoutScale) -> some View {
+        // Whether the stage's peg asks for the string, read once per update rather than every frame.
+        let calls = stageCallsString
         // Every frame while a pitch can move it; at rest (not listening, nothing held) the readout has no pitch and
         // nothing to animate, so it draws once and stops instead of redrawing at the display rate.
-        TimelineView(.animation(minimumInterval: nil, paused: resting)) { timeline in
+        return TimelineView(.animation(minimumInterval: nil, paused: resting)) { timeline in
             let reading = store.live.reading
             let heard = audio.running || store.live.preserved
-            let _ = motion.step(heard ? reading.cents : nil, locked: reading.inTune, now: timeline.date.timeIntervalSinceReferenceDate,
+            let now = timeline.date.timeIntervalSinceReferenceDate
+            let _ = motion.step(heard ? reading.cents : nil, locked: reading.inTune, now: now,
                                 hertz: reading.frequency, target: store.targetHz)
             let shown = motion.shown
-            // Once locked, the readout's "In tune" badge says it; the line below keeps its height but goes quiet.
-            let badgeSaysIt = reading.inTune && audio.running && !store.live.preserved
-            VStack(spacing: 14) {
-                NoteReadout(note: store.targetName, shown: shown, hertz: motion.shownHertz, target: store.targetHz, locked: reading.inTune)
-                meter(locked: reading.inTune, shown: shown)
-                // The same steady whole cents and colour rule as the digits above, changing in place
-                // (no rolling digits), so the two never disagree.
-                Text(statusLine(reading, shown: shown)).font(.footnote.weight(.semibold))
-                    .foregroundStyle(statusColor(reading, shown: shown))
-                    .monospacedDigit()
-                    // The words swap in one frame; only the fade is animated, so two lines never blend into one.
-                    .contentTransition(.identity)
-                    .opacity(badgeSaysIt ? 0 : 1)
-                    .animation(Motion.quick, value: badgeSaysIt)
-                    .accessibilityHidden(badgeSaysIt)
-                    .accessibilityIdentifier("tune.status")
+            // The one "in tune" flag: the readout's badge shows from it and the line below goes quiet from it, so
+            // exactly one "In tune" is ever on screen (a paused reading's line still says it is paused).
+            let locked = reading.inTune
+            let badgeSaysIt = locked && !store.live.preserved
+            // A gap of a few frames in the pitch holds the numbers rather than blinking to the target.
+            let printed = heard ? motion.printed(target: store.targetHz, now: now) : nil
+            // The stage's peg label has the call to play ("Play G3") while nothing is heard: said once, there.
+            let quiet = badgeSaysIt || (calls && waitingForString(reading))
+            VStack(spacing: scale.large ? 18 : 14) {
+                NoteReadout(note: store.targetName, shown: printed?.shown, hertz: printed?.hertz, target: store.targetHz,
+                            locked: locked, size: scale.note)
+                meter(locked: locked, shown: shown, scale: scale)
+                statusText(statusLine(reading, shown: shown), color: statusColor(reading, shown: shown), quiet: quiet,
+                           hidden: badgeSaysIt, large: scale.large)
             }
         }
         .padding(.bottom, 4)
     }
 
+    /// The line under the meter: the same steady whole cents and colour rule as the digits above, changing in place
+    /// (no rolling digits), so the two never disagree. `quiet` when another surface says it (the readout's In tune
+    /// badge, the peg's "Play G3"): the line then shows nothing and keeps its height, and VoiceOver still hears the
+    /// call to play (the stage is hidden from it). `hidden` while the badge's value carries "In tune" for VoiceOver.
+    private func statusText(_ words: String, color: Color, quiet: Bool, hidden: Bool, large: Bool) -> some View {
+        let font: Font = large ? Font.callout.weight(.semibold) : Font.footnote.weight(.semibold)
+        return Text(verbatim: quiet ? " " : words).font(font)
+            .foregroundStyle(color)
+            .monospacedDigit()
+            // The words swap in one frame; only the fade is animated, so two lines never blend into one.
+            .contentTransition(.identity)
+            .opacity(quiet ? 0 : 1)
+            .animation(Motion.quick, value: quiet)
+            .accessibilityLabel(Text(verbatim: words))
+            .accessibilityHidden(hidden)
+            .accessibilityIdentifier("tune.status")
+    }
+
+    /// Listening with nothing heard: the moment the status would ask for the string ("Play G3", `AppStore.statusText`).
+    private func waitingForString(_ reading: TuningReading) -> Bool {
+        audio.running && !store.live.preserved && reading.cents == nil && reading.status == "noSignal"
+    }
+
+    /// Whether the stage carries the call to play the string ("Play G3" beside its ringed peg) while nothing is heard,
+    /// so the status line can leave the words to it: the 3D headstock once its model is on stage and framed close
+    /// (its rig has the string), or a studio render or photograph with that string's peg on it (the 3D model's
+    /// stand-in while it loads included). Chromatic, the whole-instrument shot and pictures without the peg keep
+    /// the words in the status line.
+    private var stageCallsString: Bool {
+        guard !store.referenceMode, let anchor = store.activeAnchor else { return false }
+        let photo = store.photo?.asset
+        guard let modelID = store.modelID else { return ModelLibrary.photoCard(photo)?.point("\(anchor).peg") != nil }
+        let rig = ModelLibrary.rig(modelID)
+        if Self.supports3D && store.settings.stageMode != "studio" && failed3D != modelID && ready3D == modelID {
+            return !showWhole && rig?.string(anchor) != nil
+        }
+        let card = ModelLibrary.hasCard(modelID) ? rig.flatMap(StageCard.init(rig:)) : ModelLibrary.photoCard(photo)
+        return card?.point("\(anchor).peg") != nil
+    }
+
     /// The needle meter, or with Strobe precision on, a strobe band that drifts with the error and stands still in tune.
-    @ViewBuilder private func meter(locked: Bool, shown: Int?) -> some View {
+    /// In an iPad's column the meter spans the readout (`ReadoutScale.meterInset`) and stands a little taller.
+    @ViewBuilder private func meter(locked: Bool, shown: Int?, scale: ReadoutScale) -> some View {
         if strobeView {
             StrobeBand(cents: shown.map { Double($0) }, phase: reduceMotion ? 0 : motion.phase, locked: locked, active: motion.cents != nil)
-                .frame(height: 26).padding(.vertical, 6).padding(.horizontal, 32)
+                .frame(height: scale.large ? 32 : 26).padding(.vertical, 6).padding(.horizontal, scale.meterInset)
         } else {
             RibbonMeter(cents: motion.cents, shown: shown, phase: motion.phase, locked: locked)
-                .frame(height: 38).padding(.horizontal, 32)
+                .frame(height: scale.meterHeight).padding(.horizontal, scale.meterInset)
         }
     }
 
     /// The status under the meter reads the readout's own whole cents against the tracker's lock band:
     /// "Hold it…" inside the band, "Tighten"/"Loosen" outside it, "In tune" once the tracker locks
-    /// (then the readout's badge says it, and this line stays blank, holding its height).
+    /// (then the readout's badge says it, and `statusText` leaves the line blank, holding its height).
     private func statusLine(_ reading: TuningReading, shown: Int?) -> String {
         guard audio.running, !store.live.preserved, reading.cents != nil, let shown else { return store.statusText }
         if reading.inTune { return String(localized: "In tune") }
@@ -366,9 +420,9 @@ struct TuneView: View {
         return Palette.tuning(Double(shown), locked: reading.inTune)
     }
 
-    private var tuningPanel: some View {
+    private func tuningPanel(_ scale: ReadoutScale) -> some View {
         VStack(spacing: 6) {
-            readout
+            readout(scale)
             // In Chromatic: a free player's Pro instrument from onboarding, its strings and its stage in Pro.
             if !store.referenceMode { questLine } else { ChromaticStandInHint() }
             StringRail(motion: motion).opacity(store.referenceMode ? 0 : 1).frame(height: store.referenceMode ? 8 : nil)
@@ -563,6 +617,31 @@ enum TuneArrangement: Equatable {
     /// Landscape windows narrower than this keep the two columns (the readout would be squeezed).
     static let paneMinWidth: CGFloat = 1150
 
+    /// The landscape control rail: the 52 pt orb and its margins (`TuneView.controlRail`).
+    static let railWidth: CGFloat = 76
+
+    /// How large the readout draws for the window. A phone, a compact or short wide window and the accessibility text
+    /// sizes keep the phone's readout (Dynamic Type grows its note there). An iPad-sized window grows the note with
+    /// its column, to about 190 pt on a 13-inch iPad in either orientation, and lets the meter span the column; in
+    /// portrait the readout, rail and side pane stand wider too.
+    static func readout(_ arrangement: TuneArrangement, size: CGSize, regular: Bool, pane: Bool, largeType: Bool) -> ReadoutScale {
+        guard regular, !largeType else { return .phone }
+        switch arrangement {
+        case .beside:
+            return .phone
+        case .stacked:
+            // 190 on a 13-inch iPad, about 145 on an 11-inch, 130 on a mini: the stage keeps the larger share.
+            let note = min(190, max(112, min(size.width * 0.184, 112 + (size.height - 940) * 0.25)))
+            let width = min(size.width - 2 * Metrics.gutter, max(680, size.width * 0.84))
+            return ReadoutScale(note: note.rounded(), width: width, meterInset: 8, meterHeight: 44)
+        case .columns:
+            // The middle column: what the instrument, the side pane and the control rail leave.
+            let column = size.width - stageWidth(in: size.width, pane: pane) - (pane ? paneWidth(in: size.width) + 4 : 0) - railWidth
+            let note = min(190, max(112, min(column * 0.38, size.height * 0.21)))
+            return ReadoutScale(note: note.rounded(), width: 560, meterInset: 8, meterHeight: 44)
+        }
+    }
+
     /// Whether the window has room for the side pane (pitch trace and String health): iPad landscape from 11-inch
     /// up, or a regular-width portrait window tall enough that the stage keeps a good share of the height. Never
     /// a phone, a short window or at the accessibility text sizes (the cards would outgrow their column, or grow
@@ -575,6 +654,24 @@ enum TuneArrangement: Equatable {
         case .beside: return false
         }
     }
+}
+
+/// How large the tuner's readout draws and how wide it stands (`TuneArrangement.readout`): the phone's sizes, or an
+/// iPad's larger note and full-column meter.
+struct ReadoutScale: Equatable {
+    /// The note name's size before Dynamic Type (`NoteReadout.size`).
+    var note: CGFloat = 112
+    /// The widest the readout, quest line and string rail stand (and, in portrait, the side pane under them).
+    var width: CGFloat = 680
+    /// The meter's inset from each side of the readout.
+    var meterInset: CGFloat = 32
+    /// The needle meter's height.
+    var meterHeight: CGFloat = 38
+
+    static let phone = ReadoutScale()
+
+    /// Larger than the phone's: the gaps and the status line step up with the note.
+    var large: Bool { note > 112 }
 }
 
 /// Warm or cool light behind the stage that follows the pitch.

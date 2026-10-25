@@ -43,11 +43,14 @@ final class TabletScreenshotsUITests: XCTestCase {
         settle(1.5)
         tunerFrame("ipad-landscape-tune")
 
-        // The instrument browser is the tuner's picker sheet (a page sheet on iPad).
+        // App Store frame (iPad #2): the instrument browser, a full page of its own on iPad (Instruments/InstrumentsView.swift),
+        // never a sheet with the tuner's controls showing around it. Kept only once the tuner has left the screen.
         element("tune.instrument").tap()
         XCTAssertTrue(element("instruments.search").waitForExistence(timeout: 10))
-        settle(0.6)  // the sheet's presentation; `shot` waits out the rails' first reveal
-        shot("ipad-landscape-instruments")
+        settle(0.6)  // the page's presentation; `stillScreenshot` waits out the rails' first reveal
+        let browser = stillScreenshot(timeout: 3)
+        let alone = element("tune.stage").waitForNonExistence(timeout: 5)
+        storeFrame("ipad-landscape-instruments", picture: browser, ok: alone, "the tuner is still on screen around the browser")
         closePicker()
 
         tab("Play", until: "practice.sniper")
@@ -95,6 +98,16 @@ final class TabletScreenshotsUITests: XCTestCase {
         add(attachment)
     }
 
+    /// Keeps a store frame under its own name when it shows what its caption says; otherwise the test fails and the
+    /// picture is kept as "<name>-wrong", so the screenshot tool never frames it.
+    private func storeFrame(_ name: String, picture: XCUIScreenshot, ok: Bool, _ problem: String) {
+        if !ok { XCTFail("\(name): \(problem)") }
+        let attachment = XCTAttachment(screenshot: picture)
+        attachment.name = ok ? name : name + "-wrong"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
     /// A tuner frame for the listing: kept under its own name with the 3D stage up and the selected string locked,
     /// otherwise kept as "<name>-wrong" (and the test fails) so the screenshot tool never frames a studio stand-in or
     /// a half-lock. Each picture is taken hands off, before the check's own snapshot (which stalls the main thread).
@@ -127,7 +140,7 @@ final class TabletScreenshotsUITests: XCTestCase {
         settle(0.6)
     }
 
-    /// Closes the picker sheet and waits for it to go; on iPad it can still be settling, so a swipe is the fallback.
+    /// Closes the picker (a full page on iPad) with Done and waits for it to go; a swipe is the fallback.
     private func closePicker() {
         let search = element("instruments.search")
         let done = app.buttons["Done"].firstMatch

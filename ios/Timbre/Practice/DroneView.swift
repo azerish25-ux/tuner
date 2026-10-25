@@ -3,7 +3,8 @@ import TimbreCore
 
 /// The drone as a tanpura: its four strings plucked in turn on the drone's own clock around a dial of tonics you
 /// turn by hand, and with the microphone on, your sung or played pitch traced against the nearest swara inside a
-/// ±5¢ band.
+/// ±5¢ band. Starting the drone starts the sing-along with it when the microphone is already allowed (never a
+/// permission prompt from here), and stopping it stops what it started.
 struct DroneView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService
@@ -14,6 +15,8 @@ struct DroneView: View {
     @StateObject private var singAlong = DroneSingAlong()
     /// The microphone is on for this screen (the store's lesson microphone, owned by `owner`).
     @State private var listening = false
+    /// The microphone came on with the drone (not from Listen), so it goes off with it.
+    @State private var listeningWithDrone = false
     @State private var owner = UUID()
 
     private var fifth: Bool { firstString != "ma" }
@@ -52,7 +55,10 @@ struct DroneView: View {
             .accessibilityIdentifier("drone.start")
         }
         .onAppear(perform: conform)
-        .onChange(of: audio.droneRunning) { _, _ in conform() }
+        .onChange(of: audio.droneRunning) { _, running in
+            conform()
+            if running { listenWithDrone() } else if listeningWithDrone { stopListening() }
+        }
         .onChange(of: store.droneMidi) { _, _ in
             singAlong.reset()
             if listening { store.gameTargetHz = saHz }
@@ -156,12 +162,22 @@ struct DroneView: View {
 
     // MARK: Microphone
 
+    /// Listen and Pause: the player's own choice, which the drone stopping then leaves alone.
     private func toggleListening() {
         if listening && audio.running { stopListening() } else { startListening() }
+        listeningWithDrone = false
+    }
+
+    /// The drone has just started: the sing-along starts with it if the microphone may be used without asking
+    /// (allowed before, or the screenshots' demo pitch). Undecided or refused, Listen stays the player's to tap.
+    private func listenWithDrone() {
+        guard !listening, !audio.permissionDenied, LessonMicrophone.granted else { return }
+        startListening(haptic: false)
+        listeningWithDrone = true
     }
 
     /// The tuner's own pitch pipeline (the store's lesson microphone): readings arrive here instead of the tuner.
-    private func startListening() {
+    private func startListening(haptic: Bool = true) {
         singAlong.reset()
         listening = true
         let model = singAlong
@@ -172,10 +188,11 @@ struct DroneView: View {
             let sa = PitchMath.frequency(midi: Double(store.droneMidi), reference: store.settings.referencePitchHz)
             model.accept(hz, sa: sa)
         }
-        Haptics.shared.selection()
+        if haptic { Haptics.shared.selection() }
     }
 
     private func stopListening() {
+        listeningWithDrone = false
         guard listening else { return }
         listening = false
         store.stopLessonListening(owner: owner)

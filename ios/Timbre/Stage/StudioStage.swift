@@ -124,7 +124,8 @@ struct StudioStage: View {
         let state = input()
         let key = shownAnchor(card, state).map { shownKey(card, state, anchor: $0) }
         let frame = motion.frame(picture: imageName, head: card.head, peg: key.flatMap { card.point("\($0).peg") },
-                                 focus: state.focus, size: size, now: date.timeIntervalSinceReferenceDate, still: reduceMotion)
+                                 focus: state.focus, size: size, now: date.timeIntervalSinceReferenceDate, still: reduceMotion,
+                                 centred: state.roomy)
         ZStack {
             ZStack {
                 picture(frame)
@@ -273,6 +274,8 @@ struct StageFrame {
     static let controlsInset: CGFloat = 26
     /// Studio renders and photographs turn soft past about twice their fitted size.
     static let maxZoom: CGFloat = 2
+    /// The wood above the top pegs, as a share of the head box (pegs to nut): a centred close-up keeps it in frame.
+    static let tipShare: CGFloat = 0.35
 
     static func whole(in size: CGSize) -> StageFrame {
         let side = max(0, min(size.width, size.height))
@@ -283,19 +286,24 @@ struct StageFrame {
     /// The close-up zooms as far as the head fits (at most `maxZoom`) and lifts the head to just under the top
     /// clearance, so the neck runs down the stage below it (the 3D close-up's layout), keeping the nut clear of the
     /// bottom. On the way the picture zooms about one fixed point: the aim travels to its spot in step with the
-    /// zoom, which grows geometrically (an even apparent dolly).
-    static func closeUp(in size: CGSize, head: CGRect, aim: CGPoint, framing: Double) -> StageFrame {
+    /// zoom, which grows geometrically (an even apparent dolly). `centred` (an iPad-sized window, `StageInput.roomy`):
+    /// the head centres across the stage, and the wood above its pegs stays clear of the feathered top.
+    static func closeUp(in size: CGSize, head: CGRect, aim: CGPoint, framing: Double, centred: Bool = false) -> StageFrame {
         let base = Self.whole(in: size)
         let f = CGFloat(max(0, min(1, framing)))
         guard f > 0.0005, base.side > 1 else { return base }
-        let fitV = (size.height - pegClearance - nutClearance) / max(head.height * base.side, 1)
+        let tipRoom = centred ? head.height * tipShare : 0
+        let edge = 0.06 * size.height + 10
+        var fitV = (size.height - pegClearance - nutClearance) / max(head.height * base.side, 1)
+        if centred { fitV = min(fitV, (size.height - edge - nutClearance) / max((head.height + tipRoom) * base.side, 1)) }
         let fitH = (size.width - 160) / max(head.width * base.side, 1)
         let zoom = min(maxZoom, fitV, fitH)
         guard zoom > 1.05 else { return base }
         let full = base.side * zoom
-        let lowest = pegClearance - (head.minY - aim.y) * full
+        var lowest = pegClearance - (head.minY - aim.y) * full
+        if centred { lowest = max(lowest, edge - (head.minY - tipRoom - aim.y) * full) }
         let highest = size.height - nutClearance - (head.maxY - aim.y) * full
-        let spot = CGPoint(x: size.width / 2 - controlsInset, y: min(lowest + 16, max(lowest, highest)))
+        let spot = CGPoint(x: size.width / 2 - (centred ? 0 : controlsInset), y: min(lowest + 16, max(lowest, highest)))
         let current = CGFloat(pow(Double(zoom), Double(f)))
         let progress = (current - 1) / (zoom - 1)
         let start = base.point(aim)
@@ -403,8 +411,10 @@ final class Motion2D {
 
     /// Advances the dolly to `now` and says where the picture sits. A new picture starts whole and dollies in
     /// (the 3D stage's dolly, so a 3D model taking over from its placeholder meets it on the way); `still`
-    /// (Reduce Motion) cuts straight to the framing.
-    func frame(picture name: String, head: CGRect?, peg: CGPoint?, focus: Bool, size: CGSize, now: Double, still: Bool) -> StageFrame {
+    /// (Reduce Motion) cuts straight to the framing. `centred` (an iPad-sized window) aims at the head's centre line
+    /// and centres it across the stage (`StageFrame.closeUp`).
+    func frame(picture name: String, head: CGRect?, peg: CGPoint?, focus: Bool, size: CGSize, now: Double, still: Bool,
+               centred: Bool = false) -> StageFrame {
         if name != picture {
             picture = name
             framing = 0; framingVelocity = 0; aim = nil; framedAt = 0
@@ -416,14 +426,15 @@ final class Motion2D {
         if still { framing = goal; framingVelocity = 0 } else { advanceDolly(toward: goal, dt: dt) }
         // Between the head's centre and the peg being tuned, as the 3D close-up aims.
         let center = CGPoint(x: head.midX, y: head.midY)
-        let target = peg.map { CGPoint(x: center.x + ($0.x - center.x) * 0.35, y: center.y + ($0.y - center.y) * 0.35) } ?? center
+        let lean: CGFloat = centred ? 0 : 0.35
+        let target = peg.map { CGPoint(x: center.x + ($0.x - center.x) * lean, y: center.y + ($0.y - center.y) * 0.35) } ?? center
         if let current = aim, !still {
             let k = CGFloat(min(1, dt * 3))
             aim = CGPoint(x: current.x + (target.x - current.x) * k, y: current.y + (target.y - current.y) * k)
         } else {
             aim = target
         }
-        return StageFrame.closeUp(in: size, head: head, aim: aim ?? target, framing: framing)
+        return StageFrame.closeUp(in: size, head: head, aim: aim ?? target, framing: framing, centred: centred)
     }
 
     private func advanceDolly(toward goal: Double, dt: Double) {

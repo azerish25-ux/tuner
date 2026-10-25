@@ -8,8 +8,13 @@ import UIKit
 /// title is set in Sora. A sleeve is either dark (a deep gradient, the motif in the song's colours, light type) or,
 /// now and then, a bright colour field with the motif and the type in ink.
 ///
-/// Motifs are dealt along each course in turn (`assignedMotif`), skipping any of the last six dealt, so a course's
-/// shelf never shows the same motif twice within seven sleeves; the type is set in one of four weights.
+/// Motifs are dealt along each course in turn (`assignedMotif`) from one of two sets of twelve: the Originals' own
+/// (waveforms, grids, spirals, a synthwave horizon…) and the traditional tunes' (suns, ridges, moons, rosettes…). So
+/// the Song of the Day, an Original for anyone past the first steps, never wears the motif of the paywall's sleeve (a
+/// song from an instrument's course). A sleeve skips any motif of the last eight its course dealt and the family
+/// (`Motif.family`: suns, skies, rings…) of the two before it, so a course's shelf never shows a motif twice within
+/// nine sleeves and neighbours never look alike; the picked shelves keep each motif once (`SongsCatalog`). The type
+/// is set in one of four weights.
 ///
 /// Every sleeve keeps one grid, so the controls on it never move or collide: the catalogue number top-left, and the
 /// bottom-right corner (`playCorner`) clear for "Hear it" (or a badge). The title sits at the top under the number
@@ -20,7 +25,11 @@ struct CoverArt {
     enum Motif: CaseIterable {
         case sunset, waveform, orbits, grid, ridges, stripes, sparkle, contour
         case pulse, halftone, rays, blocks, rosette, keys, horizon, strings
+        case arches, moon, checker, spiral, equalizer, petals, constellation, waves
     }
+    /// Motifs that read alike at a glance (a sun low on the sleeve, rings round a centre, a field of bars): two
+    /// sleeves side by side never share one.
+    enum Family { case sun, land, sky, radial, sound, geometry, lines, dots }
     /// How the title lines up across the sleeve.
     enum Align { case leading, center, trailing }
 
@@ -106,28 +115,51 @@ struct CoverArt {
     /// Tunes where each course's deal starts, so the mixed "3 chords or fewer" shelf repeats as little as it can.
     private static let dealSalt: UInt64 = 181
 
-    /// The motif a course deals its song `lessonId`: song by song in course order, each takes its turn in its unit's
-    /// genre list, passing over any of the six dealt before it. Nil for a lesson that isn't one of the course's songs.
+    /// The Originals' motifs: a modern catalogue's (sound, print and geometry, one synthwave sun).
+    static let originalsMotifs: [Motif] = [.horizon, .waveform, .pulse, .equalizer, .halftone, .contour,
+                                           .spiral, .grid, .checker, .blocks, .constellation, .arches]
+    /// Every other song's: the traditional tunes' (suns and skies, land and sea, rosettes, strings and keys). No
+    /// motif is in both sets.
+    static let heritageMotifs: [Motif] = [.sunset, .rays, .ridges, .waves, .sparkle, .moon,
+                                          .rosette, .petals, .orbits, .stripes, .strings, .keys]
+    /// A sleeve passes over the motifs of this many sleeves before it in its course.
+    private static let dealWindow = 8
+
+    /// The motif a course deals its song `lessonId`: song by song in course order, from its set (`originalsMotifs`
+    /// or `heritageMotifs`) in its unit's genre's order of preference, each takes its turn (`deal`). Nil for a lesson
+    /// that isn't one of the course's songs.
     static func assignedMotif(_ lessonId: String, in course: LearnCourse) -> Motif? {
+        let pool = SongOfTheDay.isOriginals(course) ? originalsMotifs : heritageMotifs
         var recent: [Motif] = []
         var number = 0
-        let start = Int(hash(course.id, salt: dealSalt) % 8)
+        let start = Int(hash(course.id, salt: dealSalt) % UInt64(pool.count))
         for unit in course.units {
-            let list = genre(unit: unit.title.defaultValue, instrument: course.instrument).motifs
+            let preferred = genre(unit: unit.title.defaultValue, instrument: course.instrument).motifs
+            // The genre's favourites from the set first, then the rest of the set: all twelve, in order.
+            let list = preferred.filter { pool.contains($0) } + pool.filter { !preferred.contains($0) }
             for lesson in unit.lessons where lesson.kind == .song {
                 number += 1
-                let first = (number - 1 + start) % list.count
-                var pick = list[first]
-                for step in 0..<list.count {
-                    let candidate = list[(first + step) % list.count]
-                    if !recent.contains(candidate) { pick = candidate; break }
-                }
+                let pick = deal(list, from: (number - 1 + start) % list.count, after: recent)
                 if lesson.id == lessonId { return pick }
                 recent.append(pick)
-                if recent.count > 6 { recent.removeFirst() }
+                if recent.count > dealWindow { recent.removeFirst() }
             }
         }
         return nil
+    }
+
+    /// From `list[first]` on, the first motif none of the `recent` sleeves wore whose family differs from the last
+    /// two's; failing that, the first none of them wore; failing that, `list[first]`.
+    private static func deal(_ list: [Motif], from first: Int, after recent: [Motif]) -> Motif {
+        let near = recent.suffix(2).map { $0.family }
+        var fallback: Motif?
+        for step in 0..<list.count {
+            let candidate = list[(first + step) % list.count]
+            guard !recent.contains(candidate) else { continue }
+            if !near.contains(candidate.family) { return candidate }
+            if fallback == nil { fallback = candidate }
+        }
+        return fallback ?? list[first]
     }
 
     // MARK: Colour
@@ -215,16 +247,38 @@ struct CoverArt {
         case .keys: Motifs.keys(&context, region: region, ink: ink, random: &random)
         case .horizon: Motifs.horizon(&context, size: size, region: region, ink: ink, random: &random)
         case .strings: Motifs.strings(&context, size: size, region: region, ink: ink, random: &random)
+        case .arches: Motifs.arches(&context, region: region, ink: ink, random: &random)
+        case .moon: Motifs.moon(&context, region: region, ink: ink, random: &random)
+        case .checker: Motifs.checker(&context, region: region, ink: ink, random: &random)
+        case .spiral: Motifs.spiral(&context, region: region, ink: ink, random: &random)
+        case .equalizer: Motifs.equalizer(&context, region: region, ink: ink, random: &random)
+        case .petals: Motifs.petals(&context, region: region, ink: ink, random: &random)
+        case .constellation: Motifs.constellation(&context, region: region, ink: ink, random: &random)
+        case .waves: Motifs.waves(&context, size: size, region: region, ink: ink, random: &random)
         }
         Motifs.grain(&context, size: size, random: &random)
     }
 }
 
 extension CoverArt.Motif {
-    /// Drawn low in its room (a sun or a grid on the horizon, ridges), so the title goes above it.
-    var sitsLow: Bool { self == .sunset || self == .ridges || self == .horizon }
+    /// Drawn low in its room (a sun or a grid on the horizon, ridges, a rainbow, waves), so the title goes above it.
+    var sitsLow: Bool { self == .sunset || self == .ridges || self == .horizon || self == .arches || self == .waves }
     /// Piano keys need a dark sleeve to read as keys.
     var allowsField: Bool { self != .keys }
+
+    /// What it reads as at a glance: neighbouring sleeves never share a family (`CoverArt.assignedMotif`).
+    var family: CoverArt.Family {
+        switch self {
+        case .sunset, .rays, .horizon, .arches: return .sun
+        case .ridges, .waves: return .land
+        case .sparkle, .moon, .constellation: return .sky
+        case .orbits, .contour, .rosette, .spiral, .petals: return .radial
+        case .waveform, .pulse, .equalizer: return .sound
+        case .grid, .blocks, .checker: return .geometry
+        case .stripes, .strings, .keys: return .lines
+        case .halftone: return .dots
+        }
+    }
 }
 
 private extension CoverArt.Genre {
@@ -242,17 +296,19 @@ private extension CoverArt.Genre {
         }
     }
 
-    /// Eight motifs per genre, its own family first: dealt in this order along a course.
+    /// Twelve motifs per genre, its favourites first, from both sets (`CoverArt.originalsMotifs`, `heritageMotifs`):
+    /// a course deals those of its set in this order, then the rest of the set; a sleeve without a deal takes its turn
+    /// in the whole list.
     var motifs: [CoverArt.Motif] {
         switch self {
-        case .nursery: return [.sparkle, .blocks, .halftone, .grid, .rays, .orbits, .keys, .sunset]
-        case .folk: return [.ridges, .strings, .waveform, .rays, .halftone, .sunset, .contour, .blocks]
-        case .classical: return [.rosette, .orbits, .keys, .contour, .halftone, .grid, .pulse, .sparkle]
-        case .americana: return [.rays, .stripes, .strings, .ridges, .sunset, .halftone, .blocks, .waveform]
-        case .holiday: return [.sparkle, .rosette, .rays, .orbits, .grid, .halftone, .blocks, .keys]
-        case .swing: return [.keys, .grid, .stripes, .blocks, .orbits, .halftone, .pulse, .rays]
-        case .rock: return [.horizon, .stripes, .pulse, .waveform, .rays, .strings, .blocks, .sunset]
-        case .anthem: return [.horizon, .contour, .pulse, .waveform, .sparkle, .rays, .orbits, .halftone]
+        case .nursery: return [.sparkle, .moon, .petals, .arches, .constellation, .checker, .halftone, .grid, .waves, .orbits, .keys, .rays]
+        case .folk: return [.ridges, .strings, .waves, .waveform, .petals, .halftone, .contour, .moon, .arches, .spiral, .sunset, .blocks]
+        case .classical: return [.rosette, .keys, .orbits, .moon, .contour, .spiral, .petals, .halftone, .constellation, .grid, .strings, .sparkle]
+        case .americana: return [.rays, .strings, .ridges, .stripes, .waves, .halftone, .arches, .checker, .blocks, .sunset, .moon, .waveform]
+        case .holiday: return [.sparkle, .constellation, .rosette, .petals, .moon, .orbits, .checker, .grid, .halftone, .keys, .rays, .blocks]
+        case .swing: return [.keys, .equalizer, .checker, .stripes, .grid, .blocks, .spiral, .orbits, .pulse, .halftone, .moon, .rays]
+        case .rock: return [.horizon, .equalizer, .checker, .stripes, .pulse, .waveform, .blocks, .spiral, .strings, .rays, .halftone, .sunset]
+        case .anthem: return [.horizon, .arches, .contour, .pulse, .constellation, .equalizer, .waveform, .spiral, .sparkle, .orbits, .halftone, .rays]
         }
     }
 
@@ -806,6 +862,221 @@ private enum Motifs {
             board.stroke(wave, with: .color(ink.main.opacity(0.3)), lineWidth: weight * 5)
             board.stroke(wave, with: .color(ink.main), lineWidth: weight * 1.5)
             board.stroke(segment(CGPoint(x: -reach / 2, y: y), CGPoint(x: bridge, y: y)), with: .color(ink.main), lineWidth: weight * 1.5)
+        }
+    }
+
+    /// A rainbow of thick arches rising from the foot of the motif, on a ground line.
+    static func arches(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        let outer = max(4, min(region.width * 0.48, region.height * 0.96))
+        let base = CGPoint(x: region.midX + (value(&random) - 0.5) * max(0, region.width - outer * 2), y: region.maxY)
+        let bands = random.next() < 0.5 ? 4 : 5
+        let band = outer / CGFloat(bands + 1)
+        let colors: [Color] = [ink.main, ink.second, ink.line.opacity(0.85), ink.main.opacity(0.6), ink.second.opacity(0.7)]
+        for k in 0..<bands {
+            let radius = outer - band * (CGFloat(k) + 0.5)
+            var arch = Path()
+            for s in 0...48 {
+                let theta = Double.pi + Double.pi * Double(s) / 48
+                let point = CGPoint(x: base.x + CGFloat(cos(theta)) * radius, y: base.y + CGFloat(sin(theta)) * radius)
+                if s == 0 { arch.move(to: point) } else { arch.addLine(to: point) }
+            }
+            context.stroke(arch, with: .color(colors[k % colors.count]), style: StrokeStyle(lineWidth: band * 0.78, lineCap: .butt))
+        }
+        context.stroke(segment(CGPoint(x: region.minX, y: base.y), CGPoint(x: region.maxX, y: base.y)),
+                       with: .color(ink.line.opacity(0.45)), lineWidth: max(1, unit * 0.012))
+    }
+
+    /// The moon's phases in a gentle arc, waxing to full (in the second colour, glowing) and waning, over faint stars.
+    static func moon(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        let count = 5
+        let radius = max(2, min(region.width / (CGFloat(count) * 2.5), region.height * 0.2))
+        let gap = (region.width - radius * 2 * CGFloat(count)) / CGFloat(count + 1)
+        let rise = (value(&random) - 0.5) * region.height * 0.2
+        for _ in 0..<10 {
+            let point = CGPoint(x: region.minX + value(&random) * region.width, y: region.minY + value(&random) * region.height)
+            context.fill(circle(point, max(0.6, unit * 0.008)), with: .color(ink.line.opacity(0.45)))
+        }
+        // How far the dark disc slides off each moon: to the left while waxing (lit on the right), right while waning.
+        let shifts: [CGFloat] = [0.7, 1.25, 2.2, -1.25, -0.7]
+        let full = count / 2
+        for k in 0..<count {
+            // The full moon highest.
+            let lift = CGFloat(abs(k - full)) * radius * 0.35
+            let center = CGPoint(x: region.minX + gap + radius + CGFloat(k) * (radius * 2 + gap), y: region.midY + rise + lift)
+            if k == full {
+                context.fill(circle(center, radius * 1.9),
+                             with: .radialGradient(Gradient(colors: [ink.second.opacity(0.35), ink.second.opacity(0)]),
+                                                   center: center, startRadius: radius * 0.8, endRadius: radius * 1.9))
+            }
+            var disc = context
+            disc.clip(to: circle(center, radius))
+            disc.fill(circle(center, radius), with: .color(k == full ? ink.second : ink.main))
+            disc.fill(circle(CGPoint(x: center.x - shifts[k] * radius, y: center.y), radius), with: ink.ground)
+            context.stroke(circle(center, radius), with: .color(ink.line.opacity(0.35)), lineWidth: max(0.8, unit * 0.008))
+        }
+    }
+
+    /// An op-art board: a checkerboard swelling toward its middle, one square lit in the second colour.
+    static func checker(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let side = max(4, min(region.width, region.height))
+        let left = region.minX + max(0, region.width - side) * value(&random)
+        let top = region.minY + max(0, region.height - side) / 2
+        let cells = 7
+        // Squares widen toward the middle: an eased edge, (1 - cos πt) / 2.
+        func edge(_ i: Int) -> CGFloat { CGFloat((1 - cos(Double.pi * Double(i) / Double(cells))) / 2) * side }
+        let litRow = Int(random.next() * Double(cells)) % cells
+        let litColumn = Int(random.next() * Double(cells)) % cells
+        for row in 0..<cells {
+            for column in 0..<cells {
+                let lit = row == litRow && column == litColumn
+                guard lit || (row + column) % 2 == 0 else { continue }
+                let rect = CGRect(x: left + edge(column), y: top + edge(row),
+                                  width: edge(column + 1) - edge(column), height: edge(row + 1) - edge(row))
+                context.fill(Path(rect), with: .color(lit ? ink.second : ink.main))
+            }
+        }
+        context.stroke(Path(CGRect(x: left, y: top, width: side, height: side)), with: .color(ink.line.opacity(0.3)), lineWidth: 1)
+    }
+
+    /// A groove wound out from a bright centre, its last turn in the second colour.
+    static func spiral(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        let center = CGPoint(x: region.midX + (value(&random) - 0.5) * max(0, region.width - unit) * 0.8, y: region.midY)
+        let reach = unit * 0.47
+        let turns = 4.5 + random.next() * 2
+        let phase = random.next() * 2 * Double.pi
+        let steps = 420
+        // Where the last turn starts.
+        let split = Int(Double(steps) * (1 - 1 / turns))
+        var groove = Path()
+        var outer = Path()
+        for s in 0...steps {
+            let t = Double(s) / Double(steps)
+            let theta = phase + t * turns * 2 * Double.pi
+            let radius = reach * CGFloat(0.12 + 0.88 * t)
+            let point = CGPoint(x: center.x + CGFloat(cos(theta)) * radius, y: center.y + CGFloat(sin(theta)) * radius)
+            if s == 0 { groove.move(to: point) } else if s <= split { groove.addLine(to: point) }
+            if s == split { outer.move(to: point) } else if s > split { outer.addLine(to: point) }
+        }
+        let weight = max(1, unit * 0.014)
+        context.stroke(groove, with: .color(ink.line.opacity(0.55)), style: StrokeStyle(lineWidth: weight, lineCap: .round))
+        context.stroke(outer, with: .color(ink.second), style: StrokeStyle(lineWidth: weight * 2.2, lineCap: .round))
+        context.fill(circle(center, reach * 0.1), with: .color(ink.main))
+        context.fill(circle(center, reach * 0.025), with: ink.ground)
+    }
+
+    /// A level meter: columns of segments lit up to a swell, the top lit segment of each in the second colour.
+    static func equalizer(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let columns = 9
+        let rows = 9
+        let pitch = region.width / CGFloat(columns)
+        let step = region.height / CGFloat(rows)
+        let gap = min(pitch, step) * 0.22
+        let peak = 0.3 + 0.4 * random.next()
+        for column in 0..<columns {
+            let t = (Double(column) + 0.5) / Double(columns)
+            let swell = exp(-pow((t - peak) / 0.32, 2))
+            let height = Double(rows) * (0.2 + 0.8 * swell) * (0.7 + 0.3 * random.next())
+            let level = max(1, min(rows, Int(height.rounded())))
+            for row in 0..<rows {
+                let rect = CGRect(x: region.minX + CGFloat(column) * pitch + gap / 2, y: region.maxY - CGFloat(row + 1) * step + gap / 2,
+                                  width: pitch - gap, height: step - gap)
+                let cell = Path(roundedRect: rect, cornerRadius: min(rect.width, rect.height) * 0.2)
+                let color = row >= level ? ink.line.opacity(0.08) : row == level - 1 ? ink.second : ink.main
+                context.fill(cell, with: .color(color))
+            }
+        }
+    }
+
+    /// A flower of rounded petals in two rings, the inner ring between the outer's, round a bright heart.
+    static func petals(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        let center = CGPoint(x: region.midX + (value(&random) - 0.5) * max(0, region.width - unit) * 0.8, y: region.midY)
+        let count = 6 + Int(random.next() * 3) % 3
+        let turn = random.next() * Double.pi
+        for ring in 0..<2 {
+            let length = unit * (ring == 0 ? 0.47 : 0.3)
+            let width = length * (ring == 0 ? 0.42 : 0.5)
+            let color = ring == 0 ? ink.main.opacity(0.85) : ink.second.opacity(0.9)
+            for k in 0..<count {
+                let angle = turn + (Double(k) + (ring == 0 ? 0 : 0.5)) / Double(count) * 2 * Double.pi
+                var petal = context
+                petal.translateBy(x: center.x, y: center.y)
+                petal.rotate(by: .radians(angle))
+                let shape = Path(ellipseIn: CGRect(x: -width / 2, y: -length, width: width, height: length))
+                petal.fill(shape, with: .color(color))
+                petal.stroke(shape, with: .color(ink.line.opacity(0.35)), lineWidth: max(0.6, unit * 0.006))
+            }
+        }
+        context.fill(circle(center, unit * 0.09), with: .color(ink.line.opacity(0.9)))
+        context.fill(circle(center, unit * 0.045), with: .color(ink.main))
+    }
+
+    /// A constellation: seven stars joined by fine lines, one a bright four-point star, over a dust of faint ones.
+    static func constellation(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        for _ in 0..<26 {
+            let point = CGPoint(x: region.minX + value(&random) * region.width, y: region.minY + value(&random) * region.height)
+            context.fill(circle(point, max(0.5, unit * (0.004 + 0.006 * value(&random)))), with: .color(ink.line.opacity(0.4)))
+        }
+        // Left to right across the room, each up or down from the one before.
+        let count = 7
+        let room = region.insetBy(dx: region.width * 0.06, dy: region.height * 0.12)
+        var points: [CGPoint] = []
+        for k in 0..<count {
+            let x = room.minX + room.width * (CGFloat(k) + 0.2 + 0.6 * value(&random)) / CGFloat(count)
+            points.append(CGPoint(x: x, y: room.minY + value(&random) * room.height))
+        }
+        var lines = Path()
+        lines.addLines(points)
+        // A branch from the last star back to the middle one closes a shape.
+        lines.move(to: points[count - 1])
+        lines.addLine(to: points[count / 2])
+        context.stroke(lines, with: .color(ink.line.opacity(0.5)), style: StrokeStyle(lineWidth: max(0.8, unit * 0.008), lineJoin: .round))
+        let bright = 1 + Int(random.next() * Double(count - 2)) % (count - 2)
+        for (k, point) in points.enumerated() {
+            if k == bright {
+                context.fill(circle(point, unit * 0.16),
+                             with: .radialGradient(Gradient(colors: [ink.main.opacity(0.4), ink.main.opacity(0)]),
+                                                   center: point, startRadius: 0, endRadius: unit * 0.16))
+                context.fill(star(point, unit * 0.13), with: .color(ink.main))
+            } else {
+                context.fill(circle(point, unit * 0.026), with: .color(k % 3 == 0 ? ink.second : ink.line.opacity(0.9)))
+            }
+        }
+    }
+
+    /// Waves rolling in, far to near, each crest drawn in fine line, the nearest in the song's colour.
+    static func waves(_ context: inout GraphicsContext, size: CGSize, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        let layers = 4
+        let weight = max(0.8, unit * 0.01)
+        for layer in 0..<layers {
+            let depth = CGFloat(layer) / CGFloat(layers - 1)
+            let base = region.minY + region.height * (0.3 + 0.55 * depth)
+            let amplitude = region.height * (0.05 + 0.06 * depth)
+            let length = max(1, size.width * (0.5 + 0.25 * value(&random)))
+            let phase = random.next() * 2 * Double.pi
+            var crest: [CGPoint] = []
+            for s in 0...60 {
+                let x = size.width * CGFloat(s) / 60
+                let theta = Double(x / length) * 2 * Double.pi + phase
+                // A rolling wave: a sharper crest and a broader trough than a sine's.
+                let lift = pow((sin(theta) + 1) / 2, 2) * 2 - 1
+                crest.append(CGPoint(x: x, y: base - amplitude * CGFloat(lift)))
+            }
+            var water = Path()
+            water.move(to: CGPoint(x: 0, y: size.height))
+            for point in crest { water.addLine(to: point) }
+            water.addLine(to: CGPoint(x: size.width, y: size.height))
+            water.closeSubpath()
+            let near = layer == layers - 1
+            context.fill(water, with: .color(near ? ink.main : ink.main.opacity(0.22 + 0.18 * Double(layer))))
+            var line = Path()
+            line.addLines(crest)
+            context.stroke(line, with: .color(near ? ink.second : ink.line.opacity(0.5)), lineWidth: weight * (near ? 1.6 : 1))
         }
     }
 

@@ -1,6 +1,9 @@
 import SwiftUI
 import TimbreCore
 
+/// The results' own coordinate space, where the stars report their centre for the burst behind them.
+private let resultsSpace = NamedCoordinateSpace.named("lesson.results")
+
 /// The end of a lesson: stars land one by one, XP counts up, then the next lesson is one tap away. Under the tiles
 /// the coach says one specific thing about this take (a late chord change, what slipped, the tempo to beat) with
 /// its one action. Two stars or more (or a finished song) put a Share pill for its poster under the tiles from the
@@ -26,7 +29,7 @@ struct LessonResults: View {
     @State private var shareReady = false
     @State private var xp = 0
     @State private var burst = 0
-    /// The stars' centre in the results' coordinate space (`space`), where the burst is drawn.
+    /// The stars' centre in the results' coordinate space (`resultsSpace`), where the burst is drawn.
     @State private var starsCenter: CGPoint?
     @State private var appeared = false
     /// The level bar: fills from the XP before the lesson to after it, rolling over on a level-up.
@@ -81,7 +84,7 @@ struct LessonResults: View {
                 }
             buttons
         }
-        .coordinateSpace(.named(Self.space))
+        .coordinateSpace(resultsSpace)
         // Behind the content, as it was behind the stars: drawn here rather than in the scroll view, which clipped
         // the ring flat where it crossed the scroll view's top edge (review 13, bug 1).
         .background(alignment: .topLeading) { burstLayer }
@@ -105,7 +108,7 @@ struct LessonResults: View {
             .frame(height: 136)
             // Where the burst behind them is drawn (outside the scroll view, so its ring is never cut).
             .onGeometryChange(for: CGPoint.self) { proxy in
-                let frame = proxy.frame(in: .named(Self.space))
+                let frame = proxy.frame(in: resultsSpace)
                 return CGPoint(x: frame.midX, y: frame.midY)
             } action: { center in
                 starsCenter = center
@@ -144,8 +147,6 @@ struct LessonResults: View {
         .padding(.top, 8).padding(.bottom, 16)
     }
 
-    /// The results' own coordinate space, where the stars report their centre for the burst.
-    private static let space = "lesson.results"
     /// Room for the whole burst: its ring reaches about 165 pt from the centre and its sparks less, so nothing is
     /// cut at the canvas's edge either.
     private static let burstSize: CGFloat = 360

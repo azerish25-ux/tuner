@@ -30,6 +30,8 @@ struct InstrumentRig: Decodable, Sendable {
         var saddlePoint: SIMD3<Float> { SIMD3(rig: saddle) }
         var nutPoint: SIMD3<Float> { SIMD3(rig: nut) }
         var pegPoint: SIMD3<Float> { SIMD3(rig: pegCenter) }
+        /// Which way the peg points out of the head (unit length in the exported rigs).
+        var pegDirection: SIMD3<Float> { SIMD3(rig: pegAxis) }
     }
     let model: String
     let rig: String

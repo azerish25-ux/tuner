@@ -113,7 +113,7 @@ struct PracticeView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 HStack(alignment: .top, spacing: CardColumns.spacing) {
                     gamesRow(width: columns.span(2), stage: stage)
-                    toolsPanel(columns: fretted ? 2 : 1, tileHeight: 92)
+                    toolsPanel(columns: fretted ? 2 : 1, tileHeight: 92, sideBySide: !fretted)
                         .frame(width: columns.unit)
                 }
                 .fixedSize(horizontal: false, vertical: true)
@@ -127,7 +127,7 @@ struct PracticeView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 if !quests.isEmpty { questGrid(quests) }
                 gamesRow(width: columns.span(2), stage: stage)
-                toolsPanel(columns: 3, tileHeight: 116)
+                toolsPanel(columns: 3, tileHeight: 116, sideBySide: true)
             }
         }
     }
@@ -326,9 +326,10 @@ struct PracticeView: View {
     }
 
     /// iPad: the tools as large tiles, `columns` to a row, at least `tileHeight` tall and taller when the panel is given
-    /// more (beside the games in landscape, the rows share the games' height). Built eagerly, like the phone's rows.
-    /// At the accessibility sizes, the phone's single column of rows.
-    private func toolsPanel(columns: Int, tileHeight: CGFloat) -> some View {
+    /// more (beside the games in landscape, the rows share the games' height). Each tile runs a live preview of its
+    /// tool (`PlayToolPreview`): beside its name on a wide, short tile (`sideBySide`), above it on a squarer one.
+    /// Built eagerly, like the phone's rows. At the accessibility sizes, the phone's single column of rows.
+    private func toolsPanel(columns: Int, tileHeight: CGFloat, sideBySide: Bool) -> some View {
         let all = tools
         let count = max(1, columns)
         let rows = stride(from: 0, to: all.count, by: count).map { Array(all[$0..<min($0 + count, all.count)]) }
@@ -340,7 +341,7 @@ struct PracticeView: View {
                 VStack(spacing: 10) {
                     ForEach(rows.indices, id: \.self) { index in
                         HStack(spacing: 10) {
-                            ForEach(rows[index]) { tool in toolTile(tool, minHeight: tileHeight) }
+                            ForEach(rows[index]) { tool in toolTile(tool, minHeight: tileHeight, sideBySide: sideBySide) }
                             // A short last row keeps the columns' width.
                             ForEach(rows[index].count..<count, id: \.self) { _ in
                                 Color.clear.frame(maxWidth: .infinity)
@@ -408,28 +409,65 @@ struct PracticeView: View {
         return list
     }
 
-    /// A large tool tile: the live glyph in its well at the top, the name at the foot, PRO in the corner on a free plan.
-    private func toolTile(_ tool: Tool, minHeight: CGFloat) -> some View {
+    /// A large tool tile: the tool working in miniature (the metronome swinging at the last tempo, the drone's dial,
+    /// the chord boxes, the scale's box, the harmonic's node, a voice's trace), its name and what the preview shows
+    /// under it, PRO beside the words on a free plan so it never sits on the preview. Lit faintly in the tool's colour.
+    private func toolTile(_ tool: Tool, minHeight: CGFloat, sideBySide: Bool) -> some View {
         let locked = tool.pro && !commerce.isPro
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
+        let tint = PlayToolPreview.tint(tool.route)
+        let light = sideBySide ? UnitPoint(x: 0.75, y: 0.5) : UnitPoint(x: 0.5, y: 0.4)
         return Button { openTool(tool.route, pro: tool.pro) } label: {
-            VStack(alignment: .leading, spacing: 10) {
-                PlayToolGlyph(route: tool.route, symbol: tool.symbol)
-                    .frame(width: 44, height: 44)
-                    .background(RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous).fill(.white.opacity(0.06)))
-                Spacer(minLength: 0)
-                Text(tool.title).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
-                    .lineLimit(1).minimumScaleFactor(0.8)
-            }
-            .padding(14)
-            .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: .infinity, alignment: .topLeading)
-            .background(shape.fill(Palette.stageRaised))
-            .overlay(shape.strokeBorder(Palette.hairline, lineWidth: 1))
-            .overlay(alignment: .topTrailing) { if locked { ProBadge().padding(10) } }
-            .contentShape(shape)
+            toolTileFace(tool, locked: locked, sideBySide: sideBySide)
+                .padding(14)
+                .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: .infinity, alignment: .topLeading)
+                .background {
+                    ZStack {
+                        shape.fill(Palette.stageRaised)
+                        shape.fill(RadialGradient(colors: [tint.opacity(0.13), .clear], center: light, startRadius: 0, endRadius: 160))
+                    }
+                }
+                .overlay(shape.strokeBorder(Palette.hairline, lineWidth: 1))
+                .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityIdentifier("practice.\(tool.route)")
+    }
+
+    /// The tile's face: the words on the left and the preview on the right of a wide tile; the preview over the words
+    /// on a squarer one.
+    @ViewBuilder private func toolTileFace(_ tool: Tool, locked: Bool, sideBySide: Bool) -> some View {
+        if sideBySide {
+            HStack(alignment: .center, spacing: 12) {
+                VStack(alignment: .leading, spacing: 6) {
+                    if locked { ProBadge() }
+                    Spacer(minLength: 0)
+                    toolTileWords(tool)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                PlayToolPreview(route: tool.route)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        } else {
+            VStack(alignment: .leading, spacing: 10) {
+                PlayToolPreview(route: tool.route)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                HStack(alignment: .bottom, spacing: 8) {
+                    toolTileWords(tool)
+                    Spacer(minLength: 0)
+                    if locked { ProBadge() }
+                }
+            }
+        }
+    }
+
+    /// The tool's name and, under it, what its preview is showing ("96 BPM", "D3 · Tanpura").
+    private func toolTileWords(_ tool: Tool) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(tool.title).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                .lineLimit(1).minimumScaleFactor(0.8)
+            PlayToolCaption(route: tool.route)
+        }
     }
 
     @ViewBuilder private var firstTools: some View {
@@ -448,7 +486,8 @@ struct PracticeView: View {
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return Button { openTool(route, pro: pro) } label: {
             VStack(spacing: 6) {
-                // The metronome ticks and the drone ripples, live; the other tools keep their symbol.
+                // Every tool live in miniature: the metronome ticks, the drone ripples, a chord strums, a scale runs,
+                // a harmonic rings and a voice traces (PlayHubTools.swift).
                 PlayToolGlyph(route: route, symbol: symbol)
                 Text(title).font(.caption.weight(.semibold)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.8)
             }

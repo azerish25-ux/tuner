@@ -66,6 +66,12 @@ struct LessonPlayer: View {
         ZStack {
             Palette.stage.ignoresSafeArea()
             RadialGradient(colors: [accent.opacity(0.16), .clear], center: UnitPoint(x: 0.5, y: 0), startRadius: 10, endRadius: 520).ignoresSafeArea()
+            // A song's sheet: its sleeve's light from the top of the screen, behind the top bar too (drawn by the sheet
+            // under the bar, it left a hard edge level with the close button).
+            if opening && part == nil && result == nil {
+                SongOpener.Backdrop(lesson: lesson, course: course)
+                    .transition(.opacity)
+            }
             if let result {
                 LessonResults(course: course, lesson: lesson, result: result, improved: improved, reward: reward, accent: accent, practice: practiced,
                               next: nextLesson, onContinue: { dismiss() }, onNext: { next in dismiss(); onNext?(next) })

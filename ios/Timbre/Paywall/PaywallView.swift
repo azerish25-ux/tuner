@@ -99,7 +99,7 @@ struct PaywallView: View {
         let pitch = self.pitch
         let plan = PaywallPlan.make(store: store, answers: answers, horizon: planHorizon, reason: context == .standard ? store.paywallReason : nil)
         let hero = self.hero(pitch, plan: plan)
-        let layout = self.layout(pitch, plan: plan, hero: hero)
+        let layout = self.fold(pitch, plan: plan, hero: hero)
         ZStack(alignment: .topTrailing) {
             Palette.stage.ignoresSafeArea()
             RadialGradient(colors: [Palette.spotlight.opacity(0.16), .clear], center: UnitPoint(x: 0.5, y: 0.12), startRadius: 10, endRadius: 320)
@@ -117,8 +117,9 @@ struct PaywallView: View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 bottomBar.onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in barHeight = height }
             }
-            // Glass only where nothing under its corner redraws every frame (the runway and the tools' scenes do).
-            closeButton(glass: layout.preview == 0 || hero.isStill || reduceMotion)
+            // Glass only where nothing under its corner redraws every frame (the plan's drifting rail, the runway and the
+            // tools' scenes all do, unless Reduce Motion holds them still).
+            closeButton(glass: layout.preview == 0 || reduceMotion)
             if exitOfferShown, let offer = exitOffer {
                 ExitOfferCard(offer: offer, purchasing: commerce.purchasing != nil,
                               accept: { acceptExitOffer(offer) }, decline: { close() })
@@ -155,25 +156,22 @@ struct PaywallView: View {
     private var viewport: CGFloat { containerHeight > 0 ? max(0, containerHeight - barHeight) : 600 }
 
     /// The track's room. While a trial is on offer (or may be, while the plans load) the trial's track keeps its
-    /// place, so choosing Monthly never resizes the hero under the finger; otherwise the plan's own track. With the
-    /// plan's road in the hero (`road`) the track is the trial's alone: its milestones are up there.
-    private func trackReserve(_ plan: PaywallPlan, road: Bool) -> CGFloat {
+    /// place, so choosing Monthly never resizes the hero under the finger; otherwise the plan's own track.
+    private func trackReserve(_ plan: PaywallPlan) -> CGFloat {
         let trial = commerce.products.isEmpty || trialOffered ? trialTrackHeight : 0
-        return max(trial, plan.milestones.isEmpty || road ? 0 : planTrackHeight)
+        return max(trial, plan.milestones.isEmpty ? 0 : planTrackHeight)
     }
 
-    /// Headline (with its top inset), plans and trust row, and the plan track: what must show.
-    private func essentials(_ plan: PaywallPlan, road: Bool) -> CGFloat {
-        headerHeight + Self.headerTop + offerHeight + trackReserve(plan, road: road)
+    /// Headline (with its proof line and top inset), plans and trust row, and the plan track: what must show.
+    private func essentials(_ plan: PaywallPlan) -> CGFloat {
+        headerHeight + Self.headerTop + offerHeight + trackReserve(plan)
     }
 
     /// The Pro pill on its own row, when there is no hero for it to stand in.
     private static let pillRow: CGFloat = 40
     private static let previewTop: CGFloat = 6
-    /// The hero grows to this; below its own minimum (`PaywallHero.minHeight`) it steps aside for the pill alone.
-    private static let previewMax: CGFloat = 236
     private static let headerTop: CGFloat = 12
-    private static let outcomesTop: CGFloat = 12
+    private static let outcomesTop: CGFloat = 10
     private static let detailsTop: CGFloat = 6
     private static let trackTop: CGFloat = 14
 
@@ -184,35 +182,25 @@ struct PaywallView: View {
         var outcomes = true
         /// "What's in Pro", under the outcomes.
         var details = true
-        /// The plan's hero is up, with the road to the first song in it: the track leaves the plan's milestones out.
-        var road = false
-    }
-
-    /// The fold for this hero. The plan's hero carries the road to the first song, so the track below can do without
-    /// it; when its picture doesn't fit, the track keeps the milestones (and the room they take).
-    private func layout(_ pitch: Pitch, plan: PaywallPlan, hero: PaywallHero) -> Fold {
-        guard case .plan = hero else { return fold(pitch, plan: plan, hero: hero, road: false) }
-        var result = fold(pitch, plan: plan, hero: hero, road: true)
-        if result.preview == 0 { result = fold(pitch, plan: plan, hero: hero, road: false) }
-        result.road = result.preview > 0
-        return result
     }
 
     /// The room beside the essentials goes to the outcomes, then "What's in Pro" under them, then the hero (its
-    /// minimum, then its growth). When not even the pill fits, the page scrolls anyway and everything stays in
-    /// reading order above the fine print. A locked lesson's card replaces the hero.
-    private func fold(_ pitch: Pitch, plan: PaywallPlan, hero: PaywallHero, road: Bool) -> Fold {
-        var left = viewport - essentials(plan, road: road)
+    /// minimum, then its growth up to `PaywallHero.maxHeight`). When not even the pill fits, the page scrolls anyway
+    /// and everything stays in reading order above the fine print. A locked lesson's card replaces the hero.
+    /// On a 6.1-inch iPhone, onboarding's plan keeps its rail, headline, proof line, three outcomes, plans and trial
+    /// track above the pinned purchase button.
+    private func fold(_ pitch: Pitch, plan: PaywallPlan, hero: PaywallHero) -> Fold {
+        var left = viewport - essentials(plan)
         guard left >= Self.pillRow else { return Fold() }
         var result = Fold()
         result.outcomes = left - Self.pillRow >= Self.outcomesTop + outcomesHeight
         if result.outcomes { left -= Self.outcomesTop + outcomesHeight }
         let heroFloor = Self.previewTop + hero.minHeight
         // Onboarding's hero, and the plan's anywhere, take the room before "What's in Pro" (which waits below the fold
-        // unless room is left): the scene is the plan itself, and a taller stage keeps its runway and hit line well
-        // below the close button, or its instrument and sleeve large enough to read.
+        // unless room is left): the rail is the plan's own songs, and a taller stage keeps its runway and hit line
+        // well below the close button.
         if (context == .onboarding || hero.isPlan) && pitch.lesson == nil && left >= heroFloor {
-            result.preview = hero.minHeight + min(left - heroFloor, Self.previewMax - hero.minHeight)
+            result.preview = hero.minHeight + min(left - heroFloor, hero.maxHeight - hero.minHeight)
             left -= Self.previewTop + result.preview
             result.details = result.outcomes && left >= Self.detailsTop + detailsHeight
             return result
@@ -220,7 +208,7 @@ struct PaywallView: View {
         result.details = result.outcomes && left - Self.pillRow >= Self.detailsTop + detailsHeight
         if result.details { left -= Self.detailsTop + detailsHeight }
         if pitch.lesson == nil && left >= heroFloor {
-            let growth = min(left - heroFloor, Self.previewMax - hero.minHeight)
+            let growth = min(left - heroFloor, hero.maxHeight - hero.minHeight)
             result.preview = hero.minHeight + growth
         }
         return result
@@ -230,7 +218,7 @@ struct PaywallView: View {
     private var planHorizon: Int { commerce.annual.map { trialDays($0) } ?? 14 }
 
     private func content(_ pitch: Pitch, plan: PaywallPlan, hero: PaywallHero, layout: Fold) -> some View {
-        let steps = trackSteps(plan, road: layout.road)
+        let steps = trackSteps(plan)
         let trial = showsTrial
         let outcomes = shownOutcomes(plan, hero: hero)
         return VStack(spacing: 0) {
@@ -240,7 +228,8 @@ struct PaywallView: View {
                 } else {
                     PaywallProPill().padding(.top, 14)
                 }
-                header(pitch)
+                // Drawn over the plan's rail, whose sleeves reach on behind it and fade out before its words.
+                header(pitch, proof: context == .onboarding || hero.isPlan)
                     .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in headerHeight = height }
                     .padding(.top, layout.preview > 0 ? Self.headerTop : 10)
                 if layout.outcomes {
@@ -282,11 +271,11 @@ struct PaywallView: View {
         }
     }
 
-    /// The plan's outcomes, less the first song when the plan's hero already shows it (its sleeve and the day it
-    /// comes), so the same promise isn't made twice and the picture gets the room.
+    /// The plan's outcomes, three at most, less the first song when the plan's hero is up (its sleeve leads the rail,
+    /// and the track names its day), so the same promise isn't made twice.
     private func shownOutcomes(_ plan: PaywallPlan, hero: PaywallHero) -> [PaywallPlan.Outcome] {
-        guard case .plan = hero else { return plan.outcomes }
-        return plan.outcomes.filter { $0.id != "song" }
+        let outcomes = hero.isPlan ? plan.outcomes.filter { $0.id != "song" } : plan.outcomes
+        return Array(outcomes.prefix(3))
     }
 
     /// The sheet's close button, the app's one `CloseButton`: Liquid Glass (iOS 26) when nothing under its corner
@@ -387,9 +376,9 @@ struct PaywallView: View {
 
     // MARK: Hero
 
-    /// One scene across the full width with the Timbre Pro pill under it: the plan (the person's instrument, their
-    /// first song's sleeve and the road there); the instrument they just tried to open with its strings running on as
-    /// a play-along runway; or the scene of the tool that opened the paywall.
+    /// One scene across the full width with the Timbre Pro pill under it: the plan (a rail of the songs it plays,
+    /// drifting behind the headline); the instrument they just tried to open with its strings running on as a
+    /// play-along runway; or the scene of the tool that opened the paywall.
     private func preview(_ hero: PaywallHero, plan: PaywallPlan, height: CGFloat) -> some View {
         PaywallPreview(hero: hero, accent: plan.accent, height: height)
             .opacity(appeared ? 1 : 0)
@@ -406,35 +395,14 @@ struct PaywallView: View {
         return .runway(figure.figure, lanes: lanes(figure.instrumentId))
     }
 
-    /// Onboarding's paywall and Pro from Settings (or the plain upsell) sell the plan: the person's instrument, the
-    /// sleeve of the first song their plan reaches, and the road there (today, that song's day, the next unit the
-    /// plan starts), all from their real plan. Nil when the plan reaches no song (a course without any).
+    /// Onboarding's paywall and Pro from Settings (or the plain upsell) sell the plan: a rail of the sleeves of the
+    /// songs it plays, its first song first (`PaywallPlan.rail`), all real songs from the catalogue. Nil when the plan
+    /// reaches no song (a course without any) or the rail would be too short to drift.
     private func planScene(_ pitch: Pitch, plan: PaywallPlan) -> PaywallPlanScene? {
         let reason = store.paywallReason
         let planned = context == .onboarding || reason == nil || reason == "settings"
-        guard planned, pitch.lesson == nil, pitch.instrumentAsset == nil,
-              let course = plan.course, let song = plan.firstSong, let songDay = plan.songDay else { return nil }
-        var stops: [PaywallPlanScene.Stop] = []
-        if songDay > 1 { stops.append(PaywallPlanScene.Stop(id: "today", day: 1, title: nil, kind: .today)) }
-        // The song by its name, not its lesson's ("Greensleeves", not "Greensleeves: the chords"), as the track names it.
-        stops.append(PaywallPlanScene.Stop(id: "song", day: songDay, title: CoverArt.mainTitle(song.title.localized), kind: .song))
-        if let unit = plan.milestones.first(where: { $0.kind == .unit && $0.day > 1 && $0.day != songDay }) {
-            stops.append(PaywallPlanScene.Stop(id: "unit", day: unit.day, title: unit.title, kind: .unit))
-        }
-        stops.sort { $0.day < $1.day }
-        return PaywallPlanScene(instrument: planInstrument(plan, course: course), sleeve: CoverArt.of(song, in: course),
-                                accent: plan.accent, stops: stops)
-    }
-
-    /// The person's instrument as the plan's hero stands it: its studio render, else its photograph (the variant they
-    /// tune). Nil when they sing, or the course has no instrument.
-    private func planInstrument(_ plan: PaywallPlan, course: LearnCourse) -> (name: String, render: Bool)? {
-        for id in [plan.instrumentId, course.instrument].compactMap({ $0 }) {
-            guard let asset = photoAsset(id) else { continue }
-            if let model = ModelLibrary.modelID(forPhoto: asset), ModelLibrary.hasCard(model) { return (ModelLibrary.cardImageName(model), true) }
-            return (asset, false)
-        }
-        return nil
+        guard planned, pitch.lesson == nil, pitch.instrumentAsset == nil, plan.rail.count >= 3 else { return nil }
+        return PaywallPlanScene(songs: plan.rail, accent: plan.accent)
     }
 
     /// The tool that opened the paywall: the drone (the Tanpura), an ear game (the interval staircase), Pitch
@@ -494,7 +462,9 @@ struct PaywallView: View {
 
     // MARK: Header
 
-    private func header(_ pitch: Pitch) -> some View {
+    /// The headline, then (`proof`: onboarding and the plan's hero) the catalogue Pro opens, counted, or a locked
+    /// lesson's card.
+    private func header(_ pitch: Pitch, proof: Bool) -> some View {
         VStack(spacing: 0) {
             pitch.headline.font(Typeface.display(26)).tracking(-0.6)
                 .multilineTextAlignment(.center).foregroundStyle(Palette.ink)
@@ -502,9 +472,25 @@ struct PaywallView: View {
                 .lineLimit(typeSize.isAccessibilitySize ? nil : 3).minimumScaleFactor(0.8)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
+            if proof && pitch.lesson == nil { proofLine.padding(.top, 4) }
             if let lesson = pitch.lesson { lessonCard(lesson).padding(.top, 14) }
         }
         .frame(maxWidth: .infinity)
+    }
+
+    /// "557 lessons · 153 songs · 60 instruments": what Pro opens, counted from the curriculum and the catalog as they
+    /// ship (the Free and Pro table counts the same lessons), never a number written down here.
+    private var proofLine: some View {
+        let lessons = store.curriculum.courses.flatMap(\.lessons)
+        let songs = lessons.filter { $0.kind == .song }.count
+        return Text("\(lessons.count) lessons · \(songs) songs · \(store.catalog.instruments.count) instruments")
+            .font(.footnote.weight(.semibold)).monospacedDigit()
+            .foregroundStyle(Palette.inkSoft)
+            .multilineTextAlignment(.center)
+            // One line in English; a longer translation, or a larger size, wraps rather than shrinking away.
+            .lineLimit(typeSize.isAccessibilitySize ? nil : 2).minimumScaleFactor(0.9)
+            .fixedSize(horizontal: false, vertical: true)
+            .accessibilityIdentifier("paywall.proof")
     }
 
     /// The locked lesson: its unit, title and length, behind a gold lock.
@@ -554,11 +540,11 @@ struct PaywallView: View {
 
     // MARK: Outcomes
 
-    private static let benefitArt: CGFloat = 26
+    private static let benefitArt: CGFloat = 24
 
     /// Three results for the person's goal, each with its own art; they slide in one after another.
     private func outcomeList(_ outcomes: [PaywallPlan.Outcome]) -> some View {
-        VStack(alignment: .leading, spacing: 7) {
+        VStack(alignment: .leading, spacing: 6) {
             ForEach(Array(outcomes.enumerated()), id: \.element.id) { index, outcome in
                 HStack(spacing: 10) {
                     outcomeArt(outcome.art)
@@ -1013,13 +999,12 @@ struct PaywallView: View {
     /// thing the plan brings before the reminder follows (its first song, else a unit it starts, never a repeat of
     /// today's lesson). Only when the selected plan has a free trial come the reminder (when notifications can
     /// reach the person) and the first charge, at the product's own trial length and price. Without a trial the
-    /// plan's milestones fill the track; without those there is no track. With the plan's road in the hero (`road`),
-    /// the milestones are up there, so the track is the trial's alone (and without a trial there is none).
-    private func trackSteps(_ plan: PaywallPlan, road: Bool) -> [TrackStep] {
+    /// plan's milestones fill the track; without those there is no track.
+    private func trackSteps(_ plan: PaywallPlan) -> [TrackStep] {
         let today = TrackStep(id: "today", kind: .today, title: Text("Today"), detail: plan.firstLesson.map { Text(verbatim: $0) },
                               plain: String(localized: "Everything unlocked"))
         guard showsTrial, let product = selected else {
-            guard !plan.milestones.isEmpty, !road else { return [] }
+            guard !plan.milestones.isEmpty else { return [] }
             return [today] + plan.milestones.map { milestoneStep($0) }
         }
         let days = trialDays(product)
@@ -1027,7 +1012,7 @@ struct PaywallView: View {
         var steps = [today]
         let next = remindersBlocked ? days : reminder
         let ahead = plan.milestones.filter { $0.day > 1 && $0.day < next }
-        if !road, let milestone = ahead.first(where: { $0.kind == .song }) ?? ahead.last { steps.append(milestoneStep(milestone)) }
+        if let milestone = ahead.first(where: { $0.kind == .song }) ?? ahead.last { steps.append(milestoneStep(milestone)) }
         if !remindersBlocked {
             let remind = String(localized: "We remind you")
             steps.append(TrackStep(id: "reminder", kind: .reminder, title: Text("Day \(reminder)"), detail: Text(verbatim: remind), plain: remind))

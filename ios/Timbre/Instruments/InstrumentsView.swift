@@ -1,9 +1,13 @@
 import SwiftUI
 import TimbreCore
+import UIKit
 
 /// Every instrument, grouped by family, as studio cards.
 struct InstrumentsView: View {
     var picker = false
+    /// A full page of its own (the picker on iPad): the last row fades into the stage at the bottom edge rather than
+    /// being cut there, with room under it to scroll clear of the fade.
+    var fullPage = false
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
     @Environment(\.dismiss) private var dismiss
@@ -47,8 +51,10 @@ struct InstrumentsView: View {
                     if photos.isEmpty { noMatches }
                 }
                 .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+                .padding(.bottom, fullPage ? Self.bottomFade : 0)
             }
             .stageTopShade()
+            .overlay(alignment: .bottom) { if fullPage { bottomShade } }
             .scrollDismissesKeyboard(.interactively)
         }
         .background(StageBackground(motes: false))
@@ -63,6 +69,20 @@ struct InstrumentsView: View {
                 CustomTuningEditor(base: base, editing: custom).presentationBackground(Palette.stage)
             }
         }
+    }
+
+    /// How far the full page's bottom fade reaches up from the safe area's edge.
+    private static let bottomFade: CGFloat = 64
+
+    /// The full page's bottom edge: the cards passing under it dim into the stage, so a row running off the screen
+    /// reads as more below rather than as cut. On through the home indicator's strip; never in the way of a tap.
+    private var bottomShade: some View {
+        LinearGradient(colors: [Palette.stageDeep.opacity(0), Palette.stageDeep.opacity(0.9)], startPoint: .top, endPoint: .bottom)
+            .frame(height: Self.bottomFade)
+            .frame(maxWidth: .infinity)
+            .ignoresSafeArea(edges: .bottom)
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
     }
 
     /// The tab's header, its trailing control the search (a 44 pt disc, as a header's search is everywhere).
@@ -432,12 +452,50 @@ struct InstrumentsView: View {
 }
 
 struct InstrumentPicker: View {
+    /// A full page of its own (iPad) rather than a sheet.
+    var fullPage = false
+
     var body: some View {
         NavigationStack {
-            InstrumentsView(picker: true)
+            InstrumentsView(picker: true, fullPage: fullPage)
                 .navigationTitle("Choose instrument")
                 .navigationBarTitleDisplayMode(.inline)
         }
         .paywallSheet()
+    }
+}
+
+extension View {
+    /// The instrument browser over the tuner: a sheet on a phone; on iPad a full page of its own, so all 60 instruments
+    /// get the whole screen and none of the tuner's controls (Auto, Manual, Strum, the readout) show around a sheet's
+    /// edges. Done closes it either way.
+    func instrumentPicker(isPresented: Binding<Bool>) -> some View {
+        modifier(InstrumentPickerPresentation(isPresented: isPresented))
+    }
+}
+
+private struct InstrumentPickerPresentation: ViewModifier {
+    @Binding var isPresented: Bool
+    @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var commerce: CommerceService
+
+    /// The device decides, not the window's width: a picker never switches presentation while it is up (iPad
+    /// multitasking resizes), and a large iPhone in landscape keeps its sheet.
+    private var fullPage: Bool { UIDevice.current.userInterfaceIdiom == .pad }
+
+    @ViewBuilder func body(content: Content) -> some View {
+        if fullPage {
+            // No presentation background: an opaque page (its stage background fills the screen) lets the tuner leave
+            // the screen under it, rather than keep rendering out of sight.
+            content.fullScreenCover(isPresented: $isPresented) {
+                InstrumentPicker(fullPage: true)
+                    .environmentObject(store)
+                    .environmentObject(commerce)
+            }
+        } else {
+            content.sheet(isPresented: $isPresented) {
+                InstrumentPicker().presentationDetents([.large]).presentationBackground(Palette.stage)
+            }
+        }
     }
 }

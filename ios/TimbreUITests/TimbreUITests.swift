@@ -112,10 +112,11 @@ final class TimbreUITests: XCTestCase {
     // MARK: App Store frames
     //
     // The captures the listing's screenshot table names (docs/ios/APP-STORE-LISTING.md, rendered by
-    // tools/marketing/screenshots.py) must show what their captions say, every run. The tuner's lock and the chord
-    // come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift) that put the app into that moment
-    // through its own code paths, so no shot races the demo pitch's clock; Strum to tune hears the demo pitch's one
-    // fixed strum; the others are plain navigation. Every one starts from the same seeded state (`DemoData` in
+    // tools/marketing/screenshots.py) must show what their captions say, every run. The tuner's lock, the chord and
+    // Kite Weather on the highway come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift) that put
+    // the app into that moment through its own code paths, so no shot races the demo pitch's clock; Strum to tune
+    // hears the demo pitch's one fixed strum; the results follow a play-along the demo pitch plays clean; the others
+    // are plain navigation. Every one starts from the same seeded state (`DemoData` in
     // ios/Timbre/TimbreApp.swift: a 7-day streak that counts today, level 5) and is taken once the screen has come to
     // rest (`stillScreenshot`, StillScreen.swift), after the cue that its slowest animation has finished.
 
@@ -493,15 +494,22 @@ final class TimbreUITests: XCTestCase {
         element("lesson.continue").tap(); settle(2)
         element("lesson.option.1").tap(); settle(1); shot("58-lesson-listen")
         element("lesson.continue").tap(); settle(1.5); shot("59-along-ready")
+        // A one-bar count-in and six notes at 60 BPM: the take is over about 10 s after Start. Hands off until then
+        // (the picture doesn't touch the app): a query stalls its main thread, a note heard late is a miss, and the
+        // final play-along gates the lesson's stars, so a missed note would cost frame #6 its third star.
         element("lesson.continue").tap(); settle(7); shot("60-along-playing")
+        settle(4)
         XCTAssertTrue(element("along.again").waitForExistence(timeout: 30))
         settle(1); shot("61-along-done")
         // App Store frame #6. The results land in order: the stars, the coach, the XP counting up, then the level bar
         // (labelled "Level N") fills under them. Its arrival means the XP has finished counting; the badges that pop in
-        // after it and the bar's fill settle before the picture.
+        // after it and the bar's fill settle before the picture. Kept only with three stars ("Flawless" or "Great work").
         element("lesson.continue").tap()
         _ = labeled("Level [0-9]+").waitForExistence(timeout: 15)
-        stillShot("62-lesson-results", timeout: 3)
+        let results = stillScreenshot(timeout: 3)
+        let headline = labeled("(Flawless|Great work)").exists
+        storeFrame("62-lesson-results", picture: results, ok: headline,
+                   "the results don't read Flawless or Great work: the play-along wasn't played clean, so fewer than three stars")
     }
 
     /// App Store frame #1 through the `tune-locked` scene (ios/Timbre/Root/DemoScenes.swift): the demo pitch plays the
@@ -569,6 +577,29 @@ final class TimbreUITests: XCTestCase {
         let covered = element("paywall.purchase").exists || app.navigationBars["Choose instrument"].exists
         storeFrame("11b-tune-strum", picture: picture, ok: read && summary.hasPrefix("Tune ") && !covered,
                    "the strum screen reads '\(summary)' (Fine-tune button: \(read), a sheet over it: \(covered)), not the demo strum")
+    }
+
+    /// App Store frame #2 through the `song-perform` scene (DemoScenes.swift): Kite Weather, the Originals' song of the
+    /// day, performed on the fretboard runway mid-chorus, with its words under the runway, fret numbers on the gems and
+    /// a long combo. The scene opens the song on its performance and starts the take by itself 3 s later at bar 16 of
+    /// 56 (every note before it played clean, 68 in a row); the demo pitch plays on, on time. The hook line ("It's kite
+    /// weather, kite weather") is in the light from about 2 to 7.5 s into the take, so the picture is taken about 4.5 s
+    /// in, hands off from the moment the lesson shows: a query stalls the app's main thread, and a note heard late
+    /// would break the run. One snapshot afterwards checks the combo and that the words are the chorus's.
+    func test14StoreSongPerform() throws {
+        launch(pitch: true, scene: "song-perform")
+        let opened = element("lesson.close").waitForExistence(timeout: 30)
+        settle(7.5)
+        let picture = XCUIScreen.main.screenshot()
+        var combo = 0
+        var words = ""
+        for node in appNodes() {
+            if node.label == "Combo", let value = node.value as? String { combo = Int(value.prefix { $0.isNumber }) ?? 0 }
+            if node.label == "Lyrics", let value = node.value as? String { words = value.lowercased() }
+        }
+        let chorus = ["kite weather", "let it climb", "summer winds"].contains { words.contains($0) }
+        storeFrame("65-song-perform", picture: picture, ok: opened && combo >= 8 && chorus,
+                   "Kite Weather's take shows a combo of \(combo) and the words '\(words)' (opened: \(opened)), not a run of 8+ in the chorus")
     }
 
     func test07StageDiagnostics() throws {

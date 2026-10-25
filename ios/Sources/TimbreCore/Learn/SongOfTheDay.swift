@@ -1,7 +1,8 @@
 import Foundation
 
 /// The Songs tab's featured song, picked from where the learner is rather than at random: a song they haven't
-/// played, at their level, and once they are past the beginner units one of the Originals (songs written for
+/// played, at their level, adult-first (the Originals and the Standards ahead of the other tunes, nursery rhymes and
+/// campfire rounds after them), and once they are past the beginner units one of the Originals (songs written for
 /// Timbre) ahead of the traditional tunes. It stays put for the day and changes the next.
 public enum SongOfTheDay {
     /// Where a song stands for the learner.
@@ -18,15 +19,54 @@ public enum SongOfTheDay {
         public let id: String
         /// From the Originals course rather than a traditional tune.
         public let original: Bool
+        /// From the Standards & Classics: traditional tunes an adult knows (Down by the Riverside, Loch Lomond).
+        public let standard: Bool
+        /// A nursery rhyme, children's song or campfire round (`isCampfireOrKids`): it waits behind the rest.
+        public let kids: Bool
         /// The song's unit in its course, 0-based: later units are harder.
         public let unit: Int
         public let finished: Bool
         public let access: Access
 
-        public init(id: String, original: Bool, unit: Int, finished: Bool, access: Access) {
-            self.id = id; self.original = original; self.unit = unit; self.finished = finished; self.access = access
+        public init(id: String, original: Bool, unit: Int, finished: Bool, access: Access, standard: Bool = false, kids: Bool = false) {
+            self.id = id; self.original = original; self.standard = standard; self.kids = kids
+            self.unit = unit; self.finished = finished; self.access = access
+        }
+
+        /// A song lesson of `course`: an Original or a Standard by its course, a children's tune by its title.
+        public init(song lesson: Lesson, in course: LearnCourse, unit: Int, finished: Bool, access: Access) {
+            self.init(id: lesson.id, original: SongOfTheDay.isOriginals(course), unit: unit, finished: finished, access: access,
+                      standard: SongOfTheDay.isStandards(course), kids: SongOfTheDay.isCampfireOrKids(lesson.title.defaultValue))
         }
     }
+
+    // MARK: Repertoire
+
+    /// The Originals course: songs written for Timbre.
+    public static func isOriginals(_ course: LearnCourse) -> Bool {
+        course.id.hasPrefix("original") || course.title.defaultValue.lowercased().hasPrefix("original")
+    }
+
+    /// The Standards & Classics course.
+    public static func isStandards(_ course: LearnCourse) -> Bool { course.id.hasPrefix("standard") }
+
+    /// Nursery rhymes, children's songs and campfire rounds, by tune (`tuneKey`): the Songs tab gives them a shelf of
+    /// their own ("Campfire & kids") below the adult repertoire, and features one only behind every other song that
+    /// stands as well (`pick`).
+    public static let campfireAndKids: Set<String> = [
+        "maryhadalittlelamb", "twinkletwinklelittlestar", "frèrejacques", "oldmacdonaldhadafarm", "yankeedoodle",
+        "shellbecomingroundthemountain", "lightlyrow", "skiptomylou", "auclairdelalune", "bobbyshafto",
+    ]
+
+    /// A tune's key: its English title without a subtitle (after a colon or in brackets), lowercased, letters and
+    /// digits only ("Twinkle, Twinkle, Little Star" and "Twinkle Twinkle Little Star" are one tune).
+    public static func tuneKey(_ title: String) -> String {
+        let main = title.split(whereSeparator: { $0 == ":" || $0 == "(" || $0 == "（" || $0 == "：" }).first.map(String.init) ?? title
+        return String(main.lowercased().filter { $0.isLetter || $0.isNumber })
+    }
+
+    /// The song (by its English title) is a nursery rhyme, a children's song or a campfire round.
+    public static func isCampfireOrKids(_ title: String) -> Bool { campfireAndKids.contains(tuneKey(title)) }
 
     /// Past the beginner units: level 3 (300 XP), six finished lessons, or a placement past a course's first unit.
     public static func pastBeginner(level: Int, finishedLessons: Int, placed: Bool) -> Bool {
@@ -41,20 +81,31 @@ public enum SongOfTheDay {
 
     /// The day's song id, nil when there are no songs. In order: an unfinished song that plays now, then the next
     /// one Pro opens, then one to play again. Past the beginner units an Original leads each of the first two
-    /// (an open Original, the next Pro Original, then the other open songs). Among equals, the song nearest the
-    /// learner's unit wins, and a hash of `day` (days since an epoch) settles the rest, so the pick holds all day.
+    /// (an open Original, the next Pro Original, then the other open songs). Within each of those, the adult
+    /// repertoire comes first (`repertoire`: the Originals and the Standards, then the other tunes, then nursery rhymes
+    /// and campfire rounds), so a children's tune is featured only when no other song stands as well. Among equals,
+    /// the song nearest the learner's unit wins, and a hash of `day` (days since an epoch) settles the rest, so the
+    /// pick holds all day.
     public static func pick(_ songs: [Candidate], level: Int, finishedLessons: Int, placed: Bool = false, day: Int) -> String? {
         let advanced = pastBeginner(level: level, finishedLessons: finishedLessons, placed: placed)
         let target = targetUnit(level: level, pastBeginner: advanced)
         let salt = UInt64(bitPattern: Int64(day))
         let ranked = songs.map { song in
-            (id: song.id, rank: Self.rank(song, advanced: advanced), distance: abs(song.unit - target), hash: Self.hash(song.id, salt: salt))
+            (id: song.id, rank: Self.rank(song, advanced: advanced), repertoire: Self.repertoire(song),
+             distance: abs(song.unit - target), hash: Self.hash(song.id, salt: salt))
         }
         return ranked.min { a, b in
             if a.rank != b.rank { return a.rank < b.rank }
+            if a.repertoire != b.repertoire { return a.repertoire < b.repertoire }
             if a.distance != b.distance { return a.distance < b.distance }
             return a.hash < b.hash
         }?.id
+    }
+
+    /// Lower is better: 0 the Originals and the Standards, 1 the other tunes, 2 nursery rhymes and campfire rounds.
+    private static func repertoire(_ song: Candidate) -> Int {
+        if song.kids { return 2 }
+        return song.original || song.standard ? 0 : 1
     }
 
     /// Lower is better: 0 an unfinished song that plays now, 1 the next one Pro opens, 2 a finished song to play

@@ -65,8 +65,9 @@ struct SongOpener: View {
     private var playing: Bool { previewing || looping }
 
     var body: some View {
+        // The sleeve's light behind the head of the sheet is the lesson's to draw (`Backdrop`), from the top of the
+        // screen: drawn here it began under the lesson's top bar, with an edge across the screen at its close button.
         ZStack(alignment: .top) {
-            backdrop
             VStack(spacing: 0) {
                 ScrollViewReader { proxy in
                     ScrollView {
@@ -121,13 +122,24 @@ struct SongOpener: View {
 
     // MARK: Head
 
-    /// The sleeve's colours as a mesh of light behind the head of the sheet.
-    private var backdrop: some View {
-        CoverMesh(art: art)
-            .frame(height: 380)
-            .opacity(0.5)
-            .mask(LinearGradient(colors: [.black, .black.opacity(0)], startPoint: .top, endPoint: .bottom))
-            .ignoresSafeArea(edges: .top)
+    /// The sleeve's colours as a mesh of light behind the head of the sheet, fading out under it. The lesson draws it
+    /// (`LessonPlayer`) behind its top bar and the sheet alike, from the top edge of the screen, so the light runs
+    /// unbroken past the close button.
+    struct Backdrop: View {
+        let lesson: Lesson
+        let course: LearnCourse
+
+        var body: some View {
+            CoverMesh(art: CoverArt.of(lesson, in: course))
+                // The status bar, the lesson's top bar and the head of the sheet.
+                .frame(height: 500)
+                .opacity(0.5)
+                .mask(LinearGradient(colors: [.black, .black.opacity(0)], startPoint: .top, endPoint: .bottom))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .ignoresSafeArea(edges: .top)
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+        }
     }
 
     /// Full size and centred as the zoom lands, then beside the title.
@@ -324,11 +336,19 @@ struct SongOpener: View {
                 if tabbed { NotationModePicker(mode: $notationMode) }
             }
             if let words = sheet.arrangement?.words {
-                // Who wrote the words the sheet sets under the melody.
-                Text("Words: \(words.localized)")
-                    .font(.footnote).foregroundStyle(Palette.inkFaint)
-                    .lineLimit(2).fixedSize(horizontal: false, vertical: true)
-                    .padding(.top, -6)
+                // Who wrote the words the sheet sets under the melody: Timbre's own for an Original, words and music;
+                // a public-domain song keeps its real credit.
+                let original = SongOfTheDay.isOriginals(course) || words.defaultValue == "Timbre"
+                Group {
+                    if original {
+                        Text("Words & music · Timbre Originals")
+                    } else {
+                        Text("Words: \(words.localized)")
+                    }
+                }
+                .font(.footnote).foregroundStyle(Palette.inkFaint)
+                .lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                .padding(.top, -6)
             }
             LeadSheetView(chart: chart, sections: sheet.sections, accent: accent, engraved: engraved, position: position,
                           selected: selected, onSelect: { section in pick(section) },

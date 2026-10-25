@@ -65,6 +65,10 @@ final class ReadoutMotion {
     private(set) var shownHertz: Double?
     /// The cents and target `shownHertz` was last sampled for (nil: it shows the measured hertz, or nothing).
     private var hertzKey: (shown: Int, target: Double)?
+    /// The numbers last shown, the target they were read against and when: `printed` holds them through a brief gap.
+    private var lastHeard: (shown: Int, hertz: Double?, target: Double?, at: Double)?
+    /// How long `printed` holds the last numbers after the pitch drops out.
+    static let printHold = 0.4
 
     /// - Parameters:
     ///   - hertz: the measured frequency, shown when the pitch is beyond the smoothed range.
@@ -75,6 +79,16 @@ final class ReadoutMotion {
         if let raw { cents = filter.filter(max(-60, min(60, raw)), at: now) } else { filter.reset(); cents = nil }
         phase = strobe.advance(cents: locked ? 0 : cents, dt: dt)
         updateShown(raw: raw, hertz: hertz, target: target, now: now)
+        if let shown { lastHeard = (shown: shown, hertz: shownHertz, target: target, at: now) }
+    }
+
+    /// The whole cents and hertz the readout prints: those shown, held for `printHold` after the pitch drops out
+    /// (against the same target), so a gap of a few frames in the reading never blinks the numbers away. Nil once
+    /// the pitch has been gone that long, or never came: the readout then shows the target instead.
+    func printed(target: Double?, now: Double) -> (shown: Int, hertz: Double?)? {
+        if let shown { return (shown: shown, hertz: shownHertz) }
+        guard let held = lastHeard, held.target == target, now >= held.at, now - held.at < Self.printHold else { return nil }
+        return (shown: held.shown, hertz: held.hertz)
     }
 
     private func updateShown(raw: Double?, hertz: Double?, target: Double?, now: Double) {
@@ -242,7 +256,8 @@ struct CentsScale: View {
     }
 }
 
-/// The big note (octave set small and light), then cents and hertz; mint and glowing when in tune.
+/// The big note (octave set small and light), then cents and hertz; mint and glowing when in tune. Until a pitch
+/// is heard the line under the note names the target's hertz ("Target 196.00 Hz") rather than a placeholder.
 /// The numbers sit in fixed-width monospaced columns and change in place (no rolling digits), at the
 /// steady rate `ReadoutMotion` gives them, so the row never shifts. Cents use the ¢ sign in every language.
 struct NoteReadout: View {
@@ -251,27 +266,45 @@ struct NoteReadout: View {
     let shown: Int?
     let hertz: Double?
     let target: Double
+    /// The one "in tune" flag: the badge shows from it, and the tuner's status line goes quiet from the same value.
     let locked: Bool
     var compact = false
+    /// The note name's size before Dynamic Type: the phone's 112, larger in an iPad's column (`ReadoutScale`).
+    /// The octave, the glow, the cents row and the badge grow with it.
+    var size: CGFloat = 112
     @Environment(\.colorSchemeContrast) private var contrast
     @Environment(\.accessibilityDifferentiateWithoutColor) private var withoutColor
     private var strong: Bool { contrast == .increased }
+    /// How much larger than the phone's readout this one draws (1 on a phone and in the compact readout).
+    private var grow: CGFloat { compact ? 1 : max(1, size / 112) }
+    /// The cents row and target line: 15 pt on a phone, up to 21 pt beside an iPad's large note.
+    private var detailSize: CGFloat { 15 * min(grow, 1.4) }
+
+    /// What the line under the note shows: the In tune badge once locked, the cents and hertz while a pitch is
+    /// heard, and the target's hertz until one is.
+    private enum Detail: Equatable { case target, live, locked }
+    private var detail: Detail { locked ? .locked : (shown == nil ? .target : .live) }
+
     var body: some View {
         let parts = Self.split(note)
-        VStack(spacing: compact ? 2 : 6) {
-            HStack(alignment: .lastTextBaseline, spacing: 3) {
-                Text(parts.name).font(Typeface.note(compact ? 84 : 112, relativeTo: .largeTitle)).tracking(compact ? -3 : -5)
+        VStack(spacing: compact ? 2 : 6 * min(grow, 1.6)) {
+            HStack(alignment: .lastTextBaseline, spacing: 3 * grow) {
+                Text(parts.name).font(Typeface.note(compact ? 84 : size, relativeTo: .largeTitle)).tracking(compact ? -3 : -5 * grow)
                     .foregroundStyle(Palette.ink)
                     .contentTransition(.numericText())
                     .minimumScaleFactor(0.6).lineLimit(1)
-                Text(parts.octave).font(Typeface.displayLight(30)).foregroundStyle(octaveColor)
+                Text(parts.octave).font(Typeface.displayLight(30 * grow)).foregroundStyle(octaveColor)
             }
-            .shadow(color: locked ? Palette.mint.opacity(0.6) : .clear, radius: 26)
+            .shadow(color: locked ? Palette.mint.opacity(0.6) : .clear, radius: 26 * grow)
             Group {
-                if locked { lockedBadge } else { centsRow }
+                switch detail {
+                case .locked: lockedBadge
+                case .live: centsRow
+                case .target: targetLine
+                }
             }
             .transition(.opacity.combined(with: .scale(scale: 0.96)))
-            .animation(Motion.quick, value: locked)
+            .animation(Motion.quick, value: detail)
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Target \(note)"))
@@ -286,22 +319,33 @@ struct NoteReadout: View {
     }
 
     private var lockedBadge: some View {
-        Label {
+        let large = grow > 1
+        let font: Font = large ? Font.title3.weight(.semibold) : Font.subheadline.weight(.semibold)
+        return Label {
             Text("In tune") + Text(verbatim: " · \(abs(shown ?? 0))¢")
         } icon: { Image(systemName: "checkmark") }
-        .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.mint)
+        .font(font).foregroundStyle(Palette.mint)
         .monospacedDigit()
-        .padding(.horizontal, 12).padding(.vertical, 6)
+        .padding(.horizontal, large ? 16 : 12).padding(.vertical, large ? 8 : 6)
         .background(Capsule().fill(Palette.mint.opacity(0.12)))
         .overlay(Capsule().strokeBorder(Palette.mint.opacity(strong ? 0.9 : 0.4), lineWidth: strong ? 1.5 : 1))
+    }
+
+    /// "Target 196.00 Hz": what to aim for, before any pitch is heard (no placeholder dash for the cents).
+    private var targetLine: some View {
+        Text("Target \(Self.hertzText(target))")
+            .font(Typeface.number(detailSize))
+            .foregroundStyle(strong ? Palette.ink : Palette.inkSoft)
+            .lineLimit(1)
+            .fixedSize()
     }
 
     /// "−11¢ · 81.99 Hz": each number in its own fixed column, so the separator never moves.
     /// With Differentiate Without Colour a symbol leads the cents (▲ sharp, ▼ flat, ✓ in the lock band).
     private var centsRow: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 10 * min(grow, 1.4)) {
             HStack(spacing: 5) {
-                if withoutColor { PitchMark.image(PitchMark(shown: shown, locked: false), size: 11) }
+                if withoutColor { PitchMark.image(PitchMark(shown: shown, locked: false), size: 11 * min(grow, 1.4)) }
                 Self.column(Self.signed(shown), placeholder: "−00¢", alignment: .trailing)
             }
             .foregroundStyle(Palette.tuning(shown.map { Double($0) }, locked: false))
@@ -309,7 +353,7 @@ struct NoteReadout: View {
             Self.column(Self.hertzText(hertz ?? target), placeholder: Self.hertzPlaceholder(target), alignment: .leading)
                 .foregroundStyle(strong ? Palette.ink : Palette.inkSoft)
         }
-        .font(Typeface.number(15))
+        .font(Typeface.number(detailSize))
     }
 
     /// A number in a column as wide as its widest value, so it changes in place.

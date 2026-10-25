@@ -11,7 +11,7 @@ import TimbreCore
 /// close button. One Canvas on the display clock; with Reduce Motion it holds a single frame mid-song.
 /// A paywall opened from a tool shows that tool's own scene on the same stage instead (`ToolScene`): the Tanpura,
 /// the sniper's scope, the interval staircase or the metronome. The plan's paywall (onboarding, Pro from Settings)
-/// shows the plan itself instead (`PaywallPlanHero`): the instrument, the first song's sleeve and the road there.
+/// shows the plan itself instead (`PaywallPlanHero`): a rail of the sleeves of the songs it plays, drifting.
 struct PaywallPreview: View {
     let hero: PaywallHero
     let accent: Color

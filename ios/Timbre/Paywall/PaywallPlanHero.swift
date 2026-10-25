@@ -1,189 +1,155 @@
 import SwiftUI
 
-/// The plan's hero, for onboarding's paywall and Pro from Settings: it sells the plan rather than a game. The person's
-/// instrument stands under a light in their course's colour with the sleeve of the first song their plan reaches
-/// leaning beside it (drawn as the Songs shelf draws it), its record sliding out; under them, the road there from the
-/// plan itself ("Today · Day 2 Greensleeves · Day 7 Strumming"), then the Pro pill.
+/// The plan's hero, for onboarding's paywall and Pro from Settings: it shows the goods. A rail of the sleeves of the
+/// songs the plan plays (its first song first, each drawn as the Songs shelf draws it) drifts slowly right to left
+/// across the full width, under a light in the course's colour, with the Pro pill on it. The sleeves reach on past
+/// the hero, behind the headline, and fade into the stage before its words, so the headline always reads on the
+/// plain stage. The rail is laid out more than once, so it loops without a seam.
 ///
-/// The picture is fitted to the room the road and the pill leave, so the instrument always stands whole: nothing is
-/// cut by the top edge. Nothing in it redraws every frame but the record turning (off with Reduce Motion), which stands
-/// clear of the close button's corner.
+/// How large the sleeves are follows the room the fold gives the hero (`PaywallView.fold`): the hero holds their
+/// tops and the pill, from 64 points on a 6.1-inch iPhone up to `PaywallHero.maxHeight`. Only the rail's offset
+/// changes from frame to frame; the sleeves are drawn once (`SleeveStrip` is equatable). With Reduce Motion the rail
+/// stands still, the plan's first song at the left.
 struct PaywallPlanHero: View {
     let scene: PaywallPlanScene
     let height: CGFloat
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    /// The picture has come together: the sleeve out from behind the instrument, its record slid out.
-    @State private var shown = false
+    /// When the rail started drifting.
+    @State private var start = Date()
+
+    /// Points a second: a sleeve takes about forty seconds to cross a phone.
+    private static let speed: Double = 9
+    private static let gap: CGFloat = 12
+    private static let smallestSide: CGFloat = 56
+    private static let largestSide: CGFloat = 132
+    /// The sleeves' side against the hero's height: the share past 1 reaches on behind the headline.
+    private static let reach: CGFloat = 1.35
+    /// The rail runs past the content's side margins to the screen's edges.
+    private static let bleed: CGFloat = 20
+    /// Where the plan's first song starts, from the screen's left edge.
+    private static let lead: CGFloat = 24
+    /// Room above the sleeves for their tilt, and below them for their shadow.
+    private static let topRoom: CGFloat = 4
+    private static let bottomRoom: CGFloat = 8
+    /// The widest the rail has to cover (the content's widest column and its bleed), so a short rail is laid out
+    /// often enough never to leave a gap.
+    private static let widest: CGFloat = 600
+
+    private var side: CGFloat {
+        min(Self.largestSide, max(Self.smallestSide, (height - 2) * Self.reach))
+    }
 
     var body: some View {
-        VStack(spacing: 0) {
-            GeometryReader { proxy in
-                picture(proxy.size)
-            }
-            road
-                .padding(.top, 8)
-            PaywallProPill()
-                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
-                .padding(.top, 10)
-                .padding(.bottom, 2)
+        let side = self.side
+        ZStack(alignment: .top) {
+            light(side)
+            rail(side)
         }
-        .frame(height: height)
+        // The sleeves overflow the hero's frame at the bottom, behind the headline: drawn, not clipped.
+        .frame(height: height, alignment: .top)
         .frame(maxWidth: .infinity)
-        .onAppear(perform: reveal)
-    }
-
-    private func reveal() {
-        guard !shown else { return }
-        if reduceMotion {
-            shown = true
-        } else {
-            withAnimation(Motion.hero.delay(0.2)) { shown = true }
+        .overlay(alignment: .bottom) {
+            PaywallProPill().padding(.bottom, 2)
         }
     }
 
-    // MARK: The picture
-
-    /// The instrument in a square `side` points tall, standing on the floor of the room; the sleeve leaning on its
-    /// right, the record half out of it. Without an instrument the sleeve stands alone, larger.
-    private func picture(_ size: CGSize) -> some View {
-        let side = max(1, min(size.height, size.width * 0.56))
-        let alone = scene.instrument == nil
-        let sleeve = side * (alone ? 0.8 : 0.6)
-        let sleeveX = alone ? -sleeve * 0.2 : side * 0.1
-        let sleeveY = alone ? side * 0.1 - sleeve * 0.1 : side * 0.17
-        return ZStack {
-            light(side, width: size.width)
-            if let instrument = scene.instrument {
-                figure(instrument, side: side)
-                    .offset(x: -side * 0.34)
-            }
-            record(sleeve)
-                .offset(x: sleeveX + (shown ? sleeve * 0.36 : 0), y: sleeveY - sleeve * 0.02)
-            cover(sleeve)
-                .offset(x: sleeveX - (shown ? 0 : side * 0.14), y: sleeveY)
-                .opacity(shown ? 1 : 0)
-        }
-        .frame(width: size.width, height: side)
-        .frame(width: size.width, height: size.height, alignment: .bottom)
-        .accessibilityHidden(true)
+    /// A pool of the course's colour behind the rail.
+    private func light(_ side: CGFloat) -> some View {
+        Rectangle()
+            .fill(EllipticalGradient(colors: [scene.accent.opacity(0.26), scene.accent.opacity(0)], center: .center,
+                                     startRadiusFraction: 0, endRadiusFraction: 0.5))
+            .frame(height: side * 1.5)
+            .frame(maxWidth: .infinity)
+            .offset(y: -side * 0.12)
+            .padding(.horizontal, -Self.bleed)
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
     }
 
-    /// A pool of the course's colour behind the picture, and the shadow it stands on.
-    private func light(_ side: CGFloat, width: CGFloat) -> some View {
-        ZStack {
-            Rectangle()
-                .fill(EllipticalGradient(colors: [scene.accent.opacity(0.3), scene.accent.opacity(0)], center: .center,
-                                         startRadiusFraction: 0, endRadiusFraction: 0.5))
-                .frame(width: min(width * 1.05, side * 2.3), height: side * 1.4)
-                .offset(y: -side * 0.04)
-            Ellipse().fill(Color.black.opacity(0.55))
-                .frame(width: side * 1.35, height: side * 0.08)
-                .blur(radius: 6)
-                .offset(y: side * 0.47)
-        }
-    }
+    // MARK: The rail
 
-    /// The instrument, whole: a studio render (upright in its square) leans toward the sleeve; a photograph already leans.
-    private func figure(_ instrument: (name: String, render: Bool), side: CGFloat) -> some View {
-        Image(instrument.name).resizable().interpolation(.high).scaledToFit()
-            .frame(width: side * 0.94, height: side * 0.94)
-            .rotationEffect(.degrees(instrument.render ? 14 : 0))
-            .shadow(color: .black.opacity(0.55), radius: side * 0.05, y: side * 0.04)
-            .frame(width: side, height: side)
-    }
-
-    private func cover(_ side: CGFloat) -> some View {
-        SongCover(art: scene.sleeve, corner: max(6, side * 0.05))
-            .frame(width: side, height: side)
-            .rotationEffect(.degrees(-4))
-            .shadow(color: .black.opacity(0.5), radius: side * 0.08, y: side * 0.05)
-    }
-
-    /// The song's record, its label in the sleeve's colour, turning once it is out.
-    private func record(_ sleeve: CGFloat) -> some View {
-        VinylRecord(color: scene.sleeve.primary, spinning: shown && !reduceMotion)
-            .frame(width: sleeve * 0.9, height: sleeve * 0.9)
-            .rotationEffect(.degrees(shown ? 0 : -60))
-    }
-
-    // MARK: The road
-
-    /// Today, the first song and the next unit on one line; when that is too wide, the first two; at the last, the song.
-    private var road: some View {
-        ViewThatFits(in: .horizontal) {
-            roadRow(scene.stops)
-            if scene.stops.count > 2 { roadRow(Array(scene.stops.prefix(2))) }
-            roadRow(scene.stops.filter { $0.kind == .song })
-        }
-        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
-        .padding(.horizontal, 8)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(spoken)
-    }
-
-    private func roadRow(_ stops: [PaywallPlanScene.Stop]) -> some View {
-        HStack(spacing: 7) {
-            ForEach(Array(stops.enumerated()), id: \.element.id) { index, stop in
-                HStack(spacing: 7) {
-                    if index > 0 { link }
-                    stopLabel(stop)
+    private func rail(_ side: CGFloat) -> some View {
+        let songs = scene.songs
+        let pitch = side + Self.gap
+        let loop = CGFloat(songs.count) * pitch
+        let copies = loop > 0 ? max(2, Int((Self.widest / loop).rounded(.up)) + 1) : 1
+        let strip = SleeveStrip(songs: songs, side: side, gap: Self.gap, top: Self.topRoom)
+        let still = reduceMotion || loop <= 0
+        // The strip rides in an overlay, so its width (several loops) never widens the hero: the clear base holds the
+        // width of the screen and the mask cuts the strip to it.
+        return Color.clear
+            .frame(height: Self.topRoom + side + Self.bottomRoom)
+            .frame(maxWidth: .infinity)
+            .overlay(alignment: .topLeading) {
+                TimelineView(.animation(minimumInterval: 1 / 60, paused: still)) { timeline in
+                    HStack(spacing: Self.gap) {
+                        ForEach(0..<copies, id: \.self) { _ in
+                            strip.equatable()
+                        }
+                    }
+                    .fixedSize()
+                    .offset(x: Self.lead - (still ? 0 : drift(at: timeline.date, loop: loop)))
                 }
-                .opacity(shown ? 1 : 0)
-                .offset(y: shown || reduceMotion ? 0 : 5)
-                .animation(reduceMotion ? nil : Motion.pluck.delay(0.45 + Double(index) * 0.14), value: shown)
             }
-        }
-        .lineLimit(1)
+            .mask { fade(side) }
+            .padding(.horizontal, -Self.bleed)
+            .allowsHitTesting(false)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(spoken)
     }
 
-    private var link: some View {
-        Capsule().fill(Color.white.opacity(0.2)).frame(width: 12, height: 1.5)
+    /// How far the rail has drifted, within one loop of its songs.
+    private func drift(at date: Date, loop: CGFloat) -> CGFloat {
+        let travelled = max(0, date.timeIntervalSince(start)) * Self.speed
+        return CGFloat(travelled.truncatingRemainder(dividingBy: Double(loop)))
     }
 
-    private func stopLabel(_ stop: PaywallPlanScene.Stop) -> some View {
-        HStack(spacing: 5) {
-            marker(stop.kind)
-            day(stop).font(Typeface.label(11, relativeTo: .caption)).foregroundStyle(tint(stop.kind))
-            if let title = stop.title {
-                Text(verbatim: title).font(.caption.weight(.medium))
-                    .foregroundStyle(stop.kind == .unit ? Palette.inkSoft : Palette.ink)
-            }
-        }
+    /// Solid over the sleeves' upper half, gone before their foot (where the headline's words sit), and soft at the
+    /// screen's edges.
+    private func fade(_ side: CGFloat) -> some View {
+        let total = Self.topRoom + side + Self.bottomRoom
+        let solid = (Self.topRoom + side * 0.55) / total
+        let gone = (Self.topRoom + side * 0.94) / total
+        let down = LinearGradient(stops: [Gradient.Stop(color: .black, location: 0), Gradient.Stop(color: .black, location: solid),
+                                          Gradient.Stop(color: .clear, location: gone)],
+                                  startPoint: .top, endPoint: .bottom)
+        let across = LinearGradient(stops: [Gradient.Stop(color: .clear, location: 0), Gradient.Stop(color: .black, location: 0.06),
+                                            Gradient.Stop(color: .black, location: 0.94), Gradient.Stop(color: .clear, location: 1)],
+                                    startPoint: .leading, endPoint: .trailing)
+        return down.mask { across }
     }
 
-    private func day(_ stop: PaywallPlanScene.Stop) -> Text {
-        stop.day <= 1 ? Text("Today") : Text("Day \(stop.day)")
-    }
-
-    /// As on the plan track: mint for today, amber for the song, the unit quieter.
-    private func tint(_ kind: PaywallPlanScene.Stop.Kind) -> Color {
-        switch kind {
-        case .today: return Palette.mint
-        case .song: return Palette.amber
-        case .unit: return Palette.inkSoft
-        }
-    }
-
-    @ViewBuilder private func marker(_ kind: PaywallPlanScene.Stop.Kind) -> some View {
-        switch kind {
-        case .today:
-            Circle().fill(Palette.mint).frame(width: 7, height: 7)
-                .shadow(color: Palette.mint.opacity(0.6), radius: 4)
-        case .song:
-            Image(systemName: "music.note").font(.system(size: 10, weight: .bold)).foregroundStyle(Palette.amber)
-        case .unit:
-            Image(systemName: "flag.fill").font(.system(size: 9, weight: .bold)).foregroundStyle(Palette.inkSoft)
-        }
-    }
-
-    /// "Your plan: Today, Day 2 Greensleeves, Day 7 Strumming".
+    /// "Songs: Greensleeves, Clementine and Kite Weather".
     private var spoken: Text {
-        var label = Text("Your plan") + Text(verbatim: ": ")
-        for (index, stop) in scene.stops.enumerated() {
-            if index > 0 { label = label + Text(verbatim: ", ") }
-            label = label + day(stop)
-            if let title = stop.title { label = label + Text(verbatim: " ") + Text(verbatim: title) }
+        Text("Songs") + Text(verbatim: ": ") + Text(verbatim: scene.songs.map(\.title).formatted(.list(type: .and)))
+    }
+}
+
+/// One pass of the rail's sleeves, each hung with a slight tilt. Equal on the songs and their size, so the rail's
+/// drift moves the strip without drawing its sleeves again.
+private struct SleeveStrip: View, Equatable {
+    let songs: [PaywallPlan.RailSong]
+    let side: CGFloat
+    let gap: CGFloat
+    /// Room above the sleeves for their tilt.
+    let top: CGFloat
+
+    /// Tilts in turn, never two alike side by side.
+    private static let tilts: [Double] = [-2.4, 1.8, -1.2, 2.2, -1.8, 1.2, -2.0, 2.4]
+
+    static func == (lhs: SleeveStrip, rhs: SleeveStrip) -> Bool {
+        lhs.side == rhs.side && lhs.gap == rhs.gap && lhs.top == rhs.top && lhs.songs.map(\.id) == rhs.songs.map(\.id)
+    }
+
+    var body: some View {
+        HStack(spacing: gap) {
+            ForEach(Array(songs.enumerated()), id: \.element.id) { index, song in
+                SongCover(art: song.art, corner: max(6, side * 0.05))
+                    .frame(width: side, height: side)
+                    .rotationEffect(.degrees(Self.tilts[index % Self.tilts.count]))
+                    .shadow(color: .black.opacity(0.5), radius: side * 0.06, y: side * 0.04)
+            }
         }
-        return label
+        .padding(.top, top)
     }
 }

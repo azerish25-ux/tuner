@@ -10,9 +10,10 @@ struct PaywallAnswers: Equatable {
     var minutes: Int
 }
 
-/// The person's plan as the paywall tells it: three outcomes (two in onboarding), led by what they just tried to open and then
-/// their goal and course, and what the plan reaches next on its pace of one lesson a day (Today's set holds one
-/// lesson): the first song it gets to, and the units after today's whose names don't just repeat today's lesson.
+/// The person's plan as the paywall tells it: three outcomes, led by what they just tried to open and then their goal
+/// and course (in onboarding, the plan's own and then every instrument and every ear game and tool); what the plan
+/// reaches next on its pace of one lesson a day (Today's set holds one lesson): the first song it gets to, and the units
+/// after today's whose names don't just repeat today's lesson; and the songs for the hero's rail.
 struct PaywallPlan {
     enum Art {
         case course(LearnCourse)
@@ -39,6 +40,14 @@ struct PaywallPlan {
         var id: Int { day }
     }
 
+    /// A song on the plan hero's rail, its sleeve as the Songs shelf draws it.
+    struct RailSong: Identifiable {
+        let id: String
+        /// The song by its name ("Greensleeves", not "Greensleeves: the chords"), for VoiceOver.
+        let title: String
+        let art: CoverArt
+    }
+
     let course: LearnCourse?
     /// The person's instrument: onboarding's answer, else the one they tune (or the Pro one they chose and tune
     /// in Chromatic until Pro opens it). Nil when they sing, or tune by ear in Chromatic with none chosen.
@@ -49,10 +58,11 @@ struct PaywallPlan {
     /// Up to two days ahead within the horizon, in order: the first song the plan reaches, and the first unit
     /// after today's whose name doesn't echo today's lesson.
     let milestones: [Milestone]
-    /// The first song the plan reaches (today's lesson, when that is a song), however far off, and the day it comes
-    /// at one lesson a day (1: today). The plan's hero shows its sleeve.
-    let firstSong: Lesson?
+    /// The day the plan reaches its first song (today's lesson, when that is a song), however far off, at one lesson
+    /// a day (1: today); nil when it reaches none.
     let songDay: Int?
+    /// The hero's rail (`railSongs`): the plan's first song, then up to seven more. Empty when the plan reaches no song.
+    let rail: [RailSong]
 
     var accent: Color { course.map { Palette.accent($0.accent) } ?? Palette.mint }
 
@@ -86,16 +96,95 @@ struct PaywallPlan {
         let songIndex = first.flatMap { from in lessons[from...].firstIndex { $0.kind == .song } }
         let songDay = first.flatMap { from in songIndex.map { $0 - from + 1 } }
         let planned = plannedOutcomes(goal: goal, course: course, songDay: songDay, minutes: minutes, instrumentId: instrumentId, store: store)
-        // Onboarding's plan screen has just set the daily minutes, so its paywall keeps the two outcomes before them and
-        // gives the room to the hero.
-        let limit = answers == nil ? 3 : 2
+        let outcomes: [Outcome]
+        if answers != nil {
+            // Onboarding's plan screen has just set the daily minutes, so they aren't promised again: the plan's own
+            // outcomes, then every instrument and every ear game and tool, so the paywall never sells with one line.
+            // Four at most, as the plan's hero takes the first song's out (`PaywallView.shownOutcomes`) and three show.
+            let kept = planned.filter { $0.id != "daily" }
+            outcomes = merged(kept, breadthOutcomes(goal: goal, instrumentId: instrumentId, store: store), limit: 4)
+        } else {
+            outcomes = merged(reasonOutcomes(reason, course: course, instrumentId: instrumentId, store: store), planned)
+        }
         return PaywallPlan(course: course,
                            instrumentId: instrumentId,
-                           outcomes: merged(reasonOutcomes(reason, course: course, instrumentId: instrumentId, store: store), planned, limit: limit),
+                           outcomes: outcomes,
                            firstLesson: start?.title.localized,
                            milestones: plannedMilestones(course: course, start: start, horizon: horizon),
-                           firstSong: songIndex.map { lessons[$0] },
-                           songDay: songDay)
+                           songDay: songDay,
+                           rail: railSongs(course: course, from: first, store: store))
+    }
+
+    // MARK: The rail
+
+    /// The hero's rail, from the plan: its first song, then the songs it reaches after it, then the song collections
+    /// played on the same instrument (Originals first), then the songs of the units placement skipped; when those
+    /// make fewer than six, the other collections. Each tune shows once ("Greensleeves: the chords" and "… the
+    /// melody" are one sleeve), and each motif once while the songs allow it; nursery tunes (a "first songs" unit's)
+    /// wait until the rest have had their turn, so the rail looks like an adult's catalogue. Eight at most, in that
+    /// order; empty when the plan reaches no song.
+    @MainActor private static func railSongs(course: LearnCourse?, from first: Int?, store: AppStore) -> [RailSong] {
+        guard let course, let first, first < course.lessons.count else { return [] }
+        let lessons = course.lessons
+        let ahead = lessons[first...].filter { $0.kind == .song }
+        guard !ahead.isEmpty else { return [] }
+        let skipped = lessons[..<first].filter { $0.kind == .song }
+        let collections = store.curriculum.courses.filter { $0.id != course.id && isCollection($0) }
+            .sorted { isOriginals($0) && !isOriginals($1) }
+        let sameInstrument = { (shelf: LearnCourse) -> Bool in course.instrument != nil && shelf.instrument == course.instrument }
+        var candidates: [RailCandidate] = ahead.map { RailCandidate(lesson: $0, course: course) }
+        for shelf in collections where sameInstrument(shelf) { candidates += RailCandidate.songs(of: shelf) }
+        candidates += skipped.map { RailCandidate(lesson: $0, course: course) }
+        var fallback: [RailCandidate] = []
+        for shelf in collections where !sameInstrument(shelf) { fallback += RailCandidate.songs(of: shelf) }
+
+        var rail: [RailSong] = []
+        var tunes = Set<String>()
+        var motifs = Set<CoverArt.Motif>()
+        func add(_ lesson: Lesson, _ art: CoverArt) {
+            rail.append(RailSong(id: lesson.id, title: CoverArt.mainTitle(lesson.title.localized), art: art))
+            tunes.insert(tuneKey(lesson))
+            motifs.insert(art.motif)
+        }
+        // The plan's first song, then a new tune with a new motif, nursery tunes left for later.
+        for (index, song) in candidates.enumerated() where rail.count < 8 {
+            guard !tunes.contains(tuneKey(song.lesson)) else { continue }
+            let art = CoverArt.of(song.lesson, in: song.course)
+            guard index == 0 || (!motifs.contains(art.motif) && art.genre != .nursery) else { continue }
+            add(song.lesson, art)
+        }
+        // Six at least where the catalogue has them: any tune not on the rail yet.
+        for song in candidates + fallback where rail.count < 6 {
+            guard !tunes.contains(tuneKey(song.lesson)) else { continue }
+            add(song.lesson, CoverArt.of(song.lesson, in: song.course))
+        }
+        return rail
+    }
+
+    /// A song that may go on the rail, with the course its sleeve is numbered in.
+    private struct RailCandidate {
+        let lesson: Lesson
+        let course: LearnCourse
+
+        /// A course's songs in path order.
+        static func songs(of course: LearnCourse) -> [RailCandidate] {
+            course.lessons.filter { $0.kind == .song }.map { RailCandidate(lesson: $0, course: course) }
+        }
+    }
+
+    /// A tune's key: its main title in English, letters and digits only, so a song's versions and parts are one tune.
+    private static func tuneKey(_ lesson: Lesson) -> String {
+        String(CoverArt.mainTitle(lesson.title.defaultValue).lowercased().filter { $0.isLetter || $0.isNumber })
+    }
+
+    /// A course that is mostly songs (Songs, Standards, Originals), as the Songs tab counts them.
+    private static func isCollection(_ course: LearnCourse) -> Bool {
+        let songs = course.lessons.filter { $0.kind == .song }.count
+        return songs > 0 && songs * 2 >= course.lessons.count
+    }
+
+    private static func isOriginals(_ course: LearnCourse) -> Bool {
+        course.id.hasPrefix("original")
     }
 
     /// What was tapped first, then the plan's own outcomes, `limit` in all and each promise once.
@@ -247,9 +336,11 @@ struct PaywallPlan {
                     Outcome(id: "custom", text: Text("Unlimited custom tunings and string health"), art: .symbol("slider.horizontal.3", Palette.sky)),
                     daily]
         default:
-            // Practice: a song soon and lessons on their own instrument; a course without one (theory) keeps the tools.
+            // Practice: a song soon (when the plan reaches one) and lessons on their own instrument; a course without
+            // one (theory) keeps the tools.
             if let played = course, let instrument = played.instrument, instrument != "voice" {
-                let song = (songDay ?? .max) <= 7 ? Text("Play your first song this week") : Text("Play your first song")
+                guard let songDay else { return [lessonsOutcome(played, store: store), daily] }
+                let song = songDay <= 7 ? Text("Play your first song this week") : Text("Play your first song")
                 return [Outcome(id: "song", text: song, art: .glyph(.notes, Palette.amber)),
                         lessonsOutcome(played, store: store),
                         daily]
@@ -258,5 +349,33 @@ struct PaywallPlan {
                     lessonsOutcome(course, store: store),
                     daily]
         }
+    }
+
+    /// What Timbre Pro opens beyond the plan, for onboarding's paywall: every instrument the tuner knows ("Tune all 60
+    /// instruments", pictured by one they don't play yet) and every ear game and practice tool. A singer, an ear
+    /// player and a drummer read the tools first. Their ids are the promises they share with the plan's own ("tune",
+    /// "tools"), so a goal that already makes one keeps its own wording.
+    @MainActor private static func breadthOutcomes(goal: String, instrumentId: String?, store: AppStore) -> [Outcome] {
+        let count = store.catalog.instruments.count
+        let instruments = Outcome(id: "tune", text: Text("Tune all \(count) instruments"), art: otherInstrument(than: instrumentId, store: store))
+        // A singer's plan already shows an ear (its range exercises): their tools wear the metronome.
+        let toolsArt = goal == "voice" ? own("rhythm", .metronome, Palette.coral, store: store) : own("ear", .ear, Palette.violet, store: store)
+        let tools = Outcome(id: "tools", text: Text("Every ear game and practice tool"), art: toolsArt)
+        switch goal {
+        case "voice", "ear", "rhythm": return [tools, instruments]
+        default: return [instruments, tools]
+        }
+    }
+
+    /// The first Pro instrument with lessons (in course order: mandolin, then banjo) that isn't of the person's own
+    /// family, as the app pictures it; a tuning fork when there is none.
+    @MainActor private static func otherInstrument(than instrumentId: String?, store: AppStore) -> Art {
+        let catalog = store.catalog
+        let family = instrumentId.flatMap { catalog.instrument(id: $0)?.familyId }
+        let other = store.curriculum.courses.compactMap(\.instrument).first { id in
+            guard let instrument = catalog.instrument(id: id) else { return false }
+            return !instrument.isFree && instrument.familyId != family && CourseArtwork.instrumentImage(id, catalog: catalog) != nil
+        }
+        return other.map { Art.instrument($0) } ?? .symbol("tuningfork", Palette.mint)
     }
 }

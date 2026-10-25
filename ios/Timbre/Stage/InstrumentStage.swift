@@ -16,6 +16,11 @@ struct StageInput {
     /// Which string of the active anchor is being tuned, in course order (0 for the first): on a paired
     /// course, the one peg to turn. Nil cues every peg of the anchor.
     var pegIndex: Int?
+    /// An iPad-sized window (regular width and height): the close-up frames the whole headstock, every button and its
+    /// tip, centred across the stage, rather than the phone's tighter shot leaning toward the peg being tuned.
+    var roomy = false
+    /// Points along the stage's trailing edge that the side controls stand over: a roomy close-up keeps clear of them.
+    var controlsReserve: CGFloat = 0
 }
 
 /// Drives the live 3D instrument: camera framing, peg rotation following measured cents,
@@ -48,6 +53,9 @@ final class StageController {
     /// Each post's centre in model space (by peg name), measured once as the model goes on stage: where the string
     /// leaves the head, for the lock shimmer (`lockPath`).
     private var postCenters: [String: SIMD3<Float>] = [:]
+    /// The corners of every peg's box in model space (the button the player turns, with its shaft), measured once as
+    /// the model goes on stage: a roomy close-up keeps every button inside the frame (`roomyCloseUp`).
+    private var pegCorners: [SIMD3<Float>] = []
     private var staticStrings: [String: Entity] = [:]
     private var segments: [ModelEntity] = []
     private var halo: [ModelEntity] = []
@@ -162,7 +170,7 @@ final class StageController {
         model = nil
         rig = nil
         loadedModel = nil
-        pegs = [:]; posts = [:]; postCenters = [:]; staticStrings = [:]; angles = [:]
+        pegs = [:]; posts = [:]; postCenters = [:]; pegCorners = []; staticStrings = [:]; angles = [:]
         segments = []; halo = []
         currentAnchor = nil
         currentPeg = nil
@@ -185,6 +193,7 @@ final class StageController {
                 pegs[string.peg] = (peg, peg.orientation, peg.position)
                 peg.components.set(CollisionComponent(shapes: [.generateSphere(radius: 0.024)]))
                 peg.components.set(InputTargetComponent())
+                pegCorners += Self.corners(peg.visualBounds(relativeTo: holder))
             }
             if let post = entity.findEntity(named: string.post) {
                 posts[string.peg] = (post, post.orientation)
@@ -236,7 +245,7 @@ final class StageController {
         let progress = min(1, 1 - (1 + w * t) * exp(-w * t))
         let speed = w * w * t * exp(-w * t)
         let fov = Float(camera.camera.fieldOfViewInDegrees) * .pi / 180
-        let close = closeUp(rig: rig, anchor: currentAnchor, fov: fov)
+        let close = closeUp(rig: rig, anchor: currentAnchor, fov: fov, layout: input())
         let span = log(max(1.05, wholeShotDistance(rig, fov: fov) / max(close.distance, 0.001)))
         let ratio = log(Float(StageFrame.maxZoom)) / span
         framing = min(1, progress * ratio)
@@ -284,7 +293,8 @@ final class StageController {
     /// just put on stage). The dolly advances even with no model on stage, so a model that arrives mid-move
     /// appears where its placeholder's dolly has got to.
     private func applyFraming(dt: Float = 0, snapFraming: Bool = false, snapCamera: Bool = false) {
-        let target: Float = input().focus && time >= holdWholeUntil ? 1 : 0
+        let state = input()
+        let target: Float = state.focus && time >= holdWholeUntil ? 1 : 0
         if snapFraming || reduceMotion { framing = target; framingVelocity = 0 } else { dollyFraming(toward: target, dt: dt) }
         guard let rig, let model else { return }
         let snap = snapFraming || snapCamera || reduceMotion
@@ -292,7 +302,7 @@ final class StageController {
         let center = (rig.lower + rig.upper) / 2
         let wholeDistance = wholeShotDistance(rig, fov: fov)
         // Close-up: the whole headstock, gliding toward the peg being tuned when the string changes.
-        let close = closeUp(rig: rig, anchor: currentAnchor ?? rig.strings.first?.anchor, fov: fov)
+        let close = closeUp(rig: rig, anchor: currentAnchor ?? rig.strings.first?.anchor, fov: fov, layout: state)
         let previousAim = aimPoint ?? close.aim
         let focusPoint = snap ? close.aim : previousAim + (close.aim - previousAim) * min(1, dt * 3)
         aimPoint = focusPoint
@@ -310,8 +320,9 @@ final class StageController {
         let breathing = reduceMotion ? 0 : Float(sin(time * 0.35)) * 0.025 * (1 - framing)
         let rotation = simd_quatf(angle: yaw + breathing, axis: [0, 1, 0]) * simd_quatf(angle: 0.04 * (1 - framing), axis: [1, 0, 0])
         model.orientation = rotation
-        // In close-up the headstock centres in the room left of the side controls.
-        let shift = Self.controlsInset * metresPerPoint(distance: distance, fov: fov) * framing
+        // In close-up the headstock centres in the room left of the side controls (a roomy close-up centres itself).
+        let inset: Float = state.roomy ? 0 : Self.controlsInset
+        let shift = inset * metresPerPoint(distance: distance, fov: fov) * framing
         model.position = -rotation.act(point) + SIMD3<Float>(-shift, 0, -distance)
     }
 
@@ -339,7 +350,8 @@ final class StageController {
     /// backed off if needed) so every tuning peg sits at least `pegClearance` below the top edge while the
     /// nut stays `nutClearance` above the bottom. A point's height on screen is (y - aim.y) / ((distance - z) * t)
     /// of the half-height, z being how far the turned instrument brings it toward the camera; the yaw leaves y alone.
-    private func closeUp(rig: InstrumentRig, anchor: String?, fov: Float) -> (aim: SIMD3<Float>, distance: Float) {
+    private func closeUp(rig: InstrumentRig, anchor: String?, fov: Float, layout: StageInput) -> (aim: SIMD3<Float>, distance: Float) {
+        if layout.roomy { return roomyCloseUp(rig: rig, anchor: anchor, fov: fov, reserve: Float(layout.controlsReserve)) }
         let head = rig.head
         var aim = head + SIMD3<Float>(0, -0.045, 0)
         if let string = rig.string(anchor) {
@@ -364,6 +376,96 @@ final class StageController {
         let maxAim = max(minAim, lowest + bottom * distance * t)
         aim.y = min(max(aim.y, minAim), maxAim)
         return (aim, distance)
+    }
+
+    /// The iPad's close-up (`StageInput.roomy`): the whole headstock in the frame, every button and its tip clear of the
+    /// feathered edges, centred across the stage (and clear of `reserve` points of side controls on its trailing
+    /// edge), rather than the phone's tighter shot leaning toward the peg being tuned. Vertically as `closeUp`: aimed a
+    /// little toward the peg's height, the camera backing off until the pegs sit `pegClearance` under the top, the tip
+    /// and buttons under the feather and the nut `nutClearance` above the bottom. Then far enough back that the head
+    /// fits across, and slid sideways to centre it. A point's height on screen is (y - aim.y) / ((distance - z) * t) of
+    /// the half-height, its offset across x / ((distance - z) * t) of it, x and z after the close-up's turn.
+    private func roomyCloseUp(rig: InstrumentRig, anchor: String?, fov: Float, reserve: Float) -> (aim: SIMD3<Float>, distance: Float) {
+        let head = rig.head
+        var aim = head + SIMD3<Float>(0, -0.045, 0)
+        if let string = rig.string(anchor) { aim.y = head.y + (string.pegPoint.y - head.y) * 0.45 - 0.03 }
+        var distance: Float = max(0.34, (rig.upper.y - rig.lower.y) * 0.33)
+        let width = Float(viewSize.width), height = Float(viewSize.height)
+        guard height > Self.pegClearance + Self.nutClearance + 40, width > 160, !rig.strings.isEmpty else { return (aim, distance) }
+        let t = tan(fov / 2)
+        let turn = simd_quatf(angle: Self.closeYaw, axis: [0, 1, 0])
+        // The feather (`StageFeather`) fades the outer 6 % of each side: buttons and the tip stay inside it.
+        let edge = 0.06 * height + 10
+        let tip = SIMD3<Float>(head.x, rig.upper.y, head.z)
+        let buttons = pegCorners.isEmpty ? rig.strings.map { $0.pegPoint + $0.pegDirection * 0.03 } : pegCorners
+        var above: [(point: SIMD3<Float>, clearance: Float)] = rig.strings.map { (point: $0.pegPoint, clearance: Self.pegClearance) }
+        above.append((point: tip, clearance: edge))
+        above += buttons.map { (point: $0, clearance: edge) }
+        let below: [(point: SIMD3<Float>, clearance: Float)] = rig.strings.map { (point: $0.nutPoint, clearance: Self.nutClearance) }
+        // Each point bounds the aim's height: above it, aim.y >= a - k * distance * t; below it, aim.y <= b + k * distance * t.
+        let tops: [(a: Float, k: Float)] = above.map { item -> (a: Float, k: Float) in
+            let k = 1 - 2 * item.clearance / height
+            return (a: item.point.y + k * turn.act(item.point - aim).z * t, k: k)
+        }
+        let bottoms: [(b: Float, k: Float)] = below.map { item -> (b: Float, k: Float) in
+            let k = 1 - 2 * item.clearance / height
+            return (b: item.point.y - k * turn.act(item.point - aim).z * t, k: k)
+        }
+        for top in tops {
+            for bottom in bottoms where top.k + bottom.k > 0 {
+                distance = max(distance, (top.a - bottom.b) / ((top.k + bottom.k) * t))
+            }
+        }
+        let minAim = tops.map { $0.a - $0.k * distance * t }.max() ?? aim.y
+        let maxAim = max(minAim, bottoms.map { $0.b + $0.k * distance * t }.min() ?? aim.y)
+        aim.y = min(max(aim.y, minAim), maxAim)
+
+        // Across: every button, peg, nut and the tip inside the room between the feathered sides and the controls.
+        let side = 0.06 * width + 8
+        let room = width - 2 * side - reserve
+        let across = buttons + rig.strings.flatMap { [$0.pegPoint, $0.nutPoint] } + [tip]
+        let turned = across.map { turn.act($0 - aim) }
+        let pointsPerMetre = height / 2 / t
+        func extent(_ d: Float) -> (low: Float, high: Float) {
+            var low = Float.greatestFiniteMagnitude, high = -Float.greatestFiniteMagnitude
+            for v in turned {
+                let x = v.x / max(d - v.z, 0.01) * pointsPerMetre
+                low = min(low, x); high = max(high, x)
+            }
+            return (low: low, high: high)
+        }
+        if room > 40 {
+            for _ in 0..<6 {
+                let span = extent(distance)
+                guard span.high - span.low > room else { break }
+                distance *= (span.high - span.low) / room * 1.02
+            }
+        }
+        // Centred across the whole stage when that keeps clear of the sides and the controls, else as near it as fits.
+        let span = extent(distance)
+        let lowest = -width / 2 + side - span.low
+        let highest = width / 2 - side - reserve - span.high
+        let centred = -(span.low + span.high) / 2
+        let offset = lowest <= highest ? min(max(centred, lowest), highest) : (lowest + highest) / 2
+        // Slide the aim along the turned instrument's own x, so every point moves across by the offset and none in depth.
+        let metres = offset * distance / pointsPerMetre
+        aim -= turn.inverse.act(SIMD3<Float>(metres, 0, 0))
+        return (aim, distance)
+    }
+
+    /// The eight corners of a peg's box: none when it is empty, not finite, or too big to be one peg.
+    private static func corners(_ box: BoundingBox) -> [SIMD3<Float>] {
+        let low = box.min, high = box.max
+        let size = high - low
+        guard size.x >= 0, size.y >= 0, size.z >= 0, max(size.x, max(size.y, size.z)) < 0.2,
+              low.x.isFinite, low.y.isFinite, low.z.isFinite, high.x.isFinite, high.y.isFinite, high.z.isFinite else { return [] }
+        var points: [SIMD3<Float>] = []
+        for x in [low.x, high.x] {
+            for y in [low.y, high.y] {
+                for z in [low.z, high.z] { points.append(SIMD3<Float>(x, y, z)) }
+            }
+        }
+        return points
     }
 
     /// Where a rig point (model space) lands in a stage view of `size`, in points; the same projection

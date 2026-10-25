@@ -93,7 +93,7 @@ extension WidgetLibrary {
                                          access: [String: SongOfTheDay.Access], store: AppStore) -> Shelf {
         let progress = store.learn
         let candidates = songs.map { song in
-            SongOfTheDay.Candidate(id: song.lesson.id, original: isOriginals(song.course), unit: song.unitIndex,
+            SongOfTheDay.Candidate(song: song.lesson, in: song.course, unit: song.unitIndex,
                                    finished: progress.isFinished(song.lesson.id), access: access[song.lesson.id] ?? .locked)
         }
         let day = Calendar.current.ordinality(of: .day, in: .era, for: Date()) ?? 0

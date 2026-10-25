@@ -127,6 +127,8 @@ python3 tools/marketing/screenshots.py --check                                  
 
 The script stops if a caption runs past 30 characters, if a row names a capture the UI tests never take, or if a count no longer matches the build (lessons and courses from `curriculum.json`, instruments and tunings from `catalog.json`). Each caption names what the player gets, not the feature; the supporting line under it backs it up.
 
+Three frames come from store scenes (`TIMBRE_SCENE`, `ios/Timbre/Root/DemoScenes.swift`) that put the app into the moment through its own code paths: the tuner's lock (#1), the chord with every string lit (#3) and *Kite Weather* performed from bar 16, the second half of its first chorus, with every note before it played clean (#2). The results (#6) follow a play-along the demo pitch plays clean, hands off, and are kept only with three stars: a lesson's stars never outrank its final play-along.
+
 Every capture shows the same player: the UI tests' seeded history (`DemoData` in `ios/Timbre/TimbreApp.swift`) is a 7-day streak that already counts today (the flame lit), level 5 and today's tune-up done, whatever the hour the run starts. Each capture waits for its screen to settle before the picture (`stillScreenshot` in `ios/TimbreUITests/StillScreen.swift`), after the cue that its slowest animation has finished: the fingertips landing, the XP counter, a stagger.
 
 ### iPhone 6.9"
@@ -134,11 +136,11 @@ Every capture shows the same player: the UI tests' seeded history (`DemoData` in
 | # | Caption | Supporting line | Capture |
 |---|---|---|---|
 | 1 | **In tune in seconds** | 60 instruments, to the cent | a string locked on the 3D headstock, its peg ringed and ticked (`10b-tune-locked`) |
-| 2 | **Hear exactly how you played** | Pitch and timing on every note | the play-along highway mid-take (`60-along-playing`) |
+| 2 | **Hear exactly how you played** | Pitch and timing on every note | *Kite Weather* on the play-along highway mid-chorus: the words lighting up under the runway, fret numbers on the notes, a combo of 8 or more (`65-song-perform`) |
 | 3 | **Play your first chord today** | Timbre hears every string | the chord step with every string lit (`52b-lesson-chord`) |
 | 4 | **Play songs, start to finish** | Originals and timeless classics | the Songs tab (`63-songs`) |
 | 5 | **Learn at your own pace** | 557 lessons in 14 courses | Learn, with the next lesson up (`50-learn`) |
-| 6 | **Five minutes a day adds up** | Stars, streaks and daily quests | lesson results with their stars (`62-lesson-results`) |
+| 6 | **Five minutes a day adds up** | Stars, streaks and daily quests | lesson results with three stars after a clean play-along (`62-lesson-results`) |
 | 7 | **One strum checks every string** | See which string to tune first | Strum to tune with all six strings read from one strum, A2 the one to tune first (`11b-tune-strum`) |
 | 8 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) |
 
@@ -147,7 +149,7 @@ Every capture shows the same player: the UI tests' seeded history (`DemoData` in
 | # | Caption | Supporting line | Capture |
 |---|---|---|---|
 | 1 | **In tune in seconds** | 60 instruments, to the cent | the tuner in landscape (`ipad-landscape-tune`) |
-| 2 | **Tune whatever you play** | Guitar to violin, oud to erhu | the instrument browser (`ipad-landscape-instruments`) |
+| 2 | **Tune whatever you play** | Guitar to violin, oud to erhu | the instrument browser, a full page of its own on iPad with nothing of the tuner around it (`ipad-landscape-instruments`) |
 | 3 | **Play songs, start to finish** | Originals and timeless classics | the Songs tab (`ipad-landscape-songs`) |
 | 4 | **Five minutes a day adds up** | A daily set, quests and ear games | the Play tab (`ipad-landscape-practice`) |
 

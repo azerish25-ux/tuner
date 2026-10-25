@@ -1,10 +1,11 @@
 import SwiftUI
 import TimbreCore
 
-/// Ear training: ten questions a round. Each question is drawn as the Play hub's interval staircase: its first
-/// note lit, the rest a "?" pulsing with the tones; on the answer the notes land on their steps, named, with the
-/// interval. Round dots, a combo that heats up on a run of right answers, Recent answers to hear again, and a
-/// results card at the end.
+/// Ear training: ten questions a round. Each question is drawn as the Play hub's interval staircase: as the tones
+/// sound, the first note rises onto its step and the rest rise behind a frosted veil marked with the places they may
+/// land (the answers to choose from), a "?" pulsing with them; on the answer the veil lifts and the notes land on
+/// their steps, named, with the interval. Round dots, a combo that heats up on a run of right answers, Recent answers
+/// to hear again, and a results card at the end.
 struct EarTrainingView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService

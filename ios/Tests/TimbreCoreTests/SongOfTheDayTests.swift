@@ -2,31 +2,80 @@ import XCTest
 @testable import TimbreCore
 
 final class SongOfTheDayTests: XCTestCase {
-    private func song(_ id: String, original: Bool = false, unit: Int = 0, finished: Bool = false,
-                      access: SongOfTheDay.Access = .open) -> SongOfTheDay.Candidate {
-        SongOfTheDay.Candidate(id: id, original: original, unit: unit, finished: finished, access: access)
+    private func song(_ id: String, original: Bool = false, standard: Bool = false, kids: Bool = false, unit: Int = 0,
+                      finished: Bool = false, access: SongOfTheDay.Access = .open) -> SongOfTheDay.Candidate {
+        SongOfTheDay.Candidate(id: id, original: original, unit: unit, finished: finished, access: access, standard: standard, kids: kids)
     }
 
-    /// The Songs tab on a fresh start: the first nursery rhyme and the first Original are open, the rest wait.
+    /// The Songs tab on a fresh start: the first nursery rhyme, the first Original and the first Standard are open,
+    /// the rest wait.
     private var shelf: [SongOfTheDay.Candidate] {
-        [song("mary"), song("twinkle", access: .locked),
+        [song("mary", kids: true), song("twinkle", kids: true, access: .locked),
          song("kite", original: true), song("porchlight", original: true, access: .locked),
-         song("rust", original: true, unit: 1, access: .locked)]
+         song("rust", original: true, unit: 1, access: .locked),
+         song("riverside", standard: true)]
     }
 
     func testEmptyShelfHasNoSong() {
         XCTAssertNil(SongOfTheDay.pick([], level: 5, finishedLessons: 3, day: 1))
     }
 
-    func testABeginnerGetsAnOpenFirstSongThatHoldsAllDay() {
+    func testABeginnerGetsAnOpenAdultSongThatHoldsAllDay() {
         for day in 0..<40 {
             let pick = SongOfTheDay.pick(shelf, level: 1, finishedLessons: 0, day: day)
-            XCTAssertTrue(["mary", "kite"].contains(pick ?? ""), "day \(day): \(pick ?? "nil")")
+            XCTAssertTrue(["kite", "riverside"].contains(pick ?? ""), "day \(day): \(pick ?? "nil")")
             XCTAssertEqual(pick, SongOfTheDay.pick(shelf, level: 1, finishedLessons: 0, day: day))
         }
-        // Both open first songs come up over a few weeks.
+        // Both open adult songs come up over a few weeks; the open nursery rhyme never does.
         let picks = Set((0..<40).compactMap { SongOfTheDay.pick(shelf, level: 1, finishedLessons: 0, day: $0) })
-        XCTAssertEqual(picks, ["mary", "kite"])
+        XCTAssertEqual(picks, ["kite", "riverside"])
+    }
+
+    func testNurseryTunesWaitBehindTheAdultRepertoire() {
+        // A beginner with a nursery rhyme, a traditional tune and a Standard open: the Standard, every day.
+        let open = [song("mary", kids: true), song("ode"), song("loch", standard: true)]
+        for day in 0..<30 {
+            XCTAssertEqual(SongOfTheDay.pick(open, level: 1, finishedLessons: 0, day: day), "loch")
+        }
+        // Without the Standard, the traditional tune.
+        XCTAssertEqual(SongOfTheDay.pick(Array(open.prefix(2)), level: 1, finishedLessons: 0, day: 4), "ode")
+        // A nursery rhyme that plays now still beats songs that don't, for a beginner; past the beginner units the
+        // next Pro Original leads.
+        let rest = [song("mary", kids: true), song("lantern", original: true, unit: 1, access: .pro), song("ode", access: .locked)]
+        XCTAssertEqual(SongOfTheDay.pick(rest, level: 1, finishedLessons: 0, day: 4), "mary")
+        XCTAssertEqual(SongOfTheDay.pick(rest, level: 5, finishedLessons: 8, day: 4), "lantern")
+        // Past them, a nursery rhyme follows the other traditional tunes too, even ones further from the learner's unit.
+        let traditional = [song("mary", kids: true), song("ode", unit: 3), song("rust", original: true, finished: true)]
+        XCTAssertEqual(SongOfTheDay.pick(traditional, level: 5, finishedLessons: 8, day: 4), "ode")
+    }
+
+    func testCampfireAndKidsTunesAreKnownByTitle() throws {
+        for title in ["Mary Had a Little Lamb", "Twinkle, Twinkle, Little Star", "Twinkle Twinkle Little Star",
+                      "She'll Be Coming 'Round the Mountain", "Frère Jacques", "Old MacDonald Had a Farm", "Yankee Doodle"] {
+            XCTAssertTrue(SongOfTheDay.isCampfireOrKids(title), title)
+        }
+        for title in ["Down by the Riverside", "Loch Lomond", "Ode to Joy", "Kite Weather", "Greensleeves: the chords", "Amazing Grace"] {
+            XCTAssertFalse(SongOfTheDay.isCampfireOrKids(title), title)
+        }
+        // Every tune on the list is in the catalogue (a renamed song drops off it loudly), and none is an Original.
+        let curriculum = try Curriculum.bundled()
+        let songs: [(course: LearnCourse, lesson: Lesson)] = curriculum.courses.flatMap { course in
+            course.lessons.filter { $0.kind == .song }.map { (course: course, lesson: $0) }
+        }
+        let keys = Set(songs.map { SongOfTheDay.tuneKey($0.lesson.title.defaultValue) })
+        XCTAssertTrue(SongOfTheDay.campfireAndKids.isSubset(of: keys), "\(SongOfTheDay.campfireAndKids.subtracting(keys))")
+        XCTAssertFalse(songs.contains { SongOfTheDay.isOriginals($0.course) && SongOfTheDay.isCampfireOrKids($0.lesson.title.defaultValue) })
+        // A song lesson as a candidate: its course says Original or Standard, its title a children's tune.
+        let collection = try XCTUnwrap(curriculum.course(id: "songs"))
+        let mary = try XCTUnwrap(collection.lessons.first { $0.id == "song-mary" })
+        let candidate = SongOfTheDay.Candidate(song: mary, in: collection, unit: 0, finished: false, access: .open)
+        XCTAssertTrue(candidate.kids)
+        XCTAssertFalse(candidate.original || candidate.standard)
+        let standards = try XCTUnwrap(curriculum.course(id: "standards"))
+        let originals = try XCTUnwrap(curriculum.course(id: "originals"))
+        XCTAssertTrue(SongOfTheDay.isStandards(standards))
+        XCTAssertTrue(SongOfTheDay.isOriginals(originals))
+        XCTAssertFalse(SongOfTheDay.isStandards(originals) || SongOfTheDay.isOriginals(standards))
     }
 
     func testPastTheBeginnerUnitsAnOriginalLeads() {
@@ -40,11 +89,11 @@ final class SongOfTheDayTests: XCTestCase {
     }
 
     func testTheNextProOriginalComesBeforeATraditionalTune() {
-        let songs = [song("mary", finished: true), song("twinkle"),
+        let songs = [song("mary", kids: true, finished: true), song("ode"),
                      song("kite", original: true, finished: true), song("rust", original: true, unit: 1, access: .pro)]
         XCTAssertEqual(SongOfTheDay.pick(songs, level: 5, finishedLessons: 8, day: 9), "rust")
         // A beginner gets the open song rather than the Pro one.
-        XCTAssertEqual(SongOfTheDay.pick(songs, level: 1, finishedLessons: 2, day: 9), "twinkle")
+        XCTAssertEqual(SongOfTheDay.pick(songs, level: 1, finishedLessons: 2, day: 9), "ode")
     }
 
     func testAPlayedSongComesBackOnlyWhenNothingIsNew() {
