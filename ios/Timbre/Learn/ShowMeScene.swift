@@ -297,9 +297,8 @@ struct ShowMeMarks {
     struct Ring {
         var point: CGPoint
         var radius: CGFloat
-        /// String number (1 the thinnest) of an instrument with `count` strings, for its colour.
-        var number: Int
-        var count: Int
+        /// The string's colour on the runway (`HighwayRunway.color`).
+        var tint: Color
         var lit: Bool
         var alpha: CGFloat
     }
@@ -307,8 +306,7 @@ struct ShowMeMarks {
     struct Label {
         var point: CGPoint
         var value: Int
-        var number: Int
-        var count: Int
+        var tint: Color
         var lit: Bool
         var faint: Bool
     }
@@ -318,9 +316,6 @@ struct ShowMeMarks {
     var mutes: [Ring] = []
     var frets: [Label] = []
     var strings: [Label] = []
-    /// Strum: where the outer strings' names go (above the top string and below the bottom one, at the bridge end).
-    var topEdge: CGPoint?
-    var bottomEdge: CGPoint?
 }
 
 // MARK: - The stage
@@ -383,6 +378,8 @@ final class ShowMeController {
         let segments: [ModelEntity]
         let halo: [ModelEntity]
         var shown = false
+        /// Drawn still (not ringing) at this stop and glow: nothing to redraw until one changes or it rings.
+        var resting: (stop: Float, glow: Float)?
         init(lane: Int, rig: InstrumentRig.StringRig, segments: [ModelEntity], halo: [ModelEntity]) {
             self.lane = lane; self.rig = rig; self.segments = segments; self.halo = halo
         }
@@ -546,6 +543,9 @@ final class ShowMeController {
     /// ring on after it ends.
     func schedule(_ start: Date?) {
         guard let start, case let .fretting(shape)? = shot, shape.soundsOnLanding else { return }
+        // A replay takes over from a run still to come.
+        let now = Date()
+        for (lane, times) in strikes { strikes[lane] = times.filter { $0 <= now } }
         for press in shape.presses {
             let at = start.addingTimeInterval(Double(press.rank) * landingStep)
             for lane in press.first...press.last { strikes[lane, default: []].append(at) }
@@ -783,8 +783,12 @@ final class ShowMeController {
                 staticStrings[wire.rig.nodeName]?.isEnabled = true
                 wire.shown = false
             }
+            wire.resting = nil
             return
         }
+        let still = level <= 0.01
+        if still, let resting = wire.resting, resting.stop == stop, abs(resting.glow - glow) < 0.005 { return }
+        wire.resting = still ? (stop: stop, glow: glow) : nil
         wire.shown = true
         staticStrings[wire.rig.nodeName]?.isEnabled = false
         guard let neck else { return }
@@ -846,13 +850,13 @@ final class ShowMeController {
             let alpha: CGFloat = open.rank.map { touchDown($0, now: now) } ?? 1
             guard alpha > 0.01 else { continue }
             let radius = projectedLength(neck.point(lane: open.string, share: markShare), neck.across * gap * 0.32, size: size)
-            marks.opens.append(ShowMeMarks.Ring(point: point, radius: radius, number: count - open.string, count: count,
+            marks.opens.append(ShowMeMarks.Ring(point: point, radius: radius, tint: HighwayRunway.color(string: count - open.string, of: count),
                                                 lit: lit.contains(open.string), alpha: alpha))
         }
         for lane in shape.muted.sorted() {
             guard let point = project(neck.point(lane: lane, share: markShare), in: size) else { continue }
             let radius = projectedLength(neck.point(lane: lane, share: markShare), neck.across * gap * 0.32, size: size)
-            marks.mutes.append(ShowMeMarks.Ring(point: point, radius: radius, number: count - lane, count: count, lit: false, alpha: 1))
+            marks.mutes.append(ShowMeMarks.Ring(point: point, radius: radius, tint: Palette.inkSoft, lit: false, alpha: 1))
         }
         if !neck.fretless {
             for k in 1...max(1, shape.rows) {
@@ -861,13 +865,13 @@ final class ShowMeController {
                 let side = neck.point(lane: 0, share: middle) - neck.across * neck.gap(at: middle) * 1.25
                 guard let point = project(side, in: size) else { continue }
                 let held = shape.presses.contains { $0.fret == fret && touchDown($0.rank, now: now) >= 1 }
-                marks.frets.append(ShowMeMarks.Label(point: point, value: fret, number: 0, count: count, lit: held, faint: false))
+                marks.frets.append(ShowMeMarks.Label(point: point, value: fret, tint: Palette.inkFaint, lit: held, faint: false))
             }
         }
         let numbers = Self.numbersShare(shape)
         for lane in 0..<count {
             guard let point = project(neck.point(lane: lane, share: numbers), in: size) else { continue }
-            marks.strings.append(ShowMeMarks.Label(point: point, value: count - lane, number: count - lane, count: count,
+            marks.strings.append(ShowMeMarks.Label(point: point, value: count - lane, tint: HighwayRunway.color(string: count - lane, of: count),
                                                    lit: lit.contains(lane), faint: shape.muted.contains(lane)))
         }
         return marks

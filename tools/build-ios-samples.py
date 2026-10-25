@@ -565,18 +565,93 @@ def survey(cache: Path, spec: dict, select: str, folder: str, source: str) -> li
     return found
 
 
-def process_note(path: Path, nominal: int, kind: str, seconds: float, steady: bool, hint_midi: int | None):
+def wav_loops(path: Path) -> list[tuple[int, int]]:
+    """The sustain loops a WAV file's `smpl` chunk carries, as (first, last + 1) frames."""
+    data = path.read_bytes()
+    if data[:4] != b'RIFF' or data[8:12] != b'WAVE':
+        return []
+    i, loops = 12, []
+    while i + 8 <= len(data):
+        tag, size = data[i:i + 4], int.from_bytes(data[i + 4:i + 8], 'little')
+        if tag == b'smpl' and size >= 36:
+            count = int.from_bytes(data[i + 8 + 28:i + 8 + 32], 'little')
+            for k in range(count):
+                o = i + 8 + 36 + 24 * k
+                if o + 24 > len(data):
+                    break
+                first, last = (int.from_bytes(data[o + 8:o + 12], 'little'), int.from_bytes(data[o + 12:o + 16], 'little'))
+                loops.append((first, last + 1))
+        i += 8 + size + (size & 1)
+    return loops
+
+
+def extend_along_loop(x: np.ndarray, loop: tuple[int, int], seconds: float) -> np.ndarray:
+    """A plucked note trimmed at its recordist's loop, rung out to `seconds`: the loop repeated (its level evened
+    so the repeats don't pulse) under the decay the note had before it, in dB per second."""
+    first, end = loop
+    if not 0 < first < end <= len(x) or end - first < 64 or end / RATE >= seconds:
+        return x
+    seg = x[first:end].copy()
+    quarter = max(16, len(seg) // 4)
+    head, tail = float(np.sqrt(np.mean(seg[:quarter] ** 2))), float(np.sqrt(np.mean(seg[-quarter:] ** 2)))
+    if head > 0 and tail > 0:
+        # Ramp the loop from the level at its end back down at its start: every repeat joins the last at one level.
+        seg *= (tail / head) ** (1 - np.arange(len(seg)) / len(seg))
+    env = envelope_db(x[:first], 1024)
+    t = np.arange(len(env)) * 1024 / RATE
+    use = slice(len(env) // 3, len(env))
+    slope = -float(np.polyfit(t[use], env[use], 1)[0]) if len(env[use]) >= 3 else 12.0
+    slope = min(30.0, max(6.0, slope))
+    need = int(seconds * RATE) - end
+    ring = np.tile(seg, need // len(seg) + 1)[:need]
+    ring *= 10 ** (-slope * (np.arange(need) / RATE) / 20)
+    return np.concatenate([x[:end], ring])
+
+
+def shape_tone(x: np.ndarray, tone: dict) -> np.ndarray:
+    """A set's own voicing, from the attack on: a 2nd-order high-pass (a smaller body), an RBJ high shelf (brighter
+    strings) and an extra decay in dB per second (a shorter ring). None of it moves the pitch."""
+    from scipy.signal import butter, lfilter, sosfilt
+    y = x.copy()
+    if 'highpass' in tone:
+        y = sosfilt(butter(2, tone['highpass'], 'highpass', fs=RATE, output='sos'), y)
+    if 'shelf' in tone:
+        hz, db = tone['shelf']
+        a = 10 ** (db / 40)
+        w = 2 * math.pi * hz / RATE
+        alpha = math.sin(w) / 2 * math.sqrt(2)
+        cw, sa = math.cos(w), 2 * math.sqrt(a) * alpha
+        b = [a * ((a + 1) + (a - 1) * cw + sa), -2 * a * ((a - 1) + (a + 1) * cw), a * ((a + 1) + (a - 1) * cw - sa)]
+        d = [(a + 1) - (a - 1) * cw + sa, 2 * ((a - 1) - (a + 1) * cw), (a + 1) - (a - 1) * cw - sa]
+        y = lfilter(np.array(b) / d[0], np.array(d) / d[0], y)
+    if 'decay' in tone:
+        y *= 10 ** (-tone['decay'] * (np.arange(len(y)) / RATE) / 20)
+    return y
+
+
+def process_note(path: Path, nominal: int, kind: str, seconds: float, steady: bool, hint_midi: int | None,
+                 spec: dict | None = None):
+    spec = spec or {}
     x = decode(path)
     if len(x) < RATE // 4:
         raise ValueError('too short')
+    if spec.get('extend_loops'):
+        loops = wav_loops(path)
+        if loops:
+            x = extend_along_loop(x, loops[0], seconds + 0.5)
     sustained = kind == 'sustained'
     start = max(0, onset(x, -40 if sustained else -32) - int((0.005 if sustained else 0.002) * RATE))
     x = x[start:].copy()
+    if spec.get('tone'):
+        x = shape_tone(x, spec['tone'])
     raised_cosine_fade(x, int(0.001 * RATE), at_end=False)
     window_start = int((0.45 if sustained else 0.12) * RATE)
     window_len = int(1.0 * RATE)
     hz, midi, partial = measure_pitch(x, nominal if hint_midi is None else hint_midi, window_start, window_len,
                                       octave_fixed=hint_midi is not None)
+    if spec.get('relabel'):
+        # A set tuned off its labels: the note is the semitone it sounds nearest.
+        midi = int(round(69 + 12 * math.log2(hz / 440)))
     cents = 1200 * math.log2(hz / hz_of(midi))
     if abs(cents) > 35:
         raise ValueError(f'{cents:+.1f} cents from {midi}')
@@ -618,7 +693,9 @@ def process_note(path: Path, nominal: int, kind: str, seconds: float, steady: bo
     offset = abs(1200 * math.log2(reading / hz)) if reading else float('inf')
     steady_reading = (offset <= 25 and spread <= 12) or (offset <= 40 and spread <= 6)
     play = (reading, 'tuner') if steady_reading else (hz, 'fundamental')
-    return x, hz, midi, cents, loop, rms, partial, play
+    # For choosing among takes of one note: how far the needle wavers and how far it sits from the fundamental.
+    quality = spread + 0.5 * (offset if math.isfinite(offset) else 100)
+    return x, hz, midi, cents, loop, rms, partial, play, quality
 
 
 def mark(x: np.ndarray) -> tuple[int, float]:
@@ -668,17 +745,25 @@ def build_instrument(cache: Path, spec: dict, report: list) -> dict:
         resolved = []
         for nominal, token, name, path, rel in found:
             try:
-                x, hz, midi, cents, loop, rms, partial, play = process_note(path, nominal + offset, spec['kind'],
-                                                                      spec['seconds'](nominal + offset),
-                                                                      spec.get('steady', False), nominal + offset)
+                x, hz, midi, cents, loop, rms, partial, play, quality = process_note(
+                    path, nominal + offset, spec['kind'], spec['seconds'](nominal + offset), spec.get('steady', False),
+                    nominal + offset, spec)
             except ValueError as error:
                 report.append(f'  reject {rel}: {error}')
                 continue
             resolved.append(dict(midi=midi, token=token, name=name, path=path, rel=rel, x=x, hz=hz, cents=cents,
-                                 loop=loop, rms=rms, source=source, partial=partial, play=play))
+                                 loop=loop, rms=rms, source=source, partial=partial, play=play, quality=quality))
         by_midi = {}
         for r in resolved:
             by_midi.setdefault(r['midi'], []).append(r)
+        if spec.get('best_take'):
+            # Several takes of a note (or, relabelled, of a pitch): the one the needle reads steadiest.
+            for m, takes in by_midi.items():
+                best = min(takes, key=lambda c: c['quality'])
+                for c in takes:
+                    if c is not best:
+                        report.append(f"  spare take {c['rel']} (quality {c['quality']:.1f} > {best['quality']:.1f})")
+                by_midi[m] = [best]
         entries = [(m, '', '') for m in by_midi]
         keep = pick_zones(entries, spec['step'], lo, hi)
         for m in keep:
@@ -695,8 +780,11 @@ def build_instrument(cache: Path, spec: dict, report: list) -> dict:
     out_zones = []
     for z in sorted(zones, key=lambda z: (z['midi'], -z['velocity'])):
         if spec['kind'] != 'sustained':
-            x, hz, midi, cents, loop, rms, partial, play = process_note(z['path'], z['midi'], spec['kind'],
-                                                                        spec['seconds'](z['midi']), False, z['midi'])
+            # Again at the zone's own length; `relabel` is off now that the note is known.
+            again = {**spec, 'relabel': False}
+            x, hz, midi, cents, loop, rms, partial, play, _ = process_note(z['path'], z['midi'], spec['kind'],
+                                                                           spec['seconds'](z['midi']), False, z['midi'],
+                                                                           again)
             z.update(x=x, hz=hz, cents=cents, rms=rms, partial=partial, play=play)
         file = f"{spec['id']}/{spec['id']}-{z['midi']:03d}-{z['layer']}.m4a"
         encode(z['x'], OUT / file, spec['bitrate'])
@@ -723,9 +811,14 @@ def build_instrument(cache: Path, spec: dict, report: list) -> dict:
                       f"plays by {z['play'][1]} {1200 * math.log2(z['play'][0] / z['hz']):+.2f} c, "
                       f"{len(z['x']) / RATE:.2f} s"
                       + (f", loop {z['loop'][0]}-{z['loop'][1]}" if z['loop'] else ''))
-    return dict(id=spec['id'], title=spec['title'], voices=spec['voices'], kind=spec['kind'],
+    inst = dict(id=spec['id'], title=spec['title'], voices=spec['voices'], kind=spec['kind'],
                 release=spec['release'], steady=spec.get('steady', spec['kind'] != 'sustained'),
                 coverage=list(spec['coverage']), zones=out_zones)
+    if spec.get('soft_filter'):
+        inst['softFilter'] = True
+    if spec.get('pair_cents'):
+        inst['pairCents'] = spec['pair_cents']
+    return inst
 
 
 def build_drums(cache: Path, report: list) -> dict:
@@ -734,15 +827,15 @@ def build_drums(cache: Path, report: list) -> dict:
     for _, _, files, group, mics, _ in spec['pieces']:
         for f in files:
             for mic in mics:
-                paths.append(V.format(mic=mic, group=group, name=f))
+                paths.append(drum_path(mic, group, f))
     repo = checkout(cache, spec['source'], paths)
-    targets = dict(kick=0.30, snare=0.22, hat=0.06, openhat=0.06, ride=0.06, crash=0.08)
+    targets = DRUM_TARGETS
     out = []
     for piece, velocity, files, group, mics, seconds in spec['pieces']:
         for rr, f in enumerate(files, 1):
             mix = None
             for mic, weight in mics.items():
-                y = decode(repo / V.format(mic=mic, group=group, name=f)) * weight
+                y = decode(repo / drum_path(mic, group, f)) * weight
                 mix = y if mix is None else (np.pad(mix, (0, max(0, len(y) - len(mix)))) +
                                              np.pad(y, (0, max(0, len(mix) - len(y)))))
             x = mix
@@ -758,9 +851,9 @@ def build_drums(cache: Path, report: list) -> dict:
             frame, level = mark(x)
             shift, _ = verify(OUT / file, frame, level, None, False)
             # A cymbal's noisy attack crosses the marker level unevenly: a few milliseconds of slack.
-            if abs(shift) > (192 if piece in ('crash', 'ride', 'openhat') else 32) or not 0 <= len(decode(OUT / file)) - len(x) < 1024:
+            if abs(shift) > (192 if piece in SOFT_ATTACK else 32) or not 0 <= len(decode(OUT / file)) - len(x) < 1024:
                 sys.exit(f'{file}: encoded attack moved {shift} frames')
-            originals = [V.format(mic=mic, group=group, name=f) for mic in mics]
+            originals = [drum_path(mic, group, f) for mic in mics]
             out.append(dict(file=file, piece=piece, layer=layer, velocity=velocity, rr=rr, frames=len(x), mark=frame,
                             markLevel=round(level, 6), gain=round(targets[piece] * velocity / max(1e-6, rms), 5),
                             source=spec['source'], original=' + '.join(originals),
@@ -795,12 +888,30 @@ def write_doc(manifest: dict, sizes: dict):
         '- Sparse zones are pitch-shifted to the exact frequency asked for (playback ratio = target / the zone\'s',
         '  measured pitch: what Timbre\'s tuner reads from it, or its fundamental where that reading wavers), so',
         '  reference tones read exactly on the needle; a unit test renders A4 and measures 440 Hz with the tuner\'s own',
-        '  detector (`SampledTonesTests`).',
-        '- Instruments without a sample set (ukulele, mandolin, banjo, sung voice), notes outside a set\'s range and any',
-        '  failure to read a file fall back to the synthesized voices (`ToneSynth`), and the band to `BandSynth`.',
-        '- The violin and cello recordings are played with vibrato, so the tuner\'s *reference* for bowed strings stays',
-        '  the steady synthesized tone; their "Hear it", melodies and chords use the recordings. Flute, clarinet and',
-        '  brass were recorded without vibrato and serve the reference too.',
+        '  detector (`SampledTonesTests`) for every set that sounds a reference (guitar, ukulele, mandolin, piano, harp,',
+        '  marimba, flute, clarinet, brass).',
+        '- The sung voice, notes outside a set\'s range and any failure to read a file fall back to the synthesized',
+        '  voices (`ToneSynth`), and the band to `BandSynth`.',
+        '- The violin, cello and banjo recordings waver (vibrato; a banjo string\'s glide), so the tuner\'s *reference*',
+        '  for them stays the steady synthesized tone; their "Hear it", melodies and chords use the recordings. Flute,',
+        '  clarinet and brass were recorded without vibrato and serve the reference too.',
+        '- Single-layer plucked sets (guitar, ukulele, mandolin, banjo) are darkened when played softer than they were',
+        '  recorded (`softFilter`: a one-pole low-pass that follows velocity, as the Martin\'s own SFZ maps it), and',
+        '  chords are strummed string by string (`StrumFeel`: down and up strokes, per-string timing and velocity).',
+        '- The band (`BandSynth`) plays the kit, the bass, the piano and an electric guitar (`eguitar`, `chops`) in',
+        '  the style of the song: pop, rock, reggae one-drop, country two-step, funk, ballad or the plain groove.',
+        '',
+        '## Stand-ins',
+        '',
+        'Nothing CC0 or CC-BY recorded on a ukulele, a mandolin or a four/five-string banjo could be found on GitHub or',
+        'a package registry (see Rejected). These sets play the closest recordings, voiced for the instrument:',
+        '',
+        '| Voice | What plays |',
+        '| --- | --- |',
+    ]
+    for voice, what in STAND_INS:
+        lines.append(f'| {voice} | {what} |')
+    lines += [
         '',
         f'Total shipped: **{total / 1e6:.1f} MB** in {sum(len(i["zones"]) for i in manifest["instruments"])} files '
         f'(budget {BUDGET_BYTES / 1e6:.0f} MB).',
