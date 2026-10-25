@@ -337,9 +337,21 @@ public enum LessonStep: Codable, Equatable, Sendable {
         case "notes": self = .playNotes(notes: try c.decode([TimedNote].self, forKey: .notes), hint: try c.decodeIfPresent(LearnText.self, forKey: .hint))
         case "along": self = .playAlong(notes: try c.decode([TimedNote].self, forKey: .notes), bpm: try c.decode(Double.self, forKey: .bpm), beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar) ?? 4, title: try c.decodeIfPresent(LearnText.self, forKey: .title))
         case "chord": self = .playChord(chord: try c.decode(ChordSpec.self, forKey: .chord))
-        case "strum": self = .strum(chord: try c.decodeIfPresent(ChordSpec.self, forKey: .chord), pattern: try c.decode([Double].self, forKey: .pattern), bpm: try c.decode(Double.self, forKey: .bpm), bars: try c.decodeIfPresent(Int.self, forKey: .bars) ?? 2, beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar), muted: muted, accents: accents)
+        case "strum": self = .strum(chord: try c.decodeIfPresent(ChordSpec.self, forKey: .chord),
+            pattern: try c.decode([Double].self, forKey: .pattern),
+            bpm: try c.decode(Double.self, forKey: .bpm),
+            bars: try c.decodeIfPresent(Int.self, forKey: .bars) ?? 2,
+            beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar),
+            muted: muted,
+            accents: accents)
         case "tap": self = .tapRhythm(pattern: try c.decode([Double].self, forKey: .pattern), bpm: try c.decode(Double.self, forKey: .bpm), bars: try c.decodeIfPresent(Int.self, forKey: .bars) ?? 2, beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar))
-        case "progression": self = .progression(chords: try c.decode([ChordSpec].self, forKey: .chords), bars: try c.decode([Int].self, forKey: .bars), pattern: try c.decode([Double].self, forKey: .pattern), bpm: try c.decode(Double.self, forKey: .bpm), beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar), muted: muted, accents: accents)
+        case "progression": self = .progression(chords: try c.decode([ChordSpec].self, forKey: .chords),
+            bars: try c.decode([Int].self, forKey: .bars),
+            pattern: try c.decode([Double].self, forKey: .pattern),
+            bpm: try c.decode(Double.self, forKey: .bpm),
+            beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar),
+            muted: muted,
+            accents: accents)
         case "listen": self = .listen(prompt: try c.decode(LearnText.self, forKey: .prompt), sound: try c.decode([[Int]].self, forKey: .sound), options: try c.decode([LearnText].self, forKey: .options), answer: try c.decode(Int.self, forKey: .answer))
         case "quiz": self = .quiz(prompt: try c.decode(LearnText.self, forKey: .prompt), options: try c.decode([LearnText].self, forKey: .options), answer: try c.decode(Int.self, forKey: .answer), why: try c.decodeIfPresent(LearnText.self, forKey: .why), visual: try c.decodeIfPresent(LessonVisual.self, forKey: .visual) ?? .none)
         default: throw DecodingError.dataCorruptedError(forKey: .type, in: c, debugDescription: "Unknown lesson step")
@@ -352,9 +364,23 @@ public enum LessonStep: Codable, Equatable, Sendable {
         case let .playNotes(notes, hint): try c.encode("notes", forKey: .type); try c.encode(notes, forKey: .notes); try c.encodeIfPresent(hint, forKey: .hint)
         case let .playAlong(notes, bpm, beatsPerBar, title): try c.encode("along", forKey: .type); try c.encode(notes, forKey: .notes); try c.encode(bpm, forKey: .bpm); try c.encode(beatsPerBar, forKey: .beatsPerBar); try c.encodeIfPresent(title, forKey: .title)
         case let .playChord(chord): try c.encode("chord", forKey: .type); try c.encode(chord, forKey: .chord)
-        case let .strum(chord, pattern, bpm, bars, beatsPerBar, muted, accents): try c.encode("strum", forKey: .type); try c.encodeIfPresent(chord, forKey: .chord); try c.encode(pattern, forKey: .pattern); try c.encode(bpm, forKey: .bpm); try c.encode(bars, forKey: .bars); try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar); try Self.encodeMarks(muted: muted, accents: accents, into: &c)
+        case let .strum(chord, pattern, bpm, bars, beatsPerBar, muted, accents):
+            try c.encode("strum", forKey: .type)
+            try c.encodeIfPresent(chord, forKey: .chord)
+            try c.encode(pattern, forKey: .pattern)
+            try c.encode(bpm, forKey: .bpm)
+            try c.encode(bars, forKey: .bars)
+            try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar)
+            try Self.encodeMarks(muted: muted, accents: accents, into: &c)
         case let .tapRhythm(pattern, bpm, bars, beatsPerBar): try c.encode("tap", forKey: .type); try c.encode(pattern, forKey: .pattern); try c.encode(bpm, forKey: .bpm); try c.encode(bars, forKey: .bars); try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar)
-        case let .progression(chords, bars, pattern, bpm, beatsPerBar, muted, accents): try c.encode("progression", forKey: .type); try c.encode(chords, forKey: .chords); try c.encode(bars, forKey: .bars); try c.encode(pattern, forKey: .pattern); try c.encode(bpm, forKey: .bpm); try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar); try Self.encodeMarks(muted: muted, accents: accents, into: &c)
+        case let .progression(chords, bars, pattern, bpm, beatsPerBar, muted, accents):
+            try c.encode("progression", forKey: .type)
+            try c.encode(chords, forKey: .chords)
+            try c.encode(bars, forKey: .bars)
+            try c.encode(pattern, forKey: .pattern)
+            try c.encode(bpm, forKey: .bpm)
+            try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar)
+            try Self.encodeMarks(muted: muted, accents: accents, into: &c)
         case let .listen(prompt, sound, options, answer): try c.encode("listen", forKey: .type); try c.encode(prompt, forKey: .prompt); try c.encode(sound, forKey: .sound); try c.encode(options, forKey: .options); try c.encode(answer, forKey: .answer)
         case let .quiz(prompt, options, answer, why, visual): try c.encode("quiz", forKey: .type); try c.encode(prompt, forKey: .prompt); try c.encode(options, forKey: .options); try c.encode(answer, forKey: .answer); try c.encodeIfPresent(why, forKey: .why); try c.encode(visual, forKey: .visual)
         }

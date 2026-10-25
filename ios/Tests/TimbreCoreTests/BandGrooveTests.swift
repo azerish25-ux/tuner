@@ -80,12 +80,13 @@ final class BandGrooveTests: XCTestCase {
                         switch step {
                         case let .playAlong(notes, _, beatsPerBar, _):
                             found = BandCue.melody(notes, meter: beatsPerBar).flatMap(index.style(forCue:))
-                        case let .progression(chords, bars, pattern, bpm, beatsPerBar, _, _):
+                        case let .progression(chords, bars, pattern, _, beatsPerBar, _, _):
                             let meter = beatsPerBar ?? max(4, Int((pattern.max() ?? 3) + 1))
                             let symbols = BandCue.perBar(chords, bars: bars)
+                            // Nil when a song of another style opens on the same four bars and strum (First Frost and
+                            // Away in a Manger): the cue names neither song, as a shared melody cue doesn't.
                             found = BandCue.chords(symbols, meter: meter, pattern: pattern).flatMap(index.style(forCue:))
                                 ?? BandCue.chords(symbols, meter: meter).flatMap(index.style(forCue:))
-                                ?? BandStyle.inferred(pattern: pattern, bpm: bpm, meter: meter)
                         default:
                             continue
                         }

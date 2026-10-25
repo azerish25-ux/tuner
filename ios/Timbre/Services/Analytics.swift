@@ -143,12 +143,13 @@ private final class Telemetry: @unchecked Sendable {
     private let endpoint = URL(string: "https://nom.telemetrydeck.com/v2/")!
 
     private init() {
-        var underTest = false
         #if DEBUG
         let environment = ProcessInfo.processInfo.environment
-        underTest = environment["XCTestConfigurationFilePath"] != nil || environment["TIMBRE_DEMO_PITCH"] != nil
-        #endif
+        let underTest = environment["XCTestConfigurationFilePath"] != nil || environment["TIMBRE_DEMO_PITCH"] != nil
         appID = underTest ? nil : AppLinks.string("TimbreTelemetryAppID")
+        #else
+        appID = AppLinks.string("TimbreTelemetryAppID")
+        #endif
     }
 
     var isSending: Bool { queue.sync { appID != nil && sharing } }

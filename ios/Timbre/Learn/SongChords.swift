@@ -435,10 +435,10 @@ struct ChordLane: View {
     /// The bar's chords in one line, each toned by where the take is.
     private var barLine: Text {
         let slots = current < plan.ofBar.count ? plan.ofBar[current] : []
-        var line = Text(verbatim: "")
-        for (offset, index) in slots.enumerated() {
-            if offset > 0 { line = line + Text(verbatim: " · ").foregroundStyle(Palette.inkFaint) }
-            line = line + Text(verbatim: plan.slots[index].chord.name).foregroundStyle(tone(index, first: offset == 0))
+        let line = slots.enumerated().reduce(Text(verbatim: "")) { line, slot in
+            let name = Text(verbatim: plan.slots[slot.element].chord.name).foregroundStyle(tone(slot.element, first: slot.offset == 0))
+            guard slot.offset > 0 else { return line + name }
+            return line + Text(verbatim: " · ").foregroundStyle(Palette.inkFaint) + name
         }
         return line.font(Typeface.display(.hero))
     }

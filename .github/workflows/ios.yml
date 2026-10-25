@@ -85,7 +85,7 @@ jobs:
         # a violation the baseline doesn't hold is reported, and fails the job at error severity. A fresh baseline
         # candidate (ci-out/swiftlint-baseline.json) is published for when the baseline shrinks.
         if: success() || failure()
-        continue-on-error: ${{ hashFiles('tools/ci/swiftlint-baseline.json') == '' }}
+        continue-on-error: false
         timeout-minutes: 6
         run: |
           mkdir -p ci-out
@@ -132,11 +132,15 @@ jobs:
           xcrun simctl boot "$DEVICE_ID" || true
       - name: Ensure Metal toolchain
         run: bash tools/ci/ensure-metal.sh
+      # hashFiles() walks the whole workspace (samples, photos, models) and can time out; hash the two files directly.
+      - name: Module cache key
+        id: modkey
+        run: echo "key=$(cat ios/project.yml ios/Package.swift | shasum -a 256 | cut -c1-16)" >> "$GITHUB_OUTPUT"
       - name: Restore the compiled module cache
         uses: actions/cache@v4
         with:
           path: ios/build/dd/ModuleCache.noindex
-          key: modules-${{ runner.os }}-xcode26.3-${{ hashFiles('ios/project.yml', 'ios/Package.swift') }}
+          key: modules-${{ runner.os }}-xcode26.3-${{ steps.modkey.outputs.key }}
           restore-keys: modules-${{ runner.os }}-xcode26.3-
       - name: Build app and tests
         run: |
@@ -232,11 +236,15 @@ jobs:
           xcrun simctl boot "$DEVICE_ID" || true
       - name: Ensure Metal toolchain
         run: bash tools/ci/ensure-metal.sh
+      # hashFiles() walks the whole workspace (samples, photos, models) and can time out; hash the two files directly.
+      - name: Module cache key
+        id: modkey
+        run: echo "key=$(cat ios/project.yml ios/Package.swift | shasum -a 256 | cut -c1-16)" >> "$GITHUB_OUTPUT"
       - name: Restore the compiled module cache
         uses: actions/cache@v4
         with:
           path: ios/build/dd/ModuleCache.noindex
-          key: modules-${{ runner.os }}-xcode26.3-${{ hashFiles('ios/project.yml', 'ios/Package.swift') }}
+          key: modules-${{ runner.os }}-xcode26.3-${{ steps.modkey.outputs.key }}
           restore-keys: modules-${{ runner.os }}-xcode26.3-
       - name: Build app and tests
         run: |
