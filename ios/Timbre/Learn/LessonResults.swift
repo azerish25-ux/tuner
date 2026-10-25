@@ -26,6 +26,8 @@ struct LessonResults: View {
     @State private var shareReady = false
     @State private var xp = 0
     @State private var burst = 0
+    /// The stars' centre in the results' coordinate space (`space`), where the burst is drawn.
+    @State private var starsCenter: CGPoint?
     @State private var appeared = false
     /// The level bar: fills from the XP before the lesson to after it, rolling over on a level-up.
     @State private var barLevel: Level?
@@ -51,11 +53,17 @@ struct LessonResults: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.requestReview) private var requestReview
 
-    /// "Flawless" only for a clean run (98 % or better); three stars from 90 % read "Great work". The coach goes by the
-    /// same rule (`Coach.isFlawless`), so under "Flawless" it never sends you to fix something.
+    /// "Flawless" only for a clean run (98 % or better); three stars read "Great work", two "Nice work". The stars
+    /// never outrank the lesson's final play-along (`LessonRun.starCap(finalTake:)`), so a take whose own card said
+    /// "Keep going" never ends in "Great work". The coach goes by the same rules (`Coach.isFlawless`, its
+    /// `finalTake` note), so under "Flawless" it never sends you to fix something.
     private var headline: LocalizedStringKey {
         if Coach.isFlawless(result) { return "Flawless" }
-        return result.stars >= 2 ? "Great work" : "Lesson complete"
+        switch result.stars {
+        case 3...: return "Great work"
+        case 2: return "Nice work"
+        default: return "Lesson complete"
+        }
     }
 
     private var accuracyPercent: Int { Int((result.accuracy * 100).rounded()) }
@@ -73,6 +81,10 @@ struct LessonResults: View {
                 }
             buttons
         }
+        .coordinateSpace(.named(Self.space))
+        // Behind the content, as it was behind the stars: drawn here rather than in the scroll view, which clipped
+        // the ring flat where it crossed the scroll view's top edge (review 13, bug 1).
+        .background(alignment: .topLeading) { burstLayer }
         .task { await reveal() }
         .overlay {
             if let days = celebrating {
@@ -86,13 +98,18 @@ struct LessonResults: View {
     /// then the milestone's card: on a phone everything down to the level bar fits above the pinned buttons.
     private var content: some View {
         VStack(spacing: 16) {
-            ZStack {
-                SparkBurst(trigger: burst, color: Palette.amber).frame(width: 320, height: 320)
-                HStack(alignment: .bottom, spacing: 14) {
-                    ForEach(0..<3, id: \.self) { i in star(i) }
-                }
+            HStack(alignment: .bottom, spacing: 14) {
+                ForEach(0..<3, id: \.self) { i in star(i) }
             }
+            .frame(maxWidth: .infinity)
             .frame(height: 136)
+            // Where the burst behind them is drawn (outside the scroll view, so its ring is never cut).
+            .onGeometryChange(for: CGPoint.self) { proxy in
+                let frame = proxy.frame(in: .named(Self.space))
+                return CGPoint(x: frame.midX, y: frame.midY)
+            } action: { center in
+                starsCenter = center
+            }
             VStack(spacing: 8) {
                 Text(headline).font(Typeface.display(36)).tracking(-0.8).foregroundStyle(Palette.ink)
                     .multilineTextAlignment(.center)
@@ -125,6 +142,23 @@ struct LessonResults: View {
             if shareShown && hasShareCards { shareCards.transition(.move(edge: .bottom).combined(with: .opacity)) }
         }
         .padding(.top, 8).padding(.bottom, 16)
+    }
+
+    /// The results' own coordinate space, where the stars report their centre for the burst.
+    private static let space = "lesson.results"
+    /// Room for the whole burst: its ring reaches about 165 pt from the centre and its sparks less, so nothing is
+    /// cut at the canvas's edge either.
+    private static let burstSize: CGFloat = 360
+
+    /// The amber burst as each star lands (and on a level-up), centred on the stars wherever the content has
+    /// scrolled them. It sits outside the scroll view and draws past this view's bounds (into the status bar's
+    /// area when the stars are near the top), so it is whole at every text size and on every screen.
+    @ViewBuilder private var burstLayer: some View {
+        if let starsCenter {
+            SparkBurst(trigger: burst, color: Palette.amber)
+                .frame(width: Self.burstSize, height: Self.burstSize)
+                .position(starsCenter)
+        }
     }
 
     /// StepButton carries its own 12 pt below; Done (the secondary button) sits right under it.

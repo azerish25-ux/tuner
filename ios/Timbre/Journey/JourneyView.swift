@@ -208,7 +208,8 @@ struct JourneyView: View {
 
     /// Streak, level and how close tune-ups land: three tiles across, stacked one per row at the accessibility sizes
     /// (`StatTileRow`), so "day streak" and the level's name never truncate.
-    /// The third is a distance in cents, so it says "¢ off" rather than "accuracy" (a percentage everywhere else).
+    /// The third is a distance in cents, so it says "cents off" rather than "accuracy" (a percentage everywhere else),
+    /// with the unit spelled out ("Average ¢ off" made the caption read like a formula).
     /// - Parameter spacing: between the tiles (the iPad's grid spacing, so they line up with the columns below).
     private func stats(spacing: CGFloat = 10) -> some View {
         let streak = store.streak
@@ -219,7 +220,7 @@ struct JourneyView: View {
             StatTile(symbol: "flame.fill", tint: Palette.flame, value: Text("\(streak.current)"), label: "day streak")
             StatTile(symbol: "star", tint: Palette.mint, value: levelValue(level.number), label: Text(LocalizedStringKey(level.name)))
                 .accessibilityLabel(Text("Level \(level.number)") + Text(verbatim: ", ") + Text(LocalizedStringKey(level.name)))
-            StatTile(symbol: "scope", tint: Palette.amber, value: WeekRecap.centsText(average), label: "Average ¢ off")
+            StatTile(symbol: "scope", tint: Palette.amber, value: WeekRecap.centsText(average), label: "Avg. cents off")
         }
     }
 
@@ -402,11 +403,12 @@ struct JourneyView: View {
         }
     }
 
-    /// Whole cents a day with a sign: "−7" goes flat, "+2" goes sharp.
+    /// Whole cents a day with a sign and the unit, as the line above the chart says it: "−7¢" goes flat, "+2¢" sharp
+    /// (a bare "−7" over a bar didn't say what it counted).
     private static func signed(_ rate: Double) -> String {
         let n = Int(rate.rounded())
-        if n == 0 { return 0.formatted() }
-        return (n > 0 ? "+" : "−") + abs(n).formatted()
+        if n == 0 { return 0.formatted() + "¢" }
+        return (n > 0 ? "+" : "−") + abs(n).formatted() + "¢"
     }
 
     /// Rows of badges shown before "Show all".
@@ -604,7 +606,7 @@ struct JourneyView: View {
                         .interpolationMethod(.catmullRom).foregroundStyle(Palette.mint)
                     PointMark(x: .value("Date", record.date), y: .value("Cents", record.meanAbsoluteCents ?? 0)).foregroundStyle(Palette.mint)
                 }
-                .chartYAxisLabel("Average ¢ off")
+                .chartYAxisLabel("Avg. cents off")
                 .frame(height: 160)
                 Text("Lower is closer. Measured on stable readings only.").font(.caption).foregroundStyle(Palette.inkSoft)
             }
@@ -660,7 +662,8 @@ struct JourneyView: View {
                     }
                     Spacer()
                     if let cents = record.meanAbsoluteCents, record.kind == "tuning" {
-                        Text(String(format: "%.1f¢", cents)).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
+                        // "±0.6¢", as the cents-off tile above writes it (and in the locale's decimals).
+                        WeekRecap.centsText(cents).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
                     } else if record.kind == "lesson" {
                         Text(String(repeating: "★", count: max(1, min(3, record.stableCount)))).font(.footnote).foregroundStyle(Palette.amber)
                     } else if record.kind == "ear", record.count > 0 {

@@ -289,12 +289,40 @@ public struct LessonRun: Sendable {
         scores.isEmpty ? 1 : scores.values.reduce(0, +) / Double(scores.count)
     }
 
+    // MARK: The final play-along
+
+    /// A take this good (in whole percent, as its card shows it) reads "Great work" on the play-along's card…
+    public static let greatTake = 90
+    /// …from here it reads "Keep going", and below it "Just warming up" (`AlongStep`'s verdicts).
+    public static let warmTake = 50
+
+    /// The most stars a lesson can earn when its final play-along scored `score`: the lesson never reads better
+    /// than its test did. Three from a "Great work" take (90 %), two from "Keep going" (50 %), else one.
+    public static func starCap(finalTake score: Double) -> Int {
+        let percent = Int((max(0, min(1, score)) * 100).rounded())
+        return percent >= greatTake ? 3 : percent >= warmTake ? 2 : 1
+    }
+
+    /// The lesson's last play-along, its test: that step's index, nil for a lesson without one.
+    public var finalAlongIndex: Int? {
+        lesson.steps.lastIndex { step in
+            if case .playAlong = step { return true }
+            return false
+        }
+    }
+
+    /// The final play-along's score once it is in.
+    public var finalTake: Double? { finalAlongIndex.flatMap { scores[$0] } }
+
+    /// Stars from the average of the scored steps (90 % three, 70 % two), never more than the final play-along earns
+    /// on its own (`starCap(finalTake:)`) or a slow take allows (`capStars`).
     public func result(now: Date = Date()) -> LessonResult {
         let earned = accuracy >= 0.9 ? 3 : accuracy >= 0.7 ? 2 : 1
-        let stars = min(starCap, earned)
+        let take = finalTake
+        let stars = min(starCap, earned, take.map { Self.starCap(finalTake: $0) } ?? 3)
         let xp = Int((Double(lesson.xp) * (0.6 + 0.2 * Double(stars))).rounded())
         return LessonResult(lessonId: lesson.id, stars: stars, accuracy: accuracy, xp: xp,
-                            minutes: max(1, Int(now.timeIntervalSince(startedAt) / 60 + 0.5)), items: itemScores)
+                            minutes: max(1, Int(now.timeIntervalSince(startedAt) / 60 + 0.5)), items: itemScores, finalTake: take)
     }
 }
 
@@ -306,8 +334,11 @@ public struct LessonResult: Equatable, Sendable {
     public let minutes: Int
     /// How each note and chord went, weakest first (empty for lessons that play none).
     public let items: [ItemScore]
-    public init(lessonId: String, stars: Int, accuracy: Double, xp: Int, minutes: Int, items: [ItemScore] = []) {
+    /// The score of the lesson's final play-along (`LessonRun.finalTake`), which gates its stars; nil without one.
+    public let finalTake: Double?
+    public init(lessonId: String, stars: Int, accuracy: Double, xp: Int, minutes: Int, items: [ItemScore] = [], finalTake: Double? = nil) {
         self.lessonId = lessonId; self.stars = stars; self.accuracy = accuracy; self.xp = xp; self.minutes = minutes; self.items = items
+        self.finalTake = finalTake
     }
 }
 

@@ -94,29 +94,62 @@ public enum DailySet {
     /// reps: a one-minute tune-up and the day's tool for the goal, which fills the rest. Without a lesson a
     /// second tool takes its place. Deterministic per calendar day so the set is stable across launches;
     /// without Pro no Pro tool is picked, so a free player can always finish the whole set.
+    ///
+    /// `pinned` is the day's tools as the player first saw them (`toolReps(in:)` of that set): they stay, whatever
+    /// instrument the tuner is on now, so switching instruments never reshuffles a plan already shown (see
+    /// `toolPicks`). `done` is what today's set has ticked off.
     public static func activities(instrument: Instrument, goal: String?, pro: Bool = true, lessonMinutes: Int? = nil, reviewMinutes: Int? = nil,
-                                  target: Int = 10, date: Date = Date(), calendar: Calendar = .current) -> [DailyActivity] {
-        let day = max(0, calendar.ordinality(of: .day, in: .era, for: date) ?? 0)
-        let rotation = tools(instrument: instrument, goal: goal, pro: pro)
-        let first = rotation[day % rotation.count]
+                                  target: Int = 10, pinned: [DailyActivity.Kind]? = nil, done: Set<DailyActivity.Kind> = [],
+                                  date: Date = Date(), calendar: Calendar = .current) -> [DailyActivity] {
         let lesson = lessonMinutes.map { clamp($0, to: Self.lessonMinutes) }
         let review = reviewMinutes.map { clamp($0, to: Self.reviewMinutes) }
-        // What the tools have left of the target, a couple of minutes each at least.
+        // One tool beside a lesson; without one, a second tool stands in for it.
+        let picks = toolPicks(instrument: instrument, goal: goal, pro: pro, count: lesson == nil ? 2 : 1, pinned: pinned, done: done,
+                              date: date, calendar: calendar)
+        // What the tools have left of the target, shared out (the first gets any odd minute), a couple of minutes each at least.
         let toolTime = max(target, 5) - 1 - (lesson ?? 0) - (review ?? 0)
+        let share = toolTime / max(1, picks.count)
+        let extra = toolTime - share * max(1, picks.count)
         var set: [DailyActivity] = []
         if let lesson { set.append(DailyActivity(kind: .lesson, minutes: lesson)) }
         if let review { set.append(DailyActivity(kind: .review, minutes: review)) }
         set.append(DailyActivity(kind: .tune, minutes: 1))
-        if lesson != nil {
-            set.append(DailyActivity(kind: first, minutes: clamp(toolTime, to: 2...10)))
-        } else {
-            // The next different tool of the rotation stands in for the lesson.
-            let second = (1..<max(2, rotation.count)).map { rotation[(day + $0) % rotation.count] }.first { $0 != first } ?? (first == .ear ? .rhythm : .ear)
-            let half = (toolTime + 1) / 2
-            set.append(DailyActivity(kind: first, minutes: clamp(half, to: 2...10)))
-            set.append(DailyActivity(kind: second, minutes: clamp(toolTime - half, to: 2...10)))
+        for (index, kind) in picks.enumerated() {
+            set.append(DailyActivity(kind: kind, minutes: clamp(share + (index < extra ? 1 : 0), to: 2...10)))
         }
         return set
+    }
+
+    /// The tool reps of a set (neither the tune-up nor Learn's lesson and review): what `pinned` keeps for the day.
+    public static func toolReps(in set: [DailyActivity]) -> [DailyActivity.Kind] {
+        set.map(\.kind).filter { $0 != .tune && $0 != .lesson && $0 != .review }
+    }
+
+    /// The day's `count` tool reps. Fresh, they are the goal's tool of the day, then the next different tools of its
+    /// rotation. With `pinned` (the tools the player has already seen today) those stay, in their order, even when
+    /// the instrument or the plan has changed since: only a tool that can no longer be played (a Pro tool once Pro
+    /// has lapsed) gives way, unless it is already `done`. When the set has room for fewer (a lesson joined it) the
+    /// last ones not yet done step out; when it needs more (the lesson left it, or a tool gave way) the day's
+    /// rotation fills in.
+    public static func toolPicks(instrument: Instrument, goal: String?, pro: Bool = true, count: Int, pinned: [DailyActivity.Kind]? = nil,
+                                 done: Set<DailyActivity.Kind> = [], date: Date = Date(), calendar: Calendar = .current) -> [DailyActivity.Kind] {
+        let day = max(0, calendar.ordinality(of: .day, in: .era, for: date) ?? 0)
+        let rotation = tools(instrument: instrument, goal: goal, pro: pro)
+        // The rotation from today's tool on, each tool once, then ear training and rhythm should it hold only one.
+        var candidates: [DailyActivity.Kind] = []
+        for offset in 0..<rotation.count {
+            let kind = rotation[(day + offset) % rotation.count]
+            if !candidates.contains(kind) { candidates.append(kind) }
+        }
+        for kind in [DailyActivity.Kind.ear, .rhythm] where !candidates.contains(kind) { candidates.append(kind) }
+        let wanted = max(1, count)
+        var picks: [DailyActivity.Kind] = []
+        for kind in pinned ?? [] where kind != .tune && kind != .lesson && kind != .review && !picks.contains(kind) {
+            if done.contains(kind) || pro || !proKinds.contains(kind) { picks.append(kind) }
+        }
+        while picks.count > wanted, let index = picks.lastIndex(where: { !done.contains($0) }) { picks.remove(at: index) }
+        for kind in candidates where picks.count < wanted && !picks.contains(kind) { picks.append(kind) }
+        return picks
     }
 
     /// The tools a goal rotates through, one a day; the goal's own tool comes round every other day.

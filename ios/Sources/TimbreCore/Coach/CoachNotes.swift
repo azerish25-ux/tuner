@@ -70,6 +70,9 @@ public enum CoachFact: Equatable, Sendable {
     case split(strong: CoachSkill, strongPercent: Int, weak: CoachSkill, weakPercent: Int)
     /// The lesson scored `percent` % but only below its tempo, so it stopped short of three stars; `bpm` is the full tempo.
     case belowTempo(percent: Int, bpm: Int)
+    /// The lesson's final play-along came in at `percent` %, under the `needed` % its third star asks for
+    /// (`LessonRun.starCap(finalTake:)`), so the stars stopped there whatever the other steps scored.
+    case finalTake(percent: Int, needed: Int)
     /// Every one of `items` notes and chords came out clean (90 % or better).
     case clean(items: Int)
     /// A string (its anchor id) drifts this many whole cents a day between sessions (negative: flat).
@@ -89,7 +92,7 @@ public enum CoachFact: Equatable, Sendable {
 /// One thing the coach says: a fact with its numbers, what to do about it, and how much it matters.
 public struct CoachNote: Identifiable, Equatable, Sendable {
     /// One note per topic makes the cut, so the coach never says the same thing twice.
-    public enum Topic: String, Sendable { case timing, items, skills, tempo, strings, habit, growth, tuning }
+    public enum Topic: String, Sendable { case timing, items, skills, tempo, take, strings, habit, growth, tuning }
     /// Something to fix, something done well, or a nudge to keep the habit.
     public enum Tone: String, Sendable { case fix, praise, habit }
 
@@ -108,6 +111,7 @@ public struct CoachNote: Identifiable, Equatable, Sendable {
         case .slipped, .clean: return .items
         case .split: return .skills
         case .belowTempo: return .tempo
+        case .finalTake: return .take
         case .drift, .oldStrings: return .strings
         case .streak, .today: return .habit
         case .moreTime: return .growth
@@ -132,6 +136,7 @@ public struct CoachNote: Identifiable, Equatable, Sendable {
         case let .slipped(items, _): return "slipped." + items.map(\.key).joined(separator: "+")
         case let .split(strong, _, weak, _): return "split.\(strong.rawValue)>\(weak.rawValue)"
         case .belowTempo: return "tempo"
+        case .finalTake: return "take"
         case .clean: return "clean"
         case let .drift(anchor, _): return "drift.\(anchor)"
         case .oldStrings: return "strings.old"
@@ -210,6 +215,7 @@ public enum Coach {
             } else {
                 notes += timingNotes(context.takes, weight: 1)
                 if let note = belowTempoNote(context) { notes.append(note) }
+                if let note = finalTakeNote(context) { notes.append(note) }
             }
         }
         // A weak-spot review is the drill itself: it doesn't send you to it again.
@@ -247,13 +253,26 @@ public enum Coach {
         return notes
     }
 
-    /// A strong take that only came at a slower tempo: the third star is one full-tempo take away.
+    /// A strong take that only came at a slower tempo: the third star is one full-tempo take away. Not when the final
+    /// play-along itself fell short of three stars (`finalTakeNote` says that instead): tempo was not what held it back.
     static func belowTempoNote(_ context: LessonContext) -> CoachNote? {
         let result = context.result
-        guard result.stars < 3, result.accuracy >= cleanAbove, !LearnProgress.isReview(context.lesson.id),
+        let takeClears = result.finalTake.map { LessonRun.starCap(finalTake: $0) >= 3 } ?? true
+        guard result.stars < 3, result.accuracy >= cleanAbove, takeClears, !LearnProgress.isReview(context.lesson.id),
               let bpm = alongTempo(context.lesson) else { return nil }
         return CoachNote(fact: .belowTempo(percent: percent(result.accuracy), bpm: Int(bpm.rounded())),
                          action: .lesson(id: context.lesson.id), priority: 0.82)
+    }
+
+    /// The final play-along came in under "Great work", which held the stars back however well the other steps went:
+    /// the take to beat, with the lesson to play again. Below the specific notes (a late change, what slipped), which
+    /// say how to get there.
+    static func finalTakeNote(_ context: LessonContext) -> CoachNote? {
+        let result = context.result
+        guard result.stars < 3, !LearnProgress.isReview(context.lesson.id), let take = result.finalTake,
+              LessonRun.starCap(finalTake: take) < 3 else { return nil }
+        return CoachNote(fact: .finalTake(percent: percent(take), needed: LessonRun.greatTake),
+                         action: .lesson(id: context.lesson.id), priority: 0.66)
     }
 
     /// The lesson tempo of a lesson's first play-along.

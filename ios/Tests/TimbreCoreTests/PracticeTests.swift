@@ -155,6 +155,79 @@ final class PracticeTests: XCTestCase {
         XCTAssertGreaterThan(Set(days).count, 1)
     }
 
+    func testTodaysToolsStayPinnedWhenTheInstrumentChanges() throws {
+        let catalog = try Catalog()
+        let guitar = try XCTUnwrap(catalog.instrument(id: "guitar.acoustic.6"))
+        let violin = try XCTUnwrap(catalog.instrument(id: "violin.standard.4"))
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        var reshuffled = 0
+        for offset in 0..<8 {
+            let date = Date(timeIntervalSince1970: 1_800_000_000 + Double(offset) * 86_400)
+            for lesson in [5, nil] as [Int?] {
+                for pro in [true, false] {
+                    let shown = DailySet.activities(instrument: guitar, goal: nil, pro: pro, lessonMinutes: lesson, date: date, calendar: calendar)
+                    let pin = DailySet.toolReps(in: shown)
+                    XCTAssertEqual(pin.count, lesson == nil ? 2 : 1)
+                    XCTAssertEqual(pin, DailySet.toolPicks(instrument: guitar, goal: nil, pro: pro, count: pin.count, date: date, calendar: calendar))
+                    // Pinning what was shown changes nothing.
+                    XCTAssertEqual(DailySet.activities(instrument: guitar, goal: nil, pro: pro, lessonMinutes: lesson, pinned: pin, date: date, calendar: calendar), shown)
+                    // The violin would get other tools, but once shown the plan stands, minutes and all, all day.
+                    if DailySet.activities(instrument: violin, goal: nil, pro: pro, lessonMinutes: lesson, date: date, calendar: calendar) != shown { reshuffled += 1 }
+                    let later = date.addingTimeInterval(5 * 3600)
+                    XCTAssertEqual(DailySet.activities(instrument: violin, goal: nil, pro: pro, lessonMinutes: lesson, pinned: pin, done: [.tune], date: later, calendar: calendar), shown)
+                }
+            }
+        }
+        XCTAssertGreaterThan(reshuffled, 0, "without the pin, the tuner's instrument decides the tools")
+    }
+
+    func testAPinnedToolGivesWayOnlyWhenItCanNoLongerBePlayed() throws {
+        let catalog = try Catalog()
+        let guitar = try XCTUnwrap(catalog.instrument(id: "guitar.acoustic.6"))
+        // A Pro tool pinned while Pro was active gives way to a free one once Pro lapses...
+        let lapsed = DailySet.activities(instrument: guitar, goal: nil, pro: false, lessonMinutes: 5, pinned: [.scale])
+        XCTAssertEqual(Array(lapsed.map(\.kind).prefix(2)), [.lesson, .tune])
+        XCTAssertEqual(lapsed.count, 3)
+        XCTAssertTrue(lapsed.allSatisfy { !DailySet.proKinds.contains($0.kind) })
+        // ...unless it is already done.
+        let kept = DailySet.activities(instrument: guitar, goal: nil, pro: false, lessonMinutes: 5, pinned: [.scale], done: [.tune, .scale])
+        XCTAssertEqual(kept.map(\.kind), [.lesson, .tune, .scale])
+        XCTAssertEqual(kept.reduce(0) { $0 + $1.minutes }, 10)
+        // Going Pro later in the day doesn't reshuffle a free plan.
+        XCTAssertEqual(DailySet.toolReps(in: DailySet.activities(instrument: guitar, goal: nil, pro: true, lessonMinutes: 5, pinned: [.ear])), [.ear])
+        // The lesson leaving the set: the pinned tool stays first and the day's rotation adds a second.
+        let noLesson = DailySet.toolPicks(instrument: guitar, goal: nil, count: 2, pinned: [.rhythm])
+        XCTAssertEqual(noLesson.count, 2)
+        XCTAssertEqual(noLesson.first, .rhythm)
+        XCTAssertNotEqual(noLesson.last, .rhythm)
+        // A lesson joining: the last tool not yet done steps out; one already done never does.
+        XCTAssertEqual(DailySet.toolPicks(instrument: guitar, goal: nil, count: 1, pinned: [.ear, .rhythm]), [.ear])
+        XCTAssertEqual(DailySet.toolPicks(instrument: guitar, goal: nil, count: 1, pinned: [.ear, .rhythm], done: [.rhythm]), [.rhythm])
+        let both = DailySet.activities(instrument: guitar, goal: nil, lessonMinutes: 5, pinned: [.ear, .rhythm], done: [.ear, .rhythm])
+        XCTAssertEqual(both.map(\.kind), [.lesson, .tune, .ear, .rhythm])
+        XCTAssertTrue(both.allSatisfy { $0.minutes >= 2 || $0.kind == .tune })
+        // Only tools are pinned: anything else in a saved plan, or a repeat, is passed over.
+        XCTAssertEqual(DailySet.toolPicks(instrument: guitar, goal: nil, count: 1, pinned: [.lesson, .tune, .review, .ear, .ear]), [.ear])
+        XCTAssertEqual(DailySet.toolPicks(instrument: guitar, goal: nil, count: 2, pinned: []).count, 2)
+    }
+
+    func testTodaysPlanIsSavedAndEarlierSavesStillOpen() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = try LocalStore(directory: directory)
+        var settings = store.settings
+        settings.dailyDone = ["2027-01-15": ["tune"]]
+        try store.saveSettings(settings)
+        // A save from before the plan was kept has no such key, and opens without one.
+        let file = try String(contentsOf: directory.appendingPathComponent(LocalStore.fileName), encoding: .utf8)
+        XCTAssertFalse(file.contains("dailyPlan"))
+        XCTAssertNil(try LocalStore(directory: directory).settings.dailyPlan)
+        settings.dailyPlan = ["2027-01-15": ["ear", "rhythm"]]
+        try store.saveSettings(settings)
+        XCTAssertEqual(try LocalStore(directory: directory).settings.dailyPlan, ["2027-01-15": ["ear", "rhythm"]])
+    }
+
     func testQuestsForTheSamePracticeRideOnTodaysRows() {
         let quests = [Quest(kind: .tuneAll, target: 1, xp: 20), Quest(kind: .earCorrect, target: 10, xp: 20), Quest(kind: .bullseyes, target: 5, xp: 25)]
         let set = [DailyActivity(kind: .lesson, minutes: 5), DailyActivity(kind: .tune, minutes: 1), DailyActivity(kind: .ear, minutes: 4)]

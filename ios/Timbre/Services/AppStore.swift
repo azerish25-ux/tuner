@@ -387,6 +387,8 @@ final class AppStore: ObservableObject {
         let placementChanged = placed != learn
         updateSettings {
             $0.onboardingCompleted = true; $0.playerLevel = level; $0.goal = goal
+            // Today's plan follows the instrument and goal just chosen (onboarding run again included).
+            $0.dailyPlan = nil
             if placementChanged { $0.learn = placed }
             if let id = instrument?.id {
                 $0.recentInstrumentIds = Array(([id] + $0.recentInstrumentIds.filter { $0 != id }).prefix(LocalStore.recentInstrumentLimit))
@@ -849,10 +851,36 @@ final class AppStore: ObservableObject {
     }
     /// Today, the day's one session: the next lesson of the learner's course, a review when one is due, then two
     /// tool reps, about as long as the player's daily commitment. On the free plan no Pro tool is picked, so it can
-    /// always be finished.
+    /// always be finished. The tool reps are pinned for the day once worked out (`UserSettings.dailyPlan`): switching
+    /// the tuner's instrument, or going Pro, never reshuffles a plan the player has seen. They change on a new day,
+    /// or when one can no longer be played (a Pro tool after Pro lapsed).
     var dailySet: [DailyActivity] {
-        DailySet.activities(instrument: instrument, goal: settings.goal, pro: isPro, lessonMinutes: dailyLesson?.minutes,
-                            reviewMinutes: dailyReviewMinutes, target: dailyMinutes)
+        let now = Date()
+        let day = Self.dayFormatter.string(from: now)
+        let pinned = settings.dailyPlan?[day]?.compactMap { DailyActivity.Kind(rawValue: $0) }
+        let done = Set((settings.dailyDone?[day] ?? []).compactMap { DailyActivity.Kind(rawValue: $0) })
+        let set = DailySet.activities(instrument: instrument, goal: settings.goal, pro: isPro, lessonMinutes: dailyLesson?.minutes,
+                                      reviewMinutes: dailyReviewMinutes, target: dailyMinutes, pinned: pinned, done: done, date: now)
+        pinDailyTools(DailySet.toolReps(in: set), day: day, pinned: pinned)
+        return set
+    }
+
+    /// The plan `pinDailyTools` is saving ("day:tools"), so each is asked for once; one that could not be saved stays
+    /// here, so it is not tried again on every redraw.
+    private var dailyPinRequest: String?
+
+    /// Saves today's tool reps as the day's plan, once it is the player's own: after onboarding (their instrument and
+    /// goal) and once StoreKit has said whether they have Pro (before that a Pro player's plan reads as a free one).
+    private func pinDailyTools(_ tools: [DailyActivity.Kind], day: String, pinned: [DailyActivity.Kind]?) {
+        guard tools != pinned, settings.onboardingCompleted == true, commerce.entitlementResolved else { return }
+        let request = day + ":" + tools.map(\.rawValue).joined(separator: ",")
+        guard request != dailyPinRequest else { return }
+        dailyPinRequest = request
+        // On the next turn: the set is read while views draw, and settings must not change in the middle of that.
+        Task { @MainActor [weak self] in
+            guard let self, self.todayKey == day, self.updateSettings({ $0.dailyPlan = [day: tools.map(\.rawValue)] }) else { return }
+            self.dailyPinRequest = nil
+        }
     }
 
     /// The course Learn shows (its Continue card plays that course's next lesson).

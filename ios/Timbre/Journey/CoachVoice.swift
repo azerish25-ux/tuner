@@ -56,6 +56,8 @@ struct CoachVoice {
             return splitText(strong: strong, strongPercent: strongPercent, weak: weak, weakPercent: weakPercent)
         case let .belowTempo(percent, bpm):
             return String(localized: "\(percent)%, but only below the lesson tempo, so two stars. One take at the full \(bpm) BPM earns the third.")
+        case let .finalTake(percent, needed):
+            return String(localized: "Your play-along came in at \(percent)%. Three stars need \(needed)% on it.")
         case let .clean(items):
             return String(localized: "Clean run: \(items) of \(items) at 90% or better. Nothing slipped.")
         case let .drift(anchor, centsPerDay):
@@ -150,6 +152,7 @@ struct CoachVoice {
             return String(localized: "Weak-spot drill · \(drillMinutes) min")
         case let .lesson(id):
             if case .belowTempo = note.fact { return String(localized: "Play it again") }
+            if case .finalTake = note.fact { return String(localized: "Play it again") }
             if let title = lessonTitle(id) { return String(localized: "Replay “\(title)”") }
             return String(localized: "Play it again")
         case let .metronome(bpm): return String(localized: "Metronome · \(bpm) BPM")
@@ -188,6 +191,7 @@ struct CoachVoice {
         case .clean: return "checkmark.seal.fill"
         case .split: return "chart.bar.fill"
         case .belowTempo: return "speedometer"
+        case .finalTake: return "star.leadinghalf.filled"
         case .drift, .oldStrings: return "tuningfork"
         case .streak: return "flame.fill"
         case .today: return "sun.max.fill"

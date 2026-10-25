@@ -117,11 +117,13 @@ enum DemoData {
             progress.sample(StringSample(instrumentId: "guitar.acoustic.6", anchor: "s1", date: now.addingTimeInterval(-Double(day) * 86400), cents: -0.5))
         }
         // Today's tune-up is the practice that lit the flame, so Today shows it done (1 of 3) on every capture, rather
-        // than done only on the captures whose test happened to tune first.
+        // than done only on the captures whose test happened to tune first. Today's plan is pinned too (ear training,
+        // open on any plan), so every capture shows one plan whether its test has Pro or not.
         let todayKey = store.todayKey
         store.updateSettings {
             $0.fullTunes = 14; $0.learn = learn; $0.progress = progress
             $0.dailyDone = [todayKey: [DailyActivity.Kind.tune.rawValue]]
+            $0.dailyPlan = [todayKey: [DailyActivity.Kind.ear.rawValue]]
         }
     }
 }

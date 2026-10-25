@@ -232,6 +232,53 @@ final class LearnTests: XCTestCase {
         XCTAssertEqual(result.minutes, 3)
     }
 
+    /// "The open strings": four steps played clean, then a 50 % "Keep going" play-along. The average is 90 %, but the
+    /// lesson can't read better than its test: two stars, never "Great work" with three.
+    func testTheFinalPlayAlongGatesTheStars() {
+        let quiz = LessonStep.quiz(prompt: LearnText("q"), options: [LearnText("a"), LearnText("b")], answer: 0, why: nil, visual: .none)
+        let along = LessonStep.playAlong(notes: [note(40, 0), note(45, 1)], bpm: 60, beatsPerBar: 4, title: nil)
+        let lesson = Lesson(id: "g-1-2", title: LearnText("g"), kind: .lesson, minutes: 3, xp: 20, free: true, steps: [quiz, quiz, quiz, quiz, along])
+        func finish(along score: Double) -> LessonResult {
+            var run = LessonRun(lesson: lesson, now: Date(timeIntervalSince1970: 0))
+            XCTAssertEqual(run.finalAlongIndex, 4)
+            for _ in 0..<4 { run.complete(score: 1) }
+            XCTAssertNil(run.finalTake, "not played yet")
+            run.complete(score: score)
+            return run.result(now: Date(timeIntervalSince1970: 120))
+        }
+
+        let keepGoing = finish(along: 0.5)
+        XCTAssertEqual(keepGoing.accuracy, 0.9, accuracy: 1e-9)
+        XCTAssertEqual(keepGoing.stars, 2, "a Keep going take holds the lesson at two stars")
+        XCTAssertEqual(keepGoing.finalTake, 0.5)
+        XCTAssertEqual(keepGoing.xp, 20)
+        XCTAssertFalse(Coach.isFlawless(keepGoing))
+
+        // Just warming up (under 50 %): one star, though the average alone would give two.
+        let warmUp = finish(along: 0.3)
+        XCTAssertEqual(warmUp.accuracy, 0.86, accuracy: 1e-9)
+        XCTAssertEqual(warmUp.stars, 1)
+
+        // A Great work take (90 %, as its card rounds it) leaves the stars to the average.
+        XCTAssertEqual(finish(along: 0.896).stars, 3)
+        XCTAssertEqual(finish(along: 0.884).stars, 2)
+        XCTAssertEqual(finish(along: 1).stars, 3)
+
+        XCTAssertEqual(LessonRun.starCap(finalTake: 0.9), 3)
+        XCTAssertEqual(LessonRun.starCap(finalTake: 0.5), 2)
+        XCTAssertEqual(LessonRun.starCap(finalTake: 0.49), 1)
+
+        // The last play-along is the test even when a question follows it; a lesson without one has no gate.
+        var trailing = LessonRun(lesson: Lesson(id: "t", title: LearnText("t"), kind: .lesson, minutes: 3, xp: 20, free: true, steps: [along, quiz]))
+        trailing.complete(score: 0.6); trailing.complete(score: 1)
+        XCTAssertEqual(trailing.result().stars, 2)
+        var plain = LessonRun(lesson: self.lesson("p"))
+        plain.complete(score: 1); plain.complete(score: 1); plain.complete(score: 0.9)
+        XCTAssertNil(plain.finalAlongIndex)
+        XCTAssertNil(plain.result().finalTake)
+        XCTAssertEqual(plain.result().stars, 3)
+    }
+
     func testLessonsUnlockInOrderAndKeepBestStars() {
         let course = LearnCourse(id: "c", title: LearnText("C"), subtitle: LearnText("s"), instrument: nil, symbol: "music.note", accent: "mint",
                                  units: [LearnUnit(id: "u", title: LearnText("U"), summary: LearnText("s"), lessons: [lesson("a"), lesson("b"), lesson("c")])])

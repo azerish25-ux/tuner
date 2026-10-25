@@ -121,6 +121,46 @@ final class CoachNotesTests: XCTestCase {
         XCTAssertEqual(great.first?.tone, .fix)
     }
 
+    /// Review 13's results: four clean steps and a 50 % "Keep going" play-along used to average 90 % into three stars
+    /// and "Great work", under a coach note that a move didn't land. The final take now holds the lesson at two stars,
+    /// the coach never blames the tempo for it, and its specific fix leads.
+    func testAKeepGoingPlayAlongHoldsTheStarsAndTheCoachAgrees() {
+        let quiz = LessonStep.quiz(prompt: LearnText("q"), options: [LearnText("a"), LearnText("b")], answer: 0, why: nil, visual: .none)
+        let along = lesson("g-1-2", [quiz, quiz, quiz, quiz, .playAlong(notes: [timed(40)], bpm: 80, beatsPerBar: 4, title: nil)])
+        var run = LessonRun(lesson: along, now: now)
+        for _ in 0..<4 { run.complete(score: 1) }
+        run.complete(score: 0.5)
+        let result = run.result(now: now.addingTimeInterval(180))
+        XCTAssertEqual(result.stars, 2)
+        XCTAssertFalse(Coach.isFlawless(result))
+
+        // Nothing more specific to say: the take to beat, with the lesson to play again.
+        let plain = Coach.lessonNotes(Coach.LessonContext(lesson: along, courseId: "guitar", result: result))
+        XCTAssertEqual(plain.first?.fact, .finalTake(percent: 50, needed: 90))
+        XCTAssertEqual(plain.first?.action, .lesson(id: "g-1-2"))
+        XCTAssertEqual(plain.first?.tone, .fix)
+        XCTAssertFalse(plain.contains { $0.topic == .tempo }, "90 % overall, but the tempo isn't what held it back")
+
+        // A move that never landed says how to get there, so it leads; the take to beat follows.
+        let missed = [40, 45, 50, 55].enumerated().map { index, midi in
+            CoachHit(item: note(midi), beat: Double(index), offset: midi == 55 ? nil : 0.01)
+        }
+        let take = CoachTake(kind: .melody, hits: missed, bpm: 80, beatsPerBar: 4)
+        let notes = Coach.lessonNotes(Coach.LessonContext(lesson: along, courseId: "guitar", result: result, takes: [take]))
+        XCTAssertEqual(notes.first?.topic, .timing)
+        XCTAssertEqual(notes.first?.tone, .fix)
+        XCTAssertEqual(notes.dropFirst().first?.fact, .finalTake(percent: 50, needed: 90))
+
+        // A Great work take at a slower tempo is still the tempo's note, not the take's.
+        var slow = LessonRun(lesson: along, now: now)
+        for _ in 0..<4 { slow.complete(score: 1) }
+        slow.capStars(TempoLadder.slowStarCap)
+        slow.complete(score: 0.95)
+        let capped = Coach.lessonNotes(Coach.LessonContext(lesson: along, courseId: "guitar", result: slow.result(now: now)))
+        XCTAssertEqual(capped.first?.fact, .belowTempo(percent: 99, bpm: 80))
+        XCTAssertFalse(capped.contains { $0.topic == .take })
+    }
+
     func testFlawlessIsThreeStarsAtNinetyEightPercent() {
         XCTAssertTrue(Coach.isFlawless(result("a", stars: 3, accuracy: 0.98)))
         XCTAssertTrue(Coach.isFlawless(result("a", stars: 3, accuracy: 1)))

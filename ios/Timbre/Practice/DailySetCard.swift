@@ -290,12 +290,14 @@ struct DailySetCard: View {
             .accessibilityHidden(true)
         } else {
             // The ring is a fixed 112 pt with a 90 pt hole: its words shrink to fit rather than grow past it
-            // (VoiceOver and the rows carry the same facts at any size).
+            // (VoiceOver and the rows carry the same facts at any size). "9 min left", not "9 min": the rows beside
+            // it give each activity's own minutes, so the ring says these are what remain.
+            let left = minutesLeft(activities.filter { !done.contains($0.kind) }.reduce(0) { $0 + $1.minutes })
             VStack(spacing: 0) {
                 Text.fraction(done.count, activities.count).font(Typeface.hero(22)).foregroundStyle(Palette.ink)
                     .contentTransition(.numericText())
                     .heroNumeral(cap: .xxxLarge)
-                minutesText(activities.filter { !done.contains($0.kind) }.reduce(0) { $0 + $1.minutes })
+                left
                     .font(.caption).foregroundStyle(Palette.inkSoft)
                     .lineLimit(1).minimumScaleFactor(0.7)
             }
@@ -305,8 +307,13 @@ struct DailySetCard: View {
             // The count and minutes left, read once for the whole card.
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text("\(done.count) of \(activities.count)"))
-            .accessibilityValue(minutesText(activities.filter { !done.contains($0.kind) }.reduce(0) { $0 + $1.minutes }))
+            .accessibilityValue(left)
         }
+    }
+
+    /// What is left of the set's time, as the ring reads it: "9 min left".
+    private func minutesLeft(_ minutes: Int) -> Text {
+        Text("\(minutesText(minutes)) left")
     }
 
     private func row(_ activity: DailyActivity, done: Bool, quest: Quest?) -> some View {

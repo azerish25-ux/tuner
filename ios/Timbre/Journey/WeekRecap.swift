@@ -81,7 +81,7 @@ struct WeekRecapCard: View {
             Hairline()
             // Three across; one per row at the accessibility sizes, where three would truncate.
             statsLayout {
-                WeekStat(symbol: "scope", tint: Palette.amber, value: WeekRecap.centsText(recap.bestCents), label: Text("best"))
+                WeekStat(symbol: "scope", tint: Palette.amber, value: WeekRecap.centsText(recap.bestCents), label: Text("best tune-up"))
                 WeekStat(symbol: "graduationcap.fill", tint: Palette.violet, value: Text(recap.lessons, format: .number), label: Text("lessons"))
                 WeekStat(symbol: "flame.fill", tint: Palette.flame, value: Text(recap.streak, format: .number), label: Text("day streak"))
             }
@@ -237,7 +237,7 @@ struct WeekShareCard: View {
             WeekBars(days: recap.days, height: 96, barWidth: 26, labelSize: 13)
                 .padding(.horizontal, 6).padding(.top, 4)
             HStack(spacing: 10) {
-                tile("scope", Palette.amber, WeekRecap.centsText(recap.bestCents), Text("best"))
+                tile("scope", Palette.amber, WeekRecap.centsText(recap.bestCents), Text("best tune-up"))
                 tile("graduationcap.fill", Palette.violet, Text(recap.lessons, format: .number), Text("lessons"))
                 tile("flame.fill", Palette.flame, Text(recap.streak, format: .number), Text("day streak"))
             }

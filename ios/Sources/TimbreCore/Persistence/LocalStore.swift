@@ -36,6 +36,9 @@ public struct UserSettings: Codable, Equatable, Sendable {
     public var fullTunes: Int?
     /// Daily practice completion: "yyyy-MM-dd" -> activity ids.
     public var dailyDone: [String: [String]]?
+    /// Today's tool reps as first shown: "yyyy-MM-dd" -> activity ids (`DailySet.toolReps`), today's day only. Kept
+    /// all day so the plan doesn't reshuffle when the tuner switches instrument.
+    public var dailyPlan: [String: [String]]?
     public var earLevels: [String: Int]?
     public var customTunings: [CustomTuning]?
     /// XP, quests, achievements and string-health samples.
