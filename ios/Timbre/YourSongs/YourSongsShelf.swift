@@ -176,6 +176,8 @@ struct YourSongsShelf: View {
         let stacked = typeSize.isAccessibilitySize
         let layout = stacked ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
                              : AnyLayout(HStackLayout(alignment: .center, spacing: 14))
+        // In a row the words take the room between the crate and the capsule.
+        let wordsWidth: CGFloat? = stacked ? nil : CGFloat.infinity
         return Button { startAdding() } label: {
             layout {
                 HStack(spacing: 14) {
@@ -186,7 +188,7 @@ struct YourSongsShelf: View {
                     }
                     .fixedSize(horizontal: false, vertical: true)
                 }
-                .frame(maxWidth: stacked ? nil : .infinity, alignment: .leading)
+                .frame(maxWidth: wordsWidth, alignment: .leading)
                 addCapsule
             }
             .stillCard(cornerRadius: Metrics.cornerTile, padding: Metrics.tilePadding, tint: Palette.mint)

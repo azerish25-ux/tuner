@@ -26,6 +26,8 @@ enum PracticeReminder {
         /// Minutes played on each of the last two weeks' days (keyed by the start of the day; a day played without timed
         /// practice counts 0), for Sunday's "Your week".
         var minutesByDay: [Date: Int] = [:]
+        /// The day a spaced review is first due in Learn's course (nil: nothing to review); reminders from then say so.
+        var reviewDue: Date?
     }
 
     /// The latest context, so a change of time or a fresh enable can re-plan without the app's state.
@@ -103,7 +105,7 @@ enum PracticeReminder {
             let atStake = (offset == 0 && !context.practicedToday) || (offset == 1 && context.practicedToday) ? context.streak : 0
             let content = UNMutableNotificationContent()
             content.title = String(localized: "Time to play")
-            content.body = body(streak: atStake, lesson: context.nextLesson)
+            content.body = body(streak: atStake, lesson: context.nextLesson) + (context.reviewDue.map { $0 <= fire } == true ? " " + String(localized: "Your review is ready.") : "")
             content.sound = .default
             try? await center.add(UNNotificationRequest(identifier: "\(identifier).\(offset)", content: content, trigger: trigger))
         }

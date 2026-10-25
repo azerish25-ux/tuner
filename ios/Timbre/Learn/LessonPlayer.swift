@@ -34,6 +34,9 @@ struct LessonPlayer: View {
     @State private var part: PartTake?
     /// The part last practised: the sheet picks it again on the way back.
     @State private var lastPart: SongSheet.Loop?
+    /// What the finished steps said about chord changes, rhythms and questions, for spaced review (saved with the
+    /// result, never for a lesson left halfway).
+    @State private var reviewCredits: [ReviewCredit] = []
 
     /// A section of the song set up to play along with on its own: the loop picked on the sheet and its notes.
     private struct PartTake: Equatable {
@@ -276,6 +279,7 @@ struct LessonPlayer: View {
         #if DEBUG
         if DemoScene.holds(run.step) { return }  // the store scene's picture is this step, finished
         #endif
+        if let step = run.step { reviewCredits += SpacedReview.credits(for: step, score: score, tapped: practiced) }
         run.complete(score: score)
         guard run.isFinished else { return }
         var outcome = run.result()
@@ -287,7 +291,7 @@ struct LessonPlayer: View {
         // A weak-spot review keeps no stars of its own, so it never reads as a new best.
         improved = !LearnProgress.isReview(lesson.id) && outcome.stars > (store.learn.stars[lesson.id] ?? 0)
         store.stopLessonListening()
-        reward = store.finishLesson(outcome, courseId: course.id)
+        reward = store.finishLesson(outcome, courseId: course.id, credits: reviewCredits)
         SoundFX.shared.play(.complete)
         Haptics.shared.done()
         result = outcome

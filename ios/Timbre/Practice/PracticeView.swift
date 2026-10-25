@@ -10,6 +10,8 @@ struct PracticeView: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var path: [PracticeRoute] = []
+    /// Today's review, open over the hub.
+    @State private var review: ReviewSession?
 
     /// German capitalises every noun, so the instrument name keeps its capital there.
     static func inSentence(_ name: String) -> String {
@@ -37,6 +39,7 @@ struct PracticeView: View {
                     .toolbar(.hidden, for: .tabBar)
                 }
         }
+        .reviewSessionCover($review)
     }
 
     /// A phone (or any compact width) gets one column; an iPad's regular width a grid of cards (`CardColumns`).
@@ -464,8 +467,9 @@ struct PracticeView: View {
         if kind.needsPro && !commerce.isPro { store.presentPaywall("daily.\(kind.rawValue)"); return }
         switch kind {
         case .lesson: store.openDailyLesson()
-        // TODO: open the due review itself once the Learn engine offers one.
-        case .review: store.selectedTab = .learn
+        // Today's review plays right here, over the hub (Learn/WeakSpotReview.swift); with none left, Learn.
+        case .review:
+            if let session = store.dailyReviewSession { Haptics.shared.selection(); review = session } else { store.selectedTab = .learn }
         case .tune: store.selectedTab = .tune
         case .ear: path.append(.ear)
         case .chord: path.append(.chords)
