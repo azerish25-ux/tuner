@@ -26,8 +26,9 @@ struct PaywallPlanHero: View {
     private static let reach: CGFloat = 1.35
     /// The rail runs past the content's side margins to the screen's edges.
     private static let bleed: CGFloat = 20
-    /// Where the plan's first song starts, from the screen's left edge.
-    private static let lead: CGFloat = 24
+    /// Where the plan's first song starts, from the screen's left edge: just inside the edge's fade, the rail's last
+    /// song fading out to the left of it.
+    private static let lead: CGFloat = 40
     /// Room above the sleeves for their tilt, and below them for their shadow.
     private static let topRoom: CGFloat = 4
     private static let bottomRoom: CGFloat = 8
@@ -72,7 +73,9 @@ struct PaywallPlanHero: View {
         let songs = scene.songs
         let pitch = side + Self.gap
         let loop = CGFloat(songs.count) * pitch
-        let copies = loop > 0 ? max(2, Int((Self.widest / loop).rounded(.up)) + 1) : 1
+        // One loop to the left of the first song and enough to its right to reach past the widest screen at the end
+        // of a loop, so when the drift wraps to the start the picture is the same.
+        let copies = loop > 0 ? 2 + Int((Self.widest / loop).rounded(.up)) : 1
         let strip = SleeveStrip(songs: songs, side: side, gap: Self.gap, top: Self.topRoom)
         let still = reduceMotion || loop <= 0
         // The strip rides in an overlay, so its width (several loops) never widens the hero: the clear base holds the
@@ -88,7 +91,7 @@ struct PaywallPlanHero: View {
                         }
                     }
                     .fixedSize()
-                    .offset(x: Self.lead - (still ? 0 : drift(at: timeline.date, loop: loop)))
+                    .offset(x: Self.lead - loop - (still ? 0 : drift(at: timeline.date, loop: loop)))
                 }
             }
             .mask { fade(side) }
@@ -104,8 +107,8 @@ struct PaywallPlanHero: View {
         return CGFloat(travelled.truncatingRemainder(dividingBy: Double(loop)))
     }
 
-    /// Solid over the sleeves' upper half, gone before their foot (where the headline's words sit), and soft at the
-    /// screen's edges.
+    /// Solid over the sleeves' upper half, gone before their foot (where the headline's words sit), and dissolving
+    /// at the screen's edges as the app's other rails do (`EdgeFadeMask`): there is always more rail past both.
     private func fade(_ side: CGFloat) -> some View {
         let total = Self.topRoom + side + Self.bottomRoom
         let solid = (Self.topRoom + side * 0.55) / total
@@ -113,10 +116,10 @@ struct PaywallPlanHero: View {
         let down = LinearGradient(stops: [Gradient.Stop(color: .black, location: 0), Gradient.Stop(color: .black, location: solid),
                                           Gradient.Stop(color: .clear, location: gone)],
                                   startPoint: .top, endPoint: .bottom)
-        let across = LinearGradient(stops: [Gradient.Stop(color: .clear, location: 0), Gradient.Stop(color: .black, location: 0.06),
-                                            Gradient.Stop(color: .black, location: 0.94), Gradient.Stop(color: .clear, location: 1)],
-                                    startPoint: .leading, endPoint: .trailing)
-        return down.mask { across }
+        let edge = EdgeFadeMask.width(bleed: Self.bleed)
+        return down.mask {
+            EdgeFadeMask(overflow: EdgeOverflow(leading: true, trailing: true), leading: edge, trailing: edge)
+        }
     }
 
     /// "Songs: Greensleeves, Clementine and Kite Weather".

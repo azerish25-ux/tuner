@@ -194,21 +194,26 @@ struct TuneView: View {
         .padding(.horizontal, Metrics.gutter).padding(.top, 6)
     }
 
-    /// A window of iPad size (regular width and height; never a phone): the larger readout and the roomy close-up.
+    /// A window of iPad size (regular width and height; never a phone): the larger readout.
     private var regularWindow: Bool { horizontalSizeClass == .regular && verticalSizeClass == .regular }
 
-    /// - Parameter controls: Strum and listening stand on the stage's trailing edge (the roomy close-up keeps clear).
+    /// The iPad, in any window (Split View and Slide Over too): the close-up frames the whole headstock, centred, so no
+    /// button or tip is ever cut by the stage's edge. A phone keeps its tighter close-up, leaning toward the peg.
+    private var wholeHeadstock: Bool { UIDevice.current.userInterfaceIdiom == .pad }
+
+    /// - Parameter controls: Strum and listening stand on the stage's trailing edge (the whole-headstock close-up keeps
+    ///   clear of them).
     private func stageInput(controls: Bool) -> StageInput {
         // On a paired course the cue rings the one peg being tuned.
         let peg = store.referenceMode ? nil : Optional(CourseGrouping.position(of: store.activeCourse, in: store.courses))
         // The 3D camera (and the 2D studio or photo stage, as far as its picture allows) holds the headstock close-up,
         // with the peg ring and its turn arrow, whenever a string is being tuned, listening or paused alike: the peg
         // to turn is the tuner's hero. It pulls back to the whole instrument only for the all-strings celebration
-        // (Reduce Motion cuts rather than glides). In an iPad-sized window the close-up shows the whole headstock,
-        // centred across the stage.
+        // (Reduce Motion cuts rather than glides). On an iPad the close-up shows the whole headstock, centred
+        // across the stage.
         return StageInput(cents: store.live.reading.cents, level: store.live.level, locked: store.live.reading.inTune,
                           listening: audio.running, activeAnchor: store.activeAnchor, focus: !store.referenceMode && !showWhole,
-                          note: store.targetName, pegIndex: peg, roomy: regularWindow,
+                          note: store.targetName, pegIndex: peg, wholeHeadstock: wholeHeadstock,
                           controlsReserve: controls ? Self.controlsReserve : 0)
     }
 

@@ -390,12 +390,12 @@ struct AlongStep: View {
     /// The take's score as shown, in percent.
     private var percent: Int { Int((judge.accuracy * 100).rounded()) }
     /// Mint from 90 %, amber below and never red: a weak take is a warm-up to run again, not a failure.
-    private var scoreTint: Color { percent >= 90 ? Palette.mint : Palette.amber }
+    private var scoreTint: Color { percent >= LessonRun.greatTake ? Palette.mint : Palette.amber }
     /// Under half the take landed: the card leads with another go (Try again takes the filled button).
-    private var retryFirst: Bool { percent < 50 }
+    private var retryFirst: Bool { percent < LessonRun.warmTake }
 
     private var verdict: LocalizedStringKey {
-        if percent >= 90 { return "Great work" }
+        if percent >= LessonRun.greatTake { return "Great work" }
         return retryFirst ? "Just warming up" : "Keep going"
     }
 
@@ -437,7 +437,7 @@ struct AlongStep: View {
             } else if judge.bestCombo >= 2 {
                 Text("Best combo \(judge.bestCombo)").font(.footnote).foregroundStyle(Palette.inkSoft)
             }
-            if percent >= 90 && loop == nil { takeShare.padding(.top, 2) }
+            if percent >= LessonRun.greatTake && loop == nil { takeShare.padding(.top, 2) }
             if loop == nil && judge.accuracy < 0.8 && ladder.rung > 0 {
                 Button { ladder.select(0); reset() } label: { Label("Try it at \(Int(ladder.tempo(at: 0))) BPM", systemImage: "tortoise.fill") }
                     .font(Typeface.label(14)).foregroundStyle(accent).padding(.top, 2)

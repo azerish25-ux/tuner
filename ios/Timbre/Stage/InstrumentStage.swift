@@ -16,10 +16,11 @@ struct StageInput {
     /// Which string of the active anchor is being tuned, in course order (0 for the first): on a paired
     /// course, the one peg to turn. Nil cues every peg of the anchor.
     var pegIndex: Int?
-    /// An iPad-sized window (regular width and height): the close-up frames the whole headstock, every button and its
-    /// tip, centred across the stage, rather than the phone's tighter shot leaning toward the peg being tuned.
-    var roomy = false
-    /// Points along the stage's trailing edge that the side controls stand over: a roomy close-up keeps clear of them.
+    /// The close-up frames the whole headstock, every button and its tip, centred across the stage (the iPad, in any
+    /// window), rather than the phone's tighter shot leaning toward the peg being tuned.
+    var wholeHeadstock = false
+    /// Points along the stage's trailing edge that the side controls stand over: a whole-headstock close-up keeps
+    /// clear of them.
     var controlsReserve: CGFloat = 0
 }
 
@@ -54,7 +55,7 @@ final class StageController {
     /// leaves the head, for the lock shimmer (`lockPath`).
     private var postCenters: [String: SIMD3<Float>] = [:]
     /// The corners of every peg's box in model space (the button the player turns, with its shaft), measured once as
-    /// the model goes on stage: a roomy close-up keeps every button inside the frame (`roomyCloseUp`).
+    /// the model goes on stage: a whole-headstock close-up keeps every button inside the frame (`wholeHeadCloseUp`).
     private var pegCorners: [SIMD3<Float>] = []
     private var staticStrings: [String: Entity] = [:]
     private var segments: [ModelEntity] = []
@@ -320,8 +321,9 @@ final class StageController {
         let breathing = reduceMotion ? 0 : Float(sin(time * 0.35)) * 0.025 * (1 - framing)
         let rotation = simd_quatf(angle: yaw + breathing, axis: [0, 1, 0]) * simd_quatf(angle: 0.04 * (1 - framing), axis: [1, 0, 0])
         model.orientation = rotation
-        // In close-up the headstock centres in the room left of the side controls (a roomy close-up centres itself).
-        let inset: Float = state.roomy ? 0 : Self.controlsInset
+        // In close-up the headstock centres in the room left of the side controls (the whole-headstock close-up
+        // centres itself).
+        let inset: Float = state.wholeHeadstock ? 0 : Self.controlsInset
         let shift = inset * metresPerPoint(distance: distance, fov: fov) * framing
         model.position = -rotation.act(point) + SIMD3<Float>(-shift, 0, -distance)
     }
@@ -351,7 +353,7 @@ final class StageController {
     /// nut stays `nutClearance` above the bottom. A point's height on screen is (y - aim.y) / ((distance - z) * t)
     /// of the half-height, z being how far the turned instrument brings it toward the camera; the yaw leaves y alone.
     private func closeUp(rig: InstrumentRig, anchor: String?, fov: Float, layout: StageInput) -> (aim: SIMD3<Float>, distance: Float) {
-        if layout.roomy { return roomyCloseUp(rig: rig, anchor: anchor, fov: fov, reserve: Float(layout.controlsReserve)) }
+        if layout.wholeHeadstock { return wholeHeadCloseUp(rig: rig, anchor: anchor, fov: fov, reserve: Float(layout.controlsReserve)) }
         let head = rig.head
         var aim = head + SIMD3<Float>(0, -0.045, 0)
         if let string = rig.string(anchor) {
@@ -378,14 +380,14 @@ final class StageController {
         return (aim, distance)
     }
 
-    /// The iPad's close-up (`StageInput.roomy`): the whole headstock in the frame, every button and its tip clear of the
-    /// feathered edges, centred across the stage (and clear of `reserve` points of side controls on its trailing
+    /// The iPad's close-up (`StageInput.wholeHeadstock`): the whole headstock in the frame, every button and its tip
+    /// clear of the feathered edges, centred across the stage (and clear of `reserve` points of side controls on its trailing
     /// edge), rather than the phone's tighter shot leaning toward the peg being tuned. Vertically as `closeUp`: aimed a
     /// little toward the peg's height, the camera backing off until the pegs sit `pegClearance` under the top, the tip
     /// and buttons under the feather and the nut `nutClearance` above the bottom. Then far enough back that the head
     /// fits across, and slid sideways to centre it. A point's height on screen is (y - aim.y) / ((distance - z) * t) of
     /// the half-height, its offset across x / ((distance - z) * t) of it, x and z after the close-up's turn.
-    private func roomyCloseUp(rig: InstrumentRig, anchor: String?, fov: Float, reserve: Float) -> (aim: SIMD3<Float>, distance: Float) {
+    private func wholeHeadCloseUp(rig: InstrumentRig, anchor: String?, fov: Float, reserve: Float) -> (aim: SIMD3<Float>, distance: Float) {
         let head = rig.head
         var aim = head + SIMD3<Float>(0, -0.045, 0)
         if let string = rig.string(anchor) { aim.y = head.y + (string.pegPoint.y - head.y) * 0.45 - 0.03 }

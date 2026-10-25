@@ -125,7 +125,7 @@ struct StudioStage: View {
         let key = shownAnchor(card, state).map { shownKey(card, state, anchor: $0) }
         let frame = motion.frame(picture: imageName, head: card.head, peg: key.flatMap { card.point("\($0).peg") },
                                  focus: state.focus, size: size, now: date.timeIntervalSinceReferenceDate, still: reduceMotion,
-                                 centred: state.roomy)
+                                 centred: state.wholeHeadstock)
         ZStack {
             ZStack {
                 picture(frame)
@@ -286,7 +286,7 @@ struct StageFrame {
     /// The close-up zooms as far as the head fits (at most `maxZoom`) and lifts the head to just under the top
     /// clearance, so the neck runs down the stage below it (the 3D close-up's layout), keeping the nut clear of the
     /// bottom. On the way the picture zooms about one fixed point: the aim travels to its spot in step with the
-    /// zoom, which grows geometrically (an even apparent dolly). `centred` (an iPad-sized window, `StageInput.roomy`):
+    /// zoom, which grows geometrically (an even apparent dolly). `centred` (the iPad, `StageInput.wholeHeadstock`):
     /// the head centres across the stage, and the wood above its pegs stays clear of the feathered top.
     static func closeUp(in size: CGSize, head: CGRect, aim: CGPoint, framing: Double, centred: Bool = false) -> StageFrame {
         let base = Self.whole(in: size)

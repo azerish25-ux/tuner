@@ -496,12 +496,17 @@ private struct PlanStep: View {
         .padding(.top, 8)
     }
 
-    /// Placed players read the placement as a head start: the unit they start at (the course card under it names the
-    /// lesson) and that what they know is skipped. Beginners read the course. What Timbre Pro opens is left to the
-    /// paywall's Free and Pro table, one screen on, so the plan never shows a lock.
+    /// Placed players read the placement as a head start, after a skip-ahead mark in the course's colour: the unit
+    /// they start at (the course card under it names the lesson) and that what they know is skipped. Beginners read
+    /// the course. What Timbre Pro opens is left to the paywall's Free and Pro table, one screen on, so the plan never
+    /// shows a lock.
     @ViewBuilder private var subtitle: some View {
         if let startUnit, startUnit > 0 {
-            Text("You start at Unit \(startUnit + 1) — skip what you already know.")
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Image(systemName: "forward.fill").font(.caption.weight(.bold)).foregroundStyle(accent)
+                    .accessibilityHidden(true)
+                Text("You start at Unit \(startUnit + 1) — skip what you already know.")
+            }
         } else {
             Text(course.subtitle.localized)
         }
