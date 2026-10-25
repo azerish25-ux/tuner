@@ -1,12 +1,20 @@
+import StoreKitTest
 import XCTest
 
 /// End-to-end flows that double as a visual tour: every screen is captured so the
 /// design can be reviewed from CI results.
 final class TimbreUITests: XCTestCase {
     private var app: XCUIApplication!
+    private var storeKit: SKTestSession!
 
     override func setUpWithError() throws {
         continueAfterFailure = true
+        // The scheme's StoreKit configuration, loaded and emptied here: a UI-only run has no unit test to load it (the
+        // paywall would find no products), and a run after the unit tests may inherit their purchases (Pro at launch).
+        storeKit = try SKTestSession(configurationFileNamed: "Timbre")
+        storeKit.resetToDefaultState()
+        storeKit.clearTransactions()
+        storeKit.disableDialogs = true
         app = XCUIApplication()
         app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString
         app.launchArguments = ["-AppleLanguages", "(\(Self.language))", "-AppleLocale", Self.locale]
@@ -421,7 +429,7 @@ final class TimbreUITests: XCTestCase {
         let start = element("onboarding.start")
         XCTAssertTrue(start.waitForExistence(timeout: 25))
         settle(); shot("01-onboarding-welcome")
-        element("onboarding.instrument.bass.electric.4").tap(); settle(); shot("02-onboarding-instrument")
+        element("onboarding.instrument.violin.standard.4").tap(); settle(); shot("02-onboarding-instrument")
         element("onboarding.instrument.guitar.acoustic.6").tap()
         start.tap(); settle(1.5); shot("03-onboarding-experience")
         // Nothing is pre-selected: Continue waits for an answer. A beginner's path holds every page, the first chord too.
