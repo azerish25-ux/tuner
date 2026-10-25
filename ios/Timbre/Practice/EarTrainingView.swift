@@ -187,7 +187,7 @@ struct EarTrainingView: View {
         return VStack(spacing: 10) {
             EarAnswerStage(picture: picture, revealed: picked != nil, playing: playing, startedAt: playedAt,
                            together: question.simultaneous)
-                .frame(height: 176)
+                .frame(height: 204)
                 .id(serial)
                 .overlay { SparkBurst(trigger: burst, color: Palette.mint).frame(width: 300, height: 300) }
                 .overlay(alignment: .topTrailing) { xpFloat }
@@ -616,6 +616,9 @@ private struct EarPicture {
     /// Higher-or-lower: the second note's detune in cents.
     let cents: Double?
     let notation: String
+    /// Intervals: the steps the answers to choose from would land on (semitones above the root), marked under the
+    /// veil before the answer. They say no more than the buttons do.
+    let candidates: [Int]
 
     init(question: EarQuestion, reference: Double, notation: String) {
         let midis = question.tones.map { Int(PitchMath.midi(frequency: $0, reference: reference).rounded()) }
@@ -625,6 +628,7 @@ private struct EarPicture {
         cents = question.cents
         steps = question.cents == nil ? midis.dropFirst().map { max(0, min(12, $0 - first)) } : []
         self.notation = notation
+        candidates = question.drill == .interval ? question.choices.compactMap { Intervals.names.firstIndex(of: $0) } : []
     }
 
     /// "E♭4"-style names as the voice tools write them (signs set by `NoteGlyphs`).

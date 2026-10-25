@@ -105,7 +105,7 @@ struct SongPerformStep: View {
         .task {
             guard let beat = DemoScene.performBeat(lesson, beatsPerBar: beatsPerBar) else { return }
             try? await Task.sleep(for: DemoScene.performDelay)
-            startScene(atBeat: beat)
+            if !Task.isCancelled { startScene(atBeat: beat) }
         }
         #endif
         .onChange(of: ladder.rung) { _, _ in store.audio.prepareBand(band) }
