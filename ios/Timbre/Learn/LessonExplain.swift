@@ -383,21 +383,31 @@ struct ExplainStep: View {
     }
 
     /// The line under "Show me": what to watch (lit while the model plays it), handing over to a chord's "your turn"
-    /// once its demonstration is over. One line, always there, so the card never grows.
+    /// once its demonstration is over, then to the tick when it's heard. One line, always there, so the card never
+    /// grows; each caption leaves before the next arrives (`handover`).
     private var teacherLine: some View {
         ZStack {
             if cueShown, case .chord = visual {
                 turnCue(compact: false)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
-                    .transition(.opacity)
+                    .id(demo == .heard)
+                    .transition(Self.handover)
             } else if let caption {
                 ShowMeCaption(text: caption, accent: accent, live: threeD && sounding)
-                    .transition(.opacity)
+                    .transition(Self.handover)
             }
         }
         .frame(maxWidth: .infinity, minHeight: Self.teacherLine)
         .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: cueShown)
+        .animation(Motion.fade, value: demo)
+    }
+
+    /// Captions hand over in sequence, out then in: the one leaving is gone before the next fades up, never two
+    /// half-drawn lines over each other.
+    private static var handover: AnyTransition {
+        .asymmetric(insertion: .opacity.animation(.easeOut(duration: 0.2).delay(0.14)),
+                    removal: .opacity.animation(.easeIn(duration: 0.12)))
     }
 
     /// What to watch in this picture's demonstration.
@@ -589,14 +599,20 @@ struct ExplainStep: View {
     /// The demonstration is over: it's the learner's turn (or they've played it back).
     private var cueShown: Bool { demo == .yourTurn || demo == .heard }
 
-    /// After the demonstration: the learner's cue to play it back, then a tick when the microphone hears it.
-    /// Its row is always there, so the card doesn't grow when it appears.
+    /// After the demonstration: the learner's cue to play it back, then a tick when the microphone hears it, each
+    /// handing over to the next in sequence. Its row is always there, so the card doesn't grow when it appears.
     private var yourTurn: some View {
-        turnCue(compact: false)
-            .frame(minHeight: 20)
-            .opacity(cueShown ? 1 : 0)
-            .animation(Motion.settle, value: demo)
-            .accessibilityHidden(!cueShown)
+        ZStack {
+            turnCue(compact: false).hidden()
+            if cueShown {
+                turnCue(compact: false)
+                    .id(demo == .heard)
+                    .transition(Self.handover)
+            }
+        }
+        .frame(minHeight: 20)
+        .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: demo)
+        .accessibilityHidden(!cueShown)
     }
 
     /// The cue's words with their glyph; `compact` keeps the glyph alone (its words still read by VoiceOver).

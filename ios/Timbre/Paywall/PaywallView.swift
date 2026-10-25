@@ -350,9 +350,10 @@ struct PaywallView: View {
     private func pitch(_ plan: PaywallPlan) -> Pitch {
         let generic = Pitch(headline: Text("Unlock your full plan"))
         // Onboarding comes straight from the plan (and, for a beginner, their first chord): it sells the first song
-        // when the plan reaches one this week, unless the test arm keeps the plan's headline.
+        // when the plan reaches one this week, unless the player came for the tuner or the test arm keeps the plan's
+        // headline.
         if context == .onboarding {
-            guard variant.headline != "plan", let day = plan.songDay, day <= 7 else { return generic }
+            guard variant.headline != "plan", answers?.goal != "tune", let day = plan.songDay, day <= 7 else { return generic }
             return Pitch(headline: Text("Play your first song this week"), promisesSong: true)
         }
         guard let reason = store.paywallReason else { return generic }
