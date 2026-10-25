@@ -15,8 +15,7 @@ import sys
 from pathlib import Path
 
 RES = Path(__file__).resolve().parents[2] / "ios/Timbre/Resources"
-SPEC = re.compile(r"%(?:\d+\$)?(?:lld|ld|d|@|f|\.\d+f|%)|\$\{applicationName\}")
-ARG = re.compile(r"%(?:(\d+)\$)?(lld|ld|d|@|f|\.\d+f|%)")
+ARG = re.compile(r"%(?:(\d+)\$)?[-+ #0]*\d*(?:\.\d+)?(lld|llu|ld|lu|lf|d|u|f|@|%)")
 TOKEN = re.compile(r"\$\{\w+\}")
 
 

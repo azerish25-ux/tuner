@@ -1,3 +1,13 @@
+"""Legacy: the one-time import of the Android app's catalogue, photos, fonts and translations (2026-10-22).
+
+Running it now would overwrite catalog.json, photos.json, the photo imagesets, the fonts and every Localizable.strings
+with the Android snapshot, discarding everything added since. It refuses to run unless TIMBRE_REIMPORT_ANDROID=1.
+"""
+import os
+import sys
+if os.environ.get("TIMBRE_REIMPORT_ANDROID") != "1":
+    sys.exit("Legacy import: it would overwrite the catalogue, photos, fonts and translations. "
+             "Set TIMBRE_REIMPORT_ANDROID=1 only if that is what you want (see docs/TOOLS.md).")
 from pathlib import Path
 import shutil,json,re,xml.etree.ElementTree as ET
 from PIL import Image
