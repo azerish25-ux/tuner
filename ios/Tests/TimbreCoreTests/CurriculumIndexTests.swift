@@ -23,6 +23,25 @@ final class CurriculumIndexTests: XCTestCase {
         XCTAssertNil(course.position(of: "zzz"))
     }
 
+    func testASongbookOpensEverySongButKeepsItsChallengesInOrder() {
+        func lesson(_ id: String, _ kind: Lesson.Kind) -> Lesson {
+            Lesson(id: id, title: LearnText(id), kind: kind, minutes: 3, xp: 20, free: true,
+                   steps: [.explain(title: LearnText("t"), body: LearnText("b"), visual: .none)])
+        }
+        let unit = LearnUnit(id: "s.u0", title: LearnText("U"), summary: LearnText("s"),
+                             lessons: [lesson("one", .song), lesson("two", .song), lesson("three", .song), lesson("boss", .challenge)])
+        let book = LearnCourse(id: "s", title: LearnText("s"), subtitle: LearnText("s"), instrument: nil, symbol: "music.note", accent: "mint", units: [unit])
+        XCTAssertTrue(book.isSongbook)
+        let progress = LearnProgress()
+        XCTAssertTrue(progress.isUnlocked(book.lessons[2], in: book), "any song of a songbook is open")
+        XCTAssertFalse(progress.isUnlocked(book.lessons[3], in: book), "its challenge waits for the song before it")
+        // A course that teaches keeps its path, songs included.
+        let taught = LearnUnit(id: "t.u0", title: LearnText("U"), summary: LearnText("s"), lessons: [lesson("a", .lesson), lesson("b", .song)])
+        let course = LearnCourse(id: "t", title: LearnText("t"), subtitle: LearnText("s"), instrument: nil, symbol: "music.note", accent: "mint", units: [taught])
+        XCTAssertFalse(course.isSongbook)
+        XCTAssertFalse(progress.isUnlocked(course.lessons[1], in: course))
+    }
+
     func testUnlockingReadsTheIndex() {
         let course = makeCourse("c", units: [["a", "b"], ["c", "d"]])
         var progress = LearnProgress()

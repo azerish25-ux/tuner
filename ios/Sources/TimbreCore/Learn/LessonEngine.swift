@@ -426,7 +426,8 @@ public struct LearnProgress: Codable, Equatable, Sendable {
     public func isUnlocked(_ lesson: Lesson, in course: LearnCourse) -> Bool {
         // The course's own index: no lesson list is rebuilt or searched per node.
         guard let position = course.position(of: lesson.id) else { return false }
-        return position == 0 || position <= placedCount(in: course) || isFinished(course.lessons[position - 1].id) || isFinished(lesson.id)
+        return position == 0 || (course.isSongbook && lesson.kind == .song) || position <= placedCount(in: course)
+            || isFinished(course.lessons[position - 1].id) || isFinished(lesson.id)
     }
 
     /// The next lesson to play in a course: the first unfinished one after the placement

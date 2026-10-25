@@ -49,7 +49,9 @@ final class TabletScreenshotsUITests: XCTestCase {
         XCTAssertTrue(element("instruments.search").waitForExistence(timeout: 10))
         settle(0.6)  // the page's presentation; `stillScreenshot` waits out the rails' first reveal
         let browser = stillScreenshot(timeout: 3)
-        let alone = element("tune.stage").waitForNonExistence(timeout: 5)
+        // A full-screen cover keeps the tuner in the accessibility tree under it; covered, it can't be hit.
+        let tuner = element("tune.stage")
+        let alone = !tuner.exists || !tuner.isHittable
         storeFrame("ipad-landscape-instruments", picture: browser, ok: alone, "the tuner is still on screen around the browser")
         closePicker()
 

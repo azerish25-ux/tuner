@@ -88,6 +88,9 @@ public struct LearnCourse: Codable, Identifiable, Sendable {
     public let lessons: [Lesson]
     /// Each lesson's place in `lessons` (its first, should an id repeat).
     private let positions: [String: Int]
+    /// A song collection (Originals, Standards, Songs): songs and unit challenges only, no teaching lessons. Its songs
+    /// are a library to pick from, so each one is open (Pro still gates the paid ones); its challenges keep the path.
+    public let isSongbook: Bool
 
     enum CodingKeys: String, CodingKey { case id, title, subtitle, instrument, symbol, accent, units }
 
@@ -99,6 +102,7 @@ public struct LearnCourse: Codable, Identifiable, Sendable {
         var positions: [String: Int] = [:]
         for (index, lesson) in lessons.enumerated() where positions[lesson.id] == nil { positions[lesson.id] = index }
         self.positions = positions
+        isSongbook = lessons.contains { $0.kind == .song } && !lessons.contains { $0.kind == .lesson }
     }
 
     public init(from decoder: Decoder) throws {
