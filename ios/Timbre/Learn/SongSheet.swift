@@ -481,6 +481,8 @@ struct SongSectionMap: View {
                 }
             }
         }
+        // The song runs left to right in every language, as its playhead and the runway do.
+        .environment(\.layoutDirection, .leftToRight)
         .frame(height: height)
         .modifier(MapAccessibility(interactive: onSelect != nil, summary: spokenSections))
     }
@@ -526,39 +528,39 @@ struct SongSectionMap: View {
         }
     }
 
-    /// The hook (or chorus) always in amber, the other named sections in the accent and the colours after it (the
-    /// same name always the same colour), chords in the accent, plain bars in grey. An arrangement's sections are
-    /// coloured by kind (`tint(of:accent:)`). The lead sheet uses the same.
+    /// The hook (or chorus) always in gold, the other named sections in the accent and the colours after it (the same
+    /// name always the same colour), chords in the accent, plain bars in grey. An arrangement's sections are coloured by
+    /// kind (`tint(of:accent:)`). The lead sheet uses the same. None is a status colour: mint, amber and coral say how
+    /// something went, never which part of a song it is.
     static func tint(of section: SongSheet.Section, in sections: [SongSheet.Section], accent: Color) -> Color {
         if section.chord != nil { return accent }
         if let part = section.part { return tint(of: part.kind, accent: accent) }
         guard let title = section.title else { return Palette.inkSoft }
-        if section.isHook { return Palette.amber }
+        if section.isHook { return Palette.starGold }
         let names = sections.filter { !$0.isHook }.compactMap { $0.title?.defaultValue }.reduce(into: [String]()) { list, name in
             if !list.contains(name) { list.append(name) }
         }
-        let tints = [accent, Palette.violet, Palette.sky, Palette.coral]
+        let tints = [accent, Palette.violet, Palette.sky, Palette.orchid]
         let index = names.firstIndex(of: title.defaultValue) ?? 0
         return tints[index % tints.count]
     }
 
-    /// An arrangement's sections by kind: every chorus amber (the hook), the verses in the accent (mint when the
-    /// accent is the hook's amber), a bridge violet, a solo or interlude sky (coral beside a sky accent), the intro
-    /// and outro grey.
+    /// An arrangement's sections by kind: every chorus gold (the hook), the verses in the accent, a bridge violet (sky
+    /// beside a violet accent), a solo or interlude sky (orchid beside a sky accent), the intro and outro grey.
     static func tint(of kind: SongArrangement.Section.Kind, accent: Color) -> Color {
-        let verse = accent == Palette.amber ? Palette.mint : accent
+        let verse = accent
         switch kind {
-        case .chorus: return Palette.amber
+        case .chorus: return Palette.starGold
         case .verse: return verse
         case .bridge: return verse == Palette.violet ? Palette.sky : Palette.violet
-        case .solo, .interlude: return verse == Palette.sky ? Palette.coral : Palette.sky
+        case .solo, .interlude: return verse == Palette.sky ? Palette.orchid : Palette.sky
         case .intro, .outro: return Palette.inkSoft
         }
     }
 
     /// The colour a section's notes are drawn in on the lead sheet: its own, the verse's for an intro or outro.
     static func noteTint(of section: SongSheet.Section, in sections: [SongSheet.Section], accent: Color) -> Color {
-        guard section.part != nil else { return section.isHook ? Palette.amber : accent }
+        guard section.part != nil else { return section.isHook ? Palette.starGold : accent }
         return section.isBookend ? tint(of: .verse, accent: accent) : tint(of: section, in: sections, accent: accent)
     }
 
@@ -693,7 +695,7 @@ private struct SectionTile: View {
     private var barsLabel: some View {
         VStack(spacing: 0) {
             Text(section.bars == 1 ? LocalizedStringKey("Bar") : LocalizedStringKey("Bars"))
-                .font(Typeface.label(9)).tracking(0.6).textCase(.uppercase)
+                .font(Typeface.badge).tracking(0.6).textCase(.uppercase)
                 .foregroundStyle(tint == Palette.inkSoft ? Palette.inkSoft : tint)
             Text(verbatim: range).font(Typeface.number(13)).foregroundStyle(Palette.ink)
         }
@@ -746,6 +748,9 @@ struct LeadChart {
     let chords: [ChordSpec?]
     /// Every change of chord in playing order (two in a bar where the chart changes on its third beat).
     let marks: [Mark]
+    /// The changes to another chord inside each bar, after its downbeat, by bar (`SongArrangement.played(inBar:)`):
+    /// what `filledBars` adds to the downbeats. Empty for a chart of whole bars.
+    private let inside: [Int: [ChordBar.Change]]
     /// A strummed song's pattern within a bar, in beats.
     let strokes: [Double]
     /// Each melody note's lyric syllable as sung ("Twin-" joining the next), `TimedNote.held` for a note holding the
@@ -779,6 +784,7 @@ struct LeadChart {
         let perBar: [ChordSpec?]
         var changes: [Mark]?
         var pattern: [Double] = []
+        var split: [Int: [ChordBar.Change]] = [:]
         if let arrangement = sheet.arrangement {
             // The arrangement's chart, as written.
             melody = sheet.finale
@@ -786,6 +792,7 @@ struct LeadChart {
             let charted = arrangement.chordPerBar + [ChordSpec?](repeating: nil, count: bars)
             perBar = Array(charted.prefix(bars))
             changes = Self.marks(of: arrangement)
+            split = Self.inside(arrangement, bars: bars)
         } else if case let .progression(list, lengths, strums, _, _, _, _)? = lesson.steps.last {
             beats = max(1, sheet.beatsPerBar)
             var spread: [ChordSpec?] = []
@@ -806,6 +813,7 @@ struct LeadChart {
         strokes = pattern
         notes = melody
         marks = changes ?? Self.marks(of: perBar, meter: beats)
+        inside = split
         let words = Self.syllables(of: melody)
         lyrics = words
         syllablesPerBar = Self.busyBar(melody, words: words, meter: beats)
@@ -824,6 +832,19 @@ struct LeadChart {
             if change.symbol == "N" { return Mark(beat: beat, chord: nil) }
             return arrangement.shape(named: change.symbol).map { Mark(beat: beat, chord: $0) }
         }
+    }
+
+    /// Each bar's changes to another chord after its downbeat, as the band and a strummer play them (each with a shape;
+    /// a symbol without one is left out).
+    private static func inside(_ arrangement: SongArrangement, bars: Int) -> [Int: [ChordBar.Change]] {
+        var out: [Int: [ChordBar.Change]] = [:]
+        for bar in 0..<max(0, min(bars, arrangement.bars)) {
+            let later = arrangement.played(inBar: bar).filter { $0.beat > 1e-6 }.compactMap { change -> ChordBar.Change? in
+                arrangement.shape(named: change.symbol).map { ChordBar.Change(beat: change.beat, chord: $0) }
+            }
+            if !later.isEmpty { out[bar] = later }
+        }
+        return out
     }
 
     /// Bar-by-bar chords as their changes: a mark on each bar whose chord differs from the bar before (a bar without
@@ -924,10 +945,11 @@ struct LeadChart {
             .map { TimedNote(midi: $0.midi, beat: $0.beat - from, beats: $0.beats, at: $0.at) }
     }
 
-    /// The chords under a stretch of this song's melody, bar by bar from its beat 0: `notes` as a play-along step or a
-    /// practised part plays them (the verse, the hook), found in the song's take a whole number of bars in, every note
-    /// in its place. Nil when they aren't a stretch of this take, or the chart names no chords.
-    func chords(under notes: [TimedNote], meter: Int) -> [ChordSpec]? {
+    /// The chords under a stretch of this song's melody, bar by bar from its beat 0, each change inside a bar included:
+    /// `notes` as a play-along step or a practised part plays them (the verse, the hook), found in the song's take a
+    /// whole number of bars in, every note in its place. Nil when they aren't a stretch of this take, or the chart names
+    /// no chords.
+    func bars(under notes: [TimedNote], meter: Int) -> [ChordBar]? {
         guard hasChords, meter == self.meter, let first = notes.first, !self.notes.isEmpty else { return nil }
         let beats = Double(max(1, meter))
         let end = notes.map { $0.beat + $0.beats }.max() ?? beats
@@ -940,27 +962,45 @@ struct LeadChart {
                 self.notes.contains { $0.midi == note.midi && abs($0.beat - (note.beat + shift)) < 1e-3 }
             }
             guard found else { continue }
-            let chords = filledChords(from: Int(barShift.rounded()), count: count)
-            return chords.isEmpty ? nil : chords
+            let bars = filledBars(from: Int(barShift.rounded()), count: count)
+            return bars.isEmpty ? nil : bars
         }
         return nil
     }
 
     /// The song lesson of `course` with a play-along step playing exactly `notes` (in play order), and the chords
-    /// under that step from the song's chart; nil for a play-along of no song, or of a song without chords.
-    @MainActor static func chords(underStep notes: [TimedNote], meter: Int, in course: LearnCourse) -> [ChordSpec]? {
+    /// under that step from the song's chart, change by change; nil for a play-along of no song, or of a song without
+    /// chords.
+    @MainActor static func bars(underStep notes: [TimedNote], meter: Int, in course: LearnCourse) -> [ChordBar]? {
         for lesson in course.lessons where lesson.kind == .song {
             let plays = lesson.steps.contains { step in
                 guard case let .playAlong(stepNotes, _, _, _) = step, stepNotes.count == notes.count else { return false }
                 return stepNotes.sorted { $0.beat < $1.beat } == notes
             }
             guard plays else { continue }
-            return LeadChart.of(lesson).chords(under: notes, meter: meter)
+            return LeadChart.of(lesson).bars(under: notes, meter: meter)
         }
         return nil
     }
 
-    /// The chords of bars `start..<start + count`, a bar without one holding the chord before it (or the next).
+    /// Bars `start..<start + count` as they are played: each downbeat's chord (`filledChords`), then every change to
+    /// another chord inside the bar, at its beat. Twinkle's first two bars are "C · G" and "D · G".
+    func filledBars(from start: Int, count: Int) -> [ChordBar] {
+        let downbeats = filledChords(from: start, count: count)
+        let first = min(chords.count, max(0, start))
+        return downbeats.enumerated().map { offset, chord -> ChordBar in
+            var later: [ChordBar.Change] = []
+            var sounding = chord.symbol
+            for change in inside[first + offset] ?? [] where change.chord.symbol != sounding {
+                later.append(change)
+                sounding = change.chord.symbol
+            }
+            return ChordBar(chord, later: later)
+        }
+    }
+
+    /// The chords on the downbeats of bars `start..<start + count`, a bar without one holding the chord before it (or
+    /// the next).
     func filledChords(from start: Int, count: Int) -> [ChordSpec] {
         let first = min(chords.count, max(0, start))
         let range = Array(chords[first..<max(first, min(chords.count, start + count))])
@@ -971,6 +1011,49 @@ struct LeadChart {
             if let held { out.append(held) }
         }
         return out
+    }
+}
+
+/// One bar of a chart as it is played: the chord on its downbeat, then each change to another chord inside it, at the
+/// beat it comes on (counted from the downbeat). The band plays each chord for its stretch of the bar, and "Chords &
+/// words" asks for a strum on each.
+struct ChordBar: Equatable {
+    struct Change: Equatable {
+        /// Beats from the bar's downbeat.
+        let beat: Double
+        let chord: ChordSpec
+    }
+
+    let downbeat: ChordSpec
+    /// The changes after the downbeat, in order.
+    let later: [Change]
+
+    init(_ downbeat: ChordSpec, later: [Change] = []) {
+        self.downbeat = downbeat
+        // After the downbeat, in order, never two on the same beat.
+        var kept: [Change] = []
+        for change in later.sorted(by: { $0.beat < $1.beat }) where change.beat > 1e-6 {
+            if let last = kept.last, change.beat - last.beat <= 1e-6 { continue }
+            kept.append(change)
+        }
+        self.later = kept
+    }
+
+    /// Every chord of the bar in order, the downbeat's first (at beat 0).
+    var changes: [Change] { [Change(beat: 0, chord: downbeat)] + later }
+    /// The chord sounding as the bar ends.
+    var last: ChordSpec { later.last?.chord ?? downbeat }
+    var isSplit: Bool { !later.isEmpty }
+    /// "C · G".
+    var name: String { changes.map { $0.chord.name }.joined(separator: " · ") }
+
+    /// The bar's harmony as the band plays it: each chord's root and tones from its beat.
+    var segments: [BandArrangement.Segment] {
+        changes.map { change -> BandArrangement.Segment in
+            let chord = change.chord
+            let tones = ChordTarget(root: chord.root, formulaId: chord.quality)?.quality.intervals ?? [0, 7]
+            return BandArrangement.Segment(beat: change.beat, root: PitchMath.pitchClass(midi: chord.root), tones: tones)
+        }
     }
 }
 
@@ -1034,7 +1117,7 @@ struct LeadSheetView<Controls: View>: View {
     private func header(_ section: SongSheet.Section, tint: Color, on: Bool) -> some View {
         Button { onSelect(section) } label: {
             HStack(spacing: 8) {
-                name(section).font(Typeface.label(14)).foregroundStyle(Palette.ink)
+                name(section).font(Typeface.label(.footnote)).foregroundStyle(Palette.ink)
                 if section.title != nil || section.chord != nil {
                     bars(section).font(Typeface.label(12)).foregroundStyle(tint)
                 }
@@ -1067,9 +1150,9 @@ struct LeadSheetView<Controls: View>: View {
 
     private var hookBadge: some View {
         Label("Hook", systemImage: "sparkles")
-            .font(Typeface.label(11)).foregroundStyle(Palette.onAccent)
+            .font(Typeface.badge).foregroundStyle(Palette.onGold)
             .padding(.horizontal, 7).padding(.vertical, 2)
-            .background(Capsule().fill(Palette.amber))
+            .background(Capsule().fill(Palette.starGold))
             .fixedSize()
     }
 
@@ -1164,21 +1247,36 @@ enum SongPlayback {
                                bass: base.bass && bass, pad: base.pad, swing: base.swing)
     }
 
-    /// The band under a whole take of `notes` (a lesson's play-along, a song's final take): the chords `chords` names
-    /// bar by bar when there are any (the song's chart under it), else drums and a bass on the melody's key. Bars from
-    /// beat 0, as many as the notes run, at least one.
-    @MainActor static func band(take notes: [TimedNote], chords: [ChordSpec]?, bpm: Double, meter: Int, reference: Double,
+    /// The band under a stretch of `bars` bars played change by change (`ChordBar`): as `band(notes:chords:…)` on
+    /// their downbeats, each bar carrying its changes inside it (`BandArrangement.Bar.segments`), so the band follows a
+    /// chart that changes on beat 3 rather than holding the downbeat's chord under the change.
+    @MainActor static func band(notes: [TimedNote], harmony: [ChordBar], bars: Int, bpm: Double, meter: Int,
+                                reference: Double, bass: Bool) -> BandArrangement {
+        let base = band(notes: notes, chords: harmony.map(\.downbeat), bars: bars, bpm: bpm, meter: meter, reference: reference, bass: bass)
+        guard harmony.count == bars, harmony.contains(where: \.isSplit) else { return base }
+        var list = base.bars
+        for index in list.indices where index < harmony.count && harmony[index].isSplit {
+            list[index].segments = harmony[index].segments
+        }
+        return BandArrangement(bpm: base.bpm, beatsPerBar: base.beatsPerBar, reference: base.reference, bars: list,
+                               bass: base.bass, pad: base.pad, swing: base.swing)
+    }
+
+    /// The band under a whole take of `notes` (a lesson's play-along, a song's final take): the chart's chords under it
+    /// change by change when there are any, else drums and a bass on the melody's key. Bars from beat 0, as many as the
+    /// notes run, at least one.
+    @MainActor static func band(take notes: [TimedNote], harmony: [ChordBar]?, bpm: Double, meter: Int, reference: Double,
                                 bass: Bool) -> BandArrangement {
         let beats = Double(max(1, meter))
         let end = notes.map { $0.beat + $0.beats }.max() ?? beats
         let bars = max(1, Int((end / beats - 1e-6).rounded(.up)))
-        guard var chart = chords, !chart.isEmpty else {
+        guard var chart = harmony, !chart.isEmpty else {
             return .melody(notes, bpm: bpm, beatsPerBar: meter, reference: reference, bass: bass)
         }
-        // A last note ringing past the chart's last bar holds its chord.
-        while chart.count < bars, let last = chart.last { chart.append(last) }
+        // A last note ringing past the chart's last bar holds the chord it ended on.
+        while chart.count < bars, let last = chart.last { chart.append(ChordBar(last.last)) }
         let count = max(bars, chart.count)
-        return band(notes: notes, chords: Array(chart.prefix(count)), bars: count, bpm: bpm, meter: meter, reference: reference, bass: bass)
+        return band(notes: notes, harmony: Array(chart.prefix(count)), bars: count, bpm: bpm, meter: meter, reference: reference, bass: bass)
     }
 }
 

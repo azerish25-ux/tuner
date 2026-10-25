@@ -34,15 +34,17 @@ enum ShowMe {
     /// Seconds a stage waits, once its model is on stage, for the renderer to draw it behind the picture
     /// (`ShowMeController.warm`) before showing it anyway.
     static let warmLimit = 2.5
-    /// Why the last stage gave up on its model, in plain words (the DEBUG probes read it; nil while none has).
+    #if DEBUG
+    /// Why the last stage gave up on its model, in plain words (the debug probes read it; nil while none has).
     static var lastProblem: String?
+    #endif
 
     /// Whether demonstration `key` plays by itself as its card settles: the first time it appears in `course`. The
     /// App Store chord scene keeps its chord step as it is captured (the chart with every string lit).
     static func firstTime(_ key: String, course: LearnCourse, settings: UserSettings) -> Bool {
         #if DEBUG
         if DemoScene.current == .lessonChord { return false }
-        // UI tests and the App Preview walk lessons on a timed demo pitch: only the show-me scene plays by itself.
+        // A run walking lessons on the timed demo pitch keeps its pictures: only the show-me scene plays by itself.
         if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" && DemoScene.current != .showMe { return false }
         #endif
         return !settings.hasShownDemo(key, in: course.id)
@@ -137,10 +139,12 @@ enum ShowMe {
         return zip(open, shape).map { $0 + $1 }
     }
 
-    /// Notes on the neck in words for VoiceOver, in the order given ("String 3, fret 2; String 2 open").
-    static func words(dots: [Fretting]) -> String {
-        dots.map { dot in
-            dot.fret == 0 ? String(localized: "String \(dot.string) open") : String(localized: "String \(dot.string), fret \(dot.fret)")
+    /// Notes on the neck in words for VoiceOver, in the order given ("String 3, fret 2; String 2 open"); on a violin's or
+    /// cello's fingerboard by finger ("String 1, finger 1").
+    static func words(dots: [Fretting], fingerboard: Fingerboard? = nil) -> String {
+        dots.map { dot -> String in
+            if let fingerboard { return FingerPlace(dot, on: fingerboard).words }
+            return dot.fret == 0 ? String(localized: "String \(dot.string) open") : String(localized: "String \(dot.string), fret \(dot.fret)")
         }
         .joined(separator: "; ")
     }
@@ -239,7 +243,7 @@ struct ShowMeStage: View {
             if reduced { onFailure() }
         }
         #if DEBUG
-        // UI tests only: the model's state, the host's, and the demonstration's clock (Root/DemoScenes.swift).
+        // Debug builds only: the model's state, the host's, and the demonstration's clock (Root/DemoScenes.swift).
         .overlay {
             ShowMeProbe(modelID: modelID, shown: shown, ready: ready, revealed: revealed, attached: attached, controller: controller,
                         shot: shot, landStart: landStart, landingStep: landingStep, ringing: ringing.count)
@@ -466,9 +470,10 @@ struct ShowMeRhythm: View {
 // MARK: - Controls
 
 /// "Show me", the lesson's teacher: plays the picture's demonstration on the instrument in 3D, in place. It is the
-/// step's hero control, not a setting: a lit disc carries the 3D glyph (a spinner while the model loads) on a capsule a
-/// full touch target tall; once the model is on the card it reads "Again" with a replay glyph and plays it again. Until
-/// the learner has watched (`invite`) the disc sends out a ring a few times as the card settles (not under Reduce Motion).
+/// step's hero control, not a setting: a lit disc carries "3D" in letters (a rotation glyph that small reads as a
+/// globe; a spinner while the model loads) on a capsule a full touch target tall; once the model is on the card it
+/// reads "Again" with a replay glyph and plays it again. Until the learner has watched (`invite`) the disc sends out a
+/// ring a few times as the card settles (not under Reduce Motion).
 struct ShowMeButton: View {
     var accent: Color = Palette.mint
     var loading = false
@@ -509,21 +514,25 @@ struct ShowMeButton: View {
         .task(id: invite && !reduceMotion) { await callOut() }
     }
 
-    /// The accent disc with the glyph, the ring leaving it on each `ping`. The spinner and the glyph are both always
-    /// there and cross-fade, so the disc is never empty on the way from loading to playing (a removed spinner vanishes
-    /// at once while the glyph is still fading in).
+    /// The accent disc with "3D" (the replay glyph once the model is up), the ring leaving it on each `ping`. The
+    /// spinner, the letters and the glyph are always there and cross-fade, so the disc is never empty on the way from
+    /// loading to playing (a removed spinner vanishes at once while the next is still fading in).
     private var disc: some View {
         ZStack {
             Circle().fill(LinearGradient(colors: [accent.mix(with: .white, by: 0.25), accent], startPoint: .top, endPoint: .bottom))
             ProgressView().controlSize(.small).tint(Palette.onAccent)
                 .opacity(loading ? 1 : 0)
-            Image(systemName: showing ? "arrow.counterclockwise" : "rotate.3d")
+            Text(verbatim: "3D")
+                .font(.system(size: 12, weight: .heavy, design: .rounded))
+                .foregroundStyle(Palette.onAccent)
+                .opacity(loading || showing ? 0 : 1)
+            Image(systemName: "arrow.counterclockwise")
                 .font(.system(size: 14, weight: .bold))
                 .foregroundStyle(Palette.onAccent)
-                .contentTransition(.symbolEffect(.replace))
-                .opacity(loading ? 0 : 1)
+                .opacity(!loading && showing ? 1 : 0)
         }
         .animation(Motion.fade, value: loading)
+        .animation(Motion.fade, value: showing)
         .frame(width: 32, height: 32)
         .overlay { ShowMePingRing(trigger: ping, color: accent) }
         .accessibilityHidden(true)
@@ -602,82 +611,30 @@ struct ShowMeCaption: View {
     }
 }
 
-/// The switch between the 3D demonstration and the picture: "3D", and the app's one picture choice by its own name
-/// (Chart, or Player view: `ChordPicture`), styled as that choice's switch (`ChordPictureToggle`) with the chosen side
-/// filled in the accent. It never changes the stored choice: the picture comes back as the learner left it.
+/// The switch between the pictures and the 3D demonstration: one stable "Chart · Player view · 3D" capsule
+/// (`ChordPictureToggle` with its 3D segment), the same three segments in the same places whether the model or a
+/// picture is up. Picking the chart or the player's view brings that picture back (and stores it, as the picture
+/// switch always does); picking 3D brings the model.
 struct ShowMeToggle: View {
     @Binding var on: Bool
     var accent: Color = Palette.mint
     /// What VoiceOver calls the switch.
     var label: LocalizedStringKey = "Chord view"
-    @AppStorage(ChordPicture.storageKey) private var picture: ChordPicture = .chart
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Namespace private var thumb
 
     var body: some View {
-        HStack(spacing: 2) {
-            segment(Text("3D"), spoken: Text("3D model"), selected: on, id: "lesson.showme.3d") { on = true }
-            segment(Text(picture.title), spoken: Text(picture.spoken), selected: !on, id: "lesson.showme.picture") { on = false }
-        }
-        .padding(3)
-        .background(Capsule().fill(Palette.surface))
-        .overlay(Capsule().strokeBorder(Palette.controlLine, lineWidth: 1))
-        .fixedSize()
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel(Text(label))
-    }
-
-    private func segment(_ title: Text, spoken: Text, selected: Bool, id: String, action: @escaping () -> Void) -> some View {
-        Button {
-            guard !selected else { return }
-            Haptics.shared.selection()
-            withMotion(Motion.settle, reduceMotion: reduceMotion) { action() }
-        } label: {
-            title
-                .font(Typeface.label(.caption))
-                .lineLimit(1)
-                .foregroundStyle(selected ? Palette.onAccent : Palette.inkSoft)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background {
-                    if selected {
-                        Capsule().fill(accent).matchedGeometryEffect(id: "thumb", in: thumb)
-                    }
-                }
-                .contentShape(Capsule())
-        }
-        .buttonStyle(PressScaleStyle())
-        .accessibilityLabel(spoken)
-        .accessibilityAddTraits(selected ? .isSelected : [])
-        .accessibilityIdentifier(id)
+        ChordPictureToggle(accent: accent, label: label, threeD: $on)
     }
 }
 
-/// A chord card's top line while its 3D demonstration shows: the name, and the switch back to the picture where the
-/// picture switch sits (`ChordCardHeader`), at the same height, so the card holds still.
+/// A chord card's top line while its 3D demonstration can show: the name, and the stable "Chart · Player view · 3D"
+/// switch where the picture switch sits (`ChordCardHeader`), at the same height, so the card holds still.
 struct ShowMeCardHeader: View {
     let name: String
     @Binding var on: Bool
     var accent: Color = Palette.mint
 
     var body: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(alignment: .center, spacing: 12) {
-                title
-                Spacer(minLength: 8)
-                ShowMeToggle(on: $on, accent: accent)
-            }
-            VStack(spacing: 8) {
-                title
-                ShowMeToggle(on: $on, accent: accent)
-            }
-        }
-    }
-
-    private var title: some View {
-        Text(name).font(Typeface.display(.title)).foregroundStyle(Palette.ink)
-            .lineLimit(1)
-            .accessibilityHidden(true)
+        ChordCardHeader(name: name, accent: accent, threeD: $on)
     }
 }
 

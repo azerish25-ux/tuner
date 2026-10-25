@@ -71,6 +71,55 @@ final class SongArrangementTests: XCTestCase {
         }
     }
 
+    /// What the band and "Chords & words" play, bar by bar (`played(inBar:)`), is the chart's own harmonic rhythm: read
+    /// back in order, its chords change exactly where the chart's do, half-bar changes included, and every bar opens on
+    /// a chord once the first has come.
+    func testEverySongPlaysItsChartChangeByChange() throws {
+        var split = 0
+        for (_, lesson) in try songs() {
+            let arrangement = try XCTUnwrap(lesson.arrangement)
+            let meter = Double(arrangement.beatsPerBar)
+            let bars = arrangement.playedBars
+            XCTAssertEqual(bars.count, arrangement.bars, lesson.id)
+            var played: [(beat: Double, symbol: String)] = []
+            for (index, bar) in bars.enumerated() {
+                if !played.isEmpty { XCTAssertEqual(bar.first?.beat, 0, "\(lesson.id) bar \(index) opens on a chord") }
+                var last = -1.0
+                for change in bar {
+                    XCTAssertEqual(change.bar, index, lesson.id)
+                    XCTAssertTrue(change.beat > last && change.beat < meter, "\(lesson.id) bar \(index): changes in order, inside the bar")
+                    XCTAssertNotNil(arrangement.shape(named: change.symbol), "\(lesson.id): a shape for \(change.symbol)")
+                    last = change.beat
+                    let beat = Double(index) * meter + change.beat
+                    if played.last?.symbol != change.symbol { played.append((beat: beat, symbol: change.symbol)) }
+                }
+                if bar.count > 1 { split += 1 }
+            }
+            var charted: [(beat: Double, symbol: String)] = []
+            for change in arrangement.changes where change.symbol != "N" && charted.last?.symbol != change.symbol {
+                charted.append((beat: Double(change.bar) * meter + change.beat, symbol: change.symbol))
+            }
+            XCTAssertEqual(played.map { $0.symbol }, charted.map { $0.symbol }, "\(lesson.id): the chords, in order")
+            XCTAssertEqual(played.map { $0.beat }, charted.map { $0.beat }, "\(lesson.id): each where the chart changes")
+        }
+        XCTAssertGreaterThan(split, 400, "songs that change chord inside a bar keep those changes")
+    }
+
+    func testTheSmallSongChangesOnTheThirdBeatOfItsThirdBar() {
+        let (song, _) = smallSong()
+        XCTAssertEqual(song.played(inBar: 0).map(\.symbol), ["C"])
+        XCTAssertEqual(song.played(inBar: 1).map(\.symbol), ["C"], "a bar with no change holds the chord before it")
+        XCTAssertEqual(song.played(inBar: 2).map(\.symbol), ["C", "G"])
+        XCTAssertEqual(song.played(inBar: 2).map(\.beat), [0, 2])
+        XCTAssertEqual(song.played(inBar: 3).map(\.symbol), ["G"])
+        let silent = SongArrangement(bpm: 60, beatsPerBar: 4, bars: 2, sections: [],
+                                     changes: [SongArrangement.ChordChange(bar: 0, beat: 2, symbol: "C"),
+                                               SongArrangement.ChordChange(bar: 1, beat: 0, symbol: "N"),
+                                               SongArrangement.ChordChange(bar: 1, beat: 2, symbol: "C")])
+        XCTAssertEqual(silent.played(inBar: 0).map(\.beat), [2], "nothing before the first chord")
+        XCTAssertEqual(silent.played(inBar: 1).map(\.symbol), ["C"], "no chord rings on what came before; a repeat isn't a change")
+    }
+
     func testLyricsAlignWithTheirNotes() throws {
         var sung = 0
         for (_, lesson) in try songs() {

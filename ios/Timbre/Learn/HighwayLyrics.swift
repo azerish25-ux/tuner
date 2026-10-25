@@ -57,12 +57,12 @@ struct HighwayLyrics: View {
     @ViewBuilder private func topRow(_ cue: LyricSheet.Cue) -> some View {
         if let index = cue.line, sheet.lines.indices.contains(index) {
             Text(sung(sheet.lines[index], upTo: cue.syllable))
-                .font(Typeface.display(19))
+                .font(Typeface.display(.title3))
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
         } else if let next = cue.next, sheet.lines.indices.contains(next) {
             Text(verbatim: sheet.lines[next].text)
-                .font(Typeface.display(19))
+                .font(Typeface.display(.title3))
                 .foregroundStyle(Palette.inkSoft.opacity(0.7))
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
