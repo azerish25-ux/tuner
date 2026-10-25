@@ -3,12 +3,15 @@
 The app writes it down as it plays (`PreviewRecorder` in ios/Timbre/Root/DemoScenes.swift, TIMBRE_PREVIEW_AUDIO):
 
 - events.jsonl: `cue` lines (a sound effect starting: its WAV, volume and player), `launch` lines (each with the
-  engine file of that launch) and `event` lines (a scene's moments). Every time is seconds since 1970 on the host's
-  clock, the same clock the UI test marks its clips with.
+  engine file of that launch), `stream` lines (another file in the engine file's format) and `event` lines (a scene's
+  moments: a lock, the full tune, a take's clock, the band starting or stopping, the motif). Every time is seconds
+  since 1970 on the host's clock, the same clock the UI test marks its clips with.
 - cue-<fingerprint>.wav: each sound effect once, the exact bytes AVAudioPlayer played (the lock bells, the full-tune
-  strum, stars, the lesson cues).
+  strum, stars, the lesson cues, the motif).
 - engine-<launch>.pcm: what the lessons' engine rendered (tones, the click, the band), mono 16-bit, as records of a
   little-endian header (Float64 start, UInt32 frames, UInt32 sample rate) and the samples. Silence is left out.
+- string-<launch>.pcm (a `stream`): the demo string the tuner was given, in the instrument's own reference voice at
+  the pitch of each reading, so the preview hears the string drift into tune with the readout.
 
 `AppAudio.segment(start, length)` gives the sound of any wall-clock stretch at 44.1 kHz, so each clip of the cut
 carries exactly the sound the app made while it was filmed. Nothing here synthesizes a sound. Pure Python (array,
@@ -64,6 +67,28 @@ class AppAudio:
     def present(self) -> bool:
         return bool(self.cues or self.runs)
 
+    def moments(self, name: str) -> list[dict]:
+        """The app's `event` lines of this name, in time order."""
+        return sorted((e for e in self.events if e.get("name") == name and isinstance(e.get("t"), (int, float))),
+                      key=lambda e: e["t"])
+
+    def first_cue(self, after: float, before: float) -> Cue | None:
+        """The first sound effect that started in [after, before)."""
+        return next((c for c in self.cues if after <= c.time < before), None)
+
+    def band_playing(self, start: float, end: float) -> bool | None:
+        """Whether the band played through the wall-clock stretch, from the app's `band` events; None without any."""
+        changes = self.moments("band")
+        if not changes:
+            return None
+        state = False
+        for change in changes:
+            if change["t"] <= start:
+                state = bool(change.get("playing"))
+            elif change["t"] < end and not change.get("playing"):
+                return False
+        return state
+
     def _read(self, folder: Path) -> None:
         engines: list[str] = []
         for line in (folder / "events.jsonl").read_text(errors="replace").splitlines():
@@ -77,6 +102,8 @@ class AppAudio:
                                      str(item.get("player", ""))))
             elif kind == "launch" and item.get("engine"):
                 engines.append(str(item["engine"]))
+            elif kind == "stream" and item.get("file"):
+                engines.append(str(item["file"]))
             elif kind == "event":
                 self.events.append(item)
             elif kind == "note":

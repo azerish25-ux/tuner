@@ -25,7 +25,8 @@ import TimbreCore
 /// - `preview-tune` (the App Preview): the tuner holds off locking until the UI test says the 3D stage is up (it creates
 ///   the `TIMBRE_SCENE_CUE` file). Then the lowest string drifts in from 14 cents flat and locks with its bell; after a hold
 ///   the camera can film, each other string locks in turn, steadily, and the last one brings the full-tune celebration.
-///   Strings are chosen the way automatic detection chooses them, so AUTO stays AUTO on screen.
+///   Strings are chosen the way automatic detection chooses them, so AUTO stays AUTO on screen. Each lock is noted the
+///   moment it lands (within 10 ms), and the strings themselves are heard in the preview (`PreviewString`).
 /// - `show-me` (frame #3's alternative, the App Preview): the same lesson opens on its first step, E minor explained on
 ///   its card. It is the chord's first appearance in the course, so the 3D model takes the card by itself once it has
 ///   settled and the demonstration plays there: the fingertips land in finger order, then the chord rings across every
@@ -228,11 +229,12 @@ enum DemoScene: String {
     }
 
     /// Selects a string and waits until the tracker has locked it (at most a minute: a UI-test query stalls the main
-    /// thread, and a gap of more than 150 ms in the readings starts the hold again).
-    @MainActor fileprivate static func lock(_ course: Course, _ store: AppStore) async {
+    /// thread, and a gap of more than 150 ms in the readings starts the hold again), looking every `pollMilliseconds`.
+    @MainActor fileprivate static func lock(_ course: Course, _ store: AppStore, pollMilliseconds: Int = 25) async {
         select(course, store)
-        for _ in 0..<2400 where !store.lockedCourses.contains(course.index) {
-            try? await Task.sleep(for: .milliseconds(25))
+        let poll = max(1, pollMilliseconds)
+        for _ in 0..<(60_000 / poll) where !store.lockedCourses.contains(course.index) {
+            try? await Task.sleep(for: .milliseconds(poll))
         }
     }
 
@@ -257,6 +259,8 @@ enum PreviewTune {
     static let nextGap = 0.5
     /// Without a cue file, the scene starts this long after launch.
     static let fallbackStart = 12.0
+    /// How often the scene looks for each lock, in milliseconds: the preview's sync is taken the moment it is noted.
+    static let lockPoll = 10
 
     @MainActor static func run(_ store: AppStore) async {
         store.selectedTab = .tune
@@ -281,16 +285,19 @@ enum PreviewTune {
         DemoScene.select(first, store)
         store.startListening()
         PreviewRecorder.event("listen")
-        await DemoScene.lock(first, store)
+        PreviewRecorder.shared.followStrings(store)
+        await DemoScene.lock(first, store, pollMilliseconds: lockPoll)
         PreviewRecorder.event("lock", ["string": 0])
         try? await Task.sleep(for: .seconds(firstHold))
         steady = true
         for (number, course) in courses.enumerated().dropFirst() {
-            await DemoScene.lock(course, store)
+            await DemoScene.lock(course, store, pollMilliseconds: lockPoll)
             let all = store.allCoursesLocked
             PreviewRecorder.event(all ? "tuned" : "lock", ["string": number])
             if !all { try? await Task.sleep(for: .seconds(nextGap)) }
         }
+        // The full-tune strum takes over from the strings.
+        PreviewRecorder.shared.endStrings(store)
     }
 
     private static func cued(since launched: Date) -> Bool {
@@ -309,17 +316,22 @@ enum PreviewTune {
 /// strum, the lesson cues, the band and the click, each at the moment it sounded. Nothing is synthesized by the tool.
 ///
 /// - `events.jsonl`, one JSON object a line, every time in seconds since 1970 (the simulator shares the host's clock):
-///   `launch` (scene), `cue` (a sound effect starting: its file, volume and player), `event` (a scene's moments: a
-///   lock, the full tune, a take's beat clock).
+///   `launch` (scene), `cue` (a sound effect starting: its file, volume and player), `stream` (another file in the
+///   engine file's format), `note` (something the preview can't do) and `event` (a scene's moments: a lock, the full
+///   tune, a take's beat clock, `band` when the band starts or stops and what the route reads as, `sound` when the
+///   engine is heard after a pause, `motif` when the end card's motif plays).
 /// - `cue-<fingerprint>.wav`: each sound effect once, exactly the bytes `AVAudioPlayer` was given.
 /// - `engine-<launch>.pcm`: what the lessons' engine rendered (tones, the click, the band), mono 16-bit, as records of
 ///   a little-endian header (Float64 start, UInt32 frames, UInt32 sample rate) and the samples; silence is left out.
+/// - `string-<launch>.pcm`: the strings the tuner was given in `preview-tune`, as `PreviewString` voices them.
 ///
 /// Sound effects are noted by swapping `AVAudioPlayer.play` for a version that notes, then plays. The engine is reached
-/// through `Mirror` (its `engine` property is private) and tapped at its main mixer. The band plays only on headphones,
-/// so the preview's route reads as headphones (`AVAudioSessionPortDescription.portType` swapped for the speaker): the
-/// soundtrack is the band as a player hears it in headphones. The folder falls back to Caches/preview-audio when the
-/// asked one can't be written.
+/// through `Mirror` (its `engine` property is private) and tapped at its main mixer. The full band (harmony and bass as
+/// well as the kit) plays only on headphones, so the preview's route reads as headphones
+/// (`AVAudioSessionPortDescription.portType` swapped for the speaker): the soundtrack is the band as a player hears it in
+/// headphones, and the `band` events say whether it really played while each clip was filmed. With
+/// `TIMBRE_PREVIEW_MOTIF=<file>` the app plays its motif once that file exists, for the end card. The folder falls back
+/// to Caches/preview-audio when the asked one can't be written.
 final class PreviewRecorder: @unchecked Sendable {
     static let shared = PreviewRecorder()
 
@@ -332,11 +344,19 @@ final class PreviewRecorder: @unchecked Sendable {
     private var pcm: FileHandle?
     private var saved: Set<String> = []
     private var fingerprints: [String: (count: Int, key: String)] = [:]
+    // The tap's own state: when the engine was last heard.
+    private var lastHeard = 0.0
     // The main actor's own state.
     @MainActor private weak var audio: AudioService?
     @MainActor private var tappedEngine: ObjectIdentifier?
     @MainActor private var tappedRate = 0.0
     @MainActor private var engineWasRunning = false
+    /// The band and the route as last noted (`noteBand`), so each change is noted once.
+    @MainActor private var bandSeen: Bool?
+    @MainActor private var headphonesSeen: Bool?
+    /// While `followStrings` runs: every reading the tuner was given, and the receiver it had before.
+    @MainActor private var readings: [PreviewString.Reading]?
+    @MainActor private var forwarded: ((Double?, Double, Double) -> Void)?
 
     private init() {
         let asked = ProcessInfo.processInfo.environment["TIMBRE_PREVIEW_AUDIO"] ?? ""
@@ -384,6 +404,85 @@ final class PreviewRecorder: @unchecked Sendable {
             recorder.write(["kind": "note", "t": Date().timeIntervalSince1970, "text": "the route doesn't read as headphones: no band"])
         }
         recorder.watchEngine()
+        recorder.playMotifWhenAsked()
+    }
+
+    // MARK: The end card's motif
+
+    /// `TIMBRE_PREVIEW_MOTIF=<file>`: once that file exists, the app's motif plays (the sound of welcome and of Pro
+    /// unlocked) and is noted, so the end card carries the app's own signature rather than silence.
+    @MainActor private func playMotifWhenAsked() {
+        guard let path = ProcessInfo.processInfo.environment["TIMBRE_PREVIEW_MOTIF"], !path.isEmpty else { return }
+        Task { @MainActor in
+            for _ in 0..<6000 {
+                if FileManager.default.fileExists(atPath: path) {
+                    SoundFX.shared.play(.motif)
+                    PreviewRecorder.event("motif")
+                    return
+                }
+                try? await Task.sleep(for: .milliseconds(100))
+            }
+        }
+    }
+
+    // MARK: The strings, heard
+
+    /// From now until `endStrings`, every reading the tuner is given (in `preview-tune`, the demo pitch: a string
+    /// drifting into tune, then each string held in tune) is kept on its way to the tuner, so the preview can hear the
+    /// string it stands for.
+    @MainActor func followStrings(_ store: AppStore) {
+        guard enabled, readings == nil else { return }
+        readings = []
+        let forward = store.audio.onReading
+        forwarded = forward
+        store.audio.onReading = { [weak self] hz, confidence, level in
+            self?.keep(hz)
+            forward?(hz, confidence, level)
+        }
+    }
+
+    @MainActor private func keep(_ hz: Double?) {
+        readings?.append(PreviewString.Reading(time: Date().timeIntervalSince1970, hz: hz))
+    }
+
+    /// Ends `followStrings`: the tuner gets its readings directly again, and the strings are written as a stream of
+    /// their own (`string-<launch>.pcm`, the engine file's format), voiced off the main thread. A `strings` event says
+    /// the file is complete, so the test waits for it before it ends this launch.
+    @MainActor func endStrings(_ store: AppStore) {
+        guard let taken = readings, let folder else { return }
+        readings = nil
+        store.audio.onReading = forwarded
+        forwarded = nil
+        let voice = InstrumentVoice(instrument: store.instrument)
+        let name = "string-\(launch).pcm"
+        queue.async {
+            let data = PreviewString.records(taken, voice: voice)
+            try? data.write(to: folder.appendingPathComponent(name))
+            let now = Date().timeIntervalSince1970
+            self.logNow(["kind": "stream", "t": now, "file": name, "what": "the demo string"])
+            self.logNow(["kind": "event", "name": "strings", "t": now, "bytes": data.count])
+        }
+    }
+
+    /// One line of the log, written at once: only from the queue.
+    private func logNow(_ fields: [String: Any]) {
+        guard var line = try? JSONSerialization.data(withJSONObject: fields, options: [.sortedKeys]) else { return }
+        line.append(0x0A)
+        try? log?.write(contentsOf: line)
+    }
+
+    // MARK: The band
+
+    /// Notes the band starting or stopping, and the route's headphones changing (a `band` event), so the preview can
+    /// tell a clip filmed with the band playing from one filmed without it.
+    @MainActor private func noteBand() {
+        guard let audio else { return }
+        let playing = audio.bandPlaying
+        let headphones = audio.headphones
+        guard playing != bandSeen || headphones != headphonesSeen else { return }
+        bandSeen = playing
+        headphonesSeen = headphones
+        PreviewRecorder.event("band", ["playing": playing, "headphones": headphones])
     }
 
     private static func appending(_ url: URL) -> FileHandle? {
@@ -453,10 +552,12 @@ final class PreviewRecorder: @unchecked Sendable {
 
     // MARK: The engine
 
-    /// Five times a second: taps the lessons' engine when it is new, or has just started (its format settled then).
+    /// Five times a second: taps the lessons' engine when it is new, or has just started (its format settled then), and
+    /// notes the band's changes.
     @MainActor private func watchEngine() {
         Task { @MainActor in
             while true {
+                self.noteBand()
                 self.checkEngine()
                 try? await Task.sleep(for: .milliseconds(200))
             }
@@ -514,6 +615,9 @@ final class PreviewRecorder: @unchecked Sendable {
         }
         guard peak > 0.0005 else { return }
         let now = Date().timeIntervalSince1970
+        // Heard again after a pause (a song's preview starting, a take's first click): a moment the test can cut on.
+        if now - lastHeard > 0.3 { PreviewRecorder.event("sound") }
+        lastHeard = now
         var start = now - Double(frames) / rate
         if when.isHostTimeValid {
             let age = AVAudioTime.seconds(forHostTime: mach_absolute_time()) - AVAudioTime.seconds(forHostTime: when.hostTime)
@@ -557,6 +661,118 @@ final class PreviewRecorder: @unchecked Sendable {
             }
             try? await Task.sleep(for: .milliseconds(50))
         }
+    }
+}
+
+/// The strings the tuner was given in `preview-tune`, as the preview hears them: the instrument's own reference voice (the
+/// tuner's "play the note" sound, from its recordings where the app has them), read faster or slower sample by sample so
+/// its pitch follows each reading. The first string drifts into tune with the readout, re-plucked as a player would;
+/// each later string rings while it is held in tune. Peaks at -12 dBFS, under the lock bells.
+enum PreviewString {
+    struct Reading: Sendable {
+        let time: Double
+        let hz: Double?
+    }
+
+    /// The loudest sample of a string (-12 dBFS).
+    static let peak: Float = 0.25
+    static let rate = 44_100
+    /// How long a string rings on after its last reading, fading out.
+    static let ring = 0.3
+
+    private struct Point {
+        let time: Double
+        let hz: Double
+    }
+
+    /// One string's stretch: consecutive readings within a semitone of each other, none more than 0.15 s apart.
+    private struct Stretch {
+        var points: [Point]
+        var start: Double { points.first?.time ?? 0 }
+        var end: Double { points.last?.time ?? 0 }
+    }
+
+    /// The stretches as records of the engine file's format: Float64 start, UInt32 frames, UInt32 sample rate, then
+    /// the samples, mono 16-bit, little-endian.
+    static func records(_ readings: [Reading], voice: InstrumentVoice) -> Data {
+        var data = Data()
+        for stretch in stretches(readings) {
+            let samples = render(stretch, voice: voice)
+            guard !samples.isEmpty else { continue }
+            withUnsafeBytes(of: stretch.start.bitPattern.littleEndian) { data.append(contentsOf: $0) }
+            withUnsafeBytes(of: UInt32(samples.count).littleEndian) { data.append(contentsOf: $0) }
+            withUnsafeBytes(of: UInt32(rate).littleEndian) { data.append(contentsOf: $0) }
+            samples.withUnsafeBytes { data.append(contentsOf: $0) }
+        }
+        return data
+    }
+
+    private static func stretches(_ readings: [Reading]) -> [Stretch] {
+        var found: [Stretch] = []
+        for reading in readings {
+            guard let hz = reading.hz, hz > 20 else { continue }
+            let point = Point(time: reading.time, hz: hz)
+            if let last = found.last?.points.last, reading.time - last.time <= 0.15, abs(log2(hz / last.hz)) < 1.0 / 12 {
+                found[found.count - 1].points.append(point)
+            } else {
+                found.append(Stretch(points: [point]))
+            }
+        }
+        return found.filter { $0.end - $0.start >= 0.25 }
+    }
+
+    /// The reference voice at the stretch's settled pitch (its median reading), its read position stepped by each
+    /// moment's pitch over that one; a 5 ms fade in and `ring` out.
+    private static func render(_ stretch: Stretch, voice: InstrumentVoice) -> [Int16] {
+        let points = stretch.points
+        let pitches = points.map { $0.hz }.sorted()
+        guard !pitches.isEmpty else { return [] }
+        let settled = pitches[pitches.count / 2]
+        let seconds = stretch.end - stretch.start + ring
+        // A little longer than the stretch: a sharp moment reads ahead of the clock.
+        let milliseconds = min(8000, Int((seconds + 0.3) * 1000))
+        let request = ToneRequest(frequencies: [settled], kind: .reference(durationMs: milliseconds), voice: voice, sampleRate: rate)
+        let source = ToneSynth.render(request, samples: SampleLibrary.shared).frames
+        let count = Int(seconds * Double(rate))
+        guard source.count > 2, count > 0 else { return [] }
+        var out = [Float](repeating: 0, count: count)
+        var position = 0.0
+        var index = 0
+        for n in 0..<count {
+            let time = stretch.start + Double(n) / Double(rate)
+            while index + 1 < points.count && points[index + 1].time <= time { index += 1 }
+            let hz = pitch(points, index, at: time)
+            let whole = Int(position)
+            guard whole + 1 < source.count else { break }
+            let fraction = Float(position - Double(whole))
+            out[n] = source[whole] * (1 - fraction) + source[whole + 1] * fraction
+            position += hz / settled
+        }
+        return finished(out)
+    }
+
+    /// The pitch at `time`, between reading `index` and the next.
+    private static func pitch(_ points: [Point], _ index: Int, at time: Double) -> Double {
+        let here = points[index]
+        guard index + 1 < points.count else { return here.hz }
+        let next = points[index + 1]
+        let span = max(0.000_001, next.time - here.time)
+        let weight = min(1, max(0, (time - here.time) / span))
+        return here.hz + (next.hz - here.hz) * weight
+    }
+
+    /// Faded in and out, at `peak`, as 16-bit samples.
+    private static func finished(_ samples: [Float]) -> [Int16] {
+        var out = samples
+        let count = out.count
+        let fadeIn = min(count, Int(0.005 * Double(rate)))
+        let fadeOut = min(count, Int(ring * Double(rate)))
+        for n in 0..<fadeIn { out[n] *= Float(n) / Float(max(1, fadeIn)) }
+        for k in 0..<fadeOut { out[count - 1 - k] *= Float(k) / Float(max(1, fadeOut)) }
+        let loudest = out.reduce(Float(0)) { max($0, abs($1)) }
+        guard loudest > 0 else { return [] }
+        let scale = peak / loudest * 32_767
+        return out.map { value in Int16(max(-32_767, min(32_767, value * scale))) }
     }
 }
 

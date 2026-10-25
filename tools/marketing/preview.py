@@ -11,36 +11,54 @@ Run by .github/workflows/preview.yml, in this order:
                                            for the tour to begin (the test's `begin` file, or PREVIEW-BEGIN in LOG)
                                            and answers with a `recording` file once the recorder runs
   preview.py stop --out DIR                stop it with SIGINT and wait until the file is written
-  preview.py render --out DIR --log LOG [--attachments DIR] [--audio DIR] [--offset S]
+  preview.py render --out DIR --log LOG [--attachments DIR] [--audio DIR] [--offset S] [--reanchor]
                                            cut the clips the test marked into DIR/preview.mp4 + DIR/poster.png
+  preview.py check --out DIR               measure DIR/preview.mp4's sound again against its cut (DIR/cut.json)
 
 What the test marks (wall-clock seconds; AppPreviewUITests.swift):
-  PREVIEW-CLIP <name> <start> <end> <head|tail> [<shortest>]   a stretch worth showing; the end that matters when
-                                                               the cut shortens it; never below <shortest> seconds
+  PREVIEW-CLIP <name> <start> <end> <head|tail> [<shortest>] [anchor=<sync>]
+                                           a stretch worth showing; the end that matters when the cut shortens it;
+                                           never below <shortest> seconds; placed by that one sync when anchored
   PREVIEW-SYNC <label> <before> <after>    around each screenshot attached as `sync-<label>`
-  PREVIEW-POSTER <time>                    the poster moment (the first lock, held)
+  PREVIEW-POSTER <time>                    the poster moment (just after the first lock)
+  PREVIEW-REGION <label> <x> <y> <w> <h>   a region of the screen, as fractions (`readout`: the tuner's note and badge)
+  PREVIEW-CARD <start> <end>               the app's sound for the end card (its motif, played for it)
   PREVIEW-BEAT <downbeat> <beat s> <meter> the band's clock: every cut lands on a beat of it
+  PREVIEW-CHECK <name> <pass|fail> <why>   a check the test made (the highway's multiplier); a fail stops the cut
+  PREVIEW-MISSED <what>                    a moment the tour waited for and didn't get (noted in PREVIEW.txt)
   PREVIEW-CUT <name>                       which preview ("guitar", "violin"): picks its captions
   PREVIEW-APP <folder>                     where the app wrote what it played (`--audio` overrides)
 
 The recorder's own clock can't be trusted (simctl reported its start 3 s late in the first CI run, and a recording
 can stop showing the app), so render finds each sync screenshot in the recording by its picture and maps every clip
-through the nearest syncs. A sync that isn't in the recording near a clip means the recording lost the app there:
-render then exits with code 3 (preview.yml records the tour again).
+through the nearest syncs; an anchored clip goes by its own sync alone, found to 1/60 s. The lock's sync is taken the
+moment the app notes its lock, while the badge, the halo and the comet change the screen, so it pins that moment
+down. A sync that isn't in the recording near a clip means the recording lost the app there: render then exits with
+code 3 (preview.yml records the tour again).
 
 The cut. Clips join with hard cuts (no cross-fade can double-expose two screens), in the tour's order, each trimmed
 from its less important end to a whole number of the band's beats so every cut lands on the beat; the preview runs
 20–25 s, then an end card. Each clip plays in a frame drawn here: its caption in Sora over a band of the clip's
 accent (from the "### App Preview" tables in docs/ios/APP-STORE-LISTING.md), the app's picture below it, 9:41 status
-bar and all. The poster frame is the marked lock moment, clamped at least 0.25 s inside its clip, so it is never a
-cut or a transition. The soundtrack is the app's own sound at the moment each clip was filmed (soundtrack.py: the
-lock bells, the full-tune strum, Show me's chord, the band, the stars), with each clip's tail ringing 0.6 s under the
-next, then loudness-normalised. Encoded to Apple's App Preview spec: 886x1920 portrait, 30 fps, H.264 High, stereo
-AAC 44.1 kHz, 15-30 s; render fails when the soundtrack is silent (mean under -30 dB).
+bar and all. The soundtrack is the app's own sound at the moment each clip was filmed (soundtrack.py: the demo string
+drifting into tune, the lock bells, the full-tune strum, Show me's chord, the band, the stars, the song's preview),
+with each clip's tail ringing 0.6 s under the next; the app's motif under the end card; then loudness-normalised.
+Encoded to Apple's App Preview spec: 886x1920 portrait, 30 fps, H.264 High, stereo AAC 44.1 kHz, 15-30 s.
 
-render also writes DIR/PREVIEW.txt (clips, syncs, poster time, loudness), DIR/contact.png (a frame every second, to
-check the cut at a glance), DIR/sync.png (each sync screenshot beside the recording's frame it matched) and
-DIR/raw-small.mp4 (the whole recording, small). `--offset` shifts every cut by hand (positive = later).
+What has to be true before it ships (gates.py measures the files; any failure is NOT FOR UPLOAD and a non-zero exit):
+  - sound: no silence over 0.5 s anywhere; every clip sounding; under a "band" caption the band itself (its low end),
+    and the app's own note that the band was playing while the clip was filmed;
+  - lock: the readout's In tune badge shows in the lock clip, and its first frame is within 80 ms of the lock's bell
+    (`--reanchor` places the lock clip by the badge instead, for a re-cut someone has looked at);
+  - poster: the poster frame shows the badge (the marked moment, else the first frame after it that does);
+  - the test's own checks passed (the highway at ×4).
+Exit codes: 1 out of spec or a sound gate; 3 the recording lost the app; 4 the take missed a moment (the lock on camera,
+the band, ×4): preview.yml records the tour again on 3 and 4.
+
+render also writes DIR/PREVIEW.txt (clips, syncs, poster time, the gates), DIR/cut.json (the cut's layout, for `check`),
+DIR/contact.png (a frame every second, to check the cut at a glance), DIR/sync.png (each sync screenshot beside the
+recording's frame it matched) and DIR/raw-small.mp4 (the whole recording, small). `--offset` shifts every cut by hand
+(positive = later).
 
 Re-cut a CI run locally: download the preview-recording artifact (raw.mp4, record.json, take.log, attachments/,
 app/) and run `python3 tools/marketing/preview.py render --out <folder> --log <folder>/take.log
@@ -65,6 +83,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import art  # noqa: E402
+import gates  # noqa: E402
 import soundtrack  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -78,6 +97,8 @@ TAIL = 0.6                            # a clip's sound rings this long under the
 POSTER_MARGIN = 0.25                  # the poster sits at least this far inside its clip
 LOUDNESS = -16.0                      # integrated loudness target (LUFS) for the soundtrack
 QUIETEST = -30.0                      # mean volume (dB) under which the preview counts as silent
+SYNC_TOLERANCE = 0.08                 # the lock's bell and the badge's first frame, at most this far apart (s)
+RETAKE = 4                            # render's exit code when a new take may fix it (the lock, the band, ×4)
 PUBLISH_LIMIT = 44 * 1024 * 1024      # tools/ci/publish-results.sh leaves out files over 45 MB
 APPLE_LIMIT = 500 * 1024 * 1024
 PREFERRED = ("iPhone 17 Pro Max", "iPhone 16 Pro Max")
@@ -97,9 +118,13 @@ PRESENT = 10.0          # mean difference (pictures normalised to a spread of 32
 DISTINCT = 1.15         # the match beats the best one 1.5 s away by this factor: it pins the moment down
 LOST = 3                # render's exit code when the recording lost the app in a clip
 
-CLIP = re.compile(r"PREVIEW-CLIP (\S+) (\d+(?:\.\d+)?) (\d+(?:\.\d+)?) (head|tail)(?: (\d+(?:\.\d+)?))?")
+CLIP = re.compile(r"PREVIEW-CLIP (\S+) (\d+(?:\.\d+)?) (\d+(?:\.\d+)?) (head|tail)(?: (\d+(?:\.\d+)?))?((?: \w+=\S+)*)")
 SYNC = re.compile(r"PREVIEW-SYNC (\S+) (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)")
 POSTER = re.compile(r"PREVIEW-POSTER (\d+(?:\.\d+)?)")
+REGION = re.compile(r"PREVIEW-REGION (\S+) (\d+(?:\.\d+)?) (\d+(?:\.\d+)?) (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)")
+CARD = re.compile(r"PREVIEW-CARD (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)")
+CHECK = re.compile(r"PREVIEW-CHECK (\S+) (pass|fail)(?: (.*))?$")
+MISSED = re.compile(r"PREVIEW-MISSED (.+)$")
 BEAT = re.compile(r"PREVIEW-BEAT (\d+(?:\.\d+)?) (\d+(?:\.\d+)?) (\d+)")
 CUT = re.compile(r"PREVIEW-CUT (\S+)")
 APP = re.compile(r"PREVIEW-APP (.+)$")
@@ -276,6 +301,7 @@ class Clip:
     keep: str         # "head" or "tail": the end that matters when the clip is shortened
     floor: float = FLOOR
     shift: float = 0.0  # recording time minus wall clock here (the sync mapping plus --offset)
+    anchor: str | None = None  # the one sync that places this clip
 
     @property
     def length(self) -> float:
@@ -287,28 +313,47 @@ class Clip:
 
 
 def read_marks(texts: list[str]):
-    """Clips, syncs, poster, beat clock, cut name and app folder of the last run that marked any clips, from the first
-    text that has them. A retried test prints a fresh PREVIEW-BEGIN, so earlier attempts are ignored."""
+    """Clips, syncs, poster, regions, the end card's sound, the test's checks and misses, beat clock, cut name and app
+    folder of the last run that marked any clips, from the first text that has them. A retried test prints a fresh
+    PREVIEW-BEGIN, so earlier attempts are ignored."""
     for text in texts:
         runs: list[dict] = []
 
         def fresh() -> dict:
-            return {"clips": [], "syncs": [], "poster": None, "result": None, "beat": None, "cut": None, "app": None}
+            return {"clips": [], "syncs": [], "poster": None, "result": None, "beat": None, "cut": None, "app": None,
+                    "regions": {}, "card": None, "checks": [], "missed": []}
 
         for line in text.splitlines():
             if BEGIN.search(line):
                 runs.append(fresh())
                 continue
             found = {name: pattern.search(line) for name, pattern in
-                     (("clip", CLIP), ("sync", SYNC), ("poster", POSTER), ("end", END), ("beat", BEAT), ("cut", CUT), ("app", APP))}
+                     (("clip", CLIP), ("sync", SYNC), ("poster", POSTER), ("end", END), ("beat", BEAT), ("cut", CUT), ("app", APP),
+                      ("region", REGION), ("card", CARD), ("check", CHECK), ("missed", MISSED))}
             if any(found.values()) and not runs:
                 runs.append(fresh())
             current = runs[-1] if runs else None
             if found["clip"]:
                 m = found["clip"]
-                entry = (m.group(1), float(m.group(2)), float(m.group(3)), m.group(4), float(m.group(5)) if m.group(5) else FLOOR)
+                options = dict(item.split("=", 1) for item in m.group(6).split()) if m.group(6) else {}
+                entry = (m.group(1), float(m.group(2)), float(m.group(3)), m.group(4),
+                         float(m.group(5)) if m.group(5) else FLOOR, options.get("anchor"))
                 if entry not in current["clips"]:
                     current["clips"].append(entry)
+            elif found["region"]:
+                m = found["region"]
+                current["regions"][m.group(1)] = tuple(float(m.group(i)) for i in range(2, 6))
+            elif found["card"]:
+                current["card"] = (float(found["card"].group(1)), float(found["card"].group(2)))
+            elif found["check"]:
+                m = found["check"]
+                entry = (m.group(1), m.group(2), (m.group(3) or "").strip())
+                if entry not in current["checks"]:
+                    current["checks"].append(entry)
+            elif found["missed"]:
+                text_missed = found["missed"].group(1).strip()
+                if text_missed not in current["missed"]:
+                    current["missed"].append(text_missed)
             elif found["sync"]:
                 m = found["sync"]
                 entry = (m.group(1), float(m.group(2)), float(m.group(3)))
@@ -344,6 +389,7 @@ class Sync:
     at: float | None = None           # seconds into the recording of the best-matching frame
     score: float | None = None        # its difference from the screenshot
     runner_up: float | None = None    # the best difference at least 1.5 s away
+    fine: bool = False                # found again at 60 frames a second (a clip's anchor)
 
     @property
     def wall(self) -> float:
@@ -547,7 +593,6 @@ def fit(clips: list[Clip], duration: float, end_card: float):
             trim(c, snap(r * share))
         while sum(c.length for c in clips) + end_card > LONGEST and len(clips) > 1:
             notes.append(f"dropped {clips.pop().name}: too long even at the clips' shortest")
-        notes.append(f"shortened from {total:.1f} s to {sum(c.length for c in clips) + end_card:.1f} s")
     total = sum(c.length for c in clips) + end_card
     if total < SHORTEST and clips:
         end_card += SHORTEST + 0.3 - total
@@ -748,6 +793,114 @@ def timecode(seconds: float) -> str:
     return f"00:{whole // 60:02d}:{whole % 60:02d}.{int(round((seconds - whole) * 100)):02d}"
 
 
+def refine(syncs: list[Sync], labels: set[str], raw: Path) -> None:
+    """The syncs that anchor a clip, found again to 1/60 s around their coarse match (15 frames a second): a clip
+    placed by one sync alone is only as exact as that sync."""
+    for sync in syncs:
+        if sync.label not in labels or not sync.present or not sync.picture or sync.at is None:
+            continue
+        shot = tiny_picture(sync.picture)
+        if len(shot) != THUMB_W * THUMB_H:
+            continue
+        try:
+            found = gates.refine_sync(raw, normalised(shot), sync.at, normalised, distance, THUMB_W, THUMB_H)
+        except subprocess.CalledProcessError:
+            found = None
+        if found and found[1] <= PRESENT:
+            sync.at, sync.score = found
+            sync.fine = True
+
+
+@dataclass
+class LockCheck:
+    """The lock clip's bell against its badge's first frame in the recording."""
+    lines: list[str] = field(default_factory=list)
+    retakes: list[str] = field(default_factory=list)
+    badge: gates.Badge | None = None
+    series: list[tuple[float, float]] = field(default_factory=list)
+
+
+def check_lock(clips: list[Clip], app_audio: soundtrack.AppAudio, region, raw: Path, reanchor: bool) -> LockCheck:
+    """Finds the readout's In tune badge in the recording around the lock's bell (the app's own cue, on the clip's
+    mapping) and measures how far apart they are. With `reanchor`, a drift moves the clip's picture onto the bell."""
+    result = LockCheck()
+    lock = next((c for c in clips if c.name == "lock"), None)
+    if lock is None:
+        return result
+    if not region:
+        result.lines.append("lock: no readout region marked (PREVIEW-REGION readout); the badge and the poster aren't checked")
+        return result
+    noted = [e["t"] for e in app_audio.moments("lock") if lock.wall_start - 1 <= e["t"] <= lock.wall_start + lock.length + 1]
+    if not noted:
+        result.retakes.append("the app noted no lock while the lock clip was filmed")
+        return result
+    bell = app_audio.first_cue(noted[0] - 0.3, noted[0] + 0.3)
+    expected = (bell.time if bell else noted[0]) + lock.shift
+    try:
+        result.series = gates.mint_series(raw, region, max(0.0, expected - 1.2), expected + 1.6)
+    except subprocess.CalledProcessError:
+        result.series = []
+    result.badge = gates.badge_onset(result.series, expected)
+    if result.badge is None:
+        result.lines.append(f"lock: no In tune badge in the readout within 1.2 s of the bell ({expected:.2f} s in the recording)")
+        result.retakes.append("the lock's In tune badge never shows in the lock clip")
+        return result
+    drift = result.badge.onset - expected
+    source = "its cue" if bell else "the app's lock"
+    result.lines.append(f"lock: the bell ({source}) at {expected:.3f} s in the recording, the badge's first frame at "
+                        f"{result.badge.onset:.3f} s: {drift * 1000:+.0f} ms (at most ±{SYNC_TOLERANCE * 1000:.0f}); readout mint "
+                        f"{result.badge.before:.1%} before, {result.badge.peak:.1%} locked")
+    if abs(drift) > SYNC_TOLERANCE:
+        if reanchor:
+            lock.start, lock.end, lock.shift = lock.start + drift, lock.end + drift, lock.shift + drift
+            result.lines.append(f"lock: re-anchored on the badge (--reanchor): the picture moved {drift * 1000:+.0f} ms")
+        else:
+            result.retakes.append(f"sound and picture drift {drift * 1000:+.0f} ms at the lock (the bell against the badge's "
+                                  f"first frame; at most ±{SYNC_TOLERANCE * 1000:.0f} ms)")
+    if not lock.start + 0.1 <= result.badge.onset <= lock.end - 0.3:
+        result.retakes.append(f"the lock ({result.badge.onset:.2f} s) falls outside its clip ({lock.start:.2f}-{lock.end:.2f} s)")
+    return result
+
+
+def share_at(series: list[tuple[float, float]], moment: float) -> float | None:
+    """The readout's mint share in the frame nearest `moment` (None outside the measured stretch)."""
+    if not series or not series[0][0] - 0.02 <= moment <= series[-1][0] + 0.02:
+        return None
+    return min(series, key=lambda point: abs(point[0] - moment))[1]
+
+
+def verify_poster(clips: list[Clip], poster_at: float, poster_clip: str, lock: LockCheck) -> tuple[float, str, str | None]:
+    """The poster's time in the cut, what was verified, and the problem when no frame of the lock clip shows the badge.
+    The marked moment first; else the first frame from a quarter second after the badge's onset that shows it."""
+    if lock.badge is None or not lock.series:
+        return poster_at, "not verified (no badge measured)", None
+    offset = 0.0
+    clip = None
+    for c in clips:
+        if c.name == "lock":
+            clip = c
+            break
+        offset += c.length
+    if clip is None:
+        return poster_at, "not verified (no lock clip)", None
+
+    def shows(cut_time: float) -> float | None:
+        share = share_at(lock.series, clip.start + (cut_time - offset))
+        return share if share is not None and lock.badge.shown(share) else None
+
+    if poster_clip == "lock" and shows(poster_at) is not None:
+        return poster_at, f"verified: the badge shows (readout mint {shows(poster_at):.1%})", None
+    first = max(offset + POSTER_MARGIN, offset + (lock.badge.onset - clip.start) + 0.25)
+    last = offset + clip.length - POSTER_MARGIN
+    moment = snap(first)
+    while moment <= last:
+        if shows(moment) is not None:
+            return moment, f"moved to the first frame that shows the badge (readout mint {shows(moment):.1%})", None
+        moment = snap(moment + 1 / FPS)
+    return poster_at, "NOT verified", ("the poster can't show the lock: no frame of the lock clip from a quarter second after "
+                                       "the badge's first frame still shows it (the tuner's lock doesn't hold on screen)")
+
+
 def render_command(args) -> None:
     for tool in ("ffmpeg", "ffprobe"):
         if not shutil.which(tool):
@@ -783,12 +936,16 @@ def render_command(args) -> None:
     (out / "sync.png").unlink(missing_ok=True)
     frames = index_recording(raw, out)
     notes: list[str] = []
+    problems: list[str] = []     # out of spec, or a sound gate: the cut can't ship
+    retakes: list[str] = []      # the take missed a moment: a new take may fix it
     syncs: list[Sync] = []
     lost: list[str] = []
     sources: dict[str, str] = {}
     poster_wall = None
     beat = None
     cut_name = None
+    regions: dict = {}
+    card_stretch = None
     app_folder = Path(args.audio) if args.audio else None
     if marks:
         cut_name = marks["cut"]
@@ -797,26 +954,43 @@ def render_command(args) -> None:
         pictures = sync_pictures(attachments)
         syncs = [Sync(label, before, after, pictures.get(label)) for label, before, after in marks["syncs"]]
         locate(syncs, frames, record["started"])
+        refine(syncs, {entry[5] for entry in marks["clips"] if entry[5]}, raw)
         missing = [s for s in syncs if s.picture and not s.present]
         clips = []
-        for name, start, end, keep, floor in marks["clips"]:
-            shift, sources[name] = offset_near((start + end) / 2, syncs, clock)
-            clips.append(Clip(name, start + shift + offset, end + shift + offset, keep, floor, shift + offset))
+        for name, start, end, keep, floor, anchor in marks["clips"]:
+            pinned = next((s for s in syncs if s.label == anchor and s.present), None) if anchor else None
+            if pinned:
+                shift = pinned.offset
+                sources[name] = f"sync {pinned.label}" + (", to 1/60 s" if pinned.fine else "")
+            else:
+                shift, sources[name] = offset_near((start + end) / 2, syncs, clock)
+                if anchor:
+                    notes.append(f"WARNING: {name}'s own sync ({anchor}) isn't in the recording; placed by {sources[name]}")
+            clips.append(Clip(name, start + shift + offset, end + shift + offset, keep, floor, shift + offset, anchor))
             # A screenshot taken in or right around the clip that the recording doesn't show: the app is missing there.
             gone = [s.label for s in missing if start - 4 <= s.wall <= end + 4]
             if gone:
                 lost.append(f"{name} (sync {', '.join(gone)} not in the recording)")
         poster_wall = marks["poster"]
         beat = marks["beat"][1] if marks["beat"] else None
+        regions = marks["regions"]
+        card_stretch = marks["card"]
         if marks["result"] != "passed":
             notes.append(f"WARNING: the tour test {marks['result'] or 'did not finish'}; check the cut before using it")
         if syncs and not any(s.picture for s in syncs):
             notes.append("WARNING: no sync screenshots among the attachments; the cut follows the recorder's clock")
+        notes += [f"WARNING: the tour missed a moment: {missed}" for missed in marks["missed"]]
+        for name, verdict, why in marks["checks"]:
+            if verdict == "fail":
+                retakes.append(f"the tour's check {name} failed: {why}")
+            else:
+                notes.append(f"check {name}: {why or 'passed'}")
     else:
         # No marks (the test never got going): skip the launch and keep what fits.
         start = min(12.0, duration * 0.25)
         clips = [Clip("fallback", start, min(duration - 1, start + 20), "head", FLOOR, clock + offset)]
         notes.append("WARNING: no PREVIEW-CLIP marks found; this is a plain trim of the recording")
+    marked = sum(max(0.0, c.length) for c in clips) + END_CARD
     clips, card_length, fitted = fit(clips, duration, END_CARD)
     notes += fitted
     if not clips:
@@ -826,6 +1000,11 @@ def render_command(args) -> None:
     for c in clips:
         if still(frames, c.start, c.end):
             notes.append(f"WARNING: {c.name} doesn't move at all: the recorder may have stopped getting frames there")
+
+    # The lock: its bell against the badge's first frame (with --reanchor the clip may move here, before the cut).
+    app_audio = soundtrack.AppAudio(app_folder if app_folder and app_folder.is_dir() else None)
+    lock = check_lock(clips, app_audio, regions.get("readout"), raw, args.reanchor)
+    retakes += lock.retakes
 
     # The frames: a caption band per clip, and the end card.
     words = captions(cut_name)
@@ -844,13 +1023,16 @@ def render_command(args) -> None:
     card = art_dir / "end.png"
     end_card("Timbre", title, note, end_accent, card)
 
-    # The soundtrack: each clip's own sound, from the app's log.
-    app_audio = soundtrack.AppAudio(app_folder if app_folder and app_folder.is_dir() else None)
+    # The soundtrack: each clip's own sound, from the app's log, and the app's motif under the end card.
     pieces = []
     at = 0.0
     for c in clips:
         pieces.append((app_audio.segment(c.wall_start, c.length + TAIL), at, c.length))
         at += c.length
+    if card_stretch:
+        pieces.append((app_audio.segment(card_stretch[0], card_length), at, card_length))
+    else:
+        notes.append("WARNING: no PREVIEW-CARD mark: the end card has no sound of its own")
     total_audio = at + card_length
     mix = soundtrack.lay(pieces, total_audio, TAIL)
     audio_path = out / "soundtrack.wav"
@@ -873,25 +1055,45 @@ def render_command(args) -> None:
     window.unlink(missing_ok=True)
 
     poster_at, poster_clip = poster_time(clips, poster_wall)
+    poster_at, poster_verdict, poster_problem = verify_poster(clips, poster_at, poster_clip, lock)
+    if poster_problem:
+        retakes.append(poster_problem)
     poster_at = min(max(0.1, poster_at), total - 0.1)
     ffmpeg(["-ss", f"{poster_at:.3f}", "-i", str(preview), "-frames:v", "1", str(out / "poster.png")])
     sync_sheet(syncs, out / "raw-small.mp4", out / "sync.png")
     contact_sheet(preview, total, out / "contact.png")
 
-    info, problems = check(preview)
+    info, spec = check(preview)
+    problems += [f"OUT OF SPEC: {p}" for p in spec]
     mean, loudest = loudness(preview)
     if mean < QUIETEST:
         problems.append(f"the soundtrack is silent or nearly (mean {mean:.1f} dB, under {QUIETEST:.0f} dB)")
+
+    # The sound gates, on the delivered file; and the app's own word on the band while each "band" clip was filmed.
+    sections = []
+    at = 0.0
+    for c in clips:
+        sections.append(gates.Section(c.name, at, at + c.length, words.get(c.name, ("", ""))[0]))
+        at += c.length
+    sections.append(gates.Section("end card", at, at + card_length))
+    sound_lines, silent, bandless = gates.sound_report(preview, sections)
+    problems += silent
+    retakes += bandless
+    for section, c in zip(sections, clips):
+        if section.promises_band and app_audio.band_playing(c.wall_start, c.wall_start + c.length) is False:
+            retakes.append(f"{c.name}: the app's band wasn't playing all through the clip (its `band` events)")
+    write_cut(out / "cut.json", cut_name, sections, poster_at, total)
+
     size = preview.stat().st_size
     pinned = sorted(s.offset for s in syncs if s.distinct)
     lines = [
         f'App Store App Preview ({cut_name or "guitar"}): iPhone 6.9" display, portrait',
         f"preview.mp4: {WIDTH}x{HEIGHT}, {FPS} fps, H.264 High, stereo AAC 44.1 kHz, "
-        f"{float(info['format']['duration']):.2f} s, {size / 1e6:.1f} MB",
+        f"{float(info['format']['duration']):.2f} s, {size / 1e6:.1f} MB (the marked clips and end card ran {marked:.1f} s)",
         f"soundtrack: mean {mean:.1f} dB, max {loudest:.1f} dB (normalised to {LOUDNESS:.0f} LUFS; the app's mix peaked at "
         f"{peak:.2f}); {len(app_audio.cues)} sound effects and {len(app_audio.runs)} stretches of engine sound logged",
-        f"poster.png: the frame at {timecode(poster_at)} (in {poster_clip}). In App Store Connect, set the preview's "
-        "poster frame to this time.",
+        f"poster.png: the frame at {timecode(poster_at)} (in {poster_clip}), {poster_verdict}. In App Store Connect, set the "
+        "preview's poster frame to this time.",
         f"recording: {os.environ.get('DEVICE_NAME', 'simulator')}, {duration:.1f} s; start {record.get('startSource')}; "
         f"manual offset {offset:+.2f} s",
     ]
@@ -916,18 +1118,48 @@ def render_command(args) -> None:
                 verdict = "pinned" if s.distinct else ("found, not distinctive" if s.present else "NOT IN THE RECORDING")
                 runner = f"{s.runner_up:5.1f}" if s.runner_up is not None else "  -  "
                 lines.append(f"  {s.label:<14} at {s.at:7.2f} s  diff {s.score:5.1f} (next {runner})  "
-                             f"vs clock {s.offset - clock:+7.2f} s  {verdict}")
-    lines += [""] + notes
+                             f"vs clock {s.offset - clock:+7.2f} s  {verdict}{', to 1/60 s' if s.fine else ''}")
+    lines += [""] + lock.lines + sound_lines + [""] + notes
     if lost:
         lines += [f"LOST: the recording doesn't show the app in {item}" for item in lost]
+    lines += [f"NOT FOR UPLOAD: {p}" for p in problems + retakes]
+    if lost:
         lines.append("NOT FOR UPLOAD: record the tour again.")
-    lines += [f"OUT OF SPEC: {p}" for p in problems] or (["Meets the App Preview spec."] if not lost else [])
+    elif not problems and not retakes:
+        lines.append("Meets the App Preview spec and its gates.")
     (out / "PREVIEW.txt").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))
     if lost:
         sys.exit(LOST)
     if problems:
         sys.exit(1)
+    if retakes:
+        sys.exit(RETAKE)
+
+
+def write_cut(path: Path, cut_name: str | None, sections: list[gates.Section], poster_at: float, total: float) -> None:
+    """The cut's layout beside preview.mp4, so `check` can measure the file again on its own."""
+    path.write_text(json.dumps({
+        "cut": cut_name or "guitar",
+        "total": round(total, 3),
+        "poster": round(poster_at, 3),
+        "sections": [{"name": s.name, "start": round(s.start, 3), "end": round(s.end, 3), "caption": s.caption} for s in sections],
+    }, indent=2) + "\n")
+
+
+def check_command(args) -> None:
+    """The sound gates again on a rendered preview (DIR/preview.mp4 and DIR/cut.json)."""
+    out = Path(args.out)
+    preview, layout = out / "preview.mp4", out / "cut.json"
+    if not preview.exists() or not layout.exists():
+        sys.exit(f"{out} needs preview.mp4 and cut.json (both written by `preview.py render`)")
+    cut = json.loads(layout.read_text())
+    sections = [gates.Section(s["name"], float(s["start"]), float(s["end"]), s.get("caption", "")) for s in cut["sections"]]
+    lines, silent, bandless = gates.sound_report(preview, sections)
+    print("\n".join(lines))
+    for problem in silent + bandless:
+        print(f"NOT FOR UPLOAD: {problem}")
+    sys.exit(1 if silent or bandless else 0)
 
 
 def main() -> None:
@@ -947,8 +1179,14 @@ def main() -> None:
     render.add_argument("--attachments", help="exported xcresult attachments (the preview-clips note)")
     render.add_argument("--audio", help="the folder the app wrote what it played to (default: the test's PREVIEW-APP)")
     render.add_argument("--offset", default="0", help="seconds to shift every cut (positive = later)")
+    render.add_argument("--reanchor", action="store_true",
+                        help="place the lock clip by its badge when it drifts from the bell (a re-cut someone has looked at)")
+    again = sub.add_parser("check", help="measure a rendered preview's sound again (preview.mp4 and cut.json)")
+    again.add_argument("--out", required=True)
     args = parser.parse_args()
-    {"device": device_command, "record": record_command, "stop": stop_command, "render": render_command}[args.command](args)
+    commands = {"device": device_command, "record": record_command, "stop": stop_command, "render": render_command,
+                "check": check_command}
+    commands[args.command](args)
 
 
 if __name__ == "__main__":

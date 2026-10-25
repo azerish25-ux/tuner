@@ -114,9 +114,10 @@ final class TabletScreenshotsUITests: XCTestCase {
         add(attachment)
     }
 
-    /// A tuner frame for the listing: kept under its own name with the 3D stage up and the selected string locked,
-    /// otherwise kept as "<name>-wrong" (and the test fails) so the screenshot tool never frames a studio stand-in or
-    /// a half-lock. Each picture is taken hands off, before the check's own snapshot (which stalls the main thread).
+    /// A tuner frame for the listing: kept under its own name with the 3D stage up, the selected string locked and the
+    /// In tune badge showing (it holds after a lock while the string stays in the band), otherwise kept as
+    /// "<name>-wrong" (and the test fails) so the screenshot tool never frames a studio stand-in or a half-lock. Each
+    /// picture is taken hands off, before the check's own snapshot (which stalls the main thread).
     private func tunerFrame(_ name: String) {
         var picture = XCUIScreen.main.screenshot()
         var problem = ""
@@ -124,8 +125,9 @@ final class TabletScreenshotsUITests: XCTestCase {
             if attempt > 0 { settle(3); picture = XCUIScreen.main.screenshot() }
             let stage = tunerStage()
             let lock = lockedChips()
-            if stage == "3d" && lock.selected { problem = ""; break }
-            problem = "stage '\(stage)', \(lock.tuned) strings tuned, the selected one tuned: \(lock.selected)"
+            if stage == "3d" && lock.selected && lock.badge { problem = ""; break }
+            problem = "stage '\(stage)', \(lock.tuned) strings tuned, the selected one tuned: \(lock.selected), "
+                + "In tune badge: \(lock.badge)"
         }
         if !problem.isEmpty { XCTFail("\(name): \(problem)") }
         let attachment = XCTAttachment(screenshot: picture)
@@ -288,17 +290,21 @@ final class TabletScreenshotsUITests: XCTestCase {
         return tunerStage()
     }
 
-    /// The string chips from one snapshot: how many read "Tuned", and whether the selected one does.
-    private func lockedChips() -> (tuned: Int, selected: Bool) {
-        guard let root = try? app.snapshot() else { return (0, false) }
+    /// The string chips from one snapshot: how many read "Tuned", whether the selected one does, and whether the status
+    /// line ("Hold it…") has stepped aside for the In tune badge.
+    private func lockedChips() -> (tuned: Int, selected: Bool, badge: Bool) {
+        guard let root = try? app.snapshot() else { return (0, false, false) }
         var chips: [String: (selected: Bool, tuned: Bool)] = [:]
+        var status: String?
         var pending: [XCUIElementSnapshot] = [root]
         while let node = pending.popLast() {
             pending.append(contentsOf: node.children)
+            if node.identifier == "tune.status" { status = node.label }
             guard node.identifier.hasPrefix("string.") else { continue }
             let seen = chips[node.identifier] ?? (selected: false, tuned: false)
             chips[node.identifier] = (selected: seen.selected || node.isSelected, tuned: seen.tuned || (node.value as? String) == "Tuned")
         }
-        return (chips.values.filter { $0.tuned }.count, chips.values.contains { $0.selected && $0.tuned })
+        let badge = status == nil || status == "In tune"
+        return (chips.values.filter { $0.tuned }.count, chips.values.contains { $0.selected && $0.tuned }, badge)
     }
 }

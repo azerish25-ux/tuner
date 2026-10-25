@@ -17,7 +17,7 @@ The English listing was rewritten for this build (a free-tuner lead, honest song
 
 - **Same facts as the English, no stronger.** The free tier, the trial reminder ("with notifications on, Timbre reminds you two days before the trial ends"), no account, no ads and audio never recorded carry the English claims exactly.
 - **Adapted, not word-for-word.** Each description keeps the English structure but is written for its market, using the terms the app itself uses in `Resources/<lang>.lproj` (for example Bordun / bourdon / nota pedal / bordone / ドローン / 드론 / 持续音 / бурдон for drone, and the app's own names for streak, quest, achievement, unit and course).
-- **Keywords.** At most 100 characters, comma-separated with no spaces after commas (a space appears only inside a two-word term), singular forms, and none of the words already in that locale's name or subtitle. Search terms come from what people in each market type, not from the English list. For ja, ko and zh-Hans no keyword may be a substring of the name or subtitle.
+- **Keywords.** At most 100 characters, comma-separated with no spaces after commas (a space appears only inside a two-word term), singular forms, and none of the words already in that locale's name or subtitle, except an instrument word a Custom Product Page needs ([below](#custom-product-page-keywords-by-locale)): a page takes its keywords only from this field. Search terms come from what people in each market type, not from the English list. For ja, ko and zh-Hans no keyword may be a substring of the name or subtitle, with the same exception.
 - **Character counts** are Python `len()` on the NFC string.
 - **Placeholders.** `<privacy policy URL>` stays as in the English file, in every locale. The Terms link is Apple's standard EULA in every locale.
 - **Legal line.** The wording for Settings / Apple Account / Subscriptions follows Apple's own wording for that language (see the notes under each locale and the open points at the end).
@@ -36,23 +36,39 @@ The English listing was rewritten for this build (a free-tuner lead, honest song
 | zh-Hans | Timbre：吉他调音器与课程 | 边弹边学小提琴、尤克里里、贝斯 |
 | ru | Timbre: Тюнер для гитары | Уроки скрипки, укулеле и баса |
 
+## Custom Product Page keywords by locale
+
+A Custom Product Page's localization can be assigned keywords only from that localization's keyword field ([the English rule](APP-STORE-LISTING.md#custom-product-pages)): a word that sits only in the subtitle can't be assigned. The three pages to start with, and the word each locale's page takes from its own field today. "—" marks a page that can't be found in that language until the word is added to the field (shorten another keyword to make room; it may repeat a subtitle word, since the page needs it). `screenshots.py --check` fails when a word named here isn't in that locale's field.
+
+| Locale | Violin | Cello | Ukulele |
+|---|---|---|---|
+| de-DE | Violine | Cello | — add “Ukulele” (subtitle only) |
+| fr-FR | — add “violon” (subtitle only) | violoncelle | — add “ukulélé” (subtitle only) |
+| es-MX | — add “violín” (subtitle only) | violonchelo | ukulele |
+| pt-BR | — add “violino” (subtitle only) | violoncelo | — add “ukulele” (subtitle only) |
+| it | — add “violino” (subtitle only) | violoncello | — add “ukulele” (subtitle only) |
+| ja | ヴァイオリン | チェロ | — add “ウクレレ” (subtitle only) |
+| ko | — add “바이올린” (subtitle only) | 첼로 | — add “우쿨렐레” (subtitle only) |
+| zh-Hans | — add “小提琴” (subtitle only) | 大提琴 | 乌克丽丽 |
+| ru | скрипка | виолончель | — add “укулеле” (subtitle only) |
+
 ## Source for translators
 
-The English text, every count the build can change written as a variable. `screenshots.py --check` fails on a variable that isn't one of these.
+The English text, every count the build can change written as a variable. `screenshots.py --check` computes the values from the build and fails when this table disagrees, when a variable isn't one of these, or when the source with its values filled in no longer reads exactly as the English listing (so a change to the English is made here too).
 
 | Variable | Value in this build | What it is |
 |---|---:|---|
 | `{instruments}` | 60 | instruments in the catalogue |
 | `{tunings}` | 132 | preset tunings |
-| `{courses}` | 17 | courses in Learn |
-| `{lessons}` | 819 | lessons in all courses |
-| `{songs_floor}` | 120 | distinct song titles, rounded down to ten (124 now): written "{songs_floor}+" |
+| `{courses}` | 11 | courses in Learn (the songbooks are counted as songs) |
+| `{lessons}` | 518 | lessons in those courses |
+| `{songs_floor}` | 140 | distinct song titles, rounded down to ten (144 now): written "{songs_floor}+" |
 | `{originals}` | 50 | Timbre Originals |
 
 ### Promotional text (170 max)
 
 ```
-Free tuner, no ads, no account. Then lessons that listen as you play guitar, ukulele, violin, cello, bass, mandolin or banjo, and {songs_floor}+ songs to play along to.
+Free tuner, no ads, no account. Feel each string come into tune, then play lessons that listen on guitar, ukulele, violin, cello, bass, mandolin or banjo, and {songs_floor}+ songs.
 ```
 
 ### Description (4000 max)
@@ -68,12 +84,14 @@ TUNE ANYTHING, FREE
 • {tunings} tunings, from drop D and open G to DADGAD, plus your own
 • Auto string detection, with a check-off as each string locks in
 • Strum to tune: one strum reads every string at once and shows which one to tune first
+• Tune by feel: the phone pulses with the beat between your string and its note, slower as they meet and still at the lock, so you can tune without looking
 • Studio-lit 3D guitars, basses, violin, cello and mandolin, with the peg to turn shown on the headstock
 • Capo, adjustable A4 reference, solfège and sargam note names
 
 LEARN BY PLAYING
 • {lessons} lessons in {courses} courses: guitar, ukulele, bass, violin, cello, mandolin, banjo, voice, ear training, music theory and rhythm, plus songbooks for ukulele, mandolin and violin
-• Timbre listens as you play: single notes, every string of a chord, and the timing of your strumming, with pitch feedback and timing in milliseconds
+• Timbre hears every strum: the right chord, on time, and which string didn't ring
+• Every note judged as you play it, its pitch to the cent and its timing to the millisecond
 • "Show me" plays each new chord on a 3D guitar, the fingers landing in order
 • A play-along note highway that slows down for you, then speeds back up as you improve
 
@@ -117,7 +135,7 @@ Welcome to Timbre: a free tuner for {instruments} instruments, and {lessons} les
 | 2 | Hear exactly how you played | Pitch and timing on every note |
 | 3 | Play your first chord today | Timbre hears every string |
 | 4 | Tune whatever you play | {instruments} instruments, {tunings} tunings |
-| 5 | Play songs, start to finish | {songs_floor}+ songs, classics to Originals |
+| 5 | Play songs you know | {songs_floor}+ songs, classics to Originals |
 | 6 | Learn at your own pace | {lessons} lessons in {courses} courses |
 | 7 | Five minutes a day adds up | Stars, streaks and daily quests |
 | 8 | One strum checks every string | See which string to tune first |
@@ -129,7 +147,7 @@ Welcome to Timbre: a free tuner for {instruments} instruments, and {lessons} les
 |---|---|---|
 | 1 | Free tuner. No ads. | {instruments} instruments, to the cent |
 | 2 | Tune whatever you play | Violin to oud, sitar to erhu |
-| 3 | Play songs, start to finish | {songs_floor}+ songs, classics to Originals |
+| 3 | Play songs you know | {songs_floor}+ songs, classics to Originals |
 | 4 | Five minutes a day adds up | A daily set, quests and ear games |
 
 ### App Preview captions
@@ -197,8 +215,8 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
-| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -209,7 +227,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 |---|---|---|---|
 | 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
 | 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
-| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 3 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `ipad-landscape-songs` |
 | 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
 
 ### Earlier text (stale, for reference only)
@@ -318,8 +336,8 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
-| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -330,7 +348,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 |---|---|---|---|
 | 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
 | 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
-| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 3 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `ipad-landscape-songs` |
 | 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
 
 ### Earlier text (stale, for reference only)
@@ -439,8 +457,8 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
-| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -451,7 +469,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 |---|---|---|---|
 | 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
 | 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
-| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 3 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `ipad-landscape-songs` |
 | 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
 
 ### Earlier text (stale, for reference only)
@@ -560,8 +578,8 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
-| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -572,7 +590,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 |---|---|---|---|
 | 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
 | 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
-| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 3 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `ipad-landscape-songs` |
 | 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
 
 ### Earlier text (stale, for reference only)
@@ -681,8 +699,8 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
-| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -693,7 +711,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 |---|---|---|---|
 | 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
 | 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
-| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 3 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `ipad-landscape-songs` |
 | 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
 
 ### Earlier text (stale, for reference only)
@@ -802,8 +820,8 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
-| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -814,7 +832,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 |---|---|---|---|
 | 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
 | 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
-| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 3 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `ipad-landscape-songs` |
 | 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
 
 ### Earlier text (stale, for reference only)
@@ -923,8 +941,8 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
-| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -935,7 +953,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 |---|---|---|---|
 | 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
 | 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
-| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 3 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `ipad-landscape-songs` |
 | 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
 
 ### Earlier text (stale, for reference only)
@@ -1044,8 +1062,8 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
-| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -1056,7 +1074,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 |---|---|---|---|
 | 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
 | 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
-| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 3 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `ipad-landscape-songs` |
 | 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
 
 ### Earlier text (stale, for reference only)
@@ -1165,8 +1183,8 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
-| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -1177,7 +1195,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 |---|---|---|---|
 | 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
 | 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
-| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 3 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `ipad-landscape-songs` |
 | 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
 
 ### Earlier text (stale, for reference only)

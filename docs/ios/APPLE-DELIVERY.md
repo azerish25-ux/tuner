@@ -26,10 +26,10 @@ What the owner sets up in Apple's portals and GitHub before the first App Store 
 
 Create a subscription group named **Timbre Pro** with two auto-renewable subscriptions at the same level:
 
-| Product ID | Type | Duration | US price (the panel's recommendation; the owner decides) | Introductory offer |
+| Product ID | Type | Duration | US price (recommended; the owner decides) | Introductory offer |
 |---|---|---|---|---|
 | `timbre_pro_annual` | Auto-renewable | 1 year | $49.99 (the StoreKit test file still says $34.99) | Free trial, 2 weeks, new subscribers. Keep 14 days: yearly trials of 10–16 days convert at about 43 %, against 33 % for 5–9 |
-| `timbre_pro_monthly` | Auto-renewable | 1 month | $9.99 ($6.99 in the test file) | Free trial, 1 week: it also powers the paywall's one-time exit offer (§6.4) |
+| `timbre_pro_monthly` | Auto-renewable | 1 month | $9.99 ($6.99 in the test file) | **None** until a build's paywall discloses a monthly trial on the Monthly card (§6.4): before that build the paywall would show the monthly price while the App Store starts a free week |
 
 And one non-consumable:
 
@@ -37,7 +37,7 @@ And one non-consumable:
 |---|---|---|
 | `timbre_plus_lifetime` | Non-consumable | $149.99 ($89.99 in the test file); onboarding's paywall leaves it out unless the remote settings say otherwise (§5) |
 
-Turn **Family Sharing** on for the yearly plan and lifetime (parents buy lessons for their children; say so on the paywall once it is on). The prices above are REVIEW 15's recommendation for $10k a month, about a third of the lesson apps' prices; test $49.99 against $59.99 later with a second yearly product chosen by the remote settings file (§5).
+Turn **Family Sharing** on for the yearly plan and lifetime (parents buy lessons for their children; say so on the paywall once it is on). The prices above are the recommendation for $10k a month, about a third of the lesson apps' prices; test $49.99 against $59.99 later with a second yearly product chosen by the remote settings file (§5).
 
 The paywall shows the yearly plan's weekly cost, worked out from the yearly price Apple returns, so it always matches the storefront. The paywall's offer codes and its one-time exit offer are set up in [section 6](#6-growth-features-owner-steps).
 
@@ -219,7 +219,7 @@ App Store Connect → the app → Subscriptions → Timbre Pro → the plan → 
 The second time anyone turns a paywall down (onboarding's paywall counts as the first), the paywall makes one offer, once per install. It only uses offers that exist in App Store Connect, at Apple's prices; the app never invents a discount. If nothing below is set up, the paywall simply closes.
 
 1. **Lapsed subscribers.** Under App Store Connect → Subscriptions → Timbre Pro → each plan → **Win-Back Offers**, create one or more offers (for example 1 month free, for people whose subscription ended 1–6 months ago). The app offers the best one the App Store lists for the person (`eligibleWinBackOfferIDs`) and buys it with that offer applied. StoreKit may also show Apple's own win-back sheet at launch to eligible people. That needs no code.
-2. **Never subscribed.** Give `timbre_pro_monthly` an **Introductory Offer** (for example a 1-week free trial for new subscribers). Introductory-offer eligibility covers the whole group, so someone who already used the yearly trial isn't offered it. The card shows the offer as Apple holds it ("Try Pro free for 7 days"), then the monthly price and how it renews. Leave the monthly plan without an introductory offer to switch this off.
+2. **Never subscribed.** Only with a build whose paywall discloses a monthly trial everywhere it shows the Monthly plan (its own "7 days free", button, terms line and trial reminder): then give `timbre_pro_monthly` an **Introductory Offer** (for example a 1-week free trial for new subscribers). Introductory-offer eligibility covers the whole group, so someone who already used the yearly trial isn't offered it. The card shows the offer as Apple holds it ("Try Pro free for 7 days"), then the monthly price and how it renews. Until that build, leave the monthly plan without an introductory offer (the recommendation is to leave it without one anyway, and use win-back offers and offer codes, §6.3).
 3. To test locally, add an introductory offer to the monthly plan in `ios/Tests/Fixtures/Timbre.storekit` (in a scratch copy, not the committed fixture the UI tests use). Turn down the paywall twice. The exit offer never shows under the UI tests or the demo modes.
 
 
@@ -344,21 +344,22 @@ What the owner sets up in App Store Connect to turn the listing into installs, i
 
 ### 9.1 Billing Grace Period and Family Sharing
 
-1. **Billing Grace Period** (App Store Connect → the app → Subscriptions → Billing Grace Period: 16 days, all renewals). Only with a build that keeps Pro during grace: the entitlement check that trusts `Transaction.currentEntitlements` (WP1) and the billing-issue banner. Check it on TestFlight with a sandbox account set to fail renewals before turning it on. Without it, a payer whose card fails loses Pro in exactly the window grace is meant to protect.
-2. **Family Sharing** on `timbre_pro_annual` and `timbre_plus_lifetime` (each product → Family Sharing). Apple doesn't let it be turned off again for a product, so decide once. Then add the paywall's Family Sharing line (WP2 has it behind the switch).
+1. **Billing Grace Period** (App Store Connect → the app → Subscriptions → Billing Grace Period: 16 days, all renewals). Only with a build that keeps Pro during grace: the entitlement check that trusts `Transaction.currentEntitlements` and the billing-issue banner. Check it on TestFlight with a sandbox account set to fail renewals before turning it on. Without it, a payer whose card fails loses Pro in exactly the window grace is meant to protect.
+2. **Family Sharing** on `timbre_pro_annual` and `timbre_plus_lifetime` (each product → Family Sharing). Apple doesn't let it be turned off again for a product, so decide once. Then turn on the paywall's Family Sharing line.
 
 ### 9.2 Custom Product Pages
 
-[APP-STORE-LISTING.md](APP-STORE-LISTING.md#custom-product-pages) has each page's keywords, first frames, promotional text, deep link and preview. For each, starting with **violin, cello and ukulele**:
+[APP-STORE-LISTING.md](APP-STORE-LISTING.md#custom-product-pages) has each page's keywords, first frames, promotional text, deep link and preview. A page can only be assigned keywords that are in the keyword field of the latest *approved* version, so the order matters:
 
-1. Render its frames: `python3 tools/marketing/screenshots.py <ci-out/screenshots> <out> --page violin` (a page with its own table), or the main set with the page's first capture moved to the front.
-2. For the violin page, run the App Preview workflow with `preview: violin`.
-3. App Store Connect → the app → **Custom Product Pages** → (+). Name it after the instrument; add the promotional text, the frames and the preview.
-4. **Deep link**: the page's `timbre://tune?instrument=<id>` link. Before onboarding is done, `DeepLink.swift` keeps a `tune` link and onboarding opens with that instrument chosen; after it, the link opens the tuner on that instrument.
-5. **Keywords**: assign the page's keywords so it can appear in search for them (since July 2025). A page's keywords count against no other field.
-6. Submit it for review with (or after) the version.
+1. **Ship the keyword field first.** Paste the listing's [keyword field](APP-STORE-LISTING.md#keywords-97100) (and each localization's) into the version and get it approved. It is the pages' inventory: violin, fiddle, ukulele, uke, cello, bass, mandolin, banjo, chromatic, strobe, ear training.
+2. Render the page's frames: `python3 tools/marketing/screenshots.py <ci-out/screenshots> <out> --page violin` (and `--page cello`, `--page ukulele`: each has its own table), or the main set with the page's first capture moved to the front for a page without one.
+3. For the violin page, use the violin App Preview (the App Preview workflow with `preview: violin`, or `both`).
+4. App Store Connect → the app → **Custom Product Pages** → (+). Name it after the instrument; add the promotional text, the frames and the preview.
+5. **Keywords**: in the page's Keywords section, select its words from the field (the table's "Keywords from the field" column), per localization from that localization's field. Give each word to one page only. The page becomes searchable for them once it is approved and set to visible.
+6. **Deep link** (optional): the page's `timbre://tune?instrument=<id>` link. It runs only when someone on iOS 18 or later taps **Open** on the page, and only after the link is approved; someone who installs and opens Timbre from the Home Screen gets the default welcome. Before onboarding is done, `DeepLink.swift` keeps a `tune` link and onboarding opens with that instrument chosen; after it, the link opens the tuner on that instrument.
+7. Submit it for review with (or after) the version.
 
-Measure each page in App Store Connect → Analytics (page views and conversion by product page), and the installs it brought in with TelemetryDeck (onboarding's first instrument). Up to 70 pages are allowed; add banjo, voice and ear training once their first frames are store frames (a `storeFrame` check in the UI tests and a table in the listing).
+Measure each page in App Store Connect → Analytics (page views and conversion by product page), and the installs it brought in with TelemetryDeck (onboarding's first instrument). Up to 70 pages are allowed; add bass, mandolin, banjo, voice and ear training once their first frames are store frames (a `storeFrame` check in the UI tests and a table in the listing).
 
 ### 9.3 In-App Events
 
@@ -368,7 +369,7 @@ App Store Connect → the app → **In-App Events** → (+). An event card needs
 |---|---|---|---|---|
 | Holiday carols | Special Event | December 1–31, every year | `timbre://songs` | Play the carols, with the band |
 | 30-day ukulele challenge | Challenge | January (and any month the ukulele page is pushed) | `timbre://tune?instrument=ukulele.soprano.4` | A song a day on your ukulele |
-| This week's song | New Season | weekly, once "This week's song" ships (WP6 phase 2) | `timbre://songs` | A new Original, a new leaderboard |
+| This week's song | New Season | weekly, once "This week's song" ships | `timbre://songs` | A new Original, a new leaderboard |
 
 The carols are in Standards and the ukulele songbook already; check the free ones before promising "free".
 
@@ -384,26 +385,15 @@ Run one test at a time, and not while a Custom Product Page for the same audienc
 
 ### 9.5 Featuring Nomination
 
-App Store Connect → **Featuring** → Nominations → (+), "New app launch", at least three weeks before the launch date (six for a holiday window). The story: the tuner you can feel stand still (haptic beating, WP7), lessons that listen as you play, 60 instruments with violin and cello lessons nobody else teaches, and a tuner that works with VoiceOver. Attach the App Preview and a TestFlight link. Nominate again for each major update (the band on speaker, the songbooks).
+App Store Connect → **Featuring** → Nominations → (+), "New app launch", at least three weeks before the launch date (six for a holiday window). The story: the tuner you can feel stand still (Tune by feel: the phone pulses with the beat between string and note and goes still at the lock), lessons that hear every strum and name the string that didn't ring, 60 instruments with violin and cello lessons nobody else teaches, and a tuner that works with VoiceOver. Attach the App Preview and a TestFlight link. Nominate again for each major update (the band on speaker, the songbooks).
 
 ### 9.6 Accessibility Nutrition Labels
 
-App Store Connect → the app → **Accessibility** → per device. Declare a feature only when a person can do the app's common tasks with it, and only once WP10's accessibility audits pass:
-
-| Feature | Declare | Why |
-|---|---|---|
-| Larger Text | Now | Dynamic Type throughout, checked at AX5 |
-| Dark Interface | Now | The app is dark by design |
-| Differentiate Without Color Alone | Now | Every status has words or a shape as well as a colour |
-| Sufficient Contrast | Now | Text at 4.5:1, controls at 3:1 (Increase Contrast raises both) |
-| Reduced Motion | Now | Every animation has a still or a fade under Reduce Motion |
-| VoiceOver | **Only after the play-along works with it** (WP6) | The tuner works with VoiceOver today; the lessons' play-along doesn't yet, and App Review can force corrections (Guideline 2.3) |
-| Voice Control | After a pass that every control has a speakable name | |
-| Captions, Audio Descriptions | Not applicable | The app has no video with speech |
-
-None of the six competitors fills these in, so an honest, filled label is a free difference.
+App Store Connect → the app → **Accessibility** → per device. What to declare, and when, is in [APP-STORE-LISTING.md](APP-STORE-LISTING.md#accessibility-nutrition-labels): Dark Interface, Differentiate Without Color Alone, Sufficient Contrast and Reduced Motion now; Larger Text once the accessibility-size captures pass; **VoiceOver only after** the lessons' notes step speaks the next note, the play-along's cues land before their notes, and blind testers have finished Unit 1. App Review can ask for corrections (Guideline 2.3), so declare a feature only when a person can do the app's common tasks with it. None of the six competitors fills these in, so an honest, filled label is a free difference.
 
 ### 9.7 Apple Ads
 
 Not before the funnel measures revenue per install (§5). Then exact-match instrument keywords ("violin tuner", "learn violin", "cello tuner", "ukulele songs"), each ad group pointing at its Custom Product Page, at about $1.5–3k a month, and stop any keyword whose cost per install exceeds the install's measured first-year revenue.
+
+Name each instrument's ad groups so they map to one instrument, and keep that map (ad group ID → catalog id, e.g. `violin.standard.4`) in the remote settings file: the `attribution` event names the ad group within seconds of the first launch, which is how an install from an ad can open on its instrument when the page's deep link didn't run (it runs only on "Open"). Onboarding needs a small change to read that map; until then it asks.
 

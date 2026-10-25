@@ -239,7 +239,8 @@ final class TimbreUITests: XCTestCase {
 
     /// Whether the tuner shows a lock, read from one snapshot: at least `strings` chips read "Tuned" (the ✓ on the
     /// ones not being tuned), the selected chip among them, and the status line ("Hold it…", "Tighten…") has stepped
-    /// aside for the readout's In tune badge. `summary` says what was seen.
+    /// aside for the readout's In tune badge. The badge holds after a lock while the string stays in the band, so the
+    /// snapshot (taken just after the picture) sees what the picture shows. `summary` says what was seen.
     private func tunerLock(strings: Int) -> (shown: Bool, summary: String) {
         var chips: [String: (selected: Bool, tuned: Bool)] = [:]
         var status: String?
@@ -256,10 +257,8 @@ final class TimbreUITests: XCTestCase {
         let selectedTuned = chips.values.contains { $0.selected && $0.tuned }
         let badge = status == nil || status == "In tune"
         let summary = "stage shown \(stage), \(tuned) of \(chips.count) strings tuned, selected tuned \(selectedTuned), status '\(status ?? "hidden: the In tune badge")'"
-        // The picture is taken before this check, hands off; the check's own snapshot stalls the app's main thread,
-        // which can restart the hold (status back to "Hold it…") without undoing the lock, so the badge isn't required.
-        _ = badge
-        return (stage && tuned >= strings && selectedTuned, summary)
+        // The store frame's caption is a string standing still: the selected chip's tick and the In tune badge, both.
+        return (stage && tuned >= strings && selectedTuned && badge, summary)
     }
 
     // MARK: Instrument browser
@@ -575,6 +574,32 @@ final class TimbreUITests: XCTestCase {
                             : "the results don't show three stars: the play-along wasn't played clean")
     }
 
+    /// The violin page's results frame: "Open-string checkup" (vln-1-6, free), opened on its play-along through the
+    /// `song-perform` scene (DemoScenes.swift opens a lesson on its last step), played clean by the demo pitch, then its
+    /// results, kept only with three stars and room above the buttons, as frame #7 is. Hands off while the take runs (a
+    /// query stalls the app's main thread, and a note heard late is a miss).
+    func test19StoreViolinResults() throws {
+        app.launchEnvironment["TIMBRE_SCENE_SONG"] = "vln-1-6"
+        launch(pitch: true, scene: "song-perform")
+        XCTAssertTrue(element("lesson.close").waitForExistence(timeout: 30), "The violin checkup never opened")
+        settle(1.2)
+        let start = element("lesson.continue")
+        for _ in 0..<40 where !(start.exists && start.isEnabled && start.label == "Start") { settle(0.5) }
+        start.tap()
+        // A one-bar count-in and four open strings: the take is over well inside 15 s.
+        settle(15)
+        XCTAssertTrue(element("along.again").waitForExistence(timeout: 30), "The violin play-along never finished")
+        settle(1)
+        element("lesson.continue").tap()
+        _ = labeled("Level [0-9]+").waitForExistence(timeout: 15)
+        let results = stillScreenshot(timeout: 3)
+        let headline = labeled("3 of 3 stars").exists
+        let room = resultsFit()
+        storeFrame("62b-lesson-results-violin", picture: results, ok: headline && room.fits,
+                   headline ? room.summary
+                            : "the violin results don't show three stars: the play-along wasn't played clean")
+    }
+
     /// Whether the results' first screen fits above the pinned buttons (LessonResults): the Share pill and the level bar
     /// end above the fade the scroll view draws over its last 28 pt (it ends 8 pt above the buttons), so neither is
     /// dimmed (a Share pill half under the fade reads as disabled). Read from one snapshot.
@@ -613,17 +638,34 @@ final class TimbreUITests: XCTestCase {
         storeFrame("49d-tune-violin-locked", tuner: lockedTunerFrame(strings: 3))
     }
 
+    /// The cello page's lead frame (a Custom Product Page): the same scene on the 3D cello, C, G and D locked (the third
+    /// held, mid-comet).
+    func test20StoreCelloStage() throws {
+        app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
+        launch(pitch: true, scene: "tune-locked", instrument: "cello.standard.4", comet: true)
+        storeFrame("49e-tune-cello-locked", tuner: lockedTunerFrame(strings: 3))
+    }
+
+    /// The ukulele page's lead frame: the same scene on the soprano ukulele's stage (its photograph until a 3D model
+    /// ships), G, C and E locked.
+    func test21StoreUkuleleStage() throws {
+        app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
+        launch(pitch: true, scene: "tune-locked", instrument: "ukulele.soprano.4", comet: true)
+        storeFrame("17b-tune-ukulele-locked", tuner: lockedTunerFrame(strings: 3, stages: ["3d", "2d"]))
+    }
+
     private func storeFrame(_ name: String, tuner: (picture: XCUIScreenshot, problem: String)) {
         storeFrame(name, picture: tuner.picture, ok: tuner.problem.isEmpty, tuner.problem)
     }
 
     /// The tuner's lock as a store frame: the picture (mid-comet when the burst caught one, else the settled lock) and
-    /// why it isn't the frame ("" when it is).
-    private func lockedTunerFrame(strings: Int) -> (picture: XCUIScreenshot, problem: String) {
+    /// why it isn't the frame ("" when it is). `stages`: the stages the frame may show ("3d" the model; "2d" a photo
+    /// stage, for an instrument without a model).
+    private func lockedTunerFrame(strings: Int, stages: Set<String> = ["3d"]) -> (picture: XCUIScreenshot, problem: String) {
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
         let stage = waitForStage().stage
         var picture = XCUIScreen.main.screenshot()
-        guard stage == "3d" else { return (picture, "the 3D headstock never replaced its studio render (stage '\(stage)')") }
+        guard stages.contains(stage) else { return (picture, "the tuner's stage is '\(stage)', not \(stages.sorted().joined(separator: " or "))") }
         var problem = ""
         for attempt in 0..<3 {
             // Hands off: the scene's locks land, the camera settles on the third peg and the reward banner clears.
@@ -932,7 +974,8 @@ final class TimbreUITests: XCTestCase {
         return (picture, start, Date())
     }
 
-    /// "Show me" through the `show-me` scene (DemoScenes.swift; the guitar page's frame and WP9's check of the string glow): "Your first chord: E minor" opens on its first
+    /// "Show me" through the `show-me` scene (DemoScenes.swift; the guitar page's frame and the check of the string glow):
+    /// "Your first chord: E minor" opens on its first
     /// step, the chord explained on its card, and the guitar's 3D model takes the card (by itself, the chord's first time
     /// in the course; otherwise the test asks with "Show me"). The picture is the demonstration mid-play: both
     /// fingertips down on the model's own frets and the chord ringing across every string. It is kept only when the
