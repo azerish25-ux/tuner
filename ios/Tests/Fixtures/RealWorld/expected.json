@@ -7,7 +7,11 @@
     "strumSeconds": 0.85,
     "chordPrecision": 0.95,
     "chordRecall": 0.85,
-    "ringFalseSilent": 0
+    "ringFalseSilent": 0,
+    "mutedRecall": 0.9,
+    "ringingAsMuted": 0.05,
+    "accentRecall": 0.8,
+    "plainAsAccent": 0.1
   },
   "clips": []
 }

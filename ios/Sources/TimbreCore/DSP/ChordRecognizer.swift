@@ -11,13 +11,27 @@ public struct ChordTarget: Hashable, Sendable, CustomStringConvertible {
         self.quality = quality
     }
 
-    /// Bridges lesson data that names the quality by `ChordFormula.id` ("maj", "min", "7", …).
+    /// Bridges lesson data that names the quality by `ChordFormula.id` ("maj", "min", "7", "dim", …). A sixth or a
+    /// ninth added to a chord is checked as the chord it colours, the notes a strum reliably brings out: a 9 as its 7
+    /// (E9 as E7), an add9 as its triad, a minor sixth as its minor triad, and a major sixth as the minor seventh it
+    /// equals note for note (C6 is Am7). Nil for a quality the recognizer can't check.
     public init?(root: Int, formulaId: String) {
-        guard let quality = ChordRecognizer.Quality(formulaId: formulaId) else { return nil }
-        self.init(root: root, quality: quality)
+        if let quality = ChordRecognizer.Quality(formulaId: formulaId) {
+            self.init(root: root, quality: quality)
+            return
+        }
+        switch formulaId {
+        case "9": self.init(root: root, quality: .dominant7)
+        case "maj9": self.init(root: root, quality: .major7)
+        case "m9": self.init(root: root, quality: .minor7)
+        case "add9": self.init(root: root, quality: .major)
+        case "m6": self.init(root: root, quality: .minor)
+        case "6": self.init(root: root + 9, quality: .minor7)
+        default: return nil
+        }
     }
 
-    /// Parses chord symbols such as "C", "Am", "F#7", "Bbmaj7", "Em7", "Dsus2", "Asus4", "E5".
+    /// Parses chord symbols such as "C", "Am", "F#7", "Bbmaj7", "Em7", "Dsus2", "Asus4", "E5", "Bdim", "Bdim7", "Caug".
     public init?(symbol: String) {
         var rest = Substring(symbol.trimmingCharacters(in: .whitespaces))
         let letters: [Character: Int] = ["C": 0, "D": 2, "E": 4, "F": 5, "G": 7, "A": 9, "B": 11]
@@ -32,6 +46,7 @@ public struct ChordTarget: Hashable, Sendable, CustomStringConvertible {
             "maj7": .major7, "M7": .major7, "Δ7": .major7, "Δ": .major7,
             "m7": .minor7, "min7": .minor7, "-7": .minor7,
             "sus2": .sus2, "sus4": .sus4, "sus": .sus4, "5": .power,
+            "dim": .diminished, "°": .diminished, "dim7": .diminished7, "°7": .diminished7, "aug": .augmented, "+": .augmented,
         ]
         guard let quality = suffixes[String(rest)] else { return nil }
         self.init(root: root, quality: quality)
@@ -92,11 +107,21 @@ public struct ChordEstimate: Equatable, Sendable {
 /// harmonics of each string do not pose as extra chord tones; semitones folded into a compressed
 /// 12-bin chroma; exponential smoothing across frames (reset by silence or a new, louder strum);
 /// cosine match against major, minor, 7, maj7, m7, sus2, sus4 and power-chord templates on all
-/// 12 roots, with a small preference for the root in the bass. Each instance belongs to one serial
-/// audio-analysis queue.
+/// 12 roots, with a small preference for the root in the bass (diminished, diminished seventh and
+/// augmented are checked as lesson targets, and name a reading only when none of those fits). Each
+/// instance belongs to one serial audio-analysis queue.
 public final class ChordRecognizer {
     public enum Quality: String, CaseIterable, Codable, Sendable {
         case major, minor, dominant7, major7, minor7, sus2, sus4, power
+        /// The symmetric chords: checked as lesson targets, and naming a reading only when nothing above fits.
+        case diminished, diminished7, augmented
+
+        /// The qualities a reading is named with. Their templates cover the chords a strum usually rings, and none of
+        /// them is another's notes (a sixth or a ninth would be: C6 is Am7, and E9 holds E7 and Bm).
+        public static let heard: [Quality] = [.major, .minor, .dominant7, .major7, .minor7, .sus2, .sus4, .power]
+        /// Diminished, diminished seventh and augmented: they share notes with the sevenths around them (Bdim is G7
+        /// without its root), so they name a reading only when none of `heard` fits (`bestChord`).
+        public static let symmetric: [Quality] = [.diminished, .diminished7, .augmented]
 
         public var intervals: [Int] {
             switch self {
@@ -108,10 +133,13 @@ public final class ChordRecognizer {
             case .sus2: return [0, 2, 7]
             case .sus4: return [0, 5, 7]
             case .power: return [0, 7]
+            case .diminished: return [0, 3, 6]
+            case .diminished7: return [0, 3, 6, 9]
+            case .augmented: return [0, 4, 8]
             }
         }
 
-        /// Chord-symbol suffix: "", "m", "7", "maj7", "m7", "sus2", "sus4", "5".
+        /// Chord-symbol suffix: "", "m", "7", "maj7", "m7", "sus2", "sus4", "5", "dim", "dim7", "aug".
         public var suffix: String {
             switch self {
             case .major: return ""
@@ -122,6 +150,9 @@ public final class ChordRecognizer {
             case .sus2: return "sus2"
             case .sus4: return "sus4"
             case .power: return "5"
+            case .diminished: return "dim"
+            case .diminished7: return "dim7"
+            case .augmented: return "aug"
             }
         }
 
@@ -385,18 +416,38 @@ public final class ChordRecognizer {
         return DspMath.clamp01((cosine - flat) / (1 - flat))
     }
 
-    /// Best template for a chroma: highest confidence, plus `bassBonus` when its root is the bass.
+    /// Best template for a chroma among the `heard` qualities: highest confidence, plus `bassBonus` when its root is
+    /// the bass. A symmetric one (diminished, diminished seventh, augmented) names the reading only when none of those
+    /// fits (under `symmetricFloor`) and it fits well (`symmetricFit`): a chord the eight templates can name is never
+    /// renamed, and an augmented triad, which none of them fits, still reads as itself. Lesson checks hear every
+    /// symmetric chord anyway (`ChordEstimate.matches` measures the target's own template).
     public static func bestChord(chroma: [Double], bass: Int?) -> (target: ChordTarget, confidence: Double)? {
         guard chroma.count == 12, chroma.contains(where: { $0 > 0 }) else { return nil }
-        var best: (target: ChordTarget, confidence: Double, rank: Double)?
-        for quality in Quality.allCases {
+        guard let top = Self.strongest(of: Quality.heard, chroma: chroma, bass: bass) else { return nil }
+        if top.confidence < symmetricFloor, let symmetric = Self.strongest(of: Quality.symmetric, chroma: chroma, bass: bass),
+           symmetric.confidence >= symmetricFit {
+            return (symmetric.target, symmetric.confidence)
+        }
+        return (top.target, top.confidence)
+    }
+
+    /// A symmetric template names a reading only when the best of the others fits less than this…
+    static let symmetricFloor = 0.4
+    /// …and it fits at least this well.
+    static let symmetricFit = 0.7
+
+    /// The best of `qualities` on all twelve roots (the first on a tie), with its rank.
+    private static func strongest(of qualities: [Quality], chroma: [Double], bass: Int?) -> (target: ChordTarget, confidence: Double, rank: Double)? {
+        var winner: (target: ChordTarget, confidence: Double, rank: Double)?
+        for quality in qualities {
             for root in 0..<12 {
                 let target = ChordTarget(root: root, quality: quality)
                 let confidence = templateConfidence(chroma: chroma, target: target)
                 let rank = confidence + (bass == root ? bassBonus : 0)
-                if best == nil || rank > best!.rank { best = (target, confidence, rank) }
+                if let current = winner, rank <= current.rank { continue }
+                winner = (target, confidence, rank)
             }
         }
-        return best.map { ($0.target, $0.confidence) }
+        return winner
     }
 }

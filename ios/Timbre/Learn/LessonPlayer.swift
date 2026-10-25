@@ -12,10 +12,10 @@ import TimbreCore
 /// the view left part-way (a song's first step stuck at about 30 % opacity), so the first screen is simply there and
 /// the zoom is its entrance.
 ///
-/// Hands stay on the instrument: each step's main button answers the space bar and → (a page-turner pedal sends
-/// those), "Try again" answers ←, and Siri, Shortcuts or Voice Control can say Start, Next, Again or Slower
-/// (`LessonControl`, `LessonCommandIntent`). With VoiceOver each new step is announced and read from its title
-/// (`lessonStepArrival`).
+/// Hands stay on the instrument: each step's main button answers a page-turner pedal in any of its modes (Page Down,
+/// ↓ or →; Return and the space bar too), "Try again" its other pedal (Page Up, ↑ or ←), and Siri, Shortcuts or Voice
+/// Control can say Start, Next, Again or Slower (`LessonControl`, `LessonCommandIntent`). With VoiceOver each new step
+/// is announced and read from its title (`lessonStepArrival`).
 struct LessonPlayer: View {
     let course: LearnCourse
     let lesson: Lesson
@@ -42,6 +42,8 @@ struct LessonPlayer: View {
     /// What the finished steps said about chord changes, rhythms and questions, for spaced review (saved with the
     /// result, never for a lesson left halfway).
     @State private var reviewCredits: [ReviewCredit] = []
+    /// Listening questions answered wrong so far: from two, the next ones show their notes too (`ChoiceStep`).
+    @State private var earMisses = 0
 
     /// A section of the song set up to play along with on its own: the loop picked on the sheet and its notes.
     private struct PartTake: Equatable {
@@ -237,6 +239,7 @@ struct LessonPlayer: View {
         case nil:
             StepView(step: step, course: course, accent: accent, onPractice: { practiced = true },
                      onItem: { item, score in run.score(item, score) }, onStarCap: { stars in run.capStars(stars) },
+                     earMisses: earMisses, onEarMiss: { earMisses += 1 },
                      done: { score in advance(score) }, entrance: arrived)
         }
     }
@@ -330,6 +333,11 @@ struct StepView: View {
     var onItem: (PracticeItem, Double) -> Void = { _, _ in }
     /// The step limits the lesson's stars (a play-along finished below the lesson tempo).
     var onStarCap: (Int) -> Void = { _ in }
+    /// Listening questions answered wrong earlier in the lesson; from two, a listening question shows its notes and
+    /// offers "I can't hear this".
+    var earMisses = 0
+    /// A listening question was answered wrong.
+    var onEarMiss: () -> Void = {}
     let done: (Double?) -> Void
     /// Off for a lesson's first screen, which arrives inside the zoom that opens the lesson: no entrance of its own.
     var entrance = true
@@ -345,17 +353,20 @@ struct StepView: View {
                       onItem: onItem, onStarCap: onStarCap, done: done)
         case let .playChord(chord):
             ChordStep(chord: chord, course: course, accent: accent, onItem: onItem, done: done)
-        case let .strum(chord, pattern, bpm, bars, beatsPerBar, _, _):
-            RhythmStep(mode: .strum(chord), pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, strums: true, strings: course.stringCount,
-                       edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice, onStarCap: onStarCap, done: done)
-        case let .progression(chords, bars, pattern, bpm, beatsPerBar, _, _):
-            RhythmStep(mode: .progression(chords, bars), pattern: pattern, bpm: bpm, bars: bars.reduce(0, +), meter: beatsPerBar, strums: true, strings: course.stringCount,
-                       edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice, onStarCap: onStarCap, done: done)
+        case let .strum(chord, pattern, bpm, bars, beatsPerBar, muted, accents):
+            RhythmStep(mode: .strum(chord), pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, muted: muted, accents: accents, strums: true,
+                       strings: course.stringCount, edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice,
+                       onStarCap: onStarCap, done: done)
+        case let .progression(chords, bars, pattern, bpm, beatsPerBar, muted, accents):
+            RhythmStep(mode: .progression(chords, bars), pattern: pattern, bpm: bpm, bars: bars.reduce(0, +), meter: beatsPerBar, muted: muted,
+                       accents: accents, strums: true, strings: course.stringCount, edges: StringEdges.of(course), course: course, accent: accent,
+                       onPractice: onPractice, onStarCap: onStarCap, done: done)
         case let .tapRhythm(pattern, bpm, bars, beatsPerBar):
             RhythmStep(mode: .tap, pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, hearsInstrument: course.fretKind != nil, strums: course.strums,
                        strings: course.stringCount, edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice, done: done)
         case let .listen(prompt, sound, options, answer):
-            ChoiceStep(prompt: prompt, options: options, answer: answer, why: nil, visual: .none, sound: sound, course: course, accent: accent, done: done)
+            ChoiceStep(prompt: prompt, options: options, answer: answer, why: nil, visual: .none, sound: sound, course: course, accent: accent,
+                       earMisses: earMisses, onEarMiss: onEarMiss, done: done)
         case let .quiz(prompt, options, answer, why, visual):
             ChoiceStep(prompt: prompt, options: options, answer: answer, why: why, visual: visual, sound: nil, course: course, accent: accent, done: done)
         }
@@ -530,14 +541,16 @@ extension View {
     }
 }
 
-/// What a lesson's buttons answer to beyond a tap: a hardware keyboard or a page-turner pedal (they send the space bar
-/// and the arrows), and Siri, Shortcuts or Voice Control mid-lesson (`LessonCommandIntent`).
+/// What a lesson's buttons answer to beyond a tap: a hardware keyboard or a page-turner pedal, and Siri, Shortcuts or
+/// Voice Control mid-lesson (`LessonCommandIntent`). A pedal sends Page Down and Page Up, ↓ and ↑, or → and ←, by the
+/// mode it is set to: in every mode its forward pedal moves on and its back pedal plays again.
 enum LessonControl {
-    /// The step's main button (Start, Check, Continue, Next lesson): space or →; "Start" and "Next".
+    /// The step's main button (Start, Check, Continue, Next lesson): Page Down, ↓, →, Return or the space bar; "Start"
+    /// and "Next".
     case primary
-    /// Another go (Try again): ←; "Again".
+    /// Another go (Try again): Page Up, ↑ or ←; "Again".
     case again
-    /// A slower take (the play-along's tempo ladder): ↓; "Slower".
+    /// A slower take (the play-along's tempo ladder): ⌥↓, clear of the pedals; "Slower".
     case slower
 
     func answers(_ command: LessonCommand) -> Bool {
@@ -549,6 +562,8 @@ enum LessonControl {
 }
 
 /// The keys as zero-sized buttons behind the control (one button carries one shortcut), and the spoken commands.
+/// The shortcuts don't ask for priority over the system's own use of these keys, so while another control has the
+/// keyboard's focus (Full Keyboard Access, Tab on an iPad) the space bar and Return press that control, not this one.
 private struct LessonControlKeys: ViewModifier {
     let role: LessonControl
     let enabled: Bool
@@ -569,17 +584,27 @@ private struct LessonControlKeys: ViewModifier {
         ZStack {
             switch role {
             case .primary:
-                Button { fire() } label: { EmptyView() }.keyboardShortcut(.space, modifiers: [])
-                Button { fire() } label: { EmptyView() }.keyboardShortcut(.rightArrow, modifiers: [])
+                key(.pageDown)
+                key(.downArrow)
+                key(.rightArrow)
+                key(.return)
+                key(.space)
             case .again:
-                Button { fire() } label: { EmptyView() }.keyboardShortcut(.leftArrow, modifiers: [])
+                key(.pageUp)
+                key(.upArrow)
+                key(.leftArrow)
             case .slower:
-                Button { fire() } label: { EmptyView() }.keyboardShortcut(.downArrow, modifiers: [])
+                key(.downArrow, modifiers: .option)
             }
         }
         .frame(width: 0, height: 0)
         .opacity(0)
         .accessibilityHidden(true)
+    }
+
+    /// One hidden button answering `key`.
+    private func key(_ key: KeyEquivalent, modifiers: EventModifiers = []) -> some View {
+        Button { fire() } label: { EmptyView() }.keyboardShortcut(key, modifiers: modifiers)
     }
 
     /// One press at a time: a pedal's bounce, or a second press while the next step slides in, never skips a step.
@@ -592,7 +617,7 @@ private struct LessonControlKeys: ViewModifier {
 }
 
 /// The big bottom button every step ends with: the app's one primary button (`PrimaryButtonStyle`, mint whatever the
-/// course's colour), disabled looking disabled. It answers the space bar and → too (`LessonControl.primary`).
+/// course's colour), disabled looking disabled. It answers a pedal's forward press too (`LessonControl.primary`).
 struct StepButton: View {
     let title: LocalizedStringKey
     /// The step's accent. A primary button is always mint; kept so every step can hand its colours on the same way.
@@ -716,6 +741,11 @@ struct MicrophoneHint: View {
 
 // MARK: - Choices (listen and quiz)
 
+/// A question with one right answer: a theory quiz, or a listening question (`sound`: notes to hear first). A listening
+/// question answered wrong shows its notes on a small staff with the answer, so the ear has the eye's help. From the
+/// lesson's second wrong listening answer (`earMisses`) a listening question shows its notes up front too, and offers
+/// "I can't hear this": the answer and the notes, with the question left unscored, so a player who can't hear the
+/// difference (hard of hearing, a noisy room) keeps the lesson's stars.
 struct ChoiceStep: View {
     let prompt: LearnText
     let options: [LearnText]
@@ -725,9 +755,15 @@ struct ChoiceStep: View {
     let sound: [[Int]]?
     let course: LearnCourse
     let accent: Color
+    /// Listening questions answered wrong earlier in the lesson.
+    var earMisses = 0
+    /// This listening question was answered wrong.
+    var onEarMiss: () -> Void = {}
     let done: (Double?) -> Void
     @EnvironmentObject private var store: AppStore
     @State private var picked: Int?
+    /// "I can't hear this": the answer shown, the question unscored.
+    @State private var unheard = false
     @State private var shake = 0
     @State private var burst = 0
     @State private var playing = false
@@ -739,6 +775,9 @@ struct ChoiceStep: View {
     @State private var answersHeight: CGFloat = 0
 
     private var correct: Bool { picked == answer }
+    /// A listening question past the lesson's second wrong listening answer: its notes show up front, and it can be
+    /// passed unheard.
+    private var seesNotes: Bool { sound != nil && earMisses >= 2 }
     private var compact: Bool { options.count >= 3 && options.allSatisfy { $0.localized.count <= 8 } }
     /// The listen card at its plain size: the rings (156), the words under them (54) and its padding (32).
     private static let listenHeight: CGFloat = 242
@@ -765,12 +804,46 @@ struct ChoiceStep: View {
                 .scrollBounceBehavior(.basedOnSize)
             }
             if let picked { feedback(picked) }
-            StepButton(title: picked == nil ? "Check" : "Continue", accent: picked == nil || correct ? accent : Palette.danger, enabled: picked != nil) {
-                done(correct ? 1 : 0)
-            }
+            bottomBar
         }
         .onAppear { if let sound { play(sound) } }
         .onDisappear { playTask?.cancel(); playTask = nil }
+    }
+
+    /// Continue once answered (Check before, disabled); beside it on a listening question past two wrong answers,
+    /// "I can't hear this" until it is answered.
+    @ViewBuilder private var bottomBar: some View {
+        let button = StepButton(title: picked == nil ? "Check" : "Continue", accent: picked == nil || correct ? accent : Palette.danger,
+                                enabled: picked != nil, inset: !(seesNotes && picked == nil)) {
+            done(unheard ? nil : (correct ? 1.0 : 0.0))
+        }
+        if seesNotes && picked == nil {
+            LessonActionBar {
+                LessonBarButton(title: "I can’t hear this", identifier: "lesson.cantHear") { passUnheard() }
+                button
+            }
+        } else {
+            button
+        }
+    }
+
+    /// The answer and the notes, the question unscored.
+    private func passUnheard() {
+        guard picked == nil else { return }
+        Haptics.shared.selection()
+        unheard = true
+        withAnimation(Motion.settle) { picked = answer }
+    }
+
+    /// A listening question's notes on a small staff, in the order they play (bass clef for low ones).
+    @ViewBuilder private var soundStaff: some View {
+        if let sound, !sound.isEmpty {
+            let notes = sound.flatMap { $0 }
+            let mean = notes.isEmpty ? 60 : notes.reduce(0, +) / notes.count
+            StaffView(notes: notes, clef: mean < 57 ? "bass" : "treble", accent: accent, activeIndex: nil, lineGap: 9)
+                .padding(.horizontal, 8)
+                .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.stageRaised))
+        }
     }
 
     private var answers: some View {
@@ -801,7 +874,8 @@ struct ChoiceStep: View {
     /// (as on an explanation without a picture), and the answers still sit at the bottom.
     private func middle(_ room: CGSize?) -> some View {
         VStack(spacing: 20) {
-            if let sound { listenButton(sound, fill: visual == .none ? room?.height : nil) }
+            if let sound { listenButton(sound, fill: visual == .none && !seesNotes ? room?.height : nil) }
+            if seesNotes && picked == nil { soundStaff }
             if visual != .none {
                 visualCard(room.flatMap { visualRoom($0) })
             } else if sound == nil, let room {
@@ -862,7 +936,10 @@ struct ChoiceStep: View {
             // The feedback slides in and the picture above makes room for it.
             withAnimation(Motion.settle) { picked = index }
             if index == answer { SoundFX.shared.play(.correct); Haptics.shared.lock(); burst += 1 }
-            else { SoundFX.shared.play(.wrong); Haptics.shared.selection(); withAnimation(.default) { shake += 1 } }
+            else {
+                SoundFX.shared.play(.wrong); Haptics.shared.selection(); withAnimation(.default) { shake += 1 }
+                if sound != nil { onEarMiss() }
+            }
         } label: {
             HStack(spacing: 12) {
                 if compact { Spacer(minLength: 0) }
@@ -888,19 +965,29 @@ struct ChoiceStep: View {
     }
 
     private func feedback(_ picked: Int) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: correct ? "checkmark.seal.fill" : "lightbulb.fill").font(.title2).foregroundStyle(correct ? accent : Palette.amber)
-            VStack(alignment: .leading, spacing: 4) {
-                Text(correct ? LocalizedStringKey("Nice — that’s right.") : LocalizedStringKey("Not quite.")).font(Typeface.label(.headline)).foregroundStyle(Palette.ink)
-                if let why { Text(why.localized).font(.subheadline).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true) }
-                else if !correct { Text("The answer is \(options[answer].localized).").font(.subheadline).foregroundStyle(Palette.inkSoft) }
+        // Heard right, a nod; unheard, what played; wrong, the answer (and, for a listening question, its notes).
+        let tint = correct && !unheard ? accent : Palette.amber
+        return VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: unheard ? "music.note.list" : correct ? "checkmark.seal.fill" : "lightbulb.fill").font(.title2).foregroundStyle(tint)
+                VStack(alignment: .leading, spacing: 4) {
+                    feedbackHeadline.font(Typeface.label(.headline)).foregroundStyle(Palette.ink)
+                    if let why { Text(why.localized).font(.subheadline).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true) }
+                    else if !correct || unheard { Text("The answer is \(options[answer].localized).").font(.subheadline).foregroundStyle(Palette.inkSoft) }
+                }
+                Spacer(minLength: 0)
             }
-            Spacer(minLength: 0)
+            if sound != nil && (!correct || unheard) { soundStaff }
         }
         .padding(16)
-        .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill((correct ? accent : Palette.amber).opacity(0.10)))
+        .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(tint.opacity(0.10)))
         .padding(.horizontal, Metrics.gutter).padding(.bottom, 10)
         .transition(.move(edge: .bottom).combined(with: .opacity))
+    }
+
+    private var feedbackHeadline: Text {
+        if unheard { return Text("Here’s what played.") }
+        return correct ? Text("Nice — that’s right.") : Text("Not quite.")
     }
 
     /// Plays the question's notes group by group; a replay stops the sequence already playing first.
