@@ -343,8 +343,8 @@ struct ExplainStep: View {
         Binding(get: { showMe }, set: { on in setShowMe(on) })
     }
 
-    /// Under the picture: "Show me" (under notes or a strum in 3D, the switch back to the picture beside it; a chord's
-    /// sits in its header), and under it the teacher's line: what to watch, then after a chord's demonstration the
+    /// Under the picture: "Show me" (under notes or a strum, the switch between the picture and the model beside it; a
+    /// chord's sits in its header), and under it the teacher's line: what to watch, then after a chord's demonstration the
     /// learner's cue to play it back in the same place.
     @ViewBuilder private var footer: some View {
         if showMeModel != nil {
@@ -359,7 +359,7 @@ struct ExplainStep: View {
         }
     }
 
-    /// "Show me"; under notes or a strum, the switch back to the picture beside it while the model shows.
+    /// "Show me"; under notes or a strum, the switch between the picture and the model beside it.
     @ViewBuilder private var showMeControls: some View {
         if case .chord = visual {
             showMeButton
@@ -373,12 +373,9 @@ struct ExplainStep: View {
         }
     }
 
-    /// Under notes or a strum: the switch back to the picture while the model shows, and "Show me".
+    /// Under notes or a strum: the switch between the picture and the model, and "Show me".
     @ViewBuilder private var neckFooterContent: some View {
-        if showMe {
-            ShowMeToggle(on: showMeBinding, accent: accent, label: "Neck view")
-                .transition(.opacity)
-        }
+        ShowMeToggle(on: showMeBinding, accent: accent, label: "Neck view")
         showMeButton
     }
 
@@ -561,13 +558,9 @@ struct ExplainStep: View {
         .background { SparkBurst(trigger: burst, color: accent, startFraction: 0.45).frame(width: fit.width * 1.55, height: fit.width * 1.55) }
     }
 
-    /// The chord's name over the switch between the chart and the player's view; in 3D, over the switch back to it.
-    @ViewBuilder private func chordHeader(_ spec: ChordSpec) -> some View {
-        if showMe && showMeModel != nil {
-            ShowMeCardHeader(name: spec.name, on: showMeBinding, accent: accent)
-        } else {
-            ChordCardHeader(name: spec.name, accent: accent)
-        }
+    /// The chord's name over the switch between the chart, the player's view and, where the card has a model, 3D.
+    private func chordHeader(_ spec: ChordSpec) -> some View {
+        ChordCardHeader(name: spec.name, accent: accent, threeD: showMeModel != nil ? showMeBinding : nil)
     }
 
     /// The chart or the player's view, flipping between them in the same room (on its bottom edge, as the box).
@@ -740,7 +733,8 @@ struct ExplainStep: View {
                 TimelineView(.animation(minimumInterval: 1 / 60, paused: neckStart == nil)) { timeline in
                     let state = neckState(at: timeline.date, order: order, dots: dots)
                     FretboardDiagram(strings: strings, dots: dots, frets: frets, accent: accent, start: start, activeString: state.active,
-                                     fretless: course.fretless, rowHeight: rowHeight, edges: edges, landing: state.landing, fretNumbers: numbered)
+                                     fretless: course.fretless, rowHeight: rowHeight, edges: edges, landing: state.landing, fretNumbers: numbered,
+                                     fingerboard: fingerboard)
                 }
                 .transition(.opacity)
             }
@@ -749,7 +743,8 @@ struct ExplainStep: View {
                 ShowMeStage(modelID: model, strings: strings, fretless: course.fretless,
                             shot: .fretting(ShowMeShape(dots: dots, strings: strings, order: order, start: start)),
                             accent: accent, landStart: neckStart, landingStep: Self.noteStep, edges: edges, revealed: threeD,
-                            label: Text("Notes on the neck"), value: ShowMe.words(dots: order.compactMap { dots[safe: $0] }),
+                            label: Text("Notes on the neck"),
+                            value: ShowMe.words(dots: order.compactMap { dots[safe: $0] }, fingerboard: fingerboard),
                             onReady: { showMeAppeared() }, onFailure: { showMeUnavailable() })
                     .frame(height: max(160, room.height))
             }
@@ -856,8 +851,11 @@ struct ExplainStep: View {
         let landing: [Double]? = playingIndex.map { now in spots.indices.map { Double($0 <= now ? 1 : 0) } }
         let active = playingIndex.flatMap { spots[safe: $0]?.string }
         return FretboardDiagram(strings: strings, dots: spots, frets: frets, accent: accent, activeString: active, fretless: course.fretless,
-                                rowHeight: rowHeight, edges: StringEdges.of(course), landing: landing, fretNumbers: numbered)
+                                rowHeight: rowHeight, edges: StringEdges.of(course), landing: landing, fretNumbers: numbered, fingerboard: fingerboard)
     }
+
+    /// A violin's or cello's fingerboard: VoiceOver places its notes by finger, never by fret.
+    private var fingerboard: Fingerboard? { Fingerboard(instrument: course.instrument) }
 
     /// The keys of `played` (in the order they play): the one sounding now while they play, all of them otherwise.
     private func keysLit(_ played: [Int]) -> Set<Int> {

@@ -57,9 +57,12 @@ extension SpacedReview {
         case let .chord(spec): return .playChord(chord: spec)
         case let .change(from, to):
             return .progression(chords: [from, to, from, to], bars: [1, 1, 1, 1], pattern: [0, 1, 2, 3], bpm: changeBpm, beatsPerBar: 4)
-        case let .rhythm(pattern, beatsPerBar, bpm, chord, strummed):
+        case let .rhythm(pattern, beatsPerBar, bpm, chord, strummed, muted, accents):
             let tempo = min(200, max(40, bpm))
-            if strummed && strums { return .strum(chord: chord, pattern: pattern, bpm: tempo, bars: 2, beatsPerBar: beatsPerBar) }
+            // Strummed with its chops and accents, so they are graded as the lesson graded them.
+            if strummed && strums {
+                return .strum(chord: chord, pattern: pattern, bpm: tempo, bars: 2, beatsPerBar: beatsPerBar, muted: muted, accents: accents)
+            }
             return .tapRhythm(pattern: pattern, bpm: tempo, bars: 2, beatsPerBar: beatsPerBar)
         case let .question(question):
             if let sound = question.sound {
@@ -91,7 +94,7 @@ extension SpacedReview {
             switch item {
             case let .chord(spec): return .chord(spec)
             case let .change(from, _): return .chord(from)
-            case let .rhythm(pattern, beatsPerBar, _, _, _): return .rhythm(pattern: pattern, beatsPerBar: beatsPerBar ?? 4)
+            case let .rhythm(pattern, beatsPerBar, _, _, _, _, _): return .rhythm(pattern: pattern, beatsPerBar: beatsPerBar ?? 4)
             default: continue
             }
         }
@@ -116,9 +119,11 @@ extension SpacedReview {
         case let .progression(chords, _, _, _, _, _, _):
             guard !tapped else { return [] }
             return changes(in: chords).map { ReviewCredit(item: $0, score: credit) }
-        case let .strum(chord, pattern, bpm, _, beatsPerBar, _, _):
+        case let .strum(chord, pattern, bpm, _, beatsPerBar, muted, accents):
             guard !pattern.isEmpty else { return [] }
-            return [ReviewCredit(item: .rhythm(pattern: pattern, beatsPerBar: beatsPerBar, bpm: bpm, chord: chord, strummed: true), score: credit)]
+            let rhythm = ReviewItem.rhythm(pattern: pattern, beatsPerBar: beatsPerBar, bpm: bpm, chord: chord, strummed: true,
+                                           muted: muted, accents: accents)
+            return [ReviewCredit(item: rhythm, score: credit)]
         case let .tapRhythm(pattern, bpm, _, beatsPerBar):
             guard !pattern.isEmpty else { return [] }
             return [ReviewCredit(item: .rhythm(pattern: pattern, beatsPerBar: beatsPerBar, bpm: bpm, chord: nil, strummed: false), score: credit)]

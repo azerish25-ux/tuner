@@ -50,7 +50,9 @@ struct ChartSongView: View {
             }
         }
         .fullScreenCover(isPresented: $practicing) {
-            ChartPracticeView(title: library.title(of: song), steps: instrument.steps(for: chart, transform: transform), course: instrument.course)
+            // The steps, then the whole chart played through as "Chords & words".
+            ChartPracticeView(title: library.title(of: song), steps: instrument.steps(for: chart, transform: transform), course: instrument.course,
+                              song: instrument.take(for: chart, title: library.title(of: song), transform: transform))
                 .environmentObject(store).environmentObject(store.audio).environmentObject(store.commerce)
         }
         .sheet(isPresented: $editing) {

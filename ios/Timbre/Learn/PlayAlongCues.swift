@@ -43,9 +43,10 @@ enum TakeFeedback {
 // MARK: - Spoken cues
 
 /// The play-along for VoiceOver: each note named ahead of it by the app's own voice ("D, string 4, open"; just "4 open"
-/// when notes come too fast for more), timed to end before the note, with the microphone set aside while it speaks; a
-/// tick or a thud for each note judged, the count-in felt, the band stepped back and the result said at the end. On
-/// whenever VoiceOver runs, unless the player turned it off (the runway's actions).
+/// when notes come too fast for more; on a violin's or cello's fingerboard its string and finger, "String 1, finger 1"),
+/// timed by `CuePlan` to end before the note (`Timing`), with the microphone set aside while it speaks; a tick or a
+/// thud for each note judged, the count-in felt, the band stepped back and the result said at the end. On whenever
+/// VoiceOver runs, unless the player turned it off (the runway's actions).
 enum SpokenCues {
     /// The player's choice; unset follows VoiceOver.
     static let storageKey = "along.spokenCues"
@@ -61,10 +62,12 @@ enum SpokenCues {
     /// Names `note`, which is due `lead` seconds from now, through the app's own voice (`CueVoice`), so the cue is over
     /// before the note begins: in full when that fits and `brief` isn't asked for (the caller's call, from the gap
     /// before the note), else just its place, else nothing at all (a cue running into its note would hide the note
-    /// from the microphone and from the ear). The microphone is set aside while it speaks.
-    @MainActor static func schedule(_ note: TimedNote, fretted: Bool, lead: TimeInterval, brief: Bool) {
-        let short = phrase(note, fretted: fretted, brief: true)
-        speak(firstFitting: brief ? [short] : [phrase(note, fretted: fretted, brief: false), short], lead: lead)
+    /// from the microphone and from the ear). The microphone is set aside while it speaks. `fingerboard`: a violin's or
+    /// cello's, whose places are said as a string and a finger, never a fret.
+    @MainActor static func schedule(_ note: TimedNote, fretted: Bool, lead: TimeInterval, brief: Bool, fingerboard: Fingerboard? = nil) {
+        let short = phrase(note, fretted: fretted, brief: true, fingerboard: fingerboard)
+        let full = phrase(note, fretted: fretted, brief: false, fingerboard: fingerboard)
+        speak(firstFitting: brief ? [short] : [full, short], lead: lead)
     }
 
     /// Says `text` (a chord's name before its bar) through the app's own voice when it can be over before what it
@@ -80,6 +83,33 @@ enum SpokenCues {
     /// The voice is ready before the take's first cue (called as a take with cues starts).
     @MainActor static func prepare() { CueVoice.shared.prepare() }
 
+    /// A take's cues on its clock, planned as it starts (`CuePlan.plan`: when each note is named, and whether in brief,
+    /// so no cue runs into its note or the next cue) and handed out as their times come; the take says each one with
+    /// `schedule`.
+    struct Timing {
+        private var cues: [CuePlan.Cue] = []
+        private var next = 0
+
+        init() {}
+
+        /// The cues for `session`'s notes, from the start of its count-in.
+        init(_ session: PlayAlongSession) {
+            let spb = session.secondsPerBeat
+            cues = CuePlan.plan(times: session.notes.map { $0.beat * spb }, secondsPerBeat: spb, from: -session.countIn)
+        }
+
+        /// The cue whose time has come by `clock` (seconds on the take's clock), each once. After a stalled frame only
+        /// the latest is handed out: the note coming up is named rather than one already past.
+        mutating func due(at clock: Double) -> CuePlan.Cue? {
+            var found: CuePlan.Cue?
+            while next < cues.count, cues[next].at <= clock {
+                found = cues[next]
+                next += 1
+            }
+            return found
+        }
+    }
+
     @MainActor private static func speak(firstFitting options: [String], lead: TimeInterval) {
         guard lead.isFinite, lead > 0 else { return }
         let voice = CueVoice.shared
@@ -89,10 +119,15 @@ enum SpokenCues {
     }
 
     /// A note as said: its name and, on a fretted course, where to play it; `brief` keeps only the place, as briefly as
-    /// it can be said ("6 open", "5, fret 3").
-    static func phrase(_ note: TimedNote, fretted: Bool, brief: Bool) -> String {
+    /// it can be said ("6 open", "5, fret 3"). On a fingerboard the place is its string and finger ("String 1, finger
+    /// 1"), the brief cue included.
+    static func phrase(_ note: TimedNote, fretted: Bool, brief: Bool, fingerboard: Fingerboard? = nil) -> String {
         let name = spokenName(note.midi)
         guard fretted, let at = note.at else { return name }
+        if let fingerboard {
+            let place = FingerPlace(at, on: fingerboard).words
+            return brief ? place : name + ", " + place
+        }
         if brief {
             return at.fret == 0 ? String(localized: "\(at.string) open") : String(localized: "\(at.string), fret \(at.fret)")
         }

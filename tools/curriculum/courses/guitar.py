@@ -48,6 +48,7 @@ EIGHTHS = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
 SKIP = [0, 1, 1.5, 2, 3, 3.5]            # down, down-up, down, down-up
 FOLK = [0, 1, 1.5, 2.5, 3, 3.5]          # down, down-up, up-down-up
 PUSH = [0, 1.5, 3]                       # one, the and of two, four
+DOWNBEAT = [0]                           # an accent on beat one
 SHUFFLE = [round(b + o, 3) for b in range(4) for o in (0, 2 / 3)]
 
 # ---------------------------------------------------------------- melodies (all public domain)
@@ -524,14 +525,14 @@ UNIT_4 = unit("gtr-4", "Strumming", "Downstrokes, down-up eighths, accents and a
     lesson("gtr-4-3", "Accent beat one", [
         explain("Lean on one", "An accent is a note played a little louder. Strum beat one harder than the rest. "
                 "It tells everyone where the bar begins.", rhythm(QUARTERS)),
-        strum(E, QUARTERS, bpm=72, bars=4),
+        strum(E, QUARTERS, accents=DOWNBEAT, bpm=72, bars=4),
         quiz("Which beat gets the accent?", ["Beat three", "Every and", "Beat one"], 2,
              "Beat one starts the bar. A slightly louder first strum keeps you, and anyone listening, in time."),
         explain("Count the bars", "Say the bar number on beat one: one, two, three, four; two, two, three, four. "
                 "You always know where you are."),
         tap(QUARTERS, bpm=72, bars=4),
-        strum(Am, EIGHTHS, bpm=66, bars=4),
-        strum(Em, QUARTERS, bpm=76, bars=4),
+        strum(Am, EIGHTHS, accents=DOWNBEAT, bpm=66, bars=4),
+        strum(Em, QUARTERS, accents=DOWNBEAT, bpm=76, bars=4),
     ], minutes=5, xp=20),
     lesson("gtr-4-4", "Keep the hand moving", [
         explain("A pendulum hand", "Your strumming hand swings down and up all the time, like a pendulum. "

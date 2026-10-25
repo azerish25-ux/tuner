@@ -9,13 +9,7 @@ import TimbreCore
 enum LessonMicrophone {
     /// Debug builds launched with TIMBRE_DEMO_PITCH=1 (automated runs and captures) feed a demo pitch instead of the
     /// microphone. It has a pitch but no strokes, so rhythm steps play the strums themselves (`RhythmStep`).
-    static var demo: Bool {
-        #if DEBUG
-        return ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1"
-        #else
-        return false
-        #endif
-    }
+    static var demo: Bool { TestSupport.isOn(.demoPitch) }
 
     @MainActor static func unavailable(_ audio: AudioService) -> Bool {
         if demo { return false }

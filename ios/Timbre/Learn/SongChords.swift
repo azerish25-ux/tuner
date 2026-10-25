@@ -98,8 +98,9 @@ struct ChordTakeSheet {
 /// and the beats of the bar under it, split where the chord changes; the words run below karaoke style. Every chord is
 /// judged on its own first stroke for its timing and its chord (`ChordAlongJudge`), a half-bar change as much as a
 /// downbeat: a wrong chord is named in amber ("Am?"), a chord with nothing heard is missed. The combo, the score, the
-/// song map and the take's ribbon run as on the melody take. With VoiceOver each change of chord is named ahead of it
-/// (`SpokenCueTiming`). Stop goes back to the stage.
+/// song map and the take's ribbon run as on the melody take. With VoiceOver each change of chord is named ahead of it,
+/// as far ahead as a play-along's cues (`CuePlan.lead`), in the cues' own voice (`SpokenCues`). The band keeps to
+/// headphones: on the speaker its drum hits would be heard as strokes. Stop goes back to the stage.
 struct SongChordsTake: View {
     let sheet: ChordTakeSheet
     let accent: Color
@@ -288,7 +289,8 @@ struct SongChordsTake: View {
         Analytics.log(sheet.event, sheet.properties)
         store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
         ownsClick = true
-        store.audio.playBand(band, firstBar: 1)
+        // Headphones only: on the speaker the click plays alone, so no drum hit is judged as a stroke.
+        store.audio.playBand(band, firstBar: 1, onSpeaker: false)
         // Each stroke is timed as it is heard; its chord follows a quarter second later, from the same stroke.
         let analyzer = LessonAnalyzer(chords: false, strokes: true,
                                       onOnset: { time in strummed(at: time) },
@@ -324,13 +326,17 @@ struct SongChordsTake: View {
         if judge.isFinished || time > judge.duration + 1 { finish() }
     }
 
-    /// With VoiceOver: each change of chord named ahead of it ("E minor"), a half-bar change as much as a downbeat.
+    /// With VoiceOver: each change of chord named ahead of it ("E minor"), a half-bar change as much as a downbeat, and
+    /// only when it can be said before the change comes.
     private func nameNextChange(at time: Double) {
         let next = named + 1
-        guard plan.slots.indices.contains(next), time >= judge.time(of: next) - SpokenCueTiming.lead(secondsPerBeat: spb) else { return }
+        guard plan.slots.indices.contains(next) else { return }
+        let due = judge.time(of: next)
+        guard time >= due - CuePlan.lead(secondsPerBeat: spb) else { return }
         named = next
         let chord = plan.slots[next].chord
-        if next == 0 || chord.symbol != plan.slots[next - 1].chord.symbol { SpokenCues.say(SongSheet.spoken(chord)) }
+        guard next == 0 || chord.symbol != plan.slots[next - 1].chord.symbol else { return }
+        SpokenCues.schedule(saying: SongSheet.spoken(chord), lead: due - time)
     }
 
     private func react(_ update: PlayAlongSession.Update) {
