@@ -1,0 +1,57 @@
+App Store App Preview (violin): iPhone 6.9" display, portrait
+preview.mp4: 886x1920, 30 fps, H.264 High, stereo AAC 44.1 kHz, 21.77 s, 4.5 MB (the marked clips and end card ran 22.6 s)
+soundtrack: mean -23.7 dB, max -3.9 dB (normalised to -16 LUFS; the app's mix peaked at 0.43); 13 sound effects and 52 stretches of engine sound logged
+poster.png: the frame at 00:00:02.87 (in lock), NOT verified. In App Store Connect, set the preview's poster frame to this time.
+recording: iPhone 17 Pro Max, 277.3 s; start simctl reported 'Recording started'; manual offset +0.00 s
+syncs vs the recorder's clock: +0.48 s (median of 3 pinned syncs)
+
+clips (seconds into the recording -> into the preview; caption; placed by):
+  lock        81.28-  85.03 ->  0.00- 3.75  keep tail  “Tune your violin, free”  (sync lock, to 1/60 s)
+  tuned       90.90-  95.40 ->  3.75- 8.25  keep tail  “G, D, A, E: all in tune”  (syncs lock, lock-held, highway)
+  highway    130.10- 136.10 ->  8.25-14.25  keep head  “Play songs on your violin”  (syncs lock, lock-held, highway)
+  results    161.60- 164.60 -> 14.25-17.25  keep head  “Hear how you did”  (syncs lock, lock-held, highway)
+  songs      231.87- 234.12 -> 17.25-19.50  keep head  “140+ songs to learn”  (syncs lock, lock-held, highway)
+  end card                     19.50-21.75  “Violin tuner and lessons”
+
+syncs (the test's screenshots, found in the recording; sync.png shows each beside its frame):
+  tuner          at   80.40 s  diff   0.9 (next   1.0)  vs clock   +1.69 s  found, not distinctive
+  lock           at   84.23 s  diff   0.7 (next   6.1)  vs clock   +0.52 s  pinned, to 1/60 s
+  lock-held      at   84.93 s  diff   0.7 (next   6.0)  vs clock   +0.48 s  pinned
+  tuned          at   95.93 s  diff   0.6 (next   0.7)  vs clock   +0.41 s  found, not distinctive
+  highway        at  131.73 s  diff   0.9 (next   2.3)  vs clock   +0.31 s  pinned
+  highway-2      at  130.73 s  diff   2.9 (next   3.3)  vs clock   -5.42 s  found, not distinctive
+  results        at  163.33 s  diff   0.8 (next   0.8)  vs clock   -0.64 s  found, not distinctive
+  songs-ready    at  210.40 s  diff   0.4 (next   0.4)  vs clock   -0.44 s  found, not distinctive
+  songs          at  269.80 s  diff   0.3 (next   0.4)  vs clock   +0.49 s  found, not distinctive
+
+lock: the bell (its cue) at 83.553 s in the recording, the badge's first frame at 85.120 s: +1567 ms (at most ±80); readout mint 4.4% before, 9.2% locked
+sound: 41% of 21.7 s sounding; longest silence 2.9 s (at most 0.5 s allowed, silence under -60 dBFS)
+  lock       89% sounding
+  tuned      62% sounding
+  highway    13% sounding
+  results     3% sounding
+  songs      23% sounding
+  end card   55% sounding
+
+WARNING: the tour missed a moment: no star rang within 2.5 s of the finale: the results clip starts at the finale
+check multiplier: combo 138 at the clip's end (×4)
+cuts on the beat: 80 BPM, a cut every whole beat from the start
+NOT FOR UPLOAD: 1.7 s of silence at 6.5-8.2 s (tuned)
+NOT FOR UPLOAD: 0.7 s of silence at 8.3-9.0 s (highway)
+NOT FOR UPLOAD: 0.6 s of silence at 9.1-9.7 s (highway)
+NOT FOR UPLOAD: 0.7 s of silence at 9.8-10.5 s (highway)
+NOT FOR UPLOAD: 0.6 s of silence at 10.6-11.2 s (highway)
+NOT FOR UPLOAD: 0.7 s of silence at 11.3-12.0 s (highway)
+NOT FOR UPLOAD: 0.6 s of silence at 12.1-12.7 s (highway)
+NOT FOR UPLOAD: 0.7 s of silence at 12.8-13.5 s (highway)
+NOT FOR UPLOAD: 0.6 s of silence at 13.6-14.2 s (highway)
+NOT FOR UPLOAD: 2.9 s of silence at 14.3-17.2 s (results)
+NOT FOR UPLOAD: 1.7 s of silence at 17.8-19.5 s (songs)
+NOT FOR UPLOAD: 1.0 s of silence at 20.7-21.7 s (end card)
+NOT FOR UPLOAD: highway: sounding in 13% of its windows (at least 60%)
+NOT FOR UPLOAD: results: sounding in 3% of its windows (at least 60%)
+NOT FOR UPLOAD: songs: sounding in 23% of its windows (at least 60%)
+NOT FOR UPLOAD: end card: sounding in 55% of its windows (at least 60%)
+NOT FOR UPLOAD: sound and picture drift +1567 ms at the lock (the bell against the badge's first frame; at most ±80 ms)
+NOT FOR UPLOAD: the lock (85.12 s) falls outside its clip (81.28-85.03 s)
+NOT FOR UPLOAD: the poster can't show the lock: no frame of the lock clip from a quarter second after the badge's first frame still shows it (the tuner's lock doesn't hold on screen)
