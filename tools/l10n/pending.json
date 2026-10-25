@@ -213,14 +213,14 @@
   "table": "Localizable.strings",
   "key": "%lf beaten",
   "source": "%lf beaten",
-  "note": "ios/Timbre/Practice/PlayHubGames.swift:357",
+  "note": "ios/Timbre/Practice/PlayHubGames.swift:362",
   "locales": 48
  },
  {
   "table": "Localizable.strings",
   "key": "%lf more to beat %lf",
   "source": "%lf more to beat %lf",
-  "note": "ios/Timbre/Practice/PlayHubGames.swift:388",
+  "note": "ios/Timbre/Practice/PlayHubGames.swift:393",
   "locales": 48
  },
  {
@@ -241,7 +241,7 @@
   "table": "Localizable.strings",
   "key": "%lld bars",
   "source": "%lld bars",
-  "note": "ios/Timbre/Learn/SongOpener.swift:315, ios/Timbre/Songs/SongsView.swift:625",
+  "note": "ios/Timbre/Learn/SongOpener.swift:315, ios/Timbre/Songs/SongsView.swift:667",
   "locales": 48
  },
  {
@@ -255,14 +255,14 @@
   "table": "Localizable.strings",
   "key": "%lld cents higher",
   "source": "%lld cents higher",
-  "note": "ios/Timbre/Practice/EarTrainingView.swift:703",
+  "note": "ios/Timbre/Practice/EarTrainingView.swift:705",
   "locales": 48
  },
  {
   "table": "Localizable.strings",
   "key": "%lld cents lower",
   "source": "%lld cents lower",
-  "note": "ios/Timbre/Practice/EarTrainingView.swift:703",
+  "note": "ios/Timbre/Practice/EarTrainingView.swift:705",
   "locales": 48
  },
  {
@@ -333,6 +333,13 @@
   "key": "%lld not heard. Strum again.",
   "source": "%lld not heard. Strum again.",
   "note": "ios/Timbre/Tune/StrumModel.swift:377",
+  "locales": 48
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "%lld of %lld by ear",
+  "source": "%lld of %lld by ear",
+  "note": "ios/Timbre/Practice/EarTrainingView.swift:402",
   "locales": 48
  },
  {
@@ -437,14 +444,14 @@
   "table": "Localizable.strings",
   "key": "+%lld BPM every %lld bars up to %lld BPM",
   "source": "+%lld BPM every %lld bars up to %lld BPM",
-  "note": "ios/Timbre/Practice/MetronomeView.swift:437",
+  "note": "ios/Timbre/Practice/MetronomeView.swift:438",
   "locales": 48
  },
  {
   "table": "Localizable.strings",
   "key": "3 chords or fewer",
   "source": "3 chords or fewer",
-  "note": "ios/Timbre/Songs/SongsView.swift:1434",
+  "note": "ios/Timbre/Songs/SongsView.swift:1497",
   "locales": 48
  },
  {
@@ -731,7 +738,7 @@
   "table": "Localizable.strings",
   "key": "Barre · %lldfr",
   "source": "Barre · %lldfr",
-  "note": "ios/Timbre/Practice/ChordScaleTheory.swift:184",
+  "note": "ios/Timbre/Practice/ChordScaleTheory.swift:186",
   "locales": 48
  },
  {
@@ -752,7 +759,7 @@
   "table": "Localizable.strings",
   "key": "Beat %lf",
   "source": "Beat %lf",
-  "note": "ios/Timbre/Practice/PlayHubGames.swift:359",
+  "note": "ios/Timbre/Practice/PlayHubGames.swift:364",
   "locales": 48
  },
  {
@@ -787,7 +794,7 @@
   "table": "Localizable.strings",
   "key": "Because you learned %@",
   "source": "Because you learned %@",
-  "note": "ios/Timbre/Songs/SongsView.swift:1426",
+  "note": "ios/Timbre/Songs/SongsView.swift:1489",
   "locales": 48
  },
  {
@@ -850,7 +857,7 @@
   "table": "Localizable.strings",
   "key": "Campfire & kids",
   "source": "Campfire & kids",
-  "note": "ios/Timbre/Songs/SongsView.swift:1449",
+  "note": "ios/Timbre/Songs/SongsView.swift:1512",
   "locales": 48
  },
  {
@@ -883,9 +890,23 @@
  },
  {
   "table": "Localizable.strings",
+  "key": "Carols",
+  "source": "Carols",
+  "note": "ios/Timbre/Songs/SongsView.swift:1478",
+  "locales": 48
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Carols, free this week",
+  "source": "Carols, free this week",
+  "note": "ios/Timbre/Songs/SongsView.swift:1478",
+  "locales": 48
+ },
+ {
+  "table": "Localizable.strings",
   "key": "Challenge",
   "source": "Challenge",
-  "note": "ios/Timbre/Learn/LessonInspector.swift:146",
+  "note": "ios/Timbre/Learn/LessonInspector.swift:146, ios/Timbre/Practice/PlayHubGames.swift:311",
   "locales": 48
  },
  {
@@ -1165,7 +1186,7 @@
   "table": "Localizable.strings",
   "key": "Easy",
   "source": "Easy",
-  "note": "ios/Timbre/Learn/SongOpener.swift:219, ios/Timbre/Practice/ChordScaleTheory.swift:135",
+  "note": "ios/Timbre/Learn/SongOpener.swift:219, ios/Timbre/Practice/ChordScaleTheory.swift:139",
   "locales": 48
  },
  {
@@ -1193,7 +1214,7 @@
   "table": "Localizable.strings",
   "key": "Every note is part of a hidden tune",
   "source": "Every note is part of a hidden tune",
-  "note": "ios/Timbre/Practice/PitchSniperView.swift:135",
+  "note": "ios/Timbre/Practice/PitchSniperView.swift:133",
   "locales": 48
  },
  {
@@ -1291,7 +1312,7 @@
   "table": "Localizable.strings",
   "key": "Feel the beat",
   "source": "Feel the beat",
-  "note": "ios/Timbre/Practice/MetronomeView.swift:343, ios/Timbre/Settings/SettingsView.swift:374",
+  "note": "ios/Timbre/Practice/MetronomeView.swift:344, ios/Timbre/Settings/SettingsView.swift:374",
   "locales": 48
  },
  {
@@ -1340,7 +1361,7 @@
   "table": "Localizable.strings",
   "key": "Finish %@",
   "source": "Finish %@",
-  "note": "ios/Timbre/Songs/SongsView.swift:1017, ios/Timbre/Songs/SongsView.swift:1088",
+  "note": "ios/Timbre/Songs/SongsView.swift:1066, ios/Timbre/Songs/SongsView.swift:1138",
   "locales": 48
  },
  {
@@ -1452,7 +1473,7 @@
   "table": "Localizable.strings",
   "key": "Hard",
   "source": "Hard",
-  "note": "ios/Timbre/Learn/SongOpener.swift:219, ios/Timbre/Practice/ChordScaleTheory.swift:137",
+  "note": "ios/Timbre/Learn/SongOpener.swift:219, ios/Timbre/Practice/ChordScaleTheory.swift:141",
   "locales": 48
  },
  {
@@ -1837,7 +1858,7 @@
   "table": "Localizable.strings",
   "key": "Medium",
   "source": "Medium",
-  "note": "ios/Timbre/Learn/SongOpener.swift:219, ios/Timbre/Practice/ChordScaleTheory.swift:136",
+  "note": "ios/Timbre/Learn/SongOpener.swift:219, ios/Timbre/Practice/ChordScaleTheory.swift:140",
   "locales": 48
  },
  {
@@ -1877,6 +1898,13 @@
  },
  {
   "table": "Localizable.strings",
+  "key": "Missing a song you love?",
+  "source": "Missing a song you love?",
+  "note": "ios/Timbre/Songs/SongsView.swift:322",
+  "locales": 48
+ },
+ {
+  "table": "Localizable.strings",
   "key": "More",
   "source": "More",
   "note": "ios/Timbre/YourSongs/AppleMusicListen.swift:171, ios/Timbre/YourSongs/ChartDock.swift:149",
@@ -1893,7 +1921,7 @@
   "table": "Localizable.strings",
   "key": "Movable · %lldfr",
   "source": "Movable · %lldfr",
-  "note": "ios/Timbre/Practice/ChordScaleTheory.swift:187",
+  "note": "ios/Timbre/Practice/ChordScaleTheory.swift:189",
   "locales": 48
  },
  {
@@ -2012,7 +2040,7 @@
   "table": "Localizable.strings",
   "key": "Nice ear",
   "source": "Nice ear",
-  "note": "ios/Timbre/Practice/PitchSniperView.swift:157",
+  "note": "ios/Timbre/Practice/PitchSniperView.swift:155",
   "locales": 48
  },
  {
@@ -2129,6 +2157,13 @@
  },
  {
   "table": "Localizable.strings",
+  "key": "Now level %lld",
+  "source": "Now level %lld",
+  "note": "ios/Timbre/Practice/EarTrainingView.swift:404",
+  "locales": 48
+ },
+ {
+  "table": "Localizable.strings",
   "key": "Off",
   "source": "Off",
   "note": "ios/Timbre/Settings/SettingsView.swift:197, ios/Timbre/Tune/FeelToggle.swift:66",
@@ -2187,7 +2222,7 @@
   "table": "Localizable.strings",
   "key": "Open chord",
   "source": "Open chord",
-  "note": "ios/Timbre/Practice/ChordScaleTheory.swift:183",
+  "note": "ios/Timbre/Practice/ChordScaleTheory.swift:185",
   "locales": 48
  },
  {
@@ -2342,13 +2377,6 @@
   "key": "Play the chord",
   "source": "Play the chord",
   "note": "ios/Timbre/Learn/LessonInspector.swift:444",
-  "locales": 48
- },
- {
-  "table": "Localizable.strings",
-  "key": "Play the note. Hold the bullseye.",
-  "source": "Play the note. Hold the bullseye.",
-  "note": "ios/Timbre/Practice/PlayHubGames.swift:339, ios/Timbre/Practice/PracticeView.swift:449",
   "locales": 48
  },
  {
@@ -2509,7 +2537,7 @@
   "table": "Localizable.strings",
   "key": "Power · %lldfr",
   "source": "Power · %lldfr",
-  "note": "ios/Timbre/Practice/ChordScaleTheory.swift:185",
+  "note": "ios/Timbre/Practice/ChordScaleTheory.swift:187",
   "locales": 48
  },
  {
@@ -2675,6 +2703,13 @@
  },
  {
   "table": "Localizable.strings",
+  "key": "Request a song",
+  "source": "Request a song",
+  "note": "ios/Timbre/Songs/SongsView.swift:164, ios/Timbre/Songs/SongsView.swift:326",
+  "locales": 48
+ },
+ {
+  "table": "Localizable.strings",
   "key": "Right where you said",
   "source": "Right where you said",
   "note": "ios/Timbre/Onboarding/PlacementCheckView.swift:247",
@@ -2745,9 +2780,16 @@
  },
  {
   "table": "Localizable.strings",
+  "key": "Send",
+  "source": "Send",
+  "note": "ios/Timbre/Songs/SongsView.swift:166",
+  "locales": 48
+ },
+ {
+  "table": "Localizable.strings",
   "key": "Send it back",
   "source": "Send it back",
-  "note": "ios/Timbre/Practice/PlayHubGames.swift:408",
+  "note": "ios/Timbre/Practice/PlayHubGames.swift:413",
   "locales": 48
  },
  {
@@ -2878,6 +2920,13 @@
  },
  {
   "table": "Localizable.strings",
+  "key": "Song and artist",
+  "source": "Song and artist",
+  "note": "ios/Timbre/Songs/SongsView.swift:165",
+  "locales": 48
+ },
+ {
+  "table": "Localizable.strings",
   "key": "Song map",
   "source": "Song map",
   "note": "ios/Timbre/Learn/SongOpener.swift:315, ios/Timbre/Learn/SongSheet.swift:718",
@@ -2895,6 +2944,13 @@
   "key": "Songs",
   "source": "Songs",
   "note": "ios/Timbre/Paywall/PaywallPlanHero.swift:191",
+  "locales": 48
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Songs you know",
+  "source": "Songs you know",
+  "note": "ios/Timbre/Songs/SongsView.swift:1473",
   "locales": 48
  },
  {
@@ -3186,6 +3242,13 @@
  },
  {
   "table": "Localizable.strings",
+  "key": "Subdivision",
+  "source": "Subdivision",
+  "note": "ios/Timbre/Practice/MetronomeView.swift:292",
+  "locales": 48
+ },
+ {
+  "table": "Localizable.strings",
   "key": "Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. Every instrument’s standard tuning stays free.",
   "source": "Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. Every instrument’s standard tuning stays free.",
   "note": "ios/Timbre/Paywall/PaywallView.swift:1500",
@@ -3277,6 +3340,20 @@
  },
  {
   "table": "Localizable.strings",
+  "key": "Tell us a song you'd like to play. Requests decide what we add next.",
+  "source": "Tell us a song you'd like to play. Requests decide what we add next.",
+  "note": "ios/Timbre/Songs/SongsView.swift:169",
+  "locales": 48
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Ten notes. One hidden song.",
+  "source": "Ten notes. One hidden song.",
+  "note": "ios/Timbre/Practice/PlayHubGames.swift:344, ios/Timbre/Practice/PracticeView.swift:449",
+  "locales": 48
+ },
+ {
+  "table": "Localizable.strings",
   "key": "Text",
   "source": "Text",
   "note": "ios/Timbre/YourSongs/ChartEditorView.swift:38",
@@ -3287,6 +3364,13 @@
   "key": "Text size",
   "source": "Text size",
   "note": "ios/Timbre/YourSongs/ChartSongView.swift:132",
+  "locales": 48
+ },
+ {
+  "table": "Localizable.strings",
+  "key": "Thanks. Your request is in.",
+  "source": "Thanks. Your request is in.",
+  "note": "ios/Timbre/Songs/SongsView.swift:322, ios/Timbre/Songs/SongsView.swift:343",
   "locales": 48
  },
  {
@@ -3377,7 +3461,7 @@
   "table": "Localizable.strings",
   "key": "The hidden tune",
   "source": "The hidden tune",
-  "note": "ios/Timbre/Practice/PitchSniperView.swift:179",
+  "note": "ios/Timbre/Practice/PitchSniperView.swift:177",
   "locales": 48
  },
  {
@@ -3531,7 +3615,7 @@
   "table": "Localizable.strings",
   "key": "Today’s challenge",
   "source": "Today’s challenge",
-  "note": "ios/Timbre/Practice/PlayHubGames.swift:430",
+  "note": "ios/Timbre/Practice/PlayHubGames.swift:435",
   "locales": 48
  },
  {
@@ -3552,7 +3636,7 @@
   "table": "Localizable.strings",
   "key": "Triad · %lldfr",
   "source": "Triad · %lldfr",
-  "note": "ios/Timbre/Practice/ChordScaleTheory.swift:186",
+  "note": "ios/Timbre/Practice/ChordScaleTheory.swift:188",
   "locales": 48
  },
  {
@@ -3769,7 +3853,7 @@
   "table": "Localizable.strings",
   "key": "Up next",
   "source": "Up next",
-  "note": "ios/Timbre/Songs/SongsView.swift:394",
+  "note": "ios/Timbre/Songs/SongsView.swift:436",
   "locales": 48
  },
  {
@@ -4000,7 +4084,7 @@
   "table": "Localizable.strings",
   "key": "You beat %lld",
   "source": "You beat %lld",
-  "note": "ios/Timbre/Practice/PlayHubGames.swift:403",
+  "note": "ios/Timbre/Practice/PlayHubGames.swift:408",
   "locales": 48
  },
  {

@@ -531,7 +531,7 @@ struct PaywallView: View {
         .frame(maxWidth: .infinity)
     }
 
-    /// "518 lessons · 140+ songs · 60 instruments": what Pro opens, counted from the curriculum and the catalog as they
+    /// "526 lessons · 140+ songs · 60 instruments": what Pro opens, counted from the curriculum and the catalog as they
     /// ship (the Free and Pro table counts the same lessons), never a number written down here. Lessons are the ones
     /// that teach (`Curriculum.lessonCount`, songbooks aside); songs are `Curriculum.distinctTuneCount` (by title, so a
     /// song taught in two lessons or arranged for two instruments counts once), rounded down to the ten as the listing

@@ -1,6 +1,6 @@
 # App Store listing (English, U.S.)
 
-Paste into App Store Connect → the app → the version's page and App Information. Every length below is within Apple's limits, and every count is the build's own: 60 instruments, 132 tunings, 11 courses, 518 lessons, 140+ songs (144 distinct titles; the songbooks' arrangements per instrument are more and count once) and 50 Originals. `python3 tools/marketing/screenshots.py --check` re-checks the counts in this file's paste blocks and tables against `curriculum.json` and `catalog.json`, and the lengths against Apple's limits, so a stale number fails before it reaches the store.
+Paste into App Store Connect → the app → the version's page and App Information. Every length below is within Apple's limits, and every count is the build's own: 60 instruments, 132 tunings, 11 courses, 526 lessons, 140+ songs (146 distinct titles; the songbooks' arrangements per instrument are more and count once) and 50 Originals. `python3 tools/marketing/screenshots.py --check` re-checks the counts in this file's paste blocks and tables against `curriculum.json` and `catalog.json`, and the lengths against Apple's limits, so a stale number fails before it reaches the store.
 
 What the listing claims, and what it leaves out until the app makes it true:
 
@@ -103,7 +103,7 @@ TUNE ANYTHING, FREE
 • Capo, adjustable A4 reference, solfège and sargam note names
 
 LEARN BY PLAYING
-• 518 lessons in 11 courses: guitar, ukulele, bass, violin, cello, mandolin, banjo, voice, ear training, music theory and rhythm, plus songbooks for ukulele, mandolin and violin
+• 526 lessons in 11 courses: guitar, ukulele, bass, violin, cello, mandolin, banjo, voice, ear training, music theory and rhythm, plus songbooks for ukulele, mandolin, violin, cello and bass
 • Timbre hears every strum: the right chord, on time, and which string didn't ring
 • Every note judged as you play it, its pitch to the cent and its timing to the millisecond
 • "Show me" plays each new chord on a 3D guitar, the fingers landing in order
@@ -138,7 +138,7 @@ Privacy: <privacy policy URL>
 ## What's New (first release)
 
 ```
-Welcome to Timbre: a free tuner for 60 instruments, and 518 lessons that listen as you play.
+Welcome to Timbre: a free tuner for 60 instruments, and 526 lessons that listen as you play.
 ```
 
 ## Screenshots (6.9" iPhone and 13" iPad)
@@ -181,7 +181,7 @@ No two frames show the same lesson, and the first three answer the three questio
 | 3 | **Play your first chord today** | Timbre hears every string | E minor's chord step with every string lit, the six ticked strings enlarged (`52b-lesson-chord`) | `callout lime` |
 | 4 | **Tune whatever you play** | 60 instruments, 132 tunings | the instrument browser on the Folk & world strings, the wall of instruments around it (`31b-instruments-folk`) | `wall spotlight` |
 | 5 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab, the songs people know on its first shelf (`63-songs`) | `light orchid` |
-| 6 | **Learn at your own pace** | 518 lessons in 11 courses | Learn, with the next lesson up (`50-learn`) | `offset violet` |
+| 6 | **Learn at your own pace** | 526 lessons in 11 courses | Learn, with the next lesson up (`50-learn`) | `offset violet` |
 | 7 | **Five minutes a day adds up** | Stars, streaks and daily quests | lesson results with three stars after a clean play-along (`62-lesson-results`) | `zoom gold` |
 | 8 | **One strum checks every string** | See which string to tune first | Strum to tune: six strings read from one strum, A2 the one to tune first (`11b-tune-strum`) | `flip mint` |
 | 9 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) | `offset-left flame` |
@@ -205,7 +205,7 @@ The violin Custom Product Page's set ([below](#custom-product-pages)). Its first
 | 2 | **Play songs on your violin** | From Jingle Bells to Ode to Joy | *Jingle Bells* from the violin songbook on the runway, finger numbers on the gems, its last chorus lighting up (`65b-song-perform-violin`) | `zoom sky` |
 | 3 | **Hear exactly how you played** | Pitch and timing on every note | the violin's "Open-string checkup" results with three stars (`62b-lesson-results-violin`) | `zoom gold` |
 | 4 | **Play songs you know** | 140+ songs, classics to Originals | the Songs tab (`63-songs`) | `light orchid` |
-| 5 | **Learn at your own pace** | 518 lessons in 11 courses | Learn (`50-learn`) | `offset violet` |
+| 5 | **Learn at your own pace** | 526 lessons in 11 courses | Learn (`50-learn`) | `offset violet` |
 
 ### iPhone 6.9": cello page
 

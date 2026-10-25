@@ -61,7 +61,7 @@ The English text, every count the build can change written as a variable. `scree
 | `{instruments}` | 60 | instruments in the catalogue |
 | `{tunings}` | 132 | preset tunings |
 | `{courses}` | 11 | courses in Learn (the songbooks are counted as songs) |
-| `{lessons}` | 518 | lessons in those courses |
+| `{lessons}` | 526 | lessons in those courses |
 | `{songs_floor}` | 140 | distinct song titles, rounded down to ten (144 now): written "{songs_floor}+" |
 | `{originals}` | 50 | Timbre Originals |
 
@@ -89,7 +89,7 @@ TUNE ANYTHING, FREE
 • Capo, adjustable A4 reference, solfège and sargam note names
 
 LEARN BY PLAYING
-• {lessons} lessons in {courses} courses: guitar, ukulele, bass, violin, cello, mandolin, banjo, voice, ear training, music theory and rhythm, plus songbooks for ukulele, mandolin and violin
+• {lessons} lessons in {courses} courses: guitar, ukulele, bass, violin, cello, mandolin, banjo, voice, ear training, music theory and rhythm, plus songbooks for ukulele, mandolin, violin, cello and bass
 • Timbre hears every strum: the right chord, on time, and which string didn't ring
 • Every note judged as you play it, its pitch to the cent and its timing to the millisecond
 • "Show me" plays each new chord on a 3D guitar, the fingers landing in order
@@ -216,7 +216,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
 | 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 526 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -337,7 +337,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
 | 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 526 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -458,7 +458,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
 | 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 526 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -579,7 +579,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
 | 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 526 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -700,7 +700,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
 | 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 526 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -821,7 +821,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
 | 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 526 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -942,7 +942,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
 | 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 526 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -1063,7 +1063,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
 | 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 526 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
@@ -1184,7 +1184,7 @@ The English set's frames, in its order. Replace each `TRANSLATE:` cell with the 
 | 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
 | 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
 | 5 | TRANSLATE: Play songs you know | TRANSLATE: 140+ songs, classics to Originals | `63-songs` |
-| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 518 lessons in 11 courses | `50-learn` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 526 lessons in 11 courses | `50-learn` |
 | 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
 | 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
 | 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |

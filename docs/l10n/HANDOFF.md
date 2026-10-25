@@ -12,37 +12,41 @@ These come first in every TODO file (`launch` on the entry says which kind). The
 |---|---:|---:|
 | Purchase terms (legal) | 11 | 528 |
 | Permission prompts | 1 | 48 |
-| VoiceOver | 91 | 4,368 |
+| VoiceOver | 92 | 4,416 |
 | Onboarding, welcome to paywall | 46 | 2,208 |
-| **All launch-critical** | **149** | **7,152** |
+| **All launch-critical** | **150** | **7,200** |
 
 ## What is missing now
 
-- **App interface:** 626 distinct strings are missing somewhere, 30,048 locale-string pairs in all.
-- **Lessons:** 12,672 locale-string pairs across the 9 lesson languages (German (de), Spanish (es), French (fr), Italian (it), Japanese (ja), Korean (ko), Portuguese (pt), Russian (ru), Chinese (Simplified) (zh-CN)).
-- **Changed English:** 1,299 of these locale-string pairs replace a string whose English was edited. The TODO entry carries the old English and its old translation under `previous`, to update rather than start over.
+- **App interface:** 638 distinct strings are missing somewhere, 30,624 locale-string pairs in all.
+- **Lessons:** 13,203 locale-string pairs across the 9 lesson languages (German (de), Spanish (es), French (fr), Italian (it), Japanese (ja), Korean (ko), Portuguese (pt), Russian (ru), Chinese (Simplified) (zh-CN)).
+- **Changed English:** 1,410 of these locale-string pairs replace a string whose English was edited. The TODO entry carries the old English and its old translation under `previous`, to update rather than start over.
 
 | Locales | App strings missing | Lesson strings missing |
 |---|---:|---:|
-| de, es, fr, it, ja, ko, pt, ru, zh-CN | 626 | 1408 |
-| ar, bg, bn, ca, cs, da, el, et, fa, fi, gu, he, hi, hr, hu, id, is, kn, lt, lv, ml, mr, nl, no, pa, pl, ro, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zu | 626 | — |
+| de, es, fr, it, ja, ko, pt, ru, zh-CN | 638 | 1467 |
+| ar, bg, bn, ca, cs, da, el, et, fa, fi, gu, he, hi, hr, hu, id, is, kn, lt, lv, ml, mr, nl, no, pa, pl, ro, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zu | 638 | — |
 
 Where the missing lesson strings are (the same in every lesson language):
 
 | Course | Strings | Where (strings) |
 |---|---:|---|
-| Guitar | 511 | unit 2 (15), unit 3 (5), unit 4 (6), unit 5 (6), unit 6 (9), unit 7 (9), unit 8 (5), unit 9 (4), unit 10 (8), unit 11 (9), unit 12 (8), unit 13 (8), unit 14 (6), unit 15 (9), unit 16 (11), unit 17 (55), unit 18 (63), unit 19 (53), unit 20 (69), unit 21 (79), unit 22 (74) |
-| Ukulele | 192 | course title (1), unit 4 (3), unit 6 (2), unit 7 (40), unit 8 (42), unit 9 (61), unit 10 (43) |
-| Violin | 5 | unit 3 (1), unit 4 (2), unit 5 (2) |
-| Cello | 3 | unit 4 (1), unit 5 (2) |
-| Banjo | 2 | unit 3 (2) |
-| Singing | 2 | unit 5 (2) |
-| Songs | 34 | unit 1 (2), unit 2 (16), unit 3 (7), unit 4 (2), unit 5 (5), unit 6 (2) |
+| Guitar | 515 | unit 1 (12), unit 2 (7), unit 3 (5), unit 4 (6), unit 5 (6), unit 6 (9), unit 7 (9), unit 8 (5), unit 9 (4), unit 10 (8), unit 11 (9), unit 12 (8), unit 13 (8), unit 14 (6), unit 15 (9), unit 16 (11), unit 17 (55), unit 18 (63), unit 19 (53), unit 20 (69), unit 21 (79), unit 22 (74) |
+| Ukulele | 199 | course title (1), unit 1 (7), unit 2 (1), unit 4 (2), unit 6 (2), unit 7 (40), unit 8 (42), unit 9 (61), unit 10 (43) |
+| Bass | 4 | unit 1 (4) |
+| Violin | 10 | unit 1 (5), unit 3 (1), unit 4 (2), unit 5 (2) |
+| Cello | 8 | unit 1 (5), unit 4 (1), unit 5 (2) |
+| Mandolin | 3 | unit 1 (3) |
+| Banjo | 4 | unit 1 (2), unit 3 (2) |
+| Singing | 6 | unit 1 (4), unit 5 (2) |
+| Songs | 35 | course title (1), unit 1 (2), unit 2 (16), unit 3 (7), unit 4 (2), unit 5 (5), unit 6 (2) |
 | Originals | 197 | unit 1 (1), unit 2 (33), unit 3 (38), unit 5 (33), unit 6 (1), unit 7 (31), unit 8 (28), unit 10 (32) |
 | Standards & Classics | 416 | course title (2), unit 1 (43), unit 2 (41), unit 3 (43), unit 4 (53), unit 5 (44), unit 6 (48), unit 7 (54), unit 8 (48), unit 9 (40) |
-| Ukulele Songbook | 30 | course title (2), unit 1 (5), unit 2 (5), unit 3 (5), unit 4 (1), unit 7 (1), unit 8 (2), unit 9 (1), unit 10 (1), unit 19 (1), unit 20 (3), unit 22 (1), unit 24 (1), unit 25 (1) |
+| Ukulele Songbook | 30 | course title (2), unit 1 (5), unit 2 (3), unit 3 (3), unit 4 (3), unit 5 (2), unit 7 (1), unit 8 (2), unit 9 (1), unit 10 (1), unit 19 (1), unit 20 (3), unit 22 (1), unit 24 (1), unit 25 (1) |
 | Mandolin Songbook | 8 | course title (2), unit 1 (3), unit 7 (2), unit 12 (1) |
 | Violin Songbook | 8 | course title (2), unit 1 (3), unit 7 (2), unit 12 (1) |
+| Cello Songbook | 9 | course title (1), unit 1 (3), unit 3 (1), unit 7 (3), unit 13 (1) |
+| Bass Songbook | 15 | course title (2), unit 1 (2), unit 3 (3), unit 8 (1), unit 11 (3), unit 20 (1), unit 25 (3) |
 
 Lessons ship in the lesson languages only; the other locales show lessons in English by design. Interface strings ship in every locale.
 
@@ -110,4 +114,4 @@ Which languages ship is the owner's decision: `CFBundleLocalizations` in `ios/pr
 
 Interface strings are found by `tools/l10n/swiftstrings.py`, a scanner that reads Swift without Xcode. It infers the type of each interpolation (`%lld` for Int, `%@` for text); when a new string's key carries `key_check`, the inferred specifier is a guess. Confirm it with Xcode's export: run the *Localization export* workflow (`l10n.yml`) and pass its `en.xliff` with `--xliff`.
 
-Stale entries: 146 keys that some locale still holds have no English in the app any more (5,604 locale-key pairs; the keys are listed under `stale` in `tools/l10n/todo/index.json`). They are harmless, and they are where `changed` entries find their old translations.
+Stale entries: 155 keys that some locale still holds have no English in the app any more (5,724 locale-key pairs; the keys are listed under `stale` in `tools/l10n/todo/index.json`). They are harmless, and they are where `changed` entries find their old translations.
