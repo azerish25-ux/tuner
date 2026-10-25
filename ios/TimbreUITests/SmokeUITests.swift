@@ -1,3 +1,4 @@
+import StoreKitTest
 import XCTest
 
 /// The pull-request gate's three flows (.github/workflows/ios.yml, job `app`): a fresh install opens on the welcome,
@@ -62,7 +63,13 @@ final class SmokeUITests: XCTestCase {
 
     /// The drone is a Pro tool: on the free plan it opens the paywall. The StoreKit configuration in the scheme
     /// (Tests/Fixtures/Timbre.storekit) completes the purchase without a dialog, and the drone then opens.
-    func testBuyingProUnlocksAProTool() {
+    func testBuyingProUnlocksAProTool() throws {
+        // The unit tests ran purchases in this simulator's StoreKit environment first: start from no transactions.
+        let session = try SKTestSession(configurationFileNamed: "Timbre")
+        session.resetToDefaultState()
+        session.clearTransactions()
+        session.disableDialogs = true
+        defer { session.clearTransactions() }
         app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1"
         app.launchEnvironment["TIMBRE_DEMO_DATA"] = "1"
         app.launch()
