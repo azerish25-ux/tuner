@@ -1,6 +1,6 @@
 # App Store listing (English, U.S.)
 
-Paste into App Store Connect → the app → the version's page and App Information. The lengths have been checked against Apple's limits. The numbers come from the build: 60 instruments, 102 tunings, 13 courses, 499 lessons and 49 languages (lessons in 10 of them).
+Paste into App Store Connect → the app → the version's page and App Information. The lengths have been checked against Apple's limits. The numbers come from the build: 60 instruments, 102 tunings, 14 courses, 557 lessons and 49 languages (lessons in 10 of them).
 
 ## App Information
 
@@ -25,7 +25,7 @@ The 12 characters that "music" and "songs" used now hold "song" (singular, so it
 ## Promotional text (170 max; can change without a review)
 
 ```
-Tune up, then learn to play: 499 lessons that listen as you play guitar, ukulele, bass, violin, cello, mandolin, banjo or sing. New songs arrive with every update.
+Tune up, then learn to play: 557 lessons that listen as you play guitar, ukulele, bass, violin, cello, mandolin, banjo or sing. New songs arrive with every update.
 ```
 
 ## Description
@@ -41,10 +41,10 @@ TUNE ANYTHING, FAST
 • Custom tunings, capo, adjustable A4 reference, solfège and sargam note names
 
 LEARN BY PLAYING
-• 499 lessons in 13 courses: guitar, ukulele, bass, violin, cello, mandolin, banjo, voice, ear training, music theory, rhythm, songs and Originals
+• 557 lessons in 14 courses: guitar, ukulele, bass, violin, cello, mandolin, banjo, voice, ear training, music theory, rhythm, songs, Originals and Standards & Classics
 • Timbre listens as you play: single notes, whole chords and strumming rhythm, with pitch feedback and timing feedback in milliseconds
 • A play-along note highway that slows down for you, then speeds back up as you improve
-• A Songs tab: 20 original songs in today's styles plus public-domain classics from Ode to Joy to Amazing Grace
+• A Songs tab: 50 original songs in today’s styles plus public-domain classics and standards, from The Entertainer to Amazing Grace — every song a full arrangement with lyrics
 • Stars, XP, daily quests, streaks and badges keep you coming back
 
 PRACTICE TOOLS
@@ -66,7 +66,7 @@ Privacy: <privacy policy URL>
 ## What's New (first release)
 
 ```
-Welcome to Timbre: a precise tuner for 60 instruments and 499 lessons that listen as you play.
+Welcome to Timbre: a precise tuner for 60 instruments and 557 lessons that listen as you play.
 ```
 
 ## Screenshots (6.9" iPhone and 13" iPad)
@@ -89,7 +89,7 @@ The script stops if a caption runs past 30 characters, if a row names a capture 
 | 2 | **Hear exactly how you played** | Pitch and timing on every note | the play-along highway mid-take (`60-along-playing`) |
 | 3 | **Play your first chord today** | Timbre hears every string | the chord step with every string lit (`52b-lesson-chord`) |
 | 4 | **Play songs, start to finish** | Originals and timeless classics | the Songs tab (`63-songs`) |
-| 5 | **Learn at your own pace** | 499 lessons in 13 courses | Learn, with the next lesson up (`50-learn`) |
+| 5 | **Learn at your own pace** | 557 lessons in 14 courses | Learn, with the next lesson up (`50-learn`) |
 | 6 | **Five minutes a day adds up** | Stars, streaks and daily quests | lesson results with their stars (`62-lesson-results`) |
 | 7 | **Tune whatever you play** | Guitar to violin, oud to erhu | the instrument browser's Guitar shelf (`31-instruments-scrolled`) |
 | 8 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) |
@@ -126,7 +126,7 @@ No account or login is needed.
 
 ## Pricing: the owner decides
 
-The current suggestion in APPLE-DELIVERY.md is $34.99 a year, $6.99 a month and $89.99 lifetime. With 499 lessons, Timbre now sits between tuner apps and lesson apps. In the competitive brief, yearly plans had a median of $44.99. The lesson apps charge well above that, and the most common complaint across all of them was billing surprises. Two options:
+The current suggestion in APPLE-DELIVERY.md is $34.99 a year, $6.99 a month and $89.99 lifetime. With 557 lessons, Timbre now sits between tuner apps and lesson apps. In the competitive brief, yearly plans had a median of $44.99. The lesson apps charge well above that, and the most common complaint across all of them was billing surprises. Two options:
 
 - **Conservative:** keep $34.99 / $6.99 / $89.99 with a 2-week trial. This maximises conversion while there are no reviews yet.
 - **Recommended once ratings are ≥ 4.6:** $44.99 / $7.99 / $99.99 with a 7-day trial.

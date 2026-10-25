@@ -25,7 +25,7 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 from lib import QUALITIES, TUNINGS, Text, fretted, name  # noqa: E402
 
-COURSES = ["guitar", "ukulele", "bass", "violin", "cello", "mandolin", "banjo", "ear", "theory", "rhythm", "voice", "songs", "originals"]
+COURSES = ["guitar", "ukulele", "bass", "violin", "cello", "mandolin", "banjo", "ear", "theory", "rhythm", "voice", "songs", "originals", "songs_part3"]
 LIMITS = {"title": 42, "body": 300, "prompt": 140, "option": 48, "hint": 120, "why": 220, "summary": 120, "subtitle": 80}
 RANGES = {"guitar": (40, 88), "ukulele": (60, 81), "bass": (28, 67), "violin": (55, 93), "cello": (36, 76),
           "mandolin": (55, 88), "banjo": (50, 79), None: (36, 96)}
@@ -142,7 +142,7 @@ def check_lesson(lesson: dict, kind: str | None, where: str):
 # the whole song. One exception: an instrument course's strummed song (its chords, no melody) ends on the whole
 # song's chord progression, as long, because a take is a play-along and a strum isn't judged note by note. The
 # Songs tab's own courses have no exception.
-SONG_TAB_COURSES = {"songs", "originals"}
+SONG_TAB_COURSES = {"songs", "originals", "standards"}
 SONG_SECONDS = (90, 180)
 SECTION_KINDS = {"intro", "verse", "chorus", "bridge", "solo", "interlude", "outro"}
 # Chord qualities the chord recognizer (TimbreCore ChordRecognizer.Quality) can hear; a song's chart stays inside them.

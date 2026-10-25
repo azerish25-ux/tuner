@@ -2,8 +2,8 @@ import XCTest
 @testable import TimbreCore
 
 final class SongArrangementTests: XCTestCase {
-    /// The Songs tab's own courses: every song in them is a whole arrangement.
-    private static let fullSongCourses = ["songs", "originals"]
+    /// The Songs tab's own courses (Songs, Originals, Standards & Classics): every song in them is a whole arrangement.
+    private static let fullSongCourses = ["songs", "originals", "standards"]
 
     private func songs() throws -> [(course: LearnCourse, lesson: Lesson)] {
         let curriculum = try Curriculum.bundled()
@@ -14,7 +14,7 @@ final class SongArrangementTests: XCTestCase {
 
     func testEverySongIsAWholeArrangementOfOneAndAHalfToThreeMinutes() throws {
         let all = try songs()
-        XCTAssertEqual(all.count, 82)  // Songs 32, Originals 50
+        XCTAssertEqual(all.count, 100)  // Songs 32, Originals 50, Standards & Classics 18
         var lengths: [Double] = []
         for (_, lesson) in all {
             let arrangement = try XCTUnwrap(lesson.arrangement, "\(lesson.id) has an arrangement")
