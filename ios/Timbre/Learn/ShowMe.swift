@@ -28,7 +28,7 @@ enum ShowMe {
     static let patience = 5.0
 
     /// Whether demonstration `key` plays by itself as its card settles: the first time it appears in `course`. The
-    /// App Store chord scene keeps its chord step as it is captured (frame #3: the chart with every string lit).
+    /// App Store chord scene keeps its chord step as it is captured (frame #4: the chart with every string lit).
     static func firstTime(_ key: String, course: LearnCourse, settings: UserSettings) -> Bool {
         #if DEBUG
         if DemoScene.current == .lessonChord { return false }

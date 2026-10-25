@@ -217,7 +217,7 @@ def ui_english(all_locale_keys: set, xliff: Path | None) -> tuple[dict, list]:
     en_dict = read_stringsdict(RES / "en.lproj/Localizable.stringsdict")
     exported = xliff_keys(xliff) if xliff else {}
     known = set(all_locale_keys) | set(en_strings) | set(en_dict) | set(exported.get("Localizable.strings", {}))
-    literals, lexers = swiftstrings.scan(ROOT, [f for f in CODE if (ROOT / f).exists()], DECLS)
+    literals, lexers = swiftstrings.scan(ROOT, [f for f in CODE + DECLS if (ROOT / f).exists()])
     lines_of = {rel: lexer.s.splitlines() for rel, lexer in lexers.items()}
     patterns = []
 
@@ -238,6 +238,8 @@ def ui_english(all_locale_keys: set, xliff: Path | None) -> tuple[dict, list]:
         if not item["context"] and note:
             item["context"] = note
 
+    plain = [lit for lit in literals if not lit.table]
+    literals = [lit for lit in literals if lit.table]
     for lit in literals:
         lines = lines_of.get(lit.file, [])
         note = comment_above(lines, lit.line)
@@ -263,6 +265,15 @@ def ui_english(all_locale_keys: set, xliff: Path | None) -> tuple[dict, list]:
         if key in en_dict:
             source = plural_source(en_dict[key])
         add(lit.table, key, source, where, lit.slot, lines, lit.line, note, check)
+    # Text shown through a dynamic lookup (badge and level names, ear-training answers in TimbreCore): a plain literal
+    # anywhere in the code that the tables already hold as a key stays in the English.
+    for lit in plain:
+        key = lit.key
+        if key in all_locale_keys and translatable(key) and ("Localizable.strings", key) not in items \
+                and ("Localizable.stringsdict", key) not in items and key not in en_strings:
+            lines = lines_of.get(lit.file, [])
+            add("Localizable.strings", key, key, f"{lit.file}:{lit.line}",
+                note=comment_above(lines, lit.line) or "shown through a lookup (LocalizedStringKey of a value)")
     # Keys Xcode's export saw that the scanner didn't (only with --xliff).
     for table, units in exported.items():
         if table not in ("Localizable.strings", "AppShortcuts.strings"):

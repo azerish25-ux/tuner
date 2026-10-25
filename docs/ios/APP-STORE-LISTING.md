@@ -150,7 +150,7 @@ Every capture shows the same player: the UI tests' seeded history (`DemoData` in
 | # | Caption | Supporting line | Capture |
 |---|---|---|---|
 | 1 | **In tune in seconds** | 60 instruments, to the cent | the tuner in landscape (`ipad-landscape-tune`) |
-| 2 | **Tune whatever you play** | Guitar to violin, oud to erhu | the instrument browser, a full page of its own on iPad with nothing of the tuner around it (`ipad-landscape-instruments`) |
+| 2 | **Tune whatever you play** | Violin to oud, sitar to erhu | the instrument browser, a full page of its own on iPad with nothing of the tuner around it, on the bowed strings and the Folk & world strings shelf (`ipad-landscape-instruments`) |
 | 3 | **Play songs, start to finish** | Originals and timeless classics | the Songs tab (`ipad-landscape-songs`) |
 | 4 | **Five minutes a day adds up** | A daily set, quests and ear games | the Play tab (`ipad-landscape-practice`) |
 

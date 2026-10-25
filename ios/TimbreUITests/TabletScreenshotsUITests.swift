@@ -43,7 +43,7 @@ final class TabletScreenshotsUITests: XCTestCase {
         settle(1.5)
         tunerFrame("ipad-landscape-tune")
 
-        // App Store frame (iPad #2, "Guitar to violin, oud to erhu"): the instrument browser, a full page of its own on
+        // App Store frame (iPad #2, "Violin to oud, sitar to erhu"): the instrument browser, a full page of its own on
         // iPad (Instruments/InstrumentsView.swift), never a sheet with the tuner's controls showing around it, scrolled
         // to the bowed strings and the Folk & world strings so the frame shows what its caption promises, ending on a
         // whole row. Kept only once the tuner has left the screen and sitar, oud and erhu are whole on it.

@@ -339,6 +339,7 @@ class Decls:
     types: set = field(default_factory=set)          # every type declared
     file_decls: dict = field(default_factory=dict)   # file -> [(line, name, type)]
     loc_vars: dict = field(default_factory=dict)     # file -> {names declared with a localized type}
+    sinks: set = field(default_factory=set)          # (type, property) read through LocalizedStringKey(x.property)
 
 
 def vote(counts: dict, name: str, typ: str) -> None:
@@ -750,6 +751,8 @@ def callee_slots(group: Group, decls: Decls, path: str):
                 return True
     if not group.member and group.label and group.label in decls.members.get(name, set()):
         return True
+    if not group.member and group.label and (name, group.label) in decls.sinks:
+        return True
     return False
 
 
@@ -952,7 +955,6 @@ def handle_literal(tokens, i, t, stack, path, rel, decls, found):
     p, q = prev_sig(tokens, i), sig(tokens, i + 1)
     prev = tokens[p] if p >= 0 else None
     nxt = tokens[q] if q < len(tokens) else None
-    # Never a key: patterns, comparisons, dictionary keys.
     # Never a key: patterns, comparisons, dictionary keys, a String fallback (`name ?? "…"` is a String, not a key),
     # concatenations ("timbre_photo_" + id).
     if prev is not None and ((prev.kind == "id" and prev.value in ("case",)) or
@@ -1012,14 +1014,74 @@ def handle_literal(tokens, i, t, stack, path, rel, decls, found):
             grp = stack[k] if k >= 0 else g
             slot = (("." if grp.member else "") + grp.callee + "(" + (grp.label or "_") + ":)") if grp.callee else "value"
     if table is None:
+        # Not a key here; report.py still matches plain text against the keys the tables already hold (strings
+        # shown through a dynamic lookup, such as the badge names in TimbreCore).
+        if all(isinstance(part, str) for part in t.value):
+            found.append(Literal("", "".join(t.value), t.value, rel, t.line, "plain"))
         return
     named = table == "AppShortcuts.strings" or slot == "Summary(_:)"
     key, specs, guessed = make_key(t.value, path, decls, shortcut=named, line=t.line, owner=enclosing(stack))
     found.append(Literal(table, key, t.value, rel, t.line, slot, guessed, specs))
 
 
+SINK_CALLS = {"LocalizedStringKey", "NSLocalizedString", "LocalizationValue", "LocalizedStringResource"}
+
+
+def collect_sinks(path: str, tokens: list, decls: Decls) -> None:
+    """Properties shown through a dynamic lookup: LocalizedStringKey(badge.title) makes every literal passed as
+    `title:` to the badge's type a key."""
+    type_stack, depth, n = [], 0, len(tokens)
+    for i, t in enumerate(tokens):
+        if t.kind == "op" and t.value == "{":
+            depth += 1
+        elif t.kind == "op" and t.value == "}":
+            depth -= 1
+            while type_stack and type_stack[-1][1] > depth:
+                type_stack.pop()
+        elif t.kind == "id" and t.value in TYPE_DECL and not t.member:
+            j = sig(tokens, i + 1)
+            if j < n and tokens[j].kind == "id":
+                k = j
+                while k < n and not (tokens[k].kind == "op" and tokens[k].value in "{;"):
+                    k += 1
+                if k < n and tokens[k].value == "{":
+                    type_stack.append((tokens[j].value, depth + 1, tokens[k].line))
+        elif t.kind == "id" and t.value in SINK_CALLS and i + 1 < n and tokens[i + 1].kind == "op" \
+                and tokens[i + 1].value == "(":
+            args, level = [], 0
+            for x in tokens[i + 2:]:
+                if x.kind == "op" and x.value in "([{":
+                    level += 1
+                elif x.kind == "op" and x.value in ")]}":
+                    if level == 0:
+                        break
+                    level -= 1
+                elif level == 0 and x.kind == "op" and x.value == ",":
+                    break
+                if x.kind != "nl":
+                    args.append(x)
+            if not args or any(x.kind not in ("id", "op") or (x.kind == "op" and x.value not in (".", "?", "!"))
+                               for x in args):
+                continue
+            ids = [x for x in args if x.kind == "id"]
+            if len(ids) < 2:
+                continue
+            prop = ids[-1].value
+            cut = max(k for k, x in enumerate(args) if x.kind == "id" and x is ids[-1])
+            prefix = [x for x in args[:cut] if not (x.kind == "op" and x.value in ("?", "!"))]
+            while prefix and prefix[-1].kind == "op" and prefix[-1].value == ".":
+                prefix.pop()
+            owner = (type_stack[-1][0], type_stack[-1][2]) if type_stack else (None, 0)
+            typ, _ = expr_type(prefix, path, decls, t.line, owner)
+            if typ:
+                base = typ.replace("?", "").replace("!", "").strip()
+                if base in decls.types:
+                    decls.sinks.add((base, prop))
+
+
 def scan(root: Path, folders: list, decl_folders: list | None = None) -> tuple[list, dict]:
-    """All localizable literals under root/folders. Returns (literals, {file: Lexer}) for context lookups."""
+    """Every literal under root/folders (localizable ones with their table; the rest as plain text, table "").
+    Returns (literals, {file: Lexer}) for context lookups. decl_folders are read for declarations only."""
     decls = Decls()
     lexed = {}
     files = []
@@ -1037,6 +1099,8 @@ def scan(root: Path, folders: list, decl_folders: list | None = None) -> tuple[l
         tokens_by_file[path] = toks
         lexed[str(path.relative_to(root))] = lexer
         collect_decls(str(path), toks, decls)
+    for path in files:
+        collect_sinks(str(path), tokens_by_file[path], decls)
     literals = []
     for path in files:
         literals += scan_file(str(path), "", decls, tokens_by_file[path], str(path.relative_to(root)))

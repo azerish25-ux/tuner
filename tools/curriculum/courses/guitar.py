@@ -5,7 +5,7 @@ import tunes
 # The Timbre Originals the song spotlights play from (see "song spotlights" below).
 from courses.originals import (
     BALLAD as BALLAD_STRUM, CELLAR, CELLAR_1, CELLAR_SONG, DUST_3, DUST_4, GLASS_SONG, KITE_SONG, OFFBEAT, RADIO_HOOK,
-    RUST_3, RUST_HOOK, RUST_SONG,
+    RUST_HOOK, RUST_SONG,
 )
 from courses.originals_part2 import GHOST, HALO, HALO_RIFF, LETTERS, LETTERS_HOOK
 
@@ -746,6 +746,8 @@ UNIT_6 = unit("gtr-6", "Melodies on strings 3 and 4", "G and A on string 3, D, E
 
 # ================================================================ 7. Songs with chords
 
+GHOST_VERSE = [(Am, 2), (F_MINI, 2), (C, 2), (E, 2)]   # Ghost Light's verse
+
 UNIT_7 = unit("gtr-7", "Songs with chords", "A mini F, D7, and two traditional songs with both chords and melody.", [
     lesson("gtr-7-1", "The mini F", [
         explain("F without the barre", "This small F uses four strings. Finger 1 lies flat across strings 1 and 2 at fret 1, "
@@ -806,6 +808,21 @@ UNIT_7 = unit("gtr-7", "Songs with chords", "A mini F, D7, and two traditional s
         along(G, CLEM, bpm=72, beats_per_bar=3, title="Clementine"),
         CLEM_SONG.take("Clementine"),
     ], minutes=CLEM_SONG.minutes(), xp=35, kind="song", arrangement=CLEM_SONG.meta()),
+    # Ghost Light (A minor, 70 bpm): the verse walks A minor, F, C and E, two bars each; its last line leans on E's
+    # G sharp, as Greensleeves does.
+    spotlight("gtr-7", "Ghost Light", [
+        introduce("A ballad in A minor", "Ghost Light is a Timbre Original: a slow, dark ballad. Its verse walks A minor, F, "
+                  "C and E, so your mini F gets a song, and the G sharp in E pulls the tune back home.", shape(F_MINI)),
+        progression(GHOST_VERSE, HALVES, bpm=60),
+        listen("Listen to the verse's last chord. Major or minor?", [tones(E)], MAJOR_MINOR, 0),
+        explain("Big on one", "The ballad strum: one big strum on beat one and let it ring, another on three, then down-up "
+                "on four. The space after each strum is part of the song.", rhythm(BALLAD_STRUM)),
+        progression(GHOST_VERSE, BALLAD_STRUM, bpm=63),
+        notes(G, ["B3", "C4", "B3", "G#3", "B3", "E4"], hint="The verse's last line: open B, C at fret 1, B, G sharp at "
+              "fret 1 on string 3, B, then open E."),
+        GHOST.along("Verse 1", bpm=63, title=THE_VERSE),
+        progression(GHOST_VERSE, BALLAD_STRUM, bpm=70),
+    ], minutes=6),
     lesson("gtr-7-6", "Songbook challenge", [
         explain("Two songs, start to finish", "No new ideas: the mini F, D7 and both songs from this unit. "
                 "Change chords early and let the melodies sing."),
@@ -879,6 +896,22 @@ UNIT_8 = unit("gtr-8", "Seventh and sus chords", "E7, A7, G7 and B7, sus chords,
         play_chord(Asus4),
         progression([(Asus4, 1), (A, 1), (Dsus2, 1), (D, 1)], QUARTERS, bpm=66),
     ], minutes=5, xp=25),
+    # Rust Belt Shuffle (E, 80 bpm): the same 12-bar plan in E, shuffled, with a swung tune on top. Bar 9's D sharp
+    # (string 2, fret 4) is B7's third.
+    spotlight("gtr-8", "Rust Belt Shuffle", [
+        introduce("A shuffle with a tune", "Rust Belt Shuffle is a Timbre Original: a 12-bar blues in E, the plan you just "
+                  "strummed, with a swung tune on top. Keep the long-short feel in both hands.", rhythm(SHUFFLE)),
+        progression(TWELVE_BAR, SHUFFLE, bpm=66),
+        notes(G, ["G3", "G#3", "B3"], hint="Open G, then G sharp at fret 1 on string 3, then open B: the bluesy slide in "
+              "bar two."),
+        quiz("Bar two slides from G to G sharp. Which one belongs to E7?", ["G", "G sharp"], 1,
+             "E7 is E, G sharp, B and D. G is the blue note: it rubs against the chord, then slides into it."),
+        along(G, RUST_HOOK, bpm=60, title="First four bars"),
+        notes(G, ["F#4", "F#4", "E4", "D#4", "B3"], hint="Bar nine, over B7: F sharp at fret 2 on string 1, open E, "
+              "D sharp at fret 4 on string 2 with your little finger, then B."),
+        RUST_SONG.along("Verse 1", bpm=66, title=THE_VERSE),
+        progression(TWELVE_BAR, SHUFFLE, bpm=80),
+    ], minutes=6),
     lesson("gtr-8-6", "Blues challenge", [
         explain("Sevenths, sus and shuffle", "No new ideas: seventh chords, sus chords and the 12-bar shuffle. "
                 "Keep the long-short swing steady through every change."),
@@ -891,6 +924,8 @@ UNIT_8 = unit("gtr-8", "Seventh and sus chords", "E7, A7, G7 and B7, sus chords,
 ])
 
 # ================================================================ 9. Power chords and riffs
+
+CELLAR_PUSH = [(A5, 1), (G5, 1), (C5, 1), (D5, 1)] * 2   # Basement Weather's verse and chorus
 
 UNIT_9 = unit("gtr-9", "Power chords and riffs", "Power chords, open and movable, palm muting and a riff of your own.", [
     lesson("gtr-9-1", "E5 and A5", [
@@ -952,6 +987,21 @@ UNIT_9 = unit("gtr-9", "Power chords and riffs", "Power chords, open and movable
         progression([(G5, 1), (A5_UP, 1), (C5, 1), (A5_UP, 1)], PUSH, bpm=72),
         along(G, f"{RIFF} {RIFF}", bpm=76, title="Riff, up to speed", max_fret=7, first_fret=2),
     ], minutes=5, xp=25),
+    # Basement Weather (A, 92 bpm): a low riff in A on strings 6, 5 and 4, then A5, G5, C5 and D5 on the push rhythm.
+    spotlight("gtr-9", "Basement Weather", [
+        introduce("Garage rock in A", "Basement Weather is a Timbre Original: garage rock in A. A riff on the low strings "
+                  "opens it, then power chords punch back on one, the and of two, and four. Keep your palm at the bridge.",
+                  fretboard(G, [(6, 0), (6, 3, 3), (5, 0), (5, 3, 3), (4, 0)])),
+        notes(G, [("A2", 5), ("C3", 5), ("D3", 4), ("G2", 6), ("E2", 6)], hint="Open A, C at fret 3 on string 5, open D, "
+              "then G at fret 3 on string 6 and open low E."),
+        along(G, f"{CELLAR_1} {CELLAR_1}", bpm=66, title="First bar, twice"),
+        along(G, CELLAR, bpm=72, title=RIFF_TITLE),
+        explain("D5: slide C5 up", "You know C5, with finger 1 on string 5, fret 3. Slide the whole shape up two frets and "
+                "it becomes D5. G5 sits at fret 3 too, one string lower than C5.", shape(D5)),
+        play_chord(D5),
+        progression(CELLAR_PUSH, PUSH, bpm=72),
+        CELLAR_SONG.along("Intro", bpm=84, title="Riff, up to speed"),
+    ]),
     lesson("gtr-9-6", "Riff challenge", [
         explain("Power and precision", "No new ideas: power chords, open and movable, palm muting and your riff. "
                 "Lock in with the click and keep the mutes tight."),
@@ -965,6 +1015,11 @@ UNIT_9 = unit("gtr-9", "Power chords and riffs", "Power chords, open and movable
 ])
 
 # ================================================================ 10. Barre chords and the pentatonic
+
+GLASS_LOOP = [(Am, 1), (F_BARRE, 1), (C, 1), (G_MAJ, 1)]   # Glass Satellites' verse and chorus
+# A box-1 solo over A minor, F, C, G and A minor: a chord note on every beat one and three, home on A.
+GLASS_SOLO = ("A4@1:1.5 G4@2:0.5 E4@2:1 G4@2:1 A4@1:2 C5@1:1 A4@1:1 G4@2:1.5 E4@2:0.5 C4@3:1 E4@2:1"
+              " D4@3:1.5 E4@2:0.5 G4@2:2 E4@2:1 C4@3:1 A3@4:2")
 
 UNIT_10 = unit("gtr-10", "Barre chords and the pentatonic", "The F barre and B minor, the A minor pentatonic scale "
                "and your first solo.", [
@@ -1027,6 +1082,20 @@ UNIT_10 = unit("gtr-10", "Barre chords and the pentatonic", "The F barre and B m
         listen("Does this end at home?", [["E4"], ["D4"], ["C4"], ["A3"]], HOME, 0),
         along(G, SOLO, bpm=66, title="Your first solo", max_fret=8, first_fret=5),
     ], minutes=5, xp=25),
+    # Glass Satellites (A minor, 76 bpm): A minor, F (the full barre), C and G, the ballad strum, and a box-1 solo of our
+    # own over the loop.
+    spotlight("gtr-10", "Glass Satellites", [
+        introduce("A power ballad with a barre", "Glass Satellites is a Timbre Original: a power ballad on A minor, F, C "
+                  "and G. Your full F barre takes the second chord, and box 1 fits over the whole loop, so it gets a solo.",
+                  shape(F_BARRE)),
+        progression(GLASS_LOOP, HALVES, bpm=60),
+        progression(GLASS_LOOP * 2 + [(Am, 1)], BALLAD_STRUM, bpm=66),
+        GLASS_SONG.along("Chorus", bpm=66, title=THE_CHORUS),
+        quiz("Over the F chord, which box-1 notes belong to it?", ["A and C", "D and G", "E and G"], 0,
+             "F is F, A and C. Box 1 holds A and C, so they sound settled over F."),
+        along(G, GLASS_SOLO, bpm=60, title="A solo over the loop", max_fret=8, first_fret=5),
+        along(G, GLASS_SOLO, bpm=72, title="Your solo, with feeling", max_fret=8, first_fret=5),
+    ], minutes=6),
     lesson("gtr-10-6", "Final challenge", [
         explain("Everything together", "No new ideas: barre chords, B minor, the pentatonic box and your solo. "
                 "Breathe, keep the beat, and play it like you mean it."),
