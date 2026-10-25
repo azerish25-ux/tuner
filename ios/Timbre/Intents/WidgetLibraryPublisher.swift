@@ -150,9 +150,9 @@ extension WidgetLibrary {
         }
         for step in lesson.steps {
             switch step {
-            case let .progression(chords, _, _, _, _): chords.forEach(add)
+            case let .progression(chords, _, _, _, _, _, _): chords.forEach(add)
             case let .playChord(chord): add(chord)
-            case let .strum(chord, _, _, _, _): if let chord { add(chord) }
+            case let .strum(chord, _, _, _, _, _, _): if let chord { add(chord) }
             default: break
             }
         }
@@ -165,8 +165,8 @@ extension WidgetLibrary {
         for step in lesson.steps {
             switch step {
             case let .playAlong(_, bpm, _, _): return Int(bpm.rounded())
-            case let .progression(_, _, _, bpm, _): return Int(bpm.rounded())
-            case let .strum(_, _, bpm, _, _): return Int(bpm.rounded())
+            case let .progression(_, _, _, bpm, _, _, _): return Int(bpm.rounded())
+            case let .strum(_, _, bpm, _, _, _, _): return Int(bpm.rounded())
             default: continue
             }
         }

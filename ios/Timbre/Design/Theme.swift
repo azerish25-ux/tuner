@@ -47,6 +47,9 @@ enum Palette {
     static let coral = Color(hex: 0xFF7E6B)
     /// The streak's own colour (a habit, not a status).
     static let flame = Color(hex: 0xFF9F43)
+    /// A category's tint where no course owns it (a Today activity, a tool, a difficulty): a cool steel that reads as
+    /// a colour beside `inkSoft` without meaning in tune, adjust or wrong. 9:1 on `surface`.
+    static let accentNeutral = Color(hex: 0xB4BECB)
     /// Course hues: they tint what a course owns, never a status or a primary button.
     static let violet = Color(hex: 0xA592FF)
     static let sky = Color(hex: 0x62C9FF)
@@ -74,7 +77,8 @@ enum Palette {
     static let flameInk = Color(hex: 0xFFD3A8)
     /// Streak freezes: the snowflakes and the "streak saved" pill.
     static let frost = Color(hex: 0x9FD8FF)
-    /// A star's gold, for its glow and outline.
+    /// Rewards and roots as one colour: a star's glow and outline, a reward's burst or tile, a chord's or scale's root
+    /// note. Gold, so a reward never borrows the status amber.
     static let starGold = Color(hex: 0xF0A93B)
     /// A star's fill, lit from the top.
     static let starFill = LinearGradient(colors: [Color(hex: 0xFFE29A), starGold], startPoint: .top, endPoint: .bottom)

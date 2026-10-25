@@ -13,6 +13,7 @@ import UIKit
 ///                   { "id": "annual_b", "weight": 50, "annualProductId": "timbre_pro_annual_b" }],
 ///       "rating": { "show": true, "stars": 4.8, "count": 312 },
 ///       "referralCode": "FRIENDMONTH",
+///       "freeSongs": ["gtr-2-4", "gtr-6-4"],
 ///       "flags": { "unit2Free": true }
 ///     }
 ///
@@ -53,6 +54,8 @@ final class RemoteConfig: ObservableObject {
         var paywall: [PaywallVariant]?
         var rating: Rating?
         var referralCode: String?
+        /// Song lessons opened to everyone for now (a seasonal shelf's first week), by lesson id.
+        var freeSongs: [String]?
         var flags: [String: Bool]?
     }
 
@@ -123,6 +126,12 @@ final class RemoteConfig: ObservableObject {
         values.flags?[name] ?? fallback
     }
 
+    /// Song lessons the file opens to everyone, by lesson id (`freeSongs`); empty by default.
+    var freeSongs: [String] { values.freeSongs ?? [] }
+
+    /// Unit 2 of every course is free (`flags.unit2Free`); off by default.
+    var unit2Free: Bool { flag("unit2Free") }
+
     // MARK: Fetching
 
     /// Fetches now, then whenever the app comes forward (each at most every few hours). Safe to call more than once.
@@ -163,7 +172,7 @@ final class RemoteConfig: ObservableObject {
     // MARK: Rules
 
     /// What a hand-edited file may hold: named variants with a positive weight (eight at most), a rating out of five,
-    /// a plain offer code and a few dozen switches. Anything else is dropped rather than shown.
+    /// a plain offer code, a few dozen free songs and a few dozen switches. Anything else is dropped rather than shown.
     private static func sanitized(_ values: Values) -> Values {
         var clean = Values()
         let variants = (values.paywall ?? []).filter { variant in
@@ -177,6 +186,12 @@ final class RemoteConfig: ObservableObject {
             clean.referralCode = code
         }
         if let flags = values.flags, flags.count <= 64 { clean.flags = flags }
+        // Lesson ids as the curriculum writes them ("gtr-2-4"): letters, digits, dashes, dots and underscores; a
+        // few dozen at most.
+        let songs = (values.freeSongs ?? []).filter { id in
+            (1...64).contains(id.count) && id.allSatisfy { $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "-" || $0 == "_" || $0 == ".") }
+        }
+        clean.freeSongs = songs.isEmpty ? nil : Array(songs.prefix(64))
         return clean
     }
 

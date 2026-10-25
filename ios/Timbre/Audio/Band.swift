@@ -7,9 +7,21 @@ import TimbreCore
 /// comping on the chords, all in the song's style (`BandStyle`: pop, rock, reggae one-drop, country two-step, funk,
 /// ballad, or the courses' standard groove). Rendered offline once per arrangement; equal arrangements share it.
 struct BandArrangement: Hashable, Sendable {
+    /// One stretch of a bar's harmony: from `beat` (counted from the bar's downbeat) to the next segment or the bar's
+    /// end, the chord `root` (pitch class, nil for none) with `tones` above it.
+    struct Segment: Hashable, Sendable {
+        var beat: Double
+        var root: Int?
+        var tones: [Int]
+
+        init(beat: Double, root: Int?, tones: [Int] = []) {
+            self.beat = beat; self.root = root; self.tones = tones
+        }
+    }
+
     /// One bar: the harmony under it and how the drummer treats it.
     struct Bar: Hashable, Sendable {
-        /// Root pitch class (C = 0); nil plays drums only.
+        /// Root pitch class (C = 0) on the downbeat; nil plays drums only.
         var root: Int?
         /// Chord tones above the root in semitones (the comping); empty for none.
         var tones: [Int] = []
@@ -26,6 +38,23 @@ struct BandArrangement: Hashable, Sendable {
         /// and survives callers that copy bars into a new arrangement.
         var cues: [String] = []
         var guess: BandStyle = .standard
+        /// The chord changes after the downbeat, in beat order (each beat above 0 and inside the bar); empty when one
+        /// chord (`root`, `tones`) holds the whole bar. Set them through `segments`.
+        var changes: [Segment] = []
+
+        /// The bar's harmony, change by change: the downbeat's chord (`root`, `tones`) at beat 0, then each change.
+        /// A bar with one chord is one segment. Setting it puts the earliest segment on the downbeat (its beat read
+        /// as 0) and the rest in `changes`; an empty list leaves the bar without a chord (drums only).
+        /// The rendered band plays the downbeat's chord for the whole bar until it renders segment by segment.
+        var segments: [Segment] {
+            get { [Segment(beat: 0, root: root, tones: tones)] + changes }
+            set {
+                let ordered = newValue.sorted { $0.beat < $1.beat }
+                root = ordered.first?.root
+                tones = ordered.first?.tones ?? []
+                changes = Array(ordered.dropFirst())
+            }
+        }
     }
 
     /// UserDefaults key of the player's band switch (on by default).
@@ -257,6 +286,9 @@ final class BandFeel: @unchecked Sendable {
     struct State: Equatable {
         var thin = false
         var duck = false
+        /// The band plays its kit only (the band on the phone's speaker, where the microphone hears it): drums are
+        /// aperiodic, so the pitch detector rejects them. Off unless the route asks for it.
+        var kitOnly = false
         /// How many crashes and chokes have been asked for: a player fires each new one once.
         var crashes = 0
         var chokes = 0
@@ -283,9 +315,18 @@ final class BandFeel: @unchecked Sendable {
     func thin(_ on: Bool) { change { $0.thin = on } }
     /// The band steps back (true), so spoken cues come through.
     func duck(_ on: Bool) { change { $0.duck = on } }
+    /// The band plays its kit layer only (true) or in full (false). A setting of the route, not of the take: `reset`
+    /// keeps it. Today the comping drops out under it; the bass, rendered with the drums, stays until the layers split.
+    func kitOnly(_ on: Bool) { change { $0.kitOnly = on } }
+    /// Whether the band is playing its kit only (`kitOnly(_:)`).
+    var isKitOnly: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return state.kitOnly
+    }
     func crash() { change { $0.crashes &+= 1 } }
     func choke() { change { $0.chokes &+= 1 } }
-    /// A new take: the full band.
+    /// A new take: the full band (in kit only, while the route asks for that).
     func reset(duck: Bool = false) { change { $0.thin = false; $0.duck = duck } }
 }
 
@@ -312,6 +353,8 @@ final class BandPlayer {
     private let ease: Float
     private var shotPosition = 0, shotEnd = 0
     private var crashes = 0, chokes = 0
+    /// The band plays its kit only (`BandFeel.kitOnly`): the harmony stays out, the final chord's too.
+    private var kitOnly = false
     /// Frames until `BandFeel` is read again (about 5 ms).
     private var poll = 0
     private static let pollFrames = 256
@@ -325,7 +368,8 @@ final class BandPlayer {
         ease = 1 / Float(max(1, Double(track.sampleRate) * 0.15))
         if let now = feel.read() {
             crashes = now.crashes; chokes = now.chokes
-            harmony = now.thin ? 0 : 1; harmonyTarget = harmony
+            kitOnly = now.kitOnly
+            harmony = now.thin || now.kitOnly ? 0 : 1; harmonyTarget = harmony
             duck = now.duck ? Self.duckLevel : 1; duckTarget = duck
         }
     }
@@ -346,7 +390,7 @@ final class BandPlayer {
         guard state == .playing else { return }
         guard isSounding else { stop(); return }
         state = .ending
-        harmonyTarget = 1
+        harmonyTarget = kitOnly ? 0 : 1
         start(track.ending, tailFade: 1 / Float(max(1, Double(track.sampleRate) * 0.12)))
     }
 
@@ -368,11 +412,13 @@ final class BandPlayer {
     private func follow() {
         guard let now = feel.read() else { return }
         duckTarget = now.duck ? Self.duckLevel : 1
+        kitOnly = now.kitOnly
         guard state == .playing else {
             crashes = now.crashes; chokes = now.chokes
+            if kitOnly { harmonyTarget = 0 }
             return
         }
-        harmonyTarget = now.thin ? 0 : 1
+        harmonyTarget = now.thin || now.kitOnly ? 0 : 1
         if now.crashes != crashes {
             crashes = now.crashes
             shoot(track.crash)

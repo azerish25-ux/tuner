@@ -100,7 +100,7 @@ final class PlacementTests: XCTestCase {
     func testCheckPlaysGCAndDThenAStrumFromTheCourse() throws {
         let guitar = try XCTUnwrap(PlacementCheck.steps(in: try course("guitar")))
         XCTAssertEqual(chords(guitar), ["G", "C", "D"])
-        guard case let .strum(chord, pattern, bpm, bars, _)? = guitar.last else { return XCTFail("ends with a strum") }
+        guard case let .strum(chord, pattern, bpm, bars, _, _, _)? = guitar.last else { return XCTFail("ends with a strum") }
         XCTAssertEqual(chord?.symbol, "G")
         XCTAssertEqual(pattern, PlacementCheck.strumPattern, "D DU UDU")
         XCTAssertGreaterThanOrEqual(bpm, 60)
@@ -110,7 +110,7 @@ final class PlacementTests: XCTestCase {
 
         let ukulele = try XCTUnwrap(PlacementCheck.steps(in: try course("ukulele")))
         XCTAssertEqual(chords(ukulele), ["G", "C", "D"])
-        if case let .strum(_, pattern, _, _, _)? = ukulele.last { XCTAssertEqual(pattern, PlacementCheck.strumPattern, "the island strum") } else { XCTFail() }
+        if case let .strum(_, pattern, _, _, _, _, _)? = ukulele.last { XCTAssertEqual(pattern, PlacementCheck.strumPattern, "the island strum") } else { XCTFail() }
 
         XCTAssertEqual(chords(try XCTUnwrap(PlacementCheck.steps(in: try course("mandolin")))), ["G", "C", "D"])
         // The banjo has no D shape of its own: D7 stands in; its G comes from the strum steps.

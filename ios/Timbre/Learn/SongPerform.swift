@@ -688,7 +688,7 @@ struct SongEncoreStep: View {
     @State private var attempt = 0
 
     private var tempo: Int {
-        if case let .progression(_, _, _, bpm, _) = step { return Int(bpm.rounded()) }
+        if case let .progression(_, _, _, bpm, _, _, _) = step { return Int(bpm.rounded()) }
         return 0
     }
 

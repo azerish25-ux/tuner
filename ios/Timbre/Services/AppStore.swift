@@ -94,6 +94,9 @@ final class AppStore: ObservableObject {
     private var subscriptions: Set<AnyCancellable> = []
     /// The coalesced settings write (`updateSettings`), while one is waiting.
     private var settingsWrite: Task<Void, Never>?
+    /// Settings changes `updateSettingsSoon` holds, and the moment that applies them.
+    private var pendingSettings: [(inout UserSettings) -> Void] = []
+    private var pendingSettingsApply: Task<Void, Never>?
     private var widgetRepublishQueued = false
     /// What the widget library was last built from (`publishWidgetLibrary`).
     private var widgetLibraryInputs: WidgetLibraryInputs?
@@ -419,8 +422,36 @@ final class AppStore: ObservableObject {
         }
     }
 
-    /// Writes settings changes still waiting (the app leaving the foreground; tests before reopening the store).
+    /// A settings change made about 300 ms from now rather than on the frame that asks for it: the tuner's lock path
+    /// records its progress without validating and republishing the settings mid-lock. Changes asked for in the
+    /// meantime apply together, in order, as one `updateSettings` (its write coalesced as ever); `flushSettings`
+    /// applies any still waiting. Write each change against the settings it is handed, not against a copy taken when
+    /// it was asked for: another change may land first. A change the settings refuse is dropped, as `updateSettings`
+    /// drops it.
+    func updateSettingsSoon(_ mutation: @escaping (inout UserSettings) -> Void) {
+        pendingSettings.append(mutation)
+        guard pendingSettingsApply == nil else { return }
+        pendingSettingsApply = Task { @MainActor [weak self] in
+            do { try await Task.sleep(for: .milliseconds(300)) } catch { return }
+            self?.applyPendingSettings()
+        }
+    }
+
+    /// Applies every change `updateSettingsSoon` is holding, now.
+    private func applyPendingSettings() {
+        pendingSettingsApply?.cancel(); pendingSettingsApply = nil
+        guard !pendingSettings.isEmpty else { return }
+        let changes = pendingSettings
+        pendingSettings = []
+        updateSettings { settings in
+            for change in changes { change(&settings) }
+        }
+    }
+
+    /// Writes settings changes still waiting (the app leaving the foreground; tests before reopening the store),
+    /// including those `updateSettingsSoon` holds.
     func flushSettings() {
+        applyPendingSettings()
         settingsWrite?.cancel(); settingsWrite = nil
         guard persistence.hasUnsavedChanges else { return }
         do { try persistence.flush() } catch {
@@ -484,11 +515,23 @@ final class AppStore: ObservableObject {
                                            precise: settings.precision == .pro), toast: false)
     }
 
-    /// The course onboarding's plan leads to: the goal's own course (ear, voice, rhythm), else the instrument's, else theory.
-    func onboardingCourse(instrumentId: String?, goal: String) -> LearnCourse? {
+    /// The course a plan for `goal` ("songs", "ear", "voice", "rhythm", "practice", "tune", …) leads to on
+    /// `instrumentId`: the goal's own course (ear, voice, rhythm), else the instrument's, else theory. Onboarding's
+    /// plan, Learn's first lesson and the paywall's plan all start from it.
+    func planCourse(forGoal goal: String, instrumentId: String?) -> LearnCourse? {
         let byGoal = ["ear": "ear", "voice": "voice", "rhythm": "rhythm"][goal]
         let id = byGoal ?? instrumentId.flatMap { instrument in curriculum.courses.first { $0.instrument == instrument }?.id }
         return id.flatMap { curriculum.course(id: $0) } ?? curriculum.course(id: "theory")
+    }
+
+    /// `planCourse(forGoal:instrumentId:)` on the instrument on the stage (none while the tuner is on a reference note).
+    func planCourse(forGoal goal: String) -> LearnCourse? {
+        planCourse(forGoal: goal, instrumentId: referenceMode ? nil : instrument.id)
+    }
+
+    /// The course onboarding's plan leads to (`planCourse(forGoal:instrumentId:)`).
+    func onboardingCourse(instrumentId: String?, goal: String) -> LearnCourse? {
+        planCourse(forGoal: goal, instrumentId: instrumentId)
     }
 
     /// Learn progress with the experience answer applied as a placement in the plan's course and the instrument's own course.

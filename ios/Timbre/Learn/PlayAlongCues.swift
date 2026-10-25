@@ -47,6 +47,13 @@ enum SpokenCues {
         AccessibilityNotification.Announcement(announcement).post()
     }
 
+    /// Names `note`, which is due `lead` seconds from now: in full, or just its place when `brief` (the caller's call,
+    /// from the gap before the note). The cue is the speaker's to time within the lead, so it can end before the note
+    /// it announces. Today it is said at once, as `say(phrase(…))`.
+    @MainActor static func schedule(_ note: TimedNote, fretted: Bool, lead: TimeInterval, brief: Bool) {
+        say(phrase(note, fretted: fretted, brief: brief))
+    }
+
     /// A note as said: its name and, on a fretted course, where to play it; `brief` keeps only the place.
     static func phrase(_ note: TimedNote, fretted: Bool, brief: Bool) -> String {
         let name = spokenName(note.midi)

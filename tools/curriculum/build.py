@@ -139,6 +139,10 @@ def check_lesson(lesson: dict, kind: str | None, where: str):
             bar = step.get("beatsPerBar") or max(4, int(max(step["pattern"] or [0])) + 1)
             if not step["pattern"] or any(not 0 <= b < bar for b in step["pattern"]) or not 2 <= bar <= 12:
                 errors.append(f"{at}: pattern outside its {bar}-beat bar")
+        if t in ("strum", "progression"):
+            for mark in ("muted", "accents"):
+                if any(not any(abs(b - p) < 0.02 for p in step["pattern"]) for b in step.get(mark, [])):
+                    errors.append(f"{at}: {mark} beats outside the pattern")
 
 
 # Every song lesson (kind "song") is a full arrangement: intro, verses, choruses, outro, 1.5 to 3 minutes, ending on

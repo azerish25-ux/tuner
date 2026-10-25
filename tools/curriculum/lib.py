@@ -232,17 +232,26 @@ def play_chord(spec):
     return {"type": "chord", "chord": spec}
 
 
-def strum(spec, pattern, bpm, bars=2, beats_per_bar=None):
+def stroke_marks(muted=None, accents=None):
+    """A strum or progression step's muted beats (chops, chunks: no chord rings) and accented beats, each a subset of
+    its pattern counted within the bar. Written only when given, so a plain step stays as it was."""
+    return {**({"muted": list(muted)} if muted else {}), **({"accents": list(accents)} if accents else {})}
+
+
+def strum(spec, pattern, bpm, bars=2, beats_per_bar=None, muted=None, accents=None):
     """pattern: beats within one bar where to strum, e.g. [0, 1, 2, 3] or [0, 1, 1.5, 2.5, 3].
-    beats_per_bar: 3 for 3/4, 6 for 6/8 counted in eighths; default 4."""
+    beats_per_bar: 3 for 3/4, 6 for 6/8 counted in eighths; default 4.
+    muted, accents: beats of the pattern played muted or accented (`stroke_marks`)."""
     return {"type": "strum", "chord": spec, "pattern": list(pattern), "bpm": bpm, "bars": bars,
-            **({"beatsPerBar": beats_per_bar} if beats_per_bar else {})}
+            **({"beatsPerBar": beats_per_bar} if beats_per_bar else {}), **stroke_marks(muted, accents)}
 
 
-def progression(changes, pattern, bpm, beats_per_bar=None):
-    """Strum chords in time. changes: [(chord spec, bars), ...]; the pattern repeats in every bar."""
+def progression(changes, pattern, bpm, beats_per_bar=None, muted=None, accents=None):
+    """Strum chords in time. changes: [(chord spec, bars), ...]; the pattern (with its muted and accented beats)
+    repeats in every bar."""
     return {"type": "progression", "chords": [c for c, _ in changes], "bars": [b for _, b in changes],
-            "pattern": list(pattern), "bpm": bpm, **({"beatsPerBar": beats_per_bar} if beats_per_bar else {})}
+            "pattern": list(pattern), "bpm": bpm, **({"beatsPerBar": beats_per_bar} if beats_per_bar else {}),
+            **stroke_marks(muted, accents)}
 
 
 def tap(pattern, bpm, bars=2, beats_per_bar=None):

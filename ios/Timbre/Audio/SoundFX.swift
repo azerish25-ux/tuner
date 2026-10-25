@@ -212,9 +212,9 @@ struct RewardKey: Equatable, Sendable {
                 notes += list
             case let .playChord(chord):
                 chords.append((chord: chord, bars: 1))
-            case let .strum(chord, _, _, bars, _):
+            case let .strum(chord, _, _, bars, _, _, _):
                 if let chord { chords.append((chord: chord, bars: max(1, bars))) }
-            case let .progression(list, bars, _, _, _):
+            case let .progression(list, bars, _, _, _, _, _):
                 for (index, chord) in list.enumerated() {
                     chords.append((chord: chord, bars: index < bars.count ? max(1, bars[index]) : 1))
                 }

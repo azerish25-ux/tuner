@@ -457,21 +457,31 @@ struct RewardBanner: Identifiable {
 /// bar on the leading side, clear of the header's trailing controls (streak, level, settings); on wide
 /// screens it is centred. Reduce Motion fades it in place. It never takes taps; VoiceOver hears each banner.
 struct RewardToast: View {
+    /// Where the pill shows: `automatic` grows it out of the Dynamic Island where there is one; `docked` never uses the
+    /// island and hangs it under the status bar (at the leading gutter on a phone, centred on a wide screen).
+    enum Placement: Sendable { case automatic, docked }
+
     @EnvironmentObject private var store: AppStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var queue: [RewardBanner] = []
     @State private var current: RewardBanner?
     @State private var open = false
     @State private var presenting = false
+    private let placement: Placement
+
+    init(placement: Placement = .automatic) {
+        self.placement = placement
+    }
 
     var body: some View {
         // The status band is read from a reader that keeps the safe area (inside `.ignoresSafeArea()` it reads 0),
         // with the key window's inset as a fallback; the pill is then placed in full-screen coordinates.
         let windowTop = Self.windowTopInset
+        let dockedOnly = placement == .docked
         GeometryReader { outer in
             let top = max(outer.safeAreaInsets.top, windowTop)
             GeometryReader { proxy in
-                let layout = PillLayout(width: proxy.size.width, top: top)
+                let layout = PillLayout(width: proxy.size.width, top: top, dockedOnly: dockedOnly)
                 if let current {
                     placed(current, layout: layout)
                         .frame(width: proxy.size.width, height: proxy.size.height, alignment: layout.docked ? .topLeading : .top)
@@ -671,11 +681,13 @@ struct RewardToast: View {
 private struct PillLayout {
     let width: CGFloat
     let top: CGFloat
+    /// `RewardToast.Placement.docked`: never the island.
+    var dockedOnly = false
     static let islandWidth: CGFloat = 126
     static let islandHeight: CGFloat = 37
     /// Kept clear on the trailing side: streak chip, level ring and settings button (44 pt targets) with the gutter.
     static let headerControls: CGFloat = 200
-    var island: Bool { top >= 51 && width < 500 }
+    var island: Bool { !dockedOnly && top >= 51 && width < 500 }
     var docked: Bool { !island && width < 600 }
     /// The island's top edge: about 11 pt below the screen top on a 59 pt band, 14 pt on a 62 pt band.
     var islandTop: CGFloat { max(10, min(14, top - 48)) }

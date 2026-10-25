@@ -113,10 +113,10 @@ extension SpacedReview {
         guard let score, score.isFinite else { return [] }
         let credit = max(0, min(1, score))
         switch step {
-        case let .progression(chords, _, _, _, _):
+        case let .progression(chords, _, _, _, _, _, _):
             guard !tapped else { return [] }
             return changes(in: chords).map { ReviewCredit(item: $0, score: credit) }
-        case let .strum(chord, pattern, bpm, _, beatsPerBar):
+        case let .strum(chord, pattern, bpm, _, beatsPerBar, _, _):
             guard !pattern.isEmpty else { return [] }
             return [ReviewCredit(item: .rhythm(pattern: pattern, beatsPerBar: beatsPerBar, bpm: bpm, chord: chord, strummed: true), score: credit)]
         case let .tapRhythm(pattern, bpm, _, beatsPerBar):

@@ -348,10 +348,10 @@ enum LessonPreview {
                 if case let .chord(spec) = visual { keep(spec) } else if picture == nil, !isBlank(visual) { picture = visual }
             case let .playChord(chord):
                 keep(chord)
-            case let .strum(chord, pattern, _, _, meter):
+            case let .strum(chord, pattern, _, _, meter, _, _):
                 keep(chord)
                 if rhythm == nil { rhythm = (pattern, meter) }
-            case let .progression(list, _, pattern, _, meter):
+            case let .progression(list, _, pattern, _, meter, _, _):
                 list.forEach { keep($0) }
                 if rhythm == nil { rhythm = (pattern, meter) }
             case let .tapRhythm(pattern, _, _, meter):
@@ -443,7 +443,7 @@ private struct StepSummary {
             symbol = "hand.raised.fingers.spread"
             title = Text("Play the chord")
             detail = Text(verbatim: chord.name)
-        case let .strum(chord, _, bpm, bars, _):
+        case let .strum(chord, _, bpm, bars, _, _, _):
             symbol = "arrow.up.arrow.down"
             title = rhythmTitle ?? Text("Strum on the arrows")
             let tempo = Text("\(Int(bpm.rounded())) BPM · \(bars) bars")
@@ -453,7 +453,7 @@ private struct StepSummary {
             symbol = course.fretKind != nil && !micOff ? "metronome" : "hand.tap"
             title = rhythmTitle ?? Text("Tap on the dots")
             detail = Text("\(Int(bpm.rounded())) BPM · \(bars) bars")
-        case let .progression(chords, bars, _, bpm, _):
+        case let .progression(chords, bars, _, bpm, _, _, _):
             symbol = "arrow.triangle.swap"
             title = rhythmTitle ?? Text("Strum on the arrows")
             // The chords in order, then the tempo, as a strum's chord precedes its tempo.

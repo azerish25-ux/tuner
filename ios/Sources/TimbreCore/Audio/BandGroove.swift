@@ -57,7 +57,7 @@ public enum BandStyle: String, CaseIterable, Hashable, Sendable {
             switch step {
             case let .explain(title, _, _):
                 titles.append(title.defaultValue)
-            case let .progression(_, _, strokes, rate, beats):
+            case let .progression(_, _, strokes, rate, beats, _, _):
                 pattern = strokes
                 bpm = rate
                 meter = beats ?? max(4, Int((strokes.max() ?? 3) + 1))
@@ -150,7 +150,7 @@ public final class BandStyleIndex: Sendable {
             switch step {
             case let .playAlong(notes, _, beatsPerBar, _):
                 out.append(BandCue.melody(notes, meter: beatsPerBar))
-            case let .progression(chords, bars, pattern, _, beatsPerBar):
+            case let .progression(chords, bars, pattern, _, beatsPerBar, _, _):
                 // The meter as the strum step counts it: 4, or longer if the pattern needs it.
                 let meter = beatsPerBar ?? max(4, Int((pattern.max() ?? 3) + 1))
                 let symbols = BandCue.perBar(chords, bars: bars)

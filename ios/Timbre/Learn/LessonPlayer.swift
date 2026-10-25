@@ -345,10 +345,10 @@ struct StepView: View {
                       onItem: onItem, onStarCap: onStarCap, done: done)
         case let .playChord(chord):
             ChordStep(chord: chord, course: course, accent: accent, onItem: onItem, done: done)
-        case let .strum(chord, pattern, bpm, bars, beatsPerBar):
+        case let .strum(chord, pattern, bpm, bars, beatsPerBar, _, _):
             RhythmStep(mode: .strum(chord), pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, strums: true, strings: course.stringCount,
                        edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice, onStarCap: onStarCap, done: done)
-        case let .progression(chords, bars, pattern, bpm, beatsPerBar):
+        case let .progression(chords, bars, pattern, bpm, beatsPerBar, _, _):
             RhythmStep(mode: .progression(chords, bars), pattern: pattern, bpm: bpm, bars: bars.reduce(0, +), meter: beatsPerBar, strums: true, strings: course.stringCount,
                        edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice, onStarCap: onStarCap, done: done)
         case let .tapRhythm(pattern, bpm, bars, beatsPerBar):

@@ -101,9 +101,9 @@ struct LessonEntity: IndexedEntity {
         var names: [String] = []
         for step in lesson.steps {
             switch step {
-            case let .progression(chords, _, _, _, _): names += chords.map(\.symbol)
+            case let .progression(chords, _, _, _, _, _, _): names += chords.map(\.symbol)
             case let .playChord(chord): names.append(chord.symbol)
-            case let .strum(chord, _, _, _, _): if let chord { names.append(chord.symbol) }
+            case let .strum(chord, _, _, _, _, _, _): if let chord { names.append(chord.symbol) }
             default: break
             }
         }

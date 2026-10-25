@@ -69,12 +69,12 @@ struct SongSheet {
             case let .playChord(chord):
                 Self.keep(chord, in: &chords)
                 timeline.append((chord: chord, bars: 1))
-            case let .strum(chord, _, _, bars, _):
+            case let .strum(chord, _, _, bars, _, _, _):
                 if let chord {
                     Self.keep(chord, in: &chords)
                     timeline.append((chord: chord, bars: max(1, bars)))
                 }
-            case let .progression(list, lengths, _, _, _):
+            case let .progression(list, lengths, _, _, _, _, _):
                 for (index, chord) in list.enumerated() {
                     Self.keep(chord, in: &chords)
                     timeline.append((chord: chord, bars: index < lengths.count ? max(1, lengths[index]) : 1))
@@ -108,7 +108,7 @@ struct SongSheet {
             bpm = rate
             meter = max(1, beats)
             named = parts.dropLast().map { (title: $0.title, notes: $0.notes) }
-        case let .progression(list, lengths, pattern, rate, beats)?:
+        case let .progression(list, lengths, pattern, rate, beats, _, _)?:
             bpm = rate
             // As the strum step counts it: 4, or longer if the pattern needs it.
             meter = beats ?? max(4, Int((pattern.max() ?? 3) + 1))
@@ -786,7 +786,7 @@ struct LeadChart {
             let charted = arrangement.chordPerBar + [ChordSpec?](repeating: nil, count: bars)
             perBar = Array(charted.prefix(bars))
             changes = Self.marks(of: arrangement)
-        } else if case let .progression(list, lengths, strums, _, _)? = lesson.steps.last {
+        } else if case let .progression(list, lengths, strums, _, _, _, _)? = lesson.steps.last {
             beats = max(1, sheet.beatsPerBar)
             var spread: [ChordSpec?] = []
             for (index, chord) in list.enumerated() {
@@ -863,7 +863,7 @@ struct LeadChart {
         guard !notes.isEmpty else { return none }
         var best: (score: Double, chart: [ChordSpec?])?
         for step in steps {
-            guard case let .progression(list, lengths, _, _, _) = step else { continue }
+            guard case let .progression(list, lengths, _, _, _, _, _) = step else { continue }
             var flat: [ChordSpec] = []
             for (index, chord) in list.enumerated() {
                 flat += Array(repeating: chord, count: index < lengths.count ? max(1, lengths[index]) : 1)

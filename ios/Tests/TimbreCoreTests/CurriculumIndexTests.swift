@@ -126,6 +126,27 @@ final class CurriculumIndexTests: XCTestCase {
         }
     }
 
+    /// Songs count by title: the same song in two courses counts once, and teaching lessons don't count.
+    func testDistinctTuneCountCountsSongsByTitle() throws {
+        func lesson(_ id: String, _ title: String, _ kind: Lesson.Kind) -> Lesson {
+            Lesson(id: id, title: LearnText(title), kind: kind, minutes: 3, xp: 10, free: true, steps: [], arrangement: nil)
+        }
+        func course(_ id: String, _ lessons: [Lesson]) -> LearnCourse {
+            LearnCourse(id: id, title: LearnText(id), subtitle: LearnText(""), instrument: nil, symbol: "music.note", accent: "mint",
+                        units: [LearnUnit(id: id + "-1", title: LearnText("U"), summary: LearnText(""), lessons: lessons)])
+        }
+        let small = Curriculum(courses: [
+            course("a", [lesson("a1", "Ode to Joy", .song), lesson("a2", "Strumming", .lesson), lesson("a3", "Silent Night", .song)]),
+            course("b", [lesson("b1", "Ode to Joy", .song), lesson("b2", "Amazing Grace", .song)]),
+        ])
+        XCTAssertEqual(small.distinctTuneCount, 3)
+
+        let bundled = try Curriculum.bundled()
+        let titles = Set(bundled.courses.flatMap(\.lessons).filter { $0.kind == .song }.map(\.title.defaultValue))
+        XCTAssertEqual(bundled.distinctTuneCount, titles.count)
+        XCTAssertGreaterThan(bundled.distinctTuneCount, 100)
+    }
+
     /// Bullseye's hidden tunes are named after song lessons, so the reveal shows the lesson's localized title.
     func testEveryHiddenTuneNamesASongLesson() throws {
         let curriculum = try Curriculum.bundled()

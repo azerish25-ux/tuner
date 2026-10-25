@@ -360,6 +360,28 @@ final class LearnTests: XCTestCase {
         XCTAssertEqual(try JSONDecoder().decode([LessonStep].self, from: data), steps)
     }
 
+    /// Muted and accented beats on strum and progression steps round-trip; a step written without them reads as
+    /// having none, and a plain step encodes without the keys.
+    func testMutedAndAccentedBeatsDecode() throws {
+        let c = ChordSpec(name: "C", root: 0, quality: "maj", frets: [-1, 3, 2, 0, 1, 0])
+        let chunk = LessonStep.strum(chord: c, pattern: [0, 1, 2, 2.5, 3], bpm: 80, bars: 2, beatsPerBar: nil, muted: [1, 3], accents: [2.5])
+        let chop = LessonStep.progression(chords: [c], bars: [2], pattern: [1, 3], bpm: 90, beatsPerBar: 4, muted: [1, 3])
+        XCTAssertEqual(try JSONDecoder().decode([LessonStep].self, from: JSONEncoder().encode([chunk, chop])), [chunk, chop])
+        XCTAssertEqual(chunk.muted, [1, 3])
+        XCTAssertEqual(chunk.accents, [2.5])
+        XCTAssertEqual(chop.muted, [1, 3])
+        XCTAssertEqual(chop.accents, [])
+
+        let old = Data(#"{"type":"strum","pattern":[0,1,2,3],"bpm":70,"bars":2}"#.utf8)
+        let plain = try JSONDecoder().decode(LessonStep.self, from: old)
+        XCTAssertEqual(plain, .strum(chord: nil, pattern: [0, 1, 2, 3], bpm: 70, bars: 2, beatsPerBar: nil))
+        XCTAssertEqual(plain.muted, [])
+        let written = try XCTUnwrap(String(data: JSONEncoder().encode(plain), encoding: .utf8))
+        XCTAssertFalse(written.contains("muted"))
+        XCTAssertFalse(written.contains("accents"))
+        XCTAssertEqual(LessonStep.tapRhythm(pattern: [0, 1], bpm: 60, bars: 1, beatsPerBar: nil).muted, [])
+    }
+
     /// A shape played behind a capo, and a technique clip: both round-trip, and older data without them still reads.
     func testCapoAndClipDecode() throws {
         let capoA = ChordSpec(name: "A", root: 9, quality: "maj", frets: [5, 4, 2, 2, 2, 5], fingers: [2, 1, 0, 0, 0, 3], capo: 2)

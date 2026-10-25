@@ -80,7 +80,7 @@ final class BandGrooveTests: XCTestCase {
                         switch step {
                         case let .playAlong(notes, _, beatsPerBar, _):
                             found = BandCue.melody(notes, meter: beatsPerBar).flatMap(index.style(forCue:))
-                        case let .progression(chords, bars, pattern, bpm, beatsPerBar):
+                        case let .progression(chords, bars, pattern, bpm, beatsPerBar, _, _):
                             let meter = beatsPerBar ?? max(4, Int((pattern.max() ?? 3) + 1))
                             let symbols = BandCue.perBar(chords, bars: bars)
                             found = BandCue.chords(symbols, meter: meter, pattern: pattern).flatMap(index.style(forCue:))

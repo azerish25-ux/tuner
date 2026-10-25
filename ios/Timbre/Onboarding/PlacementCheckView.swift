@@ -112,7 +112,7 @@ struct PlacementCheckView: View {
 
     private var strum: (pattern: [Double], bpm: Double)? {
         for step in steps {
-            if case let .strum(_, pattern, bpm, _, _) = step { return (pattern, bpm) }
+            if case let .strum(_, pattern, bpm, _, _, _, _) = step { return (pattern, bpm) }
         }
         return nil
     }

@@ -1,3 +1,4 @@
+import StoreKit
 import SwiftUI
 
 /// Addresses the build carries in its Info.plist, set per build in project.yml. An empty or unexpanded value
@@ -120,5 +121,38 @@ struct FriendOfferLink: View {
             .simultaneousGesture(TapGesture().onEnded { Analytics.log("referral_share", ["screen": screen]) })
             .accessibilityIdentifier("referral.share")
         }
+    }
+}
+
+/// "Give a friend a month" in its own capsule, for a peak moment (a song's results, a streak): `FriendOfferLink` on a
+/// tinted pill. Like the link, nothing shows until the owner has set up the offer. `screen` names where it was tapped.
+struct ReferralPill: View {
+    let screen: String
+    var tint: Color = Palette.mint
+
+    var body: some View {
+        if ShareDestination.friendOffer != nil {
+            FriendOfferLink(screen: screen, tint: tint)
+                .padding(.horizontal, 14)
+                .background(Capsule(style: .continuous).fill(tint.opacity(0.12)))
+                .overlay(Capsule(style: .continuous).strokeBorder(tint.opacity(0.35), lineWidth: 1))
+        }
+    }
+}
+
+/// When to ask for an App Store rating. StoreKit decides whether the sheet actually shows (a few times a year at
+/// most); this only picks the moments, and never asks under automation.
+@MainActor
+enum ReviewPrompt {
+    /// Set once the first song played with three stars has asked.
+    private static let askedKey = "review.afterSong"
+
+    /// A song just finished with `stars` stars: the first three-star song asks, once in the app's life. Call it where
+    /// the results have landed; `requestReview` is the view's `@Environment(\.requestReview)`.
+    static func afterSong(stars: Int, requestReview: RequestReviewAction) {
+        let defaults = UserDefaults.standard
+        guard stars >= 3, !TestSupport.isAutomated, !defaults.bool(forKey: askedKey) else { return }
+        defaults.set(true, forKey: askedKey)
+        requestReview()
     }
 }

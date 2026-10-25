@@ -74,7 +74,7 @@ public enum PlacementCheck {
             switch step {
             case let .playChord(chord):
                 if chordShapes[chord.symbol] == nil { chordShapes[chord.symbol] = chord }
-            case let .strum(chord, pattern, bpm, _, beatsPerBar):
+            case let .strum(chord, pattern, bpm, _, beatsPerBar, _, _):
                 if let chord, strumShapes[chord.symbol] == nil { strumShapes[chord.symbol] = chord }
                 if (beatsPerBar ?? 4) == 4, !pattern.isEmpty, (pattern.max() ?? 0) < 4 { strums.append((pattern, bpm)) }
             default:

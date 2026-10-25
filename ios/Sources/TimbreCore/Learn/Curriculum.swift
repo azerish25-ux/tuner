@@ -75,6 +75,11 @@ public struct Curriculum: Codable, Sendable {
     public var lessonCount: Int { courses.reduce(0) { $0 + ($1.isSongbook ? 0 : $1.lessons.count) } }
     /// The courses that teach (songbooks aside), as `lessonCount` counts them.
     public var courseCount: Int { courses.filter { !$0.isSongbook }.count }
+    /// How many different songs the catalogue holds: song lessons counted by title, so a song taught in two lessons or
+    /// arranged for two instruments counts once. The paywall's proof line and the store listing say this number.
+    public var distinctTuneCount: Int {
+        Set(courses.flatMap(\.lessons).filter { $0.kind == .song }.map(\.title.defaultValue)).count
+    }
 }
 
 public struct LearnCourse: Codable, Identifiable, Sendable {
@@ -297,27 +302,38 @@ public enum LessonStep: Codable, Equatable, Sendable {
     /// Play this chord and let it ring.
     case playChord(chord: ChordSpec)
     /// Strum a chord on the beats of a pattern (beatsPerBar nil: 4, or longer if the pattern needs it).
-    case strum(chord: ChordSpec?, pattern: [Double], bpm: Double, bars: Int, beatsPerBar: Int?)
+    /// `muted` and `accents` are beats of the pattern, counted within the bar as `pattern` is: a muted stroke is a
+    /// chop or chunk (no chord should ring), an accented one is played harder. Both empty for plain strokes.
+    case strum(chord: ChordSpec?, pattern: [Double], bpm: Double, bars: Int, beatsPerBar: Int?,
+               muted: [Double] = [], accents: [Double] = [])
     /// Tap the screen on the beats of a pattern.
     case tapRhythm(pattern: [Double], bpm: Double, bars: Int, beatsPerBar: Int?)
-    /// Strum a chord progression in time: each chord for its number of bars, the pattern in every bar.
-    case progression(chords: [ChordSpec], bars: [Int], pattern: [Double], bpm: Double, beatsPerBar: Int?)
+    /// Strum a chord progression in time: each chord for its number of bars, the pattern in every bar, with its muted
+    /// and accented beats (as `strum`'s) in every bar too.
+    case progression(chords: [ChordSpec], bars: [Int], pattern: [Double], bpm: Double, beatsPerBar: Int?,
+                     muted: [Double] = [], accents: [Double] = [])
     /// Listen and pick the answer (intervals, chord qualities, higher/lower, which note).
     case listen(prompt: LearnText, sound: [[Int]], options: [LearnText], answer: Int)
     /// A theory question.
     case quiz(prompt: LearnText, options: [LearnText], answer: Int, why: LearnText?, visual: LessonVisual)
 
-    enum CodingKeys: String, CodingKey { case type, title, body, visual, notes, hint, bpm, beatsPerBar, chord, chords, pattern, bars, prompt, sound, options, answer, why }
+    enum CodingKeys: String, CodingKey {
+        case type, title, body, visual, notes, hint, bpm, beatsPerBar, chord, chords, pattern, bars, prompt, sound, options, answer, why
+        case muted, accents
+    }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
+        // Muted and accented beats are optional: a step without them (every curriculum written before them) has none.
+        let muted = try c.decodeIfPresent([Double].self, forKey: .muted) ?? []
+        let accents = try c.decodeIfPresent([Double].self, forKey: .accents) ?? []
         switch try c.decode(String.self, forKey: .type) {
         case "explain": self = .explain(title: try c.decode(LearnText.self, forKey: .title), body: try c.decode(LearnText.self, forKey: .body), visual: try c.decodeIfPresent(LessonVisual.self, forKey: .visual) ?? .none)
         case "notes": self = .playNotes(notes: try c.decode([TimedNote].self, forKey: .notes), hint: try c.decodeIfPresent(LearnText.self, forKey: .hint))
         case "along": self = .playAlong(notes: try c.decode([TimedNote].self, forKey: .notes), bpm: try c.decode(Double.self, forKey: .bpm), beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar) ?? 4, title: try c.decodeIfPresent(LearnText.self, forKey: .title))
         case "chord": self = .playChord(chord: try c.decode(ChordSpec.self, forKey: .chord))
-        case "strum": self = .strum(chord: try c.decodeIfPresent(ChordSpec.self, forKey: .chord), pattern: try c.decode([Double].self, forKey: .pattern), bpm: try c.decode(Double.self, forKey: .bpm), bars: try c.decodeIfPresent(Int.self, forKey: .bars) ?? 2, beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar))
+        case "strum": self = .strum(chord: try c.decodeIfPresent(ChordSpec.self, forKey: .chord), pattern: try c.decode([Double].self, forKey: .pattern), bpm: try c.decode(Double.self, forKey: .bpm), bars: try c.decodeIfPresent(Int.self, forKey: .bars) ?? 2, beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar), muted: muted, accents: accents)
         case "tap": self = .tapRhythm(pattern: try c.decode([Double].self, forKey: .pattern), bpm: try c.decode(Double.self, forKey: .bpm), bars: try c.decodeIfPresent(Int.self, forKey: .bars) ?? 2, beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar))
-        case "progression": self = .progression(chords: try c.decode([ChordSpec].self, forKey: .chords), bars: try c.decode([Int].self, forKey: .bars), pattern: try c.decode([Double].self, forKey: .pattern), bpm: try c.decode(Double.self, forKey: .bpm), beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar))
+        case "progression": self = .progression(chords: try c.decode([ChordSpec].self, forKey: .chords), bars: try c.decode([Int].self, forKey: .bars), pattern: try c.decode([Double].self, forKey: .pattern), bpm: try c.decode(Double.self, forKey: .bpm), beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar), muted: muted, accents: accents)
         case "listen": self = .listen(prompt: try c.decode(LearnText.self, forKey: .prompt), sound: try c.decode([[Int]].self, forKey: .sound), options: try c.decode([LearnText].self, forKey: .options), answer: try c.decode(Int.self, forKey: .answer))
         case "quiz": self = .quiz(prompt: try c.decode(LearnText.self, forKey: .prompt), options: try c.decode([LearnText].self, forKey: .options), answer: try c.decode(Int.self, forKey: .answer), why: try c.decodeIfPresent(LearnText.self, forKey: .why), visual: try c.decodeIfPresent(LessonVisual.self, forKey: .visual) ?? .none)
         default: throw DecodingError.dataCorruptedError(forKey: .type, in: c, debugDescription: "Unknown lesson step")
@@ -330,11 +346,33 @@ public enum LessonStep: Codable, Equatable, Sendable {
         case let .playNotes(notes, hint): try c.encode("notes", forKey: .type); try c.encode(notes, forKey: .notes); try c.encodeIfPresent(hint, forKey: .hint)
         case let .playAlong(notes, bpm, beatsPerBar, title): try c.encode("along", forKey: .type); try c.encode(notes, forKey: .notes); try c.encode(bpm, forKey: .bpm); try c.encode(beatsPerBar, forKey: .beatsPerBar); try c.encodeIfPresent(title, forKey: .title)
         case let .playChord(chord): try c.encode("chord", forKey: .type); try c.encode(chord, forKey: .chord)
-        case let .strum(chord, pattern, bpm, bars, beatsPerBar): try c.encode("strum", forKey: .type); try c.encodeIfPresent(chord, forKey: .chord); try c.encode(pattern, forKey: .pattern); try c.encode(bpm, forKey: .bpm); try c.encode(bars, forKey: .bars); try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar)
+        case let .strum(chord, pattern, bpm, bars, beatsPerBar, muted, accents): try c.encode("strum", forKey: .type); try c.encodeIfPresent(chord, forKey: .chord); try c.encode(pattern, forKey: .pattern); try c.encode(bpm, forKey: .bpm); try c.encode(bars, forKey: .bars); try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar); try Self.encodeMarks(muted: muted, accents: accents, into: &c)
         case let .tapRhythm(pattern, bpm, bars, beatsPerBar): try c.encode("tap", forKey: .type); try c.encode(pattern, forKey: .pattern); try c.encode(bpm, forKey: .bpm); try c.encode(bars, forKey: .bars); try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar)
-        case let .progression(chords, bars, pattern, bpm, beatsPerBar): try c.encode("progression", forKey: .type); try c.encode(chords, forKey: .chords); try c.encode(bars, forKey: .bars); try c.encode(pattern, forKey: .pattern); try c.encode(bpm, forKey: .bpm); try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar)
+        case let .progression(chords, bars, pattern, bpm, beatsPerBar, muted, accents): try c.encode("progression", forKey: .type); try c.encode(chords, forKey: .chords); try c.encode(bars, forKey: .bars); try c.encode(pattern, forKey: .pattern); try c.encode(bpm, forKey: .bpm); try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar); try Self.encodeMarks(muted: muted, accents: accents, into: &c)
         case let .listen(prompt, sound, options, answer): try c.encode("listen", forKey: .type); try c.encode(prompt, forKey: .prompt); try c.encode(sound, forKey: .sound); try c.encode(options, forKey: .options); try c.encode(answer, forKey: .answer)
         case let .quiz(prompt, options, answer, why, visual): try c.encode("quiz", forKey: .type); try c.encode(prompt, forKey: .prompt); try c.encode(options, forKey: .options); try c.encode(answer, forKey: .answer); try c.encodeIfPresent(why, forKey: .why); try c.encode(visual, forKey: .visual)
+        }
+    }
+
+    /// Muted and accented beats are written only when there are some, so a plain step encodes as it always has.
+    private static func encodeMarks(muted: [Double], accents: [Double], into c: inout KeyedEncodingContainer<CodingKeys>) throws {
+        if !muted.isEmpty { try c.encode(muted, forKey: .muted) }
+        if !accents.isEmpty { try c.encode(accents, forKey: .accents) }
+    }
+
+    /// The beats of a strum or progression step's pattern played muted (chops, chunks); empty for every other step.
+    public var muted: [Double] {
+        switch self {
+        case let .strum(_, _, _, _, _, muted, _), let .progression(_, _, _, _, _, muted, _): return muted
+        default: return []
+        }
+    }
+
+    /// The beats of a strum or progression step's pattern played accented; empty for every other step.
+    public var accents: [Double] {
+        switch self {
+        case let .strum(_, _, _, _, _, _, accents), let .progression(_, _, _, _, _, _, accents): return accents
+        default: return []
         }
     }
 

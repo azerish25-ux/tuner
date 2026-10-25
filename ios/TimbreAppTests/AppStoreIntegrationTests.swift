@@ -105,6 +105,29 @@ final class AppStoreIntegrationTests: XCTestCase {
         XCTAssertEqual(try AppStore(directory: directory).droneMidi, 55)
     }
 
+    /// Changes asked for "soon" (the tuner's lock path) wait, then apply together and in order; leaving the foreground
+    /// applies and writes them.
+    func testSettingsChangedSoonApplyTogetherAndFlush() throws {
+        let before = store.settings.fullTunes ?? 0
+        store.updateSettingsSoon { $0.fullTunes = ($0.fullTunes ?? 0) + 1 }
+        store.updateSettingsSoon { $0.fullTunes = ($0.fullTunes ?? 0) + 1 }
+        XCTAssertEqual(store.settings.fullTunes ?? 0, before, "nothing applies on the frame that asked")
+        store.flushSettings()
+        XCTAssertEqual(store.settings.fullTunes, before + 2)
+        XCTAssertEqual(try AppStore(directory: directory).settings.fullTunes, before + 2)
+    }
+
+    /// A plan's course: the goal's own course, else the instrument's, else theory.
+    func testPlanCourseFollowsTheGoalThenTheInstrument() throws {
+        XCTAssertEqual(store.planCourse(forGoal: "ear", instrumentId: "guitar.acoustic.6")?.id, "ear")
+        XCTAssertEqual(store.planCourse(forGoal: "songs", instrumentId: "violin.standard.4")?.id, "violin")
+        XCTAssertEqual(store.planCourse(forGoal: "songs", instrumentId: nil)?.id, "theory")
+        let guitar = try XCTUnwrap(store.catalog.instrument(id: "guitar.acoustic.6"))
+        XCTAssertTrue(store.selectInstrument(guitar))
+        XCTAssertEqual(store.planCourse(forGoal: "songs")?.id, "guitar")
+        XCTAssertEqual(store.onboardingCourse(instrumentId: guitar.id, goal: "songs")?.id, "guitar")
+    }
+
     func testSettingsWaitingForTheirWriteRideAlongWithAPracticeRecord() throws {
         store.setDrone(midi: 57)
         store.finishPractice(.ear, questions: 4, correct: 3)
