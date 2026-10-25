@@ -122,6 +122,20 @@ extension ToolScene {
         context.fill(Self.circle(center, radius), with: .radialGradient(light, center: center, startRadius: 0, endRadius: radius))
     }
 
+    /// The scene's stage light: a pool as wide as asked, squashed to the stage's height and moved off its edges so it
+    /// fades out before the top and the bottom. A round pool taller than the stage was cut by the canvas's edges and
+    /// showed as a lit band with hard top and bottom edges.
+    private func stageLight(_ context: GraphicsContext, size: CGSize, at center: CGPoint, radius: CGFloat, color: Color, strength: Double) {
+        let tall = min(radius, size.height / 2)
+        guard radius > 1, tall > 1 else { return }
+        let y = min(max(center.y, tall), size.height - tall)
+        var light = context
+        light.translateBy(x: center.x, y: y)
+        light.scaleBy(x: 1, y: tall / radius)
+        let glow = Gradient(colors: [color.opacity(strength), color.opacity(0)])
+        light.fill(Self.circle(.zero, radius), with: .radialGradient(glow, center: .zero, startRadius: 0, endRadius: radius))
+    }
+
     /// Small fixed-size type in the scene (11 points, the type floor): note names, intervals, cents.
     private func caption(_ context: GraphicsContext, _ text: String, at point: CGPoint, color: Color, anchor: UnitPoint = .center) {
         let resolved = context.resolve(Text(verbatim: text).font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundStyle(color))
@@ -169,7 +183,7 @@ extension ToolScene {
         let bridgeGap = max(5.5, min(12, radius * 0.26))
         let rings = (0..<4).map { ring($0) }
         let resonance = min(1, rings.enumerated().reduce(0.0) { $0 + $1.element * ($1.offset == 3 ? 0.45 : 0.32) })
-        pool(context, at: CGPoint(x: cx, y: gourd.y - floor * 0.25), radius: min(size.width * 0.38, 160), color: Palette.spotlight, strength: 0.12)
+        stageLight(context, size: size, at: CGPoint(x: cx, y: gourd.y - floor * 0.25), radius: min(size.width * 0.38, 160), color: Palette.spotlight, strength: 0.12)
         drawNeck(context, cx: cx, nutY: nutY, gourd: gourd, radius: radius, nutGap: nutGap, bridgeGap: bridgeGap)
         drawGourd(context, gourd: gourd, radius: radius, resonance: resonance, tonic: tonic)
         let bridgeWidth = bridgeGap * 3 + 14
@@ -344,7 +358,7 @@ extension ToolScene {
     private func drawScope(_ context: GraphicsContext, size: CGSize, floor: CGFloat) {
         let radius = max(22, min(floor / 2 - 7, size.width / 2 - 56, 100))
         let center = CGPoint(x: size.width / 2, y: floor - radius - 7)
-        pool(context, at: center, radius: radius * 1.5, color: Palette.mint, strength: 0.13)
+        stageLight(context, size: size, at: center, radius: radius * 1.5, color: Palette.mint, strength: 0.13)
         drawReticle(context, center: center, radius: radius)
         let sweep = calm ? -0.9 : elapsed * 1.7
         drawSweep(context, center: center, radius: radius, angle: sweep)
@@ -440,7 +454,9 @@ extension ToolScene {
         // Flat sits left of the centre, sharp right, as in the game.
         let value = Int(cents.rounded())
         let label = value == 0 ? "0¢" : (cos(angle) < 0 ? "−\(value)¢" : "+\(value)¢")
-        caption(context, label, at: CGPoint(x: dot.x + 9, y: dot.y - 7), color: tint, anchor: .bottomLeading)
+        // Beside the dot, on its left when its right would reach into the 48 points kept clear for the close button.
+        let flip = dot.x + 9 + 34 > center.x * 2 - 48
+        caption(context, label, at: CGPoint(x: dot.x + (flip ? -9 : 9), y: dot.y - 7), color: tint, anchor: flip ? .bottomTrailing : .bottomLeading)
     }
 
     /// The score: a ring and six sparks off the bullseye.
@@ -492,7 +508,7 @@ extension ToolScene {
         let fade = calm || local <= resting ? 1 : max(0, 1 - (local - resting) / (Self.stairRest * 0.3))
         let tops = (0..<count).map { floor - 8 - CGFloat(Self.scale[$0]) / 12 * rise }
         let centers = (0..<count).map { left + tread * (CGFloat($0) + 0.5) }
-        pool(context, at: CGPoint(x: size.width / 2, y: floor * 0.6), radius: min(size.width * 0.4, 170), color: Palette.amber, strength: 0.12)
+        stageLight(context, size: size, at: CGPoint(x: size.width / 2, y: floor * 0.6), radius: min(size.width * 0.4, 170), color: Palette.amber, strength: 0.12)
         for index in 0..<count {
             let since = local - Self.landing(index)
             let lit = since >= 0 ? max(0.22, exp(-since / 0.55)) * fade : 0
@@ -579,7 +595,7 @@ extension ToolScene {
         let count = Int(beat) % bar
         let tint = count == 0 ? Palette.amber : Palette.mint
         let swing = 24 * Double.pi / 180
-        pool(context, at: CGPoint(x: cx, y: floor * 0.45), radius: min(size.width * 0.38, 160), color: Palette.coral, strength: 0.14)
+        stageLight(context, size: size, at: CGPoint(x: cx, y: floor * 0.45), radius: min(size.width * 0.38, 160), color: Palette.coral, strength: 0.14)
         let shadow = Gradient(colors: [Color.black.opacity(0.55), Color.black.opacity(0)])
         let foot = CGPoint(x: cx, y: floor)
         context.fill(Path(ellipseIn: CGRect(x: cx - base * 0.62, y: floor - 4, width: base * 1.24, height: 8)),

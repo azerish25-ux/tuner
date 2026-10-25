@@ -20,22 +20,39 @@ by hand: change the script and run it again.
 - Sparse zones are pitch-shifted to the exact frequency asked for (playback ratio = target / the zone's
   measured fundamental), so reference tones stay exact; a unit test renders A4 and measures 440 Hz with the
   tuner's own detector.
-- Instruments without a sample set (ukulele, mandolin, sung voice), notes outside a set's range and any
+- Instruments without a sample set (ukulele, mandolin, banjo, sung voice), notes outside a set's range and any
   failure to read a file fall back to the synthesized voices (`ToneSynth`), and the band to `BandSynth`.
+- The violin and cello recordings are played with vibrato, so the tuner's *reference* for bowed strings stays
+  the steady synthesized tone; their "Hear it", melodies and chords use the recordings. Flute, clarinet and
+  brass were recorded without vibrato and serve the reference too.
 
-Total shipped: **0.8 MB** in 16 files (budget 35 MB).
+Total shipped: **10.2 MB** in 228 files (budget 35 MB).
 
 ## Libraries
 
 | Key | Library | Author | Licence | Source (pinned commit) | Notes |
 | --- | --- | --- | --- | --- | --- |
+| `growlybass` | Growlybass | Karoryfer Samples | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) | [sfzinstruments/karoryfer.growlybass](https://github.com/sfzinstruments/karoryfer.growlybass/tree/4f483268fc66b5a6d5781d421c0d11b8d08d3fc6) `4f483268fc` | readme.txt: "Royalty-free for all commercial and non-commercial use." |
 | `shinyguitar` | Shinyguitar (acoustic microphone) | Karoryfer Samples (D. Smolken) | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) | [sfzinstruments/karoryfer.shinyguitar](https://github.com/sfzinstruments/karoryfer.shinyguitar/tree/57243cca85277dbcc120ce17c6178032f93c80f3) `57243cca85` | readme.txt: "This sample library is royalty-free for all commercial and non-commercial use." |
+| `vcsl` | Versilian Community Sample Library (VCSL) | Versilian Studios LLC | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) | [sgossner/VCSL](https://github.com/sgossner/VCSL/tree/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e) `c1ea7bcc3c` | README: "This collection is under a Creative Commons 0 license ... even make commercial software, no royalties, no credit, no special terms." |
+| `virtuosity` | Virtuosity Drums | Versilian Studios LLC (drummer Austin McMahon) | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) | [sfzinstruments/virtuosity_drums](https://github.com/sfzinstruments/virtuosity_drums/tree/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc) `9f04cf9a73` | Recorded at Virtuosity Musical Instruments, Boston. |
+| `vsco2` | VS Chamber Orchestra: Community Edition (VSCO 2 CE) | Versilian Studios LLC (Sam Gossner) and Ivy Audio (Simon Dalzell) | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) | [sgossner/VSCO-2-CE](https://github.com/sgossner/VSCO-2-CE/tree/440300901dfe9275fd84e0b7763af1f8443ae62e) `440300901d` | Readme.txt: "You are permitted to use these samples for ANY purpose. We ask that you do not sell the samples directly" (Timbre does not sell them; they only sound inside the app) and asks for credit, which Timbre gives in Settings > Acknowledgements. |
 
 ## Instruments
 
 | Set | Plays for | Source | Files | Size |
 | --- | --- | --- | --- | --- |
+| Grand piano (`piano`) | piano | vcsl | 70 | 4.47 MB |
 | Archtop guitar (acoustic) (`guitar`) | guitar | shinyguitar | 16 | 0.77 MB |
+| Electric bass (`bass`) | bass | growlybass | 28 | 0.94 MB |
+| Concert harp (`harp`) | harp | vcsl | 23 | 0.89 MB |
+| Marimba (`marimba`) | mallet | vcsl | 10 | 0.23 MB |
+| Solo violin (arco, vibrato) (`violin`) | violin | vsco2 | 15 | 0.64 MB |
+| Cellos (section, vibrato) and solo double bass (`cello`) | cello | vsco2 | 16 | 0.68 MB |
+| Flute (non-vibrato) (`flute`) | flute | vsco2 | 10 | 0.41 MB |
+| Clarinet (`clarinet`) | reed | vsco2 | 10 | 0.43 MB |
+| Trumpet and tenor trombone (`brass`) | brass | vsco2 | 14 | 0.57 MB |
+| Drum kit (`drums`) | backing band | virtuosity | 16 | 0.22 MB |
 
 ## Rejected
 
@@ -46,12 +63,83 @@ Total shipped: **0.8 MB** in 16 files (budget 35 MB).
 | Salamander Drumkit, Sam's Sonor, LivingRoom Upright, BJDNiel | CC-BY-SA: share-alike terms; not CC0/CC-BY. |
 | jRhodes3c/3d, Rickenbacker 4001, MF Tin Whistle | Non-commercial (NC) licences. |
 | FlameStudios Kay 5-String Banjo | GPL-3.0: not a CC0/CC-BY sample licence. |
+| sfzinstruments/ganjo (six-string banjo) | CC0, but its recordings sit 10-60 cents sharp of their labels, two notes resolve to the same pitch and most ring under a second: not good enough; the banjo stays synthesized. |
 | Karoryfer Bigcat Cello, Black and Green Guitars | CC0, but not needed (Bigcat is not on GitHub). |
 
 ## Every shipped file
 
 | File | Source | Original recording | SHA-256 of the original | Licence |
 | --- | --- | --- | --- | --- |
+| `Samples/piano/piano-022-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_A#0_vl3_rr1.wav` | `ee105d9ae493f984…` | CC0-1.0 |
+| `Samples/piano/piano-022-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_A#0_vl2_rr1.wav` | `4122ff60f4a8f7d2…` | CC0-1.0 |
+| `Samples/piano/piano-026-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_D1_vl3_rr1.wav` | `81a84bec036c3f4c…` | CC0-1.0 |
+| `Samples/piano/piano-026-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_D1_vl2_rr1.wav` | `c20fe653bf8ed93a…` | CC0-1.0 |
+| `Samples/piano/piano-030-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_F#1_vl3_rr1.wav` | `60b25026c98093a4…` | CC0-1.0 |
+| `Samples/piano/piano-030-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_F#1_vl2_rr1.wav` | `7d73d05ed3f74702…` | CC0-1.0 |
+| `Samples/piano/piano-034-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_A#1_vl3_rr1.wav` | `c036c0d949de9aae…` | CC0-1.0 |
+| `Samples/piano/piano-034-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_A#1_vl2_rr1.wav` | `b4a5d68d122056f4…` | CC0-1.0 |
+| `Samples/piano/piano-036-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_C2_vl3_rr1.wav` | `6d27c3cc5fec4abb…` | CC0-1.0 |
+| `Samples/piano/piano-036-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_C2_vl2_rr1.wav` | `3a4dd3fb33db802d…` | CC0-1.0 |
+| `Samples/piano/piano-038-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_D2_vl3_rr1.wav` | `ae914ab03432ea13…` | CC0-1.0 |
+| `Samples/piano/piano-038-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_D2_vl2_rr1.wav` | `fff1d04b046a6c21…` | CC0-1.0 |
+| `Samples/piano/piano-040-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_E2_vl3_rr1.wav` | `6303029e8926b8b3…` | CC0-1.0 |
+| `Samples/piano/piano-040-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_E2_vl2_rr1.wav` | `12553b088d532263…` | CC0-1.0 |
+| `Samples/piano/piano-042-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_F#2_vl3_rr1.wav` | `e78ad53a15654ad2…` | CC0-1.0 |
+| `Samples/piano/piano-042-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_F#2_vl2_rr1.wav` | `70d2fc9948a95686…` | CC0-1.0 |
+| `Samples/piano/piano-044-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#2_vl3_rr1.wav` | `728d6c855648b125…` | CC0-1.0 |
+| `Samples/piano/piano-044-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#2_vl2_rr1.wav` | `0358484d55a9ce5c…` | CC0-1.0 |
+| `Samples/piano/piano-046-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_A#2_vl3_rr1.wav` | `2edb66a0d4c5fe0c…` | CC0-1.0 |
+| `Samples/piano/piano-046-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_A#2_vl2_rr1.wav` | `557dfde33238e4c5…` | CC0-1.0 |
+| `Samples/piano/piano-048-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_C3_vl3_rr1.wav` | `9910a6e13c4572d7…` | CC0-1.0 |
+| `Samples/piano/piano-048-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_C3_vl2_rr1.wav` | `8659d6dfde71a564…` | CC0-1.0 |
+| `Samples/piano/piano-050-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_D3_vl3_rr1.wav` | `7a57dcc62f221fb4…` | CC0-1.0 |
+| `Samples/piano/piano-050-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_D3_vl2_rr1.wav` | `75182e2390f558d0…` | CC0-1.0 |
+| `Samples/piano/piano-052-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_E3_vl3_rr1.wav` | `10cfd9b20d0c4774…` | CC0-1.0 |
+| `Samples/piano/piano-052-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_E3_vl2_rr1.wav` | `52e28ebe55cdcf92…` | CC0-1.0 |
+| `Samples/piano/piano-054-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_F#3_vl3_rr1.wav` | `f818d885b914206b…` | CC0-1.0 |
+| `Samples/piano/piano-054-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_F#3_vl2_rr1.wav` | `95a7f90813206645…` | CC0-1.0 |
+| `Samples/piano/piano-056-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#3_vl3_rr1.wav` | `76a501e9bd19eeff…` | CC0-1.0 |
+| `Samples/piano/piano-056-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#3_vl2_rr1.wav` | `e9f010da4ce3333e…` | CC0-1.0 |
+| `Samples/piano/piano-058-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_A#3_vl3_rr1.wav` | `d9d738af699d5cdd…` | CC0-1.0 |
+| `Samples/piano/piano-058-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_A#3_vl2_rr1.wav` | `fd825809d7b14e39…` | CC0-1.0 |
+| `Samples/piano/piano-060-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_C4_vl3_rr1.wav` | `1e7ec3baf2c9bb78…` | CC0-1.0 |
+| `Samples/piano/piano-060-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_C4_vl2_rr1.wav` | `63a1eabb40bc288d…` | CC0-1.0 |
+| `Samples/piano/piano-062-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_D4_vl3_rr1.wav` | `62f07ca9027742ac…` | CC0-1.0 |
+| `Samples/piano/piano-062-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_D4_vl2_rr1.wav` | `645cd3f6f657659b…` | CC0-1.0 |
+| `Samples/piano/piano-064-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_E4_vl3_rr1.wav` | `27cdbe9e92b07d04…` | CC0-1.0 |
+| `Samples/piano/piano-064-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_E4_vl2_rr1.wav` | `5f67a30325b3dc46…` | CC0-1.0 |
+| `Samples/piano/piano-066-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_F#4_vl3_rr1.wav` | `f1e94953958c04dd…` | CC0-1.0 |
+| `Samples/piano/piano-066-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_F#4_vl2_rr1.wav` | `0e55a62e4f21c9cf…` | CC0-1.0 |
+| `Samples/piano/piano-068-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#4_vl3_rr1.wav` | `654604eb87a5907f…` | CC0-1.0 |
+| `Samples/piano/piano-068-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#4_vl2_rr1.wav` | `67789ba22e2831a1…` | CC0-1.0 |
+| `Samples/piano/piano-070-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_A#4_vl3_rr1.wav` | `da064ffab82a822b…` | CC0-1.0 |
+| `Samples/piano/piano-070-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_A#4_vl2_rr1.wav` | `90cd801d71632c66…` | CC0-1.0 |
+| `Samples/piano/piano-072-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_C5_vl3_rr1.wav` | `c1251ce77aac2a28…` | CC0-1.0 |
+| `Samples/piano/piano-072-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_C5_vl2_rr1.wav` | `f53297008efdec07…` | CC0-1.0 |
+| `Samples/piano/piano-074-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_D5_vl3_rr1.wav` | `ef6aa60760ae682b…` | CC0-1.0 |
+| `Samples/piano/piano-074-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_D5_vl2_rr1.wav` | `814072dc61808e5b…` | CC0-1.0 |
+| `Samples/piano/piano-076-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_E5_vl3_rr1.wav` | `f6b18118f8634013…` | CC0-1.0 |
+| `Samples/piano/piano-076-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_E5_vl2_rr1.wav` | `b240ef85e7199960…` | CC0-1.0 |
+| `Samples/piano/piano-078-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_F#5_vl3_rr1.wav` | `30ae5b3b74fe543e…` | CC0-1.0 |
+| `Samples/piano/piano-078-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_F#5_vl2_rr1.wav` | `6efc03e12629ce91…` | CC0-1.0 |
+| `Samples/piano/piano-080-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#5_vl3_rr1.wav` | `1d3959d90d2832bf…` | CC0-1.0 |
+| `Samples/piano/piano-080-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#5_vl2_rr1.wav` | `586dbc660203723e…` | CC0-1.0 |
+| `Samples/piano/piano-082-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_A#5_vl3_rr1.wav` | `34634f370b67ec4e…` | CC0-1.0 |
+| `Samples/piano/piano-082-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_A#5_vl2_rr1.wav` | `6441ad24da5e4ffb…` | CC0-1.0 |
+| `Samples/piano/piano-084-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_C6_vl3_rr1.wav` | `5c162458135f81ae…` | CC0-1.0 |
+| `Samples/piano/piano-084-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_C6_vl2_rr1.wav` | `54e543e7cc23701f…` | CC0-1.0 |
+| `Samples/piano/piano-086-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_D6_vl3_rr1.wav` | `ff1e2ab98bbf9706…` | CC0-1.0 |
+| `Samples/piano/piano-086-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_D6_vl2_rr1.wav` | `dff09a446f574b11…` | CC0-1.0 |
+| `Samples/piano/piano-088-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_E6_vl3_rr1.wav` | `fd5acdd23d33ff45…` | CC0-1.0 |
+| `Samples/piano/piano-088-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_E6_vl2_rr1.wav` | `49522e664b22afc5…` | CC0-1.0 |
+| `Samples/piano/piano-092-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#6_vl3_rr1.wav` | `02a3e88585feb91f…` | CC0-1.0 |
+| `Samples/piano/piano-092-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#6_vl2_rr1.wav` | `65f847b229ee41aa…` | CC0-1.0 |
+| `Samples/piano/piano-096-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_C7_vl3_rr1.wav` | `d30b755f954dd09f…` | CC0-1.0 |
+| `Samples/piano/piano-096-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_C7_vl2_rr1.wav` | `eb212f49ca0f5c68…` | CC0-1.0 |
+| `Samples/piano/piano-100-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_E7_vl3_rr1.wav` | `e5e26ffb69858d0c…` | CC0-1.0 |
+| `Samples/piano/piano-100-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_E7_vl2_rr1.wav` | `76b455f8ff60eef8…` | CC0-1.0 |
+| `Samples/piano/piano-104-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#7_vl3_rr1.wav` | `1fd2954e98163a76…` | CC0-1.0 |
+| `Samples/piano/piano-104-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#7_vl2_rr1.wav` | `93263eca374eaa00…` | CC0-1.0 |
 | `Samples/guitar/guitar-037-mf.m4a` | `shinyguitar` | `Samples/acoustic/db2_vl3_rr1_1.wav` | `732d620deafbe554…` | CC0-1.0 |
 | `Samples/guitar/guitar-040-mf.m4a` | `shinyguitar` | `Samples/acoustic/e2_vl3_rr1_1.wav` | `47c975087b22897c…` | CC0-1.0 |
 | `Samples/guitar/guitar-045-mf.m4a` | `shinyguitar` | `Samples/acoustic/a2_vl3_rr1_1.wav` | `2eec9cdc43a79058…` | CC0-1.0 |
@@ -68,3 +156,145 @@ Total shipped: **0.8 MB** in 16 files (budget 35 MB).
 | `Samples/guitar/guitar-078-mf.m4a` | `shinyguitar` | `Samples/acoustic/gb5_vl3_rr1_1.wav` | `635456c316f2c869…` | CC0-1.0 |
 | `Samples/guitar/guitar-081-mf.m4a` | `shinyguitar` | `Samples/acoustic/a5_vl3_rr1_1.wav` | `7f0a594904f09e0b…` | CC0-1.0 |
 | `Samples/guitar/guitar-084-mf.m4a` | `shinyguitar` | `Samples/acoustic/c6_vl3_rr1_1.wav` | `84d15f81e0318e5c…` | CC0-1.0 |
+| `Samples/bass/bass-025-f.m4a` | `growlybass` | `sustain/db2_f_rr1.wav` | `6a51d063354b0cdc…` | CC0-1.0 |
+| `Samples/bass/bass-025-p.m4a` | `growlybass` | `sustain/db2_p_rr1.wav` | `11ec8c37d9510d1b…` | CC0-1.0 |
+| `Samples/bass/bass-028-f.m4a` | `growlybass` | `sustain/e2_f_rr1.wav` | `ab8ea422e3a42103…` | CC0-1.0 |
+| `Samples/bass/bass-028-p.m4a` | `growlybass` | `sustain/e2_p_rr1.wav` | `f70a409ffe1c217f…` | CC0-1.0 |
+| `Samples/bass/bass-030-f.m4a` | `growlybass` | `sustain/gb2_f_rr1.wav` | `ae7199b00fad32a0…` | CC0-1.0 |
+| `Samples/bass/bass-030-p.m4a` | `growlybass` | `sustain/gb2_p_rr1.wav` | `28c2e486a3899ec6…` | CC0-1.0 |
+| `Samples/bass/bass-033-f.m4a` | `growlybass` | `sustain/a2_f_rr1.wav` | `a82372dfddf56c39…` | CC0-1.0 |
+| `Samples/bass/bass-033-p.m4a` | `growlybass` | `sustain/a2_p_rr1.wav` | `090a7c3ad84997af…` | CC0-1.0 |
+| `Samples/bass/bass-036-f.m4a` | `growlybass` | `sustain/c3_f_rr1.wav` | `aecf86a56cca457c…` | CC0-1.0 |
+| `Samples/bass/bass-036-p.m4a` | `growlybass` | `sustain/c3_p_rr1.wav` | `c9d7757254ab3587…` | CC0-1.0 |
+| `Samples/bass/bass-039-f.m4a` | `growlybass` | `sustain/eb3_f_rr1.wav` | `3271914e197edf34…` | CC0-1.0 |
+| `Samples/bass/bass-039-p.m4a` | `growlybass` | `sustain/eb3_p_rr1.wav` | `d687b3b29d292bc6…` | CC0-1.0 |
+| `Samples/bass/bass-042-f.m4a` | `growlybass` | `sustain/gb3_f_rr1.wav` | `595b0f1c18147c72…` | CC0-1.0 |
+| `Samples/bass/bass-042-p.m4a` | `growlybass` | `sustain/gb3_p_rr1.wav` | `4c605f3229d4f43c…` | CC0-1.0 |
+| `Samples/bass/bass-045-f.m4a` | `growlybass` | `sustain/a3_f_rr1.wav` | `990d071388e30c55…` | CC0-1.0 |
+| `Samples/bass/bass-045-p.m4a` | `growlybass` | `sustain/a3_p_rr1.wav` | `dcc8e08275c55d4e…` | CC0-1.0 |
+| `Samples/bass/bass-048-f.m4a` | `growlybass` | `sustain/c4_f_rr1.wav` | `80659acdf74f7d6f…` | CC0-1.0 |
+| `Samples/bass/bass-048-p.m4a` | `growlybass` | `sustain/c4_p_rr1.wav` | `780976fab1a39299…` | CC0-1.0 |
+| `Samples/bass/bass-051-f.m4a` | `growlybass` | `sustain/eb4_f_rr1.wav` | `3435959e638aadf6…` | CC0-1.0 |
+| `Samples/bass/bass-051-p.m4a` | `growlybass` | `sustain/eb4_p_rr1.wav` | `b5351c47618ef308…` | CC0-1.0 |
+| `Samples/bass/bass-054-f.m4a` | `growlybass` | `sustain/gb4_f_rr1.wav` | `20d23297773af684…` | CC0-1.0 |
+| `Samples/bass/bass-054-p.m4a` | `growlybass` | `sustain/gb4_p_rr1.wav` | `efb3c05ed932e3ae…` | CC0-1.0 |
+| `Samples/bass/bass-057-f.m4a` | `growlybass` | `sustain/a4_f_rr1.wav` | `4b4898bb072ca44e…` | CC0-1.0 |
+| `Samples/bass/bass-057-p.m4a` | `growlybass` | `sustain/a4_p_rr1.wav` | `e3575876019acdf6…` | CC0-1.0 |
+| `Samples/bass/bass-060-f.m4a` | `growlybass` | `sustain/c5_f_rr1.wav` | `849929b198c9e5ab…` | CC0-1.0 |
+| `Samples/bass/bass-060-p.m4a` | `growlybass` | `sustain/c5_p_rr1.wav` | `584af78d1f6eb61a…` | CC0-1.0 |
+| `Samples/bass/bass-063-f.m4a` | `growlybass` | `sustain/eb5_f_rr1.wav` | `f5f3582a416bacb5…` | CC0-1.0 |
+| `Samples/bass/bass-063-p.m4a` | `growlybass` | `sustain/eb5_p_rr1.wav` | `77847a5ed4ea3d89…` | CC0-1.0 |
+| `Samples/harp/harp-028-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_E1_f1.wav` | `af372f9d4b218455…` | CC0-1.0 |
+| `Samples/harp/harp-031-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_G1_f1.wav` | `47a5ea6c3ec629e9…` | CC0-1.0 |
+| `Samples/harp/harp-035-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_B1_mf1.wav` | `284034807efbb429…` | CC0-1.0 |
+| `Samples/harp/harp-038-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_D2_mf1.wav` | `b9cbdc08e43fc0b2…` | CC0-1.0 |
+| `Samples/harp/harp-041-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_F2_mf1.wav` | `d5c0fb42c176af33…` | CC0-1.0 |
+| `Samples/harp/harp-045-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_A2_mf1.wav` | `1df9f4d138ca3931…` | CC0-1.0 |
+| `Samples/harp/harp-048-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_C3_mf3.wav` | `18e6222e8fc11a81…` | CC0-1.0 |
+| `Samples/harp/harp-052-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_E3_mf1.wav` | `aafa9d41ec0f77da…` | CC0-1.0 |
+| `Samples/harp/harp-055-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_G3_mf1.wav` | `62600eb1b37bc282…` | CC0-1.0 |
+| `Samples/harp/harp-059-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_B3_mf1.wav` | `f6f71be8c640822e…` | CC0-1.0 |
+| `Samples/harp/harp-062-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_D4_mf1.wav` | `ebfde8aab4411019…` | CC0-1.0 |
+| `Samples/harp/harp-065-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_F4_mf1.wav` | `db27ebbb37334c10…` | CC0-1.0 |
+| `Samples/harp/harp-069-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_A4_mf1.wav` | `3665f3975cad4a33…` | CC0-1.0 |
+| `Samples/harp/harp-072-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_C5_mf1.wav` | `7c8b862f6fd3f144…` | CC0-1.0 |
+| `Samples/harp/harp-076-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_E5_mf1.wav` | `95dd9ddb0bd15bee…` | CC0-1.0 |
+| `Samples/harp/harp-079-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_G5_mf1.wav` | `f2004dfc617997fb…` | CC0-1.0 |
+| `Samples/harp/harp-083-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_B5_mf1.wav` | `f2757b674c6b7301…` | CC0-1.0 |
+| `Samples/harp/harp-086-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_D6_mf1.wav` | `b040b61fb279efa1…` | CC0-1.0 |
+| `Samples/harp/harp-089-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_F6_mf1.wav` | `7cf4c012542df737…` | CC0-1.0 |
+| `Samples/harp/harp-093-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_A6_mf1.wav` | `4605355d22fae6f5…` | CC0-1.0 |
+| `Samples/harp/harp-095-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_B6_mf1.wav` | `720e56b99f84d4ef…` | CC0-1.0 |
+| `Samples/harp/harp-098-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_D7_f1.wav` | `682b95338233c098…` | CC0-1.0 |
+| `Samples/harp/harp-101-mf.m4a` | `vcsl` | `Chordophones/Composite Chordophones/Concert Harp/KSHarp_F7_f1.wav` | `638b40d6c6c67425…` | CC0-1.0 |
+| `Samples/marimba/marimba-041-mf.m4a` | `vcsl` | `Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_F1_med_01.wav` | `484de6300831ebb2…` | CC0-1.0 |
+| `Samples/marimba/marimba-048-mf.m4a` | `vcsl` | `Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_C2_med_01.wav` | `fd9c329513ed9d54…` | CC0-1.0 |
+| `Samples/marimba/marimba-055-mf.m4a` | `vcsl` | `Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_G2_med_01.wav` | `e9c2d33b9f50f068…` | CC0-1.0 |
+| `Samples/marimba/marimba-059-mf.m4a` | `vcsl` | `Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_B2_med_01.wav` | `4d0ffc47858d0c45…` | CC0-1.0 |
+| `Samples/marimba/marimba-065-mf.m4a` | `vcsl` | `Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_F3_med_01.wav` | `a493b31ac2e588ed…` | CC0-1.0 |
+| `Samples/marimba/marimba-072-mf.m4a` | `vcsl` | `Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_C4_med_01.wav` | `3e88c006eef05e8f…` | CC0-1.0 |
+| `Samples/marimba/marimba-079-mf.m4a` | `vcsl` | `Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_G4_med_01.wav` | `278e738d8214cdc1…` | CC0-1.0 |
+| `Samples/marimba/marimba-083-mf.m4a` | `vcsl` | `Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_B4_med_01.wav` | `d676b76e3850d853…` | CC0-1.0 |
+| `Samples/marimba/marimba-089-mf.m4a` | `vcsl` | `Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_F5_med_01.wav` | `430da3d4f0a32383…` | CC0-1.0 |
+| `Samples/marimba/marimba-096-mf.m4a` | `vcsl` | `Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_C6_med_01.wav` | `d93fc6f7b399ac28…` | CC0-1.0 |
+| `Samples/violin/violin-055-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_G3_f.wav` | `80bae3776b0ccd3d…` | CC0-1.0 |
+| `Samples/violin/violin-057-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_A3_f.wav` | `76934f3a85e4ba3b…` | CC0-1.0 |
+| `Samples/violin/violin-060-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_C4_f.wav` | `4169605b51a72454…` | CC0-1.0 |
+| `Samples/violin/violin-064-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_E4_f.wav` | `418512905f3294a2…` | CC0-1.0 |
+| `Samples/violin/violin-067-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_G4_f.wav` | `14e3ea3d5172722d…` | CC0-1.0 |
+| `Samples/violin/violin-069-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_A4_f.wav` | `19e5374658351508…` | CC0-1.0 |
+| `Samples/violin/violin-072-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_C5_f.wav` | `af72f852ef289223…` | CC0-1.0 |
+| `Samples/violin/violin-076-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_E5_f.wav` | `5c278e263fd59650…` | CC0-1.0 |
+| `Samples/violin/violin-079-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_G5_f.wav` | `b5bb27541d6187e6…` | CC0-1.0 |
+| `Samples/violin/violin-081-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_A5_f.wav` | `0558d79d23db55c7…` | CC0-1.0 |
+| `Samples/violin/violin-084-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_C6_f.wav` | `7ec8e0c2dde75282…` | CC0-1.0 |
+| `Samples/violin/violin-088-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_E6_f.wav` | `8d1712f5659274a8…` | CC0-1.0 |
+| `Samples/violin/violin-091-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_G6_f.wav` | `68c49e55565810ea…` | CC0-1.0 |
+| `Samples/violin/violin-093-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_A6_f.wav` | `37f6cc2f12b1b443…` | CC0-1.0 |
+| `Samples/violin/violin-096-mf.m4a` | `vsco2` | `Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_C7_f.wav` | `f8223aed62911ef3…` | CC0-1.0 |
+| `Samples/cello/cello-028-mf.m4a` | `vsco2` | `Strings/Solo Contrabass/SusNV/BKCtbss_SusNV_E0_v3_rr1.wav` | `a40e0ee5f4bd31ed…` | CC0-1.0 |
+| `Samples/cello/cello-030-mf.m4a` | `vsco2` | `Strings/Solo Contrabass/SusNV/BKCtbss_SusNV_F#0_v3_rr1.wav` | `a6e1d3a1a3ba9b50…` | CC0-1.0 |
+| `Samples/cello/cello-034-mf.m4a` | `vsco2` | `Strings/Solo Contrabass/SusNV/BKCtbss_SusNV_A#0_v3_rr1.wav` | `3a8ba2d2cf631a9b…` | CC0-1.0 |
+| `Samples/cello/cello-036-mf.m4a` | `vsco2` | `Strings/Cello Section/susvib/susvib_C1_v3_1.wav` | `19195ab85ab71626…` | CC0-1.0 |
+| `Samples/cello/cello-040-mf.m4a` | `vsco2` | `Strings/Cello Section/susvib/susvib_E1_v3_1.wav` | `ee190b95be4f2416…` | CC0-1.0 |
+| `Samples/cello/cello-043-mf.m4a` | `vsco2` | `Strings/Cello Section/susvib/susvib_G1_v3_1.wav` | `e4c61d4ab855ec20…` | CC0-1.0 |
+| `Samples/cello/cello-047-mf.m4a` | `vsco2` | `Strings/Cello Section/susvib/susvib_B1_v3_1.wav` | `8331a0e13f41243e…` | CC0-1.0 |
+| `Samples/cello/cello-050-mf.m4a` | `vsco2` | `Strings/Cello Section/susvib/susvib_D2_v3_1.wav` | `fc946615cd655057…` | CC0-1.0 |
+| `Samples/cello/cello-053-mf.m4a` | `vsco2` | `Strings/Cello Section/susvib/susvib_F2_v3_1.wav` | `d965197faf2e6ab8…` | CC0-1.0 |
+| `Samples/cello/cello-057-mf.m4a` | `vsco2` | `Strings/Cello Section/susvib/susvib_A2_v3_1.wav` | `b7f226f19b9616ab…` | CC0-1.0 |
+| `Samples/cello/cello-060-mf.m4a` | `vsco2` | `Strings/Cello Section/susvib/susvib_C3_v3_1.wav` | `51e884d54eea3bf4…` | CC0-1.0 |
+| `Samples/cello/cello-064-mf.m4a` | `vsco2` | `Strings/Cello Section/susvib/susvib_E3_v3_1.wav` | `24a7ffdc23087026…` | CC0-1.0 |
+| `Samples/cello/cello-067-mf.m4a` | `vsco2` | `Strings/Cello Section/susvib/susvib_G3_v3_1.wav` | `17df597c259a8498…` | CC0-1.0 |
+| `Samples/cello/cello-071-mf.m4a` | `vsco2` | `Strings/Cello Section/susvib/susvib_B3_v3_1.wav` | `1c8b571516ac503d…` | CC0-1.0 |
+| `Samples/cello/cello-074-mf.m4a` | `vsco2` | `Strings/Cello Section/susvib/susvib_D4_v3_1.wav` | `2ea7f580738dbcf1…` | CC0-1.0 |
+| `Samples/cello/cello-077-mf.m4a` | `vsco2` | `Strings/Cello Section/susvib/susvib_F4_v3_1.wav` | `24ea4a0f892cb60c…` | CC0-1.0 |
+| `Samples/flute/flute-060-mf.m4a` | `vsco2` | `Woodwinds/Flute/susNV/LDFlute_susNV_C3_v3_1.wav` | `8e0549fb44827c73…` | CC0-1.0 |
+| `Samples/flute/flute-064-mf.m4a` | `vsco2` | `Woodwinds/Flute/susNV/LDFlute_susNV_E3_v3_1.wav` | `3226ecd95142e09f…` | CC0-1.0 |
+| `Samples/flute/flute-069-mf.m4a` | `vsco2` | `Woodwinds/Flute/susNV/LDFlute_susNV_A3_v3_1.wav` | `8a24758e25e1b603…` | CC0-1.0 |
+| `Samples/flute/flute-072-mf.m4a` | `vsco2` | `Woodwinds/Flute/susNV/LDFlute_susNV_C4_v3_1.wav` | `9e09ce606f8fe31c…` | CC0-1.0 |
+| `Samples/flute/flute-076-mf.m4a` | `vsco2` | `Woodwinds/Flute/susNV/LDFlute_susNV_E4_v3_1.wav` | `670c72afcd4d4372…` | CC0-1.0 |
+| `Samples/flute/flute-081-mf.m4a` | `vsco2` | `Woodwinds/Flute/susNV/LDFlute_susNV_A4_v3_1.wav` | `9958014f58a16b5b…` | CC0-1.0 |
+| `Samples/flute/flute-084-mf.m4a` | `vsco2` | `Woodwinds/Flute/susNV/LDFlute_susNV_C5_v1_1.wav` | `46a335b804c9b2f0…` | CC0-1.0 |
+| `Samples/flute/flute-088-mf.m4a` | `vsco2` | `Woodwinds/Flute/susNV/LDFlute_susNV_E5_v1_1.wav` | `660df172b551dfd7…` | CC0-1.0 |
+| `Samples/flute/flute-093-mf.m4a` | `vsco2` | `Woodwinds/Flute/susNV/LDFlute_susNV_A5_v3_1.wav` | `36f09bd6d712c9c5…` | CC0-1.0 |
+| `Samples/flute/flute-096-mf.m4a` | `vsco2` | `Woodwinds/Flute/susNV/LDFlute_susNV_C6_v1_1.wav` | `0d1c902873564fac…` | CC0-1.0 |
+| `Samples/clarinet/clarinet-050-mf.m4a` | `vsco2` | `Woodwinds/Clarinet/susLong/DCClar_susLong_D2_v2_rr1_sum.wav` | `b1a793ff45d8f068…` | CC0-1.0 |
+| `Samples/clarinet/clarinet-053-mf.m4a` | `vsco2` | `Woodwinds/Clarinet/susLong/DCClar_susLong_F2_v2_rr1_sum.wav` | `36348e1fd1a1e534…` | CC0-1.0 |
+| `Samples/clarinet/clarinet-058-mf.m4a` | `vsco2` | `Woodwinds/Clarinet/susLong/DCClar_susLong_A#2_v2_rr1_sum.wav` | `82be872b7915c833…` | CC0-1.0 |
+| `Samples/clarinet/clarinet-062-mf.m4a` | `vsco2` | `Woodwinds/Clarinet/susLong/DCClar_susLong_D3_v2_rr1_sum.wav` | `30e686ffc58caa48…` | CC0-1.0 |
+| `Samples/clarinet/clarinet-065-mf.m4a` | `vsco2` | `Woodwinds/Clarinet/susLong/DCClar_susLong_F3_v2_rr1_sum.wav` | `3c9a237651cd049c…` | CC0-1.0 |
+| `Samples/clarinet/clarinet-070-mf.m4a` | `vsco2` | `Woodwinds/Clarinet/susLong/DCClar_susLong_A#3_v2_rr1_sum.wav` | `779e2cad84f6f510…` | CC0-1.0 |
+| `Samples/clarinet/clarinet-074-mf.m4a` | `vsco2` | `Woodwinds/Clarinet/susLong/DCClar_susLong_D4_v2_rr1_sum.wav` | `4bdc53f3ef917cc9…` | CC0-1.0 |
+| `Samples/clarinet/clarinet-077-mf.m4a` | `vsco2` | `Woodwinds/Clarinet/susLong/DCClar_susLong_F4_v2_rr1_sum.wav` | `9988142d8fd2856a…` | CC0-1.0 |
+| `Samples/clarinet/clarinet-082-mf.m4a` | `vsco2` | `Woodwinds/Clarinet/susLong/DCClar_susLong_A#4_v2_rr1_sum.wav` | `569e902693e7d04e…` | CC0-1.0 |
+| `Samples/clarinet/clarinet-086-mf.m4a` | `vsco2` | `Woodwinds/Clarinet/susLong/DCClar_susLong_D5_v2_rr1_sum.wav` | `4cedd1d7bd779fe3…` | CC0-1.0 |
+| `Samples/brass/brass-039-mf.m4a` | `vsco2` | `Brass/Tenor Trombone/sus/tenortbn_sus_D#1_v2_1.wav` | `eecd696f213cda2f…` | CC0-1.0 |
+| `Samples/brass/brass-041-mf.m4a` | `vsco2` | `Brass/Tenor Trombone/sus/tenortbn_sus_F1_v2_1.wav` | `44939c24af3cc64b…` | CC0-1.0 |
+| `Samples/brass/brass-046-mf.m4a` | `vsco2` | `Brass/Tenor Trombone/sus/tenortbn_sus_A#1_v2_1.wav` | `09d6fff28ec8d8a3…` | CC0-1.0 |
+| `Samples/brass/brass-050-mf.m4a` | `vsco2` | `Brass/Tenor Trombone/sus/tenortbn_sus_D2_v2_1.wav` | `f71a6d3914ac0daa…` | CC0-1.0 |
+| `Samples/brass/brass-053-mf.m4a` | `vsco2` | `Brass/Trumpet/sus/Sum_SHTrumpet_sus_F2_v3_rr1.wav` | `31992fbdf596d77e…` | CC0-1.0 |
+| `Samples/brass/brass-057-mf.m4a` | `vsco2` | `Brass/Trumpet/sus/Sum_SHTrumpet_sus_A2_v3_rr1.wav` | `6c331fb59ab6668e…` | CC0-1.0 |
+| `Samples/brass/brass-060-mf.m4a` | `vsco2` | `Brass/Trumpet/sus/Sum_SHTrumpet_sus_C3_v3_rr1.wav` | `4a55ab4d867cfa34…` | CC0-1.0 |
+| `Samples/brass/brass-063-mf.m4a` | `vsco2` | `Brass/Trumpet/sus/Sum_SHTrumpet_sus_D#3_v3_rr1.wav` | `8cf8ffb7948c8d78…` | CC0-1.0 |
+| `Samples/brass/brass-067-mf.m4a` | `vsco2` | `Brass/Trumpet/sus/Sum_SHTrumpet_sus_G3_v3_rr1.wav` | `e916631d4ef5c7d2…` | CC0-1.0 |
+| `Samples/brass/brass-070-mf.m4a` | `vsco2` | `Brass/Trumpet/sus/Sum_SHTrumpet_sus_A#3_v3_rr1.wav` | `c931621fae92e22c…` | CC0-1.0 |
+| `Samples/brass/brass-074-mf.m4a` | `vsco2` | `Brass/Trumpet/sus/Sum_SHTrumpet_sus_D4_v3_rr1.wav` | `71d77fc5c3c43b94…` | CC0-1.0 |
+| `Samples/brass/brass-077-mf.m4a` | `vsco2` | `Brass/Trumpet/sus/Sum_SHTrumpet_sus_F4_v3_rr1.wav` | `4138d1dc994d485f…` | CC0-1.0 |
+| `Samples/brass/brass-081-mf.m4a` | `vsco2` | `Brass/Trumpet/sus/Sum_SHTrumpet_sus_A4_v3_rr1.wav` | `0cd9d6d4dedadc6b…` | CC0-1.0 |
+| `Samples/brass/brass-084-mf.m4a` | `vsco2` | `Brass/Trumpet/sus/Sum_SHTrumpet_sus_C5_v3_rr1.wav` | `ba7dc7050f277c5b…` | CC0-1.0 |
+| `Samples/drums/kick-soft-1.m4a` | `virtuosity` | `Samples/kickmic/kick/kickmic_kick_snon_vl2_rr1.flac + Samples/oh/kick/oh_kick_snon_vl2_rr1.flac` | `5f816bb152f879e0…` | CC0-1.0 |
+| `Samples/drums/kick-soft-2.m4a` | `virtuosity` | `Samples/kickmic/kick/kickmic_kick_snon_vl2_rr2.flac + Samples/oh/kick/oh_kick_snon_vl2_rr2.flac` | `c2cbc978e6271f30…` | CC0-1.0 |
+| `Samples/drums/kick-hard-1.m4a` | `virtuosity` | `Samples/kickmic/kick/kickmic_kick_snon_vl4_rr1.flac + Samples/oh/kick/oh_kick_snon_vl4_rr1.flac` | `3b9026557c757ede…` | CC0-1.0 |
+| `Samples/drums/kick-hard-2.m4a` | `virtuosity` | `Samples/kickmic/kick/kickmic_kick_snon_vl4_rr2.flac + Samples/oh/kick/oh_kick_snon_vl4_rr2.flac` | `662ac9d76024ecc6…` | CC0-1.0 |
+| `Samples/drums/snare-soft-1.m4a` | `virtuosity` | `Samples/snaremic/snare/snaremic_snare_center_vl16.flac + Samples/oh/snare/oh_snare_center_vl16.flac` | `d401a7cf2ff0c5b0…` | CC0-1.0 |
+| `Samples/drums/snare-soft-2.m4a` | `virtuosity` | `Samples/snaremic/snare/snaremic_snare_center_vl18.flac + Samples/oh/snare/oh_snare_center_vl18.flac` | `faea7e6bc82a4f71…` | CC0-1.0 |
+| `Samples/drums/snare-hard-1.m4a` | `virtuosity` | `Samples/snaremic/snare/snaremic_snare_center_vl29.flac + Samples/oh/snare/oh_snare_center_vl29.flac` | `72c3099d9079f2c2…` | CC0-1.0 |
+| `Samples/drums/snare-hard-2.m4a` | `virtuosity` | `Samples/snaremic/snare/snaremic_snare_center_vl31.flac + Samples/oh/snare/oh_snare_center_vl31.flac` | `047cfaff61ca9268…` | CC0-1.0 |
+| `Samples/drums/hat-soft-1.m4a` | `virtuosity` | `Samples/oh/hh/oh_hh_closed_vl2_rr1.flac` | `466a0dac394ae52a…` | CC0-1.0 |
+| `Samples/drums/hat-soft-2.m4a` | `virtuosity` | `Samples/oh/hh/oh_hh_closed_vl2_rr2.flac` | `57dff040657690e6…` | CC0-1.0 |
+| `Samples/drums/hat-hard-1.m4a` | `virtuosity` | `Samples/oh/hh/oh_hh_closed_vl4_rr1.flac` | `163b306f52ebe550…` | CC0-1.0 |
+| `Samples/drums/hat-hard-2.m4a` | `virtuosity` | `Samples/oh/hh/oh_hh_closed_vl4_rr2.flac` | `32aa1fdbf7be06eb…` | CC0-1.0 |
+| `Samples/drums/openhat-hard-1.m4a` | `virtuosity` | `Samples/oh/hh/oh_hh_open_vl3_rr1.flac` | `046d72bfece4891b…` | CC0-1.0 |
+| `Samples/drums/ride-hard-1.m4a` | `virtuosity` | `Samples/oh/ride/oh_ride_ride_vl2_rr1.flac` | `56481c1109ac7bab…` | CC0-1.0 |
+| `Samples/drums/ride-hard-2.m4a` | `virtuosity` | `Samples/oh/ride/oh_ride_ride_vl2_rr2.flac` | `5cec02ecdc875cfc…` | CC0-1.0 |
+| `Samples/drums/crash-hard-1.m4a` | `virtuosity` | `Samples/oh/crash/oh_crash_crash_vl3_rr1.flac` | `28ac4dc5c1301755…` | CC0-1.0 |

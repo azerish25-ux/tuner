@@ -14,6 +14,7 @@ struct TuneView: View {
     @Environment(\.colorSchemeContrast) private var contrast
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     /// Settings › Strobe precision: a strobe band in place of the needle meter.
     @AppStorage(TuneView.strobeKey) private var strobeView = false
     static let strobeKey = "tune.strobe"
@@ -40,6 +41,8 @@ struct TuneView: View {
             PitchAura().allowsHitTesting(false)
             GeometryReader { proxy in
                 let arrangement = TuneArrangement(size: proxy.size, regular: horizontalSizeClass == .regular && verticalSizeClass == .regular)
+                let pane = TuneArrangement.showsPane(arrangement, size: proxy.size, regularWidth: horizontalSizeClass == .regular,
+                                                     largeType: dynamicTypeSize.isAccessibilitySize)
                 VStack(spacing: 0) {
                     header
                     // One layout that changes shape rather than two branches: the stage keeps its identity when the
@@ -47,9 +50,10 @@ struct TuneView: View {
                     // loaded model and showing the studio stand-in (or nothing) while it loads again.
                     arrangement.layout {
                         stage(controls: arrangement != .columns)
-                            .frame(width: arrangement == .columns ? TuneArrangement.stageWidth(in: proxy.size.width) : nil)
+                            .frame(width: arrangement == .columns ? TuneArrangement.stageWidth(in: proxy.size.width, pane: pane) : nil)
                             .frame(maxWidth: arrangement == .beside ? CGFloat.infinity : nil, maxHeight: .infinity)
                         panel(arrangement, width: proxy.size.width)
+                        if pane { sidePane(arrangement, width: proxy.size.width) }
                         if arrangement == .columns { controlRail }
                     }
                 }
@@ -281,6 +285,20 @@ struct TuneView: View {
             }
             .frame(maxWidth: .infinity)
         }
+    }
+
+    /// iPad (`TuneArrangement.showsPane`): the pitch over the last ten seconds and String health (TuneSidePane.swift).
+    /// In landscape a column of its own between the readout and the control rail, so the readout stays centred in
+    /// its column with the right of the screen put to use; in portrait a row under the string rail, which takes
+    /// the height the headstock had spare and lifts the readout to the middle of the screen.
+    private func sidePane(_ arrangement: TuneArrangement, width: CGFloat) -> some View {
+        let column = arrangement == .columns
+        return TuneSidePane(column: column)
+            .frame(width: column ? TuneArrangement.paneWidth(in: width) : nil)
+            .frame(maxWidth: column ? nil : CGFloat(680))
+            .padding(.leading, column ? 4 : Metrics.gutter)
+            .padding(.trailing, column ? 0 : Metrics.gutter)
+            .padding(.bottom, column ? 0 : 14)
     }
 
     /// The iPad's landscape columns: the side controls as a rail of their own on the trailing edge, where a phone
@@ -515,7 +533,7 @@ enum TuneArrangement: Equatable {
     /// A short wide window (a phone on its side): the stage beside the readout, the controls on the stage.
     case beside
     /// A wide window at regular width and height (iPad landscape): the instrument, then the readout and string
-    /// rail in the middle column, then a rail of controls on the trailing edge.
+    /// rail in the middle column, then (from `paneMinWidth`) the side pane, then a rail of controls on the trailing edge.
     case columns
 
     init(size: CGSize, regular: Bool) {
@@ -533,8 +551,28 @@ enum TuneArrangement: Equatable {
     }
 
     /// The instrument's column: enough for the headstock close-up with its peg label either side, the rest of the
-    /// width going to the readout.
-    static func stageWidth(in width: CGFloat) -> CGFloat { min(640, max(420, width * 0.42)) }
+    /// width going to the readout (and, with `pane`, to the side pane; a little narrower then, so the readout's
+    /// column still holds a six-string rail without scrolling at 1180 pt).
+    static func stageWidth(in width: CGFloat, pane: Bool = false) -> CGFloat {
+        pane ? min(600, max(410, width * 0.35)) : min(640, max(420, width * 0.42))
+    }
+
+    /// The side pane's column in landscape.
+    static func paneWidth(in width: CGFloat) -> CGFloat { min(340, max(270, width * 0.23)) }
+
+    /// Landscape windows narrower than this keep the two columns (the readout would be squeezed).
+    static let paneMinWidth: CGFloat = 1150
+
+    /// Whether the window has room for the side pane (pitch trace and String health): iPad landscape from 11-inch
+    /// up, or a regular-width portrait window tall enough that the stage keeps a good share of the height. Never
+    /// a phone, a short window or at the accessibility text sizes in portrait (the cards would grow into the stage).
+    static func showsPane(_ arrangement: TuneArrangement, size: CGSize, regularWidth: Bool, largeType: Bool) -> Bool {
+        switch arrangement {
+        case .columns: return size.width >= paneMinWidth
+        case .stacked: return regularWidth && !largeType && size.width >= 700 && size.height >= 940
+        case .beside: return false
+        }
+    }
 }
 
 /// Warm or cool light behind the stage that follows the pitch.

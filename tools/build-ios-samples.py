@@ -168,7 +168,8 @@ INSTRUMENTS = [
          layers={'3': ('mf', 0.75)}, step=lambda m: 2, range=(52, 86), seconds=lambda m: 3.2, release=0.1,
          bitrate=96, steady=True, coverage=(36, 88),
          extra=dict(source='vsco2', dir='Brass/Tenor Trombone/sus',
-                    select=r'^tenortbn_sus_(?P<note>[A-G]#?\d)_v(?P<layer>2)_1\.wav$', range=(38, 51))),
+                    select=r'^tenortbn_sus_(?P<note>[A-G]#?\d)_v(?P<layer>2)_1\.wav$', range=(38, 51),
+                    layers={'2': ('mf', 0.75)})),
 ]
 
 # Drum pieces: (piece, nominal velocity, [files per round robin], mic weights, seconds, attack loudness target).
@@ -342,6 +343,66 @@ def measure_pitch(x: np.ndarray, nominal_midi: int, start: int, length: int, par
     return freq / h, best_midi, h
 
 
+TUNER_RATE = 48000
+
+
+def yin(frame: np.ndarray, rate: int = TUNER_RATE, fmin: float = 25.0, fmax: float = 4500.0,
+        threshold: float = 0.30) -> float | None:
+    """The app's pitch detector (TimbreCore YinPitchDetector, with its least-squares period interpolation) on one
+    frame, so a zone can be pitched to read exactly on Timbre's own tuner."""
+    n = len(frame)
+    x = frame.astype(np.float64)
+    if 10 * math.log10(np.mean(x * x) + 1e-30) < -60:
+        return None
+    size = 1 << int(math.ceil(math.log2(2 * n)))
+    spectrum = np.fft.rfft(x, size)
+    acf = np.fft.irfft(np.abs(spectrum) ** 2, size)[:n]
+    prefix = np.concatenate([[0.0], np.cumsum(x * x)])
+    lags = np.arange(n)
+    difference = prefix[n - lags] + (prefix[n] - prefix[lags]) - 2 * acf
+    running = np.cumsum(difference[1:])
+    cmnd = np.ones(n)
+    cmnd[1:] = np.where(running <= 0, 1.0, difference[1:] * lags[1:] / np.where(running <= 0, 1.0, running))
+    min_lag = max(2, int(math.ceil(rate / fmax)))
+    max_lag = min(n // 2 - 1, int(math.floor(rate / fmin)))
+    below = np.nonzero(cmnd[min_lag:max_lag] < threshold)[0]
+    if not len(below):
+        return None
+    tau = min_lag + int(below[0])
+    while tau > min_lag and difference[tau - 1] < difference[tau]:
+        tau -= 1
+    while tau + 1 < max_lag and difference[tau + 1] < difference[tau]:
+        tau += 1
+    h = min(8, max(1, tau // 32))
+    if not (tau - h >= 1 and tau + h < n):
+        return rate / tau
+    u = np.arange(-h, h + 1, dtype=np.float64)
+    d = difference[tau - h:tau + h + 1]
+    s0, s1, s2 = d.sum(), (u * d).sum(), (u * u * d).sum()
+    su2, su4, count = (u * u).sum(), (u ** 4).sum(), 2 * h + 1
+    curvature = (count * s2 - su2 * s0) / (count * su4 - su2 * su2)
+    if curvature <= 0:
+        return rate / tau
+    shift = -s1 / (2 * su2 * curvature)
+    return rate / (tau + shift) if abs(shift) <= h else rate / tau
+
+
+def tuner_pitch(x: np.ndarray, start_s: float, length_s: float, near: float) -> tuple[float | None, float]:
+    """What Timbre's tuner reads over x (at RATE): the median of its detector over 4096-frame windows (hop 1024) at
+    48 kHz between `start_s` and `start_s + length_s`, and the readings' interquartile spread in cents. Readings more
+    than 50 cents from `near` (the detector jumping an octave as a string fades) are left out, as the tuner's own
+    smoothing would."""
+    from scipy.signal import resample_poly
+    y = resample_poly(x, 160, 147)
+    a, b = int(start_s * TUNER_RATE), min(len(y), int((start_s + length_s) * TUNER_RATE))
+    readings = [f for f in (yin(y[i:i + 4096]) for i in range(a, b - 4096 + 1, 1024))
+                if f and abs(1200 * math.log2(f / near)) <= 50]
+    if len(readings) < 4:
+        return None, float('inf')
+    q1, med, q3 = np.percentile(readings, [25, 50, 75])
+    return float(med), 1200 * math.log2(q3 / q1)
+
+
 def raised_cosine_fade(x: np.ndarray, frames: int, at_end: bool) -> None:
     frames = min(frames, len(x))
     if frames <= 0:
@@ -447,13 +508,19 @@ def process_note(path: Path, nominal: int, kind: str, seconds: float, steady: bo
     x *= 0.89 / peak
     attack = x[:int(0.3 * RATE)] if not sustained else x[int(0.3 * RATE):int(1.0 * RATE)]
     rms = float(np.sqrt(np.mean(attack ** 2)))
-    return x, hz, midi, cents, loop, rms, partial
+    # The pitch the app plays the zone by: what its own tuner reads, when that is a steady reading near the
+    # fundamental (real strings' stretched overtones put it a few cents above on a piano or a guitar, and a reference
+    # must agree with the needle), else the fundamental itself (a vibrato note, a faint low string the detector misreads).
+    # A plucked string glides a few cents flat as it fades; the median over the second after the attack is its pitch.
+    reading, spread = tuner_pitch(x, window_start / RATE, window_len / RATE, hz)
+    play = (reading, 'tuner') if reading and abs(1200 * math.log2(reading / hz)) <= 15 and spread <= 12 else (hz, 'fundamental')
+    return x, hz, midi, cents, loop, rms, partial, play
 
 
 def mark(x: np.ndarray) -> tuple[int, float]:
-    """The attack marker: first frame at a quarter of the peak. The app finds the same frame in its own decoding; if
-    its decoder kept the encoder's priming (1024 frames for ffmpeg's AAC) the marker sits that much later and the app
-    drops it, so attacks land on the sample they were written for."""
+    """The attack marker: first frame at a quarter of the peak, checked again after encoding (a sharp attack must not
+    move). The app tells priming by length instead (`frames`): ffmpeg writes the 1024-frame encoder delay into the
+    file's edit list, and a decoder that ignores it returns that many extra frames first."""
     level = float(np.max(np.abs(x))) * 0.25
     idx = np.nonzero(np.abs(x) >= level)[0]
     return int(idx[0]) if len(idx) else 0, level
@@ -473,15 +540,13 @@ def verify(path: Path, expect_mark: int, level: float, midi: int | None, sustain
 
 
 def build_instrument(cache: Path, spec: dict, report: list) -> dict:
-    groups = [(spec['source'], spec['dir'], spec['select'], spec['range'])]
+    groups = [(spec['source'], spec['dir'], spec['select'], spec['range'], spec['layers'])]
     if 'extra' in spec:
         e = spec['extra']
-        groups.append((e['source'], e['dir'], e['select'], e['range']))
-    layers = dict(spec['layers'])
+        groups.append((e['source'], e['dir'], e['select'], e['range'], e.get('layers', spec['layers'])))
     fallback = spec.get('fallback_layers', {})
     zones = []
-    folder = OUT / spec['id']
-    for source, directory, select, (lo, hi) in groups:
+    for source, directory, select, (lo, hi), layers in groups:
         found = survey(cache, spec, select, directory, source)
         found = [f for f in found if f[1] in layers or f[1] in fallback]
         # Sets name octaves differently (C3 or C4 for middle C; a bass written an octave up). Each recording votes
@@ -499,14 +564,14 @@ def build_instrument(cache: Path, spec: dict, report: list) -> dict:
         resolved = []
         for nominal, token, name, path, rel in found:
             try:
-                x, hz, midi, cents, loop, rms, partial = process_note(path, nominal + offset, spec['kind'],
+                x, hz, midi, cents, loop, rms, partial, play = process_note(path, nominal + offset, spec['kind'],
                                                                       spec['seconds'](nominal + offset),
                                                                       spec.get('steady', False), nominal + offset)
             except ValueError as error:
                 report.append(f'  reject {rel}: {error}')
                 continue
             resolved.append(dict(midi=midi, token=token, name=name, path=path, rel=rel, x=x, hz=hz, cents=cents,
-                                 loop=loop, rms=rms, source=source, partial=partial))
+                                 loop=loop, rms=rms, source=source, partial=partial, play=play))
         by_midi = {}
         for r in resolved:
             by_midi.setdefault(r['midi'], []).append(r)
@@ -526,20 +591,24 @@ def build_instrument(cache: Path, spec: dict, report: list) -> dict:
     out_zones = []
     for z in sorted(zones, key=lambda z: (z['midi'], -z['velocity'])):
         if spec['kind'] != 'sustained':
-            x, hz, midi, cents, loop, rms, partial = process_note(z['path'], z['midi'], spec['kind'],
-                                                                  spec['seconds'](z['midi']), False, z['midi'])
-            z.update(x=x, hz=hz, cents=cents, rms=rms, partial=partial)
+            x, hz, midi, cents, loop, rms, partial, play = process_note(z['path'], z['midi'], spec['kind'],
+                                                                        spec['seconds'](z['midi']), False, z['midi'])
+            z.update(x=x, hz=hz, cents=cents, rms=rms, partial=partial, play=play)
         file = f"{spec['id']}/{spec['id']}-{z['midi']:03d}-{z['layer']}.m4a"
         encode(z['x'], OUT / file, spec['bitrate'])
         frame, level = mark(z['x'])
         shift, measured = verify(OUT / file, frame, level, z['midi'], spec['kind'] == 'sustained', z['partial'])
         drift = None if measured is None else 1200 * math.log2(measured / z['hz'])
         # Below 60 Hz the fundamental is faint and the encoder's noise floor can nudge its measurement a little.
-        # A slow (bowed, blown) attack crosses the marker level gently, so encoding can move it a few milliseconds;
-        # the app only uses the marker to tell 0 from a whole AAC priming block (1024 frames or more).
-        if abs(shift) > (400 if spec['kind'] == 'sustained' else 32) or (drift is not None and abs(drift) > (1.0 if z['hz'] > 60 else 2.5)):
+        # A slow (bowed, blown) attack crosses the marker level gently, so encoding can move it a lot; only a sharp
+        # attack's marker is checked. The decoded length must match: the app drops priming by it.
+        padding = len(decode(OUT / file)) - len(z['x'])
+        if not 0 <= padding < 1024:
+            sys.exit(f'{file}: decodes to {padding:+d} frames over what was written')
+        if (spec['kind'] != 'sustained' and abs(shift) > 32) or (drift is not None and abs(drift) > (1.0 if z['hz'] > 60 else 2.5)):
             sys.exit(f'{file}: encoded attack moved {shift} frames, pitch {drift} cents')
-        zone = dict(file=file, midi=z['midi'], hz=round(z['hz'], 5), layer=z['layer'], velocity=z['velocity'],
+        zone = dict(file=file, midi=z['midi'], hz=round(z['play'][0], 5), f0=round(z['hz'], 5), pitchBasis=z['play'][1],
+                    layer=z['layer'], velocity=z['velocity'],
                     gain=round(target * z['velocity'] / max(1e-6, z['rms']), 5), frames=len(z['x']),
                     mark=frame, markLevel=round(level, 6), source=z['source'], original=z['rel'],
                     sha256=sha256(z['path']), cents=round(z['cents'], 2))
@@ -547,6 +616,7 @@ def build_instrument(cache: Path, spec: dict, report: list) -> dict:
             zone['loop'] = z['loop']
         out_zones.append(zone)
         report.append(f"  {file}: {z['hz']:.3f} Hz ({z['cents']:+.1f} c, h{z['partial']}, enc {drift:+.2f} c), "
+                      f"plays by {z['play'][1]} {1200 * math.log2(z['play'][0] / z['hz']):+.2f} c, "
                       f"{len(z['x']) / RATE:.2f} s"
                       + (f", loop {z['loop'][0]}-{z['loop'][1]}" if z['loop'] else ''))
     return dict(id=spec['id'], title=spec['title'], voices=spec['voices'], kind=spec['kind'],
@@ -583,7 +653,8 @@ def build_drums(cache: Path, report: list) -> dict:
             encode(x, OUT / file, 112)
             frame, level = mark(x)
             shift, _ = verify(OUT / file, frame, level, None, False)
-            if abs(shift) > 32:
+            # A cymbal's noisy attack crosses the marker level unevenly: a few milliseconds of slack.
+            if abs(shift) > (192 if piece in ('crash', 'ride', 'openhat') else 32) or not 0 <= len(decode(OUT / file)) - len(x) < 1024:
                 sys.exit(f'{file}: encoded attack moved {shift} frames')
             originals = [V.format(mic=mic, group=group, name=f) for mic in mics]
             out.append(dict(file=file, piece=piece, layer=layer, velocity=velocity, rr=rr, frames=len(x), mark=frame,
@@ -620,8 +691,11 @@ def write_doc(manifest: dict, sizes: dict):
         '- Sparse zones are pitch-shifted to the exact frequency asked for (playback ratio = target / the zone\'s',
         '  measured fundamental), so reference tones stay exact; a unit test renders A4 and measures 440 Hz with the',
         '  tuner\'s own detector.',
-        '- Instruments without a sample set (ukulele, mandolin, sung voice), notes outside a set\'s range and any',
+        '- Instruments without a sample set (ukulele, mandolin, banjo, sung voice), notes outside a set\'s range and any',
         '  failure to read a file fall back to the synthesized voices (`ToneSynth`), and the band to `BandSynth`.',
+        '- The violin and cello recordings are played with vibrato, so the tuner\'s *reference* for bowed strings stays',
+        '  the steady synthesized tone; their "Hear it", melodies and chords use the recordings. Flute, clarinet and',
+        '  brass were recorded without vibrato and serve the reference too.',
         '',
         f'Total shipped: **{total / 1e6:.1f} MB** in {sum(len(i["zones"]) for i in manifest["instruments"])} files '
         f'(budget {BUDGET_BYTES / 1e6:.0f} MB).',
@@ -672,7 +746,9 @@ def main():
         instruments = []
         for spec in INSTRUMENTS + [DRUMS]:
             if only and spec['id'] not in only:
-                kept = next((i for i in (previous or {}).get('instruments', []) if i['id'] == spec['id']), None)
+                built = args.cache / 'built' / f"{spec['id']}.json"
+                kept = json.loads(built.read_text()) if built.exists() else None
+                kept = kept or next((i for i in (previous or {}).get('instruments', []) if i['id'] == spec['id']), None)
                 if kept:
                     instruments.append(kept)
                 continue
@@ -683,6 +759,8 @@ def main():
             inst = build_drums(args.cache, report) if spec is DRUMS else build_instrument(args.cache, spec, report)
             print('\n'.join(report), flush=True)
             instruments.append(inst)
+            (args.cache / 'built').mkdir(exist_ok=True)
+            (args.cache / 'built' / f"{spec['id']}.json").write_text(json.dumps(inst))
         if not only:
             # A full build leaves nothing behind that the manifest doesn't list (a dropped set, an old file name).
             ids = {i['id'] for i in instruments}

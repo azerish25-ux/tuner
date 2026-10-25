@@ -3,16 +3,49 @@ import TimbreCore
 
 // MARK: - Chart or player's view
 
-/// How a chord is pictured wherever both pictures are offered (a lesson's chord explanations and chord steps, the
-/// Chords tool's shapes): the chord chart, upright as a songbook prints it (nut on top, lowest string on the left), or
-/// the player's view, the neck in perspective in the play-along runway's look (`PlayerNeck`). One choice for the
-/// whole app, remembered; the player's view until the learner picks the chart.
+/// How every neck and every chord in the app is drawn: one choice, remembered, flipped from the switch on a chord
+/// card (a lesson's chord explanations and chord steps, the Chords tool, the Scales neck) or in Settings › String
+/// order. It is the only stored value, so no two pictures can ever disagree.
+///
+/// - Chart (the default), as songbooks, tab and Yousician print it: a chord is the chord box (nut on top, the lowest
+///   string on the left, string 1 on the right, `ChordDiagram`), and a neck lying across the screen (the fretboard
+///   strips, the tune check, the Scales neck, the strum stage) has string 1, the thinnest, on top, nut on the left, as
+///   tablature writes it. The box is that strip turned upright, so the two always agree.
+/// - Player view: the instrument as you see it while you play. Every neck lying across the screen has the thickest
+///   string on top (so a down strum falls down the screen), and a chord is the neck in perspective in the play-along
+///   runway's look (`PlayerNeck`), its lanes laid as the runway lays them: the string on top takes the left lane, so
+///   the lowest string is on the left there too. Flipping between the two never mirrors a chord.
+///
+/// `StringOrder` is this same stored value read as the order of the strings on a neck lying down (`.tab` for Chart,
+/// `.mirror` for Player view), for the code that only asks which string is on top.
 enum ChordPicture: String, CaseIterable, Identifiable {
     case chart
     case player
 
-    /// The UserDefaults key the choice is stored under.
-    static let storageKey = "display.chordPicture"
+    /// The UserDefaults key the one choice is stored under (`StringOrder.storageKey` is the same key). Its first read
+    /// folds in, once, the separate string order older builds kept (`display.stringOrder`): someone who had put the
+    /// thickest string on top, and never picked a chord picture, keeps that as Player view.
+    static let storageKey: String = {
+        let key = "display.chordPicture"
+        let legacy = "display.stringOrder"
+        let defaults = UserDefaults.standard
+        if let old = defaults.string(forKey: legacy) {
+            if old == "mirror", defaults.string(forKey: key) == nil {
+                defaults.set(ChordPicture.player.rawValue, forKey: key)
+            }
+            defaults.removeObject(forKey: legacy)
+        }
+        return key
+    }()
+
+    /// The stored choice, for code outside a view (views read it through `@AppStorage` so they redraw).
+    static var current: ChordPicture {
+        UserDefaults.standard.string(forKey: storageKey).flatMap(ChordPicture.init(rawValue:)) ?? .chart
+    }
+
+    /// The order of the strings on a neck lying across the screen: string 1 on top for the chart, the thickest for
+    /// the player's view.
+    var stringOrder: StringOrder { self == .chart ? .tab : .mirror }
 
     var id: String { rawValue }
 

@@ -148,7 +148,7 @@ private struct WeekStat: View {
                 .frame(width: 18).accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 0) {
                 value.font(Typeface.number(16)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.7)
-                label.font(.caption2).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.75)
+                label.font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.75)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -162,7 +162,8 @@ struct WeekBars: View {
     let days: [WeekRecap.Day]
     var height: CGFloat = 52
     var barWidth: CGFloat = 14
-    var labelSize: CGFloat = 10
+    /// The weekday initials: 12 pt in soft ink, legible on the card's mint wash (10 pt faint ink fell under 4.5:1 there).
+    var labelSize: CGFloat = 12
 
     private static let barFill = LinearGradient(colors: [Palette.mint, Palette.mintDeep], startPoint: .top, endPoint: .bottom)
 
@@ -188,7 +189,7 @@ struct WeekBars: View {
                 }
             }
             Text(day.date, format: .dateTime.weekday(.narrow))
-                .font(Typeface.label(labelSize)).foregroundStyle(today ? Palette.mint : Palette.inkFaint)
+                .font(Typeface.label(labelSize)).foregroundStyle(today ? Palette.mint : Palette.inkSoft)
             Circle().fill(today ? Palette.mint : .clear).frame(width: 4, height: 4)
         }
     }

@@ -53,10 +53,12 @@ struct PracticeView: View {
         }
     }
 
+    /// The last card ends a little clear of the floating tab bar rather than touching its edge (RootView fades what
+    /// scrolls under the bar).
     private func scroller<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
         ScrollView {
             content()
-                .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+                .padding(.horizontal, Metrics.gutter).padding(.top, 12).padding(.bottom, 28)
         }
         .stageTopShade()
         .background(StageBackground(motes: false))
@@ -192,7 +194,7 @@ struct PracticeView: View {
                 Text(LocalizedStringKey(level.name)).font(Typeface.cardTitle).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true)
                 ProgressLine(value: level.progress(xp))
-                Text("\(xp - level.floor) / \(level.next - level.floor) XP · next: \(Text(LocalizedStringKey(next.name)))").font(.caption).foregroundStyle(Palette.inkSoft)
+                Text("\(xp - level.floor) / \(level.next - level.floor) XP · next: \(Text(LocalizedStringKey(next.name)))").font(.footnote).foregroundStyle(Palette.inkSoft)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

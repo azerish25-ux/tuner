@@ -296,7 +296,7 @@ struct DailySetCard: View {
                     .contentTransition(.numericText())
                     .heroNumeral(cap: .xxxLarge)
                 minutesText(activities.filter { !done.contains($0.kind) }.reduce(0) { $0 + $1.minutes })
-                    .font(.caption2).foregroundStyle(Palette.inkSoft)
+                    .font(.caption).foregroundStyle(Palette.inkSoft)
                     .lineLimit(1).minimumScaleFactor(0.7)
             }
             .frame(maxWidth: 80)
@@ -349,7 +349,7 @@ struct DailySetCard: View {
                 if locked {
                     ProBadge()
                 } else {
-                    minutesText(activity.minutes).font(Typeface.number(12)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
+                    minutesText(activity.minutes).font(Typeface.number(13)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
                         .lineLimit(1).fixedSize()
                 }
             }
@@ -357,7 +357,7 @@ struct DailySetCard: View {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     if let lesson {
                         // Takes the line's width without asking for it, so a long title never decides where the XP goes.
-                        Text(lesson.title.localized).font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1)
+                        Text(lesson.title.localized).font(.footnote).foregroundStyle(Palette.inkSoft).lineLimit(1)
                             .frame(minWidth: 0, idealWidth: 0, maxWidth: .infinity, alignment: .leading)
                     } else {
                         Spacer(minLength: 0)
@@ -387,17 +387,17 @@ struct DailySetCard: View {
     }
 
     /// The quest's XP as a small pill that fills as the quest does (its progress bar and its reward in one),
-    /// ticked once it has paid today.
+    /// ticked once it has paid today. 12 pt like every other XP pill: at 10 it was the hardest text on the card to read.
     private func xpTag(_ quest: Quest) -> some View {
         let count = store.questCounter(quest)
         let claimed = store.questProgress(quest) >= quest.target
         let progress = claimed ? 1 : min(1, Double(count.done) / Double(max(1, count.total)))
         return HStack(spacing: 2) {
-            if claimed { Image(systemName: "checkmark").font(.system(size: 8, weight: .heavy)) }
+            if claimed { Image(systemName: "checkmark").font(.system(size: 9, weight: .heavy)) }
             Text("+\(quest.xp) XP")
         }
-        .font(Typeface.label(10)).foregroundStyle(Palette.mint.opacity(claimed ? 0.75 : 1))
-        .padding(.horizontal, 6).padding(.vertical, 2)
+        .font(Typeface.label(12)).foregroundStyle(Palette.mint.opacity(claimed ? 0.8 : 1))
+        .padding(.horizontal, 7).padding(.vertical, 2)
         .background { QuestPillFill(progress: progress) }
         .fixedSize()
     }

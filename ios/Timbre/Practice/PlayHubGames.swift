@@ -168,8 +168,8 @@ struct PlayGameCard<Preview: View>: View {
         let large = typeSize.isAccessibilitySize
         return VStack(alignment: .leading, spacing: 5) {
             CardTitle(title)
-            stats.font(.caption).foregroundStyle(Palette.inkSoft)
-                .lineLimit(large ? nil : 1).minimumScaleFactor(large ? 1 : 0.75)
+            stats.font(.footnote).foregroundStyle(Palette.inkSoft)
+                .lineLimit(large ? nil : 1).minimumScaleFactor(large ? 1 : 0.8)
             if challenge.game == .sniper, let friend = center.challenge {
                 FriendTargetLine(challenge: friend)
             }
@@ -237,7 +237,7 @@ private struct GameCardCorner: View {
         } label: {
             HStack(spacing: 4) {
                 Image(systemName: "trophy.fill").font(.system(size: 11, weight: .bold))
-                if let rank { Text(verbatim: "#\(rank)").font(Typeface.label(11)).monospacedDigit() }
+                if let rank { Text(verbatim: "#\(rank)").font(Typeface.label(12)).monospacedDigit() }
             }
             .foregroundStyle(Palette.amber)
             .padding(.horizontal, 9)
@@ -327,7 +327,7 @@ struct SniperChallengeTarget: View {
         if let challenge = center.challenge {
             let passed = score > challenge.target
             HStack(spacing: 4) {
-                Image(systemName: passed ? "checkmark" : "flag.checkered").font(.system(size: 9, weight: .heavy))
+                Image(systemName: passed ? "checkmark" : "flag.checkered").font(.system(size: 10, weight: .heavy))
                     .accessibilityHidden(true)
                 if passed {
                     Text("\(challenge.target) beaten")
@@ -335,7 +335,7 @@ struct SniperChallengeTarget: View {
                     Text("Beat \(challenge.target)")
                 }
             }
-            .font(Typeface.label(11))
+            .font(Typeface.label(12))
             .foregroundStyle(passed ? Palette.mint : Palette.amber)
             .lineLimit(1).minimumScaleFactor(0.8)
             .contentTransition(.opacity)
@@ -440,10 +440,10 @@ private struct ChallengeChip: View {
 
     private func xp(complete: Bool) -> some View {
         HStack(spacing: 2) {
-            if complete { Image(systemName: "checkmark").font(.system(size: 8, weight: .heavy)) }
+            if complete { Image(systemName: "checkmark").font(.system(size: 9, weight: .heavy)) }
             Text("+\(challenge.xp) XP")
         }
-        .font(Typeface.label(11)).foregroundStyle(Palette.mint.opacity(complete ? 0.7 : 1))
+        .font(Typeface.label(12)).foregroundStyle(Palette.mint.opacity(complete ? 0.8 : 1))
         .padding(.horizontal, 7).padding(.vertical, 4)
         .background(Capsule().fill(Palette.mint.opacity(0.12)))
         .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.25), lineWidth: 1))

@@ -21,13 +21,13 @@ struct RootView: View {
 
     var body: some View {
         TabView(selection: $store.selectedTab) {
-            Tab("Tune", systemImage: "tuningfork", value: AppTab.tune) { TuneView() }
-            Tab("Learn", systemImage: "graduationcap", value: AppTab.learn) { LearnView() }
+            Tab("Tune", systemImage: "tuningfork", value: AppTab.tune) { TuneView().underTabBar() }
+            Tab("Learn", systemImage: "graduationcap", value: AppTab.learn) { LearnView().underTabBar() }
             // Songs sits beside Learn (both are the curriculum) and takes the centre of the bar. Its title is the
             // Songs course's own, already translated in every language. Instruments are chosen from the tuner's picker.
-            Tab(SongsView.title(in: store.curriculum), systemImage: "music.note.list", value: AppTab.songs) { SongsView() }
-            Tab("Play", systemImage: "gamecontroller", value: AppTab.practice) { PracticeView() }
-            Tab("Progress", systemImage: "chart.line.uptrend.xyaxis", value: AppTab.journey) { JourneyView() }
+            Tab(SongsView.title(in: store.curriculum), systemImage: "music.note.list", value: AppTab.songs) { SongsView().underTabBar() }
+            Tab("Play", systemImage: "gamecontroller", value: AppTab.practice) { PracticeView().underTabBar() }
+            Tab("Progress", systemImage: "chart.line.uptrend.xyaxis", value: AppTab.journey) { JourneyView().underTabBar() }
         }
         // VoiceOver stays on the paywall while it covers the tabs, rather than reaching the controls behind it.
         .accessibilityHidden(rootPaywall)
@@ -100,5 +100,64 @@ struct RootView: View {
         }
         // Teaches Siri the catalog's instruments for "Tune my … with Timbre".
         .task { TimbreShortcuts.updateAppShortcutParameters() }
+    }
+}
+
+// MARK: - Under the tab bar
+
+extension View {
+    /// A tab's content under the floating tab bar: what scrolls beneath the bar dissolves into the stage (the soft
+    /// scroll-edge effect on iOS 26, and a stage-coloured fade under the bar on every version), so body text and mint
+    /// buttons never read through the glass or tint it. Content resting above the bar is untouched.
+    func underTabBar() -> some View { modifier(TabBarFade()) }
+}
+
+/// The fade starts at the bar's top edge (the bottom safe-area edge) and reaches `depth` within `ramp` points, then
+/// holds to the screen's foot. It shows only while the bar does: a pushed screen that hides the bar (the bottom inset
+/// falls to the home indicator's) and iPad, whose bar is at the top, get none.
+private struct TabBarFade: ViewModifier {
+    /// The bottom safe-area inset: the bar's height (and the home indicator's) while the bar shows.
+    @State private var inset: CGFloat = 0
+
+    private static let ramp: CGFloat = 28
+    private static let depth = 0.86
+    /// The shortest bottom inset that is a tab bar (49 pt without a home indicator; the indicator alone is 34).
+    private static let barMinimum: CGFloat = 44
+
+    func body(content: Content) -> some View {
+        let shown = inset >= Self.barMinimum
+        return content
+            .modifier(SoftBottomEdge())
+            .onGeometryChange(for: CGFloat.self) { proxy in proxy.safeAreaInsets.bottom.rounded() } action: { value in
+                inset = value
+            }
+            .overlay(alignment: .bottom) {
+                fade
+                    .frame(height: max(Self.ramp, inset))
+                    .offset(y: max(Self.ramp, inset))
+                    .opacity(shown ? 1 : 0)
+                    .animation(Motion.fade, value: shown)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+            }
+    }
+
+    private var fade: some View {
+        VStack(spacing: 0) {
+            LinearGradient(colors: [Palette.stage.opacity(0), Palette.stage.opacity(Self.depth)], startPoint: .top, endPoint: .bottom)
+                .frame(height: Self.ramp)
+            Palette.stage.opacity(Self.depth)
+        }
+    }
+}
+
+/// iOS 26: the soft scroll-edge effect under the tab bar for every scroll view in the tab, asked for explicitly.
+private struct SoftBottomEdge: ViewModifier {
+    @ViewBuilder func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.scrollEdgeEffectStyle(.soft, for: .bottom)
+        } else {
+            content
+        }
     }
 }

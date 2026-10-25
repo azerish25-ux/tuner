@@ -59,8 +59,9 @@ struct JourneyView: View {
     /// tab bar), so a heading never runs under the clock.
     private func scroller<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
         ScrollView {
+            // The foot clears the floating tab bar by a little rather than touching it (RootView fades what scrolls under it).
             content()
-                .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
+                .padding(.horizontal, Metrics.gutter).padding(.top, 12).padding(.bottom, 28)
         }
         .stageTopShade()
         .background(StageBackground(motes: false))
@@ -279,7 +280,7 @@ struct JourneyView: View {
                 let today = column == 6
                 VStack(spacing: 3) {
                     Text(date, format: .dateTime.weekday(.narrow))
-                        .font(Typeface.label(11)).foregroundStyle(today ? Palette.mint : Palette.inkFaint)
+                        .font(Typeface.label(12)).foregroundStyle(today ? Palette.mint : Palette.inkSoft)
                     Circle().fill(today ? Palette.mint : .clear).frame(width: 4, height: 4)
                 }
                 .frame(maxWidth: .infinity)
@@ -369,7 +370,7 @@ struct JourneyView: View {
             HStack(spacing: 0) {
                 ForEach(anchors, id: \.self) { anchor in
                     let bad = abs(drift.first { $0.anchor == anchor }?.centsPerDay ?? 0) >= 4
-                    Text(labels[anchor] ?? anchor).font(.caption2.weight(bad ? .bold : .medium))
+                    Text(labels[anchor] ?? anchor).font(.caption.weight(bad ? .bold : .medium))
                         .foregroundStyle(bad ? Palette.amber : Palette.inkSoft)
                         .lineLimit(1).minimumScaleFactor(0.7)
                         .frame(maxWidth: .infinity)
@@ -388,8 +389,9 @@ struct JourneyView: View {
         let bar = rate == nil ? 0 : max(4, height * CGFloat(min(1, magnitude / peak)))
         let top = UnevenRoundedRectangle(topLeadingRadius: 5, topTrailingRadius: 5, style: .continuous)
         return VStack(spacing: 5) {
-            Text(verbatim: rate.map(Self.signed) ?? "–").font(Typeface.number(10))
-                .foregroundStyle(bad ? Palette.amber : Palette.inkFaint)
+            Text(verbatim: rate.map(Self.signed) ?? "–").font(Typeface.number(12))
+                .foregroundStyle(bad ? Palette.amber : Palette.inkSoft)
+                .lineLimit(1).minimumScaleFactor(0.8)
             ZStack(alignment: .bottom) {
                 top.fill(.white.opacity(0.05)).frame(height: height)
                 top.fill(LinearGradient(colors: [tint, tint.opacity(bad ? 0.7 : 0.45)], startPoint: .top, endPoint: .bottom))
@@ -552,11 +554,11 @@ struct JourneyView: View {
     /// One line under every medal: the tier's colour once earned, the count toward the goal while locked.
     @ViewBuilder private func status(_ badge: BadgeProgress, shown: Int) -> some View {
         if badge.earned {
-            Text("Earned").font(Typeface.label(11)).foregroundStyle(badge.achievement.tier.ink)
+            Text("Earned").font(Typeface.label(12)).foregroundStyle(badge.achievement.tier.ink)
                 .lineLimit(1).minimumScaleFactor(0.8)
         } else {
-            Text.fraction(shown, badge.achievement.goal).font(Typeface.number(11))
-                .foregroundStyle(shown > 0 ? badge.achievement.category.tint : Palette.inkFaint)
+            Text.fraction(shown, badge.achievement.goal).font(Typeface.number(12))
+                .foregroundStyle(shown > 0 ? badge.achievement.category.tint : Palette.inkSoft)
                 .lineLimit(1).minimumScaleFactor(0.8)
         }
     }
@@ -604,7 +606,7 @@ struct JourneyView: View {
                 }
                 .chartYAxisLabel("Average ¢ off")
                 .frame(height: 160)
-                Text("Lower is closer. Measured on stable readings only.").font(.caption).foregroundStyle(Palette.inkFaint)
+                Text("Lower is closer. Measured on stable readings only.").font(.caption).foregroundStyle(Palette.inkSoft)
             }
         }
         .stillCard()
@@ -644,7 +646,7 @@ struct JourneyView: View {
     private func recentList(limit: Int) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             JourneyCardHeading("Recent") {
-                if !store.records.isEmpty { Text("\(store.records.count) sessions").font(.caption).foregroundStyle(Palette.inkFaint) }
+                if !store.records.isEmpty { Text("\(store.records.count) sessions").font(.caption).foregroundStyle(Palette.inkSoft) }
             }
             if store.records.isEmpty {
                 Text("Your sessions appear here after your first tune-up.").font(.subheadline).foregroundStyle(Palette.inkSoft)
@@ -654,7 +656,7 @@ struct JourneyView: View {
                     Image(systemName: symbol(record)).foregroundStyle(Palette.mint).frame(width: 26)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(title(record)).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
-                        Text(record.date, format: .dateTime.month(.abbreviated).day().hour().minute()).font(.caption).foregroundStyle(Palette.inkFaint)
+                        Text(record.date, format: .dateTime.month(.abbreviated).day().hour().minute()).font(.caption).foregroundStyle(Palette.inkSoft)
                     }
                     Spacer()
                     if let cents = record.meanAbsoluteCents, record.kind == "tuning" {

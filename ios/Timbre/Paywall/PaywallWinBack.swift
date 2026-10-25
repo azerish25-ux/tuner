@@ -106,9 +106,17 @@ struct ExitOfferCard: View {
             Palette.stageDeep.opacity(0.78)
                 .ignoresSafeArea()
                 .accessibilityHidden(true)
-            card
-                .offset(y: shown || reduceMotion ? 0 : 40)
-                .opacity(shown ? 1 : 0)
+            // At the largest text sizes the card can outgrow the screen: then it scrolls, nothing cut off.
+            ViewThatFits(in: .vertical) {
+                card
+                ScrollView {
+                    card
+                }
+                .scrollIndicators(.hidden)
+                .scrollBounceBehavior(.basedOnSize)
+            }
+            .offset(y: shown || reduceMotion ? 0 : 40)
+            .opacity(shown ? 1 : 0)
         }
         .onAppear {
             withMotion(Motion.pluck, reduceMotion: reduceMotion) { shown = true }
@@ -144,10 +152,13 @@ struct ExitOfferCard: View {
                     ProgressView().tint(Palette.onAccent)
                 } else {
                     Text(offer.offer.paymentMode == .freeTrial ? "Start free trial" : "Claim offer")
-                        .lineLimit(2).multilineTextAlignment(.center)
+                        .lineLimit(2).minimumScaleFactor(0.9).multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
             .buttonStyle(GlassActionButtonStyle(busy: purchasing))
+            // As the paywall's own button: it stops growing at AX1, where its label still fits.
+            .dynamicTypeSize(...DynamicTypeSize.accessibility1)
             .disabled(purchasing)
             .padding(.top, 6)
             .accessibilityIdentifier("paywall.exitOffer.accept")

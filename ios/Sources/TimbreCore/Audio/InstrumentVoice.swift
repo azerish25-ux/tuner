@@ -1,8 +1,10 @@
 import Foundation
 
 /// The sound of "Hear it", chord play buttons, listen steps and the tuner's reference: the instrument being
-/// learned or tuned. Plucked voices are Karplus–Strong strings in a light body, `mallet` is a struck bar, and
-/// bowed, wind and sung voices are sustained (`ToneSynth` renders them all).
+/// learned or tuned. Most voices play from recordings of the real instrument when the app bundles them
+/// (`SampleLibrary`, `SampledTones`); otherwise, and for notes the recordings don't reach, plucked voices are
+/// Karplus–Strong strings in a light body, `mallet` is a struck bar, and bowed, wind and sung voices are sustained
+/// (`ToneSynth` renders them all).
 public enum InstrumentVoice: String, CaseIterable, Codable, Sendable {
     case guitar, bass, ukulele, mandolin, banjo, harp, piano
     case mallet

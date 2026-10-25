@@ -27,6 +27,8 @@ struct PaywallView: View {
     @State private var detailsOpen = false
     /// The table's Free and Pro columns grow with the text.
     @ScaledMetric(relativeTo: .caption) private var cellWidth: CGFloat = 50
+    /// The columns stop growing past xxxLarge (their numbers shrink to fit), so the labels keep the width.
+    private var tableCell: CGFloat { min(cellWidth, 72) }
     // Measured layout. The headline, the plans, the whole plan track and the button show without scrolling;
     // the outcomes, "What's in Pro" and the hero fill what is left, in that order, and what does not fit
     // waits just below the fold. Nothing rests under the pinned bar.
@@ -48,6 +50,11 @@ struct PaywallView: View {
     @State private var redeeming = false
     /// The chosen plan's glass (iOS 26) flows from card to card as the choice moves.
     @Namespace private var planGlass
+    /// The yearly card's height and whether it is under the finger: its tag, drawn over the glass group, follows it.
+    @State private var annualHeight: CGFloat = 64
+    @State private var annualPressed = false
+    /// Room at the top of the yearly card for the lower half of its tag (the tag stops growing at xxxLarge).
+    @ScaledMetric(relativeTo: .caption2) private var tagRoom: CGFloat = 12
 
     /// The yearly plan unless the storefront left it out.
     private var selected: Product? { commerce.products.first { $0.id == selectedID } ?? commerce.products.first }
@@ -491,7 +498,8 @@ struct PaywallView: View {
         VStack(spacing: 0) {
             pitch.headline.font(Typeface.display(26)).tracking(-0.6)
                 .multilineTextAlignment(.center).foregroundStyle(Palette.ink)
-                .lineLimit(3).minimumScaleFactor(0.8)
+                // Never cut short: at the accessibility sizes it takes the lines it needs (the page scrolls).
+                .lineLimit(typeSize.isAccessibilitySize ? nil : 3).minimumScaleFactor(0.8)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
             if let lesson = pitch.lesson { lessonCard(lesson).padding(.top, 14) }
@@ -512,9 +520,12 @@ struct PaywallView: View {
                     Eyebrow(Text("UNIT \(locked.unitNumber)"), color: accent, style: .display)
                 }
                 Text(locked.lesson.title.localized).font(.headline).foregroundStyle(Palette.ink)
-                    .lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                    .lineLimit(typeSize.isAccessibilitySize ? nil : 2).fixedSize(horizontal: false, vertical: true)
                 Text("\(locked.lesson.minutes) min · +\(locked.lesson.xp) XP").font(.caption).foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
             }
+            // Ahead of the spacer, or the title would wrap at half the card's width.
+            .layoutPriority(1)
             Spacer(minLength: 8)
             Image(systemName: "lock.fill").font(.system(size: 13, weight: .bold)).foregroundStyle(Palette.onGold)
                 .frame(width: 30, height: 30)
@@ -553,9 +564,11 @@ struct PaywallView: View {
                     outcomeArt(outcome.art)
                         .frame(width: Self.benefitArt, height: Self.benefitArt)
                         .accessibilityHidden(true)
-                    // One line in English; longer translations wrap rather than truncate.
+                    // One line in English; longer translations wrap rather than truncate, and at the accessibility
+                    // sizes it takes the lines it needs.
                     outcome.text.font(.subheadline.weight(.medium)).foregroundStyle(Palette.ink)
-                        .lineLimit(2).minimumScaleFactor(0.85).fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(typeSize.isAccessibilitySize ? nil : 2).minimumScaleFactor(0.85)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .opacity(appeared ? 1 : 0)
                 .offset(x: appeared || reduceMotion ? 0 : -10)
@@ -610,7 +623,7 @@ struct PaywallView: View {
             }
             .font(.caption.weight(.semibold))
             .foregroundStyle(Palette.mint)
-            .lineLimit(1).minimumScaleFactor(0.8)
+            .lineLimit(typeSize.isAccessibilitySize ? 2 : 1).minimumScaleFactor(0.8)
             // A full-size target without taking more room in the fold.
             .padding(.vertical, 12).padding(.trailing, 16)
             .contentShape(Rectangle())
@@ -667,8 +680,8 @@ struct PaywallView: View {
                     Spacer(minLength: 0)
                     Text("Free").font(.caption.weight(.semibold)).foregroundStyle(Palette.inkSoft)
                         .lineLimit(1).minimumScaleFactor(0.7)
-                        .frame(width: cellWidth)
-                    ProBadge().frame(width: cellWidth)
+                        .frame(width: tableCell)
+                    ProBadge().frame(width: tableCell)
                 }
                 .padding(.vertical, 8)
                 .accessibilityHidden(true)
@@ -681,7 +694,7 @@ struct PaywallView: View {
             .background(alignment: .trailing) {
                 // Inset 4 pt in the tile, so its corners follow the tile's.
                 RoundedRectangle(cornerRadius: Metrics.cornerTile - 4, style: .continuous).fill(Color(hex: 0xFFD08A).opacity(0.07))
-                    .frame(width: cellWidth)
+                    .frame(width: tableCell)
                     .padding(.trailing, 12).padding(.vertical, 4)
             }
             .background(shape.fill(Palette.stageRaised))
@@ -694,18 +707,42 @@ struct PaywallView: View {
         .accessibilityIdentifier("paywall.table")
     }
 
+    /// The label beside its Free and Pro cells; at the accessibility sizes the label takes the full width and the
+    /// cells sit under it, in their columns, so no word is broken across lines.
     private func proRow(_ row: ProRow) -> some View {
-        HStack(spacing: 0) {
-            row.label.font(.footnote).foregroundStyle(Palette.ink)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.vertical, 8)
-            proCell(row.free, pro: false).frame(width: cellWidth)
-            proCell(row.pro, pro: true).frame(width: cellWidth)
+        Group {
+            if typeSize.isAccessibilitySize {
+                VStack(spacing: 0) {
+                    proLabel(row.label).padding(.top, 8)
+                    HStack(spacing: 0) {
+                        Spacer(minLength: 0)
+                        proCells(row)
+                    }
+                    .padding(.vertical, 6)
+                }
+            } else {
+                HStack(spacing: 0) {
+                    proLabel(row.label).padding(.vertical, 8)
+                    proCells(row)
+                }
+            }
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(row.label)
         .accessibilityValue(Text("Free: \(spoken(row.free)), Pro: \(spoken(row.pro))"))
+    }
+
+    private func proLabel(_ label: Text) -> some View {
+        label.font(.footnote).foregroundStyle(Palette.ink)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func proCells(_ row: ProRow) -> some View {
+        HStack(spacing: 0) {
+            proCell(row.free, pro: false).frame(width: tableCell)
+            proCell(row.pro, pro: true).frame(width: tableCell)
+        }
     }
 
     @ViewBuilder private func proCell(_ cell: ProRow.Cell, pro: Bool) -> some View {
@@ -750,22 +787,47 @@ struct PaywallView: View {
                 }
             }
         } else {
-            // One glass group: the chosen plan's glass flows to the next card as the choice moves.
+            // One glass group: the chosen plan's glass flows to the next card as the choice moves. The yearly card's
+            // tag is drawn over the group, outside it: inside, the chosen plan's glass covered its lower half.
             TimbreGlassGroup(spacing: 8) {
                 VStack(spacing: 8) {
                     if let annual = commerce.annual {
-                        planRow(annual, title: "Yearly", detail: perWeek(annual), tag: annualTag(annual), saving: annualSaving, anchor: annualAnchor)
+                        planRow(annual, title: "Yearly", detail: perWeek(annual), saving: annualSaving, anchor: annualAnchor,
+                                tag: annualTag(annual))
+                            .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in annualHeight = height }
                     }
                     if let monthly = commerce.monthly {
-                        planRow(monthly, title: "Monthly", detail: String(localized: "Cancel anytime"), tag: nil, saving: nil)
+                        planRow(monthly, title: "Monthly", detail: String(localized: "Cancel anytime"), saving: nil)
                     }
+                    // A third option, quieter than the two subscriptions, so it doesn't compete with the year.
                     if let lifetime = commerce.lifetime {
-                        planRow(lifetime, title: "Lifetime", detail: String(localized: "Pay once"), tag: nil, saving: nil)
+                        planRow(lifetime, title: "Lifetime", detail: String(localized: "Pay once"), saving: nil, quiet: true)
                     }
                 }
             }
+            .overlay(alignment: .top) {
+                if let annual = commerce.annual { annualTagLayer(annualTag(annual)).zIndex(1) }
+            }
             .transition(.opacity)
         }
+    }
+
+    /// "14 days free" centred on the yearly card's top edge, in mint, in a frame the size of that card (the first in
+    /// the group), so it gives under the finger with the card. Above the glass group, never inside it.
+    private func annualTagLayer(_ text: String) -> some View {
+        Color.clear
+            .frame(height: annualHeight)
+            .overlay(alignment: .topTrailing) {
+                Badge(Text(verbatim: text), style: .solid(Palette.mint))
+                    .shadow(color: Palette.stage.opacity(0.5), radius: 4, y: 1)
+                    .padding(.trailing, 14)
+                    .alignmentGuide(.top) { dimensions in dimensions[VerticalAlignment.center] }
+            }
+            .scaleEffect(annualPressed ? 0.97 : 1)
+            .animation(Motion.quick, value: annualPressed)
+            .allowsHitTesting(false)
+            // The yearly card says it (its accessibility value).
+            .accessibilityHidden(true)
     }
 
     /// The stage's spinner, holding the three plans' place while StoreKit answers, so nothing jumps when they arrive.
@@ -812,9 +874,16 @@ struct PaywallView: View {
         Haptics.shared.selection()
     }
 
-    private func planRow(_ product: Product, title: LocalizedStringKey, detail: String, tag: String?, saving: Int?, anchor: String? = nil) -> some View {
+    /// A plan card: the check, then its face (`PlanFace`) in the first arrangement that fits: the saving beside the
+    /// name, else under the price, else everything stacked (the largest text sizes, long translations). The name is
+    /// never broken across lines. A tagged card (the yearly one) keeps room at its top for the tag over its edge.
+    private func planRow(_ product: Product, title: LocalizedStringKey, detail: String, saving: Int?, anchor: String? = nil,
+                         tag: String? = nil, quiet: Bool = false) -> some View {
         let isSelected = selected?.id == product.id
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
+        let face = PlanFace(title: title, detail: detail, price: product.displayPrice, saving: saving, anchor: anchor,
+                            selected: isSelected, quiet: quiet)
+        let inset: CGFloat = quiet ? 7 : 9
         return Button { select(product) } label: {
             HStack(spacing: 12) {
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
@@ -822,51 +891,23 @@ struct PaywallView: View {
                     .foregroundStyle(isSelected ? Palette.mint : Palette.inkFaint)
                     .contentTransition(.symbolEffect(.replace))
                     .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 2) {
-                    HStack(spacing: 8) {
-                        Text(title).font(.headline).foregroundStyle(Palette.ink)
-                        if let saving { saveChip(saving) }
-                    }
-                    Text(detail).font(.footnote).foregroundStyle(isSelected ? Palette.mint : Palette.inkSoft)
-                        .lineLimit(1).minimumScaleFactor(0.8)
-                }
-                Spacer(minLength: 8)
-                VStack(alignment: .trailing, spacing: 0) {
-                    if let anchor { anchorPrice(anchor) }
-                    Text(product.displayPrice).font(Typeface.number(19)).foregroundStyle(Palette.ink)
-                        .lineLimit(1).minimumScaleFactor(0.7)
+                ViewThatFits(in: .horizontal) {
+                    face.arranged(.inline)
+                    if saving != nil { face.arranged(.savingUnderPrice) }
+                    face.arranged(.stacked)
                 }
             }
-            .padding(.horizontal, 14).padding(.vertical, 9)
-            .modifier(PlanPlate(selected: isSelected, glass: planGlass))
-            .overlay(alignment: .topTrailing) {
-                if let tag { planTag(tag) }
-            }
+            .padding(.horizontal, 14)
+            .padding(.top, tag == nil ? inset : max(inset, min(tagRoom, 18)))
+            .padding(.bottom, inset)
+            .modifier(PlanPlate(selected: isSelected, quiet: quiet, glass: planGlass))
             .contentShape(shape)
         }
-        .buttonStyle(PressScaleStyle())
+        .buttonStyle(PlanPressStyle(pressed: tag == nil ? nil : $annualPressed))
         .accessibilityElement(children: .combine)
+        .accessibilityValue(Text(verbatim: tag ?? ""))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("paywall.plan.\(product.id)")
-    }
-
-    /// "$83.88", struck through, over the yearly price; VoiceOver says what it is.
-    private func anchorPrice(_ anchor: String) -> some View {
-        Text(verbatim: anchor).strikethrough(true, color: Palette.inkFaint)
-            .font(Typeface.number(12)).foregroundStyle(Palette.inkFaint)
-            .lineLimit(1).minimumScaleFactor(0.7)
-            .accessibilityLabel(Text("\(anchor) if paid monthly"))
-    }
-
-    /// "14 days free" on the yearly card's top edge, in mint.
-    private func planTag(_ text: String) -> some View {
-        Badge(Text(verbatim: text), style: .solid(Palette.mint))
-            .offset(x: -14, y: -10)
-    }
-
-    /// "Save 58%" beside the yearly plan's name, in Pro gold.
-    private func saveChip(_ percent: Int) -> some View {
-        Badge(Text(verbatim: String(localized: "Save \(percent)%")), style: .pro)
     }
 
     /// Under the plans. With a free trial selected (and a reminder that can arrive): how easy it is to stop, and when
@@ -880,38 +921,59 @@ struct PaywallView: View {
         }
     }
 
+    /// One line where it fits; at the largest sizes (or in a longer language) the reminder goes under the rest,
+    /// wrapping as it needs, never cut short.
     private func trialTrust(reminder: Int) -> some View {
-        HStack(spacing: 6) {
-            Image(systemName: "bell.badge.fill").foregroundStyle(Palette.mint).accessibilityHidden(true)
-            Text("Cancel in 2 taps")
-            separator
-            Text("We remind you on day \(reminder)")
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 6) {
+                trustIcon("bell.badge.fill")
+                Text("Cancel in 2 taps")
+                separator
+                Text("We remind you on day \(reminder)")
+            }
+            .lineLimit(1)
+            VStack(spacing: 2) {
+                HStack(spacing: 6) {
+                    trustIcon("bell.badge.fill")
+                    Text("Cancel in 2 taps")
+                }
+                Text("We remind you on day \(reminder)")
+            }
+            .fixedSize(horizontal: false, vertical: true)
         }
-        .font(.caption.weight(.medium))
-        .foregroundStyle(Palette.inkSoft)
-        .lineLimit(1)
-        .minimumScaleFactor(0.75)
-        .frame(maxWidth: .infinity)
-        .accessibilityElement(children: .combine)
+        .modifier(TrustLine())
         .accessibilityIdentifier("paywall.trust")
     }
 
+    /// As the trial's line: one line where it fits, else the plan's promise under the rest.
     private var plainTrust: some View {
         let promise: LocalizedStringKey = selected?.id == TimbreProduct.lifetime ? "Pay once, keep forever" : "Cancel anytime"
-        return HStack(spacing: 6) {
-            Image(systemName: "lock.shield.fill").foregroundStyle(Palette.mint).accessibilityHidden(true)
-            Text("No ads")
-            separator
-            Text("No account")
-            separator
-            Text(promise)
+        return ViewThatFits(in: .horizontal) {
+            HStack(spacing: 6) {
+                trustIcon("lock.shield.fill")
+                Text("No ads")
+                separator
+                Text("No account")
+                separator
+                Text(promise)
+            }
+            .lineLimit(1)
+            VStack(spacing: 2) {
+                HStack(spacing: 6) {
+                    trustIcon("lock.shield.fill")
+                    Text("No ads")
+                    separator
+                    Text("No account")
+                }
+                Text(promise)
+            }
+            .fixedSize(horizontal: false, vertical: true)
         }
-        .font(.caption.weight(.medium))
-        .foregroundStyle(Palette.inkSoft)
-        .lineLimit(1)
-        .minimumScaleFactor(0.75)
-        .frame(maxWidth: .infinity)
-        .accessibilityElement(children: .combine)
+        .modifier(TrustLine())
+    }
+
+    private func trustIcon(_ symbol: String) -> some View {
+        Image(systemName: symbol).foregroundStyle(Palette.mint).accessibilityHidden(true)
     }
 
     private var separator: some View {
@@ -1369,8 +1431,10 @@ struct PaywallView: View {
 /// A plan card's face. Unchosen: graphite with a control's edge. Chosen: a mint border over mint-washed Liquid Glass (iOS 26),
 /// one glass shape named in the plans' group, so choosing another plan moves it there as liquid rather than switching
 /// two cards; before iOS 26 a mint wash with a soft mint glow, as it always was.
+/// Quiet (Lifetime), unchosen, it is a shade darker than the subscriptions; chosen, it takes the same glass.
 private struct PlanPlate: ViewModifier {
     let selected: Bool
+    var quiet = false
     let glass: Namespace.ID
 
     func body(content: Content) -> some View {
@@ -1378,7 +1442,7 @@ private struct PlanPlate: ViewModifier {
         let id: String? = selected ? "paywall.plan.selected" : nil
         return content
             .background {
-                if !selected { shape.fill(Palette.stageRaised) }
+                if !selected { shape.fill(Palette.stageRaised.opacity(quiet ? 0.45 : 1)) }
             }
             // An unchosen plan is a control: its edge is `controlLine`, which holds 3:1 with Increase Contrast.
             .overlay(shape.strokeBorder(selected ? Palette.mint : Palette.controlLine, lineWidth: selected ? 2 : 1))
@@ -1390,6 +1454,137 @@ private struct PlanPlate: ViewModifier {
                 }
             }
             .timbreGlassID(id, in: glass)
+    }
+}
+
+/// `PressScaleStyle` that also tells `pressed` while the finger is down: the yearly card's tag, drawn over the glass
+/// group rather than in the card, gives with it.
+private struct PlanPressStyle: ButtonStyle {
+    var pressed: Binding<Bool>?
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.97 : 1)
+            .animation(Motion.quick, value: configuration.isPressed)
+            .onChange(of: configuration.isPressed) { _, isPressed in pressed?.wrappedValue = isPressed }
+    }
+}
+
+/// The trust line's type and colour, centred, read as one.
+private struct TrustLine: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.caption.weight(.medium))
+            .foregroundStyle(Palette.inkSoft)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity)
+            .accessibilityElement(children: .combine)
+    }
+}
+
+/// A plan card's text beside its check: the name, what it comes to ("$0.67 a week"), the price and, for the year,
+/// the saving and the year at the monthly price struck through. `PaywallView.planRow` shows the first arrangement
+/// that fits on one line each: the saving beside the name, else under the price, else all stacked. The name is
+/// never broken across lines (it once hyphenated "Year-ly" beside the saving). Quiet (Lifetime): smaller type in
+/// softer ink until chosen, a third option that doesn't compete with the two subscriptions.
+@MainActor
+private struct PlanFace {
+    enum Arrangement { case inline, savingUnderPrice, stacked }
+
+    let title: LocalizedStringKey
+    let detail: String
+    let price: String
+    let saving: Int?
+    let anchor: String?
+    let selected: Bool
+    let quiet: Bool
+
+    @ViewBuilder func arranged(_ arrangement: Arrangement) -> some View {
+        switch arrangement {
+        case .inline:
+            HStack(spacing: 0) {
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 8) {
+                        name(fixed: true)
+                        if let saving { savingChip(saving) }
+                    }
+                    detailText(wraps: false)
+                }
+                // Ahead of the spacer: the name and its saving take their room before any is left over.
+                .layoutPriority(1)
+                Spacer(minLength: 12)
+                prices(withSaving: false)
+            }
+        case .savingUnderPrice:
+            HStack(spacing: 0) {
+                VStack(alignment: .leading, spacing: 2) {
+                    name(fixed: true)
+                    detailText(wraps: false)
+                }
+                .layoutPriority(1)
+                Spacer(minLength: 12)
+                prices(withSaving: true)
+            }
+        case .stacked:
+            VStack(alignment: .leading, spacing: 3) {
+                name(fixed: false)
+                if let saving { savingChip(saving) }
+                detailText(wraps: true)
+                VStack(alignment: .leading, spacing: 0) {
+                    if let anchor { anchorPrice(anchor) }
+                    priceText
+                }
+                .padding(.top, 2)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    /// One line, always: at its full size beside the rest, shrinking a little when stacked.
+    private func name(fixed: Bool) -> some View {
+        Text(title)
+            .font(quiet ? Font.subheadline.weight(.semibold) : Font.headline)
+            .foregroundStyle(quiet && !selected ? Palette.inkSoft : Palette.ink)
+            .lineLimit(1)
+            .minimumScaleFactor(fixed ? 1 : 0.6)
+            .fixedSize(horizontal: fixed, vertical: false)
+    }
+
+    private func detailText(wraps: Bool) -> some View {
+        Text(verbatim: detail)
+            .font(quiet ? Font.caption : Font.footnote)
+            .foregroundStyle(selected ? Palette.mint : Palette.inkSoft)
+            .lineLimit(wraps ? nil : 1)
+            .minimumScaleFactor(wraps ? 1 : 0.8)
+            .fixedSize(horizontal: false, vertical: wraps)
+    }
+
+    private var priceText: some View {
+        Text(verbatim: price)
+            .font(Typeface.number(quiet ? 16 : 19))
+            .foregroundStyle(quiet && !selected ? Palette.inkSoft : Palette.ink)
+            .lineLimit(1).minimumScaleFactor(0.7)
+    }
+
+    private func prices(withSaving: Bool) -> some View {
+        VStack(alignment: .trailing, spacing: 0) {
+            if let anchor { anchorPrice(anchor) }
+            priceText
+            if withSaving, let saving { savingChip(saving).padding(.top, 3) }
+        }
+    }
+
+    /// "$83.88", struck through, over the yearly price; VoiceOver says what it is.
+    private func anchorPrice(_ anchor: String) -> some View {
+        Text(verbatim: anchor).strikethrough(true, color: Palette.inkFaint)
+            .font(Typeface.number(12)).foregroundStyle(Palette.inkFaint)
+            .lineLimit(1).minimumScaleFactor(0.7)
+            .accessibilityLabel(Text("\(anchor) if paid monthly"))
+    }
+
+    /// "Save 58%", in Pro gold.
+    private func savingChip(_ percent: Int) -> some View {
+        Badge(Text(verbatim: String(localized: "Save \(percent)%")), style: .pro)
     }
 }
 

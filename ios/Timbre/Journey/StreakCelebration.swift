@@ -124,7 +124,7 @@ struct StreakCelebration: View {
                 .shadow(color: on ? Palette.flame.opacity(0.55) : .clear, radius: 8)
                 .scaleEffect(on ? 1 : 0.86)
             Text(date, format: .dateTime.weekday(.narrow))
-                .font(Typeface.label(11)).foregroundStyle(today ? Palette.ink : Palette.inkSoft)
+                .font(Typeface.label(12)).foregroundStyle(today ? Palette.ink : Palette.inkSoft)
         }
         .frame(maxWidth: .infinity)
     }

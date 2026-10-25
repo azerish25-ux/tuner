@@ -395,10 +395,14 @@ private struct PaywallScene {
         let breathe = calm ? 0 : 0.04 * sin(elapsed * 0.8)
         // Gone before the close button's column.
         let radius = min(g.size.width * 0.38, 160)
-        let squash = max(0.3, min(1, g.hitY * 0.8 / radius))
+        // Inside the stage, top to bottom: squashed to fit and moved off the edges, so it fades out before them
+        // rather than being cut by the canvas into a band with a hard top edge.
+        let tall = min(radius * max(0.3, min(1, g.hitY * 0.8 / radius)), g.size.height / 2)
+        guard tall > 1 else { return }
+        let y = min(max(g.bridge.y * 0.75, tall), g.size.height - tall)
         var light = context
-        light.translateBy(x: g.bridge.x, y: g.bridge.y * 0.75)
-        light.scaleBy(x: 1, y: squash)
+        light.translateBy(x: g.bridge.x, y: y)
+        light.scaleBy(x: 1, y: tall / radius)
         light.fill(Self.circle(.zero, radius), with: .radialGradient(Gradient(colors: [accent.opacity(0.24 + breathe), accent.opacity(0)]),
                                                                       center: .zero, startRadius: 0, endRadius: radius))
     }

@@ -9,7 +9,8 @@ import SwiftUI
 /// or a card's inset); the first item still lines up with the content around the rail. An edge fades
 /// while more is hidden past it (measured from the chips themselves, so a rail resting at either end is
 /// solid there), and the selected item glides to the middle when the rail appears and whenever the
-/// selection changes, clear of both fades (at either end it simply rests against the margin).
+/// selection changes, clear of both fades. At either end it rests against the margin instead: the scroll is
+/// clamped to the rail's content, so the first or last item is never pushed past the edge to centre it.
 /// The rail is one glass group: a selected chip's glass pill (`ChipButtonStyle`, iOS 26) flows from chip to chip as
 /// the selection moves.
 /// Give each item `.id(value)` with the same type as `selection`.
@@ -19,9 +20,12 @@ struct EdgeRail<ID: Hashable, Content: View>: View {
     var selection: ID?
     @ViewBuilder var content: Content
 
-    @State private var position: ID?
     @State private var revealed = false
     @State private var overflow = EdgeOverflow()
+    /// The scroll view's visible width; 0 until it has been laid out.
+    @State private var viewport: CGFloat = 0
+    /// The person has dragged the rail, so a change of width leaves it where they put it.
+    @State private var browsed = false
     @Namespace private var glass
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -31,41 +35,67 @@ struct EdgeRail<ID: Hashable, Content: View>: View {
                 TimbreGlassGroup(spacing: spacing + 16) {
                     HStack(spacing: spacing) { content }
                         .scrollTargetLayout()
-                        .onGeometryChange(for: EdgeOverflow.self) { proxy in
-                            EdgeOverflow(content: proxy)
+                        .onGeometryChange(for: RailMeasure.self) { proxy in
+                            RailMeasure(overflow: EdgeOverflow(content: proxy), viewport: proxy.bounds(of: .scrollView)?.width.rounded() ?? 0)
                         } action: { value in
-                            overflow = value
-                            // The chips have their frames now: the selected one can be brought into view.
-                            reveal(scroller)
+                            measured(value, scroller)
                         }
                         .animation(reduceMotion ? Motion.quick : Motion.morph, value: selection)
                 }
                 .environment(\.timbreGlassSpace, glass)
             }
-            .scrollPosition(id: $position, anchor: .center)
+            // Bug (Voice's exercises, "…st" at the left edge): a `scrollPosition(id:anchor: .center)` binding was
+            // rewritten by the scroll view to the card under the middle (the second, while the rail rested at its
+            // start) and later re-centred on it, pushing the selected first card half past the edge. The reader scrolls
+            // to the selection itself, clamped to the content, and nothing re-anchors the rail afterwards.
+            .onScrollPhaseChange { _, phase in
+                if phase == .interacting { browsed = true }
+            }
             .modifier(RailBleed(leading: bleed, trailing: bleed, measured: overflow))
             // Bug: set as the rail appeared, before its chips were laid out, the position was dropped and a selection
             // past the edge stayed hidden ("Minor pentatonic" off the right of Scales). It is set once the chips have
-            // frames: on their first measure, or (when nothing overflows, so no measure changes) on the next turn.
+            // frames and the rail its width: on their first measure, or (when nothing overflows, so no measure
+            // changes) on the next turn.
             .onAppear {
-                DispatchQueue.main.async { reveal(scroller) }
+                DispatchQueue.main.async { reveal(scroller, viewport: viewport) }
             }
             .onChange(of: selection) { _, value in
                 guard let value else { return }
-                withAnimation(Motion.settle) { position = value }
+                // A turn later, so a chip that arrives with its selection (a custom tuning just saved) has its frame.
+                DispatchQueue.main.async {
+                    withAnimation(Motion.settle) { scroller.scrollTo(value, anchor: .center) }
+                }
             }
         }
     }
 
-    /// Brings the selection into view once, after the first layout pass. The position binding alone can still be
-    /// dropped while the scroll view settles its first frame, so the reader then scrolls to the laid-out chip
-    /// directly, a turn later, without animation (the rail opens there rather than gliding).
-    private func reveal(_ scroller: ScrollViewProxy) {
-        guard !revealed, let selection else { return }
+    /// The chips' frames or the rail's width changed. Placed at another width (a first pass before the rail had its
+    /// size, a rotation, a resized window), the selection is placed again, unless the person has moved the rail.
+    private func measured(_ value: RailMeasure, _ scroller: ScrollViewProxy) {
+        let resized = abs(value.viewport - viewport) > 1
+        overflow = value.overflow
+        viewport = value.viewport
+        if resized && revealed && !browsed { revealed = false }
+        reveal(scroller, viewport: value.viewport)
+    }
+
+    /// Brings the selection into view once the rail has a real width (a pass at no width centred the chip on a
+    /// point and left the rail scrolled there), a turn later and without animation, so the rail opens there rather
+    /// than gliding. The scroll is clamped to the content: the first and last items rest against the margin.
+    private func reveal(_ scroller: ScrollViewProxy, viewport: CGFloat) {
+        guard !revealed, viewport >= railMinimumWidth, let selection else { return }
         revealed = true
-        position = selection
         DispatchQueue.main.async { scroller.scrollTo(selection, anchor: .center) }
     }
+}
+
+/// A rail narrower than this has not been laid out yet (a sizing pass proposes no width, leaving only the bleed).
+private let railMinimumWidth: CGFloat = 88
+
+/// What `EdgeRail` reads from its chips: which ends have more past them, and the scroll view's visible width.
+private struct RailMeasure: Equatable {
+    var overflow: EdgeOverflow
+    var viewport: CGFloat
 }
 
 extension View {

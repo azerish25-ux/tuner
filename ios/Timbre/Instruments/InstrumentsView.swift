@@ -232,11 +232,13 @@ struct InstrumentsView: View {
                         store.selectTuning(tuning)
                         if available { dismiss() }
                     } label: {
+                        // At its own width: a rail never has to squeeze a chip, so a name is never cut ("My tuni…").
                         HStack(spacing: 6) {
                             if tuning.isCustom { Image(systemName: "slider.vertical.3").font(.caption2) }
-                            Text(tuning.name.localized)
+                            Text(tuning.name.localized).lineLimit(1)
                             if !available { Image(systemName: "lock.fill").font(.caption2) }
                         }
+                        .fixedSize(horizontal: true, vertical: false)
                     }
                     .buttonStyle(ChipButtonStyle(selected: tuning.id == store.tuning.id && !store.referenceMode))
                     .id(tuning.id)
@@ -251,16 +253,14 @@ struct InstrumentsView: View {
         }
     }
 
-    /// One line beside the Custom button: "Acoustic guitar tunings" when that fits, else just "Tunings" (the
-    /// instrument is named below, under Your instruments). VoiceOver always hears the full heading.
+    /// "Tunings", one line beside the Custom button, the same for every instrument and plan (it used to grow into
+    /// "Acoustic guitar tunings" only when the name fitted, so it changed with the instrument and with the Pro badge on
+    /// Custom). The instrument is named right below, under Your instruments; VoiceOver hears the full heading.
     private var tuningsHeading: some View {
-        ViewThatFits(in: .horizontal) {
-            Eyebrow("\(store.instrumentDisplayName) tunings").fixedSize()
-            Eyebrow("Tunings").lineLimit(1).minimumScaleFactor(0.8)
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("\(store.instrumentDisplayName) tunings"))
-        .accessibilityAddTraits(.isHeader)
+        Eyebrow("Tunings").lineLimit(1).minimumScaleFactor(0.8)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("\(store.instrumentDisplayName) tunings"))
+            .accessibilityAddTraits(.isHeader)
     }
 
     /// New custom tuning: in the section header so it's always in reach, not at the far end of the rail.

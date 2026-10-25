@@ -46,6 +46,8 @@ public struct UserSettings: Codable, Equatable, Sendable {
     public var tuningPrecision: String?
     /// True once the player picks a note-naming system in Settings; until then `notation` follows the app language.
     public var notationChosen: Bool?
+    /// Spaced review's schedule (`ReviewDeck`); unset until the first lesson after it arrived (Learn's weak spots seed it).
+    public var spacedReview: ReviewDeck?
     public init() {}
 }
 

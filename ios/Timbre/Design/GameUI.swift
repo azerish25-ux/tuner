@@ -131,9 +131,9 @@ struct StreakFlame: View {
 }
 
 /// Level number inside a ring that fills with XP toward the next level, captioned "LV" on mid-size rings and
-/// "LEVEL" on the large one, so the number always says what it counts. Under 44 pt there is no room for a legible
-/// caption, so the header ring shows the number alone (VoiceOver says "Level 5"). The ring is a fixed-size
-/// graphic: its type stops growing at xxxLarge, and as a button its target is at least 44 pt.
+/// "LEVEL" on the large one, so the number always says what it counts. Under 44 pt there is no room for a caption
+/// over the number, so the header ring sets the two on one line, "LV 5" (VoiceOver says "Level 5"). The ring is a
+/// fixed-size graphic: its type stops growing at xxxLarge, and as a button its target is at least 44 pt.
 struct LevelRing: View {
     @EnvironmentObject private var store: AppStore
     var size: CGFloat = 36
@@ -149,14 +149,9 @@ struct LevelRing: View {
                 .stroke(Palette.mint, style: StrokeStyle(lineWidth: size * 0.09, lineCap: .round))
                 .rotationEffect(.degrees(-90))
                 .animation(Motion.settle, value: xp)
-            VStack(spacing: large ? 1 : -1) {
-                if captioned { caption }
-                Text("\(level.number)").font(Typeface.label(size * (large ? 0.34 : captioned ? 0.33 : 0.4))).foregroundStyle(Palette.ink)
-                    .contentTransition(.numericText())
-                    .lineLimit(1).minimumScaleFactor(0.5)
-            }
-            .frame(maxWidth: size * 0.66)
-            .offset(y: captioned ? size * 0.015 : 0)
+            label(level.number)
+                .frame(maxWidth: size * (captioned ? 0.66 : 0.74))
+                .offset(y: captioned ? size * 0.015 : 0)
         }
         .frame(width: size, height: size)
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
@@ -170,6 +165,25 @@ struct LevelRing: View {
             .accessibilityShowsLargeContentViewer()
             .accessibilityIdentifier("level.ring")
         } else { ring }
+    }
+
+    /// "LEVEL" over the number in a large ring, "LV" over it in a medium one; in a small one (the tab headers') the
+    /// two share a line, "LV 5", so the ring reads as a level rather than a bare count.
+    @ViewBuilder private func label(_ number: Int) -> some View {
+        if captioned {
+            VStack(spacing: large ? 1 : -1) {
+                caption
+                Text("\(number)").font(Typeface.label(size * (large ? 0.34 : 0.33))).foregroundStyle(Palette.ink)
+                    .contentTransition(.numericText())
+                    .lineLimit(1).minimumScaleFactor(0.5)
+            }
+        } else {
+            (Text("LV").font(Typeface.label(size * 0.24)).tracking(0.3).foregroundStyle(Palette.mint)
+                + Text(verbatim: " ")
+                + Text("\(number)").font(Typeface.label(size * 0.36)).foregroundStyle(Palette.ink))
+                .contentTransition(.numericText())
+                .lineLimit(1).minimumScaleFactor(0.5)
+        }
     }
 
     private var caption: some View {

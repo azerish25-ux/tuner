@@ -1,4 +1,6 @@
+#if canImport(AVFoundation)
 import AVFoundation
+#endif
 import Foundation
 
 /// The recorded instruments bundled in `Samples/` (built by tools/build-ios-samples.py from CC0 libraries; sources in
@@ -159,9 +161,10 @@ public struct SampleManifest: Decodable, Sendable {
         public let commit: String
     }
 
-    /// One recording. `hz` is its measured fundamental at `rate`; `mark` is the first frame at `markLevel` (a quarter
-    /// of its peak) as written, so a decoder's leading priming can be found and dropped; `gain` evens the attack
-    /// loudness across the set at `velocity`; `loop` is a sustained note's loop of whole periods (frames).
+    /// One recording. `hz` is its measured fundamental at `rate`; `frames` its length as written (a decoder that
+    /// returns more kept the encoder's priming, which is dropped); `mark` is the first frame at `markLevel` (a quarter
+    /// of its peak), the build's check that encoding kept the attack in place; `gain` evens the attack loudness across
+    /// the set at `velocity`; `loop` is a sustained note's loop of whole periods (frames).
     public struct Zone: Decodable, Sendable {
         public let file: String
         public let midi: Int?
@@ -218,8 +221,12 @@ final class SampleBuffer: @unchecked Sendable {
         self.init(rate: rate, samples: values.map { $0.isFinite ? Int16(max(-1, min(1, $0)) * 32767) : 0 })
     }
 
-    /// Decodes a file (channels averaged) and lines its attack up with the manifest's `mark`.
+    /// Leading frames ffmpeg's AAC encoder adds (the build's encoder; recorded in each file's edit list).
+    static let priming = 1024
+
+    /// Decodes a file (channels averaged), without any encoder priming or end padding.
     static func decode(_ url: URL, zone: SampleManifest.Zone) -> SampleBuffer? {
+        #if canImport(AVFoundation)
         guard let file = try? AVAudioFile(forReading: url, commonFormat: .pcmFormatFloat32, interleaved: false) else { return nil }
         let format = file.processingFormat
         let channels = Int(format.channelCount)
@@ -241,15 +248,17 @@ final class SampleBuffer: @unchecked Sendable {
             }
         }
         guard !samples.isEmpty else { return nil }
-        // AAC carries encoder priming (1024 frames from the build's encoder). A decoder that honours the file's edit
-        // list drops it; one that doesn't leaves it before the attack. The attack marker tells which: wherever it lands
-        // nearest a whole priming block, that block goes (a slow bowed attack moves the marker a little either way).
-        let level = Int16(max(1, min(32767, zone.markLevel * 32767 * 0.98)))
-        if let first = samples.firstIndex(where: { $0 >= level || $0 <= -level }) {
-            let measured = first - zone.mark
-            let priming = [0, 1024, 2048, 2112].min { abs($0 - measured) < abs($1 - measured) } ?? 0
-            if priming > 0, abs(priming - measured) <= 400, priming < samples.count { samples.removeFirst(priming) }
+        // AAC carries the encoder's priming (1024 frames from the build's encoder) and pads its last packet (less than
+        // 1024 frames). A decoder that honours the file's edit list returns the frames written (`zone.frames`), maybe
+        // with that padding; one that doesn't returns the priming first, 1024 frames or more over: it goes, so attacks
+        // land on the frame they were written for.
+        if zone.frames > 0 && samples.count >= zone.frames + SampleBuffer.priming {
+            samples.removeFirst(SampleBuffer.priming)
         }
+        if zone.frames > 0 && samples.count > zone.frames { samples.removeLast(samples.count - zone.frames) }
         return SampleBuffer(rate: format.sampleRate, samples: samples)
+        #else
+        return nil
+        #endif
     }
 }
