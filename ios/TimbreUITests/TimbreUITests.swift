@@ -97,6 +97,24 @@ final class TimbreUITests: XCTestCase {
         if swiped { settle(1.2) }
     }
 
+    /// Drags the scrolled screen until `target` sits about a third of the way down it: slow drags with a hold at the
+    /// end, so no momentum carries it past.
+    private func bringToUpperMiddle(_ target: XCUIElement) {
+        let screen = app.frame
+        guard screen.height > 0 else { return }
+        for _ in 0..<4 {
+            guard let frame = (try? target.snapshot())?.frame, !frame.isEmpty else { return }
+            let distance = frame.minY - screen.height * 0.3
+            guard abs(distance) > 30 else { return }
+            // At most half the screen per drag, from a point that leaves the tab bar alone.
+            let step = max(-0.5, min(0.5, distance / screen.height))
+            let from = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: step > 0 ? 0.75 : 0.25))
+            from.press(forDuration: 0.1, thenDragTo: from.withOffset(CGVector(dx: 0, dy: -step * screen.height)),
+                       withVelocity: .slow, thenHoldForDuration: 0.4)
+            settle(0.6)
+        }
+    }
+
     /// Taps Continue (once it is enabled) until the next screen's element appears: a tap during the
     /// enable animation or the page transition can be dropped.
     private func continueUntil(_ next: XCUIElement) {
@@ -405,7 +423,15 @@ final class TimbreUITests: XCTestCase {
         scrollTo(element("practice.scales"))
         element("practice.scales").tap(); settle(1.5); shot("44-scales")
         app.navigationBars.buttons.firstMatch.tap(); settle()
-        tab("Progress"); settle(2); shot("45-journey-pro")
+        // Progress with Pro: its top (streak, level, coach, week) is the same on any plan, so the picture is taken on
+        // the card Pro adds, the tuning accuracy chart, and kept only when that card (not the Pro teaser) is there.
+        tab("Progress"); settle(1.5)
+        let chart = labeled("Tuning accuracy")
+        scrollTo(chart)
+        bringToUpperMiddle(chart)
+        let teaser = labeled("Accuracy over time").exists
+        storeFrame("45-journey-pro", picture: stillScreenshot(), ok: chart.exists && chart.isHittable && !teaser,
+                   "Progress shows \(teaser ? "the Pro teaser" : "no tuning accuracy card") after the purchase")
         tab("Play"); settle()
         scrollTo(element("practice.intonation"))
         element("practice.intonation").tap(); settle(1.5); shot("46-intonation")
@@ -512,8 +538,27 @@ final class TimbreUITests: XCTestCase {
         _ = labeled("Level [0-9]+").waitForExistence(timeout: 15)
         let results = stillScreenshot(timeout: 3)
         let headline = labeled("(Flawless|Great work)").exists
-        storeFrame("62-lesson-results", picture: results, ok: headline,
-                   "the results don't read Flawless or Great work: the play-along wasn't played clean, so fewer than three stars")
+        let room = resultsFit()
+        storeFrame("62-lesson-results", picture: results, ok: headline && room.fits,
+                   headline ? room.summary
+                            : "the results don't read Flawless or Great work: the play-along wasn't played clean, so fewer than three stars")
+    }
+
+    /// Whether the results' first screen fits above the pinned buttons (LessonResults): the Share pill and the level bar
+    /// end above the fade the scroll view draws over its last 28 pt (it ends 8 pt above the buttons), so neither is
+    /// dimmed (review 14 caught Share half under it). Read from one snapshot.
+    private func resultsFit() -> (fits: Bool, summary: String) {
+        let nodes = appNodes()
+        func frame(_ id: String) -> CGRect? { nodes.first { $0.identifier == id }?.frame }
+        let buttons = [frame("lesson.next"), frame("lesson.done")].compactMap { $0?.minY }.min()
+        let level = nodes.first { $0.label.range(of: "^Level [0-9]+$", options: .regularExpression) != nil }?.frame
+        let share = frame("lesson.share")
+        guard let buttons, let level else {
+            return (false, "the results show no level bar or no buttons (level \(level != nil), buttons \(buttons != nil))")
+        }
+        let clear = buttons - 36
+        let lowest = max(level.maxY, share?.maxY ?? 0)
+        return (lowest <= clear, "the results run under the fade over the buttons: Share ends at \(Int(share?.maxY ?? 0)), the level bar at \(Int(level.maxY)), the fade starts at \(Int(clear))")
     }
 
     /// App Store frame #1 through the `tune-locked` scene (ios/Timbre/Root/DemoScenes.swift): the demo pitch plays the

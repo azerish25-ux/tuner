@@ -5,16 +5,22 @@ import TimbreCore
 /// App Store screenshot scenes, debug builds only. `TIMBRE_SCENE=<name>` (with `TIMBRE_DEMO_PITCH=1`) puts the app
 /// straight into one hero moment through its own code paths: the tuner's tracker really locks, the lesson's judge
 /// really hears each string. The UI tests (TimbreUITests `test11StoreTunerLock`, `test12StoreChord`,
-/// `test14StoreSongPerform`) then capture what the listing's caption promises without racing the demo pitch's clock.
+/// `test14StoreSongPerform`, `test15StoreShowMe`) then capture what the listing's caption promises without racing the
+/// demo pitch's clock.
 ///
 /// Hooks, a line or two each: `Bootstrap.load` calls `start`, `AppStore.startListening` asks `steadyPitch`,
-/// `LessonPlayer` asks `lessonStart` (init) and `holds` (advance), `SongPerformStep` asks `performBeat`.
+/// `LessonPlayer` asks `lessonStart` (init) and `holds` (advance), `SongPerformStep` asks `performBeat` and
+/// `stillScore`, `ShowMeStage` carries `ShowMeProbe`.
 ///
 /// - `tune-locked` (frame #1): the demo pitch plays the selected string steadily in tune, so each string locks after
 ///   the tracker's 0.65 s hold. The two lowest strings lock first (✓ on their chips), then the third locks and stays
 ///   locked: solid chip, the In tune badge, its peg ringed and ticked on the 3D headstock. A stalled main thread only
 ///   delays a lock (the hold starts again), so the scene waits for each one rather than for a time.
-/// - `lesson-chord` (frame #3): the first guitar lesson with a chord ("Your first chord: E minor") opens on its chord
+/// - `show-me` (frame #3): the same lesson opens on its first step, E minor explained on its card. It is the chord's
+///   first appearance in the course, so the 3D model takes the card by itself once it has settled and the
+///   demonstration plays there: the fingertips land in finger order, then the chord rings across every string. (The
+///   test asks with "Show me" when the model doesn't come by itself, and again for each replay it needs.)
+/// - `lesson-chord` (frame #4): the first guitar lesson with a chord ("Your first chord: E minor") opens on its chord
 ///   step with the day's tune check done. The demo pitch plays the chord string by string, every string lights, and
 ///   the step stays on "Every string rings" instead of moving on.
 /// - `song-perform` (frame #2): Kite Weather, the Originals' song of the day, opens on its performance (the final
@@ -26,6 +32,7 @@ enum DemoScene: String {
     case tuneLocked = "tune-locked"
     case lessonChord = "lesson-chord"
     case songPerform = "song-perform"
+    case showMe = "show-me"
 
     static let current: DemoScene? = ProcessInfo.processInfo.environment["TIMBRE_SCENE"].flatMap(DemoScene.init(rawValue:))
 
@@ -37,7 +44,7 @@ enum DemoScene: String {
         switch current {
         case .tuneLocked?:
             Task { @MainActor in await DemoScene.lockStrings(store) }
-        case .lessonChord?:
+        case .lessonChord?, .showMe?:
             // Learn opens it out of its Continue card, as it opens onboarding's first lesson.
             guard let lesson = DemoScene.chordLesson(store) else { return }
             store.pendingLessonId = lesson.id
@@ -51,12 +58,13 @@ enum DemoScene: String {
 
     // MARK: Lessons
 
-    /// The run `LessonPlayer` opens `lesson` with: in `lesson-chord`, at its first chord step; in `song-perform`, at
-    /// the song's last step, its performance (nil otherwise).
+    /// The run `LessonPlayer` opens `lesson` with: in `lesson-chord`, at its first chord step; in `show-me`, at the step
+    /// that explains that chord on its card; in `song-perform`, at the song's last step, its performance (nil otherwise).
     static func lessonStart(_ lesson: Lesson) -> LessonRun? {
         let start: Int?
         switch current {
         case .lessonChord?: start = lesson.steps.firstIndex(where: DemoScene.isChord)
+        case .showMe?: start = lesson.steps.firstIndex(where: DemoScene.explainsChord)
         case .songPerform? where lesson.id == performSongId: start = lesson.steps.isEmpty ? nil : lesson.steps.count - 1
         default: start = nil
         }
@@ -74,6 +82,12 @@ enum DemoScene: String {
 
     private static func isChord(_ step: LessonStep) -> Bool {
         if case .playChord = step { return true }
+        return false
+    }
+
+    /// An explanation with a chord on its card (where "Show me" plays the chord on the 3D model).
+    private static func explainsChord(_ step: LessonStep) -> Bool {
+        if case let .explain(_, _, visual) = step, case .chord = visual { return true }
         return false
     }
 
@@ -98,6 +112,10 @@ enum DemoScene: String {
         guard current == .songPerform, lesson.id == performSongId else { return nil }
         return Double(performBar * max(1, beatsPerBar))
     }
+
+    /// In `song-perform` the take's score changes in place rather than rolling its digits: it changes with every note,
+    /// several times a second, so a rolling score is mid-roll in almost any picture ("27,?00", review 14).
+    static var stillScore: Bool { current == .songPerform }
 
     /// Learn opens the song (as a Siri or Spotlight link opens one), then goes back to the player's own course once
     /// the song is on screen, so later runs in the same simulator still open Learn on guitar.
@@ -147,6 +165,41 @@ enum DemoScene: String {
         store.chooseCourse(course.index)
         // Choosing a string by hand turns automatic detection off; the scene keeps the default (on).
         store.automatic = true
+    }
+}
+
+// MARK: - Show me
+
+/// For XCUITest only (TIMBRE_DEBUG_STATE=1), over every "Show me" stage (`ShowMeStage`): whether the model is on the
+/// card and when the demonstration's last fingertip lands, so `test15StoreShowMe` keeps its picture only when it was
+/// taken with the 3D model showing, every fingertip down and the chord ringing. Reads
+/// "showme=<3d|loading> landed=<epoch seconds, 0 before a demonstration> ringing=<strings lit>". Drawn in clear ink
+/// and never touched, like the tuner's `stage.state`, so it stays out of every screenshot.
+struct ShowMeProbe: View {
+    let ready: Bool
+    let shot: ShowMeShot
+    let landStart: Date?
+    let landingStep: Double
+    let ringing: Int
+
+    private static let enabled = ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1"
+
+    var body: some View {
+        if Self.enabled {
+            Text(verbatim: "showme=\(ready ? "3d" : "loading") landed=\(String(format: "%.3f", landed)) ringing=\(ringing)")
+                .font(.system(size: 9, design: .monospaced))
+                .foregroundStyle(Color.clear)
+                .allowsHitTesting(false)
+                .accessibilityIdentifier("showme.state")
+        }
+    }
+
+    /// When the last fingertip lands, in seconds since 1970 (0: no demonstration under way).
+    private var landed: Double {
+        guard let landStart else { return 0 }
+        var fingers = 1
+        if case let .fretting(shape) = shot { fingers = max(1, shape.landingCount) }
+        return landStart.addingTimeInterval(Double(fingers - 1) * landingStep).timeIntervalSince1970
     }
 }
 #endif

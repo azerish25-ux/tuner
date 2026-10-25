@@ -260,13 +260,23 @@ struct SongPerformStep: View {
             Spacer(minLength: 8)
             VStack(alignment: .trailing, spacing: 0) {
                 Text(points, format: .number).font(Typeface.number(26, relativeTo: .title2)).foregroundStyle(Palette.ink)
-                    .contentTransition(.numericText(value: Double(points)))
+                    .contentTransition(scoreTransition)
                     .animation(reduceMotion ? nil : Motion.quick, value: points)
                 Eyebrow("Score", color: accent, style: .display)
             }
             .accessibilityElement(children: .combine)
         }
         .padding(.horizontal, Metrics.gutter).padding(.top, 8)
+    }
+
+    /// The score's digits roll to each new total. A take scores several notes a second and each roll lasts
+    /// `Motion.quick`, so the score is mid-roll most of the time: right in the hand, but a still picture of it (the
+    /// `song-perform` store scene) would catch a ghosted digit, so there it changes in place.
+    private var scoreTransition: ContentTransition {
+        #if DEBUG
+        if DemoScene.stillScore { return .identity }
+        #endif
+        return .numericText(value: Double(points))
     }
 
     /// The play-along's stage: the runway (pitch lanes without a neck), the count-in over it, the combo HUD.

@@ -1095,7 +1095,7 @@ private enum Motifs {
 struct SongCover: View {
     let art: CoverArt
     var corner: CGFloat = 14
-    /// The type on the sleeve; off for a backdrop made from it.
+    /// The type on the sleeve; off for a backdrop made from it (and never on a sleeve under `typeMinimum`).
     var titled = true
     /// Doesn't play yet (Pro, or further on in its course): the art quietens, the title stays readable.
     var locked = false
@@ -1119,8 +1119,13 @@ struct SongCover: View {
         .accessibilityHidden(true)
     }
 
+    /// Sleeves smaller than this (a 40 pt header thumbnail, a list row's) draw the motif alone: at that size the course
+    /// line and the title can't be read, and the line came out as "ORIGI…" (review 14).
+    static let typeMinimum: CGFloat = 72
+
     private func artwork(size: CGSize) -> some View {
-        let layout = SleeveLayout(art: art, size: size, titled: titled)
+        let typed = titled && min(size.width, size.height) >= Self.typeMinimum
+        let layout = SleeveLayout(art: art, size: size, titled: typed)
         let region = layout.region
         let art = self.art
         return ZStack {
@@ -1132,7 +1137,7 @@ struct SongCover: View {
             }
             .saturation(locked ? 0.42 : 1)
             .brightness(locked ? -0.07 : 0)
-            if titled {
+            if typed {
                 if art.banner { band(layout) }
                 typeBlock(layout)
                 catalogue(layout)

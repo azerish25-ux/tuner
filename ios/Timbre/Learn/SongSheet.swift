@@ -654,16 +654,12 @@ private struct SectionTile: View {
         .background {
             ZStack(alignment: .leading) {
                 shape.fill(tint.opacity(selected ? 0.3 : base))
+                // The part played fills the tile under its name, brightest at the playhead's edge: no line drawn across
+                // the name ("Cho|rus", review 14).
                 GeometryReader { proxy in
-                    ZStack(alignment: .leading) {
-                        Rectangle().fill(tint.opacity(0.42)).frame(width: proxy.size.width * CGFloat(fill))
-                        if playing && fill > 0 && fill < 1 {
-                            Capsule().fill(Color.white)
-                                .frame(width: 3)
-                                .shadow(color: tint.opacity(0.9), radius: 5)
-                                .offset(x: proxy.size.width * CGFloat(fill) - 1.5)
-                        }
-                    }
+                    LinearGradient(colors: [tint.opacity(0.36), tint.opacity(playing && fill < 1 ? 0.62 : 0.42)],
+                                   startPoint: .leading, endPoint: .trailing)
+                        .frame(width: proxy.size.width * CGFloat(fill))
                 }
             }
         }

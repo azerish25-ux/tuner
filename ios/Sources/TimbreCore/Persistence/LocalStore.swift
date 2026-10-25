@@ -54,7 +54,55 @@ public struct UserSettings: Codable, Equatable, Sendable {
     /// The chord last opened in the Chords tool (optional, so earlier files still decode): the tool opens on it again
     /// and the Play hub's tile strums it. Unset until the tool's chord is first changed.
     public var lastChord: ChordChoice?
+    /// "Show me" demonstrations that have played by themselves, by course id (`ShowMeKey`, oldest first). The first
+    /// time a chord or a strum pattern appears in a course its 3D demonstration plays unasked; after that it waits for
+    /// "Show me". Unset until the first one plays (optional, so earlier files still decode).
+    public var shownDemos: [String: [String]]?
     public init() {}
+}
+
+extension UserSettings {
+    /// The most demonstrations remembered per course, the oldest forgotten first: far more chords and patterns than
+    /// any course teaches, so the file stays small.
+    public static let shownDemoLimit = 400
+
+    /// Whether demonstration `key` (`ShowMeKey`) has already played by itself in course `course`.
+    public func hasShownDemo(_ key: String, in course: String) -> Bool {
+        shownDemos?[course]?.contains(key) ?? false
+    }
+
+    /// Remembers that demonstration `key` has played in course `course`, so it plays by itself only once there.
+    public mutating func markDemoShown(_ key: String, in course: String) {
+        var keys = shownDemos?[course] ?? []
+        guard !keys.contains(key) else { return }
+        keys.append(key)
+        if keys.count > Self.shownDemoLimit { keys.removeFirst(keys.count - Self.shownDemoLimit) }
+        var all = shownDemos ?? [:]
+        all[course] = keys
+        shownDemos = all
+    }
+}
+
+/// What a "Show me" demonstration teaches, as a key that stays the same wherever it appears in a course: a chord by
+/// its shape (the frets from its first one, whatever the lesson calls it or however it numbers the fingers), a strum
+/// by its pattern in its bar (whatever the tempo, the chord or the step it comes in).
+public enum ShowMeKey {
+    public static func chord(_ chord: ChordSpec) -> String {
+        let frets = chord.frets.map(String.init).joined(separator: ",")
+        let base = max(1, chord.baseFret ?? 1)
+        return base > 1 ? "chord:\(frets)@\(base)" : "chord:\(frets)"
+    }
+
+    public static func strum(pattern: [Double], beatsPerBar: Int) -> String {
+        let beats = pattern.filter(\.isFinite).sorted().map(Self.beat).joined(separator: ",")
+        return "strum:\(max(1, beatsPerBar))/\(beats)"
+    }
+
+    /// A beat as written: "2" on the beat, "1.5" between.
+    private static func beat(_ value: Double) -> String {
+        if value == value.rounded(), abs(value) < 1_000 { return String(Int(value)) }
+        return String(value)
+    }
 }
 
 extension UserSettings {

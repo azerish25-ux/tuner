@@ -117,8 +117,8 @@ struct PaywallView: View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 bottomBar.onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in barHeight = height }
             }
-            // Glass only where nothing under its corner redraws every frame (the plan's drifting rail, the runway and the
-            // tools' scenes all do, unless Reduce Motion holds them still).
+            // Glass only where nothing under its corner redraws every frame (the runway and the tools' scenes do, and the
+            // plan's rail drifts past the plain pocket it keeps round the button, unless Reduce Motion holds them still).
             closeButton(glass: layout.preview == 0 || reduceMotion)
             if exitOfferShown, let offer = exitOffer {
                 ExitOfferCard(offer: offer, purchasing: commerce.purchasing != nil,
@@ -228,7 +228,7 @@ struct PaywallView: View {
                 } else {
                     PaywallProPill().padding(.top, 14)
                 }
-                // Drawn over the plan's rail, whose sleeves reach on behind it and fade out before its words.
+                // Under the plan's rail, whose sleeves are gone before its first line: it always sits on the plain stage.
                 header(pitch, proof: context == .onboarding || hero.isPlan)
                     .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in headerHeight = height }
                     .padding(.top, layout.preview > 0 ? Self.headerTop : 10)
@@ -271,8 +271,8 @@ struct PaywallView: View {
         }
     }
 
-    /// The plan's outcomes, three at most, less the first song when the plan's hero is up (its sleeve leads the rail,
-    /// and the track names its day), so the same promise isn't made twice.
+    /// The plan's outcomes, three at most, less the first song when the plan's hero is up (the rail shows the songs,
+    /// and the track names the first one's day), so the same promise isn't made twice.
     private func shownOutcomes(_ plan: PaywallPlan, hero: PaywallHero) -> [PaywallPlan.Outcome] {
         let outcomes = hero.isPlan ? plan.outcomes.filter { $0.id != "song" } : plan.outcomes
         return Array(outcomes.prefix(3))
@@ -377,7 +377,7 @@ struct PaywallView: View {
     // MARK: Hero
 
     /// One scene across the full width with the Timbre Pro pill under it: the plan (a rail of the songs it plays,
-    /// drifting behind the headline); the instrument they just tried to open with its strings running on as a
+    /// drifting above the headline); the instrument they just tried to open with its strings running on as a
     /// play-along runway; or the scene of the tool that opened the paywall.
     private func preview(_ hero: PaywallHero, plan: PaywallPlan, height: CGFloat) -> some View {
         PaywallPreview(hero: hero, accent: plan.accent, height: height)
@@ -396,8 +396,8 @@ struct PaywallView: View {
     }
 
     /// Onboarding's paywall and Pro from Settings (or the plain upsell) sell the plan: a rail of the sleeves of the
-    /// songs it plays, its first song first (`PaywallPlan.rail`), all real songs from the catalogue. Nil when the plan
-    /// reaches no song (a course without any) or the rail would be too short to drift.
+    /// songs it plays, three Originals and then its next song (`PaywallPlan.rail`), all real songs from the catalogue.
+    /// Nil when the plan reaches no song (a course without any) or the rail would be too short to drift.
     private func planScene(_ pitch: Pitch, plan: PaywallPlan) -> PaywallPlanScene? {
         let reason = store.paywallReason
         let planned = context == .onboarding || reason == nil || reason == "settings"
@@ -540,16 +540,17 @@ struct PaywallView: View {
 
     // MARK: Outcomes
 
+    /// The outcomes' icons, the size of the plan track's nodes.
     private static let benefitArt: CGFloat = 24
 
-    /// Three results for the person's goal, each with its own art; they slide in one after another.
+    /// Three results for the person's goal; they slide in one after another. Every paywall draws their icons one way:
+    /// an SF Symbol in the outcome's colour on a tinted disc (`IconOrb`, the app's feature icon), the same language as
+    /// the plan track's nodes under them, never a photograph beside a glyph tile.
     private func outcomeList(_ outcomes: [PaywallPlan.Outcome]) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             ForEach(Array(outcomes.enumerated()), id: \.element.id) { index, outcome in
                 HStack(spacing: 10) {
-                    outcomeArt(outcome.art)
-                        .frame(width: Self.benefitArt, height: Self.benefitArt)
-                        .accessibilityHidden(true)
+                    IconOrb(symbol: outcome.symbol, tint: outcome.tint, size: Self.benefitArt)
                     // One line in English; longer translations wrap rather than truncate, and at the accessibility
                     // sizes it takes the lines it needs.
                     outcome.text.font(.subheadline.weight(.medium)).foregroundStyle(Palette.ink)
@@ -564,23 +565,6 @@ struct PaywallView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 6)
         .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in outcomesHeight = height }
-    }
-
-    @ViewBuilder private func outcomeArt(_ art: PaywallPlan.Art) -> some View {
-        switch art {
-        case .course(let course):
-            CourseArt(course: course, size: Self.benefitArt)
-        case .glyph(let glyph, let accent):
-            CourseEmblemTile(glyph: glyph, accent: accent, size: Self.benefitArt)
-        case .instrument(let id):
-            if let image = CourseArtwork.instrumentImage(id, catalog: store.catalog) {
-                InstrumentTile(image: image.name, render: image.render, accent: Palette.mint, size: Self.benefitArt)
-            } else {
-                CourseEmblemTile(glyph: .note, accent: Palette.mint, size: Self.benefitArt)
-            }
-        case .symbol(let symbol, let accent):
-            SymbolTile(symbol: symbol, accent: accent, size: Self.benefitArt)
-        }
     }
 
     // MARK: What's in Pro
@@ -989,19 +973,22 @@ struct PaywallView: View {
         let id: String
         let kind: Kind
         let title: Text
-        /// Under the node. Today's is the first lesson, under "Everything unlocked".
+        /// Under the node. Today's is the first lesson (or the tool that opened the paywall), under "Everything unlocked".
         let detail: Text?
         /// What sizes the column: the detail as shown (Today: "Everything unlocked").
         let plain: String
+        /// The node's symbol, for a tool's step; else the kind's.
+        var symbol: String? = nil
     }
 
     /// The plan and the free trial on one track. Today unlocks everything and starts the first lesson; the next
     /// thing the plan brings before the reminder follows (its first song, else a unit it starts, never a repeat of
-    /// today's lesson). Only when the selected plan has a free trial come the reminder (when notifications can
-    /// reach the person) and the first charge, at the product's own trial length and price. Without a trial the
-    /// plan's milestones fill the track; without those there is no track.
+    /// today's lesson). A paywall opened from a tool starts that tool today and takes it further on day 2 ("Drone +
+    /// intonation check": `PaywallPlan.Focus`). Only when the selected plan has a free trial come the reminder (when
+    /// notifications can reach the person) and the first charge, at the product's own trial length and price.
+    /// Without a trial the plan's milestones fill the track; without those there is no track.
     private func trackSteps(_ plan: PaywallPlan) -> [TrackStep] {
-        let today = TrackStep(id: "today", kind: .today, title: Text("Today"), detail: plan.firstLesson.map { Text(verbatim: $0) },
+        let today = TrackStep(id: "today", kind: .today, title: Text("Today"), detail: plan.today.map { Text(verbatim: $0) },
                               plain: String(localized: "Everything unlocked"))
         guard showsTrial, let product = selected else {
             guard !plan.milestones.isEmpty else { return [] }
@@ -1012,7 +999,8 @@ struct PaywallView: View {
         var steps = [today]
         let next = remindersBlocked ? days : reminder
         let ahead = plan.milestones.filter { $0.day > 1 && $0.day < next }
-        if let milestone = ahead.first(where: { $0.kind == .song }) ?? ahead.last { steps.append(milestoneStep(milestone)) }
+        let chosen = ahead.first(where: { $0.kind == .focus }) ?? ahead.first(where: { $0.kind == .song }) ?? ahead.last
+        if let milestone = chosen { steps.append(milestoneStep(milestone)) }
         if !remindersBlocked {
             let remind = String(localized: "We remind you")
             steps.append(TrackStep(id: "reminder", kind: .reminder, title: Text("Day \(reminder)"), detail: Text(verbatim: remind), plain: remind))
@@ -1022,15 +1010,20 @@ struct PaywallView: View {
         return steps
     }
 
-    /// "Day 2 · Play “Greensleeves”" (the song by its name, not its lesson's), or a unit by its name.
+    /// "Day 2 · Play “Greensleeves”" (the song by its name, not its lesson's), a unit by its name, or the tool's next
+    /// step ("Day 2 · Drone + intonation check") on the tool's own symbol.
     private func milestoneStep(_ milestone: PaywallPlan.Milestone) -> TrackStep {
         let day = Text("Day \(milestone.day)")
+        let id = "day\(milestone.day)"
         switch milestone.kind {
         case .song:
             let play = String(localized: "Play “\(milestone.title)”")
-            return TrackStep(id: "day\(milestone.day)", kind: .song, title: day, detail: Text(verbatim: play), plain: play)
+            return TrackStep(id: id, kind: .song, title: day, detail: Text(verbatim: play), plain: play)
         case .unit:
-            return TrackStep(id: "day\(milestone.day)", kind: .milestone, title: day, detail: Text(verbatim: milestone.title), plain: milestone.title)
+            return TrackStep(id: id, kind: .milestone, title: day, detail: Text(verbatim: milestone.title), plain: milestone.title)
+        case .focus:
+            return TrackStep(id: id, kind: .milestone, title: day, detail: Text(verbatim: milestone.title), plain: milestone.title,
+                             symbol: milestone.symbol)
         }
     }
 
@@ -1160,7 +1153,7 @@ struct PaywallView: View {
         VStack(alignment: .leading, spacing: 10) {
             ForEach(steps) { step in
                 HStack(alignment: .top, spacing: 12) {
-                    trackNode(step.kind)
+                    trackNode(step.kind, symbol: step.symbol)
                     VStack(alignment: .leading, spacing: 2) {
                         step.title.font(Typeface.label(12)).foregroundStyle(trackTint(step.kind, title: true))
                         if step.kind == .today { Text("Everything unlocked").font(.caption).foregroundStyle(Palette.ink) }
@@ -1188,7 +1181,7 @@ struct PaywallView: View {
         let last = steps.count - 1
         return TrackColumns(lead: lead, minimums: minimums) {
             ForEach(Array(steps.enumerated()), id: \.element.id) { index, step in
-                trackNode(step.kind)
+                trackNode(step.kind, symbol: step.symbol)
                     .scaleEffect(drawn ? 1 : 0.6)
                     .opacity(drawn ? 1 : 0.3)
                     .animation(reduceMotion ? nil : Motion.pluck.delay(0.25 + Double(index) * 0.22), value: trackDrawn)
@@ -1206,11 +1199,12 @@ struct PaywallView: View {
         }
     }
 
-    private func trackNode(_ kind: TrackStep.Kind) -> some View {
+    /// A step's node: its kind's symbol, or the tool's own on a tool's step ("waveform.path" for the drone).
+    private func trackNode(_ kind: TrackStep.Kind, symbol custom: String? = nil) -> some View {
         let symbol: String
         switch kind {
         case .today: symbol = "lock.open.fill"
-        case .milestone: symbol = "flag.fill"
+        case .milestone: symbol = custom ?? "flag.fill"
         case .song: symbol = "music.note"
         case .reminder: symbol = "bell.fill"
         case .billing: symbol = "creditcard.fill"
@@ -1585,26 +1579,6 @@ private struct PlanFace {
     /// "Save 58%", in Pro gold.
     private func savingChip(_ percent: Int) -> some View {
         Badge(Text(verbatim: String(localized: "Save \(percent)%")), style: .pro)
-    }
-}
-
-/// A symbol on an accent tile, styled like the course emblems, for outcomes that are not a course.
-private struct SymbolTile: View {
-    let symbol: String
-    let accent: Color
-    var size: CGFloat = 26
-
-    var body: some View {
-        let shape = RoundedRectangle(cornerRadius: size * 0.27, style: .continuous)
-        Image(systemName: symbol)
-            .font(.system(size: size * 0.46, weight: .bold))
-            .foregroundStyle(Palette.onAccent.opacity(0.92))
-            .frame(width: size, height: size)
-            .background(shape.fill(LinearGradient(colors: [accent.mix(with: .white, by: 0.2), accent, accent.mix(with: .black, by: 0.2)],
-                                                  startPoint: .topLeading, endPoint: .bottomTrailing)))
-            .overlay(shape.fill(LinearGradient(colors: [.white.opacity(0.24), .white.opacity(0)], startPoint: .top, endPoint: .center)))
-            .overlay(shape.strokeBorder(.white.opacity(0.28), lineWidth: 0.5))
-            .accessibilityHidden(true)
     }
 }
 

@@ -137,7 +137,7 @@ struct LearnView: View {
             header
             // Today's practice set in one line; a tap opens it on the Play hub.
             DailySetCompactCard()
-            courses
+            courses()
             if let course {
                 continueCard(course)
                 // Shows itself only when a weak-spot review is due.
@@ -160,7 +160,7 @@ struct LearnView: View {
                 ScrollViewReader { reader in
                     pathScroll(backed: false, trailing: half) {
                         LazyVStack(alignment: .leading, spacing: 22) {
-                            courses
+                            courses(trailing: half)
                             if let course {
                                 // Shows itself only when a weak-spot review is due.
                                 WeakSpotReviewCard(course: course) { open(course, $0, from: Self.continueSource) }
@@ -294,17 +294,25 @@ struct LearnView: View {
         TabHeader(title: "Learn")
     }
 
-    private var courses: some View {
+    /// The course cards, run past the content's padding to the edge where they pass under it: the screen's on a phone
+    /// and on the iPad's leading side, the path column's on its trailing side (`trailing`, half the column spacing),
+    /// where the column clips them. The edge with more cards past it fades (`edgeFade`), so a card running off it
+    /// dissolves rather than being cut through mid-word ("Violi|n").
+    private func courses(trailing: CGFloat = Metrics.gutter) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .top, spacing: 10) {
                 ForEach(store.curriculum.courses) { item in
                     courseCard(item, selected: item.id == course?.id)
                 }
             }
-            .padding(.horizontal, Metrics.gutter)
+            .padding(.leading, Metrics.gutter).padding(.trailing, trailing)
         }
-        .padding(.horizontal, -Metrics.gutter)
+        .edgeFade(width: Self.courseFade)
+        .padding(.leading, -Metrics.gutter).padding(.trailing, -trailing)
     }
+
+    /// How far the course rail's fade reaches in from an edge: about half a card.
+    private static let courseFade: CGFloat = 72
 
     /// One course in the carousel: its own art in the top corner (the instrument leaning into the card,
     /// or the course emblem), the title and progress beneath. The chosen course glows in its accent.

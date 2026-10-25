@@ -162,8 +162,12 @@ struct AlongStep: View {
             .padding(.horizontal, 12)
             .layoutPriority(1)
             if !lyrics.isEmpty { lyricRow }
+            // Its whole height, always: offered only its 44 pt minimum beside the stage (which takes the rest first),
+            // the row overflowed that frame by half its height each way, and "Next" sat over the stage's bottom edge
+            // (review 14). The stage gives up the room instead.
             upcoming
                 .frame(minHeight: 44)
+                .fixedSize(horizontal: false, vertical: true)
                 .opacity(phase == .done ? 0 : 1)
                 .accessibilityHidden(phase == .done)
             Spacer(minLength: 0)

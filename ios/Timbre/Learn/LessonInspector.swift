@@ -234,11 +234,13 @@ struct LessonInspector<Companion: View>: View {
     private var steps: some View {
         let played = store.learn.isFinished(lesson.id)
         let all = lesson.steps
+        // Rhythm steps are titled as the player will title them (the screen standing in without a microphone).
+        let micOff = LessonMicrophone.unavailable(store.audio)
         return VStack(alignment: .leading, spacing: 14) {
             CardTitle("In this lesson")
             VStack(alignment: .leading, spacing: 0) {
                 ForEach(Array(all.enumerated()), id: \.offset) { index, step in
-                    stepRow(StepSummary(step), played: played, last: index == all.count - 1)
+                    stepRow(StepSummary(step, course: course, micOff: micOff), played: played, last: index == all.count - 1)
                 }
             }
         }
@@ -404,13 +406,15 @@ enum LessonPreview {
     }
 }
 
-/// One step as the inspector lists it: its kind's symbol, what it asks, and the notes, chord or tempo it plays at.
+/// One step as the inspector lists it: its kind's symbol, what it asks, and the notes, chord or tempo it plays at. A
+/// rhythm step's title is the player's own (`RhythmStepTitle`), so the outline and the lesson always agree.
 private struct StepSummary {
     let symbol: String
     let title: Text
     let detail: Text?
 
-    init(_ step: LessonStep) {
+    init(_ step: LessonStep, course: LearnCourse, micOff: Bool) {
+        let rhythmTitle = RhythmStepTitle.of(step, course: course, micOff: micOff).map { Text($0) }
         switch step {
         case let .explain(title, _, _):
             symbol = "text.book.closed"
@@ -438,17 +442,20 @@ private struct StepSummary {
             detail = Text(verbatim: chord.name)
         case let .strum(chord, _, bpm, bars, _):
             symbol = "arrow.up.arrow.down"
-            title = Text("Strum on the arrows")
+            title = rhythmTitle ?? Text("Strum on the arrows")
             let tempo = Text("\(Int(bpm.rounded())) BPM · \(bars) bars")
             detail = chord.map { Text(verbatim: $0.name + " · ") + tempo } ?? tempo
         case let .tapRhythm(_, bpm, bars, _):
-            symbol = "hand.tap"
-            title = Text("Tap on the dots")
+            // Played on the instrument in time (not tapped on the screen): its own symbol, as its own title.
+            symbol = course.fretKind != nil && !micOff ? "metronome" : "hand.tap"
+            title = rhythmTitle ?? Text("Tap on the dots")
             detail = Text("\(Int(bpm.rounded())) BPM · \(bars) bars")
         case let .progression(chords, bars, _, bpm, _):
             symbol = "arrow.triangle.swap"
-            title = Text(verbatim: chords.map(\.name).joined(separator: " → "))
-            detail = Text("\(Int(bpm.rounded())) BPM · \(bars.reduce(0, +)) bars")
+            title = rhythmTitle ?? Text("Strum on the arrows")
+            // The chords in order, then the tempo, as a strum's chord precedes its tempo.
+            let tempo = Text("\(Int(bpm.rounded())) BPM · \(bars.reduce(0, +)) bars")
+            detail = Text(verbatim: chords.map(\.name).joined(separator: " → ") + " · ") + tempo
         }
     }
 

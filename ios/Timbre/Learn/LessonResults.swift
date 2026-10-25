@@ -53,7 +53,10 @@ struct LessonResults: View {
     @State private var coachDecided = false
     /// It slides in once the stars have landed.
     @State private var coachShown = false
+    /// The content runs on below the scroll view's foot: the fade over it shows.
+    @State private var moreBelow = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.requestReview) private var requestReview
 
     /// "Flawless" only for a clean run (98 % or better); three stars read "Great work", two "Nice work". The stars
@@ -75,13 +78,14 @@ struct LessonResults: View {
         // The content scrolls inside its own frame: nothing slides under the buttons.
         VStack(spacing: 0) {
             ScrollView { content }.scrollBounceBehavior(.basedOnSize).scrollIndicators(.hidden)
-                // Content that continues below the fold fades out instead of being cut at the buttons.
-                .mask {
-                    VStack(spacing: 0) {
-                        Color.black
-                        LinearGradient(colors: [.black, .clear], startPoint: .top, endPoint: .bottom).frame(height: 28)
-                    }
+                // Content that continues below the fold fades out instead of being cut at the buttons. Only then: a
+                // screen that ends above them keeps its last row whole, not dimmed for nothing (review 14, bug 2).
+                .onScrollGeometryChange(for: Bool.self) { geometry in
+                    geometry.contentSize.height - Self.contentFoot - geometry.visibleRect.maxY > 1
+                } action: { _, more in
+                    moreBelow = more
                 }
+                .mask { foldFade }
             buttons
         }
         .coordinateSpace(resultsSpace)
@@ -97,10 +101,24 @@ struct LessonResults: View {
         }
     }
 
-    /// Stars, headline, the reminder row (until asked once), the tiles, "New best" and Share, the level bar, rewards,
-    /// then the milestone's card: on a phone everything down to the level bar fits above the pinned buttons.
+    /// The fade over the bottom of the scroll view, while there is more below.
+    private var foldFade: some View {
+        VStack(spacing: 0) {
+            Color.black
+            LinearGradient(colors: [.black, moreBelow ? .clear : .black], startPoint: .top, endPoint: .bottom).frame(height: 28)
+        }
+        .animation(Motion.fade, value: moreBelow)
+    }
+
+    /// The space under the content, inside the scroll view (not counted as "more below").
+    private static let contentFoot: CGFloat = 16
+
+    /// Stars, headline, the reminder row (until asked once, one line), the tiles, the coach, "New best" beside Share,
+    /// the level bar, rewards two to a row, then the milestone's card. On a 6.1-inch phone everything down to the level
+    /// bar, and a row of rewards, fits above the pinned buttons (Done beside Next lesson) with the reminder row showing,
+    /// so the fade never sits on them.
     private var content: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             HStack(alignment: .bottom, spacing: 14) {
                 ForEach(0..<3, id: \.self) { i in star(i) }
             }
@@ -144,7 +162,7 @@ struct LessonResults: View {
             if let reward, badgesShown > 0 { earned(reward) }
             if shareShown && hasShareCards { shareCards.transition(.move(edge: .bottom).combined(with: .opacity)) }
         }
-        .padding(.top, 8).padding(.bottom, 16)
+        .padding(.top, 8).padding(.bottom, Self.contentFoot)
     }
 
     /// Room for the whole burst: its ring reaches about 165 pt from the centre and its sparks less, so nothing is
@@ -162,22 +180,42 @@ struct LessonResults: View {
         }
     }
 
-    /// StepButton carries its own 12 pt below; Done (the secondary button) sits right under it.
+    /// Done beside Next lesson, as a step's bar sets its actions (the primary trailing), so the results keep the room
+    /// a second full-width button took; stacked, Next lesson first, where the two labels don't fit side by side (long
+    /// languages, the largest text sizes). "Practice weak spots" sits over them when there is something to review.
     private var buttons: some View {
-        VStack(spacing: 0) {
-            if let next, store.canPlay(next) {
-                StepButton(title: "Next lesson", accent: accent) { onNext(next) }
-                    .accessibilityIdentifier("lesson.next")
-            }
+        VStack(spacing: 8) {
             if !LearnProgress.isReview(lesson.id) && !coachOffersDrill {
-                PracticeWeakSpotsButton(course: course) { onNext($0) }.padding(.bottom, 8)
+                PracticeWeakSpotsButton(course: course) { onNext($0) }
             }
-            Button { onContinue() } label: { Text("Done") }
-                .buttonStyle(SecondaryButtonStyle())
-                .accessibilityIdentifier("lesson.done")
-                .padding(.horizontal, Metrics.gutter)
+            if let next, store.canPlay(next) {
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 10) {
+                        doneButton.fixedSize(horizontal: true, vertical: false)
+                        nextButton(next)
+                    }
+                    VStack(spacing: 10) {
+                        nextButton(next)
+                        doneButton
+                    }
+                }
+            } else {
+                doneButton
+            }
         }
+        .padding(.horizontal, Metrics.gutter)
         .padding(.top, 8).padding(.bottom, 8)
+    }
+
+    private func nextButton(_ next: Lesson) -> some View {
+        StepButton(title: "Next lesson", accent: accent, inset: false) { onNext(next) }
+            .accessibilityIdentifier("lesson.next")
+    }
+
+    private var doneButton: some View {
+        Button { onContinue() } label: { Text("Done") }
+            .buttonStyle(SecondaryButtonStyle())
+            .accessibilityIdentifier("lesson.done")
     }
 
     /// Level N and a bar that fills with this lesson's XP; on a level-up it fills, bursts and rolls over.
@@ -207,40 +245,62 @@ struct LessonResults: View {
         .accessibilityLabel(Text("Level \(level.number)"))
     }
 
-    /// Badges and quests this lesson completed, popping in one by one.
+    /// One thing the lesson earned: a badge, a quest, Today's set.
+    private struct Earned: Identifiable {
+        let id: String
+        let symbol: String
+        let title: Text
+        let detail: Text
+        let gold: Bool
+    }
+
+    /// Everything the lesson earned, in the order it pops in: badges, quests, then Today's set (its bonus lands here
+    /// too: the toast would be hidden behind this screen).
+    private func earnedItems(_ reward: ProgressUpdate) -> [Earned] {
+        var items: [Earned] = []
+        for badge in reward.achievementsEarned {
+            items.append(Earned(id: "badge." + badge.id, symbol: badge.symbol, title: Text(LocalizedStringKey(badge.title)),
+                                detail: Text("Achievement unlocked"), gold: true))
+        }
+        for quest in reward.questsCompleted {
+            items.append(Earned(id: "quest." + quest.id, symbol: "checkmark", title: Text(quest.title),
+                                detail: Text("Quest complete · +\(quest.xp) XP"), gold: false))
+        }
+        if reward.dailySetCompleted {
+            items.append(Earned(id: "daily", symbol: "sun.max.fill", title: Text("Today complete"),
+                                detail: Text("+\(XPReward.dailySet) XP"), gold: true))
+        }
+        return items
+    }
+
+    /// Badges and quests this lesson completed, popping in one by one: two to a row when there are several (one at
+    /// the accessibility sizes), so the usual one or two take a single row under the level bar.
     private func earned(_ reward: ProgressUpdate) -> some View {
-        VStack(spacing: 8) {
-            ForEach(Array(reward.achievementsEarned.enumerated()), id: \.element.id) { index, badge in
-                if index < badgesShown {
-                    rewardRow(symbol: badge.symbol, title: Text(LocalizedStringKey(badge.title)), detail: Text("Achievement unlocked"), gold: true)
-                }
-            }
-            ForEach(Array(reward.questsCompleted.enumerated()), id: \.element.id) { index, quest in
-                if reward.achievementsEarned.count + index < badgesShown {
-                    rewardRow(symbol: "checkmark", title: Text(quest.title), detail: Text("Quest complete · +\(quest.xp) XP"), gold: false)
-                }
-            }
-            // This lesson finished Today's set: its bonus lands here too (the toast would be hidden behind this screen).
-            if reward.dailySetCompleted && reward.achievementsEarned.count + reward.questsCompleted.count < badgesShown {
-                rewardRow(symbol: "sun.max.fill", title: Text("Today complete"), detail: Text("+\(XPReward.dailySet) XP"), gold: true)
-            }
+        let all = earnedItems(reward)
+        let columns = all.count > 1 && !typeSize.isAccessibilitySize ? 2 : 1
+        let grid = Array(repeating: GridItem(.flexible(), spacing: 8, alignment: .top), count: columns)
+        return LazyVGrid(columns: grid, spacing: 8) {
+            ForEach(Array(all.prefix(badgesShown))) { item in rewardRow(item) }
         }
         .padding(.horizontal, Metrics.gutter)
     }
 
-    private func rewardRow(symbol: String, title: Text, detail: Text, gold: Bool) -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: symbol).font(.system(size: 16, weight: .bold)).foregroundStyle(gold ? Palette.onGold : Palette.onAccent)
-                .frame(width: 36, height: 36)
-                .background(Circle().fill(gold ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.mint)))
-                .shadow(color: (gold ? Palette.starGold : Palette.mint).opacity(0.5), radius: 10)
+    private func rewardRow(_ item: Earned) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: item.symbol).font(.system(size: 14, weight: .bold)).foregroundStyle(item.gold ? Palette.onGold : Palette.onAccent)
+                .frame(width: 32, height: 32)
+                .background(Circle().fill(item.gold ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.mint)))
+                .shadow(color: (item.gold ? Palette.starGold : Palette.mint).opacity(0.5), radius: 8)
             VStack(alignment: .leading, spacing: 1) {
-                title.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
-                detail.font(.caption).foregroundStyle(Palette.inkSoft)
+                item.title.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                    .lineLimit(2).minimumScaleFactor(0.85)
+                item.detail.font(.caption).foregroundStyle(Palette.inkSoft)
+                    .lineLimit(2).minimumScaleFactor(0.85)
             }
             Spacer(minLength: 0)
         }
-        .padding(10)
+        .padding(8)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.stageRaised))
         .transition(.adaptive(.scale(scale: 0.6).combined(with: .opacity), reduceMotion: reduceMotion))
         .accessibilityElement(children: .combine)
@@ -309,17 +369,29 @@ struct LessonResults: View {
     /// Only the milestone's card waits below; the result's poster is the Share pill up top.
     private var hasShareCards: Bool { milestone != nil }
 
-    /// "New best" with Share right under it, in the first frame: the poster renders as the screen opens, so the
-    /// pill is live before the stars have finished landing. A song taken at its own tempo has "Challenge a friend"
-    /// beside Share.
+    /// "New best" with Share beside it (under it where the two don't fit side by side), in the first frame: the poster
+    /// renders as the screen opens, so the pill is live before the stars have finished landing. A song taken at its own
+    /// tempo has "Challenge a friend" beside Share.
     private var bestAndShare: some View {
-        VStack(spacing: 10) {
-            if newBest {
-                Label("New best on this lesson", systemImage: "arrow.up.circle.fill").font(.subheadline.weight(.semibold)).foregroundStyle(accent)
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 14) {
+                bestLabel
+                if sharesResult { shareRow }
             }
-            if sharesResult { shareRow }
+            VStack(spacing: 10) {
+                bestLabel
+                if sharesResult { shareRow }
+            }
         }
+        .padding(.horizontal, Metrics.gutter)
         .opacity(appeared ? 1 : 0)
+    }
+
+    @ViewBuilder private var bestLabel: some View {
+        if newBest {
+            Label("New best on this lesson", systemImage: "arrow.up.circle.fill").font(.subheadline.weight(.semibold)).foregroundStyle(accent)
+                .multilineTextAlignment(.center)
+        }
     }
 
     /// Share, and "Challenge a friend" beside it (under it where the two don't fit side by side).
@@ -391,8 +463,9 @@ struct LessonResults: View {
     // MARK: Reminder
 
     /// Until the reminder has been offered once: one row, above the tiles and clear of the pinned buttons, with
-    /// the time inline ("Remind me · 7 PM", the plan's time). Where the words don't fit beside the pill (long
-    /// languages, large type) the pill moves under them. On, it stays as a confirmation; × asks no more.
+    /// the time inline ("Remind me · 7 PM", the plan's time). One line wherever it fits: on a narrower phone the bell
+    /// gives way first; only where the words still don't fit beside the pill (long languages, large type) does the
+    /// pill move under them. On, it stays as a confirmation; × asks no more.
     private var reminderRow: some View {
         ViewThatFits(in: .horizontal) {
             HStack(spacing: 8) {
@@ -402,7 +475,14 @@ struct LessonResults: View {
                 reminderPill
                 reminderClose
             }
-            VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                reminderTitle.lineLimit(1)
+                Spacer(minLength: 4)
+                reminderPill
+                reminderClose
+            }
+            .padding(.leading, 4)
+            VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 8) {
                     reminderIcon
                     reminderTitle.fixedSize(horizontal: false, vertical: true)

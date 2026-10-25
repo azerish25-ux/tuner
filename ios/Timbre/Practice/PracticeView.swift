@@ -73,7 +73,7 @@ struct PracticeView: View {
         TabHeader(title: "Play", showsToday: false)
     }
 
-    private var sideQuests: [Quest] { DailySet.sideQuests(store.quests, beside: store.dailySet) }
+    private var sideQuests: [Quest] { GameChallenge.listed(DailySet.sideQuests(store.quests, beside: store.dailySet)) }
 
     private var compactHub: some View {
         VStack(alignment: .leading, spacing: 22) {
@@ -87,25 +87,28 @@ struct PracticeView: View {
         }
     }
 
-    /// iPad: a dashboard. Landscape (three columns): Today, your level and the day's quests share the top row at one
-    /// height; under them the ear games stand as tall tiles side by side, the tools beside them as a grid of the same
-    /// height. Portrait (two columns): Today beside the level, the quests two by two, the games side by side, then the
-    /// tools as a grid of large tiles. The games' previews grow with the window's height (`gameStage`), so the hub
-    /// reaches the fold instead of stopping halfway down it.
+    /// iPad: a dashboard. Landscape (three columns): Today, your level (with your week along its foot) and the day's
+    /// quests share the top row at one height, the badge closest to its goal filling the quests' column when one quest
+    /// or none is left; under them the ear games stand as tall tiles side by side, the tools beside them as a grid of
+    /// the same height. Portrait (two columns): Today beside the level, the quests two by two (the next badge beside a
+    /// last one alone), the games side by side, then the tools as a grid of large tiles. The games' previews grow with
+    /// the window's height (`gameStage`), so the hub reaches the fold instead of stopping halfway down it.
     private func wideHub(_ columns: CardColumns, height: CGFloat) -> some View {
         let three = columns.count >= 3
         let quests = sideQuests
+        let badge = nextBadge
         let stage = gameStage(three: three, quests: quests.count, height: height)
         return VStack(alignment: .leading, spacing: 26) {
             header
             if three {
+                let side = !quests.isEmpty || badge != nil
                 HStack(alignment: .top, spacing: CardColumns.spacing) {
                     DailySetCard { open($0) }
                         .frame(width: columns.unit)
                     levelTile
-                        .frame(width: quests.isEmpty ? columns.span(2) : columns.unit)
-                    if !quests.isEmpty {
-                        questSection(quests)
+                        .frame(width: side ? columns.unit : columns.span(2))
+                    if side {
+                        sideColumn(quests, badge: badge)
                             .frame(width: columns.unit)
                             .frame(maxHeight: .infinity, alignment: .top)
                     }
@@ -125,7 +128,7 @@ struct PracticeView: View {
                         .frame(width: columns.unit)
                 }
                 .fixedSize(horizontal: false, vertical: true)
-                if !quests.isEmpty { questGrid(quests) }
+                if !quests.isEmpty { questGrid(quests, badge: badge) }
                 gamesRow(width: columns.span(2), stage: stage)
                 toolsPanel(columns: 3, tileHeight: 116, sideBySide: true)
             }
@@ -141,41 +144,208 @@ struct PracticeView: View {
         return min(300, max(180, height - rest))
     }
 
-    /// iPad: the level as a tile as tall as Today beside it: the ring large, the level's name, how far to the next
-    /// one, and the bar along its foot.
+    /// iPad: the level as a tile as tall as Today beside it: the ring large, the level's name, how far to the next one
+    /// over its bar, and your week along its foot (`weekStrip`), so the tile is full rather than half empty.
     private var levelTile: some View {
         let xp = store.progress.xp
         let level = store.level
         let next = Progression.level(for: level.next)
-        return VStack(alignment: .leading, spacing: 12) {
+        return VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .center, spacing: 16) {
-                LevelRing(size: 92)
+                LevelRing(size: 84)
                 VStack(alignment: .leading, spacing: 6) {
                     Text(LocalizedStringKey(level.name)).font(Typeface.display(22)).foregroundStyle(Palette.ink)
                         .lineLimit(2).minimumScaleFactor(0.8)
                     Text("\(xp - level.floor) / \(level.next - level.floor) XP · next: \(Text(LocalizedStringKey(next.name)))")
                         .font(.subheadline).foregroundStyle(Palette.inkSoft)
                         .fixedSize(horizontal: false, vertical: true)
+                    ProgressLine(value: level.progress(xp), height: 6)
+                        .padding(.top, 4)
                 }
             }
             Spacer(minLength: 0)
-            ProgressLine(value: level.progress(xp), height: 8)
+            weekStrip
         }
         .frame(maxHeight: .infinity, alignment: .topLeading)
         .stillCard(tint: Palette.mint)
         .accessibilityElement(children: .combine)
     }
 
-    /// iPad, two columns: the day's quests two by two (a last one alone takes the width).
-    private func questGrid(_ quests: [Quest]) -> some View {
+    /// The level tile's foot: the last seven days as Progress's "Your week" draws them (a bar a day, today marked)
+    /// beside the minutes they add up to.
+    private var weekStrip: some View {
+        let recap = WeekRecap(records: store.records, streak: store.streak)
+        return HStack(alignment: .bottom, spacing: 16) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Your week").font(.caption).foregroundStyle(Palette.inkSoft)
+                Text(Duration.seconds(max(0, recap.minutes) * 60), format: .units(allowed: [.minutes], width: .abbreviated))
+                    .font(Typeface.number(17)).foregroundStyle(Palette.ink)
+                    .lineLimit(1).minimumScaleFactor(0.8)
+            }
+            .padding(.bottom, 9)
+            Spacer(minLength: 8)
+            WeekBars(days: recap.days, height: 22, barWidth: 10, labelSize: 11)
+                .frame(maxWidth: 210)
+                .accessibilityHidden(true)
+        }
+    }
+
+    /// iPad, two columns: the day's quests two by two; a last one alone shares its row with the next badge (or takes
+    /// the width when every badge is earned).
+    private func questGrid(_ quests: [Quest], badge: NextBadge?) -> some View {
         let pairs = stride(from: 0, to: quests.count, by: 2).map { Array(quests[$0..<min($0 + 2, quests.count)]) }
+        let beside = quests.count % 2 == 1 ? badge : nil
         return VStack(alignment: .leading, spacing: 10) {
             questHeader
             ForEach(pairs.indices, id: \.self) { index in
                 HStack(alignment: .top, spacing: CardColumns.spacing) {
                     ForEach(pairs[index]) { quest in questButton(quest) }
+                    if index == pairs.count - 1, let beside { nextBadgeRow(beside) }
+                }
+                .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    /// iPad landscape, the top row's third column: the quests Today and the game cards don't already show and, when
+    /// one or none is left, the badge closest to its goal under them, filling the column to Today's height.
+    @ViewBuilder private func sideColumn(_ quests: [Quest], badge: NextBadge?) -> some View {
+        if quests.isEmpty, let badge {
+            nextBadgeCard(badge)
+        } else {
+            VStack(alignment: .leading, spacing: 10) {
+                questHeader
+                ForEach(quests) { quest in questButton(quest) }
+                if quests.count == 1, let badge {
+                    nextBadgeRow(badge)
+                        .frame(maxHeight: .infinity)
                 }
             }
+        }
+    }
+
+    // MARK: Next badge (iPad)
+
+    /// The badge closest to its goal among those not earned yet (Progress's badge grid opens on the same ones).
+    private struct NextBadge {
+        let achievement: Achievement
+        let value: Int
+        /// Asset name of the instrument cut-out a course badge wears.
+        let image: String?
+        var shown: Int { min(max(0, value), achievement.goal) }
+        var fraction: Double { Double(shown) / Double(max(1, achievement.goal)) }
+    }
+
+    /// Nil once every badge is earned. Ties go to the badge listed first, as on Progress.
+    private var nextBadge: NextBadge? {
+        let state = store.progress
+        let earned = Set(state.achievements)
+        let streakBest = store.streak.best
+        let custom = store.settings.customTunings?.count ?? 0
+        let metrics = store.badgeMetrics
+        var best: (achievement: Achievement, value: Int, fraction: Double)?
+        for achievement in Achievements.all where !earned.contains(achievement.id) {
+            let value = achievement.value(state, streakBest: streakBest, customTunings: custom, metrics: metrics)
+            let fraction = min(1, Double(max(0, value)) / Double(max(1, achievement.goal)))
+            if let current = best, current.fraction >= fraction { continue }
+            best = (achievement, value, fraction)
+        }
+        guard let best else { return nil }
+        return NextBadge(achievement: best.achievement, value: best.value, image: badgeImage(best.achievement))
+    }
+
+    /// Instrument artwork for a course badge (the course's instrument cut-out), nil for the others.
+    private func badgeImage(_ achievement: Achievement) -> String? {
+        guard let courseId = Achievements.courseId(of: achievement),
+              let instrument = store.curriculum.course(id: courseId)?.instrument else { return nil }
+        return store.catalog.photo(instrumentId: instrument)?.asset
+    }
+
+    /// The next badge as a card of its own (landscape, the quests' column with none left): the medal with its arc,
+    /// its name and what it asks, the count, and the bar along the foot. A tap opens Progress, where the badges live.
+    private func nextBadgeCard(_ badge: NextBadge) -> some View {
+        let achievement = badge.achievement
+        let tint = achievement.category.tint
+        return Button(action: openBadges) {
+            VStack(alignment: .leading, spacing: 14) {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    CardTitle("Next badge")
+                    Spacer(minLength: 8)
+                    Text.fraction(badge.shown, achievement.goal).font(Typeface.number(13)).foregroundStyle(tint)
+                }
+                HStack(alignment: .center, spacing: 16) {
+                    AchievementMedal(achievement: achievement, earned: false, size: 72, progress: badge.fraction, image: badge.image)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(LocalizedStringKey(achievement.title)).font(Typeface.display(18)).foregroundStyle(Palette.ink)
+                            .lineLimit(2).minimumScaleFactor(0.85)
+                        Text(LocalizedStringKey(achievement.detail)).font(.subheadline).foregroundStyle(Palette.inkSoft)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                Spacer(minLength: 0)
+                ProgressLine(value: badge.fraction, color: tint, height: 6)
+            }
+            .frame(maxHeight: .infinity, alignment: .topLeading)
+            .stillCard(tint: tint)
+        }
+        .buttonStyle(PressScaleStyle())
+        .modifier(NextBadgeAccessibility(badge: badge))
+    }
+
+    /// The next badge as a row in a quest's shape (beside or under a quest): the medal, its name over the bar and the
+    /// count, and "Next badge" where a quest has its XP.
+    private func nextBadgeRow(_ badge: NextBadge) -> some View {
+        let achievement = badge.achievement
+        let tint = achievement.category.tint
+        let tile = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
+        return Button(action: openBadges) {
+            HStack(spacing: 12) {
+                AchievementMedal(achievement: achievement, earned: false, size: 40, progress: badge.fraction, image: badge.image)
+                VStack(alignment: .leading, spacing: 7) {
+                    Text(LocalizedStringKey(achievement.title)).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                    HStack(spacing: 10) {
+                        ProgressLine(value: badge.fraction, color: tint, height: 5)
+                        Text.fraction(badge.shown, achievement.goal).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                            .fixedSize()
+                    }
+                }
+                Text("Next badge").font(Typeface.label(12)).foregroundStyle(achievement.tier.ink)
+                    .lineLimit(1)
+                    .padding(.horizontal, 9).padding(.vertical, 5)
+                    .background(Capsule().fill(achievement.tier.ink.opacity(0.12)))
+                    .overlay(Capsule().strokeBorder(achievement.tier.ink.opacity(0.3), lineWidth: 1))
+                    .fixedSize()
+            }
+            .padding(.horizontal, 14).padding(.vertical, 12)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .background(tile.fill(Palette.stageRaised))
+            .overlay(tile.strokeBorder(Palette.hairline, lineWidth: 1))
+            .contentShape(tile)
+        }
+        .buttonStyle(PressScaleStyle())
+        .modifier(NextBadgeAccessibility(badge: badge))
+    }
+
+    /// The badges live on Progress.
+    private func openBadges() {
+        Haptics.shared.selection()
+        store.selectedTab = .journey
+    }
+
+    /// The next badge read as one element: "Next badge, Golden ear", then what it asks and the count.
+    private struct NextBadgeAccessibility: ViewModifier {
+        let badge: NextBadge
+
+        func body(content: Content) -> some View {
+            let achievement = badge.achievement
+            return content
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text("Next badge") + Text(verbatim: ", ") + Text(LocalizedStringKey(achievement.title)))
+                .accessibilityValue(Text(LocalizedStringKey(achievement.detail)) + Text(verbatim: ", ")
+                                    + Text("\(badge.shown) of \(achievement.goal)"))
+                .accessibilityAddTraits(.isButton)
+                .accessibilityIdentifier("practice.nextBadge")
         }
     }
 

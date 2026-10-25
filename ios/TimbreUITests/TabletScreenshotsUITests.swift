@@ -43,16 +43,20 @@ final class TabletScreenshotsUITests: XCTestCase {
         settle(1.5)
         tunerFrame("ipad-landscape-tune")
 
-        // App Store frame (iPad #2): the instrument browser, a full page of its own on iPad (Instruments/InstrumentsView.swift),
-        // never a sheet with the tuner's controls showing around it. Kept only once the tuner has left the screen.
+        // App Store frame (iPad #2, "Guitar to violin, oud to erhu"): the instrument browser, a full page of its own on
+        // iPad (Instruments/InstrumentsView.swift), never a sheet with the tuner's controls showing around it, scrolled
+        // to the bowed strings and the Folk & world strings so the frame shows what its caption promises, ending on a
+        // whole row. Kept only once the tuner has left the screen and sitar, oud and erhu are whole on it.
         element("tune.instrument").tap()
         XCTAssertTrue(element("instruments.search").waitForExistence(timeout: 10))
         settle(0.6)  // the page's presentation; `stillScreenshot` waits out the rails' first reveal
+        let folk = scrollToFolkShelf()
         let browser = stillScreenshot(timeout: 3)
         // A full-screen cover keeps the tuner in the accessibility tree under it; covered, it can't be hit.
         let tuner = element("tune.stage")
         let alone = !tuner.exists || !tuner.isHittable
-        storeFrame("ipad-landscape-instruments", picture: browser, ok: alone, "the tuner is still on screen around the browser")
+        storeFrame("ipad-landscape-instruments", picture: browser, ok: alone && folk,
+                   alone ? "sitar, oud and erhu aren't whole on screen" : "the tuner is still on screen around the browser")
         closePicker()
 
         tab("Play", until: "practice.sniper")
@@ -140,6 +144,65 @@ final class TabletScreenshotsUITests: XCTestCase {
         }
         XCTAssertTrue(target.exists, "\(name) never showed \(id)")
         settle(0.6)
+    }
+
+    /// The cards the iPad #2 frame ends on, in the Folk & world strings shelf (InstrumentsView.swift keeps photos.json's
+    /// order there, eight cards to a row in landscape, so the three share its second row).
+    private static let folkCards = ["30_folk_world_strings_sitar", "33_folk_world_strings_oud_arabic", "37_folk_world_strings_erhu"]
+
+    /// Scrolls the instrument browser down to the Folk & world strings and stops with the row holding sitar, oud and
+    /// erhu as the last whole row, its foot `folkRowFoot` above the screen's bottom edge: just above the page's bottom
+    /// fade, with the bowed strings' row above the shelf and their heading gone under the navigation bar. The next row
+    /// only shows dimming into the fade, so the frame never ends on a row of names cut at the edge. Each drag holds
+    /// still before it lifts, so the page stops where the finger does (no momentum to wait out or overshoot).
+    /// True when all three cards are whole on screen.
+    private func scrollToFolkShelf() -> Bool {
+        let cards = Self.folkCards.map { element("instrument." + $0) }
+        let screen = app.frame
+        // The grid is lazy: down about half a page at a time until the shelf's cards are laid out.
+        for _ in 0..<12 where !cards.allSatisfy({ $0.exists }) {
+            drag(by: screen.height * 0.55)
+        }
+        // Then the foot of the lowest of them to the line. A drag under the scroll view's slop (about 10 pt) never
+        // starts a scroll, so stop once within that.
+        let line = screen.maxY - Self.folkRowFoot
+        for _ in 0..<5 {
+            guard let bottom = cards.compactMap({ liveFrame($0)?.maxY }).max() else { break }
+            let offset = bottom - line
+            if abs(offset) < 12 { break }
+            drag(by: offset)
+        }
+        let top = screen.minY + 96  // under the navigation bar and the page's top shade
+        let foot = screen.maxY - 64  // above the bottom fade's darkest stretch
+        return cards.allSatisfy { card in
+            guard let box = liveFrame(card) else { return false }
+            return box.minY >= top && box.maxY <= foot
+        }
+    }
+
+    /// From the screen's bottom edge to the foot of the frame's last whole row: the page's 64 pt bottom fade starts
+    /// about 84 pt up (it runs on over the home indicator's 20 pt), and the 880 pt from the bowed strings' heading to
+    /// the foot of the folk shelf's second row is a little more than fits under the navigation bar, so the heading goes
+    /// under the bar (rather than half under it) and the bowed row leads the frame.
+    private static let folkRowFoot: CGFloat = 100
+
+    /// An element's frame from one snapshot; nil when it isn't there.
+    private func liveFrame(_ target: XCUIElement) -> CGRect? {
+        guard let box = (try? target.snapshot())?.frame, !box.isEmpty else { return nil }
+        return box
+    }
+
+    /// Scrolls the page `distance` points further down it (negative: back up) with one drag through the middle of the
+    /// screen that holds still before lifting, so the page stops where the finger does.
+    private func drag(by distance: CGFloat) {
+        let screen = app.frame
+        let travel = min(abs(distance), screen.height * 0.6)
+        let lower = screen.height / 2 + travel / 2
+        let upper = screen.height / 2 - travel / 2
+        let origin = app.coordinate(withNormalizedOffset: .zero)
+        let start = origin.withOffset(CGVector(dx: screen.width / 2, dy: distance > 0 ? lower : upper))
+        let end = origin.withOffset(CGVector(dx: screen.width / 2, dy: distance > 0 ? upper : lower))
+        start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .default, thenHoldForDuration: 0.3)
     }
 
     /// Closes the picker (a full page on iPad) with Done and waits for it to go; a swipe is the fallback.

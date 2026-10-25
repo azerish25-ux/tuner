@@ -10,12 +10,69 @@ import TimbreCore
 /// pattern's direction and rhythm. It plays in place of the picture, on the same clock as "Hear it", and the picture
 /// (the chart, or the player's view: `ChordPicture`) is one tap away. Instruments without a model (ukulele, banjo), Reduce
 /// Motion, Low Power Mode and a hot device keep the picture alone.
+///
+/// It is the lesson's teacher: the first time a chord or a strum pattern appears in a course (`firstTime`, remembered
+/// in the settings by `ShowMeKey`), its demonstration plays by itself on the model once the card has settled, never
+/// while a step is listening; after that it is one tap away. A line under the button says what to watch
+/// (`ShowMeCaption`), read from the shape or the pattern.
 @MainActor
 enum ShowMe {
     /// Seconds from the model appearing to the first fingertip landing: the camera's glide in.
     static let lead = 0.85
     /// Seconds between fingertips in a chord's demonstration (as on the lesson's explanation).
     static let landingStep = 0.45
+    /// Seconds from a step appearing to its first-time demonstration starting: the card has settled.
+    static let settle = 0.7
+    /// Seconds a first-time demonstration waits for the model before the step carries on with its picture (and,
+    /// on a playing step, opens the microphone).
+    static let patience = 5.0
+
+    /// Whether demonstration `key` plays by itself as its card settles: the first time it appears in `course`. The
+    /// App Store chord scene keeps its chord step as it is captured (frame #3: the chart with every string lit).
+    static func firstTime(_ key: String, course: LearnCourse, settings: UserSettings) -> Bool {
+        #if DEBUG
+        if DemoScene.current == .lessonChord { return false }
+        // UI tests and the App Preview walk lessons on a timed demo pitch: only the show-me scene plays by itself.
+        if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" && DemoScene.current != .showMe { return false }
+        #endif
+        return !settings.hasShownDemo(key, in: course.id)
+    }
+
+    // MARK: What to watch
+
+    /// The line under "Show me" for a chord, read from its shape: a finger laid flat first, the fingers landing in
+    /// order, one finger, or open strings ringing.
+    static func caption(for chord: ChordSpec) -> Text {
+        let shape = ShowMeShape(chord: chord)
+        if shape.presses.contains(where: { $0.first != $0.last }) {
+            return shape.presses.count > 1 ? Text("Watch one finger lie flat, then the rest land")
+                                           : Text("Watch one finger lie flat across the strings")
+        }
+        switch shape.landingCount {
+        case 0: return Text("Watch every string ring")
+        case 1: return Text("Watch the finger land, then let it ring")
+        default: return Text("Watch the fingers land in order")
+        }
+    }
+
+    /// The line under "Show me" for a strum, read from its pattern: strokes on the beat go down, between the beats up
+    /// (as the beat row draws them).
+    static func caption(pattern: [Double], beatsPerBar: Int) -> Text {
+        let hits = Set(pattern.filter { $0.isFinite && $0 >= 0 && $0 < 1_000 })
+        let downs = hits.filter { $0.truncatingRemainder(dividingBy: 1) == 0 }.map { Int($0) + 1 }.sorted()
+        let ups = hits.count - downs.count
+        if ups > 0 {
+            return downs.isEmpty ? Text("Watch the pick: up between the beats")
+                                 : Text("Watch the pick: down on the beat, up in between")
+        }
+        if downs.count == 1 { return Text("Watch the pick: one strum, then let it ring") }
+        if downs.isEmpty || Set(downs) == Set(1...max(1, beatsPerBar)) { return Text("Watch the pick: down on every beat") }
+        let beats = ListFormatter.localizedString(byJoining: downs.map(String.init))
+        return Text("Watch the pick: down on beats \(beats)")
+    }
+
+    /// The line under "Show me" for notes on the neck.
+    static var notesCaption: Text { Text("Watch each note land as it sounds") }
 
     /// Whether the 3D stage may run now.
     static func allowed(reduceMotion: Bool) -> Bool {
@@ -120,6 +177,10 @@ struct ShowMeStage: View {
         .accessibilityLabel(label)
         .accessibilityValue(Text(value))
         .accessibilityIdentifier("lesson.showme.stage")
+        #if DEBUG
+        // UI tests only: the model's state and the demonstration's clock (Root/DemoScenes.swift).
+        .overlay { ShowMeProbe(ready: ready, shot: shot, landStart: landStart, landingStep: landingStep, ringing: ringing.count) }
+        #endif
     }
 
     private var scene: some View {
@@ -301,39 +362,131 @@ struct ShowMeRhythm: View {
 
 // MARK: - Controls
 
-/// "Show me": plays the picture's demonstration on the instrument in 3D, in place (again, once it shows). A spinner
-/// stands in for its glyph while the model loads.
+/// "Show me", the lesson's teacher: plays the picture's demonstration on the instrument in 3D, in place (again, once it
+/// shows). It is the step's hero control, not a setting: a lit disc carries the 3D glyph (a spinner while the model
+/// loads, play once the model is on the card) on a glowing capsule a full touch target tall, and until the learner
+/// has watched (`invite`) the disc sends out a ring a few times as the card settles (not under Reduce Motion).
 struct ShowMeButton: View {
     var accent: Color = Palette.mint
     var loading = false
+    /// The model is on the card: the button plays the demonstration again.
+    var showing = false
+    /// Calls for a tap: a ring leaves the disc three times, a beat apart.
+    var invite = false
     let action: () -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var ping = 0
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 7) {
-                ZStack {
-                    if loading {
-                        ProgressView().controlSize(.small).tint(accent)
-                    } else {
-                        Image(systemName: "rotate.3d").font(.system(size: 14, weight: .semibold))
-                    }
-                }
-                .frame(width: 18, height: 18)
-                Text("Show me").font(Typeface.label(14)).lineLimit(1)
+            HStack(spacing: 10) {
+                disc
+                Text("Show me").font(Typeface.label(16)).foregroundStyle(Palette.ink).lineLimit(1)
             }
-            .foregroundStyle(accent)
-            .padding(.horizontal, 14)
-            .frame(minHeight: 36)
-            .background(Capsule().fill(accent.opacity(0.12)))
-            .overlay(Capsule().strokeBorder(accent.opacity(0.45), lineWidth: 1))
+            .padding(.leading, 6)
+            .padding(.trailing, 18)
+            .frame(minHeight: Metrics.minTarget)
+            .background { face }
+            .overlay(Capsule().strokeBorder(accent.opacity(0.6), lineWidth: 1.2))
+            .shadow(color: accent.opacity(0.28), radius: 12, y: 3)
             .contentShape(Capsule())
         }
         .buttonStyle(PressScaleStyle())
-        .frame(minHeight: Metrics.minTarget)
         .fixedSize()
         .accessibilityLabel(Text("Show me"))
         .accessibilityHint(Text("Plays it on a 3D model of the instrument"))
         .accessibilityIdentifier("lesson.showme")
+        .task(id: invite && !reduceMotion) { await callOut() }
+    }
+
+    /// The accent disc with the glyph, the ring leaving it on each `ping`.
+    private var disc: some View {
+        ZStack {
+            Circle().fill(LinearGradient(colors: [accent.mix(with: .white, by: 0.25), accent], startPoint: .top, endPoint: .bottom))
+            if loading {
+                ProgressView().controlSize(.small).tint(Palette.onAccent)
+            } else {
+                Image(systemName: showing ? "play.fill" : "rotate.3d")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(Palette.onAccent)
+                    .contentTransition(.symbolEffect(.replace))
+            }
+        }
+        .frame(width: 32, height: 32)
+        .overlay { ShowMePingRing(trigger: ping, color: accent) }
+        .accessibilityHidden(true)
+    }
+
+    /// The capsule: the accent, brighter at the top, over the card.
+    private var face: some View {
+        Capsule().fill(LinearGradient(colors: [accent.opacity(0.26), accent.opacity(0.1)], startPoint: .top, endPoint: .bottom))
+    }
+
+    /// Three rings from the disc, the first once the card has settled; none once the learner has watched.
+    private func callOut() async {
+        guard invite, !reduceMotion else { return }
+        for _ in 0..<3 {
+            try? await Task.sleep(for: .seconds(1.6))
+            guard !Task.isCancelled else { return }
+            ping += 1
+        }
+    }
+}
+
+/// A ring leaving "Show me"'s disc each time `trigger` changes, growing and fading out; at rest it isn't drawn.
+private struct ShowMePingRing: View {
+    let trigger: Int
+    let color: Color
+
+    private struct Ring {
+        var scale: CGFloat = 1
+        var opacity: Double = 0
+    }
+
+    var body: some View {
+        Circle()
+            .strokeBorder(color, lineWidth: 2)
+            .keyframeAnimator(initialValue: Ring(), trigger: trigger) { ring, value in
+                ring.scaleEffect(value.scale).opacity(value.opacity)
+            } keyframes: { _ in
+                KeyframeTrack(\.scale) {
+                    MoveKeyframe(1)
+                    CubicKeyframe(1.9, duration: 1.1)
+                }
+                KeyframeTrack(\.opacity) {
+                    MoveKeyframe(0.7)
+                    LinearKeyframe(0, duration: 1.1)
+                }
+            }
+            .allowsHitTesting(false)
+    }
+}
+
+/// The line under "Show me": what to watch (`ShowMe.caption`), an eye beside it, brighter while the demonstration plays
+/// on the model. One line, shrinking a little rather than wrapping, so the card never jumps.
+struct ShowMeCaption: View {
+    let text: Text
+    var accent: Color = Palette.mint
+    /// The demonstration is playing on the model now.
+    var live = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "eye.fill")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(accent)
+                .symbolEffect(.pulse, isActive: live && !reduceMotion)
+                .accessibilityHidden(true)
+            text
+                .font(Typeface.label(13))
+                .foregroundStyle(live ? Palette.ink : Palette.inkSoft)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+        }
+        .frame(minHeight: 20)
+        .animation(Motion.fade, value: live)
+        .accessibilityElement(children: .combine)
     }
 }
 

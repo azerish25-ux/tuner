@@ -18,6 +18,9 @@ import TimbreCore
 /// it sounds, or a pick sweeps the strings in the pattern's rhythm. The switch where the picture's own sits ("3D" and
 /// the chart or the player's view by name) brings the picture back. Without a model, with Reduce Motion or in Low
 /// Power Mode the picture stays alone.
+/// It is the teacher: the first time a chord or a strum pattern appears in the course, the model takes the card by
+/// itself once it has settled and the demonstration plays there instead of on the picture (`ShowMe.firstTime`). Under
+/// the button a line says what to watch (`ShowMeCaption`); after a chord's demonstration it hands over to "Your turn".
 struct ExplainStep: View {
     let title: LearnText
     let text: LearnText
@@ -65,6 +68,10 @@ struct ExplainStep: View {
     @State private var showMeReady = false
     /// The model couldn't be shown: the picture stays, and "Show me" goes.
     @State private var showMeFailed = false
+    /// The first-time demonstration is on its way to the model (it plays there, not on the picture); `firstTask`
+    /// brings the model in once the card has settled, or gives up on it.
+    @State private var firstShowing = false
+    @State private var firstTask: Task<Void, Never>?
 
     enum Demo { case idle, showing, yourTurn, heard }
     /// Seconds between fingers in the chord demonstration (the diagram's landing step and the notes' spacing).
@@ -116,11 +123,17 @@ struct ExplainStep: View {
             } else {
                 shown = true
             }
-            if autoPlays { play(replay: false) }
-            // The step's 3D model loads quietly once the card has settled, so "Show me" is immediate (once per lesson).
-            if let model = showMeModel { ModelCache.shared.prefetch(model, after: 1.2) }
+            let first = playsFirstOnModel
+            if first {
+                showFirstOnModel()
+            } else if autoPlays {
+                play(replay: false)
+            }
+            // The step's 3D model loads quietly once the card has settled, so "Show me" is immediate (once per lesson);
+            // at once when it is coming by itself.
+            if let model = showMeModel { ModelCache.shared.prefetch(model, after: first ? 0.2 : 1.2) }
         }
-        .onDisappear { demoTask?.cancel(); store.stopLessonListening(owner: owner) }
+        .onDisappear { demoTask?.cancel(); firstTask?.cancel(); store.stopLessonListening(owner: owner) }
         // The picture choice changing elsewhere (Settings) brings the picture back.
         .onChange(of: chordView) { _, _ in setShowMe(false) }
         // Leaving the app stops the demonstration where it is; "Hear it" plays it again.
@@ -173,7 +186,11 @@ struct ExplainStep: View {
     private var actionBar: some View {
         LessonActionBar {
             if hearable {
-                HearItButton(accent: accent, sounding: sounding) { play(replay: true) }
+                HearItButton(accent: accent, sounding: sounding) {
+                    // Asked for before the model came in: the picture plays it, and the model waits for "Show me".
+                    if firstShowing && !showMe { cancelFirst() }
+                    play(replay: true)
+                }
             }
             StepButton(title: "Continue", accent: accent, inset: false) { Haptics.shared.selection(); leave(); done(nil) }
         }
@@ -185,6 +202,7 @@ struct ExplainStep: View {
     private func leave() {
         demoTask?.cancel()
         demoTask = nil
+        firstTask?.cancel()
         store.stopLessonListening(owner: owner)
     }
 
@@ -228,12 +246,16 @@ struct ExplainStep: View {
         }
     }
 
-    /// The row under the picture, with its gap: "Show me" (beside a chord's "your turn"), or a chord's "your turn" alone.
+    /// The rows under the picture, with their gaps: "Show me" over its line (what to watch, then a chord's "your
+    /// turn"), or a chord's "your turn" alone.
     private var turnRow: CGFloat {
-        if showMeModel != nil { return Metrics.minTarget + 10 }
+        if showMeModel != nil { return Metrics.minTarget + 6 + Self.teacherLine + 10 }
         if case .chord = visual { return 30 }
         return 0
     }
+
+    /// The height of the line under "Show me".
+    private static let teacherLine: CGFloat = 20
 
     /// The picture, as big as `room` (inside the card) allows.
     @ViewBuilder private func picture(_ room: CGSize) -> some View {
@@ -307,32 +329,33 @@ struct ExplainStep: View {
         Binding(get: { showMe }, set: { on in setShowMe(on) })
     }
 
-    /// Under the picture: "Show me" beside a chord's cue to play it back (only the glyph of the cue when both don't
-    /// fit); under notes or a strum in 3D, the switch back to the picture beside it (a chord's sits in its header).
+    /// Under the picture: "Show me" (under notes or a strum in 3D, the switch back to the picture beside it; a chord's
+    /// sits in its header), and under it the teacher's line: what to watch, then after a chord's demonstration the
+    /// learner's cue to play it back in the same place.
     @ViewBuilder private var footer: some View {
         if showMeModel != nil {
-            if case .chord = visual {
-                // At the largest text sizes the cue goes under the button.
-                ViewThatFits(in: .horizontal) {
-                    chordFooter(compactCue: false)
-                    chordFooter(compactCue: true)
-                    VStack(spacing: 6) {
-                        showMeButton
-                        if cueShown { turnCue(compact: false) }
-                    }
-                }
-                .frame(maxWidth: .infinity, minHeight: Metrics.minTarget)
-                .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: cueShown)
-            } else {
-                ViewThatFits(in: .horizontal) {
-                    HStack(spacing: 10) { neckFooterContent }
-                    VStack(spacing: 6) { neckFooterContent }
-                }
-                .frame(maxWidth: .infinity, minHeight: Metrics.minTarget)
-                .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: showMe)
+            VStack(spacing: 6) {
+                showMeControls
+                teacherLine
             }
+            .frame(maxWidth: .infinity)
+            .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: showMe)
         } else if case .chord = visual {
             yourTurn
+        }
+    }
+
+    /// "Show me"; under notes or a strum, the switch back to the picture beside it while the model shows.
+    @ViewBuilder private var showMeControls: some View {
+        if case .chord = visual {
+            showMeButton
+                .frame(maxWidth: .infinity, minHeight: Metrics.minTarget)
+        } else {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 10) { neckFooterContent }
+                VStack(spacing: 6) { neckFooterContent }
+            }
+            .frame(maxWidth: .infinity, minHeight: Metrics.minTarget)
         }
     }
 
@@ -345,23 +368,44 @@ struct ExplainStep: View {
         showMeButton
     }
 
-    private func chordFooter(compactCue: Bool) -> some View {
-        HStack(spacing: 12) {
-            showMeButton
-            if cueShown {
-                turnCue(compact: compactCue)
+    /// The line under "Show me": what to watch (lit while the model plays it), handing over to a chord's "your turn"
+    /// once its demonstration is over. One line, always there, so the card never grows.
+    private var teacherLine: some View {
+        ZStack {
+            if cueShown, case .chord = visual {
+                turnCue(compact: false)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .transition(.opacity)
+            } else if let caption {
+                ShowMeCaption(text: caption, accent: accent, live: threeD && sounding)
                     .transition(.opacity)
             }
+        }
+        .frame(maxWidth: .infinity, minHeight: Self.teacherLine)
+        .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: cueShown)
+    }
+
+    /// What to watch in this picture's demonstration.
+    private var caption: Text? {
+        switch visual {
+        case let .chord(spec): return ShowMe.caption(for: spec)
+        case .fretboard: return ShowMe.notesCaption
+        case let .rhythm(pattern, beatsPerBar): return ShowMe.caption(pattern: pattern, beatsPerBar: beatsPerBar)
+        default: return nil
         }
     }
 
     private var showMeButton: some View {
-        ShowMeButton(accent: accent, loading: showMe && !showMeReady) { setShowMe(true) }
+        ShowMeButton(accent: accent, loading: showMe && !showMeReady, showing: threeD, invite: !showMe && !firstShowing) {
+            setShowMe(true)
+        }
     }
 
     /// "Show me" puts the instrument on the card (the demonstration plays once it is in place) or, already there, plays
-    /// it again; the switch back shows the picture where the demonstration left it.
-    private func setShowMe(_ on: Bool) {
+    /// it again; the switch back shows the picture where the demonstration left it. `tapped` is false when the step
+    /// brings the model in by itself (the first time), without a tap's haptic.
+    private func setShowMe(_ on: Bool, tapped: Bool = true) {
         guard on else {
             guard showMe else { return }
             withMotion(Motion.reveal, reduceMotion: reduceMotion) {
@@ -370,7 +414,12 @@ struct ExplainStep: View {
             }
             return
         }
-        Haptics.shared.selection()
+        if tapped {
+            Haptics.shared.selection()
+            // Asked for: the first-time wait for the model is over (it is coming now anyway).
+            firstTask?.cancel()
+            firstShowing = false
+        }
         if showMe {
             if showMeReady { play(replay: true) }
             return
@@ -392,14 +441,71 @@ struct ExplainStep: View {
     private func showMeAppeared() {
         guard showMe, !showMeReady else { return }
         withAnimation(Motion.reveal) { showMeReady = true }
+        firstTask?.cancel()
+        firstShowing = false
+        remember()
         play(replay: true, lead: ShowMe.lead)
     }
 
-    /// The model couldn't be shown: the picture stays, without "Show me".
+    /// The model couldn't be shown: the picture stays, without "Show me". A first-time demonstration plays on the
+    /// picture instead, as it would have without a model.
     private func showMeUnavailable() {
+        let wasFirst = firstShowing
+        firstTask?.cancel()
+        firstShowing = false
         showMeFailed = true
         showMe = false
         showMeReady = false
+        if wasFirst && autoPlays { play(replay: true) }
+    }
+
+    // MARK: Show me, the first time
+
+    /// What this picture teaches as the course remembers it (`ShowMeKey`): a chord's shape or a strum's pattern. Notes
+    /// on the neck are always new, so they wait for "Show me".
+    private var demoKey: String? {
+        switch visual {
+        case let .chord(spec): return ShowMeKey.chord(spec)
+        case let .rhythm(pattern, beatsPerBar): return ShowMeKey.strum(pattern: pattern, beatsPerBar: beatsPerBar)
+        default: return nil
+        }
+    }
+
+    /// The first time this chord or strum appears in the course, its demonstration plays by itself on the model rather
+    /// than on the picture (when the demonstration plays by itself at all: not with Reduce Motion or VoiceOver).
+    private var playsFirstOnModel: Bool {
+        guard autoPlays, showMeModel != nil, let key = demoKey else { return false }
+        return ShowMe.firstTime(key, course: course, settings: store.settings)
+    }
+
+    /// Brings the model in once the card has settled; should it not be in place in `ShowMe.patience`, the picture plays
+    /// the demonstration instead and the model waits for "Show me".
+    private func showFirstOnModel() {
+        firstShowing = true
+        firstTask?.cancel()
+        firstTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(ShowMe.settle))
+            guard !Task.isCancelled, firstShowing else { return }
+            if !showMe { setShowMe(true, tapped: false) }
+            try? await Task.sleep(for: .seconds(ShowMe.patience))
+            guard !Task.isCancelled, firstShowing, !showMeReady else { return }
+            cancelFirst()
+            setShowMe(false)
+            play(replay: true)
+        }
+    }
+
+    /// The first-time demonstration won't come by itself after all.
+    private func cancelFirst() {
+        firstTask?.cancel()
+        firstTask = nil
+        firstShowing = false
+    }
+
+    /// The course has now shown this chord or strum on the model: from here on it waits for "Show me".
+    private func remember() {
+        guard let key = demoKey, !store.settings.hasShownDemo(key, in: course.id) else { return }
+        store.updateSettings { $0.markDemoShown(key, in: course.id) }
     }
 
     // MARK: Chord: the fingers land, the strings ring, your turn

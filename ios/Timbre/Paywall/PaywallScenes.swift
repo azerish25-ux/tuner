@@ -19,7 +19,7 @@ enum PaywallTool: Equatable {
 }
 
 /// The paywall's hero: the person's plan (onboarding, and Pro from Settings: a rail of the songs it plays, drifting
-/// behind the headline), the instrument with its strings running on as a play-along runway (lessons, songs,
+/// above the headline), the instrument with its strings running on as a play-along runway (lessons, songs,
 /// instruments), or the scene of the tool that opened the paywall.
 enum PaywallHero {
     case plan(PaywallPlanScene)
@@ -28,7 +28,7 @@ enum PaywallHero {
 
     /// Below this height the hero steps aside for the Pro pill alone. A tool's scene still reads smaller than the
     /// runway, which needs the instrument, the lanes, the combo and the pill one above another. The plan's rail
-    /// reads smallest: its sleeves reach on under the headline, so the hero only holds their tops and the pill.
+    /// reads smallest: its sleeves are art alone, the hero's height with the pill in a pocket at their foot.
     var minHeight: CGFloat {
         switch self {
         case .plan: return 64
@@ -53,10 +53,10 @@ enum PaywallHero {
     }
 }
 
-/// What the plan's hero shows, all from the person's plan (`PaywallPlan.rail`): the sleeves of the songs it plays, its
-/// first song first, as the Songs shelf draws them.
+/// What the plan's hero shows, all from the person's plan (`PaywallPlan.rail`): the sleeves of the songs it plays,
+/// three Originals for its instrument and then its next song, as the Songs shelf draws their art.
 struct PaywallPlanScene {
-    /// Three to eight, in the plan's order.
+    /// Three to eight, in the rail's order.
     let songs: [PaywallPlan.RailSong]
     /// The course's colour, for the light behind the rail.
     let accent: Color

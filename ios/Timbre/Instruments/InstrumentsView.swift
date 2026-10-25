@@ -77,10 +77,20 @@ struct InstrumentsView: View {
     /// The full page's bottom edge: the cards passing under it dim into the stage, so a row running off the screen
     /// reads as more below rather than as cut. On through the home indicator's strip; never in the way of a tap.
     private var bottomShade: some View {
-        LinearGradient(colors: [Palette.stageDeep.opacity(0), Palette.stageDeep.opacity(0.9)], startPoint: .top, endPoint: .bottom)
+        // A strip just above the safe area's edge whose shade reaches down through the home indicator's strip by
+        // ignoring the safe area (as `stageTopShade` reaches up through the bars): a fixed-height gradient that ignored
+        // it stopped at the safe area's edge, leaving the 20 pt under it undimmed, a band of names cut at the screen's edge.
+        Color.clear
             .frame(height: Self.bottomFade)
             .frame(maxWidth: .infinity)
-            .ignoresSafeArea(edges: .bottom)
+            .background(alignment: .top) {
+                VStack(spacing: 0) {
+                    LinearGradient(colors: [Palette.stageDeep.opacity(0), Palette.stageDeep.opacity(0.9)], startPoint: .top, endPoint: .bottom)
+                        .frame(height: Self.bottomFade)
+                    Palette.stageDeep.opacity(0.9)
+                }
+                .ignoresSafeArea(edges: .bottom)
+            }
             .allowsHitTesting(false)
             .accessibilityHidden(true)
     }

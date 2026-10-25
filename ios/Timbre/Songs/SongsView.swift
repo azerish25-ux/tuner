@@ -168,8 +168,8 @@ struct SongsView: View {
     }
 
     /// The picked shelves, then the course shelves, with "Campfire & kids" (`SongsCatalog.Layout.lower`) after the
-    /// song collections and before the instruments' own. The featured song isn't repeated on its shelf: that rail
-    /// starts with the song after it.
+    /// song collections and before the instruments' own. The featured song keeps its place on its course's shelf, so
+    /// the shelf's numbers run on without a gap.
     private static func items(_ layout: SongsCatalog.Layout) -> [ShelfItem] {
         var items = layout.picks.map { ShelfItem.pick($0) }
         let rails = layout.rails.map { ShelfItem.rail($0) }
@@ -352,9 +352,10 @@ struct SongsView: View {
     }
 
     /// iPad, beside the song of the day: the next song on each shelf under the filter (open and not played yet), each
-    /// tune once and the featured tune aside; songs still to unlock fill in when fewer than three are open. Four at most.
-    /// Adult-first and varied: no nursery rhyme and no sleeve repeating a motif already beside it (the featured one's
-    /// included), unless that leaves fewer than two.
+    /// tune once and the featured tune aside; then songs still to unlock, and with fewer shelves than that (an
+    /// instrument's filter) the songs further along them, up to four, so the panel is full beside the hero rather than
+    /// a third empty. Adult-first and varied: no nursery rhyme and no sleeve repeating a motif already beside it (the
+    /// featured one's included), unless that leaves fewer than two.
     private func upNext(_ layout: SongsCatalog.Layout, hero: Song) -> [Song] {
         let progress = store.learn
         var picked: [Song] = []
@@ -373,8 +374,13 @@ struct SongsView: View {
         for rail in layout.rails {
             add(rail.songs.first { catalog.standing($0).access == .play && fits($0, strict: true) })
         }
-        if picked.count < 3 {
+        if picked.count < 4 {
             for rail in layout.rails { add(rail.songs.first { fits($0, strict: true) }) }
+        }
+        if picked.count < 4 {
+            for rail in layout.rails {
+                for song in rail.songs where picked.count < 4 && fits(song, strict: true) { add(song) }
+            }
         }
         if picked.count < 2 {
             for rail in layout.rails { add(rail.songs.first { fits($0, strict: false) }) }
@@ -809,8 +815,9 @@ struct SongsView: View {
             HStack(spacing: 6) {
                 CourseArt(course: song.course, size: 18)
                 Text(song.course.title.localized).foregroundStyle(Palette.ink)
-                // How long the song runs (not the lesson's minutes, which the song sheet gives beside it).
-                Text("Song \(sheet.length) · +\(song.lesson.xp) XP").foregroundStyle(Palette.inkSoft)
+                // How long the song runs (not the lesson's minutes, which the song sheet gives beside it), as the rows
+                // up next say it: "Originals · 2:40 · +30 XP".
+                (Text(verbatim: "· \(sheet.length) · ") + Text("+\(song.lesson.xp) XP")).foregroundStyle(Palette.inkSoft)
             }
             .font(.subheadline).lineLimit(1)
             if compact {
@@ -867,7 +874,7 @@ struct SongsView: View {
         }
     }
 
-    /// A course's songs: the stars count every one of them, the rail shows `rail` (all but the featured song).
+    /// A course's songs: the stars count every one of them, the rail shows `rail` (all of them, numbered in order).
     private func shelfView(_ shelf: Shelf, rail: [Song]) -> some View {
         let progress = store.learn
         let earned = shelf.songs.reduce(0) { $0 + (progress.stars[$1.lesson.id] ?? 0) }
@@ -1173,7 +1180,7 @@ struct SongsView: View {
         let gate: Lesson?
     }
 
-    /// A course shelf and the songs its rail shows (all but the featured song).
+    /// A course shelf and the songs its rail shows (every one, the featured song included).
     struct Rail: Identifiable {
         let shelf: SongsView.Shelf
         let songs: [SongsView.Song]
@@ -1327,9 +1334,10 @@ struct SongsView: View {
         let prefer = filter == SongsView.all ? key?.home : filter
         let picks = self.picks(pool, hero: hero, prefer: prefer, store: store)
         var rails: [Rail] = []
-        for shelf in shelves(pool, curriculum: store.curriculum) {
-            let rail = shelf.songs.filter { $0.id != hero?.id }
-            if !rail.isEmpty { rails.append(Rail(shelf: shelf, songs: rail)) }
+        // Every course shelf keeps all its songs, the featured one included: its sleeves are numbered in course order
+        // (01, 02, 03…), and a song lifted out for the hero left a hole in the count (01, 02, 03, 04, 06).
+        for shelf in shelves(pool, curriculum: store.curriculum) where !shelf.songs.isEmpty {
+            rails.append(Rail(shelf: shelf, songs: shelf.songs))
         }
         // The rails come in rank order: the song collections' (Originals, Standards, Songs) first.
         let collections = rails.filter { Self.rank($0.shelf.course) < 3 }.count
