@@ -44,7 +44,7 @@ LEARN BY PLAYING
 • 557 lessons in 14 courses: guitar, ukulele, bass, violin, cello, mandolin, banjo, voice, ear training, music theory, rhythm, songs, Originals and Standards & Classics
 • Timbre listens as you play: single notes, whole chords and strumming rhythm, with pitch feedback and timing feedback in milliseconds
 • A play-along note highway that slows down for you, then speeds back up as you improve
-• A Songs tab: 50 original songs in today’s styles plus public-domain classics and standards, from The Entertainer to Amazing Grace — every song a full arrangement with lyrics
+• A Songs tab: 50 original songs in today’s styles plus public-domain classics and standards, from The Entertainer to Amazing Grace — every song a full arrangement, most with lyrics
 • Stars, XP, daily quests, streaks and badges keep you coming back
 
 PRACTICE TOOLS
