@@ -237,7 +237,8 @@ final class AppPreviewUITests: XCTestCase {
         sync("highway")
         hold(until: hookEnd.addingTimeInterval(0.3))
         sync("highway-2")
-        clip("highway", from: hookStart, to: hookEnd, keep: .head)
+        // Whole bars on the band's clock: the cut never trims this clip.
+        clip("highway", from: hookStart, to: hookEnd, keep: .head, shortest: hookEnd.timeIntervalSince(hookStart))
 
         // The rest of the song, hands off; then the finale, its stars landing one by one.
         hold(until: clock.time(ofBeat: clock.endBeat).addingTimeInterval(1.0))

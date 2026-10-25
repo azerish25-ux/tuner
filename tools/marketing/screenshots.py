@@ -70,7 +70,7 @@ LOCALES = ["de-DE", "fr-FR", "es-MX", "pt-BR", "it", "ja", "ko", "zh-Hans", "ru"
 #   detail  callout: the region enlarged in the card that breaks out over the screen's edge
 FOCUS = {
     "10b-tune-locked": {"cut": 0.455, "rise": 0.132, "keep": (0.11, 0.79)},
-    "49d-tune-violin-locked": {"cut": 0.70, "rise": 0.05, "keep": (0.22, 0.78)},
+    "49d-tune-violin-locked": {"cut": 0.462, "rise": 0.132, "keep": (0.13, 0.80)},
     "65-song-perform": {"y0": 0.032},
     "65b-song-perform-violin": {"y0": 0.032},
     "62-lesson-results": {"y0": 0.035, "x": (0.02, 0.98)},
@@ -78,7 +78,7 @@ FOCUS = {
     "31b-instruments-folk": {"y0": 0.0},
     "63-songs": {"y0": 0.0},
     "50-learn": {"y0": 0.0},
-    "11b-tune-strum": {"y0": 0.255},
+    "11b-tune-strum": {"y0": 0.075},
     "32-journey": {"y0": 0.0},
 }
 
@@ -189,7 +189,7 @@ def build_counts() -> dict:
              if lesson.get("kind") == "song"]
     originals = [lesson for course in courses if course.get("id") == "originals" for unit in course.get("units", [])
                  for lesson in unit.get("lessons", []) if lesson.get("kind") == "song"]
-    return {
+    counts = {
         "lessons": sum(len(unit.get("lessons", [])) for course in courses for unit in course.get("units", [])),
         "courses": len(courses),
         "instruments": len(catalog["instruments"]),
@@ -198,6 +198,9 @@ def build_counts() -> dict:
         "songs": len({title(lesson).strip().lower() for lesson in songs}),
         "originals": len({title(lesson).strip().lower() for lesson in originals}),
     }
+    # The translators' source writes the song count as a round floor ("{songs_floor}+").
+    counts["songs_floor"] = counts["songs"] // 10 * 10
+    return counts
 
 
 def count_problems(text: str, counts: dict, where: str) -> list[str]:
@@ -349,7 +352,12 @@ def check() -> int:
     problems, untranslated = localized_problems(counts)
     found += problems
     if untranslated:
-        print(f"UNTRANSLATED ({len(untranslated)} rows, for the translators; not a failure): " + ", ".join(untranslated))
+        per_locale: dict[str, int] = {}
+        for row in untranslated:
+            locale = row.split()[0]
+            per_locale[locale] = per_locale.get(locale, 0) + 1
+        print(f"UNTRANSLATED (for the translators; not a failure): {len(untranslated)} caption rows: "
+              + ", ".join(f"{locale} {count}" for locale, count in per_locale.items()))
     for problem in found:
         print("PROBLEM", problem)
     print(f"{len(LOCALES) + 1} listing locales checked: {'all pass' if not found else f'{len(found)} problems'}")
@@ -383,8 +391,9 @@ def upright(shot_path: Path):
 
 
 def frame_size(device: str, shot) -> tuple:
-    w, h = art_size = SIZES[device]
-    return (h, w) if shot.width > shot.height else art_size
+    """The store size for this device in the capture's orientation."""
+    w, h = SIZES[device]
+    return (h, w) if shot.width > shot.height else (w, h)
 
 
 # MARK: composing
@@ -455,7 +464,9 @@ def _screen_radius(width: int) -> int:
 def compose(look: str, shot_path: Path, capture: str, title: str, line: str, device: str, out: Path) -> tuple:
     shot = upright(shot_path)
     size = frame_size(device, shot)
-    layout, _, accent = (look.split(None, 1) + ["mint"])[:2][0], None, (look.split() + ["", "mint"])[1] or "mint"
+    parts = look.split()
+    layout = parts[0] if parts else "zoom"
+    accent = parts[1] if len(parts) > 1 else "mint"
     landscape = size[0] > size[1]
     focus = FOCUS.get(capture, {})
     if landscape:
@@ -516,9 +527,19 @@ def _breakout(layout, accent, shot, focus, title, line, size):
                                             radius=int(feather * 2), fill=255)
     mask = mask.filter(ImageFilter.GaussianBlur(feather * 0.7))
     lifted_top = card_top - (lifted.height - int(lap * scale))
-    glow = Image.new("RGBA", lifted.size, art.tint(accent) + (0,))
-    glow.putalpha(mask.point(lambda v: int(v * 0.22)).filter(ImageFilter.GaussianBlur(feather * 1.5)))
-    frame.canvas.alpha_composite(glow, (x, lifted_top))
+    # Behind it, a pool of the capture's own stage colour (sampled along the kept region's edge), so the picture
+    # dissolves into the frame whatever the accent: no box where the stage's wash meets the frame's.
+    strip = lifted.crop((int(left), 0, int(right), lifted.height)).resize((32, 32))
+    border = [strip.getpixel((i, j)) for i in range(32) for j in range(32) if i in (0, 31) or j in (0, 31)]
+    pool_colour = tuple(sum(c[k] for c in border) // len(border) for k in range(3))
+    pad = int(feather * 8)
+    pool = Image.new("L", (lifted.width + 2 * pad, lifted.height + 2 * pad), 0)
+    ImageDraw.Draw(pool).ellipse([pad + left - feather * 2, pad + feather, pad + right + feather * 2,
+                                  pad + lifted.height + feather * 3], fill=235)
+    pool = pool.filter(ImageFilter.GaussianBlur(feather * 3))
+    wash = Image.new("RGBA", pool.size, pool_colour + (0,))
+    wash.putalpha(pool)
+    frame.canvas.alpha_composite(wash, (x - pad, lifted_top - pad))
     rising = lifted.convert("RGBA")
     rising.putalpha(mask)
     frame.canvas.alpha_composite(rising, (x, lifted_top))
@@ -623,8 +644,9 @@ def _offset(layout, accent, shot, focus, title, line, size):
     visible = (frame.h - top + frame.px(80)) / scale
     y0 = focus.get("y0", 0.0)
     screen = _scaled(shot, scale, (0, y0 * shot.height, shot.width, min(shot.height, y0 * shot.height + visible)))
-    x = -frame.px(110) if left else frame.w - width + frame.px(110)
-    corners = (False, True, False, False) if left else (True, False, False, False)
+    # Left-aligned screens (a title, a column of cards) lose nothing on the right; keep their left edge on the frame.
+    x = frame.px(36) if left else frame.w - width + frame.px(70)
+    corners = (True, True, False, False) if left else (True, False, False, False)
     frame.card(screen, x, top, _screen_radius(width), corners=corners)
     return frame
 
@@ -646,35 +668,25 @@ def _flip(layout, accent, shot, focus, title, line, size):
 
 
 def _landscape(layout, accent, shot, title, line, size, out: Path) -> tuple:
-    """iPad landscape: the caption in a column on one side and the screen bleeding off the other (`side`,
-    `side-right`), or the light frame with the caption on top."""
-    frame = Frame(size, accent, light=layout == "light", glow=(0.2 if layout == "side" else 0.8, 0.45))
-    if layout == "light":
-        m = frame.px(120)
-        foot = frame.caption(title, line, frame.px(110), m, frame.w - m)
-        height = frame.h - foot - frame.px(80) + frame.px(120)
-        scale = height / shot.height
-        screen = _scaled(shot, scale, (0, 0, shot.width, shot.height))
-        frame.card(screen, (frame.w - screen.width) // 2, foot + frame.px(80), frame.px(46), corners=(True, True, False, False), rim=False)
-        return frame.save(out)
-    column = int(frame.w * 0.30)
-    scale = (frame.h * 0.84) / shot.height
-    screen = _scaled(shot, scale, (0, 0, shot.width, shot.height))
-    top = (frame.h - screen.height) // 2
-    if layout == "side":
-        frame.card(screen, column + frame.px(40), top, frame.px(46), corners=(True, False, False, True))
-        area = (frame.px(110), column - frame.px(10))
+    """iPad landscape: the caption across the top, set left (`side`) or right (`side-right`) with the screen shifted the
+    other way and bleeding off that edge and the bottom; or the light frame, caption centred."""
+    light = layout == "light"
+    left = layout != "side-right"
+    frame = Frame(size, accent, light=light, glow=(0.5 if light else (0.25 if left else 0.75), 0.10))
+    m = frame.px(120)
+    align = "centre" if light else ("left" if left else "right")
+    foot = frame.caption(title, line, frame.px(96), m, frame.w - m, align=align)
+    width = int(frame.w * (0.80 if light else 0.86))
+    scale = width / shot.width
+    top = foot + frame.px(64)
+    visible = (frame.h - top + frame.px(60)) / scale
+    screen = _scaled(shot, scale, (0, 0, shot.width, min(shot.height, visible)))
+    if light:
+        x = (frame.w - width) // 2
     else:
-        frame.card(screen, frame.w - column - frame.px(40) - screen.width, top, frame.px(46), corners=(False, True, True, False))
-        area = (frame.w - column + frame.px(10), frame.w - frame.px(110))
-    # The caption sits a little above the middle of its column.
-    from PIL import Image
-    probe = Image.new("RGBA", frame.size)
-    trial = Frame.__new__(Frame)
-    trial.__dict__.update(frame.__dict__)
-    trial.canvas = probe
-    height = trial.caption(title, line, 0, area[0], area[1], align="left")
-    frame.caption(title, line, int(frame.h * 0.46 - height / 2), area[0], area[1], align="left")
+        x = frame.w - width + frame.px(80) if left else -frame.px(80)
+    corners = (True, True, False, False) if light else ((True, False, False, False) if left else (False, True, False, False))
+    frame.card(screen, x, top, frame.px(40), corners=corners, rim=not light)
     return frame.save(out)
 
 

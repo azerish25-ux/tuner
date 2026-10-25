@@ -585,7 +585,7 @@ def chrome(caption: str, accent: str, screen_h: int, dest: Path) -> None:
     from PIL import Image, ImageDraw
     canvas = art.backdrop((WIDTH, HEIGHT), accent, glow=(0.5, 0.05)).convert("RGBA")
     if caption:
-        font, lines = art.fit_lines(caption, "SemiBold", 66, 50, WIDTH - 2 * SCREEN_X)
+        font, lines = art.fit_lines(caption, "SemiBold", 80, 58, WIDTH - 2 * SCREEN_X)
         step = int(font.size * 1.08)
         top = (BAND - step * len(lines)) // 2 + 6
         art.text_block(canvas, lines, font, WIDTH / 2, top, art.INK, leading=1.08)

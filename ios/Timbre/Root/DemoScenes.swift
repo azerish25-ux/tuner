@@ -397,7 +397,8 @@ final class PreviewRecorder: @unchecked Sendable {
     func write(_ fields: [String: Any]) {
         guard enabled, var line = try? JSONSerialization.data(withJSONObject: fields, options: [.sortedKeys]) else { return }
         line.append(0x0A)
-        queue.async { try? self.log?.write(contentsOf: line) }
+        let payload = line
+        queue.async { try? self.log?.write(contentsOf: payload) }
     }
 
     /// A scene's moment ("lock", "tuned", "take"…), now.
@@ -523,7 +524,8 @@ final class PreviewRecorder: @unchecked Sendable {
         withUnsafeBytes(of: UInt32(frames).littleEndian) { record.append(contentsOf: $0) }
         withUnsafeBytes(of: UInt32(rate.rounded()).littleEndian) { record.append(contentsOf: $0) }
         mono.withUnsafeBytes { record.append(contentsOf: $0) }
-        queue.async { try? self.pcm?.write(contentsOf: record) }
+        let payload = record
+        queue.async { try? self.pcm?.write(contentsOf: payload) }
     }
 
     // MARK: A take's beat clock

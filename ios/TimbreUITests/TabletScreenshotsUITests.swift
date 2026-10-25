@@ -155,10 +155,10 @@ final class TabletScreenshotsUITests: XCTestCase {
     /// fade, with the bowed strings' row above the shelf. Any position where the three cards are whole between the
     /// navigation bar's shade and the bottom fade is accepted; the line is only the aim.
     ///
-    /// Each move is measured, not assumed. CI 7c8d46c showed five alignment drags of about 200 pt through the screen's
-    /// centre, which starts on a card, leaving the page where it was, while the long lazy-load drags did scroll. So the
-    /// drags now start in the page's side margin (no card under the finger), go further than needed and correct back,
-    /// and when a drag still doesn't move the page, a slow swipe takes over. Every attempt is logged.
+    /// Each move is measured, not assumed: short drags through the screen's centre, which start on a card, were seen to
+    /// leave the page where it was while the long lazy-load drags scrolled. So the alignment drags start in the page's
+    /// side margin (no card under the finger), go further than needed and correct back, and when a drag still doesn't
+    /// move the page, a slow swipe takes over. Every attempt is logged.
     /// True when all three cards are whole on screen.
     private func scrollToFolkShelf() -> Bool {
         let cards = Self.folkCards.map { element("instrument." + $0) }

@@ -1,15 +1,26 @@
 # App Store listing, localized (9 locales)
 
-Localized store text for Timbre in de-DE, fr-FR, es-MX, pt-BR, it, ja, ko, zh-Hans and ru, adapted from [APP-STORE-LISTING.md](APP-STORE-LISTING.md) (English, U.S.). English stays the primary locale. Paste each block into App Store Connect → the app → the version's page (description, promotional text, keywords, What's New) and App Information (name, subtitle) for that localization.
+Store text for Timbre in de-DE, fr-FR, es-MX, pt-BR, it, ja, ko, zh-Hans and ru, adapted from [APP-STORE-LISTING.md](APP-STORE-LISTING.md) (English, U.S., the primary locale). Paste each locale's blocks into App Store Connect → the app → the version's page (description, promotional text, keywords, What's New) and App Information (name, subtitle) for that localization.
 
-## How this was made
+## State: what is current, and what is waiting for translators
 
-- **Same facts as the English.** 60 instruments, 102 tunings, 13 courses, 499 lessons, a Songs tab with 20 original songs in today's styles plus public-domain classics, and the 40-lesson ear course. The free-tier (the tuner for guitar, bass, ukulele, violin and cello, a chromatic tuner for anything else, and the first unit of every course; see the open point on it at the end), trial-reminder ("with notifications on, Timbre reminds you two days before the trial ends"), no-account, no-ads and audio-never-recorded lines carry the same claims as the English, no stronger.
-- **Adapted, not word-for-word.** Each description keeps the English structure (intro, tune, learn, practice tools, free to start, privacy, subscription terms) but is written for that market, using the terms the app itself uses in `Resources/<lang>.lproj` (for example Bordun / bourdon / nota pedal / bordone / ドローン / 드론 / 持续音 / бурдон for drone, and the app's own names for streak, quest, achievement, unit and course).
-- **Keywords.** Each field is at most 100 characters, comma-separated with no spaces after commas (a space appears only inside a two-word term), singular forms, and none of the words already in that locale's name or subtitle. Search terms were chosen from what people in each market type, not translated from the English list. A script checked this for every locale; for ja, ko and zh-Hans it checks that no keyword is a substring of the name or subtitle.
-- **Character counts** are Python `len()` on the NFC string, measured by script from the exact text below. Nothing is over a limit.
-- **Placeholders.** `<privacy policy URL>` is left as in the English file, in every locale. The Terms link is Apple's standard EULA, the same in every locale.
-- **Legal line.** Wording for Settings / Apple Account / Subscriptions follows Apple's own wording for that language (see the notes under each locale and the open points at the end).
+> **Don't paste any locale's promotional text, description, What's New or screenshot captions yet.** They were written for an earlier build (499 lessons, 13 courses, 20 Originals, a six-frame screenshot set) and are kept under each locale only as reference, folded away. Each locale's **name, subtitle and keywords are current** and within the limits.
+
+The English listing was rewritten for this build (a free-tuner lead, honest song counts, a new nine-frame screenshot set and App Preview captions). Translators work from [Source for translators](#source-for-translators) below: the English text with every count the build can change written as a variable, so a translation never carries a stale number again. Then, per locale:
+
+1. Translate the promotional text, description and What's New from the source, filling the variables from the values table, and paste them in place of the locale's stale reference.
+2. Replace every `TRANSLATE:` cell of the locale's two screenshot caption tables with its translation (a caption is at most 30 characters). `tools/marketing/screenshots.py` reads those tables to render the locale's frames, and refuses rows still marked.
+3. Run `python3 tools/marketing/screenshots.py --check`: it checks every locale's name, subtitle and keywords against Apple's limits, that its caption tables name the English set's captures in the English order, and that a translated caption quotes no number its English row doesn't. Rows still marked `TRANSLATE:` are listed, not failed.
+4. Capture the locale's screens and render its frames: run the UI tests with `TEST_RUNNER_TIMBRE_UI_LANGUAGE=de TEST_RUNNER_TIMBRE_UI_LOCALE=de_DE`, then `python3 tools/marketing/screenshots.py <captures> <out> --locale de-DE` (and `--ipad`). Japanese, Korean, Chinese and Russian captions are set in a system font with those glyphs (or the one `--font` names), since Sora has none.
+
+## How the earlier text was made (still the rules)
+
+- **Same facts as the English, no stronger.** The free tier, the trial reminder ("with notifications on, Timbre reminds you two days before the trial ends"), no account, no ads and audio never recorded carry the English claims exactly.
+- **Adapted, not word-for-word.** Each description keeps the English structure but is written for its market, using the terms the app itself uses in `Resources/<lang>.lproj` (for example Bordun / bourdon / nota pedal / bordone / ドローン / 드론 / 持续音 / бурдон for drone, and the app's own names for streak, quest, achievement, unit and course).
+- **Keywords.** At most 100 characters, comma-separated with no spaces after commas (a space appears only inside a two-word term), singular forms, and none of the words already in that locale's name or subtitle. Search terms come from what people in each market type, not from the English list. For ja, ko and zh-Hans no keyword may be a substring of the name or subtitle.
+- **Character counts** are Python `len()` on the NFC string.
+- **Placeholders.** `<privacy policy URL>` stays as in the English file, in every locale. The Terms link is Apple's standard EULA in every locale.
+- **Legal line.** The wording for Settings / Apple Account / Subscriptions follows Apple's own wording for that language (see the notes under each locale and the open points at the end).
 
 ## Summary
 
@@ -25,18 +36,138 @@ Localized store text for Timbre in de-DE, fr-FR, es-MX, pt-BR, it, ja, ko, zh-Ha
 | zh-Hans | Timbre：吉他调音器与课程 | 边弹边学小提琴、尤克里里、贝斯 |
 | ru | Timbre: Тюнер для гитары | Уроки скрипки, укулеле и баса |
 
+## Source for translators
+
+The English text, every count the build can change written as a variable. `screenshots.py --check` fails on a variable that isn't one of these.
+
+| Variable | Value in this build | What it is |
+|---|---:|---|
+| `{instruments}` | 60 | instruments in the catalogue |
+| `{tunings}` | 132 | preset tunings |
+| `{courses}` | 17 | courses in Learn |
+| `{lessons}` | 819 | lessons in all courses |
+| `{songs_floor}` | 120 | distinct song titles, rounded down to ten (124 now): written "{songs_floor}+" |
+| `{originals}` | 50 | Timbre Originals |
+
+### Promotional text (170 max)
+
+```
+Free tuner, no ads, no account. Then lessons that listen as you play guitar, ukulele, violin, cello, bass, mandolin or banjo, and {songs_floor}+ songs to play along to.
+```
+
+### Description (4000 max)
+
+```
+Free tuner, no ads, no account. Then lessons that listen as you play.
+
+Timbre is a precise tuner and a music teacher in one app. Tune any of {instruments} instruments in seconds, then play real lessons that listen to you and tell you exactly how you did.
+
+TUNE ANYTHING, FREE
+• Every instrument's standard tuning is free, from guitar, ukulele and violin to mandolin, banjo, oud and erhu
+• A chromatic and strobe tuner with cent-level precision
+• {tunings} tunings, from drop D and open G to DADGAD, plus your own
+• Auto string detection, with a check-off as each string locks in
+• Strum to tune: one strum reads every string at once and shows which one to tune first
+• Studio-lit 3D guitars, basses, violin, cello and mandolin, with the peg to turn shown on the headstock
+• Capo, adjustable A4 reference, solfège and sargam note names
+
+LEARN BY PLAYING
+• {lessons} lessons in {courses} courses: guitar, ukulele, bass, violin, cello, mandolin, banjo, voice, ear training, music theory and rhythm, plus songbooks for ukulele, mandolin and violin
+• Timbre listens as you play: single notes, every string of a chord, and the timing of your strumming, with pitch feedback and timing in milliseconds
+• "Show me" plays each new chord on a 3D guitar, the fingers landing in order
+• A play-along note highway that slows down for you, then speeds back up as you improve
+
+PLAY SONGS
+• {songs_floor}+ songs, each a full arrangement: classics from Jingle Bells to Amazing Grace, and {originals} Originals written for Timbre in today's styles
+• Play along with the band in your headphones while the words light up
+• Your songs: paste or import any chord chart, transpose it, scroll it in time, and listen to the original on Apple Music beside it
+
+KEEP IT GOING
+• Stars, XP, daily quests, streaks and badges
+• Game Center: a weekly Bullseye league, song leaderboards and friend challenges
+• Apple Watch: a metronome you feel on your wrist, and today's practice at a glance
+• Home Screen and Lock Screen widgets, a Live Activity and Siri shortcuts
+
+PRACTICE TOOLS
+• Metronome with accents, subdivisions and a speed trainer
+• Drone, an intonation trainer, and a chord and scale library
+• Ear training: pitch direction, intervals and chord quality, plus a 40-lesson ear course
+
+FREE TO START
+Every instrument's standard tuning is free, and guitar, bass, ukulele, violin and cello tune free in every tuning. The first unit of every course and a shelf of songs are free too. Timbre Pro unlocks every lesson and song, every tuning and the full practice set. With notifications on, Timbre reminds you two days before a free trial ends.
+
+Private by design: audio is analysed on your iPhone and never recorded or uploaded. No account and no ads.
+
+Subscriptions renew automatically unless cancelled at least 24 hours before the end of the period. Manage or cancel any time in Settings → Apple Account → Subscriptions.
+Terms: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacy: <privacy policy URL>
+```
+
+### What's New
+
+```
+Welcome to Timbre: a free tuner for {instruments} instruments, and {lessons} lessons that listen as you play.
+```
+
+### Screenshot captions: iPhone (caption at most 30 characters)
+
+| # | Caption | Supporting line |
+|---|---|---|
+| 1 | Free tuner. No ads. | {instruments} instruments, to the cent |
+| 2 | Hear exactly how you played | Pitch and timing on every note |
+| 3 | Play your first chord today | Timbre hears every string |
+| 4 | Tune whatever you play | {instruments} instruments, {tunings} tunings |
+| 5 | Play songs, start to finish | {songs_floor}+ songs, classics to Originals |
+| 6 | Learn at your own pace | {lessons} lessons in {courses} courses |
+| 7 | Five minutes a day adds up | Stars, streaks and daily quests |
+| 8 | One strum checks every string | See which string to tune first |
+| 9 | See yourself get better | Accuracy, string health, badges |
+
+### Screenshot captions: iPad
+
+| # | Caption | Supporting line |
+|---|---|---|
+| 1 | Free tuner. No ads. | {instruments} instruments, to the cent |
+| 2 | Tune whatever you play | Violin to oud, sitar to erhu |
+| 3 | Play songs, start to finish | {songs_floor}+ songs, classics to Originals |
+| 4 | Five minutes a day adds up | A daily set, quests and ear games |
+
+### App Preview captions
+
+For a localized App Preview (the main cut, then the violin page's), translate these into the locale's own `### App Preview` tables when the preview is localized; until then every storefront shows the English preview.
+
+| Clip | Main preview |
+|---|---|
+| `lock` | Free tuner. No ads. |
+| `tuned` | Every string, checked |
+| `showme` | See it played in 3D |
+| `highway` | Play songs with the band |
+| `results` | Hear how you did |
+| `songs` | {songs_floor}+ songs to learn |
+| `end` | Tune. Learn. Play songs. |
+| `end-note` | Free tuner · No ads · No account |
+
+| Clip | Violin page |
+|---|---|
+| `lock` | Tune your violin, free |
+| `tuned` | G, D, A, E: all in tune |
+| `highway` | Play songs on your violin |
+| `results` | Hear how you did |
+| `songs` | {songs_floor}+ songs to learn |
+| `end` | Violin tuner and lessons |
+| `end-note` | Free tuner · No ads · No account |
+
 ---
 
 ## de-DE: German (Germany)
 
-| Field | Characters | Limit |
-|---|---:|---:|
-| Name | 30 | 30 |
-| Subtitle | 30 | 30 |
-| Keywords | 100 | 100 |
-| Promotional text | 164 | 170 |
-| Description | 2454 | 4000 |
-| What's New | 114 | 4000 |
+| Field | Characters | Limit | State |
+|---|---:|---:|---|
+| Name | 30 | 30 | current |
+| Subtitle | 30 | 30 | current (the English subtitle now leads with songs; worth following) |
+| Keywords | 100 | 100 | current |
+| Promotional text, Description, What's New | | | **stale: translate from the source above** |
+| Screenshot captions | | | **to translate: the tables below** |
 
 ### Name
 
@@ -56,13 +187,42 @@ Gitarre, Geige, Ukulele lernen
 Tuner,Violine,Bass,Cello,Metronom,Akkord,Gehörbildung,Mandoline,Banjo,chromatisch,Gesang,Lied,Strobe
 ```
 
-### Promotional text (can change without a review)
+### Screenshot captions: iPhone
+
+The English set's frames, in its order. Replace each `TRANSLATE:` cell with the translation (at most 30 characters for a caption).
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `10b-tune-locked` |
+| 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
+| 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
+| 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
+| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
+| 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
+| 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
+
+### Screenshot captions: iPad
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
+| 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
+| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
+
+### Earlier text (stale, for reference only)
+
+<details><summary>The promotional text, description, What's New and captions written for the earlier build (499 lessons, 13 courses, 20 Originals, six frames). Don't paste: reuse its wording where it still fits.</summary>
+
+Promotional text:
 
 ```
 Stimmen, dann spielen lernen: 499 Lektionen, die dir zuhören – ob Gitarre, Ukulele, Bass, Violine, Cello, Mandoline, Banjo oder Gesang. Mit jedem Update neue Songs.
 ```
 
-### Description
+Description:
 
 ```
 Timbre ist Stimmgerät und Musiklehrer in einer App. Stimme jedes von 60 Instrumenten in Sekunden und spiele dann echte Lektionen, die dir zuhören und dir genau sagen, wie es gelaufen ist.
@@ -97,15 +257,13 @@ Nutzungsbedingungen: https://www.apple.com/legal/internet-services/itunes/dev/st
 Datenschutz: <privacy policy URL>
 ```
 
-### What's New
+What's New:
 
 ```
 Willkommen bei Timbre: ein präzises Stimmgerät für 60 Instrumente und 499 Lektionen, die dir beim Spielen zuhören.
 ```
 
-### Screenshot captions
-
-In the same order as the English file (tuner, chord lesson, note highway, Learn home, studio stage, Progress).
+Captions (the old six frames):
 
 ```
 1. Alles in Sekunden stimmen
@@ -116,20 +274,21 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 6. Eine Serie, die du halten willst
 ```
 
+</details>
+
 **Notes.** Searches targeted: Stimmgerät, Gitarre stimmen, Gitarre lernen, Tuner (very common loan word in German queries), Geige/Violine. "Gitarre" sits in the subtitle so Apple can combine it with "Stimmgerät" from the name. Legal line uses Apple's German "Apple-Account" (hyphenated); the app's own de strings say "Apple Account".
 
 ---
 
 ## fr-FR: French (France)
 
-| Field | Characters | Limit |
-|---|---:|---:|
-| Name | 26 | 30 |
-| Subtitle | 29 | 30 |
-| Keywords | 98 | 100 |
-| Promotional text | 168 | 170 |
-| Description | 2678 | 4000 |
-| What's New | 102 | 4000 |
+| Field | Characters | Limit | State |
+|---|---:|---:|---|
+| Name | 26 | 30 | current |
+| Subtitle | 29 | 30 | current (the English subtitle now leads with songs; worth following) |
+| Keywords | 98 | 100 | current |
+| Promotional text, Description, What's New | | | **stale: translate from the source above** |
+| Screenshot captions | | | **to translate: the tables below** |
 
 ### Name
 
@@ -149,13 +308,42 @@ Leçons violon, ukulélé, basse
 tuner,violoncelle,chromatique,métronome,accord,mandoline,banjo,chant,diapason,solfège,chanson,note
 ```
 
-### Promotional text (can change without a review)
+### Screenshot captions: iPhone
+
+The English set's frames, in its order. Replace each `TRANSLATE:` cell with the translation (at most 30 characters for a caption).
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `10b-tune-locked` |
+| 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
+| 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
+| 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
+| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
+| 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
+| 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
+
+### Screenshot captions: iPad
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
+| 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
+| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
+
+### Earlier text (stale, for reference only)
+
+<details><summary>The promotional text, description, What's New and captions written for the earlier build (499 lessons, 13 courses, 20 Originals, six frames). Don't paste: reuse its wording where it still fits.</summary>
+
+Promotional text:
 
 ```
 Accordez, puis apprenez : 499 leçons qui vous écoutent (guitare, ukulélé, basse, violon, violoncelle, mandoline, banjo, chant). Nouvelles chansons à chaque mise à jour.
 ```
 
-### Description
+Description:
 
 ```
 Timbre réunit un accordeur précis et un professeur de musique dans une seule app. Accordez n'importe lequel des 60 instruments en quelques secondes, puis jouez de vraies leçons qui vous écoutent et vous indiquent précisément comment ça s'est passé.
@@ -190,15 +378,13 @@ Conditions d'utilisation : https://www.apple.com/legal/internet-services/itunes/
 Confidentialité : <privacy policy URL>
 ```
 
-### What's New
+What's New:
 
 ```
 Bienvenue dans Timbre : un accordeur précis pour 60 instruments et 499 leçons qui vous écoutent jouer.
 ```
 
-### Screenshot captions
-
-In the same order as the English file (tuner, chord lesson, note highway, Learn home, studio stage, Progress).
+Captions (the old six frames):
 
 ```
 1. Accordez tout en quelques secondes
@@ -209,20 +395,21 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 6. Une série à ne pas casser
 ```
 
+</details>
+
 **Notes.** Searches targeted: accordeur guitare, accordeur, leçons de guitare / apprendre la guitare, tuner (loan word used in French queries), diapason. Name keeps the French space before the colon. Legal line uses Apple's French "Réglages › Compte Apple › Abonnements".
 
 ---
 
 ## es-MX: Spanish (Mexico)
 
-| Field | Characters | Limit |
-|---|---:|---:|
-| Name | 28 | 30 |
-| Subtitle | 30 | 30 |
-| Keywords | 98 | 100 |
-| Promotional text | 165 | 170 |
-| Description | 2616 | 4000 |
-| What's New | 121 | 4000 |
+| Field | Characters | Limit | State |
+|---|---:|---:|---|
+| Name | 28 | 30 | current |
+| Subtitle | 30 | 30 | current (the English subtitle now leads with songs; worth following) |
+| Keywords | 98 | 100 | current |
+| Promotional text, Description, What's New | | | **stale: translate from the source above** |
+| Screenshot captions | | | **to translate: the tables below** |
 
 ### Name
 
@@ -242,13 +429,42 @@ Aprende violín, ukelele y bajo
 afinar,lecciones,cromático,violonchelo,metrónomo,acorde,mandolina,banjo,ukulele,clases,oído,cantar
 ```
 
-### Promotional text (can change without a review)
+### Screenshot captions: iPhone
+
+The English set's frames, in its order. Replace each `TRANSLATE:` cell with the translation (at most 30 characters for a caption).
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `10b-tune-locked` |
+| 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
+| 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
+| 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
+| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
+| 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
+| 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
+
+### Screenshot captions: iPad
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
+| 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
+| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
+
+### Earlier text (stale, for reference only)
+
+<details><summary>The promotional text, description, What's New and captions written for the earlier build (499 lessons, 13 courses, 20 Originals, six frames). Don't paste: reuse its wording where it still fits.</summary>
+
+Promotional text:
 
 ```
 Afina y aprende: 499 lecciones que te escuchan, para guitarra, ukelele, bajo, violín, violonchelo, mandolina, banjo o canto. Canciones nuevas con cada actualización.
 ```
 
-### Description
+Description:
 
 ```
 Timbre es un afinador preciso y un maestro de música en una sola app. Afina cualquiera de sus 60 instrumentos en segundos y luego toca lecciones de verdad que te escuchan y te dicen exactamente cómo lo hiciste.
@@ -283,15 +499,13 @@ Términos: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Privacidad: <privacy policy URL>
 ```
 
-### What's New
+What's New:
 
 ```
 Te damos la bienvenida a Timbre: un afinador preciso para 60 instrumentos y 499 lecciones que te escuchan mientras tocas.
 ```
 
-### Screenshot captions
-
-In the same order as the English file (tuner, chord lesson, note highway, Learn home, studio stage, Progress).
+Captions (the old six frames):
 
 ```
 1. Afina lo que sea en segundos
@@ -302,20 +516,21 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 6. Una racha que quieres mantener
 ```
 
+</details>
+
 **Notes.** Searches targeted: afinador de guitarra, afinador, afinar guitarra, clases/lecciones de guitarra, ukulele (alternate spelling of the app's "ukelele"). Legal line uses Apple's es-MX "Configuración" and "Cuenta de Apple"; the app's es.lproj says "Ajustes" (Spain wording).
 
 ---
 
 ## pt-BR: Portuguese (Brazil)
 
-| Field | Characters | Limit |
-|---|---:|---:|
-| Name | 26 | 30 |
-| Subtitle | 30 | 30 |
-| Keywords | 96 | 100 |
-| Promotional text | 163 | 170 |
-| Description | 2501 | 4000 |
-| What's New | 98 | 4000 |
+| Field | Characters | Limit | State |
+|---|---:|---:|---|
+| Name | 26 | 30 | current |
+| Subtitle | 30 | 30 | current (the English subtitle now leads with songs; worth following) |
+| Keywords | 96 | 100 | current |
+| Promotional text, Description, What's New | | | **stale: translate from the source above** |
+| Screenshot captions | | | **to translate: the tables below** |
 
 ### Name
 
@@ -335,13 +550,42 @@ Aulas: ukulele, violino, baixo
 guitarra,afinar,cromático,violoncelo,bandolim,banjo,metrônomo,acorde,cifra,treino auditivo,canto
 ```
 
-### Promotional text (can change without a review)
+### Screenshot captions: iPhone
+
+The English set's frames, in its order. Replace each `TRANSLATE:` cell with the translation (at most 30 characters for a caption).
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `10b-tune-locked` |
+| 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
+| 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
+| 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
+| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
+| 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
+| 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
+
+### Screenshot captions: iPad
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
+| 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
+| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
+
+### Earlier text (stale, for reference only)
+
+<details><summary>The promotional text, description, What's New and captions written for the earlier build (499 lessons, 13 courses, 20 Originals, six frames). Don't paste: reuse its wording where it still fits.</summary>
+
+Promotional text:
 
 ```
 Afine e aprenda: 499 lições que ouvem você, para violão, guitarra, ukulele, baixo, violino, violoncelo, bandolim, banjo ou canto. Músicas novas a cada atualização.
 ```
 
-### Description
+Description:
 
 ```
 O Timbre é um afinador preciso e um professor de música em um só app. Afine qualquer um dos 60 instrumentos em segundos e depois toque lições de verdade que ouvem você e mostram exatamente como você se saiu.
@@ -376,15 +620,13 @@ Termos: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Privacidade: <privacy policy URL>
 ```
 
-### What's New
+What's New:
 
 ```
 Boas-vindas ao Timbre: um afinador preciso para 60 instrumentos e 499 lições que ouvem você tocar.
 ```
 
-### Screenshot captions
-
-In the same order as the English file (tuner, chord lesson, note highway, Learn home, studio stage, Progress).
+Captions (the old six frames):
 
 ```
 1. Afine tudo em segundos
@@ -395,20 +637,21 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 6. Uma sequência que vale manter
 ```
 
+</details>
+
 **Notes.** Searches targeted: afinador de violão (the Brazilian #1 phrase; "violão" = acoustic guitar), afinador de guitarra (guitarra in keywords), aulas de violão / de ukulele, cifra. Subtitle says "Aulas" (market term) while the description follows the app's "lições". Legal line uses Apple's pt-BR "Ajustes › Conta Apple › Assinaturas".
 
 ---
 
 ## it: Italian
 
-| Field | Characters | Limit |
-|---|---:|---:|
-| Name | 28 | 30 |
-| Subtitle | 30 | 30 |
-| Keywords | 99 | 100 |
-| Promotional text | 164 | 170 |
-| Description | 2594 | 4000 |
-| What's New | 105 | 4000 |
+| Field | Characters | Limit | State |
+|---|---:|---:|---|
+| Name | 28 | 30 | current |
+| Subtitle | 30 | 30 | current (the English subtitle now leads with songs; worth following) |
+| Keywords | 99 | 100 | current |
+| Promotional text, Description, What's New | | | **stale: translate from the source above** |
+| Screenshot captions | | | **to translate: the tables below** |
 
 ### Name
 
@@ -428,13 +671,42 @@ Impara violino, ukulele, basso
 tuner,lezioni,cromatico,violoncello,mandolino,banjo,metronomo,accordo,orecchio,canto,canzone,musica
 ```
 
-### Promotional text (can change without a review)
+### Screenshot captions: iPhone
+
+The English set's frames, in its order. Replace each `TRANSLATE:` cell with the translation (at most 30 characters for a caption).
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `10b-tune-locked` |
+| 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
+| 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
+| 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
+| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
+| 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
+| 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
+
+### Screenshot captions: iPad
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
+| 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
+| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
+
+### Earlier text (stale, for reference only)
+
+<details><summary>The promotional text, description, What's New and captions written for the earlier build (499 lessons, 13 courses, 20 Originals, six frames). Don't paste: reuse its wording where it still fits.</summary>
+
+Promotional text:
 
 ```
 Accorda, poi impara: 499 lezioni che ti ascoltano, per chitarra, ukulele, basso, violino, violoncello, mandolino, banjo o canto. Canzoni nuove a ogni aggiornamento.
 ```
 
-### Description
+Description:
 
 ```
 Timbre è un accordatore preciso e un insegnante di musica in un'unica app. Accorda uno qualsiasi dei 60 strumenti in pochi secondi, poi suona vere lezioni che ti ascoltano e ti dicono esattamente come te la sei cavata.
@@ -469,15 +741,13 @@ Termini: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Privacy: <privacy policy URL>
 ```
 
-### What's New
+What's New:
 
 ```
 Benvenuto in Timbre: un accordatore preciso per 60 strumenti e 499 lezioni che ti ascoltano mentre suoni.
 ```
 
-### Screenshot captions
-
-In the same order as the English file (tuner, chord lesson, note highway, Learn home, studio stage, Progress).
+Captions (the old six frames):
 
 ```
 1. Accorda tutto in pochi secondi
@@ -488,20 +758,21 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 6. Una serie da non spezzare
 ```
 
+</details>
+
 **Notes.** Searches targeted: accordatore chitarra, accordatore, lezioni di chitarra / imparare a suonare, tuner (loan word), accordatore cromatico. Legal line uses Apple's Italian "Impostazioni › Account Apple › Abbonamenti".
 
 ---
 
 ## ja: Japanese
 
-| Field | Characters | Limit |
-|---|---:|---:|
-| Name | 22 | 30 |
-| Subtitle | 18 | 30 |
-| Keywords | 98 | 100 |
-| Promotional text | 96 | 170 |
-| Description | 1249 | 4000 |
-| What's New | 55 | 4000 |
+| Field | Characters | Limit | State |
+|---|---:|---:|---|
+| Name | 22 | 30 | current |
+| Subtitle | 18 | 30 | current (the English subtitle now leads with songs; worth following) |
+| Keywords | 98 | 100 | current |
+| Promotional text, Description, What's New | | | **stale: translate from the source above** |
+| Screenshot captions | | | **to translate: the tables below** |
 
 ### Name
 
@@ -521,13 +792,42 @@ Timbre: ギター チューナー＆レッスン
 チューニング,クロマチック,ストロボ,メトロノーム,コード,耳トレ,聴音,チェロ,マンドリン,バンジョー,歌,ボイトレ,音程,ピッチ,ヴァイオリン,カポ,楽器,ギターチューナー,初心者,音感,練習
 ```
 
-### Promotional text (can change without a review)
+### Screenshot captions: iPhone
+
+The English set's frames, in its order. Replace each `TRANSLATE:` cell with the translation (at most 30 characters for a caption).
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `10b-tune-locked` |
+| 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
+| 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
+| 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
+| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
+| 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
+| 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
+
+### Screenshot captions: iPad
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
+| 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
+| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
+
+### Earlier text (stale, for reference only)
+
+<details><summary>The promotional text, description, What's New and captions written for the earlier build (499 lessons, 13 courses, 20 Originals, six frames). Don't paste: reuse its wording where it still fits.</summary>
+
+Promotional text:
 
 ```
 チューニングしたら、そのままレッスンへ。ギター、ウクレレ、ベース、バイオリン、チェロ、マンドリン、バンジョー、歌。演奏を聴き取る499レッスンを収録。アップデートのたびに新しい曲が登場します。
 ```
 
-### Description
+Description:
 
 ```
 Timbreは、精密なチューナーと音楽の先生がひとつになったアプリです。60種類の楽器を数秒でチューニングしたら、そのまま演奏を聴き取り、どう弾けたかをはっきり教えてくれる本格レッスンへ進めます。
@@ -562,15 +862,13 @@ Timbreは、精密なチューナーと音楽の先生がひとつになった�
 プライバシー：<privacy policy URL>
 ```
 
-### What's New
+What's New:
 
 ```
 Timbreへようこそ。60種類の楽器に対応する精密チューナーと、演奏を聴き取る499レッスンをお届けします。
 ```
 
-### Screenshot captions
-
-In the same order as the English file (tuner, chord lesson, note highway, Learn home, studio stage, Progress).
+Captions (the old six frames):
 
 ```
 1. どんな楽器も数秒でチューニング
@@ -581,20 +879,21 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 6. 続けたくなる連続記録
 ```
 
+</details>
+
 **Notes.** Searches targeted: ギター チューナー, チューナー, チューニング, ギター レッスン, ボイトレ, 耳トレ. The name is spaced (ギター チューナー) so each term is its own token. ヴァイオリン is kept in keywords as the alternate spelling of the subtitle's バイオリン, and ギターチューナー (no space) covers the compound spelling of the spaced name. Legal line uses Apple's Japanese "設定 › Appleアカウント › サブスクリプション".
 
 ---
 
 ## ko: Korean
 
-| Field | Characters | Limit |
-|---|---:|---:|
-| Name | 18 | 30 |
-| Subtitle | 19 | 30 |
-| Keywords | 84 | 100 |
-| Promotional text | 98 | 170 |
-| Description | 1266 | 4000 |
-| What's New | 66 | 4000 |
+| Field | Characters | Limit | State |
+|---|---:|---:|---|
+| Name | 18 | 30 | current |
+| Subtitle | 19 | 30 | current (the English subtitle now leads with songs; worth following) |
+| Keywords | 84 | 100 | current |
+| Promotional text, Description, What's New | | | **stale: translate from the source above** |
+| Screenshot captions | | | **to translate: the tables below** |
 
 ### Name
 
@@ -614,13 +913,42 @@ Timbre: 기타 튜너 & 레슨
 튜닝,크로매틱,스트로브,메트로놈,코드,청음,첼로,만돌린,밴조,노래,보컬,음정,피치,악기,연습,음악,조율,카포,기타튜너,기타튜닝,독학,초보,리듬,음악이론
 ```
 
-### Promotional text (can change without a review)
+### Screenshot captions: iPhone
+
+The English set's frames, in its order. Replace each `TRANSLATE:` cell with the translation (at most 30 characters for a caption).
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `10b-tune-locked` |
+| 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
+| 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
+| 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
+| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
+| 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
+| 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
+
+### Screenshot captions: iPad
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
+| 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
+| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
+
+### Earlier text (stale, for reference only)
+
+<details><summary>The promotional text, description, What's New and captions written for the earlier build (499 lessons, 13 courses, 20 Originals, six frames). Don't paste: reuse its wording where it still fits.</summary>
+
+Promotional text:
 
 ```
 튜닝을 마치면 바로 레슨으로. 기타, 우쿨렐레, 베이스, 바이올린, 첼로, 만돌린, 밴조, 노래까지 연주를 듣고 알려 주는 499개 레슨. 업데이트마다 새로운 곡이 추가됩니다.
 ```
 
-### Description
+Description:
 
 ```
 Timbre는 정밀한 튜너와 음악 선생님을 하나의 앱에 담았습니다. 60가지 악기를 몇 초 만에 튜닝한 뒤, 연주를 들어 주고 얼마나 잘했는지 정확히 알려 주는 진짜 레슨을 시작해 보세요.
@@ -655,15 +983,13 @@ Timbre는 정밀한 튜너와 음악 선생님을 하나의 앱에 담았습니�
 개인정보 처리방침: <privacy policy URL>
 ```
 
-### What's New
+What's New:
 
 ```
 Timbre에 오신 것을 환영합니다. 60가지 악기를 위한 정밀 튜너와 연주를 들어 주는 499개 레슨을 만나 보세요.
 ```
 
-### Screenshot captions
-
-In the same order as the English file (tuner, chord lesson, note highway, Learn home, studio stage, Progress).
+Captions (the old six frames):
 
 ```
 1. 어떤 악기든 몇 초 만에 튜닝
@@ -674,20 +1000,21 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 6. 지키고 싶은 연속 기록
 ```
 
+</details>
+
 **Notes.** Searches targeted: 기타 튜너, 튜너, 기타 튜닝, 기타 레슨, 청음. "튜닝" sits in keywords (different word from 튜너), 기타튜너 / 기타튜닝 cover the unspaced spellings Korean users type, and the rest follow the app's terms (청음 훈련, 메트로놈, 계명창, 단원). Legal line uses Apple's Korean "설정 › Apple 계정 › 구독".
 
 ---
 
 ## zh-Hans: Chinese (Simplified)
 
-| Field | Characters | Limit |
-|---|---:|---:|
-| Name | 15 | 30 |
-| Subtitle | 15 | 30 |
-| Keywords | 81 | 100 |
-| Promotional text | 67 | 170 |
-| Description | 916 | 4000 |
-| What's New | 47 | 4000 |
+| Field | Characters | Limit | State |
+|---|---:|---:|---|
+| Name | 15 | 30 | current |
+| Subtitle | 15 | 30 | current (the English subtitle now leads with songs; worth following) |
+| Keywords | 81 | 100 | current |
+| Promotional text, Description, What's New | | | **stale: translate from the source above** |
+| Screenshot captions | | | **to translate: the tables below** |
 
 ### Name
 
@@ -707,13 +1034,42 @@ Timbre：吉他调音器与课程
 校音器,调弦,音准,半音阶,频闪,节拍器,和弦,练耳,乐理,大提琴,曼陀林,班卓琴,乌克丽丽,歌曲,唱歌,音乐,教学,零基础,入门,自学,节奏,指板,变调夹,声乐
 ```
 
-### Promotional text (can change without a review)
+### Screenshot captions: iPhone
+
+The English set's frames, in its order. Replace each `TRANSLATE:` cell with the translation (at most 30 characters for a caption).
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `10b-tune-locked` |
+| 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
+| 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
+| 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
+| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
+| 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
+| 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
+
+### Screenshot captions: iPad
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
+| 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
+| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
+
+### Earlier text (stale, for reference only)
+
+<details><summary>The promotional text, description, What's New and captions written for the earlier build (499 lessons, 13 courses, 20 Originals, six frames). Don't paste: reuse its wording where it still fits.</summary>
+
+Promotional text:
 
 ```
 先调音，再学琴：499 节会聆听你演奏的课程，涵盖吉他、尤克里里、贝斯、小提琴、大提琴、曼陀林、班卓琴和唱歌。每次更新都会加入新歌曲。
 ```
 
-### Description
+Description:
 
 ```
 Timbre 集精准调音器与音乐老师于一体。几秒钟就能为 60 种乐器中的任意一种调好音，然后开始真正会“聆听”你演奏的课程，并准确告诉你弹得怎么样。
@@ -748,15 +1104,13 @@ Timbre 集精准调音器与音乐老师于一体。几秒钟就能为 60 种乐
 隐私：<privacy policy URL>
 ```
 
-### What's New
+What's New:
 
 ```
 欢迎使用 Timbre：适用于 60 种乐器的精准调音器，以及 499 节会聆听你演奏的课程。
 ```
 
-### Screenshot captions
-
-In the same order as the English file (tuner, chord lesson, note highway, Learn home, studio stage, Progress).
+Captions (the old six frames):
 
 ```
 1. 几秒钟调准任何乐器
@@ -767,20 +1121,21 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 6. 值得坚持的连续记录
 ```
 
+</details>
+
 **Notes.** Searches targeted: 吉他调音器, 调音器, 校音器 (common alternate word for tuner), 吉他教学, 尤克里里 / 乌克丽丽 (both spellings), 练耳. Note: 吉他, 调音器, 课程, 小提琴, 尤克里里 and 贝斯 are already indexed from the name and subtitle. Legal line uses Apple's Simplified Chinese "设置 › Apple 账户 › 订阅".
 
 ---
 
 ## ru: Russian
 
-| Field | Characters | Limit |
-|---|---:|---:|
-| Name | 24 | 30 |
-| Subtitle | 29 | 30 |
-| Keywords | 97 | 100 |
-| Promotional text | 164 | 170 |
-| Description | 2466 | 4000 |
-| What's New | 106 | 4000 |
+| Field | Characters | Limit | State |
+|---|---:|---:|---|
+| Name | 24 | 30 | current |
+| Subtitle | 29 | 30 | current (the English subtitle now leads with songs; worth following) |
+| Keywords | 97 | 100 | current |
+| Promotional text, Description, What's New | | | **stale: translate from the source above** |
+| Screenshot captions | | | **to translate: the tables below** |
 
 ### Name
 
@@ -800,13 +1155,42 @@ Timbre: Тюнер для гитары
 настройка,хроматический,гитара,скрипка,бас,виолончель,мандолина,банджо,метроном,аккорд,слух,песня
 ```
 
-### Promotional text (can change without a review)
+### Screenshot captions: iPhone
+
+The English set's frames, in its order. Replace each `TRANSLATE:` cell with the translation (at most 30 characters for a caption).
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `10b-tune-locked` |
+| 2 | TRANSLATE: Hear exactly how you played | TRANSLATE: Pitch and timing on every note | `65-song-perform` |
+| 3 | TRANSLATE: Play your first chord today | TRANSLATE: Timbre hears every string | `52b-lesson-chord` |
+| 4 | TRANSLATE: Tune whatever you play | TRANSLATE: 60 instruments, 132 tunings | `31b-instruments-folk` |
+| 5 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `63-songs` |
+| 6 | TRANSLATE: Learn at your own pace | TRANSLATE: 819 lessons in 17 courses | `50-learn` |
+| 7 | TRANSLATE: Five minutes a day adds up | TRANSLATE: Stars, streaks and daily quests | `62-lesson-results` |
+| 8 | TRANSLATE: One strum checks every string | TRANSLATE: See which string to tune first | `11b-tune-strum` |
+| 9 | TRANSLATE: See yourself get better | TRANSLATE: Accuracy, string health, badges | `32-journey` |
+
+### Screenshot captions: iPad
+
+| # | Caption | Supporting line | Capture |
+|---|---|---|---|
+| 1 | TRANSLATE: Free tuner. No ads. | TRANSLATE: 60 instruments, to the cent | `ipad-landscape-tune` |
+| 2 | TRANSLATE: Tune whatever you play | TRANSLATE: Violin to oud, sitar to erhu | `ipad-landscape-instruments` |
+| 3 | TRANSLATE: Play songs, start to finish | TRANSLATE: 120+ songs, classics to Originals | `ipad-landscape-songs` |
+| 4 | TRANSLATE: Five minutes a day adds up | TRANSLATE: A daily set, quests and ear games | `ipad-landscape-practice` |
+
+### Earlier text (stale, for reference only)
+
+<details><summary>The promotional text, description, What's New and captions written for the earlier build (499 lessons, 13 courses, 20 Originals, six frames). Don't paste: reuse its wording where it still fits.</summary>
+
+Promotional text:
 
 ```
 Настройте и учитесь: 499 уроков, которые слушают вас на гитаре, укулеле, басе, скрипке, виолончели, мандолине, банджо и в пении. С каждым обновлением — новые песни.
 ```
 
-### Description
+Description:
 
 ```
 Timbre — это точный тюнер и учитель музыки в одном приложении. Настройте любой из 60 инструментов за секунды, а затем занимайтесь по настоящим урокам, которые слушают вашу игру и точно говорят, как у вас получилось.
@@ -841,15 +1225,13 @@ Timbre — это точный тюнер и учитель музыки в од
 Конфиденциальность: <privacy policy URL>
 ```
 
-### What's New
+What's New:
 
 ```
 Добро пожаловать в Timbre: точный тюнер для 60 инструментов и 499 уроков, которые слушают, как вы играете.
 ```
 
-### Screenshot captions
-
-In the same order as the English file (tuner, chord lesson, note highway, Learn home, studio stage, Progress).
+Captions (the old six frames):
 
 ```
 1. Настройка за секунды
@@ -860,14 +1242,15 @@ In the same order as the English file (tuner, chord lesson, note highway, Learn 
 6. Серия, которую хочется сохранить
 ```
 
+</details>
+
 **Notes.** Searches targeted: тюнер для гитары, тюнер, настройка гитары, уроки гитары / игры на гитаре, хроматический тюнер. Nominative forms (гитара, скрипка) are in keywords because people type them that way; the name and subtitle carry the genitive forms. Legal line uses the app's "Настройки › Аккаунт Apple › Подписки".
 
 ---
-
 ## Open points before submitting
 
-- **Free tier now includes violin and cello.** Violin and cello tuning moved to the free plan after these texts were written. Each locale's "free to start" paragraph still names only guitar, bass and ukulele (for example de-DE "Das Stimmgerät für Gitarre, Bass und Ukulele ist kostenlos"); a translator adds violin and cello to it, in the same words the description already uses for them, before submitting.
+- **The free tier changed.** Every instrument's standard tuning is now free, and guitar, bass, ukulele, violin and cello tune free in every tuning. The stale descriptions name only guitar, bass and ukulele; the source above has the current paragraph.
 - **Apple Account spelling (de).** The legal line uses Apple's German "Apple-Account" (hyphenated). The app's `de.lproj` subscription footers say "Apple Account" without the hyphen; worth aligning in the app so the store text and the in-app text match.
 - **Settings name (es-MX).** The store text uses Mexican Apple wording: "Configuración › Cuenta de Apple › Suscripciones". The app's `es.lproj` uses "Ajustes" (Spain wording) in its subscription footer. If the app only ships one Spanish file, decide which market it serves; the store text can switch to "Ajustes" if es-ES is added later.
 - **Native-speaker pass.** The search terms come from market knowledge, not from keyword-tool volumes. Have a native reader check tone and the keyword choices, and compare with App Store Connect's keyword and search-popularity tools once the locales are live.
-- **Not covered here.** In-app purchase display names and descriptions (they need a localization per locale in App Store Connect too), review notes (stay in English) and the screenshots themselves (the captions above still need to be rendered by `tools/marketing/screenshots.py`).
+- **Not covered here.** In-app purchase display names and descriptions (they need a localization per locale in App Store Connect too), review notes (stay in English), and Custom Product Pages (English first; localize the violin, cello and ukulele pages next, since those are the queries with the weakest competition abroad too).

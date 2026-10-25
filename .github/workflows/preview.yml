@@ -1,7 +1,10 @@
-# Manual only: records the App Store App Preview (iPhone 6.9" display, portrait) from the real app.
-# AppPreviewUITests plays a tour with the demo pitch while the simulator screen is recorded; the test marks
-# the stretches worth showing, and tools/marketing/preview.py cuts them into preview.mp4 (886x1920, 30 fps,
-# H.264 High, silent stereo AAC 44.1 kHz, 15-30 s) and poster.png, published to the ci-results/preview branch.
+# Manual only: records an App Store App Preview (iPhone 6.9" display, portrait) from the real app.
+# AppPreviewUITests plays a tour of store scenes with the demo pitch while the simulator screen is recorded; the test
+# marks the stretches worth showing, and the app writes down what it plays (its bells, strum and band) to a folder
+# shared with the runner. tools/marketing/preview.py cuts the clips with hard cuts on the beat, draws the captions and
+# the end card, lays the app's own sound under them, and writes preview.mp4 (886x1920, 30 fps, H.264 High, stereo AAC
+# 44.1 kHz, 20-25 s), poster.png and contact.png, published to the ci-results/preview branch.
+# The `preview` input picks the cut: guitar (the main listing) or violin (the violin Custom Product Page).
 name: App Preview
 on:
   # Also runs on a push to preview/** (dispatch needs the file on the default branch first).
@@ -9,6 +12,12 @@ on:
     branches: ["preview/**"]
   workflow_dispatch:
     inputs:
+      preview:
+        description: Which preview to record
+        required: false
+        default: guitar
+        type: choice
+        options: [guitar, violin]
       sync_offset:
         description: Seconds to shift every cut if they look early or late (positive = later)
         required: false
@@ -28,11 +37,15 @@ jobs:
       OUT: preview-out
     steps:
       - uses: actions/checkout@v4
-      - name: Install XcodeGen and ffmpeg
+      - name: Install XcodeGen, ffmpeg and the preview tool's Python
         run: |
           brew install xcodegen
           command -v ffmpeg >/dev/null || brew install ffmpeg
           ffmpeg -version | head -1
+          # Pillow draws the captions and the end card; fontTools checks a caption's glyphs.
+          python3 -m venv build/preview-venv
+          build/preview-venv/bin/pip install --quiet pillow fonttools
+          echo "PREVIEW_PY=$PWD/build/preview-venv/bin/python3" >> "$GITHUB_ENV"
       - name: Generate Xcode project
         working-directory: ios
         run: xcodegen generate
@@ -40,6 +53,10 @@ jobs:
         run: |
           set -o pipefail
           python3 tools/marketing/preview.py device | tee -a "$GITHUB_ENV"
+          case "${{ inputs.preview }}" in
+            violin) echo "PREVIEW_TEST=TimbreUITests/AppPreviewUITests/testAppPreviewViolin" >> "$GITHUB_ENV" ;;
+            *) echo "PREVIEW_TEST=TimbreUITests/AppPreviewUITests/testAppPreview" >> "$GITHUB_ENV" ;;
+          esac
       - name: Ensure Metal toolchain
         run: bash tools/ci/ensure-metal.sh
       - name: Build app and UI tests
@@ -59,19 +76,29 @@ jobs:
           }
           # One take. The recorder waits in the background until the test says the tour has begun (a folder shared
           # through TEST_RUNNER_PREVIEW_HANDSHAKE, or PREVIEW-BEGIN in the log), so the recording holds the tour and
-          # not the minutes of home screen while the runner installs.
+          # not the minutes of home screen while the runner installs. The app writes what it plays to handshake/app;
+          # when it couldn't write there, its own Caches/preview-audio holds the same, copied out after the take.
           take() {
-            local handshake="$PWD/$OUT/handshake" status=0 waiter
-            rm -rf "$handshake" "$OUT/record.json" "$OUT/attachments" ios/build/AppPreview.xcresult
+            local handshake="$PWD/$OUT/handshake" status=0 waiter container
+            rm -rf "$handshake" "$OUT/record.json" "$OUT/attachments" "$OUT/app" ios/build/AppPreview.xcresult
             mkdir -p "$handshake"
-            python3 tools/marketing/preview.py record --device "$DEVICE_ID" --out "$OUT" --handshake "$handshake" --log "$OUT/test.log" &
+            "$PREVIEW_PY" tools/marketing/preview.py record --device "$DEVICE_ID" --out "$OUT" --handshake "$handshake" --log "$OUT/test.log" &
             waiter=$!
-            TEST_RUNNER_PREVIEW_HANDSHAKE="$handshake" xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -only-testing:TimbreUITests/AppPreviewUITests -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd -resultBundlePath ios/build/AppPreview.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee -a "$OUT/test.log" || status=$?
+            TEST_RUNNER_PREVIEW_HANDSHAKE="$handshake" xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -only-testing:"$PREVIEW_TEST" -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd -resultBundlePath ios/build/AppPreview.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee -a "$OUT/test.log" || status=$?
             kill "$waiter" 2>/dev/null || true
             wait "$waiter" 2>/dev/null || true
-            python3 tools/marketing/preview.py stop --out "$OUT" || true
+            "$PREVIEW_PY" tools/marketing/preview.py stop --out "$OUT" || true
             if [ -d ios/build/AppPreview.xcresult ]; then
               xcrun xcresulttool export attachments --path ios/build/AppPreview.xcresult --output-path "$OUT/attachments" || true
+            fi
+            mkdir -p "$OUT/app"
+            if [ -f "$handshake/app/events.jsonl" ]; then
+              cp -R "$handshake/app/." "$OUT/app/"
+            else
+              container=$(xcrun simctl get_app_container "$DEVICE_ID" com.shahradazerisharghi.timbre data 2>/dev/null || true)
+              if [ -n "$container" ] && [ -d "$container/Library/Caches/preview-audio" ]; then
+                cp -R "$container/Library/Caches/preview-audio/." "$OUT/app/"
+              fi
             fi
             return "$status"
           }
@@ -96,7 +123,7 @@ jobs:
               continue
             fi
             cut=0
-            python3 tools/marketing/preview.py render --out "$OUT" --log "$OUT/take.log" --attachments "$OUT/attachments" --offset "${SYNC_OFFSET:-0}" || cut=$?
+            "$PREVIEW_PY" tools/marketing/preview.py render --out "$OUT" --log "$OUT/take.log" --attachments "$OUT/attachments" --audio "$OUT/app" --offset "${SYNC_OFFSET:-0}" || cut=$?
             # Exit 3: the recording lost the app in a clip (it showed the home screen while the tour went on).
             if [ "$cut" -eq 3 ] && [ "$attempt" -lt 3 ]; then
               echo "::warning::The recording lost the app in take $attempt; recording the tour again"
@@ -112,7 +139,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p ci-preview
-          for file in preview.mp4 poster.png PREVIEW.txt sync.png raw-small.mp4 record.log; do
+          for file in preview.mp4 poster.png contact.png PREVIEW.txt sync.png raw-small.mp4 record.log; do
             if [ -f "$OUT/$file" ]; then cp "$OUT/$file" ci-preview/; fi
           done
           # The clip marks and the manifest; the full-size sync screenshots stay in the artifact.
@@ -128,7 +155,8 @@ jobs:
           done
           if [ -f "$OUT/PREVIEW.txt" ]; then { echo '```'; cat "$OUT/PREVIEW.txt"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"; fi
           bash tools/ci/publish-results.sh ci-results/preview ci-preview
-      # The full-size recording, to re-cut locally: tools/marketing/preview.py render --out <folder> --log <folder>/take.log --attachments <folder>/attachments
+      # The full-size recording and the app's sound, to re-cut locally:
+      # tools/marketing/preview.py render --out <folder> --log <folder>/take.log --attachments <folder>/attachments --audio <folder>/app
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -139,6 +167,7 @@ jobs:
             ${{ env.OUT }}/test.log
             ${{ env.OUT }}/take.log
             ${{ env.OUT }}/attachments/
+            ${{ env.OUT }}/app/
             ${{ env.OUT }}/preview.mp4
             ${{ env.OUT }}/poster.png
             ${{ env.OUT }}/PREVIEW.txt

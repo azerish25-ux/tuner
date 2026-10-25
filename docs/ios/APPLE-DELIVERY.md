@@ -13,7 +13,7 @@ What the owner sets up in Apple's portals and GitHub before the first App Store 
 | Bundle ID (watch complications) | `com.shahradazerisharghi.timbre.watchkitapp.widgets` |
 | App Group | `group.com.shahradazerisharghi.timbre` (widgets read the practice streak from it; on the watch, the complications read the watch app's copy) |
 | Minimum iOS | 18.0, iPhone and iPad |
-| Privacy policy URL | https://azerish25-ux.github.io/tuner/privacy.html |
+| Privacy policy URL | https://azerish25-ux.github.io/tuner/privacy.html (move it to the owner's domain before launch: §5) |
 | Terms | Apple standard EULA: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/ |
 
 ## 1. App Store Connect app
@@ -26,18 +26,20 @@ What the owner sets up in Apple's portals and GitHub before the first App Store 
 
 Create a subscription group named **Timbre Pro** with two auto-renewable subscriptions at the same level:
 
-| Product ID | Type | Duration | Suggested US price | Introductory offer |
+| Product ID | Type | Duration | US price (the panel's recommendation; the owner decides) | Introductory offer |
 |---|---|---|---|---|
-| `timbre_pro_annual` | Auto-renewable | 1 year | $34.99 | Free trial, 2 weeks, new subscribers |
-| `timbre_pro_monthly` | Auto-renewable | 1 month | $6.99 | none |
+| `timbre_pro_annual` | Auto-renewable | 1 year | $49.99 (the StoreKit test file still says $34.99) | Free trial, 2 weeks, new subscribers. Keep 14 days: yearly trials of 10–16 days convert at about 43 %, against 33 % for 5–9 |
+| `timbre_pro_monthly` | Auto-renewable | 1 month | $9.99 ($6.99 in the test file) | Free trial, 1 week: it also powers the paywall's one-time exit offer (§6.4) |
 
 And one non-consumable:
 
-| Product ID | Type | Suggested US price |
+| Product ID | Type | US price |
 |---|---|---|
-| `timbre_plus_lifetime` | Non-consumable | $89.99 |
+| `timbre_plus_lifetime` | Non-consumable | $149.99 ($89.99 in the test file); onboarding's paywall leaves it out unless the remote settings say otherwise (§5) |
 
-The paywall shows the yearly plan's weekly cost ("$0.67 a week"), worked out from the yearly price Apple returns, so it always matches the storefront. The paywall's offer codes and its one-time exit offer are set up in [section 6](#6-growth-features-owner-steps).
+Turn **Family Sharing** on for the yearly plan and lifetime (parents buy lessons for their children; say so on the paywall once it is on). The prices above are REVIEW 15's recommendation for $10k a month, about a third of the lesson apps' prices; test $49.99 against $59.99 later with a second yearly product chosen by the remote settings file (§5).
+
+The paywall shows the yearly plan's weekly cost, worked out from the yearly price Apple returns, so it always matches the storefront. The paywall's offer codes and its one-time exit offer are set up in [section 6](#6-growth-features-owner-steps).
 
 `timbre_plus_lifetime` keeps the identifier of the earlier lifetime purchase, so anyone who bought it keeps Pro. Prices are suggestions: the app shows whatever Apple returns (`displayPrice`), including the trial length. Give each product a display name and description, a review screenshot of the paywall, and review notes saying the trial and plans are on the paywall reached from any locked lesson or Practice → Drone. Ready-to-paste names, descriptions, listing text, keywords, review notes and a pricing note are in [APP-STORE-LISTING.md](APP-STORE-LISTING.md). Submit the products with the first app version.
 
@@ -63,20 +65,42 @@ Never paste these into chat, issues, commits or logs. Revoke the key in App Stor
 ## 4. Listing
 
 - Category: Music. Secondary: Education.
-- Age rating: 4+.
-- App Privacy: **Data Not Collected** matches this version (pitch analysis and history stay on the device, no analytics SDK, no ads). Revisit if analytics or a paywall service is added. Game Center (section 6) does not change this: scores and achievements go to Apple's Game Center under the player's own Game Center account, and the app keeps no player ID, name or friend list.
+- Age rating: 4+ ([APP-STORE-LISTING.md](APP-STORE-LISTING.md#age-rating) has every answer).
+- App Privacy: **Data Not Collected** holds only while `TELEMETRYDECK_APP_ID` is unset. Once analytics are on (§5), declare "Product Interaction → Analytics, not linked to the user, not used for tracking" before submitting, matching the privacy manifest. Game Center (§6) doesn't change the label: scores go to Apple under the player's own Game Center account.
 - Encryption: the app uses only Apple's standard encryption (`ITSAppUsesNonExemptEncryption = false`).
-- Screenshots: the CI tour produces 6.9" iPhone and 13" iPad captures (`ci-results/app`, `ci-results/ipad`) as a starting point.
+- Text, keywords, screenshots and the App Preview: [APP-STORE-LISTING.md](APP-STORE-LISTING.md) (English) and [APP-STORE-LISTING-LOCALIZED.md](APP-STORE-LISTING-LOCALIZED.md). The store frames are composed from the CI captures by `tools/marketing/screenshots.py` (6.9" iPhone 1320×2868, 13" iPad 2752×2064); the App Preview comes from the **App Preview** workflow (`ci-results/preview`: `preview.mp4`, and the poster frame's time in `PREVIEW.txt`). Upload both in App Store Connect → the version → Previews and Screenshots, iPhone 6.9" and iPad 13"; App Store Connect scales them down for the smaller displays.
 - Subscription disclosures are on the paywall (price, period, auto-renewal, cancel in Settings, Terms and Privacy links), as App Review Guideline 3.1.2 requires.
 
-## 5. Analytics (optional, off until you switch it on)
+## 5. Analytics, links and remote settings
 
-Timbre can send anonymous product events (onboarding finished, paywall shown, trial started, lesson done, streaks) to [TelemetryDeck](https://telemetrydeck.com), which is privacy-first: no IDFA, no personal data, and a random install ID hashed on the device. With no app ID, nothing leaves the device.
+Four addresses and one ID are build settings in `ios/project.yml`, carried into Info.plist and read by `AppLinks` (`ios/Timbre/Services/ShareDestination.swift`). An empty value means "not set yet": the app falls back or hides what needs it. The delivery workflow passes each **repository variable** (GitHub → Settings → Secrets and variables → Actions → **Variables**) into the archive; unset keeps the project's value.
 
-1. Create a TelemetryDeck app and copy its App ID.
-2. GitHub → repository Settings → Secrets and variables → Actions → **Variables** → add `TELEMETRYDECK_APP_ID`. Delivery builds pick it up and debug builds stay in test mode.
-3. Before submitting, update the App Privacy label in App Store Connect to "Product Interaction → Analytics, not linked to the user, not used for tracking" (the app's privacy manifest already declares this), and update the "Analytics and advertising" section of PRIVACY.md.
+| Repository variable | Build setting | What it switches on |
+|---|---|---|
+| `TELEMETRYDECK_APP_ID` | `TIMBRE_TELEMETRY_APP_ID` | Anonymous product events to [TelemetryDeck](https://telemetrydeck.com) (privacy-first: no IDFA, no personal data, a random install ID hashed on the device): the funnel from `app_open` through onboarding, `paywall_view`, trial and purchase. Without it nothing leaves the device. |
+| `TIMBRE_APP_STORE_ID` | `TIMBRE_APP_STORE_ID` | The app's Apple ID in App Store Connect (digits only, App Information → Apple ID). Shares, "Beat my score" messages and the offer-code links point at `https://apps.apple.com/app/id<ID>`. Set it as soon as the app record exists. |
+| `TIMBRE_SHARE_URL` | `TIMBRE_SHARE_URL` | An https page on the owner's domain that opens a shared route in Timbre (`…/lesson?id=…`) or sends someone without the app to the App Store. Without it, shares link to the App Store page. |
+| `TIMBRE_REMOTE_CONFIG_URL` | `TIMBRE_REMOTE_CONFIG_URL` | The remote settings file below. |
+| (edit `ios/project.yml`) | `TIMBRE_PRIVACY_POLICY_URL` | The privacy policy the paywall and Settings link to; move it to the owner's domain here and in App Information. |
 
+**The remote settings file** (`ios/Timbre/Services/RemoteConfig.swift`): a small JSON file on the owner's domain, fetched when the app comes forward (at most every 6 hours), with no identifier in the request. Offline, missing or unparseable, the last good copy (or the built-in defaults) holds; nothing waits for it.
+
+```json
+{
+  "paywall": [{ "id": "control", "weight": 50 },
+              { "id": "annual_b", "weight": 50, "annualProductId": "timbre_pro_annual_b" }],
+  "rating": { "show": true, "stars": 4.8, "count": 312 },
+  "referralCode": "FRIENDMONTH",
+  "flags": { "unit2Free": true }
+}
+```
+
+- `paywall`: the arms of a paywall test, each with a `weight` (its share, 1 when left out). An arm may sell another yearly product (`annualProductId`, which must exist in the same subscription group), show lifetime on onboarding's paywall (`onboardingLifetime`), or change onboarding's headline (`headline`: `song`, the default, or `plan`). A person keeps the arm first drawn for as long as it is listed; dropping an arm moves its people to the others. The analytics events carry the arm.
+- `rating`: the paywall's rating line. It shows only when `show` is true **and** the app really has at least 4.6★ from 200 ratings; never put numbers here the App Store doesn't show.
+- `referralCode`: the offer code "Give a friend a month" hands out (§6.3).
+- `flags`: named switches for experiments.
+
+Before submitting with analytics on, update the App Privacy label (§4) and the "Analytics" section of PRIVACY.md.
 
 ## 6. Growth features: owner steps
 
@@ -183,8 +207,8 @@ How the app behaves: it signs in quietly the first time the Play tab's game card
 
 The paper-plane chip on the Bullseye card, and "Challenge a friend" wherever Game Center's own challenge isn't available, share a "Beat my score" card. For Bullseye it comes with the link `timbre://challenge?game=sniper&score=N`, which opens Bullseye with that score to beat. A player who beats it gets "Send it back" on the results screen. For a song it comes with `timbre://lesson?id=<lesson>`, which opens the song (the score to beat is in the message), on any song played through at full tempo, featured or not.
 
-- A `timbre://` link only works where Timbre is installed, and some apps don't make custom-scheme links tappable. Once the app has an App Store page, set `SniperChallenge.appStoreLink` in `ios/Timbre/Services/GameCenter.swift` to `https://apps.apple.com/app/id<Apple ID>`, so the shared message also says where to get Timbre.
-- Optional, later: host a small https page that forwards to the `timbre://` link and falls back to the App Store, and share that page instead. Universal Links would need an Associated Domains entitlement and an `apple-app-site-association` file on a domain you control.
+- A `timbre://` link only works where Timbre is installed, and some apps don't make custom-scheme links tappable. Every share therefore carries an https link as well (`ShareDestination`): the share page (`TIMBRE_SHARE_URL`, §5) with the route as its path, else the App Store page (`TIMBRE_APP_STORE_ID`, §5). Set the Apple ID as soon as the app record exists.
+- The share page is a small https page that forwards to the `timbre://` link and falls back to the App Store. Opening it as a Universal Link (straight into the app) would also need an Associated Domains entitlement and an `apple-app-site-association` file on that domain.
 
 ### 6.3 Offer codes ("Redeem code" on the paywall)
 
@@ -313,3 +337,73 @@ Get Apple's written answer before adding anything beyond this (playbook section 
 7. **Practice.** Check that each chord step hears a strum, then the progression is strummed in time.
 8. **Apple Music**, with a subscriber account: find, play, pause and restart. Without a subscription it says so and offers Try Apple Music. Check that nothing scrolls or lights with Apple Music and that the card has no Pro badge on a free account. Before MusicKit is enabled, check that the card shows the "isn't available" message.
 9. **Audio session.** Play your recording, then open Practice. The recording pauses and the microphone works. Back on the song, Play carries on from where it paused. Take a phone call mid-song: playback pauses. Close the song while something plays in another app's background audio: that app can resume.
+
+## 9. App Store Connect growth programme
+
+What the owner sets up in App Store Connect to turn the listing into installs, in the order that pays. Each item says what has to be true in the app first.
+
+### 9.1 Billing Grace Period and Family Sharing
+
+1. **Billing Grace Period** (App Store Connect → the app → Subscriptions → Billing Grace Period: 16 days, all renewals). Only with a build that keeps Pro during grace: the entitlement check that trusts `Transaction.currentEntitlements` (WP1) and the billing-issue banner. Check it on TestFlight with a sandbox account set to fail renewals before turning it on. Without it, a payer whose card fails loses Pro in exactly the window grace is meant to protect.
+2. **Family Sharing** on `timbre_pro_annual` and `timbre_plus_lifetime` (each product → Family Sharing). Apple doesn't let it be turned off again for a product, so decide once. Then add the paywall's Family Sharing line (WP2 has it behind the switch).
+
+### 9.2 Custom Product Pages
+
+[APP-STORE-LISTING.md](APP-STORE-LISTING.md#custom-product-pages) has each page's keywords, first frames, promotional text, deep link and preview. For each, starting with **violin, cello and ukulele**:
+
+1. Render its frames: `python3 tools/marketing/screenshots.py <ci-out/screenshots> <out> --page violin` (a page with its own table), or the main set with the page's first capture moved to the front.
+2. For the violin page, run the App Preview workflow with `preview: violin`.
+3. App Store Connect → the app → **Custom Product Pages** → (+). Name it after the instrument; add the promotional text, the frames and the preview.
+4. **Deep link**: the page's `timbre://tune?instrument=<id>` link. Before onboarding is done, `DeepLink.swift` keeps a `tune` link and onboarding opens with that instrument chosen; after it, the link opens the tuner on that instrument.
+5. **Keywords**: assign the page's keywords so it can appear in search for them (since July 2025). A page's keywords count against no other field.
+6. Submit it for review with (or after) the version.
+
+Measure each page in App Store Connect → Analytics (page views and conversion by product page), and the installs it brought in with TelemetryDeck (onboarding's first instrument). Up to 70 pages are allowed; add banjo, voice and ear training once their first frames are store frames (a `storeFrame` check in the UI tests and a table in the listing).
+
+### 9.3 In-App Events
+
+App Store Connect → the app → **In-App Events** → (+). An event card needs a name (30 characters), a short description (50), a long description (120), a badge, a deep link, the event's start and end, and two pictures: the card (1920×1080) and the details page (1080×1920), with no text over the safe areas. Publish an event up to 14 days before it starts so it can be promoted.
+
+| Event | Badge | When | Deep link | Short description |
+|---|---|---|---|---|
+| Holiday carols | Special Event | December 1–31, every year | `timbre://songs` | Play the carols, with the band |
+| 30-day ukulele challenge | Challenge | January (and any month the ukulele page is pushed) | `timbre://tune?instrument=ukulele.soprano.4` | A song a day on your ukulele |
+| This week's song | New Season | weekly, once "This week's song" ships (WP6 phase 2) | `timbre://songs` | A new Original, a new leaderboard |
+
+The carols are in Standards and the ukulele songbook already; check the free ones before promising "free".
+
+### 9.4 Product Page Optimization
+
+App Store Connect → the app → **Product Page Optimization** → (+). Up to three treatments against the original page, for up to 90 days; apply the winner only at 90 % confidence or better. Tests in order:
+
+1. **The first frame**: "Free tuner. No ads." (the original) against the highway first ("Hear exactly how you played"). This decides whether the tuner or the lessons lead.
+2. **The preview's poster**: the lock (the original) against the highway at ×4.
+3. **The icon**, once the icon designer delivers alternates (they ship in the build as alternate icons first).
+
+Run one test at a time, and not while a Custom Product Page for the same audience is being changed.
+
+### 9.5 Featuring Nomination
+
+App Store Connect → **Featuring** → Nominations → (+), "New app launch", at least three weeks before the launch date (six for a holiday window). The story: the tuner you can feel stand still (haptic beating, WP7), lessons that listen as you play, 60 instruments with violin and cello lessons nobody else teaches, and a tuner that works with VoiceOver. Attach the App Preview and a TestFlight link. Nominate again for each major update (the band on speaker, the songbooks).
+
+### 9.6 Accessibility Nutrition Labels
+
+App Store Connect → the app → **Accessibility** → per device. Declare a feature only when a person can do the app's common tasks with it, and only once WP10's accessibility audits pass:
+
+| Feature | Declare | Why |
+|---|---|---|
+| Larger Text | Now | Dynamic Type throughout, checked at AX5 |
+| Dark Interface | Now | The app is dark by design |
+| Differentiate Without Color Alone | Now | Every status has words or a shape as well as a colour |
+| Sufficient Contrast | Now | Text at 4.5:1, controls at 3:1 (Increase Contrast raises both) |
+| Reduced Motion | Now | Every animation has a still or a fade under Reduce Motion |
+| VoiceOver | **Only after the play-along works with it** (WP6) | The tuner works with VoiceOver today; the lessons' play-along doesn't yet, and App Review can force corrections (Guideline 2.3) |
+| Voice Control | After a pass that every control has a speakable name | |
+| Captions, Audio Descriptions | Not applicable | The app has no video with speech |
+
+None of the six competitors fills these in, so an honest, filled label is a free difference.
+
+### 9.7 Apple Ads
+
+Not before the funnel measures revenue per install (§5). Then exact-match instrument keywords ("violin tuner", "learn violin", "cello tuner", "ukulele songs"), each ad group pointing at its Custom Product Page, at about $1.5–3k a month, and stop any keyword whose cost per install exceeds the install's measured first-year revenue.
+

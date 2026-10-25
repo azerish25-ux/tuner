@@ -147,7 +147,7 @@ python3 tools/marketing/screenshots.py <de captures> <out folder> --locale de-DE
 python3 tools/marketing/screenshots.py --check                                            # every table, every locale, every count
 ```
 
-`<ci-out/screenshots>` is the iOS workflow's exported attachments (a `manifest.json` beside the PNGs) or any folder of PNGs named after their captures. Each run also writes `sheet.png`, the set side by side at search-result size, and warns when two frames look alike at that size.
+`<ci-out/screenshots>` is the iOS workflow's exported attachments (a `manifest.json` beside the PNGs) or any folder of PNGs named after their captures. Each run also writes `<set>-sheet.png`, the set side by side at search-result size, and warns when two frames look alike at that size. Where each capture's hero region sits (the crop a look uses) is the `FOCUS` table at the top of the script: adjust it there when a screen's layout moves.
 
 **The looks.** The set is art-directed, not one template nine times: each frame takes the accent of the feature it shows (the tuner's mint, the Originals' sky, the course hues lime, violet and orchid, the stars' gold, the streak's flame, the stage light's warm spotlight), and one frame is light, so the row reads as a colour progression at thumbnail size. Amber and coral never wash a frame: in the app they mean "adjust" and "wrong". The captions are set in Sora at 120 px or more, the supporting line at 56 px in ink at 60 %; there is no eyebrow (the app's name already sits above the gallery). The layouts:
 

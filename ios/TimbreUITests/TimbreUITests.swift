@@ -577,7 +577,7 @@ final class TimbreUITests: XCTestCase {
 
     /// Whether the results' first screen fits above the pinned buttons (LessonResults): the Share pill and the level bar
     /// end above the fade the scroll view draws over its last 28 pt (it ends 8 pt above the buttons), so neither is
-    /// dimmed (review 14 caught Share half under it). Read from one snapshot.
+    /// dimmed (a Share pill half under the fade reads as disabled). Read from one snapshot.
     private func resultsFit() -> (fits: Bool, summary: String) {
         let nodes = appNodes()
         func frame(_ id: String) -> CGRect? { nodes.first { $0.identifier == id }?.frame }
@@ -731,9 +731,26 @@ final class TimbreUITests: XCTestCase {
     /// 56 (every note before it played clean, 68 in a row); the demo pitch plays on, on time. The hook line ("It's kite
     /// weather, kite weather") is in the light from about 2 to 7.5 s into the take, so the picture is taken about 4.5 s
     /// in, hands off from the moment the lesson shows: a query stalls the app's main thread, and a note heard late
-    /// would break the run. One snapshot afterwards checks the combo and that the words are the chorus's.
+    /// would break the run. One snapshot afterwards checks the combo and that the words are the chorus's, and the frame
+    /// is kept only from a pair of pictures 120 ms apart whose HUD reads the same: no digit caught mid-change.
     func test14StoreSongPerform() throws {
         launch(pitch: true, scene: "song-perform")
+        storePerformFrame("65-song-perform", song: "Kite Weather", chorus: ["kite weather", "let it climb", "summer winds"])
+    }
+
+    /// The violin page's second frame: Jingle Bells from the violin songbook (free) on the runway, its last chorus
+    /// lighting up, through the same `song-perform` scene and the same checks as frame #2.
+    func test18StoreViolinSong() throws {
+        app.launchEnvironment["TIMBRE_SCENE_SONG"] = "vln-sb-song-jingle-bells"
+        app.launchEnvironment["TIMBRE_SCENE_BAR"] = "42"
+        launch(pitch: true, scene: "song-perform")
+        storePerformFrame("65b-song-perform-violin", song: "Jingle Bells", chorus: ["jingle bells", "jingle all the way", "what fun"])
+    }
+
+    /// A performance's store frame: hands off from the moment the lesson shows (a query stalls the app's main thread, and a
+    /// note heard late would break the run), then pairs of pictures; one snapshot afterwards checks the combo and that the
+    /// words are the chorus's.
+    private func storePerformFrame(_ name: String, song: String, chorus: [String]) {
         let opened = element("lesson.close").waitForExistence(timeout: 30)
         settle(7.0)
         // Pairs of pictures 120 ms apart, hands off. The frame is the first of a pair whose HUD (score, combo, multiplier)
@@ -759,16 +776,16 @@ final class TimbreUITests: XCTestCase {
         let regions = hudRegions(hud: hud, score: score)
         let steady = pairs.firstIndex { StillScreen.regionsMatch($0.0, $0.1, regions) }
         let picture = steady.map { pairs[$0].0 } ?? pairs[0].0
-        let chorus = ["kite weather", "let it climb", "summer winds"].contains { words.contains($0) }
+        let inChorus = chorus.contains { words.contains($0) }
         let problem: String
-        if !(opened && combo >= 8 && chorus) {
-            problem = "Kite Weather's take shows a combo of \(combo) and the words '\(words)' (opened: \(opened)), not a run of 8+ in the chorus"
+        if !(opened && combo >= 8 && inChorus) {
+            problem = "\(song)'s take shows a combo of \(combo) and the words '\(words)' (opened: \(opened)), not a run of 8+ in the chorus"
         } else if steady == nil {
             problem = "the HUD changed between every pair of pictures 120 ms apart (\(regions.count) regions): a counter mid-change"
         } else {
             problem = ""
         }
-        storeFrame("65-song-perform", picture: picture, ok: problem.isEmpty, problem)
+        storeFrame(name, picture: picture, ok: problem.isEmpty, problem)
     }
 
     /// The HUD's numbers as fractions of the screen: the combo counter (the left of the HUD row), the multiplier dial
@@ -863,7 +880,7 @@ final class TimbreUITests: XCTestCase {
         static let replayLanding = 0.5
         /// The model takes the card in a 0.6 s cross-fade (Motion.reveal): the picture must come later than this after
         /// the first frame drawn with the model on the card (a renderer that stalls on its first frames leaves the
-        /// cross-fade's first frame on screen: the chart with the "3D" switch on, review 15's 51b).
+        /// cross-fade's first frame on screen: the chart with the "3D" switch on).
         static let shown = 0.9
         /// Frames drawn with the model on the card by the reading after the picture: the renderer was drawing.
         static let frames = 8
