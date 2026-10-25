@@ -18,7 +18,7 @@ from courses.ukulele import (
     on_two,
 )
 from courses.songs_part3 import (
-    DBR_C, DBR_LAST, DBR_V, MOLLY_C, MOLLY_SONG, MOLLY_V, SKYE_C, SKYE_SONG, SKYE_V, WATER_SONG, WATER_V1,
+    DBR_C, DBR_LAST, DBR_V, MOLLY_C, MOLLY_SONG, MOLLY_V, SKYE_C, SKYE_SONG, SKYE_V, WATER_SONG, WATER_V1, dbr_words,
 )
 
 # ---------------------------------------------------------------- chord shapes (string 4 first)
@@ -103,7 +103,7 @@ UNIT_7 = unit("uke-7", "New keys", "B flat, D7, B minor and G minor, the keys of
         explain("Roll, don't crush", "Tilt finger 1 slightly onto its thumb side. The bonier edge presses two strings "
                 "more easily. Check that string 2 rings."),
         strum(Bb, DOWNS, bpm=60, bars=2),
-        quiz("Which chord shares finger 1's spot on string 2 with B flat?", ["F", "C", "A minor"], 0,
+        quiz("Which chord shares finger 1's spot on string 2 with B flat?", ["C", "F", "A minor"], 1,
              "F also puts finger 1 on string 2, fret 1. Keep it there as you change."),
         progression([(F, 2), (Bb, 2), (F, 2), (Bb, 2)], DOWNS, bpm=60),
         progression([(F, 1), (Bb, 1), (C7, 1), (F, 1)], D_DU, bpm=63),
@@ -123,7 +123,7 @@ UNIT_7 = unit("uke-7", "New keys", "B flat, D7, B minor and G minor, the keys of
         explain("Bm: one flat finger", "Lay finger 1 across strings 3, 2 and 1 at fret 2, then reach finger 3 to string 4, "
                 "fret 4.", shape(Bm)),
         play_chord(Bm),
-        quiz("D and B minor both press fret 2 on which strings?", ["Strings 3 and 2", "Strings 4 and 1", "Only string 1"], 0,
+        quiz("D and B minor both press fret 2 on which strings?", ["Strings 4 and 1", "Only string 1", "Strings 3 and 2"], 2,
              "Both chords hold fret 2 on strings 3 and 2. Only the outer strings change."),
         explain("The key of D", "In D, the chords D, G and A7 carry the song, and B minor adds a sad one. A7 is a single "
                 "finger: string 3, fret 1.", shape(A7)),
@@ -141,7 +141,7 @@ UNIT_7 = unit("uke-7", "New keys", "B flat, D7, B minor and G minor, the keys of
         progression([(F, 1), (Bb, 1), (C7, 1), (F, 1)], D_DU, bpm=66),
         explain("Pick the singer's key", "If a song sits too high or too low to sing, move it to another key. Same numbers, "
                 "same song, just a better fit for the voice."),
-        quiz("In the key of D, which chord is V?", ["A7", "G", "B minor"], 0,
+        quiz("In the key of D, which chord is V?", ["G", "A7", "B minor"], 1,
              "Count up from D: D, E, F sharp, G, A. A is the fifth note, so A7 is the V chord."),
         progression([(D, 1), (G, 1), (A7, 1), (D, 1)], D_DU, bpm=66),
     ], minutes=5, xp=25),
@@ -161,7 +161,7 @@ UNIT_7 = unit("uke-7", "New keys", "B flat, D7, B minor and G minor, the keys of
                 "Clean shapes first, then a steady strum."),
         play_chord(Bb),
         play_chord(Bm),
-        quiz("In the key of G, which chord is V?", ["D7", "C", "E minor"], 0),
+        quiz("In the key of G, which chord is V?", ["C", "E minor", "D7"], 2),
         progression([(F, 1), (Bb, 1), (C7, 1), (F, 1)], ISLAND, bpm=70),
         progression([(D, 1), (Bm, 1), (G, 1), (A7, 1)], ISLAND, bpm=70),
         progression([(Dm, 1), (Gm, 1), (A7, 1), (Dm, 1)], D_DU, bpm=70),
@@ -192,7 +192,7 @@ UNIT_8 = unit("uke-8", "Strum styles", "The chunk, the island strum with a backb
                 "rhythm stays the same; the groove gets a backbeat.", rhythm(ISLAND)),
         tap(ISLAND, bpm=66, bars=2),
         strum(C, ISLAND, bpm=63, bars=2),
-        quiz("In this strum, which stroke becomes the chunk?", ["The down on 2", "The up after 2", "The down on 1"], 0,
+        quiz("In this strum, which stroke becomes the chunk?", ["The up after 2", "The down on 2", "The down on 1"], 1,
              "Beat 1 rings out, beat 2 clicks. Everything else stays where the island strum had it."),
         progression([(C, 1), (G, 1), (Am, 1), (F, 1)], ISLAND, bpm=66),
         progression([(G, 1), (Em, 1), (C, 1), (D7, 1)], ISLAND, bpm=72),
@@ -205,7 +205,7 @@ UNIT_8 = unit("uke-8", "Strum styles", "The chunk, the island strum with a backb
         strum(C, SWING, bpm=66, bars=2),
         explain("The ragtime progression", "C, A7, D7, G7, then home to C. Each seventh chord pulls to the next, a little chain "
                 "of tension. It powered countless songs a century ago."),
-        quiz("Which chord does D7 pull toward here?", ["G7", "C", "A7"], 0,
+        quiz("Which chord does D7 pull toward here?", ["C", "A7", "G7"], 2,
              "D7 leads to G, and G7 leads home to C. Each chord sets up the next."),
         progression(RAGTIME, SWING, bpm=66),
         progression(RAGTIME + [(C, 2)], SWING, bpm=72),
@@ -227,7 +227,7 @@ UNIT_8 = unit("uke-8", "Strum styles", "The chunk, the island strum with a backb
                 "sway is clear.", rhythm(WALTZ_DU, beats_per_bar=3)),
         tap(WALTZ_DU, bpm=72, bars=2, beats_per_bar=3),
         strum(F, WALTZ_DU, bpm=72, bars=2, beats_per_bar=3),
-        quiz("How many strums fill this bar of three?", ["Five", "Three", "Six"], 0,
+        quiz("How many strums fill this bar of three?", ["Three", "Five", "Six"], 1,
              "Down on 1, then down-up on 2 and on 3: one plus two plus two."),
         progression([(F, 2), (C7, 2), (F, 2), (C7, 1), (F, 1)], WALTZ_DU, bpm=72, beats_per_bar=3),
         progression([(C, 1), (Am, 1), (Dm, 1), (G7, 1)], WALTZ_DU, bpm=76, beats_per_bar=3),
@@ -239,7 +239,7 @@ UNIT_8 = unit("uke-8", "Strum styles", "The chunk, the island strum with a backb
         tap(SWING, bpm=76, bars=2),
         progression([(C, 1), (Am, 1), (F, 1), (G7, 1)], CHUNK, bpm=72),
         progression([(C, 1), (G, 1), (Am, 1), (F, 1)], ISLAND, bpm=76),
-        quiz("In a swing strum, each beat splits into…", ["Long, then short", "Two equal halves", "Short, then long"], 0),
+        quiz("In a swing strum, each beat splits into…", ["Two equal halves", "Short, then long", "Long, then short"], 2),
         progression(RAGTIME + [(C, 2)], SWING, bpm=76),
         progression([(C, 1), (Am, 1), (F, 1), (G7, 1)], EIGHTHS, bpm=72),
         progression([(F, 2), (C7, 2), (F, 2), (C7, 1), (F, 1)], WALTZ_DU, bpm=84, beats_per_bar=3),
@@ -295,7 +295,7 @@ UNIT_9 = unit("uke-9", "Fingerpicking and chord melody", "One finger per string,
         explain("Out and back", "Pluck strings 4, 3, 2 and 1, then come back on 2 and 3: thumb, index, middle, ring, middle, "
                 "index. Six notes fill a bar of three.", rhythm([0, 0.5, 1, 1.5, 2, 2.5], beats_per_bar=3)),
         held([(C, pattern(C, ROLL, 0.5))] * 2, bpm=60, beats_per_bar=3, title="C, out and back"),
-        quiz("After the ring finger plucks string 1, which finger comes next?", ["The middle", "The thumb", "The index"], 0,
+        quiz("After the ring finger plucks string 1, which finger comes next?", ["The thumb", "The middle", "The index"], 1,
              "The roll turns around at the top: ring on string 1, then middle on 2 and index on 3."),
         held([(Am, pattern(Am, ROLL, 0.5)), (F, pattern(F, ROLL, 0.5))] * 2, bpm=60, beats_per_bar=3, title="A minor to F"),
         explain("Change on the thumb", "Land the new chord as the thumb starts the next bar. The fingers keep rolling; only "
@@ -308,8 +308,8 @@ UNIT_9 = unit("uke-9", "Fingerpicking and chord melody", "One finger per string,
                 "strings 2 and 1 in between. It's the ukulele's version of Travis picking.", rhythm(EIGHTHS)),
         held([(C, pattern(C, [3, 4, 3, 4], 1))] * 2, bpm=60, title="C, thumb alone"),
         held([(C, pattern(C, ALTERNATE, 0.5))] * 2, bpm=60, title="C, add the fingers"),
-        quiz("In this pattern, what does the thumb do?", ["Rocks between strings 3 and 4", "Plays only on beat 1",
-                                                          "Rests while the fingers play"], 0,
+        quiz("In this pattern, what does the thumb do?", ["Plays only on beat 1", "Rests while the fingers play",
+                                                          "Rocks between strings 3 and 4"], 2,
              "The thumb keeps the pulse, a note on every beat, while the fingers fill the gaps."),
         held([(G7, pattern(G7, ALTERNATE, 0.5))] * 2, bpm=60, title="G7, the same pattern"),
         held([(C, pattern(C, ALTERNATE, 0.5)), (G7, pattern(G7, ALTERNATE, 0.5))] * 2, bpm=63, title="C to G7"),
@@ -332,8 +332,8 @@ UNIT_9 = unit("uke-9", "Fingerpicking and chord melody", "One finger per string,
                 "tune is the hymn New Britain, printed in 1829, with John Newton's words.", shape(Bb)),
         AG_SONG.along("Intro", bpm=66, title="The picked intro"),
         AG_SONG.along("Verse 1", bpm=66, title=THE_VERSE),
-        quiz("Why does the intro's last bar end on a long note?", ["To leave room for the pickup", "Because the tune ends there",
-                                                                   "To change key"], 0,
+        quiz("Why does the intro's last bar end on a long note?", ["Because the tune ends there", "To leave room for the pickup",
+                                                                   "To change key"], 1,
              "The verse starts a beat early, on its pickup. A long last note keeps that beat clear."),
         AG_SONG.along("Interlude", bpm=72, title="Picked chords"),
         AG_SONG.take("Amazing Grace"),
@@ -341,7 +341,7 @@ UNIT_9 = unit("uke-9", "Fingerpicking and chord melody", "One finger per string,
     lesson("uke-9-6", "Challenge: fingerpicking", [
         explain("Fingers, thumb and tune", "No new ideas: one finger per string, the out-and-back roll, the alternating thumb "
                 "and the melody inside the chord."),
-        quiz("Thumb, index, middle, ring play which strings?", ["4, 3, 2 and 1", "1, 2, 3 and 4", "3, 4, 1 and 2"], 0),
+        quiz("Thumb, index, middle, ring play which strings?", ["1, 2, 3 and 4", "3, 4, 1 and 2", "4, 3, 2 and 1"], 2),
         held([(spec, pattern(spec, ROLL, 0.5)) for spec in ROLLS], bpm=69, beats_per_bar=3, title="A minor, F, C, G7"),
         held([(C, pattern(C, ALTERNATE, 0.5)), (G7, pattern(G7, ALTERNATE, 0.5))] * 2, bpm=72, title="C to G7"),
         along(U, f"r:2 {AG}", bpm=76, beats_per_bar=3, title="Amazing Grace"),
@@ -360,7 +360,7 @@ DBR_U = song(U, 88, [
     DBR_U_V, DBR_U_C,
     Part("Interlude", "interlude", " ".join(picked(spec, OUT, 1) for spec in [C, G, D7, G, C, G, D7])
          + f" {picked(G, [4, 3, 2], [1, 1, 2])}", chords="C G D7 G C G D7 G"),
-    DBR_U_V.with_lyrics("Verse 2", labeled_lyrics := DBR_V.lyrics.replace("lay down my bur-den _", "walk with the Prince of Peace")),
+    DBR_U_V.with_lyrics("Verse 2", dbr_words("walk with the Prince of Peace")),
     DBR_U_C,
     Part("Outro", "outro", on_two(transpose(f"G3:0.5 A3:0.5 B3:0.5 B3:0.5 {DBR_LAST} G3:4", 12)), pickup=2, chords="D7 G",
          lyrics="I ain't gon-na stud-y war no more. _"),
@@ -425,8 +425,8 @@ UNIT_10 = unit("uke-10", "Campfire to stage", "Four public-domain songs arranged
         DBR_U.take("Down by the Riverside"),
     ], minutes=DBR_U.minutes(), xp=35, kind="song", arrangement=DBR_U.meta()),
     lesson("uke-10-2", "The Water Is Wide", [
-        explain("A ballad to pick", "Cecil Sharp printed this English ballad in 1906. In F it uses F, B flat, C, G minor and "
-                "D minor, often two to a bar. Pick the chords between verses and let them ring."),
+        explain("A ballad to pick", "Cecil Sharp printed this English ballad in 1906. In F it uses F, B flat, C and C7, "
+                "G minor and D minor, often two to a bar. Pick the chords between verses and let them ring."),
         notes(U, ["C4", "F4", "F4", ("G4", 2), "A4"], hint="The water is wide: open string 3, F at fret 1 twice, G at fret 3, "
               "then open A."),
         WATER_U.along("Verse 1", bpm=56, title=THE_VERSE),
@@ -458,7 +458,7 @@ UNIT_10 = unit("uke-10", "Campfire to stage", "Four public-domain songs arranged
         MOLLY_U.along("Chorus", bpm=96, title=THE_CHORUS),
         progression(MOLLY_CHORDS, WALTZ_DU, bpm=96, beats_per_bar=3),
         MOLLY_U.along("Verse 1", bpm=104, title=THE_VERSE),
-        quiz("Which chord pulls hardest back to F?", ["C7", "G minor", "D minor"], 0,
+        quiz("Which chord pulls hardest back to F?", ["G minor", "C7", "D minor"], 1,
              "C7 is the V chord in F. Its seventh leans straight back home."),
         MOLLY_U.take("Molly Malone"),
     ], minutes=MOLLY_U.minutes(), xp=35, kind="song", arrangement=MOLLY_U.meta()),
@@ -469,7 +469,7 @@ UNIT_10 = unit("uke-10", "Campfire to stage", "Four public-domain songs arranged
         SKYE_U.along("Chorus", bpm=120, title=THE_CHORUS),
         progression(SKYE_HALVES, [0], bpm=132, beats_per_bar=3),
         SKYE_U.along("Verse 1", bpm=126, title=THE_VERSE),
-        quiz("In six-eight, where do the big beats fall?", ["On 1 and 4", "On every count", "On 1, 3 and 5"], 0,
+        quiz("In six-eight, where do the big beats fall?", ["On every count", "On 1, 3 and 5", "On 1 and 4"], 2,
              "Six eighths group in two threes: 1 2 3, 4 5 6. The first of each three carries the sway."),
         SKYE_U.take("The Skye Boat Song"),
     ], minutes=SKYE_U.minutes(), xp=35, kind="song", arrangement=SKYE_U.meta()),

@@ -585,6 +585,15 @@ UNIT_6 = unit("uke-6", "Songs", "Four public-domain songs with melody and chords
     ], minutes=6, xp=40, kind="challenge"),
 ])
 
-COURSE = course("ukulele", "Ukulele", "From G C E A to your first songs", "ukulele.soprano.4", "music.note", "amber", [
-    UNIT_1, UNIT_2, UNIT_3, UNIT_4, UNIT_5, UNIT_6,
+# Units 7–10 live in ukulele_part2.py, which imports the shapes, rhythms and shared text above (so this stays last).
+try:
+    from courses.ukulele_part2 import UNITS as PART_2
+except ModuleNotFoundError as missing:
+    if missing.name != "courses.ukulele_part2":
+        raise
+    PART_2 = []
+
+COURSE = course("ukulele", "Ukulele", "From G C E A to new keys, fingerpicking and a stage set", "ukulele.soprano.4",
+                "music.note", "amber", [
+    UNIT_1, UNIT_2, UNIT_3, UNIT_4, UNIT_5, UNIT_6, *PART_2,
 ])
