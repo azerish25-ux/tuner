@@ -221,7 +221,7 @@ jobs:
     # The accessibility audit (enforced kinds fail, and so does an audit that can't run) and the localization
     # launches (German, Arabic right to left with note names left to right, pseudo-localization).
     name: accessibility
-    timeout-minutes: 40
+    timeout-minutes: 55
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
@@ -256,21 +256,64 @@ jobs:
         run: |
           xcrun simctl bootstatus "$DEVICE_ID" -b
           xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre || true
+      - name: Warm the simulator up with one launch
+        run: |
+          # A simulator that has just booted can lose app launches for minutes (XCUITest then reports "Timed out while
+          # launching application" or "does not have a process ID" before a test has checked anything). The app is
+          # installed and launched once as the audits launch it, each try cut off at two minutes. Best effort: a
+          # launch that never succeeds here still fails the tests below, which say why.
+          APP=ios/build/dd/Build/Products/Debug-iphonesimulator/Timbre.app
+          BUNDLE=com.shahradazerisharghi.timbre
+          xcrun simctl install "$DEVICE_ID" "$APP" || echo "::warning::Could not install the app for the warm-up launch"
+          for attempt in 1 2 3; do
+            start=$(date +%s)
+            if SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID=$(uuidgen) SIMCTL_CHILD_TIMBRE_SKIP_ONBOARDING=1 SIMCTL_CHILD_TIMBRE_DEMO_DATA=1 \
+               SIMCTL_CHILD_TIMBRE_STAGE_REST=1 perl -e 'alarm shift; exec @ARGV' 120 xcrun simctl launch "$DEVICE_ID" "$BUNDLE"; then
+              sleep 10
+              xcrun simctl terminate "$DEVICE_ID" "$BUNDLE" || true
+              echo "Warm-up launch $attempt took $(( $(date +%s) - start )) s"
+              break
+            fi
+            echo "::warning::Warm-up launch $attempt failed after $(( $(date +%s) - start )) s"
+            xcrun simctl terminate "$DEVICE_ID" "$BUNDLE" || true
+            sleep 15
+          done
       - name: Accessibility audit and localization launches
         run: |
           set -o pipefail
-          xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO \
-            -only-testing:TimbreUITests/AccessibilityAuditUITests -only-testing:TimbreUITests/LocalizationLaunchUITests \
-            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
-            -resultBundlePath ios/build/Accessibility.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
+          tests() {  # a result bundle, a log, then the -only-testing arguments
+            local bundle="$1" log="$2"
+            shift 2
+            xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO "$@" \
+              -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+              -resultBundlePath "$bundle" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$log"
+          }
+          tests ios/build/Accessibility.xcresult ci-out/test.log \
+            -only-testing:TimbreUITests/AccessibilityAuditUITests -only-testing:TimbreUITests/LocalizationLaunchUITests && exit 0
+          # One more try for the tests that failed only because the app never launched (tools/ci/launch_retry.py);
+          # every other failure stands, whatever the second try does.
+          status=0
+          python3 tools/ci/launch_retry.py ci-out/test.log ci-out/relaunch.txt || status=1
+          if [ -s ci-out/relaunch.txt ]; then
+            # One argument a line, no spaces in them.
+            # shellcheck disable=SC2046
+            tests ios/build/Accessibility-relaunch.xcresult ci-out/test-relaunch.log $(cat ci-out/relaunch.txt) || status=1
+          fi
+          exit $status
       - name: Collect results
         if: always()
         run: |
           if [ -d ios/build/Accessibility.xcresult ]; then
             xcrun xcresulttool export attachments --path ios/build/Accessibility.xcresult --output-path ci-out/screenshots || true
           fi
-          [ -f ci-out/test.log ] && python3 tools/ci/summarize-log.py ci-out/test.log ci-out/test.summary.txt
-          gzip -f ci-out/test.log 2>/dev/null || true
+          if [ -d ios/build/Accessibility-relaunch.xcresult ]; then
+            xcrun xcresulttool export attachments --path ios/build/Accessibility-relaunch.xcresult \
+              --output-path ci-out/screenshots-relaunch || true
+          fi
+          for log in ci-out/test.log ci-out/test-relaunch.log; do
+            if [ -f "$log" ]; then python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"; fi
+          done
+          gzip -f ci-out/test.log ci-out/test-relaunch.log 2>/dev/null || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -478,6 +478,12 @@ struct SongPerformStep: View {
 
     private func startMelody() {
         playingChords = false
+        // A fresh count from the first click (a lesson's click restarts even over the Metronome tool's), so the
+        // count-in, the runway and the judging start together; this take owns it until it ends. The click comes first:
+        // starting the audio output can hold the main thread for seconds, and a take whose clock started before it
+        // would run that far ahead of the click, past what following the heard click corrects (`heardStart`).
+        store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
+        ownsClick = true
         session = PlayAlongSession(notes: notes, bpm: tempo, beatsPerBar: beatsPerBar, anyOctave: course.anyOctave, keepsTrail: !fretted)
         session.begin(at: CACurrentMediaTime())
         cueTiming = SpokenCues.Timing(session)
@@ -487,10 +493,6 @@ struct SongPerformStep: View {
         BandFeel.shared.reset(duck: spoken)
         if spoken { Earcons.shared.prepare() }
         Analytics.log("song_perform", ["lesson": lesson.id, "tempo": String(ladder.percent)])
-        // A fresh count from the first click (a lesson's click restarts even over the Metronome tool's), so the
-        // count-in, the runway and the judging start together; this take owns it until it ends.
-        store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
-        ownsClick = true
         // The band rides the metronome from the bar after the count-in (in full in headphones, its drums on the speaker).
         store.audio.playBand(band, firstBar: 1)
         store.gameTargetHz = notes.first.map { PitchMath.frequency(midi: Double($0.midi), reference: store.settings.referencePitchHz) }
@@ -738,6 +740,7 @@ extension SongPerformStep {
         startMelody()
         // The clock starts a bar before `beat`: the first frames after a jump this size (the runway's first draw of the
         // whole song, the band starting) can hold the main thread for a second, and a note due then would be a miss.
+        // Starting the audio output, which can hold it for several seconds, comes before the take's clock starts.
         let lead = Double(max(1, beatsPerBar))
         let from = max(0, beat - lead)
         session.skip(session.countIn + from * spb)

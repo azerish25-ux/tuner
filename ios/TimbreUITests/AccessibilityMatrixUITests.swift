@@ -66,10 +66,10 @@ final class AccessibilityMatrixUITests: XCTestCase {
         settle(2)
         capture("tuner")
 
-        element("settings.open").tap()
-        settle(1.5)
-        capture("settings")
-        closeSheet()
+        if openSettings() {
+            capture("settings")
+            closeSheet()
+        }
 
         // A first lesson: the explanation, the tune check, a notes step, then the play-along before Start.
         tab(1)
@@ -111,10 +111,23 @@ final class AccessibilityMatrixUITests: XCTestCase {
         capture("lesson-along-ready")
     }
 
-    /// Settings › Handedness: left-handed, or left-handed strung upside down.
-    private func chooseHandedness() {
+    /// Opens Settings with the tuner's header button. When another control takes the tap (at the largest text size the
+    /// stage's Strum control once stood over the button and opened Strum to tune), that fails the run by name and is
+    /// closed, so the screens after it are still captured.
+    private func openSettings() -> Bool {
         element("settings.open").tap()
         settle(1.5)
+        let strum = element("strum.close")
+        guard strum.exists else { return true }
+        XCTFail("the Settings button opened Strum to tune: the Strum control lies over it")
+        strum.tap()
+        settle(1.5)
+        return false
+    }
+
+    /// Settings › Handedness: left-handed, or left-handed strung upside down.
+    private func chooseHandedness() {
+        guard openSettings() else { return }
         let row = element("settings.handedness")
         scrollTo(row)
         guard row.exists else { return XCTFail("no handedness row in Settings") }

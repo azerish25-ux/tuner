@@ -217,8 +217,9 @@ enum DemoScene: String {
         return beat
     }
 
-    /// In `song-perform` the take's score changes in place rather than rolling its digits: it changes with every note,
-    /// several times a second, so a rolling score is mid-roll in almost any picture.
+    /// In `song-perform` the take's score and the HUD's combo and multiplier change in place rather than rolling their
+    /// digits or popping (`HighwayHUD`): they change with every note, several times a second, so a rolling or popping
+    /// count is mid-change in almost any picture.
     static var stillScore: Bool { current == .songPerform }
 
     /// Learn opens the song (as a Siri or Spotlight link opens one), then goes back to the player's own course once
