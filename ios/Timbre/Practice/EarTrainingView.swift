@@ -660,23 +660,18 @@ private struct IntervalLegend: View {
     }
 
     private var line: Text {
-        var text = Text(verbatim: "")
-        for (index, step) in steps.enumerated() {
-            if index > 0 { text = text + Text(verbatim: "  ·  ") }
-            let short = Text(verbatim: Intervals.short[step]).font(Typeface.label(12)).foregroundStyle(Palette.accentNeutral)
-            let name = Text(LocalizedStringKey(Intervals.names[step]))
-            text = text + short + Text(verbatim: " ") + name
+        steps.enumerated().reduce(Text(verbatim: "")) { text, item in
+            let short = Text(verbatim: Intervals.short[item.element]).font(Typeface.label(12)).foregroundStyle(Palette.accentNeutral)
+            let entry = short + Text(verbatim: " ") + Text(LocalizedStringKey(Intervals.names[item.element]))
+            return item.offset == 0 ? entry : text + Text(verbatim: "  ·  ") + entry
         }
-        return text
     }
 
     private var spoken: Text {
-        var text = Text(verbatim: "")
-        for (index, step) in steps.enumerated() {
-            if index > 0 { text = text + Text(verbatim: ", ") }
-            text = text + Text(LocalizedStringKey(Intervals.names[step]))
+        steps.enumerated().reduce(Text(verbatim: "")) { text, item in
+            let name = Text(LocalizedStringKey(Intervals.names[item.element]))
+            return item.offset == 0 ? name : text + Text(verbatim: ", ") + name
         }
-        return text
     }
 }
 

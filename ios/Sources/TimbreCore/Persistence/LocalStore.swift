@@ -735,7 +735,7 @@ public final class LocalStore {
 
     private static func validate(_ record: PracticeRecord) throws {
         guard record.date.timeIntervalSinceReferenceDate.isFinite, !record.instrumentId.isEmpty,
-              0 <= record.count, record.stableCount >= 0, record.stableCount <= record.count,
+              record.count >= .zero, record.stableCount >= 0, record.stableCount <= record.count,
               record.meanAbsoluteCents.map({ $0.isFinite && $0 >= 0 }) ?? true,
               record.durationMs.map({ $0 >= 0 }) ?? true else {
             throw LocalStoreError.invalidState("Invalid practice record")

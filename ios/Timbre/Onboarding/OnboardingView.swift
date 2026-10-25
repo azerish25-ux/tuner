@@ -340,9 +340,10 @@ struct OnboardingView: View {
                 .padding(.top, 18)
             Button("Get started") { go(.experience) }.buttonStyle(PrimaryButtonStyle()).padding(.horizontal, Metrics.gutter).padding(.top, 22)
                 .accessibilityIdentifier("onboarding.start")
+            // Clear of the mint button's glass and glow, so its frame reads only the dark page behind it.
             justTuneLink
                 .frame(maxWidth: .infinity)
-                .padding(.top, 4)
+                .padding(.top, 10)
             restoreLink
                 .frame(maxWidth: .infinity)
                 .padding(.bottom, 2)
