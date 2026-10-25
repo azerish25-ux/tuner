@@ -116,6 +116,11 @@ final class StageController {
     /// Frames drawn since the scene was attached: the stage has really drawn once this moves.
     private(set) var frames = 0
     private var glowTube: ModelEntity?
+    /// The full-tune roll (`rollStrings`): when each rig string (lowest first) is struck in turn, when they are all
+    /// struck together, and each string's glow.
+    private var rollStrikes: [Date] = []
+    private var rollBloom: Date?
+    private var rollGlows: [ModelEntity] = []
     private static let segmentCount = 36
     /// Close-up clearances in points: peg centres stay this far below the stage top (24 pt plus the peg ring),
     /// the nut this far above its bottom; the headstock centres in the room left of the side controls.
@@ -201,6 +206,7 @@ final class StageController {
         loadedModel = nil
         pegs = [:]; posts = [:]; postCenters = [:]; pegCorners = []; staticStrings = [:]; angles = [:]
         segments = []; glowTube = nil
+        rollStrikes = []; rollBloom = nil; rollGlows = []
         currentAnchor = nil
         currentPeg = nil
         aimPoint = nil
@@ -633,6 +639,61 @@ final class StageController {
             if let post = posts[string.peg] { post.entity.orientation = post.base * simd_quatf(angle: next / 6, axis: [0, 0, 1]) }
         }
         updateString(tuned.first, phase: Float(phase), locked: state.locked, active: state.listening, swing: state.marketingScale)
+        updateRoll(Date())
+    }
+
+    // MARK: Every string in tune
+
+    /// Every string in tune: the strings light one by one, lowest first, in step with the full-tune strum as it rolls
+    /// across them (`SoundSynth.tunedRoll`, `count` strings), then all together as it is strummed again
+    /// (`SoundSynth.tunedBloom`), each glowing in the in-tune colour and dying away as it rings.
+    func rollStrings(count: Int) {
+        guard let rig, let model else { return }
+        if rollGlows.count != rig.strings.count {
+            for glow in rollGlows { glow.removeFromParent() }
+            let material = StringGlow.material(UIColor(Palette.mint), opacity: 0.3)
+            rollGlows = rig.strings.map { _ -> ModelEntity in
+                let glow = ModelEntity(mesh: StringGlow.mesh(), materials: [material])
+                glow.isEnabled = false
+                model.addChild(glow)
+                return glow
+            }
+        }
+        let now = Date()
+        let step = SoundSynth.tunedRoll(count: max(1, count))
+        rollStrikes = rig.strings.indices.map { now.addingTimeInterval(Double($0) * step) }
+        rollBloom = now.addingTimeInterval(SoundSynth.tunedBloom(count: max(1, count)))
+    }
+
+    /// Each string's glow in the roll: struck, it flares and dies away, shimmering as it rings (still with Reduce Motion).
+    private func updateRoll(_ now: Date) {
+        guard let rig, let bloom = rollBloom else { return }
+        guard now.timeIntervalSince(bloom) < Self.rollRing else {
+            for glow in rollGlows { glow.isEnabled = false }
+            rollStrikes = []
+            rollBloom = nil
+            return
+        }
+        for (index, string) in rig.strings.enumerated() where index < rollGlows.count {
+            let glow = rollGlows[index]
+            let struck = index < rollStrikes.count ? Self.ringLevel(now.timeIntervalSince(rollStrikes[index])) : 0
+            let level = max(struck, Self.ringLevel(now.timeIntervalSince(bloom)))
+            guard string.radius > 0, level > 0.02 else {
+                glow.isEnabled = false
+                continue
+            }
+            let shimmer = reduceMotion ? 1 : 0.85 + 0.15 * Float(sin(time * 2 * .pi * 7 + Double(index)))
+            StringGlow.place(glow, from: string.saddlePoint, to: string.nutPoint, radius: string.radius * (2.4 + 5 * Float(level) * shimmer))
+        }
+    }
+
+    /// Seconds a string glows after the last strike.
+    private static let rollRing = 2.4
+
+    /// 1 as a string is struck, dying away; 0 before it is struck and once it has rung out.
+    private static func ringLevel(_ since: Double) -> Double {
+        guard since >= 0, since < rollRing else { return 0 }
+        return exp(-since * 2.2)
     }
 
     /// The rig strings being tuned: on a paired course the one `peg` names (in course order), else every
@@ -693,7 +754,8 @@ final class StageController {
 /// to the studio picture's framing and the stage hands over to that picture (`StudioStage`, the same one the host shows
 /// while the model loads), taking the 3D view away so nothing renders. Listening again brings the model straight back,
 /// drawn behind the picture before it shows, and the camera glides in. In Low Power Mode or on a hot device it holds
-/// the picture, live, until that passes.
+/// the picture, live, until that passes. When every string is in tune, the strings light one by one with the full-tune
+/// strum (`StageController.rollStrings`).
 struct InstrumentStage: View {
     let modelID: String
     let input: () -> StageInput
@@ -718,6 +780,7 @@ struct InstrumentStage: View {
     /// The studio picture shows over the stage.
     @State private var still = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @EnvironmentObject private var store: AppStore
     @CurrentHand private var hand
     @ObservedObject private var power = StagePower.shared
     private let debug = ProcessInfo.processInfo.environment["TIMBRE_STAGE_DEBUG"] == "1"
@@ -733,19 +796,7 @@ struct InstrumentStage: View {
 
     var body: some View {
         let plan = RestPlan(ready: ready, resting: resting && !showcase, reduced: power.reduced && !showcase)
-        ZStack {
-            if mounted {
-                // Under the picture it draws at a trace rather than not at all, so coming back it has drawn before it shows.
-                live
-                    .opacity(still ? 0.02 : 1)
-            }
-            if still, let card = restCard {
-                StudioStage(imageName: ModelLibrary.cardImageName(modelID), card: card, input: input, onSelect: onSelect,
-                            resting: resting, startsClose: true)
-                    .padding(.horizontal, StageRest.picturePadding)
-                    .transition(.opacity)
-            }
-        }
+        layers
         // One load per model, owned by the controller: a newer instrument cancels it, and only the model the host
         // still wants is ever put on stage or reported ready.
         .task(id: modelID) {
@@ -763,6 +814,8 @@ struct InstrumentStage: View {
         }
         .onChange(of: attached) { _, _ in reportLoad() }
         .onChange(of: hand) { _, _ in configure() }
+        // Every string in tune: the strings light in step with the full-tune strum.
+        .onChange(of: store.celebrate) { _, _ in controller.rollStrings(count: store.courses.count) }
         .onChange(of: reduceMotion, initial: true) { _, value in controller.reduceMotion = value }
         .onGeometryChange(for: CGSize.self) { proxy in proxy.size } action: { size in controller.viewSize = size }
         .task(id: plan) { await follow(plan) }
@@ -777,6 +830,23 @@ struct InstrumentStage: View {
                     .accessibilityIdentifier("stage.debug")
             }
             #endif
+        }
+    }
+
+    /// The model, and its studio picture over it while the stage rests.
+    private var layers: some View {
+        ZStack {
+            if mounted {
+                // Under the picture it draws at a trace rather than not at all, so coming back it has drawn before it shows.
+                live
+                    .opacity(still ? 0.02 : 1)
+            }
+            if still, let card = restCard {
+                StudioStage(imageName: ModelLibrary.cardImageName(modelID), card: card, input: input, onSelect: onSelect,
+                            resting: resting, startsClose: true)
+                    .padding(.horizontal, StageRest.picturePadding)
+                    .transition(.opacity)
+            }
         }
     }
 

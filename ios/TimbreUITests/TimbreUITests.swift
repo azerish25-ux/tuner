@@ -294,26 +294,42 @@ final class TimbreUITests: XCTestCase {
         element("onboarding.instrument.bass.electric.4").tap(); settle(); shot("02-onboarding-instrument")
         element("onboarding.instrument.guitar.acoustic.6").tap()
         start.tap(); settle(1.5); shot("03-onboarding-experience")
-        // Nothing is pre-selected: Continue waits for an answer.
-        element("onboarding.option.intermediate").tap()
-        continueUntil(element("onboarding.option.practice")); settle(1.2); shot("04-onboarding-goal")
-        element("onboarding.option.practice").tap(); settle(0.5)
+        // Nothing is pre-selected: Continue waits for an answer. A beginner's path holds every page, the first chord too.
+        element("onboarding.option.beginner").tap()
+        // A beginner's goal starts on "Play my first songs".
+        continueUntil(element("onboarding.option.songs")); settle(1.2); shot("04-onboarding-goal")
+        // A guitar has strings to hold: which hand plays (right-handed until the player says otherwise).
+        continueUntil(element("onboarding.option.right")); settle(1.2); shot("04b-onboarding-hand")
         let notNow = app.buttons["Not now"]
         for _ in 0..<3 where !notNow.exists { element("onboarding.continue").tap(); settle(1.5) }
         XCTAssertTrue(notNow.waitForExistence(timeout: 5))
         shot("05-onboarding-microphone")
         notNow.tap()
-        // "Pluck your thickest string": the stage follows the pitch, locks, and moves on to the plan by itself.
+        // "Pluck your thickest string": the stage follows the pitch and locks.
         let firstTune = element("onboarding.firsttune")
         XCTAssertTrue(firstTune.waitForExistence(timeout: 10))
         settle(1.6); shot("05a-onboarding-first-tune")
         // The lock counts as practice: the badge, the XP and day one of the streak show where Skip was.
         if element("onboarding.firsttune.reward").waitForExistence(timeout: 15) { settle(0.5); shot("05a2-onboarding-first-tune-reward") }
+        // The streak just started: the reminder card asks once, on a card of its own ("Later" never raises the system prompt).
+        let later = element("onboarding.reminder.later")
+        if later.waitForExistence(timeout: 12) {
+            settle(0.8); shot("05a3-onboarding-reminder")
+            tapIfPresent(later); settle(1)
+        }
+        // A beginner's first chord: the demo pitch plays it string by string, every string lights, then the fact.
+        if element("onboarding.firstchord").waitForExistence(timeout: 10) {
+            settle(1.5); shot("05c-onboarding-first-chord")
+            if element("onboarding.firstchord.done").waitForExistence(timeout: 30) {
+                settle(0.8); shot("05c2-onboarding-first-chord-done")
+            }
+        }
         let plan = element("onboarding.plan.start")
-        if !plan.waitForExistence(timeout: 15) {
-            // Never stall the tour on the lock: Skip leads to the same plan.
-            let skip = element("onboarding.firsttune.skip")
-            if skip.exists && skip.isHittable { skip.tap() }
+        // Never stall the tour on a page that waits for a sound: each has a way on to the same plan.
+        for skip in ["onboarding.firsttune.skip", "onboarding.reminder.later", "onboarding.firstchord.done", "onboarding.firstchord.skip"] {
+            if plan.waitForExistence(timeout: 8) { break }
+            let button = element(skip)
+            if button.exists && button.isHittable { tapIfPresent(button) }
         }
         XCTAssertTrue(plan.waitForExistence(timeout: 10))
         settle(2); shot("05b-onboarding-plan")
