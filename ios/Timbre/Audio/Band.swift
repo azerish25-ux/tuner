@@ -620,6 +620,17 @@ enum BandSynth {
         let samples: SampleLibrary?
     }
 
+    /// What every part of one bar is written with, besides its own notes: the beat's length in frames, how far off the
+    /// grid a hit may land (frames), the bar's number among the distinct bars (it varies round robins and strums), the
+    /// recorded players and the sample rate.
+    private struct BarSetup {
+        let beat: Double
+        let push: Double
+        let number: Int
+        let players: Players
+        let rate: Double
+    }
+
     /// The style the arrangement's song is played in: the one its cues name (the first time, this reads the
     /// curriculum: call it off the main thread), else the one its strum suggested.
     static func style(of arrangement: BandArrangement) -> BandStyle {
@@ -685,8 +696,8 @@ enum BandSynth {
                                              lift: spec.lift, ending: spec.ending, variation: spec.variation,
                                              chord: chorded, fifth: fifth(of: spec.tones))
             let groove = BandGroove.bar(style, context).changing(at: changes)
-            let toms = drums(&kit, &low, groove.hits, beat: beat, push: push, number: number, players: players, rate: rate,
-                             noise: &noise, feel: &feel)
+            let setup = BarSetup(beat: beat, push: push, number: number, players: players, rate: rate)
+            let toms = drums(&kit, &low, groove.hits, setup: setup, noise: &noise, feel: &feel)
             var bassed = false
             if arrangement.bass {
                 bassed = bassLine(&low, groove.bass, bar: spec, fifth: context.fifth, beat: beat, reference: reference,
@@ -695,8 +706,7 @@ enum BandSynth {
             var harmonised = false
             if arrangement.pad, chorded {
                 harmonised = true
-                let comped = comp(&chords, groove.comp, bar: spec, beat: beat, number: number, reference: reference,
-                                  players: players, rate: rate, feel: &feel)
+                let comped = comp(&chords, groove.comp, bar: spec, reference: reference, setup: setup, feel: &feel)
                 if !comped {
                     // The piano couldn't play the whole bar: the pad holds its chords instead (nothing half-comped).
                     chords = [Float](repeating: 0, count: sounding + tail)
@@ -772,8 +782,9 @@ enum BandSynth {
     /// to the click. The recorded kit when it has the piece (its round robins alternating hit by hit), else synthesized.
     /// The toms go to `toms` (the pitched layer: a tom rings at a pitch the microphone could take for a note); true
     /// when any did.
-    private static func drums(_ out: inout [Float], _ toms: inout [Float], _ hits: [BandGroove.Hit], beat: Double, push: Double,
-                              number: Int, players: Players, rate: Double, noise: inout Noise, feel: inout Noise) -> Bool {
+    private static func drums(_ out: inout [Float], _ toms: inout [Float], _ hits: [BandGroove.Hit], setup: BarSetup,
+                              noise: inout Noise, feel: inout Noise) -> Bool {
+        let beat = setup.beat, push = setup.push, number = setup.number, players = setup.players, rate = setup.rate
         var tomsPlayed = false
         for (index, hit) in hits.enumerated() {
             var at = Int((hit.beat * beat).rounded())
@@ -852,8 +863,9 @@ enum BandSynth {
     /// strums its power chord, its staccato upper voicing or its let-ring chord string by string, down or up (the piano
     /// covers a guitar stroke it can't play). Only off-downbeat strokes move off the grid. False when the piano couldn't
     /// be read (the pad plays instead).
-    private static func comp(_ out: inout [Float], _ strokes: [BandGroove.Stroke], bar: BandArrangement.Bar, beat: Double,
-                             number: Int, reference: Double, players: Players, rate: Double, feel: inout Noise) -> Bool {
+    private static func comp(_ out: inout [Float], _ strokes: [BandGroove.Stroke], bar: BandArrangement.Bar, reference: Double,
+                             setup: BarSetup, feel: inout Noise) -> Bool {
+        let beat = setup.beat, number = setup.number, players = setup.players, rate = setup.rate
         let hz = { (midi: Int) in PitchMath.frequency(midi: Double(midi), reference: reference) }
         for (index, stroke) in strokes.enumerated() {
             let segment = bar.segment(at: stroke.beat)

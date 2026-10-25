@@ -159,7 +159,7 @@ struct EarTrainingView: View {
         }
     }
 
-    /// Ten dots: mint for right, coral for wrong, a white ring on the current question.
+    /// Ten dots: mint for right, the wrong colour (`Palette.danger`) for wrong, a white ring on the current question.
     private var roundDots: some View {
         HStack(spacing: 10) {
             ForEach(0..<length, id: \.self) { i in dot(i) }
@@ -173,7 +173,7 @@ struct EarTrainingView: View {
     private func dot(_ i: Int) -> some View {
         let answered = i < outcomes.count
         let current = i == outcomes.count && picked == nil
-        let fill: Color = answered ? (outcomes[i] ? Palette.mint : Palette.coral) : .white.opacity(0.09)
+        let fill: Color = answered ? (outcomes[i] ? Palette.mint : Palette.danger) : .white.opacity(0.09)
         return Circle().fill(fill)
             .frame(width: 13, height: 13)
             .overlay(Circle().strokeBorder(current ? Palette.ink : .clear, lineWidth: 2).padding(-4))
@@ -203,7 +203,8 @@ struct EarTrainingView: View {
         .animation(Motion.pluck, value: picked)
     }
 
-    /// The question as a staircase of semitones from its first note (`EarAnswerStage`), with Hear again under it.
+    /// The question as a staircase of semitones from its first note (`EarAnswerStage`), the short interval names it
+    /// draws spelled out under it (`IntervalLegend`), and Hear again.
     private func answerStage(_ question: EarQuestion) -> some View {
         let playing = audio.tonePlaying
         let picture = EarPicture(question: question, reference: store.settings.referencePitchHz, notation: store.settings.notation)
@@ -214,6 +215,9 @@ struct EarTrainingView: View {
                 .id(serial)
                 .overlay { SparkBurst(trigger: burst, color: Palette.mint).frame(width: 300, height: 300) }
                 .overlay(alignment: .topTrailing) { xpFloat }
+            if question.drill != .pitchDirection {
+                IntervalLegend(steps: picture.abbreviated(revealed: picked != nil))
+            }
             hearButton(question, picture: picture, playing: playing)
         }
     }
@@ -343,7 +347,7 @@ struct EarTrainingView: View {
     /// An answer to hear again: right or wrong (an example is marked so), the answer, and the notes it was
     /// ("A3 → E4"; a chord's root; higher-or-lower's cents).
     private func recentChip(_ record: EarAnswerRecord) -> some View {
-        let tint = record.example ? Palette.accentNeutral : (record.right ? Palette.mint : Palette.coral)
+        let tint = record.example ? Palette.accentNeutral : (record.right ? Palette.mint : Palette.danger)
         let notes = EarPicture(question: record.question, reference: store.settings.referencePitchHz, notation: store.settings.notation).chipNotes
         return Button { play(record.question) } label: {
             HStack(spacing: 6) {
@@ -405,7 +409,10 @@ struct EarTrainingView: View {
                     .font(.subheadline).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
             }
             StatTileRow {
-                StatTile(symbol: "sparkles", tint: Palette.mint, value: Text("+\(shownXP)"), label: "XP", alignment: .center)
+                // Calm mode (`UserSettings.calmMode`) leaves out the XP: the accuracy and the best run stay.
+                if !store.settings.calmMode {
+                    StatTile(symbol: "sparkles", tint: Palette.mint, value: Text("+\(shownXP)"), label: "XP", alignment: .center)
+                }
                 StatTile(symbol: "target", tint: Palette.accentNeutral, value: Text("\(accuracy)%"), label: "accuracy", alignment: .center)
                 StatTile(symbol: "flame.fill", tint: Palette.flame, value: Text(verbatim: "×" + bestCombo.formatted()), label: "best run",
                          alignment: .center)
@@ -564,7 +571,7 @@ private struct EarAnswerRecord: Identifiable {
     var right: Bool { picked == question.answer }
 }
 
-/// An answer tile: flashes mint with a check when right, coral with a cross when wrong.
+/// An answer tile: flashes mint with a check when right, the wrong colour (`Palette.danger`) with a cross when wrong.
 private struct EarChoiceButton: View {
     let title: String
     let state: EarChoiceState
@@ -575,7 +582,7 @@ private struct EarChoiceButton: View {
     private var tint: Color {
         switch state {
         case .right: return Palette.mint
-        case .wrong: return Palette.coral
+        case .wrong: return Palette.danger
         case .idle, .faded: return Palette.controlLine
         }
     }
@@ -583,7 +590,7 @@ private struct EarChoiceButton: View {
     private var fill: Color {
         switch state {
         case .right: return Palette.mint.opacity(0.18)
-        case .wrong: return Palette.coral.opacity(0.18)
+        case .wrong: return Palette.danger.opacity(0.18)
         case .idle, .faded: return Palette.surface
         }
     }
@@ -591,7 +598,7 @@ private struct EarChoiceButton: View {
     private var glow: Color {
         switch state {
         case .right: return Palette.mint.opacity(0.35)
-        case .wrong: return Palette.coral.opacity(0.3)
+        case .wrong: return Palette.danger.opacity(0.3)
         case .idle, .faded: return .clear
         }
     }
@@ -605,7 +612,7 @@ private struct EarChoiceButton: View {
                     Image(systemName: "checkmark.circle.fill").foregroundStyle(Palette.mint)
                         .transition(.scale.combined(with: .opacity))
                 } else if state == .wrong {
-                    Image(systemName: "xmark.circle.fill").foregroundStyle(Palette.coral)
+                    Image(systemName: "xmark.circle.fill").foregroundStyle(Palette.danger)
                         .transition(.scale.combined(with: .opacity))
                 }
             }
@@ -630,6 +637,48 @@ private struct EarChoiceButton: View {
 }
 
 // MARK: - Answer stage
+
+/// The short interval names the staircase draws (M6, P4…), spelled out under it: "M6 Major 6th · P4 Perfect 4th", the
+/// short names in the staircase's steel. Read aloud as the full names alone ("Major 6th, Perfect 4th"). Its row keeps
+/// its height while nothing is abbreviated, so the card doesn't jump as the answer lands.
+private struct IntervalLegend: View {
+    /// Semitones above the first note, 0…12, lowest first.
+    let steps: [Int]
+
+    var body: some View {
+        line
+            .font(.caption)
+            .foregroundStyle(Palette.inkSoft)
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, minHeight: 18)
+            .opacity(steps.isEmpty ? 0 : 1)
+            .animation(Motion.quick, value: steps)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(spoken)
+            .accessibilityHidden(steps.isEmpty)
+    }
+
+    private var line: Text {
+        var text = Text(verbatim: "")
+        for (index, step) in steps.enumerated() {
+            if index > 0 { text = text + Text(verbatim: "  ·  ") }
+            let short = Text(verbatim: Intervals.short[step]).font(Typeface.label(12)).foregroundStyle(Palette.accentNeutral)
+            let name = Text(LocalizedStringKey(Intervals.names[step]))
+            text = text + short + Text(verbatim: " ") + name
+        }
+        return text
+    }
+
+    private var spoken: Text {
+        var text = Text(verbatim: "")
+        for (index, step) in steps.enumerated() {
+            if index > 0 { text = text + Text(verbatim: ", ") }
+            text = text + Text(LocalizedStringKey(Intervals.names[step]))
+        }
+        return text
+    }
+}
 
 /// The notes of a question, for the answer stage and the Recent chips: the first note, the others as semitones
 /// above it (an interval's second note, a chord's upper notes), or for higher-or-lower the second note's detune.
@@ -671,6 +720,19 @@ private struct EarPicture {
         if let centsLabel { return name(root) + " → " + centsLabel }
         let names = [name(root)] + steps.map { name(root + $0) }
         return drill == .chordQuality ? names.joined(separator: " ") : names.joined(separator: " → ")
+    }
+
+    /// The steps whose short names (M6, P4…) the staircase draws now, lowest first: before an interval is answered, the
+    /// places its answers would land, marked on the veil; once a chord is answered, its notes. An answered interval is
+    /// named in words, and higher-or-lower has none.
+    func abbreviated(revealed: Bool) -> [Int] {
+        let shown: [Int]
+        switch drill {
+        case .pitchDirection: shown = []
+        case .interval: shown = revealed ? [] : candidates.filter { (1...12).contains($0) }
+        case .chordQuality: shown = revealed && steps.count != 1 ? steps : []
+        }
+        return Set(shown).filter { Intervals.short.indices.contains($0) && Intervals.names.indices.contains($0) }.sorted()
     }
 
     /// A Recent chip's notes: an interval's two, a chord's root; none for higher-or-lower (its chip shows the cents).

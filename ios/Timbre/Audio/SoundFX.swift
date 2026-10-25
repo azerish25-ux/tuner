@@ -21,6 +21,8 @@ final class SoundFX {
     private var bells: [Int: AVAudioPlayer] = [:]
     /// Star bells by MIDI note, rendered once per note of a key's triad.
     private var stars: [Int: AVAudioPlayer] = [:]
+    /// Miss wobbles by pitch (tenths of a hertz), rendered once per pitch.
+    private var wobbles: [Int: AVAudioPlayer] = [:]
     /// The full-tune strum of the strings last prepared (their pitches as a key) and its player.
     private var tuned: (key: String, player: AVAudioPlayer)?
 
@@ -43,6 +45,27 @@ final class SoundFX {
         guard enabled else { return }
         if players[cue] == nil { players[cue] = Self.player(SoundSynth.wav(SoundSynth.render(cue), rate: SoundSynth.rate), volume: Self.volume(cue)) }
         start(players[cue])
+    }
+
+    /// The welcome: Timbre's motif, played only in the ambient session (`AudioSessionOwner.interfaceSoundIsAmbient`), so
+    /// it mixes with whatever the user is listening to and keeps to the Ring/Silent switch. While an engine holds the
+    /// session (the microphone, a lesson's sound) it stays silent rather than sound through it.
+    func playWelcome() {
+        guard enabled, AudioSessionOwner.shared.interfaceSoundIsAmbient() else { return }
+        play(.motif)
+    }
+
+    /// A miss near `frequency`: the wobble (two soft bells a few hertz apart, beating like a string just off its note)
+    /// at that pitch, raised an octave at a time while it is too low for a phone speaker, so the miss sounds near the
+    /// note aimed at. Cached per pitch, like the lock bells.
+    func playWobble(frequency: Double) {
+        guard enabled, let hz = SoundSynth.bellPitch(frequency) else { return }
+        let key = Self.bellKey(hz)
+        if wobbles[key] == nil {
+            if wobbles.count >= 32 { wobbles.removeAll() }
+            wobbles[key] = Self.player(SoundSynth.wav(SoundSynth.wobble(hz), rate: SoundSynth.rate), volume: Self.volume(.wobble))
+        }
+        start(wobbles[key])
     }
 
     /// Plays from the top, in the session the app's own sounds share.
@@ -365,12 +388,21 @@ enum SoundSynth {
             woodblock(&b, modes: [(640, 70, 1), (1_180, 140, 0.3)])
             return normalised(b, peak: 0.4)
         case .wobble:
-            // Two soft bells 7 Hz apart: the beating of a string just off its note.
-            var b = buffer(0.8)
-            chime(&b, hz: hz(57), at: 0, length: 0.7, gain: 0.5)
-            chime(&b, hz: hz(57) + 7, at: 0, length: 0.7, gain: 0.5)
-            return normalised(b, peak: 0.4)
+            return wobbleVoice(hz(57))
         }
+    }
+
+    /// The miss's wobble, dry: two soft bells 7 Hz apart at `pitch`, the beating of a string just off its note.
+    private static func wobbleVoice(_ pitch: Double) -> [Float] {
+        var b = buffer(0.8)
+        chime(&b, hz: pitch, at: 0, length: 0.7, gain: 0.5)
+        chime(&b, hz: pitch + 7, at: 0, length: 0.7, gain: 0.5)
+        return normalised(b, peak: 0.4)
+    }
+
+    /// The wobble at `pitch` as it plays, in the room every wobble gets (`SoundFX.playWobble`).
+    static func wobble(_ pitch: Double) -> [Float] {
+        reverberant(wobbleVoice(pitch), wet: room(.wobble))
     }
 
     /// The motif: a plucked fifth that resolves to the octave (C5, G5, C6), each note with its bell, the last ringing
