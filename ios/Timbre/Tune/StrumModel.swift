@@ -369,21 +369,23 @@ enum StrumWords {
             return String(localized: "All strings in tune")
         case .tune(let meter):
             let amount = abs(meter.shown ?? 0)
-            let action = meter.tuneUp ? String(localized: "Tune \(meter.note) up \(amount) cents first")
-                                      : String(localized: "Tune \(meter.note) down \(amount) cents first")
+            let note = NoteNames.spokenInApp(meter.note)
+            let action = meter.tuneUp ? String(localized: "Tune \(note) up \(amount) cents first")
+                                      : String(localized: "Tune \(note) down \(amount) cents first")
             return String(localized: "\(board.inTune) of \(board.meters.count) in tune") + ". " + action
         case .missing(let count):
             return plucks ? String(localized: "\(count) not heard. Pluck again.") : String(localized: "\(count) not heard. Strum again.")
         }
     }
 
-    /// "String 5, A2": the number on the lane's chip (from the peg-head anchor, 1 the thinnest, as lessons count
-    /// strings). A unison pair shares its anchor and so its chip's number. Only a lane without one (never on the
-    /// instruments strum mode opens for) falls back to the course order, a pair "Strings 3 and 4, D4".
+    /// "String 5, A 2": the number on the lane's chip (from the peg-head anchor, 1 the thinnest, as lessons count
+    /// strings) and its note as spoken. A unison pair shares its anchor and so its chip's number. Only a lane without
+    /// one (never on the instruments strum mode opens for) falls back to the course order, a pair "Strings 3 and 4, D 4".
     static func name(_ meter: StrumBoard.Meter) -> Text {
-        if let number = meter.number { return Text("String \(number), \(meter.note)") }
-        if meter.courses.count == 2 { return Text("Strings \(meter.courses[0]) and \(meter.courses[1]), \(meter.note)") }
-        return Text("String \(meter.id), \(meter.note)")
+        let note = NoteNames.spokenInApp(meter.note)
+        if let number = meter.number { return Text("String \(number), \(note)") }
+        if meter.courses.count == 2 { return Text("Strings \(meter.courses[0]) and \(meter.courses[1]), \(note)") }
+        return Text("String \(meter.id), \(note)")
     }
 
     /// "In tune", "12 cents flat", "Not heard"; ", estimate" after an approximate reading (the badge's word).
@@ -394,9 +396,10 @@ enum StrumWords {
         return meter.approximate ? Text("\(value), estimate") : Text(verbatim: value)
     }
 
-    /// The zoom's announcement: "5 of 6 in tune. Fine-tune A2".
+    /// The zoom's announcement: "5 of 6 in tune. Fine-tune A 2".
     static func zoomed(_ board: StrumBoard, meter: StrumBoard.Meter) -> String {
-        String(localized: "\(board.inTune) of \(board.meters.count) in tune") + ". " + String(localized: "Fine-tune \(meter.note)")
+        String(localized: "\(board.inTune) of \(board.meters.count) in tune") + ". "
+            + String(localized: "Fine-tune \(NoteNames.spokenInApp(meter.note))")
     }
 
     /// The zoomed lane's live words, as the tuner's status line says them: "Tighten · 12¢ flat", "Hold it…",

@@ -44,18 +44,16 @@ struct EdgeRail<ID: Hashable, Content: View>: View {
                 }
                 .environment(\.timbreGlassSpace, glass)
             }
-            // Bug (Voice's exercises, "…st" at the left edge): a `scrollPosition(id:anchor: .center)` binding was
-            // rewritten by the scroll view to the card under the middle (the second, while the rail rested at its
-            // start) and later re-centred on it, pushing the selected first card half past the edge. The reader scrolls
-            // to the selection itself, clamped to the content, and nothing re-anchors the rail afterwards.
+            // A `scrollPosition(id:anchor: .center)` binding would be rewritten by the scroll view to the card under
+            // the middle and later re-centred on it, pushing a selected first card half past the edge. The reader
+            // scrolls to the selection itself, clamped to the content, and nothing re-anchors the rail afterwards.
             .onScrollPhaseChange { _, phase in
                 if phase == .interacting { browsed = true }
             }
             .modifier(RailBleed(leading: bleed, trailing: bleed, measured: overflow))
-            // Bug: set as the rail appeared, before its chips were laid out, the position was dropped and a selection
-            // past the edge stayed hidden ("Minor pentatonic" off the right of Scales). It is set once the chips have
-            // frames and the rail its width: on their first measure, or (when nothing overflows, so no measure
-            // changes) on the next turn.
+            // Set as the rail appears, before its chips are laid out, the position would be dropped and a selection
+            // past the edge stay hidden. It is set once the chips have frames and the rail its width: on their first
+            // measure, or (when nothing overflows, so no measure changes) on the next turn.
             .onAppear {
                 DispatchQueue.main.async { reveal(scroller, viewport: viewport) }
             }
@@ -110,14 +108,21 @@ extension View {
     /// Apply directly to the ScrollView.
     func stageTopShade() -> some View { modifier(StageTopShade()) }
 
-    /// Pins controls to the bottom on a stage-coloured dock with a short fade above it. The scroll
-    /// content is inset by the dock, so nothing ends up hidden beneath it.
+    /// Pins controls to the bottom on a stage-coloured dock with a short fade above it. The scroll content is inset
+    /// by the dock and by its fade, so content scrolled to its end rests clear of both (never half under the fade);
+    /// content passing beneath still shows through the fade, and taps there reach it.
     func stageDock<Dock: View>(@ViewBuilder _ dock: () -> Dock) -> some View {
         let bar = dock()
         return safeAreaInset(edge: .bottom, spacing: 0) {
-            bar
-                .padding(.horizontal, Metrics.gutter).padding(.top, 8).padding(.bottom, 6)
-                .background { StageDockBackdrop() }
+            VStack(spacing: 0) {
+                Color.clear
+                    .frame(height: StageDockBackdrop.fade)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+                bar
+                    .padding(.horizontal, Metrics.gutter).padding(.top, 8).padding(.bottom, 6)
+                    .background { StageDockBackdrop() }
+            }
         }
     }
 
@@ -235,13 +240,16 @@ private struct StageTopShade: ViewModifier {
 }
 
 private struct StageDockBackdrop: View {
+    /// The fade's height above the dock (reserved by `stageDock`, so content never rests in it).
+    static let fade: CGFloat = 24
+
     var body: some View {
         VStack(spacing: 0) {
             LinearGradient(colors: [Palette.stage.opacity(0), Palette.stage.opacity(0.96)], startPoint: .top, endPoint: .bottom)
-                .frame(height: 24)
+                .frame(height: Self.fade)
             Palette.stage.opacity(0.96)
         }
-        .padding(.top, -24)
+        .padding(.top, -Self.fade)
         .ignoresSafeArea(edges: .bottom)
         .allowsHitTesting(false)
         .accessibilityHidden(true)

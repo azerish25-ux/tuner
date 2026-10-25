@@ -75,6 +75,11 @@ extension NoteNames {
         let language = locale.language.languageCode?.identifier ?? locale.identifier
         return spoken(note, language: language, system: system)
     }
+
+    /// The same for speech made outside a view (announcements): the app's language, the naming system in use.
+    static func spokenInApp(_ note: String) -> String {
+        spoken(note, language: TimbreLocalization.resolvedLanguage(for: TimbreLocalization.language), system: active)
+    }
 }
 
 /// The in-tune pattern for VoiceOver: a bright double tap ("da-dum") just after the lock thump,

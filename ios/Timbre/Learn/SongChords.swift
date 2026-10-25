@@ -272,14 +272,22 @@ struct SongChordsTake: View {
     private func stop() {
         guard running else { return }
         running = false
-        leave()
+        tearDown()
         stopped()
     }
 
+    /// Leaving mid-take (the lesson closed): as Stop, without going back to the stage. After a take the final chord
+    /// rings on.
     private func leave() {
+        guard running else { return }
+        running = false
+        tearDown()
+    }
+
+    private func tearDown() {
         if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
         ownsClick = false
-        if running { store.audio.stopBand() }
+        store.audio.stopBand()
         BandFeel.shared.reset()
         store.stopLessonListening(owner: owner)
     }
@@ -351,7 +359,7 @@ struct ChordLane: View {
                 case .ok where calls[last] != nil:
                     Text(verbatim: (calls[last] ?? "") + "?").foregroundStyle(Palette.amber)
                 case .ok:
-                    Label(Text("Early/late"), systemImage: "clock").foregroundStyle(Palette.amber)
+                    Label("Early/late", systemImage: "clock").foregroundStyle(Palette.amber)
                 case .perfect, .good:
                     Label(chords.indices.contains(last) ? chords[last].name : "", systemImage: "checkmark").foregroundStyle(Palette.mint)
                 }

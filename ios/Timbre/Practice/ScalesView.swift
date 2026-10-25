@@ -3,15 +3,18 @@ import SwiftUI
 import TimbreCore
 
 /// Scales: a root and a scale, spelled in its key (B♭ in F major, E♯ in F♯ major), on the neck to the 12th fret.
-/// Position pills 1–5 frame one hand position at a time (CAGED shapes on a standard-tuned guitar) and dim the rest.
-/// "Hear it" plays the position (or a run up an octave) and lights each note as it sounds; "Play along" listens
-/// through the tuner's pitch pipeline and lights each note as the player hits it, up the position and back down.
+/// Two rows of choices sit above it (the root and the scale); how the neck is shown (one hand position at a time, CAGED
+/// shapes on a standard-tuned guitar, or the whole neck; intervals or note names; Chart or Player view) is in its View
+/// menu. "Hear it" plays the position (or a run up an octave) and lights each note as it sounds; "Play along" listens
+/// through the tuner's pitch pipeline and lights each note as the player hits it, up the position and back down. For
+/// a left-handed player the neck has its nut on the right (`HandStyle.lying`).
 struct ScaleLibraryView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// Which string lies on top: the app's one picture choice (Chart: string 1; Player view: the thickest).
-    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
+    @AppStorage(ChordPicture.storageKey) private var picture: ChordPicture = .chart
+    @CurrentHand private var hand
     @State private var root = 0
     @State private var scale = ScaleFormula.all[3]
     /// Note names on the neck instead of intervals (R ♭3 4 5 ♭7).
@@ -50,7 +53,6 @@ struct ScaleLibraryView: View {
                         .accessibilityAddTraits(.isHeader)
                     ToneStrip(tones: sheet.tones)
                 }
-                if !sheet.positions.isEmpty { positionPicker(sheet) }
                 neckSection(sheet)
                 if audio.permissionDenied && along != nil {
                     MicrophoneHint().padding(.horizontal, -Metrics.gutter)
@@ -85,32 +87,15 @@ struct ScaleLibraryView: View {
 
     // MARK: Positions
 
-    private func positionPicker(_ sheet: ScaleSheet) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 6) {
-                pill(nil, title: String(localized: "All"))
-                ForEach(sheet.positions) { item in pill(item.number, title: "\(item.number)") }
-            }
-            Text(caption(sheet)).font(.footnote).foregroundStyle(Palette.inkSoft)
-                .contentTransition(.opacity)
-                .animation(Motion.quick, value: position)
-        }
-    }
-
-    private func pill(_ number: Int?, title: String) -> some View {
-        Button {
+    /// The position framed, changed from the View menu: whatever was sounding or listening stops first.
+    private var positionChoice: Binding<Int?> {
+        Binding(get: { position }, set: { number in
             guard position != number else { return }
             stopHearing()
             stopAlong()
             Haptics.shared.selection()
-            withAnimation(Motion.settle) { position = number }
-        } label: {
-            Text(title).frame(maxWidth: .infinity)
-        }
-        .buttonStyle(ChipButtonStyle(selected: position == number))
-        .accessibilityLabel(number.map { Text("Position \($0)") } ?? Text("Whole neck"))
-        .accessibilityAddTraits(position == number ? .isSelected : [])
-        .accessibilityIdentifier("scales.position.\(number ?? 0)")
+            withMotion(Motion.settle, reduceMotion: reduceMotion) { position = number }
+        })
     }
 
     /// "Position 2 · D shape · frets 9–13"; the whole neck says how to narrow it down.
@@ -127,37 +112,80 @@ struct ScaleLibraryView: View {
 
     // MARK: Neck
 
-    /// The neck under its two switches, side by side in one row so the whole neck clears the dock at rest: what the
-    /// dots say (intervals or note names) and Chart (string 1 on top, as tab) or Player view (the thickest on top), the
-    /// chord cards' switch and the app's one picture choice, so this neck always lies as the lessons' do. Where the
-    /// row is too narrow (large text, a small phone) the picture switch drops under the other.
+    /// The neck under one line: the position it frames ("Position 2 · D shape · frets 9–13") and its View menu, which
+    /// holds every way of showing it, so no row of switches stands between the scale and its neck.
     private func neckSection(_ sheet: ScaleSheet) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: 8) {
-                    NeckLabelSwitch(noteNames: $noteNames)
-                    Spacer(minLength: 0)
-                    ChordPictureToggle(label: "Neck view")
-                }
-                VStack(alignment: .trailing, spacing: 12) {
-                    NeckLabelSwitch(noteNames: $noteNames)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    ChordPictureToggle(label: "Neck view")
-                }
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .center, spacing: 12) {
+                Text(caption(sheet)).font(.footnote).foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentTransition(.opacity)
+                    .animation(Motion.quick, value: position)
+                viewMenu(sheet)
             }
             neckCard(sheet)
         }
     }
 
-    /// The neck card: string names pinned beside a neck drawn to the 15th fret, sized so the nut and twelve frets
-    /// fill the card; a position past the 12th fret (or a note to play there) slides the neck along to it.
+    /// How the neck is shown, in one menu: the hand position it frames (or the whole neck), what its dots say
+    /// (intervals or note names) and which string lies on top (Chart or Player view, the app's one picture choice, so
+    /// this neck always lies as the lessons' do).
+    private func viewMenu(_ sheet: ScaleSheet) -> some View {
+        Menu {
+            if !sheet.positions.isEmpty {
+                Picker(selection: positionChoice) {
+                    Text("Whole neck").tag(Int?.none)
+                    ForEach(sheet.positions) { item in
+                        Text("Position \(item.number)").tag(Optional(item.number))
+                    }
+                } label: {
+                    Text("Position")
+                }
+                .pickerStyle(.inline)
+            }
+            Picker(selection: $noteNames) {
+                Text("Intervals").tag(false)
+                Text("Note names").tag(true)
+            } label: {
+                Text("Note names")
+            }
+            .pickerStyle(.inline)
+            Picker(selection: $picture) {
+                ForEach(ChordPicture.allCases) { option in
+                    Text(option.title).tag(option)
+                }
+            } label: {
+                Text("Neck view")
+            }
+            .pickerStyle(.inline)
+        } label: {
+            Label("View", systemImage: "slider.horizontal.3")
+                .font(Typeface.label(13))
+                .foregroundStyle(Palette.ink)
+                .padding(.horizontal, 14)
+                .frame(minHeight: Metrics.minTarget)
+                .background(Capsule().fill(Palette.surface))
+                .overlay(Capsule().strokeBorder(Palette.controlLine, lineWidth: 1))
+                .contentShape(Capsule())
+        }
+        .fixedSize()
+        .accessibilityIdentifier("scales.view")
+    }
+
+    /// The neck card: string names pinned beside the nut of a neck drawn to the 15th fret, sized so the nut and twelve
+    /// frets fill the card; a position past the 12th fret (or a note to play there) slides the neck along to it. For a
+    /// left-handed player the nut, and the names with it, are on the right.
     private func neckCard(_ sheet: ScaleSheet) -> some View {
         let focus = sheet.positions.first { $0.number == position }
         let height = ScaleNeck.height(strings: sheet.strings.midi.count)
         let state = neckState(sheet, focus: focus)
+        let lie = hand.lying(picture.stringOrder)
         return HStack(spacing: 0) {
-            StringNameColumn(names: sheet.strings.names, order: stringOrder)
-                .frame(width: 26, height: height)
+            if !lie.nutOnRight {
+                StringNameColumn(names: sheet.strings.names, order: lie.order)
+                    .frame(width: 26, height: height)
+            }
             GeometryReader { geometry in
                 let fretWidth = ScaleNeck.fretSpacing(visible: geometry.size.width)
                 ScrollViewReader { proxy in
@@ -165,17 +193,22 @@ struct ScaleLibraryView: View {
                         ScaleNeck(openMidi: sheet.strings.midi, notes: sheet.notes, names: noteNames ? sheet.names : nil,
                                   focus: focus.map { Set($0.spots) }, window: focus?.frets, lit: state.lit, trail: state.trail,
                                   target: along != nil && !(along?.finished ?? true), hit: along?.lastHit, hits: hits,
-                                  fretWidth: fretWidth, order: stringOrder,
+                                  fretWidth: fretWidth, order: lie.order, nutOnRight: lie.nutOnRight,
                                   // Flipping the string order cross-fades the dots to their new rows too.
-                                  focusKey: "\(root).\(scale.id).\(position ?? 0).\(noteNames).\(stringOrder.rawValue)")
+                                  focusKey: "\(root).\(scale.id).\(position ?? 0).\(noteNames).\(lie.order.rawValue).\(lie.nutOnRight)")
                             .frame(width: ScaleNeck.width(fretWidth: fretWidth), height: height)
                     }
-                    .railBleed(leading: 0, trailing: 12)
-                    .onAppear { ScaleNeck.reveal(state.reach, proxy: proxy, animated: false) }
-                    .onChange(of: state.reach) { _, reach in ScaleNeck.reveal(reach, proxy: proxy, animated: true) }
+                    .railBleed(leading: lie.nutOnRight ? 12 : 0, trailing: lie.nutOnRight ? 0 : 12)
+                    .onAppear { ScaleNeck.reveal(state.reach, proxy: proxy, animated: false, nutOnRight: lie.nutOnRight) }
+                    .onChange(of: state.reach) { _, reach in ScaleNeck.reveal(reach, proxy: proxy, animated: true, nutOnRight: lie.nutOnRight) }
+                    .onChange(of: lie.nutOnRight) { _, right in ScaleNeck.reveal(state.reach, proxy: proxy, animated: false, nutOnRight: right) }
                 }
             }
             .frame(height: height)
+            if lie.nutOnRight {
+                StringNameColumn(names: sheet.strings.names, order: lie.order)
+                    .frame(width: 26, height: height)
+            }
         }
         .stillCard(padding: Metrics.tilePadding)
         .accessibilityElement(children: .ignore)
@@ -457,11 +490,11 @@ struct PlayAlong {
 
 // MARK: - The neck
 
-/// The neck to the 15th fret, nut on the left, its strings in the app's string order (`ChordPicture`: string 1 on
-/// top in the Chart view, the thickest in Player view):
-/// every scale tone as a dot labelled with its interval or its name, roots amber. A position is framed and the
-/// notes outside it shrink to faint marks. The note sounding (or to play next) is lit, the ones before it ringed;
-/// while playing along the target breathes and each hit sends out a ripple.
+/// The neck to the 15th fret, nut on the left (on the right for a left-handed player, `nutOnRight`), its strings in
+/// the app's string order (`ChordPicture`: string 1 on top in the Chart view, the thickest in Player view, as the
+/// player's hold turns it): every scale tone as a dot labelled with its interval or its name, roots amber. A position
+/// is framed and the notes outside it shrink to faint marks. The note sounding (or to play next) is lit, the ones before
+/// it ringed; while playing along the target breathes and each hit sends out a ripple.
 struct ScaleNeck: View {
     let openMidi: [Int]
     let notes: [FretPosition]
@@ -477,6 +510,8 @@ struct ScaleNeck: View {
     var hits = 0
     let fretWidth: CGFloat
     let order: StringOrder
+    /// A left-handed player's neck: the nut on the right, the frets running leftward from it.
+    var nutOnRight = false
     /// Changes with what the dots show (root, scale, position, labels): the dots cross-fade to the new set.
     let focusKey: String
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -505,10 +540,13 @@ struct ScaleNeck: View {
         top + CGFloat(order.row(ofString: count - index, count: count)) * rowGap
     }
 
-    /// Slides the neck so frets up to `reach` show: home at the nut, or the 13th–15th frets brought in from the right.
-    static func reveal(_ reach: Int, proxy: ScrollViewProxy, animated: Bool) {
+    /// Slides the neck so frets up to `reach` show: home at the nut, or the 13th–15th frets brought in from the far end
+    /// (the right; the left when the nut is on the right).
+    static func reveal(_ reach: Int, proxy: ScrollViewProxy, animated: Bool, nutOnRight: Bool = false) {
         let id = reach > 12 ? anchor(min(frets, reach)) : anchor(0)
-        let edge: UnitPoint = reach > 12 ? .trailing : .leading
+        let far: UnitPoint = nutOnRight ? .leading : .trailing
+        let home: UnitPoint = nutOnRight ? .trailing : .leading
+        let edge: UnitPoint = reach > 12 ? far : home
         if animated {
             withAnimation(Motion.settle) { proxy.scrollTo(id, anchor: edge) }
         } else {
@@ -523,7 +561,11 @@ struct ScaleNeck: View {
     private var bottomY: CGFloat { Self.top + CGFloat(max(1, openMidi.count - 1)) * Self.rowGap }
 
     private func y(_ string: Int) -> CGFloat { Self.rowY(index: string, count: openMidi.count, order: order) }
-    private func point(_ spot: NeckSpot) -> CGPoint { CGPoint(x: Self.centerX(spot.fret, fretWidth: fretWidth), y: y(spot.string)) }
+    /// Drawn nut-left, turned over for a nut on the right (words set at the mirrored points).
+    private var mirror: CanvasMirror { CanvasMirror(on: nutOnRight, width: Self.width(fretWidth: fretWidth)) }
+    private func point(_ spot: NeckSpot) -> CGPoint {
+        mirror.point(CGPoint(x: Self.centerX(spot.fret, fretWidth: fretWidth), y: y(spot.string)))
+    }
 
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -545,27 +587,29 @@ struct ScaleNeck: View {
     // MARK: Board
 
     private func drawBoard(_ context: inout GraphicsContext) {
+        let mirror = self.mirror
+        let shapes = mirror.shapes(context)
         let top = Self.top, bottom = bottomY
         let left = Self.nut, right = Self.wireX(Self.frets, fretWidth: fretWidth)
-        context.fill(Path(roundedRect: CGRect(x: left, y: top - 10, width: right - left, height: bottom - top + 20), cornerRadius: 6),
-                     with: .linearGradient(Gradient(colors: [Color(hex: 0x30200F), Color(hex: 0x22150C)]),
-                                           startPoint: CGPoint(x: 0, y: top), endPoint: CGPoint(x: 0, y: bottom)))
+        shapes.fill(Path(roundedRect: CGRect(x: left, y: top - 10, width: right - left, height: bottom - top + 20), cornerRadius: 6),
+                    with: .linearGradient(Gradient(colors: [Color(hex: 0x30200F), Color(hex: 0x22150C)]),
+                                          startPoint: CGPoint(x: 0, y: top), endPoint: CGPoint(x: 0, y: bottom)))
         // Inlays at 3, 5, 7, 9 and 15, two at 12.
         for fret in [3, 5, 7, 9, 12, 15] where fret <= Self.frets {
             let x = Self.centerX(fret, fretWidth: fretWidth)
             let ys: [CGFloat] = fret == 12 ? [top + (bottom - top) / 3, top + (bottom - top) * 2 / 3] : [(top + bottom) / 2]
-            for y in ys { context.fill(Path(ellipseIn: CGRect(x: x - 4.5, y: y - 4.5, width: 9, height: 9)), with: .color(.white.opacity(0.10))) }
+            for y in ys { shapes.fill(Path(ellipseIn: CGRect(x: x - 4.5, y: y - 4.5, width: 9, height: 9)), with: .color(.white.opacity(0.10))) }
         }
         for fret in 0...Self.frets {
             let x = Self.wireX(fret, fretWidth: fretWidth)
             var wire = Path()
             wire.move(to: CGPoint(x: x, y: top - 10))
             wire.addLine(to: CGPoint(x: x, y: bottom + 10))
-            context.stroke(wire, with: .color(fret == 0 ? Palette.ink : Color(hex: 0xC9C2B6).opacity(0.6)), lineWidth: fret == 0 ? 4 : 1.5)
+            shapes.stroke(wire, with: .color(fret == 0 ? Palette.ink : Color(hex: 0xC9C2B6).opacity(0.6)), lineWidth: fret == 0 ? 4 : 1.5)
         }
         for fret in [3, 5, 7, 9, 12, 15] where fret <= Self.frets {
             context.draw(Text("\(fret)").font(.system(size: labelSize, weight: .semibold, design: .rounded)).foregroundStyle(Palette.inkFaint),
-                         at: CGPoint(x: Self.centerX(fret, fretWidth: fretWidth), y: bottom + 21))
+                         at: mirror.point(CGPoint(x: Self.centerX(fret, fretWidth: fretWidth), y: bottom + 21)))
         }
         // Strings, thicker as they go lower.
         let pitches = openMidi.sorted()
@@ -575,7 +619,7 @@ struct ScaleNeck: View {
             var line = Path()
             line.move(to: CGPoint(x: left, y: y(index)))
             line.addLine(to: CGPoint(x: right, y: y(index)))
-            context.stroke(line, with: .color(Color(hex: 0xD8CFC2).opacity(0.75)), lineWidth: thickness)
+            shapes.stroke(line, with: .color(Color(hex: 0xD8CFC2).opacity(0.75)), lineWidth: thickness)
         }
     }
 
@@ -584,11 +628,12 @@ struct ScaleNeck: View {
         if let window {
             let left = window.lowerBound == 0 ? 2 : Self.wireX(window.lowerBound - 1, fretWidth: fretWidth)
             let right = Self.wireX(max(0, window.upperBound), fretWidth: fretWidth)
+            let width = max(fretWidth, right - left)
             let shape = RoundedRectangle(cornerRadius: 10, style: .continuous)
             shape.fill(Palette.mint.opacity(0.08))
                 .overlay(shape.strokeBorder(Palette.mint.opacity(0.6), lineWidth: 1.5))
-                .frame(width: max(fretWidth, right - left), height: bottomY - Self.top + 26)
-                .offset(x: left, y: Self.top - 13)
+                .frame(width: width, height: bottomY - Self.top + 26)
+                .offset(x: nutOnRight ? Self.width(fretWidth: fretWidth) - left - width : left, y: Self.top - 13)
                 .transition(.opacity)
         }
     }
@@ -660,7 +705,7 @@ struct ScaleNeck: View {
         return ZStack(alignment: .topLeading) {
             ForEach(0...Self.frets, id: \.self) { fret in
                 Color.clear.frame(width: 1, height: 1)
-                    .position(x: fret == 0 ? 1 : Self.wireX(fret, fretWidth: fretWidth) + 8, y: height / 2)
+                    .position(x: mirror.x(fret == 0 ? 1 : Self.wireX(fret, fretWidth: fretWidth) + 8), y: height / 2)
                     .id(Self.anchor(fret))
             }
         }
@@ -686,51 +731,6 @@ private struct TargetPulse: View {
             }
         }
         .allowsHitTesting(false)
-    }
-}
-
-/// What the neck's dots say, intervals (R ♭3 5) or note names: drawn as the Chart / Player view switch beside it
-/// (`ChordPictureToggle`), a compact track with a sliding mint thumb, so the two read as one row of neck choices.
-private struct NeckLabelSwitch: View {
-    @Binding var noteNames: Bool
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Namespace private var thumb
-
-    var body: some View {
-        HStack(spacing: 2) {
-            segment(names: false)
-            segment(names: true)
-        }
-        .padding(3)
-        .background(Capsule().fill(Palette.surface))
-        .overlay(Capsule().strokeBorder(Palette.controlLine, lineWidth: 1))
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel(Text("Note names"))
-    }
-
-    private func segment(names: Bool) -> some View {
-        let selected = noteNames == names
-        return Button {
-            guard noteNames != names else { return }
-            Haptics.shared.selection()
-            withMotion(Motion.settle, reduceMotion: reduceMotion) { noteNames = names }
-        } label: {
-            (names ? Text("Note names") : Text("Intervals"))
-                .font(Typeface.label(12))
-                .lineLimit(1).minimumScaleFactor(0.8)
-                .foregroundStyle(selected ? Palette.onAccent : Palette.inkSoft)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background {
-                    if selected {
-                        Capsule().fill(Palette.mint).matchedGeometryEffect(id: "thumb", in: thumb)
-                    }
-                }
-                .contentShape(Capsule())
-        }
-        .buttonStyle(PressScaleStyle())
-        .accessibilityAddTraits(selected ? .isSelected : [])
-        .accessibilityIdentifier(names ? "scales.labels.names" : "scales.labels.intervals")
     }
 }
 

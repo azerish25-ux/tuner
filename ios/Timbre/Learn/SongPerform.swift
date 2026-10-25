@@ -10,7 +10,9 @@ import TimbreCore
 /// multiplier), the words under the runway karaoke style (`HighwayLyrics`, with the section playing) and the song
 /// map's playhead, then the finale (`SongFinaleView`): the lesson's stars, the score, the timing strip with each
 /// section's score under it, and a story-sized poster. The best take at the song's tempo counts, as in every
-/// play-along. With VoiceOver, spoken cues name each note a beat ahead and the result is read out.
+/// play-along. With VoiceOver, spoken cues name each note a beat ahead and the result is read out. On a strummed
+/// instrument a song with a chart can be performed as "Chords & words" instead (`SongChordsTake`): its chords strummed
+/// bar by bar with the words, judged for timing and chord.
 struct SongPerformStep: View {
     let notes: [TimedNote]
     let bpm: Double
@@ -37,6 +39,11 @@ struct SongPerformStep: View {
     @State private var session: PlayAlongSession
     /// The grades of the take that counts (the ladder's outcome).
     @State private var countedGrades: [Int: PlayAlongJudge.Grade] = [:]
+    /// The take that counts was strummed ("Chords & words"): it says nothing about the melody's notes.
+    @State private var countedChords = false
+    /// The take under way is strummed.
+    @State private var playingChords = false
+    @AppStorage(SongTakeMode.storageKey) private var takeMode: SongTakeMode = .melody
     @State private var take: SongTake?
     /// How each section of the song went in the last take, for the finale.
     @State private var sections: [TakeSection] = []
@@ -100,6 +107,13 @@ struct SongPerformStep: View {
         return SongPlayback.band(take: notes, chords: chords, bpm: tempo, meter: beatsPerBar, reference: store.settings.referencePitchHz,
                                  bass: course.fretKind != "bass")
     }
+    /// The chart's chord for every bar, from the top of the song.
+    private var chartChords: [ChordSpec] {
+        let chart = LeadChart.of(lesson)
+        return chart.hasChords ? chart.filledChords(from: 0, count: chart.bars) : []
+    }
+    /// "Chords & words" is offered: a strummed instrument, and a chart with chords.
+    private var chordsAvailable: Bool { course.strums && !chartChords.isEmpty }
     private var sheet: SongSheet { SongSheet.of(lesson) }
     private var art: CoverArt { CoverArt.of(lesson, in: course) }
     private var songTitle: String { CoverArt.mainTitle(lesson.title.localized) }
@@ -110,7 +124,11 @@ struct SongPerformStep: View {
             case .stage:
                 stageView.transition(.opacity)
             case .playing:
-                takeView.transition(.asymmetric(insertion: .opacity.combined(with: .scale(scale: 1.03)), removal: .opacity))
+                if playingChords {
+                    chordsView.transition(.asymmetric(insertion: .opacity.combined(with: .scale(scale: 1.03)), removal: .opacity))
+                } else {
+                    takeView.transition(.asymmetric(insertion: .opacity.combined(with: .scale(scale: 1.03)), removal: .opacity))
+                }
             case .finale:
                 finaleView.transition(.opacity.combined(with: .scale(scale: 0.96)))
             }
@@ -168,6 +186,7 @@ struct SongPerformStep: View {
             Spacer(minLength: 0)
             if armed { StrumToStartHint(accent: accent).transition(.opacity) }
             MicrophoneHint()
+            if chordsAvailable { modeChoice }
             tempoChoice
             StepButton(title: "Perform", accent: accent) { start() }
         }
@@ -205,6 +224,40 @@ struct SongPerformStep: View {
         }
         .frame(height: 196)
         .accessibilityHidden(true)
+    }
+
+    /// The melody on the runway, or the chords with the words.
+    private var modeChoice: some View {
+        HStack(spacing: 8) {
+            modeButton(.melody, label: "Melody", symbol: "music.note")
+            modeButton(.chords, label: "Chords & words", symbol: "guitars")
+        }
+        .padding(.horizontal, Metrics.gutter)
+        .animation(reduceMotion ? nil : Motion.pluck, value: takeMode)
+    }
+
+    private func modeButton(_ mode: SongTakeMode, label: LocalizedStringKey, symbol: String) -> some View {
+        let selected = takeMode == mode
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
+        return Button {
+            guard takeMode != mode else { return }
+            takeMode = mode
+            Haptics.shared.selection()
+        } label: {
+            HStack(spacing: 7) {
+                Image(systemName: symbol).font(.system(size: 12, weight: .bold))
+                Text(label).font(Typeface.label(15)).lineLimit(1).minimumScaleFactor(0.75)
+            }
+            .foregroundStyle(selected ? Palette.ink : Palette.inkSoft)
+            .frame(maxWidth: .infinity, minHeight: 44)
+            .background(shape.fill(selected ? AnyShapeStyle(accent.opacity(0.18)) : AnyShapeStyle(Palette.stageRaised)))
+            .overlay(shape.strokeBorder(selected ? accent.opacity(0.6) : Palette.controlLine, lineWidth: 1))
+            .contentShape(shape)
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityIdentifier("song.mode.\(mode.rawValue)")
     }
 
     /// The song's tempo (three stars) or 75 % of it (two at most).
@@ -367,6 +420,18 @@ struct SongPerformStep: View {
     /// How far into the song the take is (0 through the count-in).
     private func songProgress(_ now: CFTimeInterval) -> Double { session.progress(at: now) }
 
+    // MARK: Chords & words
+
+    private var chordsView: some View {
+        SongChordsTake(lesson: lesson, course: course, accent: accent, tempo: tempo, beatsPerBar: beatsPerBar, chords: chartChords,
+                       lyrics: lyrics, band: band, spoken: spoken,
+                       finished: { result in finishChords(result) },
+                       stopped: {
+                           store.audio.prepareBand(band)
+                           withMotion(Motion.settle, reduceMotion: reduceMotion) { phase = .stage }
+                       })
+    }
+
     // MARK: The finale
 
     @ViewBuilder private var finaleView: some View {
@@ -388,7 +453,25 @@ struct SongPerformStep: View {
 
     // MARK: Flow
 
+    /// Perform: the melody on the runway, or the chords with the words when that is the take chosen (and offered).
     private func start() {
+        if takeMode == .chords && chordsAvailable {
+            startChords()
+        } else {
+            startMelody()
+        }
+    }
+
+    /// The strummed take runs itself (`SongChordsTake`, from the moment it is on screen).
+    private func startChords() {
+        playingChords = true
+        countInBeat = nil
+        withMotion(Motion.settle, reduceMotion: reduceMotion) { phase = .playing }
+        Haptics.shared.selection()
+    }
+
+    private func startMelody() {
+        playingChords = false
         session = PlayAlongSession(notes: notes, bpm: tempo, beatsPerBar: beatsPerBar, anyOctave: course.anyOctave, keepsTrail: !fretted)
         session.begin(at: CACurrentMediaTime())
         countInBeat = nil
@@ -470,10 +553,13 @@ struct SongPerformStep: View {
     }
 
     private func finish() {
-        guard phase == .playing else { return }
+        guard phase == .playing, !playingChords else { return }
         let accuracy = session.accuracy
         // The take that counts keeps its grades for the lesson's weak spots.
-        if ladder.improvesOutcome(accuracy) { countedGrades = session.grades }
+        if ladder.improvesOutcome(accuracy) {
+            countedGrades = session.grades
+            countedChords = false
+        }
         // The stage keeps the tempo chosen: a great take doesn't move it on as the practice ladder does.
         let rung = ladder.rung
         ladder.record(accuracy: accuracy)
@@ -508,6 +594,36 @@ struct SongPerformStep: View {
         }
     }
 
+    /// A strummed take ended: the same finale, its bars as the timing strip's notes. It counts toward the lesson's
+    /// stars as a melody take does, but not toward the melody's weak spots, and not on Game Center's boards.
+    private func finishChords(_ result: ChordTakeResult) {
+        guard phase == .playing, playingChords else { return }
+        let accuracy = result.accuracy
+        if ladder.improvesOutcome(accuracy) {
+            countedGrades = [:]
+            countedChords = true
+        }
+        let rung = ladder.rung
+        ladder.record(accuracy: accuracy)
+        ladder.select(rung)
+        bestPercent = ladder.outcome.map { Int(($0.score * 100).rounded()) }
+        sections = result.sections
+        take = SongTake(accuracy: accuracy, points: result.points, bestCombo: result.bestCombo, grades: result.grades,
+                        judgments: result.judgments, notes: result.grades.count, tempo: Int(tempo), full: ladder.isFullTempo)
+        withMotion(Motion.settle, reduceMotion: reduceMotion) { phase = .finale }
+        if accuracy >= 0.7 { SoundFX.shared.play(.complete) }
+        Haptics.shared.done()
+        if voiceOver {
+            let hits = result.grades.filter { $0 != .miss }.count
+            let perfect = result.grades.filter { $0 == .perfect }.count
+            let said = SpokenCues.result(hits: hits, of: result.grades.count, perfect: perfect, percent: Int((accuracy * 100).rounded()))
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(600))
+                if phase == .finale { SpokenCues.say(said) }
+            }
+        }
+    }
+
     /// The song's sections as the take went: each one's notes (an upbeat it is sung from included) scored as the
     /// play-along scores a take.
     private func scoredSections() -> [TakeSection] {
@@ -527,7 +643,8 @@ struct SongPerformStep: View {
     /// Game Center challenge on the song that is going on (its points so far). The click stops if the take started it
     /// and the Metronome tool hasn't taken it over.
     private func stopTake() {
-        guard phase == .playing else { return }
+        // A strummed take stops itself (`SongChordsTake`).
+        guard phase == .playing, !playingChords else { return }
         if ladder.isFullTempo { GameCenter.shared.performStopped(lesson: lesson.id, points: session.points, notes: notes.count) }
         if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
         ownsClick = false
@@ -545,8 +662,10 @@ struct SongPerformStep: View {
     private func complete() {
         let outcome = ladder.outcome
         if let cap = outcome?.starCap { onStarCap(cap) }
-        for (index, note) in notes.enumerated() {
-            onItem(course.practiceItem(for: note), PlayAlongJudge.credit(countedGrades[index] ?? .miss))
+        if !countedChords {
+            for (index, note) in notes.enumerated() {
+                onItem(course.practiceItem(for: note), PlayAlongJudge.credit(countedGrades[index] ?? .miss))
+            }
         }
         done(outcome?.score ?? session.accuracy)
     }
@@ -607,7 +726,7 @@ extension SongPerformStep {
     /// and the band joins at the song's own bar.
     fileprivate func startScene(atBeat beat: Double) {
         guard phase == .stage else { return }
-        start()
+        startMelody()
         // The clock starts a bar before `beat`: the first frames after a jump this size (the runway's first draw of the
         // whole song, the band starting) can hold the main thread for a second, and a note due then would be a miss.
         let lead = Double(max(1, beatsPerBar))
