@@ -13,7 +13,7 @@ import UIKit
 /// of the page asks for the songs that aren't here yet ("Request a song").
 /// A song further on in its course says under its sleeve what to finish first ("Finish Kite Weather"), and a Pro song
 /// wears a gold lock in its play corner, the same way on every shelf. Every sleeve offers twenty seconds of its song
-/// ("Hear it", over the band in headphones) and, for a tune
+/// ("Hear it", over the band) and, for a tune
 /// several courses teach (Ode to Joy on guitar, violin, cello…), badges of its other versions to choose from; the
 /// picked shelves show each tune once, in the learner's instrument's version.
 /// What every song's standing is, and so each shelf, is worked out by `SongsCatalog` once per change of progress,
@@ -24,7 +24,7 @@ struct SongsView: View {
     @AppStorage("songs.instrument") private var filter = "all"
     @AppStorage(BandArrangement.preferenceKey) private var bandOn = true
     /// The learner's Learn course: its instrument's version of a tune leads on the picked shelves.
-    @AppStorage("learn.course") private var learnCourseId = "guitar"
+    @AppStorage(Preferences.Key.learnCourse) private var learnCourseId = Preferences.defaultLearnCourse
     @State private var catalog = SongsCatalog()
     @State private var playing: LearnView.PlayingLesson?
     /// Shake counters for order-locked tiles, by lesson id.
@@ -269,7 +269,8 @@ struct SongsView: View {
     }
 
     /// Plays (or stops) a sleeve's clip in its course's instrument voice, one note at a time on one clock, the way a
-    /// lesson's "Hear it" lands its notes; a locked song's sample (`full`) plays over the band in headphones.
+    /// lesson's "Hear it" lands its notes; a locked song's sample (`full`) plays over the band, on the song's own chords
+    /// change by change where its chart has them.
     private func togglePreview(_ song: Song, full: Bool) {
         if previewing == song.id { stopPreview(); return }
         stopPreview()
@@ -277,10 +278,10 @@ struct SongsView: View {
         let audio = store.audio
         let reference = store.settings.referencePitchHz
         var band: BandArrangement?
-        if full, bandOn, audio.headphones, found.bars > 0 {
+        if full, bandOn, found.bars > 0 {
             let chart = LeadChart.of(song.lesson)
-            let chords = chart.notes.isEmpty ? [] : chart.filledChords(from: found.firstBar, count: found.bars)
-            band = SongPlayback.band(notes: found.notes, chords: chords, bars: found.bars, bpm: found.bpm, meter: found.meter,
+            let harmony = chart.notes.isEmpty ? [] : chart.filledBars(from: found.firstBar, count: found.bars)
+            band = SongPlayback.band(notes: found.notes, harmony: harmony, bars: found.bars, bpm: found.bpm, meter: found.meter,
                                      reference: reference, bass: song.course.fretKind != "bass")
         }
         // Without the band, a sample starts on its first note rather than a lead-in bar's rest.
@@ -858,8 +859,12 @@ struct SongsView: View {
                 CourseArt(course: song.course, size: 18)
                 Text(song.course.title.localized).foregroundStyle(Palette.ink)
                 // How long the song runs (not the lesson's minutes, which the song sheet gives beside it), as the rows
-                // up next say it: "Originals · 2:40 · +30 XP".
-                (Text(verbatim: "· \(sheet.length) · ") + Text("+\(song.lesson.xp) XP")).foregroundStyle(Palette.inkSoft)
+                // up next say it: "Originals · 2:40 · +30 XP"; Calm mode leaves the XP out.
+                if store.settings.calmMode {
+                    Text(verbatim: "· \(sheet.length)").foregroundStyle(Palette.inkSoft)
+                } else {
+                    (Text(verbatim: "· \(sheet.length) · ") + Text("+\(song.lesson.xp) XP")).foregroundStyle(Palette.inkSoft)
+                }
             }
             .font(.subheadline).lineLimit(1)
             if compact {
@@ -1069,7 +1074,7 @@ struct SongsView: View {
         }
     }
 
-    /// Twenty seconds of the song (over the band in headphones), from any sleeve.
+    /// Twenty seconds of the song (over the band), from any sleeve.
     private func sampleButton(_ song: Song, art: CoverArt) -> some View {
         PreviewDisc(active: previewing == song.id, ring: art.primary.mix(with: .black, by: 0.25),
                     start: previewStart, length: previewLength, side: 32) {
@@ -1112,7 +1117,7 @@ struct SongsView: View {
                 Text(verbatim: sheet.length).font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
                 if stars > 0 {
                     StarRow(stars: stars, size: 10)
-                } else {
+                } else if !store.settings.calmMode {
                     Text("+\(song.lesson.xp) XP").font(.footnote).foregroundStyle(Palette.inkSoft)
                 }
             }

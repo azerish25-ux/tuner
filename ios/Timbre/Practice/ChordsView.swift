@@ -231,7 +231,8 @@ struct ChordLibraryView: View {
 
     // MARK: Check
 
-    /// The chord as the recognizer knows it; nil for qualities it doesn't hear (6, m6, add9, 9, dim, aug).
+    /// The chord as the recognizer knows it (a sixth or a ninth checked as the chord it colours, `ChordTarget`); nil for
+    /// the few it can't check (6/9, 7sus4, 11, 13, m7♭5).
     private var target: ChordTarget? { ChordTarget(root: root, formulaId: formula.id) }
 
     private func startCheck() {

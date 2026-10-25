@@ -9,9 +9,8 @@ import TimbreCore
 /// tab), the words under it and the hook marked. Tapping a section, on the map or the lead sheet, loops it, at 50, 75
 /// or 100 % of the song's tempo, with a playhead through its bars; `practice`, when the host gives one, takes that
 /// loop on to be played. "Preview with band" plays the song from its first verse (a whole arrangement's intro is
-/// passed over, `SongPreview.excerpt`), else the opening of the take the lesson ends on: over the band in headphones,
-/// the melody alone on the speaker (the band only ever plays in headphones, where it can't reach the microphone).
-/// Start goes on to the lesson.
+/// passed over, `SongPreview.excerpt`), else the opening of the take the lesson ends on, over the band (on the speaker
+/// too: nothing is listening here). Start goes on to the lesson.
 struct SongOpener: View {
     let lesson: Lesson
     let course: LearnCourse
@@ -177,7 +176,7 @@ struct SongOpener: View {
     }
 
     /// The course, the title, then how long the song runs beside how long the lesson takes (they are different
-    /// things: "Song 0:22 · Lesson 6 min"), and its XP.
+    /// things: "Song 0:22 · Lesson 6 min"), and its XP (not in Calm mode).
     private var titleBlock: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 6) {
@@ -190,10 +189,12 @@ struct SongOpener: View {
                 Text("Song \(sheet.length) · Lesson \(lesson.minutes) min")
                     .font(.subheadline).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.8)
                 // A reward, in the rewards' gold.
-                Text("+\(lesson.xp) XP").font(Typeface.label(.caption)).foregroundStyle(Palette.starGold)
-                    .padding(.horizontal, 7).padding(.vertical, 2)
-                    .background(Capsule().fill(Palette.starGold.opacity(0.14)))
-                    .fixedSize()
+                if !store.settings.calmMode {
+                    Text("+\(lesson.xp) XP").font(Typeface.label(.caption)).foregroundStyle(Palette.starGold)
+                        .padding(.horizontal, 7).padding(.vertical, 2)
+                        .background(Capsule().fill(Palette.starGold.opacity(0.14)))
+                        .fixedSize()
+                }
             }
         }
         .accessibilityElement(children: .combine)
@@ -314,7 +315,7 @@ struct SongOpener: View {
             HStack(spacing: 8) {
                 heading("Song map", detail: Text("\(sheet.bars) bars"))
                 Spacer(minLength: 8)
-                BandControls(audio: store.audio, accent: accent)
+                BandControls(audio: store.audio, accent: accent, speaker: .fullBand)
             }
             SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent,
                            progress: position.map { $0 / Double(max(1, sheet.bars)) }, bleed: Self.margin, selected: selected) { section in
@@ -572,7 +573,7 @@ struct SongOpener: View {
         if previewing { stopPlayback(); return }
         stopPlayback()
         guard let clip = previewClip else { return }
-        let withBand = bandOn && store.audio.headphones
+        let withBand = bandOn
         let spb = 60 / max(20, clip.bpm)
         // Over the band, whole bars from the clip's first, landing on its final chord; alone, from its first note
         // (no lead-in rest before an upbeat).
@@ -608,7 +609,7 @@ struct SongOpener: View {
 
     /// The section round and round at `loopSpeed` (a whole tempo, so the click and the notes keep together): its
     /// melody (an arrangement's section with the upbeat it starts on closing each pass), or its chords strummed on
-    /// the song's pattern, over the band (on its own chords where the chart has them) in headphones.
+    /// the song's pattern, over the band (on its own chords where the chart has them).
     private func startLoop(_ section: SongSheet.Section) {
         stopPlayback()
         let chart = self.chart
@@ -619,7 +620,7 @@ struct SongOpener: View {
         let hits = chart.notes.isEmpty ? strums(harmony.map(\.downbeat), meter: meter, pattern: chart.strokes) : SongPlayback.hits(melody)
         guard !hits.isEmpty else { return }
         let pass = Double(section.bars * meter) * 60 / bpm
-        let withBand = bandOn && store.audio.headphones
+        let withBand = bandOn
         let loopBand = withBand ? SongPlayback.band(notes: melody, harmony: harmony, bars: section.bars, bpm: bpm, meter: meter,
                                                     reference: store.settings.referencePitchHz, bass: course.fretKind != "bass") : nil
         Analytics.log("song_sheet_loop", ["lesson": lesson.id, "speed": "\(Int((loopSpeed * 100).rounded()))"])

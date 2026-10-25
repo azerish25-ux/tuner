@@ -38,8 +38,9 @@ public enum ReviewItem: Codable, Equatable, Sendable {
     /// Changing between two chords in time (from a progression). The same two chords either way round are one item.
     case change(from: ChordSpec, to: ChordSpec)
     /// A rhythm as a strum or tap step asked for it: the pattern's beats, the meter (nil: the step's default), the
-    /// tempo and, on a strum, the chord it was strummed on.
-    case rhythm(pattern: [Double], beatsPerBar: Int?, bpm: Double, chord: ChordSpec?, strummed: Bool)
+    /// tempo and, on a strum, the chord it was strummed on and its muted and accented beats (as `LessonStep.strum`
+    /// counts them), so a review grades its chops and accents as the lesson did.
+    case rhythm(pattern: [Double], beatsPerBar: Int?, bpm: Double, chord: ChordSpec?, strummed: Bool, muted: [Double] = [], accents: [Double] = [])
     case question(ReviewQuestion)
 
     /// What kind of practice an item is; a review takes the kinds in turn.
@@ -80,7 +81,7 @@ public enum ReviewItem: Codable, Equatable, Sendable {
         case let .change(from, to):
             let ends = [PracticeItem.chord(from).key, PracticeItem.chord(to).key].sorted()
             return "x" + ends[0] + "~" + ends[1]
-        case let .rhythm(pattern, beatsPerBar, _, _, _):
+        case let .rhythm(pattern, beatsPerBar, _, _, _, _, _):
             return "r\(beatsPerBar ?? 0):" + pattern.map { "\($0)" }.joined(separator: ",")
         case let .question(question):
             let sound = question.sound.map { groups in groups.map { $0.map(String.init).joined(separator: "+") }.joined(separator: ",") } ?? ""
@@ -91,7 +92,10 @@ public enum ReviewItem: Codable, Equatable, Sendable {
 
     private static func textKey(_ text: LearnText) -> String { text.key.isEmpty ? text.defaultValue : text.key }
 
-    enum CodingKeys: String, CodingKey { case type = "t", midi = "m", at, chord = "c", to = "o", pattern = "p", beatsPerBar = "b", bpm = "v", strummed = "s", question = "q" }
+    enum CodingKeys: String, CodingKey {
+        case type = "t", midi = "m", at, chord = "c", to = "o", pattern = "p", beatsPerBar = "b", bpm = "v", strummed = "s", question = "q"
+        case muted = "mu", accents = "ac"
+    }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
@@ -102,7 +106,9 @@ public enum ReviewItem: Codable, Equatable, Sendable {
         case "r":
             self = .rhythm(pattern: try c.decode([Double].self, forKey: .pattern), beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar),
                            bpm: try c.decode(Double.self, forKey: .bpm), chord: try c.decodeIfPresent(ChordSpec.self, forKey: .chord),
-                           strummed: try c.decodeIfPresent(Bool.self, forKey: .strummed) ?? false)
+                           strummed: try c.decodeIfPresent(Bool.self, forKey: .strummed) ?? false,
+                           muted: try c.decodeIfPresent([Double].self, forKey: .muted) ?? [],
+                           accents: try c.decodeIfPresent([Double].self, forKey: .accents) ?? [])
         case "q": self = .question(try c.decode(ReviewQuestion.self, forKey: .question))
         default: throw DecodingError.dataCorruptedError(forKey: .type, in: c, debugDescription: "Unknown review item")
         }
@@ -117,9 +123,12 @@ public enum ReviewItem: Codable, Equatable, Sendable {
             try c.encode("c", forKey: .type); try c.encode(spec, forKey: .chord)
         case let .change(from, to):
             try c.encode("x", forKey: .type); try c.encode(from, forKey: .chord); try c.encode(to, forKey: .to)
-        case let .rhythm(pattern, beatsPerBar, bpm, chord, strummed):
+        case let .rhythm(pattern, beatsPerBar, bpm, chord, strummed, muted, accents):
             try c.encode("r", forKey: .type); try c.encode(pattern, forKey: .pattern); try c.encodeIfPresent(beatsPerBar, forKey: .beatsPerBar)
             try c.encode(bpm, forKey: .bpm); try c.encodeIfPresent(chord, forKey: .chord); try c.encode(strummed, forKey: .strummed)
+            // Only when there are any, so a plain rhythm is stored as it always was.
+            if !muted.isEmpty { try c.encode(muted, forKey: .muted) }
+            if !accents.isEmpty { try c.encode(accents, forKey: .accents) }
         case let .question(question):
             try c.encode("q", forKey: .type); try c.encode(question, forKey: .question)
         }

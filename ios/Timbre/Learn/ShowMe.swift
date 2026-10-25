@@ -45,7 +45,7 @@ enum ShowMe {
         #if DEBUG
         if DemoScene.current == .lessonChord { return false }
         // A run walking lessons on the timed demo pitch keeps its pictures: only the show-me scene plays by itself.
-        if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" && DemoScene.current != .showMe { return false }
+        if TestSupport.isOn(.demoPitch) && DemoScene.current != .showMe { return false }
         #endif
         return !settings.hasShownDemo(key, in: course.id)
     }
@@ -623,18 +623,6 @@ struct ShowMeToggle: View {
 
     var body: some View {
         ChordPictureToggle(accent: accent, label: label, threeD: $on)
-    }
-}
-
-/// A chord card's top line while its 3D demonstration can show: the name, and the stable "Chart · Player view · 3D"
-/// switch where the picture switch sits (`ChordCardHeader`), at the same height, so the card holds still.
-struct ShowMeCardHeader: View {
-    let name: String
-    @Binding var on: Bool
-    var accent: Color = Palette.mint
-
-    var body: some View {
-        ChordCardHeader(name: name, accent: accent, threeD: $on)
     }
 }
 

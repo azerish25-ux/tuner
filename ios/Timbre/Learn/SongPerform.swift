@@ -10,7 +10,7 @@ import TimbreCore
 /// multiplier), the words under the runway karaoke style (`HighwayLyrics`, with the section playing) and the song
 /// map's playhead, then the finale (`SongFinaleView`): the lesson's stars, the score, the timing strip with each
 /// section's score under it, and a story-sized poster. The best take at the song's tempo counts, as in every
-/// play-along. With VoiceOver, spoken cues name each note ahead of it (`SpokenCueTiming`) and the result is read out.
+/// play-along. With VoiceOver, spoken cues name each note ahead of it (`SpokenCues.Timing`) and the result is read out.
 /// On a strummed instrument a song with a chart can be performed as "Chords & words" instead (`SongChordsTake`): its
 /// chords strummed change by change with the words ("C · G" where a bar changes on its third beat), judged for timing
 /// and chord.
@@ -54,6 +54,8 @@ struct SongPerformStep: View {
     @State private var ownsClick = false
     /// The count-in beat last felt.
     @State private var countInBeat: Int?
+    /// When the take's spoken cues are said.
+    @State private var cueTiming = SpokenCues.Timing()
     /// The last attack heard while "Start on first strum" waits.
     @State private var armedOnset: CFTimeInterval = 0
     @AppStorage(StrumStart.storageKey) private var strumChoice: Bool?
@@ -203,7 +205,8 @@ struct SongPerformStep: View {
             Spacer(minLength: 8)
             if StrumStart.offered { StrumStartToggle(isOn: strumBinding, accent: accent, listening: armed) }
             CalibrateButton(audio: store.audio, accent: accent) { calibrating = true }
-            BandControls(audio: store.audio, accent: accent)
+            // "Chords & words" is judged on its strokes: there the speaker keeps to the click.
+            BandControls(audio: store.audio, accent: accent, speaker: takeMode == .chords && chordsAvailable ? .click : .drums)
         }
         .padding(.horizontal, Metrics.gutter).padding(.top, 8)
     }
@@ -477,6 +480,7 @@ struct SongPerformStep: View {
         playingChords = false
         session = PlayAlongSession(notes: notes, bpm: tempo, beatsPerBar: beatsPerBar, anyOctave: course.anyOctave, keepsTrail: !fretted)
         session.begin(at: CACurrentMediaTime())
+        cueTiming = SpokenCues.Timing(session)
         countInBeat = nil
         withMotion(Motion.settle, reduceMotion: reduceMotion) { phase = .playing }
         Haptics.shared.selection()
@@ -487,7 +491,7 @@ struct SongPerformStep: View {
         // count-in, the runway and the judging start together; this take owns it until it ends.
         store.audio.setMetronome(bpm: Int(tempo), beats: beatsPerBar, subdivision: 1, accents: true)
         ownsClick = true
-        // The band rides the metronome from the bar after the count-in (headphones only; else the click).
+        // The band rides the metronome from the bar after the count-in (in full in headphones, its drums on the speaker).
         store.audio.playBand(band, firstBar: 1)
         store.gameTargetHz = notes.first.map { PitchMath.frequency(midi: Double($0.midi), reference: store.settings.referencePitchHz) }
         #if DEBUG
@@ -534,18 +538,17 @@ struct SongPerformStep: View {
             countInBeat = beat
             if let beat { TakeFeedback.countIn(beat) }
         }
-        let lead = SpokenCueTiming.lead(secondsPerBeat: spb)
-        if spoken, let index = session.cue(at: now, lead: lead) { speak(index, lead: lead) }
+        if spoken, let cue = cueTiming.due(at: session.clock(at: now)) { speak(cue, now: now) }
         react(session.tick(at: now))
     }
 
-    /// Names note `index` ahead of time (`SpokenCueTiming`); just its place when the note before it is close. A
-    /// fingerboard's cue keeps to the note's name, so it never names a fret on a violin or a cello.
-    private func speak(_ index: Int, lead: Double) {
+    /// Names the note of `cue` as planned (`SpokenCues.Timing`): in full, or just its place when the note before it is
+    /// close; on a fingerboard its string and finger, never a fret.
+    private func speak(_ cue: CuePlan.Cue, now: CFTimeInterval) {
         let notes = session.notes
-        guard notes.indices.contains(index) else { return }
-        let gap = index > 0 ? (notes[index].beat - notes[index - 1].beat) * spb : .infinity
-        SpokenCues.schedule(notes[index], fretted: fretted && board == nil, lead: lead, brief: SpokenCueTiming.brief(gap: gap))
+        guard notes.indices.contains(cue.index) else { return }
+        let lead = notes[cue.index].beat * session.secondsPerBeat - session.clock(at: now)
+        SpokenCues.schedule(notes[cue.index], fretted: fretted, lead: lead, brief: cue.brief, fingerboard: board)
     }
 
     private func react(_ update: PlayAlongSession.Update) {
