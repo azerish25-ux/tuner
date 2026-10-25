@@ -852,6 +852,9 @@ struct ChordStep: View {
                 else if let next = judge.current { store.gameTargetHz = frequency(next, store) }
             }
         }
+        #if DEBUG
+        DemoScene.strumWithSilentString(pitches: pitches) { reading in heardStrum(reading, pitches: pitches, target: target) }
+        #endif
     }
 
     /// One strum, every string at once: the strings that rang tick, and the first silent one is named with what usually

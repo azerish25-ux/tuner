@@ -452,7 +452,7 @@ final class PreviewRecorder: @unchecked Sendable {
     /// `TIMBRE_PREVIEW_MOTIF=<file>`: once that file exists, the app's motif plays (the sound of welcome and of Pro
     /// unlocked) and is noted, so the end card carries the app's own signature rather than silence.
     @MainActor private func playMotifWhenAsked() {
-        guard let path = ProcessInfo.processInfo.environment["TIMBRE_PREVIEW_MOTIF"], !path.isEmpty else { return }
+        guard let path = TestSupport.value(.previewMotif), !path.isEmpty else { return }
         Task { @MainActor in
             for _ in 0..<6000 {
                 if FileManager.default.fileExists(atPath: path) {

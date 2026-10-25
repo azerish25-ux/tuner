@@ -313,7 +313,7 @@ final class AudioService: ObservableObject {
     /// `TIMBRE_DEMO_CLIP=<file>`: a recording `AudioClip` can read (an absolute path, or a file name in the app bundle)
     /// for the demo pitch to play into `frames`; nil when the run names none or the file can't be read.
     private static let demoClip: AudioClip? = {
-        guard let name = ProcessInfo.processInfo.environment["TIMBRE_DEMO_CLIP"], !name.isEmpty else { return nil }
+        guard let name = TestSupport.value(.demoClip), !name.isEmpty else { return nil }
         let found: URL? = name.hasPrefix("/") ? URL(fileURLWithPath: name) : Bundle.main.url(forResource: name, withExtension: nil)
         guard let url = found else { return nil }
         return try? AudioClip(contentsOf: url)

@@ -49,7 +49,6 @@ public struct PlayAlongSession: Sendable {
     private var lastLevel = -120.0
     private var lastOnset = -Double.infinity
     /// The next note the spoken cues have yet to name.
-    private var cued = 0
 
     public init(notes: [TimedNote], bpm: Double, beatsPerBar: Int, anyOctave: Bool = false, keepsTrail: Bool = false) {
         let sorted = notes.sorted { $0.beat < $1.beat }
@@ -107,7 +106,7 @@ public struct PlayAlongSession: Sendable {
         judge = PlayAlongJudge(notes: notes, bpm: bpm, anyOctave: anyOctave)
         grades = [:]; hitTimes = [:]; offsets = [:]; trail = []
         points = 0; tierUp = nil; finished = false
-        lastLevel = -120; lastOnset = -.infinity; cued = 0
+        lastLevel = -120; lastOnset = -.infinity
         startTime = now
     }
 
@@ -196,25 +195,6 @@ public struct PlayAlongSession: Sendable {
         guard !inside.isEmpty else { return nil }
         let credit = inside.reduce(0.0) { $0 + PlayAlongJudge.credit(grades[$1] ?? .miss) }
         return credit / Double(inside.count)
-    }
-
-    // MARK: Spoken cues
-
-    /// The note to name now, `lead` seconds before it is due (a beat, for a cue spoken over the music): the latest
-    /// one whose cue time has come and that nothing has named yet, so a run too fast to name note by note names the
-    /// note coming up rather than falling behind. Each note is named once.
-    public mutating func cue(at now: Double, lead: Double) -> Int? {
-        guard !finished, cued < notes.count else { return nil }
-        let clock = self.clock(at: now)
-        var due: Int?
-        var index = max(cued, judge.nextIndex)
-        while index < notes.count, judge.time(of: index) - lead <= clock {
-            due = index
-            index += 1
-        }
-        guard let due else { return nil }
-        cued = due + 1
-        return due
     }
 }
 

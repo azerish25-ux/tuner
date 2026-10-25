@@ -95,19 +95,6 @@ final class PlayAlongSessionTests: XCTestCase {
         XCTAssertNil(take.score(fromBeat: 8, toBeat: 12), "no notes there")
     }
 
-    func testCuesNameEachNoteABeatAheadOnce() {
-        var take = session(8)
-        take.begin(at: 100)
-        XCTAssertNil(take.cue(at: 100, lead: 1), "too early in the count-in")
-        // Note 0 is due at 0.08 s on the take's clock: named from a beat before.
-        XCTAssertEqual(take.cue(at: 103.1, lead: 1), 0)
-        XCTAssertNil(take.cue(at: 103.2, lead: 1), "each note once")
-        XCTAssertEqual(take.cue(at: 104.1, lead: 1), 1)
-        // Fallen behind (a stalled frame): the note coming up is named, not the ones already passing.
-        XCTAssertEqual(take.cue(at: 107.1, lead: 1), 4)
-        XCTAssertEqual(take.cue(at: 108.1, lead: 1), 5)
-    }
-
     func testOnlyPitchLanesKeepATrail() {
         var lanes = session(2, keepsTrail: true)
         lanes.begin(at: 0)
@@ -130,7 +117,6 @@ final class PlayAlongSessionTests: XCTestCase {
         XCTAssertEqual(take.points, 0)
         XCTAssertTrue(take.grades.isEmpty)
         XCTAssertEqual(take.nextIndex, 0)
-        XCTAssertEqual(take.cue(at: 53.1, lead: 1), 0, "the cues start again too")
     }
 
     func testTheMultiplierSteps() {

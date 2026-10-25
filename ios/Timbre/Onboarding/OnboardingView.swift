@@ -375,7 +375,7 @@ struct OnboardingView: View {
         Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(450))
             guard page == .welcome else { return }
-            sounds.play(.motif)
+            sounds.playWelcome()
         }
     }
 

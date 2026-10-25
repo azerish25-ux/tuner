@@ -533,8 +533,8 @@ struct PaywallView: View {
 
     /// "526 lessons · 140+ songs · 60 instruments": what Pro opens, counted from the curriculum and the catalog as they
     /// ship (the Free and Pro table counts the same lessons), never a number written down here. Lessons are the ones
-    /// that teach (`Curriculum.lessonCount`, songbooks aside); songs are `Curriculum.distinctTuneCount` (by title, so a
-    /// song taught in two lessons or arranged for two instruments counts once), rounded down to the ten as the listing
+    /// that teach (`Curriculum.lessonCount`, songbooks aside); songs are `Curriculum.distinctTuneCount` (each tune once,
+    /// however many lessons teach it or instruments play it), rounded down to the ten as the listing
     /// says them.
     private var proofLine: some View {
         let songs = Self.roundedCount(store.curriculum.distinctTuneCount)

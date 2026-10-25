@@ -36,6 +36,10 @@ enum TestSupport {
         case sceneCue = "TIMBRE_SCENE_CUE"
         /// A folder the App Preview's soundtrack is written to (`PreviewRecorder`).
         case previewAudio = "TIMBRE_PREVIEW_AUDIO"
+        /// A file whose appearance plays the motif under the App Preview's end card (`DemoScene.playMotifWhenAsked`).
+        case previewMotif = "TIMBRE_PREVIEW_MOTIF"
+        /// A recording played into the listening frames while the demo pitch runs (`AudioService.demoClip`).
+        case demoClip = "TIMBRE_DEMO_CLIP"
     }
 
     /// The keys that make a run automated, with XCTest's own.

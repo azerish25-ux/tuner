@@ -23,8 +23,8 @@ extension WatchSnapshot {
     static var sample: WatchSnapshot {
         WatchSnapshot(day: Calendar.current.startOfDay(for: Date()), streak: 7, best: 12, practicedToday: true,
                       steps: [.init(kind: "lesson", symbol: "graduationcap", tint: "violet", title: "Next lesson", minutes: 4, done: true),
-                              .init(kind: "tune", symbol: "tuningfork", tint: "amber", title: "Tune up", minutes: 1, done: true),
-                              .init(kind: "ear", symbol: "ear", tint: "mint", title: "Ear training", minutes: 5, done: false)])
+                              .init(kind: "tune", symbol: "tuningfork", tint: "neutral", title: "Tune up", minutes: 1, done: true),
+                              .init(kind: "ear", symbol: "ear", tint: "neutral", title: "Ear training", minutes: 5, done: false)])
     }
 }
 

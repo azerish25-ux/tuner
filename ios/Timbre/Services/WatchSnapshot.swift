@@ -24,7 +24,7 @@ struct WatchSnapshot: Codable, Equatable, Sendable {
     struct Step: Codable, Equatable, Sendable, Identifiable {
         var kind: String
         var symbol: String
-        /// A Studio Noir accent name (mint, amber, sky, coral, violet), as on the Today ring.
+        /// The Today ring's colour name: "violet" for the lesson, "neutral" for the rest (`WatchTheme`).
         var tint: String
         var title: String
         var minutes: Int
