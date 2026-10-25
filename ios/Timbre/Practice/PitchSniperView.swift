@@ -317,7 +317,7 @@ private struct BullseyeTarget: View {
         // Distance is the error (log-ish, so the last few cents still read); flat sits left, sharp right.
         let distance = r * CGFloat(min(1, sqrt(error / 60)))
         let angle = (cents < 0 ? Double.pi : 0) + sin(t * 1.3) * 0.35
-        let p = CGPoint(x: c.x + cos(angle) * distance, y: c.y - sin(angle) * distance)
+        let p = CGPoint(x: c.x + CGFloat(cos(angle)) * distance, y: c.y - CGFloat(sin(angle)) * distance)
         let color = inside ? Palette.mint : Palette.amber
         context.fill(BullseyeArt.circle(p, 22), with: .radialGradient(Gradient(colors: [color.opacity(0.7), .clear]), center: p, startRadius: 0, endRadius: 22))
         context.fill(BullseyeArt.circle(p, 9), with: .color(color))
