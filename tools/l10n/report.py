@@ -1005,8 +1005,13 @@ def annotate(report: dict, files: dict, stale_todo: list, strict: bool = False) 
     if parts:
         print("::warning title=Untranslated strings::" + "; ".join(parts)
               + ". Translators' TODO: tools/l10n/todo/<locale>.json, brief: docs/l10n/HANDOFF.md.")
+    # A string's source line ("where": "File.swift:123") moves with every edit above it; the handoff is out of date
+    # only when what translators need changed (a key, a source text, a file, a note), not when a line number did.
+    def unlined(text: str) -> str:
+        return re.sub(r'(\.(?:swift|yml|py|json|plist)):\d+', r'\1', text)
     outdated = [str(p.relative_to(ROOT)) for p, c in files.items()
-                if not p.exists() or p.read_text(encoding="utf-8") != c] + [str(p.relative_to(ROOT)) for p in stale_todo]
+                if not p.exists() or unlined(p.read_text(encoding="utf-8")) != unlined(c)]
+    outdated += [str(p.relative_to(ROOT)) for p in stale_todo]
     if outdated:
         print(f"::{'error' if strict else 'warning'} title=Translation handoff out of date::Run "
               "python3 tools/l10n/report.py and commit " + ", ".join(sorted(outdated)[:6]) + (" …" if len(outdated) > 6 else ""))
