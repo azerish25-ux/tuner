@@ -65,16 +65,37 @@ SOURCES = {
         repo='https://github.com/sfzinstruments/virtuosity_drums', commit='9f04cf9a734527edfbb0a4eee1f674e45bbf71bc',
         licence='CC0-1.0', licence_file='LICENSE', licence_marker='CC0 1.0 Universal',
         note='Recorded at Virtuosity Musical Instruments, Boston.'),
-    'shinyguitar': dict(
-        title='Shinyguitar (acoustic microphone)', author='Karoryfer Samples (D. Smolken)',
-        repo='https://github.com/sfzinstruments/karoryfer.shinyguitar', commit='57243cca85277dbcc120ce17c6178032f93c80f3',
-        licence='CC0-1.0', licence_file='LICENSE', licence_marker='CC0 1.0 Universal',
-        note='readme.txt: "This sample library is royalty-free for all commercial and non-commercial use."'),
     'growlybass': dict(
         title='Growlybass', author='Karoryfer Samples',
         repo='https://github.com/sfzinstruments/karoryfer.growlybass', commit='4f483268fc66b5a6d5781d421c0d11b8d08d3fc6',
         licence='CC0-1.0', licence_file='LICENSE', licence_marker='CC0 1.0 Universal',
         note='readme.txt: "Royalty-free for all commercial and non-commercial use."'),
+    # The Discord SFZ GM Bank admits only CC0/CC-BY instruments, each with its licence in its own SFZ; program 26 is
+    # Jeff Learman's own Martin, so the build checks that program's SFZ header rather than a repository LICENSE.
+    'jmartin': dict(
+        title='Martin HD-28 steel-string guitar (Discord SFZ GM Bank, program 26)', author='Jeff Learman',
+        repo='https://github.com/sfzinstruments/Discord-SFZ-GM-Bank', commit='7a9c478fe331f94f246d33332f0adedb25bbbe27',
+        licence='CC0-1.0', licence_file='Discord GM/Melodic/026-Acoustic Guitar (steel).sfz',
+        licence_marker='License: Creative Commons CC0',
+        note='026-Acoustic Guitar (steel).sfz: "2017 Martin HD28 Vintage Series / Author: Jeff Learman ... / License: '
+             'Creative Commons CC0"; the bank\'s README: "Only CC0, CC-BY, and equivalent licences are allowed."'),
+    'freepats': dict(
+        title='FreePats Spanish Classical Guitar', author='Roberto (roberto@zenvoid.org) for the FreePats project',
+        repo='https://github.com/freepats/spanish-classical-guitar', commit='6f4eb1b092acc88f5448cea1a0001bd07b971af8',
+        licence='CC0-1.0', licence_file='LICENSE', licence_marker='CC0 1.0 Universal',
+        note='README.md: "Published under the terms of Creative Commons CC0 public domain dedication."'),
+    'ganjo': dict(
+        title='Ganjo (six-string banjo)', author='itsclipping',
+        repo='https://github.com/sfzinstruments/ganjo', commit='ccff5cd5cd3b513873a48994c07724d9d3c39e1c',
+        licence='CC0-1.0', licence_file='LICENSE.md', licence_marker='CC0 1.0 Universal',
+        note='README.md: "Samples of a SX brand 6-string banjo (or guitar banjo, guitjo or banjo) recorded, edited and '
+             'mapped by itsclipping."'),
+    'bngguitars': dict(
+        title='Black And Green Guitars (green Gretsch Anniversary)', author='Karoryfer Samples (recorded by Brian Wood)',
+        repo='https://github.com/sfzinstruments/karoryfer.black-and-green-guitars',
+        commit='b3b3249d37dc977a1a297bd2dc053e6d9b6b805c',
+        licence='CC0-1.0', licence_file='LICENSE', licence_marker='CC0 1.0 Universal',
+        note='readme.txt: "Royalty-free for all commercial and non-commercial use. Copyright 2022 Karoryfer Lecolds."'),
 }
 
 # Libraries looked at and not used (kept in the doc so nobody re-adds them without a fresh licence check).
@@ -88,9 +109,35 @@ REJECTED = [
     ('Salamander Drumkit, Sam\'s Sonor, LivingRoom Upright, BJDNiel', 'CC-BY-SA: share-alike terms; not CC0/CC-BY.'),
     ('jRhodes3c/3d, Rickenbacker 4001, MF Tin Whistle', 'Non-commercial (NC) licences.'),
     ('FlameStudios Kay 5-String Banjo', 'GPL-3.0: not a CC0/CC-BY sample licence.'),
-    ('sfzinstruments/ganjo (six-string banjo)', 'CC0, but its recordings sit 10-60 cents sharp of their labels, two '
-     'notes resolve to the same pitch and most ring under a second: not good enough; the banjo stays synthesized.'),
-    ('Karoryfer Bigcat Cello, Black and Green Guitars', 'CC0, but not needed (Bigcat is not on GitHub).'),
+    ('FreePats FSS Steel-String Acoustic Guitar', 'GPL-3.0 with the FreePats exception (deprecated by FreePats itself): '
+     'not a CC0/CC-BY sample licence. The Martin HD-28 (CC0) plays the guitar instead.'),
+    ('sfzinstruments Terkelsen Mandolin, OvationGuitar, DamiensFunkyGuitar', 'No licence stated anywhere: unclear.'),
+    ('Blue Jeans And Moonbeams (Malaclypse the Younger)', 'MIT, a software licence, and hosted on Google Drive (not '
+     'reachable from the build, not pinnable).'),
+    ('Philharmonia Orchestra samples (mandolin, banjo, guitar), University of Iowa MIS', 'Their own terms, not CC0/CC-BY; '
+     'not on GitHub.'),
+    ('The Libre Sample Pack (TheSmallTeaBoi)', 'CC0, but its ukulele is two one-shots and a loop: not a playable set.'),
+    ('sfzinstruments/hungarian_zither (Karoryfer, CC0)', 'Considered for the mandolin (paired steel melody courses, '
+     'picked): its melody strings start at G4, so the mandolin\'s G and D strings would be an octave-shifted guess.'),
+    ('sfzinstruments/karoryfer.emilyguitar (CC0)', 'A solid-body electric recorded direct; the band\'s electric '
+     'guitar is the hollowbody Gretsch from Black And Green Guitars instead.'),
+    ('sfzinstruments/karoryfer.shinyguitar (CC0)', 'Shipped until this build as the guitar: an archtop with one '
+     'velocity layer. Replaced by the flat-top Martin HD-28.'),
+    ('Karoryfer Bigcat Cello', 'CC0, but not needed (and not on GitHub).'),
+]
+
+# Nothing CC0/CC-BY recorded on a ukulele, a mandolin or a four/five-string banjo is reachable from here. The closest
+# recordings stand in, and the doc says so: the ukulele plays a nylon-string guitar's treble notes (the ukulele's own
+# strings and pitches), the mandolin the Martin's treble notes as paired courses, the banjo a six-string banjo (a
+# real banjo head and body, guitar-tuned) with its steadiest take per note.
+STAND_INS = [
+    ('ukulele', 'FreePats Spanish classical guitar, notes C4-C6 (the soprano ukulele\'s own range and string '
+     'material), thinned below 200 Hz for the small body and damped a little faster.'),
+    ('mandolin', 'The Martin HD-28\'s notes from E3 up, thinned below 220 Hz, brightened and damped faster, played as '
+     'paired courses (two strings 1.6 cents and a millisecond apart) in phrases; references sound one string.'),
+    ('banjo', 'Ganjo, an SX six-string banjo: the steadiest take of each note, relabelled by its measured pitch '
+     '(the instrument sat about 40 cents sharp). Its tuner reference stays synthesized: the takes glide too much '
+     'for a needle.'),
 ]
 
 NOTE_RE = re.compile(r'^([A-Ga-g])([#b]?)(-?\d)$')
@@ -122,6 +169,9 @@ def piano_seconds(m):
     return 6.0 if m < 48 else 5.0 if m < 64 else 4.0 if m < 76 else 3.0
 
 
+MARTIN = r'^MartinGM2_\d{3}_+(?P<note>[A-G]b?\d)_1\.wav$'
+
+
 INSTRUMENTS = [
     dict(id='piano', title='Grand piano', voices=['piano'], kind='plucked', source='vcsl',
          dir='Chordophones/Zithers/Grand Piano, Steinway B/Sus',
@@ -129,10 +179,39 @@ INSTRUMENTS = [
          layers={'3': ('mf', 0.75), '2': ('p', 0.4)},
          step=lambda m: 2 if 34 <= m <= 86 else 4, range=(21, 108), seconds=piano_seconds,
          release=0.18, bitrate=112, coverage=(21, 108)),
-    dict(id='guitar', title='Archtop guitar (acoustic)', voices=['guitar'], kind='plucked', source='shinyguitar',
-         dir='Samples/acoustic', select=r'^(?P<note>[a-g]b?\d)_vl(?P<layer>3)_rr1_1\.wav$',
-         layers={'3': ('mf', 0.75)}, step=lambda m: 3, range=(37, 84), seconds=lambda m: 4.5 if m < 55 else 3.8,
-         release=0.08, bitrate=96, coverage=(35, 88)),
+    # The Martin's zones are a minor third apart and end in the recordist's loop: each is extended along it (with the
+    # decay the note had) to a natural length. One layer; softer notes are darkened at play time (`softFilter`), as
+    # the bank's own SFZ does with a velocity-tracked low-pass.
+    dict(id='guitar', title='Steel-string guitar (Martin HD-28)', voices=['guitar'], kind='plucked', source='jmartin',
+         dir='Discord GM/Melodic/026-Acoustic Guitar (steel)', select=MARTIN,
+         layers={'': ('mf', 0.75)}, step=lambda m: 3, range=(40, 83), extend_loops=True,
+         seconds=lambda m: 4.6 if m < 52 else 3.8 if m < 64 else 3.0 if m < 74 else 2.4,
+         release=0.08, bitrate=96, coverage=(36, 88), soft_filter=True),
+    dict(id='ukulele', title='Ukulele (nylon-string guitar recordings)', voices=['ukulele'], kind='plucked',
+         source='freepats', dir='samples', select=r'^(?P<note>[A-G]#?\d)\.flac$',
+         layers={'': ('mf', 0.75)}, step=lambda m: 2, range=(60, 84), tone=dict(highpass=200, decay=7),
+         seconds=lambda m: 2.4 if m < 67 else 2.0 if m < 76 else 1.5, release=0.06, bitrate=96, coverage=(57, 88),
+         soft_filter=True),
+    dict(id='mandolin', title='Mandolin (Martin treble strings, paired courses)', voices=['mandolin'], kind='plucked',
+         source='jmartin', dir='Discord GM/Melodic/026-Acoustic Guitar (steel)', select=MARTIN,
+         layers={'': ('mf', 0.75)}, step=lambda m: 3, range=(52, 83), extend_loops=True,
+         tone=dict(highpass=220, shelf=(2800, 4.0), decay=9),
+         seconds=lambda m: 2.4 if m < 64 else 2.0 if m < 76 else 1.6, release=0.05, bitrate=96, coverage=(53, 90),
+         soft_filter=True, pair_cents=1.6),
+    dict(id='banjo', title='Banjo (six-string, guitar-tuned)', voices=['banjo'], kind='plucked', source='ganjo',
+         dir='Common', select=r'^Banjo_Common - (?P<note>[A-G]#?\d)(?:_\d+)?\.wav$',
+         layers={'': ('mf', 0.75)}, step=lambda m: 2, range=(43, 72), relabel=True, best_take=True,
+         seconds=lambda m: 1.6, release=0.05, bitrate=96, steady=False, coverage=(43, 76), soft_filter=True),
+    # The band's electric guitar (not an instrument voice): a hollowbody Gretsch, two layers of let-ring notes for
+    # comping, and its staccato notes (`chops`) for reggae skanks, funk scratches and country chicks.
+    dict(id='eguitar', title='Electric guitar (Gretsch hollowbody)', voices=[], kind='plucked', source='bngguitars',
+         dir='Samples/green/ord', select=r'^twang_(?P<note>[a-g]b?\d)_(?P<layer>mf|p)_rr1\.wav$',
+         layers={'mf': ('mf', 0.7), 'p': ('p', 0.4)}, step=lambda m: 3, range=(40, 77),
+         seconds=lambda m: 2.6 if m < 55 else 2.2, release=0.06, bitrate=80, coverage=(38, 82)),
+    dict(id='chops', title='Electric guitar, staccato (Gretsch hollowbody)', voices=[], kind='plucked',
+         source='bngguitars', dir='Samples/green/stac', select=r'^staccato_(?P<note>[a-g]b?\d)_rr(?P<layer>1)\.wav$',
+         layers={'1': ('mf', 0.7)}, step=lambda m: 3, range=(40, 77),
+         seconds=lambda m: 0.6, release=0.02, bitrate=80, coverage=(38, 82)),
     dict(id='bass', title='Electric bass', voices=['bass'], kind='plucked', source='growlybass',
          dir='sustain', select=r'^(?P<note>[a-g]b?\d)_(?P<layer>f|p)_rr1\.wav$',
          layers={'f': ('f', 0.85), 'p': ('p', 0.45)}, step=lambda m: 2, range=(24, 64), seconds=lambda m: 3.2,
@@ -178,6 +257,14 @@ INSTRUMENTS = [
 # Virtuosity Drums keeps separate kick, snare, overhead and room mics; each hit here is the close mic with the
 # overheads under it, summed to mono.
 V = 'Samples/{mic}/{group}/{mic}_{name}.flac'
+# Hand percussion has one close mic of its own.
+PERC = 'Samples/perc/close/{group}/{name}_Close.wav'
+
+
+def drum_path(mic: str, group: str, name: str) -> str:
+    return PERC.format(group=group, name=name) if mic == 'close' else V.format(mic=mic, group=group, name=name)
+
+
 DRUMS = dict(
     id='drums', title='Drum kit', source='virtuosity',
     pieces=[
@@ -190,7 +277,18 @@ DRUMS = dict(
         ('openhat', 0.75, ['hh_open_vl3_rr1'], 'hh', {'oh': 1.0}, 1.3),
         ('ride', 0.6, ['ride_ride_vl2_rr1', 'ride_ride_vl2_rr2'], 'ride', {'oh': 1.0}, 1.8),
         ('crash', 0.85, ['crash_crash_vl3_rr1'], 'crash', {'oh': 1.0}, 2.6),
+        # For the styles: a cross-stick (reggae's one-drop, ballads), two toms for fills, tambourine and shaker.
+        ('xstick', 0.6, ['snare_crossstick_vl10', 'snare_crossstick_vl12'], 'snare', {'snaremic': 1.0, 'oh': 0.5}, 0.5),
+        ('tomhi', 0.75, ['htom_center_vl10', 'htom_center_vl12'], 'htom', {'oh': 1.0, 'snaremic': 0.35}, 1.0),
+        ('tomlo', 0.75, ['ltom_center_vl10', 'ltom_center_vl12'], 'ltom', {'oh': 1.0, 'snaremic': 0.35}, 1.2),
+        ('tamb', 0.7, ['Tamb1_Shake_rr1', 'Tamb1_Shake_rr2', 'Tamb1_Shake_rr3'], 'tambourine', {'close': 1.0}, 0.6),
+        ('shaker', 0.6, ['LShaker_Shake1D_rr1', 'LShaker_Shake1U_rr1', 'LShaker_Shake1D_rr2', 'LShaker_Shake1U_rr2'],
+         'shaker', {'close': 1.0}, 0.35),
     ])
+DRUM_TARGETS = dict(kick=0.30, snare=0.22, hat=0.06, openhat=0.06, ride=0.06, crash=0.08, xstick=0.12, tomhi=0.2,
+                    tomlo=0.22, tamb=0.05, shaker=0.035)
+# Pieces whose noisy or gradual attack crosses the marker level unevenly: a few milliseconds of slack.
+SOFT_ATTACK = {'crash', 'ride', 'openhat', 'tamb', 'shaker'}
 
 
 # MARK: - Sources
