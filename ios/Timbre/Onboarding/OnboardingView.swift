@@ -309,7 +309,7 @@ struct OnboardingView: View {
                 Spotlight().fill(LinearGradient(colors: [Palette.spotlight.opacity(0.16), Palette.spotlight.opacity(0.03)], startPoint: .top, endPoint: .bottom))
                     .blur(radius: 6)
                     .ignoresSafeArea(edges: .top)
-                Text("TIMBRE").font(Typeface.label(.body)).tracking(9).foregroundStyle(Palette.spotlight).padding(.top, 34)
+                TimbreLogotype(size: 17).padding(.top, 34)
                     .frame(maxWidth: .infinity)
                 Ellipse().fill(RadialGradient(colors: [Palette.spotlight.opacity(0.22), .clear], center: .center, startRadius: 2, endRadius: 170))
                     .frame(width: 320, height: 46).frame(maxHeight: .infinity, alignment: .bottom).padding(.bottom, 6)

@@ -39,6 +39,8 @@ And one non-consumable:
 
 Turn **Family Sharing** on for the yearly plan and lifetime (parents buy lessons for their children; say so on the paywall once it is on). The prices above are the recommendation for $10k a month, about a third of the lesson apps' prices; test $49.99 against $59.99 later with a second yearly product chosen by the remote settings file (§5).
 
+For that price test, two more yearly subscriptions can now be created in the **Timbre Pro** group, at the same level as `timbre_pro_annual`: `timbre_pro_annual_b` and `timbre_pro_annual_c` (1 year, the arm's price, the same 14-day free trial, Family Sharing as the standard year). The app already loads them and grants Pro for them exactly as for the standard year. A paywall arm sells one only when the remote settings name it (`annualProductId`, §5); where one isn't created, or isn't on sale in a storefront, that arm keeps selling `timbre_pro_annual`.
+
 The paywall shows the yearly plan's weekly cost, worked out from the yearly price Apple returns, so it always matches the storefront. The paywall's offer codes and its one-time exit offer are set up in [section 6](#6-growth-features-owner-steps).
 
 `timbre_plus_lifetime` keeps the identifier of the earlier lifetime purchase, so anyone who bought it keeps Pro. Prices are suggestions: the app shows whatever Apple returns (`displayPrice`), including the trial length. Give each product a display name and description, a review screenshot of the paywall, and review notes saying the trial and plans are on the paywall reached from any locked lesson or Practice → Drone. Ready-to-paste names, descriptions, listing text, keywords, review notes and a pricing note are in [APP-STORE-LISTING.md](APP-STORE-LISTING.md). Submit the products with the first app version.
@@ -60,7 +62,9 @@ The delivery workflow signs automatically with an App Store Connect API key, whi
 
 Never paste these into chat, issues, commits or logs. Revoke the key in App Store Connect if it is ever exposed.
 
-4. Run **Actions → Apple delivery → Run workflow** on `main` with a version (2.0.0), a new build number, and the confirmation box ticked. It runs the core tests, archives the Release build, signs it and uploads it to App Store Connect, where it appears under TestFlight after processing. The version and build number go into every bundle (app, widgets, watch app, complications); App Store Connect refuses a build number it has already seen for that version.
+4. Run **Actions → Apple delivery → Run workflow** on `main` with a version (2.0.0), a new build number, and the confirmation box ticked. It runs the core tests, archives the Release build, signs it and uploads it to App Store Connect, where it appears under TestFlight after processing. The version and build number go into every bundle (app, widgets, watch app, complications); App Store Connect refuses a build number it has already seen for that version. Two more inputs, both optional:
+   - **ship_min_coverage**: ship only the languages with at least this percent of the interface translated (`tools/l10n/shipping.py`, applied to this run's checkout only). Empty ships the committed `CFBundleLocalizations`.
+   - **internal_testflight_untranslated** (off by default): **internal TestFlight only.** Every build must pass the translation gate (`tools/l10n/critical.py --strict`: the paywall's renewal terms, the permission prompts and VoiceOver's words translated in every language it ships). Ticked, the gate only reports, and the build is exported with `testFlightInternalTestingOnly`: App Store Connect offers it to internal testers and it can never be submitted for App Store review or external testing. Its Info.plist says `TimbreBuildChannel = internal`, and the run's summary says so too. Use it to try a build on devices while translations are still coming; for a build meant for review, leave it off and ship fewer languages (`ship_min_coverage`) or deliver the translations first.
 
 ## 4. Listing
 
@@ -89,16 +93,18 @@ Four addresses and one ID are build settings in `ios/project.yml`, carried into 
 {
   "paywall": [{ "id": "control", "weight": 50 },
               { "id": "annual_b", "weight": 50, "annualProductId": "timbre_pro_annual_b" }],
-  "rating": { "show": true, "stars": 4.8, "count": 312 },
+  "rating": { "show": true },
   "referralCode": "FRIENDMONTH",
+  "freeSongs": ["song-silent-night", "uke-sb-song-silent-night"],
   "flags": { "unit2Free": true }
 }
 ```
 
 - `paywall`: the arms of a paywall test, each with a `weight` (its share, 1 when left out). An arm may sell another yearly product (`annualProductId`, which must exist in the same subscription group), show lifetime on onboarding's paywall (`onboardingLifetime`), or change onboarding's headline (`headline`: `song`, the default, or `plan`). A person keeps the arm first drawn for as long as it is listed; dropping an arm moves its people to the others. The analytics events carry the arm.
-- `rating`: the paywall's rating line. It shows only when `show` is true **and** the app really has at least 4.6★ from 200 ratings; never put numbers here the App Store doesn't show.
+- `rating`: only `show` is needed. The paywall's rating line is on unless `show` is false, and appears only where the app really has at least 4.6★ from 200 ratings in that storefront: its figures always come from the App Store itself, and any stars or count written in the file are ignored.
 - `referralCode`: the offer code "Give a friend a month" hands out (§6.3).
-- `flags`: named switches for experiments.
+- `freeSongs`: song lessons opened to everyone for now, by lesson id (a seasonal shelf's first week, such as carols in December). They stay open for as long as the file lists them: take them out when the week ends.
+- `flags`: named switches for experiments. `unit2Free` opens the second unit of every teaching course to everyone (songbooks keep their own free songs).
 
 Before submitting with analytics on, update the App Privacy label (§4) and the "Analytics" section of PRIVACY.md.
 

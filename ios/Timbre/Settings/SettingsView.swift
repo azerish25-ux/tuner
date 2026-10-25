@@ -9,6 +9,7 @@ struct SettingsView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     @State private var referenceInput = ""
     @State private var confirmClear = false
     @State private var manageSubscriptions = false
@@ -16,6 +17,8 @@ struct SettingsView: View {
     @State private var feeling = false
     @FocusState private var referenceFocused: Bool
     @AppStorage(TuneView.strobeKey) private var strobeView = false
+    /// The player has chosen Tune by feel for themselves (`TuneByFeel.chosenKey`).
+    @AppStorage(TuneByFeel.chosenKey) private var feelChosen = false
 
     private func setting<Value>(_ keyPath: WritableKeyPath<UserSettings, Value>) -> Binding<Value> {
         Binding(get: { store.settings[keyPath: keyPath] }, set: { value in store.updateSettings { $0[keyPath: keyPath] = value } })
@@ -147,15 +150,16 @@ struct SettingsView: View {
 
     private var temperamentPicker: some View {
         MenuRow(title: "Temperament", icon: Glyph(.temperament), id: "settings.temperament", selection: Binding(get: { store.settings.temperamentId }, set: { value in
-            if value != "equal" && !commerce.isPro { store.presentPaywall("temperament"); return }
+            if value != "equal" && !commerce.isPro && !FreeTier.opens(.temperaments) { store.presentPaywall("temperament"); return }
             store.updateSettings { $0.temperamentId = value }
         })) { ForEach(Temperament.all) { Text($0.name).tag($0.id) } }
     }
 
     /// The phone throbs at the beat between the string and its note (`Haptics`), so a string can be tuned by touch. It
-    /// needs haptics on (Feedback, below).
+    /// needs haptics on (Feedback, below). It shows Tune by feel as it is in effect (on while VoiceOver runs until the
+    /// player chooses), and flipping it is the player's choice, as on the tuner.
     private var tuneByFeelToggle: some View {
-        Toggle(isOn: setting(\.tuneByFeel)) { RowLabel(icon: Glyph("hand.tap"), title: Text("Tune by feel")) }
+        Toggle(isOn: TuneByFeel.binding(store, voiceOver: voiceOver)) { RowLabel(icon: Glyph("hand.tap"), title: Text("Tune by feel")) }
             .settingsRow()
             .disabled(!store.settings.hapticsEnabled)
             .accessibilityIdentifier("settings.tuneByFeel")
@@ -163,7 +167,7 @@ struct SettingsView: View {
 
     private var strobeToggle: some View {
         Toggle(isOn: Binding(get: { strobeView }, set: { on in
-            if on && !commerce.isPro { store.presentPaywall("precision"); return }
+            if on && !commerce.isPro && !FreeTier.opens(.strobe) { store.presentPaywall("precision"); return }
             strobeView = on
         })) { RowLabel(icon: Glyph("circle.dotted"), title: Text("Strobe precision")) }
         .settingsRow()
@@ -396,14 +400,17 @@ struct SettingsView: View {
         }
         .buttonStyle(RowButtonStyle())
         .disabled(feeling || !store.settings.hapticsEnabled)
-        .accessibilityHint(store.settings.tuneByFeel ? Text("Plays the beat slowing to the lock") : Text("Plays the tuner's detents, then the lock"))
+        .accessibilityHint(feelOn ? Text("Plays the beat slowing to the lock") : Text("Plays the tuner's detents, then the lock"))
         .accessibilityIdentifier("settings.feelTest")
     }
+
+    /// Tune by feel as the tuner plays it now (`TuneByFeel.isOn`): the player's choice, else on while VoiceOver runs.
+    private var feelOn: Bool { TuneByFeel.isOn(store.settings, voiceOver: voiceOver, chosen: feelChosen) }
 
     private func runFeelTest() {
         guard !feeling else { return }
         feeling = true
-        let byFeel = store.settings.tuneByFeel
+        let byFeel = feelOn
         Task { @MainActor in
             if byFeel {
                 // About three seconds of beat, then the lock's thump.
@@ -480,7 +487,7 @@ struct SettingsView: View {
                 }
             })) {
                 Text("System default").tag(TimbreLocalization.system)
-                ForEach(Self.languages, id: \.self) { code in
+                ForEach(Self.shippedLanguages, id: \.self) { code in
                     Text(Locale(identifier: code).localizedString(forIdentifier: code)?.localizedCapitalized ?? code).tag(code)
                 }
             }
@@ -536,6 +543,10 @@ struct SettingsView: View {
         .settingsRow()
         .accessibilityIdentifier("settings.shareUsage")
     }
+
+    /// The languages of `languages` this build has strings for (a `.lproj` in the app bundle), so the list never offers
+    /// one the app can't show.
+    static let shippedLanguages = languages.filter { Bundle.main.path(forResource: $0, ofType: "lproj") != nil }
 
     static let languages = ["ar", "bg", "bn", "ca", "cs", "da", "de", "el", "en", "es", "et", "fa", "fi", "fr", "gu", "he", "hi", "hr", "hu", "id", "is", "it", "ja", "kn", "ko", "lt", "lv", "ml", "mr", "nl", "no", "pa", "pl", "pt", "ro", "ru", "sk", "sl", "sv", "sw", "ta", "te", "th", "tr", "uk", "ur", "vi", "zh-CN", "zu"]
 }

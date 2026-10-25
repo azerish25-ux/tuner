@@ -33,10 +33,12 @@ struct TuneView: View {
     @State private var showWhole = false
     /// Strum to tune is open (`StrumTuneView`).
     @State private var strumOpen = false
+    /// The header's tuning menu asked for a new custom tuning (`CustomTuningEditor`).
+    @State private var creatingTuning = false
     private static let supports3D = MTLCreateSystemDefaultDevice() != nil
     #if DEBUG
     /// Debug builds launched with TIMBRE_DEBUG_STATE=1 describe the stage in an invisible label (`stageProbe`).
-    private static let probe = ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1"
+    private static let probe = TestSupport.isOn(.debugState)
     /// When listening last started, in seconds since 1970 (0 while not listening): the demo pitch's cycles count from it.
     @State private var listeningSince: Double = 0
     #endif
@@ -125,6 +127,12 @@ struct TuneView: View {
         // The instrument browser: a sheet on a phone, a full page of its own on iPad (Instruments/InstrumentsView.swift).
         .instrumentPicker(isPresented: $store.showInstrumentPicker)
         .fullScreenCover(isPresented: $strumOpen) { StrumTuneView().environmentObject(store).environmentObject(audio) }
+        .sheet(isPresented: $creatingTuning) {
+            if let base = store.catalog.tuning(id: store.instrument.defaultTuningId) {
+                CustomTuningEditor(base: base).presentationBackground(Palette.stage)
+                    .environmentObject(store).environmentObject(audio).environmentObject(store.commerce)
+            }
+        }
         #if DEBUG
         .overlay(alignment: .bottomLeading) { if Self.probe { stageProbe } }
         .onChange(of: audio.running, initial: true) { _, running in listeningSince = running ? Date().timeIntervalSince1970 : 0 }
@@ -200,21 +208,18 @@ struct TuneView: View {
 
     private var header: some View {
         HStack(alignment: .center, spacing: 8) {
-            Button { store.showInstrumentPicker = true } label: {
-                VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 2) {
+                Button { store.showInstrumentPicker = true } label: {
                     HStack(spacing: 6) {
                         Text(store.instrumentDisplayName).font(.title3.weight(.semibold)).foregroundStyle(Palette.ink).lineLimit(1)
                         Image(systemName: "chevron.down").font(.caption.weight(.bold)).foregroundStyle(Palette.inkSoft)
                     }
-                    Group {
-                        if store.referenceMode { Text("Any note · A4 \(Int(store.settings.referencePitchHz)) Hz") }
-                        else { Text("\(store.tuning.name.localized) · A4 \(Int(store.settings.referencePitchHz)) Hz") }
-                    }
-                    .font(.footnote).foregroundStyle(Palette.inkSoft).lineLimit(1)
+                    .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("tune.instrument")
+                tuningLine
             }
-            .buttonStyle(.plain)
-            .accessibilityIdentifier("tune.instrument")
             Spacer(minLength: 4)
             // The cluster every tab shares (streak and level, both to Progress), then the tuner's own settings:
             // 44 pt targets throughout. The simple tuner keeps only the settings.
@@ -225,6 +230,25 @@ struct TuneView: View {
             }
         }
         .padding(.horizontal, Metrics.gutter).padding(.top, 6)
+    }
+
+    /// The tuning and the reference under the instrument's name. A tuning's line is the header's tuning menu
+    /// (`TuningMenu`): the instrument's tunings, a new custom tuning and the instrument picker, one tap from the tuner.
+    @ViewBuilder private var tuningLine: some View {
+        if store.referenceMode {
+            Text("Any note · A4 \(Int(store.settings.referencePitchHz)) Hz")
+                .font(.footnote).foregroundStyle(Palette.inkSoft).lineLimit(1)
+        } else {
+            TuningMenu(onNewCustom: { creatingTuning = true }) {
+                HStack(spacing: 4) {
+                    Text("\(store.tuning.name.localized) · A4 \(Int(store.settings.referencePitchHz)) Hz").lineLimit(1)
+                    Image(systemName: "chevron.up.chevron.down").font(.caption2.weight(.bold)).accessibilityHidden(true)
+                }
+                .font(.footnote).foregroundStyle(Palette.inkSoft)
+                .padding(.vertical, 4)
+                .contentShape(Rectangle())
+            }
+        }
     }
 
     /// A window of iPad size (regular width and height; never a phone): the larger readout.

@@ -411,7 +411,7 @@ struct PaywallView: View {
     private var lockedLesson: LockedLesson? {
         let curriculum = store.curriculum
         if let id = store.paywallLessonId, let found = curriculum.lesson(id: id) { return locked(found.lesson, in: found.course) }
-        let courseId = UserDefaults.standard.string(forKey: "learn.course") ?? store.learn.lastCourseId ?? "guitar"
+        let courseId = Preferences.savedLearnCourse ?? store.learn.lastCourseId ?? Preferences.defaultLearnCourse
         guard let course = curriculum.course(id: courseId) ?? curriculum.courses.first else { return nil }
         let lessons = course.lessons
         let from = store.learn.nextLesson(in: course).flatMap { next in lessons.firstIndex { $0.id == next.id } } ?? 0

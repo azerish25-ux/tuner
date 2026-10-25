@@ -18,7 +18,7 @@ To learn which parts of Timbre help people play (for example, how many finish se
 
 - Events are **not linked to you**. There is no name, email, account, advertising identifier or location. Each installation has a random identifier, scrambled on the device before it is sent, which cannot be traced back to you or to your Apple Account.
 - Events are **never used for tracking** across other companies' apps or websites, and never sold.
-- Events never contain audio, recordings, your song charts or what you type.
+- Events never contain audio, recordings or your song charts, and nothing you type, with one exception you choose to send: **Request a song** on the Songs tab sends the title you type (trimmed, at most 80 characters) and the instrument filter that was on, so the songs people ask for most can be counted. It is sent like any other event, not linked to you, and not at all while sharing is off (below). Please don't put personal information in a request.
 - Timbre also sends Apple's daily performance and stability summaries for the app (launch time, responsiveness, memory, and counts of crashes or hangs), from Apple's MetricKit, so problems can be found and fixed.
 - If you installed Timbre after tapping an Apple Ads advertisement, Timbre asks Apple which campaign it was (Apple's AdServices attribution) once, and sends the campaign, ad group and keyword numbers with the events. This needs no tracking permission and identifies the advertisement, not you.
 

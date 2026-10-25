@@ -44,9 +44,7 @@ struct FirstTuneSetup {
     /// The step only runs when Timbre can hear: the microphone is allowed (or, in a debug build, the demo pitch plays
     /// the string). "Not now" or a denial skips it rather than asking again.
     static var canListen: Bool {
-        #if DEBUG
-        if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" { return true }
-        #endif
+        if TestSupport.isOn(.demoPitch) { return true }
         return AVAudioApplication.shared.recordPermission == .granted
     }
 }
@@ -69,7 +67,7 @@ struct FirstTuneResult {
 @Observable
 @MainActor
 final class FirstTuneModel {
-    private(set) var reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal")
+    private(set) var reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: .noSignal)
     private(set) var level: Double = -120
     private(set) var listening = false
     /// Set once, when the string locks; the reading freezes there.
@@ -97,7 +95,7 @@ final class FirstTuneModel {
         // Another string far from this one reads as "let it ring", not as a needle pinned at the edge.
         let near = hz.flatMap { abs(PitchMath.cents(target: target, measured: $0)) <= 300 ? $0 : nil }
         var next = tracker.accept(frequency: near, confidence: near == nil ? 0 : 1, target: target, timestampMs: now)
-        if near == nil && level > -60 { next = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "uncertain") }
+        if near == nil && level > -60 { next = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: .uncertain) }
         reading = next
         if let cents = next.cents, next.frequency != nil {
             readings += 1
@@ -320,12 +318,12 @@ struct FirstTuneStep: View {
     private func statusLine(_ reading: TuningReading, shown: Int?, locked: Bool) -> String {
         if locked { return String(localized: "In tune") }
         switch reading.status {
-        case "settling": return String(localized: "Hold it…")
-        case "uncertain": return String(localized: "Let the string ring")
-        case "flat", "sharp":
+        case .settling: return String(localized: "Hold it…")
+        case .uncertain: return String(localized: "Let the string ring")
+        case .flat, .sharp:
             let amount = max(1, abs(shown ?? Int((reading.cents ?? 0).rounded())))
-            return reading.status == "flat" ? String(localized: "Tighten · \(amount)¢ flat") : String(localized: "Loosen · \(amount)¢ sharp")
-        default: return String(localized: "Pluck the string")
+            return reading.status == .flat ? String(localized: "Tighten · \(amount)¢ flat") : String(localized: "Loosen · \(amount)¢ sharp")
+        case .noSignal, .inTune: return String(localized: "Pluck the string")
         }
     }
 
@@ -368,16 +366,25 @@ struct FirstTuneStep: View {
 
     @ViewBuilder private func xpAndStreak(_ xp: Int) -> some View {
         if xp > 0 { rewardChip(symbol: "sparkles", tint: Palette.mint, text: Text("+\(xp) XP")) }
-        if streakDays > 0 { rewardChip(symbol: "flame.fill", tint: Palette.flame, text: Text("\(streakDays)-day streak")) }
+        if streakDays > 0 {
+            // The streak's lamp, the one picture of a streak.
+            rewardChip(tint: Palette.flame, text: Text("\(streakDays)-day streak")) { Glyph(.lamp, size: 15, tint: Palette.flame) }
+        }
     }
 
     private func badgeChip(_ badge: Achievement) -> some View {
-        rewardChip(symbol: badge.symbol, tint: Palette.starGold, text: Text(LocalizedStringKey(badge.title)))
+        rewardChip(tint: Palette.starGold, text: Text(LocalizedStringKey(badge.title))) {
+            AchievementGlyph(achievement: badge, size: 12).foregroundStyle(Palette.starGold)
+        }
     }
 
     private func rewardChip(symbol: String, tint: Color, text: Text) -> some View {
+        rewardChip(tint: tint, text: text) { Image(systemName: symbol).font(.system(size: 12, weight: .bold)).foregroundStyle(tint) }
+    }
+
+    private func rewardChip<Icon: View>(tint: Color, text: Text, @ViewBuilder icon: () -> Icon) -> some View {
         HStack(spacing: 6) {
-            Image(systemName: symbol).font(.system(size: 12, weight: .bold)).foregroundStyle(tint)
+            icon()
             text.font(Typeface.label(.footnote)).foregroundStyle(Palette.ink).lineLimit(1)
         }
         .padding(.horizontal, 12).frame(minHeight: 34)

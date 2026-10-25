@@ -10,7 +10,7 @@ struct LearnView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.dynamicTypeSize) private var typeSize
-    @AppStorage("learn.course") private var courseId = "guitar"
+    @AppStorage(Preferences.Key.learnCourse) private var courseId = Preferences.defaultLearnCourse
     @State private var playing: PlayingLesson?
     /// Content has scrolled under the status bar: a scrim fades in behind it.
     @State private var scrolled = false
@@ -71,6 +71,8 @@ struct LearnView: View {
             .environmentObject(store)
             .navigationTransition(.zoom(sourceID: item.source, in: zoom))
         }
+        // "Just tune" left onboarding's questions for later: they come here, the first time Learn shows.
+        .deferredOnboardingQuestions()
     }
 
     private func open(_ course: LearnCourse, _ lesson: Lesson, from source: String) {

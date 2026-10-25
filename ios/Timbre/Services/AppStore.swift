@@ -399,12 +399,12 @@ final class AppStore: ObservableObject {
         if live.preserved { return String(localized: "Paused · last reading") }
         if !audio.running { return String(localized: "Tap to listen") }
         switch live.reading.status {
-        case "inTune": return String(localized: "In tune")
-        case "flat": return String(localized: "Tighten · \(Int(abs(live.reading.cents ?? 0).rounded()))¢ flat")
-        case "sharp": return String(localized: "Loosen · \(Int(abs(live.reading.cents ?? 0).rounded()))¢ sharp")
-        case "settling": return String(localized: "Hold it…")
-        case "uncertain": return String(localized: "Let the string ring")
-        default: return String(localized: "Play \(targetName)")
+        case .inTune: return String(localized: "In tune")
+        case .flat: return String(localized: "Tighten · \(Int(abs(live.reading.cents ?? 0).rounded()))¢ flat")
+        case .sharp: return String(localized: "Loosen · \(Int(abs(live.reading.cents ?? 0).rounded()))¢ sharp")
+        case .settling: return String(localized: "Hold it…")
+        case .uncertain: return String(localized: "Let the string ring")
+        case .noSignal: return String(localized: "Play \(targetName)")
         }
     }
 
@@ -876,9 +876,10 @@ final class AppStore: ObservableObject {
     /// While a lesson listens, raw readings (Hz when confident, level dBFS) go here instead of the tuner.
     var lessonListener: ((Double?, Double) -> Void)?
 
-    /// Free lessons, every lesson with Pro, and on the free plan the placement pass (`AccessPolicy.canPlay`).
+    /// Free lessons, every lesson with Pro, what the remote settings open to everyone (`RemoteConfig.freeOpenings`: the
+    /// listed songs, unit 2), and on the free plan the placement pass (`AccessPolicy.canPlay`).
     func canPlay(_ lesson: Lesson) -> Bool {
-        AccessPolicy.canPlay(lesson, pro: isPro, progress: learn, courses: curriculum.courses)
+        AccessPolicy.canPlay(lesson, pro: isPro, progress: learn, courses: curriculum.courses, openings: RemoteConfig.shared.freeOpenings)
     }
 
     /// The step that owns the lesson microphone; a step leaving must not stop the one that just arrived.

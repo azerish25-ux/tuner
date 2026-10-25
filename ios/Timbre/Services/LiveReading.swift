@@ -8,9 +8,9 @@ import TimbreCore
 @MainActor
 final class LiveReading {
     /// No string heard.
-    static let silence = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal")
+    static let silence = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: .noSignal)
     /// Sound, but no pitch steady enough to read: "Let the string ring".
-    static let unclear = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "uncertain")
+    static let unclear = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: .uncertain)
 
     var reading = LiveReading.silence
     var level: Double = -120

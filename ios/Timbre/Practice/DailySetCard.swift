@@ -183,7 +183,7 @@ struct DailySetCard: View {
     /// The day the completion was last celebrated here, so the burst plays once.
     @AppStorage("daily.celebrated") private var celebratedDay = ""
     /// The lesson rep follows Learn's course; reading it here redraws the card when that changes.
-    @AppStorage("learn.course") private var learnCourseId = "guitar"
+    @AppStorage(Preferences.Key.learnCourse) private var learnCourseId = Preferences.defaultLearnCourse
     @State private var visible = false
     @State private var burst = 0
     @State private var pop = false
@@ -470,7 +470,7 @@ struct DailySetCompactCard: View {
     @EnvironmentObject private var store: AppStore
     var action: (() -> Void)? = nil
     /// The lesson rep follows Learn's course; reading it here redraws the card when that changes.
-    @AppStorage("learn.course") private var learnCourseId = "guitar"
+    @AppStorage(Preferences.Key.learnCourse) private var learnCourseId = Preferences.defaultLearnCourse
 
     var body: some View {
         let activities = store.dailySet
