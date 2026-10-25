@@ -112,7 +112,8 @@ jobs:
             ios/build/Timbre.xcarchive
           retention-days: 14
   ipad:
-    timeout-minutes: 25
+    # The build, the Full Screen Apps reboot and both orientations' captures take about 25 minutes on a busy runner.
+    timeout-minutes: 45
     runs-on: macos-15
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
