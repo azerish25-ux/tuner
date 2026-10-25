@@ -34,6 +34,8 @@ HOME_PROMPT = "Does this end at home or leave you hanging?"
 
 # ---------------------------------------------------------------- strum patterns (beats in one bar)
 CHUNK = [0, 1, 2, 2.5, 3]                                  # down, chunk, down-up, chunk
+CHUNKS = [1, 3]                                            # the chunks (muted strokes) in CHUNK
+ISLAND_CHUNK = [1]                                         # the island strum with its down on 2 chunked
 SWING = [round(b + o, 3) for b in range(4) for o in (0, 2 / 3)]
 ACCENTS = [0, 1.5, 3]                                      # 3 + 3 + 2 eighths
 WALTZ_DU = [0, 1, 1.5, 2, 2.5]                             # 3/4: D, DU, DU
@@ -181,22 +183,22 @@ UNIT_8 = unit("uke-8", "Strum styles", "The chunk, the island strum with a backb
         explain("Down, chunk, down-up, chunk", "Strum down on 1, chunk on 2, down-up on 3, chunk on 4. The chunks fall where "
                 "a drummer hits the snare.", rhythm(CHUNK)),
         tap(CHUNK, bpm=66, bars=2),
-        strum(C, CHUNK, bpm=63, bars=2),
+        strum(C, CHUNK, muted=CHUNKS, bpm=63, bars=2),
         quiz("Where do the chunks land?", ["Beats 2 and 4", "Beats 1 and 3", "Only on 1"], 0,
              "Two and four are the backbeat, where the snare drum plays. A chunk there gives the strum a drummer's punch."),
-        strum(F, CHUNK, bpm=63, bars=2),
-        progression([(C, 1), (Am, 1), (F, 1), (G7, 1)], CHUNK, bpm=66),
+        strum(F, CHUNK, muted=CHUNKS, bpm=63, bars=2),
+        progression([(C, 1), (Am, 1), (F, 1), (G7, 1)], CHUNK, muted=CHUNKS, bpm=66),
     ], minutes=5, xp=20),
     lesson("uke-8-2", "Island strum with a chunk", [
         explain("Swap one down for a chunk", "Take the island strum, D, DU, UDU, and turn the down on 2 into a chunk. The "
                 "rhythm stays the same; the groove gets a backbeat.", rhythm(ISLAND)),
         tap(ISLAND, bpm=66, bars=2),
-        strum(C, ISLAND, bpm=63, bars=2),
+        strum(C, ISLAND, muted=ISLAND_CHUNK, bpm=63, bars=2),
         quiz("In this strum, which stroke becomes the chunk?", ["The up after 2", "The down on 2", "The down on 1"], 1,
              "Beat 1 rings out, beat 2 clicks. Everything else stays where the island strum had it."),
-        progression([(C, 1), (G, 1), (Am, 1), (F, 1)], ISLAND, bpm=66),
-        progression([(G, 1), (Em, 1), (C, 1), (D7, 1)], ISLAND, bpm=72),
-        progression([(F, 1), (Bb, 1), (C7, 1), (F, 1)], ISLAND, bpm=76),
+        progression([(C, 1), (G, 1), (Am, 1), (F, 1)], ISLAND, muted=ISLAND_CHUNK, bpm=66),
+        progression([(G, 1), (Em, 1), (C, 1), (D7, 1)], ISLAND, muted=ISLAND_CHUNK, bpm=72),
+        progression([(F, 1), (Bb, 1), (C7, 1), (F, 1)], ISLAND, muted=ISLAND_CHUNK, bpm=76),
     ], minutes=5, xp=20),
     lesson("uke-8-3", "Swing and the ragtime chords", [
         explain("Long-short, long-short", "Swing splits each beat unevenly: a long down, then a short up. Say hum-pty, dum-pty "
@@ -214,13 +216,13 @@ UNIT_8 = unit("uke-8", "Strum styles", "The chunk, the island strum with a backb
         explain("Push the and of 2", "Strum steady down-up eighths, but hit three of them harder: 1, the and of 2, and 4. "
                 "The accents fall 3, 3 and 2 eighths apart.", rhythm(ACCENTS)),
         tap(ACCENTS, bpm=66, bars=2),
-        strum(C, EIGHTHS, bpm=60, bars=2),
+        strum(C, EIGHTHS, accents=ACCENTS, bpm=60, bars=2),
         quiz("Which eighths get the accents?", ["1, the and of 2, and 4", "1 and 3", "Every and"], 0,
              "Count 1 2 3, 1 2 3, 1 2 across the bar's eight eighths. Each 1 is an accent."),
         explain("Where it comes from", "George Formby's split stroke on the banjo ukulele puts its big strums in the same three "
                 "places, with single strings in between. Master the accents first."),
-        strum(Am, EIGHTHS, bpm=63, bars=2),
-        progression([(C, 1), (Am, 1), (F, 1), (G7, 1)], EIGHTHS, bpm=66),
+        strum(Am, EIGHTHS, accents=ACCENTS, bpm=63, bars=2),
+        progression([(C, 1), (Am, 1), (F, 1), (G7, 1)], EIGHTHS, accents=ACCENTS, bpm=66),
     ], minutes=5, xp=20),
     lesson("uke-8-5", "Waltz strums", [
         explain("Three beats, down-up", "In three, strum down on 1, then down-up on 2 and on 3: D, DU, DU. Lean on 1 so the "
@@ -237,11 +239,11 @@ UNIT_8 = unit("uke-8", "Strum styles", "The chunk, the island strum with a backb
         explain("Five grooves", "No new ideas: chunks, the island strum with a chunk, swing, the 3-3-2 accents and the "
                 "waltz. Keep the hand moving and let the accents speak."),
         tap(SWING, bpm=76, bars=2),
-        progression([(C, 1), (Am, 1), (F, 1), (G7, 1)], CHUNK, bpm=72),
-        progression([(C, 1), (G, 1), (Am, 1), (F, 1)], ISLAND, bpm=76),
+        progression([(C, 1), (Am, 1), (F, 1), (G7, 1)], CHUNK, muted=CHUNKS, bpm=72),
+        progression([(C, 1), (G, 1), (Am, 1), (F, 1)], ISLAND, muted=ISLAND_CHUNK, bpm=76),
         quiz("In a swing strum, each beat splits into…", ["Two equal halves", "Short, then long", "Long, then short"], 2),
         progression(RAGTIME + [(C, 2)], SWING, bpm=76),
-        progression([(C, 1), (Am, 1), (F, 1), (G7, 1)], EIGHTHS, bpm=72),
+        progression([(C, 1), (Am, 1), (F, 1), (G7, 1)], EIGHTHS, accents=ACCENTS, bpm=72),
         progression([(F, 2), (C7, 2), (F, 2), (C7, 1), (F, 1)], WALTZ_DU, bpm=84, beats_per_bar=3),
     ], minutes=6, xp=35, kind="challenge"),
 ])
@@ -419,7 +421,7 @@ UNIT_10 = unit("uke-10", "Campfire to stage", "Four public-domain songs arranged
                 "ukulele it sits in G, with G, C and D7, and a gospel A sharp on string 1, fret 1."),
         notes(U, ["B4", "B4", "A#4", "B4", "A4", ("G4", 2)], hint="Down by the riverside: B, B, A sharp, B, then A and G."),
         DBR_U.along("Verse 1", bpm=72, title=THE_VERSE),
-        progression(DBR_VERSE_CHORDS, CHUNK, bpm=80),
+        progression(DBR_VERSE_CHORDS, CHUNK, muted=CHUNKS, bpm=80),
         DBR_U.along("Chorus", bpm=72, title=THE_CHORUS),
         progression(DBR_CHORUS_CHORDS, SWING, bpm=80),
         DBR_U.take("Down by the Riverside"),
@@ -442,7 +444,7 @@ UNIT_10 = unit("uke-10", "Campfire to stage", "Four public-domain songs arranged
         tap(DOWNS, bpm=88, bars=2),
         explain("Keep going, no matter what", "Miss a chord? Keep strumming and catch the next one. A singing room follows "
                 "the beat, not every note."),
-        progression(DBR_VERSE_CHORDS, CHUNK, bpm=88),
+        progression(DBR_VERSE_CHORDS, CHUNK, muted=CHUNKS, bpm=88),
         quiz("You fumble a change mid-song. What now?", ["Keep strumming and catch the next chord", "Stop and start over",
                                                           "Slow down until it's fixed"], 0,
              "The beat carries everyone. Drop a chord if you must, never the rhythm."),

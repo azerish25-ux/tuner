@@ -5,7 +5,7 @@ import TimbreCore
 /// The metronome: a long pendulum swinging in time with the click (through the centre on each beat, where a beam
 /// lights), a ring round the tempo that pulses with every click, the speed trainer and the meter card; then the
 /// hero, the bar itself: full-width beat cells docked right above Tap and Start, flooding with light as they
-/// sound, with a sweep and subdivision ticks between clicks. Accents flash amber everywhere at once.
+/// sound, with a sweep and subdivision ticks between clicks. Accents flash white everywhere at once.
 /// Every light follows one beat clock, moved onto the audio's own click clock once the first click is heard.
 struct MetronomeView: View {
     @EnvironmentObject private var store: AppStore
@@ -140,11 +140,11 @@ struct MetronomeView: View {
         .accessibilityHidden(true)
     }
 
-    /// An accent washes the top of the stage amber for a moment; other beats barely warm it.
+    /// An accent washes the top of the stage white for a moment; other beats barely tint it mint.
     private var accentWash: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 30, paused: !audio.metronomeRunning)) { timeline in
             let now = moment(at: timeline.date)
-            let tint = now.accent ? Palette.amber : Palette.mint
+            let tint = now.accent ? Palette.ink : Palette.mint
             RadialGradient(colors: [tint.opacity((now.accent ? 0.2 : 0.05) * now.flash), .clear],
                            center: UnitPoint(x: 0.5, y: 0.18), startRadius: 10, endRadius: 440)
         }
@@ -153,13 +153,13 @@ struct MetronomeView: View {
         .accessibilityHidden(true)
     }
 
-    /// A soft light behind the tempo that breathes with the click: mint on each beat, amber on an accent.
+    /// A soft light behind the tempo that breathes with the click: mint on each beat, white on an accent.
     private var tempoGlow: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 60, paused: !audio.metronomeRunning)) { timeline in
             let now = moment(at: timeline.date)
             Canvas { context, size in
                 guard now.flash > 0, size.height > 0 else { return }
-                let tint = now.accent ? Palette.amber : Palette.mint
+                let tint = now.accent ? Palette.ink : Palette.mint
                 // A circle of light stretched to the canvas, so it fades out before every edge.
                 let radius = size.height / 2
                 var glow = context
@@ -240,7 +240,7 @@ struct MetronomeView: View {
 
     /// The bar, the screen's hero right above Tap and Start: a full-width cell per beat whose fill is its level (an
     /// accent fills it, a normal beat most of it, a silent one is an empty outline). Each cell floods with light as
-    /// it clicks, amber on an accent; a line of light sweeps across it to the next click, over subdivision ticks
+    /// it clicks, white on an accent; a line of light sweeps across it to the next click, over subdivision ticks
     /// that catch as they sound. A tap cycles a beat between accent, normal and silent (Pro).
     private var beatRow: some View {
         TimelineView(.animation(minimumInterval: reduceMotion ? 1.0 / 30 : nil, paused: !audio.metronomeRunning)) { timeline in
@@ -275,9 +275,10 @@ struct MetronomeView: View {
         }
     }
 
-    /// The groove in one card: the meter and the subdivision in one strip, then the sound and the beat on the phone
-    /// (the beats themselves sit above Start). Quarters, eighths and triplets with the click or wood voice are free
-    /// (`FreeTier`); sixteenths and the beep wear a lock.
+    /// The groove in one card: the meter's strip, the subdivision's four note values on a row of their own (in view
+    /// without a scroll, whatever the meter), then the sound and the beat on the phone (the beats themselves sit above
+    /// Start). Quarters, eighths and triplets with the click or wood voice are free (`FreeTier`); sixteenths and the
+    /// beep wear a lock.
     private var meter: some View {
         VStack(alignment: .leading, spacing: 10) {
             Eyebrow("Meter")
@@ -287,11 +288,11 @@ struct MetronomeView: View {
                         .buttonStyle(ChipButtonStyle(selected: store.beats == value))
                         .id(value)
                 }
-                Rectangle().fill(Palette.line).frame(width: 1, height: 24)
-                    .padding(.horizontal, 4)
-                    .accessibilityHidden(true)
+            }
+            Eyebrow("Subdivision").padding(.top, 2)
+            EdgeRail(bleed: 16, selection: store.subdivision) {
                 ForEach(Self.subdivisions, id: \.value) { option in
-                    subdivisionChip(option)
+                    subdivisionChip(option).id(option.value)
                 }
             }
             soundPicker.padding(.top, 4)
@@ -513,7 +514,7 @@ private struct BeatMoment {
 }
 
 /// A ring round the tempo that pulses with the click: a hairline at rest; on each click it lights and two rings
-/// swell out and fade, amber and bolder on an accent. Reduce Motion: it only lights.
+/// swell out and fade, white and bolder on an accent. Reduce Motion: it only lights.
 private struct TempoRing: View {
     let moment: BeatMoment
     let still: Bool
@@ -521,7 +522,7 @@ private struct TempoRing: View {
     var body: some View {
         let flash = moment.flash
         let spread = CGFloat(1 - flash)
-        let tint = moment.accent ? Palette.amber : Palette.mint
+        let tint = moment.accent ? Palette.ink : Palette.mint
         ZStack {
             Capsule().strokeBorder(Color.white.opacity(0.1), lineWidth: 1.5)
             Capsule().strokeBorder(tint.opacity(0.9 * flash), lineWidth: moment.accent ? 3.5 : 2.5)
@@ -536,7 +537,7 @@ private struct TempoRing: View {
     }
 }
 
-/// One beat of the bar. Its level is a fill from the floor (an accent fills the cell in amber, a normal beat 60 % of
+/// One beat of the bar. Its level is a fill from the floor (an accent fills the cell in white, a normal beat 60 % of
 /// it in mint, a silent beat is a dashed outline). On its click the cell floods with its colour, glows and pops;
 /// through the beat a line of light sweeps across it over the subdivision ticks, each catching as it sounds.
 /// Reduce Motion: no pop and no sweep; the lights still keep time.
@@ -554,7 +555,7 @@ private struct BeatCell: View {
 
     private var tint: Color {
         switch level {
-        case 2: return Palette.amber
+        case 2: return Palette.ink
         case 1: return Palette.mint
         default: return Palette.inkSoft
         }
@@ -607,7 +608,7 @@ private struct BeatCell: View {
 
     private var numberLabel: some View {
         let color: Color = flash > 0.45 ? Palette.onAccent : (lit ? Palette.ink : (level == 0 ? Palette.inkFaint : Palette.inkSoft))
-        return Text("\(number)").font(Typeface.number(14)).foregroundStyle(color)
+        return Text("\(number)").font(Typeface.number(15)).foregroundStyle(color)
             .lineLimit(1).minimumScaleFactor(0.7)
             .accessibilityHidden(true)
     }
@@ -699,14 +700,14 @@ private enum PendulumArt {
         let angle = angleAt(moment.position)
         let here = g.point(angle)
         let flash = moment.flash
-        let tint = moment.accent ? Palette.amber : Palette.mint
+        let tint = moment.accent ? Palette.ink : Palette.mint
         let scale = g.bob / 22
 
         // An accent warms the hero round the click.
         if moment.accent && flash > 0 {
             let center = CGPoint(x: size.width / 2, y: g.rest)
             let r = size.width * 0.5
-            context.fill(circle(center, r), with: .radialGradient(Gradient(colors: [Palette.amber.opacity(0.18 * flash), .clear]),
+            context.fill(circle(center, r), with: .radialGradient(Gradient(colors: [Palette.ink.opacity(0.18 * flash), .clear]),
                                                                   center: center, startRadius: 0, endRadius: r))
         }
 
@@ -726,13 +727,13 @@ private enum PendulumArt {
                                                                   center: here, startRadius: 0, endRadius: r * 1.5))
         // An accent sends a ring out from the bob.
         if moment.accent && flash > 0 && !still {
-            context.stroke(circle(here, g.bob + 2 + 22 * scale * CGFloat(1 - flash)), with: .color(Palette.amber.opacity(0.75 * flash)), lineWidth: 2)
+            context.stroke(circle(here, g.bob + 2 + 22 * scale * CGFloat(1 - flash)), with: .color(Palette.ink.opacity(0.75 * flash)), lineWidth: 2)
         }
         context.fill(circle(here, g.bob), with: .linearGradient(Gradient(colors: [Color(hex: 0x8BF7D2), Palette.mintDeep]),
                                                                 startPoint: CGPoint(x: here.x, y: here.y - g.bob), endPoint: CGPoint(x: here.x, y: here.y + g.bob)))
-        // The bob itself flushes amber on an accent.
+        // The bob itself flushes white on an accent.
         if moment.accent && flash > 0 {
-            context.fill(circle(here, g.bob), with: .color(Palette.amber.opacity(0.55 * flash)))
+            context.fill(circle(here, g.bob), with: .color(Palette.ink.opacity(0.55 * flash)))
         }
         context.fill(circle(CGPoint(x: here.x - g.bob * 0.32, y: here.y - g.bob * 0.36), g.bob * 0.27),
                      with: .color(.white.opacity(0.16 + 0.2 * flash)))

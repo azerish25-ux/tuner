@@ -54,6 +54,7 @@ HALVES = [0, 2]
 EIGHTHS = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
 SIXTEENTHS = [i / 4 for i in range(16)]
 BACKBEAT = [1, 3]
+CHOPS = BACKBEAT                     # every backbeat stroke is a chop: choked at once, no chord rings on
 WALTZ = [0, 1, 2]
 THREE_THREE_TWO = [0, 1.5, 3]
 
@@ -142,6 +143,12 @@ SHAVE_D = "D5 A4:0.5 A4:0.5 B4 A4 r C#5 D5:2"             # "shave and a haircut
 
 def mando_song(bpm, parts, beats_per_bar=4, words=None):
     return song(M, bpm, parts, beats_per_bar=beats_per_bar, shapes=SHAPES, words=words, max_fret=7, fingers=FINGER)
+
+
+# The first song, unit 1 (free): Mary Had a Little Lamb on three notes in D, F sharp, E and D on the D pair (open, fret
+# 2 with the first finger, fret 4 with the second): unit 2's D major scale starts here.
+MARY_FIRST = tunes.mary3(2)
+MARY_FIRST_SONG = mando_song(84, tunes.mary3_parts(2, "D D A D D D A D"), words=tunes.MARY_CREDIT)
 
 
 def fiddle_tune(bpm, part_a, part_b, chart_a, chart_b, kick=KICK_A, kick_chords="A7 A7", tag=SHAVE_D, tag_chords="D A7,D",
@@ -264,6 +271,16 @@ UNIT_1 = unit("man-1", "Hello, mandolin", "Meet the paired strings, tune them an
         tap(QUARTERS, bpm=72, bars=2),
         tune("G3:1 D4:1 A4:1 E5:1 A4:1 D4:1 G3:2 D4:1 A4:1 E5:2 A4:1 D4:1 G3:2", bpm=70, title="Open-string run"),
     ], minutes=4, xp=30, kind="challenge"),
+    lesson("man-1-6", "Mary Had a Little Lamb", [
+        explain("Your first song", "Mary Had a Little Lamb lives on the D pair: open D, E at fret 2 with your first "
+                "finger, and F sharp at fret 4 with your second.", fretboard(M, [(3, 0), (3, 2, 1), (3, 4, 2)])),
+        play([("E4", 3)], hint="Pair 3, fret 2, first finger. That's E."),
+        play([("F#4", 3)], hint="Pair 3, fret 4, second finger. That's F sharp."),
+        play(["F#4", "E4", "D4", "E4", "F#4", "F#4", "F#4"], hint="F sharp, E, D, E, then F sharp three times."),
+        tune(MARY_FIRST[0], bpm=66, title="First half"),
+        MARY_FIRST_SONG.along("Verse 1", bpm=72, title=THE_VERSE),
+        MARY_FIRST_SONG.take("Mary Had a Little Lamb"),
+    ], minutes=MARY_FIRST_SONG.minutes(), xp=30, kind="song", arrangement=MARY_FIRST_SONG.meta()),
 ])
 
 # ================================================================ 2. First notes
@@ -441,21 +458,21 @@ UNIT_4 = unit("man-4", "Chords and the chop", "G, D, C, E minor and A, then the 
         tap(BACKBEAT, bpm=70, bars=2),
         quiz("Which beats get the chop?", ["1 and 3", "2 and 4", "Every beat"], 1,
              "Bass and guitar take beats 1 and 3. The mandolin answers on 2 and 4, like a snare drum."),
-        strum(A, BACKBEAT, bpm=66, bars=2),
+        strum(A, BACKBEAT, muted=CHOPS, bpm=66, bars=2),
         explain("Short is the sound", "Let the chord sound for only a moment. If it hangs on, relax your fingers sooner. "
                 "Your fingertips stay touching the strings the whole time."),
-        strum(A, BACKBEAT, bpm=76, bars=4),
+        strum(A, BACKBEAT, muted=CHOPS, bpm=76, bars=4),
     ], minutes=5, xp=25),
     lesson("man-4-5", "Chops in G, C and D", [
         explain("Move the A shape", "Your A shape works anywhere on the neck. Slide it up three frets for C and five frets "
                 "for D. Keep all four fingers in place as you move.", shape(C_CHOP)),
         play_chord(C_CHOP),
-        strum(C_CHOP, BACKBEAT, bpm=70, bars=2),
+        strum(C_CHOP, BACKBEAT, muted=CHOPS, bpm=70, bars=2),
         play_chord(D_CHOP),
         explain("A chop for G", "G needs a new stretch: first finger fret 2 on pair 2, second finger fret 3 on pair 1, "
                 "third finger fret 5 on pair 3, little finger fret 7 on pair 4.", shape(G_CHOP)),
         play_chord(G_CHOP),
-        progression([(G_CHOP, 2), (C_CHOP, 2), (G_CHOP, 2), (D_CHOP, 2)], BACKBEAT, bpm=70),
+        progression([(G_CHOP, 2), (C_CHOP, 2), (G_CHOP, 2), (D_CHOP, 2)], BACKBEAT, muted=CHOPS, bpm=70),
     ], minutes=6, xp=25),
     lesson("man-4-6", "Bluegrass backup", [
         explain("Rhythm for the band", "Strum open chords to learn the sound, then chop on 2 and 4 to drive the band. "
@@ -465,9 +482,9 @@ UNIT_4 = unit("man-4", "Chords and the chop", "G, D, C, E minor and A, then the 
         quiz("Your chop keeps ringing. What fixes it?", ["Strum harder", "Lift your fingers off the neck",
              "Ease off with your fretting fingers sooner"], 2,
              "The chop is choked by the fretting hand. Relax the pressure but keep your fingertips on the strings."),
-        strum(G_CHOP, BACKBEAT, bpm=80, bars=2),
-        progression([(G_CHOP, 1), (C_CHOP, 1), (G_CHOP, 1), (D_CHOP, 1)], BACKBEAT, bpm=80),
-        progression([(G_CHOP, 2), (C_CHOP, 2), (D_CHOP, 2), (G_CHOP, 2)], BACKBEAT, bpm=88),
+        strum(G_CHOP, BACKBEAT, muted=CHOPS, bpm=80, bars=2),
+        progression([(G_CHOP, 1), (C_CHOP, 1), (G_CHOP, 1), (D_CHOP, 1)], BACKBEAT, muted=CHOPS, bpm=80),
+        progression([(G_CHOP, 2), (C_CHOP, 2), (D_CHOP, 2), (G_CHOP, 2)], BACKBEAT, muted=CHOPS, bpm=88),
     ], minutes=6, xp=40, kind="challenge"),
 ])
 
@@ -595,7 +612,7 @@ UNIT_6 = unit("man-6", "Slides, hammers and crosspicking", "Add the left-hand mo
                 "Take each one at your own pace, and keep the beat steady above all."),
         tune(SLIDE_SCALE, bpm=70, title="Slides up the scale"),
         tune(HAMMER_PULL, bpm=70, title="Hammer, pull, repeat"),
-        progression([(G_CHOP, 1), (C_CHOP, 1), (G_CHOP, 1), (D_CHOP, 1)], BACKBEAT, bpm=84),
+        progression([(G_CHOP, 1), (C_CHOP, 1), (G_CHOP, 1), (D_CHOP, 1)], BACKBEAT, muted=CHOPS, bpm=84),
         quiz("Which beats does the chop land on?", ["2 and 4", "1 and 3"], 0,
              "Bass and guitar take beats 1 and 3. The mandolin answers on 2 and 4, like a snare drum."),
         tune(f"{RIPPLE_G} {RIPPLE_C} {RIPPLE_G} {RIPPLE_D}", bpm=72, title="Ripple through G, C and D"),

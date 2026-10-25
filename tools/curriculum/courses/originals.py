@@ -283,8 +283,8 @@ UNIT_1 = unit("orig-1", "Open-chord originals", "Five new songs on the open chor
         tap(OFFBEAT, bpm=72, bars=2),
         explain("Short and dry", "Strum down on each and, then ease your fretting fingers off the strings so the chord stops. "
                 "Chk, chk, chk, chk. The silence between chops is half the groove."),
-        strum(Em, OFFBEAT, bpm=72, bars=2),
-        progression(RADIO_CHORDS, OFFBEAT, bpm=80),
+        strum(Em, OFFBEAT, muted=OFFBEAT, bpm=72, bars=2),
+        progression(RADIO_CHORDS, OFFBEAT, muted=OFFBEAT, bpm=80),
         notes(G, ["E4", "E4", "D4", "E4", "B3", "C#4", "C#4", "B3", "C#4", "A3"],
               hint="Open E, D at fret 3 on string 2, C sharp at fret 2, open B, then A at fret 2 on string 3."),
         RADIO_SONG.along("Chorus", bpm=72, title=HOOK),
@@ -314,7 +314,7 @@ UNIT_1 = unit("orig-1", "Open-chord originals", "Five new songs on the open chor
         along(G, MOTH_HOOK, bpm=100, title="Moth and Ember"),
         quiz("In reggae, where does the guitar chop?", ["On every beat", "On the and of each beat", "Only on beat one"], 1,
              "The skank lands between the beats, while bass and drums hold the downbeats."),
-        progression(RADIO_CHORDS, OFFBEAT, bpm=84),
+        progression(RADIO_CHORDS, OFFBEAT, muted=OFFBEAT, bpm=84),
         along(G, DUST, bpm=104, title="Dust on the Dashboard"),
     ], minutes=6, xp=40, kind="challenge"),
 ])

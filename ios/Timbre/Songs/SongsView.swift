@@ -6,11 +6,14 @@ import UIKit
 /// course, and the songs inside each instrument course), as record shelves under a daily featured song.
 /// Sleeves are generated from each song (`CoverArt`), so there are no image assets. Songs open the
 /// same full-screen lesson flow as Learn and follow Learn's rules (`LessonAccess`) for Pro and order locks.
-/// The featured song (`SongOfTheDay`) suits the learner's level, and its sleeve plays the opening bars. The page is
-/// adult-first: the Originals and the Standards lead the hero, the picked shelves and the course shelves, and nursery
-/// rhymes and campfire rounds have a shelf of their own lower down ("Campfire & kids").
-/// A song that doesn't play yet says why under its sleeve ("Finish Kite Weather", "Timbre Pro"), the same way on
-/// every shelf. Every sleeve offers twenty seconds of its song ("Hear it", over the band in headphones) and, for a tune
+/// The featured song (`SongOfTheDay`) suits the learner's level, and its sleeve plays the opening bars. The shelves
+/// open on the songs people know ("Songs you know": Ode to Joy, Amazing Grace, Silent Night…), with the carols in their
+/// season; the rest is adult-first: the Originals and the Standards lead the hero, the picked shelves and the course
+/// shelves, and nursery rhymes and campfire rounds have a shelf of their own lower down ("Campfire & kids"). The foot
+/// of the page asks for the songs that aren't here yet ("Request a song").
+/// A song further on in its course says under its sleeve what to finish first ("Finish Kite Weather"), and a Pro song
+/// wears a gold lock in its play corner, the same way on every shelf. Every sleeve offers twenty seconds of its song
+/// ("Hear it", over the band in headphones) and, for a tune
 /// several courses teach (Ode to Joy on guitar, violin, cello…), badges of its other versions to choose from; the
 /// picked shelves show each tune once, in the learner's instrument's version.
 /// What every song's standing is, and so each shelf, is worked out by `SongsCatalog` once per change of progress,
@@ -42,6 +45,10 @@ struct SongsView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     /// The page's width, for the iPad's card columns (`CardColumns`) under the featured song.
     @State private var pageWidth: CGFloat = 0
+    /// "Request a song": the field is up, what it holds, and a thank-you once one is sent.
+    @State private var requesting = false
+    @State private var request = ""
+    @State private var requested = false
 
     /// A song, its course and unit, and its place among the course's songs (1-based).
     struct Song: Identifiable {
@@ -143,8 +150,7 @@ struct SongsView: View {
                         YourSongsShelf()
                     }
                     ForEach(shelves) { item in shelfItem(item) }
-                    Text("More lessons arrive with every update.").font(.footnote).foregroundStyle(Palette.inkFaint)
-                        .frame(maxWidth: .infinity).padding(.vertical, 24)
+                    requestFooter
                 }
                 .padding(.horizontal, Metrics.gutter).padding(.vertical, 12)
             }
@@ -155,6 +161,13 @@ struct SongsView: View {
         }
         .onChange(of: filter) { _, _ in stopPreview() }
         .onDisappear { stopPreview() }
+        .alert("Request a song", isPresented: $requesting) {
+            TextField("Song and artist", text: $request)
+            Button("Send") { sendRequest() }
+            Button("Cancel", role: .cancel) { request = "" }
+        } message: {
+            Text("Tell us a song you'd like to play. Requests decide what we add next.")
+        }
         .fullScreenCover(item: $playing) { item in
             LessonPlayer(course: item.course, lesson: item.lesson) { next in
                 // The featured song has no tile: it zooms from the hero.
@@ -299,6 +312,35 @@ struct SongsView: View {
         guard previewing != nil else { return }
         SongPlayback.stop(store.audio)
         withAnimation(Motion.settle) { previewing = nil }
+    }
+
+    // MARK: Requests
+
+    /// The foot of the page: a song that isn't here yet can be asked for.
+    private var requestFooter: some View {
+        VStack(spacing: 10) {
+            (requested ? Text("Thanks. Your request is in.") : Text("Missing a song you love?"))
+                .font(.footnote).foregroundStyle(Palette.inkSoft)
+                .contentTransition(.opacity)
+            Button { requesting = true } label: {
+                Label("Request a song", systemImage: "text.bubble")
+            }
+            .buttonStyle(SecondaryButtonStyle())
+            .accessibilityIdentifier("songs.request")
+        }
+        .frame(maxWidth: .infinity).padding(.vertical, 24)
+    }
+
+    /// Sends the request as an event (the title as typed, trimmed and cut at 80 characters, and the instrument
+    /// filter), so the songs asked for most can be counted.
+    private func sendRequest() {
+        let title = String(request.trimmingCharacters(in: .whitespacesAndNewlines).prefix(80))
+        request = ""
+        guard !title.isEmpty else { return }
+        Analytics.log("song_request", ["title": title, "filter": filter])
+        Haptics.shared.done()
+        withAnimation(Motion.settle) { requested = true }
+        AccessibilityNotification.Announcement(String(localized: "Thanks. Your request is in.", bundle: TimbreLocalization.bundle)).post()
     }
 
     // MARK: Header and filters
@@ -936,7 +978,14 @@ struct SongsView: View {
             Color.clear
                 .frame(width: tileWidth, height: tileWidth)
                 .allowsHitTesting(false)
-                .overlay(alignment: .bottomTrailing) { sampleButton(song, art: art) }
+                .overlay(alignment: .bottomTrailing) {
+                    // A Pro song wears the gold lock the tool tiles wear, above "Hear it" in the play corner that the
+                    // sleeve's type keeps clear.
+                    VStack(alignment: .trailing, spacing: 0) {
+                        if access == .pro { ProLock(size: 22).padding(.trailing, 15).allowsHitTesting(false).accessibilityHidden(true) }
+                        sampleButton(song, art: art)
+                    }
+                }
         }
         .overlay(alignment: .topTrailing) {
             if !others.isEmpty {
@@ -1032,16 +1081,17 @@ struct SongsView: View {
         .accessibilityIdentifier("songs.sample.\(song.id)")
     }
 
-    /// Under the sleeve, which already carries the title: why it doesn't play yet ("Finish Kite Weather", "Timbre
-    /// Pro"); else the part of the title it leaves off ("The chords"), else the song's chords ("G D Em C"; its key for
-    /// a melody), with room at the end for the tune's other versions (`others`, drawn over it by `tile`); then how hard
-    /// it is, how long it runs and its XP (its stars, once it has some).
+    /// Under the sleeve, which already carries the title: the lesson to finish first for a song further on in its
+    /// course ("Finish Kite Weather"; a Pro song says so with the lock on its sleeve instead); else the part of the
+    /// title it leaves off ("The chords"), else the song's chords ("G D Em C"; its key for a melody), with room at the
+    /// end for the tune's other versions (`others`, drawn over it by `tile`); then how hard it is, how long it runs and
+    /// its XP (its stars, once it has some).
     private func tileCaption(_ song: Song, sheet: SongSheet, accent: Color, standing: SongsCatalog.Standing, stars: Int,
                              others: [LearnCourse]) -> some View {
         VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .top, spacing: 6) {
                 Group {
-                    if standing.access != .play {
+                    if standing.access == .locked {
                         LockReason(access: standing.access, gate: standing.gate)
                     } else if let subtitle = Self.subtitle(song.lesson.title.localized) {
                         Text(verbatim: subtitle).font(Typeface.label(.footnote)).foregroundStyle(Palette.ink)
@@ -1402,7 +1452,9 @@ struct SongsView: View {
         }
     }
 
-    /// From the songs under the filter (the featured song's tune and the nursery rhymes aside, which have their own
+    /// First the songs people know (`SongOfTheDay.songsYouKnow`, in that order) and, from late November to Twelfth
+    /// Night, the carols (named "free this week" while the remote config opens them, `RemoteConfig.freeSongs`). Then,
+    /// from the songs under the filter (the featured song's tune and the nursery rhymes aside, which have their own
     /// shelf further down, `campfire`): songs not played yet that use the chord the learner learned last ("Because you
     /// learned E minor"), then every song of one to three chords. Each tune shows once, in its `prefer` instrument's
     /// version where it has one (its other versions are a tap away on the sleeve). Songs that play now come first,
@@ -1415,6 +1467,17 @@ struct SongsView: View {
         var above = Set<CoverArt.Motif>()
         if let hero { above.insert(art(hero).motif) }
         var out: [SongsView.Pick] = []
+        // First, the tunes everyone knows, in their fixed order (Ode to Joy, Amazing Grace, Silent Night…), and in
+        // carol season the carols: shelves of titles, not of motifs, so neither leaves a song out for its sleeve.
+        if let known = ordered(songs, by: SongOfTheDay.songsYouKnow, prefer: prefer, limit: 12) {
+            out.append(SongsView.Pick(id: "known", symbol: "heart.fill", title: Text("Songs you know"), songs: known))
+            above.formUnion(known.prefix(3).map { art($0).motif })
+        }
+        if SongOfTheDay.isCarolSeason(Date()), let carols = ordered(songs, by: SongOfTheDay.carols, prefer: prefer, limit: 17) {
+            let free = Set(RemoteConfig.shared.freeSongs)
+            let title = carols.contains { free.contains($0.id) } ? Text("Carols, free this week") : Text("Carols")
+            out.append(SongsView.Pick(id: "carols", symbol: "snowflake", title: title, songs: carols))
+        }
         if let chord = lastLearnedChord(progress, curriculum: store.curriculum) {
             // Not played yet in any version.
             let played = Set(songs.filter { progress.isFinished($0.lesson.id) }.map { Self.tuneKey($0.lesson) })
@@ -1447,6 +1510,16 @@ struct SongsView: View {
         let shelf = distinct(easiestFirst(tunes), avoiding: avoiding, limit: 12)
         guard shelf.count >= 2 else { return nil }
         return SongsView.Pick(id: "campfire", symbol: "flame.fill", title: Text("Campfire & kids"), songs: shelf)
+    }
+
+    /// The songs of `tunes` (tune keys, in that order) under the filter, one version each (`onePerTune`), up to
+    /// `limit`; nil for fewer than two.
+    private func ordered(_ songs: [SongsView.Song], by tunes: [String], prefer: String?, limit: Int) -> [SongsView.Song]? {
+        let wanted = Set(tunes)
+        let found = onePerTune(songs.filter { wanted.contains(Self.tuneKey($0.lesson)) }, prefer: prefer)
+        let place = Dictionary(uniqueKeysWithValues: tunes.enumerated().map { ($0.element, $0.offset) })
+        let shelf = found.sorted { (place[Self.tuneKey($0.lesson)] ?? 0) < (place[Self.tuneKey($1.lesson)] ?? 0) }
+        return shelf.count >= 2 ? Array(shelf.prefix(limit)) : nil
     }
 
     /// One song per tune, where its tune first comes: the version on `prefer` (the learner's instrument), then one

@@ -4,7 +4,8 @@ the odd note its unit can't reach yet, and builds its own arrangement around it:
 variation in the instrument's own idiom.
 
 Words are split for songbook (one token per note; see songbook.py for "-", "_", "~" and "/"). Every text here is in
-the public domain: written before 1929 (most long before), credited in the WORDS_* constants.
+the public domain worldwide: published before 1931 by writers who died before 1956 (most long before), credited in the
+*_CREDIT constants.
 """
 from songbook import transpose, transpose_chords  # noqa: F401  (re-exported for the courses)
 
@@ -122,3 +123,57 @@ LIGHTLY_WORDS_2 = ("Far a-way, far a-way, / ech-o in the rocks at play / call-et
                    "to this lone-ly spot. / On-ly with the sea-bird's note / shall our dy-ing mu-sic float; / "
                    "light-ly row, light-ly row, / ech-o's voice is low.")
 LIGHTLY_CREDIT = "Traditional"
+
+# ================================================================ Mary Had a Little Lamb, on three notes
+# Every instrument course's first song (the last lesson of unit 1, so it is free): the nursery tune on mi, re and do
+# only, as beginners' books set it (the jump to sol on "little lamb" sung on mi instead). C major, 4/4, eight bars.
+# Words: Sarah Josepha Hale (1830). A course moves it to three notes its first unit can reach.
+MARY3_1 = "E4 D4 C4 D4 E4 E4 E4:2 D4 D4 D4:2 E4 E4 E4:2"
+MARY3_2 = "E4 D4 C4 D4 E4 E4 E4 E4 D4 D4 E4 D4 C4:4"
+MARY3_TAIL = "D4 D4 E4 D4 C4:4"                          # the last line's end, two bars: the intro
+MARY3_LAST = "E4 D4 C4 D4 E4 E4 E4:2 D4 D4 E4 D4 C4:4"    # the first line and the last bar: the outro
+MARY_CHORDS = "C C G C C C G C"
+MARY_WORDS_1 = ("Ma-ry had a lit-tle lamb, / lit-tle lamb, lit-tle lamb, / Ma-ry had a lit-tle lamb, its / "
+                "fleece was white as snow.")
+MARY_WORDS_2 = ("Ev-ery-where that Ma-ry went, / Ma-ry went, Ma-ry went, / ev-ery-where that Ma-ry went, the / "
+                "lamb was sure to go.")
+MARY_WORDS_3 = ("Fol-lowed her to school one day, / school one day, school one day, / fol-lowed her to school one day, "
+                "which / was a-gainst the rule.")
+MARY_WORDS_4 = ("Made the chil-dren laugh and play, / laugh and play, laugh and play, / made the chil-dren laugh and "
+                "play to / see a lamb at school.")
+MARY_WORDS_END = "Ma-ry had a lit-tle lamb, / fleece was white as snow."
+MARY_CREDIT = "Sarah Josepha Hale (1830)"
+
+
+def mary3(shift):
+    """The three-note tune moved by `shift` semitones: (first half, second half, intro, outro)."""
+    return tuple(transpose(m, shift) for m in (MARY3_1, MARY3_2, MARY3_TAIL, MARY3_LAST))
+
+
+def mary3_parts(shift, chart, intro=None):
+    """A first song's parts: two bars in, four verses with a solo between the second and the third, then the first
+    line again to end. `chart`: the eight bars' chords in the new key ("G G D G G G D G"). `intro`: the two bars'
+    melody, when not the tune's last line (a singer's intro is the band alone, "r:4 r:4")."""
+    from songbook import Part
+    first, second, tail, last = mary3(shift)
+    bars = chart.split()
+    verse = Part("Verse 1", "verse", f"{first} {second}", chords=chart, lyrics=MARY_WORDS_1)
+    return [
+        Part("Intro", "intro", intro or tail, chords=f"{bars[6]} {bars[7]}"),
+        verse,
+        verse.with_lyrics("Verse 2", MARY_WORDS_2),
+        verse.instrumental("Solo"),
+        verse.with_lyrics("Verse 3", MARY_WORDS_3),
+        verse.with_lyrics("Verse 4", MARY_WORDS_4),
+        Part("Outro", "outro", last, chords=" ".join(bars[:2] + bars[6:]), lyrics=MARY_WORDS_END),
+    ]
+
+
+# ================================================================ Row, Row, Row Your Boat
+# The round (tune published by Eliphalet Oram Lyte, 1881; words in print by 1852). One chord sounds under the whole
+# tune, so it is ukulele's first song, strummed on C. C major, 6/8 counted in eighths (six beats to a bar), 8 bars.
+ROW_TUNE = ("C4:3 C4:3 C4:2 D4:1 E4:3 E4:2 D4:1 E4:2 F4:1 G4:6 "
+            "C5:1 C5:1 C5:1 G4:1 G4:1 G4:1 E4:1 E4:1 E4:1 C4:1 C4:1 C4:1 G4:2 F4:1 E4:2 D4:1 C4:6")
+ROW_WORDS = ("Row, row, row your boat / gent-ly down the stream. / Mer-ri-ly, mer-ri-ly, mer-ri-ly, mer-ri-ly, / "
+             "life is but a dream.")
+ROW_CREDIT = "Traditional (1852)"

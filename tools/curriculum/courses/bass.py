@@ -87,7 +87,12 @@ BLUES_SONG = song(B, 72, [
     Part("Outro", "outro", "A1 C#2 E2 G2 A1:4", chords="A7 A7"),
 ], shapes=SHAPES, max_fret=5)
 
-UNIT_1 = unit("bass-1", "Hello, bass", "Meet E A D G, pluck with two fingers, play your first notes.", [
+# The first song, unit 1 (free): Mary Had a Little Lamb on three notes in G, deep down: B (string 3, fret 2), open A
+# and G (string 4, fret 3), the notes unit 1 plays plus one.
+MARY_FIRST = tunes.mary3(-29)
+MARY_FIRST_SONG = song(B, 84, tunes.mary3_parts(-29, "G G D G G G D G"), shapes=SHAPES, words=tunes.MARY_CREDIT)
+
+UNIT_1 = unit("bass-1", "Hello, bass", "Meet E A D G, pluck with two fingers, play your first notes and a song.", [
     lesson("bass-1-1", "Meet your bass", [
         explain("Four strings, low and deep", "The thickest string is the lowest. It sits nearest your face when you play. We call it string 4.",
                 part("strings")),
@@ -133,6 +138,15 @@ UNIT_1 = unit("bass-1", "Hello, bass", "Meet E A D G, pluck with two fingers, pl
         tap(DOWNS, bpm=66, bars=2),
         along(B, "E1 E1 G1 G1 A1 A1 C2 C2 D2 D2 C2 C2 A1 G1 E1:2", bpm=70, title="First-notes groove"),
     ], minutes=5, xp=30, kind="challenge"),
+    lesson("bass-1-6", "Mary Had a Little Lamb", [
+        explain("Your first song", "Mary Had a Little Lamb needs three notes: B at fret 2 on string 3, open A, and G at "
+                "fret 3 on string 4. Second finger for B, third for G.", fretboard(B, [(3, 2, 2), (3, 0), (4, 3, 3)])),
+        notes(B, [("B1", 3)], hint="String 3, fret 2, second finger. That's B."),
+        notes(B, ["B1", "A1", "G1", "A1", "B1", "B1", "B1"], hint="B A G A B B B: string 3, then G on string 4."),
+        along(B, MARY_FIRST[0], bpm=66, title="First half"),
+        MARY_FIRST_SONG.along("Verse 1", bpm=72, title="The verse"),
+        MARY_FIRST_SONG.take("Mary Had a Little Lamb"),
+    ], minutes=MARY_FIRST_SONG.minutes(), xp=30, kind="song", arrangement=MARY_FIRST_SONG.meta()),
 ])
 
 UNIT_2 = unit("bass-2", "Roots and timing", "Play the root of each chord and lock in with the beat.", [

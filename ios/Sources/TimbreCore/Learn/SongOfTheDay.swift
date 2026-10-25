@@ -3,7 +3,8 @@ import Foundation
 /// The Songs tab's featured song, picked from where the learner is rather than at random: a song they haven't
 /// played, at their level, adult-first (the Originals and the Standards ahead of the other tunes, nursery rhymes and
 /// campfire rounds after them), and once they are past the beginner units one of the Originals (songs written for
-/// Timbre) ahead of the traditional tunes. It stays put for the day and changes the next.
+/// Timbre) ahead of the traditional tunes. Until the learner has played three of the songs people know
+/// (`songsYouKnow`), one of those comes first. It stays put for the day and changes the next.
 public enum SongOfTheDay {
     /// Where a song stands for the learner.
     public enum Access: Sendable, Equatable {
@@ -27,16 +28,26 @@ public enum SongOfTheDay {
         public let unit: Int
         public let finished: Bool
         public let access: Access
+        /// The tune (`tuneKey`), so its versions in several courses count as one played song.
+        public let tune: String
+        /// One of the songs people know (`songsYouKnow`).
+        public let known: Bool
 
-        public init(id: String, original: Bool, unit: Int, finished: Bool, access: Access, standard: Bool = false, kids: Bool = false) {
+        public init(id: String, original: Bool, unit: Int, finished: Bool, access: Access, standard: Bool = false, kids: Bool = false,
+                    tune: String = "", known: Bool = false) {
             self.id = id; self.original = original; self.standard = standard; self.kids = kids
             self.unit = unit; self.finished = finished; self.access = access
+            self.tune = tune.isEmpty ? id : tune
+            self.known = known
         }
 
-        /// A song lesson of `course`: an Original or a Standard by its course, a children's tune by its title.
+        /// A song lesson of `course`: an Original or a Standard by its course, a children's tune or one people know by
+        /// its title.
         public init(song lesson: Lesson, in course: LearnCourse, unit: Int, finished: Bool, access: Access) {
+            let title = lesson.title.defaultValue
             self.init(id: lesson.id, original: SongOfTheDay.isOriginals(course), unit: unit, finished: finished, access: access,
-                      standard: SongOfTheDay.isStandards(course), kids: SongOfTheDay.isCampfireOrKids(lesson.title.defaultValue))
+                      standard: SongOfTheDay.isStandards(course), kids: SongOfTheDay.isCampfireOrKids(title),
+                      tune: SongOfTheDay.tuneKey(title), known: SongOfTheDay.isKnown(title))
         }
     }
 
@@ -56,7 +67,53 @@ public enum SongOfTheDay {
     public static let campfireAndKids: Set<String> = [
         "maryhadalittlelamb", "twinkletwinklelittlestar", "frèrejacques", "oldmacdonaldhadafarm", "yankeedoodle",
         "shellbecomingroundthemountain", "lightlyrow", "skiptomylou", "auclairdelalune", "bobbyshafto",
+        "rowrowrowyourboat",
     ]
+
+    /// The songs people know, by tune (`tuneKey`), most widely known first: the public-domain melodies most people can
+    /// hum, the Songs tab's first shelf ("Songs you know") in this order.
+    public static let songsYouKnow: [String] = [
+        "odetojoy", "amazinggrace", "silentnight", "canonind", "fürelise", "greensleeves", "jinglebells",
+        "theentertainer", "korobeiniki", "dannyboy", "cancan", "inthehallofthemountainking", "auldlangsyne",
+        "whenthesaintsgomarchingin", "einekleinenachtmusik", "rondoallaturca", "morningmood", "thebluedanube",
+    ]
+
+    /// How many of the songs people know the learner plays before the day's song is picked like any other.
+    public static let knownLead = 3
+
+    /// The song (by its English title) is one people know (`songsYouKnow`).
+    public static func isKnown(_ title: String) -> Bool { songsYouKnow.contains(tuneKey(title)) }
+
+    /// Christmas carols by tune, in the order the Songs tab's seasonal shelf shows them.
+    public static let carols: [String] = [
+        "silentnight", "jinglebells", "joytotheworld", "deckthehalls", "wewishyouamerrychristmas", "ochristmastree",
+        "ocomeallyefaithful", "thefirstnoel", "harktheheraldangelssing", "awayinamanger", "olittletownofbethlehem",
+        "itcameuponthemidnightclear", "onceinroyaldavidscity", "inthebleakmidwinter", "thehollyandtheivy",
+        "angelsfromtherealmsofglory", "goodkingwenceslas",
+    ]
+
+    /// The carol shelf's season: 25 November (about four Sundays before Christmas) to 6 January, Twelfth Night.
+    public static func isCarolSeason(_ date: Date, calendar: Calendar = .current) -> Bool {
+        let parts = calendar.dateComponents([.month, .day], from: date)
+        guard let month = parts.month, let day = parts.day else { return false }
+        return month == 12 || (month == 11 && day >= 25) || (month == 1 && day <= 6)
+    }
+
+    /// Song lessons that teach a skill rather than a tune ("Your arrangement", a walking-bass exercise), by `tuneKey`:
+    /// the song count leaves them out.
+    public static let exercises: Set<String> = ["yourarrangement", "walkingthebluesina"]
+
+    /// What a song lesson counts as among the different songs the catalogue holds: its tune (`tuneKey`), with a
+    /// treatment named after it ("Amazing Grace, fingerpicked", "Ode to Joy on bass") left off; nil for an exercise.
+    /// "Greensleeves: the chords", "Greensleeves: the melody" and "Greensleeves" are one song.
+    public static func countedTune(_ title: String) -> String? {
+        var main = title.split(whereSeparator: { $0 == ":" || $0 == "(" || $0 == "（" || $0 == "：" }).first.map(String.init) ?? title
+        for treatment in [", fingerpicked", " on bass"] where main.lowercased().hasSuffix(treatment) {
+            main = String(main.dropLast(treatment.count))
+        }
+        let key = tuneKey(main)
+        return key.isEmpty || exercises.contains(key) ? nil : key
+    }
 
     /// A tune's key: its English title without a subtitle (after a colon or in brackets), lowercased, letters and
     /// digits only ("Twinkle, Twinkle, Little Star" and "Twinkle Twinkle Little Star" are one tune).
@@ -85,17 +142,21 @@ public enum SongOfTheDay {
     /// repertoire comes first (`repertoire`: the Originals and the Standards, then the other tunes, then nursery rhymes
     /// and campfire rounds), so a children's tune is featured only when no other song stands as well. Among equals,
     /// the song nearest the learner's unit wins, and a hash of `day` (days since an epoch) settles the rest, so the
-    /// pick holds all day.
+    /// pick holds all day. Until the learner has finished `knownLead` different songs people know (`known`), those
+    /// lead each of the ranks above, an Original past the beginner units included.
     public static func pick(_ songs: [Candidate], level: Int, finishedLessons: Int, placed: Bool = false, day: Int) -> String? {
         let advanced = pastBeginner(level: level, finishedLessons: finishedLessons, placed: placed)
         let target = targetUnit(level: level, pastBeginner: advanced)
         let salt = UInt64(bitPattern: Int64(day))
+        let leading = Set(songs.filter { $0.known && $0.finished }.map(\.tune)).count < knownLead
         let ranked = songs.map { song in
-            (id: song.id, rank: Self.rank(song, advanced: advanced), repertoire: Self.repertoire(song),
-             distance: abs(song.unit - target), hash: Self.hash(song.id, salt: salt))
+            let first = leading && song.known
+            return (id: song.id, rank: Self.rank(song, advanced: advanced && !first), known: first ? 0 : 1,
+                    repertoire: Self.repertoire(song), distance: abs(song.unit - target), hash: Self.hash(song.id, salt: salt))
         }
         return ranked.min { a, b in
             if a.rank != b.rank { return a.rank < b.rank }
+            if a.known != b.known { return a.known < b.known }
             if a.repertoire != b.repertoire { return a.repertoire < b.repertoire }
             if a.distance != b.distance { return a.distance < b.distance }
             return a.hash < b.hash
@@ -132,6 +193,16 @@ public enum SongOfTheDay {
         value = value &* 0xff51_afd7_ed55_8ccd
         value ^= value >> 33
         return value
+    }
+}
+
+extension Curriculum {
+    /// The different songs the catalogue holds, by tune (`SongOfTheDay.countedTune`): a song taught in two lessons
+    /// ("Greensleeves: the chords", "…: the melody"), arranged for several instruments or played as a treatment
+    /// ("…, fingerpicked", "… on bass") counts once, and exercises don't count. The paywall's proof line and the store
+    /// listing say how many.
+    public var distinctTunes: Set<String> {
+        Set(courses.flatMap(\.lessons).filter { $0.kind == .song }.compactMap { SongOfTheDay.countedTune($0.title.defaultValue) })
     }
 }
 

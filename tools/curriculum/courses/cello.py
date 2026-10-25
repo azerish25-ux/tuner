@@ -226,7 +226,12 @@ AMAZING_SONG = cello_song(76, [
 ], beats_per_bar=3, words=tunes.AMAZING_CREDIT)
 
 
-UNIT_1 = unit("vc-1", "Hello, cello", "Sit, set the endpin, hold the bow and play the four open strings.", [
+# The first song, unit 1 (free): Mary Had a Little Lamb on three notes in D, F sharp, E and D on the D string (open,
+# first finger a whole step up, third finger two whole steps up), plucked first and then bowed.
+MARY_FIRST = tunes.mary3(-10)
+MARY_FIRST_SONG = cello_song(76, tunes.mary3_parts(-10, "D D A D D D A D"), words=tunes.MARY_CREDIT)
+
+UNIT_1 = unit("vc-1", "Hello, cello", "Sit, set the endpin, hold the bow, play the open strings and your first song.", [
     lesson("vc-1-1", "Meet your cello", [
         explain("Four strings, low to high",
                 "From low to high the strings are C, G, D and A. C is the thickest and lowest. A is the thinnest "
@@ -305,6 +310,17 @@ UNIT_1 = unit("vc-1", "Hello, cello", "Sit, set the endpin, hold the bow and pla
              "Orchestras tune to A, so start there and tune the others after it."),
         tune("D3:2 D3:2 A3:2 A3:2 | G2:2 G2:2 D3:4 | C2:2 C2:2 G2:2 G2:2 | D3:4", bpm=60, title="Up and down the stairs"),
     ], minutes=5, xp=30, kind="challenge"),
+    lesson("vc-1-7", "Mary Had a Little Lamb", [
+        explain("Your first song", "Mary Had a Little Lamb lives on the D string: open D, first finger a whole step up for "
+                "E, third finger two whole steps up for F sharp. Pluck it first, then bow it.",
+                board([(2, 0), (2, 2, 1), (2, 4, 3)])),
+        play([("E3", 2)], hint="First finger on the D string, a whole step up. That's E."),
+        play([("F#3", 2)], hint="Third finger, a whole step above your first. That's F sharp."),
+        play(["F#3", "E3", "D3", "E3", "F#3", "F#3", "F#3"], hint="F sharp, E, D, E, then F sharp three times."),
+        tune(MARY_FIRST[0], bpm=60, title="First half"),
+        MARY_FIRST_SONG.along("Verse 1", bpm=66, title=THE_VERSE),
+        MARY_FIRST_SONG.take("Mary Had a Little Lamb"),
+    ], minutes=MARY_FIRST_SONG.minutes(), xp=30, kind="song", arrangement=MARY_FIRST_SONG.meta()),
 ])
 
 UNIT_2 = unit("vc-2", "Bowing", "Long, even bows, clean string crossings and your first rhythms.", [

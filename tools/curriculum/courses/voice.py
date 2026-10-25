@@ -138,7 +138,11 @@ FIVE_UP = "Do, re, mi, fa, sol: C up to G."
 SCALE_UP = "Do to do: C up to the next C."
 SCALE_DOWN = "Back down from C to C. Keep each lower note bright so it doesn't sag flat."
 
-UNIT_1 = unit("voc-1", "Finding your voice", "Stand tall, breathe low, and hold your first steady note.", [
+# The first song, unit 1 (free): Mary Had a Little Lamb on three notes, E D C, with the band two bars ahead.
+MARY_FIRST = tunes.mary3(0)
+MARY_FIRST_SONG = voice_song(84, tunes.mary3_parts(0, tunes.MARY_CHORDS, intro=BAND_IN), words=tunes.MARY_CREDIT)
+
+UNIT_1 = unit("voc-1", "Finding your voice", "Stand tall, breathe low, hold your first steady note and sing a song.", [
     lesson("voc-1-1", "Stand and breathe", [
         explain("Stand tall, stay loose", "Stand with your feet hip-width apart and knees soft. Let your shoulders drop and your head float up, as if a string lifts it. Keep your jaw loose."),
         explain("Breathe low", "Rest a hand on your belly and breathe in slowly. Your belly and lower ribs widen while your shoulders stay still. That low breath powers your voice."),
@@ -188,6 +192,15 @@ UNIT_1 = unit("voc-1", "Finding your voice", "Stand tall, breathe low, and hold 
         notes(V, ["D4"], hint="Sing D softly, then adjust until it settles."),
         along(V, "C4:2 E4:2 G4:3 r:1 G4:2 E4:2 C4:4", bpm=60, title="Up and home"),
     ], minutes=5, xp=30, kind="challenge"),
+    lesson("voc-1-6", "Mary Had a Little Lamb", [
+        explain("Your first song", "Mary Had a Little Lamb needs three notes: E, D and C, each a step from the next. "
+                "Sing it where it feels easy; Timbre hears the right note in any octave.", keyboard(["E4", "D4", "C4"])),
+        notes(V, ["E4", "D4", "C4"], hint="E, D, C: three steps down to home."),
+        notes(V, ["E4", "D4", "C4", "D4", "E4", "E4", "E4"], hint="Ma-ry had a lit-tle lamb: E D C D E E E."),
+        along(V, MARY_FIRST[0], bpm=66, title="First half"),
+        MARY_FIRST_SONG.along("Verse 1", bpm=72, title=THE_VERSE),
+        MARY_FIRST_SONG.take("Mary Had a Little Lamb"),
+    ], minutes=MARY_FIRST_SONG.minutes(), xp=30, kind="song", arrangement=MARY_FIRST_SONG.meta()),
 ])
 
 UNIT_2 = unit("voc-2", "Pitch matching", "Hear a note, sing it back, and move by small steps.", [

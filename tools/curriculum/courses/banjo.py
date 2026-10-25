@@ -7,6 +7,7 @@ Rolls are written note by note with every string fixed ("G3@3"), so the app hear
 """
 from lib import along, chord, course, explain, fretboard, lesson, listen, notes, part, play_chord, progression, quiz, rhythm, strum, tap, unit
 from songbook import Part, song
+import tunes
 
 B = "banjo"
 
@@ -197,7 +198,12 @@ SKIP_SONG = banjo_song(72, [
 
 # ================================================================ 1. Hello, banjo
 
-UNIT_1 = unit("bjo-1", "Hello, banjo", "Meet the five strings, tune to open G and find the short drone string.", [
+# The first song, unit 1 (free): Mary Had a Little Lamb on three notes in G, B A G: open string 2, string 3 at fret 2
+# (index finger) and open string 3, over the open G the banjo is tuned to.
+MARY_FIRST = tunes.mary3(-5)
+MARY_FIRST_SONG = song(B, 84, tunes.mary3_parts(-5, "G G D7 G G G D7 G"), shapes=SHAPES, words=tunes.MARY_CREDIT)
+
+UNIT_1 = unit("bjo-1", "Hello, banjo", "Meet the five strings, tune to open G, find the drone string and play a song.", [
     lesson("bjo-1-1", "Meet your banjo", [
         explain("Five strings, one short", "A banjo has four full-length strings and a fifth that starts partway up the neck, "
                 "at its own little tuning peg. That short string is the banjo's signature sound.", part("strings")),
@@ -250,6 +256,16 @@ UNIT_1 = unit("bjo-1", "Hello, banjo", "Meet the five strings, tune to open G an
         listen("String 3, then string 5. Which is higher?", [["G3"], ["G4"]], ["String 3", "String 5"], 1),
         along(B, "G3@3:1 B3@2:1 D4@1:1 G4@5:1 D3@4:1 B3@2:1 D4@1:1 G4@5:1 G3@3:4", bpm=66, title="Open G roll call"),
     ], minutes=4, xp=30, kind="challenge"),
+    lesson("bjo-1-6", "Mary Had a Little Lamb", [
+        explain("Your first song", "Mary Had a Little Lamb needs three notes: open string 2 is B, fret 2 on string 3 is A, "
+                "and open string 3 is G. Your second finger frets the A; your thumb picks string 3.",
+                fretboard(B, [(2, 0), (3, 2, 2), (3, 0)])),
+        notes(B, [("A3", 3)], hint="String 3, fret 2, second finger. That's A."),
+        notes(B, ["B3", "A3", "G3", "A3", "B3", "B3", "B3"], hint="B A G A B B B: open string 2, then string 3."),
+        along(B, MARY_FIRST[0], bpm=66, title="First half"),
+        MARY_FIRST_SONG.along("Verse 1", bpm=72, title="The verse"),
+        MARY_FIRST_SONG.take("Mary Had a Little Lamb"),
+    ], minutes=MARY_FIRST_SONG.minutes(), xp=30, kind="song", arrangement=MARY_FIRST_SONG.meta()),
 ])
 
 # ================================================================ 2. Rolls

@@ -159,7 +159,7 @@ struct DroneSingAlongCard: View {
             trace
             holdRow
         }
-        .stillCard(tint: model.held >= DroneSingAlong.goal ? Palette.amber : nil)
+        .stillCard(tint: model.held >= DroneSingAlong.goal ? Palette.starGold : nil)
         .animation(Motion.settle, value: model.held >= DroneSingAlong.goal)
     }
 
@@ -192,11 +192,11 @@ struct DroneSingAlongCard: View {
     @ViewBuilder private var readout: some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
             if listening, let degree = model.degree, let cents = model.shownCents {
-                NoteGlyphs.text(Swara.names[degree], size: 30).font(Typeface.display(30)).foregroundStyle(Palette.ink)
+                NoteGlyphs.text(Swara.names[degree], size: 28).font(Typeface.display(28)).foregroundStyle(Palette.ink)
                 NoteGlyphs.text(noteName(degree) + " · " + Swara.ratios[degree], size: 12, weight: .medium).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
                     .lineLimit(1)
                 Spacer(minLength: 8)
-                Text(verbatim: centsText(cents)).font(Typeface.number(24)).foregroundStyle(Palette.pitch(Double(cents), locked: false, band: DroneSingAlong.band))
+                Text(verbatim: centsText(cents)).font(Typeface.number(20)).foregroundStyle(Palette.pitch(Double(cents), locked: false, band: DroneSingAlong.band))
                     .contentTransition(.numericText())
             } else if permissionDenied {
                 Text("Microphone access is off. Turn it on in Settings to tune.").font(.footnote).foregroundStyle(Palette.amber)
@@ -235,18 +235,18 @@ struct DroneSingAlongCard: View {
             ZStack {
                 Circle().stroke(.white.opacity(0.1), lineWidth: 3)
                 Circle().trim(from: 0, to: max(0.001, progress))
-                    .stroke(reached ? Palette.amber : Palette.mint, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                    .stroke(reached ? Palette.starGold : Palette.mint, style: StrokeStyle(lineWidth: 3, lineCap: .round))
                     .rotationEffect(.degrees(-90))
                     .opacity(progress > 0 ? 1 : 0)
                 if reached {
-                    Image(systemName: "checkmark").font(.system(size: 10, weight: .heavy)).foregroundStyle(Palette.amber)
+                    Image(systemName: "checkmark").font(.system(size: 10, weight: .heavy)).foregroundStyle(Palette.starGold)
                         .transition(.scale.combined(with: .opacity))
                 }
             }
             .frame(width: 26, height: 26)
             .animation(Motion.fade, value: model.held)
             .symbolEffect(.bounce, value: model.reached)
-            Text("Held \(model.held) s").font(Typeface.label(14)).foregroundStyle(reached ? Palette.amber : (model.held > 0 ? Palette.mint : Palette.inkSoft))
+            Text("Held \(model.held) s").font(Typeface.label(15)).foregroundStyle(reached ? Palette.starGold : (model.held > 0 ? Palette.mint : Palette.inkSoft))
                 .contentTransition(.numericText())
             Spacer(minLength: 8)
             if model.best > 0 {
@@ -304,11 +304,11 @@ enum DroneTraceArt {
             held = now - holdStart
             let from = x(max(holdStart, now - window))
             let heldRect = CGRect(x: from, y: bandRect.minY, width: max(0, head - from), height: bandRect.height)
-            let tint = held >= Double(SingAlongTargets.goal) ? Palette.amber : Palette.mint
+            let tint = held >= Double(SingAlongTargets.goal) ? Palette.starGold : Palette.mint
             context.fill(Path(heldRect), with: .linearGradient(Gradient(colors: [tint.opacity(0.06), tint.opacity(0.26)]),
                                                                startPoint: CGPoint(x: heldRect.minX, y: 0), endPoint: CGPoint(x: heldRect.maxX, y: 0)))
         }
-        let edgeTint = held >= Double(SingAlongTargets.goal) ? Palette.amber : Palette.mint
+        let edgeTint = held >= Double(SingAlongTargets.goal) ? Palette.starGold : Palette.mint
         for edgeY in [bandRect.minY, bandRect.maxY] {
             var edge = Path()
             edge.move(to: CGPoint(x: left, y: edgeY))

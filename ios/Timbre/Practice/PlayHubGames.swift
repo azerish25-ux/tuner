@@ -117,7 +117,7 @@ struct PlayGameCard<Preview: View>: View {
     let stats: Text
     let challenge: GameChallenge
     let tint: Color
-    /// What the game asks, under its name ("Play the note. Hold the bullseye.").
+    /// What the game asks, under its name ("Ten notes. One hidden song.").
     var about: Text? = nil
     /// iPad: the card stands tall, the game idling across its top at this height and the words under it. Nil: the
     /// phone's card, the game beside the words.
@@ -223,7 +223,7 @@ private struct FriendTargetLine: View {
             }
         }
         .font(Typeface.label(12))
-        .foregroundStyle(beaten ? Palette.mint : Palette.amber)
+        .foregroundStyle(beaten ? Palette.mint : Palette.accentNeutral)
         .lineLimit(1).minimumScaleFactor(0.8)
         .padding(.top, 2)
         .transition(.opacity.combined(with: .scale(scale: 0.9, anchor: .leading)))
@@ -263,11 +263,11 @@ private struct GameCardCorner: View {
                 Image(systemName: "trophy.fill").font(.system(size: 11, weight: .bold))
                 if let rank { Text(verbatim: "#\(rank)").font(Typeface.label(12)).monospacedDigit() }
             }
-            .foregroundStyle(Palette.amber)
+            .foregroundStyle(Palette.starGold)
             .padding(.horizontal, 9)
             .frame(minWidth: 32, minHeight: 32)
             .background(Capsule().fill(Palette.stage.opacity(0.78)))
-            .overlay(Capsule().strokeBorder(Palette.amber.opacity(0.32), lineWidth: 1))
+            .overlay(Capsule().strokeBorder(Palette.starGold.opacity(0.32), lineWidth: 1))
             .tapTarget()
         }
         .buttonStyle(PressScaleStyle())
@@ -306,12 +306,17 @@ private struct ChallengeShareButton: View {
         }
     }
 
+    /// The paper plane and the word, so what it does reads without a guess.
     private var label: some View {
-        Image(systemName: "paperplane.fill").font(.system(size: 11, weight: .bold))
+        Label("Challenge", systemImage: "paperplane.fill")
+            .font(.caption.weight(.semibold))
+            .lineLimit(1)
             .foregroundStyle(Palette.mint)
-            .frame(width: 32, height: 32)
-            .background(Circle().fill(Palette.stage.opacity(0.78)))
-            .overlay(Circle().strokeBorder(Palette.mint.opacity(0.32), lineWidth: 1))
+            .padding(.horizontal, 10)
+            .frame(minHeight: 32)
+            .background(Capsule().fill(Palette.stage.opacity(0.78)))
+            .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.32), lineWidth: 1))
+            .dynamicTypeSize(...DynamicTypeSize.xxLarge)
             .tapTarget()
     }
 }
@@ -332,16 +337,16 @@ struct SniperChallengeCard: View {
             }
             .frame(width: 210, height: 210)
             VStack(spacing: 2) {
-                Text("Beat my score").font(Typeface.display(34)).tracking(-0.8).foregroundStyle(Palette.ink)
-                Text(score, format: .number).font(Typeface.number(64)).foregroundStyle(Palette.amber)
-                    .shadow(color: Palette.amber.opacity(0.35), radius: 16)
+                Text("Beat my score").font(Typeface.display(40)).tracking(-0.8).foregroundStyle(Palette.ink)
+                Text(score, format: .number).font(Typeface.number(64)).foregroundStyle(Palette.starGold)
+                    .shadow(color: Palette.starGold.opacity(0.35), radius: 16)
             }
-            Text("Play the note. Hold the bullseye.").font(.headline).foregroundStyle(Palette.inkSoft)
+            Text("Ten notes. One hidden song.").font(.headline).foregroundStyle(Palette.inkSoft)
         }
     }
 }
 
-/// Bullseye's header while a friend's challenge stands: "Beat 1,650" in amber, mint and ticked once this game passes it.
+/// Bullseye's header while a friend's challenge stands: "Beat 1,650" in steel, mint and ticked once this game passes it.
 struct SniperChallengeTarget: View {
     /// This game's score so far.
     let score: Int
@@ -360,7 +365,7 @@ struct SniperChallengeTarget: View {
                 }
             }
             .font(Typeface.label(12))
-            .foregroundStyle(passed ? Palette.mint : Palette.amber)
+            .foregroundStyle(passed ? Palette.mint : Palette.accentNeutral)
             .lineLimit(1).minimumScaleFactor(0.8)
             .contentTransition(.opacity)
             .animation(Motion.quick, value: passed)
@@ -386,7 +391,7 @@ struct SniperChallengeResult: View {
                     beaten(challenge.target)
                 } else {
                     Text("\(challenge.target - score + 1) more to beat \(challenge.target)")
-                        .font(.footnote.weight(.semibold)).foregroundStyle(Palette.amber)
+                        .font(.footnote.weight(.semibold)).foregroundStyle(Palette.accentNeutral)
                 }
             }
             .task(id: score) {
@@ -401,12 +406,12 @@ struct SniperChallengeResult: View {
     private func beaten(_ target: Int) -> some View {
         VStack(spacing: 10) {
             Label { Text("You beat \(target)") } icon: { Image(systemName: "flag.checkered") }
-                .font(Typeface.label(16)).foregroundStyle(Palette.mint)
+                .font(Typeface.label(17)).foregroundStyle(Palette.mint)
             if let card {
                 ShareLink(item: card, subject: Text("Beat my score"), message: Text(verbatim: SniperChallenge.message(score: score)),
                           preview: SharePreview("Beat my score", image: card)) {
                     Label("Send it back", systemImage: "paperplane.fill")
-                        .font(Typeface.label(14)).foregroundStyle(Palette.onAccent)
+                        .font(Typeface.label(15)).foregroundStyle(Palette.onAccent)
                         .padding(.horizontal, 16).frame(minHeight: Metrics.minTarget)
                         .background(Capsule().fill(Palette.mint))
                 }
@@ -427,7 +432,7 @@ private struct ChallengeChip: View {
     var body: some View {
         let complete = challenge.complete
         VStack(alignment: .leading, spacing: 5) {
-            Eyebrow("Today’s challenge", color: complete ? Palette.mint : Palette.amber)
+            Eyebrow("Today’s challenge", color: complete ? Palette.mint : Palette.accentNeutral)
                 .lineLimit(1).minimumScaleFactor(0.7)
             HStack(spacing: 8) {
                 ring(complete: complete)
@@ -648,12 +653,12 @@ enum IntervalStairsArt {
             let x = layout.centerX(i) - layout.stepWidth / 2 + 1.5
             let rect = CGRect(x: x, y: layout.top(i), width: layout.stepWidth - 3, height: max(4, floorY - layout.top(i)))
             context.fill(Path(roundedRect: rect, cornerRadius: 4), with: .linearGradient(
-                Gradient(colors: [Palette.amber.opacity(0.1 + 0.32 * lit), Palette.amber.opacity(0.02)]),
+                Gradient(colors: [Palette.accentNeutral.opacity(0.1 + 0.32 * lit), Palette.accentNeutral.opacity(0.02)]),
                 startPoint: CGPoint(x: rect.midX, y: rect.minY), endPoint: CGPoint(x: rect.midX, y: rect.maxY)))
             var edge = Path()
             edge.move(to: CGPoint(x: rect.minX + 2, y: rect.minY))
             edge.addLine(to: CGPoint(x: rect.maxX - 2, y: rect.minY))
-            context.stroke(edge, with: .color(Palette.amber.opacity(0.3 + 0.6 * lit)), style: StrokeStyle(lineWidth: 2, lineCap: .round))
+            context.stroke(edge, with: .color(Palette.accentNeutral.opacity(0.3 + 0.6 * lit)), style: StrokeStyle(lineWidth: 2, lineCap: .round))
         }
         var floorLine = Path()
         floorLine.move(to: CGPoint(x: inset, y: floorY))
@@ -684,22 +689,22 @@ enum IntervalStairsArt {
             var arc = Path()
             arc.move(to: root)
             arc.addQuadCurve(to: note, control: CGPoint(x: (root.x + note.x) / 2, y: min(root.y, note.y) - 24))
-            context.stroke(arc, with: .color(Palette.amber.opacity(0.45 * fade)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
+            context.stroke(arc, with: .color(Palette.accentNeutral.opacity(0.45 * fade)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
         }
-        context.fill(BullseyeArt.circle(root, 3), with: .color(Palette.amber.opacity(0.6 * fade)))
+        context.fill(BullseyeArt.circle(root, 3), with: .color(Palette.accentNeutral.opacity(0.6 * fade)))
 
         let since = u - landing(current)
         if since >= 0 && since < 0.45 {
             let ripple = noteR + CGFloat(since / 0.45) * 14
-            context.stroke(BullseyeArt.circle(note, ripple), with: .color(Palette.amber.opacity(0.7 * (1 - since / 0.45) * fade)), lineWidth: 1.5)
+            context.stroke(BullseyeArt.circle(note, ripple), with: .color(Palette.accentNeutral.opacity(0.7 * (1 - since / 0.45) * fade)), lineWidth: 1.5)
         }
-        context.fill(BullseyeArt.circle(note, 15), with: .radialGradient(Gradient(colors: [Palette.amber.opacity(0.55 * fade), .clear]),
+        context.fill(BullseyeArt.circle(note, 15), with: .radialGradient(Gradient(colors: [Palette.accentNeutral.opacity(0.55 * fade), .clear]),
                                                                            center: note, startRadius: 0, endRadius: 15))
-        context.fill(BullseyeArt.circle(note, noteR), with: .color(Palette.amber.opacity(fade)))
+        context.fill(BullseyeArt.circle(note, noteR), with: .color(Palette.accentNeutral.opacity(fade)))
         context.fill(BullseyeArt.circle(CGPoint(x: note.x - 1.5, y: note.y - 1.5), 2), with: .color(.white.opacity(0.8 * fade)))
 
         let name = Intervals.short[semitones[current]]
-        let label = Text(verbatim: name).font(Typeface.label(12)).foregroundStyle(Palette.amber.opacity(fade))
+        let label = Text(verbatim: name).font(Typeface.label(12)).foregroundStyle(Palette.accentNeutral.opacity(fade))
         let labelPoint = CGPoint(x: min(size.width - 16, max(16, note.x)), y: max(10, note.y - 20))
         context.draw(label, at: labelPoint, anchor: .center)
     }

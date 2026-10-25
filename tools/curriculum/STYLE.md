@@ -28,8 +28,10 @@ built with the helpers in `lib.py` and checked by `python3 tools/curriculum/buil
   frets; force a string with `"E4@1"` in `along` or `("E4", 1)` in `notes`.
 - Chord shapes are strings lowest string first (`"x32010"` = guitar C); the builder rejects shapes whose
   notes aren't in the chord. Fingers: 1 index … 4 little, 0 for open/muted.
-- Only public-domain or traditional melodies (composer died before 1930, or traditional and published
-  before 1929). Name the song plainly ("Ode to Joy", "Greensleeves", "Shenandoah").
+- Only melodies in the public domain worldwide: first published before 1931, and every creator whose work we
+  use (composer, lyricist, the arranger of a version we follow) died before 1956, or the tune is traditional.
+  docs/content/PUBLIC-DOMAIN-CLEARANCE.md records each song's check. Name the song plainly ("Ode to Joy",
+  "Greensleeves", "Shenandoah").
 
 ## Songs (every course)
 - Every song lesson (`kind="song"`, in any course) is a full arrangement built with `songbook.song(...)` from
@@ -49,9 +51,15 @@ built with the helpers in `lib.py` and checked by `python3 tools/curriculum/buil
 - A take is one line: no two notes at once, at least 0.15 s apart at the song's tempo. Chart chords stay in
   the recognizer's set (major, minor, 7, maj7, m7, sus2, sus4, 5), with shapes for the course's own instrument
   (guitar shapes for voice).
-- Tunes several courses share (Ode to Joy, Twinkle, Amazing Grace, Clementine, Oh! Susanna, Lightly Row) live
-  in `tunes.py` with their words, in one key; courses move them with `tunes.transpose`/`transpose_chords`.
-- Lyrics only where the text is in the public domain (written before 1929), or our own for Originals
+- Tunes several courses share (Ode to Joy, Twinkle, Amazing Grace, Clementine, Oh! Susanna, Lightly Row, the
+  three-note Mary Had a Little Lamb) live in `tunes.py` with their words, in one key; courses move them with
+  `tunes.transpose`/`transpose_chords`.
+- Unit 1 of every instrument course ends on a free song a beginner can play with what the unit taught (one new
+  note or chord at most, taught in the song lesson itself): the three-note Mary Had a Little Lamb
+  (`tunes.mary3_parts`), or on ukulele Row, Row, Row Your Boat on one chord.
+- A strum or progression step marks its chops, chunks and scratches with `muted=[beats]` and its pushed strokes
+  with `accents=[beats]` (beats of the pattern), so a correct choked stroke isn't judged a miss.
+- Lyrics only where the text passes the same test (published before 1931, its writer dead before 1956), or our own for Originals
   (credit `words="Timbre"`). Never quote modern or copyrighted lyrics, not even a line. Instrumental
   pieces have no words. One lyric token per note; `songbook.py` documents "-", "~", "_" and "/".
 - Lyric lines are short enough to read under the highway (about 40 characters) and stay inside one section.

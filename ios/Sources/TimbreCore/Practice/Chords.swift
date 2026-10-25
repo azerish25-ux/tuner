@@ -20,7 +20,16 @@ public struct ChordFormula: Identifiable, Equatable, Hashable, Sendable {
         .init(id: "m6", name: "Minor 6", suffix: "m6", intervals: [0, 3, 7, 9], optional: 7),
         .init(id: "add9", name: "Add 9", suffix: "add9", intervals: [0, 2, 4, 7], optional: 7),
         .init(id: "9", name: "Dominant 9", suffix: "9", intervals: [0, 2, 4, 7, 10], optional: 7),
+        .init(id: "maj9", name: "Major 9", suffix: "maj9", intervals: [0, 2, 4, 7, 11], optional: 7),
+        .init(id: "m9", name: "Minor 9", suffix: "m9", intervals: [0, 2, 3, 7, 10], optional: 7),
+        .init(id: "69", name: "Six-nine", suffix: "6/9", intervals: [0, 2, 4, 7, 9], optional: 7),
+        .init(id: "7sus4", name: "Dominant 7 suspended 4", suffix: "7sus4", intervals: [0, 5, 7, 10], optional: 7),
+        // The eleventh as guitarists play it: the third left out, so it doesn't clash with the eleventh.
+        .init(id: "11", name: "Dominant 11", suffix: "11", intervals: [0, 2, 5, 7, 10], optional: 7),
+        .init(id: "13", name: "Dominant 13", suffix: "13", intervals: [0, 2, 4, 7, 9, 10], optional: 7),
         .init(id: "dim", name: "Diminished", suffix: "dim", intervals: [0, 3, 6], optional: nil),
+        .init(id: "dim7", name: "Diminished 7", suffix: "dim7", intervals: [0, 3, 6, 9], optional: nil),
+        .init(id: "m7b5", name: "Half-diminished", suffix: "m7♭5", intervals: [0, 3, 6, 10], optional: nil),
         .init(id: "aug", name: "Augmented", suffix: "aug", intervals: [0, 4, 8], optional: nil),
         .init(id: "5", name: "Power chord", suffix: "5", intervals: [0, 7], optional: nil),
     ]
@@ -244,14 +253,15 @@ public enum ChordLibrary {
     }
 
     /// A family moved to the root's fret on its string (or an octave up), if it spells the chord,
-    /// is playable and stays below `maxFret`.
+    /// is playable, holds at least one fretted note (a barre family at the nut would be open strings alone, A11's
+    /// x00000) and stays below `maxFret`.
     private static func place(_ family: Family, root: Int, formula: ChordFormula, skipOpenPosition: Bool) -> [Int?]? {
         let base = ((root - standardGuitar[family.string]) % 12 + 12) % 12
         for fret in [base, base + 12] {
             if fret == 0 && skipOpenPosition { continue }
             let frets: [Int?] = family.offsets.map { offset in offset.map { $0 + fret } }
             let sounding = frets.compactMap { $0 }
-            guard let lowest = sounding.min(), let highest = sounding.max(), lowest >= 0, highest <= maxFret else { continue }
+            guard let lowest = sounding.min(), let highest = sounding.max(), lowest >= 0, highest <= maxFret, highest > 0 else { continue }
             guard spells(frets, root: root, formula: formula), ChordFingering.isPlayable(frets) else { continue }
             return frets
         }
@@ -316,6 +326,23 @@ public enum ChordLibrary {
         "m6": [Family(string: 0, offsets: [0, nil, -1, 0, 0, nil]), Family(string: 1, offsets: [nil, 0, nil, -1, 1, 0]), Family(string: 2, offsets: [nil, nil, 0, 2, 0, 1])],
         "add9": [Family(string: 1, offsets: [nil, 0, -1, -3, 0, nil]), Family(string: 2, offsets: [nil, nil, 0, -1, -2, 0]), Family(string: 1, offsets: [nil, 0, -1, nil, 0, 0])],
         "9": [Family(string: 0, offsets: [0, 2, 0, 1, 0, 2]), Family(string: 1, offsets: [nil, 0, -1, 0, 0, 0])],
+        // The jazz voicings: C maj9 x3243x, C m9 x31333, C6/9 x32233, G7sus4 353533, C11 x33333, C13 x3233 5,
+        // C dim7 x3424x and C m7♭5 x3434x, each on the E, A and D strings where the hand can hold it.
+        "maj9": [Family(string: 1, offsets: [nil, 0, -1, 1, 0, nil]), Family(string: 0, offsets: [0, -1, 1, -1, nil, nil]),
+                 Family(string: 2, offsets: [nil, nil, 0, -1, 2, 0])],
+        "m9": [Family(string: 1, offsets: [nil, 0, -2, 0, 0, 0]), Family(string: 0, offsets: [0, nil, 0, 0, 0, 2]),
+               Family(string: 2, offsets: [nil, nil, 0, -2, 1, 0])],
+        "69": [Family(string: 1, offsets: [nil, 0, -1, -1, 0, 0]), Family(string: 0, offsets: [0, -1, -1, -1, 0, 0]),
+               Family(string: 2, offsets: [nil, nil, 0, -1, 0, 0])],
+        "7sus4": [Family(string: 0, offsets: [0, 2, 0, 2, 0, 0]), Family(string: 1, offsets: [nil, 0, 2, 0, 3, 0]),
+                  Family(string: 2, offsets: [nil, nil, 0, 2, 1, 3])],
+        "11": [Family(string: 1, offsets: [nil, 0, 0, 0, 0, 0]), Family(string: 0, offsets: [0, nil, 0, -1, -2, nil]),
+               Family(string: 2, offsets: [nil, nil, 0, 0, 1, 0])],
+        "13": [Family(string: 1, offsets: [nil, 0, -1, 0, 0, 2]), Family(string: 0, offsets: [0, nil, 0, 1, 2, 2])],
+        "dim7": [Family(string: 1, offsets: [nil, 0, 1, -1, 1, nil]), Family(string: 0, offsets: [0, nil, -1, 0, -1, nil]),
+                 Family(string: 2, offsets: [nil, nil, 0, 1, 0, 1])],
+        "m7b5": [Family(string: 1, offsets: [nil, 0, 1, 0, 1, nil]), Family(string: 0, offsets: [0, nil, 0, 0, -1, nil]),
+                 Family(string: 2, offsets: [nil, nil, 0, 1, 1, 1])],
         "dim": [Family(string: 0, offsets: [0, 1, 2, 0, nil, nil]), Family(string: 1, offsets: [nil, 0, 1, 2, 1, nil]), Family(string: 2, offsets: [nil, nil, 0, 1, 0, 1])],
         "aug": [Family(string: 0, offsets: [0, nil, 2, 1, 1, nil]), Family(string: 1, offsets: [nil, 0, -1, -2, -2, nil]), Family(string: 2, offsets: [nil, nil, 0, 3, 3, 2])],
         "5": [Family(string: 0, offsets: [0, 2, 2, nil, nil, nil]), Family(string: 1, offsets: [nil, 0, 2, 2, nil, nil]), Family(string: 2, offsets: [nil, nil, 0, 2, 3, nil])],

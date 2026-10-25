@@ -341,8 +341,8 @@ final class CustomTuningTests: XCTestCase {
         XCTAssertEqual(YourSongsPolicy.freeChartLimit, 10)
     }
 
-    /// A hidden-tune Bullseye: the rounds are a tune's opening in some key the instrument's notes reach, interval for
-    /// interval; an open-strings-only instrument gets an ordinary game.
+    /// A hidden-tune Bullseye: the rounds are a tune's opening in some key the instrument reaches in first position,
+    /// interval for interval, an unfretted violin's first fingers included.
     func testBullseyeHidesATuneInItsRounds() throws {
         let guitar = [40, 45, 50, 55, 59, 64]
         let game = PitchSniper(notes: guitar, fretted: true, seed: 3, hiddenTune: true)
@@ -353,9 +353,15 @@ final class CustomTuningTests: XCTestCase {
         XCTAssertEqual(heard, Array(written.prefix(heard.count)))
         let reach = Set(guitar.flatMap { open in (0...4).map { open + $0 } })
         XCTAssertTrue(game.rounds.allSatisfy { reach.contains($0.midi) })
-        let violin = PitchSniper(notes: [55, 62, 69, 76], fretted: false, seed: 3, hiddenTune: true)
-        XCTAssertNil(violin.tune)
-        XCTAssertEqual(violin.rounds.count, 10)
+        let strings = [55, 62, 69, 76]
+        let violin = PitchSniper(notes: strings, fretted: false, seed: 3, hiddenTune: true)
+        XCTAssertNotNil(violin.tune, "a violin's first fingers reach a hidden tune")
+        let fingers = Set(strings.flatMap { open in (0...6).map { open + $0 } })
+        XCTAssertTrue(violin.rounds.allSatisfy { fingers.contains($0.midi) })
+        XCTAssertEqual(PitchSniper(notes: strings, fretted: false, seed: 3).rounds.count, 10)
+        for seed in UInt64(0)..<12 {
+            XCTAssertNotNil(PitchSniper(notes: guitar, fretted: true, seed: seed, hiddenTune: true).tune, "every game hides a tune")
+        }
         XCTAssertNil(PitchSniper(notes: guitar, fretted: true, seed: 3).tune, "an ordinary game unless asked")
         for hidden in PitchSniper.hiddenTunes {
             XCTAssertTrue(zip(hidden.steps, hidden.steps.dropFirst()).allSatisfy { $0 != $1 }, "\(hidden.title): no note straight after itself")

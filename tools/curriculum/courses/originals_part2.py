@@ -328,10 +328,10 @@ UNIT_SINGALONG = unit("orig-5", "Three-chord sing-alongs", "Five songs on three 
         tap(BACKBEAT, bpm=70, bars=2),
         explain("Up, then let go", "Brush up across strings 1 to 3, then relax your fretting hand so the chord stops at once. "
                 "Chk on two, chk on four. The quiet beats are what make it sway.", shape(C)),
-        strum(C, BACKBEAT, bpm=70, bars=2),
-        progression(bars(HAMMOCK_CHART, C, G_MAJ, Am), BACKBEAT, bpm=70),
+        strum(C, BACKBEAT, muted=BACKBEAT, bpm=70, bars=2),
+        progression(bars(HAMMOCK_CHART, C, G_MAJ, Am), BACKBEAT, muted=BACKBEAT, bpm=70),
         HAMMOCK.along("Chorus", bpm=70, title=HOOK),
-        progression(bars(HAMMOCK_CHART, C, G_MAJ, Am), BACKBEAT, bpm=76),
+        progression(bars(HAMMOCK_CHART, C, G_MAJ, Am), BACKBEAT, muted=BACKBEAT, bpm=76),
         HAMMOCK.take("Hammock Season"),
     ], HAMMOCK, xp=30),
     song_lesson("orig-glow-in-the-dark-stars", "Glow-in-the-Dark Stars", [
@@ -357,7 +357,7 @@ UNIT_SINGALONG = unit("orig-5", "Three-chord sing-alongs", "Five songs on three 
         quiz("In reggae, where does the guitar play?", ["On beats one and three", "On beats two and four", "On every beat"], 1,
              "Reggae's guitar answers the beat: a short upstroke on two and four, silence in between."),
         FROST.along("Chorus", bpm=112, title="First Frost"),
-        progression(bars(HAMMOCK_CHART, C, G_MAJ, Am), BACKBEAT, bpm=80),
+        progression(bars(HAMMOCK_CHART, C, G_MAJ, Am), BACKBEAT, muted=BACKBEAT, bpm=80),
         GLOW.along("Chorus", bpm=88, title="Glow-in-the-Dark Stars"),
     ], minutes=6, xp=40, kind="challenge"),
 ])
@@ -753,10 +753,10 @@ UNIT_GROOVE = unit("orig-7", "Grooves and seventh chords", "Lo-fi, one-drop regg
         tap(SKANK, bpm=70, bars=2),
         explain("D7 over A minor", "D7: finger 2 on string 3, fret 2, finger 1 on string 2, fret 1, finger 3 on string 1, "
                 "fret 2. Am7 to D7 and back is the sunny, minor-but-bright sound of the whole song.", shape(D7)),
-        strum(Am7, SKANK, bpm=70, bars=2),
-        progression(bars(SALT_CHART, Am7, D7), SKANK, bpm=70),
+        strum(Am7, SKANK, muted=SKANK, bpm=70, bars=2),
+        progression(bars(SALT_CHART, Am7, D7), SKANK, muted=SKANK, bpm=70),
         SALT.along("Chorus", bpm=70, title=CHORUS),
-        progression(bars(SALT_CHART, Am7, D7), SKANK, bpm=76),
+        progression(bars(SALT_CHART, Am7, D7), SKANK, muted=SKANK, bpm=76),
         SALT.take("Saltwater Sunday"),
     ], SALT),
     song_lesson("orig-pocket-change", "Pocket Change", [
@@ -804,7 +804,7 @@ UNIT_GROOVE = unit("orig-7", "Grooves and seventh chords", "Lo-fi, one-drop regg
         listen("Which song's hook starts like this?", [["A3"], ["C4"], ["C#4"], ["A3"], ["C4"], ["C#4"]],
                ["Saltwater Sunday", "Late Checkout", "Pocket Change"], 2),
         LATE.along("Chorus", bpm=76, title="Late Checkout"),
-        progression(bars(SALT_CHART, Am7, D7), SKANK, bpm=80),
+        progression(bars(SALT_CHART, Am7, D7), SKANK, muted=SKANK, bpm=80),
         SALT.along("Chorus", bpm=80, title="Saltwater Sunday"),
         quiz("Which chord has a major seventh?", ["G7", "Cmaj7", "Am7"], 1,
              "Cmaj7 adds B, a half step under C. G7 and Am7 add a flat seventh, a whole step under the root."),

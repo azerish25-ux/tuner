@@ -492,7 +492,7 @@ struct PlayAlong {
 
 /// The neck to the 15th fret, nut on the left (on the right for a left-handed player, `nutOnRight`), its strings in
 /// the app's string order (`ChordPicture`: string 1 on top in the Chart view, the thickest in Player view, as the
-/// player's hold turns it): every scale tone as a dot labelled with its interval or its name, roots amber. A position
+/// player's hold turns it): every scale tone as a dot labelled with its interval or its name, roots gold. A position
 /// is framed and the notes outside it shrink to faint marks. The note sounding (or to play next) is lit, the ones before
 /// it ringed; while playing along the target breathes and each hit sends out a ripple.
 struct ScaleNeck: View {
@@ -646,7 +646,7 @@ struct ScaleNeck: View {
         for note in notes {
             let spot = NeckSpot(string: note.string, fret: note.fret)
             let center = point(spot)
-            let tint = note.isRoot ? Palette.amber : Palette.mint
+            let tint = note.isRoot ? Palette.starGold : Palette.mint
             if let focus, !focus.contains(spot) {
                 // In the scale, outside the position: a faint mark keeps the neck's map without crowding the box.
                 let mark = r * 0.5

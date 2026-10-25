@@ -150,7 +150,7 @@ struct VoiceView: View {
             Eyebrow(LocalizedStringKey(text("timbre_voice_last_attempt", "Your last attempt")))
             if exercise.level == 7 {
                 if let low = result.lowestMidi, let high = result.highestMidi {
-                    NoteGlyphs.text(String(localized: "\(note(low)) – \(note(high))"), size: 48).font(Typeface.display(48)).foregroundStyle(Palette.locked)
+                    NoteGlyphs.text(String(localized: "\(note(low)) – \(note(high))"), size: 40).font(Typeface.display(40)).foregroundStyle(Palette.locked)
                     RangeLadder(low: low, high: high, notation: store.settings.notation)
                     Text("Your comfortable range today. A description, not a classification.").font(.footnote).foregroundStyle(Palette.inkSoft)
                 } else { Text(text("timbre_voice_range_no_result", "No reliable range yet. Try two comfortable notes.")).foregroundStyle(Palette.inkSoft) }
@@ -172,7 +172,7 @@ struct VoiceView: View {
     private func metric(_ title: String, _ value: Int?) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title).font(.caption).foregroundStyle(Palette.inkSoft)
-            Text(value.map { "\($0)" } ?? "—").font(Typeface.display(44)).foregroundStyle(Palette.ink)
+            Text(value.map { "\($0)" } ?? "—").font(Typeface.display(40)).foregroundStyle(Palette.ink)
                 .heroNumeral()
         }
         .accessibilityElement(children: .combine)
@@ -267,7 +267,7 @@ private struct VoiceTrace: View {
             let held = (size.width - inset * 2) * CGFloat(min(1, max(0.08, hold ?? 0.3)))
             context.fill(Path(roundedRect: CGRect(x: size.width / 2 - held / 2, y: center - 4, width: held, height: 8), cornerRadius: 4),
                          with: .color(Palette.mint.opacity(0.6)))
-            context.draw(NoteGlyphs.text(VoiceNoteName.name(midi, notation: notation), size: 11).font(Typeface.label(11)).foregroundStyle(Palette.inkSoft),
+            context.draw(NoteGlyphs.text(VoiceNoteName.name(midi, notation: notation), size: 12).font(Typeface.label(12)).foregroundStyle(Palette.inkSoft),
                          at: CGPoint(x: inset, y: center - 16), anchor: .leading)
             return
         }
@@ -285,7 +285,7 @@ private struct VoiceTrace: View {
             }
             context.fill(Path(roundedRect: CGRect(x: x0, y: level - 4, width: width, height: 8), cornerRadius: 4),
                          with: .color(Palette.mint.opacity(i == 0 ? 0.75 : 0.32)))
-            context.draw(NoteGlyphs.text(VoiceNoteName.name(midi, notation: notation), size: 10).font(Typeface.label(10)).foregroundStyle(i == 0 ? Palette.ink : Palette.inkFaint),
+            context.draw(NoteGlyphs.text(VoiceNoteName.name(midi, notation: notation), size: 12).font(Typeface.label(12)).foregroundStyle(i == 0 ? Palette.ink : Palette.inkFaint),
                          at: CGPoint(x: x0 + width / 2, y: level - 13))
             previous = CGPoint(x: x0 + width, y: level)
         }
@@ -339,7 +339,7 @@ private struct RangeLadder: View {
                 tick.move(to: CGPoint(x: x(midi), y: rail - 8))
                 tick.addLine(to: CGPoint(x: x(midi), y: rail + 8))
                 context.stroke(tick, with: .color(Palette.inkFaint.opacity(0.6)), lineWidth: 1)
-                context.draw(NoteGlyphs.text(VoiceNoteName.name(midi, notation: notation), size: 10).font(Typeface.label(10)).foregroundStyle(Palette.inkFaint),
+                context.draw(NoteGlyphs.text(VoiceNoteName.name(midi, notation: notation), size: 12).font(Typeface.label(12)).foregroundStyle(Palette.inkFaint),
                              at: CGPoint(x: x(midi), y: size.height - 7))
             }
             let from = x(min(low, high)), to = x(max(low, high))

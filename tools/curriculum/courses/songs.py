@@ -8,4 +8,4 @@ for part in ("songs_part1", "songs_part2"):
     except ModuleNotFoundError:
         pass
 
-COURSE = course("songs", "Songs", "Play real melodies, start to finish", "guitar.acoustic.6", "music.quarternote.3", "amber", UNITS) if UNITS else None
+COURSE = course("songs", "Songs", "Play the melody, or strum the chords and sing", "guitar.acoustic.6", "music.quarternote.3", "amber", UNITS) if UNITS else None

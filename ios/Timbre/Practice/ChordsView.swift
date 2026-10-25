@@ -109,7 +109,7 @@ struct ChordLibraryView: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .firstTextBaseline, spacing: 10) {
-                Text(chordName).font(Typeface.display(56)).foregroundStyle(Palette.ink)
+                Text(chordName).font(Typeface.display(64)).foregroundStyle(Palette.ink)
                     .heroNumeral(minimumScale: 0.6)
                     .shadow(color: Palette.mint.opacity(check == .heard ? 0.55 : 0), radius: 18)
                 Text(formula.name).font(.subheadline).foregroundStyle(Palette.inkSoft)
@@ -524,7 +524,7 @@ private struct StrumGlint: View {
     }
 }
 
-/// Easy, Medium or Hard: three rising bars, as many lit as the level, and the word, in mint, amber or coral.
+/// Easy, Medium or Hard: three rising bars, as many lit as the level, and the word, in the steel of a difficulty.
 struct DifficultyMeter: View {
     let level: VoicingProfile.Level
 
@@ -600,7 +600,7 @@ struct RootRail: View {
     }
 }
 
-/// The notes of a chord or scale in tiles, each over its degree (C E G over 1 3 5; E♭ over ♭3); the root's tile amber,
+/// The notes of a chord or scale in tiles, each over its degree (C E G over 1 3 5; E♭ over ♭3); the root's tile gold,
 /// as roots are on the neck.
 struct ToneStrip: View {
     struct Tone: Hashable {
@@ -625,15 +625,15 @@ struct ToneStrip: View {
         return VStack(spacing: 2) {
             // The sign in the system face: Sora's fallback sets ♭ full width ("E ♭").
             NoteGlyphs.text(tone.name, sign: .system(.subheadline, weight: .semibold)).font(Typeface.label(15, relativeTo: .subheadline))
-                .foregroundStyle(tone.isRoot ? Palette.amber : Palette.ink)
+                .foregroundStyle(tone.isRoot ? Palette.starGold : Palette.ink)
                 .lineLimit(1).minimumScaleFactor(0.6)
             Text(tone.degree).font(.caption2.weight(.semibold)).foregroundStyle(Palette.inkFaint)
                 .lineLimit(1).minimumScaleFactor(0.8)
         }
         .padding(.vertical, 8).padding(.horizontal, 4)
         .frame(minWidth: 0, maxWidth: 54)
-        .background(shape.fill(tone.isRoot ? Palette.amber.opacity(0.12) : Palette.stageRaised))
-        .overlay(shape.strokeBorder(tone.isRoot ? Palette.amber.opacity(0.4) : Palette.hairline, lineWidth: 1))
+        .background(shape.fill(tone.isRoot ? Palette.starGold.opacity(0.12) : Palette.stageRaised))
+        .overlay(shape.strokeBorder(tone.isRoot ? Palette.starGold.opacity(0.4) : Palette.hairline, lineWidth: 1))
         .contentTransition(.opacity)
     }
 }
