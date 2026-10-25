@@ -12,6 +12,15 @@ struct HighwayHUD: View {
     private var level: Int { ComboBadge.multiplier(combo) }
     private var tint: Color { ComboBadge.tint(level) }
 
+    /// The digits roll to each new count. A store capture changes them in place instead: a roll lasts
+    /// `Motion.quick` and a run grows several times a second, so a still picture would catch a ghosted digit.
+    private func digitTransition(_ value: Int) -> ContentTransition {
+        #if DEBUG
+        if DemoScene.stillScore { return .identity }
+        #endif
+        return .numericText(value: Double(value))
+    }
+
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
             counter
@@ -34,7 +43,7 @@ struct HighwayHUD: View {
             Text(combo, format: .number)
                 .font(Typeface.number(30, relativeTo: .title2))
                 .foregroundStyle(combo > 0 ? Palette.ink : Palette.inkFaint)
-                .contentTransition(.numericText(value: Double(combo)))
+                .contentTransition(digitTransition(combo))
                 .shadow(color: tint.opacity(level >= 2 ? 0.6 : 0), radius: 10)
             Eyebrow("Combo", color: level >= 2 ? tint : Palette.inkSoft, style: .display)
         }
@@ -64,7 +73,7 @@ struct HighwayHUD: View {
                 Text(verbatim: "×\(level)")
                     .font(Typeface.number(17))
                     .foregroundStyle(level >= 2 ? tint : Palette.inkSoft)
-                    .contentTransition(.numericText(value: Double(level)))
+                    .contentTransition(digitTransition(level))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
             }
