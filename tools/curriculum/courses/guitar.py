@@ -451,6 +451,20 @@ UNIT_3 = unit("gtr-3", "First chords", "E minor, E, A minor and A, played cleanl
         listen("Which chord is minor?", [tones(Am), tones(A)], FIRST_SECOND, 0),
         progression([(A, 1), (E, 1), (A, 1), (E, 1)], HALVES, bpm=60),
     ], minutes=5, xp=25),
+    # Dust on the Dashboard (A, 100 bpm): every verse ends on E, E, A, A; its tune there uses the notes of the E and A
+    # shapes (G sharp, A, C sharp) plus D and the open strings.
+    spotlight("gtr-3", "Dust on the Dashboard", [
+        introduce("Country on E and A", "Dust on the Dashboard is a Timbre Original: country in A. Every verse ends on two "
+                  "bars of E and two of A, the change you just learned. See the shape, move early and land on beat one.",
+                  shape(E)),
+        listen("Does this end at home?", [tones(E), tones(A)], HOME, 0),
+        progression([(E, 2), (A, 2)], ONCE, bpm=60),
+        progression([(E, 2), (A, 2)] * 2, HALVES, bpm=63),
+        notes(G, ["B3", "E4", "D4", "B3", "C#4", "B3", "G#3", "B3"], hint="Over E: open B, open E, D at fret 3 on string 2, "
+              "C sharp at fret 2, then G sharp at fret 1 on string 3."),
+        along(G, f"{DUST_3} {DUST_4}", bpm=66, title="The end of the verse"),
+        progression([(E, 2), (A, 2)] * 2, QUARTERS, bpm=72),
+    ]),
     lesson("gtr-3-7", "Chord-change challenge", [
         explain("Four chords, clean changes", "No new ideas: E minor, E, A minor and A. Land each shape cleanly, "
                 "then keep the changes steady."),
@@ -466,6 +480,8 @@ UNIT_3 = unit("gtr-3", "First chords", "E minor, E, A minor and A, played cleanl
 ])
 
 # ================================================================ 4. Strumming
+
+RADIO_LINE = " ".join(RADIO_HOOK.split()[:12])      # Low Tide Radio's hook, first line: two bars, over E minor and A
 
 UNIT_4 = unit("gtr-4", "Strumming", "Downstrokes, down-up eighths, accents and a strumming hand that never stops.", [
     lesson("gtr-4-1", "One strum per beat", [
@@ -524,6 +540,20 @@ UNIT_4 = unit("gtr-4", "Strumming", "Downstrokes, down-up eighths, accents and a
         strum(Am, FOLK, bpm=66, bars=2),
         strum(E, FOLK, bpm=66, bars=2),
     ], minutes=5, xp=25),
+    # Low Tide Radio (E minor, 80 bpm): reggae, E minor and A a bar each, the guitar only on the ands: the pendulum hand.
+    spotlight("gtr-4", "Low Tide Radio", [
+        introduce("Reggae on the ands", "Low Tide Radio is a Timbre Original: laid-back reggae on E minor and A. The guitar "
+                  "plays only the ands. Keep your hand swinging down and up, miss the strings on each number and catch "
+                  "every and.", rhythm(OFFBEAT)),
+        tap(OFFBEAT, bpm=66, bars=2),
+        strum(Em, OFFBEAT, bpm=66, bars=2),
+        progression([(Em, 1), (A, 1)] * 2, HALVES, bpm=60),
+        quiz("Where does the guitar play in Low Tide Radio?", ["Only on the ands", "On every number", "Only on beat one"], 0,
+             "Bass and drums hold the numbers. The guitar answers between them, on the ands."),
+        progression([(Em, 1), (A, 1)] * 4, OFFBEAT, bpm=66),
+        along(G, f"{RADIO_LINE} {RADIO_LINE}", bpm=63, title=HOOK),
+        progression([(Em, 1), (A, 1)] * 4, OFFBEAT, bpm=76),
+    ], minutes=6),
     lesson("gtr-4-6", "Strumming challenge", [
         explain("Steady hand, four chords", "No new ideas: quarters, eighths and the folk strum on the chords you know. "
                 "Keep the hand swinging and lean on beat one."),
