@@ -89,6 +89,11 @@ final class AudioService: ObservableObject {
     private var droneSettings: DroneSettings?
     /// What was listening and playing when the current interruption began.
     private var interrupted: Interrupted?
+    #if DEBUG
+    /// The demonstration pitch last started (`startDemo`), so the end of an interruption or a media services reset brings
+    /// it back instead of a microphone that would hear nothing.
+    private var demoFeed: (target: () -> Double?, cued: () -> Bool)?
+    #endif
 
     /// I/O buffers while timing matters (a click, a band, tones, a lesson's onsets and strokes): 5 ms.
     private static let timedBuffer: TimeInterval = 0.005
@@ -278,12 +283,15 @@ final class AudioService: ObservableObject {
     #if DEBUG
     /// The demonstration pitch (TIMBRE_DEMO_PITCH=1), for walkthroughs without a microphone: a plucked string drifting
     /// from 14 cents flat into tune, re-plucked every six seconds. `target` nil is silence; `cued` plays the target in
-    /// tune at once (a note played on time).
+    /// tune at once (a note played on time). With `TIMBRE_DEMO_CLIP` set, a recording plays into `frames` meanwhile
+    /// (`playDemoClip`).
     func startDemo(target: @escaping () -> Double?, cued: @escaping () -> Bool = { false }) {
         guard !running else { return }
         generation += 1
         let token = generation
         running = true; error = nil
+        demoFeed = (target: target, cued: cued)
+        if let clip = Self.demoClip { playDemoClip(clip, generation: token) }
         let start = ProcessInfo.processInfo.systemUptime
         Task { @MainActor [weak self] in
             while let self, self.generation == token, self.running {
@@ -298,6 +306,41 @@ final class AudioService: ObservableObject {
                     self.onReading?(nil, 0, -120)
                 }
                 try? await Task.sleep(for: .milliseconds(16))
+            }
+        }
+    }
+
+    /// `TIMBRE_DEMO_CLIP=<file>`: a recording `AudioClip` can read (an absolute path, or a file name in the app bundle)
+    /// for the demo pitch to play into `frames`; nil when the run names none or the file can't be read.
+    private static let demoClip: AudioClip? = {
+        guard let name = ProcessInfo.processInfo.environment["TIMBRE_DEMO_CLIP"], !name.isEmpty else { return nil }
+        let found: URL? = name.hasPrefix("/") ? URL(fileURLWithPath: name) : Bundle.main.url(forResource: name, withExtension: nil)
+        guard let url = found else { return nil }
+        return try? AudioClip(contentsOf: url)
+    }()
+
+    /// Plays `clip` on a loop into `frames` while the demo pitch of generation `token` runs, as the microphone's tap
+    /// feeds them: in the tap's own buffers (`AudioClip.tapFrames`) at their real-time pace, on the analysis queue, set
+    /// aside while the app's own voice speaks. A lesson's analysers (chords, strokes, onsets) hear the recording as a
+    /// take; the demo pitch still gives the readings.
+    private func playDemoClip(_ clip: AudioClip, generation token: Int) {
+        let buffers = clip.buffers(), rate = clip.sampleRate
+        guard !buffers.isEmpty, rate > 0 else { return }
+        let frames = self.frames, queue = analysisQueue, gate = SpeechGate.shared
+        let period = Double(AudioClip.tapFrames) / rate
+        let start = ProcessInfo.processInfo.systemUptime
+        Task { @MainActor [weak self] in
+            var sent = 0
+            while let self, self.generation == token, self.running {
+                let due = Int((ProcessInfo.processInfo.systemUptime - start) / period)
+                if due > sent {
+                    let batch = (sent..<due).map { buffers[$0 % buffers.count] }
+                    sent = due
+                    queue.async {
+                        for buffer in batch where !gate.isQuiet { frames.send(buffer, rate: rate) }
+                    }
+                }
+                try? await Task.sleep(for: .milliseconds(10))
             }
         }
     }
@@ -445,11 +488,13 @@ final class AudioService: ObservableObject {
     }
 
     /// What is listening and playing now that can come back later: the microphone, the Metronome tool's click and
-    /// the drone. A lesson's click and band never come back (their take can't pick up in the middle).
+    /// the drone. A lesson's click and band never come back (their take can't pick up in the middle). A demonstration
+    /// pitch (running without a tap) comes back as itself, never as the microphone.
     private func snapshot() -> Interrupted {
-        Interrupted(capture: running ? captureSettings : nil,
+        Interrupted(capture: running && tapInstalled ? captureSettings : nil,
                     metronome: metronomeRunning && metronomeOwnedByTool ? metronomeSettings : nil,
-                    drone: droneRunning ? droneSettings : nil)
+                    drone: droneRunning ? droneSettings : nil,
+                    demo: running && !tapInstalled)
     }
 
     /// Brings back what `snapshot` saw, unless it is already going again; the microphone once the app is in front.
@@ -469,6 +514,9 @@ final class AudioService: ObservableObject {
                 resumeWhenActive = capture
             }
         }
+        #if DEBUG
+        if snapshot.demo, !running, let demo = demoFeed { startDemo(target: demo.target, cued: demo.cued) }
+        #endif
     }
 
     /// A call, Siri or an alarm took the audio: everything stops, and what was going is remembered for the end.
@@ -1133,6 +1181,15 @@ final class AudioSessionOwner: @unchecked Sendable {
             lock.unlock()
         }
     }
+
+    /// `prepareInterfaceSound`, then whether the app's own sounds play in the ambient session now (mixed with what the
+    /// user is listening to, silent with the Ring/Silent switch): false while an engine holds the session or is still
+    /// letting it go, where a sound would play through the lessons' session instead.
+    func interfaceSoundIsAmbient() -> Bool {
+        prepareInterfaceSound()
+        lock.lock(); defer { lock.unlock() }
+        return holders.isEmpty && !letting && setting == .ambient
+    }
 }
 
 /// How the microphone was started.
@@ -1146,8 +1203,14 @@ private struct MetronomeSettings {
 }
 /// How the drone was started.
 private struct DroneSettings { let tonic: Double; let voice: DroneRenderer.Voice; let fifth: Bool }
-/// What can come back after an interruption or a media services reset (`AudioService.snapshot`).
-private struct Interrupted { let capture: CaptureSettings?; let metronome: MetronomeSettings?; let drone: DroneSettings? }
+/// What can come back after an interruption or a media services reset (`AudioService.snapshot`); `demo`: a
+/// demonstration pitch stood in for the microphone.
+private struct Interrupted {
+    let capture: CaptureSettings?
+    let metronome: MetronomeSettings?
+    let drone: DroneSettings?
+    let demo: Bool
+}
 /// The step's band, the metronome bar it starts on, and whether it may play on the speaker.
 private struct BandRequest { let arrangement: BandArrangement; let firstBar: Int; let onSpeaker: Bool }
 /// A tone waiting for its rendering; `reference` tones resume capture when they end.

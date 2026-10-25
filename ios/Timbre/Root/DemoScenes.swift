@@ -13,8 +13,9 @@ import TimbreCore
 ///
 /// Hooks, a line or two each: `Bootstrap.load` calls `start`, `AppStore.startListening` asks `steadyPitch`,
 /// `LessonPlayer` asks `lessonStart` (init) and `holds` (advance), `SongPerformStep` asks `performBeat` and
-/// `stillScore`, `ShowMeStage` carries `ShowMeProbe` and the explanation's card `ShowMeHostProbe`. Stage code may read
-/// `marketingScale` (inside `#if DEBUG`) to exaggerate motion for the camera.
+/// `stillScore`, `ChordStep` hands its strum handler to `strumWithSilentString`, `ShowMeStage` carries `ShowMeProbe` and
+/// the explanation's card `ShowMeHostProbe`. Stage code may read `marketingScale` (inside `#if DEBUG`) to exaggerate
+/// motion for the camera.
 ///
 /// - `tune-locked` (frame #1): the demo pitch plays the selected string steadily in tune, so each string locks after
 ///   the tracker's 0.65 s hold. The two lowest strings lock first (✓ on their chips), then the third locks and stays
@@ -34,6 +35,9 @@ import TimbreCore
 /// - `lesson-chord` (frame #3): the first guitar lesson with a chord ("Your first chord: E minor") opens on its chord
 ///   step with the day's tune check done. The demo pitch plays the chord string by string, every string lights, and
 ///   the step stays on "Every string rings" instead of moving on.
+/// - `lesson-dead-string`: the same chord step, where one strum leaves a string silent (`strumWithSilentString`): the
+///   strings that rang tick, and the one that didn't is named with what usually stops it ("String 3 isn't ringing").
+///   The demo pitch stays quiet, so nothing plays the chord string by string and the step waits on that picture.
 /// - `song-perform` (frame #2, the App Preview): a song (`TIMBRE_SCENE_SONG`, Kite Weather by default) opens on its
 ///   performance (the final take over the band, on the fretboard runway with its words) and starts the take by itself a
 ///   moment later, at `performBar` (`TIMBRE_SCENE_BAR`; by default the second half of Kite Weather's first chorus).
@@ -46,25 +50,25 @@ import TimbreCore
 enum DemoScene: String {
     case tuneLocked = "tune-locked"
     case lessonChord = "lesson-chord"
+    case lessonDeadString = "lesson-dead-string"
     case songPerform = "song-perform"
     case showMe = "show-me"
     case previewTune = "preview-tune"
     case instrumentWall = "instrument-wall"
 
-    static let current: DemoScene? = ProcessInfo.processInfo.environment["TIMBRE_SCENE"].flatMap(DemoScene.init(rawValue:))
+    static let current: DemoScene? = TestSupport.value(.scene).flatMap(DemoScene.init(rawValue:))
 
     /// What the UI test asked for besides the scene, all optional.
     enum Option {
-        private static let environment = ProcessInfo.processInfo.environment
         /// The instrument the tuner opens on (a catalog id such as "violin.standard.4").
-        static let instrument = environment["TIMBRE_SCENE_INSTRUMENT"].flatMap { $0.isEmpty ? nil : $0 }
+        static let instrument = TestSupport.value(.sceneInstrument).flatMap { $0.isEmpty ? nil : $0 }
         /// `song-perform`: the song (a lesson id) and the bar its take starts at.
-        static let song = environment["TIMBRE_SCENE_SONG"].flatMap { $0.isEmpty ? nil : $0 }
-        static let bar = environment["TIMBRE_SCENE_BAR"].flatMap { Int($0) }
+        static let song = TestSupport.value(.sceneSong).flatMap { $0.isEmpty ? nil : $0 }
+        static let bar = TestSupport.value(.sceneBar).flatMap { Int($0) }
         /// `tune-locked`: pluck the held string again every `cometPeriod`, so its lock shimmer runs again.
-        static let comet = environment["TIMBRE_SCENE_COMET"] == "1"
+        static let comet = TestSupport.isOn(.sceneComet)
         /// `preview-tune`: a file the UI test creates once the 3D stage is up; the scene starts then.
-        static let cue = environment["TIMBRE_SCENE_CUE"].flatMap { $0.isEmpty ? nil : $0 }
+        static let cue = TestSupport.value(.sceneCue).flatMap { $0.isEmpty ? nil : $0 }
     }
 
     /// How much a store or preview capture exaggerates the stage's motion (the live string's swing): 3 in a scene, 1
@@ -91,9 +95,11 @@ enum DemoScene: String {
             Task { @MainActor in await DemoScene.lockStrings(store) }
         case .previewTune?:
             Task { @MainActor in await PreviewTune.run(store) }
-        case .lessonChord?, .showMe?:
+        case .lessonChord?, .showMe?, .lessonDeadString?:
             // Learn opens it out of its Continue card, as it opens onboarding's first lesson.
             guard let lesson = DemoScene.chordLesson(store) else { return }
+            // A strum with a silent string is the picture: the demo pitch never plays a note that would tick it off.
+            if current == .lessonDeadString { store.demoNoteDue = { false } }
             store.pendingLessonId = lesson.id
             store.selectedTab = .learn
         case .songPerform?:
@@ -117,12 +123,13 @@ enum DemoScene: String {
 
     // MARK: Lessons
 
-    /// The run `LessonPlayer` opens `lesson` with: in `lesson-chord`, at its first chord step; in `show-me`, at the step
-    /// that explains that chord on its card; in `song-perform`, at the song's last step, its performance (nil otherwise).
+    /// The run `LessonPlayer` opens `lesson` with: in `lesson-chord` and `lesson-dead-string`, at its first chord step;
+    /// in `show-me`, at the step that explains that chord on its card; in `song-perform`, at the song's last step, its
+    /// performance (nil otherwise).
     static func lessonStart(_ lesson: Lesson) -> LessonRun? {
         let start: Int?
         switch current {
-        case .lessonChord?: start = lesson.steps.firstIndex(where: DemoScene.isChord)
+        case .lessonChord?, .lessonDeadString?: start = lesson.steps.firstIndex(where: DemoScene.isChord)
         case .showMe?: start = lesson.steps.firstIndex(where: DemoScene.explainsChord)
         case .songPerform? where lesson.id == performSongId: start = lesson.steps.isEmpty ? nil : lesson.steps.count - 1
         default: start = nil
@@ -152,6 +159,39 @@ enum DemoScene: String {
 
     @MainActor private static func chordLesson(_ store: AppStore) -> Lesson? {
         store.curriculum.course(id: "guitar")?.lessons.first { lesson in lesson.steps.contains(where: DemoScene.isChord) }
+    }
+
+    // MARK: A strum with a silent string
+
+    /// How long after the chord step starts listening `lesson-dead-string` strums: past the card's entrance.
+    static let deadStringDelay: Duration = .seconds(1.5)
+
+    /// `lesson-dead-string`: the chord step hears one strum, `deadStringDelay` after it starts listening, the fixed
+    /// reading `silentStrum` (every string ringing in tune but one), so it names the string that didn't ring. `hear` is
+    /// the step's own strum handler, given the reading as its analyser would give it. Does nothing in any other run.
+    @MainActor static func strumWithSilentString(pitches: [Double], hear: @escaping @MainActor (PolyReading) -> Void) {
+        guard current == .lessonDeadString, let reading = silentStrum(pitches: pitches) else { return }
+        Task { @MainActor in
+            try? await Task.sleep(for: deadStringDelay)
+            hear(reading)
+        }
+    }
+
+    /// One strum of a chord whose strings sound at `pitches` (Hz, lowest string first): each heard at its own pitch but
+    /// `silentString`'s, which isn't heard at all. Nil when no string can be called silent.
+    static func silentStrum(pitches: [Double]) -> PolyReading? {
+        guard let silent = silentString(pitches) else { return nil }
+        let strings = pitches.indices.map { index in
+            PolyReading.StringReading(index: index, targetHz: pitches[index], frequencyHz: index == silent ? nil : pitches[index],
+                                      confidence: 0.9, evidence: .fundamental)
+        }
+        return PolyReading(strings: strings, onsetTime: 0, levelDbfs: -24)
+    }
+
+    /// The string left silent: the highest one clear of every other string's harmonics (`ChordRing.isClear`), so a
+    /// strum without it reads as a dead string rather than an unsure one (on E minor, the open G: string 3).
+    static func silentString(_ pitches: [Double]) -> Int? {
+        pitches.indices.filter { ChordRing.isClear($0, among: pitches) }.max { pitches[$0] < pitches[$1] }
     }
 
     // MARK: A song, performed
@@ -185,7 +225,7 @@ enum DemoScene: String {
     /// the song is on screen, so later runs in the same simulator still open Learn on guitar.
     @MainActor private static func openSong(_ store: AppStore) {
         guard let found = store.curriculum.lesson(id: performSongId) else { return }
-        let own = UserDefaults.standard.string(forKey: "learn.course") ?? "guitar"
+        let own = Preferences.learnCourse
         store.pendingLessonId = found.lesson.id
         store.selectedTab = .learn
         guard own != found.course.id else { return }
@@ -193,8 +233,8 @@ enum DemoScene: String {
             for _ in 0..<50 where store.pendingLessonId != nil { try? await Task.sleep(for: .milliseconds(100)) }
             // Past Learn's own wait for covering screens, so the switch happens behind the open song.
             try? await Task.sleep(for: .milliseconds(2500))
-            guard UserDefaults.standard.string(forKey: "learn.course") == found.course.id else { return }
-            UserDefaults.standard.set(own, forKey: "learn.course")
+            guard Preferences.savedLearnCourse == found.course.id else { return }
+            Preferences.learnCourse = own
         }
     }
 
@@ -359,7 +399,7 @@ final class PreviewRecorder: @unchecked Sendable {
     @MainActor private var forwarded: ((Double?, Double, Double) -> Void)?
 
     private init() {
-        let asked = ProcessInfo.processInfo.environment["TIMBRE_PREVIEW_AUDIO"] ?? ""
+        let asked = TestSupport.value(.previewAudio) ?? ""
         folder = asked.isEmpty ? nil : PreviewRecorder.usableFolder(asked)
     }
 
@@ -838,7 +878,7 @@ struct ShowMeProbe: View {
     let landingStep: Double
     let ringing: Int
 
-    private static let enabled = ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1"
+    private static let enabled = TestSupport.isOn(.debugState)
 
     @ViewBuilder var body: some View {
         if Self.enabled {
@@ -884,7 +924,7 @@ struct ShowMeHostProbe: View {
     let first: Bool
     let model: String?
 
-    private static let enabled = ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1"
+    private static let enabled = TestSupport.isOn(.debugState)
 
     @ViewBuilder var body: some View {
         if Self.enabled {

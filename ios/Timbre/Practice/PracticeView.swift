@@ -73,13 +73,19 @@ struct PracticeView: View {
         TabHeader(title: "Practice", showsToday: false)
     }
 
-    private var sideQuests: [Quest] { GameChallenge.listed(DailySet.sideQuests(store.quests, beside: store.dailySet)) }
+    /// Calm mode (`UserSettings.calmMode`): no level card and no quests on the hub.
+    private var calm: Bool { store.settings.calmMode }
+
+    /// The quests Today doesn't already show; none in Calm mode.
+    private var sideQuests: [Quest] {
+        calm ? [] : GameChallenge.listed(DailySet.sideQuests(store.quests, beside: store.dailySet))
+    }
 
     private var compactHub: some View {
         VStack(alignment: .leading, spacing: 22) {
             header
             DailySetCard { open($0) }
-            levelCard
+            if !calm { levelCard }
             let sideQuests = self.sideQuests
             if !sideQuests.isEmpty { questSection(sideQuests) }
             gamesSection
@@ -92,7 +98,8 @@ struct PracticeView: View {
     /// or none is left; under them the ear games stand as tall tiles side by side, the tools beside them as a grid of
     /// the same height. Portrait (two columns): Today beside the level, the quests two by two (the next badge beside a
     /// last one alone), the games side by side, then the tools as a grid of large tiles. The games' previews grow with
-    /// the window's height (`gameStage`), so the hub reaches the fold instead of stopping halfway down it.
+    /// the window's height (`gameStage`), so the hub reaches the fold instead of stopping halfway down it. Calm mode
+    /// leaves the level and the quests out: the next badge takes their place beside Today.
     private func wideHub(_ columns: CardColumns, height: CGFloat) -> some View {
         let three = columns.count >= 3
         let quests = sideQuests
@@ -105,11 +112,13 @@ struct PracticeView: View {
                 HStack(alignment: .top, spacing: CardColumns.spacing) {
                     DailySetCard { open($0) }
                         .frame(width: columns.unit)
-                    levelTile
-                        .frame(width: side ? columns.unit : columns.span(2))
+                    if !calm {
+                        levelTile
+                            .frame(width: side ? columns.unit : columns.span(2))
+                    }
                     if side {
                         sideColumn(quests, badge: badge)
-                            .frame(width: columns.unit)
+                            .frame(width: calm ? columns.span(2) : columns.unit)
                             .frame(maxHeight: .infinity, alignment: .top)
                     }
                 }
@@ -124,8 +133,13 @@ struct PracticeView: View {
                 HStack(alignment: .top, spacing: CardColumns.spacing) {
                     DailySetCard { open($0) }
                         .frame(width: columns.unit)
-                    levelTile
-                        .frame(width: columns.unit)
+                    if !calm {
+                        levelTile
+                            .frame(width: columns.unit)
+                    } else if let badge {
+                        nextBadgeCard(badge)
+                            .frame(width: columns.unit)
+                    }
                 }
                 .fixedSize(horizontal: false, vertical: true)
                 if !quests.isEmpty { questGrid(quests, badge: badge) }
@@ -568,20 +582,23 @@ struct PracticeView: View {
         var id: PracticeRoute { route }
     }
 
-    /// The same tools as the phone's rows, in the same order (the fretted ones only on a fretted instrument). Chords is
-    /// free (its open-position shapes and Check; barre shapes are Pro inside it, `FreeTier`); the drone, scales and
-    /// intonation are Pro.
+    /// The same tools as the phone's rows, in the same order (the fretted ones only on a fretted instrument). Which are
+    /// Pro is the free plan's own table (`FreeTier`): Chords is free (its open-position shapes and Check; barre shapes
+    /// are Pro inside it); the drone, scales and intonation are Pro.
     private var tools: [Tool] {
-        var list = [Tool(route: .metronome, symbol: "metronome", title: "Metronome", pro: false),
-                    Tool(route: .drone, symbol: "waveform.path", title: "Drone", pro: true),
+        var list = [Tool(route: .metronome, symbol: "metronome", title: "Metronome", pro: Self.pro(.metronome)),
+                    Tool(route: .drone, symbol: "waveform.path", title: "Drone", pro: Self.pro(.drone)),
                     Tool(route: .voice, symbol: "music.mic", title: "Voice", pro: false)]
         if fretted {
-            list += [Tool(route: .chords, symbol: "hand.raised.fingers.spread", title: "Chords", pro: false),
-                     Tool(route: .scales, symbol: "point.3.connected.trianglepath.dotted", title: "Scales", pro: true),
-                     Tool(route: .intonation, symbol: "ruler", title: "Intonation", pro: true)]
+            list += [Tool(route: .chords, symbol: "hand.raised.fingers.spread", title: "Chords", pro: Self.pro(.chords)),
+                     Tool(route: .scales, symbol: "point.3.connected.trianglepath.dotted", title: "Scales", pro: Self.pro(.scales)),
+                     Tool(route: .intonation, symbol: "ruler", title: "Intonation", pro: Self.pro(.intonation))]
         }
         return list
     }
+
+    /// A tool the free plan doesn't open (`FreeTier.opens`).
+    private static func pro(_ tool: FreeTier.Tool) -> Bool { !FreeTier.opens(tool) }
 
     /// A large tool tile: the tool working in miniature (the metronome swinging at the last tempo, the drone's dial,
     /// the chord boxes, the scale's box, the harmonic's node, a voice's trace), its name and what the preview shows
@@ -645,15 +662,15 @@ struct PracticeView: View {
     }
 
     @ViewBuilder private var firstTools: some View {
-        tool(.metronome, "metronome", "Metronome", pro: false)
-        tool(.drone, "waveform.path", "Drone", pro: true)
+        tool(.metronome, "metronome", "Metronome", pro: Self.pro(.metronome))
+        tool(.drone, "waveform.path", "Drone", pro: Self.pro(.drone))
         tool(.voice, "music.mic", "Voice", pro: false)
     }
 
     @ViewBuilder private var frettedTools: some View {
-        tool(.chords, "hand.raised.fingers.spread", "Chords", pro: false)
-        tool(.scales, "point.3.connected.trianglepath.dotted", "Scales", pro: true)
-        tool(.intonation, "ruler", "Intonation", pro: true)
+        tool(.chords, "hand.raised.fingers.spread", "Chords", pro: Self.pro(.chords))
+        tool(.scales, "point.3.connected.trianglepath.dotted", "Scales", pro: Self.pro(.scales))
+        tool(.intonation, "ruler", "Intonation", pro: Self.pro(.intonation))
     }
 
     private func tool(_ route: PracticeRoute, _ symbol: String, _ title: LocalizedStringKey, pro: Bool) -> some View {

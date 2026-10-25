@@ -42,7 +42,7 @@ struct PitchSniperView: View {
     private var flashColor: Color {
         switch flash {
         case .bullseye: return Palette.mint
-        case .near: return Palette.amber
+        case .near: return Palette.adjust
         default: return Palette.spotlight
         }
     }
@@ -92,7 +92,7 @@ struct PitchSniperView: View {
                 if let cents {
                     Text(abs(cents) <= PitchSniper.bullseyeCents ? String(localized: "Hold it…") : cents < 0 ? String(localized: "\(Int(abs(cents).rounded())) cents flat") : String(localized: "\(Int(abs(cents).rounded())) cents sharp"))
                         .font(Typeface.label(17))
-                        .foregroundStyle(abs(cents) <= PitchSniper.bullseyeCents ? Palette.mint : Palette.amber)
+                        .foregroundStyle(abs(cents) <= PitchSniper.bullseyeCents ? Palette.mint : Palette.adjust)
                 } else {
                     // The microphone's status, set as every practice tool sets it.
                     Text(audio.running ? "Listening…" : "Tap Listen to start")
@@ -137,7 +137,7 @@ struct PitchSniperView: View {
         guard i < game.outcomes.count else { return .white.opacity(0.08) }
         switch game.outcomes[i] {
         case .bullseye: return Palette.mint
-        case .near: return Palette.amber.opacity(0.7)
+        case .near: return Palette.adjust.opacity(0.7)
         case .miss: return Palette.danger.opacity(0.55)
         }
     }
@@ -213,7 +213,7 @@ struct PitchSniperView: View {
         store.automatic = false
         let notes = store.courses.map(\.targetMidi)
         var seed = UInt64(Date().timeIntervalSince1970)
-        if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" { seed = 7 }
+        if TestSupport.isOn(.demoPitch) { seed = 7 }
         let next = PitchSniper(notes: notes.isEmpty ? [57, 60, 64, 67] : notes, fretted: fretted, referenceHz: store.settings.referencePitchHz,
                                seed: seed, hiddenTune: true)
         game = next
@@ -252,7 +252,8 @@ struct PitchSniperView: View {
             Haptics.shared.selection()
             SoundFX.shared.play(.near)
         case .miss:
-            SoundFX.shared.play(.wobble)
+            // The wobble at the note aimed at, so the miss is heard near it.
+            if let finishedRound { SoundFX.shared.playWobble(frequency: finishedRound.frequency) } else { SoundFX.shared.play(.wobble) }
         }
         store.recordProgress(.sniperRound(bullseye: { if case .bullseye = outcome { return true } else { return false } }()), announce: false)
         flashToken += 1
@@ -302,7 +303,7 @@ private struct BullseyeTarget: View {
         let error = cents.map { min(60, abs($0)) }
         let inside = (error ?? .infinity) <= PitchSniper.bullseyeCents
         let near = error.map { max(0, 1 - $0 / 50) } ?? 0
-        BullseyeArt.resonance(&context, center: c, from: bull, to: r, t: t, strength: near, tint: inside ? Palette.mint : Palette.amber)
+        BullseyeArt.resonance(&context, center: c, from: bull, to: r, t: t, strength: near, tint: inside ? Palette.mint : Palette.adjust)
         let lit: Double = flash.map { if case .bullseye = $0 { return 0.5 } else { return 0.16 } } ?? 0.16
         context.fill(BullseyeArt.circle(c, bull), with: .color(Palette.mint.opacity(lit)))
         context.stroke(BullseyeArt.circle(c, bull), with: .color(Palette.mint), lineWidth: 1.5)
@@ -316,7 +317,7 @@ private struct BullseyeTarget: View {
         let distance = r * CGFloat(min(1, sqrt(error / 60)))
         let angle = (cents < 0 ? Double.pi : 0) + sin(t * 1.3) * 0.35
         let p = CGPoint(x: c.x + CGFloat(cos(angle)) * distance, y: c.y - CGFloat(sin(angle)) * distance)
-        let color = inside ? Palette.mint : Palette.amber
+        let color = inside ? Palette.mint : Palette.adjust
         context.fill(BullseyeArt.circle(p, 22), with: .radialGradient(Gradient(colors: [color.opacity(0.7), .clear]), center: p, startRadius: 0, endRadius: 22))
         context.fill(BullseyeArt.circle(p, 9), with: .color(color))
     }
