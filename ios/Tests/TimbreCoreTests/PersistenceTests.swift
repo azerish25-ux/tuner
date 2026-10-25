@@ -194,6 +194,7 @@ final class PersistenceTests: XCTestCase {
         settings.lastChord = UserSettings.ChordChoice(root: 9, formula: "min"); settings.shownDemos = ["guitar": ["chord:0,2,2,0,0,0"]]
         settings.languageChosen = true; settings.simpleTuner = true; settings.calmMode = true; settings.tuneByFeel = true
         settings.feelTheBeat = true; settings.bandOnSpeaker = true; settings.chartsAsPrinted = true; settings.firstChordDone = true
+        settings.shareUsageData = false
         let data = try JSONEncoder().encode(settings)
         XCTAssertEqual(try JSONDecoder().decode(UserSettings.self, from: data), settings)
         // Every setting is given a value above, so every one is written: a new one left out here fails this count.

@@ -605,9 +605,10 @@ struct StepButton: View {
         Button(action: action) { Text(title) }
             .buttonStyle(PrimaryButtonStyle())
             .disabled(!enabled)
+            // On the button itself, before its keys: an identifier on the whole would reach the hidden key buttons too.
+            .accessibilityIdentifier("lesson.continue")
             .lessonControl(.primary, enabled: enabled, perform: action)
             .padding(.horizontal, inset ? Metrics.gutter : 0).padding(.bottom, inset ? 12 : 0)
-            .accessibilityIdentifier("lesson.continue")
     }
 }
 
@@ -669,6 +670,8 @@ struct HearItButton: View {
 struct LessonBarButton: View {
     let title: LocalizedStringKey
     var role: LessonControl? = nil
+    /// The button's identifier, set on the button itself so the hidden key buttons of a `role` don't share it.
+    var identifier: String? = nil
     let action: () -> Void
     @Environment(\.timbreGlassSpace) private var glass
 
@@ -685,6 +688,7 @@ struct LessonBarButton: View {
                 .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())
+        .modifier(OptionalIdentifier(id: identifier))
         .lessonControl(role ?? .again, enabled: role != nil, perform: action)
     }
 }

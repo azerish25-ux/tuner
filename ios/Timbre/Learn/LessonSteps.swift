@@ -2018,8 +2018,7 @@ struct TuneCheckStep: View {
             MicrophoneHint()
             LessonActionBar {
                 // The screen's one action: a pedal or the space bar moves past it too.
-                LessonBarButton(title: "My strings are tuned — skip", role: .primary) { finish() }
-                    .accessibilityIdentifier("lesson.tunecheck.skip")
+                LessonBarButton(title: "My strings are tuned — skip", role: .primary, identifier: "lesson.tunecheck.skip") { finish() }
             }
         }
         .onAppear { listen(); introduce(after: 1.4) }

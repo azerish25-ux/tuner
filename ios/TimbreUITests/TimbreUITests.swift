@@ -811,11 +811,16 @@ final class TimbreUITests: XCTestCase {
         settle(1)
         let folk = app.buttons["Folk & world strings"].firstMatch
         let guitarChip = app.buttons["Guitar"].firstMatch
-        for _ in 0..<4 where !(folk.exists && folk.isHittable) {
+        // From one snapshot (`isHittable` throws while the chip is off the rail's edge): its centre is on screen.
+        func onScreen(_ target: XCUIElement) -> Bool {
+            guard let box = (try? target.snapshot())?.frame, !box.isEmpty, box.midX.isFinite else { return false }
+            return app.frame.insetBy(dx: 8, dy: 8).contains(CGPoint(x: box.midX, y: box.midY))
+        }
+        for _ in 0..<5 where !onScreen(folk) {
             if guitarChip.exists { guitarChip.swipeLeft() } else { break }
             settle(0.6)
         }
-        if folk.exists && folk.isHittable { folk.tap() }
+        if onScreen(folk) { tapIfPresent(folk) }
         settle(1)
         let picture = stillScreenshot(timeout: 4)
         let banjo = element("instrument.22_folk_world_strings_banjo_5_string")

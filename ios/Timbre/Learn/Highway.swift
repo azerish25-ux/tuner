@@ -506,8 +506,8 @@ struct AlongStep: View {
             if loop == nil && session.accuracy < 0.8 && ladder.rung > 0 {
                 Button { ladder.select(0); reset() } label: { Label("Try it at \(Int(ladder.tempo(at: 0))) BPM", systemImage: "tortoise.fill") }
                     .font(Typeface.label(.body)).foregroundStyle(accent).padding(.top, 2)
-                    .lessonControl(.slower) { ladder.select(0); reset() }
                     .accessibilityIdentifier("along.slower")
+                    .lessonControl(.slower) { ladder.select(0); reset() }
             }
         }
     }
@@ -585,19 +585,19 @@ struct AlongStep: View {
                         // The loop again until it's clean; then Done (back to the whole tune's results) comes first.
                         let clean = session.accuracy >= TempoLadder.stepUpAccuracy
                         doneButton("Try again", primary: !clean) { reset() }
-                            .lessonControl(.again) { reset() }
                             .accessibilityIdentifier("along.again")
+                            .lessonControl(.again) { reset() }
                         doneButton("Done", primary: clean) { exitLoop() }
-                            .lessonControl(.primary) { exitLoop() }
                             .accessibilityIdentifier("along.loop.exit")
+                            .lessonControl(.primary) { exitLoop() }
                     } else {
                         // A weak take puts another go first: Try again takes the filled button, Continue steps back.
                         doneButton("Try again", primary: retryFirst) { reset() }
-                            .lessonControl(.again) { reset() }
                             .accessibilityIdentifier("along.again")
+                            .lessonControl(.again) { reset() }
                         doneButton("Continue", primary: !retryFirst) { complete() }
-                            .lessonControl(.primary) { complete() }
                             .accessibilityIdentifier("lesson.continue")
+                            .lessonControl(.primary) { complete() }
                     }
                 }
                 .padding(.horizontal, Metrics.gutter).padding(.bottom, 12)

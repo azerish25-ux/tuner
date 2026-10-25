@@ -823,7 +823,7 @@ private struct SpokenLabel: ViewModifier {
 }
 
 /// An accessibility identifier when there is one.
-private struct OptionalIdentifier: ViewModifier {
+struct OptionalIdentifier: ViewModifier {
     let id: String?
 
     @ViewBuilder func body(content: Content) -> some View {
