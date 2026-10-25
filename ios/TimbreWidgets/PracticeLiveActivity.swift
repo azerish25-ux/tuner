@@ -5,9 +5,9 @@ import WidgetKit
 private typealias SessionState = PracticeActivityAttributes.ContentState
 
 /// The practice session as a Live Activity: the Lock Screen banner, the Dynamic Island (compact, minimal, expanded)
-/// and the Apple Watch Smart Stack. Studio Noir: the dark stage, mint for what is running, amber for the downbeat,
-/// the flame for the streak. The session clock counts on its own from `since` (`Text(timerInterval:)`): the app
-/// updates the activity only when something changes, at most once a second.
+/// and the Apple Watch Smart Stack. Studio Noir: the dark stage, mint for what is running, white for the downbeat (as
+/// the metronome's meter shows an accent), the flame for the streak. The session clock counts on its own from `since`
+/// (`Text(timerInterval:)`): the app updates the activity only when something changes, at most once a second.
 /// Tapping it opens Timbre where the player left it (no URL, so a lesson or the metronome stays on screen).
 struct PracticeLiveActivity: Widget {
     var body: some WidgetConfiguration {
@@ -229,7 +229,7 @@ private struct CompactLeading: View {
                 .foregroundStyle(stale ? Palette.inkFaint : Palette.mint)
             // The beat dot: the bar's downbeat colour, so the click reads at a glance.
             if state.mode == .metronome && !stale {
-                Circle().fill(Palette.amber).frame(width: 6, height: 6)
+                Circle().fill(Palette.ink).frame(width: 6, height: 6)
             }
         }
         .padding(.leading, 2)
@@ -340,7 +340,7 @@ private struct SessionGlyph: View {
         .frame(width: size, height: size)
         .overlay(alignment: .topTrailing) {
             if state.mode == .metronome && !stale {
-                Circle().fill(Palette.amber)
+                Circle().fill(Palette.ink)
                     .frame(width: size * 0.22, height: size * 0.22)
                     .overlay(Circle().stroke(Palette.stage, lineWidth: 2))
             }
@@ -410,7 +410,7 @@ private struct DroneChip: View {
     }
 }
 
-/// The bar as the metronome's meter card shows it: amber accents, mint beats, silent beats dim.
+/// The bar as the metronome's meter card shows it: white accents, mint beats, silent beats dim.
 private struct BeatDots: View {
     let levels: [Int]
     var size: CGFloat = 8
@@ -429,7 +429,7 @@ private struct BeatDots: View {
 
     private static func color(_ level: Int) -> Color {
         switch level {
-        case 2: return Palette.amber
+        case 2: return Palette.ink
         case 1: return Palette.mint
         default: return Palette.line
         }

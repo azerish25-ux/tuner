@@ -6,9 +6,10 @@ import SwiftUI
 // and in Low Power Mode.
 
 enum ShaderFX {
-    /// Whether the decorative shaders may run now: not with Reduce Motion, not in Low Power Mode.
+    /// Whether the decorative shaders may run now: not with Reduce Motion, not in Low Power Mode (nor on a resting
+    /// stage, `TestSupport.stageResting`).
     static func allowed(reduceMotion: Bool) -> Bool {
-        !reduceMotion && !ProcessInfo.processInfo.isLowPowerModeEnabled
+        !reduceMotion && !ProcessInfo.processInfo.isLowPowerModeEnabled && !TestSupport.stageResting
     }
 }
 

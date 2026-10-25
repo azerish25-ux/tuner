@@ -873,9 +873,9 @@ struct InstrumentStage: View {
     @ObservedObject private var power = StagePower.shared
     #if DEBUG
     /// Debug builds launched with TIMBRE_STAGE_DEBUG=1 print the load state over the stage.
-    private let debug = ProcessInfo.processInfo.environment["TIMBRE_STAGE_DEBUG"] == "1"
+    private let debug = TestSupport.isOn(.stageDebug)
     /// Debug builds launched with TIMBRE_DEBUG_STATE=1 say how the close-up frames the head (`headProbe`).
-    private static let probe = ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1"
+    private static let probe = TestSupport.isOn(.debugState)
     #endif
 
     private var controller: StageController { box.controller }

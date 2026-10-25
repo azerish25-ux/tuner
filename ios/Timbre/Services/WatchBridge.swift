@@ -131,14 +131,13 @@ final class WatchBridge: NSObject, WCSessionDelegate {
         }
     }
 
-    /// The arc colour on the Today ring (`DailyActivity.Kind.tint`), by accent name.
+    /// The arc colour on the Today ring (`DailyActivity.Kind.tint`), by accent name: an activity is a category, never a
+    /// status, so the tools and the review are "neutral" (`Palette.accentNeutral`, steel) and the lesson is learning's
+    /// "violet". Mint, amber and coral mean in tune, adjust and wrong, on the wrist as on the iPhone.
     private static func tint(_ kind: DailyActivity.Kind) -> String {
         switch kind {
-        case .tune: return "amber"
-        case .ear, .review: return "mint"
-        case .chord, .scale, .voice, .drone: return "sky"
-        case .rhythm: return "coral"
         case .lesson: return "violet"
+        case .tune, .ear, .chord, .scale, .rhythm, .voice, .drone, .review: return "neutral"
         }
     }
 

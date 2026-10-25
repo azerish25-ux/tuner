@@ -24,6 +24,8 @@ enum TestSupport {
         case debugState = "TIMBRE_DEBUG_STATE"
         /// "1": the 3D stage draws its load state.
         case stageDebug = "TIMBRE_STAGE_DEBUG"
+        /// "1": everything that moves on its own rests as in Low Power Mode (`stageResting`).
+        case stageRest = "TIMBRE_STAGE_REST"
         /// A capture scene's name (`DemoScene`).
         case scene = "TIMBRE_SCENE"
         /// A capture scene's instrument, song, bar, lock comet and cue file.
@@ -61,6 +63,11 @@ enum TestSupport {
 
     /// The run set `key` to "1".
     static func isOn(_ key: Key) -> Bool { value(key) == "1" }
+
+    /// The run asked for a resting stage (`Key.stageRest`): the 3D stages stay on their pictures, the shader effects
+    /// and the animations that run while seen hold still, as they do in Low Power Mode, so a screen that never stops
+    /// moving can still be read whole (an accessibility audit times out on one). Read once; false in a release build.
+    static let stageResting: Bool = isOn(.stageRest)
 
     /// A UI test's own Application Support folder (`TimbreUITests/<storage id>`), so each test starts from its own
     /// saved state; nil outside one (and in a release build), where the app's own folders are used.
