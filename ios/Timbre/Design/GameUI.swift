@@ -2,9 +2,9 @@ import SwiftUI
 import TimbreCore
 import UIKit
 
-/// The streak: the flame (lit once today counts), the day count and any banked freezes, in one capsule that is the
-/// same on every tab; it taps through to Progress. Today's set is drawn on its own cards (Learn, Practice) and spoken
-/// here as the chip's value, never drawn as a ring that would change the chip's shape from tab to tab.
+/// The streak: its stage lamp (lit once today counts), the day count and any banked freezes, in one capsule that is
+/// the same on every tab; it taps through to Progress. Today's set is drawn on its own cards (Learn, Practice) and
+/// spoken here as the chip's value, never drawn as a ring that would change the chip's shape from tab to tab.
 /// The capsule is at least 36 pt and grows with its text; the target is at least 44 pt. Like a bar item it stops
 /// growing at AX1 and offers the Large Content Viewer.
 struct StreakChip: View {
@@ -15,7 +15,10 @@ struct StreakChip: View {
     var action: () -> Void = {}
     /// The capsule's side inset, growing with the count's text.
     @ScaledMetric(relativeTo: .subheadline) private var inset: CGFloat = 12
+    /// The lamp beside the count, growing with it.
+    @ScaledMetric(relativeTo: .footnote) private var lampSize: CGFloat = 16
     @Environment(\.legibilityWeight) private var legibility
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         let _ = legibility
@@ -25,9 +28,11 @@ struct StreakChip: View {
         let done = activities.filter { store.dailyDone($0.kind) }.count
         Button(action: action) {
             HStack(spacing: 5) {
-                Image(systemName: "flame.fill").font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(streak.practicedToday ? Palette.flame : Palette.inkFaint)
-                    .symbolEffect(.bounce, value: streak.current)
+                // A new day on the count: the lamp swells once (it holds its size under Reduce Motion).
+                Glyph(.lamp, size: lampSize, tint: streak.practicedToday ? Palette.flame : Palette.inkFaint)
+                    .phaseAnimator([1.0, 1.18], trigger: streak.current) { lamp, scale in
+                        lamp.scaleEffect(CGFloat(reduceMotion ? 1 : scale), anchor: .bottom)
+                    } animation: { _ in Motion.pop }
                 Text("\(streak.current)").font(Typeface.label(.footnote)).foregroundStyle(Palette.flameInk).monospacedDigit()
                 if store.streakFreezes > 0 {
                     // Banked streak freezes, one flake each.
@@ -63,61 +68,6 @@ struct StreakChip: View {
         if store.streakFreezes > 0 { parts.append(Text("\(store.streakFreezes) streak freezes")) }
         guard let first = parts.first else { return Text(verbatim: "") }
         return parts.dropFirst().reduce(first) { (line: Text, part: Text) -> Text in line + Text(verbatim: ", ") + part }
-    }
-}
-
-/// The streak's flame, alive: a warm halo, the gradient body and a white-hot core that sway and flicker out of
-/// step. Still under Reduce Motion, when `animated` is off (share cards rendered to an image), and whenever it can't
-/// be seen (off screen, the app in the background, Low Power Mode: `animatesWhileSeen`), so it costs nothing at rest.
-struct StreakFlame: View {
-    var size: CGFloat = 120
-    var lit = true
-    var animated = true
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var live = false
-
-    var body: some View {
-        Group {
-            if animated && !reduceMotion {
-                TimelineView(.animation(minimumInterval: 1 / 60, paused: !live)) { timeline in
-                    flame(timeline.date.timeIntervalSinceReferenceDate)
-                }
-                .animatesWhileSeen($live)
-            } else {
-                flame(0)
-            }
-        }
-        .frame(width: size, height: size)
-        .accessibilityHidden(true)
-    }
-
-    private static let bodyFill = LinearGradient(colors: [Color(hex: 0xFFE29A), Palette.flame, Color(hex: 0xE2542C)], startPoint: .top, endPoint: .bottom)
-    private static let coreFill = LinearGradient(colors: [.white, Color(hex: 0xFFE29A)], startPoint: .top, endPoint: .bottom)
-    private static let unlitFill = LinearGradient(colors: [Palette.inkFaint, Palette.line], startPoint: .top, endPoint: .bottom)
-
-    private func flame(_ t: Double) -> some View {
-        let sway = sin(t * 2.3) * 3 + sin(t * 5.1) * 1.2
-        let stretch = 1 + 0.035 * sin(t * 6.7) + 0.02 * sin(t * 11.3)
-        let pulse = 1 + 0.06 * sin(t * 8.9 + 1)
-        return ZStack {
-            Circle()
-                .fill(RadialGradient(colors: [Palette.flame.opacity(lit ? 0.42 : 0.08), .clear], center: .center, startRadius: 2, endRadius: size * 0.62))
-                .frame(width: size * 1.5, height: size * 1.5)
-                .scaleEffect(pulse)
-            Image(systemName: "flame.fill").font(.system(size: size * 0.78, weight: .bold))
-                .foregroundStyle(lit ? Self.bodyFill : Self.unlitFill)
-                .scaleEffect(x: 1, y: stretch, anchor: .bottom)
-                .rotationEffect(.degrees(sway), anchor: .bottom)
-                .shadow(color: Palette.flame.opacity(lit ? 0.6 : 0), radius: size * 0.16)
-            if lit {
-                Image(systemName: "flame.fill").font(.system(size: size * 0.34, weight: .bold))
-                    .foregroundStyle(Self.coreFill)
-                    .opacity(0.9)
-                    .scaleEffect(x: 1, y: pulse, anchor: .bottom)
-                    .rotationEffect(.degrees(-sway * 0.6), anchor: .bottom)
-                    .offset(y: size * 0.17)
-            }
-        }
     }
 }
 
@@ -178,12 +128,14 @@ struct LevelArc: View {
     /// 0…1 toward the next level.
     let progress: Double
     var size: CGFloat = 22
+    /// Mint; the rewards' gold for the moment of a level-up (the lesson's results).
+    var tint: Color = Palette.mint
 
     var body: some View {
         ZStack {
             Circle().stroke(Palette.line, lineWidth: size * 0.14)
             Circle().trim(from: 0, to: max(0.02, min(1, progress)))
-                .stroke(Palette.mint, style: StrokeStyle(lineWidth: size * 0.14, lineCap: .round))
+                .stroke(tint, style: StrokeStyle(lineWidth: size * 0.14, lineCap: .round))
                 .rotationEffect(.degrees(-90))
         }
         .padding(size * 0.07)
@@ -274,11 +226,11 @@ struct QuestRow: View {
         .accessibilityValue(Text(done ? "Done" : "\(progress) of \(target)"))
     }
 
-    /// "+20 XP" while open, "Done" once claimed: words at the row's end, not a pill.
+    /// "+20 XP" while open (nothing in Calm mode), "Done" once claimed: words at the row's end, not a pill.
     @ViewBuilder private func reward(_ done: Bool) -> some View {
         if done {
             Text("Done").font(Typeface.label(.caption)).foregroundStyle(Palette.mint)
-        } else {
+        } else if !store.settings.calmMode {
             Text("+\(quest.xp) XP").font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
                 .fixedSize()
         }
@@ -304,8 +256,33 @@ extension Achievement.Tier {
     }
 }
 
+extension Achievement {
+    /// A streak badge is drawn with the streak's lamp, as every streak is (`TimbreGlyph.lamp`); its stored symbol is the
+    /// flame the badge had before, kept for saves and Game Center.
+    var drawsLamp: Bool { metric == "streakBest" && symbol.hasPrefix("flame") }
+
+    /// The medal's studio-lit artwork (`artwork`, in the catalog's Medals folder) once it ships; nil until then.
+    var artworkImage: UIImage? { UIImage(named: artwork) }
+}
+
+/// A badge's glyph at `size` points (about an SF Symbol's height at that font size): the streak's lamp for a streak
+/// badge, else its symbol. Ink comes from the foreground style.
+struct AchievementGlyph: View {
+    let achievement: Achievement
+    let size: CGFloat
+    var weight: Font.Weight = .bold
+
+    var body: some View {
+        if achievement.drawsLamp {
+            DrawnGlyph(glyph: .lamp).frame(width: size * 1.1, height: size * 1.1)
+        } else {
+            Image(systemName: achievement.symbol).font(.system(size: size, weight: weight))
+        }
+    }
+}
+
 extension Achievement.Category {
-    /// The medal face, lit from the top left: tuning amber, dedication flame, ear mint, lessons violet, courses deep sky.
+    /// The medal face, lit from the top left: tuning gold, dedication flame, ear mint, lessons violet, courses deep sky.
     var face: (light: Color, deep: Color) {
         switch self {
         case .tuning: return (Color(hex: 0xFFD596), Color(hex: 0xB86E12))
@@ -328,7 +305,8 @@ extension Achievement.Category {
 }
 
 /// A medal: a metal rim for the tier (bronze, silver, gold) around a face in the category's colour, with the
-/// badge's symbol (or an instrument's artwork) embossed on it; a glint sweeps across the first time it is seen.
+/// badge's glyph (or an instrument's artwork) embossed on it; a glint sweeps across the first time it is seen. Once the
+/// medal's own studio-lit artwork ships (`Achievement.artwork`), it fills the face inside the rim instead.
 /// Locked, it is a dark disc with a faint rim, the emblem in grey, a lock pip and the progress toward its goal.
 struct AchievementMedal: View {
     let achievement: Achievement
@@ -359,15 +337,22 @@ struct AchievementMedal: View {
 
     private var earnedFace: some View {
         let face = achievement.category.face
+        let art = achievement.artworkImage
         return ZStack {
             Circle().fill(AngularGradient(colors: achievement.tier.metal, center: .center, angle: .degrees(-35)))
-            Circle().inset(by: rim)
-                .fill(RadialGradient(colors: [face.light, face.deep], center: UnitPoint(x: 0.32, y: 0.26), startRadius: 0, endRadius: size * 0.62))
+            if let art {
+                artwork(art, lit: true)
+            } else {
+                Circle().inset(by: rim)
+                    .fill(RadialGradient(colors: [face.light, face.deep], center: UnitPoint(x: 0.32, y: 0.26), startRadius: 0, endRadius: size * 0.62))
+            }
             Circle().inset(by: rim).strokeBorder(.black.opacity(0.3), lineWidth: 1)
-            emblem(lit: true)
-            // Gloss on the upper half of the face.
-            Circle().inset(by: rim + 1)
-                .fill(LinearGradient(colors: [.white.opacity(0.26), .white.opacity(0)], startPoint: .top, endPoint: .center))
+            if art == nil {
+                emblem(lit: true)
+                // Gloss on the upper half of the face (the artwork is lit in its own studio light).
+                Circle().inset(by: rim + 1)
+                    .fill(LinearGradient(colors: [.white.opacity(0.26), .white.opacity(0)], startPoint: .top, endPoint: .center))
+            }
         }
         .overlay { glint }
         .clipShape(Circle())
@@ -385,7 +370,11 @@ struct AchievementMedal: View {
                     .rotationEffect(.degrees(-90))
                     .shadow(color: tint.opacity(0.45), radius: 3)
             }
-            emblem(lit: false)
+            if let art = achievement.artworkImage {
+                artwork(art, lit: false).padding(rim * 0.6)
+            } else {
+                emblem(lit: false)
+            }
             Image(systemName: "lock.fill").font(.system(size: size * 0.13, weight: .bold)).foregroundStyle(Palette.inkSoft)
                 .frame(width: size * 0.3, height: size * 0.3)
                 .background(Circle().fill(Palette.stage))
@@ -402,11 +391,19 @@ struct AchievementMedal: View {
                 .saturation(lit ? 1 : 0)
                 .opacity(lit ? 1 : 0.38)
         } else {
-            Image(systemName: achievement.symbol).font(.system(size: size * 0.34, weight: .bold))
+            AchievementGlyph(achievement: achievement, size: size * 0.34)
                 .foregroundStyle(lit ? Color(hex: 0x0A0C10).opacity(0.82) : Palette.inkFaint.opacity(0.7))
                 // Embossed: a hairline of light under the cut.
                 .shadow(color: .white.opacity(lit ? 0.35 : 0), radius: 0, y: 0.8)
         }
+    }
+
+    /// The medal's own artwork inside the rim: full colour once earned, grey and dim while locked.
+    private func artwork(_ image: UIImage, lit: Bool) -> some View {
+        Image(uiImage: image).resizable().scaledToFill()
+            .clipShape(Circle().inset(by: rim))
+            .saturation(lit ? 1 : 0)
+            .opacity(lit ? 1 : 0.32)
     }
 
     /// A diagonal band of light that crosses the face once.
@@ -429,13 +426,15 @@ struct AchievementMedal: View {
     }
 }
 
-/// One announcement for the reward pill.
+/// One announcement for the reward toast.
 struct RewardBanner: Identifiable {
     enum Tone { case gold, mint, frost }
     let id = UUID()
     let symbol: String
+    /// Drawn in place of `symbol` (a streak badge's lamp).
+    var drawn: TimbreGlyph? = nil
     let title: Text
-    /// Nil for the compact "+XP" pill.
+    /// Nil for the compact "+XP" toast.
     let detail: Text?
     let tone: Tone
     /// How long it stays open.
@@ -451,14 +450,15 @@ struct RewardBanner: Identifiable {
     }
 }
 
-/// XP, quest, badge, daily-set, level-up and streak announcements, one banner at a time from a queue.
-/// On a phone with a Dynamic Island it is a black pill that grows out of the island and stays inside the
-/// status-bar band, so it never covers a screen's header. Without an island it hangs just below the status
-/// bar on the leading side, clear of the header's trailing controls (streak, level, settings); on wide
-/// screens it is centred. Reduce Motion fades it in place. It never takes taps; VoiceOver hears each banner.
+/// XP, quest, badge, daily-set, level-up and streak announcements, one at a time from a queue, as a capsule of the
+/// app's glass docked under the screen's header: `safeAreaInsets.top + 8`, at the leading gutter on a phone (narrow
+/// enough to leave the header's trailing controls in view), centred on a wide screen. The status bar belongs to the
+/// system, so nothing is ever drawn inside its band. Calm mode (`UserSettings.calmMode`) keeps the XP, level, quest and
+/// streak announcements back; badges and a finished Today still show, without their XP. Reduce Motion fades it in
+/// place. It never takes taps; VoiceOver hears each banner.
 struct RewardToast: View {
-    /// Where the pill shows: `automatic` grows it out of the Dynamic Island where there is one; `docked` never uses the
-    /// island and hangs it under the status bar (at the leading gutter on a phone, centred on a wide screen).
+    /// Where the toast shows. Both dock under the header, outside the status bar; the two names stay so a caller may
+    /// pass either.
     enum Placement: Sendable { case automatic, docked }
 
     @EnvironmentObject private var store: AppStore
@@ -474,17 +474,19 @@ struct RewardToast: View {
     }
 
     var body: some View {
-        // The status band is read from a reader that keeps the safe area (inside `.ignoresSafeArea()` it reads 0),
-        // with the key window's inset as a fallback; the pill is then placed in full-screen coordinates.
+        // The top inset is read from a reader that keeps the safe area (inside `.ignoresSafeArea()` it reads 0), with the
+        // key window's inset as a fallback; the toast is then placed in full-screen coordinates.
         let windowTop = Self.windowTopInset
-        let dockedOnly = placement == .docked
+        let calm = store.settings.calmMode
         GeometryReader { outer in
             let top = max(outer.safeAreaInsets.top, windowTop)
             GeometryReader { proxy in
-                let layout = PillLayout(width: proxy.size.width, top: top, dockedOnly: dockedOnly)
+                let layout = ToastLayout(width: proxy.size.width, top: top, clearsHeaderControls: !calm)
                 if let current {
-                    placed(current, layout: layout)
-                        .frame(width: proxy.size.width, height: proxy.size.height, alignment: layout.docked ? .topLeading : .top)
+                    toast(current, layout: layout)
+                        .padding(.top, layout.y)
+                        .padding(.leading, layout.leading ? Metrics.gutter : 0)
+                        .frame(width: proxy.size.width, height: proxy.size.height, alignment: layout.leading ? .topLeading : .top)
                 }
             }
             .ignoresSafeArea()
@@ -492,29 +494,20 @@ struct RewardToast: View {
         .environment(\.layoutDirection, rightToLeft ? .rightToLeft : .leftToRight)
         .allowsHitTesting(false)
         .onChange(of: store.rewardPulse) { _, _ in
-            if let reward = store.lastReward { enqueue(Self.banners(for: reward)) }
+            if let reward = store.lastReward { enqueue(Self.banners(for: reward, calm: store.settings.calmMode)) }
         }
         .onChange(of: store.streakPulse) { _, _ in
-            if let notice = store.streakNotice { enqueue([Self.banner(for: notice)]) }
+            if let notice = store.streakNotice, !store.settings.calmMode { enqueue([Self.banner(for: notice)]) }
         }
     }
 
     /// The app's own language direction (the toast sits outside the tab view that carries it).
     private var rightToLeft: Bool { TimbreLocalization.isRightToLeft(store.settings.language) }
 
-    /// The key window's top safe-area inset: the status band (59–62 pt on phones with a Dynamic Island).
+    /// The key window's top safe-area inset (the status bar's height).
     @MainActor private static var windowTopInset: CGFloat {
         let windows = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.flatMap(\.windows)
         return (windows.first(where: \.isKeyWindow) ?? windows.first)?.safeAreaInsets.top ?? 0
-    }
-
-    /// The pill at its spot: centred on the island (or the screen), or docked at the leading gutter.
-    private func placed(_ banner: RewardBanner, layout: PillLayout) -> some View {
-        let compact = banner.detail == nil
-        let size = layout.size(compact: compact, grown: open || reduceMotion)
-        return pill(banner, layout: layout)
-            .padding(.top, max(0, layout.centerY(compact: compact) - size.height / 2))
-            .padding(.leading, layout.docked ? Metrics.gutter : 0)
     }
 
     // MARK: Queue
@@ -528,7 +521,7 @@ struct RewardToast: View {
             }
         }
         if queue.count > 6 { queue.removeFirst(queue.count - 6) }
-        guard !presenting else { return }
+        guard !presenting, !queue.isEmpty else { return }
         presenting = true
         Task { @MainActor in
             await presentQueue()
@@ -536,33 +529,35 @@ struct RewardToast: View {
         }
     }
 
-    /// Shows the queue one banner at a time: grow out of the island, hold, shrink back in.
+    /// Shows the queue one banner at a time: drop in, hold, lift away.
     private func presentQueue() async {
         while !queue.isEmpty {
             let next = queue.removeFirst()
             current = next
             open = false
             AccessibilityNotification.Announcement(next.announcement).post()
-            // Let the closed pill appear at the island's size, so it can grow from there.
+            // Let the closed toast appear first, so it can drop in from there.
             try? await Task.sleep(for: .milliseconds(30))
-            withMotion(Motion.island, reduceMotion: reduceMotion) { open = true }
+            withMotion(Motion.toastIn, reduceMotion: reduceMotion) { open = true }
             try? await Task.sleep(for: .seconds(queue.count > 1 ? next.seconds * 0.8 : next.seconds))
-            withMotion(Motion.islandClose, reduceMotion: reduceMotion) { open = false }
+            withMotion(Motion.toastOut, reduceMotion: reduceMotion) { open = false }
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 220 : 360))
             current = nil
             try? await Task.sleep(for: .milliseconds(90))
         }
     }
 
-    private static func banners(for reward: ProgressUpdate) -> [RewardBanner] {
+    /// What a progress update announces. In Calm mode only a badge and a finished Today, with no XP: no levels,
+    /// quests or XP counts.
+    private static func banners(for reward: ProgressUpdate, calm: Bool) -> [RewardBanner] {
         var list: [RewardBanner] = []
-        if let level = reward.levelUp {
+        if let level = reward.levelUp, !calm {
             list.append(RewardBanner(symbol: "star.fill", title: Text("Level \(level.number)"), detail: Text(LocalizedStringKey(level.name)), tone: .gold, seconds: 2.6,
                                      announcement: String(localized: "Level \(level.number)", bundle: TimbreLocalization.bundle) + ", " + NSLocalizedString(level.name, comment: "")))
         }
         if reward.dailySetCompleted {
-            list.append(RewardBanner(symbol: "sun.max.fill", title: Text("Today complete"), detail: Text("+\(XPReward.dailySet) XP"), tone: .gold, seconds: 2.6,
-                                     announcement: String(localized: "Today complete", bundle: TimbreLocalization.bundle)))
+            list.append(RewardBanner(symbol: "sun.max.fill", title: Text("Today complete"), detail: calm ? nil : Text("+\(XPReward.dailySet) XP"),
+                                     tone: .gold, seconds: 2.6, announcement: String(localized: "Today complete", bundle: TimbreLocalization.bundle)))
         }
         let badges = reward.achievementsEarned
         if badges.count >= 3 {
@@ -572,15 +567,18 @@ struct RewardToast: View {
                                      announcement: String(localized: "\(badges.count) achievements unlocked", bundle: TimbreLocalization.bundle)))
         } else {
             for a in badges {
-                list.append(RewardBanner(symbol: a.symbol, title: Text(LocalizedStringKey(a.title)), detail: Text("Achievement unlocked"), tone: .gold, seconds: 2.6,
+                list.append(RewardBanner(symbol: a.symbol, drawn: a.drawsLamp ? .lamp : nil, title: Text(LocalizedStringKey(a.title)),
+                                         detail: Text("Achievement unlocked"), tone: .gold, seconds: 2.6,
                                          announcement: NSLocalizedString(a.title, comment: "") + ", " + String(localized: "Achievement unlocked", bundle: TimbreLocalization.bundle)))
             }
         }
-        for q in reward.questsCompleted {
-            list.append(RewardBanner(symbol: "checkmark", title: Text(q.title), detail: Text("Quest complete · +\(q.xp) XP"), tone: .mint, seconds: 2.2,
-                                     announcement: String(localized: "Quest complete · +\(q.xp) XP", bundle: TimbreLocalization.bundle)))
+        if !calm {
+            for q in reward.questsCompleted {
+                list.append(RewardBanner(symbol: "checkmark", title: Text(q.title), detail: Text("Quest complete · +\(q.xp) XP"), tone: .mint, seconds: 2.2,
+                                         announcement: String(localized: "Quest complete · +\(q.xp) XP", bundle: TimbreLocalization.bundle)))
+            }
+            if list.isEmpty && reward.xpGained > 0 { list.append(.experience(reward.xpGained)) }
         }
-        if list.isEmpty && reward.xpGained > 0 { list.append(.experience(reward.xpGained)) }
         return list
     }
 
@@ -595,59 +593,32 @@ struct RewardToast: View {
         }
     }
 
-    // MARK: Pill
+    // MARK: The toast
 
-    private func pill(_ banner: RewardBanner, layout: PillLayout) -> some View {
+    /// A capsule of the app's glass (iOS 26; a dark plate before), darkened so its words read over any header.
+    private func toast(_ banner: RewardBanner, layout: ToastLayout) -> some View {
         let compact = banner.detail == nil
-        let grown = open || reduceMotion
-        let size = layout.size(compact: compact, grown: grown)
-        return ZStack {
-            Capsule(style: .continuous).fill(layout.island ? Color.black : Palette.surface)
-            Capsule(style: .continuous).strokeBorder(.white.opacity(open ? (layout.island ? 0.08 : 0.12) : 0), lineWidth: 1)
-            content(banner, layout: layout, compact: compact)
-                .opacity(open ? 1 : 0)
-                .blur(radius: open || reduceMotion ? 0 : 5)
-                .animation(Motion.fade.delay(open && !reduceMotion ? 0.1 : 0), value: open)
+        let size = layout.size(compact: compact)
+        return HStack(spacing: 8) {
+            icon(banner, size: compact ? 24 : 28)
+            words(banner)
+            Spacer(minLength: 0)
         }
+        .padding(.leading, compact ? 6 : 7).padding(.trailing, 12)
         .frame(width: size.width, height: size.height)
-        .clipShape(Capsule(style: .continuous))
-        .shadow(color: .black.opacity(open ? 0.45 : 0), radius: 16, y: 6)
-        // On an island the closed pill is the island itself; elsewhere it fades and drops in.
-        .opacity(layout.island && !reduceMotion ? 1 : (open ? 1 : 0))
-        .scaleEffect(layout.island || reduceMotion || open ? 1 : 0.86, anchor: .top)
-        .offset(y: layout.island || reduceMotion || open ? 0 : -10)
+        .timbreGlass(Palette.stage.opacity(0.55), in: Capsule(style: .continuous))
+        .shadow(color: .black.opacity(open ? 0.35 : 0), radius: 14, y: 5)
+        .opacity(open ? 1 : 0)
+        .scaleEffect(open || reduceMotion ? 1 : 0.9, anchor: .top)
+        .offset(y: open || reduceMotion ? 0 : -10)
         .dynamicTypeSize(...DynamicTypeSize.large)
         .environment(\.colorScheme, .dark)
         .accessibilityHidden(true)
     }
 
-    @ViewBuilder private func content(_ banner: RewardBanner, layout: PillLayout, compact: Bool) -> some View {
-        if layout.island {
-            // Icon left of the camera cutout, words right of it.
-            HStack(spacing: 0) {
-                icon(banner, size: compact ? 22 : 28)
-                    .padding(.leading, compact ? 8 : 9)
-                    .frame(width: layout.side(compact: compact), alignment: .leading)
-                Color.clear.frame(width: layout.cutout)
-                words(banner)
-                    .padding(.trailing, 12)
-                    .frame(width: layout.side(compact: compact), alignment: .leading)
-            }
-            .frame(width: layout.size(compact: compact, grown: true).width)
-        } else {
-            HStack(spacing: 8) {
-                icon(banner, size: compact ? 24 : 28)
-                words(banner)
-                Spacer(minLength: 0)
-            }
-            .padding(.leading, 7).padding(.trailing, 12)
-            .frame(width: layout.size(compact: compact, grown: true).width)
-        }
-    }
-
     private func words(_ banner: RewardBanner) -> some View {
         VStack(alignment: .leading, spacing: 1) {
-            banner.title.font(Typeface.label(13))
+            banner.title.font(Typeface.label(.footnote))
                 .foregroundStyle(banner.detail == nil ? Palette.mint : Palette.ink)
                 .lineLimit(1).minimumScaleFactor(0.7)
             if let detail = banner.detail {
@@ -657,12 +628,19 @@ struct RewardToast: View {
         }
     }
 
+    /// The reward's medallion: its glyph in dark ink on the tone's colour.
     private func icon(_ banner: RewardBanner, size: CGFloat) -> some View {
-        Image(systemName: banner.symbol).font(.system(size: size * 0.46, weight: .bold))
-            .foregroundStyle(banner.tone == .mint ? Palette.onAccent : Palette.onGold)
-            .frame(width: size, height: size)
-            .background(Circle().fill(Self.fill(banner.tone)))
-            .symbolEffect(.bounce, value: open)
+        ZStack {
+            if let drawn = banner.drawn {
+                DrawnGlyph(glyph: drawn).frame(width: size * 0.56, height: size * 0.56)
+            } else {
+                Image(systemName: banner.symbol).font(.system(size: size * 0.46, weight: .bold))
+                    .symbolEffect(.bounce, value: open)
+            }
+        }
+        .foregroundStyle(banner.tone == .mint ? Palette.onAccent : Palette.onGold)
+        .frame(width: size, height: size)
+        .background(Circle().fill(Self.fill(banner.tone)))
     }
 
     private static func fill(_ tone: RewardBanner.Tone) -> AnyShapeStyle {
@@ -674,41 +652,26 @@ struct RewardToast: View {
     }
 }
 
-/// Where the reward pill sits. Phones with a Dynamic Island have a status band of 54 pt or more, with the
-/// island (about 126 × 37 pt) near its top; the pill grows from the island and stays inside the band.
-/// Other phones (notch or none) dock it under the status bar at the leading gutter, narrow enough to leave the
-/// header's trailing controls in view; wide screens (iPad, landscape) centre it under the status bar.
-private struct PillLayout {
+/// Where the reward toast sits: 8 pt under the top safe-area edge. On a phone at the leading gutter, narrow enough to
+/// leave the header's trailing controls (streak, level, settings) in view; on a wide screen (iPad, landscape) centred.
+private struct ToastLayout {
     let width: CGFloat
+    /// The top safe-area inset: the status bar's height (0 in landscape, where there is none).
     let top: CGFloat
-    /// `RewardToast.Placement.docked`: never the island.
-    var dockedOnly = false
-    static let islandWidth: CGFloat = 126
-    static let islandHeight: CGFloat = 37
-    /// Kept clear on the trailing side: streak chip, level ring and settings button (44 pt targets) with the gutter.
-    static let headerControls: CGFloat = 200
-    var island: Bool { !dockedOnly && top >= 51 && width < 500 }
-    var docked: Bool { !island && width < 600 }
-    /// The island's top edge: about 11 pt below the screen top on a 59 pt band, 14 pt on a 62 pt band.
-    var islandTop: CGFloat { max(10, min(14, top - 48)) }
-    /// The camera cutout plus a little air.
-    var cutout: CGFloat { Self.islandWidth + 6 }
-    /// Just below the status bar (a little air when there is none, as in landscape).
-    private var belowStatusBar: CGFloat { max(top, 4) + 4 }
-    func centerY(compact: Bool) -> CGFloat {
-        if island { return islandTop + Self.islandHeight / 2 }
-        return belowStatusBar + size(compact: compact, grown: true).height / 2
-    }
-    func side(compact: Bool) -> CGFloat { compact ? 64 : min(136, (width - 16 - cutout) / 2) }
-    func size(compact: Bool, grown: Bool) -> CGSize {
-        if island {
-            guard grown else { return CGSize(width: Self.islandWidth, height: Self.islandHeight) }
-            // Taller than the island but still inside the status band (its bottom stays above `top`).
-            let height = compact ? Self.islandHeight : min(46, 2 * (top - 3 - centerY(compact: compact)))
-            return CGSize(width: cutout + 2 * side(compact: compact), height: height)
-        }
-        if docked {
-            let room = width - Metrics.gutter - Self.headerControls
+    /// The header's trailing controls are showing (not in Calm mode), so the toast keeps clear of them.
+    let clearsHeaderControls: Bool
+
+    /// Kept clear on the trailing side: streak chip, level ring and settings button (44 pt targets) with the gutter;
+    /// in Calm mode only the tuner's settings button.
+    private var trailingClearance: CGFloat { clearsHeaderControls ? 200 : 76 }
+    /// Docked at the leading gutter (a phone in portrait); centred otherwise.
+    var leading: Bool { width < 600 }
+    /// The toast's top edge, in full-screen coordinates.
+    var y: CGFloat { top + 8 }
+
+    func size(compact: Bool) -> CGSize {
+        if leading {
+            let room = width - Metrics.gutter - trailingClearance
             return CGSize(width: compact ? min(150, room) : max(150, min(300, room)), height: compact ? 36 : 52)
         }
         return CGSize(width: compact ? 150 : min(width - 32, 360), height: compact ? 40 : 52)

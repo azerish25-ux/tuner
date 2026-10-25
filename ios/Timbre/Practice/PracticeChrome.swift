@@ -108,9 +108,10 @@ extension View {
     /// Apply directly to the ScrollView.
     func stageTopShade() -> some View { modifier(StageTopShade()) }
 
-    /// Pins controls to the bottom on a stage-coloured dock with a short fade above it. The scroll content is inset
-    /// by the dock and by its fade, so content scrolled to its end rests clear of both (never half under the fade);
-    /// content passing beneath still shows through the fade, and taps there reach it.
+    /// Pins controls to the bottom on an opaque stage-coloured dock with a short fade above it. The scroll content is
+    /// inset by the dock and by its fade, so content scrolled to its end rests clear of both (never half under the fade);
+    /// content passing beneath dissolves through the fade and is hidden under the dock itself, so nothing ghosts
+    /// behind a button's label. Taps in the fade reach the content.
     func stageDock<Dock: View>(@ViewBuilder _ dock: () -> Dock) -> some View {
         let bar = dock()
         return safeAreaInset(edge: .bottom, spacing: 0) {
@@ -239,15 +240,16 @@ private struct StageTopShade: ViewModifier {
     }
 }
 
+/// The dock's ground: a 24 pt fade from clear to the stage, then the stage itself, opaque to the screen's foot.
 private struct StageDockBackdrop: View {
     /// The fade's height above the dock (reserved by `stageDock`, so content never rests in it).
     static let fade: CGFloat = 24
 
     var body: some View {
         VStack(spacing: 0) {
-            LinearGradient(colors: [Palette.stage.opacity(0), Palette.stage.opacity(0.96)], startPoint: .top, endPoint: .bottom)
+            LinearGradient(colors: [Palette.stage.opacity(0), Palette.stage], startPoint: .top, endPoint: .bottom)
                 .frame(height: Self.fade)
-            Palette.stage.opacity(0.96)
+            Palette.stage
         }
         .padding(.top, -Self.fade)
         .ignoresSafeArea(edges: .bottom)

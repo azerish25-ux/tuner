@@ -30,13 +30,16 @@ struct InstrumentsView: View {
         ScrollViewReader { scroller in
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 20, pinnedViews: []) {
-                    if picker { currentTunings.id(Self.top) } else { header.id(Self.top) }
-                    if searching || picker { search }
+                    // The picker opens on its purpose, choosing an instrument: the search first. The tunings of the
+                    // instrument on the stage follow its shelf (the tuner's header menu, `TuningMenu`, has them too).
+                    if picker { search.id(Self.top) } else { header.id(Self.top) }
+                    if searching && !picker { search }
                     filters
                     if query.isEmpty && family == nil {
                         chromaticCard
                         section(Text("Your instruments"), count: nil)
                         shelf { browse(scroller) }
+                        if picker { currentTunings }
                     }
                     ForEach(store.catalog.families) { group in
                         let items = photos.filter { store.catalog.instrument(id: $0.instrumentId)?.familyId == group.id }
@@ -114,7 +117,7 @@ struct InstrumentsView: View {
     /// A family's section between the grids: its name, and how many instruments it holds on the baseline.
     private func section(_ title: Text, count: Int?) -> some View {
         SectionHeader(title) {
-            if let count { Text("\(count)").font(Typeface.number(13)).foregroundStyle(Palette.inkFaint) }
+            if let count { Text("\(count)").font(Typeface.number(.footnote)).foregroundStyle(Palette.inkFaint) }
         }
         .padding(.top, 6)
     }
@@ -214,16 +217,11 @@ struct InstrumentsView: View {
         let shape = RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous)
         return Button(action: action) {
             VStack(alignment: .leading, spacing: 4) {
-                ZStack {
-                    Circle().fill(Palette.mint.opacity(0.12))
-                    Circle().strokeBorder(Palette.mint.opacity(0.35), lineWidth: 1)
-                    Image(systemName: "plus").font(.system(size: 24, weight: .semibold)).foregroundStyle(Palette.mint)
-                }
-                .frame(width: 64, height: 64)
-                .frame(height: 148)
-                .frame(maxWidth: .infinity)
-                .padding(.bottom, 8)
-                .accessibilityHidden(true)
+                // A bare glyph, as every icon is: no tinted disc behind it.
+                Glyph("plus.circle", size: 56, tint: Palette.mint)
+                    .frame(height: 148)
+                    .frame(maxWidth: .infinity)
+                    .padding(.bottom, 8)
                 captionBlock(Text("Add instrument"), detail: Text("Browse all \(store.catalog.instruments.count)"), tint: Palette.inkSoft)
             }
             .padding(14)
@@ -233,19 +231,6 @@ struct InstrumentsView: View {
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityIdentifier(Self.addID)
-    }
-
-    /// "Try next" over a suggested card's photo.
-    private var tryNextTag: some View {
-        HStack(spacing: 4) {
-            Image(systemName: "sparkles").font(.system(size: 9, weight: .bold))
-            Text("Try next").lineLimit(1)
-        }
-        .font(Typeface.label(11))
-        .foregroundStyle(Palette.mint)
-        .padding(.horizontal, 8).padding(.vertical, 4)
-        .background(Capsule().fill(Palette.stage.opacity(0.6)))
-        .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.35), lineWidth: 1))
     }
 
     @ViewBuilder private var currentTunings: some View {
@@ -297,7 +282,7 @@ struct InstrumentsView: View {
     /// makes one on a free instrument (`FreeTier.customTunings`); past that, or on a Pro instrument, it wears a lock.
     @ViewBuilder private var customTuningButton: some View {
         if !store.referenceMode, !store.courses.isEmpty {
-            customButton(open: canCreateCustomTuning)
+            customButton(open: CustomTuningAccess.canCreate(store: store, pro: commerce.isPro))
         }
     }
 
@@ -313,11 +298,6 @@ struct InstrumentsView: View {
         }
         .buttonStyle(ChipButtonStyle(selected: false))
         .accessibilityIdentifier("tunings.custom")
-    }
-
-    private var canCreateCustomTuning: Bool {
-        if commerce.isPro { return true }
-        return store.instrument.isFree && FreeTier.canAddCustomTuning(saved: store.settings.customTunings?.count ?? 0, pro: false)
     }
 
     /// The search field: a capsule with a control's edge. Its clear button is a full 44 pt target inside the
@@ -384,8 +364,9 @@ struct InstrumentsView: View {
         .accessibilityIdentifier("instruments.chromatic")
     }
 
-    /// An instrument card. A suggested one (the shelf's "Try next") wears the tag over its photo and its own id,
-    /// so `instrument.<asset>` always finds the card in the family grid.
+    /// An instrument card. A suggested one (the shelf's "Try next") says so in its caption, leaving the photo alone,
+    /// and has its own id, so `instrument.<asset>` always finds the card in the family grid. One that needs Timbre Pro
+    /// wears the corner lock (`ProLock`), never a pill.
     private func card(_ photo: InstrumentPhoto, suggested: Bool = false) -> some View {
         let instrument = store.catalog.instrument(id: photo.instrumentId)
         let model = ModelLibrary.modelID(forPhoto: photo.asset)
@@ -407,7 +388,7 @@ struct InstrumentsView: View {
                     .frame(height: 148)
                     .frame(maxWidth: .infinity)
                     .padding(.bottom, 8)
-                cardCaption(name: name(photo), tunings: tunings, selected: selected)
+                cardCaption(name: name(photo), tunings: tunings, selected: selected, suggested: suggested)
             }
             .padding(14)
             .background {
@@ -416,7 +397,6 @@ struct InstrumentsView: View {
             }
             .overlay(shape.strokeBorder(selected ? Palette.mint : Palette.hairline, lineWidth: selected ? 1.5 : 1))
             .overlay(alignment: .topTrailing) { if !open { ProLock().padding(12) } }
-            .overlay(alignment: .topLeading) { if suggested { tryNextTag.padding(12) } }
             .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())
@@ -424,9 +404,11 @@ struct InstrumentsView: View {
         .accessibilityIdentifier((suggested ? "instruments.next." : "instrument.") + photo.asset)
     }
 
-    /// Name (up to two lines, so "7-string electric guitar" reads in full) over the tuning count.
-    private func cardCaption(name: String, tunings: Int, selected: Bool) -> some View {
-        captionBlock(Text(name), detail: tuningLine(tunings, selected: selected), tint: selected ? Palette.mint : Palette.inkSoft)
+    /// Name (up to two lines, so "7-string electric guitar" reads in full) over the tuning count, or "Try next" on a
+    /// suggestion.
+    private func cardCaption(name: String, tunings: Int, selected: Bool, suggested: Bool) -> some View {
+        let tint = selected || suggested ? Palette.mint : Palette.inkSoft
+        return captionBlock(Text(name), detail: suggested ? Text("Try next") : tuningLine(tunings, selected: selected), tint: tint)
     }
 
     private func tuningLine(_ tunings: Int, selected: Bool) -> Text {
@@ -439,13 +421,13 @@ struct InstrumentsView: View {
     private func captionBlock(_ title: Text, detail: Text, tint: Color) -> some View {
         ZStack(alignment: .bottomLeading) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(verbatim: "A\nA").font(Typeface.display(16)).lineLimit(2)
+                Text(verbatim: "A\nA").font(Typeface.display(.body)).lineLimit(2)
                 Text(verbatim: "A").font(.footnote)
             }
             .hidden()
             .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 4) {
-                title.font(Typeface.display(16)).foregroundStyle(Palette.ink)
+                title.font(Typeface.display(.body)).foregroundStyle(Palette.ink)
                     .lineLimit(2).minimumScaleFactor(0.85)
                     .fixedSize(horizontal: false, vertical: true)
                 detail.font(.footnote).foregroundStyle(tint).lineLimit(1).minimumScaleFactor(0.75)

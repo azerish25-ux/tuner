@@ -12,7 +12,7 @@ import SwiftUI
 // MARK: - Headers
 
 /// A tab's header: its title (and a line under it), read as one heading, with the shared controls on the trailing
-/// side (`HeaderControls`: the streak chip and the level ring, both leading to Progress) or your own.
+/// side (`HeaderControls`: the streak chip and the level ring, both leading to Progress, none in Calm mode) or your own.
 /// At the accessibility sizes the controls move above the title so it keeps the full width.
 struct TabHeader<Trailing: View>: View {
     private let title: Text
@@ -60,7 +60,8 @@ extension TabHeader where Trailing == HeaderControls {
 }
 
 /// The trailing cluster every tab header shares: the streak chip and the level ring (44 pt targets), both opening
-/// Progress. Tune puts its settings button after it.
+/// Progress. Tune puts its settings button after it. Calm mode (`UserSettings.calmMode`) shows neither: the header is
+/// its title alone.
 struct HeaderControls: View {
     var showsToday: Bool?
     @EnvironmentObject private var store: AppStore
@@ -70,9 +71,12 @@ struct HeaderControls: View {
     }
 
     var body: some View {
-        HStack(spacing: 2) {
-            StreakChip(showsToday: showsToday) { store.selectedTab = .journey }
-            LevelRing(size: 36) { store.selectedTab = .journey }
+        if !store.settings.calmMode {
+            HStack(spacing: 2) {
+                StreakChip(showsToday: showsToday) { store.selectedTab = .journey }
+                LevelRing(size: 36) { store.selectedTab = .journey }
+            }
+            .transition(.opacity)
         }
     }
 }

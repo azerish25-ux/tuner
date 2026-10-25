@@ -62,8 +62,8 @@ struct SparkBurst: View {
             let radius = origin + span * harmonic.share * travel
             guard radius > 1 else { continue }
             let swing = still ? 0 : Self.tremble(local) * span * 0.035 * (1 + harmonic.share)
-            // The outer ring in the burst's colour, the inner ones alternating with amber.
-            let tint: Color = outer || index % 2 == 0 ? color : Palette.amber
+            // The outer ring in the burst's colour, the inner ones alternating with the rewards' gold.
+            let tint: Color = outer || index % 2 == 0 ? color : Palette.starGold
             if ring || !outer {
                 let path = Self.ringPath(center: center, radius: radius, lobes: harmonic.lobes, amplitude: swing,
                                          phase: local, turn: turn)

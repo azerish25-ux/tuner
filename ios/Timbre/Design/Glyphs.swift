@@ -2,9 +2,9 @@ import SwiftUI
 
 // The app's icon language: a bare glyph in its ink, never an SF Symbol sitting in a tinted disc. A row's glyph stands
 // in a fixed optical box, so titles line up down a list whatever the glyph's width; it is quiet (`inkSoft`) unless the
-// row is about a status (mint, amber, coral) or a course (its hue). Where SF Symbols has no honest picture (a capo, a
-// temperament, a note value, the player's own charts) the glyph is drawn here on a 24-point grid at the symbols'
-// regular stroke, so drawn and system glyphs sit together in one list.
+// row is about a status (mint, amber, coral), a course (its hue) or a category (`accentNeutral`). Where SF Symbols has
+// no honest picture (a capo, a temperament, a note value, the player's own charts, the streak's stage lamp) the glyph
+// is drawn here on a 24-point grid at the symbols' regular stroke, so drawn and system glyphs sit together in one list.
 //
 //     Glyph("bell")                                   // a settings row
 //     Glyph(.capo)                                    // a drawn glyph
@@ -23,9 +23,14 @@ enum TimbreGlyph: CaseIterable, Sendable {
     case chart
     /// ♩, ♫, three beamed eighths under a 3, ♬: the metronome's subdivisions.
     case quarterNotes, eighthNotes, tripletNotes, sixteenthNotes
+    /// The streak: a stage lamp hanging from its rig, its beam falling below it. The one picture of a streak (the chip,
+    /// tiles, the coach, the milestone's `StageLamp`); the flame is kept for a play-along's combo, where "on fire" is meant.
+    case lamp
 
     /// The stroke of a line, in grid units (SF Symbols' regular weight at a row's size).
     static let stroke: CGFloat = 1.6
+    /// How strongly a glyph's wash (the lamp's beam) is filled, against its solids.
+    static let washOpacity: Double = 0.38
 
     /// Lines, stroked at `stroke`, in a 24-unit square (y down) scaled by `u` points per unit.
     func lines(_ u: CGFloat) -> Path {
@@ -60,6 +65,24 @@ enum TimbreGlyph: CaseIterable, Sendable {
         case .sixteenthNotes:
             line(9.4, 18.8, 9.4, 5)
             line(19.4, 16.8, 19.4, 3.5)
+        case .lamp:
+            // The drop from the rig, and the stage floor the beam lands on.
+            line(12, 0.6, 12, 2.8)
+            line(3.5, 21.8, 20.5, 21.8)
+        }
+        return path
+    }
+
+    /// Light rather than ink (the lamp's beam), filled at `washOpacity` in the same square.
+    func wash(_ u: CGFloat) -> Path {
+        var path = Path()
+        if self == .lamp {
+            // The beam, parted from the shade by a hairline of air so the two never read as one bell.
+            path.move(to: CGPoint(x: 7.6 * u, y: 10.2 * u))
+            path.addLine(to: CGPoint(x: 16.4 * u, y: 10.2 * u))
+            path.addLine(to: CGPoint(x: 20.4 * u, y: 20.6 * u))
+            path.addLine(to: CGPoint(x: 3.6 * u, y: 20.6 * u))
+            path.closeSubpath()
         }
         return path
     }
@@ -108,6 +131,13 @@ enum TimbreGlyph: CaseIterable, Sendable {
             head(16.5, 17.5, 3.2, 2.3)
             beam(8.6, 4.2, 20.2, 2.6, thickness: 2.3)
             beam(8.6, 8.2, 20.2, 6.6, thickness: 2.3)
+        case .lamp:
+            // The shade, narrow at the drop and open toward the stage.
+            path.move(to: CGPoint(x: 9.6 * u, y: 2.6 * u))
+            path.addLine(to: CGPoint(x: 14.4 * u, y: 2.6 * u))
+            path.addLine(to: CGPoint(x: 17.6 * u, y: 8.6 * u))
+            path.addLine(to: CGPoint(x: 6.4 * u, y: 8.6 * u))
+            path.closeSubpath()
         }
         return path
     }
@@ -165,7 +195,8 @@ struct Glyph: View {
     }
 }
 
-/// A `TimbreGlyph` at the size it is given: its solids filled and its lines stroked in the foreground style.
+/// A `TimbreGlyph` at the size it is given: its wash filled faintly, its solids filled and its lines stroked, all in the
+/// foreground style.
 struct DrawnGlyph: View {
     let glyph: TimbreGlyph
 
@@ -174,8 +205,10 @@ struct DrawnGlyph: View {
             let side = min(proxy.size.width, proxy.size.height)
             let unit = side / 24
             ZStack {
-                GlyphOutline(glyph: glyph, solid: true)
-                GlyphOutline(glyph: glyph, solid: false)
+                GlyphOutline(glyph: glyph, layer: .wash)
+                    .opacity(TimbreGlyph.washOpacity)
+                GlyphOutline(glyph: glyph, layer: .solids)
+                GlyphOutline(glyph: glyph, layer: .lines)
                     .stroke(style: StrokeStyle(lineWidth: TimbreGlyph.stroke * unit, lineCap: .round, lineJoin: .round))
                 if glyph == .tripletNotes {
                     Text(verbatim: "3")
@@ -188,15 +221,22 @@ struct DrawnGlyph: View {
     }
 }
 
-/// One half of a `TimbreGlyph` (its solids or its lines) centred in the rect.
+/// One layer of a `TimbreGlyph` (its wash, solids or lines) centred in the rect.
 private struct GlyphOutline: Shape {
+    enum Layer { case wash, solids, lines }
+
     let glyph: TimbreGlyph
-    let solid: Bool
+    let layer: Layer
 
     func path(in rect: CGRect) -> Path {
         let side = min(rect.width, rect.height)
         let unit = side / 24
-        let drawn = solid ? glyph.solids(unit) : glyph.lines(unit)
+        let drawn: Path
+        switch layer {
+        case .wash: drawn = glyph.wash(unit)
+        case .solids: drawn = glyph.solids(unit)
+        case .lines: drawn = glyph.lines(unit)
+        }
         return drawn.offsetBy(dx: rect.midX - side / 2, dy: rect.midY - side / 2)
     }
 }

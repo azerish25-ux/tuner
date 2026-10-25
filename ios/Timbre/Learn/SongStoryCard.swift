@@ -22,12 +22,13 @@ struct SongTake: Equatable {
 
     func count(_ grade: PlayAlongJudge.Grade) -> Int { grades.reduce(0) { $0 + ($1 == grade ? 1 : 0) } }
 
-    /// White-gold perfect, the course colour good, amber late or early, coral missed (as on the play-along's ribbon).
+    /// White-gold perfect, the course colour good, the status amber late or early (`Palette.adjust`), coral missed
+    /// (as on the play-along's ribbon).
     static func color(_ grade: PlayAlongJudge.Grade, accent: Color) -> Color {
         switch grade {
         case .perfect: return HighwayRunway.perfectGold
         case .good: return accent
-        case .ok: return Palette.amber
+        case .ok: return Palette.adjust
         case .miss: return Palette.danger
         }
     }
@@ -66,7 +67,8 @@ struct SongFinaleView: View {
 
     private var art: CoverArt { CoverArt.of(lesson, in: course) }
     private var title: String { CoverArt.mainTitle(lesson.title.localized) }
-    private var tint: Color { take.percent >= 90 ? Palette.mint : Palette.amber }
+    /// The verdict's status: mint from 90 %, else the amber of something to adjust.
+    private var tint: Color { take.percent >= 90 ? Palette.mint : Palette.adjust }
     /// Under half the take landed: another go comes first.
     private var retryFirst: Bool { take.percent < 50 }
 
@@ -141,13 +143,13 @@ struct SongFinaleView: View {
 
     private var words: some View {
         VStack(spacing: 4) {
-            Text(verdict).font(Typeface.label(15)).foregroundStyle(tint)
+            Text(verdict).font(Typeface.label(.body)).foregroundStyle(tint)
             Text("\(take.percent)%").font(Typeface.note(64)).foregroundStyle(tint)
                 .contentTransition(.numericText(value: Double(take.percent)))
                 .minimumScaleFactor(0.7)
             Text(verbatim: title).font(.headline).foregroundStyle(Palette.inkSoft).lineLimit(1)
             if let best, best > take.percent {
-                Label("Best take \(best)%", systemImage: "crown.fill").font(Typeface.label(13)).foregroundStyle(Palette.amber)
+                Label("Best take \(best)%", systemImage: "crown.fill").font(Typeface.label(.footnote)).foregroundStyle(Palette.starGold)
                     .padding(.top, 4)
             }
         }
@@ -167,7 +169,7 @@ struct SongFinaleView: View {
                 if let combo = take.bestCombo, combo > 1 {
                     StatTile(symbol: "flame.fill", tint: Palette.flame, value: Text("×\(combo)"), label: "Best combo", alignment: .center)
                 }
-                StatTile(symbol: take.full ? "metronome.fill" : "tortoise.fill", tint: take.full ? Palette.amber : Palette.inkSoft,
+                StatTile(symbol: take.full ? "metronome.fill" : "tortoise.fill", tint: take.full ? Palette.accentNeutral : Palette.inkSoft,
                          value: Text("\(take.tempo)"), label: "BPM", alignment: .center)
             }
             .padding(.horizontal, Metrics.gutter)
@@ -195,7 +197,7 @@ struct SongFinaleView: View {
         HStack(spacing: 16) {
             posterThumb
             VStack(alignment: .leading, spacing: 8) {
-                Text("Your take, story-sized").font(Typeface.label(15)).foregroundStyle(Palette.ink)
+                Text("Your take, story-sized").font(Typeface.label(.body)).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true)
                 if let poster {
                     // The link opens this song for whoever receives it.
@@ -229,7 +231,7 @@ struct SongFinaleView: View {
 
     private var shareLabel: some View {
         Label("Share", systemImage: "square.and.arrow.up")
-            .font(Typeface.label(14)).foregroundStyle(Palette.onAccent)
+            .font(Typeface.label(.body)).foregroundStyle(Palette.onAccent)
             .padding(.horizontal, 16).frame(minHeight: Metrics.minTarget)
             .background(Capsule().fill(accent))
             .fixedSize()
@@ -239,7 +241,7 @@ struct SongFinaleView: View {
         VStack(spacing: 6) {
             if let slower, let slowerTempo {
                 Button(action: slower) { Label("Try it at \(slowerTempo) BPM", systemImage: "tortoise.fill") }
-                    .font(Typeface.label(14)).foregroundStyle(accent)
+                    .font(Typeface.label(.body)).foregroundStyle(accent)
                     .tapTarget()
                     .accessibilityIdentifier("song.slower")
             }
@@ -288,7 +290,7 @@ struct SongFinaleView: View {
 
     private var storyCard: SongStoryCard {
         SongStoryCard(art: art, title: title, course: course.title.localized, stars: stars, take: take, accent: accent,
-                      streak: store.streak.current)
+                      streak: store.settings.calmMode ? 0 : store.streak.current)
     }
 }
 
@@ -312,8 +314,8 @@ struct SongStoryCard: View {
             Spacer(minLength: 12)
             sleeve
             Spacer(minLength: 18)
-            Text(verbatim: course).font(Typeface.label(12)).tracking(1.8).textCase(.uppercase).foregroundStyle(accent).lineLimit(1)
-            Text(verbatim: title).font(Typeface.display(34)).tracking(-0.8).foregroundStyle(Palette.ink)
+            Text(verbatim: course).font(Typeface.label(.caption)).tracking(1.8).textCase(.uppercase).foregroundStyle(accent).lineLimit(1)
+            Text(verbatim: title).font(Typeface.display(.display)).tracking(-0.8).foregroundStyle(Palette.ink)
                 .multilineTextAlignment(.center).lineLimit(2).minimumScaleFactor(0.6)
                 .padding(.top, 6)
             starRow.padding(.top, 14)
@@ -346,7 +348,7 @@ struct SongStoryCard: View {
 
     private var topRow: some View {
         HStack {
-            Text("TIMBRE").font(Typeface.label(13)).tracking(6).foregroundStyle(Palette.amber)
+            TimbreLogotype(size: 15)
             Spacer(minLength: 12)
             HStack(spacing: 6) {
                 Circle().fill(Palette.danger).frame(width: 7, height: 7)
@@ -394,21 +396,21 @@ struct SongStoryCard: View {
     private var score: some View {
         HStack(alignment: .firstTextBaseline, spacing: 14) {
             VStack(spacing: 0) {
-                Text("\(take.percent)%").font(Typeface.note(46)).foregroundStyle(Palette.ink)
-                Text("accuracy").font(Typeface.label(12)).foregroundStyle(Palette.inkSoft)
+                Text("\(take.percent)%").font(Typeface.note(.display)).foregroundStyle(Palette.ink)
+                Text("accuracy").font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
             }
             if let points = take.points {
                 Hairline(vertical: true).frame(height: 44)
                 VStack(spacing: 0) {
-                    Text(points, format: .number).font(Typeface.note(30)).foregroundStyle(Palette.ink)
-                    Text("Score").font(Typeface.label(12)).foregroundStyle(Palette.inkSoft)
+                    Text(points, format: .number).font(Typeface.note(.title)).foregroundStyle(Palette.ink)
+                    Text("Score").font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
                 }
             }
             if let combo = take.bestCombo, combo > 1 {
                 Hairline(vertical: true).frame(height: 44)
                 VStack(spacing: 0) {
-                    Text("×\(combo)").font(Typeface.note(30)).foregroundStyle(Palette.flame)
-                    Text("Best combo").font(Typeface.label(12)).foregroundStyle(Palette.inkSoft)
+                    Text("×\(combo)").font(Typeface.note(.title)).foregroundStyle(Palette.flame)
+                    Text("Best combo").font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
                 }
             }
         }
@@ -445,13 +447,18 @@ struct SongStoryCard: View {
     private var signature: some View {
         VStack(spacing: 10) {
             if streak > 1 {
-                Label("\(streak)-day streak", systemImage: "flame.fill").font(Typeface.label(13)).foregroundStyle(Palette.flameInk)
+                Label {
+                    Text("\(streak)-day streak")
+                } icon: {
+                    Glyph(.lamp, size: 16, tint: Palette.flame)
+                }
+                .font(Typeface.label(.footnote)).foregroundStyle(Palette.flameInk)
             }
             HStack(spacing: 10) {
                 Hairline()
                 HStack(spacing: 6) {
                     Image(systemName: "tuningfork").font(.system(size: 11, weight: .bold)).foregroundStyle(Palette.mint)
-                    Text("In tune with Timbre").font(Typeface.label(11)).tracking(0.4).foregroundStyle(Palette.inkSoft)
+                    Text("In tune with Timbre").font(Typeface.label(.caption)).tracking(0.4).foregroundStyle(Palette.inkSoft)
                 }
                 .fixedSize()
                 Hairline()

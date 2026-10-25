@@ -34,10 +34,14 @@ struct CoachVoice {
     var lessonTitle: (String) -> String? = { _ in nil }
     /// How long the weak-spot drill runs (its lesson's minutes).
     var drillMinutes = 4
+    /// Said for a clean run where the screen's headline already says it was clean (the lesson's results): the next
+    /// step rather than the same praise twice. Nil keeps the clean run's own words.
+    var nextStep: String? = nil
 
     // MARK: The note
 
     func text(_ note: CoachNote) -> String {
+        if case .clean = note.fact, let nextStep { return nextStep }
         switch note.fact {
         case let .change(from, to, milliseconds, beat, missed, count, bpm):
             return changeText(from: Self.name(from), to: Self.name(to), milliseconds: milliseconds, beat: beat, missed: missed, count: count,
@@ -200,10 +204,17 @@ struct CoachVoice {
         }
     }
 
-    /// Something to fix in amber (as the weak spots), praise in the screen's accent, the habit in the streak's flame.
+    /// The note's glyph: the streak's lamp for the streak, else the note's symbol (`symbol(_:)`).
+    static func glyph(_ note: CoachNote, size: CGFloat, tint: Color) -> Glyph {
+        if case .streak = note.fact { return Glyph(.lamp, size: size, tint: tint) }
+        return Glyph(symbol(note), size: size, tint: tint)
+    }
+
+    /// Something to fix in the status amber (`Palette.adjust`, as the weak spots), praise in the screen's accent, the
+    /// habit in the streak's lamp light.
     static func tint(_ note: CoachNote, accent: Color = Palette.mint) -> Color {
         switch note.tone {
-        case .fix: return Palette.amber
+        case .fix: return Palette.adjust
         case .praise: return accent
         case .habit: return Palette.flame
         }
@@ -291,17 +302,9 @@ struct CoachVoice {
     private static var cache: [String: String] = [:]
     /// Tips the model already answered without keeping to the facts (or couldn't answer): not asked again.
     private static var declined: Set<String> = []
-    /// Off under XCTest, the UI tests, the demo pitch and data and the store scenes (as `TimbreTips`), so every check
-    /// and store picture reads the templates word for word. Release builds never read these values.
-    private static let enabled: Bool = {
-        #if DEBUG
-        let environment = ProcessInfo.processInfo.environment
-        let quiet = ["XCTestConfigurationFilePath", "TIMBRE_TEST_STORAGE_ID", "TIMBRE_DEMO_PITCH", "TIMBRE_DEMO_DATA", "TIMBRE_SCENE"]
-        return !quiet.contains { environment[$0] != nil }
-        #else
-        return true
-        #endif
-    }()
+    /// Off whenever the app runs under automation (`TestSupport.isAutomated`, never in a release build), so every check
+    /// and capture reads the templates word for word.
+    private static let enabled = !TestSupport.isAutomated
 
     static func polish(_ template: String, names: [String]) async -> String? {
         if let cached = cache[template] { return cached }
