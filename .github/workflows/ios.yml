@@ -80,7 +80,7 @@ jobs:
           python3 tools/ci/summarize-log.py ci-out/core.log ci-out/core.summary.txt || true
           bash tools/ci/publish-results.sh ci-results/core ci-out
   app:
-    timeout-minutes: 60
+    timeout-minutes: 90
     runs-on: macos-15
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
