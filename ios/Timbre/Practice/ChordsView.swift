@@ -127,7 +127,7 @@ struct ChordLibraryView: View {
                 .stillCard()
         } else {
             VStack(alignment: .trailing, spacing: 12) {
-                // Chart or player's view, as in the lessons (one remembered choice).
+                // Chart or player's view, as in the lessons: the app's one picture choice (Settings › String order).
                 ChordPictureToggle()
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
                     ForEach(shapes, id: \.self) { shape in
@@ -368,8 +368,7 @@ private struct VoicingCard: View {
     let strums: Int
     let action: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @AppStorage(ChordPicture.storageKey) private var picture: ChordPicture = .player
-    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
+    @AppStorage(ChordPicture.storageKey) private var picture: ChordPicture = .chart
 
     var body: some View {
         let sounding = !lit.isEmpty
@@ -383,8 +382,8 @@ private struct VoicingCard: View {
                 diagram
                     .frame(height: 150)
                     .frame(maxWidth: .infinity)
-                    // The player's view lays the lowest string on the right (tab order), so its glint runs the other way.
-                    .overlay { if !reduceMotion { StrumGlint(trigger: strums).scaleEffect(x: glintMirrored ? -1 : 1) } }
+                    // Both pictures lay the lowest string on the left, so the glint runs left to right on either.
+                    .overlay { if !reduceMotion { StrumGlint(trigger: strums) } }
                 HStack(spacing: 8) {
                     Text(shape.notation).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
                         .lineLimit(1).minimumScaleFactor(0.6)
@@ -399,16 +398,19 @@ private struct VoicingCard: View {
         .accessibilityHint(Text("Plays the chord."))
     }
 
-    /// The shape as a chart, or in the player's view (the lessons' switch, over the grid).
-    @ViewBuilder private var diagram: some View {
-        if picture == .player {
-            PlayerNeck(chord: spec, accent: Palette.mint, ringing: lit, compact: true)
-        } else {
-            ChordDiagram(chord: spec, showName: false, ringing: lit, reservesFretLabel: true)
+    /// The shape as a chart, or in the player's view (the lessons' switch, over the grid), tipping between them as a
+    /// lesson's card does.
+    private var diagram: some View {
+        ZStack {
+            if picture == .player {
+                PlayerNeck(chord: spec, accent: Palette.mint, ringing: lit, compact: true)
+                    .transition(ChordFlip.transition(toPlayer: true, reduceMotion: reduceMotion))
+            } else {
+                ChordDiagram(chord: spec, showName: false, ringing: lit, reservesFretLabel: true)
+                    .transition(ChordFlip.transition(toPlayer: false, reduceMotion: reduceMotion))
+            }
         }
     }
-
-    private var glintMirrored: Bool { picture == .player && stringOrder.thinnestOnTop }
 
     private func playGlyph(_ sounding: Bool) -> some View {
         Image(systemName: sounding ? "speaker.wave.2.fill" : "play.fill")

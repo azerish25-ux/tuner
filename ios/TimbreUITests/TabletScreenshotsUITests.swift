@@ -46,14 +46,13 @@ final class TabletScreenshotsUITests: XCTestCase {
         // The instrument browser is the tuner's picker sheet (a page sheet on iPad).
         element("tune.instrument").tap()
         XCTAssertTrue(element("instruments.search").waitForExistence(timeout: 10))
-        settle(1.5)  // the sheet's presentation and the rails' first reveal
+        settle(0.6)  // the sheet's presentation; `shot` waits out the rails' first reveal
         shot("ipad-landscape-instruments")
         closePicker()
 
         tab("Play", until: "practice.sniper")
         shot("ipad-landscape-practice")
         tab("Songs", until: "songs.hero")
-        settle(0.5)
         shot("ipad-landscape-songs")
         tab("Learn", until: "learn.inspector")
         shot("ipad-landscape-learn")
@@ -79,7 +78,6 @@ final class TabletScreenshotsUITests: XCTestCase {
         tab("Learn", until: "learn.inspector")
         shot("ipad-portrait-learn")
         tab("Songs", until: "songs.hero")
-        settle(0.5)
         shot("ipad-portrait-songs")
     }
 
@@ -88,8 +86,10 @@ final class TabletScreenshotsUITests: XCTestCase {
     private func element(_ id: String) -> XCUIElement { app.descendants(matching: .any).matching(identifier: id).firstMatch }
     private func settle(_ seconds: Double = 1.2) { Thread.sleep(forTimeInterval: seconds) }
 
+    /// A capture once the screen has come to rest (StillScreen.swift): the tab's entrance, a sheet's rails and the
+    /// cards' reveal done, rather than after a fixed wait.
     private func shot(_ name: String) {
-        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        let attachment = XCTAttachment(screenshot: stillScreenshot(timeout: 3))
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
@@ -115,7 +115,7 @@ final class TabletScreenshotsUITests: XCTestCase {
         add(attachment)
     }
 
-    /// Taps a tab (the iPad's tab bar sits at the top) until `until` shows, then lets the tab's entrance settle.
+    /// Taps a tab (the iPad's tab bar sits at the top) until `until` shows; `shot` then waits for its entrance to settle.
     private func tab(_ name: String, until id: String) {
         let button = app.buttons[name].firstMatch
         let target = element(id)
@@ -124,7 +124,7 @@ final class TabletScreenshotsUITests: XCTestCase {
             if target.waitForExistence(timeout: 6) { break }
         }
         XCTAssertTrue(target.exists, "\(name) never showed \(id)")
-        settle(1.5)
+        settle(0.6)
     }
 
     /// Closes the picker sheet and waits for it to go; on iPad it can still be settling, so a swipe is the fallback.

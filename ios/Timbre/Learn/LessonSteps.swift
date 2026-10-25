@@ -400,8 +400,8 @@ struct ChordStep: View {
     /// The hand-over to the next step, a beat after the chord rings; it ends with the step.
     @State private var finishTask: Task<Void, Never>?
     @Environment(\.scenePhase) private var scenePhase
-    /// The chord chart or the player's view (the switch on the card; remembered).
-    @AppStorage(ChordPicture.storageKey) private var chordView: ChordPicture = .player
+    /// The chord chart (the default) or the player's view: the switch on the card, the app's one picture choice.
+    @AppStorage(ChordPicture.storageKey) private var chordView: ChordPicture = .chart
     private let order: [(index: Int, midi: Int)]
 
     init(chord: ChordSpec, course: LearnCourse, accent: Color,
@@ -440,7 +440,8 @@ struct ChordStep: View {
             }
             .padding(.top, 12)
             // The string checks over the chart (under the player's view, where its lanes are widest, as the runway's
-            // targets) and the chord itself, filling the room between the words and the bar.
+            // targets; both run from the lowest string on the left) and the chord itself, filling the room between
+            // the words and the bar.
             GeometryReader { geometry in
                 let fit = diagramFit(geometry.size)
                 let player = chordView == .player
@@ -506,7 +507,8 @@ struct ChordStep: View {
         let open = ChordStep.openStrings(course)
         let count = chord.frets.count
         // Right over the box's string lines, wherever `ChordDiagram` draws them (past its fret-number column), or
-        // where the neck's lanes meet its near edge (in the runway's order, so they may run high to low).
+        // where the neck's lanes meet its near edge (in the runway's Player view order: the lowest string on the
+        // left, as on the box).
         let xs = player ? PlayerNeck.stringPositions(chord, width: width)
                         : ChordDiagram(chord: chord, fretNumbers: true).stringPositions(width: width)
         let gap = count > 1 ? abs(xs[count - 1] - xs[0]) / CGFloat(count - 1) : 40
@@ -803,13 +805,13 @@ struct RhythmStep: View {
 
     // MARK: Header
 
-    /// The title, the tempo and the band; a strum's chord sits beside them as a small box under its name, so the
-    /// strings below keep the room.
+    /// The title, the tempo and the band; a strum's chord sits beside them small under its name (the chart or the
+    /// player's view, as chosen), so the strings below keep the room.
     @ViewBuilder private var header: some View {
         if case .strum(let chord?) = mode {
             HStack(alignment: .center, spacing: 16) {
                 headerWords
-                ChordDiagram(chord: chord, accent: accent, landing: true).frame(width: 112)
+                ChordPictureView(chord: chord, accent: accent, landing: true, compact: true).frame(width: 112)
             }
             .padding(.horizontal, Metrics.gutter)
             .padding(.top, 10)
@@ -1146,7 +1148,8 @@ struct TuneCheckStep: View {
     /// points the demo pitch or the tuner at a lesson string after the lesson has closed.
     @State private var lockTask: Task<Void, Never>?
     @Environment(\.scenePhase) private var scenePhase
-    /// The rail runs in the necks' string order (Settings › String order).
+    /// The rail runs in the necks' string order: the app's one picture choice (Chart: string 1 first; Player view:
+    /// the thickest first).
     @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
 
     /// A string just locked and is showing done before the check moves on.
@@ -1415,23 +1418,24 @@ struct TuneCheckStep: View {
     }
 }
 
-/// The chords of a progression in a row; the one to play now is big, the next one waits beside it.
+/// The chords of a progression in a row, in the picture the learner chose (the chart or the player's view); the one
+/// to play now is big, the next one waits beside it.
 struct ProgressionStrip: View {
     let chords: [ChordSpec]
     let bars: [Int]
     let current: Int
     let accent: Color
-    /// Names the outer strings under the chord to play now.
+    /// Names the outer strings under the chord to play now (on the chart; the small neck numbers its lanes instead).
     var edges: StringEdges?
 
     var body: some View {
         HStack(alignment: .bottom, spacing: 14) {
-            ChordDiagram(chord: chords[min(current, chords.count - 1)], accent: accent, edges: edges).frame(width: 140)
+            ChordPictureView(chord: chords[min(current, chords.count - 1)], accent: accent, edges: edges, compact: true).frame(width: 140)
                 .id(current).transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity), removal: .opacity))
             if current + 1 < chords.count {
                 VStack(spacing: 4) {
                     Text("Next").font(.caption).foregroundStyle(Palette.inkFaint)
-                    ChordDiagram(chord: chords[current + 1], accent: Palette.inkSoft).frame(width: 84).opacity(0.7)
+                    ChordPictureView(chord: chords[current + 1], accent: Palette.inkSoft, compact: true).frame(width: 84).opacity(0.7)
                 }
             }
         }

@@ -9,8 +9,12 @@ import UIKit
 /// now and then, a bright colour field with the motif and the type in ink.
 ///
 /// Motifs are dealt along each course in turn (`assignedMotif`), skipping any of the last six dealt, so a course's
-/// shelf never shows the same motif twice within seven sleeves; the type is set five ways (top or foot, left, centred
-/// or right, or on a band of colour) in one of four weights.
+/// shelf never shows the same motif twice within seven sleeves; the type is set in one of four weights.
+///
+/// Every sleeve keeps one grid, so the controls on it never move or collide: the catalogue number top-left, and the
+/// bottom-right corner (`playCorner`) clear for "Hear it" (or a badge). The title sits at the top under the number
+/// (left, centred or right), or at the foot on the left, stopping short of the play corner (now and then on a band
+/// of colour).
 struct CoverArt {
     enum Genre: CaseIterable { case nursery, folk, classical, americana, holiday, swing, rock, anthem }
     enum Motif: CaseIterable {
@@ -78,7 +82,9 @@ struct CoverArt {
         angle = 200 + 140 * random.next()
         glow = UnitPoint(x: CGFloat(0.2 + 0.6 * random.next()), y: CGFloat(0.12 + 0.5 * random.next()))
         let alignRoll = random.next()
-        align = alignRoll < 0.56 ? .leading : alignRoll < 0.8 ? .trailing : .center
+        let rolled: Align = alignRoll < 0.56 ? .leading : alignRoll < 0.8 ? .trailing : .center
+        // A title at the foot keeps to the left of the play corner.
+        align = titleOnTop ? rolled : .leading
         let bannerRoll = random.next()
         banner = !field && !titleOnTop && bannerRoll < 0.3
         let faces = genre.faces(short: main.count <= 16)
@@ -135,8 +141,11 @@ struct CoverArt {
         return UnitPoint(x: CGFloat(0.5 - 0.5 * cos(radians)), y: CGFloat(0.5 - 0.5 * sin(radians)))
     }
     var end: UnitPoint { UnitPoint(x: 1 - start.x, y: 1 - start.y) }
-    /// The corner clear of the title, where a badge, a lock or a button goes.
-    var freeCorner: Alignment { titleOnTop ? .bottomTrailing : .topTrailing }
+    /// The play corner, clear of the title on every sleeve: where "Hear it", a badge or a lock goes.
+    var freeCorner: Alignment { .bottomTrailing }
+    /// The share of the side kept clear of type at the bottom-right: room for a 32 to 38 pt "Hear it" disc in its
+    /// 44 pt tap area on a 124 to 176 pt sleeve.
+    static let playCorner: CGFloat = 0.34
 
     /// A stable 64-bit hash: `String.hashValue` changes between launches.
     static func hash(_ text: String, salt: UInt64 = 0) -> UInt64 { SongOfTheDay.hash(text, salt: salt) }
@@ -887,6 +896,7 @@ struct SongCover: View {
                 .tracking(layout.labelSize * 0.16)
                 .foregroundStyle(art.ink.opacity(0.72))
                 .lineLimit(1)
+                .minimumScaleFactor(0.7)
                 .padding(.bottom, layout.labelSize * 0.35)
             VStack(alignment: align, spacing: -points * 0.27) {
                 ForEach(Array(layout.fit.lines.enumerated()), id: \.offset) { _, line in
@@ -900,18 +910,21 @@ struct SongCover: View {
             }
         }
         .shadow(color: .black.opacity(art.field || art.banner ? 0 : 0.35), radius: layout.side * 0.03, y: layout.side * 0.01)
+        // On top, the title starts under the catalogue number; at the foot it stops short of the play corner.
         return ZStack(alignment: Alignment(horizontal: align, vertical: art.titleOnTop ? .top : .bottom)) {
             Color.clear
             block
         }
-        .padding(.horizontal, layout.pad)
-        .padding(.vertical, art.banner ? layout.bandInset : layout.pad)
+        .padding(.leading, layout.pad)
+        .padding(.trailing, layout.typeTrailing)
+        .padding(.top, art.titleOnTop ? layout.typeTop : layout.pad)
+        .padding(.bottom, art.banner ? layout.bandInset : layout.pad)
     }
 
-    /// The catalogue number, small, in the left corner the title leaves free.
+    /// The catalogue number, small, top-left on every sleeve.
     private func catalogue(_ layout: SleeveLayout) -> some View {
         let size = layout.labelSize * 1.05
-        return ZStack(alignment: art.titleOnTop ? .bottomLeading : .topLeading) {
+        return ZStack(alignment: .topLeading) {
             Color.clear
             HStack(spacing: size * 0.4) {
                 Capsule().fill((art.field ? Palette.stage : Palette.ink).opacity(0.5)).frame(width: size * 1.2, height: max(1, size * 0.1))
@@ -943,7 +956,11 @@ struct SongCover: View {
     /// A bannered title's band, and the type's inset from its edges.
     let bandHeight: CGFloat
     let bandInset: CGFloat
-    /// The motif's room: the sleeve less its margins and the type block.
+    /// The type block's top inset when the title is on top (under the catalogue number's line), and its trailing
+    /// inset (a title at the foot stops short of the play corner).
+    let typeTop: CGFloat
+    let typeTrailing: CGFloat
+    /// The motif's room: the sleeve less its margins, the catalogue number over a title on top, and the type block.
     let region: CGRect
 
     init(art: CoverArt, size: CGSize, titled: Bool) {
@@ -951,22 +968,31 @@ struct SongCover: View {
         pad = side * 0.075
         labelSize = max(6, side * 0.052)
         let width = max(1, size.width - pad * 2)
+        // The catalogue number's line (Sora's line box is 1.26 em) and the space under it.
+        typeTop = pad + labelSize * 1.05 * 1.26 + side * 0.035
         guard titled else {
             fit = TitleFit(lines: [], points: 0)
             bandHeight = 0
             bandInset = 0
+            typeTrailing = pad
             region = CGRect(x: pad, y: pad, width: width, height: max(1, size.height - pad * 2))
             return
         }
-        fit = TitleFit.make(art.title, width: width, maxHeight: side * 0.4, largest: side * 0.17, smallest: side * 0.075, font: art.face)
+        typeTrailing = art.titleOnTop ? pad : max(pad, side * CoverArt.playCorner)
+        let typeWidth = max(1, size.width - pad - typeTrailing)
+        fit = TitleFit.make(art.title, width: typeWidth, maxHeight: side * (art.titleOnTop ? 0.36 : 0.4), largest: side * 0.17,
+                            smallest: side * 0.075, font: art.face)
         let block = labelSize * 1.26 + labelSize * 0.35 + fit.height
         let gap = side * 0.05
         bandInset = pad * 0.7
         bandHeight = art.banner ? block + bandInset * 2 : 0
-        let used = art.banner ? bandHeight + pad + gap : pad * 2 + block + gap
-        let room = max(side * 0.2, size.height - used)
-        let top = art.titleOnTop ? pad + block + gap : pad
-        region = CGRect(x: pad, y: top, width: width, height: room)
+        if art.titleOnTop {
+            let top = typeTop + block + gap
+            region = CGRect(x: pad, y: top, width: width, height: max(side * 0.2, size.height - top - pad))
+        } else {
+            let used = art.banner ? bandHeight + pad + gap : pad * 2 + block + gap
+            region = CGRect(x: pad, y: pad, width: width, height: max(side * 0.2, size.height - used))
+        }
     }
 }
 

@@ -10,7 +10,33 @@ Paste into App Store Connect → the app → the version's page and App Informat
 | Subtitle | Learn Violin, Ukulele & Bass | 28/30 |
 | Primary category | Music | |
 | Secondary category | Education | |
-| Age rating | 4+ (no user content, no web access) | |
+| Age rating | 13+ as the song catalogue stands, 4+ without two songs: see [Age rating](#age-rating) (owner decision) | |
+| Privacy Policy URL | `<privacy policy URL>` (**owner TODO**: the hosted policy, on a custom domain) | required |
+
+## Age rating
+
+App Store Connect → the app → App Information → Age Ratings. Apple replaced the questionnaire in 2025. The ratings are now 4+, 9+, 13+, 16+ and 18+ (12+ and 17+ are gone), and new questions cover in-app controls, capabilities (user-generated content, messaging, advertising, web access, social media), medical and wellness topics, and violent themes. App Store Connect has required the new answers for every submission since January 31, 2026. Apple computes the rating from the answers. Timbre's answers, checked against this build:
+
+| Section | Question | Answer | Why |
+|---|---|---|---|
+| In-app controls | Parental Controls | No | |
+| | Age Assurance | No | |
+| Capabilities | Unrestricted Web Access | No | Terms and Privacy open in Safari. The app has no browser or web view. |
+| | User-Generated Content | No | Apple means content broadly distributed to other users. Charts and audio files a player imports into Your songs (from Files, the clipboard, the share sheet or the chart editor) stay on that device, and nobody else sees them. |
+| | Social Media | No | |
+| | Messaging and Chat | No | A Pitch Sniper challenge leaves as a link through the system share sheet. |
+| | Advertising | No | No ads. The paywall sells Timbre's own subscription. |
+| Mature themes | Profanity or Crude Humor | None | |
+| | Horror/Fear Themes | None | |
+| | Alcohol, Tobacco, or Drug Use or References | **Infrequent** | Two traditional songs: "Drunken Sailor" (title and chorus) and "Good King Wenceslas" ("bring me wine"). |
+| Medical or wellness | Medical or Treatment Information | No | |
+| | Health or Wellness Topics | No | The voice course's breathing is singing technique, not self-care advice. |
+| Sexuality or nudity | All three | None | The Originals' lyrics were checked. |
+| Violence | All four, guns and weapons included | None | Pitch Sniper's "scope" is a pitch reticle; no weapon is shown. |
+| Chance-based activities | Gambling, Simulated Gambling, Loot Boxes | None | Rewards are earned, never bought or drawn at random. |
+| | Contests | Infrequent | Pitch Sniper's Game Center leaderboard and friend challenges. |
+
+**Result: 13+.** The alcohol answer sets it: Apple's 4+ and 9+ definitions allow no alcohol references. Everything else here sits at 4+ (infrequent contests are 4+). **Owner decision:** remove those two songs from the bundled catalogue (`curriculum.json`) and answer None to bring the app to 4+. A 13+ music app is hidden from children whose Screen Time limits apps to 9+, and that is a large share of beginner ukulele and guitar players. Answer the questionnaire again whenever songs are added.
 
 ## Keywords (100/100)
 
@@ -30,6 +56,8 @@ Tune up, then learn to play: 557 lessons that listen as you play guitar, ukulele
 
 ## Description
 
+> **Owner TODO before pasting:** replace `<privacy policy URL>` on the last line with the hosted privacy policy, the same URL as App Information → Privacy Policy URL. Everything else is ready to paste.
+
 ```
 Timbre is a precise tuner and a music teacher in one app. Tune any of 60 instruments in seconds, then play real lessons that listen to you and tell you exactly how you did.
 
@@ -37,6 +65,7 @@ TUNE ANYTHING, FAST
 • A chromatic and strobe tuner with cent-level precision
 • 60 instruments and 102 tunings, from guitar and violin to oud, sitar and erhu
 • Auto string detection, with a check-off as each string locks in
+• Strum to tune: one strum reads every string at once and shows which one to tune first
 • Studio-lit 3D guitars, basses, violin, cello and mandolin
 • Custom tunings, capo, adjustable A4 reference, solfège and sargam note names
 
@@ -54,7 +83,7 @@ PRACTICE TOOLS
 • Home Screen and Lock Screen widgets, plus Siri shortcuts
 
 FREE TO START
-The tuner for guitar, bass, ukulele, violin and cello is free, with a chromatic tuner for anything else, and so is the first unit of every course. Timbre Pro unlocks every lesson, every instrument and the full practice set. The trial timeline is on the paywall, and, with notifications on, Timbre reminds you two days before the trial ends.
+The tuner for guitar, bass, ukulele, violin and cello is free, with a chromatic tuner for anything else, and so is the first unit of every course. Timbre Pro unlocks every lesson, every instrument and the full practice set. With notifications on, Timbre reminds you two days before a free trial ends.
 
 Private by design: audio is analysed on your iPhone and never recorded or uploaded. No account and no ads.
 
@@ -81,6 +110,8 @@ python3 tools/marketing/screenshots.py --check                                  
 
 The script stops if a caption runs past 30 characters, if a row names a capture the UI tests never take, or if a count no longer matches the build (lessons and courses from `curriculum.json`, instruments and tunings from `catalog.json`). Each caption names what the player gets, not the feature; the supporting line under it backs it up.
 
+Every capture shows the same player: the UI tests' seeded history (`DemoData` in `ios/Timbre/TimbreApp.swift`) is a 7-day streak that already counts today (the flame lit), level 5 and today's tune-up done, whatever the hour the run starts. Each capture waits for its screen to settle before the picture (`stillScreenshot` in `ios/TimbreUITests/StillScreen.swift`), after the cue that its slowest animation has finished: the fingertips landing, the XP counter, a stagger.
+
 ### iPhone 6.9"
 
 | # | Caption | Supporting line | Capture |
@@ -91,7 +122,7 @@ The script stops if a caption runs past 30 characters, if a row names a capture 
 | 4 | **Play songs, start to finish** | Originals and timeless classics | the Songs tab (`63-songs`) |
 | 5 | **Learn at your own pace** | 557 lessons in 14 courses | Learn, with the next lesson up (`50-learn`) |
 | 6 | **Five minutes a day adds up** | Stars, streaks and daily quests | lesson results with their stars (`62-lesson-results`) |
-| 7 | **Tune whatever you play** | Guitar to violin, oud to erhu | the instrument browser's Guitar shelf (`31-instruments-scrolled`) |
+| 7 | **One strum checks every string** | See which string to tune first | Strum to tune with all six strings read from one strum, A2 the one to tune first (`11b-tune-strum`) |
 | 8 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) |
 
 ### iPad 13"

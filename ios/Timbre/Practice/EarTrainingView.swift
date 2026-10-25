@@ -1,8 +1,10 @@
 import SwiftUI
 import TimbreCore
 
-/// Ear training: ten questions a round. A listening orb that pulses with the tones, round dots,
-/// a combo that heats up on a run of right answers, and a results card at the end.
+/// Ear training: ten questions a round. Each question is drawn as the Play hub's interval staircase: its first
+/// note lit, the rest a "?" pulsing with the tones; on the answer the notes land on their steps, named, with the
+/// interval. Round dots, a combo that heats up on a run of right answers, Recent answers to hear again, and a
+/// results card at the end.
 struct EarTrainingView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService
@@ -33,6 +35,10 @@ struct EarTrainingView: View {
     /// Answers so far in this drill, newest first, kept across rounds (each can be heard again).
     @State private var history: [EarAnswerRecord] = []
     @State private var answered = 0
+    /// Bumped with every new question, so its staircase starts unanswered rather than hopping back down.
+    @State private var serial = 0
+    /// Once you have answered a question of your own, Recent no longer opens with an example.
+    @AppStorage("ear.recent.exampleSeen") private var exampleSeen = false
     private let length = 10
 
     var body: some View {
@@ -58,7 +64,10 @@ struct EarTrainingView: View {
         }
         .navigationTitle("Ear training")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear { if session == nil { start() } }
+        .onAppear {
+            prefillExample()
+            if session == nil { start() }
+        }
     }
 
     /// Three or more right in a row warms the stage.
@@ -67,7 +76,7 @@ struct EarTrainingView: View {
     private var drillPicker: some View {
         Picker("Drill", selection: Binding(get: { drill }, set: { value in
             if value != .pitchDirection && !commerce.isPro { store.presentPaywall("ear.\(value.rawValue)"); return }
-            drill = value; history = []; start()
+            drill = value; history = []; prefillExample(); start()
         })) {
             Text("Pitch").tag(EarDrill.pitchDirection)
             Text("Intervals").tag(EarDrill.interval)
@@ -163,63 +172,61 @@ struct EarTrainingView: View {
                         .contentTransition(.numericText())
                 }
             }
-            listenOrb(question)
+            answerStage(question)
             answers(question)
         }
         .stillCard()
         .animation(Motion.pluck, value: picked)
     }
 
-    private func listenOrb(_ question: EarQuestion) -> some View {
+    /// The question as a staircase of semitones from its first note (`EarAnswerStage`), with Hear again under it.
+    private func answerStage(_ question: EarQuestion) -> some View {
         let playing = audio.tonePlaying
-        return VStack(spacing: 6) {
-            ZStack {
-                ListeningRings(active: playing, startedAt: playedAt, tones: question.simultaneous ? 1 : question.tones.count,
-                               together: question.simultaneous, animate: !reduceMotion)
-                    .frame(width: 232, height: 232)
-                Button { play(question) } label: { orbFace(playing) }
-                    .buttonStyle(PressScaleStyle())
-                    .accessibilityLabel("Hear again")
-                    .accessibilityIdentifier("ear.play")
-            }
-            .frame(height: 232)
-            .overlay { SparkBurst(trigger: burst, color: Palette.mint).frame(width: 300, height: 300) }
-            .overlay(alignment: .topTrailing) { xpFloat }
-            // The app is sounding the tones here, so this reads "Hear it" with a speaker, as lessons do: "Listen"
-            // is kept for the microphone.
-            Group {
-                if playing {
-                    Label("Hear it", systemImage: "speaker.wave.2.fill")
-                        .symbolEffect(.variableColor.iterative, isActive: !reduceMotion)
+        let picture = EarPicture(question: question, reference: store.settings.referencePitchHz, notation: store.settings.notation)
+        return VStack(spacing: 10) {
+            EarAnswerStage(picture: picture, revealed: picked != nil, playing: playing, startedAt: playedAt,
+                           together: question.simultaneous)
+                .frame(height: 176)
+                .id(serial)
+                .overlay { SparkBurst(trigger: burst, color: Palette.mint).frame(width: 300, height: 300) }
+                .overlay(alignment: .topTrailing) { xpFloat }
+            hearButton(question, picture: picture, playing: playing)
+        }
+    }
+
+    /// Plays the question again. The app is sounding the tones, so it reads "Hear it" with a speaker while they play,
+    /// as lessons do ("Listen" is kept for the microphone). Once answered it names what you heard,
+    /// "A3 → E4 · Perfect 5th", and still plays it again.
+    private func hearButton(_ question: EarQuestion, picture: EarPicture, playing: Bool) -> some View {
+        let revealed = picked != nil
+        return Button { play(question) } label: {
+            HStack(spacing: 8) {
+                Image(systemName: playing ? "speaker.wave.2.fill" : (revealed ? "speaker.wave.2" : "play.fill"))
+                    .symbolEffect(.variableColor.iterative, isActive: playing && !reduceMotion)
+                if revealed {
+                    picture.revealText(answer: question.answer)
+                } else if playing {
+                    Text("Hear it")
                 } else {
                     Text("Hear again")
                 }
             }
-            .font(.footnote.weight(.semibold))
-            .foregroundStyle(playing ? Palette.mint : Palette.inkFaint)
-            .animation(Motion.quick, value: playing)
-            .accessibilityHidden(true)
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(revealed ? Palette.ink : Palette.mint)
+            .lineLimit(1).minimumScaleFactor(0.75)
+            .padding(.horizontal, 16).frame(minHeight: 40)
+            .background(Capsule().fill(Palette.mint.opacity(playing ? 0.16 : 0.07)))
+            .overlay(Capsule().strokeBorder(Palette.mint.opacity(playing ? 0.55 : 0.25), lineWidth: 1))
+            .tapTarget()
         }
+        .buttonStyle(PressScaleStyle())
+        .animation(Motion.quick, value: playing)
+        .accessibilityLabel(revealed ? picture.spoken(answer: question.answer) : Text("Hear again"))
+        .accessibilityHint(revealed ? Text("Hear again") : Text(verbatim: ""))
+        .accessibilityIdentifier("ear.play")
     }
 
-    private func orbFace(_ playing: Bool) -> some View {
-        ZStack {
-            Circle().fill(RadialGradient(colors: [Palette.mint.opacity(playing ? 0.42 : 0.26), Palette.mintDeep.opacity(0.18)],
-                                         center: UnitPoint(x: 0.35, y: 0.3), startRadius: 0, endRadius: 80))
-            Circle().strokeBorder(Palette.mint.opacity(playing ? 0.7 : 0.35), lineWidth: 1)
-            Image(systemName: playing ? "waveform" : "play.fill")
-                .font(.system(size: 38, weight: .semibold)).foregroundStyle(Palette.mint)
-                .symbolEffect(.variableColor.iterative, isActive: playing)
-                .contentTransition(.symbolEffect(.replace))
-        }
-        .frame(width: 118, height: 118)
-        .scaleEffect(playing && !reduceMotion ? 1.06 : 1)
-        .shadow(color: Palette.mint.opacity(playing ? 0.45 : 0.15), radius: playing ? 26 : 12)
-        .animation(Motion.pluck, value: playing)
-        .contentShape(Circle())
-    }
-
-    /// "+2 XP" rising beside the orb on a right answer.
+    /// "+2 XP" rising over the staircase's corner on a right answer.
     @ViewBuilder private var xpFloat: some View {
         if showXP {
             Text("+\(XPReward.earCorrect) XP").font(Typeface.label(13)).foregroundStyle(Palette.onAccent)
@@ -247,8 +254,9 @@ struct EarTrainingView: View {
     // MARK: Recent answers
 
     /// Under the card: the latest answers, newest first, each a chip that plays its question again
-    /// (a miss shows what you picked struck through, then the answer). Until the first answer, one line
-    /// says what will land there, in a slot the chips' height so nothing jumps when they arrive.
+    /// (a miss shows what you picked struck through, then the answer). A first visit opens with one example
+    /// chip to hear (`prefillExample`); until the first answer, one line says what will land there, in a slot the
+    /// chips' height so nothing jumps when they arrive.
     private var recentStrip: some View {
         VStack(alignment: .leading, spacing: 10) {
             SectionHeader("Recent")
@@ -266,9 +274,33 @@ struct EarTrainingView: View {
                 }
                 .railBleed(leading: Metrics.gutter, trailing: Metrics.gutter)
                 .transition(.opacity)
+                if history.allSatisfy(\.example) {
+                    Text("Answers appear here. Tap one to hear it again.")
+                        .font(.footnote).foregroundStyle(Palette.inkSoft)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .transition(.opacity)
+                }
             }
         }
         .padding(.top, 2)
+    }
+
+    /// First visit: Recent opens with one example of this drill to hear (the same one every time), until you have
+    /// answered a question of your own.
+    private func prefillExample() {
+        guard !exampleSeen, history.isEmpty else { return }
+        history = [example(for: drill)]
+    }
+
+    private func example(for drill: EarDrill) -> EarAnswerRecord {
+        let reference = store.settings.referencePitchHz
+        func question(_ seed: UInt64) -> EarQuestion {
+            var session = EarSession(drill: drill, seed: seed, level: 0, referenceHz: reference)
+            return session.next()
+        }
+        // The first seed whose interval moves (a unison would make a dull example).
+        let chosen = (UInt64(3)...UInt64(40)).lazy.map(question).first { $0.answer != Intervals.names[0] } ?? question(3)
+        return EarAnswerRecord(id: -1, question: chosen, picked: chosen.answer, example: true)
     }
 
     private var recentHint: some View {
@@ -284,16 +316,26 @@ struct EarTrainingView: View {
         .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).strokeBorder(Palette.line, style: StrokeStyle(lineWidth: 1, dash: [3, 4])))
     }
 
+    /// An answer to hear again: right or wrong (an example is marked so), the answer, and the notes it was
+    /// ("A3 → E4"; a chord's root; higher-or-lower's cents).
     private func recentChip(_ record: EarAnswerRecord) -> some View {
-        let tint = record.right ? Palette.mint : Palette.coral
+        let tint = record.example ? Palette.amber : (record.right ? Palette.mint : Palette.coral)
+        let notes = EarPicture(question: record.question, reference: store.settings.referencePitchHz, notation: store.settings.notation).chipNotes
         return Button { play(record.question) } label: {
             HStack(spacing: 6) {
-                Image(systemName: record.right ? "checkmark" : "xmark").font(.caption.weight(.heavy)).foregroundStyle(tint)
+                if record.example {
+                    Text("Example").font(.caption.weight(.semibold)).foregroundStyle(Palette.amber)
+                } else {
+                    Image(systemName: record.right ? "checkmark" : "xmark").font(.caption.weight(.heavy)).foregroundStyle(tint)
+                }
                 if !record.right {
                     Text(LocalizedStringKey(record.picked)).strikethrough().foregroundStyle(Palette.inkFaint)
                     Image(systemName: "arrow.right").font(.caption2.weight(.bold)).foregroundStyle(Palette.inkFaint)
                 }
                 Text(LocalizedStringKey(record.question.answer)).foregroundStyle(Palette.ink)
+                if let notes {
+                    NoteGlyphs.text(notes, size: 12).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                }
                 if let cents = record.question.cents {
                     Text(verbatim: "\(Int(abs(cents).rounded()))¢").font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
                 }
@@ -310,8 +352,8 @@ struct EarTrainingView: View {
         .buttonStyle(PressScaleStyle())
         .disabled(picked != nil)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(LocalizedStringKey(record.question.answer)))
-        .accessibilityValue(record.right ? Text(verbatim: "") : Text("Not quite."))
+        .accessibilityLabel(Text(LocalizedStringKey(record.question.answer)) + Text(verbatim: notes.map { ", " + EarPicture.spokenNotes($0) } ?? ""))
+        .accessibilityValue(record.example ? Text("Example") : (record.right ? Text(verbatim: "") : Text("Not quite.")))
         .accessibilityHint(Text("Hear again"))
         .accessibilityAddTraits(.isButton)
     }
@@ -389,6 +431,7 @@ struct EarTrainingView: View {
         var next = EarSession(drill: drill, level: level, referenceHz: store.settings.referencePitchHz)
         let first = next.next()
         round += 1
+        serial += 1
         session = next; question = first; picked = nil
         outcomes = []; combo = 0; bestCombo = 0; showXP = false
         gained = 0; shownXP = 0; ringShown = false
@@ -410,10 +453,15 @@ struct EarTrainingView: View {
         session = current
         outcomes.append(right)
         withMotion(Motion.pluck, reduceMotion: reduceMotion) {
+            history.removeAll { $0.example }
             history.insert(EarAnswerRecord(id: answered, question: question, picked: choice), at: 0)
             if history.count > 12 { history.removeLast() }
         }
         answered += 1
+        exampleSeen = true
+        // The staircase names the notes as they land; VoiceOver hears them too.
+        let picture = EarPicture(question: question, reference: store.settings.referencePitchHz, notation: store.settings.notation)
+        AccessibilityNotification.Announcement(picture.spokenString(answer: NSLocalizedString(question.answer, comment: ""))).post()
         if right {
             combo += 1
             bestCombo = max(bestCombo, combo)
@@ -428,19 +476,20 @@ struct EarTrainingView: View {
             withAnimation(.default) { shake += 1 }
         }
         let token = round
+        // Long enough to see the notes land and read their names (a miss a little longer).
         Task { @MainActor in
             if right {
                 try? await Task.sleep(for: .milliseconds(520))
                 withAnimation(Motion.fade) { showXP = false }
-                try? await Task.sleep(for: .milliseconds(130))
+                try? await Task.sleep(for: .milliseconds(580))
             } else {
-                try? await Task.sleep(for: .milliseconds(1300))
+                try? await Task.sleep(for: .milliseconds(1800))
             }
             guard token == round, var s = session else { return }
             if s.asked >= length {
                 finish(s)
             } else {
-                let next = s.next(); session = s; self.question = next; picked = nil
+                let next = s.next(); session = s; serial += 1; self.question = next; picked = nil
                 play(next)
             }
         }
@@ -483,6 +532,8 @@ private struct EarAnswerRecord: Identifiable {
     let id: Int
     let question: EarQuestion
     let picked: String
+    /// A first visit's example (`prefillExample`), not an answer of yours: dropped at your first answer.
+    var example = false
     var right: Bool { picked == question.answer }
 }
 
@@ -551,59 +602,335 @@ private struct EarChoiceButton: View {
     }
 }
 
-/// Around the play button: radial bars that pluck with each tone while the question sounds
-/// (timed like AudioService.playTones), and rings drifting outward. At rest, a quiet dial.
-private struct ListeningRings: View {
-    let active: Bool
+// MARK: - Answer stage
+
+/// The notes of a question, for the answer stage and the Recent chips: the first note, the others as semitones
+/// above it (an interval's second note, a chord's upper notes), or for higher-or-lower the second note's detune.
+private struct EarPicture {
+    let drill: EarDrill
+    /// MIDI note of the first tone.
+    let root: Int
+    /// Semitones above the root of the other notes, 0…12 (empty for higher-or-lower).
+    let steps: [Int]
+    /// Higher-or-lower: the second note's detune in cents.
+    let cents: Double?
+    let notation: String
+
+    init(question: EarQuestion, reference: Double, notation: String) {
+        let midis = question.tones.map { Int(PitchMath.midi(frequency: $0, reference: reference).rounded()) }
+        let first = midis.first ?? 57
+        drill = question.drill
+        root = first
+        cents = question.cents
+        steps = question.cents == nil ? midis.dropFirst().map { max(0, min(12, $0 - first)) } : []
+        self.notation = notation
+    }
+
+    /// "E♭4"-style names as the voice tools write them (signs set by `NoteGlyphs`).
+    func name(_ midi: Int) -> String { VoiceNoteName.name(midi, notation: notation) }
+
+    /// "+35¢", "−35¢".
+    var centsLabel: String? {
+        guard let cents else { return nil }
+        return (cents < 0 ? "−" : "+") + "\(Int(abs(cents).rounded()))¢"
+    }
+
+    /// The notes heard: "A3 → E4", a chord's "A3 C♯4 E4", higher-or-lower's "A3 → +35¢".
+    var notes: String {
+        if let centsLabel { return name(root) + " → " + centsLabel }
+        let names = [name(root)] + steps.map { name(root + $0) }
+        return drill == .chordQuality ? names.joined(separator: " ") : names.joined(separator: " → ")
+    }
+
+    /// A Recent chip's notes: an interval's two, a chord's root; none for higher-or-lower (its chip shows the cents).
+    var chipNotes: String? {
+        switch drill {
+        case .pitchDirection: return nil
+        case .interval: return notes
+        case .chordQuality: return name(root)
+        }
+    }
+
+    /// "A3 → E4 · Perfect 5th".
+    func revealText(answer: String) -> Text {
+        NoteGlyphs.text(notes, size: 15) + Text(verbatim: "  ·  ") + Text(LocalizedStringKey(answer))
+    }
+
+    /// For VoiceOver: "A3, E4, Perfect 5th" (no arrows read aloud).
+    func spoken(answer: String) -> Text {
+        Text(verbatim: Self.spokenNotes(notes) + ", ") + Text(LocalizedStringKey(answer))
+    }
+
+    /// The same, already in words (`answer` localized), for an announcement.
+    func spokenString(answer: String) -> String {
+        Self.spokenNotes(notes) + ", " + answer
+    }
+
+    static func spokenNotes(_ notes: String) -> String {
+        NoteNames.glyphs(notes).replacingOccurrences(of: " → ", with: ", ")
+    }
+}
+
+/// A question drawn as the Play hub's interval staircase (`IntervalStairsArt`): a step a semitone up from the first
+/// note, which is lit from the start; the notes still to name are a "?" pulsing with the tones as they sound
+/// (timed like `AudioService.playTones`). On the answer they hop up to their steps, each with its interval and
+/// name. Reduce Motion: the tones glow without pulsing and the notes fade in on their steps.
+private struct EarAnswerStage: View {
+    let picture: EarPicture
+    let revealed: Bool
+    let playing: Bool
     let startedAt: Date?
-    let tones: Int
     let together: Bool
-    let animate: Bool
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var reveal = 0.0
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 60, paused: !(active && animate))) { timeline in
-            Canvas { context, size in draw(&context, size: size, now: timeline.date) }
+        TimelineView(.animation(minimumInterval: 1.0 / 60, paused: !(playing && !reduceMotion))) { timeline in
+            EarStairsCanvas(picture: picture, reveal: reveal, still: reduceMotion,
+                            first: energy(tone: 0, at: timeline.date), second: energy(tone: 1, at: timeline.date))
         }
-        .allowsHitTesting(false)
         .accessibilityHidden(true)
+        .onAppear { if revealed { reveal = 1 } }
+        .onChange(of: revealed) { _, now in
+            guard now else { return }
+            withAnimation(reduceMotion ? Motion.reduced : .easeInOut(duration: 0.8)) { reveal = 1 }
+        }
     }
 
-    /// 0…1 loudness of the sounding tone: a fast attack and a decay per note.
-    private func energy(at now: Date) -> Double {
-        guard active, let startedAt else { return 0 }
+    /// 0…1 loudness of tone `tone` (a chord's notes sound as one): a fast attack and a decay per note.
+    private func energy(tone: Int, at now: Date) -> Double {
+        guard playing, let startedAt else { return 0 }
+        if reduceMotion { return 0.5 }
         let elapsed = now.timeIntervalSince(startedAt)
-        guard elapsed >= 0 else { return 0 }
         let length = together ? 1.3 : 0.9
         let step = together ? 1.3 : 1.05
-        let index = Int(elapsed / step)
-        let within = elapsed - Double(index) * step
-        guard index < max(1, tones), within < length else { return 0.1 }
+        let within = elapsed - Double(together ? 0 : tone) * step
+        guard within >= 0, within < length else { return 0 }
         return 0.25 + 0.75 * min(1, within / 0.03) * exp(-within * 2.4)
     }
+}
 
-    private func draw(_ context: inout GraphicsContext, size: CGSize, now: Date) {
-        let cx = Double(size.width) / 2
-        let cy = Double(size.height) / 2
-        let inner = 68.0
-        let outer = Double(min(size.width, size.height)) / 2
-        let t = animate ? now.timeIntervalSinceReferenceDate : 0
-        let e = animate ? energy(at: now) : (active ? 0.5 : 0)
-        let count = 56
+/// The staircase at one point of the reveal; `reveal` animates (0: unanswered, 1: every note landed).
+private struct EarStairsCanvas: View, Animatable {
+    let picture: EarPicture
+    var reveal: Double
+    let still: Bool
+    let first: Double
+    let second: Double
+
+    var animatableData: Double {
+        get { reveal }
+        set { reveal = newValue }
+    }
+
+    var body: some View {
+        Canvas { context, size in
+            let frame = EarStairsArt.Frame(picture: picture, reveal: reveal, still: still, first: first, second: second)
+            if picture.cents != nil {
+                EarStairsArt.drawPitch(&context, size: size, frame: frame)
+            } else {
+                EarStairsArt.drawSteps(&context, size: size, frame: frame)
+            }
+        }
+    }
+}
+
+private enum EarStairsArt {
+    fileprivate struct Frame {
+        let picture: EarPicture
+        let reveal: Double
+        let still: Bool
+        /// Loudness of the first tone and of the rest (the chord's: both), 0…1.
+        let first: Double
+        let second: Double
+    }
+
+    static let noteR: CGFloat = 5.5
+    /// Room under the floor for two rows of note names.
+    static let nameRoom: CGFloat = 34
+
+    /// Intervals and chords: thirteen steps, unison to octave.
+    fileprivate static func drawSteps(_ context: inout GraphicsContext, size: CGSize, frame: Frame) {
+        let picture = frame.picture
+        let count = 13
+        let inset: CGFloat = 8
+        let floorY = size.height - nameRoom
+        let rise = max(30, floorY - 48)
+        let stepWidth = (size.width - inset * 2) / CGFloat(count)
+        func centerX(_ i: Int) -> CGFloat { inset + stepWidth * (CGFloat(i) + 0.5) }
+        func top(_ i: Int) -> CGFloat { floorY - 6 - CGFloat(i) / 12 * rise }
+        let targets = picture.steps
+        let highest = targets.max() ?? 0
+        let stagger = 0.15
+        let span = max(0.1, 1 - stagger * Double(max(0, targets.count - 1)))
+        func progress(_ k: Int) -> Double { min(1, max(0, (frame.reveal - stagger * Double(k)) / span)) }
+
+        // The ladder: the root's step lit, the answer's steps as their notes land, the span between warming.
         for i in 0..<count {
-            let angle = Double(i) / Double(count) * 2 * .pi - .pi / 2
-            let wobble = 0.5 + 0.5 * sin(t * 9 + Double(i) * 1.7) * cos(t * 4.3 + Double(i) * 0.61)
-            let reach = 3 + (outer - inner - 12) * e * (0.3 + 0.7 * wobble)
-            var bar = Path()
-            bar.move(to: CGPoint(x: cx + cos(angle) * inner, y: cy + sin(angle) * inner))
-            bar.addLine(to: CGPoint(x: cx + cos(angle) * (inner + reach), y: cy + sin(angle) * (inner + reach)))
-            context.stroke(bar, with: .color(Palette.mint.opacity(0.16 + 0.6 * e)), style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
+            var lit = 0.0
+            if i == 0 {
+                lit = 0.55 + 0.45 * frame.first
+            } else if let k = targets.firstIndex(of: i) {
+                lit = progress(k)
+            } else if i < highest {
+                lit = 0.16 * frame.reveal
+            }
+            let rect = CGRect(x: centerX(i) - stepWidth / 2 + 1.5, y: top(i), width: max(2, stepWidth - 3), height: max(4, floorY - top(i)))
+            step(&context, rect: rect, lit: lit)
         }
-        guard active && animate else { return }
-        for k in 0..<3 {
-            let phase = (t * 0.7 + Double(k) / 3).truncatingRemainder(dividingBy: 1)
-            let r = inner + (outer - inner) * phase
-            let rect = CGRect(x: cx - r, y: cy - r, width: r * 2, height: r * 2)
-            context.stroke(Path(ellipseIn: rect), with: .color(Palette.mint.opacity(0.3 * (1 - phase))), lineWidth: 1.2)
+        floorLine(&context, from: inset, to: size.width - inset, y: floorY)
+
+        // Note names under the floor; one too close to another drops to a second row.
+        var firstRow: [CGFloat] = []
+        func nameY(_ x: CGFloat) -> CGFloat {
+            if firstRow.contains(where: { abs($0 - x) < 36 }) { return floorY + 26 }
+            firstRow.append(x)
+            return floorY + 12
         }
+        func nameX(_ x: CGFloat) -> CGFloat { min(size.width - 18, max(18, x)) }
+
+        let root = CGPoint(x: centerX(0), y: top(0) - noteR - 1)
+        let rootX = nameX(centerX(0))
+        context.draw(noteText(picture.name(picture.root), color: Palette.inkSoft), at: CGPoint(x: rootX, y: nameY(rootX)))
+
+        // Unanswered: how far? A faint arc from the root to a "?" over the ladder, glowing with the tones.
+        let unknown = max(0, 1 - frame.reveal * 3)
+        if unknown > 0 {
+            let spot = CGPoint(x: centerX(8), y: top(10) - 2)
+            var arc = Path()
+            arc.move(to: root)
+            arc.addQuadCurve(to: CGPoint(x: spot.x - 16, y: spot.y + 6), control: CGPoint(x: (root.x + spot.x) / 2, y: spot.y - 10))
+            context.stroke(arc, with: .color(Palette.amber.opacity(0.28 * unknown)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
+            mystery(&context, at: spot, energy: frame.second, alpha: unknown)
+        }
+        dot(&context, at: root, energy: frame.first, alpha: 1)
+
+        // Answered: each note hops from the root to its step, its interval over it and its name under the floor.
+        for (k, semitones) in targets.enumerated() {
+            let p = progress(k)
+            guard p > 0 else { continue }
+            let landing = CGPoint(x: centerX(semitones), y: top(semitones) - noteR - 1)
+            let point = frame.still ? landing : hop(from: root, to: landing, progress: p)
+            let alpha = frame.still ? p : min(1, p * 4)
+            if targets.count == 1 && semitones > 0 {
+                var arc = Path()
+                arc.move(to: root)
+                arc.addQuadCurve(to: point, control: CGPoint(x: (root.x + point.x) / 2, y: min(root.y, point.y) - 24))
+                context.stroke(arc, with: .color(Palette.amber.opacity(0.5 * alpha)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
+            }
+            dot(&context, at: point, energy: 0.6 * p, alpha: alpha)
+            let short = Text(verbatim: Intervals.short[semitones]).font(Typeface.label(12)).foregroundStyle(Palette.amber.opacity(alpha))
+            context.draw(short, at: CGPoint(x: min(size.width - 14, max(14, point.x)), y: max(10, point.y - 18)))
+            if semitones > 0 {
+                let x = nameX(centerX(semitones))
+                context.draw(noteText(picture.name(picture.root + semitones), color: Palette.ink.opacity(alpha)), at: CGPoint(x: x, y: nameY(x)))
+            }
+        }
+    }
+
+    /// Higher or lower: two steps side by side, the second rising or falling by the detune (drawn larger than
+    /// life: a semitone would be a whole step), at least a visible nudge however fine the ear has become.
+    fileprivate static func drawPitch(_ context: inout GraphicsContext, size: CGSize, frame: Frame) {
+        let picture = frame.picture
+        let floorY = size.height - nameRoom
+        let rise = max(30, floorY - 48)
+        let width = min(112, size.width * 0.3)
+        let gap: CGFloat = 20
+        let leftX = size.width / 2 - gap / 2 - width / 2
+        let rightX = size.width / 2 + gap / 2 + width / 2
+        let base = floorY - 6 - rise * 0.45
+        let cents = picture.cents ?? 0
+        let shift = CGFloat(max(0.14, min(1, abs(cents) / 50))) * rise * 0.42 * (cents < 0 ? -1 : 1)
+        let p = frame.reveal
+        let eased = p * p * (3 - 2 * p)
+        let moved = frame.still ? (p > 0 ? 1 : 0) : eased
+        let secondTop = base - shift * CGFloat(moved)
+        let alpha = frame.still ? p : min(1, p * 4)
+
+        let firstRect = CGRect(x: leftX - width / 2, y: base, width: width, height: floorY - base)
+        step(&context, rect: firstRect, lit: 0.55 + 0.45 * frame.first)
+        floorLine(&context, from: leftX - width / 2 - 8, to: rightX + width / 2 + 8, y: floorY)
+
+        // The first note's level, carried across: where the second would be if it were the same.
+        var level = Path()
+        level.move(to: CGPoint(x: leftX, y: base))
+        level.addLine(to: CGPoint(x: rightX + width / 2, y: base))
+        context.stroke(level, with: .color(Palette.amber.opacity(0.22)), style: StrokeStyle(lineWidth: 1, dash: [3, 4]))
+
+        let unknown = max(0, 1 - p * 3)
+        if unknown > 0 {
+            let outline = CGRect(x: rightX - width / 2, y: base, width: width, height: floorY - base)
+            context.stroke(Path(roundedRect: outline, cornerRadius: 4), with: .color(Palette.amber.opacity(0.3 * unknown)),
+                           style: StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
+            mystery(&context, at: CGPoint(x: rightX, y: base - 26), energy: frame.second, alpha: unknown)
+        }
+        let firstDot = CGPoint(x: leftX, y: base - noteR - 1)
+        dot(&context, at: firstDot, energy: frame.first, alpha: 1)
+        context.draw(noteText(picture.name(picture.root), color: Palette.inkSoft), at: CGPoint(x: leftX, y: floorY + 12))
+
+        guard p > 0 else { return }
+        let secondRect = CGRect(x: rightX - width / 2, y: secondTop, width: width, height: max(4, floorY - secondTop))
+        var faded = context
+        faded.opacity = alpha
+        step(&faded, rect: secondRect, lit: 1)
+        let secondDot = CGPoint(x: rightX, y: secondTop - noteR - 1)
+        var link = Path()
+        link.move(to: firstDot)
+        link.addQuadCurve(to: secondDot, control: CGPoint(x: (firstDot.x + secondDot.x) / 2, y: min(firstDot.y, secondDot.y) - 20))
+        context.stroke(link, with: .color(Palette.amber.opacity(0.5 * alpha)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
+        dot(&context, at: secondDot, energy: 0.6 * p, alpha: alpha)
+        if let label = picture.centsLabel {
+            let text = Text(verbatim: label).font(Typeface.label(12)).foregroundStyle(Palette.amber.opacity(alpha))
+            context.draw(text, at: CGPoint(x: rightX, y: max(10, secondDot.y - 18)))
+        }
+    }
+
+    // MARK: Pieces
+
+    /// A step of the staircase: an amber column, its top edge brighter the more it is lit.
+    private static func step(_ context: inout GraphicsContext, rect: CGRect, lit: Double) {
+        context.fill(Path(roundedRect: rect, cornerRadius: 4), with: .linearGradient(
+            Gradient(colors: [Palette.amber.opacity(0.07 + 0.3 * lit), Palette.amber.opacity(0.02)]),
+            startPoint: CGPoint(x: rect.midX, y: rect.minY), endPoint: CGPoint(x: rect.midX, y: rect.maxY)))
+        var edge = Path()
+        edge.move(to: CGPoint(x: rect.minX + 2, y: rect.minY))
+        edge.addLine(to: CGPoint(x: rect.maxX - 2, y: rect.minY))
+        context.stroke(edge, with: .color(Palette.amber.opacity(0.16 + 0.64 * lit)), style: StrokeStyle(lineWidth: 2, lineCap: .round))
+    }
+
+    private static func floorLine(_ context: inout GraphicsContext, from start: CGFloat, to end: CGFloat, y: CGFloat) {
+        var line = Path()
+        line.move(to: CGPoint(x: start, y: y))
+        line.addLine(to: CGPoint(x: end, y: y))
+        context.stroke(line, with: .color(.white.opacity(0.07)), lineWidth: 1)
+    }
+
+    /// A note: amber with a soft halo that swells with its tone.
+    private static func dot(_ context: inout GraphicsContext, at point: CGPoint, energy: Double, alpha: Double) {
+        let halo = 14 + 6 * CGFloat(energy)
+        context.fill(SniperScopeArt.circle(point, halo), with: .radialGradient(
+            Gradient(colors: [Palette.amber.opacity((0.3 + 0.45 * energy) * alpha), .clear]), center: point, startRadius: 0, endRadius: halo))
+        context.fill(SniperScopeArt.circle(point, noteR), with: .color(Palette.amber.opacity(alpha)))
+        context.fill(SniperScopeArt.circle(CGPoint(x: point.x - 1.5, y: point.y - 1.5), 2), with: .color(.white.opacity(0.8 * alpha)))
+    }
+
+    /// The notes still to name: a "?" in a glow that swells with their tone.
+    private static func mystery(_ context: inout GraphicsContext, at point: CGPoint, energy: Double, alpha: Double) {
+        let halo = 18 + 10 * CGFloat(energy)
+        context.fill(SniperScopeArt.circle(point, halo), with: .radialGradient(
+            Gradient(colors: [Palette.amber.opacity((0.12 + 0.35 * energy) * alpha), .clear]), center: point, startRadius: 0, endRadius: halo))
+        let mark = Text(verbatim: "?").font(Typeface.display(28)).foregroundStyle(Palette.amber.opacity((0.45 + 0.55 * energy) * alpha))
+        context.draw(mark, at: point)
+    }
+
+    /// Partway along a hop from `from` to `to`: up in an arc and down onto the step.
+    private static func hop(from: CGPoint, to: CGPoint, progress p: Double) -> CGPoint {
+        let eased = p * p * (3 - 2 * p)
+        let lift = CGFloat(sin(Double.pi * p)) * 22
+        return CGPoint(x: from.x + (to.x - from.x) * CGFloat(eased), y: from.y + (to.y - from.y) * CGFloat(p) - lift)
+    }
+
+    private static func noteText(_ name: String, color: Color) -> Text {
+        NoteGlyphs.text(name, size: 12).font(Typeface.label(12)).foregroundStyle(color)
     }
 }

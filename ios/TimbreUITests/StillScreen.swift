@@ -17,12 +17,12 @@ extension XCTestCase {
     func stillScreenshot(timeout: TimeInterval = 4, interval: TimeInterval = 0.15, tolerance: Double = 0.2) -> XCUIScreenshot {
         let deadline = Date().addingTimeInterval(timeout)
         var screenshot = XCUIScreen.main.screenshot()
-        var previous = StillScreen.thumbnail(screenshot)
+        var previous = StillScreen.thumbnail(screenshot.image.cgImage)
         var quiet = 0
         while Date() < deadline {
             Thread.sleep(forTimeInterval: interval)
             screenshot = XCUIScreen.main.screenshot()
-            let current = StillScreen.thumbnail(screenshot)
+            let current = StillScreen.thumbnail(screenshot.image.cgImage)
             quiet = StillScreen.motion(previous, current) < tolerance ? quiet + 1 : 0
             if quiet >= 2 { return screenshot }
             previous = current
@@ -31,13 +31,14 @@ extension XCTestCase {
     }
 }
 
+/// The arithmetic behind `stillScreenshot`, on plain images and bytes.
 enum StillScreen {
     /// Thumbnail width in pixels: about one per four points across a phone.
     static let columns = 100
 
-    /// The screenshot as a small grey bitmap (empty when it can't be drawn).
-    static func thumbnail(_ screenshot: XCUIScreenshot) -> [UInt8] {
-        guard let image = screenshot.image.cgImage, image.width > 0, image.height > 0 else { return [] }
+    /// The image as a small grey bitmap (empty when it can't be drawn).
+    static func thumbnail(_ image: CGImage?) -> [UInt8] {
+        guard let image, image.width > 0, image.height > 0 else { return [] }
         let width = columns
         let height = max(1, image.height * width / image.width)
         var pixels = [UInt8](repeating: 0, count: width * height)

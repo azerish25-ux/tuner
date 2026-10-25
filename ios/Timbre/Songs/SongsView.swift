@@ -36,6 +36,7 @@ struct SongsView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.dynamicTypeSize) private var typeSize
     /// The page's width, for the iPad's card columns (`CardColumns`) under the featured song.
     @State private var pageWidth: CGFloat = 0
 
@@ -68,6 +69,19 @@ struct SongsView: View {
         let token: Int
     }
 
+    /// A shelf on the page: a picked one or a course's.
+    private enum ShelfItem: Identifiable {
+        case pick(Pick)
+        case rail(SongsCatalog.Rail)
+
+        var id: String {
+            switch self {
+            case .pick(let pick): return "pick." + pick.id
+            case .rail(let rail): return "rail." + rail.id
+            }
+        }
+    }
+
     /// A shelf picked from the learner's progress or the songs themselves ("Because you learned E minor",
     /// "3 chords or fewer"), above the course shelves.
     struct Pick: Identifiable {
@@ -86,8 +100,14 @@ struct SongsView: View {
         shelf.map { "songs.tile.\($0).\(lesson.id)" } ?? "songs.tile.\(lesson.id)"
     }
     private var tileWidth: CGFloat { sizeClass == .regular ? 176 : 148 }
-    private var sleeveSide: CGFloat { sizeClass == .regular ? 168 : 128 }
-    private var heroHeight: CGFloat { sizeClass == .regular ? 380 : 330 }
+    private var sleeveSide: CGFloat { sizeClass == .regular ? 168 : 124 }
+    /// iPad: the featured row's height (the song of the day and the songs up next). On iPhone the card is as tall as
+    /// what it holds.
+    private var heroHeight: CGFloat { 380 }
+    /// Under a tile's sleeve, before its caption.
+    private static let captionGap: CGFloat = 10
+    /// The tune's other versions shown as badges under a tile's sleeve; "+2" for the rest.
+    private var versionLimit: Int { sizeClass == .regular ? 3 : 2 }
 
     /// The tab's title: the Songs course's own, translated with the curriculum.
     static func title(in curriculum: Curriculum) -> String {
@@ -99,6 +119,9 @@ struct SongsView: View {
         let active = chips.contains { $0.id == filter } ? filter : Self.all
         let layout = catalog.layout(filter: active, course: learnCourseId, store: store)
         let hero = layout.hero
+        // The picked shelves, then the course shelves (the featured song isn't repeated on its shelf: that rail starts
+        // with the song after it).
+        let shelves = layout.picks.map { ShelfItem.pick($0) } + layout.rails.map { ShelfItem.rail($0) }
         let glow: Color = hero.map { catalog.art($0).primary } ?? Palette.spotlight
         NavigationStack {
             ScrollView {
@@ -110,11 +133,12 @@ struct SongsView: View {
                             .id(hero.id)
                             .transition(.adaptive(.opacity.combined(with: .scale(scale: 0.97)), reduceMotion: reduceMotion))
                     }
-                    // The player's own charts and "Add a song" (YourSongs/YourSongsShelf.swift).
+                    // The catalogue starts straight under the song of the day.
+                    if let first = shelves.first { shelfItem(first).id(first.id) }
+                    // The player's own charts and "Add a song" (YourSongs/YourSongsShelf.swift): one row while there are
+                    // none. It keeps this place whatever the filter, so its sheets and the song it opens stay up.
                     YourSongsShelf()
-                    ForEach(layout.picks) { pick in pickShelf(pick) }
-                    // The featured song isn't repeated on its shelf: that rail starts with the song after it.
-                    ForEach(layout.rails) { rail in shelfView(rail.shelf, rail: rail.songs) }
+                    ForEach(Array(shelves.dropFirst())) { item in shelfItem(item) }
                     Text("More lessons arrive with every update.").font(.footnote).foregroundStyle(Palette.inkFaint)
                         .frame(maxWidth: .infinity).padding(.vertical, 24)
                 }
@@ -391,8 +415,10 @@ struct SongsView: View {
         .accessibilityIdentifier("songs.next.\(song.id)")
     }
 
-    /// The song of the day: its sleeve (with the record peeking out) over a mesh of the sleeve's own colours, the
-    /// title and Play below. The preview button sits on the sleeve's free corner, outside the card's button.
+    /// The song of the day: its sleeve (with the record peeking out) over a mesh of the sleeve's own colours, Play
+    /// below. On iPhone the title sits beside the sleeve, so the card is short and the shelves start on the first
+    /// screen; on iPad the title goes below and the song's map and chords (`heroSheet`) fill the room beside the sleeve.
+    /// The preview button sits on the sleeve's play corner (bottom-right, as on every sleeve), outside the card's button.
     private func heroCard(_ song: Song) -> some View {
         let art = catalog.art(song)
         let accent = art.primary
@@ -400,10 +426,15 @@ struct SongsView: View {
         let stars = store.learn.stars[song.lesson.id] ?? 0
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
         let canPreview = SongPreview.opening(of: song.lesson) != nil
+        let regular = sizeClass == .regular
+        let height: CGFloat? = regular ? heroHeight : nil
+        // The disc's 44-point tap area sits in the sleeve's corner (on iPhone's smaller sleeve, flush with its edges),
+        // so the disc stays inside the play corner the sleeve's type keeps clear (`CoverArt.playCorner`).
+        let inset: CGFloat = regular ? 4 : 0
         return Button { open(song.course, song.lesson, from: Self.heroSource) } label: {
-            // The ideal height is proposed to the face, so its spacer puts the title at the bottom.
+            // On iPad the ideal height is proposed to the face, so its spacer puts the title at the bottom.
             heroFace(song, art: art, access: access, stars: stars)
-                .frame(maxWidth: .infinity, minHeight: heroHeight, idealHeight: heroHeight, alignment: .topLeading)
+                .frame(maxWidth: .infinity, minHeight: height, idealHeight: height, alignment: .topLeading)
                 .background { heroBackdrop(art) }
                 .clipShape(shape)
                 .overlay(shape.strokeBorder(accent.opacity(0.4), lineWidth: 1))
@@ -418,36 +449,187 @@ struct SongsView: View {
         .overlay(alignment: .topTrailing) {
             if canPreview {
                 PreviewDisc(active: previewing == song.id, ring: art.field ? Palette.stage : art.primary.mix(with: .black, by: 0.25),
-                            start: previewStart, length: previewLength, side: 38) {
+                            start: previewStart, length: previewLength, side: regular ? 38 : 32) {
                     togglePreview(song, full: false)
                 }
                 .accessibilityIdentifier("songs.hero.preview")
-                .padding(.trailing, Metrics.cardPadding + 4)
-                .padding(.top, art.titleOnTop ? Metrics.cardPadding + sleeveSide - 4 - 44 : Metrics.cardPadding + 4)
+                .padding(.trailing, Metrics.cardPadding + inset)
+                .padding(.top, Metrics.cardPadding + sleeveSide - inset - Metrics.minTarget)
             }
         }
     }
 
+    /// The sleeve top-right; beside it the eyebrow, then the title (iPhone) or the song's map and chords (iPad); the
+    /// details and Play at the foot.
     private func heroFace(_ song: Song, art: CoverArt, access: LessonAccess, stars: Int) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(alignment: .top, spacing: 12) {
-                // Above the record as it slides out.
-                heroEyebrow(accent: art.primary).zIndex(1)
-                Spacer(minLength: 0)
+        let regular = sizeClass == .regular
+        // At the accessibility sizes the title needs the card's width: it goes below the sleeve on iPhone too.
+        let titleBeside = !regular && !typeSize.isAccessibilitySize
+        return VStack(alignment: .leading, spacing: titleBeside ? 14 : 16) {
+            HStack(alignment: .top, spacing: regular ? 16 : 12) {
+                heroLead(song, art: art, titled: titleBeside)
+                    // Above the record as it slides out.
+                    .zIndex(1)
                 sleeve(art, playing: previewing == song.id)
             }
-            Spacer(minLength: 0)
-            heroText(song, accent: art.primary, access: access, stars: stars)
-                .background(alignment: .bottom) { heroScrim }
+            // As tall as the sleeve (or the title, if taller): the lead's spacer then sets its foot level with the sleeve's.
+            .fixedSize(horizontal: false, vertical: true)
+            // On iPad the card has the up-next panel's height; the details go to its foot.
+            if regular { Spacer(minLength: 0) }
+            heroText(song, accent: art.primary, access: access, stars: stars, compact: titleBeside)
+                .background(alignment: .bottom) { heroScrim(fade: titleBeside ? 14 : 40) }
         }
         .padding(Metrics.cardPadding)
     }
 
+    /// Beside the sleeve: the eyebrow at the top and, level with the sleeve's foot, the title (iPhone, `titled`) or,
+    /// on iPad, the song's map and chords.
+    private func heroLead(_ song: Song, art: CoverArt, titled: Bool) -> some View {
+        let regular = sizeClass == .regular
+        return VStack(alignment: .leading, spacing: regular ? 12 : 10) {
+            heroEyebrow(accent: art.primary)
+            Spacer(minLength: 0)
+            if titled {
+                // The record slides out behind it while the opening plays.
+                heroTitle(song, lines: 3)
+                    .padding(.trailing, 8)
+            } else if regular && !typeSize.isAccessibilitySize {
+                heroSheet(song, accent: art.primary)
+                    // Clear of the record at its furthest out (`sleeve`).
+                    .padding(.trailing, max(0, sleeveSide * 0.3 - 16) + 6)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    /// The song's title in the app's ink, large, over the sleeve's light.
+    private func heroTitle(_ song: Song, lines: Int) -> some View {
+        Text(song.lesson.title.localized).font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
+            .lineLimit(lines).minimumScaleFactor(lines > 2 ? 0.75 : 0.8).fixedSize(horizontal: false, vertical: true)
+            .shadow(color: .black.opacity(0.4), radius: 8, y: 2)
+    }
+
+    // MARK: The song beside its sleeve (iPad)
+
+    /// iPad, in the room beside the sleeve: the song as its song sheet draws it, read-only, its sections
+    /// (`SongSectionMap`) over its chords (`MiniChordGlyph`; its melody's notes for a song without chords), on a dark
+    /// glass so both read over any sleeve's light. While the opening plays, a playhead runs through the map from where
+    /// the opening starts in the song. Part of the hero's button: a tap on it opens the song.
+    private func heroSheet(_ song: Song, accent: Color) -> some View {
+        let sheet = SongSheet.of(song.lesson)
+        let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
+        return VStack(alignment: .leading, spacing: 8) {
+            heroMap(song, sheet: sheet, accent: accent)
+            heroHarmony(sheet, accent: accent)
+        }
+        .padding(10)
+        .frame(maxWidth: 560, alignment: .leading)
+        .background(shape.fill(.black.opacity(reduceTransparency ? 0.62 : 0.34)))
+        .overlay(shape.strokeBorder(.white.opacity(0.12), lineWidth: 1))
+        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+        .allowsHitTesting(false)
+    }
+
+    /// The song map; while the featured opening plays, filled up to where it has reached.
+    @ViewBuilder private func heroMap(_ song: Song, sheet: SongSheet, accent: Color) -> some View {
+        if previewing == song.id, let from = Self.openingBeat(of: song.lesson), let arrangement = sheet.arrangement,
+           let tempo = Self.opening(of: song.lesson)?.bpm {
+            TimelineView(.animation(minimumInterval: reduceMotion ? 0.5 : 1.0 / 30)) { timeline in
+                SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent,
+                               progress: Self.mapProgress(from: from, tempo: tempo, beats: arrangement.beats,
+                                                          elapsed: min(previewLength, timeline.date.timeIntervalSince(previewStart))),
+                               height: 30)
+            }
+        } else {
+            SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent, height: 30)
+        }
+    }
+
+    /// How far through the song the opening has reached, 0…1: `elapsed` seconds at `tempo` from beat `from`.
+    private static func mapProgress(from: Double, tempo: Double, beats: Double, elapsed: Double) -> Double {
+        let beat = from + max(0, elapsed) * max(1, tempo) / 60
+        return min(1, max(0, beat / max(1, beats)))
+    }
+
+    /// Where the featured opening (`SongPreview.opening`) starts in a whole arrangement, in beats: the first note of
+    /// its opening section. Nil for a song without one, whose opening isn't a stretch of the map.
+    private static func openingBeat(of lesson: Lesson) -> Double? {
+        guard let arrangement = lesson.arrangement, let take = lesson.songTake,
+              let section = SongPreview.openingSection(of: arrangement, notes: take.notes) else { return nil }
+        let from = arrangement.startBeat(of: section)
+        return take.notes.first { $0.beat >= from - 1e-6 }?.beat
+    }
+
+    /// The song's chords as small boxes with their names, as many as fit ("+2" for the rest); for a melody, its notes.
+    @ViewBuilder private func heroHarmony(_ sheet: SongSheet, accent: Color) -> some View {
+        if !sheet.chords.isEmpty {
+            ViewThatFits(in: .horizontal) {
+                chordStrip(sheet.chords, shown: sheet.chords.count, accent: accent)
+                chordStrip(sheet.chords, shown: min(6, sheet.chords.count), accent: accent)
+                chordStrip(sheet.chords, shown: min(5, sheet.chords.count), accent: accent)
+                chordStrip(sheet.chords, shown: min(4, sheet.chords.count), accent: accent)
+                chordStrip(sheet.chords, shown: min(3, sheet.chords.count), accent: accent)
+            }
+        } else if !sheet.melody.isEmpty {
+            let names = Self.noteNames(sheet.noteSet)
+            ViewThatFits(in: .horizontal) {
+                noteStrip(names, shown: 8, accent: accent)
+                noteStrip(names, shown: 6, accent: accent)
+                noteStrip(names, shown: 4, accent: accent)
+            }
+        }
+    }
+
+    private func chordStrip(_ chords: [ChordSpec], shown: Int, accent: Color) -> some View {
+        HStack(alignment: .bottom, spacing: 10) {
+            ForEach(chords.prefix(shown), id: \.symbol) { chord in
+                VStack(spacing: 3) {
+                    MiniChordGlyph(chord: chord, accent: accent)
+                        .frame(width: 28, height: 40)
+                    Text(verbatim: chord.name).font(Typeface.label(12)).foregroundStyle(Palette.ink)
+                        .lineLimit(1).fixedSize()
+                }
+                .frame(minWidth: 30)
+            }
+            if chords.count > shown {
+                Text(verbatim: "+\(chords.count - shown)").font(Typeface.label(12)).foregroundStyle(Palette.inkSoft).fixedSize()
+            }
+        }
+    }
+
+    /// The melody's notes once each, low to high, by name ("D", "E", "F♯").
+    private static func noteNames(_ notes: [Int]) -> [String] {
+        var names: [String] = []
+        for midi in notes {
+            let name = NoteName.pitchClass(midi)
+            if !names.contains(name) { names.append(name) }
+        }
+        return names
+    }
+
+    private func noteStrip(_ names: [String], shown: Int, accent: Color) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: "music.note").font(.system(size: 12, weight: .bold)).foregroundStyle(accent)
+            ForEach(Array(names.prefix(shown)), id: \.self) { name in
+                Text(verbatim: name).font(Typeface.display(14)).foregroundStyle(Palette.ink)
+                    .padding(.horizontal, 8).frame(minHeight: 26)
+                    .background(Capsule().fill(accent.opacity(0.16)))
+                    .overlay(Capsule().strokeBorder(accent.opacity(0.4), lineWidth: 1))
+                    .fixedSize()
+            }
+            if names.count > shown {
+                Text(verbatim: "+\(names.count - shown)").font(Typeface.label(12)).foregroundStyle(Palette.inkSoft).fixedSize()
+            }
+        }
+    }
+
+    // MARK: The featured card's light
+
     /// The stage behind the title and its details, solid under the words (and denser with Reduce Transparency) and
-    /// fading in above them, so the text keeps its contrast over any sleeve's colours. It runs out to the card's edges.
-    private var heroScrim: some View {
+    /// fading in over `fade` points above them, so the text keeps its contrast over any sleeve's colours. It runs out
+    /// to the card's edges.
+    private func heroScrim(fade: CGFloat) -> some View {
         let tone = Palette.stage.opacity(reduceTransparency ? 0.8 : 0.55)
-        let fade: CGFloat = 40
         return VStack(spacing: 0) {
             LinearGradient(colors: [Palette.stage.opacity(0), tone], startPoint: .top, endPoint: .bottom)
                 .frame(height: fade)
@@ -476,7 +658,8 @@ struct SongsView: View {
     }
 
     /// The sleeve's colours as a slow mesh of light (smooth at any width, where a blur of the sleeve smudged on
-    /// iPad), darkening toward the title.
+    /// iPad), darkening toward the title: toward the foot, and on iPhone, where the title sits beside the sleeve, also
+    /// toward the leading edge.
     private func heroBackdrop(_ art: CoverArt) -> some View {
         ZStack {
             art.far
@@ -484,6 +667,10 @@ struct SongsView: View {
             RadialGradient(colors: [art.primary.opacity(0.22), .clear], center: UnitPoint(x: 0.82, y: 0.18), startRadius: 4, endRadius: 320)
                 .blendMode(.screen)
             LinearGradient(colors: [.black.opacity(0.05), .black.opacity(0.32), .black.opacity(0.84)], startPoint: .top, endPoint: .bottom)
+            if sizeClass != .regular {
+                LinearGradient(colors: [.black.opacity(reduceTransparency ? 0.6 : 0.42), .black.opacity(0)],
+                               startPoint: .leading, endPoint: UnitPoint(x: 0.66, y: 0.5))
+            }
         }
     }
 
@@ -500,13 +687,13 @@ struct SongsView: View {
         .overlay(Capsule().strokeBorder(.white.opacity(0.14), lineWidth: 1))
     }
 
-    /// The title and details in the app's inks (on `heroScrim`), not white at partial opacity over the art.
-    private func heroText(_ song: Song, accent: Color, access: LessonAccess, stars: Int) -> some View {
+    /// The details in the app's inks (on `heroScrim`), not white at partial opacity over the art: the title (unless
+    /// it sits beside the sleeve, `compact`), the course and length, how hard the song is and its chords, and Play.
+    /// `compact` (iPhone) puts the chords on Play's row, at its end, to keep the card short.
+    private func heroText(_ song: Song, accent: Color, access: LessonAccess, stars: Int, compact: Bool) -> some View {
         let sheet = SongSheet.of(song.lesson)
-        return VStack(alignment: .leading, spacing: 8) {
-            Text(song.lesson.title.localized).font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
-                .lineLimit(2).minimumScaleFactor(0.8).fixedSize(horizontal: false, vertical: true)
-                .shadow(color: .black.opacity(0.4), radius: 8, y: 2)
+        return VStack(alignment: .leading, spacing: compact ? 10 : 8) {
+            if !compact { heroTitle(song, lines: 2) }
             HStack(spacing: 6) {
                 CourseArt(course: song.course, size: 18)
                 Text(song.course.title.localized).foregroundStyle(Palette.ink)
@@ -514,18 +701,33 @@ struct SongsView: View {
                 Text("Song \(sheet.length) · +\(song.lesson.xp) XP").foregroundStyle(Palette.inkSoft)
             }
             .font(.subheadline).lineLimit(1)
-            // What the song asks for, at a glance: its chords (its key, for a melody) and how hard it is.
-            HStack(spacing: 8) {
-                DifficultyDots(level: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count), tint: Palette.ink)
-                ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent, limit: 5)
+            if compact {
+                HStack(spacing: 10) {
+                    heroButton(access, finished: stars > 0, accent: accent).fixedSize()
+                    if stars > 0 { StarRow(stars: stars, size: 13) }
+                    if access == .pro { ProBadge() }
+                    Spacer(minLength: 4)
+                    // Offered the rest of the row first, so it shows as many chords as fit there.
+                    heroNeeds(song, sheet: sheet, accent: accent).layoutPriority(1)
+                }
+            } else {
+                heroNeeds(song, sheet: sheet, accent: accent)
+                HStack(spacing: 12) {
+                    heroButton(access, finished: stars > 0, accent: accent)
+                    if stars > 0 { StarRow(stars: stars, size: 13) }
+                    Spacer(minLength: 0)
+                    if access == .pro { ProBadge() }
+                }
+                .padding(.top, 6)
             }
-            HStack(spacing: 12) {
-                heroButton(access, finished: stars > 0, accent: accent)
-                if stars > 0 { StarRow(stars: stars, size: 13) }
-                Spacer(minLength: 0)
-                if access == .pro { ProBadge() }
-            }
-            .padding(.top, 6)
+        }
+    }
+
+    /// What the song asks for, at a glance: how hard it is and its chords (its key, for a melody).
+    private func heroNeeds(_ song: Song, sheet: SongSheet, accent: Color) -> some View {
+        HStack(spacing: 8) {
+            DifficultyDots(level: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count), tint: Palette.ink)
+            ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent, limit: 5)
         }
     }
 
@@ -545,6 +747,13 @@ struct SongsView: View {
     }
 
     // MARK: Shelves
+
+    @ViewBuilder private func shelfItem(_ item: ShelfItem) -> some View {
+        switch item {
+        case .pick(let pick): pickShelf(pick)
+        case .rail(let rail): shelfView(rail.shelf, rail: rail.songs)
+        }
+    }
 
     /// A course's songs: the stars count every one of them, the rail shows `rail` (all but the featured song).
     private func shelfView(_ shelf: Shelf, rail: [Song]) -> some View {
@@ -583,8 +792,9 @@ struct SongsView: View {
         }
     }
 
-    /// `shelf` names a picked shelf; nil is the song's own course shelf. Every sleeve carries the same controls on the
-    /// corner its title leaves free, outside the tile's own button: "Hear it", and beside it the tune's other versions.
+    /// `shelf` names a picked shelf; nil is the song's own course shelf. Every tile has the same grid, its controls
+    /// outside the tile's own button: "Hear it" in the sleeve's play corner (bottom-right, which every sleeve's type
+    /// keeps clear, its number top-left), and the tune's other versions under the sleeve, beside its chords.
     private func tile(_ song: Song, shelf: String? = nil) -> some View {
         let standing = catalog.standing(song)
         let access = standing.access
@@ -593,11 +803,13 @@ struct SongsView: View {
         let sheet = SongSheet.of(song.lesson)
         let art = catalog.art(song)
         let source = Self.tileSource(song.lesson, shelf: shelf)
+        let versions = catalog.versions(of: song)
+        let others = Self.otherCourses(versions)
         let shrink: CGFloat = reduceMotion ? 0 : 0.08
         return Button { open(song.course, song.lesson, from: source) } label: {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: Self.captionGap) {
                 tileCover(song, art: art, access: access)
-                tileCaption(song, sheet: sheet, accent: accent, standing: standing, stars: stars)
+                tileCaption(song, sheet: sheet, accent: accent, standing: standing, stars: stars, others: others)
             }
             .frame(width: tileWidth, alignment: .leading)
             .contentShape(Rectangle())
@@ -610,7 +822,14 @@ struct SongsView: View {
             Color.clear
                 .frame(width: tileWidth, height: tileWidth)
                 .allowsHitTesting(false)
-                .overlay(alignment: art.freeCorner) { sleeveControls(song, art: art, source: source) }
+                .overlay(alignment: .bottomTrailing) { sampleButton(song, art: art) }
+        }
+        .overlay(alignment: .topTrailing) {
+            if !others.isEmpty {
+                // Over the room the caption keeps for it (`tileCaption`): its 44-point tap area centred on that row.
+                versionsMenu(song, versions: versions, courses: others, source: source)
+                    .padding(.top, tileWidth + Self.captionGap - (Metrics.minTarget - VersionBadges.height) / 2)
+            }
         }
         .matchedTransitionSource(id: source, in: zoom)
         .modifier(Shake(amount: shakes[song.id] ?? 0))
@@ -623,25 +842,19 @@ struct SongsView: View {
         .alignmentGuide(VerticalAlignment.center) { dimensions in dimensions[.top] }
     }
 
-    /// The sleeve's controls, the same on every sleeve: the tune's other versions when it has some (instrument badges),
-    /// then "Hear it" in the corner.
-    private func sleeveControls(_ song: Song, art: CoverArt, source: String) -> some View {
-        let versions = catalog.versions(of: song)
-        // The disc stands in a 44-point tap area with 6 points to spare: the pill sits 2 points off its edge, and both
-        // stay clear of the catalogue number in the other corner of a 148-point sleeve.
-        return HStack(spacing: -4) {
-            if versions.count > 1 { versionsMenu(song, versions: versions, source: source) }
-            sampleButton(song, art: art)
-        }
-    }
-
-    /// The tune's other versions as small badges of their courses' art; a tap lists every version, this one first and
-    /// then the learner's instrument's, to choose which to play.
-    private func versionsMenu(_ song: Song, versions: [Song], source: String) -> some View {
+    /// The courses of a tune's other versions (`versions` without the song itself), once each; empty for a tune only
+    /// one course teaches.
+    private static func otherCourses(_ versions: [Song]) -> [LearnCourse] {
         var courses: [LearnCourse] = []
         for version in versions.dropFirst() where !courses.contains(where: { $0.id == version.course.id }) {
             courses.append(version.course)
         }
+        return courses
+    }
+
+    /// The tune's other versions as small badges of their `courses`' art; a tap lists every version, this one first and
+    /// then the learner's instrument's, to choose which to play.
+    private func versionsMenu(_ song: Song, versions: [Song], courses: [LearnCourse], source: String) -> some View {
         let names = courses.map { $0.title.localized }.joined(separator: ", ")
         return Menu {
             Section {
@@ -652,7 +865,10 @@ struct SongsView: View {
                 Text(verbatim: CoverArt.mainTitle(song.lesson.title.localized))
             }
         } label: {
-            VersionBadges(courses: courses, limit: sizeClass == .regular ? 3 : 2)
+            VersionBadges(courses: courses, limit: versionLimit)
+                // The pill as the caption keeps room for it, in a 44-point tap area.
+                .frame(minWidth: Metrics.minTarget, minHeight: Metrics.minTarget, alignment: .trailing)
+                .contentShape(Rectangle())
         }
         .menuStyle(.button)
         .buttonStyle(PressScaleStyle())
@@ -702,21 +918,29 @@ struct SongsView: View {
 
     /// Under the sleeve, which already carries the title: why it doesn't play yet ("Finish Kite Weather", "Timbre
     /// Pro"); else the part of the title it leaves off ("The chords"), else the song's chords ("G D Em C"; its key for
-    /// a melody); then how hard it is, how long it runs and its XP (its stars, once it has some).
-    private func tileCaption(_ song: Song, sheet: SongSheet, accent: Color, standing: SongsCatalog.Standing, stars: Int) -> some View {
+    /// a melody), with room at the end for the tune's other versions (`others`, drawn over it by `tile`); then how hard
+    /// it is, how long it runs and its XP (its stars, once it has some).
+    private func tileCaption(_ song: Song, sheet: SongSheet, accent: Color, standing: SongsCatalog.Standing, stars: Int,
+                             others: [LearnCourse]) -> some View {
         VStack(alignment: .leading, spacing: 7) {
-            Group {
-                if standing.access != .play {
-                    LockReason(access: standing.access, gate: standing.gate)
-                } else if let subtitle = Self.subtitle(song.lesson.title.localized) {
-                    Text(verbatim: subtitle).font(Typeface.label(13, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
-                        .lineLimit(1).minimumScaleFactor(0.8)
-                } else {
-                    ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent)
+            HStack(alignment: .top, spacing: 6) {
+                Group {
+                    if standing.access != .play {
+                        LockReason(access: standing.access, gate: standing.gate)
+                    } else if let subtitle = Self.subtitle(song.lesson.title.localized) {
+                        Text(verbatim: subtitle).font(Typeface.label(13, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
+                            .lineLimit(1).minimumScaleFactor(0.8)
+                    } else {
+                        ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent)
+                    }
+                }
+                // At least a plate's height, so captions line up; a two-line plate or larger text grows it.
+                .frame(maxWidth: .infinity, minHeight: 24, alignment: .leading)
+                if !others.isEmpty {
+                    // The versions menu's own pill, held in place here so the chords make room for it.
+                    VersionBadges(courses: others, limit: versionLimit).hidden()
                 }
             }
-            // At least a plate's height, so captions line up; a two-line plate or larger text grows it.
-            .frame(minHeight: 24, alignment: .leading)
             HStack(spacing: 7) {
                 DifficultyDots(level: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count), tint: accent)
                 Text(verbatim: sheet.length).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
@@ -754,7 +978,7 @@ struct SongsView: View {
 
     /// The sleeve with its state: songs that play show, once played, a bar along the foot filled to the best accuracy
     /// (their stars are in the caption); songs that don't play yet, Pro or further on alike, calm under the same muted
-    /// colour (the type stays crisp) and say why underneath. Every sleeve wears the same controls (`sleeveControls`).
+    /// colour (the type stays crisp) and say why underneath. Every sleeve wears "Hear it" in its play corner (`tile`).
     private func tileCover(_ song: Song, art: CoverArt, access: LessonAccess) -> some View {
         let best = access == .play ? store.learn.bestAccuracy[song.lesson.id] : nil
         return SongCover(art: art, locked: access != .play)
@@ -763,7 +987,8 @@ struct SongsView: View {
             .shadow(color: .black.opacity(0.45), radius: 12, y: 8)
     }
 
-    /// How much of the song has landed (its best accuracy), as a bar along the sleeve's foot.
+    /// How much of the song has landed (its best accuracy), as a bar along the sleeve's foot, stopping short of the
+    /// play corner.
     private func progressBar(_ best: Double) -> some View {
         let share = CGFloat(min(1, max(0, best)))
         return GeometryReader { proxy in
@@ -775,7 +1000,7 @@ struct SongsView: View {
             }
         }
         .frame(height: 4)
-        .padding(.horizontal, 10).padding(.bottom, 5)
+        .padding(.leading, 10).padding(.trailing, tileWidth * CoverArt.playCorner).padding(.bottom, 5)
         .accessibilityHidden(true)
     }
 
@@ -1335,9 +1560,12 @@ private struct DifficultyDots: View {
     }
 }
 
-/// A tune's other versions on its sleeve: their courses' art overlapping on a dark pill, "+2" past `limit`. The pill
-/// stands in a 44-point-tall tap area.
+/// A tune's other versions under its sleeve, beside its chords: their courses' art overlapping on a pill as quiet as
+/// a lock plate, "+2" past `limit`. The versions menu wraps it in a 44-point tap area; the caption holds its room
+/// with a hidden copy, so both are exactly this size.
 private struct VersionBadges: View {
+    /// The pill's height: a chord chip's row.
+    static let height: CGFloat = 24
     let courses: [LearnCourse]
     let limit: Int
 
@@ -1356,12 +1584,11 @@ private struct VersionBadges: View {
             }
         }
         .padding(.leading, 3).padding(.trailing, extra > 0 ? 6 : 3)
-        .frame(height: 27)
-        .background(Capsule().fill(.black.opacity(0.55)))
-        .overlay(Capsule().strokeBorder(.white.opacity(0.14), lineWidth: 1))
-        .shadow(color: .black.opacity(0.35), radius: 6, y: 2)
-        .frame(height: 44)
-        .contentShape(Rectangle())
+        .frame(height: Self.height)
+        .background(Capsule().fill(Color.white.opacity(0.06)))
+        .overlay(Capsule().strokeBorder(Color.white.opacity(0.14), lineWidth: 1))
+        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+        .fixedSize()
     }
 }
 

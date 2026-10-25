@@ -6,7 +6,7 @@ public struct SampledInstrument: Sendable {
 
     /// The recordings of one sampled pitch, one per velocity layer.
     struct Pitched: Sendable {
-        /// The zone's sounding pitch (fractional MIDI at A4 = 440 Hz, from its measured fundamental).
+        /// The zone's sounding pitch (fractional MIDI at A4 = 440 Hz, from its measured pitch).
         let midi: Double
         let layers: [SampleManifest.Zone]
     }
@@ -102,7 +102,7 @@ public struct SampledInstrument: Sendable {
 
 extension SampleLibrary {
     /// Adds one note of `instrument` at exactly `hz` into `out` from frame `start`, sounding `length` frames: the
-    /// nearest zone read at the exact ratio hz / (its measured fundamental), times its file rate over `rate`, so the
+    /// nearest zone read at the exact ratio hz / (its measured pitch), times its file rate over `rate`, so the
     /// note's pitch is the one asked for. The last `release` seconds (the instrument's own when nil) fade it out; a
     /// sustained note held past its recording loops its sustain. Loudness follows `velocity` (0...1), which also picks
     /// the layer, and `gain` scales it further. False when the zone can't be read (nothing is written).

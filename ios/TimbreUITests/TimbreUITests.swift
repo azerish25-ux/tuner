@@ -35,7 +35,16 @@ final class TimbreUITests: XCTestCase {
         add(attachment)
     }
 
+    /// A capture taken once the screen has come to rest (StillScreen.swift): entrances, staggers and counters done.
+    private func stillShot(_ name: String, timeout: TimeInterval = 4) {
+        keep(stillScreenshot(timeout: timeout), as: name)
+    }
+
     private func element(_ id: String) -> XCUIElement { app.descendants(matching: .any).matching(identifier: id).firstMatch }
+    /// The first element whose whole accessibility label matches `pattern` (a regular expression).
+    private func labeled(_ pattern: String) -> XCUIElement {
+        app.descendants(matching: .any).matching(NSPredicate(format: "label MATCHES %@", pattern)).firstMatch
+    }
     /// Taps a tab, retrying while a sheet is still dismissing and swallows the tap.
     private func tab(_ name: String) {
         let button = app.tabBars.buttons[name].firstMatch
@@ -105,7 +114,10 @@ final class TimbreUITests: XCTestCase {
     // The captures the listing's screenshot table names (docs/ios/APP-STORE-LISTING.md, rendered by
     // tools/marketing/screenshots.py) must show what their captions say, every run. The tuner's lock and the chord
     // come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift) that put the app into that moment
-    // through its own code paths, so no shot races the demo pitch's clock; the others are plain navigation.
+    // through its own code paths, so no shot races the demo pitch's clock; Strum to tune hears the demo pitch's one
+    // fixed strum; the others are plain navigation. Every one starts from the same seeded state (`DemoData` in
+    // ios/Timbre/TimbreApp.swift: a 7-day streak that counts today, level 5) and is taken once the screen has come to
+    // rest (`stillScreenshot`, StillScreen.swift), after the cue that its slowest animation has finished.
 
     /// Keeps a store frame under its own name when it shows what its caption says. Otherwise the test fails and the
     /// picture is kept as "<name>-wrong" (for the log), so screenshots.py never frames it.
@@ -276,7 +288,8 @@ final class TimbreUITests: XCTestCase {
         plan.tap()
         let free = element("paywall.free")
         XCTAssertTrue(free.waitForExistence(timeout: 15))
-        settle(2); shot("06-paywall-onboarding")
+        // The sheet rises, then the outcomes slide in one after another and the trial track draws itself.
+        settle(0.8); stillShot("06-paywall-onboarding", timeout: 5)
         scrollTo(free)
         free.tap()
         // Onboarding hands over to Learn and opens the plan's first lesson (the first free one on the free plan).
@@ -314,17 +327,8 @@ final class TimbreUITests: XCTestCase {
         element("settings.pro").tap()
         XCTAssertTrue(element("paywall.purchase").waitForExistence(timeout: 15))
         settle(1.5); shot("16-paywall-from-settings")
-        // Strum to tune, back on the tuner: under the demo pitch one strum is heard as the screen opens (A2 12 cents
-        // flat first, B3 approximate), so the shot waits for its "Fine-tune" button.
-        tapIfPresent(element("paywall.close")); settle(1.2)
-        let settingsDone = app.navigationBars.buttons["Done"].firstMatch
-        if settingsDone.exists { settingsDone.tap(); settle(1.2) }
-        let strum = element("tune.strum")
-        XCTAssertTrue(strum.waitForExistence(timeout: 10))
-        strum.tap()
-        XCTAssertTrue(element("strum.finetune").waitForExistence(timeout: 8))
-        settle(1.2); shot("11b-tune-strum")
-        element("strum.close").tap(); settle()
+        // Strum to tune is App Store frame #7, from a fresh launch of its own (test13StoreStrum), not from behind
+        // these two sheets.
     }
 
     func test03StudioStage() throws {
@@ -355,18 +359,19 @@ final class TimbreUITests: XCTestCase {
         launch()
         // The instrument browser is the tuner's picker sheet (the Songs tab took the Instruments tab's place).
         openPicker(); settle(0.8); shot("30-instruments")
-        // App Store frame #7: the Guitar family filter — a full grid of guitars, each on its own stage, under the
-        // title bar. A tap on the family chip is deterministic; scrolling the sheet could dismiss it or tap a Pro card.
+        // The Guitar family filter: a full grid of guitars, each on its own stage, under the title bar. A tap on the
+        // family chip is deterministic; scrolling the sheet could dismiss it or tap a Pro card. (Frame #7 was this grid
+        // until Strum to tune took its place: test13StoreStrum.)
         let guitars = app.buttons["Guitar"].firstMatch
         if guitars.waitForExistence(timeout: 5) { guitars.tap(); settle(1.5) }
-        let grid = element("instrument.guitar_classical").exists && app.navigationBars["Choose instrument"].exists && !element("paywall.purchase").exists
-        storeFrame("31-instruments-scrolled", ok: grid, "the guitar grid isn't on screen, or a paywall is over the browser")
+        shot("31-instruments-scrolled")
         closePicker()
-        // App Store frame #8: Progress, with nothing over it.
-        tab("Progress"); settle(2)
+        // App Store frame #8: Progress, with nothing over it, once its cards have come in.
+        tab("Progress"); settle(0.8)
+        let picture = stillScreenshot()
         let progress = app.tabBars.buttons["Progress"].firstMatch
         let front = progress.exists && progress.isSelected && !element("paywall.purchase").exists && !app.navigationBars["Choose instrument"].exists
-        storeFrame("32-journey", ok: front, "Progress isn't the screen in front (the browser or a paywall is still up)")
+        storeFrame("32-journey", picture: picture, ok: front, "Progress isn't the screen in front (the browser or a paywall is still up)")
         app.swipeUp(); settle(); shot("33-journey-scrolled")
     }
 
@@ -436,8 +441,14 @@ final class TimbreUITests: XCTestCase {
     func test09LearnChordLesson() throws {
         launch(pitch: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
-        tab("Learn"); settle(2.5); shot("50-learn")
-        element("learn.continue").tap(); settle(1.5); shot("51-lesson-explain")
+        // App Store frame #5, once Learn's cards have come in (and any reward banner from the tune has gone).
+        tab("Learn"); settle(1); stillShot("50-learn", timeout: 5)
+        // The lesson zooms open on E minor's demonstration: the fingertips land one by one, the chord rings across the
+        // strings, then "Your turn" (or, when the demo pitch plays it back, "Nice") shows under the neck. The picture
+        // waits for that line: every fingertip is down and the strings have stopped shimmering.
+        element("learn.continue").tap()
+        _ = labeled(".*(Your turn|Nice — ).*").waitForExistence(timeout: 12)
+        stillShot("51-lesson-explain", timeout: 2.5)
         // The lesson zooms open: a tap during the transition can be dropped, so tap until the tune check shows.
         let skip = element("lesson.tunecheck.skip")
         for _ in 0..<4 where !skip.exists { element("lesson.continue").tap(); _ = skip.waitForExistence(timeout: 3) }
@@ -461,7 +472,8 @@ final class TimbreUITests: XCTestCase {
         tab("Songs")
         let hero = element("songs.hero")
         XCTAssertTrue(hero.waitForExistence(timeout: 10))
-        settle(2); shot("63-songs")
+        // App Store frame #4, once the shelves have come in.
+        settle(1); stillShot("63-songs", timeout: 5)
         hero.tap()
         let close = element("lesson.close")
         XCTAssertTrue(close.waitForExistence(timeout: 10))
@@ -484,7 +496,12 @@ final class TimbreUITests: XCTestCase {
         element("lesson.continue").tap(); settle(7); shot("60-along-playing")
         XCTAssertTrue(element("along.again").waitForExistence(timeout: 30))
         settle(1); shot("61-along-done")
-        element("lesson.continue").tap(); settle(3.5); shot("62-lesson-results")
+        // App Store frame #6. The results land in order: the stars, the coach, the XP counting up, then the level bar
+        // (labelled "Level N") fills under them. Its arrival means the XP has finished counting; the badges that pop in
+        // after it and the bar's fill settle before the picture.
+        element("lesson.continue").tap()
+        _ = labeled("Level [0-9]+").waitForExistence(timeout: 15)
+        stillShot("62-lesson-results", timeout: 3)
     }
 
     /// App Store frame #1 through the `tune-locked` scene (ios/Timbre/Root/DemoScenes.swift): the demo pitch plays the
@@ -527,6 +544,31 @@ final class TimbreUITests: XCTestCase {
         let unheard = checks.filter { ($0.value as? String) != "Got it" }.count
         storeFrame("52b-lesson-chord", picture: picture, ok: ringing && unheard == 0,
                    ringing ? "\(unheard) of \(checks.count) strings not lit" : "the chord step never heard every string")
+    }
+
+    /// App Store frame #7: Strum to tune, every string of the guitar read from one strum (polyphonic, the tuner no
+    /// rival has). Under the demo pitch the screen hears one fixed strum a second after it opens (`StrumDemo` in
+    /// Timbre/Tune/StrumModel.swift): A2 12 cents flat (the string to tune first), E4 8 sharp, the other four in tune
+    /// and B3 marked as an estimate. Nothing races a clock: the reading never changes, so the picture only waits for
+    /// the "Fine-tune A2" button and for the strum's ring (1.8 s) to die away so the lanes stand still. It opens from
+    /// a fresh launch, straight from the tuner, so no sheet is still on its way out behind it.
+    func test13StoreStrum() throws {
+        launch(pitch: true)
+        let strum = element("tune.strum")
+        XCTAssertTrue(strum.waitForExistence(timeout: 25))
+        let close = element("strum.close")
+        for _ in 0..<3 where !close.exists {
+            if strum.exists && strum.isHittable { strum.tap() }
+            _ = close.waitForExistence(timeout: 4)
+        }
+        let read = element("strum.finetune").waitForExistence(timeout: 10)
+        // The reading lands about a second after the screen opens; its ring dies away 1.8 s after the strum's attack.
+        settle(1.2)
+        let picture = stillScreenshot(timeout: 4)
+        let summary = (try? element("strum.summary").snapshot())?.label ?? ""
+        let covered = element("paywall.purchase").exists || app.navigationBars["Choose instrument"].exists
+        storeFrame("11b-tune-strum", picture: picture, ok: read && summary.hasPrefix("Tune ") && !covered,
+                   "the strum screen reads '\(summary)' (Fine-tune button: \(read), a sheet over it: \(covered)), not the demo strum")
     }
 
     func test07StageDiagnostics() throws {

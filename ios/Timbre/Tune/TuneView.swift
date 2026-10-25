@@ -565,11 +565,13 @@ enum TuneArrangement: Equatable {
 
     /// Whether the window has room for the side pane (pitch trace and String health): iPad landscape from 11-inch
     /// up, or a regular-width portrait window tall enough that the stage keeps a good share of the height. Never
-    /// a phone, a short window or at the accessibility text sizes in portrait (the cards would grow into the stage).
+    /// a phone, a short window or at the accessibility text sizes (the cards would outgrow their column, or grow
+    /// into the stage).
     static func showsPane(_ arrangement: TuneArrangement, size: CGSize, regularWidth: Bool, largeType: Bool) -> Bool {
+        guard !largeType else { return false }
         switch arrangement {
         case .columns: return size.width >= paneMinWidth
-        case .stacked: return regularWidth && !largeType && size.width >= 700 && size.height >= 940
+        case .stacked: return regularWidth && size.width >= 700 && size.height >= 940
         case .beside: return false
         }
     }

@@ -10,6 +10,7 @@ struct ScaleLibraryView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Which string lies on top: the app's one picture choice (Chart: string 1; Player view: the thickest).
     @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
     @State private var root = 0
     @State private var scale = ScaleFormula.all[3]
@@ -55,7 +56,7 @@ struct ScaleLibraryView: View {
                 }
                 .pickerStyle(.segmented)
                 if !sheet.positions.isEmpty { positionPicker(sheet) }
-                neckCard(sheet)
+                neckSection(sheet)
                 if audio.permissionDenied && along != nil {
                     MicrophoneHint().padding(.horizontal, -Metrics.gutter)
                 }
@@ -131,6 +132,15 @@ struct ScaleLibraryView: View {
 
     // MARK: Neck
 
+    /// The neck under its switch: Chart (string 1 on top, as tab) or Player view (the thickest on top), the chord
+    /// cards' switch and the app's one picture choice, so this neck always lies as the lessons' do.
+    private func neckSection(_ sheet: ScaleSheet) -> some View {
+        VStack(alignment: .trailing, spacing: 12) {
+            ChordPictureToggle(label: "Neck view")
+            neckCard(sheet)
+        }
+    }
+
     /// The neck card: string names pinned beside a neck drawn to the 15th fret, sized so the nut and twelve frets
     /// fill the card; a position past the 12th fret (or a note to play there) slides the neck along to it.
     private func neckCard(_ sheet: ScaleSheet) -> some View {
@@ -148,7 +158,8 @@ struct ScaleLibraryView: View {
                                   focus: focus.map { Set($0.spots) }, window: focus?.frets, lit: state.lit, trail: state.trail,
                                   target: along != nil && !(along?.finished ?? true), hit: along?.lastHit, hits: hits,
                                   fretWidth: fretWidth, order: stringOrder,
-                                  focusKey: "\(root).\(scale.id).\(position ?? 0).\(noteNames)")
+                                  // Flipping the string order cross-fades the dots to their new rows too.
+                                  focusKey: "\(root).\(scale.id).\(position ?? 0).\(noteNames).\(stringOrder.rawValue)")
                             .frame(width: ScaleNeck.width(fretWidth: fretWidth), height: height)
                     }
                     .railBleed(leading: 0, trailing: 12)
@@ -438,7 +449,8 @@ struct PlayAlong {
 
 // MARK: - The neck
 
-/// The neck to the 15th fret, nut on the left, its strings in the player's string order (Settings › String order):
+/// The neck to the 15th fret, nut on the left, its strings in the app's string order (`ChordPicture`: string 1 on
+/// top in the Chart view, the thickest in Player view):
 /// every scale tone as a dot labelled with its interval or its name, roots amber. A position is framed and the
 /// notes outside it shrink to faint marks. The note sounding (or to play next) is lit, the ones before it ringed;
 /// while playing along the target breathes and each hit sends out a ripple.

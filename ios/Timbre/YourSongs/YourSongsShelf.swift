@@ -3,13 +3,18 @@ import TimbreCore
 import UniformTypeIdentifiers
 
 /// "Your songs" on the Songs tab: the player's own charts as sleeves on a rail, and "Add a song" (import a chart file,
-/// paste one, write one, or, with Pro, draft one from a recording of theirs). An empty shelf explains what it's for.
-/// Three charts are free (`YourSongsPolicy`); a song opens full screen (`ChartSongView`).
+/// paste one, write one, or, with Pro, draft one from a recording of theirs). Empty, the shelf is one row (a small
+/// crate of sleeves, what it's for, and "Add a song"), so it doesn't hold the catalogue below the fold; the add sheet
+/// says what each way in takes. Either way "Add a song" shows once. Three charts are free (`YourSongsPolicy`); a song
+/// opens full screen (`ChartSongView`).
 struct YourSongsShelf: View {
     @EnvironmentObject private var store: AppStore
     @ObservedObject private var library = YourSongsStore.shared
     @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
+    /// The empty row's crate fans its sleeves out once it is on screen.
+    @State private var fanned = false
     @State private var adding = false
     @State private var next: AddSongChoice?
     @State private var importing: ImportKind?
@@ -44,9 +49,14 @@ struct YourSongsShelf: View {
 
     private var shelf: some View {
         VStack(alignment: .leading, spacing: 12) {
-            header
-            if library.songs.isEmpty { invitation } else { rail }
+            if library.songs.isEmpty {
+                invitation
+            } else {
+                header
+                rail
+            }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("yoursongs.shelf")
     }
 

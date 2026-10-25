@@ -35,10 +35,11 @@ struct LessonVisualView: View {
         return FretboardDiagram.rowHeight(filling: room, strings: strings, frets: frets, start: start, named: strings >= 2, numbered: !fretless)
     }
 
+    /// The chord in the picture the learner chose (the chart or the player's view), as big as the room allows.
     private func chord(_ spec: ChordSpec) -> some View {
         let fit = room.map { ChordDiagram.fit(spec, room: $0) } ?? (width: CGFloat(220), stretch: CGFloat(1))
-        return ChordDiagram(chord: spec, accent: accent, landing: true, edges: StringEdges.of(instrumentId: instrumentId, strings: spec.frets.count),
-                            fretNumbers: room != nil, stretch: fit.stretch)
+        return ChordPictureView(chord: spec, accent: accent, landing: true, edges: StringEdges.of(instrumentId: instrumentId, strings: spec.frets.count),
+                                fretNumbers: room != nil, stretch: fit.stretch)
             .frame(maxWidth: fit.width)
     }
 
@@ -46,30 +47,31 @@ struct LessonVisualView: View {
     private var keysHeight: CGFloat { room.map { min(170, max(110, $0.height)) } ?? 110 }
 }
 
-/// Which string sits on top wherever a neck is drawn lying down (the fretboard strips, the intonation neck,
-/// the tune check's string rail, the highway's lanes), one choice for the whole app (Settings › String order):
-/// tab order, string 1 (the thinnest) on top as tablature writes it, or the mirror, the thickest on top as you
-/// see the neck looking down at it while playing. Where strings run side by side instead (the highway's lanes,
-/// the tune check's rail, the player's-view chord neck `PlayerNeck`), the string drawn on top takes the left.
-/// Chord boxes stand upright and keep their own convention (the lowest string on the left). The strum stage
-/// (`StrumSweep`) is the one picture that never flips: it is the instrument's top as you look down at it while
-/// you play, the thickest string on top, so a down strum travels down the screen as its arrows and words say.
+/// Which string sits on top wherever a neck is drawn lying down (the fretboard strips, the Scales and intonation
+/// necks, the tune check, the strum stage): the app's one picture choice (`ChordPicture`, Settings › String order,
+/// the Chart / Player view switch on a chord card) read as a string order. It is the same stored value, under the
+/// same key, so the necks and the chords can never disagree:
+/// - `.tab` is Chart (the default): string 1, the thinnest, on top as tablature writes it, the chord chart's box
+///   being that strip turned upright (the lowest string on the left);
+/// - `.mirror` is Player view: the thickest string on top, as you see the neck looking down at it while playing,
+///   so a down strum falls down the screen.
+/// Where strings run side by side instead (the highway's lanes, the tune check's rail, the player's-view chord neck
+/// `PlayerNeck`), the string drawn on top takes the left.
 ///
 /// In a view: `@AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab`, then
-/// `stringOrder.row(ofString:count:)` for where string n goes; elsewhere `StringOrder.current`.
+/// `stringOrder.row(ofString:count:)` for where string n goes; elsewhere `StringOrder.current`. Change it through
+/// `ChordPicture` (the switch, Settings), never on its own.
 enum StringOrder: String, CaseIterable, Identifiable {
-    /// String 1, the thinnest, on top (the default).
-    case tab
-    /// The thickest string on top.
-    case mirror
+    /// String 1, the thinnest, on top: the Chart view (the default). Stored as `ChordPicture.chart`.
+    case tab = "chart"
+    /// The thickest string on top: the Player view. Stored as `ChordPicture.player`.
+    case mirror = "player"
 
-    /// The UserDefaults key the choice is stored under.
-    static let storageKey = "display.stringOrder"
+    /// The picture choice's key: one stored value, two ways to read it.
+    static let storageKey = ChordPicture.storageKey
 
     /// The stored choice, for code outside a view (views read it through `@AppStorage` so they redraw).
-    static var current: StringOrder {
-        UserDefaults.standard.string(forKey: storageKey).flatMap(StringOrder.init(rawValue:)) ?? .tab
-    }
+    static var current: StringOrder { ChordPicture.current.stringOrder }
 
     var id: String { rawValue }
 
@@ -80,14 +82,6 @@ enum StringOrder: String, CaseIterable, Identifiable {
 
     /// The string number drawn in row `row` (0 at the top): the inverse of `row(ofString:count:)`.
     func string(atRow row: Int, count: Int) -> Int { self == .tab ? row + 1 : count - row }
-
-    /// Its name in Settings.
-    var title: LocalizedStringKey {
-        switch self {
-        case .tab: return "Tab (thinnest on top)"
-        case .mirror: return "Mirror (thickest on top)"
-        }
-    }
 }
 
 /// Which strings are the thinnest and the thickest, so every diagram can name its edges in words
@@ -154,7 +148,7 @@ enum DiagramType {
 }
 
 /// A stretch of neck, nut on the left, dots where to press, its strings in the player's string order
-/// (string 1 on top by default, as in tab; the thickest on top with Settings › String order › Mirror).
+/// (string 1 on top in the Chart view, the default, as in tab; the thickest on top in Player view).
 /// Every string is numbered beside the nut, and the top and bottom edges are named ("Thinnest (1)",
 /// "Thickest (6)"), so the orientation never has to be guessed. Lessons number the frets under their
 /// columns too, as the Scales neck does, the frets holding a dot lit.
@@ -363,8 +357,11 @@ struct FretboardDiagram: View {
     }
 }
 
-/// A chord box: strings upright, nut on top, finger numbers in the dots, open and muted marks above,
-/// a rounded bar where one finger holds several strings, and the string numbers along the bottom.
+/// A chord box as chord charts print it (the Chart view's chord, `ChordPicture.chart`): strings upright, nut on
+/// top, the lowest string on the left and string 1 on the right, finger numbers in the dots, open and muted marks
+/// above, a rounded bar where one finger holds several strings, and the string numbers along the bottom. It is the
+/// tab-order strip (`FretboardDiagram`) turned upright. Places that show a chord without the switch use
+/// `ChordPictureView`, which draws this or the player's view as chosen.
 struct ChordDiagram: View {
     let chord: ChordSpec
     var accent: Color = Palette.mint

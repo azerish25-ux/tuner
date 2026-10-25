@@ -18,8 +18,9 @@ by hand: change the script and run it again.
 - Lazily: nothing is decoded at launch. A zone is decoded (AAC to 16-bit PCM in memory) the first time a note
   needs it, and the decoded zones live in a size-capped cache that is emptied on a memory warning.
 - Sparse zones are pitch-shifted to the exact frequency asked for (playback ratio = target / the zone's
-  measured fundamental), so reference tones stay exact; a unit test renders A4 and measures 440 Hz with the
-  tuner's own detector.
+  measured pitch: what Timbre's tuner reads from it, or its fundamental where that reading wavers), so
+  reference tones read exactly on the needle; a unit test renders A4 and measures 440 Hz with the tuner's own
+  detector (`SampledTonesTests`).
 - Instruments without a sample set (ukulele, mandolin, banjo, sung voice), notes outside a set's range and any
   failure to read a file fall back to the synthesized voices (`ToneSynth`), and the band to `BandSynth`.
 - The violin and cello recordings are played with vibrato, so the tuner's *reference* for bowed strings stays

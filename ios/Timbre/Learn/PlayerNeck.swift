@@ -65,11 +65,12 @@ enum ChordPicture: String, CaseIterable, Identifiable {
         }
     }
 
-    /// What it means, under its name in Settings › String order.
+    /// What it means for the necks lying down, under its name in Settings › String order (the chord boxes go with
+    /// the name: a chart, or the player's view).
     var detail: LocalizedStringKey {
         switch self {
-        case .chart: return "String 1 on top, as tab and chord charts print it"
-        case .player: return "Thickest string on top, as you see it while playing"
+        case .chart: return "Like tab: string 1, the thinnest, on top"
+        case .player: return "As you look down at it: the thickest on top"
         }
     }
 }
@@ -176,6 +177,61 @@ private struct ChordTilt: ViewModifier {
     }
 }
 
+/// A chord in the picture the learner chose, for the places that show one without the switch beside it (a quiz's
+/// card, the Learn preview, a strum's chord, a progression's strip): the chord chart, or the player's-view neck in
+/// the room the chart's box would take at that width, its name over it as over the chart. It flips with the choice.
+struct ChordPictureView: View {
+    let chord: ChordSpec
+    var accent: Color = Palette.mint
+    var showName = true
+    /// Strings ringing now (lowest string first), lit on either picture.
+    var ringing: Set<Int> = []
+    /// The fingers land as the picture appears.
+    var landing = false
+    var edges: StringEdges?
+    /// The chart numbers its frets beside the box (the neck always numbers them down its left).
+    var fretNumbers = false
+    /// How much taller than plain the chart's frets are drawn (1 to 1.5); the neck takes the same height.
+    var stretch: CGFloat = 1
+    /// A small picture (a strip's chords, the preview's row): the neck draws narrower margins and smaller marks, and
+    /// numbers its lanes rather than naming its edges.
+    var compact = false
+    @AppStorage(ChordPicture.storageKey) private var picture: ChordPicture = .chart
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        let player = picture == .player
+        ZStack {
+            if player {
+                neck
+                    .transition(ChordFlip.transition(toPlayer: true, reduceMotion: reduceMotion))
+            } else {
+                ChordDiagram(chord: chord, accent: accent, showName: showName, ringing: ringing, landing: landing, edges: edges,
+                             fretNumbers: fretNumbers, stretch: stretch)
+                    .transition(ChordFlip.transition(toPlayer: false, reduceMotion: reduceMotion))
+            }
+        }
+        .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: player)
+    }
+
+    /// The chart's box is `count / (5.4 × stretch)` wide for its height: the neck keeps that shape, so a card holds
+    /// still whichever picture it shows.
+    private var aspect: CGFloat { CGFloat(max(1, chord.frets.count)) / (5.4 * min(1.5, max(1, stretch))) }
+
+    private var neck: some View {
+        VStack(spacing: 8) {
+            if showName {
+                // VoiceOver hears the name from the neck, with its shape.
+                Text(chord.name).font(Typeface.display(28)).foregroundStyle(Palette.ink)
+                    .lineLimit(1)
+                    .accessibilityHidden(true)
+            }
+            PlayerNeck(chord: chord, accent: accent, ringing: ringing, landsOnAppear: landing, edges: edges, compact: compact)
+                .aspectRatio(aspect, contentMode: .fit)
+        }
+    }
+}
+
 // MARK: - Perspective
 
 /// The play-along runway's materials (`HighwayRunway`): rosewood darkening toward the far end, rolled darker at its
@@ -192,7 +248,7 @@ enum NeckFinish {
 /// A neck in perspective, as the runway lays its board: a plane tilted away from you, its strings side by side in
 /// lanes converging on a vanishing point far above, the near end biggest. `u` runs along the neck from the nut (0)
 /// to the near edge (1), and negative past the nut toward the head. Lane 0 is the left one; which string takes it
-/// follows the runway (the string the diagrams draw on top: Settings › String order).
+/// is the caller's (`PlayerNeck.order`, the runway's `StringOrder`).
 struct NeckPerspective {
     let centerX: CGFloat
     /// Screen heights of the nut (u = 0) and the near edge (u = 1).
@@ -243,6 +299,10 @@ struct NeckPerspective {
 /// starts to ring (`ringing`), so it moves with "Hear it". The frets are numbered down the left, a held one lit, and
 /// every lane is numbered at the near end, the outer two named under it.
 ///
+/// It is the Player view's chord (`ChordPicture.player`), so its lanes are always the runway's in that view: the
+/// thickest string, which the necks lying down then draw on top, takes the left lane (`order`). The lowest string is
+/// on the left as on the chord chart, so flipping between the two never mirrors the chord.
+///
 /// With Reduce Motion it is one still frame, every finger in place. VoiceOver reads it as one element: the chord's
 /// name, then its shape in words (`ChordWords`).
 struct PlayerNeck: View {
@@ -260,7 +320,6 @@ struct PlayerNeck: View {
     var edges: StringEdges?
     /// A small card (the Chords tool's shapes): narrower margins, smaller marks, no edge names.
     var compact = false
-    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// Fret and string numbers grow with Dynamic Type from the 11 pt floor (`DiagramType`).
     @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
@@ -279,8 +338,13 @@ struct PlayerNeck: View {
     /// Frets with a pearl dot (12 and 24 have two).
     private static let inlays: Set<Int> = [3, 5, 7, 9, 15, 17, 19, 21]
 
+    /// Which string takes which lane: the Player view's order (`ChordPicture.player.stringOrder`, the thickest string
+    /// on the left). Fixed rather than read from the setting, so a neck flipping away to the chart never re-lays its
+    /// lanes on the way out.
+    static let order: StringOrder = .mirror
+
     var body: some View {
-        let order = stringOrder
+        let order = Self.order
         let scale = typeScale
         let still = reduceMotion
         VStack(spacing: 6) {
@@ -317,11 +381,11 @@ struct PlayerNeck: View {
 
     /// Where each string's lane meets the near edge across a neck `width` wide (lowest string first, as `chord.frets`),
     /// so a row drawn under the neck (the chord step's string checks) lines up with it.
-    static func stringPositions(_ chord: ChordSpec, width: CGFloat, compact: Bool = false, order: StringOrder = .current) -> [CGFloat] {
+    static func stringPositions(_ chord: ChordSpec, width: CGFloat, compact: Bool = false) -> [CGFloat] {
         let count = chord.frets.count
         let lane = laneSpacing(width: width, strings: count, compact: compact)
         return (0..<count).map { i in
-            let row = order.row(ofString: count - i, count: count)
+            let row = Self.order.row(ofString: count - i, count: count)
             return lane.centerX + (CGFloat(row) - CGFloat(count - 1) / 2) * lane.gap
         }
     }
@@ -478,7 +542,8 @@ struct PlayerNeck: View {
     // MARK: Drawing
 
     private func draw(_ context: inout GraphicsContext, size: CGSize, now: Date, order: StringOrder, scale: CGFloat, still: Bool) {
-        guard !chord.frets.isEmpty, size.width > 40, size.height > 90 else { return }
+        // A compact neck still draws in a progression's small "next" box.
+        guard !chord.frets.isEmpty, size.width > 40, size.height > (compact ? 56 : 90) else { return }
         let l = layout(size)
         let clock = still ? nil : landingClock(at: now)
         // Before the quick landing starts (the first frame), the fingertips are still to come.

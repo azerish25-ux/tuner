@@ -54,7 +54,7 @@ struct PaywallView: View {
     @State private var annualHeight: CGFloat = 64
     @State private var annualPressed = false
     /// Room at the top of the yearly card for the lower half of its tag (the tag stops growing at xxxLarge).
-    @ScaledMetric(relativeTo: .caption2) private var tagRoom: CGFloat = 12
+    @ScaledMetric(relativeTo: .caption2) private var tagRoom: CGFloat = 11
 
     /// The yearly plan unless the storefront left it out.
     private var selected: Product? { commerce.products.first { $0.id == selectedID } ?? commerce.products.first }
@@ -787,28 +787,40 @@ struct PaywallView: View {
                 }
             }
         } else {
-            // One glass group: the chosen plan's glass flows to the next card as the choice moves. The yearly card's
-            // tag is drawn over the group, outside it: inside, the chosen plan's glass covered its lower half.
-            TimbreGlassGroup(spacing: 8) {
-                VStack(spacing: 8) {
-                    if let annual = commerce.annual {
-                        planRow(annual, title: "Yearly", detail: perWeek(annual), saving: annualSaving, anchor: annualAnchor,
-                                tag: annualTag(annual))
-                            .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in annualHeight = height }
-                    }
-                    if let monthly = commerce.monthly {
-                        planRow(monthly, title: "Monthly", detail: String(localized: "Cancel anytime"), saving: nil)
-                    }
-                    // A third option, quieter than the two subscriptions, so it doesn't compete with the year.
-                    if let lifetime = commerce.lifetime {
-                        planRow(lifetime, title: "Lifetime", detail: String(localized: "Pay once"), saving: nil, quiet: true)
-                    }
-                }
+            // The cards' first arrangement in which every card fits (`PlanFace`), the same for all three: the saving
+            // beside the name, else under the price, else everything stacked (the largest text sizes, long
+            // translations). The yearly card's tag is drawn over the glass group, outside it: inside, the chosen
+            // plan's glass covered its lower half.
+            ViewThatFits(in: .horizontal) {
+                planGroup(.inline)
+                if commerce.annual != nil && annualSaving != nil { planGroup(.savingUnderPrice) }
+                planGroup(.stacked)
             }
             .overlay(alignment: .top) {
                 if let annual = commerce.annual { annualTagLayer(annualTag(annual)).zIndex(1) }
             }
             .transition(.opacity)
+        }
+    }
+
+    /// One glass group: the chosen plan's glass flows to the next card as the choice moves.
+    private func planGroup(_ arrangement: PlanFace.Arrangement) -> some View {
+        TimbreGlassGroup(spacing: 8) {
+            VStack(spacing: 8) {
+                if let annual = commerce.annual {
+                    planRow(annual, title: "Yearly", detail: perWeek(annual), saving: annualSaving, anchor: annualAnchor,
+                            tag: annualTag(annual), arrangement: arrangement)
+                        .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in annualHeight = height }
+                }
+                if let monthly = commerce.monthly {
+                    planRow(monthly, title: "Monthly", detail: String(localized: "Cancel anytime"), saving: nil, arrangement: arrangement)
+                }
+                // A third option, quieter than the two subscriptions, so it doesn't compete with the year.
+                if let lifetime = commerce.lifetime {
+                    planRow(lifetime, title: "Lifetime", detail: String(localized: "Pay once"), saving: nil, quiet: true,
+                            arrangement: arrangement)
+                }
+            }
         }
     }
 
@@ -837,8 +849,9 @@ struct PaywallView: View {
             .frame(height: Self.plansHeight)
     }
 
-    /// Three plan cards and the gaps between them.
-    private static let plansHeight: CGFloat = 3 * 58 + 2 * 8
+    /// The three plan cards at the default text size (the yearly one with its tag's room, the quieter lifetime one)
+    /// and the gaps between them.
+    private static let plansHeight: CGFloat = 60 + 56 + 48 + 2 * 8
 
     /// The yearly price as a week of it ("$0.67 a week"): the product's own price over 52, in the storefront's currency.
     private func perWeek(_ product: Product) -> String {
@@ -874,28 +887,25 @@ struct PaywallView: View {
         Haptics.shared.selection()
     }
 
-    /// A plan card: the check, then its face (`PlanFace`) in the first arrangement that fits: the saving beside the
-    /// name, else under the price, else everything stacked (the largest text sizes, long translations). The name is
-    /// never broken across lines. A tagged card (the yearly one) keeps room at its top for the tag over its edge.
+    /// A plan card: the check, then its face (`PlanFace`) in the group's arrangement. The name is never broken across
+    /// lines. A tagged card (the yearly one) keeps room at its top for the tag over its edge.
     private func planRow(_ product: Product, title: LocalizedStringKey, detail: String, saving: Int?, anchor: String? = nil,
-                         tag: String? = nil, quiet: Bool = false) -> some View {
+                         tag: String? = nil, quiet: Bool = false, arrangement: PlanFace.Arrangement) -> some View {
         let isSelected = selected?.id == product.id
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         let face = PlanFace(title: title, detail: detail, price: product.displayPrice, saving: saving, anchor: anchor,
                             selected: isSelected, quiet: quiet)
         let inset: CGFloat = quiet ? 7 : 9
+        // Stacked, the check stands on the name's line; otherwise centred on the card.
+        let rowAlignment: VerticalAlignment = arrangement == .stacked ? .firstTextBaseline : .center
         return Button { select(product) } label: {
-            HStack(spacing: 12) {
+            HStack(alignment: rowAlignment, spacing: 12) {
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22, weight: .semibold))
                     .foregroundStyle(isSelected ? Palette.mint : Palette.inkFaint)
                     .contentTransition(.symbolEffect(.replace))
                     .accessibilityHidden(true)
-                ViewThatFits(in: .horizontal) {
-                    face.arranged(.inline)
-                    if saving != nil { face.arranged(.savingUnderPrice) }
-                    face.arranged(.stacked)
-                }
+                face.arranged(arrangement)
             }
             .padding(.horizontal, 14)
             .padding(.top, tag == nil ? inset : max(inset, min(tagRoom, 18)))
@@ -1483,8 +1493,8 @@ private struct TrustLine: ViewModifier {
 }
 
 /// A plan card's text beside its check: the name, what it comes to ("$0.67 a week"), the price and, for the year,
-/// the saving and the year at the monthly price struck through. `PaywallView.planRow` shows the first arrangement
-/// that fits on one line each: the saving beside the name, else under the price, else all stacked. The name is
+/// the saving and the year at the monthly price struck through. `PaywallView.plans` shows the cards in the first
+/// arrangement that fits them all: the saving beside the name, else under the price, else all stacked. The name is
 /// never broken across lines (it once hyphenated "Year-ly" beside the saving). Quiet (Lifetime): smaller type in
 /// softer ink until chosen, a third option that doesn't compete with the two subscriptions.
 @MainActor
@@ -1502,6 +1512,8 @@ private struct PlanFace {
     @ViewBuilder func arranged(_ arrangement: Arrangement) -> some View {
         switch arrangement {
         case .inline:
+            // Both columns at their full width (the arrangement is only shown when they fit), so the stack never
+            // splits the room with the spacer and squeezes the name or shrinks the price; the spacer takes the rest.
             HStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 8) {
@@ -1510,10 +1522,11 @@ private struct PlanFace {
                     }
                     detailText(wraps: false)
                 }
-                // Ahead of the spacer: the name and its saving take their room before any is left over.
+                .fixedSize(horizontal: true, vertical: false)
                 .layoutPriority(1)
                 Spacer(minLength: 12)
                 prices(withSaving: false)
+                    .fixedSize(horizontal: true, vertical: false)
             }
         case .savingUnderPrice:
             HStack(spacing: 0) {
@@ -1521,9 +1534,11 @@ private struct PlanFace {
                     name(fixed: true)
                     detailText(wraps: false)
                 }
+                .fixedSize(horizontal: true, vertical: false)
                 .layoutPriority(1)
                 Spacer(minLength: 12)
                 prices(withSaving: true)
+                    .fixedSize(horizontal: true, vertical: false)
             }
         case .stacked:
             VStack(alignment: .leading, spacing: 3) {

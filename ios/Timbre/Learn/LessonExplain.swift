@@ -7,7 +7,8 @@ import TimbreCore
 /// bottom. A picture of notes is a demonstration that plays once as the step appears (with Reduce Motion or VoiceOver
 /// it waits for "Hear it"): a chord's fingers land in finger order, each string lighting as its note sounds, then the
 /// chord rings across them (on the chord chart, or on the player's-view neck where the strings shimmer as they ring:
-/// the switch on the card, remembered); a neck's dots drop in note by note, each string lit as it sounds; a staff or
+/// the switch on the card, the app's one picture choice, which also turns every neck and the strum stage); a neck's
+/// dots drop in note by note, each string lit as it sounds; a staff or
 /// a keyboard lights each note as it sounds; a rhythm's strokes sound as the pick sweeps the strings in time with the
 /// beat row.
 /// "Hear it" plays it again. The card takes the room the words leave and its picture grows to fill it.
@@ -41,8 +42,8 @@ struct ExplainStep: View {
     /// When the demonstration's first finger lands: the player's view presses its fingertips on this clock, so each
     /// meets its note (the chart keeps its own, started the same way).
     @State private var chordLandStart: Date?
-    /// The chord chart or the player's view (the switch on the card; remembered).
-    @AppStorage(ChordPicture.storageKey) private var chordView: ChordPicture = .player
+    /// The chord chart (the default) or the player's view: the switch on the card, the app's one picture choice.
+    @AppStorage(ChordPicture.storageKey) private var chordView: ChordPicture = .chart
     /// When the neck's first dot lands (nil: still, every dot in place).
     @State private var neckStart: Date?
     /// The staff or keyboard note sounding now, while the notes play one by one.

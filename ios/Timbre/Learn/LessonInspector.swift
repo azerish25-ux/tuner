@@ -280,8 +280,10 @@ struct LessonInspector<Companion: View>: View {
     // MARK: Preview
 
     /// What you'll play, drawn still: the lesson's chords (fingers landing), its first picture, its notes on the course's
-    /// neck (or a staff for the voice), its rhythm; the course's instrument when it has none of these. Stacked, it is
-    /// 250 points tall; beside the card (`wide`) it grows to the column's height and the drawing with it.
+    /// neck (or a staff for the voice), its rhythm; the course's instrument when it has none of these. Chords and necks
+    /// are drawn as the lesson draws them (the chart or the player's view, `ChordPicture`), so the preview never shows
+    /// a chord the other way round from the lesson it opens. Stacked, it is 250 points tall; beside the card (`wide`)
+    /// it grows to the column's height and the drawing with it.
     private var preview: some View {
         VStack(alignment: .leading, spacing: 12) {
             Eyebrow("Preview", color: Palette.inkSoft)
@@ -303,7 +305,7 @@ struct LessonInspector<Companion: View>: View {
         case let .chords(chords):
             HStack(alignment: .center, spacing: 14) {
                 ForEach(chords, id: \.symbol) { chord in
-                    ChordDiagram(chord: chord, accent: accent, landing: true)
+                    ChordPictureView(chord: chord, accent: accent, landing: true, compact: true)
                         .frame(maxWidth: 150)
                 }
             }

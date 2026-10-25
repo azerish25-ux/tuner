@@ -15,9 +15,10 @@ struct BeatCall: Equatable {
 /// "and" in amber), and the strokes the hand makes without touching the strings are faint ghosts, because the hand
 /// never stops: it swings down on every beat and up on every "and" whether it strikes or not. A pick rides the lane
 /// as the playhead, tracing that swing as a wave through the strings' line (down through it on a beat, up through it
-/// on an "and"), tip first along its path with a fading trail. Before the take it waits raised over beat 1. Down is
-/// down the screen everywhere a strum is drawn: here, on the strum stage (`StrumSweep`, always the player's view,
-/// thickest string on top) and in the words ("Strum down").
+/// on an "and"), tip first along its path with a fading trail. Before the take it waits raised over beat 1. The lane
+/// draws the hand, not the strings, so its down is always down, as in the words ("Strum down"); the strum stage
+/// (`StrumSweep`) lays the strings as every neck does (`ChordPicture`), and its key ("↓ 6 → 1") ties this lane's ↓
+/// to the strings a down strum crosses, whichever way up they lie.
 /// Elsewhere (taps, plucks) the strokes are dots and the playhead is a bar.
 ///
 /// Each stroke is called as it passes, mint on the beat, amber when loose, red when missed, and a loose or missed

@@ -75,13 +75,15 @@ extension View {
 
 // MARK: - String order in lessons
 
-/// Which way up the strings are drawn: string 1, the thinnest, on top as tab writes it (or at the bottom with
-/// Settings › String order › Mirror), so a beginner never has to guess as the lesson moves between pictures.
+/// Which way up the strings are drawn: string 1, the thinnest, on top as tab writes it (the Chart view, the
+/// default), or at the bottom in Player view, so a beginner never has to guess as the lesson moves between pictures.
+/// It says the one choice behind it (`ChordPicture`) can be flipped, and where: the switch on any chord card, or
+/// Settings › String order.
 struct StringOrderTip: Tip {
     var title: Text {
         StringOrder.current.thinnestOnTop ? Text("String 1 = thinnest, on top") : Text("String 1 = thinnest, at the bottom")
     }
-    var message: Text? { Text("Flip it any time in Settings › String order.") }
+    var message: Text? { Text("Chart or Player view: switch on any chord card, or in Settings › String order.") }
     var image: Image? { Image(systemName: "list.number") }
 
     var options: [any TipOption] {
@@ -90,8 +92,8 @@ struct StringOrderTip: Tip {
 }
 
 /// The string-order tip above a lesson's first step that draws a neck lying down (a fretboard picture, the notes'
-/// neck strip or the play-along's lanes) on a fretted or bowed course. Leaving that step retires it. Chord boxes
-/// stand upright with their own convention, so they never show it. LessonPlayer places it under its top bar.
+/// neck strip or the play-along's lanes) on a fretted or bowed course. Leaving that step retires it. A chord card
+/// carries the Chart / Player view switch itself, so it never shows it. LessonPlayer places it under its top bar.
 struct StringOrderTipSlot: View {
     let step: LessonStep?
     let course: LearnCourse
@@ -108,13 +110,21 @@ struct StringOrderTipSlot: View {
         }
     }
 
+    /// Steps whose strings lie across the screen in the chosen order: a fretboard picture, the notes' strip, the
+    /// play-along's lanes and, since it lies as every neck does, the strum stage (a rhythm explanation's, a strum's or
+    /// a progression's), where string 1 on top means a down strum climbs the screen.
     static func drawsNeck(_ step: LessonStep, course: LearnCourse) -> Bool {
         guard course.fretKind != nil else { return false }
         switch step {
-        case let .explain(_, _, visual), let .quiz(_, _, _, _, visual):
+        case let .explain(_, _, visual):
+            switch visual {
+            case .fretboard, .rhythm: return true
+            default: return false
+            }
+        case let .quiz(_, _, _, _, visual):
             if case .fretboard = visual { return true }
             return false
-        case .playNotes, .playAlong:
+        case .playNotes, .playAlong, .strum, .progression:
             return true
         default:
             return false

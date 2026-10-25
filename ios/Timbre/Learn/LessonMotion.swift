@@ -65,11 +65,12 @@ enum CanvasNoise {
 
 /// A pick sweeping the strings on every stroke of a rhythm pattern, in time with the beat: down strokes
 /// run from the thickest string to the thinnest, up strokes back, and each string shimmers as the pick crosses it.
-/// The stage is always the player's view, the instrument's top as you look down at it while you play: the thickest
-/// string on top whatever Settings › String order says for the tab-style necks, so a down stroke falls down the
-/// screen, as "Strum down" says and the beat row's ↓ and its pick show (an up stroke rises, as ↑). A "Player view"
-/// tag says so over the strings. Each string is numbered and the outer two are named ("Thickest (6)" on top,
-/// "Thinnest (1)" underneath), and the pick's tip, its lane's chevrons and its trail all point the way it travels.
+/// The strings lie as every other neck in the app does (`ChordPicture`, Settings › String order): in the Chart view,
+/// the default, string 1 on top as tab writes it, so a down stroke climbs the screen from the thickest string at the
+/// bottom; in Player view the thickest on top, as you look down at the instrument while you play, so it falls down
+/// the screen. Either way a key over the strings reads "↓ 6 → 1": the beat row's ↓ is a down strum, from the thickest
+/// string to string 1. Each string is numbered and the outer two are named ("Thinnest (1)", "Thickest (6)"), and the
+/// pick's tip, its lane's chevrons and its trail all point the way it travels on screen.
 /// The strings run over the instrument's top, from the sound hole to the bridge; the wood fills the whole frame and
 /// the strings spread to fill its height (up to a comfortable spacing), so a tall stage is all guitar, never bare.
 /// What comes next is the beat row's job (`RhythmBar`, `LessonBeatRow`), so the sweep draws only the stroke
@@ -88,11 +89,11 @@ struct StrumSweep: View {
     let time: Double?
     /// Bars the strokes run for; nil repeats the bar forever.
     var bars: Int?
-    /// Names the top and bottom strings in words ("Thickest (6)" over the top, "Thinnest (1)" under the bottom).
+    /// Names the top and bottom strings in words ("Thinnest (1)" over the top in the Chart view, "Thickest (6)" under
+    /// the bottom; the other way round in Player view).
     var edges: StringEdges?
-    /// The player's view: the thickest string on top, so down strokes travel down the screen (never flipped by
-    /// Settings › String order, which is about reading tab).
-    static let order: StringOrder = .mirror
+    /// Which string lies on top: the app's one picture choice, as on every other neck.
+    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
     /// The string numbers and names grow with Dynamic Type from the 11 pt floor (`DiagramType`).
     @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
 
@@ -135,7 +136,7 @@ struct StrumSweep: View {
     }
 
     var body: some View {
-        let order = Self.order
+        let order = stringOrder
         let scale = typeScale
         Canvas { context, size in
             if style == .tap { drawPad(&context, size: size) } else { drawStrings(&context, size: size, order: order, scale: scale) }
@@ -252,7 +253,7 @@ struct StrumSweep: View {
             drawString(&context, number: number, of: count, y: y, right: bridgeX, amplitude: amplitude, t: t, scale: scale)
         }
         drawEdgeNames(&context, size: size, top: top, bottom: top + band, count: count, order: order, scale: scale)
-        drawViewTag(&context, top: top, scale: scale)
+        drawStrokeKey(&context, top: top, count: count, scale: scale)
 
         if style == .pluck {
             // The lowest string, wherever the order puts it; the fingertip comes at it from outside the strings.
@@ -290,12 +291,16 @@ struct StrumSweep: View {
         }
     }
 
-    /// "Player view" over the strings' top-left corner, level with the top string's name and on a dark plate (it can
-    /// sit over the rosette): this stage is the instrument as you see it playing, which is why the thickest string is
-    /// on top here even when the tab-style necks put string 1 there.
-    private func drawViewTag(_ context: inout GraphicsContext, top: CGFloat, scale: CGFloat) {
+    /// The strum's key over the strings' top-left corner, level with the top string's name and on a dark plate (it can
+    /// sit over the rosette): "↓ 6 → 1", the beat row's down arrow in the accent, then the strings a down strum crosses
+    /// from first to last. In the Chart view that is up the screen (string 1 is on top, as in tab), so the arrow on
+    /// the beat row never reads as the way the pick moves here. Strums only: a plucking finger has no direction.
+    private func drawStrokeKey(_ context: inout GraphicsContext, top: CGFloat, count: Int, scale: CGFloat) {
+        guard style == .strum, count >= 2 else { return }
         let points = DiagramType.size(DiagramType.floor, scale: scale)
-        let text = Text("Player view").font(DiagramType.font(points, weight: .semibold)).foregroundStyle(Palette.inkSoft)
+        let arrow = Text(Image(systemName: "arrow.down")).foregroundStyle(accent)
+        let crossing = Text(verbatim: " \(count) → 1").foregroundStyle(Palette.inkSoft)
+        let text = (arrow + crossing).font(DiagramType.font(points, weight: .bold))
         let resolved = context.resolve(text)
         let size = resolved.measure(in: CGSize(width: 200, height: 40))
         let y = top - 10 - points * 0.55

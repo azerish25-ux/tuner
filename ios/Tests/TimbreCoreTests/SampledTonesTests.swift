@@ -100,7 +100,7 @@ final class SampledTonesTests: XCTestCase {
     // MARK: Pitch
 
     /// The tuner's reference stays exact from recordings: A4 rendered from the nearest zone (pitched by the exact
-    /// ratio to its measured fundamental) reads 440 Hz on the app's own detector.
+    /// ratio to the zone's measured pitch) reads 440 Hz on the app's own detector.
     func testReferenceA4ReadsExactly440OnTheTunersDetector() throws {
         let library = try bundled()
         for voice: InstrumentVoice in [.piano, .guitar, .harp, .mallet, .flute, .reed, .brass] {

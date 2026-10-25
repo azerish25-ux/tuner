@@ -258,11 +258,12 @@ struct SettingsView: View {
 
     // MARK: Display and feedback
 
-    /// Which string is drawn on top wherever a neck lies across the screen (`StringOrder`).
-    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
+    /// How every neck and chord is drawn (`ChordPicture`): the very value the Chart / Player view switch on a chord
+    /// card flips (`StringOrder` reads it too), so this row and that switch can never disagree.
+    @AppStorage(ChordPicture.storageKey) private var chordPicture: ChordPicture = .chart
 
     private var displaySection: some View {
-        SettingsGroup(title: "Display") {
+        SettingsGroup(title: "Display", footer: Text("Chord cards and the Scales neck have the same Chart / Player view switch.")) {
             MenuRow(title: "Handedness", symbol: "hand.raised", id: "settings.handedness", selection: setting(\.handedness)) {
                 Text("Right-handed").tag("right"); Text("Left-handed").tag("left")
             }
@@ -271,29 +272,35 @@ struct SettingsView: View {
         }
     }
 
-    /// "String order" and its two options, each with a small picture of the strings in that order and a check
-    /// on the chosen one (the options are too long to sit in a menu at the end of a row).
+    /// "String order" and its two options, Chart and Player view, each with a small picture of the strings in that
+    /// order, what it means in a line under its name, and a check on the chosen one (too long for a menu).
     private var stringOrderChoice: some View {
         VStack(spacing: 0) {
             RowLabel(symbol: "list.number", title: Text("String order"))
                 .settingsRow()
                 .accessibilityAddTraits(.isHeader)
-            ForEach(StringOrder.allCases) { order in
+            ForEach(ChordPicture.allCases) { picture in
                 Hairline(leading: SettingsRowMetrics.inset)
-                stringOrderOption(order)
+                stringOrderOption(picture)
             }
         }
     }
 
-    private func stringOrderOption(_ order: StringOrder) -> some View {
-        let selected = stringOrder == order
+    private func stringOrderOption(_ picture: ChordPicture) -> some View {
+        let selected = chordPicture == picture
+        let order = picture.stringOrder
         return Button {
-            stringOrder = order
+            chordPicture = picture
             Haptics.shared.selection()
         } label: {
             HStack(spacing: 12) {
                 StringOrderGlyph(thinnestOnTop: order.thinnestOnTop, lit: selected)
-                Text(order.title).font(.body).foregroundStyle(Palette.ink).multilineTextAlignment(.leading)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(picture.title).font(.body).foregroundStyle(Palette.ink)
+                    Text(picture.detail).font(.footnote).foregroundStyle(Palette.inkSoft)
+                }
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 8)
                 Image(systemName: "checkmark").font(.body.weight(.semibold)).foregroundStyle(Palette.mint)
                     .opacity(selected ? 1 : 0)
@@ -305,7 +312,8 @@ struct SettingsView: View {
         .buttonStyle(RowButtonStyle())
         .animation(Motion.quick, value: selected)
         .accessibilityAddTraits(selected ? .isSelected : [])
-        .accessibilityIdentifier("settings.stringOrder.\(order.rawValue)")
+        // The ids the option rows have always had: tab for Chart, mirror for Player view.
+        .accessibilityIdentifier("settings.stringOrder.\(order == .tab ? "tab" : "mirror")")
     }
 
     private var feedbackSection: some View {
@@ -517,7 +525,7 @@ private struct MenuRow<Selection: Hashable, Options: View>: View {
     }
 }
 
-/// Four strings, thin to thick from the top (tab order) or the other way round (mirror), in the orb column.
+/// Four strings, thin to thick from the top (Chart, tab order) or the other way round (Player view), in the orb column.
 private struct StringOrderGlyph: View {
     let thinnestOnTop: Bool
     let lit: Bool

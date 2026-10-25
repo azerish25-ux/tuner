@@ -179,7 +179,8 @@ final class AppStore: ObservableObject {
                                             week: week, instrument: instrumentDisplayName, updated: Date(), lesson: lesson))
         WatchBridge.shared.publish(self)  // Apple Watch: streak, Today, quest and complication (Services/WatchBridge.swift)
         PracticeReminder.update(.init(streak: summary.current, practicedToday: summary.practicedToday, nextLesson: lesson?.title,
-                                      minutesByDay: PracticeReminder.minutesByDay(records)))
+                                      minutesByDay: PracticeReminder.minutesByDay(records),
+                                      reviewDue: course.flatMap { reviewDeck.nextDue(in: $0.id) }))
     }
 
     // MARK: Derived state
@@ -746,12 +747,17 @@ final class AppStore: ObservableObject {
     /// Saves a finished lesson: stars, XP, quests and badges, and a practice record for the streak.
     /// Saves the lesson and its XP; returns what was earned so the results screen can show it.
     @discardableResult
-    func finishLesson(_ result: LessonResult, courseId: String) -> ProgressUpdate? {
+    /// `credits`: what the lesson's steps said about chord changes, rhythms and questions (`SpacedReview.credits`), for
+    /// spaced review alongside the result's note and chord scores.
+    func finishLesson(_ result: LessonResult, courseId: String, credits: [ReviewCredit] = []) -> ProgressUpdate? {
         // Today's lesson rep, read before this lesson moves the course on.
         let todayRep = dailyRep(forLesson: result.lessonId)
         var learn = self.learn
         learn.record(result, courseId: courseId)
-        guard updateSettings({ $0.learn = learn }) else { return nil }
+        // Spaced review: what slipped joins the schedule, what came back is spaced out (Learn/WeakSpotReview.swift).
+        var deck = reviewDeck
+        deck.record(ReviewCredit.from(result.items) + credits, courseId: courseId)
+        guard updateSettings({ $0.learn = learn; $0.spacedReview = deck }) else { return nil }
         // count = stars possible, stableCount = stars earned (records require stableCount <= count).
         save(PracticeRecord(instrumentId: "learn.\(courseId)", kind: "lesson", count: 3, stableCount: result.stars, durationMs: result.minutes * 60_000))
         Analytics.log("lesson_done", ["lesson": result.lessonId, "stars": String(result.stars)])

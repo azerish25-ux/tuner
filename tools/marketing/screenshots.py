@@ -13,7 +13,11 @@ Before rendering (and with --check, instead of rendering) it checks the tables: 
 Each store frame must come from exactly one capture in the UI tests, and that capture must be deterministic:
 TimbreUITests keeps a frame under its own name only when it checked that the screen shows what the caption
 says (`storeFrame`); otherwise the test fails and keeps the picture as "<name>-wrong". The tuner's lock and
-the chord come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift), not from timed shots.
+the chord come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift), and Strum to tune (iPhone
+#7, `11b-tune-strum`, from test13StoreStrum) from the demo pitch's one fixed strum (StrumDemo), not from timed
+shots. Every capture starts from the same seeded player (DemoData in ios/Timbre/TimbreApp.swift: the same
+streak, lit flame, level and XP on every frame) and is taken once its screen has settled (`stillScreenshot`,
+ios/TimbreUITests/StillScreen.swift).
 
 Rendering reads the xcresult attachment manifest written by the iOS workflow, picks the captures the
 table names and lays each one on a "Still Point" stage under its caption. A capture is turned upright from

@@ -4,8 +4,8 @@ import AVFoundation
 import Foundation
 
 /// The recorded instruments bundled in `Samples/` (built by tools/build-ios-samples.py from CC0 libraries; sources in
-/// docs/content/AUDIO-SOURCES.md): sparse key zones per instrument, AAC, mono, each with its measured fundamental so a
-/// note can be pitched from the nearest zone by an exact ratio. Nothing is decoded until a note needs it; decoded
+/// docs/content/AUDIO-SOURCES.md): sparse key zones per instrument, AAC, mono, each with its measured pitch so a note
+/// can be pitched from the nearest zone by an exact ratio. Nothing is decoded until a note needs it; decoded
 /// zones live in a size-capped cache (`capacityBytes`) that `purge` empties. Thread-safe: tones and the band render
 /// on their own queues at once.
 public final class SampleLibrary: @unchecked Sendable {
@@ -161,7 +161,9 @@ public struct SampleManifest: Decodable, Sendable {
         public let commit: String
     }
 
-    /// One recording. `hz` is its measured fundamental at `rate`; `frames` its length as written (a decoder that
+    /// One recording. `hz` is its measured pitch: what Timbre's own tuner reads from it (a real string's stretched
+    /// overtones put that a few cents above its fundamental, and a reference must agree with the needle), or its
+    /// fundamental where that reading isn't steady (vibrato); `frames` its length as written (a decoder that
     /// returns more kept the encoder's priming, which is dropped); `mark` is the first frame at `markLevel` (a quarter
     /// of its peak), the build's check that encoding kept the attack in place; `gain` evens the attack loudness across
     /// the set at `velocity`; `loop` is a sustained note's loop of whole periods (frames).

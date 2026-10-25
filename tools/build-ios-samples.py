@@ -9,9 +9,11 @@ What the script does to each recording (the app does the rest at play time, see 
   * mono (channels averaged; drums mix close and overhead mics), 44.1 kHz;
   * leading silence trimmed to a 2-5 ms pre-roll, tails trimmed and faded (sustained notes are cut before their
     natural release and get a loop region of whole periods instead);
-  * the fundamental measured to a hundredth of a cent (Hann-windowed DTFT on the steady part), so the app can pitch
-    any note from the nearest zone with an exact ratio; samples more than 35 cents from their equal-tempered note
-    are rejected;
+  * the fundamental measured to a hundredth of a cent (Hann-windowed DTFT on the steady part; samples more than
+    35 cents from their equal-tempered note are rejected), then the pitch Timbre's own tuner reads (a port of its
+    YIN detector at 48 kHz): the app plays a zone by that reading when it is steady and near the fundamental (real
+    strings read a few cents sharp of their fundamental through their stretched overtones, and a reference tone must
+    agree with the needle), else by the fundamental; any note is then pitched from the nearest zone by an exact ratio;
   * peak-normalised to -1 dBFS for the encoder, with a per-file gain that evens the attack loudness of the set;
   * encoded with ffmpeg's AAC (mono, 80-112 kbps), then decoded again to verify the pitch and the attack position.
 
@@ -513,7 +515,7 @@ def process_note(path: Path, nominal: int, kind: str, seconds: float, steady: bo
     # must agree with the needle), else the fundamental itself (a vibrato note, a faint low string the detector misreads).
     # A plucked string glides a few cents flat as it fades; the median over the second after the attack is its pitch.
     reading, spread = tuner_pitch(x, window_start / RATE, window_len / RATE, hz)
-    play = (reading, 'tuner') if reading and abs(1200 * math.log2(reading / hz)) <= 15 and spread <= 12 else (hz, 'fundamental')
+    play = (reading, 'tuner') if reading and abs(1200 * math.log2(reading / hz)) <= 25 and spread <= 12 else (hz, 'fundamental')
     return x, hz, midi, cents, loop, rms, partial, play
 
 
@@ -689,8 +691,9 @@ def write_doc(manifest: dict, sizes: dict):
         '- Lazily: nothing is decoded at launch. A zone is decoded (AAC to 16-bit PCM in memory) the first time a note',
         '  needs it, and the decoded zones live in a size-capped cache that is emptied on a memory warning.',
         '- Sparse zones are pitch-shifted to the exact frequency asked for (playback ratio = target / the zone\'s',
-        '  measured fundamental), so reference tones stay exact; a unit test renders A4 and measures 440 Hz with the',
-        '  tuner\'s own detector.',
+        '  measured pitch: what Timbre\'s tuner reads from it, or its fundamental where that reading wavers), so',
+        '  reference tones read exactly on the needle; a unit test renders A4 and measures 440 Hz with the tuner\'s own',
+        '  detector (`SampledTonesTests`).',
         '- Instruments without a sample set (ukulele, mandolin, banjo, sung voice), notes outside a set\'s range and any',
         '  failure to read a file fall back to the synthesized voices (`ToneSynth`), and the band to `BandSynth`.',
         '- The violin and cello recordings are played with vibrato, so the tuner\'s *reference* for bowed strings stays',
