@@ -19,6 +19,13 @@ extension String {
     }
 }
 
+extension Bundle {
+    /// The app language's strings, `TimbreLocalization.bundle`, for a lookup that names its bundle:
+    /// `String(localized: "…", bundle: .app)`. New code names it; the two module-wide overloads above give calls that
+    /// name no bundle the same answer, and go once every call names one.
+    static var app: Bundle { TimbreLocalization.bundle }
+}
+
 func localizedVoiceExplanation(_ result: VoiceResult, level: Int) -> String {
     guard result.accuracy != nil else {
         let key: String

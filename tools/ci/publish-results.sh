@@ -3,9 +3,15 @@
 # orphan commit on its own branch, e.g. ci-results/app. Each run replaces the
 # branch, so history never grows. Readable with plain `git fetch`, which works
 # where artifact downloads are unavailable.
+#
+#   publish-results.sh BRANCH DIR [JOB]
+#
+# JOB names the job the evidence came from (default: the job running this script). The workflows run it from one
+# small publish job, the only one with write access, over the results the other jobs uploaded as artifacts.
 set -euo pipefail
 branch="$1"
 source_dir="$2"
+source_job="${3:-${GITHUB_JOB:-unknown}}"
 # Side branches publish next to the main evidence (ci-results/core--dsp-chords) instead of over it.
 ref="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-}}"
 case "$ref" in ""|main|v2/foundations) ;; *) branch="${branch}--${ref//\//-}" ;; esac
@@ -21,7 +27,7 @@ cat > "$work/RUN.txt" <<EOF
 sha=${GITHUB_SHA:-unknown}
 ref=${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-unknown}}
 run=${GITHUB_RUN_ID:-unknown}
-job=${GITHUB_JOB:-unknown}
+job=${source_job}
 date=$(date -u +%FT%TZ)
 EOF
 cd "$work"

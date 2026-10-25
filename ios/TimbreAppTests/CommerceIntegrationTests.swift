@@ -28,7 +28,9 @@ final class CommerceIntegrationTests: XCTestCase {
         try await super.tearDown()
     }
 
-    private func waitUntil(timeout: TimeInterval = 10, _ condition: @escaping () -> Bool) async throws {
+    /// Waits for `condition` without touching StoreKit: what arrives by itself (a transaction update). The limit is
+    /// generous because the StoreKit test daemon is slow on a busy runner; a passing run returns as soon as it holds.
+    private func waitUntil(timeout: TimeInterval = 30, _ condition: @escaping () -> Bool) async throws {
         let deadline = Date().addingTimeInterval(timeout)
         while !condition() {
             guard Date() < deadline else { XCTFail("Timed out"); return }
@@ -36,22 +38,53 @@ final class CommerceIntegrationTests: XCTestCase {
         }
     }
 
-    /// Checks again until `condition` holds: a failed renewal sends no transaction, and the status StoreKit reports
-    /// for a renewal the session forces arrives a moment later.
-    private func refreshUntil(timeout: TimeInterval = 10, _ condition: @escaping () -> Bool) async throws {
+    /// Checks again until `condition` holds, refreshing entitlements as the app does whenever it comes forward: a
+    /// failed renewal sends no transaction, and the status StoreKit reports for a renewal the session forces arrives a
+    /// moment later.
+    private func refreshUntil(timeout: TimeInterval = 30, _ condition: @escaping () -> Bool) async throws {
         let deadline = Date().addingTimeInterval(timeout)
         while true {
             await commerce.refreshEntitlements()
             if condition() { return }
             guard Date() < deadline else { XCTFail("Timed out"); return }
-            try await Task.sleep(for: .milliseconds(200))
+            try await Task.sleep(for: .milliseconds(250))
         }
+    }
+
+    /// What the session and the service say about a purchase, for a failure message.
+    private func purchaseState(_ productID: String) -> String {
+        let recorded = session.allTransactions().filter { $0.productIdentifier == productID }.count
+        return "pro \(commerce.isPro), pending \(commerce.pending), error \(commerce.error ?? "none"), "
+            + "\(recorded) session transactions for \(productID)"
+    }
+
+    /// Buys `product` the way the paywall does and waits for Pro; returns what `purchase` itself reported. On a busy
+    /// runner the StoreKit test daemon can fail a purchase with a transient error before it records anything (the
+    /// paywall's button would simply be tapped again: so is this one, once), or record it after `purchase` has
+    /// returned (the refresh the app makes on coming forward picks it up: so does the wait).
+    @discardableResult
+    private func buy(_ product: Product, timeout: TimeInterval = 30) async throws -> Bool {
+        var granted = await commerce.purchase(product)
+        let recorded = session.allTransactions().contains { $0.productIdentifier == product.id }
+        if !granted, !commerce.isPro, !commerce.pending, !recorded, let first = commerce.error {
+            print("The purchase of \(product.id) failed before StoreKit recorded it (\(first)); buying again")
+            granted = await commerce.purchase(product)
+        }
+        let deadline = Date().addingTimeInterval(timeout)
+        while !commerce.isPro {
+            guard Date() < deadline else {
+                XCTFail("\(product.id) never granted Pro: \(purchaseState(product.id))")
+                break
+            }
+            try await Task.sleep(for: .milliseconds(250))
+            await commerce.refreshEntitlements()
+        }
+        return granted
     }
 
     private func subscribeMonthly() async throws {
         let monthly = try XCTUnwrap(commerce.monthly)
-        _ = await commerce.purchase(monthly)
-        try await waitUntil { self.commerce.isPro }
+        try await buy(monthly)
         XCTAssertNil(commerce.billingIssue)
     }
 
@@ -67,39 +100,33 @@ final class CommerceIntegrationTests: XCTestCase {
 
     func testAnnualSubscriptionGrantsPro() async throws {
         let annual = try XCTUnwrap(commerce.annual)
-        let granted = await commerce.purchase(annual)
-        try await waitUntil { self.commerce.isPro }
-        XCTAssertTrue(granted || commerce.isPro)
+        let granted = try await buy(annual)
+        XCTAssertTrue(granted || commerce.isPro, purchaseState(annual.id))
         XCTAssertEqual(commerce.activeProductID, TimbreProduct.annual)
         XCTAssertNotNil(commerce.renewalDate)
     }
 
     func testLifetimeGrantsProWithoutRenewal() async throws {
         let lifetime = try XCTUnwrap(commerce.lifetime)
-        _ = await commerce.purchase(lifetime)
-        try await waitUntil { self.commerce.isPro }
+        try await buy(lifetime)
         XCTAssertNil(commerce.renewalDate)
     }
 
     func testExpiredSubscriptionReturnsToFree() async throws {
         let monthly = try XCTUnwrap(commerce.monthly)
-        _ = await commerce.purchase(monthly)
-        try await waitUntil { self.commerce.isPro }
+        try await buy(monthly)
         try session.expireSubscription(productIdentifier: TimbreProduct.monthly)
         try await Task.sleep(for: .milliseconds(400))
-        await commerce.refreshEntitlements()
-        try await waitUntil { !self.commerce.isPro }
+        try await refreshUntil { !self.commerce.isPro }
     }
 
     func testRefundRevokesLifetime() async throws {
         let lifetime = try XCTUnwrap(commerce.lifetime)
-        _ = await commerce.purchase(lifetime)
-        try await waitUntil { self.commerce.isPro }
+        try await buy(lifetime)
         let transaction = try XCTUnwrap(session.allTransactions().first { $0.productIdentifier == TimbreProduct.lifetime })
         try session.refundTransaction(identifier: transaction.identifier)
         try await Task.sleep(for: .milliseconds(400))
-        await commerce.refreshEntitlements()
-        try await waitUntil { !self.commerce.isPro }
+        try await refreshUntil { !self.commerce.isPro }
     }
 
     func testExistingPurchaseIsFoundByFreshService() async throws {

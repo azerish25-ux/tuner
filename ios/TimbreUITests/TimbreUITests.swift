@@ -127,6 +127,30 @@ final class TimbreUITests: XCTestCase {
         }
     }
 
+    /// Waits for `target` with one query every `interval` seconds instead of continuously: each query stalls the app's
+    /// main thread, which is where a step played by the demo pitch does its work.
+    private func waitSparingly(for target: XCUIElement, timeout: TimeInterval, every interval: TimeInterval = 3) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        while true {
+            if target.exists { return true }
+            guard Date() < deadline else { return false }
+            settle(interval)
+        }
+    }
+
+    /// Taps a lesson explanation's Continue until the step after it is on screen. A tap that lands while the lesson is
+    /// still zooming open can be dropped; the steps that follow an explanation here (the tune check, a notes step) have
+    /// no Continue of their own, so its disappearance is the sign the lesson moved on.
+    private func leaveExplanation() {
+        let next = element("lesson.continue")
+        for _ in 0..<4 {
+            guard next.waitForExistence(timeout: 5) else { return }
+            next.tap()
+            if next.waitForNonExistence(timeout: 6) { return }
+        }
+        XCTFail("the lesson stayed on its explanation: Continue was tapped four times")
+    }
+
     /// Taps Continue (once it is enabled) until the next screen's element appears: a tap during the
     /// enable animation or the page transition can be dropped.
     private func continueUntil(_ next: XCUIElement) {
@@ -541,12 +565,21 @@ final class TimbreUITests: XCTestCase {
         let node = element("learn.lesson.gtr-1-2")
         scrollTo(node)
         node.tap(); settle(1.5)
-        element("lesson.continue").tap(); settle(1)
+        leaveExplanation()
+        // Today's tune check comes first unless an earlier flow already did it (test09 does, on the same simulator):
+        // skip it. With the demo pitch it can also finish by itself while the tap is on its way.
         let skip = element("lesson.tunecheck.skip")
-        tapIfPresent(skip); settle(1)
+        if skip.waitForExistence(timeout: 2) {
+            tapIfPresent(skip)
+            _ = skip.waitForNonExistence(timeout: 20)
+        }
         settle(1.5); shot("56-lesson-notes")
-        // Two note steps finish on their own with the demo pitch, then a quiz and a listening question.
-        XCTAssertTrue(element("lesson.option.0").waitForExistence(timeout: 25))
+        // Two note steps finish on their own with the demo pitch, then a quiz and a listening question. Hands off while
+        // they play: every query of the screen stalls the app's main thread for a second or more, and the demo pitch,
+        // the hold that ticks each note off and the hand-over to the next step all run on that thread. Polling from
+        // the start stretched the two steps to 13 s on a quiet runner and past 25 s on a busy one.
+        settle(6)
+        XCTAssertTrue(waitSparingly(for: element("lesson.option.0"), timeout: 60), "the note steps didn't finish on the demo pitch")
         // The quiz slides in from the side: a tap resolved mid-slide lands on the tile beside the right answer.
         settle(1.2)
         element("lesson.option.0").tap(); settle(1); shot("57-lesson-quiz")

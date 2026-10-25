@@ -17,7 +17,7 @@ sweep removes the reference and keeps the explanation:
 Store-frame references ("frame #4", "store frame 51b") are removed the same way in product code; the capture tests
 and the capture scenes (Root/DemoScenes.swift) keep them, as the hygiene lint does. Only comment text changes: code
 and string literals are never touched. A reference the rules can't remove cleanly ("Review 13's results: …") is
-listed for a person to rewrite. Run the hygiene lint afterwards (tools/ci/lint_tells.py --update-baseline).
+listed for a person to rewrite. Run the hygiene lint afterwards (tools/ci/comment_hygiene.py --update-baseline).
 """
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
-import lint_tells  # noqa: E402
+import comment_hygiene  # noqa: E402
 from swift_source import scan  # noqa: E402
 
 _REVIEW = r"(?i:review(?:\s+round)?\s*#?\s*\d+(?:['’]s)?(?:\s+\d{1,3}[a-z]?\b)?)"
@@ -61,13 +61,13 @@ def _rewrite(text: str, patterns) -> str:
 
 
 def _remaining_rules(rel: str) -> list:
-    return [lint_tells.RULES_BY_ID[r] for r in ("review-ref", "bug-ref", "qa-ref", "store-frame")
-            if lint_tells.RULES_BY_ID[r].applies(rel)]
+    return [comment_hygiene.RULES_BY_ID[r] for r in ("review-ref", "bug-ref", "qa-ref", "store-frame")
+            if comment_hygiene.RULES_BY_ID[r].applies(rel)]
 
 
 def sweep_source(source: str, rel: str = "ios/Timbre/Example.swift") -> tuple[str, list[tuple[int, str]]]:
     """(rewritten source, [(line, text)] references left for a person)."""
-    frames = lint_tells.RULES_BY_ID["store-frame"].applies(rel)
+    frames = comment_hygiene.RULES_BY_ID["store-frame"].applies(rel)
     patterns = _WITH_FRAMES if frames else _WITHOUT_FRAMES
     _, comments = scan(source)
     edits = []
@@ -131,7 +131,7 @@ def _join_orphan_punctuation(lines: list[str], index: int) -> None:
 
 def swift_paths(root: Path, targets: list[str]) -> list[Path]:
     if not targets:
-        return lint_tells.swift_files(root)
+        return comment_hygiene.swift_files(root)
     out = []
     for target in targets:
         path = (root / target) if not Path(target).is_absolute() else Path(target)

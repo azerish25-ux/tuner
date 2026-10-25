@@ -10,6 +10,9 @@ packages:
 settings:
   base:
     SWIFT_VERSION: "5.10"
+    # Complete concurrency checking, as warnings in the Swift 5 language mode: each team clears its own files, and
+    # the CI warnings gate (tools/ci/build_warnings.py) counts them per file while failing on every other warning.
+    SWIFT_STRICT_CONCURRENCY: complete
     DEVELOPMENT_TEAM: ""
     MARKETING_VERSION: "1.0.0"
     CURRENT_PROJECT_VERSION: "1"
@@ -21,7 +24,7 @@ targets:
       - path: Timbre
         excludes: [Resources]
       - path: Timbre/Resources
-        excludes: [Samples]
+        excludes: [Samples]  # shipping.py: the .lproj folders of locales that don't ship follow Samples
         buildPhase: resources
       # The recorded instruments (tools/build-ios-samples.py; sources and licences in docs/content/AUDIO-SOURCES.md),
       # copied as one folder so Samples/manifest.json and Samples/<instrument>/*.m4a keep their paths in the bundle.
@@ -44,6 +47,12 @@ targets:
       path: Timbre/Info.plist
       properties:
         CFBundleDisplayName: Timbre
+        # The languages the app ships, English first: every .lproj today. Which ship is the owner's decision;
+        # tools/l10n/shipping.py --min PERCENT --apply rewrites this line and the marked excludes together.
+        # Quoted: YAML would read a bare `no` (Norwegian) as false.
+        CFBundleLocalizations: ["en", "ar", "bg", "bn", "ca", "cs", "da", "de", "el", "es", "et", "fa", "fi", "fr", "gu", "he", "hi", "hr", "hu", "id", "is", "it", "ja", "kn", "ko", "lt", "lv", "ml", "mr", "nl", "no", "pa", "pl", "pt", "ro", "ru", "sk", "sl", "sv", "sw", "ta", "te", "th", "tr", "uk", "ur", "vi", "zh-CN", "zu"]  # shipping.py
+        # Delivery stamps an internal TestFlight build "internal" (apple-delivery.yml); an App Store build leaves it empty.
+        TimbreBuildChannel: $(TIMBRE_BUILD_CHANNEL)
         # The version and build every bundle carries (app, widgets, watch app, complications): App Store Connect needs a
         # new build number per upload (apple-delivery.yml sets both), and the watch app's must equal the app's.
         CFBundleShortVersionString: $(MARKETING_VERSION)
@@ -101,6 +110,7 @@ targets:
         TimbreRemoteConfigURL: $(TIMBRE_REMOTE_CONFIG_URL)
     settings:
       base:
+        TIMBRE_BUILD_CHANNEL: ""
         TIMBRE_TELEMETRY_APP_ID: ""
         TIMBRE_PRIVACY_POLICY_URL: "https://azerish25-ux.github.io/tuner/privacy.html"
         TIMBRE_APP_STORE_ID: ""
@@ -134,6 +144,7 @@ targets:
       # Widget and control labels ("day streak", "Tune") read the app's string tables.
       - path: Timbre/Resources
         includes: ["*.lproj/Localizable.strings", "*.lproj/Localizable.stringsdict"]
+        excludes: []  # shipping.py: the .lproj folders of locales that don't ship
         buildPhase: resources
     entitlements:
       path: TimbreWidgets/TimbreWidgets.entitlements
@@ -175,6 +186,7 @@ targets:
       # The watch's own labels ("day streak", "Tempo", "Start today's practice") read the app's string tables.
       - path: Timbre/Resources
         includes: ["*.lproj/Localizable.strings", "*.lproj/Localizable.stringsdict"]
+        excludes: []  # shipping.py: the .lproj folders of locales that don't ship
         buildPhase: resources
     dependencies:
       - target: TimbreWatchWidgets
@@ -214,6 +226,7 @@ targets:
       - path: TimbreWatch/Shared/WatchTheme.swift
       - path: Timbre/Resources
         includes: ["*.lproj/Localizable.strings", "*.lproj/Localizable.stringsdict"]
+        excludes: []  # shipping.py: the .lproj folders of locales that don't ship
         buildPhase: resources
     entitlements:
       path: TimbreWatchWidgets/TimbreWatchWidgets.entitlements

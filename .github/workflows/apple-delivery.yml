@@ -20,11 +20,16 @@ on:
         required: true
         default: false
         type: boolean
-      allow_untranslated:
-        description: Upload even if a shipped language lacks a legal, permission or VoiceOver string (internal TestFlight only, never an App Store release)
+      internal_testflight_untranslated:
+        description: INTERNAL TESTFLIGHT ONLY - skip the translation gate. The build is exported for internal testers only (it can't be submitted for App Store review or external testing) and stamped TimbreBuildChannel=internal
         required: false
         default: false
         type: boolean
+      ship_min_coverage:
+        description: Ship only the languages with at least this percent of the interface translated (tools/l10n/shipping.py); empty ships the committed CFBundleLocalizations
+        required: false
+        default: ''
+        type: string
 permissions:
   contents: read
 concurrency:
@@ -49,6 +54,9 @@ jobs:
       TIMBRE_REMOTE_CONFIG_URL: ${{ vars.TIMBRE_REMOTE_CONFIG_URL }}
       MARKETING_VERSION: ${{ inputs.marketing_version }}
       BUILD_NUMBER: ${{ inputs.build_number }}
+      SHIP_MIN_COVERAGE: ${{ inputs.ship_min_coverage }}
+      # "internal" for a build that skipped the translation gate: exported for internal TestFlight testing only.
+      BUILD_CHANNEL: ${{ inputs.internal_testflight_untranslated && 'internal' || '' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -67,7 +75,8 @@ jobs:
                                 ('APP_STORE_CONNECT_KEY_ID', r'[A-Z0-9]{10}'),
                                 ('APP_STORE_CONNECT_ISSUER_ID', r'[A-Fa-f0-9-]{36}'),
                                 ('MARKETING_VERSION', r'[0-9]+\.[0-9]+(?:\.[0-9]+)?'),
-                                ('BUILD_NUMBER', r'[1-9][0-9]{0,8}')]:
+                                ('BUILD_NUMBER', r'[1-9][0-9]{0,8}'),
+                                ('SHIP_MIN_COVERAGE', r'(?:[0-9]{1,2}(?:\.[0-9]+)?|100)?')]:
               if not re.fullmatch(pattern, os.environ[name]):
                   raise SystemExit('Invalid format for ' + name)
           if 'BEGIN PRIVATE KEY' not in os.environ['APP_STORE_CONNECT_API_KEY_P8']:
@@ -81,11 +90,29 @@ jobs:
           set -euo pipefail
           swift test --package-path ios --parallel
           python3 tools/verify-ios-resources.py
+      - name: Choose the shipped languages
+        # The owner's bar for this upload: CFBundleLocalizations and the build's .lproj folders keep only the locales
+        # with at least SHIP_MIN_COVERAGE percent of the interface translated (this checkout only; nothing is committed).
+        if: ${{ inputs.ship_min_coverage != '' }}
+        run: |
+          set -euo pipefail
+          python3 tools/l10n/shipping.py --min "$SHIP_MIN_COVERAGE" --apply | tee shipping.txt
+          { echo "### Languages in this build"; echo; echo '```'; tail -3 shipping.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Legal, permission and VoiceOver strings in every shipped language
         # The paywall's renewal terms, the permission prompts and VoiceOver's words must be translated in every
-        # language the app ships (tools/l10n/critical.py). Ship fewer languages or deliver the translations first.
-        if: ${{ !inputs.allow_untranslated }}
+        # language the app ships (tools/l10n/critical.py). Ship fewer languages (ship_min_coverage, or
+        # tools/l10n/shipping.py) or deliver the translations first. Only an internal TestFlight build skips this.
+        if: ${{ !inputs.internal_testflight_untranslated }}
         run: python3 tools/l10n/critical.py --strict --github
+      - name: Internal TestFlight build (not for App Store review)
+        if: ${{ inputs.internal_testflight_untranslated }}
+        run: |
+          python3 tools/l10n/critical.py --github || true
+          echo "::warning title=Internal TestFlight build::The translation gate was skipped. This build is exported for internal TestFlight testing only and can't be submitted for App Store review."
+          { echo "## INTERNAL TESTFLIGHT BUILD"; echo
+            echo "The translation gate was skipped, so this build is exported with testFlightInternalTestingOnly: App Store Connect"
+            echo "offers it to internal testers only and it can't be submitted for review or external testing. Its Info.plist"
+            echo "says TimbreBuildChannel = internal."; } >> "$GITHUB_STEP_SUMMARY"
       - name: Generate Xcode project
         run: |
           set -euo pipefail
@@ -105,6 +132,10 @@ jobs:
           directory = pathlib.Path(os.environ['DELIVERY_DIRECTORY'])
           options = {'method': 'app-store-connect', 'destination': 'upload', 'signingStyle': 'automatic',
                      'teamID': os.environ['APPLE_TEAM_ID'], 'manageAppVersionAndBuildNumber': False, 'uploadSymbols': True}
+          if os.environ.get('BUILD_CHANNEL') == 'internal':
+              # A build that skipped the translation gate goes to internal testers only: App Store Connect won't let it
+              # be submitted for review or sent to external testers.
+              options['testFlightInternalTestingOnly'] = True
           (directory / 'ExportOptions.plist').write_bytes(plistlib.dumps(options))
           PY
       - name: Ensure Metal toolchain
@@ -120,6 +151,7 @@ jobs:
             -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID" \
             DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic \
             MARKETING_VERSION="$MARKETING_VERSION" CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
+            TIMBRE_BUILD_CHANNEL="${BUILD_CHANNEL:-}" \
             TIMBRE_TELEMETRY_APP_ID="${TELEMETRYDECK_APP_ID:-}" TIMBRE_APP_STORE_ID="${TIMBRE_APP_STORE_ID:-}" \
             TIMBRE_SHARE_URL="${TIMBRE_SHARE_URL:-}" TIMBRE_REMOTE_CONFIG_URL="${TIMBRE_REMOTE_CONFIG_URL:-}" archive
       - name: Export, sign and upload to App Store Connect
@@ -132,6 +164,9 @@ jobs:
             -authenticationKeyPath "$DELIVERY_DIRECTORY/AuthKey.p8" \
             -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"
           echo 'Upload accepted. Apple processing and TestFlight availability must be checked in App Store Connect.' >> "$GITHUB_STEP_SUMMARY"
+          if [ "${BUILD_CHANNEL:-}" = "internal" ]; then
+            echo 'This upload is internal TestFlight only: it cannot be submitted for App Store review.' >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Remove the API key
         if: ${{ always() }}
         run: rm -rf "${DELIVERY_DIRECTORY:-$RUNNER_TEMP/apple-delivery}"

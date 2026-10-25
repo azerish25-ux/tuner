@@ -1,0 +1,6 @@
+{
+ "about": "Warnings the CI warnings gate (tools/ci/build_warnings.py) allows: each entry is a regular expression on the path inside the repository and one on the message, with the reason the code can't avoid it. Keep it short; remove an entry once its warning is gone.",
+ "allow": [
+  {"path": "^ios/build/", "message": ".", "why": "Code Xcode generates into the build folder (asset symbols, App Intents metadata), not ours to edit."}
+ ]
+}

@@ -3,6 +3,7 @@
 
     python3 tools/l10n/report.py                 # regenerate the handoff (idempotent)
     python3 tools/l10n/report.py --check         # CI: warn about missing strings and an out-of-date handoff
+    python3 tools/l10n/report.py --check --strict  # the core job: also exit 1 when the committed handoff is stale
     python3 tools/l10n/report.py --import DIR    # merge translators' filled TODO files, apply them, regenerate
     python3 tools/l10n/report.py --xliff en.xliff  # settle code keys with Xcode's own export (l10n.yml)
 
@@ -18,6 +19,10 @@ English comes from
     AppShortcuts.strings  the App Shortcut phrases in the Swift sources
     InfoPlist.strings     the Timbre target's Info.plist strings in ios/project.yml
     Learn.strings         en.lproj/Learn.strings (tools/curriculum/build.py), for the lesson languages only
+
+Launch-critical strings come first in every TODO file and on the handoff page (`launch` on the entry): the paywall's
+purchase terms, the permission prompts and what VoiceOver says (tools/l10n/critical.py, which the App Store upload
+enforces), then the onboarding funnel from the welcome screen to the paywall.
 
 Nothing here translates: it lists what people translate, and merges what they deliver.
 """
@@ -51,6 +56,10 @@ LEARN = "Learn.strings"
 FIRST_SEEN = ["ios/project.yml", "ios/Timbre/Onboarding/", "ios/Timbre/Paywall/", "ios/Timbre/Root/", "ios/Timbre/Tune/",
               "ios/Timbre/Learn/", "ios/Timbre/Songs/", "ios/Timbre/Practice/", "ios/Timbre/Design/",
               "ios/Timbre/Journey/", "ios/Timbre/Instruments/", "ios/Timbre/YourSongs/", "ios/Timbre/Settings/"]
+#: The onboarding funnel, welcome to paywall: launch-critical after the legal, permission and VoiceOver strings.
+FUNNEL = ("ios/Timbre/Onboarding/",)
+#: Launch-critical kinds in the order translators take them.
+LAUNCH = ("legal", "permission", "voiceover", "funnel")
 INFO_KEYS = re.compile(r"^\s+(CFBundleDisplayName|NS\w+UsageDescription):\s*(.+?)\s*$")
 SPEC = re.compile(r"%(?:\d+\$)?[-+ #0]*\d*(?:\.\d+)?(?:lld|ld|llu|lu|d|u|lf|f|@|%)|\$\{\w+\}")
 LANGUAGE_NAMES = {
@@ -465,8 +474,9 @@ def clean(item: dict) -> dict:
     return out
 
 
-def build(xliff: Path | None = None) -> dict:
-    """Everything the handoff needs, computed from the repository."""
+def build(xliff: Path | None = None, launch: bool = False) -> dict:
+    """Everything the handoff needs, computed from the repository; with `launch`, the launch-critical entries are
+    tagged and listed first (`mark_launch`)."""
     locs, lesson_locs = locales(), lesson_locales()
     tables = {loc: {t: read_strings(RES / f"{loc}.lproj/{t}") for t in ("Localizable.strings", "AppShortcuts.strings",
                                                                       "InfoPlist.strings", LEARN)} for loc in locs}
@@ -560,7 +570,32 @@ def build(xliff: Path | None = None) -> dict:
                         break
             todo.append(entry)
         report["locales"][loc] = {"todo": todo, "awaiting_apply": awaiting, "stale": stale[loc]}
+    if launch:
+        mark_launch(report)
     return report
+
+
+def mark_launch(report: dict) -> None:
+    """Tags each launch-critical TODO entry with its kind (`launch`) and moves those entries to the front of every
+    locale's list, in LAUNCH order; the rest keep their order (the order a new user meets them)."""
+    import critical  # imported here: critical.py imports this module
+
+    classifier = critical.Classifier()
+    kinds: dict = {}
+    for entry in report["locales"].values():
+        for item in entry["todo"]:
+            if item["table"] == LEARN:
+                continue
+            ident = (item["table"], item["key"])
+            if ident not in kinds:
+                found = classifier.categories(item)
+                if not found and any(w.startswith(FUNNEL) for w in item.get("where", [])):
+                    found = {"funnel"}
+                kinds[ident] = next((kind for kind in LAUNCH if kind in found), None)
+            if kinds[ident]:
+                item["launch"] = kinds[ident]
+        rank = {kind: n for n, kind in enumerate(LAUNCH)}
+        entry["todo"].sort(key=lambda item: rank.get(item.get("launch"), len(LAUNCH)))
 
 
 # ---------------------------------------------------------------------------------------------- rendering
@@ -608,7 +643,12 @@ def render_index(report: dict) -> str:
         by_table = {}
         for item in entry["todo"]:
             by_table[item["table"]] = by_table.get(item["table"], 0) + 1
-        rows[loc] = {"missing": dict(sorted(by_table.items())), "changed": sum(1 for i in entry["todo"] if i["status"] == "changed"),
+        launch = {}
+        for item in entry["todo"]:
+            if item.get("launch"):
+                launch[item["launch"]] = launch.get(item["launch"], 0) + 1
+        rows[loc] = {"missing": dict(sorted(by_table.items())), "launch_critical": dict(sorted(launch.items())),
+                     "changed": sum(1 for i in entry["todo"] if i["status"] == "changed"),
                      "rejected": sum(1 for i in entry["todo"] if i["status"] == "rejected"),
                      "awaiting_apply": len(entry["awaiting_apply"]), "stale": len(entry["stale"]),
                      "lessons": loc in report["lesson_locales"]}
@@ -664,6 +704,34 @@ def lesson_breakdown(report: dict) -> list:
             for course, units in courses.items()]
 
 
+def render_launch(report: dict) -> list:
+    """The handoff's first section: what the launch needs translated before anything else, with counts."""
+    locs = report["locales"]
+    names = {"legal": "Purchase terms (legal)", "permission": "Permission prompts", "voiceover": "VoiceOver",
+             "funnel": "Onboarding, welcome to paywall"}
+    strings: dict = {}
+    pairs: dict = {}
+    for entry in locs.values():
+        for item in entry["todo"]:
+            kind = item.get("launch")
+            if kind:
+                strings.setdefault(kind, set()).add((item["table"], item["key"]))
+                pairs[kind] = pairs.get(kind, 0) + 1
+    out = ["## Launch-critical first", ""]
+    if not strings:
+        return out + ["Every launch-critical string is translated in every locale.", ""]
+    out += ["These come first in every TODO file (`launch` on the entry says which kind). The App Store upload refuses a "
+            "build when a shipped language lacks a purchase term, a permission prompt or a VoiceOver string "
+            "(`tools/l10n/critical.py --strict`), and the onboarding is the first thing a new user reads.", "",
+            "| Kind | Strings | Locale-string pairs |", "|---|---:|---:|"]
+    for kind in LAUNCH:
+        if kind in strings:
+            out.append(f"| {names[kind]} | {len(strings[kind])} | {pairs[kind]:,} |")
+    total = len(set().union(*strings.values()))
+    out += [f"| **All launch-critical** | **{total}** | **{sum(pairs.values()):,}** |", ""]
+    return out
+
+
 def render_handoff(report: dict) -> str:
     locs = report["locales"]
     total_ui = sum(counts(e).get("ui", 0) for e in locs.values())
@@ -682,9 +750,10 @@ def render_handoff(report: dict) -> str:
     w("")
     w("This is the brief for the people who translate Timbre. Translations are done by people, never by a machine. "
       "The English is the source. Everything on this page and in the TODO files is generated from the code and the "
-      "curriculum, and the iOS workflow warns on every run (pushes to main, pull requests) while anything is "
-      "missing or this page is out of date (see *For developers*). A string a locale lacks shows in English.")
+      "curriculum: the iOS workflow warns on every run while anything is missing, and fails when this page is out of "
+      "date (see *For developers*). A string a locale lacks shows in English.")
     w("")
+    out.extend(render_launch(report))
     w("## What is missing now")
     w("")
     w(f"- **App interface:** {len(ui_keys):,} distinct strings are missing somewhere, "
@@ -728,8 +797,9 @@ def render_handoff(report: dict) -> str:
     w("## What to translate")
     w("")
     w("One file per language: `tools/l10n/todo/<locale>.json` (for example `tools/l10n/todo/de.json`). Each line "
-      "of `strings` is one string, in the order a new user meets them: permission prompts, onboarding, the paywall "
-      "and the tuner first, then the lessons in course order. Its fields:")
+      "of `strings` is one string: the launch-critical ones first (above), then the rest in the order a new user "
+      "meets them: permission prompts, onboarding, the paywall and the tuner, then the lessons in course order. "
+      "Its fields:")
     w("")
     w("| Field | Meaning |")
     w("|---|---|")
@@ -744,6 +814,8 @@ def render_handoff(report: dict) -> str:
       "`shrinks to fit`. |")
     w("| `max_length` | Aim for at most this many characters. For lessons it is the limit the English is written "
       "to; for interface strings it is a soft limit from the layout. Longer text shrinks or truncates. |")
+    w("| `launch` | Present on launch-critical strings, which come first: `legal`, `permission`, `voiceover` or "
+      "`funnel` (see *Launch-critical first*). |")
     w("| `status` | `new`; `changed` (the English was edited: start from `previous.translation`); `rejected` "
       "(a translation failed a check: `problem` says why, and the text is in `translation` or "
       "`previous.translation`). |")
@@ -785,7 +857,9 @@ def render_handoff(report: dict) -> str:
     w("```sh")
     w("python3 tools/l10n/report.py                      # regenerate the TODO files, pending.json and this page")
     w("python3 tools/l10n/report.py --import tools/l10n/todo   # merge filled TODO files, apply, regenerate")
-    w("python3 tools/l10n/report.py --check              # what CI runs: warnings only, never fails")
+    w("python3 tools/l10n/report.py --check --strict     # what CI runs: fails when this page is out of date")
+    w("python3 tools/l10n/critical.py --baseline         # what CI runs: fails on a new untranslated critical string")
+    w("python3 tools/l10n/shipping.py                    # coverage per locale, and the languages that ship")
     w("```")
     w("")
     w("`--import DIR` reads every `<locale>.json` in DIR (the TODO format), checks each translation, merges the good "
@@ -799,10 +873,22 @@ def render_handoff(report: dict) -> str:
     w("")
     w("Run `report.py` after adding or editing English (a new `Text(\"…\")`, a curriculum change) and commit "
       "`tools/l10n/todo`, `tools/l10n/pending.json`, `tools/l10n/source` and this page with the change. The core job "
-      "of the iOS workflow (`.github/workflows/ios.yml`) runs `report.py --check` on every run: it prints a warning "
-      "annotation with the per-locale counts, another when the committed handoff is out of date, adds the table to "
-      "the job summary, and publishes fresh TODO files with the core results (branch `ci-results/core`, folder "
-      "`l10n`). It never fails the build.")
+      "of the iOS workflow (`.github/workflows/ios.yml`) runs `report.py --check --strict` on every run: it prints a "
+      "warning annotation with the per-locale counts, adds the table to the job summary, publishes fresh TODO files "
+      "with the core results (branch `ci-results/core`, folder `l10n`), and fails when the committed handoff is out "
+      "of date.")
+    w("")
+    w("The same job runs `critical.py --baseline`: a legal, permission or VoiceOver string that a shipped locale lacks "
+      "and that `tools/l10n/critical-baseline.json` doesn't list fails it. Deliver the translations, or record the gap "
+      "with `python3 tools/l10n/critical.py --write-baseline` (the diff shows the reviewer which English goes out). "
+      "The App Store upload (`apple-delivery.yml`) allows no gap at all; only an internal TestFlight build, which "
+      "can't be submitted for review, may skip that check.")
+    w("")
+    w("Which languages ship is the owner's decision: `CFBundleLocalizations` in `ios/project.yml`, every `.lproj` "
+      "today. `python3 tools/l10n/shipping.py --min 95 --apply` ships only the locales with at least 95 % of the "
+      "interface translated (add `--critical` to also require every launch-critical string), and `--all --apply` "
+      "ships every one again. The translations stay in the repository either way. The delivery workflow's "
+      "`ship_min_coverage` input applies a bar to one upload without committing it.")
     w("")
     w("Interface strings are found by `tools/l10n/swiftstrings.py`, a scanner that reads Swift without Xcode. "
       "It infers the type of each interpolation (`%lld` for Int, `%@` for text); when a new string's key carries "
@@ -905,8 +991,8 @@ def import_todo(folder: Path) -> None:
 
 # ---------------------------------------------------------------------------------------------------- main
 
-def annotate(report: dict, files: dict, stale_todo: list) -> None:
-    """GitHub warning annotations and a job summary (CI)."""
+def annotate(report: dict, files: dict, stale_todo: list, strict: bool = False) -> list:
+    """GitHub annotations and a job summary (CI); returns the generated files that differ from the committed ones."""
     parts = []
     for ui, lessons, group in group_locales(report):
         if not ui and not lessons:
@@ -922,8 +1008,8 @@ def annotate(report: dict, files: dict, stale_todo: list) -> None:
     outdated = [str(p.relative_to(ROOT)) for p, c in files.items()
                 if not p.exists() or p.read_text(encoding="utf-8") != c] + [str(p.relative_to(ROOT)) for p in stale_todo]
     if outdated:
-        print("::warning title=Translation handoff out of date::Run python3 tools/l10n/report.py and commit "
-              + ", ".join(sorted(outdated)[:6]) + (" …" if len(outdated) > 6 else ""))
+        print(f"::{'error' if strict else 'warning'} title=Translation handoff out of date::Run "
+              "python3 tools/l10n/report.py and commit " + ", ".join(sorted(outdated)[:6]) + (" …" if len(outdated) > 6 else ""))
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary:
         lines = ["## Translations", "", "| Locales | App strings missing | Lesson strings missing |", "|---|---:|---:|"]
@@ -932,28 +1018,36 @@ def annotate(report: dict, files: dict, stale_todo: list) -> None:
         lines += ["", "Brief: docs/l10n/HANDOFF.md. " + ("The committed handoff is out of date." if outdated else "")]
         with open(summary, "a", encoding="utf-8") as handle:
             handle.write("\n".join(lines) + "\n")
+    return outdated
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--check", action="store_true", help="CI: print warnings, write nothing in the repository")
+    parser.add_argument("--strict", action="store_true", help="with --check: exit 1 when the handoff is out of date")
     parser.add_argument("--out", type=Path, help="with --check: also write the generated files under this folder")
     parser.add_argument("--import", dest="import_dir", type=Path, help="merge filled TODO files from this folder")
     parser.add_argument("--xliff", type=Path, help="an en.xliff from Xcode's export, to settle code keys")
     args = parser.parse_args()
     if args.import_dir:
         import_todo(args.import_dir)
-    report = build(args.xliff)
+    report = build(args.xliff, launch=True)
     carried = carried_translations(TODO)
     files = outputs(report, carried)
     stale_todo = [p for p in sorted(TODO.glob("*.json")) if p not in files] if TODO.exists() else []
     if args.check:
-        annotate(report, files, stale_todo)
+        outdated = annotate(report, files, stale_todo, strict=args.strict)
         if args.out:
             for path, content in files.items():
                 target = args.out / path.relative_to(ROOT)
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_text(content, encoding="utf-8")
+        if outdated and args.strict:
+            print(f"FAILED: the committed handoff is out of date ({len(outdated)} files). Run "
+                  f"python3 tools/l10n/report.py and commit the result.")
+            for path in sorted(outdated)[:20]:
+                print("    " + path)
+            return 1
         return 0
     changed = write(files, stale_todo)
     for ui, lessons, group in group_locales(report):
@@ -964,10 +1058,10 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    if "--check" in sys.argv:
+    if "--check" in sys.argv and "--strict" not in sys.argv:
         try:
             sys.exit(main())
-        except Exception as error:  # noqa: BLE001 - CI must never fail on the report
+        except Exception as error:  # noqa: BLE001 - a report-only run never fails CI
             print(f"::warning title=Translation report failed::{type(error).__name__}: {error}")
             sys.exit(0)
     sys.exit(main())
