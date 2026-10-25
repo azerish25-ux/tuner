@@ -246,8 +246,8 @@ public struct ReviewCard: Codable, Equatable, Sendable, Identifiable {
 
     enum CodingKeys: String, CodingKey { case item = "i", courseId = "c", due = "d", interval = "n", ease = "e", streak = "r", lapses = "l", score = "s", seen = "t" }
 
-    public static func id(courseId: String, key: String) -> String { courseId + "|" + key }
-    public var id: String { Self.id(courseId: courseId, key: item.key) }
+    public static func cardId(courseId: String, key: String) -> String { courseId + "|" + key }
+    public var id: String { Self.cardId(courseId: courseId, key: item.key) }
     public var kind: ReviewItem.Kind { item.kind }
 
     /// A slipped item joining the deck: back tomorrow.
@@ -351,7 +351,7 @@ public struct ReviewDeck: Codable, Equatable, Sendable {
     /// twice in one take counts at its average); a new item joins only if it slipped.
     public mutating func record(_ credits: [ReviewCredit], courseId: String, now: Date = Date(), calendar: Calendar = .current) {
         for credit in Self.merged(credits) {
-            let id = ReviewCard.id(courseId: courseId, key: credit.item.key)
+            let id = ReviewCard.cardId(courseId: courseId, key: credit.item.key)
             if let index = cards.firstIndex(where: { $0.id == id }) {
                 var card = cards[index]
                 // The latest form of the item (a rhythm's tempo, a chord's fingering) is the one asked next time.
@@ -467,7 +467,7 @@ public struct ReviewDeck: Codable, Equatable, Sendable {
             guard let courseId = courseOf(lessonId) else { continue }
             for spot in weakSpots[lessonId] ?? [] {
                 let item = ReviewItem(spot.item)
-                let id = ReviewCard.id(courseId: courseId, key: item.key)
+                let id = ReviewCard.cardId(courseId: courseId, key: item.key)
                 if let existing = cards[id], existing.score <= spot.score { continue }
                 if cards[id] == nil { order.append(id) }
                 let due = SpacedReview.day(calendar.startOfDay(for: spot.seen), plus: 1, calendar: calendar)

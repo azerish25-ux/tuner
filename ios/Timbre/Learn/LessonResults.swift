@@ -275,15 +275,51 @@ struct LessonResults: View {
     private var hasShareCards: Bool { milestone != nil }
 
     /// "New best" with Share right under it, in the first frame: the poster renders as the screen opens, so the
-    /// pill is live before the stars have finished landing.
+    /// pill is live before the stars have finished landing. A song taken at its own tempo has "Challenge a friend"
+    /// beside Share.
     private var bestAndShare: some View {
         VStack(spacing: 10) {
             if newBest {
                 Label("New best on this lesson", systemImage: "arrow.up.circle.fill").font(.subheadline.weight(.semibold)).foregroundStyle(accent)
             }
-            if sharesResult { resultShare.accessibilityIdentifier("lesson.share") }
+            if sharesResult { shareRow }
         }
         .opacity(appeared ? 1 : 0)
+    }
+
+    /// Share, and "Challenge a friend" beside it (under it where the two don't fit side by side).
+    @ViewBuilder private var shareRow: some View {
+        if let points = challengePoints {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 10) { sharePill; challengeButton(points) }
+                VStack(spacing: 10) { sharePill; challengeButton(points) }
+            }
+        } else {
+            sharePill
+        }
+    }
+
+    private var sharePill: some View {
+        resultShare.accessibilityIdentifier("lesson.share")
+    }
+
+    /// The song's best take at its own tempo this time (SongPerform hands it to Game Center); nil for a lesson, a song
+    /// that ends on its chords, or only slower takes.
+    private var challengePoints: Int? {
+        guard isSong, !practice else { return nil }
+        return GameCenter.shared.performBest(for: lesson.id)
+    }
+
+    /// "Challenge a friend" on the song: Game Center's own challenge where App Store Connect has one for it (a featured
+    /// song, iOS 26), else a "Beat my score" card sent with the link that opens the song (Services/GameCenterSocial.swift).
+    private func challengeButton(_ points: Int) -> some View {
+        let title = CoverArt.mainTitle(lesson.title.localized)
+        return ChallengeFriendButton(board: GameCenterIDs.song(forLesson: lesson.id)?.leaderboardID, screen: "results", tint: accent,
+                                     message: PerformChallenge.message(points: points, title: title, lesson: lesson.id),
+                                     armed: shareReady) {
+            SongChallengeCard(title: title, art: CoverArt.of(lesson, in: course), points: points, accent: accent)
+        }
+        .accessibilityIdentifier("lesson.challenge")
     }
 
     /// The milestone's card, once its celebration has been seen.

@@ -515,7 +515,11 @@ def process_note(path: Path, nominal: int, kind: str, seconds: float, steady: bo
     # must agree with the needle), else the fundamental itself (a vibrato note, a faint low string the detector misreads).
     # A plucked string glides a few cents flat as it fades; the median over the second after the attack is its pitch.
     reading, spread = tuner_pitch(x, window_start / RATE, window_len / RATE, hz)
-    play = (reading, 'tuner') if reading and abs(1200 * math.log2(reading / hz)) <= 25 and spread <= 12 else (hz, 'fundamental')
+    # A piano's bass strings are stretch-tuned: their fundamentals sit 20-35 cents flat and read in tune on a tuner,
+    # so a very steady reading may sit further from the fundamental.
+    offset = abs(1200 * math.log2(reading / hz)) if reading else float('inf')
+    steady_reading = (offset <= 25 and spread <= 12) or (offset <= 40 and spread <= 6)
+    play = (reading, 'tuner') if steady_reading else (hz, 'fundamental')
     return x, hz, midi, cents, loop, rms, partial, play
 
 

@@ -49,8 +49,6 @@ struct AlongStep: View {
     private let lyrics: LyricSheet
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
-    /// The runway's lanes follow the diagrams' string order (Settings › String order).
-    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
 
     enum Phase { case ready, playing, done }
 
@@ -285,12 +283,13 @@ struct AlongStep: View {
         .accessibilityElement(children: .contain)
     }
 
-    /// The fretboard runway on fretted courses, pitch lanes otherwise.
+    /// The fretboard runway on fretted courses (its lanes the lowest string first, as the chord pictures), pitch lanes
+    /// otherwise.
     @ViewBuilder private func runway(elapsed: Double, now: CFTimeInterval) -> some View {
         if fretted {
             HighwayRunway(notes: take, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: now,
                           strings: course.stringCount, edges: StringEdges.of(course), beatsPerBar: beatsPerBar,
-                          heat: multiplier, calm: reduceMotion, order: stringOrder, offsets: offsets, tierUp: tierUp)
+                          heat: multiplier, calm: reduceMotion, offsets: offsets, tierUp: tierUp)
         } else {
             HighwayCanvas(notes: take, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: now,
                           lanes: 0, accent: accent, trail: trail, startTime: startTime + countIn, calm: reduceMotion, offsets: offsets)
@@ -892,7 +891,8 @@ struct HighwayCanvas: View {
     var calm = false
     /// Seconds early (negative) or late of each note played, for the "Early" and "Late" pops.
     var offsets: [Int: Double] = [:]
-    /// String lanes lie in the necks' string order (Settings › String order), string 1 on top in tab order.
+    /// String lanes lie across the screen, so they follow the necks' string order (`ChordPicture`): string 1 on top
+    /// in the Chart view, the thickest in Player view.
     @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
     /// Lane numbers grow with Dynamic Type from the 11 pt floor (`DiagramType`).
     @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
@@ -1078,8 +1078,9 @@ enum HitBurst {
     }
 }
 
-/// Fretted play-along as a runway down a fretboard: a lane per string in the player's string order (the string
-/// the diagrams draw on top takes the left lane: string 1 in tab order, the lowest string in mirror order)
+/// Fretted play-along as a runway down a fretboard: a lane per string, the lowest string on the left in both views
+/// (`StringOrder.upright`), as the chord chart and the player's-view neck (`PlayerNeck`) stand their strings, so a
+/// shape learned on either comes down the runway the same way round. The lanes lie
 /// over dark rosewood whose fret wires and inlays scroll toward you out of the fog, two bars or more of them in
 /// view. Each lane ends in a target ring carrying its string's number, the outer two named underneath
 /// ("Thinnest", "Thickest"). Notes ride their lane as big glossy gems in the string's colour, the fret over the
@@ -1104,7 +1105,8 @@ struct HighwayRunway: View {
     var heat = 1
     /// Reduce Motion: a hit lights its target without bursts, beams or sparks.
     var calm = false
-    /// Which string takes the first (left) lane, as the diagrams put it on top (Settings › String order).
+    /// No longer read: the lanes stand upright, so they always run from the lowest string on the left
+    /// (`StringOrder.upright`) whichever view is chosen. Kept so existing callers still compile.
     var order: StringOrder = .tab
     /// Seconds early (negative) or late of each note played, for the "Early" and "Late" pops.
     var offsets: [Int: Double] = [:]
@@ -1198,7 +1200,7 @@ struct HighwayRunway: View {
     }
 
     private func draw(_ context: inout GraphicsContext, size: CGSize, scale: CGFloat) {
-        let g = Lanes(size: size, strings: strings, order: order)
+        let g = Lanes(size: size, strings: strings, order: StringOrder.upright)
         drawBoard(&context, g, size: size)
         drawTierWave(&context, g)
         drawFrets(&context, g)

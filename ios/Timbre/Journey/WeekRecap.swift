@@ -50,9 +50,12 @@ struct WeekRecap: Equatable {
 }
 
 /// Progress's "Your week": the minutes (one bar a day, today marked), then the closest tune, the lessons and
-/// the streak, with a poster of it to share.
+/// the streak, with a poster of it to share. With Game Center friends (the player's yes), a line under the figures and
+/// on the poster says where the streak stands among theirs (Services/GameCenterSocial.swift).
 struct WeekRecapCard: View {
     let recap: WeekRecap
+    @EnvironmentObject private var store: AppStore
+    @ObservedObject private var center = GameCenter.shared
     @State private var poster: Image?
     @Environment(\.displayScale) private var displayScale
     @Environment(\.locale) private var locale
@@ -82,11 +85,24 @@ struct WeekRecapCard: View {
                 WeekStat(symbol: "graduationcap.fill", tint: Palette.violet, value: Text(recap.lessons, format: .number), label: Text("lessons"))
                 WeekStat(symbol: "flame.fill", tint: Palette.flame, value: Text(recap.streak, format: .number), label: Text("day streak"))
             }
+            if friends != nil || center.friendsAccess == .ask { WeekFriendsRow(standing: friends) }
         }
         .stillCard(tint: Palette.mint)
-        .task(id: recap) {
-            poster = ShareCardRenderer.image(WeekShareCard(recap: recap), scale: displayScale, locale: locale, direction: layoutDirection)
+        .animation(Motion.fade, value: friends)
+        .task(id: WeekPoster(recap: recap, friends: friends)) {
+            poster = ShareCardRenderer.image(WeekShareCard(recap: recap, friends: friends), scale: displayScale, locale: locale,
+                                             direction: layoutDirection)
         }
+        // The streak's place among friends is read here (Game Center signs in quietly, as on the Play tab's games).
+        .task {
+            GameCenter.shared.activate(store)
+            GameCenter.shared.refreshFriends()
+        }
+    }
+
+    /// Where the streak stands among Game Center friends on a streak; nil without them (or without the player's yes).
+    private var friends: FriendStreak? {
+        FriendStreak(mine: recap.streak, friends: center.friendStreaks)
     }
 
     private var header: some View {
@@ -195,9 +211,17 @@ struct WeekBars: View {
     }
 }
 
-/// The week as a poster: the dates, "Your week", the minutes large over the seven bars, and three figures.
+/// What the week's poster is drawn from: it is drawn again when either changes.
+private struct WeekPoster: Equatable {
+    let recap: WeekRecap
+    let friends: FriendStreak?
+}
+
+/// The week as a poster: the dates, "Your week", the minutes large over the seven bars, and three figures; with Game
+/// Center friends, the streak's place among theirs under them (counts only, no names).
 struct WeekShareCard: View {
     let recap: WeekRecap
+    var friends: FriendStreak? = nil
 
     var body: some View {
         ShareCardFrame(glow: Palette.mint, signature: true) {
@@ -218,6 +242,7 @@ struct WeekShareCard: View {
                 tile("flame.fill", Palette.flame, Text(recap.streak, format: .number), Text("day streak"))
             }
             .padding(.top, 4)
+            if let friends { FriendStreakLine(standing: friends, size: 15) }
         }
     }
 

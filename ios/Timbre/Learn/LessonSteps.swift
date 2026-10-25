@@ -507,8 +507,8 @@ struct ChordStep: View {
         let open = ChordStep.openStrings(course)
         let count = chord.frets.count
         // Right over the box's string lines, wherever `ChordDiagram` draws them (past its fret-number column), or
-        // where the neck's lanes meet its near edge (in the runway's Player view order: the lowest string on the
-        // left, as on the box).
+        // where the neck's lanes meet its near edge (in the runway's order: the lowest string on the left, as on the
+        // box).
         let xs = player ? PlayerNeck.stringPositions(chord, width: width)
                         : ChordDiagram(chord: chord, fretNumbers: true).stringPositions(width: width)
         let gap = count > 1 ? abs(xs[count - 1] - xs[0]) / CGFloat(count - 1) : 40
@@ -1148,8 +1148,7 @@ struct TuneCheckStep: View {
     /// points the demo pitch or the tuner at a lesson string after the lesson has closed.
     @State private var lockTask: Task<Void, Never>?
     @Environment(\.scenePhase) private var scenePhase
-    /// The rail runs in the necks' string order: the app's one picture choice (Chart: string 1 first; Player view:
-    /// the thickest first).
+    /// The strip's string order, which the rail reads: the app's one picture choice (`ChordPicture`).
     @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
 
     /// A string just locked and is showing done before the check moves on.
@@ -1161,10 +1160,9 @@ struct TuneCheckStep: View {
         let midi: Int
     }
 
-    /// The open strings in the order the check runs and the rail shows them: the string the neck strip draws on
-    /// top comes first, on the left, as the play-along's lanes put it (string 1 first in tab order, the lowest
-    /// string first in mirror order), so the rail, the strip under it and the lanes all read the same way.
-    /// A banjo's short drone string is left out.
+    /// The open strings in the order the check runs and the rail shows them: a checklist read against the neck strip
+    /// right under it, so the string the strip draws on top comes first, on the left (string 1 in the Chart view, the
+    /// thickest in Player view), as the Intonation tool's rail reads its neck. A banjo's short drone string is left out.
     private var rail: [RailString] {
         let open = ChordStep.openStrings(course)
         let count = open.count

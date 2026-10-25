@@ -288,8 +288,10 @@ final class BandPlayer {
 enum BandSynth {
     /// The recorded kit under the bass and piano (its hits are levelled loud for a kit on its own).
     private static let drumLevel = 0.7
-    /// Comping chords sit under the player: a soft touch on the piano.
-    private static let compVelocity = 0.5
+    /// Comping chords sit under the player and a touch under the bass: a soft touch on the piano.
+    private static let compVelocity = 0.42
+    /// The recorded bass's touch at a bass line's full velocity.
+    private static let bassVelocity = 0.9
 
     static func render(_ arrangement: BandArrangement, sampleRate: Int, samples: SampleLibrary? = nil) -> BandTrack {
         let rate = Double(max(8000, sampleRate))
@@ -357,7 +359,7 @@ enum BandSynth {
                     // The recorded bass: the note, then the same 60 ms let-go as the synthesized one.
                     let release = Int(0.06 * rate)
                     if let bassSet, let samples, bassSet.covers(hz),
-                       samples.addNote(bassSet, hz: hz, velocity: 0.8 * Double(note.velocity), into: &out, start: at,
+                       samples.addNote(bassSet, hz: hz, velocity: bassVelocity * Double(note.velocity), into: &out, start: at,
                                        length: length + release, rate: rate, release: 0.06) {
                         continue
                     }

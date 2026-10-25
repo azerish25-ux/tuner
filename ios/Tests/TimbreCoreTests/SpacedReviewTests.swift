@@ -26,7 +26,7 @@ final class SpacedReviewTests: XCTestCase {
         deck.record([ReviewCredit(item: item, score: score)], courseId: course, now: on(day), calendar: calendar)
     }
     private func card(_ deck: ReviewDeck, _ item: ReviewItem, course: String = "guitar") -> ReviewCard? {
-        deck.cards.first { $0.id == ReviewCard.id(courseId: course, key: item.key) }
+        deck.cards.first { $0.id == ReviewCard.cardId(courseId: course, key: item.key) }
     }
     private func listen(_ low: Int, _ high: Int) -> ReviewItem {
         .question(ReviewQuestion(prompt: LearnText(key: "Lhigher", "Which is higher?"), sound: [[low], [high]],

@@ -13,8 +13,10 @@ import TimbreCore
 ///   tablature writes it. The box is that strip turned upright, so the two always agree.
 /// - Player view: the instrument as you see it while you play. Every neck lying across the screen has the thickest
 ///   string on top (so a down strum falls down the screen), and a chord is the neck in perspective in the play-along
-///   runway's look (`PlayerNeck`), its lanes laid as the runway lays them: the string on top takes the left lane, so
-///   the lowest string is on the left there too. Flipping between the two never mirrors a chord.
+///   runway's look (`PlayerNeck`), its lanes laid as the runway lays them, the lowest string on the left.
+///
+/// Strings standing upright side by side (the chord pictures, the play-along and paywall runways' lanes) run from the
+/// lowest string on the left in both views (`StringOrder.upright`), so flipping never mirrors a chord or a lane.
 ///
 /// `StringOrder` is this same stored value read as the order of the strings on a neck lying down (`.tab` for Chart,
 /// `.mirror` for Player view), for the code that only asks which string is on top.
@@ -299,9 +301,9 @@ struct NeckPerspective {
 /// starts to ring (`ringing`), so it moves with "Hear it". The frets are numbered down the left, a held one lit, and
 /// every lane is numbered at the near end, the outer two named under it.
 ///
-/// It is the Player view's chord (`ChordPicture.player`), so its lanes are always the runway's in that view: the
-/// thickest string, which the necks lying down then draw on top, takes the left lane (`order`). The lowest string is
-/// on the left as on the chord chart, so flipping between the two never mirrors the chord.
+/// It is the Player view's chord (`ChordPicture.player`), its lanes the play-along runway's (`order`,
+/// `StringOrder.upright`): the lowest string on the left, as on the chord chart, so flipping between the two never
+/// mirrors the chord, and a shape learned here is the shape that comes down the runway.
 ///
 /// With Reduce Motion it is one still frame, every finger in place. VoiceOver reads it as one element: the chord's
 /// name, then its shape in words (`ChordWords`).
@@ -338,10 +340,10 @@ struct PlayerNeck: View {
     /// Frets with a pearl dot (12 and 24 have two).
     private static let inlays: Set<Int> = [3, 5, 7, 9, 15, 17, 19, 21]
 
-    /// Which string takes which lane: the Player view's order (`ChordPicture.player.stringOrder`, the thickest string
-    /// on the left). Fixed rather than read from the setting, so a neck flipping away to the chart never re-lays its
-    /// lanes on the way out.
-    static let order: StringOrder = .mirror
+    /// Which string takes which lane: upright strings' order (`StringOrder.upright`, the lowest string on the left, as
+    /// on the runway and the chart). Fixed rather than read from the setting, so a neck flipping away to the chart
+    /// never re-lays its lanes on the way out.
+    static let order: StringOrder = StringOrder.upright
 
     var body: some View {
         let order = Self.order

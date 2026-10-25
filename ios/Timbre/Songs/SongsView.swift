@@ -1,5 +1,6 @@
 import SwiftUI
 import TimbreCore
+import UIKit
 
 /// The Songs tab: every song in the curriculum, wherever it lives (Originals, the public-domain Songs
 /// course, and the songs inside each instrument course), as record shelves under a daily featured song.
@@ -121,23 +122,27 @@ struct SongsView: View {
         let hero = layout.hero
         // The picked shelves, then the course shelves (the featured song isn't repeated on its shelf: that rail starts
         // with the song after it).
-        let shelves = layout.picks.map { ShelfItem.pick($0) } + layout.rails.map { ShelfItem.rail($0) }
+        let shelves: [ShelfItem] = layout.picks.map { ShelfItem.pick($0) } + layout.rails.map { ShelfItem.rail($0) }
         let glow: Color = hero.map { catalog.art($0).primary } ?? Palette.spotlight
         NavigationStack {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 24) {
-                    header
-                    if chips.count > 1 { filterRail(chips, active: active) }
-                    if let hero {
-                        featured(hero, layout: layout)
-                            .id(hero.id)
-                            .transition(.adaptive(.opacity.combined(with: .scale(scale: 0.97)), reduceMotion: reduceMotion))
+                    // The top of the page as one piece, so "Your songs" is built with it on any screen height: it opens
+                    // a chart another app hands to Timbre ("Open in Timbre").
+                    VStack(alignment: .leading, spacing: 24) {
+                        header
+                        if chips.count > 1 { filterRail(chips, active: active) }
+                        if let hero {
+                            featured(hero, layout: layout)
+                                .id(hero.id)
+                                .transition(.adaptive(.opacity.combined(with: .scale(scale: 0.97)), reduceMotion: reduceMotion))
+                        }
+                        // The catalogue starts straight under the song of the day.
+                        if let first = shelves.first { shelfItem(first).id(first.id) }
+                        // The player's own charts and "Add a song" (YourSongs/YourSongsShelf.swift): one row while there
+                        // are none. It keeps this place whatever the filter, so its sheets and the song it opens stay up.
+                        YourSongsShelf()
                     }
-                    // The catalogue starts straight under the song of the day.
-                    if let first = shelves.first { shelfItem(first).id(first.id) }
-                    // The player's own charts and "Add a song" (YourSongs/YourSongsShelf.swift): one row while there are
-                    // none. It keeps this place whatever the filter, so its sheets and the song it opens stay up.
-                    YourSongsShelf()
                     ForEach(Array(shelves.dropFirst())) { item in shelfItem(item) }
                     Text("More lessons arrive with every update.").font(.footnote).foregroundStyle(Palette.inkFaint)
                         .frame(maxWidth: .infinity).padding(.vertical, 24)
@@ -532,17 +537,101 @@ struct SongsView: View {
 
     /// The song map; while the featured opening plays, filled up to where it has reached.
     @ViewBuilder private func heroMap(_ song: Song, sheet: SongSheet, accent: Color) -> some View {
+        let named = Self.mapWidth(sheet.sections)
         if previewing == song.id, let from = Self.openingBeat(of: song.lesson), let arrangement = sheet.arrangement,
            let tempo = Self.opening(of: song.lesson)?.bpm {
             TimelineView(.animation(minimumInterval: reduceMotion ? 0.5 : 1.0 / 30)) { timeline in
-                SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent,
-                               progress: Self.mapProgress(from: from, tempo: tempo, beats: arrangement.beats,
-                                                          elapsed: min(previewLength, timeline.date.timeIntervalSince(previewStart))),
-                               height: 30)
+                heroMapBody(sheet, accent: accent, named: named,
+                            progress: Self.mapProgress(from: from, tempo: tempo, beats: arrangement.beats,
+                                                       elapsed: min(previewLength, timeline.date.timeIntervalSince(previewStart))))
             }
         } else {
-            SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent, height: 30)
+            heroMapBody(sheet, accent: accent, named: named, progress: nil)
         }
+    }
+
+    /// The song map (`SongSectionMap`) where the panel has room for every section's name (`named` points: landscape);
+    /// else, rather than a map cut off at the panel's edge, the song's shape (`songShape`).
+    private func heroMapBody(_ sheet: SongSheet, accent: Color, named: CGFloat, progress: Double?) -> some View {
+        ViewThatFits(in: .horizontal) {
+            SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent, progress: progress, height: 30)
+                .frame(minWidth: named, maxWidth: .infinity)
+            songShape(sheet, accent: accent, progress: progress)
+        }
+    }
+
+    /// About how wide the song map is with every section's name in full: `SongSectionMap`'s tiles are the name (Sora,
+    /// at the reader's text size) and 12 points a side, 44 at least, 4 apart.
+    private static func mapWidth(_ sections: [SongSheet.Section]) -> CGFloat {
+        let label = UIFont(name: "Sora-SemiBold", size: UIFontMetrics(forTextStyle: .caption1).scaledValue(for: 12))
+            ?? UIFont.systemFont(ofSize: 12, weight: .semibold)
+        let symbol = UIFont(name: "Sora-SemiBold", size: UIFontMetrics(forTextStyle: .subheadline).scaledValue(for: 15))
+            ?? UIFont.systemFont(ofSize: 15, weight: .semibold)
+        var total: CGFloat = 0
+        for section in sections {
+            var name = section.bars == 1 ? "\(section.start + 1)" : "\(section.start + 1)–\(section.start + section.bars)"
+            var font = label
+            if section.isBookend {
+                name = ""
+            } else if let title = section.title {
+                name = title.localized
+            } else if let chord = section.chord {
+                name = chord.name
+                font = symbol
+            }
+            let width = (name as NSString).size(withAttributes: [.font: font]).width
+            total += max(44, ceil(width) + 24)
+        }
+        return total + 4 * CGFloat(max(0, sections.count - 1))
+    }
+
+    /// The song's shape, for a panel too narrow for the map's names: "Song map" and its length over its sections as
+    /// plain bars, each its share of the song wide and in the map's colours (`SongSectionMap.tint`), lit up to the
+    /// playhead while the opening plays. As tall as the map.
+    private func songShape(_ sheet: SongSheet, accent: Color, progress: Double?) -> some View {
+        let sections = sheet.sections
+        let total = max(1, sections.reduce(0) { $0 + max(1, $1.bars) })
+        return VStack(alignment: .leading, spacing: 7) {
+            HStack(spacing: 8) {
+                Eyebrow("Song map", color: Palette.ink, style: .display)
+                Text("\(sheet.bars) bars").font(Typeface.label(11)).foregroundStyle(Palette.inkSoft)
+            }
+            .lineLimit(1)
+            GeometryReader { proxy in
+                let room = max(0, proxy.size.width - 3 * CGFloat(max(0, sections.count - 1)))
+                HStack(spacing: 3) {
+                    ForEach(sections) { section in
+                        shapeBar(section, in: sections, bars: sheet.bars, accent: accent, progress: progress)
+                            .frame(width: room * CGFloat(max(1, section.bars)) / CGFloat(total))
+                    }
+                }
+            }
+            .frame(height: 8)
+        }
+        .frame(height: 30, alignment: .bottomLeading)
+        .accessibilityHidden(true)
+    }
+
+    /// A section of the song's shape: its colour, brighter behind the playhead.
+    private func shapeBar(_ section: SongSheet.Section, in sections: [SongSheet.Section], bars: Int, accent: Color,
+                          progress: Double?) -> some View {
+        let tint = SongSectionMap.tint(of: section, in: sections, accent: accent)
+        let quiet = section.isBookend || (section.title == nil && section.chord == nil)
+        let played = Self.played(section, bars: bars, progress: progress)
+        return Capsule().fill(tint.opacity(quiet ? 0.3 : 0.6))
+            .overlay(alignment: .leading) {
+                GeometryReader { proxy in
+                    Capsule().fill(tint).frame(width: proxy.size.width * CGFloat(played))
+                }
+            }
+            .clipShape(Capsule())
+    }
+
+    /// How much of `section` the playhead has passed, 0…1 (`progress` is 0…1 of the song's `bars`).
+    private static func played(_ section: SongSheet.Section, bars: Int, progress: Double?) -> Double {
+        guard let progress else { return 0 }
+        let bar = progress * Double(max(1, bars))
+        return min(1, max(0, (bar - Double(section.start)) / Double(max(1, section.bars))))
     }
 
     /// How far through the song the opening has reached, 0…1: `elapsed` seconds at `tempo` from beat `from`.

@@ -344,6 +344,7 @@ struct DailySetCard: View {
         return VStack(alignment: .leading, spacing: 2) {
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 rowTitle(kind, done: done)
+                if kind == .review && !done { ReviewDueBadge(count: store.dailyReviewDueCount) }  // spaced review (Learn/WeakSpotReview.swift)
                 if xpBesideName, let quest { xpTag(quest) }
                 Spacer(minLength: 4)
                 if locked {

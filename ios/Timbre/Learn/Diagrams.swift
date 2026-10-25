@@ -55,8 +55,11 @@ struct LessonVisualView: View {
 ///   being that strip turned upright (the lowest string on the left);
 /// - `.mirror` is Player view: the thickest string on top, as you see the neck looking down at it while playing,
 ///   so a down strum falls down the screen.
-/// Where strings run side by side instead (the highway's lanes, the tune check's rail, the player's-view chord neck
-/// `PlayerNeck`), the string drawn on top takes the left.
+/// Where strings stand upright side by side instead (the play-along runway's lanes, the paywall's runway, the
+/// player's-view chord neck `PlayerNeck`), they always run from the lowest string on the left (`upright`), as the
+/// chord chart and a photograph of the instrument show them: in the Chart view that is the tab strip turned upright,
+/// in Player view the string on top taking the left, so a chord never mirrors anywhere. A row of string chips read
+/// against a neck lying under it (the tune check's, the Intonation tool's) follows that neck: its top string first.
 ///
 /// In a view: `@AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab`, then
 /// `stringOrder.row(ofString:count:)` for where string n goes; elsewhere `StringOrder.current`. Change it through
@@ -72,6 +75,10 @@ enum StringOrder: String, CaseIterable, Identifiable {
 
     /// The stored choice, for code outside a view (views read it through `@AppStorage` so they redraw).
     static var current: StringOrder { ChordPicture.current.stringOrder }
+
+    /// Strings standing upright side by side, read as lanes counted from the left (`row(ofString:count:)` 0 is the
+    /// left lane): the lowest string on the left in either view, as on a chord chart. Not a choice: the same always.
+    static let upright: StringOrder = .mirror
 
     var id: String { rawValue }
 

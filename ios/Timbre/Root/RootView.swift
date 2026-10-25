@@ -82,7 +82,7 @@ struct RootView: View {
             if phase == .active { store.applyStreakFreezes(); store.syncAchievements() }
         }
         .onChange(of: keepAwake, initial: true) { _, awake in UIApplication.shared.isIdleTimerDisabled = awake }
-        .task { store.applyStreakFreezes(); store.syncAchievements() }
+        .task { store.applyStreakFreezes(); store.syncAchievements(); GameCenter.shared.launched(store) }
         .onChange(of: commerce.isPro) { _, pro in if pro { Analytics.log("pro_active") } }
         // timbre://… from widgets and links, and from App Intents through `IntentRouter.link` (routes: Intents/DeepLink.swift).
         // A chord chart shared to Timbre ("Open in Timbre") goes to Your songs (YourSongs/YourSongsStore.swift).

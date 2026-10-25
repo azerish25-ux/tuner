@@ -2,8 +2,9 @@ import SwiftUI
 import TimbreCore
 
 /// The paywall's hero, one scene across the full width: the person's own instrument under a spotlight, its strings
-/// running on toward you as the lanes of a play-along runway, in the lesson highway's string colours and order
-/// (Settings › String order). A light runs down a string, a gem leaves the bridge on that string's lane and glides
+/// running on toward you as the lanes of a play-along runway, in the lesson highway's string colours and order (the
+/// lowest string on the left, as the upright instrument shows them). A light runs down a string, a gem leaves the
+/// bridge on that string's lane and glides
 /// to the hit line, where its target flashes. Under the line, inside the runway, the combo builds from the moment
 /// the paywall opens, counted as the play-along counts it (×2 from 4 notes, ×3 from 8, ×4 from 16), and holds at ×4.
 /// The Timbre Pro pill stands on the stage floor below. Everything stays inside the runway's width, clear of the
@@ -16,8 +17,6 @@ struct PaywallPreview: View {
     let accent: Color
     let height: CGFloat
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    /// The lanes follow the diagrams' and the lesson highway's string order.
-    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
     /// The pill's measured size: the combo and the hit line stand above it.
     @State private var pill = CGSize(width: 128, height: 26)
     /// When the scene appeared: the combo counts from here.
@@ -75,7 +74,7 @@ struct PaywallPreview: View {
         case .plan:
             break
         case .runway(let figure, let lanes):
-            PaywallScene(figure: figure, lanes: max(1, lanes), order: stringOrder, accent: accent, elapsed: elapsed,
+            PaywallScene(figure: figure, lanes: max(1, lanes), accent: accent, elapsed: elapsed,
                          calm: reduceMotion, pill: pill).draw(&context, size: size)
         case .tool(let tool):
             ToolScene(tool: tool, elapsed: elapsed, calm: reduceMotion, pill: pill).draw(&context, size: size)
@@ -193,7 +192,6 @@ struct PaywallFigure {
 private struct PaywallScene {
     let figure: PaywallFigure
     let lanes: Int
-    let order: StringOrder
     let accent: Color
     /// Seconds since the scene appeared.
     let elapsed: Double
@@ -244,8 +242,9 @@ private struct PaywallScene {
 
     /// The string a note plays.
     private func string(_ note: Note) -> Int { lanes - Int((note.place * Double(lanes - 1)).rounded()) }
-    /// A string's lane, counted from the left, in the player's string order.
-    private func lane(_ string: Int) -> Int { order.row(ofString: string, count: lanes) }
+    /// A string's lane, counted from the left: the lowest string on the left, as the lesson highway's lanes and the
+    /// chord pictures, and as the strings on the upright picture they run on from (`StringOrder.upright`).
+    private func lane(_ string: Int) -> Int { StringOrder.upright.row(ofString: string, count: lanes) }
     private func color(_ string: Int) -> Color { HighwayRunway.color(string: string, of: lanes) }
 
     /// The lane string a string on the picture belongs to (a 21-string kora shares out seven lanes).

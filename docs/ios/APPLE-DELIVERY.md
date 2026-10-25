@@ -80,22 +80,36 @@ Timbre can send anonymous product events (onboarding finished, paywall shown, tr
 
 ## 6. Growth features: owner steps
 
-The app ships with all of these switched on in code, and each works as soon as its App Store Connect setup exists. Until then it stays out of sight: no Leaderboard chips, no exit offer, and an offer-code sheet with nothing to redeem. Nothing crashes or prompts. The identifiers below are also in `ios/Timbre/Services/GameCenterIDs.swift`, and they must match exactly.
+The app ships with all of these switched on in code, and each works as soon as its App Store Connect setup exists. Until then it stays out of sight: no Leaderboard chips, "Challenge a friend" shares a link instead of a Game Center challenge, no friend streak, no exit offer, and an offer-code sheet with nothing to redeem. Nothing crashes or prompts. The identifiers below are also in `ios/Timbre/Services/GameCenterIDs.swift`, and they must match exactly. Game Center IDs use only letters, digits and periods, because challenge IDs allow nothing else.
 
 ### 6.1 Game Center
 
 1. **Capability.** Under Certificates, Identifiers & Profiles → Identifiers → `com.shahradazerisharghi.timbre`, check that **Game Center** is ticked. It is on by default for explicit App IDs.
 2. **Entitlement.** This is a one-line change to `ios/project.yml`. Under `targets → Timbre → entitlements → properties`, add `com.apple.developer.game-center: true` beside the App Group. The delivery workflow signs automatically, and its Admin API key can update the provisioning profile. The entitlement was left out of the repo on purpose, so CI never signs with a capability the App ID might not have yet. Without it, Game Center may refuse to sign in on TestFlight and App Store builds; the app then carries on without it. Do not add `gamekit` to `UIRequiredDeviceCapabilities`.
-3. **Turn on Game Center for the app version.** Go to App Store Connect → the app → Features → **Game Center** → enable it. Then, on the version page, add the leaderboards and achievements below under Game Center.
-4. **Leaderboards.** Create all three. Each uses score format **Integer**, submission type **Best score**, and is sorted **High to low**.
+3. **Friends list reason (for the friend streak).** This is a one-line change to `ios/project.yml`. Under `targets → Timbre → info → properties`, beside `NSMicrophoneUsageDescription`, add:
+   `NSGKFriendListUsageDescription: Timbre shows where your practice streak stands among your Game Center friends who also play Timbre. It never shows their names.`
+   GameKit shows this sentence in its one-time prompt. Without the key the app never asks, and the friend streak stays off.
+4. **Turn on Game Center for the app version.** Go to App Store Connect → the app → Features → **Game Center** → enable it. Then, on the version page, add the leaderboards, achievements, challenges and activities below under Game Center.
+5. **Leaderboards.** Create all twelve. Each uses score format **Integer** and is sorted **High to low**. The submission type is **Best score** for every board except `timbre.streak`, which is **Most recent score**, because a streak goes down when it ends.
 
 | Leaderboard ID | Type | Name (English) | Score range | Notes |
 |---|---|---|---|---|
 | `timbre.sniper.best` | Classic | Pitch Sniper | 0 – 25,000 | All-time best game |
-| `timbre.sniper.weekly` | Recurring | Pitch Sniper this week | 0 – 25,000 | Starts on a Monday at 00:00, lasts 1 week, repeats every week. This is the weekly league; the Leaderboard chip opens it first. |
+| `timbre.sniper.weekly` | Recurring | Pitch Sniper this week | 0 – 25,000 | Starts on a Monday at 00:00 UTC, lasts 1 week, restarts every week. This is the weekly league. The Leaderboard chip opens it first, and the Pitch Sniper challenge is built on it. |
 | `timbre.ear.level` | Classic | Ear trainer level | 1 – 100 | The level the Play tab shows |
+| `timbre.streak` | Classic | Practice streak | 0 – 10,000 | **Most recent score.** Days in a row, sent when the streak changes. The friend streak reads it back for friends only. |
+| `timbre.song.twinkle` | Classic | Twinkle, Twinkle, Little Star | 0 – 200,000 | Perform score |
+| `timbre.song.odetojoy` | Classic | Ode to Joy | 0 – 200,000 | Perform score |
+| `timbre.song.jinglebells` | Classic | Jingle Bells | 0 – 200,000 | Perform score |
+| `timbre.song.saints` | Classic | When the Saints Go Marching In | 0 – 200,000 | Perform score |
+| `timbre.song.kiteweather` | Classic | Kite Weather | 0 – 200,000 | Perform score |
+| `timbre.song.dashboard` | Classic | Dust on the Dashboard | 0 – 200,000 | Perform score |
+| `timbre.song.lochlomond` | Classic | Loch Lomond | 0 – 200,000 | Perform score |
+| `timbre.song.mountain` | Classic | She'll Be Coming 'Round the Mountain | 0 – 200,000 | Perform score |
 
-5. **Achievements.** Create these 31 achievements, worth 895 points in all (the cap is 1,000). For every one, set Hidden to No and Achievable more than once to No. Add a 1024 × 1024 image. Use the badge's title as the title. Use its detail for both descriptions, before and after it is earned. The per-instrument course badges and the Pro-only badges (custom tuning, Pro-precision locks) are left out on purpose.
+The eight song boards are the "Perform" family: one per featured song (`GameCenterIDs.songs`, all free, so every player can answer a challenge). A board takes the score of a whole take at the song's own tempo: each note's credit (perfect 1, good 0.8, late or early 0.5) × 100 × the combo multiplier (up to ×4). Slower takes and practice loops never count. The longest featured song has 228 notes, so 200,000 leaves room for longer songs later. To feature another song, add a line to `GameCenterIDs.songs` and create its board, challenge and activity with the same slug.
+
+6. **Achievements.** Create these 31 achievements, worth 895 points in all (the cap is 1,000). For every one, set Hidden to No and Achievable more than once to No. Add a 1024 × 1024 image. Use the badge's title as the title. Use its detail for both descriptions, before and after it is earned. The per-instrument course badges and the Pro-only badges (custom tuning, Pro-precision locks) are left out on purpose.
 
 | Achievement ID | Title | Description | Points |
 |---|---|---|---|
@@ -131,13 +145,43 @@ The app ships with all of these switched on in code, and each works as soon as i
 | `timbre.badge.course_done` | Graduate | Finish a whole course | 50 |
 | `timbre.badge.songs_25` | Songbook | Play 25 songs | 50 |
 
-6. **Test** with a sandbox Apple Account signed in to Game Center on a TestFlight build. Open the Play tab. The welcome banner appears once, and a trophy chip appears on each game card when its board exists. Badges earned before sign-in are reported then.
+7. **Challenges (iOS 26 and later).** Go to App Store Connect → the app → Game Center → **Challenges** → (+). Enter the reference name and the challenge ID. Under Associated Leaderboard, choose the board below. Add an English localization (display name and description) and a 3840 × 2160 image (PNG or JPEG, RGB, no transparency; the share card art on a wide dark canvas works). Submit the challenges for review with the app version. Apple allows 20 challenges per app, and these use 9.
 
-How the app behaves: it signs in quietly the first time the Play tab's game cards show, or when a challenge link opens, and never during onboarding. It never shows GameKit's sign-in sheet. When a player isn't signed in, the app isn't recognised yet, or Game Center is restricted, everything stays hidden. Game Center's own achievement banner is off, because the app announces badges itself.
+| Challenge ID | Associated leaderboard | Repeatable | Display name | Description |
+|---|---|---|---|---|
+| `timbre.challenge.sniper` | `timbre.sniper.weekly` | Yes | Pitch Sniper duel | Ten notes, one bullseye at a time. The best game wins. |
+| `timbre.challenge.song.twinkle` | `timbre.song.twinkle` | No | Twinkle, Twinkle, Little Star | One take at full tempo. The best score wins. |
+| `timbre.challenge.song.odetojoy` | `timbre.song.odetojoy` | No | Ode to Joy | One take at full tempo. The best score wins. |
+| `timbre.challenge.song.jinglebells` | `timbre.song.jinglebells` | No | Jingle Bells | One take at full tempo. The best score wins. |
+| `timbre.challenge.song.saints` | `timbre.song.saints` | No | When the Saints Go Marching In | One take at full tempo. The best score wins. |
+| `timbre.challenge.song.kiteweather` | `timbre.song.kiteweather` | No | Kite Weather | One take at full tempo. The best score wins. |
+| `timbre.challenge.song.dashboard` | `timbre.song.dashboard` | No | Dust on the Dashboard | One take at full tempo. The best score wins. |
+| `timbre.challenge.song.lochlomond` | `timbre.song.lochlomond` | No | Loch Lomond | One take at full tempo. The best score wins. |
+| `timbre.challenge.song.mountain` | `timbre.song.mountain` | No | She'll Be Coming 'Round the Mountain | One take at full tempo. The best score wins. |
+
+   - The app finds each challenge by the leaderboard it is built on, so any subset works. Create Pitch Sniper's first. Until a challenge exists, and always below iOS 26 or when signed out, "Challenge a friend" shares a "Beat my score" card with a link instead (§6.2).
+   - Pitch Sniper's challenge is repeatable (players pick 1, 3 or unlimited tries), and Apple only allows that on a recurring board. It lasts the rest of the board's week. The song challenges sit on classic boards, so they are one take each, and the player picks 1 day, 3 days or 1 week.
+   - Once a Game Center version is live, open Challenges → … → **Set Challenges Minimum Version** and pick the first version with this feature, so nobody on an older build is invited.
+   - Xcode 26 can hold all of this in a GameKit configuration file and sync it to App Store Connect instead. The IDs must stay the same.
+8. **Activities (iOS 26, recommended).** An activity takes a player who taps a challenge in the Games app, or its notification, straight to the right screen. Go to Game Center → **Activities** → (+). Enter the reference name and the activity ID, then add an English localization and a 3840 × 2160 image. Under Activity Associations → **Add Association** → Leaderboards, choose the boards below. Leave Supports Party Code off and the participants range empty. Apple allows 20 activities per app, and these use 9.
+
+| Activity ID | Associate these leaderboards | Opens |
+|---|---|---|
+| `timbre.activity.sniper` | `timbre.sniper.weekly`, `timbre.sniper.best` | Pitch Sniper |
+| `timbre.activity.song.<slug>`, one per song above with the same slug (for example `timbre.activity.song.lochlomond`) | `timbre.song.<slug>` | That song |
+
+   Instead of one activity per song, any activity may carry the property `lesson` set to a lesson ID from `GameCenterIDs.songs` (for example `std-loch-lomond`), and the app opens that lesson. Without activities, a challenge still opens Timbre, just not on the right screen.
+9. **Test** with a sandbox Apple Account signed in to Game Center on a TestFlight build. On iOS, Settings → Developer → **Notify About Score Submissions** shows each score as it is sent.
+   - Open the Play tab. The welcome banner appears once, and a trophy chip appears on each game card when its board exists. Badges earned before sign-in are reported then.
+   - Finish a Pitch Sniper game. "Challenge a friend" on the end screen opens Game Center's challenge screen on iOS 26, or a share sheet with the "Beat my score" card on iOS 18–25 or before the challenge exists. With a challenge going on, "Live challenge" appears under it and opens Game Center's challenges.
+   - Play a featured song through at full tempo. The results show "Challenge a friend" beside Share.
+   - On Progress, "Your week" offers "Compare streaks with friends" once. After a yes, and with a sandbox friend who also plays and allows it, "Streak #2 of 2 among friends" appears on the card and on its poster.
+
+How the app behaves: it signs in quietly the first time the Play tab's game cards or Progress's week card show, or when a challenge link opens, and never during onboarding. On iOS 26 it also signs in at launch when the Games app has handed it an activity or challenge. It never shows GameKit's sign-in sheet. When a player isn't signed in, the app isn't recognised yet, or Game Center is restricted, everything stays hidden, and "Challenge a friend" falls back to its link. Game Center's own achievement banner is off, because the app announces badges itself. Scores go to Game Center only when a game or take ends, because each submission counts as a try in a challenge. While a song challenge is going on, stopping a take part-way counts as a try, with the points so far. A best set while signed out is sent once at the next sign-in. Friends' streaks are read only after the player says yes, stay in memory, and are dropped if the player later says no. The card and poster show a rank and a count, never a friend's name.
 
 ### 6.2 "Beat my score" challenge links
 
-The paper-plane chip on the Pitch Sniper card shares a "Beat my score" card. It comes with the link `timbre://challenge?game=sniper&score=N`, which opens Pitch Sniper with that score to beat. A player who beats it gets "Send it back" on the results screen.
+The paper-plane chip on the Pitch Sniper card, and "Challenge a friend" wherever Game Center's own challenge isn't available, share a "Beat my score" card. For Pitch Sniper it comes with the link `timbre://challenge?game=sniper&score=N`, which opens Pitch Sniper with that score to beat. A player who beats it gets "Send it back" on the results screen. For a song it comes with `timbre://lesson?id=<lesson>`, which opens the song (the score to beat is in the message), on any song played through at full tempo, featured or not.
 
 - A `timbre://` link only works where Timbre is installed, and some apps don't make custom-scheme links tappable. Once the app has an App Store page, set `SniperChallenge.appStoreLink` in `ios/Timbre/Services/GameCenter.swift` to `https://apps.apple.com/app/id<Apple ID>`, so the shared message also says where to get Timbre.
 - Optional, later: host a small https page that forwards to the `timbre://` link and falls back to the App Store, and share that page instead. Universal Links would need an Associated Domains entitlement and an `apple-app-site-association` file on a domain you control.

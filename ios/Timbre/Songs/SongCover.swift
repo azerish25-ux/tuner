@@ -13,8 +13,8 @@ import UIKit
 ///
 /// Every sleeve keeps one grid, so the controls on it never move or collide: the catalogue number top-left, and the
 /// bottom-right corner (`playCorner`) clear for "Hear it" (or a badge). The title sits at the top under the number
-/// (left, centred or right), or at the foot on the left, stopping short of the play corner (now and then on a band
-/// of colour).
+/// (left, centred or right), or, when short, at the foot on the left, stopping short of the play corner (now and then
+/// on a band of colour).
 struct CoverArt {
     enum Genre: CaseIterable { case nursery, folk, classical, americana, holiday, swing, rock, anthem }
     enum Motif: CaseIterable {
@@ -71,11 +71,12 @@ struct CoverArt {
         let fieldRoll = random.next()
         field = genre.allowsField && chosen.allowsField && fieldRoll < 0.28
         let coin = random.next() < 0.5
-        // A sun, a horizon or ridges sit low, so their title goes on top.
-        titleOnTop = chosen.sitsLow ? true : coin
+        let main = Self.mainTitle(title)
+        // A sun, a horizon or ridges sit low, so their title goes on top; so does a long title, which needs the
+        // sleeve's whole width (a title at the foot stops short of the play corner).
+        titleOnTop = chosen.sitsLow || main.count > Self.footTitleLimit || coin
         let capitalRoll = random.next()
         let capitals = genre.capitals ?? (capitalRoll < 0.25)
-        let main = Self.mainTitle(title)
         self.title = capitals ? main.uppercased() : main
         self.label = label.uppercased()
         self.number = number
@@ -146,6 +147,8 @@ struct CoverArt {
     /// The share of the side kept clear of type at the bottom-right: room for a 32 to 38 pt "Hear it" disc in its
     /// 44 pt tap area on a 124 to 176 pt sleeve.
     static let playCorner: CGFloat = 0.34
+    /// The longest title (in characters) set at the foot, where it has the sleeve's width less the play corner.
+    static let footTitleLimit = 16
 
     /// A stable 64-bit hash: `String.hashValue` changes between launches.
     static func hash(_ text: String, salt: UInt64 = 0) -> UInt64 { SongOfTheDay.hash(text, salt: salt) }

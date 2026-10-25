@@ -144,11 +144,11 @@ struct PlacementCheckView: View {
         }
     }
 
-    /// The three chords, in the order they're asked for.
+    /// The three chords, in the order they're asked for, in the picture the learner chose (the chart by default).
     private var chordRow: some View {
         HStack(spacing: 10) {
             ForEach(Array(chords.enumerated()), id: \.offset) { _, chord in
-                ChordDiagram(chord: chord, accent: accent, landing: !reduceMotion)
+                ChordPictureView(chord: chord, accent: accent, landing: !reduceMotion, compact: true)
                     .frame(maxWidth: .infinity)
                     .stillCard(cornerRadius: Metrics.cornerTile, padding: Metrics.tilePadding)
             }
