@@ -185,6 +185,12 @@ final class CommerceService: ObservableObject {
                 }
                 await refreshEntitlements()
                 await transaction.finish()
+                // StoreKit can list a transaction it has just verified in the current entitlements a moment late: one
+                // more look a second on, so a slow update can't leave Pro off after a purchase that went through.
+                if !isPro {
+                    try? await Task.sleep(for: .seconds(1))
+                    await refreshEntitlements()
+                }
                 return isPro
             case .pending:
                 pending = true

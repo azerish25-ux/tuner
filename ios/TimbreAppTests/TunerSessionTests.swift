@@ -9,7 +9,7 @@ import TimbreCore
 @MainActor
 final class TunerSessionTests: XCTestCase {
     private func reading(cents: Double?, stable: Bool = true) -> TuningReading {
-        TuningReading(frequency: cents == nil ? nil : 440, cents: cents, stable: stable, inTune: false, status: "flat")
+        TuningReading(frequency: cents == nil ? nil : 440, cents: cents, stable: stable, inTune: false, status: .flat)
     }
 
     func testAutomaticDetectionMovesAfterThreeReadingsRunning() {

@@ -52,11 +52,16 @@ struct CelebrationOverlay: View {
                 if let seconds = store.lastTuneSeconds, seconds > 0 {
                     Label("\(seconds) s", systemImage: "stopwatch.fill").foregroundStyle(Palette.ink)
                 }
-                // The simple tuner keeps to the tuning: no XP or streak.
-                if !store.settings.simpleTuner {
+                // The simple tuner keeps to the tuning, and Calm mode leaves the game out: no XP or streak.
+                if !store.settings.simpleTuner && !store.settings.calmMode {
                     Label("+\(XPReward.fullTune) XP", systemImage: "sparkles").foregroundStyle(Palette.mint)
                     if store.streak.current > 0 {
-                        Label("\(store.streak.current)-day streak", systemImage: "flame.fill").foregroundStyle(Palette.flameInk)
+                        Label {
+                            Text("\(store.streak.current)-day streak")
+                        } icon: {
+                            Glyph(.lamp, size: 15, tint: Palette.flame)
+                        }
+                        .foregroundStyle(Palette.flameInk)
                     }
                 }
             }
@@ -115,7 +120,7 @@ struct CelebrationOverlay: View {
         if let course = store.curriculum.courses.first(where: { $0.instrument == store.instrument.id }), let next = store.learn.nextLesson(in: course) {
             Button {
                 dismiss()
-                UserDefaults.standard.set(course.id, forKey: "learn.course")
+                Preferences.learnCourse = course.id
                 store.selectedTab = .learn
             } label: {
                 Label("Ready to play: \(next.title.localized)", systemImage: "graduationcap.fill")
@@ -154,7 +159,8 @@ struct CelebrationOverlay: View {
     private func renderCard() {
         let tune = TuneShareCard(instrument: store.instrumentDisplayName, tuning: store.tuning.name.localized,
                                  notes: store.courses.map { TargetLabelFormatter.splitCue(store.courseLabel($0)).main },
-                                 modelID: store.modelID, photo: store.photo?.asset, streak: store.streak.current, seconds: store.lastTuneSeconds)
+                                 modelID: store.modelID, photo: store.photo?.asset, streak: store.settings.calmMode ? 0 : store.streak.current,
+                                 seconds: store.lastTuneSeconds)
         card = ShareCardRenderer.image(tune, scale: displayScale, locale: locale, direction: layoutDirection)
     }
 }
@@ -361,7 +367,7 @@ struct ShareCardRow<Card: View>: View {
     }
 }
 
-/// The Studio Noir frame every share card uses: the dark stage under a warm light, TIMBRE across the top
+/// The Studio Noir frame every share card uses: the dark stage under a warm light, the logotype across the top
 /// beside an optional tag, and the moment beneath. 400 pt wide. Only the achievement, never personal data.
 /// With `signature`, a poster's sign-off closes it: hairlines either side of the tuning fork and "In tune with Timbre".
 struct ShareCardFrame<Tag: View, Content: View>: View {
@@ -380,7 +386,7 @@ struct ShareCardFrame<Tag: View, Content: View>: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Text("TIMBRE").font(Typeface.label(13)).tracking(6).foregroundStyle(Palette.spotlight)
+                TimbreLogotype(size: 15)
                 Spacer(minLength: 12)
                 tag
             }
@@ -425,7 +431,14 @@ struct TuneShareCard: View {
 
     var body: some View {
         ShareCardFrame {
-            if streak > 1 { Label("\(streak)-day streak", systemImage: "flame.fill").font(Typeface.label(12)).foregroundStyle(Palette.flameInk) }
+            if streak > 1 {
+                Label {
+                    Text("\(streak)-day streak")
+                } icon: {
+                    Glyph(.lamp, size: 14, tint: Palette.flame)
+                }
+                .font(Typeface.label(12)).foregroundStyle(Palette.flameInk)
+            }
         } content: {
             if let name = modelID.flatMap({ ModelLibrary.hasCard($0) ? ModelLibrary.cardImageName($0) : nil }) ?? photo {
                 Image(name).resizable().scaledToFit().frame(height: 300).shadow(color: .black.opacity(0.65), radius: 24, y: 14)
@@ -476,7 +489,7 @@ struct LessonShareCard: View {
 
     private var streakChip: some View {
         HStack(spacing: 6) {
-            Image(systemName: "flame.fill").font(.system(size: 13, weight: .bold)).foregroundStyle(Palette.flame)
+            Glyph(.lamp, size: 17, tint: Palette.flame)
             Text("\(streak)-day streak").font(Typeface.label(.body)).foregroundStyle(Palette.flameInk)
                 .lineLimit(1).minimumScaleFactor(0.7)
         }
