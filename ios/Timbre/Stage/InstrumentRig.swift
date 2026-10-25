@@ -98,9 +98,26 @@ enum ModelLibrary {
               let data = try? Data(contentsOf: url) else { return [:] }
         return (try? JSONDecoder().decode([String: [String: [Double]]].self, from: data)) ?? [:]
     }()
+    /// Turn signs for photographed pegs (photo-turns.json), keyed by photo asset and anchor: +1 where clockwise tightens,
+    /// as the 3D rigs encode it (a key or peg head on the bass side of the head, seen from the front, is +1; the treble
+    /// side -1). Each entry there says what its photograph shows; a photo without one shows no turn arrow.
+    private struct PhotoTurns: Decodable {
+        struct Photo: Decodable { let tighten: [String: Int] }
+        let photos: [String: Photo]
+    }
+    private static let photoTurns: [String: [String: Int]] = {
+        guard let url = Bundle.main.url(forResource: "photo-turns", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let file = try? JSONDecoder().decode(PhotoTurns.self, from: data) else { return [:] }
+        return file.photos.mapValues(\.tighten)
+    }()
     static func photoCard(_ asset: String?) -> StageCard? {
         guard let asset, let points = photoPoints[asset], !points.isEmpty else { return nil }
-        return StageCard(points: points)
+        var card = StageCard(points: points)
+        for (anchor, sign) in photoTurns[asset] ?? [:] where abs(sign) == 1 && card.anchors.contains(anchor) {
+            card.turns[anchor] = sign
+        }
+        return card
     }
 
     /// Attribution for artist models (the `credit` block of each bundled rig), for Acknowledgements.

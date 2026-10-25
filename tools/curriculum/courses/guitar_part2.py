@@ -12,9 +12,13 @@ from lib import along, chord, explain, fretboard, lesson, listen, notes, play_ch
 from songbook import Part, song
 import tunes
 from courses.guitar import (
-    A, A7, B7, BOX, BOX_DOTS, C, D, D7, E, E7, EIGHTHS, F_MINI, FIRST_SECOND, FOLK, G, G_MAJ, HALVES, HOME, MAJOR_MINOR,
-    QUARTERS, SHAPES, SHUFFLE, SOLO, UP_DOWN, Am, Bm, Em, shape, tones,
+    A, A7, B7, BOX, BOX_DOTS, C, D, D7, E, E7, EIGHTHS, F_MINI, FIRST_SECOND, FOLK, G, G_MAJ, HALVES, HOME, HOOK,
+    MAJOR_MINOR, QUARTERS, SHAPES, SHUFFLE, SKIP, SOLO, THE_CHORUS, THE_VERSE, UP_DOWN, Am, Bm, Em, introduce, shape,
+    spotlight, tones,
 )
+# The Originals this part's song spotlights play from.
+from courses.originals import FUNK as NEON_STRUM, NEON_HOOK, NEON_SONG, PORCH_SONG
+from courses.originals_part2 import GRAVEL, SALT, SPARK, SPRAY
 
 
 # ---------------------------------------------------------------- helpers
@@ -71,6 +75,29 @@ def on_capo(step):
     return step
 
 
+def pin(melody: str, strings: dict) -> str:
+    """Each note of a melody fixed to the string `strings` names for it ("E4": 2); rests and lengths kept."""
+    out = []
+    for token in melody.split():
+        n, _, length = token.partition(":")
+        out.append(token if n.lower() == "r" or "@" in n else f"{n}@{strings[n]}:{length or 1}")
+    return " ".join(out)
+
+
+def in_place(arranged, label, strings, bpm, title, capo=None, **position):
+    """A section of an Original (a songbook.Song), its tune and words as written, with every note on the string
+    `strings` names: the same section in a position up the neck, or over a capo. A note at the capo's fret is held by
+    the capo (no finger), and none may sit below it. position: max_fret and first_fret, as for along()."""
+    part = next(p for p in arranged.parts if p.label == label)
+    moved = Part(part.label, part.kind, pin(part.melody, strings), part.lyrics, part.chords, part.pickup)
+    step = song(G, bpm, [moved], beats_per_bar=arranged.bpb, shapes=arranged.shapes, **position).take(title)
+    for n in step["notes"] if capo else []:
+        assert n["at"]["f"] >= capo, f"{label}: a note below the capo"
+        if n["at"]["f"] == capo:
+            n["at"].pop("g", None)
+    return step
+
+
 # ================================================================ 11. Fingerpicking
 
 EM_BASS = "E2@6:1 B2@5:1 E2@6:1 B2@5:1"
@@ -89,6 +116,13 @@ ARP_C = eighths("C3@5 G3@3 C4@2 E4@1 C4@2 G3@3")
 ARP_G = eighths("G2@6 G3@3 B3@2 G4@1 B3@2 G3@3")
 ARP_E = eighths("E2@6 G#3@3 B3@2 E4@1 B3@2 G#3@3")
 BALLAD = [(Am, ARP_AM), (F_MINI, ARP_F), (C, ARP_C), (G_MAJ, ARP_G), (Am, ARP_AM), (F_MINI, ARP_F), (E, ARP_E), (Am, ARP_AM)]
+# Porchlight (song spotlight): p-i-m-a twice a bar, the thumb on each chord's root, over its verse and chorus chords.
+PIMA_D = eighths("D3@4 A3@3 D4@2 F#4@1 D3@4 A3@3 D4@2 F#4@1")
+PIMA_A = eighths("A2@5 A3@3 C#4@2 E4@1 A2@5 A3@3 C#4@2 E4@1")
+PIMA_G = eighths("G2@6 G3@3 B3@2 G4@1 G2@6 G3@3 B3@2 G4@1")
+PIMA_EM = eighths("E2@6 G3@3 B3@2 E4@1 E2@6 G3@3 B3@2 E4@1")
+PORCH_VERSE = [(D, PIMA_D), (A, PIMA_A), (G_MAJ, PIMA_G), (D, PIMA_D)]
+PORCH_CHORUS = [(Em, PIMA_EM), (G_MAJ, PIMA_G), (A, PIMA_A), (D, PIMA_D)]
 
 UNIT_11 = unit("gtr-11", "Fingerpicking", "Thumb on the bass, p-i-m-a, Travis picking and a fingerpicked ballad.", [
     lesson("gtr-11-1", "Thumb on the bass", [
@@ -154,6 +188,19 @@ UNIT_11 = unit("gtr-11", "Fingerpicking", "Thumb on the bass, p-i-m-a, Travis pi
         over(BALLAD[:4], bpm=60, beats_per_bar=3, title="First line"),
         over(BALLAD, bpm=63, beats_per_bar=3, title="The ballad"),
     ], minutes=5, xp=25),
+    # Porchlight (D, 70 bpm): a slow ballad on D, A, G and E minor, fingerpicked; the chorus tune on strings 1 and 2.
+    spotlight("gtr-11", "Porchlight", [
+        introduce("A ballad, fingerpicked", "Porchlight is a Timbre Original: a slow ballad in D. Fingerpick it: your thumb "
+                  "on each chord's root, then i, m and a up strings 3, 2 and 1. Let every note ring into the next.",
+                  shape(D)),
+        quiz("In D, which string does your thumb play?", ["String 4", "String 5", "String 6"], 0,
+             "D's root is open string 4. Strings 5 and 6 stay quiet in this chord."),
+        over([(D, PIMA_D), (A, PIMA_A)] * 2, bpm=60, title="D to A, p-i-m-a"),
+        over(PORCH_VERSE, bpm=60, title="The verse, picked"),
+        over(PORCH_CHORUS, bpm=60, title="The chorus, picked"),
+        PORCH_SONG.along("Chorus", bpm=63, title=THE_CHORUS),
+        over(PORCH_VERSE + PORCH_CHORUS, bpm=66, title="Porchlight, picked"),
+    ]),
     lesson("gtr-11-6", "Fingerpicking challenge", [
         explain("Thumb, fingers, flow", "No new ideas: the alternating bass, p-i-m-a, Travis picking and the ballad. "
                 "Keep the thumb steady and let every note ring."),
@@ -181,6 +228,9 @@ LICK_1 = "A4@1:L C5@1:S A4@1:L G4@2:S E4@2:1 G4@2:1 A4@1:4"        # box 1, high
 LICK_2 = "E4@2:L D4@3:S C4@3:L D4@3:S C4@3:L A3@4:S G3@4:1 A3@4:4"   # box 1, low A
 LICKS = f"{LICK_1} {LICK_2}"
 BOX_1 = {"max_fret": 8, "first_fret": 5}
+# Neon Laundromat (song spotlight): the boogie walk in even eighths, a bass line under its A7 vamp; its chorus chords.
+NEON_BOOGIE = eighths("A2@5 A2@5 C#3@5 C#3@5 E3@4 E3@4 F#3@4 F#3@4 G3@3 G3@3 F#3@4 F#3@4 E3@4 E3@4 C#3@5 C#3@5")
+NEON_CHORUS = [(A7, 2), (E7, 2), (A7, 2), (E7, 1), (A7, 1)]
 
 UNIT_12 = unit("gtr-12", "Blues", "The 12-bar in A, the quick change, a boogie bass line, the turnaround and your first blues licks.", [
     lesson("gtr-12-1", "The blues in A", [
@@ -250,6 +300,25 @@ UNIT_12 = unit("gtr-12", "Blues", "The 12-bar in A, the quick change, a boogie b
         swung(LICKS, bpm=66, title="Question and answer", **BOX_1),
         swung(LICKS, bpm=72, title="Blues licks, up to speed", **BOX_1),
     ], minutes=5, xp=25),
+    # Neon Laundromat (A7, 96 bpm): a funk vamp whose hook slides C to C sharp, the blues rub; the boogie walk, played
+    # straight, is its bass line; the chorus is A7 and E7.
+    spotlight("gtr-12", "Neon Laundromat", [
+        introduce("Funk on one chord", "Neon Laundromat is a Timbre Original: funk that sits on one chord, A7. Its hook "
+                  "slides from C to C sharp, the same rub your blues licks make, and its chorus drops to E7.",
+                  fretboard(G, [(3, 2, 2), (2, 1, 1), (2, 2, 2), (1, 0)])),
+        notes(G, ["A3", "C4", "C#4", "E4"], hint="A at fret 2 on string 3, then C and C sharp at frets 1 and 2 on string 2, "
+              "then open E."),
+        along(G, NEON_HOOK, bpm=72, title=HOOK),
+        quiz("Over A7, which note rubs against the chord?", ["C", "C sharp", "E"], 0,
+             "A7 is A, C sharp, E and G. C, from your pentatonic box, rubs against its C sharp, and the hook slides from "
+             "one to the other."),
+        explain("Boogie, played straight", "Neon Laundromat doesn't shuffle. Play your boogie walk in even eighths and it "
+                "becomes a bass line under the A7: A, C sharp, E, F sharp, G, and back down.", rhythm(EIGHTHS)),
+        along(G, f"{NEON_BOOGIE} {NEON_BOOGIE}", bpm=72, title="Boogie, played straight"),
+        tap(NEON_STRUM, bpm=72, bars=2),
+        progression(NEON_CHORUS, NEON_STRUM, bpm=72),
+        NEON_SONG.along("Verse 1", bpm=76, title=THE_VERSE),
+    ], minutes=6),
     lesson("gtr-12-6", "Blues challenge", [
         explain("Twelve bars, your way", "No new ideas: the 12-bar in A and E, the quick change, the boogie line, "
                 "the turnaround and your licks. Keep the shuffle swinging."),
@@ -282,6 +351,14 @@ BOX2 = ("C3@6:1 D3@6:1 E3@5:1 G3@5:1 A3@4:1 C4@4:1 D4@3:1 E4@3:1 G4@2:1 A4@2:1 C
 LINK = "A3@4:1 C4@3:1 D4@3:0.5 E4@3:1.5 G4@2:1 A4@2:3"         # box 1, slide on string 3, finish in box 2
 LINK_FINGERS = {3: 3, 4: 2, 5: 4}
 SAME_DIFFERENT = ["Same", "Different"]
+# Saltwater Sunday (song spotlight): a break of our own over its verse, Am7 | D7 | Am7 | D7. Bars 1 and 2 in box 1
+# (C hammered to D, pulled back); bars 3 and 4 slide finger 3 from D to E on string 3 into box 2. A chord note starts
+# every bar and every beat three.
+SALT_BREAK_1 = "A3@4:0.5 C4@3:0.5 D4@3:0.5 C4@3:0.5 A3@4:1 G3@4:1 A3@4:1 C4@3:1 D4@3:2"
+SALT_BREAK_2 = "C4@3:1 D4@3:0.5 E4@3:1.5 G4@2:1 A4@2:1 G4@2:0.5 E4@3:0.5 D4@3:2"
+SALT_BREAK = f"{SALT_BREAK_1} {SALT_BREAK_2}"
+SALT_SLIDE = {2: 3, 3: 2, 5: 2, 6: 3, 7: 1}      # box 2 fingers after the slide (finger 1 at fret 7)
+SALT_FINGERS = {len(SALT_BREAK_1.split()) + i: g for i, g in SALT_SLIDE.items()}
 
 UNIT_13 = unit("gtr-13", "Lead technique", "Hammer-ons, pull-offs, slides, bends and vibrato, and a second pentatonic box.", [
     lesson("gtr-13-1", "Hammer-ons", [
@@ -350,6 +427,20 @@ UNIT_13 = unit("gtr-13", "Lead technique", "Hammer-ons, pull-offs, slides, bends
         fingered(along(G, LINK, bpm=60, title="From box 1 to box 2", **UP_NECK), LINK_FINGERS),
         along(G, BOX2, bpm=63, title="Box 2, up and down", **BOX_2),
     ], minutes=5, xp=25),
+    # Saltwater Sunday (A minor, 76 bpm): reggae where Am7 and D7 trade bars; a hammer, pull and slide break across both
+    # boxes, then the Original's chorus.
+    spotlight("gtr-13", "Saltwater Sunday", [
+        introduce("Lead over a reggae groove", "Saltwater Sunday is a Timbre Original: laid-back reggae in A minor, where "
+                  "Am7 and D7 trade bars. Both pentatonic boxes fit over them. Hammer, pull and slide, and land on a chord "
+                  "note as each bar begins.", fretboard(G, BOX_DOTS, frets=4, start=5)),
+        along(G, SALT_BREAK_1, bpm=60, title="Hammer and pull, in box 1", **BOX_1),
+        quiz("Over D7, which of these box notes belongs to the chord?", ["C", "E", "G"], 0,
+             "D7 is D, F sharp, A and C. C, its seventh, sounds settled; E and G only pass through."),
+        fingered(along(G, SALT_BREAK_2, bpm=60, title="Slide up into box 2", **UP_NECK), SALT_SLIDE),
+        fingered(along(G, SALT_BREAK, bpm=63, title="Your break over Am7 and D7", **UP_NECK), SALT_FINGERS),
+        SALT.along("Chorus", bpm=66, title=THE_CHORUS),
+        fingered(along(G, SALT_BREAK, bpm=72, title="Your break over Am7 and D7", **UP_NECK), SALT_FINGERS),
+    ], minutes=6),
     lesson("gtr-13-6", "Lead challenge", [
         explain("Phrases with feeling", "No new ideas: hammer-ons, pull-offs, slides, bend targets, vibrato and both boxes. "
                 "Play each phrase cleanly, then make it sing."),
@@ -373,6 +464,8 @@ C_BAR = chord(G, "C", "x35553", "x13331")
 D_BAR = chord(G, "D", "x57775", "x13331")
 E_BAR = chord(G, "E", "x79997", "x13331")
 Cm = chord(G, "Cm", "x35543", "x13421")       # A minor shape, like B minor
+Csm = chord(G, "C#m", "x46654", "x13421")     # the same shape one fret up
+SPRAY_LOOP = [(E, 1), (B_BAR, 1), (Csm, 1), (A, 1)]   # Spray Paint Sunrise's verse and chorus
 
 UNIT_14 = unit("gtr-14", "Moving barre chords", "E and A shapes up the neck, major and minor, the closer shape, and a "
                "progression in A.", [
@@ -441,6 +534,20 @@ UNIT_14 = unit("gtr-14", "Moving barre chords", "E and A shapes up the neck, maj
         progression([(Bm, 1), (G_BAR, 1), (D_BAR, 1), (A_BAR, 1)], FOLK, bpm=66),
         progression([(A_BAR, 1), (D_BAR, 1), (E_BAR, 1), (A_BAR, 1)], FOLK, bpm=66),
     ], minutes=5, xp=25),
+    # Spray Paint Sunrise (E, 124 bpm): E, B, C sharp minor and A; B and C sharp minor are A-shape barres at frets 2 and 4.
+    spotlight("gtr-14", "Spray Paint Sunrise", [
+        introduce("Two barres, one family", "Spray Paint Sunrise is a Timbre Original: indie pop in E on E, B, C sharp "
+                  "minor and A. B and C sharp minor are both A-shape barres, two frets apart, so one hand shape does most "
+                  "of the work.", shape(B_BAR)),
+        quiz("C sharp minor as an A minor shape barre sits at…", ["Fret 4", "Fret 2", "Fret 6"], 0,
+             "String 5 counts up from A: B at 2, C at 3, C sharp at 4."),
+        play_chord(Csm),
+        listen("Major or minor?", [tones(Csm)], MAJOR_MINOR, 1),
+        progression([(B_BAR, 1), (Csm, 1)] * 2, HALVES, bpm=60),
+        progression(SPRAY_LOOP * 2, HALVES, bpm=63),
+        SPRAY.along("Chorus", bpm=84, title=THE_CHORUS),
+        progression(SPRAY_LOOP * 2, FOLK, bpm=72),
+    ], minutes=6),
     lesson("gtr-14-6", "Barre challenge", [
         explain("Up and down the neck", "No new ideas: E and A shapes, major and minor, choosing the closer shape and smooth "
                 "changes. Relax between chords and land on beat one."),
@@ -464,6 +571,7 @@ FUNK = [0, 0.75, 1.5, 2, 2.75, 3.5]           # the hits; the hand keeps moving 
 REGGAE = [1, 3]
 POP = [0, 1.5, 2.5, 3, 3.5]                   # down, up on the and of two and three, down-up on four
 BOOMS = [(G_MAJ, "G2@6:2 D3@4:2"), (C, "C3@5:2 E3@4:2"), (D, "D3@4:2 A2@5:2"), (G_MAJ, "G2@6:4")]
+SPARK_LOOP = [(C, 1), (G_MAJ, 1), (Am, 1), (F_MINI, 1)]   # Sparkler Season's verse and chorus
 
 UNIT_15 = unit("gtr-15", "Rhythm styles", "Funk sixteenths and scratches, the reggae chop, country boom-chick and a "
                "syncopated pop strum.", [
@@ -531,6 +639,20 @@ UNIT_15 = unit("gtr-15", "Rhythm styles", "Funk sixteenths and scratches, the re
         progression([(G_MAJ, 1), (D, 1), (Em, 1), (C, 1)], POP, bpm=72),
         progression([(C, 1), (G_MAJ, 1), (Am, 1), (F_MINI, 1)], POP, bpm=72),
     ], minutes=5, xp=25),
+    # Sparkler Season (C, 104 bpm): C, G, A minor and F, with the syncopated pop strum; its hook on strings 1 and 2.
+    spotlight("gtr-15", "Sparkler Season", [
+        introduce("The pop strum on four chords", "Sparkler Season is a Timbre Original: a summer anthem in C on C, G, A "
+                  "minor and F. Give it the syncopated pop strum, and change a hair early, on the and of four.", rhythm(POP)),
+        tap(POP, bpm=72, bars=2),
+        progression(SPARK_LOOP * 2, POP, bpm=72),
+        notes(G, ["E4", "D4", "E4", "D4", "G4", "D4", "G4", "E4", "D4"],
+              hint="Open E and D at fret 3 on string 2, twice, then G at fret 3 on string 1, and back down to D."),
+        SPARK.along("Chorus", bpm=80, title=THE_CHORUS),
+        quiz("Why change chords on the and of four?", ["So the new chord rings on beat one", "To slow the song down",
+                                                       "To skip a chord"], 0,
+             "Moving on the last up strum gets your hand there a hair early, so the new chord is ready for beat one."),
+        progression(SPARK_LOOP * 2, POP, bpm=88),
+    ]),
     lesson("gtr-15-6", "Rhythm styles challenge", [
         explain("Four grooves, one hand", "No new ideas: funk sixteenths, the reggae chop, boom-chick and the syncopated pop "
                 "strum. Keep the hand swinging and change only what it hits."),
@@ -552,6 +674,11 @@ CAPO_C = chord(G, "D", "x54232", "x32010")
 CAPO_D = chord(G, "E", "xx2454", "xxx132")
 CAPO_Em = chord(G, "F#m", "244222", "023000")
 CAPO_A = chord(G, "B", "x24442", "xx123x")
+# Gravel Road Two-Step (song spotlight), in A with the capo on fret 2: G, C and D shapes sound A, D and E. Its chorus tune
+# moves with the capo: no open strings, fret 2 is the capo, and the fingers think in G.
+GRAVEL_VERSE = [(CAPO_G, 1), (CAPO_C, 1), (CAPO_G, 1), (CAPO_D, 1), (CAPO_G, 1), (CAPO_C, 1), (CAPO_D, 1), (CAPO_G, 1)]
+GRAVEL_CHORUS = [(CAPO_C, 1), (CAPO_G, 1), (CAPO_D, 1), (CAPO_G, 1)] * 2
+GRAVEL_CAPO = {"F#4": 1, "E4": 2, "D4": 2, "C#4": 2, "B3": 3, "A3": 3, "G#3": 4}
 # Oh! Susanna (Stephen Foster, 1848), in G, 2/4, rhythm simplified to eighths. Checked against the 1851
 # Gumbo Chaff banjo tutor (in D). The verse opens with a two-note pickup.
 SUS_LINE = "B3:0.5 D4:0.5 D4:0.5 E4:0.5 D4:0.5 B3:0.5 G3:0.5 A3:0.5"
@@ -676,6 +803,20 @@ UNIT_16 = unit("gtr-16", "Putting it together", "A capo, G and D shapes on capo 
         along(G, SUS_C, bpm=72, beats_per_bar=2, title="Chorus: the melody"),
         SUS_ARRANGED.take("Oh! Susanna"),
     ], minutes=SUS_ARRANGED.minutes(), xp=35, kind="song", arrangement=SUS_ARRANGED.meta()),
+    # Gravel Road Two-Step (A, 116 bpm): dance-hall country on A, D and E, played on capo 2 with G-family shapes; the
+    # two-step is the boom-chick with a quick up; the chorus tune moves up with the capo.
+    spotlight("gtr-16", "Gravel Road Two-Step", [
+        introduce("Country with a capo", "Gravel Road Two-Step is a Timbre Original: dance-hall country in A, on A, D and E. "
+                  "Clamp the capo on fret 2 and play it with G, C and D shapes, the ones you know best.", shape(CAPO_G)),
+        quiz("Capo on fret 2. Which shape sounds as E?", ["The D shape", "The C shape", "The G shape"], 0,
+             "Two frets above D is E. On capo 2 the G shape gives A, and the C shape gives D."),
+        progression(GRAVEL_VERSE[:4], HALVES, bpm=63),
+        explain("The two-step", "Pick the chord's root on beats one and three, and strum on two and four, each with a quick "
+                "up after it. Boom, chick-a, boom, chick-a: the dancers' steps.", rhythm(SKIP)),
+        progression(GRAVEL_VERSE, SKIP, bpm=72),
+        in_place(GRAVEL, "Chorus", GRAVEL_CAPO, bpm=72, title=THE_CHORUS, capo=2, max_fret=7, first_fret=3),
+        progression(GRAVEL_CHORUS, SKIP, bpm=84),
+    ]),
     lesson("gtr-16-6", "Final showcase", [
         explain("Your showcase", "No new ideas: the capo, G and D shapes, and your Oh! Susanna arrangement. "
                 "Play it as if someone's listening. Maybe someone is."),

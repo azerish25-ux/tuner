@@ -15,12 +15,15 @@ Melodies are public domain or our own: the opening of Joy to the World (Lowell M
 from lib import along, chord, explain, fretboard, lesson, listen, notes, play_chord, progression, quiz, rhythm, tap, unit
 from songbook import Part, song
 from courses.guitar import (
-    C, D, D7, F_MINI, FIRST_SECOND, FOLK, G, G7, G_MAJ, HALVES, HOME, MAJOR_MINOR, QUARTERS, SHAPES, UP_DOWN,
-    Am, Em, shape, tones,
+    C, D, D7, EIGHTHS, F_MINI, FIRST_SECOND, FOLK, G, G7, G_MAJ, HALVES, HOME, HOOK, MAJOR_MINOR, QUARTERS, SHAPES,
+    THE_CHORUS, THE_VERSE, UP_DOWN, Am, Bm, Em, introduce, shape, spotlight, tones,
 )
 from courses.guitar_part2 import (
-    BOX_1, C_BAR, D_BAR, G_BAR, LICK_1, SAME_DIFFERENT, TRAVIS_G, eighths, fingered, over, swung,
+    BOX_1, C_BAR, D_BAR, Fsm, G_BAR, LICK_1, SAME_DIFFERENT, TRAVIS_G, eighths, fingered, in_place, over, swung,
 )
+# The Originals this part's song spotlights play from.
+from courses.originals import DOOWOP, HIGHLIFE, JUKEBOX_SONG, MARKET_A, MARKET_SONG
+from courses.originals_part2 import LANTERN, LATE, ROLLER, STROBE
 from courses.songs_part2 import JOY_1
 from courses.songs_part3 import DBR_C, DBR_LAST, DBR_STUDY, DBR_V, dbr_words
 
@@ -62,6 +65,12 @@ UP_AND_BACK = [(G_MAJ, 1), (G_BAR, 1), (G_D5, 1), (G_C7, 1), (G_A10, 1), (G_C7, 
 AT_FRET_3 = [(G_BAR, 1), (C_BAR, 1), (D_C2, 1), (G_BAR, 1)]
 AT_FRET_5 = [(G_D5, 1), (C_G5, 1), (D_BAR, 1), (G_D5, 1)]
 HIGH = {"max_fret": 12}
+# Lantern Hill (song spotlight): its chorus, C G D G twice, open, then near fret 5 and near fret 3; and picked at fret 5.
+LANTERN_OPEN = [(C, 1), (G_MAJ, 1), (D, 1), (G_MAJ, 1)] * 2
+LANTERN_AT_5 = [(C_G5, 1), (G_D5, 1), (D_BAR, 1), (G_D5, 1)] * 2
+LANTERN_AT_3 = [(C_BAR, 1), (G_BAR, 1), (D_C2, 1), (G_BAR, 1)] * 2
+LANTERN_PICKED = [(C_G5, "G3@4:1 C4@3:1 E4@2:1 C5@1:1"), (G_D5, "B4@1:1 G4@2:1 D4@3:1 G3@4:1"),
+                  (D_BAR, "A3@4:1 D4@3:1 F#4@2:1 A4@1:1"), (G_D5, "G4@2:2 G3@4:2")] * 2
 
 UNIT_17 = unit("gtr-17", "The CAGED system", "Five open shapes become five places to play G, and chords that stay near "
                "your hand.", [
@@ -128,6 +137,20 @@ UNIT_17 = unit("gtr-17", "The CAGED system", "Five open shapes become five place
                 "and D as the C shape at fret 2.", shape(C_BAR)),
         progression(AT_FRET_3, HALVES, bpm=63),
     ], minutes=5, xp=25),
+    # Lantern Hill (G, 92 bpm): a campfire sing-along on G, C and D; its chorus three ways up the neck.
+    spotlight("gtr-17", "Lantern Hill", [
+        introduce("One song, three places", "Lantern Hill is a Timbre Original: a campfire sing-along on G, C and D. Play "
+                  "its chorus open, then near fret 5, then near fret 3, and the same song moves around the neck.",
+                  shape(G_D5)),
+        progression(LANTERN_OPEN, FOLK, bpm=66),
+        quiz("Near fret 5, which shape plays C?", ["The G shape", "The A shape", "The E shape"], 0,
+             "C's G shape uses frets 5 and 8, right beside the D-shape G and the A-shape D."),
+        progression(LANTERN_AT_5, HALVES, bpm=60),
+        progression(LANTERN_AT_3, HALVES, bpm=60),
+        over(LANTERN_PICKED, bpm=63, title="The chorus, picked at fret 5", **HIGH),
+        LANTERN.along("Chorus", bpm=76, title=THE_CHORUS),
+        progression(LANTERN_AT_5, FOLK, bpm=72),
+    ], minutes=6),
     lesson("gtr-17-6", "CAGED challenge", [
         explain("Five shapes, one neck", "No new ideas: G in all five shapes, and G, C and D near fret 3 and fret 5. "
                 "Name each shape as you land it."),
@@ -170,6 +193,12 @@ def quarters(arps):
 
 def doubled_eighths(arps):
     return [(spec, eighths(f"{line} {line}")) for spec, line in arps]
+
+
+# Roller Rink (song spotlight): its loop, G, E minor, C and D, as the four triads at frets 2 to 5, picked from the top
+# string down; the top note holds G three bars, then steps to F sharp.
+ROLLER_ARPS = [(G_TRI_1, "G4@1 D4@2 B3@3 D4@2"), (Em_TRI_2, "G4@1 E4@2 B3@3 E4@2"),
+               (C_TRI, "G4@1 E4@2 C4@3 E4@2"), (D_TRI_2, "F#4@1 D4@2 A3@3 D4@2")]
 
 
 UNIT_18 = unit("gtr-18", "Triads up the neck", "Three-note chords on the top strings: major and minor, every inversion, "
@@ -237,6 +266,19 @@ UNIT_18 = unit("gtr-18", "Triads up the neck", "Three-note chords on the top str
         listen("Did the top note go up or down?", [["G4"], ["F#4"]], UP_DOWN, 1),
         over(quarters(HIGH_ARPS), bpm=60, title="Arpeggios, frets 5 to 9", **TOP),
     ], minutes=5, xp=25),
+    # Roller Rink (G, 120 bpm): retro dance pop on G, E minor, C and D, the one, six, four and five: the triad loop.
+    spotlight("gtr-18", "Roller Rink", [
+        introduce("Triads on the dance floor", "Roller Rink is a Timbre Original: retro dance pop on G, E minor, C and D, "
+                  "your four triads between frets 2 and 5. Small shapes on the top strings sound bright and tight, like a "
+                  "second guitar.", shape(G_TRI_1)),
+        quiz("Roller Rink's loop is the one, six, four and five of G. Which chord is the six?", ["E minor", "C", "D"], 0,
+             "Count up G major: G 1, A 2, B 3, C 4, D 5, E 6. The chord on 6 is minor: E minor."),
+        progression(LOW_FOUR * 2, QUARTERS, bpm=72),
+        over(doubled_eighths(ROLLER_ARPS), bpm=66, title="Triads, top string down", max_fret=5),
+        ROLLER.along("Chorus", bpm=88, title=THE_CHORUS),
+        progression(HIGH_FOUR * 2, EIGHTHS, bpm=80),
+        over(doubled_eighths(ROLLER_ARPS) * 2, bpm=84, title="Triads, top string down", max_fret=5),
+    ], minutes=6),
     lesson("gtr-18-6", "Triad challenge", [
         explain("Small shapes, whole neck", "No new ideas: major and minor triads, their inversions, G, E minor, C and D in two "
                 "places, and the arpeggios. Keep every move small."),
@@ -266,6 +308,9 @@ Gmaj7 = chord(G, "Gmaj7", "3x443x", "2x341x")      # root on string 6, string 5 
 CHARLESTON = [0, round(1 + 2 / 3, 3)]              # one, and the swung and of two
 TWO_FIVE_ONE_C = [(Dm7_5, 1), (G7_3, 1), (Cmaj7_5, 2)]
 TWO_FIVE_ONE_G = [(Am7_5, 1), (D7_5, 1), (Gmaj7, 2)]
+# Late Checkout (song spotlight): Dm7, G7, Cmaj7 and Am7 on a loop, open, then barred around fret 5.
+LATE_OPEN = [(Dm7, 1), (G7, 1), (Cmaj7, 1), (Am7, 1)] * 2
+LATE_BARRED = [(Dm7_5, 1), (G7_3, 1), (Cmaj7_5, 1), (Am7_5, 1)] * 2
 
 UNIT_19 = unit("gtr-19", "Seventh chords and jazz voicings", "Major, minor and dominant sevenths, open and barred, the "
                "ii–V–I, and swing comping.", [
@@ -333,6 +378,19 @@ UNIT_19 = unit("gtr-19", "Seventh chords and jazz voicings", "Major, minor and d
         progression(TWO_FIVE_ONE_G, CHARLESTON, bpm=72),
         progression(TWO_FIVE_ONE_C, CHARLESTON, bpm=72),
     ], minutes=5, xp=25),
+    # Late Checkout (C, 72 bpm, swung): lo-fi on Dm7, G7, Cmaj7 and Am7, a ii–V–I and the six; comped with the Charleston.
+    spotlight("gtr-19", "Late Checkout", [
+        introduce("A ii–V–I on a loop", "Late Checkout is a Timbre Original: lo-fi in C on Dm7, G7, Cmaj7 and Am7. That's "
+                  "a ii–V–I, plus the six chord to start it over. Comp it with your barred sevenths and the Charleston.",
+                  rhythm(CHARLESTON)),
+        progression(LATE_OPEN, HALVES, bpm=63),
+        quiz("In Late Checkout, which chord is the V?", ["G7", "Dm7", "Am7"], 0,
+             "Count up C major: C 1, D 2, E 3, F 4, G 5. The seventh chord on G is G7."),
+        progression(LATE_BARRED, HALVES, bpm=63),
+        progression(LATE_BARRED, CHARLESTON, bpm=72),
+        LATE.along("Chorus", bpm=66, title=THE_CHORUS),
+        progression(LATE_BARRED, CHARLESTON, bpm=80),
+    ]),
     lesson("gtr-19-6", "Jazz chord challenge", [
         explain("Sevenths, swung", "No new ideas: major, minor and dominant sevenths, open and barred, and the ii–V–I in C "
                 "and G. Keep the chords short and the swing steady."),
@@ -364,6 +422,9 @@ MIXO_SCALE = [("D3", 5), ("E3", 4), ("F#3", 4), ("G3", 4), ("A3", 3), ("B3", 3),
 # Our own melodies. A Dorian leans on F sharp, its bright sixth; D Mixolydian on C, its lowered seventh.
 DORIAN = pinned("A3 C4 E4 D4 C4:0.5 B3:0.5 A3 F#3 G3 A3 B3 C4 D4 E4 F#4 E4 D4 C4 B3:0.5 A3:0.5 G3 F#3 A3:4", IN_POS_2)
 MIXO = pinned("D3 F#3 A3 C4 B3:0.5 A3:0.5 G3 A3:2 D4 C4 A3 F#3 G3:0.5 F#3:0.5 E3 D3:2", IN_POS_2)
+# Market Day (song spotlight): its hook and chorus use only G major's notes, so they sit in this position whole.
+MARKET_HOOK = pinned(MARKET_A, IN_POS_2)
+MARKET_LOOP = [(G_MAJ, 1), (Bm, 1), (C, 1), (D, 1)] * 2 + [(G_MAJ, 1)]
 
 UNIT_20 = unit("gtr-20", "The major scale in position", "G major in two octaves at fret 2, scale degrees and chords, and "
                "the Dorian and Mixolydian modes.", [
@@ -430,6 +491,24 @@ UNIT_20 = unit("gtr-20", "The major scale in position", "G major in two octaves 
                 "Mixolydian, from E plain minor. Same frets, different moods."),
         along(G, f"{MIXO} {MIXO}", bpm=72, title="D Mixolydian, twice", **POS_2),
     ], minutes=5, xp=25),
+    # Market Day (G, 104 bpm): highlife-flavored pop on G, B minor, C and D (degrees 1, 3, 4 and 5); the hook and chorus
+    # played in second position.
+    spotlight("gtr-20", "Market Day", [
+        introduce("A hook in second position", "Market Day is a Timbre Original: sunny pop in G with a highlife bounce, the "
+                  "bright guitar music of West Africa. Its hook uses only G major's notes, so it sits inside your "
+                  "second-position scale.", fretboard(G, HIGH_DOTS, frets=4, start=2)),
+        quiz("Market Day's chords are G, B minor, C and D. Which scale degrees are they on?", ["1, 3, 4 and 5",
+                                                                                              "1, 2, 4 and 5",
+                                                                                              "1, 4, 5 and 6"], 0,
+             "G is 1, B is 3, C is 4 and D is 5. The chord on 3 is minor in every major key: B minor."),
+        notes(G, [("D4", 2), ("B3", 3), ("D4", 2), ("E4", 2), ("D4", 2), ("B3", 3)], hint="D at fret 3 on string 2, B at "
+              "fret 4 on string 3, D again, E at fret 5 with finger 4, then D and B.", **POS_2),
+        along(G, MARKET_HOOK, bpm=63, title=HOOK, **POS_2),
+        tap(HIGHLIFE, bpm=72, bars=2),
+        progression(MARKET_LOOP, HIGHLIFE, bpm=72),
+        in_place(MARKET_SONG, "Chorus", IN_POS_2, bpm=72, title=THE_CHORUS, **POS_2),
+        progression(MARKET_LOOP, HIGHLIFE, bpm=84),
+    ], minutes=6),
     lesson("gtr-20-6", "Scale challenge", [
         explain("One position, three moods", "No new ideas: G major in two octaves, the scale in thirds, A Dorian and "
                 "D Mixolydian. Keep one finger per fret."),
@@ -465,6 +544,11 @@ SWEET_SWUNG = "C#4@2:L E4@2:S C#4@2:L B3@3:S A3@3:1 F#3@4:1 A3@3:4"
 SPACE = "A3@3:0.5 B3@3:0.5 C#4@2 r:2 C#4@2:0.5 E4@2:0.5 F#4@1 r:2 E4@2 C#4@2 B3@3 A3@3 A3@3:4"
 ANSWER = "C#4@2 B3@3:0.5 A3@3:0.5 F#3@4:2"
 VARIED = f"{ANSWER} {ANSWER} C#4@2 E4@2 F#4@1 E4@2 C#4@2:0.5 B3@3:0.5 A3@3:3"
+# Slow Motion Strobe (song spotlight): a break of our own in this box over its loop, F sharp minor | D | A | E. A chord
+# note starts every bar and every beat three; A hammers to B over D, a trill over A, E hammered to F sharp over E.
+STROBE_BREAK_1 = "C#4@2:0.5 E4@2:0.5 F#4@1:1.5 E4@2:0.5 C#4@2:1 A3@3:0.5 B3@3:0.5 A3@3:1 F#3@4:2"
+STROBE_BREAK_2 = "A3@3:0.25 B3@3:0.25 A3@3:0.25 B3@3:0.25 A3@3:1 C#4@2:2 E3@4:1 F#3@4:0.5 E3@4:0.5 B3@3:2"
+STROBE_BREAK = f"{STROBE_BREAK_1} {STROBE_BREAK_2}"
 
 UNIT_21 = unit("gtr-21", "Major pentatonic and expressive lead", "The major pentatonic, country hammer-ons and slides, "
                "trills, phrasing, and sweet and sour over the blues.", [
@@ -534,6 +618,21 @@ UNIT_21 = unit("gtr-21", "Major pentatonic and expressive lead", "The major pent
                 "narrow: the pitch should waver, never wander off."),
         along(G, VARIED, bpm=69, title="Repeat and vary, with vibrato", **MAJ),
     ], minutes=5, xp=25),
+    # Slow Motion Strobe (A, 118 bpm): synth-pop on F sharp minor, D, A and E; the box at fret 2 is both A major and
+    # F sharp minor pentatonic, so one box covers the loop.
+    spotlight("gtr-21", "Slow Motion Strobe", [
+        introduce("One box, the whole loop", "Slow Motion Strobe is a Timbre Original: synth-pop in A on F sharp minor, D, "
+                  "A and E. Your box at fret 2 fits the whole loop: A major pentatonic, which is F sharp minor pentatonic "
+                  "too.", fretboard(G, MAJ_DOTS, frets=4, start=2)),
+        listen("Listen to the first chord. Major or minor?", [tones(Fsm)], MAJOR_MINOR, 1),
+        along(G, STROBE_BREAK_1, bpm=60, title="Over F sharp minor and D", **MAJ),
+        along(G, STROBE_BREAK_2, bpm=60, title="Over A and E", **MAJ),
+        quiz("Which box notes belong to the E chord?", ["E and B", "C sharp and F sharp", "A and C sharp"], 0,
+             "E is E, G sharp and B. The box holds E and B but no G sharp, so lean on those two over E."),
+        along(G, STROBE_BREAK, bpm=63, title="Your break over the loop", **MAJ),
+        STROBE.along("Chorus", bpm=84, title=THE_CHORUS),
+        along(G, STROBE_BREAK, bpm=76, title="Your break over the loop", **MAJ),
+    ], minutes=6),
     lesson("gtr-21-6", "Expressive lead challenge", [
         explain("Sweet, sour and singing", "No new ideas: the major pentatonic, hammer-ons, slides, trills and both boxes over "
                 "the blues. Leave space, and finish on A."),
@@ -560,6 +659,12 @@ INTRO_LINE = f"{DBR_STUDY} {LAST_LINE} G3:4"
 TAG = f"{LAST_LINE} G3:4 {LAST_LINE} G3:4"
 FILLED = f"{LAST_LINE} G3 G2@6 D3@4 B2@5"              # the held G filled with the chord's bass notes
 TUNE_AND_FILLS = "D4 B3 A3 G3 A3:2 D3@4 F#3@4 B3 A3 G3 E3 G3:2 D3@4 B2@5"
+# Jukebox Moon (song spotlight): AABA doo-wop on C, A minor, F and G7. Its last line (the outro) becomes an intro, and
+# the verse's first line gets fills: each held note gives its second beat to a chord note below (G, E, A).
+JUKEBOX_LOOP = [(C, 1), (Am, 1), (F_MINI, 1), (G7, 1)] * 2 + [(C, 1)]
+JUKEBOX_LAST = JUKEBOX_SONG.parts[-1].melody
+JUKEBOX_FILLED = ("G3:L C4:S E4:1 G3:1 D4:L C4:S C4:1 E3:1 A3:L C4:S E4:1 F4:L E4:S F4:1 C4:1 A3:1"
+                  " D4:L E4:S F4:1 D4:1 B3:1")
 
 # Down by the Riverside, the learner's arrangement: a Travis-picked intro, the verse and chorus (words and tune as the
 # Standards course has them), a G major pentatonic solo of our own over the verse's chords, the second verse and chorus,
@@ -578,8 +683,6 @@ DBR_ARR = song(G, 84, [
     Part("Outro", "outro", f"G3:0.5 A3:0.5 B3:0.5 B3:0.5 {LAST_LINE} G3:4", pickup=2, chords="D7 G",
          lyrics="I ain't gon-na stud-y war no more. _"),
 ], shapes=SHAPES, words="Traditional spiritual (printed 1918)")
-THE_VERSE = "The verse"
-THE_CHORUS = "The chorus"
 
 UNIT_22 = unit("gtr-22", "Song form and arranging", "Verse, chorus and AABA, intros and tags, texture and fills, and "
                "your own arrangement of Down by the Riverside.", [
@@ -639,6 +742,21 @@ UNIT_22 = unit("gtr-22", "Song form and arranging", "Verse, chorus and AABA, int
         quiz("Which parts of this arrangement have no words?", ["The verses", "The choruses", "The intro and the solo"], 2),
         DBR_ARR.take("Down by the Riverside"),
     ], minutes=DBR_ARR.minutes(), xp=35, kind="song", arrangement=DBR_ARR.meta()),
+    # Jukebox Moon (C, 72 bpm, swung): a fifties slow dance in AABA form; strum, the A tune, fills, an intro from the
+    # last line, the B.
+    spotlight("gtr-22", "Jukebox Moon", [
+        introduce("AABA, fifties style", "Jukebox Moon is a Timbre Original: a fifties slow dance in AABA form, a verse, "
+                  "the verse again, a bridge on F, then the verse once more. Strum every beat, with a quick swung up into "
+                  "each new bar.", rhythm(DOOWOP)),
+        quiz("In Jukebox Moon, which section is the B?", ["The bridge", "The first verse", "The last verse"], 0,
+             "The verses share one tune: A, A. The bridge brings new chords and a new tune, B, then the verse returns."),
+        progression(JUKEBOX_LOOP, DOOWOP, bpm=66),
+        JUKEBOX_SONG.along("Verse 1", bpm=66, title=THE_VERSE),
+        swung(JUKEBOX_FILLED, bpm=66, title="The first line, with fills"),
+        along(G, JUKEBOX_LAST, bpm=66, title="An intro from the last line"),
+        JUKEBOX_SONG.along("Bridge", bpm=66, title="The bridge"),
+        progression(JUKEBOX_LOOP, DOOWOP, bpm=72),
+    ], minutes=6),
     lesson("gtr-22-6", "Arranger's showcase", [
         explain("Your arrangement, start to finish", "No new ideas: form, intros, tags, texture, fills and your Down by the "
                 "Riverside. Play it straight through, like a set."),

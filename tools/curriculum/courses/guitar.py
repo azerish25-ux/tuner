@@ -907,7 +907,7 @@ UNIT_8 = unit("gtr-8", "Seventh and sus chords", "E7, A7, G7 and B7, sus chords,
         quiz("Bar two slides from G to G sharp. Which one belongs to E7?", ["G", "G sharp"], 1,
              "E7 is E, G sharp, B and D. G is the blue note: it rubs against the chord, then slides into it."),
         along(G, RUST_HOOK, bpm=60, title="First four bars"),
-        notes(G, ["F#4", "F#4", "E4", "D#4", "B3"], hint="Bar nine, over B7: F sharp at fret 2 on string 1, open E, "
+        notes(G, ["F#4", "E4", "D#4", "B3"], hint="Bar nine, over B7: F sharp at fret 2 on string 1, open E, "
               "D sharp at fret 4 on string 2 with your little finger, then B."),
         RUST_SONG.along("Verse 1", bpm=66, title=THE_VERSE),
         progression(TWELVE_BAR, SHUFFLE, bpm=80),

@@ -10,8 +10,9 @@ struct StageCard: Sendable {
     /// The headstock: the box around every peg and nut point, when the picture has one compact enough to frame
     /// close (harps, zithers, kalimbas and winds have none, and their pictures stay whole).
     let head: CGRect?
-    /// Each string's turn sign from its 3D rig (+1: clockwise tightens); empty for photographs,
-    /// which then show no turn arrow rather than a guessed one.
+    /// Each string's turn sign (+1: clockwise tightens): from its 3D rig, or for a photograph from photo-turns.json
+    /// (the side of the head each key sits on in the picture). A string without one shows no turn arrow rather than
+    /// a guessed one.
     var turns: [String: Int] = [:]
     /// Strings tuned by a slide (wind joints) rather than a peg.
     var slides: Set<String> = []

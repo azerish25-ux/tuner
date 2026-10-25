@@ -52,6 +52,9 @@ struct TuneView: View {
                     // loaded model and showing the studio stand-in (or nothing) while it loads again.
                     arrangement.layout {
                         stage(controls: arrangement != .columns)
+                            // The iPad's landscape columns: the instrument keeps a gutter off the screen's leading edge, so
+                            // the whole-headstock close-up never presses its buttons against it.
+                            .padding(.leading, arrangement == .columns ? TuneArrangement.stageLead : 0)
                             .frame(width: arrangement == .columns ? TuneArrangement.stageWidth(in: proxy.size.width, pane: pane) : nil)
                             .frame(maxWidth: arrangement == .beside ? CGFloat.infinity : nil, maxHeight: .infinity)
                         panel(arrangement, width: proxy.size.width, scale: scale)
@@ -230,13 +233,14 @@ struct TuneView: View {
         let input: () -> StageInput = { self.stageInput(controls: controls) }
         ZStack(alignment: .top) {
             if store.referenceMode {
-                // The note name lives in the readout below; the strobe dial stays clear of the side controls. A tap on
-                // its note wheel holds that note (Manual).
+                // The note name lives in the readout below; the strobe dial stays clear of the side controls (their whole
+                // reserve, the orb's breathing halo included, either side so the dial stays centred over the readout).
+                // A tap on its note wheel holds that note (Manual).
                 let settings = store.settings
                 ChromaticStage(input: input, midi: store.activeMidi + settings.transposition - settings.capo,
                                notation: settings.notation, resting: resting,
                                onPick: { store.chooseReferenceNote($0 - settings.transposition + settings.capo) })
-                    .padding(.top, 8).padding(.bottom, 4).padding(.horizontal, controls ? 64 : 20)
+                    .padding(.top, 8).padding(.bottom, 4).padding(.horizontal, controls ? Self.controlsReserve : 20)
             } else if let modelID = store.modelID {
                 let rig = ModelLibrary.rig(modelID)
                 if Self.supports3D && store.settings.stageMode != "studio" && failed3D != modelID {
@@ -319,10 +323,11 @@ struct TuneView: View {
     }
 
     /// The iPad's landscape columns: the side controls as a rail of their own on the trailing edge, where a phone
-    /// has them, beside the readout rather than floating over the middle of the stage.
+    /// has them, beside the readout rather than floating over the middle of the stage. A clear gutter on each side
+    /// (wider than the listening orb's breathing halo) keeps them off the side pane's cards.
     private var controlRail: some View {
         sideControls
-            .padding(.leading, 6).padding(.trailing, 18)
+            .padding(.horizontal, TuneArrangement.railGap)
             .frame(maxHeight: .infinity)
     }
 
@@ -411,13 +416,14 @@ struct TuneView: View {
 
     /// The status under the meter reads the readout's own whole cents against the tracker's lock band:
     /// "Hold it…" inside the band, "Tighten"/"Loosen" outside it, "In tune" once the tracker locks
-    /// (then the readout's badge says it, and `statusText` leaves the line blank, holding its height).
+    /// (then the readout's badge says it, and `statusText` leaves the line blank, holding its height). The cents
+    /// are the readout's, just above ("−10¢ · 81.92 Hz"), so the line names only the turn.
     private func statusLine(_ reading: TuningReading, shown: Int?) -> String {
         guard audio.running, !store.live.preserved, reading.cents != nil, let shown else { return store.statusText }
         if reading.inTune { return String(localized: "In tune") }
         let amount = abs(shown)
         if Double(amount) <= Palette.tuningBand { return String(localized: "Hold it…") }
-        return shown < 0 ? String(localized: "Tighten · \(amount)¢ flat") : String(localized: "Loosen · \(amount)¢ sharp")
+        return shown < 0 ? String(localized: "Tighten") : String(localized: "Loosen")
     }
 
     private func statusColor(_ reading: TuningReading, shown: Int?) -> Color {
@@ -622,8 +628,15 @@ enum TuneArrangement: Equatable {
     /// Landscape windows narrower than this keep the two columns (the readout would be squeezed).
     static let paneMinWidth: CGFloat = 1150
 
-    /// The landscape control rail: the 52 pt orb and its margins (`TuneView.controlRail`).
-    static let railWidth: CGFloat = 76
+    /// The gap either side of the landscape control rail (`TuneView.controlRail`): the orb's halo grows 9 pt past its
+    /// disc while it listens, and the rail stays a clear column of its own beside the side pane.
+    static let railGap: CGFloat = 18
+
+    /// The landscape control rail: the 52 pt orb and its gaps (`TuneView.controlRail`).
+    static let railWidth: CGFloat = 52 + 2 * railGap
+
+    /// The instrument's gutter off the screen's leading edge in the landscape columns (inside `stageWidth`).
+    static let stageLead: CGFloat = Metrics.gutter
 
     /// How large the readout draws for the window. A phone, a compact or short wide window and the accessibility text
     /// sizes keep the phone's readout (Dynamic Type grows its note there). An iPad-sized window grows the note with

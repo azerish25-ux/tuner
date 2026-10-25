@@ -2,7 +2,7 @@
 """Find the localizable string literals in Timbre's Swift sources, without Xcode.
 
 Xcode's own export (`xcodebuild -exportLocalizations`, the l10n.yml workflow) is the authority: it knows each
-literal's type. This scanner is the quick, dependency-free approximation that `report.py` runs on every push. It
+literal's type. This scanner is the quick, dependency-free approximation that `report.py` runs in CI. It
 reads a literal as a localization key when it sits where Swift makes it a LocalizedStringKey,
 LocalizedStringResource or String.LocalizationValue:
 
@@ -93,9 +93,6 @@ class Lexer:
     def __init__(self, text: str):
         self.s = text
         self.comments: dict[int, str] = {}
-
-    def line_at(self, i: int) -> int:
-        return self.s.count("\n", 0, i) + 1
 
     def tokens(self) -> list:
         toks, _, _ = self.lex(0, False, 1)
@@ -229,8 +226,6 @@ def dedent_multiline(parts: list) -> list:
         if indent:
             lines = text.split("\n")
             text = "\n".join(line[len(indent):] if line.startswith(indent) else line for line in lines)
-            if index == 0 and not text.startswith(indent) and part.startswith("\n" + indent):
-                pass
         out.append(text)
     joined = []
     for part in out:
@@ -337,6 +332,7 @@ class Decls:
     func_types: dict = field(default_factory=dict)   # function name -> {return type: count}
     type_funcs: dict = field(default_factory=dict)   # type name -> {function: return type}
     types: set = field(default_factory=set)          # every type declared
+    enum_cases: dict = field(default_factory=dict)   # enum case name -> [associated value types]
     file_decls: dict = field(default_factory=dict)   # file -> [(line, name, type)]
     loc_vars: dict = field(default_factory=dict)     # file -> {names declared with a localized type}
     sinks: set = field(default_factory=set)          # (type, property) read through LocalizedStringKey(x.property)
@@ -458,9 +454,37 @@ def collect_decls(path: str, tokens: list, decls: Decls) -> None:
                         loc_vars.add(name)
                         if type_stack and type_stack[-1][1] == depth and is_localized_type(typ):
                             decls.members.setdefault(type_stack[-1][0], set()).add(name)
-        elif t.kind == "id" and t.value == "case" and type_stack and type_stack[-1][1] == depth:
-            pass
+        elif t.kind == "id" and t.value == "case" and not t.member:
+            collect_case(tokens, i, path, decls, bool(type_stack) and type_stack[-1][1] == depth)
         i += 1
+
+
+def collect_case(tokens: list, i: int, path: str, decls: Decls, in_type_body: bool) -> None:
+    """`case drift(name: String, cents: Int)` in an enum records the associated types; `case let .drift(name, cents)`
+    in a switch types its bindings from them."""
+    n = len(tokens)
+    j = sig(tokens, i + 1)
+    if in_type_body and j + 1 < n and tokens[j].kind == "id" and tokens[j + 1].kind == "op" and tokens[j + 1].value == "(":
+        close = match_close(tokens, j + 1)
+        types = []
+        for p in split_params(tokens[j + 2:close]):
+            colon = next((k for k, x in enumerate(p) if x.kind == "op" and x.value == ":"), None)
+            types.append(type_text(p[colon + 1:] if colon is not None else p).split("=")[0])
+        decls.enum_cases[tokens[j].value] = types
+        return
+    outer_let = j < n and tokens[j].kind == "id" and tokens[j].value in ("let", "var")
+    if outer_let:
+        j = sig(tokens, j + 1)
+    if not (j + 2 < n and tokens[j].kind == "op" and tokens[j].value == "." and tokens[j + 1].kind == "id"
+            and tokens[j + 2].kind == "op" and tokens[j + 2].value == "("):
+        return
+    name = tokens[j + 1].value
+    close = match_close(tokens, j + 2)
+    for index, p in enumerate(split_params(tokens[j + 3:close])):
+        ids = [x for x in p if x.kind == "id" and x.value not in ("let", "var")]
+        if (outer_let or any(x.kind == "id" and x.value in ("let", "var") for x in p)) and len(ids) == 1 \
+                and ids[0].value != "_":
+            decls.file_decls.setdefault(path, []).append((tokens[j].line, ids[-1].value, ("case", name, index)))
 
 
 def initializer(tokens: list, i: int, condition: bool) -> list:
@@ -541,6 +565,9 @@ def local_type(path: str, line: int, name: str, decls: Decls, floor: int = 0, ow
     for decl_line, decl_name, typ in decls.file_decls.get(path, []):
         if decl_name == name and floor <= decl_line <= line and (best is None or decl_line >= best[0]):
             best = (decl_line, typ)
+    if best and isinstance(best[1], tuple) and best[1][0] == "case":
+        types = decls.enum_cases.get(best[1][1], [])
+        return types[best[1][2]] if best[1][2] < len(types) else None
     if best and isinstance(best[1], tuple):
         if depth > 4:
             return None
@@ -622,7 +649,8 @@ def expr_type(toks: list, path: str, decls: Decls, line: int, owner: tuple, dept
         return expr_type(toks[2:], path, decls, line, owner, depth + 1)
     # Follow the leading member chain a.b.c(…).d, typing each step from the declarations seen.
     typ, last, started, k = None, None, False, 0
-    own, own_line = owner
+    own, own_line = owner[0], owner[1]
+    dollar0 = owner[2] if len(owner) > 2 else None
     while k < len(toks):
         t = toks[k]
         if t.kind == "op" and t.value in (".", "?", "!"):
@@ -635,6 +663,8 @@ def expr_type(toks: list, path: str, decls: Decls, line: int, owner: tuple, dept
         if not started:
             if name in ("self", "Self"):
                 typ = own
+            elif name == "$0":
+                typ = dollar0
             elif is_call:
                 typ = decls.type_funcs.get(own, {}).get(name) or majority(decls.func_types.get(name))
             elif name in decls.types and k + 1 < len(toks) and toks[k + 1].value == ".":
@@ -684,9 +714,6 @@ def expr_type(toks: list, path: str, decls: Decls, line: int, owner: tuple, dept
     return None, True
 
 
-SHORTCUT_TOKENS = re.compile(r"^\\?\.\$?(\w+)$|^\.(\w+)$")
-
-
 def make_key(parts: list, path: str, decls: Decls, shortcut: bool = False, line: int = 0, owner: tuple = (None, 0)):
     if shortcut:
         out = []
@@ -725,6 +752,7 @@ class Group:
     state: str | None = None   # statement state: "loc", "nonloc" or None
     commas: int = 0
     owner: tuple | None = None  # (type name, line) when this brace is a type's body
+    dollar0: str | None = None  # the type of $0 when this brace is a closure such as `rank.map { … }`
 
 
 def callee_slots(group: Group, decls: Decls, path: str):
@@ -804,6 +832,8 @@ def walk(tokens: list, path: str, rel: str, decls: Decls, found: list, stack: li
             if t.value == "{" and pending_type is not None:
                 new.owner = (pending_type, t.line)
                 pending_type = None
+            if t.value == "{":
+                new.dollar0 = closure_element(tokens, i, path, decls, stack)
             if t.value == "{":
                 if pending_body is not None:
                     new.localized_body, new.tuple_pos = pending_body
@@ -916,10 +946,49 @@ def walk(tokens: list, path: str, rel: str, decls: Decls, found: list, stack: li
 
 
 def enclosing(stack: list) -> tuple:
+    """(enclosing type, the line its body opens on, the type of $0 in the innermost typed closure)."""
+    dollar0 = next((grp.dollar0 for grp in reversed(stack) if grp.dollar0), None)
     for grp in reversed(stack):
         if grp.owner:
-            return grp.owner
-    return (None, 0)
+            return grp.owner + (dollar0,)
+    return (None, 0, dollar0)
+
+
+ELEMENT_CALLS = {"map", "flatMap", "compactMap", "filter", "first", "contains", "forEach", "allSatisfy", "sorted",
+                 "min", "max"}
+
+
+def closure_element(tokens: list, i: int, path: str, decls: Decls, stack: list):
+    """The type of $0 in a closure opening at i after `receiver.map` (an Optional's or an array's element)."""
+    p = prev_sig(tokens, i)
+    if p < 1 or tokens[p].kind != "id" or tokens[p].value not in ELEMENT_CALLS or not tokens[p].member:
+        return None
+    k = p - 1  # the "."
+    start = k
+    level = 0
+    while start - 1 >= 0:
+        x = tokens[start - 1]
+        if x.kind == "op" and x.value in ")]":
+            level += 1
+        elif x.kind == "op" and x.value in "([":
+            if level == 0:
+                break
+            level -= 1
+        elif level == 0 and not (x.kind == "id" or (x.kind == "op" and x.value in ".?!")):
+            break
+        elif x.kind == "nl":
+            break
+        start -= 1
+    receiver = tokens[start:k]
+    if not receiver:
+        return None
+    typ, _ = expr_type(receiver, path, decls, tokens[i].line, enclosing(stack))
+    if not typ:
+        return None
+    base = typ.strip()
+    if base.endswith("?"):
+        return base[:-1]
+    return element_type(base)
 
 
 def statement_head(tokens: list, i: int) -> str | None:

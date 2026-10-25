@@ -100,7 +100,8 @@ struct StrumTuneView: View {
                 .accessibilityIdentifier("strum.close")
             Spacer(minLength: 8)
             VStack(spacing: 2) {
-                Text("Strum to tune").font(Typeface.display(18, relativeTo: .headline)).foregroundStyle(Palette.ink)
+                Text(store.strumPlucks ? "Pluck to tune" : "Strum to tune")
+                    .font(Typeface.display(18, relativeTo: .headline)).foregroundStyle(Palette.ink)
                 Text("\(store.instrumentDisplayName) · \(store.tuning.name.localized)")
                     .font(.footnote).foregroundStyle(contrast == .increased ? Palette.ink : Palette.inkSoft)
             }
@@ -158,20 +159,23 @@ struct StrumTuneView: View {
         guard listening else {
             return audio.permissionDenied ? String(localized: "Microphone is off") : String(localized: "Tap to listen")
         }
+        let plucks = store.strumPlucks
         if let zoomed { return done ? String(localized: "All in tune") : String(localized: "Fine-tune \(zoomed.note)") }
-        if model.thin { return String(localized: "Strum them all together") }
+        if model.thin { return plucks ? String(localized: "Pluck them all together") : String(localized: "Strum them all together") }
         switch board.verdict {
-        case .waiting: return model.pending ? String(localized: "Listening…") : String(localized: "Strum all open strings")
+        case .waiting:
+            if model.pending { return String(localized: "Listening…") }
+            return plucks ? String(localized: "Pluck all open strings") : String(localized: "Strum all open strings")
         case .allInTune: return String(localized: "All in tune")
         case .tune(let meter): return StrumWords.tuneFirst(meter)
-        case .missing: return String(localized: "Strum again")
+        case .missing: return plucks ? String(localized: "Pluck again") : String(localized: "Strum again")
         }
     }
 
     private func detail(_ board: StrumBoard, zoomed: StrumBoard.Meter?, done: Bool) -> String {
         guard listening else {
-            return audio.permissionDenied ? String(localized: "Microphone access is off. Turn it on in Settings to tune.")
-                                          : String(localized: "Every string reads from one strum")
+            if audio.permissionDenied { return String(localized: "Microphone access is off. Turn it on in Settings to tune.") }
+            return store.strumPlucks ? String(localized: "Every string reads at once") : String(localized: "Every string reads from one strum")
         }
         if zoomed != nil {
             return done ? String(localized: "Every string within ±\(Int(Palette.tuningBand))¢")
@@ -329,7 +333,7 @@ struct StrumTuneView: View {
                     .buttonStyle(SecondaryButtonStyle())
                     .accessibilityIdentifier("strum.done")
             case .missing:
-                Text("Turn a peg, then strum again")
+                Text(store.strumPlucks ? "Turn a peg, then pluck again" : "Turn a peg, then strum again")
                     .font(.footnote)
                     .foregroundStyle(contrast == .increased ? Palette.ink : Palette.inkSoft)
                     .multilineTextAlignment(.center)
@@ -354,7 +358,7 @@ struct StrumTuneView: View {
                 .accessibilityLabel(Text(audio.tonePlaying ? "Stop reference tone" : "Play reference tone"))
                 .accessibilityIdentifier("strum.tone")
                 Button { zoomOut() } label: {
-                    Label("Strum again", systemImage: "arrow.uturn.backward")
+                    Label(store.strumPlucks ? "Pluck again" : "Strum again", systemImage: "arrow.uturn.backward")
                 }
                 .buttonStyle(SecondaryButtonStyle())
                 .accessibilityHint(Text("Shows every string again"))
@@ -377,7 +381,7 @@ struct StrumTuneView: View {
         let board = StrumBoard.make(store: store, reading: model.reading, band: Palette.tuningBand)
         celebration?.cancel(); celebration = nil; pendingMean = nil
         zoomTask?.cancel(); zoomTask = nil
-        UIAccessibility.post(notification: .announcement, argument: StrumWords.spoken(board))
+        UIAccessibility.post(notification: .announcement, argument: StrumWords.spoken(board, plucks: store.strumPlucks))
         guard board.verdict == .allInTune else {
             Haptics.shared.selection()
             if autoZoom, let last = board.lastString { scheduleZoom(last.id) }
@@ -518,31 +522,70 @@ struct StrumTuneView: View {
 
 /// The tuner's way into Strum to tune, at the top of the stage's controls: a round control with strings and a
 /// strum across them, "Strum" beneath. Only for instruments a strum can read (`AppStore.canStrumTune`): stringed,
-/// 3 to 12 strings, one the player may tune, never in Chromatic.
+/// 3 to 12 strings, one the player may tune, never in Chromatic. Bowed strings are plucked, not strummed: there it
+/// reads "Pluck all", with a fingertip on each string (`AppStore.strumPlucks`).
 struct StrumToggle: View {
     let action: () -> Void
     @EnvironmentObject private var store: AppStore
 
     var body: some View {
         if store.canStrumTune {
+            let plucks = store.strumPlucks
             Button {
                 Haptics.shared.selection()
                 action()
             } label: {
                 VStack(spacing: 3) {
-                    StrumGlyph()
+                    glyph(plucks: plucks)
                         .frame(width: 22, height: 22)
                         .frame(width: 44, height: 44)
                         .stageControlDisc()
-                    StageCaption(text: Text("Strum"))
+                    StageCaption(text: Text(plucks ? "Pluck all" : "Strum"))
                 }
                 .contentShape(Rectangle())
             }
             .buttonStyle(PressScaleStyle())
-            .accessibilityLabel(Text("Strum to tune"))
-            .accessibilityHint(Text("Strum every open string once to read them all"))
+            .accessibilityLabel(Text(plucks ? "Pluck to tune" : "Strum to tune"))
+            .accessibilityHint(Text(plucks ? "Pluck every open string once to read them all" : "Strum every open string once to read them all"))
             .accessibilityIdentifier("tune.strum")
         }
+    }
+
+    @ViewBuilder private func glyph(plucks: Bool) -> some View {
+        if plucks { PluckGlyph() } else { StrumGlyph() }
+    }
+}
+
+extension AppStore {
+    /// Bowed strings (violin, viola, cello, double bass) are plucked to read them all at once, never strummed: the
+    /// toggle and the sheet say "Pluck".
+    var strumPlucks: Bool { instrument.familyId == "bowed_strings" }
+}
+
+/// Four strings, each touched by a fingertip in turn (pizzicato), rising across them.
+private struct PluckGlyph: View {
+    var body: some View {
+        Canvas { context, size in
+            let w = size.width, h = size.height
+            var trail = Path()
+            for i in 0..<4 {
+                let x = w * (0.17 + 0.22 * CGFloat(i))
+                var string = Path()
+                string.move(to: CGPoint(x: x, y: h * 0.06))
+                string.addLine(to: CGPoint(x: x, y: h * 0.94))
+                context.stroke(string, with: .color(Palette.ink.opacity(0.9)), lineWidth: 1.7 - 0.25 * CGFloat(i))
+                let tip = CGPoint(x: x, y: h * (0.72 - 0.13 * CGFloat(i)))
+                if i == 0 { trail.move(to: tip) } else { trail.addLine(to: tip) }
+            }
+            context.stroke(trail, with: .color(Palette.mint.opacity(0.45)), style: StrokeStyle(lineWidth: 1.2, lineCap: .round, dash: [1.5, 2.5]))
+            for i in 0..<4 {
+                let x = w * (0.17 + 0.22 * CGFloat(i))
+                let y = h * (0.72 - 0.13 * CGFloat(i))
+                let r = w * 0.085
+                context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: 2 * r, height: 2 * r)), with: .color(Palette.mint))
+            }
+        }
+        .accessibilityHidden(true)
     }
 }
 

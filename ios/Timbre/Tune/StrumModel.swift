@@ -360,11 +360,11 @@ enum StrumWords {
         NoteReadout.signed(meter.shown)
     }
 
-    /// One announcement for the whole strum.
-    static func spoken(_ board: StrumBoard) -> String {
+    /// One announcement for the whole strum. `plucks`: bowed strings, plucked rather than strummed.
+    static func spoken(_ board: StrumBoard, plucks: Bool = false) -> String {
         switch board.verdict {
         case .waiting:
-            return String(localized: "Strum all open strings")
+            return plucks ? String(localized: "Pluck all open strings") : String(localized: "Strum all open strings")
         case .allInTune:
             return String(localized: "All strings in tune")
         case .tune(let meter):
@@ -373,7 +373,7 @@ enum StrumWords {
                                       : String(localized: "Tune \(meter.note) down \(amount) cents first")
             return String(localized: "\(board.inTune) of \(board.meters.count) in tune") + ". " + action
         case .missing(let count):
-            return String(localized: "\(count) not heard. Strum again.")
+            return plucks ? String(localized: "\(count) not heard. Pluck again.") : String(localized: "\(count) not heard. Strum again.")
         }
     }
 

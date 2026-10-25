@@ -25,6 +25,15 @@ jobs:
           swift test --package-path ios --parallel 2>&1 | tee ci-out/core.log
       - name: Verify catalogue and bundled resources
         run: python3 tools/verify-ios-resources.py 2>&1 | tee ci-out/resources.log
+      - name: Translation handoff (warnings only)
+        # Every string a shipped locale lacks (docs/l10n/HANDOFF.md, tools/l10n/todo): a warning annotation with the
+        # per-locale counts, another when the committed handoff is out of date, fresh TODO files in the core results.
+        # Never fails the build.
+        if: always()
+        continue-on-error: true
+        run: |
+          mkdir -p ci-out
+          python3 tools/l10n/report.py --check --out ci-out/l10n 2>&1 | tee ci-out/l10n.log || true
       - name: Publish core results
         if: always()
         env:
