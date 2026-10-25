@@ -2,16 +2,21 @@ import Foundation
 
 // MARK: - A take, as the coach reads it
 
-/// One moment of a take: what the player was asked to play, where it sits (beats from the start), and how far
-/// off it landed.
+/// One moment of a take: what the player was asked to play, where it sits (beats from the start), how far off it
+/// landed, and for a strummed chord whether it rang that chord.
 public struct CoachHit: Equatable, Sendable {
     public let item: PracticeItem
     public let beat: Double
     /// Seconds late (positive) or early (negative); nil when it was never heard.
     public let offset: Double?
-    public init(item: PracticeItem, beat: Double, offset: Double?) {
-        self.item = item; self.beat = beat; self.offset = offset
+    /// A stroke on time that rang another chord (or none): the change didn't land, however good its timing.
+    public let wrongChord: Bool
+    public init(item: PracticeItem, beat: Double, offset: Double?, wrongChord: Bool = false) {
+        self.item = item; self.beat = beat; self.offset = offset; self.wrongChord = wrongChord
     }
+
+    /// The timing that counts for the change: none when the chord was wrong.
+    var landed: Double? { wrongChord ? nil : offset }
 }
 
 /// The timing of one finished take of a play-along (notes) or a strummed step (chords), in time order.
@@ -48,9 +53,12 @@ public struct CoachTake: Equatable, Sendable {
     ///   - offsets: per stroke, how far off a judged stroke was. Strokes count bar by bar, in the pattern's own
     ///     order (as the rhythm step lays out its beats).
     ///   - strays: per missed stroke, the nearest stroke heard outside its window (a change played far too late).
+    ///   - wrongChords: the strokes that rang another chord, or none ("C → F lands late, and half the time it's
+    ///     still C"): a change on such a stroke didn't land.
     /// - Returns: nil without chords or strokes.
     public static func strummed(chords: [ChordSpec], bars: [Int], pattern: [Double], beatsPerBar: Int, bpm: Double,
-                                offsets: [Int: Double], strays: [Int: Double] = [:], date: Date = Date()) -> CoachTake? {
+                                offsets: [Int: Double], strays: [Int: Double] = [:], wrongChords: Set<Int> = [],
+                                date: Date = Date()) -> CoachTake? {
         let positions = pattern
         guard !chords.isEmpty, !positions.isEmpty, positions.allSatisfy(\.isFinite), bpm > 0 else { return nil }
         // Which chord sounds in each bar.
@@ -64,7 +72,8 @@ public struct CoachTake: Equatable, Sendable {
         for (bar, chord) in barChords.enumerated() {
             for (k, position) in positions.enumerated() {
                 let stroke = bar * positions.count + k
-                hits.append(CoachHit(item: .chord(chord), beat: Double(bar * perBar) + position, offset: offsets[stroke] ?? strays[stroke]))
+                hits.append(CoachHit(item: .chord(chord), beat: Double(bar * perBar) + position, offset: offsets[stroke] ?? strays[stroke],
+                                     wrongChord: wrongChords.contains(stroke)))
             }
         }
         return CoachTake(kind: .chords, hits: hits, bpm: bpm, beatsPerBar: perBar, date: date)
@@ -80,7 +89,10 @@ extension Coach {
         public let to: PracticeItem
         /// Mean seconds late (positive) or early of the changes that were heard; nil when none was.
         public let meanOffset: Double?
+        /// Changes that didn't land: never heard, or heard on another chord (`wrongChord` of them).
         public let missed: Int
+        /// Changes heard on time but on another chord (counted in `missed` too).
+        public let wrongChord: Int
         public let count: Int
         /// The beat of the bar (1-based) the change lands on, where it first came up.
         public let beat: Int
@@ -99,6 +111,7 @@ extension Coach {
             let to: PracticeItem
             var landed: [Double] = []
             var missed = 0
+            var wrong = 0
             let beat: Int
             let bpm: Double
             let order: Int
@@ -112,7 +125,7 @@ extension Coach {
         var order = 0
         for take in takes {
             for (i, hit) in take.hits.enumerated() {
-                let cost = hit.offset.map { abs($0) } ?? missCost
+                let cost = hit.landed.map { abs($0) } ?? missCost
                 all.append(cost)
                 guard i > 0, take.hits[i - 1].item != hit.item else { steady.append(cost); continue }
                 let from = take.hits[i - 1].item
@@ -122,7 +135,12 @@ extension Coach {
                                          order: order, melody: take.kind == .melody)
                     order += 1
                 }
-                if let offset = hit.offset { tallies[key]?.landed.append(offset) } else { tallies[key]?.missed += 1 }
+                if let offset = hit.landed {
+                    tallies[key]?.landed.append(offset)
+                } else {
+                    tallies[key]?.missed += 1
+                    if hit.wrongChord { tallies[key]?.wrong += 1 }
+                }
             }
         }
         // What staying put costs: the strokes that don't change, else every hit.
@@ -133,7 +151,7 @@ extension Coach {
         }
         guard let worst = candidates.max(by: { $0.cost != $1.cost ? $0.cost < $1.cost : $0.order > $1.order }) else { return nil }
         let mean = worst.landed.isEmpty ? nil : worst.landed.reduce(0, +) / Double(worst.landed.count)
-        return Change(from: worst.from, to: worst.to, meanOffset: mean, missed: worst.missed, count: worst.count,
+        return Change(from: worst.from, to: worst.to, meanOffset: mean, missed: worst.missed, wrongChord: worst.wrong, count: worst.count,
                       beat: worst.beat, bpm: worst.bpm, cost: worst.cost)
     }
 

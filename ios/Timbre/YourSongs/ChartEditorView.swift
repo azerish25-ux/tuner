@@ -206,7 +206,7 @@ struct ChordPickerSheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     Text(verbatim: NoteNames.glyphs(NoteNames.chordSymbol(built)))
-                        .font(Typeface.display(44)).foregroundStyle(Palette.mint)
+                        .font(Typeface.display(.display)).foregroundStyle(Palette.mint)
                         .frame(maxWidth: .infinity)
                         .contentTransition(.numericText())
                         .accessibilityLabel(Text("Chord \(NoteNames.glyphs(NoteNames.chordSymbol(built)))"))

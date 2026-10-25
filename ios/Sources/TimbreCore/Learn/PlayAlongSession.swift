@@ -217,3 +217,144 @@ public struct PlayAlongSession: Sendable {
         return due
     }
 }
+
+// MARK: - Chords & words
+
+/// A song strummed bar by bar ("Chords & words"): each bar is judged on the first stroke heard in it, for its timing
+/// against the bar's downbeat (perfect, good, or early or late), then for its chord once the stroke has rung: the
+/// chord asked for keeps the timing's grade, another chord holds it to early or late and is named, and a stroke no
+/// chord can be heard in (a tap on the body, a muted strum) misses the bar. A bar with no stroke at all misses once it
+/// is over. The run of perfect and good bars counts and scores as the melody take's notes do.
+public struct ChordAlongJudge: Sendable {
+    /// What a stroke's chord or a frame changed.
+    public typealias Update = PlayAlongSession.Update
+
+    public let bars: Int
+    public let secondsPerBar: Double
+    /// Pipeline delay from string to reading, added to every downbeat.
+    public let latency: Double
+    public private(set) var grades: [Int: PlayAlongJudge.Grade] = [:]
+    /// When each bar was judged (host clock), for its mark.
+    public private(set) var hitTimes: [Int: Double] = [:]
+    /// Seconds early (negative) or late of each bar's stroke.
+    public private(set) var offsets: [Int: Double] = [:]
+    /// The chord heard instead of the bar's ("Am"), for its call.
+    public private(set) var calls: [Int: String] = [:]
+    public private(set) var judgments: [PlayAlongJudge.Judgment] = []
+    public private(set) var combo = 0
+    public private(set) var bestCombo = 0
+    public private(set) var points = 0
+    /// When the multiplier last stepped up.
+    public private(set) var tierUp: Double?
+    /// Bars whose stroke has been timed, with its grade, waiting for its chord.
+    private var timed: [Int: PlayAlongJudge.Grade] = [:]
+    /// How early a stroke may come for the bar ahead of it.
+    public static let early = 0.15
+    /// How long after its stroke a bar waits for the chord before keeping the timing's grade.
+    public static let chordWait = 0.6
+
+    public init(bars: Int, bpm: Double, beatsPerBar: Int, latency: Double = 0.08) {
+        self.bars = max(1, bars)
+        secondsPerBar = Double(max(1, beatsPerBar)) * 60 / max(20, bpm)
+        self.latency = latency
+    }
+
+    /// Bar `index`'s downbeat on the take's clock (seconds since bar 0's).
+    public func time(of index: Int) -> Double { Double(index) * secondsPerBar + latency }
+    public var duration: Double { Double(bars) * secondsPerBar }
+    public var isFinished: Bool { grades.count >= bars }
+    public var multiplier: Int { PlayAlongSession.multiplier(combo) }
+
+    /// The bar under way at `clock` (a stroke a little early counts for the bar ahead); nil before the first and after
+    /// the last.
+    public func bar(at clock: Double) -> Int? {
+        let index = Int(((clock - latency + Self.early) / secondsPerBar).rounded(.down))
+        return index >= 0 && index < bars ? index : nil
+    }
+
+    /// A stroke heard at `clock`: times the bar it falls in, unless that bar has its stroke already. Returns the bar
+    /// it timed, whose chord is to come (`chord(bar:right:heard:at:)`).
+    @discardableResult
+    public mutating func stroke(at clock: Double) -> Int? {
+        guard let index = bar(at: clock), grades[index] == nil, timed[index] == nil else { return nil }
+        let offset = clock - time(of: index)
+        let lateness = abs(offset)
+        timed[index] = lateness <= PlayAlongJudge.perfectSeconds ? .perfect : lateness <= PlayAlongJudge.goodSeconds ? .good : .ok
+        offsets[index] = offset
+        return index
+    }
+
+    /// The chord bar `index`'s stroke rang: `right` when it was the bar's chord, else `heard` (nil: no chord could be
+    /// read from it). Judges the bar.
+    public mutating func chord(bar index: Int, right: Bool, heard: String?, at now: Double) -> Update {
+        guard let grade = timed.removeValue(forKey: index) else { return Update() }
+        if right { return judge(index, grade, at: now) }
+        guard let heard else { return judge(index, .miss, at: now) }
+        calls[index] = heard
+        return judge(index, .ok, at: now)
+    }
+
+    /// A frame at `clock`: a bar over with no stroke is missed, and a stroke whose chord never came keeps its
+    /// timing's grade.
+    public mutating func tick(at clock: Double, now: Double) -> Update {
+        var update = Update()
+        for index in 0..<bars where grades[index] == nil {
+            var next: Update?
+            if let grade = timed[index] {
+                if clock > time(of: index) + (offsets[index] ?? 0) + Self.chordWait {
+                    timed[index] = nil
+                    next = judge(index, grade, at: now)
+                }
+            } else if clock > time(of: index) + secondsPerBar - Self.early {
+                next = judge(index, .miss, at: now)
+            }
+            if let next { Self.merge(&update, next) }
+        }
+        return update
+    }
+
+    private static func merge(_ update: inout Update, _ next: Update) {
+        update.judgments += next.judgments
+        if let tier = next.tier { update.tier = tier }
+        if let run = next.brokenRun { update.brokenRun = run }
+        if next.finished { update.finished = true }
+    }
+
+    private mutating func judge(_ index: Int, _ grade: PlayAlongJudge.Grade, at now: Double) -> Update {
+        var update = Update()
+        let run = combo
+        grades[index] = grade
+        hitTimes[index] = now
+        if grade == .miss { offsets[index] = nil }
+        let judgment = PlayAlongJudge.Judgment(index: index, grade: grade, offset: offsets[index])
+        judgments.append(judgment)
+        update.judgments = [judgment]
+        switch grade {
+        case .perfect, .good:
+            combo += 1
+            bestCombo = max(bestCombo, combo)
+        case .ok, .miss:
+            combo = 0
+        }
+        if grade != .miss { points += Int((PlayAlongJudge.credit(grade) * 100).rounded()) * multiplier }
+        if grade == .perfect || grade == .good, [4, 8, 16].contains(combo) {
+            tierUp = now
+            update.tier = multiplier
+        }
+        if run >= 4, combo == 0 { update.brokenRun = run }
+        update.finished = isFinished
+        return update
+    }
+
+    /// 0…1 over every bar: perfect 1, good 0.8, early or late 0.5, missed 0.
+    public var accuracy: Double {
+        judgments.reduce(0.0) { $0 + PlayAlongJudge.credit($1.grade) } / Double(bars)
+    }
+
+    /// The take's score over `range` of its bars; nil for none.
+    public func score(bars range: Range<Int>) -> Double? {
+        let inside = range.clamped(to: 0..<bars)
+        guard !inside.isEmpty else { return nil }
+        return inside.reduce(0.0) { $0 + PlayAlongJudge.credit(grades[$1] ?? .miss) } / Double(inside.count)
+    }
+}

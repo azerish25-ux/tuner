@@ -145,7 +145,7 @@ struct ChartPracticeView: View {
             Spacer(minLength: 0)
             ZStack {
                 SparkBurst(trigger: round + 1, color: accent).frame(width: 260, height: 260)
-                IconOrb(symbol: "music.note.list", tint: accent, size: 96)
+                Glyph(.chart, size: 72, tint: Palette.mint)
             }
             VStack(spacing: 8) {
                 StepTitle(Text("Practice done")).multilineTextAlignment(.center)
@@ -162,7 +162,7 @@ struct ChartPracticeView: View {
             Spacer(minLength: 0)
             VStack(spacing: 10) {
                 Button { again() } label: { Text("Practice again") }
-                    .buttonStyle(PrimaryButtonStyle(accent: accent))
+                    .buttonStyle(PrimaryButtonStyle())
                 Button { dismiss() } label: { Text("Back to the song") }
                     .buttonStyle(SecondaryButtonStyle())
                     .accessibilityIdentifier("yoursongs.practice.done")

@@ -139,15 +139,13 @@ struct YourSongsShelf: View {
 
     private var header: some View {
         HStack(alignment: .center, spacing: 10) {
-            Image(systemName: "music.note.house.fill").font(.system(size: 15, weight: .bold)).foregroundStyle(Palette.mint)
-                .frame(width: 32, height: 32)
-                .background(RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous).fill(Palette.mint.opacity(0.14)))
-                .accessibilityHidden(true)
+            // The shelf's own glyph, a chart of chords over words: the player's charts, not another record.
+            Glyph(.chart, size: Glyph.lead)
             SectionHeader(Text("Your songs")) {
                 HStack(spacing: 8) {
                     if !store.isPro && !library.songs.isEmpty {
                         Text.fraction(library.songs.count, YourSongsPolicy.freeChartLimit)
-                            .font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                            .font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
                     }
                     Button { startAdding() } label: { addCapsule.tapTarget() }
                         .buttonStyle(PressScaleStyle())
@@ -160,7 +158,7 @@ struct YourSongsShelf: View {
     /// "Add a song" as a small mint capsule: the shelf's one way in, in its header or on the empty row.
     private var addCapsule: some View {
         Label("Add a song", systemImage: "plus")
-            .font(Typeface.label(13, relativeTo: .subheadline)).foregroundStyle(Palette.onAccent)
+            .font(Typeface.label(.footnote)).foregroundStyle(Palette.onAccent)
             .lineLimit(1)
             .padding(.horizontal, 12).frame(minHeight: 32)
             .background(Capsule().fill(Palette.mint))
@@ -228,7 +226,7 @@ struct YourSongsShelf: View {
     /// The crate's sleeves: fixed, so they look the same on every visit.
     private static let crateArt: [CoverArt] = [
         CoverArt(id: "yoursongs.crate.1", title: "", accent: "violet", genre: .swing, label: "", number: 1, motif: .stripes),
-        CoverArt(id: "yoursongs.crate.2", title: "", accent: "amber", genre: .folk, label: "", number: 2, motif: .sunset),
+        CoverArt(id: "yoursongs.crate.2", title: "", accent: "orchid", genre: .folk, label: "", number: 2, motif: .sunset),
         CoverArt(id: "yoursongs.crate.3", title: "", accent: "mint", genre: .anthem, label: "", number: 3, motif: .halftone),
     ]
 
@@ -255,7 +253,7 @@ struct YourSongsShelf: View {
                     .overlay(alignment: art.freeCorner) { badges(song).padding(8) }
                     .shadow(color: .black.opacity(0.45), radius: 12, y: 8)
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(verbatim: title).font(Typeface.label(13, relativeTo: .subheadline)).foregroundStyle(Palette.ink).lineLimit(1)
+                    Text(verbatim: title).font(Typeface.label(.footnote)).foregroundStyle(Palette.ink).lineLimit(1)
                     Text(verbatim: [chart.artist, keyName.map { String(localized: "Key \($0)", bundle: TimbreLocalization.bundle) }]
                         .compactMap { $0 }.joined(separator: " · "))
                         .font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1)
@@ -406,14 +404,14 @@ struct AddSongSheet: View {
                 .font(.footnote).foregroundStyle(Palette.ink)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .stillCard(cornerRadius: Metrics.cornerTile, padding: Metrics.tilePadding, tint: Palette.amber)
+        .stillCard(cornerRadius: Metrics.cornerTile, padding: Metrics.tilePadding)
     }
 
     private func option(symbol: String, title: LocalizedStringKey, detail: LocalizedStringKey, pro: Bool = false, identifier: String,
                         action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(alignment: .center, spacing: 14) {
-                IconOrb(symbol: symbol, tint: Palette.mint)
+                Glyph(symbol, size: Glyph.lead)
                 VStack(alignment: .leading, spacing: 3) {
                     HStack(spacing: 6) {
                         Text(title).font(.headline).foregroundStyle(Palette.ink)
@@ -435,7 +433,7 @@ struct AddSongSheet: View {
     @ViewBuilder private var pasteOption: some View {
         if canAdd {
             HStack(alignment: .center, spacing: 14) {
-                IconOrb(symbol: "doc.on.clipboard", tint: Palette.mint)
+                Glyph("doc.on.clipboard", size: Glyph.lead)
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Paste a chart").font(.headline).foregroundStyle(Palette.ink)
                     Text("Copied from a chord sheet you own, in ChordPro or with chords over the words.")

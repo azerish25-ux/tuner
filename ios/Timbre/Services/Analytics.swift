@@ -79,8 +79,11 @@ private final class AnalyticsLifecycle {
         observers.append(center.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { _ in
             MainActor.assumeIsolated { AnalyticsLifecycle.shared.enteredBackground() }
         })
-        // Started after the app came forward (by a first event): this launch's open is logged now.
-        if UIApplication.shared.applicationState == .active { becameActive() }
+        // Started after the app came forward (by a first event): this launch's open is logged once the run loop turns.
+        // Started at launch, the activation notification logs it first and this finds it done.
+        Task { @MainActor in
+            if UIApplication.shared.applicationState == .active { AnalyticsLifecycle.shared.becameActive() }
+        }
         MXMetricManager.shared.add(metrics)
         AppleAdsAttribution.sendOnce()
         RemoteConfig.shared.start()

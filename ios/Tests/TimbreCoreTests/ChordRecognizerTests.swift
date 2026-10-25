@@ -126,6 +126,88 @@ final class ChordRecognizerTests: XCTestCase {
         }
     }
 
+    /// The banjo's two-finger D7 (x0210: D A C D, no F♯) reads best as D5. It must still pass for D7, and not for the
+    /// chords around it.
+    func testBanjoTwoFingerD7PassesForD7() throws {
+        let banjo = [67, 50, 55, 59, 62]
+        let d7 = try XCTUnwrap(ChordTarget(symbol: "D7"))
+        for rate in [44100.0, 48000.0] {
+            for seed: UInt64 in [1, 2, 3] {
+                let signal = Synth.chord(Synth.voicing("x0210", tuning: banjo), sampleRate: rate, duration: duration, seed: seed)
+                let (recognizer, estimate) = recognise(signal, rate: rate)
+                let context = "banjo x0210 at \(Int(rate)) Hz, seed \(seed): heard \(estimate?.symbol ?? "nothing")"
+                XCTAssertTrue(recognizer.matches(d7), context)
+                XCTAssertEqual(estimate?.matches(d7), true, context)
+                for other in ["D", "Dm", "G", "G7", "Am", "C"] {
+                    let target = try XCTUnwrap(ChordTarget(symbol: other))
+                    XCTAssertFalse(recognizer.matches(target), "\(context) passed for \(other)")
+                }
+            }
+        }
+    }
+
+    // MARK: Each stroke's chord
+
+    /// Feeds a take in 1024-sample buffers: each stroke read, with the expected stroke it is nearest (within 30 ms).
+    private func strokes(_ take: (samples: [Float], strokes: [Double], chords: [Int]), rate: Double) -> [(expected: Int, chord: ChordEstimate?)] {
+        let reader = StrokeChords(sampleRate: rate)
+        var found: [StrokeChords.Stroke] = []
+        var start = 0
+        while start < take.samples.count {
+            let end = min(take.samples.count, start + 1024)
+            found += reader.feed(Array(take.samples[start..<end])).strokes
+            start = end
+        }
+        return found.compactMap { stroke -> (expected: Int, chord: ChordEstimate?)? in
+            guard let nearest = take.strokes.indices.min(by: { abs(take.strokes[$0] - stroke.time) < abs(take.strokes[$1] - stroke.time) }),
+                  abs(take.strokes[nearest] - stroke.time) <= 0.03 else { return nil }
+            return (expected: nearest, chord: stroke.chord)
+        }
+    }
+
+    private let progressionTargets = ["C", "Am", "F", "G"].compactMap { ChordTarget(symbol: $0) }
+
+    /// C – Am – F – G strummed in time: every stroke is found, and read as its own bar's chord.
+    func testEachStrokeOfAProgressionIsReadForItsChord() {
+        let shapes = ["x32010", "x02210", "133211", "320003"]
+        for rate in [44100.0, 48000.0] {
+            for seed: UInt64 in [1, 2] {
+                let take = Synth.progression(shapes, pattern: [0, 1, 2, 3], bpm: 80, sampleRate: rate, seed: seed)
+                let heard = strokes(take, rate: rate)
+                let context = "C Am F G at \(Int(rate)) Hz, seed \(seed): " + heard.map { $0.chord?.symbol ?? "-" }.joined(separator: " ")
+                XCTAssertGreaterThanOrEqual(heard.count, 15, context)
+                let right = heard.filter { $0.chord?.matches(progressionTargets[take.chords[$0.expected]]) ?? false }
+                XCTAssertGreaterThanOrEqual(right.count, 15, context)
+            }
+        }
+    }
+
+    /// Strummed in time through C – Am – F – G, open strings never pass for the chord, taps on the body ring none, and
+    /// G all the way through is right in the G bar only.
+    func testStrokesOfTheWrongChordOrNoneAreCaught() {
+        for rate in [44100.0, 48000.0] {
+            let open = Synth.progression(Array(repeating: "000000", count: 4), pattern: [0, 1, 2, 3], bpm: 80, sampleRate: rate, seed: 1)
+            let openHeard = strokes(open, rate: rate)
+            XCTAssertGreaterThanOrEqual(openHeard.count, 15, "open strings at \(Int(rate)) Hz")
+            for stroke in openHeard {
+                XCTAssertFalse(stroke.chord?.matches(progressionTargets[open.chords[stroke.expected]]) ?? false,
+                               "open strings passed for \(progressionTargets[open.chords[stroke.expected]]) at \(Int(rate)) Hz")
+            }
+
+            let taps = Synth.progression(Array(repeating: "000000", count: 4), pattern: [0, 1, 2, 3], bpm: 80, sampleRate: rate, seed: 1, taps: true)
+            let tapHeard = strokes(taps, rate: rate)
+            XCTAssertGreaterThanOrEqual(tapHeard.count, 15, "taps at \(Int(rate)) Hz")
+            XCTAssertTrue(tapHeard.allSatisfy { $0.chord == nil }, "a tap rang a chord at \(Int(rate)) Hz: \(tapHeard.compactMap { $0.chord?.symbol })")
+
+            let g = Synth.progression(Array(repeating: "320003", count: 4), pattern: [0, 1, 2, 3], bpm: 80, sampleRate: rate, seed: 2)
+            for stroke in strokes(g, rate: rate) {
+                let bar = g.chords[stroke.expected]
+                let right = stroke.chord?.matches(progressionTargets[bar]) ?? false
+                XCTAssertEqual(right, bar == 3, "G strummed in bar \(bar + 1) at \(Int(rate)) Hz, heard \(stroke.chord?.symbol ?? "nothing")")
+            }
+        }
+    }
+
     func testBassAndChromaOfAReading() throws {
         let rate = 48000.0
         for (shape, bass) in [("x32010", 0), ("x00232", 9), ("320003", 7), ("022000", 4)] {

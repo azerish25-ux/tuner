@@ -22,10 +22,27 @@ struct StageInput {
     /// Points along the stage's trailing edge that the side controls stand over: a whole-headstock close-up keeps
     /// clear of them.
     var controlsReserve: CGFloat = 0
+    /// How many times wider the live string swings than in use: 1, except in an App Store capture of a moment the
+    /// still frame would otherwise miss (`captureScale`). The amplitude only; nothing else on the stage changes.
+    var marketingScale: Float = StageInput.defaultMarketingScale
+
+    static var defaultMarketingScale: Float {
+        #if DEBUG
+        return captureScale
+        #else
+        return 1
+        #endif
+    }
+
+    #if DEBUG
+    /// Set by an App Store scene (`DemoScene`) before the stage appears: 3 shows the string's swing in a still frame.
+    nonisolated(unsafe) static var captureScale: Float = 1
+    #endif
 }
 
 /// Drives the live 3D instrument: camera framing, peg rotation following measured cents,
-/// a vibrating string whose standing wave drifts with the pitch error and freezes in tune.
+/// a vibrating string whose standing wave drifts with the pitch error and freezes in tune. A left-handed player's
+/// stage is the same scene turned over by its host (`flipX`): projected points and the pegs' turn follow.
 @MainActor
 final class StageController {
     let root = Entity()
@@ -48,7 +65,7 @@ final class StageController {
     /// for, so the model appears at the placeholder's framing instead of holding the whole instrument first.
     var revealClose = false
     private var model: Entity?
-    private var rig: InstrumentRig?
+    private(set) var rig: InstrumentRig?
     private var pegs: [String: (entity: Entity, base: simd_quatf, position: SIMD3<Float>)] = [:]
     private var posts: [String: (entity: Entity, base: simd_quatf)] = [:]
     /// Each post's centre in model space (by peg name), measured once as the model goes on stage: where the string
@@ -59,7 +76,6 @@ final class StageController {
     private var pegCorners: [SIMD3<Float>] = []
     private var staticStrings: [String: Entity] = [:]
     private var segments: [ModelEntity] = []
-    private var halo: [ModelEntity] = []
     private var subscription: EventSubscription?
     private let light = Entity()
     private var filter = ReadoutMotion.makeFilter()
@@ -91,6 +107,15 @@ final class StageController {
     var input: () -> StageInput = { StageInput() }
     /// Paywall and onboarding: the instrument sways slowly under the lights.
     var showcase = false
+    /// The host shows the stage mirrored (a left-handed instrument): projected points mirror, and a peg that tightens
+    /// clockwise on the model tightens anticlockwise on screen.
+    var flipX = false
+    /// The stage at rest holds this much of the close-up (the studio picture's own zoom) instead of all of it, so it
+    /// can hand over to that picture (`InstrumentStage`); nil holds the whole close-up.
+    var restFraming: Float?
+    /// Frames drawn since the scene was attached: the stage has really drawn once this moves.
+    private(set) var frames = 0
+    private var glowTube: ModelEntity?
     private static let segmentCount = 36
     /// Close-up clearances in points: peg centres stay this far below the stage top (24 pt plus the peg ring),
     /// the nut this far above its bottom; the headstock centres in the room left of the side controls.
@@ -109,7 +134,10 @@ final class StageController {
         root.addChild(camera)
     }
 
+    /// Puts the stage in a (new) scene: a stage brought back after resting attaches again, model and all.
     func attach(_ content: inout RealityViewCameraContent) {
+        subscription?.cancel()
+        frames = 0
         content.add(root)
         subscription = content.subscribe(to: SceneEvents.Update.self) { [weak self] event in
             MainActor.assumeIsolated { self?.tick(Float(event.deltaTime)) }
@@ -145,12 +173,12 @@ final class StageController {
         if let loadTask { await loadTask.value }
     }
 
+    /// Loads through the shared cache (`ModelCache`), so the tuner and a lesson's "Show me" load an instrument once.
     private func load(_ modelID: String, ticket: Int) async {
-        guard let url = ModelLibrary.url(modelID) else { fail("no usdz for \(modelID)", ticket: ticket); return }
+        guard ModelLibrary.url(modelID) != nil else { fail("no usdz for \(modelID)", ticket: ticket); return }
         guard let rig = ModelLibrary.rig(modelID) else { fail("no rig for \(modelID)", ticket: ticket); return }
-        let entity: Entity
-        do { entity = try await Entity(contentsOf: url) } catch {
-            fail("load failed: \(error.localizedDescription)", ticket: ticket)
+        guard let entity = await ModelCache.shared.instance(of: modelID) else {
+            fail("load failed: \(ModelCache.shared.problem(modelID) ?? "no reason given")", ticket: ticket)
             return
         }
         // Another instrument was asked for while this one loaded (its task was cancelled then): drop this model.
@@ -172,7 +200,7 @@ final class StageController {
         rig = nil
         loadedModel = nil
         pegs = [:]; posts = [:]; postCenters = [:]; pegCorners = []; staticStrings = [:]; angles = [:]
-        segments = []; halo = []
+        segments = []; glowTube = nil
         currentAnchor = nil
         currentPeg = nil
         aimPoint = nil
@@ -207,18 +235,18 @@ final class StageController {
         var metal = PhysicallyBasedMaterial()
         metal.baseColor = .init(tint: UIColor(white: 0.86, alpha: 1))
         metal.metallic = 1.0; metal.roughness = 0.28
-        var glowMaterial = UnlitMaterial(color: UIColor(red: 1, green: 0.86, blue: 0.62, alpha: 0.32))
-        glowMaterial.blending = .transparent(opacity: 0.32)
         for _ in 0..<Self.segmentCount {
             let segment = ModelEntity(mesh: mesh, materials: [metal])
             segment.isEnabled = false
             holder.addChild(segment); segments.append(segment)
-            let glowSegment = ModelEntity(mesh: mesh, materials: [glowMaterial])
-            glowSegment.isEnabled = false
-            holder.addChild(glowSegment); halo.append(glowSegment)
         }
+        // The lit string's glow: one tube along it, never a glow per segment (their overlaps beaded the light).
+        let glow = ModelEntity(mesh: StringGlow.mesh(), materials: [StringGlow.material(UIColor(red: 1, green: 0.86, blue: 0.62, alpha: 1), opacity: 0.3)])
+        glow.isEnabled = false
+        holder.addChild(glow)
+        glowTube = glow
         addLights()
-        receiveImageBasedLight(holder)
+        holder.receiveImageBasedLight(from: light)
         // Aim at the string being tuned from the first frame, not at the first string and then glide across.
         let state = input()
         currentAnchor = state.activeAnchor ?? rig.strings.first?.anchor
@@ -262,13 +290,17 @@ final class StageController {
     func setEnvironment(_ resource: EnvironmentResource) {
         light.components.set(ImageBasedLightComponent(source: .single(resource), intensityExponent: 0.4))
         if light.parent == nil { root.addChild(light) }
-        if let model { receiveImageBasedLight(model) }
+        model?.receiveImageBasedLight(from: light)
     }
 
-    private func receiveImageBasedLight(_ entity: Entity) {
-        guard light.components.has(ImageBasedLightComponent.self) else { return }
-        entity.components.set(ImageBasedLightReceiverComponent(imageBasedLight: light))
-        for child in entity.children { receiveImageBasedLight(child) }
+    /// How far into the close-up (0 the whole instrument, 1 the close-up) the camera must be for the instrument to look
+    /// `zoom` times as big as in the whole shot: where the studio picture's close-up stands, so the two meet.
+    func framing(atZoom zoom: Float) -> Float? {
+        guard let rig else { return nil }
+        let fov = Float(camera.camera.fieldOfViewInDegrees) * .pi / 180
+        let close = closeUp(rig: rig, anchor: currentAnchor ?? rig.strings.first?.anchor, fov: fov, layout: input())
+        let span = log(max(1.05, wholeShotDistance(rig, fov: fov) / max(close.distance, 0.001)))
+        return min(1, max(0, log(max(1, zoom)) / span))
     }
 
     private func addLights() {
@@ -295,7 +327,7 @@ final class StageController {
     /// appears where its placeholder's dolly has got to.
     private func applyFraming(dt: Float = 0, snapFraming: Bool = false, snapCamera: Bool = false) {
         let state = input()
-        let target: Float = state.focus && time >= holdWholeUntil ? 1 : 0
+        let target: Float = state.focus && time >= holdWholeUntil ? (restFraming ?? 1) : 0
         if snapFraming || reduceMotion { framing = target; framingVelocity = 0 } else { dollyFraming(toward: target, dt: dt) }
         guard let rig, let model else { return }
         let snap = snapFraming || snapCamera || reduceMotion
@@ -479,7 +511,8 @@ final class StageController {
         guard depth > 0.01 else { return nil }
         let fov = Float(camera.camera.fieldOfViewInDegrees) * .pi / 180
         let scale = Float(size.height) / 2 / (depth * tan(fov / 2))
-        return CGPoint(x: size.width / 2 + CGFloat(world.x * scale), y: size.height / 2 - CGFloat(world.y * scale))
+        let x = size.width / 2 + CGFloat(world.x * scale)
+        return CGPoint(x: flipX ? size.width - x : x, y: size.height / 2 - CGFloat(world.y * scale))
     }
 
     struct PegMarker {
@@ -487,7 +520,8 @@ final class StageController {
         var points: [CGPoint]
         /// The label's side: -1 left of the peg (pegs left of the head's centre), +1 right.
         var side: CGFloat
-        /// The rig's turn sign: +1 when clockwise tightens.
+        /// The turn sign as the stage shows the peg: +1 when clockwise tightens (the rig's, turned over on a
+        /// mirrored stage).
         var tighten: Int
         var slides: Bool
         /// 0 = whole instrument, 1 = headstock close-up.
@@ -509,7 +543,9 @@ final class StageController {
         guard let first = strings.first, let lead = points.first else { return nil }
         let head = screenPoint(rig.head, in: size)
         let left = head.map { lead.x < $0.x } ?? true
-        return PegMarker(points: points, side: left ? -1 : 1, tighten: first.tighten, slides: first.slides, closeUp: framing)
+        // A mirror image turns the other way: what tightens clockwise on the model tightens anticlockwise on screen.
+        let tighten = flipX ? -first.tighten : first.tighten
+        return PegMarker(points: points, side: left ? -1 : 1, tighten: tighten, slides: first.slides, closeUp: framing)
     }
 
     /// The string being tuned on screen, for the lock shimmer (`LockShimmer`).
@@ -550,6 +586,7 @@ final class StageController {
     }
 
     func tick(_ dt: Float) {
+        frames += 1
         guard dt > 0 else { return }
         time += Double(dt)
         let state = input()
@@ -595,7 +632,7 @@ final class StageController {
             peg.entity.orientation = peg.base * simd_quatf(angle: next, axis: [1, 0, 0])
             if let post = posts[string.peg] { post.entity.orientation = post.base * simd_quatf(angle: next / 6, axis: [0, 0, 1]) }
         }
-        updateString(tuned.first, phase: Float(phase), locked: state.locked, active: state.listening)
+        updateString(tuned.first, phase: Float(phase), locked: state.locked, active: state.listening, swing: state.marketingScale)
     }
 
     /// The rig strings being tuned: on a paired course the one `peg` names (in course order), else every
@@ -606,14 +643,14 @@ final class StageController {
         return [strings[peg]]
     }
 
-    private func updateString(_ string: InstrumentRig.StringRig?, phase: Float, locked: Bool, active: Bool) {
+    private func updateString(_ string: InstrumentRig.StringRig?, phase: Float, locked: Bool, active: Bool, swing: Float) {
         guard let string, string.radius > 0 else { return }
         let visible = active && (energy > 0.02 || glow > 0.05)
         staticStrings[string.nodeName]?.isEnabled = !visible
         let a = string.saddlePoint, b = string.nutPoint
         let axis = simd_normalize(b - a)
         let lateral = simd_normalize(simd_cross(axis, [0, 0, 1]) + SIMD3<Float>(0, 0, 0.35))
-        let amplitude = (0.0012 + 0.0042 * energy) * (1 - 0.85 * glow)
+        let amplitude = (0.0012 + 0.0042 * energy) * (1 - 0.85 * glow) * max(1, swing)
         let t = Float(time)
         var points: [SIMD3<Float>] = []
         points.reserveCapacity(Self.segmentCount + 1)
@@ -636,16 +673,27 @@ final class StageController {
             segment.position = (p + q) / 2
             segment.orientation = rotation
             segment.scale = [radius, length * 1.02, radius]
-            let haloSegment = halo[i]
-            haloSegment.isEnabled = visible && glow > 0.05
-            haloSegment.position = segment.position
-            haloSegment.orientation = rotation
-            haloSegment.scale = [radius * (3 + 5 * glow), length * 1.02, radius * (3 + 5 * glow)]
+        }
+        if let glowTube {
+            if visible && glow > 0.05 {
+                StringGlow.place(glowTube, from: a, to: b, radius: string.radius * (3 + 5 * glow))
+            } else {
+                glowTube.isEnabled = false
+            }
         }
     }
 }
 
 /// SwiftUI host. Taps on a peg select its string; the peg being tuned is ringed and labelled with its turn.
+///
+/// For a left-handed player the stage is the mirror image of the model (a left-handed instrument), its pegs' turn
+/// arrows reversed to match; the words beside the peg read as usual.
+///
+/// At rest it spares the device: once the host has been at rest (`resting`) for `StageRest.idle`, the camera eases back
+/// to the studio picture's framing and the stage hands over to that picture (`StudioStage`, the same one the host shows
+/// while the model loads), taking the 3D view away so nothing renders. Listening again brings the model straight back,
+/// drawn behind the picture before it shows, and the camera glides in. In Low Power Mode or on a hot device it holds
+/// the picture, live, until that passes.
 struct InstrumentStage: View {
     let modelID: String
     let input: () -> StageInput
@@ -658,39 +706,46 @@ struct InstrumentStage: View {
     /// The host's placeholder (a `StudioStage` with card points) dollies to the peg as well: the model then
     /// appears at the placeholder's framing instead of holding the whole instrument first.
     var revealClose = false
-    /// The host isn't listening and holds no reading: the peg cue settles and stops redrawing (`StagePegCue.resting`).
+    /// The host isn't listening and holds no reading: the peg cue settles and stops redrawing (`StagePegCue.resting`),
+    /// and after a while the stage rests on its studio picture.
     var resting = false
     @State private var box = StageBox()
     @State private var ready = false
     @State private var status = "make"
     @State private var attached = false
+    /// The 3D view is in place (taken away while the stage rests on its picture).
+    @State private var mounted = true
+    /// The studio picture shows over the stage.
+    @State private var still = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @CurrentHand private var hand
+    @ObservedObject private var power = StagePower.shared
     private let debug = ProcessInfo.processInfo.environment["TIMBRE_STAGE_DEBUG"] == "1"
 
     private var controller: StageController { box.controller }
 
+    /// What decides whether the stage rests on its picture.
+    private struct RestPlan: Equatable {
+        var ready: Bool
+        var resting: Bool
+        var reduced: Bool
+    }
+
     var body: some View {
-        RealityView { content in
-            content.camera = .virtual
-            if let image = StageLighting.environmentImage(),
-               let resource = try? await EnvironmentResource(equirectangular: image, withName: "timbre.stage") {
-                controller.setEnvironment(resource)
+        let plan = RestPlan(ready: ready, resting: resting && !showcase, reduced: power.reduced && !showcase)
+        ZStack {
+            if mounted {
+                // Under the picture it draws at a trace rather than not at all, so coming back it has drawn before it shows.
+                live
+                    .opacity(still ? 0.02 : 1)
             }
-            configure()
-            controller.reduceMotion = reduceMotion
-            controller.attach(&content)
-            // The model task loads and reports; attaching reports through `attached` (this closure's copy of the
-            // view keeps the model id it was made with, so it never reports a model itself).
-            attached = true
-            status = "attached"
-        } update: { _ in
-            controller.input = input
+            if still, let card = restCard {
+                StudioStage(imageName: ModelLibrary.cardImageName(modelID), card: card, input: input, onSelect: onSelect,
+                            resting: resting, startsClose: true)
+                    .padding(.horizontal, StageRest.picturePadding)
+                    .transition(.opacity)
+            }
         }
-        .gesture(SpatialTapGesture().targetedToAnyEntity().onEnded { value in
-            var entity: Entity? = value.entity
-            while let current = entity, !current.name.hasPrefix("peg_") { entity = current.parent }
-            if let name = entity?.name { onSelect(controller.pegName(forNode: name) ?? String(name.dropFirst(4))) }
-        })
         // One load per model, owned by the controller: a newer instrument cancels it, and only the model the host
         // still wants is ever put on stage or reported ready.
         .task(id: modelID) {
@@ -707,16 +762,14 @@ struct InstrumentStage: View {
             controller.request(id)
         }
         .onChange(of: attached) { _, _ in reportLoad() }
+        .onChange(of: hand) { _, _ in configure() }
         .onChange(of: reduceMotion, initial: true) { _, value in controller.reduceMotion = value }
         .onGeometryChange(for: CGSize.self) { proxy in proxy.size } action: { size in controller.viewSize = size }
-        // Feather the edges so the stage melts into the screen whatever the renderer clears to.
-        .mask { StageFeather(close: 1) }
-        .overlay {
-            if !showcase { StagePegCue(controller: controller, input: input, reduceMotion: reduceMotion, resting: resting, loaded: ready) }
-        }
+        .task(id: plan) { await follow(plan) }
         .opacity(ready ? 1 : 0)
         .animation(Motion.settle, value: ready)
         .accessibilityHidden(true)
+        .accessibilityIgnoresInvertColors()
         .overlay(alignment: .bottomLeading) {
             #if DEBUG
             if debug {
@@ -727,10 +780,47 @@ struct InstrumentStage: View {
         }
     }
 
+    /// The model in its scene, feathered into the screen, turned over for a left-handed player, the peg cue over it.
+    private var live: some View {
+        let mirrored = hand.mirrorsUpright
+        return RealityView { content in
+            content.camera = .virtual
+            if let resource = await ModelCache.shared.environment() { controller.setEnvironment(resource) }
+            configure()
+            controller.reduceMotion = reduceMotion
+            controller.attach(&content)
+            // The model task loads and reports; attaching reports through `attached` (this closure's copy of the
+            // view keeps the model id it was made with, so it never reports a model itself).
+            attached = true
+            if !ready { status = "attached" }
+        } update: { _ in
+            controller.input = input
+        }
+        .gesture(SpatialTapGesture().targetedToAnyEntity().onEnded { value in
+            var entity: Entity? = value.entity
+            while let current = entity, !current.name.hasPrefix("peg_") { entity = current.parent }
+            if let name = entity?.name { onSelect(controller.pegName(forNode: name) ?? String(name.dropFirst(4))) }
+        })
+        // Feather the edges so the stage melts into the screen whatever the renderer clears to.
+        .mask { StageFeather(close: 1) }
+        .scaleEffect(x: mirrored ? -1 : 1, y: 1)
+        .overlay {
+            if !showcase { StagePegCue(controller: controller, input: input, reduceMotion: reduceMotion, resting: resting, loaded: ready) }
+        }
+    }
+
+    /// The studio picture the stage rests on: the model's own render with its points; nil for a model without one,
+    /// which stays in 3D.
+    private var restCard: StageCard? {
+        guard ModelLibrary.hasCard(modelID), let rig = ModelLibrary.rig(modelID) else { return nil }
+        return StageCard(rig: rig)
+    }
+
     private func configure() {
         controller.input = input
         controller.showcase = showcase
         controller.revealClose = revealClose
+        controller.flipX = hand.mirrorsUpright
     }
 
     /// Ready (the host retires its placeholder) only once the model this view shows is on stage and the scene is
@@ -741,6 +831,80 @@ struct InstrumentStage: View {
         if controller.failed { onFailure() }
         else if attached && controller.loadedModel == modelID { ready = true; onReady() }
     }
+
+    // MARK: Resting on the picture
+
+    /// Rests on the picture at once in Low Power Mode, after `StageRest.idle` at rest; otherwise stays (or comes back)
+    /// in 3D.
+    private func follow(_ plan: RestPlan) async {
+        guard plan.ready, restCard != nil else {
+            await wake()
+            return
+        }
+        if plan.reduced {
+            await doze(after: 0)
+        } else if plan.resting {
+            await doze(after: StageRest.idle)
+        } else {
+            await wake()
+        }
+    }
+
+    /// After `idle` seconds the camera eases back to the picture's framing (cut in Low Power Mode and with Reduce
+    /// Motion), the picture fades in over the model, and the 3D view goes.
+    private func doze(after idle: Double) async {
+        if idle > 0 {
+            try? await Task.sleep(for: .seconds(idle))
+            guard !Task.isCancelled else { return }
+        }
+        if !still {
+            if idle > 0 && !reduceMotion, let framing = restFraming() {
+                controller.restFraming = framing
+                try? await Task.sleep(for: .seconds(StageRest.pullBack))
+                guard !Task.isCancelled else { return }
+            }
+            withMotion(Motion.reveal, reduceMotion: reduceMotion) { still = true }
+            try? await Task.sleep(for: .seconds(0.7))
+            guard !Task.isCancelled else { return }
+        }
+        mounted = false
+    }
+
+    /// The 3D view comes back behind the picture; once it has drawn a few frames the picture fades away and the camera
+    /// glides in to the close-up.
+    private func wake() async {
+        if !mounted {
+            mounted = true
+            let start = controller.frames
+            var waited = 0.0
+            while controller.frames < start + 3 && waited < 1.5 {
+                try? await Task.sleep(for: .milliseconds(50))
+                guard !Task.isCancelled else { return }
+                waited += 0.05
+            }
+        }
+        controller.restFraming = nil
+        if still { withMotion(Motion.settle, reduceMotion: reduceMotion) { still = false } }
+    }
+
+    /// The close-up framing at which the model looks as big as the studio picture's close-up does.
+    private func restFraming() -> Float? {
+        guard let head = restCard?.head else { return nil }
+        let size = controller.viewSize
+        let picture = CGSize(width: max(0, size.width - 2 * StageRest.picturePadding), height: size.height)
+        let zoom = StageFrame.closeUpZoom(in: picture, head: head, centred: input().wholeHeadstock)
+        return controller.framing(atZoom: Float(zoom))
+    }
+}
+
+/// The 3D stage resting on its studio picture (`InstrumentStage`).
+enum StageRest {
+    /// Seconds at rest before the stage hands over to its picture.
+    static let idle = 12.0
+    /// Seconds the camera takes to ease back to the picture's framing.
+    static let pullBack = 1.1
+    /// The picture's inset on each side, as the tuner gives its placeholder.
+    static let picturePadding: CGFloat = 16
 }
 
 /// Holds the stage's controller, made on first use: `@State` evaluates its initial value each time the view is

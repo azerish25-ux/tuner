@@ -1,53 +1,108 @@
 import SwiftUI
 import TimbreCore
 
-/// One chip per course, in physical order. Unison partners (a mandolin's pair) share one chip marked ×2,
+/// One chip per course, in physical order, thickest to thinnest from the left (mirrored for a left-handed player),
+/// in every language: the row is music, not text, so it never flips right to left. Under it, "Thickest" and "Thinnest"
+/// name its ends wherever the strings run low to high. Unison partners (a mandolin's pair) share one chip marked ×2,
 /// with a pip per string that lights as that string locks; the chip turns solid once both have.
 /// The course being tuned is the one raised, filled chip, showing the live pitch in the tuner's colour rule
-/// (mint in the lock band, amber close, coral far) and blooming solid mint as it locks. Tuned courses stay
-/// quiet with a small ✓ on the shoulder. Increase Contrast strengthens rings and labels; Differentiate
-/// Without Colour adds a symbol (▲ sharp, ▼ flat, ✓ in tune).
+/// (mint in the lock band, amber close, coral far) and turning solid mint as it locks. Tuned courses stay
+/// quiet with a small ✓ on the shoulder. When every string is in tune the chips light low to high in step with the
+/// strum (`SoundFX.playTuned`). Increase Contrast strengthens rings and labels; Differentiate Without Colour adds a
+/// symbol (▲ sharp, ▼ flat, ✓ in tune).
 struct StringRail: View {
     /// The readout's smoothing, so the selected chip shows the same value as the digits.
     let motion: ReadoutMotion
     @EnvironmentObject private var store: AppStore
+    @Environment(\.colorSchemeContrast) private var contrast
+    /// The chips lit by the full-tune roll right now.
+    @State private var ringing: Set<Int> = []
+
     var body: some View {
         let groups = CourseGrouping.groups(store.courses)
-        let ordered = store.settings.handedness == "left" ? Array(groups.reversed()) : groups
-        // Centred when every course fits (iPad, most instruments); scrolls full-bleed for long courses.
-        ViewThatFits(in: .horizontal) {
-            row(ordered).padding(.horizontal, Metrics.gutter)
-            ScrollViewReader { proxy in
-                ScrollView(.horizontal, showsIndicators: false) { row(ordered) }
-                    .contentMargins(.horizontal, Metrics.gutter, for: .scrollContent)
-                    // The raised chip's shadow and the ✓ badges reach past the row: let them show.
-                    .scrollClipDisabled()
-                    .onChange(of: store.selectedCourse) { _, index in
-                        let chip = groups.first { $0.contains(index) }?.id ?? index
-                        withAnimation(Motion.settle) { proxy.scrollTo(chip, anchor: .center) }
-                    }
+        let mirrored = store.settings.handedness.isLeftHanded
+        let ordered = mirrored ? Array(groups.reversed()) : groups
+        VStack(spacing: 2) {
+            // Centred when every course fits (iPad, most instruments); scrolls full-bleed for long courses.
+            ViewThatFits(in: .horizontal) {
+                row(ordered).padding(.horizontal, Metrics.gutter)
+                ScrollViewReader { proxy in
+                    ScrollView(.horizontal, showsIndicators: false) { row(ordered) }
+                        .contentMargins(.horizontal, Metrics.gutter, for: .scrollContent)
+                        // The raised chip's shadow and the ✓ badges reach past the row: let them show.
+                        .scrollClipDisabled()
+                        .onChange(of: store.selectedCourse) { _, index in
+                            let chip = groups.first { $0.contains(index) }?.id ?? index
+                            withAnimation(Motion.settle) { proxy.scrollTo(chip, anchor: .center) }
+                        }
+                }
             }
+            if Self.lowToHigh(groups) { ends(mirrored: mirrored) }
         }
+        .environment(\.layoutDirection, .leftToRight)
+        .onChange(of: store.celebrate) { _, _ in roll(groups) }
     }
 
     private func row(_ groups: [CourseGroup]) -> some View {
         HStack(spacing: 10) {
             ForEach(groups) { group in
-                CourseChip(group: group, motion: motion).id(group.id)
+                CourseChip(group: group, motion: motion, ringing: ringing.contains(group.id)).id(group.id)
             }
         }
         .padding(.vertical, 6)
+    }
+
+    /// "Thickest" under the low end, "Thinnest" under the high one.
+    private func ends(mirrored: Bool) -> some View {
+        let color = contrast == .increased ? Palette.inkSoft : Palette.inkFaint
+        return HStack {
+            Text(mirrored ? "Thinnest" : "Thickest")
+            Spacer(minLength: 12)
+            Text(mirrored ? "Thickest" : "Thinnest")
+        }
+        .font(.caption2.weight(.medium))
+        .foregroundStyle(color)
+        .lineLimit(1)
+        .padding(.horizontal, Metrics.gutter + 4)
+        .accessibilityHidden(true)
+    }
+
+    /// The strings rise in pitch along the row (a guitar, a bass, the violin family), so its ends are the thickest
+    /// and thinnest strings. Re-entrant tunings (a GCEA ukulele, a banjo's short fifth) don't, and get no captions.
+    static func lowToHigh(_ groups: [CourseGroup]) -> Bool {
+        guard groups.count > 1 else { return false }
+        let pitches = groups.map(\.lead.targetMidi)
+        return zip(pitches, pitches.dropFirst()).allSatisfy { $0 < $1 }
+    }
+
+    /// Every string in tune: each chip lights in turn, in string order, as the strum rolls across its string.
+    private func roll(_ groups: [CourseGroup]) {
+        let courses = store.courses
+        let step = SoundSynth.tunedRoll(count: courses.count)
+        for group in groups {
+            let position = courses.firstIndex { $0.index == group.lead.index } ?? 0
+            let id = group.id
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(Double(position) * step))
+                withAnimation(Motion.pop) { _ = ringing.insert(id) }
+                try? await Task.sleep(for: .milliseconds(360))
+                withAnimation(Motion.settle) { _ = ringing.remove(id) }
+            }
+        }
     }
 }
 
 private struct CourseChip: View {
     let group: CourseGroup
     let motion: ReadoutMotion
+    /// Lit by the full-tune roll.
+    var ringing = false
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.colorSchemeContrast) private var contrast
     @Environment(\.accessibilityDifferentiateWithoutColor) private var withoutColor
+    @Environment(\.locale) private var locale
 
     private struct Style {
         var ring: Color
@@ -87,8 +142,10 @@ private struct CourseChip: View {
         // are not tuning carries the ✓ instead.
         let raised = selected && !style.solid
         let lift: Color = raised ? Color.black.opacity(0.6) : Color.clear
-        let halo: Color = style.solid ? Palette.mint.opacity(0.55) : (raised ? style.ring.opacity(0.3) : Color.clear)
+        let halo: Color = ringing ? Palette.mint.opacity(0.85) : (style.solid ? Palette.mint.opacity(0.55) : (raised ? style.ring.opacity(0.3) : Color.clear))
+        let scale: CGFloat = ringing && !reduceMotion ? 1.16 : (selected ? 1.1 : 1)
         let change = Motion.adaptive(Motion.pluck, reduceMotion: reduceMotion)
+        let spoken = NoteNames.spoken(label.main, locale: locale, system: NoteNames.active)
         Button { store.chooseCourse(group.nextToTune(store.lockedCourses).index) } label: {
             content(face, text: style.text, cueColor: style.cue)
                 .background { chipFill(style.fill, raised: raised) }
@@ -96,16 +153,18 @@ private struct CourseChip: View {
                 .overlay(Capsule().strokeBorder(style.ring, lineWidth: ringWidth(selected: selected, solid: style.solid)))
                 .overlay(alignment: .topTrailing) { shoulderBadge(tuned: tuned, done: tuned && !selected, ring: style.ring) }
                 .shadow(color: lift, radius: 10, y: 6)
-                .shadow(color: halo, radius: 12)
-                .scaleEffect(selected ? 1.1 : 1)
+                .shadow(color: halo, radius: ringing ? 16 : 12)
+                .scaleEffect(scale)
                 .animation(change, value: selected)
                 .animation(change, value: tuned)
                 .animation(change, value: style.solid)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(accessibilityName(label.main))
+        .accessibilityLabel(Text("String \(stringNumber), \(spoken)"))
         .accessibilityValue(accessibilityState(locked: locked, tuned: tuned))
         .accessibilityAddTraits(selected ? .isSelected : [])
+        // Voice Control: "Tap D", "Tap String 4" or "Tap D 3", without the comma.
+        .accessibilityInputLabels(inputLabels(name: parts.name, spoken: spoken))
         .accessibilityIdentifier("string.\(group.id)")
     }
 
@@ -192,17 +251,14 @@ private struct CourseChip: View {
         }
     }
 
-    /// The solid state is a second copy of the chip (mint fill, dark label) revealed by a capsule that blooms
-    /// from the centre. Fill and label change together, so every glyph is either light on dark or dark on
-    /// mint at each moment of the lock: the label never disappears. Reduce Motion fades it instead.
+    /// The solid state is a second copy of the chip (mint fill, dark label) that crossfades in over the first as the
+    /// string locks, growing the last few points to its size. Both copies carry the label, so it never disappears
+    /// and is never cut; under Reduce Motion it only fades.
     private func solidLayer(_ face: Face, solid: Bool) -> some View {
         content(face, text: Palette.onAccent, cueColor: Palette.onAccent.opacity(0.75), solid: true)
             .background(Capsule().fill(Palette.mint))
-            .mask {
-                Capsule()
-                    .scaleEffect(solid || reduceMotion ? 1 : 0.001)
-                    .opacity(solid || !reduceMotion ? 1 : 0)
-            }
+            .opacity(solid ? 1 : 0)
+            .scaleEffect(solid || reduceMotion ? 1 : 0.92)
             .allowsHitTesting(false)
             .accessibilityHidden(true)
     }
@@ -211,7 +267,7 @@ private struct CourseChip: View {
     /// mint, and its ✓ badge says it is done (so it never outshines the string being tuned).
     private func restingStyle(tuned: Bool) -> Style {
         tuned ? Style(ring: Palette.mint.opacity(strong ? 0.7 : 0.22), fill: Palette.mint.opacity(0.04), text: Palette.ink, cue: Palette.mint)
-              : Style(ring: .white.opacity(strong ? 0.45 : 0.12), fill: .white.opacity(0.03), text: Palette.ink, cue: strong ? Palette.inkSoft : Palette.inkFaint)
+              : Style(ring: Palette.controlLine, fill: .white.opacity(0.03), text: Palette.ink, cue: strong ? Palette.inkSoft : Palette.inkFaint)
     }
 
     /// The string being tuned is the raised, filled chip: it follows the live pitch with the readout's colour rule
@@ -230,12 +286,18 @@ private struct CourseChip: View {
         return Style(ring: tint, fill: tint.opacity(0.2), text: Palette.ink, cue: tint, mark: PitchMark(shown: live, locked: false))
     }
 
-    /// "String 4, D3": the number players call the string by, 1 the thinnest (the digits its peg-head anchor ends in,
-    /// "s4"), as lessons and Strum to tune count. A pair shares its anchor, so it reads as one string; its state says
-    /// "1 of 2". Only a course without an anchor falls back to its index.
-    private func accessibilityName(_ note: String) -> Text {
+    /// The number players call the string by, 1 the thinnest (the digits its peg-head anchor ends in, "s4"), as
+    /// lessons and Strum to tune count: VoiceOver reads "String 4, D 3". A pair shares its anchor, so it reads as one
+    /// string; its state says "1 of 2". Only a course without an anchor falls back to its index.
+    private var stringNumber: Int {
         let digits = String((group.lead.anchorId ?? "").reversed().prefix { $0.isNumber }.reversed())
-        return Text("String \(Int(digits) ?? group.lead.index), \(note)")
+        return Int(digits) ?? group.lead.index
+    }
+
+    /// What Voice Control answers to: the note ("D", "F sharp"), the string's number, and the note with its octave.
+    private func inputLabels(name: String, spoken: String) -> [Text] {
+        let letter = NoteNames.spoken(name, locale: locale, system: NoteNames.active)
+        return [Text(verbatim: letter), Text("String \(stringNumber)"), Text(verbatim: spoken)]
     }
 
     /// "Tuned"; a pair part way: "1 of 2".

@@ -14,7 +14,7 @@ resources = root / 'ios/Timbre/Resources'
 catalog = json.loads((core / 'catalog.json').read_text(encoding='utf-8'))
 photos = json.loads((core / 'photos.json').read_text(encoding='utf-8'))
 assert len(catalog['instruments']) == 60
-assert len(catalog['tunings']) == 102
+assert len(catalog["tunings"]) == 132
 assert len(catalog['families']) == 8
 assert len(photos) >= 71
 assert len({p['asset'] for p in photos}) == len(photos)
@@ -145,4 +145,4 @@ for band_only in ('eguitar', 'chops'):
         assert not sample_sets[band_only]['voices'] and sample_sets[band_only]['kind'] == 'plucked', band_only
 assert {'guitar', 'piano', 'bass'} <= played_voices
 assert sample_bytes <= 35_000_000, f'samples {sample_bytes / 1e6:.1f} MB over the 35 MB budget'
-print(f'OK: 60 instruments, 102 tunings, {len(photos)} photos/{2 * len(photos)} images, 49 locales, 1 licensed font family, {len(manifest['photos'])} 3D models; all literal localization keys exist; {len(listed)} instrument samples ({sample_bytes / 1e6:.1f} MB, {len(sample_sets)} sets, {", ".join(sorted(sample_sources))}).')
+print(f'OK: 60 instruments, 132 tunings, {len(photos)} photos/{2 * len(photos)} images, 49 locales, 1 licensed font family, {len(manifest['photos'])} 3D models; all literal localization keys exist; {len(listed)} instrument samples ({sample_bytes / 1e6:.1f} MB, {len(sample_sets)} sets, {", ".join(sorted(sample_sources))}).')

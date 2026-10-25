@@ -141,7 +141,7 @@ final class CommerceService: ObservableObject {
             case .success(let result):
                 guard case .verified(let transaction) = result, TimbreProduct.all.contains(transaction.productID) else {
                     error = String(localized: "The App Store purchase could not be verified. Restore purchases or try again.")
-                    Analytics.log("purchase_failed", ["product": product.id, "reason": "unverified"])
+                    Analytics.log("purchase_failed", Self.purchaseProperties(product, error: "unverified"))
                     return false
                 }
                 await refreshEntitlements()
@@ -150,21 +150,32 @@ final class CommerceService: ObservableObject {
             case .pending:
                 pending = true
             case .userCancelled:
-                Analytics.log("purchase_cancelled", ["product": product.id])
+                Analytics.log("purchase_cancelled", Self.purchaseProperties(product))
             @unknown default:
                 error = String(localized: "The App Store returned an unknown status. Please restore purchases.")
-                Analytics.log("purchase_failed", ["product": product.id, "reason": "unknown_result"])
+                Analytics.log("purchase_failed", Self.purchaseProperties(product, error: "unknown_result"))
             }
         } catch {
             self.error = error.localizedDescription
-            let reason = Self.failureReason(error)
-            Analytics.log(reason == "cancelled" ? "purchase_cancelled" : "purchase_failed", ["product": product.id, "reason": reason])
+            let cause = Self.failureCause(error)
+            if cause == "cancelled" {
+                Analytics.log("purchase_cancelled", Self.purchaseProperties(product))
+            } else {
+                Analytics.log("purchase_failed", Self.purchaseProperties(product, error: cause))
+            }
         }
         return false
     }
 
+    /// The paywall's purchase properties (product, price, currency), with `error` naming why a purchase failed.
+    private static func purchaseProperties(_ product: Product, error: String? = nil) -> [String: String] {
+        var properties = ["product": product.id, "price": "\(product.price)", "currency": product.priceFormatStyle.currencyCode]
+        if let error { properties["error"] = error }
+        return properties
+    }
+
     /// A short, non-identifying name for why a purchase threw.
-    private static func failureReason(_ error: Error) -> String {
+    private static func failureCause(_ error: Error) -> String {
         if let store = error as? StoreKitError {
             switch store {
             case .userCancelled: return "cancelled"
@@ -220,7 +231,7 @@ final class CommerceService: ObservableObject {
             billingIssue = issue
             entitlementResolved = true
             // In the grace period the paid period has already ended: Pro ends with the grace period instead.
-            if case .gracePeriod(let until?) = issue { scheduleExpiryCheck(until) } else { scheduleExpiryCheck(active?.1) }
+            if case .gracePeriod(let until?)? = issue { scheduleExpiryCheck(until) } else { scheduleExpiryCheck(active?.1) }
             break
         }
         refreshInProgress = false

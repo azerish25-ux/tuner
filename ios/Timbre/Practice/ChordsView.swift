@@ -1,7 +1,8 @@
 import SwiftUI
 import TimbreCore
 
-/// The Chords and Scales tools (Play › Tools, Pro: the Play hub opens them).
+/// The Chords and Scales tools (Play › Tools). Chords is free with its open-position shapes and Check (`FreeTier`);
+/// Scales is Pro (the Play hub opens it).
 struct ChordsView: View {
     enum Mode { case chords, scales }
     let mode: Mode
@@ -30,9 +31,12 @@ extension UserSettings.ChordChoice {
 /// that names it ("Barre · 3fr"), rates how hard it is to hold and strums it on a tap: a glint of light crosses the
 /// box low to high as each string lights with the sound. "Check" listens with the lessons' chord recognizer
 /// (any shape and any inversion count, as in a lesson's chord step) and says when the chord rings true.
+/// On the free plan the open-position shapes play and Check listens for any chord that has one; barre and movable
+/// shapes wear a lock and open the paywall (`FreeTier.canUseVoicing`).
 struct ChordLibraryView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService
+    @EnvironmentObject private var commerce: CommerceService
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var root = 0
     @State private var formula = ChordFormula.all[0]
@@ -149,14 +153,41 @@ struct ChordLibraryView: View {
                 ChordPictureToggle()
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
                     ForEach(shapes, id: \.self) { shape in
-                        VoicingCard(shape: shape, spec: spec(for: shape), profile: VoicingProfile(shape, formulaId: formula.id),
-                                    chordName: chordName, lit: ringing == shape ? ringStrings : [], strums: strums[shape] ?? 0) {
-                            strum(shape, strings: strings)
-                        }
+                        voicingCard(shape, strings: strings)
                     }
                 }
+                if shapes.contains(where: { !isOpen($0, strings: strings) }) { proNote }
             }
         }
+    }
+
+    /// One shape's card: it strums, or (a Pro shape on the free plan) opens the paywall.
+    private func voicingCard(_ shape: ChordShape, strings: OpenStrings) -> some View {
+        let open = isOpen(shape, strings: strings)
+        return VoicingCard(shape: shape, spec: spec(for: shape), profile: VoicingProfile(shape, formulaId: formula.id),
+                           chordName: chordName, lit: ringing == shape ? ringStrings : [], strums: strums[shape] ?? 0,
+                           locked: !open) {
+            if open { strum(shape, strings: strings) } else { store.presentPaywall("chords.voicing") }
+        }
+    }
+
+    /// Under the grid on the free plan, when some shapes are Pro: what is free and what isn't.
+    private var proNote: some View {
+        Label("Open shapes are free. Barre and movable shapes come with Timbre Pro.", systemImage: "lock")
+            .font(.footnote).foregroundStyle(Palette.inkSoft)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private func isOpen(_ shape: ChordShape, strings: OpenStrings) -> Bool {
+        FreeTier.canUseVoicing(shape, root: root, formula: formula, openMidi: strings.midi, pro: commerce.isPro)
+    }
+
+    /// Check is free for any chord the free plan has a shape for (and always with Pro).
+    private var checkOpen: Bool {
+        let strings = OpenStrings(store)
+        if commerce.isPro { return true }
+        return ChordLibrary.voicings(root: root, formula: formula, openMidi: strings.midi, limit: 6).contains { isOpen($0, strings: strings) }
     }
 
     private func spec(for shape: ChordShape) -> ChordSpec {
@@ -275,18 +306,26 @@ struct ChordLibraryView: View {
                     .frame(maxWidth: .infinity, minHeight: 54)
             } else {
                 switch check {
-                case .idle:
-                    // One verb for it, as in the lessons: "Check".
-                    Button(action: startCheck) { Label("Check", systemImage: "mic.fill") }
-                        .buttonStyle(PrimaryButtonStyle())
-                        .accessibilityIdentifier("chords.check")
-                        .accessibilityHint(Text("Listens while you play the chord."))
+                case .idle: checkButton
                 case .listening: listeningBar
                 case .heard: heardBar
                 }
             }
         }
         .animation(Motion.settle, value: check)
+    }
+
+    /// One verb for it, as in the lessons: "Check". A chord with only Pro shapes keeps it, locked.
+    private var checkButton: some View {
+        let open = checkOpen
+        return Button {
+            if open { startCheck() } else { store.presentPaywall("chords.check") }
+        } label: {
+            Label("Check", systemImage: open ? "mic.fill" : "lock.fill")
+        }
+        .buttonStyle(PrimaryButtonStyle())
+        .accessibilityIdentifier("chords.check")
+        .accessibilityHint(open ? Text("Listens while you play the chord.") : Text("Timbre Pro"))
     }
 
     /// Listening: what to strum, and what the microphone hears (amber until it is the chord).
@@ -387,6 +426,8 @@ private struct VoicingCard: View {
     let chordName: String
     let lit: Set<Int>
     let strums: Int
+    /// A Pro shape on the free plan: its box dimmed, a lock in the corner, and a tap opens the paywall.
+    var locked = false
     let action: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage(ChordPicture.storageKey) private var picture: ChordPicture = .chart
@@ -403,20 +444,22 @@ private struct VoicingCard: View {
                 diagram
                     .frame(height: 150)
                     .frame(maxWidth: .infinity)
+                    .opacity(locked ? 0.45 : 1)
                     // Both pictures lay the lowest string on the left, so the glint runs left to right on either.
                     .overlay { if !reduceMotion { StrumGlint(trigger: strums) } }
                 HStack(spacing: 8) {
                     Text(shape.notation).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
                         .lineLimit(1).minimumScaleFactor(0.6)
                     Spacer(minLength: 4)
-                    playGlyph(sounding)
+                    if !locked { playGlyph(sounding) }
                 }
             }
             .stillCard(padding: Metrics.tilePadding, tint: sounding ? Palette.mint : nil)
+            .overlay(alignment: .topTrailing) { if locked { ProLock().padding(10) } }
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityLabel(Text("\(chordName), \(profile.title), \(profile.level.name), \(shape.notation)"))
-        .accessibilityHint(Text("Plays the chord."))
+        .accessibilityHint(locked ? Text("Timbre Pro") : Text("Plays the chord."))
     }
 
     /// The shape as a chart, or in the player's view (the lessons' switch, over the grid), tipping between them as a

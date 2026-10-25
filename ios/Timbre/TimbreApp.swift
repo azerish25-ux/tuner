@@ -180,6 +180,12 @@ private struct LaunchFailure: View {
     let openWithoutSavedFile: () -> Void
     @State private var confirming = false
 
+    init(failure: Bootstrap.Failure, retry: @escaping () -> Void, openWithoutSavedFile: @escaping () -> Void) {
+        self.failure = failure
+        self.retry = retry
+        self.openWithoutSavedFile = openWithoutSavedFile
+    }
+
     var body: some View {
         LaunchMessage(symbol: "exclamationmark.triangle", tint: Palette.amber, title: Text("Timbre couldn't open"), message: message) {
             Button("Try again", action: retry)

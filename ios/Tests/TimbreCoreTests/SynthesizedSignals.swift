@@ -127,6 +127,45 @@ enum Synth {
               brightness: brightness, up: up, body: body, tuneCents: tuneCents)
     }
 
+    /// A strummed progression in 4/4: shape k for bar k, a down strum on each beat of `pattern` from `start`. At each
+    /// change the chord before stops within about 40 ms (the fingers lift); with `taps` every stroke is a tap on the
+    /// body instead. Peak-normalised to `gain`, plus uniform noise of amplitude `noise`. Returns the audio, each
+    /// stroke's time (seconds) and the bar (shape) it belongs to.
+    static func progression(_ shapes: [String], pattern: [Double], bpm: Double, sampleRate: Double, seed: UInt64, start: Double = 0.5,
+                            taps: Bool = false, gain: Double = 0.3, noise: Double = 0.002) -> (samples: [Float], strokes: [Double], chords: [Int]) {
+        var rng = TestRandom(seed: seed)
+        let secondsPerBeat = 60 / bpm
+        var strokes: [Double] = []
+        var chords: [Int] = []
+        for index in shapes.indices {
+            for position in pattern {
+                strokes.append(start + (Double(index * 4) + position) * secondsPerBeat)
+                chords.append(index)
+            }
+        }
+        let count = Int(((strokes.last ?? 0) + 1) * sampleRate)
+        var total = [Double](repeating: 0, count: count)
+        var ringing = [Double](repeating: 0, count: count)
+        var playing: Int?
+        for (time, index) in zip(strokes, chords) {
+            if taps {
+                click(at: time, amplitude: 0.4, into: &total, sampleRate: sampleRate, rng: &rng)
+                continue
+            }
+            if let before = playing, before != index {
+                let from = Int(time * sampleRate)
+                for i in from..<count { ringing[i] *= exp(-Double(i - from) / (0.04 * sampleRate)) }
+            }
+            playing = index
+            strum(voicing(shapes[index]), at: time, into: &ringing, sampleRate: sampleRate, rng: &rng)
+        }
+        for i in total.indices { total[i] += ringing[i] }
+        let peak = total.map { abs($0) }.max() ?? 0
+        let scale = peak > 0 ? gain / peak : 0
+        for i in total.indices { total[i] = total[i] * scale + noise * rng.uniform(-1, 1) }
+        return (total.map { Float($0) }, strokes, chords)
+    }
+
     /// A 40 ms woodblock-like click: a 2.5 kHz ping plus noise, decaying with a 6 ms time constant.
     static func click(at time: Double, amplitude: Double, into out: inout [Double], sampleRate: Double, rng: inout TestRandom) {
         let start = Int((time * sampleRate).rounded())

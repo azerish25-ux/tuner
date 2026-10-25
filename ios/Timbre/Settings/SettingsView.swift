@@ -458,11 +458,6 @@ struct SettingsView: View {
         }
     }
 
-    /// The privacy policy's address, from Info.plist (one place for every link to it).
-    private static var privacyPolicy: URL? {
-        (Bundle.main.object(forInfoDictionaryKey: "TimbrePrivacyPolicyURL") as? String).flatMap { URL(string: $0) }
-    }
-
     private var privacySection: some View {
         SettingsGroup(title: "Privacy", footer: Text("Timbre \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "")")) {
             HStack(alignment: .top, spacing: 12) {
@@ -473,13 +468,12 @@ struct SettingsView: View {
                     .padding(.top, 2)
             }
             .settingsRow()
-            if let policy = Self.privacyPolicy {
-                Hairline(leading: SettingsRowMetrics.inset)
-                Link(destination: policy) {
-                    SettingRow(icon: Glyph("doc.text"), title: Text("Privacy policy")) { RowGlyph(symbol: "arrow.up.right") }
-                }
-                .buttonStyle(RowButtonStyle())
+            Hairline(leading: SettingsRowMetrics.inset)
+            // The one address every link to the policy uses (the build's Info.plist, else the published one).
+            Link(destination: AppLinks.privacy) {
+                SettingRow(icon: Glyph("doc.text"), title: Text("Privacy policy")) { RowGlyph(symbol: "arrow.up.right") }
             }
+            .buttonStyle(RowButtonStyle())
             Hairline(leading: SettingsRowMetrics.inset)
             NavigationLink { Acknowledgements() } label: {
                 SettingRow(icon: Glyph("heart"), title: Text("Acknowledgements")) { RowGlyph(symbol: "chevron.right") }

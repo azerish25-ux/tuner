@@ -246,7 +246,8 @@ public enum ChartPractice {
 
 // MARK: - What's free
 
-/// Your songs on the free plan and with Timbre Pro, in the manner of `AccessPolicy`: three charts free, as many as you
+/// Your songs on the free plan and with Timbre Pro, in the manner of `AccessPolicy` (and `FreeTier`'s table): ten charts
+/// free, enough to make "paste any chord sheet and Timbre listens" the answer to "can I play my song?", as many as you
 /// like with Pro. Charts already saved always open, play and edit (they are the player's own); only adding past the
 /// limit asks for Pro. With the player's own recording, playing along (the chart following it) and syncing it by
 /// tapping along are free; slowing it down, looping a part and detecting its chords are Pro.
@@ -255,7 +256,7 @@ public enum ChartPractice {
 /// charging for it, modifying it (no loop, no slow-down) and synchronising anything to it, so no chart, chord or scroll
 /// is ever timed to an Apple Music track, and its DRM audio is never analysed.
 public enum YourSongsPolicy {
-    public static let freeChartLimit = 3
+    public static let freeChartLimit = 10
 
     public static func canAddChart(existing: Int, pro: Bool) -> Bool { pro || existing < freeChartLimit }
     public static func canPlayAlongWithRecording(pro: Bool) -> Bool { true }

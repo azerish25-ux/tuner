@@ -55,8 +55,8 @@ struct OnboardingView: View {
     /// Unanswered until the player picks; Continue waits for an answer. A beginner's goal starts on "Play my first songs".
     @State private var level: String?
     @State private var goal: String?
-    /// "right", "left" or "leftUpsideDown", as `UserSettings.handedness` holds it.
-    @State private var hand = "right"
+    /// The hand question's answer (`UserSettings.handedness`).
+    @State private var hand = Handedness.right
     @State private var showPaywall = false
     @State private var restoring = false
     @State private var restoreMessage: String?
@@ -75,6 +75,7 @@ struct OnboardingView: View {
     @State private var chordBefore = false
     @State private var chordPlayed = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         ZStack {
@@ -96,8 +97,8 @@ struct OnboardingView: View {
         }
         .onAppear {
             Analytics.start()
-            hand = HandednessAnswer.id(store.settings.handedness)
-            chordBefore = store.settings.firstChordDone == true
+            hand = store.settings.handedness
+            chordBefore = store.settings.firstChordDone
             logStep(page)
         }
         .onChange(of: page) { _, next in logStep(next) }
@@ -179,7 +180,7 @@ struct OnboardingView: View {
 
     private func afterHand() {
         let answer = hand
-        store.updateSettings { HandednessAnswer.store(answer, in: &$0.handedness) }
+        store.updateSettings { $0.handedness = answer }
         go(.microphone)
     }
 
@@ -214,7 +215,7 @@ struct OnboardingView: View {
         store.completeOnboarding(instrument: instrument, level: answeredLevel, goal: answeredGoal, minutes: dailyMinutes)
         Analytics.log("onboarding_complete", ["instrument": instrumentID ?? "chromatic", "goal": answeredGoal, "level": answeredLevel,
                                               "minutes": String(dailyMinutes), "reminder": reminderOn ? "on" : "off",
-                                              "placement_check": checkedFrom == nil ? "no" : "yes", "hand": asksHand ? hand : "none",
+                                              "placement_check": checkedFrom == nil ? "no" : "yes", "hand": asksHand ? hand.rawValue : "none",
                                               "first_tune": tuned ? "locked" : "no", "first_chord": chordPlayed ? "played" : "no"])
     }
 
@@ -254,7 +255,10 @@ struct OnboardingView: View {
             }
             .frame(maxHeight: .infinity)
             VStack(alignment: .leading, spacing: 12) {
-                Text("Tune in seconds.\nThen learn to play.").font(Typeface.display(32)).tracking(-0.8).foregroundStyle(Palette.ink)
+                // Two lines at the usual sizes (shrinking a little on a narrow phone); as many as it needs at the
+                // accessibility sizes.
+                Text("Tune in seconds.\nThen learn to play.").font(Typeface.display(40)).tracking(-1).foregroundStyle(Palette.ink)
+                    .lineLimit(typeSize.isAccessibilitySize ? nil : 2).minimumScaleFactor(0.75)
                     .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
                 Text("Timbre listens and tells you exactly how you did.")
                     .font(.body).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
@@ -435,11 +439,11 @@ struct OnboardingView: View {
 
     /// Right, left, and (not for bowed instruments) a right-handed instrument played left-handed, strung upside down.
     private var handAnswers: [Answer] {
-        var list = [Answer(id: "right", title: "Right-handed", glyph: .symbol("hand.raised")),
-                    Answer(id: "left", title: "Left-handed", glyph: .mirrored("hand.raised"))]
+        var list = [Answer(id: Handedness.right.rawValue, title: "Right-handed", glyph: .symbol("hand.raised")),
+                    Answer(id: Handedness.left.rawValue, title: "Left-handed", glyph: .mirrored("hand.raised"))]
         let bowed = ["violin", "cello"].contains(LearnCourse.fretKind(of: instrumentID) ?? "")
         if !bowed {
-            list.append(Answer(id: "leftUpsideDown", title: "Left-handed, strung upside down", glyph: .symbol("arrow.up.arrow.down")))
+            list.append(Answer(id: Handedness.leftUpsideDown.rawValue, title: "Left-handed, strung upside down", glyph: .symbol("arrow.up.arrow.down")))
         }
         return list
     }
@@ -457,7 +461,9 @@ struct OnboardingView: View {
     }
 
     private var handPage: some View {
-        let selection = Binding<String?>(get: { hand }, set: { if let value = $0 { hand = value } })
+        let selection = Binding<String?>(get: { hand.rawValue }, set: { id in
+            if let value = id.flatMap(Handedness.init(rawValue:)) { hand = value }
+        })
         return questionPage("Which hand do you play with?", "Necks, chord charts and the stage follow your hand.", enabled: true,
                             onContinue: afterHand) {
             answerList(handAnswers, selection: selection)
@@ -684,20 +690,6 @@ private struct AnswerGlyph: View {
         case .bars(let value): Image(systemName: "cellularbars", variableValue: value)
         case .mirrored(let name): Image(systemName: name).scaleEffect(x: -1, y: 1)
         }
-    }
-}
-
-/// The handedness answer written into, and read from, the setting whatever its stored form: a plain string or a
-/// `String`-backed value with the same names ("right", "left", "leftUpsideDown").
-private enum HandednessAnswer {
-    static func id(_ value: String) -> String { value }
-
-    static func id<Value: RawRepresentable>(_ value: Value) -> String where Value.RawValue == String { value.rawValue }
-
-    static func store(_ id: String, in field: inout String) { field = id }
-
-    static func store<Value: RawRepresentable>(_ id: String, in field: inout Value) where Value.RawValue == String {
-        if let value = Value(rawValue: id) { field = value }
     }
 }
 

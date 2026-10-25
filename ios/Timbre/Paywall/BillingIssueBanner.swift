@@ -5,14 +5,15 @@ import SwiftUI
 /// subscription sheet, where the payment method is updated. It shows only while there is such a problem
 /// (`CommerceService.billingIssue`): in the Billing Grace Period Pro carries on and the banner says until when; in
 /// Billing Retry Pro has paused. Back from the sheet, entitlements are checked again, so a fixed payment clears it at
-/// once. The app shell places it (full width inside the screen's gutters, above the content).
+/// once. The app shell places it above the content; it keeps to the screen's gutters itself.
 struct BillingIssueBanner: View {
     @EnvironmentObject private var commerce: CommerceService
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var managing = false
 
     var body: some View {
-        Group {
+        // A stack rather than a group: the sheet stays attached while it is open, even once the problem is fixed.
+        VStack(spacing: 0) {
             if let issue = commerce.billingIssue {
                 card(issue)
                     .transition(.adaptive(.move(edge: .top).combined(with: .opacity), reduceMotion: reduceMotion))
@@ -55,6 +56,8 @@ struct BillingIssueBanner: View {
             .stillCard(cornerRadius: Metrics.cornerTile, padding: Metrics.tilePadding, tint: Palette.amber)
         }
         .buttonStyle(PressScaleStyle())
+        .padding(.horizontal, Metrics.gutter)
+        .padding(.vertical, 8)
         .accessibilityElement(children: .combine)
         .accessibilityHint(Text("Opens your App Store subscription"))
         .accessibilityIdentifier("billing.banner")

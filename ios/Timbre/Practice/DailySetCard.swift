@@ -58,8 +58,9 @@ extension DailyActivity.Kind {
         }
     }
 
-    /// Chords, scales and the drone are Pro tools: a free player's tap opens the paywall.
-    var needsPro: Bool { [.chord, .scale, .drone].contains(self) }
+    /// Scales and the drone are Pro tools: a free player's tap opens the paywall. Chords is free (its open shapes and
+    /// Check, `FreeTier`).
+    var needsPro: Bool { [.scale, .drone].contains(self) }
 }
 
 /// Minutes as the locale writes them ("4 min", "4 Min.").

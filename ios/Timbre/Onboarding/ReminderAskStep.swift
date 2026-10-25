@@ -26,7 +26,7 @@ struct ReminderAskStep: View {
                 bell.padding(.top, 36)
                 VStack(spacing: 10) {
                     Text("Keep your \(max(1, streak))-day streak")
-                        .font(Typeface.display(32)).tracking(-0.6).foregroundStyle(Palette.ink)
+                        .font(Typeface.display(28)).tracking(-0.5).foregroundStyle(Palette.ink)
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)

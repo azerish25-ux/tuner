@@ -548,15 +548,15 @@ final class TimbreUITests: XCTestCase {
         settle(1); shot("61-along-done")
         // App Store frame #7. The results land in order: the stars, the coach, the XP counting up, then the level bar
         // (labelled "Level N") fills under them. Its arrival means the XP has finished counting; the badges that pop in
-        // after it and the bar's fill settle before the picture. Kept only with three stars ("Flawless" or "Great work").
+        // after it and the bar's fill settle before the picture. Kept only with three stars (the row reads "3 of 3 stars").
         element("lesson.continue").tap()
         _ = labeled("Level [0-9]+").waitForExistence(timeout: 15)
         let results = stillScreenshot(timeout: 3)
-        let headline = labeled("(Flawless|Great work)").exists
+        let headline = labeled("3 of 3 stars").exists
         let room = resultsFit()
         storeFrame("62-lesson-results", picture: results, ok: headline && room.fits,
                    headline ? room.summary
-                            : "the results don't read Flawless or Great work: the play-along wasn't played clean, so fewer than three stars")
+                            : "the results don't show three stars: the play-along wasn't played clean")
     }
 
     /// Whether the results' first screen fits above the pinned buttons (LessonResults): the Share pill and the level bar

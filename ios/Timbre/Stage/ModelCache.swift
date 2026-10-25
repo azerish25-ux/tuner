@@ -1,12 +1,13 @@
 import RealityKit
 import UIKit
 
-/// Loaded 3D instrument models kept for reuse, so a lesson loads its instrument once however many of its steps show it
-/// (the "Show me" demonstrations, `ShowMeStage`). Each stage gets its own copy (`instance(of:)`), which shares the
-/// cached model's meshes and textures; the copies are free to move, hide and re-parent their parts.
+/// Loaded 3D instrument models kept for reuse: every usdz the app shows loads through here, so the tuner's stage
+/// (`InstrumentStage`) and a lesson's "Show me" demonstrations (`ShowMeStage`) load an instrument once however many
+/// of them show it. Each stage gets its own copy (`instance(of:)`), which shares the cached model's meshes and
+/// textures; the copies are free to move, hide and re-parent their parts.
 ///
-/// It keeps the most recent model only (a lesson plays one instrument), loads each model at most once at a time (a
-/// second request joins the first), and lets go of everything on a memory warning or when the app goes to the
+/// It keeps the most recent model only (a player plays one instrument at a time), loads each model at most once at a
+/// time (a second request joins the first), and lets go of everything on a memory warning or when the app goes to the
 /// background. The stage environment (`StageLighting`) is made once and shared too.
 @MainActor
 final class ModelCache {
@@ -73,7 +74,7 @@ final class ModelCache {
         if let environmentLoad { return await environmentLoad.value }
         let load = Task<EnvironmentResource?, Never> { @MainActor in
             guard let image = StageLighting.environmentImage() else { return nil }
-            return try? await EnvironmentResource(equirectangular: image, withName: "timbre.showme")
+            return try? await EnvironmentResource(equirectangular: image, withName: "timbre.stage")
         }
         environmentLoad = load
         let resource = await load.value

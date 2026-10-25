@@ -3,7 +3,7 @@ import TimbreCore
 import TipKit
 
 /// Timbre's coach marks (TipKit): a one-time hint at the moment a feature matters, never over a paywall or a sheet.
-/// UI tests and the store-screenshot runs hide them all, so every picture stays clean.
+/// Automated and demo runs hide them all, so no test or capture has a tip over it.
 enum TimbreTips {
     /// False under XCTest, the UI tests (they all set TIMBRE_TEST_STORAGE_ID), the demo pitch, demo data and the
     /// store scenes. Release builds never read these values.

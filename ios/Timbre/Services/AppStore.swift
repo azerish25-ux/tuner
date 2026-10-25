@@ -532,6 +532,7 @@ final class AppStore: ObservableObject {
     @discardableResult func selectInstrument(_ instrument: Instrument, photo: String? = nil, tuning: Tuning? = nil) -> Bool {
         guard canTune(instrument) else { presentPaywall("instrument", instrument: instrument); return false }
         if let tuning, tuning.instrumentId != instrument.id { return false }
+        if let tuning, !AccessPolicy.canUse(tuning: tuning, of: instrument, pro: isPro) { presentPaywall("tuning", instrument: instrument); return false }
         endTuningSession()
         let saved = updateSettings {
             $0.selectedInstrumentId = instrument.id; $0.selectedPhotoAsset = photo

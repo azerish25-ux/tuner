@@ -52,9 +52,12 @@ struct CelebrationOverlay: View {
                 if let seconds = store.lastTuneSeconds, seconds > 0 {
                     Label("\(seconds) s", systemImage: "stopwatch.fill").foregroundStyle(Palette.ink)
                 }
-                Label("+\(XPReward.fullTune) XP", systemImage: "sparkles").foregroundStyle(Palette.mint)
-                if store.streak.current > 0 {
-                    Label("\(store.streak.current)-day streak", systemImage: "flame.fill").foregroundStyle(Palette.flameInk)
+                // The simple tuner keeps to the tuning: no XP or streak.
+                if !store.settings.simpleTuner {
+                    Label("+\(XPReward.fullTune) XP", systemImage: "sparkles").foregroundStyle(Palette.mint)
+                    if store.streak.current > 0 {
+                        Label("\(store.streak.current)-day streak", systemImage: "flame.fill").foregroundStyle(Palette.flameInk)
+                    }
                 }
             }
             .font(Typeface.label(13))

@@ -53,8 +53,7 @@ final class TunerAnnouncer {
     /// "8 cents sharp, loosen" (the words on screen under the meter).
     static func guidance(_ shown: Int) -> String {
         if Double(abs(shown)) <= Palette.tuningBand { return String(localized: "Hold it…") }
-        let turn = shown < 0 ? String(localized: "Tighten") : String(localized: "Loosen")
-        return NoteReadout.spoken(shown, locked: false) + ", " + turn.lowercased()
+        return NoteReadout.guidance(shown, locked: false)
     }
 
     /// Silence: the next held pitch starts again with its note.

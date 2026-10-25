@@ -2,6 +2,8 @@ import SwiftUI
 
 /// Under the tuner's stage: how it picks its target (AUTO | MANUAL) and the reference tone, side by side on glass.
 /// When a language's words don't fit, the reference button keeps only its tuning fork (VoiceOver still names it).
+/// The words grow with Dynamic Type up to the first accessibility size (the compact face takes over when they no
+/// longer fit); beyond it, a long press on any control shows it large (Large Content Viewer).
 struct TunerStageBar: View {
     let automatic: Bool
     /// Chromatic: the modes follow or hold a note rather than a string.
@@ -16,7 +18,7 @@ struct TunerStageBar: View {
             bar(compact: false)
             bar(compact: true)
         }
-        .dynamicTypeSize(...DynamicTypeSize.xLarge)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 
     /// iOS 26: both pieces of Liquid Glass in one container (Design/Glass.swift), sampling one backdrop in one pass;
@@ -80,6 +82,9 @@ struct DetectionPill: View {
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityLabel(auto ? Text("Automatic") : Text("Manual"))
+        .accessibilityShowsLargeContentViewer {
+            Label(auto ? "Automatic" : "Manual", systemImage: auto ? "dot.radiowaves.left.and.right" : "hand.point.up.left")
+        }
         .accessibilityHint(hint(auto: auto))
         .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityIdentifier(auto ? "tune.auto" : "tune.manual")
@@ -140,6 +145,9 @@ struct ReferenceToneButton: View {
         .buttonStyle(PressScaleStyle())
         .animation(Motion.quick, value: playing)
         .accessibilityLabel(playing ? Text("Stop reference tone") : Text("Play reference tone"))
+        .accessibilityShowsLargeContentViewer {
+            Label(playing ? "Stop reference tone" : "Play reference tone", systemImage: playing ? "speaker.wave.2.fill" : "tuningfork")
+        }
         .accessibilityIdentifier("tune.tone")
     }
 

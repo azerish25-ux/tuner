@@ -15,6 +15,7 @@ struct TuneView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.locale) private var locale
     /// Settings › Strobe precision: a strobe band in place of the needle meter.
     @AppStorage(TuneView.strobeKey) private var strobeView = false
     static let strobeKey = "tune.strobe"
@@ -66,21 +67,30 @@ struct TuneView: View {
             }
             CelebrationOverlay()
         }
-        .onAppear { autoListen() }
+        .onAppear {
+            // The tuner's feel, every reading: the detents and lock, or with Tune by feel the beat (Design/Haptics.swift).
+            store.onTunerFrame = { frame in Haptics.shared.feel(frame) }
+            autoListen()
+        }
+        .onChange(of: store.settings.tuneByFeel, initial: true) { _, on in Haptics.shared.byFeel = on }
         .onChange(of: scenePhase) { _, phase in if phase == .active && store.selectedTab == .tune { autoListen() } }
         .onChange(of: store.requestReviewNow) { _, now in
             if now { requestReview(); store.requestReviewNow = false }
         }
         .task(id: "\(store.tuning.id) \(store.settings.referencePitchHz) \(store.settings.temperamentId)") {
-            SoundFX.shared.prepareLocks(store.courses.map { store.target(for: $0) })
+            let strings = store.courses.map { store.target(for: $0) }
+            SoundFX.shared.prepareLocks(strings)
+            SoundFX.shared.prepareTuned(strings)
         }
         .onChange(of: store.lockedCourses) { old, new in
             // A string just locked: a soft bell at its own pitch (an octave up when it's low).
             guard let index = new.subtracting(old).first, let course = store.courses.first(where: { $0.index == index }) else { return }
-            // The last string: a resolving chord for the whole instrument instead of one more bell.
+            // The last string: the instrument's own open strings, rolled with their bells and strummed, instead of
+            // one more bell. Automatic detection stays put while they ring.
             if store.allCoursesLocked {
-                store.autoQuietUntil = ProcessInfo.processInfo.systemUptime + 2.6
-                SoundFX.shared.play(.tuned)
+                let strings = store.courses.map { store.target(for: $0) }
+                store.autoQuietUntil = ProcessInfo.processInfo.systemUptime + SoundSynth.tunedBloom(count: strings.count) + 2
+                SoundFX.shared.playTuned(frequencies: strings)
             } else {
                 store.autoQuietUntil = ProcessInfo.processInfo.systemUptime + 1.2
                 SoundFX.shared.playLock(frequency: store.target(for: course))
@@ -159,7 +169,9 @@ struct TuneView: View {
         let reading = store.live.reading
         let heard = front && audio.running && !store.live.preserved && reading.cents != nil
         let shown = heard ? (motion.shown ?? reading.cents.map { Int($0.rounded()) }) : nil
-        announcer.step(note: store.targetName, shown: shown, locked: reading.inTune, now: ProcessInfo.processInfo.systemUptime)
+        let note = store.targetName
+        announcer.step(note: note, spoken: NoteNames.spoken(note, locale: locale, system: store.settings.notation), shown: shown,
+                       locked: reading.inTune, now: ProcessInfo.processInfo.systemUptime)
     }
 
     private func autoListen() {
@@ -187,9 +199,9 @@ struct TuneView: View {
             .accessibilityIdentifier("tune.instrument")
             Spacer(minLength: 4)
             // The cluster every tab shares (streak and level, both to Progress), then the tuner's own settings:
-            // 44 pt targets throughout.
+            // 44 pt targets throughout. The simple tuner keeps only the settings.
             HStack(spacing: 2) {
-                HeaderControls()
+                if !store.settings.simpleTuner { HeaderControls() }
                 IconButton(symbol: "slider.horizontal.3", size: .compact, label: "Settings") { store.showSettings = true }
                     .accessibilityIdentifier("settings.open")
             }
@@ -220,7 +232,7 @@ struct TuneView: View {
                           controlsReserve: controls ? Self.controlsReserve : 0)
     }
 
-    /// The width the side controls take on the stage's trailing edge: the 52 pt orb, its 14 pt margin and a gap.
+    /// The width the side controls take on the stage's trailing edge: the 52 pt orb, the gutter and a gap.
     static let controlsReserve: CGFloat = 76
 
     /// Nothing drives the stage (not listening, no reading held): its animations settle, then stop redrawing.
@@ -274,6 +286,8 @@ struct TuneView: View {
                             onSelect: { selectPeg($0) }, resting: resting).padding(28)
             }
         }
+        // Pictures of instruments stay as they are under Smart Invert.
+        .accessibilityIgnoresInvertColors()
         // The bar under the stage has a strip of its own, so it never covers the nut and strings the lock runs down.
         .padding(.bottom, Self.stageBarClearance)
         .overlay { stageControls(rail: controls) }
@@ -403,9 +417,12 @@ struct TuneView: View {
     }
 
     /// The needle meter, or with Strobe precision on, a strobe band that drifts with the error and stands still in tune.
-    /// In an iPad's column the meter spans the readout (`ReadoutScale.meterInset`) and stands a little taller.
+    /// In an iPad's column the meter spans the readout (`ReadoutScale.meterInset`) and stands a little taller. Chromatic
+    /// shows none: its strobe dial on the stage is the meter, and a second one under the note would say it twice.
     @ViewBuilder private func meter(locked: Bool, shown: Int?, scale: ReadoutScale) -> some View {
-        if strobeView {
+        if store.referenceMode {
+            EmptyView()
+        } else if strobeView {
             StrobeBand(cents: shown.map { Double($0) }, phase: reduceMotion ? 0 : motion.phase, locked: locked, active: motion.cents != nil)
                 .frame(height: scale.large ? 32 : 26).padding(.vertical, 6).padding(.horizontal, scale.meterInset)
         } else {
@@ -434,8 +451,9 @@ struct TuneView: View {
     private func tuningPanel(_ scale: ReadoutScale) -> some View {
         VStack(spacing: 6) {
             readout(scale)
-            // In Chromatic: a free player's Pro instrument from onboarding, its strings and its stage in Pro.
-            if !store.referenceMode { questLine } else { ChromaticStandInHint() }
+            // In Chromatic: a free player's Pro instrument from onboarding, its strings and its stage in Pro. The simple
+            // tuner has no quest line.
+            if store.referenceMode { ChromaticStandInHint() } else if !store.settings.simpleTuner { questLine }
             StringRail(motion: motion).opacity(store.referenceMode ? 0 : 1).frame(height: store.referenceMode ? 8 : nil)
         }
         .padding(.bottom, 8)
@@ -479,8 +497,9 @@ struct TuneView: View {
     private func stageControls(rail: Bool) -> some View {
         VStack(spacing: 4) {
             if rail {
+                // The gutter clear of the orb's frame, which holds its breathing halo: nothing reaches the edge.
                 sideControls
-                    .padding(.trailing, 14)
+                    .padding(.trailing, Metrics.gutter)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
             } else {
                 Spacer(minLength: 0)
@@ -515,8 +534,9 @@ struct StageControl: View {
 }
 
 /// The caption under a stage control ("Strum", "Listen"): Sora 10 on the caption2 curve (`Typeface.badge`), mint while
-/// the control is on. It stops growing at xLarge so the column of controls keeps its shape over the instrument; the
-/// control's own VoiceOver label carries the words.
+/// the control is on. It grows up to the first accessibility size, then holds so the column of controls keeps its
+/// shape over the instrument; past that a long press shows it large (each control offers the Large Content Viewer).
+/// The control's own VoiceOver label carries the words.
 struct StageCaption: View {
     let text: Text
     var active = false
@@ -526,7 +546,7 @@ struct StageCaption: View {
             .foregroundStyle(active ? Palette.mint : Palette.inkSoft)
             .lineLimit(1)
             .fixedSize()
-            .dynamicTypeSize(...DynamicTypeSize.xLarge)
+            .dynamicTypeSize(...DynamicTypeSize.accessibility1)
             .accessibilityHidden(true)
     }
 }
@@ -552,8 +572,9 @@ private struct StageControlDisc: ViewModifier {
     }
 }
 
-/// Listening on and off: mint when listening, its halo breathing with the input level. On the stage it is captioned
-/// like Strum ("Listen", then "Pause" while it listens); in a header it stands alone.
+/// Listening on and off: mint when listening, its halo breathing with the input level inside the orb's own 52 pt
+/// frame. On the stage it is captioned like Strum ("Listen", then "Pause" while it listens); in a header it stands
+/// alone. A long press shows it large (Large Content Viewer).
 struct ListenOrb: View {
     var captioned = false
     @EnvironmentObject private var store: AppStore
@@ -572,12 +593,16 @@ struct ListenOrb: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text(audio.running ? "Pause listening" : "Listen"))
+        .accessibilityShowsLargeContentViewer {
+            Label(audio.running ? "Pause listening" : "Listen", systemImage: audio.running ? "pause.fill" : "mic.fill")
+        }
         .accessibilityIdentifier("listenButton")
     }
 
     private func orb(level: Double) -> some View {
         ZStack {
-            Circle().fill(Palette.mint.opacity(0.2)).frame(width: 52, height: 52).scaleEffect(1 + level * 0.35).opacity(audio.running ? 1 : 0)
+            // The halo breathes from just outside the disc to the edge of the frame, never past it.
+            Circle().fill(Palette.mint.opacity(0.2)).frame(width: 46, height: 46).scaleEffect(1 + level * 0.13).opacity(audio.running ? 1 : 0)
             // At rest the stage controls' disc; listening, solid mint over it.
             Color.clear.frame(width: 44, height: 44).stageControlDisc().opacity(audio.running ? 0 : 1)
             Circle().fill(Palette.mint).frame(width: 44, height: 44).opacity(audio.running ? 1 : 0)
@@ -628,8 +653,8 @@ enum TuneArrangement: Equatable {
     /// Landscape windows narrower than this keep the two columns (the readout would be squeezed).
     static let paneMinWidth: CGFloat = 1150
 
-    /// The gap either side of the landscape control rail (`TuneView.controlRail`): the orb's halo grows 9 pt past its
-    /// disc while it listens, and the rail stays a clear column of its own beside the side pane.
+    /// The gap either side of the landscape control rail (`TuneView.controlRail`): the rail stays a clear column of its
+    /// own beside the side pane.
     static let railGap: CGFloat = 18
 
     /// The landscape control rail: the 52 pt orb and its gaps (`TuneView.controlRail`).

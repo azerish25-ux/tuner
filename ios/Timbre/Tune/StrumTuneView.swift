@@ -388,9 +388,9 @@ struct StrumTuneView: View {
             return
         }
         guard !store.allCoursesLocked else {
-            // Already tuned string by string this session: the chord again, nothing new to credit.
+            // Already tuned string by string this session: the strings' own strum again, nothing new to credit.
             Haptics.shared.done()
-            SoundFX.shared.play(.tuned)
+            SoundFX.shared.playTuned(frequencies: store.courses.map { store.target(for: $0) })
             return
         }
         Haptics.shared.lock()
@@ -546,6 +546,9 @@ struct StrumToggle: View {
             }
             .buttonStyle(PressScaleStyle())
             .accessibilityLabel(Text(plucks ? "Pluck to tune" : "Strum to tune"))
+            .accessibilityShowsLargeContentViewer {
+                Label(plucks ? "Pluck to tune" : "Strum to tune", systemImage: "guitars")
+            }
             .accessibilityHint(Text(plucks ? "Pluck every open string once to read them all" : "Strum every open string once to read them all"))
             .accessibilityIdentifier("tune.strum")
         }

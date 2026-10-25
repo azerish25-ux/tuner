@@ -249,12 +249,12 @@ struct ChartDock: View {
                     if follower.tapNow() { Haptics.shared.beat(accent: true) }
                 } label: {
                     VStack(spacing: 0) {
-                        Text("Tap").font(Typeface.label(12))
-                        Text(verbatim: name).font(Typeface.display(26)).lineLimit(1).minimumScaleFactor(0.6)
+                        Text("Tap").font(Typeface.label(.caption))
+                        Text(verbatim: name).font(Typeface.display(.title)).lineLimit(1).minimumScaleFactor(0.6)
                     }
-                    .foregroundStyle(Palette.onGold)
+                    .foregroundStyle(Palette.onAccent)
                     .frame(maxWidth: .infinity, minHeight: 70)
-                    .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.amber))
+                    .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.mint))
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(PressScaleStyle())
@@ -330,7 +330,7 @@ struct RoundPlayFace: View {
             .contentTransition(.symbolEffect(.replace))
             .frame(width: 52, height: 52)
             .background(Circle().fill(Palette.mint))
-            .shadow(color: Palette.mint.opacity(playing ? 0.5 : 0.25), radius: playing ? 14 : 8)
+            .liveGlow(playing, radius: 14)
     }
 }
 
@@ -356,7 +356,7 @@ struct RecordingScrubber: View {
                     Spacer(minLength: 4)
                     Text(verbatim: Self.clock(player.duration))
                 }
-                .font(Typeface.number(11)).foregroundStyle(Palette.inkFaint)
+                .font(Typeface.number(.caption)).foregroundStyle(Palette.inkFaint)
             }
         }
         .accessibilityElement(children: .ignore)
@@ -379,7 +379,7 @@ struct RecordingScrubber: View {
             if let loop = player.loop {
                 let start = CGFloat(loop.lowerBound / duration) * width
                 let end = CGFloat(loop.upperBound / duration) * width
-                Capsule().fill(Palette.amber.opacity(0.45)).frame(width: max(4, end - start), height: 10).offset(x: start)
+                Capsule().fill(Palette.sky.opacity(0.45)).frame(width: max(4, end - start), height: 10).offset(x: start)
             }
             Capsule().fill(Palette.mint).frame(width: max(6, width * share), height: 6)
             Circle().fill(Palette.ink).frame(width: 14, height: 14).offset(x: max(0, width * share - 7))

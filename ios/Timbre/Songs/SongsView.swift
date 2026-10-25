@@ -987,6 +987,8 @@ struct SongsView: View {
         .menuStyle(.button)
         .buttonStyle(PressScaleStyle())
         .menuOrder(.fixed)
+        // The badges stop growing at xxLarge: a long press shows the control magnified instead.
+        .accessibilityShowsLargeContentViewer { Label("Versions", systemImage: "square.stack") }
         .accessibilityLabel(Text("Versions"))
         .accessibilityValue(Text(verbatim: names))
         .accessibilityIdentifier("songs.versions.\(song.id)")
@@ -1619,6 +1621,10 @@ private struct PreviewDisc: View {
             .contentShape(Circle())
         }
         .buttonStyle(PressScaleStyle())
+        // A fixed-size disc with no words: a long press shows what it does, magnified.
+        .accessibilityShowsLargeContentViewer {
+            Label { active ? Text("Stop") : Text("Hear it") } icon: { Image(systemName: active ? "stop.fill" : "play.fill") }
+        }
         .accessibilityLabel(active ? Text("Stop") : Text("Hear it"))
     }
 

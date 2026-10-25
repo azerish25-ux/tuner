@@ -119,7 +119,7 @@ final class CommerceIntegrationTests: XCTestCase {
         try await subscribeMonthly()
         try session.forceRenewalOfSubscription(productIdentifier: TimbreProduct.monthly)
         try await refreshUntil { self.commerce.billingIssue != nil }
-        guard case .gracePeriod = commerce.billingIssue else {
+        guard case .gracePeriod? = commerce.billingIssue else {
             return XCTFail("expected the grace period, got \(String(describing: commerce.billingIssue))")
         }
         XCTAssertTrue(commerce.isPro, "a payer keeps Pro while the App Store retries the payment")

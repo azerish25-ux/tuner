@@ -99,8 +99,8 @@ final class ChartPlaybackTests: XCTestCase {
     }
 
     func testFreeAndPro() {
-        XCTAssertTrue(YourSongsPolicy.canAddChart(existing: 2, pro: false))
-        XCTAssertFalse(YourSongsPolicy.canAddChart(existing: 3, pro: false))
+        XCTAssertTrue(YourSongsPolicy.canAddChart(existing: 9, pro: false))
+        XCTAssertFalse(YourSongsPolicy.canAddChart(existing: 10, pro: false))
         XCTAssertTrue(YourSongsPolicy.canAddChart(existing: 300, pro: true))
         XCTAssertTrue(YourSongsPolicy.canPlayAlongWithRecording(pro: false))
         XCTAssertFalse(YourSongsPolicy.canSlowDownAndLoop(pro: false))

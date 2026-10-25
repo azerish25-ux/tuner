@@ -566,13 +566,15 @@ struct PracticeView: View {
         var id: PracticeRoute { route }
     }
 
-    /// The same tools as the phone's rows, in the same order (the fretted ones only on a fretted instrument).
+    /// The same tools as the phone's rows, in the same order (the fretted ones only on a fretted instrument). Chords is
+    /// free (its open-position shapes and Check; barre shapes are Pro inside it, `FreeTier`); the drone, scales and
+    /// intonation are Pro.
     private var tools: [Tool] {
         var list = [Tool(route: .metronome, symbol: "metronome", title: "Metronome", pro: false),
                     Tool(route: .drone, symbol: "waveform.path", title: "Drone", pro: true),
                     Tool(route: .voice, symbol: "music.mic", title: "Voice", pro: false)]
         if fretted {
-            list += [Tool(route: .chords, symbol: "hand.raised.fingers.spread", title: "Chords", pro: true),
+            list += [Tool(route: .chords, symbol: "hand.raised.fingers.spread", title: "Chords", pro: false),
                      Tool(route: .scales, symbol: "point.3.connected.trianglepath.dotted", title: "Scales", pro: true),
                      Tool(route: .intonation, symbol: "ruler", title: "Intonation", pro: true)]
         }
@@ -647,7 +649,7 @@ struct PracticeView: View {
     }
 
     @ViewBuilder private var frettedTools: some View {
-        tool(.chords, "hand.raised.fingers.spread", "Chords", pro: true)
+        tool(.chords, "hand.raised.fingers.spread", "Chords", pro: false)
         tool(.scales, "point.3.connected.trianglepath.dotted", "Scales", pro: true)
         tool(.intonation, "ruler", "Intonation", pro: true)
     }

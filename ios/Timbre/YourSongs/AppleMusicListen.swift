@@ -231,7 +231,7 @@ struct AppleMusicCard: View {
                 if listener.queuedId == catalog.id.rawValue {
                     TimelineView(.periodic(from: .now, by: 0.5)) { _ in
                         Text(verbatim: Self.clock(listener.playbackTime) + (catalog.duration.map { " / " + Self.clock($0) } ?? ""))
-                            .font(Typeface.number(11)).foregroundStyle(Palette.inkFaint)
+                            .font(Typeface.number(.caption)).foregroundStyle(Palette.inkFaint)
                     }
                 }
             }

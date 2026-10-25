@@ -302,7 +302,7 @@ private struct ActionFace<S: InsettableShape>: View {
     var body: some View {
         if prominent && enabled {
             shape.fill(pressed ? Palette.mint.mix(with: .black, by: 0.12) : Palette.mint)
-                .overlay(shape.strokeBorder(Self.highlight, lineWidth: 1))
+                .overlay(shape.strokeBorder(highlight, lineWidth: 1))
         } else if prominent {
             shape.fill(Palette.surface).overlay(shape.strokeBorder(Palette.controlLine, lineWidth: 1))
         } else if let tint {
@@ -314,7 +314,9 @@ private struct ActionFace<S: InsettableShape>: View {
     }
 
     /// Light along the top edge, gone by the middle: the one highlight a resting button has.
-    private static let highlight = LinearGradient(colors: [.white.opacity(0.55), .white.opacity(0)], startPoint: .top, endPoint: .center)
+    private var highlight: LinearGradient {
+        LinearGradient(colors: [.white.opacity(0.55), .white.opacity(0)], startPoint: .top, endPoint: .center)
+    }
 }
 
 /// A chip: graphite with a control outline, or chosen, a pill of light. On iOS 26 the chosen pill is Liquid Glass

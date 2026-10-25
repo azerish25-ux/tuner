@@ -310,7 +310,7 @@ struct NoteReadout: View {
         .accessibilityElement(children: .ignore)
         // "Target E flat 3", as a musician says it in the app's language.
         .accessibilityLabel(Text("Target \(NoteNames.spoken(note, locale: locale, system: NoteNames.active))"))
-        .accessibilityValue(Text(Self.spoken(shown, locked: locked)))
+        .accessibilityValue(Text(Self.guidance(shown, locked: locked)))
         // VoiceOver reads the live value when it needs it rather than on every change.
         .accessibilityAddTraits(.updatesFrequently)
     }
@@ -388,6 +388,14 @@ struct NoteReadout: View {
         if abs(cents) < 2 { return String(localized: "In tune") }
         let amount = Int(abs(cents).rounded())
         return cents < 0 ? String(localized: "\(amount) cents flat") : String(localized: "\(amount) cents sharp")
+    }
+
+    /// The readout's value for VoiceOver: the cents and, outside the lock band, the turn the screen shows under the
+    /// meter ("12 cents flat, tighten"); "In tune" once locked.
+    static func guidance(_ shown: Int?, locked: Bool) -> String {
+        guard let shown, !locked, Double(abs(shown)) > Palette.tuningBand else { return spoken(shown, locked: locked) }
+        let turn = shown < 0 ? String(localized: "Tighten") : String(localized: "Loosen")
+        return spoken(shown, locked: false) + ", " + turn.lowercased()
     }
 
     /// VoiceOver for the tuner readout: the same whole cents the screen shows; "In tune" once locked.

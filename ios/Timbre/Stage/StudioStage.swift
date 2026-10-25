@@ -59,6 +59,17 @@ struct StageCard: Sendable {
         }
     }
 
+    /// The same picture turned over left to right (a left-handed instrument): every point mirrored, and every peg
+    /// turning the other way.
+    func mirrored() -> StageCard {
+        var flipped: [String: [Double]] = [:]
+        for (key, point) in points { flipped[key] = [Double(1 - point.x), Double(point.y)] }
+        var card = StageCard(points: flipped)
+        card.turns = turns.mapValues { -$0 }
+        card.slides = slides
+        return card
+    }
+
     /// The headstock's centre line: the mean x of the nut points (of the pegs when there are none).
     var centerX: CGFloat {
         let nuts = points.filter { $0.key.hasSuffix(".nut") }.map(\.value.x)
@@ -72,7 +83,8 @@ struct StageCard: Sendable {
 /// own saddle and nut (see `StringDrawing`) and a glowing ring on the peg, which checks off in tune,
 /// with the note and turn cue beside it. When the host asks for focus, the picture dollies in to its
 /// headstock as the 3D stage does (`StageFrame`). Colours follow the tuner's rule; Reduce Motion cuts
-/// the dolly and stills the pulse and the ripple while the colours keep following the pitch.
+/// the dolly and stills the pulse and the ripple while the colours keep following the pitch. A left-handed
+/// player's picture is its mirror image (`HandStyle.mirrorsUpright`), the words beside it reading as usual.
 struct StudioStage: View {
     let imageName: String
     let card: StageCard?
@@ -81,6 +93,8 @@ struct StudioStage: View {
     /// The host isn't listening and holds no reading: once the dolly, the string's glow and the ring have settled,
     /// the stage stops redrawing (and its ring stops pulsing) until something changes.
     var resting = false
+    /// Opens on the close-up rather than dollying in to it (the 3D stage handing over to its picture at rest).
+    var startsClose = false
     @State private var motion = Motion2D()
     /// A change at rest (a new picture or string, the close-up, the window's size, listening stopping) still moves:
     /// the stage keeps drawing for `StageSettle.window` before it holds still.
@@ -88,8 +102,15 @@ struct StudioStage: View {
     /// The moment the string locks, for its shimmer.
     @State private var flash = LockFlash()
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @CurrentHand private var hand
 
     var body: some View {
+        let mirrored = hand.mirrorsUpright
+        stage(card: mirrored ? card?.mirrored() : card, mirrored: mirrored)
+            .accessibilityIgnoresInvertColors()
+    }
+
+    private func stage(card: StageCard?, mirrored: Bool) -> some View {
         GeometryReader { geometry in
             let size = geometry.size
             if let card {
@@ -98,7 +119,7 @@ struct StudioStage: View {
                 let still = resting && !settling
                 // Every frame while anything moves: the dolly moves the picture, its rings and its tap targets together.
                 TimelineView(.animation(minimumInterval: reduceMotion ? 0.1 : nil, paused: still)) { timeline in
-                    live(card: card, size: size, date: timeline.date, idle: still)
+                    live(card: card, mirrored: mirrored, size: size, date: timeline.date, idle: still)
                 }
                 .task(id: key) {
                     settling = true
@@ -107,13 +128,14 @@ struct StudioStage: View {
                     if !Task.isCancelled { settling = false }
                 }
             } else {
-                picture(StageFrame.whole(in: size))
+                picture(StageFrame.whole(in: size), mirrored: mirrored)
             }
         }
     }
 
-    private func picture(_ frame: StageFrame) -> some View {
+    private func picture(_ frame: StageFrame, mirrored: Bool) -> some View {
         Image(imageName).resizable().interpolation(.high).scaledToFit()
+            .scaleEffect(x: mirrored ? -1 : 1, y: 1)
             .frame(width: frame.side, height: frame.side)
             .shadow(color: .black.opacity(0.55), radius: 30, y: 18)
             .position(x: frame.origin.x + frame.side / 2, y: frame.origin.y + frame.side / 2)
@@ -121,15 +143,15 @@ struct StudioStage: View {
 
     /// - Parameter idle: the stage has settled at rest and this is its last frame until something changes: the
     ///   peg's ring is drawn still rather than frozen mid-pulse.
-    @ViewBuilder private func live(card: StageCard, size: CGSize, date: Date, idle: Bool = false) -> some View {
+    @ViewBuilder private func live(card: StageCard, mirrored: Bool, size: CGSize, date: Date, idle: Bool = false) -> some View {
         let state = input()
         let key = shownAnchor(card, state).map { shownKey(card, state, anchor: $0) }
         let frame = motion.frame(picture: imageName, head: card.head, peg: key.flatMap { card.point("\($0).peg") },
                                  focus: state.focus, size: size, now: date.timeIntervalSinceReferenceDate, still: reduceMotion,
-                                 centred: state.wholeHeadstock)
+                                 centred: state.wholeHeadstock, startsClose: startsClose)
         ZStack {
             ZStack {
-                picture(frame)
+                picture(frame, mirrored: mirrored)
                 Canvas { context, _ in draw(&context, card: card, frame: frame, date: date, idle: idle) }
                     .allowsHitTesting(false)
                     .accessibilityHidden(true)
@@ -219,7 +241,8 @@ struct StudioStage: View {
             // The string only lights up while it rings (or holds the in-tune glow); a silent string stays the picture's own.
             let presence = max(g, min(1, e * 2.5))
             if state.listening, presence > 0.02 {
-                StringDrawing.draw(&context, from: p0, to: p1, color: color, energy: e, glow: g, phase: phase, presence: presence, time: now, still: still)
+                StringDrawing.draw(&context, from: p0, to: p1, color: color, energy: e, glow: g, phase: phase, presence: presence, time: now, still: still,
+                                   swing: Double(state.marketingScale))
             }
         }
         if let peg = card.point("\(key).peg") {
@@ -289,16 +312,26 @@ struct StageFrame {
     /// bottom. On the way the picture zooms about one fixed point: the aim travels to its spot in step with the
     /// zoom, which grows geometrically (an even apparent dolly). `centred` (the iPad, `StageInput.wholeHeadstock`):
     /// the head centres across the stage, and the wood above its pegs stays clear of the feathered top.
+    /// How far the close-up zooms in on `head` (a card box) in a stage of `size`: as far as the head fits between the
+    /// clearances, at most `maxZoom`.
+    static func closeUpZoom(in size: CGSize, head: CGRect, centred: Bool = false) -> CGFloat {
+        let base = Self.whole(in: size)
+        guard base.side > 1 else { return 1 }
+        let tipRoom = centred ? head.height * tipShare : 0
+        let edge = 0.06 * size.height + 10
+        var fitV = (size.height - pegClearance - nutClearance) / max(head.height * base.side, 1)
+        if centred { fitV = min(fitV, (size.height - edge - nutClearance) / max((head.height + tipRoom) * base.side, 1)) }
+        let fitH = (size.width - 160) / max(head.width * base.side, 1)
+        return min(maxZoom, fitV, fitH)
+    }
+
     static func closeUp(in size: CGSize, head: CGRect, aim: CGPoint, framing: Double, centred: Bool = false) -> StageFrame {
         let base = Self.whole(in: size)
         let f = CGFloat(max(0, min(1, framing)))
         guard f > 0.0005, base.side > 1 else { return base }
         let tipRoom = centred ? head.height * tipShare : 0
         let edge = 0.06 * size.height + 10
-        var fitV = (size.height - pegClearance - nutClearance) / max(head.height * base.side, 1)
-        if centred { fitV = min(fitV, (size.height - edge - nutClearance) / max((head.height + tipRoom) * base.side, 1)) }
-        let fitH = (size.width - 160) / max(head.width * base.side, 1)
-        let zoom = min(maxZoom, fitV, fitH)
+        let zoom = closeUpZoom(in: size, head: head, centred: centred)
         guard zoom > 1.05 else { return base }
         let full = base.side * zoom
         var lowest = pegClearance - (head.minY - aim.y) * full
@@ -332,13 +365,14 @@ struct StageFeather: View {
 /// the soft blur of its swing (widest mid-string, as a real vibrating string looks), and strobe dashes that
 /// travel along it with the pitch error and stand still in tune. Locked, it glows as a lit string.
 enum StringDrawing {
+    /// - Parameter swing: how many times wider than in use the string swings (`StageInput.marketingScale`).
     static func draw(_ context: inout GraphicsContext, from p0: CGPoint, to p1: CGPoint, color: Color,
-                     energy e: Double, glow g: Double, phase: Double, presence: Double, time now: Double, still: Bool) {
+                     energy e: Double, glow g: Double, phase: Double, presence: Double, time now: Double, still: Bool, swing scale: Double = 1) {
         let dx = p1.x - p0.x, dy = p1.y - p0.y
         let length = max(1, sqrt(dx * dx + dy * dy))
         let normal = CGPoint(x: -dy / length, y: dx / length)
         // Half-width of the swing in points: a few points at most, calming as the string locks.
-        let swing: Double = still ? 0 : (0.5 + 2.6 * e) * (1 - 0.85 * g)
+        let swing: Double = still ? 0 : (0.5 + 2.6 * e) * (1 - 0.85 * g) * max(1, scale)
         let segments = 40
         func point(_ u: Double, _ offset: Double) -> CGPoint {
             CGPoint(x: p0.x + dx * u + normal.x * offset, y: p0.y + dy * u + normal.y * offset)
@@ -414,11 +448,13 @@ final class Motion2D {
     /// (the 3D stage's dolly, so a 3D model taking over from its placeholder meets it on the way); `still`
     /// (Reduce Motion) cuts straight to the framing. `centred` (an iPad-sized window) aims at the head's centre line
     /// and centres it across the stage (`StageFrame.closeUp`).
+    /// `startsClose`: a new picture opens on the close-up (when focused) instead of dollying in to it.
     func frame(picture name: String, head: CGRect?, peg: CGPoint?, focus: Bool, size: CGSize, now: Double, still: Bool,
-               centred: Bool = false) -> StageFrame {
+               centred: Bool = false, startsClose: Bool = false) -> StageFrame {
         if name != picture {
             picture = name
-            framing = 0; framingVelocity = 0; aim = nil; framedAt = 0
+            framing = startsClose && focus ? 1 : 0
+            framingVelocity = 0; aim = nil; framedAt = 0
         }
         let dt = framedAt == 0 ? 0 : min(0.25, max(0, now - framedAt))
         framedAt = now

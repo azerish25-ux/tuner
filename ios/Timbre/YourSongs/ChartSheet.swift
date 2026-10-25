@@ -3,7 +3,7 @@ import TimbreCore
 
 /// A chart as a Studio Noir song sheet: each section under its name (a chorus marked by a bar of the accent down its
 /// side), chords in Sora over the syllables they fall on, lines wrapping word by word to the width, rows of chords on
-/// their own as chips between bar lines, comments in amber, tabs in a fixed-width face. The chord sounding (or, while
+/// their own as chips between bar lines, comments in a quiet plate, tabs in a fixed-width face. The chord sounding (or, while
 /// syncing, the next one to tap) is lit. Chords are shown as the player plays them: transposed and written for their
 /// capo (`ChartTransform`). Every line carries an id (`lineID`) to scroll to.
 struct ChartSheetView: View {
@@ -11,7 +11,7 @@ struct ChartSheetView: View {
     let transform: ChartTransform
     /// The chord lit: an index into `chart.chordSequence`.
     var current: Int?
-    /// Lit for a tap (amber) rather than as sounding (the accent).
+    /// Lit for a tap (ink) rather than as sounding (the accent).
     var syncing = false
     /// The player's text size on top of Dynamic Type.
     var textScale: CGFloat = 1
@@ -73,9 +73,10 @@ struct ChartSheetView: View {
 
     private func sectionHeader(_ title: Text, repeated: Bool, chorus: Bool) -> some View {
         HStack(spacing: 8) {
-            Eyebrow(title, color: chorus ? accent : Palette.inkSoft, style: .display)
+            // A section of the song is section level: its name in small capitals, as a chart prints it.
+            Eyebrow(title, color: chorus ? accent : Palette.inkSoft, style: .display, level: .section)
             if repeated {
-                Label("Again", systemImage: "repeat").font(Typeface.label(11)).foregroundStyle(Palette.inkSoft)
+                Label("Again", systemImage: "repeat").font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
                     .labelStyle(.titleAndIcon)
             }
         }
@@ -107,9 +108,9 @@ struct ChartSheetView: View {
             Image(systemName: "text.bubble.fill").font(.system(size: 12 * textScale, weight: .semibold)).accessibilityHidden(true)
             Text(verbatim: text).font(.system(size: lyricSize * textScale * 0.88).italic())
         }
-        .foregroundStyle(Palette.amber)
+        .foregroundStyle(Palette.inkSoft)
         .padding(.horizontal, 10).padding(.vertical, 5)
-        .background(Capsule().fill(Palette.amber.opacity(0.1)))
+        .background(Capsule().fill(Color.white.opacity(0.06)))
     }
 
     @ViewBuilder private func lyricLine(_ tokens: [Token], barRow: Bool, names: [String]) -> some View {
@@ -155,13 +156,14 @@ struct ChartSheetView: View {
         .padding(.trailing, token.gap ? lyricSize * textScale * 0.28 : 0)
     }
 
-    /// A chord as the player reads it; the one sounding sits in a pill of the accent (amber while syncing).
+    /// A chord as the player reads it; the one sounding sits in a pill of the accent (ink while syncing, waiting for
+    /// the tap), glowing while it plays.
     private func chordLabel(_ chord: String, index: Int?, names: [String]) -> some View {
         let lit = index != nil && index == current
-        let fill: Color = syncing ? Palette.amber : accent
+        let fill: Color = syncing ? Palette.ink : accent
         return Text(verbatim: display(chord, names: names))
             .font(.custom("Sora-SemiBold", fixedSize: chordSize * textScale))
-            .foregroundStyle(lit ? (syncing ? Palette.onGold : Palette.onAccent) : accent)
+            .foregroundStyle(lit ? (syncing ? Palette.stage : Palette.onAccent) : accent)
             .lineLimit(1)
             .fixedSize()
             .padding(.horizontal, 4).padding(.vertical, 1)

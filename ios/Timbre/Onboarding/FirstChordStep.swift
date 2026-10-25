@@ -86,12 +86,12 @@ struct FirstChordStep: View {
     private var header: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
             VStack(alignment: .leading, spacing: 6) {
-                Text(setup.isChord ? "Your first chord" : "Ring every open string")
-                    .font(Typeface.display(32)).tracking(-0.6).foregroundStyle(Palette.ink)
+                (setup.isChord ? Text("Your first chord") : Text("Ring every open string"))
+                    .font(Typeface.display(28)).tracking(-0.5).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("onboarding.firstchord")
-                Text(setup.isChord ? "Thirty seconds, then your plan." : "Lowest first, then your plan.")
+                (setup.isChord ? Text("Thirty seconds, then your plan.") : Text("Lowest first, then your plan."))
                     .font(.subheadline).foregroundStyle(Palette.inkSoft)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -107,17 +107,18 @@ struct FirstChordStep: View {
         .padding(.horizontal, Metrics.gutter).padding(.top, 18)
     }
 
-    /// The fact, large, where the step was: then the plan.
+    /// The fact where the step was, the chord large under it: then the plan.
     private var celebration: some View {
         VStack(spacing: 10) {
-            Text(setup.isChord ? "You just played your first chord" : "Every string rings")
-                .font(Typeface.display(34)).tracking(-0.8).foregroundStyle(Palette.mint)
+            (setup.isChord ? Text("You just played your first chord") : Text("Every string rings"))
+                .font(Typeface.display(28)).tracking(-0.5).foregroundStyle(Palette.mint)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
             Text(verbatim: setup.chord.name)
-                .font(Typeface.display(22)).foregroundStyle(Palette.ink)
-                .accessibilityHidden(!setup.isChord)
+                .font(Typeface.display(64)).tracking(-1.2).foregroundStyle(Palette.ink)
+                .lineLimit(1).minimumScaleFactor(0.5)
+                .shadow(color: Palette.mint.opacity(0.35), radius: 20)
             Text("Your plan is next.").font(.subheadline).foregroundStyle(Palette.inkSoft)
         }
         .padding(.horizontal, Metrics.gutter + Metrics.proseInset)

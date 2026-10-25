@@ -258,6 +258,17 @@ public enum ChordLibrary {
         return nil
     }
 
+    /// An open-position shape, the free plan's chord library (`FreeTier`): in standard tuning (or standard moved as a
+    /// whole) one of the curated open chords for that root and quality (x32010, xx3211 for F, x21202 for B7); in any
+    /// other tuning a shape within the first four frets that rings at least one open string.
+    public static func isOpenPosition(_ shape: ChordShape, root: Int, formula: ChordFormula, openMidi: [Int]) -> Bool {
+        if let shift = standardShift(openMidi) {
+            let pc = (((root - shift) % 12) + 12) % 12
+            return (openShapes[formula.id]?[pc] ?? []).map(parse).contains(shape.frets)
+        }
+        return shape.highestFret <= 4 && shape.frets.contains(0)
+    }
+
     /// Lowest fretted position of a shape (0 when it is all open strings).
     private static func position(_ frets: [Int?]) -> Int { frets.compactMap { $0 }.filter { $0 > 0 }.min() ?? 0 }
 

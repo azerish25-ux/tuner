@@ -230,7 +230,7 @@ struct BackButton: View {
 /// Two to four choices in one capsule track; the chosen one is the chips' pill of light (ink, dark type), and it
 /// slides to the next choice (Liquid Glass flowing on iOS 26; a matched pill before; a short fade under Reduce
 /// Motion). Each segment is 40 pt tall in a 44 pt track. Labels default to the chips' type; set a font inside
-/// `label` to change it (Sora digits for minutes, say). `identifier` names each segment for UI tests.
+/// `label` to change it (Sora digits for minutes, say). `identifier` names each segment for automation.
 ///
 ///     SegmentedPill(options: [5, 10, 15], selection: $minutes, identifier: { "onboarding.minutes.\($0)" }) { value in
 ///         Text(Duration.seconds(value * 60), format: .units(allowed: [.minutes], width: .abbreviated))

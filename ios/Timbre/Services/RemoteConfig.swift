@@ -85,7 +85,7 @@ final class RemoteConfig: ObservableObject {
     private static let maxBytes = 64_000
     private static let session = URLSession(configuration: .ephemeral)
 
-    /// UI tests and the demo modes keep the defaults, so their captures never depend on a file somewhere.
+    /// Automated runs and the demo modes keep the built-in defaults, so what they show never depends on the network.
     private static let quiet: Bool = {
         #if DEBUG
         let environment = ProcessInfo.processInfo.environment

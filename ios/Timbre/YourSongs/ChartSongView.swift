@@ -113,7 +113,7 @@ struct ChartSongView: View {
                 practicing = true
             } label: {
                 Label("Practice", systemImage: "guitars")
-                    .font(Typeface.label(14, relativeTo: .subheadline)).foregroundStyle(canPractice ? Palette.onAccent : Palette.inkFaint)
+                    .font(Typeface.label(.body)).foregroundStyle(canPractice ? Palette.onAccent : Palette.inkFaint)
                     .padding(.horizontal, 14).frame(minHeight: 36)
                     .background(Capsule().fill(canPractice ? Palette.mint : Palette.surface))
                     .tapTarget()
@@ -240,25 +240,21 @@ struct ChartSongView: View {
                     }
                 }
             }
-            ChordFlowLayout(spacing: 6, lineSpacing: 6) {
-                if let key = transform.soundingKey(of: chart) {
-                    metaChip(symbol: "music.note", text: Text("Key \(Self.keyName(key))"))
-                }
-                if let tempo = chart.tempo { metaChip(symbol: "metronome", text: Text("\(Int(tempo.rounded())) BPM")) }
-                if let meter = chart.meter { metaChip(symbol: "timer", text: Text(verbatim: meter.text)) }
-                metaChip(symbol: "music.quarternote.3", text: Text("\(chart.uniqueChords.count) chords"))
-            }
+            facts(chart, transform: transform)
         }
     }
 
-    private func metaChip(symbol: String, text: Text) -> some View {
-        HStack(spacing: 5) {
-            Image(systemName: symbol).font(.system(size: 11, weight: .semibold)).foregroundStyle(Palette.mint).accessibilityHidden(true)
-            text.font(Typeface.label(12, relativeTo: .caption)).foregroundStyle(Palette.ink)
-        }
-        .padding(.horizontal, 10).frame(minHeight: 28)
-        .background(Capsule().fill(Palette.surface))
-        .overlay(Capsule().strokeBorder(Palette.controlLine, lineWidth: 1))
+    /// The key, tempo, meter and chord count as one line of words ("Key G · 96 BPM · 4/4 · 5 chords"), not a row of
+    /// pills.
+    private func facts(_ chart: ChordChart, transform: ChartTransform) -> some View {
+        var parts: [Text] = []
+        if let key = transform.soundingKey(of: chart) { parts.append(Text("Key \(Self.keyName(key))")) }
+        if let tempo = chart.tempo { parts.append(Text("\(Int(tempo.rounded())) BPM")) }
+        if let meter = chart.meter { parts.append(Text(verbatim: meter.text)) }
+        parts.append(Text("\(chart.uniqueChords.count) chords"))
+        let line = parts.dropFirst().reduce(parts[0]) { (line: Text, part: Text) -> Text in line + Text(verbatim: " · ") + part }
+        return line.font(.subheadline).foregroundStyle(Palette.inkSoft)
+            .fixedSize(horizontal: false, vertical: true)
     }
 
     static func keyName(_ key: (tonic: Int, minor: Bool)) -> String {
@@ -287,11 +283,10 @@ struct ChartSongView: View {
                        identifier: "yoursongs.capo")
             if let tip {
                 Button { change(song) { $0.capo = tip } } label: {
-                    Label("Easiest with capo \(tip)", systemImage: "lightbulb.fill")
-                        .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.amber)
+                    Label("Easiest with capo \(tip)", systemImage: "lightbulb")
+                        .font(.subheadline.weight(.semibold))
                 }
-                .buttonStyle(.plain)
-                .tapTarget()
+                .buttonStyle(TextLinkStyle())
                 .accessibilityIdentifier("yoursongs.capoTip")
             }
             if song.transpose != 0 && song.recording(.file) != nil {
@@ -359,7 +354,7 @@ struct ChartSongView: View {
                 VStack(spacing: 6) {
                     MiniChordGlyph(chord: spec, accent: Palette.mint, lit: lit)
                         .frame(width: 48, height: 58)
-                    Text(verbatim: name).font(Typeface.label(14)).foregroundStyle(lit ? Palette.mint : Palette.ink)
+                    Text(verbatim: name).font(Typeface.label(.body)).foregroundStyle(lit ? Palette.mint : Palette.ink)
                         .lineLimit(1).minimumScaleFactor(0.7)
                 }
                 .frame(width: 64)
@@ -373,7 +368,7 @@ struct ChartSongView: View {
             .accessibilityValue(Text(verbatim: ChordWords.shape(spec)))
             .accessibilityHint(Text("Plays the chord"))
         } else {
-            Text(verbatim: name).font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
+            Text(verbatim: name).font(Typeface.label(.body)).foregroundStyle(Palette.inkSoft)
                 .frame(width: 64, height: 92)
                 .background(RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous).fill(Palette.stageRaised))
         }
