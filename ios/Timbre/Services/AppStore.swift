@@ -6,14 +6,19 @@ import UIKit
 /// The instrument browser lives in the tuner's picker sheet (`showInstrumentPicker`), not in a tab.
 enum AppTab: Hashable { case tune, learn, songs, practice, journey }
 
-/// App state and actions. High-rate readings live in `live` so they never invalidate
-/// views that observe this object.
+/// App state and actions. State that changes while the player tunes or plays is observed apart from this object, so it
+/// never redraws every screen that observes the store: the readings themselves (about 60 a second) in `live`, and what
+/// the tuner tunes to, its locks and a game's or lesson's target in `tuner`. The store forwards its tuner API to `tuner`.
+///
+/// The saved state (`LocalStore`) changes here at once and is written to disk on a background queue, a burst of
+/// changes as one write; `flushSettings` writes whatever is waiting before the app leaves the foreground.
 @MainActor
 final class AppStore: ObservableObject {
     let catalog: Catalog
     let audio = AudioService()
     let commerce = CommerceService()
     let live = LiveReading()
+    let tuner = TunerSession()
     private let persistence: LocalStore
     @Published private(set) var settings: UserSettings
     @Published private(set) var records: [PracticeRecord] {
@@ -27,12 +32,6 @@ final class AppStore: ObservableObject {
     @Published var showSettings = false
     @Published var showInstrumentPicker = false
     @Published var error: String?
-    @Published var referenceMode = false
-    @Published private(set) var referenceMidi = 69
-    @Published var selectedCourse = 0
-    @Published var automatic = true
-    @Published private(set) var lockedCourses: Set<Int> = []
-    @Published private(set) var celebrate = 0
     @Published var requestReviewNow = false
     @Published var paywallReason: String?
     /// The locked lesson or instrument that opened the paywall, when one did: the paywall names it.
@@ -42,16 +41,12 @@ final class AppStore: ObservableObject {
     @Published var pendingPracticeRoute: PracticeRoute?
     /// A lesson for the Learn tab to open (onboarding's placed first lesson); LearnView opens it and clears it.
     @Published var pendingLessonId: String?
-    /// While true, readings target the octave and never count as tuning sessions.
-    @Published var intonationMode = false
-    /// Ear games set their own target; readings then never count as tuning.
-    @Published var gameTargetHz: Double?
     #if DEBUG
-    /// Demo pitch only (UI tests, App Preview): while set, the demo stays silent until this says the next
-    /// note is due, then plays it in tune — a play-along played on time rather than a slow drift.
+    /// With the demo pitch standing in for the microphone (`TestSupport.Key.demoPitch`): while set, the demo stays
+    /// silent until this says the next note is due, then plays it in tune, a play-along played on time rather than a
+    /// slow drift.
     var demoNoteDue: (() -> Bool)?
     #endif
-    private var measuringTuning: Bool { !intonationMode && gameTargetHz == nil }
     /// The tuner's feel: called with every tuner reading (`TunerFrame`), about 60 a second while the tuner listens.
     /// `TunerFrame.standardFeel` (the cent detents and the lock) until a replacement is installed, as tune by feel's
     /// haptic beating will be: `store.onTunerFrame = { frame in … }` from main-actor code, capturing the store weakly.
@@ -77,41 +72,35 @@ final class AppStore: ObservableObject {
     private var attempt: VoiceAttempt?
     private var pendingVoiceRecord: PracticeRecord?
     private var voiceTask: Task<Void, Never>?
-    private var sessionStarted: Date?
-    private var sessionStartedUptime: TimeInterval?
-    private var sessionCount = 0
-    private var stableCount = 0
-    private var totalError = 0.0
-    private var lastAutoIndex: Int?
-    /// Automatic string detection pauses until then (while the lock bell rings).
-    var autoQuietUntil: TimeInterval = 0
-    private var autoHits = 0
     private var lastTaps: [TimeInterval] = []
     private var voiceStarted: TimeInterval = 0
     private var practiceStarted: [String: TimeInterval] = [:]
-    /// Courses whose first reading this session has gone into the string-health log.
-    private var sampledCourses: Set<Int> = []
     private var subscriptions: Set<AnyCancellable> = []
     /// The coalesced settings write (`updateSettings`), while one is waiting.
     private var settingsWrite: Task<Void, Never>?
-    /// Settings changes `updateSettingsSoon` holds, and the moment that applies them.
+    /// Settings changes `updateSettingsSoon` holds, the work queued behind them (`later`), and the moment that
+    /// applies them.
     private var pendingSettings: [(inout UserSettings) -> Void] = []
+    private var pendingWork: [(AppStore) -> Void] = []
     private var pendingSettingsApply: Task<Void, Never>?
     private var widgetRepublishQueued = false
     /// What the widget library was last built from (`publishWidgetLibrary`).
     private var widgetLibraryInputs: WidgetLibraryInputs?
 
-    init(directory: URL? = nil) throws {
+    /// Opens the saved state in `directory` (Application Support/Timbre by default). `catalog`: one already decoded
+    /// (the launch decodes it off the main thread); nil decodes it here.
+    init(directory: URL? = nil, catalog: Catalog? = nil) throws {
         // The curriculum decodes on a background queue while the catalog and the saved state load here; the launch
         // waits only for whatever of it is left (none when it was awaited before the store was made).
         CurriculumStore.shared.preload()
-        catalog = try Catalog()
-        let storageDirectory = directory ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("Timbre", isDirectory: true)
-        persistence = try LocalStore(directory: storageDirectory)
+        self.catalog = try catalog ?? Catalog()
+        // Every change is made in memory at once and written on the store's background queue.
+        persistence = try LocalStore(directory: directory ?? LocalStore.defaultDirectory, durability: .background)
         settings = persistence.settings; records = persistence.records
         curriculum = CurriculumStore.shared.curriculum
+        let curriculumFailure = CurriculumStore.shared.failure
         #if DEBUG
-        if let failure = CurriculumStore.shared.failure { assertionFailure("curriculum.json did not decode: \(failure)") }
+        if let curriculumFailure { assertionFailure("curriculum.json did not decode: \(curriculumFailure)") }
         #endif
         voiceLevel = settings.selectedVoiceLevel ?? 1
         TimbreLocalization.language = settings.language
@@ -126,6 +115,10 @@ final class AppStore: ObservableObject {
         // App opens, sessions, MetricKit, Apple Ads attribution and the remote settings start only once the player's
         // sharing choice is known, so an opt-out stops the attribution request too.
         Analytics.start()
+        // A curriculum that didn't decode leaves Learn empty: it must reach the dashboard, not only a debug assertion.
+        if let curriculumFailure {
+            Analytics.log("curriculum_failed", ["error": String(String(describing: curriculumFailure).prefix(160))])
+        }
         audio.onReading = { [weak self] hz, confidence, level in self?.accept(hz, confidence: confidence, level: level) }
         // Reference tones, "Hear it" and chord buttons sound like the selected instrument (a lesson's own course instrument while it is open).
         audio.instrumentVoice = { [weak self] in self.map { InstrumentVoice(instrument: $0.instrument) } ?? .guitar }
@@ -160,6 +153,10 @@ final class AppStore: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in self?.pinDailyPlanSoon() }
             .store(in: &subscriptions)
+        // A write the disk refused (it is full, say) is retried with the next one; the player is told now.
+        persistence.onWriteFailure { [weak self] error in
+            Task { @MainActor in self?.error = String(localized: "Practice could not be saved: \(error.localizedDescription)") }
+        }
     }
 
     /// Published values change after their publisher fires: the widgets are rebuilt on the next turn, once.
@@ -173,17 +170,11 @@ final class AppStore: ObservableObject {
         }
     }
 
-    /// What Pro was the last time StoreKit answered, on this device (`noteProStatus`).
-    private static let proKnownKey = "analytics.proActive"
-
-    /// `pro_active` is logged when Pro turns on against what this device last knew, not on every launch of a
-    /// subscriber; a lapse is remembered so the next activation counts again.
+    /// `pro_active` is logged when Pro turns on against what this device last knew (`Preferences.proActive`), not on
+    /// every launch of a subscriber; a lapse is remembered so the next activation counts again.
     private func noteProStatus(resolved: Bool, pro: Bool) {
-        guard resolved else { return }
-        let defaults = UserDefaults.standard
-        let known = defaults.object(forKey: Self.proKnownKey) as? Bool
-        guard known != pro else { return }
-        defaults.set(pro, forKey: Self.proKnownKey)
+        guard resolved, Preferences.proActive != pro else { return }
+        Preferences.proActive = pro
         if pro { Analytics.log("pro_active") }
     }
 
@@ -222,7 +213,7 @@ final class AppStore: ObservableObject {
         let today = calendar.startOfDay(for: Date())
         let days = Set(records.map { calendar.startOfDay(for: $0.date) })
         let week = (0..<7).reversed().map { offset in calendar.date(byAdding: .day, value: -offset, to: today).map(days.contains) ?? false }
-        let course = curriculum.course(id: UserDefaults.standard.string(forKey: "learn.course") ?? "guitar")
+        let course = curriculum.course(id: Preferences.learnCourse)
         let lesson = course.flatMap { course in
             learn.nextLesson(in: course).map {
                 WidgetSnapshot.NextLesson(course: course.title.localized, symbol: course.symbol, accent: course.accent, title: $0.title.localized,
@@ -236,6 +227,50 @@ final class AppStore: ObservableObject {
         PracticeReminder.update(.init(streak: summary.current, practicedToday: summary.practicedToday, nextLesson: lesson?.title,
                                       minutesByDay: PracticeReminder.minutesByDay(records),
                                       reviewDue: course.flatMap { reviewDeck.nextDue(in: $0.id) }))
+    }
+
+    // MARK: Tuner (forwarded to `tuner`)
+
+    // These read and write `tuner`, which is observed on its own: a view that reads `store.selectedCourse` redraws
+    // when the string changes, and no view that doesn't read it does.
+
+    /// Chromatic mode: any note, named as it is heard (`selectReference`).
+    var referenceMode: Bool {
+        get { tuner.referenceMode }
+        set { tuner.referenceMode = newValue }
+    }
+    /// The note chromatic mode tunes to (`chooseReferenceNote`).
+    var referenceMidi: Int { tuner.referenceMidi }
+    /// The string being tuned, by `Course.index`.
+    var selectedCourse: Int {
+        get { tuner.selectedCourse }
+        set { tuner.selectedCourse = newValue }
+    }
+    /// The tuner follows the string (or note) played.
+    var automatic: Bool {
+        get { tuner.automatic }
+        set { tuner.automatic = newValue }
+    }
+    /// The strings locked in tune this session.
+    var lockedCourses: Set<Int> { tuner.lockedCourses }
+    /// Moves on with every full tune, for the celebration.
+    var celebrate: Int { tuner.celebrate }
+    /// Seconds from the first reading to the last string locking, for the celebration and share card.
+    var lastTuneSeconds: Int? { tuner.lastTuneSeconds }
+    /// While true, readings target the octave and never count as tuning sessions.
+    var intonationMode: Bool {
+        get { tuner.intonationMode }
+        set { tuner.intonationMode = newValue }
+    }
+    /// An ear game's, a lesson's or a song's own target; readings then never count as tuning.
+    var gameTargetHz: Double? {
+        get { tuner.gameTargetHz }
+        set { tuner.gameTargetHz = newValue }
+    }
+    /// Automatic string detection pauses until then (system uptime), while the lock bell rings.
+    var autoQuietUntil: TimeInterval {
+        get { tuner.autoQuietUntil }
+        set { tuner.autoQuietUntil = newValue }
     }
 
     // MARK: Derived state
@@ -304,7 +339,7 @@ final class AppStore: ObservableObject {
         return photo.map { NSLocalizedString("timbre_photo_" + $0.asset, bundle: .main, value: $0.label, comment: "") } ?? instrument.name.localized
     }
     var activeAnchor: String? { referenceMode ? nil : activeCourse.anchorId }
-    var allCoursesLocked: Bool { !courses.isEmpty && Set(courses.map(\.index)).isSubset(of: lockedCourses) }
+    var allCoursesLocked: Bool { tuner.allLocked(courses.map(\.index)) }
     var voiceExercise: VoiceExercise { VoiceExercise(level: voiceLevel, rootMidi: voiceRoot) }
     var voiceTargetMidi: Int { voiceExercise.note(at: live.voiceElapsed) }
     /// Counted once and kept until the records, the frozen days or the day change.
@@ -418,7 +453,15 @@ final class AppStore: ObservableObject {
         guard settingsWrite == nil else { return }
         settingsWrite = Task { @MainActor [weak self] in
             do { try await Task.sleep(for: .milliseconds(400)) } catch { return }
-            self?.flushSettings()
+            self?.writeSettings()
+        }
+    }
+
+    /// Hands the settings waiting for their write to the store's background queue, which writes the file.
+    private func writeSettings() {
+        settingsWrite = nil
+        do { try persistence.flush(wait: false) } catch {
+            self.error = String(localized: "Settings could not be saved: \(error.localizedDescription)")
         }
     }
 
@@ -430,6 +473,17 @@ final class AppStore: ObservableObject {
     /// drops it.
     func updateSettingsSoon(_ mutation: @escaping (inout UserSettings) -> Void) {
         pendingSettings.append(mutation)
+        scheduleSettingsBatch()
+    }
+
+    /// Work for the next batch of `updateSettingsSoon`: it runs once the batch's changes apply, in the order asked.
+    /// The tuner's lock path hands its rewards and counts here (`noteLock`), so the frame that locks saves nothing.
+    private func later(_ work: @escaping (AppStore) -> Void) {
+        pendingWork.append(work)
+        scheduleSettingsBatch()
+    }
+
+    private func scheduleSettingsBatch() {
         guard pendingSettingsApply == nil else { return }
         pendingSettingsApply = Task { @MainActor [weak self] in
             do { try await Task.sleep(for: .milliseconds(300)) } catch { return }
@@ -437,19 +491,21 @@ final class AppStore: ObservableObject {
         }
     }
 
-    /// Applies every change `updateSettingsSoon` is holding, now.
+    /// Applies every change `updateSettingsSoon` is holding, then the work queued behind them, now.
     private func applyPendingSettings() {
         pendingSettingsApply?.cancel(); pendingSettingsApply = nil
-        guard !pendingSettings.isEmpty else { return }
-        let changes = pendingSettings
-        pendingSettings = []
-        updateSettings { settings in
-            for change in changes { change(&settings) }
+        let changes = pendingSettings, work = pendingWork
+        pendingSettings = []; pendingWork = []
+        if !changes.isEmpty {
+            updateSettings { settings in
+                for change in changes { change(&settings) }
+            }
         }
+        for item in work { item(self) }
     }
 
-    /// Writes settings changes still waiting (the app leaving the foreground; tests before reopening the store),
-    /// including those `updateSettingsSoon` holds.
+    /// Writes everything still waiting, including what `updateSettingsSoon` holds, and returns once it is on disk:
+    /// the app leaving the foreground, and before the saved state is opened again.
     func flushSettings() {
         applyPendingSettings()
         settingsWrite?.cancel(); settingsWrite = nil
@@ -460,8 +516,8 @@ final class AppStore: ObservableObject {
     }
 
     /// Minutes a day the player committed to on onboarding's plan (5, 10 or 15).
-    static let dailyMinutesKey = "plan.dailyMinutes"
-    var dailyMinutes: Int { UserDefaults.standard.object(forKey: Self.dailyMinutesKey) as? Int ?? 10 }
+    static let dailyMinutesKey = Preferences.Key.dailyMinutes
+    var dailyMinutes: Int { Preferences.dailyMinutes }
 
     /// Ends onboarding: the instrument, the placement and the daily commitment are saved, then Learn opens
     /// the plan's first lesson (`pendingLessonId`) rather than leaving the player on the tuner.
@@ -482,10 +538,10 @@ final class AppStore: ObservableObject {
                 $0.recentInstrumentIds = Array(([id] + $0.recentInstrumentIds.filter { $0 != id }).prefix(LocalStore.recentInstrumentLimit))
             }
         }
-        UserDefaults.standard.set(minutes, forKey: Self.dailyMinutesKey)
+        Preferences.dailyMinutes = minutes
         // Learn opens on the course for the instrument (or the goal) chosen in onboarding, with its first lesson open.
         if let course = onboardingCourse(instrumentId: instrument?.id, goal: goal) {
-            UserDefaults.standard.set(course.id, forKey: "learn.course")
+            Preferences.learnCourse = course.id
             if let lesson = firstLesson(in: course) {
                 pendingLessonId = lesson.id
                 selectedTab = .learn
@@ -590,15 +646,15 @@ final class AppStore: ObservableObject {
         selectedCourse = courses.first?.index ?? 0
     }
 
-    func selectReference() { endTuningSession(); resetTuningMeasurements(); referenceMode = true; automatic = true; selectedTab = .tune }
+    func selectReference() { endTuningSession(); resetTuningMeasurements(); tuner.startChromatic(); selectedTab = .tune }
 
     func chooseReferenceNote(_ midi: Int) {
-        referenceMidi = min(119, max(12, midi)); automatic = false
+        tuner.choose(referenceNote: midi)
         tracker.reset(); live.clear(); audio.stopTone()
     }
 
     func chooseCourse(_ index: Int) {
-        selectedCourse = index; automatic = false
+        tuner.choose(course: index)
         tracker.reset(); live.clear(); audio.stopTone()
         Haptics.shared.selection()
     }
@@ -615,10 +671,10 @@ final class AppStore: ObservableObject {
         guard !audio.running else { return }
         guard canListen else { presentPaywall("instrument", instrument: instrument); return }
         tracker.reset(); live.clear()
-        if sessionStarted == nil { sessionStarted = Date(); sessionStartedUptime = ProcessInfo.processInfo.systemUptime }
+        tuner.beginSession()
         #if DEBUG
-        if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" {
-            // A store scene (Root/DemoScenes.swift) holds the string in tune; otherwise it drifts in every six seconds.
+        if TestSupport.isOn(.demoPitch) {
+            // A capture scene (Root/DemoScenes.swift) holds the string in tune; otherwise it drifts in every six seconds.
             audio.startDemo(target: { [weak self] in self?.targetHz ?? 440 }, cued: { DemoScene.steadyPitch })
             return
         }
@@ -650,7 +706,7 @@ final class AppStore: ObservableObject {
     }
 
     private var microphoneGain: Double { pow(10, Double(settings.micSensitivity - 60) / 40) }
-    private func resetTuningMeasurements() { sessionCount = 0; stableCount = 0; totalError = 0; sessionStarted = nil; sessionStartedUptime = nil; autoHits = 0; lastAutoIndex = nil; lockedCourses = []; sampledCourses = [] }
+    private func resetTuningMeasurements() { tuner.resetMeasurements() }
     func target(for course: Course) -> Double { Temperament.byId(settings.temperamentId).frequency(midi: course.targetMidi, reference: settings.referencePitchHz, letterName: course.label) }
 
     func accept(_ hz: Double?, confidence: Double, level: Double) {
@@ -662,7 +718,7 @@ final class AppStore: ObservableObject {
         live.level = level
         live.updatedAt = ProcessInfo.processInfo.systemUptime
         let now = Int(ProcessInfo.processInfo.systemUptime * 1000)
-        if hz == nil || confidence < settings.confidenceThreshold { autoHits = 0; lastAutoIndex = nil }
+        if hz == nil || confidence < settings.confidenceThreshold { tuner.heardNothing() }
         if voiceRunning {
             guard countdown == 0, let attempt else { return }
             let elapsed = Int((ProcessInfo.processInfo.systemUptime - voiceStarted) * 1000)
@@ -677,74 +733,95 @@ final class AppStore: ObservableObject {
             if live.trace.count > 600 { live.trace.removeFirst(live.trace.count - 600) }
             return
         }
-        // The lock bell (played at a string's pitch) must not pull automatic detection onto another string.
-        if automatic, !referenceMode, gameTargetHz == nil, ProcessInfo.processInfo.systemUptime >= autoQuietUntil, let hz, confidence >= settings.confidenceThreshold {
-            let nearest = courses.min { abs(log(hz / target(for: $0))) < abs(log(hz / target(for: $1))) }
-            // Unison partners (a mandolin's pair) tie: stay on the string being tuned, so a pair's second string gets its turn.
-            let active = activeCourse
-            let best = nearest.map { $0.targetMidi == active.targetMidi && $0.anchorId == active.anchorId ? active : $0 }
-            if let best {
-                if lastAutoIndex == best.index { autoHits += 1 } else { autoHits = 1; lastAutoIndex = best.index }
-                if autoHits >= 3 && selectedCourse != best.index { selectedCourse = best.index; tracker.reset() }
-            }
-        }
-        if referenceMode, automatic, let hz, hz > 0, confidence >= settings.confidenceThreshold {
-            let midi = min(119, max(12, Int(PitchMath.midi(frequency: hz, reference: settings.referencePitchHz).rounded())))
-            if midi != referenceMidi { referenceMidi = midi }
-        }
+        follow(hz, confidence: confidence)
         let wasInTune = live.reading.inTune
         let tunedTo = targetHz
         var reading = tracker.accept(frequency: hz, confidence: confidence, target: tunedTo, timestampMs: now)
-        if hz == nil && level > -60 && !audio.tonePlaying { reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "uncertain") }
+        if hz == nil && level > -60 && !audio.tonePlaying { reading = LiveReading.unclear }
         live.reading = reading
         // The feel (today: the cent detents and the lock) comes first, ahead of the lock's rewards.
         onTunerFrame(TunerFrame(reading: reading, targetHz: tunedTo, level: level, enteredTune: reading.inTune && !wasInTune,
-                                measuring: measuringTuning, time: live.updatedAt))
-        if !referenceMode, measuringTuning, reading.stable, let cents = reading.cents, abs(cents) <= 100,
-           !sampledCourses.contains(activeCourse.index), let anchor = activeCourse.anchorId {
-            sampledCourses.insert(activeCourse.index)
-            var state = progress
-            state.sample(StringSample(instrumentId: instrument.id, anchor: anchor, date: Date(), cents: cents))
-            updateSettings { $0.progress = state }
+                                measuring: tuner.measuring, time: live.updatedAt))
+        guard tuner.measuring else { return }
+        if !referenceMode {
+            noteStringHealth(reading)
+            noteLock(reading, wasInTune: wasInTune)
         }
-        if reading.inTune && !wasInTune && measuringTuning && !referenceMode {
-            let before = allCoursesLocked
-            let fresh = lockedCourses.insert(activeCourse.index).inserted
-            let completed = !before && allCoursesLocked
-            if completed { completedFullTune() }
-            if fresh {
-                // The course goes into today's saved list too, so the tuning quest keeps its count after this session ends.
-                recordProgress(.stringTuned(instrumentId: instrument.id, all: completed, course: activeCourse.index,
-                                            courses: courses.map(\.index), precise: settings.precision == .pro))
-            }
+        tuner.count(reading)
+    }
+
+    /// Automatic detection, on a confident reading: the string nearest it once three readings running agree (never
+    /// while the lock bell rings, nor while a game or lesson sets the target), or in chromatic mode the nearest note.
+    private func follow(_ hz: Double?, confidence: Double) {
+        guard tuner.automatic, let hz, confidence >= settings.confidenceThreshold else { return }
+        if referenceMode {
+            guard hz > 0 else { return }
+            tuner.heard(note: Int(PitchMath.midi(frequency: hz, reference: settings.referencePitchHz).rounded()))
+            return
         }
-        if measuringTuning, let cents = reading.cents, reading.frequency != nil {
-            sessionCount += 1
-            if reading.stable { stableCount += 1; totalError += abs(cents) }
+        // The lock bell (played at a string's pitch) must not pull automatic detection onto another string.
+        guard gameTargetHz == nil, ProcessInfo.processInfo.systemUptime >= tuner.autoQuietUntil else { return }
+        let nearest = courses.min { abs(log(hz / target(for: $0))) < abs(log(hz / target(for: $1))) }
+        // Unison partners (a mandolin's pair) tie: stay on the string being tuned, so a pair's second string gets its turn.
+        let active = activeCourse
+        let best = nearest.map { $0.targetMidi == active.targetMidi && $0.anchorId == active.anchorId ? active : $0 }
+        if let best, tuner.heard(course: best.index) { tracker.reset() }
+    }
+
+    /// The first steady reading of each string this session joins its string-health log, with the next settings batch.
+    private func noteStringHealth(_ reading: TuningReading) {
+        guard reading.stable, let cents = reading.cents, abs(cents) <= 100, let anchor = activeCourse.anchorId,
+              tuner.sampleOnce(activeCourse.index) else { return }
+        let sample = StringSample(instrumentId: instrument.id, anchor: anchor, date: Date(), cents: cents)
+        updateSettingsSoon { settings in
+            var progress = settings.progress ?? ProgressState()
+            progress.sample(sample)
+            settings.progress = progress
         }
     }
 
-    /// Seconds from the first reading to the last string locking, for the celebration and share card.
-    private(set) var lastTuneSeconds: Int?
+    /// A measured string came into tune: it locks at once (and the last one celebrates); its reward and the full
+    /// tune's count follow with the next settings batch, so the locking frame saves nothing.
+    private func noteLock(_ reading: TuningReading, wasInTune: Bool) {
+        guard reading.inTune, !wasInTune else { return }
+        let course = activeCourse.index, all = courses.map(\.index)
+        let lock = tuner.lock(course, of: all)
+        if lock.completed { celebrateFullTune(countingLater: true) }
+        guard lock.fresh else { return }
+        // The course goes into today's saved list too, so the tuning quest keeps its count after this session ends.
+        let event = ProgressEvent.stringTuned(instrumentId: instrument.id, all: lock.completed, course: course, courses: all,
+                                              precise: settings.precision == .pro)
+        later { $0.recordProgress(event) }
+    }
 
-    private func completedFullTune() {
-        lastTuneSeconds = sessionStartedUptime.map { Int((ProcessInfo.processInfo.systemUptime - $0).rounded()) }
-        celebrate += 1
+    /// Every string locked: the celebration and its haptic now, the count (and the review request it can bring) now or
+    /// with the next settings batch.
+    private func celebrateFullTune(countingLater: Bool) {
+        tuner.completeFullTune()
         Haptics.shared.done()
+        let instrumentId = instrument.id
+        if countingLater {
+            later { $0.countFullTune(instrumentId: instrumentId) }
+        } else {
+            countFullTune(instrumentId: instrumentId)
+        }
+    }
+
+    private func countFullTune(instrumentId: String) {
         let count = (settings.fullTunes ?? 0) + 1
         updateSettings { $0.fullTunes = count }
         if count == 3 || count == 12 { requestReviewNow = true }
-        Analytics.log("full_tune", ["instrument": instrument.id, "count": String(count)])
+        Analytics.log("full_tune", ["instrument": instrumentId, "count": String(count)])
     }
 
     /// Sessions save themselves when listening stops: no "finish" button.
     func endTuningSession() {
         defer { resetTuningMeasurements() }
-        guard sessionCount >= 3, let startedUptime = sessionStartedUptime else { return }
-        let duration = max(0, Int((ProcessInfo.processInfo.systemUptime - startedUptime) * 1000))
-        guard duration >= 4000 else { return }
-        let record = PracticeRecord(date: sessionStarted ?? Date(), instrumentId: referenceMode ? "reference.chromatic" : instrument.id, tuningId: referenceMode ? nil : tuning.id, kind: "tuning", count: sessionCount, stableCount: stableCount, meanAbsoluteCents: stableCount > 0 ? totalError / Double(stableCount) : nil, durationMs: duration)
-        save(record)
+        guard let session = tuner.summary() else { return }
+        save(PracticeRecord(date: session.started, instrumentId: referenceMode ? "reference.chromatic" : instrument.id,
+                            tuningId: referenceMode ? nil : tuning.id, kind: "tuning", count: session.readings,
+                            stableCount: session.stableReadings, meanAbsoluteCents: session.meanAbsoluteCents,
+                            durationMs: session.durationMs))
         markDaily(.tune)
     }
 
@@ -807,14 +884,15 @@ final class AppStore: ObservableObject {
     /// The step that owns the lesson microphone; a step leaving must not stop the one that just arrived.
     private var lessonOwner: UUID?
 
-    /// Opens the microphone for a lesson over a pitch range; the demo pitch (UI tests) follows `gameTargetHz`.
+    /// Opens the microphone for a lesson over a pitch range; the demo pitch, when it stands in for the microphone,
+    /// follows `gameTargetHz`.
     func startLessonListening(owner: UUID, lowHz: Double = 60, highHz: Double = 1400, analyzer: LessonAnalyzer? = nil, listener: @escaping (Double?, Double) -> Void) {
         lessonOwner = owner
         lessonListener = listener
         audio.frames.set(analyzer.map { analyzer in { samples, rate in analyzer.feed(samples, rate: rate) } })
         guard !audio.running else { return }
         #if DEBUG
-        if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" {
+        if TestSupport.isOn(.demoPitch) {
             audio.startDemo(target: { [weak self] in
                 guard let self else { return nil }
                 if let due = self.demoNoteDue, !due() { return nil }
@@ -991,7 +1069,7 @@ final class AppStore: ObservableObject {
 
     /// The course Learn shows (its Continue card plays that course's next lesson).
     var learnCourse: LearnCourse? {
-        curriculum.course(id: UserDefaults.standard.string(forKey: "learn.course") ?? "guitar") ?? curriculum.courses.first
+        curriculum.course(id: Preferences.learnCourse) ?? curriculum.courses.first
     }
 
     /// Today's lesson: once one is done, the lesson finished; before that, the course's next lesson, if this
@@ -1218,28 +1296,23 @@ extension AppStore {
     /// saved for today like one tuned string by string. False when every string had already locked this session.
     @discardableResult
     func completeStrumTune(meanCents: Double) -> Bool {
-        guard !referenceMode, measuringTuning, canStrumTune else { return false }
+        guard !referenceMode, tuner.measuring, canStrumTune else { return false }
         let all = courses.map(\.index)
-        let fresh = all.filter { !lockedCourses.contains($0) }
+        let fresh = tuner.lockAll(all)
         guard !fresh.isEmpty else { return false }
-        lockedCourses.formUnion(fresh)
-        completedFullTune()
+        celebrateFullTune(countingLater: false)
         for (offset, index) in fresh.enumerated() {
             recordProgress(.stringTuned(instrumentId: instrument.id, all: offset == fresh.count - 1, course: index,
                                         courses: all, precise: settings.precision == .pro))
         }
         // A session long enough to save itself (`endTuningSession`) already covers today's practice.
-        if sessionCount < 3 {
-            let duration = sessionStartedUptime.map { Int(max(0, ProcessInfo.processInfo.systemUptime - $0) * 1000) }
-            save(PracticeRecord(date: sessionStarted ?? Date(), instrumentId: instrument.id, tuningId: tuning.id, kind: "tuning",
+        if tuner.readingCount < 3 {
+            save(PracticeRecord(date: tuner.startedAt ?? Date(), instrumentId: instrument.id, tuningId: tuning.id, kind: "tuning",
                                 count: all.count, stableCount: all.count,
-                                meanAbsoluteCents: meanCents.isFinite ? max(0, meanCents) : nil, durationMs: duration))
+                                meanAbsoluteCents: meanCents.isFinite ? max(0, meanCents) : nil, durationMs: tuner.elapsedMs()))
             // That record covers the session so far: the tuner starts a new one from here (the strings stay locked), so
             // `endTuningSession` never counts these minutes a second time.
-            let locked = lockedCourses, sampled = sampledCourses
-            resetTuningMeasurements()
-            lockedCourses = locked; sampledCourses = sampled
-            if audio.running { sessionStarted = Date(); sessionStartedUptime = ProcessInfo.processInfo.systemUptime }
+            tuner.restartMeasuring(listening: audio.running)
         }
         markDaily(.tune)
         Analytics.log("strum_tune", ["instrument": instrument.id, "strings": String(all.count)])

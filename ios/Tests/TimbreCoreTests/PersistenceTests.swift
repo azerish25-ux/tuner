@@ -53,14 +53,14 @@ final class PersistenceTests: XCTestCase {
     }
     func testHistoryClearIsPersistedAndRetainsSettings() throws {
         let directory = try directory(), store = try LocalStore(directory: directory)
-        var settings = store.settings; settings.reducedMotion = true
+        var settings = store.settings; settings.calmMode = true
         try store.saveSettings(settings)
         try store.append(PracticeRecord(instrumentId: "guitar", kind: "tuner", count: 0, stableCount: 0))
         try store.clearHistory()
         let reopened = try LocalStore(directory: directory)
         XCTAssertTrue(reopened.records.isEmpty)
         XCTAssertTrue(reopened.demonstratedLevels.isEmpty)
-        XCTAssertTrue(reopened.settings.reducedMotion)
+        XCTAssertTrue(reopened.settings.calmMode)
     }
     func testOnlyMeasuredCurrentVoiceEvidenceAdvancesProgress() throws {
         let directory = try directory(), store = try LocalStore(directory: directory)
@@ -164,7 +164,7 @@ final class PersistenceTests: XCTestCase {
         XCTAssertFalse(settings.languageChosen)
         // Fields that came later read as their defaults.
         XCTAssertFalse(settings.simpleTuner || settings.calmMode || settings.tuneByFeel || settings.feelTheBeat)
-        XCTAssertFalse(settings.bandOnSpeaker || settings.chartsAsPrinted || settings.firstChordDone)
+        XCTAssertFalse(settings.chartsAsPrinted || settings.firstChordDone)
         // Saved again, it reads back the same.
         try store.saveSettings(settings)
         XCTAssertEqual(try LocalStore(directory: directory).settings, settings)
@@ -172,13 +172,13 @@ final class PersistenceTests: XCTestCase {
 
     func testEverySettingSurvivesTheLenientDecoder() throws {
         var settings = UserSettings()
-        settings.referencePitchHz = 442; settings.temperamentId = "just"; settings.theme = "light"; settings.skin = "wood"
-        settings.reducedMotion = true; settings.hapticsEnabled = false; settings.language = "de"
+        settings.referencePitchHz = 442; settings.temperamentId = "just"
+        settings.hapticsEnabled = false; settings.language = "de"
         settings.recentInstrumentIds = ["guitar.acoustic.6", "ukulele.soprano.4"]; settings.analysisWindowOverride = 4096
         settings.micSensitivity = 40; settings.confidenceThreshold = 0.6; settings.notation = "solfege"
         settings.capo = 3; settings.transposition = -2; settings.handedness = .leftUpsideDown
         settings.lastTuningIds = ["guitar.acoustic.6": "guitar.acoustic.6.drop_d"]; settings.selectedInstrumentId = "ukulele.soprano.4"
-        settings.selectedPhotoAsset = "ukulele"; settings.telemetryEnabled = true; settings.selectedVoiceLevel = 3
+        settings.selectedPhotoAsset = "ukulele"; settings.selectedVoiceLevel = 3
         settings.onboardingCompleted = true; settings.playerLevel = "novice"; settings.goal = "songs"; settings.stageMode = "studio"
         settings.metronomeBpm = 96; settings.metronomeBeats = 3; settings.metronomeSubdivision = 2; settings.metronomeSound = "wood"
         settings.metronomeBeatLevels = [2, 1, 1]; settings.droneMidi = 50; settings.droneVoice = "pure"; settings.fullTunes = 7
@@ -193,7 +193,7 @@ final class PersistenceTests: XCTestCase {
         settings.tuningPrecision = "standard"; settings.notationChosen = true; settings.spacedReview = ReviewDeck()
         settings.lastChord = UserSettings.ChordChoice(root: 9, formula: "min"); settings.shownDemos = ["guitar": ["chord:0,2,2,0,0,0"]]
         settings.languageChosen = true; settings.simpleTuner = true; settings.calmMode = true; settings.tuneByFeel = true
-        settings.feelTheBeat = true; settings.bandOnSpeaker = true; settings.chartsAsPrinted = true; settings.firstChordDone = true
+        settings.feelTheBeat = true; settings.chartsAsPrinted = true; settings.firstChordDone = true
         settings.shareUsageData = false
         let data = try JSONEncoder().encode(settings)
         XCTAssertEqual(try JSONDecoder().decode(UserSettings.self, from: data), settings)
@@ -344,5 +344,115 @@ final class PersistenceTests: XCTestCase {
         try reopened.saveSettings(picked)
         XCTAssertTrue(reopened.settings.languageChosen)
         XCTAssertEqual(try LocalStore(directory: directory).settings.language, "en")
+    }
+
+    /// A save cut off at any byte, or a file torn by the disk, never locks the player out: what opens is the file
+    /// repaired, or the backup, and it can be saved again.
+    func testAFileCutOffOrTornAnywhereStillOpens() throws {
+        let directory = try directory(), store = try LocalStore(directory: directory)
+        var settings = store.settings
+        settings.capo = 2
+        try store.saveSettings(settings)
+        for index in 0..<20 {
+            try store.append(PracticeRecord(date: Date(timeIntervalSince1970: 1_000 + Double(index) * 3_600), instrumentId: "guitar.acoustic.6",
+                                            kind: "tuning", count: 6, stableCount: 4, meanAbsoluteCents: 2.5, durationMs: 60_000))
+        }
+        let file = directory.appendingPathComponent(LocalStore.fileName)
+        let backupFile = directory.appendingPathComponent(LocalStore.backupFileName)
+        let whole = try Data(contentsOf: file), backup = try Data(contentsOf: backupFile)
+        var random = SeededGenerator(seed: 0x7157_A11C)
+        for trial in 0..<80 {
+            var bytes = [UInt8](whole)
+            if trial.isMultiple(of: 2) {
+                bytes = Array(bytes.prefix(Int.random(in: 0..<bytes.count, using: &random)))
+            } else {
+                for _ in 0..<Int.random(in: 1...8, using: &random) {
+                    bytes[Int.random(in: 0..<bytes.count, using: &random)] = UInt8.random(in: 0...255, using: &random)
+                }
+            }
+            try Data(bytes).write(to: file)
+            try backup.write(to: backupFile)
+            let opened = try LocalStore(directory: directory)
+            XCTAssertNotEqual(opened.recovery, .startedFresh, "trial \(trial): the backup was readable")
+            XCTAssertLessThanOrEqual(opened.records.count, 20, "trial \(trial)")
+            XCTAssertNoThrow(try opened.saveSettings(opened.settings), "trial \(trial): what opened is a valid state")
+        }
+    }
+
+    // MARK: Background durability
+
+    func testBackgroundSavesAreCurrentAtOnceAndOnDiskAfterAFlush() throws {
+        let directory = try directory()
+        let store = try LocalStore(directory: directory, durability: .background)
+        var settings = store.settings
+        for capo in 1...12 {
+            settings.capo = capo
+            try store.stageSettings(settings)
+            try store.append(PracticeRecord(date: Date(timeIntervalSince1970: Double(capo) * 60), instrumentId: "guitar.acoustic.6",
+                                            kind: "tuning", count: 4, stableCount: 3))
+        }
+        XCTAssertEqual(store.settings.capo, 12, "current at once")
+        XCTAssertEqual(store.records.count, 12)
+        try store.flush()
+        XCTAssertFalse(store.hasUnsavedChanges)
+        let reopened = try LocalStore(directory: directory)
+        XCTAssertEqual(reopened.settings, store.settings)
+        XCTAssertEqual(reopened.records, store.records)
+    }
+
+    func testBackgroundStagedSettingsWaitForAFlush() throws {
+        let directory = try directory()
+        let store = try LocalStore(directory: directory, durability: .background)
+        var settings = store.settings
+        settings.hapticsEnabled = false
+        try store.stageSettings(settings)
+        XCTAssertTrue(store.hasUnsavedChanges)
+        try store.flush(wait: false)
+        try store.flush()
+        XCTAssertFalse(store.hasUnsavedChanges)
+        XCTAssertFalse(try LocalStore(directory: directory).settings.hapticsEnabled)
+        // Invalid settings are refused at once and change nothing, as with immediate durability.
+        var invalid = store.settings
+        invalid.confidenceThreshold = .nan
+        XCTAssertThrowsError(try store.stageSettings(invalid))
+        XCTAssertThrowsError(try store.append(PracticeRecord(instrumentId: "guitar", kind: "tuner", count: 1, stableCount: 2)))
+        XCTAssertEqual(store.settings.confidenceThreshold, 0.75)
+        XCTAssertTrue(store.records.isEmpty)
+    }
+
+    func testABackgroundWriteThatFailsIsReportedAndRetried() throws {
+        let directory = try directory()
+        let store = try LocalStore(directory: directory, durability: .background)
+        let reported = expectation(description: "the failed write is reported")
+        reported.assertForOverFulfill = false
+        store.onWriteFailure { _ in reported.fulfill() }
+        // A directory at the file's place makes every atomic replacement fail.
+        let blocker = directory.appendingPathComponent(LocalStore.fileName)
+        try FileManager.default.createDirectory(at: blocker, withIntermediateDirectories: true)
+        let record = PracticeRecord(instrumentId: "guitar.acoustic.6", kind: "tuning", count: 4, stableCount: 3)
+        try store.append(record)
+        XCTAssertEqual(store.records, [record], "the state is current although the disk refused it")
+        XCTAssertThrowsError(try store.flush())
+        wait(for: [reported], timeout: 5)
+        XCTAssertTrue(store.hasUnsavedChanges)
+        try FileManager.default.removeItem(at: blocker)
+        try store.flush()
+        XCTAssertFalse(store.hasUnsavedChanges)
+        XCTAssertEqual(try LocalStore(directory: directory).records, [record])
+    }
+}
+
+/// SplitMix64: the same sequence on every run, so a failing trial can be replayed.
+private struct SeededGenerator: RandomNumberGenerator {
+    private var state: UInt64
+
+    init(seed: UInt64) { state = seed }
+
+    mutating func next() -> UInt64 {
+        state &+= 0x9E37_79B9_7F4A_7C15
+        var mixed = state
+        mixed = (mixed ^ (mixed >> 30)) &* 0xBF58_476D_1CE4_E5B9
+        mixed = (mixed ^ (mixed >> 27)) &* 0x94D0_49BB_1331_11EB
+        return mixed ^ (mixed >> 31)
     }
 }

@@ -41,6 +41,7 @@ struct TimbreApp: App {
                 RecoveryNotice(recovery: recovery) { bootstrap.acknowledgeRecovery() }
             } else {
                 RootView().environmentObject(store).environmentObject(store.audio).environmentObject(store.commerce)
+                    .environment(store.tuner)
             }
         } else if let failure = bootstrap.failure {
             LaunchFailure(failure: failure, retry: { bootstrap.load() }, openWithoutSavedFile: { bootstrap.openWithoutSavedFile() })
@@ -50,9 +51,9 @@ struct TimbreApp: App {
     }
 }
 
-/// Opens the store once the curriculum has decoded. Opening never dead-ends: a saved file that can't be read is
-/// recovered by `LocalStore` (and `recovery` tells the player once), and one the system won't hand over yet is tried
-/// again when it can be read, or set aside at the player's word.
+/// Opens the store once the catalogue and the curriculum have decoded, both off the main thread. Opening never
+/// dead-ends: a saved file that can't be read is recovered by `LocalStore` (and `recovery` tells the player once), and
+/// one the system won't hand over yet is tried again when it can be read, or set aside at the player's word.
 @MainActor
 final class Bootstrap: ObservableObject {
     /// Why the app couldn't open.
@@ -78,8 +79,10 @@ final class Bootstrap: ObservableObject {
         loading = true
         failure = nil
         Task { [weak self] in
+            // The curriculum started decoding at launch (`TimbreApp.init`); the catalogue decodes beside it.
+            let catalog = await Task.detached(priority: .userInitiated) { Result { try Catalog() } }.value
             _ = await CurriculumStore.shared.load()
-            self?.open()
+            self?.open(catalog: catalog)
         }
     }
 
@@ -105,16 +108,15 @@ final class Bootstrap: ObservableObject {
         if let store { action(store) } else { waiting.append(action) }
     }
 
-    private func open() {
+    private func open(catalog: Result<Catalog, any Error>) {
         defer { loading = false }
         do {
-            let store = try AppStore(directory: directory)
+            let store = try AppStore(directory: directory, catalog: catalog.get())
             #if DEBUG
-            let environment = ProcessInfo.processInfo.environment
-            if environment["TIMBRE_SKIP_ONBOARDING"] == "1" { store.updateSettings { $0.onboardingCompleted = true; $0.goal = "practice" } }
-            if environment["TIMBRE_STAGE_MODE"] == "studio" { store.updateSettings { $0.stageMode = "studio" } }
-            if environment["TIMBRE_DEMO_DATA"] == "1", store.records.isEmpty { DemoData.seed(store) }
-            DemoScene.start(store)  // TIMBRE_SCENE: an App Store screenshot's hero moment (Root/DemoScenes.swift)
+            if TestSupport.isOn(.skipOnboarding) { store.updateSettings { $0.onboardingCompleted = true; $0.goal = "practice" } }
+            if TestSupport.value(.stageMode) == "studio" { store.updateSettings { $0.stageMode = "studio" } }
+            if TestSupport.isOn(.demoData), store.records.isEmpty { DemoData.seed(store) }
+            DemoScene.start(store)  // a capture scene's moment, when the run names one (Root/DemoScenes.swift)
             #endif
             recovery = store.storageRecovery
             failure = nil
@@ -129,16 +131,9 @@ final class Bootstrap: ObservableObject {
         }
     }
 
+    /// Application Support/Timbre; an automated run that names its own storage keeps its state apart.
     nonisolated private static func storageDirectory() -> URL {
-        #if DEBUG
-        // Separate application state per UI test; release builds never read these values.
-        let environment = ProcessInfo.processInfo.environment
-        if let identifier = environment["TIMBRE_TEST_STORAGE_ID"], UUID(uuidString: identifier) != nil {
-            return FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-                .appendingPathComponent("TimbreUITests", isDirectory: true).appendingPathComponent(identifier, isDirectory: true)
-        }
-        #endif
-        return LocalStore.defaultDirectory
+        TestSupport.storageRoot ?? LocalStore.defaultDirectory
     }
 }
 
@@ -151,7 +146,7 @@ private struct RecoveryNotice: View {
 
     var body: some View {
         LaunchMessage(symbol: restored ? "clock.arrow.circlepath" : "arrow.counterclockwise",
-                      tint: restored ? Palette.mint : Palette.amber, title: title, message: message) {
+                      tint: restored ? Palette.mint : Palette.accentNeutral, title: title, message: message) {
             Button("Continue", action: dismiss)
                 .buttonStyle(PrimaryButtonStyle())
                 .accessibilityIdentifier("launch.recovery.continue")
@@ -187,7 +182,7 @@ private struct LaunchFailure: View {
     }
 
     var body: some View {
-        LaunchMessage(symbol: "exclamationmark.triangle", tint: Palette.amber, title: Text("Timbre couldn't open"), message: message) {
+        LaunchMessage(symbol: "exclamationmark.triangle", tint: Palette.accentNeutral, title: Text("Timbre couldn't open"), message: message) {
             Button("Try again", action: retry)
                 .buttonStyle(PrimaryButtonStyle())
                 .accessibilityIdentifier("launch.retry")
@@ -263,65 +258,3 @@ private struct LaunchMessage<Actions: View>: View {
         .padding(.vertical, 24)
     }
 }
-
-#if DEBUG
-/// Realistic history for screenshots and UI tests: one state for every capture, whatever the hour a run starts. A
-/// 7-day streak that already counts today (the flame lit), level 5 (1,240 XP), today's tune-up ticked off in Today.
-/// A test's own practice adds nothing to the streak: today already counts, and today's streak freeze counts as awarded.
-enum DemoData {
-    @MainActor static func seed(_ store: AppStore) {
-        let now = Date()
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: now)
-        // Records sit on calendar days, at 5 PM, and today's just before now: never after it (a record from the future
-        // doesn't count) and never before midnight. Dating them "now − 1 h" put today's on yesterday for a run started
-        // between midnight and 1 AM (CI runs in UTC), so captures showed 7 days with a grey flame until a test's own
-        // practice made it 8.
-        let latest = max(today, now.addingTimeInterval(-120))
-        func moment(_ daysAgo: Int, minutes: Double = 0) -> Date {
-            let day = calendar.date(byAdding: .day, value: -daysAgo, to: today) ?? today.addingTimeInterval(-Double(daysAgo) * 86400)
-            return min(day.addingTimeInterval(17 * 3600 + minutes * 60), latest)
-        }
-        // Today first: each save checks the streak, and history saved after today's record never reaches a streak milestone.
-        for day in [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 13, 14, 15, 17, 20, 21, 22, 27, 28, 34] {
-            store.save(PracticeRecord(date: moment(day), instrumentId: "guitar.acoustic.6", tuningId: "guitar.acoustic.6.standard", kind: "tuning",
-                                      count: 180, stableCount: 120, meanAbsoluteCents: 0.6 + Double(day) * 0.09, durationMs: 90_000 + day * 4000))
-            if day % 2 == 0 {
-                store.save(PracticeRecord(date: moment(day, minutes: 10), instrumentId: "practice.ear", kind: "ear", count: 10, stableCount: 7 + day % 3, durationMs: 240_000))
-            }
-        }
-        // A learner a few lessons in, level 5, with a G string that drifts flat. The three lessons were finished on three
-        // days of this week's streak, each with the practice record a finished lesson saves (`AppStore.finishLesson`),
-        // so Learn's three finished lessons, "Your week" and the stats below agree.
-        var learn = LearnProgress()
-        let first = store.curriculum.course(id: "guitar")?.lessons.prefix(3) ?? []
-        for (i, lesson) in first.enumerated() {
-            let stars = [3, 2, 3][i]
-            let date = moment([3, 2, 1][i], minutes: 30)
-            learn.record(LessonResult(lessonId: lesson.id, stars: stars, accuracy: [0.96, 0.81, 0.93][i], xp: 20, minutes: 4), courseId: "guitar", now: date)
-            store.save(PracticeRecord(date: date, instrumentId: "learn.guitar", kind: "lesson", count: 3, stableCount: stars, durationMs: 4 * 60_000))
-        }
-        var progress = ProgressState()
-        progress.xp = 1240
-        progress.stats = ["stringsTuned": 140, "fullTunes": 14, "lessons": 3, "perfectLessons": 2, "earCorrect": 38, "bullseyes": 12, "sniperBest": 1650]
-        progress.achievements = ["first_tune", "full_tune", "streak_7", "strings_100", "bullseye", "first_lesson"]
-        progress.instrumentsTuned = ["guitar.acoustic.6"]
-        // Day 7 of the run already earned its freeze: without this, a test's first practice would bank one and pop the
-        // "streak freeze" banner (and a snowflake beside the flame) into whatever it captures next.
-        progress.freezeAwardDay = Quests.dayKey(now)
-        for (day, cents) in [(9, -2.0), (6, -9.0), (4, -14.0), (1, -23.0)] {
-            progress.sample(StringSample(instrumentId: "guitar.acoustic.6", anchor: "s3", date: now.addingTimeInterval(-Double(day) * 86400), cents: cents))
-            progress.sample(StringSample(instrumentId: "guitar.acoustic.6", anchor: "s1", date: now.addingTimeInterval(-Double(day) * 86400), cents: -0.5))
-        }
-        // Today's tune-up is the practice that lit the flame, so Today shows it done (1 of 3) on every capture, rather
-        // than done only on the captures whose test happened to tune first. Today's plan is pinned too (ear training,
-        // open on any plan), so every capture shows one plan whether its test has Pro or not.
-        let todayKey = store.todayKey
-        store.updateSettings {
-            $0.fullTunes = 14; $0.learn = learn; $0.progress = progress
-            $0.dailyDone = [todayKey: [DailyActivity.Kind.tune.rawValue]]
-            $0.dailyPlan = [todayKey: [DailyActivity.Kind.ear.rawValue]]
-        }
-    }
-}
-#endif

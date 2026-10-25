@@ -19,11 +19,8 @@ final class LiveActivityController {
     static let shared = LiveActivityController()
     typealias State = PracticeActivityAttributes.ContentState
 
-    /// Tests and the screenshot tour never start Live Activities (as Analytics stays local there).
-    private let enabled: Bool = {
-        let environment = ProcessInfo.processInfo.environment
-        return environment["XCTestConfigurationFilePath"] == nil && environment["TIMBRE_DEMO_PITCH"] == nil
-    }()
+    /// An automated run never starts Live Activities (as Analytics stays local there).
+    private let enabled = !TestSupport.isAutomated
 
     private static let minInterval: TimeInterval = 1
     private static let dwell: TimeInterval = 10

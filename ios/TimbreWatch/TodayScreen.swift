@@ -68,7 +68,7 @@ struct TodayScreen: View {
                 VStack(spacing: 0) {
                     WristFlame(lit: lit).frame(width: 26, height: 26)
                     Text(streak, format: .number)
-                        .font(Typeface.display(26, relativeTo: .title2))
+                        .font(Typeface.display(28, relativeTo: .title2))
                         .foregroundStyle(Palette.ink)
                         .contentTransition(.numericText(value: Double(streak)))
                         .lineLimit(1)
@@ -83,7 +83,7 @@ struct TodayScreen: View {
             if let line = status(lit: lit, streak: streak) {
                 line
                     .font(.caption2)
-                    .foregroundStyle(lit ? Palette.mint : Palette.amber)
+                    .foregroundStyle(lit ? Palette.mint : Palette.flame)
                     .multilineTextAlignment(.center)
             }
         }
@@ -168,13 +168,13 @@ struct TodayScreen: View {
             HStack(spacing: 6) {
                 ProgressBar(value: Double(quest.done) / Double(max(1, quest.total)), tint: tint)
                 Text(verbatim: "\(quest.done) / \(quest.total)")
-                    .font(Typeface.number(11))
+                    .font(Typeface.number(12))
                     .foregroundStyle(Palette.inkSoft)
                     .fixedSize()
             }
             if !quest.claimed {
                 Text("+\(quest.xp) XP")
-                    .font(Typeface.label(11))
+                    .font(Typeface.label(12))
                     .foregroundStyle(Palette.mint)
             }
         }

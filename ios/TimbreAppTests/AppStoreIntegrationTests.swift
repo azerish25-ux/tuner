@@ -131,8 +131,31 @@ final class AppStoreIntegrationTests: XCTestCase {
     func testSettingsWaitingForTheirWriteRideAlongWithAPracticeRecord() throws {
         store.setDrone(midi: 57)
         store.finishPractice(.ear, questions: 4, correct: 3)
-        // The record's write carries the drone setting changed just before it.
-        XCTAssertEqual(try AppStore(directory: directory).droneMidi, 57)
+        // The record's save carries the drone setting changed just before it, on the store's background queue; the
+        // flush waits for that write before the state is opened again.
+        store.flushSettings()
+        let reopened = try AppStore(directory: directory)
+        XCTAssertEqual(reopened.droneMidi, 57)
+        XCTAssertEqual(reopened.records.first?.kind, "ear")
+    }
+
+    /// The tuner's lock path saves nothing on the frame that locks: the string locks at once, and its reward and its
+    /// string-health sample arrive with the next settings batch (a flush applies them now).
+    func testALockedStringIsRewardedWithTheNextSettingsBatch() throws {
+        let string = store.activeCourse
+        let before = store.progress
+        let start = ProcessInfo.processInfo.systemUptime
+        // Held in tune, a reading every 20 ms: the lock needs 650 ms in the band.
+        while !store.lockedCourses.contains(string.index), ProcessInfo.processInfo.systemUptime - start < 3 {
+            store.accept(store.target(for: string), confidence: 0.95, level: -30)
+            Thread.sleep(forTimeInterval: 0.02)
+        }
+        XCTAssertTrue(store.lockedCourses.contains(string.index), "held in tune, the string locks")
+        XCTAssertEqual(store.progress, before, "the locking frame saves nothing")
+        store.flushSettings()
+        XCTAssertEqual(store.progress.stats["stringsTuned"], (before.stats["stringsTuned"] ?? 0) + 1)
+        XCTAssertGreaterThan(store.progress.xp, before.xp)
+        XCTAssertEqual(store.progress.stringSamples.count, before.stringSamples.count + 1)
     }
 
     func testTuningSessionSavesOnPauseAndCountsTowardStreak() throws {

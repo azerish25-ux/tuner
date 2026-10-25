@@ -7,7 +7,12 @@ import TimbreCore
 @Observable
 @MainActor
 final class LiveReading {
-    var reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal")
+    /// No string heard.
+    static let silence = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal")
+    /// Sound, but no pitch steady enough to read: "Let the string ring".
+    static let unclear = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "uncertain")
+
+    var reading = LiveReading.silence
     var level: Double = -120
     var preserved = false
     var updatedAt: TimeInterval = 0
@@ -17,7 +22,7 @@ final class LiveReading {
     var voiceLiveHoldMs = 0
 
     func clear() {
-        reading = TuningReading(frequency: nil, cents: nil, stable: false, inTune: false, status: "noSignal")
+        reading = Self.silence
         preserved = false
     }
 }

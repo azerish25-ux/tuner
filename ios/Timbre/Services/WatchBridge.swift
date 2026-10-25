@@ -1,4 +1,5 @@
 import Foundation
+import Synchronization
 import TimbreCore
 import UIKit
 import WatchConnectivity
@@ -31,7 +32,7 @@ final class WatchBridge: NSObject, WCSessionDelegate {
     private override init() { super.init() }
 
     /// Builds the snapshot from the store and sends it when it differs from what the watch has. Without a paired
-    /// watch that has Timbre (the simulator, an iPad) nothing is built or sent.
+    /// watch that has Timbre (an iPad, or an iPhone without one) nothing is built or sent.
     func publish(_ store: AppStore) {
         guard WCSession.isSupported() else { return }
         self.store = store
@@ -195,16 +196,12 @@ final class WatchBridge: NSObject, WCSessionDelegate {
 }
 
 /// A Bool written on the main queue and read from WatchConnectivity's.
-private final class SharedFlag: @unchecked Sendable {
-    private let lock = NSLock()
-    private var stored = false
+private final class SharedFlag: Sendable {
+    private let stored = Mutex(false)
 
-    var value: Bool {
-        lock.lock(); defer { lock.unlock() }
-        return stored
-    }
+    var value: Bool { stored.withLock { $0 } }
 
     func set(_ value: Bool) {
-        lock.lock(); stored = value; lock.unlock()
+        stored.withLock { $0 = value }
     }
 }

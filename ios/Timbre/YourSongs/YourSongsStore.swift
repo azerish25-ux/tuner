@@ -23,15 +23,8 @@ final class YourSongsStore: ObservableObject {
     static let maxChartBytes = 512 * 1024
 
     private init() {
-        var base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("Timbre", isDirectory: true)
-        #if DEBUG
-        // UI tests keep their own state (as `Bootstrap` does for the app's store).
-        if let identifier = ProcessInfo.processInfo.environment["TIMBRE_TEST_STORAGE_ID"], UUID(uuidString: identifier) != nil {
-            base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-                .appendingPathComponent("TimbreUITests", isDirectory: true).appendingPathComponent(identifier, isDirectory: true)
-        }
-        #endif
+        // Beside the app's saved state (`Bootstrap`): an automated run that names its own storage keeps these apart too.
+        let base = TestSupport.storageRoot ?? LocalStore.defaultDirectory
         library = try? UserSongLibrary(directory: base.appendingPathComponent("YourSongs", isDirectory: true))
         reload()
     }

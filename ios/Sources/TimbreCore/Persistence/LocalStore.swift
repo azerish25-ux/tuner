@@ -1,11 +1,9 @@
 import Foundation
+import Synchronization
 
 public struct UserSettings: Codable, Equatable, Sendable {
     public var referencePitchHz: Double = 440
     public var temperamentId = "equal"
-    public var theme = "dark"
-    public var skin = "brass"
-    public var reducedMotion = false
     public var hapticsEnabled = true
     /// The app language: "system" follows the device (or the language chosen for Timbre in iOS Settings); a code
     /// ("de", "zh-CN") is one picked in Timbre's Settings. `TimbreLocalization` resolves it.
@@ -21,8 +19,6 @@ public struct UserSettings: Codable, Equatable, Sendable {
     public var lastTuningIds: [String: String] = [:]
     public var selectedInstrumentId = "guitar.acoustic.6"
     public var selectedPhotoAsset: String?
-    /// Never set by any screen; kept so older files still decode. Usage sharing is `shareUsageData`.
-    public var telemetryEnabled = false
     /// Settings › Share anonymous usage data: nil until the player chooses (sharing is on until then, `sharesUsage`).
     public var shareUsageData: Bool? = nil
     public var selectedVoiceLevel: Int?
@@ -64,7 +60,8 @@ public struct UserSettings: Codable, Equatable, Sendable {
     public var shownDemos: [String: [String]]?
 
     // The fields below are plain values with defaults: the lenient decoder gives a file without them (or with a value
-    // this version can't read) the default, so they need not be optional.
+    // this version can't read) the default, so they need not be optional. A field nothing reads any more is deleted
+    // rather than kept: older files still open, since the decoder skips the keys it doesn't know.
 
     /// True once the player picks an app language in Settings. Until then an "en" saved when English was the default
     /// opens as "system", so the app follows the device.
@@ -77,9 +74,6 @@ public struct UserSettings: Codable, Equatable, Sendable {
     public var tuneByFeel = false
     /// The metronome's beat is felt on the phone as well as heard.
     public var feelTheBeat = false
-    /// Lessons play the band on the speaker while the microphone listens (voice processing, after its self-test);
-    /// off, the band needs headphones and the speaker plays only the click.
-    public var bandOnSpeaker = false
     /// Chord charts drawn as printed (right-handed) even when `handedness` is left-handed.
     public var chartsAsPrinted = false
     /// Onboarding's "Your first chord" has been played or skipped, so it isn't offered again.
@@ -113,9 +107,6 @@ extension UserSettings {
         }
         read(&referencePitchHz, .referencePitchHz)
         read(&temperamentId, .temperamentId)
-        read(&theme, .theme)
-        read(&skin, .skin)
-        read(&reducedMotion, .reducedMotion)
         read(&hapticsEnabled, .hapticsEnabled)
         read(&language, .language)
         read(&recentInstrumentIds, .recentInstrumentIds)
@@ -129,7 +120,6 @@ extension UserSettings {
         read(&lastTuningIds, .lastTuningIds)
         read(&selectedInstrumentId, .selectedInstrumentId)
         read(&selectedPhotoAsset, .selectedPhotoAsset)
-        read(&telemetryEnabled, .telemetryEnabled)
         read(&shareUsageData, .shareUsageData)
         read(&selectedVoiceLevel, .selectedVoiceLevel)
         read(&onboardingCompleted, .onboardingCompleted)
@@ -162,7 +152,6 @@ extension UserSettings {
         read(&calmMode, .calmMode)
         read(&tuneByFeel, .tuneByFeel)
         read(&feelTheBeat, .feelTheBeat)
-        read(&bandOnSpeaker, .bandOnSpeaker)
         read(&chartsAsPrinted, .chartsAsPrinted)
         read(&firstChordDone, .firstChordDone)
     }
@@ -290,6 +279,9 @@ public enum LocalStoreError: Error, Equatable {
 /// last save (`timbre-state.bak.json`) opens instead, else a fresh start; `recovery` says which, so the app can tell
 /// the player. `init` throws only when the system won't hand the file over (it is protected until the first unlock,
 /// say), and then the file is left exactly as it is.
+///
+/// A save checks only what it changes (the settings, or the one record added) against the bounds: what is already in
+/// the state passed them when it got there. How a save reaches the disk is the store's `durability`.
 public final class LocalStore {
     public static let recentInstrumentLimit = 12
     public static let fileName = "timbre-state.json"
@@ -307,7 +299,7 @@ public final class LocalStore {
     /// Set-aside files kept for diagnosis; older ones are deleted.
     static let quarantineLimit = 3
 
-    /// Where the app keeps its state: Application Support/Timbre. Tests and UI tests pass their own directory.
+    /// Where the app keeps its state: Application Support/Timbre. Any other directory can be passed instead.
     public static var defaultDirectory: URL {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("Timbre", isDirectory: true)
     }
@@ -320,7 +312,18 @@ public final class LocalStore {
         case startedFresh
     }
 
-    private struct State: Codable, Equatable {
+    /// How a save reaches the disk.
+    public enum Durability: Sendable {
+        /// Each save writes the file before it returns, and a save that can't be written throws and changes nothing.
+        case immediate
+        /// Each save changes the state at once and hands it to a serial background queue, which writes the file: the
+        /// caller never waits for the disk, and saves made while a write runs become one write of the newest state. A
+        /// write that fails is reported (`onWriteFailure`) and retried with the next save or `flush()`; until then the
+        /// state is ahead of the file. `flush()` returns once everything saved so far is on disk.
+        case background
+    }
+
+    fileprivate struct State: Codable, Equatable, Sendable {
         var version = LocalStore.currentVersion
         var settings = UserSettings()
         var records: [PracticeRecord] = []
@@ -339,52 +342,61 @@ public final class LocalStore {
         }
     }
 
-    private let fileURL: URL
-    private let backupURL: URL
+    public let durability: Durability
+    private let file: StateFile
+    /// Background durability's writer; nil when saves write the file themselves.
+    private let writer: StateWriter?
     private var state: State
-    /// The file on disk is one this store opened or wrote, so it may become the backup.
-    private var fileIsGood = false
-    /// Settings made current by `stageSettings` and not written yet.
+    /// Settings made current by `stageSettings` and not handed to the disk yet.
     private var staged = false
+    /// Background durability: the last state handed to the writer, counted from 1.
+    private var generation = 0
     /// The history size that triggers a roll-up (tests lower it).
     public var historyLimit = LocalStore.recordLimit
     public var settings: UserSettings { state.settings }
     public var records: [PracticeRecord] { state.records }
     public var demonstratedLevels: Set<Int> { state.demonstratedLevels }
-    /// Staged settings are waiting for `flush()` (or the next write, which carries them).
-    public var hasUnsavedChanges: Bool { staged }
+    /// Something saved is not on disk yet: staged settings waiting for `flush()` (or the next save, which carries
+    /// them), or with background durability a write still running or one that failed.
+    public var hasUnsavedChanges: Bool { staged || (writer.map { $0.written < generation } ?? false) }
     /// Set when opening had to get past a file it couldn't read.
     public private(set) var recovery: Recovery?
     /// Where the unreadable file was set aside, if one was.
     public private(set) var quarantinedFile: URL?
 
-    public init(directory: URL) throws {
+    public init(directory: URL, durability: Durability = .immediate) throws {
         let files = FileManager.default
         try files.createDirectory(at: directory, withIntermediateDirectories: true)
-        fileURL = directory.appendingPathComponent(Self.fileName)
-        backupURL = directory.appendingPathComponent(Self.backupFileName)
+        let file = StateFile(url: directory.appendingPathComponent(Self.fileName),
+                             backupURL: directory.appendingPathComponent(Self.backupFileName))
+        self.file = file
+        self.durability = durability
+        switch durability {
+        case .immediate: writer = nil
+        case .background: writer = StateWriter(file: file)
+        }
         var unreadable = false
-        if files.fileExists(atPath: fileURL.path) {
+        if files.fileExists(atPath: file.url.path) {
             // A read the system refuses throws from here and leaves the file alone: it is fine, just not available yet.
-            let data = try Data(contentsOf: fileURL)
+            let data = try Data(contentsOf: file.url)
             if let opened = Self.open(data) {
                 state = opened
-                fileIsGood = true
+                file.trust()
                 return
             }
             unreadable = true
             quarantinedFile = try? Self.setAside(in: directory)
         }
         // No file, or one set aside: the backup if there is one (a file set aside on an earlier launch included).
-        if let backup = try? Data(contentsOf: backupURL), let opened = Self.open(backup) {
-            state = opened
+        if let backup = try? Data(contentsOf: file.backupURL), let restored = Self.open(backup) {
+            state = restored
             recovery = .restoredBackup
         } else {
             state = State()
             if unreadable { recovery = .startedFresh }
         }
-        // The recovered state becomes the file at once; if that fails, the next save writes it.
-        if recovery != nil { try? persist(state) }
+        // The recovered state becomes the file at once, whatever the durability; if that fails, the next save writes it.
+        if recovery != nil { try? file.write(state) }
     }
 
     /// Moves the state file in `directory` aside as `timbre-state.corrupt-<time>.json`, so the next opening starts
@@ -406,38 +418,55 @@ public final class LocalStore {
         return destination
     }
 
+    /// Background durability: `handler` runs on the writer's queue whenever a write fails (the state stays current,
+    /// and the next save or `flush()` writes it again). Immediate durability reports a failure by throwing instead.
+    public func onWriteFailure(_ handler: @escaping @Sendable (any Error) -> Void) {
+        writer?.onFailure(handler)
+    }
+
     public func saveSettings(_ settings: UserSettings) throws {
-        try persist(candidate(settings))
+        let next = candidate(settings)
+        try Self.validate(next.settings)
+        try commit(next)
     }
     /// Validates settings and makes them current without writing the file, so a burst of changes costs one write:
     /// `flush()` writes them, as does any other save in the meantime. Invalid settings throw and change nothing.
     public func stageSettings(_ settings: UserSettings) throws {
         let next = candidate(settings)
-        try Self.validate(next)
+        try Self.validate(next.settings)
         state = next
         staged = true
     }
-    /// Writes staged settings; nothing to do when none are waiting. On failure they stay staged (and current).
-    public func flush() throws {
-        guard staged else { return }
-        try persist(state)
+    /// Writes what is waiting: staged settings, and with background durability a write that failed. Immediate: now,
+    /// throwing on failure (staged settings then stay staged, and current). Background: hands the state to the writer
+    /// and, with `wait`, returns once everything saved so far is on disk, throwing the write's failure if it isn't.
+    public func flush(wait: Bool = true) throws {
+        guard let writer else {
+            guard staged else { return }
+            try commit(state)
+            return
+        }
+        if staged || writer.written < generation { submit() }
+        if wait { try writer.wait(for: generation) }
     }
     public func append(_ record: PracticeRecord) throws {
+        try Self.validate(record)
         var candidate = state
         candidate.records.removeAll { $0.id == record.id }
         candidate.records.append(record)
         candidate.records.sort { $0.date > $1.date }
         if candidate.records.count > historyLimit {
             candidate.records = Self.rolledUp(candidate.records, now: Date(), calendar: .current)
+            try Self.validateHistory(candidate)
         }
         if let level = Self.evidencedLevel(record) { candidate.demonstratedLevels.insert(level) }
-        try persist(candidate)
+        try commit(candidate)
     }
     /// Clearing history also removes its vocal progress evidence; settings remain.
     public func clearHistory() throws {
         var candidate = state
         candidate.records = []; candidate.demonstratedLevels = []
-        try persist(candidate)
+        try commit(candidate)
     }
 
     /// The state with `settings` in it. A language set after opening is the player's own choice, so it is marked
@@ -450,26 +479,22 @@ public final class LocalStore {
         return candidate
     }
 
-    /// Validates, encodes and atomically replaces the file; memory changes only once the write succeeded. (An atomic
-    /// write either lands whole or leaves the old file, so the file is not read back and decoded again.) The file as
-    /// it stood is copied to the backup first, when it is one this store opened or wrote.
-    private func persist(_ candidate: State) throws {
-        try Self.validate(candidate)
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys]
-        let data = try encoder.encode(candidate)
-        if fileIsGood { keepBackup() }
-        try data.write(to: fileURL, options: .atomic)
+    /// Makes `candidate` (already validated) the state. Immediate: the file is written first, and memory changes only
+    /// once it is (an atomic write lands whole or leaves the old file, so it is not read back). Background: memory
+    /// changes now and the writer writes it.
+    private func commit(_ candidate: State) throws {
+        if writer == nil { try file.write(candidate) }
         state = candidate
         staged = false
-        fileIsGood = true
+        submit()
     }
 
-    /// Best effort: a backup that can't be made never stops a save. (On APFS the copy is a clone, not a second write.)
-    private func keepBackup() {
-        let files = FileManager.default
-        try? files.removeItem(at: backupURL)
-        try? files.copyItem(at: fileURL, to: backupURL)
+    /// Background durability: hands the current state to the writer.
+    private func submit() {
+        guard let writer else { return }
+        staged = false
+        generation += 1
+        writer.submit(state, generation: generation)
     }
 
     private static func normalized(_ settings: UserSettings) -> UserSettings {
@@ -676,9 +701,14 @@ public final class LocalStore {
         !midis.isEmpty && midis.count <= customTuningCourseLimit && midis.allSatisfy { (0...127).contains($0) }
     }
 
-    /// What every write must satisfy. Opening repairs a file into these bounds rather than refusing it.
+    /// What every write must satisfy, whole: an opened file's state (`open` repairs a file into these bounds rather
+    /// than refusing it). A save checks only what it changes, against the same bounds.
     private static func validate(_ value: State) throws {
-        let settings = value.settings
+        try validate(value.settings)
+        try validateHistory(value)
+    }
+
+    private static func validate(_ settings: UserSettings) throws {
         guard settings.referencePitchHz.isFinite, referencePitchRange.contains(settings.referencePitchHz),
               micSensitivityRange.contains(settings.micSensitivity), settings.confidenceThreshold.isFinite,
               (0...1).contains(settings.confidenceThreshold), capoRange.contains(settings.capo),
@@ -692,17 +722,141 @@ public final class LocalStore {
               settings.learn?.isValid ?? true else {
             throw LocalStoreError.invalidState("Invalid settings")
         }
+    }
+
+    /// Every record, their ids unique, and the demonstrated levels.
+    private static func validateHistory(_ value: State) throws {
         guard Set(value.records.map(\.id)).count == value.records.count,
               value.demonstratedLevels.allSatisfy({ isEvidenceLevel($0) }) else {
             throw LocalStoreError.invalidState("Invalid history or progress")
         }
-        for record in value.records {
-            guard record.date.timeIntervalSinceReferenceDate.isFinite, !record.instrumentId.isEmpty,
-                  record.count >= 0, record.stableCount >= 0, record.stableCount <= record.count,
-                  record.meanAbsoluteCents.map({ $0.isFinite && $0 >= 0 }) ?? true,
-                  record.durationMs.map({ $0 >= 0 }) ?? true else {
-                throw LocalStoreError.invalidState("Invalid practice record")
-            }
+        for record in value.records { try validate(record) }
+    }
+
+    private static func validate(_ record: PracticeRecord) throws {
+        guard record.date.timeIntervalSinceReferenceDate.isFinite, !record.instrumentId.isEmpty,
+              record.count >= 0, record.stableCount >= 0, record.stableCount <= record.count,
+              record.meanAbsoluteCents.map({ $0.isFinite && $0 >= 0 }) ?? true,
+              record.durationMs.map({ $0 >= 0 }) ?? true else {
+            throw LocalStoreError.invalidState("Invalid practice record")
         }
     }
 }
+
+// MARK: - Writing the file
+
+/// The state file and its backup. Writes come from one place at a time: the saving thread with immediate durability,
+/// the writer's queue with background durability.
+private final class StateFile: Sendable {
+    let url: URL
+    let backupURL: URL
+    /// The file on disk is one this store opened or wrote, so it may become the backup.
+    private let trusted = Mutex(false)
+
+    init(url: URL, backupURL: URL) {
+        self.url = url
+        self.backupURL = backupURL
+    }
+
+    func trust() { trusted.withLock { $0 = true } }
+
+    /// Encodes `state` and atomically replaces the file, after copying the file as it stood to the backup when it is
+    /// one this store opened or wrote.
+    func write(_ state: LocalStore.State) throws {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        let data = try encoder.encode(state)
+        if trusted.withLock({ $0 }) { keepBackup() }
+        try data.write(to: url, options: .atomic)
+        trust()
+    }
+
+    /// Best effort: a backup that can't be made never stops a save. (On APFS the copy is a clone, not a second write.)
+    private func keepBackup() {
+        let files = FileManager.default
+        try? files.removeItem(at: backupURL)
+        try? files.copyItem(at: url, to: backupURL)
+    }
+}
+
+/// Background durability's writer: a serial queue that encodes and writes the newest state handed to it. While a
+/// write runs, states handed over replace one another, so a burst of saves costs one more write and the file always
+/// ends as the newest state.
+private final class StateWriter: Sendable {
+    private struct Shared {
+        /// The newest state not written yet, and its generation.
+        var next: (generation: Int, state: LocalStore.State)?
+        /// The queue is writing, or about to.
+        var draining = false
+        /// The newest generation on disk.
+        var written = 0
+        /// Why the latest write failed; nil once one succeeds.
+        var failure: (any Error)?
+        var onFailure: (@Sendable (any Error) -> Void)?
+    }
+
+    private let file: StateFile
+    private let queue = DispatchQueue(label: "LocalStore.writer", qos: .utility)
+    private let guarded = Mutex(Shared())
+
+    init(file: StateFile) {
+        self.file = file
+    }
+
+    /// The newest generation on disk.
+    var written: Int { guarded.withLock { $0.written } }
+
+    func onFailure(_ handler: @escaping @Sendable (any Error) -> Void) {
+        guarded.withLock { $0.onFailure = handler }
+    }
+
+    func submit(_ state: LocalStore.State, generation: Int) {
+        let start = guarded.withLock { shared -> Bool in
+            shared.next = (generation, state)
+            guard !shared.draining else { return false }
+            shared.draining = true
+            return true
+        }
+        if start { queue.async { self.drain() } }
+    }
+
+    /// Blocks until every state handed over so far has been written or has failed; throws the failure when
+    /// `generation` isn't on disk.
+    func wait(for generation: Int) throws {
+        queue.sync {}
+        let (written, failure) = guarded.withLock { ($0.written, $0.failure) }
+        guard written < generation else { return }
+        throw failure ?? CocoaError(.fileWriteUnknown)
+    }
+
+    private func drain() {
+        while let job = take() {
+            do {
+                try file.write(job.state)
+                guarded.withLock { shared in
+                    shared.written = max(shared.written, job.generation)
+                    shared.failure = nil
+                }
+            } catch {
+                let report = guarded.withLock { shared -> (@Sendable (any Error) -> Void)? in
+                    shared.failure = error
+                    return shared.onFailure
+                }
+                report?(error)
+            }
+        }
+    }
+
+    /// The next state to write, or nil (and the queue idle) when there is none.
+    private func take() -> (generation: Int, state: LocalStore.State)? {
+        guarded.withLock { shared in
+            guard let next = shared.next else {
+                shared.draining = false
+                return nil
+            }
+            shared.next = nil
+            return next
+        }
+    }
+}
+

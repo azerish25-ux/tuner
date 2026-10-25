@@ -129,7 +129,7 @@ struct MetronomeScreen: View {
 
             Button { metronome.tap() } label: {
                 Text("Tap")
-                    .font(Typeface.label(14))
+                    .font(Typeface.label(13))
                     .foregroundStyle(Palette.ink)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)

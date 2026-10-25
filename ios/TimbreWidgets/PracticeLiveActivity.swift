@@ -94,7 +94,7 @@ private struct SessionBanner: View {
             Spacer(minLength: 8)
             VStack(alignment: .trailing, spacing: 8) {
                 SessionClock(state: state, stale: stale)
-                    .font(Typeface.number(24, relativeTo: .title2))
+                    .font(Typeface.number(.title3))
                     .foregroundStyle(stale ? Palette.inkFaint : Palette.ink)
                     .multilineTextAlignment(.trailing)
                     .frame(maxWidth: 110, alignment: .trailing)
@@ -117,7 +117,7 @@ private struct SmallStack: View {
             SessionGlyph(state: state, stale: stale, size: 30)
             VStack(alignment: .leading, spacing: 1) {
                 SessionHeading(state: state)
-                value.font(Typeface.display(18, relativeTo: .headline)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.7)
+                value.font(Typeface.display(.headline)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.7)
             }
             Spacer(minLength: 0)
         }
@@ -175,21 +175,21 @@ private struct StandByStage: View {
         switch state.mode {
         case .metronome:
             HStack(alignment: .firstTextBaseline, spacing: 10) {
-                Text(verbatim: "♩ \(state.bpm)").font(Typeface.display(56, relativeTo: .largeTitle)).foregroundStyle(ink)
-                Text(verbatim: state.meter).font(Typeface.number(24, relativeTo: .title2)).foregroundStyle(Palette.inkSoft)
+                Text(verbatim: "♩ \(state.bpm)").font(Typeface.hero(56)).foregroundStyle(ink)
+                Text(verbatim: state.meter).font(Typeface.number(.title3)).foregroundStyle(Palette.inkSoft)
             }
             .lineLimit(1)
             .minimumScaleFactor(0.6)
         case .drone:
             HStack(alignment: .firstTextBaseline, spacing: 10) {
-                Text(verbatim: state.drone).font(Typeface.display(56, relativeTo: .largeTitle)).foregroundStyle(ink)
+                Text(verbatim: state.drone).font(Typeface.hero(56)).foregroundStyle(ink)
                 Text("Tonic").font(Typeface.label(20, relativeTo: .title3)).foregroundStyle(Palette.inkSoft)
             }
             .lineLimit(1)
             .minimumScaleFactor(0.6)
         case .practice, .done:
             SessionClock(state: state, stale: stale)
-                .font(Typeface.number(52, relativeTo: .largeTitle))
+                .font(Typeface.hero(52))
                 .foregroundStyle(ink)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
@@ -250,7 +250,7 @@ private struct CompactTrailing: View {
                 Text(verbatim: state.drone).font(Typeface.display(15))
             case .practice, .done:
                 SessionClock(state: state, stale: stale)
-                    .font(Typeface.number(14))
+                    .font(Typeface.number(.footnote))
                     .multilineTextAlignment(.trailing)
                     .frame(width: 50, alignment: .trailing)
             }
@@ -402,7 +402,7 @@ private struct DroneChip: View {
             Image(systemName: "waveform.path")
             Text(verbatim: note)
         }
-        .font(Typeface.label(11))
+        .font(Typeface.label(.caption))
         .foregroundStyle(Palette.mint)
         .padding(.horizontal, 6)
         .padding(.vertical, 2)

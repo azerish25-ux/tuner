@@ -2,13 +2,43 @@ import Foundation
 
 /// The one place the app asks whether it is running under automation: unit and UI tests, the demo pitch, demo data
 /// and the capture scenes (the App Store screenshots and App Preview). Features that must stay quiet there (remote
-/// settings, Game Center, the win-back offer, analytics) read `isAutomated` instead of the environment.
+/// settings, Game Center, the win-back offer, analytics) read `isAutomated` instead of the environment; a feature
+/// that a run switches on reads its own `Key`.
 ///
-/// Debug builds only: a release build is never automated, so none of this reaches the shipped app.
+/// Debug builds only: a release build is never automated and reads no launch environment, so none of this reaches the
+/// shipped app.
 enum TestSupport {
-    /// The launch environment keys an automated run sets.
-    private static let automationKeys = ["XCTestConfigurationFilePath", "TIMBRE_TEST_STORAGE_ID", "TIMBRE_DEMO_PITCH",
-                                         "TIMBRE_DEMO_DATA", "TIMBRE_SCENE"]
+    /// The launch environment an automated run (a UI test, `tools/marketing`) can set.
+    enum Key: String, CaseIterable, Sendable {
+        /// A UI test's own storage folder, a UUID (`storageRoot`).
+        case storageID = "TIMBRE_TEST_STORAGE_ID"
+        /// "1": a demo pitch stands in for the microphone.
+        case demoPitch = "TIMBRE_DEMO_PITCH"
+        /// "1": realistic practice history is seeded on an empty store (`DemoData`).
+        case demoData = "TIMBRE_DEMO_DATA"
+        /// "1": onboarding counts as done.
+        case skipOnboarding = "TIMBRE_SKIP_ONBOARDING"
+        /// "studio": the tuner opens on the studio stage.
+        case stageMode = "TIMBRE_STAGE_MODE"
+        /// "1": probes XCUITest reads (presentation flags, the stage's state) are drawn.
+        case debugState = "TIMBRE_DEBUG_STATE"
+        /// "1": the 3D stage draws its load state.
+        case stageDebug = "TIMBRE_STAGE_DEBUG"
+        /// A capture scene's name (`DemoScene`).
+        case scene = "TIMBRE_SCENE"
+        /// A capture scene's instrument, song, bar, lock comet and cue file.
+        case sceneInstrument = "TIMBRE_SCENE_INSTRUMENT"
+        case sceneSong = "TIMBRE_SCENE_SONG"
+        case sceneBar = "TIMBRE_SCENE_BAR"
+        case sceneComet = "TIMBRE_SCENE_COMET"
+        case sceneCue = "TIMBRE_SCENE_CUE"
+        /// A folder the App Preview's soundtrack is written to (`PreviewRecorder`).
+        case previewAudio = "TIMBRE_PREVIEW_AUDIO"
+    }
+
+    /// The keys that make a run automated, with XCTest's own.
+    private static let automationKeys = ["XCTestConfigurationFilePath", Key.storageID.rawValue, Key.demoPitch.rawValue,
+                                         Key.demoData.rawValue, Key.scene.rawValue]
 
     /// A test, a demo mode or a capture scene is driving the app. Always false in a release build.
     static let isAutomated: Bool = {
@@ -18,5 +48,25 @@ enum TestSupport {
         #else
         return false
         #endif
+    }()
+
+    /// What the run set `key` to; nil when it didn't, and always in a release build.
+    static func value(_ key: Key) -> String? {
+        #if DEBUG
+        return ProcessInfo.processInfo.environment[key.rawValue]
+        #else
+        return nil
+        #endif
+    }
+
+    /// The run set `key` to "1".
+    static func isOn(_ key: Key) -> Bool { value(key) == "1" }
+
+    /// A UI test's own Application Support folder (`TimbreUITests/<storage id>`), so each test starts from its own
+    /// saved state; nil outside one (and in a release build), where the app's own folders are used.
+    static let storageRoot: URL? = {
+        guard let identifier = value(.storageID), UUID(uuidString: identifier) != nil else { return nil }
+        return FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("TimbreUITests", isDirectory: true).appendingPathComponent(identifier, isDirectory: true)
     }()
 }

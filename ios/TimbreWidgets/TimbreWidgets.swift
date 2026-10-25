@@ -154,7 +154,7 @@ struct QuickTuneView: View {
         default:
             VStack(spacing: entry.instrument == nil ? 8 : 4) {
                 StrobeRing().frame(maxWidth: .infinity, maxHeight: .infinity)
-                Text("Tune").font(Typeface.display(22)).foregroundStyle(Palette.ink).widgetAccentable()
+                Text("Tune").font(Typeface.display(.title3)).foregroundStyle(Palette.ink).widgetAccentable()
                 // A widget set to one instrument names it, so a row of them reads at a glance.
                 if let instrument = entry.instrument {
                     Text(verbatim: instrument.name)
@@ -201,8 +201,8 @@ struct StreakView: View {
         default:
             HStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Image(systemName: "flame.fill").font(.title2).foregroundStyle(status.practicedToday ? Palette.amber : Palette.inkFaint)
-                    Text("\(status.days)").font(Typeface.display(44)).foregroundStyle(Palette.ink).contentTransition(.numericText())
+                    Image(systemName: "flame.fill").font(.title2).foregroundStyle(status.practicedToday ? Palette.flame : Palette.inkFaint)
+                    Text("\(status.days)").font(Typeface.display(.display)).foregroundStyle(Palette.ink).contentTransition(.numericText())
                     Text("day streak").font(.caption.weight(.semibold)).foregroundStyle(Palette.inkSoft)
                     Spacer(minLength: 0)
                     Text(status.practicedToday ? "Practised today" : "Ten minutes keeps it alive")
@@ -305,7 +305,7 @@ struct NextLessonView: View {
     private var empty: some View {
         VStack(alignment: .leading, spacing: 6) {
             Image(systemName: "graduationcap.fill").font(.title3).foregroundStyle(Palette.mint)
-            Text("Course complete").font(Typeface.display(18)).foregroundStyle(Palette.ink)
+            Text("Course complete").font(Typeface.display(.headline)).foregroundStyle(Palette.ink)
             Spacer(minLength: 0)
             Text("Replay any lesson for three stars.").font(.caption2).foregroundStyle(Palette.inkSoft).lineLimit(3)
         }

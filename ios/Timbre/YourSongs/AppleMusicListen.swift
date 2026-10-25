@@ -173,7 +173,7 @@ struct AppleMusicCard: View {
             }
             content
             if let problem = listener.problem {
-                Text(verbatim: problem).font(.footnote).foregroundStyle(Palette.amber).fixedSize(horizontal: false, vertical: true)
+                Text(verbatim: problem).font(.footnote).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
             }
         }
         .stillCard(cornerRadius: Metrics.cornerTile, padding: Metrics.tilePadding)
@@ -307,7 +307,7 @@ struct AppleMusicPicker: View {
                 if searching && results.isEmpty {
                     StageSpinner("Searching Apple Music…").listRowBackground(Color.clear)
                 } else if let failure {
-                    Text(verbatim: failure).font(.subheadline).foregroundStyle(Palette.amber).listRowBackground(Color.clear)
+                    Text(verbatim: failure).font(.subheadline).foregroundStyle(Palette.inkSoft).listRowBackground(Color.clear)
                 } else if results.isEmpty && !query.isEmpty {
                     ContentUnavailableView.search(text: query).listRowBackground(Color.clear)
                 }
