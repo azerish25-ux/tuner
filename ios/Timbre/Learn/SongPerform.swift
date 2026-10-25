@@ -442,15 +442,20 @@ struct SongPerformStep: View {
         take = SongTake(accuracy: accuracy, points: points, bestCombo: judge.bestCombo,
                         grades: notes.indices.map { grades[$0] ?? .miss }, judgments: judge.judgments,
                         notes: notes.count, tempo: Int(tempo), full: ladder.isFullTempo)
+        // A whole take at the song's own tempo goes to Game Center: a featured song's board (and any challenge on it),
+        // and "Challenge a friend" on the results. Slower takes never count there.
+        if ladder.isFullTempo { GameCenter.shared.performed(lesson: lesson.id, points: points, notes: notes.count) }
         withMotion(Motion.settle, reduceMotion: reduceMotion) { phase = .finale }
         if accuracy >= 0.7 { SoundFX.shared.play(.complete) }
         Haptics.shared.done()
     }
 
-    /// Stop mid-take (or the app went to the background): back to the stage, nothing counted. The click stops if
-    /// the take started it and the Metronome tool hasn't taken it over.
+    /// Stop mid-take (or the app went to the background): back to the stage, nothing counted, except as a try in a
+    /// Game Center challenge on the song that is going on (its points so far). The click stops if the take started it
+    /// and the Metronome tool hasn't taken it over.
     private func stopTake() {
         guard phase == .playing else { return }
+        if ladder.isFullTempo { GameCenter.shared.performStopped(lesson: lesson.id, points: points, notes: notes.count) }
         if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
         ownsClick = false
         store.audio.stopBand()
