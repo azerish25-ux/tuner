@@ -133,12 +133,8 @@ final class GameCenter: ObservableObject {
     /// The streak last sent and on which day ("2026-10-24:12").
     private static let streakSentKey = "gamecenter.streak.sent"
 
-    /// Off under XCTest, the UI tests and the demo and screenshot modes (as coach marks are): no sign-in banner in a capture.
-    static let enabled: Bool = {
-        let environment = ProcessInfo.processInfo.environment
-        let quiet = ["XCTestConfigurationFilePath", "TIMBRE_TEST_STORAGE_ID", "TIMBRE_DEMO_PITCH", "TIMBRE_DEMO_DATA", "TIMBRE_SCENE"]
-        return !quiet.contains { environment[$0] != nil }
-    }()
+    /// Off in an automated run (as coach marks are): no sign-in banner over what the run records.
+    static let enabled = !TestSupport.isAutomated
 
     private init() {}
 

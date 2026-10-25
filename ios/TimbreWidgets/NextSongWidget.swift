@@ -148,9 +148,9 @@ struct NextSongView: View {
                 .containerBackground(for: .widget) { Color.clear }
             } else {
                 VStack(alignment: .leading, spacing: 6) {
-                    Image(systemName: "music.note.list").font(.title3).foregroundStyle(Palette.amber)
+                    Image(systemName: "music.note.list").font(.title3).foregroundStyle(Palette.accentNeutral)
                     Spacer(minLength: 0)
-                    Text("Next song").font(Typeface.display(18)).foregroundStyle(Palette.ink)
+                    Text("Next song").font(Typeface.display(.headline)).foregroundStyle(Palette.ink)
                     Text("Open Timbre to pick your next song.").font(.caption2).foregroundStyle(Palette.inkSoft).lineLimit(3)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
@@ -213,7 +213,7 @@ private struct AccessMark: View {
         switch song.access {
         case "pro":
             Text("Pro")
-                .font(Typeface.label(10)).textCase(.uppercase).tracking(0.6)
+                .font(Typeface.label(.caption)).textCase(.uppercase).tracking(0.6)
                 .foregroundStyle(Palette.onAccent)
                 .padding(.horizontal, 6).padding(.vertical, 2)
                 .background(Capsule().fill(Palette.proGold))
@@ -223,7 +223,7 @@ private struct AccessMark: View {
             HStack(spacing: 1) {
                 ForEach(0..<3, id: \.self) { index in
                     Image(systemName: "star.fill").font(.system(size: 8, weight: .bold))
-                        .foregroundStyle(index < song.stars ? Palette.amber : Palette.ink.opacity(0.2))
+                        .foregroundStyle(index < song.stars ? Palette.starGold : Palette.ink.opacity(0.2))
                 }
             }
             .accessibilityLabel(Text("\(song.stars) of 3 stars"))
@@ -277,7 +277,7 @@ private struct ChordChips: View {
         HStack(spacing: 4) {
             ForEach(chords, id: \.self) { chord in
                 Text(verbatim: chord)
-                    .font(Typeface.label(11))
+                    .font(Typeface.label(.caption))
                     .foregroundStyle(Palette.ink)
                     .padding(.horizontal, 6).padding(.vertical, 2)
                     .background(Capsule().fill(tint.opacity(0.18)))

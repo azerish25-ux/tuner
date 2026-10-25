@@ -56,13 +56,13 @@ struct StreakSnippet: View {
                 .font(.title2)
                 .foregroundStyle(status.practicedToday ? Palette.flame : Palette.inkFaint)
             Text(status.days, format: .number)
-                .font(Typeface.display(44, relativeTo: .largeTitle))
+                .font(Typeface.display(.display))
                 .foregroundStyle(Palette.ink)
             Text("day streak").font(.caption.weight(.semibold)).foregroundStyle(Palette.inkSoft)
             if status.practicedToday {
                 Text("Practised today").font(.caption2).foregroundStyle(Palette.success).lineLimit(2)
             } else if status.days > 0 {
-                Text("Keep it alive today").font(.caption2).foregroundStyle(Palette.amber).lineLimit(2)
+                Text("Keep it alive today").font(.caption2).foregroundStyle(Palette.flame).lineLimit(2)
             }
         }
     }

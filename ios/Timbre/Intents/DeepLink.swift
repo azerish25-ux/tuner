@@ -201,7 +201,7 @@ enum DeepLink {
         guard let found = store.curriculum.lesson(id: id) else { store.selectedTab = .learn; return }
         switch LessonAccess.of(found.lesson, in: found.course, store: store) {
         case .play, .pro:
-            let ownCourse = UserDefaults.standard.string(forKey: "learn.course") ?? "guitar"
+            let ownCourse = Preferences.learnCourse
             store.pendingLessonId = found.lesson.id
             store.selectedTab = .learn
             if found.lesson.kind == .song && ownCourse != found.course.id {
@@ -211,7 +211,7 @@ enum DeepLink {
             if found.lesson.kind == .song {
                 store.selectedTab = .songs
             } else {
-                UserDefaults.standard.set(found.course.id, forKey: "learn.course")
+                Preferences.learnCourse = found.course.id
                 store.selectedTab = .learn
             }
         }
@@ -225,8 +225,8 @@ enum DeepLink {
             for _ in 0..<30 where store.pendingLessonId != nil { try? await Task.sleep(for: .milliseconds(100)) }
             // Past Learn's own wait for covering screens, so the switch happens behind the open song.
             try? await Task.sleep(for: .milliseconds(2500))
-            guard UserDefaults.standard.string(forKey: "learn.course") == songCourse else { return }
-            UserDefaults.standard.set(own, forKey: "learn.course")
+            guard Preferences.savedLearnCourse == songCourse else { return }
+            Preferences.learnCourse = own
         }
     }
 

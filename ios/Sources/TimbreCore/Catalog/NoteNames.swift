@@ -1,4 +1,5 @@
 import Foundation
+import Synchronization
 
 /// Note and chord names in the note-naming system the player picked (Settings › Note names).
 ///
@@ -13,8 +14,12 @@ public enum NoteNames {
     public static let systems = ["english", "german", "solfege", "sargam", "numbered"]
 
     /// The system on screen. The app sets it from `UserSettings.notation` at launch and on every settings change;
-    /// the chord and scale tools, lesson diagrams and lesson chord names (`ChordSpec.name`) read it.
-    public static var active = "english"
+    /// the chord and scale tools, lesson diagrams and lesson chord names (`ChordSpec.name`) read it, from any thread.
+    public static var active: String {
+        get { activeSystem.withLock { $0 } }
+        set { activeSystem.withLock { $0 = newValue } }
+    }
+    private static let activeSystem = Mutex("english")
 
     private static let letters: [Character] = ["C", "D", "E", "F", "G", "A", "B"]
     private static let accidentals: Set<Character> = ["#", "b", "♯", "♭"]

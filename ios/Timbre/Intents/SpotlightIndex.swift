@@ -164,12 +164,8 @@ enum SpotlightIndex {
     private static let schema = 1
 
     @MainActor static func refresh(_ store: AppStore) {
-        #if DEBUG
-        // UI tests and store screenshots never need it (and keep their launches quiet).
-        let environment = ProcessInfo.processInfo.environment
-        let testing = ["XCTestConfigurationFilePath", "TIMBRE_TEST_STORAGE_ID", "TIMBRE_DEMO_PITCH", "TIMBRE_SCENE"]
-        if testing.contains(where: { environment[$0] != nil }) { return }
-        #endif
+        // An automated run never needs it, and its launches stay quiet.
+        if TestSupport.isAutomated { return }
         guard CSSearchableIndex.isIndexingAvailable() else { return }
         let info = Bundle.main.infoDictionary ?? [:]
         let parts = [String(schema),
