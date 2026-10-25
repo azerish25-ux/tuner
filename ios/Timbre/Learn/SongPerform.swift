@@ -541,7 +541,10 @@ extension SongPerformStep {
     fileprivate func startScene(atBeat beat: Double) {
         guard phase == .stage else { return }
         start()
-        startTime -= countIn + beat * spb
+        // The clock starts a bar before `beat`: the first frames after a jump this size (the runway's first draw of the
+        // whole song, the band starting) can hold the main thread for a second, and a note due then would be a miss.
+        let lead = Double(max(1, beatsPerBar))
+        startTime -= countIn + max(0, beat - lead) * spb
         let now = CACurrentMediaTime()
         for _ in notes.indices {
             let index = judge.nextIndex
