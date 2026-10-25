@@ -158,7 +158,7 @@ final class TabletScreenshotsUITests: XCTestCase {
     /// True when all three cards are whole on screen.
     private func scrollToFolkShelf() -> Bool {
         let cards = Self.folkCards.map { element("instrument." + $0) }
-        let screen = app.frame
+        let screen = screenFrame
         // The grid is lazy: down about half a page at a time until the shelf's cards are laid out.
         for _ in 0..<12 where !cards.allSatisfy({ $0.exists }) {
             drag(by: screen.height * 0.55)
@@ -174,10 +174,26 @@ final class TabletScreenshotsUITests: XCTestCase {
         }
         let top = screen.minY + 96  // under the navigation bar and the page's top shade
         let foot = screen.maxY - 64  // above the bottom fade's darkest stretch
-        return cards.allSatisfy { card in
+        let whole = cards.allSatisfy { card in
             guard let box = liveFrame(card) else { return false }
             return box.minY >= top && box.maxY <= foot
         }
+        if !whole {
+            let boxes = cards.map { liveFrame($0).map { "\($0)" } ?? "none" }.joined(separator: ", ")
+            print("FOLK SHELF: screen \(screen) app \(app.frame) window \(app.windows.firstMatch.frame) cards \(boxes)")
+        }
+        return whole
+    }
+
+    /// The screen in the interface's own orientation. On a rotated iPad `app.frame` can still read portrait while the
+    /// elements' frames are laid out in landscape, which put the scroll's target line off the screen.
+    private var screenFrame: CGRect {
+        let window = app.windows.firstMatch.frame
+        var frame = window.isEmpty ? app.frame : window
+        if XCUIDevice.shared.orientation.isLandscape && frame.height > frame.width {
+            frame = CGRect(x: 0, y: 0, width: frame.height, height: frame.width)
+        }
+        return frame
     }
 
     /// From the screen's bottom edge to the foot of the frame's last whole row: the page's 64 pt bottom fade starts
@@ -195,7 +211,7 @@ final class TabletScreenshotsUITests: XCTestCase {
     /// Scrolls the page `distance` points further down it (negative: back up) with one drag through the middle of the
     /// screen that holds still before lifting, so the page stops where the finger does.
     private func drag(by distance: CGFloat) {
-        let screen = app.frame
+        let screen = screenFrame
         let travel = min(abs(distance), screen.height * 0.6)
         let lower = screen.height / 2 + travel / 2
         let upper = screen.height / 2 - travel / 2
