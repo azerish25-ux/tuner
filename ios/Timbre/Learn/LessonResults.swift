@@ -451,13 +451,15 @@ struct LessonResults: View {
     @ViewBuilder private var resultShare: some View {
         let courseTitle = course.title.localized
         let title = lesson.title.localized
+        // The link opens this lesson or song for whoever receives it (a review's id is this player's own: Timbre).
+        let route = LearnProgress.isReview(lesson.id) ? nil : DeepLink.lesson(id: lesson.id)
         if isSong {
-            SharePill(preview: "Timbre", tint: accent, armed: shareReady, wait: .zero) {
+            SharePill(preview: "Timbre", tint: accent, armed: shareReady, wait: .zero, route: route) {
                 LessonShareCard(course: courseTitle, title: title, headline: nil, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: true,
                                 streak: store.streak.current)
             }
         } else {
-            SharePill(preview: headline, tint: accent, armed: shareReady, wait: .zero) {
+            SharePill(preview: headline, tint: accent, armed: shareReady, wait: .zero, route: route) {
                 LessonShareCard(course: courseTitle, title: title, headline: headline, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: false,
                                 streak: store.streak.current)
             }
@@ -694,6 +696,8 @@ struct SharePill<Card: View>: View {
     /// so it never runs while a reward moment is still landing.
     let armed: Bool
     let wait: Duration
+    /// The `timbre://` route the share's link opens (`ShareDestination`); nil links to Timbre itself.
+    let route: URL?
     let card: Card
     @State private var image: Image?
     @Environment(\.displayScale) private var displayScale
@@ -701,18 +705,19 @@ struct SharePill<Card: View>: View {
     @Environment(\.layoutDirection) private var layoutDirection
 
     init(preview: LocalizedStringKey, tint: Color = Palette.mint, armed: Bool = true, wait: Duration = ShareCardRenderer.entrance,
-         @ViewBuilder card: () -> Card) {
+         route: URL? = nil, @ViewBuilder card: () -> Card) {
         self.preview = preview
         self.tint = tint
         self.armed = armed
         self.wait = wait
+        self.route = route
         self.card = card()
     }
 
     var body: some View {
         Group {
             if let image {
-                ShareLink(item: image, preview: SharePreview(preview, image: image)) { face(image) }
+                ShareLink(item: image, message: ShareDestination.message(for: route), preview: SharePreview(preview, image: image)) { face(image) }
                     .buttonStyle(PressScaleStyle())
                     .transition(.opacity)
             } else {
