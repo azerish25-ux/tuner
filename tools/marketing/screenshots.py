@@ -68,19 +68,34 @@ LOCALES = ["de-DE", "fr-FR", "es-MX", "pt-BR", "it", "ja", "ko", "zh-Hans", "ru"
 #   rise    breakout: the top of the picture that rises out
 #   keep    breakout: the columns of the rising picture kept (its sides fade away)
 #   detail  callout: the region enlarged in the card that breaks out over the screen's edge
+#
+# A zoom or flip starts below the status bar (it ends at 0.044 of a 6.3-inch capture) or at the very top, never across
+# it; render refuses a frame whose top edge cuts through text (`sliced`).
 FOCUS = {
     "10b-tune-locked": {"cut": 0.455, "rise": 0.132, "keep": (0.11, 0.79)},
     "49d-tune-violin-locked": {"cut": 0.462, "rise": 0.132, "keep": (0.13, 0.80)},
+    "49e-tune-cello-locked": {"cut": 0.462, "rise": 0.132, "keep": (0.13, 0.80)},
+    "17b-tune-ukulele-locked": {"cut": 0.455, "rise": 0.132, "keep": (0.11, 0.79)},
     "65-song-perform": {"y0": 0.032},
     "65b-song-perform-violin": {"y0": 0.032},
-    "62-lesson-results": {"y0": 0.035, "x": (0.02, 0.98)},
-    "52b-lesson-chord": {"y0": 0.0, "detail": (0.12, 0.145, 0.90, 0.272)},
+    # Below the status bar, above the stars' rings' brightest part.
+    "62-lesson-results": {"y0": 0.06, "x": (0.02, 0.98)},
+    "62b-lesson-results-violin": {"y0": 0.06, "x": (0.02, 0.98)},
+    # The callout enlarges the six ticked strings themselves: the step's headline stays at its own size in the screen.
+    "52b-lesson-chord": {"y0": 0.0, "detail": (0.149, 0.208, 0.902, 0.278)},
     "31b-instruments-folk": {"y0": 0.0},
     "63-songs": {"y0": 0.0},
     "50-learn": {"y0": 0.0},
-    "11b-tune-strum": {"y0": 0.075},
+    # The flip's top edge falls between the screen's subtitle and "Tune A2 up 12¢ first", which leads the frame.
+    "11b-tune-strum": {"y0": 0.118},
     "32-journey": {"y0": 0.0},
 }
+
+# A frame's top edge may not cut through text ("9:41" or a screen title sliced in half): a capture row there with this
+# many columns at SLICE_LEVEL or brighter is a slice. Clean edges measure 0; the slices this guard was made for, 103
+# (the status bar on the results) and 141 (the strum screen's title).
+SLICE_COLUMNS = 8
+SLICE_LEVEL = 200
 
 
 # MARK: the tables
@@ -278,6 +293,52 @@ def _block_after(text: str, heading: str) -> str | None:
     return match.group(2).strip() if match else None
 
 
+def _tables_after(text: str, heading: str) -> list[list[list[str]]]:
+    """Every table (rows of cells, header included, divider left out) between the `#` heading starting with `heading`
+    and the next heading."""
+    tables: list[list[list[str]]] = []
+    inside = False
+    current: list[list[str]] = []
+    for line in text.splitlines() + [""]:
+        if line.startswith("#"):
+            if inside:
+                break
+            inside = line.lstrip("#").strip().lower().startswith(heading.lower())
+            continue
+        if inside and line.startswith("|"):
+            cells = _cells(line)
+            if not set("".join(cells)) <= set("-: "):
+                current.append(cells)
+        elif current:
+            tables.append(current)
+            current = []
+    if current:
+        tables.append(current)
+    return tables
+
+
+def _table_after(text: str, heading: str) -> list[list[str]]:
+    """The first table under the heading starting with `heading` (empty without one)."""
+    tables = _tables_after(text, heading)
+    return tables[0] if tables else []
+
+
+def page_keywords() -> dict[str, list[str]]:
+    """Each Custom Product Page's keywords, from the listing's "## Custom Product Pages" table (the column headed
+    "Keywords…"; "—" for a page that takes none)."""
+    rows = _table_after(LISTING.read_text(encoding="utf-8"), "Custom Product Pages")
+    if not rows:
+        return {}
+    column = next((i for i, cell in enumerate(rows[0]) if cell.lower().startswith("keywords")), None)
+    found: dict[str, list[str]] = {}
+    for cells in rows[1:]:
+        if column is None or column >= len(cells):
+            continue
+        cell = cells[column].strip()
+        found[cells[0]] = [] if cell.startswith("—") else [w.strip().strip("`") for w in cell.split(",") if w.strip()]
+    return found
+
+
 def listing_problems(counts: dict) -> list[str]:
     """The English listing's fields within Apple's limits and its counts equal to the build's."""
     found = []
@@ -300,10 +361,23 @@ def listing_problems(counts: dict) -> list[str]:
     keywords = fields["keywords"]
     if ", " in keywords:
         found.append("listing: keywords have a space after a comma (it counts against the 100)")
+    words = [word.strip().lower() for word in keywords.split(",") if word.strip()]
+    for word in sorted({w for w in words if words.count(w) > 1}):
+        found.append(f"listing: keyword “{word}” is in the field twice")
+    # A Custom Product Page can be assigned only keywords from the field (Apple: "from your latest approved app
+    # version"), each page its own: so a page's word is in the field even when the name or subtitle has it too.
+    assigned: dict[str, str] = {}
+    for page, page_words in page_keywords().items():
+        for word in page_words:
+            if word.lower() not in words:
+                found.append(f"Custom Product Page {page}: “{word}” isn't in the keyword field, so the page can't be assigned it")
+            if word.lower() in assigned:
+                found.append(f"Custom Product Pages {assigned[word.lower()]} and {page} both take “{word}”: give each keyword to one page")
+            assigned.setdefault(word.lower(), page)
     indexed = set(re.findall(r"[a-z]+", (fields.get("name", "") + " " + fields.get("subtitle", "")).lower()))
-    for word in keywords.split(","):
-        if word.strip().lower() in indexed:
-            found.append(f"listing: keyword “{word}” is already in the name or subtitle")
+    for word in words:
+        if word in indexed and word not in assigned:
+            found.append(f"listing: keyword “{word}” is already in the name or subtitle (only a Custom Product Page's word may be)")
     for name in ("promotional", "description", "whats new"):
         found += count_problems(fields[name], counts, f"listing {name}")
     # The App Preview's captions are counted claims too.
@@ -326,6 +400,7 @@ def localized_problems(counts: dict) -> tuple[list[str], list[str]]:
         if variable not in counts:
             found.append(f"localized source: {{{variable}}} is not one of {', '.join(sorted(counts))}")
     sections = re.split(r"^## ", text, flags=re.M)
+    page_table = _table_after(text, "Custom Product Page keywords by locale")
     for locale in LOCALES:
         section = next((s for s in sections if s.split(":", 1)[0].strip().lower() == locale.lower()), None)
         if section is None:
@@ -337,12 +412,80 @@ def localized_problems(counts: dict) -> tuple[list[str], list[str]]:
                 found.append(f"{locale}: no {name.lower()} block")
             elif len(unicodedata.normalize("NFC", value)) > limit:
                 found.append(f"{locale}: the {name.lower()} is {len(value)} characters (at most {limit})")
+        field = {w.strip().lower() for w in (_block_after("## " + section, "Keywords") or "").split(",") if w.strip()}
+        row = next((cells for cells in page_table[1:] if cells and cells[0].strip("`").lower() == locale.lower()), None)
+        if page_table and row is None:
+            found.append(f"{locale}: no row in the Custom Product Page keywords table")
+        for page, cell in zip(page_table[0][1:] if page_table else [], (row or [])[1:]):
+            for word in ([] if cell.startswith("—") else [w.strip() for w in cell.split(",") if w.strip()]):
+                if word.lower() not in field:
+                    found.append(f"{locale}: the {page} page's “{word}” isn't in the locale's keyword field")
+        english_rows = {device: plan(device) for device in ("iphone", "ipad")}
         for device in ("iphone", "ipad"):
             rows = _localized_rows(locale, device)
-            problems, todo = table_problems(f"{locale} {device}", rows, counts, english=plan(device))
+            problems, todo = table_problems(f"{locale} {device}", rows, counts, english=english_rows[device])
             found += problems
             untranslated += todo
+            # A cell still to translate holds the English row's current words, so the translator works from them.
+            for number, (capture, caption, line, _) in enumerate(rows, 1):
+                if number > len(english_rows[device]):
+                    break
+                source = english_rows[device][number - 1]
+                for cell, current in ((caption, source[1]), (line, source[2])):
+                    if cell.startswith(UNTRANSLATED) and cell.removeprefix(UNTRANSLATED).strip() != current:
+                        found.append(f"{locale} {device} #{number}: “{cell}” isn't the English row's current text “{current}”")
     return found, untranslated
+
+
+def source_problems(counts: dict) -> list[str]:
+    """The translators' source (APP-STORE-LISTING-LOCALIZED.md) against the build and the English listing: each
+    variable's value is the build's, and with the values filled in, the promotional text, description, What's New and
+    the caption tables read exactly as the English listing does."""
+    if not LOCALIZED.exists():
+        return []
+    text = LOCALIZED.read_text(encoding="utf-8")
+    match = re.search(r"^## Source for translators[^\n]*\n(.*?)(?=^## |\Z)", text, re.S | re.M)
+    if not match:
+        return ["localized: no “## Source for translators” section"]
+    source = match.group(1)
+    english = LISTING.read_text(encoding="utf-8")
+    found: list[str] = []
+    for cells in _table_after("## variables\n" + source, "variables"):
+        named = re.fullmatch(r"`\{(\w+)\}`", cells[0]) if cells else None
+        if named and named.group(1) in counts and len(cells) > 1:
+            value = cells[1].replace(",", "")
+            if not value.isdigit() or int(value) != counts[named.group(1)]:
+                found.append(f"localized source: {{{named.group(1)}}} says {cells[1]}; the build has {counts[named.group(1)]}")
+
+    def fill(value: str) -> str:
+        return re.sub(r"\{(\w+)\}", lambda m: str(counts.get(m.group(1), m.group(0))), value)
+
+    for heading in ("Promotional text", "Description", "What's New"):
+        theirs, ours = _block_after(source, heading), _block_after(english, heading)
+        if theirs is None or ours is None:
+            found.append(f"localized source: no {heading.lower()} block to compare")
+        elif fill(theirs) != ours:
+            first = next((a for a, b in zip(fill(theirs).splitlines(), ours.splitlines()) if a != b), "(a line added or removed)")
+            found.append(f"localized source: the {heading.lower()} isn't the English listing's (first difference: “{first[:80]}”)")
+    for device, heading in (("iphone", "Screenshot captions: iPhone"), ("ipad", "Screenshot captions: iPad")):
+        theirs = [(fill(c[1]), fill(c[2])) for c in _table_after(source, heading) if len(c) >= 3 and c[0].isdigit()]
+        ours = [(caption, line) for _, caption, line, _ in plan(device)]
+        if theirs != ours:
+            found.append(f"localized source: the {device} caption table isn't the English set's (copy the English rows, "
+                         "numbers as variables)")
+    preview = {"main preview": _preview_table(english, None), "violin page": _preview_table(english, "violin")}
+    for table in _tables_after(source, "App Preview captions"):
+        label = table[0][1].lower() if table and len(table[0]) > 1 else ""
+        theirs = {c[0].strip("`"): fill(c[1]) for c in table[1:] if len(c) >= 2}
+        if label in preview and theirs != preview[label]:
+            found.append(f"localized source: the App Preview captions ({label}) aren't the English table's")
+    return found
+
+
+def _preview_table(text: str, page: str | None) -> dict[str, str]:
+    """Clip -> caption of the listing's "### App Preview" table (the main one, or the page's)."""
+    heading = "App Preview: " + page if page else "App Preview ("
+    return {c[0].strip("`"): c[1].replace("**", "").strip() for c in _table_after(text, heading)[1:] if len(c) >= 2}
 
 
 def check() -> int:
@@ -358,6 +501,7 @@ def check() -> int:
         for number, (capture, caption, line, look) in enumerate(rows, 1):
             print(f"{label} {number}. {caption} | {line} | {capture} | {look}")
     found += listing_problems(counts)
+    found += source_problems(counts)
     problems, untranslated = localized_problems(counts)
     found += problems
     if untranslated:
@@ -699,6 +843,36 @@ def _landscape(layout, accent, shot, title, line, size, out: Path) -> tuple:
     return frame.save(out)
 
 
+def top_row(look: str, capture: str, device: str, shot) -> int | None:
+    """The capture's row at the visible top edge of its frame's screen picture; None where the layout starts at the
+    capture's own top or fades its edge (a breakout's rising picture)."""
+    size = frame_size(device, shot)
+    if size[0] > size[1]:
+        return None
+    parts = look.split()
+    layout = parts[0] if parts else "zoom"
+    if device == "ipad":
+        layout = "light" if layout == "light" else "zoom"
+    if layout == "breakout":
+        return None
+    y0 = FOCUS.get(capture, {}).get("y0", 0.0)
+    row = y0 * shot.height
+    if layout == "flip":
+        # `_flip` lets the picture run 60 px (at 1320 wide) past the frame's top edge.
+        unit = min(size) / 1320
+        scale = (size[0] - 2 * int(round(64 * unit))) / shot.width
+        row += int(round(60 * unit)) / scale
+    return int(row) if row >= 1 else None
+
+
+def sliced(shot, row: int) -> int:
+    """How many columns of the capture hold near-white (text) within two rows of `row`."""
+    gray = shot.convert("L")
+    pixels = gray.load()
+    rows = range(max(0, row - 2), min(gray.height, row + 3))
+    return sum(1 for x in range(gray.width) if any(pixels[x, y] >= SLICE_LEVEL for y in rows))
+
+
 def size_problem(device: str, path: Path, shot_path: Path):
     """Why the written frame can't go to App Store Connect (a size it doesn't take, or the capture's orientation lost on
     the way), or None."""
@@ -777,6 +951,12 @@ def render(folder: Path, out: Path, device: str, page: str | None, locale: str |
         problem = size_problem(device, target, captures[name][0])
         if problem:
             unusable.append(f"{where}: {problem}")
+            continue
+        shot = upright(captures[name][0])
+        row = top_row(look, name, device, shot)
+        if row is not None and sliced(shot, row) >= SLICE_COLUMNS:
+            unusable.append(f"{where}: its top edge cuts through text at row {row} of the capture ({sliced(shot, row)} "
+                            "bright columns): move its y0 in FOCUS into a gap")
             continue
         written.append(target)
         print("wrote", target, f"{size[0]}x{size[1]}", look)

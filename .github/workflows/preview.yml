@@ -3,8 +3,11 @@
 # marks the stretches worth showing, and the app writes down what it plays (its bells, strum and band) to a folder
 # shared with the runner. tools/marketing/preview.py cuts the clips with hard cuts on the beat, draws the captions and
 # the end card, lays the app's own sound under them, and writes preview.mp4 (886x1920, 30 fps, H.264 High, stereo AAC
-# 44.1 kHz, 20-25 s), poster.png and contact.png, published to the ci-results/preview branch.
-# The `preview` input picks the cut: guitar (the main listing) or violin (the violin Custom Product Page).
+# 44.1 kHz, 20-25 s), poster.png and contact.png, published to the ci-results/preview branch (the violin cut to
+# ci-results/preview-violin). The render measures what it made (preview.py, gates.py: no silence over 0.5 s, the band
+# under its caption, the lock's bell within 80 ms of the badge, the poster on the lock, the highway at x4) and fails
+# the run when a cut can't ship; a take that missed a moment (exit 3 or 4) is recorded again, up to three takes.
+# The `preview` input picks the cut: both (default), guitar (the main listing) or violin (the violin Custom Product Page).
 name: App Preview
 on:
   # Also runs on a push to preview/** (dispatch needs the file on the default branch first).
@@ -13,28 +16,38 @@ on:
   workflow_dispatch:
     inputs:
       preview:
-        description: Which preview to record
+        description: Which preview to record (both records the two side by side)
         required: false
-        default: guitar
+        default: both
         type: choice
-        options: [guitar, violin]
+        options: [both, guitar, violin]
       sync_offset:
         description: Seconds to shift every cut if they look early or late (positive = later)
         required: false
         default: "0"
         type: string
+      reanchor:
+        description: Place the lock clip by its badge when it drifts from the bell (a re-cut someone has looked at)
+        required: false
+        default: false
+        type: boolean
 permissions:
   contents: write
 concurrency:
-  group: app-preview-${{ github.ref }}
+  group: app-preview-${{ github.ref }}-${{ inputs.preview || 'both' }}
   cancel-in-progress: true
 jobs:
   preview:
     runs-on: macos-15
-    timeout-minutes: 75
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        cut: ${{ fromJSON((inputs.preview == 'guitar' && '["guitar"]') || (inputs.preview == 'violin' && '["violin"]') || '["guitar","violin"]') }}
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       OUT: preview-out
+      CUT: ${{ matrix.cut }}
     steps:
       - uses: actions/checkout@v4
       - name: Install XcodeGen, ffmpeg and the preview tool's Python
@@ -53,7 +66,7 @@ jobs:
         run: |
           set -o pipefail
           python3 tools/marketing/preview.py device | tee -a "$GITHUB_ENV"
-          case "${{ inputs.preview }}" in
+          case "$CUT" in
             violin) echo "PREVIEW_TEST=TimbreUITests/AppPreviewUITests/testAppPreviewViolin" >> "$GITHUB_ENV" ;;
             *) echo "PREVIEW_TEST=TimbreUITests/AppPreviewUITests/testAppPreview" >> "$GITHUB_ENV" ;;
           esac
@@ -67,6 +80,7 @@ jobs:
       - name: Record the tour and cut the App Preview
         env:
           SYNC_OFFSET: ${{ inputs.sync_offset }}
+          REANCHOR: ${{ inputs.reanchor && '--reanchor' || '' }}
         run: |
           set -o pipefail
           # Apple's marketing status bar: 9:41, full battery, full signal.
@@ -123,10 +137,12 @@ jobs:
               continue
             fi
             cut=0
-            "$PREVIEW_PY" tools/marketing/preview.py render --out "$OUT" --log "$OUT/take.log" --attachments "$OUT/attachments" --audio "$OUT/app" --offset "${SYNC_OFFSET:-0}" || cut=$?
+            "$PREVIEW_PY" tools/marketing/preview.py render --out "$OUT" --log "$OUT/take.log" --attachments "$OUT/attachments" --audio "$OUT/app" --offset "${SYNC_OFFSET:-0}" $REANCHOR || cut=$?
             # Exit 3: the recording lost the app in a clip (it showed the home screen while the tour went on).
-            if [ "$cut" -eq 3 ] && [ "$attempt" -lt 3 ]; then
-              echo "::warning::The recording lost the app in take $attempt; recording the tour again"
+            # Exit 4: the take missed a moment (the lock on camera, the band, x4): another take may catch it.
+            if { [ "$cut" -eq 3 ] || [ "$cut" -eq 4 ]; } && [ "$attempt" -lt 3 ]; then
+              echo "::warning::Take $attempt can't ship (exit $cut, see PREVIEW.txt); recording the tour again"
+              grep "NOT FOR UPLOAD" "$OUT/PREVIEW.txt" || true
               continue
             fi
             if [ "$tour" -ne 0 ]; then result=$tour; else result=$cut; fi
@@ -139,7 +155,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p ci-preview
-          for file in preview.mp4 poster.png contact.png PREVIEW.txt sync.png raw-small.mp4 record.log; do
+          for file in preview.mp4 poster.png contact.png PREVIEW.txt cut.json sync.png raw-small.mp4 record.log; do
             if [ -f "$OUT/$file" ]; then cp "$OUT/$file" ci-preview/; fi
           done
           # The clip marks and the manifest; the full-size sync screenshots stay in the artifact.
@@ -154,13 +170,15 @@ jobs:
             fi
           done
           if [ -f "$OUT/PREVIEW.txt" ]; then { echo '```'; cat "$OUT/PREVIEW.txt"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"; fi
-          bash tools/ci/publish-results.sh ci-results/preview ci-preview
+          branch=ci-results/preview
+          if [ "$CUT" = violin ]; then branch=ci-results/preview-violin; fi
+          bash tools/ci/publish-results.sh "$branch" ci-preview
       # The full-size recording and the app's sound, to re-cut locally:
       # tools/marketing/preview.py render --out <folder> --log <folder>/take.log --attachments <folder>/attachments --audio <folder>/app
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: preview-recording
+          name: preview-recording-${{ matrix.cut }}
           path: |
             ${{ env.OUT }}/raw.mp4
             ${{ env.OUT }}/record.json
@@ -171,5 +189,6 @@ jobs:
             ${{ env.OUT }}/preview.mp4
             ${{ env.OUT }}/poster.png
             ${{ env.OUT }}/PREVIEW.txt
+            ${{ env.OUT }}/cut.json
           if-no-files-found: ignore
           retention-days: 7
