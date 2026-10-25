@@ -651,6 +651,102 @@ final class TimbreUITests: XCTestCase {
                    "Kite Weather's take shows a combo of \(combo) and the words '\(words)' (opened: \(opened)), not a run of 8+ in the chorus")
     }
 
+    // MARK: Show me
+
+    /// The "Show me" stage's probe (TIMBRE_DEBUG_STATE=1, `ShowMeProbe` in ios/Timbre/Root/DemoScenes.swift, never
+    /// drawn): "showme=<3d|loading> landed=<epoch s the last fingertip lands, 0 before a demonstration> ringing=<n>".
+    /// An empty stage when no "Show me" stage is on screen.
+    private func showMeProbe() -> (stage: String, landed: Date?, ringing: Int) {
+        guard let label = (try? element("showme.state").snapshot())?.label else { return ("", nil, 0) }
+        var stage = ""
+        var landed: Date?
+        var ringing = 0
+        for field in label.split(separator: " ") {
+            let parts = field.split(separator: "=", maxSplits: 1).map(String.init)
+            guard parts.count == 2 else { continue }
+            if parts[0] == "showme" { stage = parts[1] }
+            if parts[0] == "landed", let seconds = Double(parts[1]), seconds > 0 { landed = Date(timeIntervalSince1970: seconds) }
+            if parts[0] == "ringing" { ringing = Int(parts[1]) ?? 0 }
+        }
+        return (stage, landed, ringing)
+    }
+
+    /// A chord's demonstration on the model, timed from its last fingertip landing (LessonExplain's `runDemo`): a
+    /// landing step (0.45 s) later the chord rings across the strings, low to high 0.04 s apart, and they stay lit for
+    /// 1.5 s. A picture taken from `from` to `to` after the landing has every fingertip down and every string ringing.
+    private enum ShowMeRing {
+        static let from = 0.75
+        static let to = 1.85
+        static let aim = 1.0
+        /// "Show me" on the model plays it again: its first fingertip lands 0.05 s after the tap, its last (E minor's
+        /// second) a landing step later.
+        static let replayLanding = 0.5
+    }
+
+    /// One try at the ring, hands off from the tap or the probe to the picture: the demonstration already under way
+    /// while the ring is still ahead, otherwise "Show me" again (it replays on the model, once the last one is over).
+    /// Returns the picture and when it was taken.
+    private func catchShowMeRing(landed: Date?, replay: Bool) -> (picture: XCUIScreenshot, start: Date, end: Date) {
+        var aim: Date
+        if !replay, let landed, landed.addingTimeInterval(ShowMeRing.to - 0.5) > Date() {
+            aim = max(landed.addingTimeInterval(ShowMeRing.aim), Date())
+        } else {
+            // The last demonstration has finished (its strings dark, "Your turn" up), so the app is at rest for the tap.
+            if let landed { hold(until: landed.addingTimeInterval(3)) }
+            let before = Date()
+            element("lesson.showme").tap()
+            let after = Date()
+            aim = max(after.addingTimeInterval(ShowMeRing.replayLanding + ShowMeRing.from + 0.05),
+                      before.addingTimeInterval(ShowMeRing.replayLanding + ShowMeRing.aim))
+        }
+        hold(until: aim)
+        let start = Date()
+        let picture = XCUIScreen.main.screenshot()
+        return (picture, start, Date())
+    }
+
+    /// App Store frame #3 through the `show-me` scene (DemoScenes.swift): "Your first chord: E minor" opens on its first
+    /// step, the chord explained on its card, and the guitar's 3D model takes the card (by itself, the chord's first time
+    /// in the course; otherwise the test asks with "Show me"). The picture is the demonstration mid-play: both
+    /// fingertips down on the model's own frets and the chord ringing across every string. It is kept only when the
+    /// probe says the 3D stage is showing and the picture fell inside the ring on the demonstration's own clock; a miss
+    /// plays it again ("Show me" on the model), hands off until the picture.
+    func test15StoreShowMe() throws {
+        app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
+        launch(pitch: true, scene: "show-me")
+        let opened = element("lesson.close").waitForExistence(timeout: 30)
+        // The model loads (the first on a fresh simulator can take 20 s or more); ask for it if it doesn't come.
+        let askAfter = Date().addingTimeInterval(5)
+        let deadline = Date().addingTimeInterval(90)
+        var asked = false
+        var probe = showMeProbe()
+        while probe.stage != "3d" && Date() < deadline {
+            if probe.stage.isEmpty && !asked && Date() > askAfter {
+                let button = element("lesson.showme")
+                if button.exists && button.isHittable { button.tap(); asked = true }
+            }
+            settle(0.5)
+            probe = showMeProbe()
+        }
+        var picture = XCUIScreen.main.screenshot()
+        var problem = "the 3D stage never showed (probe '\(probe.stage)', lesson open: \(opened), Show me asked: \(asked))"
+        if probe.stage == "3d" {
+            for attempt in 0..<4 {
+                let take = catchShowMeRing(landed: probe.landed, replay: attempt > 0)
+                picture = take.picture
+                probe = showMeProbe()
+                if probe.stage == "3d", let landed = probe.landed,
+                   take.start >= landed.addingTimeInterval(ShowMeRing.from), take.end <= landed.addingTimeInterval(ShowMeRing.to) {
+                    problem = ""
+                    break
+                }
+                let offset = probe.landed.map { String(format: "%.2f", take.start.timeIntervalSince($0)) } ?? "?"
+                problem = "the picture missed the ring: taken \(offset) s after the last fingertip landed (stage '\(probe.stage)', \(probe.ringing) strings lit now)"
+            }
+        }
+        storeFrame("51b-lesson-showme", picture: picture, ok: problem.isEmpty, problem)
+    }
+
     func test07StageDiagnostics() throws {
         launch(stageDebug: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))

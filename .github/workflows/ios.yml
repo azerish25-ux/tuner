@@ -144,11 +144,40 @@ jobs:
           PY
       - name: Ensure Metal toolchain
         run: bash tools/ci/ensure-metal.sh
-      - name: Boot the iPad with the marketing status bar (9:41, full battery and signal)
+      - name: Boot the iPad in Full Screen Apps with the marketing status bar (9:41, full battery and signal)
         run: |
-          # The iPad store frames come from these captures: Apple's 9:41 status bar, not the runner's clock.
           xcrun simctl boot "$IPAD_DEVICE_ID" || true
           xcrun simctl bootstatus "$IPAD_DEVICE_ID" -b
+          # iPadOS 26 starts in Windowed Apps, which draws the window-resize arc in the app's bottom-right corner, on
+          # every iPad capture. Full Screen Apps (Settings > Multitasking & Gestures) has none. The mode is two private
+          # SpringBoard defaults, both off for Full Screen Apps; SpringBoard reads them only as it starts, so a device
+          # without them gets them written and boots once more. They persist on the device (the retry's reboot keeps
+          # them). Should a later iPadOS ignore them, the step says so and the captures carry the arc again.
+          keys="SBMedusaMultitaskingEnabled SBChamoisWindowingEnabled"
+          full_screen() {
+            for key in $keys; do
+              [ "$(xcrun simctl spawn "$IPAD_DEVICE_ID" defaults read com.apple.springboard "$key" 2>/dev/null)" = "0" ] || return 1
+            done
+          }
+          for attempt in 1 2; do
+            full_screen && break
+            echo "Switching the iPad to Full Screen Apps (attempt $attempt)"
+            for key in $keys; do
+              xcrun simctl spawn "$IPAD_DEVICE_ID" defaults write com.apple.springboard "$key" -bool NO || true
+            done
+            # Let cfprefsd write the domain out before the shutdown, then boot with the new mode.
+            sleep 2
+            xcrun simctl shutdown "$IPAD_DEVICE_ID" || true
+            xcrun simctl boot "$IPAD_DEVICE_ID" || true
+            xcrun simctl bootstatus "$IPAD_DEVICE_ID" -b
+          done
+          if full_screen; then
+            echo "The iPad runs in Full Screen Apps: no window-resize arc in the captures"
+          else
+            echo "::warning::Could not switch the iPad simulator to Full Screen Apps; the iPad captures may show the window-resize arc"
+          fi
+          # The iPad store frames come from these captures: Apple's 9:41 status bar, not the runner's clock. Set after
+          # the last boot (a reboot drops it).
           xcrun simctl status_bar "$IPAD_DEVICE_ID" override --time 9:41 --batteryState charged --batteryLevel 100 --cellularBars 4 --wifiBars 3 \
             || xcrun simctl status_bar "$IPAD_DEVICE_ID" override --time 9:41 \
             || echo "::warning::Could not override the simulator status bar; the captures show the real time"
