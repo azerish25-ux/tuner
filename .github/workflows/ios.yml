@@ -180,10 +180,31 @@ jobs:
             xcrun simctl boot "$IPAD_DEVICE_ID" || true
             xcrun simctl bootstatus "$IPAD_DEVICE_ID" -b
           done
-          if full_screen; then
+          # SpringBoard can still be settling into the new mode after bootstatus returns; the UI test's launch then
+          # hangs ("does not have a process ID"). Prove an app launches first; if none does, go back to the default
+          # mode rather than lose the iPad run (the captures then carry the arc, with a warning).
+          launches() {
+            for try in 1 2 3 4 5 6; do
+              if xcrun simctl launch "$IPAD_DEVICE_ID" com.apple.Preferences >/dev/null 2>&1; then
+                sleep 2; xcrun simctl terminate "$IPAD_DEVICE_ID" com.apple.Preferences >/dev/null 2>&1 || true
+                return 0
+              fi
+              sleep 10
+            done
+            return 1
+          }
+          if full_screen && launches; then
             echo "The iPad runs in Full Screen Apps: no window-resize arc in the captures"
           else
-            echo "::warning::Could not switch the iPad simulator to Full Screen Apps; the iPad captures may show the window-resize arc"
+            echo "::warning::The iPad simulator did not run apps in Full Screen Apps; back to the default mode, so the iPad captures may show the window-resize arc"
+            for key in $keys; do
+              xcrun simctl spawn "$IPAD_DEVICE_ID" defaults delete com.apple.springboard "$key" >/dev/null 2>&1 || true
+            done
+            sleep 2
+            xcrun simctl shutdown "$IPAD_DEVICE_ID" || true
+            xcrun simctl boot "$IPAD_DEVICE_ID" || true
+            xcrun simctl bootstatus "$IPAD_DEVICE_ID" -b
+            launches || echo "::warning::No app launched on the iPad simulator after the reset either"
           fi
           # The iPad store frames come from these captures: Apple's 9:41 status bar, not the runner's clock. Set after
           # the last boot (a reboot drops it).
