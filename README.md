@@ -25,7 +25,7 @@ The [iOS workflow](https://github.com/azerish25-ux/tuner/actions/workflows/ios.y
 
 ## Purchases and Apple delivery
 
-Timbre Pro is sold as `timbre_pro_annual` (two-week free trial) and `timbre_pro_monthly` in the **Timbre Pro** subscription group, plus `timbre_plus_lifetime` (non-consumable). Every tuning of guitar, bass, ukulele, violin and cello stays free; the rest of the catalogue, custom tunings and the full practice set are Pro. Prices come from StoreKit; the bundled `.storekit` fixture is test data. There are no ads.
+Timbre Pro is sold as `timbre_pro_annual` (two-week free trial) and `timbre_pro_monthly` in the **Timbre Pro** subscription group, plus `timbre_plus_lifetime` (non-consumable). Every instrument's standard tuning is free, and guitar, bass, ukulele, violin and cello are free in every tuning (one custom tuning is free); the other instruments' alternate and custom tunings, most lessons beyond each course's first unit, and the full practice set are Pro (`AccessPolicy`, `FreeTier`). Prices come from StoreKit; the bundled `.storekit` fixture is test data. There are no ads.
 
 The [manual Apple delivery workflow](.github/workflows/apple-delivery.yml) signs automatically with an App Store Connect API key and uploads to TestFlight. It needs explicit owner confirmation and the `apple-delivery` environment secrets, and must not be dispatched until the owner authorizes delivery. See [Apple delivery instructions](docs/ios/APPLE-DELIVERY.md) and the [privacy policy](docs/ios/PRIVACY.md).
 
