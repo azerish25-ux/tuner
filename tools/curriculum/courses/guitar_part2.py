@@ -145,7 +145,7 @@ UNIT_11 = unit("gtr-11", "Fingerpicking", "Thumb on the bass, p-i-m-a, Travis pi
              "p thumb, i index, m middle, a ring. The little finger usually rests."),
         over([(Em, "E2@6:1 G3@3:1 B3@2:1 E4@1:1")] * 2, bpm=66, title="E minor, p-i-m-a"),
         explain("Pluck into your palm", "Each finger plucks up and slightly toward your palm, then relaxes. Keep your hand still "
-                "above the strings and let the fingers do the moving."),
+                "above the strings and let the fingers do the moving.", clip="guitar_pima"),
         over([(Am, PIMA_AM)] * 2, bpm=63, title="A minor, p-i-m-a"),
         over([(C, PIMA_C)] * 2, bpm=63, title="C, p-i-m-a"),
         over([(Am, PIMA_AM), (C, PIMA_C)] * 2, bpm=66, title="A minor to C"),
@@ -405,7 +405,7 @@ UNIT_13 = unit("gtr-13", "Lead technique", "Hammer-ons, pull-offs, slides, bends
                 "of two frets, from fret 7 must sound exactly like fret 9.", fretboard(G, [(3, 7, 3), (3, 9)], frets=4, start=6)),
         notes(G, [("E4", 3)], hint="String 3, fret 9: this is your bend target. Let it ring and remember it.", **BOX_2),
         explain("Three fingers push", "Put finger 3 on fret 7 with fingers 1 and 2 behind it on the same string. Push all three "
-                "toward the ceiling, turning your wrist as if turning a doorknob."),
+                "toward the ceiling, turning your wrist as if turning a doorknob.", clip="guitar_bend"),
         quiz("Your bend from fret 7 sounds lower than fret 9. What now?", ["Push a little further", "Pick harder", "Release the bend"], 0,
              "A bend that falls short sounds sour. Push until it matches the target you heard."),
         listen("Target, then a short bend. Same note or different?", [["E4"], ["Eb4"]], SAME_DIFFERENT, 1),

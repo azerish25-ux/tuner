@@ -243,7 +243,7 @@ UNIT_1 = unit("vc-1", "Hello, cello", "Sit, set the endpin, hold the bow and pla
     lesson("vc-1-2", "Sit with your cello", [
         explain("Sit tall, near the edge",
                 "Sit near the front edge of a chair, feet flat and knees apart, as if you could stand up easily. "
-                "The cello rests between your knees."),
+                "The cello rests between your knees.", clip="cello_posture"),
         explain("Set the endpin",
                 "Pull out the endpin until the cello's top edge meets your chest at the breastbone and the C peg "
                 "sits near your left ear. Tighten the screw. A rest or strap keeps it from sliding.",

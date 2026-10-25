@@ -22,8 +22,8 @@ import TimbreCore
 ///   delays a lock (the hold starts again), so the scene waits for each one rather than for a time. With
 ///   `TIMBRE_SCENE_COMET=1` the held string is plucked again every `cometPeriod`, so its lock shimmer runs again for a
 ///   picture taken mid-comet.
-/// - `preview-tune` (the App Preview): the tuner waits, quiet, until the UI test says the 3D stage is up (it creates the
-///   `TIMBRE_SCENE_CUE` file). Then the lowest string drifts in from 14 cents flat and locks with its bell; after a hold
+/// - `preview-tune` (the App Preview): the tuner holds off locking until the UI test says the 3D stage is up (it creates
+///   the `TIMBRE_SCENE_CUE` file). Then the lowest string drifts in from 14 cents flat and locks with its bell; after a hold
 ///   the camera can film, each other string locks in turn, steadily, and the last one brings the full-tune celebration.
 ///   Strings are chosen the way automatic detection chooses them, so AUTO stays AUTO on screen.
 /// - `show-me` (frame #3's alternative, the App Preview): the same lesson opens on its first step, E minor explained on
@@ -66,8 +66,9 @@ enum DemoScene: String {
         static let cue = environment["TIMBRE_SCENE_CUE"].flatMap { $0.isEmpty ? nil : $0 }
     }
 
-    /// How much a store or preview capture exaggerates the stage's motion (string amplitude, shimmer length): 3 in a
-    /// scene, 1 otherwise. The camera sees 1.2 mm of string travel as nothing; the product never sees this value.
+    /// How much a store or preview capture exaggerates the stage's motion (the live string's swing): 3 in a scene, 1
+    /// otherwise. The camera sees 1.2 mm of string travel as nothing; the product never sees this value. `start` hands
+    /// it to the 3D stage (`StageInput.captureScale`) before the stage appears.
     static var marketingScale: Double { current == nil ? 1 : 3 }
 
     /// The tuner's demo pitch plays the selected string in tune at once, with no six-second drift.
@@ -82,6 +83,7 @@ enum DemoScene: String {
     /// Starts the scene once the store is ready (`Bootstrap.load`, before the first frame).
     @MainActor static func start(_ store: AppStore) {
         PreviewRecorder.startIfAsked(store)
+        StageInput.captureScale = Float(marketingScale)
         if let id = Option.instrument { chooseInstrument(id, store) }
         switch current {
         case .tuneLocked?:
@@ -259,14 +261,23 @@ enum PreviewTune {
     @MainActor static func run(_ store: AppStore) async {
         store.selectedTab = .tune
         let launched = Date()
-        // The tuner listens as it appears, while the 3D model may still be loading: it stays quiet until the cue.
-        while !cued(since: launched) {
-            if store.audio.running { store.pauseListening() }
-            try? await Task.sleep(for: .milliseconds(100))
-        }
         let courses = store.courses
         guard let first = courses.first else { return }
         steady = false
+        // Until the cue the tuner listens (a tuner that hears nothing rests on its studio picture after a while, and the
+        // 3D model must stay up), but the lowest string is chosen again every 0.4 s, so its 0.65 s hold never completes
+        // and nothing locks before the camera rolls.
+        var chosen = Date.distantPast
+        while !cued(since: launched) {
+            if !store.audio.running { store.startListening() }
+            if Date().timeIntervalSince(chosen) > 0.4 {
+                DemoScene.select(first, store)
+                chosen = Date()
+            }
+            try? await Task.sleep(for: .milliseconds(50))
+        }
+        // A fresh session (the demo pitch's drift starts over, 14 cents flat), with no pause long enough to rest.
+        store.pauseListening()
         DemoScene.select(first, store)
         store.startListening()
         PreviewRecorder.event("listen")

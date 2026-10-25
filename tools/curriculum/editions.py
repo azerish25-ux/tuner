@@ -96,9 +96,17 @@ class Instrument:
         self.chord_steps = chord_steps
         self.fingers = fingers or {}
         self.max_fret = max_fret
+        self._places = {}
 
     # ------------------------------------------------------------ where a note is played
     def place(self, m):
+        """Where `m` is played (a fresh dict each time; the search asks for the same notes thousands of times)."""
+        if m not in self._places:
+            self._places[m] = self._place(m)
+        found = self._places[m]
+        return dict(found) if found is not None else None
+
+    def _place(self, m):
         if self.kind == "ukulele":
             # Strings 1 to 3 only: the fourth string (G4) sounds inside the tune's range, so a ukulele melody leaves it
             # to the chords. Lowest fret wins.

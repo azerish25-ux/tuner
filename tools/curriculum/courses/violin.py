@@ -247,7 +247,7 @@ UNIT_1 = unit("vln-1", "Hello, violin", "Hold it, bow it, tune it, and play the 
     lesson("vln-1-2", "Hold the violin", [
         explain("Collarbone and chin rest",
                 "Set the violin's lower edge on your left collarbone and turn your head to rest your jaw on the chin "
-                "rest. The weight of your head holds it. No clamping."),
+                "rest. The weight of your head holds it. No clamping.", clip="violin_hold"),
         explain("A light left hand",
                 "Point the scroll forward and to your left, about level with the floor. Your left hand cradles the "
                 "neck, thumb across from your first finger. Keep the wrist straight and soft."),
@@ -263,7 +263,7 @@ UNIT_1 = unit("vln-1", "Hello, violin", "Hold it, bow it, tune it, and play the 
         explain("Parts of the bow", BOW_PARTS),
         explain("A soft, round bow hold",
                 "Bend your thumb and set its tip where the frog meets the stick. Drape your fingers over the stick, "
-                "with your little finger standing curved on top. Keep the whole hand soft."),
+                "with your little finger standing curved on top. Keep the whole hand soft.", clip="violin_bow_hold"),
         quiz("Where does your thumb go?",
              ["Bent, where the frog meets the stick", "Straight, under the hair", "Flat on top of the stick"], 0,
              "A bent thumb at the frog lets the hand stay soft and balance the bow."),

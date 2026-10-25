@@ -12,7 +12,9 @@ Conventions
 """
 from __future__ import annotations
 
+import os
 import re
+from pathlib import Path
 
 # Open-string MIDI by instrument (string 1 first).
 TUNINGS = {
@@ -165,7 +167,36 @@ def parse_chord_name(chord_name: str):
 
 # ---------------------------------------------------------------- steps
 
-def explain(title, body, visual=None):
+# ---------------------------------------------------------------- technique clips
+# A physical skill (a bow hold, a pick grip, palm muting) is shown best by a hand doing it. A step names its clip;
+# until the bundle has that clip (a looping video, or a photo in the asset catalogue, as the app's LessonClip looks them
+# up), the step keeps its drawn visual. `build.py --clips` lists the clips still to shoot.
+APP_RESOURCES = Path(__file__).resolve().parents[2] / "ios/Timbre/Resources"
+CLIP_TYPES = ("mov", "mp4", "m4v")
+PLANNED_CLIPS: dict[str, str] = {}      # clip name → the step it shows
+_bundled_clips: set[str] | None = None
+
+
+def bundled_clips() -> set[str]:
+    """Names the app bundle has a clip for: videos anywhere in its resources, or a photo's image set."""
+    global _bundled_clips
+    if _bundled_clips is None:
+        found = set()
+        for folder, dirs, files in os.walk(APP_RESOURCES):
+            found |= {name[: -len(".imageset")] for name in dirs if name.endswith(".imageset")}
+            dirs[:] = [d for d in dirs if not d.endswith((".imageset", ".lproj"))]
+            found |= {name.rsplit(".", 1)[0] for name in files if name.rsplit(".", 1)[-1] in CLIP_TYPES}
+        _bundled_clips = found
+    return _bundled_clips
+
+
+def explain(title, body, visual=None, clip=None):
+    """clip: the technique clip that shows this step, by its bundle name ("violin_bow_hold"); it takes the visual's
+    place once the bundle has it."""
+    if clip:
+        PLANNED_CLIPS[clip] = T(title).text
+        if clip in bundled_clips():
+            visual = {"type": "clip", "name": clip}
     return {"type": "explain", "title": T(title), "body": T(body), "visual": visual or {"type": "none"}}
 
 

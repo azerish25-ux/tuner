@@ -368,7 +368,7 @@ struct OnboardingView: View {
         } label: {
             HStack(spacing: 7) {
                 choice.title.lineLimit(1)
-                // Tuned in Chromatic on the free plan; its own stage is Pro.
+                // An instrument the free plan can't tune (none while every standard tuning is free).
                 if needsPro(choice) { ProBadge() }
             }
         }

@@ -941,7 +941,7 @@ UNIT_9 = unit("gtr-9", "Power chords and riffs", "Power chords, open and movable
     ], minutes=4, xp=20),
     lesson("gtr-9-2", "Palm muting", [
         explain("Rest the edge of your hand", "Lay the outer edge of your picking hand on the strings, right where they meet "
-                "the bridge. Strum, and the notes turn short and chunky."),
+                "the bridge. Strum, and the notes turn short and chunky.", clip="guitar_palm_mute"),
         strum(E5, EIGHTHS, bpm=76, bars=2),
         quiz("Where does your palm rest for palm muting?", ["Over the sound hole", "On the frets", "Near the neck", "Right at the bridge"], 3,
              "At the bridge the strings still sound, just shorter. Move forward and they go dead."),
@@ -1039,7 +1039,7 @@ UNIT_10 = unit("gtr-10", "Barre chords and the pentatonic", "The F barre and B m
         explain("One finger, six strings", "Lay finger 1 flat across all six strings at fret 1. Fingers 2, 3 and 4 make "
                 "an E shape in front of it. F is E moved up one fret.", shape(F_BARRE)),
         explain("Pull, don't squeeze", "Let your arm's weight pull the barre in, as if gently drawing the neck toward you. "
-                "Your thumb only steadies. Roll finger 1 onto its side."),
+                "Your thumb only steadies. Roll finger 1 onto its side.", clip="guitar_f_barre"),
         play_chord(F_BARRE),
         with_fingers(along(G, "F2@6:1 C3@5:1 F3@4:1 A3@3:1 C4@2:1 F4@1:3", bpm=60, title="F, string by string"),
                      [1, 3, 4, 2, 1, 1]),

@@ -5,6 +5,7 @@ python3 tools/curriculum/build.py            # validate and write
 python3 tools/curriculum/build.py --check    # validate only
 python3 tools/curriculum/build.py --check --only ear,theory   # validate some courses
 python3 tools/curriculum/build.py --check --editions          # also list each songbook edition's key
+python3 tools/curriculum/build.py --check --clips             # list the technique clips still to shoot
 
 Reads every course module listed in COURSES (tools/curriculum/courses/<name>.py, each
 defining COURSE = course(...)), validates it, assigns string keys, and writes
@@ -326,6 +327,10 @@ def main() -> int:
         for course_id, lengths in song_lengths.items():
             print(f"  {course_id:10} {len(lengths):3} songs, {len(lyric_songs.get(course_id, [])):2} with lyrics, "
                   f"{clock(min(lengths))} / {clock(median(lengths))} / {clock(max(lengths))}")
+    if "--clips" in sys.argv:
+        from lib import PLANNED_CLIPS, bundled_clips
+        for name, step in sorted(PLANNED_CLIPS.items()):
+            print(f"  clip {name:22} {'bundled' if name in bundled_clips() else 'to shoot'}: {step}")
     if "--editions" in sys.argv:
         from courses.songbook_sources import REPORT
         print("\n".join(REPORT))

@@ -198,7 +198,9 @@ struct SongFinaleView: View {
                 Text("Your take, story-sized").font(Typeface.label(15)).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true)
                 if let poster {
-                    ShareLink(item: poster, preview: SharePreview(title, image: poster)) { shareLabel }
+                    // The link opens this song for whoever receives it.
+                    ShareLink(item: poster, message: ShareDestination.message(for: DeepLink.lesson(id: lesson.id)),
+                              preview: SharePreview(title, image: poster)) { shareLabel }
                         .buttonStyle(PressScaleStyle())
                         .accessibilityIdentifier("song.share")
                 } else {

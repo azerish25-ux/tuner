@@ -120,6 +120,9 @@ final class AppStore: ObservableObject {
         Haptics.shared.enabled = settings.hapticsEnabled
         // Settings › Share anonymous usage data, from the saved choice (on until the player chooses).
         Analytics.setSharing(settings.sharesUsage)
+        // App opens, sessions, MetricKit, Apple Ads attribution and the remote settings start only once the player's
+        // sharing choice is known, so an opt-out stops the attribution request too.
+        Analytics.start()
         audio.onReading = { [weak self] hz, confidence, level in self?.accept(hz, confidence: confidence, level: level) }
         // Reference tones, "Hear it" and chord buttons sound like the selected instrument (a lesson's own course instrument while it is open).
         audio.instrumentVoice = { [weak self] in self.map { InstrumentVoice(instrument: $0.instrument) } ?? .guitar }

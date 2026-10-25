@@ -13,9 +13,6 @@ struct TimbreApp: App {
         CurriculumStore.shared.preload()
         // Coach marks load before any screen can show one (Tips/TimbreTips.swift).
         TimbreTips.configure()
-        // App opens, sessions, MetricKit and the remote settings from launch; the player's sharing choice is applied
-        // as soon as the saved settings open (`AppStore`), and drops anything queued before then if sharing is off.
-        Analytics.start()
     }
 
     var body: some Scene {

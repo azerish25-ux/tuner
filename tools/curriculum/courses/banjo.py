@@ -29,6 +29,7 @@ def claw(*ns):
 G = chord(B, "G", "00000")
 C = chord(B, "C", "02012", "02013")
 D7 = chord(B, "D7", "x0210", "00210")        # the open G of string 5 isn't in D7, so it sits out
+D7_FULL = chord(B, "D7", "x0214", "00214")    # the little finger adds F sharp on string 1: all four notes of D7
 Em = chord(B, "Em", "02002", "02003")         # C with the first finger lifted
 PINCH = chord(B, "G", "0xxx0")                # thumb on 5, middle on 1, together
 
@@ -321,6 +322,9 @@ UNIT_3 = unit("bjo-3", "Chords with rolls", "Fret G, C, D7 and E minor and keep 
                 "Strings 4 and 1 ring open. Leave the fifth string out; its G clashes with D7.", shape(D7)),
         play_chord(D7),
         strum(D7, QUARTERS, bpm=60, bars=2),
+        explain("The full D7, if you like", "The two-finger D7 has no F sharp. Add your little finger at fret 4 of string 1 "
+                "and all four notes of D7 ring. Either shape works in the songs; the full one sounds richer.", shape(D7_FULL)),
+        play_chord(D7_FULL),
         listen("Which chord wants to move on?", [["D3", "A3", "C4", "D4"], ["G3", "B3", "D4", "G4"]], ["The first", "The second"], 0),
         quiz("What does your thumb do on D7?", ["Plays string 5 as usual", "Frets string 5", "Stays on strings 3 and 4"], 2,
              "The open G of string 5 isn't part of D7. For now your thumb keeps to strings 3 and 4."),

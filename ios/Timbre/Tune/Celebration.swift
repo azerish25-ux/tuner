@@ -92,7 +92,7 @@ struct CelebrationOverlay: View {
             // The card renders once the card has risen; until then Share rests where it will be, in the primary
             // button's disabled look.
             if let card {
-                ShareLink(item: card, preview: SharePreview("In tune with Timbre", image: card)) {
+                ShareLink(item: card, message: ShareDestination.message(for: shareRoute), preview: SharePreview("In tune with Timbre", image: card)) {
                     Label("Share", systemImage: "square.and.arrow.up")
                 }
                 .buttonStyle(PrimaryButtonStyle())
@@ -106,6 +106,9 @@ struct CelebrationOverlay: View {
         .animation(Motion.fade, value: card == nil)
         .padding(.top, 6)
     }
+
+    /// The share's link opens the tuner on the instrument just tuned.
+    private var shareRoute: URL { DeepLink.tune(instrument: store.referenceMode ? nil : store.instrument.id) }
 
     /// Tuned up: the natural moment to play something.
     @ViewBuilder private var nextLesson: some View {
@@ -248,21 +251,24 @@ enum ShareCardRenderer {
 /// "Share" for a card: rendered once when it appears, then handed to the share sheet. Style it like a button.
 struct ShareCardButton<Card: View>: View {
     let preview: LocalizedStringKey
+    /// The `timbre://` route the share's link opens (`ShareDestination`); nil links to Timbre itself.
+    let route: URL?
     let card: Card
     @State private var image: Image?
     @Environment(\.displayScale) private var displayScale
     @Environment(\.locale) private var locale
     @Environment(\.layoutDirection) private var layoutDirection
 
-    init(preview: LocalizedStringKey, @ViewBuilder card: () -> Card) {
+    init(preview: LocalizedStringKey, route: URL? = nil, @ViewBuilder card: () -> Card) {
         self.preview = preview
+        self.route = route
         self.card = card()
     }
 
     var body: some View {
         Group {
             if let image {
-                ShareLink(item: image, preview: SharePreview(preview, image: image)) { label }
+                ShareLink(item: image, message: ShareDestination.message(for: route), preview: SharePreview(preview, image: image)) { label }
             } else {
                 Button {} label: { label }.disabled(true)
             }
@@ -284,17 +290,21 @@ struct ShareCardRow<Card: View>: View {
     let detail: Text
     let preview: LocalizedStringKey
     let tint: Color
+    /// The `timbre://` route the share's link opens (`ShareDestination`); nil links to Timbre itself.
+    let route: URL?
     let card: Card
     @State private var image: Image?
     @Environment(\.displayScale) private var displayScale
     @Environment(\.locale) private var locale
     @Environment(\.layoutDirection) private var layoutDirection
 
-    init(title: Text, detail: Text, preview: LocalizedStringKey, tint: Color = Palette.mint, @ViewBuilder card: () -> Card) {
+    init(title: Text, detail: Text, preview: LocalizedStringKey, tint: Color = Palette.mint, route: URL? = nil,
+         @ViewBuilder card: () -> Card) {
         self.title = title
         self.detail = detail
         self.preview = preview
         self.tint = tint
+        self.route = route
         self.card = card()
     }
 
@@ -343,7 +353,7 @@ struct ShareCardRow<Card: View>: View {
 
     @ViewBuilder private var shareButton: some View {
         if let image {
-            ShareLink(item: image, preview: SharePreview(preview, image: image)) { shareLabel }
+            ShareLink(item: image, message: ShareDestination.message(for: route), preview: SharePreview(preview, image: image)) { shareLabel }
                 .buttonStyle(PressScaleStyle())
         } else {
             shareLabel.opacity(0.5)

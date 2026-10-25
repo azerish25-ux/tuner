@@ -235,7 +235,7 @@ UNIT_1 = unit("man-1", "Hello, mandolin", "Meet the paired strings, tune them an
     ], minutes=4, xp=20),
     lesson("man-1-3", "Hold the pick", [
         explain("A relaxed pinch", "Hold the pick between the pad of your thumb and the side of your curled index finger. "
-                "Let only the tip show. Keep your wrist loose, as if shaking water off your hand."),
+                "Let only the tip show. Keep your wrist loose, as if shaking water off your hand.", clip="mandolin_pick_grip"),
         quiz("How much of the pick should show?", ["Half of it", "Just the tip", "As much as possible"], 1,
              "A short tip gives you control and a clean sound. Too much pick snags on the paired strings."),
         explain("Down through the pair", "Push the pick down through both strings of a pair in one small motion and stop "
