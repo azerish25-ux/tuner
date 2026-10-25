@@ -441,9 +441,9 @@ final class GameCenter: ObservableObject {
             Task { @MainActor in GameCenter.shared.challengesLoaded(found) }
             for definition in list {
                 guard let board = definition.leaderboard?.baseLeaderboardID else { continue }
-                definition.hasActiveChallenges { live, _ in
+                definition.hasActiveChallenges(completionHandler: { live, _ in
                     Task { @MainActor in GameCenter.shared.challengeLive(board, live) }
-                }
+                })
             }
         }
     }

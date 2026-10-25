@@ -149,48 +149,95 @@ struct YourSongsShelf: View {
                         Text.fraction(library.songs.count, YourSongsPolicy.freeChartLimit)
                             .font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
                     }
-                    Button { startAdding() } label: {
-                        Label("Add a song", systemImage: "plus")
-                            .font(Typeface.label(13, relativeTo: .subheadline)).foregroundStyle(Palette.onAccent)
-                            .padding(.horizontal, 12).frame(minHeight: 32)
-                            .background(Capsule().fill(Palette.mint))
-                            .tapTarget()
-                    }
-                    .buttonStyle(PressScaleStyle())
-                    .accessibilityIdentifier("yoursongs.add")
+                    Button { startAdding() } label: { addCapsule.tapTarget() }
+                        .buttonStyle(PressScaleStyle())
+                        .accessibilityIdentifier("yoursongs.add")
                 }
             }
         }
+    }
+
+    /// "Add a song" as a small mint capsule: the shelf's one way in, in its header or on the empty row.
+    private var addCapsule: some View {
+        Label("Add a song", systemImage: "plus")
+            .font(Typeface.label(13, relativeTo: .subheadline)).foregroundStyle(Palette.onAccent)
+            .lineLimit(1)
+            .padding(.horizontal, 12).frame(minHeight: 32)
+            .background(Capsule().fill(Palette.mint))
+            .fixedSize()
     }
 
     // MARK: Empty
 
+    /// One row, the whole of it a button to the add sheet: a crate of sleeves, "Your songs" and what it's for, and
+    /// "Add a song". VoiceOver hears what the shelf takes (a chart, a recording, Apple Music) as the hint. At the
+    /// accessibility sizes the capsule goes under the words.
     private var invitation: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack(alignment: .top, spacing: 14) {
-                IconOrb(symbol: "music.note.list", tint: Palette.mint, size: 52)
-                VStack(alignment: .leading, spacing: 4) {
-                    CardTitle("Play the songs you love")
-                    Text("Bring a chord chart (ChordPro or chords over the words), paste one or write your own. Play it along with your own recording, or listen on Apple Music.")
-                        .font(.subheadline).foregroundStyle(Palette.inkSoft)
-                        .fixedSize(horizontal: false, vertical: true)
+        let stacked = typeSize.isAccessibilitySize
+        let layout = stacked ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
+                             : AnyLayout(HStackLayout(alignment: .center, spacing: 14))
+        return Button { startAdding() } label: {
+            layout {
+                HStack(spacing: 14) {
+                    crate
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Your songs").font(Typeface.cardTitle).foregroundStyle(Palette.ink)
+                        Text("Play the songs you love").font(.footnote).foregroundStyle(Palette.inkSoft)
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
                 }
+                .frame(maxWidth: stacked ? nil : .infinity, alignment: .leading)
+                addCapsule
             }
-            Button { startAdding() } label: { Label("Add a song", systemImage: "plus") }
-                .buttonStyle(PrimaryButtonStyle())
-                .accessibilityIdentifier("yoursongs.add.empty")
+            .stillCard(cornerRadius: Metrics.cornerTile, padding: Metrics.tilePadding, tint: Palette.mint)
         }
-        .stillCard(tint: Palette.mint)
+        .buttonStyle(PressScaleStyle())
+        .accessibilityLabel(Text("Add a song"))
+        .accessibilityHint(Text("Bring a chord chart (ChordPro or chords over the words), paste one or write your own. Play it along with your own recording, or listen on Apple Music."))
+        .accessibilityIdentifier("yoursongs.add")
     }
+
+    /// Three sleeves, as if pulled from a crate, drawn like the songs' own (`SongCover`) without their type; they fan
+    /// out with a pluck when the row comes on screen (at once with Reduce Motion).
+    private var crate: some View {
+        let turns: [Double] = [-15, 10, -2]
+        let shifts: [CGFloat] = [-10, 10, 0]
+        return ZStack {
+            ForEach(Self.crateArt.indices, id: \.self) { index in
+                SongCover(art: Self.crateArt[index], corner: 6, titled: false)
+                    .frame(width: 34, height: 34)
+                    .shadow(color: .black.opacity(0.4), radius: 4, y: 2)
+                    .rotationEffect(.degrees(fanned ? turns[index] : 0))
+                    .offset(x: fanned ? shifts[index] : 0, y: fanned && index < 2 ? 2 : 0)
+            }
+        }
+        .frame(width: 58, height: 44)
+        .accessibilityHidden(true)
+        .onAppear {
+            guard !fanned else { return }
+            if reduceMotion {
+                fanned = true
+            } else {
+                withAnimation(Motion.pluck.delay(0.15)) { fanned = true }
+            }
+        }
+    }
+
+    /// The crate's sleeves: fixed, so they look the same on every visit.
+    private static let crateArt: [CoverArt] = [
+        CoverArt(id: "yoursongs.crate.1", title: "", accent: "violet", genre: .swing, label: "", number: 1, motif: .stripes),
+        CoverArt(id: "yoursongs.crate.2", title: "", accent: "amber", genre: .folk, label: "", number: 2, motif: .sunset),
+        CoverArt(id: "yoursongs.crate.3", title: "", accent: "mint", genre: .anthem, label: "", number: 3, motif: .halftone),
+    ]
 
     // MARK: Rail
 
+    /// The player's songs; "Add a song" is the header's.
     private var rail: some View {
         EdgeRail(spacing: 14, selection: nil as String?) {
             ForEach(Array(library.songs.enumerated()), id: \.element.id) { item in
                 tile(item.element, number: item.offset + 1).id(item.element.id)
             }
-            addTile
         }
     }
 
@@ -240,26 +287,6 @@ struct YourSongsShelf: View {
             .frame(width: 24, height: 24)
             .background(Circle().fill(.black.opacity(0.55)))
             .overlay(Circle().strokeBorder(.white.opacity(0.14), lineWidth: 1))
-    }
-
-    private var addTile: some View {
-        Button { startAdding() } label: {
-            VStack(alignment: .leading, spacing: 8) {
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .strokeBorder(Palette.controlLine, style: StrokeStyle(lineWidth: 1.5, dash: [6, 5]))
-                    .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Color.white.opacity(0.03)))
-                    .overlay {
-                        Image(systemName: "plus").font(.system(size: 28, weight: .semibold)).foregroundStyle(Palette.mint)
-                    }
-                    .frame(width: tileWidth, height: tileWidth)
-                Text("Add a song").font(Typeface.label(13, relativeTo: .subheadline)).foregroundStyle(Palette.inkSoft)
-            }
-            .frame(width: tileWidth, alignment: .leading)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(PressScaleStyle())
-        .accessibilityIdentifier("yoursongs.add.tile")
-        .alignmentGuide(VerticalAlignment.center) { dimensions in dimensions[.top] }
     }
 
     /// A user song's sleeve: the same generated art as the curriculum's songs, its genre dealt from its id.

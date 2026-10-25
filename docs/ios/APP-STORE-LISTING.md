@@ -36,7 +36,7 @@ App Store Connect → the app → App Information → Age Ratings. Apple replace
 | Chance-based activities | Gambling, Simulated Gambling, Loot Boxes | None | Rewards are earned, never bought or drawn at random. |
 | | Contests | Infrequent | Pitch Sniper's Game Center leaderboard and friend challenges. |
 
-**Result: 13+.** The alcohol answer sets it: Apple's 4+ and 9+ definitions allow no alcohol references. Everything else here sits at 4+ (infrequent contests are 4+). **Owner decision:** remove those two songs from the bundled catalogue (`curriculum.json`) and answer None to bring the app to 4+. A 13+ music app is hidden from children whose Screen Time limits apps to 9+, and that is a large share of beginner ukulele and guitar players. Answer the questionnaire again whenever songs are added.
+**Result: 13+** (confirm it on the summary App Store Connect shows after the last answer). The alcohol answer sets it: Apple's 4+ and 9+ definitions allow no alcohol references. Everything else here sits at 4+, infrequent contests included. **Owner decision:** remove those two songs from the bundled catalogue (`curriculum.json`) and answer None, and the app is 4+. At 13+ it is hidden from any child whose Screen Time limits apps to 9+, and many beginners on ukulele and guitar are children. Answer the questionnaire again whenever songs are added.
 
 ## Keywords (100/100)
 

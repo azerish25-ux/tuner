@@ -869,7 +869,9 @@ final class AppStore: ObservableObject {
     }
 
     /// Minutes of today's review rep, when Learn has a review due.
+    /// Spaced review puts one in whenever something is due; once done, it keeps its place on the ring for the day.
     var dailyReviewMinutes: Int? {
+        if dailyDone(.review) { return SpacedReview.sessionMinutes }
         guard let course = learnCourse, reviewDue(in: course), let review = weakSpotReview(in: course) else { return nil }
         return review.minutes
     }
