@@ -56,7 +56,8 @@ private struct StrumTuneTipAnchor: ViewModifier {
     private let tip = StrumTuneTip()
 
     private var clear: Bool {
-        TimbreTips.enabled && store.settings.onboardingCompleted == true && store.canStrumTune && store.selectedTab == .tune
+        // Not on bowed strings: the coach mark speaks of strumming, and their toggle reads "Pluck all" (StrumToggle).
+        TimbreTips.enabled && store.settings.onboardingCompleted == true && store.canStrumTune && !store.strumPlucks && store.selectedTab == .tune
             && !store.showPaywall && !store.showSettings && !store.showInstrumentPicker
     }
 
