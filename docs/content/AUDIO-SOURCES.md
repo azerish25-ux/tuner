@@ -8,7 +8,8 @@ by hand: change the script and run it again.
 
 - Only libraries whose licence allows redistribution inside a commercial app: **CC0** (preferred) or **CC-BY**
   (then credited in Settings > Acknowledgements and here). Everything shipped today is CC0.
-- Each source is pinned to a commit; the build refuses to run unless that commit's licence file is CC0.
+- Each source is pinned to a commit; the build refuses to run unless that commit's licence file (for the GM
+  bank, the Martin program's own SFZ header) states CC0.
 - Anything with unclear provenance, share-alike, non-commercial or GPL terms is rejected (list below).
 - `tools/verify-ios-resources.py` checks the manifest on every CI run: files present, licences allowed,
   sources listed, the total size within budget.
@@ -20,21 +21,41 @@ by hand: change the script and run it again.
 - Sparse zones are pitch-shifted to the exact frequency asked for (playback ratio = target / the zone's
   measured pitch: what Timbre's tuner reads from it, or its fundamental where that reading wavers), so
   reference tones read exactly on the needle; a unit test renders A4 and measures 440 Hz with the tuner's own
-  detector (`SampledTonesTests`).
-- Instruments without a sample set (ukulele, mandolin, banjo, sung voice), notes outside a set's range and any
-  failure to read a file fall back to the synthesized voices (`ToneSynth`), and the band to `BandSynth`.
+  detector (`SampledTonesTests`) for every set that sounds a reference (guitar, ukulele, mandolin, piano, harp,
+  marimba, flute, clarinet, brass).
+- The banjo and the sung voice (no recording good enough, see Stand-ins and Rejected), notes outside a set's
+  range and any failure to read a file fall back to the synthesized voices (`ToneSynth`), and the band to
+  `BandSynth`'s own synthesized parts.
 - The violin and cello recordings are played with vibrato, so the tuner's *reference* for bowed strings stays
   the steady synthesized tone; their "Hear it", melodies and chords use the recordings. Flute, clarinet and
   brass were recorded without vibrato and serve the reference too.
+- Single-layer plucked sets (guitar, ukulele, mandolin) are darkened when played softer than they were
+  recorded (`softFilter`: a one-pole low-pass that follows velocity, as the Martin's own SFZ maps it), and
+  chords are strummed string by string (`StrumFeel`: down and up strokes, per-string timing and velocity).
+- The band (`BandSynth`) plays the kit, the bass, the piano and an electric guitar (`eguitar`, `chops`) in
+  the style of the song: pop, rock, reggae one-drop, country two-step, funk, ballad or the plain groove.
 
-Total shipped: **10.2 MB** in 228 files (budget 35 MB).
+## Stand-ins
+
+Nothing CC0 or CC-BY recorded on a ukulele, a mandolin or a banjo good enough to ship could be found on GitHub
+or a package registry (see Rejected). Two sets play the closest recordings, voiced for the instrument; the
+banjo stays synthesized:
+
+| Voice | What plays |
+| --- | --- |
+| ukulele | FreePats Spanish classical guitar, notes C4-C6 (the soprano ukulele's own range and string material), thinned below 200 Hz for the small body and damped a little faster. |
+| mandolin | The Martin HD-28's notes from E3 up, thinned below 220 Hz, brightened and damped faster, played as paired courses (two strings 1.6 cents and a millisecond apart) in phrases; references sound one string. |
+
+Total shipped: **11.5 MB** in 302 files (budget 35 MB).
 
 ## Libraries
 
 | Key | Library | Author | Licence | Source (pinned commit) | Notes |
 | --- | --- | --- | --- | --- | --- |
+| `bngguitars` | Black And Green Guitars (green Gretsch Anniversary) | Karoryfer Samples (recorded by Brian Wood) | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) | [sfzinstruments/karoryfer.black-and-green-guitars](https://github.com/sfzinstruments/karoryfer.black-and-green-guitars/tree/b3b3249d37dc977a1a297bd2dc053e6d9b6b805c) `b3b3249d37` | readme.txt: "Royalty-free for all commercial and non-commercial use. Copyright 2022 Karoryfer Lecolds." |
+| `freepats` | FreePats Spanish Classical Guitar | Roberto (roberto@zenvoid.org) for the FreePats project | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) | [freepats/spanish-classical-guitar](https://github.com/freepats/spanish-classical-guitar/tree/6f4eb1b092acc88f5448cea1a0001bd07b971af8) `6f4eb1b092` | README.md: "Published under the terms of Creative Commons CC0 public domain dedication." |
 | `growlybass` | Growlybass | Karoryfer Samples | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) | [sfzinstruments/karoryfer.growlybass](https://github.com/sfzinstruments/karoryfer.growlybass/tree/4f483268fc66b5a6d5781d421c0d11b8d08d3fc6) `4f483268fc` | readme.txt: "Royalty-free for all commercial and non-commercial use." |
-| `shinyguitar` | Shinyguitar (acoustic microphone) | Karoryfer Samples (D. Smolken) | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) | [sfzinstruments/karoryfer.shinyguitar](https://github.com/sfzinstruments/karoryfer.shinyguitar/tree/57243cca85277dbcc120ce17c6178032f93c80f3) `57243cca85` | readme.txt: "This sample library is royalty-free for all commercial and non-commercial use." |
+| `jmartin` | Martin HD-28 steel-string guitar (Discord SFZ GM Bank, program 26) | Jeff Learman | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) | [sfzinstruments/Discord-SFZ-GM-Bank](https://github.com/sfzinstruments/Discord-SFZ-GM-Bank/tree/7a9c478fe331f94f246d33332f0adedb25bbbe27) `7a9c478fe3` | 026-Acoustic Guitar (steel).sfz: "2017 Martin HD28 Vintage Series / Author: Jeff Learman ... / License: Creative Commons CC0"; the bank's README: "Only CC0, CC-BY, and equivalent licences are allowed." |
 | `vcsl` | Versilian Community Sample Library (VCSL) | Versilian Studios LLC | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) | [sgossner/VCSL](https://github.com/sgossner/VCSL/tree/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e) `c1ea7bcc3c` | README: "This collection is under a Creative Commons 0 license ... even make commercial software, no royalties, no credit, no special terms." |
 | `virtuosity` | Virtuosity Drums | Versilian Studios LLC (drummer Austin McMahon) | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) | [sfzinstruments/virtuosity_drums](https://github.com/sfzinstruments/virtuosity_drums/tree/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc) `9f04cf9a73` | Recorded at Virtuosity Musical Instruments, Boston. |
 | `vsco2` | VS Chamber Orchestra: Community Edition (VSCO 2 CE) | Versilian Studios LLC (Sam Gossner) and Ivy Audio (Simon Dalzell) | [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/) | [sgossner/VSCO-2-CE](https://github.com/sgossner/VSCO-2-CE/tree/440300901dfe9275fd84e0b7763af1f8443ae62e) `440300901d` | Readme.txt: "You are permitted to use these samples for ANY purpose. We ask that you do not sell the samples directly" (Timbre does not sell them; they only sound inside the app) and asks for credit, which Timbre gives in Settings > Acknowledgements. |
@@ -44,7 +65,11 @@ Total shipped: **10.2 MB** in 228 files (budget 35 MB).
 | Set | Plays for | Source | Files | Size |
 | --- | --- | --- | --- | --- |
 | Grand piano (`piano`) | piano | vcsl | 70 | 4.47 MB |
-| Archtop guitar (acoustic) (`guitar`) | guitar | shinyguitar | 16 | 0.77 MB |
+| Steel-string guitar (Martin HD-28) (`guitar`) | guitar | jmartin | 15 | 0.62 MB |
+| Ukulele (nylon-string guitar recordings) (`ukulele`) | ukulele | freepats | 12 | 0.25 MB |
+| Mandolin (Martin treble strings, paired courses) (`mandolin`) | mandolin | jmartin | 11 | 0.27 MB |
+| Electric guitar (Gretsch hollowbody) (`eguitar`) | backing band | bngguitars | 26 | 0.65 MB |
+| Electric guitar, staccato (Gretsch hollowbody) (`chops`) | backing band | bngguitars | 13 | 0.09 MB |
 | Electric bass (`bass`) | bass | growlybass | 28 | 0.94 MB |
 | Concert harp (`harp`) | harp | vcsl | 23 | 0.89 MB |
 | Marimba (`marimba`) | mallet | vcsl | 10 | 0.23 MB |
@@ -53,7 +78,7 @@ Total shipped: **10.2 MB** in 228 files (budget 35 MB).
 | Flute (non-vibrato) (`flute`) | flute | vsco2 | 10 | 0.41 MB |
 | Clarinet (`clarinet`) | reed | vsco2 | 10 | 0.43 MB |
 | Trumpet and tenor trombone (`brass`) | brass | vsco2 | 14 | 0.57 MB |
-| Drum kit (`drums`) | backing band | virtuosity | 16 | 0.22 MB |
+| Drum kit (`drums`) | backing band | virtuosity | 29 | 0.36 MB |
 
 ## Rejected
 
@@ -64,8 +89,16 @@ Total shipped: **10.2 MB** in 228 files (budget 35 MB).
 | Salamander Drumkit, Sam's Sonor, LivingRoom Upright, BJDNiel | CC-BY-SA: share-alike terms; not CC0/CC-BY. |
 | jRhodes3c/3d, Rickenbacker 4001, MF Tin Whistle | Non-commercial (NC) licences. |
 | FlameStudios Kay 5-String Banjo | GPL-3.0: not a CC0/CC-BY sample licence. |
-| sfzinstruments/ganjo (six-string banjo) | CC0, but its recordings sit 10-60 cents sharp of their labels, two notes resolve to the same pitch and most ring under a second: not good enough; the banjo stays synthesized. |
-| Karoryfer Bigcat Cello, Black and Green Guitars | CC0, but not needed (Bigcat is not on GitHub). |
+| FreePats FSS Steel-String Acoustic Guitar | GPL-3.0 with the FreePats exception (deprecated by FreePats itself): not a CC0/CC-BY sample licence. The Martin HD-28 (CC0) plays the guitar instead. |
+| sfzinstruments Terkelsen Mandolin, OvationGuitar, DamiensFunkyGuitar | No licence stated anywhere: unclear. |
+| Blue Jeans And Moonbeams (Malaclypse the Younger) | MIT, a software licence, and hosted on Google Drive (not reachable from the build, not pinnable). |
+| Philharmonia Orchestra samples (mandolin, banjo, guitar), University of Iowa MIS | Their own terms, not CC0/CC-BY; not on GitHub. |
+| The Libre Sample Pack (TheSmallTeaBoi) | CC0, but its ukulele is two one-shots and a loop: not a playable set. |
+| sfzinstruments/hungarian_zither (Karoryfer, CC0) | Considered for the mandolin (paired steel melody courses, picked): its melody strings start at G4, so the mandolin's G and D strings would be an octave-shifted guess. |
+| sfzinstruments/karoryfer.emilyguitar (CC0) | A solid-body electric recorded direct; the band's electric guitar is the hollowbody Gretsch from Black And Green Guitars instead. |
+| sfzinstruments/karoryfer.shinyguitar (CC0) | Shipped until this build as the guitar: an archtop with one velocity layer. Replaced by the flat-top Martin HD-28. |
+| sfzinstruments/ganjo (SX six-string banjo, CC0) | Measured again for the banjo: the instrument sits 25-50 cents sharp of its labels (most takes fall between semitones and fail the 35-cent check), and the steadiest take of each pitch leaves nine notes with gaps up to nine semitones (none for D3-E3), most ringing 0.3-0.8 s (G3, the banjo's most played note, 0.33 s). Not good enough: the banjo stays synthesized. |
+| Karoryfer Bigcat Cello | CC0, but not needed (and not on GitHub). |
 
 ## Every shipped file
 
@@ -141,22 +174,83 @@ Total shipped: **10.2 MB** in 228 files (budget 35 MB).
 | `Samples/piano/piano-100-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_E7_vl2_rr1.wav` | `76b455f8ff60eef8…` | CC0-1.0 |
 | `Samples/piano/piano-104-mf.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#7_vl3_rr1.wav` | `1fd2954e98163a76…` | CC0-1.0 |
 | `Samples/piano/piano-104-p.m4a` | `vcsl` | `Chordophones/Zithers/Grand Piano, Steinway B/Sus/JHPiano_Sus_Close_G#7_vl2_rr1.wav` | `93263eca374eaa00…` | CC0-1.0 |
-| `Samples/guitar/guitar-037-mf.m4a` | `shinyguitar` | `Samples/acoustic/db2_vl3_rr1_1.wav` | `732d620deafbe554…` | CC0-1.0 |
-| `Samples/guitar/guitar-040-mf.m4a` | `shinyguitar` | `Samples/acoustic/e2_vl3_rr1_1.wav` | `47c975087b22897c…` | CC0-1.0 |
-| `Samples/guitar/guitar-045-mf.m4a` | `shinyguitar` | `Samples/acoustic/a2_vl3_rr1_1.wav` | `2eec9cdc43a79058…` | CC0-1.0 |
-| `Samples/guitar/guitar-048-mf.m4a` | `shinyguitar` | `Samples/acoustic/c3_vl3_rr1_1.wav` | `ec242d1c0a1aca8a…` | CC0-1.0 |
-| `Samples/guitar/guitar-051-mf.m4a` | `shinyguitar` | `Samples/acoustic/eb3_vl3_rr1_1.wav` | `d7e6c674bb26169e…` | CC0-1.0 |
-| `Samples/guitar/guitar-054-mf.m4a` | `shinyguitar` | `Samples/acoustic/gb3_vl3_rr1_1.wav` | `aacb73c8f2f1e112…` | CC0-1.0 |
-| `Samples/guitar/guitar-057-mf.m4a` | `shinyguitar` | `Samples/acoustic/a3_vl3_rr1_1.wav` | `19f33205cacc60b2…` | CC0-1.0 |
-| `Samples/guitar/guitar-060-mf.m4a` | `shinyguitar` | `Samples/acoustic/c4_vl3_rr1_1.wav` | `0cd222f2c8c2d7c5…` | CC0-1.0 |
-| `Samples/guitar/guitar-063-mf.m4a` | `shinyguitar` | `Samples/acoustic/eb4_vl3_rr1_1.wav` | `d9bfb23d3fbe4091…` | CC0-1.0 |
-| `Samples/guitar/guitar-066-mf.m4a` | `shinyguitar` | `Samples/acoustic/gb4_vl3_rr1_1.wav` | `0f58455166afa02e…` | CC0-1.0 |
-| `Samples/guitar/guitar-069-mf.m4a` | `shinyguitar` | `Samples/acoustic/a4_vl3_rr1_1.wav` | `faeda4085d3f5a8b…` | CC0-1.0 |
-| `Samples/guitar/guitar-072-mf.m4a` | `shinyguitar` | `Samples/acoustic/c5_vl3_rr1_1.wav` | `40ce5a6ecb73699e…` | CC0-1.0 |
-| `Samples/guitar/guitar-075-mf.m4a` | `shinyguitar` | `Samples/acoustic/eb5_vl3_rr1_1.wav` | `9c405ad2d5a4859a…` | CC0-1.0 |
-| `Samples/guitar/guitar-078-mf.m4a` | `shinyguitar` | `Samples/acoustic/gb5_vl3_rr1_1.wav` | `635456c316f2c869…` | CC0-1.0 |
-| `Samples/guitar/guitar-081-mf.m4a` | `shinyguitar` | `Samples/acoustic/a5_vl3_rr1_1.wav` | `7f0a594904f09e0b…` | CC0-1.0 |
-| `Samples/guitar/guitar-084-mf.m4a` | `shinyguitar` | `Samples/acoustic/c6_vl3_rr1_1.wav` | `84d15f81e0318e5c…` | CC0-1.0 |
+| `Samples/guitar/guitar-040-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_040__E2_1.wav` | `3d80eb25aa8cbe8d…` | CC0-1.0 |
+| `Samples/guitar/guitar-043-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_043__G2_1.wav` | `574f9b934a6965cf…` | CC0-1.0 |
+| `Samples/guitar/guitar-046-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_046_Bb2_1.wav` | `aadf19ca38c73473…` | CC0-1.0 |
+| `Samples/guitar/guitar-049-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_049_Db3_1.wav` | `bf57a94a18e63c6c…` | CC0-1.0 |
+| `Samples/guitar/guitar-052-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_052__E3_1.wav` | `e2ee2b611260e25b…` | CC0-1.0 |
+| `Samples/guitar/guitar-055-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_055__G3_1.wav` | `694679709136628e…` | CC0-1.0 |
+| `Samples/guitar/guitar-058-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_058_Bb3_1.wav` | `cdacb0918cbe4c2e…` | CC0-1.0 |
+| `Samples/guitar/guitar-061-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_061_Db4_1.wav` | `81c1ea3bdd795d7e…` | CC0-1.0 |
+| `Samples/guitar/guitar-064-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_064__E4_1.wav` | `1ce5ce765892d3f5…` | CC0-1.0 |
+| `Samples/guitar/guitar-068-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_068_Ab4_1.wav` | `85595b30c7d2fcca…` | CC0-1.0 |
+| `Samples/guitar/guitar-071-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_071__B4_1.wav` | `5278514d5a99ba18…` | CC0-1.0 |
+| `Samples/guitar/guitar-074-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_074__D5_1.wav` | `272f34deb22bc1dd…` | CC0-1.0 |
+| `Samples/guitar/guitar-077-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_077__F5_1.wav` | `981d8956ffde9ec5…` | CC0-1.0 |
+| `Samples/guitar/guitar-080-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_080_Ab5_1.wav` | `1dfca9cf6adb0f6e…` | CC0-1.0 |
+| `Samples/guitar/guitar-083-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_083__B5_1.wav` | `da4133e56cc7e73f…` | CC0-1.0 |
+| `Samples/ukulele/ukulele-060-mf.m4a` | `freepats` | `samples/C4.flac` | `e8fcd63c262ebef3…` | CC0-1.0 |
+| `Samples/ukulele/ukulele-062-mf.m4a` | `freepats` | `samples/D4.flac` | `1fe411c50d107374…` | CC0-1.0 |
+| `Samples/ukulele/ukulele-064-mf.m4a` | `freepats` | `samples/E4.flac` | `b8882fbba2b6a9d0…` | CC0-1.0 |
+| `Samples/ukulele/ukulele-066-mf.m4a` | `freepats` | `samples/F#4.flac` | `bff470dc10000750…` | CC0-1.0 |
+| `Samples/ukulele/ukulele-069-mf.m4a` | `freepats` | `samples/A4.flac` | `bac918520eb26172…` | CC0-1.0 |
+| `Samples/ukulele/ukulele-071-mf.m4a` | `freepats` | `samples/B4.flac` | `ca2b8e768bd7ce5b…` | CC0-1.0 |
+| `Samples/ukulele/ukulele-073-mf.m4a` | `freepats` | `samples/C#5.flac` | `3004eac9668ec8d8…` | CC0-1.0 |
+| `Samples/ukulele/ukulele-075-mf.m4a` | `freepats` | `samples/D#5.flac` | `9fa313d7dd5d00c8…` | CC0-1.0 |
+| `Samples/ukulele/ukulele-077-mf.m4a` | `freepats` | `samples/F5.flac` | `e4096ad0b1812adf…` | CC0-1.0 |
+| `Samples/ukulele/ukulele-079-mf.m4a` | `freepats` | `samples/G5.flac` | `0d887f7f14d526e5…` | CC0-1.0 |
+| `Samples/ukulele/ukulele-081-mf.m4a` | `freepats` | `samples/A5.flac` | `a0111ff90a40a7d6…` | CC0-1.0 |
+| `Samples/ukulele/ukulele-083-mf.m4a` | `freepats` | `samples/B5.flac` | `0c417e8aa71eb880…` | CC0-1.0 |
+| `Samples/mandolin/mandolin-052-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_052__E3_1.wav` | `e2ee2b611260e25b…` | CC0-1.0 |
+| `Samples/mandolin/mandolin-055-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_055__G3_1.wav` | `694679709136628e…` | CC0-1.0 |
+| `Samples/mandolin/mandolin-058-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_058_Bb3_1.wav` | `cdacb0918cbe4c2e…` | CC0-1.0 |
+| `Samples/mandolin/mandolin-061-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_061_Db4_1.wav` | `81c1ea3bdd795d7e…` | CC0-1.0 |
+| `Samples/mandolin/mandolin-064-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_064__E4_1.wav` | `1ce5ce765892d3f5…` | CC0-1.0 |
+| `Samples/mandolin/mandolin-068-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_068_Ab4_1.wav` | `85595b30c7d2fcca…` | CC0-1.0 |
+| `Samples/mandolin/mandolin-071-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_071__B4_1.wav` | `5278514d5a99ba18…` | CC0-1.0 |
+| `Samples/mandolin/mandolin-074-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_074__D5_1.wav` | `272f34deb22bc1dd…` | CC0-1.0 |
+| `Samples/mandolin/mandolin-077-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_077__F5_1.wav` | `981d8956ffde9ec5…` | CC0-1.0 |
+| `Samples/mandolin/mandolin-080-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_080_Ab5_1.wav` | `1dfca9cf6adb0f6e…` | CC0-1.0 |
+| `Samples/mandolin/mandolin-083-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_083__B5_1.wav` | `da4133e56cc7e73f…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-040-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_e3_mf_rr1.wav` | `a839c8a67e29ab9c…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-040-p.m4a` | `bngguitars` | `Samples/green/ord/twang_e3_p_rr1.wav` | `63ba7d12a6423251…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-043-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_g3_mf_rr1.wav` | `07155e3d554cc0dd…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-043-p.m4a` | `bngguitars` | `Samples/green/ord/twang_g3_p_rr1.wav` | `e28b227ce2e9c801…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-046-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_bb3_mf_rr1.wav` | `0057324f9ef12fb9…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-046-p.m4a` | `bngguitars` | `Samples/green/ord/twang_bb3_p_rr1.wav` | `646fb24818dc9ed2…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-049-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_db4_mf_rr1.wav` | `19285ce4a7dc794e…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-049-p.m4a` | `bngguitars` | `Samples/green/ord/twang_db4_p_rr1.wav` | `ef65dbc1cef3e786…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-052-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_e4_mf_rr1.wav` | `d8dd360dca1a3069…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-052-p.m4a` | `bngguitars` | `Samples/green/ord/twang_e4_p_rr1.wav` | `235bc84a8f35f2e6…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-055-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_g4_mf_rr1.wav` | `5281bb39ee797565…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-055-p.m4a` | `bngguitars` | `Samples/green/ord/twang_g4_p_rr1.wav` | `cb651e5183f683c4…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-058-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_bb4_mf_rr1.wav` | `947e2ed04fabf2ca…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-058-p.m4a` | `bngguitars` | `Samples/green/ord/twang_bb4_p_rr1.wav` | `b3ea98f323221e56…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-061-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_db5_mf_rr1.wav` | `f9577eaab8356854…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-061-p.m4a` | `bngguitars` | `Samples/green/ord/twang_db5_p_rr1.wav` | `d57bde0c1ed106dd…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-064-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_e5_mf_rr1.wav` | `5be9d64bb782ee36…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-064-p.m4a` | `bngguitars` | `Samples/green/ord/twang_e5_p_rr1.wav` | `06fa02d07e522ab0…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-067-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_g5_mf_rr1.wav` | `721315752766e4a3…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-067-p.m4a` | `bngguitars` | `Samples/green/ord/twang_g5_p_rr1.wav` | `6e29a399b8e33b59…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-070-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_bb5_mf_rr1.wav` | `6f613ceac7f5cbfe…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-070-p.m4a` | `bngguitars` | `Samples/green/ord/twang_bb5_p_rr1.wav` | `cf64de1567b3ee60…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-073-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_db6_mf_rr1.wav` | `0c1585dfebbfd9ab…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-073-p.m4a` | `bngguitars` | `Samples/green/ord/twang_db6_p_rr1.wav` | `b12937ecc01d934e…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-076-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_e6_mf_rr1.wav` | `9e9696255bcb5704…` | CC0-1.0 |
+| `Samples/eguitar/eguitar-076-p.m4a` | `bngguitars` | `Samples/green/ord/twang_e6_p_rr1.wav` | `ad694ab0788d3cd8…` | CC0-1.0 |
+| `Samples/chops/chops-040-mf.m4a` | `bngguitars` | `Samples/green/stac/staccato_e3_rr1.wav` | `41fc0bb4e913021b…` | CC0-1.0 |
+| `Samples/chops/chops-043-mf.m4a` | `bngguitars` | `Samples/green/stac/staccato_g3_rr1.wav` | `e6558d3c72a1e9f1…` | CC0-1.0 |
+| `Samples/chops/chops-046-mf.m4a` | `bngguitars` | `Samples/green/stac/staccato_bb3_rr1.wav` | `41b8e070347f3eee…` | CC0-1.0 |
+| `Samples/chops/chops-049-mf.m4a` | `bngguitars` | `Samples/green/stac/staccato_db4_rr1.wav` | `1dbafa1e8b2320c1…` | CC0-1.0 |
+| `Samples/chops/chops-052-mf.m4a` | `bngguitars` | `Samples/green/stac/staccato_e4_rr1.wav` | `0ed644bcdb94011d…` | CC0-1.0 |
+| `Samples/chops/chops-055-mf.m4a` | `bngguitars` | `Samples/green/stac/staccato_g4_rr1.wav` | `9bb4439a3a0204d4…` | CC0-1.0 |
+| `Samples/chops/chops-058-mf.m4a` | `bngguitars` | `Samples/green/stac/staccato_bb4_rr1.wav` | `1fc18e13612eef97…` | CC0-1.0 |
+| `Samples/chops/chops-061-mf.m4a` | `bngguitars` | `Samples/green/stac/staccato_db5_rr1.wav` | `c4db377c100e5e51…` | CC0-1.0 |
+| `Samples/chops/chops-064-mf.m4a` | `bngguitars` | `Samples/green/stac/staccato_e5_rr1.wav` | `39f34770646a744f…` | CC0-1.0 |
+| `Samples/chops/chops-067-mf.m4a` | `bngguitars` | `Samples/green/stac/staccato_g5_rr1.wav` | `7dff8d97023ba8b8…` | CC0-1.0 |
+| `Samples/chops/chops-070-mf.m4a` | `bngguitars` | `Samples/green/stac/staccato_bb5_rr1.wav` | `a1f0078557a0758d…` | CC0-1.0 |
+| `Samples/chops/chops-073-mf.m4a` | `bngguitars` | `Samples/green/stac/staccato_db6_rr1.wav` | `b815036b2abb6677…` | CC0-1.0 |
+| `Samples/chops/chops-076-mf.m4a` | `bngguitars` | `Samples/green/stac/staccato_e6_rr1.wav` | `a2f918c060cf4b02…` | CC0-1.0 |
 | `Samples/bass/bass-025-f.m4a` | `growlybass` | `sustain/db2_f_rr1.wav` | `6a51d063354b0cdc…` | CC0-1.0 |
 | `Samples/bass/bass-025-p.m4a` | `growlybass` | `sustain/db2_p_rr1.wav` | `11ec8c37d9510d1b…` | CC0-1.0 |
 | `Samples/bass/bass-028-f.m4a` | `growlybass` | `sustain/e2_f_rr1.wav` | `ab8ea422e3a42103…` | CC0-1.0 |
@@ -299,3 +393,16 @@ Total shipped: **10.2 MB** in 228 files (budget 35 MB).
 | `Samples/drums/ride-hard-1.m4a` | `virtuosity` | `Samples/oh/ride/oh_ride_ride_vl2_rr1.flac` | `56481c1109ac7bab…` | CC0-1.0 |
 | `Samples/drums/ride-hard-2.m4a` | `virtuosity` | `Samples/oh/ride/oh_ride_ride_vl2_rr2.flac` | `5cec02ecdc875cfc…` | CC0-1.0 |
 | `Samples/drums/crash-hard-1.m4a` | `virtuosity` | `Samples/oh/crash/oh_crash_crash_vl3_rr1.flac` | `28ac4dc5c1301755…` | CC0-1.0 |
+| `Samples/drums/xstick-hard-1.m4a` | `virtuosity` | `Samples/snaremic/snare/snaremic_snare_crossstick_vl10.flac + Samples/oh/snare/oh_snare_crossstick_vl10.flac` | `f0278ade07591586…` | CC0-1.0 |
+| `Samples/drums/xstick-hard-2.m4a` | `virtuosity` | `Samples/snaremic/snare/snaremic_snare_crossstick_vl12.flac + Samples/oh/snare/oh_snare_crossstick_vl12.flac` | `dbc095af2eb7b58d…` | CC0-1.0 |
+| `Samples/drums/tomhi-hard-1.m4a` | `virtuosity` | `Samples/oh/htom/oh_htom_center_vl10.flac + Samples/snaremic/htom/snaremic_htom_center_vl10.flac` | `f9c27dd553935328…` | CC0-1.0 |
+| `Samples/drums/tomhi-hard-2.m4a` | `virtuosity` | `Samples/oh/htom/oh_htom_center_vl12.flac + Samples/snaremic/htom/snaremic_htom_center_vl12.flac` | `562abe7ce8bf85c7…` | CC0-1.0 |
+| `Samples/drums/tomlo-hard-1.m4a` | `virtuosity` | `Samples/oh/ltom/oh_ltom_center_vl10.flac + Samples/snaremic/ltom/snaremic_ltom_center_vl10.flac` | `6edddb5c17cdff36…` | CC0-1.0 |
+| `Samples/drums/tomlo-hard-2.m4a` | `virtuosity` | `Samples/oh/ltom/oh_ltom_center_vl12.flac + Samples/snaremic/ltom/snaremic_ltom_center_vl12.flac` | `6d9e23629216d846…` | CC0-1.0 |
+| `Samples/drums/tamb-hard-1.m4a` | `virtuosity` | `Samples/perc/close/tambourine/Tamb1_Shake_rr1_Close.wav` | `14f76ae3873d766b…` | CC0-1.0 |
+| `Samples/drums/tamb-hard-2.m4a` | `virtuosity` | `Samples/perc/close/tambourine/Tamb1_Shake_rr2_Close.wav` | `c4f8859e04efc5ba…` | CC0-1.0 |
+| `Samples/drums/tamb-hard-3.m4a` | `virtuosity` | `Samples/perc/close/tambourine/Tamb1_Shake_rr3_Close.wav` | `5a9c5ca43aaf0365…` | CC0-1.0 |
+| `Samples/drums/shaker-hard-1.m4a` | `virtuosity` | `Samples/perc/close/shaker/LShaker_Shake1D_rr1_Close.wav` | `b3aa3914ef344f3f…` | CC0-1.0 |
+| `Samples/drums/shaker-hard-2.m4a` | `virtuosity` | `Samples/perc/close/shaker/LShaker_Shake1U_rr1_Close.wav` | `4ae8e16412617c5d…` | CC0-1.0 |
+| `Samples/drums/shaker-hard-3.m4a` | `virtuosity` | `Samples/perc/close/shaker/LShaker_Shake1D_rr2_Close.wav` | `8e090bae2f9b79f2…` | CC0-1.0 |
+| `Samples/drums/shaker-hard-4.m4a` | `virtuosity` | `Samples/perc/close/shaker/LShaker_Shake1U_rr2_Close.wav` | `070f3c7e2040b4f9…` | CC0-1.0 |

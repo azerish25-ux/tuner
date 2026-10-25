@@ -14,6 +14,8 @@ import TimbreCore
 enum ShowMe {
     /// Seconds from the model appearing to the first fingertip landing: the camera's glide in.
     static let lead = 0.85
+    /// Seconds between fingertips in a chord's demonstration (as on the lesson's explanation).
+    static let landingStep = 0.45
 
     /// Whether the 3D stage may run now.
     static func allowed(reduceMotion: Bool) -> Bool {
@@ -194,28 +196,38 @@ struct ShowMeStage: View {
     @ViewBuilder private func overlay(size: CGSize, now: Date) -> some View {
         switch shot {
         case .fretting:
-            let frame = controller.marks(in: size, now: now, ringing: ringing)
-            let scale = typeScale
-            let tint = accent
-            Canvas { context, _ in
-                if let frame { ShowMeDrawing.draw(&context, frame, accent: tint, scale: scale) }
-            }
+            fretMarks(size: size, now: now)
         case .strum:
-            if let edges, let points = controller.strumEdges(in: size) {
-                ZStack {
-                    if let top = edges.label(strings) {
-                        top.font(.system(.caption2, design: .rounded).weight(.semibold)).foregroundStyle(Palette.inkSoft)
-                            .fixedSize()
-                            .position(x: points.top.x, y: points.top.y - 8)
-                    }
-                    if let bottom = edges.label(1) {
-                        bottom.font(.system(.caption2, design: .rounded).weight(.semibold)).foregroundStyle(Palette.inkSoft)
-                            .fixedSize()
-                            .position(x: points.bottom.x, y: points.bottom.y + 8)
-                    }
+            strumLabels(size: size)
+        }
+    }
+
+    /// The fingertips, the open and muted marks and the numbers, as they stand at `now`.
+    private func fretMarks(size: CGSize, now: Date) -> some View {
+        let frame = controller.marks(in: size, now: now, ringing: ringing, landStart: landStart, landingStep: landingStep)
+        let scale = typeScale
+        let tint = accent
+        return Canvas { context, _ in
+            if let frame { ShowMeDrawing.draw(&context, frame, accent: tint, scale: scale) }
+        }
+    }
+
+    /// The outer strings' names above the top string and below the bottom one.
+    @ViewBuilder private func strumLabels(size: CGSize) -> some View {
+        if let edges, let points = controller.strumEdges(in: size) {
+            ZStack {
+                if let top = edges.label(strings) {
+                    top.font(.system(.caption2, design: .rounded).weight(.semibold)).foregroundStyle(Palette.inkSoft)
+                        .fixedSize()
+                        .position(x: points.top.x, y: points.top.y - 8)
                 }
-                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+                if let bottom = edges.label(1) {
+                    bottom.font(.system(.caption2, design: .rounded).weight(.semibold)).foregroundStyle(Palette.inkSoft)
+                        .fixedSize()
+                        .position(x: points.bottom.x, y: points.bottom.y + 8)
+                }
             }
+            .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         }
     }
 }
@@ -240,18 +252,22 @@ struct ShowMeRhythm: View {
     var onReady: () -> Void = {}
     var onFailure: () -> Void = {}
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// The model is in place: until then the picture's own beat row shows, not this one.
+    @State private var ready = false
 
     var body: some View {
         VStack(spacing: 10) {
             ShowMeStage(modelID: modelID, strings: strings, shot: .strum(strum), accent: accent, edges: edges,
                         label: Text("Strum pattern"), value: String(localized: "Down strokes go from the thickest string to the thinnest, up strokes back."),
-                        onReady: onReady, onFailure: onFailure)
+                        onReady: { ready = true; onReady() }, onFailure: onFailure)
                 .frame(maxHeight: .infinity)
-            TimelineView(.animation(paused: reduceMotion)) { timeline in
+            TimelineView(.animation(paused: reduceMotion || !ready)) { timeline in
                 RhythmBar(pattern: strum.pattern, beatsPerBar: strum.beatsPerBar, accent: accent,
                           playhead: reduceMotion ? nil : playhead(at: timeline.date), arrows: arrows)
             }
         }
+        .opacity(ready ? 1 : 0)
+        .animation(Motion.reveal, value: ready)
     }
 
     /// How far through the bar the loop is at `date` (0…1).
@@ -453,7 +469,7 @@ enum ShowMeDrawing {
         // The glow around the pad.
         var light = context
         light.blendMode = .plusLighter
-        for point in [finger.tip, end] {
+        for point in finger.end == nil ? [finger.tip] : [finger.tip, end] {
             let halo = r * 2.3
             light.fill(circle(point, halo), with: .radialGradient(Gradient(colors: [accent.opacity(0.32 * alpha), accent.opacity(0)]),
                                                                   center: point, startRadius: 0, endRadius: halo))

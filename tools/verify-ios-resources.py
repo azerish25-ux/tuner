@@ -86,6 +86,8 @@ for key, source in sample_sources.items():
     assert source['title'] and source['author'], key
     assert source['commit'] in audio_doc and source['title'] in audio_doc, ('AUDIO-SOURCES.md must list', key)
 voice_cases = {'guitar', 'bass', 'ukulele', 'mandolin', 'banjo', 'harp', 'piano', 'mallet', 'violin', 'cello', 'flute', 'reed', 'brass', 'voice'}
+# The kit pieces BandSynth plays (Band.swift `Drum.piece`).
+drum_pieces = {'kick', 'snare', 'hat', 'openhat', 'ride', 'crash', 'xstick', 'tomhi', 'tomlo', 'tamb', 'shaker'}
 listed, sample_bytes, played_voices = set(), 0, set()
 for inst in sample_manifest['instruments']:
     assert inst['kind'] in {'plucked', 'struck', 'sustained', 'drums'} and inst['zones'], inst['id']
@@ -102,13 +104,16 @@ for inst in sample_manifest['instruments']:
         assert f"`Samples/{zone['file']}`" in audio_doc, ('AUDIO-SOURCES.md must list', zone['file'])
         assert zone['gain'] > 0 and 0 < zone['velocity'] <= 1 and 0 <= zone['mark'] < zone['frames'] and zone['markLevel'] > 0, zone['file']
         if inst['kind'] == 'drums':
-            assert zone['piece'] in {'kick', 'snare', 'hat', 'openhat', 'ride', 'crash'}, zone['file']
+            assert zone['piece'] in drum_pieces, zone['file']
         else:
             equal_tempered = 440 * 2 ** ((zone['midi'] - 69) / 12)
             assert zone['hz'] > 0 and abs(1200 * math.log2(zone['hz'] / equal_tempered)) <= 35, zone['file']
             assert inst['coverage'][0] - 6 <= zone['midi'] <= inst['coverage'][1] + 6, zone['file']
         if 'loop' in zone:
             assert inst['kind'] == 'sustained' and 0 < zone['loop'][0] < zone['loop'][1] <= zone['frames'], zone['file']
+    # Optional play-time voicing: a velocity-tracked darkening (single-layer plucked sets), paired courses (mandolin).
+    assert inst.get('softFilter', False) in (True, False) and (not inst.get('softFilter') or inst['kind'] == 'plucked'), inst['id']
+    assert 0 <= inst.get('pairCents', 0) <= 5, inst['id']
 on_disk = {str(p.relative_to(samples)) for p in samples.rglob('*') if p.is_file() and p.name != 'manifest.json'}
 assert on_disk == listed, ('unlisted or missing samples', sorted(on_disk - listed), sorted(listed - on_disk))
 sample_sets = {inst['id']: inst for inst in sample_manifest['instruments']}
@@ -117,6 +122,10 @@ assert folders == set(sample_sets), ('sample folders without a manifest set, or 
 assert all(z['file'].split('/')[0] == inst_id for inst_id, inst in sample_sets.items() for z in inst['zones']), 'a set\'s files live in its own folder'
 assert {'drums', 'bass', 'piano'} <= set(sample_sets), 'the backing band needs drums, bass and piano'
 assert {'kick', 'snare', 'hat', 'crash'} <= {z['piece'] for z in sample_sets['drums']['zones']}
+# The band's electric guitar (let-ring comping and staccato chops) plays no instrument voice of its own.
+for band_only in ('eguitar', 'chops'):
+    if band_only in sample_sets:
+        assert not sample_sets[band_only]['voices'] and sample_sets[band_only]['kind'] == 'plucked', band_only
 assert {'guitar', 'piano', 'bass'} <= played_voices
 assert sample_bytes <= 35_000_000, f'samples {sample_bytes / 1e6:.1f} MB over the 35 MB budget'
 print(f'OK: 60 instruments, 102 tunings, {len(photos)} photos/{2 * len(photos)} images, 49 locales, 1 licensed font family, {len(manifest['photos'])} 3D models; all literal localization keys exist; {len(listed)} instrument samples ({sample_bytes / 1e6:.1f} MB, {len(sample_sets)} sets, {", ".join(sorted(sample_sources))}).')

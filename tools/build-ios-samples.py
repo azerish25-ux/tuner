@@ -2,11 +2,14 @@
 """Build Timbre's sampled instruments: ios/Timbre/Resources/Samples (AAC .m4a + manifest.json) and the per-file
 source/licence table in docs/content/AUDIO-SOURCES.md.
 
-Only CC0 libraries hosted on GitHub are used, each pinned to a commit and checked for its CC0 LICENSE file before a
-single sample is read. Every shipped file is traced to its source path and the SHA-256 of the original recording.
+Only CC0 libraries hosted on GitHub are used, each pinned to a commit and checked for its CC0 licence (a LICENSE file,
+or for an instrument of a multi-author bank, that instrument's own SFZ header) before a single sample is read. Every
+shipped file is traced to its source path and the SHA-256 of the original recording.
 
 What the script does to each recording (the app does the rest at play time, see TimbreCore/Audio/SampleLibrary.swift):
   * mono (channels averaged; drums mix close and overhead mics), 44.1 kHz;
+  * a plucked note the recordist trimmed at a sustain loop (the WAV's `smpl` chunk) rung out along that loop with the
+    decay it had; a stand-in set's voicing (a high-pass for a smaller body, a high shelf, a faster decay);
   * leading silence trimmed to a 2-5 ms pre-roll, tails trimmed and faded (sustained notes are cut before their
     natural release and get a loop region of whole periods instead);
   * the fundamental measured to a hundredth of a cent (Hann-windowed DTFT on the steady part; samples more than
@@ -84,12 +87,6 @@ SOURCES = {
         repo='https://github.com/freepats/spanish-classical-guitar', commit='6f4eb1b092acc88f5448cea1a0001bd07b971af8',
         licence='CC0-1.0', licence_file='LICENSE', licence_marker='CC0 1.0 Universal',
         note='README.md: "Published under the terms of Creative Commons CC0 public domain dedication."'),
-    'ganjo': dict(
-        title='Ganjo (six-string banjo)', author='itsclipping',
-        repo='https://github.com/sfzinstruments/ganjo', commit='ccff5cd5cd3b513873a48994c07724d9d3c39e1c',
-        licence='CC0-1.0', licence_file='LICENSE.md', licence_marker='CC0 1.0 Universal',
-        note='README.md: "Samples of a SX brand 6-string banjo (or guitar banjo, guitjo or banjo) recorded, edited and '
-             'mapped by itsclipping."'),
     'bngguitars': dict(
         title='Black And Green Guitars (green Gretsch Anniversary)', author='Karoryfer Samples (recorded by Brian Wood)',
         repo='https://github.com/sfzinstruments/karoryfer.black-and-green-guitars',
@@ -123,21 +120,21 @@ REJECTED = [
      'guitar is the hollowbody Gretsch from Black And Green Guitars instead.'),
     ('sfzinstruments/karoryfer.shinyguitar (CC0)', 'Shipped until this build as the guitar: an archtop with one '
      'velocity layer. Replaced by the flat-top Martin HD-28.'),
+    ('sfzinstruments/ganjo (SX six-string banjo, CC0)', 'Measured again for the banjo: the instrument sits 25-50 cents '
+     'sharp of its labels (most takes fall between semitones and fail the 35-cent check), and the steadiest take of '
+     'each pitch leaves nine notes with gaps up to nine semitones (none for D3-E3), most ringing 0.3-0.8 s (G3, the '
+     'banjo\'s most played note, 0.33 s). Not good enough: the banjo stays synthesized.'),
     ('Karoryfer Bigcat Cello', 'CC0, but not needed (and not on GitHub).'),
 ]
 
-# Nothing CC0/CC-BY recorded on a ukulele, a mandolin or a four/five-string banjo is reachable from here. The closest
-# recordings stand in, and the doc says so: the ukulele plays a nylon-string guitar's treble notes (the ukulele's own
-# strings and pitches), the mandolin the Martin's treble notes as paired courses, the banjo a six-string banjo (a
-# real banjo head and body, guitar-tuned) with its steadiest take per note.
+# Nothing CC0/CC-BY recorded on a ukulele or a mandolin is reachable from here. The closest recordings stand in, and
+# the doc says so: the ukulele plays a nylon-string guitar's treble notes (the ukulele's own strings and pitches), the
+# mandolin the Martin's treble notes as paired courses. The banjo stays synthesized (see Rejected: ganjo).
 STAND_INS = [
     ('ukulele', 'FreePats Spanish classical guitar, notes C4-C6 (the soprano ukulele\'s own range and string '
      'material), thinned below 200 Hz for the small body and damped a little faster.'),
     ('mandolin', 'The Martin HD-28\'s notes from E3 up, thinned below 220 Hz, brightened and damped faster, played as '
      'paired courses (two strings 1.6 cents and a millisecond apart) in phrases; references sound one string.'),
-    ('banjo', 'Ganjo, an SX six-string banjo: the steadiest take of each note, relabelled by its measured pitch '
-     '(the instrument sat about 40 cents sharp). Its tuner reference stays synthesized: the takes glide too much '
-     'for a needle.'),
 ]
 
 NOTE_RE = re.compile(r'^([A-Ga-g])([#b]?)(-?\d)$')
@@ -190,18 +187,15 @@ INSTRUMENTS = [
     dict(id='ukulele', title='Ukulele (nylon-string guitar recordings)', voices=['ukulele'], kind='plucked',
          source='freepats', dir='samples', select=r'^(?P<note>[A-G]#?\d)\.flac$',
          layers={'': ('mf', 0.75)}, step=lambda m: 2, range=(60, 84), tone=dict(highpass=200, decay=7),
+         attack_slack=128,
          seconds=lambda m: 2.4 if m < 67 else 2.0 if m < 76 else 1.5, release=0.06, bitrate=96, coverage=(57, 88),
          soft_filter=True),
     dict(id='mandolin', title='Mandolin (Martin treble strings, paired courses)', voices=['mandolin'], kind='plucked',
          source='jmartin', dir='Discord GM/Melodic/026-Acoustic Guitar (steel)', select=MARTIN,
          layers={'': ('mf', 0.75)}, step=lambda m: 3, range=(52, 83), extend_loops=True,
-         tone=dict(highpass=220, shelf=(2800, 4.0), decay=9),
+         tone=dict(highpass=220, shelf=(2800, 4.0), decay=9), attack_slack=128,
          seconds=lambda m: 2.4 if m < 64 else 2.0 if m < 76 else 1.6, release=0.05, bitrate=96, coverage=(53, 90),
          soft_filter=True, pair_cents=1.6),
-    dict(id='banjo', title='Banjo (six-string, guitar-tuned)', voices=['banjo'], kind='plucked', source='ganjo',
-         dir='Common', select=r'^Banjo_Common - (?P<note>[A-G]#?\d)(?:_\d+)?\.wav$',
-         layers={'': ('mf', 0.75)}, step=lambda m: 2, range=(43, 72), relabel=True, best_take=True,
-         seconds=lambda m: 1.6, release=0.05, bitrate=96, steady=False, coverage=(43, 76), soft_filter=True),
     # The band's electric guitar (not an instrument voice): a hollowbody Gretsch, two layers of let-ring notes for
     # comping, and its staccato notes (`chops`) for reggae skanks, funk scratches and country chicks.
     dict(id='eguitar', title='Electric guitar (Gretsch hollowbody)', voices=[], kind='plucked', source='bngguitars',
@@ -211,7 +205,7 @@ INSTRUMENTS = [
     dict(id='chops', title='Electric guitar, staccato (Gretsch hollowbody)', voices=[], kind='plucked',
          source='bngguitars', dir='Samples/green/stac', select=r'^staccato_(?P<note>[a-g]b?\d)_rr(?P<layer>1)\.wav$',
          layers={'1': ('mf', 0.7)}, step=lambda m: 3, range=(40, 77),
-         seconds=lambda m: 0.6, release=0.02, bitrate=80, coverage=(38, 82)),
+         seconds=lambda m: 0.6, release=0.02, bitrate=80, coverage=(38, 82), window=(0.02, 0.2)),
     dict(id='bass', title='Electric bass', voices=['bass'], kind='plucked', source='growlybass',
          dir='sustain', select=r'^(?P<note>[a-g]b?\d)_(?P<layer>f|p)_rr1\.wav$',
          layers={'f': ('f', 0.85), 'p': ('p', 0.45)}, step=lambda m: 2, range=(24, 64), seconds=lambda m: 3.2,
@@ -287,8 +281,9 @@ DRUMS = dict(
     ])
 DRUM_TARGETS = dict(kick=0.30, snare=0.22, hat=0.06, openhat=0.06, ride=0.06, crash=0.08, xstick=0.12, tomhi=0.2,
                     tomlo=0.22, tamb=0.05, shaker=0.035)
-# Pieces whose noisy or gradual attack crosses the marker level unevenly: a few milliseconds of slack.
-SOFT_ATTACK = {'crash', 'ride', 'openhat', 'tamb', 'shaker'}
+# Pieces whose noisy or gradual attack crosses the marker level unevenly: frames of slack for the encoded marker
+# (a cymbal's few milliseconds; a shake swells in, and lands wherever its swell does).
+SOFT_ATTACK = {'crash': 192, 'ride': 192, 'openhat': 192, 'tamb': 512, 'shaker': 512}
 
 
 # MARK: - Sources
@@ -645,13 +640,10 @@ def process_note(path: Path, nominal: int, kind: str, seconds: float, steady: bo
     if spec.get('tone'):
         x = shape_tone(x, spec['tone'])
     raised_cosine_fade(x, int(0.001 * RATE), at_end=False)
-    window_start = int((0.45 if sustained else 0.12) * RATE)
-    window_len = int(1.0 * RATE)
+    window = pitch_window(spec, kind)
+    window_start, window_len = int(window[0] * RATE), int(window[1] * RATE)
     hz, midi, partial = measure_pitch(x, nominal if hint_midi is None else hint_midi, window_start, window_len,
                                       octave_fixed=hint_midi is not None)
-    if spec.get('relabel'):
-        # A set tuned off its labels: the note is the semitone it sounds nearest.
-        midi = int(round(69 + 12 * math.log2(hz / 440)))
     cents = 1200 * math.log2(hz / hz_of(midi))
     if abs(cents) > 35:
         raise ValueError(f'{cents:+.1f} cents from {midi}')
@@ -693,9 +685,7 @@ def process_note(path: Path, nominal: int, kind: str, seconds: float, steady: bo
     offset = abs(1200 * math.log2(reading / hz)) if reading else float('inf')
     steady_reading = (offset <= 25 and spread <= 12) or (offset <= 40 and spread <= 6)
     play = (reading, 'tuner') if steady_reading else (hz, 'fundamental')
-    # For choosing among takes of one note: how far the needle wavers and how far it sits from the fundamental.
-    quality = spread + 0.5 * (offset if math.isfinite(offset) else 100)
-    return x, hz, midi, cents, loop, rms, partial, play, quality
+    return x, hz, midi, cents, loop, rms, partial, play
 
 
 def mark(x: np.ndarray) -> tuple[int, float]:
@@ -707,16 +697,22 @@ def mark(x: np.ndarray) -> tuple[int, float]:
     return int(idx[0]) if len(idx) else 0, level
 
 
+def pitch_window(spec: dict | None, kind: str) -> tuple[float, float]:
+    """Where a note's pitch is measured (start, length in seconds): the steady part after the attack, or a set's own
+    window (a staccato note is over in a fifth of a second)."""
+    return (spec or {}).get('window') or ((0.45 if kind == 'sustained' else 0.12), 1.0)
+
+
 def verify(path: Path, expect_mark: int, level: float, midi: int | None, sustained: bool,
-           partial: int | None = None) -> tuple[int, float | None]:
+           partial: int | None = None, window: tuple[float, float] | None = None) -> tuple[int, float | None]:
     """Decodes the encoded file again: how far its attack marker moved, and its fundamental (same window as the build)."""
     y = decode(path)
     idx = np.nonzero(np.abs(y) >= level)[0]
     got = int(idx[0]) if len(idx) else -1
     measured = None
     if midi is not None:
-        measured, _, _ = measure_pitch(y, midi, int((0.45 if sustained else 0.12) * RATE), int(1.0 * RATE),
-                                       partial=partial, octave_fixed=True)
+        start, length = window or ((0.45 if sustained else 0.12), 1.0)
+        measured, _, _ = measure_pitch(y, midi, int(start * RATE), int(length * RATE), partial=partial, octave_fixed=True)
     return got - expect_mark, measured
 
 
@@ -737,33 +733,25 @@ def build_instrument(cache: Path, spec: dict, report: list) -> dict:
         for nominal, token, name, path, rel in found:
             x = decode(path)
             start = max(0, onset(x, -40 if spec['kind'] == 'sustained' else -32))
-            _, midi, _ = measure_pitch(x[start:], nominal, int((0.45 if spec['kind'] == 'sustained' else 0.12) * RATE),
-                                       int(1.0 * RATE))
+            window = pitch_window(spec, spec['kind'])
+            _, midi, _ = measure_pitch(x[start:], nominal, int(window[0] * RATE), int(window[1] * RATE))
             votes[midi - nominal] = votes.get(midi - nominal, 0) + 1
         offset = max(votes, key=votes.get) if votes else 0
         report.append(f'  {source}:{directory}: octave offset {offset:+d} (votes {votes})')
         resolved = []
         for nominal, token, name, path, rel in found:
             try:
-                x, hz, midi, cents, loop, rms, partial, play, quality = process_note(
+                x, hz, midi, cents, loop, rms, partial, play = process_note(
                     path, nominal + offset, spec['kind'], spec['seconds'](nominal + offset), spec.get('steady', False),
                     nominal + offset, spec)
             except ValueError as error:
                 report.append(f'  reject {rel}: {error}')
                 continue
             resolved.append(dict(midi=midi, token=token, name=name, path=path, rel=rel, x=x, hz=hz, cents=cents,
-                                 loop=loop, rms=rms, source=source, partial=partial, play=play, quality=quality))
+                                 loop=loop, rms=rms, source=source, partial=partial, play=play))
         by_midi = {}
         for r in resolved:
             by_midi.setdefault(r['midi'], []).append(r)
-        if spec.get('best_take'):
-            # Several takes of a note (or, relabelled, of a pitch): the one the needle reads steadiest.
-            for m, takes in by_midi.items():
-                best = min(takes, key=lambda c: c['quality'])
-                for c in takes:
-                    if c is not best:
-                        report.append(f"  spare take {c['rel']} (quality {c['quality']:.1f} > {best['quality']:.1f})")
-                by_midi[m] = [best]
         entries = [(m, '', '') for m in by_midi]
         keep = pick_zones(entries, spec['step'], lo, hi)
         for m in keep:
@@ -780,24 +768,23 @@ def build_instrument(cache: Path, spec: dict, report: list) -> dict:
     out_zones = []
     for z in sorted(zones, key=lambda z: (z['midi'], -z['velocity'])):
         if spec['kind'] != 'sustained':
-            # Again at the zone's own length; `relabel` is off now that the note is known.
-            again = {**spec, 'relabel': False}
-            x, hz, midi, cents, loop, rms, partial, play, _ = process_note(z['path'], z['midi'], spec['kind'],
-                                                                           spec['seconds'](z['midi']), False, z['midi'],
-                                                                           again)
+            x, hz, midi, cents, loop, rms, partial, play = process_note(z['path'], z['midi'], spec['kind'],
+                                                                        spec['seconds'](z['midi']), False, z['midi'], spec)
             z.update(x=x, hz=hz, cents=cents, rms=rms, partial=partial, play=play)
         file = f"{spec['id']}/{spec['id']}-{z['midi']:03d}-{z['layer']}.m4a"
         encode(z['x'], OUT / file, spec['bitrate'])
         frame, level = mark(z['x'])
-        shift, measured = verify(OUT / file, frame, level, z['midi'], spec['kind'] == 'sustained', z['partial'])
+        shift, measured = verify(OUT / file, frame, level, z['midi'], spec['kind'] == 'sustained', z['partial'],
+                                 pitch_window(spec, spec['kind']))
         drift = None if measured is None else 1200 * math.log2(measured / z['hz'])
         # Below 60 Hz the fundamental is faint and the encoder's noise floor can nudge its measurement a little.
         # A slow (bowed, blown) attack crosses the marker level gently, so encoding can move it a lot; only a sharp
-        # attack's marker is checked. The decoded length must match: the app drops priming by it.
+        # attack's marker is checked (with some slack where a set's voicing filter softens the attack). The decoded
+        # length must match: the app drops priming by it.
         padding = len(decode(OUT / file)) - len(z['x'])
         if not 0 <= padding < 1024:
             sys.exit(f'{file}: decodes to {padding:+d} frames over what was written')
-        if (spec['kind'] != 'sustained' and abs(shift) > 32) or (drift is not None and abs(drift) > (1.0 if z['hz'] > 60 else 2.5)):
+        if (spec['kind'] != 'sustained' and abs(shift) > spec.get('attack_slack', 32)) or (drift is not None and abs(drift) > (spec.get('pitch_slack', 1.0) if z['hz'] > 60 else 2.5)):
             sys.exit(f'{file}: encoded attack moved {shift} frames, pitch {drift} cents')
         zone = dict(file=file, midi=z['midi'], hz=round(z['play'][0], 5), f0=round(z['hz'], 5), pitchBasis=z['play'][1],
                     layer=z['layer'], velocity=z['velocity'],
@@ -851,7 +838,7 @@ def build_drums(cache: Path, report: list) -> dict:
             frame, level = mark(x)
             shift, _ = verify(OUT / file, frame, level, None, False)
             # A cymbal's noisy attack crosses the marker level unevenly: a few milliseconds of slack.
-            if abs(shift) > (192 if piece in SOFT_ATTACK else 32) or not 0 <= len(decode(OUT / file)) - len(x) < 1024:
+            if abs(shift) > SOFT_ATTACK.get(piece, 32) or not 0 <= len(decode(OUT / file)) - len(x) < 1024:
                 sys.exit(f'{file}: encoded attack moved {shift} frames')
             originals = [drum_path(mic, group, f) for mic in mics]
             out.append(dict(file=file, piece=piece, layer=layer, velocity=velocity, rr=rr, frames=len(x), mark=frame,
@@ -876,7 +863,8 @@ def write_doc(manifest: dict, sizes: dict):
         '',
         '- Only libraries whose licence allows redistribution inside a commercial app: **CC0** (preferred) or **CC-BY**',
         '  (then credited in Settings > Acknowledgements and here). Everything shipped today is CC0.',
-        '- Each source is pinned to a commit; the build refuses to run unless that commit\'s licence file is CC0.',
+        '- Each source is pinned to a commit; the build refuses to run unless that commit\'s licence file (for the GM',
+        '  bank, the Martin program\'s own SFZ header) states CC0.',
         '- Anything with unclear provenance, share-alike, non-commercial or GPL terms is rejected (list below).',
         '- `tools/verify-ios-resources.py` checks the manifest on every CI run: files present, licences allowed,',
         '  sources listed, the total size within budget.',
@@ -890,12 +878,13 @@ def write_doc(manifest: dict, sizes: dict):
         '  reference tones read exactly on the needle; a unit test renders A4 and measures 440 Hz with the tuner\'s own',
         '  detector (`SampledTonesTests`) for every set that sounds a reference (guitar, ukulele, mandolin, piano, harp,',
         '  marimba, flute, clarinet, brass).',
-        '- The sung voice, notes outside a set\'s range and any failure to read a file fall back to the synthesized',
-        '  voices (`ToneSynth`), and the band to `BandSynth`.',
-        '- The violin, cello and banjo recordings waver (vibrato; a banjo string\'s glide), so the tuner\'s *reference*',
-        '  for them stays the steady synthesized tone; their "Hear it", melodies and chords use the recordings. Flute,',
-        '  clarinet and brass were recorded without vibrato and serve the reference too.',
-        '- Single-layer plucked sets (guitar, ukulele, mandolin, banjo) are darkened when played softer than they were',
+        '- The banjo and the sung voice (no recording good enough, see Stand-ins and Rejected), notes outside a set\'s',
+        '  range and any failure to read a file fall back to the synthesized voices (`ToneSynth`), and the band to',
+        '  `BandSynth`\'s own synthesized parts.',
+        '- The violin and cello recordings are played with vibrato, so the tuner\'s *reference* for bowed strings stays',
+        '  the steady synthesized tone; their "Hear it", melodies and chords use the recordings. Flute, clarinet and',
+        '  brass were recorded without vibrato and serve the reference too.',
+        '- Single-layer plucked sets (guitar, ukulele, mandolin) are darkened when played softer than they were',
         '  recorded (`softFilter`: a one-pole low-pass that follows velocity, as the Martin\'s own SFZ maps it), and',
         '  chords are strummed string by string (`StrumFeel`: down and up strokes, per-string timing and velocity).',
         '- The band (`BandSynth`) plays the kit, the bass, the piano and an electric guitar (`eguitar`, `chops`) in',
@@ -903,8 +892,9 @@ def write_doc(manifest: dict, sizes: dict):
         '',
         '## Stand-ins',
         '',
-        'Nothing CC0 or CC-BY recorded on a ukulele, a mandolin or a four/five-string banjo could be found on GitHub or',
-        'a package registry (see Rejected). These sets play the closest recordings, voiced for the instrument:',
+        'Nothing CC0 or CC-BY recorded on a ukulele, a mandolin or a banjo good enough to ship could be found on GitHub',
+        'or a package registry (see Rejected). Two sets play the closest recordings, voiced for the instrument; the',
+        'banjo stays synthesized:',
         '',
         '| Voice | What plays |',
         '| --- | --- |',

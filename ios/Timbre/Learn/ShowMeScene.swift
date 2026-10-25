@@ -172,10 +172,11 @@ struct ShowMeShape: Equatable {
         self.presses = presses
         self.opens = opens
         self.muted = []
+        // From the visual's first fret (or the lowest held, if lower) to the highest held: four frets at least.
         let held = presses.map(\.fret)
-        let low = min(held.min() ?? max(1, start), max(1, start))
-        self.base = max(1, low)
-        self.rows = min(12, max(4, (held.max() ?? 0) - self.base + 1))
+        let base = max(1, min(held.min() ?? max(1, start), max(1, start)))
+        self.base = base
+        self.rows = min(12, max(4, (held.max() ?? 0) - base + 1))
         self.soundsOnLanding = true
     }
 
@@ -715,7 +716,8 @@ final class ShowMeController {
             let holding = shape.presses.filter { $0.first <= lane && lane <= $0.last && landed($0.rank, now: now) }
                 .max { $0.rank < $1.rank }
             let stop = holding.map { neck.stopShare(fret: $0.fret) } ?? 0
-            let open = shape.opens.contains { $0.string == lane && landed($0.rank ?? 0, now: now) }
+            // A chord's open strings glow from the start; a run's open notes from when they sound.
+            let open = shape.opens.contains { mark in mark.string == lane && (mark.rank.map { landed($0, now: now) } ?? true) }
             let rung = ring(lane, now: now)
             let lit = ringing.contains(lane)
             var glow: Float = muted ? 0 : max(rung.level * 0.9, lit ? 0.55 : 0)
@@ -837,8 +839,11 @@ final class ShowMeController {
     // MARK: Marks
 
     /// The fingertips (far ones first, so nearer ones lie over them), the open and muted marks and the numbers, as they
-    /// stand at `now` in a view of `size`.
-    func marks(in size: CGSize, now: Date, ringing lit: Set<Int>) -> ShowMeMarks? {
+    /// stand at `now` in a view of `size`. The view passes its own clock, so a landing it has just started never draws
+    /// a frame from the one before.
+    func marks(in size: CGSize, now: Date, ringing lit: Set<Int>, landStart start: Date?, landingStep step: Double) -> ShowMeMarks? {
+        landStart = start
+        landingStep = step
         guard let neck, case let .fretting(shape)? = shot, loaded else { return nil }
         var marks = ShowMeMarks()
         let count = neck.lanes.count
@@ -993,10 +998,10 @@ enum ShowMePickMesh {
             (SIMD2(0.24, -0.28), 0.22)
         ]
         var points: [SIMD2<Float>] = []
-        for round in rounds {
+        for disc in rounds {
             for k in 0..<28 {
-                let a = Float(k) / 28 * 2 * .pi
-                points.append(round.center + SIMD2(cos(a), sin(a)) * round.radius)
+                let angle = Float(k) / 28 * 2 * .pi
+                points.append(disc.center + SIMD2<Float>(cos(angle), sin(angle)) * disc.radius)
             }
         }
         return hull(points)

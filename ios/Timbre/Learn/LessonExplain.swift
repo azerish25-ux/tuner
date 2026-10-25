@@ -12,6 +12,12 @@ import TimbreCore
 /// a keyboard lights each note as it sounds; a rhythm's strokes sound as the pick sweeps the strings in time with the
 /// beat row.
 /// "Hear it" plays it again. The card takes the room the words leave and its picture grows to fill it.
+///
+/// "Show me", under a chord, notes on the neck or a strum, plays the same demonstration on the course instrument's 3D
+/// model in place of the picture (`ShowMeStage`): the fingertips land on the model's own frets, each string shimmering as
+/// it sounds, or a pick sweeps the strings in the pattern's rhythm. The switch where the picture's own sits ("3D" and
+/// the chart or the player's view by name) brings the picture back. Without a model, with Reduce Motion or in Low
+/// Power Mode the picture stays alone.
 struct ExplainStep: View {
     let title: LearnText
     let text: LearnText
@@ -53,6 +59,12 @@ struct ExplainStep: View {
     @State private var owner = UUID()
     @State private var matchedFrames = 0
     @State private var burst = 0
+    /// "Show me": the demonstration plays on the instrument's 3D model in place of the picture.
+    @State private var showMe = false
+    /// The model is in place (the picture gives way to it then).
+    @State private var showMeReady = false
+    /// The model couldn't be shown: the picture stays, and "Show me" goes.
+    @State private var showMeFailed = false
 
     enum Demo { case idle, showing, yourTurn, heard }
     /// Seconds between fingers in the chord demonstration (the diagram's landing step and the notes' spacing).
@@ -105,8 +117,12 @@ struct ExplainStep: View {
                 shown = true
             }
             if autoPlays { play(replay: false) }
+            // The step's 3D model loads quietly once the card has settled, so "Show me" is immediate (once per lesson).
+            if let model = showMeModel { ModelCache.shared.prefetch(model, after: 1.2) }
         }
         .onDisappear { demoTask?.cancel(); store.stopLessonListening(owner: owner) }
+        // The picture choice changing elsewhere (Settings) brings the picture back.
+        .onChange(of: chordView) { _, _ in setShowMe(false) }
         // Leaving the app stops the demonstration where it is; "Hear it" plays it again.
         .onChange(of: scenePhase) { _, phase in
             guard phase == .background, sounding else { return }
@@ -181,14 +197,15 @@ struct ExplainStep: View {
         }
     }
 
-    /// Plays the demonstration: once by itself as the step appears, again from "Hear it" (`replay`).
-    private func play(replay: Bool) {
+    /// Plays the demonstration: once by itself as the step appears, again from "Hear it" (`replay`). `lead` holds the
+    /// first note back (the 3D stage's glide in); a strum then starts its loop afresh.
+    private func play(replay: Bool, lead: Double? = nil) {
         switch visual {
-        case let .chord(spec): runDemo(spec, replay: replay)
-        case .fretboard: playNeck(replay: replay)
+        case let .chord(spec): runDemo(spec, replay: replay, lead: lead)
+        case .fretboard: playNeck(replay: replay, lead: lead)
         case let .staff(midi, _): playNotes(midi, lead: replay ? 0 : 0.45)
         case let .keyboard(midi): playNotes(midi.sorted(), lead: replay ? 0 : 0.45)
-        case let .rhythm(pattern, beatsPerBar): playRhythm(pattern, beatsPerBar: beatsPerBar, replay: replay)
+        case let .rhythm(pattern, beatsPerBar): playRhythm(pattern, beatsPerBar: beatsPerBar, replay: replay && lead == nil)
         default: break
         }
     }
@@ -202,7 +219,7 @@ struct ExplainStep: View {
         } else {
             VStack(spacing: 10) {
                 picture(CGSize(width: inner.width, height: max(0, inner.height - turnRow)))
-                if case .chord = visual { yourTurn }
+                footer
             }
             .frame(maxWidth: .infinity, minHeight: max(0, height - 36))
             .padding(18)
@@ -211,8 +228,9 @@ struct ExplainStep: View {
         }
     }
 
-    /// The chord's "your turn" line under its box, with its gap.
+    /// The row under the picture, with its gap: "Show me" (beside a chord's "your turn"), or a chord's "your turn" alone.
     private var turnRow: CGFloat {
+        if showMeModel != nil { return Metrics.minTarget + 10 }
         if case .chord = visual { return 30 }
         return 0
     }
@@ -221,10 +239,21 @@ struct ExplainStep: View {
     @ViewBuilder private func picture(_ room: CGSize) -> some View {
         switch visual {
         case let .rhythm(pattern, beatsPerBar):
-            // The stroke sweeps above the pattern in time with its playhead, filling the card.
-            RhythmLoop(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, arrows: course.strums, bpm: Self.rhythmBPM,
-                       sweep: sweepStyle, strings: max(1, course.stringCount), edges: StringEdges.of(course), origin: rhythmOrigin)
-                .frame(height: max(180, room.height))
+            // The stroke sweeps above the pattern in time with its playhead, filling the card (on the 3D model, shown).
+            ZStack {
+                if !threeD {
+                    RhythmLoop(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, arrows: course.strums, bpm: Self.rhythmBPM,
+                               sweep: sweepStyle, strings: max(1, course.stringCount), edges: StringEdges.of(course), origin: rhythmOrigin)
+                        .transition(.opacity)
+                }
+                if showMe, let model = showMeModel {
+                    ShowMeRhythm(modelID: model, strings: max(1, course.stringCount),
+                                 strum: ShowMeStrum(pattern: pattern, beatsPerBar: beatsPerBar, bpm: Self.rhythmBPM, origin: rhythmOrigin),
+                                 accent: accent, arrows: course.strums, edges: StringEdges.of(course),
+                                 onReady: { showMeAppeared() }, onFailure: { showMeUnavailable() })
+                }
+            }
+            .frame(height: max(180, room.height))
         case let .chord(spec):
             chordBox(spec, room: room)
         case let .fretboard(strings, dots, frets, start):
@@ -252,6 +281,127 @@ struct ExplainStep: View {
                               together: false, noteMs: ms, gapMs: 0)
     }
 
+    // MARK: Show me: the demonstration on the instrument, in 3D
+
+    /// The course instrument's 3D model when this picture can be demonstrated on it (a chord or notes on its neck, a
+    /// strum on a strummed instrument) and the stage may run now (not with Reduce Motion, in Low Power Mode or hot).
+    private var showMeModel: String? {
+        guard !showMeFailed, demonstrable else { return nil }
+        return ShowMe.model(for: course, catalog: store.catalog, reduceMotion: reduceMotion)
+    }
+
+    private var demonstrable: Bool {
+        switch visual {
+        case let .chord(spec): return spec.frets.count == course.stringCount
+        case let .fretboard(strings, dots, _, _): return strings == course.stringCount && !dots.isEmpty
+        case .rhythm: return sweepStyle == .strum
+        default: return false
+        }
+    }
+
+    /// The model has taken the picture's place (the picture comes back should the stage stop being allowed meanwhile,
+    /// in Low Power Mode say).
+    private var threeD: Bool { showMe && showMeReady && showMeModel != nil }
+
+    private var showMeBinding: Binding<Bool> {
+        Binding(get: { showMe }, set: { on in setShowMe(on) })
+    }
+
+    /// Under the picture: "Show me" beside a chord's cue to play it back (only the glyph of the cue when both don't
+    /// fit); under notes or a strum in 3D, the switch back to the picture beside it (a chord's sits in its header).
+    @ViewBuilder private var footer: some View {
+        if showMeModel != nil {
+            if case .chord = visual {
+                // At the largest text sizes the cue goes under the button.
+                ViewThatFits(in: .horizontal) {
+                    chordFooter(compactCue: false)
+                    chordFooter(compactCue: true)
+                    VStack(spacing: 6) {
+                        showMeButton
+                        if cueShown { turnCue(compact: false) }
+                    }
+                }
+                .frame(maxWidth: .infinity, minHeight: Metrics.minTarget)
+                .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: cueShown)
+            } else {
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 10) { neckFooterContent }
+                    VStack(spacing: 6) { neckFooterContent }
+                }
+                .frame(maxWidth: .infinity, minHeight: Metrics.minTarget)
+                .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: showMe)
+            }
+        } else if case .chord = visual {
+            yourTurn
+        }
+    }
+
+    /// Under notes or a strum: the switch back to the picture while the model shows, and "Show me".
+    @ViewBuilder private var neckFooterContent: some View {
+        if showMe {
+            ShowMeToggle(on: showMeBinding, accent: accent, label: "Neck view")
+                .transition(.opacity)
+        }
+        showMeButton
+    }
+
+    private func chordFooter(compactCue: Bool) -> some View {
+        HStack(spacing: 12) {
+            showMeButton
+            if cueShown {
+                turnCue(compact: compactCue)
+                    .transition(.opacity)
+            }
+        }
+    }
+
+    private var showMeButton: some View {
+        ShowMeButton(accent: accent, loading: showMe && !showMeReady) { setShowMe(true) }
+    }
+
+    /// "Show me" puts the instrument on the card (the demonstration plays once it is in place) or, already there, plays
+    /// it again; the switch back shows the picture where the demonstration left it.
+    private func setShowMe(_ on: Bool) {
+        guard on else {
+            guard showMe else { return }
+            withMotion(Motion.reveal, reduceMotion: reduceMotion) {
+                showMe = false
+                showMeReady = false
+            }
+            return
+        }
+        Haptics.shared.selection()
+        if showMe {
+            if showMeReady { play(replay: true) }
+            return
+        }
+        // The picture's demonstration stops; the model's starts as it arrives.
+        demoTask?.cancel()
+        store.stopLessonListening(owner: owner)
+        sounding = false
+        lit = []
+        playingIndex = nil
+        neckStart = nil
+        if demo == .showing { demo = .idle }
+        showMeReady = false
+        showMe = true
+    }
+
+    /// The model is in place: it takes over from the picture and the demonstration plays on it, once the camera has
+    /// glided in.
+    private func showMeAppeared() {
+        guard showMe, !showMeReady else { return }
+        withAnimation(Motion.reveal) { showMeReady = true }
+        play(replay: true, lead: ShowMe.lead)
+    }
+
+    /// The model couldn't be shown: the picture stays, without "Show me".
+    private func showMeUnavailable() {
+        showMeFailed = true
+        showMe = false
+        showMeReady = false
+    }
+
     // MARK: Chord: the fingers land, the strings ring, your turn
 
     /// The chord as big as the card allows, under its name and the switch between the chart and the player's view.
@@ -264,58 +414,100 @@ struct ExplainStep: View {
         let edges = StringEdges.of(instrumentId: course.instrument, strings: spec.frets.count)
         let player = chordView == .player
         return VStack(spacing: 8) {
-            ChordCardHeader(name: spec.name, accent: accent)
+            chordHeader(spec)
             ZStack {
-                if player {
-                    PlayerNeck(chord: spec, accent: accent, ringing: lit, landStart: chordLandStart, landingStep: Self.demoStep, edges: edges)
-                        .transition(ChordFlip.transition(toPlayer: true, reduceMotion: reduceMotion))
-                } else {
-                    ChordDiagram(chord: spec, accent: accent, showName: false, ringing: lit, landing: landsFingers, landingOrder: .fingers,
-                                 landingStep: Self.demoStep, replay: demoReplay, edges: edges, fretNumbers: true, stretch: fit.stretch)
-                        .transition(ChordFlip.transition(toPlayer: false, reduceMotion: reduceMotion))
+                if !threeD {
+                    chordPicture(spec, fit: fit, edges: edges, player: player)
+                        .transition(.opacity)
+                }
+                if showMe, let model = showMeModel {
+                    // The same demonstration on the instrument: the same clock, the same strings lit.
+                    ShowMeStage(modelID: model, strings: spec.frets.count, fretless: course.fretless, shot: .fretting(ShowMeShape(chord: spec)),
+                                accent: accent, ringing: lit, landStart: chordLandStart, landingStep: Self.demoStep, edges: edges,
+                                label: Text("\(spec.name) chord"), value: ChordWords.shape(spec),
+                                onReady: { showMeAppeared() }, onFailure: { showMeUnavailable() })
                 }
             }
             .frame(width: fit.width, height: ChordDiagram.boxHeight(spec, width: fit.width, stretch: fit.stretch, named: edges != nil))
-            .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: player)
         }
         .frame(maxWidth: fit.width)
         // Played back right: sparks from behind the box, on a canvas of their own size.
         .background { SparkBurst(trigger: burst, color: accent, startFraction: 0.45).frame(width: fit.width * 1.55, height: fit.width * 1.55) }
     }
 
+    /// The chord's name over the switch between the chart and the player's view; in 3D, over the switch back to it.
+    @ViewBuilder private func chordHeader(_ spec: ChordSpec) -> some View {
+        if showMe && showMeModel != nil {
+            ShowMeCardHeader(name: spec.name, on: showMeBinding, accent: accent)
+        } else {
+            ChordCardHeader(name: spec.name, accent: accent)
+        }
+    }
+
+    /// The chart or the player's view, flipping between them in the same room.
+    private func chordPicture(_ spec: ChordSpec, fit: (width: CGFloat, stretch: CGFloat), edges: StringEdges?, player: Bool) -> some View {
+        ZStack {
+            if player {
+                PlayerNeck(chord: spec, accent: accent, ringing: lit, landStart: chordLandStart, landingStep: Self.demoStep, edges: edges)
+                    .transition(ChordFlip.transition(toPlayer: true, reduceMotion: reduceMotion))
+            } else {
+                ChordDiagram(chord: spec, accent: accent, showName: false, ringing: lit, landing: landsFingers, landingOrder: .fingers,
+                             landingStep: Self.demoStep, replay: demoReplay, edges: edges, fretNumbers: true, stretch: fit.stretch)
+                    .transition(ChordFlip.transition(toPlayer: false, reduceMotion: reduceMotion))
+            }
+        }
+        .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: player)
+    }
+
     /// The fingers land as the demonstration plays: from the start when it plays by itself, else from the first
     /// "Hear it" (until then, and with Reduce Motion, every finger sits in place).
     private var landsFingers: Bool { !reduceMotion && (autoPlays || demoReplay > 0) }
 
+    /// The demonstration is over: it's the learner's turn (or they've played it back).
+    private var cueShown: Bool { demo == .yourTurn || demo == .heard }
+
     /// After the demonstration: the learner's cue to play it back, then a tick when the microphone hears it.
     /// Its row is always there, so the card doesn't grow when it appears.
     private var yourTurn: some View {
+        turnCue(compact: false)
+            .frame(minHeight: 20)
+            .opacity(cueShown ? 1 : 0)
+            .animation(Motion.settle, value: demo)
+            .accessibilityHidden(!cueShown)
+    }
+
+    /// The cue's words with their glyph; `compact` keeps the glyph alone (its words still read by VoiceOver).
+    @ViewBuilder private func turnCue(compact: Bool) -> some View {
         Group {
             if demo == .heard {
-                Label("Nice — that’s right.", systemImage: "checkmark.seal.fill").foregroundStyle(accent)
+                if compact {
+                    Label("Nice — that’s right.", systemImage: "checkmark.seal.fill").labelStyle(.iconOnly).foregroundStyle(accent)
+                } else {
+                    Label("Nice — that’s right.", systemImage: "checkmark.seal.fill").foregroundStyle(accent)
+                }
             } else {
-                Label("Your turn — play it back", systemImage: "hand.point.up.left.fill").foregroundStyle(Palette.ink)
+                if compact {
+                    Label("Your turn — play it back", systemImage: "hand.point.up.left.fill").labelStyle(.iconOnly).foregroundStyle(Palette.ink)
+                } else {
+                    Label("Your turn — play it back", systemImage: "hand.point.up.left.fill").foregroundStyle(Palette.ink)
+                }
             }
         }
         .font(Typeface.label(14))
         .multilineTextAlignment(.center)
-        .frame(minHeight: 20)
-        .opacity(demo == .yourTurn || demo == .heard ? 1 : 0)
-        .animation(Motion.settle, value: demo)
-        .accessibilityHidden(demo == .idle || demo == .showing)
     }
 
     /// Fingers land one by one (finger 1 first), each string lighting as its finger's note sounds, then the chord
     /// rings across every string, low to high; `replay` lands them again (the Hear it button).
-    private func runDemo(_ chord: ChordSpec, replay: Bool) {
+    private func runDemo(_ chord: ChordSpec, replay: Bool, lead delay: Double? = nil) {
         demoTask?.cancel()
         store.stopLessonListening(owner: owner)
         if replay { demoReplay += 1 }
         demo = .showing
         lit = []
         sounding = true
-        // The diagram starts landing 0.25 s after it appears, 0.05 s after a replay.
-        let lead = replay ? 0.05 : 0.25
+        // The diagram starts landing 0.25 s after it appears, 0.05 s after a replay (the 3D stage once it has glided in).
+        let lead = delay ?? (replay ? 0.05 : 0.25)
         chordLandStart = Date().addingTimeInterval(lead)
         let notes = demoNotes(chord)
         let strings = chord.frets.indices.filter { chord.frets[$0] >= 0 }
@@ -353,13 +545,7 @@ struct ExplainStep: View {
 
     /// Each landing's note (the lowest string a finger holds) and that string, in landing order.
     private func demoNotes(_ chord: ChordSpec) -> [(rank: Int, midi: Int, string: Int)] {
-        let open = ChordStep.openStrings(course)
-        let ranks = ChordDiagram(chord: chord, landingOrder: .fingers).landingRanks
-        var byRank: [Int: (midi: Int, string: Int)] = [:]
-        for (i, fret) in chord.frets.enumerated() where fret > 0 && i < open.count && i < ranks.count {
-            if byRank[ranks[i]] == nil { byRank[ranks[i]] = (midi: open[i] + fret, string: i) }
-        }
-        return byRank.keys.sorted().compactMap { rank in byRank[rank].map { (rank: rank, midi: $0.midi, string: $0.string) } }
+        ShowMe.demoNotes(chord, open: ChordStep.openStrings(course))
     }
 
     /// The learner plays the chord back: three matching readings in a row count. Only when the microphone
@@ -416,11 +602,25 @@ struct ExplainStep: View {
         let numbered = !course.fretless
         let rowHeight = FretboardDiagram.rowHeight(filling: room, strings: strings, frets: frets, start: start, named: strings >= 2, numbered: numbered)
         let order = neckOrder
-        return TimelineView(.animation(minimumInterval: 1 / 60, paused: neckStart == nil)) { timeline in
-            let state = neckState(at: timeline.date, order: order, dots: dots)
-            FretboardDiagram(strings: strings, dots: dots, frets: frets, accent: accent, start: start, activeString: state.active,
-                             fretless: course.fretless, rowHeight: rowHeight,
-                             edges: StringEdges.of(instrumentId: course.instrument, strings: strings), landing: state.landing, fretNumbers: numbered)
+        let edges = StringEdges.of(instrumentId: course.instrument, strings: strings)
+        return ZStack {
+            if !threeD {
+                TimelineView(.animation(minimumInterval: 1 / 60, paused: neckStart == nil)) { timeline in
+                    let state = neckState(at: timeline.date, order: order, dots: dots)
+                    FretboardDiagram(strings: strings, dots: dots, frets: frets, accent: accent, start: start, activeString: state.active,
+                                     fretless: course.fretless, rowHeight: rowHeight, edges: edges, landing: state.landing, fretNumbers: numbered)
+                }
+                .transition(.opacity)
+            }
+            if showMe, let model = showMeModel {
+                // The dots land on the instrument's own frets, on the same clock, each string ringing as its note sounds.
+                ShowMeStage(modelID: model, strings: strings, fretless: course.fretless,
+                            shot: .fretting(ShowMeShape(dots: dots, strings: strings, order: order, start: start)),
+                            accent: accent, landStart: neckStart, landingStep: Self.noteStep, edges: edges,
+                            label: Text("Notes on the neck"), value: ShowMe.words(dots: order.compactMap { dots[safe: $0] }),
+                            onReady: { showMeAppeared() }, onFailure: { showMeUnavailable() })
+                    .frame(height: max(160, room.height))
+            }
         }
     }
 
@@ -437,9 +637,9 @@ struct ExplainStep: View {
     }
 
     /// The dots drop in one by one, each as its note sounds; `replay` starts at once (the Hear it button).
-    private func playNeck(replay: Bool) {
+    private func playNeck(replay: Bool, lead delay: Double? = nil) {
         demoTask?.cancel()
-        let lead = replay ? 0.05 : 0.3
+        let lead = delay ?? (replay ? 0.05 : 0.3)
         let midis = neckMidis
         let order = neckOrder
         neckStart = Date().addingTimeInterval(lead)
