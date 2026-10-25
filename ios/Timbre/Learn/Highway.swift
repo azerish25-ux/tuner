@@ -683,7 +683,11 @@ struct AlongStep: View {
             let onset = (level - lastLevel > 6 && level > -50) || now - lastOnset < 0.12
             lastLevel = level
             if let heard, !fretted { trail.append((now, Double(heard.midi) + heard.cents / 100)); if trail.count > 240 { trail.removeFirst(60) } }
-            apply(judge.update(time: now - startTime - countIn, midi: heard?.midi, cents: heard?.cents, onset: onset), now: now)
+            var clock = now - startTime - countIn
+            #if DEBUG
+            clock = demoJudgedTime(clock, judge: judge, store: store, heard: heard != nil)
+            #endif
+            apply(judge.update(time: clock, midi: heard?.midi, cents: heard?.cents, onset: onset), now: now)
         }
     }
 
@@ -2032,3 +2036,14 @@ struct TakeRibbon: View {
         .accessibilityValue(Text(value, format: .number))
     }
 }
+
+#if DEBUG
+/// The demo pitch (UI tests) plays each play-along note the moment it falls due, from a loop on the main thread. A
+/// stalled frame (the simulator drawing the runway in software) only delays when that reading reaches the judge, so
+/// a demo take is judged at the moment the note was due to sound, as a steady player would play it, not when the
+/// stalled frame got round to it.
+@MainActor func demoJudgedTime(_ clock: Double, judge: PlayAlongJudge, store: AppStore, heard: Bool) -> Double {
+    guard store.demoNoteDue != nil, heard, judge.nextIndex < judge.notes.count else { return clock }
+    return min(clock, judge.time(of: judge.nextIndex) + 0.01)
+}
+#endif

@@ -394,7 +394,11 @@ struct SongPerformStep: View {
                 trail.append((now, Double(heard.midi) + heard.cents / 100))
                 if trail.count > 240 { trail.removeFirst(60) }
             }
-            apply(judge.update(time: now - startTime - countIn, midi: heard?.midi, cents: heard?.cents, onset: onset), now: now)
+            var clock = now - startTime - countIn
+            #if DEBUG
+            clock = demoJudgedTime(clock, judge: judge, store: store, heard: heard != nil)
+            #endif
+            apply(judge.update(time: clock, midi: heard?.midi, cents: heard?.cents, onset: onset), now: now)
         }
     }
 
