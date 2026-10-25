@@ -42,7 +42,7 @@ song-licensing playbook), [process/archive/](process/archive/) (every review and
   and its integration pass shipped against that review afterwards; round 17 has not been judged (its brief is ready in
   [process/templates/](process/templates/)). The jury's view: code alone tops out around 8.7; 9.0–9.1 needs the owner
   items (licensed songs, real recordings, design hires, translations, testers).
-- **Build health at hand-over.** The required PR `gate` (TimbreCore tests, app unit tests and smoke UI flows, Release
+- **Build health at hand-over.** On the final commit the required PR `gate` (TimbreCore tests, app unit tests and smoke UI flows, Release
   device build, lint and translation gates) is green. The nightly tour (App Store captures), the accessibility audit
   and the App Preview have open items listed in [KNOWN-ISSUES.md](KNOWN-ISSUES.md) §2.
 - **Ready for the App Store?** The app is feature-complete for a first release in English. Before submitting: the
