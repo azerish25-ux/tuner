@@ -288,7 +288,7 @@ struct SectionRibbon: View {
             .overlay {
                 ViewThatFits(in: .horizontal) {
                     VStack(spacing: 1) {
-                        Text(verbatim: section.name).font(Typeface.label(10)).foregroundStyle(Palette.inkSoft)
+                        Text(verbatim: section.name).font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
                         percentLabel(section, tint: tint)
                     }
                     percentLabel(section, tint: tint)

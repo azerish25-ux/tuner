@@ -79,7 +79,7 @@ struct StreakCelebration: View {
                 .contentTransition(.numericText(value: Double(shownDays)))
                 .shadow(color: Palette.spotlight.opacity(0.3 * lamp), radius: 18)
                 .heroNumeral()
-            Text("day streak").font(Typeface.display(24, relativeTo: .title2)).tracking(-0.3).foregroundStyle(Palette.ink)
+            Text("day streak").font(Typeface.display(.title3)).tracking(-0.3).foregroundStyle(Palette.ink)
             // The milestone's name as the app's display eyebrow, in a pill of the lamp's light.
             Eyebrow(StreakShareCard.titleText(days), color: Palette.flameInk, style: .display)
                 .multilineTextAlignment(.center)

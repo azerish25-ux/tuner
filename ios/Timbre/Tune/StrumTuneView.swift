@@ -101,7 +101,7 @@ struct StrumTuneView: View {
             Spacer(minLength: 8)
             VStack(spacing: 2) {
                 Text(store.strumPlucks ? "Pluck to tune" : "Strum to tune")
-                    .font(Typeface.display(18, relativeTo: .headline)).foregroundStyle(Palette.ink)
+                    .font(Typeface.display(.headline)).foregroundStyle(Palette.ink)
                 Text("\(store.instrumentDisplayName) · \(store.tuning.name.localized)")
                     .font(.footnote).foregroundStyle(contrast == .increased ? Palette.ink : Palette.inkSoft)
             }
@@ -132,7 +132,7 @@ struct StrumTuneView: View {
                         .accessibilityHidden(true)
                 }
                 Text(verbatim: title)
-                    .font(Typeface.display(26, relativeTo: .title2)).tracking(-0.4)
+                    .font(Typeface.display(.title)).tracking(-0.4)
                     .foregroundStyle(allInTune ? Palette.mint : Palette.ink)
                     .multilineTextAlignment(.center)
                     .contentTransition(.opacity)
@@ -549,9 +549,7 @@ struct StrumToggle: View {
             }
             .buttonStyle(PressScaleStyle())
             .accessibilityLabel(Text(plucks ? "Pluck to tune" : "Strum to tune"))
-            .accessibilityShowsLargeContentViewer {
-                Label(plucks ? "Pluck to tune" : "Strum to tune", systemImage: "guitars")
-            }
+            .cappedControl(plucks ? Text("Pluck to tune") : Text("Strum to tune"), symbol: "guitars")
             .accessibilityHint(Text(plucks ? "Pluck every open string once to read them all" : "Strum every open string once to read them all"))
             .accessibilityIdentifier("tune.strum")
         }

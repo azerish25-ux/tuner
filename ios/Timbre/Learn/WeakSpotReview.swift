@@ -132,7 +132,7 @@ struct WeakSpotReviewCard: View {
         let shape = RoundedRectangle(cornerRadius: Metrics.corner, style: .continuous)
         return Button { Haptics.shared.selection(); onStart(lesson) } label: {
             HStack(spacing: 14) {
-                IconOrb(symbol: spaced ? "arrow.clockwise" : "scope", tint: tint, size: 48)
+                Glyph(spaced ? "arrow.clockwise" : "scope", size: Glyph.lead, tint: tint)
                 VStack(alignment: .leading, spacing: 6) {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text(spaced ? LocalizedStringKey("Review") : LocalizedStringKey("Weak-spot review"))
@@ -168,7 +168,7 @@ struct ReviewDueBadge: View {
     var body: some View {
         if count > 0 {
             Text("\(count) due")
-                .font(Typeface.label(12)).foregroundStyle(Palette.onAccent)
+                .font(Typeface.label(.caption)).foregroundStyle(Palette.onAccent)
                 .lineLimit(1)
                 .padding(.horizontal, 7).padding(.vertical, 2)
                 .background(Capsule().fill(Palette.mint))
@@ -191,7 +191,7 @@ struct PracticeWeakSpotsButton: View {
         if let lesson = store.weakSpotReview(in: course) {
             Button { Haptics.shared.selection(); onStart(lesson) } label: {
                 Label("Practice weak spots", systemImage: "scope")
-                    .font(Typeface.label(15)).foregroundStyle(accent)
+                    .font(Typeface.label(.body)).foregroundStyle(accent)
                     .padding(.horizontal, 18).frame(minHeight: 44)
                     .background(Capsule().fill(accent.opacity(0.12)))
                     .overlay(Capsule().strokeBorder(accent.opacity(0.35), lineWidth: 1))
@@ -211,12 +211,12 @@ struct WeakSpotChips: View {
     var body: some View {
         HStack(spacing: 6) {
             ForEach(Array(spots.prefix(shown).enumerated()), id: \.offset) { _, spot in
-                Text(Self.name(spot.item)).font(Typeface.label(12)).foregroundStyle(Palette.amber)
+                Text(Self.name(spot.item)).font(Typeface.label(.caption)).foregroundStyle(Palette.amber)
                     .padding(.horizontal, 8).padding(.vertical, 3)
                     .background(Capsule().fill(Palette.amber.opacity(0.14)))
             }
             if spots.count > shown {
-                Text(verbatim: "+\(spots.count - shown)").font(Typeface.label(12)).foregroundStyle(Palette.inkSoft)
+                Text(verbatim: "+\(spots.count - shown)").font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
             }
         }
         .lineLimit(1)
@@ -240,7 +240,7 @@ struct ReviewItemChips: View {
         HStack(spacing: 6) {
             ForEach(Array(items.prefix(shown).enumerated()), id: \.offset) { _, item in chip(item) }
             if items.count > shown {
-                Text(verbatim: "+\(items.count - shown)").font(Typeface.label(12)).foregroundStyle(Palette.inkSoft)
+                Text(verbatim: "+\(items.count - shown)").font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
             }
         }
         .lineLimit(1)
@@ -254,7 +254,7 @@ struct ReviewItemChips: View {
                 Image(systemName: Self.symbol(item.kind)).accessibilityLabel(Self.label(item.kind))
             }
         }
-        .font(Typeface.label(12)).foregroundStyle(Palette.mint)
+        .font(Typeface.label(.caption)).foregroundStyle(Palette.mint)
         .padding(.horizontal, 8).padding(.vertical, 3)
         .background(Capsule().fill(Palette.mint.opacity(0.14)))
     }

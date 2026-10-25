@@ -52,9 +52,9 @@ struct PegLabel: View {
         let parts = NoteReadout.split(note)
         HStack(spacing: 5) {
             if prompt {
-                Text("Play \(note)").font(Typeface.label(13))
+                Text("Play \(note)").font(Typeface.label(.footnote))
             } else {
-                Text(parts.name).font(Typeface.label(15)) + Text(parts.octave).font(Typeface.label(10))
+                Text(parts.name).font(Typeface.label(.body)) + Text(parts.octave).font(Typeface.label(.caption))
             }
             if let symbol = turn.symbol {
                 Image(systemName: symbol).font(.system(size: 12, weight: .bold))

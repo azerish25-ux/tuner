@@ -112,7 +112,7 @@ struct SongChordsTake: View {
             }
             Spacer(minLength: 8)
             VStack(alignment: .trailing, spacing: 0) {
-                Text(judge.points, format: .number).font(Typeface.number(26, relativeTo: .title2)).foregroundStyle(Palette.ink)
+                Text(judge.points, format: .number).font(Typeface.number(.title)).foregroundStyle(Palette.ink)
                     .contentTransition(HighwayHUD.digitTransition(judge.points))
                     .animation(reduceMotion ? nil : Motion.quick, value: judge.points)
                 Eyebrow("Score", color: accent, style: .display)
@@ -323,7 +323,7 @@ struct ChordLane: View {
                 ForEach(1...2, id: \.self) { ahead in
                     if chords.indices.contains(current + ahead) {
                         Text(verbatim: chords[current + ahead].name)
-                            .font(Typeface.display(ahead == 1 ? 34 : 24, relativeTo: .title))
+                            .font(Typeface.display(ahead == 1 ? .title : .title3))
                             .foregroundStyle(Palette.inkSoft.opacity(ahead == 1 ? 1 : 0.7))
                             .lineLimit(1).minimumScaleFactor(0.5)
                     }

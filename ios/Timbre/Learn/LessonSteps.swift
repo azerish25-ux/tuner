@@ -146,7 +146,7 @@ struct NotesStep: View {
     /// sits right on the ring (the one to play now), and the lesson's hint heads the whole run instead.
     private var prompt: some View {
         Text(course.instrument == "voice" ? LocalizedStringKey("Sing this note") : LocalizedStringKey("Play this note"))
-            .font(Typeface.label(15)).foregroundStyle(Palette.inkSoft)
+            .font(Typeface.label(.body)).foregroundStyle(Palette.inkSoft)
     }
 
     private var header: some View {
@@ -154,7 +154,7 @@ struct NotesStep: View {
             if !isSequence { prompt }
             if let hint {
                 Text(hint.localized)
-                    .font(isSequence ? Typeface.label(15) : .subheadline)
+                    .font(isSequence ? Typeface.label(.body) : .subheadline)
                     .foregroundStyle(isSequence ? Palette.ink : Palette.inkFaint)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
@@ -229,7 +229,7 @@ struct NotesStep: View {
                                  fretless: course.fretless, rowHeight: 18, pulsing: !finished, edges: StringEdges.of(course), fretNumbers: true)
                     .padding(.horizontal, 18)
                 Text(at.fret == 0 ? LocalizedStringKey("String \(at.string), open") : LocalizedStringKey("String \(at.string), fret \(at.fret)"))
-                    .font(Typeface.label(13)).foregroundStyle(accent)
+                    .font(Typeface.label(.footnote)).foregroundStyle(accent)
                     .contentTransition(.opacity)
             }
             .animation(Motion.quick, value: judge.index)
@@ -269,7 +269,7 @@ struct NotesStep: View {
             ForEach(Array(notes.enumerated()), id: \.offset) { index, note in
                 let state = index < judge.index ? 2 : index == judge.index ? 1 : 0
                 // Notes still to come: soft ink on a raised chip with a hairline, readable on the green wash.
-                Text(NoteName.pitchClass(note.midi)).font(Typeface.label(14))
+                Text(NoteName.pitchClass(note.midi)).font(Typeface.label(.footnote))
                     .foregroundStyle(state == 2 ? Palette.onAccent : state == 1 ? Palette.ink : Palette.inkSoft)
                     .frame(minWidth: 38, minHeight: 34)
                     .background(Capsule().fill(state == 2 ? AnyShapeStyle(accent) : AnyShapeStyle(Palette.surface)))
@@ -479,7 +479,7 @@ struct ChordStep: View {
     var body: some View {
         VStack(spacing: 16) {
             VStack(spacing: 6) {
-                Text(finished ? LocalizedStringKey("Every string rings") : LocalizedStringKey("Strum it, or pluck each string")).font(Typeface.label(16)).foregroundStyle(Palette.inkSoft)
+                Text(finished ? LocalizedStringKey("Every string rings") : LocalizedStringKey("Strum it, or pluck each string")).font(Typeface.label(.body)).foregroundStyle(Palette.inkSoft)
                     .accessibilityIdentifier("lesson.chord")
                     .lessonStepArrival()
                 guidance
@@ -784,7 +784,7 @@ struct ChordStep: View {
     /// What the microphone hears as a chord; its row is kept while hidden, so the box doesn't jump.
     private var hearingPill: some View {
         let showing = hearing != nil && !finished
-        return Text("Hearing \(hearing ?? chord.name)").font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
+        return Text("Hearing \(hearing ?? chord.name)").font(Typeface.label(.footnote)).foregroundStyle(Palette.inkSoft)
             .padding(.horizontal, 14).padding(.vertical, 7).background(Capsule().fill(Palette.stageRaised))
             .opacity(showing ? 1 : 0)
             .animation(Motion.quick, value: showing)
@@ -927,7 +927,7 @@ struct LessonStringCheck: View {
 
     var body: some View {
         Text(mark == .muted ? "×" : note)
-            .font(Typeface.label(side >= 36 ? 15 : 13))
+            .font(Typeface.label(side >= 36 ? .body : .footnote))
             .foregroundStyle(ink)
             .frame(width: side, height: side)
             .background(Circle().fill(fill))
@@ -1278,7 +1278,7 @@ struct RhythmStep: View {
             // Ready shows bar 1 (the clock hasn't started), done the last bar with its calls.
             let bar = phase == .done ? max(0, bars - 1) : min(max(0, bars - 1), max(0, Int(elapsed / barLength)))
             VStack(spacing: 6) {
-                Text("Bar \(bar + 1) of \(bars)").font(Typeface.label(13)).foregroundStyle(Palette.inkSoft)
+                Text("Bar \(bar + 1) of \(bars)").font(Typeface.label(.footnote)).foregroundStyle(Palette.inkSoft)
                     .opacity(phase == .done ? 0 : 1)
                 LessonBeatRow(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: playhead(now: now, elapsed: elapsed, bar: bar),
                               calls: calls(inBar: bar), arrows: !isTap || strums, restingPick: phase != .done)
@@ -1429,10 +1429,10 @@ struct RhythmStep: View {
         let tint = ScoreTint.color(score)
         return VStack(spacing: 2) {
             Text("\(Int((score * 100).rounded()))% on the beat")
-                .font(Typeface.display(compact ? 22 : 28)).foregroundStyle(tint)
+                .font(Typeface.display(compact ? .title3 : .title)).foregroundStyle(tint)
             if !chordRight.isEmpty && !compact {
                 Text("\(chordRight.values.filter { $0 }.count) of \(chordRight.count) chords right")
-                    .font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
+                    .font(Typeface.label(.footnote)).foregroundStyle(Palette.inkSoft)
             }
         }
             .multilineTextAlignment(.center)
@@ -1492,7 +1492,7 @@ struct RhythmStep: View {
             startOnStrum.toggle()
         } label: {
             Label("Start on first strum", systemImage: startOnStrum ? "mic.fill" : "mic")
-                .font(Typeface.label(14))
+                .font(Typeface.label(.footnote))
                 .foregroundStyle(startOnStrum ? accent : Palette.inkSoft)
                 .symbolEffect(.variableColor.iterative, isActive: armed && !reduceMotion)
                 .lineLimit(1).minimumScaleFactor(0.8)
@@ -2046,7 +2046,7 @@ struct TuneCheckStep: View {
             // One view throughout. The locked note turns to the accent, then fades out completely; only then does the
             // next string take over (chips, neck and note together) and its note fade in: never two at once, and
             // never the last string's note beside the next string's chip.
-            Text(verbatim: index < strings.count ? NoteName.name(strings[index]) : "✓").font(Typeface.note(64))
+            Text(verbatim: index < strings.count ? NoteName.name(strings[index]) : "✓").font(Typeface.note(.hero))
                 .foregroundStyle(settling ? accent : Palette.ink)
                 .contentTransition(.identity)
                 .opacity(noteVisible ? 1 : 0)
@@ -2133,8 +2133,8 @@ struct TuneCheckStep: View {
     private func stringChip(_ string: RailString, done: Bool, current: Bool) -> some View {
         let ink = done ? Palette.onAccent : current ? Palette.ink : Palette.inkSoft
         return VStack(spacing: -1) {
-            Text(NoteName.pitchClass(string.midi)).font(Typeface.label(15))
-            Text(verbatim: "\(string.number)").font(Typeface.number(11)).opacity(0.75)
+            Text(NoteName.pitchClass(string.midi)).font(Typeface.label(.body))
+            Text(verbatim: "\(string.number)").font(Typeface.number(.caption)).opacity(0.75)
         }
         .foregroundStyle(ink)
         .lineLimit(1)

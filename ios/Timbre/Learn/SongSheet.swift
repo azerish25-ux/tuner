@@ -671,7 +671,7 @@ private struct SectionTile: View {
             }
         }
         .scaleEffect(pressed ? 0.95 : 1)
-        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+        .cappedControl(Text(verbatim: SongSectionMap.spoken(section)), symbol: "repeat", cap: .xxLarge)
     }
 
     @ViewBuilder private var name: some View {

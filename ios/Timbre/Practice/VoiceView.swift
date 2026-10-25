@@ -56,7 +56,7 @@ struct VoiceView: View {
                             Image(systemName: level == 7 ? "arrow.up.and.down" : "music.note").foregroundStyle(Palette.mint)
                             Spacer()
                             if store.demonstratedLevels.contains(level) { Image(systemName: "checkmark.seal.fill").foregroundStyle(Palette.success) }
-                            else if locked(level) { ProBadge() }
+                            else if locked(level) { ProLock(size: 22) }
                         }
                         Text(level == 7 ? String(localized: "Range test") : exerciseName(level)).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
                             .multilineTextAlignment(.leading).lineLimit(2)

@@ -105,7 +105,8 @@ enum StringOrder: String, CaseIterable, Identifiable {
 
 // MARK: - The player's hand
 
-/// How the player holds the instrument (Settings › Handedness), as every picture of it reads it:
+/// How the player holds the instrument (Settings › Handedness, `UserSettings.handedness`), as every picture of it
+/// reads it:
 /// - `.right`: the pictures as drawn.
 /// - `.left`: a left-handed instrument, the mirror image of a right-handed one. Every neck and chord picture is its mirror
 ///   image (a neck lying across the screen has its nut on the right, a chord box its lowest string on the right), and so
@@ -114,25 +115,7 @@ enum StringOrder: String, CaseIterable, Identifiable {
 ///   lying across the screen has its nut on the right and string 1 on top, as the player sees it, and a strum falls from
 ///   string 1. Standing up (a chord box, the player's-view neck, the 3D headstock), it is the right-handed instrument it is.
 /// Words are never mirrored, and every string keeps its number (1 is the thinnest) whichever way it is held.
-enum PlayingHand: String, CaseIterable, Identifiable, Sendable {
-    case right
-    case left
-    case leftUpsideDown
-
-    var id: String { rawValue }
-
-    /// From the stored setting, in whichever form it is kept ("left", `.leftUpsideDown`, "left-upside-down").
-    init(setting: Any) {
-        let word = String(describing: setting).lowercased()
-        if word.contains("upside") {
-            self = .leftUpsideDown
-        } else if word.hasPrefix("left") {
-            self = .left
-        } else {
-            self = .right
-        }
-    }
-
+extension Handedness {
     /// The fretting hand is the right one: a neck lying across the screen has its nut on the right.
     var nutOnRight: Bool { self != .right }
     /// The instrument is the mirror image of a right-handed one (strung left-handed).
@@ -144,20 +127,20 @@ enum PlayingHand: String, CaseIterable, Identifiable, Sendable {
 /// The player's hold with Settings › Charts as printed, and what each kind of picture makes of them. Views read it with
 /// `@CurrentHand`; a screen can hand it down with `.handStyle(_:)`.
 struct HandStyle: Equatable, Sendable {
-    var hand: PlayingHand = .right
+    var hand: Handedness = .right
     /// Chord charts (the chord box, and the Chart view's necks lying across the screen) stay as songbooks print them.
     var chartsAsPrinted = false
 
     static let standard = HandStyle()
 
-    init(hand: PlayingHand = .right, chartsAsPrinted: Bool = false) {
+    init(hand: Handedness = .right, chartsAsPrinted: Bool = false) {
         self.hand = hand
         self.chartsAsPrinted = chartsAsPrinted
     }
 
     /// From the player's settings.
     init(_ settings: UserSettings) {
-        self.init(hand: PlayingHand(setting: settings.handedness), chartsAsPrinted: settings.chartsAsPrinted == true)
+        self.init(hand: settings.handedness, chartsAsPrinted: settings.chartsAsPrinted)
     }
 
     /// The chord box (`ChordDiagram`) is drawn as its mirror image.
@@ -336,6 +319,7 @@ struct FretboardDiagram: View {
             }
         }
         .frame(height: height)
+        .accessibilityIgnoresInvertColors()
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(accessibility))
     }
@@ -618,7 +602,7 @@ struct ChordDiagram: View {
     var body: some View {
         let flip = mirrored ?? hand.mirrorsChordChart
         VStack(spacing: 8) {
-            if showName { Text(chord.name).font(Typeface.display(28)).foregroundStyle(Palette.ink) }
+            if showName { Text(chord.name).font(Typeface.display(.title)).foregroundStyle(Palette.ink) }
             TimelineView(.animation(paused: !landing || landed || reduceMotion)) { timeline in
                 let landScale = landScales(at: timeline.date)
                 let scale = typeScale
@@ -632,6 +616,7 @@ struct ChordDiagram: View {
             }
             if let edges, chord.frets.count >= 2 { edgeNames(edges, mirrored: flip) }
         }
+        .accessibilityIgnoresInvertColors()
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(chord.name) chord"))
         .accessibilityValue(Text(ChordWords.shape(chord)))
@@ -1110,7 +1095,8 @@ struct RhythmBar: View {
     }
 }
 
-/// The course instrument's photograph with the named part glowing (strings, head, nut, bridge).
+/// The course instrument's photograph with the named part glowing (strings, head, nut, bridge); a left-handed
+/// instrument for a left-handed player (`HandStyle.mirrorsUpright`).
 struct InstrumentPartView: View {
     let part: String
     let instrumentId: String?
@@ -1118,16 +1104,20 @@ struct InstrumentPartView: View {
     /// Explanations give the photograph whatever room the card has.
     var height: CGFloat = 260
     @EnvironmentObject private var store: AppStore
+    @CurrentHand private var hand
     @State private var pulse = false
 
     var body: some View {
         let asset = instrumentId.flatMap { store.catalog.photo(instrumentId: $0)?.asset } ?? "01_guitar_acoustic_guitar"
-        let card = ModelLibrary.photoCard(asset)
+        let mirrored = hand.mirrorsUpright
+        let card = ModelLibrary.photoCard(asset).map { mirrored ? $0.mirrored() : $0 }
         GeometryReader { geometry in
             let side = min(geometry.size.width, geometry.size.height)
             let origin = CGPoint(x: (geometry.size.width - side) / 2, y: (geometry.size.height - side) / 2)
             ZStack {
-                Image(asset).resizable().interpolation(.high).scaledToFit().frame(width: side, height: side)
+                Image(asset).resizable().interpolation(.high).scaledToFit()
+                    .scaleEffect(x: mirrored ? -1 : 1, y: 1)
+                    .frame(width: side, height: side)
                     .shadow(color: .black.opacity(0.6), radius: 20, y: 12)
                     .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
                 if let card {
@@ -1153,6 +1143,7 @@ struct InstrumentPartView: View {
             }
         }
         .frame(height: height)
+        .accessibilityIgnoresInvertColors()
         .onAppear { withAnimation(.easeInOut(duration: 1.1).repeatForever(autoreverses: true)) { pulse = true } }
         .accessibilityHidden(true)
     }
@@ -1166,8 +1157,15 @@ struct LessonBackdrop: View {
     let course: LearnCourse
     var accent: Color = Palette.mint
     @EnvironmentObject private var store: AppStore
+    @CurrentHand private var hand
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var floating = false
+
+    /// The instrument's lean as it floats (the other way for a left-handed instrument).
+    private var tilt: Double {
+        let lean: Double = floating ? -8 : -12
+        return hand.mirrorsUpright ? -lean : lean
+    }
 
     /// The instrument's studio render, or its photograph, resolved as on the Learn tab.
     private var image: String? {
@@ -1184,8 +1182,9 @@ struct LessonBackdrop: View {
                     .scaleEffect(floating ? 0.84 : 1)
                     .frame(maxHeight: .infinity, alignment: .bottom)
                 Image(image).resizable().interpolation(.high).scaledToFit()
+                    .scaleEffect(x: hand.mirrorsUpright ? -1 : 1, y: 1)
                     .shadow(color: .black.opacity(0.6), radius: 22, y: 16)
-                    .rotationEffect(.degrees(floating ? -8 : -12))
+                    .rotationEffect(.degrees(tilt))
                     .offset(y: floating ? -8 : 4)
                     .padding(.vertical, 24)
             } else if course.id == "theory" {

@@ -185,6 +185,69 @@ final class PolyTunerTests: XCTestCase {
         assertStrum("A alone", guitar, cents: [nil, -8, nil, nil, nil, nil], seed: 2)
     }
 
+    // MARK: Which strings of a chord rang (ChordRing)
+
+    /// Strums `shape` on a guitar with string `muted` (its place among the sounding strings, lowest first) silent, and
+    /// reads the strum once through the stream: each sounding string's state.
+    private func ring(_ shape: String, muted: Int?, seed: UInt64, sampleRate: Double) -> [ChordRing.State]? {
+        let midi = Synth.voicing(shape).compactMap { $0 }
+        let pitches = midi.map(StrumSynth.midiHz)
+        let tuner = PolyTuner(strings: pitches, sampleRate: sampleRate)
+        var cents = [Double?](repeating: 0, count: midi.count)
+        if let muted { cents[muted] = nil }
+        let duration = 0.3 + tuner.settle + tuner.window + 0.15
+        let signal = StrumSynth.strum(StrumSynth.detuned(midi, cents), sampleRate: sampleRate, duration: duration, seed: seed)
+        let readings = feed(signal, to: tuner, chunk: 512)
+        XCTAssertEqual(readings.count, 1, "\(shape) at \(Int(sampleRate)) Hz, seed \(seed)")
+        return readings.first.map { ChordRing.states($0, pitches: pitches) }
+    }
+
+    /// A clean strum of an open chord leaves no string called silent: strings on another string's octave may be unsure,
+    /// never dead.
+    func testCleanChordsHaveNoSilentString() {
+        for (name, shape) in [("C", "x32010"), ("Em", "022000"), ("Am", "x02210"), ("G", "320003"), ("D", "xx0232")] {
+            for rate in [44100.0, 48000.0] {
+                for seed: UInt64 in [1, 2] {
+                    guard let states = ring(shape, muted: nil, seed: seed, sampleRate: rate) else { continue }
+                    XCTAssertFalse(states.contains(.dead), "\(name) at \(Int(rate)) Hz, seed \(seed): \(states)")
+                }
+            }
+        }
+    }
+
+    /// A string muted by a leaning finger is named, and only that one: C's open G (finger 2 on the D string touching
+    /// it), E minor's G, A minor's C, D's F♯.
+    func testAMutedStringIsNamed() {
+        let cases: [(name: String, shape: String, muted: Int)] = [("C", "x32010", 2), ("Em", "022000", 3), ("Am", "x02210", 3), ("D", "xx0232", 3)]
+        for (name, shape, muted) in cases {
+            for rate in [44100.0, 48000.0] {
+                for seed: UInt64 in [1, 2] {
+                    guard let states = ring(shape, muted: muted, seed: seed, sampleRate: rate) else { continue }
+                    let dead = states.indices.filter { states[$0] == .dead }
+                    XCTAssertEqual(dead, [muted], "\(name) at \(Int(rate)) Hz, seed \(seed): \(states)")
+                }
+            }
+        }
+    }
+
+    /// One strum can't hear a string that sits on another's octave (E minor's E3, an octave over the low E): muted or
+    /// not, it is never called dead.
+    func testAStringOnAnOctaveIsNeverCalledDead() {
+        for rate in [44100.0, 48000.0] {
+            guard let states = ring("022000", muted: 2, seed: 1, sampleRate: rate) else { continue }
+            XCTAssertNotEqual(states[2], .dead, "\(states)")
+            XCTAssertFalse(states.contains(.dead), "\(states)")
+        }
+    }
+
+    func testClearStringsAreTheOnesOffEveryOtherStringsHarmonics() {
+        let em = Synth.voicing("022000").compactMap { $0 }.map(StrumSynth.midiHz)
+        // E2 B2 E3 G3 B3 E4: E3, B3 and E4 sit on the low E's harmonics; E2, B2 and G3 are clear.
+        XCTAssertEqual(em.indices.map { ChordRing.isClear($0, among: em) }, [true, true, false, true, false, false])
+        XCTAssertFalse(ChordRing.isClear(1, among: [220, 220]), "a unison")
+        XCTAssertFalse(ChordRing.isClear(3, among: [220]), "out of range")
+    }
+
     func testUnisonCoursesShareOneReading() {
         assertStrum("mandolin G3 D4 A4 E5 courses", mandolin, cents: [5, 5, -10, -10, 15, 15, -3, -3], seed: 1)
     }

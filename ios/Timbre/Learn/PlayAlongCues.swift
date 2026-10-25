@@ -237,7 +237,7 @@ struct StrumToStartHint: View {
 
     var body: some View {
         Label("Play a note to start", systemImage: "waveform")
-            .font(Typeface.label(14))
+            .font(Typeface.label(.body))
             .foregroundStyle(Palette.ink)
             .padding(.horizontal, 14).padding(.vertical, 8)
             .background(Capsule().fill(Palette.stageDeep.opacity(0.85)))

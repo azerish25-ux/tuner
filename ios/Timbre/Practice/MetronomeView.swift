@@ -18,6 +18,8 @@ struct MetronomeView: View {
     @State private var trainerEvery = 4
     @State private var trainerTarget = 140
     @State private var trainerTask: Task<Void, Never>?
+    /// Feel the beat's haptic clock, while the click runs.
+    @State private var feelTask: Task<Void, Never>?
     /// The tempo under the slider while a finger drags it; committed (saved, and the click changed) on release.
     @State private var slidingBpm: Double?
     @State private var sliding = false
@@ -33,8 +35,7 @@ struct MetronomeView: View {
                 trainerControls
                 meter
             }
-            // Only the meter card's own margin meets the dock's fade: the sound control rests fully above it, and
-            // the beat row follows close below.
+            // The dock reserves its fade (`stageDock`), so the meter card's own margin is all the room it needs.
             .padding(.horizontal, Metrics.gutter).padding(.bottom, 16)
         }
         // The pendulum takes whatever the controls and the beat row leave, so nothing sits empty above the bar.
@@ -58,9 +59,13 @@ struct MetronomeView: View {
         .onChange(of: store.beats) { _, _ in restartBar() }
         .onChange(of: store.subdivision) { _, _ in restartBar() }
         .onChange(of: audio.metronomeRunning) { _, running in
-            if running { anchor = Date(); anchorBpm = store.bpm; alignToClick() } else { trainerTask?.cancel() }
+            if running {
+                anchor = Date(); anchorBpm = store.bpm; alignToClick(); feelBeats()
+            } else {
+                trainerTask?.cancel(); feelTask?.cancel()
+            }
         }
-        .onDisappear { trainerTask?.cancel() }
+        .onDisappear { trainerTask?.cancel(); feelTask?.cancel() }
     }
 
     private func beatPosition(at date: Date) -> Double { date.timeIntervalSince(anchor) * Double(anchorBpm) / 60 }
@@ -270,7 +275,9 @@ struct MetronomeView: View {
         }
     }
 
-    /// The groove in one card: the meter, the subdivision and the sound (the beats themselves sit above Start).
+    /// The groove in one card: the meter and the subdivision in one strip, then the sound and the beat on the phone
+    /// (the beats themselves sit above Start). Quarters, eighths and triplets with the click or wood voice are free
+    /// (`FreeTier`); sixteenths and the beep wear a lock.
     private var meter: some View {
         VStack(alignment: .leading, spacing: 10) {
             Eyebrow("Meter")
@@ -280,19 +287,87 @@ struct MetronomeView: View {
                         .buttonStyle(ChipButtonStyle(selected: store.beats == value))
                         .id(value)
                 }
-            }
-            HStack(spacing: 8) {
-                ForEach(1...4, id: \.self) { value in
-                    Button { if commerce.isPro || value == 1 { store.setMetronome(subdivision: value) } else { store.presentPaywall("metronome.subdivision") } } label: {
-                        Image(systemName: ["music.note", "music.note.list", "triangle", "square.grid.2x2"][value - 1]).frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(ChipButtonStyle(selected: store.subdivision == value))
-                    .accessibilityLabel(Text(["Quarter notes", "Eighth notes", "Triplets", "Sixteenth notes"][value - 1]))
+                Rectangle().fill(Palette.line).frame(width: 1, height: 24)
+                    .padding(.horizontal, 4)
+                    .accessibilityHidden(true)
+                ForEach(Self.subdivisions, id: \.value) { option in
+                    subdivisionChip(option)
                 }
             }
             soundPicker.padding(.top, 4)
+            feelToggle
         }
         .stillCard()
+    }
+
+    /// The four subdivisions as the note values they click: ♩, ♫, a triplet and ♬.
+    private struct Subdivision {
+        let value: Int
+        let glyph: TimbreGlyph
+        let name: LocalizedStringKey
+    }
+
+    private static let subdivisions = [
+        Subdivision(value: 1, glyph: .quarterNotes, name: "Quarter notes"),
+        Subdivision(value: 2, glyph: .eighthNotes, name: "Eighth notes"),
+        Subdivision(value: 3, glyph: .tripletNotes, name: "Triplets"),
+        Subdivision(value: 4, glyph: .sixteenthNotes, name: "Sixteenth notes"),
+    ]
+
+    private func subdivisionChip(_ option: Subdivision) -> some View {
+        let selected = store.subdivision == option.value
+        let open = FreeTier.canUseSubdivision(option.value, pro: commerce.isPro)
+        return Button {
+            if open { store.setMetronome(subdivision: option.value) } else { store.presentPaywall("metronome.subdivision") }
+        } label: {
+            HStack(spacing: 3) {
+                Glyph(option.glyph, size: 22, tint: selected ? Palette.stage : (open ? Palette.ink : Palette.inkFaint))
+                if !open {
+                    Image(systemName: "lock.fill").font(.caption2).foregroundStyle(Palette.inkFaint)
+                        .accessibilityHidden(true)
+                }
+            }
+        }
+        .buttonStyle(ChipButtonStyle(selected: selected))
+        .accessibilityLabel(Text(option.name))
+        .accessibilityValue(open ? Text(verbatim: "") : Text("Timbre Pro"))
+        .accessibilityAddTraits(selected ? .isSelected : [])
+    }
+
+    /// The phone taps each click into the hand (`UserSettings.feelTheBeat`, also in Settings): an accent firmer.
+    private var feelToggle: some View {
+        Toggle(isOn: Binding(get: { store.settings.feelTheBeat }, set: { on in
+            store.updateSettings { $0.feelTheBeat = on }
+            if on { feelBeats() } else { feelTask?.cancel() }
+        })) {
+            Text("Feel the beat").font(.subheadline).foregroundStyle(Palette.ink)
+        }
+        .tint(Palette.mint)
+        .accessibilityIdentifier("metronome.feel")
+    }
+
+    /// While the click runs with Feel the beat on, a haptic tap lands on every sounding beat, read from the same
+    /// beat clock as the lights (an accent firmer, a silent beat none).
+    private func feelBeats() {
+        feelTask?.cancel()
+        guard store.settings.feelTheBeat, audio.metronomeRunning else { return }
+        feelTask = Task { @MainActor in
+            var last = Int.min
+            while !Task.isCancelled && audio.metronomeRunning {
+                let position = beatPosition(at: Date())
+                let whole = Int(floor(position))
+                if position >= 0 && whole != last {
+                    last = whole
+                    let count = max(1, store.beats)
+                    let beat = ((whole % count) + count) % count
+                    let levels = store.beatLevels
+                    let level = levels.indices.contains(beat) ? levels[beat] : 1
+                    if level > 0 { Haptics.shared.beat(accent: level == 2) }
+                }
+                let wait = (Double(whole) + 1 - position) * 60 / Double(max(1, anchorBpm))
+                try? await Task.sleep(for: .milliseconds(max(4, Int(wait * 1000) + 2)))
+            }
+        }
     }
 
     /// Click, wood or beep: part of the meter card, so the whole groove is set in one place. Its name and
@@ -312,25 +387,37 @@ struct MetronomeView: View {
     }
 
     private var soundLabel: some View {
-        HStack(spacing: 8) {
-            Eyebrow("Sound")
-            if !commerce.isPro { ProBadge() }
-        }
+        Eyebrow("Sound")
     }
 
+    /// Click and wood are free; the beep wears a lock on the free plan (`FreeTier`).
     private var soundControl: some View {
         SegmentedPill(options: MetronomeRenderer.Sound.allCases,
                       selection: Binding(get: { store.metronomeSound }, set: { value in
-                          if commerce.isPro { store.setMetronome(sound: value) } else { store.presentPaywall("metronome.sound") }
+                          if FreeTier.canUseMetronomeSound(value.rawValue, pro: commerce.isPro) {
+                              store.setMetronome(sound: value)
+                          } else {
+                              store.presentPaywall("metronome.sound")
+                          }
                       }),
                       identifier: { "metronome.sound.\($0.rawValue)" }) { sound in
+            soundName(sound)
+        }
+        .accessibilityLabel(Text("Sound"))
+    }
+
+    @ViewBuilder private func soundName(_ sound: MetronomeRenderer.Sound) -> some View {
+        let open = FreeTier.canUseMetronomeSound(sound.rawValue, pro: commerce.isPro)
+        HStack(spacing: 4) {
             switch sound {
             case .click: Text("Click")
             case .wood: Text("Wood")
             case .beep: Text("Beep")
             }
+            if !open {
+                Image(systemName: "lock.fill").font(.caption2).accessibilityLabel(Text("Timbre Pro"))
+            }
         }
-        .accessibilityLabel(Text("Sound"))
     }
 
     /// The speed trainer sits right under the tempo it drives, so it is never parked under the dock;
@@ -345,7 +432,7 @@ struct MetronomeView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 8) {
                         Text("Speed trainer").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
-                        if !commerce.isPro { ProBadge() }
+                        if !commerce.isPro { ProLock(size: 20) }
                     }
                     Text("+\(trainerStep) BPM every \(trainerEvery) bars up to \(trainerTarget) BPM").font(.caption).foregroundStyle(Palette.inkSoft)
                         .fixedSize(horizontal: false, vertical: true)

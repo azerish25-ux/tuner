@@ -253,6 +253,6 @@ struct NotationModePicker: View {
             Text(option.title).font(Typeface.label(12)).lineLimit(1).fixedSize()
         }
         .fixedSize()
-        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+        .cappedControl(Text(mode.title), cap: .xxLarge)
     }
 }

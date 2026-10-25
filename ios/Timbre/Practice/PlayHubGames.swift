@@ -1,7 +1,7 @@
 import SwiftUI
 import TimbreCore
 
-// The Play hub's ear games as live cards: each game idles in a small preview of itself (Pitch Sniper's scope,
+// The Practice hub's ear games as live cards: each game idles in a small preview of itself (Pitch Sniper's scope,
 // the ear trainer's interval staircase) beside its best score, its level and today's challenge with the XP it
 // pays, all read from saved progress. One timeline per card, paused off screen, still under Reduce Motion.
 // In each card's corner: the game's Game Center leaderboard (Services/GameCenter.swift) and, on Pitch Sniper, a
@@ -69,7 +69,7 @@ struct GameChallenge {
         quests.first { $0.kind == .earCorrect }
     }
 
-    /// The quests for the Play hub's "Today's quests" list: `quests` less the ones a game card already shows as
+    /// The quests for the Practice hub's "Today's quests" list: `quests` less the ones a game card already shows as
     /// today's challenge (with the quest's XP), so each task, and its reward, shows once. A second Bullseye quest on
     /// the same day has no card to ride on and stays in the list.
     static func listed(_ quests: [Quest]) -> [Quest] {
@@ -110,7 +110,7 @@ enum SniperRank {
 
 // MARK: - Card
 
-/// A game on the Play hub: its name, best score and level, and today's challenge with its XP on the left; the
+/// A game on the Practice hub: its name, best score and level, and today's challenge with its XP on the left; the
 /// game idling on the right, lit by the game's colour.
 struct PlayGameCard<Preview: View>: View {
     let title: LocalizedStringKey

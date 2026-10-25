@@ -17,6 +17,7 @@ struct IntonationView: View {
     /// above the Listen dock instead of under it.
     @State private var neckHeight: CGFloat = 140
     @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
+    @CurrentHand private var hand
 
     enum Step { case harmonic, fretted }
     private static let needed = 24
@@ -27,9 +28,9 @@ struct IntonationView: View {
         return store.courses.filter { seen.insert($0.anchorId ?? "\($0.index)").inserted }
     }
 
-    /// The same in the order the chips, the results and the check run: the string the neck draws on top first
-    /// (Settings › String order), so the row reads like the neck under it and the lessons' string rails.
-    private var rail: [Course] { stringOrder.thinnestOnTop ? Array(strings.reversed()) : strings }
+    /// The same in the order the chips, the results and the check run: lowest to highest, left to right, as the
+    /// tuner's string rail reads (right to left on a left-handed instrument, as its rail does).
+    private var rail: [Course] { hand.mirrorsUpright ? Array(strings.reversed()) : strings }
 
     var body: some View {
         ScrollView {
@@ -80,7 +81,7 @@ struct IntonationView: View {
                 let selected = string.index == course
                 Button { select(string.index) } label: {
                     VStack(spacing: 2) {
-                        Text(NoteReadout.split(store.courseLabel(string)).name).font(Typeface.display(18)).lineLimit(1).minimumScaleFactor(0.6)
+                        Text(NoteReadout.split(store.courseLabel(string)).name).font(Typeface.display(.headline)).lineLimit(1).minimumScaleFactor(0.6)
                         Image(systemName: done ? "checkmark" : "circle.dotted").font(.caption2.weight(.bold))
                     }
                     .foregroundStyle(selected ? Palette.stage : Palette.ink)
@@ -98,20 +99,21 @@ struct IntonationView: View {
     private var instruction: some View {
         let label = store.courseLabel(store.activeCourse)
         return HStack(alignment: .top, spacing: 14) {
-            IconOrb(symbol: step == .harmonic ? "hand.point.up.left" : "hand.raised.fingers.spread", tint: step == .harmonic ? Palette.flat : Palette.amber)
+            Glyph(step == .harmonic ? "hand.point.up.left" : "hand.raised.fingers.spread", size: Glyph.lead, tint: Palette.amber)
             VStack(alignment: .leading, spacing: 4) {
                 if step == .harmonic {
                     Eyebrow("Step 1 of 2")
-                    Text("Play the 12th-fret harmonic on \(label)").font(Typeface.display(26)).foregroundStyle(Palette.ink)
+                    Text("Play the 12th-fret harmonic on \(label)").font(Typeface.display(.title)).foregroundStyle(Palette.ink)
                         .fixedSize(horizontal: false, vertical: true)
                     Text("Touch the string lightly right above the 12th fret, pluck, and let it ring.").font(.subheadline).foregroundStyle(Palette.inkSoft)
                 } else {
                     Eyebrow("Step 2 of 2")
-                    Text("Now fret \(label) at the 12th fret").font(Typeface.display(26)).foregroundStyle(Palette.ink)
+                    Text("Now fret \(label) at the 12th fret").font(Typeface.display(.title)).foregroundStyle(Palette.ink)
                         .fixedSize(horizontal: false, vertical: true)
                     Text("Press just behind the fret with normal pressure and let it ring.").font(.subheadline).foregroundStyle(Palette.inkSoft)
                 }
             }
+            Spacer(minLength: 0)
         }
         .stillCard()
     }
@@ -126,6 +128,7 @@ struct IntonationView: View {
             guard let reference, let cents else { return nil }
             return reference * pow(2, cents / 1200)
         }()
+        let lie = hand.lying(stringOrder)
         return VStack(alignment: .leading, spacing: 12) {
             IntonationNeck(labels: strings.map { NoteReadout.split(store.courseLabel($0)).name },
                            selected: position,
@@ -133,7 +136,8 @@ struct IntonationView: View {
                            harmonicDone: reference != nil,
                            cents: cents,
                            fretted: store.instrument.familyId != "bowed_strings",
-                           thinnestOnTop: stringOrder.thinnestOnTop,
+                           thinnestOnTop: lie.order.thinnestOnTop,
+                           nutOnRight: lie.nutOnRight,
                            animate: !reduceMotion)
                 .frame(height: neckHeight)
                 .animation(Motion.settle, value: course)
@@ -144,7 +148,7 @@ struct IntonationView: View {
                        value: frettedHz.map { String(format: "%.1f Hz", $0) })
                 Spacer(minLength: 0)
                 if let cents {
-                    Text(String(format: "%+.1f¢", cents)).font(Typeface.number(15))
+                    Text(String(format: "%+.1f¢", cents)).font(Typeface.number(.body))
                         .foregroundStyle(abs(cents) <= 3 ? Palette.success : Palette.amber)
                         .transition(.opacity)
                 }
@@ -168,7 +172,11 @@ struct IntonationView: View {
             VStack(alignment: .leading, spacing: 1) {
                 Text(harmonic ? "Harmonic" : "Fretted").font(.caption.weight(.semibold))
                     .foregroundStyle(active ? Palette.ink : Palette.inkSoft)
-                Text(value ?? "—").font(Typeface.number(11)).foregroundStyle(Palette.inkFaint)
+                if let value {
+                    Text(verbatim: value).font(Typeface.number(.caption)).foregroundStyle(Palette.inkFaint)
+                } else {
+                    Text("Not yet").font(.caption2).foregroundStyle(Palette.inkFaint)
+                }
             }
         }
         .animation(Motion.quick, value: active)
@@ -188,7 +196,11 @@ struct IntonationView: View {
             .frame(width: 60, height: 60)
             .animation(Motion.quick, value: samples.count)
             VStack(alignment: .leading, spacing: 4) {
-                Text(reading.frequency.map { String(format: "%.2f Hz", $0) } ?? "—").font(Typeface.number(20)).foregroundStyle(Palette.ink)
+                if let hz = reading.frequency {
+                    Text(verbatim: String(format: "%.2f Hz", hz)).font(Typeface.number(.title3)).foregroundStyle(Palette.ink)
+                } else {
+                    Text("Not yet").font(Typeface.number(.title3)).foregroundStyle(Palette.inkFaint)
+                }
                 // The microphone's status, set as every practice tool sets it.
                 Text(audio.running ? (reading.stable ? String(localized: "Hold it…") : String(localized: "Listening…")) : String(localized: "Tap Listen to start"))
                     .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft)
@@ -201,17 +213,17 @@ struct IntonationView: View {
 
     private var results: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Eyebrow("Results")
+            CardTitle("Results")
             ForEach(rail.filter { offsets[$0.index] != nil }) { string in
                 let cents = offsets[string.index] ?? 0
                 HStack(spacing: 12) {
-                    Text(NoteReadout.split(store.courseLabel(string)).name).font(Typeface.display(24)).foregroundStyle(Palette.ink).frame(width: 34)
+                    Text(NoteReadout.split(store.courseLabel(string)).name).font(Typeface.display(.title3)).foregroundStyle(Palette.ink).frame(width: 34)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(verdict(cents)).font(.subheadline.weight(.semibold)).foregroundStyle(abs(cents) <= 3 ? Palette.success : Palette.pitch(cents, locked: false))
                         Text(advice(cents)).font(.caption).foregroundStyle(Palette.inkSoft)
                     }
                     Spacer()
-                    Text(String(format: "%+.1f¢", cents)).font(Typeface.number(15)).foregroundStyle(Palette.ink)
+                    Text(String(format: "%+.1f¢", cents)).font(Typeface.number(.body)).foregroundStyle(Palette.ink)
                 }
                 .accessibilityElement(children: .combine)
             }
@@ -324,7 +336,8 @@ private struct NeckLayout {
 /// on top as in tab, or the lowest string on top as you look down at it while playing), each string
 /// named at the nut. On the string being checked: the harmonic point (a ring over the 12th fret) and the
 /// fretted note (a dot just behind it), the one being measured in amber with a breathing ring; once both
-/// are in, an arrow at the saddle shows which way it should move (a check when it's within 3 cents).
+/// are in, an arrow at the saddle shows which way it should move (a check when it's within 3 cents). For a
+/// left-handed player the nut is on the right and the saddle on the left (`nutOnRight`), the words reading as usual.
 private struct IntonationNeck: View {
     let labels: [String]
     let selected: Int
@@ -335,64 +348,72 @@ private struct IntonationNeck: View {
     let fretted: Bool
     /// String 1 (the last course) on top.
     let thinnestOnTop: Bool
+    /// The nut on the right (a left-handed player's neck).
+    var nutOnRight = false
     let animate: Bool
 
-    /// The neck's names and numbers (the string names, "12"): 11 pt like `.caption2` and growing with it, held at
+    /// The neck's names and numbers (the string names, "12"): the caption step, growing with it, held at
     /// the xxLarge size (`body`) so the drawing keeps its layout.
-    private static let label = Typeface.label(11, relativeTo: .caption2)
+    private static var label: Font { Typeface.label(.caption) }
 
     var body: some View {
         GeometryReader { geometry in
             let layout = NeckLayout(size: geometry.size, strings: labels.count, reversed: thinnestOnTop)
+            let mirror = CanvasMirror(on: nutOnRight, width: geometry.size.width)
             ZStack(alignment: .topLeading) {
                 Canvas { context, size in
-                    draw(&context, layout: NeckLayout(size: size, strings: labels.count, reversed: thinnestOnTop))
+                    draw(&context, layout: NeckLayout(size: size, strings: labels.count, reversed: thinnestOnTop),
+                         mirror: CanvasMirror(on: nutOnRight, width: size.width))
                 }
                 NeckBreath(animate: animate && cents == nil)
-                    .position(measuringHarmonic ? layout.harmonicPoint(selected) : layout.frettedPoint(selected))
+                    .position(mirror.point(measuringHarmonic ? layout.harmonicPoint(selected) : layout.frettedPoint(selected)))
             }
         }
         .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+        .accessibilityIgnoresInvertColors()
         .accessibilityHidden(true)
     }
 
-    private func draw(_ context: inout GraphicsContext, layout: NeckLayout) {
+    /// Draws the neck nut-left; `mirror` turns the shapes over for a nut on the right and sets the words at the
+    /// mirrored points.
+    private func draw(_ context: inout GraphicsContext, layout: NeckLayout, mirror: CanvasMirror) {
+        let shapes = mirror.shapes(context)
         let count = labels.count
         let edgeTop = layout.top - 10
         let edgeBottom = layout.bottom + 10
         // Fingerboard (running on past the second break) and bridge.
         let boardEnd = layout.breakAfter + 10
-        context.fill(Path(roundedRect: CGRect(x: layout.nut, y: edgeTop, width: boardEnd - layout.nut, height: edgeBottom - edgeTop), cornerRadius: 5),
+        shapes.fill(Path(roundedRect: CGRect(x: layout.nut, y: edgeTop, width: boardEnd - layout.nut, height: edgeBottom - edgeTop), cornerRadius: 5),
                      with: .linearGradient(Gradient(colors: [Palette.surface, Palette.stageDeep]), startPoint: CGPoint(x: 0, y: edgeTop), endPoint: CGPoint(x: 0, y: edgeBottom)))
         let bridge = CGRect(x: layout.saddle - 8, y: edgeTop - 2, width: 18, height: edgeBottom - edgeTop + 4)
-        context.fill(Path(roundedRect: bridge, cornerRadius: 4), with: .color(Palette.surface))
-        context.stroke(Path(roundedRect: bridge, cornerRadius: 4), with: .color(Palette.line), lineWidth: 1)
+        shapes.fill(Path(roundedRect: bridge, cornerRadius: 4), with: .color(Palette.surface))
+        shapes.stroke(Path(roundedRect: bridge, cornerRadius: 4), with: .color(Palette.line), lineWidth: 1)
         var saddleLine = Path()
         saddleLine.move(to: CGPoint(x: layout.saddle, y: edgeTop + 1))
         saddleLine.addLine(to: CGPoint(x: layout.saddle, y: edgeBottom - 1))
-        context.stroke(saddleLine, with: .color(Palette.ink.opacity(0.7)), style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
+        shapes.stroke(saddleLine, with: .color(Palette.ink.opacity(0.7)), style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
         if fretted {
             for n in 10...15 where n != 12 {
                 var fret = Path()
                 fret.move(to: CGPoint(x: layout.fret(n), y: edgeTop))
                 fret.addLine(to: CGPoint(x: layout.fret(n), y: edgeBottom))
-                context.stroke(fret, with: .color(Palette.inkFaint.opacity(0.36)), lineWidth: 1.4)
+                shapes.stroke(fret, with: .color(Palette.inkFaint.opacity(0.36)), lineWidth: 1.4)
             }
             let inlay = CGPoint(x: (layout.fret(14) + layout.fret(15)) / 2, y: (layout.top + layout.bottom) / 2)
-            context.fill(Path(ellipseIn: CGRect(x: inlay.x - 3, y: inlay.y - 3, width: 6, height: 6)), with: .color(Palette.inkFaint.opacity(0.28)))
+            shapes.fill(Path(ellipseIn: CGRect(x: inlay.x - 3, y: inlay.y - 3, width: 6, height: 6)), with: .color(Palette.inkFaint.opacity(0.28)))
         }
         // The 12th fret (or octave point): the midpoint of the string.
         let twelve = layout.fret(12)
         var octave = Path()
         octave.move(to: CGPoint(x: twelve, y: edgeTop - 3))
         octave.addLine(to: CGPoint(x: twelve, y: edgeBottom + 3))
-        context.stroke(octave, with: .color(Palette.ink.opacity(fretted ? 0.75 : 0.4)),
+        shapes.stroke(octave, with: .color(Palette.ink.opacity(fretted ? 0.75 : 0.4)),
                        style: StrokeStyle(lineWidth: fretted ? 2.2 : 1.2, lineCap: .round, dash: fretted ? [] : [3, 3]))
-        context.draw(Text(verbatim: "12").font(Self.label).foregroundStyle(Palette.inkSoft), at: CGPoint(x: twelve, y: edgeTop - 12))
+        context.draw(Text(verbatim: "12").font(Self.label).foregroundStyle(Palette.inkSoft), at: mirror.point(CGPoint(x: twelve, y: edgeTop - 12)))
         // A word every language translates: the system face, at `.caption2` like the names.
-        context.draw(Text("Saddle").font(.caption2.weight(.semibold)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: layout.saddle, y: edgeBottom + 13))
+        context.draw(Text("Saddle").font(.caption2.weight(.semibold)).foregroundStyle(Palette.inkSoft), at: mirror.point(CGPoint(x: layout.saddle, y: edgeBottom + 13)))
         // Nut.
-        context.fill(Path(roundedRect: CGRect(x: layout.nut - 3, y: edgeTop - 1, width: 5, height: edgeBottom - edgeTop + 2), cornerRadius: 1.5),
+        shapes.fill(Path(roundedRect: CGRect(x: layout.nut - 3, y: edgeTop - 1, width: 5, height: edgeBottom - edgeTop + 2), cornerRadius: 1.5),
                      with: .color(Palette.ink.opacity(0.82)))
         // Strings, thick to thin, the one being checked lit; every string named while the rows have room for the
         // names at the current text size, else just the one being checked.
@@ -405,14 +426,14 @@ private struct IntonationNeck: View {
             line.move(to: CGPoint(x: layout.nut, y: y))
             line.addLine(to: CGPoint(x: layout.saddle, y: y))
             if i == selected {
-                context.stroke(line, with: .color(Palette.mint.opacity(0.18)), lineWidth: thickness + 6)
-                context.stroke(line, with: .color(Palette.mint), lineWidth: thickness)
+                shapes.stroke(line, with: .color(Palette.mint.opacity(0.18)), lineWidth: thickness + 6)
+                shapes.stroke(line, with: .color(Palette.mint), lineWidth: thickness)
             } else {
-                context.stroke(line, with: .color(Palette.inkSoft.opacity(0.32)), lineWidth: thickness)
+                shapes.stroke(line, with: .color(Palette.inkSoft.opacity(0.32)), lineWidth: thickness)
             }
             if named || i == selected {
                 context.draw(Text(verbatim: labels[i]).font(Self.label).foregroundStyle(i == selected ? Palette.ink : Palette.inkSoft),
-                             at: CGPoint(x: layout.nut - 9, y: y), anchor: .trailing)
+                             at: mirror.point(CGPoint(x: layout.nut - 9, y: y)), anchor: mirror.anchor(.trailing))
             }
         }
         // Breaks either side of the enlarged stretch.
@@ -423,17 +444,17 @@ private struct IntonationNeck: View {
             var band = Path()
             band.addLines([a, b, c, d])
             band.closeSubpath()
-            context.fill(band, with: .color(Palette.stageRaised))
+            shapes.fill(band, with: .color(Palette.stageRaised))
             var edges = Path()
             edges.move(to: a); edges.addLine(to: d)
             edges.move(to: b); edges.addLine(to: c)
-            context.stroke(edges, with: .color(Palette.inkFaint.opacity(0.5)), lineWidth: 1)
+            shapes.stroke(edges, with: .color(Palette.inkFaint.opacity(0.5)), lineWidth: 1)
         }
-        drawMarkers(&context, layout: layout)
+        drawMarkers(shapes, layout: layout)
     }
 
     /// The two notes being compared on the lit string, and the saddle's verdict.
-    private func drawMarkers(_ context: inout GraphicsContext, layout: NeckLayout) {
+    private func drawMarkers(_ context: GraphicsContext, layout: NeckLayout) {
         guard labels.indices.contains(selected) else { return }
         let ring = layout.harmonicPoint(selected)
         let dot = layout.frettedPoint(selected)

@@ -96,10 +96,10 @@ struct FirstChordStep: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             Button { finish(played: false) } label: {
-                Text("Skip").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft)
-                    .padding(.horizontal, 8).tapTarget()
+                Text("Skip").font(.subheadline.weight(.semibold))
+                    .padding(.horizontal, 8)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(TextLinkStyle(tint: Palette.inkSoft))
             .opacity(played ? 0 : 1)
             .disabled(played)
             .accessibilityIdentifier("onboarding.firstchord.skip")

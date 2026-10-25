@@ -210,11 +210,11 @@ struct LessonPlayer: View {
             HStack(spacing: 6) {
                 Image(systemName: "repeat").font(.system(size: 11, weight: .bold)).foregroundStyle(tint)
                 Text(verbatim: lesson.title.localized)
-                    .font(Typeface.label(14)).foregroundStyle(Palette.ink)
+                    .font(Typeface.label(.footnote)).foregroundStyle(Palette.ink)
                     .lineLimit(1)
             }
             (bars + Text(verbatim: " · \(Int((part.loop.speed * 100).rounded()))% · \(Int(part.plan.bpm.rounded())) BPM"))
-                .font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                .font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -385,7 +385,7 @@ struct LessonHeader: View {
         VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .firstTextBaseline, spacing: 10) {
                 Text(verbatim: title)
-                    .font(Typeface.label(14))
+                    .font(Typeface.label(.footnote))
                     .foregroundStyle(Palette.ink)
                     .lineLimit(1)
                 Spacer(minLength: 0)
@@ -407,14 +407,14 @@ struct LessonHeader: View {
         if tuningUp {
             Label("Tune up", systemImage: "tuningfork")
                 .labelStyle(.titleAndIcon)
-                .font(Typeface.label(12))
+                .font(Typeface.label(.caption))
                 .foregroundStyle(accent)
                 .lineLimit(1)
                 .fixedSize()
                 .transition(.opacity)
         } else {
             Text("Step \(shown) of \(steps)")
-                .font(Typeface.number(12))
+                .font(Typeface.number(.caption))
                 .foregroundStyle(Palette.inkSoft)
                 .lineLimit(1)
                 .fixedSize()
@@ -591,10 +591,11 @@ private struct LessonControlKeys: ViewModifier {
     }
 }
 
-/// The big bottom button every step ends with: the app's one primary button (`PrimaryButtonStyle`) in the step's
-/// accent, disabled looking disabled.
+/// The big bottom button every step ends with: the app's one primary button (`PrimaryButtonStyle`, mint whatever the
+/// course's colour), disabled looking disabled. It answers the space bar and → too (`LessonControl.primary`).
 struct StepButton: View {
     let title: LocalizedStringKey
+    /// The step's accent. A primary button is always mint; kept so every step can hand its colours on the same way.
     var accent: Color = Palette.mint
     var enabled = true
     /// Off inside a `LessonActionBar`, which keeps the margins for the whole row.
@@ -602,7 +603,7 @@ struct StepButton: View {
     let action: () -> Void
     var body: some View {
         Button(action: action) { Text(title) }
-            .buttonStyle(PrimaryButtonStyle(accent: accent))
+            .buttonStyle(PrimaryButtonStyle())
             .disabled(!enabled)
             .lessonControl(.primary, enabled: enabled, perform: action)
             .padding(.horizontal, inset ? Metrics.gutter : 0).padding(.bottom, inset ? 12 : 0)
@@ -835,7 +836,7 @@ struct ChoiceStep: View {
                 }
                 .frame(height: rings)
                 VStack(spacing: 2) {
-                    Text("Hear it").font(Typeface.label(17)).foregroundStyle(Palette.ink)
+                    Text("Hear it").font(Typeface.label(.headline)).foregroundStyle(Palette.ink)
                     Text("Tap to play again").font(.subheadline).foregroundStyle(Palette.inkSoft)
                 }
             }
@@ -861,7 +862,7 @@ struct ChoiceStep: View {
         } label: {
             HStack(spacing: 12) {
                 if compact { Spacer(minLength: 0) }
-                Text(option.localized).font(compact ? Typeface.display(26) : .body.weight(.semibold)).foregroundStyle(Palette.ink).multilineTextAlignment(.leading)
+                Text(option.localized).font(compact ? Typeface.display(.title) : .body.weight(.semibold)).foregroundStyle(Palette.ink).multilineTextAlignment(.leading)
                 Spacer(minLength: compact ? 0 : 8)
                 if reveal && index == answer { Image(systemName: "checkmark.circle.fill").foregroundStyle(accent) }
                 else if reveal && isPicked { Image(systemName: "xmark.circle.fill").foregroundStyle(Palette.danger) }
@@ -886,7 +887,7 @@ struct ChoiceStep: View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: correct ? "checkmark.seal.fill" : "lightbulb.fill").font(.title2).foregroundStyle(correct ? accent : Palette.amber)
             VStack(alignment: .leading, spacing: 4) {
-                Text(correct ? LocalizedStringKey("Nice — that’s right.") : LocalizedStringKey("Not quite.")).font(Typeface.label(17)).foregroundStyle(Palette.ink)
+                Text(correct ? LocalizedStringKey("Nice — that’s right.") : LocalizedStringKey("Not quite.")).font(Typeface.label(.headline)).foregroundStyle(Palette.ink)
                 if let why { Text(why.localized).font(.subheadline).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true) }
                 else if !correct { Text("The answer is \(options[answer].localized).").font(.subheadline).foregroundStyle(Palette.inkSoft) }
             }

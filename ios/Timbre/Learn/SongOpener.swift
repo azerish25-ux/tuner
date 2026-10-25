@@ -449,7 +449,7 @@ struct SongOpener: View {
     private var actionBar: some View {
         LessonActionBar {
             previewButton
-            StepButton(title: "Start", accent: accent, inset: false) {
+            StepButton(title: "Start", inset: false) {
                 stopPlayback()
                 Haptics.shared.selection()
                 start()

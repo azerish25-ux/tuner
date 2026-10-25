@@ -8,7 +8,7 @@ import XCTest
 ///   full-tune celebration plays out; "Show me" fingers E minor on the 3D guitar; Kite Weather on the highway at ×4 with
 ///   the band, cut on the song's own downbeats; the song's stars; the Songs tab, under 3 s. preview.py adds the end card.
 /// - `testAppPreviewViolin`, the violin page's preview (a Custom Product Page): the same tuner moment on the 3D violin,
-///   then a violin play-along and its stars, and Songs.
+///   then Jingle Bells from the violin songbook on the runway with the band, its stars, and Songs.
 ///
 /// Every scene is a fresh launch into a store scene (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift), so each moment
 /// comes from the app's own code paths, in the same state on every run. Each scene marks only the stretch worth showing:
@@ -45,14 +45,18 @@ final class AppPreviewUITests: XCTestCase {
         let hookBar: Int
         let hookBars: Int
         let showMe: Bool
+        /// The song's tempo and last beat, for when the app's own note of the take's clock is missing.
+        let bpm: Double
+        let endBeat: Double
 
         /// Kite Weather from bar 47: the last chorus's "climb, let it go", then the hook ("It's kite weather, kite
         /// weather", bars 48–49) at ×4, and the song's end nine bars later.
         static let guitar = Cut(name: "guitar", instrument: nil, lesson: "orig-kite-weather", performs: true, bar: 47,
-                                hookBar: 48, hookBars: 2, showMe: true)
-        /// The violin's open-string checkup (free; the violin's songs need Pro, which the tour has no way to buy).
-        static let violin = Cut(name: "violin", instrument: "violin.standard.4", lesson: "vln-1-6", performs: false, bar: 0,
-                                hookBar: 0, hookBars: 0, showMe: false)
+                                hookBar: 48, hookBars: 2, showMe: true, bpm: 88, endBeat: 224)
+        /// Jingle Bells from the violin songbook (free): its last chorus ("Jingle bells, jingle bells", bars 42–43) and
+        /// the song's end ten bars later.
+        static let violin = Cut(name: "violin", instrument: "violin.standard.4", lesson: "vln-sb-song-jingle-bells", performs: true,
+                                bar: 41, hookBar: 42, hookBars: 2, showMe: false, bpm: 80, endBeat: 208)
     }
 
     private var app: XCUIApplication!
@@ -224,8 +228,8 @@ final class AppPreviewUITests: XCTestCase {
         let shown = Date()
         // Hands off from here: a query stalls the main thread, and a note heard late would break the run.
         let clock = takeClock(after: shown.addingTimeInterval(-15), until: shown.addingTimeInterval(12))
-            ?? TakeClock(origin: shown.addingTimeInterval(3.2), beat: 60.0 / 88.0, meter: 4,
-                         firstBeat: Double((cut.bar - 1) * 4), endBeat: 224)
+            ?? TakeClock(origin: shown.addingTimeInterval(3.2), beat: 60.0 / cut.bpm, meter: 4,
+                         firstBeat: Double((cut.bar - 1) * 4), endBeat: cut.endBeat)
         let hookStart = clock.time(ofBeat: Double(cut.hookBar * clock.meter))
         let hookEnd = clock.time(ofBeat: Double((cut.hookBar + cut.hookBars) * clock.meter))
         mark("PREVIEW-BEAT \(stamp(hookStart)) \(String(format: "%.5f", clock.beat)) \(clock.meter)")

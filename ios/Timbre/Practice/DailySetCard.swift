@@ -71,7 +71,7 @@ private func minutesText(_ minutes: Int) -> Text {
 // MARK: - Ring
 
 /// Today as a ring: one arc per activity, as long as its minutes, filling in once it is done. The same ring
-/// sits on the Play hub, on Learn and around the streak flame. With Differentiate Without Color an open
+/// sits on the Practice hub, on Learn and around the streak flame. With Differentiate Without Color an open
 /// activity is a dotted track and a done one carries a check, so the two differ by shape as well as by light.
 /// With `open`, each arc is a button for its activity (the card's rows carry the same actions for VoiceOver).
 struct DailySetRing: View {
@@ -169,9 +169,9 @@ private struct RingSector: Shape {
     }
 }
 
-// MARK: - Play hub card
+// MARK: - Practice hub card
 
-/// Today at the top of the Play hub: the day's one session (the next lesson, then two tool reps) as arcs of a
+/// Today at the top of the Practice hub: the day's one session (the next lesson, then two tool reps) as arcs of a
 /// ring and as rows beside it, each opening its lesson or tool and ticking off as it is done. Each fact shows
 /// once: how many are done and the minutes left sit in the ring, the set's bonus in the header, and a daily
 /// quest for the same practice rides on its row as an XP side goal. Finishing the set pays the bonus (the toast
@@ -356,7 +356,7 @@ struct DailySetCard: View {
                 if xpBesideName, let quest { xpTag(quest) }
                 Spacer(minLength: 4)
                 if locked {
-                    ProBadge()
+                    ProLock(size: 22)
                 } else {
                     minutesText(activity.minutes).font(Typeface.number(13)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
                         .lineLimit(1).fixedSize()
@@ -460,7 +460,7 @@ private struct QuestPillFill: View {
 // MARK: - Compact card (Learn)
 
 /// Today in one line, for the Learn tab's header area: the small ring with how many are done, "Today", and
-/// what is left. A tap opens the lesson when that is next, otherwise the Play hub (or `action`).
+/// what is left. A tap opens the lesson when that is next, otherwise the Practice hub (or `action`).
 struct DailySetCompactCard: View {
     @EnvironmentObject private var store: AppStore
     var action: (() -> Void)? = nil

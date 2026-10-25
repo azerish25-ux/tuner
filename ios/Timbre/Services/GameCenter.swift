@@ -84,7 +84,7 @@ enum FriendsAccess {
 /// - friends: with the player's yes, Progress's week card says where their streak stands among friends;
 /// - the app's badges as achievements.
 ///
-/// It never stands in the way: it signs in quietly once onboarding is over and the Play tab's games or Progress's week
+/// It never stands in the way: it signs in quietly once onboarding is over and the Practice tab's games or Progress's week
 /// card first show (or a challenge link or Games app activity opens), never shows GameKit's sign-in screen, and when
 /// nobody is signed in, Game Center is restricted or App Store Connect has no Game Center set up yet, it simply stays
 /// off: the chips stay hidden, challenges fall back to links and nothing is reported. Scores and badges earned before it

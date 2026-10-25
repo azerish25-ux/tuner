@@ -95,7 +95,7 @@ struct WeekRecapCard: View {
             poster = ShareCardRenderer.image(WeekShareCard(recap: recap, friends: friends), scale: displayScale, locale: locale,
                                              direction: layoutDirection)
         }
-        // The streak's place among friends is read here (Game Center signs in quietly, as on the Play tab's games).
+        // The streak's place among friends is read here (Game Center signs in quietly, as on the Practice tab's games).
         .task {
             GameCenter.shared.activate(store)
             GameCenter.shared.refreshFriends()

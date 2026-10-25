@@ -274,7 +274,7 @@ struct AlongStep: View {
     /// The tempo level at a glance: 100 % in the course colour, slower in amber.
     private var tempoBadge: some View {
         Text("\(ladder.percent)%")
-            .font(Typeface.number(12))
+            .font(Typeface.number(.caption))
             .foregroundStyle(rungTint(ladder.rung))
             .contentTransition(.numericText(value: Double(ladder.percent)))
             .padding(.horizontal, 8).padding(.vertical, 3)
@@ -291,7 +291,7 @@ struct AlongStep: View {
         Button { exitLoop() } label: {
             HStack(spacing: 5) {
                 Image(systemName: "repeat").font(.system(size: 11, weight: .bold))
-                Text("Bar \(loop.bar + 1)").font(Typeface.label(12))
+                Text("Bar \(loop.bar + 1)").font(Typeface.label(.caption))
                 Image(systemName: "xmark").font(.system(size: 9, weight: .heavy)).opacity(0.7)
             }
             .foregroundStyle(Palette.amber)
@@ -313,20 +313,16 @@ struct AlongStep: View {
     /// to the whole tune.
     private func loopPanel(_ loop: BarLoop) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: "repeat")
-                .font(.system(size: 17, weight: .bold))
-                .foregroundStyle(Palette.amber)
-                .frame(width: 44, height: 44)
-                .background(Circle().fill(Palette.amber.opacity(0.14)))
+            Glyph("repeat", size: Glyph.lead, tint: Palette.amber)
             VStack(alignment: .leading, spacing: 2) {
-                Text("Bar \(loop.bar + 1)").font(Typeface.label(16)).foregroundStyle(Palette.ink)
+                Text("Bar \(loop.bar + 1)").font(Typeface.label(.body)).foregroundStyle(Palette.ink)
                 Text("\(Int(loop.bpm)) BPM · \(BarLoop.passes) bars").font(.caption).foregroundStyle(Palette.inkSoft)
             }
             .lineLimit(1)
             Spacer(minLength: 8)
             if phase == .ready {
                 Button { exitLoop() } label: {
-                    Text("Done").font(Typeface.label(14)).foregroundStyle(accent)
+                    Text("Done").font(Typeface.label(.body)).foregroundStyle(accent)
                         .padding(.horizontal, 14)
                         .frame(minHeight: 44)
                         .background(Capsule().fill(accent.opacity(0.12)))
@@ -394,10 +390,10 @@ struct AlongStep: View {
             VStack(alignment: .leading, spacing: 10) {
                 HStack(spacing: 10) {
                     Text("Next").font(Typeface.label(13)).foregroundStyle(Palette.inkFaint)
-                    Text(NoteName.name(note.midi)).font(Typeface.display(22)).foregroundStyle(Palette.ink)
+                    Text(NoteName.name(note.midi)).font(Typeface.display(.title3)).foregroundStyle(Palette.ink)
                     if fretted, let at = note.at {
                         Text(at.fret == 0 ? LocalizedStringKey("String \(at.string), open") : LocalizedStringKey("String \(at.string), fret \(at.fret)"))
-                            .font(Typeface.label(14)).foregroundStyle(nextTint(note))
+                            .font(Typeface.label(.body)).foregroundStyle(nextTint(note))
                             .padding(.horizontal, 12).padding(.vertical, 6)
                             .background(Capsule().fill(nextTint(note).opacity(0.12)))
                         if at.fret > 0, let finger = at.finger, finger > 0 { fingerTag(finger, tint: nextTint(note)) }
@@ -417,7 +413,7 @@ struct AlongStep: View {
     /// The finger to fret the next note with: a white tag with its number, as pinned to the gem's corner.
     private func fingerTag(_ finger: Int, tint: Color) -> some View {
         Text(verbatim: "\(finger)")
-            .font(Typeface.number(14, relativeTo: .caption))
+            .font(Typeface.number(.footnote))
             .foregroundStyle(tint.mix(with: .black, by: 0.62))
             .frame(width: 26, height: 26)
             .background(Circle().fill(Color.white.opacity(0.95)))
@@ -474,9 +470,9 @@ struct AlongStep: View {
         VStack(spacing: compact ? 8 : 10) {
             VStack(spacing: compact ? 8 : 10) {
                 if !compact {
-                    Text(verdict).font(Typeface.label(14)).foregroundStyle(scoreTint)
+                    Text(verdict).font(Typeface.label(.body)).foregroundStyle(scoreTint)
                 }
-                Text("\(percent)%").font(Typeface.note(compact ? 46 : 56)).foregroundStyle(scoreTint)
+                Text("\(percent)%").font(Typeface.note(compact ? .display : .hero)).foregroundStyle(scoreTint)
                     .minimumScaleFactor(0.7)
             }
             // Where VoiceOver lands when a take ends: the whole result in one sentence.
@@ -501,7 +497,7 @@ struct AlongStep: View {
             if timingIsOff {
                 // Consistently early or late usually means the headphones or speaker lag: measure it.
                 Button { calibrating = true } label: { Label("Calibrate timing", systemImage: "metronome") }
-                    .font(Typeface.label(14)).foregroundStyle(accent)
+                    .font(Typeface.label(.body)).foregroundStyle(accent)
                     .accessibilityIdentifier("along.calibrate.hint")
             } else if session.judge.bestCombo >= 2 {
                 Text("Best combo \(session.judge.bestCombo)").font(.footnote).foregroundStyle(Palette.inkSoft)
@@ -509,7 +505,7 @@ struct AlongStep: View {
             if percent >= LessonRun.greatTake && loop == nil { takeShare.padding(.top, 2) }
             if loop == nil && session.accuracy < 0.8 && ladder.rung > 0 {
                 Button { ladder.select(0); reset() } label: { Label("Try it at \(Int(ladder.tempo(at: 0))) BPM", systemImage: "tortoise.fill") }
-                    .font(Typeface.label(14)).foregroundStyle(accent).padding(.top, 2)
+                    .font(Typeface.label(.body)).foregroundStyle(accent).padding(.top, 2)
                     .lessonControl(.slower) { ladder.select(0); reset() }
                     .accessibilityIdentifier("along.slower")
             }
@@ -570,7 +566,7 @@ struct AlongStep: View {
         case .ready:
             VStack(spacing: 12) {
                 ladderOrLoop
-                StepButton(title: "Start", accent: accent) { start() }
+                StepButton(title: "Start") { start() }
             }
         case .playing:
             VStack(spacing: 12) {
@@ -579,7 +575,7 @@ struct AlongStep: View {
                     .hidden()
                     .accessibilityHidden(true)
                     .overlay { TakeRibbon(count: take.count, grades: session.grades, current: session.nextIndex, accent: accent) }
-                StepButton(title: "Listening…", accent: accent, enabled: false) {}
+                StepButton(title: "Listening…", enabled: false) {}
             }
         case .done:
             VStack(spacing: 12) {
@@ -621,11 +617,11 @@ struct AlongStep: View {
         }
     }
 
-    /// The results' pair: the one to do next as the primary button in the course colour, the other as the secondary.
+    /// The results' pair: the one to do next as the primary button, the other as the secondary.
     @ViewBuilder private func doneButton(_ title: LocalizedStringKey, primary: Bool, action: @escaping () -> Void) -> some View {
         if primary {
             Button(action: action) { Text(title) }
-                .buttonStyle(PrimaryButtonStyle(accent: accent))
+                .buttonStyle(PrimaryButtonStyle())
         } else {
             Button(action: action) { Text(title) }
                 .buttonStyle(SecondaryButtonStyle())
@@ -660,7 +656,7 @@ struct AlongStep: View {
         } label: {
             VStack(spacing: 1) {
                 Text("\(Int((TempoLadder.rungs[rung] * 100).rounded()))%").font(Typeface.label(15))
-                Text(Int(ladder.tempo(at: rung)), format: .number).font(Typeface.number(11)).opacity(0.75)
+                Text(Int(ladder.tempo(at: rung)), format: .number).font(Typeface.number(.caption)).opacity(0.75)
             }
             .foregroundStyle(selected ? Palette.onAccent : Palette.ink)
             .frame(maxWidth: .infinity, minHeight: 48)
@@ -1266,7 +1262,7 @@ struct HighwayRunway: View {
 
     /// The strings' colours, string 1 first: sky, blue, pink, lime, violet, rose. None is a verdict's (mint, amber and
     /// coral say how a note went), and neighbouring strings stay far apart under every colour-vision deficiency.
-    private static let palette: [Color] = [Palette.sky, Color(hex: 0x6E8BFF), Color(hex: 0xFF7AD0), Color(hex: 0xC8F25A),
+    private static let palette: [Color] = [Palette.sky, Color(hex: 0x6E8BFF), Color(hex: 0xFF7AD0), Palette.lime,
                                            Palette.violet, Color(hex: 0xFFA3E0)]
     static func color(string: Int, of count: Int) -> Color {
         let index = count <= 1 ? 0 : Int((Double(string - 1) / Double(count - 1) * Double(palette.count - 1)).rounded())
@@ -2017,7 +2013,7 @@ struct ComboBadge: View {
                 Circle().trim(from: 0, to: max(0.001, Self.progress(combo)))
                     .stroke(tint, style: StrokeStyle(lineWidth: 3, lineCap: .round))
                     .rotationEffect(.degrees(-90))
-                Text(combo, format: .number).font(Typeface.number(10)).foregroundStyle(Palette.ink)
+                Text(combo, format: .number).font(Typeface.number(.caption)).foregroundStyle(Palette.ink)
                     .lineLimit(1).minimumScaleFactor(0.6)
             }
             .frame(width: 26, height: 26)
@@ -2025,7 +2021,7 @@ struct ComboBadge: View {
             HStack(spacing: 2) {
                 Image(systemName: "flame.fill").font(.system(size: 13, weight: .bold))
                     .symbolEffect(.bounce, value: calm ? 0 : level)
-                Text("×\(level)").font(Typeface.number(18))
+                Text("×\(level)").font(Typeface.number(.headline))
                     .contentTransition(.numericText(value: Double(level)))
             }
             .foregroundStyle(tint)
@@ -2078,8 +2074,8 @@ struct UpNextRail: View {
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous)
         return VStack(spacing: 0) {
             if fretted, let at = note.at {
-                Text(at.fret, format: .number).font(Typeface.number(16)).foregroundStyle(Palette.ink)
-                Text(NoteName.pitchClass(note.midi)).font(Typeface.label(11)).foregroundStyle(tint)
+                Text(at.fret, format: .number).font(Typeface.number(.body)).foregroundStyle(Palette.ink)
+                Text(NoteName.pitchClass(note.midi)).font(Typeface.label(.caption)).foregroundStyle(tint)
             } else {
                 Text(NoteName.pitchClass(note.midi)).font(Typeface.label(15)).foregroundStyle(Palette.ink)
             }

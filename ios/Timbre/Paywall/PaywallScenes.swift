@@ -8,10 +8,10 @@ enum PaywallTool: Equatable {
     /// The Tanpura drone, as the Drone screen draws it: four strings (Pa, or Ma without `fifth`, then three Sa)
     /// plucked in turn in the drone's rhythm over the gourd, which names the tonic.
     case drone(tonic: String, fifth: Bool)
-    /// Pitch Sniper's scope, as on the Play tab, also the picture of the tuner's ±1¢ precision: the game's rings at
+    /// Pitch Sniper's scope, as on the Practice tab, also the picture of the tuner's ±1¢ precision: the game's rings at
     /// 50, 20 and 5 cents and a pitch homing in on the bullseye.
     case scope
-    /// The ear trainer's interval staircase, as on the Play tab: a note climbing the major scale, each interval to
+    /// The ear trainer's interval staircase, as on the Practice tab: a note climbing the major scale, each interval to
     /// the root named as it lands.
     case staircase
     /// The metronome: a pendulum at the person's tempo, the bar's beats lighting in turn.
@@ -343,7 +343,7 @@ extension ToolScene {
         return 0.71 + CGFloat((off - 20) / 30) * 0.29
     }
 
-    /// Pitch Sniper's scope, as on the Play tab: a dark lens with the game's cents rings and crosshairs, a radar
+    /// Pitch Sniper's scope, as on the Practice tab: a dark lens with the game's cents rings and crosshairs, a radar
     /// sweep going round, and a pitch homing in shot after shot, its cents beside it.
     private func drawScope(_ context: GraphicsContext, size: CGSize, floor: CGFloat) {
         let radius = max(22, min(floor / 2 - 7, size.width / 2 - 56, 100))
@@ -470,7 +470,7 @@ extension ToolScene {
 // MARK: Staircase
 
 extension ToolScene {
-    /// The major scale from the root, as on the Play tab's ear trainer: unison, major second … octave.
+    /// The major scale from the root, as on the Practice tab's ear trainer: unison, major second … octave.
     private static let scale = [0, 2, 4, 5, 7, 9, 11, 12]
     private static let stairHop = 0.42
     private static let stairRest = 1.2
@@ -482,7 +482,7 @@ extension ToolScene {
         index == 0 ? 0 : (Double(index - 1) + 0.7) * stairHop
     }
 
-    /// The ear trainer's interval staircase, as on the Play tab: the major scale as steps from the root (half steps
+    /// The ear trainer's interval staircase, as on the Practice tab: the major scale as steps from the root (half steps
     /// rise half as far), a note hopping up it, each step lighting as it lands, its interval to the root drawn as
     /// an arc and named over the note; it rests on the octave, fades, and climbs again.
     private func drawStaircase(_ context: GraphicsContext, size: CGSize, floor: CGFloat) {

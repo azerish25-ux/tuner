@@ -584,10 +584,10 @@ struct OnboardingView: View {
                 Analytics.log("mic_permission", ["granted": "0", "asked": "0"])
                 afterMicrophone()
             } label: {
-                Text("Not now").font(.subheadline).foregroundStyle(Palette.inkSoft)
-                    .frame(maxWidth: .infinity, minHeight: Metrics.minTarget).contentShape(Rectangle())
+                Text("Not now").font(.subheadline)
+                    .padding(.horizontal, 24)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(TextLinkStyle(tint: Palette.inkSoft))
             .padding(.bottom, 4)
         }
     }
@@ -671,24 +671,26 @@ struct OnboardingView: View {
     }
 }
 
-/// An answer's glyph, plain (no disc): soft ink, mint once chosen.
+/// An answer's glyph, the app's bare `Glyph` at a card's leading size: soft ink, mint once chosen. The years' signal
+/// bars fill to their value, drawn at the same size and weight.
 private struct AnswerGlyph: View {
     let glyph: Answer.Glyph
     let selected: Bool
 
-    var body: some View {
-        symbol
-            .font(.system(size: 19, weight: .semibold))
-            .foregroundStyle(selected ? Palette.mint : Palette.inkSoft)
-            .frame(width: 28)
-            .accessibilityHidden(true)
-    }
+    private var tint: Color { selected ? Palette.mint : Palette.inkSoft }
 
-    @ViewBuilder private var symbol: some View {
+    @ViewBuilder var body: some View {
         switch glyph {
-        case .symbol(let name): Image(systemName: name)
-        case .bars(let value): Image(systemName: "cellularbars", variableValue: value)
-        case .mirrored(let name): Image(systemName: name).scaleEffect(x: -1, y: 1)
+        case .symbol(let name):
+            Glyph(name, size: Glyph.lead, tint: tint)
+        case .mirrored(let name):
+            Glyph(name, size: Glyph.lead, tint: tint).scaleEffect(x: -1, y: 1)
+        case .bars(let value):
+            Image(systemName: "cellularbars", variableValue: value)
+                .font(.system(size: Glyph.lead * 0.78, weight: .regular))
+                .foregroundStyle(tint)
+                .frame(width: Glyph.lead, height: Glyph.lead)
+                .accessibilityHidden(true)
         }
     }
 }
@@ -822,10 +824,7 @@ private struct PlanStep: View {
     private func checkRow(_ state: PlanCheck) -> some View {
         Button(action: onCheck) {
             HStack(spacing: 14) {
-                Image(systemName: state == .done ? "checkmark.seal.fill" : "gauge.with.dots.needle.67percent")
-                    .font(.system(size: 20, weight: .semibold)).foregroundStyle(accent)
-                    .frame(width: 28)
-                    .accessibilityHidden(true)
+                Glyph(state == .done ? "checkmark.seal" : "gauge.with.dots.needle.67percent", size: Glyph.lead, tint: accent)
                 VStack(alignment: .leading, spacing: 2) {
                     checkTitle(state).font(.headline).foregroundStyle(Palette.ink)
                         .fixedSize(horizontal: false, vertical: true)

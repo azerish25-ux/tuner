@@ -170,9 +170,9 @@ struct LessonBeatRow: View {
     /// The counts under the lane: each beat's number, and its "&" where the hand swings up.
     private func drawCounts(_ context: inout GraphicsContext, _ lane: Lane, up: Double, ands: Bool) {
         for beat in 0..<lane.meter {
-            context.draw(Text("\(beat + 1)").font(Typeface.label(13)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: lane.x(Double(beat)), y: Self.countsY))
+            context.draw(Text("\(beat + 1)").font(Typeface.label(.footnote)).foregroundStyle(Palette.inkSoft), at: CGPoint(x: lane.x(Double(beat)), y: Self.countsY))
             if ands {
-                context.draw(Text(verbatim: "&").font(Typeface.label(12)).foregroundStyle(Palette.inkFaint),
+                context.draw(Text(verbatim: "&").font(Typeface.label(.caption)).foregroundStyle(Palette.inkFaint),
                              at: CGPoint(x: lane.x(Double(beat) + up), y: Self.countsY))
             }
         }
@@ -269,7 +269,7 @@ struct LessonBeatRow: View {
                 // Under the counts; kept inside the row at the ends.
                 let y = onBeat || !hasOffbeats ? Self.firstCallY : Self.secondCallY
                 let labelX = min(max(center.x, 40), size.width - 40)
-                context.draw(words.font(Typeface.label(11)).foregroundStyle(color), at: CGPoint(x: labelX, y: y))
+                context.draw(words.font(Typeface.label(.caption)).foregroundStyle(color), at: CGPoint(x: labelX, y: y))
             }
         }
     }

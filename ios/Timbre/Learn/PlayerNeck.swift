@@ -110,7 +110,7 @@ struct ChordPictureToggle: View {
             withMotion(Motion.settle, reduceMotion: reduceMotion) { picture = option }
         } label: {
             Text(option.title)
-                .font(Typeface.label(12))
+                .font(Typeface.label(.caption))
                 .lineLimit(1)
                 .foregroundStyle(selected ? Palette.onAccent : Palette.inkSoft)
                 .padding(.horizontal, 12)
@@ -151,7 +151,7 @@ struct ChordCardHeader: View {
     }
 
     private var title: some View {
-        Text(name).font(Typeface.display(28)).foregroundStyle(Palette.ink)
+        Text(name).font(Typeface.display(.title)).foregroundStyle(Palette.ink)
             .lineLimit(1)
             .accessibilityHidden(true)
     }
@@ -224,7 +224,7 @@ struct ChordPictureView: View {
         VStack(spacing: 8) {
             if showName {
                 // VoiceOver hears the name from the neck, with its shape.
-                Text(chord.name).font(Typeface.display(28)).foregroundStyle(Palette.ink)
+                Text(chord.name).font(Typeface.display(.title)).foregroundStyle(Palette.ink)
                     .lineLimit(1)
                     .accessibilityHidden(true)
             }
@@ -374,6 +374,7 @@ struct PlayerNeck: View {
                 EdgeNamesRow(leading: flip ? rightLane : leftLane, trailing: flip ? leftLane : rightLane)
             }
         }
+        .accessibilityIgnoresInvertColors()
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(chord.name) chord"))
         .accessibilityValue(Text(ChordWords.shape(chord)))

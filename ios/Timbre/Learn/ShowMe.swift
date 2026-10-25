@@ -38,7 +38,7 @@ enum ShowMe {
     static var lastProblem: String?
 
     /// Whether demonstration `key` plays by itself as its card settles: the first time it appears in `course`. The
-    /// App Store chord scene keeps its chord step as it is captured (frame #4: the chart with every string lit).
+    /// App Store chord scene keeps its chord step as it is captured (the chart with every string lit).
     static func firstTime(_ key: String, course: LearnCourse, settings: UserSettings) -> Bool {
         #if DEBUG
         if DemoScene.current == .lessonChord { return false }
@@ -489,7 +489,7 @@ struct ShowMeButton: View {
                     Text("Show me").opacity(showing ? 0 : 1)
                     Text("Again").opacity(showing ? 1 : 0)
                 }
-                .font(Typeface.label(16)).foregroundStyle(Palette.ink).lineLimit(1)
+                .font(Typeface.label(.body)).foregroundStyle(Palette.ink).lineLimit(1)
                 .animation(Motion.fade, value: showing)
             }
             .padding(.leading, 6)
@@ -590,7 +590,7 @@ struct ShowMeCaption: View {
                 .symbolEffect(.pulse, isActive: live && !reduceMotion)
                 .accessibilityHidden(true)
             text
-                .font(Typeface.label(13))
+                .font(Typeface.label(.footnote))
                 .foregroundStyle(live ? Palette.ink : Palette.inkSoft)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
@@ -633,7 +633,7 @@ struct ShowMeToggle: View {
             withMotion(Motion.settle, reduceMotion: reduceMotion) { action() }
         } label: {
             title
-                .font(Typeface.label(12))
+                .font(Typeface.label(.caption))
                 .lineLimit(1)
                 .foregroundStyle(selected ? Palette.onAccent : Palette.inkSoft)
                 .padding(.horizontal, 12)
@@ -674,7 +674,7 @@ struct ShowMeCardHeader: View {
     }
 
     private var title: some View {
-        Text(name).font(Typeface.display(28)).foregroundStyle(Palette.ink)
+        Text(name).font(Typeface.display(.title)).foregroundStyle(Palette.ink)
             .lineLimit(1)
             .accessibilityHidden(true)
     }

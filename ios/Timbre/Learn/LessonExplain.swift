@@ -632,7 +632,7 @@ struct ExplainStep: View {
                 }
             }
         }
-        .font(Typeface.label(14))
+        .font(Typeface.label(.footnote))
         .multilineTextAlignment(.center)
     }
 

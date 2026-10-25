@@ -30,9 +30,8 @@ struct HighwayHUD: View {
         }
         .padding(.horizontal, 14)
         .padding(.top, 12)
-        // It sits over the board: large type grows it only so far.
-        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
-        .allowsHitTesting(false)
+        // It sits over the board: large type grows it only so far, and a long press shows it magnified.
+        .cappedControl(Text("Combo \(combo), ×\(level)"), symbol: "flame.fill", cap: .xxLarge)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Combo"))
         .accessibilityValue(Text(verbatim: "\(combo), ×\(level)"))
@@ -42,7 +41,7 @@ struct HighwayHUD: View {
     private var counter: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(combo, format: .number)
-                .font(Typeface.number(30, relativeTo: .title2))
+                .font(Typeface.number(.title))
                 .foregroundStyle(combo > 0 ? Palette.ink : Palette.inkFaint)
                 .contentTransition(Self.digitTransition(combo))
                 .shadow(color: tint.opacity(level >= 2 ? 0.6 : 0), radius: 10)

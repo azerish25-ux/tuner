@@ -1,7 +1,8 @@
 """Art direction shared by the store frames (screenshots.py) and the App Preview (preview.py).
 
 The palette is the app's own (ios/Timbre/Design/Theme.swift, "Studio Noir"): a near-black stage, mint for in tune,
-amber for rewards, and the course accents (sky, violet, coral). Type is the app's Sora. A frame's background takes the
+gold for rewards (the stars' `starGold`), and the course hues (sky, violet, orchid, lime). Amber and coral are status
+colours in the app (adjust, wrong), so no frame is washed in them. Type is the app's Sora. A frame's background takes the
 accent of the feature it shows, so a set reads as a colour progression at thumbnail size instead of one dark image
 repeated. Captions are set in Sora when it has every glyph, else in the first system font that does (CJK and
 Cyrillic captions), or the one `--font` names.
@@ -30,6 +31,9 @@ TINTS = {
     "sky": (98, 201, 255),
     "amber": (255, 181, 71),
     "violet": (165, 146, 255),
+    "orchid": (227, 138, 219),
+    "lime": (196, 232, 107),
+    "gold": (240, 169, 59),
     "coral": (255, 126, 107),
     "flame": (255, 159, 67),
     "spotlight": (255, 196, 140),

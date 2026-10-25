@@ -120,7 +120,7 @@ struct StrumFinaleLane: View {
             .scaleEffect(locked && !reduceMotion ? 1.12 : 1)
             .overlay(alignment: .trailing) {
                 Text(verbatim: NoteReadout.signed(shown))
-                    .font(Typeface.number(22, relativeTo: .title3))
+                    .font(Typeface.number(.title3))
                     .foregroundStyle(tone)
                     .fixedSize()
                     .alignmentGuide(.trailing) { d in d[.leading] - 16 }

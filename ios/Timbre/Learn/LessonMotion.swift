@@ -34,7 +34,7 @@ enum LessonMicrophone {
 struct PracticeModeTag: View {
     var body: some View {
         Label("Practice mode", systemImage: "hand.tap.fill")
-            .font(Typeface.label(12))
+            .font(Typeface.label(.caption))
             .foregroundStyle(Palette.amber)
             .lineLimit(1)
             .padding(.horizontal, 10).padding(.vertical, 5)

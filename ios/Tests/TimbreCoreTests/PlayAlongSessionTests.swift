@@ -136,4 +136,56 @@ final class PlayAlongSessionTests: XCTestCase {
     func testTheMultiplierSteps() {
         XCTAssertEqual([0, 3, 4, 7, 8, 15, 16, 40].map(PlayAlongSession.multiplier), [1, 1, 2, 2, 3, 3, 4, 4])
     }
+
+    // MARK: Chords & words
+
+    /// Four bars of 4/4 at 60 BPM: a bar is four seconds, its downbeat 0.08 s after the bar line.
+    private func chordTake(_ bars: Int = 4) -> ChordAlongJudge { ChordAlongJudge(bars: bars, bpm: 60, beatsPerBar: 4) }
+
+    func testABarIsTimedByItsFirstStrokeAndJudgedByItsChord() {
+        var take = chordTake()
+        XCTAssertEqual(take.stroke(at: take.time(of: 0) + 0.03), 0)
+        XCTAssertNil(take.stroke(at: take.time(of: 0) + 1), "the bar's later strokes don't time it again")
+        XCTAssertTrue(take.grades.isEmpty, "judged only once its chord is heard")
+        let right = take.chord(bar: 0, right: true, heard: "G", at: 1)
+        XCTAssertEqual(right.judgments.map(\.grade), [.perfect])
+        XCTAssertNil(take.calls[0])
+
+        XCTAssertEqual(take.stroke(at: take.time(of: 1) - 0.12), 1, "a little early counts for the bar ahead")
+        let wrong = take.chord(bar: 1, right: false, heard: "Am", at: 2)
+        XCTAssertEqual(wrong.judgments.map(\.grade), [.ok], "another chord is held to early or late")
+        XCTAssertEqual(take.calls[1], "Am")
+
+        XCTAssertEqual(take.stroke(at: take.time(of: 2)), 2)
+        let silent = take.chord(bar: 2, right: false, heard: nil, at: 3)
+        XCTAssertEqual(silent.judgments.map(\.grade), [.miss], "nothing a chord rang in")
+        XCTAssertEqual(take.combo, 0)
+    }
+
+    func testABarWithNoStrokeIsMissedOnceItIsOver() {
+        var take = chordTake(2)
+        XCTAssertTrue(take.tick(at: take.time(of: 0) + 2, now: 0).isEmpty)
+        let over = take.tick(at: take.time(of: 1), now: 0)
+        XCTAssertEqual(over.judgments.map(\.grade), [.miss])
+        // A stroke whose chord never comes keeps its timing's grade.
+        take.stroke(at: take.time(of: 1) + 0.1)
+        let kept = take.tick(at: take.time(of: 1) + 0.1 + ChordAlongJudge.chordWait + 0.01, now: 0)
+        XCTAssertEqual(kept.judgments.map(\.grade), [.good])
+        XCTAssertTrue(kept.finished)
+        XCTAssertEqual(take.accuracy, 0.4, accuracy: 1e-9)
+    }
+
+    func testRightChordsOnTheBeatBuildTheMultiplier() {
+        var take = chordTake(16)
+        var tiers: [Int] = []
+        for bar in 0..<16 {
+            take.stroke(at: take.time(of: bar))
+            if let tier = take.chord(bar: bar, right: true, heard: "C", at: Double(bar)).tier { tiers.append(tier) }
+        }
+        XCTAssertEqual(tiers, [2, 3, 4])
+        XCTAssertEqual(take.points, 300 + 800 + 2400 + 400)
+        XCTAssertTrue(take.isFinished)
+        XCTAssertEqual(take.score(bars: 0..<4) ?? -1, 1, accuracy: 1e-9)
+        XCTAssertNil(take.score(bars: 16..<20))
+    }
 }

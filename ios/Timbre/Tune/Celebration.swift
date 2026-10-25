@@ -45,7 +45,7 @@ struct CelebrationOverlay: View {
             StillStrings(count: store.courses.count)
                 .frame(width: 92, height: 56)
                 .accessibilityHidden(true)
-            Text("All strings in tune").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink).multilineTextAlignment(.center)
+            Text("All strings in tune").font(Typeface.display(.title)).tracking(-0.6).foregroundStyle(Palette.ink).multilineTextAlignment(.center)
             Text("\(store.instrumentDisplayName) · \(store.tuning.name.localized)").font(.subheadline).foregroundStyle(Palette.inkSoft)
             noteRow
             HStack(spacing: 10) {

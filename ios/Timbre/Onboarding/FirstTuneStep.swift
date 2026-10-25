@@ -328,10 +328,10 @@ struct FirstTuneStep: View {
 
     private var skipButton: some View {
         Button { finish(locked: false) } label: {
-            Text("Skip").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft)
-                .padding(.horizontal, 24).frame(minHeight: 44).contentShape(Rectangle())
+            Text("Skip").font(.subheadline.weight(.semibold))
+                .padding(.horizontal, 24)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(TextLinkStyle(tint: Palette.inkSoft))
         .opacity(model.lockedIn ? 0 : 1)
         .disabled(model.lockedIn)
         .padding(.bottom, 10)

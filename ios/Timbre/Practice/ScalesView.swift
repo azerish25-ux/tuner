@@ -32,7 +32,7 @@ struct ScaleLibraryView: View {
     @State private var cheers = 0
     @State private var owner = UUID()
     /// The title's size as Dynamic Type grows it, for its ♯ and ♭ (set in the system face beside Sora).
-    @ScaledMetric(relativeTo: .largeTitle) private var titleSize: CGFloat = 36
+    @ScaledMetric(relativeTo: .title) private var titleSize: CGFloat = 28
 
     /// One sequence note and the gap after it, as `AudioService.playTones` plays them.
     private static let noteMs = 380
@@ -48,7 +48,7 @@ struct ScaleLibraryView: View {
                 }
                 scaleRail
                 VStack(alignment: .leading, spacing: 12) {
-                    NoteGlyphs.text(sheet.title, size: titleSize).font(Typeface.display(36)).foregroundStyle(Palette.ink)
+                    NoteGlyphs.text(sheet.title, size: titleSize).font(Typeface.display(.title)).foregroundStyle(Palette.ink)
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                     ToneStrip(tones: sheet.tones)
@@ -161,7 +161,7 @@ struct ScaleLibraryView: View {
             .pickerStyle(.inline)
         } label: {
             Label("View", systemImage: "slider.horizontal.3")
-                .font(Typeface.label(13))
+                .font(Typeface.label(.footnote))
                 .foregroundStyle(Palette.ink)
                 .padding(.horizontal, 14)
                 .frame(minHeight: Metrics.minTarget)
@@ -271,7 +271,7 @@ struct ScaleLibraryView: View {
                             .transition(.opacity)
                     }
                     Spacer(minLength: 0)
-                    Text.fraction(index, run.midis.count).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
+                    Text.fraction(index, run.midis.count).font(Typeface.number(.footnote)).foregroundStyle(Palette.inkSoft)
                         .contentTransition(.numericText())
                 }
                 ProgressLine(value: Double(index) / Double(max(1, run.midis.count)), color: Palette.mint, height: 4)
@@ -581,6 +581,7 @@ struct ScaleNeck: View {
         }
         .animation(Motion.settle, value: focusKey)
         .animation(Motion.settle, value: window)
+        .accessibilityIgnoresInvertColors()
         .accessibilityHidden(true)
     }
 

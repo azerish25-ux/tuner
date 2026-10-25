@@ -171,7 +171,7 @@ struct SongPerformStep: View {
             Spacer(minLength: 0)
             spotlitSleeve
             VStack(spacing: 6) {
-                Text(verbatim: songTitle).font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
+                Text(verbatim: songTitle).font(Typeface.display(.title)).tracking(-0.6).foregroundStyle(Palette.ink)
                     .multilineTextAlignment(.center).lineLimit(2).minimumScaleFactor(0.7)
                     .accessibilityAddTraits(.isHeader)
                 Text("The whole song, start to finish, with the band.").font(.subheadline).foregroundStyle(Palette.inkSoft)
@@ -188,7 +188,7 @@ struct SongPerformStep: View {
             MicrophoneHint()
             if chordsAvailable { modeChoice }
             tempoChoice
-            StepButton(title: "Perform", accent: accent) { start() }
+            StepButton(title: "Perform") { start() }
         }
         .animation(reduceMotion ? nil : Motion.quick, value: armed)
     }
@@ -337,7 +337,7 @@ struct SongPerformStep: View {
             }
             Spacer(minLength: 8)
             VStack(alignment: .trailing, spacing: 0) {
-                Text(session.points, format: .number).font(Typeface.number(26, relativeTo: .title2)).foregroundStyle(Palette.ink)
+                Text(session.points, format: .number).font(Typeface.number(.title)).foregroundStyle(Palette.ink)
                     .contentTransition(HighwayHUD.digitTransition(session.points))
                     .animation(reduceMotion ? nil : Motion.quick, value: session.points)
                 Eyebrow("Score", color: accent, style: .display)

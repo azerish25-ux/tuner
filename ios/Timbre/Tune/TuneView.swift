@@ -592,9 +592,7 @@ struct ListenOrb: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text(audio.running ? "Pause listening" : "Listen"))
-        .accessibilityShowsLargeContentViewer {
-            Label(audio.running ? "Pause listening" : "Listen", systemImage: audio.running ? "pause.fill" : "mic.fill")
-        }
+        .cappedControl(audio.running ? Text("Pause listening") : Text("Listen"), symbol: audio.running ? "pause.fill" : "mic.fill")
         .accessibilityIdentifier("listenButton")
     }
 

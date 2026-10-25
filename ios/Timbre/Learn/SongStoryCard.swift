@@ -184,7 +184,7 @@ struct SongFinaleView: View {
 
     private func stat(_ label: LocalizedStringKey, _ value: Int, _ color: Color) -> some View {
         VStack(spacing: 2) {
-            Text("\(value)").font(Typeface.number(18)).foregroundStyle(color)
+            Text("\(value)").font(Typeface.number(.headline)).foregroundStyle(color)
             Text(label).font(.caption).foregroundStyle(Palette.inkSoft)
         }
         .accessibilityElement(children: .combine)
@@ -256,7 +256,7 @@ struct SongFinaleView: View {
     @ViewBuilder private func finaleButton(_ title: LocalizedStringKey, primary: Bool, action: @escaping () -> Void) -> some View {
         if primary {
             Button(action: action) { Text(title).lineLimit(1).minimumScaleFactor(0.75) }
-                .buttonStyle(PrimaryButtonStyle(accent: accent))
+                .buttonStyle(PrimaryButtonStyle())
         } else {
             Button(action: action) { Text(title).lineLimit(1).minimumScaleFactor(0.75) }
                 .buttonStyle(SecondaryButtonStyle())

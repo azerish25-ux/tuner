@@ -3,7 +3,7 @@ import TimbreCore
 
 enum PracticeRoute: Hashable { case metronome, ear, chords, scales, drone, voice, intonation, sniper }
 
-/// Play: Today (the day's one session), your level, the quests Today doesn't already cover, ear games and tools.
+/// Practice: Today (the day's one session), your level, the quests Today doesn't already cover, ear games and tools.
 struct PracticeView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
@@ -70,7 +70,7 @@ struct PracticeView: View {
     /// The tab's title with the shared streak chip and level ring. Today's ring is the card right below, so the chip
     /// shows just the streak.
     private var header: some View {
-        TabHeader(title: "Play", showsToday: false)
+        TabHeader(title: "Practice", showsToday: false)
     }
 
     private var sideQuests: [Quest] { GameChallenge.listed(DailySet.sideQuests(store.quests, beside: store.dailySet)) }
@@ -525,7 +525,7 @@ struct PracticeView: View {
     }
 
     /// The tools one per row, as `FeatureRow` lays out a row: the live glyph in its well, the name taking the rest of
-    /// the line (wrapping freely), PRO on a free plan and a chevron.
+    /// the line (wrapping freely), a lock on a Pro tool on the free plan, and a chevron.
     private var toolList: some View {
         VStack(spacing: 10) {
             ForEach(tools) { tool in toolRow(tool) }
@@ -542,7 +542,7 @@ struct PracticeView: View {
                 Text(tool.title).font(.headline).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                if locked { ProBadge() }
+                if locked { ProLock(size: 22) }
                 Image(systemName: "chevron.right").font(.footnote.weight(.bold)).foregroundStyle(Palette.inkFaint)
                     .accessibilityHidden(true)
             }
@@ -557,7 +557,7 @@ struct PracticeView: View {
         if pro && !commerce.isPro { store.presentPaywall("practice.\(route)") } else { path.append(route) }
     }
 
-    /// One of the Play hub's tools, as the iPad grid shows it.
+    /// One of the Practice hub's tools, as the iPad grid shows it.
     private struct Tool: Identifiable {
         let route: PracticeRoute
         let symbol: String
@@ -583,7 +583,7 @@ struct PracticeView: View {
 
     /// A large tool tile: the tool working in miniature (the metronome swinging at the last tempo, the drone's dial,
     /// the chord boxes, the scale's box, the harmonic's node, a voice's trace), its name and what the preview shows
-    /// under it, PRO beside the words on a free plan so it never sits on the preview. Lit faintly in the tool's colour.
+    /// under it, a lock beside the words on a free plan so it never sits on the preview. Lit faintly in the tool's colour.
     private func toolTile(_ tool: Tool, minHeight: CGFloat, sideBySide: Bool) -> some View {
         let locked = tool.pro && !commerce.isPro
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
@@ -612,7 +612,7 @@ struct PracticeView: View {
         if sideBySide {
             HStack(alignment: .center, spacing: 12) {
                 VStack(alignment: .leading, spacing: 6) {
-                    if locked { ProBadge() }
+                    if locked { ProLock(size: 22) }
                     Spacer(minLength: 0)
                     toolTileWords(tool)
                 }
@@ -627,7 +627,7 @@ struct PracticeView: View {
                 HStack(alignment: .bottom, spacing: 8) {
                     toolTileWords(tool)
                     Spacer(minLength: 0)
-                    if locked { ProBadge() }
+                    if locked { ProLock(size: 22) }
                 }
             }
         }
@@ -666,7 +666,7 @@ struct PracticeView: View {
             .frame(maxWidth: .infinity, minHeight: 74)
             .background(shape.fill(Palette.stageRaised))
             .overlay(shape.strokeBorder(Palette.hairline, lineWidth: 1))
-            .overlay(alignment: .topTrailing) { if pro && !commerce.isPro { ProBadge().padding(5) } }
+            .overlay(alignment: .topTrailing) { if pro && !commerce.isPro { ProLock(size: 20).padding(5) } }
             .contentShape(shape)
         }
         .buttonStyle(.plain)

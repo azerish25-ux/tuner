@@ -359,4 +359,22 @@ final class LearnTests: XCTestCase {
         let data = try JSONEncoder().encode(steps)
         XCTAssertEqual(try JSONDecoder().decode([LessonStep].self, from: data), steps)
     }
+
+    /// A shape played behind a capo, and a technique clip: both round-trip, and older data without them still reads.
+    func testCapoAndClipDecode() throws {
+        let capoA = ChordSpec(name: "A", root: 9, quality: "maj", frets: [5, 4, 2, 2, 2, 5], fingers: [2, 1, 0, 0, 0, 3], capo: 2)
+        let steps: [LessonStep] = [
+            .playChord(chord: capoA),
+            .explain(title: LearnText("Hold the bow"), body: LearnText("Soft and round."), visual: .clip(name: "bow_hold")),
+        ]
+        XCTAssertEqual(try JSONDecoder().decode([LessonStep].self, from: JSONEncoder().encode(steps)), steps)
+
+        let written = Data(#"{"type":"explain","title":{"k":"","t":"Hold the bow"},"body":{"k":"","t":"Soft."},"visual":{"type":"clip","name":"bow_hold"}}"#.utf8)
+        XCTAssertEqual(try JSONDecoder().decode(LessonStep.self, from: written),
+                       .explain(title: LearnText("Hold the bow"), body: LearnText("Soft."), visual: .clip(name: "bow_hold")))
+        let chord = try JSONDecoder().decode(ChordSpec.self, from: Data(#"{"name":"G","root":7,"quality":"maj","frets":[3,2,0,0,0,3]}"#.utf8))
+        XCTAssertNil(chord.capo)
+        let capo = try JSONDecoder().decode(ChordSpec.self, from: Data(#"{"name":"A","root":9,"quality":"maj","frets":[5,4,2,2,2,5],"capo":2}"#.utf8))
+        XCTAssertEqual(capo.capo, 2)
+    }
 }

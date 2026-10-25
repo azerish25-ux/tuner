@@ -108,6 +108,21 @@ final class ProgressionTests: XCTestCase {
         XCTAssertTrue(Quests.counter(for: Quest(kind: .tuneAll, target: 1, xp: 20), state: state, instrumentId: "g", courses: [0, 1, 2, 3, 4, 5], now: day(5), calendar: calendar) == (done: 6, total: 6))
     }
 
+    func testAFieldThatCantBeReadCostsOnlyThatField() throws {
+        // XP of the wrong type, a stat below zero, one unreadable sample beside a good one, too many freezes.
+        let damaged = #"{"xp":"lots","stats":{"stringsTuned":3,"bullseyes":-2},"achievements":["first_tune","streak_7"],"stringSamples":[{"instrumentId":"g","anchor":"s6","date":0,"cents":-4},{"instrumentId":"g"}],"streakFreezes":99,"questsClaimed":7}"#
+        let state = try JSONDecoder().decode(ProgressState.self, from: Data(damaged.utf8))
+        XCTAssertEqual(state.xp, 0)
+        XCTAssertEqual(state.stats, ["stringsTuned": 3])
+        XCTAssertEqual(state.achievements, ["first_tune", "streak_7"])
+        XCTAssertEqual(state.stringSamples.count, 1)
+        XCTAssertEqual(state.streakFreezes, StreakFreeze.cap)
+        XCTAssertEqual(state.questsClaimed, [])
+        XCTAssertTrue(state.isValid)
+        // Not an object at all still fails.
+        XCTAssertThrowsError(try JSONDecoder().decode(ProgressState.self, from: Data("[1, 2]".utf8)))
+    }
+
     func testDailySetPaysOnceADayAndCountsTowardBadges() {
         var state = ProgressState()
         var update = state.record(.dailySetCompleted, now: day(5), calendar: calendar)

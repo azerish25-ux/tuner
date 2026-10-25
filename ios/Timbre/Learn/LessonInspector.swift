@@ -5,7 +5,7 @@ import TimbreCore
 /// what it is (unit, kind, minutes, XP, stars; a song's sleeve) with Start, Continue or Play again (Timbre Pro for a Pro
 /// lesson, the open lesson on the way for one not reached yet); then what's in it step by step, and a still preview of
 /// what you'll play: its chords, its first picture, its notes on the neck or a staff, or its rhythm. `wide` sets the
-/// card, its steps and `companion` (Learn's Today) in one column with the preview beside them, as tall as that column;
+/// card, its steps and `companion` (Learn's Today) in one column with the preview beside them, centred on that column;
 /// otherwise everything stacks in one column.
 struct LessonInspector<Companion: View>: View {
     let course: LearnCourse
@@ -33,8 +33,8 @@ struct LessonInspector<Companion: View>: View {
 
     @ViewBuilder private var columns: some View {
         if wide {
-            // The card, its steps and the companion in one column; the preview beside them as a stage as tall as
-            // that column, so both end level.
+            // The card, its steps and the companion in one column; the preview beside them, centred on that column
+            // and as tall as its drawing wants (a stage stretched to the column's height left a band of empty stage).
             HStack(alignment: .top, spacing: CardColumns.spacing) {
                 VStack(alignment: .leading, spacing: CardColumns.spacing) {
                     handing(hero)
@@ -43,7 +43,7 @@ struct LessonInspector<Companion: View>: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .top)
                 handing(preview)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             }
             .fixedSize(horizontal: false, vertical: true)
         } else {
@@ -99,7 +99,7 @@ struct LessonInspector<Companion: View>: View {
                     Eyebrow(Text("Unit \(place.number) · \(place.unit.title.localized)"), color: accent, style: .display)
                         .lineLimit(1)
                 }
-                Text(lesson.title.localized).font(Typeface.display(24)).tracking(-0.4).foregroundStyle(Palette.ink)
+                Text(lesson.title.localized).font(Typeface.display(.title3)).tracking(-0.4).foregroundStyle(Palette.ink)
                     .lineLimit(3).fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
                 meta(stars: stars)
@@ -149,7 +149,7 @@ struct LessonInspector<Companion: View>: View {
             Image(systemName: symbol).font(.system(size: 9, weight: .bold)).accessibilityHidden(true)
             Text(name)
         }
-        .font(Typeface.label(11)).foregroundStyle(accent)
+        .font(Typeface.label(.caption)).foregroundStyle(accent)
         .padding(.horizontal, 8).frame(minHeight: 22)
         .background(Capsule().fill(accent.opacity(0.14)))
         .overlay(Capsule().strokeBorder(accent.opacity(0.3), lineWidth: 1))
@@ -285,14 +285,14 @@ struct LessonInspector<Companion: View>: View {
     /// neck (or a staff for the voice), its rhythm; the course's instrument when it has none of these. Chords and necks
     /// are drawn as the lesson draws them (the chart or the player's view, `ChordPicture`), so the preview never shows
     /// a chord the other way round from the lesson it opens. Stacked, it is 250 points tall; beside the card (`wide`)
-    /// it grows to the column's height and the drawing with it.
+    /// it grows up to 440 points, the drawing centred in it.
     private var preview: some View {
         VStack(alignment: .leading, spacing: 12) {
             Eyebrow("Preview", color: Palette.inkSoft)
                 .accessibilityAddTraits(.isHeader)
             previewBody
                 .frame(maxWidth: .infinity)
-                .frame(minHeight: wide ? 300 : 250, maxHeight: wide ? CGFloat.infinity : 250)
+                .frame(minHeight: wide ? 300 : 250, maxHeight: wide ? 440 : 250)
                 .background {
                     // A soft light on the stage, in the course's colour.
                     RadialGradient(colors: [accent.opacity(0.12), .clear], center: .center, startRadius: 0, endRadius: 260)
@@ -315,7 +315,7 @@ struct LessonInspector<Companion: View>: View {
         case let .visual(visual):
             GeometryReader { proxy in
                 LessonVisualView(visual: visual, accent: accent, instrumentId: course.instrument, room: proxy.size)
-                    .frame(width: proxy.size.width, height: proxy.size.height)
+                    .frame(width: proxy.size.width, height: proxy.size.height, alignment: .center)
             }
         case .art:
             CourseHeroArt(artwork: CourseArtwork.of(course, catalog: store.catalog), accent: accent, size: 200, lean: -10)

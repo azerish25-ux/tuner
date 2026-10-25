@@ -59,7 +59,7 @@ final class TabletScreenshotsUITests: XCTestCase {
                    alone ? "sitar, oud and erhu aren't whole on screen" : "the tuner is still on screen around the browser")
         closePicker()
 
-        tab("Play", until: "practice.sniper")
+        tab("Practice", until: "practice.sniper")
         shot("ipad-landscape-practice")
         tab("Songs", until: "songs.hero")
         shot("ipad-landscape-songs")
@@ -82,7 +82,7 @@ final class TabletScreenshotsUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
         settle(1.5)
         shot("ipad-portrait-progress")
-        tab("Play", until: "practice.sniper")
+        tab("Practice", until: "practice.sniper")
         shot("ipad-portrait-practice")
         tab("Learn", until: "learn.inspector")
         shot("ipad-portrait-learn")

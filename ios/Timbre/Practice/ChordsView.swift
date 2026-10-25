@@ -1,8 +1,8 @@
 import SwiftUI
 import TimbreCore
 
-/// The Chords and Scales tools (Play › Tools). Chords is free with its open-position shapes and Check (`FreeTier`);
-/// Scales is Pro (the Play hub opens it).
+/// The Chords and Scales tools (Practice › Tools). Chords is free with its open-position shapes and Check (`FreeTier`);
+/// Scales is Pro (the Practice hub opens it).
 struct ChordsView: View {
     enum Mode { case chords, scales }
     let mode: Mode
@@ -275,7 +275,7 @@ struct ChordLibraryView: View {
     }
 
     /// A new chord: the strum's lights go; a check listens for the new chord (or stops, if it can't hear that kind).
-    /// It is kept as the chord shown last: the tool opens on it next time and the Play hub's tile strums it.
+    /// It is kept as the chord shown last: the tool opens on it next time and the Practice hub's tile strums it.
     private func chordChanged() {
         strumTask?.cancel()
         ringing = nil

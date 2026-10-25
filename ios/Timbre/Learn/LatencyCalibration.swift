@@ -49,7 +49,7 @@ struct LatencyCalibrationSheet: View {
 
     private var header: some View {
         HStack {
-            Text("Calibrate timing").font(Typeface.display(24)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
+            Text("Calibrate timing").font(Typeface.display(.title3)).foregroundStyle(Palette.ink).accessibilityAddTraits(.isHeader)
             Spacer()
             CloseButton { dismiss() }
                 .accessibilityIdentifier("calibrate.close")
@@ -68,7 +68,7 @@ struct LatencyCalibrationSheet: View {
                 Text(milliseconds(saved), format: .measurement(width: .abbreviated, usage: .asProvided)).monospacedDigit()
             }
         }
-        .font(Typeface.label(14))
+        .font(Typeface.label(.footnote))
         .foregroundStyle(Palette.inkSoft)
         .padding(.horizontal, 14).padding(.vertical, 8)
         .background(Capsule().fill(Palette.stageRaised))
@@ -133,7 +133,7 @@ struct LatencyCalibrationSheet: View {
         case .done:
             if let result {
                 Text(milliseconds(result), format: .measurement(width: .abbreviated, usage: .asProvided))
-                    .font(Typeface.note(44)).foregroundStyle(accent).monospacedDigit()
+                    .font(Typeface.note(.display)).foregroundStyle(accent).monospacedDigit()
                     .transition(.scale(scale: 0.8).combined(with: .opacity))
             }
         case .failed:

@@ -148,7 +148,7 @@ enum DeepLink {
     }
 
     /// Pitch Sniper (a free game) with a friend's score to beat: shown on its card and in the game's header until a game
-    /// passes it. A link for another game, or with a score no game can reach, opens the Play tab alone.
+    /// passes it. A link for another game, or with a score no game can reach, opens the Practice tab alone.
     @MainActor private static func openChallenge(game: String?, score: String?, store: AppStore) {
         store.selectedTab = .practice
         guard game == PlayGame.sniper.rawValue, let target = score.flatMap({ Int($0) }),
@@ -167,7 +167,7 @@ enum DeepLink {
     }
 
     /// The Drone tool in `pitchClass` (kept in the octave the player last used). It is a Pro tool: on the free plan
-    /// the Play tab shows its paywall, as tapping the tool there does.
+    /// the Practice tab shows its paywall, as tapping the tool there does.
     @MainActor private static func openDrone(pitchClass: Int?, start: Bool, store: AppStore) {
         store.selectedTab = .practice
         Analytics.log("shortcut", ["destination": "drone"])

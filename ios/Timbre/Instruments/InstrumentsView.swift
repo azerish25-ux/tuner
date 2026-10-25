@@ -164,7 +164,7 @@ struct InstrumentsView: View {
     }
 
     /// Two instruments to try next, picked from what this person plays: a guitarist's ukulele and bass, a
-    /// violinist's viola and cello. Ones that need Pro wear its badge.
+    /// violinist's viola and cello. One that needs Pro wears a lock.
     private var suggestions: [InstrumentPhoto] {
         let owned = mine.map(\.instrumentId)
         let base = store.referenceMode ? (owned.first ?? store.instrument.id) : store.instrument.id
@@ -293,21 +293,31 @@ struct InstrumentsView: View {
             .accessibilityAddTraits(.isHeader)
     }
 
-    /// New custom tuning: in the section header so it's always in reach, not at the far end of the rail.
+    /// New custom tuning: in the section header so it's always in reach, not at the far end of the rail. The free plan
+    /// makes one on a free instrument (`FreeTier.customTunings`); past that, or on a Pro instrument, it wears a lock.
     @ViewBuilder private var customTuningButton: some View {
         if !store.referenceMode, !store.courses.isEmpty {
-            Button {
-                if commerce.isPro { creating = true } else { store.presentPaywall("custom_tuning") }
-            } label: {
-                HStack(spacing: 6) {
-                    Image(systemName: "plus")
-                    Text("Custom")
-                    if !commerce.isPro { ProBadge() }
-                }
-            }
-            .buttonStyle(ChipButtonStyle(selected: false))
-            .accessibilityIdentifier("tunings.custom")
+            customButton(open: canCreateCustomTuning)
         }
+    }
+
+    private func customButton(open: Bool) -> some View {
+        Button {
+            if open { creating = true } else { store.presentPaywall("custom_tuning") }
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: "plus")
+                Text("Custom")
+                if !open { Image(systemName: "lock.fill").font(.caption2).accessibilityLabel(Text("Timbre Pro")) }
+            }
+        }
+        .buttonStyle(ChipButtonStyle(selected: false))
+        .accessibilityIdentifier("tunings.custom")
+    }
+
+    private var canCreateCustomTuning: Bool {
+        if commerce.isPro { return true }
+        return store.instrument.isFree && FreeTier.canAddCustomTuning(saved: store.settings.customTunings?.count ?? 0, pro: false)
     }
 
     /// The search field: a capsule with a control's edge. Its clear button is a full 44 pt target inside the
@@ -355,7 +365,7 @@ struct InstrumentsView: View {
             if picker { dismiss() }
         } label: {
             HStack(spacing: 14) {
-                IconOrb(symbol: "dot.radiowaves.left.and.right", tint: Palette.mint)
+                Glyph("dot.radiowaves.left.and.right", size: Glyph.lead, tint: Palette.mint)
                 VStack(alignment: .leading, spacing: 3) {
                     Text("Chromatic").font(.headline).foregroundStyle(Palette.ink)
                     Text("A strobe tuner for any note: voice, piano, winds or anything else.")
@@ -405,7 +415,7 @@ struct InstrumentsView: View {
                     .overlay(RadialGradient(colors: [(selected ? Palette.mint : Palette.spotlight).opacity(selected ? 0.10 : 0.06), .clear], center: UnitPoint(x: 0.5, y: 0.3), startRadius: 4, endRadius: 140).clipShape(shape))
             }
             .overlay(shape.strokeBorder(selected ? Palette.mint : Palette.hairline, lineWidth: selected ? 1.5 : 1))
-            .overlay(alignment: .topTrailing) { if !open { ProBadge().padding(12) } }
+            .overlay(alignment: .topTrailing) { if !open { ProLock().padding(12) } }
             .overlay(alignment: .topLeading) { if suggested { tryNextTag.padding(12) } }
             .contentShape(shape)
         }

@@ -68,6 +68,23 @@ final class CoachTimingTests: XCTestCase {
         XCTAssertEqual(change.bpm, 60)
     }
 
+    /// A change on time but on the old chord still ("Em → C lands, but it's still Em") didn't land; the same take
+    /// with the right chords has nothing to say.
+    func testAChangeOnTimeWithTheWrongChordDidNotLand() throws {
+        let take = try XCTUnwrap(CoachTake.strummed(chords: [em, c, em, c], bars: [1, 1, 1, 1], pattern: [0, 1, 2, 3], beatsPerBar: 4, bpm: 60,
+                                                    offsets: onTime(except: [:]), wrongChords: [4, 12]))
+        XCTAssertTrue(take.hits[4].wrongChord)
+        XCTAssertFalse(take.hits[3].wrongChord)
+        XCTAssertEqual(take.hits[4].offset ?? -1, 0.02, accuracy: 1e-9, "the timing is kept")
+        let change = try XCTUnwrap(Coach.worstChange(in: [take]))
+        XCTAssertEqual(change.from, .chord(em))
+        XCTAssertEqual(change.to, .chord(c))
+        XCTAssertNil(change.meanOffset)
+        XCTAssertEqual(change.missed, 2)
+        XCTAssertEqual(change.wrongChord, 2)
+        XCTAssertNil(Coach.worstChange(in: [try XCTUnwrap(progression(offsets: onTime(except: [:])))]))
+    }
+
     func testChangesNeverHeardStillCount() throws {
         var offsets = onTime(except: [:])
         offsets[4] = nil

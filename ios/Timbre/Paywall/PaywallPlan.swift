@@ -17,12 +17,14 @@ struct PaywallAnswers: Equatable {
 /// from a tool starts the track with that tool instead (`Focus`).
 struct PaywallPlan {
     /// One promise of Pro, said as a result. Every outcome on every paywall wears the same kind of icon, in one tint:
-    /// a plain SF Symbol (`PaywallView.outcomeList`).
+    /// a bare glyph (`PaywallView.outcomeList`), an SF Symbol or one drawn for Timbre.
     struct Outcome: Identifiable {
         /// What the outcome promises ("drone", "song", "daily"…): the same promise is never listed twice.
         let id: String
         let text: Text
         let symbol: String
+        /// A glyph drawn for Timbre, in place of `symbol` (the player's own charts).
+        var drawn: TimbreGlyph? = nil
     }
 
     struct Milestone: Identifiable {
@@ -475,6 +477,6 @@ struct PaywallPlan {
 
     /// Your songs (`YourSongsPolicy`): any song the player knows, from its chords, with Apple Music playing beside it.
     private static var yourSongs: Outcome {
-        Outcome(id: "yoursongs", text: Text("Any song you love: paste the chords, play along"), symbol: "music.note.list")
+        Outcome(id: "yoursongs", text: Text("Any song you love: paste the chords, play along"), symbol: "music.note.list", drawn: .chart)
     }
 }

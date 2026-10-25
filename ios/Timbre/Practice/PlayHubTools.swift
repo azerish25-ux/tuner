@@ -2,7 +2,7 @@ import QuartzCore
 import SwiftUI
 import TimbreCore
 
-// The Play hub's tools, alive: each idles in a small working picture of itself. The metronome swings at the player's
+// The Practice hub's tools, alive: each idles in a small working picture of itself. The metronome swings at the player's
 // tempo (on the click itself while it runs), the drone ripples with the tanpura's pluck cycle (the drone's own clock
 // while it plays), a chord box strums the chord last opened in the Chords tool (a I–V–vi–IV until there is one) in
 // this tuning, the Scales tool's box runs up and down note by note, a string rings in its second mode round the

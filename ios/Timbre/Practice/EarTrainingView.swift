@@ -1,7 +1,7 @@
 import SwiftUI
 import TimbreCore
 
-/// Ear training: ten questions a round. Each question is drawn as the Play hub's interval staircase: as the tones
+/// Ear training: ten questions a round. Each question is drawn as the Practice hub's interval staircase: as the tones
 /// sound, the first note rises onto its step and the rest rise behind a frosted veil marked with the places they may
 /// land (the answers to choose from), a "?" pulsing with them; on the answer the veil lifts and the notes land on
 /// their steps, named, with the interval. Round dots, a combo that heats up on a run of right answers, Recent answers
@@ -699,7 +699,7 @@ private struct EarPicture {
     }
 }
 
-/// A question drawn as the Play hub's interval staircase (`IntervalStairsArt`): a step a semitone up from the first
+/// A question drawn as the Practice hub's interval staircase (`IntervalStairsArt`): a step a semitone up from the first
 /// note. On the question's first hearing each note rises as its tone begins: the first onto its step, the rest into a
 /// frosted veil over the steps they might land on. They rise to the veil's "?", the same height whatever the answer,
 /// so nothing is given away; the veil marks the places the answers to choose from would land (higher-or-lower's two,

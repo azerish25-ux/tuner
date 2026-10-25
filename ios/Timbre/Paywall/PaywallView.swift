@@ -606,9 +606,8 @@ struct PaywallView: View {
                 .shadow(color: .black.opacity(0.55), radius: 8, y: 5)
                 .accessibilityHidden(true)
         } else {
-            Image(systemName: course.symbol).font(.system(size: 22, weight: .semibold)).foregroundStyle(accent)
+            Glyph(course.symbol, size: Glyph.lead, tint: accent)
                 .frame(width: 40, height: 58)
-                .accessibilityHidden(true)
         }
     }
 
@@ -617,17 +616,13 @@ struct PaywallView: View {
     /// The outcomes' icons, the size of the plan track's nodes.
     private static let benefitArt: CGFloat = 24
 
-    /// Three results for the person's goal; they slide in one after another. Every outcome wears one tint: a plain
-    /// SF Symbol in mint, the width of the plan track's nodes, never a disc or a colour of its own.
+    /// Three results for the person's goal; they slide in one after another. Every outcome wears one tint: a bare
+    /// glyph in mint (`Glyph`), the width of the plan track's nodes, never a disc or a colour of its own.
     private func outcomeList(_ outcomes: [PaywallPlan.Outcome]) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             ForEach(Array(outcomes.enumerated()), id: \.element.id) { index, outcome in
                 HStack(spacing: 10) {
-                    Image(systemName: outcome.symbol)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(Palette.mint)
-                        .frame(width: Self.benefitArt, height: Self.benefitArt)
-                        .accessibilityHidden(true)
+                    outcomeGlyph(outcome)
                     // One line in English; longer translations wrap rather than truncate, and at the accessibility
                     // sizes it takes the lines it needs.
                     outcome.text.font(.subheadline.weight(.medium)).foregroundStyle(Palette.ink)
@@ -642,6 +637,14 @@ struct PaywallView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 6)
         .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in outcomesHeight = height }
+    }
+
+    @ViewBuilder private func outcomeGlyph(_ outcome: PaywallPlan.Outcome) -> some View {
+        if let drawn = outcome.drawn {
+            Glyph(drawn, size: Self.benefitArt, tint: Palette.mint)
+        } else {
+            Glyph(outcome.symbol, size: Self.benefitArt, tint: Palette.mint)
+        }
     }
 
     // MARK: What's in Pro
@@ -1369,10 +1372,10 @@ struct PaywallView: View {
             }
             if context == .onboarding {
                 Button { decline() } label: {
-                    Text("Continue with the free tuner").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft)
-                        .padding(.horizontal, 12).tapTarget()
+                    Text("Continue with the free tuner").font(.subheadline.weight(.semibold))
+                        .padding(.horizontal, 12)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(TextLinkStyle(tint: Palette.inkSoft))
                 .padding(.top, 4)
                 .accessibilityIdentifier("paywall.free")
             }
@@ -1421,8 +1424,9 @@ struct PaywallView: View {
         }
     }
 
-    /// "Restore purchases · Terms · Privacy", each a 44 pt target. "Restore purchases" as Settings words it; where
-    /// the row can't hold it (a long translation at a large size), "Restore", read as "Restore purchases".
+    /// "Restore purchases · Terms · Privacy", text links (`TextLinkStyle`: underlined with Button Shapes, 44 pt
+    /// targets). "Restore purchases" as Settings words it; where the row can't hold it (a long translation at a large
+    /// size), "Restore", read as "Restore purchases".
     private var links: some View {
         ViewThatFits(in: .horizontal) {
             linkRow(restore: "Restore purchases")
@@ -1434,20 +1438,20 @@ struct PaywallView: View {
     private func linkRow(restore: LocalizedStringKey) -> some View {
         HStack(spacing: 0) {
             Button { Task { await commerce.restore() } } label: { linkLabel(restore) }
-                .buttonStyle(.plain)
+                .buttonStyle(TextLinkStyle(tint: Palette.inkSoft))
                 .disabled(commerce.loading)
                 .accessibilityLabel(Text("Restore purchases"))
             separator
             Link(destination: AppLinks.terms) { linkLabel("Terms") }
+                .buttonStyle(TextLinkStyle(tint: Palette.inkSoft))
             separator
             Link(destination: AppLinks.privacy) { linkLabel("Privacy") }
+                .buttonStyle(TextLinkStyle(tint: Palette.inkSoft))
         }
     }
 
     private func linkLabel(_ title: LocalizedStringKey) -> some View {
-        Text(title).foregroundStyle(Palette.inkSoft)
-            .padding(.horizontal, 8)
-            .tapTarget()
+        Text(title).padding(.horizontal, 8).frame(minWidth: Metrics.minTarget)
     }
 
     /// "Have an offer code? Redeem code": the App Store's own redemption sheet (codes are set up in App Store Connect).
@@ -1460,9 +1464,8 @@ struct PaywallView: View {
                 .font(.footnote.weight(.semibold))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 12)
-                .tapTarget()
         }
-        .buttonStyle(.plain)
+        .buttonStyle(TextLinkStyle())
         .disabled(commerce.purchasing != nil)
         .accessibilityIdentifier("paywall.redeem")
     }

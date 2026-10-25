@@ -107,8 +107,8 @@ BEGIN = re.compile(r"PREVIEW-BEGIN (\d+(?:\.\d+)?)")
 END = re.compile(r"PREVIEW-END (\w+)")
 
 # Each clip's accent when the listing's table names none: the tuner mint, Show me the guitar course's mint, the
-# highway the Originals' sky, rewards amber, Songs the stage light.
-DEFAULT_TINTS = {"lock": "mint", "tuned": "mint", "showme": "mint", "highway": "sky", "results": "amber",
+# highway the Originals' sky, rewards the stars' gold, Songs the stage light.
+DEFAULT_TINTS = {"lock": "mint", "tuned": "mint", "showme": "mint", "highway": "sky", "results": "gold",
                  "songs": "spotlight", "end": "mint"}
 
 

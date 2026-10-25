@@ -121,7 +121,7 @@ final class CoachNotesTests: XCTestCase {
         XCTAssertEqual(great.first?.tone, .fix)
     }
 
-    /// Review 13's results: four clean steps and a 50 % "Keep going" play-along used to average 90 % into three stars
+    /// Four clean steps and a 50 % "Keep going" play-along used to average 90 % into three stars
     /// and "Great work", under a coach note that a move didn't land. The final take now holds the lesson at two stars,
     /// the coach never blames the tempo for it, and its specific fix leads.
     func testAKeepGoingPlayAlongHoldsTheStarsAndTheCoachAgrees() {

@@ -373,7 +373,7 @@ final class TimbreUITests: XCTestCase {
 
     func test04PracticeTour() throws {
         launch()
-        tab("Play"); settle(1.5); shot("20-practice-hub")
+        tab("Practice"); settle(1.5); shot("20-practice-hub")
         // The Today card sits above the tools: bring the metronome into view first.
         scrollTo(element("practice.metronome"))
         element("practice.metronome").tap(); settle(1.2); shot("21-metronome")
@@ -410,7 +410,7 @@ final class TimbreUITests: XCTestCase {
     func test06PurchaseUnlocksPro() throws {
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
         launch()
-        tab("Play"); settle()
+        tab("Practice"); settle()
         scrollTo(element("practice.drone"))
         element("practice.drone").tap()
         let purchase = element("paywall.purchase")
@@ -447,7 +447,7 @@ final class TimbreUITests: XCTestCase {
         let teaser = labeled("Accuracy over time").exists
         storeFrame("45-journey-pro", picture: stillScreenshot(), ok: chart.exists && chart.isHittable && !teaser,
                    "Progress shows \(teaser ? "the Pro teaser" : "no tuning accuracy card") after the purchase")
-        tab("Play"); settle()
+        tab("Practice"); settle()
         scrollTo(element("practice.intonation"))
         element("practice.intonation").tap(); settle(1.5); shot("46-intonation")
         app.navigationBars.buttons.firstMatch.tap(); settle()

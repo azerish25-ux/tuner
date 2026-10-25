@@ -83,10 +83,10 @@ struct ReminderAskStep: View {
             .disabled(asking)
             .accessibilityIdentifier("onboarding.reminder.allow")
             Button { finish(on: false, result: "later") } label: {
-                Text("Not now").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.inkSoft)
-                    .frame(maxWidth: .infinity, minHeight: Metrics.minTarget).contentShape(Rectangle())
+                Text("Not now").font(.subheadline.weight(.semibold))
+                    .padding(.horizontal, 24)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(TextLinkStyle(tint: Palette.inkSoft))
             .disabled(asking)
             .accessibilityIdentifier("onboarding.reminder.later")
         }

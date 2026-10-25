@@ -82,9 +82,7 @@ struct DetectionPill: View {
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityLabel(auto ? Text("Automatic") : Text("Manual"))
-        .accessibilityShowsLargeContentViewer {
-            Label(auto ? "Automatic" : "Manual", systemImage: auto ? "dot.radiowaves.left.and.right" : "hand.point.up.left")
-        }
+        .cappedControl(auto ? Text("Automatic") : Text("Manual"), symbol: auto ? "dot.radiowaves.left.and.right" : "hand.point.up.left")
         .accessibilityHint(hint(auto: auto))
         .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityIdentifier(auto ? "tune.auto" : "tune.manual")
@@ -145,9 +143,8 @@ struct ReferenceToneButton: View {
         .buttonStyle(PressScaleStyle())
         .animation(Motion.quick, value: playing)
         .accessibilityLabel(playing ? Text("Stop reference tone") : Text("Play reference tone"))
-        .accessibilityShowsLargeContentViewer {
-            Label(playing ? "Stop reference tone" : "Play reference tone", systemImage: playing ? "speaker.wave.2.fill" : "tuningfork")
-        }
+        .cappedControl(playing ? Text("Stop reference tone") : Text("Play reference tone"),
+                       symbol: playing ? "speaker.wave.2.fill" : "tuningfork")
         .accessibilityIdentifier("tune.tone")
     }
 

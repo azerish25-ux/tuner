@@ -137,7 +137,7 @@ struct LessonResults: View {
                 starsCenter = center
             }
             VStack(spacing: 8) {
-                Text(headline).font(Typeface.display(36)).tracking(-0.8).foregroundStyle(Palette.ink)
+                Text(headline).font(Typeface.display(.display)).tracking(-0.8).foregroundStyle(Palette.ink)
                     .multilineTextAlignment(.center)
                     .accessibilityAddTraits(.isHeader)
                 Text(lesson.title.localized).font(.headline).foregroundStyle(Palette.inkSoft)
@@ -513,7 +513,7 @@ struct LessonResults: View {
 
     private var reminderTitle: Text {
         Text(reminderOn ? LocalizedStringKey("Daily practice reminder") : LocalizedStringKey("Make it a habit"))
-            .font(Typeface.label(14))
+            .font(Typeface.label(.footnote))
             .foregroundStyle(Palette.ink)
     }
 
@@ -734,7 +734,7 @@ struct SharePill<Card: View>: View {
             Image(systemName: "square.and.arrow.up").font(.system(size: 13, weight: .bold)).accessibilityHidden(true)
             Text("Share")
         }
-        .font(Typeface.label(14))
+        .font(Typeface.label(.footnote))
         .foregroundStyle(tint)
         .padding(.leading, 9).padding(.trailing, 16)
         .frame(minHeight: Metrics.minTarget)

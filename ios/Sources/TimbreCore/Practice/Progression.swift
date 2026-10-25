@@ -51,6 +51,64 @@ public struct ProgressState: Codable, Equatable, Sendable {
     }
 }
 
+extension ProgressState {
+    /// Reads what it can and keeps the default for the rest: a missing key (a save from before the field existed) or a
+    /// value of the wrong type costs that one field, never the player's XP, badges or streak freezes. An unreadable
+    /// string sample is dropped on its own, and values out of range are brought back in (`repaired`), so the state
+    /// that loads is always one `isValid` accepts.
+    public init(from decoder: Decoder) throws {
+        self.init()
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        func read<Value: Decodable>(_ value: inout Value, _ key: CodingKeys) {
+            if let decoded = try? container.decodeIfPresent(Value.self, forKey: key) { value = decoded }
+        }
+        read(&xp, .xp)
+        read(&stats, .stats)
+        read(&questDay, .questDay)
+        read(&questProgress, .questProgress)
+        read(&questsClaimed, .questsClaimed)
+        read(&achievements, .achievements)
+        read(&instrumentsTuned, .instrumentsTuned)
+        if let samples = try? container.decodeIfPresent([LossyEntry<StringSample>].self, forKey: .stringSamples) {
+            stringSamples = samples.compactMap(\.value)
+        }
+        read(&restrung, .restrung)
+        read(&streakFreezes, .streakFreezes)
+        read(&frozenDays, .frozenDays)
+        read(&freezeAwardDay, .freezeAwardDay)
+        read(&tunedToday, .tunedToday)
+        read(&dailySetDay, .dailySetDay)
+        self = repaired
+    }
+
+    /// The state with every value brought into the ranges `isValid` checks: negative counts dropped, lists trimmed to
+    /// their newest entries, unreadable samples left out.
+    public var repaired: ProgressState {
+        var state = self
+        state.xp = min(50_000_000, max(0, xp))
+        state.stats = stats.filter { $0.value >= 0 }
+        state.questProgress = questProgress.filter { $0.value >= 0 }
+        state.questsClaimed = Array(questsClaimed.suffix(16))
+        state.achievements = Array(achievements.suffix(128))
+        state.instrumentsTuned = Array(instrumentsTuned.suffix(128))
+        state.stringSamples = Array(stringSamples.filter { $0.cents.isFinite && abs($0.cents) <= 1200 }.suffix(Self.sampleLimit))
+        if let freezes = streakFreezes { state.streakFreezes = min(StreakFreeze.cap, max(0, freezes)) }
+        if let days = frozenDays { state.frozenDays = Array(days.suffix(400)) }
+        if let today = tunedToday {
+            var lists: [String: [Int]] = [:]
+            for (instrument, courses) in today.prefix(128) { lists[instrument] = Array(courses.suffix(64)) }
+            state.tunedToday = lists
+        }
+        return state
+    }
+}
+
+/// A list element decoded on its own: one that can't be read becomes nil instead of failing the whole list.
+private struct LossyEntry<Value: Decodable>: Decodable {
+    let value: Value?
+    init(from decoder: Decoder) throws { value = try? Value(from: decoder) }
+}
+
 public struct StringSample: Codable, Equatable, Sendable {
     public var instrumentId: String
     public var anchor: String
