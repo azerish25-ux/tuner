@@ -34,9 +34,10 @@ final class LocalizationLaunchUITests: XCTestCase {
 
     private func settle(_ seconds: Double) { Thread.sleep(forTimeInterval: seconds) }
 
+    /// Attaches `picture` (a new screenshot when nil) as `name`.
     @discardableResult
-    private func shot(_ name: String) -> XCUIScreenshot {
-        let screenshot = XCUIScreen.main.screenshot()
+    private func shot(_ name: String, picture: XCUIScreenshot? = nil) -> XCUIScreenshot {
+        let screenshot = picture ?? XCUIScreen.main.screenshot()
         let attachment = XCTAttachment(screenshot: screenshot)
         attachment.name = name
         attachment.lifetime = .keepAlways
@@ -90,18 +91,30 @@ final class LocalizationLaunchUITests: XCTestCase {
 
     /// The tuner's big note reads "E₂" in Arabic too, never "₂E": the octave sits to the right of the note's letter.
     /// Read from the picture, since the readout is one element for VoiceOver: the note is drawn in the brightest ink,
-    /// the octave beside it in a quieter grey on the same baseline (NoteReadout, Tune/Readout.swift).
+    /// the octave beside it in a quieter grey on the same baseline (NoteReadout, Tune/Readout.swift). The demo pitch
+    /// plays the string, so the readout is up whether or not the microphone starts (its alert would cover the tuner);
+    /// while that string is locked the octave turns mint, so pictures are read until one shows it grey (unlocked).
     func testAnArabicTunerKeepsTheOctaveRightOfTheNote() {
+        app.launchEnvironment["TIMBRE_DEMO_PITCH"] = "1"
         launch(language: "ar", locale: "ar_SA", onboarded: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 30), "the tuner didn't open")
         let status = element("tune.status")
         XCTAssertTrue(status.waitForExistence(timeout: 10))
         settle(3)
-        let picture = shot("l10n-ar-tune")
         guard let line = (try? status.snapshot())?.frame, !line.isEmpty else {
+            shot("l10n-ar-tune")
             return XCTFail("no status line under the readout to measure from")
         }
-        let found = OctaveSide.measure(picture.image, above: line, screenWidth: app.frame.width)
+        let width = app.frame.width
+        var picture = XCUIScreen.main.screenshot()
+        var found = OctaveSide.measure(picture.image, above: line, screenWidth: width)
+        // The demo pitch's six-second cycle locks for under half of it: eight looks 0.7 s apart span more than one.
+        for _ in 0..<8 where found.side == .unknown {
+            settle(0.7)
+            picture = XCUIScreen.main.screenshot()
+            found = OctaveSide.measure(picture.image, above: line, screenWidth: width)
+        }
+        shot("l10n-ar-tune", picture: picture)
         XCTAssertEqual(found.side, .right, "the octave isn't to the right of the note: \(found.summary)")
     }
 

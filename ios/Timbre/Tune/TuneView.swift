@@ -54,7 +54,8 @@ struct TuneView: View {
                 let scale = TuneArrangement.readout(arrangement, size: proxy.size, regular: regularWindow, pane: pane,
                                                     largeType: dynamicTypeSize.isAccessibilitySize)
                 VStack(spacing: 0) {
-                    header
+                    // Over the stage: nothing the stage lets spill past its top ever takes the header's taps.
+                    header.zIndex(1)
                     // One layout that changes shape rather than two branches: the stage keeps its identity when the
                     // window turns or resizes, so the 3D instrument carries on instead of being rebuilt, losing its
                     // loaded model and showing the studio stand-in (or nothing) while it loads again.
@@ -533,13 +534,20 @@ struct TuneView: View {
     /// their own rail), each captioned the same way. Auto | Manual and the reference tone carry their words on the
     /// bar under the stage. A short stage (a small phone, a large text size) packs them closer, then drops the
     /// captions (each control keeps its VoiceOver label and the Large Content Viewer); only where even that can't fit
-    /// does Tune by feel wait in Settings.
+    /// does Tune by feel wait in Settings. The shortest stage (a phone at the largest accessibility text sizes, where
+    /// the readout takes the height) stands Strum beside listening: a column that doesn't fit spills over the header
+    /// above the stage, and its Strum took the taps meant for Settings there.
     private var sideControls: some View {
         ViewThatFits(in: .vertical) {
             sideColumn(spacing: 14, captioned: true, feel: true)
             sideColumn(spacing: 6, captioned: true, feel: true)
             sideColumn(spacing: 6, captioned: false, feel: true)
             sideColumn(spacing: 14, captioned: true, feel: false)
+            sideColumn(spacing: 6, captioned: false, feel: false)
+            HStack(spacing: 8) {
+                StrumToggle(captioned: false) { strumOpen = true }.strumTuneTip()
+                ListenOrb(captioned: false)
+            }
         }
     }
 

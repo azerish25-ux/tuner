@@ -22,6 +22,16 @@ struct HighwayHUD: View {
         return .numericText(value: Double(value))
     }
 
+    /// No pops or pulses: Reduce Motion, or a store capture, where the count's pop on every note (its spring
+    /// takes longer than the gap between notes) would put the counter mid-pop in almost any picture, as a rolling
+    /// digit would (`digitTransition`).
+    private var still: Bool {
+        #if DEBUG
+        if DemoScene.stillScore { return true }
+        #endif
+        return calm
+    }
+
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
             counter
@@ -48,9 +58,9 @@ struct HighwayHUD: View {
             Eyebrow("Combo", color: level >= 2 ? tint : Palette.inkSoft, style: .display)
         }
         .phaseAnimator([1.0, 1.16], trigger: combo) { content, scale in
-            content.scaleEffect(calm || combo == 0 ? 1 : CGFloat(scale), anchor: .leading)
+            content.scaleEffect(still || combo == 0 ? 1 : CGFloat(scale), anchor: .leading)
         } animation: { _ in Motion.pop }
-        .animation(calm ? nil : Motion.quick, value: combo)
+        .animation(still ? nil : Motion.quick, value: combo)
     }
 
     /// The multiplier in a ring filling toward the next step, a flame beside it from ×2.
@@ -60,7 +70,7 @@ struct HighwayHUD: View {
                 Image(systemName: "flame.fill")
                     .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(tint)
-                    .symbolEffect(.bounce, value: calm ? 0 : level)
+                    .symbolEffect(.bounce, value: still ? 0 : level)
                     .transition(.scale.combined(with: .opacity))
             }
             ZStack {
@@ -81,9 +91,9 @@ struct HighwayHUD: View {
             .shadow(color: tint.opacity(level >= 3 ? 0.55 : 0), radius: 12)
         }
         .phaseAnimator([1.0, 1.22], trigger: level) { content, scale in
-            content.scaleEffect(calm ? 1 : CGFloat(scale), anchor: .trailing)
+            content.scaleEffect(still ? 1 : CGFloat(scale), anchor: .trailing)
         } animation: { _ in Motion.pop }
-        .animation(calm ? nil : Motion.quick, value: combo)
-        .animation(calm ? nil : Motion.pluck, value: level)
+        .animation(still ? nil : Motion.quick, value: combo)
+        .animation(still ? nil : Motion.pluck, value: level)
     }
 }

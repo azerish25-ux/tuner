@@ -29,6 +29,30 @@ extension XCTestCase {
         }
         return screenshot
     }
+
+    /// Waits, from pictures alone, until `region` (fractions of the screen, origin top-left) has read dark (its mean
+    /// grey under `dark`) for `hold` seconds in a row, at most `timeout`; whether it did. A lit button giving way to a
+    /// dark one (a performance's mint Perform to the take's Stop) tells a take on screen from a stage still waiting,
+    /// and how long it has been there, without a query: a query stalls the app's main thread, and a stalled app shows
+    /// its last frame, so the dark has to be seen, not inferred from the time. A dark moment that doesn't last (the
+    /// screen coming in) starts the count again.
+    @discardableResult
+    func waitForDark(_ region: CGRect, dark: Double = 90, hold: TimeInterval, timeout: TimeInterval) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        var since: Date?
+        while Date() < deadline {
+            let level = StillScreen.brightness(XCUIScreen.main.screenshot().image.cgImage, region: region)
+            if let level, level < dark {
+                let start = since ?? Date()
+                since = start
+                if Date().timeIntervalSince(start) >= hold { return true }
+            } else {
+                since = nil
+            }
+            Thread.sleep(forTimeInterval: 0.2)
+        }
+        return false
+    }
 }
 
 /// The arithmetic behind `stillScreenshot`, on plain images and bytes.
@@ -69,6 +93,13 @@ enum StillScreen {
             .integral.intersection(CGRect(x: 0, y: 0, width: width, height: height))
         guard box.width >= 4, box.height >= 4, let part = image.cropping(to: box) else { return [] }
         return thumbnail(part)
+    }
+
+    /// The mean grey (0–255) of `region` of `image` (fractions, origin top-left); nil when the region falls outside it.
+    static func brightness(_ image: CGImage?, region: CGRect) -> Double? {
+        let part = thumbnail(image, region: region)
+        guard !part.isEmpty else { return nil }
+        return Double(part.reduce(0) { $0 + Int($1) }) / Double(part.count)
     }
 
     /// Whether every region reads the same in both pictures (each region's mean difference under `tolerance`): a

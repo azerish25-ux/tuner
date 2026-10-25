@@ -967,12 +967,20 @@ final class TimbreUITests: XCTestCase {
         storePerformFrame("65b-song-perform-violin", song: "Jingle Bells", chorus: ["jingle bells", "jingle all the way", "what fun"])
     }
 
+    /// Where a performance's bottom button sits, as fractions of the screen: the stage's Perform (mint, mean grey about
+    /// 180) and the take's Stop (dark, about 25) both fill this band across a phone.
+    private static let takeButton = CGRect(x: 0.1, y: 0.895, width: 0.8, height: 0.04)
+    /// How long the take has been on screen when its pictures are taken: about 4.5 s in, its hook line in the light.
+    private static let takeHold: TimeInterval = 4.5
+
     /// A performance's store frame: hands off from the moment the lesson shows (a query stalls the app's main thread, and a
     /// note heard late would break the run), then pairs of pictures; one snapshot afterwards checks the combo and that the
-    /// words are the chorus's.
+    /// words are the chorus's. The pictures are taken `takeHold` seconds after the take is seen on screen (the stage's
+    /// mint Perform button given way to the take's dark Stop, `takeButton`), not a fixed time after the lesson opened:
+    /// starting the audio output can hold the app for seconds first, and a held app shows the stage still.
     private func storePerformFrame(_ name: String, song: String, chorus: [String]) {
         let opened = element("lesson.close").waitForExistence(timeout: 30)
-        settle(7.0)
+        let playing = waitForDark(Self.takeButton, hold: Self.takeHold, timeout: 40)
         // Pairs of pictures 120 ms apart, hands off. The frame is the first of a pair whose HUD (score, combo, multiplier)
         // reads the same in both: no counter caught mid-change or mid-pop, which a single picture can't promise.
         var pairs: [(XCUIScreenshot, XCUIScreenshot)] = []
@@ -998,7 +1006,9 @@ final class TimbreUITests: XCTestCase {
         let picture = steady.map { pairs[$0].0 } ?? pairs[0].0
         let inChorus = chorus.contains { words.contains($0) }
         let problem: String
-        if !(opened && combo >= 8 && inChorus) {
+        if !playing {
+            problem = "\(song)'s take never stayed on screen for \(Self.takeHold) s (the stage's Perform button stayed lit; opened: \(opened))"
+        } else if !(opened && combo >= 8 && inChorus) {
             problem = "\(song)'s take shows a combo of \(combo) and the words '\(words)' (opened: \(opened)), not a run of 8+ in the chorus"
         } else if steady == nil {
             problem = "the HUD changed between every pair of pictures 120 ms apart (\(regions.count) regions): a counter mid-change"
