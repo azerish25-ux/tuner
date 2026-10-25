@@ -44,16 +44,31 @@ struct BandArrangement: Hashable, Sendable {
 
         /// The bar's harmony, change by change: the downbeat's chord (`root`, `tones`) at beat 0, then each change.
         /// A bar with one chord is one segment. Setting it puts the earliest segment on the downbeat (its beat read
-        /// as 0) and the rest in `changes`; an empty list leaves the bar without a chord (drums only).
-        /// The rendered band plays the downbeat's chord for the whole bar until it renders segment by segment.
+        /// as 0) and the rest in `changes`, one per beat (the first given wins); an empty list leaves the bar without
+        /// a chord (drums only). The band plays each segment's chord from its beat: the bass moves to its root and the
+        /// comping to its chord, and whatever was still ringing stops at the change (`BandGroove.changing(at:)`).
         var segments: [Segment] {
             get { [Segment(beat: 0, root: root, tones: tones)] + changes }
             set {
-                let ordered = newValue.sorted { $0.beat < $1.beat }
+                // In beat order; segments given at the same beat keep the order they came in.
+                let indexed = newValue.enumerated().sorted { ($0.element.beat, $0.offset) < ($1.element.beat, $1.offset) }
+                let ordered = indexed.map { $0.element }
                 root = ordered.first?.root
                 tones = ordered.first?.tones ?? []
-                changes = Array(ordered.dropFirst())
+                var later: [Segment] = []
+                for segment in ordered.dropFirst() where segment.beat.isFinite && segment.beat > 1e-6 {
+                    if let last = later.last, abs(last.beat - segment.beat) < 1e-6 { continue }
+                    later.append(segment)
+                }
+                changes = later
             }
+        }
+
+        /// The chord sounding at `beat` of this bar: the last segment starting at or before it.
+        func segment(at beat: Double) -> Segment {
+            var found = Segment(beat: 0, root: root, tones: tones)
+            for change in changes where change.beat <= beat + 1e-6 { found = change }
+            return found
         }
     }
 
@@ -213,17 +228,21 @@ enum KeyEstimate {
 
 // MARK: - The rendered band
 
-/// Every distinct bar of an arrangement (plus the ending) rendered once, back to back, in two layers: the rhythm
-/// section (drums and bass) and the harmony (the comping chords), so the band can thin to drums and bass and fill
-/// back in without a second rendering. After the bars come two one-shots the take can fire over the band: a crash
-/// (the multiplier reaching ×4) and a choked strum (a run broken). Each part runs a bar plus a release tail, so a
-/// bar's last notes ring over the next downbeat. Immutable after init; the render thread only reads it.
+/// Every distinct bar of an arrangement (plus the ending) rendered once, back to back, in three layers: the kit (drums
+/// and cymbals, nothing with a pitch the microphone could take for a note), the pitched rhythm section (the bass line
+/// and the toms) and the harmony (the comping). So the band can thin to drums and bass and fill back in, and keep to
+/// its kit on the phone's speaker, without a second rendering. After the bars come two one-shots the take can fire
+/// over the band, in the kit layer: a crash (the multiplier reaching ×4) and a choked strum (a run broken). Each part
+/// runs a bar plus a release tail, so a bar's last notes ring over the next downbeat. Immutable after init; the render
+/// thread only reads it.
 final class BandTrack: @unchecked Sendable {
     let sampleRate: Int
-    /// The rhythm section, and the one-shots.
-    let samples: UnsafeMutableBufferPointer<Float>
-    /// The harmony, at the same offsets as `samples` (silent under the one-shots).
-    let harmony: UnsafeMutableBufferPointer<Float>
+    /// The kit, and the one-shots.
+    let kit: UnsafeMutableBufferPointer<Float>
+    /// The bass line and the toms, at the same offsets as `kit`; nil when the arrangement has neither.
+    let bass: UnsafeMutableBufferPointer<Float>?
+    /// The comping, at the same offsets; nil when the arrangement has none.
+    let harmony: UnsafeMutableBufferPointer<Float>?
     let starts: [Int]
     let lengths: [Int]
     /// Part to start on each bar of the arrangement (repeats when the step runs longer).
@@ -234,9 +253,9 @@ final class BandTrack: @unchecked Sendable {
     let crash: Int
     let choke: Int
 
-    /// `harmony[i]` lies under `rhythm[i]` (a missing or shorter one is silent); `crash` and `choke` are parts of
-    /// `rhythm`.
-    init(sampleRate: Int, rhythm: [[Float]], harmony: [[Float]], sequence: [Int], ending: Int, crash: Int, choke: Int) {
+    /// `bass[i]` and `harmony[i]` lie under `kit[i]` (a missing or shorter one is silent there); `crash` and `choke`
+    /// are parts of `kit`.
+    init(sampleRate: Int, kit: [[Float]], bass: [[Float]], harmony: [[Float]], sequence: [Int], ending: Int, crash: Int, choke: Int) {
         self.sampleRate = sampleRate
         self.sequence = sequence
         self.ending = ending
@@ -244,44 +263,58 @@ final class BandTrack: @unchecked Sendable {
         self.choke = choke
         var peak: Float = 0
         var total = 0
-        for (index, part) in rhythm.enumerated() {
+        for (index, part) in kit.enumerated() {
             total += part.count
-            let under = index < harmony.count ? harmony[index] : []
+            let low = index < bass.count ? bass[index] : []
+            let high = index < harmony.count ? harmony[index] : []
             for (frame, value) in part.enumerated() {
-                peak = max(peak, abs(value + (frame < under.count ? under[frame] : 0)))
+                let under = (frame < low.count ? low[frame] : 0) + (frame < high.count ? high[frame] : 0)
+                peak = max(peak, abs(value + under))
             }
         }
         // Mixed under the player: the loudest moment of the band stays well below full scale.
         let scale: Float = peak > 0.35 ? 0.35 / peak : 1
-        samples = UnsafeMutableBufferPointer<Float>.allocate(capacity: max(1, total))
-        samples.initialize(repeating: 0)
-        self.harmony = UnsafeMutableBufferPointer<Float>.allocate(capacity: max(1, total))
-        self.harmony.initialize(repeating: 0)
+        let lengths = kit.map { $0.count }
         var starts: [Int] = []
-        var lengths: [Int] = []
         var offset = 0
-        for (index, part) in rhythm.enumerated() {
-            starts.append(offset); lengths.append(part.count)
-            for (frame, value) in part.enumerated() { samples[offset + frame] = value * scale }
-            if index < harmony.count {
-                for (frame, value) in harmony[index].prefix(part.count).enumerated() { self.harmony[offset + frame] = value * scale }
-            }
-            offset += part.count
+        for length in lengths {
+            starts.append(offset)
+            offset += length
         }
         self.starts = starts
         self.lengths = lengths
+        self.kit = Self.layer(kit, starts: starts, lengths: lengths, total: total, scale: scale)
+        self.bass = Self.audible(bass) ? Self.layer(bass, starts: starts, lengths: lengths, total: total, scale: scale) : nil
+        self.harmony = Self.audible(harmony) ? Self.layer(harmony, starts: starts, lengths: lengths, total: total, scale: scale) : nil
+    }
+
+    /// Whether any part of a layer sounds at all.
+    private static func audible(_ parts: [[Float]]) -> Bool {
+        parts.contains { part in part.contains { $0 != 0 } }
+    }
+
+    /// One layer laid out at the parts' offsets, each part cut to its length.
+    private static func layer(_ parts: [[Float]], starts: [Int], lengths: [Int], total: Int, scale: Float) -> UnsafeMutableBufferPointer<Float> {
+        let buffer = UnsafeMutableBufferPointer<Float>.allocate(capacity: max(1, total))
+        buffer.initialize(repeating: 0)
+        for (index, part) in parts.enumerated() where index < starts.count {
+            let start = starts[index]
+            for (frame, value) in part.prefix(lengths[index]).enumerated() { buffer[start + frame] = value * scale }
+        }
+        return buffer
     }
 
     deinit {
-        samples.deallocate()
-        harmony.deallocate()
+        kit.deallocate()
+        bass?.deallocate()
+        harmony?.deallocate()
     }
 }
 
 /// What the take asks of the band as it goes, from the main thread to the render thread: thin to the drums and bass
-/// (a note missed) or play in full (a run of four again), step back under spoken cues (VoiceOver), and the one-shots
-/// over it (a crash at ×4, a choked strum when a run breaks). The band only ever plays in headphones, so these never
-/// reach the microphone. The render thread only ever `try`s the lock (it skips a read rather than wait).
+/// (a note missed) or play in full (a run of four again), step back under spoken cues (VoiceOver), keep to its kit
+/// (on the phone's speaker while the microphone listens), and the one-shots over it (a crash at ×4, a choked strum
+/// when a run breaks). The render thread only ever `try`s the lock (it skips a read rather than wait).
 final class BandFeel: @unchecked Sendable {
     struct State: Equatable {
         var thin = false
@@ -315,8 +348,10 @@ final class BandFeel: @unchecked Sendable {
     func thin(_ on: Bool) { change { $0.thin = on } }
     /// The band steps back (true), so spoken cues come through.
     func duck(_ on: Bool) { change { $0.duck = on } }
-    /// The band plays its kit layer only (true) or in full (false). A setting of the route, not of the take: `reset`
-    /// keeps it. Today the comping drops out under it; the bass, rendered with the drums, stays until the layers split.
+    /// The band plays its kit layer only (true) or in full (false): no bass, no toms, no comping, and the kit voiced
+    /// for a phone's speaker. A setting of the route, not of the take: `reset` keeps it. `AudioService` sets it from
+    /// the route and the microphone (on the speaker while it listens) and holds the band to its kit there whatever
+    /// this says; a screen may also ask for the kit anywhere.
     func kitOnly(_ on: Bool) { change { $0.kitOnly = on } }
     /// Whether the band is playing its kit only (`kitOnly(_:)`).
     var isKitOnly: Bool {
@@ -332,11 +367,14 @@ final class BandFeel: @unchecked Sendable {
 
 /// Render-thread side of the band. It never keeps time itself: the metronome's own downbeats start
 /// each bar (`downbeat`), so the band is sample-locked to the click and pauses with it.
-/// Two read heads: the bar now playing and the tail of the one before, each over both layers; a third plays the
+/// Two read heads: the bar now playing and the tail of the one before, each over the three layers; a third plays the
 /// one-shots. It follows `BandFeel` every few milliseconds. Allocates nothing.
 final class BandPlayer {
     private enum State { case playing, ending, stopped }
     private let track: BandTrack
+    private let kitLayer: UnsafeMutableBufferPointer<Float>
+    private let bassLayer: UnsafeMutableBufferPointer<Float>?
+    private let harmonyLayer: UnsafeMutableBufferPointer<Float>?
     private let feel: BandFeel
     /// The metronome bar (0 = the count-in bar) on which the band's first bar starts.
     private let firstBar: Int
@@ -346,32 +384,51 @@ final class BandPlayer {
     private var tailGain: Float = 1, tailFade: Float = 0
     private var gain: Float = 1, target: Float = 1
     private let ramp: Float
-    /// The harmony's level (0 thinned to drums and bass) and the whole band's under spoken cues, each easing to its
-    /// target over about 150 ms.
+    /// Each layer's level, easing to its target over about 150 ms: the comping (0 thinned, or kit only), the bass and
+    /// toms (0 kit only), the kit (stepping back when a kit on its own is thinned), how far the kit is voiced for the
+    /// speaker, and the whole band under spoken cues.
     private var harmony: Float = 1, harmonyTarget: Float = 1
+    private var low: Float = 1, lowTarget: Float = 1
+    private var drumsLevel: Float = 1, drumsTarget: Float = 1
+    private var speaker: Float = 0, speakerTarget: Float = 0
     private var duck: Float = 1, duckTarget: Float = 1
     private let ease: Float
     private var shotPosition = 0, shotEnd = 0
     private var crashes = 0, chokes = 0
-    /// The band plays its kit only (`BandFeel.kitOnly`): the harmony stays out, the final chord's too.
-    private var kitOnly = false
+    /// The take's last word on thinning (kept while `BandFeel` can't be read).
+    private var thinned = false
+    /// The route holds the band to its kit (`AudioService`: on the speaker while the microphone listens), whatever
+    /// `BandFeel` says. Set under the output's lock.
+    var routeKitOnly = false
+    /// The kit as a phone's speaker plays it: nothing under 200 Hz (the kick's boom, the snare's body), which a phone
+    /// can't play anyway and the pitch detector could take for a low note.
+    private var speakerFilter: SpeakerFilter
     /// Frames until `BandFeel` is read again (about 5 ms).
     private var poll = 0
     private static let pollFrames = 256
     private static let duckLevel: Float = 0.4
+    /// The kit on the speaker sits a little under its headphone level, so the microphone hears the instrument first.
+    private static let speakerLevel: Float = 0.8
+    /// A kit on its own, thinned after a miss, steps back this far (there is no comping to drop), and comes back in
+    /// full at four in a row.
+    private static let thinKit: Float = 0.5
 
-    init(track: BandTrack, firstBar: Int, feel: BandFeel = .shared) {
+    init(track: BandTrack, firstBar: Int, kitOnly: Bool = false, feel: BandFeel = .shared) {
         self.track = track
+        kitLayer = track.kit
+        bassLayer = track.bass
+        harmonyLayer = track.harmony
         self.feel = feel
         self.firstBar = firstBar
+        routeKitOnly = kitOnly
         ramp = 1 / Float(max(1, Double(track.sampleRate) * 0.04))
         ease = 1 / Float(max(1, Double(track.sampleRate) * 0.15))
-        if let now = feel.read() {
-            crashes = now.crashes; chokes = now.chokes
-            kitOnly = now.kitOnly
-            harmony = now.thin || now.kitOnly ? 0 : 1; harmonyTarget = harmony
-            duck = now.duck ? Self.duckLevel : 1; duckTarget = duck
-        }
+        speakerFilter = SpeakerFilter(cutoff: 200, rate: Double(track.sampleRate))
+        let now = feel.read()
+        crashes = now?.crashes ?? 0
+        chokes = now?.chokes ?? 0
+        aim(now)
+        harmony = harmonyTarget; low = lowTarget; drumsLevel = drumsTarget; speaker = speakerTarget; duck = duckTarget
     }
 
     /// Something is coming out (the click ducks under it).
@@ -385,12 +442,13 @@ final class BandPlayer {
         start(track.sequence[index % track.sequence.count], tailFade: 0)
     }
 
-    /// The final chord now, with the whole band; the bar under it fades out quickly.
+    /// The final chord now, with the whole band (just its kit where the route keeps it to that); the bar under it
+    /// fades out quickly.
     func finish() {
         guard state == .playing else { return }
         guard isSounding else { stop(); return }
         state = .ending
-        harmonyTarget = kitOnly ? 0 : 1
+        aim(feel.read())
         start(track.ending, tailFade: 1 / Float(max(1, Double(track.sampleRate) * 0.12)))
     }
 
@@ -408,17 +466,34 @@ final class BandPlayer {
         end = position + track.lengths[part]
     }
 
-    /// Reads what the take asks for: the band's thinning and ducking, and any new one-shot.
+    /// The layers' targets from what the take and the route ask; with `now` nil (the main thread holds it), the
+    /// take's last word stands. A final chord is never thinned.
+    private func aim(_ now: BandFeel.State?) {
+        if let now {
+            duckTarget = now.duck ? Self.duckLevel : 1
+            thinned = now.thin
+        }
+        let kitOnly = routeKitOnly || (now?.kitOnly ?? (speakerTarget > 0))
+        let thin = state == .playing && thinned
+        harmonyTarget = kitOnly || thin ? 0 : 1
+        lowTarget = kitOnly ? 0 : 1
+        drumsTarget = kitOnly && thin ? Self.thinKit : 1
+        speakerTarget = kitOnly ? 1 : 0
+    }
+
+    /// Reads what the take asks for: the band's thinning, ducking and kit, and any new one-shot.
     private func follow() {
-        guard let now = feel.read() else { return }
-        duckTarget = now.duck ? Self.duckLevel : 1
-        kitOnly = now.kitOnly
+        let now = feel.read()
+        aim(now)
+        if !isSounding {
+            // Nothing is coming out yet (the count-in): the band starts as asked, with no fade to hear.
+            harmony = harmonyTarget; low = lowTarget; drumsLevel = drumsTarget; speaker = speakerTarget
+        }
+        guard let now else { return }
         guard state == .playing else {
             crashes = now.crashes; chokes = now.chokes
-            if kitOnly { harmonyTarget = 0 }
             return
         }
-        harmonyTarget = now.thin || now.kitOnly ? 0 : 1
         if now.crashes != crashes {
             crashes = now.crashes
             shoot(track.crash)
@@ -435,6 +510,10 @@ final class BandPlayer {
         shotEnd = shotPosition + track.lengths[part]
     }
 
+    private static func approach(_ value: Float, _ goal: Float, by step: Float) -> Float {
+        value < goal ? min(goal, value + step) : max(goal, value - step)
+    }
+
     func nextSample() -> Float {
         if poll == 0 {
             poll = Self.pollFrames
@@ -442,27 +521,74 @@ final class BandPlayer {
         } else {
             poll -= 1
         }
-        if harmony != harmonyTarget { harmony = harmony < harmonyTarget ? min(harmonyTarget, harmony + ease) : max(harmonyTarget, harmony - ease) }
-        if duck != duckTarget { duck = duck < duckTarget ? min(duckTarget, duck + ease) : max(duckTarget, duck - ease) }
-        var value: Float = 0
+        if harmony != harmonyTarget { harmony = Self.approach(harmony, harmonyTarget, by: ease) }
+        if low != lowTarget { low = Self.approach(low, lowTarget, by: ease) }
+        if drumsLevel != drumsTarget { drumsLevel = Self.approach(drumsLevel, drumsTarget, by: ease) }
+        if speaker != speakerTarget { speaker = Self.approach(speaker, speakerTarget, by: ease) }
+        if duck != duckTarget { duck = Self.approach(duck, duckTarget, by: ease) }
+        var drums: Float = 0
+        var bass: Float = 0
+        var chords: Float = 0
         if position < end {
-            value += track.samples[position] + track.harmony[position] * harmony
+            drums += kitLayer[position]
+            if let bassLayer { bass += bassLayer[position] }
+            if let harmonyLayer { chords += harmonyLayer[position] }
             position += 1
         }
         if tailPosition < tailEnd {
-            value += (track.samples[tailPosition] + track.harmony[tailPosition] * harmony) * tailGain
+            drums += kitLayer[tailPosition] * tailGain
+            if let bassLayer { bass += bassLayer[tailPosition] * tailGain }
+            if let harmonyLayer { chords += harmonyLayer[tailPosition] * tailGain }
             tailPosition += 1
             if tailFade > 0 {
                 tailGain = max(0, tailGain - tailFade)
                 if tailGain == 0 { tailPosition = tailEnd }
             }
         }
+        // The one-shots ring out in full over a kit that has stepped back.
+        var kit = drums * drumsLevel
         if shotPosition < shotEnd {
-            value += track.samples[shotPosition]
+            kit += kitLayer[shotPosition]
             shotPosition += 1
         }
-        if gain != target { gain = gain < target ? min(target, gain + ramp) : max(target, gain - ramp) }
-        return value * gain * duck
+        // The filter runs on every sample, so moving to and from the speaker's voicing never clicks.
+        let filtered = speakerFilter.process(kit)
+        if speaker > 0 {
+            let voiced = kit + (filtered - kit) * speaker
+            kit = voiced * (1 - (1 - Self.speakerLevel) * speaker)
+        }
+        if gain != target { gain = Self.approach(gain, target, by: ramp) }
+        return (kit + bass * low + chords * harmony) * gain * duck
+    }
+}
+
+/// A second-order high-pass (Butterworth, an RBJ biquad) for the render thread: no allocation, its state in doubles.
+private struct SpeakerFilter {
+    private let b0, b1, b2, a1, a2: Double
+    private var x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0
+
+    init(cutoff: Double, rate: Double) {
+        let omega = 2 * Double.pi * min(cutoff, rate * 0.45) / max(1, rate)
+        let alpha = sin(omega) / (2 * 0.7071)
+        let cosine = cos(omega)
+        let a0 = 1 + alpha
+        b0 = (1 + cosine) / 2 / a0
+        b1 = -(1 + cosine) / a0
+        b2 = (1 + cosine) / 2 / a0
+        a1 = -2 * cosine / a0
+        a2 = (1 - alpha) / a0
+    }
+
+    mutating func process(_ input: Float) -> Float {
+        let x = Double(input)
+        var y = b0 * x + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2
+        // Settles to exact silence rather than lingering in subnormal numbers.
+        if abs(y) < 1e-15 { y = 0 }
+        x2 = x1
+        x1 = x
+        y2 = y1
+        y1 = y
+        return Float(y)
     }
 }
 
@@ -526,8 +652,9 @@ enum BandSynth {
             sequence.append(specs.count)
             specs.append(bar)
         }
-        let last = arrangement.bars.last
-        specs.append(BandArrangement.Bar(root: last?.root, tones: last?.tones ?? [], ending: true))
+        // The final chord is the one the last bar ends on.
+        let closing = arrangement.bars.last?.segments.last
+        specs.append(BandArrangement.Bar(root: closing?.root, tones: closing?.tones ?? [], ending: true))
 
         let table = Wavetable(partials: [1, 0.35, 0.12, 0.05])
         let push = 0.006 * rate
@@ -539,51 +666,68 @@ enum BandSynth {
         // kick and bass stay dry under its low cut. Recordings bring their own room: less of it.
         let room = RoomReverb.Settings(wet: recorded ? 0.09 : 0.16, feedback: 0.78, damping: 0.4, lowCut: 280)
         let fade = Int(0.04 * rate)
-        var rhythm: [[Float]] = []
+        var kits: [[Float]] = []
+        var lows: [[Float]] = []
         var harmony: [[Float]] = []
         for (number, spec) in specs.enumerated() {
             let sounding = spec.ending ? Int(1.3 * rate) : barLength
-            var out = [Float](repeating: 0, count: sounding + tail)
+            var kit = [Float](repeating: 0, count: sounding + tail)
+            var low = [Float](repeating: 0, count: sounding + tail)
             var chords = [Float](repeating: 0, count: sounding + tail)
             var noise = Noise(seed: UInt32(truncatingIfNeeded: 0x2545F491 &+ number &* 7919))
             // The drummer's feel, apart from the drums' own noise so their sound stays the same.
             var feel = Noise(seed: UInt32(truncatingIfNeeded: 0x51ED_270B &+ number &* 104_729))
-            let fifth = spec.tones.isEmpty || spec.tones.contains(7) ? 7 : 0
+            // The groove follows the downbeat's chord; each note and stroke then sounds the chord of the change it
+            // starts under, and nothing rings across a change.
+            let changes = spec.changes.map { $0.beat }.filter { $0 < Double(meter) }
+            let chorded = spec.segments.contains { $0.root != nil && !$0.tones.isEmpty }
             let context = BandGroove.Context(meter: meter, bpm: arrangement.bpm, swing: arrangement.swing, fill: spec.fill,
                                              lift: spec.lift, ending: spec.ending, variation: spec.variation,
-                                             chord: !spec.tones.isEmpty, fifth: fifth)
-            let groove = BandGroove.bar(style, context)
-            drums(&out, groove.hits, beat: beat, push: push, number: number, players: players, rate: rate, noise: &noise, feel: &feel)
-            if arrangement.bass, let root = spec.root {
-                bassLine(&out, groove.bass, root: root, beat: beat, ending: spec.ending, reference: reference, players: players, rate: rate)
+                                             chord: chorded, fifth: fifth(of: spec.tones))
+            let groove = BandGroove.bar(style, context).changing(at: changes)
+            let toms = drums(&kit, &low, groove.hits, beat: beat, push: push, number: number, players: players, rate: rate,
+                             noise: &noise, feel: &feel)
+            var bassed = false
+            if arrangement.bass {
+                bassed = bassLine(&low, groove.bass, bar: spec, fifth: context.fifth, beat: beat, reference: reference,
+                                  players: players, rate: rate)
             }
             var harmonised = false
-            if arrangement.pad, let root = spec.root, !spec.tones.isEmpty {
+            if arrangement.pad, chorded {
                 harmonised = true
-                let comped = comp(&chords, groove.comp, root: root, tones: spec.tones, beat: beat, number: number,
-                                  reference: reference, players: players, rate: rate, feel: &feel)
+                let comped = comp(&chords, groove.comp, bar: spec, beat: beat, number: number, reference: reference,
+                                  players: players, rate: rate, feel: &feel)
                 if !comped {
-                    // The piano couldn't play the whole bar: the pad holds the chord instead (nothing half-comped).
+                    // The piano couldn't play the whole bar: the pad holds its chords instead (nothing half-comped).
                     chords = [Float](repeating: 0, count: sounding + tail)
-                    let voices = padVoicing(root: root, tones: spec.tones).map { PitchMath.frequency(midi: Double($0), reference: reference) }
-                    pad(&chords, length: spec.ending ? Int(0.9 * rate) : barLength, frequencies: voices, rate: rate, table: table)
+                    padChords(&chords, bar: spec, meter: meter, beat: beat, length: spec.ending ? Int(0.9 * rate) : barLength,
+                              reference: reference, rate: rate, table: table)
                 }
             }
-            RoomReverb.apply(&out, rate: rate, settings: room)
-            RoomReverb.fadeTail(&out, frames: fade)
+            RoomReverb.apply(&kit, rate: rate, settings: room)
+            RoomReverb.fadeTail(&kit, frames: fade)
+            let pitched = toms || bassed
+            if pitched {
+                RoomReverb.apply(&low, rate: rate, settings: room)
+                RoomReverb.fadeTail(&low, frames: fade)
+            }
             if harmonised {
                 RoomReverb.apply(&chords, rate: rate, settings: room)
                 RoomReverb.fadeTail(&chords, frames: fade)
             }
-            rhythm.append(out)
+            kits.append(kit)
+            lows.append(pitched ? low : [])
             harmony.append(harmonised ? chords : [])
         }
         let ending = specs.count - 1
-        rhythm.append(crashShot(players: players, rate: rate, room: room))
-        rhythm.append(chokeShot(rate: rate))
-        return BandTrack(sampleRate: Int(rate), rhythm: rhythm, harmony: harmony, sequence: sequence, ending: ending,
+        kits.append(crashShot(players: players, rate: rate, room: room))
+        kits.append(chokeShot(rate: rate))
+        return BandTrack(sampleRate: Int(rate), kit: kits, bass: lows, harmony: harmony, sequence: sequence, ending: ending,
                          crash: ending + 1, choke: ending + 2)
     }
+
+    /// The fifth a bass may answer a chord's root with: 7, or 0 (the root again) for a chord without one.
+    private static func fifth(of tones: [Int]) -> Int { tones.isEmpty || tones.contains(7) ? 7 : 0 }
 
     /// The crash a take fires at ×4: the recorded kit's cymbal, else the synthesized one, in the band's room.
     private static func crashShot(players: Players, rate: Double, room: RoomReverb.Settings) -> [Float] {
@@ -626,18 +770,26 @@ enum BandSynth {
     /// The kit: played, not programmed. Every hit within ±8 % of its velocity, everything but the kick and the crash
     /// off the grid by up to ±6 ms; kicks and anything on the downbeat stay exact, so the band stays sample-locked
     /// to the click. The recorded kit when it has the piece (its round robins alternating hit by hit), else synthesized.
-    private static func drums(_ out: inout [Float], _ hits: [BandGroove.Hit], beat: Double, push: Double, number: Int,
-                              players: Players, rate: Double, noise: inout Noise, feel: inout Noise) {
+    /// The toms go to `toms` (the pitched layer: a tom rings at a pitch the microphone could take for a note); true
+    /// when any did.
+    private static func drums(_ out: inout [Float], _ toms: inout [Float], _ hits: [BandGroove.Hit], beat: Double, push: Double,
+                              number: Int, players: Players, rate: Double, noise: inout Noise, feel: inout Noise) -> Bool {
+        var tomsPlayed = false
         for (index, hit) in hits.enumerated() {
             var at = Int((hit.beat * beat).rounded())
             let velocity = hit.velocity * Float(1 + 0.08 * feel.next())
             if hit.beat > 0, hit.piece != .kick, hit.piece != .crash {
                 at = max(0, at + Int((push * feel.next()).rounded()))
             }
-            let piece = hit.piece.rawValue
-            if let kit = players.kit, let samples = players.samples, kit.has(piece: piece),
-               samples.addHit(kit, piece: piece, velocity: Double(min(1, velocity)), variation: number + index,
-                              into: &out, start: at, rate: rate, gain: drumLevel) {
+            let variation = number + index
+            if hit.piece == .tomhi || hit.piece == .tomlo {
+                tomsPlayed = true
+                if !recordedHit(&toms, hit.piece, at: at, velocity: velocity, variation: variation, players: players, rate: rate) {
+                    tom(&toms, at: at, hz: hit.piece == .tomhi ? 165 : 110, velocity: velocity, rate: rate)
+                }
+                continue
+            }
+            if recordedHit(&out, hit.piece, at: at, velocity: velocity, variation: variation, players: players, rate: rate) {
                 continue
             }
             switch hit.piece {
@@ -649,20 +801,36 @@ enum BandSynth {
             case .shaker: hat(&out, at: at, velocity: velocity * 0.5, rate: rate, noise: &noise)
             case .openhat: crash(&out, at: at, velocity: velocity * 0.4, rate: rate, noise: &noise)
             case .crash: crash(&out, at: at, velocity: velocity, rate: rate, noise: &noise)
-            case .tomhi: tom(&out, at: at, hz: 165, velocity: velocity, rate: rate)
-            case .tomlo: tom(&out, at: at, hz: 110, velocity: velocity, rate: rate)
+            case .tomhi, .tomlo: break
             }
         }
+        return tomsPlayed
     }
 
-    /// The bass line on the bar's root: the recorded bass (each note, then a 60 ms let-go), else the synthesized one.
-    private static func bassLine(_ out: inout [Float], _ notes: [BandGroove.Note], root: Int, beat: Double, ending: Bool,
-                                 reference: Double, players: Players, rate: Double) {
+    /// One hit of the recorded kit, when it has the piece and it can be read.
+    private static func recordedHit(_ out: inout [Float], _ piece: BandGroove.Piece, at: Int, velocity: Float, variation: Int,
+                                    players: Players, rate: Double) -> Bool {
+        guard let kit = players.kit, let samples = players.samples, kit.has(piece: piece.rawValue) else { return false }
+        return samples.addHit(kit, piece: piece.rawValue, velocity: Double(min(1, velocity)), variation: variation, into: &out,
+                              start: at, rate: rate, gain: drumLevel)
+    }
+
+    /// The bass line, each note on the root of the chord it starts under (`Bar.segment(at:)`; nothing under no chord):
+    /// the recorded bass (each note, then a 60 ms let-go), else the synthesized one. An answer on the fifth stays on the
+    /// root under a later chord that has no fifth. True when it played anything.
+    private static func bassLine(_ out: inout [Float], _ notes: [BandGroove.Note], bar: BandArrangement.Bar, fifth: Int,
+                                 beat: Double, reference: Double, players: Players, rate: Double) -> Bool {
+        var played = false
         for note in notes {
+            let segment = bar.segment(at: note.beat)
+            guard let root = segment.root else { continue }
+            var interval = note.interval
+            if segment.beat > 0, fifth != 0, interval == fifth, Self.fifth(of: segment.tones) == 0 { interval = 0 }
             let at = Int((note.beat * beat).rounded())
-            let length = ending ? min(Int(note.beats * beat), Int(1.1 * rate)) : Int(note.beats * beat)
-            let hz = PitchMath.frequency(midi: Double(bassMidi(root) + note.interval), reference: reference)
+            let length = bar.ending ? min(Int(note.beats * beat), Int(1.1 * rate)) : Int(note.beats * beat)
+            let hz = PitchMath.frequency(midi: Double(bassMidi(root) + interval), reference: reference)
             let release = Int(0.06 * rate)
+            played = true
             if let set = players.bass, let samples = players.samples, set.covers(hz),
                samples.addNote(set, hz: hz, velocity: bassVelocity * Double(note.velocity), into: &out, start: at,
                                length: length + release, rate: rate, release: 0.06) {
@@ -670,6 +838,7 @@ enum BandSynth {
             }
             bass(&out, at: at, length: length, hz: hz, velocity: note.velocity, rate: rate)
         }
+        return played
     }
 
     /// Roots between F1 and E2, where a bass guitar sits.
@@ -678,16 +847,19 @@ enum BandSynth {
         return pc >= 5 ? 24 + pc : 36 + pc
     }
 
-    /// The bar's chord strokes. The piano rolls its chord low to high a few milliseconds apart, or breaks it one tone
-    /// at a time over the pedal; the guitar strums its power chord, its staccato upper voicing or its let-ring chord
-    /// string by string, down or up (the piano covers a guitar stroke it can't play). Only off-downbeat strokes move
-    /// off the grid. False when the piano couldn't be read (the pad plays instead).
-    private static func comp(_ out: inout [Float], _ strokes: [BandGroove.Stroke], root: Int, tones: [Int], beat: Double,
+    /// The bar's chord strokes, each on the chord it starts under (`Bar.segment(at:)`; none under no chord). The piano
+    /// rolls its chord low to high a few milliseconds apart, or breaks it one tone at a time over the pedal; the guitar
+    /// strums its power chord, its staccato upper voicing or its let-ring chord string by string, down or up (the piano
+    /// covers a guitar stroke it can't play). Only off-downbeat strokes move off the grid. False when the piano couldn't
+    /// be read (the pad plays instead).
+    private static func comp(_ out: inout [Float], _ strokes: [BandGroove.Stroke], bar: BandArrangement.Bar, beat: Double,
                              number: Int, reference: Double, players: Players, rate: Double, feel: inout Noise) -> Bool {
         let hz = { (midi: Int) in PitchMath.frequency(midi: Double(midi), reference: reference) }
-        let chord = padVoicing(root: root, tones: tones).sorted().map(hz)
-        let broken = arpeggioVoicing(root: root, tones: tones).map(hz)
         for (index, stroke) in strokes.enumerated() {
+            let segment = bar.segment(at: stroke.beat)
+            guard let root = segment.root, !segment.tones.isEmpty else { continue }
+            let tones = segment.tones
+            let chord = padVoicing(root: root, tones: tones).sorted().map(hz)
             var at = Int((stroke.beat * beat).rounded())
             if stroke.beat > 0 { at = max(0, at + Int((0.004 * rate * feel.next()).rounded())) }
             let length = max(1, Int(stroke.beats * beat))
@@ -696,6 +868,7 @@ enum BandSynth {
                 guard piano(&out, chord, at: at, length: length, velocity: stroke.velocity, players: players, rate: rate,
                             feel: &feel) else { return false }
             case .arpeggio:
+                let broken = arpeggioVoicing(root: root, tones: tones).map(hz)
                 guard let keys = players.keys, let samples = players.samples, !broken.isEmpty else { return false }
                 let note = broken[stroke.tone % broken.count]
                 guard keys.covers(note) else { return false }
@@ -720,6 +893,22 @@ enum BandSynth {
             }
         }
         return true
+    }
+
+    /// The pad under each of the bar's chords, from its change to the next (the last one for `length` frames from the
+    /// downbeat).
+    private static func padChords(_ out: inout [Float], bar: BandArrangement.Bar, meter: Int, beat: Double, length: Int,
+                                  reference: Double, rate: Double, table: Wavetable) {
+        let segments = bar.segments.filter { $0.beat < Double(meter) }
+        for (index, segment) in segments.enumerated() {
+            guard let root = segment.root, !segment.tones.isEmpty else { continue }
+            let start = index == 0 ? 0 : Int((segment.beat * beat).rounded())
+            let stop = index + 1 < segments.count ? Int((segments[index + 1].beat * beat).rounded()) : length
+            let voices = padVoicing(root: root, tones: segment.tones).map { PitchMath.frequency(midi: Double($0), reference: reference) }
+            let last = index + 1 == segments.count
+            pad(&out, start: start, length: max(1, stop - start), fade: last ? 0.5 : 0.08, frequencies: voices, rate: rate,
+                table: table)
+        }
     }
 
     /// The piano's chord at `at`, rolled low to high.
@@ -881,11 +1070,13 @@ enum BandSynth {
     }
 
     /// Two slightly detuned oscillators per chord tone, slow attack, long release into the next bar.
-    private static func pad(_ out: inout [Float], length: Int, frequencies: [Double], rate: Double, table: Wavetable) {
+    /// From `start`, for `length` frames; `fade` seconds of release (short where the next chord takes over).
+    private static func pad(_ out: inout [Float], start: Int, length: Int, fade: Double, frequencies: [Double], rate: Double,
+                            table: Wavetable) {
         let attack = 0.25 * rate
-        let release = Int(0.5 * rate)
-        let count = min(length + release, out.count)
-        guard length > 0, count > 0 else { return }
+        let release = Int(fade * rate)
+        let count = min(length + release, out.count - start)
+        guard start >= 0, length > 0, count > 0 else { return }
         for (voice, hz) in frequencies.enumerated() {
             for detune in [-5.0, 5.0] {
                 let increment = hz * pow(2, detune / 1200) / rate
@@ -897,7 +1088,7 @@ enum BandSynth {
                         let left = 1 - Double(i - length) / Double(max(1, release))
                         envelope *= left * left
                     }
-                    out[i] += table.sample(phase) * Float(envelope) * 0.03
+                    out[start + i] += table.sample(phase) * Float(envelope) * 0.03
                     phase += increment
                     if phase >= 1 { phase -= 1 }
                 }

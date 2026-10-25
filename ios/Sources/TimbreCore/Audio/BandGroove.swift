@@ -183,8 +183,8 @@ public final class BandStyleIndex: Sendable {
 // MARK: - What the band plays in a bar
 
 /// One bar of the band in a style, in beats from the bar's downbeat: the drummer's hits, the bass line (intervals
-/// above the bar's root) and the chord strokes (who plays them, for how long, how hard, down or up). Pure data: the
-/// app's `BandSynth` renders it with the recorded kit, bass, piano and electric guitar.
+/// above the root of the chord each note starts under) and the chord strokes (who plays them, for how long, how hard,
+/// down or up). Pure data: the app's `BandSynth` renders it with the recorded kit, bass, piano and electric guitar.
 public struct BandGroove: Equatable, Sendable {
     /// The kit's pieces (the sample set "drums").
     public enum Piece: String, CaseIterable, Sendable {
@@ -678,5 +678,71 @@ public struct BandGroove: Equatable, Sendable {
             }
         }
         return BandGroove(hits: hits, bass: bass, comp: comp)
+    }
+}
+
+// MARK: - Chord changes inside a bar
+
+extension BandGroove {
+    /// The shortest stretch (in beats) worth striking again after a change; a note ending sooner just stops there.
+    static let shortestRestrike = 0.2
+    private static let epsilon = 1e-6
+
+    /// The bar with its harmony changing at `changes` (beats after the downbeat; anything at or before it is ignored).
+    /// A bass note or a chord stroke still sounding at a change stops there, so the old chord never rings into the new
+    /// one; where that part has nothing starting on the change, it sounds again there (the bass on the new chord's
+    /// root, the comping struck afresh and a touch softer), so every change is heard on its beat. The drums are
+    /// untouched. The renderer reads each note's and stroke's chord from the change it starts in.
+    public func changing(at changes: [Double]) -> BandGroove {
+        let marks = Array(Set(changes.filter { $0.isFinite && $0 > Self.epsilon })).sorted()
+        guard !marks.isEmpty else { return self }
+        var bass = self.bass
+        var comp = self.comp
+        for change in marks {
+            bass = Self.split(bass, at: change)
+            comp = Self.split(comp, at: change)
+        }
+        return BandGroove(hits: hits, bass: bass.sorted { $0.beat < $1.beat }, comp: comp.sorted { $0.beat < $1.beat })
+    }
+
+    private static func crosses(start: Double, length: Double, _ change: Double) -> Bool {
+        start < change - epsilon && start + length > change + epsilon
+    }
+
+    private static func split(_ notes: [Note], at change: Double) -> [Note] {
+        let startsThere = notes.contains { abs($0.beat - change) < epsilon }
+        var out: [Note] = []
+        var restrike: Note?
+        for note in notes {
+            guard crosses(start: note.beat, length: note.beats, change) else {
+                out.append(note)
+                continue
+            }
+            let left = note.beat + note.beats - change
+            out.append(Note(beat: note.beat, beats: change - note.beat, interval: note.interval, velocity: note.velocity))
+            if !startsThere, restrike == nil, left >= shortestRestrike {
+                restrike = Note(beat: change, beats: left, interval: 0, velocity: note.velocity * 0.9)
+            }
+        }
+        if let restrike { out.append(restrike) }
+        return out
+    }
+
+    private static func split(_ strokes: [Stroke], at change: Double) -> [Stroke] {
+        var out: [Stroke] = []
+        var restruck: Set<Part> = []
+        for stroke in strokes {
+            guard crosses(start: stroke.beat, length: stroke.beats, change) else {
+                out.append(stroke)
+                continue
+            }
+            let left = stroke.beat + stroke.beats - change
+            out.append(Stroke(stroke.beat, change - stroke.beat, stroke.velocity, stroke.part, up: stroke.up, tone: stroke.tone))
+            let partStarts = strokes.contains { $0.part == stroke.part && abs($0.beat - change) < epsilon }
+            guard !partStarts, !restruck.contains(stroke.part), left >= shortestRestrike else { continue }
+            restruck.insert(stroke.part)
+            out.append(Stroke(change, left, stroke.velocity * 0.9, stroke.part))
+        }
+        return out
     }
 }

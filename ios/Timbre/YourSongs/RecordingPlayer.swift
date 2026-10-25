@@ -38,7 +38,9 @@ final class RecordingPlayer: ObservableObject {
     private var resumeAt = 0.0
     private var lastTime = 0.0
     private var generation = 0
-    private var observers: [NSObjectProtocol] = []
+    /// Removes its observers when the player goes; it isn't main-actor state, so letting go of it never needs the
+    /// main actor.
+    private let observers = ObserverBag()
     /// A call (or Siri, an alarm) paused the recording while it played: it plays on if the interruption ends with
     /// "should resume".
     private var resumeAfterInterruption = false
@@ -48,33 +50,26 @@ final class RecordingPlayer: ObservableObject {
     init() {
         engine.attach(node)
         engine.attach(timePitch)
-        observers.append(NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: engine, queue: .main) { [weak self] _ in
+        observers.add(NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: engine, queue: .main) { [weak self] _ in
             // The session changed under the engine (another engine took it, a route changed): it has stopped.
             Task { @MainActor in self?.engineStopped() }
         })
-        observers.append(NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: .main) { [weak self] notification in
-            let info = notification.userInfo
-            let type = (info?[AVAudioSessionInterruptionTypeKey] as? UInt).flatMap(AVAudioSession.InterruptionType.init(rawValue:))
-            let options = AVAudioSession.InterruptionOptions(rawValue: info?[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0)
+        observers.add(NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: .main) { [weak self] notification in
+            // A notification for the app having been suspended isn't answered (`SessionInterruption`).
+            guard let interruption = SessionInterruption(notification) else { return }
             Task { @MainActor in
-                guard let self, let type else { return }
-                switch type {
+                guard let self else { return }
+                switch interruption {
                 case .began:
                     self.resumeAfterInterruption = self.isPlaying
                     self.pause()
-                case .ended:
-                    let resume = self.resumeAfterInterruption && options.contains(.shouldResume)
+                case .ended(let shouldResume):
+                    let resume = self.resumeAfterInterruption && shouldResume
                     self.resumeAfterInterruption = false
                     if resume && !self.isPlaying { self.play() }
-                @unknown default:
-                    break
                 }
             }
         })
-    }
-
-    deinit {
-        for observer in observers { NotificationCenter.default.removeObserver(observer) }
     }
 
     /// The length of an audio file in seconds; nil when it can't be read (DRM, damaged, not audio).
@@ -286,6 +281,20 @@ final class RecordingPlayer: ObservableObject {
         guard sessionActive else { return }
         AudioSessionOwner.shared.release(.recording, deactivate: deactivate)
         if deactivate { sessionActive = false }
+    }
+}
+
+/// Notification observers removed together when their owner goes, from whatever thread lets go of it last.
+private final class ObserverBag: @unchecked Sendable {
+    private let lock = NSLock()
+    private var tokens: [NSObjectProtocol] = []
+
+    func add(_ token: NSObjectProtocol) {
+        lock.lock(); tokens.append(token); lock.unlock()
+    }
+
+    deinit {
+        for token in tokens { NotificationCenter.default.removeObserver(token) }
     }
 }
 
