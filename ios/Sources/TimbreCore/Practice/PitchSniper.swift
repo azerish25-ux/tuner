@@ -1,7 +1,8 @@
 import Foundation
 
-/// Pitch Sniper: play or sing the target note and hold it inside the bullseye.
-/// Ten rounds; faster bullseyes score more, and consecutive bullseyes build a combo.
+/// Bullseye: play or sing the target note and hold it inside the bullseye. Ten rounds; faster bullseyes score more,
+/// and consecutive bullseyes build a combo. In a hidden-tune game the targets, in order, are the opening of a tune
+/// everyone knows (`HiddenTune`), named once the game is over.
 public struct PitchSniper: Sendable {
     public struct Round: Equatable, Sendable {
         public let midi: Int
@@ -20,7 +21,31 @@ public struct PitchSniper: Sendable {
     public static let ringCents = 20.0
     public static let winBullseyes = 6
 
+    /// A tune hidden in a game's rounds: its opening notes are the targets, in order, and its name shows at the end.
+    public struct HiddenTune: Equatable, Sendable {
+        /// The English title of the tune's song lesson (the app shows that lesson's localized title).
+        public let title: String
+        /// The opening's notes as semitones from the tonic, a note repeated straight after itself played once (a
+        /// held note scores its round, so a repeat would score the next by itself).
+        public let steps: [Int]
+    }
+
+    /// Openings checked note for note against the songs' own arrangements in the curriculum.
+    public static let hiddenTunes: [HiddenTune] = [
+        HiddenTune(title: "Ode to Joy", steps: [4, 5, 7, 5, 4, 2, 0, 2, 4, 2]),
+        HiddenTune(title: "Twinkle, Twinkle, Little Star", steps: [0, 7, 9, 7, 5, 4, 2, 0]),
+        HiddenTune(title: "Mary Had a Little Lamb", steps: [4, 2, 0, 2, 4, 2, 4, 7]),
+        HiddenTune(title: "Frère Jacques", steps: [0, 2, 4, 0, 2, 4, 0, 4, 5, 7]),
+        HiddenTune(title: "Jingle Bells", steps: [4, 7, 0, 2, 4, 5, 4, 2, 4, 2]),
+        HiddenTune(title: "When the Saints Go Marching In", steps: [0, 4, 5, 7, 0, 4, 5, 7, 0, 4]),
+        HiddenTune(title: "Amazing Grace", steps: [-5, 0, 4, 0, 4, 2, 0, -3, -5]),
+        HiddenTune(title: "Oh! Susanna", steps: [0, 2, 4, 7, 9, 7, 4, 0, 2, 4]),
+        HiddenTune(title: "Für Elise", steps: [7, 6, 7, 6, 7, 2, 5, 3, 0]),
+    ]
+
     public let rounds: [Round]
+    /// The tune the rounds spell, in a hidden-tune game.
+    public let tune: HiddenTune?
     public private(set) var index = 0
     public private(set) var score = 0
     public private(set) var combo = 0
@@ -29,18 +54,47 @@ public struct PitchSniper: Sendable {
     private var holdStart: Double?
     private var bestRing: Double = .infinity
 
-    /// Targets come from the instrument's own notes (open strings, plus the first frets when fretted).
-    public init(notes: [Int], fretted: Bool, referenceHz: Double = 440, count: Int = 10, seed: UInt64) {
+    /// Targets come from the instrument's own notes (open strings, plus the first frets when fretted). With
+    /// `hiddenTune`, a tune whose opening those notes can play (in some key) sets the targets instead; when none fits
+    /// (an unfretted instrument has only its open strings), the game is an ordinary one.
+    public init(notes: [Int], fretted: Bool, referenceHz: Double = 440, count: Int = 10, seed: UInt64, hiddenTune: Bool = false) {
         var pool = Set(notes)
         if fretted { for n in notes { for fret in 1...4 { pool.insert(n + fret) } } }
         let sorted = pool.sorted()
         var rng = SplitMix64(seed: seed)
+        if hiddenTune, let placed = Self.place(in: sorted, rng: &rng) {
+            tune = placed.tune
+            rounds = placed.midis.prefix(count).map { Round(midi: $0, frequency: referenceHz * pow(2, Double($0 - 69) / 12)) }
+            return
+        }
+        tune = nil
         var picks: [Int] = []
         while picks.count < count, !sorted.isEmpty {
             let note = sorted[Int(rng.next() % UInt64(sorted.count))]
             if note != picks.last || sorted.count == 1 { picks.append(note) }
         }
         rounds = picks.map { Round(midi: $0, frequency: referenceHz * pow(2, Double($0 - 69) / 12)) }
+    }
+
+    /// A hidden tune that `pool` (sorted MIDI notes) can play, and its notes: tunes in a seeded order, each in the key
+    /// whose notes sit nearest the middle of the pool.
+    static func place(in pool: [Int], rng: inout SplitMix64) -> (tune: HiddenTune, midis: [Int])? {
+        guard let low = pool.first, let high = pool.last else { return nil }
+        let available = Set(pool)
+        var order = Array(hiddenTunes.indices)
+        for i in stride(from: order.count - 1, to: 0, by: -1) {
+            order.swapAt(i, Int(rng.next() % UInt64(i + 1)))
+        }
+        let middle = Double(low + high) / 2
+        for index in order {
+            let tune = hiddenTunes[index]
+            guard let lowest = tune.steps.min(), let highest = tune.steps.max(), low - lowest <= high - highest else { continue }
+            let centre = Double(lowest + highest) / 2
+            let tonics = (low - lowest...high - highest).filter { tonic in tune.steps.allSatisfy { available.contains(tonic + $0) } }
+            guard let tonic = tonics.min(by: { abs(Double($0) + centre - middle) < abs(Double($1) + centre - middle) }) else { continue }
+            return (tune, tune.steps.map { tonic + $0 })
+        }
+        return nil
     }
 
     public var current: Round? { index < rounds.count ? rounds[index] : nil }
