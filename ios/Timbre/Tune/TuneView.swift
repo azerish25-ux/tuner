@@ -451,9 +451,8 @@ struct TuneView: View {
     private func tuningPanel(_ scale: ReadoutScale) -> some View {
         VStack(spacing: 6) {
             readout(scale)
-            // In Chromatic: a free player's Pro instrument from onboarding, its strings and its stage in Pro. The simple
-            // tuner has no quest line.
-            if store.referenceMode { ChromaticStandInHint() } else if !store.settings.simpleTuner { questLine }
+            // Chromatic has no strings to quest over; the simple tuner has no quest line.
+            if !store.referenceMode && !store.settings.simpleTuner { questLine }
             StringRail(motion: motion).opacity(store.referenceMode ? 0 : 1).frame(height: store.referenceMode ? 8 : nil)
         }
         .padding(.bottom, 8)
