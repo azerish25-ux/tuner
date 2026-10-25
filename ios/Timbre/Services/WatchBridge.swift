@@ -147,7 +147,7 @@ final class WatchBridge: NSObject, WCSessionDelegate {
         switch quest.kind {
         case .tuneAll: return NSLocalizedString("Tune every string", comment: "")
         case .holdInTune: return counted("Lock %lld strings in tune")
-        case .sniperWin: return NSLocalizedString("Win a round of Pitch Sniper", comment: "")
+        case .sniperWin: return NSLocalizedString("Win a round of Bullseye", comment: "")
         case .bullseyes: return counted("Hit %lld bullseyes")
         case .practiceMinutes: return counted("Practice for %lld minutes")
         case .earCorrect: return counted("Get %lld ear questions right")

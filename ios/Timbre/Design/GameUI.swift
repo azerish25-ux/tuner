@@ -219,7 +219,7 @@ extension Quest {
         switch kind {
         case .tuneAll: return "Tune every string"
         case .holdInTune: return "Lock \(target) strings in tune"
-        case .sniperWin: return "Win a round of Pitch Sniper"
+        case .sniperWin: return "Win a round of Bullseye"
         case .bullseyes: return "Hit \(target) bullseyes"
         case .practiceMinutes: return "Practice for \(target) minutes"
         case .earCorrect: return "Get \(target) ear questions right"

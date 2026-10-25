@@ -276,7 +276,7 @@ struct PracticeView: View {
         let best = stats["sniperBest"] ?? 0
         let sniperLevel = SniperRank.level(bullseyes: stats["bullseyes"] ?? 0)
         let sniperStats = statsLine(best > 0 ? Text("Best \(best)") : nil, level: sniperLevel)
-        return gameCard(.sniper, title: "Pitch Sniper", stats: sniperStats, challenge: .sniper(store), tint: Palette.mint, stage: stage) { live in
+        return gameCard(.sniper, title: "Bullseye", stats: sniperStats, challenge: .sniper(store), tint: Palette.mint, stage: stage) { live in
             SniperScopePreview(live: live)
         }
     }

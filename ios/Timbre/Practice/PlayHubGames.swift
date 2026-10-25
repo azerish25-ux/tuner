@@ -301,7 +301,7 @@ struct SniperChallengeCard: View {
 
     var body: some View {
         ShareCardFrame(glow: Palette.mint, signature: true) {
-            Label("Pitch Sniper", systemImage: "scope").font(Typeface.label(12)).foregroundStyle(Palette.mint)
+            Label("Bullseye", systemImage: "scope").font(Typeface.label(12)).foregroundStyle(Palette.mint)
         } content: {
             Canvas { context, size in
                 SniperScopeArt.draw(&context, size: size, t: SniperScopeArt.stillTime)

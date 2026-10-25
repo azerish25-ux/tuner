@@ -624,7 +624,7 @@ JUKEBOX_V = Part("Verse 1", "verse", JUKEBOX, chords="C Am F G7 C Am F G7 C", ly
 JUKEBOX_SONG = song(G, 72, [
     Part("Intro", "intro", "E4:4 C4:4 C4:4 B3:4", chords="C Am F G7"),
     JUKEBOX_V,
-    JUKEBOX_V.with_lyrics("Verse 2", "Pink rib-bon tied in your soft brown hair, / ne-on hum-ming a lul-la-by there; / last call, she's "
+    JUKEBOX_V.with_lyrics("Verse 2", "Pink rib-bon tied in your soft brown hair, / ne-on hum-ming a lul-la-by there; / it's late, she's "
                                      "turn-ing the dead-bolt key, / but there's one more song for the moon and for me."),
     Part("Bridge", "bridge", swing("A3:L C4:S F4:2 E4:L D4:S C4:2 A3:2 G3:L C4:S E4:2 D4:L C4:S E4:4 "
                                    "A3:L C4:S F4:2 G4:L F4:S E4:2 D4:2 D4:L E4:S F4:1 D4:1 B3:1 G3:4"), chords="F F C C F C,G G G7", lyrics=(

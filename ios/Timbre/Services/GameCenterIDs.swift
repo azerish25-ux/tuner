@@ -8,8 +8,8 @@ import Foundation
 ///
 /// Leaderboards ("Integer", sorted high to low, no score format suffix):
 ///
-///     timbre.sniper.best    Classic     Best score     "Pitch Sniper"            Score range 0 – 25,000
-///     timbre.sniper.weekly  Recurring   Best score     "Pitch Sniper this week"  Starts Monday 00:00 UTC, lasts 1 week,
+///     timbre.sniper.best    Classic     Best score     "Bullseye"                Score range 0 – 25,000
+///     timbre.sniper.weekly  Recurring   Best score     "Bullseye this week"      Starts Monday 00:00 UTC, lasts 1 week,
 ///                                                                                restarts every week; 0 – 25,000
 ///     timbre.ear.level      Classic     Best score     "Ear trainer level"       Score range 1 – 100
 ///     timbre.streak         Classic     Most recent    "Practice streak"         Score range 0 – 10,000 (days)

@@ -414,7 +414,7 @@ ROLLER = song(G, 120, [
     ROLLER_V.part("Verse 1", "verse", "Rent-ed skates and lac-es tied, / dis-co ball throws spots of light, / "
                   "you're the best at skat-ing back-wards, / I'm the best at hold-ing tight.", ROLLER_CHART),
     ROLLER_PRE, ROLLER_CHORUS,
-    ROLLER_V.part("Verse 2", "verse", "Mu-sic from an old cas-sette, / pret-zels and a cher-ry pop, / "
+    ROLLER_V.part("Verse 2", "verse", "Mu-sic from an old cas-sette, / pret-zels and a so-da pop, / "
                   "lights go low and some-one whis-tles, / and we spin and nev-er stop.", ROLLER_CHART),
     ROLLER_PRE, ROLLER_CHORUS,
     Lines("r:0.5 C4:0.5 C4:0.5 E4:1 E4:0.5 G4:0.5 E4:0.5 F#4:4",
@@ -608,7 +608,7 @@ LATE_CHORUS = LATE_C.part("Chorus", "chorus", "Late check-out, late check-out, /
                           "late check-out, late check-out, / let the whole cit-y just wait.", LATE_CHART)
 LATE = song(G, 72, [
     Part("Intro", "intro", LATE_HOOK, chords="Dm7 G7"),
-    LATE_V.part("Verse 1", "verse", "Do not dis-turb on the door, / cof-fee gone cold on the tray; / "
+    LATE_V.part("Verse 1", "verse", "Post-cards and maps by the door, / cof-fee gone cold on the tray; / "
                 "rain on the win-dow, a slow drum, / let's give the morn-ing a-way.", LATE_CHART),
     LATE_CHORUS,
     LATE_V.part("Verse 2", "verse", "Cit-y is honk-ing be-low, / both of our phones on the floor; / "
@@ -893,7 +893,7 @@ COLD = song(G, 120, [
     COLD_V.part("Verse 1", "verse", "Out on the ice where the cold wind blows, / I hear your voice in the hol-low pines; / "
                 "ev-ery-thing qui-et and ev-ery-thing slow, / nev-er a word from you, nev-er a sign.", COLD_CHART),
     COLD_CHORUS,
-    COLD_V.part("Verse 2", "verse", "Lights on the shore where you used to live, / some-bod-y new in your bed-room now; / "
+    COLD_V.part("Verse 2", "verse", "Lights on the shore where you used to live, / some-bod-y new in your win-dow now; / "
                 "I hold my breath and I lis-ten for you, / noth-ing but si-lence, and noth-ing to give.", COLD_CHART),
     COLD_CHORUS,
     Lines("E4:2 E4:1 G4:1 E4:1 C4:1 D4:2 E4:1 F#4:3", "G4:1 F#4:1 E4:1 D4:2 B3:1 E4:6").part(
@@ -1282,7 +1282,7 @@ STROBE = song(G, 118, [
     STROBE_V.part("Verse 1", "verse", "Bass in the floor-boards, lights in my eyes, / ev-ery-one's danc-ing, no-bod-y's shy; / "
                   "then I see you stand-ing in the light, / and the whole world's slow-ing down to-night.", STROBE_CHART),
     STROBE_PRE, STROBE_CHORUS,
-    STROBE_V.part("Verse 2", "verse", "Glit-ter on col-lars, smoke in the air, / ev-ery-one sing-ing, no-bod-y cares; / "
+    STROBE_V.part("Verse 2", "verse", "Glit-ter on col-lars, hands in the air, / ev-ery-one sing-ing, no-bod-y cares; / "
                   "then you see me stand-ing in the light, / and the whole world's slow-ing down to-night.", STROBE_CHART),
     STROBE_PRE, STROBE_CHORUS,
     Lines("r:0.5 F#4:0.5 F#4:0.5 F#4:1 E4:0.5 D4:0.5 E4:0.5 E4:2 B3:2",
@@ -1373,7 +1373,7 @@ SPRAY_TRAIN = "r:0.5 E4:0.5 E4:0.5 G#4:1 E4:0.5 C#4:0.5 E4:0.5 E4:4"
 SPRAY = song(G, 124, [
     Part("Intro", "intro", f"{SPRAY_HOOK} {SPRAY_HERE}", chords="E B C#m A"),
     SPRAY_V.part("Verse 1", "verse", "Half past five at the un-der-pass, / two cans of blue and a can of gold, / "
-                 "trains go by and they shake the wall, / paint-ing our names where the con-crete's cold.", SPRAY_CHART),
+                 "trains go by and they shake the wall, / paint-ing a sun where the con-crete's cold.", SPRAY_CHART),
     SPRAY_PRE, SPRAY_CHORUS,
     SPRAY_V.part("Verse 2", "verse", "Dogs start bark-ing a-cross the tracks, / sun com-ing up in a streak of red, / "
                  "you've got paint all a-cross your nose, / laugh-ing so loud that we wake the dead.", SPRAY_CHART),

@@ -94,8 +94,8 @@ The app ships with all of these switched on in code, and each works as soon as i
 
 | Leaderboard ID | Type | Name (English) | Score range | Notes |
 |---|---|---|---|---|
-| `timbre.sniper.best` | Classic | Pitch Sniper | 0 – 25,000 | All-time best game |
-| `timbre.sniper.weekly` | Recurring | Pitch Sniper this week | 0 – 25,000 | Starts on a Monday at 00:00 UTC, lasts 1 week, restarts every week. This is the weekly league. The Leaderboard chip opens it first, and the Pitch Sniper challenge is built on it. |
+| `timbre.sniper.best` | Classic | Bullseye | 0 – 25,000 | All-time best game |
+| `timbre.sniper.weekly` | Recurring | Bullseye this week | 0 – 25,000 | Starts on a Monday at 00:00 UTC, lasts 1 week, restarts every week. This is the weekly league. The Leaderboard chip opens it first, and the Bullseye challenge is built on it. |
 | `timbre.ear.level` | Classic | Ear trainer level | 1 – 100 | The level the Play tab shows |
 | `timbre.streak` | Classic | Practice streak | 0 – 10,000 | **Most recent score.** Days in a row, sent when the streak changes. The friend streak reads it back for friends only. |
 | `timbre.song.twinkle` | Classic | Twinkle, Twinkle, Little Star | 0 – 200,000 | Perform score |
@@ -128,10 +128,10 @@ The eight song boards are the "Perform" family: one per featured song (`GameCent
 | `timbre.badge.minutes_600` | Ten hours | Practice for ten hours in all | 50 |
 | `timbre.badge.daily_1` | Daily set | Finish a daily set | 5 |
 | `timbre.badge.daily_30` | Creature of habit | Finish 30 daily sets | 50 |
-| `timbre.badge.bullseye` | Bullseye | Hit a bullseye in Pitch Sniper | 5 |
-| `timbre.badge.sniper_win` | Marksman | Win a round of Pitch Sniper | 10 |
+| `timbre.badge.bullseye` | Bullseye | Hit your first bullseye | 5 |
+| `timbre.badge.sniper_win` | Round Winner | Win a round of Bullseye | 10 |
 | `timbre.badge.bullseyes_50` | Dead center | Hit 50 bullseyes | 25 |
-| `timbre.badge.sharpshooter` | Sharpshooter | Score 2,000 in Pitch Sniper | 50 |
+| `timbre.badge.sharpshooter` | High Scorer | Score 2,000 in Bullseye | 50 |
 | `timbre.badge.golden_ear` | Golden ear | Answer 50 ear questions right | 25 |
 | `timbre.badge.ear_perfect` | Clean sweep | Get all ten right in an ear round | 25 |
 | `timbre.badge.ear_500` | Master listener | Answer 500 ear questions right | 50 |
@@ -149,7 +149,7 @@ The eight song boards are the "Perform" family: one per featured song (`GameCent
 
 | Challenge ID | Associated leaderboard | Repeatable | Display name | Description |
 |---|---|---|---|---|
-| `timbre.challenge.sniper` | `timbre.sniper.weekly` | Yes | Pitch Sniper duel | Ten notes, one bullseye at a time. The best game wins. |
+| `timbre.challenge.sniper` | `timbre.sniper.weekly` | Yes | Bullseye duel | Ten notes, one bullseye at a time. The best game wins. |
 | `timbre.challenge.song.twinkle` | `timbre.song.twinkle` | No | Twinkle, Twinkle, Little Star | One take at full tempo. The best score wins. |
 | `timbre.challenge.song.odetojoy` | `timbre.song.odetojoy` | No | Ode to Joy | One take at full tempo. The best score wins. |
 | `timbre.challenge.song.jinglebells` | `timbre.song.jinglebells` | No | Jingle Bells | One take at full tempo. The best score wins. |
@@ -159,21 +159,21 @@ The eight song boards are the "Perform" family: one per featured song (`GameCent
 | `timbre.challenge.song.lochlomond` | `timbre.song.lochlomond` | No | Loch Lomond | One take at full tempo. The best score wins. |
 | `timbre.challenge.song.mountain` | `timbre.song.mountain` | No | She'll Be Coming 'Round the Mountain | One take at full tempo. The best score wins. |
 
-   - The app finds each challenge by the leaderboard it is built on, so any subset works. Create Pitch Sniper's first. Until a challenge exists, and always below iOS 26 or when signed out, "Challenge a friend" shares a "Beat my score" card with a link instead (§6.2).
-   - Pitch Sniper's challenge is repeatable (players pick 1, 3 or unlimited tries), and Apple only allows that on a recurring board. It lasts the rest of the board's week. The song challenges sit on classic boards, so they are one take each, and the player picks 1 day, 3 days or 1 week.
+   - The app finds each challenge by the leaderboard it is built on, so any subset works. Create Bullseye's first. Until a challenge exists, and always below iOS 26 or when signed out, "Challenge a friend" shares a "Beat my score" card with a link instead (§6.2).
+   - Bullseye's challenge is repeatable (players pick 1, 3 or unlimited tries), and Apple only allows that on a recurring board. It lasts the rest of the board's week. The song challenges sit on classic boards, so they are one take each, and the player picks 1 day, 3 days or 1 week.
    - Once a Game Center version is live, open Challenges → … → **Set Challenges Minimum Version** and pick the first version with this feature, so nobody on an older build is invited.
    - Xcode 26 can hold all of this in a GameKit configuration file and sync it to App Store Connect instead. The IDs must stay the same.
 8. **Activities (iOS 26, recommended).** An activity takes a player who taps a challenge in the Games app, or its notification, straight to the right screen. Go to Game Center → **Activities** → (+). Enter the reference name and the activity ID, then add an English localization and a 3840 × 2160 image. Under Activity Associations → **Add Association** → Leaderboards, choose the boards below. Leave Supports Party Code off and the participants range empty. Apple allows 20 activities per app, and these use 9.
 
 | Activity ID | Associate these leaderboards | Opens |
 |---|---|---|
-| `timbre.activity.sniper` | `timbre.sniper.weekly`, `timbre.sniper.best` | Pitch Sniper |
+| `timbre.activity.sniper` | `timbre.sniper.weekly`, `timbre.sniper.best` | Bullseye |
 | `timbre.activity.song.<slug>`, one per song above with the same slug (for example `timbre.activity.song.lochlomond`) | `timbre.song.<slug>` | That song |
 
    Instead of one activity per song, any activity may carry the property `lesson` set to a lesson ID from `GameCenterIDs.songs` (for example `std-loch-lomond`), and the app opens that lesson. Without activities, a challenge still opens Timbre, just not on the right screen.
 9. **Test** with a sandbox Apple Account signed in to Game Center on a TestFlight build. On iOS, Settings → Developer → **Notify About Score Submissions** shows each score as it is sent.
    - Open the Play tab. The welcome banner appears once, and a trophy chip appears on each game card when its board exists. Badges earned before sign-in are reported then.
-   - Finish a Pitch Sniper game. "Challenge a friend" on the end screen opens Game Center's challenge screen on iOS 26, or a share sheet with the "Beat my score" card on iOS 18–25 or before the challenge exists. With a challenge going on, "Live challenge" appears under it and opens Game Center's challenges.
+   - Finish a Bullseye game. "Challenge a friend" on the end screen opens Game Center's challenge screen on iOS 26, or a share sheet with the "Beat my score" card on iOS 18–25 or before the challenge exists. With a challenge going on, "Live challenge" appears under it and opens Game Center's challenges.
    - Play a featured song through at full tempo. The results show "Challenge a friend" beside Share.
    - On Progress, "Your week" offers "Compare streaks with friends" once. After a yes, and with a sandbox friend who also plays and allows it, "Streak #2 of 2 among friends" appears on the card and on its poster.
 
@@ -181,7 +181,7 @@ How the app behaves: it signs in quietly the first time the Play tab's game card
 
 ### 6.2 "Beat my score" challenge links
 
-The paper-plane chip on the Pitch Sniper card, and "Challenge a friend" wherever Game Center's own challenge isn't available, share a "Beat my score" card. For Pitch Sniper it comes with the link `timbre://challenge?game=sniper&score=N`, which opens Pitch Sniper with that score to beat. A player who beats it gets "Send it back" on the results screen. For a song it comes with `timbre://lesson?id=<lesson>`, which opens the song (the score to beat is in the message), on any song played through at full tempo, featured or not.
+The paper-plane chip on the Bullseye card, and "Challenge a friend" wherever Game Center's own challenge isn't available, share a "Beat my score" card. For Bullseye it comes with the link `timbre://challenge?game=sniper&score=N`, which opens Bullseye with that score to beat. A player who beats it gets "Send it back" on the results screen. For a song it comes with `timbre://lesson?id=<lesson>`, which opens the song (the score to beat is in the message), on any song played through at full tempo, featured or not.
 
 - A `timbre://` link only works where Timbre is installed, and some apps don't make custom-scheme links tappable. Once the app has an App Store page, set `SniperChallenge.appStoreLink` in `ios/Timbre/Services/GameCenter.swift` to `https://apps.apple.com/app/id<Apple ID>`, so the shared message also says where to get Timbre.
 - Optional, later: host a small https page that forwards to the `timbre://` link and falls back to the App Store, and share that page instead. Universal Links would need an Associated Domains entitlement and an `apple-app-site-association` file on a domain you control.

@@ -13,8 +13,8 @@ G = "guitar"
 G_MAJ = chord(G, "G", "320003", "21xxx3")
 C = chord(G, "C", "x32010", "x32x1x")
 D7 = chord(G, "D7", "xx0212", "xxx213")
-Dm = chord(G, "Dm", "xx0231", "xxx231")
 # Chart-only shapes (the songs' chord charts; no strum step asks for them).
+Dm = chord(G, "Dm", "xx0231", "xxx231")
 F_MINI = chord(G, "F", "xx3211", "xx3211")
 Am = chord(G, "Am", "x02210", "xx231x")
 E7 = chord(G, "E7", "020100", "x2x1xx")
@@ -293,16 +293,15 @@ AURA_A = "G3:1 C4:1 B3:1 C4:1 D4:1 A3:1 D4:2 C4:1 B3:1 A3:1 B3:1 C4:4"
 AURA_B = ("E4:1 E4:1 E4:2 E4:1 E4:1 E4:2 E4:1 D4:1 C4:1 D4:1 E4:4"
           " E4:1 E4:1 F4:1 E4:1 D4:1 A3:1 D4:2 C4:1 B3:1 A3:1 B3:1 C4:4")
 AURA = f"{AURA_A} {AURA_A} {AURA_B}"
-# Drunken Sailor (traditional sea shanty), D Dorian: verse, then chorus.
-SAILOR_V = ("A3:1 A3:0.5 A3:0.5 A3:1 A3:0.5 A3:0.5 A3:1 D3:1 F3:1 A3:1"
-            " G3:1 G3:0.5 G3:0.5 G3:1 G3:0.5 G3:0.5 G3:1 C3:1 E3:1 G3:1"
-            " A3:1 A3:0.5 A3:0.5 A3:1 A3:0.5 A3:0.5 A3:1 B3:1 C4:1 D4:1"
-            " C4:1 A3:1 G3:1 E3:1 D3:2 D3:2")
-# "and up she ris-es": the last beat of each line splits in two for the words.
-SAILOR_C = ("A3:2 A3:2 A3:1 D3:1 F3:1 A3:0.5 A3:0.5 G3:2 G3:2 G3:1 C3:1 E3:1 G3:0.5 G3:0.5"
-            " A3:2 A3:2 A3:1 B3:1 C4:1 D4:0.5 D4:0.5 C4:1 A3:1 G3:1 E3:1 D3:2 D3:2")
-SAILOR = f"{SAILOR_V} {SAILOR_C}"
-SAILOR_CHORDS = [(Dm, 2), (C, 2), (Dm, 2), (C, 1), (Dm, 1)]
+# Bobby Shafto (Northumberland), in G, from Bruce & Stokoe's Northumbrian Minstrelsy (1882), 2/4 in B flat there:
+# each 2/4 bar of eighths is a 4/4 bar of quarters here. The words go to the tune's second strain (the verse); the
+# first strain is the dance part fiddlers played around it (William Vickers' manuscript has the tune by 1770).
+BOBBY_V = ("B3 D4 B3 G3 B3 D4 B3:2 A3 C4 A3 F#3 A3 C4 A3:2"
+           " B3 D4 B3 G3 B3 D4 B3:2 A3 C4 A3 F#3 G3:2 G3:2")
+BOBBY_D = ("G3 G3 G3 C4 B3 D4 B3 G3 D3 D3 D3 G3 F#3 A3 F#3 D3"
+           " G3 F#3 G3 C4 B3 D4 B3 G3 A3 C4 A3 F#3 G3:2 G3:2")
+BOBBY = f"{BOBBY_V} {BOBBY_D}"
+BOBBY_CHORDS = [(G_MAJ, 2), (D7, 2), (G_MAJ, 2), (D7, 1), (G_MAJ, 1)]
 
 # ---------------------------------------------------------------- unit 2: the whole songs
 
@@ -397,28 +396,24 @@ AURA_SONG = song(G, 66, [
     Part("Outro", "outro", "C4 B3 A3 B3 C4:4", chords="G C", lyrics="sing of Au-ra Lee."),
 ], shapes=SHAPES, words="W. W. Fosdick (1861)")
 
-# Drunken Sailor: three verses, each with the "Way hay" chorus.
-SAILOR_V1 = Part("Verse 1", "verse", SAILOR_V, chords="Dm Dm C C Dm Dm C Dm", lyrics=(
-    "What shall we do with a drunk-en sail-or? / What shall we do with a drunk-en sail-or? / What shall we do with a drunk-en sail-or / "
-    "ear-ly in the morn-ing?"))
-SAILOR_CH = Part("Chorus", "chorus", SAILOR_C, chords="Dm Dm C C Dm Dm C Dm", lyrics=(
-    "Way hay and up she ris-es, / way hay and up she ris-es, / way hay and up she ris-es / ear-ly in the morn-ing."))
+# Bobby Shafto: the two Northumbrian verses (Bruce & Stokoe, 1882; spelling made standard), the dance strain between
+# them, the verse on the guitar alone, the dance strain again and the last line to finish.
+BOBBY_VERSE = Part("Verse 1", "verse", BOBBY_V, chords="G G D7 D7 G G D7 G", lyrics=(
+    "Bob-by Shaf-to's gone to sea, / sil-ver buck-les on his knee; / he'll come back and mar-ry me, / bon-ny Bob-by Shaf-to."))
+BOBBY_DANCE = Part("Interlude", "interlude", BOBBY_D, chords="G,C G G D7 G,C G D7 G")
+BOBBY_SONG = song(G, 100, [
+    Part("Intro", "intro", "A3 C4 A3 F#3 G3:2 G3:2", chords="D7 G"),
+    BOBBY_VERSE,
+    BOBBY_DANCE,
+    BOBBY_VERSE.with_lyrics("Verse 2", "Bob-by Shaf-to's bright and fair, / comb-ing down his yel-low hair; / "
+                                       "he's my own for ev-er mair, / bon-ny Bob-by Shaf-to."),
+    BOBBY_VERSE.instrumental("Solo"),
+    BOBBY_DANCE,
+    Part("Outro", "outro", "A3 C4 A3 F#3 G3:2 G3:2", chords="D7 G", lyrics="bon-ny Bob-by Shaf-to."),
+], shapes=SHAPES, words="Traditional (Northumbrian Minstrelsy, 1882)")
 
 
-def sailor_verse(label, line):
-    return SAILOR_V1.with_lyrics(label, f"{line}, / {line}, / {line} / ear-ly in the morn-ing.")
-
-
-SAILOR_SONG = song(G, 80, [
-    Part("Intro", "intro", "C4 A3 G3 E3 D3:2 D3:2", chords="C Dm"),
-    SAILOR_V1, SAILOR_CH,
-    sailor_verse("Verse 2", "Put him in the long-boat till he's so-ber"), SAILOR_CH,
-    sailor_verse("Verse 3", "Shave his bel-ly with a rust-y ra-zor"), SAILOR_CH,
-    Part("Outro", "outro", "C4 A3 G3 E3 D3:2 D3:2", chords="C Dm", lyrics="ear-ly in the morn-ing!"),
-], shapes=SHAPES, words="Traditional sea shanty")
-
-
-UNIT_2 = unit("songs-2", "Folk favorites", "Campfire songs and a sea shanty, with easy chords to strum on the simplest ones.", [
+UNIT_2 = unit("songs-2", "Folk favorites", "Campfire songs and a sea song, with easy chords to strum on the simplest ones.", [
     lesson("song-oh-susanna", "Oh! Susanna", [
         explain("A Gold Rush anthem", "Stephen Foster published this song in 1848, and gold seekers heading to California "
                 "made it their anthem. The verse sits on strings 3, 2 and 1.",
@@ -485,23 +480,24 @@ UNIT_2 = unit("songs-2", "Folk favorites", "Campfire songs and a sea shanty, wit
         along(G, AURA_B, bpm=60, title="The high part"),
         AURA_SONG.take("Aura Lee"),
     ], minutes=AURA_SONG.minutes(), xp=35, kind="song", arrangement=AURA_SONG.meta()),
-    lesson("song-drunken-sailor", "Drunken Sailor", [
-        explain("Pull together", "Sailors sang shanties like this one so a whole crew could haul a rope on the same beat. "
-                "This one is in a minor key, which sounds darker.",
-                fretboard(G, [(5, 3, 3), (4, 0), (4, 2, 2), (4, 3, 3), (3, 0), (3, 2, 2), (2, 0), (2, 1, 1), (2, 3, 3)])),
-        notes(G, ["A3", "D3", "F3", "A3", "G3", "C3", "E3", "G3"],
-              hint="A, down to open D, then F at fret 3 and A. Then G, down to C on string 5, E and G."),
-        explain("Long, short-short", "The verse opens on one repeated note: long, short-short, long, short-short. "
-                "Tap it before you play it.", rhythm([0, 1, 1.5, 2, 3, 3.5])),
-        tap([0, 1, 1.5, 2, 3, 3.5], bpm=66, bars=2),
-        notes(G, ["A3", "B3", "C4", "D4", "C4", "A3", "G3", "E3", "D3"], hint="Climb A B C D, then fall C A G E down to open D."),
-        along(G, SAILOR_V, bpm=60, title="Verse"),
-        SAILOR_SONG.along("Chorus", bpm=72, title=THE_CHORUS),
-        explain("D minor and C", "Two chords carry the whole shanty. They trade places every two bars, then every bar at the end. "
-                "Strum D minor from string 4.", shape(Dm)),
-        progression(SAILOR_CHORDS, QUARTERS, bpm=66),
-        SAILOR_SONG.take("Drunken Sailor"),
-    ], minutes=SAILOR_SONG.minutes(), xp=35, kind="song", arrangement=SAILOR_SONG.meta()),
+    lesson("song-bobby-shafto", "Bobby Shafto", [
+        explain("A sailor's sweetheart", "This song from the north of England is about Bobby Shafto, gone to sea. Its words "
+                "were in print by 1805, and fiddlers played its tune for dances by 1770.",
+                fretboard(G, [(4, 0), (4, 4, 4), (3, 0), (3, 2, 2), (2, 0), (2, 1, 1), (2, 3, 3)])),
+        notes(G, ["B3", "D4", "B3", "G3", "B3", "D4", "B3"], hint="Open B, D at fret 3, back to B and open G, then B, D and B again."),
+        explain("F sharp with finger 4", "The second line dips to F sharp: string 4, fret 4, with your little finger. "
+                "Keep your hand over the first four frets so it's ready.", fretboard(G, [(4, 4, 4), (3, 0), (3, 2, 2), (2, 1, 1)])),
+        notes(G, ["A3", "C4", "A3", "F#3", "A3", "C4", "A3"], hint="A at fret 2 on string 3, C at fret 1 on string 2, A, down to F sharp, and back up."),
+        explain("Step, step, hold", "The first three lines end the same way: two notes of one beat, then one of two beats. "
+                "Gone to sea, on his knee, marry me.", rhythm([0, 1, 2])),
+        tap([0, 1, 2], bpm=66, bars=2),
+        along(G, BOBBY_V, bpm=66, title=THE_VERSE),
+        BOBBY_SONG.along("Interlude", bpm=72, title="Interlude"),
+        explain("G and D7 again", "The verse needs only the two chords from Oh! Susanna: two bars of G, two of D7, two of G, "
+                "then D7 and G.", shape(D7)),
+        progression(BOBBY_CHORDS, QUARTERS, bpm=72),
+        BOBBY_SONG.take("Bobby Shafto"),
+    ], minutes=BOBBY_SONG.minutes(), xp=35, kind="song", arrangement=BOBBY_SONG.meta()),
     lesson("song-medley-folk", "Folk medley", [
         explain("Campfire set list", "No new notes or chords: all six songs from this unit, one after another, "
                 "each a little faster than before."),
@@ -512,8 +508,8 @@ UNIT_2 = unit("songs-2", "Folk favorites", "Campfire songs and a sea shanty, wit
         along(G, OLD, bpm=80, title="Old MacDonald Had a Farm"),
         along(G, YANKEE, bpm=92, title="Yankee Doodle"),
         along(G, AURA, bpm=72, title="Aura Lee"),
-        progression(SAILOR_CHORDS, QUARTERS, bpm=72),
-        along(G, SAILOR, bpm=80, title="Drunken Sailor"),
+        progression(BOBBY_CHORDS, QUARTERS, bpm=76),
+        along(G, BOBBY, bpm=88, title="Bobby Shafto"),
     ], minutes=6, xp=40, kind="challenge"),
 ])
 

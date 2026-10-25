@@ -119,7 +119,7 @@ DBR_C = Part("Chorus", "chorus", DBR_CHORUS, pickup=2, chords="C G D7 G C G D7 G
 DBR_SONG = song(G, 92, [
     Part("Intro", "intro", f"{DBR_STUDY} {DBR_LAST} G3:4", chords="C G D7 G"),
     DBR_V, DBR_C,
-    DBR_V.with_lyrics("Verse 2", dbr_words("lay down my sword and shield")),
+    DBR_V.with_lyrics("Verse 2", dbr_words("walk with the Prince of Peace")),
     DBR_C,
     DBR_V.instrumental("Solo"),
     DBR_C,

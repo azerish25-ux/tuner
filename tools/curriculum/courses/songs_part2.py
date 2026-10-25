@@ -212,20 +212,24 @@ WENCES_4 = "D3 D3 E3 F#3 G3 G3 A3:2 D4 C4 B3 A3 G3:2 C4:2 G3:4"
 WENCES = f"{WENCES_1} {WENCES_1} {WENCES_3} {WENCES_4}"
 WENCES_CHORDS = [(G_MAJ, 2), (D7, 1), (G_MAJ, 3), (D7, 1), (G_MAJ, 3), (D7, 1), (G_MAJ, 1), (D7, 1), (G_MAJ, 2), (C, 1), (G_MAJ, 1)]
 
-# The whole carol: three of Neale's verses (1853).
+# The whole carol: four of Neale's five verses (1853). Verse 3 ("bring me wine") is left out so the Songs course
+# carries no alcohol reference (the App Store's 4+ rating); verses 4 and 5 finish the story.
 WENCES_V = Part("Verse 1", "verse", WENCES, chords="G G D7 G G G D7 G G G D7 G D7 G G C G", lyrics=(
     "Good King Wen-ces-las looked out / on the Feast of Ste-phen, / when the snow lay round a-bout, / deep and crisp and e-ven; / "
     "bright-ly shone the moon that night, / though the frost was cru-el, / when a poor man came in sight, / gath-'ring win-ter fu- _ el."))
-WENCES_SONG = song(G, 96, [
+WENCES_SONG = song(G, 100, [
     Part("Intro", "intro", "G3:2 C4:2 G3:4", chords="G,C G"),
     WENCES_V,
     WENCES_V.with_lyrics("Verse 2", "“Hith-er, page, and stand by me, / if thou know'st it, tell-ing, / yon-der peas-ant, who is he? / "
                                     "Where and what his dwell-ing?” / “Sire, he lives a good league hence, / un-der-neath the moun-tain, / "
                                     "right a-gainst the for-est fence, / by Saint Ag-nes' foun- _ tain.”"),
-    WENCES_V.with_lyrics("Verse 3", "“Bring me flesh, and bring me wine, / bring me pine logs hith-er; / thou and I will see him dine, / "
-                                    "when we bear them thith-er.” / Page and mon-arch, forth they went, / forth they went to-geth-er, / "
-                                    "through the rude wind's wild la-ment / and the bit-ter weath- _ er."),
-    Part("Outro", "outro", "D4 C4 B3 A3 G3:2 C4:2 G3:4", chords="D7 G,C G", lyrics="gath-'ring win-ter fu- _ el."),
+    WENCES_V.with_lyrics("Verse 3", "“Sire, the night is dark-er now, / and the wind blows strong-er; / fails my heart, I know not how, / "
+                                    "I can go no long-er.” / “Mark my foot-steps, good my page, / tread thou in them bold-ly: / "
+                                    "thou shalt find the win-ter's rage / freeze thy blood less cold- _ ly.”"),
+    WENCES_V.with_lyrics("Verse 4", "In his mas-ter's steps he trod, / where the snow lay dint-ed; / heat was in the ver-y sod / "
+                                    "which the saint had print-ed. / There-fore, Chris-tian men, be sure, / wealth or rank pos-sess-ing, / "
+                                    "ye who now will bless the poor / shall your-selves find bless- _ ing."),
+    Part("Outro", "outro", "D4 C4 B3 A3 G3:2 C4:2 G3:4", chords="D7 G,C G", lyrics="shall your-selves find bless- _ ing."),
 ], shapes=SHAPES, words="John Mason Neale (1853)")
 
 L_WENCES = lesson("song-good-king-wenceslas", "Good King Wenceslas", [

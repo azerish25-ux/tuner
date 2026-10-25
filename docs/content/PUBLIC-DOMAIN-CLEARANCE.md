@@ -36,7 +36,7 @@ We took only the melody, which is the public-domain work itself. We copied no en
 | # | Song | First published | Creators and their death years | What we use | Rights source | Melody checked against | Verdict |
 |---|---|---|---|---|---|---|---|
 | 1 | She'll Be Coming 'Round the Mountain | Spiritual "When the Chariot Comes", 1899; secular words printed in Sandburg's *American Songbag*, 1927 | Traditional (Sandburg compiled it; he didn't write it) | Tune and three traditional verses (coming / driving six white horses / we'll all go out to meet her) | [Wikipedia](https://en.wikipedia.org/wiki/She%27ll_Be_Coming_%27Round_the_Mountain) | [Traditional Tune Archive](https://tunearch.org/wiki/Coming_%27Round_the_Mountain) | Cleared |
-| 2 | Down by the Riverside | *Plantation Melodies*, Rodeheaver, Chicago, 1918 | Traditional spiritual, before the Civil War | Tune and traditional verses ("burden", "sword and shield") and chorus | [Wikipedia](https://en.wikipedia.org/wiki/Down_by_the_Riverside) | [Wikibooks Liederbuch](https://de.wikibooks.org/wiki/Liederbuch/_Down_by_the_riverside) | Cleared |
+| 2 | Down by the Riverside | *Plantation Melodies*, Rodeheaver, Chicago, 1918 | Traditional spiritual, before the Civil War | Tune and traditional verses ("burden", "walk with the Prince of Peace") and chorus. The "sword and shield" verse is left out for the 4+ age rating (see below) | [Wikipedia](https://en.wikipedia.org/wiki/Down_by_the_Riverside) | [Wikibooks Liederbuch](https://de.wikibooks.org/wiki/Liederbuch/_Down_by_the_riverside) | Cleared |
 | 3 | Loch Lomond | *Vocal Melodies of Scotland*, 1841 | Traditional (authorship only attributed) | Tune, first verse and chorus | [Loch Lomond & Trossachs NP](https://lochlomondtrossachs.org.uk/loch-lomond-song), [Univ. of Otago](https://www.otago.ac.nz/library/exhibitions/insearchofscotland/cabinet8-2.html) | [Traditional Tune Archive](https://tunearch.org/wiki/Bonnie_Banks_o%27_Loch_Lomond_(The)) | Cleared |
 | 4 | Molly Malone | Boston, *Carmina Collegensia*, 1876; London, 1884 | James Yorkston, 1839–1906 (the 1884 arranger, Edmund Forman, is not used) | Tune and three verses with chorus | [Wikipedia](https://en.wikipedia.org/wiki/Molly_Malone), [Yorkston's dates](https://threadinburgh.scot/2022/10/24/the-thread-about-what-links-a-victorian-gas-meter-collector-from-abbeyhill-a-german-sheet-music-publisher-and-an-irish-cultural-anthem/) | [folkinfo 618](https://folkinfo.mainlynorfolk.info/songs/618.html) | Cleared |
 | 5 | The Water Is Wide | Cecil Sharp, *Folk Songs from Somerset*, 1906 (verses from 1724 onward) | Traditional; Cecil Sharp, 1859–1924 | Sharp's tune and two of his verses (Britten's 1948 and Rutter's 1973 arrangements are not used) | [Wikipedia](https://en.wikipedia.org/wiki/The_Water_Is_Wide_(song)) | [Traditional Tune Archive](https://ttadev.org/wiki/Annotation:Water_is_Wide_(The)) | Cleared |
@@ -111,7 +111,52 @@ These fail a test, or are doubtful enough to leave out. Where no link is given, 
 | Boléro (Ravel, 1928) | Ravel died 1937, but his heirs claimed co-authorship for Alexandre Benois, who died 1960. A French court rejected the claim in 2024 | Excluded as doubtful |
 | O Fortuna (Orff, 1937); Sabre Dance (Khachaturian, 1942) | Published after 1930; composers died 1982 and 1978 | Excluded |
 | Midnight Special, Frankie and Johnny, John Henry, Down in the Valley, Michael Row the Boat Ashore, He's Got the Whole World in His Hands, Will the Circle Be Unbroken | The well-known versions trace to 1920s–1950s recordings or arrangements whose creators or first printing we couldn't pin down | Excluded as doubtful |
-| Red River Valley, Shenandoah, Danny Boy, Drunken Sailor, Silent Night, Jingle Bells, Deck the Halls, Auld Lang Syne, In the Hall of the Mountain King, Ode to Joy | Already in the curriculum | Skipped as duplicates |
+| Red River Valley, Shenandoah, Danny Boy, Silent Night, Jingle Bells, Deck the Halls, Auld Lang Syne, In the Hall of the Mountain King, Ode to Joy | Already in the curriculum | Skipped as duplicates |
+
+## The 4+ age rating: content changes in every course
+
+Timbre answers Apple's age-rating questionnaire for 4+ (`docs/ios/APP-STORE-LISTING.md`, Age rating). Apple's 4+ allows no reference to alcohol, tobacco or drugs, and no reference to guns or other weapons. It also allows no profanity, horror, suggestive theme, violence or gambling. In October 2026 every title, lyric and lesson text in every course was checked against those rules. That covered the Songs, Originals and Standards courses and each instrument course's songs. These are the changes, and the songs that replace or fill in what was taken out. The rights tests are the same two as above.
+
+### Replaced or changed
+
+| Course | Song | Problem | Change |
+|---|---|---|---|
+| Songs, unit 2 | Drunken Sailor | Alcohol in the title and in every chorus line. "Shave his belly with a rusty razor" names a blade | Removed. Bobby Shafto takes its place (cleared below) |
+| Songs, unit 5 | Good King Wenceslas | Neale's verse 3: "Bring me flesh, and bring me wine" | Sings Neale's verses 1, 2, 4 and 5 instead of 1, 2 and 3 (tempo 96 → 100 to stay under three minutes) |
+| Standards, unit 1 | Down by the Riverside | "Gonna lay down my sword and shield" names a weapon | That verse is replaced by the traditional "Gonna walk with the Prince of Peace" (one of the verses in the Wikibooks Liederbuch edition the melody was checked against) |
+| Originals | Jukebox Moon, Slow Motion Strobe, Roller Rink, Late Checkout, Cold Lake, Spray Paint Sunrise | Timbre's own words: "last call", "smoke in the air", "cherry pop", a "Do not disturb" sign, "somebody new in your bedroom", tagging names on a wall | Same syllables, cleaner words: "it's late", "hands in the air", "soda pop", "Postcards and maps by the door", "in your window", "painting a sun" |
+
+### Songs added
+
+| # | Song | First published | Creators and their death years | What we use | Rights source | Melody checked against | Verdict |
+|---|---|---|---|---|---|---|---|
+| A1 | Bobby Shafto (Songs, unit 2) | Words in print by 1805. The tune is in William Vickers' manuscript (Northumberland, 1770) and, as "Brave Willy Forster", in Henry Atkinson's manuscript (1694/95). Words and tune together in Bruce & Stokoe, *Northumbrian Minstrelsy*, Newcastle, 1882 | Traditional (Northumberland and Durham). Bruce and Stokoe only compiled it | Both strains of the tune. The second strain carries the words, and the first is played as the interlude. Words: the two Northumbrian verses ("gone to sea", "bright and fair"), with the spelling made standard ("gaen" → "gone", "siller" → "silver", "me awn" → "my own"; "for ever mair" kept for the rhyme). Not used: the Scottish set's "bairn" verse and the undated "tall and slim" verse | [Wikipedia](https://en.wikipedia.org/wiki/Bobby_Shafto%27s_Gone_to_Sea), [Traditional Tune Archive annotation](https://tunearch.org/wiki/Annotation:Bobby_Shaftoe_(1)) | [Traditional Tune Archive, Bobby Shaftoe (1)](https://tunearch.org/wiki/Bobby_Shaftoe_(1)): Bruce & Stokoe's 1882 setting, note for note. It is moved from B flat to G, and each 2/4 eighth note becomes a 4/4 quarter. The chords are our own | Cleared |
+| A2 | Good King Wenceslas, verses 4 and 5 (Songs, unit 5) | Tune "Tempus adest floridum", *Piae Cantiones*, 1582. Words: Neale and Helmore, *Carols for Christmas-tide*, London, 1853 | Words John Mason Neale, 1818–1866 | Neale's verses 4 ("Sire, the night is darker now") and 5 ("In his master's steps he trod") on the existing arrangement | [Wikipedia](https://en.wikipedia.org/wiki/Good_King_Wenceslas), [Hymnology Archive](https://www.hymnologyarchive.com/good-king-wenceslas) | Melody unchanged. All 16 lines checked word for word against the five stanzas Wikipedia gives | Cleared |
+| A3 | Down by the Riverside, "Prince of Peace" verse (Standards, unit 1) | As song 2 above | Traditional | The verse line, sung in the existing verse | As song 2 | [Wikibooks Liederbuch](https://de.wikibooks.org/wiki/Liederbuch/_Down_by_the_riverside) has this verse | Cleared |
+
+### Kept after review
+
+These were checked and left as they are. Under Apple's definitions, none of them raises the rating.
+
+- "A cup o' kindness" (Auld Lang Syne) and "a cup of good cheer" (We Wish You a Merry Christmas) name no drink. Neither song uses Burns's "pint-stowp" verse.
+- "Feuertrunken" in the German Ode to Joy is a figure of speech, "drunk with fire".
+- Camptown Races sings "I'll bet my money on the bobtail nag". Apple's Gambling and Simulated Gambling questions are about betting in the app, and Timbre has none.
+- Clementine, Molly Malone and Danny Boy mention a death, but none tells a frightening story.
+- Amazing Grace's "he will my shield and portion be" (voice course) uses the shield as a figure of speech, not a weapon.
+- Soldier's Joy is a fiddle tune with no words. One theory links its title to morphine, through a 1920s sung version that Timbre doesn't use. The Traditional Tune Archive lists "The King's Hornpipe" as a clean alternative title, if the owner wants one.
+- Yankee Doodle, Loch Lomond and The Skye Boat Song give history (the Revolution, the Jacobites) only in their lesson notes. They have no fighting.
+
+### Turned down as replacements
+
+| Song | Problem |
+|---|---|
+| Spanish Ladies | Its last verse: "We'll drink and be jolly and drown melancholy" |
+| Haul Away Joe | "Then he got his head cut off" (King Louis verse) |
+| Blow the Man Down | To "blow a man down" is to knock him down, and the verses tell of a fight |
+| Sailing, Sailing (Godfrey Marks, 1880) | The verse is a toast: "Then here's to the sailor" |
+| Old King Cole | "He called for his pipe, and he called for his bowl" |
+| Pop Goes the Weasel | "In and out the Eagle", a London pub |
+| Oranges and Lemons | Ends with "a chopper to chop off your head" |
 
 ## Rules for anyone adding songs here
 
@@ -119,4 +164,5 @@ These fail a test, or are doubtful enough to leave out. Where no link is given, 
 - Use the original or traditional melody and words. A famous recording is not the song: it may carry its own copyright in the arrangement, the changed melody or new verses.
 - Check the melody against a public-domain edition (Mutopia, IMSLP scans of pre-1931 printings, the Traditional Tune Archive). Copy no engraving or chord chart.
 - Don't name trademarks in lesson text. Write "a video game", not the game's name, and "a British TV comedy", not the show's name.
+- Keep the app 4+. A title or a single line can raise the rating, so no song may reference drink, smoke, drugs or weapons. It may have no innuendo, horror, gambling or swearing either. Leave out the verse rather than the song when only one verse has the problem, and add it to the 4+ tables above.
 - Add a row here with its sources before the song ships.

@@ -10,33 +10,50 @@ Paste into App Store Connect → the app → the version's page and App Informat
 | Subtitle | Learn Violin, Ukulele & Bass | 28/30 |
 | Primary category | Music | |
 | Secondary category | Education | |
-| Age rating | 13+ as the song catalogue stands, 4+ without two songs: see [Age rating](#age-rating) (owner decision) | |
+| Age rating | 4+: see [Age rating](#age-rating) | |
 | Privacy Policy URL | `<privacy policy URL>` (**owner TODO**: the hosted policy, on a custom domain) | required |
 
 ## Age rating
 
-App Store Connect → the app → App Information → Age Ratings. Apple replaced the questionnaire in 2025. The ratings are now 4+, 9+, 13+, 16+ and 18+ (12+ and 17+ are gone), and new questions cover in-app controls, capabilities (user-generated content, messaging, advertising, web access, social media), medical and wellness topics, and violent themes. App Store Connect has required the new answers for every submission since January 31, 2026. Apple computes the rating from the answers. Timbre's answers, checked against this build:
+App Store Connect → the app → App Information → Age Ratings. Apple replaced the questionnaire in 2025. The ratings are now 4+, 9+, 13+, 16+ and 18+ (12+ and 17+ are gone), and new questions cover in-app controls, capabilities (user-generated content, messaging, advertising, web access, social media), medical and wellness topics, and violent themes. App Store Connect has required the new answers for every submission since January 31, 2026, and the social media question since September 2026. Apple computes the rating from the answers, and the strictest answer sets it. Apple's [definitions](https://developer.apple.com/help/app-store-connect/reference/app-information/age-ratings-values-and-definitions) allow at 4+ only the in-app controls, the capabilities other than web access and social media, and infrequent contests. Any profanity, horror, suggestive theme, cartoon violence or weapon makes an app at least 9+, and any alcohol, tobacco or drug reference makes it at least 13+. Two of Apple's definitions count mere *references*: alcohol, tobacco and drugs, and guns or other weapons (swords and knives included). A title or a single lyric line is enough.
+
+Timbre's answers, checked against this build: every title, lyric and lesson text in `curriculum.json`, swept in October 2026.
 
 | Section | Question | Answer | Why |
 |---|---|---|---|
 | In-app controls | Parental Controls | No | |
-| | Age Assurance | No | |
+| | Age Assurance | No | The app asks no age and uses no age-range API. |
 | Capabilities | Unrestricted Web Access | No | Terms and Privacy open in Safari. The app has no browser or web view. |
-| | User-Generated Content | No | Apple means content broadly distributed to other users. Charts and audio files a player imports into Your songs (from Files, the clipboard, the share sheet or the chart editor) stay on that device, and nobody else sees them. |
-| | Social Media | No | |
-| | Messaging and Chat | No | A Pitch Sniper challenge leaves as a link through the system share sheet. |
+| | User-Generated Content | No | Charts and audio files a player imports into Your songs (from Files, the clipboard, the share sheet or the chart editor) are user content. Apple's question, though, is about "the broad distribution of content created by users", and these stay on that device where nobody else sees them. A Yes would still allow 4+, but it would bring Guideline 1.2's filtering, reporting and blocking duties, which apply only to content that others see. Answer Yes if imported charts ever become shareable inside the app. |
+| | Social Media | No | No feed and no discovery of other players' content. The friend streak shows Game Center friends' streak lengths, nothing they made. |
+| | Messaging and Chat | No | "Challenge a friend" opens Game Center's own challenge, or sends a link through the system share sheet. Players can't write to each other in the app. |
 | | Advertising | No | No ads. The paywall sells Timbre's own subscription. |
 | Mature themes | Profanity or Crude Humor | None | |
-| | Horror/Fear Themes | None | |
-| | Alcohol, Tobacco, or Drug Use or References | **Infrequent** | Two traditional songs: "Drunken Sailor" (title and chorus) and "Good King Wenceslas" ("bring me wine"). |
+| | Horror/Fear Themes | None | A few old songs mention a death (Clementine, Molly Malone, Danny Boy), but none tells a frightening story. Ghost Light is about a theatre's stage lamp. |
+| | Alcohol, Tobacco, or Drug Use or References | None | "Drunken Sailor" was replaced by "Bobby Shafto". Good King Wenceslas sings Neale's verses 1, 2, 4 and 5, leaving out verse 3 ("bring me wine"). The Originals were cleaned of "last call" and "smoke in the air". "A cup o' kindness" (Auld Lang Syne) and "a cup of good cheer" (We Wish You a Merry Christmas) name no drink. "Feuertrunken" in the German Ode to Joy means "drunk with fire", a figure of speech. Soldier's Joy is a fiddle tune with no words. Its title names no drug, though one theory links it to morphine. |
 | Medical or wellness | Medical or Treatment Information | No | |
-| | Health or Wellness Topics | No | The voice course's breathing is singing technique, not self-care advice. |
-| Sexuality or nudity | All three | None | The Originals' lyrics were checked. |
-| Violence | All four, guns and weapons included | None | Pitch Sniper's "scope" is a pitch reticle; no weapon is shown. |
-| Chance-based activities | Gambling, Simulated Gambling, Loot Boxes | None | Rewards are earned, never bought or drawn at random. |
-| | Contests | Infrequent | Pitch Sniper's Game Center leaderboard and friend challenges. |
+| | Health or Wellness Topics | No | The voice course's breathing and warm-ups are singing technique, not self-care advice. |
+| Sexuality or nudity | Mature or Suggestive Themes | None | The love songs go no further than holding hands and a slow dance. The Originals were cleaned of a hotel "Do not disturb" sign, "cherry pop" and "somebody new in your bedroom". Spray Paint Sunrise now paints a sun rather than the singers' names, so it no longer tags a wall. |
+| | Sexual Content or Nudity; Graphic Sexual Content and Nudity | None | |
+| Violence | Cartoon or Fantasy Violence; Realistic Violence; Prolonged Graphic or Sadistic Realistic Violence | None | The catalogue has no murder ballads and no battle songs. |
+| | Guns or Other Weapons | None | Down by the Riverside sings its traditional "walk with the Prince of Peace" verse, not "lay down my sword and shield". The pitch game is called Bullseye (a target, no weapon words). |
+| Chance-based activities | Gambling; Simulated Gambling | None | Nothing in the app can be bet. Camptown Races' "I'll bet my money on the bobtail nag" is a lyric, not betting. |
+| | Loot Boxes | None | Rewards are earned, never bought or drawn at random. |
+| | Contests | Infrequent | Game Center leaderboards on Bullseye, the ear trainer, the streak and eight featured songs, and friend challenges on them. Competing is optional and covers a small part of the app. |
+| Age categories | Made for Kids | Not Applicable | The Kids category would need a parental gate before every purchase and every link out (Guideline 1.3). 4+ doesn't. |
 
-**Result: 13+** (confirm it on the summary App Store Connect shows after the last answer). The alcohol answer sets it: Apple's 4+ and 9+ definitions allow no alcohol references. Everything else here sits at 4+, infrequent contests included. **Owner decision:** remove those two songs from the bundled catalogue (`curriculum.json`) and answer None, and the app is 4+. At 13+ it is hidden from any child whose Screen Time limits apps to 9+, and many beginners on ukulele and guitar are children. Answer the questionnaire again whenever songs are added.
+**Result: 4+.** Confirm it on the summary App Store Connect shows after the last answer. Every answer sits inside Apple's 4+ list. At 4+, Timbre stays visible to a child whose Screen Time allows only 4+ or 9+ apps, and many beginners on ukulele and guitar are children.
+
+**Bullseye (the pitch game).** It was called Pitch Sniper; it and its badges were renamed (Bullseye, High Scorer, Round Winner) so nothing borrows shooting words, and "None" stands for weapons.
+
+**Keeping 4+.** Answer the questionnaire again whenever songs or games are added, and hold new content, the Originals included, to these rules:
+
+- No drink, smoke or drug, in a title or a lyric. Leave out the verse rather than the song when only one verse has it.
+- No weapons, not even laid down.
+- No innuendo, horror, gambling or swearing.
+- Give leaderboards to a featured set of songs, not to every song: Contests answered Frequent makes the app 13+.
+
+`docs/content/PUBLIC-DOMAIN-CLEARANCE.md` lists the songs taken out or changed for the rating and the tunes turned down for it.
 
 ## Keywords (100/100)
 

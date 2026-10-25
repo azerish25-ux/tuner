@@ -661,7 +661,7 @@ struct PaywallView: View {
                    free: .count(instruments.filter(\.isFree).count), pro: .count(instruments.count)),
             ProRow(id: "lessons", label: Text("Lessons in \(store.curriculum.courses.count) courses"),
                    free: .count(lessons.filter(\.free).count), pro: .count(lessons.count)),
-            ProRow(id: "free", label: Text("Metronome and Pitch Sniper"), free: .included, pro: .included),
+            ProRow(id: "free", label: Text("Metronome and Bullseye"), free: .included, pro: .included),
             ProRow(id: "ear", label: Text("Name intervals and chords by ear"), free: .excluded, pro: .included),
             ProRow(id: "tools", label: Text("Chords, scales, intonation and drone"), free: .excluded, pro: .included),
             ProRow(id: "precision", label: Text("Strobe, temperaments and custom tunings"), free: .excluded, pro: .included),

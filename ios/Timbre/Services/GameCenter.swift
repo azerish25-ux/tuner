@@ -25,7 +25,7 @@ struct SniperChallenge: Equatable {
     /// What the share sheet sends with the card: the score and the link that opens Pitch Sniper with it to beat.
     static func message(score: Int) -> String {
         let link = DeepLink.challenge(score: score).absoluteString
-        let line = String(localized: "Beat my \(score) in Pitch Sniper on Timbre: \(link)")
+        let line = String(localized: "Beat my \(score) in Bullseye on Timbre: \(link)")
         guard let store = appStoreLink else { return line }
         return line + "\n" + String(localized: "Get Timbre: \(store)")
     }
