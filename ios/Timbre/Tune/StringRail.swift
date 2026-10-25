@@ -13,6 +13,8 @@ import TimbreCore
 struct StringRail: View {
     /// The readout's smoothing, so the selected chip shows the same value as the digits.
     let motion: ReadoutMotion
+    /// The lock as the readout shows it, so the chip stays solid exactly while the badge does.
+    let latch: LockLatch
     @EnvironmentObject private var store: AppStore
     @Environment(\.colorSchemeContrast) private var contrast
     /// The chips lit by the full-tune roll right now.
@@ -46,7 +48,7 @@ struct StringRail: View {
     private func row(_ groups: [CourseGroup]) -> some View {
         HStack(spacing: 10) {
             ForEach(groups) { group in
-                CourseChip(group: group, motion: motion, ringing: ringing.contains(group.id)).id(group.id)
+                CourseChip(group: group, motion: motion, latch: latch, ringing: ringing.contains(group.id)).id(group.id)
             }
         }
         .padding(.vertical, 6)
@@ -95,6 +97,7 @@ struct StringRail: View {
 private struct CourseChip: View {
     let group: CourseGroup
     let motion: ReadoutMotion
+    let latch: LockLatch
     /// Lit by the full-tune roll.
     var ringing = false
     @EnvironmentObject private var store: AppStore
@@ -171,7 +174,7 @@ private struct CourseChip: View {
     private func content(_ face: Face, text: Color, cueColor: Color, solid: Bool = false) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 1) {
             Text(face.name).font(Typeface.label(17))
-            Text(face.cue).font(Typeface.label(10)).foregroundStyle(cueColor)
+            Text(face.cue).font(Typeface.label(.caption)).foregroundStyle(cueColor)
         }
         // The symbol sits just above the note, the pair's pips just below it; neither moves the note.
         .overlay(alignment: .top) {
@@ -229,13 +232,15 @@ private struct CourseChip: View {
         if group.count > 1 {
             HStack(spacing: 2) {
                 if tuned { Image(systemName: "checkmark").font(.system(size: 7, weight: .heavy)) }
-                Text(verbatim: "×\(group.count)").font(Typeface.label(9))
+                Text(verbatim: "×\(group.count)").font(Typeface.badge)
             }
             .foregroundStyle(tuned ? Palette.onAccent : (strong ? Palette.ink : Palette.inkSoft))
             .padding(.horizontal, 4).padding(.vertical, 1.5)
             .background(Capsule().fill(tuned ? Palette.mint : Palette.stageRaised))
             .overlay(Capsule().strokeBorder(tuned ? Color.clear : ring, lineWidth: 1))
             .fixedSize()
+            // A badge on the chip's shoulder: it grows a little with the text size, never over the note.
+            .dynamicTypeSize(...DynamicTypeSize.xLarge)
             .offset(x: 4, y: -3)
             .accessibilityHidden(true)
         } else if done {
@@ -271,17 +276,17 @@ private struct CourseChip: View {
     }
 
     /// The string being tuned is the raised, filled chip: it follows the live pitch with the readout's colour rule
-    /// (the same steady whole cents as the digits) and turns solid mint while locked. With no pitch it is solid
-    /// mint if already tuned, otherwise a bright ring on the raised fill.
+    /// (the same steady whole cents as the digits) and turns solid mint while the lock is on screen (`LockLatch`).
+    /// With no pitch it is solid mint if already tuned, otherwise a bright ring on the raised fill.
     private func selectedStyle(tuned: Bool) -> Style {
         // Only this chip reads the live reading, so only it redraws with the pitch.
         let reading = store.live.reading
         let live = audio.running && reading.cents != nil ? motion.shown : nil
         let solid = Style(ring: Palette.mint, fill: Palette.mint.opacity(0.12), text: Palette.ink, cue: Palette.mint, solid: true, mark: .inTune)
+        if latch.shows(reading, listening: audio.running, shown: live) { return solid }
         guard let live else {
             return tuned ? solid : Style(ring: strong ? Palette.ink : Palette.ink.opacity(0.85), fill: .white.opacity(0.06), text: Palette.ink, cue: strong ? Palette.ink : Palette.inkSoft)
         }
-        if reading.inTune { return solid }
         let tint = Palette.tuning(Double(live), locked: false)
         return Style(ring: tint, fill: tint.opacity(0.2), text: Palette.ink, cue: tint, mark: PitchMark(shown: live, locked: false))
     }

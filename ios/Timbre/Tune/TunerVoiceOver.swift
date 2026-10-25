@@ -22,7 +22,8 @@ final class TunerAnnouncer {
     ///   - note: the target note as the readout shows it ("G3", "Eb3").
     ///   - spoken: the same note as VoiceOver should say it ("G 3", "E flat 3"; `NoteNames.spoken`); nil says `note`.
     ///   - shown: the whole cents on screen; nil with no pitch (or while not listening).
-    ///   - locked: the tracker's lock.
+    ///   - locked: the lock as the screen shows it (`LockLatch`), so "In tune" is said once per lock, never again for
+    ///     a flicker of the tracker's.
     func step(note: String, spoken: String? = nil, shown: Int?, locked: Bool, now: TimeInterval) {
         guard let shown else { reset(); return }
         if note != lastNote { wasLocked = false }

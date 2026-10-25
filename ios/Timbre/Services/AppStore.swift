@@ -700,12 +700,17 @@ final class AppStore: ObservableObject {
         // The feel (today: the cent detents and the lock) comes first, ahead of the lock's rewards.
         onTunerFrame(TunerFrame(reading: reading, targetHz: tunedTo, level: level, enteredTune: reading.inTune && !wasInTune,
                                 measuring: measuringTuning, time: live.updatedAt))
+        // The string-health sample and the lock's progress are saved a moment later (`updateSettingsSoon`), never on the
+        // frame that reads the string: the lock lands on screen first, and the settings follow.
         if !referenceMode, measuringTuning, reading.stable, let cents = reading.cents, abs(cents) <= 100,
            !sampledCourses.contains(activeCourse.index), let anchor = activeCourse.anchorId {
             sampledCourses.insert(activeCourse.index)
-            var state = progress
-            state.sample(StringSample(instrumentId: instrument.id, anchor: anchor, date: Date(), cents: cents))
-            updateSettings { $0.progress = state }
+            let sample = StringSample(instrumentId: instrument.id, anchor: anchor, date: Date(), cents: cents)
+            updateSettingsSoon { settings in
+                var state = settings.progress ?? ProgressState()
+                state.sample(sample)
+                settings.progress = state
+            }
         }
         if reading.inTune && !wasInTune && measuringTuning && !referenceMode {
             let before = allCoursesLocked
@@ -714,8 +719,8 @@ final class AppStore: ObservableObject {
             if completed { completedFullTune() }
             if fresh {
                 // The course goes into today's saved list too, so the tuning quest keeps its count after this session ends.
-                recordProgress(.stringTuned(instrumentId: instrument.id, all: completed, course: activeCourse.index,
-                                            courses: courses.map(\.index), precise: settings.precision == .pro))
+                recordLock(.stringTuned(instrumentId: instrument.id, all: completed, course: activeCourse.index,
+                                        courses: courses.map(\.index), precise: settings.precision == .pro))
             }
         }
         if measuringTuning, let cents = reading.cents, reading.frequency != nil {
@@ -732,7 +737,7 @@ final class AppStore: ObservableObject {
         celebrate += 1
         Haptics.shared.done()
         let count = (settings.fullTunes ?? 0) + 1
-        updateSettings { $0.fullTunes = count }
+        updateSettingsSoon { $0.fullTunes = ($0.fullTunes ?? 0) + 1 }
         if count == 3 || count == 12 { requestReviewNow = true }
         Analytics.log("full_tune", ["instrument": instrument.id, "count": String(count)])
     }
@@ -891,6 +896,27 @@ final class AppStore: ObservableObject {
         let update = state.record(event, streakBest: summary.best, customTunings: settings.customTunings?.count ?? 0,
                                   metrics: achievementMetrics(minutes: summary.totalMinutes))
         guard updateSettings({ $0.progress = state }) else { return nil }
+        announceProgress(update, for: event, announce: announce, toast: toast)
+        return update
+    }
+
+    /// A string's lock, recorded off the lock's own frame: the event is applied to the progress saved about 300 ms
+    /// later (`updateSettingsSoon`, to whatever progress is saved by then), and what it earned is announced once it
+    /// is saved, so the badge, bell and peg land first and the reward follows.
+    private func recordLock(_ event: ProgressEvent) {
+        let summary = streak
+        let customTunings = settings.customTunings?.count ?? 0
+        let metrics = achievementMetrics(minutes: summary.totalMinutes)
+        updateSettingsSoon { [weak self] settings in
+            var state = settings.progress ?? ProgressState()
+            let update = state.record(event, streakBest: summary.best, customTunings: customTunings, metrics: metrics)
+            settings.progress = state
+            Task { @MainActor [weak self] in self?.announceProgress(update, for: event) }
+        }
+    }
+
+    /// What a recorded event earned, told: the haptic, the reward toast, the analytics events and Game Center.
+    private func announceProgress(_ update: ProgressUpdate, for event: ProgressEvent, announce: Bool = true, toast: Bool = true) {
         if toast, update.levelUp != nil || !update.achievementsEarned.isEmpty || update.dailySetCompleted { Haptics.shared.done() }
         if toast, announce || update.levelUp != nil || !update.questsCompleted.isEmpty || !update.achievementsEarned.isEmpty || update.dailySetCompleted {
             publishReward(update)
@@ -899,7 +925,6 @@ final class AppStore: ObservableObject {
         if let level = update.levelUp { Analytics.log("level_up", ["level": String(level.number)]) }
         if update.dailySetCompleted { Analytics.log("daily_set_done") }
         GameCenter.shared.recorded(event)  // Pitch Sniper games to the leaderboards and a friend's challenge (Services/GameCenter.swift)
-        return update
     }
 
     /// Hands a reward to the toast. Rewards recorded by one action (a finished ear round records several events)

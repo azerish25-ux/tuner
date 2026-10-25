@@ -77,7 +77,7 @@ struct CelebrationOverlay: View {
         HStack(spacing: 6) {
             ForEach(Array(store.courses.enumerated()), id: \.offset) { _, course in
                 let note = NoteReadout.split(TargetLabelFormatter.splitCue(store.courseLabel(course)).main)
-                (Text(note.name).font(Typeface.label(13)) + Text(note.octave).font(Typeface.label(9)))
+                (Text(note.name).font(Typeface.label(.body)) + Text(note.octave).font(Typeface.label(.caption)))
                     .foregroundStyle(Palette.mint)
                     .frame(minWidth: 30, minHeight: 30)
                     .background(Circle().fill(Palette.mint.opacity(0.12)))
@@ -345,7 +345,7 @@ struct ShareCardRow<Card: View>: View {
 
     private var shareLabel: some View {
         Label("Share", systemImage: "square.and.arrow.up")
-            .font(Typeface.label(14)).foregroundStyle(Palette.onAccent)
+            .font(Typeface.label(.body)).foregroundStyle(Palette.onAccent)
             .padding(.horizontal, 14).frame(minHeight: 38)
             .background(Capsule().fill(tint))
             .fixedSize()
@@ -380,7 +380,7 @@ struct ShareCardFrame<Tag: View, Content: View>: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Text("TIMBRE").font(Typeface.label(13)).tracking(6).foregroundStyle(Palette.amber)
+                Text("TIMBRE").font(Typeface.label(13)).tracking(6).foregroundStyle(Palette.spotlight)
                 Spacer(minLength: 12)
                 tag
             }
@@ -404,7 +404,7 @@ struct ShareCardFrame<Tag: View, Content: View>: View {
             Hairline()
             HStack(spacing: 6) {
                 Image(systemName: "tuningfork").font(.system(size: 11, weight: .bold)).foregroundStyle(Palette.mint)
-                Text("In tune with Timbre").font(Typeface.label(11)).tracking(0.4).foregroundStyle(Palette.inkSoft)
+                Text("In tune with Timbre").font(Typeface.label(.caption)).tracking(0.4).foregroundStyle(Palette.inkSoft)
             }
             .fixedSize()
             Hairline()
@@ -431,14 +431,14 @@ struct TuneShareCard: View {
                 Image(name).resizable().scaledToFit().frame(height: 300).shadow(color: .black.opacity(0.65), radius: 24, y: 14)
                     .background(Ellipse().fill(RadialGradient(colors: [Palette.spotlight.opacity(0.25), .clear], center: .center, startRadius: 2, endRadius: 160)).frame(width: 300, height: 40).offset(y: 150))
             }
-            Text("In tune").font(Typeface.display(52)).tracking(-1.2).foregroundStyle(Palette.ink)
+            Text("In tune").font(Typeface.display(.hero)).tracking(-1.4).foregroundStyle(Palette.ink)
             if let seconds, seconds > 0 {
-                Text("Every string in \(seconds) seconds").font(Typeface.label(16)).foregroundStyle(Palette.mint)
+                Text("Every string in \(seconds) seconds").font(Typeface.label(.headline)).foregroundStyle(Palette.mint)
             }
             Text("\(instrument) · \(tuning)").font(.headline).foregroundStyle(Palette.inkSoft)
             HStack(spacing: 8) {
                 ForEach(Array(notes.enumerated()), id: \.offset) { _, note in
-                    Text(note).font(Typeface.label(14)).foregroundStyle(Palette.mint)
+                    Text(note).font(Typeface.label(.body)).foregroundStyle(Palette.mint)
                         .padding(.horizontal, 10).frame(height: 30)
                         .background(Capsule().fill(Palette.mint.opacity(0.12)))
                 }
@@ -477,7 +477,7 @@ struct LessonShareCard: View {
     private var streakChip: some View {
         HStack(spacing: 6) {
             Image(systemName: "flame.fill").font(.system(size: 13, weight: .bold)).foregroundStyle(Palette.flame)
-            Text("\(streak)-day streak").font(Typeface.label(14)).foregroundStyle(Palette.flameInk)
+            Text("\(streak)-day streak").font(Typeface.label(.body)).foregroundStyle(Palette.flameInk)
                 .lineLimit(1).minimumScaleFactor(0.7)
         }
         .padding(.horizontal, 14).frame(height: 34)
@@ -520,7 +520,7 @@ struct LessonShareCard: View {
 
     @ViewBuilder private var words: some View {
         if let headline {
-            Text(headline).font(Typeface.display(52)).tracking(-1.2).foregroundStyle(Palette.ink)
+            Text(headline).font(Typeface.display(.display)).tracking(-0.8).foregroundStyle(Palette.ink)
                 .multilineTextAlignment(.center).lineLimit(2).minimumScaleFactor(0.6)
                 .fixedSize(horizontal: false, vertical: true)
             Text(title).font(.headline).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
@@ -533,12 +533,12 @@ struct LessonShareCard: View {
 
     private var accuracyChip: some View {
         HStack(spacing: 6) {
-            Image(systemName: "target").font(.system(size: 13, weight: .bold)).foregroundStyle(Palette.amber)
+            Image(systemName: "target").font(.system(size: 13, weight: .bold)).foregroundStyle(Palette.starGold)
             Text("\(accuracy)%").font(Typeface.label(15)).foregroundStyle(Palette.ink)
-            Text("accuracy").font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
+            Text("accuracy").font(Typeface.label(.body)).foregroundStyle(Palette.inkSoft)
         }
         .padding(.horizontal, 14).frame(height: 34)
-        .background(Capsule().fill(Palette.amber.opacity(0.12)))
+        .background(Capsule().fill(Palette.starGold.opacity(0.12)))
         .padding(.top, 2)
     }
 }
@@ -563,8 +563,8 @@ struct StreakShareCard: View {
                 StageLamp(level: StageLamp.brightness(days: days), size: 170)
             }
             .frame(height: 190)
-            Text(days, format: .number).font(Typeface.number(92)).foregroundStyle(Palette.ink)
-            Text("day streak").font(Typeface.label(18)).tracking(0.6).foregroundStyle(Palette.inkSoft)
+            Text(days, format: .number).font(Typeface.hero(92)).foregroundStyle(Palette.ink)
+            Text("day streak").font(Typeface.label(.headline)).tracking(0.6).foregroundStyle(Palette.inkSoft)
             LightingRig(days: days, lit: min(days, 7)).padding(.top, 4)
         }
     }

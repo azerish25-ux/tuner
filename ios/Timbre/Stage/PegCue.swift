@@ -57,8 +57,10 @@ struct PegLabel: View {
                 Text(parts.name).font(Typeface.label(.body)) + Text(parts.octave).font(Typeface.label(.caption))
             }
             if let symbol = turn.symbol {
+                // The turn is the peg's, seen on screen: its arrow never mirrors for a right-to-left language.
                 Image(systemName: symbol).font(.system(size: 12, weight: .bold))
                     .rotationEffect(.degrees(nudge))
+                    .environment(\.layoutDirection, .leftToRight)
             }
         }
         .foregroundStyle(color)
@@ -70,10 +72,12 @@ struct PegLabel: View {
 
     /// Which side of the peg the label goes: `preferred` (away from the headstock), unless the label
     /// (about `width` wide) would run into the screen edge or the side controls and the other side has more room.
+    /// The controls take `controlsReserve` points on the right, or on the left (`controlsOnLeft`, a right-to-left
+    /// language).
     static func side(for point: CGPoint, preferred: CGFloat, gap: CGFloat, in size: CGSize,
-                     width: CGFloat = 60, trailingReserve: CGFloat = 64) -> CGFloat {
-        let right = size.width - trailingReserve - (point.x + gap)
-        let left = point.x - gap - 8
+                     width: CGFloat = 60, controlsReserve: CGFloat = 64, controlsOnLeft: Bool = false) -> CGFloat {
+        let right = size.width - (controlsOnLeft ? 0 : controlsReserve) - (point.x + gap)
+        let left = point.x - (controlsOnLeft ? controlsReserve : 0) - gap - 8
         if preferred > 0 { return right >= width || right >= left ? 1 : -1 }
         return left >= width || left >= right ? -1 : 1
     }
@@ -136,7 +140,8 @@ struct StagePegCue: View {
             let pulse = reduceMotion || idle || state.locked ? 0 : 2.5 * sin(now * 3)
             let radius = CGFloat(12 + 10 * close + pulse)
             let gap = radius + 10
-            let side = PegLabel.side(for: lead, preferred: marker.side, gap: gap, in: size, width: calling ? PegLabel.callWidth : 60)
+            let side = PegLabel.side(for: lead, preferred: marker.side, gap: gap, in: size, width: calling ? PegLabel.callWidth : 60,
+                                     controlsOnLeft: state.rightToLeft)
             let shimmer = flash.step(locked: state.listening && state.locked, key: "\(state.activeAnchor ?? "-")|\(state.pegIndex ?? -1)",
                                      now: now, duration: LockShimmer.duration)
             ZStack {
@@ -152,6 +157,7 @@ struct StagePegCue: View {
                 }
                 .opacity(0.55 + 0.45 * close)
                 PegLabel(note: state.note, turn: turn, color: color, prompt: calling, nudge: turn.nudge(at: now, reduceMotion: reduceMotion))
+                    .environment(\.layoutDirection, state.rightToLeft ? .rightToLeft : .leftToRight)
                     .placedBeside(lead, side: side, gap: gap)
                     .opacity(close)
             }
