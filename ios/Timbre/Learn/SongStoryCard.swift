@@ -76,8 +76,8 @@ struct SongFinaleView: View {
         if take.percent >= 98 { return "Flawless" }
         if take.percent >= 90 {
             guard !take.grades.isEmpty else { return "Solid take" }
-            let landed = take.grades.count - take.count(.miss)
-            return "\(landed) of \(take.grades.count) notes landed"
+            let hits = take.grades.count - take.count(.miss)
+            return "\(hits) of \(take.grades.count) notes landed"
         }
         return retryFirst ? "Just warming up" : "Keep going"
     }

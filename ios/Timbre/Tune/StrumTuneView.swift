@@ -245,6 +245,8 @@ struct StrumTuneView: View {
         }
         .overlay { if ring.hint { StrumPickSweep(ring: ring) } }
         .padding(.horizontal, 12)
+        // The lanes are the strings: left to right in every language.
+        .environment(\.layoutDirection, .leftToRight)
     }
 
     /// The zoom: the strings already in tune shrink into a row of ✓ chips and the last lane fills the stage.
@@ -257,6 +259,7 @@ struct StrumTuneView: View {
                         .matchedGeometryEffect(id: laneKey(other.id, zoomed: true), in: laneSpace)
                 }
             }
+            .environment(\.layoutDirection, .leftToRight)
             StrumFinaleLane(meter: meter, band: band, done: done) { course in finaleLock(course) }
                 .frame(maxHeight: .infinity)
                 .matchedGeometryEffect(id: laneKey(meter.id, zoomed: true), in: laneSpace)

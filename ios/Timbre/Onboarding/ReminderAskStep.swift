@@ -31,7 +31,7 @@ struct ReminderAskStep: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                         .accessibilityIdentifier("onboarding.reminder.card")
-                    Text("One reminder on days you haven't played yet, naming your next lesson. Never more than one a day.")
+                    Text("On days you haven't played yet, one reminder that names your next lesson.")
                         .font(.subheadline).foregroundStyle(Palette.inkSoft)
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
