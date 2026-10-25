@@ -369,8 +369,10 @@ public struct BandGroove: Equatable, Sendable {
             return [Note(beat: 0, beats: 0.9, interval: 0, velocity: 1), Note(beat: 1, beats: 0.9, interval: answer, velocity: 0.8)]
         default:
             if meter >= 6 && meter % 3 == 0 {
-                return stride(from: 0, to: meter, by: 3).map { b in
-                    Note(beat: Double(b), beats: 2.7, interval: (b / 3) % 2 == 0 ? 0 : answer, velocity: b == 0 ? 1 : 0.8)
+                return stride(from: 0, to: meter, by: 3).map { (b: Int) -> Note in
+                    let interval: Int = (b / 3) % 2 == 0 ? 0 : answer
+                    let velocity: Float = b == 0 ? 1 : 0.8
+                    return Note(beat: Double(b), beats: 2.7, interval: interval, velocity: velocity)
                 }
             }
             if meter >= 4 {
@@ -389,7 +391,10 @@ public struct BandGroove: Equatable, Sendable {
         let push = c.swing ? 2.0 / 3.0 : 0.5
         if c.fill { return [Stroke(0, Double(meter) - 0.1, 0.55, .piano)] }
         if meter >= 6 && meter % 3 == 0 {
-            return stride(from: 0, to: meter, by: 3).map { Stroke(Double($0), 2.8, $0 == 0 ? 0.58 : 0.46, .piano) }
+            return stride(from: 0, to: meter, by: 3).map { (b: Int) -> Stroke in
+                let velocity: Double = b == 0 ? 0.58 : 0.46
+                return Stroke(Double(b), 2.8, velocity, .piano)
+            }
         }
         switch meter {
         case 4: return [Stroke(0, 1.9, 0.6, .piano), Stroke(2, 1.4, 0.5, .piano), Stroke(3 + push, 0.45, 0.36, .piano)]
@@ -668,7 +673,7 @@ public struct BandGroove: Equatable, Sendable {
                     comp.append(Stroke(Double(e), Double(meter) + 0.3 - Double(e), e == 0 ? 0.46 : 0.34, .arpeggio, tone: tones[e % 6]))
                 }
             } else {
-                comp = (0..<groups).map { Stroke(Double($0 * 3), 2.8, $0 == 0 ? 0.58 : 0.46, .piano) }
+                comp = (0..<groups).map { (g: Int) -> Stroke in Stroke(Double(g * 3), 2.8, g == 0 ? 0.58 : 0.46, .piano) }
             }
         }
         return BandGroove(hits: hits, bass: bass, comp: comp)
