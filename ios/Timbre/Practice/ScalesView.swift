@@ -50,11 +50,6 @@ struct ScaleLibraryView: View {
                         .accessibilityAddTraits(.isHeader)
                     ToneStrip(tones: sheet.tones)
                 }
-                Picker("Note names", selection: $noteNames) {
-                    Text("Intervals").tag(false)
-                    Text("Note names").tag(true)
-                }
-                .pickerStyle(.segmented)
                 if !sheet.positions.isEmpty { positionPicker(sheet) }
                 neckSection(sheet)
                 if audio.permissionDenied && along != nil {
@@ -132,11 +127,24 @@ struct ScaleLibraryView: View {
 
     // MARK: Neck
 
-    /// The neck under its switch: Chart (string 1 on top, as tab) or Player view (the thickest on top), the chord
-    /// cards' switch and the app's one picture choice, so this neck always lies as the lessons' do.
+    /// The neck under its two switches, side by side in one row so the whole neck clears the dock at rest: what the
+    /// dots say (intervals or note names) and Chart (string 1 on top, as tab) or Player view (the thickest on top), the
+    /// chord cards' switch and the app's one picture choice, so this neck always lies as the lessons' do. Where the
+    /// row is too narrow (large text, a small phone) the picture switch drops under the other.
     private func neckSection(_ sheet: ScaleSheet) -> some View {
-        VStack(alignment: .trailing, spacing: 12) {
-            ChordPictureToggle(label: "Neck view")
+        VStack(alignment: .leading, spacing: 12) {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) {
+                    NeckLabelSwitch(noteNames: $noteNames)
+                    Spacer(minLength: 0)
+                    ChordPictureToggle(label: "Neck view")
+                }
+                VStack(alignment: .trailing, spacing: 12) {
+                    NeckLabelSwitch(noteNames: $noteNames)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    ChordPictureToggle(label: "Neck view")
+                }
+            }
             neckCard(sheet)
         }
     }
@@ -678,6 +686,51 @@ private struct TargetPulse: View {
             }
         }
         .allowsHitTesting(false)
+    }
+}
+
+/// What the neck's dots say, intervals (R ♭3 5) or note names: drawn as the Chart / Player view switch beside it
+/// (`ChordPictureToggle`), a compact track with a sliding mint thumb, so the two read as one row of neck choices.
+private struct NeckLabelSwitch: View {
+    @Binding var noteNames: Bool
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Namespace private var thumb
+
+    var body: some View {
+        HStack(spacing: 2) {
+            segment(names: false)
+            segment(names: true)
+        }
+        .padding(3)
+        .background(Capsule().fill(Palette.surface))
+        .overlay(Capsule().strokeBorder(Palette.controlLine, lineWidth: 1))
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(Text("Note names"))
+    }
+
+    private func segment(names: Bool) -> some View {
+        let selected = noteNames == names
+        return Button {
+            guard noteNames != names else { return }
+            Haptics.shared.selection()
+            withMotion(Motion.settle, reduceMotion: reduceMotion) { noteNames = names }
+        } label: {
+            (names ? Text("Note names") : Text("Intervals"))
+                .font(Typeface.label(12))
+                .lineLimit(1).minimumScaleFactor(0.8)
+                .foregroundStyle(selected ? Palette.onAccent : Palette.inkSoft)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background {
+                    if selected {
+                        Capsule().fill(Palette.mint).matchedGeometryEffect(id: "thumb", in: thumb)
+                    }
+                }
+                .contentShape(Capsule())
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityIdentifier(names ? "scales.labels.names" : "scales.labels.intervals")
     }
 }
 

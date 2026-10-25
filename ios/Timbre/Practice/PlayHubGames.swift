@@ -59,9 +59,27 @@ struct GameChallenge {
         return max(0, progress.questProgress[kind.rawValue] ?? 0)
     }
 
+    /// The day's quest Bullseye's card carries as its challenge: the first to win a round or hit bullseyes.
+    static func sniperQuest(in quests: [Quest]) -> Quest? {
+        quests.first { $0.kind == .sniperWin || $0.kind == .bullseyes }
+    }
+
+    /// The day's quest the ear trainer's card carries as its challenge.
+    static func earQuest(in quests: [Quest]) -> Quest? {
+        quests.first { $0.kind == .earCorrect }
+    }
+
+    /// The quests for the Play hub's "Today's quests" list: `quests` less the ones a game card already shows as
+    /// today's challenge (with the quest's XP), so each task, and its reward, shows once. A second Bullseye quest on
+    /// the same day has no card to ride on and stays in the list.
+    static func listed(_ quests: [Quest]) -> [Quest] {
+        let onCards = Set([sniperQuest(in: quests), earQuest(in: quests)].compactMap { $0?.id })
+        return quests.filter { !onCards.contains($0.id) }
+    }
+
     /// A won round (or today's bullseye quest).
     @MainActor static func sniper(_ store: AppStore) -> GameChallenge {
-        if let quest = store.quests.first(where: { $0.kind == .sniperWin || $0.kind == .bullseyes }) {
+        if let quest = sniperQuest(in: store.quests) {
             let count = store.questCounter(quest)
             let title = quest.kind == .sniperWin ? Text("Win a round") : Text("Hit \(quest.target) bullseyes")
             return GameChallenge(title: title, xp: quest.xp, done: count.done, total: count.total, game: .sniper)
@@ -72,7 +90,7 @@ struct GameChallenge {
 
     /// Ten right answers, a full round's worth (or today's ear quest).
     @MainActor static func ear(_ store: AppStore) -> GameChallenge {
-        if let quest = store.quests.first(where: { $0.kind == .earCorrect }) {
+        if let quest = earQuest(in: store.quests) {
             let count = store.questCounter(quest)
             return GameChallenge(title: Text("Get \(quest.target) right"), xp: quest.xp, done: count.done, total: count.total, game: .ear)
         }

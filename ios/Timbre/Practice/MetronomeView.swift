@@ -319,14 +319,18 @@ struct MetronomeView: View {
     }
 
     private var soundControl: some View {
-        Picker("Sound", selection: Binding(get: { store.metronomeSound }, set: { value in
-            if commerce.isPro { store.setMetronome(sound: value) } else { store.presentPaywall("metronome.sound") }
-        })) {
-            Text("Click").tag(MetronomeRenderer.Sound.click)
-            Text("Wood").tag(MetronomeRenderer.Sound.wood)
-            Text("Beep").tag(MetronomeRenderer.Sound.beep)
+        SegmentedPill(options: MetronomeRenderer.Sound.allCases,
+                      selection: Binding(get: { store.metronomeSound }, set: { value in
+                          if commerce.isPro { store.setMetronome(sound: value) } else { store.presentPaywall("metronome.sound") }
+                      }),
+                      identifier: { "metronome.sound.\($0.rawValue)" }) { sound in
+            switch sound {
+            case .click: Text("Click")
+            case .wood: Text("Wood")
+            case .beep: Text("Beep")
+            }
         }
-        .pickerStyle(.segmented)
+        .accessibilityLabel(Text("Sound"))
     }
 
     /// The speed trainer sits right under the tempo it drives, so it is never parked under the dock;

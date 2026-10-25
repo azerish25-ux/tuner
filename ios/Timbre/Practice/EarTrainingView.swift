@@ -74,16 +74,39 @@ struct EarTrainingView: View {
     /// Three or more right in a row warms the stage.
     private var hot: Bool { combo >= 3 && !finished }
 
+    /// The drill, as the app's segmented pill (the chips' pill of light sliding to the choice). Intervals and Chords
+    /// are Pro: without it they carry a lock, and a tap opens the paywall while the pill stays put.
     private var drillPicker: some View {
-        Picker("Drill", selection: Binding(get: { drill }, set: { value in
-            if value != .pitchDirection && !commerce.isPro { store.presentPaywall("ear.\(value.rawValue)"); return }
-            drill = value; history = []; prefillExample(); start()
-        })) {
-            Text("Pitch").tag(EarDrill.pitchDirection)
-            Text("Intervals").tag(EarDrill.interval)
-            Text("Chords").tag(EarDrill.chordQuality)
+        SegmentedPill(options: [EarDrill.pitchDirection, EarDrill.interval, EarDrill.chordQuality],
+                      selection: Binding(get: { drill }, set: { pick($0) }),
+                      identifier: { "ear.drill.\($0.rawValue)" }) { value in
+            drillLabel(value)
         }
-        .pickerStyle(.segmented)
+    }
+
+    private func drillLabel(_ value: EarDrill) -> some View {
+        let locked = value != .pitchDirection && !commerce.isPro
+        return HStack(spacing: 5) {
+            drillTitle(value)
+            if locked {
+                Image(systemName: "lock.fill").font(.system(size: 10, weight: .bold))
+                    .accessibilityLabel(Text("Pro"))
+            }
+        }
+    }
+
+    private func drillTitle(_ value: EarDrill) -> Text {
+        switch value {
+        case .pitchDirection: return Text("Pitch")
+        case .interval: return Text("Intervals")
+        case .chordQuality: return Text("Chords")
+        }
+    }
+
+    private func pick(_ value: EarDrill) {
+        guard value != drill else { return }
+        if value != .pitchDirection && !commerce.isPro { store.presentPaywall("ear.\(value.rawValue)"); return }
+        drill = value; history = []; prefillExample(); start()
     }
 
     private var prompt: LocalizedStringKey {

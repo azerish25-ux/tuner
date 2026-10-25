@@ -47,8 +47,8 @@ struct TanpuraMoment {
 /// neck to the bridge on the gourd and are plucked in turn exactly when the drone plucks them (the audio's own
 /// clock), each shimmering as it rings and settling as it fades, a ripple leaving the gourd with every pluck.
 /// The gourd is a dial of the twelve tonics, rising clockwise like a clock face and turned so the chosen one rests
-/// at the bottom, with its name and Sa's frequency inside; the note at the top, on the neck, sits on a small plate
-/// over the strings so they never hide it. With `onSelect` the dial turns by hand: a drag round the ring rotates
+/// at the bottom, with its name and Sa's frequency inside; the note at the top passes under the neck, so the strings
+/// run clear from nut to bridge. With `onSelect` the dial turns by hand: a drag round the ring rotates
 /// it under the finger, clicking into a detent at every note (a tick and a selection haptic each) and settling on
 /// the nearest when let go; a tap on a note brings that one round. While the drone plays it is plainly alive: a halo
 /// breathes round the gourd once a cycle, the rim lights mint, and each string blurs as it swings. Reduce Motion:
@@ -276,13 +276,13 @@ struct TanpuraHero: View {
         }
     }
 
-    /// A tap on a note (the one on the neck too) brings it round to the bottom.
+    /// A tap on a note brings it round to the bottom (not the one hidden under the neck: turn the dial for that).
     private func tap(at location: CGPoint, around middle: CGPoint, labelRadius: CGFloat) {
         guard drag == nil else { return }
         var nearest: (pc: Int, distance: CGFloat)?
         for pc in 0..<12 {
             let step = ((pc - tonicPc) % 12 + 12) % 12
-            guard step != 0 else { continue }
+            guard step != 0, TanpuraLayout.clearOfNeck(pc, turn: turn) > 0.5 else { continue }
             // Where the label is drawn: its place on the dial, turned with it.
             let angle = (180 + (Double(pc) - turn) * 30) * Double.pi / 180
             let point = CGPoint(x: middle.x + labelRadius * CGFloat(sin(angle)), y: middle.y - labelRadius * CGFloat(cos(angle)))
@@ -300,24 +300,20 @@ struct TanpuraHero: View {
         SoundFX.shared.play(.click)
     }
 
-    /// A tonic's name ("E♭", "F♯"), the chosen one in mint. Near the top it sits on the neck, across the strings:
-    /// a plate the colour of the stage fades in under it there so the strings run beneath the name, not through it.
+    /// A tonic's name ("E♭", "F♯"), the chosen one in mint. The note at the top would sit on the neck, across the
+    /// strings: it passes under the neck instead, fading out as the dial turns it there and back in as it comes
+    /// round the other side, so the strings run clear from the nut to the bridge.
     private func dialLabel(_ pc: Int, turn shown: Double) -> some View {
         let step = ((pc - tonicPc) % 12 + 12) % 12
         let selected = step == 0
         let firstString = step == (fifth ? 7 : 5)
         let name = VoiceNoteName.pitchClass(pc, notation: notation)
-        let plate = TanpuraLayout.onNeck(pc, turn: shown)
         return NoteGlyphs.text(name, size: selected ? 13 : 11, weight: selected ? .semibold : .medium)
             .font(selected ? Typeface.label(13, relativeTo: .caption2) : .system(size: 11, weight: .medium))
             .foregroundStyle(selected ? Palette.mint : (firstString ? Palette.inkSoft : Palette.inkFaint))
             .fixedSize()
             .padding(.horizontal, 5).padding(.vertical, 2)
-            .background {
-                Capsule().fill(Palette.stage)
-                    .overlay(Capsule().strokeBorder(Palette.line, lineWidth: 1))
-                    .opacity(plate)
-            }
+            .opacity(TanpuraLayout.clearOfNeck(pc, turn: shown))
             .dynamicTypeSize(...DynamicTypeSize.large)
             .animation(Motion.quick, value: step)
     }
@@ -412,12 +408,12 @@ struct TanpuraLayout {
         return CGPoint(x: center.x + labelRadius * CGFloat(sin(angle)), y: center.y - labelRadius * CGFloat(cos(angle)))
     }
 
-    /// How far a tonic's label sits on the neck, the dial turned by `turn` semitones: 1 at the top, where the
-    /// strings run, easing to 0 a semitone either side.
-    static func onNeck(_ pc: Int, turn: Double) -> Double {
+    /// How clear of the neck a tonic's label is, the dial turned by `turn` semitones: 0 at the top, where it would
+    /// sit across the strings, rising as it leaves them to 1 well before it rests a semitone either side.
+    static func clearOfNeck(_ pc: Int, turn: Double) -> Double {
         let angle = (180 + (Double(pc) - turn) * 30).truncatingRemainder(dividingBy: 360)
         let fromTop = min(abs(angle), 360 - abs(angle))
-        return max(0, 1 - fromTop / 30)
+        return min(1, max(0, (fromTop - 12) / 14))
     }
 }
 
@@ -531,9 +527,9 @@ enum TanpuraArt {
             inlay.addEllipse(in: CGRect(x: p.x - 0.9, y: p.y - 0.9, width: 1.8, height: 1.8))
         }
         context.fill(inlay, with: .color(Palette.amber.opacity(0.18)))
-        // The dial's ticks, the bottom one (the tonic) marked.
+        // The dial's ticks, the bottom one (the tonic) marked; none at the top, where the neck meets the gourd.
         var ticks = Path()
-        for i in 0..<12 where i != 6 {
+        for i in 0..<12 where i != 6 && i != 0 {
             let angle = Double(i) * Double.pi / 6
             ticks.move(to: CGPoint(x: c.x + (r + 3) * CGFloat(sin(angle)), y: c.y - (r + 3) * CGFloat(cos(angle))))
             ticks.addLine(to: CGPoint(x: c.x + (r + 6) * CGFloat(sin(angle)), y: c.y - (r + 6) * CGFloat(cos(angle))))

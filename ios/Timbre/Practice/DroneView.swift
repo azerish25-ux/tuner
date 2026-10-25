@@ -89,46 +89,49 @@ struct DroneView: View {
 
     // MARK: Settings
 
-    /// The rest of the drone, one labelled row each, the controls lined up in one column.
+    /// The rest of the drone, one labelled row each, the controls lined up in one column: the app's segmented pills,
+    /// like every other choice in Play.
     private var settings: some View {
         VStack(spacing: 12) {
             settingRow("Octave") {
-                Picker("Octave", selection: Binding(get: { store.droneMidi >= 60 ? 1 : 0 }, set: { setTonic(store.droneMidi % 12 + ($0 == 1 ? 60 : 48)) })) {
-                    Text("Low").tag(0); Text("High").tag(1)
+                SegmentedPill(options: [0, 1],
+                              selection: Binding(get: { store.droneMidi >= 60 ? 1 : 0 }, set: { setTonic(store.droneMidi % 12 + ($0 == 1 ? 60 : 48)) }),
+                              identifier: { "drone.octave.\($0)" }) { octave in
+                    octave == 1 ? Text("High") : Text("Low")
                 }
             }
             settingRow("Voice") {
-                Picker("Voice", selection: Binding(get: { store.droneVoice }, set: { setVoice($0) })) {
-                    Text("Tanpura").tag(DroneRenderer.Voice.tanpura)
-                    Text("Pure").tag(DroneRenderer.Voice.pure)
+                SegmentedPill(options: [DroneRenderer.Voice.tanpura, DroneRenderer.Voice.pure],
+                              selection: Binding(get: { store.droneVoice }, set: { setVoice($0) })) { voice in
+                    voice == .pure ? Text("Pure") : Text("Tanpura")
                 }
             }
             settingRow("First string") {
-                Picker("First string", selection: Binding(get: { fifth }, set: { setFirstString(fifth: $0) })) {
-                    Text(verbatim: "Pa").tag(true)
-                    Text(verbatim: "Ma").tag(false)
+                SegmentedPill(options: [true, false], selection: Binding(get: { fifth }, set: { setFirstString(fifth: $0) })) { pa in
+                    Text(verbatim: pa ? "Pa" : "Ma")
                 }
             }
         }
         .stillCard()
     }
 
-    /// A name on the left (the picker carries it for VoiceOver) and its segmented control on the right; large
-    /// text stacks the two.
+    /// A name on the left and its segmented pill on the right; large text stacks the two. VoiceOver reads the name,
+    /// then each choice.
     private func settingRow<Control: View>(_ title: LocalizedStringKey, @ViewBuilder control: () -> Control) -> some View {
-        let name = Text(title).font(.subheadline).foregroundStyle(Palette.inkSoft).accessibilityHidden(true)
-        let picker = control().pickerStyle(.segmented)
+        let name = Text(title).font(.subheadline).foregroundStyle(Palette.inkSoft)
+        let pill = control()
         return ViewThatFits(in: .horizontal) {
             HStack(spacing: 12) {
                 name.lineLimit(1)
                 Spacer(minLength: 8)
-                picker.frame(width: 184)
+                pill.frame(width: 184)
             }
             VStack(alignment: .leading, spacing: 8) {
                 name.fixedSize(horizontal: false, vertical: true)
-                picker
+                pill
             }
         }
+        .accessibilityElement(children: .contain)
     }
 
     // MARK: Actions

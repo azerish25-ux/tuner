@@ -170,24 +170,50 @@ struct FirstTuneStep: View {
     // MARK: Pieces
 
     private var header: some View {
-        // Locked: the readout's badge says "In tune"; the title cheers instead of repeating it. Both titles are laid
-        // out, one on top of the other, and cross-fade in place: the block is always as tall as the longer one, so the
-        // line under it never moves and the two never overlap it (the two-line title used to run over it).
+        // Locked: the readout's badge says "In tune"; the title cheers instead of repeating it. A hidden copy of both
+        // titles and the line under them keeps the block as tall as the longer one, so the stage below never moves.
+        // The shown title cross-fades, and the note line rides up under "Great work" instead of keeping the second
+        // line of "Pluck your thickest string" as a gap; the room left over falls between the block and the stage.
         let locked = model.lockedIn
-        return VStack(alignment: .leading, spacing: 6) {
-            ZStack(alignment: .topLeading) {
-                title("Pluck your thickest string", color: Palette.ink).opacity(locked ? 0 : 1)
-                title("Great work", color: Palette.mint).opacity(locked ? 1 : 0)
+        return ZStack(alignment: .topLeading) {
+            VStack(alignment: .leading, spacing: 6) {
+                ZStack(alignment: .topLeading) {
+                    title("Pluck your thickest string", color: Palette.ink)
+                    title("Great work", color: Palette.mint)
+                }
+                noteLine
             }
-            .animation(Motion.fade, value: locked)
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(locked ? Text("Great work") : Text("Pluck your thickest string"))
-            .accessibilityAddTraits(.isHeader)
-            .accessibilityIdentifier("onboarding.firsttune")
-            Text(verbatim: "\(setup.note) · \(setup.name)").font(.subheadline).foregroundStyle(Palette.inkSoft)
+            .hidden()
+            .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 6) {
+                shownTitle(locked: locked)
+                noteLine
+            }
+            .adaptiveAnimation(Motion.settle, value: locked)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, Metrics.gutter).padding(.top, 18)
+    }
+
+    /// The title on screen, cross-fading in place when the string locks.
+    private func shownTitle(locked: Bool) -> some View {
+        ZStack(alignment: .topLeading) {
+            if locked {
+                title("Great work", color: Palette.mint).transition(.opacity)
+            } else {
+                title("Pluck your thickest string", color: Palette.ink).transition(.opacity)
+            }
+        }
+        .animation(Motion.fade, value: locked)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(locked ? Text("Great work") : Text("Pluck your thickest string"))
+        .accessibilityAddTraits(.isHeader)
+        .accessibilityIdentifier("onboarding.firsttune")
+    }
+
+    /// The string and the instrument ("E2 · Acoustic guitar").
+    private var noteLine: some View {
+        Text(verbatim: "\(setup.note) · \(setup.name)").font(.subheadline).foregroundStyle(Palette.inkSoft)
     }
 
     private func title(_ text: LocalizedStringKey, color: Color) -> some View {
