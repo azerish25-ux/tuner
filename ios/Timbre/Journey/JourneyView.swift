@@ -3,7 +3,8 @@ import SwiftUI
 import TimbreCore
 
 /// Progress: streak, level and accuracy, the coach, the week in review, the practice calendar, string health,
-/// achievements, history.
+/// achievements, history. Calm mode (`UserSettings.calmMode`) shows the time played in place of the streak and the
+/// level, and the coach and the week leave the streak out.
 struct JourneyView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
@@ -169,7 +170,13 @@ struct JourneyView: View {
                                            course: course, learn: store.learn,
                                            canReview: course.map { store.weakSpotReview(in: $0) != nil } ?? false,
                                            today: today, takes: CoachTakes.shared.takes(since: Date().addingTimeInterval(-12 * 3600)))
-        return Coach.journeyNotes(context)
+        let notes = Coach.journeyNotes(context)
+        guard store.settings.calmMode else { return notes }
+        // Calm mode: no nudge about keeping the streak alive.
+        return notes.filter { note in
+            if case .streak = note.fact { return false }
+            return true
+        }
     }
 
     private var coachVoice: CoachVoice {
@@ -211,32 +218,52 @@ struct JourneyView: View {
     /// (`StatTileRow`), so "day streak" and the level's name never truncate.
     /// The third is a distance in cents, so it says "cents off" rather than "accuracy" (a percentage everywhere else),
     /// with the unit spelled out ("Average ¢ off" made the caption read like a formula).
-    private func stats() -> some View {
-        let streak = store.streak
+    /// Calm mode: this week's minutes and the cents off, with no streak or level.
+    @ViewBuilder private func stats() -> some View {
         let level = store.level
-        return StatTileRow {
-            StatTile(symbol: "flame.fill", tint: Palette.flame, value: Text("\(streak.current)"), label: "day streak")
-            StatTile(value: levelValue(level.number), label: Text(LocalizedStringKey(level.name))) {
-                LevelArc(progress: level.progress(store.progress.xp), size: 18)
+        if store.settings.calmMode {
+            StatTileRow {
+                StatTile(symbol: "clock", tint: Palette.accentNeutral, value: Text(weekMinutes, format: .number), label: "minutes this week")
+                StatTile(symbol: "scope", tint: Palette.inkSoft, value: WeekRecap.centsText(averageCents), label: "Avg. cents off")
             }
-            .accessibilityLabel(Text("Level \(level.number)") + Text(verbatim: ", ") + Text(LocalizedStringKey(level.name)))
-            StatTile(symbol: "scope", tint: Palette.inkSoft, value: WeekRecap.centsText(averageCents), label: "Avg. cents off")
+        } else {
+            StatTileRow {
+                StatTile(value: Text("\(store.streak.current)"), label: Text("day streak")) {
+                    Glyph(.lamp, size: 18, tint: Palette.flame)
+                }
+                StatTile(value: levelValue(level.number), label: Text(LocalizedStringKey(level.name))) {
+                    LevelArc(progress: level.progress(store.progress.xp), size: 18)
+                }
+                .accessibilityLabel(Text("Level \(level.number)") + Text(verbatim: ", ") + Text(LocalizedStringKey(level.name)))
+                StatTile(symbol: "scope", tint: Palette.inkSoft, value: WeekRecap.centsText(averageCents), label: "Avg. cents off")
+            }
         }
     }
 
-    /// iPad: the same three figures in one bar across the board, each centred in its third.
+    /// iPad: the same figures in one bar across the board, each centred in its share.
     private var statBar: some View {
-        let streak = store.streak
         let level = store.level
+        let cents = StatBar.Figure(id: "cents", symbol: "scope", tint: Palette.inkSoft, value: WeekRecap.centsText(averageCents), label: Text("Avg. cents off"))
+        if store.settings.calmMode {
+            return StatBar([
+                StatBar.Figure(id: "minutes", symbol: "clock", tint: Palette.accentNeutral, value: Text(weekMinutes, format: .number), label: Text("minutes this week")),
+                cents,
+            ])
+        }
         return StatBar([
-            StatBar.Figure(id: "streak", symbol: "flame.fill", tint: Palette.flame, value: Text("\(streak.current)"), label: Text("day streak")),
+            StatBar.Figure(id: "streak", value: Text("\(store.streak.current)"), label: Text("day streak")) {
+                Glyph(.lamp, size: Glyph.lead, tint: Palette.flame)
+            },
             StatBar.Figure(id: "level", value: levelValue(level.number), label: Text(LocalizedStringKey(level.name)),
                            spoken: Text("Level \(level.number)") + Text(verbatim: ", ") + Text(LocalizedStringKey(level.name))) {
                 LevelArc(progress: level.progress(store.progress.xp), size: Glyph.lead)
             },
-            StatBar.Figure(id: "cents", symbol: "scope", tint: Palette.inkSoft, value: WeekRecap.centsText(averageCents), label: Text("Avg. cents off")),
+            cents,
         ])
     }
+
+    /// Minutes played in the last seven days (as "Your week" counts them).
+    private var weekMinutes: Int { WeekRecap(records: store.records, streak: store.streak).minutes }
 
     /// The mean distance of the last ten tune-ups, in cents; nil before there are any.
     private var averageCents: Double? {
@@ -319,7 +346,7 @@ struct JourneyView: View {
         let labels = stringLabels
         return VStack(alignment: .leading, spacing: 10) {
             JourneyCardHeading("String health") {
-                if advice { Text("Restring soon").font(.caption.weight(.semibold)).foregroundStyle(Palette.amber) }
+                if advice { Text("Restring soon").font(.caption.weight(.semibold)).foregroundStyle(Palette.adjust) }
             }
             Group {
                 if let worst, abs(worst.centsPerDay) >= 1, coachSaysDrift(of: worst.anchor) {
@@ -349,7 +376,7 @@ struct JourneyView: View {
             }
             .accessibilityIdentifier("journey.restrung")
         }
-        .stillCard(tint: advice ? Palette.amber : nil)
+        .stillCard(tint: advice ? Palette.adjust : nil)
     }
 
     /// Whether the coach is telling how this string drifts (its tip on this screen), so String health doesn't print
@@ -381,7 +408,7 @@ struct JourneyView: View {
                 }
             }
             .overlay(alignment: .bottom) {
-                DriftThresholdLine().stroke(Palette.amber.opacity(0.4), style: StrokeStyle(lineWidth: 1, dash: [3, 4]))
+                DriftThresholdLine().stroke(Palette.adjust.opacity(0.4), style: StrokeStyle(lineWidth: 1, dash: [3, 4]))
                     .frame(height: 1).offset(y: -threshold)
             }
             .overlay(alignment: .bottom) { Hairline() }
@@ -389,7 +416,7 @@ struct JourneyView: View {
                 ForEach(anchors, id: \.self) { anchor in
                     let bad = abs(drift.first { $0.anchor == anchor }?.centsPerDay ?? 0) >= 4
                     Text(labels[anchor] ?? anchor).font(.caption.weight(bad ? .bold : .medium))
-                        .foregroundStyle(bad ? Palette.amber : Palette.inkSoft)
+                        .foregroundStyle(bad ? Palette.adjust : Palette.inkSoft)
                         .lineLimit(1).minimumScaleFactor(0.7)
                         .frame(maxWidth: .infinity)
                 }
@@ -403,7 +430,7 @@ struct JourneyView: View {
     private func driftBar(_ rate: Double?, peak: Double, height: CGFloat) -> some View {
         let magnitude = abs(rate ?? 0)
         let bad = magnitude >= 4
-        let tint = bad ? Palette.amber : Palette.mint
+        let tint = bad ? Palette.adjust : Palette.mint
         let bar = rate == nil ? 0 : max(4, height * CGFloat(min(1, magnitude / peak)))
         let top = UnevenRoundedRectangle(topLeadingRadius: 5, topTrailingRadius: 5, style: .continuous)
         return VStack(spacing: 5) {
@@ -415,7 +442,7 @@ struct JourneyView: View {
                     Text("Not yet").font(.caption2)
                 }
             }
-            .foregroundStyle(bad ? Palette.amber : Palette.inkSoft)
+            .foregroundStyle(bad ? Palette.adjust : Palette.inkSoft)
             .lineLimit(1).minimumScaleFactor(0.6)
             ZStack(alignment: .bottom) {
                 top.fill(.white.opacity(0.05)).frame(height: height)

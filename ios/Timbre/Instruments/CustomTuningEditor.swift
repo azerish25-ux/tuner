@@ -25,7 +25,7 @@ struct CustomTuningEditor: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     TextField("Tuning name", text: $name)
-                        .font(Typeface.display(30)).foregroundStyle(Palette.ink)
+                        .font(Typeface.display(.title)).foregroundStyle(Palette.ink)
                         .padding(.horizontal, 16).padding(.vertical, 12).glassCapsule(interactive: false)
                         .accessibilityIdentifier("custom.name")
                     HeadstockPreview(pegs: pegs, card: CardHeadstock.resolve(modelID: store.modelID, anchors: pegs.map(\.anchor)), animate: !reduceMotion)
@@ -113,10 +113,10 @@ struct CustomTuningEditor: View {
                 }
                 .font(.caption.weight(.semibold)).foregroundStyle(Palette.inkFaint)
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
-                    Text(PitchMath.noteName(midi: midi, notation: store.settings.notation)).font(Typeface.display(28)).foregroundStyle(Palette.ink)
+                    Text(PitchMath.noteName(midi: midi, notation: store.settings.notation)).font(Typeface.display(.title)).foregroundStyle(Palette.ink)
                         .contentTransition(.numericText())
                     if shift != 0 {
-                        Text(shift > 0 ? "+\(shift)" : "\(shift)").font(Typeface.number(12))
+                        Text(shift > 0 ? "+\(shift)" : "\(shift)").font(Typeface.number(.caption))
                             .foregroundStyle(shift > 0 ? Palette.sharp : Palette.flat)
                     }
                 }
@@ -196,7 +196,7 @@ private struct HeadstockPreview: View {
         GeometryReader { geometry in
             let size = geometry.size
             ZStack(alignment: .topLeading) {
-                RadialGradient(colors: [Palette.amber.opacity(0.1), .clear], center: UnitPoint(x: 0.5, y: 0.34), startRadius: 4, endRadius: 190)
+                RadialGradient(colors: [Palette.spotlight.opacity(0.1), .clear], center: UnitPoint(x: 0.5, y: 0.34), startRadius: 4, endRadius: 190)
                 if pegs.count > 8 {
                     StringFan(pegs: pegs)
                 } else if let card {
@@ -334,7 +334,7 @@ private struct DrawnHeadstock {
         head.closeSubpath()
         context.fill(head, with: .linearGradient(Gradient(colors: [Palette.line, Palette.surface]), startPoint: CGPoint(x: center, y: crown), endPoint: CGPoint(x: center, y: nutY)))
         context.stroke(head, with: .color(.white.opacity(0.08)), lineWidth: 1)
-        // Tuners: a shaft out to a button, gold-lit when that string has moved.
+        // Tuners: a shaft out to a button, lit in the adjust amber when that string has moved (it will need turning).
         let points = posts
         for (i, post) in points.enumerated() {
             let moved = pegs.indices.contains(i) && pegs[i].shift != 0
@@ -346,7 +346,7 @@ private struct DrawnHeadstock {
             let button = CGRect(x: post.x + out * 27 - 7, y: post.y - 5.5, width: 14, height: 11)
             let metal = Gradient(colors: [Palette.ink.opacity(0.8), Palette.inkFaint])
             let shading: GraphicsContext.Shading = moved
-                ? .color(Palette.amber)
+                ? .color(Palette.adjust)
                 : .linearGradient(metal, startPoint: CGPoint(x: button.midX, y: button.minY), endPoint: CGPoint(x: button.midX, y: button.maxY))
             context.fill(Path(roundedRect: button, cornerRadius: 4), with: shading)
         }
@@ -358,7 +358,7 @@ private struct DrawnHeadstock {
             string.move(to: post)
             string.addLine(to: CGPoint(x: slot(i), y: nutY))
             string.addLine(to: CGPoint(x: slot(i) + (slot(i) - center) * 0.15, y: size.height))
-            context.stroke(string, with: .color(moved ? Palette.amber.opacity(0.9) : Palette.ink.opacity(0.45)), lineWidth: width)
+            context.stroke(string, with: .color(moved ? Palette.adjust.opacity(0.9) : Palette.ink.opacity(0.45)), lineWidth: width)
         }
         for post in points {
             context.fill(Path(ellipseIn: CGRect(x: post.x - 4.5, y: post.y - 4.5, width: 9, height: 9)), with: .color(Palette.ink.opacity(0.78)))
@@ -369,7 +369,7 @@ private struct DrawnHeadstock {
 }
 
 /// Note badges in a column either side of the headstock, each joined to its peg by a hairline; a moved
-/// string's badge and line turn amber and carry its offset.
+/// string's badge and line turn the amber of a string to adjust (`Palette.adjust`) and carry its offset.
 private struct PegBadges: View {
     let pegs: [PegState]
     let posts: [CGPoint]
@@ -397,13 +397,13 @@ private struct PegBadges: View {
                     var line = Path()
                     line.move(to: spot.edge)
                     line.addLine(to: posts[i])
-                    context.stroke(line, with: .color(moved ? Palette.amber.opacity(0.75) : .white.opacity(0.2)), lineWidth: 1)
+                    context.stroke(line, with: .color(moved ? Palette.adjust.opacity(0.75) : .white.opacity(0.2)), lineWidth: 1)
                     let post = posts[i]
                     if moved {
                         context.fill(Path(ellipseIn: CGRect(x: post.x - 10, y: post.y - 10, width: 20, height: 20)),
-                                     with: .radialGradient(Gradient(colors: [Palette.amber.opacity(0.55), .clear]), center: post, startRadius: 0, endRadius: 10))
+                                     with: .radialGradient(Gradient(colors: [Palette.adjust.opacity(0.55), .clear]), center: post, startRadius: 0, endRadius: 10))
                     }
-                    context.fill(Path(ellipseIn: CGRect(x: post.x - 2.5, y: post.y - 2.5, width: 5, height: 5)), with: .color(moved ? Palette.amber : Palette.ink.opacity(0.8)))
+                    context.fill(Path(ellipseIn: CGRect(x: post.x - 2.5, y: post.y - 2.5, width: 5, height: 5)), with: .color(moved ? Palette.adjust : Palette.ink.opacity(0.8)))
                 }
             }
             ForEach(pegs) { peg in
@@ -444,7 +444,7 @@ private struct PegBadges: View {
     }
 }
 
-/// A string's note with its move from standard: amber with the offset once moved, popping as it changes.
+/// A string's note with its move from standard: the adjust amber with the offset once moved, popping as it changes.
 private struct PegBadge: View {
     let note: String
     let shift: Int
@@ -452,20 +452,20 @@ private struct PegBadge: View {
 
     var body: some View {
         HStack(spacing: 5) {
-            Text(verbatim: note).font(Typeface.display(15, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
+            Text(verbatim: note).font(Typeface.display(.body)).foregroundStyle(Palette.ink)
                 .contentTransition(.numericText())
             if shift != 0 {
                 Text(verbatim: shift > 0 ? "+\(shift)" : "\u{2212}\(-shift)")
-                    .font(Typeface.number(11, relativeTo: .caption2)).foregroundStyle(Palette.onAccent)
+                    .font(Typeface.number(.caption)).foregroundStyle(Palette.onAccent)
                     .contentTransition(.numericText())
                     .padding(.horizontal, 5).padding(.vertical, 1)
-                    .background(Capsule().fill(Palette.amber))
+                    .background(Capsule().fill(Palette.adjust))
                     .transition(.scale(scale: 0.6).combined(with: .opacity))
             }
         }
         .padding(.horizontal, 9).padding(.vertical, 5)
         .background(Capsule().fill(Palette.stage.opacity(0.88)))
-        .overlay(Capsule().strokeBorder(shift != 0 ? Palette.amber.opacity(0.7) : Palette.line, lineWidth: 1))
+        .overlay(Capsule().strokeBorder(shift != 0 ? Palette.adjust.opacity(0.7) : Palette.line, lineWidth: 1))
         .fixedSize()
         .animation(Motion.pluck, value: shift)
         .phaseAnimator([1.0, 1.12], trigger: shift) { content, scale in
@@ -474,10 +474,11 @@ private struct PegBadge: View {
     }
 }
 
-/// Many strings side by side (harps, zithers, koras): low strings long on the left, each peg lit amber with
-/// its offset once moved.
+/// Many strings side by side (harps, zithers, koras): low strings long on the left, each peg lit in the amber of a
+/// string to adjust, with its offset, once moved.
 private struct StringFan: View {
     let pegs: [PegState]
+    private static let fanLabel = Font.custom(Typeface.Face.medium.fontName, fixedSize: 10).monospacedDigit()
 
     var body: some View {
         Canvas { context, size in
@@ -493,11 +494,12 @@ private struct StringFan: View {
                 var string = Path()
                 string.move(to: CGPoint(x: x, y: top))
                 string.addLine(to: CGPoint(x: x, y: bottom))
-                context.stroke(string, with: .color(moved ? Palette.amber.opacity(0.9) : Palette.ink.opacity(0.4)), lineWidth: 1.8 - 0.9 * along)
-                context.fill(Path(ellipseIn: CGRect(x: x - 3.5, y: top - 3.5, width: 7, height: 7)), with: .color(moved ? Palette.amber : Palette.inkSoft))
+                context.stroke(string, with: .color(moved ? Palette.adjust.opacity(0.9) : Palette.ink.opacity(0.4)), lineWidth: 1.8 - 0.9 * along)
+                context.fill(Path(ellipseIn: CGRect(x: x - 3.5, y: top - 3.5, width: 7, height: 7)), with: .color(moved ? Palette.adjust : Palette.inkSoft))
                 if moved {
                     let label = peg.shift > 0 ? "+\(peg.shift)" : "\u{2212}\(-peg.shift)"
-                    context.draw(Text(verbatim: label).font(Typeface.number(10)).foregroundStyle(Palette.amber),
+                    // Drawn to the size of the fan (art, off the type scale), so dozens of strings keep their labels apart.
+                    context.draw(Text(verbatim: label).font(Self.fanLabel).foregroundStyle(Palette.adjust),
                                  at: CGPoint(x: x, y: top - 12 - (i % 2 == 0 ? 0 : 12)))
                 }
             }

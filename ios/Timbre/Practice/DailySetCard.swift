@@ -47,14 +47,13 @@ extension DailyActivity.Kind {
         }
     }
 
-    /// Violet is learning (as on Learn's quests and badges); a set never puts two arcs of one colour side by side.
+    /// An activity is a category, never a status: the tools and the review in steel (`accentNeutral`), the lesson in
+    /// learning's violet (as on Learn's quests and badges). The ring tells a done arc from an open one by its light,
+    /// and with Differentiate Without Color by its shape too.
     var tint: Color {
         switch self {
-        case .tune: return Palette.amber
-        case .ear, .review: return Palette.mint
-        case .chord, .scale, .voice, .drone: return Palette.sky
-        case .rhythm: return Palette.coral
         case .lesson: return Palette.violet
+        case .tune, .ear, .chord, .scale, .rhythm, .voice, .drone, .review: return Palette.accentNeutral
         }
     }
 
@@ -71,8 +70,8 @@ private func minutesText(_ minutes: Int) -> Text {
 // MARK: - Ring
 
 /// Today as a ring: one arc per activity, as long as its minutes, filling in once it is done. The same ring
-/// sits on the Practice hub, on Learn and around the streak flame. With Differentiate Without Color an open
-/// activity is a dotted track and a done one carries a check, so the two differ by shape as well as by light.
+/// sits on the Practice hub and on Learn. With Differentiate Without Color an open activity is a dotted track and a
+/// done one carries a check, so the two differ by shape as well as by light.
 /// With `open`, each arc is a button for its activity (the card's rows carry the same actions for VoiceOver).
 struct DailySetRing: View {
     let activities: [DailyActivity]
@@ -175,7 +174,8 @@ private struct RingSector: Shape {
 /// ring and as rows beside it, each opening its lesson or tool and ticking off as it is done. Each fact shows
 /// once: how many are done and the minutes left sit in the ring, the set's bonus in the header, and a daily
 /// quest for the same practice rides on its row as an XP side goal. Finishing the set pays the bonus (the toast
-/// announces it) and the card celebrates once: a burst of sparks, a chime, a gold ring.
+/// announces it) and the card celebrates once: a burst of sparks, a chime, a gold ring. Calm mode
+/// (`UserSettings.calmMode`) shows no XP and no streak: the ring, the rows and "Done".
 struct DailySetCard: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var commerce: CommerceService
@@ -212,7 +212,7 @@ struct DailySetCard: View {
                 }
             }
         }
-        .stillCard(tint: complete ? Palette.amber : Palette.mint)
+        .stillCard(tint: complete ? Palette.starGold : Palette.mint)
         .onAppear { visible = true; celebrateIfNeeded(complete) }
         .onDisappear { visible = false }
         .onChange(of: complete) { _, now in if visible { celebrateIfNeeded(now) } }
@@ -232,24 +232,30 @@ struct DailySetCard: View {
             CardTitle("Today")
             Spacer()
             if complete {
-                Label { Text("Done") } icon: { Image(systemName: "flame.fill") }
-                    .font(Typeface.label(12)).foregroundStyle(Palette.amber)
-            } else {
+                doneLabel
+            } else if !store.settings.calmMode {
                 bonus
             }
         }
     }
 
-    /// What finishing the whole set pays.
+    /// "Done", with the streak's lamp beside it (it kept the streak), in the rewards' gold; the word alone in Calm mode.
+    private var doneLabel: some View {
+        HStack(spacing: 5) {
+            if !store.settings.calmMode { Glyph(.lamp, size: 14, tint: Palette.flame) }
+            Text("Done")
+        }
+        .font(Typeface.label(.caption)).foregroundStyle(Palette.starGold)
+        .accessibilityElement(children: .combine)
+    }
+
+    /// What finishing the whole set pays: words on the header's baseline, in the rewards' gold, no pill.
     private var bonus: some View {
         HStack(spacing: 4) {
-            Image(systemName: "sun.max.fill").font(.system(size: 10, weight: .bold)).accessibilityHidden(true)
+            Image(systemName: "sun.max.fill").font(.caption2.weight(.bold)).accessibilityHidden(true)
             Text("+\(XPReward.dailySet) XP")
         }
-        .font(Typeface.label(12)).foregroundStyle(Palette.amber)
-        .padding(.horizontal, 9).padding(.vertical, 4)
-        .background(Capsule().fill(Palette.amber.opacity(0.12)))
-        .overlay(Capsule().strokeBorder(Palette.amber.opacity(0.3), lineWidth: 1))
+        .font(Typeface.label(.caption)).foregroundStyle(Palette.starGold)
         .fixedSize()
         .accessibilityElement(children: .combine)
     }
@@ -257,7 +263,7 @@ struct DailySetCard: View {
     private func ring(_ activities: [DailyActivity], done: Set<DailyActivity.Kind>, complete: Bool) -> some View {
         // Every layer is sized explicitly: the ring must stay 112 pt whatever its siblings measure.
         ZStack {
-            Circle().fill(RadialGradient(colors: [Palette.amber.opacity(complete ? 0.28 : 0), .clear], center: .center, startRadius: 10, endRadius: 70))
+            Circle().fill(RadialGradient(colors: [Palette.starGold.opacity(complete ? 0.28 : 0), .clear], center: .center, startRadius: 10, endRadius: 70))
                 .frame(width: 112, height: 112)
                 .scaleEffect(1.25)
             DailySetRing(activities: activities, done: done, lineWidth: 11, open: open)
@@ -267,7 +273,7 @@ struct DailySetCard: View {
         .frame(width: 112, height: 112)
         .overlay {
             if !reduceMotion {
-                SparkBurst(trigger: burst, color: Palette.amber)
+                SparkBurst(trigger: burst, color: Palette.starGold)
                     .frame(width: 240, height: 240)
                     .allowsHitTesting(false)
             }
@@ -278,14 +284,15 @@ struct DailySetCard: View {
     @ViewBuilder private func center(_ activities: [DailyActivity], done: Set<DailyActivity.Kind>, complete: Bool) -> some View {
         if complete {
             VStack(spacing: 2) {
-                Image(systemName: "checkmark").font(.system(size: 26, weight: .heavy)).foregroundStyle(Palette.amber)
+                Image(systemName: "checkmark").font(.system(size: 26, weight: .heavy)).foregroundStyle(Palette.starGold)
                     .symbolEffect(.bounce, value: burst)
-                HStack(spacing: 3) {
-                    Image(systemName: "flame.fill").font(.system(size: 10, weight: .bold))
-                    Text("\(store.streak.current)").font(Typeface.number(12))
+                if !store.settings.calmMode {
+                    HStack(spacing: 3) {
+                        Glyph(.lamp, size: 12, tint: Palette.flame)
+                        Text("\(store.streak.current)").font(Typeface.number(.caption)).foregroundStyle(Palette.flameInk)
+                    }
+                    .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
                 }
-                .foregroundStyle(Palette.flame)
-                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             }
             .allowsHitTesting(false)
             .accessibilityHidden(true)
@@ -358,7 +365,7 @@ struct DailySetCard: View {
                 if locked {
                     ProLock(size: 22)
                 } else {
-                    minutesText(activity.minutes).font(Typeface.number(13)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
+                    minutesText(activity.minutes).font(Typeface.number(.footnote)).foregroundStyle(done ? Palette.mint : Palette.inkSoft)
                         .lineLimit(1).fixedSize()
                 }
             }
@@ -377,12 +384,10 @@ struct DailySetCard: View {
         }
     }
 
-    /// The kind's symbol, or a check once done (so done reads by shape, not only by fill).
+    /// The kind's glyph, bare in its tint, or a mint check once done (so done reads by shape, not only by colour).
     private func rowIcon(_ kind: DailyActivity.Kind, done: Bool) -> some View {
-        Image(systemName: done ? "checkmark" : kind.symbol).font(.system(size: 11, weight: .bold))
-            .foregroundStyle(done ? Palette.onAccent : kind.tint)
+        Glyph(done ? "checkmark" : kind.symbol, size: Glyph.row, tint: done ? Palette.mint : kind.tint)
             .frame(width: 26, height: 26)
-            .background(Circle().fill(done ? AnyShapeStyle(kind.tint) : AnyShapeStyle(kind.tint.opacity(0.14))))
             .contentTransition(.symbolEffect(.replace))
     }
 
@@ -405,7 +410,7 @@ struct DailySetCard: View {
             if claimed { Image(systemName: "checkmark").font(.system(size: 9, weight: .heavy)) }
             Text("+\(quest.xp) XP")
         }
-        .font(Typeface.label(12)).foregroundStyle(Palette.mint.opacity(claimed ? 0.8 : 1))
+        .font(Typeface.label(.caption)).foregroundStyle(Palette.mint.opacity(claimed ? 0.8 : 1))
         .padding(.horizontal, 7).padding(.vertical, 2)
         .background { QuestPillFill(progress: progress) }
         .fixedSize()
@@ -479,11 +484,11 @@ struct DailySetCompactCard: View {
                 ZStack {
                     DailySetRing(activities: activities, done: done, lineWidth: 5, gap: 0.08)
                     if complete {
-                        Image(systemName: "checkmark").font(.system(size: 13, weight: .heavy)).foregroundStyle(Palette.amber)
+                        Image(systemName: "checkmark").font(.system(size: 13, weight: .heavy)).foregroundStyle(Palette.starGold)
                     } else {
-                        // Inside a 40 pt ring: shrinks to fit rather than growing past it.
-                        Text.fraction(done.count, activities.count).font(Typeface.number(10)).foregroundStyle(Palette.ink)
-                            .heroNumeral(cap: .xxxLarge, minimumScale: 0.6)
+                        // Inside a 40 pt ring: the scale's smallest step, shrinking to fit rather than growing past it.
+                        Text.fraction(done.count, activities.count).font(Typeface.number(.caption)).foregroundStyle(Palette.ink)
+                            .heroNumeral(cap: .xxxLarge, minimumScale: 0.5)
                             .frame(width: 28)
                     }
                 }
@@ -491,14 +496,14 @@ struct DailySetCompactCard: View {
                 .accessibilityElement(children: .ignore)
                 .accessibilityLabel(complete ? Text("Done") : Text("\(done.count) of \(activities.count)"))
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Today").font(Typeface.display(15)).foregroundStyle(Palette.ink)
+                    Text("Today").font(Typeface.display(.body)).foregroundStyle(Palette.ink)
                     subtitle(left, complete: complete)
                 }
                 Spacer(minLength: 8)
                 Image(systemName: "chevron.right").font(.footnote.weight(.bold)).foregroundStyle(Palette.inkFaint)
                     .accessibilityHidden(true)
             }
-            .stillCard(cornerRadius: Metrics.cornerTile, padding: Metrics.tilePadding, tint: complete ? Palette.amber : nil)
+            .stillCard(cornerRadius: Metrics.cornerTile, padding: Metrics.tilePadding, tint: complete ? Palette.starGold : nil)
         }
         .buttonStyle(PressScaleStyle())
         .accessibilityElement(children: .combine)
@@ -510,7 +515,7 @@ struct DailySetCompactCard: View {
     /// Learn's Continue card right below, and the count sits in the ring.
     @ViewBuilder private func subtitle(_ left: [DailyActivity], complete: Bool) -> some View {
         if complete || left.isEmpty {
-            Text("Done").font(.caption).foregroundStyle(Palette.amber)
+            Text("Done").font(.caption).foregroundStyle(Palette.starGold)
         } else {
             let names = left.map { (activity: DailyActivity) -> Text in activity.kind == .lesson ? Text("Lesson") : Text(activity.kind.title) }
             names.dropFirst().reduce(names[0]) { (line: Text, name: Text) -> Text in line + Text(verbatim: " · ") + name }

@@ -289,7 +289,7 @@ struct LearnView: View {
             .accessibilityHidden(true)
     }
 
-    /// The tab's title with the shared streak and level controls.
+    /// The tab's title with the shared streak and level controls (the title alone in Calm mode).
     private var header: some View {
         TabHeader(title: "Learn")
     }
@@ -378,6 +378,12 @@ struct LearnView: View {
         .accessibilityIdentifier("learn.course.\(item.id)")
     }
 
+    /// "5 min · +25 XP": the lesson's length and what it pays; the length alone in Calm mode (`UserSettings.calmMode`).
+    private func lessonLength(_ lesson: Lesson) -> Text {
+        let line = store.settings.calmMode ? Text("\(lesson.minutes) min") : Text("\(lesson.minutes) min · +\(lesson.xp) XP")
+        return line.font(.subheadline).foregroundStyle(Palette.inkSoft)
+    }
+
     @ViewBuilder private func continueCard(_ course: LearnCourse) -> some View {
         let accent = Palette.accent(course.accent)
         let next = store.learn.nextLesson(in: course)
@@ -391,7 +397,7 @@ struct LearnView: View {
                         Eyebrow(Text("Unit \(unitNumber) · \(unit.title.localized)"), color: accent, style: .display).lineLimit(1)
                         Text(next.title.localized).font(Typeface.display(.title)).tracking(-0.5).foregroundStyle(Palette.ink)
                             .lineLimit(2).minimumScaleFactor(0.85).fixedSize(horizontal: false, vertical: true)
-                        Text("\(next.minutes) min · +\(next.xp) XP").font(.subheadline).foregroundStyle(Palette.inkSoft)
+                        lessonLength(next)
                         // The primary button's face and type (the whole card is the button), at least 44 pt tall:
                         // mint as every primary action, whatever the course's hue.
                         HStack(spacing: 6) {
@@ -474,7 +480,8 @@ struct UnitSection: View {
                 }
                 Spacer(minLength: 8)
                 VStack(alignment: .trailing, spacing: 6) {
-                    if unit.lessons.contains(where: { !$0.free }) && !store.isPro { ProBadge() }
+                    // A unit with Pro lessons says so with the corner lock, as every locked card does.
+                    if unit.lessons.contains(where: { !$0.free }) && !store.isPro { ProLock(size: 24) }
                     starCount(progress.stars(in: unit), of: unit.lessons.count * 3)
                     Text.lessonCount(finished, unit.lessons.count).font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
                         .multilineTextAlignment(.trailing)
@@ -560,8 +567,10 @@ enum LessonAccess {
     }
 }
 
-/// One stop on the path: raised disc, kind icon, stars when finished, lock when not yet open. The next lesson pulses
-/// with "Start" beside it; on iPad the lesson the inspector shows wears a ring.
+/// One stop on the path: raised disc, kind icon, stars when finished, lock when not yet open. A Timbre Pro lesson
+/// keeps its kind icon, dimmed, under the gold corner lock (`ProLock`), so it reads apart from a lesson not reached
+/// yet (a grey lock) by shape as well as colour. The next lesson pulses with "Start" beside it; on iPad the lesson the
+/// inspector shows wears a ring.
 struct LessonNode: View {
     let course: LearnCourse
     let lesson: Lesson
@@ -612,9 +621,12 @@ struct LessonNode: View {
                     Circle().fill(lit ? AnyShapeStyle(LinearGradient(colors: [accent.mix(with: .white, by: 0.25), accent], startPoint: .top, endPoint: .bottom)) : AnyShapeStyle(Palette.surface))
                         .frame(width: size, height: size)
                         .overlay(Circle().strokeBorder(.white.opacity(lit ? 0.35 : 0.06), lineWidth: 1.5).padding(1))
-                    Image(systemName: pro ? "lock.fill" : (lit ? symbol : "lock.fill"))
+                    Image(systemName: lit || pro ? symbol : "lock.fill")
                         .font(.system(size: size * 0.34, weight: .bold))
                         .foregroundStyle(lit ? Palette.onAccent : Palette.inkFaint)
+                }
+                .overlay(alignment: .topTrailing) {
+                    if pro { ProLock(size: 24).offset(x: 4, y: -4) }
                 }
                 .overlay {
                     if selected {
@@ -626,10 +638,7 @@ struct LessonNode: View {
                 .overlay(alignment: startSide == .trailing ? .trailing : .leading) {
                     if current { startPill }
                 }
-                if pro {
-                    // A Pro lesson says so (a lesson not reached yet has the lock alone).
-                    ProBadge()
-                } else if stars > 0 {
+                if stars > 0 && !pro {
                     HStack(spacing: 2) {
                         ForEach(0..<3, id: \.self) { i in
                             Image(systemName: "star.fill").font(.system(size: 10, weight: .bold)).foregroundStyle(i < stars ? Palette.starGold : .white.opacity(0.15))

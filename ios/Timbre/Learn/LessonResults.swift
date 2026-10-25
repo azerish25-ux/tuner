@@ -6,8 +6,10 @@ private let resultsSpace = NamedCoordinateSpace.named("lesson.results")
 
 /// The end of a lesson: stars land one by one, XP counts up, then the next lesson is one tap away. Under the tiles
 /// the coach says one specific thing about this take (a late chord change, what slipped, the tempo to beat) with
-/// its one action. Two stars or more (or a finished song) put a Share pill for its poster under the tiles from the
-/// first frame; a streak milestone takes the screen with its own celebration, and its card waits below.
+/// its one action, or, when the headline already says the take was clean, the next step. Two stars or more (or a
+/// finished song) put a Share pill for its poster under the tiles from the first frame; a streak milestone takes the
+/// screen with its own celebration, and its card waits below. Calm mode (`UserSettings.calmMode`) keeps the stars, the
+/// accuracy, the time played, the coach and the badges, and leaves out XP, the level, quests and the streak.
 struct LessonResults: View {
     let course: LearnCourse
     let lesson: Lesson
@@ -75,6 +77,9 @@ struct LessonResults: View {
     private var rewardKey: RewardKey? { RewardKey.of(lesson) }
 
     private var accuracyPercent: Int { Int((result.accuracy * 100).rounded()) }
+
+    /// Calm mode: no XP, level, quests or streak on this screen.
+    private var calm: Bool { store.settings.calmMode }
 
     var body: some View {
         // The content scrolls inside its own frame: nothing slides under the buttons.
@@ -149,36 +154,61 @@ struct LessonResults: View {
                     .opacity(appeared ? 1 : 0)
                     .transition(.scale(scale: 0.95).combined(with: .opacity))
             }
-            // Side by side; one per row at the accessibility sizes, so "day streak" never truncates.
-            StatTileRow(spacing: 12) {
-                StatTile(symbol: "sparkles", tint: accent, value: Text("+\(xp)"), label: Text("XP"), alignment: .center)
-                StatTile(symbol: "target", tint: Palette.amber, value: Text("\(accuracyPercent)%"), label: Text("accuracy"), alignment: .center)
-                StatTile(symbol: "flame.fill", tint: Palette.flame, value: Text("\(store.streak.current)"), label: Text("day streak"), alignment: .center)
-            }
-            .padding(.horizontal, Metrics.gutter)
-            .opacity(appeared ? 1 : 0)
+            tiles
+                .padding(.horizontal, Metrics.gutter)
+                .opacity(appeared ? 1 : 0)
             if let coach = shownCoach {
                 coachCard(coach)
                     .opacity(coachShown ? 1 : 0)
                     .offset(y: coachShown || reduceMotion ? 0 : 14)
             }
             if newBest || sharesResult { bestAndShare }
-            if let barLevel { levelBar(barLevel).padding(.horizontal, Metrics.gutter).transition(.opacity) }
+            // "Give a friend a month" at a peak; nothing until the owner has set up the offer.
+            if atPeak {
+                ReferralPill(screen: "results", tint: accent)
+                    .opacity(appeared ? 1 : 0)
+            }
+            if let barLevel, !calm { levelBar(barLevel).padding(.horizontal, Metrics.gutter).transition(.opacity) }
             if let reward, badgesShown > 0 { earned(reward) }
             if shareShown && hasShareCards { shareCards.transition(.move(edge: .bottom).combined(with: .opacity)) }
         }
         .padding(.top, 8).padding(.bottom, Self.contentFoot)
     }
 
-    /// Room for the whole burst: its outer ring lands 160 pt from the centre, so nothing is cut at the canvas's edge.
+    /// The take's figures, side by side (one per row at the accessibility sizes, so "day streak" never truncates): the
+    /// XP in the rewards' gold, the accuracy, and the streak by its lamp. Calm mode: the accuracy and the minutes played.
+    @ViewBuilder private var tiles: some View {
+        if calm {
+            StatTileRow(spacing: 12) {
+                accuracyTile
+                StatTile(symbol: "clock", tint: Palette.accentNeutral, value: Text(result.minutes, format: .number), label: Text("minutes"), alignment: .center)
+            }
+        } else {
+            StatTileRow(spacing: 12) {
+                StatTile(symbol: "sparkles", tint: Palette.starGold, value: Text("+\(xp)"), label: Text("XP"), alignment: .center)
+                accuracyTile
+                StatTile(value: Text("\(store.streak.current)"), label: Text("day streak"), alignment: .center) {
+                    Glyph(.lamp, size: 18, tint: Palette.flame)
+                }
+            }
+        }
+    }
+
+    /// How much landed: a figure, so its glyph is a category's steel, never the status amber.
+    private var accuracyTile: some View {
+        StatTile(symbol: "target", tint: Palette.accentNeutral, value: Text("\(accuracyPercent)%"), label: Text("accuracy"), alignment: .center)
+    }
+
+    /// Room for the whole burst: its rings land within 160 pt of the centre, so nothing is cut at the canvas's edge.
     private static let burstSize: CGFloat = 360
 
-    /// The amber harmonic burst as each star lands (and on a level-up), centred on the stars wherever the content
-    /// has scrolled them. It sits outside the scroll view and draws past this view's bounds (into the status bar's
-    /// area when the stars are near the top), so it is whole at every text size and on every screen.
+    /// The rewards' gold harmonic burst as each star lands (and on a level-up), centred on the stars wherever the
+    /// content has scrolled them. Its outer ring is left out (`ring: false`): at full reach it crossed the headline and
+    /// the lesson's title, so only the inner rings and the nodes ring out behind the stars. It sits outside the scroll
+    /// view and draws past this view's bounds, so it is whole at every text size and on every screen.
     @ViewBuilder private var burstLayer: some View {
         if let starsCenter {
-            SparkBurst(trigger: burst, color: Palette.amber)
+            SparkBurst(trigger: burst, color: Palette.starGold, ring: false)
                 .frame(width: Self.burstSize, height: Self.burstSize)
                 .position(starsCenter)
         }
@@ -222,19 +252,21 @@ struct LessonResults: View {
             .accessibilityIdentifier("lesson.done")
     }
 
-    /// Level N and a bar that fills with this lesson's XP; on a level-up it fills, bursts and rolls over.
+    /// Level N and a bar that fills with this lesson's XP; on a level-up it fills, bursts and rolls over. The level is
+    /// drawn as it is in every header: its ring filling toward the next level around "LV 5" (gold for the moment of a
+    /// level-up).
     private func levelBar(_ level: Level) -> some View {
         HStack(spacing: 12) {
             ZStack {
-                Circle().fill(leveled ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.mint.opacity(0.16)))
-                Text("\(level.number)").font(Typeface.label(17)).foregroundStyle(leveled ? Palette.onGold : Palette.ink)
-                    .contentTransition(.numericText())
+                LevelArc(progress: barValue, size: 44, tint: leveled ? Palette.starGold : Palette.mint)
+                LevelMark(number: level.number, size: 44)
+                    .frame(maxWidth: 44 * 0.74)
             }
-            .frame(width: 40, height: 40)
+            .frame(width: 44, height: 44)
             .scaleEffect(leveled ? 1.12 : 1)
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
-                    Text("Level \(level.number)").font(Typeface.label(15)).foregroundStyle(leveled ? Palette.starGold : Palette.ink)
+                    Text("Level \(level.number)").font(Typeface.label(.body)).foregroundStyle(leveled ? Palette.starGold : Palette.ink)
                     if leveled { Image(systemName: "arrow.up.circle.fill").font(.subheadline.weight(.bold)).foregroundStyle(Palette.starGold).transition(.scale.combined(with: .opacity)) }
                     Text(LocalizedStringKey(level.name)).font(.footnote).foregroundStyle(Palette.inkSoft).lineLimit(1)
                     Spacer(minLength: 0)
@@ -253,26 +285,30 @@ struct LessonResults: View {
     private struct Earned: Identifiable {
         let id: String
         let symbol: String
+        /// A streak badge, drawn with the streak's lamp.
+        var lamp = false
         let title: Text
-        let detail: Text
+        let detail: Text?
         let gold: Bool
     }
 
     /// Everything the lesson earned, in the order it pops in: badges, quests, then Today's set (its bonus lands here
-    /// too: the toast would be hidden behind this screen).
+    /// too: the toast would be hidden behind this screen). Calm mode: badges and a finished Today, without XP.
     private func earnedItems(_ reward: ProgressUpdate) -> [Earned] {
         var items: [Earned] = []
         for badge in reward.achievementsEarned {
-            items.append(Earned(id: "badge." + badge.id, symbol: badge.symbol, title: Text(LocalizedStringKey(badge.title)),
+            items.append(Earned(id: "badge." + badge.id, symbol: badge.symbol, lamp: badge.drawsLamp, title: Text(LocalizedStringKey(badge.title)),
                                 detail: Text("Achievement unlocked"), gold: true))
         }
-        for quest in reward.questsCompleted {
-            items.append(Earned(id: "quest." + quest.id, symbol: "checkmark", title: Text(quest.title),
-                                detail: Text("Quest complete · +\(quest.xp) XP"), gold: false))
+        if !calm {
+            for quest in reward.questsCompleted {
+                items.append(Earned(id: "quest." + quest.id, symbol: "checkmark", title: Text(quest.title),
+                                    detail: Text("Quest complete · +\(quest.xp) XP"), gold: false))
+            }
         }
         if reward.dailySetCompleted {
             items.append(Earned(id: "daily", symbol: "sun.max.fill", title: Text("Today complete"),
-                                detail: Text("+\(XPReward.dailySet) XP"), gold: true))
+                                detail: calm ? nil : Text("+\(XPReward.dailySet) XP"), gold: true))
         }
         return items
     }
@@ -291,15 +327,24 @@ struct LessonResults: View {
 
     private func rewardRow(_ item: Earned) -> some View {
         HStack(spacing: 10) {
-            Image(systemName: item.symbol).font(.system(size: 14, weight: .bold)).foregroundStyle(item.gold ? Palette.onGold : Palette.onAccent)
-                .frame(width: 32, height: 32)
-                .background(Circle().fill(item.gold ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.mint)))
-                .shadow(color: (item.gold ? Palette.starGold : Palette.mint).opacity(0.5), radius: 8)
+            ZStack {
+                if item.lamp {
+                    DrawnGlyph(glyph: .lamp).frame(width: 17, height: 17)
+                } else {
+                    Image(systemName: item.symbol).font(.system(size: 14, weight: .bold))
+                }
+            }
+            .foregroundStyle(item.gold ? Palette.onGold : Palette.onAccent)
+            .frame(width: 32, height: 32)
+            .background(Circle().fill(item.gold ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.mint)))
+            .shadow(color: (item.gold ? Palette.starGold : Palette.mint).opacity(0.5), radius: 8)
             VStack(alignment: .leading, spacing: 1) {
                 item.title.font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
                     .lineLimit(2).minimumScaleFactor(0.85)
-                item.detail.font(.caption).foregroundStyle(Palette.inkSoft)
-                    .lineLimit(2).minimumScaleFactor(0.85)
+                if let detail = item.detail {
+                    detail.font(.caption).foregroundStyle(Palette.inkSoft)
+                        .lineLimit(2).minimumScaleFactor(0.85)
+                }
             }
             Spacer(minLength: 0)
         }
@@ -319,13 +364,24 @@ struct LessonResults: View {
         let context = Coach.LessonContext(lesson: lesson, courseId: course.id, result: result,
                                           takes: CoachTakes.shared.takes(since: since), tapped: practice,
                                           canReview: store.weakSpotReview(in: course) != nil)
-        return Coach.lessonNotes(context).first
+        guard let note = Coach.lessonNotes(context).first else { return nil }
+        // A clean run's praise would only repeat the headline: the coach gives the next step, or stays quiet.
+        if case .clean = note.fact, Coach.isFlawless(result), cleanNextStep == nil { return nil }
+        return note
     }
 
     private var coachVoice: CoachVoice {
         let lessons = course.lessons
         return CoachVoice(lessonTitle: { id in lessons.first { $0.id == id }?.title.localized },
-                          drillMinutes: store.weakSpotReview(in: course)?.minutes ?? 4)
+                          drillMinutes: store.weakSpotReview(in: course)?.minutes ?? 4,
+                          nextStep: cleanNextStep)
+    }
+
+    /// What the coach says after a flawless take instead of praising it again (the headline has): the next lesson, by
+    /// name and length. Nil without one to play.
+    private var cleanNextStep: String? {
+        guard Coach.isFlawless(result), !practice, let next, store.canPlay(next) else { return nil }
+        return String(localized: "Next up: “\(next.title.localized)”, about \(next.minutes) min.")
     }
 
     /// The note, worked out once (`reveal`) so it holds still while the screen is open; before that, the same note
@@ -370,8 +426,14 @@ struct LessonResults: View {
     private var newBest: Bool { improved && result.stars == 3 }
     /// Two or three stars (not in practice mode) or any finished song.
     private var sharesResult: Bool { isSong || (result.stars >= 2 && !practice) }
-    /// Only the milestone's card waits below; the result's poster is the Share pill up top.
-    private var hasShareCards: Bool { milestone != nil }
+    /// Only the milestone's card waits below (never in Calm mode); the result's poster is the Share pill up top.
+    private var hasShareCards: Bool { milestone != nil && !calm }
+
+    /// A peak worth passing a month of Pro on from: a song played with three stars, or a streak milestone.
+    private var atPeak: Bool { (isSong && result.stars == 3 && !practice) || hasShareCards }
+
+    /// The streak a poster carries: none in Calm mode.
+    private var posterStreak: Int { calm ? 0 : store.streak.current }
 
     /// "New best" with Share beside it (under it where the two don't fit side by side), in the first frame: the poster
     /// renders as the screen opens, so the pill is live before the stars have finished landing. A song taken at its own
@@ -456,12 +518,12 @@ struct LessonResults: View {
         if isSong {
             SharePill(preview: "Timbre", tint: accent, armed: shareReady, wait: .zero, route: route) {
                 LessonShareCard(course: courseTitle, title: title, headline: nil, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: true,
-                                streak: store.streak.current)
+                                streak: posterStreak)
             }
         } else {
             SharePill(preview: headline, tint: accent, armed: shareReady, wait: .zero, route: route) {
                 LessonShareCard(course: courseTitle, title: title, headline: headline, stars: result.stars, accuracy: accuracyPercent, accent: accent, song: false,
-                                streak: store.streak.current)
+                                streak: posterStreak)
             }
         }
     }
@@ -505,12 +567,11 @@ struct LessonResults: View {
         .padding(.horizontal, Metrics.gutter)
     }
 
+    /// The bell, bare in the course's colour (a glyph never sits in a tinted disc).
     private var reminderIcon: some View {
-        Image(systemName: reminderOn ? "bell.badge.fill" : "bell.fill")
-            .font(.system(size: 14, weight: .semibold)).foregroundStyle(accent)
-            .frame(width: 30, height: 30).background(Circle().fill(accent.opacity(0.14)))
+        Glyph(reminderOn ? "bell.badge" : "bell", size: Glyph.row, tint: accent)
+            .frame(width: 30, height: 30)
             .contentTransition(.symbolEffect(.replace))
-            .accessibilityHidden(true)
     }
 
     private var reminderTitle: Text {
@@ -544,7 +605,7 @@ struct LessonResults: View {
                 }
                 Text(time, format: Self.timeFormat)
             }
-            .font(Typeface.label(13)).lineLimit(1)
+            .font(Typeface.label(.footnote)).lineLimit(1)
             .foregroundStyle(reminderOn ? accent : Palette.onAccent)
             .padding(.horizontal, 12).frame(minHeight: 36)
             .background(Capsule().fill(reminderOn ? AnyShapeStyle(accent.opacity(0.12)) : AnyShapeStyle(accent)))
@@ -631,37 +692,51 @@ struct LessonResults: View {
             // A fade under Reduce Motion, where it doesn't move.
             withAnimation(reduceMotion ? Motion.fade : Motion.page) { coachShown = true }
         }
-        // Ask for a rating right after a flawless lesson, a couple of times in the app's life.
-        if result.stars == 3, [2, 10].contains(store.progress.stats["lessons"] ?? 0) {
-            try? await Task.sleep(for: .seconds(1.5))
-            requestReview()
+        if !calm {
+            let steps = 20
+            for s in 1...steps {
+                try? await Task.sleep(for: .milliseconds(30))
+                withAnimation(.linear(duration: 0.03)) { xp = result.xp * s / steps }
+                // A soft tick every other step while the number climbs.
+                if result.xp > 0, s % 2 == 0 { SoundFX.shared.play(.xpTick) }
+            }
+            await fillLevelBar()
         }
-        let steps = 20
-        for s in 1...steps {
-            try? await Task.sleep(for: .milliseconds(30))
-            withAnimation(.linear(duration: 0.03)) { xp = result.xp * s / steps }
-            // A soft tick every other step while the number climbs.
-            if result.xp > 0, s % 2 == 0 { SoundFX.shared.play(.xpTick) }
-        }
-        await fillLevelBar()
         // The lull after the level bar: the poster renders here (a few frames of work), not as the stars land.
         shareReady = true
         if let reward {
-            for i in 0..<(reward.achievementsEarned.count + reward.questsCompleted.count + (reward.dailySetCompleted ? 1 : 0)) {
+            let items = earnedItems(reward)
+            for i in items.indices {
                 try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 320))
                 withMotion(Motion.reward, reduceMotion: reduceMotion) { badgesShown = i + 1 }
                 // A badge rings the key's octave over the stars' triad.
-                if i < reward.achievementsEarned.count { SoundFX.shared.playStar(3, key: key); Haptics.shared.lock() }
+                if items[i].id.hasPrefix("badge.") { SoundFX.shared.playStar(3, key: key); Haptics.shared.lock() }
             }
         }
-        // A streak milestone takes the whole screen once the results have landed; its share card waits below.
-        if let milestone {
+        // Once everything has landed, and never just before a milestone takes the screen.
+        if milestone == nil || calm { await askForRating() }
+        // A streak milestone takes the whole screen once the results have landed; its share card waits below. Calm
+        // mode claims it quietly (above) and celebrates nothing.
+        if let milestone, !calm {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 100 : 600))
             withAnimation(Motion.fade) { celebrating = milestone }
         }
         guard hasShareCards else { return }
         try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 280))
         withMotion(Motion.page, reduceMotion: reduceMotion) { shareShown = true }
+    }
+
+    /// The moments a rating is asked for, once the results have landed (StoreKit decides whether the sheet shows): the
+    /// first song played with three stars (`ReviewPrompt.afterSong`, once in the app's life), and a flawless second and
+    /// tenth lesson. Never under automation.
+    private func askForRating() async {
+        if isSong {
+            guard !practice else { return }
+            ReviewPrompt.afterSong(stars: result.stars, requestReview: requestReview)
+        } else if result.stars == 3, !TestSupport.isAutomated, [2, 10].contains(store.progress.stats["lessons"] ?? 0) {
+            try? await Task.sleep(for: .seconds(1.5))
+            requestReview()
+        }
     }
 
     private func fillLevelBar() async {

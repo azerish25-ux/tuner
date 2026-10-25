@@ -87,7 +87,7 @@ struct SettingsView: View {
                 }
             } else {
                 Button { store.presentPaywall("settings") } label: {
-                    FeatureRow(symbol: "sparkles", title: "Try Timbre Pro", detail: "Every instrument, every ear game and practice tool.") { ProBadge() }
+                    FeatureRow(symbol: "sparkles", title: "Try Timbre Pro", detail: "Every lesson and song, every tuning and tool.") { ProBadge() }
                         .padding(16)
                 }
                 .buttonStyle(RowButtonStyle())
@@ -121,8 +121,14 @@ struct SettingsView: View {
 
     // MARK: Tuning
 
+    /// How the tuner reads and tells: Tune by feel first (the tuner's own way to tune without looking), then the
+    /// reference, the temperament, the lock's precision, the strobe and the names it shows.
     private var tuningSection: some View {
-        SettingsGroup(title: "Tuning", footer: Text("Capo and transposition change the names you see, never the pitch Timbre measures.")) {
+        SettingsGroup(title: "Tuning", footer: Text("Tune by feel pulses at the beat between the string and its note, slower as they meet, still at the lock.")
+                        + Text(verbatim: " ")
+                        + Text("Capo and transposition change the names you see, never the pitch Timbre measures.")) {
+            tuneByFeelToggle
+            Hairline(leading: SettingsRowMetrics.inset)
             referenceRow
             Hairline(leading: SettingsRowMetrics.inset)
             temperamentPicker
@@ -144,6 +150,15 @@ struct SettingsView: View {
             if value != "equal" && !commerce.isPro { store.presentPaywall("temperament"); return }
             store.updateSettings { $0.temperamentId = value }
         })) { ForEach(Temperament.all) { Text($0.name).tag($0.id) } }
+    }
+
+    /// The phone throbs at the beat between the string and its note (`Haptics`), so a string can be tuned by touch. It
+    /// needs haptics on (Feedback, below).
+    private var tuneByFeelToggle: some View {
+        Toggle(isOn: setting(\.tuneByFeel)) { RowLabel(icon: Glyph("hand.tap"), title: Text("Tune by feel")) }
+            .settingsRow()
+            .disabled(!store.settings.hapticsEnabled)
+            .accessibilityIdentifier("settings.tuneByFeel")
     }
 
     private var strobeToggle: some View {
@@ -273,7 +288,7 @@ struct SettingsView: View {
     @AppStorage(ChordPicture.storageKey) private var chordPicture: ChordPicture = .chart
 
     private var displaySection: some View {
-        SettingsGroup(title: "Display", footer: Text("Simple tuner shows the tuner on its own. Calm mode keeps XP and streak counters out of the way.")) {
+        SettingsGroup(title: "Display", footer: Text("Simple tuner shows the tuner on its own. Calm mode leaves out XP, levels, quests and streaks; your stars and badges stay.")) {
             handednessPicker
             if store.settings.handedness != .right {
                 Hairline(leading: SettingsRowMetrics.inset)
@@ -352,14 +367,9 @@ struct SettingsView: View {
     // MARK: Feel
 
     private var feelSection: some View {
-        SettingsGroup(title: "Feedback", footer: Text("Tune by feel pulses at the beat between the string and its note, slower as they meet, still at the lock.")) {
+        SettingsGroup(title: "Feedback") {
             Toggle(isOn: setting(\.hapticsEnabled)) { RowLabel(icon: Glyph("iphone.radiowaves.left.and.right"), title: Text("Haptics")) }
                 .settingsRow()
-            Hairline(leading: SettingsRowMetrics.inset)
-            Toggle(isOn: setting(\.tuneByFeel)) { RowLabel(icon: Glyph("hand.tap"), title: Text("Tune by feel")) }
-                .settingsRow()
-                .disabled(!store.settings.hapticsEnabled)
-                .accessibilityIdentifier("settings.tuneByFeel")
             Hairline(leading: SettingsRowMetrics.inset)
             Toggle(isOn: setting(\.feelTheBeat)) { RowLabel(icon: Glyph("metronome"), title: Text("Feel the beat")) }
                 .settingsRow()

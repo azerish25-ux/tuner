@@ -45,8 +45,8 @@ struct RootView: View {
         .fullScreenCover(isPresented: Binding(get: { store.settings.onboardingCompleted != true }, set: { _ in })) {
             OnboardingView().environmentObject(store).environmentObject(audio).environmentObject(commerce)
         }
-        // The root paywall is a plain overlay rather than a UIKit presentation: UI tests never saw a sheet
-        // anchored at the root appear over the tabs. Settings and the instrument picker host their own sheet.
+        // The root paywall is a plain overlay rather than a UIKit presentation: a sheet anchored at the root did not
+        // reliably appear over the tabs. Settings and the instrument picker host their own sheet.
         .overlay {
             if rootPaywall {
                 // Rises from the bottom; a plain fade under Reduce Motion.
@@ -54,14 +54,19 @@ struct RootView: View {
             }
         }
         .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: store.showPaywall)
-        // A 7/30/100-day run reached outside a lesson: its share card (lesson results show their own).
-        .overlay { StreakMilestoneOverlay() }
-        // Rewards grow out of the Dynamic Island, inside the status-bar band (RewardToast places itself).
-        .overlay { RewardToast() }
+        // A 3/7/30/100-day run reached outside a lesson: its celebration and share card (lesson results show their
+        // own). Calm mode celebrates no streak: the milestone is let go without a screen.
+        .overlay { if !store.settings.calmMode { StreakMilestoneOverlay() } }
+        .onChange(of: store.streakMilestone) { _, milestone in
+            if milestone != nil, store.settings.calmMode { _ = store.takeStreakMilestone() }
+        }
+        // Rewards drop in under the header, never inside the status bar (RewardToast places itself; Calm mode
+        // keeps XP, levels, quests and streaks back).
+        .overlay { RewardToast(placement: .docked) }
         #if DEBUG
         .overlay(alignment: .topLeading) {
-            // UI-test probe (TIMBRE_DEBUG_STATE=1): the presentation flags, readable by XCUITest. Drawn in clear ink
-            // and never touched, so it is never seen (and stays off the title) while its label stays readable.
+            // Debug builds with TIMBRE_DEBUG_STATE=1: the presentation flags as an element automation can read. Drawn in
+            // clear ink and never touched, so it is never seen (and stays off the title) while its label stays readable.
             if ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1" {
                 Text(verbatim: "paywall=\(store.showPaywall) settings=\(store.showSettings) picker=\(store.showInstrumentPicker) reason=\(store.paywallReason ?? "-") pro=\(commerce.isPro) tab=\(String(describing: store.selectedTab))")
                     .font(.system(size: 9, design: .monospaced)).foregroundStyle(Color.clear)

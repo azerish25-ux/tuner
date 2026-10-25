@@ -8,10 +8,14 @@ import UIKit
 ///
 /// The colour rule:
 /// - Status is exclusive. Mint means in tune, correct or go (and so every primary button is mint), amber means
-///   adjust, coral means wrong. Nothing else is drawn in those three: a course, a lane or a sleeve never is.
+///   adjust, coral means wrong. Nothing else is drawn in those three: a course, a lane, a category, a reward or a
+///   sleeve never is. Outside this file a status is asked for by its role (`adjust`, `danger`, `flat`, `sharp`,
+///   `pitch(_:locked:band:)`), so every amber or coral on screen says why it is there.
 /// - Course hues (`accent(_:)`: mint, sky, violet, orchid, lime) only tint what a course owns: its art, its eyebrow,
 ///   its progress. Never a primary button, never a status.
-/// - Rewards keep their own: `flame` for the streak, gold (`proGold`, `starFill`) for Timbre Pro and stars.
+/// - A category no course owns (a Today activity, a tool, a figure's glyph, a difficulty) is `accentNeutral`.
+/// - Rewards keep their own: `starGold` for stars, bursts, reward tiles and the root of a chord or scale; `proGold`
+///   for Timbre Pro; `flame` for the streak's lamp (`TimbreGlyph.lamp`, the one picture of a streak).
 /// - Glow means live: listening, locked, playing (`liveGlow`, Kit.swift). A button at rest is flat.
 ///
 /// Contrast: `inkSoft`, `inkFaint`, `line`, `controlLine` and `hairline` follow Increase Contrast (Settings ›
@@ -26,9 +30,9 @@ enum Palette {
     /// Dividers between rows and sections (decoration). Increase Contrast: 3:1 on the stage, cards and `surface`.
     static let line = adaptive(0x24272D, high: 0x60666F)
     /// The boundary of a control that sits on the stage or a card: an unselected chip, a search field, a secondary
-    /// button, a segmented track, a resting string chip. About 3:1 on `surface` and the stage without Increase
-    /// Contrast (WCAG 1.4.11), brighter still with it.
-    static let controlLine = adaptive(0x5A606A, high: 0x7A808A)
+    /// button, a segmented track, a resting string chip. At least 3:1 on every surface it sits on without Increase
+    /// Contrast (WCAG 1.4.11): 3.23:1 on `surface`, 3.41:1 on `stageRaised`, 3.70:1 on the stage; brighter with it.
+    static let controlLine = adaptive(0x646A74, high: 0x7A808A)
     /// A card's border: white at 6% (14% with Increase Contrast). `stillCard` draws it.
     static let hairline = Color(uiColor: UIColor { traits in
         UIColor(white: 1, alpha: traits.accessibilityContrast == .high ? 0.14 : 0.06)
@@ -45,7 +49,10 @@ enum Palette {
     static let mintDeep = Color(hex: 0x1A8F69)
     static let amber = Color(hex: 0xFFB547)
     static let coral = Color(hex: 0xFF7E6B)
-    /// The streak's own colour (a habit, not a status).
+    /// Status: something to adjust, as the tuner's amber means it (a string due for new strings, a coach's fix, a peg
+    /// that will need turning, a grade that came in early or late). The role every non-pitch amber is asked for by.
+    static let adjust = amber
+    /// The streak's own colour, the warm light of its lamp (a habit, not a status).
     static let flame = Color(hex: 0xFF9F43)
     /// A category's tint where no course owns it (a Today activity, a tool, a difficulty): a cool steel that reads as
     /// a colour beside `inkSoft` without meaning in tune, adjust or wrong. 9:1 on `surface`.
@@ -352,10 +359,10 @@ enum Motion {
     static let pluck = Animation.spring(response: 0.42, dampingFraction: 0.72)
     static let settle = Animation.spring(response: 0.6, dampingFraction: 0.9)
     static let quick = Animation.snappy(duration: 0.22)
-    /// The reward pill growing out of the Dynamic Island: quick, with a little overshoot.
-    static let island = Animation.spring(response: 0.46, dampingFraction: 0.7)
-    /// The reward pill folding back into the island: no overshoot.
-    static let islandClose = Animation.spring(response: 0.34, dampingFraction: 1)
+    /// The reward toast dropping in under the header: quick, with a little overshoot.
+    static let toastIn = Animation.spring(response: 0.46, dampingFraction: 0.7)
+    /// The reward toast lifting away: no overshoot.
+    static let toastOut = Animation.spring(response: 0.34, dampingFraction: 1)
     /// Steps and pages: a lesson step, an onboarding page, the song sheet's parts.
     static let page = Animation.spring(response: 0.5, dampingFraction: 0.86)
     /// Combo counts, answers, nudges: fast, with a bounce.

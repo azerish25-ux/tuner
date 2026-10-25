@@ -18,7 +18,7 @@ struct CoachNoteView: View {
     var body: some View {
         let template = voice.text(note)
         HStack(alignment: .top, spacing: 12) {
-            Glyph(CoachVoice.symbol(note), size: Glyph.lead, tint: tint)
+            CoachVoice.glyph(note, size: Glyph.lead, tint: tint)
             VStack(alignment: .leading, spacing: 8) {
                 if eyebrow { Eyebrow("Coach", color: tint) }
                 Text(verbatim: reworded ?? template)

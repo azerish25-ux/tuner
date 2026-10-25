@@ -51,7 +51,8 @@ struct WeekRecap: Equatable {
 
 /// Progress's "Your week": the minutes (one bar a day, today marked), then the closest tune, the lessons and
 /// the streak, with a poster of it to share. With Game Center friends (the player's yes), a line under the figures and
-/// on the poster says where the streak stands among theirs (Services/GameCenterSocial.swift).
+/// on the poster says where the streak stands among theirs (Services/GameCenterSocial.swift). Calm mode
+/// (`UserSettings.calmMode`) leaves the streak, and the friends' standing on it, off the card and the poster.
 struct WeekRecapCard: View {
     let recap: WeekRecap
     @EnvironmentObject private var store: AppStore
@@ -81,19 +82,21 @@ struct WeekRecapCard: View {
             Hairline()
             // Three across; one per row at the accessibility sizes, where three would truncate.
             statsLayout {
-                WeekStat(symbol: "scope", tint: Palette.amber, value: WeekRecap.centsText(recap.bestCents), label: Text("best tune-up"))
+                WeekStat(symbol: "scope", tint: Palette.accentNeutral, value: WeekRecap.centsText(recap.bestCents), label: Text("best tune-up"))
                 WeekStat(symbol: "graduationcap.fill", tint: Palette.violet, value: Text(recap.lessons, format: .number), label: Text("lessons"))
-                WeekStat(symbol: "flame.fill", tint: Palette.flame, value: Text(recap.streak, format: .number), label: Text("day streak"))
+                if !calm {
+                    WeekStat(symbol: "", drawn: .lamp, tint: Palette.flame, value: Text(recap.streak, format: .number), label: Text("day streak"))
+                }
             }
-            if friends != nil || center.friendsAccess == .ask { WeekFriendsRow(standing: friends) }
+            if !calm, friends != nil || center.friendsAccess == .ask { WeekFriendsRow(standing: friends) }
             // A member can pass a month of Pro on, once the owner has set up the offer code.
             if store.isPro { FriendOfferLink(screen: "week") }
         }
         .stillCard(tint: Palette.mint)
         .animation(Motion.fade, value: friends)
-        .task(id: WeekPoster(recap: recap, friends: friends)) {
-            poster = ShareCardRenderer.image(WeekShareCard(recap: recap, friends: friends), scale: displayScale, locale: locale,
-                                             direction: layoutDirection)
+        .task(id: WeekPoster(recap: recap, friends: calm ? nil : friends, calm: calm)) {
+            let card = WeekShareCard(recap: recap, friends: calm ? nil : friends, showsStreak: !calm)
+            poster = ShareCardRenderer.image(card, scale: displayScale, locale: locale, direction: layoutDirection)
         }
         // The streak's place among friends is read here (Game Center signs in quietly, as on the Practice tab's games).
         .task {
@@ -106,6 +109,9 @@ struct WeekRecapCard: View {
     private var friends: FriendStreak? {
         FriendStreak(mine: recap.streak, friends: center.friendStreaks)
     }
+
+    /// Calm mode: no streak here or on the poster.
+    private var calm: Bool { store.settings.calmMode }
 
     private var header: some View {
         HStack(alignment: .center, spacing: 10) {
@@ -133,7 +139,7 @@ struct WeekRecapCard: View {
     /// A 36 pt pill in a 44 pt target.
     private var shareLabel: some View {
         Label("Share", systemImage: "square.and.arrow.up")
-            .font(Typeface.label(13)).foregroundStyle(Palette.mint)
+            .font(Typeface.label(.footnote)).foregroundStyle(Palette.mint)
             .padding(.horizontal, 12).frame(minHeight: 36)
             .background(Capsule().fill(Palette.mint.opacity(0.12)))
             .overlay(Capsule().strokeBorder(Palette.mint.opacity(0.35), lineWidth: 1))
@@ -157,21 +163,30 @@ struct WeekRecapCard: View {
 /// One small figure of the week: icon, value and what it counts.
 private struct WeekStat: View {
     let symbol: String
+    /// Drawn in place of `symbol` (the streak's lamp).
+    var drawn: TimbreGlyph? = nil
     let tint: Color
     let value: Text
     let label: Text
 
     var body: some View {
         HStack(spacing: 8) {
-            Image(systemName: symbol).font(.system(size: 13, weight: .semibold)).foregroundStyle(tint)
-                .frame(width: 18).accessibilityHidden(true)
+            icon.frame(width: 18).accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 0) {
-                value.font(Typeface.number(16)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.7)
+                value.font(Typeface.number(.headline)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.7)
                 label.font(.caption).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.75)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
+    }
+
+    @ViewBuilder private var icon: some View {
+        if let drawn {
+            Glyph(drawn, size: 17, tint: tint)
+        } else {
+            Image(systemName: symbol).font(.system(size: 13, weight: .semibold)).foregroundStyle(tint)
+        }
     }
 }
 
@@ -214,47 +229,52 @@ struct WeekBars: View {
     }
 }
 
-/// What the week's poster is drawn from: it is drawn again when either changes.
+/// What the week's poster is drawn from: it is drawn again when any of it changes.
 private struct WeekPoster: Equatable {
     let recap: WeekRecap
     let friends: FriendStreak?
+    let calm: Bool
 }
 
 /// The week as a poster: the dates, "Your week", the minutes large over the seven bars, and three figures; with Game
-/// Center friends, the streak's place among theirs under them (counts only, no names).
+/// Center friends, the streak's place among theirs under them (counts only, no names). Without `showsStreak` (Calm
+/// mode) the streak's figure is left out.
 struct WeekShareCard: View {
     let recap: WeekRecap
     var friends: FriendStreak? = nil
+    var showsStreak = true
 
     var body: some View {
         ShareCardFrame(glow: Palette.mint, signature: true) {
-            recap.rangeText.font(Typeface.label(12)).tracking(1.2).foregroundStyle(Palette.mint).lineLimit(1)
+            recap.rangeText.font(Typeface.label(.caption)).tracking(1.2).foregroundStyle(Palette.mint).lineLimit(1)
         } content: {
-            Text("Your week").font(Typeface.display(44)).tracking(-1).foregroundStyle(Palette.ink)
+            Text("Your week").font(Typeface.display(.display)).tracking(-1).foregroundStyle(Palette.ink)
                 .padding(.top, 8)
             VStack(spacing: 0) {
-                Text(recap.minutes, format: .number).font(Typeface.number(96)).foregroundStyle(Palette.ink)
+                Text(recap.minutes, format: .number).font(Typeface.hero(96)).foregroundStyle(Palette.ink)
                     .shadow(color: Palette.mint.opacity(0.35), radius: 20)
-                Text("minutes").font(Typeface.label(18)).tracking(0.6).foregroundStyle(Palette.inkSoft)
+                Text("minutes").font(Typeface.label(.headline)).tracking(0.6).foregroundStyle(Palette.inkSoft)
             }
             WeekBars(days: recap.days, height: 96, barWidth: 26, labelSize: 13)
                 .padding(.horizontal, 6).padding(.top, 4)
             HStack(spacing: 10) {
-                tile("scope", Palette.amber, WeekRecap.centsText(recap.bestCents), Text("best tune-up"))
-                tile("graduationcap.fill", Palette.violet, Text(recap.lessons, format: .number), Text("lessons"))
-                tile("flame.fill", Palette.flame, Text(recap.streak, format: .number), Text("day streak"))
+                tile(Image(systemName: "scope"), Palette.accentNeutral, WeekRecap.centsText(recap.bestCents), Text("best tune-up"))
+                tile(Image(systemName: "graduationcap.fill"), Palette.violet, Text(recap.lessons, format: .number), Text("lessons"))
+                if showsStreak {
+                    tile(Glyph(.lamp, size: 18, tint: Palette.flame), Palette.flame, Text(recap.streak, format: .number), Text("day streak"))
+                }
             }
             .padding(.top, 4)
             if let friends { FriendStreakLine(standing: friends, size: 15) }
         }
     }
 
-    private func tile(_ symbol: String, _ tint: Color, _ value: Text, _ label: Text) -> some View {
+    private func tile<Icon: View>(_ icon: Icon, _ tint: Color, _ value: Text, _ label: Text) -> some View {
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
         return VStack(spacing: 5) {
-            Image(systemName: symbol).font(.system(size: 14, weight: .bold)).foregroundStyle(tint)
-            value.font(Typeface.number(22)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.6)
-            label.font(Typeface.label(12)).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.7)
+            icon.font(.system(size: 14, weight: .bold)).foregroundStyle(tint)
+            value.font(Typeface.number(.title3)).foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.6)
+            label.font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft).lineLimit(1).minimumScaleFactor(0.7)
         }
         .frame(maxWidth: .infinity).padding(.vertical, 14)
         .background(shape.fill(Color.white.opacity(0.05)))
