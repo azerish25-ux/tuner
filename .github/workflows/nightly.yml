@@ -1,0 +1,353 @@
+# What the pull-request gate (ios.yml) leaves out to stay under 15 minutes: the full iPhone UI tour with its App Store
+# captures and the launch-time metric, the unsigned archive, the iPad shelf, the accessibility matrix and the thread
+# sanitizer. Runs every night on the default branch, by hand, and on a pull request labelled `captures` (on each push
+# while the label is on). Results: ci-results/app, ci-results/ipad, ci-results/a11y-matrix and ci-results/tsan.
+name: Nightly and captures
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+  pull_request:
+    types: [labeled, opened, reopened, synchronize]
+permissions:
+  contents: read
+concurrency:
+  group: nightly-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+  HOMEBREW_NO_AUTO_UPDATE: "1"
+  HOMEBREW_NO_INSTALL_CLEANUP: "1"
+jobs:
+  tour:
+    # Every UI flow (TimbreUITests), the launch-time metric and the unsigned archive.
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
+    timeout-minutes: 90
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate Xcode project
+        run: |
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          cd ios && xcodegen generate
+      - name: Select available iPhone simulator
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,re,sys; d=json.load(sys.stdin); runtimes=sorted(d["devices"].items(),key=lambda pair:tuple(map(int,re.findall(r"\d+",pair[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if "iPhone" in x["name"]))')
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
+      - name: Build app and tests
+        run: |
+          set -o pipefail
+          mkdir -p ios/build ci-out
+          xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/build.log
+      - name: Boot simulator and allow the microphone
+        run: |
+          xcrun simctl boot "$DEVICE_ID" || true
+          xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre || true
+      - name: Marketing status bar (9:41, full battery and signal)
+        run: |
+          # The store frames come from these captures: Apple's 9:41 status bar, not the runner's clock.
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcrun simctl status_bar "$DEVICE_ID" override --time 9:41 --batteryState charged --batteryLevel 100 --cellularBars 4 --wifiBars 3 \
+            || xcrun simctl status_bar "$DEVICE_ID" override --time 9:41 \
+            || echo "::warning::Could not override the simulator status bar; the captures show the real time"
+      - name: UI tour, store captures and launch time
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO \
+            -only-testing:TimbreUITests/TimbreUITests -only-testing:TimbreUITests/LaunchPerformanceUITests \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+            -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
+      - name: Archive unsigned iOS app
+        if: success() || failure()
+        run: |
+          set -o pipefail
+          xcodebuild archive -project ios/Timbre.xcodeproj -scheme Timbre -destination 'generic/platform=iOS' -archivePath ios/build/Timbre.xcarchive CODE_SIGNING_ALLOWED=NO 2>&1 | tail -40 | tee ci-out/archive.log
+      - name: Export simulator screenshots
+        if: always()
+        run: |
+          if [ -d ios/build/UITests.xcresult ]; then
+            xcrun xcresulttool export attachments --path ios/build/UITests.xcresult --output-path ci-out/screenshots || true
+          fi
+          for log in ci-out/build.log ci-out/test.log; do [ -f "$log" ] && python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"; done
+          gzip -f ci-out/build.log ci-out/test.log 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results-tour
+          path: ci-out
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-evidence
+          path: |
+            ios/build/*.xcresult
+            ios/build/Timbre.xcarchive
+          retention-days: 14
+
+  ipad:
+    # The build, the Full Screen Apps reboot and both orientations' captures take about 25 minutes on a busy runner.
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures')
+    timeout-minutes: 45
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify iPad SDK environment
+        run: |
+          xcodebuild -version
+          SDK_VERSION=$(xcrun --sdk iphonesimulator --show-sdk-version)
+          test "${SDK_VERSION%%.*}" -ge 26
+      - name: Generate baseline Xcode project
+        run: |
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          cd ios && xcodegen generate
+      - name: Select latest available 13-inch iPad simulator
+        run: |
+          mkdir -p ios/build
+          xcrun simctl list devices available -j > ios/build/ipad-simulators.json
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          devices = json.loads(Path('ios/build/ipad-simulators.json').read_text())['devices']
+          version = lambda value: tuple(map(int, re.findall(r'\d+', value)))
+          for runtime, available in sorted(devices.items(), key=lambda item: version(item[0]), reverse=True):
+              if 'iOS' not in runtime:
+                  continue
+              candidates = [device for device in available if 'iPad' in device['name'] and re.search(r'\b13[- ]inch\b', device['name'])]
+              if not candidates:
+                  continue
+              device = max(candidates, key=lambda value: ('Pro' in value['name'], version(value['name'])))
+              print(f"Using {device['name']} on {runtime}: {device['udid']}")
+              with open(os.environ['GITHUB_ENV'], 'a') as environment:
+                  environment.write(f"IPAD_DEVICE_ID={device['udid']}\n")
+              break
+          else:
+              raise SystemExit('No available 13-inch iPad simulator; tablet verification cannot use a smaller device.')
+          PY
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
+      - name: Boot the iPad in Full Screen Apps with the marketing status bar (9:41, full battery and signal)
+        run: |
+          xcrun simctl boot "$IPAD_DEVICE_ID" || true
+          xcrun simctl bootstatus "$IPAD_DEVICE_ID" -b
+          # iPadOS 26 starts in Windowed Apps, which draws the window-resize arc in the app's bottom-right corner, on
+          # every iPad capture. Full Screen Apps (Settings > Multitasking & Gestures) has none. The mode is two private
+          # SpringBoard defaults, both off for Full Screen Apps; SpringBoard reads them only as it starts, so a device
+          # without them gets them written and boots once more. They persist on the device (the retry's reboot keeps
+          # them). Should a later iPadOS ignore them, the step says so and the captures carry the arc again.
+          keys="SBMedusaMultitaskingEnabled SBChamoisWindowingEnabled"
+          full_screen() {
+            for key in $keys; do
+              [ "$(xcrun simctl spawn "$IPAD_DEVICE_ID" defaults read com.apple.springboard "$key" 2>/dev/null)" = "0" ] || return 1
+            done
+          }
+          for attempt in 1 2; do
+            full_screen && break
+            echo "Switching the iPad to Full Screen Apps (attempt $attempt)"
+            for key in $keys; do
+              xcrun simctl spawn "$IPAD_DEVICE_ID" defaults write com.apple.springboard "$key" -bool NO || true
+            done
+            # Let cfprefsd write the domain out before the shutdown, then boot with the new mode.
+            sleep 2
+            xcrun simctl shutdown "$IPAD_DEVICE_ID" || true
+            xcrun simctl boot "$IPAD_DEVICE_ID" || true
+            xcrun simctl bootstatus "$IPAD_DEVICE_ID" -b
+          done
+          # SpringBoard can still be settling into the new mode after bootstatus returns; the UI test's launch then
+          # hangs ("does not have a process ID"). Prove an app launches first; if none does, go back to the default
+          # mode rather than lose the iPad run (the captures then carry the arc, with a warning).
+          launches() {
+            for try in 1 2 3 4 5 6; do
+              if xcrun simctl launch "$IPAD_DEVICE_ID" com.apple.Preferences >/dev/null 2>&1; then
+                sleep 2; xcrun simctl terminate "$IPAD_DEVICE_ID" com.apple.Preferences >/dev/null 2>&1 || true
+                return 0
+              fi
+              sleep 10
+            done
+            return 1
+          }
+          if full_screen && launches; then
+            echo "The iPad runs in Full Screen Apps: no window-resize arc in the captures"
+          else
+            echo "::warning::The iPad simulator did not run apps in Full Screen Apps; back to the default mode, so the iPad captures may show the window-resize arc"
+            for key in $keys; do
+              xcrun simctl spawn "$IPAD_DEVICE_ID" defaults delete com.apple.springboard "$key" >/dev/null 2>&1 || true
+            done
+            sleep 2
+            xcrun simctl shutdown "$IPAD_DEVICE_ID" || true
+            xcrun simctl boot "$IPAD_DEVICE_ID" || true
+            xcrun simctl bootstatus "$IPAD_DEVICE_ID" -b
+            launches || echo "::warning::No app launched on the iPad simulator after the reset either"
+          fi
+          # The iPad store frames come from these captures: Apple's 9:41 status bar, not the runner's clock. Set after
+          # the last boot (a reboot drops it).
+          xcrun simctl status_bar "$IPAD_DEVICE_ID" override --time 9:41 --batteryState charged --batteryLevel 100 --cellularBars 4 --wifiBars 3 \
+            || xcrun simctl status_bar "$IPAD_DEVICE_ID" override --time 9:41 \
+            || echo "::warning::Could not override the simulator status bar; the captures show the real time"
+      - name: Run real iPad portrait and landscape screenshots
+        run: |
+          set -o pipefail
+          mkdir -p ci-out
+          # A reboot drops the status bar override: set it again after one.
+          status_bar() {
+            xcrun simctl bootstatus "$IPAD_DEVICE_ID" -b
+            xcrun simctl status_bar "$IPAD_DEVICE_ID" override --time 9:41 --batteryState charged --batteryLevel 100 --cellularBars 4 --wifiBars 3 \
+              || xcrun simctl status_bar "$IPAD_DEVICE_ID" override --time 9:41 || true
+          }
+          run() { xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -only-testing:TimbreUITests/TabletScreenshotsUITests -destination "platform=iOS Simulator,id=$IPAD_DEVICE_ID" -resultBundlePath ios/build/TabletScreenshots.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee -a ci-out/ipad-test.log; }
+          # The hosted simulator sometimes fails to bring up accessibility for the test runner; that is not a test failure.
+          if ! run; then
+            grep -q "failed to initialize for UI testing" ci-out/ipad-test.log || exit 1
+            echo "Test runner failed to start; rebooting the simulator and retrying once"
+            xcrun simctl shutdown "$IPAD_DEVICE_ID" || true; xcrun simctl boot "$IPAD_DEVICE_ID" || true
+            status_bar
+            rm -rf ios/build/TabletScreenshots.xcresult
+            run
+          fi
+      - name: Export iPad screenshot attachments
+        if: always()
+        run: |
+          if [ -d ios/build/TabletScreenshots.xcresult ]; then
+            xcrun xcresulttool export attachments --path ios/build/TabletScreenshots.xcresult --output-path ci-out/ipad-screenshots || true
+          fi
+          [ -f ci-out/ipad-test.log ] && python3 tools/ci/summarize-log.py ci-out/ipad-test.log ci-out/ipad-test.summary.txt
+          gzip -f ci-out/ipad-test.log 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results-ipad
+          path: ci-out
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ipad-evidence
+          path: ios/build/
+          retention-days: 14
+
+  a11y-matrix:
+    # The screens where layout breaks first, under one setting per run (AccessibilityMatrixUITests): the largest
+    # text size, Bold Text, Increase Contrast, left-handed, left-handed upside down and Arabic. Pictures and audit
+    # reports for review; a screen that can't be reached fails.
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'captures') || contains(github.event.pull_request.labels.*.name, 'accessibility')
+    timeout-minutes: 75
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate Xcode project
+        run: |
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          cd ios && xcodegen generate
+      - name: Select an iPhone simulator and boot it
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,re,sys; d=json.load(sys.stdin); runtimes=sorted(d["devices"].items(),key=lambda pair:tuple(map(int,re.findall(r"\d+",pair[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if "iPhone" in x["name"]))')
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$DEVICE_ID" || true
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
+      - name: Build app and tests
+        run: |
+          set -o pipefail
+          mkdir -p ios/build ci-out
+          xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -derivedDataPath ios/build/dd COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO 2>&1 | tail -40 | tee ci-out/build-tail.log
+      - name: Every variant
+        run: |
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre || true
+          # Simulator settings for the variants that are system settings (best effort: a setting the simulator
+          # refuses leaves that variant as the baseline, and the step says so).
+          setting() {
+            case "$1:$2" in
+              contrast:on) xcrun simctl ui "$DEVICE_ID" increase_contrast enabled || echo "::warning::Increase Contrast could not be set" ;;
+              contrast:off) xcrun simctl ui "$DEVICE_ID" increase_contrast disabled || true ;;
+              bold:on) xcrun simctl spawn "$DEVICE_ID" defaults write com.apple.Accessibility EnhancedTextLegibilityEnabled -bool YES || echo "::warning::Bold Text could not be set" ;;
+              bold:off) xcrun simctl spawn "$DEVICE_ID" defaults write com.apple.Accessibility EnhancedTextLegibilityEnabled -bool NO || true ;;
+            esac
+          }
+          status=0
+          for variant in baseline ax5 bold contrast lefty upside ar; do
+            setting "$variant" on
+            TEST_RUNNER_TIMBRE_MATRIX="$variant" xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre \
+              -parallel-testing-enabled NO -only-testing:TimbreUITests/AccessibilityMatrixUITests \
+              -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+              -resultBundlePath "ios/build/Matrix-$variant.xcresult" CODE_SIGNING_ALLOWED=NO > "ci-out/matrix-$variant.log" 2>&1 \
+              || { status=1; echo "::error::The $variant run failed (ci-out/matrix-$variant.log)"; }
+            setting "$variant" off
+            tail -5 "ci-out/matrix-$variant.log"
+          done
+          exit $status
+      - name: Collect results
+        if: always()
+        run: |
+          for bundle in ios/build/Matrix-*.xcresult; do
+            [ -d "$bundle" ] || continue
+            name=$(basename "$bundle" .xcresult)
+            xcrun xcresulttool export attachments --path "$bundle" --output-path "ci-out/$name" || true
+          done
+          gzip -f ci-out/matrix-*.log 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results-a11y-matrix
+          path: ci-out
+          retention-days: 14
+
+  tsan:
+    # The engine's tests under the thread sanitizer: data races the compiler's checking can't see.
+    if: github.event_name != 'pull_request'
+    timeout-minutes: 30
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Swift core tests with the thread sanitizer
+        run: |
+          set -o pipefail
+          mkdir -p ci-out
+          swift test --package-path ios --sanitize=thread 2>&1 | tee ci-out/tsan.log
+      - name: Summarize
+        if: always()
+        run: |
+          python3 tools/ci/summarize-log.py ci-out/tsan.log ci-out/tsan.summary.txt || true
+          gzip -f ci-out/tsan.log 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results-tsan
+          path: ci-out
+          retention-days: 14
+
+  publish:
+    # The only job that writes to the repository (see ios.yml): ci-results/app (the tour and its captures),
+    # ci-results/ipad, ci-results/a11y-matrix and ci-results/tsan.
+    name: publish results
+    if: >-
+      always()
+      && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+      && (needs.tour.result != 'skipped' || needs.ipad.result != 'skipped'
+          || needs['a11y-matrix'].result != 'skipped' || needs.tsan.result != 'skipped')
+    needs: [tour, ipad, a11y-matrix, tsan]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/ci
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: results-*
+          path: results
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for pair in tour:app ipad:ipad a11y-matrix:a11y-matrix tsan:tsan; do
+            job="${pair%%:*}"; branch="ci-results/${pair##*:}"
+            [ -d "results/results-$job" ] || { echo "No results from $job"; continue; }
+            bash tools/ci/publish-results.sh "$branch" "results/results-$job" "$job" || echo "::warning::Could not publish $job results"
+          done

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- sl plural forms (CLDR categories used: one, two, few, other). Keys match en.lproj/Localizable.stringsdict; wording follows this locale's Localizable.strings. -->
+<plist version="1.0">
+<dict>
+	<key>%lld cents flat</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Prenizko, centi: %lld</string>
+			<key>two</key>
+			<string>Prenizko, centi: %lld</string>
+			<key>few</key>
+			<string>Prenizko, centi: %lld</string>
+			<key>other</key>
+			<string>Prenizko, centi: %lld</string>
+		</dict>
+	</dict>
+	<key>%lld cents sharp</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Previsoko, centi: %lld</string>
+			<key>two</key>
+			<string>Previsoko, centi: %lld</string>
+			<key>few</key>
+			<string>Previsoko, centi: %lld</string>
+			<key>other</key>
+			<string>Previsoko, centi: %lld</string>
+		</dict>
+	</dict>
+	<key>%lld minutes</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld min</string>
+			<key>two</key>
+			<string>%lld min</string>
+			<key>few</key>
+			<string>%lld min</string>
+			<key>other</key>
+			<string>%lld min</string>
+		</dict>
+	</dict>
+	<key>%lld sessions</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Seje: %lld</string>
+			<key>two</key>
+			<string>Seje: %lld</string>
+			<key>few</key>
+			<string>Seje: %lld</string>
+			<key>other</key>
+			<string>Seje: %lld</string>
+		</dict>
+	</dict>
+	<key>Every %lld bars</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Vsak takt</string>
+			<key>two</key>
+			<string>Vsak %lld. takt</string>
+			<key>few</key>
+			<string>Vsak %lld. takt</string>
+			<key>other</key>
+			<string>Vsak %lld. takt</string>
+		</dict>
+	</dict>
+	<key>Practised on %lld days in the last twelve weeks</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Dni vadbe v zadnjih dvanajstih tednih: %lld</string>
+			<key>two</key>
+			<string>Dni vadbe v zadnjih dvanajstih tednih: %lld</string>
+			<key>few</key>
+			<string>Dni vadbe v zadnjih dvanajstih tednih: %lld</string>
+			<key>other</key>
+			<string>Dni vadbe v zadnjih dvanajstih tednih: %lld</string>
+		</dict>
+	</dict>
+	<key>Practised today. Best run %lld days.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Danes ste vadili. Najdaljši niz v dneh: %lld.</string>
+			<key>two</key>
+			<string>Danes ste vadili. Najdaljši niz v dneh: %lld.</string>
+			<key>few</key>
+			<string>Danes ste vadili. Najdaljši niz v dneh: %lld.</string>
+			<key>other</key>
+			<string>Danes ste vadili. Najdaljši niz v dneh: %lld.</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

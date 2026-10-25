@@ -1,8 +1,10 @@
 # Timbre for iOS
 
-Native Swift and SwiftUI port of Timbre's Android instrument tuner and singing practice app. Requires iOS 17 or later. App Store archives use Xcode 26 or later and the iOS 26 SDK or later.
+A precision tuner and a music-lessons app that listens as you play, for iPhone, iPad and Apple Watch, built in Swift and SwiftUI. Requires iOS 18 or later. App Store archives use Xcode 26 or later and the iOS 26 SDK or later.
 
-The app includes the original 60-instrument catalogue, 102 tunings, 71 photographic instrument variants, reference tones, eight vocal exercises, metronome, measured practice history, 49 language tables, and the original fonts and colour palette. Pitch analysis runs on the device; microphone recordings are neither retained nor uploaded.
+**New here? Start with [docs/HANDOVER.md](docs/HANDOVER.md)** — the state of the project, what's unfinished, how to release, how development was run, and links to every other document.
+
+The app includes a 60-instrument catalogue with 132 tunings and 73 photographic instrument variants, 7 3D instruments, 300 recorded instrument samples, 526 teaching lessons in 11 courses plus songbooks (146 songs), a play-along with a band, chord and strum checking, ear training, metronome, drone, voice exercises, measured practice history, streaks, quests and badges, widgets, a Live Activity, App Intents, Game Center, a watch companion and 49 language tables. Pitch analysis runs on the device; microphone recordings are neither retained nor uploaded.
 
 ## Build and verification
 
@@ -17,16 +19,18 @@ xcodegen generate
 open Timbre.xcodeproj
 ```
 
-The [iOS workflow](https://github.com/azerish25-ux/tuner/actions/workflows/ios.yml) runs core regressions, validates resources, executes simulator application/StoreKit/UI tests on iPhone plus a separate 13-inch iPad portrait/landscape flow, creates an unsigned device archive, and separately compiles the optional advertising overlay. Its `ios-evidence` artifact contains the Xcode result bundle and archive when those steps succeed. Screenshots are attached to the UI test results and exported; `ipad-evidence` contains the tablet result and captures. Inspect the actual run results before treating a revision as verified.
+The [iOS workflow](https://github.com/azerish25-ux/tuner/actions/workflows/ios.yml) is the pull-request gate: its required `gate` check passes only when the core job (engine tests with a coverage floor, resources, the translation handoff and the legal/permission/VoiceOver string gate, comment hygiene, SwiftLint), the app job (unit tests and three smoke UI flows) and a Release device build are green, each in under 15 minutes, with compiler warnings treated as errors (concurrency warnings are counted per file while they are cleared). Its `accessibility` job runs the accessibility audit and the localization launches beside it. The [nightly workflow](.github/workflows/nightly.yml) runs the full UI tour with the App Store captures, the 13-inch iPad flow, the accessibility matrix, the thread sanitizer and the unsigned archive, every night and on pull requests labelled `captures`. Results, logs and screenshots are published to the `ci-results/*` branches (the tour's captures to `ci-results/app`, the iPad's to `ci-results/ipad`). Inspect the actual run results before treating a revision as verified.
 
-`ios/Sources/TimbreCore` contains the Foundation-only musical and persistence logic. `ios/Timbre` contains the native interface, AVAudioEngine integration, StoreKit commerce and consent-gated advertising. `ios/project.yml` is the Xcode project source. Generated Xcode projects and build products are ignored.
+`ios/Sources/TimbreCore` contains the Foundation-only musical and persistence logic. `ios/Timbre` contains the interface, the RealityKit tuning stage, AVAudioEngine integration and StoreKit commerce; `ios/TimbreWidgets` holds the widgets and Control Center control. `ios/project.yml` is the Xcode project source. Generated Xcode projects and build products are ignored.
 
-## Purchases, ads and Apple delivery
+## Purchases and Apple delivery
 
-The production product identifier is `timbre_plus_lifetime`, an Apple non-consumable. Prices come from StoreKit. The test fixture is bundled only with test targets; its price is local test data. Google Play purchases do not automatically establish an Apple purchase entitlement.
+Timbre Pro is sold as `timbre_pro_annual` (two-week free trial) and `timbre_pro_monthly` in the **Timbre Pro** subscription group, plus `timbre_plus_lifetime` (non-consumable). Every instrument's standard tuning is free, and guitar, bass, ukulele, violin and cello are free in every tuning (one custom tuning is free); the other instruments' alternate and custom tunings, most lessons beyond each course's first unit, and the full practice set are Pro (`AccessPolicy`, `FreeTier`). Prices come from StoreKit; the bundled `.storekit` fixture is test data. There are no ads.
 
-The default project does not link an advertising SDK and runs without advertising credentials. To include advertising, generate with `xcodegen generate --spec project-ads.yml` and supply the owner's iOS AdMob application and interstitial identifiers. Release builds reject missing or Google demo identifiers. The overlay uses UMP for consent and privacy choices. CI compiles the optional integration separately with Google's demo application ID. Never put Apple signing keys, certificates or passwords in repository files.
+The [manual Apple delivery workflow](.github/workflows/apple-delivery.yml) signs automatically with an App Store Connect API key and uploads to TestFlight. It needs explicit owner confirmation and the `apple-delivery` environment secrets, and must not be dispatched until the owner authorizes delivery. See [Apple delivery instructions](docs/ios/APPLE-DELIVERY.md) and the [privacy policy](docs/ios/PRIVACY.md).
 
-The [manual Apple delivery workflow](.github/workflows/apple-delivery.yml) requires explicit owner confirmation and protected environment secrets. It is separate from normal verification and must not be dispatched until the owner authorizes Apple delivery. See [Apple delivery instructions](docs/ios/APPLE-DELIVERY.md), [privacy policy](docs/ios/PRIVACY.md), and the [source parity audit](docs/ios/parity-audit.md).
+## 3D instruments
 
-The bundled resources are sufficient to build. Regenerating them with `tools/import-ios-resources.py` additionally requires the original Android source copied to the ignored `reference/android` directory and Python Pillow. The original icon vector is retained at `tools/timbre-icon.svg`.
+The seven shipped 3D instruments are Sketchfab models under CC BY (credits in each rig file), converted for RealityKit. `tools/models` also contains a pipeline that builds instruments from code in Blender 4.5 (the `3D assets` workflow), renders studio cards with Cycles and writes rig files that tell the app which nodes are pegs and strings; `python3 tools/models/install_assets.py <built folder>` copies them into the app. See [docs/TOOLS.md](docs/TOOLS.md).
+
+The bundled resources are sufficient to build. `tools/import-ios-resources.py` was the one-time import from the Android app; it now refuses to run, because it would overwrite everything added since. The original icon vector is retained at `tools/timbre-icon.svg`.

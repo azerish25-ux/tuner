@@ -1,0 +1,58 @@
+# Renders the studio cards (Assets.xcassets/render_<model>.png) with RealityKit, the live stage's renderer, lights and
+# image-based light (tools/models/render_cards.swift), from the camera the cards were first rendered with, so card2D in
+# the rigs stays valid. Publishes every variant, the phone close-ups beside the live stage (sheet-closeups.png) and all
+# cards side by side (sheet-cards.png) to ci-results/cards; install the chosen variant with
+#   python3 tools/models/cards.py install <results> --variant <name> [--photos]
+name: Render instrument cards
+on:
+  # Also runs on a push to cards/** (dispatch needs the file on the default branch first).
+  push:
+    branches: ["cards/**"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: cards-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  cards:
+    runs-on: macos-15
+    timeout-minutes: 40
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      OUT: build/cards
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the renderer
+        run: |
+          set -o pipefail
+          mkdir -p "$OUT"
+          sw_vers | tee "$OUT/host.txt"
+          xcodebuild -version | tee -a "$OUT/host.txt"
+          xcrun --sdk macosx swiftc -O -parse-as-library -swift-version 5 -target arm64-apple-macos15.0 \
+            tools/models/render_cards.swift -o build/render-cards 2>&1 | tee "$OUT/build.log"
+      - name: Render the cards
+        run: |
+          set -o pipefail
+          build/render-cards ios/Timbre/Resources/Models "$OUT" 2>&1 | tee "$OUT/render.log"
+      - name: Latest live stage captures
+        if: always()
+        continue-on-error: true
+        run: |
+          mkdir -p build/live
+          git fetch --depth 1 origin ci-results/app
+          git archive FETCH_HEAD screenshots | tar -x -C build/live
+          ls build/live/screenshots | head -3
+      - name: Review sheets
+        if: always()
+        run: |
+          python3 -m venv build/venv
+          build/venv/bin/pip install --quiet pillow numpy
+          if [ -d "$OUT/cards" ]; then
+            build/venv/bin/python tools/models/cards.py sheet "$OUT" --live build/live/screenshots
+          fi
+      - name: Publish the cards
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash tools/ci/publish-results.sh ci-results/cards "$OUT"

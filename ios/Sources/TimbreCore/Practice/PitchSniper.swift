@@ -1,0 +1,158 @@
+import Foundation
+
+/// Bullseye: play or sing the target note and hold it inside the bullseye. Ten rounds; faster bullseyes score more,
+/// and consecutive bullseyes build a combo. In a hidden-tune game (every game the app starts) the targets, in order,
+/// are the opening of a tune everyone knows (`HiddenTune`), named once the game is over.
+public struct PitchSniper: Sendable {
+    public struct Round: Equatable, Sendable {
+        public let midi: Int
+        public let frequency: Double
+    }
+    public enum Outcome: Equatable, Sendable { case bullseye(points: Int), near(points: Int), miss }
+    public enum Event: Equatable, Sendable {
+        /// Steady progress toward a hit (0...1 of the hold).
+        case holding(Double)
+        case finished(Outcome)
+    }
+
+    public static let roundSeconds = 8.0
+    public static let holdSeconds = 0.6
+    public static let bullseyeCents = 5.0
+    public static let ringCents = 20.0
+    public static let winBullseyes = 6
+
+    /// A tune hidden in a game's rounds: its opening notes are the targets, in order, and its name shows at the end.
+    public struct HiddenTune: Equatable, Sendable {
+        /// The English title of the tune's song lesson (the app shows that lesson's localized title).
+        public let title: String
+        /// The opening's notes as semitones from the tonic, a note repeated straight after itself played once (a
+        /// held note scores its round, so a repeat would score the next by itself).
+        public let steps: [Int]
+    }
+
+    /// Openings checked note for note against the songs' own arrangements in the curriculum.
+    public static let hiddenTunes: [HiddenTune] = [
+        HiddenTune(title: "Ode to Joy", steps: [4, 5, 7, 5, 4, 2, 0, 2, 4, 2]),
+        HiddenTune(title: "Twinkle, Twinkle, Little Star", steps: [0, 7, 9, 7, 5, 4, 2, 0]),
+        HiddenTune(title: "Mary Had a Little Lamb", steps: [4, 2, 0, 2, 4, 2, 4, 7]),
+        HiddenTune(title: "Frère Jacques", steps: [0, 2, 4, 0, 2, 4, 0, 4, 5, 7]),
+        HiddenTune(title: "Jingle Bells", steps: [4, 7, 0, 2, 4, 5, 4, 2, 4, 2]),
+        HiddenTune(title: "When the Saints Go Marching In", steps: [0, 4, 5, 7, 0, 4, 5, 7, 0, 4]),
+        HiddenTune(title: "Amazing Grace", steps: [-5, 0, 4, 0, 4, 2, 0, -3, -5]),
+        HiddenTune(title: "Oh! Susanna", steps: [0, 2, 4, 7, 9, 7, 4, 0, 2, 4]),
+        HiddenTune(title: "Für Elise", steps: [7, 6, 7, 6, 7, 2, 5, 3, 0]),
+    ]
+
+    public let rounds: [Round]
+    /// The tune the rounds spell, in a hidden-tune game.
+    public let tune: HiddenTune?
+    public private(set) var index = 0
+    public private(set) var score = 0
+    public private(set) var combo = 0
+    public private(set) var outcomes: [Outcome] = []
+    private var roundStart: Double?
+    private var holdStart: Double?
+    private var bestRing: Double = .infinity
+
+    /// Targets come from the instrument's own notes (open strings, plus the first frets when fretted). With
+    /// `hiddenTune`, a tune whose opening the instrument can play in first position sets the targets instead: up to
+    /// four frets above any open string, or on strings tuned in fifths without frets (violin, cello) up to six half
+    /// steps, where the fingers meet the next string's open note. Only when no tune fits there is the game an ordinary
+    /// one.
+    public init(notes: [Int], fretted: Bool, referenceHz: Double = 440, count: Int = 10, seed: UInt64, hiddenTune: Bool = false) {
+        var pool = Set(notes)
+        if fretted { for n in notes { for fret in 1...4 { pool.insert(n + fret) } } }
+        let sorted = pool.sorted()
+        var rng = SplitMix64(seed: seed)
+        let reach = fretted ? 4 : 6
+        let firstPosition = Set(notes.flatMap { open in (0...reach).map { open + $0 } }).sorted()
+        if hiddenTune, let placed = Self.place(in: firstPosition, rng: &rng) {
+            tune = placed.tune
+            rounds = placed.midis.prefix(count).map { Round(midi: $0, frequency: referenceHz * pow(2, Double($0 - 69) / 12)) }
+            return
+        }
+        tune = nil
+        var picks: [Int] = []
+        while picks.count < count, !sorted.isEmpty {
+            let note = sorted[Int(rng.next() % UInt64(sorted.count))]
+            if note != picks.last || sorted.count == 1 { picks.append(note) }
+        }
+        rounds = picks.map { Round(midi: $0, frequency: referenceHz * pow(2, Double($0 - 69) / 12)) }
+    }
+
+    /// A hidden tune that `pool` (sorted MIDI notes) can play, and its notes: tunes in a seeded order, each in the key
+    /// whose notes sit nearest the middle of the pool.
+    static func place(in pool: [Int], rng: inout SplitMix64) -> (tune: HiddenTune, midis: [Int])? {
+        guard let low = pool.first, let high = pool.last else { return nil }
+        let available = Set(pool)
+        var order = Array(hiddenTunes.indices)
+        for i in stride(from: order.count - 1, to: 0, by: -1) {
+            order.swapAt(i, Int(rng.next() % UInt64(i + 1)))
+        }
+        let middle = Double(low + high) / 2
+        for index in order {
+            let tune = hiddenTunes[index]
+            guard let lowest = tune.steps.min(), let highest = tune.steps.max(), low - lowest <= high - highest else { continue }
+            let centre = Double(lowest + highest) / 2
+            let tonics = (low - lowest...high - highest).filter { tonic in tune.steps.allSatisfy { available.contains(tonic + $0) } }
+            guard let tonic = tonics.min(by: { abs(Double($0) + centre - middle) < abs(Double($1) + centre - middle) }) else { continue }
+            return (tune, tune.steps.map { tonic + $0 })
+        }
+        return nil
+    }
+
+    public var current: Round? { index < rounds.count ? rounds[index] : nil }
+    public var isOver: Bool { index >= rounds.count }
+    public var bullseyes: Int { outcomes.filter { if case .bullseye = $0 { return true } else { return false } }.count }
+    public var won: Bool { bullseyes >= Self.winBullseyes }
+    public var multiplier: Int { min(5, 1 + combo) }
+
+    /// Seconds left in the current round.
+    public func remaining(at time: Double) -> Double {
+        guard let roundStart else { return Self.roundSeconds }
+        return max(0, Self.roundSeconds - (time - roundStart))
+    }
+
+    /// Feed the live reading: cents from the current target (nil when silent).
+    public mutating func update(cents: Double?, at time: Double) -> Event? {
+        guard !isOver else { return nil }
+        if roundStart == nil { roundStart = time }
+        let elapsed = time - (roundStart ?? time)
+        if let cents, abs(cents) <= Self.bullseyeCents {
+            if holdStart == nil { holdStart = time }
+            let held = time - (holdStart ?? time)
+            if held >= Self.holdSeconds {
+                let speed = max(0, 1 - elapsed / Self.roundSeconds)
+                let points = (100 + Int(400 * speed)) * multiplier
+                combo += 1
+                return finish(.bullseye(points: points))
+            }
+            return .holding(held / Self.holdSeconds)
+        }
+        holdStart = nil
+        if let cents, abs(cents) <= Self.ringCents { bestRing = min(bestRing, abs(cents)) }
+        if elapsed >= Self.roundSeconds {
+            combo = 0
+            return finish(bestRing <= Self.ringCents ? .near(points: 50) : .miss)
+        }
+        return nil
+    }
+
+    /// Give up on the current round (no points, combo resets).
+    public mutating func skip() -> Event? {
+        guard !isOver else { return nil }
+        combo = 0
+        return finish(.miss)
+    }
+
+    private mutating func finish(_ outcome: Outcome) -> Event {
+        switch outcome {
+        case .bullseye(let points), .near(let points): score += points
+        case .miss: break
+        }
+        outcomes.append(outcome)
+        index += 1
+        roundStart = nil; holdStart = nil; bestRing = .infinity
+        return .finished(outcome)
+    }
+}

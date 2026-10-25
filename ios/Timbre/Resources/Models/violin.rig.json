@@ -1,0 +1,207 @@
+{
+ "model": "violin",
+ "rig": "FRICTION_PEG",
+ "pegNote": "Pegs follow the violin pegbox: G and E wind on the pegs nearest the nut, D and A on the pegs nearest the scroll. The model's peg nodes keep their build names, so G (s4) turns peg_s3, D (s3) peg_s4, A (s2) peg_s1 and E (s1) peg_s2; the pegbox strings in violin.usdz were re-routed to match (the artist rig had G and E on the scroll-side pegs).",
+ "degPerCent": 1.2,
+ "strings": [
+  {
+   "anchor": "s4",
+   "saddle": [
+    -0.0199,
+    0.17408,
+    0.04817
+   ],
+   "nut": [
+    -0.01031,
+    0.50406,
+    0.0281
+   ],
+   "radius": 0.0005,
+   "wound": true,
+   "peg": "peg_s3",
+   "post": "post_s3",
+   "node": "string_s4",
+   "pegCenter": [
+    -0.0175,
+    0.51564,
+    0.01138
+   ],
+   "pegAxis": [
+    -0.99973,
+    -0.01774,
+    -0.015
+   ],
+   "tighten": 1
+  },
+  {
+   "anchor": "s3",
+   "saddle": [
+    -0.00713,
+    0.17408,
+    0.05155
+   ],
+   "nut": [
+    -0.00481,
+    0.50406,
+    0.02855
+   ],
+   "radius": 0.000438,
+   "wound": true,
+   "peg": "peg_s4",
+   "post": "post_s4",
+   "node": "string_s3",
+   "pegCenter": [
+    -0.01728,
+    0.53939,
+    -0.00163
+   ],
+   "pegAxis": [
+    -0.99985,
+    -0.01118,
+    -0.01309
+   ],
+   "tighten": 1
+  },
+  {
+   "anchor": "s2",
+   "saddle": [
+    0.00541,
+    0.17408,
+    0.05138
+   ],
+   "nut": [
+    0.00069,
+    0.50406,
+    0.02839
+   ],
+   "radius": 0.000375,
+   "wound": true,
+   "peg": "peg_s1",
+   "post": "post_s1",
+   "node": "string_s2",
+   "pegCenter": [
+    0.01306,
+    0.54754,
+    -0.00617
+   ],
+   "pegAxis": [
+    0.99994,
+    -0.00311,
+    0.01088
+   ],
+   "tighten": -1
+  },
+  {
+   "anchor": "s1",
+   "saddle": [
+    0.01652,
+    0.17408,
+    0.04857
+   ],
+   "nut": [
+    0.00619,
+    0.50406,
+    0.02761
+   ],
+   "radius": 0.000162,
+   "wound": false,
+   "peg": "peg_s2",
+   "post": "post_s2",
+   "node": "string_s1",
+   "pegCenter": [
+    0.01311,
+    0.52467,
+    0.00692
+   ],
+   "pegAxis": [
+    0.99984,
+    0.00065,
+    0.01784
+   ],
+   "tighten": -1
+  }
+ ],
+ "headCenter": [
+  -0.00209,
+  0.52385,
+  0.0013
+ ],
+ "bodyCenter": [
+  -0.0,
+  0.295,
+  0.0
+ ],
+ "length": 0.59,
+ "boundsMin": [
+  -0.11062,
+  0.0,
+  -0.0526
+ ],
+ "boundsMax": [
+  0.11062,
+  0.59,
+  0.0526
+ ],
+ "credit": {
+  "id": "violin_queenrose",
+  "uid": "051c3db9337c412e947887477a28bb27",
+  "title": "Heirloom Violin",
+  "author": "Queen Rose",
+  "authorUrl": "https://sketchfab.com/QueenRose",
+  "license": "by",
+  "licenseLabel": "CC Attribution",
+  "url": "https://sketchfab.com/3d-models/heirloom-violin-051c3db9337c412e947887477a28bb27",
+  "faces": 42390,
+  "archiveBytes": 31099347
+ },
+ "card2D": {
+  "s4.saddle": [
+   0.4401,
+   0.6966
+  ],
+  "s4.nut": [
+   0.4666,
+   0.1709
+  ],
+  "s4.peg": [
+   0.4673,
+   0.1521
+  ],
+  "s3.saddle": [
+   0.4563,
+   0.6987
+  ],
+  "s3.nut": [
+   0.4744,
+   0.171
+  ],
+  "s3.peg": [
+   0.4761,
+   0.1142
+  ],
+  "s2.saddle": [
+   0.4746,
+   0.7
+  ],
+  "s2.nut": [
+   0.4825,
+   0.171
+  ],
+  "s2.peg": [
+   0.5229,
+   0.1012
+  ],
+  "s1.saddle": [
+   0.4926,
+   0.7005
+  ],
+  "s1.nut": [
+   0.4911,
+   0.1711
+  ],
+  "s1.peg": [
+   0.5146,
+   0.1377
+  ]
+ }
+}

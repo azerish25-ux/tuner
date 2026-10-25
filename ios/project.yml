@@ -2,7 +2,7 @@ name: Timbre
 options:
   bundleIdPrefix: com.shahradazerisharghi
   deploymentTarget:
-    iOS: "17.0"
+    iOS: "18.0"
   xcodeVersion: "26.0"
 packages:
   TimbreCore:
@@ -10,8 +10,9 @@ packages:
 settings:
   base:
     SWIFT_VERSION: "5.10"
-    TIMBRE_ADMOB_APP_ID: ""
-    TIMBRE_ADMOB_INTERSTITIAL_ID: ""
+    # Complete concurrency checking, as warnings in the Swift 5 language mode: each team clears its own files, and
+    # the CI warnings gate (tools/ci/build_warnings.py) counts them per file while failing on every other warning.
+    SWIFT_STRICT_CONCURRENCY: complete
     DEVELOPMENT_TEAM: ""
     MARKETING_VERSION: "1.0.0"
     CURRENT_PROJECT_VERSION: "1"
@@ -23,27 +24,225 @@ targets:
       - path: Timbre
         excludes: [Resources]
       - path: Timbre/Resources
+        excludes: [Samples]  # shipping.py: the .lproj folders of locales that don't ship follow Samples
+        buildPhase: resources
+      # The recorded instruments (tools/build-ios-samples.py; sources and licences in docs/content/AUDIO-SOURCES.md),
+      # copied as one folder so Samples/manifest.json and Samples/<instrument>/*.m4a keep their paths in the bundle.
+      # TimbreCore's SampleLibrary decodes a zone only when a note needs it.
+      - path: Timbre/Resources/Samples
+        type: folder
         buildPhase: resources
     dependencies:
       - package: TimbreCore
+      - target: TimbreWidgets
+      # The Apple Watch companion, embedded in Timbre.app/Watch ("Embed Watch Content"); it signs itself, as Xcode's
+      # own watch template does. Building Timbre for an iOS simulator builds it for the watch simulator.
+      - target: TimbreWatch
+        codeSign: false
+    entitlements:
+      path: Timbre/Timbre.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.shahradazerisharghi.timbre]
     info:
       path: Timbre/Info.plist
       properties:
         CFBundleDisplayName: Timbre
+        # The languages the app ships, English first: every .lproj today. Which ship is the owner's decision;
+        # tools/l10n/shipping.py --min PERCENT --apply rewrites this line and the marked excludes together.
+        # Quoted: YAML would read a bare `no` (Norwegian) as false.
+        CFBundleLocalizations: ["en", "ar", "bg", "bn", "ca", "cs", "da", "de", "el", "es", "et", "fa", "fi", "fr", "gu", "he", "hi", "hr", "hu", "id", "is", "it", "ja", "kn", "ko", "lt", "lv", "ml", "mr", "nl", "no", "pa", "pl", "pt", "ro", "ru", "sk", "sl", "sv", "sw", "ta", "te", "th", "tr", "uk", "ur", "vi", "zh-CN", "zu"]  # shipping.py
+        # Delivery stamps an internal TestFlight build "internal" (apple-delivery.yml); an App Store build leaves it empty.
+        TimbreBuildChannel: $(TIMBRE_BUILD_CHANNEL)
+        # The version and build every bundle carries (app, widgets, watch app, complications): App Store Connect needs a
+        # new build number per upload (apple-delivery.yml sets both), and the watch app's must equal the app's.
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # "Start today's practice" handed over from Apple Watch (TimbreApp continues it on Today).
+        NSUserActivityTypes: [com.shahradazerisharghi.timbre.today]
         NSMicrophoneUsageDescription: Timbre listens to your instrument or voice to measure pitch. Audio is processed on your device and is never saved or uploaded.
-        UILaunchScreen: {}
+        # Your songs: "Listen on Apple Music" beside a chart the player brought (YourSongs/AppleMusicListen.swift).
+        # Needs the MusicKit App Service on the App ID (docs/ios/APPLE-DELIVERY.md, section 8).
+        NSAppleMusicUsageDescription: Timbre plays the Apple Music songs you choose, so you can listen to them beside your own chord charts.
+        # Your songs: chord charts shared to Timbre ("Open in Timbre", Files) are imported as a copy kept on this device.
+        LSSupportsOpeningDocumentsInPlace: false
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: ChordPro chart
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [org.chordpro.chordpro]
+          - CFBundleTypeName: Text chord chart
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [public.plain-text]
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: org.chordpro.chordpro
+            UTTypeDescription: ChordPro chart
+            UTTypeConformsTo: [public.plain-text]
+            UTTypeTagSpecification:
+              public.filename-extension: [cho, chordpro, chopro, crd]
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UIBackgroundModes: [audio]
+        # The practice session (metronome, drone, tuner, lesson) on the Lock Screen and in the Dynamic Island; local updates only.
+        NSSupportsLiveActivities: true
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
         UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
         ITSAppUsesNonExemptEncryption: false
-        UIAppFonts: [space_grotesk.ttf, inter.ttf, ibm_plex_mono.ttf]
-        TIMBRE_ADMOB_APP_ID: "$(TIMBRE_ADMOB_APP_ID)"
-        TIMBRE_ADMOB_INTERSTITIAL_ID: "$(TIMBRE_ADMOB_INTERSTITIAL_ID)"
+        UIAppFonts: [Sora-Light.ttf, Sora-Medium.ttf, Sora-SemiBold.ttf, Sora-Bold.ttf]
+        CFBundleURLTypes:
+          - CFBundleURLName: com.shahradazerisharghi.timbre
+            CFBundleURLSchemes: [timbre]
+        # Empty = analytics stay on the device. Set the TELEMETRYDECK_APP_ID repository variable to switch it on in delivery builds.
+        TimbreTelemetryAppID: $(TIMBRE_TELEMETRY_APP_ID)
+        # Addresses the build carries (read by `AppLinks`, Services/ShareDestination.swift). Each comes from the build
+        # setting of the same name below; an empty value means "not set yet", and the app falls back or hides the link.
+        # The privacy policy the paywall and Settings link to: move it to the owner's domain by changing
+        # TIMBRE_PRIVACY_POLICY_URL (both keys carry it until every reader uses `AppLinks.privacy`).
+        TimbrePrivacyURL: $(TIMBRE_PRIVACY_POLICY_URL)
+        TimbrePrivacyPolicyURL: $(TIMBRE_PRIVACY_POLICY_URL)
+        # The app's Apple ID in App Store Connect (digits): the App Store page and offer codes.
+        TimbreAppStoreID: $(TIMBRE_APP_STORE_ID)
+        # An https page that opens a shared route in Timbre, or sends someone without it to the App Store.
+        TimbreShareURL: $(TIMBRE_SHARE_URL)
+        # The remote settings file (`RemoteConfig`): paywall variant, annual product, social proof switch.
+        TimbreRemoteConfigURL: $(TIMBRE_REMOTE_CONFIG_URL)
     settings:
       base:
+        TIMBRE_BUILD_CHANNEL: ""
+        TIMBRE_TELEMETRY_APP_ID: ""
+        TIMBRE_PRIVACY_POLICY_URL: "https://azerish25-ux.github.io/tuner/privacy.html"
+        TIMBRE_APP_STORE_ID: ""
+        TIMBRE_SHARE_URL: ""
+        TIMBRE_REMOTE_CONFIG_URL: ""
         PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre
         TARGETED_DEVICE_FAMILY: "1,2"
+        # The on-device coach (Journey/CoachVoice.swift, `CoachPolish`): FoundationModels is iOS 26+, so it is
+        # weak-linked for the iOS 18 target; every use is behind #available and the model's own availability, and the
+        # coach keeps its templates wherever the model isn't there.
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) COACH_MODEL"
+        OTHER_LDFLAGS: "$(inherited) -weak_framework FoundationModels"
+  TimbreWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: TimbreWidgets
+        excludes: [PrivacyInfo.xcprivacy]
+      - path: TimbreWidgets/PrivacyInfo.xcprivacy
+        buildPhase: resources
+      - path: Timbre/Intents/SharedIntents.swift
+      # The configurable widgets' instruments and song shelves, written by the app (WidgetLibraryPublisher.swift).
+      - path: Timbre/Intents/WidgetLibrary.swift
+      # The streak carried forward to the moment shown (`StreakStatus`, as Siri reads it), so the widget resets after midnight.
+      - path: Timbre/Intents/StreakSnippet.swift
+      - path: Timbre/Services/WidgetBridge.swift
+      - path: Timbre/Services/PracticeActivityAttributes.swift
+      - path: Timbre/Design/Theme.swift
+      - path: Timbre/Resources/Fonts
+        buildPhase: resources
+      # Widget and control labels ("day streak", "Tune") read the app's string tables.
+      - path: Timbre/Resources
+        includes: ["*.lproj/Localizable.strings", "*.lproj/Localizable.stringsdict"]
+        excludes: []  # shipping.py: the .lproj folders of locales that don't ship
+        buildPhase: resources
+    entitlements:
+      path: TimbreWidgets/TimbreWidgets.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.shahradazerisharghi.timbre]
+    info:
+      path: TimbreWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Timbre
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+        UIAppFonts: [Sora-Light.ttf, Sora-Medium.ttf, Sora-SemiBold.ttf, Sora-Bold.ttf]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre.widgets
+        TARGETED_DEVICE_FAMILY: "1,2"
+  # Apple Watch companion (watchOS 11+): the haptic wrist metronome, today's streak and set, and "Start today's practice"
+  # on the iPhone. A single-target SwiftUI watch app embedded in Timbre.app/Watch, fed over WatchConnectivity by
+  # Timbre/Services/WatchBridge.swift. Same App Group id as the iPhone (each device has its own container): the watch app
+  # keeps the iPhone's last snapshot there for its complications.
+  TimbreWatch:
+    type: application
+    platform: watchOS
+    deploymentTarget: "11.0"
+    sources:
+      - path: TimbreWatch
+        excludes: [PrivacyInfo.xcprivacy]
+      - path: TimbreWatch/PrivacyInfo.xcprivacy
+        buildPhase: resources
+      - path: Timbre/Services/WatchSnapshot.swift
+      - path: Timbre/Resources/Fonts/Sora-Medium.ttf
+        buildPhase: resources
+      - path: Timbre/Resources/Fonts/Sora-SemiBold.ttf
+        buildPhase: resources
+      - path: Timbre/Resources/Fonts/Sora-OFL.txt
+        buildPhase: resources
+      # The watch's own labels ("day streak", "Tempo", "Start today's practice") read the app's string tables.
+      - path: Timbre/Resources
+        includes: ["*.lproj/Localizable.strings", "*.lproj/Localizable.stringsdict"]
+        excludes: []  # shipping.py: the .lproj folders of locales that don't ship
+        buildPhase: resources
+    dependencies:
+      - target: TimbreWatchWidgets
+        codeSign: false
+    entitlements:
+      path: TimbreWatch/TimbreWatch.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.shahradazerisharghi.timbre]
+    info:
+      path: TimbreWatch/Info.plist
+      properties:
+        CFBundleDisplayName: Timbre
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # A single-target watch app, installed with (and only beside) the iPhone app.
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: com.shahradazerisharghi.timbre
+        WKRunsIndependentlyOfCompanionApp: false
+        NSUserActivityTypes: [com.shahradazerisharghi.timbre.today]
+        UIAppFonts: [Sora-Medium.ttf, Sora-SemiBold.ttf]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre.watchkitapp
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+  # The watch complications (accessoryCircular, Rectangular, Corner, Inline): the streak flame and count with today's set.
+  TimbreWatchWidgets:
+    type: app-extension
+    platform: watchOS
+    deploymentTarget: "11.0"
+    sources:
+      - path: TimbreWatchWidgets
+        excludes: [PrivacyInfo.xcprivacy]
+      - path: TimbreWatchWidgets/PrivacyInfo.xcprivacy
+        buildPhase: resources
+      - path: Timbre/Services/WatchSnapshot.swift
+      - path: TimbreWatch/Shared/SnapshotStore.swift
+      - path: TimbreWatch/Shared/WatchTheme.swift
+      - path: Timbre/Resources
+        includes: ["*.lproj/Localizable.strings", "*.lproj/Localizable.stringsdict"]
+        excludes: []  # shipping.py: the .lproj folders of locales that don't ship
+        buildPhase: resources
+    entitlements:
+      path: TimbreWatchWidgets/TimbreWatchWidgets.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.shahradazerisharghi.timbre]
+    info:
+      path: TimbreWatchWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Timbre
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre.watchkitapp.widgets
   TimbreUITests:
     type: bundle.ui-testing
     platform: iOS
@@ -78,3 +277,10 @@ schemes:
     test:
       targets: [TimbreAppTests, TimbreUITests]
       parallelizeBuild: false
+  # Runs the watch app on its own (a watch simulator paired with an iPhone one, or a watch).
+  TimbreWatch:
+    build:
+      targets:
+        TimbreWatch: all
+    run:
+      config: Debug

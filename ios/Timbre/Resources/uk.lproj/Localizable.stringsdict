@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- uk plural forms (CLDR categories used: one, few, many, other). Keys match en.lproj/Localizable.stringsdict; wording follows this locale's Localizable.strings. -->
+<plist version="1.0">
+<dict>
+	<key>%lld cents flat</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Нижче на %lld¢</string>
+			<key>few</key>
+			<string>Нижче на %lld¢</string>
+			<key>many</key>
+			<string>Нижче на %lld¢</string>
+			<key>other</key>
+			<string>Нижче на %lld¢</string>
+		</dict>
+	</dict>
+	<key>%lld cents sharp</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Вище на %lld¢</string>
+			<key>few</key>
+			<string>Вище на %lld¢</string>
+			<key>many</key>
+			<string>Вище на %lld¢</string>
+			<key>other</key>
+			<string>Вище на %lld¢</string>
+		</dict>
+	</dict>
+	<key>%lld minutes</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld хв</string>
+			<key>few</key>
+			<string>%lld хв</string>
+			<key>many</key>
+			<string>%lld хв</string>
+			<key>other</key>
+			<string>%lld хв</string>
+		</dict>
+	</dict>
+	<key>%lld sessions</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Занять: %lld</string>
+			<key>few</key>
+			<string>Занять: %lld</string>
+			<key>many</key>
+			<string>Занять: %lld</string>
+			<key>other</key>
+			<string>Занять: %lld</string>
+		</dict>
+	</dict>
+	<key>Every %lld bars</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Кожен такт</string>
+			<key>few</key>
+			<string>Кожні %lld такти</string>
+			<key>many</key>
+			<string>Кожні %lld тактів</string>
+			<key>other</key>
+			<string>Кожні %lld такту</string>
+		</dict>
+	</dict>
+	<key>Practised on %lld days in the last twelve weeks</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Днів із заняттями за останні дванадцять тижнів: %lld</string>
+			<key>few</key>
+			<string>Днів із заняттями за останні дванадцять тижнів: %lld</string>
+			<key>many</key>
+			<string>Днів із заняттями за останні дванадцять тижнів: %lld</string>
+			<key>other</key>
+			<string>Днів із заняттями за останні дванадцять тижнів: %lld</string>
+		</dict>
+	</dict>
+	<key>Practised today. Best run %lld days.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Сьогодні заняття виконано. Найкраща серія: %lld дн.</string>
+			<key>few</key>
+			<string>Сьогодні заняття виконано. Найкраща серія: %lld дн.</string>
+			<key>many</key>
+			<string>Сьогодні заняття виконано. Найкраща серія: %lld дн.</string>
+			<key>other</key>
+			<string>Сьогодні заняття виконано. Найкраща серія: %lld дн.</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

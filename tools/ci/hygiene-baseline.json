@@ -1,0 +1,118 @@
+{
+  "about": "Occurrences that predate the hygiene lint (tools/ci/comment_hygiene.py), per file and 'rule: matched text'. It only ever shrinks: fix code, then run `python3 tools/ci/comment_hygiene.py --update-baseline`. A warn rule with no entry left here fails on any new occurrence.",
+  "allowed": {
+    "ios/Timbre/Learn/Highway.swift": {
+      "status-colour: palette.amber": 7
+    },
+    "ios/Timbre/Learn/HighwayPop.swift": {
+      "status-colour: palette.amber": 1
+    },
+    "ios/Timbre/Learn/HighwayTimingStrip.swift": {
+      "status-colour: palette.amber": 2
+    },
+    "ios/Timbre/Learn/LatencyCalibration.swift": {
+      "status-colour: palette.amber": 1
+    },
+    "ios/Timbre/Learn/LessonBeatRow.swift": {
+      "status-colour: palette.amber": 1
+    },
+    "ios/Timbre/Learn/LessonExplain.swift": {
+      "test-coupling: ui tests": 1
+    },
+    "ios/Timbre/Learn/LessonMotion.swift": {
+      "status-colour: palette.amber": 4,
+      "status-colour: palette.coral": 1
+    },
+    "ios/Timbre/Learn/LessonPlayer.swift": {
+      "status-colour: palette.amber": 1
+    },
+    "ios/Timbre/Learn/LessonSteps.swift": {
+      "status-colour: palette.amber": 6
+    },
+    "ios/Timbre/Learn/SongChords.swift": {
+      "status-colour: palette.amber": 2
+    },
+    "ios/Timbre/Learn/SongPerform.swift": {
+      "status-colour: palette.amber": 1
+    },
+    "ios/Timbre/Learn/WeakSpotReview.swift": {
+      "status-colour: palette.amber": 4
+    },
+    "ios/Timbre/Onboarding/PlacementCheckView.swift": {
+      "status-colour: palette.amber": 2
+    },
+    "ios/Timbre/Onboarding/ReminderAskStep.swift": {
+      "inline-orb: .background(circle().fill(radialgradient(colors: [palette.mint.opacity(0.18)": 1
+    },
+    "ios/Timbre/Paywall/BillingIssueBanner.swift": {
+      "status-colour: palette.amber": 3
+    },
+    "ios/Timbre/Paywall/PaywallScenes.swift": {
+      "status-colour: palette.amber": 1
+    },
+    "ios/Timbre/Practice/ChordsView.swift": {
+      "inline-orb: .background(circle().fill(sounding ? palette.mint : palette.mint.opacity(0.14)": 1,
+      "status-colour: palette.amber": 1
+    },
+    "ios/Timbre/Practice/DroneSingAlong.swift": {
+      "status-colour: palette.amber": 4
+    },
+    "ios/Timbre/Practice/DroneView.swift": {
+      "status-colour: palette.amber": 1,
+      "test-coupling: screenshots": 2,
+      "test-coupling: ui tests": 1
+    },
+    "ios/Timbre/Practice/IntonationView.swift": {
+      "status-colour: palette.amber": 2
+    },
+    "ios/Timbre/Practice/PlayHubGames.swift": {
+      "status-colour: palette.amber": 3
+    },
+    "ios/Timbre/Practice/PracticeView.swift": {
+      "test-coupling: ui tests": 1
+    },
+    "ios/Timbre/Practice/ScalesView.swift": {
+      "status-colour: palette.amber": 1
+    },
+    "ios/Timbre/Songs/SongsView.swift": {
+      "inline-orb: .background(circle().fill(playable ? anyshapestyle(palette.mint) : anyshapestyle(color.white.opacity(0.08)": 1
+    },
+    "ios/Timbre/Tune/Celebration.swift": {
+      "inline-orb: .background(circle().fill(palette.mint.opacity(0.12)": 1
+    },
+    "ios/Timbre/Tune/ChromaticStage.swift": {
+      "status-colour: palette.amber": 2,
+      "status-colour: palette.coral": 2
+    },
+    "ios/Timbre/Tune/Readout.swift": {
+      "status-colour: palette.amber": 1,
+      "status-colour: palette.coral": 3
+    },
+    "ios/Timbre/Tune/StrumFinale.swift": {
+      "status-colour: palette.amber": 2
+    },
+    "ios/Timbre/Tune/StrumMeters.swift": {
+      "inline-orb: .background(circle().fill(palette.amber.opacity(0.16)": 1,
+      "status-colour: palette.amber": 9
+    },
+    "ios/Timbre/Tune/StrumModel.swift": {
+      "test-coupling: screenshots": 1,
+      "test-coupling: ui tests": 1
+    },
+    "ios/Timbre/Tune/TuneSidePane.swift": {
+      "status-colour: palette.amber": 7,
+      "status-colour: palette.coral": 1
+    },
+    "ios/Timbre/Tune/TuneView.swift": {
+      "inline-orb: .background(circle().fill(active ? palette.mint.opacity(0.12)": 1
+    },
+    "ios/TimbreWatch/MetronomeScreen.swift": {
+      "status-colour: palette.amber": 1
+    },
+    "ios/TimbreWatch/TodayScreen.swift": {
+      "inline-orb: .background(circle().fill(step.done ? tint : tint.opacity(0.16)": 1,
+      "inline-orb: .background(circle().fill(tint.opacity(0.16)": 1,
+      "status-colour: palette.amber": 4
+    }
+  }
+}

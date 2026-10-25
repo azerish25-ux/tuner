@@ -1,0 +1,144 @@
+import CoreGraphics
+import Foundation
+import UIKit
+import simd
+import TimbreCore
+
+/// Animation anchors exported with each 3D model (tools/models/build_assets.py).
+/// Coordinates are metres in the model's USD stage space (Y up, +Z toward the player).
+struct InstrumentRig: Decodable, Sendable {
+    struct StringRig: Decodable, Sendable {
+        let anchor: String
+        let saddle: [Float]
+        let nut: [Float]
+        let radius: Float
+        let wound: Bool
+        let peg: String
+        let post: String
+        let pegCenter: [Float]
+        let pegAxis: [Float]
+        let tighten: Int
+        /// Scene node of the speaking string; course pairs name each string (default string_<anchor>).
+        let node: String?
+        /// "rotate" (pegs, machine heads: about the node's local X) or "slide" (wind joints,
+        /// brass slides, kalimba tines: along the node's local X, which points "out").
+        let motion: String?
+        /// Slide travel in metres per cent of pitch error.
+        let perCent: Float?
+        var nodeName: String { node ?? "string_\(anchor)" }
+        var slides: Bool { motion == "slide" }
+        var saddlePoint: SIMD3<Float> { SIMD3(rig: saddle) }
+        var nutPoint: SIMD3<Float> { SIMD3(rig: nut) }
+        var pegPoint: SIMD3<Float> { SIMD3(rig: pegCenter) }
+        /// Which way the peg points out of the head (unit length in the exported rigs).
+        var pegDirection: SIMD3<Float> { SIMD3(rig: pegAxis) }
+    }
+    let model: String
+    let rig: String
+    let degPerCent: Float
+    let strings: [StringRig]
+    let headCenter: [Float]
+    let bodyCenter: [Float]
+    let length: Float
+    let boundsMin: [Float]
+    let boundsMax: [Float]
+    /// Normalised (0...1, top-left origin) positions on the studio card render.
+    let card2D: [String: [Double]]?
+
+    var head: SIMD3<Float> { SIMD3(rig: headCenter) }
+    var lower: SIMD3<Float> { SIMD3(rig: boundsMin) }
+    var upper: SIMD3<Float> { SIMD3(rig: boundsMax) }
+    func string(_ anchor: String?) -> StringRig? { strings.first { $0.anchor == anchor } }
+    func card(_ key: String) -> CGPoint? {
+        guard let p = card2D?[key], p.count == 2 else { return nil }
+        return CGPoint(x: p[0], y: p[1])
+    }
+}
+
+private extension SIMD3 where Scalar == Float {
+    init(rig array: [Float]) { self.init(array.count > 0 ? array[0] : 0, array.count > 1 ? array[1] : 0, array.count > 2 ? array[2] : 0) }
+}
+
+/// Bundled models, rigs and studio renders. A photo variant maps to a model id.
+enum ModelLibrary {
+    private struct Manifest: Decodable { let photos: [String: String] }
+    private static let manifest: Manifest? = {
+        guard let url = Bundle.main.url(forResource: "models-manifest", withExtension: "json"),
+              let data = try? Data(contentsOf: url) else { return nil }
+        return try? JSONDecoder().decode(Manifest.self, from: data)
+    }()
+    private static var rigs: [String: InstrumentRig] = [:]
+
+    static func modelID(forPhoto asset: String?) -> String? {
+        guard let asset, let id = manifest?.photos[asset], url(id) != nil else { return nil }
+        return id
+    }
+    static func url(_ id: String) -> URL? { Bundle.main.url(forResource: id, withExtension: "usdz") }
+    @MainActor static func rig(_ id: String) -> InstrumentRig? {
+        if let cached = rigs[id] { return cached }
+        guard let url = Bundle.main.url(forResource: id, withExtension: "rig.json"),
+              let data = try? Data(contentsOf: url), let rig = try? JSONDecoder().decode(InstrumentRig.self, from: data) else { return nil }
+        rigs[id] = rig
+        return rig
+    }
+    /// Studio render used for cards and the 2D stage.
+    static func cardImageName(_ id: String) -> String { "render_\(id)" }
+    /// Some models ship 3D only; their cards keep the original photograph.
+    @MainActor static func hasCard(_ id: String) -> Bool {
+        if let known = cards[id] { return known }
+        let exists = UIImage(named: cardImageName(id)) != nil
+        cards[id] = exists
+        return exists
+    }
+    @MainActor private static var cards: [String: Bool] = [:]
+
+    /// Stage points for instrument photographs (photo-rigs.json), keyed by photo asset.
+    private static let photoPoints: [String: [String: [Double]]] = {
+        guard let url = Bundle.main.url(forResource: "photo-rigs", withExtension: "json"),
+              let data = try? Data(contentsOf: url) else { return [:] }
+        return (try? JSONDecoder().decode([String: [String: [Double]]].self, from: data)) ?? [:]
+    }()
+    /// Turn signs for photographed pegs (photo-turns.json), keyed by photo asset and anchor: +1 where clockwise tightens,
+    /// as the 3D rigs encode it (a key or peg head on the bass side of the head, seen from the front, is +1; the treble
+    /// side -1). Each entry there says what its photograph shows; a photo without one shows no turn arrow.
+    private struct PhotoTurns: Decodable {
+        struct Photo: Decodable { let tighten: [String: Int] }
+        let photos: [String: Photo]
+    }
+    private static let photoTurns: [String: [String: Int]] = {
+        guard let url = Bundle.main.url(forResource: "photo-turns", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let file = try? JSONDecoder().decode(PhotoTurns.self, from: data) else { return [:] }
+        return file.photos.mapValues(\.tighten)
+    }()
+    static func photoCard(_ asset: String?) -> StageCard? {
+        guard let asset, let points = photoPoints[asset], !points.isEmpty else { return nil }
+        var card = StageCard(points: points)
+        for (anchor, sign) in photoTurns[asset] ?? [:] where abs(sign) == 1 && card.anchors.contains(anchor) {
+            card.turns[anchor] = sign
+        }
+        return card
+    }
+
+    /// Attribution for artist models (the `credit` block of each bundled rig), for Acknowledgements.
+    static func credits() -> [ModelCredit] {
+        struct File: Decodable { let credit: ModelCredit? }
+        let urls = Bundle.main.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? []
+        let credits = urls.filter { $0.lastPathComponent.hasSuffix(".rig.json") }
+            .compactMap { url in (try? Data(contentsOf: url)).flatMap { try? JSONDecoder().decode(File.self, from: $0).credit } }
+        return Dictionary(credits.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a }).values.sorted { $0.title < $1.title }
+    }
+}
+
+struct ModelCredit: Decodable, Identifiable, Sendable {
+    let id: String
+    let title: String
+    let author: String
+    let license: String
+    let url: String
+    var link: URL { URL(string: url) ?? URL(string: "https://sketchfab.com")! }
+    var licenseName: String { license == "cc0" ? "CC0 1.0" : "CC BY 4.0" }
+    var licenseLink: URL? {
+        URL(string: license == "cc0" ? "https://creativecommons.org/publicdomain/zero/1.0/" : "https://creativecommons.org/licenses/by/4.0/")
+    }
+}

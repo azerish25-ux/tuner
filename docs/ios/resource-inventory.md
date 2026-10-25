@@ -1,5 +1,16 @@
 # iOS resource inventory
 
+> **Current state (2026-10-25).** This page began as the record of the one-time import from the Android app; the
+> bundle has grown since. Today the app ships 60 instruments, 132 tunings, 73 photographic variants (146 images),
+> 49 localization tables, 7 3D models, 300 instrument samples (15 sets) and one licensed font family, **Sora**
+> (Light, Medium, SemiBold, Bold; `ios/Timbre/Resources/Fonts`, SIL OFL in `Sora-OFL.txt`) — the Inter, Space Grotesk
+> and IBM Plex Mono files named below were replaced. `python3 tools/verify-ios-resources.py` prints the live counts.
+> **Do not run `tools/import-ios-resources.py` again:** it would overwrite the catalogue, photos, fonts and every
+> translation with the Android snapshot. See [docs/ARCHITECTURE.md](../ARCHITECTURE.md) (resources) and
+> [docs/TOOLS.md](../TOOLS.md).
+>
+> The original import record follows, unchanged.
+
 `python tools/import-ios-resources.py` imports the checked-in Android snapshot; Python Pillow is required to decode WebP and encode PNG. The generated inputs contain 60 instruments, 8 families, 102 tunings and a separate chromatic reference mode. Catalogue attribution, provenance, anchor identifiers, tuning ownership and all paired string pitches are retained. Twelve-string guitar partners remain 12 course entries sharing six physical anchors. Bass 5-string variants remain supported tunings of their original 4/5-string instrument entry; they are not invented extra presets.
 
 The core bundle includes `catalog.json` and `photos.json`. Names are normalized to `LocalizedText` objects with `timbre_catalog_*` keys matching Android catalog string resources. The photo index contains 71 exact instrument/variant mappings. Each full image and thumbnail is converted into one universal PNG asset in `Assets.xcassets`: 142 imagesets. The `asset` and `thumbnail` fields name compiled image assets directly, usable with `Image(photo.asset)`. Original image source, SHA-256 metadata and origin are preserved in the JSON index. The stored digest describes the original Android WebP, not the converted PNG.

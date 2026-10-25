@@ -1,6 +1,7 @@
 import Foundation
 import StoreKit
 import StoreKitTest
+import TimbreCore
 
 /// StoreKit's clearTransactions propagates asynchronously to currentEntitlements.
 /// Wait for the actual verified store view, not the app's local entitlement flag.
@@ -16,45 +17,33 @@ enum StoreKitTestEnvironment {
             }
         }
     }
-    /// External test purchases are asynchronous across StoreKit's transaction and
-    /// entitlement views. Establish the real store precondition before cold-launching
-    /// a service; waiting on that service would conflate fixture setup with app behavior.
-    static func waitUntilVerifiedPurchase(_ session: SKTestSession, productID: String = "timbre_plus_lifetime", timeout: TimeInterval = 12) async throws {
+
+    static func waitUntilVerifiedPurchase(_ session: SKTestSession, productID: String, timeout: TimeInterval = 12) async throws {
         let deadline = Date().addingTimeInterval(timeout)
-        var lastSnapshot: [String] = []
+        var snapshot: [String] = []
         while Date() < deadline {
-            lastSnapshot.removeAll()
+            snapshot.removeAll()
             for await result in Transaction.currentEntitlements {
-                switch result {
-                case .verified(let transaction):
-                    lastSnapshot.append("verified:\(transaction.productID),revoked:\(transaction.revocationDate != nil),type:\(transaction.productType)")
-                    if transaction.productID == productID, transaction.productType == .nonConsumable,
-                       transaction.revocationDate == nil, !transaction.isUpgraded { return }
-                case .unverified(let transaction, let error):
-                    lastSnapshot.append("unverified:\(transaction.productID),error:\(error)")
+                if case .verified(let transaction) = result {
+                    snapshot.append(transaction.productID)
+                    if transaction.productID == productID, transaction.revocationDate == nil { return }
                 }
             }
             try await Task.sleep(for: .milliseconds(100))
         }
-        let transactions = session.allTransactions().map { "\($0.productIdentifier):\($0.identifier):state=\($0.state.rawValue)" }.joined(separator: ",")
-        throw Failure.verifiedPurchaseDidNotPropagate("session=[\(transactions)], entitlementSnapshot=[\(lastSnapshot.joined(separator: ","))]")
+        throw Failure.verifiedPurchaseDidNotPropagate("entitlements=[\(snapshot.joined(separator: ","))]")
     }
-    static func waitUntilClean(_ session: SKTestSession, productID: String = "timbre_plus_lifetime", timeout: TimeInterval = 12) async throws {
+
+    static func waitUntilClean(_ session: SKTestSession, timeout: TimeInterval = 12) async throws {
         let deadline = Date().addingTimeInterval(timeout)
-        var consecutiveCleanSnapshots = 0
+        var clean = 0
         while Date() < deadline {
-            var activePurchase = false
+            var active = false
             for await result in Transaction.currentEntitlements {
-                guard case .verified(let transaction) = result,
-                      transaction.productID == productID,
-                      transaction.productType == .nonConsumable,
-                      transaction.revocationDate == nil,
-                      !transaction.isUpgraded else { continue }
-                activePurchase = true
+                if case .verified(let transaction) = result, TimbreProduct.all.contains(transaction.productID), transaction.revocationDate == nil { active = true }
             }
-            let clean = !activePurchase && session.allTransactions().isEmpty
-            consecutiveCleanSnapshots = clean ? consecutiveCleanSnapshots + 1 : 0
-            if consecutiveCleanSnapshots >= 2 { return }
+            clean = !active && session.allTransactions().isEmpty ? clean + 1 : 0
+            if clean >= 2 { return }
             try await Task.sleep(for: .milliseconds(100))
         }
         throw Failure.transactionsDidNotClear

@@ -3,20 +3,19 @@ import Foundation
 public struct LocalizedText: Codable, Equatable, Hashable, Sendable, CustomStringConvertible {
     public let key: String
     public let defaultValue: String
+    /// A name that names notes (a tuning's: "Eb standard", "Key of Bb"): shown with ♯ and ♭ (`NoteNames.glyphs`),
+    /// "E♭ standard". The key and the authored default stay as they are.
+    public var namesNotes = false
     public var description: String { defaultValue }
-    public var localized: String { key.isEmpty ? defaultValue : NSLocalizedString(key, bundle: TimbreLocalization.bundle, value: defaultValue, comment: "") }
+    public var localized: String {
+        let text = key.isEmpty ? defaultValue : NSLocalizedString(key, bundle: TimbreLocalization.bundle, value: defaultValue, comment: "")
+        return namesNotes ? NoteNames.glyphs(text) : text
+    }
     enum CodingKeys: String, CodingKey { case key; case defaultValue = "default" }
     public init(key: String = "", defaultValue: String) { self.key = key; self.defaultValue = defaultValue }
     public init(from decoder: Decoder) throws {
         if let value = try? decoder.singleValueContainer().decode(String.self) { key = ""; defaultValue = value }
         else { let c = try decoder.container(keyedBy: CodingKeys.self); key = try c.decode(String.self, forKey: .key); defaultValue = try c.decode(String.self, forKey: .defaultValue) }
-    }
-}
-public enum TimbreLocalization {
-    public static var language = "en"
-    public static var bundle: Bundle {
-        guard language != "system", let path = Bundle.main.path(forResource: language, ofType: "lproj"), let selected = Bundle(path: path) else { return .main }
-        return selected
     }
 }
 public struct InstrumentFamily: Codable, Identifiable, Equatable, Sendable {
@@ -63,6 +62,41 @@ public struct Tuning: Codable, Identifiable, Equatable, Sendable {
     public let courses: [Course]
     // Paired strings are separate courses sharing the physical anchor, preserving octave partners.
     public var coursesByAnchor: [String: [Course]] { Dictionary(grouping: courses, by: { $0.anchorId ?? "course-\($0.index)" }) }
+    public var isCustom: Bool { provenance == CustomTuning.provenance }
+    public init(id: String, instrumentId: String, name: LocalizedText, isDefault: Bool, isFree: Bool, a4Hz: Double,
+                temperamentId: String, provenance: String, courses: [Course]) {
+        self.id = id; self.instrumentId = instrumentId; self.name = name; self.isDefault = isDefault; self.isFree = isFree
+        self.a4Hz = a4Hz; self.temperamentId = temperamentId; self.provenance = provenance; self.courses = courses
+    }
+    /// The same tuning, its name shown with ♯ and ♭ (`LocalizedText.namesNotes`).
+    func namingNotes() -> Tuning {
+        var shown = name
+        shown.namesNotes = true
+        return Tuning(id: id, instrumentId: instrumentId, name: shown, isDefault: isDefault, isFree: isFree, a4Hz: a4Hz,
+                      temperamentId: temperamentId, provenance: provenance, courses: courses)
+    }
+}
+
+/// A player-made tuning: one target per course of the instrument's default tuning, so
+/// string order, octave pairs and 3D anchors all carry over.
+public struct CustomTuning: Codable, Equatable, Identifiable, Sendable {
+    public static let provenance = "CUSTOM"
+    public var id: String
+    public var instrumentId: String
+    public var name: String
+    public var midis: [Int]
+    public init(id: String = "custom." + UUID().uuidString.lowercased(), instrumentId: String, name: String, midis: [Int]) {
+        self.id = id; self.instrumentId = instrumentId; self.name = name; self.midis = midis
+    }
+    public func tuning(base: Tuning) -> Tuning {
+        let ordered = base.courses.sorted { $0.index < $1.index }
+        let courses = ordered.enumerated().map { offset, course in
+            let midi = offset < midis.count ? midis[offset] : course.targetMidi
+            return Course(index: course.index, targetMidi: midi, label: PitchMath.noteName(midi: midi), anchorId: course.anchorId)
+        }
+        return Tuning(id: id, instrumentId: instrumentId, name: LocalizedText(defaultValue: name), isDefault: false, isFree: false,
+                      a4Hz: base.a4Hz, temperamentId: base.temperamentId, provenance: Self.provenance, courses: courses)
+    }
 }
 public struct ReferenceMode: Codable, Identifiable, Equatable, Sendable {
     public let id: String
@@ -103,7 +137,9 @@ public struct Catalog: Sendable {
     public init() throws {
         guard let url = Bundle.module.url(forResource: "catalog", withExtension: "json"), let photosURL = Bundle.module.url(forResource: "photos", withExtension: "json") else { throw CatalogError.missingResources }
         let document = try JSONDecoder().decode(Document.self, from: Data(contentsOf: url))
-        families = document.families.sorted { $0.ordering < $1.ordering }; instruments = document.instruments; tunings = document.tunings; referenceMode = document.referenceMode; referencePitch = document.referencePitch
+        families = document.families.sorted { $0.ordering < $1.ordering }; instruments = document.instruments; referenceMode = document.referenceMode; referencePitch = document.referencePitch
+        // Tuning names name notes: on screen "Eb standard" reads "E♭ standard" (ids and keys unchanged).
+        tunings = document.tunings.map { $0.namingNotes() }
         photos = try JSONDecoder().decode([InstrumentPhoto].self, from: Data(contentsOf: photosURL))
         let ids = Set(instruments.map(\.id)); let tuningIDs = Set(tunings.map(\.id)); let familyIDs = Set(families.map(\.id))
         guard ids.count == instruments.count, tuningIDs.count == tunings.count, familyIDs.count == families.count else { throw CatalogError.invalid("Duplicate identifier") }

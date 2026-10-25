@@ -1,0 +1,419 @@
+{
+ "about": "Turn signs for the photographed pegs (photo-rigs.json points), read by ModelLibrary.photoCard into StageCard.turns. +1: clockwise tightens, as the 3D rigs encode it (tools/models: tighten = -side): a key or peg head on the bass side of the head (the left, seen from the front with the head up) is +1, one on the treble side -1, whatever side of centre its post sits. Each entry says what the photograph shows. Photos left out show no turn arrow rather than a guessed one.",
+ "skipped": [
+  "29_folk_world_strings_renaissance_lute (the bent-back pegbox's two peg rows can't be told apart in this perspective)",
+  "32_folk_world_strings_kora, 34_folk_world_strings_guqin, 35_folk_world_strings_guzheng, 37_folk_world_strings_erhu (tuning pegs hidden, or seen side-on)",
+  "39/40 koto and gayageum (movable bridges), the winds (slides), 67 timpani (pedal), 68 kalimba (tines)"
+ ],
+ "photos": {
+  "01_guitar_acoustic_guitar": {
+   "why": "3+3 head, front view: E A D keys on the left (bass) side, G B E on the right (as guitar_acoustic.rig.json).",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": -1,
+    "s4": 1,
+    "s5": 1,
+    "s6": 1
+   }
+  },
+  "02_guitar_7_string_electric_guitar": {
+   "why": "7-in-line head, front view: every key on the left (bass) edge, as bass_p4.rig.json's in-line keys.",
+   "tighten": {
+    "s1": 1,
+    "s2": 1,
+    "s3": 1,
+    "s4": 1,
+    "s5": 1,
+    "s6": 1,
+    "s7": 1
+   }
+  },
+  "03_guitar_12_string_acoustic_guitar": {
+   "why": "6+6 head, front view: the three low courses' keys on the left, the three high courses' on the right.",
+   "tighten": {
+    "c1": -1,
+    "c2": -1,
+    "c3": -1,
+    "c4": 1,
+    "c5": 1,
+    "c6": 1
+   }
+  },
+  "04_guitar_baritone_guitar": {
+   "why": "6-in-line head, front view: every key on the left (bass) edge, though the top posts sit right of centre.",
+   "tighten": {
+    "s1": 1,
+    "s2": 1,
+    "s3": 1,
+    "s4": 1,
+    "s5": 1,
+    "s6": 1
+   }
+  },
+  "05_guitar_tenor_guitar": {
+   "why": "2+2 head, front view: the two low strings' keys left, the two high strings' right.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": 1,
+    "s4": 1
+   }
+  },
+  "06_bass_4_string_p_bass": {
+   "why": "4-in-line head, front view: every key on the left (bass) edge (as bass_p4.rig.json).",
+   "tighten": {
+    "s1": 1,
+    "s2": 1,
+    "s3": 1,
+    "s4": 1
+   }
+  },
+  "07_bass_5_string_j_bass": {
+   "why": "4+1 head, front view: B E A D keys on the left edge, the G key alone on the right.",
+   "tighten": {
+    "s1": -1,
+    "s2": 1,
+    "s3": 1,
+    "s4": 1,
+    "s5": 1
+   }
+  },
+  "08_guitar_guitalele": {
+   "why": "Slotted 3+3 head, front view: rollers for the three low strings turn from keys on the left, the three high from the right.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": -1,
+    "s4": 1,
+    "s5": 1,
+    "s6": 1
+   }
+  },
+  "09_guitar_guitarron_mexican": {
+   "why": "Slotted 3+3 head, front view: low three keys left, high three right.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": -1,
+    "s4": 1,
+    "s5": 1,
+    "s6": 1
+   }
+  },
+  "10_ukulele_soprano_ukulele": {
+   "why": "Soprano ukulele, 2+2 head with side keys, front view: G (s4) and C (s3) keys on the left, E and A on the right; each string winds onto the post on its own side.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": 1,
+    "s4": 1
+   }
+  },
+  "11_ukulele_concert_ukulele": {
+   "why": "Concert ukulele, 2+2 head with side keys, front view: G (s4) and C (s3) keys on the left, E and A on the right; each string winds onto the post on its own side.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": 1,
+    "s4": 1
+   }
+  },
+  "12_ukulele_tenor_ukulele": {
+   "why": "Tenor ukulele, 2+2 head with side keys, front view: G (s4) and C (s3) keys on the left, E and A on the right; each string winds onto the post on its own side.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": 1,
+    "s4": 1
+   }
+  },
+  "baritone_ukulele": {
+   "why": "2+2 head with side keys, front view: D and G keys left, B and E right.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": 1,
+    "s4": 1
+   }
+  },
+  "bass_ukulele": {
+   "why": "2+2 head with side keys, front view: E and A keys left, D and G right.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": 1,
+    "s4": 1
+   }
+  },
+  "13_mandolin_mandolin": {
+   "why": "4+4 head, front view: the two low courses' keys left, the two high courses' right (as mandolin.rig.json).",
+   "tighten": {
+    "c1": -1,
+    "c2": -1,
+    "c3": 1,
+    "c4": 1
+   }
+  },
+  "14_mandolin_octave_mandolin": {
+   "why": "4+4 head, front view: the two low courses' keys left, the two high courses' right (as mandolin.rig.json).",
+   "tighten": {
+    "c1": -1,
+    "c2": -1,
+    "c3": 1,
+    "c4": 1
+   }
+  },
+  "15_mandolin_mandola": {
+   "why": "4+4 head, front view: the two low courses' keys left, the two high courses' right (as mandolin.rig.json).",
+   "tighten": {
+    "c1": -1,
+    "c2": -1,
+    "c3": 1,
+    "c4": 1
+   }
+  },
+  "16_mandolin_mandocello": {
+   "why": "4+4 head, front view: the two low courses' keys left, the two high courses' right (as mandolin.rig.json).",
+   "tighten": {
+    "c1": -1,
+    "c2": -1,
+    "c3": 1,
+    "c4": 1
+   }
+  },
+  "17_bowed_strings_violin": {
+   "why": "Pegbox, front view: G and D peg heads on the left, A and E on the right (violin.rig.json's signs). G and E take the pegs nearest the nut.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": 1,
+    "s4": 1
+   }
+  },
+  "18_bowed_strings_viola": {
+   "why": "Pegbox, front view: C and G peg heads on the left, D and A on the right. C and A take the pegs nearest the nut.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": 1,
+    "s4": 1
+   }
+  },
+  "19_bowed_strings_cello": {
+   "why": "Pegbox, front view: C and G peg heads on the left, D and A on the right (cello.rig.json's signs). C and A take the pegs nearest the nut.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": 1,
+    "s4": 1
+   }
+  },
+  "20_bowed_strings_double_bass_4_string": {
+   "why": "Scroll with side machines, front view: E and A keys on the left, D and G on the right.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": 1,
+    "s4": 1
+   }
+  },
+  "21_bowed_strings_double_bass_5_string": {
+   "why": "Scroll with side machines, front view: the two low strings' keys on the left, the three high strings' on the right.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": -1,
+    "s4": 1,
+    "s5": 1
+   }
+  },
+  "22_folk_world_strings_banjo_5_string": {
+   "why": "2+2 head, front view: D and G (s4, s3) keys left, B and D (s2, s1) right; the fifth-string key juts from the bass (left) edge of the neck like a left-side key.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": 1,
+    "s4": 1,
+    "s5": 1
+   }
+  },
+  "23_folk_world_strings_greek_bouzouki_tetrachordo": {
+   "why": "Slotted 4+4 head, front view: the two low courses' keys left, the two high courses' right.",
+   "tighten": {
+    "c1": -1,
+    "c2": -1,
+    "c3": 1,
+    "c4": 1
+   }
+  },
+  "24_folk_world_strings_irish_bouzouki": {
+   "why": "Slotted 4+4 head, front view: the two low courses' keys left, the two high courses' right.",
+   "tighten": {
+    "c1": -1,
+    "c2": -1,
+    "c3": 1,
+    "c4": 1
+   }
+  },
+  "25_folk_world_strings_charango": {
+   "why": "Slotted 5+5 head, front view: courses 5, 4 and 3 turn from keys on the left, 2 and 1 from the right.",
+   "tighten": {
+    "c1": -1,
+    "c2": -1,
+    "c3": 1,
+    "c4": 1,
+    "c5": 1
+   }
+  },
+  "26_folk_world_strings_appalachian_mountain_dulcimer": {
+   "why": "Head with side keys, front view: the bass string's key on the left, the middle and melody strings' keys on the right.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": 1
+   }
+  },
+  "30_folk_world_strings_sitar": {
+   "why": "Front view: the pegs for strings 2-4 enter the head from the left, 5-7 from the right; string 1's peg juts from the left side of the neck.",
+   "tighten": {
+    "s1": 1,
+    "s2": 1,
+    "s3": 1,
+    "s4": 1,
+    "s5": -1,
+    "s6": -1,
+    "s7": -1
+   }
+  },
+  "31_folk_world_strings_sarod": {
+   "why": "Front view: pegs 3-4 enter the head from the left and 5-6 from the right; 1-2 jut from the left side of the neck.",
+   "tighten": {
+    "s1": 1,
+    "s2": 1,
+    "s3": 1,
+    "s4": 1,
+    "s5": -1,
+    "s6": -1
+   }
+  },
+  "33_folk_world_strings_oud_arabic": {
+   "why": "Bent-back pegbox, front view: the three low courses' peg heads on the left (bass) cheek, the three high courses' on the right.",
+   "tighten": {
+    "c1": -1,
+    "c2": -1,
+    "c3": -1,
+    "c4": 1,
+    "c5": 1,
+    "c6": 1
+   }
+  },
+  "36_folk_world_strings_pipa": {
+   "why": "Pegbox, front view: the two low strings' peg heads on the left, the two high strings' on the right.",
+   "tighten": {
+    "s1": -1,
+    "s2": -1,
+    "s3": 1,
+    "s4": 1
+   }
+  },
+  "38_folk_world_strings_shamisen": {
+   "why": "Pegbox, front view: the s1 peg head on the left, s2 and s3 on the right.",
+   "tighten": {
+    "s1": 1,
+    "s2": -1,
+    "s3": -1
+   }
+  },
+  "41_folk_world_strings_balalaika_prima": {
+   "why": "3-in-line head, front view: every key on the right (treble) edge, so all turn as right-side keys.",
+   "tighten": {
+    "c1": -1,
+    "c2": -1
+   }
+  },
+  "42_folk_world_strings_domra": {
+   "why": "3-in-line head, front view: every key on the left (bass) edge.",
+   "tighten": {
+    "s1": 1,
+    "s2": 1,
+    "s3": 1
+   }
+  },
+  "27_folk_world_strings_hammered_dulcimer": {
+   "why": "Wrest pins seen from their tops, turned with a key: clockwise tightens (the strings wind clockwise), so every pin is +1.",
+   "tighten": {
+    "b1": 1,
+    "b10": 1,
+    "b11": 1,
+    "b12": 1,
+    "b13": 1,
+    "b14": 1,
+    "b2": 1,
+    "b3": 1,
+    "b4": 1,
+    "b5": 1,
+    "b6": 1,
+    "b7": 1,
+    "b8": 1,
+    "b9": 1,
+    "t1": 1,
+    "t10": 1,
+    "t11": 1,
+    "t12": 1,
+    "t13": 1,
+    "t14": 1,
+    "t15": 1,
+    "t2": 1,
+    "t3": 1,
+    "t4": 1,
+    "t5": 1,
+    "t6": 1,
+    "t7": 1,
+    "t8": 1,
+    "t9": 1
+   }
+  },
+  "28_folk_world_strings_autoharp": {
+   "why": "Wrest pins seen from their tops, turned with a key: clockwise tightens (the strings wind clockwise), so every pin is +1.",
+   "tighten": {
+    "s1": 1,
+    "s10": 1,
+    "s11": 1,
+    "s12": 1,
+    "s13": 1,
+    "s14": 1,
+    "s15": 1,
+    "s16": 1,
+    "s17": 1,
+    "s18": 1,
+    "s19": 1,
+    "s2": 1,
+    "s20": 1,
+    "s21": 1,
+    "s22": 1,
+    "s23": 1,
+    "s24": 1,
+    "s25": 1,
+    "s26": 1,
+    "s27": 1,
+    "s28": 1,
+    "s29": 1,
+    "s3": 1,
+    "s30": 1,
+    "s31": 1,
+    "s32": 1,
+    "s33": 1,
+    "s34": 1,
+    "s35": 1,
+    "s36": 1,
+    "s4": 1,
+    "s5": 1,
+    "s6": 1,
+    "s7": 1,
+    "s8": 1,
+    "s9": 1
+   }
+  }
+ }
+}

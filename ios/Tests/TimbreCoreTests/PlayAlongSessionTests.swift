@@ -1,0 +1,210 @@
+import XCTest
+@testable import TimbreCore
+
+/// One play-along take (TimbreCore/Learn/PlayAlongSession.swift): its clock and count-in, the score with the combo
+/// multiplier, what each reading reports for the host (a tier reached, a run broken, the end), each section's score
+/// and when the spoken cues name a note.
+final class PlayAlongSessionTests: XCTestCase {
+    /// `count` notes a beat apart at 60 BPM in 4/4 (a second a beat, a four-second count-in).
+    private func session(_ count: Int, keepsTrail: Bool = false) -> PlayAlongSession {
+        let notes = (0..<count).map { TimedNote(midi: 60 + $0 % 5, beat: Double($0), beats: 1) }
+        return PlayAlongSession(notes: notes, bpm: 60, beatsPerBar: 4, keepsTrail: keepsTrail)
+    }
+
+    /// Plays note `index` with a fresh attack, `late` seconds after it is due.
+    @discardableResult
+    private func play(_ take: inout PlayAlongSession, _ index: Int, late: Double = 0) -> PlayAlongSession.Update {
+        let now = take.startTime + take.countIn + take.judge.time(of: index) + late
+        take.onset(at: now)
+        return take.hear(midi: take.notes[index].midi, cents: 0, level: -20, at: now)
+    }
+
+    func testTheClockCountsInABarBeforeBeatZero() {
+        var take = session(4)
+        take.begin(at: 100)
+        XCTAssertEqual(take.countIn, 4, accuracy: 1e-9)
+        XCTAssertEqual(take.clock(at: 104), 0, accuracy: 1e-9)
+        XCTAssertEqual(take.countInBeat(at: 100), 0)
+        XCTAssertEqual(take.countInBeat(at: 102.5), 2)
+        XCTAssertNil(take.countInBeat(at: 104.1), "the count-in is over")
+        XCTAssertNil(take.countInBeat(at: 99), "not started")
+        take.follow(start: 100.05)
+        XCTAssertEqual(take.clock(at: 104.05), 0, accuracy: 1e-9, "the clock follows the click as it was heard")
+        take.skip(8)
+        XCTAssertEqual(take.clock(at: 104.05), 8, accuracy: 1e-9)
+    }
+
+    func testTheMultiplierStepsUpAndScoresEachNote() {
+        var take = session(16)
+        take.begin(at: 10)
+        var tiers: [Int] = []
+        var last = PlayAlongSession.Update()
+        for index in 0..<16 {
+            last = play(&take, index)
+            XCTAssertEqual(last.judgments.map(\.grade), [.perfect])
+            if let tier = last.tier { tiers.append(tier) }
+        }
+        XCTAssertEqual(tiers, [2, 3, 4], "×2 at four in a row, ×3 at eight, ×4 at sixteen")
+        // 3 notes at ×1, 4 at ×2, 8 at ×3 and the sixteenth at ×4.
+        XCTAssertEqual(take.points, 300 + 800 + 2400 + 400)
+        XCTAssertTrue(last.finished)
+        XCTAssertTrue(take.finished)
+        XCTAssertEqual(take.hits, 16)
+        XCTAssertEqual(take.count(.perfect), 16)
+        XCTAssertEqual(take.accuracy, 1, accuracy: 1e-9)
+        XCTAssertNotNil(take.tierUp)
+        XCTAssertTrue(take.tick(at: 1000).isEmpty, "nothing more once the take is over")
+    }
+
+    func testABrokenRunOfFourOrMoreIsReported() {
+        var take = session(10)
+        take.begin(at: 0)
+        for index in 0..<5 { play(&take, index) }
+        XCTAssertEqual(take.combo, 5)
+        // Note 5 is never played: its window closes a third of a second after it is due.
+        let missed = take.tick(at: take.startTime + take.countIn + take.judge.time(of: 5) + 0.4)
+        XCTAssertEqual(missed.judgments.map(\.grade), [.miss])
+        XCTAssertEqual(missed.brokenRun, 5)
+        XCTAssertEqual(take.combo, 0)
+        // A short run breaking is not worth a sound.
+        play(&take, 6)
+        play(&take, 7)
+        let early = play(&take, 8, late: -0.18)
+        XCTAssertEqual(early.judgments.map(\.grade), [.ok])
+        XCTAssertNil(early.brokenRun)
+    }
+
+    func testAnUnplayedTakeEndsOnItsOwn() {
+        var take = session(2)
+        take.begin(at: 0)
+        XCTAssertTrue(take.tick(at: 1).isEmpty, "the count-in")
+        let end = take.tick(at: take.countIn + take.judge.duration + PlayAlongSession.tail + 0.1)
+        XCTAssertEqual(end.judgments.map(\.grade), [.miss, .miss])
+        XCTAssertTrue(end.finished)
+        XCTAssertEqual(take.accuracy, 0, accuracy: 1e-9)
+    }
+
+    func testEachSectionScoresItsOwnNotes() {
+        var take = session(8)
+        take.begin(at: 0)
+        for index in 0..<4 { play(&take, index) }
+        _ = take.tick(at: take.countIn + take.judge.duration + PlayAlongSession.tail + 0.1)
+        XCTAssertEqual(take.score(fromBeat: 0, toBeat: 4) ?? -1, 1, accuracy: 1e-9)
+        XCTAssertEqual(take.score(fromBeat: 4, toBeat: 8) ?? -1, 0, accuracy: 1e-9)
+        XCTAssertEqual(take.score(fromBeat: 2, toBeat: 6) ?? -1, 0.5, accuracy: 1e-9)
+        XCTAssertNil(take.score(fromBeat: 8, toBeat: 12), "no notes there")
+    }
+
+    func testOnlyPitchLanesKeepATrail() {
+        var lanes = session(2, keepsTrail: true)
+        lanes.begin(at: 0)
+        _ = lanes.hear(midi: 61, cents: 12, level: -30, at: 1)
+        XCTAssertEqual(lanes.trail.count, 1)
+        XCTAssertEqual(lanes.trail.first?.1 ?? 0, 61.12, accuracy: 1e-9)
+        var strings = session(2)
+        strings.begin(at: 0)
+        _ = strings.hear(midi: 61, cents: 12, level: -30, at: 1)
+        XCTAssertTrue(strings.trail.isEmpty)
+    }
+
+    func testANewTakeStartsClean() {
+        var take = session(4)
+        take.begin(at: 0)
+        for index in 0..<4 { play(&take, index) }
+        XCTAssertTrue(take.finished)
+        take.begin(at: 50)
+        XCTAssertFalse(take.finished)
+        XCTAssertEqual(take.points, 0)
+        XCTAssertTrue(take.grades.isEmpty)
+        XCTAssertEqual(take.nextIndex, 0)
+    }
+
+    func testTheMultiplierSteps() {
+        XCTAssertEqual([0, 3, 4, 7, 8, 15, 16, 40].map(PlayAlongSession.multiplier), [1, 1, 2, 2, 3, 3, 4, 4])
+    }
+
+    // MARK: Chords & words
+
+    /// Four bars of 4/4 at 60 BPM, a chord on each downbeat: a bar is four seconds, its downbeat 0.08 s after the bar
+    /// line.
+    private func chordTake(_ bars: Int = 4) -> ChordAlongJudge { ChordAlongJudge(bars: bars, bpm: 60, beatsPerBar: 4) }
+
+    func testABarIsTimedByItsFirstStrokeAndJudgedByItsChord() {
+        var take = chordTake()
+        XCTAssertEqual(take.stroke(at: take.time(of: 0) + 0.03), 0)
+        XCTAssertNil(take.stroke(at: take.time(of: 0) + 1), "the bar's later strokes don't time it again")
+        XCTAssertTrue(take.grades.isEmpty, "judged only once its chord is heard")
+        let right = take.chord(0, right: true, heard: "G", at: 1)
+        XCTAssertEqual(right.judgments.map(\.grade), [.perfect])
+        XCTAssertNil(take.calls[0])
+
+        XCTAssertEqual(take.stroke(at: take.time(of: 1) - 0.12), 1, "a little early counts for the bar ahead")
+        let wrong = take.chord(1, right: false, heard: "Am", at: 2)
+        XCTAssertEqual(wrong.judgments.map(\.grade), [.ok], "another chord is held to early or late")
+        XCTAssertEqual(take.calls[1], "Am")
+
+        XCTAssertEqual(take.stroke(at: take.time(of: 2)), 2)
+        let silent = take.chord(2, right: false, heard: nil, at: 3)
+        XCTAssertEqual(silent.judgments.map(\.grade), [.miss], "nothing a chord rang in")
+        XCTAssertEqual(take.combo, 0)
+    }
+
+    func testABarWithNoStrokeIsMissedOnceItIsOver() {
+        var take = chordTake(2)
+        XCTAssertTrue(take.tick(at: take.time(of: 0) + 2, now: 0).isEmpty)
+        let over = take.tick(at: take.time(of: 1), now: 0)
+        XCTAssertEqual(over.judgments.map(\.grade), [.miss])
+        // A stroke whose chord never comes keeps its timing's grade.
+        take.stroke(at: take.time(of: 1) + 0.1)
+        let kept = take.tick(at: take.time(of: 1) + 0.1 + ChordAlongJudge.chordWait + 0.01, now: 0)
+        XCTAssertEqual(kept.judgments.map(\.grade), [.good])
+        XCTAssertTrue(kept.finished)
+        XCTAssertEqual(take.accuracy, 0.4, accuracy: 1e-9)
+    }
+
+    func testRightChordsOnTheBeatBuildTheMultiplier() {
+        var take = chordTake(16)
+        var tiers: [Int] = []
+        for bar in 0..<16 {
+            take.stroke(at: take.time(of: bar))
+            if let tier = take.chord(bar, right: true, heard: "C", at: Double(bar)).tier { tiers.append(tier) }
+        }
+        XCTAssertEqual(tiers, [2, 3, 4])
+        XCTAssertEqual(take.points, 300 + 800 + 2400 + 400)
+        XCTAssertTrue(take.isFinished)
+        XCTAssertEqual(take.score(bars: 0..<4) ?? -1, 1, accuracy: 1e-9)
+        XCTAssertNil(take.score(bars: 16..<20))
+    }
+
+    /// Twinkle's opening in "Chords & words": C on beat 1 and G on beat 3, then D and G. Four chords to strum in two
+    /// bars, each judged on its own stroke and its own chord.
+    func testAChangeInsideABarIsJudgedOnItsOwn() {
+        var take = ChordAlongJudge(beats: [0, 2, 4, 6], length: 8, bpm: 60, beatsPerBar: 4)
+        XCTAssertEqual(take.count, 4)
+        XCTAssertEqual(take.time(of: 1), 2.08, accuracy: 1e-9, "the change on beat 3 is due two seconds in")
+        XCTAssertEqual(take.index(at: take.time(of: 1) + 0.5), 1, "G sounds through beats 3 and 4")
+        XCTAssertEqual(take.index(forStrokeAt: take.time(of: 1) - 0.1), 1, "a stroke a little early is for the change")
+        XCTAssertEqual(take.stroke(at: take.time(of: 0)), 0)
+        XCTAssertEqual(take.chord(0, right: true, heard: "C", at: 1).judgments.map(\.grade), [.perfect])
+        XCTAssertNil(take.stroke(at: take.time(of: 0) + 1), "C's later strokes don't time it again")
+        // The change to G goes unplayed: it is missed once D is due, not when the bar ends.
+        let missed = take.tick(at: take.end(of: 1) - ChordAlongJudge.early + 0.01, now: 3)
+        XCTAssertEqual(missed.judgments.map(\.index), [1])
+        XCTAssertEqual(missed.judgments.map(\.grade), [.miss])
+        XCTAssertEqual(take.stroke(at: take.time(of: 2) + 0.1), 2)
+        XCTAssertEqual(take.chord(2, right: false, heard: "Am", at: 5).judgments.map(\.grade), [.ok])
+        XCTAssertEqual(take.calls[2], "Am")
+        XCTAssertEqual(take.stroke(at: take.time(of: 3)), 3)
+        XCTAssertTrue(take.chord(3, right: true, heard: "G", at: 7).finished)
+        XCTAssertEqual(take.accuracy, (1 + 0 + 0.5 + 1) / 4, accuracy: 1e-9)
+        XCTAssertEqual(take.score(bars: 0..<1) ?? -1, 0.5, accuracy: 1e-9, "the first bar's two chords")
+        XCTAssertEqual(take.indices(fromBeat: 4, toBeat: 8), [2, 3])
+    }
+
+    func testChordBeatsAreSortedAndKeptOnce() {
+        let take = ChordAlongJudge(beats: [4, 0, 2, 2, .nan], length: 4, bpm: 120, beatsPerBar: 4)
+        XCTAssertEqual(take.beats, [0, 2, 4])
+        XCTAssertEqual(take.length, 5, accuracy: 1e-9, "the last chord gets at least a beat")
+        XCTAssertEqual(ChordAlongJudge(bars: 3, bpm: 60, beatsPerBar: 3).beats, [0, 3, 6])
+    }
+}

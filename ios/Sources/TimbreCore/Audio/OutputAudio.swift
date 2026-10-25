@@ -47,6 +47,7 @@ public struct ReferenceToneWaveform: Sendable {
 }
 
 /// Sample-clock tone with the Android12ms raised-cosine envelope. No per-sample allocations.
+/// Kept for Android parity; the app now sounds tones in the instrument's own voice (`ToneSynth`, `InstrumentVoice`).
 public final class ReferenceToneRenderer {
     private let waveform: ReferenceToneWaveform
     private let totalFrames: Int64, fadeFrames: Int64, amplitude: Double
@@ -78,9 +79,12 @@ public final class ReferenceToneRenderer {
 }
 
 public struct MetronomePattern: Equatable, Sendable {
+    /// Every tempo a click plays: the lessons' slowest rungs and bar loops (down to 20) included, so the click never
+    /// runs faster than the runway it counts. The Metronome tool offers 30 and up.
+    public static let tempoRange = 20...300
     public let bpm: Int, beatsPerBar: Int, subdivision: Int
     public init(bpm: Int = 96, beatsPerBar: Int = 4, subdivision: Int = 1) {
-        precondition((40...240).contains(bpm) && (2...7).contains(beatsPerBar) && (1...4).contains(subdivision))
+        precondition(Self.tempoRange.contains(bpm) && (1...12).contains(beatsPerBar) && (1...4).contains(subdivision))
         self.bpm = bpm; self.beatsPerBar = beatsPerBar; self.subdivision = subdivision
     }
 }
@@ -98,6 +102,10 @@ public final class MetronomeRenderer {
     private var pulseIndex = 0, clickAge = Int.max
     private var clickFrequency = 1000.0, clickAmplitude = 0.18
     public var accents = true
+    /// Optional per-beat levels: 0 = silent, 1 = normal, 2 = accent. Overrides `accents`.
+    public var beatLevels: [Int]?
+    public enum Sound: String, CaseIterable, Sendable { case click, wood, beep }
+    public var sound: Sound = .click
     public private(set) var lastPulse: MetronomePulse?
     public init(sampleRate: Int = 48000, initial: MetronomePattern = .init()) {
         precondition(sampleRate >= 40)
@@ -115,10 +123,13 @@ public final class MetronomeRenderer {
         lastPulse = nil
         if Double(frame) >= nextPulse {
             let sub = pulseIndex % pattern.subdivision, beat = (pulseIndex / pattern.subdivision) % pattern.beatsPerBar
-            let accent = beat == 0 && sub == 0 && accents
+            let levels = beatLevels.flatMap { $0.count == pattern.beatsPerBar ? $0 : nil }
+            let level = levels.map { sub == 0 ? $0[beat] : min(1, $0[beat]) } ?? (beat == 0 && sub == 0 && accents ? 2 : 1)
+            let accent = level == 2 && sub == 0
             lastPulse = MetronomePulse(frame: frame, beat: beat, subdivision: sub, accent: accent)
-            clickFrequency = accent ? 1500 : sub == 0 ? 1100 : 800
-            clickAmplitude = accent ? 0.28 : sub == 0 ? 0.18 : 0.09
+            let base: Double = sound == .wood ? 620 : sound == .beep ? 880 : 1100
+            clickFrequency = accent ? base * 1.36 : sub == 0 ? base : base * 0.73
+            clickAmplitude = level == 0 ? 0 : accent ? 0.28 : sub == 0 ? 0.18 : 0.09
             clickAge = 0; pulseIndex = (pulseIndex + 1) % (pattern.beatsPerBar * pattern.subdivision)
             nextPulse += interval(pattern)
         }
@@ -126,7 +137,7 @@ public final class MetronomeRenderer {
         if clickAge < clickLength {
             let age = clickAge
             clickAge += 1
-            let decay: Double = exp(-7.0 * Double(age) / Double(clickLength))
+            let decay: Double = exp((sound == .beep ? -2.5 : sound == .wood ? -11.0 : -7.0) * Double(age) / Double(clickLength))
             let attack: Double = min(1.0, Double(age) / 12.0)
             let envelope: Double = decay * attack
             let phase: Double = 2.0 * Double.pi * clickFrequency * Double(age) / Double(sampleRate)

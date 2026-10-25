@@ -1,224 +1,189 @@
 import XCTest
-import StoreKitTest
-import UIKit
 import TimbreCore
+import UIKit
 @testable import Timbre
 
-/// Exercises the actual app state, DSP handoff, persistence and verified StoreKit gates.
-/// Run serially with CommerceIntegrationTests because StoreKit has one shared test environment.
 @MainActor
 final class AppStoreIntegrationTests: XCTestCase {
-    func testBundledTypographyRegistersActualFontNames() {
-        for name in ["SpaceGrotesk-Light", "Inter-Regular", "IBMPlexMono-Medium"] {
-            XCTAssertNotNil(UIFont(name: name, size: 20), "Bundled font must be registered instead of silently falling back: \(name)")
-        }
-    }
     private var directory: URL!
-    private var session: SKTestSession!
-    private var store: Timbre.AppStore!
+    private var store: AppStore!
 
     override func setUp() async throws {
         try await super.setUp()
-        directory = FileManager.default.temporaryDirectory.appendingPathComponent("Timbre-AppStoreTests-" + UUID().uuidString, isDirectory: true)
-        session = try SKTestSession(configurationFileNamed: "Timbre")
-        session.resetToDefaultState()
-        session.clearTransactions()
-        session.disableDialogs = true
-        try await StoreKitTestEnvironment.waitUntilClean(session)
-        store = try Timbre.AppStore(directory: directory)
-        store.updateSettings { $0.hapticsEnabled = false }
-        await store.commerce.load()
+        directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        store = try AppStore(directory: directory)
     }
+
     override func tearDown() async throws {
-        store?.stopActivity()
         store = nil
-        session?.clearTransactions()
-        session = nil
-        if let directory, FileManager.default.fileExists(atPath: directory.path) { try FileManager.default.removeItem(at: directory) }
-        directory = nil
+        try? FileManager.default.removeItem(at: directory)
         try await super.tearDown()
     }
-    func testFreeInstrumentsAndPaidAlternatesPreserveCurrentSelection() throws {
-        XCTAssertFalse(store.commerce.isPlus)
-        for id in ["guitar.acoustic.6", "bass.electric.4", "ukulele.soprano.4"] {
-            let instrument = try XCTUnwrap(store.catalog.instrument(id: id))
-            store.showPlus = false
-            store.selectInstrument(instrument)
-            XCTAssertEqual(store.instrument.id, id)
-            XCTAssertFalse(store.showPlus)
-            let original = store.tuning.id
-            let paidTuning = try XCTUnwrap(store.catalog.tunings.first { $0.instrumentId == id && !$0.isFree })
-            store.selectTuning(paidTuning)
-            XCTAssertTrue(store.showPlus)
-            XCTAssertEqual(store.tuning.id, original)
-        }
-        let originalInstrument = store.instrument.id
-        let paidInstrument = try XCTUnwrap(store.catalog.instrument(id: "violin.standard.4"))
-        store.selectInstrument(paidInstrument)
-        XCTAssertTrue(store.showPlus)
-        XCTAssertEqual(store.instrument.id, originalInstrument)
+
+    func testFreeInstrumentOffersEveryPresetTuning() throws {
+        let guitar = try XCTUnwrap(store.catalog.instrument(id: "guitar.acoustic.6"))
+        XCTAssertTrue(store.selectInstrument(guitar))
+        let dropD = try XCTUnwrap(store.catalog.tuning(id: "guitar.acoustic.6.drop_d"))
+        store.selectTuning(dropD)
+        XCTAssertEqual(store.tuning.id, dropD.id)
+        XCTAssertFalse(store.showPaywall)
+        XCTAssertEqual(store.courses.first?.label, "D2")
     }
-    func testRecentInstrumentsPreferCompletedSessionsWithOpenedFallback() throws {
-        let guitar = store.instrument
-        let bass = try XCTUnwrap(store.catalog.instrument(id: "bass.electric.4"))
-        let ukulele = try XCTUnwrap(store.catalog.instrument(id: "ukulele.soprano.4"))
-        store.selectInstrument(bass)
-        XCTAssertEqual(store.recentInstrumentIds.first, bass.id)
-        store.chooseCourse(1)
-        store.accept(store.targetHz, confidence: 0.99, level: -18)
-        store.finishTuning()
-        store.selectInstrument(ukulele)
-        XCTAssertEqual(store.recentInstrumentIds, [bass.id], "Completed evidence takes precedence over later previews")
-        store.selectInstrument(guitar)
-        store.chooseCourse(1)
-        store.accept(store.targetHz, confidence: 0.99, level: -18)
-        store.finishTuning()
-        XCTAssertEqual(store.recentInstrumentIds, [guitar.id, bass.id])
-        store.clearHistory()
-        XCTAssertEqual(store.recentInstrumentIds.first, guitar.id, "Clearing evidence restores the remembered selection fallback")
-        store.selectInstrument(ukulele)
-        XCTAssertEqual(store.recentInstrumentIds.first, ukulele.id)
+
+    func testViolinAndCelloTuneFree() throws {
+        let violin = try XCTUnwrap(store.catalog.instrument(id: "violin.standard.4"))
+        XCTAssertTrue(store.selectInstrument(violin))
+        let fiddle = try XCTUnwrap(store.catalog.tuning(id: "violin.standard.4.cross_ae"))
+        store.selectTuning(fiddle)
+        XCTAssertEqual(store.tuning.id, fiddle.id)
+        let cello = try XCTUnwrap(store.catalog.instrument(id: "cello.standard.4"))
+        XCTAssertTrue(store.selectInstrument(cello))
+        XCTAssertEqual(store.instrument.id, cello.id)
+        XCTAssertFalse(store.showPaywall)
     }
-    func testRestorationRejectsUnknownAndForeignTuningIdentifiers() throws {
-        let guitar = store.instrument
-        let foreign = try XCTUnwrap(store.catalog.tunings.first { $0.instrumentId != guitar.id })
-        for identifier in ["missing.tuning", foreign.id] {
-            store.updateSettings { $0.lastTuningIds[guitar.id] = identifier }
-            let restored = try Timbre.AppStore(directory: directory)
-            XCTAssertEqual(restored.instrument.id, guitar.id)
-            XCTAssertEqual(restored.tuning.id, guitar.defaultTuningId)
-            XCTAssertEqual(restored.tuning.instrumentId, restored.instrument.id)
-            restored.stopActivity()
-        }
+
+    func testEveryInstrumentTunesFreeInItsStandardTuning() throws {
+        let viola = try XCTUnwrap(store.catalog.instrument(id: "viola.standard.4"))
+        XCTAssertFalse(viola.isFree)
+        XCTAssertTrue(store.selectInstrument(viola))
+        XCTAssertEqual(store.instrument.id, viola.id)
+        XCTAssertEqual(store.tuning.id, viola.defaultTuningId)
+        XCTAssertTrue(store.canListen)
+        XCTAssertFalse(store.showPaywall)
     }
-    func testVerifiedPurchaseUnlocksPaidInstrumentAndPairedTwelveStringCourses() async throws {
-        _ = try XCTUnwrap(store.commerce.product)
-        await store.commerce.purchase()
-        try await waitUntil { self.store.commerce.isPlus }
-        let guitar = try XCTUnwrap(store.catalog.instrument(id: "guitar.acoustic.12"))
-        store.showPlus = false
-        store.selectInstrument(guitar)
-        XCTAssertFalse(store.showPlus)
-        XCTAssertEqual(store.instrument.id, guitar.id)
-        XCTAssertEqual(store.courses.count, 12)
-        let pairs = store.tuning.coursesByAnchor
-        XCTAssertEqual(pairs.count, 6)
-        XCTAssertTrue(pairs.values.allSatisfy { $0.count == 2 })
-        XCTAssertEqual(pairs["c6"]?.map(\.targetMidi), [40, 52])
-        let alternate = try XCTUnwrap(store.catalog.tuning(id: "guitar.acoustic.6.drop_d"))
-        store.selectInstrument(try XCTUnwrap(store.catalog.instrument(id: "guitar.acoustic.6")))
+
+    func testAnotherInstrumentsAlternateTuningShowsThePaywallForAFreeUser() throws {
+        let banjo = try XCTUnwrap(store.catalog.instrument(id: "banjo.five.5"))
+        XCTAssertTrue(store.selectInstrument(banjo))
+        let alternate = try XCTUnwrap(store.tunings.first { $0.id != banjo.defaultTuningId })
         store.selectTuning(alternate)
-        XCTAssertEqual(store.tuning.id, alternate.id)
+        XCTAssertTrue(store.showPaywall)
+        XCTAssertEqual(store.tuning.id, banjo.defaultTuningId)
     }
-    func testInstrumentPhotoAndTuningSelectionIsOneConfirmedTransaction() async throws {
-        await store.commerce.purchase()
-        try await waitUntil { self.store.commerce.isPlus }
-        let bass = try XCTUnwrap(store.catalog.instrument(id: "bass.electric.4"))
-        let five = try XCTUnwrap(store.catalog.tuning(id: "bass.electric.4.five"))
-        let photo = try XCTUnwrap(store.catalog.photos.first { $0.label == "5-string bass" })
-        XCTAssertTrue(store.selectInstrument(bass, photo: photo.asset, tuning: five))
-        let saved = try LocalStore(directory: directory).settings
-        XCTAssertEqual(saved.selectedInstrumentId, bass.id)
-        XCTAssertEqual(saved.selectedPhotoAsset, photo.asset)
-        XCTAssertEqual(saved.lastTuningIds[bass.id], five.id)
-        XCTAssertEqual(store.photo?.label, "5-string bass")
-        store.selectReference()
-        try FileManager.default.removeItem(at: directory)
-        let occupiedPath = directory.deletingLastPathComponent().appendingPathComponent(directory.lastPathComponent, isDirectory: false)
-        try Data("unavailable storage".utf8).write(to: occupiedPath)
-        defer { try? FileManager.default.removeItem(at: occupiedPath) }
-        let uke = try XCTUnwrap(store.catalog.instrument(id: "ukulele.soprano.4"))
-        XCTAssertFalse(store.selectInstrument(uke, tuning: store.catalog.tuning(id: uke.defaultTuningId)))
-        XCTAssertEqual(store.settings, saved)
-        XCTAssertTrue(store.referenceMode)
-        XCTAssertNotNil(store.error)
+
+    func testAnUnreadableSavedFileOpensFreshAndSaysSo() throws {
+        store = nil
+        let fresh = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: fresh) }
+        try FileManager.default.createDirectory(at: fresh, withIntermediateDirectories: true)
+        try Data("not valid JSON".utf8).write(to: fresh.appendingPathComponent(LocalStore.fileName))
+        let opened = try AppStore(directory: fresh)
+        XCTAssertEqual(opened.storageRecovery, .startedFresh)
+        XCTAssertNil(try AppStore(directory: fresh).storageRecovery, "told once: the next opening is an ordinary one")
     }
-    func testDisplayTransposeAndCapoLeaveSoundingPitchUnchangedWhileCalibrationChangesIt() {
-        store.chooseCourse(6)
-        let originalMidi = store.activeMidi
-        let originalHz = store.targetHz
-        store.updateSettings { $0.transposition = 2; $0.capo = 1 }
-        XCTAssertEqual(store.targetName, PitchMath.noteName(midi: originalMidi + 1))
-        XCTAssertEqual(store.activeMidi, originalMidi)
-        XCTAssertEqual(store.targetHz, originalHz, accuracy: 1e-9)
-        store.updateSettings { $0.referencePitchHz = 432 }
-        XCTAssertEqual(store.targetHz, originalHz * 432 / 440, accuracy: 1e-8)
+
+    func testGuitarHasA3DModelWithMatchingRigAnchors() throws {
+        let modelID = try XCTUnwrap(store.modelID, "the free guitar should ship with a 3D model")
+        XCTAssertNotNil(ModelLibrary.url(modelID))
+        let rig = try XCTUnwrap(ModelLibrary.rig(modelID))
+        let anchors = Set(store.courses.compactMap(\.anchorId))
+        XCTAssertEqual(Set(rig.strings.map(\.anchor)), anchors)
+        XCTAssertNotNil(UIImage(named: ModelLibrary.cardImageName(modelID)))
+        XCTAssertNotNil(rig.card("s6.peg"))
     }
-    func testSyntheticDetectedReadingsFinishAndPersistMeasuredStatistics() throws {
-        store.chooseCourse(6)
-        let target = store.targetHz
-        let detected = try detectedPitch(hz: target * PitchMath.ratio(cents: 2))
-        for _ in 0..<12 { store.accept(detected.frequencyHz, confidence: detected.confidence, level: detected.levelDbfs) }
-        let expectedError = abs(PitchMath.cents(target: target, measured: detected.frequencyHz))
-        store.finishTuning()
-        XCTAssertNil(store.error)
-        let record = try XCTUnwrap(store.records.last)
-        XCTAssertEqual(record.instrumentId, "guitar.acoustic.6")
-        XCTAssertEqual(record.tuningId, "guitar.acoustic.6.standard")
-        XCTAssertEqual(record.count, 12)
-        XCTAssertEqual(record.stableCount, 10)
-        XCTAssertEqual(try XCTUnwrap(record.meanAbsoluteCents), expectedError, accuracy: 1e-7)
-        let disk = try LocalStore(directory: directory)
-        XCTAssertEqual(disk.records, store.records)
-        store.finishTuning()
-        XCTAssertEqual(store.records.count, 1)
-        XCTAssertNotNil(store.error)
+
+    func testListeningSettingsRestartOnlyWhenRelevant() throws {
+        store.updateSettings { $0.hapticsEnabled = false }
+        XCTAssertFalse(store.settings.hapticsEnabled)
+        store.updateSettings { $0.referencePitchHz = 442 }
+        XCTAssertEqual(store.targetHz, 442 * pow(2, (40 - 69) / 12.0), accuracy: 0.001)
     }
-    func testPauseRetainsExplicitLastReadingAndChangingTargetClearsIt() throws {
-        let detected = try detectedPitch(hz: store.targetHz)
-        for _ in 0..<3 { store.accept(detected.frequencyHz, confidence: detected.confidence, level: detected.levelDbfs) }
-        store.pauseListening()
-        XCTAssertTrue(store.isReadingPreserved)
-        XCTAssertEqual(try XCTUnwrap(store.reading.frequency), detected.frequencyHz, accuracy: 1e-9)
-        XCTAssertFalse(store.audio.running)
-        store.chooseCourse(2)
-        XCTAssertFalse(store.isReadingPreserved)
-        XCTAssertNil(store.reading.frequency)
+
+    func testMetronomeAndDroneSettingsPersist() throws {
+        store.setMetronome(bpm: 132, beats: 7, subdivision: 2, sound: .wood)
+        store.cycleBeatLevel(3)
+        // Settings writes are coalesced; the app writes what is waiting when it leaves the foreground.
+        store.flushSettings()
+        let reopened = try AppStore(directory: directory)
+        XCTAssertEqual(reopened.bpm, 132)
+        XCTAssertEqual(reopened.beats, 7)
+        XCTAssertEqual(reopened.subdivision, 2)
+        XCTAssertEqual(reopened.metronomeSound, .wood)
+        XCTAssertEqual(reopened.beatLevels[3], 0)
+        reopened.setDrone(midi: 55, voice: .pure)
+        reopened.flushSettings()
+        XCTAssertEqual(try AppStore(directory: directory).droneMidi, 55)
     }
-    func testChangingReferenceNoteOrCalibrationClearsPausedMeasurement() throws {
-        store.selectReference()
-        let detected = try detectedPitch(hz: store.targetHz)
-        store.accept(detected.frequencyHz, confidence: detected.confidence, level: detected.levelDbfs)
-        store.pauseListening()
-        XCTAssertTrue(store.isReadingPreserved)
-        store.chooseReferenceNote(store.referenceMidi + 1)
-        XCTAssertNil(store.reading.frequency)
-        XCTAssertFalse(store.isReadingPreserved)
-        let next = try detectedPitch(hz: store.targetHz)
-        store.accept(next.frequencyHz, confidence: next.confidence, level: next.levelDbfs)
-        store.pauseListening()
-        XCTAssertTrue(store.isReadingPreserved)
-        XCTAssertTrue(store.updateSettings { $0.referencePitchHz = 432 })
-        XCTAssertNil(store.reading.frequency)
-        XCTAssertNil(store.reading.cents)
-        XCTAssertFalse(store.isReadingPreserved)
+
+    /// Changes asked for "soon" (the tuner's lock path) wait, then apply together and in order; leaving the foreground
+    /// applies and writes them.
+    func testSettingsChangedSoonApplyTogetherAndFlush() throws {
+        let before = store.settings.fullTunes ?? 0
+        store.updateSettingsSoon { $0.fullTunes = ($0.fullTunes ?? 0) + 1 }
+        store.updateSettingsSoon { $0.fullTunes = ($0.fullTunes ?? 0) + 1 }
+        XCTAssertEqual(store.settings.fullTunes ?? 0, before, "nothing applies on the frame that asked")
+        store.flushSettings()
+        XCTAssertEqual(store.settings.fullTunes, before + 2)
+        XCTAssertEqual(try AppStore(directory: directory).settings.fullTunes, before + 2)
     }
-    func testAutomaticReferenceContinuesFollowingDifferentDetectedNotes() {
-        store.selectReference()
-        store.automatic = true
-        for midi in [57, 64, 69] {
-            store.accept(PitchMath.frequency(midi: Double(midi)), confidence: 0.99, level: -18)
-            XCTAssertTrue(store.automatic)
-            XCTAssertEqual(store.referenceMidi, midi)
-            XCTAssertNotNil(store.reading.frequency)
+
+    /// A plan's course: the goal's own course, else the instrument's, else theory.
+    func testPlanCourseFollowsTheGoalThenTheInstrument() throws {
+        XCTAssertEqual(store.planCourse(forGoal: "ear", instrumentId: "guitar.acoustic.6")?.id, "ear")
+        XCTAssertEqual(store.planCourse(forGoal: "songs", instrumentId: "violin.standard.4")?.id, "violin")
+        XCTAssertEqual(store.planCourse(forGoal: "songs", instrumentId: nil)?.id, "theory")
+        let guitar = try XCTUnwrap(store.catalog.instrument(id: "guitar.acoustic.6"))
+        XCTAssertTrue(store.selectInstrument(guitar))
+        XCTAssertEqual(store.planCourse(forGoal: "songs")?.id, "guitar")
+        XCTAssertEqual(store.onboardingCourse(instrumentId: guitar.id, goal: "songs")?.id, "guitar")
+    }
+
+    func testSettingsWaitingForTheirWriteRideAlongWithAPracticeRecord() throws {
+        store.setDrone(midi: 57)
+        store.finishPractice(.ear, questions: 4, correct: 3)
+        // The record's save carries the drone setting changed just before it, on the store's background queue; the
+        // flush waits for that write before the state is opened again.
+        store.flushSettings()
+        let reopened = try AppStore(directory: directory)
+        XCTAssertEqual(reopened.droneMidi, 57)
+        XCTAssertEqual(reopened.records.first?.kind, "ear")
+    }
+
+    /// The tuner's lock path saves nothing on the frame that locks: the string locks at once, and its reward and its
+    /// string-health sample arrive with the next settings batch (a flush applies them now).
+    func testALockedStringIsRewardedWithTheNextSettingsBatch() throws {
+        let string = store.activeCourse
+        let before = store.progress
+        let start = ProcessInfo.processInfo.systemUptime
+        // Held in tune, a reading every 20 ms: the lock needs 650 ms in the band.
+        while !store.lockedCourses.contains(string.index), ProcessInfo.processInfo.systemUptime - start < 3 {
+            store.accept(store.target(for: string), confidence: 0.95, level: -30)
+            Thread.sleep(forTimeInterval: 0.02)
         }
+        XCTAssertTrue(store.lockedCourses.contains(string.index), "held in tune, the string locks")
+        XCTAssertEqual(store.progress, before, "the locking frame saves nothing")
+        store.flushSettings()
+        XCTAssertEqual(store.progress.stats["stringsTuned"], (before.stats["stringsTuned"] ?? 0) + 1)
+        XCTAssertGreaterThan(store.progress.xp, before.xp)
+        XCTAssertEqual(store.progress.stringSamples.count, before.stringSamples.count + 1)
     }
-    func testChangingInstrumentDropsPreviousCountersRatherThanMisattributingHistory() throws {
-        store.chooseCourse(6)
-        let detected = try detectedPitch(hz: store.targetHz)
-        for _ in 0..<5 { store.accept(detected.frequencyHz, confidence: detected.confidence, level: detected.levelDbfs) }
-        store.selectInstrument(try XCTUnwrap(store.catalog.instrument(id: "bass.electric.4")))
-        store.finishTuning()
-        XCTAssertTrue(store.records.isEmpty)
-        XCTAssertNotNil(store.error)
+
+    func testTuningSessionSavesOnPauseAndCountsTowardStreak() throws {
+        for _ in 0..<40 { store.accept(store.targetHz * 1.002, confidence: 0.95, level: -30) }
+        store.endTuningSession()
+        XCTAssertTrue(store.records.isEmpty, "a few milliseconds of audio is not a session")
+        store.finishPractice(.ear, questions: 10, correct: 8)
+        XCTAssertEqual(store.records.first?.kind, "ear")
+        XCTAssertEqual(store.streak.current, 1)
+        XCTAssertTrue(store.dailyDone(.ear))
     }
-    private func detectedPitch(hz: Double) throws -> DetectedPitch {
-        let samples: [Float] = (0..<4096).map { Float(0.6 * sin(2 * .pi * hz * Double($0) / 48000)) }
-        return try XCTUnwrap(YinPitchDetector(sampleRate: 48000, minFrequency: 50, maxFrequency: 1000).detect(samples))
+
+    func testAutomaticModeFollowsThePlayedString() throws {
+        store.automatic = true
+        let a = try XCTUnwrap(store.courses.first { $0.label == "A2" })
+        for _ in 0..<5 { store.accept(store.target(for: a), confidence: 0.95, level: -30) }
+        XCTAssertEqual(store.selectedCourse, a.index)
     }
-    private func waitUntil(_ condition: @escaping @MainActor () -> Bool) async throws {
-        let deadline = Date().addingTimeInterval(12)
-        while !condition(), Date() < deadline { try await Task.sleep(for: .milliseconds(100)) }
-        XCTAssertTrue(condition(), "Verified StoreKit entitlement did not arrive")
+
+    func testTodayOpensWithTheNextLessonAndAFinishedLessonTicksItOff() throws {
+        let lesson = try XCTUnwrap(store.dailyLesson, "a fresh learner has a free first lesson to play")
+        XCTAssertEqual(store.dailySet.first?.kind, .lesson)
+        let course = try XCTUnwrap(store.curriculum.lesson(id: lesson.id)?.course)
+        store.finishLesson(LessonResult(lessonId: lesson.id, stars: 2, accuracy: 0.8, xp: 20, minutes: 4), courseId: course.id)
+        XCTAssertTrue(store.dailyDone(.lesson))
+        XCTAssertEqual(store.dailyLesson?.id, lesson.id, "Today keeps the lesson that was played, not the next one")
+        XCTAssertEqual(store.dailySet.first?.kind, .lesson)
+        XCTAssertTrue(store.streak.practicedToday, "any activity of Today keeps the streak")
+        XCTAssertFalse(store.dailySetComplete)
     }
 }

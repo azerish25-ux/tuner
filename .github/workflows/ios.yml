@@ -1,3 +1,10 @@
+# The pull-request gate. Branch protection requires the `gate` job: it passes only when `core`, `app` and `release`
+# all pass, and the three run side by side in under 15 minutes. `accessibility` runs beside them and can fail the
+# workflow on its own (the accessibility audit and the localization launches). The full UI tour with its App Store
+# captures, the iPad shelf, the unsigned archive and the sanitizers run nightly or on the `captures` label
+# (nightly.yml). GitHub runs nothing for a commit marked [skip ci], so the required gate never reports and such a
+# pull request can't merge; the core job also refuses earlier commits that touch ios/ without CI. Every pull request
+# runs it (no path filter): a required check that never reports would block a documentation-only change.
 name: iOS
 on:
   push:
@@ -9,23 +16,103 @@ permissions:
 concurrency:
   group: ios-native-${{ github.ref }}
   cancel-in-progress: true
+env:
+  DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+  HOMEBREW_NO_AUTO_UPDATE: "1"
+  HOMEBREW_NO_INSTALL_CLEANUP: "1"
 jobs:
   core:
-    timeout-minutes: 10
+    name: core
+    timeout-minutes: 15
     runs-on: macos-15
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
     steps:
       - uses: actions/checkout@v4
-      - name: Swift core regression tests
-        run: swift test --package-path ios --parallel
+        with:
+          # The commit history for the [skip ci] check, without the file contents of other commits (or of the
+          # ci-results branches): a blobless clone fetches commits and trees only.
+          fetch-depth: 0
+          filter: blob:none
+      - name: No commit touching ios/ skips CI
+        if: github.event_name == 'pull_request'
+        run: |
+          set -o pipefail
+          mkdir -p ci-out
+          python3 tools/ci/skip_ci_guard.py --base "origin/${{ github.base_ref }}" --head "${{ github.event.pull_request.head.sha }}" --github 2>&1 | tee ci-out/skip-ci.log
+      - name: Swift core regression tests, with coverage
+        run: |
+          set -o pipefail
+          mkdir -p ci-out
+          swift test --package-path ios --parallel --enable-code-coverage 2>&1 | tee ci-out/core.log
+      - name: TimbreCore coverage floor
+        run: |
+          set -o pipefail
+          python3 tools/ci/coverage.py 2>&1 | tee ci-out/coverage.log
+      - name: Compiler warnings in TimbreCore (concurrency counted, the rest fail)
+        if: success() || failure()
+        run: python3 tools/ci/build_warnings.py ci-out/core.log --github --out ci-out/warnings-core
       - name: Verify catalogue and bundled resources
-        run: python3 tools/verify-ios-resources.py
+        if: success() || failure()
+        run: |
+          set -o pipefail
+          python3 tools/verify-ios-resources.py 2>&1 | tee ci-out/resources.log
+      - name: Translation handoff is current
+        # docs/l10n/HANDOFF.md and tools/l10n/todo must match the English in the code: run
+        # `python3 tools/l10n/report.py` after adding or editing a string and commit what it writes. Fresh TODO files
+        # are published with the results either way.
+        if: success() || failure()
+        run: |
+          set -o pipefail
+          mkdir -p ci-out
+          python3 tools/l10n/report.py --check --strict --out ci-out/l10n 2>&1 | tee ci-out/l10n.log
+      - name: No new untranslated legal, permission or VoiceOver string
+        # A critical string a shipped locale lacks and tools/l10n/critical-baseline.json doesn't list fails here.
+        # The App Store upload (apple-delivery.yml) allows no gap at all.
+        if: success() || failure()
+        run: |
+          set -o pipefail
+          mkdir -p ci-out/l10n
+          python3 tools/l10n/critical.py --baseline --github --out ci-out/l10n 2>&1 | tee ci-out/l10n-critical.log
+      - name: Comment and design-rule hygiene
+        # tools/ci/comment_hygiene.py: review, bug, QA, store-frame, WIP and review-panel references fail; the design
+        # rules (type scale, status colours, orb tiles) report new uses and fail once their baseline is empty.
+        if: success() || failure()
+        run: |
+          set -o pipefail
+          python3 tools/ci/test_hygiene.py 2>&1 | tee ci-out/hygiene-tests.log
+          python3 tools/ci/comment_hygiene.py --github 2>&1 | tee ci-out/hygiene.log
+      - name: SwiftLint (new error-severity violations fail)
+        # .swiftlint.yml at the repository root, against the committed baseline (tools/ci/swiftlint-baseline.json):
+        # a violation the baseline doesn't hold is reported, and fails the job at error severity. A fresh baseline
+        # candidate (ci-out/swiftlint-baseline.json) is published for when the baseline shrinks.
+        if: success() || failure()
+        continue-on-error: false
+        timeout-minutes: 6
+        run: |
+          mkdir -p ci-out
+          command -v swiftlint >/dev/null 2>&1 || brew install swiftlint >/dev/null
+          swiftlint version
+          if [ -f tools/ci/swiftlint-baseline.json ]; then
+            swiftlint lint --quiet --reporter summary --write-baseline ci-out/swiftlint-baseline.json > ci-out/swiftlint.txt 2>&1 || true
+            swiftlint lint --quiet --baseline tools/ci/swiftlint-baseline.json --reporter github-actions-logging
+          else
+            swiftlint lint --quiet --reporter summary --write-baseline ci-out/swiftlint-baseline.json > ci-out/swiftlint.txt 2>&1 || true
+            tail -60 ci-out/swiftlint.txt
+          fi
+      - name: Summarize
+        if: always()
+        run: python3 tools/ci/summarize-log.py ci-out/core.log ci-out/core.summary.txt || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results-core
+          path: ci-out
+          retention-days: 7
+
   app:
-    timeout-minutes: 30
+    # Unit tests (TimbreAppTests) and three smoke flows (SmokeUITests: a fresh launch, a string locked, Pro bought).
+    name: app
+    timeout-minutes: 25
     runs-on: macos-15
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
     steps:
       - uses: actions/checkout@v4
       - name: Verify App Store SDK minimum
@@ -33,93 +120,257 @@ jobs:
           xcodebuild -version
           SDK_VERSION=$(xcrun --sdk iphoneos --show-sdk-version)
           test "${SDK_VERSION%%.*}" -ge 26
-      - name: Install XcodeGen
-        run: brew install xcodegen
       - name: Generate Xcode project
-        working-directory: ios
-        run: xcodegen generate
-      - name: Select available iPhone simulator
+        run: |
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          cd ios && xcodegen generate
+      - name: Select an iPhone simulator and boot it
         run: |
           DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,re,sys; d=json.load(sys.stdin); runtimes=sorted(d["devices"].items(),key=lambda pair:tuple(map(int,re.findall(r"\d+",pair[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if "iPhone" in x["name"]))')
           echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
-      - name: Build and run UI flows
+          # Boots while the app builds.
+          xcrun simctl boot "$DEVICE_ID" || true
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
+      # hashFiles() walks the whole workspace (samples, photos, models) and can time out; hash the two files directly.
+      - name: Module cache key
+        id: modkey
+        run: echo "key=$(cat ios/project.yml ios/Package.swift | shasum -a 256 | cut -c1-16)" >> "$GITHUB_OUTPUT"
+      - name: Restore the compiled module cache
+        uses: actions/cache@v4
+        with:
+          path: ios/build/dd/ModuleCache.noindex
+          key: modules-${{ runner.os }}-xcode26.3-${{ steps.modkey.outputs.key }}
+          restore-keys: modules-${{ runner.os }}-xcode26.3-
+      - name: Build app and tests
         run: |
           set -o pipefail
-          mkdir -p ios/build
-          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -skip-testing:TimbreUITests/TabletScreenshotsUITests -destination "platform=iOS Simulator,id=$DEVICE_ID" -resultBundlePath ios/build/UITests.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ios/build/test.log
-      - name: Archive unsigned iOS app
+          mkdir -p ios/build ci-out
+          xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -derivedDataPath ios/build/dd COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/build.log
+      - name: Warnings are errors (concurrency counted per file)
+        if: success() || failure()
+        run: python3 tools/ci/build_warnings.py ci-out/build.log --github --out ci-out/warnings-app
+      - name: Allow the microphone
         run: |
-          xcodebuild archive -project ios/Timbre.xcodeproj -scheme Timbre -destination 'generic/platform=iOS' -archivePath ios/build/Timbre.xcarchive CODE_SIGNING_ALLOWED=NO
-      - name: Compile optional advertising integration
-        working-directory: ios
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre || true
+      - name: Unit tests and smoke flows
         run: |
-          xcodegen generate --spec project-ads.yml
-          xcodebuild build -project Timbre.xcodeproj -scheme Timbre -configuration Debug -destination 'generic/platform=iOS Simulator' TIMBRE_ADMOB_APP_ID='ca-app-pub-3940256099942544~1458002511' CODE_SIGNING_ALLOWED=NO
-      - name: Export simulator screenshots
+          set -o pipefail
+          xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO \
+            -only-testing:TimbreAppTests -only-testing:TimbreUITests/SmokeUITests \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+            -resultBundlePath ios/build/Gate.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/test.log
+      - name: Collect results
         if: always()
         run: |
-          if [ -d ios/build/UITests.xcresult ]; then
-            xcrun xcresulttool export attachments --path ios/build/UITests.xcresult --output-path ios/build/screenshots
+          if [ -d ios/build/Gate.xcresult ]; then
+            xcrun xcresulttool export attachments --path ios/build/Gate.xcresult --output-path ci-out/screenshots || true
           fi
+          for log in ci-out/build.log ci-out/test.log; do [ -f "$log" ] && python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"; done
+          gzip -f ci-out/build.log ci-out/test.log 2>/dev/null || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ios-evidence
-          path: ios/build/
-          retention-days: 14
-  ipad:
+          name: results-app
+          path: ci-out
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: gate-xcresult
+          path: ios/build/Gate.xcresult
+          retention-days: 7
+
+  release:
+    # The configuration that ships: a Release build for devices, compiled with warnings treated as errors (the log gate).
+    name: release
     timeout-minutes: 25
     runs-on: macos-15
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
     steps:
       - uses: actions/checkout@v4
-      - name: Verify iPad SDK environment
+      - name: Generate Xcode project
         run: |
-          xcodebuild -version
-          SDK_VERSION=$(xcrun --sdk iphonesimulator --show-sdk-version)
-          test "${SDK_VERSION%%.*}" -ge 26
-      - name: Install XcodeGen
-        run: brew install xcodegen
-      - name: Generate baseline Xcode project
-        working-directory: ios
-        run: xcodegen generate
-      - name: Select latest available 13-inch iPad simulator
-        run: |
-          mkdir -p ios/build
-          xcrun simctl list devices available -j > ios/build/ipad-simulators.json
-          python3 - <<'PY'
-          import json, os, re
-          from pathlib import Path
-          devices = json.loads(Path('ios/build/ipad-simulators.json').read_text())['devices']
-          version = lambda value: tuple(map(int, re.findall(r'\d+', value)))
-          for runtime, available in sorted(devices.items(), key=lambda item: version(item[0]), reverse=True):
-              if 'iOS' not in runtime:
-                  continue
-              candidates = [device for device in available if 'iPad' in device['name'] and re.search(r'\b13[- ]inch\b', device['name'])]
-              if not candidates:
-                  continue
-              device = max(candidates, key=lambda value: ('Pro' in value['name'], version(value['name'])))
-              print(f"Using {device['name']} on {runtime}: {device['udid']}")
-              with open(os.environ['GITHUB_ENV'], 'a') as environment:
-                  environment.write(f"IPAD_DEVICE_ID={device['udid']}\n")
-              break
-          else:
-              raise SystemExit('No available 13-inch iPad simulator; tablet verification cannot use a smaller device.')
-          PY
-      - name: Run real iPad portrait and landscape screenshots
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          cd ios && xcodegen generate
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
+      - name: Release build for iOS devices
         run: |
           set -o pipefail
-          xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO -only-testing:TimbreUITests/TabletScreenshotsUITests -destination "platform=iOS Simulator,id=$IPAD_DEVICE_ID" -resultBundlePath ios/build/TabletScreenshots.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee ios/build/ipad-test.log
-      - name: Export iPad screenshot attachments
+          mkdir -p ci-out
+          xcodebuild build -project ios/Timbre.xcodeproj -scheme Timbre -configuration Release -destination 'generic/platform=iOS' \
+            -derivedDataPath ios/build/release COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO 2>&1 | tee ci-out/release.log
+      - name: Warnings are errors (concurrency counted per file)
+        if: success() || failure()
+        run: python3 tools/ci/build_warnings.py ci-out/release.log --github --out ci-out/warnings-release
+      - name: Collect results
         if: always()
         run: |
-          if [ -d ios/build/TabletScreenshots.xcresult ]; then
-            xcrun xcresulttool export attachments --path ios/build/TabletScreenshots.xcresult --output-path ios/build/ipad-screenshots
-          fi
+          [ -f ci-out/release.log ] && python3 tools/ci/summarize-log.py ci-out/release.log ci-out/release.summary.txt
+          gzip -f ci-out/release.log 2>/dev/null || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ipad-evidence
-          path: ios/build/
-          retention-days: 14
+          name: results-release
+          path: ci-out
+          retention-days: 7
+
+  accessibility:
+    # The accessibility audit (enforced kinds fail, and so does an audit that can't run) and the localization
+    # launches (German, Arabic right to left with note names left to right, pseudo-localization).
+    name: accessibility
+    timeout-minutes: 55
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate Xcode project
+        run: |
+          command -v xcodegen >/dev/null 2>&1 || brew install xcodegen
+          cd ios && xcodegen generate
+      - name: Select an iPhone simulator and boot it
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,re,sys; d=json.load(sys.stdin); runtimes=sorted(d["devices"].items(),key=lambda pair:tuple(map(int,re.findall(r"\d+",pair[0]))),reverse=True); print(next(x["udid"] for k,v in runtimes if "iOS" in k for x in v if "iPhone" in x["name"]))')
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$DEVICE_ID" || true
+      - name: Ensure Metal toolchain
+        run: bash tools/ci/ensure-metal.sh
+      # hashFiles() walks the whole workspace (samples, photos, models) and can time out; hash the two files directly.
+      - name: Module cache key
+        id: modkey
+        run: echo "key=$(cat ios/project.yml ios/Package.swift | shasum -a 256 | cut -c1-16)" >> "$GITHUB_OUTPUT"
+      - name: Restore the compiled module cache
+        uses: actions/cache@v4
+        with:
+          path: ios/build/dd/ModuleCache.noindex
+          key: modules-${{ runner.os }}-xcode26.3-${{ steps.modkey.outputs.key }}
+          restore-keys: modules-${{ runner.os }}-xcode26.3-
+      - name: Build app and tests
+        run: |
+          set -o pipefail
+          mkdir -p ios/build ci-out
+          xcodebuild build-for-testing -project ios/Timbre.xcodeproj -scheme Timbre -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -derivedDataPath ios/build/dd COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO 2>&1 | tail -40 | tee ci-out/build-tail.log
+      - name: Allow the microphone
+        run: |
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcrun simctl privacy "$DEVICE_ID" grant microphone com.shahradazerisharghi.timbre || true
+      - name: Warm the simulator up with one launch
+        run: |
+          # A simulator that has just booted can lose app launches for minutes (XCUITest then reports "Timed out while
+          # launching application" or "does not have a process ID" before a test has checked anything). The app is
+          # installed and launched once as the audits launch it, each try cut off at two minutes. Best effort: a
+          # launch that never succeeds here still fails the tests below, which say why.
+          APP=ios/build/dd/Build/Products/Debug-iphonesimulator/Timbre.app
+          BUNDLE=com.shahradazerisharghi.timbre
+          xcrun simctl install "$DEVICE_ID" "$APP" || echo "::warning::Could not install the app for the warm-up launch"
+          for attempt in 1 2 3; do
+            start=$(date +%s)
+            if SIMCTL_CHILD_TIMBRE_TEST_STORAGE_ID=$(uuidgen) SIMCTL_CHILD_TIMBRE_SKIP_ONBOARDING=1 SIMCTL_CHILD_TIMBRE_DEMO_DATA=1 \
+               SIMCTL_CHILD_TIMBRE_STAGE_REST=1 perl -e 'alarm shift; exec @ARGV' 120 xcrun simctl launch "$DEVICE_ID" "$BUNDLE"; then
+              sleep 10
+              xcrun simctl terminate "$DEVICE_ID" "$BUNDLE" || true
+              echo "Warm-up launch $attempt took $(( $(date +%s) - start )) s"
+              break
+            fi
+            echo "::warning::Warm-up launch $attempt failed after $(( $(date +%s) - start )) s"
+            xcrun simctl terminate "$DEVICE_ID" "$BUNDLE" || true
+            sleep 15
+          done
+      - name: Accessibility audit and localization launches
+        run: |
+          set -o pipefail
+          tests() {  # a result bundle, a log, then the -only-testing arguments
+            local bundle="$1" log="$2"
+            shift 2
+            xcodebuild test-without-building -project ios/Timbre.xcodeproj -scheme Timbre -parallel-testing-enabled NO "$@" \
+              -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath ios/build/dd \
+              -resultBundlePath "$bundle" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$log"
+          }
+          tests ios/build/Accessibility.xcresult ci-out/test.log \
+            -only-testing:TimbreUITests/AccessibilityAuditUITests -only-testing:TimbreUITests/LocalizationLaunchUITests && exit 0
+          # One more try for the tests that failed only because the app never launched (tools/ci/launch_retry.py);
+          # every other failure stands, whatever the second try does.
+          status=0
+          python3 tools/ci/launch_retry.py ci-out/test.log ci-out/relaunch.txt || status=1
+          if [ -s ci-out/relaunch.txt ]; then
+            # One argument a line, no spaces in them.
+            # shellcheck disable=SC2046
+            tests ios/build/Accessibility-relaunch.xcresult ci-out/test-relaunch.log $(cat ci-out/relaunch.txt) || status=1
+          fi
+          exit $status
+      - name: Collect results
+        if: always()
+        run: |
+          if [ -d ios/build/Accessibility.xcresult ]; then
+            xcrun xcresulttool export attachments --path ios/build/Accessibility.xcresult --output-path ci-out/screenshots || true
+          fi
+          if [ -d ios/build/Accessibility-relaunch.xcresult ]; then
+            xcrun xcresulttool export attachments --path ios/build/Accessibility-relaunch.xcresult \
+              --output-path ci-out/screenshots-relaunch || true
+          fi
+          for log in ci-out/test.log ci-out/test-relaunch.log; do
+            if [ -f "$log" ]; then python3 tools/ci/summarize-log.py "$log" "${log%.log}.summary.txt"; fi
+          done
+          gzip -f ci-out/test.log ci-out/test-relaunch.log 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results-accessibility
+          path: ci-out
+          retention-days: 7
+
+  gate:
+    # The one required status check. It fails unless every gate job passed (a skipped or cancelled one fails it too).
+    name: gate
+    if: always()
+    needs: [core, app, release]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Every gate job passed
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          results = {job: value["result"] for job, value in json.loads(os.environ["RESULTS"]).items()}
+          for job, result in sorted(results.items()):
+              print(f"{job}: {result}")
+          failed = [job for job, result in results.items() if result != "success"]
+          if failed:
+              sys.exit("The gate is red: " + ", ".join(sorted(failed)))
+          print("The gate is green")
+          PY
+
+  publish:
+    # The only job that writes to the repository: each job's results go to a ci-results branch, readable with a plain
+    # git fetch: ci-results/core, ci-results/gate (the app job's unit tests and smoke flows), ci-results/release and
+    # ci-results/accessibility. The nightly tour keeps ci-results/app and ci-results/ipad (nightly.yml). Pull requests
+    # from forks get a read-only token and skip it.
+    name: publish results
+    if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    needs: [core, app, release, accessibility]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/ci
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: results-*
+          path: results
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for pair in core:core app:gate release:release accessibility:accessibility; do
+            job="${pair%%:*}"; branch="ci-results/${pair##*:}"
+            [ -d "results/results-$job" ] || { echo "No results from $job"; continue; }
+            bash tools/ci/publish-results.sh "$branch" "results/results-$job" "$job" || echo "::warning::Could not publish $job results"
+          done
