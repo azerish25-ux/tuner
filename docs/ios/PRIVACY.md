@@ -14,7 +14,7 @@ On your device only: your settings, custom tunings, the instruments you choose, 
 
 ## Anonymous usage analytics
 
-To learn which parts of Timbre help people play (for example, how many finish setting up, open a lesson or start a trial), Timbre sends anonymous product events to [TelemetryDeck](https://telemetrydeck.com), a privacy-focused analytics service. An event names what happened in the app ("lesson finished", "paywall shown", "trial started", the plan and its price), the app version, the device's system version and language.
+To learn which parts of Timbre help people play (for example, how many finish setting up, open a lesson or start a trial), Timbre sends anonymous product events to [TelemetryDeck](https://telemetrydeck.com), a privacy-focused analytics service. An event names what happened in the app ("lesson finished", "paywall shown", "trial started", the plan and its price), the app version, the device's system version and language. For a subscription, events also say what the App Store reports about it afterwards: that it renewed, was refunded, or was set not to renew, with the plan's name and the kind of offer it used (for example a free trial).
 
 - Events are **not linked to you**. There is no name, email, account, advertising identifier or location. Each installation has a random identifier, scrambled on the device before it is sent, which cannot be traced back to you or to your Apple Account.
 - Events are **never used for tracking** across other companies' apps or websites, and never sold.
@@ -26,7 +26,9 @@ You can turn sharing off at any time in **Settings** in the app; from then on ev
 
 ## Settings Timbre downloads
 
-Timbre may download a small settings file from its developer's website (for example, which version of the subscription screen to show). The request carries no identifier and nothing about you.
+Timbre may download a small settings file from its developer's website (for example, which version of the subscription screen to show, or which songs are free this week). The request carries no identifier and nothing about you.
+
+To show the app's App Store rating on the subscription screen, Timbre may ask Apple's public App Store lookup service for it, at most once a day. The request names the app and the country of your App Store, and nothing about you.
 
 ## Purchases
 

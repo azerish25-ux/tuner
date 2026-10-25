@@ -2,15 +2,17 @@ import StoreKit
 import SwiftUI
 import TimbreCore
 
-// The one-time offer a paywall makes as it is turned down for the second time (onboarding's paywall being the first
+// What a paywall puts forward once as it is turned down for the second time (onboarding's paywall being the first
 // time). It is only ever an offer the App Store itself holds for this person on a real product, at the App Store's
 // price, never a made-up discount:
 //   1. someone whose subscription lapsed: the best win-back offer the App Store says they may redeem
-//      (App Store Connect → Subscriptions → the plan → Win-Back Offers);
-//   2. someone who never had a trial in the group: the monthly plan's own introductory offer, when App Store Connect
-//      gives it one (a free week, say), as a lighter start than the year;
+//      (App Store Connect → Subscriptions → the plan → Win-Back Offers), the one offer made only here;
+//   2. someone who never had a trial in the group: the month's own free trial, when App Store Connect gives it one.
+//      The Monthly card already says it ("7 days free"), so this isn't presented as a special offer: it is the
+//      smaller step for someone who doesn't want the year ("Not ready for a year?");
 //   3. otherwise nothing: the paywall simply closes.
-// Made once per install, never under the UI tests or the demo modes.
+// Made once per install, and never while the app is driven by automation (`TestSupport.isAutomated`), whose tours
+// close paywalls many times over.
 
 /// A real App Store offer to make on the way out.
 struct ExitOffer {
@@ -59,9 +61,9 @@ extension CommerceService {
                 }
             }
         }
-        // Never had an introductory offer in the group: the monthly plan's, when it has one.
+        // Never had an introductory offer in the group: the month's free trial, when it has one.
         if let monthly, let subscription = monthly.subscription, let intro = subscription.introductoryOffer,
-           await subscription.isEligibleForIntroOffer {
+           intro.paymentMode == .freeTrial, await subscription.isEligibleForIntroOffer {
             return ExitOffer(kind: .introductory, product: monthly, offer: intro)
         }
         return nil
@@ -73,12 +75,8 @@ enum PaywallDeclines {
     private static let countKey = "paywall.declines"
     private static let offeredKey = "paywall.exitOfferMade"
 
-    /// Off under XCTest, the UI tests and the demo and screenshot modes: their tours close paywalls many times over.
-    private static let enabled: Bool = {
-        let environment = ProcessInfo.processInfo.environment
-        let quiet = ["XCTestConfigurationFilePath", "TIMBRE_TEST_STORAGE_ID", "TIMBRE_DEMO_PITCH", "TIMBRE_DEMO_DATA", "TIMBRE_SCENE"]
-        return !quiet.contains { environment[$0] != nil }
-    }()
+    /// Never while automation drives the app: its tours close paywalls many times over.
+    private static var enabled: Bool { !TestSupport.isAutomated }
 
     static var count: Int { UserDefaults.standard.integer(forKey: countKey) }
 
@@ -127,17 +125,17 @@ struct ExitOfferCard: View {
     private var card: some View {
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous)
         return VStack(spacing: 12) {
-            Image(systemName: offer.kind == .winBack ? "arrow.uturn.backward.circle.fill" : "gift.fill")
+            Image(systemName: offer.kind == .winBack ? "arrow.uturn.backward.circle.fill" : "calendar")
                 .font(.system(size: 26, weight: .semibold))
                 .foregroundStyle(Palette.proGold)
                 .frame(width: 60, height: 60)
-                .background(Circle().fill(Palette.amber.opacity(0.14)))
-                .overlay(Circle().strokeBorder(Palette.amber.opacity(0.3), lineWidth: 1))
+                .background(Circle().fill(Palette.starGold.opacity(0.14)))
+                .overlay(Circle().strokeBorder(Palette.starGold.opacity(0.3), lineWidth: 1))
                 .symbolEffect(.bounce, value: shown)
                 .accessibilityHidden(true)
-            Eyebrow(Text(offer.kind == .winBack ? "Welcome back" : "Before you go"), color: Palette.amber)
+            Eyebrow(Text(offer.kind == .winBack ? "Welcome back" : "Not ready for a year?"), color: Palette.starGold)
             Text(verbatim: headline)
-                .font(Typeface.display(26)).tracking(-0.5).foregroundStyle(Palette.ink)
+                .font(Typeface.display(.title)).tracking(-0.5).foregroundStyle(Palette.ink)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
@@ -175,10 +173,10 @@ struct ExitOfferCard: View {
         .background {
             ZStack {
                 shape.fill(Palette.stageRaised)
-                shape.fill(RadialGradient(colors: [Palette.amber.opacity(0.16), .clear], center: .top, startRadius: 0, endRadius: 260))
+                shape.fill(RadialGradient(colors: [Palette.starGold.opacity(0.16), .clear], center: .top, startRadius: 0, endRadius: 260))
             }
         }
-        .overlay(shape.strokeBorder(Palette.amber.opacity(0.22), lineWidth: 1))
+        .overlay(shape.strokeBorder(Palette.starGold.opacity(0.22), lineWidth: 1))
         .shadow(color: .black.opacity(0.5), radius: 30, y: 10)
         .padding(.horizontal, 12).padding(.bottom, 8)
         .accessibilityElement(children: .contain)

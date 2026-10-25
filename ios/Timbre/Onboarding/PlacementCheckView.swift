@@ -122,7 +122,7 @@ struct PlacementCheckView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     Eyebrow("Placement check", color: accent, style: .display)
-                    Text("Show us how you play").font(Typeface.display(32)).tracking(-0.6).foregroundStyle(Palette.ink)
+                    Text("Show us how you play").font(Typeface.stepTitle).tracking(-0.6).foregroundStyle(Palette.ink)
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                     Text("Change between three chords, then strum a pattern. About 45 seconds, and your plan moves to match.")
@@ -181,7 +181,7 @@ struct PlacementCheckView: View {
                     unitRing.padding(.top, 24)
                     VStack(spacing: 8) {
                         resultTitle
-                            .font(Typeface.display(30)).tracking(-0.5).foregroundStyle(Palette.ink)
+                            .font(Typeface.display(.title)).tracking(-0.5).foregroundStyle(Palette.ink)
                             .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
                             .accessibilityAddTraits(.isHeader)
                         resultDetail
@@ -296,7 +296,7 @@ struct PlacementCheckView: View {
             Image(systemName: clean ? "checkmark.circle.fill" : rough ? "exclamationmark.circle.fill" : "checkmark.circle")
                 .font(.system(size: 12, weight: .bold))
                 .foregroundStyle(clean ? accent : rough ? Palette.amber : Palette.inkSoft)
-            Text(verbatim: chord.name).font(Typeface.label(14)).foregroundStyle(Palette.ink)
+            Text(verbatim: chord.name).font(Typeface.label(.footnote)).foregroundStyle(Palette.ink)
         }
         .padding(.horizontal, 10).frame(minHeight: 34)
         .background(Capsule().fill(Palette.stageRaised))
@@ -310,7 +310,7 @@ struct PlacementCheckView: View {
             Eyebrow(Text("Unit \(toUnit + 1) · \(unit.title.localized)"), color: accent, style: .display).lineLimit(1)
             Text("First lesson").font(.subheadline).foregroundStyle(Palette.inkSoft)
             if let first = unit.lessons.first {
-                Text(first.title.localized).font(Typeface.display(22)).tracking(-0.3).foregroundStyle(Palette.ink)
+                Text(first.title.localized).font(Typeface.display(.title3)).tracking(-0.3).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

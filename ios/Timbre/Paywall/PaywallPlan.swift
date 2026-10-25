@@ -12,9 +12,14 @@ struct PaywallAnswers: Equatable {
 
 /// The person's plan as the paywall tells it: three outcomes, led by what they just tried to open and then their goal
 /// and course (in onboarding, the plan's own and then every instrument and every ear game and tool); what the plan
-/// reaches next on its pace of one lesson a day (Today's set holds one lesson): the first song it gets to, and the units
-/// after today's whose names don't just repeat today's lesson; and the songs for the hero's rail. A paywall opened
-/// from a tool starts the track with that tool instead (`Focus`).
+/// reaches next at the minutes a day the person chose (`Pace`): its first song, and the units after today's whose
+/// names don't just repeat today's lesson; and the songs for the hero's rail. A paywall opened from a tool starts the
+/// track with that tool instead (`Focus`).
+///
+/// The first song is one the free plan can play whenever the plan can promise one: for the "songs" goal, when the
+/// course's own first song is Pro or more than a week off, the plan's song is the first free song ahead in the course,
+/// else a free song from the instrument's songbook on day 2 (`FirstSong`). Onboarding's "Play your first song this
+/// week" is said only for such a song.
 struct PaywallPlan {
     /// One promise of Pro, said as a result. Every outcome on every paywall wears the same kind of icon, in one tint:
     /// a bare glyph (`PaywallView.outcomeList`), an SF Symbol or one drawn for Timbre.
@@ -49,6 +54,33 @@ struct PaywallPlan {
         let symbol: String
     }
 
+    /// The song the plan names first: its lesson, the day it comes and whether the free plan plays it.
+    struct FirstSong {
+        let lesson: Lesson
+        let day: Int
+        /// The free plan opens it (a free lesson, a placement pass, or one the remote settings open).
+        let free: Bool
+
+        /// "Ode to Joy", not "Ode to Joy: the melody".
+        var title: String { CoverArt.mainTitle(lesson.title.localized) }
+    }
+
+    /// The plan's pace: the minutes a day the person chose, spent on the course's lessons in order from today's. A
+    /// lesson comes on the day its minutes run up to (10 minutes a day: lessons of 3, 4 and 4 minutes are days 1, 1 and 2).
+    struct Pace {
+        let lessons: [Lesson]
+        /// Where today starts in `lessons`.
+        let first: Int
+        let minutesADay: Int
+
+        /// The day the lesson at `index` comes (1: today); a lesson before today's counts as today.
+        func day(of index: Int) -> Int {
+            guard index > first, index < lessons.count, first >= 0 else { return 1 }
+            let through = lessons[first...index].reduce(0) { $0 + max(1, $1.minutes) }
+            return max(1, Int((Double(through) / Double(max(1, minutesADay))).rounded(.up)))
+        }
+    }
+
     /// A song on the plan hero's rail, its sleeve as the Songs shelf draws it.
     struct RailSong: Identifiable {
         let id: String
@@ -68,9 +100,11 @@ struct PaywallPlan {
     /// after today's whose name doesn't echo today's lesson. Opened from a tool: that tool's next step on day 2,
     /// then the plan's first milestone after it.
     let milestones: [Milestone]
-    /// The day the plan reaches its first song (today's lesson, when that is a song), however far off, at one lesson
-    /// a day (1: today); nil when it reaches none.
-    let songDay: Int?
+    /// The plan's first song (`FirstSong`): the day it comes (1: today) however far off, and whether the free plan
+    /// plays it; nil when the plan reaches none.
+    let song: FirstSong?
+    /// The day the plan reaches its first song; nil when it reaches none.
+    var songDay: Int? { song?.day }
     /// The hero's rail (`railSongs`): three Originals, the plan's next song, then the songs it reaches; eight at most.
     /// Empty when the plan reaches no song.
     let rail: [RailSong]
@@ -84,29 +118,35 @@ struct PaywallPlan {
         let goal: String
         let instrumentId: String?
         let course: LearnCourse?
-        let start: Lesson?
+        let progress: LearnProgress
         let minutes: Int
         if let answers {
             let instrument = answers.instrumentId.flatMap { store.catalog.instrument(id: $0)?.id }
             goal = answers.goal
             instrumentId = instrument
             course = store.onboardingCourse(instrumentId: instrument, goal: answers.goal)
-            let progress = store.onboardingProgress(level: answers.level, instrumentId: instrument, goal: answers.goal)
-            start = course.flatMap { progress.nextLesson(in: $0) }
+            progress = store.onboardingProgress(level: answers.level, instrumentId: instrument, goal: answers.goal)
             minutes = answers.minutes
         } else {
             goal = store.settings.goal ?? "practice"
             instrumentId = store.referenceMode ? nil : store.instrument.id
             course = store.learnCourse
-            start = course.flatMap { store.learn.nextLesson(in: $0) }
+            progress = store.learn
             minutes = store.dailyMinutes
         }
+        let start = course.flatMap { progress.nextLesson(in: $0) }
         let lessons = course?.lessons ?? []
         let first = start.flatMap { lesson in lessons.firstIndex { $0.id == lesson.id } }
-        // One lesson a day from the first one: the day the plan reaches its first song.
-        let songIndex = first.flatMap { from in lessons[from...].firstIndex { $0.kind == .song } }
-        let songDay = first.flatMap { from in songIndex.map { $0 - from + 1 } }
-        let planned = plannedOutcomes(goal: goal, course: course, songDay: songDay, minutes: minutes, store: store)
+        let pace = Pace(lessons: lessons, first: first ?? 0, minutesADay: minutes)
+        let courses = store.curriculum.courses
+        let openings = RemoteConfig.shared.freeOpenings
+        let freePlan = { (lesson: Lesson) -> Bool in
+            AccessPolicy.canPlay(lesson, pro: false, progress: progress, courses: courses, openings: openings)
+        }
+        let song = first.flatMap { from in
+            firstSong(goal: goal, course: course, from: from, pace: pace, instrumentId: instrumentId, courses: courses, free: freePlan)
+        }
+        let planned = plannedOutcomes(goal: goal, course: course, songDay: song?.day, minutes: minutes, store: store)
         let outcomes: [Outcome]
         if answers != nil {
             // Onboarding's plan screen has just set the daily minutes, so they aren't promised again: the plan's own
@@ -117,7 +157,7 @@ struct PaywallPlan {
         } else {
             outcomes = merged(reasonOutcomes(reason, course: course, store: store), planned)
         }
-        let milestones = plannedMilestones(course: course, start: start, horizon: horizon)
+        let milestones = plannedMilestones(course: course, start: start, horizon: horizon, pace: pace, song: song)
         // A tool's paywall sells the tool on the track too: Today opens it and day 2 takes it further ("Drone +
         // intonation check", not the plan's "E minor" and "Ode to Joy"); the plan's own milestones follow.
         let tool: Focus? = answers == nil ? Self.focus(reason, store: store) : nil
@@ -131,8 +171,47 @@ struct PaywallPlan {
                            outcomes: outcomes,
                            today: tool?.today ?? start?.title.localized,
                            milestones: track,
-                           songDay: songDay,
+                           song: song,
                            rail: railSongs(course: course, from: first, store: store))
+    }
+
+    // MARK: The first song
+
+    /// The song the plan names first. The course's own first song from today on, at the person's pace. For the
+    /// "songs" goal, when that one is Pro or more than a week off, a song the free plan plays instead: the first free
+    /// song ahead in the course within the week, else the instrument's songbook song (`songbookSong`) on day 2, so
+    /// "Play your first song this week" is true on the free plan too.
+    private static func firstSong(goal: String, course: LearnCourse?, from first: Int, pace: Pace, instrumentId: String?,
+                                  courses: [LearnCourse], free: (Lesson) -> Bool) -> FirstSong? {
+        guard let course, first < course.lessons.count else { return nil }
+        let lessons = course.lessons
+        let ahead = lessons.indices.filter { $0 >= first && lessons[$0].kind == .song }
+        let own = ahead.first.map { FirstSong(lesson: lessons[$0], day: pace.day(of: $0), free: free(lessons[$0])) }
+        guard goal == "songs" else { return own }
+        if let own, own.free, own.day <= 7 { return own }
+        if let index = ahead.first(where: { free(lessons[$0]) && pace.day(of: $0) <= 7 }) {
+            return FirstSong(lesson: lessons[index], day: pace.day(of: index), free: true)
+        }
+        let instrument = course.instrument ?? instrumentId
+        if let songbook = songbookSong(instrument: instrument, excluding: course.id, courses: courses, free: free) {
+            // Today is the course's first lesson; the song comes the day after.
+            return FirstSong(lesson: songbook, day: 2, free: true)
+        }
+        return own
+    }
+
+    /// A free song from a collection played on `instrument` (the guitar's Songs, an instrument's songbook), tunes people
+    /// know before the Originals: the first a grown-up would pick, else the first nursery tune.
+    private static func songbookSong(instrument: String?, excluding courseId: String, courses: [LearnCourse],
+                                     free: (Lesson) -> Bool) -> Lesson? {
+        guard let instrument, instrument != "voice" else { return nil }
+        let shelves = courses.filter { $0.id != courseId && $0.instrument == instrument && isCollection($0) }
+        let ordered = shelves.filter { !SongOfTheDay.isOriginals($0) } + shelves.filter { SongOfTheDay.isOriginals($0) }
+        var songs: [Lesson] = []
+        for shelf in ordered {
+            for lesson in shelf.lessons where lesson.kind == .song && free(lesson) { songs.append(lesson) }
+        }
+        return songs.first { !isKids($0) } ?? songs.first
     }
 
     // MARK: A tool's track
@@ -301,29 +380,37 @@ struct PaywallPlan {
         return Array(list.prefix(limit))
     }
 
-    /// The first song after today's lesson and the units after today's, within the horizon: up to two, in order,
-    /// the song always among them. A unit named like today's lesson ("Your first chord: E minor", then "First
-    /// chords") would only say the same thing twice, so it is left out.
-    private static func plannedMilestones(course: LearnCourse?, start: Lesson?, horizon: Int) -> [Milestone] {
-        guard let course, let start, let first = course.lessons.firstIndex(where: { $0.id == start.id }),
-              let startUnit = course.units.firstIndex(where: { unit in unit.lessons.contains { $0.id == start.id } }) else { return [] }
-        let today = keywords(start.title.localized)
+    /// The plan's first song after today (`FirstSong`) and the units after today's, within the horizon, at the person's
+    /// pace: up to two, in order, the song always among them, none on today. A unit named like today's lesson ("Your
+    /// first chord: E minor", then "First chords") would only say the same thing twice, so it is left out.
+    private static func plannedMilestones(course: LearnCourse?, start: Lesson?, horizon: Int, pace: Pace, song first: FirstSong?) -> [Milestone] {
+        // The song by its name, not its lesson's: "Greensleeves", not "Greensleeves: the chords". Today's lesson isn't a
+        // milestone, even when it is the song.
+        let song = first.flatMap { song -> Milestone? in
+            guard song.day > 1, song.day <= horizon else { return nil }
+            return Milestone(day: song.day, title: song.title, kind: .song)
+        }
+        guard let course, let start, let today = course.lessons.firstIndex(where: { $0.id == start.id }),
+              let startUnit = course.units.firstIndex(where: { unit in unit.lessons.contains { $0.id == start.id } }) else {
+            return song.map { [$0] } ?? []
+        }
+        let todayWords = keywords(start.title.localized)
         var units: [Milestone] = []
         var opening = 0
         for (number, unit) in course.units.enumerated() {
             let unitStart = opening
             opening += unit.lessons.count
-            guard number > startUnit else { continue }
-            let day = unitStart - first + 1
+            guard number > startUnit, unitStart > today else { continue }
+            let day = pace.day(of: unitStart)
             guard day <= horizon else { break }
+            guard day > 1 else { continue }
             let title = unit.title.localized
-            if keywords(title).isDisjoint(with: today) { units.append(Milestone(day: day, title: title)) }
+            // A unit starting the same day as one already listed (short lessons, many minutes) would crowd the track.
+            if keywords(title).isDisjoint(with: todayWords), !units.contains(where: { $0.day == day }) {
+                units.append(Milestone(day: day, title: title))
+            }
         }
-        let lessons = course.lessons
-        let songIndex = lessons.indices.first { $0 > first && lessons[$0].kind == .song }
-        guard let index = songIndex, index - first + 1 <= horizon else { return Array(units.prefix(2)) }
-        // The song by its name, not its lesson's: "Greensleeves", not "Greensleeves: the chords".
-        let song = Milestone(day: index - first + 1, title: CoverArt.mainTitle(lessons[index].title.localized), kind: .song)
+        guard let song else { return Array(units.prefix(2)) }
         let unit = units.first { $0.day != song.day }
         return ([song] + (unit.map { [$0] } ?? [])).sorted { $0.day < $1.day }
     }

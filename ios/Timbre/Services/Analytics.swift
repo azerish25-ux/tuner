@@ -12,11 +12,16 @@ import UIKit
 /// The funnel, as the dashboard names it:
 /// - `app_open {launch: cold|warm}`: a launch, or a return after half a minute or more away (a new session).
 /// - `onboarding_step {step, index}`, `mic_permission {granted, asked}`, `onboarding_first_tune {result}`,
-///   `reminder_ask {result}`, `onboarding_first_chord {result}`, `onboarding_complete {…}`.
+///   `feel_offer {result: shown|on|later}`, `onboarding_first_chord {result}`, `reminder_ask {result}`,
+///   `onboarding_complete {…, path: plan|just_tune|questions}`, `onboarding_questions_closed {step}`.
 /// - `paywall_view {reason, variant}`, once per paywall shown (onboarding's included); `paywall_close {reason, variant}`
 ///   when it is turned down.
-/// - `purchase_start {product, reason, variant}`, then `purchase {product, reason, variant, trial, price, currency}`;
-///   `purchase_cancelled` and `purchase_failed` come from the commerce service.
+/// - `purchase_start {product, reason, variant}`, then `purchase {product, reason, variant, trial, price, currency}`
+///   (`trial=1` whenever the plan bought starts a free trial, yearly or monthly); `purchase_cancelled` and
+///   `purchase_failed` come from the commerce service.
+/// - After the purchase (`SubscriptionOutcomes`): `subscription_state {state, will_renew, offer, product}` when the
+///   subscription's status changes, `renewal {product, offer}`, `refund {product, reason}`.
+/// - `referral_share {screen}` when "Give a friend a month" is tapped.
 /// - `attribution {attributed, campaign, ad_group, keyword, country}`, once per install (Apple Ads).
 /// - `metrics_daily` and `diagnostics`, MetricKit's daily summaries.
 enum Analytics {
