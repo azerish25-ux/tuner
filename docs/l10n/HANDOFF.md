@@ -6,8 +6,8 @@ This is the brief for the people who translate Timbre. Translations are done by 
 
 ## What is missing now
 
-- **App interface:** 475 distinct strings are missing somewhere, 22800 locale-string pairs in all.
-- **Lessons:** 10134 locale-string pairs across the 9 lesson languages (German (de), Spanish (es), French (fr), Italian (it), Japanese (ja), Korean (ko), Portuguese (pt), Russian (ru), Chinese (Simplified) (zh-CN)).
+- **App interface:** 475 distinct strings are missing somewhere, 22,800 locale-string pairs in all.
+- **Lessons:** 10,134 locale-string pairs across the 9 lesson languages (German (de), Spanish (es), French (fr), Italian (it), Japanese (ja), Korean (ko), Portuguese (pt), Russian (ru), Chinese (Simplified) (zh-CN)).
 - **Changed English:** 867 of these locale-string pairs replace a string whose English was edited. The TODO entry carries the old English and its old translation under `previous`, to update rather than start over.
 
 | Locales | App strings missing | Lesson strings missing |
@@ -87,4 +87,4 @@ Run `report.py` after adding or editing English (a new `Text("…")`, a curricul
 
 Interface strings are found by `tools/l10n/swiftstrings.py`, a scanner that reads Swift without Xcode. It infers the type of each interpolation (`%lld` for Int, `%@` for text); when a new string's key carries `key_check`, the inferred specifier is a guess. Confirm it with Xcode's export: run the *Localization export* workflow (`l10n.yml`) and pass its `en.xliff` with `--xliff`.
 
-Stale entries: 141 keys that some locale still holds have no English in the app any more (5364 locale-key pairs; the keys are listed under `stale` in `tools/l10n/todo/index.json`). They are harmless, and they are where `changed` entries find their old translations.
+Stale entries: 141 keys that some locale still holds have no English in the app any more (5,364 locale-key pairs; the keys are listed under `stale` in `tools/l10n/todo/index.json`). They are harmless, and they are where `changed` entries find their old translations.
