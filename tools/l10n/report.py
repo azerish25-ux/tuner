@@ -1,0 +1,901 @@
+#!/usr/bin/env python3
+"""The translators' handoff: every English string a shipped locale lacks, per locale.
+
+    python3 tools/l10n/report.py                 # regenerate the handoff (idempotent)
+    python3 tools/l10n/report.py --check         # CI: warn about missing strings and an out-of-date handoff
+    python3 tools/l10n/report.py --import DIR    # merge translators' filled TODO files, apply them, regenerate
+    python3 tools/l10n/report.py --xliff en.xliff  # settle code keys with Xcode's own export (l10n.yml)
+
+Writes
+    tools/l10n/todo/<locale>.json   what each locale still needs, with context and length hints
+    tools/l10n/todo/index.json      the counts, per locale and table
+    tools/l10n/pending.json         every UI string some locale lacks (the old queue's format)
+    docs/l10n/HANDOFF.md            the translators' brief, with the counts
+
+English comes from
+    Localizable.strings   the Swift sources (swiftstrings.py) and en.lproj/Localizable.strings (the timbre_* keys)
+    Localizable.stringsdict  en.lproj/Localizable.stringsdict (plurals)
+    AppShortcuts.strings  the App Shortcut phrases in the Swift sources
+    InfoPlist.strings     the Timbre target's Info.plist strings in ios/project.yml
+    Learn.strings         en.lproj/Learn.strings (tools/curriculum/build.py), for the lesson languages only
+
+Nothing here translates: it lists what people translate, and merges what they deliver.
+"""
+from __future__ import annotations
+
+import argparse
+import ast
+import difflib
+import json
+import math
+import os
+import plistlib
+import re
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
+RES = ROOT / "ios/Timbre/Resources"
+TODO = HERE / "todo"
+HANDOFF = ROOT / "docs/l10n/HANDOFF.md"
+PENDING = HERE / "pending.json"
+HISTORY = HERE / "source/learn-history.json"
+CURRICULUM = ROOT / "ios/Sources/TimbreCore/Resources/curriculum.json"
+CODE = ["ios/Timbre", "ios/TimbreWidgets", "ios/TimbreWatch", "ios/TimbreWatchWidgets"]
+DECLS = ["ios/Sources"]
+UI_TABLES = ["InfoPlist.strings", "AppShortcuts.strings", "Localizable.strings", "Localizable.stringsdict"]
+LEARN = "Learn.strings"
+INFO_KEYS = re.compile(r"^\s+(CFBundleDisplayName|NS\w+UsageDescription):\s*(.+?)\s*$")
+SPEC = re.compile(r"%(?:\d+\$)?[-+ #0]*\d*(?:\.\d+)?(?:lld|ld|llu|lu|d|u|lf|f|@|%)|\$\{\w+\}")
+LANGUAGE_NAMES = {
+    "ar": "Arabic", "bg": "Bulgarian", "bn": "Bengali", "ca": "Catalan", "cs": "Czech", "da": "Danish",
+    "de": "German", "el": "Greek", "es": "Spanish", "et": "Estonian", "fa": "Persian", "fi": "Finnish",
+    "fr": "French", "gu": "Gujarati", "he": "Hebrew", "hi": "Hindi", "hr": "Croatian", "hu": "Hungarian",
+    "id": "Indonesian", "is": "Icelandic", "it": "Italian", "ja": "Japanese", "kn": "Kannada", "ko": "Korean",
+    "lt": "Lithuanian", "lv": "Latvian", "ml": "Malayalam", "mr": "Marathi", "nl": "Dutch", "no": "Norwegian",
+    "pa": "Punjabi", "pl": "Polish", "pt": "Portuguese", "ro": "Romanian", "ru": "Russian", "sk": "Slovak",
+    "sl": "Slovenian", "sv": "Swedish", "sw": "Swahili", "ta": "Tamil", "te": "Telugu", "th": "Thai",
+    "tr": "Turkish", "uk": "Ukrainian", "ur": "Urdu", "vi": "Vietnamese", "zh-CN": "Chinese (Simplified)",
+    "zu": "Zulu",
+}
+
+sys.path.insert(0, str(HERE))
+import apply as ui_apply  # noqa: E402
+import apply_learn  # noqa: E402
+import swiftstrings  # noqa: E402
+
+
+# ------------------------------------------------------------------------------------------------- tables
+
+def unescape(text: str) -> str:
+    return re.sub(r'\\(u[0-9a-fA-F]{4}|.)', lambda m: {"n": "\n", "t": "\t", "r": "\r"}.get(
+        m.group(1), chr(int(m.group(1)[1:], 16)) if m.group(1).startswith("u") and len(m.group(1)) == 5 else m.group(1)),
+        text)
+
+
+def read_strings(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    text = path.read_text(encoding="utf-8")
+    pairs = re.findall(r'^\s*"((?:[^"\\]|\\.)*)"\s*=\s*"((?:[^"\\]|\\.)*)"\s*;', text, re.M)
+    return {unescape(k): unescape(v) for k, v in pairs}
+
+
+def read_stringsdict(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    with path.open("rb") as handle:
+        return plistlib.load(handle)
+
+
+def plural_source(entry: dict) -> str:
+    """The English `other` form of a stringsdict entry (the text a translator starts from)."""
+    for name, value in entry.items():
+        if isinstance(value, dict) and "other" in value:
+            return value["other"]
+    return entry.get("NSStringLocalizedFormatKey", "")
+
+
+def locales() -> list:
+    return sorted(p.name[:-6] for p in RES.glob("*.lproj") if p.name not in ("en.lproj", "Base.lproj"))
+
+
+def lesson_locales() -> list:
+    found = {p.parent.name[:-6] for p in RES.glob("*.lproj/Learn.strings")} | {p.stem for p in (HERE / "learn").glob("*.json")}
+    return sorted(found - {"en"})
+
+
+def translatable(key: str) -> bool:
+    """False for keys with nothing to translate: a format alone, a note name, a symbol ("%@", "C%lld", "✓")."""
+    return bool(re.search(r"[^\W\d_]{2,}", SPEC.sub(" ", key)))
+
+
+# ---------------------------------------------------------------------------------------------- English (UI)
+
+def literal_pattern(parts: list) -> re.Pattern:
+    """A regex matching the key a literal can have, whatever the types of its interpolations."""
+    has_interp = any(isinstance(p, swiftstrings.Interp) for p in parts)
+    out = []
+    for p in parts:
+        if isinstance(p, swiftstrings.Interp):
+            out.append(r"%(?:\d+\$)?(?:lld|ld|llu|lu|d|u|lf|f|\.\d+f|@)")
+        else:
+            out.append(re.escape(p.replace("%", "%%") if has_interp else p))
+    return re.compile("".join(out) + r"\Z", re.S)
+
+
+def tightness(lines: list, line: int, slot: str) -> list:
+    """Hints that the text sits somewhere tight: from the code of the statement around `line`."""
+    near = " ".join(lines[line - 1:line + 3]) if 0 < line <= len(lines) else ""
+    hints = []
+    if ".lineLimit(1)" in near:
+        hints.append("one line")
+    if "minimumScaleFactor" in near:
+        hints.append("shrinks to fit")
+    if any(word in near for word in ("Typeface.label(", ".caption2", "Capsule()", ".badge(")):
+        hints.append("small label")
+    if slot.startswith(("Button(", "Tab(", "Toggle(", ".badge(", "Label(")):
+        hints.append("control label")
+    if slot.startswith(("AppShortcut(shortTitle", ".configurationDisplayName", "ControlWidget")):
+        hints.append("system UI label")
+    return hints
+
+
+def max_length_for(source: str, hints: list):
+    if not hints or not any(h in ("one line", "shrinks to fit", "small label", "control label", "system UI label")
+                            for h in hints):
+        return None
+    plain = SPEC.sub("00", source)
+    if len(plain) > 60:
+        return None
+    return max(len(plain) + 6, math.ceil(len(plain) * 1.5))
+
+
+def comment_above(lines: list, line: int) -> str:
+    """The // comment lines right above `line`, joined."""
+    out = []
+    k = line - 2
+    while k >= 0 and len(out) < 4:
+        text = lines[k].strip()
+        if text.startswith("//"):
+            out.insert(0, text.lstrip("/ ").strip())
+            k -= 1
+        else:
+            break
+    trailing = re.search(r"//\s*(.+)$", lines[line - 1]) if 0 < line <= len(lines) else None
+    if trailing and '"' not in trailing.group(1):
+        out.append(trailing.group(1).strip())
+    return " ".join(out)
+
+
+def legacy_references() -> dict:
+    """Where each timbre_* key is used: the Swift sources and the bundled catalogue JSON."""
+    found = {}
+    files = [p for folder in CODE + DECLS for p in sorted((ROOT / folder).rglob("*.swift"))]
+    files += sorted((ROOT / "ios/Sources/TimbreCore/Resources").glob("*.json"))
+    for path in files:
+        for number, text in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            for key in re.findall(r"\btimbre_\w+", text):
+                found.setdefault(key, f"{path.relative_to(ROOT)}:{number}")
+    return found
+
+
+def info_plist_strings() -> dict:
+    """The Timbre target's localizable Info.plist values (ios/project.yml)."""
+    out = {}
+    text = (ROOT / "ios/project.yml").read_text(encoding="utf-8")
+    block = text.split("\n  Timbre:\n", 1)[-1].split("\n  TimbreWidgets:\n", 1)[0]
+    for line in block.splitlines():
+        m = INFO_KEYS.match(line)
+        if m:
+            out[m.group(1)] = m.group(2).strip().strip('"')
+    return out
+
+
+def xliff_keys(path: Path) -> dict:
+    """{table: {key: note}} from an Xcode export."""
+    ns = {"x": "urn:oasis:names:tc:xliff:document:1.2"}
+    out = {}
+    for file in ET.parse(path).getroot().findall("x:file", ns):
+        table = Path(file.get("original")).name
+        if not file.get("original", "").startswith("Timbre/"):
+            continue
+        for unit in file.findall(".//x:trans-unit", ns):
+            note = unit.find("x:note", ns)
+            text = (note.text or "") if note is not None else ""
+            out.setdefault(table, {})[unit.get("id")] = "" if text == "No comment provided by engineer." else text
+    return out
+
+
+def ui_english(all_locale_keys: set, xliff: Path | None) -> tuple[dict, list]:
+    """{(table, key): item} for the UI tables, and the literal patterns seen in code (for stale detection)."""
+    items = {}
+    en_strings = read_strings(RES / "en.lproj/Localizable.strings")
+    en_dict = read_stringsdict(RES / "en.lproj/Localizable.stringsdict")
+    exported = xliff_keys(xliff) if xliff else {}
+    known = set(all_locale_keys) | set(en_strings) | set(en_dict) | set(exported.get("Localizable.strings", {}))
+    literals, lexers = swiftstrings.scan(ROOT, [f for f in CODE if (ROOT / f).exists()], DECLS)
+    lines_of = {rel: lexer.s.splitlines() for rel, lexer in lexers.items()}
+    patterns = []
+
+    def add(table, key, source, where, slot="", lines=None, line=0, note="", check=False):
+        if table == "Localizable.strings" and key in en_dict:
+            table = "Localizable.stringsdict"
+        item = items.get((table, key))
+        if item is None:
+            hints = tightness(lines, line, slot) if lines else []
+            item = {"table": table, "key": key, "source": source, "where": [], "context": note,
+                    "max_length": max_length_for(source, hints), "hints": hints}
+            if check:
+                item["key_check"] = ("the interpolation types in this key are inferred: confirm it with an Xcode "
+                                     "export (l10n.yml) before applying")
+            items[(table, key)] = item
+        if where and where not in item["where"] and len(item["where"]) < 3:
+            item["where"].append(where)
+        if not item["context"] and note:
+            item["context"] = note
+
+    for lit in literals:
+        lines = lines_of.get(lit.file, [])
+        note = comment_above(lines, lit.line)
+        where = f"{lit.file}:{lit.line}"
+        key, check = lit.key, lit.guessed
+        if lit.table == "Localizable.strings" and any(isinstance(p, swiftstrings.Interp) for p in lit.parts):
+            pattern = literal_pattern(lit.parts)
+            patterns.append(pattern)
+            matches = sorted(k for k in known if pattern.match(k))
+            if lit.key in matches:
+                check = False
+            elif len(matches) == 1:
+                key, check = matches[0], False
+            elif matches:
+                key, check = max(matches, key=lambda k: (k in exported.get("Localizable.strings", {}),
+                                                         k in all_locale_keys, k)), False
+        if not translatable(key):
+            continue
+        if lit.table == "Localizable.strings" and key in en_strings:
+            add("Localizable.strings", key, en_strings[key], where, lit.slot, lines, lit.line, note)
+            continue
+        source = key
+        if key in en_dict:
+            source = plural_source(en_dict[key])
+        add(lit.table, key, source, where, lit.slot, lines, lit.line, note, check)
+    # Keys Xcode's export saw that the scanner didn't (only with --xliff).
+    for table, units in exported.items():
+        if table not in ("Localizable.strings", "AppShortcuts.strings"):
+            continue
+        for key, note in units.items():
+            if translatable(key) and (table, key) not in items and key not in en_strings \
+                    and ("Localizable.stringsdict", key) not in items:
+                add(table, key, key, "", note=note or "found by Xcode's export")
+    # The timbre_* keys: English is the value.
+    refs = legacy_references()
+    for key, value in en_strings.items():
+        if ("Localizable.strings", key) not in items and translatable(value):
+            add("Localizable.strings", key, value, refs.get(key, ""), note="")
+    for key, entry in en_dict.items():
+        if ("Localizable.stringsdict", key) not in items:
+            add("Localizable.stringsdict", key, plural_source(entry), "", note="")
+    for key, value in info_plist_strings().items():
+        note = {"CFBundleDisplayName": "The app's name under its icon (keep the brand name).",
+                "NSMicrophoneUsageDescription": "The system's microphone permission prompt.",
+                "NSAppleMusicUsageDescription": "The system's Apple Music permission prompt."}.get(
+            key, "A system permission prompt.")
+        add("InfoPlist.strings", key, value, "ios/project.yml", note=note)
+    for item in items.values():
+        if item["table"] == "Localizable.stringsdict":
+            item["context"] = ("Plural. Give every plural form your language uses (zero, one, two, few, many, "
+                               "other) as a JSON object, e.g. {\"one\": \"…\", \"other\": \"…\"}. " + item["context"]).strip()
+    return items, patterns
+
+
+# ------------------------------------------------------------------------------------------- English (Learn)
+
+def learn_limits() -> dict:
+    source = (ROOT / "tools/curriculum/build.py").read_text(encoding="utf-8")
+    m = re.search(r"^LIMITS = (\{.*?\})$", source, re.M)
+    return ast.literal_eval(m.group(1)) if m else {}
+
+
+def learn_english() -> dict:
+    """{key: item} for Learn.strings, in curriculum order, with where each string sits in the course."""
+    english = {k: v for k, v in read_strings(RES / "en.lproj/Learn.strings").items()}
+    limits = learn_limits()
+    limits.setdefault("option", limits.get("options"))
+    order = {}
+    course_data = json.loads(CURRICULUM.read_text(encoding="utf-8")) if CURRICULUM.exists() else {"courses": []}
+
+    def visit(value, place, field=None):
+        if isinstance(value, dict):
+            if set(value) == {"k", "t"}:
+                if value["k"] not in order:
+                    order[value["k"]] = (len(order), place, field)
+                return
+            for name, inner in value.items():
+                visit(inner, place, name)
+        elif isinstance(value, list):
+            for inner in value:
+                visit(inner, place, field)
+
+    for course in course_data["courses"]:
+        cname = course["title"]["t"] if isinstance(course.get("title"), dict) else course["id"]
+        visit({"title": course["title"], "subtitle": course.get("subtitle")}, f"{cname} course")
+        for number, unit in enumerate(course["units"], 1):
+            utitle = unit["title"]["t"]
+            visit({"title": unit["title"], "summary": unit.get("summary")}, f"{cname} · Unit {number} “{utitle}”")
+            for lesson in unit["lessons"]:
+                ltitle = lesson["title"]["t"]
+                base = f"{cname} · Unit {number} · {lesson['kind']} {lesson['id']} “{ltitle}”"
+                visit({"title": lesson["title"]}, base)
+                for index, step in enumerate(lesson.get("steps", []), 1):
+                    visit(step, f"{base} · step {index} ({step.get('type', '')})")
+                rest = {k: v for k, v in lesson.items() if k not in ("title", "steps")}
+                visit(rest, f"{base} · song")
+    items = {}
+    unplaced = len(order)
+    for key, text in english.items():
+        position, place, field = order.get(key, (unplaced, "", ""))
+        singular = {"options": "option"}.get(field, field)
+        role = {"name": "song section label (Intro, Verse 1 …) on a small chip",
+                "words": "lyric credit (a name and year: usually keep as is)",
+                "options": "quiz answer", "why": "explanation after a quiz answer", "hint": "hint under an exercise",
+                "prompt": "question or instruction", "body": "lesson card text", "title": "title",
+                "summary": "unit summary", "subtitle": "course subtitle"}.get(field, field or "")
+        limit = limits.get(singular)
+        if field == "name":
+            limit = max(12, math.ceil(len(text) * 1.5))
+        items[key] = {"table": LEARN, "key": key, "source": text,
+                      "context": f"{place} · {role}".strip(" ·"), "max_length": limit, "order": position}
+    return dict(sorted(items.items(), key=lambda kv: (kv[1]["order"], kv[0])))
+
+
+def learn_history(english: dict, stale_keys: set) -> dict:
+    """Old English for lesson keys that left en.lproj/Learn.strings (so a changed sentence can reuse its old
+    translation). Kept in tools/l10n/source/learn-history.json; refreshed from git history when it is there."""
+    history = json.loads(HISTORY.read_text(encoding="utf-8")) if HISTORY.exists() else {}
+    wanted = {k for k in stale_keys if k not in history}
+    if wanted:
+        try:
+            revs = subprocess.run(["git", "log", "--format=%H", "--", "ios/Timbre/Resources/en.lproj/Learn.strings"],
+                                  cwd=ROOT, capture_output=True, text=True, timeout=30).stdout.split()
+            for rev in revs[:200]:
+                if not wanted:
+                    break
+                old = subprocess.run(["git", "show", f"{rev}:ios/Timbre/Resources/en.lproj/Learn.strings"],
+                                     cwd=ROOT, capture_output=True, text=True, timeout=30).stdout
+                for key, value in re.findall(r'^"(L[0-9a-f]+)" = "((?:[^"\\]|\\.)*)";$', old, re.M):
+                    if key in wanted:
+                        history[key] = unescape(value)
+                        wanted.discard(key)
+        except (OSError, subprocess.SubprocessError):
+            pass
+    return {k: v for k, v in sorted(history.items()) if k in stale_keys and k not in english}
+
+
+# --------------------------------------------------------------------------------------------- the report
+
+def best_previous(source: str, candidates: dict) -> list:
+    """Stale English variants close to `source`, best first: [(ratio, old English)]."""
+    out = []
+    matcher = difflib.SequenceMatcher(autojunk=False)
+    matcher.set_seq2(source)
+    for old in candidates:
+        if abs(len(old) - len(source)) > max(len(source), len(old)) * 0.5:
+            continue
+        matcher.set_seq1(old)
+        if matcher.real_quick_ratio() < 0.6 or matcher.quick_ratio() < 0.6:
+            continue
+        ratio = matcher.ratio()
+        if ratio >= 0.6:
+            out.append((ratio, old))
+    return sorted(out, key=lambda pair: (-pair[0], pair[1]))
+
+
+def clean(item: dict) -> dict:
+    out = {"table": item["table"], "key": item["key"], "source": item["source"]}
+    if item.get("context"):
+        out["context"] = item["context"]
+    if item.get("where"):
+        out["where"] = item["where"]
+    if item.get("hints"):
+        out["layout"] = ", ".join(item["hints"])
+    if item.get("max_length"):
+        out["max_length"] = item["max_length"]
+    if item.get("key_check"):
+        out["key_check"] = item["key_check"]
+    return out
+
+
+def build(xliff: Path | None = None) -> dict:
+    """Everything the handoff needs, computed from the repository."""
+    locs, lesson_locs = locales(), lesson_locales()
+    tables = {loc: {t: read_strings(RES / f"{loc}.lproj/{t}") for t in ("Localizable.strings", "AppShortcuts.strings",
+                                                                      "InfoPlist.strings", LEARN)} for loc in locs}
+    dicts = {loc: read_stringsdict(RES / f"{loc}.lproj/Localizable.stringsdict") for loc in locs}
+    delivered = {}
+    for loc in locs:
+        path = HERE / "translations" / f"{loc}.json"
+        delivered[loc] = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+        learn_path = HERE / "learn" / f"{loc}.json"
+        delivered[loc][LEARN] = json.loads(learn_path.read_text(encoding="utf-8")) if learn_path.exists() else {}
+    all_keys = set()
+    for loc in locs:
+        all_keys |= set(tables[loc]["Localizable.strings"]) | set(dicts[loc])
+        all_keys |= set(delivered[loc].get("Localizable.strings", {}))
+    ui, patterns = ui_english(all_keys, xliff)
+    learn = learn_english()
+
+    # Stale: keys a locale holds that the English no longer has (an edited or removed string).
+    english_ui = {(t, k) for t, k in ui}
+    stale = {}
+    for loc in locs:
+        rows = []
+        for table in ("Localizable.strings", "AppShortcuts.strings", "InfoPlist.strings"):
+            for key, value in tables[loc][table].items():
+                if (table, key) in english_ui or (table == "Localizable.strings" and (
+                        ("Localizable.stringsdict", key) in english_ui or any(p.match(key) for p in patterns))):
+                    continue
+                if table == "InfoPlist.strings" and key == "CFBundleName":
+                    continue
+                rows.append({"table": table, "key": key, "translation": value})
+        for key in dicts[loc]:
+            if ("Localizable.stringsdict", key) not in english_ui:
+                rows.append({"table": "Localizable.stringsdict", "key": key, "translation": ""})
+        if loc in lesson_locs:
+            for key, value in delivered[loc][LEARN].items():
+                if key not in learn:
+                    rows.append({"table": LEARN, "key": key, "translation": value})
+        stale[loc] = rows
+    stale_learn_keys = {r["key"] for rows in stale.values() for r in rows if r["table"] == LEARN}
+    history = learn_history(learn, stale_learn_keys)
+
+    # Candidate earlier versions of each missing string (English edited: the old translation may be reused).
+    stale_ui_sources = {}
+    for loc in locs:
+        for row in stale[loc]:
+            if row["table"] in ("Localizable.strings", "AppShortcuts.strings"):
+                stale_ui_sources.setdefault(row["key"], set()).add(loc)
+    stale_learn_sources = {text: key for key, text in history.items()}
+
+    report = {"locales": {}, "lesson_locales": lesson_locs, "ui_total": len(ui), "learn_total": len(learn),
+              "history": history}
+    previous_cache = {}
+    for loc in locs:
+        todo, awaiting = [], []
+        wanted = list(ui.values()) + (list(learn.values()) if loc in lesson_locs else [])
+        for item in wanted:
+            table, key = item["table"], item["key"]
+            if table == "Localizable.stringsdict":
+                have = key in dicts[loc]
+            elif table == "Localizable.strings":
+                have = key in tables[loc][table] or key in dicts[loc]
+            else:
+                have = key in tables[loc][table]
+            if have:
+                continue
+            entry = clean(item)
+            entry["status"] = "new"
+            given = delivered[loc].get(table, {}).get(key) if table != "Localizable.stringsdict" else None
+            if isinstance(given, str) and given.strip():
+                problems = []
+                if table == LEARN:
+                    problems = apply_learn.problems(item["source"], given, loc)
+                elif ui_apply.specs(key) != ui_apply.specs(given):
+                    problems = ["format arguments differ from the English"]
+                if not problems:
+                    awaiting.append({"table": table, "key": key})
+                    continue
+                entry["status"] = "rejected"
+                entry["previous"] = {"translation": given, "problem": ", ".join(problems)}
+            elif table in ("Localizable.strings", "AppShortcuts.strings", LEARN):
+                cache_key = (table, item["source"])
+                if cache_key not in previous_cache:
+                    pool = stale_learn_sources if table == LEARN else stale_ui_sources
+                    previous_cache[cache_key] = best_previous(item["source"], pool)
+                for ratio, old in previous_cache[cache_key]:
+                    if table == LEARN:
+                        old_key = stale_learn_sources[old]
+                        translation = delivered[loc][LEARN].get(old_key)
+                    else:
+                        translation = tables[loc]["Localizable.strings"].get(old) or tables[loc]["AppShortcuts.strings"].get(old)
+                    if translation:
+                        entry["status"] = "changed"
+                        entry["previous"] = {"source": old, "translation": translation}
+                        break
+            todo.append(entry)
+        report["locales"][loc] = {"todo": todo, "awaiting_apply": awaiting, "stale": stale[loc]}
+    return report
+
+
+# ---------------------------------------------------------------------------------------------- rendering
+
+def counts(entry: dict) -> dict:
+    out = {}
+    for item in entry["todo"]:
+        group = "lessons" if item["table"] == LEARN else "ui"
+        out[group] = out.get(group, 0) + 1
+    return out
+
+
+def render_todo(loc: str, entry: dict, carried: dict) -> str:
+    items = []
+    for item in entry["todo"]:
+        row = dict(item)
+        row["translation"] = carried.get((item["table"], item["key"]), "")
+        items.append(row)
+    by_table = {}
+    for item in entry["todo"]:
+        by_table[item["table"]] = by_table.get(item["table"], 0) + 1
+    doc = {
+        "locale": loc,
+        "language": LANGUAGE_NAMES.get(loc, loc),
+        "about": "Generated by tools/l10n/report.py: do not edit anything but the \"translation\" fields. "
+                 "Brief: docs/l10n/HANDOFF.md.",
+        "counts": dict(sorted(by_table.items())),
+        "strings": items,
+    }
+    return json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
+
+
+def render_index(report: dict) -> str:
+    rows = {}
+    for loc, entry in report["locales"].items():
+        by_table = {}
+        for item in entry["todo"]:
+            by_table[item["table"]] = by_table.get(item["table"], 0) + 1
+        rows[loc] = {"missing": dict(sorted(by_table.items())), "changed": sum(1 for i in entry["todo"] if i["status"] == "changed"),
+                     "rejected": sum(1 for i in entry["todo"] if i["status"] == "rejected"),
+                     "awaiting_apply": len(entry["awaiting_apply"]), "stale": len(entry["stale"]),
+                     "lessons": loc in report["lesson_locales"]}
+    doc = {"about": "Generated by tools/l10n/report.py. Per locale: strings still to translate, by table.",
+           "english": {"ui": report["ui_total"], "lessons": report["learn_total"]}, "locales": rows}
+    return json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
+
+
+def render_pending(report: dict) -> str:
+    seen = {}
+    for entry in report["locales"].values():
+        for item in entry["todo"]:
+            if item["table"] == LEARN:
+                continue
+            row = seen.setdefault((item["table"], item["key"]), {
+                "table": item["table"], "key": item["key"], "source": item["source"],
+                "note": item.get("context", "") or ", ".join(item.get("where", [])), "locales": 0})
+            row["locales"] += 1
+    rows = sorted(seen.values(), key=lambda r: (r["table"], r["key"]))
+    return json.dumps(rows, ensure_ascii=False, indent=1) + "\n"
+
+
+def group_locales(report: dict) -> list:
+    """[(ui missing, lesson missing, [locales])], locales with the same counts together."""
+    groups = {}
+    for loc, entry in report["locales"].items():
+        c = counts(entry)
+        groups.setdefault((c.get("ui", 0), c.get("lessons", 0)), []).append(loc)
+    return sorted(((ui, les, locs) for (ui, les), locs in groups.items()), key=lambda g: (-g[1], -g[0], g[2]))
+
+
+def lesson_breakdown(report: dict) -> list:
+    """[(course · unit, count)] of the lesson strings missing in the first lesson locale."""
+    if not report["lesson_locales"]:
+        return []
+    first = report["locales"][report["lesson_locales"][0]]["todo"]
+    out = {}
+    for item in first:
+        if item["table"] != LEARN:
+            continue
+        m = re.match(r"(.+? · Unit \d+)|(.+? course)", item.get("context", ""))
+        place = (m.group(1) or m.group(2)) if m else "other"
+        out[place] = out.get(place, 0) + 1
+    return list(out.items())
+
+
+def render_handoff(report: dict) -> str:
+    locs = report["locales"]
+    total_ui = sum(counts(e).get("ui", 0) for e in locs.values())
+    total_lessons = sum(counts(e).get("lessons", 0) for e in locs.values())
+    ui_keys = {(i["table"], i["key"]) for e in locs.values() for i in e["todo"] if i["table"] != LEARN}
+    changed = sum(1 for e in locs.values() for i in e["todo"] if i["status"] == "changed")
+    rejected = sum(1 for e in locs.values() for i in e["todo"] if i["status"] == "rejected")
+    awaiting = sum(len(e["awaiting_apply"]) for e in locs.values())
+    stale = sum(len(e["stale"]) for e in locs.values())
+    lesson_names = ", ".join(f"{LANGUAGE_NAMES.get(l, l)} ({l})" for l in report["lesson_locales"])
+    out = []
+    w = out.append
+    w("# Timbre translation handoff")
+    w("")
+    w("<!-- Generated by tools/l10n/report.py. Edit the template in that script, not this file. -->")
+    w("")
+    w("This is the brief for the people who translate Timbre. Translations are done by people, never by a machine. "
+      "The English is the source; everything here is generated from the code and the curriculum, so it is never out "
+      "of date for long: CI warns on every push while anything is missing (see *For developers* below).")
+    w("")
+    w("## What is missing now")
+    w("")
+    w(f"- **App interface:** {len(ui_keys)} distinct strings are missing somewhere, "
+      f"{total_ui} locale-string pairs in all.")
+    w(f"- **Lessons:** {total_lessons} locale-string pairs across the {len(report['lesson_locales'])} lesson languages "
+      f"({lesson_names}).")
+    if changed:
+        w(f"- **Changed English:** {changed} of these replace a string whose English was edited. The TODO entry "
+          f"carries the old English and its old translation under `previous`, to update rather than start over.")
+    if rejected:
+        w(f"- **Rejected:** {rejected} delivered translations failed a check (format arguments, numbers or ♯/♭ "
+          f"differ from the English). The entry shows the delivered text and the problem under `previous`.")
+    if awaiting:
+        w(f"- **Delivered, not applied yet:** {awaiting} translations are in `tools/l10n/translations` or "
+          f"`tools/l10n/learn` but not in the app's tables. A developer runs `python3 tools/l10n/report.py --import "
+          f"tools/l10n/todo` (or the two apply scripts) to apply them.")
+    w("")
+    w("| Locales | App strings missing | Lesson strings missing |")
+    w("|---|---:|---:|")
+    for ui, lessons, group in group_locales(report):
+        if not ui and not lessons:
+            continue
+        w(f"| {', '.join(group)} | {ui} | {lessons if group[0] in report['lesson_locales'] else '—'} |")
+    done = [l for l, e in locs.items() if not e["todo"]]
+    if done:
+        w(f"| complete: {', '.join(done)} | 0 | 0 |")
+    w("")
+    breakdown = lesson_breakdown(report)
+    if breakdown:
+        w("Where the missing lesson strings are (the same in every lesson language):")
+        w("")
+        w("| Course · unit | Strings |")
+        w("|---|---:|")
+        for place, number in breakdown:
+            w(f"| {place} | {number} |")
+        w("")
+    w("Lessons ship in the lesson languages only; the other locales show lessons in English by design (the store "
+      "listing says so). Interface strings ship in every locale.")
+    w("")
+    w("## What to translate")
+    w("")
+    w("One file per language: `tools/l10n/todo/<locale>.json` (for example `tools/l10n/todo/de.json`). Each entry "
+      "in `strings` is one string:")
+    w("")
+    w("| Field | Meaning |")
+    w("|---|---|")
+    w("| `table` | Where it ships: `Localizable.strings` (app interface), `Learn.strings` (lessons), "
+      "`AppShortcuts.strings` (Siri phrases), `InfoPlist.strings` (system permission prompts), "
+      "`Localizable.stringsdict` (plurals). |")
+    w("| `key` | The identifier. Never change it. For interface strings it is the English itself. |")
+    w("| `source` | The English to translate. |")
+    w("| `context` | Where the text appears and what it does (a code comment, or the course, unit, lesson and step). |")
+    w("| `where` | The code location, for a developer answering a question. |")
+    w("| `layout` | Present when the text sits somewhere tight: `one line`, `small label`, `control label`, "
+      "`shrinks to fit`. |")
+    w("| `max_length` | Aim for at most this many characters. For lessons it is the limit the English is written "
+      "to; for interface strings it is a soft limit from the layout. Longer text shrinks or truncates. |")
+    w("| `status` | `new`; `changed` (the English was edited: start from `previous.translation`); `rejected` "
+      "(a delivered translation failed a check: see `previous.problem`). |")
+    w("| `translation` | **Your text goes here.** Leave it empty to skip a string. |")
+    w("")
+    w("Rules the import checks (a translation that breaks one is kept out and listed again as `rejected`):")
+    w("")
+    w("- Keep every format argument: `%@`, `%lld`, `%d`, `%lf`, `%.1f` and their count and order. To reorder, use "
+      "positional forms: `%2$@ … %1$lld`. Keep `%%` (a percent sign) as it is.")
+    w("- Keep named tokens exactly: `${applicationName}`, `${instrument}`, `${key}`, `${bpm}`.")
+    w("- Lessons: keep every number, `♯`, `♭` and line break (`\\n`) of the English. German uses H for B natural "
+      "and B for B flat, so a German `B♭` becomes `B` (the check knows this).")
+    w("- Keep the brand names Timbre and Timbre Pro, and song titles that are names. Lyric credits (`words`) are "
+      "usually kept as they are.")
+    w("- Note names follow the app's own notation setting: translate the words around them, not the letters.")
+    w("- Voice: warm, direct, second person (informal where your language has the choice, as the existing "
+      "translations do). No exclamation marks or emoji the English doesn't have.")
+    w("- Plurals (`Localizable.stringsdict`): put a JSON object in `translation` with the forms your language "
+      "uses, e.g. `{\"one\": \"%lld Minute\", \"other\": \"%lld Minuten\"}`.")
+    w("")
+    w("Reuse what is already translated: the app's current tables are in `ios/Timbre/Resources/<locale>.lproj/` "
+      "(`Localizable.strings`, `Learn.strings`), and the delivered lesson translations in `tools/l10n/learn/<locale>.json`.")
+    w("")
+    w("## How to deliver")
+    w("")
+    w("1. Fill the `translation` fields of `tools/l10n/todo/<locale>.json`. Partial files are fine.")
+    w("2. Send the file back (or commit it on a branch). Keep the file name and the JSON structure.")
+    w("3. A developer imports it (below). Anything rejected comes back in the next TODO file with the reason.")
+    w("")
+    w("Formats used in the repository, for reference:")
+    w("")
+    w("- `tools/l10n/translations/<locale>.json`: `{\"Localizable.strings\": {\"English key\": \"translation\"}, "
+      "\"AppShortcuts.strings\": {…}, \"InfoPlist.strings\": {…}}`, the interface translations `apply.py` merges.")
+    w("- `tools/l10n/learn/<locale>.json`: `{\"L0a1b2c3d4e\": \"translation\"}`, the lesson translations "
+      "`apply_learn.py` writes. Lesson keys are a hash of the English, so an edited sentence gets a new key.")
+    w("")
+    w("## For developers")
+    w("")
+    w("```sh")
+    w("python3 tools/l10n/report.py                      # regenerate the TODO files, pending.json and this page")
+    w("python3 tools/l10n/report.py --import tools/l10n/todo   # merge filled TODO files, apply, regenerate")
+    w("python3 tools/l10n/report.py --check              # what CI runs: warnings only, never fails")
+    w("```")
+    w("")
+    w("`--import DIR` reads every `<locale>.json` in DIR (the TODO format), checks each translation, merges the good "
+      "ones into `tools/l10n/translations/<locale>.json` and `tools/l10n/learn/<locale>.json`, then runs the two "
+      "apply scripts and regenerates the handoff. By hand, the apply steps are:")
+    w("")
+    w("```sh")
+    w("python3 tools/l10n/apply.py tools/l10n/translations   # interface tables, every locale")
+    w("python3 tools/l10n/apply_learn.py                     # lesson tables, the lesson languages")
+    w("```")
+    w("")
+    w("Run `report.py` after adding or editing English (a new `Text(\"…\")`, a curriculum change) and commit "
+      "`tools/l10n/todo`, `tools/l10n/pending.json` and this page with the change. The core CI job runs "
+      "`report.py --check` on every push: it prints a warning with the per-locale counts, another when the committed "
+      "handoff is out of date, and publishes fresh TODO files with the core results (`ci-results/core`, folder "
+      "`l10n`). It never fails the build.")
+    w("")
+    w("Interface strings are found by `tools/l10n/swiftstrings.py`, a scanner that reads Swift without Xcode. "
+      "It infers the type of each interpolation (`%lld` for Int, `%@` for text); when a new string's key carries "
+      "`key_check`, the inferred specifier is a guess. Confirm it with Xcode's export: run the *Localization export* "
+      "workflow (`l10n.yml`) and pass its `en.xliff` with `--xliff`.")
+    w("")
+    if stale:
+        w(f"Stale entries: the locale tables hold {stale} translations of English that is no longer in the app "
+          f"(listed per locale in `tools/l10n/todo/index.json`). They are harmless, and they are where `changed` "
+          f"entries find their old translations.")
+        w("")
+    return "\n".join(out)
+
+
+def outputs(report: dict, carried_by_loc: dict) -> dict:
+    """{path: content} for every generated file."""
+    files = {}
+    for loc, entry in report["locales"].items():
+        if entry["todo"]:
+            files[TODO / f"{loc}.json"] = render_todo(loc, entry, carried_by_loc.get(loc, {}))
+    files[TODO / "index.json"] = render_index(report)
+    files[PENDING] = render_pending(report)
+    files[HANDOFF] = render_handoff(report)
+    if report["history"]:
+        files[HISTORY] = json.dumps(report["history"], ensure_ascii=False, indent=1) + "\n"
+    return files
+
+
+def carried_translations(folder: Path) -> dict:
+    """Translations already typed into TODO files, so regenerating never loses them."""
+    out = {}
+    for path in sorted(folder.glob("*.json")):
+        if path.name == "index.json":
+            continue
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        for item in doc.get("strings", []) if isinstance(doc, dict) else []:
+            value = item.get("translation")
+            if value:
+                out.setdefault(doc.get("locale", path.stem), {})[(item.get("table"), item.get("key"))] = value
+    return out
+
+
+def write(files: dict, stale_todo: list) -> int:
+    changed = 0
+    for path, content in files.items():
+        if path.exists() and path.read_text(encoding="utf-8") == content:
+            continue
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+        changed += 1
+    for path in stale_todo:
+        path.unlink()
+        changed += 1
+    return changed
+
+
+# ------------------------------------------------------------------------------------------------- import
+
+def import_todo(folder: Path) -> None:
+    """Merges filled TODO files into tools/l10n/translations and tools/l10n/learn."""
+    merged = rejected = 0
+    for path in sorted(folder.glob("*.json")):
+        if path.name == "index.json":
+            continue
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        loc = doc.get("locale", path.stem)
+        ui_path, learn_path = HERE / "translations" / f"{loc}.json", HERE / "learn" / f"{loc}.json"
+        ui_doc = json.loads(ui_path.read_text(encoding="utf-8")) if ui_path.exists() else {}
+        learn_doc = json.loads(learn_path.read_text(encoding="utf-8")) if learn_path.exists() else {}
+        for item in doc.get("strings", []):
+            value, table, key = item.get("translation"), item.get("table"), item.get("key")
+            if not value:
+                continue
+            if table == "Localizable.stringsdict":
+                print(f"{loc}: plural {key!r} needs a hand edit of {loc}.lproj/Localizable.stringsdict: {value!r}")
+                continue
+            if not isinstance(value, str):
+                continue
+            if table == LEARN:
+                problems = apply_learn.problems(item.get("source", ""), value, loc)
+                if problems:
+                    print(f"{loc} {key}: {problems}: not imported")
+                    rejected += 1
+                    continue
+                learn_doc[key] = value
+            else:
+                if ui_apply.specs(key) != ui_apply.specs(value):
+                    print(f"{loc} {key!r}: format arguments differ: not imported")
+                    rejected += 1
+                    continue
+                ui_doc.setdefault(table, {})[key] = value
+            merged += 1
+        if ui_doc:
+            ui_path.write_text(json.dumps(ui_doc, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        if learn_doc and (loc in lesson_locales() or learn_path.exists()):
+            learn_path.write_text(json.dumps(dict(sorted(learn_doc.items())), ensure_ascii=False, indent=1) + "\n",
+                                  encoding="utf-8")
+    print(f"imported {merged} translations, rejected {rejected}")
+    subprocess.run([sys.executable, str(HERE / "apply.py"), str(HERE / "translations")], check=True)
+    subprocess.run([sys.executable, str(HERE / "apply_learn.py")], check=True)
+
+
+# ---------------------------------------------------------------------------------------------------- main
+
+def annotate(report: dict, files: dict, stale_todo: list) -> None:
+    """GitHub warning annotations and a job summary (CI)."""
+    parts = []
+    for ui, lessons, group in group_locales(report):
+        if not ui and not lessons:
+            continue
+        label = group[0] if len(group) == 1 else f"{len(group)} locales ({', '.join(group)})"
+        text = f"{label}: {ui} app"
+        if group[0] in report["lesson_locales"]:
+            text += f" + {lessons} lesson"
+        parts.append(text)
+    if parts:
+        print("::warning title=Untranslated strings::" + "; ".join(parts)
+              + ". Translators' TODO: tools/l10n/todo/<locale>.json, brief: docs/l10n/HANDOFF.md.")
+    outdated = [str(p.relative_to(ROOT)) for p, c in files.items()
+                if not p.exists() or p.read_text(encoding="utf-8") != c] + [str(p.relative_to(ROOT)) for p in stale_todo]
+    if outdated:
+        print("::warning title=Translation handoff out of date::Run python3 tools/l10n/report.py and commit "
+              + ", ".join(sorted(outdated)[:6]) + (" …" if len(outdated) > 6 else ""))
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        lines = ["## Translations", "", "| Locales | App strings missing | Lesson strings missing |", "|---|---:|---:|"]
+        for ui, lessons, group in group_locales(report):
+            lines.append(f"| {', '.join(group)} | {ui} | {lessons if group[0] in report['lesson_locales'] else '—'} |")
+        lines += ["", "Brief: docs/l10n/HANDOFF.md. " + ("The committed handoff is out of date." if outdated else "")]
+        with open(summary, "a", encoding="utf-8") as handle:
+            handle.write("\n".join(lines) + "\n")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--check", action="store_true", help="CI: print warnings, write nothing in the repository")
+    parser.add_argument("--out", type=Path, help="with --check: also write the generated files under this folder")
+    parser.add_argument("--import", dest="import_dir", type=Path, help="merge filled TODO files from this folder")
+    parser.add_argument("--xliff", type=Path, help="an en.xliff from Xcode's export, to settle code keys")
+    args = parser.parse_args()
+    if args.import_dir:
+        import_todo(args.import_dir)
+    report = build(args.xliff)
+    carried = carried_translations(TODO)
+    files = outputs(report, carried)
+    stale_todo = [p for p in sorted(TODO.glob("*.json")) if p not in files] if TODO.exists() else []
+    if args.check:
+        annotate(report, files, stale_todo)
+        if args.out:
+            for path, content in files.items():
+                target = args.out / path.relative_to(ROOT)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(content, encoding="utf-8")
+        return 0
+    changed = write(files, stale_todo)
+    for ui, lessons, group in group_locales(report):
+        print(f"{', '.join(group)}: {ui} app strings, {lessons} lesson strings missing")
+    print(f"{changed} files updated" if changed else "handoff up to date")
+    return 0
+
+
+if __name__ == "__main__":
+    if "--check" in sys.argv:
+        try:
+            sys.exit(main())
+        except Exception as error:  # noqa: BLE001 - CI must never fail on the report
+            print(f"::warning title=Translation report failed::{type(error).__name__}: {error}")
+            sys.exit(0)
+    sys.exit(main())

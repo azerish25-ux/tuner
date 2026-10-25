@@ -160,7 +160,7 @@ struct LearnView: View {
                 ScrollViewReader { reader in
                     pathScroll(backed: false, trailing: half) {
                         LazyVStack(alignment: .leading, spacing: 22) {
-                            courses(trailing: half)
+                            courses(trailing: half, fade: Self.courseFade)
                             if let course {
                                 // Shows itself only when a weak-spot review is due.
                                 WeakSpotReviewCard(course: course) { open(course, $0, from: Self.continueSource) }
@@ -296,9 +296,10 @@ struct LearnView: View {
 
     /// The course cards, run past the content's padding to the edge where they pass under it: the screen's on a phone
     /// and on the iPad's leading side, the path column's on its trailing side (`trailing`, half the column spacing),
-    /// where the column clips them. The edge with more cards past it fades (`edgeFade`), so a card running off it
-    /// dissolves rather than being cut through mid-word ("Violi|n").
-    private func courses(trailing: CGFloat = Metrics.gutter) -> some View {
+    /// where the column clips them. On iPad (`fade`) the edge with more cards past it fades (`edgeFade`), so a card
+    /// running into the column's edge dissolves there rather than being cut through mid-word ("Violi|n"); a phone's
+    /// rail runs on off the screen's edge as before.
+    private func courses(trailing: CGFloat = Metrics.gutter, fade: CGFloat = 0) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .top, spacing: 10) {
                 ForEach(store.curriculum.courses) { item in
@@ -307,11 +308,12 @@ struct LearnView: View {
             }
             .padding(.leading, Metrics.gutter).padding(.trailing, trailing)
         }
-        .edgeFade(width: Self.courseFade)
+        .edgeFade(width: fade)
         .padding(.leading, -Metrics.gutter).padding(.trailing, -trailing)
     }
 
-    /// How far the course rail's fade reaches in from an edge: about half a card.
+    /// How far the iPad course rail's fade reaches in from an edge: about half a card, so the card at the column's edge
+    /// is a shadow of itself rather than a cut word.
     private static let courseFade: CGFloat = 72
 
     /// One course in the carousel: its own art in the top corner (the instrument leaning into the card,

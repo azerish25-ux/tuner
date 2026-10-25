@@ -2,6 +2,12 @@
 from lib import along, chord, course, explain, fretboard, fretted, lesson, listen, notes, part, play_chord, progression, quiz, rhythm, strum, tap, unit
 from songbook import Part, song
 import tunes
+# The Timbre Originals the song spotlights play from (see "song spotlights" below).
+from courses.originals import (
+    BALLAD as BALLAD_STRUM, CELLAR, CELLAR_1, CELLAR_SONG, DUST_3, DUST_4, GLASS_SONG, KITE_SONG, OFFBEAT, RADIO_HOOK,
+    RUST_3, RUST_HOOK, RUST_SONG,
+)
+from courses.originals_part2 import GHOST, HALO, HALO_RIFF, LETTERS, LETTERS_HOOK
 
 G = "guitar"
 
@@ -30,6 +36,7 @@ A5 = chord(G, "A5", "x022xx", "xx23xx")
 G5 = chord(G, "G5", "355xxx", "134xxx")
 A5_UP = chord(G, "A5", "577xxx", "134xxx")
 C5 = chord(G, "C5", "x355xx", "x134xx")
+D5 = chord(G, "D5", "x577xx", "x134xx")        # C5 slid up two frets
 Bm = chord(G, "Bm", "x24432", "x13421")
 Bm_EASY = chord(G, "Bm", "xx4432", "xx3421")
 
@@ -123,6 +130,26 @@ def with_fingers(step, fingers):
 SHAPES = {c["name"]: c for c in [Em, E, Am, A, C, G_MAJ, D, Dm, F_MINI, D7, E7, A7, G7, B7]}
 THE_VERSE = "The verse"
 THE_CHORUS = "The chorus"
+HOOK = "The hook"
+RIFF_TITLE = "The riff"
+
+# ---------------------------------------------------------------- song spotlights
+# Every unit from 2 on has one, just before its challenge: a Timbre Original (courses/originals.py, originals_part2.py)
+# whose chords, key and feel fit what the unit taught, played with that skill: its riff or hook on the strings just
+# learned, its strum on the unit's chords, a fill or a solo, then a section of the song. No Original is used twice.
+# Sections come from the Original's own arrangement (Song.along: its tune and words); fills and solos are new, written
+# over the Original's chords. Each lesson is a plain "lesson": the whole song stays in the Originals course.
+SONGBOOK = "The whole song is in Songs, under Originals."
+
+
+def spotlight(unit_id, original, steps, minutes=5):
+    """A unit's song spotlight: "gtr-5-spotlight", "Song spotlight: Kite Weather"."""
+    return lesson(f"{unit_id}-spotlight", f"Song spotlight: {original}", steps, minutes=minutes, xp=25)
+
+
+def introduce(title, body, visual=None):
+    """A spotlight's opening explain: the Original and the skill it uses, then where the whole song lives."""
+    return explain(title, f"{body} {SONGBOOK}", visual)
 
 # Ode to Joy, unit 2: strings 1 and 2, plus the open G that ends the middle section.
 O_A1, O_A2, O_B, O_TAIL = tunes.ode(0)
@@ -327,6 +354,19 @@ UNIT_2 = unit("gtr-2", "First melodies", "Notes on strings 1 and 2, reading tab,
         along(G, MARY, bpm=72, title="Mary Had a Little Lamb"),
         MARY_SONG.take("Mary Had a Little Lamb"),
     ], minutes=MARY_SONG.minutes(), xp=30, kind="song", arrangement=MARY_SONG.meta()),
+    # Letters in a Shoebox (C, 72 bpm): the chorus sits on strings 1 and 2 and opens with Ode to Joy's long-short lilt.
+    spotlight("gtr-2", "Letters in a Shoebox", [
+        introduce("A ballad on two strings", "Letters in a Shoebox is a Timbre Original, a slow ballad in C. Its chorus "
+                  "lives on strings 1 and 2, and its hook opens with the long, short lilt you played in Ode to Joy.",
+                  fretboard(G, [(2, 1, 1), (2, 3, 3), (1, 0), (1, 1, 1), (1, 3, 3)])),
+        notes(G, ["C4", "D4", "E4", "F4", "G4", "D4"], hint="The hook: C and D on string 2, then E, F and G on string 1, "
+              "and back to D."),
+        tap([0, 1.5, 2, 3], bpm=63, bars=2),
+        along(G, LETTERS_HOOK, bpm=60, title=HOOK),
+        listen("Does the chorus end at home?", [["E4"], ["D4"], ["C4"], ["D4"], ["C4"]], HOME, 0),
+        LETTERS.along("Chorus", bpm=63, title=THE_CHORUS),
+        LETTERS.along("Chorus", bpm=72, title="Letters in a Shoebox"),
+    ]),
     lesson("gtr-2-6", "Melody challenge", [
         explain("Six notes, two strings", "No new ideas: E, F and G on string 1, B, C and D on string 2. "
                 "Start slow, then hold a steady tempo.",

@@ -494,6 +494,13 @@ final class StageController {
         var closeUp: Float
     }
 
+    /// The string a tapped peg node turns, as the host names pegs ("s4", or "c4a" on a pair); nil when the rig has no
+    /// such peg. Node names don't always match: the violin and cello rigs wind G/E (C/A) onto pegs built as peg_s3/peg_s2.
+    func pegName(forNode name: String) -> String? {
+        guard let string = rig?.strings.first(where: { $0.peg == name }) else { return nil }
+        return String(string.nodeName.dropFirst("string_".count))
+    }
+
     /// The pegs of the string being tuned, projected for the stage overlay; nil before the model is on stage.
     func pegMarker(in size: CGSize) -> PegMarker? {
         guard let rig, !showcase, let anchor = currentAnchor else { return nil }
@@ -682,7 +689,7 @@ struct InstrumentStage: View {
         .gesture(SpatialTapGesture().targetedToAnyEntity().onEnded { value in
             var entity: Entity? = value.entity
             while let current = entity, !current.name.hasPrefix("peg_") { entity = current.parent }
-            if let name = entity?.name { onSelect(String(name.dropFirst(4))) }
+            if let name = entity?.name { onSelect(controller.pegName(forNode: name) ?? String(name.dropFirst(4))) }
         })
         // One load per model, owned by the controller: a newer instrument cancels it, and only the model the host
         // still wants is ever put on stage or reported ready.

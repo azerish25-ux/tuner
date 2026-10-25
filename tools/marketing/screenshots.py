@@ -6,17 +6,20 @@ python3 tools/marketing/screenshots.py --check
 
 The captions live in one place only: the "### iPhone" and "### iPad" tables under "## Screenshots" in
 docs/ios/APP-STORE-LISTING.md. This script reads them, so the listing and the images can't disagree.
-Before rendering (and with --check, instead of rendering) it checks the tables: a caption of at most
-30 characters, a capture the UI tests really take, and every count a caption or supporting line quotes
+Before rendering (and with --check, instead of rendering) it checks the tables: at most 10 frames a device
+(App Store Connect's limit), a caption of at most 30 characters, a capture the UI tests really take, and every count a caption or supporting line quotes
 (lessons, courses, instruments, tunings) equal to the build's own (curriculum.json, catalog.json).
 
 Each store frame must come from exactly one capture in the UI tests, and that capture must be deterministic:
 TimbreUITests keeps a frame under its own name only when it checked that the screen shows what the caption
 says (`storeFrame`); otherwise the test fails and keeps the picture as "<name>-wrong". The tuner's lock (#1),
-Kite Weather on the highway mid-chorus (#2, `65-song-perform`, from test14StoreSongPerform) and the chord (#3)
-come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift), Strum to tune (iPhone #7,
-`11b-tune-strum`, from test13StoreStrum) from the demo pitch's one fixed strum (StrumDemo), and the results (#6)
-from a play-along the demo pitch plays clean, kept only with three stars; none from timed shots. On iPad the
+Kite Weather on the highway mid-chorus (#2, `65-song-perform`, from test14StoreSongPerform), "Show me" playing
+E minor on the 3D guitar (#3, `51b-lesson-showme`, from test15StoreShowMe: kept only when the stage's probe says
+the model is showing and the picture fell inside the chord's ring on the demonstration's own clock) and the chord
+(#4) come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift), Strum to tune (iPhone #8,
+`11b-tune-strum`, from test13StoreStrum) from the demo pitch's one fixed strum (StrumDemo), and the results (#7)
+from a play-along the demo pitch plays clean, kept only with three stars and with Share and the level bar clear of
+the fade over the buttons; none from an unchecked timed shot. On iPad the
 instrument browser (#2) is a full page of its own, never a sheet over the live tuner. Every capture starts from the same seeded player (DemoData in ios/Timbre/TimbreApp.swift: the same
 streak, lit flame, level and XP on every frame) and is taken once its screen has settled (`stillScreenshot`,
 ios/TimbreUITests/StillScreen.swift).
@@ -42,6 +45,8 @@ CURRICULUM = ROOT / "ios/Sources/TimbreCore/Resources/curriculum.json"
 CATALOG = ROOT / "ios/Sources/TimbreCore/Resources/catalog.json"
 UI_TESTS = ROOT / "ios/TimbreUITests"
 CAPTION_LIMIT = 30
+# App Store Connect takes at most 10 screenshots per device size.
+FRAME_LIMIT = 10
 INK, SOFT, MINT, AMBER, STAGE = (245, 243, 239), (163, 168, 177), (76, 242, 184), (255, 181, 71), (6, 7, 8)
 COUNT = re.compile(r"(\d[\d,]*)(\+?)\s+(lessons|courses|instruments|tunings)\b", re.IGNORECASE)
 # App Store Connect's sizes for the 6.9-inch iPhone and the 13-inch iPad, portrait (width, height); landscape swaps them.
@@ -81,6 +86,8 @@ def problems(device: str, rows: list, counts: dict) -> list:
     found = []
     if not rows:
         return [f"{device}: no screenshot table under '## Screenshots' / '### {device}' in {LISTING.name}"]
+    if len(rows) > FRAME_LIMIT:
+        found.append(f"{device}: {len(rows)} frames; App Store Connect takes at most {FRAME_LIMIT}")
     tests = "\n".join(path.read_text(encoding="utf-8") for path in sorted(UI_TESTS.glob("*.swift")))
     for number, (capture, caption, line) in enumerate(rows, 1):
         where = f"{device} #{number}"

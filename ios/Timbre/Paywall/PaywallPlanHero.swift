@@ -45,14 +45,14 @@ struct PaywallPlanHero: View {
     /// often enough never to leave a gap.
     private static let widest: CGFloat = 600
     /// The plain stage kept round the Pro pill, and how softly the sleeves dissolve into a pocket of plain stage.
-    private static let pillMargin: CGFloat = 14
+    private static let pillMargin: CGFloat = 16
     private static let softness: CGFloat = 9
     /// The close button's disc from the rail's top-trailing corner (`PaywallView.closeButton`: a 34 pt disc in a
     /// 44 pt target, 15 pt in from the trailing edge and 8 pt under the safe area, which is 6 pt above the hero), and
     /// the plain stage kept round it.
     private static let closeInset: CGFloat = 37
     private static let closeDrop: CGFloat = 24
-    private static let closeClear: CGFloat = 30
+    private static let closeClear: CGFloat = 32
     /// A rail narrower than the content's widest column (480 pt) and its bleed runs to the window's trailing edge,
     /// under the close button; a wider window centres the column away from it.
     private static let columnCap: CGFloat = 519

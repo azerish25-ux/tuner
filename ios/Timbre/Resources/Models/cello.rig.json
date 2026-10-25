@@ -1,6 +1,7 @@
 {
  "model": "cello",
  "rig": "FRICTION_PEG",
+ "pegNote": "Pegs follow the cello pegbox: C and A wind on the pegs nearest the nut, G and D on the pegs nearest the scroll. The model's peg nodes keep their build names, so C (s4) turns peg_s3, G (s3) peg_s4, D (s2) peg_s1 and A (s1) peg_s2; the pegbox strings in cello.usdz were re-routed to match (the artist rig had C and A on the scroll-side pegs).",
  "degPerCent": 1.2,
  "strings": [
   {
@@ -17,18 +18,18 @@
    ],
    "radius": 0.001062,
    "wound": true,
-   "peg": "peg_s4",
-   "post": "post_s4",
+   "peg": "peg_s3",
+   "post": "post_s3",
    "node": "string_s4",
    "pegCenter": [
-    -0.02964,
-    1.34827,
-    -0.01422
+    -0.03033,
+    1.29349,
+    0.02141
    ],
    "pegAxis": [
-    -1.0,
-    -0.00229,
-    -0.00026
+    -0.99991,
+    -0.00018,
+    0.01375
    ],
    "tighten": 1
   },
@@ -46,18 +47,18 @@
    ],
    "radius": 0.000812,
    "wound": true,
-   "peg": "peg_s3",
-   "post": "post_s3",
+   "peg": "peg_s4",
+   "post": "post_s4",
    "node": "string_s3",
    "pegCenter": [
-    -0.03033,
-    1.29349,
-    0.02141
+    -0.02964,
+    1.34827,
+    -0.01422
    ],
    "pegAxis": [
-    -0.99991,
-    -0.00018,
-    0.01375
+    -1.0,
+    -0.00229,
+    -0.00026
    ],
    "tighten": 1
   },
@@ -75,18 +76,18 @@
    ],
    "radius": 0.000656,
    "wound": true,
-   "peg": "peg_s2",
-   "post": "post_s2",
+   "peg": "peg_s1",
+   "post": "post_s1",
    "node": "string_s2",
    "pegCenter": [
-    0.02725,
-    1.32042,
-    0.01002
+    0.02803,
+    1.37065,
+    -0.0332
    ],
    "pegAxis": [
-    0.99995,
-    -0.00214,
-    0.00942
+    1.0,
+    0.0014,
+    0.00252
    ],
    "tighten": -1
   },
@@ -104,18 +105,18 @@
    ],
    "radius": 0.000531,
    "wound": true,
-   "peg": "peg_s1",
-   "post": "post_s1",
+   "peg": "peg_s2",
+   "post": "post_s2",
    "node": "string_s1",
    "pegCenter": [
-    0.02803,
-    1.37065,
-    -0.0332
+    0.02725,
+    1.32042,
+    0.01002
    ],
    "pegAxis": [
-    1.0,
-    0.0014,
-    0.00252
+    0.99995,
+    -0.00214,
+    0.00942
    ],
    "tighten": -1
   }
@@ -163,8 +164,8 @@
    0.1487
   ],
   "s4.peg": [
-   0.4862,
-   0.0935
+   0.4763,
+   0.1292
   ],
   "s3.saddle": [
    0.458,
@@ -175,8 +176,8 @@
    0.1487
   ],
   "s3.peg": [
-   0.4763,
-   0.1292
+   0.4862,
+   0.0935
   ],
   "s2.saddle": [
    0.469,
@@ -187,8 +188,8 @@
    0.1487
   ],
   "s2.peg": [
-   0.5136,
-   0.1116
+   0.5254,
+   0.0789
   ],
   "s1.saddle": [
    0.4796,
@@ -199,8 +200,8 @@
    0.1487
   ],
   "s1.peg": [
-   0.5254,
-   0.0789
+   0.5136,
+   0.1116
   ]
  }
 }

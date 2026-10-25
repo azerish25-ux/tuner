@@ -127,7 +127,7 @@ python3 tools/marketing/screenshots.py --check                                  
 
 The script stops if a caption runs past 30 characters, if a row names a capture the UI tests never take, or if a count no longer matches the build (lessons and courses from `curriculum.json`, instruments and tunings from `catalog.json`). Each caption names what the player gets, not the feature; the supporting line under it backs it up.
 
-Three frames come from store scenes (`TIMBRE_SCENE`, `ios/Timbre/Root/DemoScenes.swift`) that put the app into the moment through its own code paths: the tuner's lock (#1), the chord with every string lit (#3) and *Kite Weather* performed from bar 16, the second half of its first chorus, with every note before it played clean (#2). The results (#6) follow a play-along the demo pitch plays clean, hands off, and are kept only with three stars: a lesson's stars never outrank its final play-along.
+Four frames come from store scenes (`TIMBRE_SCENE`, `ios/Timbre/Root/DemoScenes.swift`) that put the app into the moment through its own code paths: the tuner's lock (#1), *Kite Weather* performed from bar 16, the second half of its first chorus, with every note before it played clean (#2), "Show me" playing E minor on the 3D guitar (#3) and the chord with every string lit (#4). The "Show me" frame is kept only when the test's probe says the 3D stage is showing and the picture fell inside the chord's ring on the demonstration's own clock: both fingertips down, every string ringing. The results (#7) follow a play-along the demo pitch plays clean, hands off, and are kept only with three stars (a lesson's stars never outrank its final play-along) and with Share and the level bar clear of the fade above the buttons.
 
 Every capture shows the same player: the UI tests' seeded history (`DemoData` in `ios/Timbre/TimbreApp.swift`) is a 7-day streak that already counts today (the flame lit), level 5 and today's tune-up done, whatever the hour the run starts. Each capture waits for its screen to settle before the picture (`stillScreenshot` in `ios/TimbreUITests/StillScreen.swift`), after the cue that its slowest animation has finished: the fingertips landing, the XP counter, a stagger.
 
@@ -137,12 +137,13 @@ Every capture shows the same player: the UI tests' seeded history (`DemoData` in
 |---|---|---|---|
 | 1 | **In tune in seconds** | 60 instruments, to the cent | a string locked on the 3D headstock, its peg ringed and ticked (`10b-tune-locked`) |
 | 2 | **Hear exactly how you played** | Pitch and timing on every note | *Kite Weather* on the play-along highway mid-chorus: the words lighting up under the runway, fret numbers on the notes, a combo of 8 or more (`65-song-perform`) |
-| 3 | **Play your first chord today** | Timbre hears every string | the chord step with every string lit (`52b-lesson-chord`) |
-| 4 | **Play songs, start to finish** | Originals and timeless classics | the Songs tab (`63-songs`) |
-| 5 | **Learn at your own pace** | 617 lessons in 14 courses | Learn, with the next lesson up (`50-learn`) |
-| 6 | **Five minutes a day adds up** | Stars, streaks and daily quests | lesson results with three stars after a clean play-along (`62-lesson-results`) |
-| 7 | **One strum checks every string** | See which string to tune first | Strum to tune with all six strings read from one strum, A2 the one to tune first (`11b-tune-strum`) |
-| 8 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) |
+| 3 | **Watch it, then play it** | Fingers land on a 3D guitar | "Show me" mid-play: E minor's fingertips down on the 3D guitar's frets, the chord ringing across every string (`51b-lesson-showme`) |
+| 4 | **Play your first chord today** | Timbre hears every string | the chord step with every string lit (`52b-lesson-chord`) |
+| 5 | **Play songs, start to finish** | Originals and timeless classics | the Songs tab (`63-songs`) |
+| 6 | **Learn at your own pace** | 617 lessons in 14 courses | Learn, with the next lesson up (`50-learn`) |
+| 7 | **Five minutes a day adds up** | Stars, streaks and daily quests | lesson results with three stars after a clean play-along (`62-lesson-results`) |
+| 8 | **One strum checks every string** | See which string to tune first | Strum to tune with all six strings read from one strum, A2 the one to tune first (`11b-tune-strum`) |
+| 9 | **See yourself get better** | Accuracy, string health, badges | the Progress screen (`32-journey`) |
 
 ### iPad 13"
 

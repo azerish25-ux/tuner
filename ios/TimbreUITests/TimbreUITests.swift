@@ -130,11 +130,12 @@ final class TimbreUITests: XCTestCase {
     // MARK: App Store frames
     //
     // The captures the listing's screenshot table names (docs/ios/APP-STORE-LISTING.md, rendered by
-    // tools/marketing/screenshots.py) must show what their captions say, every run. The tuner's lock, the chord and
-    // Kite Weather on the highway come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift) that put
-    // the app into that moment through its own code paths, so no shot races the demo pitch's clock; Strum to tune
-    // hears the demo pitch's one fixed strum; the results follow a play-along the demo pitch plays clean; the others
-    // are plain navigation. Every one starts from the same seeded state (`DemoData` in
+    // tools/marketing/screenshots.py) must show what their captions say, every run. The tuner's lock, Kite Weather on
+    // the highway, "Show me" and the chord come from store scenes (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift) that
+    // put the app into that moment through its own code paths, so no shot races the demo pitch's clock ("Show me" is
+    // caught mid-play on the demonstration's own clock, read from its probe, and checked against it afterwards);
+    // Strum to tune hears the demo pitch's one fixed strum; the results follow a play-along the demo pitch plays clean;
+    // the others are plain navigation. Every one starts from the same seeded state (`DemoData` in
     // ios/Timbre/TimbreApp.swift: a 7-day streak that counts today, level 5) and is taken once the screen has come to
     // rest (`stillScreenshot`, StillScreen.swift), after the cue that its slowest animation has finished.
 
@@ -346,7 +347,7 @@ final class TimbreUITests: XCTestCase {
         element("settings.pro").tap()
         XCTAssertTrue(element("paywall.purchase").waitForExistence(timeout: 15))
         settle(1.5); shot("16-paywall-from-settings")
-        // Strum to tune is App Store frame #7, from a fresh launch of its own (test13StoreStrum), not from behind
+        // Strum to tune is App Store frame #8, from a fresh launch of its own (test13StoreStrum), not from behind
         // these two sheets.
     }
 
@@ -385,7 +386,7 @@ final class TimbreUITests: XCTestCase {
         if guitars.waitForExistence(timeout: 5) { guitars.tap(); settle(1.5) }
         shot("31-instruments-scrolled")
         closePicker()
-        // App Store frame #8: Progress, with nothing over it, once its cards have come in.
+        // App Store frame #9: Progress, with nothing over it, once its cards have come in.
         tab("Progress"); settle(0.8)
         let picture = stillScreenshot()
         let progress = app.tabBars.buttons["Progress"].firstMatch
@@ -427,8 +428,10 @@ final class TimbreUITests: XCTestCase {
         // the card Pro adds, the tuning accuracy chart, and kept only when that card (not the Pro teaser) is there.
         tab("Progress"); settle(1.5)
         let chart = labeled("Tuning accuracy")
-        scrollTo(chart)
-        bringToUpperMiddle(chart)
+        if chart.waitForExistence(timeout: 5) {
+            scrollTo(chart)
+            bringToUpperMiddle(chart)
+        }
         let teaser = labeled("Accuracy over time").exists
         storeFrame("45-journey-pro", picture: stillScreenshot(), ok: chart.exists && chart.isHittable && !teaser,
                    "Progress shows \(teaser ? "the Pro teaser" : "no tuning accuracy card") after the purchase")
@@ -468,7 +471,7 @@ final class TimbreUITests: XCTestCase {
     func test09LearnChordLesson() throws {
         launch(pitch: true)
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
-        // App Store frame #5, once Learn's cards have come in (and any reward banner from the tune has gone).
+        // App Store frame #6, once Learn's cards have come in (and any reward banner from the tune has gone).
         tab("Learn"); settle(1); stillShot("50-learn", timeout: 5)
         // The lesson zooms open on E minor's demonstration: the fingertips land one by one, the chord rings across the
         // strings, then "Your turn" (or, when the demo pitch plays it back, "Nice") shows under the neck. The picture
@@ -484,7 +487,7 @@ final class TimbreUITests: XCTestCase {
         // pitch tunes each string in turn, so the check can finish on its own while the tap is on its way.
         tapIfPresent(skip)
         // The demo pitch plays the chord's strings and the step hands over to the strum explainer by itself. (The
-        // chord with every string lit, App Store frame #3, comes from its own scene: test12StoreChord.)
+        // chord with every string lit, App Store frame #4, comes from its own scene: test12StoreChord.)
         let next = element("lesson.continue")
         XCTAssertTrue(next.waitForExistence(timeout: 30))
         settle(1.5); shot("53-lesson-strum-explain")
@@ -499,7 +502,7 @@ final class TimbreUITests: XCTestCase {
         tab("Songs")
         let hero = element("songs.hero")
         XCTAssertTrue(hero.waitForExistence(timeout: 10))
-        // App Store frame #4, once the shelves have come in.
+        // App Store frame #5, once the shelves have come in.
         settle(1); stillShot("63-songs", timeout: 5)
         hero.tap()
         let close = element("lesson.close")
@@ -524,14 +527,14 @@ final class TimbreUITests: XCTestCase {
         element("lesson.continue").tap(); settle(1.5); shot("59-along-ready")
         // A one-bar count-in and six notes at 60 BPM: the take is over about 10 s after Start. Hands off until then
         // (the picture doesn't touch the app): a query stalls its main thread, a note heard late is a miss, and the
-        // final play-along gates the lesson's stars, so a missed note would cost frame #6 its third star.
+        // final play-along gates the lesson's stars, so a missed note would cost frame #7 its third star.
         // The take starts a second or two after the tap (the step's entrance, then Start), so its last note lands
         // about 11 s after it: the first query waits until 15 s, well clear of it.
         element("lesson.continue").tap(); settle(7); shot("60-along-playing")
         settle(8)
         XCTAssertTrue(element("along.again").waitForExistence(timeout: 30))
         settle(1); shot("61-along-done")
-        // App Store frame #6. The results land in order: the stars, the coach, the XP counting up, then the level bar
+        // App Store frame #7. The results land in order: the stars, the coach, the XP counting up, then the level bar
         // (labelled "Level N") fills under them. Its arrival means the XP has finished counting; the badges that pop in
         // after it and the bar's fill settle before the picture. Kept only with three stars ("Flawless" or "Great work").
         element("lesson.continue").tap()
@@ -586,7 +589,7 @@ final class TimbreUITests: XCTestCase {
         storeFrame("10b-tune-locked", picture: picture, ok: problem.isEmpty, problem)
     }
 
-    /// App Store frame #3 through the `lesson-chord` scene (DemoScenes.swift): "Your first chord: E minor" opens on its
+    /// App Store frame #4 through the `lesson-chord` scene (DemoScenes.swift): "Your first chord: E minor" opens on its
     /// chord step, the demo pitch plays the chord string by string, and the step stays on "Every string rings" with
     /// every string lit instead of handing over to the next step.
     func test12StoreChord() throws {
@@ -603,7 +606,7 @@ final class TimbreUITests: XCTestCase {
                    ringing ? "\(unheard) of \(checks.count) strings not lit" : "the chord step never heard every string")
     }
 
-    /// App Store frame #7: Strum to tune, every string of the guitar read from one strum (polyphonic, the tuner no
+    /// App Store frame #8: Strum to tune, every string of the guitar read from one strum (polyphonic, the tuner no
     /// rival has). Under the demo pitch the screen hears one fixed strum a second after it opens (`StrumDemo` in
     /// Timbre/Tune/StrumModel.swift): A2 12 cents flat (the string to tune first), E4 8 sharp, the other four in tune
     /// and B3 marked as an estimate. Nothing races a clock: the reading never changes, so the picture only waits for
@@ -683,21 +686,21 @@ final class TimbreUITests: XCTestCase {
         static let replayLanding = 0.5
     }
 
-    /// One try at the ring, hands off from the tap or the probe to the picture: the demonstration already under way
-    /// while the ring is still ahead, otherwise "Show me" again (it replays on the model, once the last one is over).
-    /// Returns the picture and when it was taken.
+    /// One try at the ring, hands off from the last probe to the picture: the demonstration already under way while
+    /// its ring is still ahead, otherwise "Show me" again (it replays on the model, once the last one is over), its new
+    /// clock read from the probe right after the tap. Returns the picture and when it was taken.
     private func catchShowMeRing(landed: Date?, replay: Bool) -> (picture: XCUIScreenshot, start: Date, end: Date) {
-        var aim: Date
+        let aim: Date
         if !replay, let landed, landed.addingTimeInterval(ShowMeRing.to - 0.5) > Date() {
             aim = max(landed.addingTimeInterval(ShowMeRing.aim), Date())
         } else {
             // The last demonstration has finished (its strings dark, "Your turn" up), so the app is at rest for the tap.
             if let landed { hold(until: landed.addingTimeInterval(3)) }
             let before = Date()
-            element("lesson.showme").tap()
-            let after = Date()
-            aim = max(after.addingTimeInterval(ShowMeRing.replayLanding + ShowMeRing.from + 0.05),
-                      before.addingTimeInterval(ShowMeRing.replayLanding + ShowMeRing.aim))
+            tapIfPresent(element("lesson.showme"))
+            let replayed = showMeProbe().landed.flatMap { $0 > before ? $0 : nil }
+            aim = max(replayed?.addingTimeInterval(ShowMeRing.aim) ?? before.addingTimeInterval(ShowMeRing.replayLanding + ShowMeRing.aim),
+                      Date())
         }
         hold(until: aim)
         let start = Date()
