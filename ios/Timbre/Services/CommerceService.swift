@@ -94,8 +94,21 @@ final class CommerceService: ObservableObject {
         }
     }
 
-    var annual: Product? { products.first { $0.id == TimbreProduct.annual } }
+    /// The yearly plan the paywall sells: the one this install's paywall arm names (`RemoteConfig.annualProductID`),
+    /// else the standard one, also when the named one isn't on sale in this storefront.
+    var annual: Product? {
+        let named = Self.annualProductID(remote: RemoteConfig.shared.annualProductID)
+        return products.first { $0.id == named } ?? products.first { $0.id == TimbreProduct.annual }
+    }
     var monthly: Product? { products.first { $0.id == TimbreProduct.monthly } }
+
+    /// The remote settings' yearly product when it is a subscription Timbre knows (`TimbreProduct.subscriptions`, the
+    /// month aside), else the standard yearly plan. An unknown product would take a subscription that never grants Pro
+    /// (`AccessPolicy.isPro` counts known products only), so a typo in the file can't sell one.
+    static func annualProductID(remote: String?) -> String {
+        guard let remote, remote != TimbreProduct.monthly, TimbreProduct.subscriptions.contains(remote) else { return TimbreProduct.annual }
+        return remote
+    }
     var lifetime: Product? { products.first { $0.id == TimbreProduct.lifetime } }
 
     /// "14 days free" style label for the annual intro offer, when eligible.
@@ -225,7 +238,11 @@ final class CommerceService: ObservableObject {
             var issue: BillingIssue?
             if active?.0 != TimbreProduct.lifetime { issue = await Self.currentBillingIssue() }
             guard revision == refreshRevision else { continue }
+            // Pro arriving once entitlements were already known (a purchase, a restore, an approved Ask to Buy), not a
+            // subscriber's launch.
+            let unlocked = entitlementResolved && !isPro && AccessPolicy.isPro(evidence)
             isPro = AccessPolicy.isPro(evidence)
+            if unlocked { Self.announceUnlock() }
             activeProductID = active?.0
             renewalDate = active?.1
             billingIssue = issue
@@ -238,6 +255,13 @@ final class CommerceService: ObservableObject {
         let waiting = refreshWaiters
         refreshWaiters.removeAll()
         for continuation in waiting { continuation.resume() }
+    }
+
+    /// Pro just unlocked: Timbre's motif, once, quietly (`SoundFX` stays silent when sounds are off), and only while
+    /// the app is on screen.
+    private static func announceUnlock() {
+        guard UIApplication.shared.applicationState == .active else { return }
+        SoundFX.shared.play(.motif)
     }
 
     /// The subscription group's billing problem, if any. The group is found through the latest transaction of either

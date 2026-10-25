@@ -25,23 +25,31 @@ enum Swara {
     }
 }
 
+/// The sing-along's targets, free of the model's actor so the trace can draw them from anywhere: the ±5¢ band, the
+/// eight seconds of trace on screen, and holding inside the band for all eight as the goal.
+enum SingAlongTargets {
+    static let band = 5.0
+    static let window = 8.0
+    static let goal = 8
+}
+
 /// The player's pitch against the drone, read through the tuner's own pitch pipeline (the store's lesson
 /// microphone): each reading is placed against the nearest swara, kept for the trace, and timed while it stays
 /// inside ±5¢ of it. High-rate state lives in plain properties the trace reads each frame; only what the words
 /// show (the swara, whole cents, whole seconds held) is published.
 @MainActor
 final class DroneSingAlong: ObservableObject {
-    struct Sample {
+    struct Sample: Sendable {
         let time: TimeInterval
         /// Cents from the swara (smoothed); nil is a gap (silence).
         let cents: Double?
         let degree: Int
     }
 
-    static let band = 5.0
-    /// Seconds of trace on screen; holding inside the band end to end is the goal.
-    static let window = 8.0
-    static let goal = 8
+    /// The band, the window and the goal, readable off the main actor (the trace draws them).
+    static var band: Double { SingAlongTargets.band }
+    static var window: Double { SingAlongTargets.window }
+    static var goal: Int { SingAlongTargets.goal }
 
     @Published private(set) var degree: Int?
     @Published private(set) var shownCents: Int?
@@ -272,7 +280,7 @@ enum DroneTraceArt {
         let top: CGFloat = 8, bottom = size.height - 8
         let mid = (top + bottom) / 2
         let half = (bottom - top) / 2
-        let window = DroneSingAlong.window
+        let window = SingAlongTargets.window
         func y(_ cents: Double) -> CGFloat { mid - CGFloat(max(-range * 1.1, min(range * 1.1, cents)) / range) * half }
         func x(_ time: TimeInterval) -> CGFloat { head - CGFloat((now - time) / window) * (head - left) }
 
@@ -289,18 +297,18 @@ enum DroneTraceArt {
         context.draw(Text(verbatim: "±5¢").font(scale).foregroundStyle(Palette.mint), at: CGPoint(x: left - 6, y: mid), anchor: .trailing)
 
         // The band, and the stretch of it held so far (from the hold's start, or eight seconds back).
-        let bandRect = CGRect(x: left, y: y(DroneSingAlong.band), width: head - left, height: y(-DroneSingAlong.band) - y(DroneSingAlong.band))
+        let bandRect = CGRect(x: left, y: y(SingAlongTargets.band), width: head - left, height: y(-SingAlongTargets.band) - y(SingAlongTargets.band))
         context.fill(Path(bandRect), with: .color(Palette.mint.opacity(0.08)))
         var held = 0.0
         if let holdStart, listening {
             held = now - holdStart
             let from = x(max(holdStart, now - window))
             let heldRect = CGRect(x: from, y: bandRect.minY, width: max(0, head - from), height: bandRect.height)
-            let tint = held >= Double(DroneSingAlong.goal) ? Palette.amber : Palette.mint
+            let tint = held >= Double(SingAlongTargets.goal) ? Palette.amber : Palette.mint
             context.fill(Path(heldRect), with: .linearGradient(Gradient(colors: [tint.opacity(0.06), tint.opacity(0.26)]),
                                                                startPoint: CGPoint(x: heldRect.minX, y: 0), endPoint: CGPoint(x: heldRect.maxX, y: 0)))
         }
-        let edgeTint = held >= Double(DroneSingAlong.goal) ? Palette.amber : Palette.mint
+        let edgeTint = held >= Double(SingAlongTargets.goal) ? Palette.amber : Palette.mint
         for edgeY in [bandRect.minY, bandRect.maxY] {
             var edge = Path()
             edge.move(to: CGPoint(x: left, y: edgeY))
@@ -324,7 +332,7 @@ enum DroneTraceArt {
             if let earlier = previous, let a = earlier.cents, let b = sample.cents, earlier.degree == sample.degree,
                sample.time - earlier.time < 0.2, sample.time >= now - window - 0.2 {
                 let from = CGPoint(x: x(earlier.time), y: y(a)), to = CGPoint(x: x(sample.time), y: y(b))
-                if abs(a) <= DroneSingAlong.band && abs(b) <= DroneSingAlong.band {
+                if abs(a) <= SingAlongTargets.band && abs(b) <= SingAlongTargets.band {
                     inside.move(to: from); inside.addLine(to: to)
                 } else {
                     outside.move(to: from); outside.addLine(to: to)
@@ -343,7 +351,7 @@ enum DroneTraceArt {
         // The head: where the pitch is now.
         if let last = samples.last, let cents = last.cents, now - last.time < 0.3 {
             let p = CGPoint(x: x(last.time), y: y(cents))
-            let tint = abs(cents) <= DroneSingAlong.band ? Palette.mint : Palette.amber
+            let tint = abs(cents) <= SingAlongTargets.band ? Palette.mint : Palette.amber
             plot.fill(Path(ellipseIn: CGRect(x: p.x - 12, y: p.y - 12, width: 24, height: 24)),
                       with: .radialGradient(Gradient(colors: [tint.opacity(0.45), .clear]), center: p, startRadius: 0, endRadius: 12))
             plot.fill(Path(ellipseIn: CGRect(x: p.x - 4.5, y: p.y - 4.5, width: 9, height: 9)), with: .color(tint))
