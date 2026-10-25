@@ -43,6 +43,27 @@ enum ShowMe {
         return byRank.keys.sorted().compactMap { rank in byRank[rank].map { (rank: rank, midi: $0.midi, string: $0.string) } }
     }
 
+    /// What a strum demonstration rings, lowest string first: `chord`'s sounding strings or, without one, the
+    /// instrument's first open chord (E minor on guitar, C on ukulele, G on mandolin, the open strings otherwise, as
+    /// the lesson's explanation strums). `open` is the instrument's open strings, lowest first.
+    static func strumNotes(_ chord: ChordSpec?, open: [Int], fretKind: String?) -> [Int] {
+        if let chord {
+            var notes: [Int] = []
+            for (i, fret) in chord.frets.enumerated() where fret >= 0 && i < open.count {
+                notes.append(open[i] + fret)
+            }
+            if !notes.isEmpty { return notes }
+        }
+        let shape: [Int]
+        switch fretKind {
+        case "guitar": shape = [0, 2, 2, 0, 0, 0]
+        case "ukulele": shape = [0, 0, 0, 3]
+        case "mandolin": shape = [0, 0, 2, 3]
+        default: shape = Array(repeating: 0, count: open.count)
+        }
+        return zip(open, shape).map { $0 + $1 }
+    }
+
     /// Notes on the neck in words for VoiceOver, in the order given ("String 3, fret 2; String 2 open").
     static func words(dots: [Fretting]) -> String {
         dots.map { dot in

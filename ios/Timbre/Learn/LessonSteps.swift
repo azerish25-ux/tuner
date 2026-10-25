@@ -835,6 +835,10 @@ struct LessonStepBar: View {
 /// pattern at the step's tempo, on one clock.
 /// The strings always lie in Player view (`StrumSweep.order`: the thickest on top), so both picks go down the screen on
 /// a ↓; the chord beside the title is a fretting picture and follows the picture choice, as every chord box does.
+/// Before Start, "Show me" under the strings plays the pattern on the course instrument's 3D model in their place
+/// (`ShowMeStage`, seen the same way up, its pick on the preview's clock) while two bars of it sound; Start brings the
+/// strings back before the click and the microphone start. Without a model, with Reduce Motion or in Low Power Mode
+/// the strings stay alone.
 struct RhythmStep: View {
     enum Mode { case tap, strum(ChordSpec?), progression([ChordSpec], [Int]) }
     let mode: Mode
@@ -851,6 +855,8 @@ struct RhythmStep: View {
     var strings = 0
     /// The thinnest and thickest strings, named on the sweep and the chord boxes.
     var edges: StringEdges?
+    /// The course, for "Show me": before the take, the pattern strummed on its instrument's 3D model.
+    var course: LearnCourse?
     let accent: Color
     /// Called when the step is passed by tapping because the microphone can't hear the instrument.
     var onPractice: () -> Void = {}
@@ -877,6 +883,16 @@ struct RhythmStep: View {
     /// This step started the click that's running, so it stops it when it goes. A click it didn't start (the
     /// Metronome tool's) is left alone until a take restarts the click fresh.
     @State private var ownsClick = false
+    /// "Show me", before Start: the course instrument's 3D model in place of the strings, its pick sweeping the pattern
+    /// on the preview's clock (`ShowMeStage`) while two bars of it sound. Start brings the strings back for the take, so
+    /// the demonstration never sounds while the step listens.
+    @State private var showMe = false
+    @State private var showMeReady = false
+    @State private var showMeFailed = false
+    /// Beat 1 of the preview's loop as a date: the 3D stage's clock.
+    @State private var showOrigin = Date()
+    /// The demonstration's strokes, sounding.
+    @State private var showMeTask: Task<Void, Never>?
 
     enum Phase { case ready, playing, done }
     private var beatsPerBar: Int { meter ?? max(4, Int((pattern.max() ?? 3) + 1)) }
@@ -927,14 +943,23 @@ struct RhythmStep: View {
             micOff = LessonMicrophone.unavailable(store.audio)
             store.audio.prepareBand(band)
         }
+        // The 3D model loads quietly once the step has settled, so "Show me" is immediate (once per lesson); never
+        // once a take is under way.
+        .task {
+            try? await Task.sleep(for: .seconds(1.2))
+            guard !Task.isCancelled, phase == .ready, let model = showMeModel else { return }
+            ModelCache.shared.prefetch(model)
+        }
         .onReceive(store.audio.$permissionDenied) { denied in if denied { micOff = true } }
         .onReceive(store.audio.$error) { error in
             // The microphone failed to start mid-take: the screen takes over.
             if error != nil, phase == .playing, instrumentStep, !store.audio.running { micOff = true }
         }
         // Leaving the app mid-take drops the take: no click left sounding in a pocket, nothing half-heard graded.
-        .onChange(of: scenePhase) { _, now in if now == .background { abandonTake() } }
+        // A demonstration stops where it is ("Show me" plays it again).
+        .onChange(of: scenePhase) { _, now in if now == .background { stopShowMeSound(); abandonTake() } }
         .onDisappear {
+            showMeTask?.cancel()
             if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
             store.audio.stopBand()
             store.stopLessonListening(owner: owner)
@@ -1052,28 +1077,63 @@ struct RhythmStep: View {
 
     /// The rest of the screen, all of it: the strings with the pick sweeping them (or the tap pad), the count-in
     /// over them as a take starts and the score over them once it's done. On a short phone under a long header
-    /// the strings give way rather than squeeze (the lane above already shows every stroke).
+    /// the strings give way rather than squeeze (the lane above already shows every stroke). Before Start, "Show me"
+    /// sits under the strings when the course instrument has a 3D model and there is room for both.
     private var stage: some View {
         GeometryReader { proxy in
-            let side = min(proxy.size.width, proxy.size.height)
-            ZStack {
-                if tapping {
-                    tapPad(side: min(240, side, max(120, side * 0.62)))
-                        .opacity(phase == .done ? 0.3 : 1)
-                } else if proxy.size.height >= Self.smallestStage {
-                    strumStage.opacity(phase == .done ? 0.35 : 1)
+            let offered = showMeOffered(height: proxy.size.height)
+            VStack(spacing: 8) {
+                GeometryReader { inner in
+                    stageContent(inner.size)
                 }
-                // Both badges shrink to a short stage (a small phone under a progression's chords).
-                if counting { countInBadge(largest: min(56, max(24, proxy.size.height * 0.5))).transition(.opacity) }
-                if phase == .done { scoreBadge(compact: proxy.size.height < 90).transition(.scale(scale: 0.9).combined(with: .opacity)) }
+                if offered {
+                    showMeRow.transition(.opacity)
+                }
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
         }
         .padding(.horizontal, Metrics.gutter)
     }
 
+    /// The strings (or the tap pad) in `size`, with the count-in or the score over them.
+    private func stageContent(_ size: CGSize) -> some View {
+        let side = min(size.width, size.height)
+        return ZStack {
+            if tapping {
+                tapPad(side: min(240, side, max(120, side * 0.62)))
+                    .opacity(phase == .done ? 0.3 : 1)
+            } else if size.height >= Self.smallestStage {
+                stringsStage.opacity(phase == .done ? 0.35 : 1)
+            }
+            // Both badges shrink to a short stage (a small phone under a progression's chords).
+            if counting { countInBadge(largest: min(56, max(24, size.height * 0.5))).transition(.opacity) }
+            if phase == .done { scoreBadge(compact: size.height < 90).transition(.scale(scale: 0.9).combined(with: .opacity)) }
+        }
+        .frame(width: size.width, height: size.height)
+    }
+
     /// Below this the strings would be cramped.
     private static let smallestStage: CGFloat = 110
+    /// "Show me"'s row under the strings, with its gap.
+    private static let showMeRowHeight: CGFloat = Metrics.minTarget + 8
+
+    /// The strings with the pick sweeping them; with "Show me" on, the 3D model takes their place once it is in place,
+    /// its pick on the preview's clock (the beat lane's), so both picks keep together.
+    @ViewBuilder private var stringsStage: some View {
+        let model = showMe && phase == .ready ? showMeModel : nil
+        ZStack {
+            if model == nil || !showMeReady {
+                strumStage.transition(.opacity)
+            }
+            if let model, let course {
+                ShowMeStage(modelID: model, strings: course.stringCount, fretless: course.fretless,
+                            shot: .strum(ShowMeStrum(pattern: pattern, beatsPerBar: beatsPerBar, bpm: bpm, origin: showOrigin)),
+                            accent: accent, edges: edges, label: Text("Strum pattern"),
+                            value: String(localized: "Down strokes go from the thickest string to the thinnest, up strokes back."),
+                            onReady: { showMeAppeared() }, onFailure: { showMeUnavailable() })
+            }
+        }
+    }
 
     /// The strings with the pick sweeping them in time with the click: a preview loop before Start, still once done.
     private var strumStage: some View {
@@ -1156,9 +1216,150 @@ struct RhythmStep: View {
         return max(0, lengths.count - 1)
     }
 
+    // MARK: Show me: the pattern strummed on the instrument, in 3D
+
+    /// The course instrument's 3D model, when this step strums the strings on screen (not the tap pad) and the stage
+    /// may run now (not with Reduce Motion, in Low Power Mode or hot).
+    private var showMeModel: String? {
+        guard !showMeFailed, strums, !tapping, let course, course.strums, course.stringCount == strings else { return nil }
+        return ShowMe.model(for: course, catalog: store.catalog, reduceMotion: reduceMotion)
+    }
+
+    /// "Show me" is offered before the take only (the microphone is not listening then), under strings with room to
+    /// spare for it.
+    private func showMeOffered(height: CGFloat) -> Bool {
+        phase == .ready && showMeModel != nil && height >= Self.smallestStage + Self.showMeRowHeight
+    }
+
+    private var showMeBinding: Binding<Bool> {
+        Binding(get: { showMe }, set: { on in setShowMe(on) })
+    }
+
+    /// Under the strings: the switch back to them while the model shows, and "Show me".
+    private var showMeRow: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 10) { showMeControls }
+            VStack(spacing: 6) { showMeControls }
+        }
+        .frame(maxWidth: .infinity, minHeight: Metrics.minTarget)
+        .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: showMe)
+    }
+
+    @ViewBuilder private var showMeControls: some View {
+        if showMe {
+            ShowMeToggle(on: showMeBinding, accent: accent, label: "Neck view")
+                .transition(.opacity)
+        }
+        ShowMeButton(accent: accent, loading: showMe && !showMeReady) { setShowMe(true) }
+    }
+
+    /// "Show me" puts the instrument in place of the strings (the strokes sound once it is there) or, already there,
+    /// sounds them again; the switch brings the strings back.
+    private func setShowMe(_ on: Bool) {
+        guard on else {
+            guard showMe else { return }
+            stopShowMeSound()
+            withMotion(Motion.reveal, reduceMotion: reduceMotion) {
+                showMe = false
+                showMeReady = false
+            }
+            return
+        }
+        guard phase == .ready else { return }
+        Haptics.shared.selection()
+        if showMe {
+            if showMeReady { soundShowMe(lead: 0.15) }
+            return
+        }
+        // On the preview's own clock (`appeared`), so the model's pick runs with the beat lane's.
+        showOrigin = Date().addingTimeInterval(appeared - CACurrentMediaTime())
+        showMeReady = false
+        showMe = true
+    }
+
+    /// The model is in place: it takes over from the strings and the strokes sound once the camera has glided in.
+    private func showMeAppeared() {
+        guard showMe, !showMeReady, phase == .ready else { return }
+        withAnimation(Motion.reveal) { showMeReady = true }
+        soundShowMe(lead: ShowMe.lead)
+    }
+
+    /// The model couldn't be shown: the strings stay, without "Show me".
+    private func showMeUnavailable() {
+        stopShowMeSound()
+        showMeFailed = true
+        showMe = false
+        showMeReady = false
+    }
+
+    /// The take starts: the demonstration stops and the strings come back, before the click and the microphone start.
+    private func closeShowMe() {
+        stopShowMeSound()
+        guard showMe else { return }
+        withMotion(Motion.quick, reduceMotion: reduceMotion) {
+            showMe = false
+            showMeReady = false
+        }
+    }
+
+    private func stopShowMeSound() {
+        showMeTask?.cancel()
+        showMeTask = nil
+    }
+
+    /// Two bars of the pattern's strokes from the first one at least `lead` away (the camera's glide in), on the
+    /// model's clock: the step's chord strummed down across every string, up across the top three, each sounding as
+    /// the pick reaches the first string (as on the lesson's explanation).
+    private func soundShowMe(lead: Double) {
+        stopShowMeSound()
+        let notes = showMeNotes
+        guard !pattern.isEmpty, !notes.isEmpty, barLength > 0, phase == .ready else { return }
+        let reference = store.settings.referencePitchHz
+        let downTones = notes.map { PitchMath.frequency(midi: Double($0), reference: reference) }
+        let upTones = notes.sorted().suffix(3).map { PitchMath.frequency(midi: Double($0), reference: reference) }
+        let origin = showOrigin
+        let bar = barLength
+        let beat = spb
+        let from = Date().timeIntervalSince(origin) + lead
+        let hits = pattern.sorted()
+        let firstBar = Int((from / bar).rounded(.down))
+        var strokes: [(at: Double, down: Bool)] = []
+        for index in firstBar...(firstBar + 2) {
+            for hit in hits {
+                let at = Double(index) * bar + hit * beat
+                if at >= from - 0.0001 { strokes.append((at: at, down: hit.truncatingRemainder(dividingBy: 1) == 0)) }
+            }
+        }
+        let run = Array(strokes.prefix(hits.count * 2))
+        showMeTask = Task { @MainActor in
+            for stroke in run {
+                let wait = origin.addingTimeInterval(stroke.at - 0.09).timeIntervalSinceNow
+                if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
+                // Never once the take has started (Start cancels this too).
+                guard !Task.isCancelled, phase == .ready, showMe else { return }
+                store.audio.playTones(stroke.down ? downTones : upTones, together: true, noteMs: stroke.down ? 520 : 320)
+            }
+        }
+    }
+
+    /// What the demonstration strums, lowest string first: the step's chord (a progression's first), or the
+    /// instrument's first open chord.
+    private var showMeNotes: [Int] {
+        guard let course else { return [] }
+        let chord: ChordSpec?
+        switch mode {
+        case .tap: chord = nil
+        case .strum(let spec): chord = spec
+        case .progression(let chords, _): chord = chords.first
+        }
+        return ShowMe.strumNotes(chord, open: ChordStep.openStrings(course), fretKind: course.fretKind)
+    }
+
     // MARK: The take
 
     private func start() {
+        // The demonstration never sounds over the take: it stops before the click and the microphone start.
+        closeShowMe()
         hits = []; grades = [:]; offsets = [:]; strays = [:]; score = 0
         startTime = CACurrentMediaTime()
         withAnimation(Motion.quick) { phase = .playing; counting = true }

@@ -340,13 +340,13 @@ struct StepView: View {
             ChordStep(chord: chord, course: course, accent: accent, onItem: onItem, done: done)
         case let .strum(chord, pattern, bpm, bars, beatsPerBar):
             RhythmStep(mode: .strum(chord), pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, strums: true, strings: course.stringCount,
-                       edges: StringEdges.of(course), accent: accent, onPractice: onPractice, done: done)
+                       edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice, done: done)
         case let .progression(chords, bars, pattern, bpm, beatsPerBar):
             RhythmStep(mode: .progression(chords, bars), pattern: pattern, bpm: bpm, bars: bars.reduce(0, +), meter: beatsPerBar, strums: true, strings: course.stringCount,
-                       edges: StringEdges.of(course), accent: accent, onPractice: onPractice, done: done)
+                       edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice, done: done)
         case let .tapRhythm(pattern, bpm, bars, beatsPerBar):
             RhythmStep(mode: .tap, pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, hearsInstrument: course.fretKind != nil, strums: course.strums,
-                       strings: course.stringCount, edges: StringEdges.of(course), accent: accent, onPractice: onPractice, done: done)
+                       strings: course.stringCount, edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice, done: done)
         case let .listen(prompt, sound, options, answer):
             ChoiceStep(prompt: prompt, options: options, answer: answer, why: nil, visual: .none, sound: sound, course: course, accent: accent, done: done)
         case let .quiz(prompt, options, answer, why, visual):

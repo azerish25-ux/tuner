@@ -5,12 +5,22 @@ import TimbreCore
 struct ChordsView: View {
     enum Mode { case chords, scales }
     let mode: Mode
+    @EnvironmentObject private var store: AppStore
 
     var body: some View {
         switch mode {
-        case .chords: ChordLibraryView()
+        // Chords opens on the chord it showed last (`UserSettings.lastChord`).
+        case .chords: ChordLibraryView(start: store.settings.lastChord)
         case .scales: ScaleLibraryView()
         }
+    }
+}
+
+extension UserSettings.ChordChoice {
+    /// The saved chord's root (0…11) and quality; nil when its quality is not one the Chords tool offers.
+    var resolved: (root: Int, formula: ChordFormula)? {
+        guard let quality = ChordFormula.all.first(where: { $0.id == formula }) else { return nil }
+        return (root: ((root % 12) + 12) % 12, formula: quality)
     }
 }
 
@@ -38,6 +48,14 @@ struct ChordLibraryView: View {
     @State private var matchedFrames = 0
     @State private var owner = UUID()
     @State private var celebrate = 0
+
+    /// `start`: the chord to open on (the one shown last); C major without one.
+    init(start: UserSettings.ChordChoice? = nil) {
+        if let saved = start?.resolved {
+            _root = State(initialValue: saved.root)
+            _formula = State(initialValue: saved.formula)
+        }
+    }
 
     var body: some View {
         let strings = OpenStrings(store)
@@ -226,10 +244,13 @@ struct ChordLibraryView: View {
     }
 
     /// A new chord: the strum's lights go; a check listens for the new chord (or stops, if it can't hear that kind).
+    /// It is kept as the chord shown last: the tool opens on it next time and the Play hub's tile strums it.
     private func chordChanged() {
         strumTask?.cancel()
         ringing = nil
         ringStrings = []
+        let choice = UserSettings.ChordChoice(root: root, formula: formula.id)
+        store.updateSettings { $0.lastChord = choice }
         switch check {
         case .idle: break
         case .heard: withAnimation(Motion.settle) { check = .idle; heard = nil }

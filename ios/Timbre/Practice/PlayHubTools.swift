@@ -4,8 +4,9 @@ import TimbreCore
 
 // The Play hub's tools, alive: each idles in a small working picture of itself. The metronome swings at the player's
 // tempo (on the click itself while it runs), the drone ripples with the tanpura's pluck cycle (the drone's own clock
-// while it plays), a chord box strums a I–V–vi–IV in this tuning, the Scales tool's box runs up and down note by
-// note, a string rings in its second mode round the 12th-fret node, and a voice traces the current exercise.
+// while it plays), a chord box strums the chord last opened in the Chords tool (a I–V–vi–IV until there is one) in
+// this tuning, the Scales tool's box runs up and down note by note, a string rings in its second mode round the
+// 12th-fret node, and a voice traces the current exercise.
 // Two sizes: a glyph on the phone's tiles (`PlayToolGlyph`) and a preview across the iPad's (`PlayToolPreview`), with
 // the line under its name (`PlayToolCaption`). One timeline per glyph or tile, paused off screen, one still frame
 // under Reduce Motion.
@@ -95,7 +96,8 @@ struct PlayToolCaption: View {
         case .voice:
             return Text("Level \(store.voiceLevel)")
         case .chords:
-            let names = ChordPreviewSet.chords(for: OpenStrings(store).midi).map(\.name)
+            // The chord last opened in the tool ("C♯m"), or the four the preview strums without one.
+            let names = ChordPreviewSet.chords(for: OpenStrings(store).midi, last: store.settings.lastChord).map(\.name)
             return NoteGlyphs.text(names.joined(separator: " · "), size: 12, weight: .regular)
         case .scales:
             let scale = ScalePreviewBox.scale
@@ -424,32 +426,46 @@ enum DroneDialArt {
 
 // MARK: - Chords
 
-/// The chord boxes the Chords preview strums: a I–V–vi–IV in C (C, G, Am, F), each the Chords tool's first shape for
-/// it in this tuning, named in the player's note names. Worked out once per tuning.
+/// The chord boxes the Chords preview strums: the chord last opened in the Chords tool (`UserSettings.lastChord`) on
+/// its own, or, until there is one (or when this tuning has no shape for it), a I–V–vi–IV in C (C, G, Am, F). Each is
+/// the Chords tool's first shape for it in this tuning, named in the player's note names. Worked out once per tuning
+/// and chord.
 @MainActor
 enum ChordPreviewSet {
     private static var cache: [String: [ChordPreviewArt.Chord]] = [:]
     private static let progression: [(root: Int, formula: String)] = [(0, "maj"), (7, "maj"), (9, "min"), (5, "maj")]
 
-    static func chords(for openMidi: [Int]) -> [ChordPreviewArt.Chord] {
-        let key = openMidi.map(String.init).joined(separator: ",") + "|" + Spelling.system
+    static func chords(for openMidi: [Int], last: UserSettings.ChordChoice? = nil) -> [ChordPreviewArt.Chord] {
+        let chosen = last?.resolved
+        let chosenKey = chosen.map { "\($0.root):\($0.formula.id)" } ?? "-"
+        let key = openMidi.map(String.init).joined(separator: ",") + "|" + Spelling.system + "|" + chosenKey
         if let known = cache[key] { return known }
         var result: [ChordPreviewArt.Chord] = []
         if !openMidi.isEmpty {
-            for step in progression {
-                let formula = ChordFormula.byId(step.formula)
-                guard let shape = ChordLibrary.voicings(root: step.root, formula: formula, openMidi: openMidi, limit: 1).first else { continue }
-                let name = Spelling.name(Spelling.chord(root: step.root, intervals: formula.intervals).root) + formula.suffix
-                result.append(ChordPreviewArt.Chord(name: name, frets: shape.frets))
+            if let chosen, let picked = Self.make(root: chosen.root, formula: chosen.formula, openMidi: openMidi) {
+                result = [picked]
+            } else {
+                for step in progression {
+                    if let chord = Self.make(root: step.root, formula: ChordFormula.byId(step.formula), openMidi: openMidi) {
+                        result.append(chord)
+                    }
+                }
             }
         }
         cache[key] = result
         return result
     }
+
+    /// The Chords tool's first shape for the chord in this tuning, named as the tool spells it; nil when it has none.
+    private static func make(root: Int, formula: ChordFormula, openMidi: [Int]) -> ChordPreviewArt.Chord? {
+        guard let shape = ChordLibrary.voicings(root: root, formula: formula, openMidi: openMidi, limit: 1).first else { return nil }
+        let name = Spelling.name(Spelling.chord(root: root, intervals: formula.intervals).root) + formula.suffix
+        return ChordPreviewArt.Chord(name: name, frets: shape.frets)
+    }
 }
 
 /// A chord box strummed: low to high a glint crosses the strings, each lighting and swinging as it is passed, the
-/// root's dot in gold; then the next chord of the four.
+/// root's dot in gold; then the next chord of the four (the chord last opened in the tool, strummed again).
 struct ChordBoxPreview: View {
     var live = true
     var compact = false
@@ -458,7 +474,7 @@ struct ChordBoxPreview: View {
 
     var body: some View {
         let midi = OpenStrings(store).midi
-        let chords = ChordPreviewSet.chords(for: midi)
+        let chords = ChordPreviewSet.chords(for: midi, last: store.settings.lastChord)
         let strings = max(4, min(8, midi.count))
         TimelineView(.animation(minimumInterval: 1.0 / 30, paused: !live || reduceMotion)) { timeline in
             let t = reduceMotion ? ChordPreviewArt.stillTime : timeline.date.timeIntervalSinceReferenceDate
@@ -488,7 +504,9 @@ enum ChordPreviewArt {
         let local = cycle - turn * hold
         let chord: Chord? = chords.isEmpty ? nil : chords[Int(turn.truncatingRemainder(dividingBy: Double(chords.count)))]
         let count = max(2, chord?.frets.count ?? strings)
-        let presence = max(0, min(1, min(local / 0.3, (hold - local) / 0.25)))
+        // Changing chords, the shape fades out and the next fades in; one chord stays put and is strummed again.
+        let fade: Double = max(0, min(1, min(local / 0.3, (hold - local) / 0.25)))
+        let presence: Double = chords.count == 1 ? 1 : fade
 
         // The box: room above for the name and the open and muted marks; four frets.
         let nameRoom: CGFloat = compact ? 0 : 22

@@ -51,7 +51,23 @@ public struct UserSettings: Codable, Equatable, Sendable {
     public var notationChosen: Bool?
     /// Spaced review's schedule (`ReviewDeck`); unset until the first lesson after it arrived (Learn's weak spots seed it).
     public var spacedReview: ReviewDeck?
+    /// The chord last opened in the Chords tool (optional, so earlier files still decode): the tool opens on it again
+    /// and the Play hub's tile strums it. Unset until the tool's chord is first changed.
+    public var lastChord: ChordChoice?
     public init() {}
+}
+
+extension UserSettings {
+    /// A chord as the Chords tool picks it: a root pitch class (0 = C) and a quality (`ChordFormula.id`).
+    public struct ChordChoice: Codable, Equatable, Sendable {
+        public var root: Int
+        public var formula: String
+
+        public init(root: Int, formula: String) {
+            self.root = root
+            self.formula = formula
+        }
+    }
 }
 
 extension UserSettings {
