@@ -226,12 +226,16 @@ public struct ChordSpec: Codable, Equatable, Hashable, Sendable {
     public let frets: [Int]
     public let fingers: [Int]?
     public let baseFret: Int?
+    /// The fret a capo sits at, when the shape is played behind one ("a G shape on capo 2 reads A"). `frets` are then
+    /// still absolute: the capo's own fret shows on the strings it stops, and fingers count from the capo.
+    public let capo: Int?
     /// The symbol as the player reads it, in the active note-naming system (`NoteNames.active`): "Hm" and "H7"
     /// in German, so diagrams agree with the lesson text.
     public var name: String { NoteNames.chordSymbol(symbol) }
-    enum CodingKeys: String, CodingKey { case symbol = "name", root, quality, frets, fingers, baseFret }
-    public init(name: String, root: Int, quality: String, frets: [Int], fingers: [Int]? = nil, baseFret: Int? = nil) {
+    enum CodingKeys: String, CodingKey { case symbol = "name", root, quality, frets, fingers, baseFret, capo }
+    public init(name: String, root: Int, quality: String, frets: [Int], fingers: [Int]? = nil, baseFret: Int? = nil, capo: Int? = nil) {
         self.symbol = name; self.root = root; self.quality = quality; self.frets = frets; self.fingers = fingers; self.baseFret = baseFret
+        self.capo = capo
     }
 }
 
@@ -245,8 +249,11 @@ public enum LessonVisual: Codable, Equatable, Sendable {
     case rhythm(pattern: [Double], beatsPerBar: Int)
     case keyboard(midi: [Int])
     case instrument(part: String)
+    /// A short looping clip (or a set of photos) of a hand doing what the words describe: a bow hold, a pick grip,
+    /// palm muting. `name` is the bundled resource's name without its extension.
+    case clip(name: String)
 
-    enum CodingKeys: String, CodingKey { case type, strings, dots, frets, start, chord, midi, clef, pattern, beatsPerBar, part }
+    enum CodingKeys: String, CodingKey { case type, strings, dots, frets, start, chord, midi, clef, pattern, beatsPerBar, part, name }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         switch try c.decode(String.self, forKey: .type) {
@@ -256,6 +263,7 @@ public enum LessonVisual: Codable, Equatable, Sendable {
         case "rhythm": self = .rhythm(pattern: try c.decode([Double].self, forKey: .pattern), beatsPerBar: try c.decodeIfPresent(Int.self, forKey: .beatsPerBar) ?? 4)
         case "keyboard": self = .keyboard(midi: try c.decode([Int].self, forKey: .midi))
         case "instrument": self = .instrument(part: try c.decode(String.self, forKey: .part))
+        case "clip": self = .clip(name: try c.decode(String.self, forKey: .name))
         default: self = .none
         }
     }
@@ -269,6 +277,7 @@ public enum LessonVisual: Codable, Equatable, Sendable {
         case let .rhythm(pattern, beatsPerBar): try c.encode("rhythm", forKey: .type); try c.encode(pattern, forKey: .pattern); try c.encode(beatsPerBar, forKey: .beatsPerBar)
         case let .keyboard(midi): try c.encode("keyboard", forKey: .type); try c.encode(midi, forKey: .midi)
         case let .instrument(part): try c.encode("instrument", forKey: .type); try c.encode(part, forKey: .part)
+        case let .clip(name): try c.encode("clip", forKey: .type); try c.encode(name, forKey: .name)
         }
     }
 }

@@ -38,6 +38,40 @@ public enum Streaks {
     }
 }
 
+/// `Streaks.summary` worked out once and kept until something it reads changes: the records, the frozen days, the
+/// calendar day or the time zone. A record dated later than the last count starts to count when its time comes.
+/// The owner bumps `revision` whenever its records change (the cache never compares the records themselves).
+public struct StreakCache {
+    private var revision: Int?
+    private var frozen: [Date] = []
+    private var timeZone: TimeZone?
+    private var validFrom = Date.distantFuture
+    private var validUntil = Date.distantPast
+    private var cached: StreakSummary?
+
+    public init() {}
+
+    public mutating func summary(records: [PracticeRecord], revision: Int, frozen: [Date], now: Date = Date(), calendar: Calendar = .current) -> StreakSummary {
+        if let cached, self.revision == revision, self.frozen == frozen, timeZone == calendar.timeZone, validFrom <= now, now < validUntil {
+            return cached
+        }
+        let summary = Streaks.summary(records: records, frozen: Set(frozen), now: now, calendar: calendar)
+        let today = calendar.startOfDay(for: now)
+        let tomorrow = calendar.date(byAdding: .day, value: 1, to: today) ?? now
+        let nextRecord = records.lazy.map(\.date).filter { $0 > now }.min()
+        self.revision = revision
+        self.frozen = frozen
+        timeZone = calendar.timeZone
+        validFrom = today
+        validUntil = nextRecord.map { min($0, tomorrow) } ?? tomorrow
+        cached = summary
+        return summary
+    }
+
+    /// Forgets the summary: the next read counts again.
+    public mutating func invalidate() { cached = nil }
+}
+
 /// Streak freezes: one is earned on every seventh day of a run (up to `cap` banked), and banked
 /// freezes cover missed days automatically, as long as there are enough of them for the whole gap.
 public enum StreakFreeze {
