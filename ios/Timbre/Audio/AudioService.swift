@@ -53,7 +53,11 @@ final class AudioService: ObservableObject {
     /// The voice tones sound in when a call names none: the selected instrument's (the store provides it).
     var instrumentVoice: () -> InstrumentVoice = { .guitar }
     /// The open lesson's course instrument while its player is showing; nil falls back to `instrumentVoice`.
-    var courseVoice: InstrumentVoice?
+    var courseVoice: InstrumentVoice? {
+        didSet { if let courseVoice { warmSamples(courseVoice) } }
+    }
+    /// Voices whose recorded zones have been decoded ahead of their first note (`warmSamples`).
+    private var warmedVoices: Set<InstrumentVoice> = []
     /// Tones render here (a few milliseconds), never on the main thread or in the audio callback.
     private let toneQueue = DispatchQueue(label: "com.timbre.tones", qos: .userInitiated)
     /// Recent renderings: a lesson replays the same chord, the tuner the same string.
@@ -82,8 +86,13 @@ final class AudioService: ObservableObject {
             }
         })
         observers.append(NotificationCenter.default.addObserver(forName: UIApplication.didReceiveMemoryWarningNotification, object: nil, queue: .main) { [weak self] _ in
-            // Rendered bands are a few MB each; the one playing stays alive with its player (tones likewise).
-            Task { @MainActor in self?.bandCache.removeAll(); self?.toneCache.removeAll(); self?.toneRecency.removeAll() }
+            // Rendered bands are a few MB each; the one playing stays alive with its player (tones likewise). Decoded
+            // instrument recordings go too (a note decodes its zone again when it next plays).
+            SampleLibrary.shared?.purge()
+            Task { @MainActor in
+                self?.bandCache.removeAll(); self?.toneCache.removeAll(); self?.toneRecency.removeAll()
+                self?.warmedVoices.removeAll()
+            }
         })
         observers.append(NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: .main) { [weak self] notification in
             // Headphones in or out: the band follows at once (out: it fades before it can reach the mic).
@@ -122,6 +131,8 @@ final class AudioService: ObservableObject {
         guard generation == token, !Task.isCancelled else { return }
         permissionDenied = !allowed
         guard allowed else { error = String(localized: "Microphone access is off. Turn it on in Settings to tune."); return }
+        // The tuner's reference and "Hear it" will want this instrument's recordings: decode them while it listens.
+        warmSamples(currentVoice)
         var transitionChecks = 0
         while UIApplication.shared.applicationState == .inactive && transitionChecks < 20 {
             do { try await Task.sleep(for: .milliseconds(50)) } catch { return }
@@ -266,6 +277,7 @@ final class AudioService: ObservableObject {
             tonePlaying = true; resumeCaptureAfterTone = resume
             let request = ToneRequest(frequencies: [hz], kind: .reference(durationMs: max(0, durationMs)),
                                       voice: voice ?? currentVoice, sampleRate: renderer.rate)
+            warmSamples(request.voice)
             sound(request, reference: true)
         } catch { suspend(); self.error = String(localized: "Could not play the reference tone: \(error.localizedDescription)") }
     }
@@ -280,6 +292,7 @@ final class AudioService: ObservableObject {
             try ensureOutput()
             let kind = ToneRequest.Kind.phrase(together: together, noteMs: together ? noteMs + 400 : noteMs, gapMs: gapMs)
             let request = ToneRequest(frequencies: frequencies, kind: kind, voice: voice ?? currentVoice, sampleRate: renderer.rate)
+            warmSamples(request.voice)
             tonePlaying = true
             toneTask?.cancel(); toneTask = nil
             sound(request, reference: false)
@@ -288,8 +301,16 @@ final class AudioService: ObservableObject {
 
     private var currentVoice: InstrumentVoice { courseVoice ?? instrumentVoice() }
 
-    /// Plays a request from the cache, or renders it on the tone queue first; a newer request or a stop
-    /// in the meantime wins.
+    /// Decodes `voice`'s recorded zones on a utility queue, once (until a memory warning), so its first notes don't
+    /// wait on decoding. A voice without recordings costs nothing; nothing is decoded at launch.
+    private func warmSamples(_ voice: InstrumentVoice) {
+        guard !warmedVoices.contains(voice), let library = SampleLibrary.shared, library.instrument(for: voice) != nil else { return }
+        warmedVoices.insert(voice)
+        DispatchQueue.global(qos: .utility).async { library.prewarm(voice) }
+    }
+
+    /// Plays a request from the cache, or renders it on the tone queue first (from the instrument's recordings when
+    /// the app has them, else synthesized); a newer request or a stop in the meantime wins.
     private func sound(_ request: ToneRequest, reference: Bool) {
         toneToken += 1
         let token = toneToken
@@ -301,7 +322,7 @@ final class AudioService: ObservableObject {
             return
         }
         toneQueue.async { [weak self] in
-            let clip = ToneSynth.render(request)
+            let clip = ToneSynth.render(request, samples: SampleLibrary.shared)
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.remember(clip, for: request)
@@ -549,7 +570,7 @@ final class AudioService: ObservableObject {
         guard !bandRendering.contains(key) else { return nil }
         bandRendering.insert(key)
         bandQueue.async { [weak self] in
-            let track = BandSynth.render(arrangement, sampleRate: rate)
+            let track = BandSynth.render(arrangement, sampleRate: rate, samples: SampleLibrary.shared)
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.bandRendering.remove(key)

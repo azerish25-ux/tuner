@@ -1,6 +1,7 @@
 """Verify the native app bundles every authored catalogue/photo/font resource."""
 from pathlib import Path
 import json
+import math
 import re
 import plistlib
 
@@ -69,4 +70,53 @@ for source in (root / 'ios/Timbre').rglob('*.swift'):
 assert not missing, '\n'.join(missing)
 locales = list(resources.glob('*.lproj'))
 assert len(locales) == 49
-print(f'OK: 60 instruments, 102 tunings, {len(photos)} photos/{2 * len(photos)} images, 49 locales, 1 licensed font family, {len(manifest['photos'])} 3D models; all literal localization keys exist.')
+# Recorded instruments (tools/build-ios-samples.py): every manifest file present and nothing unlisted, licences that
+# allow redistribution in a commercial app (CC0, or CC-BY with a credit), sources pinned on GitHub, pitches measured,
+# the band's kit, bass and piano there, every file traced in docs/content/AUDIO-SOURCES.md, the total within budget.
+samples = resources / 'Samples'
+sample_manifest = json.loads((samples / 'manifest.json').read_text(encoding='utf-8'))
+assert sample_manifest['version'] == 1 and sample_manifest['sampleRate'] == 44100
+allowed_licences = {'CC0-1.0', 'CC-BY-3.0', 'CC-BY-4.0'}
+sample_sources = sample_manifest['sources']
+audio_doc = (root / 'docs/content/AUDIO-SOURCES.md').read_text(encoding='utf-8')
+for key, source in sample_sources.items():
+    assert source['licence'] in allowed_licences, (key, source['licence'])
+    assert source['licenceURL'].startswith('https://creativecommons.org/'), key
+    assert source['repo'].startswith('https://github.com/') and re.fullmatch(r'[0-9a-f]{40}', source['commit']), key
+    assert source['title'] and source['author'], key
+    assert source['commit'] in audio_doc and source['title'] in audio_doc, ('AUDIO-SOURCES.md must list', key)
+voice_cases = {'guitar', 'bass', 'ukulele', 'mandolin', 'banjo', 'harp', 'piano', 'mallet', 'violin', 'cello', 'flute', 'reed', 'brass', 'voice'}
+listed, sample_bytes, played_voices = set(), 0, set()
+for inst in sample_manifest['instruments']:
+    assert inst['kind'] in {'plucked', 'struck', 'sustained', 'drums'} and inst['zones'], inst['id']
+    assert set(inst['voices']) <= voice_cases and not (set(inst['voices']) & played_voices), inst['id']
+    played_voices |= set(inst['voices'])
+    for zone in inst['zones']:
+        path = samples / zone['file']
+        assert path.is_file() and path.suffix == '.m4a', zone['file']
+        assert zone['file'] not in listed, ('listed twice', zone['file'])
+        listed.add(zone['file'])
+        sample_bytes += path.stat().st_size
+        assert zone['source'] in sample_sources, zone['file']
+        assert zone['original'] and re.fullmatch(r'[0-9a-f]{64}( \+ [0-9a-f]{64})*', zone['sha256']), zone['file']
+        assert f"`Samples/{zone['file']}`" in audio_doc, ('AUDIO-SOURCES.md must list', zone['file'])
+        assert zone['gain'] > 0 and 0 < zone['velocity'] <= 1 and 0 <= zone['mark'] < zone['frames'] and zone['markLevel'] > 0, zone['file']
+        if inst['kind'] == 'drums':
+            assert zone['piece'] in {'kick', 'snare', 'hat', 'openhat', 'ride', 'crash'}, zone['file']
+        else:
+            equal_tempered = 440 * 2 ** ((zone['midi'] - 69) / 12)
+            assert zone['hz'] > 0 and abs(1200 * math.log2(zone['hz'] / equal_tempered)) <= 35, zone['file']
+            assert inst['coverage'][0] - 6 <= zone['midi'] <= inst['coverage'][1] + 6, zone['file']
+        if 'loop' in zone:
+            assert inst['kind'] == 'sustained' and 0 < zone['loop'][0] < zone['loop'][1] <= zone['frames'], zone['file']
+on_disk = {str(p.relative_to(samples)) for p in samples.rglob('*') if p.is_file() and p.name != 'manifest.json'}
+assert on_disk == listed, ('unlisted or missing samples', sorted(on_disk - listed), sorted(listed - on_disk))
+sample_sets = {inst['id']: inst for inst in sample_manifest['instruments']}
+folders = {p.name for p in samples.iterdir() if p.is_dir()}
+assert folders == set(sample_sets), ('sample folders without a manifest set, or sets without a folder', sorted(folders ^ set(sample_sets)))
+assert all(z['file'].split('/')[0] == inst_id for inst_id, inst in sample_sets.items() for z in inst['zones']), 'a set\'s files live in its own folder'
+assert {'drums', 'bass', 'piano'} <= set(sample_sets), 'the backing band needs drums, bass and piano'
+assert {'kick', 'snare', 'hat', 'crash'} <= {z['piece'] for z in sample_sets['drums']['zones']}
+assert {'guitar', 'piano', 'bass'} <= played_voices
+assert sample_bytes <= 35_000_000, f'samples {sample_bytes / 1e6:.1f} MB over the 35 MB budget'
+print(f'OK: 60 instruments, 102 tunings, {len(photos)} photos/{2 * len(photos)} images, 49 locales, 1 licensed font family, {len(manifest['photos'])} 3D models; all literal localization keys exist; {len(listed)} instrument samples ({sample_bytes / 1e6:.1f} MB, {len(sample_sets)} sets, {", ".join(sorted(sample_sources))}).')

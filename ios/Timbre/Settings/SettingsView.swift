@@ -633,6 +633,7 @@ private struct Acknowledgements: View {
                         .padding(.horizontal, 16).padding(.vertical, 12)
                     }
                 }
+                if !soundCredits.isEmpty { sounds }
             }
             .padding(.horizontal, Metrics.gutter)
             .padding(.top, 12)
@@ -641,6 +642,32 @@ private struct Acknowledgements: View {
         .stageTopShade()
         .background(StageBackground(motes: false))
         .navigationTitle("Acknowledgements")
+    }
+
+    /// The sample libraries the recorded instruments and the band come from (Samples/manifest.json).
+    private var soundCredits: [SampleCredit] { SampleLibrary.shared?.credits ?? [] }
+
+    private var sounds: some View {
+        SettingsGroup(title: "Sounds", footer: Text("Recorded instruments, shared under CC0 by their makers.")) {
+            ForEach(Array(soundCredits.enumerated()), id: \.element.id) { index, credit in
+                if index > 0 { Hairline(leading: 16) }
+                soundCredit(credit)
+            }
+        }
+    }
+
+    private func soundCredit(_ credit: SampleCredit) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            if let link = credit.link {
+                Link(destination: link) { Text(verbatim: credit.title).font(.subheadline.weight(.semibold)) }
+            } else {
+                Text(verbatim: credit.title).font(.subheadline.weight(.semibold))
+            }
+            Text(verbatim: "\(credit.author) · \(credit.licence)").font(.caption).foregroundStyle(Palette.inkSoft)
+            if let licence = credit.licenceLink { Link("Licence", destination: licence).font(.caption) }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 16).padding(.vertical, 12)
     }
 
     private func license(_ name: String, file: String) -> some View {

@@ -281,11 +281,17 @@ final class BandPlayer {
 
 // MARK: - Offline synthesis
 
-/// Drums (sine-drop kick, noise snare, filtered-noise hat), a plucked bass and a detuned pad, written
-/// into plain buffers off the main thread, humanized and set in a light room. Deterministic: the same
-/// arrangement renders the same audio.
+/// The band, written into plain buffers off the main thread, humanized and set in a light room. With the app's
+/// recorded instruments (`samples`): a real drum kit, an electric bass and a grand piano comping the chords; without
+/// them, or for any part whose recording can't be read, the synthesized drums (sine-drop kick, noise snare,
+/// filtered-noise hat), plucked bass and detuned pad. Deterministic: the same arrangement renders the same audio.
 enum BandSynth {
-    static func render(_ arrangement: BandArrangement, sampleRate: Int) -> BandTrack {
+    /// The recorded kit under the bass and piano (its hits are levelled loud for a kit on its own).
+    private static let drumLevel = 0.7
+    /// Comping chords sit under the player: a soft touch on the piano.
+    private static let compVelocity = 0.5
+
+    static func render(_ arrangement: BandArrangement, sampleRate: Int, samples: SampleLibrary? = nil) -> BandTrack {
         let rate = Double(max(8000, sampleRate))
         let meter = max(1, arrangement.beatsPerBar)
         let beat = 60 / min(300, max(20, arrangement.bpm)) * rate
@@ -308,6 +314,10 @@ enum BandSynth {
 
         let table = Wavetable(partials: [1, 0.35, 0.12, 0.05])
         let push = 0.006 * rate
+        let kit = samples?.instrument(id: "drums")
+        let bassSet = samples?.instrument(id: "bass")
+        let keys = samples?.instrument(id: "piano")
+        let recorded = kit != nil || bassSet != nil || keys != nil
         var parts: [[Float]] = []
         for (number, spec) in specs.enumerated() {
             let sounding = spec.ending ? Int(1.3 * rate) : barLength
@@ -317,7 +327,7 @@ enum BandSynth {
             var feel = Noise(seed: UInt32(truncatingIfNeeded: 0x51ED_270B &+ number &* 104_729))
             let hits = spec.ending ? [Hit(beat: 0, drum: .kick, velocity: 1), Hit(beat: 0, drum: .crash, velocity: 1)]
                                    : groove(meter: meter, fill: spec.fill, swing: arrangement.swing)
-            for hit in hits {
+            for (index, hit) in hits.enumerated() {
                 var at = Int((hit.beat * beat).rounded())
                 // Played, not programmed: every hit within ±8 % of its velocity, hats and snares off the grid
                 // by up to ±6 ms. Kicks and anything on the downbeat stay exact, so the band stays
@@ -325,6 +335,12 @@ enum BandSynth {
                 let velocity = hit.velocity * Float(1 + 0.08 * feel.next())
                 if hit.beat > 0, hit.drum == .hat || hit.drum == .snare {
                     at = max(0, at + Int((push * feel.next()).rounded()))
+                }
+                // The recorded kit when there is one, its round robins alternating hit by hit.
+                if let kit, let samples, kit.has(piece: hit.drum.piece),
+                   samples.addHit(kit, piece: hit.drum.piece, velocity: Double(min(1, velocity)), variation: number + index,
+                                  into: &out, start: at, rate: rate, gain: drumLevel) {
+                    continue
                 }
                 switch hit.drum {
                 case .kick: kick(&out, at: at, velocity: velocity, rate: rate)
@@ -338,16 +354,30 @@ enum BandSynth {
                     let at = Int((note.beat * beat).rounded())
                     let length = spec.ending ? min(Int(note.beats * beat), Int(1.1 * rate)) : Int(note.beats * beat)
                     let hz = PitchMath.frequency(midi: Double(bassMidi(root) + note.interval), reference: reference)
+                    // The recorded bass: the note, then the same 60 ms let-go as the synthesized one.
+                    let release = Int(0.06 * rate)
+                    if let bassSet, let samples, bassSet.covers(hz),
+                       samples.addNote(bassSet, hz: hz, velocity: 0.8 * Double(note.velocity), into: &out, start: at,
+                                       length: length + release, rate: rate, release: 0.06) {
+                        continue
+                    }
                     bass(&out, at: at, length: length, hz: hz, velocity: note.velocity, rate: rate)
                 }
             }
             if arrangement.pad, let root = spec.root, !spec.tones.isEmpty {
                 let voices = padVoicing(root: root, tones: spec.tones).map { PitchMath.frequency(midi: Double($0), reference: reference) }
-                pad(&out, length: spec.ending ? Int(0.9 * rate) : barLength, frequencies: voices, rate: rate, table: table)
+                var comped = false
+                if let keys, let samples, voices.allSatisfy({ keys.covers($0) }) {
+                    comped = comp(&out, frequencies: voices, meter: meter, beat: beat, bar: spec, swing: arrangement.swing,
+                                  keys: keys, samples: samples, rate: rate, feel: &feel)
+                }
+                if !comped {
+                    pad(&out, length: spec.ending ? Int(0.9 * rate) : barLength, frequencies: voices, rate: rate, table: table)
+                }
             }
             // The same small room as the cues, its tail ringing into the release so it carries over the
-            // next downbeat; kick and bass stay dry under its low cut.
-            RoomReverb.apply(&out, rate: rate, settings: RoomReverb.Settings(wet: 0.16, feedback: 0.78, damping: 0.4, lowCut: 280))
+            // next downbeat; kick and bass stay dry under its low cut. Recordings bring their own room: less of it.
+            RoomReverb.apply(&out, rate: rate, settings: RoomReverb.Settings(wet: recorded ? 0.09 : 0.16, feedback: 0.78, damping: 0.4, lowCut: 280))
             RoomReverb.fadeTail(&out, frames: Int(0.04 * rate))
             parts.append(out)
         }
@@ -356,7 +386,18 @@ enum BandSynth {
 
     // MARK: Parts
 
-    private enum Drum { case kick, snare, hat, crash }
+    private enum Drum {
+        case kick, snare, hat, crash
+        /// The recorded kit's piece (SampleLibrary "drums").
+        var piece: String {
+            switch self {
+            case .kick: return "kick"
+            case .snare: return "snare"
+            case .hat: return "hat"
+            case .crash: return "crash"
+            }
+        }
+    }
     private struct Hit { let beat: Double; let drum: Drum; let velocity: Float }
     private struct BassNote { let beat: Double; let beats: Double; let interval: Int; let velocity: Float }
 
@@ -436,6 +477,45 @@ enum BandSynth {
     private static func bassMidi(_ root: Int) -> Int {
         let pc = PitchMath.pitchClass(midi: root)
         return pc >= 5 ? 24 + pc : 36 + pc
+    }
+
+    /// A pianist comping the bar's chord on the recorded piano: half-bar chords with a soft push before the next bar
+    /// in 4/4, the waltz's "pah-pah" in 3/4, one chord per dotted group in compound meters; a fill bar holds one chord
+    /// under the drums and the ending rings out. Each chord is rolled low to high a few milliseconds apart, and only
+    /// off-downbeat chords move off the grid. False when a note couldn't be read (the pad plays instead).
+    private static func comp(_ out: inout [Float], frequencies: [Double], meter: Int, beat: Double, bar: BandArrangement.Bar,
+                             swing: Bool, keys: SampledInstrument, samples: SampleLibrary, rate: Double, feel: inout Noise) -> Bool {
+        let compound = meter >= 6 && meter % 3 == 0
+        let push = swing ? 2.0 / 3.0 : 0.5
+        var chords: [(beat: Double, beats: Double, velocity: Double)]
+        if bar.ending {
+            chords = [(beat: 0, beats: 1.25 * rate / max(1, beat), velocity: 0.62)]
+        } else if bar.fill {
+            chords = [(beat: 0, beats: Double(meter) - 0.1, velocity: 0.55)]
+        } else if compound {
+            chords = stride(from: 0, to: meter, by: 3).map { (beat: Double($0), beats: 2.8, velocity: $0 == 0 ? 0.58 : 0.46) }
+        } else {
+            switch meter {
+            case 4: chords = [(beat: 0, beats: 1.9, velocity: 0.6), (beat: 2, beats: 1.4, velocity: 0.5),
+                              (beat: 3 + push, beats: 0.45, velocity: 0.36)]
+            case 3: chords = [(beat: 0, beats: 0.9, velocity: 0.4), (beat: 1, beats: 0.8, velocity: 0.45), (beat: 2, beats: 0.8, velocity: 0.42)]
+            case 2: chords = [(beat: 0, beats: 0.9, velocity: 0.55), (beat: 1, beats: 0.9, velocity: 0.45)]
+            default: chords = [(beat: 0, beats: Double(meter) - 0.1, velocity: 0.55)]
+            }
+        }
+        let ordered = frequencies.sorted()
+        for chord in chords {
+            var at = Int((chord.beat * beat).rounded())
+            if chord.beat > 0 { at = max(0, at + Int((0.004 * rate * feel.next()).rounded())) }
+            let length = max(1, Int(chord.beats * beat))
+            for (rank, hz) in ordered.enumerated() {
+                let roll = rank == 0 ? 0 : Int((Double(rank) * 0.006 + 0.002 * feel.next()) * rate)
+                let velocity = compVelocity * chord.velocity / 0.6 * (1 + 0.06 * feel.next())
+                guard samples.addNote(keys, hz: hz, velocity: velocity, into: &out, start: at + roll,
+                                      length: length + Int(0.2 * rate), rate: rate, release: 0.2) else { return false }
+            }
+        }
+        return true
     }
 
     /// Chord tones packed between G3 and A#4: close voicings that move little from chord to chord.

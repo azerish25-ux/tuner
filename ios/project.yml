@@ -21,6 +21,13 @@ targets:
       - path: Timbre
         excludes: [Resources]
       - path: Timbre/Resources
+        excludes: [Samples]
+        buildPhase: resources
+      # The recorded instruments (tools/build-ios-samples.py; sources and licences in docs/content/AUDIO-SOURCES.md),
+      # copied as one folder so Samples/manifest.json and Samples/<instrument>/*.m4a keep their paths in the bundle.
+      # TimbreCore's SampleLibrary decodes a zone only when a note needs it.
+      - path: Timbre/Resources/Samples
+        type: folder
         buildPhase: resources
     dependencies:
       - package: TimbreCore

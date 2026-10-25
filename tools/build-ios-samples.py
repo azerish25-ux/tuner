@@ -73,11 +73,6 @@ SOURCES = {
         repo='https://github.com/sfzinstruments/karoryfer.growlybass', commit='4f483268fc66b5a6d5781d421c0d11b8d08d3fc6',
         licence='CC0-1.0', licence_file='LICENSE', licence_marker='CC0 1.0 Universal',
         note='readme.txt: "Royalty-free for all commercial and non-commercial use."'),
-    'ganjo': dict(
-        title='ganjo (six-string banjo)', author='itsclipping',
-        repo='https://github.com/sfzinstruments/ganjo', commit='ccff5cd5cd3b513873a48994c07724d9d3c39e1c',
-        licence='CC0-1.0', licence_file='LICENSE.md', licence_marker='CC0 1.0 Universal',
-        note=''),
 }
 
 # Libraries looked at and not used (kept in the doc so nobody re-adds them without a fresh licence check).
@@ -91,6 +86,8 @@ REJECTED = [
     ('Salamander Drumkit, Sam\'s Sonor, LivingRoom Upright, BJDNiel', 'CC-BY-SA: share-alike terms; not CC0/CC-BY.'),
     ('jRhodes3c/3d, Rickenbacker 4001, MF Tin Whistle', 'Non-commercial (NC) licences.'),
     ('FlameStudios Kay 5-String Banjo', 'GPL-3.0: not a CC0/CC-BY sample licence.'),
+    ('sfzinstruments/ganjo (six-string banjo)', 'CC0, but its recordings sit 10-60 cents sharp of their labels, two '
+     'notes resolve to the same pitch and most ring under a second: not good enough; the banjo stays synthesized.'),
     ('Karoryfer Bigcat Cello, Black and Green Guitars', 'CC0, but not needed (Bigcat is not on GitHub).'),
 ]
 
@@ -138,9 +135,6 @@ INSTRUMENTS = [
          dir='sustain', select=r'^(?P<note>[a-g]b?\d)_(?P<layer>f|p)_rr1\.wav$',
          layers={'f': ('f', 0.85), 'p': ('p', 0.45)}, step=lambda m: 2, range=(24, 64), seconds=lambda m: 3.2,
          release=0.07, bitrate=80, coverage=(23, 67)),
-    dict(id='banjo', title='Six-string banjo', voices=['banjo'], kind='plucked', source='ganjo',
-         dir='Common', select=r'^Banjo_Common - (?P<note>[A-G]#?\d)\.wav$', layers={'': ('mf', 0.75)},
-         step=lambda m: 2, range=(36, 84), seconds=lambda m: 3.0, release=0.07, bitrate=96, coverage=(36, 88)),
     dict(id='harp', title='Concert harp', voices=['harp'], kind='plucked', source='vcsl',
          dir='Chordophones/Composite Chordophones/Concert Harp',
          select=r'^KSHarp_(?P<note>[A-G]#?\d)_(?P<layer>mf|f|mp|p)\d\.wav$',
@@ -457,8 +451,9 @@ def process_note(path: Path, nominal: int, kind: str, seconds: float, steady: bo
 
 
 def mark(x: np.ndarray) -> tuple[int, float]:
-    """The attack marker: first frame at a quarter of the peak. The app finds the same frame in its own decoding and
-    drops whatever its decoder put before it (AAC priming), so attacks land on the sample they were written for."""
+    """The attack marker: first frame at a quarter of the peak. The app finds the same frame in its own decoding; if
+    its decoder kept the encoder's priming (1024 frames for ffmpeg's AAC) the marker sits that much later and the app
+    drops it, so attacks land on the sample they were written for."""
     level = float(np.max(np.abs(x))) * 0.25
     idx = np.nonzero(np.abs(x) >= level)[0]
     return int(idx[0]) if len(idx) else 0, level
@@ -488,14 +483,25 @@ def build_instrument(cache: Path, spec: dict, report: list) -> dict:
     folder = OUT / spec['id']
     for source, directory, select, (lo, hi) in groups:
         found = survey(cache, spec, select, directory, source)
-        # Octave-correct each recording first (sets name octaves differently), then keep sparse zones.
+        found = [f for f in found if f[1] in layers or f[1] in fallback]
+        # Sets name octaves differently (C3 or C4 for middle C; a bass written an octave up). Each recording votes
+        # for the octave its harmonics say, and the whole set takes the majority, so a faint fundamental can't
+        # shift one note an octave.
+        votes = {}
+        for nominal, token, name, path, rel in found:
+            x = decode(path)
+            start = max(0, onset(x, -40 if spec['kind'] == 'sustained' else -32))
+            _, midi, _ = measure_pitch(x[start:], nominal, int((0.45 if spec['kind'] == 'sustained' else 0.12) * RATE),
+                                       int(1.0 * RATE))
+            votes[midi - nominal] = votes.get(midi - nominal, 0) + 1
+        offset = max(votes, key=votes.get) if votes else 0
+        report.append(f'  {source}:{directory}: octave offset {offset:+d} (votes {votes})')
         resolved = []
         for nominal, token, name, path, rel in found:
-            if token not in layers and token not in fallback:
-                continue
             try:
-                x, hz, midi, cents, loop, rms, partial = process_note(path, nominal, spec['kind'],
-                                                                      spec['seconds'](nominal), spec.get('steady', False), None)
+                x, hz, midi, cents, loop, rms, partial = process_note(path, nominal + offset, spec['kind'],
+                                                                      spec['seconds'](nominal + offset),
+                                                                      spec.get('steady', False), nominal + offset)
             except ValueError as error:
                 report.append(f'  reject {rel}: {error}')
                 continue
@@ -528,7 +534,10 @@ def build_instrument(cache: Path, spec: dict, report: list) -> dict:
         frame, level = mark(z['x'])
         shift, measured = verify(OUT / file, frame, level, z['midi'], spec['kind'] == 'sustained', z['partial'])
         drift = None if measured is None else 1200 * math.log2(measured / z['hz'])
-        if abs(shift) > 4 or (drift is not None and abs(drift) > 0.5):
+        # Below 60 Hz the fundamental is faint and the encoder's noise floor can nudge its measurement a little.
+        # A slow (bowed, blown) attack crosses the marker level gently, so encoding can move it a few milliseconds;
+        # the app only uses the marker to tell 0 from a whole AAC priming block (1024 frames or more).
+        if abs(shift) > (400 if spec['kind'] == 'sustained' else 32) or (drift is not None and abs(drift) > (1.0 if z['hz'] > 60 else 2.5)):
             sys.exit(f'{file}: encoded attack moved {shift} frames, pitch {drift} cents')
         zone = dict(file=file, midi=z['midi'], hz=round(z['hz'], 5), layer=z['layer'], velocity=z['velocity'],
                     gain=round(target * z['velocity'] / max(1e-6, z['rms']), 5), frames=len(z['x']),
@@ -537,7 +546,8 @@ def build_instrument(cache: Path, spec: dict, report: list) -> dict:
         if z['loop']:
             zone['loop'] = z['loop']
         out_zones.append(zone)
-        report.append(f"  {file}: {z['hz']:.3f} Hz ({z['cents']:+.1f} c), {len(z['x']) / RATE:.2f} s"
+        report.append(f"  {file}: {z['hz']:.3f} Hz ({z['cents']:+.1f} c, h{z['partial']}, enc {drift:+.2f} c), "
+                      f"{len(z['x']) / RATE:.2f} s"
                       + (f", loop {z['loop'][0]}-{z['loop'][1]}" if z['loop'] else ''))
     return dict(id=spec['id'], title=spec['title'], voices=spec['voices'], kind=spec['kind'],
                 release=spec['release'], steady=spec.get('steady', spec['kind'] != 'sustained'),
@@ -573,7 +583,7 @@ def build_drums(cache: Path, report: list) -> dict:
             encode(x, OUT / file, 112)
             frame, level = mark(x)
             shift, _ = verify(OUT / file, frame, level, None, False)
-            if abs(shift) > 4:
+            if abs(shift) > 32:
                 sys.exit(f'{file}: encoded attack moved {shift} frames')
             originals = [V.format(mic=mic, group=group, name=f) for mic in mics]
             out.append(dict(file=file, piece=piece, layer=layer, velocity=velocity, rr=rr, frames=len(x), mark=frame,
@@ -673,6 +683,19 @@ def main():
             inst = build_drums(args.cache, report) if spec is DRUMS else build_instrument(args.cache, spec, report)
             print('\n'.join(report), flush=True)
             instruments.append(inst)
+        if not only:
+            # A full build leaves nothing behind that the manifest doesn't list (a dropped set, an old file name).
+            ids = {i['id'] for i in instruments}
+            listed = {z['file'] for i in instruments for z in i['zones']}
+            for path in sorted(OUT.rglob('*'), reverse=True):
+                rel = str(path.relative_to(OUT))
+                if path.is_file() and path.name != 'manifest.json' and rel not in listed:
+                    path.unlink()
+                elif path.is_dir() and (path.name not in ids or not any(path.iterdir())):
+                    for child in path.rglob('*'):
+                        if child.is_file():
+                            child.unlink()
+                    path.rmdir()
         used = sorted({z['source'] for i in instruments for z in i['zones']})
         sources = {}
         for key in used:
