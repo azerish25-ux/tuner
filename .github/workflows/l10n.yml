@@ -1,8 +1,16 @@
 name: Localization export
 on:
   push:
-    branches: ["l10n/**"]
+    branches: ["main", "l10n/**"]
+    paths:
+      - ".github/workflows/l10n.yml"
+      - "ios/**/*.swift"
+      - "ios/project.yml"
+      - "tools/l10n/*.py"
   workflow_dispatch:
+concurrency:
+  group: localization-export-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
@@ -41,3 +49,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bash tools/ci/publish-results.sh ci-results/l10n ci-out
+      - name: Upload localization evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: localization-export-${{ github.sha }}
+          path: ci-out
+          if-no-files-found: error
