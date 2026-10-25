@@ -62,7 +62,10 @@ final class AudioService: ObservableObject {
     /// How late a click is heard on the current route: the learner's tap-along calibration for this kind of
     /// route when there is one, else the session's output latency (often too low on Bluetooth).
     private var heardLatency = AudioService.calibratedLatency(for: AudioService.currentRoute()) ?? AVAudioSession.sharedInstance().outputLatency
-    private let bandQueue = DispatchQueue(label: "com.timbre.band", qos: .utility)
+    /// The band renders here, off the main thread, as tones do on theirs: user-initiated, because a take that has started
+    /// waits on it (the band joins at the first downbeat after its rendering lands), and utility work is the first a busy
+    /// device puts off, behind the runway's frames and everything else on screen.
+    private let bandQueue = DispatchQueue(label: "com.timbre.band", qos: .userInitiated)
     private var bandRequest: BandRequest?
     private var bandPrepared: BandArrangement?
     private var bandCache: [BandRenderKey: BandTrack] = [:]
@@ -858,6 +861,8 @@ final class AudioService: ObservableObject {
     private var bandKitOnly: Bool { !headphones && (captureWanted || running) }
     /// What the renderer was last told about `bandKitOnly`.
     private var renderedKitOnly = false
+    /// A band is still rendering (`bandTrack`): one asked for now joins at the first downbeat after it lands.
+    var bandRenderPending: Bool { !bandRendering.isEmpty }
 
     /// A step that may play with a band: renders it ahead of time, off the main thread, so it is ready on Start.
     func prepareBand(_ arrangement: BandArrangement?) {

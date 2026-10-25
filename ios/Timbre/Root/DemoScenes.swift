@@ -359,8 +359,8 @@ enum PreviewTune {
 /// - `events.jsonl`, one JSON object a line, every time in seconds since 1970 (the simulator shares the host's clock):
 ///   `launch` (scene), `cue` (a sound effect starting: its file, volume and player), `stream` (another file in the
 ///   engine file's format), `note` (something the preview can't do) and `event` (a scene's moments: a lock, the full
-///   tune, a take's beat clock, `band` when the band starts or stops and what the route reads as, `sound` when the
-///   engine is heard after a pause, `motif` when the end card's motif plays).
+///   tune, a take's beat clock, `band` when the band starts or stops, what the route reads as and whether a band is
+///   still rendering, `sound` when the engine is heard after a pause, `motif` when the end card's motif plays).
 /// - `cue-<fingerprint>.wav`: each sound effect once, exactly the bytes `AVAudioPlayer` was given.
 /// - `engine-<launch>.pcm`: what the lessons' engine rendered (tones, the click, the band), mono 16-bit, as records of
 ///   a little-endian header (Float64 start, UInt32 frames, UInt32 sample rate) and the samples; silence is left out.
@@ -392,9 +392,10 @@ final class PreviewRecorder: @unchecked Sendable {
     @MainActor private var tappedEngine: ObjectIdentifier?
     @MainActor private var tappedRate = 0.0
     @MainActor private var engineWasRunning = false
-    /// The band and the route as last noted (`noteBand`), so each change is noted once.
+    /// The band, the route and the band's rendering as last noted (`noteBand`), so each change is noted once.
     @MainActor private var bandSeen: Bool?
     @MainActor private var headphonesSeen: Bool?
+    @MainActor private var renderingSeen: Bool?
     /// While `followStrings` runs: every reading the tuner was given, and the receiver it had before.
     @MainActor private var readings: [PreviewString.Reading]?
     @MainActor private var forwarded: ((Double?, Double, Double) -> Void)?
@@ -514,16 +515,19 @@ final class PreviewRecorder: @unchecked Sendable {
 
     // MARK: The band
 
-    /// Notes the band starting or stopping, and the route's headphones changing (a `band` event), so the preview can
-    /// tell a clip filmed with the band playing from one filmed without it.
+    /// Notes the band starting or stopping, the route's headphones changing and a band rendering or landing (a `band`
+    /// event), so the preview can tell a clip filmed with the band playing from one filmed without it, and a band that
+    /// was asked for but still rendering from one that never was.
     @MainActor private func noteBand() {
         guard let audio else { return }
         let playing = audio.bandPlaying
         let headphones = audio.headphones
-        guard playing != bandSeen || headphones != headphonesSeen else { return }
+        let rendering = audio.bandRenderPending
+        guard playing != bandSeen || headphones != headphonesSeen || rendering != renderingSeen else { return }
         bandSeen = playing
         headphonesSeen = headphones
-        PreviewRecorder.event("band", ["playing": playing, "headphones": headphones])
+        renderingSeen = rendering
+        PreviewRecorder.event("band", ["playing": playing, "headphones": headphones, "rendering": rendering])
     }
 
     private static func appending(_ url: URL) -> FileHandle? {
