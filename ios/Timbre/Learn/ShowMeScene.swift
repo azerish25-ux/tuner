@@ -334,6 +334,31 @@ final class ShowMeController {
     private(set) var loaded = false
     /// The model can't be shown (no rig that fits, or it failed to load).
     private(set) var failed = false
+    /// What the stage is doing, or why it gave up, in plain words (the DEBUG probe, `ShowMeProbe`).
+    private(set) var status = "idle"
+    /// Scene updates since the model went on stage: RealityKit has drawn it. Its first frames, behind the picture, are
+    /// where a fresh device or simulator builds the model's shaders.
+    private(set) var frames = 0
+    /// The host shows the stage on its card: from then `shownFrames` counts the frames drawn, the first at `liveSince`.
+    var shown = false {
+        didSet {
+            guard shown != oldValue else { return }
+            shownFrames = 0
+            liveSince = nil
+        }
+    }
+    private(set) var shownFrames = 0
+    private(set) var liveSince: Date?
+    /// Frames the model is drawn behind the picture before it may show.
+    static let warmFrames = 4
+    /// The model is on stage and the renderer has drawn it a few times.
+    var warm: Bool { loaded && frames >= Self.warmFrames }
+    /// Frames drawn behind the picture when the stage told its host it was ready (nil before): fewer than
+    /// `warmFrames` means the warm-up ran out of patience rather than seeing the model drawn.
+    private(set) var framesAtReady: Int?
+
+    /// The stage has told its host it is ready.
+    func noteReady() { framesAtReady = frames }
     private var loadedID: String?
     /// The model's parent: turned and moved to frame the shot (the camera stays at the origin looking down −Z).
     private let holder = Entity()
@@ -431,17 +456,33 @@ final class ShowMeController {
     /// Puts model `id` on stage (once): its strings matched to the lesson's, lowest first.
     func load(_ id: String, strings: Int, fretless: Bool, accent: Color) async {
         guard loadedID != id else { return }
-        guard let rig = ModelLibrary.rig(id), let neck = ShowMeNeck(rig: rig, strings: strings, fretless: fretless) else {
-            failed = true
+        status = "loading \(id)"
+        guard let rig = ModelLibrary.rig(id) else {
+            fail("no rig for \(id)")
+            return
+        }
+        guard let neck = ShowMeNeck(rig: rig, strings: strings, fretless: fretless) else {
+            fail("the rig of \(id) has no neck of \(strings) strings")
             return
         }
         guard let model = await ModelCache.shared.instance(of: id) else {
-            failed = true
+            fail("\(id) didn't load: \(ModelCache.shared.problem(id) ?? "no reason given")")
             return
         }
-        guard !Task.isCancelled else { return }
+        guard !Task.isCancelled else {
+            status = "stopped loading \(id)"
+            return
+        }
         install(model, rig: rig, neck: neck, accent: UIColor(accent))
         loadedID = id
+        status = "on stage"
+    }
+
+    /// The model can't be shown: the host goes back to its picture, and the probes say why.
+    private func fail(_ reason: String) {
+        failed = true
+        status = reason
+        ShowMe.lastProblem = reason
     }
 
     private func install(_ model: Entity, rig: InstrumentRig, neck: ShowMeNeck, accent: UIColor) {
@@ -478,6 +519,8 @@ final class ShowMeController {
         plan = nil
         glide = 0
         glideVelocity = 0
+        frames = 0
+        framesAtReady = nil
         loaded = true
     }
 
@@ -663,10 +706,27 @@ final class ShowMeController {
     /// The camera is still gliding in.
     var gliding: Bool { glide < 1 }
 
+    #if DEBUG
+    /// One line for the probe (`ShowMeProbe`): the load state, the frames drawn, the framing and the light.
+    var diagnostics: String {
+        let size = "\(Int(viewSize.width))x\(Int(viewSize.height))"
+        let ibl = light.components.has(ImageBasedLightComponent.self) ? 1 : 0
+        let before = framesAtReady.map { "\($0)" } ?? "-"
+        return "status=\(status) loaded=\(loaded ? 1 : 0) failed=\(failed ? 1 : 0) frames=\(frames) drawnBeforeReady=\(before) "
+            + "framed=\(plan != nil ? 1 : 0) glide=\(String(format: "%.2f", glide)) size=\(size) ibl=\(ibl)"
+    }
+    #endif
+
     // MARK: Every frame
 
     private func tick(_ dt: Float) {
-        guard dt > 0, loaded else { return }
+        guard loaded else { return }
+        frames += 1
+        if shown {
+            shownFrames += 1
+            if liveSince == nil { liveSince = Date() }
+        }
+        guard dt > 0 else { return }
         applyFraming(dt)
         let now = Date()
         prune(now)

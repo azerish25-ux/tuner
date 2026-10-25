@@ -18,6 +18,8 @@ final class ModelCache {
     /// Most recently used last.
     private var recent: [String] = []
     private var loads: [String: Task<Entity?, Never>] = [:]
+    /// Why a model failed to load, by id (the error's words), until it loads.
+    private var problems: [String: String] = [:]
     private var environmentResource: EnvironmentResource?
     private var environmentLoad: Task<EnvironmentResource?, Never>?
     private var observers: [NSObjectProtocol] = []
@@ -54,6 +56,17 @@ final class ModelCache {
         recent = []
     }
 
+    /// Why model `id` last failed to load; nil when it hasn't.
+    func problem(_ id: String) -> String? { problems[id] }
+
+    /// Where model `id` stands, in a word, for diagnostics: cached, loading, failed (and why) or idle.
+    func describe(_ id: String) -> String {
+        if prototypes[id] != nil { return "cached" }
+        if loads[id] != nil { return "loading" }
+        if let problem = problems[id] { return "failed (\(problem))" }
+        return "idle"
+    }
+
     /// The dark stage's image-based light, made once.
     func environment() async -> EnvironmentResource? {
         if let environmentResource { return environmentResource }
@@ -75,14 +88,24 @@ final class ModelCache {
             return cached
         }
         if let load = loads[id] { return await load.value }
-        guard let url = ModelLibrary.url(id) else { return nil }
+        guard let url = ModelLibrary.url(id) else {
+            problems[id] = "no usdz for \(id) in the bundle"
+            return nil
+        }
+        // The error is kept (not swallowed) so a stage that gives up can say why.
         let load = Task<Entity?, Never> { @MainActor in
-            try? await Entity(contentsOf: url)
+            do {
+                return try await Entity(contentsOf: url)
+            } catch {
+                self.problems[id] = error.localizedDescription
+                return nil
+            }
         }
         loads[id] = load
         let entity = await load.value
         loads[id] = nil
         if let entity {
+            problems[id] = nil
             prototypes[id] = entity
             touch(id)
         }

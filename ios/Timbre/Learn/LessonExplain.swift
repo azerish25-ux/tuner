@@ -243,6 +243,9 @@ struct ExplainStep: View {
             .padding(18)
             .background(card)
             .overlay(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous).strokeBorder(Palette.hairline, lineWidth: 1))
+            #if DEBUG
+            .overlay(alignment: .bottomLeading) { showMeCardProbe }
+            #endif
         }
     }
 
@@ -271,7 +274,7 @@ struct ExplainStep: View {
                 if showMe, let model = showMeModel {
                     ShowMeRhythm(modelID: model, strings: max(1, course.stringCount),
                                  strum: ShowMeStrum(pattern: pattern, beatsPerBar: beatsPerBar, bpm: Self.rhythmBPM, origin: rhythmOrigin),
-                                 accent: accent, arrows: course.strums, edges: StringEdges.of(course),
+                                 accent: accent, arrows: course.strums, edges: StringEdges.of(course), revealed: threeD,
                                  onReady: { showMeAppeared() }, onFailure: { showMeUnavailable() })
                 }
             }
@@ -322,8 +325,19 @@ struct ExplainStep: View {
     }
 
     /// The model has taken the picture's place (the picture comes back should the stage stop being allowed meanwhile,
-    /// in Low Power Mode say).
+    /// in Low Power Mode say). The stage shows only while this holds (`ShowMeStage.revealed`).
     private var threeD: Bool { showMe && showMeReady && showMeModel != nil }
+
+    #if DEBUG
+    /// UI tests only (`ShowMeHostProbe`, Root/DemoScenes.swift): the card's side of "Show me", the state that swaps the
+    /// picture for the model, beside the stage's own probe.
+    @ViewBuilder private var showMeCardProbe: some View {
+        if demonstrable {
+            ShowMeHostProbe(showMe: showMe, ready: showMeReady, threeD: threeD, failed: showMeFailed, first: firstShowing,
+                            model: ShowMe.model(for: course, catalog: store.catalog, reduceMotion: reduceMotion))
+        }
+    }
+    #endif
 
     private var showMeBinding: Binding<Bool> {
         Binding(get: { showMe }, set: { on in setShowMe(on) })
@@ -514,27 +528,30 @@ struct ExplainStep: View {
     /// The chart's fingers land in finger order on the demonstration's clock, its frets numbered; the player's view
     /// presses its fingertips in the same order on the same clock, fading the muted strings and lighting the open
     /// ones. Either way each string lights (and on the neck shimmers) as it sounds. Both take the same room, so the
-    /// card holds still as they flip.
+    /// card holds still as they flip. Everything in the box sits on its bottom edge, so the chart's string names, the
+    /// player's view's and the 3D stage's fall in the same place and a cross-fade between them shows one set.
     private func chordBox(_ spec: ChordSpec, room: CGSize) -> some View {
         let fit = ChordDiagram.fit(spec, room: room, minWidth: 220)
         let edges = StringEdges.of(instrumentId: course.instrument, strings: spec.frets.count)
         let player = chordView == .player
         return VStack(spacing: 8) {
             chordHeader(spec)
-            ZStack {
+            ZStack(alignment: .bottom) {
                 if !threeD {
                     chordPicture(spec, fit: fit, edges: edges, player: player)
                         .transition(.opacity)
                 }
                 if showMe, let model = showMeModel {
-                    // The same demonstration on the instrument: the same clock, the same strings lit.
+                    // The same demonstration on the instrument: the same clock, the same strings lit. It takes the box
+                    // as the picture leaves it (`threeD`), never before.
                     ShowMeStage(modelID: model, strings: spec.frets.count, fretless: course.fretless, shot: .fretting(ShowMeShape(chord: spec)),
                                 accent: accent, ringing: lit, landStart: chordLandStart, landingStep: Self.demoStep, edges: edges,
-                                label: Text("\(spec.name) chord"), value: ChordWords.shape(spec),
+                                revealed: threeD, label: Text("\(spec.name) chord"), value: ChordWords.shape(spec),
                                 onReady: { showMeAppeared() }, onFailure: { showMeUnavailable() })
                 }
             }
-            .frame(width: fit.width, height: ChordDiagram.boxHeight(spec, width: fit.width, stretch: fit.stretch, named: edges != nil))
+            .frame(width: fit.width, height: ChordDiagram.boxHeight(spec, width: fit.width, stretch: fit.stretch, named: edges != nil),
+                   alignment: .bottom)
         }
         .frame(maxWidth: fit.width)
         // Played back right: sparks from behind the box, on a canvas of their own size.
@@ -550,9 +567,9 @@ struct ExplainStep: View {
         }
     }
 
-    /// The chart or the player's view, flipping between them in the same room.
+    /// The chart or the player's view, flipping between them in the same room (on its bottom edge, as the box).
     private func chordPicture(_ spec: ChordSpec, fit: (width: CGFloat, stretch: CGFloat), edges: StringEdges?, player: Bool) -> some View {
-        ZStack {
+        ZStack(alignment: .bottom) {
             if player {
                 PlayerNeck(chord: spec, accent: accent, ringing: lit, landStart: chordLandStart, landingStep: Self.demoStep, edges: edges)
                     .transition(ChordFlip.transition(toPlayer: true, reduceMotion: reduceMotion))
@@ -722,7 +739,7 @@ struct ExplainStep: View {
                 // The dots land on the instrument's own frets, on the same clock, each string ringing as its note sounds.
                 ShowMeStage(modelID: model, strings: strings, fretless: course.fretless,
                             shot: .fretting(ShowMeShape(dots: dots, strings: strings, order: order, start: start)),
-                            accent: accent, landStart: neckStart, landingStep: Self.noteStep, edges: edges,
+                            accent: accent, landStart: neckStart, landingStep: Self.noteStep, edges: edges, revealed: threeD,
                             label: Text("Notes on the neck"), value: ShowMe.words(dots: order.compactMap { dots[safe: $0] }),
                             onReady: { showMeAppeared() }, onFailure: { showMeUnavailable() })
                     .frame(height: max(160, room.height))

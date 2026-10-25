@@ -534,7 +534,8 @@ struct ChordStep: View {
             } else {
                 ChordCardHeader(name: chord.name, accent: accent)
             }
-            ZStack {
+            // Bottom-aligned, so the chart's, the player's view's and the stage's string names sit in one place.
+            ZStack(alignment: .bottom) {
                 if !threeD {
                     chordPicture(fit, edges: edges)
                         .transition(.opacity)
@@ -542,6 +543,7 @@ struct ChordStep: View {
                 if showMe, let model {
                     ShowMeStage(modelID: model, strings: chord.frets.count, fretless: course.fretless, shot: .fretting(ShowMeShape(chord: chord)),
                                 accent: accent, ringing: ringing, landStart: showLandStart, landingStep: ShowMe.landingStep, edges: edges,
+                                revealed: threeD,
                                 label: Text("\(chord.name) chord"), value: ChordWords.shape(chord),
                                 onReady: { showMeAppeared() }, onFailure: { showMeUnavailable() })
                 }

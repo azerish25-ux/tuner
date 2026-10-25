@@ -10,7 +10,7 @@ import TimbreCore
 ///
 /// Hooks, a line or two each: `Bootstrap.load` calls `start`, `AppStore.startListening` asks `steadyPitch`,
 /// `LessonPlayer` asks `lessonStart` (init) and `holds` (advance), `SongPerformStep` asks `performBeat` and
-/// `stillScore`, `ShowMeStage` carries `ShowMeProbe`.
+/// `stillScore`, `ShowMeStage` carries `ShowMeProbe` and the explanation's card `ShowMeHostProbe`.
 ///
 /// - `tune-locked` (frame #1): the demo pitch plays the selected string steadily in tune, so each string locks after
 ///   the tracker's 0.65 s hold. The two lowest strings lock first (✓ on their chips), then the third locks and stays
@@ -171,12 +171,23 @@ enum DemoScene: String {
 // MARK: - Show me
 
 /// For XCUITest only (TIMBRE_DEBUG_STATE=1), over every "Show me" stage (`ShowMeStage`): whether the model is on the
-/// card and when the demonstration's last fingertip lands, so `test15StoreShowMe` keeps its picture only when it was
-/// taken with the 3D model showing, every fingertip down and the chord ringing. Reads
-/// "showme=<3d|loading> landed=<epoch seconds, 0 before a demonstration> ringing=<strings lit>". Drawn in clear ink
-/// and never touched, like the tuner's `stage.state`, so it stays out of every screenshot.
+/// card, since when the renderer has drawn it there, and when the demonstration's last fingertip lands, so
+/// `test15StoreShowMe` keeps its picture only when it was taken with the 3D model showing (the card's picture gone),
+/// drawn for longer than the cross-fade, every fingertip down and the chord ringing. Reads
+/// "showme=<3d|picture|loading> landed=<epoch s, 0 before a demonstration> ringing=<strings lit> live=<epoch s of the
+/// first frame drawn with the model on the card, 0 before> frames=<frames drawn since> now=<the app's clock>
+/// diag=<model, load state, host state, frames, framing, cache>". "3d" needs the stage ready *and* the host showing it
+/// (the state that takes the picture away), "picture" is a ready stage the host hasn't shown, "loading" the rest; the
+/// free-text `diag` comes last, for the test's log. Re-read five times a second (the controller's counters change
+/// without SwiftUI hearing of it). Drawn in clear ink and never touched, like the tuner's `stage.state`, so it stays
+/// out of every screenshot.
 struct ShowMeProbe: View {
+    let modelID: String
+    let shown: Bool
     let ready: Bool
+    let revealed: Bool
+    let attached: Bool
+    let controller: ShowMeController
     let shot: ShowMeShot
     let landStart: Date?
     let landingStep: Double
@@ -186,13 +197,26 @@ struct ShowMeProbe: View {
 
     @ViewBuilder var body: some View {
         if Self.enabled {
-            Text(verbatim: "showme=\(ready ? "3d" : "loading") landed=\(String(format: "%.3f", landed)) ringing=\(ringing)")
-                .font(.system(size: 9, design: .monospaced))
-                .foregroundStyle(Color.clear)
-                .allowsHitTesting(false)
-                .accessibilityIdentifier("showme.state")
+            TimelineView(.periodic(from: .now, by: 0.2)) { context in
+                Text(verbatim: label(at: context.date))
+                    .font(.system(size: 9, design: .monospaced))
+                    .foregroundStyle(Color.clear)
+                    .allowsHitTesting(false)
+                    .accessibilityIdentifier("showme.state")
+            }
         }
     }
+
+    private func label(at now: Date) -> String {
+        let stage = shown ? "3d" : (ready ? "picture" : "loading")
+        let live = controller.liveSince?.timeIntervalSince1970 ?? 0
+        let head = "showme=\(stage) landed=\(Self.seconds(landed)) ringing=\(ringing) live=\(Self.seconds(live)) "
+            + "frames=\(controller.shownFrames) now=\(Self.seconds(now.timeIntervalSince1970))"
+        let host = "model=\(modelID) ready=\(ready ? 1 : 0) revealed=\(revealed ? 1 : 0) attached=\(attached ? 1 : 0)"
+        return head + " diag=" + host + " " + controller.diagnostics + " cache=\(ModelCache.shared.describe(modelID))"
+    }
+
+    private static func seconds(_ value: Double) -> String { String(format: "%.3f", value) }
 
     /// When the last fingertip lands, in seconds since 1970 (0: no demonstration under way).
     private var landed: Double {
@@ -201,5 +225,33 @@ struct ShowMeProbe: View {
         if case let .fretting(shape) = shot { fingers = max(1, shape.landingCount) }
         return landStart.addingTimeInterval(Double(fingers - 1) * landingStep).timeIntervalSince1970
     }
+}
+
+/// For XCUITest only (TIMBRE_DEBUG_STATE=1), on a lesson card whose picture can play in 3D (LessonExplain): the card's
+/// own side of "Show me", the state that swaps its picture for the model, so a test that finds no stage (or a stage the
+/// card never showed) can say why. Reads "card showMe=<0|1> ready=<0|1> threeD=<0|1> failed=<0|1> first=<0|1>
+/// model=<id|none> problem=<why the last stage gave up, or none>". Drawn in clear ink and never touched.
+struct ShowMeHostProbe: View {
+    let showMe: Bool
+    let ready: Bool
+    let threeD: Bool
+    let failed: Bool
+    let first: Bool
+    let model: String?
+
+    private static let enabled = ProcessInfo.processInfo.environment["TIMBRE_DEBUG_STATE"] == "1"
+
+    @ViewBuilder var body: some View {
+        if Self.enabled {
+            Text(verbatim: "card showMe=\(flag(showMe)) ready=\(flag(ready)) threeD=\(flag(threeD)) failed=\(flag(failed)) "
+                 + "first=\(flag(first)) model=\(model ?? "none") problem=\(ShowMe.lastProblem ?? "none")")
+                .font(.system(size: 9, design: .monospaced))
+                .foregroundStyle(Color.clear)
+                .allowsHitTesting(false)
+                .accessibilityIdentifier("showme.host")
+        }
+    }
+
+    private func flag(_ value: Bool) -> String { value ? "1" : "0" }
 }
 #endif

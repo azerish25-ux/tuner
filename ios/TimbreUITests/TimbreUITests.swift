@@ -656,22 +656,46 @@ final class TimbreUITests: XCTestCase {
 
     // MARK: Show me
 
-    /// The "Show me" stage's probe (TIMBRE_DEBUG_STATE=1, `ShowMeProbe` in ios/Timbre/Root/DemoScenes.swift, never
-    /// drawn): "showme=<3d|loading> landed=<epoch s the last fingertip lands, 0 before a demonstration> ringing=<n>".
-    /// An empty stage when no "Show me" stage is on screen.
-    private func showMeProbe() -> (stage: String, landed: Date?, ringing: Int) {
-        guard let label = (try? element("showme.state").snapshot())?.label else { return ("", nil, 0) }
+    /// One reading of the "Show me" stage's probe (TIMBRE_DEBUG_STATE=1, `ShowMeProbe` in ios/Timbre/Root/DemoScenes.swift,
+    /// never drawn): "showme=<3d|picture|loading> landed=<epoch s the last fingertip lands, 0 before a demonstration>
+    /// ringing=<n> live=<epoch s of the first frame drawn with the model on the card, 0 before> frames=<drawn since>
+    /// now=<app clock> diag=<free text>". "3d" only once the card has swapped its picture for the model (the card's own
+    /// state, not just the stage's); "picture" is a ready stage the card hasn't shown. An empty stage when no "Show me"
+    /// stage is on screen.
+    private struct ShowMeReading {
         var stage = ""
         var landed: Date?
         var ringing = 0
-        for field in label.split(separator: " ") {
+        var live: Date?
+        var frames = 0
+    }
+
+    private func showMeProbe() -> ShowMeReading {
+        var reading = ShowMeReading()
+        guard let label = (try? element("showme.state").snapshot())?.label else { return reading }
+        // The free-text diagnostic comes last; only the fields before it are read.
+        let head = label.components(separatedBy: " diag=").first ?? label
+        for field in head.split(separator: " ") {
             let parts = field.split(separator: "=", maxSplits: 1).map(String.init)
             guard parts.count == 2 else { continue }
-            if parts[0] == "showme" { stage = parts[1] }
-            if parts[0] == "landed", let seconds = Double(parts[1]), seconds > 0 { landed = Date(timeIntervalSince1970: seconds) }
-            if parts[0] == "ringing" { ringing = Int(parts[1]) ?? 0 }
+            switch parts[0] {
+            case "showme": reading.stage = parts[1]
+            case "landed": reading.landed = Double(parts[1]).flatMap { $0 > 0 ? Date(timeIntervalSince1970: $0) : nil }
+            case "ringing": reading.ringing = Int(parts[1]) ?? 0
+            case "live": reading.live = Double(parts[1]).flatMap { $0 > 0 ? Date(timeIntervalSince1970: $0) : nil }
+            case "frames": reading.frames = Int(parts[1]) ?? 0
+            default: break
+            }
         }
-        return (stage, landed, ringing)
+        return reading
+    }
+
+    /// Both "Show me" probes in full, the stage's and its card's (`ShowMeHostProbe`), for the log when the frame isn't
+    /// kept: the model's load state and error, attached, ready, frames drawn, framing, and the card's own state.
+    private func showMeDiagnostics() -> String {
+        let stage = (try? element("showme.state").snapshot())?.label ?? "no stage on the card"
+        let card = (try? element("showme.host").snapshot())?.label ?? "no card probe"
+        return "stage probe: \(stage) | \(card)"
     }
 
     /// A chord's demonstration on the model, timed from its last fingertip landing (LessonExplain's `runDemo`): a
@@ -684,6 +708,31 @@ final class TimbreUITests: XCTestCase {
         /// "Show me" on the model plays it again: its first fingertip lands 0.05 s after the tap, its last (E minor's
         /// second) a landing step later.
         static let replayLanding = 0.5
+        /// The model takes the card in a 0.6 s cross-fade (Motion.reveal): the picture must come later than this after
+        /// the first frame drawn with the model on the card (a renderer that stalls on its first frames leaves the
+        /// cross-fade's first frame on screen: the chart with the "3D" switch on, review 15's 51b).
+        static let shown = 0.9
+        /// Frames drawn with the model on the card by the reading after the picture: the renderer was drawing.
+        static let frames = 8
+    }
+
+    /// Why a take isn't the store frame ("" when it is): the card showed the model in place of its picture, the renderer
+    /// had been drawing it there for longer than the cross-fade, and the picture fell inside the ring.
+    private func showMeVerdict(_ probe: ShowMeReading, start: Date, end: Date) -> String {
+        guard probe.stage == "3d" else { return "the card isn't showing the 3D model (stage '\(probe.stage)')" }
+        guard let live = probe.live, probe.frames >= ShowMeRing.frames else {
+            return "the renderer drew \(probe.frames) frames with the model on the card (live: \(probe.live == nil ? "never" : "yes"))"
+        }
+        guard start >= live.addingTimeInterval(ShowMeRing.shown) else {
+            return String(format: "the picture came %.2f s after the model's first frame on the card, inside its cross-fade",
+                          start.timeIntervalSince(live))
+        }
+        guard let landed = probe.landed,
+              start >= landed.addingTimeInterval(ShowMeRing.from), end <= landed.addingTimeInterval(ShowMeRing.to) else {
+            let offset = probe.landed.map { String(format: "%.2f", start.timeIntervalSince($0)) } ?? "?"
+            return "the picture missed the ring: taken \(offset) s after the last fingertip landed (\(probe.ringing) strings lit now)"
+        }
+        return ""
     }
 
     /// One try at the ring, hands off from the last probe to the picture: the demonstration already under way while
@@ -712,40 +761,48 @@ final class TimbreUITests: XCTestCase {
     /// step, the chord explained on its card, and the guitar's 3D model takes the card (by itself, the chord's first time
     /// in the course; otherwise the test asks with "Show me"). The picture is the demonstration mid-play: both
     /// fingertips down on the model's own frets and the chord ringing across every string. It is kept only when the
-    /// probe says the 3D stage is showing and the picture fell inside the ring on the demonstration's own clock; a miss
-    /// plays it again ("Show me" on the model), hands off until the picture.
+    /// probe says the card has swapped its chart for the model, the renderer had been drawing the model there for
+    /// longer than the cross-fade (and kept drawing), and the picture fell inside the ring on the demonstration's own
+    /// clock; a miss plays it again ("Show me" on the model), hands off until the picture. A frame not kept logs both
+    /// probes in full (load state, error, attached, ready, frames, framing; the card's state).
     func test15StoreShowMe() throws {
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
         launch(pitch: true, scene: "show-me")
         let opened = element("lesson.close").waitForExistence(timeout: 30)
-        // The model loads (the first on a fresh simulator can take 20 s or more); ask for it if it doesn't come.
+        // The model loads (the first on a fresh simulator can take 20 s or more); ask for it if it doesn't come, again
+        // should the card give up on it meanwhile (its first-time wait is 5 s).
         let askAfter = Date().addingTimeInterval(5)
         let deadline = Date().addingTimeInterval(90)
-        var asked = false
+        var asks = 0
+        var lastAsk = Date.distantPast
         var probe = showMeProbe()
         while probe.stage != "3d" && Date() < deadline {
-            if probe.stage.isEmpty && !asked && Date() > askAfter {
+            if probe.stage.isEmpty && asks < 3 && Date() > askAfter && Date().timeIntervalSince(lastAsk) > 8 {
                 let button = element("lesson.showme")
-                if button.exists && button.isHittable { button.tap(); asked = true }
+                if button.exists && button.isHittable { button.tap(); asks += 1; lastAsk = Date() }
             }
             settle(0.5)
             probe = showMeProbe()
         }
         var picture = XCUIScreen.main.screenshot()
-        var problem = "the 3D stage never showed (probe '\(probe.stage)', lesson open: \(opened), Show me asked: \(asked))"
+        var problem = "the 3D stage never showed (stage '\(probe.stage)', lesson open: \(opened), Show me asked \(asks) times)"
         if probe.stage == "3d" {
             for attempt in 0..<4 {
                 let take = catchShowMeRing(landed: probe.landed, replay: attempt > 0)
                 picture = take.picture
                 probe = showMeProbe()
-                if probe.stage == "3d", let landed = probe.landed,
-                   take.start >= landed.addingTimeInterval(ShowMeRing.from), take.end <= landed.addingTimeInterval(ShowMeRing.to) {
-                    problem = ""
-                    break
-                }
-                let offset = probe.landed.map { String(format: "%.2f", take.start.timeIntervalSince($0)) } ?? "?"
-                problem = "the picture missed the ring: taken \(offset) s after the last fingertip landed (stage '\(probe.stage)', \(probe.ringing) strings lit now)"
+                problem = showMeVerdict(probe, start: take.start, end: take.end)
+                if problem.isEmpty { break }
             }
+        }
+        if !problem.isEmpty {
+            let diagnostics = showMeDiagnostics()
+            print("SHOW ME PROBE: \(diagnostics)")
+            let note = XCTAttachment(string: diagnostics)
+            note.name = "showme-probe"
+            note.lifetime = .keepAlways
+            add(note)
+            problem += " [\(diagnostics)]"
         }
         storeFrame("51b-lesson-showme", picture: picture, ok: problem.isEmpty, problem)
     }

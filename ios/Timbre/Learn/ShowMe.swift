@@ -26,6 +26,11 @@ enum ShowMe {
     /// Seconds a first-time demonstration waits for the model before the step carries on with its picture (and,
     /// on a playing step, opens the microphone).
     static let patience = 5.0
+    /// Seconds a stage waits, once its model is on stage, for the renderer to draw it behind the picture
+    /// (`ShowMeController.warm`) before showing it anyway.
+    static let warmLimit = 2.5
+    /// Why the last stage gave up on its model, in plain words (the DEBUG probes read it; nil while none has).
+    static var lastProblem: String?
 
     /// Whether demonstration `key` plays by itself as its card settles: the first time it appears in `course`. The
     /// App Store chord scene keeps its chord step as it is captured (frame #4: the chart with every string lit).
@@ -134,7 +139,14 @@ enum ShowMe {
 
 /// The 3D demonstration in a card: the model on a dark stage feathered into the card, the camera gliding in to the shot
 /// as it appears (`ShowMeController`), the fingertips and marks drawn over it, the outer strings named under a neck.
-/// It shows once the model is in place (`onReady`); `onFailure` hands the card back to its picture.
+/// It tells the host once the model is in place and the renderer has drawn it (`onReady`); it shows once the host has
+/// given it the card (`revealed`, the same state that takes the host's picture away), so the stage and the picture
+/// cross-fade in one move and never sit over each other. `onFailure` hands the card back to its picture.
+///
+/// Until then it stays behind the picture drawing at a trace rather than not at all. A RealityView at zero opacity
+/// may not be drawn, so the model's first frames (where a fresh device or simulator builds its shaders, seconds in CI)
+/// landed on the reveal and held the card still on its first cross-fade frame: the picture, a blank "Show me" disc and
+/// two sets of edge names (store frame 51b, review 15). Drawn behind the picture, that cost is paid while it loads.
 ///
 /// Inputs follow the 2D pictures': `ringing` lights strings and each newly lit one starts to ring (a chord), a run of
 /// notes rings each note as it lands, and `landStart` is the demonstration's clock (the first fingertip presses then,
@@ -150,12 +162,16 @@ struct ShowMeStage: View {
     var landStart: Date?
     var landingStep: Double = 0.45
     var edges: StringEdges?
+    /// The host shows the stage in place of its picture (its own "3D is up" state). Hosts that don't say show it as
+    /// soon as it is ready.
+    var revealed = true
     let label: Text
     var value: String = ""
     var onReady: () -> Void = {}
     var onFailure: () -> Void = {}
     @State private var box = ShowMeBox()
     @State private var attached = false
+    /// The model is on stage, attached and drawn (or the warm-up's patience ran out): the host has been told.
     @State private var ready = false
     /// The overlay redraws every frame only while something moves (the glide, a landing, a string ringing).
     @State private var live = false
@@ -165,21 +181,36 @@ struct ShowMeStage: View {
 
     private var controller: ShowMeController { box.controller }
 
+    /// The stage is on the card: ready, and the host has taken its picture away.
+    private var shown: Bool { ready && revealed }
+
+    /// How much of the stage shows behind the picture while it loads: enough for RealityKit to draw it, too little to see.
+    private static let trace: Double = 0.02
+
     var body: some View {
         VStack(spacing: 6) {
             scene
             if case .fretting = shot, let edges, strings >= 2 {
+                // Fades in with the model, where the picture's own names stood (the host bottom-aligns both), so the
+                // cross-fade never shows two sets of names.
                 EdgeNamesRow(leading: edges.label(strings), trailing: edges.label(1))
-                    .opacity(ready ? 1 : 0)
+                    .opacity(shown ? 1 : 0)
+                    .animation(Motion.reveal, value: shown)
             }
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(label)
         .accessibilityValue(Text(value))
         .accessibilityIdentifier("lesson.showme.stage")
+        // Behind the picture VoiceOver reads the picture alone.
+        .accessibilityHidden(!shown)
+        .onChange(of: shown, initial: true) { _, now in reveal(now) }
         #if DEBUG
-        // UI tests only: the model's state and the demonstration's clock (Root/DemoScenes.swift).
-        .overlay { ShowMeProbe(ready: ready, shot: shot, landStart: landStart, landingStep: landingStep, ringing: ringing.count) }
+        // UI tests only: the model's state, the host's, and the demonstration's clock (Root/DemoScenes.swift).
+        .overlay {
+            ShowMeProbe(modelID: modelID, shown: shown, ready: ready, revealed: revealed, attached: attached, controller: controller,
+                        shot: shot, landStart: landStart, landingStep: landingStep, ringing: ringing.count)
+        }
         #endif
     }
 
@@ -193,14 +224,16 @@ struct ShowMeStage: View {
         } update: { _ in
             configure()
         }
-        // One load per model; the model itself comes from the lesson's cache (`ModelCache`).
+        // One load per model; the model itself comes from the lesson's cache (`ModelCache`). Ready once it is on
+        // stage and drawn behind the picture.
         .task(id: modelID) {
             configure()
             await controller.load(modelID, strings: strings, fretless: fretless, accent: accent)
             guard !Task.isCancelled else { return }
+            await warmUp()
+            guard !Task.isCancelled else { return }
             report()
         }
-        .onChange(of: attached) { _, _ in report() }
         .onChange(of: ringing) { old, new in
             configure()
             let added = new.subtracting(old)
@@ -220,8 +253,10 @@ struct ShowMeStage: View {
         // Feathered, so the stage melts into the card whatever the renderer clears to.
         .mask { StageFeather(close: 1) }
         .overlay { marks }
-        .opacity(ready ? 1 : 0)
-        .animation(Motion.reveal, value: ready)
+        // Behind the picture it draws at a trace, never at zero (see the type's note).
+        .opacity(shown ? 1 : Self.trace)
+        .animation(Motion.reveal, value: shown)
+        .allowsHitTesting(shown)
     }
 
     private func configure() {
@@ -237,17 +272,39 @@ struct ShowMeStage: View {
         return Double(max(0, shape.landingCount - 1)) * landingStep + 0.7
     }
 
-    /// Ready once the model is on stage and the scene attached: the camera starts its glide in and the host hears of it.
+    /// Waits, behind the picture, until the scene is attached and the renderer has drawn the model a few times
+    /// (`ShowMeController.warm`), so the reveal never waits on the renderer; one that has drawn nothing yet gets
+    /// `ShowMe.warmLimit` seconds and is shown anyway.
+    private func warmUp() async {
+        var waited = 0.0
+        while !Task.isCancelled && !controller.failed {
+            if attached && controller.loaded {
+                if controller.warm || waited >= ShowMe.warmLimit { return }
+                waited += 0.05
+            }
+            try? await Task.sleep(for: .milliseconds(50))
+        }
+    }
+
+    /// Ready once the model is on stage, the scene attached and the model drawn: the host hears of it and gives the
+    /// stage the card (`revealed`).
     private func report() {
         if controller.failed {
             onFailure()
             return
         }
         guard attached, controller.loaded, !ready else { return }
-        controller.beginGlide()
+        controller.noteReady()
         ready = true
-        keepAlive(for: 1.5)
         onReady()
+    }
+
+    /// The host has put the stage on the card (or taken it off): the camera glides in from a wider shot as it appears.
+    private func reveal(_ now: Bool) {
+        controller.shown = now
+        guard now else { return }
+        controller.beginGlide()
+        keepAlive(for: 1.5)
     }
 
     private func keepAlive(for seconds: Double) { keepAlive(until: Date().addingTimeInterval(seconds)) }
@@ -270,7 +327,7 @@ struct ShowMeStage: View {
                 overlay(size: geometry.size, now: timeline.date)
             }
         }
-        .opacity(ready ? 1 : 0)
+        .opacity(shown ? 1 : 0)
         .allowsHitTesting(false)
         .accessibilityHidden(true)
     }
@@ -331,25 +388,31 @@ struct ShowMeRhythm: View {
     /// Down and up arrows on the beat row (strummed instruments).
     var arrows = true
     var edges: StringEdges?
+    /// The host shows the model in place of its picture (`ShowMeStage.revealed`).
+    var revealed = true
     var onReady: () -> Void = {}
     var onFailure: () -> Void = {}
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// The model is in place: until then the picture's own beat row shows, not this one.
     @State private var ready = false
 
+    private var shown: Bool { ready && revealed }
+
     var body: some View {
         VStack(spacing: 10) {
-            ShowMeStage(modelID: modelID, strings: strings, shot: .strum(strum), accent: accent, edges: edges,
+            // The stage keeps its own visibility (a trace behind the picture while it loads, so it is drawn).
+            ShowMeStage(modelID: modelID, strings: strings, shot: .strum(strum), accent: accent, edges: edges, revealed: revealed,
                         label: Text("Strum pattern"), value: String(localized: "Down strokes go from the thickest string to the thinnest, up strokes back."),
                         onReady: { ready = true; onReady() }, onFailure: onFailure)
                 .frame(maxHeight: .infinity)
-            TimelineView(.animation(paused: reduceMotion || !ready)) { timeline in
+            TimelineView(.animation(paused: reduceMotion || !shown)) { timeline in
                 RhythmBar(pattern: strum.pattern, beatsPerBar: strum.beatsPerBar, accent: accent,
                           playhead: reduceMotion ? nil : playhead(at: timeline.date), arrows: arrows)
             }
+            .opacity(shown ? 1 : 0)
+            .animation(Motion.reveal, value: shown)
+            .accessibilityHidden(!shown)
         }
-        .opacity(ready ? 1 : 0)
-        .animation(Motion.reveal, value: ready)
     }
 
     /// How far through the bar the loop is at `date` (0…1).
@@ -399,19 +462,21 @@ struct ShowMeButton: View {
         .task(id: invite && !reduceMotion) { await callOut() }
     }
 
-    /// The accent disc with the glyph, the ring leaving it on each `ping`.
+    /// The accent disc with the glyph, the ring leaving it on each `ping`. The spinner and the glyph are both always
+    /// there and cross-fade, so the disc is never empty on the way from loading to playing (a removed spinner vanishes
+    /// at once while the glyph is still fading in).
     private var disc: some View {
         ZStack {
             Circle().fill(LinearGradient(colors: [accent.mix(with: .white, by: 0.25), accent], startPoint: .top, endPoint: .bottom))
-            if loading {
-                ProgressView().controlSize(.small).tint(Palette.onAccent)
-            } else {
-                Image(systemName: showing ? "play.fill" : "rotate.3d")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(Palette.onAccent)
-                    .contentTransition(.symbolEffect(.replace))
-            }
+            ProgressView().controlSize(.small).tint(Palette.onAccent)
+                .opacity(loading ? 1 : 0)
+            Image(systemName: showing ? "play.fill" : "rotate.3d")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundStyle(Palette.onAccent)
+                .contentTransition(.symbolEffect(.replace))
+                .opacity(loading ? 0 : 1)
         }
+        .animation(Motion.fade, value: loading)
         .frame(width: 32, height: 32)
         .overlay { ShowMePingRing(trigger: ping, color: accent) }
         .accessibilityHidden(true)
