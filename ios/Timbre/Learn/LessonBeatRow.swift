@@ -2,10 +2,20 @@ import SwiftUI
 import TimbreCore
 
 /// How one stroke of a rhythm step went: its grade and how far off it was in seconds (negative early). A miss
-/// carries the nearest stroke heard outside the window, if there was one; nil when nothing was heard.
+/// carries the nearest stroke heard outside the window, if there was one; nil when nothing was heard. A stroke that
+/// came in on time with the wrong chord, or with none, says so (`chord`).
 struct BeatCall: Equatable {
     let grade: PlayAlongJudge.Grade
     let offset: Double?
+    var chord: ChordCall? = nil
+}
+
+/// What a stroke rang when it wasn't the chord asked for.
+enum ChordCall: Equatable {
+    /// Another chord, by its name as the player reads it ("Am").
+    case wrong(String)
+    /// No chord at all: a tap on the body, a muted strum.
+    case silent
 }
 
 /// The rhythm step's beat lane: one bar on a track, the counts under it, each stroke called as the playhead passes.
@@ -22,7 +32,8 @@ struct BeatCall: Equatable {
 /// Elsewhere (taps, plucks) the strokes are dots and the playhead is a bar.
 ///
 /// Each stroke is called as it passes, mint on the beat, amber when loose, red when missed, and a loose or missed
-/// stroke says why under its count ("120 ms late", "Missed"); each one swells as the playhead reaches it.
+/// stroke says why under its count ("120 ms late", "Missed"); a stroke on time with the wrong chord turns amber with
+/// the chord it rang ("Am?"), one that rang no chord says so ("No chord"). Each one swells as the playhead reaches it.
 /// Explanations and quizzes draw the same lane without the calls (`RhythmBar`).
 struct LessonBeatRow: View {
     let pattern: [Double]
@@ -279,8 +290,14 @@ struct LessonBeatRow: View {
         }
     }
 
-    /// Why a stroke was loose or missed, nil for a clean one.
+    /// Why a stroke was loose or missed, nil for a clean one. The chord comes first: a stroke on time with the wrong
+    /// chord is wrong for that reason.
     private func reason(_ call: BeatCall) -> Text? {
+        switch call.chord {
+        case .wrong(let name)?: return Text(verbatim: name + "?")
+        case .silent?: return Text("No chord")
+        case nil: break
+        }
         switch call.grade {
         case .perfect, .good:
             return nil
@@ -298,6 +315,11 @@ struct LessonBeatRow: View {
     private var spokenCalls: String {
         pattern.indices.compactMap { i -> String? in
             guard let call = calls[i] else { return nil }
+            switch call.chord {
+            case .wrong(let name)?: return String(localized: "Sounded like \(name)")
+            case .silent?: return String(localized: "No chord")
+            case nil: break
+            }
             switch call.grade {
             case .perfect: return String(localized: "Perfect")
             case .good: return String(localized: "Good")

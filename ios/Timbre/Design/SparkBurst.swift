@@ -61,8 +61,9 @@ struct SparkBurst: View {
             let travel = still ? 1 : Self.landing(local / 0.42)
             let radius = origin + span * harmonic.share * travel
             guard radius > 1 else { continue }
-            let swing = still ? 0 : Self.tremble(local) * span * 0.045
-            let tint: Color = index % 2 == 0 ? color : Palette.amber
+            let swing = still ? 0 : Self.tremble(local) * span * 0.035 * (1 + harmonic.share)
+            // The outer ring in the burst's colour, the inner ones alternating with amber.
+            let tint: Color = outer || index % 2 == 0 ? color : Palette.amber
             if ring || !outer {
                 let path = Self.ringPath(center: center, radius: radius, lobes: harmonic.lobes, amplitude: swing,
                                          phase: local, turn: turn)
@@ -110,5 +111,5 @@ struct SparkBurst: View {
     }
 
     /// How hard a ring trembles: struck at launch, gone by the time it has landed and held a beat.
-    private static func tremble(_ t: Double) -> Double { exp(-t / 0.16) }
+    private static func tremble(_ t: Double) -> Double { exp(-t / 0.22) }
 }

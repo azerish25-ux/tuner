@@ -17,6 +17,14 @@ struct FirstTuneSetup {
     let name: String
     let photoAsset: String?
     let modelID: String?
+    /// A higher string rings the same letter (the guitar's two Es): the lock says "Low E".
+    let low: Bool
+
+    /// What the lock says, as a fact: "Low E, dead on.", or "G, dead on." where no other string shares the letter.
+    var fact: Text {
+        let letter = String(note.prefix { !$0.isNumber && $0 != "-" })
+        return low ? Text("Low \(letter), dead on.") : Text("\(letter), dead on.")
+    }
 
     /// Nil for "Voice or other", or an instrument without strings to pluck.
     @MainActor static func make(store: AppStore, instrumentID: String?) -> FirstTuneSetup? {
@@ -25,10 +33,11 @@ struct FirstTuneSetup {
               let course = tuning.courses.min(by: { $0.targetMidi < $1.targetMidi }) else { return nil }
         let photo = store.catalog.photo(instrumentId: id)
         let name = photo.map { NSLocalizedString("timbre_photo_" + $0.asset, bundle: .main, value: $0.label, comment: "") } ?? instrument.name.localized
+        let low = tuning.courses.contains { $0.targetMidi > course.targetMidi && ($0.targetMidi - course.targetMidi) % 12 == 0 }
         return FirstTuneSetup(instrument: instrument, tuning: tuning, course: course,
                               note: TargetLabelFormatter.splitCue(store.courseLabel(course)).main,
                               hz: store.target(for: course), name: name,
-                              photoAsset: photo?.asset, modelID: ModelLibrary.modelID(forPhoto: photo?.asset))
+                              photoAsset: photo?.asset, modelID: ModelLibrary.modelID(forPhoto: photo?.asset), low: low)
     }
 
     /// The step only runs when Timbre can hear: the microphone is allowed (or the UI-test demo pitch plays).
@@ -110,9 +119,9 @@ final class FirstTuneModel {
 }
 
 /// Onboarding's first win: "Pluck your thickest string" on the tuner's own live stage. The stage and
-/// readout follow the microphone (note, cents, which way to turn); when the string locks there is a
-/// burst, a haptic chord and "In tune", and the lock is saved like a tuner session (streak, XP, "First in
-/// tune"), shown in chips where Skip was; then the plan. Skip is always there until the lock.
+/// readout follow the microphone (note, cents, which way to turn), and VoiceOver hears them as on the tuner; when the
+/// string locks there is a burst, a haptic chord and the fact ("Low E, dead on."), and the lock is saved like a tuner
+/// session (streak, XP, "First in tune"), shown in chips where Skip was. Skip is always there until the lock.
 struct FirstTuneStep: View {
     let setup: FirstTuneSetup
     /// Called once: true when the string locked, false when skipped.
@@ -120,8 +129,11 @@ struct FirstTuneStep: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     @State private var model = FirstTuneModel()
     @State private var motion = ReadoutMotion()
+    /// VoiceOver's note and cents while the string is held, and "In tune" on the lock, as the tuner speaks them.
+    @State private var announcer = TunerAnnouncer()
     @State private var owner = UUID()
     @State private var burstStart: Date? = nil
     @State private var finished = false
@@ -165,21 +177,37 @@ struct FirstTuneStep: View {
             // The microphone stops in the background; pick the string up again on return.
             if phase == .active && !model.lockedIn && !finished { listen() }
         }
+        .task(id: voiceOver) {
+            guard voiceOver else { return }
+            while !Task.isCancelled {
+                announce()
+                try? await Task.sleep(for: .milliseconds(200))
+            }
+        }
+    }
+
+    /// Feeds the announcer what the readout shows; on the lock, the lock.
+    private func announce() {
+        let reading = model.reading
+        let locked = model.lockedIn
+        let heard = model.listening && (locked || reading.cents != nil)
+        let shown: Int? = locked ? 0 : (motion.shown ?? reading.cents.map { Int($0.rounded()) })
+        announcer.step(note: setup.note, shown: heard ? shown : nil, locked: locked, now: ProcessInfo.processInfo.systemUptime)
     }
 
     // MARK: Pieces
 
     private var header: some View {
-        // Locked: the readout's badge says "In tune"; the title cheers instead of repeating it. A hidden copy of both
-        // titles and the line under them keeps the block as tall as the longer one, so the stage below never moves.
-        // The shown title cross-fades, and the note line rides up under "Great work" instead of keeping the second
+        // Locked: the readout's badge says "In tune"; the title says what was done ("Low E, dead on."). A hidden copy
+        // of both titles and the line under them keeps the block as tall as the longer one, so the stage below never
+        // moves. The shown title cross-fades, and the note line rides up under the fact instead of keeping the second
         // line of "Pluck your thickest string" as a gap; the room left over falls between the block and the stage.
         let locked = model.lockedIn
         return ZStack(alignment: .topLeading) {
             VStack(alignment: .leading, spacing: 6) {
                 ZStack(alignment: .topLeading) {
-                    title("Pluck your thickest string", color: Palette.ink)
-                    title("Great work", color: Palette.mint)
+                    title(Text("Pluck your thickest string"), color: Palette.ink)
+                    title(setup.fact, color: Palette.mint)
                 }
                 noteLine
             }
@@ -199,14 +227,14 @@ struct FirstTuneStep: View {
     private func shownTitle(locked: Bool) -> some View {
         ZStack(alignment: .topLeading) {
             if locked {
-                title("Great work", color: Palette.mint).transition(.opacity)
+                title(setup.fact, color: Palette.mint).transition(.opacity)
             } else {
-                title("Pluck your thickest string", color: Palette.ink).transition(.opacity)
+                title(Text("Pluck your thickest string"), color: Palette.ink).transition(.opacity)
             }
         }
         .animation(Motion.fade, value: locked)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(locked ? Text("Great work") : Text("Pluck your thickest string"))
+        .accessibilityLabel(locked ? setup.fact : Text("Pluck your thickest string"))
         .accessibilityAddTraits(.isHeader)
         .accessibilityIdentifier("onboarding.firsttune")
     }
@@ -216,8 +244,8 @@ struct FirstTuneStep: View {
         Text(verbatim: "\(setup.note) · \(setup.name)").font(.subheadline).foregroundStyle(Palette.inkSoft)
     }
 
-    private func title(_ text: LocalizedStringKey, color: Color) -> some View {
-        Text(text).font(Typeface.display(32)).tracking(-0.6)
+    private func title(_ text: Text, color: Color) -> some View {
+        text.font(Typeface.display(32)).tracking(-0.6)
             .foregroundStyle(color)
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -375,7 +403,6 @@ struct FirstTuneStep: View {
         // The tuner's own lock bell, at the pitch of the string just tuned.
         SoundFX.shared.playLock(frequency: setup.hz)
         burstStart = Date()
-        UIAccessibility.post(notification: .announcement, argument: String(localized: "In tune"))
         Analytics.log("onboarding_first_tune", ["result": "locked", "instrument": setup.instrument.id])
         // It counts: today's practice (the streak starts), the string's XP and the "First in tune" badge.
         reward = store.recordFirstTune(model.result(setup))
@@ -415,8 +442,8 @@ private struct FirstTuneAura: View {
     }
 }
 
-/// The lock: a ring of light and sparks from the stage.
-private struct FirstTuneBurst: View {
+/// Onboarding's wins (the first tune's lock, the first chord): a ring of light and sparks from the stage.
+struct FirstTuneBurst: View {
     let started: Date
     private struct Spark { let angle, speed, size, hue: Double }
     private static let sparks: [Spark] = {
