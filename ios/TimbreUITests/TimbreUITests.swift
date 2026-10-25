@@ -497,8 +497,10 @@ final class TimbreUITests: XCTestCase {
         // A one-bar count-in and six notes at 60 BPM: the take is over about 10 s after Start. Hands off until then
         // (the picture doesn't touch the app): a query stalls its main thread, a note heard late is a miss, and the
         // final play-along gates the lesson's stars, so a missed note would cost frame #6 its third star.
+        // The take starts a second or two after the tap (the step's entrance, then Start), so its last note lands
+        // about 11 s after it: the first query waits until 15 s, well clear of it.
         element("lesson.continue").tap(); settle(7); shot("60-along-playing")
-        settle(4)
+        settle(8)
         XCTAssertTrue(element("along.again").waitForExistence(timeout: 30))
         settle(1); shot("61-along-done")
         // App Store frame #6. The results land in order: the stars, the coach, the XP counting up, then the level bar
