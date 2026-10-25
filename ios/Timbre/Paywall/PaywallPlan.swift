@@ -118,11 +118,12 @@ struct PaywallPlan {
     // MARK: The rail
 
     /// The hero's rail, from the plan: its first song, then the songs it reaches after it, then the song collections
-    /// played on the same instrument (Originals first), then the songs of the units placement skipped; when those
-    /// make fewer than six, the other collections. Each tune shows once ("Greensleeves: the chords" and "… the
-    /// melody" are one sleeve), and each motif once while the songs allow it; nursery tunes (a "first songs" unit's)
-    /// wait until the rest have had their turn, so the rail looks like an adult's catalogue. Eight at most, in that
-    /// order; empty when the plan reaches no song.
+    /// played on the same instrument (the Originals, then the Standards, then the rest, as the Songs tab ranks them),
+    /// then the songs of the units placement skipped; when those make fewer than six, the other collections. Each
+    /// tune shows once ("Greensleeves: the chords" and "… the melody" are one sleeve), each motif once and no two
+    /// neighbours of one motif family while the songs allow it; nursery rhymes and campfire rounds
+    /// (`SongOfTheDay.isCampfireOrKids`) wait until the rest have had their turn, so the rail looks like an adult's
+    /// catalogue. Eight at most, in that order; empty when the plan reaches no song.
     @MainActor private static func railSongs(course: LearnCourse?, from first: Int?, store: AppStore) -> [RailSong] {
         guard let course, let first, first < course.lessons.count else { return [] }
         let lessons = course.lessons
@@ -130,7 +131,7 @@ struct PaywallPlan {
         guard !ahead.isEmpty else { return [] }
         let skipped = lessons[..<first].filter { $0.kind == .song }
         let collections = store.curriculum.courses.filter { $0.id != course.id && isCollection($0) }
-            .sorted { isOriginals($0) && !isOriginals($1) }
+            .sorted { shelfRank($0) < shelfRank($1) }
         let sameInstrument = { (shelf: LearnCourse) -> Bool in course.instrument != nil && shelf.instrument == course.instrument }
         var candidates: [RailCandidate] = ahead.map { RailCandidate(lesson: $0, course: course) }
         for shelf in collections where sameInstrument(shelf) { candidates += RailCandidate.songs(of: shelf) }
@@ -146,11 +147,13 @@ struct PaywallPlan {
             tunes.insert(tuneKey(lesson))
             motifs.insert(art.motif)
         }
-        // The plan's first song, then a new tune with a new motif, nursery tunes left for later.
+        // The plan's first song, then a new tune with a new motif in another family than its neighbour's, the
+        // children's tunes left for later.
         for (index, song) in candidates.enumerated() where rail.count < 8 {
             guard !tunes.contains(tuneKey(song.lesson)) else { continue }
             let art = CoverArt.of(song.lesson, in: song.course)
-            guard index == 0 || (!motifs.contains(art.motif) && art.genre != .nursery) else { continue }
+            let fresh = !motifs.contains(art.motif) && rail.last?.art.motif.family != art.motif.family
+            guard index == 0 || (fresh && !SongOfTheDay.isCampfireOrKids(song.lesson.title.defaultValue)) else { continue }
             add(song.lesson, art)
         }
         // Six at least where the catalogue has them: any tune not on the rail yet.
@@ -172,10 +175,8 @@ struct PaywallPlan {
         }
     }
 
-    /// A tune's key: its main title in English, letters and digits only, so a song's versions and parts are one tune.
-    private static func tuneKey(_ lesson: Lesson) -> String {
-        String(CoverArt.mainTitle(lesson.title.defaultValue).lowercased().filter { $0.isLetter || $0.isNumber })
-    }
+    /// A tune's key (`SongOfTheDay.tuneKey`), so a song's versions and parts are one tune.
+    private static func tuneKey(_ lesson: Lesson) -> String { SongOfTheDay.tuneKey(lesson.title.defaultValue) }
 
     /// A course that is mostly songs (Songs, Standards, Originals), as the Songs tab counts them.
     private static func isCollection(_ course: LearnCourse) -> Bool {
@@ -183,8 +184,10 @@ struct PaywallPlan {
         return songs > 0 && songs * 2 >= course.lessons.count
     }
 
-    private static func isOriginals(_ course: LearnCourse) -> Bool {
-        course.id.hasPrefix("original")
+    /// The adult repertoire first: 0 the Originals, 1 the Standards, 2 the other collections.
+    private static func shelfRank(_ course: LearnCourse) -> Int {
+        if SongOfTheDay.isOriginals(course) { return 0 }
+        return SongOfTheDay.isStandards(course) ? 1 : 2
     }
 
     /// What was tapped first, then the plan's own outcomes, `limit` in all and each promise once.

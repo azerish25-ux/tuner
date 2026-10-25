@@ -677,9 +677,12 @@ private struct EarPicture {
 }
 
 /// A question drawn as the Play hub's interval staircase (`IntervalStairsArt`): a step a semitone up from the first
-/// note, which is lit from the start; the notes still to name are a "?" pulsing with the tones as they sound
-/// (timed like `AudioService.playTones`). On the answer they hop up to their steps, each with its interval and
-/// name. Reduce Motion: the tones glow without pulsing and the notes fade in on their steps.
+/// note. On the question's first hearing each note rises as its tone begins: the first onto its step, the rest into a
+/// frosted veil over the steps they might land on. They rise to the veil's "?", the same height whatever the answer,
+/// so nothing is given away; the veil marks the places the answers to choose from would land (higher-or-lower's two,
+/// the intervals on the buttons). On the answer the veil lifts and the notes hop up to their steps, each with its
+/// interval and name. A replay only glows (timed like `AudioService.playTones`). Reduce Motion: the notes stand in
+/// place, the tones glow without pulsing and the answer fades in on its steps.
 private struct EarAnswerStage: View {
     let picture: EarPicture
     let revealed: Bool
@@ -688,14 +691,29 @@ private struct EarAnswerStage: View {
     let together: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var reveal = 0.0
+    /// When this question was first played: its notes rise with that hearing only.
+    @State private var firstHearing: Date?
+
+    init(picture: EarPicture, revealed: Bool, playing: Bool, startedAt: Date?, together: Bool) {
+        self.picture = picture
+        self.revealed = revealed
+        self.playing = playing
+        self.startedAt = startedAt
+        self.together = together
+        _firstHearing = State(initialValue: startedAt)
+    }
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 60, paused: !(playing && !reduceMotion))) { timeline in
             EarStairsCanvas(picture: picture, reveal: reveal, still: reduceMotion,
-                            first: energy(tone: 0, at: timeline.date), second: energy(tone: 1, at: timeline.date))
+                            first: energy(tone: 0, at: timeline.date), second: energy(tone: 1, at: timeline.date),
+                            firstRise: rise(tone: 0, at: timeline.date), secondRise: rise(tone: 1, at: timeline.date))
         }
         .accessibilityHidden(true)
         .onAppear { if revealed { reveal = 1 } }
+        .onChange(of: startedAt) { _, now in
+            if firstHearing == nil { firstHearing = now }
+        }
         .onChange(of: revealed) { _, now in
             guard now else { return }
             withAnimation(reduceMotion ? Motion.reduced : .easeInOut(duration: 0.8)) { reveal = 1 }
@@ -713,6 +731,15 @@ private struct EarAnswerStage: View {
         guard within >= 0, within < length else { return 0 }
         return 0.25 + 0.75 * min(1, within / 0.03) * exp(-within * 2.4)
     }
+
+    /// 0…1: how far tone `tone`'s note has risen. On the question's first hearing it rises over 0.42 s from the moment
+    /// its tone begins (a chord's notes together); on a replay, once heard, or under Reduce Motion it stands risen.
+    private func rise(tone: Int, at now: Date) -> Double {
+        guard let startedAt else { return 0 }
+        guard playing, !reduceMotion, startedAt == firstHearing else { return 1 }
+        let begin = together ? 0 : Double(tone) * 1.05
+        return min(1, max(0, (now.timeIntervalSince(startedAt) - begin) / 0.42))
+    }
 }
 
 /// The staircase at one point of the reveal; `reveal` animates (0: unanswered, 1: every note landed).
@@ -722,6 +749,8 @@ private struct EarStairsCanvas: View, Animatable {
     let still: Bool
     let first: Double
     let second: Double
+    let firstRise: Double
+    let secondRise: Double
 
     var animatableData: Double {
         get { reveal }
@@ -730,7 +759,8 @@ private struct EarStairsCanvas: View, Animatable {
 
     var body: some View {
         Canvas { context, size in
-            let frame = EarStairsArt.Frame(picture: picture, reveal: reveal, still: still, first: first, second: second)
+            let frame = EarStairsArt.Frame(picture: picture, reveal: reveal, still: still, first: first, second: second,
+                                           firstRise: firstRise, secondRise: secondRise)
             if picture.cents != nil {
                 EarStairsArt.drawPitch(&context, size: size, frame: frame)
             } else {
@@ -748,6 +778,9 @@ private enum EarStairsArt {
         /// Loudness of the first tone and of the rest (the chord's: both), 0…1.
         let first: Double
         let second: Double
+        /// How far the first note and the rest have risen, 0…1.
+        let firstRise: Double
+        let secondRise: Double
     }
 
     static let noteR: CGFloat = 5.5
@@ -760,7 +793,7 @@ private enum EarStairsArt {
         let count = 13
         let inset: CGFloat = 8
         let floorY = size.height - nameRoom
-        let rise = max(30, floorY - 48)
+        let rise = max(30, floorY - 44)
         let stepWidth = (size.width - inset * 2) / CGFloat(count)
         func centerX(_ i: Int) -> CGFloat { inset + stepWidth * (CGFloat(i) + 0.5) }
         func top(_ i: Int) -> CGFloat { floorY - 6 - CGFloat(i) / 12 * rise }
@@ -769,12 +802,13 @@ private enum EarStairsArt {
         let stagger = 0.15
         let span = max(0.1, 1 - stagger * Double(max(0, targets.count - 1)))
         func progress(_ k: Int) -> Double { min(1, max(0, (frame.reveal - stagger * Double(k)) / span)) }
+        let unknown = max(0, 1 - frame.reveal * 3)
 
-        // The ladder: the root's step lit, the answer's steps as their notes land, the span between warming.
+        // The ladder: the root's step lit as its note lands, the answer's steps as theirs do, the span between warming.
         for i in 0..<count {
             var lit = 0.0
             if i == 0 {
-                lit = 0.55 + 0.45 * frame.first
+                lit = (0.55 + 0.45 * frame.first) * min(1, frame.firstRise * 2)
             } else if let k = targets.firstIndex(of: i) {
                 lit = progress(k)
             } else if i < highest {
@@ -794,21 +828,37 @@ private enum EarStairsArt {
         }
         func nameX(_ x: CGFloat) -> CGFloat { min(size.width - 18, max(18, x)) }
 
-        let root = CGPoint(x: centerX(0), y: top(0) - noteR - 1)
+        // The first note hops up from the floor onto its step as it sounds.
+        let rest = CGPoint(x: centerX(0), y: top(0) - noteR - 1)
+        let root = frame.still || frame.firstRise >= 1 ? rest : hop(from: CGPoint(x: rest.x, y: floorY + 2), to: rest, progress: frame.firstRise)
+        let rootAlpha = min(1, frame.firstRise * 5)
         let rootX = nameX(centerX(0))
         context.draw(noteText(picture.name(picture.root), color: Palette.inkSoft), at: CGPoint(x: rootX, y: nameY(rootX)))
 
-        // Unanswered: how far? A faint arc from the root to a "?" over the ladder, glowing with the tones.
-        let unknown = max(0, 1 - frame.reveal * 3)
+        // Unanswered: a veil over the steps above the root, the places the answers on the buttons would land marked on
+        // it, the rest of the notes rising behind it to its "?".
         if unknown > 0 {
-            let spot = CGPoint(x: centerX(8), y: top(10) - 2)
+            let veilTop = top(12) - 24
+            let veil = CGRect(x: centerX(1) - stepWidth / 2, y: veilTop, width: stepWidth * 12, height: floorY - veilTop)
+            let spot = CGPoint(x: centerX(3), y: top(10))
+            if frame.secondRise > 0 {
+                let hidden = CGPoint(x: spot.x, y: floorY - (floorY - spot.y) * CGFloat(overshoot(frame.secondRise)))
+                hiddenNote(&context, at: hidden, energy: frame.second, alpha: unknown * min(1, frame.secondRise * 4))
+            }
+            veilPanel(&context, rect: veil, alpha: unknown)
+            for semitones in picture.candidates where (1...12).contains(semitones) {
+                let x = centerX(semitones)
+                slot(&context, from: x - stepWidth / 2 + 3, to: x + stepWidth / 2 - 3, y: top(semitones), label: Intervals.short[semitones],
+                     at: CGPoint(x: x, y: top(semitones) - 9), alpha: unknown)
+            }
             var arc = Path()
             arc.move(to: root)
             arc.addQuadCurve(to: CGPoint(x: spot.x - 16, y: spot.y + 6), control: CGPoint(x: (root.x + spot.x) / 2, y: spot.y - 10))
-            context.stroke(arc, with: .color(Palette.amber.opacity(0.28 * unknown)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
+            context.stroke(arc, with: .color(Palette.amber.opacity(0.28 * unknown * rootAlpha)),
+                           style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
             mystery(&context, at: spot, energy: frame.second, alpha: unknown)
         }
-        dot(&context, at: root, energy: frame.first, alpha: 1)
+        dot(&context, at: root, energy: frame.first, alpha: rootAlpha)
 
         // Answered: each note hops from the root to its step, its interval over it and its name under the floor.
         for (k, semitones) in targets.enumerated() {
@@ -833,46 +883,66 @@ private enum EarStairsArt {
         }
     }
 
-    /// Higher or lower: two steps side by side, the second rising or falling by the detune (drawn larger than
-    /// life: a semitone would be a whole step), at least a visible nudge however fine the ear has become.
+    /// Higher or lower: two columns side by side, the second rising or falling by the detune (drawn larger than
+    /// life: a semitone would be a whole step), at least a clear nudge however fine the ear has become. Unanswered, the
+    /// second stands behind a veil marked with its two possible places, the first one's level running between them.
     fileprivate static func drawPitch(_ context: inout GraphicsContext, size: CGSize, frame: Frame) {
         let picture = frame.picture
         let floorY = size.height - nameRoom
-        let rise = max(30, floorY - 48)
-        let width = min(112, size.width * 0.3)
-        let gap: CGFloat = 20
+        let rise = max(40, floorY - 26)
+        let width = min(120, size.width * 0.3)
+        let gap: CGFloat = 24
         let leftX = size.width / 2 - gap / 2 - width / 2
         let rightX = size.width / 2 + gap / 2 + width / 2
-        let base = floorY - 6 - rise * 0.45
+        let base = floorY - rise * 0.5
         let cents = picture.cents ?? 0
-        let shift = CGFloat(max(0.14, min(1, abs(cents) / 50))) * rise * 0.42 * (cents < 0 ? -1 : 1)
+        let magnitude = CGFloat(max(0.32, min(1, abs(cents) / 50))) * rise * 0.4
+        let shift = magnitude * (cents < 0 ? -1 : 1)
         let p = frame.reveal
         let eased = p * p * (3 - 2 * p)
         let moved = frame.still ? (p > 0 ? 1 : 0) : eased
         let secondTop = base - shift * CGFloat(moved)
         let alpha = frame.still ? p : min(1, p * 4)
+        let unknown = max(0, 1 - p * 3)
 
-        let firstRect = CGRect(x: leftX - width / 2, y: base, width: width, height: floorY - base)
-        step(&context, rect: firstRect, lit: 0.55 + 0.45 * frame.first)
+        // The first note's column, rising from the floor to its pitch as it sounds.
+        let firstTop = floorY - (floorY - base) * CGFloat(overshoot(frame.firstRise))
+        if frame.firstRise > 0 {
+            let firstRect = CGRect(x: leftX - width / 2, y: firstTop, width: width, height: max(2, floorY - firstTop))
+            step(&context, rect: firstRect, lit: 0.55 + 0.45 * frame.first)
+        }
         floorLine(&context, from: leftX - width / 2 - 8, to: rightX + width / 2 + 8, y: floorY)
+
+        // Unanswered: the second note rising behind the veil to the first one's level, whichever way it really went;
+        // the two places it may land marked on the veil, a higher and a lower, with the difference.
+        if unknown > 0 {
+            let veilTop = base - magnitude - 24
+            let veil = CGRect(x: rightX - width / 2, y: veilTop, width: width, height: floorY - veilTop)
+            if frame.secondRise > 0 {
+                let hidden = CGPoint(x: rightX, y: floorY - (floorY - base) * CGFloat(overshoot(frame.secondRise)))
+                hiddenNote(&context, at: hidden, energy: frame.second, alpha: unknown * min(1, frame.secondRise * 4))
+            }
+            veilPanel(&context, rect: veil, alpha: unknown)
+            let amount = "\(Int(abs(cents).rounded()))¢"
+            slot(&context, from: veil.minX + 8, to: veil.maxX - 8, y: base - magnitude, label: "+" + amount,
+                 at: CGPoint(x: veil.maxX + 6, y: base - magnitude), anchor: .leading, alpha: unknown)
+            slot(&context, from: veil.minX + 8, to: veil.maxX - 8, y: base + magnitude, label: "−" + amount,
+                 at: CGPoint(x: veil.maxX + 6, y: base + magnitude), anchor: .leading, alpha: unknown)
+        }
 
         // The first note's level, carried across: where the second would be if it were the same.
         var level = Path()
         level.move(to: CGPoint(x: leftX, y: base))
         level.addLine(to: CGPoint(x: rightX + width / 2, y: base))
-        context.stroke(level, with: .color(Palette.amber.opacity(0.22)), style: StrokeStyle(lineWidth: 1, dash: [3, 4]))
-
-        let unknown = max(0, 1 - p * 3)
+        context.stroke(level, with: .color(Palette.amber.opacity(0.22 * min(1, frame.firstRise * 2))), style: StrokeStyle(lineWidth: 1, dash: [3, 4]))
         if unknown > 0 {
-            let outline = CGRect(x: rightX - width / 2, y: base, width: width, height: floorY - base)
-            context.stroke(Path(roundedRect: outline, cornerRadius: 4), with: .color(Palette.amber.opacity(0.3 * unknown)),
-                           style: StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
-            mystery(&context, at: CGPoint(x: rightX, y: base - 26), energy: frame.second, alpha: unknown)
+            mystery(&context, at: CGPoint(x: rightX, y: base), energy: frame.second, alpha: unknown)
         }
-        let firstDot = CGPoint(x: leftX, y: base - noteR - 1)
-        dot(&context, at: firstDot, energy: frame.first, alpha: 1)
+        let firstDot = CGPoint(x: leftX, y: firstTop - noteR - 1)
+        dot(&context, at: firstDot, energy: frame.first, alpha: min(1, frame.firstRise * 5))
         context.draw(noteText(picture.name(picture.root), color: Palette.inkSoft), at: CGPoint(x: leftX, y: floorY + 12))
 
+        // Answered: the second column steps out from the first one's level onto its place, the cents over it.
         guard p > 0 else { return }
         let secondRect = CGRect(x: rightX - width / 2, y: secondTop, width: width, height: max(4, floorY - secondTop))
         var faded = context
@@ -919,6 +989,45 @@ private enum EarStairsArt {
         context.fill(SniperScopeArt.circle(CGPoint(x: point.x - 1.5, y: point.y - 1.5), 2), with: .color(.white.opacity(0.8 * alpha)))
     }
 
+    /// A note out of sight: its glow, drawn before the veil so the veil frosts it over.
+    private static func hiddenNote(_ context: inout GraphicsContext, at point: CGPoint, energy: Double, alpha: Double) {
+        let halo = 20 + 10 * CGFloat(energy)
+        context.fill(SniperScopeArt.circle(point, halo), with: .radialGradient(
+            Gradient(colors: [Palette.amber.opacity((0.4 + 0.4 * energy) * alpha), .clear]), center: point, startRadius: 0, endRadius: halo))
+        context.fill(SniperScopeArt.circle(point, noteR), with: .color(Palette.amber.opacity(0.85 * alpha)))
+    }
+
+    /// The veil over what is still to name: frosted, finely hatched and edged in a dashed line; it lifts as it goes.
+    private static func veilPanel(_ context: inout GraphicsContext, rect: CGRect, alpha: Double) {
+        let lifted = rect.offsetBy(dx: 0, dy: -10 * CGFloat(1 - alpha))
+        let shape = Path(roundedRect: lifted, cornerRadius: 8)
+        context.fill(shape, with: .color(Palette.stageRaised.opacity(0.62 * alpha)))
+        context.fill(shape, with: .linearGradient(Gradient(colors: [Palette.amber.opacity(0.08 * alpha), Palette.amber.opacity(0.02 * alpha)]),
+                                                  startPoint: CGPoint(x: lifted.midX, y: lifted.minY), endPoint: CGPoint(x: lifted.midX, y: lifted.maxY)))
+        var hatch = context
+        hatch.clip(to: shape)
+        var lines = Path()
+        var x = lifted.minX - lifted.height
+        while x < lifted.maxX {
+            lines.move(to: CGPoint(x: x, y: lifted.maxY))
+            lines.addLine(to: CGPoint(x: x + lifted.height, y: lifted.minY))
+            x += 9
+        }
+        hatch.stroke(lines, with: .color(.white.opacity(0.035 * alpha)), lineWidth: 1)
+        context.stroke(shape, with: .color(Palette.amber.opacity(0.3 * alpha)), style: StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
+    }
+
+    /// A place the hidden note may land: a dashed mark at its height and the answer it would be, named.
+    private static func slot(_ context: inout GraphicsContext, from start: CGFloat, to end: CGFloat, y: CGFloat, label: String,
+                             at labelPoint: CGPoint, anchor: UnitPoint = .center, alpha: Double) {
+        var line = Path()
+        line.move(to: CGPoint(x: start, y: y))
+        line.addLine(to: CGPoint(x: end, y: y))
+        context.stroke(line, with: .color(Palette.amber.opacity(0.45 * alpha)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 3]))
+        let text = Text(verbatim: label).font(Typeface.label(10)).foregroundStyle(Palette.amber.opacity(0.75 * alpha))
+        context.draw(text, at: labelPoint, anchor: anchor)
+    }
+
     /// The notes still to name: a "?" in a glow that swells with their tone.
     private static func mystery(_ context: inout GraphicsContext, at point: CGPoint, energy: Double, alpha: Double) {
         let halo = 18 + 10 * CGFloat(energy)
@@ -933,6 +1042,13 @@ private enum EarStairsArt {
         let eased = p * p * (3 - 2 * p)
         let lift = CGFloat(sin(Double.pi * p)) * 22
         return CGPoint(x: from.x + (to.x - from.x) * CGFloat(eased), y: from.y + (to.y - from.y) * CGFloat(p) - lift)
+    }
+
+    /// A rise that overshoots a touch and settles (back-out easing), 0…1.
+    private static func overshoot(_ x: Double) -> Double {
+        let t = min(1, max(0, x)) - 1
+        let c = 1.4
+        return 1 + (c + 1) * t * t * t + c * t * t
     }
 
     private static func noteText(_ name: String, color: Color) -> Text {
