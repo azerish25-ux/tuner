@@ -140,7 +140,8 @@ struct TanpuraHero: View {
     private func halo(_ layout: TanpuraLayout, moment: TanpuraMoment) -> some View {
         let r = layout.radius
         let breath = CGFloat(moment.breath)
-        let swell = CGFloat(moment.resonance)
+        // Under Reduce Motion it only brightens with the strings; it never grows.
+        let swell = moment.still ? 0 : CGFloat(moment.resonance)
         let reach = r * (1.72 + 0.16 * breath + 0.08 * swell)
         let strength = 0.12 + 0.16 * moment.breath + 0.1 * moment.resonance
         return Circle()

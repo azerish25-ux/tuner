@@ -137,6 +137,9 @@ struct DroneSingAlongCard: View {
     let notation: String
     let headphones: Bool
     let permissionDenied: Bool
+    /// The drone is playing but the microphone is off (it starts with the drone only when already allowed): the
+    /// Listen pill's microphone pulses to say singing along is one tap away.
+    var invite = false
     let toggle: () -> Void
     @State private var visible = true
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -165,6 +168,7 @@ struct DroneSingAlongCard: View {
             Button(action: toggle) {
                 // A 36 pt pill in a 44 pt target.
                 Label(listening ? "Pause" : "Listen", systemImage: listening ? "pause.fill" : "mic.fill")
+                    .symbolEffect(.pulse, options: .repeating, isActive: invite && !listening && !reduceMotion)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(listening ? Palette.ink : Palette.onAccent)
                     .padding(.horizontal, 14).frame(minHeight: 36)

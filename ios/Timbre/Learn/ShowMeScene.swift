@@ -391,11 +391,12 @@ final class ShowMeController {
     /// Segments along a speaking length.
     private static let speaking = 22
     private static let fieldOfView: Float = 30
-    /// The player's-view shot: tilted back so the head goes away from the camera, turned to show the bass edge.
-    private static let tilt: Float = 0.9
-    private static let turn: Float = 0.22
-    /// Where the pick crosses the strings, as a share of the scale from the nut (about a fifth of it from the saddle).
-    private static let pickShare: Float = 0.81
+    /// The player's-view shot: tilted back so the head goes away from the camera, as the player's-view neck lies
+    /// (`PlayerNeck`). The glide swings in to it from the bass side.
+    private static let tilt: Float = 1.05
+    private static let swing: Float = 0.38
+    /// Where the pick crosses the strings, as a share of the scale from the nut (about a sixth of it from the saddle).
+    private static let pickShare: Float = 0.83
     /// Glide stiffness (rad/s): about 0.9 s from the wide shot to the frame.
     private static let glideRate: Float = 5.2
     /// How long a struck string rings.
@@ -482,7 +483,7 @@ final class ShowMeController {
         loaded = true
     }
 
-    private static func part(_ mesh: MeshResource, _ material: RealityKit.Material, in parent: Entity) -> ModelEntity {
+    private static func part(_ mesh: MeshResource, _ material: any RealityKit.Material, in parent: Entity) -> ModelEntity {
         let entity = ModelEntity(mesh: mesh, materials: [material])
         entity.isEnabled = false
         parent.addChild(entity)
@@ -527,10 +528,12 @@ final class ShowMeController {
         root.addChild(rim)
     }
 
-    /// The camera glides in from a wider shot (the model has just appeared).
+    /// The camera glides in from a wider shot (the model has just appeared), placed at once so nothing projects from
+    /// an unframed stage.
     func beginGlide() {
         glide = 0
         glideVelocity = 0
+        applyFraming(0)
     }
 
     /// Strings the host just lit start to ring now.
@@ -576,9 +579,9 @@ final class ShowMeController {
             points.append(neck.point(lane: last, share: share) + neck.across * gap * 0.9)
         }
         let aim = points.reduce(SIMD3<Float>.zero, +) / Float(points.count)
-        let rotation = simd_quatf(angle: -Self.tilt, axis: [1, 0, 0]) * simd_quatf(angle: Self.turn, axis: [0, 1, 0]) * neck.square
+        let rotation = simd_quatf(angle: -Self.tilt, axis: [1, 0, 0]) * neck.square
         let distance = fit(points, aim: aim, rotation: rotation, marginX: 0.9, marginY: 0.9)
-        let wide = simd_quatf(angle: -(Self.tilt - 0.45), axis: [1, 0, 0]) * simd_quatf(angle: Self.turn + 0.32, axis: [0, 1, 0]) * neck.square
+        let wide = simd_quatf(angle: -(Self.tilt - 0.45), axis: [1, 0, 0]) * simd_quatf(angle: Self.swing, axis: [0, 1, 0]) * neck.square
         return Plan(rotation: rotation, aim: aim, distance: distance,
                     startRotation: wide, startAim: aim + neck.along * 0.05, startDistance: distance * 2.3)
     }
@@ -588,16 +591,16 @@ final class ShowMeController {
     private func strumPlan(_ neck: ShowMeNeck) -> Plan {
         let last = neck.lanes.count - 1
         var points: [SIMD3<Float>] = []
-        for share: Float in [0.63, 1.03] {
+        for share: Float in [0.72, 1.0] {
             let gap = max(neck.gap(at: share), 0.006)
             points.append(neck.point(lane: 0, share: share) - neck.across * gap * 1.8)
             points.append(neck.point(lane: last, share: share) + neck.across * gap * 1.8)
         }
         let aim = points.reduce(SIMD3<Float>.zero, +) / Float(points.count)
         let roll = simd_quatf(angle: -.pi / 2, axis: [0, 0, 1])
-        let rotation = simd_quatf(angle: 0.36, axis: [0, 1, 0]) * simd_quatf(angle: -0.24, axis: [1, 0, 0]) * roll * neck.square
-        let distance = fit(points, aim: aim, rotation: rotation, marginX: 0.92, marginY: 0.8)
-        let wide = simd_quatf(angle: 0.7, axis: [0, 1, 0]) * simd_quatf(angle: -0.1, axis: [1, 0, 0]) * roll * neck.square
+        let rotation = simd_quatf(angle: 0.72, axis: [0, 1, 0]) * simd_quatf(angle: -0.32, axis: [1, 0, 0]) * roll * neck.square
+        let distance = fit(points, aim: aim, rotation: rotation, marginX: 0.94, marginY: 0.8)
+        let wide = simd_quatf(angle: 1.05, axis: [0, 1, 0]) * simd_quatf(angle: -0.15, axis: [1, 0, 0]) * roll * neck.square
         return Plan(rotation: rotation, aim: aim, distance: distance,
                     startRotation: wide, startAim: aim + neck.along * 0.04, startDistance: distance * 1.9)
     }
@@ -757,8 +760,8 @@ final class ShowMeController {
         let side = simd_normalize(simd_cross(tip, neck.normal))
         let face = simd_cross(side, tip)
         pick.orientation = simd_quatf(simd_float3x3(columns: (side, tip, face)))
-        // The pick's middle sits a third of its height behind the tip.
-        pick.position = position - tip * size * 0.18
+        // The tip reaches a little past the strings it is crossing.
+        pick.position = position - tip * size * 0.3
         pick.scale = SIMD3<Float>(repeating: size)
         pick.isEnabled = true
         pickFlash = state.touching ? 1 : max(0, pickFlash - dt * 3)

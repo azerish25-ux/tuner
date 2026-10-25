@@ -34,7 +34,8 @@ struct DroneView: View {
                 hero
                 settings
                 DroneSingAlongCard(model: singAlong, listening: listening && audio.running, tonicPc: store.droneMidi % 12, notation: notation,
-                                   headphones: audio.headphones, permissionDenied: audio.permissionDenied, toggle: toggleListening)
+                                   headphones: audio.headphones, permissionDenied: audio.permissionDenied,
+                                   invite: audio.droneRunning && !listening && !audio.permissionDenied, toggle: toggleListening)
                 Label("Sing or play long notes against the drone. Headphones keep it out of the microphone.", systemImage: "headphones")
                     .font(.footnote).foregroundStyle(listening && !audio.headphones ? Palette.amber : Palette.inkSoft)
                     .fixedSize(horizontal: false, vertical: true)
