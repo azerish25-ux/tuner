@@ -114,6 +114,9 @@ final class AudioService: ObservableObject {
                 self.suspend(); self.engine = AVAudioEngine()
             }
         })
+        // The band knows a song's style from the curriculum (`BandStyleIndex`): it reads it once, a few seconds after
+        // launch on the band's own queue, so the first band to render never waits on it.
+        bandQueue.asyncAfter(deadline: .now() + 4) { _ = BandStyleIndex.shared }
     }
 
     var outputActive: Bool { metronomeRunning || droneRunning || tonePlaying || bandOutro }

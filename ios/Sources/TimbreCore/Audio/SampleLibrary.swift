@@ -196,6 +196,10 @@ public struct SampleManifest: Decodable, Sendable {
         /// MIDI notes the set may play (zones are pitched at most a few semitones beyond their own note).
         public let coverage: [Int]
         public let zones: [Zone]
+        /// A single-layer plucked set: notes played softer than recorded are darkened (a velocity-tracked low-pass).
+        public let softFilter: Bool?
+        /// Paired courses (a mandolin's): phrases sound two strings this many cents apart in all.
+        public let pairCents: Double?
     }
 
     public let version: Int

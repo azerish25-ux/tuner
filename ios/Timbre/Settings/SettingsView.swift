@@ -672,6 +672,11 @@ private struct Acknowledgements: View {
                 Text(verbatim: credit.title).font(.subheadline.weight(.semibold))
             }
             Text(verbatim: "\(credit.author) · \(credit.licence)").font(.caption).foregroundStyle(Palette.inkSoft)
+            // What Timbre plays from it ("Ukulele (nylon-string guitar recordings)"), so a stand-in says what it is.
+            if !credit.instruments.isEmpty {
+                Text(verbatim: credit.instruments.joined(separator: " · ")).font(.caption).foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             if let licence = credit.licenceLink { Link("Licence", destination: licence).font(.caption) }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

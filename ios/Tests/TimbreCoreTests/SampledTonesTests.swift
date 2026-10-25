@@ -65,17 +65,32 @@ final class SampledTonesTests: XCTestCase {
 
     // MARK: The bundle
 
+    /// The voices that play from recordings (the ukulele and the mandolin from stand-ins, docs/content/AUDIO-SOURCES.md).
+    private static let recordedVoices: [InstrumentVoice] = [.guitar, .bass, .ukulele, .mandolin, .piano, .harp, .mallet, .violin, .cello,
+                                                            .flute, .reed, .brass]
+
     func testBundledLibraryCoversTheMainInstrumentsAndTheBand() throws {
         let library = try bundled()
-        for voice: InstrumentVoice in [.guitar, .bass, .piano, .harp, .mallet, .violin, .cello, .flute, .reed, .brass] {
+        for voice in Self.recordedVoices {
             XCTAssertNotNil(library.instrument(for: voice), "\(voice)")
         }
-        // No CC0 recordings fit these yet: they keep their synthesized voices.
-        for voice: InstrumentVoice in [.ukulele, .mandolin, .banjo, .voice] { XCTAssertNil(library.instrument(for: voice), "\(voice)") }
+        // No CC0 recordings good enough for these: they keep their synthesized voices.
+        for voice: InstrumentVoice in [.banjo, .voice] { XCTAssertNil(library.instrument(for: voice), "\(voice)") }
         let kit = try XCTUnwrap(library.instrument(id: "drums"))
-        for piece in ["kick", "snare", "hat", "crash"] { XCTAssertTrue(kit.has(piece: piece), piece) }
+        for piece in BandGroove.Piece.allCases.map(\.rawValue) { XCTAssertTrue(kit.has(piece: piece), piece) }
         XCTAssertNotNil(library.instrument(id: "bass"))
         XCTAssertNotNil(library.instrument(id: "piano"))
+        // The band's electric guitar, let-ring and staccato, plays no instrument voice.
+        for id in ["eguitar", "chops"] {
+            let set = try XCTUnwrap(library.instrument(id: id), id)
+            XCTAssertEqual(set.kind, .plucked, id)
+            XCTAssertFalse(InstrumentVoice.allCases.contains { library.instrument(for: $0)?.id == id }, id)
+        }
+        // Single-layer plucked sets darken their softer notes; the mandolin sounds paired courses.
+        for voice: InstrumentVoice in [.guitar, .ukulele, .mandolin] { XCTAssertTrue(try XCTUnwrap(library.instrument(for: voice)).softFilter, "\(voice)") }
+        XCTAssertFalse(try XCTUnwrap(library.instrument(for: .piano)).softFilter)
+        XCTAssertGreaterThan(try XCTUnwrap(library.instrument(for: .mandolin)).pairCents, 0)
+        XCTAssertEqual(try XCTUnwrap(library.instrument(for: .guitar)).pairCents, 0)
         XCTAssertFalse(library.credits.isEmpty)
         XCTAssertTrue(library.credits.allSatisfy { $0.licence == "CC0-1.0" || $0.licence.hasPrefix("CC-BY") })
         // Lazy: opening the library decodes nothing.
@@ -103,7 +118,7 @@ final class SampledTonesTests: XCTestCase {
     /// ratio to the zone's measured pitch) reads 440 Hz on the app's own detector.
     func testReferenceA4ReadsExactly440OnTheTunersDetector() throws {
         let library = try bundled()
-        for voice: InstrumentVoice in [.piano, .guitar, .harp, .mallet, .flute, .reed, .brass] {
+        for voice: InstrumentVoice in [.piano, .guitar, .ukulele, .mandolin, .harp, .mallet, .flute, .reed, .brass] {
             let request = ToneRequest(frequencies: [440], kind: .reference(durationMs: 2000), voice: voice, sampleRate: rate)
             let clip = try XCTUnwrap(SampledTones.render(request, library: library), "\(voice) should play A4 from its recordings")
             let frames = clip.frames
@@ -116,13 +131,17 @@ final class SampledTonesTests: XCTestCase {
         }
     }
 
-    /// Every string of a guitar and a bass, and notes between the zones, come out at their exact pitch.
-    func testGuitarAndBassReferencesAreExactAcrossTheirRange() throws {
+    /// Every string of a guitar, a bass, a ukulele (re-entrant G) and a mandolin, and notes between the zones, come
+    /// out at their exact pitch.
+    func testFrettedReferencesAreExactAcrossTheirRange() throws {
         let library = try bundled()
         let cases: [(InstrumentVoice, [Double])] = [
             (.guitar, [40, 45, 50, 55, 59, 64, 69, 76].map { PitchMath.frequency(midi: $0) }),
             (.bass, [28, 33, 38, 43, 47].map { PitchMath.frequency(midi: $0) }),
             (.guitar, [PitchMath.frequency(midi: 64, reference: 432)]),
+            (.ukulele, [67, 60, 64, 69, 62, 72].map { PitchMath.frequency(midi: $0) }),
+            (.mandolin, [55, 62, 69, 76, 59, 81].map { PitchMath.frequency(midi: $0) }),
+            (.ukulele, [PitchMath.frequency(midi: 69, reference: 442)]),
         ]
         for (voice, frequencies) in cases {
             for hz in frequencies {
@@ -175,7 +194,7 @@ final class SampledTonesTests: XCTestCase {
 
     func testRecordedPhrasesKeepTheSynthesizersTimingAndLevels() throws {
         let library = try bundled()
-        for voice: InstrumentVoice in [.guitar, .bass, .piano, .harp, .mallet, .violin, .cello, .flute, .reed, .brass] {
+        for voice in Self.recordedVoices {
             // A chord and a little tune in the middle of the instrument's range.
             let range = try XCTUnwrap(library.instrument(for: voice)).coverage
             let middle = Double(range.lowerBound + range.upperBound) / 2
@@ -202,9 +221,91 @@ final class SampledTonesTests: XCTestCase {
         }
     }
 
+    // MARK: Touch, courses and strums
+
+    /// A softer pluck than the recorded layer is darker, not only quieter; at the recorded touch nothing is filtered.
+    func testSoftNotesOfSingleLayerSetsAreDarkened() throws {
+        let library = try bundled()
+        let guitar = try XCTUnwrap(library.instrument(for: .guitar))
+        func render(_ velocity: Double) -> [Float] {
+            var out = [Float](repeating: 0, count: rate)
+            XCTAssertTrue(library.addNote(guitar, hz: 196, velocity: velocity, into: &out, start: 0, length: rate, rate: Double(rate)))
+            return out
+        }
+        /// Mean absolute slope over mean absolute level: higher for a brighter sound.
+        func brightness(_ x: [Float]) -> Double {
+            let slice = Array(x[0..<Int(0.5 * Double(rate))])
+            let level = slice.reduce(0.0) { $0 + Double(abs($1)) }
+            let slope = zip(slice, slice.dropFirst()).reduce(0.0) { $0 + Double(abs($1.1 - $1.0)) }
+            return slope / max(1e-9, level)
+        }
+        let recorded = render(SampledTones.velocity), soft = render(0.2)
+        XCTAssertLessThan(brightness(soft), brightness(recorded) * 0.9, "a gentle pluck has fewer overtones")
+        XCTAssertEqual(SampleLibrary.softening(velocity: SampledTones.velocity, recorded: SampledTones.velocity, rate: 48000), 0)
+        XCTAssertGreaterThan(SampleLibrary.softening(velocity: 0.2, recorded: SampledTones.velocity, rate: 48000), 0)
+        // The reference sounds at the recorded touch: unfiltered, exact.
+        let reading = try XCTUnwrap(tunerPitch(recorded, from: 0.12, to: 0.9, near: 196))
+        XCTAssertLessThan(abs(cents(reading, 196)), 1.0)
+    }
+
+    /// The mandolin's phrases sound a course of two strings; its reference one string, so the needle stays still.
+    func testMandolinPhrasesArePairedCoursesAndItsReferenceIsOneString() throws {
+        let library = try bundled()
+        let mandolin = try XCTUnwrap(library.instrument(for: .mandolin))
+        var single = [Float](repeating: 0, count: rate), paired = [Float](repeating: 0, count: rate)
+        XCTAssertTrue(library.addNote(mandolin, hz: 440, velocity: 0.75, into: &single, start: 0, length: rate, rate: Double(rate)))
+        XCTAssertTrue(library.addNote(mandolin, hz: 440, velocity: 0.75, into: &paired, start: 0, length: rate, rate: Double(rate), paired: true))
+        XCTAssertNotEqual(single, paired)
+        func energy(_ x: [Float]) -> Float { x[Int(0.1 * Double(rate))..<Int(0.5 * Double(rate))].reduce(Float(0)) { $0 + $1 * $1 } }
+        // Two strings at a little over half the level each, drifting apart in phase (the shimmer, fastest in the upper
+        // partials): about as loud as one string, never twice as loud.
+        XCTAssertGreaterThan(energy(paired), energy(single) * 0.5)
+        XCTAssertLessThan(energy(paired), energy(single) * 1.3)
+        let request = ToneRequest(frequencies: [440], kind: .reference(durationMs: 1500), voice: .mandolin, sampleRate: rate)
+        let reference = try XCTUnwrap(SampledTones.render(request, library: library))
+        let reading = try XCTUnwrap(tunerPitch(reference.frames, from: 0.12, to: 1.12, near: 440))
+        XCTAssertLessThan(abs(cents(reading, 440)), 1.0)
+    }
+
+    /// A strum: a downstroke meets the strings low to high over its span, the first string at once and loudest; an
+    /// upstroke runs high to low and barely brushes the bass strings; equal strokes are identical, others differ.
+    func testStrumFeelTimesAndWeighsEachString() {
+        let down = StrumFeel.hits(strings: 6, stroke: .down, span: 0.08, velocity: 0.75, seed: 1)
+        XCTAssertEqual(down.map(\.string), Array(0..<6))
+        XCTAssertEqual(down.first?.delay, 0)
+        XCTAssertTrue(zip(down, down.dropFirst()).allSatisfy { $0.delay < $1.delay }, "in order, never together")
+        XCTAssertEqual(down.last?.delay ?? 0, 0.08, accuracy: 0.008)
+        XCTAssertGreaterThan(down.first?.velocity ?? 0, down.last?.velocity ?? 1)
+        XCTAssertTrue(down.allSatisfy { $0.velocity > 0 && $0.velocity <= 0.75 * 1.08 })
+        let up = StrumFeel.hits(strings: 6, stroke: .up, span: 0.03, velocity: 0.75, seed: 1)
+        XCTAssertEqual(up.map(\.string), Array((0..<6).reversed()))
+        XCTAssertLessThan(up.last?.velocity ?? 1, 0.4, "the bass strings are only brushed")
+        XCTAssertEqual(StrumFeel.hits(strings: 6, stroke: .down, span: 0.08, velocity: 0.75, seed: 1), down)
+        XCTAssertNotEqual(StrumFeel.hits(strings: 6, stroke: .down, span: 0.08, velocity: 0.75, seed: 2), down)
+        XCTAssertTrue(StrumFeel.strums(.guitar) && StrumFeel.strums(.ukulele) && !StrumFeel.strums(.piano))
+        XCTAssertEqual(StrumFeel.hits(strings: 0, stroke: .down, span: 0.1, velocity: 1, seed: 0), [])
+    }
+
+    /// "Hear it" on a guitar chord strums it: the strings enter one after another over about 16 ms each.
+    func testGuitarChordsAreStrummedStringByString() throws {
+        let library = try bundled()
+        let chord = [82.41, 110, 146.83, 196, 246.94, 329.63]
+        let request = ToneRequest(frequencies: chord, kind: .phrase(together: true, noteMs: 1500, gapMs: 0), voice: .guitar, sampleRate: rate)
+        let frames = try XCTUnwrap(SampledTones.render(request, library: library)).frames
+        // The low string sounds within a few milliseconds; the chord keeps building as the top strings land.
+        XCTAssertGreaterThan(frames[0..<Int(0.01 * Double(rate))].reduce(Float(0)) { max($0, abs($1)) }, 0.01)
+        func energy(_ from: Double, _ to: Double) -> Float {
+            frames[Int(from * Double(rate))..<Int(to * Double(rate))].reduce(Float(0)) { $0 + $1 * $1 }
+        }
+        XCTAssertGreaterThan(energy(0.07, 0.11), energy(0.0, 0.04) * 0.5, "the top strings arrive later in the stroke")
+        XCTAssertEqual(frames.count, ToneSynth.render(request).count)
+    }
+
     func testFallsBackToSynthesisWhereRecordingsCannotServe() throws {
         let library = try bundled()
-        // No recording for the sung voice: synthesized, identical to before.
+        // No recording for the sung voice or the banjo: synthesized, identical to before.
+        let banjo = ToneRequest(frequencies: [196, 293.66], kind: .phrase(together: true, noteMs: 600, gapMs: 0), voice: .banjo, sampleRate: rate)
+        XCTAssertNil(SampledTones.render(banjo, library: library))
         let sung = ToneRequest(frequencies: [220], kind: .phrase(together: false, noteMs: 500, gapMs: 0), voice: .voice, sampleRate: rate)
         XCTAssertNil(SampledTones.render(sung, library: library))
         XCTAssertEqual(ToneSynth.render(sung, samples: library).frames, ToneSynth.render(sung).frames)

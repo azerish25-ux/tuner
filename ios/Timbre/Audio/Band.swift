@@ -3,21 +3,29 @@ import TimbreCore
 
 // MARK: - What the band plays
 
-/// The backing band of one lesson step: drums in the step's meter, a bass line on the roots and,
-/// for chord steps, a soft pad. Rendered offline once per arrangement; equal arrangements share it.
+/// The backing band of one lesson step: drums in the step's meter, a bass line on the roots and, for chord steps,
+/// comping on the chords, all in the song's style (`BandStyle`: pop, rock, reggae one-drop, country two-step, funk,
+/// ballad, or the courses' standard groove). Rendered offline once per arrangement; equal arrangements share it.
 struct BandArrangement: Hashable, Sendable {
     /// One bar: the harmony under it and how the drummer treats it.
     struct Bar: Hashable, Sendable {
         /// Root pitch class (C = 0); nil plays drums only.
         var root: Int?
-        /// Chord tones above the root in semitones (the pad); empty for none.
+        /// Chord tones above the root in semitones (the comping); empty for none.
         var tones: [Int] = []
         /// 1 answers the root with the octave instead of the fifth, so a long melody breathes.
         var variation = 0
-        /// A short snare fill closing a four-bar phrase.
+        /// A short fill closing a four-bar phrase.
         var fill = false
         /// The final chord with a cymbal, for a take that went well.
         var ending = false
+        /// The first bar of a phrase after a fill: the bigger styles open it with a crash.
+        var lift = false
+        /// What the song can be recognised by (`BandCue`: its melody's opening, its chords) and the style its strum
+        /// pattern suggests. The style itself is settled when the band renders, off the main thread (`BandSynth.style`),
+        /// and survives callers that copy bars into a new arrangement.
+        var cues: [String] = []
+        var guess: BandStyle = .standard
     }
 
     /// UserDefaults key of the player's band switch (on by default).
@@ -33,38 +41,47 @@ struct BandArrangement: Hashable, Sendable {
     let pad: Bool
     let swing: Bool
 
-    /// A melodic play-along: drums and a bass on the tonic and dominant of the key the notes suggest.
-    /// `bass` is off when the player's own instrument is the bass.
+    /// A melodic play-along: drums and a bass on the tonic and dominant of the key the notes suggest, in the style of
+    /// the song the notes open (when the band knows it). `bass` is off when the player's own instrument is the bass.
     static func melody(_ notes: [TimedNote], bpm: Double, beatsPerBar: Int, reference: Double, bass: Bool) -> BandArrangement {
         let meter = max(1, beatsPerBar)
         let end = notes.map { $0.beat + $0.beats }.max() ?? Double(meter)
         let count = max(1, Int((end / Double(meter)).rounded(.up)))
         let tonic = KeyEstimate.tonic(of: notes)
-        let bars = phrased(Array(repeating: Bar(root: tonic), count: count), alternate: true)
+        let cues = BandCue.melody(notes, meter: meter).map { [$0] } ?? []
+        let bars = phrased(Array(repeating: Bar(root: tonic, cues: cues), count: count), alternate: true)
         return BandArrangement(bpm: bpm, beatsPerBar: meter, reference: reference, bars: bars,
                                bass: bass && tonic != nil, pad: false, swing: swung(notes.map(\.beat)))
     }
 
-    /// A strum or progression step: each chord for its bars, bass on the roots, a pad on the chord.
-    /// Without chords (a strum step with no chord) the band is drums only.
+    /// A strum or progression step: each chord for its bars, bass on the roots, comping on the chord, in the song's
+    /// style (recognised by its chords and strum, else guessed from the strum). Without chords (a strum step with
+    /// no chord) the band is drums only.
     static func chords(_ chords: [ChordSpec], bars: [Int], pattern: [Double], bpm: Double, beatsPerBar: Int, reference: Double) -> BandArrangement {
+        let meter = max(1, beatsPerBar)
+        let symbols = BandCue.perBar(chords, bars: bars)
+        let cues = [BandCue.chords(symbols, meter: meter, pattern: pattern), BandCue.chords(symbols, meter: meter)].compactMap { $0 }
+        let guess = BandStyle.inferred(pattern: pattern, bpm: bpm, meter: meter)
         var list: [Bar] = []
         for (index, chord) in chords.enumerated() {
             let tones = ChordTarget(root: chord.root, formulaId: chord.quality)?.quality.intervals ?? [0, 7]
             let count = index < bars.count ? max(0, bars[index]) : 1
-            list += Array(repeating: Bar(root: PitchMath.pitchClass(midi: chord.root), tones: tones), count: count)
+            let bar = Bar(root: PitchMath.pitchClass(midi: chord.root), tones: tones, cues: cues, guess: guess)
+            list += Array(repeating: bar, count: count)
         }
-        if list.isEmpty { list = Array(repeating: Bar(root: nil), count: max(1, bars.reduce(0, +))) }
-        return BandArrangement(bpm: bpm, beatsPerBar: max(1, beatsPerBar), reference: reference, bars: phrased(list, alternate: false),
+        if list.isEmpty { list = Array(repeating: Bar(root: nil, guess: guess), count: max(1, bars.reduce(0, +))) }
+        return BandArrangement(bpm: bpm, beatsPerBar: meter, reference: reference, bars: phrased(list, alternate: false),
                                bass: true, pad: true, swing: swung(pattern))
     }
 
-    /// A fill closes every fourth bar and the last one; a melody's bass alternates bar by bar.
+    /// A fill closes every fourth bar and the last one, and the bar after a fill lifts; a melody's bass alternates
+    /// bar by bar.
     private static func phrased(_ bars: [Bar], alternate: Bool) -> [Bar] {
         var out = bars
         for index in out.indices {
             out[index].variation = alternate ? index % 2 : 0
             out[index].fill = out.count > 1 && (index % 4 == 3 || index == out.count - 1)
+            out[index].lift = out.count > 4 && index > 0 && index % 4 == 0
         }
         return out
     }
@@ -281,10 +298,12 @@ final class BandPlayer {
 
 // MARK: - Offline synthesis
 
-/// The band, written into plain buffers off the main thread, humanized and set in a light room. With the app's
-/// recorded instruments (`samples`): a real drum kit, an electric bass and a grand piano comping the chords; without
-/// them, or for any part whose recording can't be read, the synthesized drums (sine-drop kick, noise snare,
-/// filtered-noise hat), plucked bass and detuned pad. Deterministic: the same arrangement renders the same audio.
+/// The band, written into plain buffers off the main thread, humanized and set in a light room, in the song's style
+/// (`BandGroove` says what each player does bar by bar). With the app's recorded instruments (`samples`): a real drum
+/// kit (cross-stick, toms, tambourine and shaker included), an electric bass, a grand piano and a hollowbody electric
+/// guitar strumming string by string (`StrumFeel`); without them, or for any part whose recording can't be read, the
+/// synthesized drums (sine-drop kick and toms, noise snare, filtered-noise hat), plucked bass and detuned pad, the
+/// piano standing in for a missing guitar. Deterministic: the same arrangement renders the same audio.
 enum BandSynth {
     /// The recorded kit under the bass and piano (its hits are levelled loud for a kit on its own).
     private static let drumLevel = 0.7
@@ -292,6 +311,31 @@ enum BandSynth {
     private static let compVelocity = 0.42
     /// The recorded bass's touch at a bass line's full velocity.
     private static let bassVelocity = 0.9
+    /// The electric guitar's level: its strokes stack three to five strings.
+    private static let guitarLevel = 0.7
+
+    /// The recorded players the band can use (each nil when the app ships without it).
+    private struct Players {
+        let kit: SampledInstrument?
+        let bass: SampledInstrument?
+        let keys: SampledInstrument?
+        let guitar: SampledInstrument?
+        let chops: SampledInstrument?
+        let samples: SampleLibrary?
+    }
+
+    /// The style the arrangement's song is played in: the one its cues name (the first time, this reads the
+    /// curriculum: call it off the main thread), else the one its strum suggested.
+    static func style(of arrangement: BandArrangement) -> BandStyle {
+        guard let first = arrangement.bars.first else { return .standard }
+        if !first.cues.isEmpty {
+            let index = BandStyleIndex.shared
+            for cue in first.cues {
+                if let known = index.style(forCue: cue) { return known }
+            }
+        }
+        return first.guess
+    }
 
     static func render(_ arrangement: BandArrangement, sampleRate: Int, samples: SampleLibrary? = nil) -> BandTrack {
         let rate = Double(max(8000, sampleRate))
@@ -300,6 +344,7 @@ enum BandSynth {
         let barLength = max(1, Int((beat * Double(meter)).rounded()))
         let tail = Int(0.6 * rate)
         let reference = arrangement.reference.isFinite && arrangement.reference > 0 ? arrangement.reference : 440
+        let style = Self.style(of: arrangement)
 
         // Distinct bars only; a forty-bar melody is a handful of parts.
         var specs: [BandArrangement.Bar] = []
@@ -316,10 +361,10 @@ enum BandSynth {
 
         let table = Wavetable(partials: [1, 0.35, 0.12, 0.05])
         let push = 0.006 * rate
-        let kit = samples?.instrument(id: "drums")
-        let bassSet = samples?.instrument(id: "bass")
-        let keys = samples?.instrument(id: "piano")
-        let recorded = kit != nil || bassSet != nil || keys != nil
+        let players = Players(kit: samples?.instrument(id: "drums"), bass: samples?.instrument(id: "bass"),
+                              keys: samples?.instrument(id: "piano"), guitar: samples?.instrument(id: "eguitar"),
+                              chops: samples?.instrument(id: "chops"), samples: samples)
+        let recorded = players.kit != nil || players.bass != nil || players.keys != nil
         var parts: [[Float]] = []
         for (number, spec) in specs.enumerated() {
             let sounding = spec.ending ? Int(1.3 * rate) : barLength
@@ -327,53 +372,20 @@ enum BandSynth {
             var noise = Noise(seed: UInt32(truncatingIfNeeded: 0x2545F491 &+ number &* 7919))
             // The drummer's feel, apart from the drums' own noise so their sound stays the same.
             var feel = Noise(seed: UInt32(truncatingIfNeeded: 0x51ED_270B &+ number &* 104_729))
-            let hits = spec.ending ? [Hit(beat: 0, drum: .kick, velocity: 1), Hit(beat: 0, drum: .crash, velocity: 1)]
-                                   : groove(meter: meter, fill: spec.fill, swing: arrangement.swing)
-            for (index, hit) in hits.enumerated() {
-                var at = Int((hit.beat * beat).rounded())
-                // Played, not programmed: every hit within ±8 % of its velocity, hats and snares off the grid
-                // by up to ±6 ms. Kicks and anything on the downbeat stay exact, so the band stays
-                // sample-locked to the click.
-                let velocity = hit.velocity * Float(1 + 0.08 * feel.next())
-                if hit.beat > 0, hit.drum == .hat || hit.drum == .snare {
-                    at = max(0, at + Int((push * feel.next()).rounded()))
-                }
-                // The recorded kit when there is one, its round robins alternating hit by hit.
-                if let kit, let samples, kit.has(piece: hit.drum.piece),
-                   samples.addHit(kit, piece: hit.drum.piece, velocity: Double(min(1, velocity)), variation: number + index,
-                                  into: &out, start: at, rate: rate, gain: drumLevel) {
-                    continue
-                }
-                switch hit.drum {
-                case .kick: kick(&out, at: at, velocity: velocity, rate: rate)
-                case .snare: snare(&out, at: at, velocity: velocity, rate: rate, noise: &noise)
-                case .hat: hat(&out, at: at, velocity: velocity, rate: rate, noise: &noise)
-                case .crash: crash(&out, at: at, velocity: velocity, rate: rate, noise: &noise)
-                }
-            }
+            let fifth = spec.tones.isEmpty || spec.tones.contains(7) ? 7 : 0
+            let context = BandGroove.Context(meter: meter, bpm: arrangement.bpm, swing: arrangement.swing, fill: spec.fill,
+                                             lift: spec.lift, ending: spec.ending, variation: spec.variation,
+                                             chord: !spec.tones.isEmpty, fifth: fifth)
+            let groove = BandGroove.bar(style, context)
+            drums(&out, groove.hits, beat: beat, push: push, number: number, players: players, rate: rate, noise: &noise, feel: &feel)
             if arrangement.bass, let root = spec.root {
-                for note in bassLine(meter: meter, bar: spec) {
-                    let at = Int((note.beat * beat).rounded())
-                    let length = spec.ending ? min(Int(note.beats * beat), Int(1.1 * rate)) : Int(note.beats * beat)
-                    let hz = PitchMath.frequency(midi: Double(bassMidi(root) + note.interval), reference: reference)
-                    // The recorded bass: the note, then the same 60 ms let-go as the synthesized one.
-                    let release = Int(0.06 * rate)
-                    if let bassSet, let samples, bassSet.covers(hz),
-                       samples.addNote(bassSet, hz: hz, velocity: bassVelocity * Double(note.velocity), into: &out, start: at,
-                                       length: length + release, rate: rate, release: 0.06) {
-                        continue
-                    }
-                    bass(&out, at: at, length: length, hz: hz, velocity: note.velocity, rate: rate)
-                }
+                bassLine(&out, groove.bass, root: root, beat: beat, ending: spec.ending, reference: reference, players: players, rate: rate)
             }
             if arrangement.pad, let root = spec.root, !spec.tones.isEmpty {
-                let voices = padVoicing(root: root, tones: spec.tones).map { PitchMath.frequency(midi: Double($0), reference: reference) }
-                var comped = false
-                if let keys, let samples, voices.allSatisfy({ keys.covers($0) }) {
-                    comped = comp(&out, frequencies: voices, meter: meter, beat: beat, bar: spec, swing: arrangement.swing,
-                                  keys: keys, samples: samples, rate: rate, feel: &feel)
-                }
+                let comped = comp(&out, groove.comp, root: root, tones: spec.tones, beat: beat, number: number,
+                                  reference: reference, players: players, rate: rate, feel: &feel)
                 if !comped {
+                    let voices = padVoicing(root: root, tones: spec.tones).map { PitchMath.frequency(midi: Double($0), reference: reference) }
                     pad(&out, length: spec.ending ? Int(0.9 * rate) : barLength, frequencies: voices, rate: rate, table: table)
                 }
             }
@@ -388,90 +400,52 @@ enum BandSynth {
 
     // MARK: Parts
 
-    private enum Drum {
-        case kick, snare, hat, crash
-        /// The recorded kit's piece (SampleLibrary "drums").
-        var piece: String {
-            switch self {
-            case .kick: return "kick"
-            case .snare: return "snare"
-            case .hat: return "hat"
-            case .crash: return "crash"
+    /// The kit: played, not programmed. Every hit within ±8 % of its velocity, everything but the kick and the crash
+    /// off the grid by up to ±6 ms; kicks and anything on the downbeat stay exact, so the band stays sample-locked
+    /// to the click. The recorded kit when it has the piece (its round robins alternating hit by hit), else synthesized.
+    private static func drums(_ out: inout [Float], _ hits: [BandGroove.Hit], beat: Double, push: Double, number: Int,
+                              players: Players, rate: Double, noise: inout Noise, feel: inout Noise) {
+        for (index, hit) in hits.enumerated() {
+            var at = Int((hit.beat * beat).rounded())
+            let velocity = hit.velocity * Float(1 + 0.08 * feel.next())
+            if hit.beat > 0, hit.piece != .kick, hit.piece != .crash {
+                at = max(0, at + Int((push * feel.next()).rounded()))
             }
-        }
-    }
-    private struct Hit { let beat: Double; let drum: Drum; let velocity: Float }
-    private struct BassNote { let beat: Double; let beats: Double; let interval: Int; let velocity: Float }
-
-    /// A gentle groove per meter: 4/4 kick on 1 and 3, snare on 2 and 4; 3/4 a waltz; 6/8 (and 9/8,
-    /// 12/8) in dotted groups; anything else kick on 1, snare on the off beats. Hi-hat throughout.
-    private static func groove(meter: Int, fill: Bool, swing: Bool) -> [Hit] {
-        let compound = meter >= 6 && meter % 3 == 0
-        let offbeat = swing ? 2.0 / 3.0 : 0.5
-        let fills = fill && meter >= 2
-        let fillStart = fills ? Double(compound ? meter - 2 : meter - 1) : Double(meter)
-        var hits: [Hit] = []
-        for b in 0..<meter where Double(b) < fillStart {
-            let beat = Double(b)
-            if compound {
-                if b % 3 == 0 {
-                    let group = b / 3
-                    hits.append(Hit(beat: beat, drum: group % 2 == 0 ? .kick : .snare, velocity: group == 0 ? 1 : 0.7))
-                }
-                hits.append(Hit(beat: beat, drum: .hat, velocity: b % 3 == 0 ? 0.8 : 0.5))
+            let piece = hit.piece.rawValue
+            if let kit = players.kit, let samples = players.samples, kit.has(piece: piece),
+               samples.addHit(kit, piece: piece, velocity: Double(min(1, velocity)), variation: number + index,
+                              into: &out, start: at, rate: rate, gain: drumLevel) {
                 continue
             }
-            switch meter {
-            case 3:
-                hits.append(Hit(beat: beat, drum: b == 0 ? .kick : .snare, velocity: b == 0 ? 1 : 0.4))
-            case 4:
-                hits.append(Hit(beat: beat, drum: b % 2 == 0 ? .kick : .snare, velocity: b == 0 ? 1 : 0.75))
-            default:
-                if b == 0 { hits.append(Hit(beat: beat, drum: .kick, velocity: 1)) }
-                else if b % 2 == 1 { hits.append(Hit(beat: beat, drum: .snare, velocity: 0.65)) }
-            }
-            hits.append(Hit(beat: beat, drum: .hat, velocity: b == 0 ? 0.8 : 0.65))
-            hits.append(Hit(beat: beat + offbeat, drum: .hat, velocity: 0.4))
-        }
-        if fills {
-            let steps: [Double] = compound ? [0, 1, 1.5] : [0, 0.25, 0.5, 0.75]
-            for (index, step) in steps.enumerated() {
-                hits.append(Hit(beat: fillStart + step, drum: .snare, velocity: 0.45 + 0.14 * Float(index)))
+            switch hit.piece {
+            case .kick: kick(&out, at: at, velocity: velocity, rate: rate)
+            case .snare: snare(&out, at: at, velocity: velocity, rate: rate, noise: &noise)
+            case .xstick: snare(&out, at: at, velocity: velocity * 0.45, rate: rate, noise: &noise)
+            case .hat, .ride: hat(&out, at: at, velocity: velocity, rate: rate, noise: &noise)
+            case .tamb: hat(&out, at: at, velocity: velocity * 0.7, rate: rate, noise: &noise)
+            case .shaker: hat(&out, at: at, velocity: velocity * 0.5, rate: rate, noise: &noise)
+            case .openhat: crash(&out, at: at, velocity: velocity * 0.4, rate: rate, noise: &noise)
+            case .crash: crash(&out, at: at, velocity: velocity, rate: rate, noise: &noise)
+            case .tomhi: tom(&out, at: at, hz: 165, velocity: velocity, rate: rate)
+            case .tomlo: tom(&out, at: at, hz: 110, velocity: velocity, rate: rate)
             }
         }
-        return hits
     }
 
-    /// Root on the downbeat, answered by the fifth (or the octave) mid-bar, with a pickup in 4/4.
-    private static func bassLine(meter: Int, bar: BandArrangement.Bar) -> [BassNote] {
-        let fifth = bar.tones.isEmpty || bar.tones.contains(7) ? 7 : 0
-        let answer = bar.variation == 0 ? fifth : 12
-        if bar.ending { return [BassNote(beat: 0, beats: Double(min(meter, 2)), interval: 0, velocity: 1)] }
-        switch meter {
-        case 4:
-            var notes = [BassNote(beat: 0, beats: 1.8, interval: 0, velocity: 1), BassNote(beat: 2, beats: 1.3, interval: answer, velocity: 0.85)]
-            if !bar.fill { notes.append(BassNote(beat: 3.5, beats: 0.4, interval: bar.variation == 0 ? 12 : fifth, velocity: 0.6)) }
-            return notes
-        case 3:
-            return [BassNote(beat: 0, beats: 1.8, interval: 0, velocity: 1), BassNote(beat: 2, beats: 0.9, interval: answer, velocity: 0.75)]
-        case 2:
-            return [BassNote(beat: 0, beats: 0.9, interval: 0, velocity: 1), BassNote(beat: 1, beats: 0.9, interval: answer, velocity: 0.8)]
-        default:
-            if meter >= 6 && meter % 3 == 0 {
-                var notes: [BassNote] = []
-                for b in stride(from: 0, to: meter, by: 3) {
-                    let interval: Int = (b / 3) % 2 == 0 ? 0 : answer
-                    let velocity: Float = b == 0 ? 1 : 0.8
-                    notes.append(BassNote(beat: Double(b), beats: 2.7, interval: interval, velocity: velocity))
-                }
-                return notes
+    /// The bass line on the bar's root: the recorded bass (each note, then a 60 ms let-go), else the synthesized one.
+    private static func bassLine(_ out: inout [Float], _ notes: [BandGroove.Note], root: Int, beat: Double, ending: Bool,
+                                 reference: Double, players: Players, rate: Double) {
+        for note in notes {
+            let at = Int((note.beat * beat).rounded())
+            let length = ending ? min(Int(note.beats * beat), Int(1.1 * rate)) : Int(note.beats * beat)
+            let hz = PitchMath.frequency(midi: Double(bassMidi(root) + note.interval), reference: reference)
+            let release = Int(0.06 * rate)
+            if let set = players.bass, let samples = players.samples, set.covers(hz),
+               samples.addNote(set, hz: hz, velocity: bassVelocity * Double(note.velocity), into: &out, start: at,
+                               length: length + release, rate: rate, release: 0.06) {
+                continue
             }
-            if meter >= 4 {
-                let half = meter / 2
-                return [BassNote(beat: 0, beats: Double(half) - 0.2, interval: 0, velocity: 1),
-                        BassNote(beat: Double(half), beats: Double(meter - half) - 0.2, interval: answer, velocity: 0.8)]
-            }
-            return [BassNote(beat: 0, beats: Double(meter) * 0.9, interval: 0, velocity: 1)]
+            bass(&out, at: at, length: length, hz: hz, velocity: note.velocity, rate: rate)
         }
     }
 
@@ -481,41 +455,76 @@ enum BandSynth {
         return pc >= 5 ? 24 + pc : 36 + pc
     }
 
-    /// A pianist comping the bar's chord on the recorded piano: half-bar chords with a soft push before the next bar
-    /// in 4/4, the waltz's "pah-pah" in 3/4, one chord per dotted group in compound meters; a fill bar holds one chord
-    /// under the drums and the ending rings out. Each chord is rolled low to high a few milliseconds apart, and only
-    /// off-downbeat chords move off the grid. False when a note couldn't be read (the pad plays instead).
-    private static func comp(_ out: inout [Float], frequencies: [Double], meter: Int, beat: Double, bar: BandArrangement.Bar,
-                             swing: Bool, keys: SampledInstrument, samples: SampleLibrary, rate: Double, feel: inout Noise) -> Bool {
-        let compound = meter >= 6 && meter % 3 == 0
-        let push = swing ? 2.0 / 3.0 : 0.5
-        var chords: [(beat: Double, beats: Double, velocity: Double)]
-        if bar.ending {
-            chords = [(beat: 0, beats: 1.25 * rate / max(1, beat), velocity: 0.62)]
-        } else if bar.fill {
-            chords = [(beat: 0, beats: Double(meter) - 0.1, velocity: 0.55)]
-        } else if compound {
-            chords = stride(from: 0, to: meter, by: 3).map { (beat: Double($0), beats: 2.8, velocity: $0 == 0 ? 0.58 : 0.46) }
-        } else {
-            switch meter {
-            case 4: chords = [(beat: 0, beats: 1.9, velocity: 0.6), (beat: 2, beats: 1.4, velocity: 0.5),
-                              (beat: 3 + push, beats: 0.45, velocity: 0.36)]
-            case 3: chords = [(beat: 0, beats: 0.9, velocity: 0.4), (beat: 1, beats: 0.8, velocity: 0.45), (beat: 2, beats: 0.8, velocity: 0.42)]
-            case 2: chords = [(beat: 0, beats: 0.9, velocity: 0.55), (beat: 1, beats: 0.9, velocity: 0.45)]
-            default: chords = [(beat: 0, beats: Double(meter) - 0.1, velocity: 0.55)]
+    /// The bar's chord strokes. The piano rolls its chord low to high a few milliseconds apart, or breaks it one tone
+    /// at a time over the pedal; the guitar strums its power chord, its staccato upper voicing or its let-ring chord
+    /// string by string, down or up (the piano covers a guitar stroke it can't play). Only off-downbeat strokes move
+    /// off the grid. False when the piano couldn't be read (the pad plays instead).
+    private static func comp(_ out: inout [Float], _ strokes: [BandGroove.Stroke], root: Int, tones: [Int], beat: Double,
+                             number: Int, reference: Double, players: Players, rate: Double, feel: inout Noise) -> Bool {
+        let hz = { (midi: Int) in PitchMath.frequency(midi: Double(midi), reference: reference) }
+        let chord = padVoicing(root: root, tones: tones).sorted().map(hz)
+        let broken = arpeggioVoicing(root: root, tones: tones).map(hz)
+        for (index, stroke) in strokes.enumerated() {
+            var at = Int((stroke.beat * beat).rounded())
+            if stroke.beat > 0 { at = max(0, at + Int((0.004 * rate * feel.next()).rounded())) }
+            let length = max(1, Int(stroke.beats * beat))
+            switch stroke.part {
+            case .piano:
+                guard piano(&out, chord, at: at, length: length, velocity: stroke.velocity, players: players, rate: rate,
+                            feel: &feel) else { return false }
+            case .arpeggio:
+                guard let keys = players.keys, let samples = players.samples, !broken.isEmpty else { return false }
+                let note = broken[stroke.tone % broken.count]
+                guard keys.covers(note) else { return false }
+                let velocity = compVelocity * stroke.velocity / 0.6 * (1 + 0.06 * feel.next())
+                guard samples.addNote(keys, hz: note, velocity: velocity, into: &out, start: at, length: length + Int(0.3 * rate),
+                                      rate: rate, release: 0.3) else { return false }
+            case .power, .chop, .ring:
+                let voicing: [Int]
+                switch stroke.part {
+                case .power: voicing = powerVoicing(root: root, tones: tones)
+                case .chop: voicing = chopVoicing(root: root, tones: tones)
+                default: voicing = ringVoicing(root: root, tones: tones)
+                }
+                let set = stroke.part == .chop ? players.chops : players.guitar
+                let strummed = guitar(&out, voicing.map(hz), stroke: stroke, at: at, length: length, set: set,
+                                      seed: UInt64(number * 64 + index), players: players, rate: rate)
+                if !strummed {
+                    // No guitar recording: the piano plays the stroke, short and a touch softer.
+                    guard piano(&out, chord, at: at, length: length, velocity: stroke.velocity * 0.8, players: players,
+                                rate: rate, feel: &feel) else { return false }
+                }
             }
         }
-        let ordered = frequencies.sorted()
-        for chord in chords {
-            var at = Int((chord.beat * beat).rounded())
-            if chord.beat > 0 { at = max(0, at + Int((0.004 * rate * feel.next()).rounded())) }
-            let length = max(1, Int(chord.beats * beat))
-            for (rank, hz) in ordered.enumerated() {
-                let roll = rank == 0 ? 0 : Int((Double(rank) * 0.006 + 0.002 * feel.next()) * rate)
-                let velocity = compVelocity * chord.velocity / 0.6 * (1 + 0.06 * feel.next())
-                guard samples.addNote(keys, hz: hz, velocity: velocity, into: &out, start: at + roll,
-                                      length: length + Int(0.2 * rate), rate: rate, release: 0.2) else { return false }
-            }
+        return true
+    }
+
+    /// The piano's chord at `at`, rolled low to high.
+    private static func piano(_ out: inout [Float], _ chord: [Double], at: Int, length: Int, velocity: Double, players: Players,
+                              rate: Double, feel: inout Noise) -> Bool {
+        guard let keys = players.keys, let samples = players.samples, !chord.isEmpty, chord.allSatisfy({ keys.covers($0) }) else { return false }
+        for (rank, hz) in chord.enumerated() {
+            let roll = rank == 0 ? 0 : Int((Double(rank) * 0.006 + 0.002 * feel.next()) * rate)
+            let touch = compVelocity * velocity / 0.6 * (1 + 0.06 * feel.next())
+            guard samples.addNote(keys, hz: hz, velocity: touch, into: &out, start: at + roll,
+                                  length: length + Int(0.2 * rate), rate: rate, release: 0.2) else { return false }
+        }
+        return true
+    }
+
+    /// One guitar stroke across `strings` (low to high): a quick pick for a chop, a little slower for a power chord,
+    /// slower again for a let-ring chord. False when the guitar can't play it (no recording, out of its range).
+    private static func guitar(_ out: inout [Float], _ strings: [Double], stroke: BandGroove.Stroke, at: Int, length: Int,
+                               set: SampledInstrument?, seed: UInt64, players: Players, rate: Double) -> Bool {
+        guard let set, let samples = players.samples, !strings.isEmpty, strings.allSatisfy({ set.covers($0) }) else { return false }
+        let perString = stroke.part == .chop ? 0.005 : stroke.part == .power ? 0.008 : 0.012
+        let release = stroke.part == .chop ? 0.03 : stroke.part == .power ? 0.05 : 0.2
+        let hits = StrumFeel.hits(strings: strings.count, stroke: stroke.up ? .up : .down,
+                                  span: perString * Double(strings.count - 1), velocity: stroke.velocity, seed: seed)
+        for hit in hits {
+            guard samples.addNote(set, hz: strings[hit.string], velocity: hit.velocity, into: &out,
+                                  start: at + Int(hit.delay * rate), length: length + Int(release * rate), rate: rate,
+                                  release: release, gain: guitarLevel) else { return false }
         }
         return true
     }
@@ -532,6 +541,43 @@ enum BandSynth {
         return midis
     }
 
+    /// A broken chord for the left and right hands: the root between C3 and B3, then the close voicing above it.
+    private static func arpeggioVoicing(root: Int, tones: [Int]) -> [Int] {
+        let bass = 48 + PitchMath.pitchClass(midi: root)
+        return [bass] + padVoicing(root: root, tones: tones).sorted().filter { $0 > bass }
+    }
+
+    /// The fifth a power chord stacks on its root: the chord's own (diminished and augmented chords keep theirs).
+    private static func powerFifth(_ tones: [Int]) -> Int {
+        if tones.contains(7) { return 7 }
+        return tones.first { $0 == 6 || $0 == 8 } ?? 7
+    }
+
+    /// Root, fifth and octave on the guitar's low strings (the root between E2 and D#3).
+    private static func powerVoicing(root: Int, tones: [Int]) -> [Int] {
+        let low = 40 + (PitchMath.pitchClass(midi: root) - 4 + 12) % 12
+        return [low, low + powerFifth(tones), low + 12]
+    }
+
+    /// The chord's tones on the top strings, between D4 and D5: a skank's, a chick's or a scratch's voicing.
+    private static func chopVoicing(root: Int, tones: [Int]) -> [Int] {
+        var midis: [Int] = []
+        for tone in tones {
+            var midi = 60 + PitchMath.pitchClass(midi: root) + tone
+            while midi > 74 { midi -= 12 }
+            while midi < 62 { midi += 12 }
+            if !midis.contains(midi) { midis.append(midi) }
+        }
+        return midis.sorted()
+    }
+
+    /// An open, ringing chord: the power chord with the rest of the chord's tones above it.
+    private static func ringVoicing(root: Int, tones: [Int]) -> [Int] {
+        let power = powerVoicing(root: root, tones: tones)
+        let top = padVoicing(root: root, tones: tones).filter { $0 > power[2] && !power.contains($0) }
+        return (power + top).sorted()
+    }
+
     // MARK: Voices
 
     private static func kick(_ out: inout [Float], at start: Int, velocity: Float, rate: Double) {
@@ -543,6 +589,19 @@ enum BandSynth {
             phase += 2 * Double.pi * (45 + 95 * exp(-t / 0.03)) / rate
             let envelope = min(1, t / 0.002) * exp(-t / 0.12)
             out[start + i] += Float(sin(phase) * envelope) * 0.55 * velocity
+        }
+    }
+
+    /// A tom: a sine that drops a little from its strike pitch to `hz`.
+    private static func tom(_ out: inout [Float], at start: Int, hz: Double, velocity: Float, rate: Double) {
+        let count = min(Int(0.4 * rate), out.count - start)
+        guard start >= 0, count > 0 else { return }
+        var phase = 0.0
+        for i in 0..<count {
+            let t = Double(i) / rate
+            phase += 2 * Double.pi * hz * (1 + 0.35 * exp(-t / 0.04)) / rate
+            let envelope = min(1, t / 0.002) * exp(-t / 0.16)
+            out[start + i] += Float(sin(phase) * envelope) * 0.4 * velocity
         }
     }
 

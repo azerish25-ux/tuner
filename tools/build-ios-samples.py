@@ -134,7 +134,8 @@ STAND_INS = [
     ('ukulele', 'FreePats Spanish classical guitar, notes C4-C6 (the soprano ukulele\'s own range and string '
      'material), thinned below 200 Hz for the small body and damped a little faster.'),
     ('mandolin', 'The Martin HD-28\'s notes from E3 up, thinned below 220 Hz, brightened and damped faster, played as '
-     'paired courses (two strings 1.6 cents and a millisecond apart) in phrases; references sound one string.'),
+     'paired courses (two strings 1.6 cents apart, the slow shimmer of a doubled course) in phrases; references '
+     'sound one string.'),
 ]
 
 NOTE_RE = re.compile(r'^([A-Ga-g])([#b]?)(-?\d)$')
@@ -183,19 +184,19 @@ INSTRUMENTS = [
          dir='Discord GM/Melodic/026-Acoustic Guitar (steel)', select=MARTIN,
          layers={'': ('mf', 0.75)}, step=lambda m: 3, range=(40, 83), extend_loops=True,
          seconds=lambda m: 4.6 if m < 52 else 3.8 if m < 64 else 3.0 if m < 74 else 2.4,
-         release=0.08, bitrate=96, coverage=(36, 88), soft_filter=True),
+         release=0.08, bitrate=96, coverage=(36, 88), soft_filter=True, needs_reading=True),
     dict(id='ukulele', title='Ukulele (nylon-string guitar recordings)', voices=['ukulele'], kind='plucked',
          source='freepats', dir='samples', select=r'^(?P<note>[A-G]#?\d)\.flac$',
          layers={'': ('mf', 0.75)}, step=lambda m: 2, range=(60, 84), tone=dict(highpass=200, decay=7),
          attack_slack=128,
          seconds=lambda m: 2.4 if m < 67 else 2.0 if m < 76 else 1.5, release=0.06, bitrate=96, coverage=(57, 88),
-         soft_filter=True),
+         soft_filter=True, needs_reading=True),
     dict(id='mandolin', title='Mandolin (Martin treble strings, paired courses)', voices=['mandolin'], kind='plucked',
          source='jmartin', dir='Discord GM/Melodic/026-Acoustic Guitar (steel)', select=MARTIN,
          layers={'': ('mf', 0.75)}, step=lambda m: 3, range=(52, 83), extend_loops=True,
          tone=dict(highpass=220, shelf=(2800, 4.0), decay=9), attack_slack=128,
          seconds=lambda m: 2.4 if m < 64 else 2.0 if m < 76 else 1.6, release=0.05, bitrate=96, coverage=(53, 90),
-         soft_filter=True, pair_cents=1.6),
+         soft_filter=True, pair_cents=1.6, needs_reading=True),
     # The band's electric guitar (not an instrument voice): a hollowbody Gretsch, two layers of let-ring notes for
     # comping, and its staccato notes (`chops`) for reggae skanks, funk scratches and country chicks.
     dict(id='eguitar', title='Electric guitar (Gretsch hollowbody)', voices=[], kind='plucked', source='bngguitars',
@@ -680,6 +681,10 @@ def process_note(path: Path, nominal: int, kind: str, seconds: float, steady: bo
     # must agree with the needle), else the fundamental itself (a vibrato note, a faint low string the detector misreads).
     # A plucked string glides a few cents flat as it fades; the median over the second after the attack is its pitch.
     reading, spread = tuner_pitch(x, window_start / RATE, window_len / RATE, hz)
+    if reading is None and spec.get('needs_reading'):
+        # A set that sounds the tuner's reference: a zone the needle can't read near its own note (a buried
+        # fundamental, the detector locking an octave up) would play a reference that never registers.
+        raise ValueError("the tuner can't read it near its fundamental")
     # A piano's bass strings are stretch-tuned: their fundamentals sit 20-35 cents flat and read in tune on a tuner,
     # so a very steady reading may sit further from the fundamental.
     offset = abs(1200 * math.log2(reading / hz)) if reading else float('inf')
@@ -884,9 +889,10 @@ def write_doc(manifest: dict, sizes: dict):
         '- The violin and cello recordings are played with vibrato, so the tuner\'s *reference* for bowed strings stays',
         '  the steady synthesized tone; their "Hear it", melodies and chords use the recordings. Flute, clarinet and',
         '  brass were recorded without vibrato and serve the reference too.',
-        '- Single-layer plucked sets (guitar, ukulele, mandolin) are darkened when played softer than they were',
-        '  recorded (`softFilter`: a one-pole low-pass that follows velocity, as the Martin\'s own SFZ maps it), and',
-        '  chords are strummed string by string (`StrumFeel`: down and up strokes, per-string timing and velocity).',
+        '- Single-layer plucked sets (guitar, ukulele, mandolin: no CC0/CC-BY flat-top guitar with two recorded',
+        '  velocity layers was found, see Rejected) are darkened when played softer than they were recorded',
+        '  (`softFilter`: a one-pole low-pass that follows velocity, as the Martin\'s own SFZ maps it), and chords',
+        '  are strummed string by string (`StrumFeel`: down and up strokes, per-string timing and velocity).',
         '- The band (`BandSynth`) plays the kit, the bass, the piano and an electric guitar (`eguitar`, `chops`) in',
         '  the style of the song: pop, rock, reggae one-drop, country two-step, funk, ballad or the plain groove.',
         '',

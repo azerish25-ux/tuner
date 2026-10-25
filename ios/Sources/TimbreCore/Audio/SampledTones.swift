@@ -24,6 +24,10 @@ public struct SampledInstrument: Sendable {
     public let steady: Bool
     /// MIDI notes (at A4 = 440 Hz) the set plays; beyond them the synthesized voice takes over.
     public let coverage: ClosedRange<Int>
+    /// Notes softer than the recorded layer are darkened, not only quieter (`SampleLibrary.addNote`).
+    public let softFilter: Bool
+    /// Paired courses: phrases sound two strings this many cents apart in all (0: one string).
+    public let pairCents: Double
     let pitched: [Pitched]
     let pieces: [String: Piece]
     /// Each pitch's layer nearest a medium velocity: what `prewarm` decodes.
@@ -35,6 +39,8 @@ public struct SampledInstrument: Sendable {
         self.kind = kind
         release = max(0.005, entry.release)
         steady = entry.steady
+        softFilter = (entry.softFilter ?? false) && kind == .plucked
+        pairCents = max(0, min(5, entry.pairCents ?? 0))
         let low = entry.coverage.first ?? 0, high = entry.coverage.last ?? 127
         coverage = min(low, high)...max(low, high)
         if kind == .drums {
@@ -105,10 +111,13 @@ extension SampleLibrary {
     /// nearest zone read at the exact ratio hz / (its measured pitch), times its file rate over `rate`, so the
     /// note's pitch is the one asked for. The last `release` seconds (the instrument's own when nil) fade it out; a
     /// sustained note held past its recording loops its sustain. Loudness follows `velocity` (0...1), which also picks
-    /// the layer, and `gain` scales it further. False when the zone can't be read (nothing is written).
+    /// the layer, and `gain` scales it further; a `softFilter` set played softer than its layer is also darkened.
+    /// `paired` sounds a course of two strings (`pairCents` apart, together: two copies of one recording a little
+    /// apart in time would comb-filter it) on a set that has them; a reference never does, its pitch must stay single.
+    /// False when the zone can't be read (nothing is written).
     @discardableResult
     public func addNote(_ instrument: SampledInstrument, hz: Double, velocity: Double, into out: inout [Float], start: Int,
-                        length: Int, rate: Double, release: Double? = nil, gain: Double = 1) -> Bool {
+                        length: Int, rate: Double, release: Double? = nil, gain: Double = 1, paired: Bool = false) -> Bool {
         guard hz.isFinite, hz > 0, rate > 0, let zone = instrument.zone(for: hz, velocity: velocity),
               let zoneHz = zone.hz, zoneHz > 0, let buffer = buffer(zone) else { return false }
         let ratio = hz / zoneHz * buffer.rate / rate
@@ -119,8 +128,28 @@ extension SampleLibrary {
            points[1] <= buffer.count {
             loop = (Double(points[0]), Double(points[1]))
         }
-        Self.play(buffer, ratio: ratio, amplitude: amplitude, loop: loop, into: &out, start: start, length: length, fade: fade)
+        let smoothing = instrument.softFilter ? Self.softening(velocity: velocity, recorded: zone.velocity, rate: rate) : 0
+        if paired && instrument.pairCents > 0 {
+            let spread = pow(2, instrument.pairCents / 2400)
+            Self.play(buffer, ratio: ratio * spread, amplitude: amplitude * 0.55, loop: loop, into: &out, start: start,
+                      length: length, fade: fade, smoothing: smoothing)
+            Self.play(buffer, ratio: ratio / spread, amplitude: amplitude * 0.55, loop: loop, into: &out, start: start,
+                      length: length, fade: fade, smoothing: smoothing)
+        } else {
+            Self.play(buffer, ratio: ratio, amplitude: amplitude, loop: loop, into: &out, start: start, length: length, fade: fade,
+                      smoothing: smoothing)
+        }
         return true
+    }
+
+    /// The one-pole low-pass coefficient for a note `velocity` against its layer's `recorded` one: none at the
+    /// recorded touch or harder, then a cutoff falling from 14 kHz towards 700 Hz as the touch softens (a pluck
+    /// that gentle excites fewer overtones). Zero means unfiltered.
+    static func softening(velocity: Double, recorded: Double, rate: Double) -> Float {
+        let touch = max(0, velocity) / max(0.05, recorded)
+        guard touch < 0.97, rate > 0 else { return 0 }
+        let cutoff = 700 * pow(14_000.0 / 700, min(1, touch))
+        return Float(1 - exp(-2 * Double.pi * min(cutoff, 0.45 * rate) / rate))
     }
 
     /// Adds one hit of a kit piece at its recorded pitch: the layer nearest `velocity`, `variation` choosing among its
@@ -137,9 +166,10 @@ extension SampleLibrary {
 
     /// Reads `buffer` at `ratio` frames per output frame (4-point cubic interpolation) into out[start...], for at most
     /// `length` frames, the last `fade` of them faded with a raised cosine. A loop crossfades its last 80 ms into the
-    /// stretch before its start, so the jump back is seamless.
+    /// stretch before its start, so the jump back is seamless. `smoothing` (0...1, 0 off) runs the note through a
+    /// one-pole low-pass.
     static func play(_ buffer: SampleBuffer, ratio: Double, amplitude: Float, loop: (start: Double, end: Double)?,
-                     into out: inout [Float], start: Int, length: Int, fade: Int) {
+                     into out: inout [Float], start: Int, length: Int, fade: Int, smoothing: Float = 0) {
         guard start >= 0, start < out.count, ratio > 0, ratio.isFinite else { return }
         let count = min(length, out.count - start)
         guard count > 0 else { return }
@@ -155,6 +185,7 @@ extension SampleLibrary {
                     fadeIn = loop.end - crossfade
                 }
                 var position = 0.0
+                var low: Float = 0
                 for n in 0..<count {
                     if let loop, position >= loop.end { position -= span }
                     if loop == nil && position >= last { break }
@@ -162,6 +193,10 @@ extension SampleLibrary {
                     if loop != nil, crossfade > 0, position > fadeIn {
                         let w = Float((position - fadeIn) / crossfade)
                         value = value * (1 - w) + cubic(source, position - span) * w
+                    }
+                    if smoothing > 0 {
+                        low += smoothing * (value - low)
+                        value = low
                     }
                     var envelope: Float = 1
                     if fadeFrames > 0 && n >= count - fadeFrames {
@@ -209,7 +244,8 @@ public enum SampledTones {
         switch request.kind {
         case let .phrase(together, noteMs, gapMs):
             guard var out = phrase(request.frequencies, together: together, noteMs: noteMs, gapMs: gapMs,
-                                   instrument: instrument, library: library, rate: rate) else { return nil }
+                                   instrument: instrument, library: library, rate: rate,
+                                   strummed: StrumFeel.strums(request.voice)) else { return nil }
             return ToneClip(frames: finish(&out, instrument: instrument, rate: rate, fadeEnd: true), sampleRate: request.sampleRate)
         case let .reference(durationMs):
             guard let hz = request.frequencies.first,
@@ -219,16 +255,30 @@ public enum SampledTones {
         }
     }
 
-    /// As `ToneSynth.phrase`: notes in turn (`noteMs` each, `gapMs` of silence after) or together for `noteMs`, a
-    /// plucked chord strummed low to high (`ToneSynth.strumSpread` apart, with the same small human jitter).
+    /// As `ToneSynth.phrase`: notes in turn (`noteMs` each, `gapMs` of silence after) or together for `noteMs`. A
+    /// fretted voice's chord (`strummed`) is a relaxed downstroke across its strings (`StrumFeel`: the pick's timing
+    /// and weight string by string); other plucked chords roll low to high `ToneSynth.strumSpread` apart, sustained
+    /// ones enter almost at once, with the same small human jitter. Paired courses sound as pairs.
     static func phrase(_ frequencies: [Double], together: Bool, noteMs: Int, gapMs: Int, instrument: SampledInstrument,
-                       library: SampleLibrary, rate: Double) -> [Float]? {
+                       library: SampleLibrary, rate: Double, strummed: Bool = false) -> [Float]? {
         let note = max(1, Int(Double(max(1, noteMs)) * rate / 1000))
         let step = Int(Double(max(1, noteMs) + max(0, gapMs)) * rate / 1000)
         let total = together ? note : max(1, step * frequencies.count)
         var out = [Float](repeating: 0, count: total)
         if together {
             let order = frequencies.indices.sorted { frequencies[$0] < frequencies[$1] }
+            if strummed && instrument.kind == .plucked {
+                let span = StrumFeel.span(strings: order.count)
+                let hits = StrumFeel.hits(strings: order.count, stroke: .down, span: span, velocity: velocity,
+                                          seed: 0x5EED_0000 &+ UInt64(order.count))
+                for hit in hits {
+                    let start = max(0, Int(hit.delay * rate))
+                    guard start < total else { continue }
+                    guard library.addNote(instrument, hz: frequencies[order[hit.string]], velocity: hit.velocity, into: &out,
+                                          start: start, length: total - start, rate: rate, paired: true) else { return nil }
+                }
+                return out
+            }
             let spread = instrument.kind == .sustained ? 0.012 : ToneSynth.strumSpread
             var feel = ToneNoise(seed: 0x5EED_0000 &+ UInt64(order.count))
             for (rank, index) in order.enumerated() {
@@ -237,12 +287,12 @@ public enum SampledTones {
                 let strength = velocity * (1 - 0.03 * Double(rank) + 0.04 * Double(feel.next()))
                 guard start < total else { continue }
                 guard library.addNote(instrument, hz: frequencies[index], velocity: strength, into: &out, start: start,
-                                      length: total - start, rate: rate) else { return nil }
+                                      length: total - start, rate: rate, paired: true) else { return nil }
             }
         } else {
             for (index, hz) in frequencies.enumerated() {
                 guard library.addNote(instrument, hz: hz, velocity: velocity, into: &out, start: index * step,
-                                      length: note, rate: rate) else { return nil }
+                                      length: note, rate: rate, paired: true) else { return nil }
             }
         }
         return out

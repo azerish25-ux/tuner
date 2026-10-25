@@ -29,9 +29,10 @@ by hand: change the script and run it again.
 - The violin and cello recordings are played with vibrato, so the tuner's *reference* for bowed strings stays
   the steady synthesized tone; their "Hear it", melodies and chords use the recordings. Flute, clarinet and
   brass were recorded without vibrato and serve the reference too.
-- Single-layer plucked sets (guitar, ukulele, mandolin) are darkened when played softer than they were
-  recorded (`softFilter`: a one-pole low-pass that follows velocity, as the Martin's own SFZ maps it), and
-  chords are strummed string by string (`StrumFeel`: down and up strokes, per-string timing and velocity).
+- Single-layer plucked sets (guitar, ukulele, mandolin: no CC0/CC-BY flat-top guitar with two recorded
+  velocity layers was found, see Rejected) are darkened when played softer than they were recorded
+  (`softFilter`: a one-pole low-pass that follows velocity, as the Martin's own SFZ maps it), and chords
+  are strummed string by string (`StrumFeel`: down and up strokes, per-string timing and velocity).
 - The band (`BandSynth`) plays the kit, the bass, the piano and an electric guitar (`eguitar`, `chops`) in
   the style of the song: pop, rock, reggae one-drop, country two-step, funk, ballad or the plain groove.
 
@@ -44,9 +45,9 @@ banjo stays synthesized:
 | Voice | What plays |
 | --- | --- |
 | ukulele | FreePats Spanish classical guitar, notes C4-C6 (the soprano ukulele's own range and string material), thinned below 200 Hz for the small body and damped a little faster. |
-| mandolin | The Martin HD-28's notes from E3 up, thinned below 220 Hz, brightened and damped faster, played as paired courses (two strings 1.6 cents and a millisecond apart) in phrases; references sound one string. |
+| mandolin | The Martin HD-28's notes from E3 up, thinned below 220 Hz, brightened and damped faster, played as paired courses (two strings 1.6 cents apart, the slow shimmer of a doubled course) in phrases; references sound one string. |
 
-Total shipped: **11.5 MB** in 302 files (budget 35 MB).
+Total shipped: **11.4 MB** in 300 files (budget 35 MB).
 
 ## Libraries
 
@@ -65,9 +66,9 @@ Total shipped: **11.5 MB** in 302 files (budget 35 MB).
 | Set | Plays for | Source | Files | Size |
 | --- | --- | --- | --- | --- |
 | Grand piano (`piano`) | piano | vcsl | 70 | 4.47 MB |
-| Steel-string guitar (Martin HD-28) (`guitar`) | guitar | jmartin | 15 | 0.62 MB |
+| Steel-string guitar (Martin HD-28) (`guitar`) | guitar | jmartin | 14 | 0.59 MB |
 | Ukulele (nylon-string guitar recordings) (`ukulele`) | ukulele | freepats | 12 | 0.25 MB |
-| Mandolin (Martin treble strings, paired courses) (`mandolin`) | mandolin | jmartin | 11 | 0.27 MB |
+| Mandolin (Martin treble strings, paired courses) (`mandolin`) | mandolin | jmartin | 10 | 0.25 MB |
 | Electric guitar (Gretsch hollowbody) (`eguitar`) | backing band | bngguitars | 26 | 0.65 MB |
 | Electric guitar, staccato (Gretsch hollowbody) (`chops`) | backing band | bngguitars | 13 | 0.09 MB |
 | Electric bass (`bass`) | bass | growlybass | 28 | 0.94 MB |
@@ -186,7 +187,6 @@ Total shipped: **11.5 MB** in 302 files (budget 35 MB).
 | `Samples/guitar/guitar-068-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_068_Ab4_1.wav` | `85595b30c7d2fcca…` | CC0-1.0 |
 | `Samples/guitar/guitar-071-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_071__B4_1.wav` | `5278514d5a99ba18…` | CC0-1.0 |
 | `Samples/guitar/guitar-074-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_074__D5_1.wav` | `272f34deb22bc1dd…` | CC0-1.0 |
-| `Samples/guitar/guitar-077-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_077__F5_1.wav` | `981d8956ffde9ec5…` | CC0-1.0 |
 | `Samples/guitar/guitar-080-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_080_Ab5_1.wav` | `1dfca9cf6adb0f6e…` | CC0-1.0 |
 | `Samples/guitar/guitar-083-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_083__B5_1.wav` | `da4133e56cc7e73f…` | CC0-1.0 |
 | `Samples/ukulele/ukulele-060-mf.m4a` | `freepats` | `samples/C4.flac` | `e8fcd63c262ebef3…` | CC0-1.0 |
@@ -209,7 +209,6 @@ Total shipped: **11.5 MB** in 302 files (budget 35 MB).
 | `Samples/mandolin/mandolin-068-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_068_Ab4_1.wav` | `85595b30c7d2fcca…` | CC0-1.0 |
 | `Samples/mandolin/mandolin-071-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_071__B4_1.wav` | `5278514d5a99ba18…` | CC0-1.0 |
 | `Samples/mandolin/mandolin-074-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_074__D5_1.wav` | `272f34deb22bc1dd…` | CC0-1.0 |
-| `Samples/mandolin/mandolin-077-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_077__F5_1.wav` | `981d8956ffde9ec5…` | CC0-1.0 |
 | `Samples/mandolin/mandolin-080-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_080_Ab5_1.wav` | `1dfca9cf6adb0f6e…` | CC0-1.0 |
 | `Samples/mandolin/mandolin-083-mf.m4a` | `jmartin` | `Discord GM/Melodic/026-Acoustic Guitar (steel)/MartinGM2_083__B5_1.wav` | `da4133e56cc7e73f…` | CC0-1.0 |
 | `Samples/eguitar/eguitar-040-mf.m4a` | `bngguitars` | `Samples/green/ord/twang_e3_mf_rr1.wav` | `a839c8a67e29ab9c…` | CC0-1.0 |
