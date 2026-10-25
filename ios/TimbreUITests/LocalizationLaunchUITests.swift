@@ -233,7 +233,7 @@ enum OctaveSide {
             if shape.count > best.count { best = shape }
         }
         let tall = best.maxY - best.minY
-        guard best.count > 0, CGFloat(tall) >= 30 * scale else {
+        guard best.count >= 1, CGFloat(tall) >= 30 * scale else {
             return Finding(side: .unknown, summary: "no note letter found above the status line (largest bright shape \(tall) px tall)")
         }
 

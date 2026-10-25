@@ -12,20 +12,20 @@ These come first in every TODO file (`launch` on the entry says which kind). The
 |---|---:|---:|
 | Purchase terms (legal) | 11 | 528 |
 | Permission prompts | 1 | 48 |
-| VoiceOver | 92 | 4,416 |
+| VoiceOver | 93 | 4,464 |
 | Onboarding, welcome to paywall | 46 | 2,208 |
-| **All launch-critical** | **150** | **7,200** |
+| **All launch-critical** | **151** | **7,248** |
 
 ## What is missing now
 
-- **App interface:** 638 distinct strings are missing somewhere, 30,624 locale-string pairs in all.
+- **App interface:** 639 distinct strings are missing somewhere, 30,672 locale-string pairs in all.
 - **Lessons:** 13,203 locale-string pairs across the 9 lesson languages (German (de), Spanish (es), French (fr), Italian (it), Japanese (ja), Korean (ko), Portuguese (pt), Russian (ru), Chinese (Simplified) (zh-CN)).
 - **Changed English:** 1,410 of these locale-string pairs replace a string whose English was edited. The TODO entry carries the old English and its old translation under `previous`, to update rather than start over.
 
 | Locales | App strings missing | Lesson strings missing |
 |---|---:|---:|
-| de, es, fr, it, ja, ko, pt, ru, zh-CN | 638 | 1467 |
-| ar, bg, bn, ca, cs, da, el, et, fa, fi, gu, he, hi, hr, hu, id, is, kn, lt, lv, ml, mr, nl, no, pa, pl, ro, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zu | 638 | — |
+| de, es, fr, it, ja, ko, pt, ru, zh-CN | 639 | 1467 |
+| ar, bg, bn, ca, cs, da, el, et, fa, fi, gu, he, hi, hr, hu, id, is, kn, lt, lv, ml, mr, nl, no, pa, pl, ro, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zu | 639 | — |
 
 Where the missing lesson strings are (the same in every lesson language):
 
@@ -114,4 +114,4 @@ Which languages ship is the owner's decision: `CFBundleLocalizations` in `ios/pr
 
 Interface strings are found by `tools/l10n/swiftstrings.py`, a scanner that reads Swift without Xcode. It infers the type of each interpolation (`%lld` for Int, `%@` for text); when a new string's key carries `key_check`, the inferred specifier is a guess. Confirm it with Xcode's export: run the *Localization export* workflow (`l10n.yml`) and pass its `en.xliff` with `--xliff`.
 
-Stale entries: 155 keys that some locale still holds have no English in the app any more (5,724 locale-key pairs; the keys are listed under `stale` in `tools/l10n/todo/index.json`). They are harmless, and they are where `changed` entries find their old translations.
+Stale entries: 156 keys that some locale still holds have no English in the app any more (5,772 locale-key pairs; the keys are listed under `stale` in `tools/l10n/todo/index.json`). They are harmless, and they are where `changed` entries find their old translations.
