@@ -57,6 +57,7 @@ final class CommerceService: ObservableObject {
             for await result in Transaction.updates {
                 guard !Task.isCancelled else { return }
                 guard case .verified(let transaction) = result, TimbreProduct.all.contains(transaction.productID) else { continue }
+                SubscriptionOutcomes.transactionArrived(transaction)
                 await self?.refreshEntitlements()
                 self?.pending = false
                 await transaction.finish()
@@ -96,31 +97,55 @@ final class CommerceService: ObservableObject {
 
     /// The yearly plan the paywall sells: the one this install's paywall arm names (`RemoteConfig.annualProductID`),
     /// else the standard one, also when the named one isn't on sale in this storefront.
-    var annual: Product? {
-        let named = Self.annualProductID(remote: RemoteConfig.shared.annualProductID)
-        return products.first { $0.id == named } ?? products.first { $0.id == TimbreProduct.annual }
-    }
+    var annual: Product? { yearly(for: RemoteConfig.shared.annualProductID) }
     var monthly: Product? { products.first { $0.id == TimbreProduct.monthly } }
-
-    /// The remote settings' yearly product when it is a subscription Timbre knows (`TimbreProduct.subscriptions`, the
-    /// month aside), else the standard yearly plan. An unknown product would take a subscription that never grants Pro
-    /// (`AccessPolicy.isPro` counts known products only), so a typo in the file can't sell one.
-    static func annualProductID(remote: String?) -> String {
-        guard let remote, remote != TimbreProduct.monthly, TimbreProduct.subscriptions.contains(remote) else { return TimbreProduct.annual }
-        return remote
-    }
     var lifetime: Product? { products.first { $0.id == TimbreProduct.lifetime } }
 
-    /// "14 days free" style label for the annual intro offer, when eligible.
-    var trialLabel: String? {
-        guard trialEligible, let offer = annual?.subscription?.introductoryOffer, offer.paymentMode == .freeTrial else { return nil }
-        let period = offer.period
+    /// The yearly plan a paywall arm naming `remote` sells: that plan when it is on sale here, else the standard year.
+    func yearly(for remote: String?) -> Product? {
+        let named = Self.annualProductID(remote: remote)
+        return products.first { $0.id == named } ?? products.first { $0.id == TimbreProduct.annual }
+    }
+
+    /// The remote settings' yearly product when it is one of Timbre's yearly plans (`TimbreProduct.yearly`: the standard
+    /// year and its price-test arms), else the standard year. Anything else (the month, lifetime, a typo) would sell a
+    /// plan the arm didn't mean, or one that never grants Pro (`AccessPolicy.isPro` counts known products only).
+    static func annualProductID(remote: String?) -> String {
+        guard let remote, TimbreProduct.yearly.contains(remote) else { return TimbreProduct.annual }
+        return remote
+    }
+
+    // MARK: Free trials
+
+    /// Days of the free trial that buying `product` starts for this person: its introductory offer, when that is a free
+    /// trial and the group's introductory offer is still theirs. StoreKit applies it by itself to whichever plan of the
+    /// group has one, so a plan's trial is said wherever that plan is sold. Nil for a plan without one, or after a trial.
+    func trialDays(for product: Product?) -> Int? {
+        guard trialEligible, let offer = product?.subscription?.introductoryOffer, offer.paymentMode == .freeTrial else { return nil }
+        return Self.days(of: offer.period, count: offer.periodCount)
+    }
+
+    /// "14-day free trial", "1-month free trial": `product`'s free trial as its button names it; nil without one.
+    func trialLabel(for product: Product?) -> String? {
+        guard trialDays(for: product) != nil, let period = product?.subscription?.introductoryOffer?.period else { return nil }
         let count = period.value
         switch period.unit {
         case .day: return String(localized: "\(count)-day free trial")
         case .week: return String(localized: "\(count * 7)-day free trial")
         case .month: return String(localized: "\(count)-month free trial")
         default: return String(localized: "Free trial")
+        }
+    }
+
+    /// A period `count` times over, in days (a month counts 30, a year 365).
+    static func days(of period: Product.SubscriptionPeriod, count: Int = 1) -> Int {
+        let length = period.value * max(1, count)
+        switch period.unit {
+        case .day: return length
+        case .week: return length * 7
+        case .month: return length * 30
+        case .year: return length * 365
+        default: return length
         }
     }
 
@@ -136,7 +161,8 @@ final class CommerceService: ObservableObject {
         do {
             let fetched = try await Product.products(for: TimbreProduct.all)
             products = TimbreProduct.all.compactMap { id in fetched.first { $0.id == id } }
-            if let subscription = annual?.subscription { trialEligible = await subscription.isEligibleForIntroOffer }
+            // One answer for the whole group: an introductory offer is once per subscription group.
+            if let subscription = products.compactMap(\.subscription).first { trialEligible = await subscription.isEligibleForIntroOffer }
             if products.isEmpty { error = String(localized: "Timbre Pro is unavailable in the App Store right now. Please try again later.") }
         } catch { self.error = error.localizedDescription }
     }
@@ -236,7 +262,10 @@ final class CommerceService: ObservableObject {
                 if AccessPolicy.isPro([item]), active?.0 != TimbreProduct.lifetime { active = (transaction.productID, transaction.expirationDate) }
             }
             var issue: BillingIssue?
-            if active?.0 != TimbreProduct.lifetime { issue = await Self.currentBillingIssue() }
+            if active?.0 != TimbreProduct.lifetime, let statuses = await Self.subscriptionStatuses() {
+                issue = BillingIssue(statuses)
+                SubscriptionOutcomes.statusChecked(statuses)
+            }
             guard revision == refreshRevision else { continue }
             // Pro arriving once entitlements were already known (a purchase, a restore, an approved Ask to Buy), not a
             // subscriber's launch.
@@ -264,15 +293,80 @@ final class CommerceService: ObservableObject {
         SoundFX.shared.play(.motif)
     }
 
-    /// The subscription group's billing problem, if any. The group is found through the latest transaction of either
-    /// plan, so someone who never subscribed costs no status request.
-    private static func currentBillingIssue() async -> BillingIssue? {
-        for productID in [TimbreProduct.annual, TimbreProduct.monthly] {
+    /// The subscription group's statuses, found through the latest transaction of any of its plans, so someone who
+    /// never subscribed costs no status request; nil for them, or when the App Store can't be reached.
+    private static func subscriptionStatuses() async -> [Product.SubscriptionInfo.Status]? {
+        for productID in TimbreProduct.yearly + [TimbreProduct.monthly] {
             guard let latest = await Transaction.latest(for: productID), case .verified(let transaction) = latest,
                   let group = transaction.subscriptionGroupID else { continue }
-            guard let statuses = try? await Product.SubscriptionInfo.status(for: group) else { return nil }
-            return BillingIssue(statuses)
+            return try? await Product.SubscriptionInfo.status(for: group)
         }
         return nil
+    }
+}
+
+/// What happens to a subscription after the purchase, logged from the device until a server hears it from App Store
+/// Server Notifications:
+/// - `subscription_state {state, will_renew, offer, product}` whenever the group's status changes: a trial cancelled on
+///   its first day shows as `will_renew=0`, a lapse as `state=expired`;
+/// - `renewal {product, offer}` for each later period of a subscription (a new transaction on the same purchase);
+/// - `refund {product, reason}` when the App Store revokes a purchase.
+/// Plan names and states only, never anything about the person.
+@MainActor
+enum SubscriptionOutcomes {
+    /// The state last logged, so a launch that finds it unchanged logs nothing.
+    private static let stateKey = "commerce.subscriptionState"
+
+    /// A transaction from `Transaction.updates`: a renewal or a refund. (A purchase made in the app reports itself.)
+    static func transactionArrived(_ transaction: Transaction) {
+        if transaction.revocationDate != nil {
+            var reason = "other"
+            if let revocation = transaction.revocationReason, revocation == .developerIssue { reason = "developer_issue" }
+            Analytics.log("refund", ["product": transaction.productID, "reason": reason])
+        } else if transaction.productType == .autoRenewable, transaction.reason == .renewal, !transaction.isUpgraded {
+            Analytics.log("renewal", ["product": transaction.productID, "offer": offerName(transaction.offer?.type)])
+        }
+    }
+
+    /// The group's status as the App Store just reported it, logged when it differs from the one logged last.
+    static func statusChecked(_ statuses: [Product.SubscriptionInfo.Status]) {
+        guard let status = statuses.first(where: { $0.state == .subscribed }) ?? statuses.first else { return }
+        var properties = ["state": stateName(status.state), "offer": "none"]
+        if case .verified(let transaction) = status.transaction {
+            properties["product"] = transaction.productID
+            properties["offer"] = offerName(transaction.offer?.type)
+        }
+        if case .verified(let renewal) = status.renewalInfo {
+            properties["will_renew"] = renewal.willAutoRenew ? "1" : "0"
+        }
+        let snapshot = properties.sorted { $0.key < $1.key }.map { "\($0.key)=\($0.value)" }.joined(separator: "&")
+        let defaults = UserDefaults.standard
+        guard defaults.string(forKey: stateKey) != snapshot else { return }
+        defaults.set(snapshot, forKey: stateKey)
+        Analytics.log("subscription_state", properties)
+    }
+
+    private static func stateName(_ state: Product.SubscriptionInfo.RenewalState) -> String {
+        switch state {
+        case .subscribed: return "subscribed"
+        case .expired: return "expired"
+        case .inGracePeriod: return "grace_period"
+        case .inBillingRetryPeriod: return "billing_retry"
+        case .revoked: return "revoked"
+        default: return "unknown"
+        }
+    }
+
+    /// The offer a period was bought with: an introductory offer (a free trial), a promotional or win-back offer, an
+    /// offer code, or none.
+    private static func offerName(_ type: Transaction.OfferType?) -> String {
+        guard let type else { return "none" }
+        switch type {
+        case .introductory: return "introductory"
+        case .promotional: return "promotional"
+        case .code: return "code"
+        case .winBack: return "win_back"
+        default: return "other"
+        }
     }
 }

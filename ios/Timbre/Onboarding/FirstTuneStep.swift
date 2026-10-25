@@ -1,4 +1,5 @@
 import AVFoundation
+import CoreHaptics
 import Metal
 import Observation
 import SwiftUI
@@ -40,8 +41,8 @@ struct FirstTuneSetup {
                               photoAsset: photo?.asset, modelID: ModelLibrary.modelID(forPhoto: photo?.asset), low: low)
     }
 
-    /// The step only runs when Timbre can hear: the microphone is allowed (or the UI-test demo pitch plays).
-    /// "Not now" or a denial skips it rather than asking again.
+    /// The step only runs when Timbre can hear: the microphone is allowed (or, in a debug build, the demo pitch plays
+    /// the string). "Not now" or a denial skips it rather than asking again.
     static var canListen: Bool {
         #if DEBUG
         if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" { return true }
@@ -143,6 +144,8 @@ struct FirstTuneStep: View {
     @State private var reward: ProgressUpdate? = nil
     @State private var streakDays = 0
     @State private var rewardsShown = false
+    /// After the lock: Tune by feel is offered, with a three-second feel of it (`FeelOffer`), on a phone that can.
+    @State private var feelOffered = false
     private static let supports3D = MTLCreateSystemDefaultDevice() != nil
 
     var body: some View {
@@ -168,7 +171,13 @@ struct FirstTuneStep: View {
                     }
                 }
                 .adaptiveAnimation(Motion.pluck, value: rewardsShown)
+                if feelOffered {
+                    FeelOffer { on in finishFeelOffer(on) }
+                        .padding(.horizontal, Metrics.gutter).padding(.bottom, 10)
+                        .transition(.adaptive(.move(edge: .bottom).combined(with: .opacity), reduceMotion: reduceMotion))
+                }
             }
+            .adaptiveAnimation(Motion.settle, value: feelOffered)
         }
         .onAppear(perform: start)
         .onDisappear { store.stopLessonListening(owner: owner) }
@@ -245,7 +254,7 @@ struct FirstTuneStep: View {
     }
 
     private func title(_ text: Text, color: Color) -> some View {
-        text.font(Typeface.display(32)).tracking(-0.6)
+        text.font(Typeface.stepTitle).tracking(-0.6)
             .foregroundStyle(color)
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -363,13 +372,13 @@ struct FirstTuneStep: View {
     }
 
     private func badgeChip(_ badge: Achievement) -> some View {
-        rewardChip(symbol: badge.symbol, tint: Palette.amber, text: Text(LocalizedStringKey(badge.title)))
+        rewardChip(symbol: badge.symbol, tint: Palette.starGold, text: Text(LocalizedStringKey(badge.title)))
     }
 
     private func rewardChip(symbol: String, tint: Color, text: Text) -> some View {
         HStack(spacing: 6) {
             Image(systemName: symbol).font(.system(size: 12, weight: .bold)).foregroundStyle(tint)
-            text.font(Typeface.label(13)).foregroundStyle(Palette.ink).lineLimit(1)
+            text.font(Typeface.label(.footnote)).foregroundStyle(Palette.ink).lineLimit(1)
         }
         .padding(.horizontal, 12).frame(minHeight: 34)
         .background(Capsule().fill(tint.opacity(0.14)))
@@ -387,7 +396,7 @@ struct FirstTuneStep: View {
     }
 
     private func listen() {
-        // The UI-test demo pitch follows the game target; the microphone ignores it.
+        // The demo pitch of a debug build follows the game target; the microphone ignores it.
         store.gameTargetHz = setup.hz
         let model = self.model
         let low = max(25, min(setup.instrument.minFrequencyHz, setup.hz) / 1.12)
@@ -413,8 +422,21 @@ struct FirstTuneStep: View {
             SoundFX.shared.play(.star)
             rewardsShown = reward != nil || streakDays > 0
             try? await Task.sleep(for: .milliseconds(rewardsShown ? 2300 : 1700))
-            finish(locked: true)
+            // The string just went still in the hand too: the moment to offer the feel of it. It waits for an answer.
+            if FeelOffer.available(store.settings) {
+                feelOffered = true
+                Analytics.log("feel_offer", ["result": "shown"])
+            } else {
+                finish(locked: true)
+            }
         }
+    }
+
+    /// The feel offer answered: on (the setting is saved and the tuner beats from now on) or not now; then onward.
+    private func finishFeelOffer(_ on: Bool) {
+        if on { store.updateSettings { $0.tuneByFeel = true } }
+        Analytics.log("feel_offer", ["result": on ? "on" : "later"])
+        finish(locked: true)
     }
 
     private func finish(locked: Bool) {
@@ -423,6 +445,76 @@ struct FirstTuneStep: View {
         store.stopLessonListening(owner: owner)
         if !locked { Analytics.log("onboarding_first_tune", ["result": "skipped", "instrument": setup.instrument.id]) }
         onDone(locked)
+    }
+}
+
+/// Tune by feel, offered once the first string has locked: "Want to feel it?", a three-second feel of it (a string
+/// coming into tune, the beat slowing to stillness, `Haptics.feelTest`), and the choice to turn it on. Offered only on a
+/// phone that can play it, with haptics on and Tune by feel still off; it never turns itself on.
+private struct FeelOffer: View {
+    /// Called once: true when the player turned it on.
+    let onDone: (Bool) -> Void
+    @State private var feeling = false
+    @State private var felt = false
+
+    static func available(_ settings: UserSettings) -> Bool {
+        CHHapticEngine.capabilitiesForHardware().supportsHaptics && settings.hapticsEnabled && !settings.tuneByFeel
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
+                Glyph("hand.tap", size: Glyph.lead, tint: Palette.mint)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Want to feel it?").font(.headline).foregroundStyle(Palette.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Tune by feel: your iPhone pulses slower as the string comes in, and goes still in tune.")
+                        .font(.subheadline).foregroundStyle(Palette.inkSoft)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 10) { feelButton; onButton }
+                VStack(spacing: 8) { feelButton; onButton }
+            }
+            Button { onDone(false) } label: {
+                Text("Not now").font(.subheadline.weight(.semibold)).padding(.horizontal, 12)
+            }
+            .buttonStyle(TextLinkStyle(tint: Palette.inkSoft))
+            .frame(maxWidth: .infinity)
+            .accessibilityIdentifier("onboarding.feel.later")
+        }
+        .stillCard()
+        .accessibilityElement(children: .contain)
+    }
+
+    /// Plays the feel: about three seconds of a string beating its way into tune, then the lock.
+    private var feelButton: some View {
+        Button {
+            guard !feeling else { return }
+            feeling = true
+            Haptics.shared.feelTest()
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(3_400))
+                feeling = false
+                felt = true
+            }
+        } label: {
+            Label(felt ? "Feel it again" : "Feel it", systemImage: "iphone.radiowaves.left.and.right")
+        }
+        .buttonStyle(SecondaryButtonStyle())
+        .disabled(feeling)
+        .accessibilityHint(Text("Plays three seconds of the feel on your iPhone"))
+        .accessibilityIdentifier("onboarding.feel.try")
+    }
+
+    private var onButton: some View {
+        Button("Turn it on") {
+            Haptics.shared.selection()
+            onDone(true)
+        }
+        .buttonStyle(PrimaryButtonStyle())
+        .accessibilityIdentifier("onboarding.feel.on")
     }
 }
 
@@ -464,7 +556,7 @@ struct FirstTuneBurst: View {
                     let d = spark.speed * t * (1 - t / 4)
                     let p = CGPoint(x: center.x + cos(spark.angle) * d, y: center.y + sin(spark.angle) * d + 50 * t * t)
                     let alpha = max(0, 1 - t / 2)
-                    let color = spark.hue > 0.65 ? Palette.amber : Palette.mint
+                    let color = spark.hue > 0.65 ? Palette.starGold : Palette.mint
                     context.fill(Path(ellipseIn: CGRect(x: p.x - spark.size, y: p.y - spark.size, width: spark.size * 2, height: spark.size * 2)),
                                  with: .color(color.opacity(alpha)))
                 }

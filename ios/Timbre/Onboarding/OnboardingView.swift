@@ -4,10 +4,11 @@ import TimbreCore
 import UIKit
 
 /// Onboarding's pages, in order. Not every player sees every one (`OnboardingView.segments`): the hand question needs
-/// an instrument, the first tune needs the microphone, the reminder card follows a locked first tune while iOS has
-/// never asked for notifications, and the first chord is for beginners whose first tune locked.
+/// an instrument, the first tune needs the microphone, the first chord is for beginners whose first tune locked, and
+/// the reminder card follows those wins (at the bigger one, after the chord) while iOS has never asked for
+/// notifications.
 private enum OnboardingPage: Int, CaseIterable {
-    case welcome, experience, goal, hand, microphone, firstTune, reminder, firstChord, plan
+    case welcome, experience, goal, hand, microphone, firstTune, firstChord, reminder, plan
 
     /// The page as the funnel names it (`onboarding_step`).
     var name: String {
@@ -41,12 +42,18 @@ private struct Answer: Identifiable {
 }
 
 struct OnboardingView: View {
+    /// Where onboarding starts: the welcome (a first launch), or the questions alone, which "Just tune" left for the
+    /// first time Learn opens (`OnboardingDeferral`): how long, what for and which hand, then the plan.
+    enum Entry { case welcome, questions }
+
+    let entry: Entry
     @EnvironmentObject private var store: AppStore
     /// Observed so the Pro badges on the instrument chips go when a restore unlocks everything.
     @EnvironmentObject private var commerce: CommerceService
+    @Environment(\.dismiss) private var dismiss
     /// An instrument a link chose (an instrument's Custom Product Page): the welcome screen selects it.
     @ObservedObject private var link = OnboardingLink.shared
-    @State private var page = OnboardingPage.welcome
+    @State private var page: OnboardingPage
     @State private var instrumentID: String? = "guitar.acoustic.6"
     /// An instrument a link chose that isn't one of the usual chips: it gets a chip of its own, first.
     @State private var linkedID: String?
@@ -79,11 +86,16 @@ struct OnboardingView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
 
+    init(entry: Entry = .welcome) {
+        self.entry = entry
+        _page = State(initialValue: entry == .questions ? .experience : .welcome)
+    }
+
     var body: some View {
         ZStack {
             StageBackground()
             VStack(spacing: 0) {
-                progressBar
+                progressRow
                 pageView
                     .transition(.adaptive(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
                                                       removal: .move(edge: .leading).combined(with: .opacity)),
@@ -101,6 +113,8 @@ struct OnboardingView: View {
             Analytics.start()
             hand = store.settings.handedness
             chordBefore = store.settings.firstChordDone
+            // The instrument "Just tune" put on the stage is the questions' instrument too.
+            if entry == .questions { instrumentID = store.referenceMode ? nil : store.instrument.id }
             logStep(page)
         }
         .onChange(of: page) { _, next in logStep(next) }
@@ -124,15 +138,30 @@ struct OnboardingView: View {
 
     // MARK: Progress
 
-    /// The pages this player's path holds (the welcome and the reminder card aside), each a segment of the bar.
+    /// The bar's segments: the longest path this player could take from where they start (the welcome and the
+    /// reminder card aside), fixed once the instrument is chosen, so the bar never grows longer as they answer. A page
+    /// their answers skip (the first chord after "A few years") fills as they pass it.
     private var segments: [OnboardingPage] {
         var pages: [OnboardingPage] = [.experience, .goal]
         if asksHand { pages.append(.hand) }
+        guard entry == .welcome else { return pages + [.plan] }
         pages.append(.microphone)
         if firstTuneSetup != nil { pages.append(.firstTune) }
-        if chordPlanned { pages.append(.firstChord) }
+        if chordPossible { pages.append(.firstChord) }
         pages.append(.plan)
         return pages
+    }
+
+    /// The bar, and in the deferred questions a way out (closing leaves Learn as it is, and they aren't asked again).
+    private var progressRow: some View {
+        HStack(spacing: 10) {
+            progressBar
+            if entry == .questions {
+                IconButton(symbol: "xmark", size: .compact, label: "Close") { closeQuestions() }
+                    .accessibilityIdentifier("onboarding.questions.close")
+            }
+        }
+        .padding(.horizontal, Metrics.gutter).padding(.top, entry == .questions ? 4 : 12)
     }
 
     private var progressBar: some View {
@@ -143,7 +172,6 @@ struct OnboardingView: View {
                 Capsule().fill(segment.rawValue <= page.rawValue ? Palette.mint : Palette.line).frame(height: 4)
             }
         }
-        .padding(.horizontal, Metrics.gutter).padding(.top, 12)
         .opacity(page == .welcome ? 0 : 1)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Step \(max(1, done)) of \(pages.count)"))
@@ -168,8 +196,14 @@ struct OnboardingView: View {
 
     /// A beginner (just starting, or a few months in) plays a first chord after the first tune, once ever.
     private var chordPlanned: Bool {
-        guard level == "beginner" || level == "novice", !chordBefore else { return false }
-        return FirstChordSetup.make(store: store, instrumentID: instrumentID) != nil
+        guard level == "beginner" || level == "novice" else { return false }
+        return chordPossible
+    }
+
+    /// The instrument has a first chord to play and it hasn't been played before: the chord is on this player's
+    /// longest path, whatever they answer.
+    private var chordPossible: Bool {
+        !chordBefore && FirstChordSetup.make(store: store, instrumentID: instrumentID) != nil
     }
 
     private func afterExperience() {
@@ -178,12 +212,16 @@ struct OnboardingView: View {
         go(.goal)
     }
 
-    private func afterGoal() { go(asksHand ? .hand : .microphone) }
+    /// The deferred questions go straight from the answers to the plan: "Just tune" already asked for the microphone
+    /// and tuned.
+    private var afterAnswers: OnboardingPage { entry == .questions ? .plan : .microphone }
+
+    private func afterGoal() { go(asksHand ? .hand : afterAnswers) }
 
     private func afterHand() {
         let answer = hand
         store.updateSettings { $0.handedness = answer }
-        go(.microphone)
+        go(afterAnswers)
     }
 
     /// After the microphone question: the first tune when Timbre can hear the instrument, then the plan.
@@ -192,14 +230,16 @@ struct OnboardingView: View {
         if FirstTuneSetup.canListen, firstTuneSetup != nil { go(.firstTune) } else { go(.plan) }
     }
 
-    /// A locked string started the streak: the reminder card (when it may ask), then a beginner's first chord.
+    /// A locked string started the streak: a beginner's first chord, then the reminder card (when it may ask).
     private func afterFirstTune(_ locked: Bool) {
         tuned = locked
-        if locked && reminderAskable { page = .reminder } else { afterReminder() }
+        if locked && chordPlanned { page = .firstChord } else { afterChord() }
     }
 
-    private func afterReminder() {
-        page = tuned && chordPlanned ? .firstChord : .plan
+    /// After the first chord (or straight after the first tune): the reminder card asks at the peak of the two wins,
+    /// once a string has locked and iOS has never asked; then the plan.
+    private func afterChord() {
+        page = tuned && reminderAskable ? .reminder : .plan
     }
 
     /// Pro members skip the offer.
@@ -218,7 +258,37 @@ struct OnboardingView: View {
         Analytics.log("onboarding_complete", ["instrument": instrumentID ?? "chromatic", "goal": answeredGoal, "level": answeredLevel,
                                               "minutes": String(dailyMinutes), "reminder": reminderOn ? "on" : "off",
                                               "placement_check": checkedFrom == nil ? "no" : "yes", "hand": asksHand ? hand.rawValue : "none",
-                                              "first_tune": tuned ? "locked" : "no", "first_chord": chordPlayed ? "played" : "no"])
+                                              "first_tune": tuned ? "locked" : "no", "first_chord": chordPlayed ? "played" : "no",
+                                              "path": entry == .questions ? "questions" : "plan"])
+        if entry == .questions {
+            OnboardingDeferral.shared.resolve()
+            dismiss()
+        }
+    }
+
+    /// The deferred questions closed unanswered: Learn stays as it is, and they aren't asked again.
+    private func closeQuestions() {
+        Analytics.log("onboarding_questions_closed", ["step": page.name])
+        OnboardingDeferral.shared.resolve()
+        dismiss()
+    }
+
+    /// "Just tune": the tuner at once, for someone who came for it. The welcome's instrument takes the stage, the
+    /// microphone is asked for as the tuner starts listening (over the tuner, where it makes sense), and the
+    /// questions wait for the first time Learn opens (`OnboardingDeferral`). One tap to a listening tuner, two with the
+    /// microphone's own prompt.
+    private func justTune() {
+        Haptics.shared.selection()
+        if let instrument = instrumentID.flatMap({ store.catalog.instrument(id: $0) }) {
+            _ = store.selectInstrument(instrument, photo: store.catalog.photo(instrumentId: instrument.id)?.asset)
+        } else {
+            store.selectReference()
+        }
+        OnboardingDeferral.shared.deferQuestions()
+        store.updateSettings { $0.onboardingCompleted = true }
+        store.selectedTab = .tune
+        Analytics.log("onboarding_complete", ["instrument": instrumentID ?? "chromatic", "path": "just_tune"])
+        store.startListening()
     }
 
     /// A link's instrument, chosen on the welcome screen (later pages keep the player's own choice).
@@ -239,7 +309,7 @@ struct OnboardingView: View {
                 Spotlight().fill(LinearGradient(colors: [Palette.spotlight.opacity(0.16), Palette.spotlight.opacity(0.03)], startPoint: .top, endPoint: .bottom))
                     .blur(radius: 6)
                     .ignoresSafeArea(edges: .top)
-                Text("TIMBRE").font(Typeface.label(15)).tracking(9).foregroundStyle(Palette.amber).padding(.top, 34)
+                Text("TIMBRE").font(Typeface.label(.body)).tracking(9).foregroundStyle(Palette.spotlight).padding(.top, 34)
                     .frame(maxWidth: .infinity)
                 Ellipse().fill(RadialGradient(colors: [Palette.spotlight.opacity(0.22), .clear], center: .center, startRadius: 2, endRadius: 170))
                     .frame(width: 320, height: 46).frame(maxHeight: .infinity, alignment: .bottom).padding(.bottom, 6)
@@ -270,14 +340,30 @@ struct OnboardingView: View {
                 .padding(.top, 18)
             Button("Get started") { go(.experience) }.buttonStyle(PrimaryButtonStyle()).padding(.horizontal, Metrics.gutter).padding(.top, 22)
                 .accessibilityIdentifier("onboarding.start")
-            restoreButton
-                .padding(.horizontal, Metrics.gutter).padding(.top, 10).padding(.bottom, 4)
+            justTuneLink
+                .frame(maxWidth: .infinity)
+                .padding(.top, 4)
+            restoreLink
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 2)
             if let restoreMessage {
                 Text(restoreMessage).font(.caption).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity).padding(.horizontal, Metrics.gutter + Metrics.proseInset).padding(.bottom, 6)
             }
         }
         .onAppear(perform: playWelcome)
+    }
+
+    /// "Just tune": for someone who came for the tuner, straight to it (`justTune`), the questions left for Learn.
+    private var justTuneLink: some View {
+        Button(action: justTune) {
+            Label("Just tune", systemImage: "tuningfork")
+                .font(.subheadline.weight(.semibold))
+                .padding(.horizontal, 16)
+        }
+        .buttonStyle(TextLinkStyle(tint: Palette.ink))
+        .accessibilityHint(Text("Opens the tuner now. Your plan can wait."))
+        .accessibilityIdentifier("onboarding.justTune")
     }
 
     /// Timbre's motif as the welcome first appears, once, after a beat so it lands with the spotlit instrument
@@ -293,8 +379,8 @@ struct OnboardingView: View {
         }
     }
 
-    /// "I already have Timbre Pro": the quieter bordered action under "Get started".
-    private var restoreButton: some View {
+    /// "I already have Timbre Pro": a footnote link at the foot of the welcome, for the few who do.
+    private var restoreLink: some View {
         Button {
             restoring = true
             restoreMessage = nil
@@ -304,9 +390,13 @@ struct OnboardingView: View {
                 if store.commerce.isPro { go(.experience) } else { restoreMessage = store.commerce.error }
             }
         } label: {
-            if restoring { ProgressView().tint(Palette.ink) } else { Text("I already have Timbre Pro") }
+            Group {
+                if restoring { ProgressView().controlSize(.small).tint(Palette.inkSoft) } else { Text("I already have Timbre Pro") }
+            }
+            .font(.footnote)
+            .padding(.horizontal, 16)
         }
-        .buttonStyle(SecondaryButtonStyle())
+        .buttonStyle(TextLinkStyle(tint: Palette.inkSoft))
         .disabled(restoring)
         .accessibilityIdentifier("onboarding.restore")
     }
@@ -338,13 +428,36 @@ struct OnboardingView: View {
         }
     }
 
-    /// The first `count` chips whole on one line, and the "more" chip when some are left.
+    /// `count` chips whole on one line, and the "more" chip when some are left. The line keeps the chosen instrument and
+    /// the beachhead instruments (`chipRank`: guitar, violin, ukulele, cello…) before the rest, so a longer
+    /// language ("Gitarre", "Violine") pushes bass or banjo into "…", never the violin or the player's own choice.
     private func chipLine(_ count: Int) -> some View {
-        HStack(spacing: 8) {
-            ForEach(Array(choices.prefix(count))) { choice in instrumentChip(choice) }
+        let shown = visibleChoices(count)
+        return HStack(spacing: 8) {
+            ForEach(shown) { choice in instrumentChip(choice) }
             if count < choices.count { moreChip }
         }
         .padding(.horizontal, Metrics.gutter)
+    }
+
+    /// The chips a line of `count` shows, in the row's own order: the chosen one, a link's, then by `chipRank`.
+    private func visibleChoices(_ count: Int) -> [Choice] {
+        guard count < choices.count else { return choices }
+        let ranked = choices.enumerated().sorted { lhs, rhs in
+            let left = chipRank(lhs.element), right = chipRank(rhs.element)
+            return left == right ? lhs.offset < rhs.offset : left < right
+        }
+        let kept = Set(ranked.prefix(count).map(\.offset))
+        return choices.enumerated().filter { kept.contains($0.offset) }.map(\.element)
+    }
+
+    /// Lower first: the chosen instrument, a link's, then guitar, violin, ukulele, cello, bass, mandolin, banjo, voice.
+    private func chipRank(_ choice: Choice) -> Int {
+        if choice.id == instrumentID { return -2 }
+        if let linkedID, choice.id == linkedID { return -1 }
+        let priority = ["guitar.acoustic.6", "violin.standard.4", "ukulele.soprano.4", "cello.standard.4", "bass.electric.4",
+                        "mandolin.standard.8", "banjo.five.5"]
+        return priority.firstIndex { $0 == choice.id } ?? priority.count
     }
 
     /// Every chip on one line that scrolls, for text too large to fit two: the edge fade dissolves a chip passing
@@ -515,7 +628,7 @@ struct OnboardingView: View {
 
     private func question(_ title: LocalizedStringKey, _ detail: LocalizedStringKey) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(title).font(Typeface.display(32)).tracking(-0.6).foregroundStyle(Palette.ink).fixedSize(horizontal: false, vertical: true)
+            Text(title).font(Typeface.stepTitle).tracking(-0.6).foregroundStyle(Palette.ink).fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
             Text(detail).font(.subheadline).foregroundStyle(Palette.inkSoft)
                 .fixedSize(horizontal: false, vertical: true)
@@ -582,7 +695,7 @@ struct OnboardingView: View {
             }
             .frame(height: 260)
             .accessibilityHidden(true)
-            Text("Timbre listens\nto your instrument").font(Typeface.display(34)).tracking(-0.6).multilineTextAlignment(.center).foregroundStyle(Palette.ink)
+            Text("Timbre listens\nto your instrument").font(Typeface.stepTitle).tracking(-0.6).multilineTextAlignment(.center).foregroundStyle(Palette.ink)
                 .accessibilityAddTraits(.isHeader)
             Text("Pitch is measured on your iPhone. Recordings are never saved or uploaded.").multilineTextAlignment(.center).foregroundStyle(Palette.inkSoft)
                 .padding(.horizontal, Metrics.gutter + Metrics.proseInset)
@@ -622,7 +735,7 @@ struct OnboardingView: View {
     private var reminderPage: some View {
         ReminderAskStep(streak: store.streak.current, time: $reminderTime) { on in
             reminderOn = on
-            afterReminder()
+            go(.plan)
         }
     }
 
@@ -630,7 +743,7 @@ struct OnboardingView: View {
         if let setup = FirstChordSetup.make(store: store, instrumentID: instrumentID) {
             FirstChordStep(setup: setup) { played in
                 chordPlayed = played
-                go(.plan)
+                afterChord()
             }
         } else {
             plan
@@ -651,6 +764,7 @@ struct OnboardingView: View {
             let start = progress.nextLesson(in: course)
             let checkSteps = placementCheckSteps(course)
             PlanStep(course: course, start: start, goal: goalAnswer, artwork: CourseArtwork.of(course, catalog: store.catalog),
+                     playedChord: playedChord,
                      check: checkSteps == nil ? nil : (checkedFrom == nil ? PlanCheck.offer : PlanCheck.done),
                      minutes: $dailyMinutes, reminder: $reminderTime, reminderOn: $reminderOn,
                      onCheck: { checking = true }, onStart: { startPlan() })
@@ -667,6 +781,13 @@ struct OnboardingView: View {
                         .accessibilityIdentifier("onboarding.plan.start")
                 }
         }
+    }
+
+    /// The chord just played in onboarding ("Em"), which the plan shows as done; nil when none was (or it was the open
+    /// strings rather than a chord).
+    private var playedChord: String? {
+        guard chordPlayed, let setup = FirstChordSetup.make(store: store, instrumentID: instrumentID), setup.isChord else { return nil }
+        return setup.chord.name
     }
 
     /// The 45-second placement check, for players who said a few years or more, when Timbre can hear them and the
@@ -727,7 +848,8 @@ enum ReminderTime {
 }
 
 /// An onboarding page's main action, pinned to the foot of the page. The page above keeps clear of it (the inset
-/// reserves its height, at every text size) and passes under its short fade, so no row ever rests under the button.
+/// reserves its height, at every text size) and passes under its short fade into the solid stage, so nothing ever
+/// shows through behind the button.
 struct OnboardingDock<Content: View>: View {
     private let content: Content
 
@@ -735,14 +857,14 @@ struct OnboardingDock<Content: View>: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            LinearGradient(colors: [Palette.stage.opacity(0), Palette.stage.opacity(0.9)], startPoint: .top, endPoint: .bottom)
-                .frame(height: 18)
+            LinearGradient(colors: [Palette.stage.opacity(0), Palette.stage], startPoint: .top, endPoint: .bottom)
+                .frame(height: 20)
                 .allowsHitTesting(false)
                 .accessibilityHidden(true)
             content
                 .padding(.horizontal, Metrics.gutter).padding(.top, 4).padding(.bottom, 12)
                 .frame(maxWidth: .infinity)
-                .background(Palette.stage.opacity(0.9))
+                .background(Palette.stage, ignoresSafeAreaEdges: .bottom)
         }
     }
 }
@@ -763,6 +885,8 @@ private struct PlanStep: View {
     let goal: Answer?
     /// The course's art, as on the Learn tab: the instrument's render or photograph, or the course emblem.
     let artwork: CourseArtwork
+    /// The chord played a moment ago in onboarding ("Em"): it already counts, so the card shows it done.
+    let playedChord: String?
     /// The 45-second placement check: on offer, done, or not for this player (nil).
     let check: PlanCheck?
     @Binding var minutes: Int
@@ -814,7 +938,7 @@ private struct PlanStep: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Your plan").font(Typeface.display(34)).tracking(-0.6).foregroundStyle(Palette.ink)
+            Text("Your plan").font(Typeface.stepTitle).tracking(-0.6).foregroundStyle(Palette.ink)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
             subtitle.font(.subheadline).foregroundStyle(Palette.inkSoft)
@@ -883,7 +1007,7 @@ private struct PlanStep: View {
                 .foregroundStyle(accent)
                 Text("First lesson").font(.subheadline).foregroundStyle(Palette.inkSoft).padding(.top, 6)
                 if let start {
-                    Text(start.title.localized).font(Typeface.display(24)).tracking(-0.4).foregroundStyle(Palette.ink)
+                    Text(start.title.localized).font(Typeface.display(.title3)).tracking(-0.4).foregroundStyle(Palette.ink)
                         .lineLimit(3).fixedSize(horizontal: false, vertical: true)
                         .contentTransition(.opacity)
                 }
@@ -891,6 +1015,14 @@ private struct PlanStep: View {
                     Eyebrow(Text("Unit \(startUnit + 1) · \(course.units[startUnit].title.localized)"), color: Palette.inkSoft, style: .display)
                         .lineLimit(2).fixedSize(horizontal: false, vertical: true)
                         .contentTransition(.opacity)
+                }
+                if let playedChord {
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.circle.fill").foregroundStyle(Palette.mint).accessibilityHidden(true)
+                        Text("\(playedChord) played").foregroundStyle(Palette.ink)
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .padding(.top, 2)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -1015,7 +1147,7 @@ private struct PlanCommitment: View {
     private var minutesRow: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 10) {
-                rowIcon("timer", tint: Palette.amber)
+                rowIcon("timer", tint: Palette.accentNeutral)
                 Text("Daily practice").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
                     .lineLimit(1).minimumScaleFactor(0.8)
             }
@@ -1029,7 +1161,7 @@ private struct PlanCommitment: View {
     private var minutePicker: some View {
         SegmentedPill(options: Self.choices, selection: $minutes, identifier: { "onboarding.minutes.\($0)" }) { value in
             Text(Duration.seconds(value * 60), format: .units(allowed: [.minutes], width: .abbreviated))
-                .font(Typeface.label(14)).monospacedDigit()
+                .font(Typeface.label(.footnote)).monospacedDigit()
         }
     }
 
@@ -1057,7 +1189,7 @@ private struct PlanCommitment: View {
 
     private var reminderTime: some View {
         HStack(spacing: 10) {
-            rowIcon(reminderOn ? "bell.badge.fill" : "bell.fill", tint: reminderOn ? Palette.mint : Palette.amber)
+            rowIcon(reminderOn ? "bell.badge.fill" : "bell.fill", tint: reminderOn ? Palette.mint : Palette.accentNeutral)
             DatePicker("Daily practice reminder", selection: $reminder, displayedComponents: .hourAndMinute)
                 .labelsHidden()
                 .datePickerStyle(.compact)
@@ -1077,7 +1209,7 @@ private struct PlanCommitment: View {
                 }
                 Text("Remind me").lineLimit(1)
             }
-            .font(Typeface.label(14))
+            .font(Typeface.label(.footnote))
             .foregroundStyle(reminderOn ? Palette.onAccent : Palette.mint)
             .padding(.horizontal, 14).frame(minHeight: 38)
             .background(Capsule().fill(reminderOn ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(Palette.mint.opacity(0.12))))

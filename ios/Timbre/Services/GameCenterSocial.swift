@@ -77,7 +77,7 @@ struct ChallengeFriendButton<Card: View>: View {
             Image(systemName: symbol).font(.system(size: 13, weight: .bold)).accessibilityHidden(true)
             Text("Challenge a friend")
         }
-        .font(Typeface.label(14))
+        .font(Typeface.label(.footnote))
         .foregroundStyle(tint)
         .lineLimit(1)
         .padding(.horizontal, 16)
@@ -125,7 +125,7 @@ struct SniperFriendChallenge: View {
         } label: {
             Label("Live challenge", systemImage: "flag.checkered")
                 .font(Typeface.label(13, relativeTo: .footnote))
-                .foregroundStyle(Palette.amber)
+                .foregroundStyle(Palette.starGold)
                 .lineLimit(1)
                 .frame(minHeight: Metrics.minTarget)
                 .contentShape(Rectangle())
@@ -154,9 +154,9 @@ struct SongChallengeCard: View {
                 .shadow(color: art.primary.opacity(0.45), radius: 26, y: 14)
                 .padding(.top, 4)
             VStack(spacing: 2) {
-                Text("Beat my score").font(Typeface.display(34)).tracking(-0.8).foregroundStyle(Palette.ink)
-                Text(points, format: .number).font(Typeface.number(64)).foregroundStyle(Palette.amber)
-                    .shadow(color: Palette.amber.opacity(0.35), radius: 16)
+                Text("Beat my score").font(Typeface.display(.title)).tracking(-0.8).foregroundStyle(Palette.ink)
+                Text(points, format: .number).font(Typeface.number(64)).foregroundStyle(Palette.starGold)
+                    .shadow(color: Palette.starGold.opacity(0.35), radius: 16)
             }
             Text(verbatim: title).font(.headline).foregroundStyle(Palette.inkSoft)
                 .multilineTextAlignment(.center).lineLimit(2)

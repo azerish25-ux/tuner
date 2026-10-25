@@ -1,25 +1,31 @@
 import Combine
 import Foundation
+import TimbreCore
 import UIKit
 
-/// What the owner can change without a build: which paywall a person sees (and the yearly product it sells), the
-/// rating line, the referral offer code and named switches for experiments. Read from a small JSON file at
-/// `AppLinks.remoteConfig`, kept from the last good copy and fetched again when the app comes forward (at most every
-/// few hours). With no address in the build, offline, or with a file that doesn't parse, the last good copy or the
-/// built-in defaults hold; nothing ever waits for it. The request carries no identifier.
+/// What the owner can change without a build: which paywall a person sees (and the yearly product it sells), whether
+/// the App Store rating may show, the referral offer code, lessons opened to everyone and named switches for
+/// experiments. Read from a small JSON file at `AppLinks.remoteConfig`, kept from the last good copy and fetched again
+/// when the app comes forward (at most every few hours). With no address in the build, offline, or with a file that
+/// doesn't parse, the last good copy or the built-in defaults hold; nothing ever waits for it. The request carries no
+/// identifier.
 ///
 ///     {
 ///       "paywall": [{ "id": "control", "weight": 50 },
 ///                   { "id": "annual_b", "weight": 50, "annualProductId": "timbre_pro_annual_b" }],
-///       "rating": { "show": true, "stars": 4.8, "count": 312 },
+///       "rating": { "show": true },
 ///       "referralCode": "FRIENDMONTH",
-///       "freeSongs": ["gtr-2-4", "gtr-6-4"],
+///       "freeSongs": ["song-silent-night", "uke-sb-song-silent-night"],
 ///       "flags": { "unit2Free": true }
 ///     }
 ///
 /// A person keeps the paywall variant they were first given for as long as it is listed: assignment draws once from a
 /// random number fixed for the install, weighted by `weight`. Dropping a variant from the list (or giving it weight 0)
-/// moves its people to the others, so flipping the file flips the paywall without a build.
+/// moves its people to the others, so flipping the file flips the paywall without a build. An arm's
+/// `annualProductId` is one of `TimbreProduct.yearly`; anything else sells the standard year.
+///
+/// `freeSongs` and `flags.unit2Free` open lessons to everyone (`FreeOpenings`): the app applies them as the file
+/// loads, so the lesson locks, the plan and the paywall's Free and Pro table follow them at once.
 @MainActor
 final class RemoteConfig: ObservableObject {
     static let shared = RemoteConfig()
@@ -43,7 +49,8 @@ final class RemoteConfig: ObservableObject {
         fileprivate var share: Double { weight ?? 1 }
     }
 
-    /// The paywall's rating line, as the App Store shows the app's rating.
+    /// The paywall's rating line: `show: false` keeps it off. Its figures always come from the App Store itself
+    /// (`StoreRating`), per storefront; numbers written into the file are ignored.
     struct Rating: Codable, Equatable, Sendable {
         var show: Bool?
         var stars: Double?
@@ -58,15 +65,6 @@ final class RemoteConfig: ObservableObject {
         var freeSongs: [String]?
         var flags: [String: Bool]?
     }
-
-    /// A rating worth showing: switched on in the file, and at least `minimumStars` from `minimumRatings` ratings.
-    struct RatingLine: Equatable {
-        let stars: Double
-        let count: Int
-    }
-
-    static let minimumStars = 4.6
-    static let minimumRatings = 200
 
     @Published private(set) var values: Values
     /// This install's paywall arm (`PaywallVariant.control` without a test running).
@@ -89,21 +87,14 @@ final class RemoteConfig: ObservableObject {
     private static let session = URLSession(configuration: .ephemeral)
 
     /// Automated runs and the demo modes keep the built-in defaults, so what they show never depends on the network.
-    private static let quiet: Bool = {
-        #if DEBUG
-        let environment = ProcessInfo.processInfo.environment
-        let keys = ["XCTestConfigurationFilePath", "TIMBRE_TEST_STORAGE_ID", "TIMBRE_DEMO_PITCH", "TIMBRE_DEMO_DATA", "TIMBRE_SCENE"]
-        return keys.contains { environment[$0] != nil }
-        #else
-        return false
-        #endif
-    }()
+    private static var quiet: Bool { TestSupport.isAutomated }
 
     private init() {
         let cached = Self.quiet ? nil : UserDefaults.standard.data(forKey: Keys.cache).flatMap { try? JSONDecoder().decode(Values.self, from: $0) }
         let initial = Self.sanitized(cached ?? Values())
         values = initial
         paywallVariant = Self.assign(initial.paywall ?? [])
+        FreeOpenings.current = Self.openings(initial)
     }
 
     // MARK: Reading
@@ -111,12 +102,8 @@ final class RemoteConfig: ObservableObject {
     /// The yearly product this install's paywall sells, when its arm names one.
     var annualProductID: String? { paywallVariant.annualProductId }
 
-    /// The rating line, only when it is switched on and the rating clears the bar.
-    var ratingLine: RatingLine? {
-        guard let rating = values.rating, rating.show == true, let stars = rating.stars, let count = rating.count,
-              stars >= Self.minimumStars, count >= Self.minimumRatings else { return nil }
-        return RatingLine(stars: stars, count: count)
-    }
+    /// The App Store rating may show on the paywall (`StoreRating` has the figures); on unless the file turns it off.
+    var ratingAllowed: Bool { values.rating?.show != false }
 
     /// The offer code "Give a friend a month" shares.
     var referralCode: String? { values.referralCode }
@@ -131,6 +118,13 @@ final class RemoteConfig: ObservableObject {
 
     /// Unit 2 of every course is free (`flags.unit2Free`); off by default.
     var unit2Free: Bool { flag("unit2Free") }
+
+    /// What the file opens to everyone: `freeSongs` and, with `unit2Free`, every course's second unit.
+    var freeOpenings: FreeOpenings { Self.openings(values) }
+
+    private static func openings(_ values: Values) -> FreeOpenings {
+        FreeOpenings(lessons: Set(values.freeSongs ?? []), unit2: values.flags?["unit2Free"] ?? false)
+    }
 
     // MARK: Fetching
 
@@ -165,13 +159,14 @@ final class RemoteConfig: ObservableObject {
     private func apply(_ next: Values) {
         guard next != values else { return }
         values = next
+        FreeOpenings.current = Self.openings(next)
         let variant = Self.assign(next.paywall ?? [])
         if variant != paywallVariant { paywallVariant = variant }
     }
 
     // MARK: Rules
 
-    /// What a hand-edited file may hold: named variants with a positive weight (eight at most), a rating out of five,
+    /// What a hand-edited file may hold: named variants with a positive weight (eight at most), the rating's switch,
     /// a plain offer code, a few dozen free songs and a few dozen switches. Anything else is dropped rather than shown.
     private static func sanitized(_ values: Values) -> Values {
         var clean = Values()
@@ -179,9 +174,8 @@ final class RemoteConfig: ObservableObject {
             !variant.id.isEmpty && variant.id.count <= 40 && variant.share.isFinite && variant.share > 0
         }
         clean.paywall = variants.isEmpty ? nil : Array(variants.prefix(8))
-        if let rating = values.rating, let stars = rating.stars, stars.isFinite, (0...5).contains(stars), (rating.count ?? 0) >= 0 {
-            clean.rating = rating
-        }
+        // Only the switch is kept: the rating's figures come from the App Store.
+        if let show = values.rating?.show { clean.rating = Rating(show: show) }
         if let code = values.referralCode, (1...64).contains(code.count), code.allSatisfy({ $0.isASCII && ($0.isLetter || $0.isNumber) }) {
             clean.referralCode = code
         }

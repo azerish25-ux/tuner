@@ -217,8 +217,8 @@ extension ToolScene {
         context.fill(Path(roundedRect: nut, cornerRadius: 1.5), with: .color(Color(hex: 0xE3D8C4).opacity(0.7)))
     }
 
-    /// The gourd: a mint aura swelling as the strings ring, a ripple off it with each pluck, dark wood with an
-    /// amber rim and a ring of inlay, the dial's ticks round it with the tonic marked at the bottom, and the
+    /// The gourd: a mint aura swelling as the strings ring, a ripple off it with each pluck, dark wood with a
+    /// warm rim and a ring of inlay, the dial's ticks round it with the tonic marked at the bottom, and the
     /// tonic's name under the bridge when there is room.
     private func drawGourd(_ context: GraphicsContext, gourd: CGPoint, radius: CGFloat, resonance: Double, tonic: String) {
         let aura = radius * (1.5 + 0.12 * CGFloat(resonance))
@@ -236,14 +236,14 @@ extension ToolScene {
         context.fill(Self.circle(gourd, radius), with: .radialGradient(wood, center: light, startRadius: 0, endRadius: radius * 1.35))
         context.fill(Self.circle(gourd, radius), with: .radialGradient(Gradient(colors: [Palette.mint.opacity(0.12 * resonance), Palette.mint.opacity(0)]),
                                                                       center: gourd, startRadius: 0, endRadius: radius))
-        context.stroke(Self.circle(gourd, radius), with: .color(Palette.amber.opacity(0.28)), lineWidth: 1.5)
+        context.stroke(Self.circle(gourd, radius), with: .color(Palette.spotlight.opacity(0.28)), lineWidth: 1.5)
         var inlay = Path()
         for dot in 0..<32 {
             let angle = Double(dot) / 32 * 2 * Double.pi
             let point = CGPoint(x: gourd.x + radius * 0.9 * CGFloat(cos(angle)), y: gourd.y + radius * 0.9 * CGFloat(sin(angle)))
             inlay.addEllipse(in: CGRect(x: point.x - 0.8, y: point.y - 0.8, width: 1.6, height: 1.6))
         }
-        context.fill(inlay, with: .color(Palette.amber.opacity(0.2)))
+        context.fill(inlay, with: .color(Palette.spotlight.opacity(0.2)))
         var ticks = Path()
         for tick in 0..<12 where tick != 6 {
             let angle = Double(tick) * Double.pi / 6
@@ -357,7 +357,7 @@ extension ToolScene {
 
     private func drawReticle(_ context: GraphicsContext, center: CGPoint, radius: CGFloat) {
         context.fill(Self.circle(center, radius), with: .color(Color.black.opacity(0.3)))
-        let tints = [Color.white.opacity(0.11), Color.white.opacity(0.09), Palette.amber.opacity(0.45)]
+        let tints = [Color.white.opacity(0.11), Color.white.opacity(0.09), Palette.mint.opacity(0.45)]
         for (ring, tint) in zip(Self.scopeRings, tints) {
             context.stroke(Self.circle(center, radius * ring.share), with: .color(tint), lineWidth: 1)
         }
@@ -498,7 +498,7 @@ extension ToolScene {
         let fade = calm || local <= resting ? 1 : max(0, 1 - (local - resting) / (Self.stairRest * 0.3))
         let tops = (0..<count).map { floor - 8 - CGFloat(Self.scale[$0]) / 12 * rise }
         let centers = (0..<count).map { left + tread * (CGFloat($0) + 0.5) }
-        stageLight(context, size: size, at: CGPoint(x: size.width / 2, y: floor * 0.6), radius: min(size.width * 0.4, 170), color: Palette.amber, strength: 0.12)
+        stageLight(context, size: size, at: CGPoint(x: size.width / 2, y: floor * 0.6), radius: min(size.width * 0.4, 170), color: Palette.spotlight, strength: 0.12)
         for index in 0..<count {
             let since = local - Self.landing(index)
             let lit = since >= 0 ? max(0.22, exp(-since / 0.55)) * fade : 0
@@ -525,19 +525,19 @@ extension ToolScene {
         drawNote(context, at: note, ball: ball, since: local - Self.landing(current), fade: fade)
         guard named else { return }
         let name = context.resolve(Text(verbatim: Intervals.short[Self.scale[current]])
-            .font(.custom("Sora-SemiBold", fixedSize: 13)).foregroundStyle(Palette.amber.opacity(fade)))
+            .font(.custom("Sora-SemiBold", fixedSize: 13)).foregroundStyle(Palette.starGold.opacity(fade)))
         context.draw(name, at: CGPoint(x: note.x, y: max(9, note.y - ball - 13)), anchor: .center)
     }
 
-    /// A step in amber glass, its top edge brighter once the note has reached it and flashing as it lands.
+    /// A step in gold glass, its top edge brighter once the note has reached it and flashing as it lands.
     private func drawStep(_ context: GraphicsContext, rect: CGRect, lit: Double) {
-        let glass = Gradient(colors: [Palette.amber.opacity(0.1 + 0.32 * lit), Palette.amber.opacity(0.02)])
+        let glass = Gradient(colors: [Palette.starGold.opacity(0.1 + 0.32 * lit), Palette.starGold.opacity(0.02)])
         context.fill(Path(roundedRect: rect, cornerRadius: 4),
                      with: .linearGradient(glass, startPoint: CGPoint(x: rect.midX, y: rect.minY), endPoint: CGPoint(x: rect.midX, y: rect.maxY)))
         var edge = Path()
         edge.move(to: CGPoint(x: rect.minX + 2, y: rect.minY))
         edge.addLine(to: CGPoint(x: rect.maxX - 2, y: rect.minY))
-        context.stroke(edge, with: .color(Palette.amber.opacity(0.3 + 0.6 * lit)), style: StrokeStyle(lineWidth: 2, lineCap: .round))
+        context.stroke(edge, with: .color(Palette.starGold.opacity(0.3 + 0.6 * lit)), style: StrokeStyle(lineWidth: 2, lineCap: .round))
     }
 
     /// The interval to the root: a dashed arc from the first step to the note, the root marked.
@@ -546,19 +546,19 @@ extension ToolScene {
             var arc = Path()
             arc.move(to: root)
             arc.addQuadCurve(to: note, control: CGPoint(x: (root.x + note.x) / 2, y: max(4, min(root.y, note.y) - 24)))
-            context.stroke(arc, with: .color(Palette.amber.opacity(0.45 * fade)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
+            context.stroke(arc, with: .color(Palette.starGold.opacity(0.45 * fade)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
         }
-        context.fill(Self.circle(root, 3), with: .color(Palette.amber.opacity(0.6 * fade)))
+        context.fill(Self.circle(root, 3), with: .color(Palette.starGold.opacity(0.6 * fade)))
     }
 
-    /// The note: an amber bead with a highlight, ringing where it lands.
+    /// The note: a gold bead with a highlight, ringing where it lands.
     private func drawNote(_ context: GraphicsContext, at point: CGPoint, ball: CGFloat, since: Double, fade: Double) {
         if !calm, since >= 0, since < 0.45 {
             let progress = since / 0.45
-            context.stroke(Self.circle(point, ball + CGFloat(progress) * 14), with: .color(Palette.amber.opacity(0.7 * (1 - progress) * fade)), lineWidth: 1.5)
+            context.stroke(Self.circle(point, ball + CGFloat(progress) * 14), with: .color(Palette.starGold.opacity(0.7 * (1 - progress) * fade)), lineWidth: 1.5)
         }
-        pool(context, at: point, radius: ball * 2.7, color: Palette.amber, strength: 0.55 * fade)
-        context.fill(Self.circle(point, ball), with: .color(Palette.amber.opacity(fade)))
+        pool(context, at: point, radius: ball * 2.7, color: Palette.starGold, strength: 0.55 * fade)
+        context.fill(Self.circle(point, ball), with: .color(Palette.starGold.opacity(fade)))
         context.fill(Self.circle(CGPoint(x: point.x - ball * 0.27, y: point.y - ball * 0.27), ball * 0.36), with: .color(Color.white.opacity(0.8 * fade)))
     }
 }
@@ -571,7 +571,7 @@ extension ToolScene {
 
     /// A metronome: a graphite pyramid with its tempo scale, the pendulum swinging to an end on every beat at the
     /// person's tempo, each beat ringing out from the end of the swing and lighting its pip on the case's foot
-    /// (the downbeat in amber), the tempo beside it.
+    /// (the downbeat in gold), the tempo beside it.
     private func drawBeat(_ context: GraphicsContext, size: CGSize, floor: CGFloat, bpm: Int, beats: Int) {
         let spb = Self.secondsPerBeat(bpm)
         let cx = size.width / 2
@@ -583,9 +583,9 @@ extension ToolScene {
         let since = elapsed - beat * spb
         let bar = max(2, min(8, beats))
         let count = Int(beat) % bar
-        let tint = count == 0 ? Palette.amber : Palette.mint
+        let tint = count == 0 ? Palette.starGold : Palette.mint
         let swing = 24 * Double.pi / 180
-        stageLight(context, size: size, at: CGPoint(x: cx, y: floor * 0.45), radius: min(size.width * 0.38, 160), color: Palette.coral, strength: 0.14)
+        stageLight(context, size: size, at: CGPoint(x: cx, y: floor * 0.45), radius: min(size.width * 0.38, 160), color: Palette.spotlight, strength: 0.14)
         let shadow = Gradient(colors: [Color.black.opacity(0.55), Color.black.opacity(0)])
         let foot = CGPoint(x: cx, y: floor)
         context.fill(Path(ellipseIn: CGRect(x: cx - base * 0.62, y: floor - 4, width: base * 1.24, height: 8)),
@@ -614,7 +614,7 @@ extension ToolScene {
         context.draw(tempo, at: CGPoint(x: label, y: floor - height * 0.3), anchor: .trailing)
     }
 
-    /// The case: a graphite pyramid with a coral rim and its tempo scale up the middle.
+    /// The case: a graphite pyramid with a warm rim and its tempo scale up the middle.
     private func drawCase(_ context: GraphicsContext, cx: CGFloat, floor: CGFloat, top: CGFloat, base: CGFloat, pivot: CGPoint) {
         let crown = base * 0.34
         var body = Path()
@@ -625,7 +625,7 @@ extension ToolScene {
         body.closeSubpath()
         let graphite = Gradient(colors: [Color(hex: 0x262930), Color(hex: 0x111317)])
         context.fill(body, with: .linearGradient(graphite, startPoint: CGPoint(x: cx, y: top), endPoint: CGPoint(x: cx, y: floor)))
-        context.stroke(body, with: .color(Palette.coral.opacity(0.4)), lineWidth: 1)
+        context.stroke(body, with: .color(Palette.spotlight.opacity(0.4)), lineWidth: 1)
         let span = pivot.y - 10 - (top + 8)
         guard span > 20 else { return }
         var scale = Path()
@@ -650,13 +650,13 @@ extension ToolScene {
         var weight = context
         weight.translateBy(x: pivot.x + arm * 0.62 * along.x, y: pivot.y + arm * 0.62 * along.y)
         weight.rotate(by: .radians(angle))
-        let brass = Gradient(colors: [Palette.coral.mix(with: .white, by: 0.25), Palette.coral.mix(with: .black, by: 0.25)])
+        let brass = Gradient(colors: [Palette.starGold.mix(with: .white, by: 0.25), Palette.starGold.mix(with: .black, by: 0.25)])
         weight.fill(Path(roundedRect: CGRect(x: -width / 2, y: -height / 2, width: width, height: height), cornerRadius: 2.5),
                     with: .linearGradient(brass, startPoint: CGPoint(x: 0, y: -height / 2), endPoint: CGPoint(x: 0, y: height / 2)))
         context.fill(Self.circle(pivot, 3.5), with: .color(Palette.ink.opacity(0.9)))
     }
 
-    /// The bar's beats in a row on the case's foot: the one just played lit, the downbeat in amber.
+    /// The bar's beats in a row on the case's foot: the one just played lit, the downbeat in gold.
     private func drawPips(_ context: GraphicsContext, cx: CGFloat, y: CGFloat, width: CGFloat, bar: Int, current: Int, flash: Double) {
         let gap: CGFloat = 4
         let pip = max(3, min(6, (width - gap * CGFloat(bar - 1)) / CGFloat(bar)))
@@ -664,7 +664,7 @@ extension ToolScene {
         for index in 0..<bar {
             let center = CGPoint(x: cx - total / 2 + pip / 2 + CGFloat(index) * (pip + gap), y: y)
             let lit = index == current
-            let color = lit ? (index == 0 ? Palette.amber : Palette.mint) : Color.white.opacity(0.16)
+            let color = lit ? (index == 0 ? Palette.starGold : Palette.mint) : Color.white.opacity(0.16)
             if lit { pool(context, at: center, radius: pip * 2.2, color: color, strength: 0.6 * (0.4 + 0.6 * flash)) }
             context.fill(Self.circle(center, pip / 2), with: .color(color))
         }

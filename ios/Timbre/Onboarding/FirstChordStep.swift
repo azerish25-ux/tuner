@@ -10,6 +10,14 @@ struct FirstChordSetup {
     let chord: ChordSpec
     /// A chord, rather than the open strings one after another.
     let isChord: Bool
+    /// The course lesson that teaches this chord ("Your first chord: E minor"), which playing it here is credited to.
+    var lesson: Lesson? = nil
+
+    /// The lesson whose chord onboarding's first chord played (`creditedLesson`), by id.
+    static let creditedLessonKey = "onboarding.firstChordLesson"
+
+    /// The course lesson the first chord was credited to, once it was played; nil before (or when it was skipped).
+    static var creditedLesson: String? { UserDefaults.standard.string(forKey: creditedLessonKey) }
 
     /// Nil for "Voice or other" and for an instrument without a course of its own.
     @MainActor static func make(store: AppStore, instrumentID: String?) -> FirstChordSetup? {
@@ -18,8 +26,8 @@ struct FirstChordSetup {
         guard !open.isEmpty else { return nil }
         switch course.fretKind {
         case "guitar", "ukulele":
-            guard let chord = firstChord(in: course), chord.frets.count == open.count else { return nil }
-            return FirstChordSetup(course: course, chord: chord, isChord: true)
+            guard let first = firstChord(in: course), first.chord.frets.count == open.count else { return nil }
+            return FirstChordSetup(course: course, chord: first.chord, isChord: true, lesson: first.lesson)
         case "banjo":
             let chord = ChordSpec(name: "G", root: 7, quality: "maj", frets: Array(repeating: 0, count: open.count))
             return FirstChordSetup(course: course, chord: chord, isChord: true)
@@ -31,11 +39,11 @@ struct FirstChordSetup {
         }
     }
 
-    /// The first chord a lesson of the course asks for.
-    private static func firstChord(in course: LearnCourse) -> ChordSpec? {
+    /// The first chord a lesson of the course asks for, and that lesson.
+    private static func firstChord(in course: LearnCourse) -> (chord: ChordSpec, lesson: Lesson)? {
         for lesson in course.lessons {
             for step in lesson.steps {
-                if case .playChord(let chord) = step { return chord }
+                if case .playChord(let chord) = step { return (chord, lesson) }
             }
         }
         return nil
@@ -135,6 +143,8 @@ struct FirstChordStep: View {
     private func chordPlayed() {
         guard !played, !finished else { return }
         store.updateSettings { $0.firstChordDone = true }
+        // The chord counts for the lesson that teaches it ("Your first chord: E minor"): the plan shows it played.
+        if setup.isChord, let lesson = setup.lesson { UserDefaults.standard.set(lesson.id, forKey: FirstChordSetup.creditedLessonKey) }
         Haptics.shared.done()
         SoundFX.shared.play(.star)
         burstStart = Date()
