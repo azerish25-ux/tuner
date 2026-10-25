@@ -113,7 +113,11 @@ final class CurriculumIndexTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(songs("ukulele.soprano.4").count, 90)
         XCTAssertGreaterThanOrEqual(songs("mandolin.standard.8").count, 20)
         XCTAssertGreaterThanOrEqual(songs("violin.standard.4").count, 20)
-        for (id, instrument) in [("ukulele-songbook", "ukulele.soprano.4"), ("mandolin-songbook", "mandolin.standard.8"), ("violin-songbook", "violin.standard.4")] {
+        XCTAssertGreaterThanOrEqual(songs("cello.standard.4").count, 40)
+        XCTAssertGreaterThanOrEqual(songs("bass.electric.4").count, 30)
+        let books = [("ukulele-songbook", "ukulele.soprano.4"), ("mandolin-songbook", "mandolin.standard.8"), ("violin-songbook", "violin.standard.4"),
+                     ("cello-songbook", "cello.standard.4"), ("bass-songbook", "bass.electric.4")]
+        for (id, instrument) in books {
             let book = try XCTUnwrap(curriculum.course(id: id))
             XCTAssertTrue(book.isSongbook, id)
             XCTAssertNotEqual(curriculum.courses.first { $0.instrument == instrument }?.id, id, "\(id) follows its instrument's course")
@@ -142,9 +146,59 @@ final class CurriculumIndexTests: XCTestCase {
         XCTAssertEqual(small.distinctTuneCount, 3)
 
         let bundled = try Curriculum.bundled()
-        let titles = Set(bundled.courses.flatMap(\.lessons).filter { $0.kind == .song }.map(\.title.defaultValue))
-        XCTAssertEqual(bundled.distinctTuneCount, titles.count)
+        XCTAssertGreaterThanOrEqual(bundled.distinctTuneCount, bundled.distinctTunes.count)
         XCTAssertGreaterThan(bundled.distinctTuneCount, 100)
+    }
+
+    /// A song counts once however many lessons, instruments or treatments it has ("Greensleeves: the chords",
+    /// "Amazing Grace, fingerpicked", "Ode to Joy on bass"), and an exercise doesn't count.
+    func testDistinctTunesCountEachSongOnce() throws {
+        func lesson(_ id: String, _ title: String) -> Lesson {
+            Lesson(id: id, title: LearnText(title), kind: .song, minutes: 3, xp: 10, free: true, steps: [], arrangement: nil)
+        }
+        let small = Curriculum(courses: [
+            LearnCourse(id: "a", title: LearnText("a"), subtitle: LearnText(""), instrument: nil, symbol: "music.note", accent: "mint",
+                        units: [LearnUnit(id: "a-1", title: LearnText("U"), summary: LearnText(""), lessons: [
+                            lesson("a1", "Greensleeves: the chords"), lesson("a2", "Greensleeves: the melody"), lesson("a3", "Greensleeves"),
+                            lesson("a4", "Amazing Grace, fingerpicked"), lesson("a5", "Amazing Grace"), lesson("a6", "Ode to Joy on bass"),
+                            lesson("a7", "Twinkle Twinkle Little Star"), lesson("a8", "Twinkle, Twinkle, Little Star"),
+                            lesson("a9", "Your arrangement"), lesson("a10", "Walking the blues in A"),
+                        ])]),
+        ])
+        XCTAssertEqual(small.distinctTunes, ["greensleeves", "amazinggrace", "odetojoy", "twinkletwinklelittlestar"])
+        let bundled = try Curriculum.bundled()
+        let titles = Set(bundled.courses.flatMap(\.lessons).filter { $0.kind == .song }.map(\.title.defaultValue))
+        XCTAssertLessThan(bundled.distinctTunes.count, titles.count)
+        XCTAssertGreaterThan(bundled.distinctTunes.count, 100)
+    }
+
+    /// "Songs you know" and the carols name tunes the catalogue has; the shelf opens on Ode to Joy, Amazing Grace and
+    /// Silent Night; and the day's song comes from it, ahead of an Original, until three of them have been played.
+    func testSongsYouKnowLeadUntilThreeArePlayed() throws {
+        let bundled = try Curriculum.bundled()
+        let tunes = Set(bundled.courses.flatMap(\.lessons).filter { $0.kind == .song }.map { SongOfTheDay.tuneKey($0.title.defaultValue) })
+        for tune in SongOfTheDay.songsYouKnow + SongOfTheDay.carols { XCTAssertTrue(tunes.contains(tune), tune) }
+        XCTAssertEqual(Array(SongOfTheDay.songsYouKnow.prefix(3)), ["odetojoy", "amazinggrace", "silentnight"])
+        XCTAssertTrue(SongOfTheDay.isKnown("Danny Boy (Londonderry Air)"))
+        XCTAssertFalse(SongOfTheDay.isKnown("Kite Weather"))
+
+        let ode = SongOfTheDay.Candidate(id: "ode", original: false, unit: 4, finished: false, access: .open, tune: "odetojoy", known: true)
+        let kite = SongOfTheDay.Candidate(id: "kite", original: true, unit: 0, finished: false, access: .open)
+        XCTAssertEqual(SongOfTheDay.pick([kite, ode], level: 5, finishedLessons: 8, day: 3), "ode")
+        let played = ["amazinggrace", "silentnight", "canonind"].map {
+            SongOfTheDay.Candidate(id: $0, original: false, unit: 0, finished: true, access: .open, tune: $0, known: true)
+        }
+        XCTAssertEqual(SongOfTheDay.pick([kite, ode] + played.prefix(2), level: 5, finishedLessons: 8, day: 3), "ode")
+        XCTAssertEqual(SongOfTheDay.pick([kite, ode] + played, level: 5, finishedLessons: 8, day: 3), "kite")
+
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC") ?? .current
+        func day(_ month: Int, _ day: Int) -> Date { calendar.date(from: DateComponents(year: 2026, month: month, day: day)) ?? Date() }
+        XCTAssertTrue(SongOfTheDay.isCarolSeason(day(12, 10), calendar: calendar))
+        XCTAssertTrue(SongOfTheDay.isCarolSeason(day(11, 25), calendar: calendar))
+        XCTAssertTrue(SongOfTheDay.isCarolSeason(day(1, 6), calendar: calendar))
+        XCTAssertFalse(SongOfTheDay.isCarolSeason(day(1, 7), calendar: calendar))
+        XCTAssertFalse(SongOfTheDay.isCarolSeason(day(7, 1), calendar: calendar))
     }
 
     /// Bullseye's hidden tunes are named after song lessons, so the reveal shows the lesson's localized title.

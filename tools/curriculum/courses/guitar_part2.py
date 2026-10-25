@@ -568,7 +568,7 @@ Am_HIGH = chord(G, "Am", "xx7555", "xx3111")  # top four strings of the A minor 
 D_HIGH = chord(G, "D", "xx7775", "xx3331")    # top four strings of the D barre at fret 5
 SIXTEENTHS = [i / 4 for i in range(16)]
 FUNK = [0, 0.75, 1.5, 2, 2.75, 3.5]           # the hits; the hand keeps moving in sixteenths, scratching between them
-REGGAE = [1, 3]
+REGGAE = [1, 3]                                # chops: short, cut off at once
 POP = [0, 1.5, 2.5, 3, 3.5]                   # down, up on the and of two and three, down-up on four
 BOOMS = [(G_MAJ, "G2@6:2 D3@4:2"), (C, "C3@5:2 E3@4:2"), (D, "D3@4:2 A2@5:2"), (G_MAJ, "G2@6:4")]
 SPARK_LOOP = [(C, 1), (G_MAJ, 1), (Am, 1), (F_MINI, 1)]   # Sparkler Season's verse and chorus
@@ -605,12 +605,12 @@ UNIT_15 = unit("gtr-15", "Rhythm styles", "Funk sixteenths and scratches, the re
         tap(REGGAE, bpm=72, bars=2),
         explain("Small, high shapes", "Use the top four strings only. This A minor is the top of your A minor barre at fret 5: "
                 "finger 3 on string 4, fret 7, finger 1 barring the rest.", shape(Am_HIGH)),
-        strum(Am_HIGH, REGGAE, bpm=72, bars=2),
+        strum(Am_HIGH, REGGAE, muted=REGGAE, bpm=72, bars=2),
         quiz("How long should a reggae chop ring?", ["As long as possible", "Barely at all", "Exactly one beat"], 1,
              "Squeeze, strum, release. The chop is a short bark, and the space after it is the groove."),
         explain("D, up top", "Now the top of your D barre: finger 3 flat across strings 4, 3 and 2 at fret 7, "
                 "finger 1 on string 1 at fret 5.", shape(D_HIGH)),
-        progression([(Am_HIGH, 1), (D_HIGH, 1), (Am_HIGH, 1), (D_HIGH, 1)], REGGAE, bpm=72),
+        progression([(Am_HIGH, 1), (D_HIGH, 1), (Am_HIGH, 1), (D_HIGH, 1)], REGGAE, muted=REGGAE, bpm=72),
     ], minutes=5, xp=25),
     lesson("gtr-15-4", "Country boom-chick", [
         explain("Bass, strum, bass, strum", "Country rhythm splits the bar: a single bass note on beats one and three, a quick "
@@ -659,7 +659,7 @@ UNIT_15 = unit("gtr-15", "Rhythm styles", "Funk sixteenths and scratches, the re
         tap(FUNK, bpm=66, bars=2),
         progression([(E9, 1), (D9, 1), (E9, 1), (D9, 1)], FUNK, bpm=69),
         quiz("Reggae chops land on which beats?", ["One and three", "Two and four", "Every beat"], 1),
-        progression([(Am_HIGH, 1), (D_HIGH, 1), (Am_HIGH, 1), (D_HIGH, 1)], REGGAE, bpm=76),
+        progression([(Am_HIGH, 1), (D_HIGH, 1), (Am_HIGH, 1), (D_HIGH, 1)], REGGAE, muted=REGGAE, bpm=76),
         over(BOOMS, bpm=80, title="Booms in G, C and D"),
         progression([(G_MAJ, 2), (C, 2), (D, 2), (G_MAJ, 2)], QUARTERS, bpm=84),
         progression([(G_MAJ, 1), (D, 1), (Em, 1), (C, 1)], POP, bpm=76),

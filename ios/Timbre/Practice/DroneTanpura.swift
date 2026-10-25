@@ -308,13 +308,13 @@ struct TanpuraHero: View {
         let selected = step == 0
         let firstString = step == (fifth ? 7 : 5)
         let name = VoiceNoteName.pitchClass(pc, notation: notation)
-        return NoteGlyphs.text(name, size: selected ? 13 : 11, weight: selected ? .semibold : .medium)
-            .font(selected ? Typeface.label(13, relativeTo: .caption2) : .system(size: 11, weight: .medium))
+        return NoteGlyphs.text(name, size: selected ? 13 : 12, weight: selected ? .semibold : .medium)
+            .font(Typeface.label(selected ? 13 : 12, relativeTo: .caption2))
             .foregroundStyle(selected ? Palette.mint : (firstString ? Palette.inkSoft : Palette.inkFaint))
             .fixedSize()
             .padding(.horizontal, 5).padding(.vertical, 2)
             .opacity(TanpuraLayout.clearOfNeck(pc, turn: shown))
-            .dynamicTypeSize(...DynamicTypeSize.large)
+            .cappedControl(Text(verbatim: name), cap: .xxLarge)
             .animation(Motion.quick, value: step)
     }
 
@@ -509,7 +509,7 @@ enum TanpuraArt {
         context.fill(circle(c, r), with: .radialGradient(wood, center: CGPoint(x: c.x - r * 0.3, y: c.y - r * 0.35), startRadius: 0, endRadius: r * 1.35))
         context.fill(circle(c, r), with: .radialGradient(Gradient(colors: [Palette.mint.opacity(0.1 * resonance), .clear]),
                                                          center: c, startRadius: 0, endRadius: r))
-        context.stroke(circle(c, r), with: .color(Palette.amber.opacity(0.26)), lineWidth: 1.5)
+        context.stroke(circle(c, r), with: .color(Palette.accentNeutral.opacity(0.26)), lineWidth: 1.5)
         if moment.running {
             // Playing: the rim lit mint, brightest with the breath and the strings.
             let lit = min(1, 0.3 + 0.35 * moment.breath + 0.25 * resonance) * max(0.35, moment.fade)
@@ -526,7 +526,7 @@ enum TanpuraArt {
             let p = CGPoint(x: c.x + r * 0.93 * CGFloat(cos(angle)), y: c.y + r * 0.93 * CGFloat(sin(angle)))
             inlay.addEllipse(in: CGRect(x: p.x - 0.9, y: p.y - 0.9, width: 1.8, height: 1.8))
         }
-        context.fill(inlay, with: .color(Palette.amber.opacity(0.18)))
+        context.fill(inlay, with: .color(Palette.accentNeutral.opacity(0.18)))
         // The dial's ticks, the bottom one (the tonic) marked; none at the top, where the neck meets the gourd.
         var ticks = Path()
         for i in 0..<12 where i != 6 && i != 0 {

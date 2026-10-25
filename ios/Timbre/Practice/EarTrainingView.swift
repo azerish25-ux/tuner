@@ -143,7 +143,7 @@ struct EarTrainingView: View {
     @ViewBuilder private var comboBadge: some View {
         if combo >= 2 {
             Label("Combo ×\(combo)", systemImage: "flame.fill")
-                .font(Typeface.label(14)).foregroundStyle(Palette.flame)
+                .font(Typeface.label(15)).foregroundStyle(Palette.flame)
                 .padding(.horizontal, 12).padding(.vertical, 6)
                 .background(Capsule().fill(Palette.flame.opacity(0.14)))
                 .overlay(Capsule().strokeBorder(Palette.flame.opacity(0.4), lineWidth: 1))
@@ -159,7 +159,7 @@ struct EarTrainingView: View {
         }
     }
 
-    /// Ten dots: mint for right, coral for wrong, an amber ring on the current question.
+    /// Ten dots: mint for right, coral for wrong, a white ring on the current question.
     private var roundDots: some View {
         HStack(spacing: 10) {
             ForEach(0..<length, id: \.self) { i in dot(i) }
@@ -176,7 +176,7 @@ struct EarTrainingView: View {
         let fill: Color = answered ? (outcomes[i] ? Palette.mint : Palette.coral) : .white.opacity(0.09)
         return Circle().fill(fill)
             .frame(width: 13, height: 13)
-            .overlay(Circle().strokeBorder(current ? Palette.amber : .clear, lineWidth: 2).padding(-4))
+            .overlay(Circle().strokeBorder(current ? Palette.ink : .clear, lineWidth: 2).padding(-4))
             .shadow(color: answered ? fill.opacity(0.55) : .clear, radius: 5)
             .scaleEffect(answered || current ? 1 : 0.82)
     }
@@ -188,7 +188,7 @@ struct EarTrainingView: View {
             VStack(spacing: 6) {
                 Eyebrow("Question \(questionNumber) of \(length)")
                     .contentTransition(.numericText())
-                Text(prompt).font(Typeface.display(26)).tracking(-0.4).foregroundStyle(Palette.ink)
+                Text(prompt).font(Typeface.display(28)).tracking(-0.4).foregroundStyle(Palette.ink)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
                 if let cents = question.cents {
@@ -343,12 +343,12 @@ struct EarTrainingView: View {
     /// An answer to hear again: right or wrong (an example is marked so), the answer, and the notes it was
     /// ("A3 → E4"; a chord's root; higher-or-lower's cents).
     private func recentChip(_ record: EarAnswerRecord) -> some View {
-        let tint = record.example ? Palette.amber : (record.right ? Palette.mint : Palette.coral)
+        let tint = record.example ? Palette.accentNeutral : (record.right ? Palette.mint : Palette.coral)
         let notes = EarPicture(question: record.question, reference: store.settings.referencePitchHz, notation: store.settings.notation).chipNotes
         return Button { play(record.question) } label: {
             HStack(spacing: 6) {
                 if record.example {
-                    Text("Example").font(.caption.weight(.semibold)).foregroundStyle(Palette.amber)
+                    Text("Example").font(.caption.weight(.semibold)).foregroundStyle(Palette.accentNeutral)
                 } else {
                     Image(systemName: record.right ? "checkmark" : "xmark").font(.caption.weight(.heavy)).foregroundStyle(tint)
                 }
@@ -395,17 +395,18 @@ struct EarTrainingView: View {
         let accuracy = session.accuracy ?? 0
         return VStack(spacing: 20) {
             scoreRing(session)
-                .overlay { SparkBurst(trigger: resultBurst, color: Palette.amber).frame(width: 320, height: 320) }
+                .overlay { SparkBurst(trigger: resultBurst, color: Palette.starGold).frame(width: 320, height: 320) }
                 .padding(.top, 6)
             VStack(spacing: 6) {
                 Eyebrow("Session complete")
-                Text(headline(accuracy)).font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
-                Text("\(session.correct) of \(session.asked) right · now level \(session.level + 1)")
+                Text("\(session.correct) of \(session.asked) by ear").font(Typeface.display(28)).tracking(-0.6)
+                    .foregroundStyle(Palette.ink).multilineTextAlignment(.center)
+                (Text(headline(accuracy)) + Text(verbatim: " · ") + Text("Now level \(session.level + 1)"))
                     .font(.subheadline).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
             }
             StatTileRow {
                 StatTile(symbol: "sparkles", tint: Palette.mint, value: Text("+\(shownXP)"), label: "XP", alignment: .center)
-                StatTile(symbol: "target", tint: Palette.amber, value: Text("\(accuracy)%"), label: "accuracy", alignment: .center)
+                StatTile(symbol: "target", tint: Palette.accentNeutral, value: Text("\(accuracy)%"), label: "accuracy", alignment: .center)
                 StatTile(symbol: "flame.fill", tint: Palette.flame, value: Text(verbatim: "×" + bestCombo.formatted()), label: "best run",
                          alignment: .center)
             }
@@ -496,7 +497,8 @@ struct EarTrainingView: View {
             withAnimation(Motion.pluck) { showXP = true }
         } else {
             combo = 0
-            SoundFX.shared.play(.wrong)
+            // A thud without a pitch, as a right answer's knock has none: a pitched cue would colour the next question.
+            Earcons.shared.play(hit: false)
             Haptics.shared.selection()
             withAnimation(.default) { shake += 1 }
         }
@@ -887,7 +889,7 @@ private enum EarStairsArt {
             var arc = Path()
             arc.move(to: root)
             arc.addQuadCurve(to: CGPoint(x: spot.x - 16, y: spot.y + 6), control: CGPoint(x: (root.x + spot.x) / 2, y: spot.y - 10))
-            context.stroke(arc, with: .color(Palette.amber.opacity(0.28 * unknown * rootAlpha)),
+            context.stroke(arc, with: .color(Palette.accentNeutral.opacity(0.28 * unknown * rootAlpha)),
                            style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
             mystery(&context, at: spot, energy: frame.second, alpha: unknown)
         }
@@ -904,7 +906,7 @@ private enum EarStairsArt {
                 var arc = Path()
                 arc.move(to: root)
                 arc.addQuadCurve(to: point, control: CGPoint(x: (root.x + point.x) / 2, y: min(root.y, point.y) - 24))
-                context.stroke(arc, with: .color(Palette.amber.opacity(0.5 * alpha)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
+                context.stroke(arc, with: .color(Palette.accentNeutral.opacity(0.5 * alpha)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
             }
             dot(&context, at: point, energy: 0.6 * p, alpha: alpha)
             intervalLabel(&context, semitones: semitones, inWords: targets.count == 1, at: point, width: size.width, alpha: alpha)
@@ -966,7 +968,7 @@ private enum EarStairsArt {
         var level = Path()
         level.move(to: CGPoint(x: leftX, y: base))
         level.addLine(to: CGPoint(x: rightX + width / 2, y: base))
-        context.stroke(level, with: .color(Palette.amber.opacity(0.22 * min(1, frame.firstRise * 2))), style: StrokeStyle(lineWidth: 1, dash: [3, 4]))
+        context.stroke(level, with: .color(Palette.accentNeutral.opacity(0.22 * min(1, frame.firstRise * 2))), style: StrokeStyle(lineWidth: 1, dash: [3, 4]))
         if unknown > 0 {
             mystery(&context, at: CGPoint(x: rightX, y: base), energy: frame.second, alpha: unknown)
         }
@@ -984,25 +986,25 @@ private enum EarStairsArt {
         var link = Path()
         link.move(to: firstDot)
         link.addQuadCurve(to: secondDot, control: CGPoint(x: (firstDot.x + secondDot.x) / 2, y: min(firstDot.y, secondDot.y) - 20))
-        context.stroke(link, with: .color(Palette.amber.opacity(0.5 * alpha)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
+        context.stroke(link, with: .color(Palette.accentNeutral.opacity(0.5 * alpha)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 4]))
         dot(&context, at: secondDot, energy: 0.6 * p, alpha: alpha)
         if let label = picture.centsLabel {
-            let text = Text(verbatim: label).font(Typeface.label(12)).foregroundStyle(Palette.amber.opacity(alpha))
+            let text = Text(verbatim: label).font(Typeface.label(12)).foregroundStyle(Palette.accentNeutral.opacity(alpha))
             context.draw(text, at: CGPoint(x: rightX, y: max(10, secondDot.y - 18)))
         }
     }
 
     // MARK: Pieces
 
-    /// A step of the staircase: an amber column, its top edge brighter the more it is lit.
+    /// A step of the staircase: a steel column, its top edge brighter the more it is lit.
     private static func step(_ context: inout GraphicsContext, rect: CGRect, lit: Double) {
         context.fill(Path(roundedRect: rect, cornerRadius: 4), with: .linearGradient(
-            Gradient(colors: [Palette.amber.opacity(0.07 + 0.3 * lit), Palette.amber.opacity(0.02)]),
+            Gradient(colors: [Palette.accentNeutral.opacity(0.07 + 0.3 * lit), Palette.accentNeutral.opacity(0.02)]),
             startPoint: CGPoint(x: rect.midX, y: rect.minY), endPoint: CGPoint(x: rect.midX, y: rect.maxY)))
         var edge = Path()
         edge.move(to: CGPoint(x: rect.minX + 2, y: rect.minY))
         edge.addLine(to: CGPoint(x: rect.maxX - 2, y: rect.minY))
-        context.stroke(edge, with: .color(Palette.amber.opacity(0.16 + 0.64 * lit)), style: StrokeStyle(lineWidth: 2, lineCap: .round))
+        context.stroke(edge, with: .color(Palette.accentNeutral.opacity(0.16 + 0.64 * lit)), style: StrokeStyle(lineWidth: 2, lineCap: .round))
     }
 
     private static func floorLine(_ context: inout GraphicsContext, from start: CGFloat, to end: CGFloat, y: CGFloat) {
@@ -1012,12 +1014,12 @@ private enum EarStairsArt {
         context.stroke(line, with: .color(.white.opacity(0.07)), lineWidth: 1)
     }
 
-    /// A note: amber with a soft halo that swells with its tone.
+    /// A note: steel with a soft halo that swells with its tone.
     private static func dot(_ context: inout GraphicsContext, at point: CGPoint, energy: Double, alpha: Double) {
         let halo = 14 + 6 * CGFloat(energy)
         context.fill(BullseyeArt.circle(point, halo), with: .radialGradient(
-            Gradient(colors: [Palette.amber.opacity((0.3 + 0.45 * energy) * alpha), .clear]), center: point, startRadius: 0, endRadius: halo))
-        context.fill(BullseyeArt.circle(point, noteR), with: .color(Palette.amber.opacity(alpha)))
+            Gradient(colors: [Palette.accentNeutral.opacity((0.3 + 0.45 * energy) * alpha), .clear]), center: point, startRadius: 0, endRadius: halo))
+        context.fill(BullseyeArt.circle(point, noteR), with: .color(Palette.accentNeutral.opacity(alpha)))
         context.fill(BullseyeArt.circle(CGPoint(x: point.x - 1.5, y: point.y - 1.5), 2), with: .color(.white.opacity(0.8 * alpha)))
     }
 
@@ -1025,8 +1027,8 @@ private enum EarStairsArt {
     private static func hiddenNote(_ context: inout GraphicsContext, at point: CGPoint, energy: Double, alpha: Double) {
         let halo = 20 + 10 * CGFloat(energy)
         context.fill(BullseyeArt.circle(point, halo), with: .radialGradient(
-            Gradient(colors: [Palette.amber.opacity((0.4 + 0.4 * energy) * alpha), .clear]), center: point, startRadius: 0, endRadius: halo))
-        context.fill(BullseyeArt.circle(point, noteR), with: .color(Palette.amber.opacity(0.85 * alpha)))
+            Gradient(colors: [Palette.accentNeutral.opacity((0.4 + 0.4 * energy) * alpha), .clear]), center: point, startRadius: 0, endRadius: halo))
+        context.fill(BullseyeArt.circle(point, noteR), with: .color(Palette.accentNeutral.opacity(0.85 * alpha)))
     }
 
     /// The veil over what is still to name: frosted, finely hatched and edged in a dashed line; it lifts as it goes.
@@ -1034,7 +1036,7 @@ private enum EarStairsArt {
         let lifted = rect.offsetBy(dx: 0, dy: -10 * CGFloat(1 - alpha))
         let shape = Path(roundedRect: lifted, cornerRadius: 8)
         context.fill(shape, with: .color(Palette.stageRaised.opacity(0.62 * alpha)))
-        context.fill(shape, with: .linearGradient(Gradient(colors: [Palette.amber.opacity(0.08 * alpha), Palette.amber.opacity(0.02 * alpha)]),
+        context.fill(shape, with: .linearGradient(Gradient(colors: [Palette.accentNeutral.opacity(0.08 * alpha), Palette.accentNeutral.opacity(0.02 * alpha)]),
                                                   startPoint: CGPoint(x: lifted.midX, y: lifted.minY), endPoint: CGPoint(x: lifted.midX, y: lifted.maxY)))
         var hatch = context
         hatch.clip(to: shape)
@@ -1046,7 +1048,7 @@ private enum EarStairsArt {
             x += 9
         }
         hatch.stroke(lines, with: .color(.white.opacity(0.035 * alpha)), lineWidth: 1)
-        context.stroke(shape, with: .color(Palette.amber.opacity(0.3 * alpha)), style: StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
+        context.stroke(shape, with: .color(Palette.accentNeutral.opacity(0.3 * alpha)), style: StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
     }
 
     /// An answered note's interval over it: in words for an interval ("Perfect 5th", as the buttons name it), kept
@@ -1055,11 +1057,11 @@ private enum EarStairsArt {
                                       width: CGFloat, alpha: Double) {
         let y = max(10, point.y - 18)
         guard inWords else {
-            let short = Text(verbatim: Intervals.short[semitones]).font(Typeface.label(12)).foregroundStyle(Palette.amber.opacity(alpha))
+            let short = Text(verbatim: Intervals.short[semitones]).font(Typeface.label(12)).foregroundStyle(Palette.accentNeutral.opacity(alpha))
             context.draw(short, at: CGPoint(x: min(width - 14, max(14, point.x)), y: y))
             return
         }
-        let words = Text(LocalizedStringKey(Intervals.names[semitones])).font(Typeface.label(12)).foregroundStyle(Palette.amber.opacity(alpha))
+        let words = Text(LocalizedStringKey(Intervals.names[semitones])).font(Typeface.label(12)).foregroundStyle(Palette.accentNeutral.opacity(alpha))
         if point.x < width * 0.3 {
             context.draw(words, at: CGPoint(x: max(4, point.x - 10), y: y), anchor: .leading)
         } else if point.x > width * 0.7 {
@@ -1075,8 +1077,8 @@ private enum EarStairsArt {
         var line = Path()
         line.move(to: CGPoint(x: start, y: y))
         line.addLine(to: CGPoint(x: end, y: y))
-        context.stroke(line, with: .color(Palette.amber.opacity(0.45 * alpha)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 3]))
-        let text = Text(verbatim: label).font(Typeface.label(10)).foregroundStyle(Palette.amber.opacity(0.75 * alpha))
+        context.stroke(line, with: .color(Palette.accentNeutral.opacity(0.45 * alpha)), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, dash: [3, 3]))
+        let text = Text(verbatim: label).font(Typeface.label(12)).foregroundStyle(Palette.accentNeutral.opacity(0.75 * alpha))
         context.draw(text, at: labelPoint, anchor: anchor)
     }
 
@@ -1084,8 +1086,8 @@ private enum EarStairsArt {
     private static func mystery(_ context: inout GraphicsContext, at point: CGPoint, energy: Double, alpha: Double) {
         let halo = 18 + 10 * CGFloat(energy)
         context.fill(BullseyeArt.circle(point, halo), with: .radialGradient(
-            Gradient(colors: [Palette.amber.opacity((0.12 + 0.35 * energy) * alpha), .clear]), center: point, startRadius: 0, endRadius: halo))
-        let mark = Text(verbatim: "?").font(Typeface.display(28)).foregroundStyle(Palette.amber.opacity((0.45 + 0.55 * energy) * alpha))
+            Gradient(colors: [Palette.accentNeutral.opacity((0.12 + 0.35 * energy) * alpha), .clear]), center: point, startRadius: 0, endRadius: halo))
+        let mark = Text(verbatim: "?").font(Typeface.display(28)).foregroundStyle(Palette.accentNeutral.opacity((0.45 + 0.55 * energy) * alpha))
         context.draw(mark, at: point)
     }
 

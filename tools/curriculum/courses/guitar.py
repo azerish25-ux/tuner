@@ -179,6 +179,11 @@ MARY_SONG = song(G, 76, [
          lyrics="Ma-ry had a lit-tle lamb, / fleece was white as snow."),
 ], shapes=SHAPES, words="Sarah Josepha Hale (1830)")
 
+# The first song, unit 1 (free): Mary Had a Little Lamb on three notes in G, B A G, on open string 2 and string 3
+# (open, and fret 2 with the second finger, as E minor's fingers learned). Unit 2 plays the whole tune in C.
+FIRST = tunes.mary3(-5)
+FIRST_SONG = song(G, 80, tunes.mary3_parts(-5, "G G D G G G D G"), shapes=SHAPES, words=tunes.MARY_CREDIT)
+
 # When the Saints Go Marching In, unit 6: low on strings 5, 4 and 3; the solo takes the verse up an octave, onto
 # strings 2 and 1 from unit 2.
 SAINTS_TAG = "r:2 E3 F3 G3:2 E3:2 C3:2 D3:2 C3:4"
@@ -292,6 +297,15 @@ UNIT_1 = unit("gtr-1", "Hello, guitar", "Hold it, tune it, play your first notes
         play_chord(Em),
         strum(Em, QUARTERS, bpm=66, bars=4),
     ], minutes=4, xp=30, kind="challenge"),
+    lesson("gtr-1-6", "Mary Had a Little Lamb: three notes", [
+        explain("Your first song", "Mary Had a Little Lamb needs three notes: open string 2 is B, fret 2 on string 3 is A, "
+                "and open string 3 is G. Your second finger plays the A.", fretboard(G, [(2, 0), (3, 2, 2), (3, 0)])),
+        notes(G, [("A3", 3)], hint="String 3, fret 2, second finger. That's A."),
+        notes(G, ["B3", "A3", "G3", "A3", "B3", "B3", "B3"], hint="B A G A B B B: open string 2, then string 3."),
+        along(G, FIRST[0], bpm=66, title="First half"),
+        FIRST_SONG.along("Verse 1", bpm=66, title=THE_VERSE),
+        FIRST_SONG.take("Mary Had a Little Lamb"),
+    ], minutes=FIRST_SONG.minutes(), xp=30, kind="song", arrangement=FIRST_SONG.meta()),
 ])
 
 # ================================================================ 2. First melodies
@@ -546,13 +560,13 @@ UNIT_4 = unit("gtr-4", "Strumming", "Downstrokes, down-up eighths, accents and a
                   "plays only the ands. Keep your hand swinging down and up, miss the strings on each number and catch "
                   "every and.", rhythm(OFFBEAT)),
         tap(OFFBEAT, bpm=66, bars=2),
-        strum(Em, OFFBEAT, bpm=66, bars=2),
+        strum(Em, OFFBEAT, muted=OFFBEAT, bpm=66, bars=2),
         progression([(Em, 1), (A, 1)] * 2, HALVES, bpm=60),
         quiz("Where does the guitar play in Low Tide Radio?", ["Only on the ands", "On every number", "Only on beat one"], 0,
              "Bass and drums hold the numbers. The guitar answers between them, on the ands."),
-        progression([(Em, 1), (A, 1)] * 4, OFFBEAT, bpm=66),
+        progression([(Em, 1), (A, 1)] * 4, OFFBEAT, muted=OFFBEAT, bpm=66),
         along(G, f"{RADIO_LINE} {RADIO_LINE}", bpm=63, title=HOOK),
-        progression([(Em, 1), (A, 1)] * 4, OFFBEAT, bpm=76),
+        progression([(Em, 1), (A, 1)] * 4, OFFBEAT, muted=OFFBEAT, bpm=76),
     ], minutes=6),
     lesson("gtr-4-6", "Strumming challenge", [
         explain("Steady hand, four chords", "No new ideas: quarters, eighths and the folk strum on the chords you know. "

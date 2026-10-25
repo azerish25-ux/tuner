@@ -25,7 +25,7 @@ struct CoverArt {
     enum Genre: CaseIterable { case nursery, folk, classical, americana, holiday, swing, rock, anthem }
     enum Motif: CaseIterable {
         case sunset, waveform, orbits, grid, ridges, stripes, sparkle, contour
-        case pulse, halftone, rays, blocks, rosette, keys, horizon, strings
+        case dial, halftone, rays, blocks, rosette, keys, horizon, strings
         case arches, moon, checker, spiral, equalizer, petals, constellation, waves
     }
     /// Motifs that read alike at a glance (a sun low on the sleeve, rings round a centre, a field of bars): two
@@ -140,7 +140,7 @@ struct CoverArt {
     private static let dealSalt: UInt64 = 181
 
     /// The Originals' motifs: a modern catalogue's (sound, print and geometry, one synthwave sun).
-    static let originalsMotifs: [Motif] = [.horizon, .waveform, .pulse, .equalizer, .halftone, .contour,
+    static let originalsMotifs: [Motif] = [.horizon, .waveform, .dial, .equalizer, .halftone, .contour,
                                            .spiral, .grid, .checker, .blocks, .constellation, .arches]
     /// Every other song's: the traditional tunes' (suns and skies, land and sea, rosettes, strings and keys). No
     /// motif is in both sets.
@@ -263,7 +263,7 @@ struct CoverArt {
         case .stripes: Motifs.stripes(&context, size: size, region: region, ink: ink, random: &random)
         case .sparkle: Motifs.sparkle(&context, region: region, ink: ink, random: &random)
         case .contour: Motifs.contour(&context, region: region, ink: ink, random: &random)
-        case .pulse: Motifs.pulse(&context, region: region, ink: ink, random: &random)
+        case .dial: Motifs.dial(&context, region: region, ink: ink, random: &random)
         case .halftone: Motifs.halftone(&context, region: region, ink: ink, random: &random)
         case .rays: Motifs.rays(&context, size: size, region: region, ink: ink, random: &random)
         case .blocks: Motifs.blocks(&context, region: region, ink: ink, random: &random)
@@ -285,8 +285,9 @@ struct CoverArt {
 }
 
 extension CoverArt.Motif {
-    /// Drawn low in its room (a sun or a grid on the horizon, ridges, a rainbow, waves), so the title goes above it.
-    var sitsLow: Bool { self == .sunset || self == .ridges || self == .horizon || self == .arches || self == .waves }
+    /// Drawn low in its room (a sun or a grid on the horizon, ridges, a rainbow, waves, a dial's arc), so the title goes
+    /// above it.
+    var sitsLow: Bool { self == .sunset || self == .ridges || self == .horizon || self == .arches || self == .waves || self == .dial }
     /// Piano keys need a dark sleeve to read as keys.
     var allowsField: Bool { self != .keys }
 
@@ -297,7 +298,7 @@ extension CoverArt.Motif {
         case .ridges, .waves: return .land
         case .sparkle, .moon, .constellation: return .sky
         case .orbits, .contour, .rosette, .spiral, .petals: return .radial
-        case .waveform, .pulse, .equalizer: return .sound
+        case .waveform, .dial, .equalizer: return .sound
         case .grid, .blocks, .checker: return .geometry
         case .stripes, .strings, .keys: return .lines
         case .halftone: return .dots
@@ -340,9 +341,9 @@ private extension CoverArt.Genre {
         case .classical: return [.rosette, .keys, .orbits, .moon, .contour, .spiral, .petals, .halftone, .constellation, .grid, .strings, .sparkle]
         case .americana: return [.rays, .strings, .ridges, .stripes, .waves, .halftone, .arches, .checker, .blocks, .sunset, .moon, .waveform]
         case .holiday: return [.sparkle, .constellation, .rosette, .petals, .moon, .orbits, .checker, .grid, .halftone, .keys, .rays, .blocks]
-        case .swing: return [.keys, .equalizer, .checker, .stripes, .grid, .blocks, .spiral, .orbits, .pulse, .halftone, .moon, .rays]
-        case .rock: return [.horizon, .equalizer, .checker, .stripes, .pulse, .waveform, .blocks, .spiral, .strings, .rays, .halftone, .sunset]
-        case .anthem: return [.horizon, .arches, .contour, .pulse, .constellation, .equalizer, .waveform, .spiral, .sparkle, .orbits, .halftone, .rays]
+        case .swing: return [.keys, .equalizer, .checker, .stripes, .grid, .blocks, .spiral, .orbits, .dial, .halftone, .moon, .rays]
+        case .rock: return [.horizon, .equalizer, .checker, .stripes, .dial, .waveform, .blocks, .spiral, .strings, .rays, .halftone, .sunset]
+        case .anthem: return [.horizon, .arches, .contour, .dial, .constellation, .equalizer, .waveform, .spiral, .sparkle, .orbits, .halftone, .rays]
         }
     }
 
@@ -621,38 +622,38 @@ private enum Motifs {
         }
     }
 
-    /// Stacked pulse lines, each hiding the ones behind it, rising into a signal in the middle; one line lit.
-    static func pulse(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
-        let lines = 12
-        let gap = region.height / CGFloat(lines + 3)
-        let rise = gap * 3
-        let samples = 48
-        let lit = 3 + Int(random.next() * Double(lines - 5))
-        let middle = 0.5 + (random.next() - 0.5) * 0.24
-        let weight = max(1, min(region.width, region.height) * 0.011)
-        for k in 0..<lines {
-            let base = region.minY + gap * CGFloat(k + 3)
-            let p1 = random.next() * 6.28
-            let p2 = random.next() * 6.28
-            var crest: [CGPoint] = []
-            for s in 0...samples {
-                let t = Double(s) / Double(samples)
-                let envelope = exp(-pow((t - middle) / 0.16, 2))
-                let jitter = 0.6 + 0.25 * sin(t * 41 + p1) + 0.15 * sin(t * 67 + p2)
-                let lift = 0.05 * (1 + sin(t * 29 + p2)) + envelope * jitter
-                crest.append(CGPoint(x: region.minX + region.width * CGFloat(t), y: base - rise * CGFloat(lift)))
-            }
-            var body = Path()
-            body.move(to: CGPoint(x: region.minX, y: base + gap * 1.2))
-            for point in crest { body.addLine(to: point) }
-            body.addLine(to: CGPoint(x: region.maxX, y: base + gap * 1.2))
-            body.closeSubpath()
-            context.fill(body, with: ink.ground)
-            var line = Path()
-            line.addLines(crest)
-            context.stroke(line, with: .color(k == lit ? ink.main : ink.line.opacity(0.7)),
-                           style: StrokeStyle(lineWidth: k == lit ? weight * 1.8 : weight, lineJoin: .round))
+    /// A radio's tuning dial: a fan of ticks along a wide arc, every fifth one long, a few stations marked in the
+    /// second colour, and the needle, in the song's colour, resting on one of them.
+    static func dial(_ context: inout GraphicsContext, region: CGRect, ink: MotifInk, random: inout SystemRandom) {
+        let unit = min(region.width, region.height)
+        let pivot = CGPoint(x: region.midX, y: region.maxY - unit * 0.04)
+        let radius = min(region.width * 0.47, region.height * 0.9)
+        let weight = max(1, unit * 0.012)
+        let ticks = 41
+        // Degrees from the right, counterclockwise: the arc spans 25 to 155, left to right as i grows.
+        func angle(_ i: Int) -> Double { (155 - 130 * Double(i) / Double(ticks - 1)) * Double.pi / 180 }
+        func point(_ i: Int, _ length: CGFloat) -> CGPoint {
+            CGPoint(x: pivot.x + CGFloat(cos(angle(i))) * length, y: pivot.y - CGFloat(sin(angle(i))) * length)
         }
+        var stations: [Int] = []
+        for _ in 0..<3 { stations.append(3 + Int(random.next() * Double(ticks - 6))) }
+        var band = Path()
+        for i in 0..<ticks {
+            if i == 0 { band.move(to: point(i, radius * 0.72)) } else { band.addLine(to: point(i, radius * 0.72)) }
+        }
+        context.stroke(band, with: .color(ink.line.opacity(0.25)), lineWidth: weight)
+        for i in 0..<ticks {
+            let long = i % 5 == 0
+            let station = stations.contains(i)
+            let color = station ? ink.second : ink.line.opacity(long ? 0.7 : 0.35)
+            context.stroke(segment(point(i, radius * (long ? 0.78 : 0.86)), point(i, radius)), with: .color(color),
+                           style: StrokeStyle(lineWidth: station ? weight * 2 : weight, lineCap: .round))
+        }
+        let tuned = stations[Int(random.next() * Double(stations.count)) % stations.count]
+        context.stroke(segment(pivot, point(tuned, radius * 1.04)), with: .color(ink.main),
+                       style: StrokeStyle(lineWidth: weight * 2.4, lineCap: .round))
+        context.fill(circle(pivot, unit * 0.07), with: .color(ink.main))
+        context.fill(circle(pivot, unit * 0.025), with: ink.ground)
     }
 
     /// A sphere in halftone, its dots swelling toward the light, ringed by one orbit in the second colour.

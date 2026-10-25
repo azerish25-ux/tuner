@@ -49,20 +49,24 @@ enum Spelling {
     static var system: String { ["german", "solfege"].contains(NoteNames.active) ? NoteNames.active : "english" }
 
     /// How a chord tone is named against its root, and where it sorts: 1, ♭3 or 3, 4, ♭5, 5 or ♯5, 6, ♭7 or 7,
-    /// then 9; a 2 stands in for the third in a sus2.
+    /// then 9, 11 and 13; a 2 stands in for the third in a sus2. Over a seventh the 2 is the 9th, the 4 the 11th
+    /// (when the 9th is there too) and the 6 the 13th; a diminished seventh's 6 is its ♭♭7.
     static func chordDegree(_ interval: Int, in intervals: [Int]) -> (label: String, order: Int) {
         let hasThird = intervals.contains(3) || intervals.contains(4)
+        let hasSeventh = intervals.contains(10) || intervals.contains(11)
         switch ((interval % 12) + 12) % 12 {
         case 0: return ("1", 1)
         case 1: return ("♭9", 9)
-        case 2: return hasThird ? ("9", 9) : ("2", 2)
+        case 2: return hasThird || hasSeventh ? ("9", 9) : ("2", 2)
         case 3: return ("♭3", 3)
         case 4: return ("3", 3)
-        case 5: return ("4", 4)
+        case 5: return hasSeventh && intervals.contains(2) ? ("11", 11) : ("4", 4)
         case 6: return ("♭5", 5)
         case 7: return ("5", 5)
         case 8: return intervals.contains(7) ? ("♭6", 6) : ("♯5", 5)
-        case 9: return ("6", 6)
+        case 9:
+            if hasSeventh { return ("13", 13) }
+            return intervals.contains(3) && intervals.contains(6) ? ("♭♭7", 7) : ("6", 6)
         case 10: return ("♭7", 7)
         default: return ("7", 7)
         }
@@ -140,9 +144,7 @@ struct VoicingProfile: Equatable {
 
         var tint: Color {
             switch self {
-            case .easy: return Palette.mint
-            case .medium: return Palette.amber
-            case .hard: return Palette.coral
+            case .easy, .medium, .hard: return Palette.accentNeutral
             }
         }
     }

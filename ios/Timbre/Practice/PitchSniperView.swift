@@ -4,7 +4,7 @@ import TimbreCore
 
 /// Bullseye: play or sing the target note; your pitch is a dot homing in on the bullseye, and rings of sound leave the
 /// centre as it nears, more and brighter the closer it is. A bullseye rings the target's own note, a near miss knocks
-/// softly and a miss wobbles out of tune (`SoundFX`). Every other game hides a tune in its targets and names it at the end.
+/// softly and a miss wobbles out of tune (`SoundFX`). Every game hides a tune in its targets and names it at the end.
 struct PitchSniperView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var audio: AudioService
@@ -17,8 +17,6 @@ struct PitchSniperView: View {
     @State private var flashToken = 0
     @State private var finished = false
     @State private var restoreAutomatic = true
-    /// Games started on this screen: every second one hides a tune (`PitchSniper.HiddenTune`).
-    @State private var gamesStarted = 0
     /// Until then (uptime) the microphone's reading is set aside: the bullseye's bell is still ringing in the room.
     @State private var quietUntil = 0.0
     private let ticker = Timer.publish(every: 1.0 / 30, on: .main, in: .common).autoconnect()
@@ -64,7 +62,7 @@ struct PitchSniperView: View {
                 Spacer()
                 VStack(alignment: .trailing, spacing: 0) {
                     Text(game.score.formatted()).font(Typeface.number(20)).foregroundStyle(Palette.ink).contentTransition(.numericText())
-                    Text("Combo ×\(game.multiplier)").font(Typeface.label(12)).foregroundStyle(game.combo > 0 ? Palette.amber : Palette.inkFaint)
+                    Text("Combo ×\(game.multiplier)").font(Typeface.label(12)).foregroundStyle(game.combo > 0 ? Palette.starGold : Palette.inkFaint)
                 }
                 .accessibilityElement(children: .combine)
             }
@@ -79,7 +77,7 @@ struct PitchSniperView: View {
                     Eyebrow("Play or sing", color: Palette.inkSoft)
                     HStack(alignment: .lastTextBaseline, spacing: 2) {
                         Text(parts.name).font(Typeface.note(64)).foregroundStyle(Palette.ink)
-                        Text(parts.octave).font(Typeface.displayLight(26)).foregroundStyle(Palette.inkFaint)
+                        Text(parts.octave).font(Typeface.displayLight(28)).foregroundStyle(Palette.inkFaint)
                     }
                     .environment(\.layoutDirection, .leftToRight)
                 }
@@ -93,7 +91,7 @@ struct PitchSniperView: View {
             Group {
                 if let cents {
                     Text(abs(cents) <= PitchSniper.bullseyeCents ? String(localized: "Hold it…") : cents < 0 ? String(localized: "\(Int(abs(cents).rounded())) cents flat") : String(localized: "\(Int(abs(cents).rounded())) cents sharp"))
-                        .font(Typeface.label(18))
+                        .font(Typeface.label(17))
                         .foregroundStyle(abs(cents) <= PitchSniper.bullseyeCents ? Palette.mint : Palette.amber)
                 } else {
                     // The microphone's status, set as every practice tool sets it.
@@ -108,7 +106,7 @@ struct PitchSniperView: View {
             HStack(spacing: 8) {
                 ForEach(0..<game.rounds.count, id: \.self) { i in
                     Circle().fill(dotColor(game, i)).frame(width: 18, height: 18)
-                        .overlay(Circle().strokeBorder(i == game.index ? Palette.amber : .clear, lineWidth: 2))
+                        .overlay(Circle().strokeBorder(i == game.index ? Palette.ink : .clear, lineWidth: 2))
                 }
             }
             .padding(.top, 22)
@@ -201,7 +199,7 @@ struct PitchSniperView: View {
 
     private func stat(_ value: String, _ label: LocalizedStringKey) -> some View {
         VStack(spacing: 2) {
-            Text(value).font(Typeface.number(22)).foregroundStyle(Palette.ink)
+            Text(value).font(Typeface.number(20)).foregroundStyle(Palette.ink)
             Text(label).font(.caption).foregroundStyle(Palette.inkSoft)
         }
     }
@@ -217,8 +215,7 @@ struct PitchSniperView: View {
         var seed = UInt64(Date().timeIntervalSince1970)
         if ProcessInfo.processInfo.environment["TIMBRE_DEMO_PITCH"] == "1" { seed = 7 }
         let next = PitchSniper(notes: notes.isEmpty ? [57, 60, 64, 67] : notes, fretted: fretted, referenceHz: store.settings.referencePitchHz,
-                               seed: seed, hiddenTune: gamesStarted % 2 == 1)
-        gamesStarted += 1
+                               seed: seed, hiddenTune: true)
         game = next
         finished = false; hold = 0; flash = nil; quietUntil = 0
         store.gameTargetHz = next.current?.frequency

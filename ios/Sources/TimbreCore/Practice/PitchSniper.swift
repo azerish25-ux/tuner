@@ -1,8 +1,8 @@
 import Foundation
 
 /// Bullseye: play or sing the target note and hold it inside the bullseye. Ten rounds; faster bullseyes score more,
-/// and consecutive bullseyes build a combo. In a hidden-tune game the targets, in order, are the opening of a tune
-/// everyone knows (`HiddenTune`), named once the game is over.
+/// and consecutive bullseyes build a combo. In a hidden-tune game (every game the app starts) the targets, in order,
+/// are the opening of a tune everyone knows (`HiddenTune`), named once the game is over.
 public struct PitchSniper: Sendable {
     public struct Round: Equatable, Sendable {
         public let midi: Int
@@ -55,14 +55,18 @@ public struct PitchSniper: Sendable {
     private var bestRing: Double = .infinity
 
     /// Targets come from the instrument's own notes (open strings, plus the first frets when fretted). With
-    /// `hiddenTune`, a tune whose opening those notes can play (in some key) sets the targets instead; when none fits
-    /// (an unfretted instrument has only its open strings), the game is an ordinary one.
+    /// `hiddenTune`, a tune whose opening the instrument can play in first position sets the targets instead: up to
+    /// four frets above any open string, or on strings tuned in fifths without frets (violin, cello) up to six half
+    /// steps, where the fingers meet the next string's open note. Only when no tune fits there is the game an ordinary
+    /// one.
     public init(notes: [Int], fretted: Bool, referenceHz: Double = 440, count: Int = 10, seed: UInt64, hiddenTune: Bool = false) {
         var pool = Set(notes)
         if fretted { for n in notes { for fret in 1...4 { pool.insert(n + fret) } } }
         let sorted = pool.sorted()
         var rng = SplitMix64(seed: seed)
-        if hiddenTune, let placed = Self.place(in: sorted, rng: &rng) {
+        let reach = fretted ? 4 : 6
+        let firstPosition = Set(notes.flatMap { open in (0...reach).map { open + $0 } }).sorted()
+        if hiddenTune, let placed = Self.place(in: firstPosition, rng: &rng) {
             tune = placed.tune
             rounds = placed.midis.prefix(count).map { Round(midi: $0, frequency: referenceHz * pow(2, Double($0 - 69) / 12)) }
             return

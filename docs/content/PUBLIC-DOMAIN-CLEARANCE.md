@@ -1,6 +1,6 @@
 # Public-domain clearance: Standards & Classics
 
-The Standards & Classics course (`tools/curriculum/courses/songs_part3.py` and `standards_part2.py`, course id `standards`), and the ukulele, mandolin and violin songbook editions made from it, ships in every App Store territory, so a song is in only if it clears **both** tests:
+The Standards & Classics course (`tools/curriculum/courses/songs_part3.py` and `standards_part2.py`, course id `standards`), and the ukulele, mandolin, violin and cello songbook editions and bass lines made from it, ships in every App Store territory, so a song is in only if it clears **both** tests:
 
 1. **First published before 1931.** It is in the US public domain as of 1 January 2026.
 2. **Every creator whose work we use died before 1956, or the work is traditional or anonymous.** That covers life + 70 countries.
@@ -78,6 +78,19 @@ We took only the melody, which is the public-domain work itself. We copied no en
 Songs 19–38 (units 5 to 9, `standards_part2.py`) were added in October 2026. Every one was read note by note from the Mutopia edition in its row and moved to a guitar key; each chord chart, intro, solo and ending is our own. The ukulele, mandolin and violin songbooks carry the same songs, moved again by `editions.py`.
 
 25 of the 38 carry words: songs 1–9, 19–31 and 36–38.
+
+## First songs: the free end of every instrument course's unit 1
+
+Every instrument course's first unit (free) ends on a whole song (`tools/curriculum/tunes.py`). Both clear the same two tests.
+
+| Song | Courses | First published | Creators and their death years | What we use | Rights source | Verdict |
+|---|---|---|---|---|---|---|
+| Mary Had a Little Lamb, on three notes | Guitar and banjo (B A G), mandolin and cello (F sharp E D), violin (C sharp B A), bass (B A G, low), singing (E D C) | Poem 1830; the tune sung to it is in Lowell Mason's arrangement of 1830s | Sarah Josepha Hale, 1788–1879; Lowell Mason, 1792–1872 | The tune on its first three notes (the jump to sol sung on mi, as beginners' books set it) and Hale's four verses | [Wikipedia](https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb) | Cleared |
+| Row, Row, Row Your Boat | Ukulele (one chord, C) | Words in print 1852; tune with the words, Eliphalet Oram Lyte, 1881 | Eliphalet Oram Lyte, 1842–1913 | Tune and its one verse | [Wikipedia](https://en.wikipedia.org/wiki/Row,_Row,_Row_Your_Boat) | Cleared |
+
+## December carols
+
+Songs shows a carol shelf from 25 November to 6 January (`SongsView.swift`, `SongOfTheDay.carols`). To open the carols to everyone for the shelf's first week, set the remote config's `freeSongs` to the carols' lesson ids for that week and clear it after. The guitar versions: `song-silent-night`, `song-jingle-bells`, `song-joy-to-the-world`, `song-deck-the-halls`, `song-we-wish-you`, `song-good-king-wenceslas`, `std-o-christmas-tree`, `std-o-come-all-ye-faithful`, `std-the-first-noel`, `std-hark-the-herald`, `std-away-in-a-manger`, `std-o-little-town`, `std-it-came-upon`, `std-royal-davids-city`, `std-bleak-midwinter`, `std-holly-and-ivy`, `std-angels-from-the-realms`; each songbook's edition adds its prefix (`uke-sb-`, `man-sb-`, `vln-sb-`, `vc-sb-`, `bass-sb-`).
 
 ## Cleared but not shipped yet
 

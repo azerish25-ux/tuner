@@ -101,7 +101,7 @@ struct IntonationView: View {
     private var instruction: some View {
         let label = store.courseLabel(store.activeCourse)
         return HStack(alignment: .top, spacing: 14) {
-            Glyph(step == .harmonic ? "hand.point.up.left" : "hand.raised.fingers.spread", size: Glyph.lead, tint: Palette.amber)
+            Glyph(step == .harmonic ? "hand.point.up.left" : "hand.raised.fingers.spread", size: Glyph.lead, tint: Palette.accentNeutral)
             VStack(alignment: .leading, spacing: 4) {
                 if step == .harmonic {
                     Eyebrow("Step 1 of 2")
@@ -161,7 +161,7 @@ struct IntonationView: View {
 
     /// "Harmonic" or "Fretted" with its marker, lit while it is the note being measured.
     private func legend(harmonic: Bool, active: Bool, done: Bool, value: String?) -> some View {
-        let tint = active ? Palette.amber : (done ? Palette.mint : Palette.inkFaint)
+        let tint = active ? Palette.ink : (done ? Palette.mint : Palette.inkFaint)
         return HStack(spacing: 8) {
             ZStack {
                 if harmonic {
@@ -337,7 +337,7 @@ private struct NeckLayout {
 /// The neck from nut to saddle, its strings in the player's string order (Settings › String order: string 1
 /// on top as in tab, or the lowest string on top as you look down at it while playing), each string
 /// named at the nut. On the string being checked: the harmonic point (a ring over the 12th fret) and the
-/// fretted note (a dot just behind it), the one being measured in amber with a breathing ring; once both
+/// fretted note (a dot just behind it), the one being measured in white with a breathing ring; once both
 /// are in, an arrow at the saddle shows which way it should move (a check when it's within 3 cents). For a
 /// left-handed player the nut is on the right and the saddle on the left (`nutOnRight`), the words reading as usual.
 private struct IntonationNeck: View {
@@ -460,8 +460,8 @@ private struct IntonationNeck: View {
         guard labels.indices.contains(selected) else { return }
         let ring = layout.harmonicPoint(selected)
         let dot = layout.frettedPoint(selected)
-        let ringColor = measuringHarmonic ? Palette.amber : (harmonicDone ? Palette.mint : Palette.inkFaint)
-        let dotColor = !measuringHarmonic ? Palette.amber : (cents != nil ? Palette.mint : Palette.inkFaint)
+        let ringColor = measuringHarmonic ? Palette.ink : (harmonicDone ? Palette.mint : Palette.inkFaint)
+        let dotColor = !measuringHarmonic ? Palette.ink : (cents != nil ? Palette.mint : Palette.inkFaint)
         context.fill(Path(ellipseIn: CGRect(x: ring.x - 8, y: ring.y - 8, width: 16, height: 16)), with: .color(Palette.stageRaised.opacity(0.7)))
         context.stroke(Path(ellipseIn: CGRect(x: ring.x - 7, y: ring.y - 7, width: 14, height: 14)), with: .color(ringColor), lineWidth: 2.5)
         context.fill(Path(ellipseIn: CGRect(x: dot.x - 6.5, y: dot.y - 6.5, width: 13, height: 13)), with: .color(dotColor))
@@ -490,13 +490,13 @@ private struct IntonationNeck: View {
     }
 }
 
-/// A ring breathing out from the note being measured. Hidden with Reduce Motion (its marker is amber anyway).
+/// A ring breathing out from the note being measured. Hidden with Reduce Motion (its marker is lit anyway).
 private struct NeckBreath: View {
     let animate: Bool
     @State private var out = false
 
     var body: some View {
-        Circle().strokeBorder(Palette.amber, lineWidth: 2)
+        Circle().strokeBorder(Palette.ink, lineWidth: 2)
             .frame(width: 16, height: 16)
             .scaleEffect(out ? 2.4 : 1)
             .opacity(animate ? (out ? 0 : 0.9) : 0)

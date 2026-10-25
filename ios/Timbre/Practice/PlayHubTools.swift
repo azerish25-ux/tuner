@@ -62,7 +62,7 @@ struct PlayToolPreview: View {
     /// The light behind each tool's preview on its tile, so a grid of six doesn't read as one colour.
     static func tint(_ route: PracticeRoute) -> Color {
         switch route {
-        case .drone, .chords: return Palette.amber
+        case .drone, .chords: return Palette.orchid
         case .voice: return Palette.sky
         case .intonation: return Palette.violet
         default: return Palette.mint
@@ -205,7 +205,7 @@ enum MetronomePreviewArt {
         let fraction = beats - floor(beats)
         let flash = max(0, 1 - fraction * 3.5)
         let downbeat = ((Int(floor(beats)) % 4) + 4) % 4 == 0
-        let accent = downbeat ? Palette.amber : Palette.mint
+        let accent = downbeat ? Palette.ink : Palette.mint
 
         // The click: an arc either side, leaving the foot on the beat.
         let start = halfBase * 0.8
@@ -351,7 +351,7 @@ enum DroneDialArt {
 
         // The room it fills, and a ripple leaving the gourd with each pluck.
         context.fill(BullseyeArt.circle(c, r * 1.55),
-                     with: .radialGradient(Gradient(colors: [Palette.amber.opacity((0.07 + 0.14 * resonance) * lift), .clear]),
+                     with: .radialGradient(Gradient(colors: [Palette.orchid.opacity((0.07 + 0.14 * resonance) * lift), .clear]),
                                            center: c, startRadius: r * 0.5, endRadius: r * 1.55))
         if !pure {
             for string in 0..<DroneCycle.strings {
@@ -368,7 +368,7 @@ enum DroneDialArt {
                                                                          startRadius: 0, endRadius: r * 1.35))
         context.fill(BullseyeArt.circle(c, r), with: .radialGradient(Gradient(colors: [Palette.mint.opacity(0.12 * resonance), .clear]),
                                                                          center: c, startRadius: 0, endRadius: r))
-        context.stroke(BullseyeArt.circle(c, r), with: .color(Palette.amber.opacity(0.32)), lineWidth: 1.2)
+        context.stroke(BullseyeArt.circle(c, r), with: .color(Palette.accentNeutral.opacity(0.32)), lineWidth: 1.2)
         var ticks = Path()
         for i in 0..<12 where i != 6 {
             let a = Double(i) * Double.pi / 6
@@ -569,7 +569,7 @@ enum ChordPreviewArt {
                                                            startPoint: CGPoint(x: band.minX, y: 0), endPoint: CGPoint(x: band.maxX, y: 0)))
         }
         if !compact, let chord {
-            let name = NoteGlyphs.text(chord.name, size: 15).font(Typeface.display(16)).foregroundStyle(Palette.ink.opacity(presence))
+            let name = NoteGlyphs.text(chord.name, size: 15).font(Typeface.display(15)).foregroundStyle(Palette.ink.opacity(presence))
             context.draw(name, at: CGPoint(x: size.width / 2, y: nameRoom / 2))
         }
     }
@@ -578,7 +578,7 @@ enum ChordPreviewArt {
     private static func mark(_ context: inout GraphicsContext, chord: Chord, string s: Int, x: CGFloat, top: CGFloat, fretH: CGFloat,
                              gap: CGFloat, base: Int, markRoom: CGFloat, presence: Double, lit: Double, compact: Bool) {
         let isRoot = s == chord.bass
-        let tint = isRoot ? Palette.amber : Palette.mint
+        let tint = isRoot ? Palette.starGold : Palette.mint
         let markY = top - markRoom / 2 - (compact ? 0.5 : 1)
         guard let fret = chord.frets[s] else {
             guard !compact else { return }
@@ -728,7 +728,7 @@ enum ScaleRunArt {
         let radius = max(compact ? 1.5 : 3, min(slot, colW) * 0.34)
         for (index, spot) in spots.enumerated() {
             let center = CGPoint(x: x(spot.fret), y: y(spot.string))
-            let tint = box.roots.contains(spot) ? Palette.amber : Palette.mint
+            let tint = box.roots.contains(spot) ? Palette.starGold : Palette.mint
             if index == current {
                 if !compact {
                     context.fill(BullseyeArt.circle(center, radius * 3),
@@ -826,8 +826,8 @@ enum HarmonicNodeArt {
         let rest: CGFloat = compact ? 3 : 5
         let breathe: CGFloat = compact ? 2 : 5
         let ring = rest + CGFloat(pulse) * breathe
-        context.stroke(BullseyeArt.circle(node, ring), with: .color(Palette.amber.opacity(0.85 - 0.5 * pulse)), lineWidth: compact ? 1 : 1.5)
-        context.fill(BullseyeArt.circle(node, compact ? 1.6 : 2.6), with: .color(Palette.amber))
+        context.stroke(BullseyeArt.circle(node, ring), with: .color(Palette.accentNeutral.opacity(0.85 - 0.5 * pulse)), lineWidth: compact ? 1 : 1.5)
+        context.fill(BullseyeArt.circle(node, compact ? 1.6 : 2.6), with: .color(Palette.accentNeutral))
         guard !compact else { return }
         // A harmonic's diamond over it, the fret's number under it.
         let d: CGFloat = 4
@@ -838,7 +838,7 @@ enum HarmonicNodeArt {
         diamond.addLine(to: CGPoint(x: tip.x, y: tip.y + d))
         diamond.addLine(to: CGPoint(x: tip.x - d, y: tip.y))
         diamond.closeSubpath()
-        context.fill(diamond, with: .color(Palette.amber.opacity(0.9)))
+        context.fill(diamond, with: .color(Palette.accentNeutral.opacity(0.9)))
         let label = Text(verbatim: "12").font(.system(size: 10, weight: .semibold, design: .rounded)).foregroundStyle(Palette.inkFaint)
         context.draw(label, at: CGPoint(x: node.x, y: midY + amplitude + 14))
     }

@@ -199,7 +199,22 @@ RIVER_SONG = song(U, 84, [
     Part("Outro", "outro", f"{picked('F')} F4@2:4", chords="F F"),
 ], shapes=SHAPES, words="Traditional (in print by 1896)")
 
-UNIT_1 = unit("uke-1", "Hello, ukulele", "Hold it, meet G C E A, play your first notes.", [
+# Row, Row, Row Your Boat, unit 1 (free): one chord under the whole tune, so the C chord just learned strums all of
+# it. The tune on strings 1 to 3 in 6/8 (six eighths to a bar), the C chord picked out and back between verses.
+ROW_BEATS = [0, 3]                        # the two big beats of a 6/8 bar
+ROW_ROLL = "G4@4 C4@3 E4@2 C5@1 E4@2 C4@3"
+ROW_V = Part("Verse 1", "verse", on_two(tunes.ROW_TUNE), chords="C C C C C C C C", lyrics=tunes.ROW_WORDS)
+ROW_SONG = song(U, 144, [
+    Part("Intro", "intro", f"{ROW_ROLL} {ROW_ROLL}", chords="C C"),
+    ROW_V,
+    ROW_V.with_lyrics("Verse 2", tunes.ROW_WORDS),
+    Part("Interlude", "interlude", " ".join([ROW_ROLL] * 4), chords="C C C C"),
+    ROW_V.instrumental("Solo"),
+    ROW_V.with_lyrics("Verse 3", tunes.ROW_WORDS),
+    Part("Outro", "outro", on_two("G4:2 F4:1 E4:2 D4:1 C4:6"), chords="C C", lyrics="life is but a dream."),
+], beats_per_bar=6, shapes=SHAPES, words=tunes.ROW_CREDIT)
+
+UNIT_1 = unit("uke-1", "Hello, ukulele", "Hold it, meet G C E A, play your first notes, your first chord and a song.", [
     lesson("uke-1-1", "Meet your ukulele", [
         explain("Four strings, one small body", "Rest the body against your chest with the neck pointing left. The string nearest the floor is string 1. It plays the highest open note.",
                 part("strings")),
@@ -257,9 +272,6 @@ UNIT_1 = unit("uke-1", "Hello, ukulele", "Hold it, meet G C E A, play your first
         notes(U, ["D4", "F4", "B4", "C5"], hint="Your fretted notes: D, F, B, C."),
         along(U, "C4 E4 G4@2 A4 C5:2 A4:2 G4@2 E4 D4 F4 E4:2 C4:2", bpm=70, title="First-notes medley"),
     ], minutes=5, xp=30, kind="challenge"),
-])
-
-UNIT_2 = unit("uke-2", "First chords", "C, A minor, F, G7 and G: the chords behind countless songs.", [
     lesson("uke-2-1", "Your first chord: C", [
         explain("One finger, four strings", "C uses your third finger on fret 3 of string 1. The other three strings ring open.",
                 {"type": "chord", "chord": C}),
@@ -272,6 +284,18 @@ UNIT_2 = unit("uke-2", "First chords", "C, A minor, F, G7 and G: the chords behi
              "Your third finger reaches fret 3 without a stretch."),
         strum(C, DOWNS, bpm=66, bars=4),
     ], minutes=4, xp=20),
+    lesson("uke-1-7", "Row, Row, Row Your Boat", [
+        explain("One chord, one song", "Row, Row, Row Your Boat needs only C. Strum it on the two big beats of every bar, "
+                "then play the tune on strings 1 to 3.", {"type": "chord", "chord": C}),
+        strum(C, ROW_BEATS, bpm=132, bars=4, beats_per_bar=6),
+        notes(U, ["C4", "D4", "E4", "F4", ("G4", 2)], hint="The tune's five notes: C and D on string 3, E, F and G on string 2."),
+        ROW_SONG.along("Verse 1", bpm=120, title=THE_VERSE),
+        progression([(C, 8)], ROW_BEATS, bpm=144, beats_per_bar=6),
+        ROW_SONG.take("Row, Row, Row Your Boat"),
+    ], minutes=ROW_SONG.minutes(), xp=30, kind="song", arrangement=ROW_SONG.meta()),
+])
+
+UNIT_2 = unit("uke-2", "First chords", "A minor, F, G7 and G: with C, the chords behind countless songs.", [
     lesson("uke-2-2", "A minor and your first change", [
         explain("A minor: one finger again", "Put your second finger on fret 2 of string 4 and strum all four strings. A minor sounds darker than C.",
                 {"type": "chord", "chord": Am}),

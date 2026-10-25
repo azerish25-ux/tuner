@@ -154,7 +154,7 @@ struct PracticeView: View {
             HStack(alignment: .center, spacing: 16) {
                 LevelRing(size: 84)
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(LocalizedStringKey(level.name)).font(Typeface.display(22)).foregroundStyle(Palette.ink)
+                    Text(LocalizedStringKey(level.name)).font(Typeface.display(20)).foregroundStyle(Palette.ink)
                         .lineLimit(2).minimumScaleFactor(0.8)
                     Text("\(xp - level.floor) / \(level.next - level.floor) XP · next: \(Text(LocalizedStringKey(next.name)))")
                         .font(.subheadline).foregroundStyle(Palette.inkSoft)
@@ -276,7 +276,7 @@ struct PracticeView: View {
                 HStack(alignment: .center, spacing: 16) {
                     AchievementMedal(achievement: achievement, earned: false, size: 72, progress: badge.fraction, image: badge.image)
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(LocalizedStringKey(achievement.title)).font(Typeface.display(18)).foregroundStyle(Palette.ink)
+                        Text(LocalizedStringKey(achievement.title)).font(Typeface.display(17)).foregroundStyle(Palette.ink)
                             .lineLimit(2).minimumScaleFactor(0.85)
                         Text(LocalizedStringKey(achievement.detail)).font(.subheadline).foregroundStyle(Palette.inkSoft)
                             .fixedSize(horizontal: false, vertical: true)
@@ -446,7 +446,7 @@ struct PracticeView: View {
         let best = stats["sniperBest"] ?? 0
         let sniperLevel = SniperRank.level(bullseyes: stats["bullseyes"] ?? 0)
         let sniperStats = statsLine(best > 0 ? Text("Best \(best)") : nil, level: sniperLevel)
-        return gameCard(.sniper, title: "Bullseye", about: Text("Play the note. Hold the bullseye."), stats: sniperStats,
+        return gameCard(.sniper, title: "Bullseye", about: Text("Ten notes. One hidden song."), stats: sniperStats,
                         challenge: .sniper(store), tint: Palette.mint, stage: stage) { live in
             BullseyePreview(live: live)
         }
@@ -457,7 +457,7 @@ struct PracticeView: View {
         let correct = store.progress.stats["earCorrect"] ?? 0
         let earStats = statsLine(Text("\(correct) correct"), level: earLevel)
         return gameCard(.ear, title: "Ear training", about: Text("Hear two notes. Name the gap."), stats: earStats,
-                        challenge: .ear(store), tint: Palette.amber, stage: stage) { live in
+                        challenge: .ear(store), tint: Palette.accentNeutral, stage: stage) { live in
             IntervalStairsPreview(live: live)
         }
     }
@@ -700,7 +700,7 @@ struct ProgressRing: View {
         ZStack {
             Circle().stroke(Palette.line, lineWidth: 5)
             Circle().trim(from: 0, to: max(0.001, progress)).stroke(Palette.mint, style: StrokeStyle(lineWidth: 5, lineCap: .round)).rotationEffect(.degrees(-90))
-            Text("\(Int((progress * 100).rounded()))%").font(Typeface.number(11)).foregroundStyle(Palette.inkSoft)
+            Text("\(Int((progress * 100).rounded()))%").font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
         }
         .animation(Motion.settle, value: progress)
         .accessibilityElement().accessibilityLabel(Text("\(Int((progress * 100).rounded())) percent done"))
