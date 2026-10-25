@@ -69,12 +69,12 @@ LOCALES = ["de-DE", "fr-FR", "es-MX", "pt-BR", "it", "ja", "ko", "zh-Hans", "ru"
 #   keep    breakout: the columns of the rising picture kept (its sides fade away)
 #   detail  callout: the region enlarged in the card that breaks out over the screen's edge
 FOCUS = {
-    "10b-tune-locked": {"cut": 0.455, "rise": 0.075, "keep": (0.20, 0.80)},
+    "10b-tune-locked": {"cut": 0.455, "rise": 0.132, "keep": (0.11, 0.79)},
     "49d-tune-violin-locked": {"cut": 0.70, "rise": 0.05, "keep": (0.22, 0.78)},
     "65-song-perform": {"y0": 0.032},
     "65b-song-perform-violin": {"y0": 0.032},
     "62-lesson-results": {"y0": 0.035, "x": (0.02, 0.98)},
-    "52b-lesson-chord": {"y0": 0.0, "detail": (0.10, 0.085, 0.92, 0.152)},
+    "52b-lesson-chord": {"y0": 0.0, "detail": (0.12, 0.145, 0.90, 0.272)},
     "31b-instruments-folk": {"y0": 0.0},
     "63-songs": {"y0": 0.0},
     "50-learn": {"y0": 0.0},
@@ -511,10 +511,10 @@ def _breakout(layout, accent, shot, focus, title, line, size):
     lifted = _scaled(shot, scale, (0, rise * shot.height, shot.width, min(shot.height, cut * shot.height + lap)))
     mask = Image.new("L", lifted.size, 0)
     left, right = keep[0] * lifted.width, keep[1] * lifted.width
-    feather = lifted.width * 0.07
-    ImageDraw.Draw(mask).rounded_rectangle([left + feather, feather * 1.4, right - feather, lifted.height - feather * 0.6],
+    feather = lifted.width * 0.045
+    ImageDraw.Draw(mask).rounded_rectangle([left + feather, feather, right - feather, lifted.height - feather * 0.5],
                                             radius=int(feather * 2), fill=255)
-    mask = mask.filter(ImageFilter.GaussianBlur(feather * 0.8))
+    mask = mask.filter(ImageFilter.GaussianBlur(feather * 0.7))
     lifted_top = card_top - (lifted.height - int(lap * scale))
     glow = Image.new("RGBA", lifted.size, art.tint(accent) + (0,))
     glow.putalpha(mask.point(lambda v: int(v * 0.22)).filter(ImageFilter.GaussianBlur(feather * 1.5)))
@@ -541,11 +541,12 @@ def _callout(layout, accent, shot, focus, title, line, size):
     detail = focus.get("detail")
     if detail:
         dx0, dy0, dx1, dy1 = detail
-        zoom = scale * 1.55
+        # Half as large again as in the screen, but never wider than the frame less its margins.
+        zoom = min(scale * 1.55, (frame.w - 2 * frame.px(48)) / ((dx1 - dx0) * shot.width))
         picture = _scaled(shot, zoom, (dx0 * shot.width, dy0 * shot.height, dx1 * shot.width, dy1 * shot.height))
         # Over the detail's own place in the screen, pushed right so it breaks out past the screen's edge.
         centre_y = top + ((dy0 + dy1) / 2 - y0) * shot.height * scale
-        cx = min(frame.w - frame.px(40) - picture.width, x + width - picture.width + frame.px(150))
+        cx = max(frame.px(48), min(frame.w - frame.px(48) - picture.width, x + width - picture.width + frame.px(150)))
         cy = int(centre_y - picture.height / 2 + frame.px(40))
         frame.card(picture, cx, cy, frame.px(34), shadow=190)
     return frame
