@@ -46,11 +46,12 @@ final class ChordRecognizerTests: XCTestCase {
         try assertRecognised(barreAndPowerChords)
     }
 
-    /// Every root and quality, voiced by the app's own chord finder (its first shape), one strum each.
+    /// Every root and quality a reading is named with, voiced by the app's own chord finder (its first shape), one
+    /// strum each.
     func testEveryRootAndQualityFromTheChordFinder() {
         var total = 0, correct = 0, rootCorrect = 0
         var misses: [String] = []
-        for (index, quality) in ChordRecognizer.Quality.allCases.enumerated() {
+        for (index, quality) in ChordRecognizer.Quality.heard.enumerated() {
             let formula = ChordFormula.byId(quality.formulaId)
             XCTAssertEqual(formula.intervals, quality.intervals, quality.rawValue)
             for root in 0..<12 {
@@ -283,15 +284,37 @@ final class ChordRecognizerTests: XCTestCase {
         XCTAssertEqual(Array(heard[(firstGFrame + 1)..<(firstGFrame + 8)]), [String?](repeating: "G", count: 7), "\(heard)")
     }
 
-    func testIdealChromaRecoversEveryChord() {
+    /// The chroma of a chord's notes, evenly.
+    private func idealChroma(_ target: ChordTarget) -> [Double] {
+        var chroma = [Double](repeating: 0, count: 12)
+        for pitchClass in target.pitchClasses { chroma[pitchClass] = 1 / Double(target.pitchClasses.count).squareRoot() }
+        return chroma
+    }
+
+    /// A reading of `pitchClasses` played evenly with `bass` lowest, as the recognizer would make it.
+    private func idealReading(_ pitchClasses: [Int], bass: Int) throws -> ChordEstimate {
+        var chroma = [Double](repeating: 0, count: 12)
+        for pitchClass in pitchClasses { chroma[pitchClass] = 1 / Double(pitchClasses.count).squareRoot() }
+        let best = try XCTUnwrap(ChordRecognizer.bestChord(chroma: chroma, bass: bass))
+        return ChordEstimate(root: best.target.root, quality: best.target.quality, confidence: best.confidence, chroma: chroma, bass: bass)
+    }
+
+    func testIdealChromaRecoversEveryChord() throws {
+        // Every quality a reading is named with, and the augmented triad, which none of them fits, read as themselves.
+        for quality in ChordRecognizer.Quality.heard + [.augmented] {
+            for root in 0..<12 {
+                let target = ChordTarget(root: root, quality: quality)
+                let best = ChordRecognizer.bestChord(chroma: idealChroma(target), bass: root)
+                XCTAssertEqual(best?.target, target)
+                XCTAssertEqual(best?.confidence ?? 0, 1, accuracy: 1e-12)
+            }
+        }
+        // Every quality, the symmetric ones included, passes a lesson check of itself.
         for quality in ChordRecognizer.Quality.allCases {
             for root in 0..<12 {
                 let target = ChordTarget(root: root, quality: quality)
-                var chroma = [Double](repeating: 0, count: 12)
-                for pitchClass in target.pitchClasses { chroma[pitchClass] = 1 / Double(target.pitchClasses.count).squareRoot() }
-                let best = ChordRecognizer.bestChord(chroma: chroma, bass: root)
-                XCTAssertEqual(best?.target, target)
-                XCTAssertEqual(best?.confidence ?? 0, 1, accuracy: 1e-12)
+                let reading = try idealReading(Array(target.pitchClasses), bass: root)
+                XCTAssertTrue(reading.matches(target), "\(target.symbol) read as \(reading.symbol)")
             }
         }
         // A flat chroma (broadband noise) fits nothing.
@@ -317,6 +340,50 @@ final class ChordRecognizerTests: XCTestCase {
             XCTAssertEqual(ChordTarget(symbol: "C" + quality.suffix)?.quality, quality)
         }
         XCTAssertEqual(ChordTarget(root: 4, formulaId: "min"), ChordTarget(root: 4, quality: .minor))
-        XCTAssertNil(ChordTarget(root: 4, formulaId: "dim"))
+        XCTAssertEqual(ChordTarget(root: 11, formulaId: "dim"), ChordTarget(root: 11, quality: .diminished))
+        XCTAssertEqual(ChordTarget(root: 0, formulaId: "aug"), ChordTarget(root: 0, quality: .augmented))
+        XCTAssertEqual(ChordTarget(symbol: "Bdim7"), ChordTarget(root: 11, quality: .diminished7))
+        XCTAssertEqual(ChordTarget(symbol: "C+"), ChordTarget(root: 0, quality: .augmented))
+        // Added sixths and ninths are checked as the chord they colour.
+        XCTAssertEqual(ChordTarget(root: 4, formulaId: "9"), ChordTarget(root: 4, quality: .dominant7))
+        XCTAssertEqual(ChordTarget(root: 0, formulaId: "add9"), ChordTarget(root: 0, quality: .major))
+        XCTAssertEqual(ChordTarget(root: 0, formulaId: "m6"), ChordTarget(root: 0, quality: .minor))
+        XCTAssertEqual(ChordTarget(root: 0, formulaId: "6"), ChordTarget(root: 9, quality: .minor7), "C6 is Am7, note for note")
+        XCTAssertNil(ChordTarget(root: 4, formulaId: "13b9"))
+    }
+
+    /// The funk unit's E9 and D9: a ninth chord is checked as its seventh, so a stroke of E9 passes for E9 (and E7, the
+    /// same check) and not for the chords inside it.
+    func testNinthChordsAreCheckedAsTheirSeventh() throws {
+        let e9 = try XCTUnwrap(ChordTarget(root: 4, formulaId: "9"))
+        let reading = try idealReading([4, 8, 11, 2, 6], bass: 4)    // E G♯ B D F♯
+        XCTAssertEqual(reading.symbol, "E7")
+        XCTAssertTrue(reading.matches(e9))
+        for other in ["E", "Bm", "Em7", "E5", "Esus2"] {
+            XCTAssertFalse(reading.matches(try XCTUnwrap(ChordTarget(symbol: other))), other)
+        }
+        let d9 = try XCTUnwrap(ChordTarget(root: 2, formulaId: "9"))
+        XCTAssertTrue(try idealReading([2, 6, 9, 0, 4], bass: 2).matches(d9))
+        // A plain E major doesn't pass for E9.
+        XCTAssertFalse(try idealReading([4, 8, 11], bass: 4).matches(e9))
+    }
+
+    /// Diminished and augmented chords are checked against their own templates; the chords around them are turned away.
+    func testSymmetricChordsAreChecked() throws {
+        let bdim = try XCTUnwrap(ChordTarget(symbol: "Bdim"))
+        let bdimHeard = try idealReading([11, 2, 5], bass: 11)
+        XCTAssertTrue(bdimHeard.matches(bdim))
+        XCTAssertFalse(bdimHeard.matches(try XCTUnwrap(ChordTarget(symbol: "Bm"))))
+        // G7 played isn't Bdim, though it holds all of it.
+        XCTAssertFalse(try idealReading([7, 11, 2, 5], bass: 7).matches(bdim))
+        let caug = try XCTUnwrap(ChordTarget(symbol: "Caug"))
+        let caugHeard = try idealReading([0, 4, 8], bass: 0)
+        XCTAssertEqual(caugHeard.symbol, "Caug")
+        XCTAssertTrue(caugHeard.matches(caug))
+        XCTAssertFalse(caugHeard.matches(try XCTUnwrap(ChordTarget(symbol: "C"))))
+        XCTAssertFalse(try idealReading([0, 4, 7], bass: 0).matches(caug))
+        let bdim7 = try XCTUnwrap(ChordTarget(symbol: "Bdim7"))
+        XCTAssertTrue(try idealReading([11, 2, 5, 8], bass: 11).matches(bdim7))
+        XCTAssertFalse(try idealReading([7, 11, 2, 5], bass: 7).matches(bdim7))
     }
 }

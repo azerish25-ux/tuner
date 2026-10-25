@@ -93,6 +93,61 @@ public struct PlayAlongJudge: Sendable {
     }
 }
 
+// MARK: - Spoken cues
+
+/// When a play-along's spoken cues are said, so a player who can't see the runway hears each note's name in time to
+/// play it and no cue runs into the note it names or into the next cue. VoiceOver takes about 1.4 s over a full cue
+/// ("E, string 6, open") at its default rate and about 0.75 s over a brief one ("String 6, open").
+///
+/// - Each cue is said two beats ahead when a beat is shorter than `twoBeatsUnder` (60 BPM: two seconds ahead), one
+///   beat ahead otherwise.
+/// - It is brief when its note comes less than `briefUnder` after the note before (one beat apart at 60 BPM).
+/// - A cue never starts before the one before it has been said; it starts later instead, brief if a full one would
+///   then run into its note, and is left out (the earcons and the runway carry that note) if even a brief one would.
+/// - Every cue ends `clearance` before its note, and none starts before `from` (the take's start).
+public enum CuePlan {
+    public static let fullSeconds = 1.4
+    public static let briefSeconds = 0.75
+    public static let clearance = 0.1
+    public static let twoBeatsUnder = 1.5
+    public static let briefUnder = 1.6
+
+    /// One cue: the note it names (index into the times given), when it is said, and whether it is brief.
+    public struct Cue: Equatable, Sendable {
+        public let index: Int
+        /// Seconds on the take's clock (the clock of the note times).
+        public let at: Double
+        public let brief: Bool
+        /// How long it takes to say.
+        public var length: Double { brief ? CuePlan.briefSeconds : CuePlan.fullSeconds }
+    }
+
+    /// How far ahead of its note a cue is said: two beats when a beat is shorter than `twoBeatsUnder`, else one.
+    public static func lead(secondsPerBeat: Double) -> Double {
+        secondsPerBeat < twoBeatsUnder ? 2 * secondsPerBeat : secondsPerBeat
+    }
+
+    /// The cues for notes due at `times` (seconds, in order), on a take whose beat is `secondsPerBeat` long.
+    public static func plan(times: [Double], secondsPerBeat: Double, from: Double = 0) -> [Cue] {
+        guard secondsPerBeat.isFinite, secondsPerBeat > 0 else { return [] }
+        let ahead = Self.lead(secondsPerBeat: secondsPerBeat)
+        var cues: [Cue] = []
+        var free = from
+        for (index, time) in times.enumerated() where time.isFinite {
+            let gap = index == 0 ? Double.infinity : time - times[index - 1]
+            let latest = time - clearance
+            let start = max(time - ahead, free)
+            var brief = gap < briefUnder
+            if !brief && start + fullSeconds > latest { brief = true }
+            guard start + (brief ? briefSeconds : fullSeconds) <= latest else { continue }
+            let cue = Cue(index: index, at: start, brief: brief)
+            cues.append(cue)
+            free = start + cue.length
+        }
+        return cues
+    }
+}
+
 // MARK: - Tempo ladder
 
 /// A play-along's tempo ladder: a take runs at 75 %, 90 %, 100 % or 110 % of the lesson tempo. It starts at

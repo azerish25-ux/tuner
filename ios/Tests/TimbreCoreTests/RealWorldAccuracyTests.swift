@@ -1,10 +1,13 @@
-import AVFoundation
 import XCTest
 @testable import TimbreCore
 
 /// Real recordings held to the accuracy the app claims: the tuner on single strings, strum-to-tune, each stroke's
-/// chord and the silent-string check. Every other DSP test runs on synthesized signals; these run on the owner's
-/// corpus of real instruments, phones and rooms, and skip until it lands.
+/// chord, muted strokes and accents, and the silent-string check. Every other DSP test runs on synthesized signals;
+/// these run on the owner's corpus of real instruments, phones and rooms, and skip until it lands.
+///
+/// Each recording is fed as the microphone feeds a lesson: `AudioClip` hands it over in the tap's 512-frame buffers,
+/// through the same analysis a live take goes through (`LessonListening`, `StrokeChords`, `PolyTuner`), with no
+/// audio engine in the way.
 ///
 /// The corpus lives in `Tests/Fixtures/RealWorld/`: audio files (anything `AVAudioFile` reads: WAV, CAF, AIFF, M4A;
 /// mono or stereo, any sample rate) and `expected.json`, which holds the budgets and lists each clip with what is
@@ -13,7 +16,8 @@ import XCTest
 /// ```
 /// { "version": 1,
 ///   "budgets": { "noteMedianCents": 0.5, "noteSettleSeconds": 0.25, "strumCents": 2.0, "strumSeconds": 0.85,
-///                "chordPrecision": 0.95, "chordRecall": 0.85, "ringFalseSilent": 0 },
+///                "chordPrecision": 0.95, "chordRecall": 0.85, "ringFalseSilent": 0,
+///                "mutedRecall": 0.9, "ringingAsMuted": 0.05, "accentRecall": 0.8, "plainAsAccent": 0.1 },
 ///   "clips": [
 ///     { "file": "guitar/e2-iphone15-quiet.wav", "kind": "note", "midi": 40, "cents": -3.2, "onset": 0.41,
 ///       "device": "iPhone 15", "mic": "built-in", "room": "quiet" },
@@ -21,7 +25,10 @@ import XCTest
 ///       "stringCents": [0, -12.5, 3.1, 0.4, -7.8, 1.2] },
 ///     { "file": "guitar/c-strums.wav", "kind": "chord", "played": "C", "targets": ["C", "Am", "G", "F"] },
 ///     { "file": "guitar/body-taps.wav", "kind": "chord", "played": null, "targets": ["C", "G"] },
-///     { "file": "guitar/c-string3-muted.wav", "kind": "ring", "shape": "x32010", "silent": [3] }
+///     { "file": "guitar/c-string3-muted.wav", "kind": "ring", "shape": "x32010", "silent": [3] },
+///     { "file": "ukulele/c-chunks.wav", "kind": "mute", "technique": "chunk", "played": "C", "muted": true },
+///     { "file": "mandolin/a-chops-ringing.wav", "kind": "mute", "technique": "chop", "played": "A", "muted": false },
+///     { "file": "ukulele/c-332-accents.wav", "kind": "accent", "accents": [0.52, 1.27, 2.02] }
 ///   ] }
 /// ```
 /// - `note`: one plucked string. `midi` plus `cents` is its true pitch (measured with a reference tuner); `onset`, in
@@ -32,6 +39,13 @@ import XCTest
 /// - `chord`: strokes of one chord (`played`), or of none (`played` null: taps on the body, muted strums). Each stroke
 ///   is judged against every chord in `targets`, so wrong chords turned away count as much as right ones accepted.
 ///   Budgets: precision (a stroke accepted as a chord really was it) and recall (the right chord accepted).
+/// - `mute`: strokes of one technique on `played`: chunks, chops or palm-muted scratches (`muted` true), or the same
+///   strokes left ringing (`muted` false). A stroke passes as muted the way a rhythm step hears it (`StrumTake`): no
+///   chord, or stopped 150 ms on. Budgets: muted strokes that pass (`mutedRecall`), ringing strokes that pass anyway
+///   (`ringingAsMuted`).
+/// - `accent`: strummed strokes, those within 30 ms of the times in `accents` (seconds) played accented. Budgets:
+///   accented strokes heard at least `StrumTake.accentDb` over the median of the plain ones (`accentRecall`), and plain
+///   strokes heard that loud (`plainAsAccent`).
 /// - `ring`: one strum of `shape` (frets lowest string first, "x" muted, on `tuning`, standard guitar by default) with
 ///   the strings numbered in `silent` (1 the thinnest) muted on purpose, empty for a clean strum. Budget: strings
 ///   called silent that rang, across the corpus.
@@ -51,6 +65,10 @@ final class RealWorldAccuracyTests: XCTestCase {
         let chordPrecision: Double
         let chordRecall: Double
         let ringFalseSilent: Int
+        var mutedRecall: Double?
+        var ringingAsMuted: Double?
+        var accentRecall: Double?
+        var plainAsAccent: Double?
     }
 
     private struct Clip: Decodable {
@@ -66,6 +84,9 @@ final class RealWorldAccuracyTests: XCTestCase {
         var shape: String?
         var tuning: [Int]?
         var silent: [Int]?
+        var technique: String?
+        var muted: Bool?
+        var accents: [Double]?
         var device: String?
         var mic: String?
         var room: String?
@@ -75,12 +96,9 @@ final class RealWorldAccuracyTests: XCTestCase {
 
     private struct Recording {
         let clip: Clip
-        let samples: [Float]
-        let rate: Double
-    }
-
-    private struct CorpusError: Error, CustomStringConvertible {
-        let description: String
+        let audio: AudioClip
+        var samples: [Float] { audio.samples }
+        var rate: Double { audio.sampleRate }
     }
 
     private static let folder = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
@@ -98,28 +116,10 @@ final class RealWorldAccuracyTests: XCTestCase {
                 print("Real-world corpus: \(clip.file) is listed but not present")
                 continue
             }
-            let audio = try Self.read(url)
-            recordings.append(Recording(clip: clip, samples: audio.samples, rate: audio.rate))
+            recordings.append(Recording(clip: clip, audio: try AudioClip(contentsOf: url)))
         }
         if recordings.isEmpty { throw XCTSkip("No \(kind) recordings in the real-world corpus yet") }
         return (corpus.budgets, recordings)
-    }
-
-    /// The file as mono samples at its own rate.
-    private static func read(_ url: URL) throws -> (samples: [Float], rate: Double) {
-        let file = try AVAudioFile(forReading: url)
-        let format = file.processingFormat
-        guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(file.length)) else {
-            throw CorpusError(description: "\(url.lastPathComponent): no buffer")
-        }
-        try file.read(into: buffer)
-        guard let channels = buffer.floatChannelData else { throw CorpusError(description: "\(url.lastPathComponent): not float audio") }
-        let frames = Int(buffer.frameLength), count = Int(format.channelCount)
-        var mono = [Float](repeating: 0, count: frames)
-        for channel in 0..<count {
-            for i in 0..<frames { mono[i] += channels[channel][i] / Float(count) }
-        }
-        return (mono, format.sampleRate)
     }
 
     private static func firstOnset(_ samples: [Float], rate: Double) -> Double? {
@@ -183,7 +183,7 @@ final class RealWorldAccuracyTests: XCTestCase {
                 continue
             }
             let tuner = PolyTuner(strings: strings.map { PitchMath.frequency(midi: Double($0)) }, sampleRate: recording.rate)
-            guard let found = Self.firstReading(recording.samples, rate: recording.rate, tuner: tuner) else {
+            guard let found = Self.firstReading(recording.audio, tuner: tuner) else {
                 XCTFail("\(clip.label): no reading")
                 continue
             }
@@ -198,13 +198,12 @@ final class RealWorldAccuracyTests: XCTestCase {
         }
     }
 
-    /// The tuner's first reading and when it came (seconds of audio fed).
-    private static func firstReading(_ samples: [Float], rate: Double, tuner: PolyTuner) -> (reading: PolyReading, at: Double)? {
-        var start = 0
-        while start < samples.count {
-            let end = min(samples.count, start + 512)
-            if let reading = tuner.feed(Array(samples[start..<end])) { return (reading, Double(end) / rate) }
-            start = end
+    /// The tuner's first reading and when it came (seconds of audio fed), fed in the tap's buffers.
+    private static func firstReading(_ audio: AudioClip, tuner: PolyTuner) -> (reading: PolyReading, at: Double)? {
+        var fed = 0
+        for buffer in audio.buffers() {
+            fed += buffer.count
+            if let reading = tuner.feed(buffer) { return (reading, Double(fed) / audio.sampleRate) }
         }
         return nil
     }
@@ -218,14 +217,7 @@ final class RealWorldAccuracyTests: XCTestCase {
             let clip = recording.clip
             let played = clip.played.flatMap { ChordTarget(symbol: $0) }
             let targets = (clip.targets ?? [clip.played].compactMap { $0 }).compactMap { ChordTarget(symbol: $0) }
-            let reader = StrokeChords(sampleRate: recording.rate)
-            var strokes: [StrokeChords.Stroke] = []
-            var start = 0
-            while start < recording.samples.count {
-                let end = min(recording.samples.count, start + 1024)
-                strokes += reader.feed(Array(recording.samples[start..<end])).strokes
-                start = end
-            }
+            let strokes = recording.audio.strokes()
             XCTAssertFalse(strokes.isEmpty, "\(clip.label): no strokes heard")
             for stroke in strokes {
                 for target in targets {
@@ -257,7 +249,7 @@ final class RealWorldAccuracyTests: XCTestCase {
             let pitches = sounding.compactMap { frets[$0] }.map { PitchMath.frequency(midi: Double($0)) }
             guard !pitches.isEmpty else { continue }
             let tuner = PolyTuner(strings: pitches, sampleRate: recording.rate)
-            guard let found = Self.firstReading(recording.samples, rate: recording.rate, tuner: tuner) else {
+            guard let found = Self.firstReading(recording.audio, tuner: tuner) else {
                 XCTFail("\(clip.label): no reading")
                 continue
             }
@@ -272,5 +264,56 @@ final class RealWorldAccuracyTests: XCTestCase {
         }
         print("Real-world rings: \(named) of \(muted) muted strings named, \(falseSilent) called silent that rang")
         XCTAssertLessThanOrEqual(falseSilent, budgets.ringFalseSilent)
+    }
+
+    // MARK: Chunks, chops and mutes
+
+    func testMutedStrokesAreHeardStopping() throws {
+        let (budgets, recordings) = try corpus("mute")
+        var mutedPassed = 0, mutedTotal = 0, ringingPassed = 0, ringingTotal = 0
+        for recording in recordings {
+            let clip = recording.clip
+            guard let muted = clip.muted else { XCTFail("\(clip.file): a mute clip says whether its strokes are muted"); continue }
+            let strokes = recording.audio.strokes()
+            XCTAssertFalse(strokes.isEmpty, "\(clip.label): no strokes heard")
+            // As a rhythm step hears a muted beat: no chord rang, or it had stopped 150 ms on.
+            let passed = strokes.filter { $0.chord == nil || $0.stopped == true }.count
+            if muted { mutedPassed += passed; mutedTotal += strokes.count } else { ringingPassed += passed; ringingTotal += strokes.count }
+            print("Real-world \(clip.technique ?? "mute") \(clip.label): \(passed) of \(strokes.count) passed as muted; rings "
+                  + strokes.map { stroke in stroke.ring.map { String(format: "%.2f", $0 / max(stroke.attack, 1e-9)) } ?? "-" }.joined(separator: " "))
+        }
+        if mutedTotal > 0, let recall = budgets.mutedRecall {
+            XCTAssertGreaterThanOrEqual(Double(mutedPassed) / Double(mutedTotal), recall, "muted strokes heard as muted")
+        }
+        if ringingTotal > 0, let ceiling = budgets.ringingAsMuted {
+            XCTAssertLessThanOrEqual(Double(ringingPassed) / Double(ringingTotal), ceiling, "ringing strokes passed as muted")
+        }
+    }
+
+    // MARK: Accents
+
+    func testAccentsStandOutFromThePlainStrokes() throws {
+        let (budgets, recordings) = try corpus("accent")
+        var accentsHeard = 0, accentsTotal = 0, plainLoud = 0, plainTotal = 0
+        for recording in recordings {
+            let clip = recording.clip
+            let marks = clip.accents ?? []
+            let strokes = recording.audio.strokes()
+            let accented = strokes.filter { stroke in marks.contains { abs($0 - stroke.time) <= 0.03 } }
+            let plain = strokes.filter { stroke in !marks.contains { abs($0 - stroke.time) <= 0.03 } }.map { $0.level }.sorted()
+            guard plain.count >= 2 else { XCTFail("\(clip.label): too few plain strokes heard"); continue }
+            let median = plain[plain.count / 2]
+            accentsHeard += accented.filter { $0.level >= median + StrumTake.accentDb }.count
+            accentsTotal += marks.count
+            plainLoud += plain.filter { $0 >= median + StrumTake.accentDb }.count
+            plainTotal += plain.count
+            print("Real-world accents \(clip.label): " + accented.map { String(format: "%+.1f dB", $0.level - median) }.joined(separator: " "))
+        }
+        if accentsTotal > 0, let recall = budgets.accentRecall {
+            XCTAssertGreaterThanOrEqual(Double(accentsHeard) / Double(accentsTotal), recall, "accents heard standing out")
+        }
+        if plainTotal > 0, let ceiling = budgets.plainAsAccent {
+            XCTAssertLessThanOrEqual(Double(plainLoud) / Double(plainTotal), ceiling, "plain strokes heard as accents")
+        }
     }
 }

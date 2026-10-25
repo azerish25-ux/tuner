@@ -3,37 +3,31 @@ import TimbreCore
 
 /// How one stroke of a rhythm step went: its grade and how far off it was in seconds (negative early). A miss
 /// carries the nearest stroke heard outside the window, if there was one; nil when nothing was heard. A stroke that
-/// came in on time with the wrong chord, or with none, says so (`chord`).
+/// came in on time but rang the wrong chord or none, a chop left ringing or an accent played soft says so (`call`).
 struct BeatCall: Equatable {
     let grade: PlayAlongJudge.Grade
     let offset: Double?
-    var chord: ChordCall? = nil
-}
-
-/// What a stroke rang when it wasn't the chord asked for.
-enum ChordCall: Equatable {
-    /// Another chord, by its name as the player reads it ("Am").
-    case wrong(String)
-    /// No chord at all: a tap on the body, a muted strum.
-    case silent
+    var call: StrumTake.Call? = nil
 }
 
 /// The rhythm step's beat lane: one bar on a track, the counts under it, each stroke called as the playhead passes.
 ///
 /// On a strummed instrument the lane shows what the strumming hand really does. Every eighth is a slot, counted
 /// "1 & 2 & 3 & 4 &": the pattern's strokes are chips with their arrow (down on the beat in the accent, up on the
-/// "and" in amber), and the strokes the hand makes without touching the strings are faint ghosts, because the hand
+/// "and" in steel), and the strokes the hand makes without touching the strings are faint ghosts, because the hand
 /// never stops: it swings down on every beat and up on every "and" whether it strikes or not. A pick rides the lane
 /// as the playhead, tracing that swing as a wave through the strings' line (down through it on a beat, up through it
 /// on an "and"), tip first along its path with a fading trail. Before the take it waits raised over beat 1. The lane
 /// draws the hand, so its down is always down, as in the words ("Strum down"); the strum stage that goes with it
 /// (`StrumSweep`) always lays the strings in Player view, the thickest on top, so its pick falls down the screen on
 /// this lane's ↓ too, and its key ("↓ 6 → 1") names the strings a down strum crosses, top to bottom.
-/// Elsewhere (taps, plucks) the strokes are dots and the playhead is a bar.
+/// Elsewhere (taps, plucks) the strokes are dots and the playhead is a bar. A muted stroke (a chunk, a chop) is
+/// marked with a cross instead of its arrow, an accented one with an accent mark (>) over it.
 ///
 /// Each stroke is called as it passes, mint on the beat, amber when loose, red when missed, and a loose or missed
 /// stroke says why under its count ("120 ms late", "Missed"); a stroke on time with the wrong chord turns amber with
-/// the chord it rang ("Am?"), one that rang no chord says so ("No chord"). Each one swells as the playhead reaches it.
+/// the chord it rang ("Am?"), one that rang no chord says so ("No chord"), a chop left ringing "Let it stop", a soft
+/// accent "Harder". Each one swells as the playhead reaches it.
 /// Explanations and quizzes draw the same lane without the calls (`RhythmBar`).
 struct LessonBeatRow: View {
     let pattern: [Double]
@@ -49,6 +43,9 @@ struct LessonBeatRow: View {
     var callRows = true
     /// With no playhead, the pick waits over beat 1 (before Start, counting in); off once the take is done.
     var restingPick = true
+    /// Beats of the pattern played muted (a cross on the chip) and accented (an accent mark over it).
+    var muted: [Double] = []
+    var accents: [Double] = []
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// Off-beat strokes put their reasons on a second line, so neighbours' words never collide.
@@ -65,7 +62,7 @@ struct LessonBeatRow: View {
             .frame(height: height)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text("Rhythm pattern"))
-            .accessibilityValue(spokenCalls)
+            .accessibilityValue(calls.isEmpty ? spokenMarks : spokenCalls)
     }
 
     // MARK: Geometry
@@ -107,6 +104,8 @@ struct LessonBeatRow: View {
     }
 
     private func isStruck(_ beat: Double) -> Bool { pattern.contains { abs($0 - beat) < 0.02 } }
+    private func isMuted(_ beat: Double) -> Bool { muted.contains { abs($0 - beat) < 0.02 } }
+    private func isAccented(_ beat: Double) -> Bool { accents.contains { abs($0 - beat) < 0.02 } }
 
     /// The hand's swing reads the pattern only when every stroke sits on a slot (triplets don't: they keep the
     /// plain lane, arrows on the dots).
@@ -261,10 +260,15 @@ struct LessonBeatRow: View {
             BeatStrike.draw(&context, at: center, radius: r, color: color, strike: strike)
             context.fill(circle(center, r + 4), with: .color(color.opacity(call == nil ? 0.18 : 0.3)))
             context.fill(circle(center, r), with: .color(color))
-            if arrows {
+            if isMuted(hit) {
+                // A muted stroke: the hand still swings through, but nothing should ring.
+                let cross = Text(Image(systemName: "xmark")).font(.system(size: r * 0.95, weight: .black)).foregroundStyle(Palette.onAccent)
+                context.draw(cross, at: center)
+            } else if arrows {
                 let arrow = Text(Image(systemName: onBeat ? "arrow.down" : "arrow.up")).font(.system(size: r * 1.15, weight: .black)).foregroundStyle(Palette.onAccent)
                 context.draw(arrow, at: center)
             }
+            if isAccented(hit) { drawAccent(&context, over: center, radius: r, color: color) }
             if callRows, let call, let words = reason(call) {
                 // Under the counts; kept inside the row at the ends.
                 let y = onBeat || !hasOffbeats ? Self.firstCallY : Self.secondCallY
@@ -274,15 +278,26 @@ struct LessonBeatRow: View {
         }
     }
 
+    /// An accent mark (>) over a stroke's chip, in the chip's colour.
+    private func drawAccent(_ context: inout GraphicsContext, over center: CGPoint, radius r: CGFloat, color: Color) {
+        let y = center.y - r - 7, w: CGFloat = 6, h: CGFloat = 3.5
+        var wedge = Path()
+        wedge.move(to: CGPoint(x: center.x - w, y: y - h))
+        wedge.addLine(to: CGPoint(x: center.x + w, y: y))
+        wedge.addLine(to: CGPoint(x: center.x - w, y: y + h))
+        context.stroke(wedge, with: .color(color), style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+    }
+
     private func circle(_ center: CGPoint, _ radius: CGFloat) -> Path {
         Path(ellipseIn: CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2))
     }
 
     // MARK: Calls
 
-    /// Upcoming strokes as in the explanations (down strokes mint, up strokes amber); called ones by their grade.
+    /// Upcoming strokes as in the explanations (down strokes in the accent, up strokes in steel, so neither reads as a
+    /// call); called ones by their grade.
     private func tint(_ call: BeatCall?, onBeat: Bool) -> Color {
-        guard let grade = call?.grade else { return onBeat ? accent : Palette.amber }
+        guard let grade = call?.grade else { return onBeat ? accent : Palette.accentNeutral }
         switch grade {
         case .perfect, .good: return accent
         case .ok: return Palette.amber
@@ -290,12 +305,14 @@ struct LessonBeatRow: View {
         }
     }
 
-    /// Why a stroke was loose or missed, nil for a clean one. The chord comes first: a stroke on time with the wrong
-    /// chord is wrong for that reason.
+    /// Why a stroke was loose or missed, nil for a clean one. What it rang comes first: a stroke on time with the
+    /// wrong chord is wrong for that reason.
     private func reason(_ call: BeatCall) -> Text? {
-        switch call.chord {
-        case .wrong(let name)?: return Text(verbatim: name + "?")
-        case .silent?: return Text("No chord")
+        switch call.call {
+        case .wrongChord(let name)?: return Text(verbatim: name + "?")
+        case .noChord?: return Text("No chord")
+        case .ringing?: return Text("Let it stop")
+        case .softAccent?: return Text("Harder")
         case nil: break
         }
         switch call.grade {
@@ -315,9 +332,11 @@ struct LessonBeatRow: View {
     private var spokenCalls: String {
         pattern.indices.compactMap { i -> String? in
             guard let call = calls[i] else { return nil }
-            switch call.chord {
-            case .wrong(let name)?: return String(localized: "Sounded like \(name)")
-            case .silent?: return String(localized: "No chord")
+            switch call.call {
+            case .wrongChord(let name)?: return String(localized: "Sounded like \(name)")
+            case .noChord?: return String(localized: "No chord")
+            case .ringing?: return String(localized: "Let it stop")
+            case .softAccent?: return String(localized: "Harder")
             case nil: break
             }
             switch call.grade {
@@ -330,5 +349,21 @@ struct LessonBeatRow: View {
             }
         }
         .joined(separator: ", ")
+    }
+
+    /// For VoiceOver before a take: the muted and accented strokes, by their counts ("Muted: 2, 4. Accents: 1").
+    private var spokenMarks: String {
+        var parts: [String] = []
+        let mutedCounts = pattern.filter { isMuted($0) }.map(Self.spokenCount)
+        if !mutedCounts.isEmpty { parts.append(String(localized: "Muted: \(mutedCounts.joined(separator: ", "))")) }
+        let accentCounts = pattern.filter { isAccented($0) }.map(Self.spokenCount)
+        if !accentCounts.isEmpty { parts.append(String(localized: "Accents: \(accentCounts.joined(separator: ", "))")) }
+        return parts.joined(separator: ". ")
+    }
+
+    /// A stroke's count as said: "2" on a beat, "and of 2" between beats.
+    private static func spokenCount(_ beat: Double) -> String {
+        let number = Int(beat.rounded(.down)) + 1
+        return beat.truncatingRemainder(dividingBy: 1) == 0 ? "\(number)" : String(localized: "and of \(number)")
     }
 }

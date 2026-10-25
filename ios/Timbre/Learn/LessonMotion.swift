@@ -7,7 +7,7 @@ import TimbreCore
 /// Whether a lesson can hear the instrument at all. Without it (permission refused, or the microphone
 /// failed to start), an instrument's rhythm steps fall back to tapping the screen: practice mode.
 enum LessonMicrophone {
-    /// UI-test and store-capture runs (TIMBRE_DEMO_PITCH=1, debug builds only) feed a demo pitch instead of the
+    /// Debug builds launched with TIMBRE_DEMO_PITCH=1 (automated runs and captures) feed a demo pitch instead of the
     /// microphone. It has a pitch but no strokes, so rhythm steps play the strums themselves (`RhythmStep`).
     static var demo: Bool {
         #if DEBUG
@@ -44,7 +44,7 @@ struct PracticeModeTag: View {
     }
 }
 
-/// A score's colour by grade: 90 % and up mint, 70 % and up gold, lower coral.
+/// A score's colour by grade: 90 % and up mint (right), 70 % and up amber (adjust), lower coral (wrong).
 enum ScoreTint {
     static func color(_ score: Double) -> Color {
         let percent = (score * 100).rounded()

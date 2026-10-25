@@ -86,6 +86,8 @@ struct NotesStep: View {
     /// neither reopens the microphone (or finishes the lesson) after it has closed.
     @State private var hearTask: Task<Void, Never>?
     @State private var finishTask: Task<Void, Never>?
+    /// VoiceOver: the next note as each one lands, and which way to go while a pitch is held that isn't it yet.
+    @State private var voice = NoteStepVoice()
 
     init(notes: [TimedNote], hint: LearnText?, course: LearnCourse, accent: Color,
          onItem: @escaping (PracticeItem, Double) -> Void = { _, _ in }, done: @escaping (Double?) -> Void) {
@@ -180,9 +182,36 @@ struct NotesStep: View {
         .layoutPriority(1)
         // Below its neighbours, so the sparks pass behind the prompt and the chips, never over words.
         .zIndex(-1)
-        .accessibilityElement(children: .combine)
+        // The note to play, as said ("D, string 4, open"), and how the pitch heard stands.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: shown.map { spokenPhrase($0) } ?? ""))
+        .accessibilityValue(Text(status))
         // The note to play is what this step is about: VoiceOver reads the step from here.
         .lessonStepArrival()
+    }
+
+    /// A note as VoiceOver says it: its name in the app's language and, on a fretted or fingerboard course, where it
+    /// is played ("F sharp, string 1, fret 2").
+    private func spokenPhrase(_ note: TimedNote) -> String {
+        let name = NoteNames.spokenInApp(NoteName.pitchClass(note.midi))
+        guard course.fretKind != nil, let at = note.at ?? course.fretting(for: note.midi) else { return name }
+        let place = at.fret == 0 ? String(localized: "String \(at.string), open") : String(localized: "String \(at.string), fret \(at.fret)")
+        return name + ", " + place
+    }
+
+    /// What VoiceOver says while a pitch is held that isn't the note in tune yet: which way to go ("A little flat.
+    /// Tighten" on a fretted string; "Go higher" for a voice or a fingerboard), or the note it is ("That’s G"). Nil
+    /// while nothing is heard or the note is in tune (the ring fills).
+    private func spokenGuidance(_ note: HeardNote?) -> String? {
+        guard let note, let target = current?.midi else { return nil }
+        let right = course.anyOctave ? (note.midi - target) % 12 == 0 : note.midi == target
+        guard right else { return String(localized: "That’s \(NoteNames.spokenInApp(NoteName.pitchClass(note.midi)))") }
+        guard abs(note.cents) > judge.toleranceCents else { return nil }
+        let pegs = course.fretKind != nil && !course.fretless
+        if note.cents < 0 {
+            return String(localized: "A little flat") + ". " + (pegs ? String(localized: "Tighten") : String(localized: "Go higher"))
+        }
+        return String(localized: "A little sharp") + ". " + (pegs ? String(localized: "Loosen") : String(localized: "Go lower"))
     }
 
     /// A shockwave leaving the ring's edge when a note lands: drawn on a canvas twice the ring's size
@@ -217,7 +246,7 @@ struct NotesStep: View {
     /// fades in (`NoteHandover`), so two never overlap and none is left half drawn.
     private var noteLetter: some View {
         let name = NoteName.name(shown?.midi ?? 60)
-        return NoteHandover(String(name.dropLast(name.last?.isNumber == true ? 1 : 0)), font: Typeface.note(88), turn: min(judge.index, max(0, notes.count - 1)))
+        return NoteHandover(String(name.dropLast(name.last?.isNumber == true ? 1 : 0)), font: Typeface.hero(88), turn: min(judge.index, max(0, notes.count - 1)))
     }
 
     /// Where to play it: a strip of the neck with the target string and fret lit and breathing (fretted
@@ -285,7 +314,8 @@ struct NotesStep: View {
             let note = HeardNote(hz: hz, reference: store.settings.referencePitchHz)
             heard = note
             guard !finished else { return }
-            switch judge.update(time: CACurrentMediaTime(), midi: note?.midi, cents: note?.cents) {
+            let now = CACurrentMediaTime()
+            switch judge.update(time: now, midi: note?.midi, cents: note?.cents) {
             case .holding(let p)?: hold = p
             case .hit(let index)?:
                 hold = 0; burst += 1
@@ -294,12 +324,17 @@ struct NotesStep: View {
                 wrongHere = 0
                 SoundFX.shared.play(.correct); Haptics.shared.lock()
                 if judge.isFinished { finish(score: judge.accuracy) }
-                else if let next = current { store.gameTargetHz = frequency(next.midi, store) }
+                else if let next = current {
+                    store.gameTargetHz = frequency(next.midi, store)
+                    // A blind learner hears where the next note is without taking a hand off the instrument.
+                    if UIAccessibility.isVoiceOverRunning { voice.next(spokenPhrase(next), now: now) }
+                }
             case .wrong?:
                 wrongHere += 1
                 hold = max(0, hold - 0.1)
             default: hold = max(0, hold - 0.1)
             }
+            if UIAccessibility.isVoiceOverRunning && !finished { voice.heard(spokenGuidance(note), now: now) }
         }
     }
 
@@ -825,7 +860,9 @@ struct ChordStep: View {
         guard !finished, !sounding, reading.strings.count == order.count else { return }
         let states = ChordRing.states(reading, pitches: pitches)
         let chordHeard = CACurrentMediaTime() - lastMatch < 1.2
-        if let target, !chordHeard, let heard = lastReading, !heard.heardPitchClasses().isSubset(of: target.pitchClasses) { return }
+        // The shape's own notes count too: a 9 is checked as its 7 (`ChordTarget`), and its ninth is no wrong note.
+        let shape = Set(order.map { $0.midi % 12 })
+        if let target, !chordHeard, let heard = lastReading, !heard.heardPitchClasses().isSubset(of: target.pitchClasses.union(shape)) { return }
         let dead = states.indices.filter { states[$0] == .dead }.map { order[$0].index }
         if dead.isEmpty && (chordHeard || states.allSatisfy { $0 == .rings }) {
             withAnimation(Motion.pluck) {
@@ -1023,9 +1060,11 @@ struct LessonStepBar: View {
 /// neck to the right for a left-handed player, string 1 on top for one playing a right-handed instrument turned over),
 /// so the pick goes down the screen on a ↓; the chord beside the title is a fretting picture and follows the picture
 /// choice, as every chord box does.
-/// On a strummed instrument heard through the microphone every stroke is graded for its chord as well as its timing
-/// (`StrokeChords`): another chord holds the stroke to OK and names what rang ("Am?"), no chord at all misses a down
-/// stroke. A take where most strokes rang the wrong chord keeps the lesson to one star.
+/// On a strummed instrument heard through the microphone every stroke is graded for what it rang as well as its timing
+/// (`StrumTake`, `StrokeChords`): another chord holds the stroke to OK and names what rang ("Am?"), no chord at all
+/// misses a down stroke. A muted beat (a chunk, a chop) asks for the opposite: no chord, or one stopped dead, and a
+/// chop left ringing is held to OK ("Let it stop"). An accented beat must stand out from the rest ("Push the and of
+/// 2"). A take where most played strokes rang the wrong chord keeps the lesson to one star.
 /// Before Start, "Show me" under the strings plays the pattern on the course instrument's 3D model in their place
 /// (`ShowMeStage`, seen the same way up, its pick on the preview's clock) while two bars of it sound; Start brings the
 /// strings back before the click and the microphone start. Without a model, with Reduce Motion or in Low Power Mode
@@ -1040,6 +1079,9 @@ struct RhythmStep: View {
     let bars: Int
     /// Beats in a bar when the lesson sets it (3/4, 6/8 in eighths); otherwise 4, or longer if the pattern needs it.
     var meter: Int?
+    /// Beats of the pattern played muted (chunks, chops) and accented, as `pattern` counts them.
+    var muted: [Double] = []
+    var accents: [Double] = []
     /// On an instrument course a tap step is played on the instrument, so hands stay on the strings.
     var hearsInstrument = false
     /// Strummed instruments: the pattern reads as down and up strokes, and a pick sweeps the strings.
@@ -1063,18 +1105,9 @@ struct RhythmStep: View {
     @State private var phase = Phase.ready
     @State private var startTime: CFTimeInterval = 0
     @State private var appeared = CACurrentMediaTime()
-    @State private var hits: [Double] = []
-    @State private var grades: [Int: PlayAlongJudge.Grade] = [:]
-    /// How far off each judged stroke was, in seconds (negative early).
-    @State private var offsets: [Int: Double] = [:]
-    /// The nearest stroke heard outside a beat's window: the reason it's missed ("240 ms early").
-    @State private var strays: [Int: Double] = [:]
-    /// When each judged stroke was heard (host clock), so its chord, read a moment later, finds it.
-    @State private var strokeTimes: [Int: CFTimeInterval] = [:]
-    /// Each stroke whose chord was read: true when it rang the chord asked for.
-    @State private var chordRight: [Int: Bool] = [:]
-    /// What a stroke rang instead of its chord.
-    @State private var chordCalls: [Int: ChordCall] = [:]
+    /// The take stroke by stroke: timing, what each stroke rang, the muted and accented beats. Strokes are stamped
+    /// with their host time, so each one's reading, a moment later, finds it.
+    @State private var take = StrumTake(pattern: [], bars: 0, bpm: 60)
     /// "Start on first strum": before a take, the microphone waits for the instrument and the count-in starts on it.
     @AppStorage("lesson.startOnStrum") private var startOnStrum = false
     @State private var armed = false
@@ -1109,7 +1142,8 @@ struct RhythmStep: View {
     private var spb: Double { 60 / bpm }
     private var countIn: Double { Double(beatsPerBar) * spb }
     private var barLength: Double { Double(beatsPerBar) * spb }
-    private var expected: [Double] { (0..<bars).flatMap { bar in pattern.map { countIn + (Double(bar * beatsPerBar) + $0) * spb } } }
+    /// When each stroke is due, from the take's start (`StrumTake.expected`).
+    private var expected: [Double] { take.expected }
     private var isTap: Bool { if case .tap = mode { return true } else { return false } }
     /// The instrument is what counts here (strum steps, and tap steps on an instrument course).
     private var instrumentStep: Bool { !isTap || hearsInstrument }
@@ -1156,29 +1190,36 @@ struct RhythmStep: View {
 
     private static func target(_ chord: ChordSpec) -> ChordTarget? { ChordTarget(root: chord.root, formulaId: chord.quality) }
 
-    /// The chord stroke `index` asks for: its bar's.
-    private func chord(forStroke index: Int) -> ChordSpec? {
-        guard !pattern.isEmpty else { return nil }
-        let bar = index / pattern.count
+    /// Each stroke is read a moment after it (`StrokeChords`): on a strummed instrument heard through the microphone,
+    /// for a chord to check, a muted beat to hear stop or an accent to hear stand out.
+    private var readsStrokes: Bool {
+        guard instrumentStep, !micOff, !LessonMicrophone.demo, LearnCourse.strummed(course?.instrument), !isTap else { return false }
+        return checksChords || !muted.isEmpty || !accents.isEmpty
+    }
+
+    /// The chord each bar asks for (a progression's chords for their bars, the last one again past the end); none
+    /// where chords aren't checked.
+    private var barTargets: [ChordTarget?] {
+        guard checksChords else { return [] }
         switch mode {
         case .tap:
-            return nil
+            return []
         case .strum(let chord):
-            return chord
+            return [chord.flatMap(Self.target)]
         case .progression(let chords, let lengths):
-            var total = 0
+            var targets: [ChordTarget?] = []
             for (i, n) in lengths.enumerated() {
-                total += n
-                if bar < total { return i < chords.count ? chords[i] : chords.last }
+                let chord = i < chords.count ? chords[i] : chords.last
+                targets += Array(repeating: chord.flatMap(Self.target), count: max(0, n))
             }
-            return chords.last
+            targets.append(chords.last.flatMap(Self.target))
+            return targets
         }
     }
 
-    /// Most of the take's strokes rang another chord (or none): the lesson stays at one star, whatever the timing.
-    private var chordsMostlyWrong: Bool {
-        guard !chordRight.isEmpty else { return false }
-        return Double(chordRight.values.filter { $0 }.count) / Double(chordRight.count) < 0.5
+    /// A fresh take of this step's pattern.
+    private func freshTake() -> StrumTake {
+        StrumTake(pattern: pattern, beatsPerBar: beatsPerBar, bars: bars, bpm: bpm, muted: muted, accents: accents, chords: barTargets)
     }
 
 
@@ -1283,7 +1324,7 @@ struct RhythmStep: View {
                 Text("Bar \(bar + 1) of \(bars)").font(Typeface.label(.footnote)).foregroundStyle(Palette.inkSoft)
                     .opacity(phase == .done ? 0 : 1)
                 LessonBeatRow(pattern: pattern, beatsPerBar: beatsPerBar, accent: accent, playhead: playhead(now: now, elapsed: elapsed, bar: bar),
-                              calls: calls(inBar: bar), arrows: !isTap || strums, restingPick: phase != .done)
+                              calls: calls(inBar: bar), arrows: !isTap || strums, restingPick: phase != .done, muted: muted, accents: accents)
                     .padding(.horizontal, 12)
                     .onChange(of: Int(now * 30)) { _, _ in expire(now: now) }
             }
@@ -1330,13 +1371,13 @@ struct RhythmStep: View {
         .accessibilityLabel(Text("\(beat + 1)"))
     }
 
-    /// How each stroke of `bar` went, by its place in the pattern: a judged stroke with its timing, a miss with
-    /// the nearest stroke heard outside its window (or none).
+    /// How each stroke of `bar` went, by its place in the pattern: a judged stroke with its timing and what else cost
+    /// it, a miss with the nearest stroke heard outside its window (or none).
     private func calls(inBar bar: Int) -> [Int: BeatCall] {
-        guard !pattern.isEmpty else { return [:] }
+        guard !take.pattern.isEmpty else { return [:] }
         var out: [Int: BeatCall] = [:]
-        for (i, grade) in grades where i / pattern.count == bar {
-            out[i % pattern.count] = BeatCall(grade: grade, offset: grade == .miss ? strays[i] : offsets[i], chord: chordCalls[i])
+        for (i, grade) in take.grades where take.bar(of: i) == bar {
+            out[take.slot(of: i)] = BeatCall(grade: grade, offset: grade == .miss ? take.strays[i] : take.offsets[i], call: take.calls[i])
         }
         return out
     }
@@ -1425,15 +1466,15 @@ struct RhythmStep: View {
         .allowsHitTesting(false)
     }
 
-    /// The take's score over the dimmed strings, in its grade's colour; with chords checked, how many strokes rang the
-    /// right one under it.
+    /// The take's score over the dimmed strings, in its grade's colour; under it the one thing to work on first, when
+    /// strokes were read: a chop that rang, an accent to push, or how many strokes rang the right chord.
     private func scoreBadge(compact: Bool) -> some View {
         let tint = ScoreTint.color(score)
         return VStack(spacing: 2) {
             Text("\(Int((score * 100).rounded()))% on the beat")
                 .font(Typeface.display(compact ? .title3 : .title)).foregroundStyle(tint)
-            if !chordRight.isEmpty && !compact {
-                Text("\(chordRight.values.filter { $0 }.count) of \(chordRight.count) chords right")
+            if !compact, let note = takeNote {
+                Text(note)
                     .font(Typeface.label(.footnote)).foregroundStyle(Palette.inkSoft)
             }
         }
@@ -1442,6 +1483,22 @@ struct RhythmStep: View {
             .background(Capsule().fill(Palette.stage.opacity(0.85)))
             .overlay(Capsule().strokeBorder(tint.opacity(0.45), lineWidth: 1.5))
             .shadow(color: tint.opacity(0.35), radius: 18)
+    }
+
+    /// The one thing to work on first once the take is over, when its strokes were read: muted strokes that rang, an
+    /// accent to push, or how many played strokes rang the right chord; nil with nothing to say.
+    private var takeNote: String? {
+        if take.calls.values.contains(.ringing) { return String(localized: "Muted strokes rang: let them stop") }
+        if let beat = take.accentToPush { return Self.push(beat) }
+        guard !take.chordRight.isEmpty else { return nil }
+        return String(localized: "\(take.chordRight.values.filter { $0 }.count) of \(take.chordRight.count) chords right")
+    }
+
+    /// "Push beat 3", "Push the and of 2": the accent to play harder, by its count.
+    static func push(_ beat: Double) -> String {
+        let number = Int(beat.rounded(.down)) + 1
+        if beat.truncatingRemainder(dividingBy: 1) == 0 { return String(localized: "Push beat \(number)") }
+        return String(localized: "Push the and of \(number)")
     }
 
     private func tapPad(side: CGFloat) -> some View {
@@ -1474,7 +1531,7 @@ struct RhythmStep: View {
                 LessonBarButton(title: "Try again", role: .again) { start() }
                 StepButton(title: "Continue", accent: accent, inset: false) {
                     if practice { onPractice() }
-                    if chordsMostlyWrong { onStarCap(1) }
+                    if take.chordsMostlyWrong { onStarCap(1) }
                     done(score)
                 }
             }
@@ -1731,8 +1788,8 @@ struct RhythmStep: View {
         // The demonstration never sounds over the take: it stops before the click and the microphone start.
         closeShowMe()
         armed = false
-        hits = []; grades = [:]; offsets = [:]; strays = [:]; score = 0
-        strokeTimes = [:]; chordRight = [:]; chordCalls = [:]
+        take = freshTake()
+        score = 0
         startTime = CACurrentMediaTime()
         withAnimation(Motion.quick) { phase = .playing; counting = true }
         // A fresh count from its first click (`setMetronome` restarts any click already running, the Metronome
@@ -1742,10 +1799,10 @@ struct RhythmStep: View {
         // From the bar after the count-in, on headphones; the speaker keeps the click alone.
         store.audio.playBand(band, firstBar: 1)
         // Only the instrument counts on an instrument step; the screen is the fallback without a microphone. Each
-        // stroke's chord follows a moment after its timing (`judgeChord`).
+        // stroke's reading (its chord, attack and ring) follows a moment after its timing (`read`).
         if instrumentStep && !micOff {
-            let analyzer = LessonAnalyzer(chords: false, strokes: checksChords, onOnset: { time in register(time) },
-                                          onStroke: { time, heard in judgeChord(at: time, heard: heard) })
+            let analyzer = LessonAnalyzer(chords: false, strokes: readsStrokes, onOnset: { time in register(time) },
+                                          onStrokeRead: { time, stroke in read(stroke, at: time) })
             store.startLessonListening(owner: owner, lowHz: 60, highHz: 1400, analyzer: analyzer) { _, _ in }
         }
     }
@@ -1757,61 +1814,16 @@ struct RhythmStep: View {
         register(CACurrentMediaTime())
     }
 
+    /// A stroke heard (or a tap) at host time `time`: scored by its timing when it lands in a beat's window.
     private func register(_ time: CFTimeInterval) {
         guard phase == .playing else { return }
-        let t = time - startTime
-        let times = expected
-        let open = times.indices.filter { grades[$0] == nil }
-        if let index = open.min(by: { abs(times[$0] - t) < abs(times[$1] - t) }), abs(times[index] - t) <= 0.18 {
-            let offset = abs(times[index] - t)
-            grades[index] = offset <= 0.05 ? .perfect : offset <= 0.1 ? .good : .ok
-            offsets[index] = t - times[index]
-            strokeTimes[index] = time
-            SoundFX.shared.play(.hit)
-            return
-        }
-        // Outside every window: kept as the reason the nearest stroke is missed, unless it's played after all.
-        guard let nearest = times.indices.min(by: { abs(times[$0] - t) < abs(times[$1] - t) }),
-              grades[nearest] == nil || grades[nearest] == .miss else { return }
-        let off = t - times[nearest]
-        if abs(off) <= 0.45, abs(off) < abs(strays[nearest] ?? .infinity) { strays[nearest] = off }
+        if take.heard(at: time - startTime, stamp: time) != nil { SoundFX.shared.play(.hit) }
     }
 
-    /// A stroke's chord, read about a quarter second after it (`StrokeChords`): the chord asked for keeps the stroke's
-    /// timing grade; another chord holds it to OK and names what rang ("Am?"); no chord at all (a tap on the body, a
-    /// muted strum) misses a down stroke and holds an up stroke, which brushes only a few strings, to OK.
-    private func judgeChord(at time: CFTimeInterval, heard: ChordEstimate?) {
-        guard phase == .playing,
-              let index = strokeTimes.min(by: { abs($0.value - time) < abs($1.value - time) })?.key,
-              let at = strokeTimes[index], abs(at - time) <= 0.05, chordRight[index] == nil,
-              let grade = grades[index], let spec = chord(forStroke: index), let target = Self.target(spec) else { return }
-        if let heard, heard.matches(target) {
-            chordRight[index] = true
-            return
-        }
-        chordRight[index] = false
-        let down = pattern[index % pattern.count].truncatingRemainder(dividingBy: 1) == 0
-        if heard == nil && down {
-            grades[index] = .miss
-            chordCalls[index] = .silent
-        } else {
-            grades[index] = Self.capped(grade, at: .ok)
-            chordCalls[index] = heard.map { ChordCall.wrong($0.symbol) } ?? .silent
-        }
-    }
-
-    /// `grade`, or `most` when that is lower.
-    private static func capped(_ grade: PlayAlongJudge.Grade, at most: PlayAlongJudge.Grade) -> PlayAlongJudge.Grade {
-        rank(grade) <= rank(most) ? grade : most
-    }
-
-    private static func rank(_ grade: PlayAlongJudge.Grade) -> Int {
-        switch grade {
-        case .perfect: return 3
-        case .good: return 2
-        case .ok: return 1
-        case .miss: return 0
-        }
+    /// A stroke's reading, about a quarter second after it (`StrokeChords`), graded for what it rang (`StrumTake`).
+    private func read(_ stroke: StrokeChords.Stroke, at time: CFTimeInterval) {
+        guard phase == .playing else { return }
+        take.read(stroke, stamp: time)
     }
 
     private func expire(now: CFTimeInterval) {
@@ -1821,33 +1833,32 @@ struct RhythmStep: View {
         let t = now - startTime
         if counting && t >= countIn { withAnimation(Motion.quick) { counting = false } }
         if LessonMicrophone.demo, instrumentStep, !micOff { demoStrokes(at: t) }
-        for (i, time) in expected.enumerated() where grades[i] == nil && t > time + 0.2 { grades[i] = .miss }
-        // With chords checked, the last stroke's chord comes in a quarter second after it.
-        if t > (expected.last ?? 0) + (checksChords ? 0.65 : 0.4) { finish() }
+        take.expire(at: t)
+        // With strokes read, the last one's reading comes in a quarter second after it.
+        if take.isOver(at: t, reading: readsStrokes) { finish() }
     }
 
-    /// UI-test and store-capture runs (the demo pitch has no strokes to hear): the player strums on time, a little
+    /// On the demo pitch (debug builds' captures, which have no strokes to hear) the player strums on time, a little
     /// human, and one stroke in eight lands a touch late, so the beat row shows its call.
     private func demoStrokes(at t: Double) {
         let jitter = [0.012, -0.018, 0.026, -0.008]
-        for (i, time) in expected.enumerated() where grades[i] == nil {
+        for (i, time) in expected.enumerated() where take.grades[i] == nil {
             let off = i % 8 == 1 ? 0.12 : jitter[i % jitter.count]
             if t >= time + off { register(startTime + time + off) }
         }
     }
 
     private func finish() {
-        let points = grades.values.reduce(0.0) { $0 + ($1 == .perfect ? 1 : $1 == .good ? 0.8 : $1 == .ok ? 0.5 : 0) }
-        score = expected.isEmpty ? 1 : points / Double(expected.count)
+        score = take.finish()
         // The coach reads chord-change timing from strummed takes heard on the instrument.
         if instrumentStep && !micOff {
             switch mode {
             case .strum(let chord?):
                 CoachTakes.shared.record(CoachTake.strummed(chords: [chord], bars: [bars], pattern: pattern, beatsPerBar: beatsPerBar, bpm: bpm,
-                                                            offsets: offsets, strays: strays, wrongChords: wrongChords))
+                                                            offsets: take.offsets, strays: take.strays, wrongChords: take.wrongChords))
             case .progression(let chords, let lengths):
                 CoachTakes.shared.record(CoachTake.strummed(chords: chords, bars: lengths, pattern: pattern, beatsPerBar: beatsPerBar, bpm: bpm,
-                                                            offsets: offsets, strays: strays, wrongChords: wrongChords))
+                                                            offsets: take.offsets, strays: take.strays, wrongChords: take.wrongChords))
             default:
                 break
             }
@@ -1861,16 +1872,12 @@ struct RhythmStep: View {
         announceTake()
     }
 
-    /// The strokes that rang another chord, or none.
-    private var wrongChords: Set<Int> { Set(chordRight.filter { !$0.value }.keys) }
-
-    /// VoiceOver hears how the take went as it ends, not only when it finds the badge.
+    /// VoiceOver hears how the take went as it ends, not only when it finds the badge: the score, then the one thing
+    /// to work on first.
     private func announceTake() {
         guard UIAccessibility.isVoiceOverRunning else { return }
         var words = String(localized: "\(Int((score * 100).rounded()))% on the beat")
-        if !chordRight.isEmpty {
-            words += ". " + String(localized: "\(chordRight.values.filter { $0 }.count) of \(chordRight.count) chords right")
-        }
+        if let note = takeNote { words += ". " + note }
         UIAccessibility.post(notification: .announcement, argument: words)
     }
 
@@ -1882,8 +1889,8 @@ struct RhythmStep: View {
         ownsClick = false
         store.audio.stopBand()
         store.stopLessonListening(owner: owner)
-        hits = []; grades = [:]; offsets = [:]; strays = [:]; score = 0
-        strokeTimes = [:]; chordRight = [:]; chordCalls = [:]
+        take = freshTake()
+        score = 0
         counting = false
         phase = .ready
         appeared = CACurrentMediaTime()
@@ -2292,6 +2299,48 @@ final class TuneCheckVoice {
         guard UIAccessibility.isVoiceOverRunning else { return }
         let queued = NSAttributedString(string: text, attributes: [.accessibilitySpeechQueueAnnouncement: true])
         UIAccessibility.post(notification: .announcement, argument: queued)
+    }
+}
+
+/// VoiceOver for the notes step: the note to play next as each one lands ("Next: D, string 4, open"), and while a
+/// pitch is held that isn't the note in tune yet, on the tuner's cadence (`TunerAnnouncer`: after half a second, then
+/// about every 1.5 s), which way to go ("A little flat. Tighten", "That’s G"). The next note cuts off whatever was being
+/// said, so a quick player never hears a stale one; guidance queues behind it, and waits a full interval after it. A
+/// plain class fed with each reading, so speaking never redraws a view; silent without VoiceOver.
+@MainActor
+final class NoteStepVoice {
+    private var heldSince: TimeInterval?
+    private var lastSpoken: TimeInterval = 0
+    private var lastWords: String?
+
+    /// The note to play now, the one before it having landed.
+    func next(_ phrase: String, now: TimeInterval) {
+        heldSince = nil
+        lastWords = nil
+        lastSpoken = now
+        Self.post(String(localized: "Next: \(phrase)"), queued: false)
+    }
+
+    /// A reading: `words` while a pitch that isn't the note in tune is held, nil otherwise (silence, or in tune).
+    func heard(_ words: String?, now: TimeInterval) {
+        guard let words else {
+            heldSince = nil
+            lastWords = nil
+            return
+        }
+        if words != lastWords {
+            heldSince = now
+            lastWords = words
+        }
+        guard let held = heldSince, now - held >= TunerAnnouncer.settle, now - lastSpoken >= TunerAnnouncer.interval else { return }
+        lastSpoken = now
+        Self.post(words, queued: true)
+    }
+
+    private static func post(_ text: String, queued: Bool) {
+        guard UIAccessibility.isVoiceOverRunning else { return }
+        let announcement = NSAttributedString(string: text, attributes: [.accessibilitySpeechQueueAnnouncement: queued])
+        UIAccessibility.post(notification: .announcement, argument: announcement)
     }
 }
 

@@ -127,7 +127,7 @@ struct LessonInspector<Companion: View>: View {
                 HStack(spacing: 2) {
                     ForEach(0..<3, id: \.self) { index in
                         Image(systemName: "star.fill").font(.system(size: 11, weight: .bold))
-                            .foregroundStyle(index < stars ? Palette.amber : .white.opacity(0.18))
+                            .foregroundStyle(index < stars ? Palette.starGold : .white.opacity(0.18))
                     }
                 }
                 .accessibilityElement(children: .ignore)
@@ -170,7 +170,7 @@ struct LessonInspector<Companion: View>: View {
             .accessibilityIdentifier("learn.continue")
         case .pro:
             Button(action: onStart) {
-                capsule(symbol: "lock.fill", title: Text("Timbre Pro"), ink: Palette.onAccent, fill: AnyShapeStyle(Palette.proGold), glow: Palette.amber)
+                capsule(symbol: "lock.fill", title: Text("Timbre Pro"), ink: Palette.onGold, fill: AnyShapeStyle(Palette.proGold), glow: Palette.proGoldDeep)
             }
             .buttonStyle(PressScaleStyle())
             .accessibilityIdentifier("learn.continue")

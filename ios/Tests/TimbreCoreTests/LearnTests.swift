@@ -399,4 +399,269 @@ final class LearnTests: XCTestCase {
         let capo = try JSONDecoder().decode(ChordSpec.self, from: Data(#"{"name":"A","root":9,"quality":"maj","frets":[5,4,2,2,2,5],"capo":2}"#.utf8))
         XCTAssertEqual(capo.capo, 2)
     }
+
+    // MARK: Strummed takes, stroke by stroke
+
+    /// How a stroke sounded: the chord it rang (nil: none), whether it had stopped 150 ms on, and how loud.
+    private struct Sounded {
+        var chord: ChordTarget?
+        var stopped = false
+        var db = -20.0
+    }
+
+    /// `sound` as `StrokeChords` reads it: the chord's notes evenly, its root lowest.
+    private func reading(_ sound: Sounded) -> StrokeChords.Stroke {
+        let attack = pow(10, sound.db / 20)
+        let chord = sound.chord.map { target -> ChordEstimate in
+            var chroma = [Double](repeating: 0, count: 12)
+            for pitchClass in target.pitchClasses { chroma[pitchClass] = 1 / Double(target.pitchClasses.count).squareRoot() }
+            return ChordEstimate(root: target.root, quality: target.quality, confidence: 1, chroma: chroma, bass: target.root)
+        }
+        return StrokeChords.Stroke(time: 0, chord: chord, attack: attack, ring: attack * (sound.stopped ? 0.05 : 0.7))
+    }
+
+    /// Plays every stroke of `take` on its beat (`late` seconds after it), each sounding as `sound` says, read a
+    /// moment later as a rhythm step reads it; then the take ends.
+    private func play(_ take: inout StrumTake, late: (Int) -> Double = { _ in 0 }, _ sound: (Int) -> Sounded) {
+        for (index, due) in take.expected.enumerated() {
+            let at = due + late(index)
+            take.heard(at: at, stamp: 1000 + at)
+            take.read(reading(sound(index)), stamp: 1000 + at)
+        }
+        take.finish()
+    }
+
+    /// uke-8-1 "The chunk": C on 1, 2, 3, the and of 3 and 4, beats 2 and 4 chunked. Played right, the take scores
+    /// 100 %: every chunk stopped, every strum rang C. Judged as plain strokes (no muted beats) the same take missed
+    /// every chunk and scored 60 %.
+    func testACorrectChunkTakeScoresFullMarks() throws {
+        let c = try XCTUnwrap(ChordTarget(root: 0, formulaId: "maj"))
+        let pattern: [Double] = [0, 1, 2, 2.5, 3]
+        func played(_ index: Int) -> Sounded {
+            [1.0, 3.0].contains(pattern[index % pattern.count]) ? Sounded(chord: nil, stopped: true) : Sounded(chord: c)
+        }
+        var take = StrumTake(pattern: pattern, bars: 2, bpm: 63, muted: [1, 3], chords: [c])
+        play(&take, played)
+        XCTAssertEqual(take.score, 1, accuracy: 1e-9)
+        XCTAssertTrue(take.calls.isEmpty, "\(take.calls)")
+        XCTAssertEqual(take.mutedStopped.stopped, 4)
+        XCTAssertEqual(take.mutedStopped.of, 4)
+        XCTAssertEqual(take.chordRight.count, 6, "muted strokes count for no chord")
+        XCTAssertTrue(take.chordRight.values.allSatisfy { $0 })
+        XCTAssertFalse(take.chordsMostlyWrong)
+
+        // A chunk the reader caught ringing C in its first instants, stopped by 150 ms, is a chunk all the same.
+        var choked = StrumTake(pattern: pattern, bars: 2, bpm: 63, muted: [1, 3], chords: [c])
+        play(&choked) { index in [1.0, 3.0].contains(pattern[index % pattern.count]) ? Sounded(chord: c, stopped: true) : Sounded(chord: c) }
+        XCTAssertEqual(choked.score, 1, accuracy: 1e-9)
+
+        var unmarked = StrumTake(pattern: pattern, bars: 2, bpm: 63, chords: [c])
+        play(&unmarked, played)
+        XCTAssertEqual(unmarked.score, 0.6, accuracy: 1e-9)
+        XCTAssertEqual(unmarked.calls.values.filter { $0 == .noChord }.count, 4)
+    }
+
+    /// A chop left ringing is held to OK and called; the lesson's chords don't count it against them.
+    func testAChopLeftRingingIsCalled() throws {
+        let a = try XCTUnwrap(ChordTarget(root: 9, formulaId: "maj"))
+        var take = StrumTake(pattern: [1, 3], bars: 2, bpm: 66, muted: [1, 3], chords: [a])
+        play(&take) { _ in Sounded(chord: a, stopped: false) }
+        XCTAssertEqual(take.calls.values.filter { $0 == .ringing }.count, 4)
+        XCTAssertTrue(take.grades.values.allSatisfy { $0 == .ok })
+        XCTAssertEqual(take.score, 0.5, accuracy: 1e-9)
+        XCTAssertEqual(take.mutedStopped.stopped, 0)
+        XCTAssertTrue(take.chordRight.isEmpty)
+        XCTAssertFalse(take.chordsMostlyWrong)
+    }
+
+    /// man-4-4 "The chop" (every stroke a chop on 2 and 4): played right, the lesson earns three stars. Judged without
+    /// its muted beats, the same playing scored nothing on its strums and kept the lesson to one star.
+    func testACorrectChopLessonEarnsThreeStars() throws {
+        let found = try XCTUnwrap(try Curriculum.bundled().lesson(id: "man-4-4")?.lesson)
+        let marked = Self.marking(found, muted: [1, 3])
+        XCTAssertEqual(stars(marked), 3)
+        XCTAssertEqual(stars(Self.marking(found, muted: [])), 1)
+    }
+
+    /// `lesson` with `muted` beats (those its pattern plays) on every strum and progression step, and no others.
+    private static func marking(_ lesson: Lesson, muted: [Double]) -> Lesson {
+        let steps = lesson.steps.map { step -> LessonStep in
+            switch step {
+            case let .strum(chord, pattern, bpm, bars, meter, _, accents):
+                return .strum(chord: chord, pattern: pattern, bpm: bpm, bars: bars, beatsPerBar: meter,
+                              muted: muted.filter { pattern.contains($0) }, accents: accents)
+            case let .progression(chords, bars, pattern, bpm, meter, _, accents):
+                return .progression(chords: chords, bars: bars, pattern: pattern, bpm: bpm, beatsPerBar: meter,
+                                    muted: muted.filter { pattern.contains($0) }, accents: accents)
+            default:
+                return step
+            }
+        }
+        return Lesson(id: lesson.id, title: lesson.title, kind: lesson.kind, minutes: lesson.minutes, xp: lesson.xp, free: lesson.free,
+                      steps: steps)
+    }
+
+    /// The stars `lesson` earns played right throughout: every question answered, every note and chord heard, and
+    /// every strum on the beat with its chord, each chop (a beat of the pattern on 2 and 4) choked with no chord.
+    private func stars(_ lesson: Lesson) -> Int {
+        var run = LessonRun(lesson: lesson, now: Date(timeIntervalSince1970: 0))
+        for step in lesson.steps {
+            switch step {
+            case .explain:
+                run.complete(score: nil)
+            case let .strum(chord, pattern, bpm, bars, meter, muted, accents):
+                let target = chord.flatMap { ChordTarget(root: $0.root, formulaId: $0.quality) }
+                var take = StrumTake(pattern: pattern, beatsPerBar: meter, bars: bars, bpm: bpm, muted: muted, accents: accents, chords: [target])
+                play(&take) { index in pattern[index % pattern.count] == 1 || pattern[index % pattern.count] == 3 ? Sounded(chord: nil, stopped: true) : Sounded(chord: target) }
+                if take.chordsMostlyWrong { run.capStars(1) }
+                run.complete(score: take.score)
+            case let .progression(chords, bars, pattern, bpm, meter, muted, accents):
+                let targets = zip(chords, bars).flatMap { chord, count in
+                    Array(repeating: ChordTarget(root: chord.root, formulaId: chord.quality), count: count)
+                }
+                var take = StrumTake(pattern: pattern, beatsPerBar: meter, bars: bars.reduce(0, +), bpm: bpm, muted: muted, accents: accents,
+                                     chords: targets)
+                play(&take) { index in
+                    let beat = pattern[index % pattern.count]
+                    let bar = min(index / pattern.count, targets.count - 1)
+                    return beat == 1 || beat == 3 ? Sounded(chord: nil, stopped: true) : Sounded(chord: targets[bar])
+                }
+                if take.chordsMostlyWrong { run.capStars(1) }
+                run.complete(score: take.score)
+            case let .tapRhythm(pattern, bpm, bars, meter):
+                var take = StrumTake(pattern: pattern, beatsPerBar: meter, bars: bars, bpm: bpm)
+                play(&take) { _ in Sounded(chord: nil) }
+                run.complete(score: take.score)
+            default:
+                run.complete(score: 1)
+            }
+        }
+        return run.result(now: Date(timeIntervalSince1970: 300)).stars
+    }
+
+    /// uke-8-4's 3-3-2: accents on 1, the and of 2 and 4. Pushed 6 dB over the rest they pass; played evenly they are
+    /// held to OK and the beat to push is named.
+    func testAccentsMustStandOut() throws {
+        let c = try XCTUnwrap(ChordTarget(root: 0, formulaId: "maj"))
+        let pattern: [Double] = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
+        let accents: [Double] = [0, 1.5, 3]
+        var pushed = StrumTake(pattern: pattern, bars: 2, bpm: 60, accents: accents, chords: [c])
+        play(&pushed) { index in Sounded(chord: c, db: accents.contains(pattern[index % pattern.count]) ? -14 : -20) }
+        XCTAssertEqual(pushed.score, 1, accuracy: 1e-9)
+        XCTAssertNil(pushed.accentToPush)
+
+        var even = StrumTake(pattern: pattern, bars: 2, bpm: 60, accents: accents, chords: [c])
+        play(&even) { _ in Sounded(chord: c) }
+        XCTAssertEqual(even.calls.values.filter { $0 == .softAccent }.count, 6)
+        XCTAssertEqual(even.score, (10 + 6 * 0.5) / 16, accuracy: 1e-9)
+        XCTAssertEqual(even.accentToPush, 0)
+
+        // Only the and of 2 left soft: that's the one to push.
+        var one = StrumTake(pattern: pattern, bars: 2, bpm: 60, accents: accents, chords: [c])
+        play(&one) { index in
+            let beat = pattern[index % pattern.count]
+            return Sounded(chord: c, db: beat == 0 || beat == 3 ? -14 : -20)
+        }
+        XCTAssertEqual(one.accentToPush, 1.5)
+        // Unheard levels (no stroke reading, as when the screen stands in for the instrument) judge no accents.
+        var tapped = StrumTake(pattern: pattern, bars: 2, bpm: 60, accents: accents)
+        for due in tapped.expected { tapped.heard(at: due, stamp: due) }
+        let score = tapped.finish()
+        XCTAssertEqual(score, 1, accuracy: 1e-9)
+        XCTAssertTrue(tapped.calls.isEmpty)
+    }
+
+    /// Every chord the curriculum asks for (a chord to ring, a strum, a progression) is one the recognizer checks:
+    /// none is passed unheard for want of a template.
+    func testEveryChordTheCurriculumAsksForIsChecked() throws {
+        var unchecked: Set<String> = []
+        for lesson in try Curriculum.bundled().courses.flatMap(\.lessons) {
+            for step in lesson.steps {
+                var chords: [ChordSpec] = []
+                switch step {
+                case let .playChord(chord): chords = [chord]
+                case let .strum(chord, _, _, _, _, _, _): chords = chord.map { [$0] } ?? []
+                case let .progression(list, _, _, _, _, _, _): chords = list
+                default: break
+                }
+                for chord in chords where ChordTarget(root: chord.root, formulaId: chord.quality) == nil {
+                    unchecked.insert("\(lesson.id): \(chord.symbol) (\(chord.quality))")
+                }
+            }
+        }
+        XCTAssertTrue(unchecked.isEmpty, "\(unchecked.sorted())")
+    }
+
+    /// gtr-15-2's E9: a stroke of E9 is checked as E7, and passes; an E major stroke doesn't.
+    func testANinthChordStrokeIsChecked() throws {
+        let e9 = try XCTUnwrap(ChordTarget(root: 4, formulaId: "9"))
+        XCTAssertEqual(e9, ChordTarget(root: 4, quality: .dominant7))
+        var chroma = [Double](repeating: 0, count: 12)
+        for pitchClass in [4, 8, 11, 2, 6] { chroma[pitchClass] = 1 / 5.0.squareRoot() }    // E G♯ B D F♯
+        let best = try XCTUnwrap(ChordRecognizer.bestChord(chroma: chroma, bass: 4))
+        let heard = ChordEstimate(root: best.target.root, quality: best.target.quality, confidence: best.confidence, chroma: chroma, bass: 4)
+        var take = StrumTake(pattern: [0, 0.75, 1.5, 2, 2.75, 3.5], bars: 1, bpm: 60, chords: [e9])
+        for (index, due) in take.expected.enumerated() {
+            take.heard(at: due, stamp: due)
+            let chord = index == 5 ? ChordEstimate(root: 4, quality: .major, confidence: 1, chroma: [], bass: 4) : heard
+            take.read(StrokeChords.Stroke(time: 0, chord: chord, attack: 0.1, ring: 0.07), stamp: due)
+        }
+        take.finish()
+        XCTAssertEqual(take.chordRight.values.filter { $0 }.count, 5)
+        XCTAssertEqual(take.chordRight[5], false)
+        XCTAssertNotNil(take.calls[5], "the E major stroke is called")
+    }
+
+    /// Timing: a stroke 120 ms late is OK, one never played is missed once its window has passed, and one far outside
+    /// every window is kept as the reason its beat was missed.
+    func testStrokesAreTimedAndMissed() {
+        var take = StrumTake(pattern: [0, 1, 2, 3], bars: 1, bpm: 60)
+        XCTAssertEqual(take.countIn, 4, accuracy: 1e-9)
+        XCTAssertEqual(take.heard(at: 4.02, stamp: 0), 0)
+        XCTAssertEqual(take.heard(at: 5.12, stamp: 1), 1)
+        XCTAssertNil(take.heard(at: 5.7, stamp: 2), "300 ms early for beat 3")
+        take.expire(at: 6.3)
+        XCTAssertEqual(take.grades[2], .miss)
+        XCTAssertEqual(take.strays[2] ?? 0, -0.3, accuracy: 1e-9)
+        XCTAssertFalse(take.isOver(at: 7.3, reading: true))
+        XCTAssertTrue(take.isOver(at: 7.7, reading: true))
+        take.finish()
+        XCTAssertEqual(take.grades, [0: .perfect, 1: .ok, 2: .miss, 3: .miss])
+        XCTAssertEqual(take.score, 1.5 / 4, accuracy: 1e-9)
+    }
+
+    // MARK: Spoken cues
+
+    /// At the roll call's 60 BPM, each note is named two beats ahead, briefly once notes come a beat apart, and no cue
+    /// runs into the next or into its note.
+    func testSpokenCuesComeTwoBeatsAheadWithoutColliding() {
+        let times = (0..<6).map { 4 + Double($0) }    // a bar of count-in, then a note a beat
+        let cues = CuePlan.plan(times: times, secondsPerBeat: 1)
+        XCTAssertEqual(cues.map { $0.index }, Array(0..<6), "every note is named")
+        XCTAssertFalse(cues[0].brief, "the first note is named in full")
+        XCTAssertTrue(cues.dropFirst().allSatisfy { $0.brief }, "a beat apart, the brief form")
+        for (k, cue) in cues.enumerated() {
+            XCTAssertLessThanOrEqual(cue.at + cue.length, times[cue.index] - CuePlan.clearance + 1e-9, "cue \(k) runs into its note")
+            XCTAssertLessThanOrEqual(times[cue.index] - cue.at, 2 + 1e-9, "never more than two beats ahead")
+            if k + 1 < cues.count { XCTAssertLessThanOrEqual(cue.at + cue.length, cues[k + 1].at + 1e-9, "cue \(k) runs into the next") }
+        }
+        XCTAssertEqual(times[5] - cues[5].at, 2, accuracy: 1e-9, "settles two beats ahead")
+        XCTAssertEqual(CuePlan.lead(secondsPerBeat: 1), 2)
+        XCTAssertEqual(CuePlan.lead(secondsPerBeat: 2), 2, "a beat ahead once a beat is long")
+
+        // Two beats apart there is room for every name in full.
+        let spaced = CuePlan.plan(times: [4, 6, 8, 10], secondsPerBeat: 1)
+        XCTAssertEqual(spaced.count, 4)
+        XCTAssertTrue(spaced.allSatisfy { !$0.brief })
+
+        // Eighths at 120 BPM: too fast to name every note; those named never overlap.
+        let fast = (0..<12).map { 2 + 0.25 * Double($0) }
+        let named = CuePlan.plan(times: fast, secondsPerBeat: 0.5)
+        XCTAssertFalse(named.isEmpty)
+        XCTAssertLessThan(named.count, fast.count)
+        for (k, cue) in named.enumerated() where k + 1 < named.count {
+            XCTAssertLessThanOrEqual(cue.at + cue.length, named[k + 1].at + 1e-9)
+        }
+        XCTAssertTrue(CuePlan.plan(times: [3], secondsPerBeat: 0.5, from: 2.9).isEmpty, "no time left before the note")
+    }
 }
