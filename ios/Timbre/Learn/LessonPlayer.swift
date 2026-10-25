@@ -253,8 +253,16 @@ struct LessonPlayer: View {
         return practiced ? min(1, stars) : stars
     }
 
-    /// The close button beside the lesson's compact header: its name, "Step 2 of 7" and a track with a segment
-    /// per step, all in one 44 pt row.
+    /// The tune check is on screen, ahead of the step that listens (the same test `stage` makes). It is no step of the
+    /// lesson's: the header says "Tune up" rather than borrowing that step's number, so the counter and the track move
+    /// on at every screen.
+    private var tuningUp: Bool {
+        guard !opening, let step = run.step else { return false }
+        return step.usesMicrophone && !tuneChecked && TuneCheckStep.needed(for: course)
+    }
+
+    /// The close button beside the lesson's compact header: its name, "Step 2 of 7" (or "Tune up" over the tune check)
+    /// and a track with a segment per step, all in one 44 pt row.
     private var topBar: some View {
         HStack(spacing: 8) {
             if opening, let part {
@@ -265,7 +273,7 @@ struct LessonPlayer: View {
             } else {
                 CloseButton(label: "Close lesson") { if run.index == 0 { dismiss() } else { confirmQuit = true } }
                     .accessibilityIdentifier("lesson.close")
-                LessonHeader(title: lesson.title.localized, index: run.index, steps: lesson.steps.count, accent: accent)
+                LessonHeader(title: lesson.title.localized, index: run.index, steps: lesson.steps.count, accent: accent, tuningUp: tuningUp)
                     // A song's sheet comes before its steps (and names the song itself): the header shows once they start.
                     .opacity(opening ? 0 : 1)
                     .accessibilityHidden(opening)
@@ -345,12 +353,18 @@ struct StepView: View {
 
 /// A lesson's compact header beside its close button: the lesson's name and "Step 2 of 7" on one line, over a track
 /// with a segment per step. VoiceOver reads it as one element.
+///
+/// The tune check before the first step that listens is no step of its own: over it the counter reads "Tune up" (a
+/// tuning fork in the accent) and the track shows only the steps done, so every screen moves the header on: "Step 1
+/// of 5" (segment 1 lit softly), "Tune up" (segment 1 filled), "Step 2 of 5" (segment 2 lit). Never a number twice.
 struct LessonHeader: View {
     let title: String
-    /// The step on screen, from 0.
+    /// The step on screen, from 0; over the tune check, the step it comes before.
     let index: Int
     let steps: Int
     let accent: Color
+    /// The tune check is on screen, ahead of step `index`.
+    var tuningUp = false
 
     private var shown: Int { min(index + 1, max(1, steps)) }
 
@@ -362,31 +376,52 @@ struct LessonHeader: View {
                     .foregroundStyle(Palette.ink)
                     .lineLimit(1)
                 Spacer(minLength: 0)
-                Text("Step \(shown) of \(steps)")
-                    .font(Typeface.number(12))
-                    .foregroundStyle(Palette.inkSoft)
-                    .lineLimit(1)
-                    .fixedSize()
-                    .contentTransition(.numericText(value: Double(shown)))
+                counter
             }
-            LessonProgressTrack(index: index, steps: steps, accent: accent)
+            LessonProgressTrack(index: index, steps: steps, accent: accent, current: !tuningUp)
         }
         // One row beside the 44 pt close button: the words stop growing before they'd crowd it.
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .adaptiveAnimation(Motion.page, value: index)
+        .adaptiveAnimation(Motion.page, value: tuningUp)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: title))
-        .accessibilityValue(Text("Step \(shown) of \(steps)"))
+        .accessibilityValue(tuningUp ? Text("Tune up") : Text("Step \(shown) of \(steps)"))
+    }
+
+    /// "Step 2 of 7", or "Tune up" with its tuning fork over the tune check.
+    @ViewBuilder private var counter: some View {
+        if tuningUp {
+            Label("Tune up", systemImage: "tuningfork")
+                .labelStyle(.titleAndIcon)
+                .font(Typeface.label(12))
+                .foregroundStyle(accent)
+                .lineLimit(1)
+                .fixedSize()
+                .transition(.opacity)
+        } else {
+            Text("Step \(shown) of \(steps)")
+                .font(Typeface.number(12))
+                .foregroundStyle(Palette.inkSoft)
+                .lineLimit(1)
+                .fixedSize()
+                .contentTransition(.numericText(value: Double(shown)))
+                .transition(.opacity)
+        }
     }
 }
 
 /// The lesson's progress: a segment per step, the steps done filled in the accent, the one on screen lit softly with
-/// a glow, the rest dim. A long lesson (over 16 steps) would make slivers, so it gets one continuous bar instead.
+/// a glow, the rest dim. A long lesson (over 16 steps) would make slivers, so it gets one continuous bar instead, the
+/// steps done filled and the one on screen lit softly ahead of them.
 struct LessonProgressTrack: View {
     /// The step on screen, from 0 (`steps` once every step is done).
     let index: Int
     let steps: Int
     let accent: Color
+    /// Step `index` is on screen (lit softly). Off while something that is no step comes before it (the tune check):
+    /// then only the steps done show, and step `index` lights when it arrives.
+    var current = true
     private static let thickness: CGFloat = 6
 
     var body: some View {
@@ -405,17 +440,24 @@ struct LessonProgressTrack: View {
         HStack(spacing: 4) {
             ForEach(0..<steps, id: \.self) { k in
                 Capsule().fill(Color.white.opacity(0.09))
-                    .overlay(Capsule().fill(fill).opacity(k < index ? 1 : k == index ? 0.4 : 0))
-                    .shadow(color: accent.opacity(k == index ? 0.55 : 0), radius: 5)
+                    .overlay(Capsule().fill(fill).opacity(k < index ? 1 : lit(k) ? 0.4 : 0))
+                    .shadow(color: accent.opacity(lit(k) ? 0.55 : 0), radius: 5)
             }
         }
     }
 
+    /// Step `k` is the one on screen.
+    private func lit(_ k: Int) -> Bool { current && k == index }
+
     private var bar: some View {
         GeometryReader { proxy in
             let share = steps > 0 ? CGFloat(min(index, steps)) / CGFloat(steps) : 1
+            // The step on screen reaches one step further, lit softly under the steps done.
+            let reach = steps > 0 && current && index < steps ? CGFloat(index + 1) / CGFloat(steps) : share
             ZStack(alignment: .leading) {
                 Capsule().fill(Color.white.opacity(0.09))
+                Capsule().fill(fill).opacity(reach > share ? 0.4 : 0)
+                    .frame(width: max(Self.thickness, proxy.size.width * reach))
                 Capsule().fill(fill)
                     .frame(width: max(Self.thickness, proxy.size.width * share))
                     .shadow(color: accent.opacity(0.5), radius: 6)

@@ -697,6 +697,8 @@ struct LessonStepBar: View {
 /// strings filling everything down to the button, the pick sweeping them in time with the click. The count-in shows
 /// big over the strings as the take starts, the score over them once it's done. Before Start both picks preview the
 /// pattern at the step's tempo, on one clock.
+/// The strings always lie in Player view (`StrumSweep.order`: the thickest on top), so both picks go down the screen on
+/// a ↓; the chord beside the title is a fretting picture and follows the picture choice, as every chord box does.
 struct RhythmStep: View {
     enum Mode { case tap, strum(ChordSpec?), progression([ChordSpec], [Int]) }
     let mode: Mode

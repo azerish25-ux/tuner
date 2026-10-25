@@ -65,11 +65,12 @@ enum CanvasNoise {
 
 /// A pick sweeping the strings on every stroke of a rhythm pattern, in time with the beat: down strokes
 /// run from the thickest string to the thinnest, up strokes back, and each string shimmers as the pick crosses it.
-/// The strings lie as every other neck in the app does (`ChordPicture`, Settings › String order): in the Chart view,
-/// the default, string 1 on top as tab writes it, so a down stroke climbs the screen from the thickest string at the
-/// bottom; in Player view the thickest on top, as you look down at the instrument while you play, so it falls down
-/// the screen. Either way a key over the strings reads "↓ 6 → 1": the beat row's ↓ is a down strum, from the thickest
-/// string to string 1. Each string is numbered and the outer two are named ("Thinnest (1)", "Thickest (6)"), and the
+/// The strings always lie in Player view, the thickest on top, as you look down at the instrument while you play,
+/// whatever the picture choice (`ChordPicture`, Settings › String order) says: that choice is for fretting pictures
+/// (chord boxes, necks), and a strum is a motion. So a down strum falls down the screen, the same way as the beat
+/// row's ↓ and its pick (`LessonBeatRow`), the words ("Strum down") and the hand itself; an up strum rises. The key over
+/// the strings reads "↓ 6 → 1" from the top string down: a down strum, from the thickest string to string 1. Each
+/// string is numbered and the outer two are named ("Thickest (6)" on top, "Thinnest (1)" under the bottom), and the
 /// pick's tip, its lane's chevrons and its trail all point the way it travels on screen.
 /// The strings run over the instrument's top, from the sound hole to the bridge; the wood fills the whole frame and
 /// the strings spread to fill its height (up to a comfortable spacing), so a tall stage is all guitar, never bare.
@@ -89,11 +90,11 @@ struct StrumSweep: View {
     let time: Double?
     /// Bars the strokes run for; nil repeats the bar forever.
     var bars: Int?
-    /// Names the top and bottom strings in words ("Thinnest (1)" over the top in the Chart view, "Thickest (6)" under
-    /// the bottom; the other way round in Player view).
+    /// Names the top and bottom strings in words ("Thickest (6)" over the top, "Thinnest (1)" under the bottom).
     var edges: StringEdges?
-    /// Which string lies on top: the app's one picture choice, as on every other neck.
-    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
+    /// Which string lies on top: always Player view's order, the thickest on top, so a down strum falls down the screen.
+    /// Not the picture choice (`StringOrder.storageKey`), which turns the fretting pictures only.
+    static let order: StringOrder = .mirror
     /// The string numbers and names grow with Dynamic Type from the 11 pt floor (`DiagramType`).
     @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
 
@@ -136,7 +137,7 @@ struct StrumSweep: View {
     }
 
     var body: some View {
-        let order = stringOrder
+        let order = Self.order
         let scale = typeScale
         Canvas { context, size in
             if style == .tap { drawPad(&context, size: size) } else { drawStrings(&context, size: size, order: order, scale: scale) }
@@ -293,8 +294,8 @@ struct StrumSweep: View {
 
     /// The strum's key over the strings' top-left corner, level with the top string's name and on a dark plate (it can
     /// sit over the rosette): "↓ 6 → 1", the beat row's down arrow in the accent, then the strings a down strum crosses
-    /// from first to last. In the Chart view that is up the screen (string 1 is on top, as in tab), so the arrow on
-    /// the beat row never reads as the way the pick moves here. Strums only: a plucking finger has no direction.
+    /// from first to last, the top string first. That is down the screen, the way the arrow points and the pick falls,
+    /// and the numbers read top to bottom down the left edge. Strums only: a plucking finger has no direction.
     private func drawStrokeKey(_ context: inout GraphicsContext, top: CGFloat, count: Int, scale: CGFloat) {
         guard style == .strum, count >= 2 else { return }
         let points = DiagramType.size(DiagramType.floor, scale: scale)

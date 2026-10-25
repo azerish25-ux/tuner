@@ -110,21 +110,19 @@ struct StringOrderTipSlot: View {
         }
     }
 
-    /// Steps whose strings lie across the screen in the chosen order: a fretboard picture, the notes' strip, the
-    /// play-along's lanes and, since it lies as every neck does, the strum stage (a rhythm explanation's, a strum's or
-    /// a progression's), where string 1 on top means a down strum climbs the screen.
+    /// Steps whose strings lie across the screen in the chosen order: a fretboard picture, the notes' strip and the
+    /// play-along's lanes. Not the strum stage (a rhythm explanation's, a strum's or a progression's): it always lies in
+    /// Player view so a down strum falls down the screen (`StrumSweep.order`), and names its own edges.
     static func drawsNeck(_ step: LessonStep, course: LearnCourse) -> Bool {
         guard course.fretKind != nil else { return false }
         switch step {
         case let .explain(_, _, visual):
-            switch visual {
-            case .fretboard, .rhythm: return true
-            default: return false
-            }
+            if case .fretboard = visual { return true }
+            return false
         case let .quiz(_, _, _, _, visual):
             if case .fretboard = visual { return true }
             return false
-        case .playNotes, .playAlong, .strum, .progression:
+        case .playNotes, .playAlong:
             return true
         default:
             return false

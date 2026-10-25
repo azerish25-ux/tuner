@@ -48,7 +48,8 @@ struct LessonVisualView: View {
 }
 
 /// Which string sits on top wherever a neck is drawn lying down (the fretboard strips, the Scales and intonation
-/// necks, the tune check, the strum stage): the app's one picture choice (`ChordPicture`, Settings › String order,
+/// necks, the tune check; the strum stage is always `.mirror`, so a down strum falls down the screen): the app's one
+/// picture choice (`ChordPicture`, Settings › String order,
 /// the Chart / Player view switch on a chord card) read as a string order. It is the same stored value, under the
 /// same key, so the necks and the chords can never disagree:
 /// - `.tab` is Chart (the default): string 1, the thinnest, on top as tablature writes it, the chord chart's box

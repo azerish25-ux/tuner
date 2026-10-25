@@ -105,7 +105,8 @@ struct ChartPracticeView: View {
         HStack(spacing: 8) {
             CloseButton(label: "Close") { if index == 0 || index >= steps.count { dismiss() } else { confirmQuit = true } }
                 .accessibilityIdentifier("yoursongs.practice.close")
-            LessonHeader(title: title, index: min(index, steps.count), steps: steps.count, accent: accent)
+            LessonHeader(title: title, index: min(index, steps.count), steps: steps.count, accent: accent,
+                         tuningUp: index < steps.count && steps[index].usesMicrophone && !tuneChecked && TuneCheckStep.needed(for: course))
         }
         .padding(.leading, 8).padding(.trailing, Metrics.gutter).padding(.top, 4).padding(.bottom, 6)
     }
