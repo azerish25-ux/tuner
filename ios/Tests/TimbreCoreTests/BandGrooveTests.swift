@@ -210,4 +210,56 @@ final class BandGrooveTests: XCTestCase {
         XCTAssertEqual(BandGroove.bar(.ballad, context(meter: 3)).comp.filter { $0.part == .arpeggio }.count, 6)
         XCTAssertEqual(BandGroove.bar(.rock, context(meter: 6)).comp.filter { $0.part == .power }.count, 6)
     }
+
+    // MARK: Chord changes inside a bar
+
+    func testAChangeOnBeatThreeIsWhereTheStandardGrooveAlreadyMoves() {
+        // "C G | D G": the half-bar chords and the bass's answer already start on beat 3, so nothing is cut or added.
+        let bar = BandGroove.bar(.standard, context())
+        XCTAssertEqual(bar.changing(at: [2]), bar)
+        // A fill bar holds one chord under the drums: the change cuts it and strikes the new chord on beat 3.
+        let fill = BandGroove.bar(.standard, context(fill: true)).changing(at: [2])
+        XCTAssertEqual(fill.comp.map(\.beat), [0, 2])
+        XCTAssertEqual(fill.comp[0].beats, 2, accuracy: 1e-9)
+        XCTAssertEqual(fill.comp[1].beats, 1.9, accuracy: 1e-9)
+        XCTAssertLessThan(fill.comp[1].velocity, fill.comp[0].velocity)
+    }
+
+    func testAChangeOnBeatTwoCutsTheRingingChordAndRootAndSoundsTheNewOnes() {
+        let bar = BandGroove.bar(.standard, context()).changing(at: [1])
+        XCTAssertEqual(bar.bass.map(\.beat), [0, 1, 2, 3.5])
+        XCTAssertEqual(bar.bass[0].beats, 1, accuracy: 1e-9)
+        XCTAssertEqual(bar.bass[1].interval, 0, "the new chord's root")
+        XCTAssertEqual(bar.comp.map(\.beat), [0, 1, 2, 3.5])
+        XCTAssertEqual(bar.comp[0].beats, 1, accuracy: 1e-9)
+        XCTAssertEqual(bar.hits, BandGroove.bar(.standard, context()).hits, "the drums don't change")
+    }
+
+    func testNothingRingsAcrossAChangeInAnyStyle() {
+        for style in BandStyle.allCases {
+            for meter in [3, 4, 6] {
+                for change in [1.0, 1.5, 2.0, 3.0] where change < Double(meter) {
+                    for fill in [false, true] {
+                        let plain = BandGroove.bar(style, context(meter: meter, fill: fill))
+                        let split = plain.changing(at: [change])
+                        let label = "\(style) \(meter) at \(change)"
+                        XCTAssertFalse(split.bass.contains { $0.beat < change - 1e-6 && $0.beat + $0.beats > change + 1e-6 }, label)
+                        XCTAssertFalse(split.comp.contains { $0.beat < change - 1e-6 && $0.beat + $0.beats > change + 1e-6 }, label)
+                        XCTAssertTrue(split.bass.allSatisfy { $0.beats > 0 } && split.comp.allSatisfy { $0.beats > 0 }, label)
+                        XCTAssertEqual(split.hits, plain.hits, label)
+                        // Whatever rang across the change is struck again on it.
+                        if plain.comp.contains(where: { $0.beat < change - 1e-6 && $0.beat + $0.beats > change + 0.2 }) {
+                            XCTAssertTrue(split.comp.contains { abs($0.beat - change) < 1e-6 }, label)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func testNoChangeLeavesTheBarAsItIs() {
+        let bar = BandGroove.bar(.pop, context())
+        XCTAssertEqual(bar.changing(at: []), bar)
+        XCTAssertEqual(bar.changing(at: [0]), bar, "the downbeat is the bar's own chord")
+    }
 }

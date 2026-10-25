@@ -4,7 +4,9 @@ import TimbreCore
 /// Short interface sounds (right answer, wrong answer, star, count-in click, lock), synthesized once on
 /// device: Karplus–Strong plucks for notes, soft harmonic bells for rewards, a two-mode woodblock for clicks,
 /// the musical ones in a light baked-in room (`RoomReverb`). They play through AVAudioPlayer so they never
-/// interrupt the microphone capture, and stay quiet.
+/// interrupt the microphone capture, and stay quiet. Between engines they play in the ambient session the owner keeps
+/// for them (`AudioSessionOwner.prepareInterfaceSound`): opening Timbre never stops the user's music or podcast, and
+/// once the tuner has stopped, the chimes keep to the Ring/Silent switch.
 ///
 /// The rewards speak the music they reward: a lock rings the string's own pitch (`playLock`), the whole instrument
 /// in tune strums its own open strings (`playTuned`), and a lesson's stars ring the triad of its key (`playStar`).
@@ -23,6 +25,9 @@ final class SoundFX {
     private var tuned: (key: String, player: AVAudioPlayer)?
 
     private init() {
+        // Before any player is prepared (preparing one can activate the session): ambient, so the app's first sound
+        // (the welcome motif) mixes with whatever the user is listening to.
+        AudioSessionOwner.shared.prepareInterfaceSound()
         // Render every cue off the main thread; a cue asked for before then renders on the spot.
         Task.detached(priority: .utility) { [weak self] in
             let rendered = Cue.allCases.map { ($0, SoundSynth.wav(SoundSynth.render($0), rate: SoundSynth.rate)) }
@@ -37,7 +42,13 @@ final class SoundFX {
     func play(_ cue: Cue) {
         guard enabled else { return }
         if players[cue] == nil { players[cue] = Self.player(SoundSynth.wav(SoundSynth.render(cue), rate: SoundSynth.rate), volume: Self.volume(cue)) }
-        guard let player = players[cue] else { return }
+        start(players[cue])
+    }
+
+    /// Plays from the top, in the session the app's own sounds share.
+    private func start(_ player: AVAudioPlayer?) {
+        guard let player else { return }
+        AudioSessionOwner.shared.prepareInterfaceSound()
         player.currentTime = 0
         player.play()
     }
@@ -48,9 +59,7 @@ final class SoundFX {
         guard enabled, let hz = SoundSynth.bellPitch(frequency) else { return }
         let key = Self.bellKey(hz)
         if bells[key] == nil { installBell(SoundSynth.wav(SoundSynth.bell(hz), rate: SoundSynth.rate), key: key) }
-        guard let player = bells[key] else { return }
-        player.currentTime = 0
-        player.play()
+        start(bells[key])
     }
 
     /// The lock bell for a MIDI note at A4 = 440 Hz.
@@ -88,9 +97,7 @@ final class SoundFX {
         if tuned?.key != key, let player = Self.player(SoundSynth.wav(SoundSynth.tuned(frequencies), rate: SoundSynth.rate), volume: Self.tunedVolume) {
             tuned = (key, player)
         }
-        guard let player = tuned?.player else { return }
-        player.currentTime = 0
-        player.play()
+        start(tuned?.player)
     }
 
     /// Renders the full-tune strum for these strings in the background, so the last lock never waits on synthesis.
@@ -122,9 +129,7 @@ final class SoundFX {
         guard enabled else { return }
         let midi = (key ?? .neutral).starMidi(index)
         if stars[midi] == nil { installStar(SoundSynth.wav(SoundSynth.starBell(SoundSynth.hz(midi)), rate: SoundSynth.rate), midi: midi) }
-        guard let player = stars[midi] else { return }
-        player.currentTime = 0
-        player.play()
+        start(stars[midi])
     }
 
     /// Renders a key's star bells in the background as a results screen opens.
@@ -147,6 +152,7 @@ final class SoundFX {
     }
 
     private static func player(_ data: Data, volume: Float) -> AVAudioPlayer? {
+        AudioSessionOwner.shared.prepareInterfaceSound()
         guard let player = try? AVAudioPlayer(data: data) else { return nil }
         player.volume = volume
         player.prepareToPlay()
