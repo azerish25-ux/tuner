@@ -160,6 +160,12 @@ public struct Lesson: Codable, Identifiable, Sendable {
     /// A song's whole arrangement (sections, chord chart, lyric credit); its last step is then the whole song with its
     /// words (`songTake`). Nil for every other lesson.
     public var arrangement: SongArrangement?
+
+    public init(id: String, title: LearnText, kind: Kind, minutes: Int, xp: Int, free: Bool, steps: [LessonStep],
+                arrangement: SongArrangement? = nil) {
+        self.id = id; self.title = title; self.kind = kind; self.minutes = minutes; self.xp = xp; self.free = free
+        self.steps = steps; self.arrangement = arrangement
+    }
 }
 
 /// A position on a fretted instrument: string 1 is the highest-pitched string, fret 0 is open.
