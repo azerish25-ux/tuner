@@ -1,0 +1,3 @@
+# Commits reachable from this one predate tools/ci/skip_ci_guard.py and are not checked by it (the day-1 contracts of
+# wave 19 on v2/foundations). Never move it forward past a commit that skipped CI.
+bb6a22e5e0430c5c593268142106fc588872d439

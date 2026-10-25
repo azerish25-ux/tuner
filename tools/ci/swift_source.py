@@ -1,6 +1,6 @@
 """Splits Swift source into code, string literals and comments.
 
-The hygiene lint (lint_tells.py) and the comment sweep (sweep_comments.py) read comments as comments and code as
+The hygiene lint (comment_hygiene.py) and the comment sweep (sweep_comments.py) read comments as comments and code as
 code: a review reference inside a string literal is copy, not a comment, and `IconOrb(` inside a comment is prose.
 
     code, comments = scan(source)

@@ -1,11 +1,15 @@
 {
-  "about": "Occurrences that predate the hygiene lint (tools/ci/lint_tells.py), per file and 'rule: matched text'. It only ever shrinks: fix code, then run `python3 tools/ci/lint_tells.py --update-baseline`.",
+  "about": "Occurrences that predate the hygiene lint (tools/ci/comment_hygiene.py), per file and 'rule: matched text'. It only ever shrinks: fix code, then run `python3 tools/ci/comment_hygiene.py --update-baseline`. A warn rule with no entry left here fails on any new occurrence.",
   "allowed": {
     "ios/Timbre/Audio/AudioService.swift": {
       "test-coupling: screenshot": 1,
       "test-coupling: ui-test": 1
     },
+    "ios/Timbre/Design/SparkBurst.swift": {
+      "status-colour: palette.amber": 1
+    },
     "ios/Timbre/Instruments/CustomTuningEditor.swift": {
+      "status-colour: palette.amber": 11,
       "type-scale: typeface.display(30": 1,
       "type-scale: typeface.number(10": 1,
       "type-scale: typeface.number(11": 1
@@ -19,12 +23,18 @@
       "test-coupling: ui tests": 1
     },
     "ios/Timbre/Intents/StreakSnippet.swift": {
+      "status-colour: palette.amber": 1,
       "type-scale: typeface.display(44": 1
     },
     "ios/Timbre/Journey/CoachVoice.swift": {
+      "status-colour: palette.amber": 1,
       "test-coupling: ui tests": 1
     },
+    "ios/Timbre/Journey/JourneyView.swift": {
+      "status-colour: palette.amber": 6
+    },
     "ios/Timbre/Journey/WeekRecap.swift": {
+      "status-colour: palette.amber": 2,
       "type-scale: typeface.display(44": 1,
       "type-scale: typeface.label(18": 1,
       "type-scale: typeface.number(16": 1,
@@ -32,6 +42,7 @@
       "type-scale: typeface.number(96": 1
     },
     "ios/Timbre/Learn/Highway.swift": {
+      "status-colour: palette.amber": 11,
       "test-coupling: simulator": 1,
       "test-coupling: ui tests": 1,
       "type-scale: typeface.note(96": 1
@@ -39,13 +50,38 @@
     "ios/Timbre/Learn/HighwayLyrics.swift": {
       "type-scale: typeface.display(19": 2
     },
+    "ios/Timbre/Learn/HighwayPop.swift": {
+      "status-colour: palette.amber": 1
+    },
+    "ios/Timbre/Learn/HighwayTimingStrip.swift": {
+      "status-colour: palette.amber": 2
+    },
+    "ios/Timbre/Learn/LatencyCalibration.swift": {
+      "status-colour: palette.amber": 1
+    },
+    "ios/Timbre/Learn/LessonBeatRow.swift": {
+      "status-colour: palette.amber": 2
+    },
     "ios/Timbre/Learn/LessonExplain.swift": {
       "test-coupling: ui tests": 1
     },
+    "ios/Timbre/Learn/LessonInspector.swift": {
+      "status-colour: palette.amber": 2
+    },
     "ios/Timbre/Learn/LessonMotion.swift": {
+      "status-colour: palette.amber": 4,
+      "status-colour: palette.coral": 1,
       "test-coupling: ui-test": 1
     },
+    "ios/Timbre/Learn/LessonPlayer.swift": {
+      "status-colour: palette.amber": 2
+    },
+    "ios/Timbre/Learn/LessonResults.swift": {
+      "inline-orb: .background(circle().fill(accent.opacity(0.14)": 1,
+      "status-colour: palette.amber": 2
+    },
     "ios/Timbre/Learn/LessonSteps.swift": {
+      "status-colour: palette.amber": 6,
       "type-scale: typeface.note(88": 1
     },
     "ios/Timbre/Learn/ShowMe.swift": {
@@ -55,7 +91,11 @@
     "ios/Timbre/Learn/ShowMeScene.swift": {
       "test-coupling: simulator": 1
     },
+    "ios/Timbre/Learn/SongChords.swift": {
+      "status-colour: palette.amber": 2
+    },
     "ios/Timbre/Learn/SongOpener.swift": {
+      "status-colour: palette.amber": 2,
       "type-scale: typeface.display(16": 1,
       "type-scale: typeface.display(18": 1,
       "type-scale: typeface.display(26": 1,
@@ -63,87 +103,137 @@
       "type-scale: typeface.label(14": 2
     },
     "ios/Timbre/Learn/SongPerform.swift": {
+      "status-colour: palette.amber": 2,
       "type-scale: typeface.note(96": 1
     },
     "ios/Timbre/Learn/SongSheet.swift": {
+      "status-colour: palette.amber": 5,
+      "status-colour: palette.coral": 2,
       "type-scale: typeface.label(11": 1,
       "type-scale: typeface.label(14": 1,
       "type-scale: typeface.label(9": 1
     },
     "ios/Timbre/Learn/SongStoryCard.swift": {
+      "status-colour: palette.amber": 5,
       "type-scale: typeface.display(34": 1,
       "type-scale: typeface.label(11": 1,
       "type-scale: typeface.label(14": 2,
       "type-scale: typeface.note(30": 2,
       "type-scale: typeface.note(46": 1
     },
+    "ios/Timbre/Learn/WeakSpotReview.swift": {
+      "status-colour: palette.amber": 4
+    },
     "ios/Timbre/Onboarding/FirstTuneStep.swift": {
+      "status-colour: palette.amber": 2,
       "test-coupling: ui-test": 2,
       "type-scale: typeface.display(32": 1
     },
     "ios/Timbre/Onboarding/OnboardingView.swift": {
+      "status-colour: palette.amber": 3,
       "type-scale: typeface.display(24": 1,
       "type-scale: typeface.display(32": 1,
       "type-scale: typeface.display(34": 2,
       "type-scale: typeface.label(14": 2
     },
     "ios/Timbre/Onboarding/PlacementCheckView.swift": {
+      "status-colour: palette.amber": 2,
       "type-scale: typeface.display(22": 1,
       "type-scale: typeface.display(30": 1,
       "type-scale: typeface.display(32": 1,
       "type-scale: typeface.label(14": 1
     },
+    "ios/Timbre/Onboarding/ReminderAskStep.swift": {
+      "inline-orb: .background(circle().fill(radialgradient(colors: [palette.mint.opacity(0.18)": 1
+    },
+    "ios/Timbre/Paywall/BillingIssueBanner.swift": {
+      "status-colour: palette.amber": 3
+    },
+    "ios/Timbre/Paywall/PaywallScenes.swift": {
+      "status-colour: palette.amber": 16,
+      "status-colour: palette.coral": 4
+    },
     "ios/Timbre/Paywall/PaywallView.swift": {
+      "status-colour: palette.amber": 3,
       "type-scale: typeface.display(26": 1,
       "type-scale: typeface.number(14": 1
     },
     "ios/Timbre/Paywall/PaywallWinBack.swift": {
+      "inline-orb: .background(circle().fill(palette.amber.opacity(0.14)": 1,
+      "status-colour: palette.amber": 5,
       "test-coupling: screenshot": 1,
       "test-coupling: ui tests": 2,
       "type-scale: typeface.display(26": 1
     },
+    "ios/Timbre/Practice/ChordScaleTheory.swift": {
+      "status-colour: palette.amber": 1,
+      "status-colour: palette.coral": 1
+    },
     "ios/Timbre/Practice/ChordsView.swift": {
+      "inline-orb: .background(circle().fill(sounding ? palette.mint : palette.mint.opacity(0.14)": 1,
+      "status-colour: palette.amber": 4,
       "type-scale: typeface.display(56": 1
     },
     "ios/Timbre/Practice/DailySetCard.swift": {
+      "inline-orb: .background(circle().fill(done ? anyshapestyle(kind.tint) : anyshapestyle(kind.tint.opacity(0.14)": 1,
+      "status-colour: palette.amber": 12,
+      "status-colour: palette.coral": 1,
       "type-scale: typeface.number(10": 1
     },
     "ios/Timbre/Practice/DroneSingAlong.swift": {
+      "status-colour: palette.amber": 10,
       "type-scale: typeface.display(30": 1,
       "type-scale: typeface.label(14": 1,
       "type-scale: typeface.number(24": 1
     },
+    "ios/Timbre/Practice/DroneTanpura.swift": {
+      "status-colour: palette.amber": 2
+    },
     "ios/Timbre/Practice/DroneView.swift": {
+      "status-colour: palette.amber": 1,
       "test-coupling: screenshots": 2,
       "test-coupling: ui tests": 1
     },
     "ios/Timbre/Practice/EarTrainingView.swift": {
+      "status-colour: palette.amber": 26,
+      "status-colour: palette.coral": 6,
       "type-scale: typeface.display(26": 1,
       "type-scale: typeface.display(30": 1,
       "type-scale: typeface.label(10": 1,
       "type-scale: typeface.label(14": 1
     },
+    "ios/Timbre/Practice/IntonationView.swift": {
+      "status-colour: palette.amber": 7
+    },
     "ios/Timbre/Practice/MetronomeView.swift": {
+      "status-colour: palette.amber": 8,
       "type-scale: typeface.number(14": 1
     },
     "ios/Timbre/Practice/PitchSniperView.swift": {
+      "status-colour: palette.amber": 7,
       "type-scale: typeface.displaylight(26": 1,
       "type-scale: typeface.label(18": 1,
       "type-scale: typeface.number(22": 1
     },
     "ios/Timbre/Practice/PlayHubGames.swift": {
+      "status-colour: palette.amber": 20,
       "type-scale: typeface.display(34": 1,
       "type-scale: typeface.label(14": 1,
       "type-scale: typeface.label(16": 1
     },
     "ios/Timbre/Practice/PlayHubTools.swift": {
+      "status-colour: palette.amber": 9,
       "type-scale: typeface.display(16": 1
     },
     "ios/Timbre/Practice/PracticeView.swift": {
+      "status-colour: palette.amber": 1,
       "test-coupling: ui tests": 1,
       "type-scale: typeface.display(18": 1,
       "type-scale: typeface.display(22": 1,
       "type-scale: typeface.number(11": 1
+    },
+    "ios/Timbre/Practice/ScalesView.swift": {
+      "status-colour: palette.amber": 2
     },
     "ios/Timbre/Practice/VoiceView.swift": {
       "type-scale: typeface.display(44": 1,
@@ -165,6 +255,7 @@
       "test-coupling: ui tests": 1
     },
     "ios/Timbre/Services/GameCenterSocial.swift": {
+      "status-colour: palette.amber": 3,
       "type-scale: typeface.display(34": 1,
       "type-scale: typeface.label(14": 1
     },
@@ -174,7 +265,11 @@
     "ios/Timbre/Services/WatchBridge.swift": {
       "test-coupling: simulator": 1
     },
+    "ios/Timbre/Songs/SongsView.swift": {
+      "inline-orb: .background(circle().fill(playable ? anyshapestyle(palette.mint) : anyshapestyle(color.white.opacity(0.08)": 1
+    },
     "ios/Timbre/TimbreApp.swift": {
+      "status-colour: palette.amber": 2,
       "test-coupling: screenshot": 1,
       "test-coupling: screenshots": 1,
       "test-coupling: ui test": 1,
@@ -184,6 +279,8 @@
       "test-coupling: ui tests": 1
     },
     "ios/Timbre/Tune/Celebration.swift": {
+      "inline-orb: .background(circle().fill(palette.mint.opacity(0.12)": 1,
+      "status-colour: palette.amber": 3,
       "type-scale: typeface.display(52": 2,
       "type-scale: typeface.label(11": 1,
       "type-scale: typeface.label(14": 4,
@@ -192,14 +289,25 @@
       "type-scale: typeface.label(9": 1,
       "type-scale: typeface.number(92": 1
     },
+    "ios/Timbre/Tune/ChromaticStage.swift": {
+      "status-colour: palette.amber": 2,
+      "status-colour: palette.coral": 2
+    },
     "ios/Timbre/Tune/Readout.swift": {
+      "status-colour: palette.amber": 1,
+      "status-colour: palette.coral": 3,
       "type-scale: typeface.displaylight(30": 1
     },
     "ios/Timbre/Tune/StringRail.swift": {
       "type-scale: typeface.label(10": 1,
       "type-scale: typeface.label(9": 1
     },
+    "ios/Timbre/Tune/StrumFinale.swift": {
+      "status-colour: palette.amber": 2
+    },
     "ios/Timbre/Tune/StrumMeters.swift": {
+      "inline-orb: .background(circle().fill(palette.amber.opacity(0.16)": 1,
+      "status-colour: palette.amber": 12,
       "type-scale: typeface.label(10": 2,
       "type-scale: typeface.number(10": 1
     },
@@ -208,30 +316,42 @@
       "test-coupling: ui tests": 1
     },
     "ios/Timbre/Tune/TuneSidePane.swift": {
+      "status-colour: palette.amber": 7,
+      "status-colour: palette.coral": 1,
       "type-scale: typeface.number(11": 1
     },
     "ios/Timbre/Tune/TuneView.swift": {
+      "inline-orb: .background(circle().fill(active ? palette.mint.opacity(0.12)": 1,
       "test-coupling: screenshot": 1,
       "test-coupling: ui-test": 1,
       "test-coupling: xcuitest": 1
+    },
+    "ios/Timbre/YourSongs/AppleMusicListen.swift": {
+      "status-colour: palette.amber": 2
     },
     "ios/Timbre/YourSongs/YourSongsStore.swift": {
       "test-coupling: ui tests": 1
     },
     "ios/TimbreWatch/MetronomeScreen.swift": {
+      "status-colour: palette.amber": 1,
       "type-scale: typeface.label(14": 1
     },
     "ios/TimbreWatch/TodayScreen.swift": {
+      "inline-orb: .background(circle().fill(step.done ? tint : tint.opacity(0.16)": 1,
+      "inline-orb: .background(circle().fill(tint.opacity(0.16)": 1,
+      "status-colour: palette.amber": 5,
       "type-scale: typeface.display(26": 1,
       "type-scale: typeface.label(11": 1,
       "type-scale: typeface.number(11": 1
     },
     "ios/TimbreWidgets/NextSongWidget.swift": {
+      "status-colour: palette.amber": 2,
       "type-scale: typeface.display(18": 1,
       "type-scale: typeface.label(10": 1,
       "type-scale: typeface.label(11": 1
     },
     "ios/TimbreWidgets/PracticeLiveActivity.swift": {
+      "status-colour: palette.amber": 3,
       "type-scale: typeface.display(18": 1,
       "type-scale: typeface.display(56": 2,
       "type-scale: typeface.label(11": 1,
@@ -240,6 +360,7 @@
       "type-scale: typeface.number(52": 1
     },
     "ios/TimbreWidgets/TimbreWidgets.swift": {
+      "status-colour: palette.amber": 1,
       "type-scale: typeface.display(18": 1,
       "type-scale: typeface.display(22": 1,
       "type-scale: typeface.display(44": 1

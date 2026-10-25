@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import lint_tells  # noqa: E402
+import comment_hygiene  # noqa: E402
 import sweep_comments  # noqa: E402
 from swift_source import scan  # noqa: E402
 
@@ -59,7 +59,7 @@ class LexerTests(unittest.TestCase):
 
 class LintTests(unittest.TestCase):
     def rules(self, source: str, path: str = "ios/Timbre/Learn/X.swift") -> list[str]:
-        return [f.rule for f in lint_tells.lint_source(path, source)]
+        return [f.rule for f in comment_hygiene.lint_source(path, source)]
 
     def test_review_and_bug_references_in_comments(self):
         self.assertEqual(self.rules("// held still (review 14, bug 2).\nlet a = 1"), ["review-ref", "bug-ref"])
@@ -75,8 +75,11 @@ class LintTests(unittest.TestCase):
         self.assertNotIn("store-frame", self.rules(source, "ios/TimbreUITests/TimbreUITests.swift"))
         self.assertNotIn("store-frame", self.rules(source, "ios/Timbre/Root/DemoScenes.swift"))
 
-    def test_wip_and_agent_chatter(self):
-        self.assertEqual(self.rules("// WIP: finish\n// the jurors asked for it"), ["wip", "agent-chatter"])
+    def test_wip_and_process_references(self):
+        self.assertEqual(self.rules("// WIP: finish\n// the jurors asked for it"), ["wip", "process-ref"])
+
+    def test_tool_names_are_not_policed(self):
+        self.assertEqual(self.rules("// Written with Claude's help, reviewed by a person."), [])
 
     def test_code_rules_ignore_comments_and_strings(self):
         self.assertEqual(self.rules('IconOrb(symbol: "x") // IconOrb( again\nlet s = "IconOrb("'), ["icon-orb"])
@@ -85,15 +88,34 @@ class LintTests(unittest.TestCase):
         source = "Text(a).font(Typeface.display(16))\nText(b).font(Typeface.label(17))\nText(c).font(Typeface.hero(44))"
         self.assertEqual(self.rules(source), ["type-scale"])
 
+    def test_inline_orb_is_a_tinted_circle_behind_a_glyph(self):
+        tinted = "Image(systemName: s).background(Circle().fill(tint.opacity(0.14)))"
+        solid = "Image(systemName: s).background(Circle().fill(Palette.mint))"
+        self.assertEqual(self.rules(tinted), ["inline-orb"])
+        self.assertEqual(self.rules(solid), [])
+
+    def test_status_colour_outside_the_tokens(self):
+        self.assertEqual(self.rules("Text(a).foregroundStyle(Palette.amber)"), ["status-colour"])
+        self.assertEqual(self.rules("static let x = Palette.coral", "ios/Timbre/Design/Theme.swift"), [])
+
+    def test_a_warn_rule_arms_itself_once_its_baseline_is_empty(self):
+        allowed = comment_hygiene.tally([comment_hygiene.Finding("type-scale", "a.swift", 1, "Typeface.label(14", "")])
+        armed = comment_hygiene.armed_rules(allowed, strict=False)
+        self.assertIn("review-ref", armed)
+        self.assertIn("icon-orb", armed)
+        self.assertNotIn("type-scale", armed)
+        self.assertIn("type-scale", comment_hygiene.armed_rules(allowed, strict=True))
+        self.assertNotIn("test-coupling", comment_hygiene.armed_rules(allowed, strict=True))
+
     def test_baseline_allows_existing_count_and_blocks_one_more(self):
-        old = [lint_tells.Finding("review-ref", "a.swift", 3, "review 14", "")]
-        allowed = lint_tells.tally(old)
-        over, shrink = lint_tells.compare(old, allowed)
+        old = [comment_hygiene.Finding("review-ref", "a.swift", 3, "review 14", "")]
+        allowed = comment_hygiene.tally(old)
+        over, shrink = comment_hygiene.compare(old, allowed)
         self.assertEqual((over, shrink), ([], []))
-        two = old + [lint_tells.Finding("review-ref", "a.swift", 9, "Review 14", "")]
-        over, _ = lint_tells.compare(two, allowed)
+        two = old + [comment_hygiene.Finding("review-ref", "a.swift", 9, "Review 14", "")]
+        over, _ = comment_hygiene.compare(two, allowed)
         self.assertEqual(len(over), 2)
-        over, shrink = lint_tells.compare([], allowed)
+        over, shrink = comment_hygiene.compare([], allowed)
         self.assertEqual(over, [])
         self.assertEqual(len(shrink), 1)
 

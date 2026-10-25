@@ -1,9 +1,9 @@
 # SwiftLint for Timbre. Run `swiftlint lint` from the repository root.
 #
-# CI (ios.yml, core job) reports these rules on every pull request. Once a baseline of the existing violations is
-# committed as tools/ci/swiftlint-baseline.json (the job writes a candidate to ci-out/swiftlint-baseline.json), the
-# same step fails on new violations only. The comment rules that block today live in tools/ci/lint_tells.py; the
-# custom rule below shows them in Xcode as you type.
+# CI (ios.yml, core job) lints every pull request against tools/ci/swiftlint-baseline.json, the violations that predate
+# the gate: a new error-severity violation fails the job, a new warning is reported. Each run publishes a fresh
+# baseline candidate (ci-results/core, swiftlint-baseline.json) for when the baseline shrinks. The comment rules that
+# block live in tools/ci/comment_hygiene.py; the custom rules below show them in Xcode as you type.
 included:
   - ios/Timbre
   - ios/Sources
@@ -82,7 +82,7 @@ custom_rules:
     match_kinds:
       - comment
       - doccomment
-    message: "Say what the code guarantees and why, or link a tracked issue (tools/ci/lint_tells.py)."
+    message: "Say what the code guarantees and why, or link a tracked issue (tools/ci/comment_hygiene.py)."
     severity: error
   wip_marker:
     name: "WIP marker"

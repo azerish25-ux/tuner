@@ -2,8 +2,10 @@
 """Release gate: every shipped language carries the strings a store review, a permission prompt or VoiceOver needs.
 
     python3 tools/l10n/critical.py                    # report what is missing, per category and locale (exit 0)
-    python3 tools/l10n/critical.py --github           # the same, with warning annotations (the core CI job)
-    python3 tools/l10n/critical.py --strict           # exit 1 when a shipped locale lacks one (apple-delivery.yml)
+    python3 tools/l10n/critical.py --github           # the same, with warning annotations
+    python3 tools/l10n/critical.py --baseline         # pull requests: exit 1 on a gap the baseline doesn't list
+    python3 tools/l10n/critical.py --write-baseline   # record today's gaps as the baseline (a reviewed diff)
+    python3 tools/l10n/critical.py --strict           # App Store delivery: exit 1 on any gap in a shipped locale
     python3 tools/l10n/critical.py --strict --locales de,fr,ja   # only these locales ship
     python3 tools/l10n/critical.py --out DIR          # also write DIR/critical-missing.json for the translators
 
@@ -15,9 +17,16 @@ Critical strings (everything else stays a warning in report.py --check):
                 CustomContent / Action(named:), posted as an announcement, or built by a declaration whose
                 documentation says it is for VoiceOver (ChordWords in Learn/Diagrams.swift)
 
+Two gates use this script:
+    pull requests     `--baseline`: the gaps that predate the gate are listed in tools/l10n/critical-baseline.json,
+                      and a new one fails the core job. Adding a critical English string therefore means delivering
+                      its translations, or recording the gap with `--write-baseline`, which shows up in review.
+    App Store upload  `--strict` (apple-delivery.yml): no gap at all in a shipped locale. Only an internal TestFlight
+                      build may skip it, and that build can't be submitted for review.
+
 The English, the tables and what each locale lacks come from report.py's model, so this gate and the translators'
-handoff always agree. "Shipped" is every .lproj in ios/Timbre/Resources unless --locales narrows it (the owner may
-trim CFBundleLocalizations to the locales that are complete).
+handoff always agree. "Shipped" is CFBundleLocalizations in ios/project.yml (tools/l10n/shipping.py writes it), or
+every .lproj when the project doesn't declare it, unless --locales narrows it.
 """
 from __future__ import annotations
 
@@ -30,8 +39,10 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import report  # noqa: E402
+import shipping  # noqa: E402
 import swiftstrings  # noqa: E402
 
+BASELINE = HERE / "critical-baseline.json"
 CATEGORIES = ("legal", "permission", "voiceover")
 LEGAL_FOLDERS = ("ios/Timbre/Paywall/",)
 LEGAL_WORDS = re.compile(r"\b(?:renew\w*|subscri\w*|cancel\w*|charge[sd]?|billed|billing|trials?|refund\w*|terms|"
@@ -117,10 +128,91 @@ def missing(model: dict, locales: list[str], classifier: Classifier) -> dict:
     return out
 
 
+def gap_keys(gaps: dict) -> dict:
+    """{category: {"table|key": sorted locales}} for the gaps `missing` found."""
+    out: dict = {}
+    for loc, per in gaps.items():
+        for category, items in per.items():
+            for item in items:
+                out.setdefault(category, {}).setdefault(f"{item['table']}|{item['key']}", set()).add(loc)
+    return {category: {key: sorted(locs) for key, locs in sorted(keys.items())} for category, keys in sorted(out.items())}
+
+
+def load_baseline(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8")).get("gaps", {})
+
+
+def write_baseline(path: Path, keys: dict) -> int:
+    body = {
+        "about": "Legal, permission and VoiceOver strings that a shipped locale lacks and that predate the pull-request "
+                 "gate (tools/l10n/critical.py --baseline): per category, 'table|key' and the locales without it. A gap "
+                 "not listed here fails the core job. Translations shrink it; `critical.py --write-baseline` rewrites "
+                 "it, and anything that adds is a reviewed decision to ship English in those locales for now. The App "
+                 "Store delivery gate (--strict) ignores this file.",
+    }
+    # One string per line, its locales beside it: a translation delivered is a one-line diff.
+    lines = ["{", f' "about": {json.dumps(body["about"], ensure_ascii=False)},', ' "gaps": {']
+    categories = list(keys.items())
+    for c, (category, per) in enumerate(categories):
+        lines.append(f"  {json.dumps(category)}: {{")
+        rows = list(per.items())
+        for r, (key, locs) in enumerate(rows):
+            comma = "," if r < len(rows) - 1 else ""
+            lines.append(f"   {json.dumps(key, ensure_ascii=False)}: {json.dumps(locs)}{comma}")
+        lines.append("  }" + ("," if c < len(categories) - 1 else ""))
+    lines += [" }", "}"]
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return sum(len(locs) for per in keys.values() for locs in per.values())
+
+
+def compare(current: dict, allowed: dict) -> tuple[list, list]:
+    """(new, gone): (category, key, locale) gaps not in the baseline, and baseline entries no longer missing."""
+    new, gone = [], []
+    for category, keys in current.items():
+        for key, locs in keys.items():
+            known = set(allowed.get(category, {}).get(key, []))
+            new.extend((category, key, loc) for loc in locs if loc not in known)
+    for category, keys in allowed.items():
+        for key, locs in keys.items():
+            have = set(current.get(category, {}).get(key, []))
+            gone.extend((category, key, loc) for loc in locs if loc not in have)
+    return new, gone
+
+
+def escape(value: str) -> str:
+    return value.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+
+
+def gate_new(new: list, github: bool) -> int:
+    """Prints the gaps the baseline doesn't list; 1 when there are any."""
+    if not new:
+        return 0
+    by_key: dict = {}
+    for category, key, loc in new:
+        by_key.setdefault((category, key), []).append(loc)
+    for (category, key), locs in sorted(by_key.items()):
+        table, _, text = key.partition("|")
+        print(f"NEW {category} [{table}] {text[:110]!r}: {', '.join(sorted(locs))}")
+        if github:
+            message = (f"New {category} string without translations in {len(locs)} shipped locales: {text[:140]!r}. "
+                       f"Deliver the translations (tools/l10n/report.py --import), or record the gap with "
+                       f"python3 tools/l10n/critical.py --write-baseline.")
+            print(f"::error title=l10n/{category}::{escape(message)}")
+    print(f"FAILED: {len(new)} new legal, permission or VoiceOver gaps ({len(by_key)} strings). Deliver the "
+          f"translations, or record them deliberately with --write-baseline (the diff shows in review).")
+    return 1
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--strict", action="store_true", help="exit 1 when a shipped locale lacks a critical string")
-    parser.add_argument("--locales", help="comma-separated locales that ship (default: every .lproj)")
+    parser.add_argument("--baseline", nargs="?", const=BASELINE, type=Path, metavar="FILE",
+                        help="exit 1 on a gap the baseline doesn't list (default tools/l10n/critical-baseline.json)")
+    parser.add_argument("--write-baseline", nargs="?", const=BASELINE, type=Path, metavar="FILE",
+                        help="record today's gaps as the baseline")
+    parser.add_argument("--locales", help="comma-separated locales that ship (default: CFBundleLocalizations)")
     parser.add_argument("--github", action="store_true", help="emit GitHub annotations")
     parser.add_argument("--out", type=Path, help="write critical-missing.json here")
     parser.add_argument("--xliff", type=Path, help="an en.xliff from Xcode's export, to settle code keys (l10n.yml)")
@@ -128,14 +220,23 @@ def main(argv: list[str] | None = None) -> int:
 
     model = report.build(args.xliff)
     available = sorted(model["locales"])
-    locales = available
+    locales = [loc for loc in shipping.shipped() if loc in model["locales"]]
     if args.locales:
-        locales = [loc.strip() for loc in args.locales.split(",") if loc.strip()]
+        locales = [loc.strip() for loc in args.locales.split(",") if loc.strip() and loc.strip() != shipping.SOURCE]
         unknown = sorted(set(locales) - set(available))
         if unknown:
             print(f"No string tables for: {', '.join(unknown)}")
             return 2
     gaps = missing(model, locales, Classifier())
+    current = gap_keys(gaps)
+    print(f"Shipped locales checked: {len(locales)} ({', '.join(locales) or 'English only'})")
+
+    if args.write_baseline:
+        pairs = write_baseline(args.write_baseline, current)
+        where = args.write_baseline.resolve()
+        shown = where.relative_to(report.ROOT) if where.is_relative_to(report.ROOT) else where
+        print(f"Baseline written: {pairs} locale × string gaps in {shown}")
+        return 0
 
     level = "error" if args.strict else "warning"
     total = 0
@@ -150,7 +251,7 @@ def main(argv: list[str] | None = None) -> int:
         for (table, key), locs in sorted(keys.items(), key=lambda kv: (-len(kv[1]), kv[0]))[:12]:
             shown = "all shipped locales" if len(locs) == len(locales) else ", ".join(locs)
             print(f"    [{table}] {key[:110]!r}: {shown}")
-        if keys and args.github:
+        if keys and args.github and not args.baseline:
             print(f"::{level} title=l10n/{category}::{len(keys)} {category} strings are untranslated in "
                   f"{len({l for v in keys.values() for l in v})} shipped locales ({pairs} gaps). "
                   f"See tools/l10n/critical.py and docs/l10n/HANDOFF.md.")
@@ -160,11 +261,20 @@ def main(argv: list[str] | None = None) -> int:
                       for c, items in per.items() if items} for loc, per in gaps.items()}
         (args.out / "critical-missing.json").write_text(json.dumps(body, indent=2, ensure_ascii=False) + "\n",
                                                         encoding="utf-8")
+    if args.baseline:
+        new, gone = compare(current, load_baseline(args.baseline))
+        if gone:
+            print(f"{len(gone)} baseline gaps are translated now: shrink the baseline with "
+                  f"python3 tools/l10n/critical.py --write-baseline")
+        if gate_new(new, args.github):
+            return 1
+        print(f"OK: no gap beyond the baseline ({total} known gaps; the App Store gate requires none).")
+        return 0
     if total and args.strict:
         print(f"FAILED: {total} legal, permission or VoiceOver gaps in the shipped locales. Deliver the translations "
-              f"(tools/l10n/report.py --import) or ship fewer locales (--locales).")
+              f"(tools/l10n/report.py --import) or ship fewer locales (tools/l10n/shipping.py --min … --apply).")
         return 1
-    print("OK" if not total else "Reported (not failing: run with --strict to gate a release)")
+    print("OK" if not total else "Reported (not failing: --baseline gates pull requests, --strict a release)")
     return 0
 
 
