@@ -274,6 +274,7 @@ struct NoteReadout: View {
     var size: CGFloat = 112
     @Environment(\.colorSchemeContrast) private var contrast
     @Environment(\.accessibilityDifferentiateWithoutColor) private var withoutColor
+    @Environment(\.locale) private var locale
     private var strong: Bool { contrast == .increased }
     /// How much larger than the phone's readout this one draws (1 on a phone and in the compact readout).
     private var grow: CGFloat { compact ? 1 : max(1, size / 112) }
@@ -307,7 +308,8 @@ struct NoteReadout: View {
             .animation(Motion.quick, value: detail)
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Target \(note)"))
+        // "Target E flat 3", as a musician says it in the app's language.
+        .accessibilityLabel(Text("Target \(NoteNames.spoken(note, locale: locale, system: NoteNames.active))"))
         .accessibilityValue(Text(Self.spoken(shown, locked: locked)))
         // VoiceOver reads the live value when it needs it rather than on every change.
         .accessibilityAddTraits(.updatesFrequently)

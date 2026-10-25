@@ -90,14 +90,15 @@ struct JourneyView: View {
         }
     }
 
-    /// iPad: the stats across the top (one tile per column in landscape), the cards in columns of a phone's
-    /// proportions so no calendar row or bar chart is stretched across the screen, and the badges across the foot,
+    /// iPad: the figures in one summary bar across the top (not phone tiles stretched across the width), the cards in
+    /// columns of a phone's proportions so no calendar row or bar chart is stretched across the screen, and the badges
+    /// across the foot,
     /// where the width shows more of them per row. Recent closes the last column and stops level with the others
     /// (`BalancedColumns`), showing as many sessions as fit, rather than running on beside an empty stretch.
     private func wideBoard(_ columns: CardColumns) -> some View {
         VStack(alignment: .leading, spacing: 20) {
             title
-            stats(spacing: CardColumns.spacing)
+            statBar
             BalancedColumns(width: columns.unit) {
                 if columns.count >= 3 {
                     column {
@@ -210,23 +211,42 @@ struct JourneyView: View {
     /// (`StatTileRow`), so "day streak" and the level's name never truncate.
     /// The third is a distance in cents, so it says "cents off" rather than "accuracy" (a percentage everywhere else),
     /// with the unit spelled out ("Average ¢ off" made the caption read like a formula).
-    /// - Parameter spacing: between the tiles (the iPad's grid spacing, so they line up with the columns below).
-    private func stats(spacing: CGFloat = 10) -> some View {
+    private func stats() -> some View {
         let streak = store.streak
         let level = store.level
-        let recent = tuningSessions.suffix(10).compactMap(\.meanAbsoluteCents)
-        let average = recent.isEmpty ? nil : recent.reduce(0, +) / Double(recent.count)
-        return StatTileRow(spacing: spacing) {
+        return StatTileRow {
             StatTile(symbol: "flame.fill", tint: Palette.flame, value: Text("\(streak.current)"), label: "day streak")
-            StatTile(symbol: "star", tint: Palette.mint, value: levelValue(level.number), label: Text(LocalizedStringKey(level.name)))
-                .accessibilityLabel(Text("Level \(level.number)") + Text(verbatim: ", ") + Text(LocalizedStringKey(level.name)))
-            StatTile(symbol: "scope", tint: Palette.amber, value: WeekRecap.centsText(average), label: "Avg. cents off")
+            StatTile(value: levelValue(level.number), label: Text(LocalizedStringKey(level.name))) {
+                LevelArc(progress: level.progress(store.progress.xp), size: 18)
+            }
+            .accessibilityLabel(Text("Level \(level.number)") + Text(verbatim: ", ") + Text(LocalizedStringKey(level.name)))
+            StatTile(symbol: "scope", tint: Palette.inkSoft, value: WeekRecap.centsText(averageCents), label: "Avg. cents off")
         }
     }
 
-    /// "LV 5": the level reads as a level, not a count (the caption the level rings use).
+    /// iPad: the same three figures in one bar across the board, each centred in its third.
+    private var statBar: some View {
+        let streak = store.streak
+        let level = store.level
+        return StatBar([
+            StatBar.Figure(id: "streak", symbol: "flame.fill", tint: Palette.flame, value: Text("\(streak.current)"), label: Text("day streak")),
+            StatBar.Figure(id: "level", value: levelValue(level.number), label: Text(LocalizedStringKey(level.name)),
+                           spoken: Text("Level \(level.number)") + Text(verbatim: ", ") + Text(LocalizedStringKey(level.name))) {
+                LevelArc(progress: level.progress(store.progress.xp), size: Glyph.lead)
+            },
+            StatBar.Figure(id: "cents", symbol: "scope", tint: Palette.inkSoft, value: WeekRecap.centsText(averageCents), label: Text("Avg. cents off")),
+        ])
+    }
+
+    /// The mean distance of the last ten tune-ups, in cents; nil before there are any.
+    private var averageCents: Double? {
+        let recent = tuningSessions.suffix(10).compactMap(\.meanAbsoluteCents)
+        return recent.isEmpty ? nil : recent.reduce(0, +) / Double(recent.count)
+    }
+
+    /// "LV 5": the level reads as a level, not a count (the mark the level ring carries).
     private func levelValue(_ number: Int) -> Text {
-        Text("LV").font(Typeface.label(13)).foregroundStyle(Palette.mint) + Text(verbatim: " ") + Text(number, format: .number)
+        Text("LV").font(Typeface.label(.footnote)).foregroundStyle(Palette.mint) + Text(verbatim: " ") + Text(number, format: .number)
     }
 
     /// The last seven days with a poster to share; hidden until there is practice in them.
@@ -259,10 +279,9 @@ struct JourneyView: View {
                         .frame(height: 26)
                         .overlay {
                             if date == today && !played {
-                                RoundedRectangle(cornerRadius: 7, style: .continuous).strokeBorder(Palette.amber.opacity(0.7), style: StrokeStyle(lineWidth: 1.5, dash: [3, 3]))
+                                RoundedRectangle(cornerRadius: 7, style: .continuous).strokeBorder(Palette.controlLine, style: StrokeStyle(lineWidth: 1.5, dash: [3, 3]))
                             } else if date == today {
                                 RoundedRectangle(cornerRadius: 7, style: .continuous).strokeBorder(Palette.ink.opacity(0.9), lineWidth: 2)
-                                    .shadow(color: Palette.mint.opacity(0.6), radius: 6)
                             }
                         }
                 }
@@ -281,7 +300,7 @@ struct JourneyView: View {
                 let today = column == 6
                 VStack(spacing: 3) {
                     Text(date, format: .dateTime.weekday(.narrow))
-                        .font(Typeface.label(12)).foregroundStyle(today ? Palette.mint : Palette.inkSoft)
+                        .font(Typeface.label(.caption)).foregroundStyle(today ? Palette.mint : Palette.inkSoft)
                     Circle().fill(today ? Palette.mint : .clear).frame(width: 4, height: 4)
                 }
                 .frame(maxWidth: .infinity)
@@ -321,12 +340,10 @@ struct JourneyView: View {
             }
             Button { confirmRestring = true } label: {
                 Label(restrung.map { String(localized: "Restrung \($0.formatted(.relative(presentation: .named)))") } ?? String(localized: "I just restrung"), systemImage: "arrow.triangle.2.circlepath")
-                    .font(.footnote.weight(.semibold)).foregroundStyle(Palette.mint)
-                    // A text link: a 44 pt target, its look unchanged.
-                    .frame(minHeight: Metrics.minTarget, alignment: .leading)
-                    .contentShape(Rectangle())
+                    .font(.footnote.weight(.semibold))
             }
-            .buttonStyle(.plain)
+            // A text link (underlined with Button Shapes on), in a 44 pt target.
+            .buttonStyle(TextLinkStyle())
             .confirmationDialog("Mark new strings on \(store.instrumentDisplayName)?", isPresented: $confirmRestring, titleVisibility: .visible) {
                 Button("I just restrung") { store.markRestrung() }
             }
@@ -390,14 +407,20 @@ struct JourneyView: View {
         let bar = rate == nil ? 0 : max(4, height * CGFloat(min(1, magnitude / peak)))
         let top = UnevenRoundedRectangle(topLeadingRadius: 5, topTrailingRadius: 5, style: .continuous)
         return VStack(spacing: 5) {
-            Text(verbatim: rate.map(Self.signed) ?? "–").font(Typeface.number(12))
-                .foregroundStyle(bad ? Palette.amber : Palette.inkSoft)
-                .lineLimit(1).minimumScaleFactor(0.8)
+            Group {
+                if let rate {
+                    Text(verbatim: Self.signed(rate)).font(Typeface.number(.caption))
+                } else {
+                    // The one placeholder for a value not measured yet, as everywhere in the app.
+                    Text("Not yet").font(.caption2)
+                }
+            }
+            .foregroundStyle(bad ? Palette.amber : Palette.inkSoft)
+            .lineLimit(1).minimumScaleFactor(0.6)
             ZStack(alignment: .bottom) {
                 top.fill(.white.opacity(0.05)).frame(height: height)
                 top.fill(LinearGradient(colors: [tint, tint.opacity(bad ? 0.7 : 0.45)], startPoint: .top, endPoint: .bottom))
                     .frame(height: driftShown ? bar : 0)
-                    .shadow(color: bad ? tint.opacity(0.45) : .clear, radius: 6)
             }
             .frame(width: 16)
         }
@@ -444,11 +467,10 @@ struct JourneyView: View {
                         Text(allBadges ? LocalizedStringKey("Show fewer") : LocalizedStringKey("Show all"))
                         Image(systemName: "chevron.down").rotationEffect(.degrees(allBadges ? 180 : 0))
                     }
-                    .font(.footnote.weight(.semibold)).foregroundStyle(Palette.mint)
-                    .frame(maxWidth: .infinity, minHeight: Metrics.minTarget)
-                    .contentShape(Rectangle())
+                    .font(.footnote.weight(.semibold))
+                    .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(TextLinkStyle())
                 .accessibilityIdentifier("journey.badges.more")
             }
         }
@@ -556,11 +578,11 @@ struct JourneyView: View {
     /// One line under every medal: the tier's colour once earned, the count toward the goal while locked.
     @ViewBuilder private func status(_ badge: BadgeProgress, shown: Int) -> some View {
         if badge.earned {
-            Text("Earned").font(Typeface.label(12)).foregroundStyle(badge.achievement.tier.ink)
+            Text("Earned").font(Typeface.label(.caption)).foregroundStyle(badge.achievement.tier.ink)
                 .lineLimit(1).minimumScaleFactor(0.8)
         } else {
-            Text.fraction(shown, badge.achievement.goal).font(Typeface.number(12))
-                .foregroundStyle(shown > 0 ? badge.achievement.category.tint : Palette.inkSoft)
+            Text.fraction(shown, badge.achievement.goal).font(Typeface.number(.caption))
+                .foregroundStyle(shown > 0 ? Palette.ink : Palette.inkSoft)
                 .lineLimit(1).minimumScaleFactor(0.8)
         }
     }
@@ -575,11 +597,11 @@ struct JourneyView: View {
                 Text(LocalizedStringKey(a.detail)).font(.subheadline).foregroundStyle(Palette.inkSoft)
                     .fixedSize(horizontal: false, vertical: true)
                 if badge.earned {
-                    Text("Earned").font(Typeface.label(12)).foregroundStyle(a.tier.ink)
+                    Text("Earned").font(Typeface.label(.caption)).foregroundStyle(a.tier.ink)
                 } else {
                     HStack(spacing: 8) {
-                        ProgressLine(value: badge.fraction, color: a.category.tint, height: 5).frame(width: 110)
-                        Text.fraction(shown, a.goal).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                        ProgressLine(value: badge.fraction, color: Palette.mint, height: 5).frame(width: 110)
+                        Text.fraction(shown, a.goal).font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
                     }
                 }
             }
@@ -618,7 +640,7 @@ struct JourneyView: View {
     private var lockedInsights: some View {
         Button { store.presentPaywall("journey") } label: {
             HStack(spacing: 14) {
-                IconOrb(symbol: "chart.xyaxis.line", tint: Palette.mint)
+                Glyph("chart.xyaxis.line", size: Glyph.lead, tint: Palette.mint)
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 8) {
                         Text("Accuracy over time").font(.headline).foregroundStyle(Palette.ink)
@@ -634,7 +656,7 @@ struct JourneyView: View {
                     .accessibilityHidden(true)
             }
             .contentShape(Rectangle())
-            .stillCard(tint: Palette.amber)
+            .stillCard()
         }
         .buttonStyle(PressScaleStyle())
     }
@@ -655,7 +677,7 @@ struct JourneyView: View {
             }
             ForEach(store.records.prefix(limit)) { record in
                 HStack(spacing: 12) {
-                    Image(systemName: symbol(record)).foregroundStyle(Palette.mint).frame(width: 26)
+                    Glyph(symbol(record))
                     VStack(alignment: .leading, spacing: 2) {
                         Text(title(record)).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
                         Text(record.date, format: .dateTime.month(.abbreviated).day().hour().minute()).font(.caption).foregroundStyle(Palette.inkSoft)
@@ -663,13 +685,13 @@ struct JourneyView: View {
                     Spacer()
                     if let cents = record.meanAbsoluteCents, record.kind == "tuning" {
                         // "±0.6¢", as the cents-off tile above writes it (and in the locale's decimals).
-                        WeekRecap.centsText(cents).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
+                        WeekRecap.centsText(cents).font(Typeface.number(.footnote)).foregroundStyle(Palette.inkSoft)
                     } else if record.kind == "lesson" {
-                        Text(String(repeating: "★", count: max(1, min(3, record.stableCount)))).font(.footnote).foregroundStyle(Palette.amber)
+                        Text(verbatim: String(repeating: "★", count: max(1, min(3, record.stableCount)))).font(.footnote).foregroundStyle(Palette.starGold)
                     } else if record.kind == "ear", record.count > 0 {
-                        Text.fraction(record.stableCount, record.count).font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
+                        Text.fraction(record.stableCount, record.count).font(Typeface.number(.footnote)).foregroundStyle(Palette.inkSoft)
                     } else if let accuracy = record.voiceResult?.accuracy {
-                        Text("\(accuracy)%").font(Typeface.number(13)).foregroundStyle(Palette.inkSoft)
+                        Text("\(accuracy)%").font(Typeface.number(.footnote)).foregroundStyle(Palette.inkSoft)
                     }
                 }
                 .padding(.vertical, 4)
@@ -681,11 +703,11 @@ struct JourneyView: View {
     private func symbol(_ record: PracticeRecord) -> String {
         switch record.kind {
         case "voice": return "music.mic"
-        case "lesson": return "graduationcap.fill"
-        case "ear": return "ear.fill"
-        case "rhythm": return "metronome.fill"
+        case "lesson": return "graduationcap"
+        case "ear": return "ear"
+        case "rhythm": return "metronome"
         case "drone": return "waveform.path"
-        case "chord", "scale": return "hand.raised.fingers.spread.fill"
+        case "chord", "scale": return "hand.raised.fingers.spread"
         default: return "tuningfork"
         }
     }

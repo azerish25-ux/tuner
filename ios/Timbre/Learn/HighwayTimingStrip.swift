@@ -10,6 +10,9 @@ import TimbreCore
 /// Given `onLoop`, the misses are ringed and tapping one (anywhere in its column) hands its index over, so the
 /// play-along can loop that note's bar at a slower tempo; a line under the strip says so, and VoiceOver then reads
 /// the strip as the count of misses with an action per bar that has one.
+///
+/// Under a whole song's take (the finale, which sets `takeSections`), the song's sections follow as a ribbon, each
+/// as long as its bars and named with its score where there is room ("Chorus 96 %").
 struct HighwayTimingStrip: View {
     let count: Int
     let judgments: [PlayAlongJudge.Judgment]
@@ -20,6 +23,7 @@ struct HighwayTimingStrip: View {
     /// The bar (0 first) each note falls in, for the VoiceOver actions.
     var bar: (Int) -> Int = { $0 }
     @State private var landed = false
+    @Environment(\.takeSections) private var sections
 
     /// Offsets this far either way reach the edge (the judge takes a note up to 0.2 s early and 0.32 s late).
     static let range = 0.3
@@ -30,6 +34,15 @@ struct HighwayTimingStrip: View {
     private var loops: Bool { onLoop != nil && !misses.isEmpty }
 
     var body: some View {
+        VStack(spacing: 12) {
+            timing
+            if !sections.isEmpty {
+                SectionRibbon(sections: sections, calm: calm)
+            }
+        }
+    }
+
+    private var timing: some View {
         VStack(spacing: 6) {
             strip
             if loops {
@@ -188,5 +201,127 @@ struct HighwayTimingStrip: View {
         line.move(to: CGPoint(x: 0, y: y))
         line.addLine(to: CGPoint(x: size.width, y: y))
         context.stroke(line, with: .color(Palette.amber.opacity(0.7)), style: StrokeStyle(lineWidth: 1.2, dash: [4, 4]))
+    }
+}
+
+// MARK: - The song's sections
+
+/// One section of a song as a take went: its name, where it sits (first bar, how many) and the share of its notes
+/// played as the play-along scores them; no score for a section without notes (an intro the band plays alone).
+struct TakeSection: Identifiable, Equatable {
+    let id: Int
+    let name: String
+    let start: Int
+    let bars: Int
+    /// 0…1 over the notes sung or played in it.
+    let score: Double?
+
+    var percent: Int? { score.map { Int(($0 * 100).rounded()) } }
+}
+
+private struct TakeSectionsKey: EnvironmentKey {
+    static let defaultValue: [TakeSection] = []
+}
+
+extension EnvironmentValues {
+    /// The sections of the song whose take a timing strip shows (the song finale sets them); empty elsewhere.
+    var takeSections: [TakeSection] {
+        get { self[TakeSectionsKey.self] }
+        set { self[TakeSectionsKey.self] = newValue }
+    }
+}
+
+/// A song's sections side by side, each as long as its bars and lit by how its notes went (mint from 90 %, amber
+/// below, faint without notes), named with its score where there is room ("Chorus 96 %"); under them, the strongest
+/// section and the one with most to gain, in words. The tiles fill in from the left after the timing strip's dots.
+struct SectionRibbon: View {
+    let sections: [TakeSection]
+    var calm = false
+    @State private var shown = false
+
+    private static let gap: CGFloat = 3
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            GeometryReader { proxy in
+                HStack(spacing: Self.gap) {
+                    ForEach(Array(sections.enumerated()), id: \.element.id) { index, section in
+                        tile(section)
+                            .frame(width: width(of: section, in: proxy.size.width))
+                            .opacity(shown || calm ? 1 : 0)
+                            .animation(calm ? nil : Motion.fade.delay(0.9 + Double(index) * 0.06), value: shown)
+                    }
+                }
+            }
+            .frame(height: 44)
+            if let summary {
+                Text(summary)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .onAppear { shown = true }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("Sections"))
+        .accessibilityValue(Text(verbatim: spoken))
+    }
+
+    private var totalBars: Int { max(1, sections.reduce(0) { $0 + max(1, $1.bars) }) }
+
+    private func width(of section: TakeSection, in total: CGFloat) -> CGFloat {
+        let room = max(0, total - Self.gap * CGFloat(max(0, sections.count - 1)))
+        return room * CGFloat(max(1, section.bars)) / CGFloat(totalBars)
+    }
+
+    private func tint(_ section: TakeSection) -> Color {
+        guard let score = section.score else { return Palette.inkFaint }
+        return score >= 0.9 ? Palette.mint : Palette.amber
+    }
+
+    private func tile(_ section: TakeSection) -> some View {
+        let shape = RoundedRectangle(cornerRadius: 8, style: .continuous)
+        let tint = tint(section)
+        return shape
+            .fill(tint.opacity(section.score == nil ? 0.08 : 0.08 + 0.22 * (section.score ?? 0)))
+            .overlay(shape.strokeBorder(tint.opacity(section.score == nil ? 0.25 : 0.6), lineWidth: 1))
+            .overlay {
+                ViewThatFits(in: .horizontal) {
+                    VStack(spacing: 1) {
+                        Text(verbatim: section.name).font(Typeface.label(10)).foregroundStyle(Palette.inkSoft)
+                        percentLabel(section, tint: tint)
+                    }
+                    percentLabel(section, tint: tint)
+                    Color.clear.frame(width: 1, height: 1)
+                }
+                .lineLimit(1)
+                .padding(.horizontal, 4)
+            }
+    }
+
+    @ViewBuilder private func percentLabel(_ section: TakeSection, tint: Color) -> some View {
+        if let percent = section.percent {
+            Text(verbatim: "\(percent)%").font(Typeface.number(13)).foregroundStyle(tint == Palette.inkFaint ? Palette.inkSoft : tint)
+        } else {
+            Text(verbatim: "–").font(Typeface.number(13)).foregroundStyle(Palette.inkFaint)
+        }
+    }
+
+    /// The strongest and the weakest of the sections with notes ("Strongest: Chorus, 96 % · Most to gain: Bridge,
+    /// 71 %"); just the strongest when every one is 90 % or more, nothing with fewer than two.
+    private var summary: LocalizedStringKey? {
+        let scored = sections.filter { $0.score != nil }
+        guard scored.count >= 2, let best = scored.max(by: { ($0.score ?? 0) < ($1.score ?? 0) }),
+              let worst = scored.min(by: { ($0.score ?? 0) < ($1.score ?? 0) }),
+              let high = best.percent, let low = worst.percent else { return nil }
+        if low >= 90 || best.id == worst.id { return "Strongest: \(best.name), \(high)%" }
+        return "Strongest: \(best.name), \(high)% · Most to gain: \(worst.name), \(low)%"
+    }
+
+    /// Every section with its score, for VoiceOver ("Verse 1, 92 %; Chorus, 96 %").
+    private var spoken: String {
+        sections.compactMap { section in
+            section.percent.map { "\(section.name), \($0) %" }
+        }.joined(separator: "; ")
     }
 }

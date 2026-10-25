@@ -186,15 +186,15 @@ struct CoachVoice {
 
     static func symbol(_ note: CoachNote) -> String {
         switch note.fact {
-        case .change, .lean, .nextLevel: return "metronome.fill"
+        case .change, .lean, .nextLevel: return "metronome"
         case .slipped: return "scope"
-        case .clean: return "checkmark.seal.fill"
-        case .split: return "chart.bar.fill"
+        case .clean: return "checkmark.seal"
+        case .split: return "chart.bar"
         case .belowTempo: return "speedometer"
         case .finalTake: return "star.leadinghalf.filled"
         case .drift, .oldStrings: return "tuningfork"
-        case .streak: return "flame.fill"
-        case .today: return "sun.max.fill"
+        case .streak: return "flame"
+        case .today: return "sun.max"
         case .moreTime: return "chart.line.uptrend.xyaxis"
         case .closerTuning: return "target"
         }

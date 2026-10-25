@@ -16,14 +16,13 @@ struct PaywallAnswers: Equatable {
 /// after today's whose names don't just repeat today's lesson; and the songs for the hero's rail. A paywall opened
 /// from a tool starts the track with that tool instead (`Focus`).
 struct PaywallPlan {
-    /// One promise of Pro, said as a result. Every outcome on every paywall wears the same kind of icon: an SF Symbol
-    /// in its colour on a tinted disc (`IconOrb`, the app's feature icon), as the plan track's nodes are drawn.
+    /// One promise of Pro, said as a result. Every outcome on every paywall wears the same kind of icon, in one tint:
+    /// a plain SF Symbol (`PaywallView.outcomeList`).
     struct Outcome: Identifiable {
         /// What the outcome promises ("drone", "song", "daily"…): the same promise is never listed twice.
         let id: String
         let text: Text
         let symbol: String
-        let tint: Color
     }
 
     struct Milestone: Identifiable {
@@ -344,53 +343,55 @@ struct PaywallPlan {
     /// Empty for onboarding, the generic upsell and anything unknown, which lead with the plan.
     @MainActor private static func reasonOutcomes(_ reason: String?, course: LearnCourse?, store: AppStore) -> [Outcome] {
         guard let reason else { return [] }
-        let tools = Outcome(id: "tools", text: Text("Every ear game and practice tool"), symbol: "ear", tint: Palette.violet)
-        let kit = Outcome(id: "kit", text: Text("Chords, scales, intonation and drone"), symbol: "music.note.list", tint: Palette.amber)
-        let custom = Outcome(id: "custom", text: Text("Unlimited custom tunings and string health"), symbol: "slider.horizontal.3", tint: Palette.sky)
-        let tune = Outcome(id: "tune", text: Text("In tune in seconds, on any instrument"), symbol: "tuningfork", tint: Palette.mint)
+        let tools = Outcome(id: "tools", text: Text("Every ear game and practice tool"), symbol: "ear")
+        let kit = Outcome(id: "kit", text: Text("Chords, scales, intonation and drone"), symbol: "music.note.list")
+        let custom = Outcome(id: "custom", text: Text("Unlimited custom tunings and string health"), symbol: "slider.horizontal.3")
+        let tune = Outcome(id: "tune", text: Text("In tune in seconds, on any instrument"), symbol: "tuningfork")
         switch reason {
         case "lesson":
             return [lessonsOutcome(store.paywallLessonId.flatMap { store.curriculum.lesson(id: $0)?.course } ?? course, store: store)]
         case "instrument", "tuning":
             return [tune, custom]
         case "custom_tuning":
-            return [Outcome(id: "insights", text: Text("Custom tunings, string health and accuracy insights"), symbol: "slider.horizontal.3", tint: Palette.sky),
+            return [Outcome(id: "insights", text: Text("Custom tunings, string health and accuracy insights"), symbol: "slider.horizontal.3"),
                     tune]
         case "precision":
-            return [Outcome(id: "strobe", text: Text("Strobe precision"), symbol: "scope", tint: Palette.sky), tune]
+            return [Outcome(id: "strobe", text: Text("Strobe precision"), symbol: "scope"), tune]
         case "temperament":
-            return [Outcome(id: "temperaments", text: temperaments, symbol: "pianokeys", tint: Palette.violet), custom]
+            return [Outcome(id: "temperaments", text: temperaments, symbol: "pianokeys"), custom]
         case "capo", "transpose":
-            return [Outcome(id: "capo", text: Text("Capo and transposition"), symbol: "arrow.up.arrow.down", tint: Palette.violet), custom]
+            return [Outcome(id: "capo", text: Text("Capo and transposition"), symbol: "arrow.up.arrow.down"), custom]
         case "journey":
-            return [Outcome(id: "trends", text: Text("Accuracy trends and milestones, measured on device"), symbol: "chart.line.uptrend.xyaxis",
-                            tint: Palette.mint)]
+            return [Outcome(id: "trends", text: Text("Accuracy trends and milestones, measured on device"), symbol: "chart.line.uptrend.xyaxis")]
         case "voice":
-            return [Outcome(id: "range", text: Text("Range test and exercises"), symbol: "music.mic", tint: Palette.mint), tools]
+            return [Outcome(id: "range", text: Text("Range test and exercises"), symbol: "music.mic"), tools]
         default:
             break
         }
         if reason.hasSuffix("drone") {
-            return [Outcome(id: "drone", text: Text("Intonation over a drone"), symbol: "waveform.path", tint: Palette.sky), tools]
+            return [Outcome(id: "drone", text: Text("Intonation over a drone"), symbol: "waveform.path"), tools]
         }
         if reason.hasSuffix("chords") || reason.hasSuffix("chord") {
-            return [Outcome(id: "chords", text: Text("Every shape, any tuning"), symbol: "hand.raised.fingers.spread", tint: Palette.sky), kit]
+            return [Outcome(id: "chords", text: Text("Every shape, any tuning"), symbol: "hand.raised.fingers.spread"), kit]
         }
         if reason.hasSuffix("scales") || reason.hasSuffix("scale") {
-            return [Outcome(id: "scales", text: Text("Fretboard maps"), symbol: "point.3.connected.trianglepath.dotted", tint: Palette.sky), kit]
+            return [Outcome(id: "scales", text: Text("Fretboard maps"), symbol: "point.3.connected.trianglepath.dotted"), kit]
         }
         if reason.hasSuffix("intonation") {
-            return [Outcome(id: "intonation", text: Text("Intonation checks at the 12th fret"), symbol: "ruler", tint: Palette.sky), kit]
+            return [Outcome(id: "intonation", text: Text("Intonation checks at the 12th fret"), symbol: "ruler"), kit]
         }
         if reason.hasPrefix("ear.") {
-            return [Outcome(id: "ear", text: Text("Name intervals and chords by ear"), symbol: "ear", tint: Palette.violet),
-                    Outcome(id: "drills", text: Text("Pitch, intervals, chords"), symbol: "music.note.list", tint: Palette.amber)]
+            return [Outcome(id: "ear", text: Text("Name intervals and chords by ear"), symbol: "ear"),
+                    Outcome(id: "drills", text: Text("Pitch, intervals, chords"), symbol: "music.note.list")]
         }
         if reason.hasPrefix("metronome.") {
-            return [Outcome(id: "meter", text: Text("Accents, odd meters, tap"), symbol: "metronome", tint: Palette.coral), kit]
+            return [Outcome(id: "meter", text: Text("Accents, odd meters, tap"), symbol: "metronome"), kit]
         }
         if reason.hasPrefix("practice.") || reason.hasPrefix("daily.") {
             return [kit, tools]
+        }
+        if reason.hasPrefix("your_songs") {
+            return [yourSongs, Outcome(id: "yoursongs.tools", text: Text("Slow down, loop and find chords in your recordings"), symbol: "waveform")]
         }
         return []
     }
@@ -403,10 +404,10 @@ struct PaywallPlan {
             let generic: Set<String> = ["music.note", "music.note.list", "music.quarternote.3"]
             let symbol = generic.contains(instrumentCourse.symbol) ? "graduationcap.fill" : instrumentCourse.symbol
             return Outcome(id: "lessons", text: Text("\(instrumentCourse.title.localized) lessons that listen as you play"),
-                           symbol: symbol, tint: Palette.accent(instrumentCourse.accent))
+                           symbol: symbol)
         }
         return Outcome(id: "catalog", text: Text("\(store.curriculum.lessonCount) lessons across \(store.curriculum.courses.count) courses"),
-                       symbol: "graduationcap.fill", tint: Palette.sky)
+                       symbol: "graduationcap.fill")
     }
 
     /// "Just, Meantone and Werckmeister", in the locale's own list style.
@@ -420,23 +421,23 @@ struct PaywallPlan {
     /// What Pro does for this goal, said as results. The daily minutes close every set.
     @MainActor private static func plannedOutcomes(goal: String, course: LearnCourse?, songDay: Int?, minutes: Int,
                                                    store: AppStore) -> [Outcome] {
-        let daily = Outcome(id: "daily", text: Text("\(minutes) minutes a day, planned for you"), symbol: "flame.fill", tint: Palette.flame)
+        let daily = Outcome(id: "daily", text: Text("\(minutes) minutes a day, planned for you"), symbol: "flame.fill")
         switch goal {
         case "ear":
-            return [Outcome(id: "ear", text: Text("Name intervals and chords by ear"), symbol: "ear", tint: Palette.violet),
-                    Outcome(id: "tools", text: Text("Every ear game and practice tool"), symbol: "music.note.list", tint: Palette.amber),
+            return [Outcome(id: "ear", text: Text("Name intervals and chords by ear"), symbol: "ear"),
+                    Outcome(id: "tools", text: Text("Every ear game and practice tool"), symbol: "music.note.list"),
                     daily]
         case "voice":
-            return [Outcome(id: "sing", text: Text("Sing in tune"), symbol: "music.mic", tint: Palette.mint),
-                    Outcome(id: "range", text: Text("Range test and exercises"), symbol: "waveform", tint: Palette.violet),
+            return [Outcome(id: "sing", text: Text("Sing in tune"), symbol: "music.mic"),
+                    Outcome(id: "range", text: Text("Range test and exercises"), symbol: "waveform"),
                     daily]
         case "rhythm":
-            return [Outcome(id: "time", text: Text("Keep better time"), symbol: "metronome", tint: Palette.coral),
-                    Outcome(id: "meter", text: Text("Accents, odd meters, tap"), symbol: "music.quarternote.3", tint: Palette.amber),
+            return [Outcome(id: "time", text: Text("Keep better time"), symbol: "metronome"),
+                    Outcome(id: "meter", text: Text("Accents, odd meters, tap"), symbol: "music.quarternote.3"),
                     daily]
         case "tune":
-            return [Outcome(id: "tune", text: Text("In tune in seconds, on any instrument"), symbol: "tuningfork", tint: Palette.mint),
-                    Outcome(id: "custom", text: Text("Unlimited custom tunings and string health"), symbol: "slider.horizontal.3", tint: Palette.sky),
+            return [Outcome(id: "tune", text: Text("In tune in seconds, on any instrument"), symbol: "tuningfork"),
+                    Outcome(id: "custom", text: Text("Unlimited custom tunings and string health"), symbol: "slider.horizontal.3"),
                     daily]
         default:
             // Practice: a song soon (when the plan reaches one) and lessons on their own instrument; a course without
@@ -444,31 +445,36 @@ struct PaywallPlan {
             if let played = course, let instrument = played.instrument, instrument != "voice" {
                 guard let songDay else { return [lessonsOutcome(played, store: store), daily] }
                 let song = songDay <= 7 ? Text("Play your first song this week") : Text("Play your first song")
-                return [Outcome(id: "song", text: song, symbol: "music.quarternote.3", tint: Palette.amber),
+                return [Outcome(id: "song", text: song, symbol: "music.quarternote.3"),
                         lessonsOutcome(played, store: store),
                         daily]
             }
-            return [Outcome(id: "tools", text: Text("Every ear game and practice tool"), symbol: "ear", tint: Palette.violet),
+            return [Outcome(id: "tools", text: Text("Every ear game and practice tool"), symbol: "ear"),
                     lessonsOutcome(course, store: store),
                     daily]
         }
     }
 
-    /// What Timbre Pro opens beyond the plan, for onboarding's paywall: every instrument the tuner knows ("Tune all 60
-    /// instruments") and every ear game and practice tool. A singer, an ear player and a drummer read the tools first.
-    /// Their ids are the promises they share with the plan's own ("tune", "tools"), so a goal that already makes one
-    /// keeps its own wording.
+    /// What Timbre Pro opens beyond the plan, for onboarding's paywall: any song the player brings (their own charts,
+    /// played along with Apple Music), every tuning of every instrument the tuner knows, and every ear game and practice
+    /// tool. A singer, an ear player and a drummer read the tools first. Their ids are the promises they share with the
+    /// plan's own ("tune", "tools"), so a goal that already makes one keeps its own wording.
     @MainActor private static func breadthOutcomes(goal: String, store: AppStore) -> [Outcome] {
         let count = store.catalog.instruments.count
-        // Sky, so it never stands mint beside a guitar plan's mint lessons.
-        let instruments = Outcome(id: "tune", text: Text("Tune all \(count) instruments"), symbol: "tuningfork", tint: Palette.sky)
+        let instruments = Outcome(id: "tune", text: Text("Every tuning for all \(count) instruments"), symbol: "tuningfork")
         // A singer's plan already shows a waveform and a microphone: their tools wear the metronome.
         let tools = goal == "voice"
-            ? Outcome(id: "tools", text: Text("Every ear game and practice tool"), symbol: "metronome", tint: Palette.coral)
-            : Outcome(id: "tools", text: Text("Every ear game and practice tool"), symbol: "ear", tint: Palette.violet)
+            ? Outcome(id: "tools", text: Text("Every ear game and practice tool"), symbol: "metronome")
+            : Outcome(id: "tools", text: Text("Every ear game and practice tool"), symbol: "ear")
         switch goal {
         case "voice", "ear", "rhythm": return [tools, instruments]
-        default: return [instruments, tools]
+        case "tune": return [instruments, yourSongs, tools]
+        default: return [yourSongs, instruments, tools]
         }
+    }
+
+    /// Your songs (`YourSongsPolicy`): any song the player knows, from its chords, with Apple Music playing beside it.
+    private static var yourSongs: Outcome {
+        Outcome(id: "yoursongs", text: Text("Any song you love: paste the chords, play along"), symbol: "music.note.list")
     }
 }

@@ -2,13 +2,15 @@ import QuartzCore
 import SwiftUI
 import TimbreCore
 
-/// The last step of a song lesson, played as a performance: the whole song in one take over the band. First the
+/// The last step of a song lesson, played as a performance: the whole song in one take over the band, which plays
+/// the song's own chords (its chart) bar by bar, thins to drums and bass on a miss and crashes in at ×4. First the
 /// stage (the sleeve under a light with its record turning, the song map, the tempo: the song's own, or 75 % for at
-/// most two stars), then the take, on the play-along's own runway and judge (`HighwayRunway`, `HighwayCanvas`,
-/// `PlayAlongJudge`) with its count-in and combo HUD, a running score (each note's credit times the combo
+/// most two stars), then the take, on the play-along's own runway and session (`HighwayRunway`, `HighwayCanvas`,
+/// `PlayAlongSession`) with its count-in and combo HUD, a running score (each note's credit times the combo
 /// multiplier), the words under the runway karaoke style (`HighwayLyrics`, with the section playing) and the song
-/// map's playhead, then the finale (`SongFinaleView`): the lesson's stars, the score, the
-/// timing strip and a story-sized poster. The best take at the song's tempo counts, as in every play-along.
+/// map's playhead, then the finale (`SongFinaleView`): the lesson's stars, the score, the timing strip with each
+/// section's score under it, and a story-sized poster. The best take at the song's tempo counts, as in every
+/// play-along. With VoiceOver, spoken cues name each note a beat ahead and the result is read out.
 struct SongPerformStep: View {
     let notes: [TimedNote]
     let bpm: Double
@@ -26,30 +28,30 @@ struct SongPerformStep: View {
 
     @EnvironmentObject private var store: AppStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     @Environment(\.scenePhase) private var scenePhase
-    /// The runway's lanes follow the diagrams' string order (Settings › String order).
-    @AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab
     @State private var owner = UUID()
     @State private var phase = Phase.stage
     @State private var ladder: TempoLadder
-    @State private var judge: PlayAlongJudge
-    @State private var grades: [Int: PlayAlongJudge.Grade] = [:]
+    /// The take under way, or the last one.
+    @State private var session: PlayAlongSession
     /// The grades of the take that counts (the ladder's outcome).
     @State private var countedGrades: [Int: PlayAlongJudge.Grade] = [:]
-    @State private var hitTimes: [Int: CFTimeInterval] = [:]
-    @State private var offsets: [Int: Double] = [:]
-    @State private var startTime: CFTimeInterval = 0
-    @State private var trail: [(CFTimeInterval, Double)] = []
-    @State private var lastLevel = -120.0
-    @State private var lastOnset: CFTimeInterval = 0
-    @State private var points = 0
-    /// When the multiplier last stepped up (×2, ×3, ×4): the board's new colour rolls up it from the hit line.
-    @State private var tierUp: CFTimeInterval?
     @State private var take: SongTake?
+    /// How each section of the song went in the last take, for the finale.
+    @State private var sections: [TakeSection] = []
     @State private var bestPercent: Int?
     @State private var calibrating = false
     /// The take started the click (so leaving stops it, unless the Metronome tool has taken it over since).
     @State private var ownsClick = false
+    /// The count-in beat last felt.
+    @State private var countInBeat: Int?
+    /// The last attack heard while "Start on first strum" waits.
+    @State private var armedOnset: CFTimeInterval = 0
+    @AppStorage(StrumStart.storageKey) private var strumChoice: Bool?
+    @AppStorage(SpokenCues.storageKey) private var spokenChoice: Bool?
+    /// How the player holds the instrument: a left-hander's lanes run mirrored.
+    @CurrentHand private var hand
     /// The song's words by line, from the notes' syllables (empty for an instrumental).
     private let lyrics: LyricSheet
 
@@ -71,18 +73,32 @@ struct SongPerformStep: View {
         self.projectedStars = projectedStars
         self.done = done
         _ladder = State(initialValue: TempoLadder(bpm: bpm))
-        _judge = State(initialValue: PlayAlongJudge(notes: sorted, bpm: bpm, anyOctave: course.anyOctave))
+        let fretted = course.fretKind != nil && sorted.allSatisfy { $0.at != nil }
+        _session = State(initialValue: PlayAlongSession(notes: sorted, bpm: bpm, beatsPerBar: beatsPerBar, anyOctave: course.anyOctave,
+                                                        keepsTrail: !fretted))
     }
 
     private var tempo: Double { ladder.tempo }
     private var spb: Double { 60 / tempo }
-    private var countIn: Double { Double(beatsPerBar) * spb }
     private var fretted: Bool { course.fretKind != nil && notes.allSatisfy { $0.at != nil } }
-    private var multiplier: Int { ComboBadge.multiplier(judge.combo) }
+    private var multiplier: Int { session.multiplier }
     private var lookahead: Double { HighwayRunway.lookahead(secondsPerBeat: spb, beatsPerBar: beatsPerBar) }
-    /// Drums and a bass in the song's key, as under every play-along (no band bass when the player is the bass).
+    /// Spoken cues: on while VoiceOver runs, unless turned off.
+    private var spoken: Bool { voiceOver && (spokenChoice ?? true) }
+    /// "Start on first strum": the player's choice, else on while VoiceOver runs (where the microphone can hear).
+    private var strumStarts: Bool { StrumStart.offered && (strumChoice ?? voiceOver) }
+    private var strumBinding: Binding<Bool> {
+        Binding(get: { strumStarts }, set: { strumChoice = $0 })
+    }
+    /// Listening for the first note on the stage.
+    private var armed: Bool { strumStarts && phase == .stage }
+    /// The band on the song's own chords, bar by bar from its chart (drums and a bass in its key when the chart names
+    /// none); no band bass when the player is the bass.
     private var band: BandArrangement {
-        .melody(notes, bpm: tempo, beatsPerBar: beatsPerBar, reference: store.settings.referencePitchHz, bass: course.fretKind != "bass")
+        let chart = LeadChart.of(lesson)
+        let chords = chart.hasChords ? chart.filledChords(from: 0, count: chart.bars) : nil
+        return SongPlayback.band(take: notes, chords: chords, bpm: tempo, meter: beatsPerBar, reference: store.settings.referencePitchHz,
+                                 bass: course.fretKind != "bass")
     }
     private var sheet: SongSheet { SongSheet.of(lesson) }
     private var art: CoverArt { CoverArt.of(lesson, in: course) }
@@ -99,7 +115,10 @@ struct SongPerformStep: View {
                 finaleView.transition(.opacity.combined(with: .scale(scale: 0.96)))
             }
         }
-        .onAppear { store.audio.prepareBand(band) }
+        .onAppear {
+            store.audio.prepareBand(band)
+            arm()
+        }
         #if DEBUG
         // A store scene (Root/DemoScenes.swift) performs the song by itself, from a chosen bar.
         .task {
@@ -109,12 +128,14 @@ struct SongPerformStep: View {
         }
         #endif
         .onChange(of: ladder.rung) { _, _ in store.audio.prepareBand(band) }
+        .onChange(of: armed) { _, _ in arm() }
         // A take can't go on in the pocket: the app going to the background ends it, nothing counted.
         .onChange(of: scenePhase) { _, now in if now == .background { stopTake() } }
         .onDisappear {
             if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
             ownsClick = false
             store.audio.stopBand(); store.stopLessonListening(owner: owner)
+            BandFeel.shared.reset()
             #if DEBUG
             store.demoNoteDue = nil
             #endif
@@ -145,10 +166,12 @@ struct SongPerformStep: View {
             SongSectionMap(sections: sheet.sections, bars: sheet.bars, accent: accent, height: 44)
                 .padding(.horizontal, Metrics.gutter)
             Spacer(minLength: 0)
+            if armed { StrumToStartHint(accent: accent).transition(.opacity) }
             MicrophoneHint()
             tempoChoice
             StepButton(title: "Perform", accent: accent) { start() }
         }
+        .animation(reduceMotion ? nil : Motion.quick, value: armed)
     }
 
     private var stageHeader: some View {
@@ -156,6 +179,7 @@ struct SongPerformStep: View {
             Label { Eyebrow("Final take", color: accent, style: .display) } icon: { Image(systemName: "music.mic") }
                 .font(Typeface.eyebrowDisplay).foregroundStyle(accent).lineLimit(1)
             Spacer(minLength: 8)
+            if StrumStart.offered { StrumStartToggle(isOn: strumBinding, accent: accent, listening: armed) }
             CalibrateButton(audio: store.audio, accent: accent) { calibrating = true }
             BandControls(audio: store.audio, accent: accent)
         }
@@ -241,9 +265,10 @@ struct SongPerformStep: View {
                                progress: songProgress(CACurrentMediaTime()), height: 34)
             }
             .padding(.horizontal, Metrics.gutter)
-            TakeRibbon(count: notes.count, grades: grades, current: judge.nextIndex, accent: accent)
+            TakeRibbon(count: notes.count, grades: session.grades, current: session.nextIndex, accent: accent)
             Spacer(minLength: 0)
             LessonBarButton(title: "Stop") { stopTake() }
+                .background { StopKey { stopTake() } }
                 .padding(.horizontal, Metrics.gutter).padding(.bottom, 12)
                 .accessibilityIdentifier("song.stop")
         }
@@ -259,9 +284,9 @@ struct SongPerformStep: View {
             }
             Spacer(minLength: 8)
             VStack(alignment: .trailing, spacing: 0) {
-                Text(points, format: .number).font(Typeface.number(26, relativeTo: .title2)).foregroundStyle(Palette.ink)
-                    .contentTransition(scoreTransition)
-                    .animation(reduceMotion ? nil : Motion.quick, value: points)
+                Text(session.points, format: .number).font(Typeface.number(26, relativeTo: .title2)).foregroundStyle(Palette.ink)
+                    .contentTransition(HighwayHUD.digitTransition(session.points))
+                    .animation(reduceMotion ? nil : Motion.quick, value: session.points)
                 Eyebrow("Score", color: accent, style: .display)
             }
             .accessibilityElement(children: .combine)
@@ -269,24 +294,14 @@ struct SongPerformStep: View {
         .padding(.horizontal, Metrics.gutter).padding(.top, 8)
     }
 
-    /// The score's digits roll to each new total. A take scores several notes a second and each roll lasts
-    /// `Motion.quick`, so the score is mid-roll most of the time: right in the hand, but a still picture of it (the
-    /// `song-perform` store scene) would catch a ghosted digit, so there it changes in place.
-    private var scoreTransition: ContentTransition {
-        #if DEBUG
-        if DemoScene.stillScore { return .identity }
-        #endif
-        return .numericText(value: Double(points))
-    }
-
     /// The play-along's stage: the runway (pitch lanes without a neck), the count-in over it, the combo HUD.
     private var runwayStage: some View {
         TimelineView(.animation(paused: phase != .playing)) { _ in
             let now = CACurrentMediaTime()
             // Seconds since beat 0 on the heard clock (negative during the count-in).
-            let clock = now - startTime - countIn
+            let clock = session.clock(at: now)
             ZStack {
-                runway(elapsed: runwayElapsed(now: now), now: now)
+                runway(elapsed: session.runwayClock(at: now, waiting: -0.2 * lookahead, glide: !reduceMotion), now: now)
                 if clock < 0 {
                     Text("\(Int(-clock / spb) + 1)").font(Typeface.note(96)).foregroundStyle(Palette.ink)
                         .shadow(color: accent.opacity(0.6), radius: 20)
@@ -295,15 +310,22 @@ struct SongPerformStep: View {
             }
             .onChange(of: Int(now * 20)) { _, _ in tick(now: now) }
         }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Play-along, \(notes.count) notes"))
+        .modifier(RunwayAccessibility(label: Text("Play-along, \(notes.count) notes"), value: runwayValue, spoken: spoken,
+                                      canSpeak: voiceOver) { spokenChoice = !spoken })
         .frame(minHeight: 240, maxHeight: fretted ? 460 : 340)
-        .overlay(alignment: .top) { HighwayHUD(combo: judge.combo, calm: reduceMotion) }
+        .overlay(alignment: .top) { HighwayHUD(combo: session.combo, calm: reduceMotion) }
         .background(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous).fill(Palette.stageDeep))
         .overlay(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous).strokeBorder(Palette.hairline, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: Metrics.cornerHero, style: .continuous))
         .padding(.horizontal, 12)
         .layoutPriority(1)
+    }
+
+    /// What VoiceOver reads on the runway while the take plays: the note coming up.
+    private var runwayValue: Text {
+        let index = session.nextIndex
+        guard notes.indices.contains(index) else { return Text(verbatim: "") }
+        return Text("Next: \(SpokenCues.phrase(notes[index], fretted: fretted, brief: false))")
     }
 
     /// The words under the runway: the line being sung lit syllable by syllable, the next one dim, and over them the
@@ -319,7 +341,7 @@ struct SongPerformStep: View {
     /// Where the take is, in beats from the song's first bar (nil before it starts, negative through the count-in).
     private func lyricBeat(_ now: CFTimeInterval) -> Double? {
         guard phase == .playing else { return nil }
-        return (now - startTime - countIn) / spb
+        return session.clock(at: now) / spb
     }
 
     /// The section of the arrangement playing (the first through the count-in).
@@ -328,34 +350,22 @@ struct SongPerformStep: View {
         return arrangement.section(atBeat: max(0, beat ?? 0))?.name.localized
     }
 
-    /// The fretboard runway on fretted courses, pitch lanes otherwise.
+    /// The fretboard runway on fretted courses (mirrored for a left-hander), pitch lanes otherwise. The first notes
+    /// wait near the line before the start, then glide back to where the count-in puts them.
     @ViewBuilder private func runway(elapsed: Double, now: CFTimeInterval) -> some View {
         if fretted {
-            HighwayRunway(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: now,
-                          strings: course.stringCount, beatsPerBar: beatsPerBar, heat: multiplier, calm: reduceMotion,
-                          order: stringOrder, offsets: offsets, tierUp: tierUp)
+            HighwayRunway(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: session.grades, hitTimes: session.hitTimes,
+                          now: now, strings: course.stringCount, beatsPerBar: beatsPerBar, heat: multiplier, calm: reduceMotion,
+                          mirrored: hand.mirrorsUpright, offsets: session.offsets, tierUp: session.tierUp)
         } else {
-            HighwayCanvas(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: grades, hitTimes: hitTimes, now: now,
-                          lanes: 0, accent: accent, trail: trail, startTime: startTime + countIn, calm: reduceMotion, offsets: offsets)
+            HighwayCanvas(notes: notes, secondsPerBeat: spb, elapsed: elapsed, grades: session.grades, hitTimes: session.hitTimes,
+                          now: now, lanes: 0, accent: accent, trail: session.trail, startTime: session.startTime + session.countIn,
+                          calm: reduceMotion, offsets: session.offsets)
         }
     }
 
-    /// The first notes wait near the line before the start, then glide back to where the count-in puts them.
-    private func runwayElapsed(now: CFTimeInterval) -> Double {
-        let preview = -0.2 * lookahead
-        let actual = now - startTime - countIn
-        let t = max(0, now - startTime) / 0.5
-        guard !reduceMotion, t < 1 else { return actual }
-        let eased = 1 - pow(1 - t, 3)
-        return preview + (actual - preview) * eased
-    }
-
     /// How far into the song the take is (0 through the count-in).
-    private func songProgress(_ now: CFTimeInterval) -> Double {
-        let duration = judge.duration
-        guard duration > 0 else { return 0 }
-        return min(1, max(0, (now - startTime - countIn) / duration))
-    }
+    private func songProgress(_ now: CFTimeInterval) -> Double { session.progress(at: now) }
 
     // MARK: The finale
 
@@ -365,6 +375,8 @@ struct SongPerformStep: View {
                            stars: projectedStars(take.accuracy, take.full ? nil : TempoLadder.slowStarCap),
                            best: bestPercent, slower: slowerAction, slowerTempo: Int(ladder.tempo(at: 0)),
                            again: { start() }, proceed: { complete() })
+                // Each section's score under the timing strip.
+                .environment(\.takeSections, sections)
         }
     }
 
@@ -377,11 +389,13 @@ struct SongPerformStep: View {
     // MARK: Flow
 
     private func start() {
-        judge = PlayAlongJudge(notes: notes, bpm: tempo, anyOctave: course.anyOctave)
-        grades = [:]; hitTimes = [:]; offsets = [:]; trail = []; points = 0; tierUp = nil
-        startTime = CACurrentMediaTime()
+        session = PlayAlongSession(notes: notes, bpm: tempo, beatsPerBar: beatsPerBar, anyOctave: course.anyOctave, keepsTrail: !fretted)
+        session.begin(at: CACurrentMediaTime())
+        countInBeat = nil
         withMotion(Motion.settle, reduceMotion: reduceMotion) { phase = .playing }
         Haptics.shared.selection()
+        BandFeel.shared.reset(duck: spoken)
+        if spoken { Earcons.shared.prepare() }
         Analytics.log("song_perform", ["lesson": lesson.id, "tempo": String(ladder.percent)])
         // A fresh count from the first click (a lesson's click restarts even over the Metronome tool's), so the
         // count-in, the runway and the judging start together; this take owns it until it ends.
@@ -391,78 +405,92 @@ struct SongPerformStep: View {
         store.audio.playBand(band, firstBar: 1)
         store.gameTargetHz = notes.first.map { PitchMath.frequency(midi: Double($0.midi), reference: store.settings.referencePitchHz) }
         #if DEBUG
-        store.demoNoteDue = { judge.nextIndex < notes.count && CACurrentMediaTime() - startTime - countIn >= judge.time(of: judge.nextIndex) - 0.02 }
+        store.demoNoteDue = { session.nextIndex < notes.count && session.clock(at: CACurrentMediaTime()) >= session.judge.time(of: session.nextIndex) - 0.02 }
         #endif
         // Re-attacks of a repeated note come from the onset detector (a jump in loudness as a fallback).
-        let analyzer = LessonAnalyzer(chords: false, onOnset: { time in lastOnset = time })
+        let analyzer = LessonAnalyzer(chords: false, onOnset: { time in session.onset(at: time) })
         store.startLessonListening(owner: owner, analyzer: analyzer) { hz, level in
+            guard phase == .playing else { return }
             let now = CACurrentMediaTime()
             let heard = HeardNote(hz: hz, reference: store.settings.referencePitchHz)
-            let onset = (level - lastLevel > 6 && level > -50) || now - lastOnset < 0.12
-            lastLevel = level
-            if let heard, !fretted {
-                trail.append((now, Double(heard.midi) + heard.cents / 100))
-                if trail.count > 240 { trail.removeFirst(60) }
-            }
-            var clock = now - startTime - countIn
+            var clock = session.clock(at: now)
             #if DEBUG
-            clock = demoJudgedTime(clock, judge: judge, store: store, heard: heard != nil)
+            clock = demoJudgedTime(clock, judge: session.judge, store: store, heard: heard != nil)
             #endif
-            apply(judge.update(time: clock, midi: heard?.midi, cents: heard?.cents, onset: onset), now: now)
+            react(session.hear(midi: heard?.midi, cents: heard?.cents, level: level, at: now, clock: clock))
+        }
+    }
+
+    /// "Start on first strum": on the stage the microphone listens, and a note of the song played on the instrument
+    /// (an attack, then its pitch) starts the take. Off again once it starts or the switch is off.
+    private func arm() {
+        guard armed else {
+            if phase == .stage { store.stopLessonListening(owner: owner) }
+            return
+        }
+        let wanted = StrumStart.pitchClasses(notes)
+        armedOnset = 0
+        let analyzer = LessonAnalyzer(chords: false, onOnset: { time in armedOnset = time })
+        store.startLessonListening(owner: owner, analyzer: analyzer) { hz, level in
+            guard armed, level > -50, CACurrentMediaTime() - armedOnset < 0.3,
+                  let heard = HeardNote(hz: hz, reference: store.settings.referencePitchHz),
+                  wanted.contains(PitchMath.pitchClass(midi: heard.midi)) else { return }
+            start()
         }
     }
 
     private func tick(now: CFTimeInterval) {
         guard phase == .playing else { return }
         // Notes and judging follow the heard clock (the first click as it reached the ears), not the tap.
-        if let heard = store.audio.heardStart(near: startTime) { startTime = heard }
-        apply(judge.update(time: now - startTime - countIn, midi: nil, cents: nil), now: now)
-        if judge.isFinished || now - startTime - countIn > judge.duration + 1.2 { finish() }
+        if let heard = store.audio.heardStart(near: session.startTime) { session.follow(start: heard) }
+        let beat = session.countInBeat(at: now)
+        if beat != countInBeat {
+            countInBeat = beat
+            if let beat { TakeFeedback.countIn(beat) }
+        }
+        if spoken, let index = session.cue(at: now, lead: spb) { speak(index) }
+        react(session.tick(at: now))
     }
 
-    private func apply(_ judgments: [PlayAlongJudge.Judgment], now: CFTimeInterval) {
-        for j in judgments {
-            grades[j.index] = j.grade
-            hitTimes[j.index] = now
-            if let offset = j.offset { offsets[j.index] = offset }
-            if j.grade != .miss { points += Int((PlayAlongJudge.credit(j.grade) * 100).rounded()) * multiplier }
-            if j.grade == .perfect { Haptics.shared.selection() }
+    /// Names note `index` ahead of time; just its string and fret when the note before it is close.
+    private func speak(_ index: Int) {
+        let notes = session.notes
+        guard notes.indices.contains(index) else { return }
+        let gap = index > 0 ? (notes[index].beat - notes[index - 1].beat) * spb : .infinity
+        SpokenCues.say(SpokenCues.phrase(notes[index], fretted: fretted, brief: gap < 0.9))
+    }
+
+    private func react(_ update: PlayAlongSession.Update) {
+        guard !update.isEmpty else { return }
+        TakeFeedback.react(update, combo: session.combo, spoken: spoken)
+        if !update.judgments.isEmpty, session.nextIndex < notes.count {
+            store.gameTargetHz = PitchMath.frequency(midi: Double(notes[session.nextIndex].midi), reference: store.settings.referencePitchHz)
         }
-        // The multiplier steps up at 4, 8 and 16 in a row: a firmer tap with the HUD's pulse, and the board's
-        // colour rolls up to the next tier.
-        if let last = judgments.last, last.grade == .perfect || last.grade == .good {
-            switch judge.combo {
-            case 4, 8, 16:
-                Haptics.shared.beat(accent: true)
-                tierUp = now
-            default: break
-            }
-        }
-        if !judgments.isEmpty, judge.nextIndex < notes.count {
-            store.gameTargetHz = PitchMath.frequency(midi: Double(notes[judge.nextIndex].midi), reference: store.settings.referencePitchHz)
-        }
-        if judge.isFinished { finish() }
+        if update.finished { finish() }
     }
 
     private func finish() {
         guard phase == .playing else { return }
-        let accuracy = judge.accuracy
+        let accuracy = session.accuracy
         // The take that counts keeps its grades for the lesson's weak spots.
-        if ladder.improvesOutcome(accuracy) { countedGrades = grades }
+        if ladder.improvesOutcome(accuracy) { countedGrades = session.grades }
         // The stage keeps the tempo chosen: a great take doesn't move it on as the practice ladder does.
         let rung = ladder.rung
         ladder.record(accuracy: accuracy)
         ladder.select(rung)
         // A good take ends on the band's final chord; otherwise it fades with the click.
         store.audio.finishBand(celebrate: accuracy >= 0.7)
+        BandFeel.shared.reset()
         ownsClick = false
         store.stopLessonListening(owner: owner)
         #if DEBUG
         store.demoNoteDue = nil
         #endif
         bestPercent = ladder.outcome.map { Int(($0.score * 100).rounded()) }
-        take = SongTake(accuracy: accuracy, points: points, bestCombo: judge.bestCombo,
-                        grades: notes.indices.map { grades[$0] ?? .miss }, judgments: judge.judgments,
+        let points = session.points
+        sections = scoredSections()
+        take = SongTake(accuracy: accuracy, points: points, bestCombo: session.judge.bestCombo,
+                        grades: notes.indices.map { session.grades[$0] ?? .miss }, judgments: session.judge.judgments,
                         notes: notes.count, tempo: Int(tempo), full: ladder.isFullTempo)
         // A whole take at the song's own tempo goes to Game Center: a featured song's board (and any challenge on it),
         // and "Challenge a friend" on the results. Slower takes never count there.
@@ -470,6 +498,29 @@ struct SongPerformStep: View {
         withMotion(Motion.settle, reduceMotion: reduceMotion) { phase = .finale }
         if accuracy >= 0.7 { SoundFX.shared.play(.complete) }
         Haptics.shared.done()
+        if voiceOver {
+            let result = SpokenCues.result(hits: session.hits, of: notes.count, perfect: session.count(.perfect),
+                                           percent: Int((accuracy * 100).rounded()))
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(600))
+                if phase == .finale { SpokenCues.say(result) }
+            }
+        }
+    }
+
+    /// The song's sections as the take went: each one's notes (an upbeat it is sung from included) scored as the
+    /// play-along scores a take.
+    private func scoredSections() -> [TakeSection] {
+        let parts = sheet.sections
+        let meter = Double(max(1, beatsPerBar))
+        return parts.enumerated().map { index, part in
+            let from = Double(part.start) * meter - (part.part?.pickup ?? 0)
+            let next = index + 1 < parts.count ? parts[index + 1] : nil
+            let to = next.map { Double($0.start) * meter - ($0.part?.pickup ?? 0) } ?? .infinity
+            let name = part.title?.localized ?? part.chord?.name ?? SongSectionMap.spoken(part)
+            return TakeSection(id: part.id, name: name, start: part.start, bars: part.bars,
+                               score: session.score(fromBeat: from, toBeat: to))
+        }
     }
 
     /// Stop mid-take (or the app went to the background): back to the stage, nothing counted, except as a try in a
@@ -477,10 +528,11 @@ struct SongPerformStep: View {
     /// and the Metronome tool hasn't taken it over.
     private func stopTake() {
         guard phase == .playing else { return }
-        if ladder.isFullTempo { GameCenter.shared.performStopped(lesson: lesson.id, points: points, notes: notes.count) }
+        if ladder.isFullTempo { GameCenter.shared.performStopped(lesson: lesson.id, points: session.points, notes: notes.count) }
         if ownsClick && store.audio.metronomeRunning && !store.audio.metronomeOwnedByTool { store.audio.stopMetronome() }
         ownsClick = false
         store.audio.stopBand()
+        BandFeel.shared.reset()
         store.stopLessonListening(owner: owner)
         #if DEBUG
         store.demoNoteDue = nil
@@ -496,7 +548,7 @@ struct SongPerformStep: View {
         for (index, note) in notes.enumerated() {
             onItem(course.practiceItem(for: note), PlayAlongJudge.credit(countedGrades[index] ?? .miss))
         }
-        done(outcome?.score ?? judge.accuracy)
+        done(outcome?.score ?? session.accuracy)
     }
 }
 
@@ -551,22 +603,25 @@ struct SongEncoreStep: View {
 extension SongPerformStep {
     /// The `song-perform` store scene (Root/DemoScenes.swift): the take starts `beat` beats into the song. Its clock
     /// moves on to there and every note before it is judged as the demo pitch plays them, on time, so the combo, the
-    /// score, the ribbon, the words and the song map stand where a clean take would; the demo pitch plays on from there.
+    /// score, the ribbon, the words and the song map stand where a clean take would; the demo pitch plays on from there,
+    /// and the band joins at the song's own bar.
     fileprivate func startScene(atBeat beat: Double) {
         guard phase == .stage else { return }
         start()
         // The clock starts a bar before `beat`: the first frames after a jump this size (the runway's first draw of the
         // whole song, the band starting) can hold the main thread for a second, and a note due then would be a miss.
         let lead = Double(max(1, beatsPerBar))
-        startTime -= countIn + max(0, beat - lead) * spb
+        let from = max(0, beat - lead)
+        session.skip(session.countIn + from * spb)
+        // The click's first bar is the song's bar `from` starts: the band plays that bar there.
+        store.audio.playBand(band, firstBar: -Int((from / lead).rounded()))
         let now = CACurrentMediaTime()
         for _ in notes.indices {
-            let index = judge.nextIndex
-            guard index < judge.notes.count, judge.notes[index].beat < beat else { break }
-            let time = judge.time(of: index)
-            let midi = judge.notes[index].midi
-            apply(judge.update(time: time, midi: midi, cents: 0, onset: true), now: now)
-            if judge.nextIndex == index { break }
+            let index = session.nextIndex
+            guard index < session.notes.count, session.notes[index].beat < beat else { break }
+            session.onset(at: now)
+            react(session.hear(midi: session.notes[index].midi, cents: 0, level: -20, at: now, clock: session.judge.time(of: index)))
+            if session.nextIndex == index { break }
         }
     }
 }

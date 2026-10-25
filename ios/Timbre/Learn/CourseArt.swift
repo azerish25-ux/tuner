@@ -4,7 +4,7 @@ import TimbreCore
 /// A course's own picture, wherever a course is shown (Learn's carousel and continue card, the Songs tab,
 /// the onboarding plan, the paywall). Instrument courses wear the instrument's studio render (or its
 /// photograph); the rest (theory, ear training, rhythm, singing, songs, originals) a drawn emblem on their
-/// accent gradient. No SF Symbols: the art is the app's own.
+/// course hue. No SF Symbols: the art is the app's own. Smart Invert leaves all of it as it is (it is a picture).
 enum CourseArtwork {
     case instrument(name: String, render: Bool)
     case emblem(CourseGlyph)
@@ -88,6 +88,7 @@ struct CourseHeroArt: View {
                 .frame(width: size, height: size)
                 .rotationEffect(.degrees(lean))
                 .shadow(color: .black.opacity(0.6), radius: size * 0.1, y: size * 0.07)
+                .accessibilityIgnoresInvertColors()
                 .accessibilityHidden(true)
         case .emblem(let glyph):
             CourseEmblemTile(glyph: glyph, accent: accent, size: size * 0.66)
@@ -118,6 +119,7 @@ struct CourseEmblemTile: View {
         }
         .frame(width: size, height: size)
         .clipShape(shape)
+        .accessibilityIgnoresInvertColors()
         .accessibilityHidden(true)
     }
 }
@@ -141,6 +143,7 @@ struct InstrumentTile: View {
         .frame(width: size, height: size)
         .clipShape(shape)
         .overlay(shape.strokeBorder(accent.opacity(0.45), lineWidth: max(0.5, size / 90)))
+        .accessibilityIgnoresInvertColors()
         .accessibilityHidden(true)
     }
 

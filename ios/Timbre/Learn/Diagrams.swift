@@ -49,19 +49,21 @@ struct LessonVisualView: View {
 }
 
 /// Which string sits on top wherever a neck is drawn lying down (the fretboard strips, the Scales and intonation
-/// necks, the tune check; the strum stage is always `.mirror`, so a down strum falls down the screen): the app's one
-/// picture choice (`ChordPicture`, Settings › String order,
-/// the Chart / Player view switch on a chord card) read as a string order. It is the same stored value, under the
-/// same key, so the necks and the chords can never disagree:
+/// necks, the tune check; the strum stage is `.mirror`, so a down strum falls down the screen): the app's one picture
+/// choice (`ChordPicture`, Settings › String order, the Chart / Player view switch on a chord card) read as a string
+/// order. It is the same stored value, under the same key, so the necks and the chords can never disagree:
 /// - `.tab` is Chart (the default): string 1, the thinnest, on top as tablature writes it, the chord chart's box
 ///   being that strip turned upright (the lowest string on the left);
 /// - `.mirror` is Player view: the thickest string on top, as you see the neck looking down at it while playing,
 ///   so a down strum falls down the screen.
 /// Where strings stand upright side by side instead (the play-along runway's lanes, the paywall's runway, the
-/// player's-view chord neck `PlayerNeck`), they always run from the lowest string on the left (`upright`), as the
-/// chord chart and a photograph of the instrument show them: in the Chart view that is the tab strip turned upright,
-/// in Player view the string on top taking the left, so a chord never mirrors anywhere. A row of string chips read
-/// against a neck lying under it (the tune check's, the Intonation tool's) follows that neck: its top string first.
+/// player's-view chord neck `PlayerNeck`), they run from the lowest string on the left (`upright`), as the chord chart
+/// and a photograph of the instrument show them: in the Chart view that is the tab strip turned upright, in Player
+/// view the string on top taking the left, so flipping between the two never mirrors a chord.
+///
+/// The player's hold (Settings › Handedness, `HandStyle`) turns these for a left-handed player: a neck lying down
+/// takes its order and nut side from `HandStyle.lying(_:)`, upright lanes from `lanes(for:)`, the strum stage from
+/// `HandStyle.strumOrder`.
 ///
 /// In a view: `@AppStorage(StringOrder.storageKey) private var stringOrder: StringOrder = .tab`, then
 /// `stringOrder.row(ofString:count:)` for where string n goes; elsewhere `StringOrder.current`. Change it through
@@ -79,7 +81,8 @@ enum StringOrder: String, CaseIterable, Identifiable {
     static var current: StringOrder { ChordPicture.current.stringOrder }
 
     /// Strings standing upright side by side, read as lanes counted from the left (`row(ofString:count:)` 0 is the
-    /// left lane): the lowest string on the left in either view, as on a chord chart. Not a choice: the same always.
+    /// left lane): the lowest string on the left in either view, as on a right-handed chord chart (a left-handed
+    /// player's lanes: `lanes(for:)`).
     static let upright: StringOrder = .mirror
 
     var id: String { rawValue }
@@ -515,8 +518,11 @@ struct FretboardDiagram: View {
 /// A chord box as chord charts print it (the Chart view's chord, `ChordPicture.chart`): strings upright, nut on
 /// top, the lowest string on the left and string 1 on the right, finger numbers in the dots, open and muted marks
 /// above, a rounded bar where one finger holds several strings, and the string numbers along the bottom. It is the
-/// tab-order strip (`FretboardDiagram`) turned upright. Places that show a chord without the switch use
-/// `ChordPictureView`, which draws this or the player's view as chosen.
+/// tab-order strip (`FretboardDiagram`) turned upright. For a left-handed player it is its mirror image, the lowest
+/// string on the right, unless Settings › Charts as printed keeps it as songbooks print it (`HandStyle`). A shape
+/// played behind a capo has the capo across the top in place of the nut, its fingers counted from it, and says so
+/// under the box ("G shape · capo 2"). Places that show a chord without the switch use `ChordPictureView`, which
+/// draws this or the player's view as chosen.
 struct ChordDiagram: View {
     let chord: ChordSpec
     var accent: Color = Palette.mint
@@ -539,10 +545,14 @@ struct ChordDiagram: View {
     var fretNumbers = false
     /// How much taller than plain the frets are drawn (1 to 1.5), so a lesson's box can fill its card.
     var stretch: CGFloat = 1
+    /// Drawn as its mirror image (a left-handed player's chart); nil follows the player's hold (`CurrentHand`). Code
+    /// that measures the box outside a view (`stringPositions`) passes the hold's `mirrorsChordChart`.
+    var mirrored: Bool?
     @State private var landStart: Date?
     @State private var landed = false
     @State private var landGeneration = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @CurrentHand private var hand
     /// String and fret numbers grow with Dynamic Type from the 11 pt floor (`DiagramType`).
     @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
 
@@ -550,21 +560,26 @@ struct ChordDiagram: View {
 
     /// Its name over the box and the edge names under it, with the gaps between them.
     static let chrome: CGFloat = 62
+    /// The capo's line under the box ("G shape · capo 2") with the gap above it.
+    static let capoLine: CGFloat = 24
 
-    /// The width and stretch that fill `room` with a chord's box: its name and edge names (`chrome`) around a box
-    /// 5.4 rows tall for every string gap across at plain proportions, the frets drawn up to half as tall again
-    /// when there's height to spare, and narrower than `maxWidth` only when the room is short.
+    /// The width and stretch that fill `room` with a chord's box: its name and edge names (`chrome`, and the capo's
+    /// line) around a box 5.4 rows tall for every string gap across at plain proportions, the frets drawn up to half as
+    /// tall again when there's height to spare, and narrower than `maxWidth` only when the room is short.
     static func fit(_ chord: ChordSpec, room: CGSize, maxWidth: CGFloat = 340, minWidth: CGFloat = 170) -> (width: CGFloat, stretch: CGFloat) {
         let count = CGFloat(max(2, chord.frets.count))
-        let boxRoom = max(0, room.height - chrome)
+        let boxRoom = max(0, room.height - chrome - (chord.drawnCapo > 0 ? capoLine : 0))
         let width = max(minWidth, min(maxWidth, room.width))
         let plain = width * 5.4 / count
         if boxRoom >= plain { return (width, min(1.45, boxRoom / plain)) }
         return (max(minWidth, min(width, boxRoom * count / 5.4)), 1)
     }
 
-    /// The column left of the box for the fret numbers or the "5fr" label.
-    private var labelColumn: CGFloat { (reservesFretLabel || fretNumbers || (chord.baseFret ?? 1) > 1) ? 20 : 0 }
+    /// The column beside the box for the fret numbers or the "5fr" label (a capo's shape needs neither).
+    private var labelColumn: CGFloat {
+        let upTheNeck = chord.drawnCapo == 0 && (chord.baseFret ?? 1) > 1
+        return (reservesFretLabel || fretNumbers || upTheNeck) ? 20 : 0
+    }
 
     /// A finger dot's radius is at most 0.38 of the string gap, and a landing dot overshoots it by up to 9 %.
     private static let dotReach: CGFloat = 0.38 * 1.09
@@ -573,11 +588,12 @@ struct ChordDiagram: View {
     /// The least margin beside an outer string: room for its open ring or muted cross over the nut.
     private static let sideFloor: CGFloat = 10
 
-    /// The lowest string's x and the gap between strings across a canvas `width` wide. Each side keeps exactly
-    /// the room a whole finger dot needs on an outer string (its radius at the largest, its halo and its landing
-    /// overshoot; a barre's rounded end the same), so a dot on string 1 or the lowest string is never cut off at
-    /// any size (bug 06b); the fret-number column sits left of that. The margins grow with the box, so a big box
-    /// keeps its dots inside and a small one doesn't waste its width on empty margins.
+    /// The lowest string's x and the gap between strings across a canvas `width` wide (drawn as a right-hander's
+    /// chart; a mirrored one is turned over afterwards). Each side keeps exactly the room a whole finger dot needs on
+    /// an outer string (its radius at the largest, its halo and its landing overshoot; a barre's rounded end the same),
+    /// so a dot on string 1 or the lowest string is never cut off at any size; the fret-number column sits beside
+    /// that. The margins grow with the box, so a big box keeps its dots inside and a small one doesn't waste its width
+    /// on empty margins.
     private func stringSpan(width: CGFloat) -> (first: CGFloat, gap: CGFloat) {
         let count = chord.frets.count
         let room = max(0, width - labelColumn)
@@ -592,22 +608,29 @@ struct ChordDiagram: View {
     }
 
     /// Where each string's line runs across a box `width` wide (lowest string first), so a row drawn over the
-    /// box (the lesson's string checks) lines up with it.
+    /// box (the lesson's string checks) lines up with it; mirrored when `mirrored` is set.
     func stringPositions(width: CGFloat) -> [CGFloat] {
         let span = stringSpan(width: width)
-        return (0..<chord.frets.count).map { span.first + CGFloat($0) * span.gap }
+        let mirror = CanvasMirror(on: mirrored ?? false, width: width)
+        return (0..<chord.frets.count).map { mirror.x(span.first + CGFloat($0) * span.gap) }
     }
 
     var body: some View {
+        let flip = mirrored ?? hand.mirrorsChordChart
         VStack(spacing: 8) {
             if showName { Text(chord.name).font(Typeface.display(28)).foregroundStyle(Palette.ink) }
             TimelineView(.animation(paused: !landing || landed || reduceMotion)) { timeline in
                 let landScale = landScales(at: timeline.date)
                 let scale = typeScale
-                Canvas { context, size in draw(&context, size: size, land: landScale, scale: scale) }
-                    .aspectRatio(CGFloat(chord.frets.count) / (5.4 * min(1.5, max(1, stretch))), contentMode: .fit)
+                Canvas { context, size in
+                    draw(&context, size: size, land: landScale, mirror: CanvasMirror(on: flip, width: size.width), scale: scale)
+                }
+                .aspectRatio(CGFloat(chord.frets.count) / (5.4 * min(1.5, max(1, stretch))), contentMode: .fit)
             }
-            if let edges, chord.frets.count >= 2 { edgeNames(edges) }
+            if let capo = capoCaption {
+                capo.lineLimit(1).minimumScaleFactor(0.8)
+            }
+            if let edges, chord.frets.count >= 2 { edgeNames(edges, mirrored: flip) }
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(chord.name) chord"))
@@ -616,18 +639,27 @@ struct ChordDiagram: View {
         .onChange(of: replay) { _, _ in startLanding(delay: 0.05) }
     }
 
-    /// The lowest string's name under the left of the box, string 1's under the right (`EdgeNamesRow`).
-    private func edgeNames(_ edges: StringEdges) -> some View {
-        EdgeNamesRow(leading: edges.label(chord.frets.count), trailing: edges.label(1))
+    /// "G shape · capo 2", under a shape played behind a capo.
+    private var capoCaption: Text? {
+        guard let shape = chord.drawnCapoShape else { return nil }
+        return Text("\(shape) shape · capo \(chord.drawnCapo)")
+            .font(.system(.footnote, design: .rounded).weight(.semibold))
+            .foregroundStyle(Palette.inkSoft)
+    }
+
+    /// The lowest string's name under its side of the box, string 1's under the other (`EdgeNamesRow`).
+    private func edgeNames(_ edges: StringEdges, mirrored: Bool) -> some View {
+        let lowest = edges.label(chord.frets.count), first = edges.label(1)
+        return EdgeNamesRow(leading: mirrored ? first : lowest, trailing: mirrored ? lowest : first)
             .padding(.top, -4)
     }
 
-    /// The box's height without its name (the frets and string numbers at a `width` and `stretch`, and the edge
-    /// names under it when `named`): the room a picture that swaps with it (`PlayerNeck`) is given, so the card
-    /// holds still as the learner flips between them.
+    /// The box's height without its name (the frets and string numbers at a `width` and `stretch`, the capo's line
+    /// and the edge names under it when `named`): the room a picture that swaps with it (`PlayerNeck`) is given, so
+    /// the card holds still as the learner flips between them.
     static func boxHeight(_ chord: ChordSpec, width: CGFloat, stretch: CGFloat, named: Bool) -> CGFloat {
         let grid = width * 5.4 * min(1.5, max(1, stretch)) / CGFloat(max(1, chord.frets.count))
-        return grid + (named ? 22 : 0)
+        return grid + (named ? 22 : 0) + (chord.drawnCapo > 0 ? capoLine : 0)
     }
 
     /// One finger laid flat across several strings at one fret (an index-finger barre, or finger 3
@@ -648,7 +680,7 @@ struct ChordDiagram: View {
         let frets = chord.frets
         var found: [Barre] = []
         for finger in Set(fingers.filter { $0 > 0 }).sorted() {
-            let held = frets.indices.filter { fingers[safe: $0] == finger && frets[$0] > 0 }
+            let held = frets.indices.filter { fingers[safe: $0] == finger && chord.drawnFingered($0) }
             guard held.count >= 2, let first = held.first, let last = held.last else { continue }
             let fret = frets[first]
             guard held.allSatisfy({ frets[$0] == fret }), (first...last).allSatisfy({ frets[$0] >= fret }) else { continue }
@@ -657,11 +689,15 @@ struct ChordDiagram: View {
         return found
     }
 
-    private func draw(_ context: inout GraphicsContext, size: CGSize, land: (Int) -> CGFloat, scale: CGFloat) {
+    /// Draws the box as a right-hander's chart; `mirror` turns the shapes over and sets the words at the mirrored points.
+    private func draw(_ context: inout GraphicsContext, size: CGSize, land: (Int) -> CGFloat, mirror: CanvasMirror, scale: CGFloat) {
+        let shapes = mirror.shapes(context)
         let count = chord.frets.count
         let rows = 4
-        let base = chord.baseFret ?? 1
-        // The "5fr" label (or the fret numbers) get their own column left of the grid instead of sitting on its edge,
+        let capo = chord.drawnCapo
+        // Behind a capo the box starts at the first fret above it, as the open shape it is.
+        let base = capo > 0 ? capo + 1 : (chord.baseFret ?? 1)
+        // The "5fr" label (or the fret numbers) get their own column beside the grid instead of sitting on its edge,
         // and each outer string keeps room for a whole dot beside it (`stringSpan`).
         let span = stringSpan(width: size.width)
         let left = span.first, gap = span.gap
@@ -671,86 +707,108 @@ struct ChordDiagram: View {
         let top: CGFloat = 24, bottom = size.height - (numbered ? 20 : 6)
         let rowHeight = (bottom - top) / CGFloat(rows)
         let radius = min(gap, rowHeight) * 0.38
-        if base == 1 {
-            context.fill(Path(roundedRect: CGRect(x: left - 2, y: top - 5, width: right - left + 4, height: 6), cornerRadius: 2), with: .color(Palette.ink))
+        if capo > 0 {
+            drawCapo(shapes, left: left, right: right, top: top, radius: radius)
+        } else if base == 1 {
+            shapes.fill(Path(roundedRect: CGRect(x: left - 2, y: top - 5, width: right - left + 4, height: 6), cornerRadius: 2), with: .color(Palette.ink))
         } else if !fretNumbers {
             context.draw(Text("\(base)fr").font(DiagramType.font(11, weight: .semibold, scale: scale)).foregroundStyle(Palette.inkSoft),
-                         at: CGPoint(x: left - radius - 4, y: top + rowHeight / 2), anchor: .trailing)
+                         at: mirror.point(CGPoint(x: left - radius - 4, y: top + rowHeight / 2)), anchor: mirror.anchor(.trailing))
         }
         if fretNumbers {
-            drawFretNumbers(&context, base: base, rows: rows, top: top, rowHeight: rowHeight, x: left - radius - 6, land: land, scale: scale)
+            drawFretNumbers(&context, base: base, rows: rows, top: top, rowHeight: rowHeight, x: left - radius - 6, land: land, mirror: mirror, scale: scale)
         }
         for row in 0...rows {
             let y = top + CGFloat(row) * rowHeight
-            context.fill(Path(CGRect(x: left, y: y - 0.75, width: right - left, height: 1.5)), with: .color(Palette.inkSoft.opacity(0.5)))
+            shapes.fill(Path(CGRect(x: left, y: y - 0.75, width: right - left, height: 1.5)), with: .color(Palette.inkSoft.opacity(0.5)))
         }
         let barres = self.barres
         for i in 0..<count {
             let x = left + CGFloat(i) * gap
             let lit = ringing.contains(i)
-            // Lowest string (left) thickest, like the real set.
+            // Lowest string thickest, like the real set.
             let thickness = count > 1 ? 1.1 + 2.1 * CGFloat(count - 1 - i) / CGFloat(count - 1) : 1.8
-            context.fill(Path(CGRect(x: x - thickness / 2, y: top, width: thickness, height: bottom - top)), with: .color(lit ? accent : Palette.inkSoft.opacity(0.75)))
+            shapes.fill(Path(CGRect(x: x - thickness / 2, y: top, width: thickness, height: bottom - top)), with: .color(lit ? accent : Palette.inkSoft.opacity(0.75)))
             if numbered {
-                // String numbers run from the lowest string (left) down to 1.
+                // String numbers run from the lowest string down to 1.
                 context.draw(Text("\(count - i)").font(DiagramType.font(11, scale: scale)).foregroundStyle(lit ? accent : Palette.inkFaint),
-                             at: CGPoint(x: x, y: size.height - 8))
+                             at: mirror.point(CGPoint(x: x, y: size.height - 8)))
             }
             let fret = chord.frets[i]
             if fret < 0 {
-                context.draw(Text("×").font(.system(size: 15, weight: .bold)).foregroundStyle(Palette.inkFaint), at: CGPoint(x: x, y: 10))
-            } else if fret == 0 {
-                context.stroke(Path(ellipseIn: CGRect(x: x - 6, y: 4, width: 12, height: 12)), with: .color(lit ? accent : Palette.ink), lineWidth: 1.8)
+                context.draw(Text("×").font(.system(size: 15, weight: .bold)).foregroundStyle(Palette.inkFaint), at: mirror.point(CGPoint(x: x, y: 10)))
+            } else if !chord.drawnFingered(i) {
+                // Open, or ringing from the capo.
+                shapes.stroke(Path(ellipseIn: CGRect(x: x - 6, y: 4, width: 12, height: 12)), with: .color(lit ? accent : Palette.ink), lineWidth: 1.8)
             } else if !barres.contains(where: { $0.fret == fret && $0.first <= i && i <= $0.last }) {
-                let scale = land(i)
-                guard scale > 0.01 else { continue }
-                let y = top + (CGFloat(fret - base) + 0.5) * rowHeight - (1 - min(1, scale)) * 12
-                let r = radius * scale
-                let halo = 3 * scale
-                context.fill(Path(ellipseIn: CGRect(x: x - r - halo, y: y - r - halo, width: (r + halo) * 2, height: (r + halo) * 2)), with: .color(accent.opacity(lit ? 0.45 : 0.18)))
-                context.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))
-                if scale > 0.6, let finger = chord.fingers?[safe: i], finger > 0 {
-                    context.draw(Text("\(finger)").font(.system(size: r * 1.05, weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent), at: CGPoint(x: x, y: y))
+                let grow = land(i)
+                guard grow > 0.01 else { continue }
+                let y = top + (CGFloat(fret - base) + 0.5) * rowHeight - (1 - min(1, grow)) * 12
+                let r = radius * grow
+                let halo = 3 * grow
+                shapes.fill(Path(ellipseIn: CGRect(x: x - r - halo, y: y - r - halo, width: (r + halo) * 2, height: (r + halo) * 2)), with: .color(accent.opacity(lit ? 0.45 : 0.18)))
+                shapes.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)), with: .color(accent))
+                if grow > 0.6, let finger = chord.fingers?[safe: i], finger > 0 {
+                    context.draw(Text("\(finger)").font(.system(size: r * 1.05, weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent),
+                                 at: mirror.point(CGPoint(x: x, y: y)))
                 }
             }
         }
         for barre in barres {
-            drawBarre(&context, barre, left: left, gap: gap, top: top, rowHeight: rowHeight, radius: radius, base: base, scale: land(barre.first))
+            drawBarre(&context, shapes: shapes, barre, left: left, gap: gap, top: top, rowHeight: rowHeight, radius: radius, base: base,
+                      grow: land(barre.first), mirror: mirror)
         }
     }
 
-    /// Each row's fret beside it, right-aligned left of the box; a fret with a landed finger on it in the accent.
+    /// The capo across every string where the nut would be: a clamp's padded bar a little past the outer strings, its
+    /// rubber edge along the bottom and its screw toward one end.
+    private func drawCapo(_ shapes: GraphicsContext, left: CGFloat, right: CGFloat, top: CGFloat, radius: CGFloat) {
+        let reach = max(4, radius * 0.6)
+        let bar = CGRect(x: left - reach, y: top - 7, width: right - left + reach * 2, height: 9)
+        shapes.fill(Path(roundedRect: bar, cornerRadius: 4.5), with: .color(Palette.inkSoft))
+        let pad = CGRect(x: bar.minX + 3, y: bar.maxY - 2.5, width: max(0, bar.width - 6), height: 1.5)
+        shapes.fill(Path(roundedRect: pad, cornerRadius: 0.75), with: .color(Palette.stage.opacity(0.45)))
+        let screw = CGRect(x: bar.maxX - 8, y: bar.midY - 2.5, width: 5, height: 5)
+        shapes.fill(Path(ellipseIn: screw), with: .color(Palette.stage.opacity(0.5)))
+    }
+
+    /// Each row's fret beside it, right-aligned beside the box; a fret with a landed finger on it in the accent. Behind
+    /// a capo, the capo's own fret is numbered beside it.
     private func drawFretNumbers(_ context: inout GraphicsContext, base: Int, rows: Int, top: CGFloat, rowHeight: CGFloat, x: CGFloat,
-                                 land: (Int) -> CGFloat, scale: CGFloat) {
+                                 land: (Int) -> CGFloat, mirror: CanvasMirror, scale: CGFloat) {
         let frets = chord.frets
+        let anchor = mirror.anchor(.trailing)
         for row in 0..<rows {
             let fret = base + row
-            let held = frets.indices.contains { frets[$0] == fret && land($0) > 0.6 }
+            let held = frets.indices.contains { frets[$0] == fret && chord.drawnFingered($0) && land($0) > 0.6 }
             let label = Text("\(fret)").font(DiagramType.font(11, weight: held ? .heavy : .semibold, scale: scale))
                 .foregroundStyle(held ? accent : Palette.inkFaint)
-            context.draw(label, at: CGPoint(x: x, y: top + (CGFloat(row) + 0.5) * rowHeight), anchor: .trailing)
+            context.draw(label, at: mirror.point(CGPoint(x: x, y: top + (CGFloat(row) + 0.5) * rowHeight)), anchor: anchor)
+        }
+        let capo = chord.drawnCapo
+        if capo > 0 {
+            let label = Text("\(capo)").font(DiagramType.font(11, weight: .semibold, scale: scale)).foregroundStyle(Palette.inkSoft)
+            context.draw(label, at: mirror.point(CGPoint(x: x, y: top - 2.5)), anchor: anchor)
         }
     }
 
-    /// A rounded bar across the strings the finger holds, landing with the barre's lowest string.
-    private func drawBarre(_ context: inout GraphicsContext, _ barre: Barre, left: CGFloat, gap: CGFloat, top: CGFloat,
-                           rowHeight: CGFloat, radius: CGFloat, base: Int, scale: CGFloat) {
-        guard scale > 0.01 else { return }
-        let y = top + (CGFloat(barre.fret - base) + 0.5) * rowHeight - (1 - min(1, scale)) * 12
-        let r = radius * scale
-        let halo = 3 * scale
+    /// A rounded bar across the strings the finger holds, landing with the barre's lowest string. Its ends sit one dot
+    /// radius past the outer strings it holds, whatever the landing's overshoot, and its glow hugs it.
+    private func drawBarre(_ context: inout GraphicsContext, shapes: GraphicsContext, _ barre: Barre, left: CGFloat, gap: CGFloat, top: CGFloat,
+                           rowHeight: CGFloat, radius: CGFloat, base: Int, grow: CGFloat, mirror: CanvasMirror) {
+        guard grow > 0.01 else { return }
+        let y = top + (CGFloat(barre.fret - base) + 0.5) * rowHeight - (1 - min(1, grow)) * 12
+        let thick = radius * grow
+        let halo = 3 * min(1, grow)
         let x0 = left + CGFloat(barre.first) * gap, x1 = left + CGFloat(barre.last) * gap
         let lit = (barre.first...barre.last).contains { ringing.contains($0) }
-        let glow = CGRect(x: x0 - r - halo, y: y - r - halo, width: x1 - x0 + (r + halo) * 2, height: (r + halo) * 2)
-        context.fill(Path(roundedRect: glow, cornerRadius: r + halo), with: .color(accent.opacity(lit ? 0.45 : 0.18)))
-        let bar = CGRect(x: x0 - r, y: y - r, width: x1 - x0 + r * 2, height: r * 2)
-        context.fill(Path(roundedRect: bar, cornerRadius: r), with: .color(accent))
-        // A soft sheen along the top, so it reads as one finger lying flat.
-        context.fill(Path(roundedRect: CGRect(x: x0, y: y - r + 1.5, width: max(0, x1 - x0), height: max(1, r * 0.35)), cornerRadius: r * 0.2),
-                     with: .color(.white.opacity(0.22)))
-        if scale > 0.6 {
-            context.draw(Text("\(barre.finger)").font(.system(size: r * 1.05, weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent),
-                         at: CGPoint(x: (x0 + x1) / 2, y: y))
+        let glow = CGRect(x: x0 - radius, y: y - thick - halo, width: x1 - x0 + radius * 2, height: (thick + halo) * 2)
+        shapes.fill(Path(roundedRect: glow, cornerRadius: min(radius, thick + halo)), with: .color(accent.opacity(lit ? 0.45 : 0.18)))
+        let bar = CGRect(x: x0 - radius, y: y - thick, width: x1 - x0 + radius * 2, height: thick * 2)
+        shapes.fill(Path(roundedRect: bar, cornerRadius: min(radius, thick)), with: .color(accent))
+        if grow > 0.6 {
+            context.draw(Text("\(barre.finger)").font(.system(size: thick * 1.05, weight: .heavy, design: .rounded)).foregroundStyle(Palette.onAccent),
+                         at: mirror.point(CGPoint(x: (x0 + x1) / 2, y: y)))
         }
     }
 
@@ -764,14 +822,14 @@ struct ChordDiagram: View {
         return { i in CGFloat(ChordDiagram.spring(elapsed - Double(ranks[safe: i] ?? 0) * step)) }
     }
 
-    /// When each string's finger lands (0, 1, 2 …): fretted strings left to right, or by finger number
+    /// When each string's finger lands (0, 1, 2 …): fingered strings left to right, or by finger number
     /// (finger 1 first, a barre with its finger); strings without a finger after the rest.
     var landingRanks: [Int] {
         let frets = chord.frets
-        let stringOrder = frets.indices.map { i in frets.prefix(i).filter { $0 > 0 }.count }
+        let stringOrder = frets.indices.map { i in (0..<i).filter { chord.drawnFingered($0) }.count }
         guard landingOrder == .fingers, let fingers = chord.fingers else { return stringOrder }
         let used = Set(frets.indices.compactMap { i -> Int? in
-            guard frets[i] > 0, let finger = fingers[safe: i], finger > 0 else { return nil }
+            guard chord.drawnFingered(i), let finger = fingers[safe: i], finger > 0 else { return nil }
             return finger
         }).sorted()
         return frets.indices.map { i in
@@ -782,8 +840,9 @@ struct ChordDiagram: View {
 
     /// How many landings there are (the last one's rank + 1).
     var landingCount: Int {
-        let fretted = chord.frets.indices.filter { chord.frets[$0] > 0 }
-        return (fretted.map { landingRanks[$0] }.max() ?? -1) + 1
+        let ranks = landingRanks
+        let fingered = chord.frets.indices.filter { chord.drawnFingered($0) }
+        return (fingered.compactMap { ranks[safe: $0] }.max() ?? -1) + 1
     }
 
     /// A damped spring from 0 to 1: response 0.35 s with a slight overshoot.
@@ -807,6 +866,26 @@ struct ChordDiagram: View {
             // A replay started meanwhile keeps the clock running.
             if generation == landGeneration { landed = true }
         }
+    }
+}
+
+extension ChordSpec {
+    /// The fret the capo clamps for this shape; 0 without one.
+    var drawnCapo: Int { max(0, capo ?? 0) }
+
+    /// Whether a finger stops string `i` (lowest first): fretted above the capo, or above the nut without one.
+    func drawnFingered(_ i: Int) -> Bool { frets.indices.contains(i) && frets[i] > drawnCapo }
+
+    /// The shape's own name under a capo, in the player's note names ("G" for an A played as a G shape on capo 2);
+    /// nil without a capo.
+    var drawnCapoShape: String? {
+        let capo = drawnCapo
+        guard capo > 0 else { return nil }
+        let main = symbol.split(separator: "/", maxSplits: 1).first.map(String.init) ?? symbol
+        let accidentals: Set<Character> = ["#", "b", "♯", "♭"]
+        let suffix = String(main.dropFirst().drop { accidentals.contains($0) })
+        let shapeRoot = ((root - capo) % 12 + 12) % 12
+        return NoteNames.glyphs(NoteNames.chord(root: shapeRoot, suffix: suffix))
     }
 }
 
@@ -847,8 +926,8 @@ struct EdgeNamesRow: View {
 }
 
 /// A chord's shape in words for VoiceOver, said once by whichever picture shows it (the chart or the player's
-/// view): the fingers in the order they go down, then the open and the muted strings ("Finger 2 on string 5,
-/// fret 2; Finger 3 on string 4, fret 2; Strings 6, 3, 2 and 1 open").
+/// view): the capo first when there is one, the fingers in the order they go down, then the open (or capo) and the
+/// muted strings ("Finger 2 on string 5, fret 2; Finger 3 on string 4, fret 2; Strings 6, 3, 2 and 1 open").
 @MainActor
 enum ChordWords {
     static func shape(_ chord: ChordSpec) -> String {
@@ -860,7 +939,7 @@ enum ChordWords {
             let strings = (barre.first...barre.last).map { count - $0 }
             placed.append((order: barre.finger, words: String(localized: "Finger \(barre.finger) across strings \(list(strings)) at fret \(barre.fret)")))
         }
-        for i in frets.indices where frets[i] > 0 {
+        for i in frets.indices where chord.drawnFingered(i) {
             if barres.contains(where: { $0.fret == frets[i] && $0.first <= i && i <= $0.last }) { continue }
             let string = count - i
             let fret = frets[i]
@@ -875,7 +954,9 @@ enum ChordWords {
             a.element.order != b.element.order ? a.element.order < b.element.order : a.offset < b.offset
         }
         var parts = sorted.map { $0.element.words }
-        let open = frets.indices.filter { frets[$0] == 0 }.map { count - $0 }
+        let capo = chord.drawnCapo
+        if capo > 0 { parts.insert(String(localized: "Capo on fret \(capo)"), at: 0) }
+        let open = frets.indices.filter { frets[$0] >= 0 && !chord.drawnFingered($0) }.map { count - $0 }
         let muted = frets.indices.filter { frets[$0] < 0 }.map { count - $0 }
         if open.count == 1, let only = open.first {
             parts.append(String(localized: "String \(only) open"))

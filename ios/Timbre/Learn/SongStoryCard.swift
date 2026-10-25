@@ -58,6 +58,8 @@ struct SongFinaleView: View {
     @Environment(\.locale) private var locale
     @Environment(\.layoutDirection) private var layoutDirection
     @State private var shownStars = 0
+    /// When each earned star landed, for its ring.
+    @State private var landed: [Int: Date] = [:]
     @State private var burst = 0
     @State private var appeared = false
     @State private var poster: Image?
@@ -68,9 +70,15 @@ struct SongFinaleView: View {
     /// Under half the take landed: another go comes first.
     private var retryFirst: Bool { take.percent < 50 }
 
+    /// Over the score, what the take was: "Flawless" from 98 %, then the fact ("212 of 228 notes landed", or for a
+    /// strummed take "Solid take") from 90 %; under that, the next step.
     private var verdict: LocalizedStringKey {
         if take.percent >= 98 { return "Flawless" }
-        if take.percent >= 90 { return "Great work" }
+        if take.percent >= 90 {
+            guard !take.grades.isEmpty else { return "Solid take" }
+            let landed = take.grades.count - take.count(.miss)
+            return "\(landed) of \(take.grades.count) notes landed"
+        }
         return retryFirst ? "Just warming up" : "Keep going"
     }
 
@@ -111,16 +119,24 @@ struct SongFinaleView: View {
         .accessibilityLabel(Text("\(stars) of 3 stars"))
     }
 
+    /// A star: its bare string waits in place, and an earned one lands over it, ringing (`RewardStar`). Under Reduce
+    /// Motion it only fades in.
     private func star(_ index: Int) -> some View {
         let earned = index < stars
-        let shown = index < shownStars
-        return Image(systemName: "star.fill")
-            .font(.system(size: index == 1 ? 78 : 58, weight: .bold))
-            .foregroundStyle(earned && shown ? AnyShapeStyle(Palette.starFill) : AnyShapeStyle(Color.white.opacity(0.08)))
-            .shadow(color: earned && shown ? Palette.starGold.opacity(0.6) : .clear, radius: 16)
-            .scaleEffect(shown ? 1 : 0.3)
-            .rotationEffect(.degrees(shown ? 0 : -40))
-            .offset(y: index == 1 ? -10 : 0)
+        let lit = earned && index < shownStars
+        let size: CGFloat = index == 1 ? 78 : 58
+        return ZStack {
+            RewardStar(earned: false)
+            if earned {
+                RewardStar(earned: true, landed: landed[index])
+                    .shadow(color: Palette.starGold.opacity(0.6), radius: 16)
+                    .opacity(lit ? 1 : 0)
+                    .scaleEffect(lit || reduceMotion ? 1 : 0.3)
+                    .rotationEffect(.degrees(lit || reduceMotion ? 0 : -40))
+            }
+        }
+        .frame(width: size * 1.05, height: size)
+        .offset(y: index == 1 ? -10 : 0)
     }
 
     private var words: some View {
@@ -249,16 +265,18 @@ struct SongFinaleView: View {
 
     // MARK: Reveal
 
-    /// The stars land first; the poster (a 1080 × 1920 render on the main thread) is drawn only once they have
-    /// and the burst has settled, so the take → finale transition and the stars never hitch on it (QA M11). Share
-    /// waits, dimmed, the moment it takes.
+    /// The stars land first, ringing the song's key (1, 3, 5); the poster (a 1080 × 1920 render on the main
+    /// thread) is drawn only once they have and the burst has settled, so the take → finale transition and the stars
+    /// never hitch on it. Share waits, dimmed, the moment it takes.
     private func reveal() async {
+        let key = RewardKey.of(lesson)
+        SoundFX.shared.prepareStars(key)
         withAnimation(Motion.fade) { appeared = true }
         for index in 0..<3 {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 80 : 340))
             guard !Task.isCancelled else { return }
             withMotion(Motion.reward, reduceMotion: reduceMotion) { shownStars = index + 1 }
-            if index < stars { SoundFX.shared.play(.star); Haptics.shared.lock(); burst += 1 }
+            if index < stars { landed[index] = Date(); SoundFX.shared.playStar(index, key: key); Haptics.shared.lock(); burst += 1 }
         }
         try? await Task.sleep(for: .milliseconds(reduceMotion ? 120 : 520))
         guard !Task.isCancelled, poster == nil else { return }
@@ -362,9 +380,9 @@ struct SongStoryCard: View {
         HStack(alignment: .bottom, spacing: 10) {
             ForEach(0..<3, id: \.self) { index in
                 let earned = index < stars
-                Image(systemName: "star.fill")
-                    .font(.system(size: index == 1 ? 50 : 38, weight: .bold))
-                    .foregroundStyle(earned ? AnyShapeStyle(Palette.starFill) : AnyShapeStyle(Color.white.opacity(0.1)))
+                let size: CGFloat = index == 1 ? 50 : 38
+                RewardStar(earned: earned)
+                    .frame(width: size * 1.05, height: size)
                     .shadow(color: earned ? Palette.starGold.opacity(0.55) : .clear, radius: 12)
                     .offset(y: index == 1 ? -8 : 0)
             }

@@ -42,11 +42,34 @@ final class AppStoreIntegrationTests: XCTestCase {
         XCTAssertFalse(store.showPaywall)
     }
 
-    func testProInstrumentShowsPaywallForFreeUser() throws {
+    func testEveryInstrumentTunesFreeInItsStandardTuning() throws {
         let viola = try XCTUnwrap(store.catalog.instrument(id: "viola.standard.4"))
-        XCTAssertFalse(store.selectInstrument(viola))
+        XCTAssertFalse(viola.isFree)
+        XCTAssertTrue(store.selectInstrument(viola))
+        XCTAssertEqual(store.instrument.id, viola.id)
+        XCTAssertEqual(store.tuning.id, viola.defaultTuningId)
+        XCTAssertTrue(store.canListen)
+        XCTAssertFalse(store.showPaywall)
+    }
+
+    func testAnotherInstrumentsAlternateTuningShowsThePaywallForAFreeUser() throws {
+        let banjo = try XCTUnwrap(store.catalog.instrument(id: "banjo.five.5"))
+        XCTAssertTrue(store.selectInstrument(banjo))
+        let alternate = try XCTUnwrap(store.tunings.first { $0.id != banjo.defaultTuningId })
+        store.selectTuning(alternate)
         XCTAssertTrue(store.showPaywall)
-        XCTAssertEqual(store.instrument.id, "guitar.acoustic.6")
+        XCTAssertEqual(store.tuning.id, banjo.defaultTuningId)
+    }
+
+    func testAnUnreadableSavedFileOpensFreshAndSaysSo() throws {
+        store = nil
+        let fresh = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: fresh) }
+        try FileManager.default.createDirectory(at: fresh, withIntermediateDirectories: true)
+        try Data("not valid JSON".utf8).write(to: fresh.appendingPathComponent(LocalStore.fileName))
+        let opened = try AppStore(directory: fresh)
+        XCTAssertEqual(opened.storageRecovery, .startedFresh)
+        XCTAssertNil(try AppStore(directory: fresh).storageRecovery, "told once: the next opening is an ordinary one")
     }
 
     func testGuitarHasA3DModelWithMatchingRigAnchors() throws {

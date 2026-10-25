@@ -98,7 +98,7 @@ struct ReminderAskStep: View {
         UserDefaults.standard.set(true, forKey: PracticeReminder.askedKey)
         asking = true
         Task { @MainActor in
-            let on = await PracticeReminder.enable(at: PlanCommitment.minutesOfDay(time))
+            let on = await PracticeReminder.enable(at: ReminderTime.minutes(of: time))
             asking = false
             if on { Haptics.shared.lock() }
             finish(on: on, result: on ? "allowed" : "denied")
@@ -108,7 +108,7 @@ struct ReminderAskStep: View {
     private func finish(on: Bool, result: String) {
         guard !finished else { return }
         finished = true
-        Analytics.log("reminder_ask", ["result": result, "minutes": String(PlanCommitment.minutesOfDay(time))])
+        Analytics.log("reminder_ask", ["result": result, "minutes": String(ReminderTime.minutes(of: time))])
         onDone(on)
     }
 }

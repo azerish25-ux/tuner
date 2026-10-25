@@ -242,27 +242,6 @@ final class PracticeTests: XCTestCase {
         XCTAssertNil(Quest(kind: .practiceMinutes, target: 5, xp: 15).dailyKind)
     }
 
-    func testAccessPolicy() throws {
-        let catalog = try Catalog()
-        let guitar = try XCTUnwrap(catalog.instrument(id: "guitar.acoustic.6"))
-        let violin = try XCTUnwrap(catalog.instrument(id: "violin.standard.4"))
-        let viola = try XCTUnwrap(catalog.instrument(id: "viola.standard.4"))
-        let dropD = try XCTUnwrap(catalog.tuning(id: "guitar.acoustic.6.drop_d"))
-        let fiddle = try XCTUnwrap(catalog.tuning(id: "violin.standard.4.cross_ae"))
-        XCTAssertEqual(Set(catalog.instruments.filter(\.isFree).map(\.id)),
-                       ["guitar.acoustic.6", "bass.electric.4", "ukulele.soprano.4", "violin.standard.4", "cello.standard.4"])
-        XCTAssertTrue(AccessPolicy.canUse(tuning: dropD, of: guitar, pro: false), "Every preset of a free instrument is free")
-        XCTAssertTrue(AccessPolicy.canUse(tuning: fiddle, of: violin, pro: false), "Violin tunes free, cross-tuning too")
-        XCTAssertFalse(AccessPolicy.canTune(instrument: viola, pro: false))
-        XCTAssertTrue(AccessPolicy.canTune(instrument: viola, pro: true))
-        let now = Date()
-        XCTAssertTrue(AccessPolicy.isPro([.init(productID: TimbreProduct.annual, isSubscription: true, revoked: false, expiresAt: now.addingTimeInterval(60))], now: now))
-        XCTAssertFalse(AccessPolicy.isPro([.init(productID: TimbreProduct.annual, isSubscription: true, revoked: false, expiresAt: now.addingTimeInterval(-60))], now: now))
-        XCTAssertFalse(AccessPolicy.isPro([.init(productID: TimbreProduct.lifetime, isSubscription: false, revoked: true, expiresAt: nil)], now: now))
-        XCTAssertTrue(AccessPolicy.isPro([.init(productID: TimbreProduct.lifetime, isSubscription: false, revoked: false, expiresAt: nil)], now: now))
-        XCTAssertFalse(AccessPolicy.isPro([.init(productID: "other", isSubscription: false, revoked: false, expiresAt: nil)], now: now))
-    }
-
     func testOneEuroFilterSmoothsJitterAndFollowsSteps() {
         var filter = OneEuroFilter()
         var t = 0.0

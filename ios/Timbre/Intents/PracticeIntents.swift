@@ -1,4 +1,5 @@
 import AppIntents
+import Combine
 import SwiftUI
 
 // App-only intents (Siri, Shortcuts, Spotlight, the Action button). The ones that need the screen open Timbre and
@@ -71,6 +72,56 @@ struct ContinueLessonIntent: AppIntent {
         IntentRouter.shared.link = DeepLink.lesson
         return .result()
     }
+}
+
+/// "Again in Timbre", "Next in Timbre", "Slower in Timbre": the lesson on screen, driven by voice while both hands are on
+/// the instrument (Siri, Voice Control through Shortcuts, the Action button). With no lesson open, Start and Next open
+/// the next one.
+struct LessonCommandIntent: AppIntent {
+    static let title: LocalizedStringResource = "Control my lesson"
+    static let description = IntentDescription("Starts, repeats, slows down or moves on the lesson step on screen, so your hands can stay on your instrument.")
+    static let openAppWhenRun = true
+
+    @Parameter(title: "Action")
+    var command: LessonCommand
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("\(\.$command) in my lesson")
+    }
+
+    @MainActor func perform() async throws -> some IntentResult {
+        let remote = LessonRemote.shared
+        if remote.open > 0 {
+            remote.commands.send(command)
+        } else if command == .start || command == .next {
+            IntentRouter.shared.link = DeepLink.lesson
+        }
+        return .result()
+    }
+}
+
+/// What a lesson can be told to do (`LessonCommandIntent`); its buttons answer them (`LessonControl`).
+enum LessonCommand: String, AppEnum {
+    case start, next, again, slower
+
+    static let typeDisplayRepresentation: TypeDisplayRepresentation = "Lesson action"
+    static let caseDisplayRepresentations: [LessonCommand: DisplayRepresentation] = [
+        .start: DisplayRepresentation(title: "Start", synonyms: ["Go", "Play"]),
+        .next: DisplayRepresentation(title: "Next", synonyms: ["Continue", "Next step"]),
+        .again: DisplayRepresentation(title: "Again", synonyms: ["Try again", "Repeat"]),
+        .slower: DisplayRepresentation(title: "Slower", synonyms: ["Slow down"]),
+    ]
+}
+
+/// The lesson on screen's ear for commands from outside it: intents send, the lesson's buttons listen.
+@MainActor
+final class LessonRemote {
+    static let shared = LessonRemote()
+    let commands = PassthroughSubject<LessonCommand, Never>()
+    /// Lessons open now (the player counts itself in and out).
+    var open = 0
+    /// When a key or command last pressed a lesson button (system uptime): one press at a time.
+    var lastFired: TimeInterval = 0
 }
 
 /// "What's my Timbre streak?": answered in Siri or Shortcuts without opening the app, from the snapshot the app

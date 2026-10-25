@@ -9,8 +9,16 @@ final class TimbreUITests: XCTestCase {
         continueAfterFailure = true
         app = XCUIApplication()
         app.launchEnvironment["TIMBRE_TEST_STORAGE_ID"] = UUID().uuidString
-        app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        app.launchArguments = ["-AppleLanguages", "(\(Self.language))", "-AppleLocale", Self.locale]
     }
+
+    /// The tour's language: English, unless the run asks for another to capture a localized store set
+    /// (`TEST_RUNNER_TIMBRE_UI_LANGUAGE=de TEST_RUNNER_TIMBRE_UI_LOCALE=de_DE xcodebuild test …`, then
+    /// `tools/marketing/screenshots.py … --locale de-DE`). A few store-frame checks read English text (the chord step's
+    /// "Every string rings", the results' headline), so a localized run keeps those frames as "-wrong" until they read
+    /// identifiers instead.
+    private static let language = ProcessInfo.processInfo.environment["TIMBRE_UI_LANGUAGE"].flatMap { $0.isEmpty ? nil : $0 } ?? "en"
+    private static let locale = ProcessInfo.processInfo.environment["TIMBRE_UI_LOCALE"].flatMap { $0.isEmpty ? nil : $0 } ?? "en_US"
 
     override func tearDownWithError() throws {
         if (testRun?.totalFailureCount ?? 0) > 0 { shot("zz-failure-\(name)") }
@@ -18,8 +26,12 @@ final class TimbreUITests: XCTestCase {
     }
 
     /// `scene`: a store screenshot's hero moment (TIMBRE_SCENE, ios/Timbre/Root/DemoScenes.swift; it needs `pitch`).
-    private func launch(onboarded: Bool = true, demo: Bool = true, studio: Bool = false, pitch: Bool = false, stageDebug: Bool = false, scene: String? = nil) {
+    /// `instrument`: the catalog id the tuner opens on; `comet`: the held string is plucked again every few seconds.
+    private func launch(onboarded: Bool = true, demo: Bool = true, studio: Bool = false, pitch: Bool = false, stageDebug: Bool = false,
+                        scene: String? = nil, instrument: String? = nil, comet: Bool = false) {
         if let scene { app.launchEnvironment["TIMBRE_SCENE"] = scene }
+        if let instrument { app.launchEnvironment["TIMBRE_SCENE_INSTRUMENT"] = instrument }
+        if comet { app.launchEnvironment["TIMBRE_SCENE_COMET"] = "1" }
         if stageDebug { app.launchEnvironment["TIMBRE_STAGE_DEBUG"] = "1" }
         if pitch { app.launchEnvironment["TIMBRE_DEMO_PITCH"] = "1" }
         if onboarded { app.launchEnvironment["TIMBRE_SKIP_ONBOARDING"] = "1" }
@@ -487,7 +499,7 @@ final class TimbreUITests: XCTestCase {
         // pitch tunes each string in turn, so the check can finish on its own while the tap is on its way.
         tapIfPresent(skip)
         // The demo pitch plays the chord's strings and the step hands over to the strum explainer by itself. (The
-        // chord with every string lit, App Store frame #4, comes from its own scene: test12StoreChord.)
+        // chord with every string lit, App Store frame #3, comes from its own scene: test12StoreChord.)
         let next = element("lesson.continue")
         XCTAssertTrue(next.waitForExistence(timeout: 30))
         settle(1.5); shot("53-lesson-strum-explain")
@@ -566,30 +578,96 @@ final class TimbreUITests: XCTestCase {
 
     /// App Store frame #1 through the `tune-locked` scene (ios/Timbre/Root/DemoScenes.swift): the demo pitch plays the
     /// selected string steadily in tune, so the tuner's own tracker locks the two lowest strings (✓ on their chips), then
-    /// the third, which stays locked: solid chip, In tune badge, its peg ringed and ticked on the 3D headstock. Nothing
-    /// races a clock. The test only keeps its hands off while the holds run: a query stalls the app's main thread, and a
-    /// gap of more than 150 ms in the readings starts the 0.65 s hold again (the scene waits for each lock).
+    /// the third, which stays locked: solid chip, In tune badge, its peg ringed and ticked on the 3D headstock. With
+    /// `comet` the scene plucks that string again every 4 s, and the picture is caught mid-comet, its lock shimmer
+    /// running along the string (`cometPicture`). Nothing races a clock: the test keeps its hands off while the holds
+    /// run (a query stalls the app's main thread, and a gap of more than 150 ms in the readings starts the 0.65 s hold
+    /// again).
     func test11StoreTunerLock() throws {
         app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
-        launch(pitch: true, scene: "tune-locked")
+        launch(pitch: true, scene: "tune-locked", comet: true)
+        storeFrame("10b-tune-locked", tuner: lockedTunerFrame(strings: 3))
+    }
+
+    /// The violin page's lead frame (a Custom Product Page): the same scene on the 3D violin, G, D and A locked (the
+    /// third held, mid-comet).
+    func test16StoreViolinStage() throws {
+        app.launchEnvironment["TIMBRE_DEBUG_STATE"] = "1"
+        launch(pitch: true, scene: "tune-locked", instrument: "violin.standard.4", comet: true)
+        storeFrame("49d-tune-violin-locked", tuner: lockedTunerFrame(strings: 3))
+    }
+
+    private func storeFrame(_ name: String, tuner: (picture: XCUIScreenshot, problem: String)) {
+        storeFrame(name, picture: tuner.picture, ok: tuner.problem.isEmpty, tuner.problem)
+    }
+
+    /// The tuner's lock as a store frame: the picture (mid-comet when the burst caught one, else the settled lock) and
+    /// why it isn't the frame ("" when it is).
+    private func lockedTunerFrame(strings: Int) -> (picture: XCUIScreenshot, problem: String) {
         XCTAssertTrue(element("tune.stage").waitForExistence(timeout: 25))
         let stage = waitForStage().stage
         var picture = XCUIScreen.main.screenshot()
-        var problem = "the 3D headstock never replaced its studio render (stage '\(stage)')"
-        if stage == "3d" {
-            for attempt in 0..<3 {
-                // Hands off: the scene's locks land, the camera settles on the third peg and the reward banner clears.
-                settle(attempt == 0 ? 7 : 3)
+        guard stage == "3d" else { return (picture, "the 3D headstock never replaced its studio render (stage '\(stage)')") }
+        var problem = ""
+        for attempt in 0..<3 {
+            // Hands off: the scene's locks land, the camera settles on the third peg and the reward banner clears.
+            settle(attempt == 0 ? 7 : 3)
+            if let readout = readoutRegion(), let comet = cometPicture(readout: readout) {
+                picture = comet.picture
+                print("TUNER FRAME: mid-comet, \(comet.note)")
+            } else {
                 picture = XCUIScreen.main.screenshot()
-                let lock = tunerLock(strings: 3)
-                if lock.shown { problem = ""; break }
-                problem = "no lock on screen: " + lock.summary
+                print("TUNER FRAME: no comet caught; the settled lock")
             }
+            let lock = tunerLock(strings: strings)
+            if lock.shown { problem = ""; break }
+            problem = "no lock on screen: " + lock.summary
         }
-        storeFrame("10b-tune-locked", picture: picture, ok: problem.isEmpty, problem)
+        return (picture, problem)
     }
 
-    /// App Store frame #4 through the `lesson-chord` scene (DemoScenes.swift): "Your first chord: E minor" opens on its
+    /// The tuner's readout (the note, its badge and meter) as a fraction of the screen: from under the AUTO / MANUAL
+    /// control down to the string chips. One snapshot; nil without the control.
+    private func readoutRegion() -> CGRect? {
+        let nodes = appNodes()
+        let screen = app.frame
+        guard screen.height > 0, let control = nodes.first(where: { $0.identifier == "tune.detection" })?.frame else { return nil }
+        let chips = nodes.filter { $0.identifier.hasPrefix("string.") }.map { $0.frame.minY }.min() ?? screen.height * 0.85
+        guard chips - control.maxY > 40 else { return nil }
+        return CGRect(x: 0.1, y: control.maxY / screen.height, width: 0.8, height: (chips - control.maxY) / screen.height)
+    }
+
+    /// The lock shimmer caught mid-run. The `comet` scene plucks the held string again every 4 s; the tracker locks it
+    /// again 0.65 s later and the shimmer runs from its peg along the string. A burst of pictures over more than one
+    /// period, hands off; the readout's own change (the In tune badge stepping aside while the hold runs) dates the
+    /// pluck, and the picture kept is the one nearest `cometAim` after the lock with the readout back as it rests (In
+    /// tune). Nil when the burst saw no pluck.
+    private func cometPicture(readout: CGRect) -> (picture: XCUIScreenshot, note: String)? {
+        var burst: [(time: Date, shot: XCUIScreenshot, readout: [UInt8])] = []
+        let end = Date().addingTimeInterval(5.6)
+        while Date() < end && burst.count < 48 {
+            let time = Date()
+            let shot = XCUIScreen.main.screenshot()
+            burst.append((time, shot, StillScreen.thumbnail(shot.image.cgImage, region: readout)))
+        }
+        guard burst.count >= 8, let rest = StillScreen.medoid(burst.map { $0.readout }) else { return nil }
+        let changed = burst.map { StillScreen.motion($0.readout, rest) > Self.cometChange }
+        guard let pluck = changed.indices.first(where: { $0 > 0 && changed[$0] && !changed[$0 - 1] }) else { return nil }
+        let locked = burst[pluck].time.addingTimeInterval(0.65)
+        let aim = locked.addingTimeInterval(Self.cometAim)
+        let settled = burst.indices.filter { $0 > pluck && burst[$0].time >= locked && !changed[$0] }
+        guard let best = settled.min(by: { abs(burst[$0].time.timeIntervalSince(aim)) < abs(burst[$1].time.timeIntervalSince(aim)) }) else { return nil }
+        let after = burst[best].time.timeIntervalSince(burst[pluck].time)
+        return (burst[best].shot, String(format: "%.2f s after the pluck (%ld pictures)", after, burst.count))
+    }
+
+    /// Seconds after the lock the comet is at its brightest, partway along the string (LockShimmer runs 1.15 s, longer in
+    /// the store scenes).
+    private static let cometAim = 0.35
+    /// The readout's mean change (grey levels) that marks the hold after a pluck.
+    private static let cometChange = 2.5
+
+    /// App Store frame #3 through the `lesson-chord` scene (DemoScenes.swift): "Your first chord: E minor" opens on its
     /// chord step, the demo pitch plays the chord string by string, and the step stays on "Every string rings" with
     /// every string lit instead of handing over to the next step.
     func test12StoreChord() throws {
@@ -641,17 +719,76 @@ final class TimbreUITests: XCTestCase {
     func test14StoreSongPerform() throws {
         launch(pitch: true, scene: "song-perform")
         let opened = element("lesson.close").waitForExistence(timeout: 30)
-        settle(7.5)
-        let picture = XCUIScreen.main.screenshot()
+        settle(7.0)
+        // Pairs of pictures 120 ms apart, hands off. The frame is the first of a pair whose HUD (score, combo, multiplier)
+        // reads the same in both: no counter caught mid-change or mid-pop, which a single picture can't promise.
+        var pairs: [(XCUIScreenshot, XCUIScreenshot)] = []
+        for _ in 0..<6 {
+            let first = XCUIScreen.main.screenshot()
+            Thread.sleep(forTimeInterval: 0.12)
+            pairs.append((first, XCUIScreen.main.screenshot()))
+        }
         var combo = 0
         var words = ""
+        var hud: CGRect?
+        var score: CGRect?
         for node in appNodes() {
-            if node.label == "Combo", let value = node.value as? String { combo = Int(value.prefix { $0.isNumber }) ?? 0 }
+            if node.label == "Combo" {
+                if let value = node.value as? String { combo = Int(value.prefix { $0.isNumber }) ?? 0 }
+                hud = node.frame
+            }
             if node.label == "Lyrics", let value = node.value as? String { words = value.lowercased() }
+            if node.label.hasSuffix("Score") { score = node.frame }
         }
+        let regions = hudRegions(hud: hud, score: score)
+        let steady = pairs.firstIndex { StillScreen.regionsMatch($0.0, $0.1, regions) }
+        let picture = steady.map { pairs[$0].0 } ?? pairs[0].0
         let chorus = ["kite weather", "let it climb", "summer winds"].contains { words.contains($0) }
-        storeFrame("65-song-perform", picture: picture, ok: opened && combo >= 8 && chorus,
-                   "Kite Weather's take shows a combo of \(combo) and the words '\(words)' (opened: \(opened)), not a run of 8+ in the chorus")
+        let problem: String
+        if !(opened && combo >= 8 && chorus) {
+            problem = "Kite Weather's take shows a combo of \(combo) and the words '\(words)' (opened: \(opened)), not a run of 8+ in the chorus"
+        } else if steady == nil {
+            problem = "the HUD changed between every pair of pictures 120 ms apart (\(regions.count) regions): a counter mid-change"
+        } else {
+            problem = ""
+        }
+        storeFrame("65-song-perform", picture: picture, ok: problem.isEmpty, problem)
+    }
+
+    /// The HUD's numbers as fractions of the screen: the combo counter (the left of the HUD row), the multiplier dial
+    /// (its right; the runway between them moves) and the score. Empty without the HUD.
+    private func hudRegions(hud: CGRect?, score: CGRect?) -> [CGRect] {
+        let screen = app.frame
+        guard screen.width > 0, screen.height > 0, let hud else { return [] }
+        func fraction(_ box: CGRect) -> CGRect {
+            CGRect(x: box.minX / screen.width, y: box.minY / screen.height, width: box.width / screen.width, height: box.height / screen.height)
+        }
+        let side = min(hud.width * 0.24, 110)
+        var regions = [fraction(CGRect(x: hud.minX, y: hud.minY, width: side, height: hud.height)),
+                       fraction(CGRect(x: hud.maxX - side, y: hud.minY, width: side, height: hud.height))]
+        if let score { regions.append(fraction(score)) }
+        return regions
+    }
+
+    /// App Store frame #4 ("Tune whatever you play"), with the instrument wall around it: the `instrument-wall` scene opens
+    /// the browser by itself; the Folk & world strings filter fills it with the instruments no other tuner has.
+    func test17StoreInstrumentWall() throws {
+        launch(scene: "instrument-wall")
+        XCTAssertTrue(element("instruments.search").waitForExistence(timeout: 25), "The instrument browser never opened")
+        settle(1)
+        let folk = app.buttons["Folk & world strings"].firstMatch
+        let guitarChip = app.buttons["Guitar"].firstMatch
+        for _ in 0..<4 where !(folk.exists && folk.isHittable) {
+            if guitarChip.exists { guitarChip.swipeLeft() } else { break }
+            settle(0.6)
+        }
+        if folk.exists && folk.isHittable { folk.tap() }
+        settle(1)
+        let picture = stillScreenshot(timeout: 4)
+        let banjo = element("instrument.22_folk_world_strings_banjo_5_string")
+        let filtered = banjo.exists && banjo.isHittable && !element("instrument.01_guitar_acoustic_guitar").exists
+        storeFrame("31b-instruments-folk", picture: picture, ok: filtered,
+                   "the browser isn't showing the Folk & world strings (banjo on screen: \(banjo.exists), filter chip found: \(folk.exists))")
     }
 
     // MARK: Show me
@@ -757,7 +894,7 @@ final class TimbreUITests: XCTestCase {
         return (picture, start, Date())
     }
 
-    /// App Store frame #3 through the `show-me` scene (DemoScenes.swift): "Your first chord: E minor" opens on its first
+    /// "Show me" through the `show-me` scene (DemoScenes.swift; the guitar page's frame and WP9's check of the string glow): "Your first chord: E minor" opens on its first
     /// step, the chord explained on its card, and the guitar's 3D model takes the card (by itself, the chord's first time
     /// in the course; otherwise the test asks with "Show me"). The picture is the demonstration mid-play: both
     /// fingertips down on the model's own frets and the chord ringing across every string. It is kept only when the

@@ -1,8 +1,9 @@
 import SwiftUI
 
 // Timbre's signature Metal effects (Design/Shaders.metal): the lock shimmer over the tuner's stage, the lamp and the
-// lock's ring of light on the chromatic strobe and the heat glow on reward stars. Each one decorates a view that already says everything on its
-// own, runs only for its moment (no idle frames) and steps aside under Reduce Motion and in Low Power Mode.
+// lock's ring of light on the chromatic strobe and the heat glow on reward stars. Each one decorates a view that
+// already says everything on its own, runs only for its moment (no idle frames) and steps aside under Reduce Motion
+// and in Low Power Mode.
 
 enum ShaderFX {
     /// Whether the decorative shaders may run now: not with Reduce Motion, not in Low Power Mode.
@@ -54,18 +55,33 @@ struct LockShimmer: View {
     /// Seconds since the lock.
     let elapsed: Double
     var tint: Color = Palette.mint
+    /// How long this one runs: the shimmer's whole course (flash, sweep, comet) stretched or squeezed to fit.
+    var duration: Double = LockShimmer.duration
 
-    /// How long it runs: over before the tuner moves on to the other string of a pair (1.2 s).
-    static let duration = 1.15
+    /// The shimmer as written (`Shaders.metal`): over before the tuner moves on to the other string of a pair (1.2 s).
+    static let standard = 1.15
+    /// Held longer for the App Store captures, so a still frame can catch the comet mid-run and the preview can hold
+    /// on it. Only in the store's demo scenes; the app itself always runs `standard`.
+    static let marketing = 1.8
+
+    /// How long the shimmer runs here: `standard`, or `marketing` in a demo scene (debug builds only).
+    static var duration: Double {
+        #if DEBUG
+        if DemoScene.current != nil { return marketing }
+        #endif
+        return standard
+    }
 
     var body: some View {
         let box = head ?? .zero
+        // The shader is timed for `standard`; another duration plays the same course at its own pace.
+        let time = elapsed * Self.standard / max(0.1, duration)
         Rectangle()
             .fill(Color.white)
             .colorEffect(ShaderLibrary.timbreLockShimmer(
                 .float2(peg), .float2(post), .float2(nut), .float2(saddle),
                 .float4(box.minX, box.minY, box.width, box.height),
-                .float(elapsed), .color(tint)))
+                .float(time), .color(tint)))
             .blendMode(.plusLighter)
             .allowsHitTesting(false)
             .accessibilityHidden(true)

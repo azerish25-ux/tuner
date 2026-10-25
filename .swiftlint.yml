@@ -1,0 +1,94 @@
+# SwiftLint for Timbre. Run `swiftlint lint` from the repository root.
+#
+# CI (ios.yml, core job) reports these rules on every pull request. Once a baseline of the existing violations is
+# committed as tools/ci/swiftlint-baseline.json (the job writes a candidate to ci-out/swiftlint-baseline.json), the
+# same step fails on new violations only. The comment rules that block today live in tools/ci/lint_tells.py; the
+# custom rule below shows them in Xcode as you type.
+included:
+  - ios/Timbre
+  - ios/Sources
+  - ios/Tests
+  - ios/TimbreAppTests
+  - ios/TimbreUITests
+  - ios/TimbreWidgets
+  - ios/TimbreWatch
+  - ios/TimbreWatchWidgets
+excluded:
+  - ios/.build
+  - ios/build
+  - ios/Timbre.xcodeproj
+
+disabled_rules:
+  - trailing_comma             # either style reads fine; not worth churn
+  - multiple_closures_with_trailing_closure  # SwiftUI's Button { } label: { } reads better this way
+
+opt_in_rules:
+  - accessibility_label_for_image
+  - accessibility_trait_for_button
+  - contains_over_first_not_nil
+  - discouraged_optional_boolean
+  - empty_count
+  - fatal_error_message
+  - first_where
+  - force_unwrapping
+  - last_where
+  - private_swiftui_state
+  - sorted_first_last
+  - toggle_bool
+  - unowned_variable_capture
+  - weak_delegate
+
+line_length:
+  warning: 160
+  error: 250
+  ignores_urls: true
+  ignores_interpolated_strings: true
+file_length:
+  warning: 900
+  error: 2200
+type_body_length:
+  warning: 400
+  error: 1200
+function_body_length:
+  warning: 80
+  error: 130
+cyclomatic_complexity:
+  warning: 15
+  error: 30
+large_tuple:
+  warning: 4
+  error: 6
+nesting:
+  type_level: 3
+identifier_name:
+  min_length:
+    warning: 1
+    error: 1
+  max_length:
+    warning: 60
+    error: 80
+type_name:
+  min_length:
+    warning: 2
+    error: 1
+  max_length:
+    warning: 60
+    error: 80
+
+custom_rules:
+  review_reference:
+    name: "Review or bug reference"
+    regex: '(?i)\b(review\s*#?\s*\d+|bug\s*#?\s*\d+[a-z]?|QA\s*[A-Z]?\d+)\b'
+    match_kinds:
+      - comment
+      - doccomment
+    message: "Say what the code guarantees and why, or link a tracked issue (tools/ci/lint_tells.py)."
+    severity: error
+  wip_marker:
+    name: "WIP marker"
+    regex: '\bWIP\b'
+    match_kinds:
+      - comment
+      - doccomment
+    message: "Finish the work or open an issue; don't ship WIP markers."
+    severity: error

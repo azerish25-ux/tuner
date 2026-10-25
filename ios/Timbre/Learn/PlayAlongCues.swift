@@ -170,22 +170,29 @@ final class Earcons {
 
 // MARK: - Starting on the first note
 
-/// "Start on first strum": while a take waits, the microphone listens, and the first note played on the instrument
-/// starts the count-in, so both hands stay on it. A note counts when an attack is followed by a steady pitch the take
-/// plays somewhere (a voice, a cough or a tap on the phone rarely is). Off unless chosen, except under VoiceOver.
+/// "Start on first strum" for a play-along: while a take waits, the microphone listens, and the first note played on
+/// the instrument starts the count-in, so both hands stay on it. A note counts when an attack is followed by a steady
+/// pitch the take plays somewhere (a voice, a cough or a tap on the phone rarely is). The same switch as the rhythm
+/// steps' (one setting); unset, it is on while VoiceOver runs. Never offered to the demo pitch of a UI-test run.
 enum StrumStart {
-    /// The player's choice; unset follows VoiceOver.
-    static let storageKey = "along.strumStart"
+    /// The player's choice, shared with the rhythm steps.
+    static let storageKey = "lesson.startOnStrum"
+
+    /// The switch can do anything here: a real microphone the player has allowed.
+    @MainActor static var offered: Bool { !LessonMicrophone.demo && LessonMicrophone.granted }
 
     /// The pitch classes a take plays: a note heard in one of them starts it.
     static func pitchClasses(_ notes: [TimedNote]) -> Set<Int> { Set(notes.map { PitchMath.pitchClass(midi: $0.midi) }) }
 }
 
-/// The switch for "Start on first strum" beside a play-along's other controls: the instrument in a ring, tinted when
-/// on. A 34 pt face in a 44 pt target, as the calibrate and band buttons beside it.
+/// The switch for "Start on first strum" beside a play-along's other controls: the microphone in a ring, tinted when
+/// on, its waves running while it listens. A 34 pt face in a 44 pt target, as the calibrate and band buttons beside it.
 struct StrumStartToggle: View {
     @Binding var isOn: Bool
     let accent: Color
+    /// Listening for the first note now.
+    var listening = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         Button {
@@ -195,9 +202,10 @@ struct StrumStartToggle: View {
             ZStack {
                 Circle().fill(isOn ? accent.opacity(0.16) : Palette.surface)
                 Circle().strokeBorder(isOn ? accent.opacity(0.45) : Palette.hairline, lineWidth: 1)
-                Image(systemName: "guitars")
+                Image(systemName: isOn ? "mic.fill" : "mic")
                     .font(.system(size: 14, weight: .bold))
                     .foregroundStyle(isOn ? accent : Palette.inkSoft)
+                    .symbolEffect(.variableColor.iterative, isActive: listening && !reduceMotion)
             }
             .frame(width: 34, height: 34)
             .frame(minWidth: Metrics.minTarget, minHeight: Metrics.minTarget)
@@ -207,6 +215,19 @@ struct StrumStartToggle: View {
         .accessibilityLabel(Text("Start on first strum"))
         .accessibilityAddTraits(isOn ? [.isToggle, .isSelected] : [.isToggle])
         .accessibilityIdentifier("along.strumstart")
+    }
+}
+
+/// Esc stops a take from a keyboard: a hidden button carrying the shortcut, behind the visible Stop.
+struct StopKey: View {
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) { EmptyView() }
+            .keyboardShortcut(.escape, modifiers: [])
+            .frame(width: 0, height: 0)
+            .opacity(0)
+            .accessibilityHidden(true)
     }
 }
 
@@ -235,12 +256,4 @@ enum TakeFact {
         if hits == total { return "All \(total) notes" }
         return "\(hits) of \(total) notes"
     }
-}
-
-// MARK: - Handedness
-
-extension AppStore {
-    /// The player plays left-handed on an instrument strung for it: string lanes run mirrored, the lowest string on
-    /// the right. (Played upside down, a right-handed instrument keeps the usual order.)
-    var mirroredLanes: Bool { String(describing: settings.handedness) == "left" }
 }

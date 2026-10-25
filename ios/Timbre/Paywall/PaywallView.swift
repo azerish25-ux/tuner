@@ -17,7 +17,12 @@ struct PaywallView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.locale) private var locale
-    @State private var selectedID = TimbreProduct.annual
+    /// The plan tapped; nil keeps the year (or the first plan offered).
+    @State private var selectedID: String?
+    /// This paywall's arm of a running test (`RemoteConfig`), fixed while it is open.
+    @State private var variant = RemoteConfig.PaywallVariant.control
+    /// `paywall_view` is logged once per paywall shown.
+    @State private var viewLogged = false
     @State private var appeared = false
     /// Notifications are off for Timbre: no reminder can arrive, so none is promised.
     @State private var remindersBlocked = false
@@ -56,8 +61,22 @@ struct PaywallView: View {
     /// Room at the top of the yearly card for the lower half of its tag (the tag stops growing at xxxLarge).
     @ScaledMetric(relativeTo: .caption2) private var tagRoom: CGFloat = 11
 
-    /// The yearly plan unless the storefront left it out.
-    private var selected: Product? { commerce.products.first { $0.id == selectedID } ?? commerce.products.first }
+    /// The plans on offer: the year and the month, and the lifetime unlock everywhere but onboarding (unless its test
+    /// arm brings it back, or the storefront has nothing else).
+    private var offered: [Product] {
+        let subscriptions = [commerce.annual, commerce.monthly].compactMap { $0 }
+        guard let lifetime = commerce.lifetime, showsLifetime || subscriptions.isEmpty else { return subscriptions }
+        return subscriptions + [lifetime]
+    }
+
+    private var showsLifetime: Bool { context == .standard || variant.onboardingLifetime == true }
+
+    /// The plan chosen: the yearly one unless the storefront left it out.
+    private var selected: Product? { offered.first { $0.id == selectedID } ?? offered.first }
+
+    private func isAnnual(_ product: Product) -> Bool { product.id == commerce.annual?.id }
+
+    private func isLifetime(_ product: Product) -> Bool { product.id == commerce.lifetime?.id }
 
     /// Works both as a presented sheet (dismiss) and as the root overlay (the store flag).
     private func close() {
@@ -69,6 +88,7 @@ struct PaywallView: View {
     /// paywall is turned down (onboarding's is the first), the App Store's own offer for them is made, once, if there is
     /// one; otherwise, and every other time, the paywall closes.
     private func decline() {
+        Analytics.log("paywall_close", ["reason": analyticsReason, "variant": variant.id])
         let due = PaywallDeclines.offerDue
         PaywallDeclines.record()
         guard due, let offer = exitOffer, !commerce.isPro else { close(); return }
@@ -84,10 +104,13 @@ struct PaywallView: View {
     }
 
     private func acceptExitOffer(_ offer: ExitOffer) {
-        let reason = analyticsReason
+        var properties = purchaseProperties(offer.product, trial: offer.offer.paymentMode == .freeTrial)
+        properties["offer"] = offer.kind.rawValue
+        properties["offer_price"] = "\(offer.offer.price)"
+        Analytics.log("purchase_start", properties)
         Task {
             guard await commerce.purchase(offer.product, options: offer.options) else { return }
-            Analytics.log("purchase", ["product": offer.product.id, "reason": reason, "offer": offer.kind.rawValue])
+            Analytics.log("purchase", properties)
             // As with the yearly trial, notification permission is asked only once the free days have started.
             if let days = offer.freeDays, days >= 3 { await TrialReminder.schedule(afterDays: days) }
         }
@@ -95,9 +118,25 @@ struct PaywallView: View {
 
     private var analyticsReason: String { context == .onboarding ? "onboarding" : (store.paywallReason ?? "unknown") }
 
+    /// What a purchase event carries: the plan, why the paywall opened, its test arm, whether a free trial starts, and
+    /// the price in the storefront's currency, as StoreKit gave it.
+    private func purchaseProperties(_ product: Product, trial: Bool) -> [String: String] {
+        ["product": product.id, "reason": analyticsReason, "variant": variant.id, "trial": trial ? "1" : "0",
+         "price": "\(product.price)", "currency": product.priceFormatStyle.currencyCode]
+    }
+
+    /// The paywall is on screen: its arm is fixed, and it is counted once.
+    private func didAppear() {
+        appeared = true
+        guard !viewLogged else { return }
+        viewLogged = true
+        variant = RemoteConfig.shared.paywallVariant
+        Analytics.log("paywall_view", ["reason": analyticsReason, "variant": variant.id])
+    }
+
     var body: some View {
-        let pitch = self.pitch
         let plan = PaywallPlan.make(store: store, answers: answers, horizon: planHorizon, reason: context == .standard ? store.paywallReason : nil)
+        let pitch = self.pitch(plan)
         let hero = self.hero(pitch, plan: plan)
         let layout = self.fold(pitch, plan: plan, hero: hero)
         ZStack(alignment: .topTrailing) {
@@ -117,12 +156,14 @@ struct PaywallView: View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 bottomBar.onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height } action: { height in barHeight = height }
             }
-            // Glass only where nothing under its corner redraws every frame (the runway and the tools' scenes do, and the
-            // plan's rail drifts past the plain pocket it keeps round the button, unless Reduce Motion holds them still).
-            closeButton(glass: layout.preview == 0 || reduceMotion)
+            closeButton
             if exitOfferShown, let offer = exitOffer {
                 ExitOfferCard(offer: offer, purchasing: commerce.purchasing != nil,
-                              accept: { acceptExitOffer(offer) }, decline: { close() })
+                              accept: { acceptExitOffer(offer) },
+                              decline: {
+                                  Analytics.log("exit_offer_declined", ["kind": offer.kind.rawValue, "reason": analyticsReason])
+                                  close()
+                              })
                     .transition(.opacity)
                     .zIndex(2)
             }
@@ -141,7 +182,7 @@ struct PaywallView: View {
             await prepareExitOffer()
         }
         .task { remindersBlocked = await TrialReminder.isBlocked() }
-        .onAppear { appeared = true }
+        .onAppear(perform: didAppear)
         .onChange(of: scenePhase) { _, phase in
             // The person may have switched notifications on or off in Settings meanwhile.
             guard phase == .active else { return }
@@ -220,7 +261,7 @@ struct PaywallView: View {
     private func content(_ pitch: Pitch, plan: PaywallPlan, hero: PaywallHero, layout: Fold) -> some View {
         let steps = trackSteps(plan)
         let trial = showsTrial
-        let outcomes = shownOutcomes(plan, hero: hero)
+        let outcomes = shownOutcomes(plan, hero: hero, pitch: pitch)
         return VStack(spacing: 0) {
             VStack(spacing: 0) {
                 if layout.preview > 0 {
@@ -271,19 +312,19 @@ struct PaywallView: View {
         }
     }
 
-    /// The plan's outcomes, three at most, less the first song when the plan's hero is up (the rail shows the songs,
-    /// and the track names the first one's day), so the same promise isn't made twice.
-    private func shownOutcomes(_ plan: PaywallPlan, hero: PaywallHero) -> [PaywallPlan.Outcome] {
-        let outcomes = hero.isPlan ? plan.outcomes.filter { $0.id != "song" } : plan.outcomes
+    /// The plan's outcomes, three at most, less the first song when the headline or the plan's hero already promises
+    /// it (the rail shows the songs, and the track names the first one's day), so the same promise isn't made twice.
+    private func shownOutcomes(_ plan: PaywallPlan, hero: PaywallHero, pitch: Pitch) -> [PaywallPlan.Outcome] {
+        let outcomes = hero.isPlan || pitch.promisesSong ? plan.outcomes.filter { $0.id != "song" } : plan.outcomes
         return Array(outcomes.prefix(3))
     }
 
-    /// The sheet's close button, the app's one `CloseButton`: Liquid Glass (iOS 26) when nothing under its corner
-    /// redraws every frame, else the graphite disc. Its 34 pt disc sits on the content's 20 pt edge; the target is 44.
-    private func closeButton(glass: Bool) -> some View {
-        CloseButton(label: "Close", glass: glass) { decline() }
+    /// The sheet's close button: a solid 44 pt disc, so it reads over any hero (the runway and the tools' scenes move
+    /// under its corner), in a 44 pt target.
+    private var closeButton: some View {
+        IconButton(symbol: "xmark", size: .regular, label: "Close") { decline() }
             .accessibilityIdentifier("paywall.close")
-            .padding(.trailing, 15).padding(.top, 8)
+            .padding(.trailing, 10).padding(.top, 4)
     }
 
     // MARK: Pitch
@@ -295,6 +336,8 @@ struct PaywallView: View {
         var lesson: LockedLesson? = nil
         /// The instrument to stand in the hero instead of the person's own.
         var instrumentAsset: String? = nil
+        /// The headline promises the first song this week (the outcomes then leave it out).
+        var promisesSong = false
     }
 
     private struct LockedLesson {
@@ -304,10 +347,15 @@ struct PaywallView: View {
         let lesson: Lesson
     }
 
-    private var pitch: Pitch {
-        // Onboarding comes straight from "Start my plan"; the outcomes below tell what the plan brings.
+    private func pitch(_ plan: PaywallPlan) -> Pitch {
         let generic = Pitch(headline: Text("Unlock your full plan"))
-        guard context == .standard, let reason = store.paywallReason else { return generic }
+        // Onboarding comes straight from the plan (and, for a beginner, their first chord): it sells the first song
+        // when the plan reaches one this week, unless the test arm keeps the plan's headline.
+        if context == .onboarding {
+            guard variant.headline != "plan", let day = plan.songDay, day <= 7 else { return generic }
+            return Pitch(headline: Text("Play your first song this week"), promisesSong: true)
+        }
+        guard let reason = store.paywallReason else { return generic }
         switch reason {
         case "lesson":
             guard let locked = lockedLesson else { return generic }
@@ -462,8 +510,8 @@ struct PaywallView: View {
 
     // MARK: Header
 
-    /// The headline, then (`proof`: onboarding and the plan's hero) the catalogue Pro opens, counted, or a locked
-    /// lesson's card.
+    /// The headline, then (`proof`: onboarding and the plan's hero) the catalogue Pro opens, counted, and the rating
+    /// once it is worth showing; or a locked lesson's card.
     private func header(_ pitch: Pitch, proof: Bool) -> some View {
         VStack(spacing: 0) {
             pitch.headline.font(Typeface.display(26)).tracking(-0.6)
@@ -472,17 +520,23 @@ struct PaywallView: View {
                 .lineLimit(typeSize.isAccessibilitySize ? nil : 3).minimumScaleFactor(0.8)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
-            if proof && pitch.lesson == nil { proofLine.padding(.top, 4) }
+            if proof && pitch.lesson == nil {
+                proofLine.padding(.top, 4)
+                if let rating = RemoteConfig.shared.ratingLine { ratingLine(rating).padding(.top, 2) }
+            }
             if let lesson = pitch.lesson { lessonCard(lesson).padding(.top, 14) }
         }
         .frame(maxWidth: .infinity)
     }
 
-    /// "557 lessons · 153 songs · 60 instruments": what Pro opens, counted from the curriculum and the catalog as they
-    /// ship (the Free and Pro table counts the same lessons), never a number written down here.
+    /// "638 lessons · 120+ songs · 60 instruments": what Pro opens, counted from the curriculum and the catalog as they
+    /// ship (the Free and Pro table counts the same lessons), never a number written down here. Songs count by title,
+    /// so a song taught in two lessons (its chords, its melody) counts once, and round down to the ten as the listing
+    /// says them.
     private var proofLine: some View {
         let lessons = store.curriculum.courses.flatMap(\.lessons)
-        let songs = lessons.filter { $0.kind == .song }.count
+        let titles = Set(lessons.filter { $0.kind == .song }.map(\.title.defaultValue))
+        let songs = Self.roundedCount(titles.count)
         return Text("\(lessons.count) lessons · \(songs) songs · \(store.catalog.instruments.count) instruments")
             .font(.footnote.weight(.semibold)).monospacedDigit()
             .foregroundStyle(Palette.inkSoft)
@@ -491,6 +545,23 @@ struct PaywallView: View {
             .lineLimit(typeSize.isAccessibilitySize ? nil : 2).minimumScaleFactor(0.9)
             .fixedSize(horizontal: false, vertical: true)
             .accessibilityIdentifier("paywall.proof")
+    }
+
+    /// A count as the store listing says it: exact under 20, else down to the ten with a plus ("120+" for 124).
+    static func roundedCount(_ count: Int) -> String {
+        guard count >= 20 else { return count.formatted() }
+        let tens = count / 10 * 10
+        return tens == count ? count.formatted() : "\(tens.formatted())+"
+    }
+
+    /// "4.8★ · 312 ratings": the App Store rating, switched on remotely and only past the bar (`RemoteConfig.RatingLine`).
+    private func ratingLine(_ rating: RemoteConfig.RatingLine) -> some View {
+        Text("\(rating.stars, format: .number.precision(.fractionLength(1)))★ · \(rating.count) ratings")
+            .font(.footnote.weight(.semibold)).monospacedDigit()
+            .foregroundStyle(Palette.amber)
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
+            .accessibilityIdentifier("paywall.rating")
     }
 
     /// The locked lesson: its unit, title and length, behind a gold lock.
@@ -534,7 +605,9 @@ struct PaywallView: View {
                 .shadow(color: .black.opacity(0.55), radius: 8, y: 5)
                 .accessibilityHidden(true)
         } else {
-            IconOrb(symbol: course.symbol, tint: accent, size: 44)
+            Image(systemName: course.symbol).font(.system(size: 22, weight: .semibold)).foregroundStyle(accent)
+                .frame(width: 40, height: 58)
+                .accessibilityHidden(true)
         }
     }
 
@@ -543,14 +616,17 @@ struct PaywallView: View {
     /// The outcomes' icons, the size of the plan track's nodes.
     private static let benefitArt: CGFloat = 24
 
-    /// Three results for the person's goal; they slide in one after another. Every paywall draws their icons one way:
-    /// an SF Symbol in the outcome's colour on a tinted disc (`IconOrb`, the app's feature icon), the same language as
-    /// the plan track's nodes under them, never a photograph beside a glyph tile.
+    /// Three results for the person's goal; they slide in one after another. Every outcome wears one tint: a plain
+    /// SF Symbol in mint, the width of the plan track's nodes, never a disc or a colour of its own.
     private func outcomeList(_ outcomes: [PaywallPlan.Outcome]) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             ForEach(Array(outcomes.enumerated()), id: \.element.id) { index, outcome in
                 HStack(spacing: 10) {
-                    IconOrb(symbol: outcome.symbol, tint: outcome.tint, size: Self.benefitArt)
+                    Image(systemName: outcome.symbol)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(Palette.mint)
+                        .frame(width: Self.benefitArt, height: Self.benefitArt)
+                        .accessibilityHidden(true)
                     // One line in English; longer translations wrap rather than truncate, and at the accessibility
                     // sizes it takes the lines it needs.
                     outcome.text.font(.subheadline.weight(.medium)).foregroundStyle(Palette.ink)
@@ -620,15 +696,19 @@ struct PaywallView: View {
         let pro: Cell
     }
 
-    /// Free against Pro as the app enforces it: instruments and lessons by `AccessPolicy` (free instruments, 5 of 60:
-    /// guitar, bass, ukulele, violin, cello; free lessons), the tools by their own locks (the metronome's basics and
-    /// Pitch Sniper are free; interval and chord ear drills, the Pro tools, strobe, temperaments and custom tunings are Pro).
+    /// Free against Pro as the app enforces it: instruments and lessons by `AccessPolicy` (the instruments a free player
+    /// tunes, or, once every standard tuning is free, the other tunings; free lessons), the tools by their own locks (the
+    /// metronome's basics and Pitch Sniper are free; interval and chord ear drills, the Pro tools, strobe,
+    /// temperaments and custom tunings are Pro).
     private var proRows: [ProRow] {
         let instruments = store.catalog.instruments
         let lessons = store.curriculum.courses.flatMap(\.lessons)
+        let tuning = standardTuningsFree
+            ? ProRow(id: "tunings", label: Text("Alternate tunings for every instrument"), free: .excluded, pro: .included)
+            : ProRow(id: "instruments", label: Text("Instruments to tune"),
+                     free: .count(instruments.filter { AccessPolicy.canTune(instrument: $0, pro: false) }.count), pro: .count(instruments.count))
         return [
-            ProRow(id: "instruments", label: Text("Instruments to tune"),
-                   free: .count(instruments.filter(\.isFree).count), pro: .count(instruments.count)),
+            tuning,
             ProRow(id: "lessons", label: Text("Lessons in \(store.curriculum.courses.count) courses"),
                    free: .count(lessons.filter(\.free).count), pro: .count(lessons.count)),
             ProRow(id: "free", label: Text("Metronome and Bullseye"), free: .included, pro: .included),
@@ -737,13 +817,24 @@ struct PaywallView: View {
 
     // MARK: Plans
 
-    /// The plans and the trust line under them.
+    /// The plans, the trust line under them and, for a plan the family can share, that it can.
     private var offer: some View {
         VStack(spacing: 0) {
             // Room above the first row for its tag.
             plans.padding(.top, 14).animation(Motion.settle, value: commerce.products.isEmpty)
             trustRow.padding(.top, 10)
+            if selected?.isFamilyShareable == true { familyLine.padding(.top, 4) }
         }
+    }
+
+    /// Family Sharing, when App Store Connect turns it on for the chosen plan (StoreKit says so; nothing is assumed).
+    private var familyLine: some View {
+        HStack(spacing: 6) {
+            trustIcon("person.2.fill")
+            Text("Share with up to 5 family members")
+        }
+        .modifier(TrustLine())
+        .accessibilityIdentifier("paywall.family")
     }
 
     @ViewBuilder private var plans: some View {
@@ -785,8 +876,9 @@ struct PaywallView: View {
                 if let monthly = commerce.monthly {
                     planRow(monthly, title: "Monthly", detail: String(localized: "Cancel anytime"), saving: nil, arrangement: arrangement)
                 }
-                // A third option, quieter than the two subscriptions, so it doesn't compete with the year.
-                if let lifetime = commerce.lifetime {
+                // A third option, quieter than the two subscriptions, so it doesn't compete with the year. Onboarding's
+                // paywall leaves it out: a first-time buyer chooses between the trial year and the month.
+                if let lifetime = commerce.lifetime, offered.contains(where: { $0.id == lifetime.id }) {
                     planRow(lifetime, title: "Lifetime", detail: String(localized: "Pay once"), saving: nil, quiet: true,
                             arrangement: arrangement)
                 }
@@ -812,16 +904,17 @@ struct PaywallView: View {
             .accessibilityHidden(true)
     }
 
-    /// The stage's spinner, holding the three plans' place while StoreKit answers, so nothing jumps when they arrive.
+    /// The stage's spinner, holding the plans' place while StoreKit answers, so nothing jumps when they arrive.
     private var planSkeleton: some View {
         StageSpinner("Plans are loading.")
             .frame(maxWidth: .infinity)
-            .frame(height: Self.plansHeight)
+            .frame(height: showsLifetime ? Self.plansHeight : Self.subscriptionPlansHeight)
     }
 
     /// The three plan cards at the default text size (the yearly one with its tag's room, the quieter lifetime one)
-    /// and the gaps between them.
+    /// and the gaps between them; without the lifetime card, the two subscriptions.
     private static let plansHeight: CGFloat = 60 + 56 + 48 + 2 * 8
+    private static let subscriptionPlansHeight: CGFloat = 60 + 56 + 8
 
     /// The yearly price as a week of it ("$0.67 a week"): the product's own price over 52, in the storefront's currency.
     private func perWeek(_ product: Product) -> String {
@@ -927,7 +1020,7 @@ struct PaywallView: View {
 
     /// As the trial's line: one line where it fits, else the plan's promise under the rest.
     private var plainTrust: some View {
-        let promise: LocalizedStringKey = selected?.id == TimbreProduct.lifetime ? "Pay once, keep forever" : "Cancel anytime"
+        let promise: LocalizedStringKey = selected.map(isLifetime) == true ? "Pay once, keep forever" : "Cancel anytime"
         return ViewThatFits(in: .horizontal) {
             HStack(spacing: 6) {
                 trustIcon("lock.shield.fill")
@@ -963,7 +1056,7 @@ struct PaywallView: View {
     // MARK: Track
 
     /// The selected plan has a free trial: only then does the track promise a reminder and a charge.
-    private var showsTrial: Bool { selected?.id == TimbreProduct.annual && commerce.trialLabel != nil }
+    private var showsTrial: Bool { selected.map(isAnnual) == true && commerce.trialLabel != nil }
 
     /// The yearly plan has a free trial for this person.
     private var trialOffered: Bool { commerce.annual != nil && commerce.trialLabel != nil }
@@ -972,11 +1065,11 @@ struct PaywallView: View {
         enum Kind { case today, milestone, song, reminder, billing }
         let id: String
         let kind: Kind
+        /// The day it falls on (Today is day 1): where it sits along the track.
+        let day: Int
         let title: Text
         /// Under the node. Today's is the first lesson (or the tool that opened the paywall), under "Everything unlocked".
         let detail: Text?
-        /// What sizes the column: the detail as shown (Today: "Everything unlocked").
-        let plain: String
         /// The node's symbol, for a tool's step; else the kind's.
         var symbol: String? = nil
     }
@@ -988,8 +1081,7 @@ struct PaywallView: View {
     /// notifications can reach the person) and the first charge, at the product's own trial length and price.
     /// Without a trial the plan's milestones fill the track; without those there is no track.
     private func trackSteps(_ plan: PaywallPlan) -> [TrackStep] {
-        let today = TrackStep(id: "today", kind: .today, title: Text("Today"), detail: plan.today.map { Text(verbatim: $0) },
-                              plain: String(localized: "Everything unlocked"))
+        let today = TrackStep(id: "today", kind: .today, day: 1, title: Text("Today"), detail: plan.today.map { Text(verbatim: $0) })
         guard showsTrial, let product = selected else {
             guard !plan.milestones.isEmpty else { return [] }
             return [today] + plan.milestones.map { milestoneStep($0) }
@@ -1002,11 +1094,11 @@ struct PaywallView: View {
         let chosen = ahead.first(where: { $0.kind == .focus }) ?? ahead.first(where: { $0.kind == .song }) ?? ahead.last
         if let milestone = chosen { steps.append(milestoneStep(milestone)) }
         if !remindersBlocked {
-            let remind = String(localized: "We remind you")
-            steps.append(TrackStep(id: "reminder", kind: .reminder, title: Text("Day \(reminder)"), detail: Text(verbatim: remind), plain: remind))
+            steps.append(TrackStep(id: "reminder", kind: .reminder, day: reminder, title: Text("Day \(reminder)"),
+                                   detail: Text(verbatim: String(localized: "We remind you"))))
         }
         let price = String(localized: "\(product.displayPrice)/year")
-        steps.append(TrackStep(id: "billing", kind: .billing, title: Text("Day \(days)"), detail: Text(verbatim: price), plain: price))
+        steps.append(TrackStep(id: "billing", kind: .billing, day: days, title: Text("Day \(days)"), detail: Text(verbatim: price)))
         return steps
     }
 
@@ -1018,86 +1110,51 @@ struct PaywallView: View {
         switch milestone.kind {
         case .song:
             let play = String(localized: "Play “\(milestone.title)”")
-            return TrackStep(id: id, kind: .song, title: day, detail: Text(verbatim: play), plain: play)
+            return TrackStep(id: id, kind: .song, day: milestone.day, title: day, detail: Text(verbatim: play))
         case .unit:
-            return TrackStep(id: id, kind: .milestone, title: day, detail: Text(verbatim: milestone.title), plain: milestone.title)
+            return TrackStep(id: id, kind: .milestone, day: milestone.day, title: day, detail: Text(verbatim: milestone.title))
         case .focus:
-            return TrackStep(id: id, kind: .milestone, title: day, detail: Text(verbatim: milestone.title), plain: milestone.title,
+            return TrackStep(id: id, kind: .milestone, day: milestone.day, title: day, detail: Text(verbatim: milestone.title),
                              symbol: milestone.symbol)
         }
     }
 
-    /// The narrowest each column of the track may get, at the caption size its text uses: a milestone, a song
-    /// and the reminder fit two lines without a word split across them; Today and the price keep their one line
-    /// with little shrinking. `TrackColumns` widens a column to its minimum from those with room to spare.
-    private func trackMinimums(_ steps: [TrackStep]) -> [CGFloat] {
-        let traits = UITraitCollection(preferredContentSizeCategory: Self.sizeCategory(typeSize))
-        let font = UIFont.preferredFont(forTextStyle: .caption1, compatibleWith: traits)
-        return steps.map { step in
-            switch step.kind {
-            case .today, .billing: return Self.textWidth(step.plain, font: font) * 0.8
-            case .milestone, .song, .reminder: return Self.twoLineWidth(step.plain, font: font) + 2
-            }
+    /// Where each step sits along the track, 0 (Today) to 1 (the last day), in proportion to its day, so the gap
+    /// between nodes is the time between them. Neighbours keep at least a sixth of the track apart (day 1 and day 2
+    /// would otherwise touch); the track then scales back to fit.
+    private static func trackPositions(_ steps: [TrackStep]) -> [CGFloat] {
+        guard steps.count > 1, let first = steps.first?.day, let last = steps.last?.day, last > first else {
+            return steps.indices.map { CGFloat($0) / CGFloat(max(1, steps.count - 1)) }
         }
+        let span = CGFloat(last - first)
+        var positions = steps.map { CGFloat($0.day - first) / span }
+        let gap: CGFloat = 1 / 6
+        for index in positions.indices.dropFirst() { positions[index] = max(positions[index], positions[index - 1] + gap) }
+        if let end = positions.last, end > 1 { positions = positions.map { $0 / end } }
+        return positions
     }
 
-    private static func textWidth(_ text: String, font: UIFont) -> CGFloat {
-        ceil((text as NSString).size(withAttributes: [.font: font]).width)
-    }
-
-    /// The narrowest width that sets `text` on two lines without splitting a word: its best break between words.
-    private static func twoLineWidth(_ text: String, font: UIFont) -> CGFloat {
-        let words = text.split(whereSeparator: \.isWhitespace).map(String.init)
-        guard words.count > 1 else { return textWidth(text, font: font) }
-        var best = CGFloat.greatestFiniteMagnitude
-        for split in 1..<words.count {
-            let first = words[..<split].joined(separator: " ")
-            let rest = words[split...].joined(separator: " ")
-            best = min(best, max(textWidth(first, font: font), textWidth(rest, font: font)))
-        }
-        return best
-    }
-
-    /// The UIKit size category for the environment's text size, to measure as SwiftUI will draw.
-    private static func sizeCategory(_ size: DynamicTypeSize) -> UIContentSizeCategory {
-        switch size {
-        case .xSmall: return .extraSmall
-        case .small: return .small
-        case .medium: return .medium
-        case .large: return .large
-        case .xLarge: return .extraLarge
-        case .xxLarge: return .extraExtraLarge
-        case .xxxLarge: return .extraExtraExtraLarge
-        case .accessibility1: return .accessibilityMedium
-        case .accessibility2: return .accessibilityLarge
-        case .accessibility3: return .accessibilityExtraLarge
-        case .accessibility4: return .accessibilityExtraExtraLarge
-        case .accessibility5: return .accessibilityExtraExtraExtraLarge
-        @unknown default: return .large
-        }
-    }
-
-    /// Days on top, nodes on a line, what happens under each. Today's column is wider: it holds the first lesson.
-    /// Without notifications the track says how to cancel instead of promising a reminder.
+    /// Days on top, nodes on a line, what happens under each, each step at its day's place along the line (the words
+    /// centred under their node, the first and last held to the ends). Without notifications the track says how to
+    /// cancel instead of promising a reminder.
     private func planTrack(_ steps: [TrackStep]) -> some View {
-        let lead: CGFloat = steps.count >= 4 ? 0.4 : (steps.count == 3 ? 0.42 : 0.5)
+        let positions = Self.trackPositions(steps)
         let last = steps.count - 1
         let days = selected.map { trialDays($0) } ?? 14
         let cancelNote = showsTrial && remindersBlocked
-        let minimums = typeSize.isAccessibilitySize ? [] : trackMinimums(steps)
         return VStack(spacing: 5) {
             if typeSize.isAccessibilitySize {
                 trackRows(steps)
             } else {
-                TrackColumns(lead: lead, minimums: minimums) {
+                TrackSpread(positions: positions, words: true) {
                     ForEach(Array(steps.enumerated()), id: \.element.id) { index, step in
                         step.title.font(Typeface.label(12)).foregroundStyle(trackTint(step.kind, title: true))
                             .lineLimit(1).minimumScaleFactor(0.8)
                             .frame(maxWidth: .infinity, alignment: Self.edge(index, last))
                     }
                 }
-                trackLine(steps, lead: lead, minimums: minimums)
-                TrackColumns(lead: lead, minimums: minimums) {
+                trackLine(steps, positions: positions)
+                TrackSpread(positions: positions, words: true) {
                     ForEach(Array(steps.enumerated()), id: \.element.id) { index, step in
                         trackDetail(step)
                             .multilineTextAlignment(Self.textEdge(index, last))
@@ -1175,17 +1232,16 @@ struct PaywallView: View {
         }
     }
 
-    /// The nodes on a line from Today to the last step; the line draws itself in and each node pops as it passes.
-    private func trackLine(_ steps: [TrackStep], lead: CGFloat, minimums: [CGFloat]) -> some View {
+    /// The nodes on a line from Today to the last step, each at its day's place; the line draws itself in and each
+    /// node pops as it passes.
+    private func trackLine(_ steps: [TrackStep], positions: [CGFloat]) -> some View {
         let drawn = trackDrawn || reduceMotion
-        let last = steps.count - 1
-        return TrackColumns(lead: lead, minimums: minimums) {
+        return TrackSpread(positions: positions, words: false) {
             ForEach(Array(steps.enumerated()), id: \.element.id) { index, step in
                 trackNode(step.kind, symbol: step.symbol)
                     .scaleEffect(drawn ? 1 : 0.6)
                     .opacity(drawn ? 1 : 0.3)
                     .animation(reduceMotion ? nil : Motion.pluck.delay(0.25 + Double(index) * 0.22), value: trackDrawn)
-                    .frame(maxWidth: .infinity, alignment: Self.edge(index, last))
             }
         }
         .background {
@@ -1274,21 +1330,20 @@ struct PaywallView: View {
 
     private var ctaTitle: String {
         guard let selected else { return String(localized: "Continue") }
-        if selected.id == TimbreProduct.annual, let trial = commerce.trialLabel { return String(localized: "Start \(trial)") }
-        if selected.id == TimbreProduct.lifetime { return String(localized: "Unlock for \(selected.displayPrice)") }
+        if isAnnual(selected), let trial = commerce.trialLabel { return String(localized: "Start \(trial)") }
+        if isLifetime(selected) { return String(localized: "Unlock for \(selected.displayPrice)") }
         return String(localized: "Subscribe for \(selected.displayPrice)")
     }
 
     /// What happens after the purchase, in one line next to the button.
     private var terms: String? {
         guard let selected else { return nil }
-        switch selected.id {
-        case TimbreProduct.annual where commerce.trialLabel != nil:
+        if isAnnual(selected) {
+            guard commerce.trialLabel != nil else { return String(localized: "\(selected.displayPrice) a year, renews automatically.") }
             return String(localized: "Free for \(trialDays(selected)) days, then \(selected.displayPrice) a year.")
-        case TimbreProduct.annual: return String(localized: "\(selected.displayPrice) a year, renews automatically.")
-        case TimbreProduct.monthly: return String(localized: "\(selected.displayPrice) a month, renews automatically.")
-        default: return String(localized: "One payment. Yours to keep, no subscription.")
         }
+        if selected.id == commerce.monthly?.id { return String(localized: "\(selected.displayPrice) a month, renews automatically.") }
+        return String(localized: "One payment. Yours to keep, no subscription.")
     }
 
     private var cta: some View {
@@ -1352,12 +1407,13 @@ struct PaywallView: View {
 
     private func purchase() {
         guard let selected else { return }
-        let wasTrial = selected.id == TimbreProduct.annual && commerce.trialLabel != nil
+        let wasTrial = isAnnual(selected) && commerce.trialLabel != nil
         let days = trialDays(selected)
-        let reason = context == .onboarding ? "onboarding" : (store.paywallReason ?? "unknown")
+        let properties = purchaseProperties(selected, trial: wasTrial)
+        Analytics.log("purchase_start", properties)
         Task {
             if await commerce.purchase(selected) {
-                Analytics.log("purchase", ["product": selected.id, "reason": reason])
+                Analytics.log("purchase", properties)
                 // Notification permission is asked here, after the trial has started, never before.
                 if wasTrial { await TrialReminder.schedule(afterDays: days) }
             }
@@ -1381,9 +1437,9 @@ struct PaywallView: View {
                 .disabled(commerce.loading)
                 .accessibilityLabel(Text("Restore purchases"))
             separator
-            Link(destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!) { linkLabel("Terms") }
+            Link(destination: AppLinks.terms) { linkLabel("Terms") }
             separator
-            Link(destination: URL(string: "https://azerish25-ux.github.io/tuner/privacy.html")!) { linkLabel("Privacy") }
+            Link(destination: AppLinks.privacy) { linkLabel("Privacy") }
         }
     }
 
@@ -1410,10 +1466,25 @@ struct PaywallView: View {
         .accessibilityIdentifier("paywall.redeem")
     }
 
+    /// The renewal terms, and what stays free as `AccessPolicy` has it today.
     private var finePrint: some View {
-        Text("Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The tuner for guitar, bass, ukulele, violin and cello stays free.")
-            .font(.caption2).foregroundStyle(Palette.inkFaint).multilineTextAlignment(.center)
-            .fixedSize(horizontal: false, vertical: true)
+        Group {
+            if standardTuningsFree {
+                Text("Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. Every instrument’s standard tuning stays free.")
+            } else {
+                Text("Subscriptions renew automatically until cancelled in Settings › Apple Account › Subscriptions. Cancel at least a day before renewal to avoid the next charge. The tuner for guitar, bass, ukulele, violin and cello stays free.")
+            }
+        }
+        .font(.caption2).foregroundStyle(Palette.inkFaint).multilineTextAlignment(.center)
+        .fixedSize(horizontal: false, vertical: true)
+    }
+
+    /// Every instrument's standard tuning is free on the free plan (`AccessPolicy`).
+    private var standardTuningsFree: Bool {
+        store.catalog.instruments.allSatisfy { instrument in
+            guard let tuning = store.catalog.tuning(id: instrument.defaultTuningId) else { return true }
+            return AccessPolicy.canUse(tuning: tuning, of: instrument, pro: false)
+        }
     }
 }
 
@@ -1471,8 +1542,8 @@ private struct TrustLine: ViewModifier {
     }
 }
 
-/// A plan card's text beside its check: the name, what it comes to ("$0.67 a week"), the price and, for the year,
-/// the saving and the year at the monthly price struck through. `PaywallView.plans` shows the cards in the first
+/// A plan card's text beside its check: the name, what it comes to (a week of the year's price), the price and, for the
+/// year, the saving and the year at the monthly price struck through beside the price. `PaywallView.plans` shows the cards in the first
 /// arrangement that fits them all: the saving beside the name, else under the price, else all stacked. The name is
 /// never broken across lines (it once hyphenated "Year-ly" beside the saving). Quiet (Lifetime): smaller type in
 /// softer ink until chosen, a third option that doesn't compete with the two subscriptions.
@@ -1524,11 +1595,7 @@ private struct PlanFace {
                 name(fixed: false)
                 if let saving { savingChip(saving) }
                 detailText(wraps: true)
-                VStack(alignment: .leading, spacing: 0) {
-                    if let anchor { anchorPrice(anchor) }
-                    priceText
-                }
-                .padding(.top, 2)
+                pricePair.padding(.top, 2)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -1562,13 +1629,20 @@ private struct PlanFace {
 
     private func prices(withSaving: Bool) -> some View {
         VStack(alignment: .trailing, spacing: 0) {
-            if let anchor { anchorPrice(anchor) }
-            priceText
+            pricePair
             if withSaving, let saving { savingChip(saving).padding(.top, 3) }
         }
     }
 
-    /// "$83.88", struck through, over the yearly price; VoiceOver says what it is.
+    /// The price, and for the year the year at the monthly price struck through beside it, on one baseline.
+    private var pricePair: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 6) {
+            if let anchor { anchorPrice(anchor) }
+            priceText
+        }
+    }
+
+    /// The year at the monthly price, struck through beside the yearly price; VoiceOver says what it is.
     private func anchorPrice(_ anchor: String) -> some View {
         Text(verbatim: anchor).strikethrough(true, color: Palette.inkFaint)
             .font(Typeface.number(12)).foregroundStyle(Palette.inkFaint)
@@ -1582,81 +1656,66 @@ private struct PlanFace {
     }
 }
 
-/// The plan track's columns: the first takes `lead` of the width (Today, with the first lesson under it), the
-/// others share the rest equally. The titles, the nodes and the details each use one, so they line up. A column
-/// narrower than its minimum (a song name on two lines, the price on one) takes the room it needs from the columns
-/// with some to spare, in proportion to what they spare; none claims more than two fifths of the track.
-private struct TrackColumns: Layout {
-    var lead: CGFloat
-    /// Each column's narrowest, in points; empty for the plain shares.
-    var minimums: [CGFloat] = []
-    var spacing: CGFloat = 8
+/// The plan track's rows laid out along the track, each step at its day's place (`positions`, 0 to 1 between the
+/// centres of the end nodes, `inset` in from the edges). Nodes sit exactly there. Words are centred under their
+/// node, the first and last held to the ends, each at most two fifths of the track wide (they wrap first), and pushed
+/// apart just enough never to touch; when they can't all fit, they share the track in proportion and shrink a little.
+private struct TrackSpread: Layout {
+    var positions: [CGFloat]
+    /// Words (true) or nodes (false).
+    var words: Bool
+    var inset: CGFloat = 12
+    var spacing: CGFloat = 6
 
-    private func widths(_ total: CGFloat, count: Int) -> [CGFloat] {
-        guard count > 1 else { return [total] }
-        let room = max(0, total - spacing * CGFloat(count - 1))
-        let first = room * lead
-        var columns = [first] + Array(repeating: (room - first) / CGFloat(count - 1), count: count - 1)
-        guard minimums.count == count else { return columns }
-        let floors = minimums.map { min($0, room * 0.4) }
-        let short = zip(columns, floors).reduce(CGFloat(0)) { sum, pair in sum + max(0, pair.1 - pair.0) }
-        guard short > 0 else { return columns }
-        let spare = zip(columns, floors).map { pair in max(0, pair.0 - pair.1) }
-        let spareTotal = spare.reduce(0, +)
-        let share = spareTotal > 0 ? min(1, short / spareTotal) : 0
-        for index in columns.indices {
-            columns[index] = max(floors[index], columns[index] - spare[index] * share)
+    private struct Slot {
+        var x: CGFloat
+        var width: CGFloat
+    }
+
+    private func anchor(_ index: Int, width: CGFloat) -> CGFloat {
+        let position = index < positions.count ? positions[index] : 0
+        return inset + position * max(0, width - 2 * inset)
+    }
+
+    private func slots(_ subviews: Subviews, width: CGFloat) -> [Slot] {
+        let count = subviews.count
+        guard count > 0 else { return [] }
+        guard words else {
+            return subviews.indices.map { index in
+                let size = subviews[index].sizeThatFits(.unspecified).width
+                return Slot(x: anchor(index, width: width) - size / 2, width: size)
+            }
         }
-        // Not enough to spare: everything gives way alike, and the text shrinks a little.
-        let sum = columns.reduce(0, +)
-        return sum > room ? columns.map { $0 * room / sum } : columns
+        var widths = subviews.map { min(width * 0.4, $0.sizeThatFits(.unspecified).width) }
+        let room = max(0, width - spacing * CGFloat(count - 1))
+        let total = widths.reduce(0, +)
+        if total > room, total > 0 { widths = widths.map { $0 * room / total } }
+        var xs: [CGFloat] = widths.indices.map { index in
+            if index == 0 { return 0 }
+            if index == count - 1 { return width - widths[index] }
+            return anchor(index, width: width) - widths[index] / 2
+        }
+        // Apart from the left, then held inside the right end, then apart from the right.
+        for index in xs.indices.dropFirst() { xs[index] = max(xs[index], xs[index - 1] + widths[index - 1] + spacing) }
+        xs[count - 1] = min(xs[count - 1], width - widths[count - 1])
+        for index in xs.indices.dropLast().reversed() { xs[index] = min(xs[index], xs[index + 1] - spacing - widths[index]) }
+        xs[0] = max(0, xs[0])
+        return xs.indices.map { Slot(x: xs[$0], width: widths[$0]) }
     }
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         let width = proposal.replacingUnspecifiedDimensions().width
-        let columns = widths(width, count: subviews.count)
         var height: CGFloat = 0
-        for (subview, column) in zip(subviews, columns) {
-            height = max(height, subview.sizeThatFits(ProposedViewSize(width: column, height: nil)).height)
+        for (subview, slot) in zip(subviews, slots(subviews, width: width)) {
+            height = max(height, subview.sizeThatFits(ProposedViewSize(width: slot.width, height: nil)).height)
         }
         return CGSize(width: width, height: height)
     }
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let columns = widths(bounds.width, count: subviews.count)
-        var x = bounds.minX
-        for (subview, column) in zip(subviews, columns) {
-            subview.place(at: CGPoint(x: x, y: bounds.minY), anchor: .topLeading, proposal: ProposedViewSize(width: column, height: nil))
-            x += column + spacing
+        for (subview, slot) in zip(subviews, slots(subviews, width: bounds.width)) {
+            subview.place(at: CGPoint(x: bounds.minX + slot.x, y: bounds.minY), anchor: .topLeading,
+                          proposal: ProposedViewSize(width: slot.width, height: nil))
         }
-    }
-}
-
-/// Local reminder two days before a free trial converts. The paywall promises it only when it can arrive.
-enum TrialReminder {
-    /// True when notifications are turned off for Timbre, so a reminder would never be shown.
-    static func isBlocked() async -> Bool {
-        let settings = await UNUserNotificationCenter.current().notificationSettings()
-        return settings.authorizationStatus == .denied
-    }
-
-    /// Called right after a successful trial purchase. A first-time user is asked for permission here.
-    static func schedule(afterDays days: Int) async {
-        let center = UNUserNotificationCenter.current()
-        let status = await center.notificationSettings().authorizationStatus
-        switch status {
-        case .denied:
-            return
-        case .notDetermined:
-            guard (try? await center.requestAuthorization(options: [.alert, .sound])) == true else { return }
-        default:
-            break
-        }
-        let content = UNMutableNotificationContent()
-        content.title = String(localized: "Your Timbre Pro trial ends soon")
-        content.body = String(localized: "It renews in two days. Keep tuning, or cancel anytime in Settings.")
-        let seconds = max(3600, TimeInterval(days - 2) * 86400)
-        let request = UNNotificationRequest(identifier: "timbre.trial.reminder", content: content, trigger: UNTimeIntervalNotificationTrigger(timeInterval: seconds, repeats: false))
-        try? await center.add(request)
     }
 }

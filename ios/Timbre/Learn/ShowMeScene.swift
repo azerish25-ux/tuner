@@ -123,13 +123,16 @@ struct ShowMeShape: Equatable {
     let presses: [Press]
     let opens: [Open]
     let muted: Set<Int>
+    /// The fret a capo clamps (0 without one): the open strings ring from it.
+    let capo: Int
     /// The first fret framed and how many.
     let base: Int
     let rows: Int
     /// Each note sounds as its fingertip lands (a run of notes); a chord's strings ring when the host says (`ringing`).
     let soundsOnLanding: Bool
 
-    /// A chord: fingertips in finger order (finger 1 first, a barre with its finger), as the chart lands them.
+    /// A chord: fingertips in finger order (finger 1 first, a barre with its finger), as the chart lands them. Behind a
+    /// capo, the strings it stops ring open from it.
     @MainActor init(chord: ChordSpec) {
         let diagram = ChordDiagram(chord: chord, landingOrder: .fingers)
         let ranks = diagram.landingRanks
@@ -138,17 +141,19 @@ struct ShowMeShape: Equatable {
         var presses: [Press] = barres.map { barre in
             Press(first: barre.first, last: barre.last, fret: barre.fret, finger: barre.finger, rank: ranks[safe: barre.first] ?? 0)
         }
-        for i in frets.indices where frets[i] > 0 {
+        for i in frets.indices where chord.drawnFingered(i) {
             if barres.contains(where: { $0.fret == frets[i] && $0.first <= i && i <= $0.last }) { continue }
             let finger = chord.fingers?[safe: i].flatMap { $0 > 0 ? $0 : nil }
             presses.append(Press(first: i, last: i, fret: frets[i], finger: finger, rank: ranks[safe: i] ?? 0))
         }
         self.strings = frets.count
         self.presses = presses
-        self.opens = frets.indices.filter { frets[$0] == 0 }.map { Open(string: $0, rank: nil) }
+        self.opens = frets.indices.filter { frets[$0] >= 0 && !chord.drawnFingered($0) }.map { Open(string: $0, rank: nil) }
         self.muted = Set(frets.indices.filter { frets[$0] < 0 })
-        // The frets the player's view shows (`PlayerNeck`): four, more when the shape needs them.
-        let base = max(1, chord.baseFret ?? 1)
+        // The frets the player's view shows (`PlayerNeck`): four, more when the shape needs them; behind a capo, from it.
+        let capo = chord.drawnCapo
+        let base = capo > 0 ? capo + 1 : max(1, chord.baseFret ?? 1)
+        self.capo = capo
         self.base = base
         self.rows = min(6, max(4, (frets.max() ?? 0) - base + 1))
         self.soundsOnLanding = false
@@ -172,6 +177,7 @@ struct ShowMeShape: Equatable {
         self.presses = presses
         self.opens = opens
         self.muted = []
+        self.capo = 0
         // From the visual's first fret (or the lowest held, if lower) to the highest held: four frets at least.
         let held = presses.map(\.fret)
         let base = max(1, min(held.min() ?? max(1, start), max(1, start)))
@@ -298,8 +304,6 @@ struct ShowMeMarks {
     struct Ring {
         var point: CGPoint
         var radius: CGFloat
-        /// The string's colour on the runway (`HighwayRunway.color`).
-        var tint: Color
         var lit: Bool
         var alpha: CGFloat
     }
@@ -307,9 +311,15 @@ struct ShowMeMarks {
     struct Label {
         var point: CGPoint
         var value: Int
-        var tint: Color
         var lit: Bool
         var faint: Bool
+    }
+
+    /// A capo across the strings, from one end to the other, `width` thick.
+    struct Bar {
+        var from: CGPoint
+        var to: CGPoint
+        var width: CGFloat
     }
 
     var fingers: [Finger] = []
@@ -317,6 +327,7 @@ struct ShowMeMarks {
     var mutes: [Ring] = []
     var frets: [Label] = []
     var strings: [Label] = []
+    var capo: Bar?
 }
 
 // MARK: - The stage
@@ -325,7 +336,9 @@ struct ShowMeMarks {
 /// chord or the notes are played (or to where the strings are strummed), seen as the player's view shows a neck (nut
 /// far, lowest string on the left) or, for a strum, as a teacher's video does (strings across, the thickest on top, so a
 /// down stroke falls down the screen). Strings shimmer as they sound, each between where it is stopped and the
-/// saddle; a pick sweeps the strings on every stroke. The fingertips and marks are drawn over it (`marks(in:now:)`).
+/// saddle, in one continuous glow; a pick sweeps the strings on every stroke. The fingertips and marks are drawn over
+/// it (`marks(in:now:)`). A left-handed player's view is the stage turned over by its host (`flipX`, `flipY`), and the
+/// marks are projected to match.
 @MainActor
 final class ShowMeController {
     let root = Entity()
@@ -372,6 +385,9 @@ final class ShowMeController {
 
     // Inputs, set by the view.
     var shot: ShowMeShot? { didSet { if shot != oldValue { plan = nil } } }
+    /// The host shows the stage turned over left to right (and top to bottom): projected marks follow.
+    var flipX = false
+    var flipY = false
     var ringing: Set<Int> = []
     var landStart: Date?
     var landingStep: Double = 0.45
@@ -402,12 +418,13 @@ final class ShowMeController {
         let rig: InstrumentRig.StringRig
         /// The held part (nut to the stop) first, then the speaking length.
         let segments: [ModelEntity]
-        let halo: [ModelEntity]
+        /// Its glow along the speaking length, in one piece (`StringGlow`).
+        let glow: ModelEntity
         var shown = false
         /// Drawn still (not ringing) at this stop and glow: nothing to redraw until one changes or it rings.
         var resting: (stop: Float, glow: Float)?
-        init(lane: Int, rig: InstrumentRig.StringRig, segments: [ModelEntity], halo: [ModelEntity]) {
-            self.lane = lane; self.rig = rig; self.segments = segments; self.halo = halo
+        init(lane: Int, rig: InstrumentRig.StringRig, segments: [ModelEntity], glow: ModelEntity) {
+            self.lane = lane; self.rig = rig; self.segments = segments; self.glow = glow
         }
     }
 
@@ -442,13 +459,7 @@ final class ShowMeController {
     func setEnvironment(_ resource: EnvironmentResource) {
         light.components.set(ImageBasedLightComponent(source: .single(resource), intensityExponent: 0.4))
         if light.parent == nil { root.addChild(light) }
-        receiveImageBasedLight(holder)
-    }
-
-    private func receiveImageBasedLight(_ entity: Entity) {
-        guard light.components.has(ImageBasedLightComponent.self) else { return }
-        entity.components.set(ImageBasedLightReceiverComponent(imageBasedLight: light))
-        for child in entity.children { receiveImageBasedLight(child) }
+        holder.receiveImageBasedLight(from: light)
     }
 
     // MARK: Loading
@@ -502,20 +513,19 @@ final class ShowMeController {
         wound.baseColor = .init(tint: UIColor(red: 0.86, green: 0.76, blue: 0.58, alpha: 1))
         wound.metallic = 1.0
         wound.roughness = 0.34
-        var glow = UnlitMaterial(color: accent.withAlphaComponent(0.4))
-        glow.blending = .transparent(opacity: 0.4)
+        let glow = StringGlow.material(accent, opacity: 0.34)
+        let tube = StringGlow.mesh()
         wires = []
         for (index, lane) in neck.lanes.enumerated() {
             for string in lane.strings {
                 let metal = string.wound ? wound : plain
                 let segments = (0...Self.speaking).map { _ in Self.part(mesh, metal, in: holder) }
-                let halo = (0..<Self.speaking).map { _ in Self.part(mesh, glow, in: holder) }
-                wires.append(Wire(lane: index, rig: string, segments: segments, halo: halo))
+                wires.append(Wire(lane: index, rig: string, segments: segments, glow: Self.part(tube, glow, in: holder)))
             }
         }
         makePick(accent: accent)
         addLights()
-        receiveImageBasedLight(holder)
+        holder.receiveImageBasedLight(from: light)
         plan = nil
         glide = 0
         glideVelocity = 0
@@ -662,9 +672,15 @@ final class ShowMeController {
         return distance
     }
 
-    /// Over the nut (or the first fret shown, up the neck): the open and muted marks.
+    /// Over the nut (the capo, or the first fret shown up the neck): the open and muted marks.
     private static func markShare(_ shape: ShowMeShape) -> Float {
-        shape.base <= 1 ? -0.018 : ShowMeNeck.share(fret: Double(shape.base - 1)) - 0.012
+        if shape.capo > 0 { return capoShare(shape) - 0.022 }
+        return shape.base <= 1 ? -0.018 : ShowMeNeck.share(fret: Double(shape.base - 1)) - 0.012
+    }
+
+    /// Where a capo clamps the strings: just behind its fret wire, as a finger would.
+    private static func capoShare(_ shape: ShowMeShape) -> Float {
+        ShowMeNeck.share(fret: Double(shape.capo) - 0.35)
     }
 
     /// Past the last fret shown: the string numbers.
@@ -700,7 +716,8 @@ final class ShowMeController {
         let depth = -world.z
         guard depth > 0.01 else { return nil }
         let scale = Float(size.height) / 2 / (depth * tan(Self.fieldOfView * .pi / 360))
-        return CGPoint(x: size.width / 2 + CGFloat(world.x * scale), y: size.height / 2 - CGFloat(world.y * scale))
+        let x = size.width / 2 + CGFloat(world.x * scale), y = size.height / 2 - CGFloat(world.y * scale)
+        return CGPoint(x: flipX ? size.width - x : x, y: flipY ? size.height - y : y)
     }
 
     /// The camera is still gliding in.
@@ -775,7 +792,8 @@ final class ShowMeController {
             // Stopped by the fingertip that landed last on it (a finger over a barre, the newest note of a run).
             let holding = shape.presses.filter { $0.first <= lane && lane <= $0.last && landed($0.rank, now: now) }
                 .max { $0.rank < $1.rank }
-            let stop = holding.map { neck.stopShare(fret: $0.fret) } ?? 0
+            // Not held by a finger: it rings from the capo, or from the nut.
+            let stop = holding.map { neck.stopShare(fret: $0.fret) } ?? (shape.capo > 0 ? neck.stopShare(fret: shape.capo) : 0)
             // A chord's open strings glow from the start; a run's open notes from when they sound.
             let open = shape.opens.contains { mark in mark.string == lane && (mark.rank.map { landed($0, now: now) } ?? true) }
             let rung = ring(lane, now: now)
@@ -841,7 +859,7 @@ final class ShowMeController {
         if !visible {
             if wire.shown {
                 for segment in wire.segments { segment.isEnabled = false }
-                for segment in wire.halo { segment.isEnabled = false }
+                wire.glow.isEnabled = false
                 staticStrings[wire.rig.nodeName]?.isEnabled = true
                 wire.shown = false
             }
@@ -874,13 +892,13 @@ final class ShowMeController {
             let offset = amplitude * envelope * (standing + ripple)
             let point = held + (saddle - held) * v + lateral * offset
             place(wire.segments[k], from: previous, to: point, radius: radius, enabled: true)
-            let halo = wire.halo[k - 1]
-            if glow > 0.04 {
-                place(halo, from: previous, to: point, radius: wire.rig.radius * (2.6 + 6 * glow), enabled: true)
-            } else {
-                halo.isEnabled = false
-            }
             previous = point
+        }
+        // One glow along the whole speaking length (never one per segment, whose overlaps would bead the light).
+        if glow > 0.04 {
+            StringGlow.place(wire.glow, from: held, to: saddle, radius: wire.rig.radius * (2.6 + 6 * glow))
+        } else {
+            wire.glow.isEnabled = false
         }
     }
 
@@ -915,14 +933,14 @@ final class ShowMeController {
             let alpha: CGFloat = open.rank.map { touchDown($0, now: now) } ?? 1
             guard alpha > 0.01 else { continue }
             let radius = projectedLength(neck.point(lane: open.string, share: markShare), neck.across * gap * 0.32, size: size)
-            marks.opens.append(ShowMeMarks.Ring(point: point, radius: radius, tint: HighwayRunway.color(string: count - open.string, of: count),
-                                                lit: lit.contains(open.string), alpha: alpha))
+            marks.opens.append(ShowMeMarks.Ring(point: point, radius: radius, lit: lit.contains(open.string), alpha: alpha))
         }
         for lane in shape.muted.sorted() {
             guard let point = project(neck.point(lane: lane, share: markShare), in: size) else { continue }
             let radius = projectedLength(neck.point(lane: lane, share: markShare), neck.across * gap * 0.32, size: size)
-            marks.mutes.append(ShowMeMarks.Ring(point: point, radius: radius, tint: Palette.inkSoft, lit: false, alpha: 1))
+            marks.mutes.append(ShowMeMarks.Ring(point: point, radius: radius, lit: false, alpha: 1))
         }
+        if shape.capo > 0 { marks.capo = capoBar(shape, neck, size: size) }
         if !neck.fretless {
             for k in 1...max(1, shape.rows) {
                 let fret = shape.base + k - 1
@@ -930,16 +948,27 @@ final class ShowMeController {
                 let side = neck.point(lane: 0, share: middle) - neck.across * neck.gap(at: middle) * 1.25
                 guard let point = project(side, in: size) else { continue }
                 let held = shape.presses.contains { $0.fret == fret && touchDown($0.rank, now: now) >= 1 }
-                marks.frets.append(ShowMeMarks.Label(point: point, value: fret, tint: Palette.inkFaint, lit: held, faint: false))
+                marks.frets.append(ShowMeMarks.Label(point: point, value: fret, lit: held, faint: false))
             }
         }
         let numbers = Self.numbersShare(shape)
         for lane in 0..<count {
             guard let point = project(neck.point(lane: lane, share: numbers), in: size) else { continue }
-            marks.strings.append(ShowMeMarks.Label(point: point, value: count - lane, tint: HighwayRunway.color(string: count - lane, of: count),
-                                                   lit: lit.contains(lane), faint: shape.muted.contains(lane)))
+            marks.strings.append(ShowMeMarks.Label(point: point, value: count - lane, lit: lit.contains(lane), faint: shape.muted.contains(lane)))
         }
         return marks
+    }
+
+    /// The capo across every string, a little past the outer ones, as wide on screen as a finger's pad.
+    private func capoBar(_ shape: ShowMeShape, _ neck: ShowMeNeck, size: CGSize) -> ShowMeMarks.Bar? {
+        let share = Self.capoShare(shape)
+        let gap = neck.gap(at: share)
+        let lift = neck.normal * 0.002
+        let from = neck.point(lane: 0, share: share) - neck.across * gap * 0.6 + lift
+        let to = neck.point(lane: neck.lanes.count - 1, share: share) + neck.across * gap * 0.6 + lift
+        guard let a = project(from, in: size), let b = project(to, in: size) else { return nil }
+        let width = projectedLength(neck.point(lane: 0, share: share), neck.along * 0.008, size: size)
+        return ShowMeMarks.Bar(from: a, to: b, width: max(5, width))
     }
 
     /// The strum's outer strings, for their names: above the top string and below the bottom one, near the bridge.

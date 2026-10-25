@@ -34,6 +34,44 @@ jobs:
         run: |
           mkdir -p ci-out
           python3 tools/l10n/report.py --check --out ci-out/l10n 2>&1 | tee ci-out/l10n.log || true
+      - name: Legal, permission and VoiceOver strings (report here; apple-delivery.yml enforces)
+        # The renewal terms, permission prompts and VoiceOver strings each shipped locale lacks
+        # (tools/l10n/critical.py), as warning annotations and ci-out/l10n/critical-missing.json.
+        if: success() || failure()
+        continue-on-error: true
+        run: |
+          mkdir -p ci-out/l10n
+          python3 tools/l10n/critical.py --github --out ci-out/l10n 2>&1 | tee ci-out/l10n-critical.log
+      - name: Engineering hygiene lint
+        # Fails on a new review-round, bug-number, QA, store-frame, WIP or assistant reference in a Swift comment;
+        # reports new IconOrb uses and off-scale Typeface sizes (tools/ci/lint_tells.py). What predates the gate is
+        # in tools/ci/hygiene-baseline.json, which only shrinks.
+        if: success() || failure()
+        run: |
+          set -o pipefail
+          mkdir -p ci-out
+          python3 tools/ci/test_hygiene.py 2>&1 | tee ci-out/hygiene-tests.log
+          python3 tools/ci/lint_tells.py --github 2>&1 | tee ci-out/hygiene.log
+      - name: SwiftLint (report only until a baseline is committed)
+        # .swiftlint.yml at the repository root. Writes the summary and a baseline candidate
+        # (ci-out/swiftlint-baseline.json); committing that file as tools/ci/swiftlint-baseline.json makes this step
+        # gate the job on new violations only.
+        if: success() || failure()
+        continue-on-error: ${{ hashFiles('tools/ci/swiftlint-baseline.json') == '' }}
+        timeout-minutes: 4
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: "1"
+          HOMEBREW_NO_INSTALL_CLEANUP: "1"
+        run: |
+          mkdir -p ci-out
+          command -v swiftlint >/dev/null 2>&1 || brew install swiftlint >/dev/null
+          swiftlint version
+          if [ -f tools/ci/swiftlint-baseline.json ]; then
+            swiftlint lint --quiet --baseline tools/ci/swiftlint-baseline.json --reporter github-actions-logging
+          else
+            swiftlint lint --quiet --reporter summary --write-baseline ci-out/swiftlint-baseline.json > ci-out/swiftlint.txt 2>&1 || true
+            tail -60 ci-out/swiftlint.txt
+          fi
       - name: Publish core results
         if: always()
         env:

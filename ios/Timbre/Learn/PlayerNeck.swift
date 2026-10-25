@@ -237,14 +237,19 @@ struct ChordPictureView: View {
 // MARK: - Perspective
 
 /// The play-along runway's materials (`HighwayRunway`): rosewood darkening toward the far end, rolled darker at its
-/// edges, nickel fret wires and bone for the nut and the binding. The strings take the runway's colours
-/// (`HighwayRunway.color(string:of:)`), so a shape learned here is the shape that comes down the runway.
+/// edges, nickel fret wires and bone for the nut and the binding. In a lesson the strings are plain steel and bronze,
+/// lit in the lesson's accent as they ring, as every lesson picture marks them (the runway keeps a colour per string).
 enum NeckFinish {
     static let wood = Gradient(colors: [Color(hex: 0x16100D), Color(hex: 0x3B2A1F)])
     static let woodFar = Color(hex: 0x16100D)
     static let roll = Gradient(colors: [Color.black.opacity(0.4), Color.black.opacity(0), Color.black.opacity(0), Color.black.opacity(0.4)])
     static let wire = Color(hex: 0xC9CED6)
     static let bone = Color(hex: 0xEDE3CF)
+    /// Plain strings, and the wound bass strings.
+    static let steel = Color(hex: 0xE2DDD3)
+    static let bronze = Color(hex: 0xCDB892)
+    /// A capo's padded bar.
+    static let capo = Color(hex: 0x2B2E34)
 }
 
 /// A neck in perspective, as the runway lays its board: a plane tilted away from you, its strings side by side in
@@ -293,17 +298,19 @@ struct NeckPerspective {
 
 // MARK: - The player's view
 
-/// A chord as the player sees it: the neck in perspective, nut at the far end, its strings in the runway's lanes and
-/// colours, four frets (more when the shape needs them) spaced as real frets are. Fingertips press in finger order
+/// A chord as the player sees it: the neck in perspective, nut at the far end, its strings in the runway's lanes,
+/// four frets (more when the shape needs them) spaced as real frets are. Fingertips press in finger order
 /// (1, then 2, then 3), each coming down out of the air with its shadow tightening under it, pressing just behind
 /// its fret wire with a little squash and a ring across the board. Muted strings fade and take a ×, open strings glow
 /// with a ring at the head, and each string shimmers between where it's held (or the nut) and the near end as it
-/// starts to ring (`ringing`), so it moves with "Hear it". The frets are numbered down the left, a held one lit, and
-/// every lane is numbered at the near end, the outer two named under it.
+/// starts to ring (`ringing`), so it moves with "Hear it". Every mark is in the lesson's accent. The frets are numbered
+/// down the bass side, a held one lit, and every lane is numbered at the near end, the outer two named under it. A
+/// shape behind a capo has the capo across the far end in place of the nut.
 ///
 /// It is the Player view's chord (`ChordPicture.player`), its lanes the play-along runway's (`order`,
 /// `StringOrder.upright`): the lowest string on the left, as on the chord chart, so flipping between the two never
-/// mirrors the chord, and a shape learned here is the shape that comes down the runway.
+/// mirrors the chord, and a shape learned here is the shape that comes down the runway. A left-handed player's neck is
+/// its mirror image (`HandStyle.mirrorsUpright`), its words still reading as usual.
 ///
 /// With Reduce Motion it is one still frame, every finger in place. VoiceOver reads it as one element: the chord's
 /// name, then its shape in words (`ChordWords`).
@@ -322,7 +329,10 @@ struct PlayerNeck: View {
     var edges: StringEdges?
     /// A small card (the Chords tool's shapes): narrower margins, smaller marks, no edge names.
     var compact = false
+    /// Drawn as its mirror image (a left-handed instrument); nil follows the player's hold (`CurrentHand`).
+    var mirrored: Bool?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @CurrentHand private var hand
     /// Fret and string numbers grow with Dynamic Type from the 11 pt floor (`DiagramType`).
     @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
     /// The quick landing as the neck appears.
@@ -349,17 +359,19 @@ struct PlayerNeck: View {
         let order = Self.order
         let scale = typeScale
         let still = reduceMotion
+        let flip = mirrored ?? hand.mirrorsUpright
         VStack(spacing: 6) {
             TimelineView(.animation(minimumInterval: 1.0 / 60, paused: !live || still)) { timeline in
                 let now = live ? timeline.date : Date()
                 Canvas { context, size in
-                    draw(&context, size: size, now: now, order: order, scale: scale, still: still)
+                    draw(&context, size: size, now: now, order: order, mirror: CanvasMirror(on: flip, width: size.width), scale: scale, still: still)
                 }
             }
             if !compact, let edges, chord.frets.count >= 2 {
                 let count = chord.frets.count
-                EdgeNamesRow(leading: edges.label(order.string(atRow: 0, count: count)),
-                             trailing: edges.label(order.string(atRow: count - 1, count: count)))
+                let leftLane = edges.label(order.string(atRow: 0, count: count))
+                let rightLane = edges.label(order.string(atRow: count - 1, count: count))
+                EdgeNamesRow(leading: flip ? rightLane : leftLane, trailing: flip ? leftLane : rightLane)
             }
         }
         .accessibilityElement(children: .ignore)
@@ -382,13 +394,15 @@ struct PlayerNeck: View {
     }
 
     /// Where each string's lane meets the near edge across a neck `width` wide (lowest string first, as `chord.frets`),
-    /// so a row drawn under the neck (the chord step's string checks) lines up with it.
-    static func stringPositions(_ chord: ChordSpec, width: CGFloat, compact: Bool = false) -> [CGFloat] {
+    /// so a row drawn under the neck (the chord step's string checks) lines up with it; `mirrored` for a left-handed
+    /// player's neck (`HandStyle.mirrorsUpright`).
+    static func stringPositions(_ chord: ChordSpec, width: CGFloat, compact: Bool = false, mirrored: Bool = false) -> [CGFloat] {
         let count = chord.frets.count
         let lane = laneSpacing(width: width, strings: count, compact: compact)
+        let mirror = CanvasMirror(on: mirrored, width: width)
         return (0..<count).map { i in
             let row = Self.order.row(ofString: count - i, count: count)
-            return lane.centerX + (CGFloat(row) - CGFloat(count - 1) / 2) * lane.gap
+            return mirror.x(lane.centerX + (CGFloat(row) - CGFloat(count - 1) / 2) * lane.gap)
         }
     }
 
@@ -425,7 +439,8 @@ struct PlayerNeck: View {
         let farY: CGFloat = compact ? 22 : 34
         let nearY = max(farY + 40, size.height - numbersRow - 2)
         let neck = NeckPerspective(centerX: lane.centerX, farY: farY, nearY: nearY, gap: lane.gap, strings: count)
-        let base = max(1, chord.baseFret ?? 1)
+        // Behind a capo the neck starts at the capo, the first fret shown the first above it.
+        let base = chord.drawnCapo > 0 ? chord.drawnCapo + 1 : max(1, chord.baseFret ?? 1)
         let rows = min(6, max(4, (chord.frets.max() ?? 0) - base + 1))
         // Real fret spacing: each fret a twelfth root of two closer than the one before; the board runs a little
         // past the last wire shown.
@@ -543,9 +558,11 @@ struct PlayerNeck: View {
 
     // MARK: Drawing
 
-    private func draw(_ context: inout GraphicsContext, size: CGSize, now: Date, order: StringOrder, scale: CGFloat, still: Bool) {
+    /// Draws the neck as a right-hander's; `mirror` turns the shapes over and sets the words at the mirrored points.
+    private func draw(_ context: inout GraphicsContext, size: CGSize, now: Date, order: StringOrder, mirror: CanvasMirror, scale: CGFloat, still: Bool) {
         // A compact neck still draws in a progression's small "next" box.
         guard !chord.frets.isEmpty, size.width > 40, size.height > (compact ? 56 : 90) else { return }
+        let shapes = mirror.shapes(context)
         let l = layout(size)
         let clock = still ? nil : landingClock(at: now)
         // Before the quick landing starts (the first frame), the fingertips are still to come.
@@ -558,18 +575,18 @@ struct PlayerNeck: View {
             guard let clock else { return Touch() }
             return Self.touch(rank: ranks[safe: i] ?? 0, clock: clock, now: now)
         }
-        drawBoard(&context, l)
-        drawFrets(&context, l)
-        drawFretNumbers(&context, l, touches: touches, scale: scale)
-        drawStrings(&context, l, order: order, now: now, still: still, reveal: reveal)
-        drawMarks(&context, l, order: order, elapsed: elapsed, reveal: reveal)
-        drawFingers(&context, l, order: order, touches: touches)
-        drawNumbers(&context, l, order: order, scale: scale)
+        drawBoard(shapes, l)
+        drawFrets(shapes, l)
+        drawFretNumbers(&context, l, touches: touches, mirror: mirror, scale: scale)
+        drawStrings(shapes, l, order: order, now: now, still: still, reveal: reveal)
+        drawMarks(&context, shapes: shapes, l, order: order, elapsed: elapsed, reveal: reveal, mirror: mirror)
+        drawFingers(&context, shapes: shapes, l, order: order, touches: touches, mirror: mirror)
+        drawNumbers(&context, l, order: order, mirror: mirror, scale: scale)
     }
 
     /// The head past the nut fading into the card, then the board: rosewood with its grain running along the neck,
     /// rolled darker at the edges and shaded at the near end, between bone binding.
-    private func drawBoard(_ context: inout GraphicsContext, _ l: Layout) {
+    private func drawBoard(_ context: GraphicsContext, _ l: Layout) {
         let neck = l.neck
         let topY = neck.y(l.topU)
         var head = Path()
@@ -611,9 +628,9 @@ struct PlayerNeck: View {
                        lineWidth: compact ? 1 : 1.6)
     }
 
-    /// Pearl dots on their frets, the bone nut (or a wire, up the neck) and the fret wires, each on its shadow with a
-    /// glint along its top.
-    private func drawFrets(_ context: inout GraphicsContext, _ l: Layout) {
+    /// Pearl dots on their frets, the bone nut (a capo's bar behind a capo, or a wire up the neck) and the fret wires,
+    /// each on its shadow with a glint along its top.
+    private func drawFrets(_ context: GraphicsContext, _ l: Layout) {
         let neck = l.neck
         for k in 1...l.rows {
             let fret = l.base + k - 1
@@ -635,6 +652,10 @@ struct PlayerNeck: View {
             let u = l.wires[k]
             let s = neck.scale(u)
             let y = neck.y(u)
+            if k == 0 && chord.drawnCapo > 0 {
+                drawCapo(context, l, y: y, scale: s)
+                continue
+            }
             if k == 0 && l.base == 1 {
                 let h = (compact ? 4 : 6) * s
                 let nut = CGRect(x: neck.left(0) - 1, y: y - h, width: neck.right(0) - neck.left(0) + 2, height: h + 1)
@@ -653,25 +674,42 @@ struct PlayerNeck: View {
         }
     }
 
-    /// Each row's fret down the left of the board, beside its middle; a fret with a pressed fingertip on it lit.
-    private func drawFretNumbers(_ context: inout GraphicsContext, _ l: Layout, touches: [Touch], scale: CGFloat) {
+    /// The capo where the nut would be: a padded bar clamped across every string a little past the board's edges, on
+    /// its shadow, its screw toward the treble side.
+    private func drawCapo(_ context: GraphicsContext, _ l: Layout, y: CGFloat, scale s: CGFloat) {
+        let neck = l.neck
+        let h = (compact ? 6 : 9) * s
+        let reach = neck.gap * 0.25 * s
+        let bar = CGRect(x: neck.left(0) - reach, y: y - h, width: neck.right(0) - neck.left(0) + reach * 2, height: h + 1)
+        context.fill(Path(roundedRect: bar.offsetBy(dx: 0, dy: h * 0.35), cornerRadius: h * 0.45), with: .color(.black.opacity(0.4)))
+        let body = Gradient(colors: [NeckFinish.capo.mix(with: .white, by: 0.18), NeckFinish.capo])
+        context.fill(Path(roundedRect: bar, cornerRadius: h * 0.45),
+                     with: .linearGradient(body, startPoint: CGPoint(x: 0, y: bar.minY), endPoint: CGPoint(x: 0, y: bar.maxY)))
+        let screw = h * 0.5
+        context.fill(Path(ellipseIn: CGRect(x: bar.maxX - screw * 2.2, y: bar.midY - screw / 2, width: screw, height: screw)),
+                     with: .color(NeckFinish.wire.opacity(0.55)))
+    }
+
+    /// Each row's fret down the bass side of the board, beside its middle; a fret with a pressed fingertip on it lit.
+    private func drawFretNumbers(_ context: inout GraphicsContext, _ l: Layout, touches: [Touch], mirror: CanvasMirror, scale: CGFloat) {
         let neck = l.neck
         let frets = chord.frets
         for k in 1...l.rows {
             let fret = l.base + k - 1
-            let held = frets.indices.contains { frets[$0] == fret && (touches[safe: $0]?.down ?? 1) >= 1 }
+            let held = frets.indices.contains { frets[$0] == fret && chord.drawnFingered($0) && (touches[safe: $0]?.down ?? 1) >= 1 }
             let u = l.cellU(k)
             let label = Text(verbatim: "\(fret)")
                 .font(DiagramType.font(compact ? 11 : 12, weight: held ? .heavy : .semibold, scale: scale))
                 .foregroundStyle(held ? accent : Palette.inkFaint)
-            context.draw(label, at: CGPoint(x: neck.left(u) - 6, y: neck.y(u)), anchor: .trailing)
+            context.draw(label, at: mirror.point(CGPoint(x: neck.left(u) - 6, y: neck.y(u))), anchor: mirror.anchor(.trailing))
         }
     }
 
-    /// The strings in their lanes, from the head to the near edge: a glow in the string's colour under a metal core
-    /// tinted with it, thicker toward the bass. A muted string fades; an open one glows its whole length; a ringing
-    /// one brightens and shimmers between where it's held (the fingertip, or the nut) and the near end.
-    private func drawStrings(_ context: inout GraphicsContext, _ l: Layout, order: StringOrder, now: Date, still: Bool, reveal: CGFloat) {
+    /// The strings in their lanes, from the head to the near edge: steel, or bronze on the wound bass strings, thicker
+    /// toward the bass, with a glow in the lesson's accent under it while it rings. A muted string fades; an open one
+    /// glows its whole length; a ringing one brightens and shimmers between where it's held (the fingertip, or the nut
+    /// or capo) and the near end.
+    private func drawStrings(_ context: GraphicsContext, _ l: Layout, order: StringOrder, now: Date, still: Bool, reveal: CGFloat) {
         let count = chord.frets.count
         let neck = l.neck
         let topY = neck.y(l.topU)
@@ -682,43 +720,45 @@ struct PlayerNeck: View {
         for i in 0..<count {
             let number = count - i
             let row = order.row(ofString: number, count: count)
-            let tint = HighwayRunway.color(string: number, of: count)
             let fret = chord.frets[i]
             let muted = fret < 0
-            let open = fret == 0
+            let open = fret >= 0 && !chord.drawnFingered(i)
             let lit = ringing.contains(i)
             let level = still ? 0 : ringLevel(i, now: now)
             let presence = muted ? 1 - 0.78 * Double(reveal) : 1
-            var glow = 0.08 + 0.3 * level
-            if open { glow += 0.14 * Double(reveal) }
+            var glow = 0.3 * level
+            if open { glow += 0.12 * Double(reveal) }
             if lit { glow += 0.26 }
             var half: CGFloat = compact ? 3 : 5
             if open { half += 2 }
             if lit { half += 4 }
             half += CGFloat(level) * 4
-            let lane = lanePath(neck, row: row, from: l.topU, half: half)
-            light.fill(lane, with: .linearGradient(Gradient(colors: [tint.opacity(0), tint.opacity(glow * presence)]),
-                                                   startPoint: CGPoint(x: 0, y: neck.farY), endPoint: CGPoint(x: 0, y: neck.nearY)))
+            if glow > 0.01 {
+                let lane = lanePath(neck, row: row, from: l.topU, half: half)
+                light.fill(lane, with: .linearGradient(Gradient(colors: [accent.opacity(0), accent.opacity(glow * presence)]),
+                                                       startPoint: CGPoint(x: 0, y: neck.farY), endPoint: CGPoint(x: 0, y: neck.nearY)))
+            }
             let gauge: CGFloat = count > 1 ? CGFloat(number - 1) / CGFloat(count - 1) : 0.5
+            let wound = count >= 4 && gauge > 0.45
             let thinnest: CGFloat = compact ? 0.8 : 1.1
             let extra: CGFloat = compact ? 1.3 : 2.1
             let width = (thinnest + gauge * extra) * neck.scale(0.6)
-            let start: CGFloat = fret > 0 ? l.fingerU(fret) : 0
+            let start: CGFloat = chord.drawnFingered(i) ? l.fingerU(fret) : 0
             let reach: CGFloat = compact ? 2.2 : 3.6
             let swing: CGFloat = (still || muted) ? 0 : sway(i, now: now) * reach
             let path = stringPath(neck, row: row, top: l.topU, start: start, swing: swing)
             let from = CGPoint(x: 0, y: topY), to = CGPoint(x: 0, y: neck.nearY)
-            let bright: Double = (lit || level > 0.3) ? 0.72 : 0.48
-            let metal = tint.mix(with: .white, by: bright)
+            let bare = wound ? NeckFinish.bronze : NeckFinish.steel
+            let metal = (lit || level > 0.3) ? bare.mix(with: accent, by: 0.45) : bare
             let line = StrokeStyle(lineWidth: width, lineCap: .round)
             context.stroke(path.offsetBy(dx: 1.2, dy: 1.4), with: .linearGradient(Self.fading(.black, 0.4 * presence, at: fade), startPoint: from, endPoint: to),
                            style: line)
             if level > 0.02 {
-                light.stroke(path, with: .linearGradient(Self.fading(tint, 0.55 * level, at: fade), startPoint: from, endPoint: to),
+                light.stroke(path, with: .linearGradient(Self.fading(accent, 0.5 * level, at: fade), startPoint: from, endPoint: to),
                              style: StrokeStyle(lineWidth: width + 5, lineCap: .round))
             }
             context.stroke(path, with: .linearGradient(Self.fading(metal, 0.9 * presence, at: fade), startPoint: from, endPoint: to), style: line)
-            if count >= 4 && gauge > 0.45 {
+            if wound {
                 // The winding on the wound strings.
                 context.stroke(path, with: .linearGradient(Self.fading(.black, 0.22 * presence, at: fade), startPoint: from, endPoint: to),
                                style: StrokeStyle(lineWidth: width, dash: [1, 1.5]))
@@ -766,42 +806,45 @@ struct PlayerNeck: View {
         return path
     }
 
-    /// Over the nut: a × popping in on each muted string, a ring on each open one with its glow (brighter while it rings).
-    private func drawMarks(_ context: inout GraphicsContext, _ l: Layout, order: StringOrder, elapsed: Double?, reveal: CGFloat) {
+    /// Over the nut (or the capo): a × popping in on each muted string, a ring on each open one with its glow
+    /// (brighter while it rings).
+    private func drawMarks(_ context: inout GraphicsContext, shapes: GraphicsContext, _ l: Layout, order: StringOrder, elapsed: Double?,
+                           reveal: CGFloat, mirror: CanvasMirror) {
         let count = chord.frets.count
         let neck = l.neck
         let u = neck.u(atY: l.markY)
         let pop: CGFloat = elapsed.map { CGFloat(LessonSpring.value($0 - 0.05)) } ?? 1
         let r: CGFloat = compact ? 4 : 7
-        var light = context
+        var light = shapes
         light.blendMode = .plusLighter
-        for i in 0..<count where chord.frets[i] <= 0 {
+        for i in 0..<count where !chord.drawnFingered(i) {
             let number = count - i
             let center = CGPoint(x: neck.x(row: order.row(ofString: number, count: count), u), y: l.markY)
             if chord.frets[i] < 0 {
                 guard pop > 0.02 else { continue }
                 // On a dark disc, so the string running up to the head doesn't cut through it.
-                context.fill(circle(center, (r + 2.5) * min(1, pop)), with: .color(Palette.stageRaised.opacity(0.9)))
+                shapes.fill(circle(center, (r + 2.5) * min(1, pop)), with: .color(Palette.stageRaised.opacity(0.9)))
                 var mark = context
                 mark.opacity = Double(min(1, pop))
-                mark.translateBy(x: center.x, y: center.y)
+                let at = mirror.point(center)
+                mark.translateBy(x: at.x, y: at.y)
                 mark.scaleBy(x: pop, y: pop)
                 mark.draw(Text(verbatim: "×").font(.system(size: compact ? 11 : 16, weight: .bold)).foregroundStyle(Palette.inkSoft), at: .zero)
             } else {
-                let tint = HighwayRunway.color(string: number, of: count)
                 let lit = ringing.contains(i)
                 let halo = r * (lit ? 3.4 : 2.6)
-                let strength = (lit ? 0.6 : 0.4) * Double(reveal)
-                context.fill(circle(center, r + 2), with: .color(Palette.stageRaised.opacity(0.9)))
-                light.fill(circle(center, halo), with: .radialGradient(Gradient(colors: [tint.opacity(strength), tint.opacity(0)]),
+                let strength = (lit ? 0.55 : 0.32) * Double(reveal)
+                shapes.fill(circle(center, r + 2), with: .color(Palette.stageRaised.opacity(0.9)))
+                light.fill(circle(center, halo), with: .radialGradient(Gradient(colors: [accent.opacity(strength), accent.opacity(0)]),
                                                                      center: center, startRadius: 0, endRadius: halo))
-                context.stroke(circle(center, r), with: .color(tint.mix(with: .white, by: lit ? 0.6 : 0.35)), lineWidth: compact ? 1.6 : 2.2)
+                shapes.stroke(circle(center, r), with: .color(lit ? accent.mix(with: .white, by: 0.35) : accent), lineWidth: compact ? 1.6 : 2.2)
             }
         }
     }
 
     /// The fingertips (a finger laid across several strings as one pad), far ones first so nearer ones lie over them.
-    private func drawFingers(_ context: inout GraphicsContext, _ l: Layout, order: StringOrder, touches: [Touch]) {
+    private func drawFingers(_ context: inout GraphicsContext, shapes: GraphicsContext, _ l: Layout, order: StringOrder, touches: [Touch],
+                             mirror: CanvasMirror) {
         let count = chord.frets.count
         let neck = l.neck
         let frets = chord.frets
@@ -813,7 +856,7 @@ struct PlayerNeck: View {
             let b = neck.x(row: order.row(ofString: count - barre.last, count: count), u)
             presses.append(Press(u: u, from: min(a, b), to: max(a, b), finger: barre.finger, touch: touches[safe: barre.first] ?? Touch()))
         }
-        for i in frets.indices where frets[i] > 0 {
+        for i in frets.indices where chord.drawnFingered(i) {
             let covered = barres.contains { $0.fret == frets[i] && $0.first <= i && i <= $0.last }
             guard !covered else { continue }
             let u = l.fingerU(frets[i])
@@ -821,14 +864,15 @@ struct PlayerNeck: View {
             presses.append(Press(u: u, from: x, to: x, finger: chord.fingers?[safe: i], touch: touches[safe: i] ?? Touch()))
         }
         for press in presses.sorted(by: { $0.u < $1.u }) {
-            drawPress(&context, press, l)
+            drawPress(&context, shapes: shapes, press, l, mirror: mirror)
         }
     }
 
     /// One fingertip: coming down it is bigger and higher, its shadow wide and soft on the wood; pressing, the shadow
-    /// tightens under it, it squashes a touch and a ring runs out across the board. A glossy pad in the accent with
-    /// its finger number, standing on its darker edge.
-    private func drawPress(_ context: inout GraphicsContext, _ press: Press, _ l: Layout) {
+    /// tightens under it, it squashes a touch and a ring runs out across the board. A soft pad in the accent, shaded
+    /// from its top to where it meets the string, with its finger number. A finger laid across several strings ends one
+    /// fingertip's radius past the outer strings it holds.
+    private func drawPress(_ context: inout GraphicsContext, shapes: GraphicsContext, _ press: Press, _ l: Layout, mirror: CanvasMirror) {
         let down = min(1, max(0, press.touch.down))
         guard down > 0.01 else { return }
         let neck = l.neck
@@ -842,33 +886,28 @@ struct PlayerNeck: View {
         }
         let contact = CGPoint(x: (press.from + press.to) / 2, y: neck.y(press.u))
         let reach = (press.to - press.from) / 2
-        drawPressShadow(&context, at: contact, reach: reach, radius: r, air: air, scale: s, alpha: alpha)
+        drawPressShadow(shapes, at: contact, reach: reach, radius: r, air: air, scale: s, alpha: alpha)
         if let since = press.touch.since, since < 0.45 {
-            drawPressRing(&context, at: contact, reach: reach, radius: r, since: since)
+            drawPressRing(shapes, at: contact, reach: reach, radius: r, since: since)
         }
         let center = CGPoint(x: contact.x, y: contact.y - 18 * s * air)
-        let rx = r * grow
+        // A single fingertip swells and squashes; a barre keeps its ends where the strings are.
+        let rx = reach > 0.5 ? r : r * grow
         let ry = r * grow * 0.9
-        let tip = CGRect(x: center.x - reach * grow - rx, y: center.y - ry, width: (reach * grow + rx) * 2, height: ry * 2)
-        let pad = Path(roundedRect: tip, cornerRadius: ry)
-        context.fill(Path(roundedRect: tip.offsetBy(dx: 0, dy: 2.5 * s), cornerRadius: ry), with: .color(accent.mix(with: .black, by: 0.45).opacity(alpha)))
-        let face = Gradient(colors: [accent.mix(with: .white, by: 0.35).opacity(alpha), accent.opacity(alpha), accent.mix(with: .black, by: 0.15).opacity(alpha)])
-        context.fill(pad, with: .linearGradient(face, startPoint: CGPoint(x: tip.midX, y: tip.minY), endPoint: CGPoint(x: tip.midX, y: tip.maxY)))
-        let gloss = CGRect(x: tip.minX + rx * 0.35, y: tip.minY + ry * 0.14, width: max(0, tip.width - rx * 0.7), height: ry * 0.7)
-        context.fill(Path(roundedRect: gloss, cornerRadius: ry * 0.35),
-                     with: .linearGradient(Gradient(colors: [Color.white.opacity(0.5 * alpha), Color.white.opacity(0)]),
-                                           startPoint: CGPoint(x: 0, y: gloss.minY), endPoint: CGPoint(x: 0, y: gloss.maxY)))
-        context.stroke(pad, with: .color(Color.white.opacity(0.35 * alpha)), lineWidth: 1)
+        let tip = CGRect(x: center.x - reach - rx, y: center.y - ry, width: (reach + rx) * 2, height: ry * 2)
+        let pad = Path(roundedRect: tip, cornerRadius: min(rx, ry))
+        let face = Gradient(colors: [accent.mix(with: .white, by: 0.14).opacity(alpha), accent.opacity(alpha), accent.mix(with: .black, by: 0.2).opacity(alpha)])
+        shapes.fill(pad, with: .linearGradient(face, startPoint: CGPoint(x: tip.midX, y: tip.minY), endPoint: CGPoint(x: tip.midX, y: tip.maxY)))
         if down > 0.6, let finger = press.finger, finger > 0 {
             let label = Text(verbatim: "\(finger)").font(.system(size: max(8, r * 1.1), weight: .heavy, design: .rounded))
                 .foregroundStyle(Palette.onAccent.opacity(alpha))
-            context.draw(label, at: CGPoint(x: center.x, y: center.y + ry * 0.05))
+            context.draw(label, at: mirror.point(CGPoint(x: center.x, y: center.y + ry * 0.05)))
         }
     }
 
     /// The fingertip's shadow on the wood, lit from the far end: wide, faint and offset while the finger is in the
     /// air (`air` 1), small and dark right under it as it presses (`air` 0).
-    private func drawPressShadow(_ context: inout GraphicsContext, at contact: CGPoint, reach: CGFloat, radius r: CGFloat, air: CGFloat,
+    private func drawPressShadow(_ context: GraphicsContext, at contact: CGPoint, reach: CGFloat, radius r: CGFloat, air: CGFloat,
                                  scale s: CGFloat, alpha: Double) {
         let spread = 1 + 0.6 * air
         let w = (reach + r * spread) * 2
@@ -883,7 +922,7 @@ struct PlayerNeck: View {
     }
 
     /// The ring a press sends out, lying flat on the tilted board.
-    private func drawPressRing(_ context: inout GraphicsContext, at contact: CGPoint, reach: CGFloat, radius r: CGFloat, since: Double) {
+    private func drawPressRing(_ context: GraphicsContext, at contact: CGPoint, reach: CGFloat, radius r: CGFloat, since: Double) {
         let q = CGFloat(min(1, since / 0.45))
         let eased = 1 - (1 - q) * (1 - q)
         let spread = r * (1.1 + 1.8 * eased)
@@ -891,19 +930,18 @@ struct PlayerNeck: View {
         context.stroke(Path(roundedRect: rect, cornerRadius: spread * 0.5), with: .color(accent.opacity(0.6 * Double(1 - q))), lineWidth: 0.6 + 2 * (1 - q))
     }
 
-    /// Each lane's string number under the near edge, in the string's colour (the accent while it rings), as the
-    /// runway numbers its targets.
-    private func drawNumbers(_ context: inout GraphicsContext, _ l: Layout, order: StringOrder, scale: CGFloat) {
+    /// Each lane's string number under the near edge, the accent while it rings, faint when muted.
+    private func drawNumbers(_ context: inout GraphicsContext, _ l: Layout, order: StringOrder, mirror: CanvasMirror, scale: CGFloat) {
         guard let y = l.numbersY else { return }
         let count = chord.frets.count
         for i in 0..<count {
             let number = count - i
             let x = l.neck.x(row: order.row(ofString: number, count: count), 1)
-            var tone = HighwayRunway.color(string: number, of: count).mix(with: .white, by: 0.45)
+            var tone = Palette.inkSoft
             if chord.frets[i] < 0 { tone = Palette.inkFaint.opacity(0.6) }
             if ringing.contains(i) { tone = accent }
             let label = Text(verbatim: "\(number)").font(DiagramType.font(11, scale: scale)).foregroundStyle(tone)
-            context.draw(label, at: CGPoint(x: x, y: y))
+            context.draw(label, at: mirror.point(CGPoint(x: x, y: y)))
         }
     }
 

@@ -322,7 +322,7 @@ struct StrumBoard {
                                 number: number(anchor: group.lead.anchorId),
                                 gauge: gauge, cents: heard?.cents, evidence: heard?.evidence))
         }
-        if store.settings.handedness == "left" { meters.reverse() }
+        if store.settings.handedness.isLeftHanded { meters.reverse() }
         let inTune = meters.filter { $0.inTune(band: band) }.count
         return StrumBoard(meters: meters, verdict: verdict(meters, read: reading != nil, band: band), inTune: inTune)
     }

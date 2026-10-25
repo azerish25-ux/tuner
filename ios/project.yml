@@ -87,14 +87,25 @@ targets:
             CFBundleURLSchemes: [timbre]
         # Empty = analytics stay on the device. Set the TELEMETRYDECK_APP_ID repository variable to switch it on in delivery builds.
         TimbreTelemetryAppID: $(TIMBRE_TELEMETRY_APP_ID)
-        # The privacy policy the paywall and Settings link to. Read it with
-        # `Bundle.main.object(forInfoDictionaryKey: "TimbrePrivacyPolicyURL") as? String`; move the policy to the
-        # owner's domain by changing TIMBRE_PRIVACY_POLICY_URL below (one place for every link).
+        # Addresses the build carries (read by `AppLinks`, Services/ShareDestination.swift). Each comes from the build
+        # setting of the same name below; an empty value means "not set yet", and the app falls back or hides the link.
+        # The privacy policy the paywall and Settings link to: move it to the owner's domain by changing
+        # TIMBRE_PRIVACY_POLICY_URL (both keys carry it until every reader uses `AppLinks.privacy`).
+        TimbrePrivacyURL: $(TIMBRE_PRIVACY_POLICY_URL)
         TimbrePrivacyPolicyURL: $(TIMBRE_PRIVACY_POLICY_URL)
+        # The app's Apple ID in App Store Connect (digits): the App Store page and offer codes.
+        TimbreAppStoreID: $(TIMBRE_APP_STORE_ID)
+        # An https page that opens a shared route in Timbre, or sends someone without it to the App Store.
+        TimbreShareURL: $(TIMBRE_SHARE_URL)
+        # The remote settings file (`RemoteConfig`): paywall variant, annual product, social proof switch.
+        TimbreRemoteConfigURL: $(TIMBRE_REMOTE_CONFIG_URL)
     settings:
       base:
         TIMBRE_TELEMETRY_APP_ID: ""
         TIMBRE_PRIVACY_POLICY_URL: "https://azerish25-ux.github.io/tuner/privacy.html"
+        TIMBRE_APP_STORE_ID: ""
+        TIMBRE_SHARE_URL: ""
+        TIMBRE_REMOTE_CONFIG_URL: ""
         PRODUCT_BUNDLE_IDENTIFIER: com.shahradazerisharghi.timbre
         TARGETED_DEVICE_FAMILY: "1,2"
         # The on-device coach (Journey/CoachVoice.swift, `CoachPolish`): FoundationModels is iOS 26+, so it is

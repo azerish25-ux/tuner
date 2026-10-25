@@ -172,6 +172,26 @@ struct LevelMark: View {
     }
 }
 
+/// The level's ring on its own, without the mark inside: beside an "LV 5" figure (a stat tile, the stat bar), so the
+/// level is drawn as it is in the header, ring and "LV" together.
+struct LevelArc: View {
+    /// 0…1 toward the next level.
+    let progress: Double
+    var size: CGFloat = 22
+
+    var body: some View {
+        ZStack {
+            Circle().stroke(Palette.line, lineWidth: size * 0.14)
+            Circle().trim(from: 0, to: max(0.02, min(1, progress)))
+                .stroke(Palette.mint, style: StrokeStyle(lineWidth: size * 0.14, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+        }
+        .padding(size * 0.07)
+        .frame(width: size, height: size)
+        .accessibilityHidden(true)
+    }
+}
+
 /// Thin progress bar used by quests and levels.
 struct ProgressLine: View {
     let value: Double

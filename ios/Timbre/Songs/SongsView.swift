@@ -137,13 +137,12 @@ struct SongsView: View {
                                 .id(hero.id)
                                 .transition(.adaptive(.opacity.combined(with: .scale(scale: 0.97)), reduceMotion: reduceMotion))
                         }
-                        // The catalogue starts straight under the song of the day.
-                        if let first = shelves.first { shelfItem(first).id(first.id) }
-                        // The player's own charts and "Add a song" (YourSongs/YourSongsShelf.swift): one row while there
-                        // are none. It keeps this place whatever the filter, so its sheets and the song it opens stay up.
+                        // The player's own charts and "Add a song" (YourSongs/YourSongsShelf.swift), above the fold under
+                        // the song of the day: one row while there are none. It keeps this place whatever the filter, so
+                        // its sheets and the song it opens stay up.
                         YourSongsShelf()
                     }
-                    ForEach(Array(shelves.dropFirst())) { item in shelfItem(item) }
+                    ForEach(shelves) { item in shelfItem(item) }
                     Text("More lessons arrive with every update.").font(.footnote).foregroundStyle(Palette.inkFaint)
                         .frame(maxWidth: .infinity).padding(.vertical, 24)
                 }
@@ -435,7 +434,7 @@ struct SongsView: View {
                 Image(systemName: playable ? "play.fill" : "lock.fill").font(.system(size: 12, weight: .bold))
                     .foregroundStyle(playable ? Palette.onAccent : Palette.inkSoft)
                     .frame(width: 32, height: 32)
-                    .background(Circle().fill(playable ? AnyShapeStyle(art.primary) : AnyShapeStyle(Color.white.opacity(0.08))))
+                    .background(Circle().fill(playable ? AnyShapeStyle(Palette.mint) : AnyShapeStyle(Color.white.opacity(0.08))))
             }
             .padding(7)
             .background(shape.fill(.white.opacity(0.04)))
@@ -472,7 +471,7 @@ struct SongsView: View {
                 .background { heroBackdrop(art) }
                 .clipShape(shape)
                 .overlay(shape.strokeBorder(accent.opacity(0.4), lineWidth: 1))
-                .shadow(color: accent.opacity(0.28), radius: 26, y: 12)
+                .shadow(color: .black.opacity(0.45), radius: 22, y: 12)
                 .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())
@@ -521,7 +520,7 @@ struct SongsView: View {
     private func heroLead(_ song: Song, art: CoverArt, titled: Bool) -> some View {
         let regular = sizeClass == .regular
         return VStack(alignment: .leading, spacing: regular ? 12 : 10) {
-            heroEyebrow(accent: art.primary)
+            heroEyebrow(accent: art.primary, playing: previewing == song.id)
             Spacer(minLength: 0)
             if titled {
                 // The record slides out behind it while the opening plays.
@@ -538,7 +537,7 @@ struct SongsView: View {
 
     /// The song's title in the app's ink, large, over the sleeve's light.
     private func heroTitle(_ song: Song, lines: Int) -> some View {
-        Text(song.lesson.title.localized).font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink)
+        Text(song.lesson.title.localized).font(Typeface.display(.title)).tracking(-0.6).foregroundStyle(Palette.ink)
             .lineLimit(lines).minimumScaleFactor(lines > 2 ? 0.75 : 0.8).fixedSize(horizontal: false, vertical: true)
             .shadow(color: .black.opacity(0.4), radius: 8, y: 2)
     }
@@ -623,7 +622,7 @@ struct SongsView: View {
         return VStack(alignment: .leading, spacing: 7) {
             HStack(spacing: 8) {
                 Eyebrow("Song map", color: Palette.ink, style: .display)
-                Text("\(sheet.bars) bars").font(Typeface.label(11)).foregroundStyle(Palette.inkSoft)
+                Text("\(sheet.bars) bars").font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
             }
             .lineLimit(1)
             GeometryReader { proxy in
@@ -704,13 +703,13 @@ struct SongsView: View {
                 VStack(spacing: 3) {
                     MiniChordGlyph(chord: chord, accent: accent)
                         .frame(width: 28, height: 40)
-                    Text(verbatim: chord.name).font(Typeface.label(12)).foregroundStyle(Palette.ink)
+                    Text(verbatim: chord.name).font(Typeface.label(.caption)).foregroundStyle(Palette.ink)
                         .lineLimit(1).fixedSize()
                 }
                 .frame(minWidth: 30)
             }
             if chords.count > shown {
-                Text(verbatim: "+\(chords.count - shown)").font(Typeface.label(12)).foregroundStyle(Palette.inkSoft).fixedSize()
+                Text(verbatim: "+\(chords.count - shown)").font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft).fixedSize()
             }
         }
     }
@@ -729,14 +728,14 @@ struct SongsView: View {
         HStack(spacing: 6) {
             Image(systemName: "music.note").font(.system(size: 12, weight: .bold)).foregroundStyle(accent)
             ForEach(Array(names.prefix(shown)), id: \.self) { name in
-                Text(verbatim: name).font(Typeface.display(14)).foregroundStyle(Palette.ink)
+                Text(verbatim: name).font(Typeface.display(.body)).foregroundStyle(Palette.ink)
                     .padding(.horizontal, 8).frame(minHeight: 26)
                     .background(Capsule().fill(accent.opacity(0.16)))
                     .overlay(Capsule().strokeBorder(accent.opacity(0.4), lineWidth: 1))
                     .fixedSize()
             }
             if names.count > shown {
-                Text(verbatim: "+\(names.count - shown)").font(Typeface.label(12)).foregroundStyle(Palette.inkSoft).fixedSize()
+                Text(verbatim: "+\(names.count - shown)").font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft).fixedSize()
             }
         }
     }
@@ -792,11 +791,12 @@ struct SongsView: View {
         }
     }
 
-    /// "SONG OF THE DAY": the app's display eyebrow in ink, on a dark pill over the art.
-    private func heroEyebrow(accent: Color) -> some View {
+    /// "Song of the day": the app's display eyebrow in ink, on a dark plate over the art. Its waveform moves only while
+    /// the opening plays (motion means live).
+    private func heroEyebrow(accent: Color, playing: Bool) -> some View {
         HStack(spacing: 6) {
             Image(systemName: "waveform").font(Typeface.eyebrowDisplay).foregroundStyle(accent)
-                .symbolEffect(.variableColor.iterative, options: .repeating, isActive: !reduceMotion)
+                .symbolEffect(.variableColor.iterative, options: .repeating, isActive: playing && !reduceMotion)
             Eyebrow("Song of the day", color: Palette.ink, style: .display)
                 .lineLimit(1).minimumScaleFactor(0.7)
         }
@@ -822,7 +822,7 @@ struct SongsView: View {
             .font(.subheadline).lineLimit(1)
             if compact {
                 HStack(spacing: 10) {
-                    heroButton(access, finished: stars > 0, accent: accent).fixedSize()
+                    heroButton(access, finished: stars > 0).fixedSize()
                     if stars > 0 { StarRow(stars: stars, size: 13) }
                     if access == .pro { ProBadge() }
                     Spacer(minLength: 4)
@@ -832,7 +832,7 @@ struct SongsView: View {
             } else {
                 heroNeeds(song, sheet: sheet, accent: accent)
                 HStack(spacing: 12) {
-                    heroButton(access, finished: stars > 0, accent: accent)
+                    heroButton(access, finished: stars > 0)
                     if stars > 0 { StarRow(stars: stars, size: 13) }
                     Spacer(minLength: 0)
                     if access == .pro { ProBadge() }
@@ -850,9 +850,9 @@ struct SongsView: View {
         }
     }
 
-    /// Play, drawn as the app's primary button in the song's colour (its label font, a capsule at least 44 pt tall).
-    /// It is part of the hero's own button, so it is a look, not a second button.
-    private func heroButton(_ access: LessonAccess, finished: Bool, accent: Color) -> some View {
+    /// Play, drawn as the app's primary button: mint whatever the sleeve's colours (its label font, a capsule at least
+    /// 44 pt tall, flat at rest). It is part of the hero's own button, so it is a look, not a second button.
+    private func heroButton(_ access: LessonAccess, finished: Bool) -> some View {
         HStack(spacing: 6) {
             Image(systemName: access == .play ? "play.fill" : "lock.fill")
             Text(finished ? LocalizedStringKey("Play again") : LocalizedStringKey("Play"))
@@ -860,9 +860,7 @@ struct SongsView: View {
         .font(Typeface.button).foregroundStyle(Palette.onAccent)
         .padding(.horizontal, 18).padding(.vertical, 8)
         .frame(minHeight: Metrics.minTarget)
-        .background(Capsule().fill(accent))
-        .overlay(Capsule().strokeBorder(.white.opacity(0.35), lineWidth: 1).blendMode(.overlay))
-        .shadow(color: accent.opacity(0.45), radius: 12, y: 4)
+        .background(Capsule().fill(Palette.mint))
     }
 
     // MARK: Shelves
@@ -885,7 +883,7 @@ struct SongsView: View {
                 CourseArt(course: shelf.course, size: 32)
                 SectionHeader(Text(shelf.course.title.localized)) {
                     Label { Text.fraction(earned, shelf.songs.count * 3) } icon: { Image(systemName: "star.fill") }
-                        .font(Typeface.number(12)).foregroundStyle(Palette.amber)
+                        .font(Typeface.number(.caption)).foregroundStyle(Palette.starGold)
                 }
             }
             EdgeRail(spacing: 14, selection: next?.id) {
@@ -898,10 +896,7 @@ struct SongsView: View {
     private func pickShelf(_ pick: Pick) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .center, spacing: 10) {
-                Image(systemName: pick.symbol).font(.system(size: 15, weight: .bold)).foregroundStyle(Palette.amber)
-                    .frame(width: 32, height: 32)
-                    .background(RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous).fill(Palette.amber.opacity(0.14)))
-                    .accessibilityHidden(true)
+                Glyph(pick.symbol, size: Glyph.lead)
                 // Wraps rather than shrinking a long reason ("Because you learned E minor").
                 SectionHeader(pick.title)
             }
@@ -1047,7 +1042,7 @@ struct SongsView: View {
                     if standing.access != .play {
                         LockReason(access: standing.access, gate: standing.gate)
                     } else if let subtitle = Self.subtitle(song.lesson.title.localized) {
-                        Text(verbatim: subtitle).font(Typeface.label(13, relativeTo: .subheadline)).foregroundStyle(Palette.ink)
+                        Text(verbatim: subtitle).font(Typeface.label(.footnote)).foregroundStyle(Palette.ink)
                             .lineLimit(1).minimumScaleFactor(0.8)
                     } else {
                         ChordChips(chords: sheet.chords, key: sheet.keyName, tint: accent)
@@ -1062,11 +1057,11 @@ struct SongsView: View {
             }
             HStack(spacing: 7) {
                 DifficultyDots(level: sheet.difficulty(unit: song.unitIndex, of: song.course.units.count), tint: accent)
-                Text(verbatim: sheet.length).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                Text(verbatim: sheet.length).font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
                 if stars > 0 {
                     StarRow(stars: stars, size: 10)
                 } else {
-                    Text("+\(song.lesson.xp) XP").font(.footnote).foregroundStyle(accent.mix(with: Palette.inkSoft, by: 0.45))
+                    Text("+\(song.lesson.xp) XP").font(.footnote).foregroundStyle(Palette.inkSoft)
                 }
             }
             .lineLimit(1)
@@ -1113,9 +1108,8 @@ struct SongsView: View {
         return GeometryReader { proxy in
             ZStack(alignment: .leading) {
                 Capsule().fill(.black.opacity(0.45))
-                Capsule().fill(Palette.amber)
+                Capsule().fill(Palette.mint)
                     .frame(width: max(4, proxy.size.width * share))
-                    .shadow(color: Palette.amber.opacity(0.6), radius: 4)
             }
         }
         .frame(height: 4)
@@ -1144,7 +1138,7 @@ struct SongsView: View {
                     Text("Next up: \(found.lesson.title.localized)").font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink).lineLimit(1)
                     Image(systemName: "play.fill").font(.caption.weight(.bold)).foregroundStyle(Palette.onAccent)
                         .frame(width: 30, height: 30)
-                        .background(Circle().fill(accent))
+                        .background(Circle().fill(Palette.mint))
                         .accessibilityHidden(true)
                 }
                 .padding(.leading, 16).padding(.trailing, 6).padding(.vertical, 6)
@@ -1172,7 +1166,7 @@ struct SongsView: View {
 /// from the curriculum; each song's access (and, for one further on in its course, the open lesson on the way to it)
 /// once per change of the learner's progress, Pro, level or day; each filter's featured song, picked shelves and
 /// course shelves once per such change too. Bodies then only look things up, so a settings save, the reward pulse or
-/// a slider step elsewhere in the app no longer re-runs some hundred access checks, sorts and lesson scans (QA M15).
+/// a slider step elsewhere in the app no longer re-runs some hundred access checks, sorts and lesson scans.
 @MainActor final class SongsCatalog {
     struct Standing {
         let access: LessonAccess
@@ -1654,17 +1648,17 @@ private struct LockReason: View {
         let shape = RoundedRectangle(cornerRadius: Metrics.cornerChip, style: .continuous)
         HStack(alignment: .firstTextBaseline, spacing: 5) {
             Image(systemName: "lock.fill").font(.system(size: 10, weight: .bold))
-                .foregroundStyle(pro ? Palette.amber : Palette.inkSoft)
+                .foregroundStyle(pro ? Palette.proGoldDeep : Palette.inkSoft)
             reason
-                .font(Typeface.label(12, relativeTo: .subheadline))
+                .font(Typeface.label(TypeStep.caption.points, relativeTo: .subheadline))
                 .foregroundStyle(pro ? AnyShapeStyle(Palette.proGold) : AnyShapeStyle(Palette.ink.opacity(0.88)))
                 .lineLimit(2).minimumScaleFactor(0.85)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(.horizontal, 8).padding(.vertical, 4)
         .frame(minHeight: 24)
-        .background(shape.fill(pro ? Palette.amber.opacity(0.1) : Color.white.opacity(0.06)))
-        .overlay(shape.strokeBorder(pro ? Palette.amber.opacity(0.35) : Color.white.opacity(0.1), lineWidth: 1))
+        .background(shape.fill(pro ? Palette.proGoldDeep.opacity(0.1) : Color.white.opacity(0.06)))
+        .overlay(shape.strokeBorder(pro ? Palette.proGoldDeep.opacity(0.35) : Color.white.opacity(0.1), lineWidth: 1))
     }
 
     private var reason: Text {
@@ -1701,13 +1695,13 @@ private struct ChordChips: View {
         HStack(spacing: 4) {
             ForEach(chords.prefix(shown), id: \.symbol) { chord in chip(chord.name) }
             if chords.count > shown {
-                Text(verbatim: "+\(chords.count - shown)").font(Typeface.label(11)).foregroundStyle(Palette.inkSoft).fixedSize()
+                Text(verbatim: "+\(chords.count - shown)").font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft).fixedSize()
             }
         }
     }
 
     private func chip(_ name: String) -> some View {
-        Text(verbatim: name).font(Typeface.label(12)).foregroundStyle(Palette.ink)
+        Text(verbatim: name).font(Typeface.label(.caption)).foregroundStyle(Palette.ink)
             .padding(.horizontal, 7).frame(minHeight: 22)
             .background(Capsule().fill(tint.opacity(0.16)))
             .overlay(Capsule().strokeBorder(tint.opacity(0.4), lineWidth: 1))
@@ -1717,7 +1711,7 @@ private struct ChordChips: View {
     private func keyLabel(_ key: String) -> some View {
         HStack(spacing: 5) {
             Image(systemName: "music.note").font(.system(size: 10, weight: .bold)).foregroundStyle(tint)
-            Text(verbatim: key).font(Typeface.label(12)).foregroundStyle(Palette.inkSoft)
+            Text(verbatim: key).font(Typeface.label(.caption)).foregroundStyle(Palette.inkSoft)
         }
         .lineLimit(1)
     }
@@ -1761,7 +1755,7 @@ private struct VersionBadges: View {
                 }
             }
             if extra > 0 {
-                Text(verbatim: "+\(extra)").font(Typeface.label(11)).foregroundStyle(Palette.ink).fixedSize()
+                Text(verbatim: "+\(extra)").font(Typeface.label(.caption)).foregroundStyle(Palette.ink).fixedSize()
             }
         }
         .padding(.leading, 3).padding(.trailing, extra > 0 ? 6 : 3)
@@ -1773,14 +1767,14 @@ private struct VersionBadges: View {
     }
 }
 
-/// Three small stars, earned ones in amber.
+/// Three small stars, earned ones in the stars' gold.
 private struct StarRow: View {
     let stars: Int
     var size: CGFloat = 10
     var body: some View {
         HStack(spacing: 2) {
             ForEach(0..<3, id: \.self) { i in
-                Image(systemName: "star.fill").font(.system(size: size, weight: .bold)).foregroundStyle(i < stars ? Palette.amber : .white.opacity(0.18))
+                Image(systemName: "star.fill").font(.system(size: size, weight: .bold)).foregroundStyle(i < stars ? Palette.starGold : .white.opacity(0.18))
             }
         }
         .accessibilityHidden(true)

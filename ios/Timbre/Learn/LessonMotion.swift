@@ -65,9 +65,11 @@ enum CanvasNoise {
 
 /// A pick sweeping the strings on every stroke of a rhythm pattern, in time with the beat: down strokes
 /// run from the thickest string to the thinnest, up strokes back, and each string shimmers as the pick crosses it.
-/// The strings always lie in Player view, the thickest on top, as you look down at the instrument while you play,
-/// whatever the picture choice (`ChordPicture`, Settings › String order) says: that choice is for fretting pictures
-/// (chord boxes, necks), and a strum is a motion. So a down strum falls down the screen, the same way as the beat
+/// The strings lie as you look down at the instrument while you play, the thickest on top (`order`), whatever the
+/// picture choice (`ChordPicture`, Settings › String order) says: that choice is for fretting pictures (chord boxes,
+/// necks), and a strum is a motion. A left-handed player sees it `mirrored` (the neck end on the right, the bridge on
+/// the left; the numbers and names still read left to right), and one playing a right-handed instrument turned over
+/// has string 1 on top (`order` `.tab`), so their down strum still falls down the screen from the string it starts on. So a down strum falls down the screen, the same way as the beat
 /// row's ↓ and its pick (`LessonBeatRow`), the words ("Strum down") and the hand itself; an up strum rises. The key over
 /// the strings reads "↓ 6 → 1" from the top string down: a down strum, from the thickest string to string 1. Each
 /// string is numbered and the outer two are named ("Thickest (6)" on top, "Thinnest (1)" under the bottom), and the
@@ -92,9 +94,13 @@ struct StrumSweep: View {
     var bars: Int?
     /// Names the top and bottom strings in words ("Thickest (6)" over the top, "Thinnest (1)" under the bottom).
     var edges: StringEdges?
-    /// Which string lies on top: always Player view's order, the thickest on top, so a down strum falls down the screen.
-    /// Not the picture choice (`StringOrder.storageKey`), which turns the fretting pictures only.
+    /// Which string lies on top by default: Player view's order, the thickest on top, so a down strum falls down the
+    /// screen. Not the picture choice (`StringOrder.storageKey`), which turns the fretting pictures only.
     static let order: StringOrder = .mirror
+    /// The neck end on the right and the bridge on the left, for a left-handed player. Words aren't mirrored.
+    var mirrored = false
+    /// Which string lies on top: `.mirror` (the thickest), or `.tab` for a right-handed instrument played turned over.
+    var stringOrder: StringOrder = StrumSweep.order
     /// The string numbers and names grow with Dynamic Type from the 11 pt floor (`DiagramType`).
     @ScaledMetric(relativeTo: .caption2) private var typeScale: CGFloat = 1
 
@@ -137,7 +143,7 @@ struct StrumSweep: View {
     }
 
     var body: some View {
-        let order = Self.order
+        let order = stringOrder
         let scale = typeScale
         Canvas { context, size in
             if style == .tap { drawPad(&context, size: size) } else { drawStrings(&context, size: size, order: order, scale: scale) }
@@ -233,17 +239,23 @@ struct StrumSweep: View {
         let nearby = moving ? strokes(near: t) : []
         let state = moving ? pick(at: t, nearby) : PickState(position: 0, touching: false, down: pattern.first.map { $0.truncatingRemainder(dividingBy: 1) == 0 } ?? true, lift: 0)
 
+        // The instrument is drawn into `art`, flipped left to right for a left-handed player; words go on `context`.
+        var art = context
+        if mirrored {
+            art.translateBy(x: size.width, y: 0)
+            art.scaleBy(x: -1, y: 1)
+        }
         // The wood fills the whole stage, edge to edge.
-        drawSoundboard(&context, size: size, from: 0, to: size.height)
+        drawSoundboard(&art, size: size, from: 0, to: size.height)
         if style == .strum {
             let radius = min(band * 0.5 + 20, size.width * 0.26, area.height / 2 - 8)
-            // Far enough in that the rosette clears the string numbers at the left edge.
-            drawSoundHole(&context, center: CGPoint(x: max(radius + 24, size.width * 0.3), y: area.midY), radius: max(10, radius))
+            // Far enough in that the rosette clears the string numbers at the neck end.
+            drawSoundHole(&art, center: CGPoint(x: max(radius + 24, size.width * 0.3), y: area.midY), radius: max(10, radius))
         }
-        drawBridge(&context, x: bridgeX, top: top, gap: gap, count: count)
-        drawFlash(&context, center: CGPoint(x: pickX, y: area.midY), size: size, t: t, nearby: nearby, moving: moving)
+        drawBridge(&art, x: bridgeX, top: top, gap: gap, count: count)
+        drawFlash(&art, center: CGPoint(x: pickX, y: area.midY), size: size, t: t, nearby: nearby, moving: moving)
         if style == .strum {
-            drawLane(&context, x: pickX, above: frame.above, below: frame.below, falling: frame.fallsOnScreen(down: state.down), width: 26 * grow)
+            drawLane(&art, x: pickX, above: frame.above, below: frame.below, falling: frame.fallsOnScreen(down: state.down), width: 26 * grow)
         }
 
         for row in 0..<count {
@@ -251,19 +263,20 @@ struct StrumSweep: View {
             let number = order.string(atRow: row, count: count)
             let crossed = moving ? lastExcitation(ofString: number, count: count, share: frame.share(y), at: t, nearby) : nil
             let amplitude = crossed.map { CGFloat(5 * exp(-(t - $0) * 4.5)) } ?? 0
-            drawString(&context, number: number, of: count, y: y, right: bridgeX, amplitude: amplitude, t: t, scale: scale)
+            drawString(&art, number: number, of: count, y: y, right: bridgeX, amplitude: amplitude, t: t)
+            drawStringNumber(&context, number: number, y: y, x: mirrored ? size.width - 8 : 8, lit: amplitude > 0.5, scale: scale)
         }
         drawEdgeNames(&context, size: size, top: top, bottom: top + band, count: count, order: order, scale: scale)
-        drawStrokeKey(&context, top: top, count: count, scale: scale)
+        drawStrokeKey(&context, size: size, top: top, count: count, scale: scale)
 
         if style == .pluck {
             // The lowest string, wherever the order puts it; the fingertip comes at it from outside the strings.
             let lowest = top + CGFloat(order.row(ofString: count, count: count)) * gap
-            drawFinger(&context, x: pickX, stringY: lowest, fromAbove: frame.thickOnTop, t: t, nearby: nearby, moving: moving, grow: grow)
+            drawFinger(&art, x: pickX, stringY: lowest, fromAbove: frame.thickOnTop, t: t, nearby: nearby, moving: moving, grow: grow)
             return
         }
         var y = frame.y(state.position)
-        drawTrail(&context, x: pickX, frame: frame, pickY: y, t: t, nearby: nearby, moving: moving, state: state, width: 26 * grow)
+        drawTrail(&art, x: pickX, frame: frame, pickY: y, t: t, nearby: nearby, moving: moving, state: state, width: 26 * grow)
         if moving, t < 0, bars != nil {
             // Counting in: the pick bobs on each click, away from the strings, ready to go (a loop just turns on
             // through the bar before).
@@ -273,22 +286,23 @@ struct StrumSweep: View {
         }
         let x = pickX + CGFloat(state.lift) * 24 * grow
         let alpha = state.touching || !moving ? 1 : 0.75 - 0.3 * state.lift
-        drawPick(&context, center: CGPoint(x: x, y: y), pointsDown: frame.fallsOnScreen(down: state.down), scale: (state.touching ? 1 : 0.9) * grow, alpha: alpha)
+        drawPick(&art, center: CGPoint(x: x, y: y), pointsDown: frame.fallsOnScreen(down: state.down), scale: (state.touching ? 1 : 0.9) * grow, alpha: alpha)
     }
 
-    /// The top string's name just above it and the bottom string's just below, at the right end, clear of
-    /// the pick (which crosses at 62 % of the width) and the numbers on the left.
+    /// The top string's name just above it and the bottom string's just below, at the bridge end, clear of
+    /// the pick (which crosses at 62 % of the width from the neck end) and the numbers at the neck end.
     private func drawEdgeNames(_ context: inout GraphicsContext, size: CGSize, top: CGFloat, bottom: CGFloat, count: Int,
                                order: StringOrder, scale: CGFloat) {
         guard let edges, count >= 2, top >= 22 else { return }
-        let x = size.width - 4
+        let x = mirrored ? 4 : size.width - 4
+        let anchor: UnitPoint = mirrored ? .leading : .trailing
         let points = DiagramType.size(DiagramType.floor, scale: scale)
         let lift = 8 + points * 0.55
         if let name = edges.canvasLabel(order.string(atRow: 0, count: count), size: points) {
-            context.draw(name, at: CGPoint(x: x, y: top - lift), anchor: .trailing)
+            context.draw(name, at: CGPoint(x: x, y: top - lift), anchor: anchor)
         }
         if let name = edges.canvasLabel(order.string(atRow: count - 1, count: count), size: points) {
-            context.draw(name, at: CGPoint(x: x, y: bottom + lift), anchor: .trailing)
+            context.draw(name, at: CGPoint(x: x, y: bottom + lift), anchor: anchor)
         }
     }
 
@@ -296,16 +310,19 @@ struct StrumSweep: View {
     /// sit over the rosette): "↓ 6 → 1", the beat row's down arrow in the accent, then the strings a down strum crosses
     /// from first to last, the top string first. That is down the screen, the way the arrow points and the pick falls,
     /// and the numbers read top to bottom down the left edge. Strums only: a plucking finger has no direction.
-    private func drawStrokeKey(_ context: inout GraphicsContext, top: CGFloat, count: Int, scale: CGFloat) {
+    private func drawStrokeKey(_ context: inout GraphicsContext, size stage: CGSize, top: CGFloat, count: Int, scale: CGFloat) {
         guard style == .strum, count >= 2 else { return }
         let points = DiagramType.size(DiagramType.floor, scale: scale)
         let arrow = Text(Image(systemName: "arrow.down")).foregroundStyle(accent)
-        let crossing = Text(verbatim: " \(count) → 1").foregroundStyle(Palette.inkSoft)
+        // The strings a down strum crosses, top first: from the thickest, or from string 1 when it lies on top.
+        let first = stringOrder.string(atRow: 0, count: count), last = stringOrder.string(atRow: count - 1, count: count)
+        let crossing = Text(verbatim: " \(first) → \(last)").foregroundStyle(Palette.inkSoft)
         let text = (arrow + crossing).font(DiagramType.font(points, weight: .bold))
         let resolved = context.resolve(text)
         let size = resolved.measure(in: CGSize(width: 200, height: 40))
         let y = top - 10 - points * 0.55
-        let plate = CGRect(x: 2, y: y - size.height / 2 - 2, width: size.width + 12, height: size.height + 4)
+        let width = size.width + 12
+        let plate = CGRect(x: mirrored ? stage.width - 2 - width : 2, y: y - size.height / 2 - 2, width: width, height: size.height + 4)
         guard plate.minY >= 2 else { return }
         context.fill(Path(roundedRect: plate, cornerRadius: plate.height / 2), with: .color(Palette.stageDeep.opacity(0.75)))
         context.draw(resolved, at: CGPoint(x: plate.minX + 6, y: y), anchor: .leading)
@@ -371,19 +388,22 @@ struct StrumSweep: View {
         context.stroke(circle(center, 18 + CGFloat(age / 0.4) * 46), with: .color(accent.mix(with: .white, by: 0.4).opacity(0.55 * fade)), lineWidth: 0.5 + 2 * CGFloat(fade))
     }
 
+    /// The string's number at the neck end, as beside the nut on the fretboards, lit while it rings.
+    private func drawStringNumber(_ context: inout GraphicsContext, number: Int, y: CGFloat, x: CGFloat, lit: Bool, scale: CGFloat) {
+        let label = Text("\(number)").font(DiagramType.font(11, scale: scale))
+            .foregroundStyle(lit ? accent : Palette.inkSoft.opacity(0.85))
+        context.draw(label, at: CGPoint(x: x, y: y))
+    }
+
     /// String `number` (1 the thinnest), thicker toward the bass, bowing in a standing wave while it rings: a shadow
     /// on the top under it, the winding on the wound strings and a thin highlight along it.
     private func drawString(_ context: inout GraphicsContext, number: Int, of count: Int, y: CGFloat, right: CGFloat, amplitude: CGFloat,
-                            t: Double, scale: CGFloat) {
+                            t: Double) {
         let gauge = count > 1 ? CGFloat(number - 1) / CGFloat(count - 1) : 0.5
         let thickness = 1 + gauge * 2.6
         let wound = count >= 4 && gauge > 0.45
         let base = wound ? Color(hex: 0xCDB892) : Color(hex: 0xE4DFD6)
         let tint = base.mix(with: accent, by: Double(min(1, amplitude / 3.5)))
-        // The string's number at the left edge, as beside the nut on the fretboards, lit while it rings.
-        let label = Text("\(number)").font(DiagramType.font(11, scale: scale))
-            .foregroundStyle(amplitude > 0.5 ? accent : Palette.inkSoft.opacity(0.85))
-        context.draw(label, at: CGPoint(x: 8, y: y))
         let left: CGFloat = 20
         var path = Path()
         path.move(to: CGPoint(x: left, y: y))

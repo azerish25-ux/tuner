@@ -105,6 +105,11 @@ final class BandGrooveTests: XCTestCase {
         XCTAssertGreaterThan(Double(recognised), Double(total) * 0.95, "\(recognised) of \(total) Originals steps recognised")
     }
 
+    func testTheSharedIndexReadsTheAppsOneCurriculum() {
+        XCTAssertGreaterThan(BandStyleIndex.shared.count, 500, "built from CurriculumStore's decoded curriculum")
+        XCTAssertTrue(CurriculumStore.shared.isLoaded)
+    }
+
     func testCuesIgnoreTempoAndNeedTwoChords() {
         let notes = [60, 62, 64, 65, 67, 69].enumerated().map { TimedNote(midi: $1, beat: 1 + Double($0) * 0.5, beats: 0.5, at: nil) }
         let later = notes.map { TimedNote(midi: $0.midi, beat: $0.beat + 4, beats: $0.beats * 2, at: nil) }

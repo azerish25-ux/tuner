@@ -1,0 +1,22 @@
+# SwiftFormat for Timbre. `swiftformat --lint .` reports, `swiftformat .` rewrites (from the repository root).
+# Matches the code's existing layout: four-space indent, lines up to 160 columns, arguments wrapped as written.
+
+--swiftversion 5.10
+--exclude ios/.build,ios/build,ios/Timbre.xcodeproj,tools
+
+--indent 4
+--maxwidth 160
+--wraparguments preserve
+--wrapparameters preserve
+--wrapcollections preserve
+--closingparen balanced
+
+# One statement per line: `a(); b()` becomes two lines.
+--semicolons never
+--self remove
+--stripunusedargs closure-only
+--header ignore
+--importgrouping alpha
+--extensionacl on-declarations
+--commas inline
+--trimwhitespace always

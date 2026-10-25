@@ -314,8 +314,7 @@ extension EnvironmentValues {
 /// At the accessibility sizes it turns into a full-width row (symbol, then value over label), so nothing truncates.
 /// Put tiles side by side in a `StatTileRow`, which stacks them at those sizes and evens their heights.
 struct StatTile: View {
-    private let symbol: String
-    private let tint: Color
+    private let icon: AnyView
     private let value: Text
     private let label: Text
     private let alignment: HorizontalAlignment
@@ -323,8 +322,14 @@ struct StatTile: View {
     @Environment(\.statTileFills) private var fills
 
     init(symbol: String, tint: Color = Palette.mint, value: Text, label: Text, alignment: HorizontalAlignment = .leading) {
-        self.symbol = symbol
-        self.tint = tint
+        self.init(value: value, label: label, alignment: alignment) {
+            Image(systemName: symbol).font(.subheadline.weight(.semibold)).foregroundStyle(tint)
+        }
+    }
+
+    /// With its own mark in place of a symbol (the level's ring).
+    init<Icon: View>(value: Text, label: Text, alignment: HorizontalAlignment = .leading, @ViewBuilder icon: () -> Icon) {
+        self.icon = AnyView(icon())
         self.value = value
         self.label = label
         self.alignment = alignment
@@ -343,7 +348,7 @@ struct StatTile: View {
     @ViewBuilder private var content: some View {
         if typeSize.isAccessibilitySize {
             HStack(alignment: .center, spacing: 12) {
-                icon
+                mark
                 VStack(alignment: .leading, spacing: 2) {
                     figure
                     caption.fixedSize(horizontal: false, vertical: true)
@@ -352,7 +357,7 @@ struct StatTile: View {
             }
         } else {
             VStack(alignment: alignment, spacing: 4) {
-                icon
+                mark
                 figure
                 caption
                     .multilineTextAlignment(alignment == .center ? .center : .leading)
@@ -363,9 +368,8 @@ struct StatTile: View {
         }
     }
 
-    private var icon: some View {
-        Image(systemName: symbol).font(.subheadline.weight(.semibold)).foregroundStyle(tint)
-            .accessibilityHidden(true)
+    private var mark: some View {
+        icon.accessibilityHidden(true)
     }
 
     private var figure: some View {
@@ -410,12 +414,23 @@ struct StatTileRow<Content: View>: View {
 struct StatBar: View {
     struct Figure: Identifiable {
         let id: String
-        let symbol: String
-        let tint: Color
+        let icon: AnyView
         let value: Text
         let label: Text
         /// What VoiceOver reads for the figure, when its value and label alone don't say it ("Level 5, Strummer").
-        var spoken: Text? = nil
+        let spoken: Text?
+
+        init(id: String, symbol: String, tint: Color, value: Text, label: Text, spoken: Text? = nil) {
+            self.init(id: id, value: value, label: label, spoken: spoken) { Glyph(symbol, size: Glyph.lead, tint: tint) }
+        }
+
+        init<Icon: View>(id: String, value: Text, label: Text, spoken: Text? = nil, @ViewBuilder icon: () -> Icon) {
+            self.id = id
+            self.icon = AnyView(icon())
+            self.value = value
+            self.label = label
+            self.spoken = spoken
+        }
     }
 
     private let figures: [Figure]
@@ -441,7 +456,7 @@ struct StatBar: View {
 
     private func cell(_ figure: Figure, stacked: Bool) -> some View {
         HStack(spacing: 12) {
-            Glyph(figure.symbol, size: Glyph.lead, tint: figure.tint)
+            figure.icon.accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 figure.value.font(Typeface.number(.title3)).foregroundStyle(Palette.ink)
                     .lineLimit(1).minimumScaleFactor(0.7)

@@ -16,10 +16,11 @@ import UIKit
 /// nine sleeves and neighbours never look alike; the picked shelves keep each motif once (`SongsCatalog`). The type
 /// is set in one of four weights.
 ///
-/// Every sleeve keeps one grid, so the controls on it never move or collide: the catalogue number top-left, and the
-/// bottom-right corner (`playCorner`) clear for "Hear it" (or a badge). The title sits at the top under the number
-/// (left, centred or right), or, when short, at the foot on the left, stopping short of the play corner (now and then
-/// on a band of colour).
+/// Every sleeve keeps one grid, so the controls on it never move or collide: the bottom-right corner (`playCorner`)
+/// is clear for "Hear it" (or a badge). The title sits at the top (left, centred or right), or, when short, at the foot
+/// on the left, stopping short of the play corner (now and then on a band of colour). How a sleeve credits itself
+/// varies (`Imprint`): a catalogue rule and number over the course in spaced capitals, a number in the top corner over
+/// the course as written, the course alone, or the title alone, so a shelf never reads as one template run many times.
 struct CoverArt {
     enum Genre: CaseIterable { case nursery, folk, classical, americana, holiday, swing, rock, anthem }
     enum Motif: CaseIterable {
@@ -32,6 +33,22 @@ struct CoverArt {
     enum Family { case sun, land, sky, radial, sound, geometry, lines, dots }
     /// How the title lines up across the sleeve.
     enum Align { case leading, center, trailing }
+    /// How the sleeve credits itself.
+    enum Imprint {
+        /// A rule and the catalogue number top-left, the course over the title in spaced capitals.
+        case catalogue
+        /// The number alone in the top-right corner, the course over the title as it is written.
+        case corner
+        /// No number: the course over the title as it is written.
+        case credit
+        /// The title alone.
+        case plain
+
+        /// The catalogue number is drawn.
+        var numbered: Bool { self == .catalogue || self == .corner }
+        /// The course's line over the title is drawn.
+        var credited: Bool { self != .plain }
+    }
 
     let seed: UInt64
     let genre: Genre
@@ -48,9 +65,11 @@ struct CoverArt {
     let banner: Bool
     /// The title's Sora face.
     let face: String
+    /// How the sleeve credits itself.
+    let imprint: Imprint
     /// The title as set on the sleeve: the main title (no subtitle), in capitals for some genres.
     let title: String
-    /// The small line over the title: the course, as the artist.
+    /// The small line over the title: the course, as the artist, as written (a `catalogue` imprint sets it in capitals).
     let label: String
     /// The song's place in its course, as a catalogue number.
     let number: Int
@@ -87,7 +106,7 @@ struct CoverArt {
         let capitalRoll = random.next()
         let capitals = genre.capitals ?? (capitalRoll < 0.25)
         self.title = capitals ? main.uppercased() : main
-        self.label = label.uppercased()
+        self.label = label
         self.number = number
         angle = 200 + 140 * random.next()
         glow = UnitPoint(x: CGFloat(0.2 + 0.6 * random.next()), y: CGFloat(0.12 + 0.5 * random.next()))
@@ -99,7 +118,12 @@ struct CoverArt {
         banner = !field && !titleOnTop && bannerRoll < 0.3
         let faces = genre.faces(short: main.count <= 16)
         face = faces[Self.index(random.next(), faces.count)]
+        // Its own roll, after every other, so the rest of the sleeve is drawn as it always was.
+        imprint = genre.imprint(Double(Self.hash(id, salt: Self.imprintSalt) % 1000) / 1000)
     }
+
+    /// Seeds the imprint's roll apart from the sleeve's other choices.
+    private static let imprintSalt: UInt64 = 53
 
     private static func index(_ value: Double, _ count: Int) -> Int { min(max(0, count - 1), Int(value * Double(count))) }
 
@@ -282,17 +306,27 @@ extension CoverArt.Motif {
 }
 
 private extension CoverArt.Genre {
-    /// Accent names (`Palette.accent`) the genre's sleeves are coloured from.
+    /// Course hues (`Palette.accent`) the genre's sleeves are coloured from: never a status colour.
     var hues: [String] {
         switch self {
-        case .nursery: return ["amber", "coral", "sky"]
-        case .folk: return ["amber", "mint", "coral"]
+        case .nursery: return ["orchid", "lime", "sky"]
+        case .folk: return ["orchid", "mint", "lime"]
         case .classical: return ["violet", "sky"]
-        case .americana: return ["coral", "sky", "amber"]
-        case .holiday: return ["coral", "mint", "amber"]
-        case .swing: return ["violet", "amber", "coral"]
-        case .rock: return ["coral", "amber", "violet"]
+        case .americana: return ["lime", "sky", "orchid"]
+        case .holiday: return ["lime", "mint", "orchid"]
+        case .swing: return ["violet", "orchid", "lime"]
+        case .rock: return ["lime", "orchid", "violet"]
         case .anthem: return ["sky", "violet", "mint"]
+        }
+    }
+
+    /// How a sleeve of the genre credits itself, from a roll in 0..<1: classical sleeves mostly by the course as
+    /// written, rock and anthem by the catalogue rule or the title alone, the rest a mix.
+    func imprint(_ roll: Double) -> CoverArt.Imprint {
+        switch self {
+        case .classical: return roll < 0.6 ? .credit : roll < 0.85 ? .corner : .plain
+        case .rock, .anthem: return roll < 0.45 ? .catalogue : roll < 0.75 ? .plain : .corner
+        default: return roll < 0.3 ? .catalogue : roll < 0.55 ? .corner : roll < 0.8 ? .credit : .plain
         }
     }
 
@@ -1116,11 +1150,13 @@ struct SongCover: View {
             guard drift, !reduceMotion else { return }
             withAnimation(.easeInOut(duration: 6).repeatForever(autoreverses: true)) { drifting = true }
         }
+        // A picture: Smart Invert leaves it as it is.
+        .accessibilityIgnoresInvertColors()
         .accessibilityHidden(true)
     }
 
     /// Sleeves smaller than this (a 40 pt header thumbnail, a list row's) draw the motif alone: at that size the course
-    /// line and the title can't be read, and the line came out as "ORIGI…" (review 14).
+    /// line and the title can't be read (the line would be cut to "ORIGI…").
     static let typeMinimum: CGFloat = 72
 
     private func artwork(size: CGSize) -> some View {
@@ -1165,18 +1201,21 @@ struct SongCover: View {
         }
     }
 
-    /// The course over the title, in the corner and alignment the sleeve gives them.
+    /// The course over the title (as the imprint credits it), in the corner and alignment the sleeve gives them.
     private func typeBlock(_ layout: SleeveLayout) -> some View {
         let points = layout.fit.points
         let align = horizontal
+        let capitals = art.imprint == .catalogue
         let block = VStack(alignment: align, spacing: 0) {
-            Text(verbatim: art.label)
-                .font(.custom("Sora-SemiBold", fixedSize: layout.labelSize))
-                .tracking(layout.labelSize * 0.16)
-                .foregroundStyle(art.ink.opacity(0.72))
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-                .padding(.bottom, layout.labelSize * 0.35)
+            if art.imprint.credited {
+                Text(verbatim: capitals ? art.label.uppercased() : art.label)
+                    .font(.custom(capitals ? "Sora-SemiBold" : "Sora-Medium", fixedSize: layout.labelSize * (capitals ? 1 : 1.1)))
+                    .tracking(layout.labelSize * (capitals ? 0.16 : 0.01))
+                    .foregroundStyle(art.ink.opacity(0.72))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .padding(.bottom, layout.labelSize * 0.35)
+            }
             VStack(alignment: align, spacing: -points * 0.27) {
                 ForEach(Array(layout.fit.lines.enumerated()), id: \.offset) { _, line in
                     Text(verbatim: line)
@@ -1200,19 +1239,32 @@ struct SongCover: View {
         .padding(.bottom, art.banner ? layout.bandInset : layout.pad)
     }
 
-    /// The catalogue number, small, top-left on every sleeve.
-    private func catalogue(_ layout: SleeveLayout) -> some View {
+    /// The catalogue number, small: after a rule top-left (`catalogue`), alone top-right (`corner`), or not at all.
+    @ViewBuilder private func catalogue(_ layout: SleeveLayout) -> some View {
         let size = layout.labelSize * 1.05
-        return ZStack(alignment: .topLeading) {
-            Color.clear
-            HStack(spacing: size * 0.4) {
-                Capsule().fill((art.field ? Palette.stage : Palette.ink).opacity(0.5)).frame(width: size * 1.2, height: max(1, size * 0.1))
-                Text(verbatim: String(format: "%02d", art.number))
-                    .font(.custom("Sora-Medium", fixedSize: size)).monospacedDigit()
-                    .foregroundStyle((art.field ? Palette.stage : Palette.ink).opacity(0.62))
+        let ink = (art.field ? Palette.stage : Palette.ink)
+        let number = Text(verbatim: String(format: "%02d", art.number))
+            .font(.custom("Sora-Medium", fixedSize: size)).monospacedDigit()
+            .foregroundStyle(ink.opacity(0.62))
+        switch art.imprint {
+        case .catalogue:
+            ZStack(alignment: .topLeading) {
+                Color.clear
+                HStack(spacing: size * 0.4) {
+                    Capsule().fill(ink.opacity(0.5)).frame(width: size * 1.2, height: max(1, size * 0.1))
+                    number
+                }
             }
+            .padding(layout.pad)
+        case .corner:
+            ZStack(alignment: .topTrailing) {
+                Color.clear
+                number
+            }
+            .padding(layout.pad)
+        case .credit, .plain:
+            EmptyView()
         }
-        .padding(layout.pad)
     }
 
     private func glow(side: CGFloat) -> some View {
@@ -1261,7 +1313,8 @@ struct SongCover: View {
         let typeWidth = max(1, size.width - pad - typeTrailing)
         fit = TitleFit.make(art.title, width: typeWidth, maxHeight: side * (art.titleOnTop ? 0.36 : 0.4), largest: side * 0.17,
                             smallest: side * 0.075, font: art.face)
-        let block = labelSize * 1.26 + labelSize * 0.35 + fit.height
+        let credit = art.imprint.credited ? labelSize * 1.26 + labelSize * 0.35 : 0
+        let block = credit + fit.height
         let gap = side * 0.05
         bandInset = pad * 0.7
         bandHeight = art.banner ? block + bandInset * 2 : 0
@@ -1398,18 +1451,22 @@ struct CoverMesh: View {
     let art: CoverArt
     var animated = true
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Drifting only while seen (`animatesWhileSeen`): never off screen, in the background or in Low Power Mode.
+    @State private var live = false
 
     var body: some View {
         Group {
             if animated && !reduceMotion {
-                TimelineView(.animation(minimumInterval: 1.0 / 24)) { timeline in
+                TimelineView(.animation(minimumInterval: 1.0 / 24, paused: !live)) { timeline in
                     mesh(at: timeline.date.timeIntervalSinceReferenceDate)
                 }
+                .animatesWhileSeen($live)
             } else {
                 mesh(at: 0)
             }
         }
         .allowsHitTesting(false)
+        .accessibilityIgnoresInvertColors()
         .accessibilityHidden(true)
     }
 
@@ -1456,6 +1513,7 @@ struct VinylRecord: View {
             Canvas { context, size in Self.draw(&context, size: size, degrees: turn, color: color) }
         }
         .allowsHitTesting(false)
+        .accessibilityIgnoresInvertColors()
         .accessibilityHidden(true)
     }
 

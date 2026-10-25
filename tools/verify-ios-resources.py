@@ -4,8 +4,11 @@ import json
 import math
 import re
 import plistlib
+import sys
 
 root = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(root / 'tools/ci'))
+from swift_source import scan as swift_scan  # noqa: E402
 core = root / 'ios/Sources/TimbreCore/Resources'
 resources = root / 'ios/Timbre/Resources'
 catalog = json.loads((core / 'catalog.json').read_text(encoding='utf-8'))
@@ -63,9 +66,23 @@ assert any(item['NSPrivacyAccessedAPIType'] == 'NSPrivacyAccessedAPICategoryUser
 english = (resources / 'en.lproj/Localizable.strings').read_text(encoding='utf-8')
 keys = set(re.findall(r'^"([^"]+)"\s*=', english, re.M))
 missing = []
+
+
+def without_comments(text):
+    """The Swift source with its comments removed: a key named in a comment isn't a lookup."""
+    kept, last = [], 0
+    for comment in swift_scan(text)[1]:
+        kept.append(text[last:comment.start])
+        last = comment.end
+    kept.append(text[last:])
+    return ''.join(kept)
+
+
+# StoreKit product identifiers share the prefix (timbre_pro_annual, timbre_plus_lifetime); they aren't string keys.
+product_id = re.compile(r'timbre_(?:pro|plus)_')
 for source in (root / 'ios/Timbre').rglob('*.swift'):
-    for key in re.findall(r'"(timbre_[a-z0-9_]+)"', source.read_text(encoding='utf-8')):
-        if key not in keys and not key.endswith('_'):
+    for key in re.findall(r'"(timbre_[a-z0-9_]+)"', without_comments(source.read_text(encoding='utf-8'))):
+        if key not in keys and not key.endswith('_') and not product_id.match(key):
             missing.append(f'{source.relative_to(root)}: {key}')
 assert not missing, '\n'.join(missing)
 locales = list(resources.glob('*.lproj'))

@@ -59,4 +59,40 @@ enum StillScreen {
         for index in a.indices { total += abs(Int(a[index]) - Int(b[index])) }
         return Double(total) / Double(a.count)
     }
+
+    /// The part of `image` inside `region` (fractions of the image, origin top-left) as a thumbnail; empty when the
+    /// region falls outside it.
+    static func thumbnail(_ image: CGImage?, region: CGRect) -> [UInt8] {
+        guard let image else { return [] }
+        let width = CGFloat(image.width), height = CGFloat(image.height)
+        let box = CGRect(x: region.minX * width, y: region.minY * height, width: region.width * width, height: region.height * height)
+            .integral.intersection(CGRect(x: 0, y: 0, width: width, height: height))
+        guard box.width >= 4, box.height >= 4, let part = image.cropping(to: box) else { return [] }
+        return thumbnail(part)
+    }
+
+    /// Whether every region reads the same in both pictures (each region's mean difference under `tolerance`): a
+    /// counter caught mid-roll, or a number popping, differs between two pictures 120 ms apart; a settled one doesn't.
+    static func regionsMatch(_ a: XCUIScreenshot, _ b: XCUIScreenshot, _ regions: [CGRect], tolerance: Double = 1.0) -> Bool {
+        guard !regions.isEmpty else { return false }
+        let first = a.image.cgImage, second = b.image.cgImage
+        return regions.allSatisfy { region in
+            motion(thumbnail(first, region: region), thumbnail(second, region: region)) < tolerance
+        }
+    }
+
+    /// The thumbnail closest to all the others (the least total difference): what a burst of pictures shows at rest,
+    /// when a change shows in only a few of them. Nil for an empty burst.
+    static func medoid(_ thumbnails: [[UInt8]]) -> [UInt8]? {
+        let usable = thumbnails.filter { !$0.isEmpty }
+        guard !usable.isEmpty else { return nil }
+        var best = usable[0]
+        var bestTotal = Double.infinity
+        for candidate in usable {
+            var total = 0.0
+            for other in usable { total += min(255, motion(candidate, other)) }
+            if total < bestTotal { bestTotal = total; best = candidate }
+        }
+        return best
+    }
 }

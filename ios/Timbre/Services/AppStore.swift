@@ -236,6 +236,8 @@ final class AppStore: ObservableObject {
 
     var isPro: Bool { commerce.isPro }
     var demonstratedLevels: Set<Int> { persistence.demonstratedLevels }
+    /// How the saved state was recovered on opening (`LocalStore.recovery`), for the launch notice.
+    var storageRecovery: LocalStore.Recovery? { persistence.recovery }
     var instrument: Instrument { catalog.instrument(id: settings.selectedInstrumentId) ?? catalog.instruments[0] }
     var tuning: Tuning {
         let id = settings.lastTuningIds[instrument.id] ?? instrument.defaultTuningId
@@ -487,7 +489,7 @@ final class AppStore: ObservableObject {
 
     private static func standIn(settings: UserSettings, catalog: Catalog) -> Instrument? {
         guard settings.onboardingCompleted == true, let id = settings.recentInstrumentIds.first, id != settings.selectedInstrumentId,
-              let instrument = catalog.instrument(id: id), !instrument.isFree else { return nil }
+              let instrument = catalog.instrument(id: id), !AccessPolicy.canTune(instrument: instrument, pro: false) else { return nil }
         return instrument
     }
 
@@ -572,7 +574,7 @@ final class AppStore: ObservableObject {
 
     // MARK: Listening
 
-    var canListen: Bool { referenceMode || canTune(instrument) }
+    var canListen: Bool { referenceMode || AccessPolicy.canUse(tuning: tuning, of: instrument, pro: isPro) }
 
     func startListening() {
         guard !audio.running else { return }

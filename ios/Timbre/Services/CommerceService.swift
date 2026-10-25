@@ -4,8 +4,30 @@ import Combine
 import TimbreCore
 import UIKit
 
+/// A subscription payment the App Store couldn't collect (`CommerceService.billingIssue`, `BillingIssueBanner`).
+enum BillingIssue: Equatable {
+    /// The Billing Grace Period: Pro carries on until `until` while the App Store retries the payment.
+    case gracePeriod(until: Date?)
+    /// Billing Retry: Pro has paused while the App Store keeps retrying the payment.
+    case billingRetry
+
+    /// The issue the group's statuses show, if any. A family member's active status, or any active one, means none.
+    init?(_ statuses: [Product.SubscriptionInfo.Status]) {
+        if statuses.contains(where: { $0.state == .subscribed }) { return nil }
+        if let grace = statuses.first(where: { $0.state == .inGracePeriod }) {
+            var until: Date?
+            if case .verified(let renewal) = grace.renewalInfo { until = renewal.gracePeriodExpirationDate }
+            self = .gracePeriod(until: until)
+        } else if statuses.contains(where: { $0.state == .inBillingRetryPeriod }) {
+            self = .billingRetry
+        } else {
+            return nil
+        }
+    }
+}
+
 /// StoreKit 2 commerce: Timbre Pro annual/monthly subscriptions and the lifetime unlock.
-/// Access comes only from verified, unrevoked, unexpired transactions.
+/// Access comes only from verified, unrevoked transactions in the current entitlements (`AccessPolicy.isPro`).
 @MainActor
 final class CommerceService: ObservableObject {
     @Published private(set) var isPro = false
@@ -18,6 +40,8 @@ final class CommerceService: ObservableObject {
     @Published private(set) var trialEligible = true
     @Published private(set) var activeProductID: String?
     @Published private(set) var renewalDate: Date?
+    /// A subscription payment that didn't go through, while the App Store retries it; nil for a lifetime owner.
+    @Published private(set) var billingIssue: BillingIssue?
     private var updatesTask: Task<Void, Never>?
     private var refreshInProgress = false
     private var refreshRevision = 0
@@ -117,6 +141,7 @@ final class CommerceService: ObservableObject {
             case .success(let result):
                 guard case .verified(let transaction) = result, TimbreProduct.all.contains(transaction.productID) else {
                     error = String(localized: "The App Store purchase could not be verified. Restore purchases or try again.")
+                    Analytics.log("purchase_failed", ["product": product.id, "reason": "unverified"])
                     return false
                 }
                 await refreshEntitlements()
@@ -125,12 +150,32 @@ final class CommerceService: ObservableObject {
             case .pending:
                 pending = true
             case .userCancelled:
-                break
+                Analytics.log("purchase_cancelled", ["product": product.id])
             @unknown default:
                 error = String(localized: "The App Store returned an unknown status. Please restore purchases.")
+                Analytics.log("purchase_failed", ["product": product.id, "reason": "unknown_result"])
             }
-        } catch { self.error = error.localizedDescription }
+        } catch {
+            self.error = error.localizedDescription
+            let reason = Self.failureReason(error)
+            Analytics.log(reason == "cancelled" ? "purchase_cancelled" : "purchase_failed", ["product": product.id, "reason": reason])
+        }
         return false
+    }
+
+    /// A short, non-identifying name for why a purchase threw.
+    private static func failureReason(_ error: Error) -> String {
+        if let store = error as? StoreKitError {
+            switch store {
+            case .userCancelled: return "cancelled"
+            case .networkError: return "network"
+            case .systemError: return "system"
+            case .notAvailableInStorefront: return "storefront"
+            case .notEntitled: return "not_entitled"
+            default: return "store_unknown"
+            }
+        }
+        return error is Product.PurchaseError ? "purchase_error" : "other"
     }
 
     func restore() async {
@@ -163,19 +208,36 @@ final class CommerceService: ObservableObject {
                 let item = EntitlementEvidence(productID: transaction.productID, isSubscription: transaction.productType == .autoRenewable,
                                                revoked: transaction.revocationDate != nil, expiresAt: transaction.expirationDate)
                 evidence.append(item)
-                if AccessPolicy.isPro([item]) { active = (transaction.productID, transaction.expirationDate) }
+                // Lifetime wins: it never lapses, so there is no renewal date to show or to wait for.
+                if AccessPolicy.isPro([item]), active?.0 != TimbreProduct.lifetime { active = (transaction.productID, transaction.expirationDate) }
             }
+            var issue: BillingIssue?
+            if active?.0 != TimbreProduct.lifetime { issue = await Self.currentBillingIssue() }
             guard revision == refreshRevision else { continue }
             isPro = AccessPolicy.isPro(evidence)
             activeProductID = active?.0
             renewalDate = active?.1
+            billingIssue = issue
             entitlementResolved = true
-            scheduleExpiryCheck(active?.1)
+            // In the grace period the paid period has already ended: Pro ends with the grace period instead.
+            if case .gracePeriod(let until?) = issue { scheduleExpiryCheck(until) } else { scheduleExpiryCheck(active?.1) }
             break
         }
         refreshInProgress = false
         let waiting = refreshWaiters
         refreshWaiters.removeAll()
         for continuation in waiting { continuation.resume() }
+    }
+
+    /// The subscription group's billing problem, if any. The group is found through the latest transaction of either
+    /// plan, so someone who never subscribed costs no status request.
+    private static func currentBillingIssue() async -> BillingIssue? {
+        for productID in [TimbreProduct.annual, TimbreProduct.monthly] {
+            guard let latest = await Transaction.latest(for: productID), case .verified(let transaction) = latest,
+                  let group = transaction.subscriptionGroupID else { continue }
+            guard let statuses = try? await Product.SubscriptionInfo.status(for: group) else { return nil }
+            return BillingIssue(statuses)
+        }
+        return nil
     }
 }

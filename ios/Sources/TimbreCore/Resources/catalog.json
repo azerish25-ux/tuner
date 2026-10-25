@@ -105,16 +105,34 @@
         "guitar.acoustic.6.standard",
         "guitar.acoustic.6.drop_d",
         "guitar.acoustic.6.eb_std",
+        "guitar.acoustic.6.d_std",
+        "guitar.acoustic.6.c_std",
+        "guitar.acoustic.6.b_std",
+        "guitar.acoustic.6.double_drop_d",
+        "guitar.acoustic.6.drop_c_sharp",
+        "guitar.acoustic.6.drop_c",
+        "guitar.acoustic.6.drop_b",
         "guitar.acoustic.6.open_g",
         "guitar.acoustic.6.open_d",
-        "guitar.acoustic.6.dadgad"
+        "guitar.acoustic.6.open_c",
+        "guitar.acoustic.6.open_e",
+        "guitar.acoustic.6.open_a",
+        "guitar.acoustic.6.open_em",
+        "guitar.acoustic.6.open_dm",
+        "guitar.acoustic.6.open_gm",
+        "guitar.acoustic.6.open_c6",
+        "guitar.acoustic.6.dobro_g",
+        "guitar.acoustic.6.dadgad",
+        "guitar.acoustic.6.nashville",
+        "guitar.acoustic.6.lute",
+        "guitar.acoustic.6.all_fourths"
       ],
-      "minFrequencyHz": 73.42,
-      "maxFrequencyHz": 329.63,
+      "minFrequencyHz": 61.74,
+      "maxFrequencyHz": 392.0,
       "isFree": true,
       "anchorType": "MACHINE_HEAD",
       "provenance": "VERIFIED",
-      "source": "Standard EADGBE, Drop D, Open D/G and DADGAD documented by Fender and Yamaha; Eb standard lowers each standard string one semitone. https://www.fender.com/articles/setup/alternate-guitar-tuning https://hub.yamaha.com/guitars/g-how-to/altered-tunings-part-1/",
+      "source": "Standard EADGBE, Drop D, Open D/G and DADGAD documented by Fender and Yamaha; Eb standard lowers each standard string one semitone. https://www.fender.com/articles/setup/alternate-guitar-tuning https://hub.yamaha.com/guitars/g-how-to/altered-tunings-part-1/ Further presets: D, C and B standard, the drop tunings and open C, E, A, C6, Dobro G and the cross-note minors from Wikipedia's tuning lists; Nashville from its article; lute tuning (third string to F#) and all fourths from Wikipedia's guitar-tunings article. https://en.wikipedia.org/wiki/List_of_guitar_tunings https://en.wikipedia.org/wiki/Open_tuning https://en.wikipedia.org/wiki/Open_C_tuning https://en.wikipedia.org/wiki/Nashville_tuning_(high_strung) https://en.wikipedia.org/wiki/Guitar_tunings",
       "license": "Timbre project — original compilation of factual tuning data from the cited public sources. No competitor asset copied, traced or colour-sampled.",
       "schemaVersion": 1
     },
@@ -231,6 +249,10 @@
       "supportedTuningIds": [
         "bass.electric.4.standard",
         "bass.electric.4.drop_d",
+        "bass.electric.4.eb_std",
+        "bass.electric.4.d_std",
+        "bass.electric.4.drop_c",
+        "bass.electric.4.bead",
         "bass.electric.4.five"
       ],
       "minFrequencyHz": 30.87,
@@ -238,7 +260,7 @@
       "isFree": true,
       "anchorType": "MACHINE_HEAD",
       "provenance": "VERIFIED",
-      "source": "Four-string E-A-D-G, five-string low-B B-E-A-D-G and Drop D on the four-string; source examples from Schecter and Yamaha. https://www.schecterguitars.com/about https://hub.yamaha.com/guitars/bass/alternate-bass-tunings/",
+      "source": "Four-string E-A-D-G, five-string low-B B-E-A-D-G and Drop D on the four-string; source examples from Schecter and Yamaha. https://www.schecterguitars.com/about https://hub.yamaha.com/guitars/bass/alternate-bass-tunings/ E-flat and D standard, Drop C and BEAD (a four-string a fourth down) on the four-string.",
       "license": "Timbre project — original compilation of factual tuning data from the cited public sources. No competitor asset copied, traced or colour-sampled.",
       "schemaVersion": 1
     },
@@ -305,14 +327,16 @@
       "supportedTuningIds": [
         "ukulele.soprano.4.standard",
         "ukulele.soprano.4.low_g",
-        "ukulele.soprano.4.d_tuning"
+        "ukulele.soprano.4.d_tuning",
+        "ukulele.soprano.4.slack_key",
+        "ukulele.soprano.4.slide_c7"
       ],
-      "minFrequencyHz": 196,
+      "minFrequencyHz": 196.0,
       "maxFrequencyHz": 493.88,
       "isFree": true,
       "anchorType": "MACHINE_HEAD",
       "provenance": "VERIFIED",
-      "source": "Kala G-C-E-A re-entrant ukulele, low-G option and A-D-F#-B Hawaiian D tuning. https://kalabrand.com/blogs/home/ukulele-tuning-decoded https://support.kalabrand.com/hc/en-us/articles/360028870411-What-Is-The-Difference-Between-High-G-and-Low-G-Tuning",
+      "source": "Kala G-C-E-A re-entrant ukulele, low-G option and A-D-F#-B Hawaiian D tuning. https://kalabrand.com/blogs/home/ukulele-tuning-decoded https://support.kalabrand.com/hc/en-us/articles/360028870411-What-Is-The-Difference-Between-High-G-and-Low-G-Tuning Slack-key G-C-E-G and the slide C7 tuning G-C-E-Bb. https://ukutabs.com/ukulele-guides/different-ukulele-tunings/",
       "license": "Timbre project — original compilation of factual tuning data from the cited public sources. No competitor asset copied, traced or colour-sampled.",
       "schemaVersion": 1
     },
@@ -377,14 +401,16 @@
       "anchorMapRef": "",
       "defaultTuningId": "mandolin.standard.8.standard",
       "supportedTuningIds": [
-        "mandolin.standard.8.standard"
+        "mandolin.standard.8.standard",
+        "mandolin.standard.8.cross_aeae",
+        "mandolin.standard.8.cross_gdgd"
       ],
-      "minFrequencyHz": 196,
+      "minFrequencyHz": 196.0,
       "maxFrequencyHz": 659.26,
       "isFree": false,
       "anchorType": "MACHINE_HEAD",
       "provenance": "VERIFIED",
-      "source": "Unison G3-G3 D4-D4 A4-A4 E5-E5 mandolin courses. https://www.petersontuners.com/myinstrument/mandolin",
+      "source": "Unison G3-G3 D4-D4 A4-A4 E5-E5 mandolin courses. https://www.petersontuners.com/myinstrument/mandolin Fiddle cross tunings carried over to the paired courses: AEAE and sawmill GDGD. https://fiddlingaround.co.uk/cross%20tuning.html",
       "license": "Timbre project — original compilation of factual tuning data from the cited public sources. No competitor asset copied, traced or colour-sampled.",
       "schemaVersion": 1
     },
@@ -474,14 +500,17 @@
       "defaultTuningId": "violin.standard.4.standard",
       "supportedTuningIds": [
         "violin.standard.4.standard",
-        "violin.standard.4.cross_ae"
+        "violin.standard.4.cross_ae",
+        "violin.standard.4.high_bass",
+        "violin.standard.4.sawmill",
+        "violin.standard.4.calico"
       ],
-      "minFrequencyHz": 196,
+      "minFrequencyHz": 196.0,
       "maxFrequencyHz": 659.26,
       "isFree": true,
       "anchorType": "FRICTION_PEG",
       "provenance": "VERIFIED",
-      "source": "Violin G3-D4-A4-E5 and fiddle AEAE cross-tuning. https://www.petersontuners.com/myInstrument/violin",
+      "source": "Violin G3-D4-A4-E5 and fiddle AEAE cross-tuning. https://www.petersontuners.com/myInstrument/violin Old-time cross tunings ADAE (high bass), GDGD (sawmill) and AEAC# (Calico). https://en.wikipedia.org/wiki/Cross_tuning https://fiddlingaround.co.uk/cross%20tuning.html",
       "license": "Timbre project — original compilation of factual tuning data from the cited public sources. No competitor asset copied, traced or colour-sampled.",
       "schemaVersion": 1
     },
@@ -574,14 +603,15 @@
       "supportedTuningIds": [
         "banjo.five.5.standard",
         "banjo.five.5.double_c",
-        "banjo.five.5.open_d"
+        "banjo.five.5.open_d",
+        "banjo.five.5.g_modal"
       ],
       "minFrequencyHz": 130.81,
       "maxFrequencyHz": 392,
       "isFree": false,
       "anchorType": "MACHINE_HEAD",
       "provenance": "VERIFIED",
-      "source": "Deering five-string banjo G-D-G-B-D, Double C G-C-G-C-D and Open D F#-D-F#-A-D; the short fifth string is re-entrant. https://www.deeringbanjos.com/blogs/deering-banjos-blog/alternate-tunings-for-bluegrass-banjo https://blog.deeringbanjos.com/hubfs/Chord%20Charts/Michael%20Miles%20Chord%20Charts/05.%20Chords%20in%20Double%20C%20%26%20G%20Modal.pdf",
+      "source": "Deering five-string banjo G-D-G-B-D, Double C G-C-G-C-D and Open D F#-D-F#-A-D; the short fifth string is re-entrant. https://www.deeringbanjos.com/blogs/deering-banjos-blog/alternate-tunings-for-bluegrass-banjo https://blog.deeringbanjos.com/hubfs/Chord%20Charts/Michael%20Miles%20Chord%20Charts/05.%20Chords%20in%20Double%20C%20%26%20G%20Modal.pdf G modal (sawmill) G-D-G-C-D from the same chart.",
       "license": "Timbre project — original compilation of factual tuning data from the cited public sources. No competitor asset copied, traced or colour-sampled.",
       "schemaVersion": 1
     },
@@ -1727,6 +1757,363 @@
       ]
     },
     {
+      "id": "guitar.acoustic.6.d_std",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_d_std",
+        "default": "D standard"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 38,
+          "label": "D2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 43,
+          "label": "G2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 48,
+          "label": "C3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 53,
+          "label": "F3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 57,
+          "label": "A3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 62,
+          "label": "D4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.c_std",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_c_std",
+        "default": "C standard"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 36,
+          "label": "C2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 41,
+          "label": "F2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 46,
+          "label": "Bb2",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 51,
+          "label": "Eb3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 55,
+          "label": "G3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 60,
+          "label": "C4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.b_std",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_b_std",
+        "default": "B standard"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 35,
+          "label": "B1",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 40,
+          "label": "E2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 45,
+          "label": "A2",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 50,
+          "label": "D3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 54,
+          "label": "F#3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 59,
+          "label": "B3",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.double_drop_d",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_double_drop_d",
+        "default": "Double drop D"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 38,
+          "label": "D2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 45,
+          "label": "A2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 50,
+          "label": "D3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 55,
+          "label": "G3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 59,
+          "label": "B3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 62,
+          "label": "D4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.drop_c_sharp",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_drop_c_sharp",
+        "default": "Drop C#"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 37,
+          "label": "C#2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 44,
+          "label": "G#2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 49,
+          "label": "C#3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 54,
+          "label": "F#3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 58,
+          "label": "A#3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 63,
+          "label": "D#4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.drop_c",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_drop_c",
+        "default": "Drop C"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 36,
+          "label": "C2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 43,
+          "label": "G2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 48,
+          "label": "C3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 53,
+          "label": "F3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 57,
+          "label": "A3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 62,
+          "label": "D4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.drop_b",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_drop_b",
+        "default": "Drop B"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 35,
+          "label": "B1",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 42,
+          "label": "F#2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 47,
+          "label": "B2",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 52,
+          "label": "E3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 56,
+          "label": "G#3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 61,
+          "label": "C#4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
       "id": "guitar.acoustic.6.open_g",
       "instrumentId": "guitar.acoustic.6",
       "name": {
@@ -1829,6 +2216,414 @@
       ]
     },
     {
+      "id": "guitar.acoustic.6.open_c",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_open_c",
+        "default": "Open C"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 36,
+          "label": "C2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 43,
+          "label": "G2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 48,
+          "label": "C3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 55,
+          "label": "G3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 60,
+          "label": "C4",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 64,
+          "label": "E4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.open_e",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_open_e",
+        "default": "Open E"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 40,
+          "label": "E2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 47,
+          "label": "B2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 52,
+          "label": "E3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 56,
+          "label": "G#3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 59,
+          "label": "B3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 64,
+          "label": "E4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.open_a",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_open_a",
+        "default": "Open A"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 40,
+          "label": "E2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 45,
+          "label": "A2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 52,
+          "label": "E3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 57,
+          "label": "A3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 61,
+          "label": "C#4",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 64,
+          "label": "E4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.open_em",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_open_em",
+        "default": "Open E minor"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 40,
+          "label": "E2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 47,
+          "label": "B2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 52,
+          "label": "E3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 55,
+          "label": "G3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 59,
+          "label": "B3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 64,
+          "label": "E4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.open_dm",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_open_dm",
+        "default": "Open D minor"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 38,
+          "label": "D2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 45,
+          "label": "A2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 50,
+          "label": "D3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 53,
+          "label": "F3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 57,
+          "label": "A3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 62,
+          "label": "D4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.open_gm",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_open_gm",
+        "default": "Open G minor"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 38,
+          "label": "D2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 43,
+          "label": "G2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 50,
+          "label": "D3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 55,
+          "label": "G3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 58,
+          "label": "Bb3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 62,
+          "label": "D4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.open_c6",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_open_c6",
+        "default": "Open C6"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 36,
+          "label": "C2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 45,
+          "label": "A2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 48,
+          "label": "C3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 55,
+          "label": "G3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 60,
+          "label": "C4",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 64,
+          "label": "E4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.dobro_g",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_dobro_g",
+        "default": "Dobro open G"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 43,
+          "label": "G2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 47,
+          "label": "B2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 50,
+          "label": "D3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 55,
+          "label": "G3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 59,
+          "label": "B3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 62,
+          "label": "D4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
       "id": "guitar.acoustic.6.dadgad",
       "instrumentId": "guitar.acoustic.6",
       "name": {
@@ -1875,6 +2670,159 @@
           "index": 6,
           "targetMidi": 62,
           "label": "D4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.nashville",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_nashville",
+        "default": "Nashville (high-strung)"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 52,
+          "label": "E3",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 57,
+          "label": "A3",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 62,
+          "label": "D4",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 67,
+          "label": "G4",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 59,
+          "label": "B3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 64,
+          "label": "E4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.lute",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_lute",
+        "default": "Lute (F# third string)"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 40,
+          "label": "E2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 45,
+          "label": "A2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 50,
+          "label": "D3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 54,
+          "label": "F#3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 59,
+          "label": "B3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 64,
+          "label": "E4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "guitar.acoustic.6.all_fourths",
+      "instrumentId": "guitar.acoustic.6",
+      "name": {
+        "key": "timbre_catalog_tuning_guitar_acoustic_6_all_fourths",
+        "default": "All fourths"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 40,
+          "label": "E2",
+          "anchorId": "s6"
+        },
+        {
+          "index": 2,
+          "targetMidi": 45,
+          "label": "A2",
+          "anchorId": "s5"
+        },
+        {
+          "index": 3,
+          "targetMidi": 50,
+          "label": "D3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 4,
+          "targetMidi": 55,
+          "label": "G3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 60,
+          "label": "C4",
+          "anchorId": "s2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 65,
+          "label": "F4",
           "anchorId": "s1"
         }
       ]
@@ -2300,6 +3248,162 @@
       ]
     },
     {
+      "id": "bass.electric.4.eb_std",
+      "instrumentId": "bass.electric.4",
+      "name": {
+        "key": "timbre_catalog_tuning_bass_electric_4_eb_std",
+        "default": "Eb standard"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 27,
+          "label": "Eb1",
+          "anchorId": "s4"
+        },
+        {
+          "index": 2,
+          "targetMidi": 32,
+          "label": "Ab1",
+          "anchorId": "s3"
+        },
+        {
+          "index": 3,
+          "targetMidi": 37,
+          "label": "Db2",
+          "anchorId": "s2"
+        },
+        {
+          "index": 4,
+          "targetMidi": 42,
+          "label": "Gb2",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "bass.electric.4.d_std",
+      "instrumentId": "bass.electric.4",
+      "name": {
+        "key": "timbre_catalog_tuning_bass_electric_4_d_std",
+        "default": "D standard"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 26,
+          "label": "D1",
+          "anchorId": "s4"
+        },
+        {
+          "index": 2,
+          "targetMidi": 31,
+          "label": "G1",
+          "anchorId": "s3"
+        },
+        {
+          "index": 3,
+          "targetMidi": 36,
+          "label": "C2",
+          "anchorId": "s2"
+        },
+        {
+          "index": 4,
+          "targetMidi": 41,
+          "label": "F2",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "bass.electric.4.drop_c",
+      "instrumentId": "bass.electric.4",
+      "name": {
+        "key": "timbre_catalog_tuning_bass_electric_4_drop_c",
+        "default": "Drop C"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 24,
+          "label": "C1",
+          "anchorId": "s4"
+        },
+        {
+          "index": 2,
+          "targetMidi": 31,
+          "label": "G1",
+          "anchorId": "s3"
+        },
+        {
+          "index": 3,
+          "targetMidi": 36,
+          "label": "C2",
+          "anchorId": "s2"
+        },
+        {
+          "index": 4,
+          "targetMidi": 41,
+          "label": "F2",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "bass.electric.4.bead",
+      "instrumentId": "bass.electric.4",
+      "name": {
+        "key": "timbre_catalog_tuning_bass_electric_4_bead",
+        "default": "BEAD"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 23,
+          "label": "B0",
+          "anchorId": "s4"
+        },
+        {
+          "index": 2,
+          "targetMidi": 28,
+          "label": "E1",
+          "anchorId": "s3"
+        },
+        {
+          "index": 3,
+          "targetMidi": 33,
+          "label": "A1",
+          "anchorId": "s2"
+        },
+        {
+          "index": 4,
+          "targetMidi": 38,
+          "label": "D2",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
       "id": "bass.electric.4.five",
       "instrumentId": "bass.electric.4",
       "name": {
@@ -2564,6 +3668,84 @@
       ]
     },
     {
+      "id": "ukulele.soprano.4.slack_key",
+      "instrumentId": "ukulele.soprano.4",
+      "name": {
+        "key": "timbre_catalog_tuning_ukulele_soprano_4_slack_key",
+        "default": "Slack-key (open C)"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 67,
+          "label": "G4",
+          "anchorId": "s4"
+        },
+        {
+          "index": 2,
+          "targetMidi": 60,
+          "label": "C4",
+          "anchorId": "s3"
+        },
+        {
+          "index": 3,
+          "targetMidi": 64,
+          "label": "E4",
+          "anchorId": "s2"
+        },
+        {
+          "index": 4,
+          "targetMidi": 67,
+          "label": "G4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "ukulele.soprano.4.slide_c7",
+      "instrumentId": "ukulele.soprano.4",
+      "name": {
+        "key": "timbre_catalog_tuning_ukulele_soprano_4_slide_c7",
+        "default": "Slide (C7)"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 67,
+          "label": "G4",
+          "anchorId": "s4"
+        },
+        {
+          "index": 2,
+          "targetMidi": 60,
+          "label": "C4",
+          "anchorId": "s3"
+        },
+        {
+          "index": 3,
+          "targetMidi": 64,
+          "label": "E4",
+          "anchorId": "s2"
+        },
+        {
+          "index": 4,
+          "targetMidi": 70,
+          "label": "Bb4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
       "id": "ukulele.baritone.4.standard",
       "instrumentId": "ukulele.baritone.4",
       "name": {
@@ -2700,6 +3882,132 @@
           "index": 8,
           "targetMidi": 76,
           "label": "E5",
+          "anchorId": "c1"
+        }
+      ]
+    },
+    {
+      "id": "mandolin.standard.8.cross_aeae",
+      "instrumentId": "mandolin.standard.8",
+      "name": {
+        "key": "timbre_catalog_tuning_mandolin_standard_8_cross_aeae",
+        "default": "Cross A (AEAE)"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 57,
+          "label": "A3",
+          "anchorId": "c4"
+        },
+        {
+          "index": 2,
+          "targetMidi": 57,
+          "label": "A3",
+          "anchorId": "c4"
+        },
+        {
+          "index": 3,
+          "targetMidi": 64,
+          "label": "E4",
+          "anchorId": "c3"
+        },
+        {
+          "index": 4,
+          "targetMidi": 64,
+          "label": "E4",
+          "anchorId": "c3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 69,
+          "label": "A4",
+          "anchorId": "c2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 69,
+          "label": "A4",
+          "anchorId": "c2"
+        },
+        {
+          "index": 7,
+          "targetMidi": 76,
+          "label": "E5",
+          "anchorId": "c1"
+        },
+        {
+          "index": 8,
+          "targetMidi": 76,
+          "label": "E5",
+          "anchorId": "c1"
+        }
+      ]
+    },
+    {
+      "id": "mandolin.standard.8.cross_gdgd",
+      "instrumentId": "mandolin.standard.8",
+      "name": {
+        "key": "timbre_catalog_tuning_mandolin_standard_8_cross_gdgd",
+        "default": "Sawmill (GDGD)"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 55,
+          "label": "G3",
+          "anchorId": "c4"
+        },
+        {
+          "index": 2,
+          "targetMidi": 55,
+          "label": "G3",
+          "anchorId": "c4"
+        },
+        {
+          "index": 3,
+          "targetMidi": 62,
+          "label": "D4",
+          "anchorId": "c3"
+        },
+        {
+          "index": 4,
+          "targetMidi": 62,
+          "label": "D4",
+          "anchorId": "c3"
+        },
+        {
+          "index": 5,
+          "targetMidi": 67,
+          "label": "G4",
+          "anchorId": "c2"
+        },
+        {
+          "index": 6,
+          "targetMidi": 67,
+          "label": "G4",
+          "anchorId": "c2"
+        },
+        {
+          "index": 7,
+          "targetMidi": 74,
+          "label": "D5",
+          "anchorId": "c1"
+        },
+        {
+          "index": 8,
+          "targetMidi": 74,
+          "label": "D5",
           "anchorId": "c1"
         }
       ]
@@ -2967,6 +4275,123 @@
           "index": 4,
           "targetMidi": 76,
           "label": "E5",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "violin.standard.4.high_bass",
+      "instrumentId": "violin.standard.4",
+      "name": {
+        "key": "timbre_catalog_tuning_violin_standard_4_high_bass",
+        "default": "High bass (ADAE)"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 57,
+          "label": "A3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 2,
+          "targetMidi": 62,
+          "label": "D4",
+          "anchorId": "s3"
+        },
+        {
+          "index": 3,
+          "targetMidi": 69,
+          "label": "A4",
+          "anchorId": "s2"
+        },
+        {
+          "index": 4,
+          "targetMidi": 76,
+          "label": "E5",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "violin.standard.4.sawmill",
+      "instrumentId": "violin.standard.4",
+      "name": {
+        "key": "timbre_catalog_tuning_violin_standard_4_sawmill",
+        "default": "Sawmill (GDGD)"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 55,
+          "label": "G3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 2,
+          "targetMidi": 62,
+          "label": "D4",
+          "anchorId": "s3"
+        },
+        {
+          "index": 3,
+          "targetMidi": 67,
+          "label": "G4",
+          "anchorId": "s2"
+        },
+        {
+          "index": 4,
+          "targetMidi": 74,
+          "label": "D5",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "violin.standard.4.calico",
+      "instrumentId": "violin.standard.4",
+      "name": {
+        "key": "timbre_catalog_tuning_violin_standard_4_calico",
+        "default": "Calico (AEAC#)"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 57,
+          "label": "A3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 2,
+          "targetMidi": 64,
+          "label": "E4",
+          "anchorId": "s3"
+        },
+        {
+          "index": 3,
+          "targetMidi": 69,
+          "label": "A4",
+          "anchorId": "s2"
+        },
+        {
+          "index": 4,
+          "targetMidi": 73,
+          "label": "C#5",
           "anchorId": "s1"
         }
       ]
@@ -3297,6 +4722,51 @@
           "index": 4,
           "targetMidi": 57,
           "label": "A3",
+          "anchorId": "s2"
+        },
+        {
+          "index": 5,
+          "targetMidi": 62,
+          "label": "D4",
+          "anchorId": "s1"
+        }
+      ]
+    },
+    {
+      "id": "banjo.five.5.g_modal",
+      "instrumentId": "banjo.five.5",
+      "name": {
+        "key": "timbre_catalog_tuning_banjo_five_5_g_modal",
+        "default": "G modal (sawmill)"
+      },
+      "isDefault": false,
+      "isFree": false,
+      "a4Hz": 440,
+      "temperamentId": "equal",
+      "provenance": "VERIFIED",
+      "courses": [
+        {
+          "index": 1,
+          "targetMidi": 67,
+          "label": "G4",
+          "anchorId": "s5"
+        },
+        {
+          "index": 2,
+          "targetMidi": 50,
+          "label": "D3",
+          "anchorId": "s4"
+        },
+        {
+          "index": 3,
+          "targetMidi": 55,
+          "label": "G3",
+          "anchorId": "s3"
+        },
+        {
+          "index": 4,
+          "targetMidi": 60,
+          "label": "C4",
           "anchorId": "s2"
         },
         {

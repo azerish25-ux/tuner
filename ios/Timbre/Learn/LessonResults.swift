@@ -59,18 +59,20 @@ struct LessonResults: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.requestReview) private var requestReview
 
-    /// "Flawless" only for a clean run (98 % or better); three stars read "Great work", two "Nice work". The stars
-    /// never outrank the lesson's final play-along (`LessonRun.starCap(finalTake:)`), so a take whose own card said
-    /// "Keep going" never ends in "Great work". The coach goes by the same rules (`Coach.isFlawless`, its
-    /// `finalTake` note), so under "Flawless" it never sends you to fix something.
+    /// The headline leads with what happened, as a teacher would say it: "6 of 6, clean" when the coach counted a
+    /// clean run, "Nothing slipped" for any other flawless one (`Coach.isFlawless`, 98 % or better), "92% landed" for
+    /// two or three stars, else "Lesson complete". The stars never outrank the lesson's final play-along
+    /// (`LessonRun.starCap(finalTake:)`) and the coach goes by the same rules, so the headline never praises a take
+    /// the coach then sends you to fix.
     private var headline: LocalizedStringKey {
-        if Coach.isFlawless(result) { return "Flawless" }
-        switch result.stars {
-        case 3...: return "Great work"
-        case 2: return "Nice work"
-        default: return "Lesson complete"
-        }
+        if practice { return "Lesson complete" }
+        if case .clean(let items)? = shownCoach?.fact, items > 1, Coach.isFlawless(result) { return "\(items) of \(items), clean" }
+        if Coach.isFlawless(result) { return "Nothing slipped" }
+        return result.stars >= 2 ? "\(accuracyPercent)% landed" : "Lesson complete"
     }
+
+    /// The key of the lesson's music: its stars ring that key's triad.
+    private var rewardKey: RewardKey? { RewardKey.of(lesson) }
 
     private var accuracyPercent: Int { Int((result.accuracy * 100).rounded()) }
 
@@ -79,7 +81,7 @@ struct LessonResults: View {
         VStack(spacing: 0) {
             ScrollView { content }.scrollBounceBehavior(.basedOnSize).scrollIndicators(.hidden)
                 // Content that continues below the fold fades out instead of being cut at the buttons. Only then: a
-                // screen that ends above them keeps its last row whole, not dimmed for nothing (review 14, bug 2).
+                // screen that ends above them keeps its last row whole, not dimmed for nothing.
                 .onScrollGeometryChange(for: Bool.self) { geometry in
                     geometry.contentSize.height - Self.contentFoot - geometry.visibleRect.maxY > 1
                 } action: { _, more in
@@ -89,8 +91,8 @@ struct LessonResults: View {
             buttons
         }
         .coordinateSpace(resultsSpace)
-        // Behind the content, as it was behind the stars: drawn here rather than in the scroll view, which clipped
-        // the ring flat where it crossed the scroll view's top edge (review 13, bug 1).
+        // Behind the content, as it was behind the stars: drawn here rather than in the scroll view, which would
+        // clip the rings flat where they cross its top edge.
         .background(alignment: .topLeading) { burstLayer }
         .task { await reveal() }
         .overlay {
@@ -124,6 +126,9 @@ struct LessonResults: View {
             }
             .frame(maxWidth: .infinity)
             .frame(height: 136)
+            // The stars are read as one fact: "2 of 3 stars".
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("\(result.stars) of 3 stars"))
             // Where the burst behind them is drawn (outside the scroll view, so its ring is never cut).
             .onGeometryChange(for: CGPoint.self) { proxy in
                 let frame = proxy.frame(in: resultsSpace)
@@ -147,7 +152,7 @@ struct LessonResults: View {
             // Side by side; one per row at the accessibility sizes, so "day streak" never truncates.
             StatTileRow(spacing: 12) {
                 StatTile(symbol: "sparkles", tint: accent, value: Text("+\(xp)"), label: Text("XP"), alignment: .center)
-                StatTile(symbol: "scope", tint: Palette.amber, value: Text("\(accuracyPercent)%"), label: Text("accuracy"), alignment: .center)
+                StatTile(symbol: "target", tint: Palette.amber, value: Text("\(accuracyPercent)%"), label: Text("accuracy"), alignment: .center)
                 StatTile(symbol: "flame.fill", tint: Palette.flame, value: Text("\(store.streak.current)"), label: Text("day streak"), alignment: .center)
             }
             .padding(.horizontal, Metrics.gutter)
@@ -165,12 +170,11 @@ struct LessonResults: View {
         .padding(.top, 8).padding(.bottom, Self.contentFoot)
     }
 
-    /// Room for the whole burst: its ring reaches about 165 pt from the centre and its sparks less, so nothing is
-    /// cut at the canvas's edge either.
+    /// Room for the whole burst: its outer ring lands 160 pt from the centre, so nothing is cut at the canvas's edge.
     private static let burstSize: CGFloat = 360
 
-    /// The amber burst as each star lands (and on a level-up), centred on the stars wherever the content has
-    /// scrolled them. It sits outside the scroll view and draws past this view's bounds (into the status bar's
+    /// The amber harmonic burst as each star lands (and on a level-up), centred on the stars wherever the content
+    /// has scrolled them. It sits outside the scroll view and draws past this view's bounds (into the status bar's
     /// area when the stars are near the top), so it is whole at every text size and on every screen.
     @ViewBuilder private var burstLayer: some View {
         if let starsCenter {
@@ -585,20 +589,25 @@ struct LessonResults: View {
         }
     }
 
+    /// A star: its bare string waits in place, and an earned one lands over it, ringing, white-hot and cooling to
+    /// gold (`RewardStar`, `StarHeat`). It spins in from small; under Reduce Motion it only fades in.
     private func star(_ i: Int) -> some View {
         let earned = i < result.stars
-        let shown = i < shownStars
+        let lit = earned && i < shownStars
         let size: CGFloat = i == 1 ? 90 : 68
-        return Image(systemName: "star.fill")
-            .font(.system(size: size, weight: .bold))
-            .foregroundStyle(earned && shown ? AnyShapeStyle(Palette.starFill) : AnyShapeStyle(Color.white.opacity(0.08)))
-            // Lands white-hot and cools to gold, a glint crossing it (Shaders.metal).
-            .modifier(StarHeat(landed: earned ? landed[i] : nil))
-            .shadow(color: earned && shown ? Palette.starGold.opacity(0.6) : .clear, radius: 18)
-            .scaleEffect(shown ? 1 : 0.3)
-            .rotationEffect(.degrees(shown ? 0 : -40))
-            .offset(y: i == 1 ? -12 : 0)
-            .accessibilityHidden(true)
+        return ZStack {
+            RewardStar(earned: false)
+            if earned {
+                RewardStar(earned: true, landed: landed[i])
+                    .modifier(StarHeat(landed: landed[i]))
+                    .shadow(color: Palette.starGold.opacity(0.6), radius: 18)
+                    .opacity(lit ? 1 : 0)
+                    .scaleEffect(lit || reduceMotion ? 1 : 0.3)
+                    .rotationEffect(.degrees(lit || reduceMotion ? 0 : -40))
+            }
+        }
+        .frame(width: size * 1.05, height: size)
+        .offset(y: i == 1 ? -12 : 0)
     }
 
     private func reveal() async {
@@ -606,11 +615,14 @@ struct LessonResults: View {
         if milestone == nil { milestone = store.takeStreakMilestone() }
         // Held from here on; its room was kept from the first frame (it fades in), so nothing below jumps.
         if !coachDecided { coach = coachNote(); coachDecided = true }
+        let key = rewardKey
+        SoundFX.shared.prepareStars(key)
         withAnimation(Motion.fade) { appeared = true }
         for i in 0..<3 {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 80 : 380))
             withMotion(Motion.reward, reduceMotion: reduceMotion) { shownStars = i + 1 }
-            if i < result.stars { landed[i] = Date(); SoundFX.shared.play(.star); Haptics.shared.lock(); burst += 1 }
+            // Each star rings the next note of the key's triad: 1, 3, 5.
+            if i < result.stars { landed[i] = Date(); SoundFX.shared.playStar(i, key: key); Haptics.shared.lock(); burst += 1 }
         }
         if coach != nil {
             try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 200))
@@ -626,6 +638,8 @@ struct LessonResults: View {
         for s in 1...steps {
             try? await Task.sleep(for: .milliseconds(30))
             withAnimation(.linear(duration: 0.03)) { xp = result.xp * s / steps }
+            // A soft tick every other step while the number climbs.
+            if result.xp > 0, s % 2 == 0 { SoundFX.shared.play(.xpTick) }
         }
         await fillLevelBar()
         // The lull after the level bar: the poster renders here (a few frames of work), not as the stars land.
@@ -634,7 +648,8 @@ struct LessonResults: View {
             for i in 0..<(reward.achievementsEarned.count + reward.questsCompleted.count + (reward.dailySetCompleted ? 1 : 0)) {
                 try? await Task.sleep(for: .milliseconds(reduceMotion ? 60 : 320))
                 withMotion(Motion.reward, reduceMotion: reduceMotion) { badgesShown = i + 1 }
-                if i < reward.achievementsEarned.count { SoundFX.shared.play(.star); Haptics.shared.lock() }
+                // A badge rings the key's octave over the stars' triad.
+                if i < reward.achievementsEarned.count { SoundFX.shared.playStar(3, key: key); Haptics.shared.lock() }
             }
         }
         // A streak milestone takes the whole screen once the results have landed; its share card waits below.

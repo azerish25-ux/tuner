@@ -11,13 +11,13 @@ final class AccessibilityAuditUITests: XCTestCase {
     private static let enforced: XCUIAccessibilityAuditType = []
 
     private static let kinds: [(type: XCUIAccessibilityAuditType, name: String)] = [
-        (.contrast, "contrast"),
-        (.sufficientElementDescription, "element description"),
-        (.hitRegion, "hit region"),
-        (.dynamicType, "Dynamic Type"),
-        (.textClipped, "clipped text"),
-        (.trait, "traits"),
-        (.elementDetection, "element detection"),
+        (type: .contrast, name: "contrast"),
+        (type: .sufficientElementDescription, name: "element description"),
+        (type: .hitRegion, name: "hit region"),
+        (type: .dynamicType, name: "Dynamic Type"),
+        (type: .textClipped, name: "clipped text"),
+        (type: .trait, name: "traits"),
+        (type: .elementDetection, name: "element detection"),
     ]
 
     /// What one audit found, filled in by the issue handler.

@@ -20,6 +20,11 @@ on:
         required: true
         default: false
         type: boolean
+      allow_untranslated:
+        description: Upload even if a shipped language lacks a legal, permission or VoiceOver string (internal TestFlight only, never an App Store release)
+        required: false
+        default: false
+        type: boolean
 permissions:
   contents: read
 concurrency:
@@ -38,6 +43,10 @@ jobs:
       APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
       APP_STORE_CONNECT_API_KEY_P8: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8 }}
       TELEMETRYDECK_APP_ID: ${{ vars.TELEMETRYDECK_APP_ID }}
+      # Optional repository variables for the addresses in Info.plist (ios/project.yml); unset keeps the project's value.
+      TIMBRE_APP_STORE_ID: ${{ vars.TIMBRE_APP_STORE_ID }}
+      TIMBRE_SHARE_URL: ${{ vars.TIMBRE_SHARE_URL }}
+      TIMBRE_REMOTE_CONFIG_URL: ${{ vars.TIMBRE_REMOTE_CONFIG_URL }}
       MARKETING_VERSION: ${{ inputs.marketing_version }}
       BUILD_NUMBER: ${{ inputs.build_number }}
     steps:
@@ -72,6 +81,11 @@ jobs:
           set -euo pipefail
           swift test --package-path ios --parallel
           python3 tools/verify-ios-resources.py
+      - name: Legal, permission and VoiceOver strings in every shipped language
+        # The paywall's renewal terms, the permission prompts and VoiceOver's words must be translated in every
+        # language the app ships (tools/l10n/critical.py). Ship fewer languages or deliver the translations first.
+        if: ${{ !inputs.allow_untranslated }}
+        run: python3 tools/l10n/critical.py --strict --github
       - name: Generate Xcode project
         run: |
           set -euo pipefail
@@ -106,7 +120,8 @@ jobs:
             -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID" \
             DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic \
             MARKETING_VERSION="$MARKETING_VERSION" CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
-            TIMBRE_TELEMETRY_APP_ID="${TELEMETRYDECK_APP_ID:-}" archive
+            TIMBRE_TELEMETRY_APP_ID="${TELEMETRYDECK_APP_ID:-}" TIMBRE_APP_STORE_ID="${TIMBRE_APP_STORE_ID:-}" \
+            TIMBRE_SHARE_URL="${TIMBRE_SHARE_URL:-}" TIMBRE_REMOTE_CONFIG_URL="${TIMBRE_REMOTE_CONFIG_URL:-}" archive
       - name: Export, sign and upload to App Store Connect
         shell: bash
         run: |

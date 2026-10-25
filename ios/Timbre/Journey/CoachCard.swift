@@ -3,8 +3,8 @@ import TimbreCore
 
 // MARK: - One note
 
-/// One coach note: an icon for what it is about, the words (the template, then a rewording on device where that
-/// is on) and its one action as a pill.
+/// One coach note: a glyph for what it is about, the words (the template, then a rewording on device where that is
+/// on) and its one action as a pill.
 struct CoachNoteView: View {
     let note: CoachNote
     let voice: CoachVoice
@@ -18,7 +18,7 @@ struct CoachNoteView: View {
     var body: some View {
         let template = voice.text(note)
         HStack(alignment: .top, spacing: 12) {
-            IconOrb(symbol: CoachVoice.symbol(note), tint: tint, size: 38)
+            Glyph(CoachVoice.symbol(note), size: Glyph.lead, tint: tint)
             VStack(alignment: .leading, spacing: 8) {
                 if eyebrow { Eyebrow("Coach", color: tint) }
                 Text(verbatim: reworded ?? template)
@@ -52,7 +52,7 @@ struct CoachNoteView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Image(systemName: "chevron.forward").font(.system(size: 10, weight: .heavy)).opacity(0.7).accessibilityHidden(true)
             }
-            .font(Typeface.label(13))
+            .font(Typeface.label(.footnote))
             .foregroundStyle(tint)
             .padding(.horizontal, 12).padding(.vertical, 8).frame(minHeight: 36)
             .background(shape.fill(tint.opacity(0.14)))
@@ -149,7 +149,7 @@ struct CoachPanel: View {
 
     private var waiting: some View {
         HStack(alignment: .top, spacing: 12) {
-            IconOrb(symbol: "waveform", tint: Palette.mint, size: 38)
+            Glyph("waveform", size: Glyph.lead, tint: Palette.inkSoft)
             Text("Play a lesson or tune up on a few days: notes on your timing, chords and strings show up here.")
                 .font(.callout).foregroundStyle(Palette.inkSoft)
                 .fixedSize(horizontal: false, vertical: true)

@@ -158,7 +158,10 @@ struct PlacementCheckView: View {
     @ViewBuilder private var strumCard: some View {
         if let strum {
             HStack(spacing: 14) {
-                IconOrb(symbol: "metronome.fill", tint: accent, size: 40)
+                Image(systemName: "metronome.fill")
+                    .font(.system(size: 20, weight: .semibold)).foregroundStyle(accent)
+                    .frame(width: 28)
+                    .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 6) {
                     StrokeArrows(pattern: strum.pattern, accent: accent)
                     Text("\(Int(strum.bpm)) BPM · \(PlacementCheck.bars) bars").font(.subheadline).foregroundStyle(Palette.inkSoft)

@@ -14,7 +14,8 @@ struct HighwayHUD: View {
 
     /// The digits roll to each new count. A store capture changes them in place instead: a roll lasts
     /// `Motion.quick` and a run grows several times a second, so a still picture would catch a ghosted digit.
-    private func digitTransition(_ value: Int) -> ContentTransition {
+    /// The take's other running counts (the ribbon's tallies) change the same way.
+    static func digitTransition(_ value: Int) -> ContentTransition {
         #if DEBUG
         if DemoScene.stillScore { return .identity }
         #endif
@@ -43,7 +44,7 @@ struct HighwayHUD: View {
             Text(combo, format: .number)
                 .font(Typeface.number(30, relativeTo: .title2))
                 .foregroundStyle(combo > 0 ? Palette.ink : Palette.inkFaint)
-                .contentTransition(digitTransition(combo))
+                .contentTransition(Self.digitTransition(combo))
                 .shadow(color: tint.opacity(level >= 2 ? 0.6 : 0), radius: 10)
             Eyebrow("Combo", color: level >= 2 ? tint : Palette.inkSoft, style: .display)
         }
@@ -73,7 +74,7 @@ struct HighwayHUD: View {
                 Text(verbatim: "×\(level)")
                     .font(Typeface.number(17))
                     .foregroundStyle(level >= 2 ? tint : Palette.inkSoft)
-                    .contentTransition(digitTransition(level))
+                    .contentTransition(Self.digitTransition(level))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
             }

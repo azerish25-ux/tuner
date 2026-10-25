@@ -3,88 +3,200 @@ import SwiftUI
 import TimbreCore
 import UIKit
 
+/// Onboarding's pages, in order. Not every player sees every one (`OnboardingView.segments`): the hand question needs
+/// an instrument, the first tune needs the microphone, the reminder card follows a locked first tune while iOS has
+/// never asked for notifications, and the first chord is for beginners whose first tune locked.
+private enum OnboardingPage: Int, CaseIterable {
+    case welcome, experience, goal, hand, microphone, firstTune, reminder, firstChord, plan
+
+    /// The page as the funnel names it (`onboarding_step`).
+    var name: String {
+        switch self {
+        case .welcome: return "welcome"
+        case .experience: return "experience"
+        case .goal: return "goal"
+        case .hand: return "hand"
+        case .microphone: return "microphone"
+        case .firstTune: return "first_tune"
+        case .reminder: return "reminder"
+        case .firstChord: return "first_chord"
+        case .plan: return "plan"
+        }
+    }
+}
+
+/// One answer to an onboarding question: its id (what is saved), its words and its glyph.
+private struct Answer: Identifiable {
+    enum Glyph {
+        case symbol(String)
+        /// Signal bars filled to `value` (0…1): how long they have played.
+        case bars(Double)
+        /// The symbol mirrored (the left hand).
+        case mirrored(String)
+    }
+
+    let id: String
+    let title: LocalizedStringKey
+    let glyph: Glyph
+}
+
 struct OnboardingView: View {
     @EnvironmentObject private var store: AppStore
     /// Observed so the Pro badges on the instrument chips go when a restore unlocks everything.
     @EnvironmentObject private var commerce: CommerceService
-    @State private var step = 0
+    /// An instrument a link chose (an instrument's Custom Product Page): the welcome screen selects it.
+    @ObservedObject private var link = OnboardingLink.shared
+    @State private var page = OnboardingPage.welcome
     @State private var instrumentID: String? = "guitar.acoustic.6"
+    /// An instrument a link chose that isn't one of the usual chips: it gets a chip of its own, first.
+    @State private var linkedID: String?
     /// The welcome screen shows every instrument in rows, after "more".
     @State private var allInstruments = false
-    /// Unanswered until the player picks; Continue waits for an answer.
+    /// Unanswered until the player picks; Continue waits for an answer. A beginner's goal starts on "Play my first songs".
     @State private var level: String?
     @State private var goal: String?
+    /// "right", "left" or "leftUpsideDown", as `UserSettings.handedness` holds it.
+    @State private var hand = "right"
     @State private var showPaywall = false
     @State private var restoring = false
     @State private var restoreMessage: String?
-    /// The plan's commitment: minutes a day and the reminder time ("Remind me" turns it on there).
+    /// The plan's commitment: minutes a day and the reminder time (the reminder card or "Remind me" turns it on).
     @State private var dailyMinutes = 10
-    @State private var reminderTime = PlanCommitment.defaultTime
+    @State private var reminderTime = ReminderTime.initial
     @State private var reminderOn = false
     /// The placement check is up, and the answer it started from once it has run.
     @State private var checking = false
     @State private var checkedFrom: String?
+    /// The first tune locked: the streak has begun, so the reminder card and the first chord may follow it.
+    @State private var tuned = false
+    /// iOS has never asked for notifications and nothing has offered the reminder yet: the card may ask.
+    @State private var reminderAskable = false
+    /// The first chord was played before this onboarding (it ran before): it isn't offered again.
+    @State private var chordBefore = false
+    @State private var chordPlayed = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    /// Welcome, experience, goal, microphone, first tune, plan.
-    private let steps = 6
 
     var body: some View {
         ZStack {
             StageBackground()
             VStack(spacing: 0) {
-                HStack(spacing: 6) {
-                    ForEach(0..<steps, id: \.self) { index in
-                        Capsule().fill(index <= step ? Palette.mint : Palette.line).frame(height: 4)
-                    }
-                }
-                .padding(.horizontal, Metrics.gutter).padding(.top, 12)
-                .opacity(step == 0 ? 0 : 1)
-                Group {
-                    switch step {
-                    case 0: welcome
-                    case 1: experience
-                    case 2: goals
-                    case 3: microphone
-                    case 4: firstTune
-                    default: plan
-                    }
-                }
-                .transition(.adaptive(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
-                                                  removal: .move(edge: .leading).combined(with: .opacity)),
-                                      reduceMotion: reduceMotion))
-                .id(step)
-                .frame(maxHeight: .infinity)
+                progressBar
+                pageView
+                    .transition(.adaptive(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
+                                                      removal: .move(edge: .leading).combined(with: .opacity)),
+                                          reduceMotion: reduceMotion))
+                    .id(page)
+                    .frame(maxHeight: .infinity)
             }
         }
-        .animation(Motion.adaptive(Motion.page, reduceMotion: reduceMotion), value: step)
+        .animation(Motion.adaptive(Motion.page, reduceMotion: reduceMotion), value: page)
         .fullScreenCover(isPresented: $showPaywall, onDismiss: finish) {
             PaywallView(context: .onboarding, answers: PaywallAnswers(instrumentId: instrumentID, level: level ?? "beginner", goal: goal ?? "tune", minutes: dailyMinutes))
                 .environmentObject(store).environmentObject(store.commerce)
         }
+        .onAppear {
+            Analytics.start()
+            hand = HandednessAnswer.id(store.settings.handedness)
+            chordBefore = store.settings.firstChordDone == true
+            logStep(page)
+        }
+        .onChange(of: page) { _, next in logStep(next) }
+        .onReceive(link.$instrumentID) { id in takeLink(id) }
+        .task { reminderAskable = await ReminderAskStep.canAsk() }
     }
 
-    private func next() { Haptics.shared.selection(); step += 1 }
+    @ViewBuilder private var pageView: some View {
+        switch page {
+        case .welcome: welcome
+        case .experience: experience
+        case .goal: goals
+        case .hand: handPage
+        case .microphone: microphone
+        case .firstTune: firstTune
+        case .reminder: reminderPage
+        case .firstChord: firstChord
+        case .plan: plan
+        }
+    }
+
+    // MARK: Progress
+
+    /// The pages this player's path holds (the welcome and the reminder card aside), each a segment of the bar.
+    private var segments: [OnboardingPage] {
+        var pages: [OnboardingPage] = [.experience, .goal]
+        if asksHand { pages.append(.hand) }
+        pages.append(.microphone)
+        if firstTuneSetup != nil { pages.append(.firstTune) }
+        if chordPlanned { pages.append(.firstChord) }
+        pages.append(.plan)
+        return pages
+    }
+
+    private var progressBar: some View {
+        let pages = segments
+        let done = pages.filter { $0.rawValue <= page.rawValue }.count
+        return HStack(spacing: 6) {
+            ForEach(pages, id: \.self) { segment in
+                Capsule().fill(segment.rawValue <= page.rawValue ? Palette.mint : Palette.line).frame(height: 4)
+            }
+        }
+        .padding(.horizontal, Metrics.gutter).padding(.top, 12)
+        .opacity(page == .welcome ? 0 : 1)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("Step \(max(1, done)) of \(pages.count)"))
+        .accessibilityHidden(page == .welcome)
+    }
+
+    private func logStep(_ step: OnboardingPage) {
+        Analytics.log("onboarding_step", ["step": step.name, "index": String(step.rawValue)])
+    }
+
+    // MARK: Flow
+
+    private func go(_ next: OnboardingPage) {
+        Haptics.shared.selection()
+        page = next
+    }
+
+    /// Every instrument has strings to hold: "Voice or other" skips the hand question.
+    private var asksHand: Bool { instrumentID != nil }
+
+    private var firstTuneSetup: FirstTuneSetup? { FirstTuneSetup.make(store: store, instrumentID: instrumentID) }
+
+    /// A beginner (just starting, or a few months in) plays a first chord after the first tune, once ever.
+    private var chordPlanned: Bool {
+        guard level == "beginner" || level == "novice", !chordBefore else { return false }
+        return FirstChordSetup.make(store: store, instrumentID: instrumentID) != nil
+    }
+
+    private func afterExperience() {
+        // Beginners came to play: their goal starts on songs (they can choose another).
+        if goal == nil, instrumentID != nil, level == "beginner" || level == "novice" { goal = "songs" }
+        go(.goal)
+    }
+
+    private func afterGoal() { go(asksHand ? .hand : .microphone) }
+
+    private func afterHand() {
+        let answer = hand
+        store.updateSettings { HandednessAnswer.store(answer, in: &$0.handedness) }
+        go(.microphone)
+    }
 
     /// After the microphone question: the first tune when Timbre can hear the instrument, then the plan.
     /// "Not now", a denial, or "Voice or other" go straight to the plan.
     private func afterMicrophone() {
-        if FirstTuneSetup.canListen, FirstTuneSetup.make(store: store, instrumentID: instrumentID) != nil {
-            next()
-        } else {
-            Haptics.shared.selection()
-            step = Self.planStep
-        }
+        if FirstTuneSetup.canListen, firstTuneSetup != nil { go(.firstTune) } else { go(.plan) }
     }
 
-    private static let planStep = 5
+    /// A locked string started the streak: the reminder card (when it may ask), then a beginner's first chord.
+    private func afterFirstTune(_ locked: Bool) {
+        tuned = locked
+        if locked && reminderAskable { page = .reminder } else { afterReminder() }
+    }
 
-    /// "Pluck your thickest string" on the live stage; locking it (or Skip) leads to the plan.
-    @ViewBuilder private var firstTune: some View {
-        if let setup = FirstTuneSetup.make(store: store, instrumentID: instrumentID) {
-            FirstTuneStep(setup: setup) { _ in step = Self.planStep }
-        } else {
-            plan
-        }
+    private func afterReminder() {
+        page = tuned && chordPlanned ? .firstChord : .plan
     }
 
     /// Pro members skip the offer.
@@ -102,8 +214,20 @@ struct OnboardingView: View {
         store.completeOnboarding(instrument: instrument, level: answeredLevel, goal: answeredGoal, minutes: dailyMinutes)
         Analytics.log("onboarding_complete", ["instrument": instrumentID ?? "chromatic", "goal": answeredGoal, "level": answeredLevel,
                                               "minutes": String(dailyMinutes), "reminder": reminderOn ? "on" : "off",
-                                              "placement_check": checkedFrom == nil ? "no" : "yes"])
+                                              "placement_check": checkedFrom == nil ? "no" : "yes", "hand": asksHand ? hand : "none",
+                                              "first_tune": tuned ? "locked" : "no", "first_chord": chordPlayed ? "played" : "no"])
     }
+
+    /// A link's instrument, chosen on the welcome screen (later pages keep the player's own choice).
+    private func takeLink(_ id: String?) {
+        guard let id else { return }
+        link.consume()
+        guard page == .welcome, store.catalog.instrument(id: id) != nil else { return }
+        if !baseChoices.contains(where: { $0.id == id }) { linkedID = id }
+        withMotion(Motion.pluck, reduceMotion: reduceMotion) { instrumentID = id }
+    }
+
+    // MARK: Welcome
 
     /// Spotlit instrument, the promise, and the instrument picker in one screen.
     private var welcome: some View {
@@ -130,36 +254,41 @@ struct OnboardingView: View {
             }
             .frame(maxHeight: .infinity)
             VStack(alignment: .leading, spacing: 12) {
-                Text("Tune until it\nstands still.").font(Typeface.display(40)).tracking(-1).foregroundStyle(Palette.ink)
+                Text("Tune in seconds.\nThen learn to play.").font(Typeface.display(32)).tracking(-0.8).foregroundStyle(Palette.ink)
                     .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
-                // "Today" is the daily three-activity set everywhere; "quest" means a side goal.
-                Text("A precision tuner, hundreds of lessons that listen as you play, and a Today plan to keep you going.")
+                Text("Timbre listens and tells you exactly how you did.")
                     .font(.body).foregroundStyle(Palette.inkSoft).fixedSize(horizontal: false, vertical: true)
             }
             .padding(.horizontal, Metrics.gutter)
             instrumentPicker
                 .padding(.top, 18)
-            Button("Get started") { next() }.buttonStyle(PrimaryButtonStyle()).padding(.horizontal, Metrics.gutter).padding(.top, 22)
+            Button("Get started") { go(.experience) }.buttonStyle(PrimaryButtonStyle()).padding(.horizontal, Metrics.gutter).padding(.top, 22)
                 .accessibilityIdentifier("onboarding.start")
-            Button {
-                restoring = true
-                restoreMessage = nil
-                Task {
-                    await store.commerce.restore()
-                    restoring = false
-                    if store.commerce.isPro { next() } else { restoreMessage = store.commerce.error }
-                }
-            } label: {
-                if restoring { ProgressView().tint(Palette.inkSoft) } else { Text("I already have Timbre Pro").underline() }
-            }
-            .font(.footnote).foregroundStyle(Palette.inkSoft).frame(maxWidth: .infinity).frame(height: 44).padding(.bottom, 4)
-            .disabled(restoring)
-            .accessibilityIdentifier("onboarding.restore")
+            restoreButton
+                .padding(.horizontal, Metrics.gutter).padding(.top, 10).padding(.bottom, 4)
             if let restoreMessage {
                 Text(restoreMessage).font(.caption).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity).padding(.horizontal, Metrics.gutter + Metrics.proseInset).padding(.bottom, 6)
             }
         }
+    }
+
+    /// "I already have Timbre Pro": the quieter bordered action under "Get started".
+    private var restoreButton: some View {
+        Button {
+            restoring = true
+            restoreMessage = nil
+            Task {
+                await store.commerce.restore()
+                restoring = false
+                if store.commerce.isPro { go(.experience) } else { restoreMessage = store.commerce.error }
+            }
+        } label: {
+            if restoring { ProgressView().tint(Palette.ink) } else { Text("I already have Timbre Pro") }
+        }
+        .buttonStyle(SecondaryButtonStyle())
+        .disabled(restoring)
+        .accessibilityIdentifier("onboarding.restore")
     }
 
     // MARK: Instruments
@@ -218,7 +347,7 @@ struct OnboardingView: View {
             Haptics.shared.selection()
         } label: {
             HStack(spacing: 7) {
-                Text(choice.title).lineLimit(1)
+                choice.title.lineLimit(1)
                 // Tuned in Chromatic on the free plan; its own stage is Pro.
                 if needsPro(choice) { ProBadge() }
             }
@@ -243,8 +372,7 @@ struct OnboardingView: View {
 
     private var selectedChoice: Choice { choices.first { $0.id == instrumentID } ?? choices[0] }
 
-    /// A Pro instrument for a free player (`AccessPolicy`): the welcome chip wears the Pro badge. Of the chips, that is
-    /// mandolin and banjo; guitar, bass, ukulele, violin and cello tune free.
+    /// A Pro instrument for a free player (`AccessPolicy`): the welcome chip wears the Pro badge.
     private func needsPro(_ choice: Choice) -> Bool {
         guard let id = choice.id, let instrument = store.catalog.instrument(id: id) else { return false }
         return !AccessPolicy.canTune(instrument: instrument, pro: commerce.isPro)
@@ -257,86 +385,169 @@ struct OnboardingView: View {
         return photo
     }
 
-    private struct Choice: Identifiable { let id: String?; let title: LocalizedStringKey; let photo: String?; let symbol: String? }
+    private struct Choice: Identifiable { let id: String?; let title: Text; let photo: String? }
+
+    /// The usual chips, and first, an instrument a link chose that isn't among them.
     private var choices: [Choice] {
-        [Choice(id: "guitar.acoustic.6", title: "Guitar", photo: "01_guitar_acoustic_guitar", symbol: nil),
-         Choice(id: "bass.electric.4", title: "Bass", photo: "06_bass_4_string_p_bass", symbol: nil),
-         Choice(id: "ukulele.soprano.4", title: "Ukulele", photo: "10_ukulele_soprano_ukulele", symbol: nil),
-         Choice(id: "violin.standard.4", title: "Violin", photo: "17_bowed_strings_violin", symbol: nil),
-         Choice(id: "cello.standard.4", title: "Cello", photo: "19_bowed_strings_cello", symbol: nil),
-         Choice(id: "mandolin.standard.8", title: "Mandolin", photo: "13_mandolin_mandolin", symbol: nil),
-         Choice(id: "banjo.five.5", title: "Banjo", photo: "22_folk_world_strings_banjo_5_string", symbol: nil),
-         Choice(id: nil, title: "Voice or other", photo: nil, symbol: "dot.radiowaves.left.and.right")]
-    }
-
-    private var levelOptions: [(String, LocalizedStringKey, String)] {
-        // Each answer starts the course at its own unit (`CoursePlacement`): unit 1, after the basics, the mid-course
-        // chords and songs, the barre and lead units, and past them.
-        [("beginner", "Just starting", "leaf.fill"), ("novice", "A few months", "music.note"), ("intermediate", "A few years", "music.quarternote.3"),
-         ("advanced", "Many years", "star.fill"), ("pro", "I play professionally", "crown.fill")]
-    }
-
-    private var goalOptions: [(String, LocalizedStringKey, String)] {
-        [("tune", "Tune fast and precisely", "tuningfork"), ("practice", "Practice every day", "calendar"), ("ear", "Train my ear", "ear.fill"), ("voice", "Sing in tune", "music.mic"), ("rhythm", "Keep better time", "metronome.fill")]
-    }
-
-    private func options(_ items: [(String, LocalizedStringKey, String)], selection: Binding<String?>) -> some View {
-        VStack(spacing: 10) {
-            ForEach(items, id: \.0) { item in
-                let selected = selection.wrappedValue == item.0
-                let row = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
-                Button {
-                    withAnimation(Motion.pluck) { selection.wrappedValue = item.0 }
-                    Haptics.shared.selection()
-                } label: {
-                    HStack(spacing: 14) {
-                        IconOrb(symbol: item.2, size: 40)
-                        Text(item.1).font(.headline).foregroundStyle(Palette.ink)
-                        Spacer()
-                        Image(systemName: selected ? "checkmark.circle.fill" : "circle").foregroundStyle(selected ? Palette.mint : Palette.inkFaint)
-                            .contentTransition(.symbolEffect(.replace))
-                    }
-                    .padding(14)
-                    .background(row.fill(selected ? Palette.mint.opacity(0.14) : Palette.stageRaised.opacity(0.8)))
-                    .overlay(row.strokeBorder(selected ? Palette.mint : Palette.controlLine, lineWidth: 1))
-                    .contentShape(row)
-                }
-                .buttonStyle(PressScaleStyle())
-                .accessibilityAddTraits(selected ? .isSelected : [])
-                .accessibilityIdentifier("onboarding.option.\(item.0)")
-            }
+        var list = baseChoices
+        if let linkedID, let instrument = store.catalog.instrument(id: linkedID) {
+            let photo = store.catalog.photo(instrumentId: linkedID)
+            let name = photo.map { NSLocalizedString("timbre_photo_" + $0.asset, bundle: .main, value: $0.label, comment: "") } ?? instrument.name.localized
+            list.insert(Choice(id: linkedID, title: Text(verbatim: name), photo: photo?.asset), at: 0)
         }
+        return list
+    }
+
+    private var baseChoices: [Choice] {
+        [Choice(id: "guitar.acoustic.6", title: Text("Guitar"), photo: "01_guitar_acoustic_guitar"),
+         Choice(id: "bass.electric.4", title: Text("Bass"), photo: "06_bass_4_string_p_bass"),
+         Choice(id: "ukulele.soprano.4", title: Text("Ukulele"), photo: "10_ukulele_soprano_ukulele"),
+         Choice(id: "violin.standard.4", title: Text("Violin"), photo: "17_bowed_strings_violin"),
+         Choice(id: "cello.standard.4", title: Text("Cello"), photo: "19_bowed_strings_cello"),
+         Choice(id: "mandolin.standard.8", title: Text("Mandolin"), photo: "13_mandolin_mandolin"),
+         Choice(id: "banjo.five.5", title: Text("Banjo"), photo: "22_folk_world_strings_banjo_5_string"),
+         Choice(id: nil, title: Text("Voice or other"), photo: nil)]
+    }
+
+    // MARK: Questions
+
+    /// Each answer starts the course at its own unit (`CoursePlacement`): unit 1, after the basics, the mid-course
+    /// chords and songs, the barre and lead units, and past them. The bars fill with the years.
+    private var levelAnswers: [Answer] {
+        [Answer(id: "beginner", title: "Just starting", glyph: .bars(0)),
+         Answer(id: "novice", title: "A few months", glyph: .bars(0.25)),
+         Answer(id: "intermediate", title: "A few years", glyph: .bars(0.5)),
+         Answer(id: "advanced", title: "Many years", glyph: .bars(0.75)),
+         Answer(id: "pro", title: "I play professionally", glyph: .bars(1))]
+    }
+
+    /// "Play my first songs" leads for anyone with an instrument: the intent the plan, the first chord and the paywall
+    /// are built around.
+    private var goalAnswers: [Answer] {
+        let songs = Answer(id: "songs", title: "Play my first songs", glyph: .symbol("music.note.list"))
+        let rest = [Answer(id: "tune", title: "Tune fast and precisely", glyph: .symbol("tuningfork")),
+                    Answer(id: "practice", title: "Practice every day", glyph: .symbol("calendar")),
+                    Answer(id: "ear", title: "Train my ear", glyph: .symbol("ear")),
+                    Answer(id: "voice", title: "Sing in tune", glyph: .symbol("music.mic")),
+                    Answer(id: "rhythm", title: "Keep better time", glyph: .symbol("metronome"))]
+        return instrumentID == nil ? rest : [songs] + rest
+    }
+
+    /// Right, left, and (not for bowed instruments) a right-handed instrument played left-handed, strung upside down.
+    private var handAnswers: [Answer] {
+        var list = [Answer(id: "right", title: "Right-handed", glyph: .symbol("hand.raised")),
+                    Answer(id: "left", title: "Left-handed", glyph: .mirrored("hand.raised"))]
+        let bowed = ["violin", "cello"].contains(LearnCourse.fretKind(of: instrumentID) ?? "")
+        if !bowed {
+            list.append(Answer(id: "leftUpsideDown", title: "Left-handed, strung upside down", glyph: .symbol("arrow.up.arrow.down")))
+        }
+        return list
+    }
+
+    private var experience: some View {
+        questionPage("How long have you been playing?", "Exercises start where you are.", enabled: level != nil, onContinue: afterExperience) {
+            answerList(levelAnswers, selection: $level)
+        }
+    }
+
+    private var goals: some View {
+        questionPage("What matters most?", "Your Today plan is built around it.", enabled: goal != nil, onContinue: afterGoal) {
+            answerList(goalAnswers, selection: $goal)
+        }
+    }
+
+    private var handPage: some View {
+        let selection = Binding<String?>(get: { hand }, set: { if let value = $0 { hand = value } })
+        return questionPage("Which hand do you play with?", "Necks, chord charts and the stage follow your hand.", enabled: true,
+                            onContinue: afterHand) {
+            answerList(handAnswers, selection: selection)
+        }
+    }
+
+    /// A question over its answers, the answers centred in the room left under it, and Continue in the dock. Where
+    /// they don't fit (large text, a small phone) the page scrolls above the dock instead.
+    private func questionPage<Content: View>(_ title: LocalizedStringKey, _ detail: LocalizedStringKey, enabled: Bool,
+                                             onContinue: @escaping () -> Void, @ViewBuilder answers: () -> Content) -> some View {
+        let list = answers()
+        return ViewThatFits(in: .vertical) {
+            questionStack(title, detail, list, spread: true)
+            ScrollView {
+                questionStack(title, detail, list, spread: false)
+            }
+            .scrollBounceBehavior(.basedOnSize)
+        }
+        .onboardingDock { continueButton(enabled: enabled, action: onContinue) }
+    }
+
+    private func questionStack<Content: View>(_ title: LocalizedStringKey, _ detail: LocalizedStringKey, _ answers: Content,
+                                              spread: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            question(title, detail)
+            if spread { Spacer(minLength: 18) } else { Color.clear.frame(height: 18) }
+            answers
+            if spread { Spacer(minLength: 18) }
+        }
+        .padding(.horizontal, Metrics.gutter).padding(.top, 18).padding(.bottom, 8)
+        .frame(maxWidth: .infinity, maxHeight: spread ? CGFloat.infinity : nil, alignment: .topLeading)
+    }
+
+    private func question(_ title: LocalizedStringKey, _ detail: LocalizedStringKey) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title).font(Typeface.display(32)).tracking(-0.6).foregroundStyle(Palette.ink).fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
+            Text(detail).font(.subheadline).foregroundStyle(Palette.inkSoft)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.top, 8)
+    }
+
+    private func answerList(_ items: [Answer], selection: Binding<String?>) -> some View {
+        VStack(spacing: 10) {
+            ForEach(items) { item in answerRow(item, selection: selection) }
+        }
+    }
+
+    /// An answer: its glyph, its words and a check, the chosen one washed in mint.
+    private func answerRow(_ item: Answer, selection: Binding<String?>) -> some View {
+        let selected = selection.wrappedValue == item.id
+        let row = RoundedRectangle(cornerRadius: Metrics.cornerTile, style: .continuous)
+        return Button {
+            withMotion(Motion.pluck, reduceMotion: reduceMotion) { selection.wrappedValue = item.id }
+            Haptics.shared.selection()
+        } label: {
+            HStack(spacing: 14) {
+                AnswerGlyph(glyph: item.glyph, selected: selected)
+                Text(item.title).font(.headline).foregroundStyle(Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 8)
+                Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundStyle(selected ? Palette.mint : Palette.inkFaint)
+                    .contentTransition(.symbolEffect(.replace))
+                    .accessibilityHidden(true)
+            }
+            .padding(.horizontal, 16).padding(.vertical, 14)
+            .frame(minHeight: 56)
+            .background(row.fill(selected ? Palette.mint.opacity(0.14) : Palette.stageRaised.opacity(0.8)))
+            .overlay(row.strokeBorder(selected ? Palette.mint : Palette.controlLine, lineWidth: 1))
+            .contentShape(row)
+        }
+        .buttonStyle(PressScaleStyle())
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityIdentifier("onboarding.option.\(item.id)")
     }
 
     /// Continue waits, neutral and clearly inactive but readable (the primary button's disabled look), until a
     /// question is answered.
-    private func continueButton(enabled: Bool) -> some View {
-        Button("Continue") { next() }
+    private func continueButton(enabled: Bool, action: @escaping () -> Void) -> some View {
+        Button("Continue", action: action)
             .buttonStyle(PrimaryButtonStyle())
             .disabled(!enabled)
             .animation(Motion.quick, value: enabled)
             .accessibilityIdentifier("onboarding.continue")
     }
 
-    private var experience: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            question("How long have you been playing?", "Exercises start where you are.")
-            options(levelOptions, selection: $level)
-            Spacer()
-            continueButton(enabled: level != nil)
-        }
-        .padding(.horizontal, Metrics.gutter).padding(.vertical, 18)
-    }
-
-    private var goals: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            question("What matters most?", "Your Today plan is built around it.")
-            options(goalOptions, selection: $goal)
-            Spacer()
-            continueButton(enabled: goal != nil)
-        }
-        .padding(.horizontal, Metrics.gutter).padding(.vertical, 18)
-    }
+    // MARK: Microphone
 
     private var microphone: some View {
         VStack(spacing: 22) {
@@ -348,19 +559,25 @@ struct OnboardingView: View {
                 Image(systemName: "mic.fill").font(.system(size: 54)).foregroundStyle(Palette.mint)
             }
             .frame(height: 260)
+            .accessibilityHidden(true)
             Text("Timbre listens\nto your instrument").font(Typeface.display(34)).tracking(-0.6).multilineTextAlignment(.center).foregroundStyle(Palette.ink)
+                .accessibilityAddTraits(.isHeader)
             Text("Pitch is measured on your iPhone. Recordings are never saved or uploaded.").multilineTextAlignment(.center).foregroundStyle(Palette.inkSoft)
                 .padding(.horizontal, Metrics.gutter + Metrics.proseInset)
             Spacer()
             Button("Allow microphone") {
                 Task {
-                    _ = await AVAudioApplication.requestRecordPermission()
+                    let granted = await AVAudioApplication.requestRecordPermission()
+                    Analytics.log("mic_permission", ["granted": granted ? "1" : "0", "asked": "1"])
                     afterMicrophone()
                 }
             }
             .buttonStyle(PrimaryButtonStyle()).padding(.horizontal, Metrics.gutter)
             .accessibilityIdentifier("onboarding.microphone")
-            Button { afterMicrophone() } label: {
+            Button {
+                Analytics.log("mic_permission", ["granted": "0", "asked": "0"])
+                afterMicrophone()
+            } label: {
                 Text("Not now").font(.subheadline).foregroundStyle(Palette.inkSoft)
                     .frame(maxWidth: .infinity, minHeight: Metrics.minTarget).contentShape(Rectangle())
             }
@@ -369,18 +586,49 @@ struct OnboardingView: View {
         }
     }
 
+    // MARK: First tune, reminder, first chord
+
+    /// "Pluck your thickest string" on the live stage; locking it (or Skip) leads on.
+    @ViewBuilder private var firstTune: some View {
+        if let setup = firstTuneSetup {
+            FirstTuneStep(setup: setup) { locked in afterFirstTune(locked) }
+        } else {
+            plan
+        }
+    }
+
+    private var reminderPage: some View {
+        ReminderAskStep(streak: store.streak.current, time: $reminderTime) { on in
+            reminderOn = on
+            afterReminder()
+        }
+    }
+
+    @ViewBuilder private var firstChord: some View {
+        if let setup = FirstChordSetup.make(store: store, instrumentID: instrumentID) {
+            FirstChordStep(setup: setup) { played in
+                chordPlayed = played
+                go(.plan)
+            }
+        } else {
+            plan
+        }
+    }
+
+    // MARK: Plan
+
     /// The plan from the answers: the course, where the placement starts, the goal and the next milestones.
     @ViewBuilder private var plan: some View {
         let instrument = instrumentID.flatMap { store.catalog.instrument(id: $0)?.id }
         let answeredGoal = goal ?? "tune"
-        let goalOption = goalOptions.first { $0.0 == answeredGoal }
+        let goalAnswer = goalAnswers.first { $0.id == answeredGoal }
         if let course = store.onboardingCourse(instrumentId: instrument, goal: answeredGoal) {
             let answered = level ?? "beginner"
             // The same placement the paywall's "Today" and the lesson Learn opens use (`AppStore.onboardingProgress`).
             let progress = store.onboardingProgress(level: answered, instrumentId: instrument, goal: answeredGoal)
             let start = progress.nextLesson(in: course)
             let checkSteps = placementCheckSteps(course)
-            PlanStep(course: course, start: start, goal: goalOption, artwork: CourseArtwork.of(course, catalog: store.catalog),
+            PlanStep(course: course, start: start, goal: goalAnswer, artwork: CourseArtwork.of(course, catalog: store.catalog),
                      check: checkSteps == nil ? nil : (checkedFrom == nil ? PlanCheck.offer : PlanCheck.done),
                      minutes: $dailyMinutes, reminder: $reminderTime, reminderOn: $reminderOn,
                      onCheck: { checking = true }, onStart: { startPlan() })
@@ -391,11 +639,11 @@ struct OnboardingView: View {
                     }
                 }
         } else {
-            VStack {
-                Spacer()
-                Button("Start my plan") { startPlan() }.buttonStyle(PrimaryButtonStyle()).padding(.horizontal, Metrics.gutter).padding(.bottom, 14)
-                    .accessibilityIdentifier("onboarding.plan.start")
-            }
+            Color.clear
+                .onboardingDock {
+                    Button("Start my plan") { startPlan() }.buttonStyle(PrimaryButtonStyle())
+                        .accessibilityIdentifier("onboarding.plan.start")
+                }
         }
     }
 
@@ -415,14 +663,85 @@ struct OnboardingView: View {
         guard checked != answered else { return }
         withMotion(Motion.settle, reduceMotion: reduceMotion) { level = checked }
     }
+}
 
-    private func question(_ title: LocalizedStringKey, _ detail: LocalizedStringKey) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(title).font(Typeface.display(32)).tracking(-0.6).foregroundStyle(Palette.ink).fixedSize(horizontal: false, vertical: true)
-                .accessibilityAddTraits(.isHeader)
-            Text(detail).font(.subheadline).foregroundStyle(Palette.inkSoft)
+/// An answer's glyph, plain (no disc): soft ink, mint once chosen.
+private struct AnswerGlyph: View {
+    let glyph: Answer.Glyph
+    let selected: Bool
+
+    var body: some View {
+        symbol
+            .font(.system(size: 19, weight: .semibold))
+            .foregroundStyle(selected ? Palette.mint : Palette.inkSoft)
+            .frame(width: 28)
+            .accessibilityHidden(true)
+    }
+
+    @ViewBuilder private var symbol: some View {
+        switch glyph {
+        case .symbol(let name): Image(systemName: name)
+        case .bars(let value): Image(systemName: "cellularbars", variableValue: value)
+        case .mirrored(let name): Image(systemName: name).scaleEffect(x: -1, y: 1)
         }
-        .padding(.top, 8)
+    }
+}
+
+/// The handedness answer written into, and read from, the setting whatever its stored form: a plain string or a
+/// `String`-backed value with the same names ("right", "left", "leftUpsideDown").
+private enum HandednessAnswer {
+    static func id(_ value: String) -> String { value }
+
+    static func id<Value: RawRepresentable>(_ value: Value) -> String where Value.RawValue == String { value.rawValue }
+
+    static func store(_ id: String, in field: inout String) { field = id }
+
+    static func store<Value: RawRepresentable>(_ id: String, in field: inout Value) where Value.RawValue == String {
+        if let value = Value(rawValue: id) { field = value }
+    }
+}
+
+/// The practice reminder's time of day, as onboarding's pickers hold it.
+enum ReminderTime {
+    /// Today at the reminder's time: 7 pm unless one was chosen before.
+    static var initial: Date {
+        let minutes = PracticeReminder.minutes
+        return Calendar.current.date(bySettingHour: minutes / 60, minute: minutes % 60, second: 0, of: Date()) ?? Date()
+    }
+
+    /// Minutes after midnight.
+    static func minutes(of date: Date) -> Int {
+        let time = Calendar.current.dateComponents([.hour, .minute], from: date)
+        return (time.hour ?? 19) * 60 + (time.minute ?? 0)
+    }
+}
+
+/// An onboarding page's main action, pinned to the foot of the page. The page above keeps clear of it (the inset
+/// reserves its height, at every text size) and passes under its short fade, so no row ever rests under the button.
+struct OnboardingDock<Content: View>: View {
+    private let content: Content
+
+    init(@ViewBuilder content: () -> Content) { self.content = content() }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            LinearGradient(colors: [Palette.stage.opacity(0), Palette.stage.opacity(0.9)], startPoint: .top, endPoint: .bottom)
+                .frame(height: 18)
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+            content
+                .padding(.horizontal, Metrics.gutter).padding(.top, 4).padding(.bottom, 12)
+                .frame(maxWidth: .infinity)
+                .background(Palette.stage.opacity(0.9))
+        }
+    }
+}
+
+extension View {
+    /// Pins `content` (the page's main action) in an `OnboardingDock` at the page's foot.
+    func onboardingDock<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        let dock = OnboardingDock(content: content)
+        return safeAreaInset(edge: .bottom, spacing: 0) { dock }
     }
 }
 
@@ -431,7 +750,7 @@ struct OnboardingView: View {
 private struct PlanStep: View {
     let course: LearnCourse
     let start: Lesson?
-    let goal: (String, LocalizedStringKey, String)?
+    let goal: Answer?
     /// The course's art, as on the Learn tab: the instrument's render or photograph, or the course emblem.
     let artwork: CourseArtwork
     /// The 45-second placement check: on offer, done, or not for this player (nil).
@@ -458,22 +777,22 @@ private struct PlanStep: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    header.planReveal(shown, 0, reduceMotion)
-                    courseCard.planReveal(shown, 1, reduceMotion)
-                    if let check { checkRow(check).planReveal(shown, 2, reduceMotion) }
-                    PlanCommitment(goal: goal, minutes: $minutes, reminder: $reminder, reminderOn: $reminderOn)
-                        .planReveal(shown, 2, reduceMotion)
-                    if !milestones.isEmpty { milestoneList }
-                }
-                .padding(.horizontal, Metrics.gutter).padding(.top, 18).padding(.bottom, 16)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                header.planReveal(shown, 0, reduceMotion)
+                courseCard.planReveal(shown, 1, reduceMotion)
+                if let check { checkRow(check).planReveal(shown, 2, reduceMotion) }
+                PlanCommitment(goal: goal, minutes: $minutes, reminder: $reminder, reminderOn: $reminderOn)
+                    .planReveal(shown, 2, reduceMotion)
+                if !milestones.isEmpty { milestoneList }
             }
-            .scrollBounceBehavior(.basedOnSize)
+            .padding(.horizontal, Metrics.gutter).padding(.top, 18).padding(.bottom, 16)
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        // Pinned in the dock, which reserves its height: the goal card and the milestones scroll clear of it.
+        .onboardingDock {
             Button("Start my plan") { Haptics.shared.selection(); onStart() }
                 .buttonStyle(PrimaryButtonStyle())
-                .padding(.horizontal, Metrics.gutter).padding(.top, 8).padding(.bottom, 14)
                 .planReveal(shown, 7, reduceMotion)
                 .accessibilityIdentifier("onboarding.plan.start")
         }
@@ -496,17 +815,12 @@ private struct PlanStep: View {
         .padding(.top, 8)
     }
 
-    /// Placed players read the placement as a head start, after a skip-ahead mark in the course's colour: the unit
-    /// they start at (the course card under it names the lesson) and that what they know is skipped. Beginners read
-    /// the course. What Timbre Pro opens is left to the paywall's Free and Pro table, one screen on, so the plan never
-    /// shows a lock.
+    /// Placed players read the placement as a head start: the unit they start at (the course card under it names the
+    /// lesson) and that what they know is skipped. Beginners read the course. What Timbre Pro opens is left to the
+    /// paywall's Free and Pro table, one screen on, so the plan never shows a lock.
     @ViewBuilder private var subtitle: some View {
         if let startUnit, startUnit > 0 {
-            HStack(alignment: .firstTextBaseline, spacing: 6) {
-                Image(systemName: "forward.fill").font(.caption.weight(.bold)).foregroundStyle(accent)
-                    .accessibilityHidden(true)
-                Text("You start at Unit \(startUnit + 1) — skip what you already know.")
-            }
+            Text("You start at Unit \(startUnit + 1) — skip what you already know.")
         } else {
             Text(course.subtitle.localized)
         }
@@ -516,7 +830,10 @@ private struct PlanStep: View {
     private func checkRow(_ state: PlanCheck) -> some View {
         Button(action: onCheck) {
             HStack(spacing: 14) {
-                IconOrb(symbol: state == .done ? "checkmark.seal.fill" : "gauge.with.dots.needle.67percent", tint: accent, size: 40)
+                Image(systemName: state == .done ? "checkmark.seal.fill" : "gauge.with.dots.needle.67percent")
+                    .font(.system(size: 20, weight: .semibold)).foregroundStyle(accent)
+                    .frame(width: 28)
+                    .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     checkTitle(state).font(.headline).foregroundStyle(Palette.ink)
                         .fixedSize(horizontal: false, vertical: true)
@@ -652,24 +969,13 @@ private struct PlanStep: View {
 /// The plan's daily commitment, in the goal's card: minutes a day (5, 10 or 15) and a reminder time.
 /// "Remind me" asks for notifications right there; a refusal just leaves the reminder off.
 private struct PlanCommitment: View {
-    let goal: (String, LocalizedStringKey, String)?
+    let goal: Answer?
     @Binding var minutes: Int
     @Binding var reminder: Date
     @Binding var reminderOn: Bool
     @State private var asking = false
 
     static let choices = [5, 10, 15]
-
-    /// Today at the reminder's time: 7 pm unless one was chosen before.
-    static var defaultTime: Date {
-        let minutes = PracticeReminder.minutes
-        return Calendar.current.date(bySettingHour: minutes / 60, minute: minutes % 60, second: 0, of: Date()) ?? Date()
-    }
-
-    static func minutesOfDay(_ date: Date) -> Int {
-        let time = Calendar.current.dateComponents([.hour, .minute], from: date)
-        return (time.hour ?? 19) * 60 + (time.minute ?? 0)
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -683,12 +989,12 @@ private struct PlanCommitment: View {
         .stillCard()
     }
 
-    private func goalRow(_ goal: (String, LocalizedStringKey, String)) -> some View {
+    private func goalRow(_ goal: Answer) -> some View {
         HStack(spacing: 14) {
-            IconOrb(symbol: goal.2, tint: Palette.amber, size: 44)
+            AnswerGlyph(glyph: goal.glyph, selected: false)
             VStack(alignment: .leading, spacing: 2) {
                 Text("Your goal").font(.caption).foregroundStyle(Palette.inkSoft)
-                Text(goal.1).font(.headline).foregroundStyle(Palette.ink)
+                Text(goal.title).font(.headline).foregroundStyle(Palette.ink)
             }
             Spacer(minLength: 0)
         }
@@ -738,7 +1044,7 @@ private struct PlanCommitment: View {
         .onChange(of: reminder) { _, time in
             // A new time while the reminder is on re-plans it (permission is already there).
             guard reminderOn else { return }
-            Task { await PracticeReminder.enable(at: Self.minutesOfDay(time)) }
+            Task { await PracticeReminder.enable(at: ReminderTime.minutes(of: time)) }
         }
     }
 
@@ -800,7 +1106,7 @@ private struct PlanCommitment: View {
         UserDefaults.standard.set(true, forKey: PracticeReminder.askedKey)
         asking = true
         Task { @MainActor in
-            let on = await PracticeReminder.enable(at: Self.minutesOfDay(reminder))
+            let on = await PracticeReminder.enable(at: ReminderTime.minutes(of: reminder))
             asking = false
             withAnimation(Motion.pluck) { reminderOn = on }
             if on { Haptics.shared.lock() }

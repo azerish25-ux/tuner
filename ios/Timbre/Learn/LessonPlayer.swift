@@ -9,8 +9,13 @@ import TimbreCore
 ///
 /// Lessons zoom open out of the card that was tapped (Learn's path, the Songs shelves). Until that presentation has
 /// landed (`ArrivalProbe`), nothing on screen animates: an entrance started inside the zoom could be cut off with
-/// the view left part-way (bug 64, a song's first step stuck at about 30 % opacity), so the first screen is simply
-/// there and the zoom is its entrance.
+/// the view left part-way (a song's first step stuck at about 30 % opacity), so the first screen is simply there and
+/// the zoom is its entrance.
+///
+/// Hands stay on the instrument: each step's main button answers the space bar and → (a page-turner pedal sends
+/// those), "Try again" answers ←, and Siri, Shortcuts or Voice Control can say Start, Next, Again or Slower
+/// (`LessonControl`, `LessonCommandIntent`). With VoiceOver each new step is announced and read from its title
+/// (`lessonStepArrival`).
 struct LessonPlayer: View {
     let course: LearnCourse
     let lesson: Lesson
@@ -107,6 +112,8 @@ struct LessonPlayer: View {
             Button("Keep going", role: .cancel) {}
         } message: { Text("Your progress in this lesson won’t be saved.") }
         .onAppear { LiveActivityController.shared.lessonOpened(lesson.id, title: lesson.title.localized, symbol: course.symbol) }
+        .onAppear { LessonRemote.shared.open += 1 }
+        .onDisappear { LessonRemote.shared.open = max(0, LessonRemote.shared.open - 1) }
         .onDisappear {
             store.stopLessonListening()
             // Only a lesson's own click stops with it: the Metronome tool's (left running when the lesson opened, and
@@ -340,10 +347,10 @@ struct StepView: View {
             ChordStep(chord: chord, course: course, accent: accent, onItem: onItem, done: done)
         case let .strum(chord, pattern, bpm, bars, beatsPerBar):
             RhythmStep(mode: .strum(chord), pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, strums: true, strings: course.stringCount,
-                       edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice, done: done)
+                       edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice, onStarCap: onStarCap, done: done)
         case let .progression(chords, bars, pattern, bpm, beatsPerBar):
             RhythmStep(mode: .progression(chords, bars), pattern: pattern, bpm: bpm, bars: bars.reduce(0, +), meter: beatsPerBar, strums: true, strings: course.stringCount,
-                       edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice, done: done)
+                       edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice, onStarCap: onStarCap, done: done)
         case let .tapRhythm(pattern, bpm, bars, beatsPerBar):
             RhythmStep(mode: .tap, pattern: pattern, bpm: bpm, bars: bars, meter: beatsPerBar, hearsInstrument: course.fretKind != nil, strums: course.strums,
                        strings: course.stringCount, edges: StringEdges.of(course), course: course, accent: accent, onPractice: onPractice, done: done)
@@ -474,7 +481,7 @@ struct LessonProgressTrack: View {
 
 /// Every step's title, the same on every kind of step (an explanation, a quiz, a strum, the tune check, a play-along):
 /// Sora 28 on the title curve, leading, wrapping onto as many lines as it needs, and a heading for VoiceOver. The
-/// title never changes size or alignment from one step to the next.
+/// title never changes size or alignment from one step to the next. With VoiceOver, a new step is read from here.
 struct StepTitle: View {
     private let text: Text
 
@@ -487,6 +494,100 @@ struct StepTitle: View {
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityAddTraits(.isHeader)
+            .lessonStepArrival()
+    }
+}
+
+/// A new step's heading takes VoiceOver's focus once the step has slid in, after the screen-change cue: a step that
+/// moves on by itself (a chord heard, a string in tune) is read from its title, not left on the step that went.
+private struct StepArrival: ViewModifier {
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
+    @AccessibilityFocusState private var focused: Bool
+
+    func body(content: Content) -> some View {
+        content
+            .accessibilityFocused($focused)
+            .task {
+                guard voiceOver else { return }
+                // Past the step's slide-in (`Motion.page`), so the cue and the focus land on the new step.
+                try? await Task.sleep(for: .milliseconds(550))
+                guard !Task.isCancelled else { return }
+                UIAccessibility.post(notification: .screenChanged, argument: nil)
+                try? await Task.sleep(for: .milliseconds(150))
+                guard !Task.isCancelled else { return }
+                focused = true
+            }
+    }
+}
+
+extension View {
+    /// This element is where VoiceOver reads a new lesson step from (its title, or what stands for one).
+    func lessonStepArrival() -> some View { modifier(StepArrival()) }
+
+    /// Keys and spoken commands for a lesson button (`LessonControl`), off while `enabled` is false.
+    func lessonControl(_ role: LessonControl, enabled: Bool = true, perform: @escaping () -> Void) -> some View {
+        modifier(LessonControlKeys(role: role, enabled: enabled, perform: perform))
+    }
+}
+
+/// What a lesson's buttons answer to beyond a tap: a hardware keyboard or a page-turner pedal (they send the space bar
+/// and the arrows), and Siri, Shortcuts or Voice Control mid-lesson (`LessonCommandIntent`).
+enum LessonControl {
+    /// The step's main button (Start, Check, Continue, Next lesson): space or →; "Start" and "Next".
+    case primary
+    /// Another go (Try again): ←; "Again".
+    case again
+    /// A slower take (the play-along's tempo ladder): ↓; "Slower".
+    case slower
+
+    func answers(_ command: LessonCommand) -> Bool {
+        switch (self, command) {
+        case (.primary, .start), (.primary, .next), (.again, .again), (.slower, .slower): return true
+        default: return false
+        }
+    }
+}
+
+/// The keys as zero-sized buttons behind the control (one button carries one shortcut), and the spoken commands.
+private struct LessonControlKeys: ViewModifier {
+    let role: LessonControl
+    let enabled: Bool
+    let perform: () -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .background {
+                if enabled { keys }
+            }
+            .onReceive(LessonRemote.shared.commands) { command in
+                guard enabled, role.answers(command) else { return }
+                fire()
+            }
+    }
+
+    @ViewBuilder private var keys: some View {
+        ZStack {
+            switch role {
+            case .primary:
+                Button(action: fire) { EmptyView() }.keyboardShortcut(.space, modifiers: [])
+                Button(action: fire) { EmptyView() }.keyboardShortcut(.rightArrow, modifiers: [])
+            case .again:
+                Button(action: fire) { EmptyView() }.keyboardShortcut(.leftArrow, modifiers: [])
+            case .slower:
+                Button(action: fire) { EmptyView() }.keyboardShortcut(.downArrow, modifiers: [])
+            }
+        }
+        .frame(width: 0, height: 0)
+        .opacity(0)
+        .accessibilityHidden(true)
+    }
+
+    /// One press at a time: a pedal's bounce, or a second press while the next step slides in, never skips a step.
+    @MainActor private func fire() {
+        let now = ProcessInfo.processInfo.systemUptime
+        guard now - LessonRemote.shared.lastFired > 0.6 else { return }
+        LessonRemote.shared.lastFired = now
+        perform()
     }
 }
 
@@ -503,6 +604,7 @@ struct StepButton: View {
         Button(action: action) { Text(title) }
             .buttonStyle(PrimaryButtonStyle(accent: accent))
             .disabled(!enabled)
+            .lessonControl(.primary, enabled: enabled, perform: action)
             .padding(.horizontal, inset ? Metrics.gutter : 0).padding(.bottom, inset ? 12 : 0)
             .accessibilityIdentifier("lesson.continue")
     }
@@ -561,9 +663,11 @@ struct HearItButton: View {
 }
 
 /// A quieter button for a step's bottom bar ("I played it", "My strings are tuned — skip"): the secondary button's
-/// capsule, height, type and control outline (`SecondaryButtonStyle`); clear glass on iOS 26.
+/// capsule, height, type and control outline (`SecondaryButtonStyle`); clear glass on iOS 26. Given a `role`, it
+/// answers its key and spoken command too ("Try again": ←, "Again").
 struct LessonBarButton: View {
     let title: LocalizedStringKey
+    var role: LessonControl? = nil
     let action: () -> Void
     @Environment(\.timbreGlassSpace) private var glass
 
@@ -580,6 +684,7 @@ struct LessonBarButton: View {
                 .contentShape(shape)
         }
         .buttonStyle(PressScaleStyle())
+        .lessonControl(role ?? .again, enabled: role != nil, perform: action)
     }
 }
 

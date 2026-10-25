@@ -26,6 +26,16 @@ jobs:
             SWIFT_EMIT_LOC_STRINGS=YES 2>&1 | tail -40 | tee ci-out/export.log
           find ci-out/l10n -name "*.xliff" -exec cp {} ci-out/ \;
           ls -la ci-out
+      - name: Handoff and release-critical strings with Xcode's own keys
+        # The scanner infers each interpolation's specifier (%lld, %@ …); the export states it. Both reports here use
+        # the export's keys, so what translators deliver matches what the app looks up.
+        if: success()
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          XLIFF=$(ls ci-out/*.xliff | head -1)
+          python3 tools/l10n/report.py --check --xliff "$XLIFF" --out ci-out/handoff 2>&1 | tee ci-out/report.log
+          python3 tools/l10n/critical.py --xliff "$XLIFF" --out ci-out 2>&1 | tee ci-out/critical.log
       - name: Publish
         if: always()
         env:

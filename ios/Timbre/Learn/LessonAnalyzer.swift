@@ -22,6 +22,8 @@ final class LessonAnalyzer: @unchecked Sendable {
     private var poly: PolyTuner?
     private var pending: [Float] = []
     private var rate = 0.0
+    /// Each onset's host time as it was reported, so its stroke's chord comes back with exactly the same time.
+    private var onsetHost: [Double: CFTimeInterval] = [:]
     /// The latest estimate, and whether it matches the target chord.
     private let onChord: @MainActor (ChordEstimate?, Bool) -> Void
     private let onOnset: @MainActor (CFTimeInterval) -> Void
@@ -60,13 +62,18 @@ final class LessonAnalyzer: @unchecked Sendable {
             onsets = wantsStrokes ? nil : OnsetDetector(sampleRate: rate)
             poly = strings.map { PolyTuner(strings: $0, sampleRate: rate) }
             pending = []
+            onsetHost = [:]
         }
         if let strokes {
             // Stream seconds onto the host clock, relative to this chunk's arrival.
             let found = strokes.feed(samples)
-            for time in found.onsets { post(onOnset, arrived - (strokes.elapsed - time)) }
+            for time in found.onsets {
+                let host = arrived - (strokes.elapsed - time)
+                onsetHost[time] = host
+                post(onOnset, host)
+            }
             for stroke in found.strokes {
-                let host = arrived - (strokes.elapsed - stroke.time)
+                let host = onsetHost.removeValue(forKey: stroke.time) ?? arrived - (strokes.elapsed - stroke.time)
                 let callback = onStroke
                 let chord = stroke.chord
                 Task { @MainActor in callback(host, chord) }

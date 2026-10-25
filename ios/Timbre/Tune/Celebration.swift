@@ -1,103 +1,145 @@
 import SwiftUI
 import TimbreCore
 
-/// All strings in tune: a burst of light, a chord of haptics and a card to share.
+/// All strings in tune, as a finale in three beats. The camera pulls back to the whole instrument (`TuneView`) while
+/// the instrument's own open strings roll low to high, each with its bell, and strum together (`SoundFX.playTuned`,
+/// the rail's chips lighting in step). Only then does the card rise: the strings standing still, the tuning, the time
+/// and the share card, with a harmonic burst. It closes itself after a few seconds.
 struct CelebrationOverlay: View {
     @EnvironmentObject private var store: AppStore
     @State private var visible = false
     @State private var started = Date()
     @State private var card: Image?
+    @State private var burst = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.displayScale) private var displayScale
     @Environment(\.locale) private var locale
     @Environment(\.layoutDirection) private var layoutDirection
 
+    /// How long the card stays once it has risen.
+    static let holds = 6.0
+
+    /// The card waits for the pull-back and the strings' roll (`SoundSynth.tunedBloom`); under Reduce Motion the
+    /// camera cuts, so it waits for the roll alone.
+    static func entranceDelay(strings: Int, reduceMotion: Bool) -> Double {
+        let roll = SoundSynth.tunedBloom(count: strings)
+        return reduceMotion ? roll + 0.2 : max(0.9, roll) + 0.45
+    }
+
     var body: some View {
         ZStack {
             if visible {
                 Color.black.opacity(0.35).ignoresSafeArea().onTapGesture { dismiss() }
-                if !reduceMotion { Burst(started: started).allowsHitTesting(false) }
-                VStack(spacing: 14) {
-                    Image(systemName: "checkmark").font(.system(size: 26, weight: .heavy)).foregroundStyle(Palette.onAccent)
-                        .frame(width: 64, height: 64)
-                        .background(Circle().fill(Palette.mint))
-                        .shadow(color: Palette.mint.opacity(0.6), radius: 24)
-                        .symbolEffect(.bounce, value: visible)
-                    Text("All strings in tune").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink).multilineTextAlignment(.center)
-                    Text("\(store.instrumentDisplayName) · \(store.tuning.name.localized)").font(.subheadline).foregroundStyle(Palette.inkSoft)
-                    HStack(spacing: 6) {
-                        ForEach(Array(store.courses.enumerated()), id: \.offset) { _, course in
-                            let note = NoteReadout.split(TargetLabelFormatter.splitCue(store.courseLabel(course)).main)
-                            (Text(note.name).font(Typeface.label(13)) + Text(note.octave).font(Typeface.label(9)))
-                                .foregroundStyle(Palette.mint)
-                                .frame(minWidth: 30, minHeight: 30)
-                                .background(Circle().fill(Palette.mint.opacity(0.12)))
-                        }
-                    }
-                    .accessibilityHidden(true)
-                    HStack(spacing: 10) {
-                        if let seconds = store.lastTuneSeconds, seconds > 0 {
-                            Label("\(seconds) s", systemImage: "stopwatch.fill").foregroundStyle(Palette.ink)
-                        }
-                        Label("+\(XPReward.fullTune) XP", systemImage: "sparkles").foregroundStyle(Palette.mint)
-                        if store.streak.current > 0 {
-                            Label("\(store.streak.current)-day streak", systemImage: "flame.fill").foregroundStyle(Palette.flameInk)
-                        }
-                    }
-                    .font(Typeface.label(13))
-                    HStack(spacing: 12) {
-                        // The card renders once the burst has landed; until then Share rests where it will be, in the
-                        // primary button's disabled look.
-                        if let card {
-                            ShareLink(item: card, preview: SharePreview("In tune with Timbre", image: card)) {
-                                Label("Share", systemImage: "square.and.arrow.up")
-                            }
-                            .buttonStyle(PrimaryButtonStyle())
-                        } else {
-                            Button {} label: { Label("Share", systemImage: "square.and.arrow.up") }
-                                .buttonStyle(PrimaryButtonStyle())
-                                .disabled(true)
-                        }
-                        Button("Done") { dismiss() }.buttonStyle(SecondaryButtonStyle())
-                    }
-                    .animation(Motion.fade, value: card == nil)
-                    .padding(.top, 6)
-                    // Tuned up: the natural moment to play something.
-                    if let course = store.curriculum.courses.first(where: { $0.instrument == store.instrument.id }), let next = store.learn.nextLesson(in: course) {
-                        Button {
-                            dismiss()
-                            UserDefaults.standard.set(course.id, forKey: "learn.course")
-                            store.selectedTab = .learn
-                        } label: {
-                            Label("Ready to play: \(next.title.localized)", systemImage: "graduationcap.fill")
-                                .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.mint).lineLimit(1)
-                                .tapTarget()
-                        }
-                        .padding(.top, 2)
-                        .accessibilityIdentifier("celebration.lesson")
-                    }
-                }
-                // A hero card: the hero radius, the card inset with a little extra air around the moment.
-                .padding(.horizontal, Metrics.proseInset).padding(.vertical, 12)
-                .stillCard(cornerRadius: Metrics.cornerHero)
-                .padding(.horizontal, Metrics.gutter + Metrics.proseInset)
-                .transition(.adaptive(.scale(scale: 0.92).combined(with: .opacity), reduceMotion: reduceMotion))
-                .accessibilityAddTraits(.isModal)
+                SparkBurst(trigger: burst, color: Palette.mint, reach: 190)
+                    .frame(width: 420, height: 420)
+                    .allowsHitTesting(false)
+                cardView
             }
         }
         .adaptiveAnimation(Motion.pluck, value: visible)
-        .onChange(of: store.celebrate) { _, _ in
-            let start = Date()
-            started = start
-            card = nil
-            visible = true
-            // Rendering the card holds the main thread for a few frames: after the entrance, never under it.
-            Task { @MainActor in
-                try? await Task.sleep(for: ShareCardRenderer.entrance)
-                guard visible, started == start else { return }
-                renderCard()
+        .onChange(of: store.celebrate) { _, _ in present() }
+    }
+
+    private var cardView: some View {
+        VStack(spacing: 14) {
+            StillStrings(count: store.courses.count)
+                .frame(width: 92, height: 56)
+                .accessibilityHidden(true)
+            Text("All strings in tune").font(Typeface.display(30)).tracking(-0.6).foregroundStyle(Palette.ink).multilineTextAlignment(.center)
+            Text("\(store.instrumentDisplayName) · \(store.tuning.name.localized)").font(.subheadline).foregroundStyle(Palette.inkSoft)
+            noteRow
+            HStack(spacing: 10) {
+                if let seconds = store.lastTuneSeconds, seconds > 0 {
+                    Label("\(seconds) s", systemImage: "stopwatch.fill").foregroundStyle(Palette.ink)
+                }
+                Label("+\(XPReward.fullTune) XP", systemImage: "sparkles").foregroundStyle(Palette.mint)
+                if store.streak.current > 0 {
+                    Label("\(store.streak.current)-day streak", systemImage: "flame.fill").foregroundStyle(Palette.flameInk)
+                }
             }
-            Task { try? await Task.sleep(for: .seconds(6)); if visible { dismiss() } }
+            .font(Typeface.label(13))
+            shareRow
+            nextLesson
+        }
+        // A hero card: the hero radius, the card inset with a little extra air around the moment.
+        .padding(.horizontal, Metrics.proseInset).padding(.vertical, 12)
+        .stillCard(cornerRadius: Metrics.cornerHero)
+        .padding(.horizontal, Metrics.gutter + Metrics.proseInset)
+        .transition(.adaptive(.scale(scale: 0.92).combined(with: .opacity).combined(with: .offset(y: 24)), reduceMotion: reduceMotion))
+        .accessibilityAddTraits(.isModal)
+    }
+
+    /// The strings just tuned, low to high, as chips (music-spatial: left to right in every language).
+    private var noteRow: some View {
+        HStack(spacing: 6) {
+            ForEach(Array(store.courses.enumerated()), id: \.offset) { _, course in
+                let note = NoteReadout.split(TargetLabelFormatter.splitCue(store.courseLabel(course)).main)
+                (Text(note.name).font(Typeface.label(13)) + Text(note.octave).font(Typeface.label(9)))
+                    .foregroundStyle(Palette.mint)
+                    .frame(minWidth: 30, minHeight: 30)
+                    .background(Circle().fill(Palette.mint.opacity(0.12)))
+            }
+        }
+        .environment(\.layoutDirection, .leftToRight)
+        .accessibilityHidden(true)
+    }
+
+    private var shareRow: some View {
+        HStack(spacing: 12) {
+            // The card renders once the card has risen; until then Share rests where it will be, in the primary
+            // button's disabled look.
+            if let card {
+                ShareLink(item: card, preview: SharePreview("In tune with Timbre", image: card)) {
+                    Label("Share", systemImage: "square.and.arrow.up")
+                }
+                .buttonStyle(PrimaryButtonStyle())
+            } else {
+                Button {} label: { Label("Share", systemImage: "square.and.arrow.up") }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(true)
+            }
+            Button("Done") { dismiss() }.buttonStyle(SecondaryButtonStyle())
+        }
+        .animation(Motion.fade, value: card == nil)
+        .padding(.top, 6)
+    }
+
+    /// Tuned up: the natural moment to play something.
+    @ViewBuilder private var nextLesson: some View {
+        if let course = store.curriculum.courses.first(where: { $0.instrument == store.instrument.id }), let next = store.learn.nextLesson(in: course) {
+            Button {
+                dismiss()
+                UserDefaults.standard.set(course.id, forKey: "learn.course")
+                store.selectedTab = .learn
+            } label: {
+                Label("Ready to play: \(next.title.localized)", systemImage: "graduationcap.fill")
+                    .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.mint).lineLimit(1)
+                    .tapTarget()
+            }
+            .padding(.top, 2)
+            .accessibilityIdentifier("celebration.lesson")
+        }
+    }
+
+    /// The finale's beats: the card waits for the pull-back and the roll, rises with its burst, renders its share
+    /// card once it has settled, and closes itself after `holds` seconds.
+    private func present() {
+        let start = Date()
+        started = start
+        card = nil
+        visible = false
+        let delay = Self.entranceDelay(strings: store.courses.count, reduceMotion: reduceMotion)
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(delay))
+            guard started == start else { return }
+            visible = true
+            if !reduceMotion { burst += 1 }
+            // Rendering the card holds the main thread for a few frames: after the entrance, never under it.
+            try? await Task.sleep(for: ShareCardRenderer.entrance)
+            guard visible, started == start else { return }
+            renderCard()
+            try? await Task.sleep(for: .seconds(Self.holds))
+            if visible, started == start { dismiss() }
         }
     }
 
@@ -108,6 +150,54 @@ struct CelebrationOverlay: View {
                                  notes: store.courses.map { TargetLabelFormatter.splitCue(store.courseLabel($0)).main },
                                  modelID: store.modelID, photo: store.photo?.asset, streak: store.streak.current, seconds: store.lastTuneSeconds)
         card = ShareCardRenderer.image(tune, scale: displayScale, locale: locale, direction: layoutDirection)
+    }
+}
+
+/// The instrument's strings, thick to thin, ringing as the card arrives and settling straight: the moment a tuned
+/// string stands still, as a glyph. Still under Reduce Motion.
+private struct StillStrings: View {
+    let count: Int
+    @State private var appeared = Date()
+    @State private var ringing = true
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private static let ring = 1.2
+
+    var body: some View {
+        TimelineView(.animation(paused: !ringing || reduceMotion)) { timeline in
+            let t = timeline.date.timeIntervalSince(appeared)
+            let swing = ringing && !reduceMotion && t < Self.ring ? exp(-t / 0.3) * cos(2 * .pi * 6 * t) : 0
+            Canvas { context, size in draw(&context, size: size, swing: swing) }
+        }
+        .task {
+            appeared = Date()
+            try? await Task.sleep(for: .seconds(Self.ring))
+            ringing = false
+        }
+    }
+
+    private func draw(_ context: inout GraphicsContext, size: CGSize, swing: Double) {
+        let strings = max(1, min(12, count))
+        let gap = size.width / CGFloat(strings + 1)
+        for index in 0..<strings {
+            let x = gap * CGFloat(index + 1)
+            // Each string swings at its own rate (a higher one a little faster), in its fundamental's shape.
+            let amount = CGFloat(swing) * gap * 0.32 * (index % 2 == 0 ? 1 : -1)
+            var path = Path()
+            path.move(to: CGPoint(x: x, y: 0))
+            for step in 1...16 {
+                let y = size.height * CGFloat(step) / 16
+                let bow = amount * CGFloat(sin(Double(step) / 16 * .pi))
+                path.addLine(to: CGPoint(x: x + bow, y: y))
+            }
+            let width = 2.6 - 1.4 * CGFloat(index) / CGFloat(max(1, strings - 1))
+            context.stroke(path, with: .color(Palette.mint), style: StrokeStyle(lineWidth: width, lineCap: .round))
+        }
+        // The nut and the bridge the strings run between.
+        for y in [CGFloat(0), size.height] {
+            let bar = CGRect(x: gap * 0.5, y: y - 1.5, width: size.width - gap, height: 3)
+            context.fill(Path(roundedRect: bar, cornerRadius: 1.5), with: .color(Palette.ink.opacity(0.35)))
+        }
     }
 }
 
@@ -134,37 +224,6 @@ struct StreakMilestoneOverlay: View {
                 days = reached
             }
         }
-    }
-}
-
-private struct Burst: View {
-    let started: Date
-    /// The ring and most sparks; the rest are amber.
-    var tint: Color = Palette.mint
-    private struct Spark { let angle, speed, size, hue: Double }
-    private static let sparks: [Spark] = {
-        var g = SystemRandom(seed: 5)
-        return (0..<90).map { _ in Spark(angle: g.next() * 2 * .pi, speed: 120 + 320 * g.next(), size: 1.5 + 3.5 * g.next(), hue: g.next()) }
-    }()
-    var body: some View {
-        TimelineView(.animation) { timeline in
-            Canvas { context, size in
-                let t = timeline.date.timeIntervalSince(started)
-                guard t < 2.4 else { return }
-                let center = CGPoint(x: size.width / 2, y: size.height * 0.42)
-                let ring = 40 + t * 380
-                context.stroke(Path(ellipseIn: CGRect(x: center.x - ring, y: center.y - ring, width: ring * 2, height: ring * 2)),
-                               with: .color(tint.opacity(max(0, 0.5 - t * 0.3))), lineWidth: 2)
-                for spark in Self.sparks {
-                    let d = spark.speed * t * (1 - t / 4)
-                    let p = CGPoint(x: center.x + cos(spark.angle) * d, y: center.y + sin(spark.angle) * d + 60 * t * t)
-                    let alpha = max(0, 1 - t / 2.2)
-                    let color = spark.hue > 0.6 ? Palette.amber : tint
-                    context.fill(Path(ellipseIn: CGRect(x: p.x - spark.size, y: p.y - spark.size, width: spark.size * 2, height: spark.size * 2)), with: .color(color.opacity(alpha)))
-                }
-            }
-        }
-        .ignoresSafeArea()
     }
 }
 
@@ -380,7 +439,7 @@ struct TuneShareCard: View {
 struct LessonShareCard: View {
     let course: String
     let title: String
-    /// "Flawless" or "Great work" for a lesson; nil for a song, whose title leads.
+    /// The results' headline for a lesson ("92% landed"); nil for a song, whose title leads.
     let headline: LocalizedStringKey?
     let stars: Int
     let accuracy: Int
@@ -437,9 +496,9 @@ struct LessonShareCard: View {
         HStack(alignment: .bottom, spacing: 12 * scale) {
             ForEach(0..<3, id: \.self) { i in
                 let earned = i < stars
-                Image(systemName: "star.fill")
-                    .font(.system(size: (i == 1 ? 86 : 64) * scale, weight: .bold))
-                    .foregroundStyle(earned ? AnyShapeStyle(Palette.starFill) : AnyShapeStyle(Color.white.opacity(0.08)))
+                let size = (i == 1 ? 86 : 64) * scale
+                RewardStar(earned: earned)
+                    .frame(width: size * 1.05, height: size)
                     .shadow(color: earned ? Palette.starGold.opacity(0.55) : .clear, radius: 16)
                     .offset(y: i == 1 ? -12 * scale : 0)
             }
@@ -449,6 +508,8 @@ struct LessonShareCard: View {
     @ViewBuilder private var words: some View {
         if let headline {
             Text(headline).font(Typeface.display(52)).tracking(-1.2).foregroundStyle(Palette.ink)
+                .multilineTextAlignment(.center).lineLimit(2).minimumScaleFactor(0.6)
+                .fixedSize(horizontal: false, vertical: true)
             Text(title).font(.headline).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
         } else {
             Text(title).font(Typeface.display(40)).tracking(-0.8).foregroundStyle(Palette.ink)
@@ -459,7 +520,7 @@ struct LessonShareCard: View {
 
     private var accuracyChip: some View {
         HStack(spacing: 6) {
-            Image(systemName: "scope").font(.system(size: 13, weight: .bold)).foregroundStyle(Palette.amber)
+            Image(systemName: "target").font(.system(size: 13, weight: .bold)).foregroundStyle(Palette.amber)
             Text("\(accuracy)%").font(Typeface.label(15)).foregroundStyle(Palette.ink)
             Text("accuracy").font(Typeface.label(14)).foregroundStyle(Palette.inkSoft)
         }
@@ -469,7 +530,8 @@ struct LessonShareCard: View {
     }
 }
 
-/// A streak milestone (7, 30, 100 days): the flame, the number of days and the badge it earns.
+/// A streak milestone (7, 30, 100 days): the stage lamp burning over the number of days, the rig of the last week
+/// and the badge it earns.
 struct StreakShareCard: View {
     let days: Int
 
@@ -483,27 +545,14 @@ struct StreakShareCard: View {
         } content: {
             ZStack {
                 Circle()
-                    .fill(RadialGradient(colors: [Palette.flame.opacity(0.34), .clear], center: .center, startRadius: 4, endRadius: 140))
+                    .fill(RadialGradient(colors: [Palette.flame.opacity(0.3), .clear], center: .center, startRadius: 4, endRadius: 140))
                     .frame(width: 280, height: 280)
-                StreakFlame(size: 150, animated: false)
+                StageLamp(level: StageLamp.brightness(days: days), size: 170)
             }
             .frame(height: 190)
             Text(days, format: .number).font(Typeface.number(92)).foregroundStyle(Palette.ink)
             Text("day streak").font(Typeface.label(18)).tracking(0.6).foregroundStyle(Palette.inkSoft)
-            embers
+            LightingRig(days: days, lit: min(days, 7)).padding(.top, 4)
         }
-    }
-
-    /// A week of embers, one lit for each day of the run (all seven from a week on).
-    private var embers: some View {
-        HStack(spacing: 8) {
-            ForEach(0..<7, id: \.self) { index in
-                let lit = index < min(days, 7)
-                Circle().fill(lit ? Palette.flame : Color.white.opacity(0.12)).frame(width: 11, height: 11)
-                    .shadow(color: lit ? Palette.flame.opacity(0.6) : .clear, radius: 6)
-            }
-        }
-        .padding(.top, 4)
-        .accessibilityHidden(true)
     }
 }

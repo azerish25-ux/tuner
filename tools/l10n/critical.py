@@ -47,8 +47,7 @@ DECL = re.compile(r"^(\s*)(?:@[\w.]+(?:\([^)]*\))?\s+)*(?:(?:public|internal|pri
 
 
 def declaration_docs(lines: list[str], index: int) -> str:
-    """The `///` documentation of every declaration enclosing line `index` (0-based), innermost first."""
-    found = []
+    """The `///` documentation of the innermost documented declaration enclosing line `index` (0-based)."""
     text = lines[index]
     limit = len(text) - len(text.lstrip())
     i = index - 1
@@ -64,9 +63,10 @@ def declaration_docs(lines: list[str], index: int) -> str:
             while j >= 0 and lines[j].lstrip().startswith("///"):
                 docs.append(lines[j].strip()[3:].strip())
                 j -= 1
-            found.append(" ".join(reversed(docs)))
+            if docs:
+                return " ".join(reversed(docs))
         i -= 1
-    return " ".join(found)
+    return ""
 
 
 class Classifier:
@@ -86,8 +86,7 @@ class Classifier:
         if not lines or not number.isdigit() or int(number) > len(lines):
             return False
         index = int(number) - 1
-        statement = " ".join(lines[max(0, index - 1): index + 2])
-        if VOICEOVER_CALLS.search(statement):
+        if VOICEOVER_CALLS.search(lines[index]):
             return True
         return bool(VOICEOVER_DOCS.search(declaration_docs(lines, index)))
 

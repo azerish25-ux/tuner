@@ -3,7 +3,7 @@ import AppIntents
 /// Timbre's App Shortcuts: Siri phrases, Spotlight, the Shortcuts app and the Action button, with no setup.
 /// Phrases are translated in <locale>.lproj/AppShortcuts.strings; "Tune my …" learns the catalog's instruments
 /// from `InstrumentQuery.suggestedEntities()` when RootView calls `updateAppShortcutParameters()`.
-/// At most ten shortcuts; the most used come first, as Spotlight shows them in this order.
+/// At most ten shortcuts (this is ten); the most used come first, as Spotlight shows them in this order.
 struct TimbreShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(intent: OpenTunerIntent(), phrases: ["Tune with \(.applicationName)", "Open the \(.applicationName) tuner"],
@@ -30,5 +30,9 @@ struct TimbreShortcuts: AppShortcutsProvider {
                     shortTitle: "Metronome", systemImageName: "metronome")
         AppShortcut(intent: EarTrainingIntent(), phrases: ["Train my ear with \(.applicationName)"],
                     shortTitle: "Ear training", systemImageName: "ear.fill")
+        // Mid-lesson, hands on the instrument: "Again in Timbre", "Next in Timbre", "Slower in Timbre".
+        AppShortcut(intent: LessonCommandIntent(), phrases: ["\(\.$command) in \(.applicationName)",
+                                                             "\(\.$command) my \(.applicationName) lesson"],
+                    shortTitle: "Lesson controls", systemImageName: "playpause.fill")
     }
 }

@@ -30,7 +30,7 @@ struct ExplainStep: View {
     let done: (Double?) -> Void
     /// The card and the words rise in as the step appears. Off for a lesson's first screen, which arrives inside the
     /// zoom out of the tapped card: a reveal started under that zoom could be cut off part-way and leave the step
-    /// at about 30 % opacity (bug 64), so there the step is simply there and the zoom is its entrance.
+    /// at about 30 % opacity, so there the step is simply there and the zoom is its entrance.
     var entrance = true
     @EnvironmentObject private var store: AppStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -161,7 +161,7 @@ struct ExplainStep: View {
     /// photo; diagrams (neck, chord, staff, keyboard) up to a card's limit.
     private func heroHeight(base: CGFloat, spare: CGFloat) -> CGFloat {
         switch visual {
-        case .none, .rhythm, .instrument: return base + spare
+        case .none, .rhythm, .instrument, .clip: return base + spare
         default: return max(base, min(base + spare, Self.diagramCardLimit))
         }
     }

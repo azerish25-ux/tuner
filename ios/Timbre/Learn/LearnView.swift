@@ -160,7 +160,7 @@ struct LearnView: View {
                 ScrollViewReader { reader in
                     pathScroll(backed: false, trailing: half) {
                         LazyVStack(alignment: .leading, spacing: 22) {
-                            courses(trailing: half, fade: Self.courseFade)
+                            courseRail
                             if let course {
                                 // Shows itself only when a weak-spot review is due.
                                 WeakSpotReviewCard(course: course) { open(course, $0, from: Self.continueSource) }
@@ -191,7 +191,7 @@ struct LearnView: View {
         let pick: ((Lesson) -> Void)? = selecting ? { lesson in select(lesson) } : nil
         ForEach(Array(course.units.enumerated()), id: \.element.id) { index, unit in
             UnitSection(course: course, unit: unit, number: index + 1, zoom: zoom, path: path, selectedId: shown,
-                        onSelect: pick) { course, lesson in
+                        roomy: selecting, onSelect: pick) { course, lesson in
                 open(course, lesson, from: LessonNode.source(lesson))
             }
         }
@@ -294,33 +294,49 @@ struct LearnView: View {
         TabHeader(title: "Learn")
     }
 
-    /// The course cards, run past the content's padding to the edge where they pass under it: the screen's on a phone
-    /// and on the iPad's leading side, the path column's on its trailing side (`trailing`, half the column spacing),
-    /// where the column clips them. On iPad (`fade`) the edge with more cards past it fades (`edgeFade`), so a card
-    /// running into the column's edge dissolves there rather than being cut through mid-word ("Violi|n"); a phone's
-    /// rail runs on off the screen's edge as before.
-    private func courses(trailing: CGFloat = Metrics.gutter, fade: CGFloat = 0) -> some View {
+    /// The course cards on a phone, run past the content's padding to the screen's edges, where they pass under it.
+    private func courses() -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(alignment: .top, spacing: 10) {
+            HStack(alignment: .top, spacing: Self.railSpacing) {
                 ForEach(store.curriculum.courses) { item in
                     courseCard(item, selected: item.id == course?.id)
                 }
             }
-            .padding(.leading, Metrics.gutter).padding(.trailing, trailing)
+            .padding(.horizontal, Metrics.gutter)
         }
-        .edgeFade(width: fade)
-        .padding(.leading, -Metrics.gutter).padding(.trailing, -trailing)
+        .padding(.horizontal, -Metrics.gutter)
     }
 
-    /// How far the iPad course rail's fade reaches in from an edge: about half a card, so the card at the column's edge
-    /// is a shadow of itself rather than a cut word.
-    private static let courseFade: CGFloat = 72
+    /// iPad: the course cards in the path's column as whole cards, never one cut at the column's edge ("Violi|n"): as
+    /// many as fit side by side share the column's width, and the rail comes to rest on a card's edge.
+    private var courseRail: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(alignment: .top, spacing: Self.railSpacing) {
+                ForEach(store.curriculum.courses) { item in
+                    courseCard(item, selected: item.id == course?.id, fill: true)
+                        .containerRelativeFrame(.horizontal) { length, _ in Self.wholeCardWidth(in: length) }
+                }
+            }
+            .scrollTargetLayout()
+        }
+        .scrollTargetBehavior(.viewAligned)
+        .edgeFade()
+    }
+
+    private static let railSpacing: CGFloat = 10
+
+    /// The width of a course card when `length` points hold a whole number of them (two at least, none under a phone
+    /// card's 136 points).
+    private static func wholeCardWidth(in length: CGFloat) -> CGFloat {
+        let count = max(2, Int((length + railSpacing) / (136 + railSpacing)))
+        return max(0, (length - CGFloat(count - 1) * railSpacing) / CGFloat(count))
+    }
 
     /// One course in the carousel: its own art in the top corner (the instrument leaning into the card,
-    /// or the course emblem), the title and progress beneath. The chosen course glows in its accent.
+    /// or the course emblem), the title and progress beneath. The chosen course is lit in its hue and outlined.
     /// At the accessibility sizes the art gives its room to the words: the card widens, its title wraps and it grows
-    /// as tall as they need.
-    private func courseCard(_ item: LearnCourse, selected: Bool) -> some View {
+    /// as tall as they need. `fill` takes the width the rail gives it (iPad) instead of a phone card's.
+    private func courseCard(_ item: LearnCourse, selected: Bool, fill: Bool = false) -> some View {
         let accent = Palette.accent(item.accent)
         let done = store.learn.finishedCount(in: item)
         let total = item.lessons.count
@@ -338,15 +354,16 @@ struct LearnView: View {
                         .allowsHitTesting(false)
                 }
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(item.title.localized).font(Typeface.display(16)).foregroundStyle(Palette.ink)
+                    Text(item.title.localized).font(Typeface.display(.body)).foregroundStyle(Palette.ink)
                         .lineLimit(roomy ? 3 : 1).minimumScaleFactor(roomy ? 1 : 0.8)
-                    Text.lessonCount(done, total).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                    Text.lessonCount(done, total).font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
                         .lineLimit(1).minimumScaleFactor(0.8)
                     ProgressLine(value: total == 0 ? 0 : Double(done) / Double(total), color: accent, height: 4)
                 }
                 .padding(14)
             }
-            .frame(width: roomy ? 220 : 136)
+            .frame(width: fill ? nil : (roomy ? 220 : 136))
+            .frame(maxWidth: fill ? .infinity : nil)
             .frame(minHeight: 170, maxHeight: roomy ? nil : 170, alignment: .bottomLeading)
             .background {
                 shape.fill(Palette.stageRaised)
@@ -372,20 +389,21 @@ struct LearnView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     if let next, let unit, let unitNumber {
                         Eyebrow(Text("Unit \(unitNumber) · \(unit.title.localized)"), color: accent, style: .display).lineLimit(1)
-                        Text(next.title.localized).font(Typeface.display(24)).tracking(-0.4).foregroundStyle(Palette.ink).lineLimit(2).fixedSize(horizontal: false, vertical: true)
+                        Text(next.title.localized).font(Typeface.display(.title)).tracking(-0.5).foregroundStyle(Palette.ink)
+                            .lineLimit(2).minimumScaleFactor(0.85).fixedSize(horizontal: false, vertical: true)
                         Text("\(next.minutes) min · +\(next.xp) XP").font(.subheadline).foregroundStyle(Palette.inkSoft)
-                        // The primary button's face and type (the whole card is the button), at least 44 pt tall.
+                        // The primary button's face and type (the whole card is the button), at least 44 pt tall:
+                        // mint as every primary action, whatever the course's hue.
                         HStack(spacing: 6) {
                             Image(systemName: store.canPlay(next) ? "play.fill" : "lock.fill")
                             Text(store.learn.finishedCount(in: course) == 0 ? LocalizedStringKey("Start") : LocalizedStringKey("Continue"))
                         }
                         .font(Typeface.button).foregroundStyle(Palette.onAccent)
                         .padding(.horizontal, 18).frame(minHeight: Metrics.minTarget)
-                        .background(Capsule().fill(accent))
-                        .shadow(color: accent.opacity(0.45), radius: 12, y: 4)
+                        .background(Capsule().fill(Palette.mint))
                         .padding(.top, 4)
                     } else {
-                        Text("Course complete").font(Typeface.display(24)).foregroundStyle(Palette.ink)
+                        Text("Course complete").font(Typeface.display(.title)).foregroundStyle(Palette.ink)
                         Text("Replay any lesson for three stars.").font(.subheadline).foregroundStyle(Palette.inkSoft)
                     }
                 }
@@ -432,6 +450,9 @@ struct UnitSection: View {
     let path: PathState
     /// iPad: the lesson the inspector shows, ringed on the path.
     var selectedId: String? = nil
+    /// iPad's path column: the neck widens and the path swings wider, so the path fills the column rather than running
+    /// down its middle as a strip.
+    var roomy = false
     /// iPad: a tap on a node not yet picked picks it for the inspector (nil on a phone: the tap plays).
     var onSelect: ((Lesson) -> Void)? = nil
     let onPlay: (LearnCourse, Lesson) -> Void
@@ -455,7 +476,7 @@ struct UnitSection: View {
                 VStack(alignment: .trailing, spacing: 6) {
                     if unit.lessons.contains(where: { !$0.free }) && !store.isPro { ProBadge() }
                     starCount(progress.stars(in: unit), of: unit.lessons.count * 3)
-                    Text.lessonCount(finished, unit.lessons.count).font(Typeface.number(12)).foregroundStyle(Palette.inkSoft)
+                    Text.lessonCount(finished, unit.lessons.count).font(Typeface.number(.caption)).foregroundStyle(Palette.inkSoft)
                         .multilineTextAlignment(.trailing)
                 }
             }
@@ -463,7 +484,9 @@ struct UnitSection: View {
             .overlay(alignment: .leading) { Capsule().fill(accent).frame(width: 4).padding(.vertical, 18) }
             GeometryReader { geometry in
                 let neck = course.fretKind != nil
-                let swing = neck ? 22.0 : min(90, geometry.size.width * 0.24)
+                let neckWidth: CGFloat = roomy ? min(260, max(150, geometry.size.width * 0.5)) : 150
+                let openSwing: CGFloat = roomy ? min(170, geometry.size.width * 0.32) : min(90, geometry.size.width * 0.24)
+                let swing: CGFloat = neck ? 22 + (neckWidth - 150) / 2 : openSwing
                 let points = unit.lessons.indices.map { i in
                     CGPoint(x: geometry.size.width / 2 + sin(Double(i) * 1.15 + Double(number)) * swing, y: rowHeight * (CGFloat(i) + 0.5))
                 }
@@ -477,7 +500,7 @@ struct UnitSection: View {
                     if neck {
                         // The path is a stretch of fingerboard: frets between lessons, strings running through.
                         NeckStrip(rows: unit.lessons.count, rowHeight: rowHeight, strings: course.stringCount, fretless: course.fretless, accent: accent)
-                            .frame(width: 150)
+                            .frame(width: neckWidth)
                             .position(x: geometry.size.width / 2, y: rowHeight * CGFloat(unit.lessons.count) / 2)
                     } else {
                         Path { path in
@@ -512,7 +535,7 @@ struct UnitSection: View {
     /// "★ 8 / 15", read "8 of 15 stars".
     private func starCount(_ stars: Int, of total: Int) -> some View {
         Label { Text.fraction(stars, total) } icon: { Image(systemName: "star.fill") }
-            .font(Typeface.number(12)).foregroundStyle(Palette.amber)
+            .font(Typeface.number(.caption)).foregroundStyle(Palette.starGold)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text("\(stars) of \(total) stars"))
     }
@@ -538,7 +561,7 @@ enum LessonAccess {
 }
 
 /// One stop on the path: raised disc, kind icon, stars when finished, lock when not yet open. The next lesson pulses
-/// with START beside it; on iPad the lesson the inspector shows wears a ring.
+/// with "Start" beside it; on iPad the lesson the inspector shows wears a ring.
 struct LessonNode: View {
     let course: LearnCourse
     let lesson: Lesson
@@ -593,12 +616,10 @@ struct LessonNode: View {
                         .font(.system(size: size * 0.34, weight: .bold))
                         .foregroundStyle(lit ? Palette.onAccent : Palette.inkFaint)
                 }
-                .shadow(color: current ? accent.opacity(0.5) : .clear, radius: 18)
                 .overlay {
                     if selected {
                         Circle().strokeBorder(Palette.ink.opacity(0.9), lineWidth: 2.5)
                             .frame(width: size + 14, height: size + 14)
-                            .shadow(color: accent.opacity(0.6), radius: 8)
                             .transition(.scale(scale: 0.85).combined(with: .opacity))
                     }
                 }
@@ -611,7 +632,7 @@ struct LessonNode: View {
                 } else if stars > 0 {
                     HStack(spacing: 2) {
                         ForEach(0..<3, id: \.self) { i in
-                            Image(systemName: "star.fill").font(.system(size: 10, weight: .bold)).foregroundStyle(i < stars ? Palette.amber : .white.opacity(0.15))
+                            Image(systemName: "star.fill").font(.system(size: 10, weight: .bold)).foregroundStyle(i < stars ? Palette.starGold : .white.opacity(0.15))
                         }
                     }
                 }
@@ -636,14 +657,14 @@ struct LessonNode: View {
         return Text(lit ? LocalizedStringKey("Open") : LocalizedStringKey("Locked"))
     }
 
-    /// START beside the disc, just past its halo, a small chevron pointing at the node; it nudges toward it and back.
+    /// "Start" beside the disc, just past its halo, a small chevron pointing at the node; it nudges toward it and back.
     private var startPill: some View {
         let trailing = startSide == .trailing
         let edge: HorizontalAlignment = trailing ? .trailing : .leading
         let gap = Self.startGap
         return HStack(spacing: 4) {
             if trailing { chevron("chevron.backward") }
-            Text("Start").font(Typeface.label(12)).tracking(1.2).textCase(.uppercase)
+            Text("Start").font(Typeface.label(.caption))
             if !trailing { chevron("chevron.forward") }
         }
         .foregroundStyle(accent)

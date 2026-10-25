@@ -1,0 +1,193 @@
+{
+  "demonstratedLevels": [
+    4,
+    2
+  ],
+  "records": [
+    {
+      "count": 180,
+      "date": 814210200.0,
+      "durationMs": 92000,
+      "id": "8B0D7A4E-2F61-4C1B-9E55-3C2A1F6B7D10",
+      "instrumentId": "guitar.acoustic.6",
+      "kind": "tuning",
+      "meanAbsoluteCents": 0.8,
+      "stableCount": 120,
+      "tuningId": "guitar.acoustic.6.standard"
+    },
+    {
+      "count": 10,
+      "date": 814126200.0,
+      "durationMs": 240000,
+      "id": "1C9F3E22-7B44-4A0D-8D6A-5E7F90B1C2D3",
+      "instrumentId": "practice.ear",
+      "kind": "ear",
+      "stableCount": 8
+    },
+    {
+      "count": 3,
+      "date": 814038300.0,
+      "durationMs": 240000,
+      "id": "F4A2B6C8-0D1E-4F3A-9B5C-7D8E9F0A1B2C",
+      "instrumentId": "learn.guitar",
+      "kind": "lesson",
+      "stableCount": 3
+    }
+  ],
+  "settings": {
+    "capo": 2,
+    "confidenceThreshold": 0.75,
+    "customTunings": [
+      {
+        "id": "custom.5e0b1d2c-3a4f-4b6e-8c7d-9e0f1a2b3c4d",
+        "instrumentId": "guitar.acoustic.6",
+        "midis": [
+          36,
+          43,
+          48,
+          55,
+          60,
+          64
+        ],
+        "name": "Open C"
+      }
+    ],
+    "dailyDone": {
+      "2026-10-20": [
+        "tune",
+        "lesson"
+      ]
+    },
+    "dailyPlan": {
+      "2026-10-20": [
+        "ear"
+      ]
+    },
+    "droneMidi": 50,
+    "droneVoice": "warm",
+    "earLevels": {
+      "intervals": 2
+    },
+    "fullTunes": 14,
+    "goal": "songs",
+    "handedness": "left",
+    "hapticsEnabled": true,
+    "language": "en",
+    "lastChord": {
+      "formula": "min",
+      "root": 9
+    },
+    "lastTuningIds": {
+      "guitar.acoustic.6": "guitar.acoustic.6.drop_d"
+    },
+    "learn": {
+      "bestAccuracy": {
+        "gtr-1-1": 0.96,
+        "gtr-1-2": 0.81,
+        "gtr-1-3": 0.93
+      },
+      "finishedDates": {
+        "gtr-1-1": 813949200.0,
+        "gtr-1-2": 814035600.0,
+        "gtr-1-3": 814122000.0
+      },
+      "lastCourseId": "guitar",
+      "lastLessonId": "gtr-1-3",
+      "placedThrough": {},
+      "sinceReview": {
+        "guitar": 3
+      },
+      "stars": {
+        "gtr-1-1": 3,
+        "gtr-1-2": 2,
+        "gtr-1-3": 3
+      },
+      "weakSpots": {}
+    },
+    "metronomeBeatLevels": [
+      2,
+      1,
+      1,
+      1
+    ],
+    "metronomeBeats": 4,
+    "metronomeBpm": 96,
+    "metronomeSound": "wood",
+    "metronomeSubdivision": 2,
+    "micSensitivity": 60,
+    "notation": "english",
+    "notationChosen": true,
+    "onboardingCompleted": true,
+    "playerLevel": "novice",
+    "progress": {
+      "achievements": [
+        "first_tune",
+        "full_tune",
+        "streak_7"
+      ],
+      "dailySetDay": "2026-10-19",
+      "freezeAwardDay": "2026-10-20",
+      "frozenDays": [
+        813456000.0
+      ],
+      "instrumentsTuned": [
+        "guitar.acoustic.6"
+      ],
+      "questDay": "2026-10-20",
+      "questProgress": {
+        "tune_strings": 6
+      },
+      "questsClaimed": [],
+      "restrung": {
+        "guitar.acoustic.6": 809974800.0
+      },
+      "stats": {
+        "fullTunes": 14,
+        "lessons": 3,
+        "stringsTuned": 140
+      },
+      "streakFreezes": 1,
+      "stringSamples": [
+        {
+          "anchor": "s3",
+          "cents": -9.0,
+          "date": 814122000.0,
+          "instrumentId": "guitar.acoustic.6"
+        }
+      ],
+      "tunedToday": {
+        "guitar.acoustic.6": [
+          1,
+          2,
+          3
+        ]
+      },
+      "xp": 1240
+    },
+    "recentInstrumentIds": [
+      "guitar.acoustic.6",
+      "ukulele.soprano.4"
+    ],
+    "reducedMotion": false,
+    "referencePitchHz": 442,
+    "selectedInstrumentId": "guitar.acoustic.6",
+    "selectedPhotoAsset": "guitar_acoustic_6",
+    "selectedVoiceLevel": 3,
+    "shownDemos": {
+      "guitar": [
+        "chord:0,2,2,0,0,0"
+      ]
+    },
+    "skin": "brass",
+    "spacedReview": {
+      "k": []
+    },
+    "stageMode": "3d",
+    "telemetryEnabled": false,
+    "temperamentId": "equal",
+    "theme": "dark",
+    "transposition": 0,
+    "tuningPrecision": "standard"
+  },
+  "version": 1
+}
