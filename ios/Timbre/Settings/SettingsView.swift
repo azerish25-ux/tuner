@@ -79,6 +79,12 @@ struct SettingsView: View {
                     }
                     .buttonStyle(RowButtonStyle())
                 }
+                // "Give a friend a month", once the owner has set up the offer (`ShareDestination.friendOffer`).
+                if ShareDestination.friendOffer != nil {
+                    Hairline(leading: SettingsRowMetrics.inset)
+                    FriendOfferLink(screen: "settings")
+                        .settingsRow()
+                }
             } else {
                 Button { store.presentPaywall("settings") } label: {
                     FeatureRow(symbol: "sparkles", title: "Try Timbre Pro", detail: "Every instrument, every ear game and practice tool.") { ProBadge() }
@@ -369,8 +375,9 @@ struct SettingsView: View {
         }
     }
 
-    /// Plays the tuner's feel on the phone: a detent a cent at a time toward the note, then the lock. If nothing is
-    /// felt, the phone's haptics are off (Settings › Sounds & Haptics) or this phone has none.
+    /// Plays the tuner's feel on the phone as the tuner would: with Tune by feel, the beat slowing to the lock
+    /// (`Haptics.feelTest`); without it, a detent a cent at a time toward the note, then the lock. If nothing is felt,
+    /// the phone's haptics are off (Settings › Sounds & Haptics) or this phone has none.
     private var feelTest: some View {
         Button { runFeelTest() } label: {
             SettingRow(icon: Glyph("waveform.path"), title: Text("Feel test")) {
@@ -379,24 +386,36 @@ struct SettingsView: View {
         }
         .buttonStyle(RowButtonStyle())
         .disabled(feeling || !store.settings.hapticsEnabled)
-        .accessibilityHint(Text("Plays the tuner's detents, then the lock"))
+        .accessibilityHint(store.settings.tuneByFeel ? Text("Plays the beat slowing to the lock") : Text("Plays the tuner's detents, then the lock"))
         .accessibilityIdentifier("settings.feelTest")
     }
 
     private func runFeelTest() {
         guard !feeling else { return }
         feeling = true
+        let byFeel = store.settings.tuneByFeel
         Task { @MainActor in
-            for cents in [5.0, 4, 3, 2, 1, 0] {
-                Haptics.shared.detent(cents: cents)
-                try? await Task.sleep(for: .milliseconds(240))
+            if byFeel {
+                // About three seconds of beat, then the lock's thump.
+                Haptics.shared.feelTest()
+                try? await Task.sleep(for: .milliseconds(3_600))
+            } else {
+                await playDetents()
             }
-            Haptics.shared.lock()
-            try? await Task.sleep(for: .milliseconds(500))
-            // Forget the last detent, so the tuner's first one fires.
-            Haptics.shared.detent(cents: nil)
             feeling = false
         }
+    }
+
+    /// The standard feel: detents from 5¢ to the note, then the lock.
+    @MainActor private func playDetents() async {
+        for cents in [5.0, 4, 3, 2, 1, 0] {
+            Haptics.shared.detent(cents: cents)
+            try? await Task.sleep(for: .milliseconds(240))
+        }
+        Haptics.shared.lock()
+        try? await Task.sleep(for: .milliseconds(500))
+        // Forget the last detent, so the tuner's first one fires.
+        Haptics.shared.detent(cents: nil)
     }
 
     // MARK: Reminders
@@ -469,6 +488,8 @@ struct SettingsView: View {
             }
             .settingsRow()
             Hairline(leading: SettingsRowMetrics.inset)
+            usageToggle
+            Hairline(leading: SettingsRowMetrics.inset)
             // The one address every link to the policy uses (the build's Info.plist, else the published one).
             Link(destination: AppLinks.privacy) {
                 SettingRow(icon: Glyph("doc.text"), title: Text("Privacy policy")) { RowGlyph(symbol: "arrow.up.right") }
@@ -485,6 +506,25 @@ struct SettingsView: View {
             }
             .buttonStyle(RowButtonStyle())
         }
+    }
+
+    /// Anonymous product events (the privacy policy's "Anonymous usage analytics"): on until the player chooses, and
+    /// off, nothing more leaves the device (`Analytics.setSharing`, applied by `AppStore.updateSettings`).
+    private var usageToggle: some View {
+        Toggle(isOn: Binding(get: { store.settings.sharesUsage }, set: { on in store.updateSettings { $0.shareUsageData = on } })) {
+            HStack(spacing: 12) {
+                Glyph("chart.bar")
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Share anonymous usage data").font(.body).foregroundStyle(Palette.ink)
+                    Text("Which features get used, never audio or anything linked to you.")
+                        .font(.footnote).foregroundStyle(Palette.inkSoft)
+                }
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .settingsRow()
+        .accessibilityIdentifier("settings.shareUsage")
     }
 
     static let languages = ["ar", "bg", "bn", "ca", "cs", "da", "de", "el", "en", "es", "et", "fa", "fi", "fr", "gu", "he", "hi", "hr", "hu", "id", "is", "it", "ja", "kn", "ko", "lt", "lv", "ml", "mr", "nl", "no", "pa", "pl", "pt", "ro", "ru", "sk", "sl", "sv", "sw", "ta", "te", "th", "tr", "uk", "ur", "vi", "zh-CN", "zu"]

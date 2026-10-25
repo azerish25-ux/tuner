@@ -150,4 +150,27 @@ final class ChordLibraryTests: XCTestCase {
         XCTAssertEqual(decoded?.questProgress["holdInTune"], 2)
         XCTAssertEqual(decoded?.isValid, true)
     }
+
+    /// The free plan's chord library (`FreeTier`): the curated open shapes in standard (and standard moved as a whole),
+    /// elsewhere first-position shapes that ring an open string; barre shapes are Pro.
+    func testOpenPositionShapesAreTheFreeLibrary() {
+        let major = ChordFormula.byId("maj")
+        let c = ChordLibrary.voicings(root: 0, formula: major, openMidi: ChordLibrary.standardGuitar)
+        XCTAssertEqual(c.first?.notation, "x32010")
+        XCTAssertTrue(ChordLibrary.isOpenPosition(c[0], root: 0, formula: major, openMidi: ChordLibrary.standardGuitar))
+        XCTAssertTrue(c.dropFirst().contains { !ChordLibrary.isOpenPosition($0, root: 0, formula: major, openMidi: ChordLibrary.standardGuitar) },
+                      "the barre shapes up the neck are not")
+        XCTAssertTrue(FreeTier.canUseVoicing(c[1], root: 0, formula: major, openMidi: ChordLibrary.standardGuitar, pro: true))
+        // E-flat standard: the same open shapes, a half step down.
+        let flat = ChordLibrary.standardGuitar.map { $0 - 1 }
+        let eb = ChordLibrary.voicings(root: 11, formula: major, openMidi: flat)
+        XCTAssertTrue(ChordLibrary.isOpenPosition(eb[0], root: 11, formula: major, openMidi: flat))
+        // Ukulele G C E A (lowest-numbered course first): C as 0003 is open; Bb (3211) is not.
+        let uke = [67, 60, 64, 69]
+        XCTAssertTrue(ChordLibrary.isOpenPosition(ChordShape(frets: [0, 0, 0, 3], score: 0), root: 0, formula: major, openMidi: uke))
+        XCTAssertFalse(ChordLibrary.isOpenPosition(ChordShape(frets: [3, 2, 1, 1], score: 0), root: 10, formula: major, openMidi: uke))
+        // C# major has no open shape in standard tuning: no free shape.
+        let cSharp = ChordLibrary.voicings(root: 1, formula: major, openMidi: ChordLibrary.standardGuitar)
+        XCTAssertFalse(cSharp.contains { ChordLibrary.isOpenPosition($0, root: 1, formula: major, openMidi: ChordLibrary.standardGuitar) })
+    }
 }

@@ -120,8 +120,11 @@ def part(name_):
 
 # ---------------------------------------------------------------- chords
 
-def chord(instrument: str, chord_name: str, frets: str | list, fingers: str | list | None = None, root=None, quality=None):
-    """A chord shape. frets lowest string first: "x32010" (guitar C) or [-1,3,2,0,1,0]; 10+ as list."""
+def chord(instrument: str, chord_name: str, frets: str | list, fingers: str | list | None = None, root=None, quality=None,
+          capo: int | None = None):
+    """A chord shape. frets lowest string first: "x32010" (guitar C) or [-1,3,2,0,1,0]; 10+ as list.
+    capo: the fret a capo clamps (frets stay absolute: the capo's own fret shows on the strings it stops, and those
+    strings take finger 0); the diagram draws the bar and captions the shape ("G shape · capo 2")."""
     if isinstance(frets, str):
         frets = [-1 if c in "xX" else int(c) for c in frets]
     if isinstance(fingers, str):
@@ -141,6 +144,9 @@ def chord(instrument: str, chord_name: str, frets: str | list, fingers: str | li
         spec["fingers"] = fingers
     if base > 1:
         spec["baseFret"] = base
+    if capo:
+        assert all(f < 0 or f == 0 or f >= capo for f in frets), f"{chord_name}: a fret below the capo"
+        spec["capo"] = capo
     return spec
 
 

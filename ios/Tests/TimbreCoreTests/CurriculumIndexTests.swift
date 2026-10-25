@@ -101,4 +101,35 @@ final class CurriculumIndexTests: XCTestCase {
         guard pulses.count >= 2 else { return }
         XCTAssertEqual(Double(pulses[1].frame - pulses[0].frame) / 4800, 60.0 / 29, accuracy: 0.001)
     }
+
+    /// Songs › Ukulele, Mandolin and Violin: a real songbook on each (the instrument's course and its Songbook), every
+    /// song a whole arrangement charted in the instrument's own four-string shapes. The instrument's own course stays
+    /// first, so a ukulele player's Learn course is still Ukulele.
+    func testInstrumentSongbooks() throws {
+        let curriculum = try Curriculum.bundled()
+        func songs(_ instrument: String) -> [Lesson] {
+            curriculum.courses.filter { $0.instrument == instrument }.flatMap(\.lessons).filter { $0.kind == .song }
+        }
+        XCTAssertGreaterThanOrEqual(songs("ukulele.soprano.4").count, 90)
+        XCTAssertGreaterThanOrEqual(songs("mandolin.standard.8").count, 20)
+        XCTAssertGreaterThanOrEqual(songs("violin.standard.4").count, 20)
+        for (id, instrument) in [("ukulele-songbook", "ukulele.soprano.4"), ("mandolin-songbook", "mandolin.standard.8"), ("violin-songbook", "violin.standard.4")] {
+            let book = try XCTUnwrap(curriculum.course(id: id))
+            XCTAssertTrue(book.isSongbook, id)
+            XCTAssertNotEqual(curriculum.courses.first { $0.instrument == instrument }?.id, id, "\(id) follows its instrument's course")
+            for lesson in book.lessons {
+                let arrangement = try XCTUnwrap(lesson.arrangement, lesson.id)
+                XCTAssertFalse(arrangement.shapes.isEmpty, lesson.id)
+                XCTAssertTrue(arrangement.shapes.allSatisfy { $0.frets.count == 4 }, lesson.id)
+                XCTAssertNotNil(lesson.songTake, lesson.id)
+            }
+        }
+    }
+
+    /// Bullseye's hidden tunes are named after song lessons, so the reveal shows the lesson's localized title.
+    func testEveryHiddenTuneNamesASongLesson() throws {
+        let curriculum = try Curriculum.bundled()
+        let titles = Set(curriculum.courses.flatMap(\.lessons).filter { $0.kind == .song }.map(\.title.defaultValue))
+        for tune in PitchSniper.hiddenTunes { XCTAssertTrue(titles.contains(tune.title), tune.title) }
+    }
 }

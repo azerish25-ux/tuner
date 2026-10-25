@@ -447,6 +447,8 @@ struct ChordStep: View {
     @State private var firstShowing = false
     @State private var firstTask: Task<Void, Never>?
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
+    /// The player's hold: the string checks sit over the strings wherever the picture draws them.
+    @CurrentHand private var hand
     private let order: [(index: Int, midi: Int)]
 
     init(chord: ChordSpec, course: LearnCourse, accent: Color,
@@ -756,9 +758,9 @@ struct ChordStep: View {
         let count = chord.frets.count
         // Right over the box's string lines, wherever `ChordDiagram` draws them (past its fret-number column), or
         // where the neck's lanes meet its near edge (in the runway's order: the lowest string on the left, as on the
-        // box).
-        let xs = player ? PlayerNeck.stringPositions(chord, width: width)
-                        : ChordDiagram(chord: chord, fretNumbers: true).stringPositions(width: width)
+        // box), each mirrored as the picture is for a left-handed player.
+        let xs = player ? PlayerNeck.stringPositions(chord, width: width, mirrored: hand.mirrorsUpright)
+                        : ChordDiagram(chord: chord, fretNumbers: true, mirrored: hand.mirrorsChordChart).stringPositions(width: width)
         let gap = count > 1 ? abs(xs[count - 1] - xs[0]) / CGFloat(count - 1) : 40
         let side = min(40, max(26, gap - 8))
         let next: Int? = order.indices.contains(judge.index) && !finished ? order[judge.index].index : nil
@@ -1099,6 +1101,8 @@ struct RhythmStep: View {
     /// The height the stage has, so a first-time demonstration only comes in where "Show me" has room under it.
     @State private var stageRoom: CGFloat = 0
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
+    /// How the player holds the instrument (Settings › Handedness): the strum stage is drawn as they see it.
+    @CurrentHand private var hand
 
     enum Phase { case ready, playing, done }
     private var beatsPerBar: Int { meter ?? max(4, Int((pattern.max() ?? 3) + 1)) }
@@ -1177,8 +1181,6 @@ struct RhythmStep: View {
         return Double(chordRight.values.filter { $0 }.count) / Double(chordRight.count) < 0.5
     }
 
-    /// How the player holds the instrument (Settings › Handedness): the strum stage is drawn as they see it.
-    private var hand: Handedness { store.settings.handedness }
 
     var body: some View {
         VStack(spacing: 14) {
@@ -1407,7 +1409,7 @@ struct RhythmStep: View {
         TimelineView(.animation(paused: reduceMotion || phase == .done)) { _ in
             StrumSweep(pattern: pattern, beatsPerBar: beatsPerBar, strings: max(1, strings), style: sweepStyle, accent: accent,
                        secondsPerBeat: spb, time: sweepTime(CACurrentMediaTime()), bars: phase == .playing ? bars : nil, edges: edges,
-                       mirrored: hand.isLeftHanded, stringOrder: hand == .leftUpsideDown ? .tab : StrumSweep.order)
+                       mirrored: hand.hand.nutOnRight, stringOrder: hand.strumOrder)
         }
     }
 

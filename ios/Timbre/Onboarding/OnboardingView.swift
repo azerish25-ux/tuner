@@ -74,6 +74,8 @@ struct OnboardingView: View {
     /// The first chord was played before this onboarding (it ran before): it isn't offered again.
     @State private var chordBefore = false
     @State private var chordPlayed = false
+    /// The welcome has played Timbre's motif (once, as it first appears).
+    @State private var welcomed = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
 
@@ -274,6 +276,20 @@ struct OnboardingView: View {
                 Text(restoreMessage).font(.caption).foregroundStyle(Palette.inkSoft).multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity).padding(.horizontal, Metrics.gutter + Metrics.proseInset).padding(.bottom, 6)
             }
+        }
+        .onAppear(perform: playWelcome)
+    }
+
+    /// Timbre's motif as the welcome first appears, once, after a beat so it lands with the spotlit instrument
+    /// (`SoundFX` stays silent when sounds are off).
+    private func playWelcome() {
+        guard !welcomed else { return }
+        welcomed = true
+        let sounds = SoundFX.shared
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(450))
+            guard page == .welcome else { return }
+            sounds.play(.motif)
         }
     }
 

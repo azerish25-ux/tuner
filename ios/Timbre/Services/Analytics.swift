@@ -43,8 +43,9 @@ enum Analytics {
         AnalyticsLifecycle.shared.start()
     }
 
-    /// The player's switch (Settings, `UserSettings.telemetryEnabled`). Off, nothing more leaves the device and what
-    /// was waiting is dropped; the device's own log carries on. On until it is set.
+    /// The player's switch (Settings › Share anonymous usage data, `UserSettings.sharesUsage`), applied by `AppStore`
+    /// as the saved settings open and whenever it changes. Off, nothing more leaves the device and what was waiting is
+    /// dropped; the device's own log carries on. On until it is set.
     static func setSharing(_ on: Bool) { Telemetry.shared.setSharing(on) }
 
     /// Events are leaving the device: the build has an app ID and sharing is on.

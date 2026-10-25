@@ -384,7 +384,7 @@ struct ExplainStep: View {
 
     /// The line under "Show me": what to watch (lit while the model plays it), handing over to a chord's "your turn"
     /// once its demonstration is over, then to the tick when it's heard. One line, always there, so the card never
-    /// grows; each caption leaves before the next arrives (`handover`).
+    /// grows; each caption leaves before the next arrives (`ShowMe.captionTransition`).
     private var teacherLine: some View {
         ZStack {
             if cueShown, case .chord = visual {
@@ -392,22 +392,15 @@ struct ExplainStep: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .id(demo == .heard)
-                    .transition(Self.handover)
+                    .transition(ShowMe.captionTransition(reduceMotion: reduceMotion))
             } else if let caption {
                 ShowMeCaption(text: caption, accent: accent, live: threeD && sounding)
-                    .transition(Self.handover)
+                    .transition(ShowMe.captionTransition(reduceMotion: reduceMotion))
             }
         }
         .frame(maxWidth: .infinity, minHeight: Self.teacherLine)
         .animation(Motion.adaptive(Motion.settle, reduceMotion: reduceMotion), value: cueShown)
         .animation(Motion.fade, value: demo)
-    }
-
-    /// Captions hand over in sequence, out then in: the one leaving is gone before the next fades up, never two
-    /// half-drawn lines over each other.
-    private static var handover: AnyTransition {
-        .asymmetric(insertion: .opacity.animation(.easeOut(duration: 0.2).delay(0.14)),
-                    removal: .opacity.animation(.easeIn(duration: 0.12)))
     }
 
     /// What to watch in this picture's demonstration.
@@ -607,7 +600,7 @@ struct ExplainStep: View {
             if cueShown {
                 turnCue(compact: false)
                     .id(demo == .heard)
-                    .transition(Self.handover)
+                    .transition(ShowMe.captionTransition(reduceMotion: reduceMotion))
             }
         }
         .frame(minHeight: 20)

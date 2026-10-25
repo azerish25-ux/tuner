@@ -668,12 +668,13 @@ UNIT_15 = unit("gtr-15", "Rhythm styles", "Funk sixteenths and scratches, the re
 
 # ================================================================ 16. Putting it together
 
-# Capo on fret 2: open shapes at the frets actually pressed, named by what sounds. Finger 0 = held by the capo.
-CAPO_G = chord(G, "A", "542225", "210003")
-CAPO_C = chord(G, "D", "x54232", "x32010")
-CAPO_D = chord(G, "E", "xx2454", "xxx132")
-CAPO_Em = chord(G, "F#m", "244222", "023000")
-CAPO_A = chord(G, "B", "x24442", "xx123x")
+# Capo on fret 2: open shapes at the frets actually pressed, named by what sounds. Finger 0 = held by the capo, and the
+# diagram draws the capo's bar at fret 2 ("G shape · capo 2").
+CAPO_G = chord(G, "A", "542225", "210003", capo=2)
+CAPO_C = chord(G, "D", "x54232", "x32010", capo=2)
+CAPO_D = chord(G, "E", "xx2454", "xxx132", capo=2)
+CAPO_Em = chord(G, "F#m", "244222", "023000", capo=2)
+CAPO_A = chord(G, "B", "x24442", "xx123x", capo=2)
 # Gravel Road Two-Step (song spotlight), in A with the capo on fret 2: G, C and D shapes sound A, D and E. Its chorus tune
 # moves with the capo: no open strings, fret 2 is the capo, and the fingers think in G.
 GRAVEL_VERSE = [(CAPO_G, 1), (CAPO_C, 1), (CAPO_G, 1), (CAPO_D, 1), (CAPO_G, 1), (CAPO_C, 1), (CAPO_D, 1), (CAPO_G, 1)]

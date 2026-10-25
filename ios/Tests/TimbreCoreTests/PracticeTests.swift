@@ -318,4 +318,47 @@ final class CustomTuningTests: XCTestCase {
         settings.customTunings = [CustomTuning(instrumentId: "ukulele.soprano.4", name: "Broken", midis: [200])]
         XCTAssertThrowsError(try store.saveSettings(settings))
     }
+
+    /// The free plan's table (`FreeTier`): eighths and triplets with the click and wood voices, one custom tuning
+    /// (and its edits), ten Your songs charts.
+    func testFreeTierTable() {
+        XCTAssertTrue(FreeTier.canUseSubdivision(1, pro: false))
+        XCTAssertTrue(FreeTier.canUseSubdivision(2, pro: false))
+        XCTAssertTrue(FreeTier.canUseSubdivision(3, pro: false))
+        XCTAssertFalse(FreeTier.canUseSubdivision(4, pro: false))
+        XCTAssertTrue(FreeTier.canUseSubdivision(4, pro: true))
+        XCTAssertTrue(FreeTier.canUseMetronomeSound("click", pro: false))
+        XCTAssertTrue(FreeTier.canUseMetronomeSound("wood", pro: false))
+        XCTAssertFalse(FreeTier.canUseMetronomeSound("beep", pro: false))
+        let first = CustomTuning(id: "custom.a", instrumentId: "guitar.acoustic.6", name: "Open G6", midis: [38, 43, 50, 55, 59, 64])
+        XCTAssertTrue(FreeTier.canAddCustomTuning(saved: 0, pro: false))
+        XCTAssertFalse(FreeTier.canAddCustomTuning(saved: 1, pro: false))
+        XCTAssertTrue(FreeTier.canAddCustomTuning(saved: 5, pro: true))
+        XCTAssertTrue(FreeTier.canSaveCustomTuning(id: "custom.a", saved: [], pro: false), "the first one")
+        XCTAssertTrue(FreeTier.canSaveCustomTuning(id: "custom.a", saved: [first], pro: false), "an edit of the free one")
+        XCTAssertFalse(FreeTier.canSaveCustomTuning(id: "custom.b", saved: [first], pro: false))
+        XCTAssertTrue(FreeTier.canSaveCustomTuning(id: "custom.b", saved: [first], pro: true))
+        XCTAssertEqual(YourSongsPolicy.freeChartLimit, 10)
+    }
+
+    /// A hidden-tune Bullseye: the rounds are a tune's opening in some key the instrument's notes reach, interval for
+    /// interval; an open-strings-only instrument gets an ordinary game.
+    func testBullseyeHidesATuneInItsRounds() throws {
+        let guitar = [40, 45, 50, 55, 59, 64]
+        let game = PitchSniper(notes: guitar, fretted: true, seed: 3, hiddenTune: true)
+        let tune = try XCTUnwrap(game.tune)
+        XCTAssertEqual(game.rounds.count, min(10, tune.steps.count))
+        let heard = zip(game.rounds, game.rounds.dropFirst()).map { $1.midi - $0.midi }
+        let written = zip(tune.steps, tune.steps.dropFirst()).map { $1 - $0 }
+        XCTAssertEqual(heard, Array(written.prefix(heard.count)))
+        let reach = Set(guitar.flatMap { open in (0...4).map { open + $0 } })
+        XCTAssertTrue(game.rounds.allSatisfy { reach.contains($0.midi) })
+        let violin = PitchSniper(notes: [55, 62, 69, 76], fretted: false, seed: 3, hiddenTune: true)
+        XCTAssertNil(violin.tune)
+        XCTAssertEqual(violin.rounds.count, 10)
+        XCTAssertNil(PitchSniper(notes: guitar, fretted: true, seed: 3).tune, "an ordinary game unless asked")
+        for hidden in PitchSniper.hiddenTunes {
+            XCTAssertTrue(zip(hidden.steps, hidden.steps.dropFirst()).allSatisfy { $0 != $1 }, "\(hidden.title): no note straight after itself")
+        }
+    }
 }
