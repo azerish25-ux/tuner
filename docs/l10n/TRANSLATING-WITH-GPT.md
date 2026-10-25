@@ -1,0 +1,1213 @@
+# Translating Timbre with GPT
+
+The operating manual for producing Timbre's translations with GPT (a large language model) and human reviewers, so that what comes back passes the repository's checks on the first import, clears the App Store gate, and reads like an app written in the language. It covers what is translated where, the exact input and output of a translation, the rules the import enforces and the ones it can't, ready-to-use prompts, a small helper that batches the TODO files for GPT and checks its answers, the apply-and-verify loop, QA, and the store listing.
+
+Three files go with it:
+
+- [HANDOFF.md](HANDOFF.md): the generated brief, with today's counts (`tools/l10n/report.py` writes it). Its field definitions and import rules hold here unchanged. Its opening line, "Translations are done by people, never by a machine", predates this plan; under this manual GPT drafts, the checks below gate every string mechanically, and a native reviewer signs off every launch-critical string and a sample of the rest ([§8.5](#85-human-review)).
+- [GLOSSARY-TEMPLATE.md](GLOSSARY-TEMPLATE.md): the term list fixed once per locale and given to GPT with every batch.
+- [tools/curriculum/STYLE.md](../../tools/curriculum/STYLE.md): the English voice the translations carry over.
+
+Everything here was checked against the code at commit `0bbf273` (branch `v2/foundations`). Counts are that commit's; HANDOFF.md always has the current ones.
+
+## Contents
+
+1. [The work in one page](#1-the-work-in-one-page)
+2. [What is translated, where, and in which order](#2-what-is-translated-where-and-in-which-order)
+3. [The TODO file](#3-the-todo-file)
+4. [Hard rules](#4-hard-rules)
+5. [Prompts](#5-prompts)
+6. [The batch helper](#6-the-batch-helper)
+7. [Apply and verify](#7-apply-and-verify)
+8. [QA](#8-qa)
+9. [The App Store listing](#9-the-app-store-listing)
+10. [Traps the tooling doesn't catch](#10-traps-the-tooling-doesnt-catch)
+
+## 1. The work in one page
+
+Per locale, in this order:
+
+1. **Glossary.** Copy [GLOSSARY-TEMPLATE.md](GLOSSARY-TEMPLATE.md) to `docs/l10n/glossary/<locale>.md`, pre-fill it from the current tables, decide the rest, have a native reviewer sign it off.
+2. **Batches.** `python3 gpt_l10n.py split <repo> <locale>` cuts `tools/l10n/todo/<locale>.json` into batches of one kind each (legal, permission, VoiceOver, funnel, the rest of the interface, whole lessons) ([§6](#6-the-batch-helper)).
+3. **Translate.** For each batch: the system prompt ([§5.1](#51-system-prompt)) plus the batch message the helper writes ([§5.2](#52-batch-message)); GPT answers in JSON ([§5.3](#53-output-format)).
+4. **Merge.** `python3 gpt_l10n.py merge <repo> <locale> <answers>` runs the import's own checks plus stricter ones and writes the answers that pass into the TODO file's `translation` fields. Errors go back to GPT; warnings go to the reviewer.
+5. **Review.** A GPT review pass over the merged text ([§5.5](#55-review-pass)), then the human sample ([§8.5](#85-human-review)). Corrections go into the same `translation` fields.
+6. **Import and gates.** `python3 tools/l10n/report.py --import tools/l10n/todo`, then the gates ([§7](#7-apply-and-verify)). Commit.
+7. **See it.** Screenshots and a pass on a phone in the language ([§8](#8-qa)).
+8. **Listing** (the nine store locales): [§9](#9-the-app-store-listing).
+
+## 2. What is translated, where, and in which order
+
+### 2.1 Surfaces
+
+| Surface | English comes from | Translation ships in | TODO `table` | Locales |
+|---|---|---|---|---|
+| App interface: every screen, alert, share card and App Intents dialog, the Home and Lock Screen widgets and Live Activity (`ios/TimbreWidgets`), the Watch app and its complications (`ios/TimbreWatch`, `ios/TimbreWatchWidgets`) | Swift string literals, found by `tools/l10n/swiftstrings.py` (the key is the English itself); legacy `timbre_*` keys from `en.lproj/Localizable.strings` | `ios/Timbre/Resources/<locale>.lproj/Localizable.strings`. The widget and Watch targets copy the same table (`ios/project.yml`: `includes: ["*.lproj/Localizable.strings", "*.lproj/Localizable.stringsdict"]`) | `Localizable.strings` | all 48 |
+| What VoiceOver says: labels, hints, values, announcements, Voice Control's input labels | the same literals, inside an accessibility modifier or announcement (`tools/l10n/critical.py` finds them) | `Localizable.strings` | `Localizable.strings`, `launch: voiceover` | all 48 |
+| Plurals | `en.lproj/Localizable.stringsdict` (7 entries today) | `<locale>.lproj/Localizable.stringsdict` | `Localizable.stringsdict` | all 48 |
+| Siri and Shortcuts phrases | `AppShortcut` phrases in `ios/Timbre/Intents/` | `AppShortcuts.strings` | `AppShortcuts.strings` | all 48 |
+| System permission prompts, home-screen name | the Timbre target's Info.plist keys in `ios/project.yml` (`NSMicrophoneUsageDescription`, `NSAppleMusicUsageDescription`, `CFBundleDisplayName`) | `InfoPlist.strings` | `InfoPlist.strings`, `launch: permission` | all 48 |
+| Lessons: course, unit and lesson titles, lesson cards, prompts, quiz answers and explanations, hints, unit summaries, course subtitles, song section chips, lyric credits | `tools/curriculum/courses/*.py` → `tools/curriculum/build.py` → `en.lproj/Learn.strings` (keys are a hash of the English, so an edited sentence gets a new key) | `tools/l10n/learn/<locale>.json` → `apply_learn.py` → `<locale>.lproj/Learn.strings` | `Learn.strings` | the 9 lesson languages |
+| App Store listing: name, subtitle, keywords, promotional text, description, What's New, screenshot captions, App Preview captions | `docs/ios/APP-STORE-LISTING.md`, and its "Source for translators" (counts as variables) in `docs/ios/APP-STORE-LISTING-LOCALIZED.md` | `APP-STORE-LISTING-LOCALIZED.md`, pasted into App Store Connect; captions rendered by `tools/marketing/screenshots.py` | none (no TODO file) | the 9 listing locales |
+| Other App Store Connect text: in-app purchase display names and descriptions, Game Center leaderboard and achievement names | the tables in `APP-STORE-LISTING.md`; `ios/Timbre/Services/GameCenterIDs.swift` (achievement titles and details are the app's own badge texts) | App Store Connect only | none | as the listing |
+
+Not translated: sung lyrics (the public-domain originals, or Timbre's own for the Originals), App Review notes (English), product and file names. "What's New" exists only as the App Store version text; the app has no What's New screen of its own.
+
+### 2.2 Locales
+
+- **49 string tables**: English, the source, and 48 translations: ar, bg, bn, ca, cs, da, de, el, es, et, fa, fi, fr, gu, he, hi, hr, hu, id, is, it, ja, kn, ko, lt, lv, ml, mr, nl, no, pa, pl, pt, ro, ru, sk, sl, sv, sw, ta, te, th, tr, uk, ur, vi, zh-CN, zu. `tools/verify-ios-resources.py` asserts there are 49 `.lproj` folders. All 48 ship today (`CFBundleLocalizations` in `ios/project.yml`).
+- **The 9 major locales**, de, es, fr, it, ja, ko, pt, ru and zh-CN: the interface, the lessons (they have `tools/l10n/learn/<locale>.json` and a `Learn.strings`), and the store listing (as de-DE, es-MX, fr-FR, it, ja, ko, pt-BR, ru and zh-Hans).
+- **The 39 others**: the interface only. Lessons show in English there by design; `report.py` gives them no lesson TODO.
+- **Right to left**: ar, fa, he, ur ([§4.11](#411-right-to-left-ar-fa-he-ur)).
+- **Variants**: one table per language serves every region. `es` serves Spain and Latin America (the current table uses Spain's iOS wording, "Ajustes"; the store listing is es-MX, "Configuración"), `pt` serves Brazil and Portugal (the current table is Brazilian, "você"), `zh-CN` is Simplified Chinese, `no` is Norwegian Bokmål. The glossary records the variant.
+
+### 2.3 What is missing (at 0bbf273)
+
+639 interface strings in every one of the 48 locales (30,672 locale-string pairs), of which 151 are launch-critical, and 1,467 lesson strings in each lesson language (13,203 pairs). Every locale has 67.7 % of the interface (`python3 tools/l10n/shipping.py`). 1,410 of the pairs are `changed`: the English was edited and the old translation comes along to update.
+
+### 2.4 Priority, and the gate each step opens
+
+The TODO files are already in this order: `report.py` puts the launch-critical entries first (legal, permission, VoiceOver, funnel), then the interface in the order a new user meets it (permission prompts, onboarding, the paywall, the tabs, the tuner, Learn, Songs, Practice, Progress, instruments, Your songs, Settings, then everything else), then the lessons in course order. Translate from the top.
+
+| # | What | Marker in the TODO entry | Strings (each locale) | What it unlocks |
+|---|---|---|---:|---|
+| 1 | Purchase terms (the paywall's renewal, trial, cancel, billing, restore, Terms and Privacy texts) | `launch: legal` | 11 | `critical.py --strict`, which the App Store upload runs (`apple-delivery.yml`): a shipped locale may lack none of 1–3. `critical.py --baseline` fails any pull request that adds a new gap. |
+| 2 | Permission prompts | `launch: permission` | 1 | as 1 |
+| 3 | VoiceOver | `launch: voiceover` | 93 | as 1 |
+| 4 | Onboarding, welcome to paywall | `launch: funnel` | 46 | No gate, but it is the first thing every new user reads, and `LocalizationLaunchUITests` checks the German welcome ([§8.2](#82-the-localization-launch-tests)). |
+| 5 | The rest of the interface | none | 488 | The shipping bar: `shipping.py --min 95` ships a locale only when 95 % of its interface is translated ([§7.6](#76-shipping-fewer-locales)). |
+| 6 | Lessons (9 locales) | `table: Learn.strings` | 1,467 | Nothing gates them: an untranslated lesson string shows in English. |
+| 7 | Store listing (9 locales) | none | 13 caption rows plus the text blocks | `screenshots.py --check` ([§9](#9-the-app-store-listing)). |
+
+Across locales, the order that gets an upload through soonest:
+
+1. Steps 1–4 for all 48 locales. Then `critical.py --strict` passes with every locale shipped.
+2. Step 5 for the 9 major locales: they are complete.
+3. Step 6, then step 7, for the 9 major locales.
+4. Step 5 for the other 39, shipping each one as it reaches the bar.
+
+Until a locale has steps 1–3, either it doesn't ship (`shipping.py --min … --critical --apply`) or the upload fails.
+
+## 3. The TODO file
+
+`tools/l10n/todo/<locale>.json`, generated by `python3 tools/l10n/report.py`. One file per locale, one string per line, so a delivered translation is a one-line diff. `tools/l10n/todo/index.json` holds the counts; it isn't a TODO file.
+
+### 3.1 Header
+
+| Field | Meaning |
+|---|---|
+| `locale` | The locale code (the `.lproj` name). The import uses it (falling back to the file name). |
+| `language` | Its English name. |
+| `about` | "fill in the translation fields and change nothing else". |
+| `counts` | Entries per table. |
+| `strings` | The entries, below. |
+
+### 3.2 Entry fields
+
+| Field | When present | Meaning | GPT |
+|---|---|---|---|
+| `table` | always | Where the string ships: `Localizable.strings`, `Localizable.stringsdict`, `AppShortcuts.strings`, `InfoPlist.strings`, `Learn.strings` ([§2.1](#21-surfaces)). | reads; never changes |
+| `key` | always | The lookup key. Interface: the English itself (for `timbre_*` and InfoPlist keys, an identifier). Lessons: `L` + a hash of the English. | never sees it (the helper maps ids to keys) |
+| `source` | always | The English to translate. For a plural, the English `other` form. | translates |
+| `context` | when the code has a comment above the string, for every lesson string, InfoPlist and plurals | Interface: the developer's comment (layout, what the text does). Lessons: course · unit · lesson kind, id and title · step number and type · role (title, lesson card text, question or instruction, quiz answer, explanation after a quiz answer, hint under an exercise, song section label, lyric credit). Plurals: an instruction to give every form. | reads |
+| `where` | interface strings | Up to two `file:line` locations in the Swift sources (line numbers drift). The helper adds the code line as `code`, which shows what fills each `%@`. | reads |
+| `layout` | when the code shows a tight spot | `one line`, `shrinks to fit` (the text scales down to fit), `small label`, `control label` (a button, tab, toggle or badge), `system UI label` (a Shortcuts title, a widget's name), comma-separated. | reads |
+| `max_length` | tight interface strings; every lesson string except lyric credits | Aim at most this many characters. Interface: `max(len + 6, 1.5 × len)` of the English with each argument counted as two characters (only for English of up to 60 characters), a soft limit. Lessons: the limit the English is written to (title 42, lesson card 300, question 140, quiz answer 48, hint 120, explanation 220, unit summary 120, course subtitle 80; a section chip `max(12, 1.5 × len)`). Nothing enforces it; the screen truncates or shrinks. | stays within |
+| `launch` | launch-critical strings | `legal`, `permission`, `voiceover` or `funnel` ([§2.4](#24-priority-and-the-gate-each-step-opens)). A string that is both legal and VoiceOver shows `legal`. | applies the rules of [§4.15](#415-legal-permission-voiceover-siri-watch) |
+| `key_check` | 5 new interface strings today | The scanner guessed an argument's type in the key (`%lld` or `%@`). Translate normally; a developer confirms the key before importing ([§7.4](#74-confirm-guessed-keys-key_check)). | translates normally |
+| `status` | always | `new`; `changed`: the English was edited, `previous` has the old English and its translation; `rejected`: a delivered translation failed a check, `problem` says why. | follows |
+| `previous` | `changed`, some `rejected` | `{"source": old English, "translation": old translation}` for `changed`; `{"translation": …}` for a rejected delivery that was stored but failed. | starts from it |
+| `problem` | `rejected` | Why the import refused the text: "format arguments or ${…} tokens differ from the English", "the numbers differ from the English", "the line breaks differ from the English", "the count of ♯ differs from the English", "a plural needs a JSON object with at least an "other" form", "empty". | fixes exactly that |
+| `translation` | always | **The only field that is filled.** A string; for `Localizable.stringsdict`, a JSON object of plural forms. Empty means "not translated" (the entry is skipped). For a rejected entry it may hold the refused text. | writes (through the helper) |
+
+Never change any other field, never reorder, add or delete lines, never rename the file. `report.py` regenerates the file from the code after every import, keeps every `translation` typed into it (`carried_translations`), and drops entries whose English no longer exists.
+
+### 3.3 Examples (from `de.json`)
+
+A changed legal string: start from `previous.translation`, change what the English change requires (here "cancel anytime" became "Cancel anytime in Settings"):
+
+```json
+{"table": "Localizable.strings", "key": "Cancel anytime in Settings", "source": "Cancel anytime in Settings", "where": ["ios/Timbre/Paywall/PaywallView.swift:1033", "ios/Timbre/Paywall/PaywallView.swift:1041"], "status": "changed", "previous": {"source": "cancel anytime", "translation": "jederzeit kündbar"}, "launch": "legal", "translation": ""}
+```
+
+A VoiceOver string with a layout limit:
+
+```json
+{"table": "Localizable.strings", "key": "Not heard", "source": "Not heard", "where": ["ios/Timbre/Tune/StrumMeters.swift:180", "ios/Timbre/Tune/StrumMeters.swift:534"], "layout": "one line", "max_length": 15, "status": "new", "launch": "voiceover", "translation": ""}
+```
+
+A string whose key was guessed (`key_check`):
+
+```json
+{"table": "Localizable.strings", "key": "Then %@. It renews automatically until you cancel in Settings.", "source": "Then %@. It renews automatically until you cancel in Settings.", "where": ["ios/Timbre/Paywall/PaywallWinBack.swift:208"], "key_check": "the interpolation types in this key are inferred: confirm it with an Xcode export (l10n.yml) before applying", "status": "new", "launch": "legal", "translation": ""}
+```
+
+A lesson string:
+
+```json
+{"table": "Learn.strings", "key": "La0e88a1c69", "source": "B A G A B B B: open string 2, then string 3.", "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 3 (notes) · hint under an exercise", "max_length": 120, "status": "new", "translation": ""}
+```
+
+Its German translation must write H for B and keep both digits: `"H A G A H H H: leere Saite 2, dann Saite 3."` ("zwei" for 2 is refused: "the numbers differ from the English").
+
+A Siri phrase:
+
+```json
+{"table": "AppShortcuts.strings", "key": "${command} in ${applicationName}", "source": "${command} in ${applicationName}", "context": "Mid-lesson, hands on the instrument: \"Again in Timbre\", \"Next in Timbre\", \"Slower in Timbre\".", "where": ["ios/Timbre/Intents/TimbreShortcuts.swift:34"], "status": "new", "translation": ""}
+```
+
+A plural (none is open today; this is the shape one takes), and its Russian translation:
+
+```json
+{"table": "Localizable.stringsdict", "key": "%lld sessions", "source": "%lld sessions", "context": "Plural. Give every plural form your language uses (zero, one, two, few, many, other) as a JSON object, e.g. {\"one\": \"…\", \"other\": \"…\"}.", "status": "new",
+ "translation": {"one": "%lld занятие", "few": "%lld занятия", "many": "%lld занятий", "other": "%lld занятия"}}
+```
+
+### 3.4 What happens to an entry after the import
+
+| Entry | After `report.py --import tools/l10n/todo` |
+|---|---|
+| A translation that passes the checks | Merged into `tools/l10n/translations/<locale>.json` (interface) or `tools/l10n/learn/<locale>.json` (lessons), written into the `.lproj` tables, gone from the regenerated TODO file. |
+| A translation that fails a check | Printed as "not imported"; stays in the TODO file with `status: rejected`, `problem` and the refused text in `translation`. |
+| A plural that passes | Printed as "add it to `<locale>.lproj/Localizable.stringsdict` by hand"; nothing is written ([§7.5](#75-plurals-by-hand)). The entry stays until the plural is in the table. |
+| A `key_check` translation under a wrong guessed key | Imported under a key the app never looks up: the entry disappears from the TODO file while the app still shows English. Confirm keys first ([§7.4](#74-confirm-guessed-keys-key_check)). |
+| An empty `translation` | Skipped; stays. |
+
+## 4. Hard rules
+
+The rules GPT follows. The prompts ([§5](#5-prompts)) carry them; this section gives the reasons and the per-language detail. "The import checks" means `report.py --import` refuses the text; "the helper checks" means `gpt_l10n.py merge` refuses it or warns.
+
+### 4.1 Format arguments
+
+Arguments are where the app inserts a value at run time: `%@` text (a note or chord name, an instrument, a song title, a price, a date, a translated word such as "flat"), `%lld` and `%d` whole numbers, `%lf`, `%f` and `%.1f` decimals, `%llu` and `%u` unsigned numbers. `%%` is a literal percent sign in a string that has arguments ("Save %lld%%").
+
+- Keep every argument: the same number of each type. The app formats the number itself, in the reader's locale.
+- To change their order, number all of them with their position in the English: "Combo %lld, ×%lld" → `×%2$lld · Combo %1$lld`. Never mix numbered and plain arguments in one string (`Takt %1$lld von %lld` is refused).
+- Legacy `timbre_*` strings already number theirs (`%1$d`); keep the numbers.
+- Never add an argument, never drop one, never put a space or letter inside one (`% @`, `%l ld`), never use a full-width ％.
+- `%%` stays `%%`.
+
+The import checks the types and their order (`tools/l10n/apply.py`, `specs`), but it doesn't see `%lf`, `%llu` or `%u`: a translation that drops a `%lf` passes the import and the app shows the sentence without its number ("%lf more to beat %lf" is such a string today). The helper checks every type.
+
+Example of what the arguments hold, from `code`: `Text("Your \(labels[worst.anchor] ?? worst.anchor) string drifts \(worst.centsPerDay < 0 ? String(localized: "flat") : String(localized: "sharp")) about \(Int(abs(worst.centsPerDay).rounded()))¢ a day.")` is "Your %@ string drifts %@ about %lld¢ a day.": a string's name, the translated word for flat or sharp, a number. The German that shipped for the earlier wording reorders all three: `Deine %1$@-Saite verstimmt sich: etwa %3$lld Cent pro Tag %2$@.`
+
+### 4.2 Named tokens and literal syntax
+
+- `${applicationName}`, `${instrument}`, `${key}`, `${bpm}`, `${command}` (Siri phrases and Shortcuts summaries): keep each one exactly as spelled, in any order. Every Siri phrase keeps `${applicationName}`; Siri needs the app's name in the phrase. The import checks them.
+- Literal syntax stays verbatim: ChordPro in examples (`[G]Amazing [C]grace`, `{start_of_chorus}`, `{end_of_chorus}`), URLs, file names, the `›` between Settings levels (it mirrors itself in right-to-left text), `·` separators, `×` multipliers, `≈`, `→`, en-dash ranges (`1–16`), `/`, `+`.
+- Symbols the English uses for meaning stay: ♯ ♭ ✓ ▲ ▼ ¢.
+
+### 4.3 Plurals
+
+New plural keys arrive as `table: Localizable.stringsdict`; today all 7 are translated in every locale. The translation is a JSON object with the forms the language uses. The categories are CLDR's; the repository's own `.stringsdict` files record which each locale uses:
+
+| Forms | Locales |
+|---|---|
+| `other` | id, ja, ko, th, vi, zh-CN |
+| `one`, `other` | bg, bn, ca, da, de, el, es, et, fa, fi, fr, gu, hi, hu, is, it, kn, ml, mr, nl, no, pa, pt, sv, sw, ta, te, tr, ur, zu (and en) |
+| `zero`, `one`, `other` | lv |
+| `one`, `two`, `other` | he |
+| `one`, `few`, `other` | cs, hr, lt, ro, sk |
+| `one`, `two`, `few`, `other` | sl |
+| `one`, `few`, `many`, `other` | pl, ru, uk |
+| `zero`, `one`, `two`, `few`, `many`, `other` | ar |
+
+- `one` is not "exactly 1" in every language: it is 0 and 1 in fr, pt, hi, bn, gu, kn, fa and zu, 1, 21, 31 … in ru, uk, hr, lt, lv and is, and 1, 101 … in sl. So **every form keeps the number**: each form must carry the same arguments as the English (`%lld`), or the import refuses it, even though the English `one` of "Every %lld bars" reads "Every bar".
+- `other` is always required.
+- The import doesn't write plurals ([§7.5](#75-plurals-by-hand)).
+
+Counted strings that are **not** plurals: many interface strings carry a count in a flat `Localizable.strings` entry ("%lld bars", "Finish %lld lessons", "Hit %lld bullseyes"). One text must then read right for every number. In languages with several plural forms, write a count-neutral form: a label and a colon (Russian "тактов: %lld"), or the form that fits the common counts. A unit abbreviation that doesn't inflect ("%lld дн.") works on screen, but not in a VoiceOver string. `tools/l10n/plurals-en.json` lists 22 such strings that become real plurals when the app moves to String Catalogs (`tools/l10n/xcstrings.py`); translators add their forms then.
+
+### 4.4 Line breaks, spaces and characters
+
+- **Line breaks** (`\n` in the TODO file's JSON, a real line break in the text): lessons must keep the same number as the English (the import checks). Interface strings should keep the English line structure ("Tune in seconds.\nThen learn to play." is a two-line headline); the import doesn't check, the helper warns.
+- No leading or trailing spaces, no double spaces.
+- The ellipsis is one character, …, wherever the English has it ("Listening…"). The current tables mix in three dots in places; don't follow them.
+- Write ordinary hyphens: the code itself turns "45-second" into non-breaking hyphens.
+- Invisible characters: none, except the right-to-left marks of [§4.11](#411-right-to-left-ar-fa-he-ur), the joiners a script needs (ZWNJ in Persian "می‌شوید", ZWJ and ZWNJ in Indic scripts), and the no-break spaces of French typography.
+
+### 4.5 Length and layout
+
+- `max_length` is a target, not a check: nothing refuses a longer text, but a `one line` label truncates and a `shrinks to fit` label gets smaller. The helper warns.
+- Count CJK characters twice (each is about two Latin characters wide); the helper does.
+- `control label`: a button, tab, toggle or badge; use the shortest natural wording the iOS convention of the language allows (infinitive or noun).
+- `small label`: caption-sized text on a chip or capsule.
+- Watch and widget strings (`where` in `ios/TimbreWatch`, `ios/TimbreWatchWidgets`, `ios/TimbreWidgets`) sit on very small screens even without a `layout`.
+- Long compounds (German, Finnish, Dutch, Hungarian, Russian) don't hyphenate in a one-line label: choose a shorter word.
+- Lessons: German, Russian and French run 20–35 % longer than English; the limits leave little room. Shorten wording, never the content of a lesson card, a question or a legal sentence; say in `note` when a limit can't be met.
+- VoiceOver strings have no visual limit; keep them as short as the English.
+
+### 4.6 Names that never change
+
+Timbre, Timbre Pro, Pro (the plan), Apple, iPhone, iPad, Apple Watch, App Store, Apple Music, Game Center, Siri, ChordPro, XP, BPM, Hz, A4. Never translate, transliterate or inflect "Timbre": rebuild the sentence so it needs no ending ("in Timbre", "die App Timbre"). Apple's own products keep Apple's spelling in each language; Apple's localized names of iOS places and features (Settings, Apple Account, Subscriptions, Home Screen, Lock Screen, Live Activity, Shortcuts, Control Center) are used as iOS shows them in the language ([glossary §1](GLOSSARY-TEMPLATE.md#1-locale-decisions)).
+
+Decided per locale, in the glossary: song titles (local title where one is established, else the English; Originals translated or kept), the course names, and the game "Bullseye". HANDOFF.md asks to keep game names, but every shipped table translates "Bullseye" (de Volltreffer, fr Tir parfait, ja ど真ん中, ru В яблочко); the glossary decides, and every string naming the game follows it. Instrument names are translated, as the catalogue's `timbre_catalog_*` keys already are.
+
+### 4.7 Units and numbers
+
+- Hz, BPM, XP and the cents sign ¢ stay as they are. The word "cents" is translated (Cent, セント, 音分, центы). "min", "ms" follow the language's abbreviations.
+- Interface strings: a literal number in the English stays the same number. Thousands separators follow the language ("Score 2,000 in Bullseye": de 2.000, fr 2 000 with a no-break space). Digits: Western 0–9, unless the current table uses the script's own digits (fa, bn and mr do in places); numbers the app formats follow the device's settings anyway.
+- **Lessons** (the import checks): every group of digits in the English appears in the translation, the same groups the same number of times, in ASCII digits 0–9. So: "string 2" stays "2", never "zwei", "二" or a full-width "２"; "2,000" may become "2.000" or "2 000" (the digit groups 2 and 000 survive) but not "2000"; a number the English spells as a word ("three notes", "ten half steps") stays a word, because a digit the English doesn't have is also refused. The count of `%` signs must match too.
+
+### 4.8 Note names
+
+- **Interface**: the app writes note and chord names itself, through `NoteNames` and the player's Settings › Note names: German letters (B natural H, B♭ B) by default in `de`, letters in every other language, or the player's choice of solfège, sargam or numbers; VoiceOver speaks them with the language's own words (`NoteNames.spoken`). Interface strings therefore never spell a note of their own: the `%@` brings it. The few letters in interface English are not notes: "Loop A–B", "Set B" are loop markers, and `[G]` in the ChordPro help is syntax. Keep them as they are (German too).
+- **Lessons**: note letters and chord symbols exactly as in the English (C, F♯, B♭, Em, G7, D/F♯, DADGAD), with one exception the import knows: German writes H for B natural and B for B♭ (a German `B♭` drops its sign). Lesson text is not respelled at run time; only diagrams, chord names and the tools follow the setting. Don't convert lessons to Do Ré Mi, even in languages that read solfège.
+- **♯ and ♭**: a sign in the English stays a sign (the import counts them). A spelled-out "sharp" or "flat" becomes the language's word, as `NoteNames.SpokenWords` has them (fr dièse/bémol, it diesis/bemolle, es sostenido/bemol, pt sustenido/bemol, ru диез/бемоль as "D-диез", ja シャープ/フラット as "Dシャープ", zh-CN 升/降 before the letter, "升 D", ko 샵/플랫), never a sign: a sign the English doesn't have is refused. German may write a spelled-out "D sharp" as the German name "Dis" ("E flat" as "Es"); where the English writes the sign (D♯, E♭), German keeps the sign. Never ASCII `#` or `b`.
+- **Tuner direction**: "flat" and "sharp" on the tuner mean too low and too high (de zu tief / zu hoch); the glossary has both senses.
+
+### 4.9 Musical terminology
+
+Use the glossary's term for every listed word, every time, inflected as the grammar needs. For words not in it, use what instrument teachers in the language say; loanwords are fine where usual (Bend, Hammer-on). Several English words have more than one sense in Timbre (Tune, sharp/flat, bar, key, pick, lock, take, run, chart, Intonation): the glossary's last section lists them. Where the batch gives `refs` (the current translation of a control or screen the string names) or `lesson_title`, use them verbatim. Known wrong terms in the shipped tables are listed in [§10](#10-traps-the-tooling-doesnt-catch); don't copy them.
+
+### 4.10 Punctuation and quotation marks
+
+The quotation marks are the ones the current tables use where they quote a control's name ("Tap Listen to start"); where a table doesn't quote, the language's standard form follows the slash.
+
+| Language | Quotation marks | Other |
+|---|---|---|
+| de | „…“ | |
+| fr | « … » with no-break spaces | no-break space (U+00A0 or narrow U+202F) before : ; ? ! |
+| es, ca, it, pt | none around control names; «…» (es, ca, it) or “…” (pt) for titles | Spanish opens questions with ¿ |
+| ru, uk, el | «…» | Greek question mark is ; (U+037E) |
+| pl, ro | „…” | |
+| hu | none / „…” | |
+| cs, sk, bg, lt | „…“ | |
+| et, hr, lv | „…” | |
+| sl | »…« | |
+| da, no, sv, fi, is, nl, tr, id, vi, sw | none / “…” (sv, fi ”…”) | |
+| ar, fa | «…» | Arabic comma ، and question mark ؟ |
+| he | “…” | |
+| ur | “…” | full stop ۔ |
+| hi, bn, pa | “…” | full stop । (danda) |
+| mr, gu, kn, ml, ta, te, zu | “…” | full stop . |
+| th | “…” | no full stop |
+| ja | 「…」 | 、。！？（）：full width, digits ASCII |
+| zh-CN | “…”, 《…》 for titles | ，。：；？！（）full width |
+| ko | ‘…’ | Western punctuation |
+
+The glossary fixes the final choice; keep it consistent with the current table. When a string names another control ("Tap Listen to start"), use that control's exact translation (the batch's `refs`), quoted as the language quotes control names.
+
+### 4.11 Right to left (ar, fa, he, ur)
+
+The layout flips by itself (`TimbreLocalization.isRightToLeft`); the tuner readout, the note highway, the timing strip and other pictures of an instrument stay left to right in code. The text needs three things:
+
+- **Begin with a word of the language.** A paragraph can take its direction from its first strong character, so a string that starts with `%@` (which may be a Latin note, chord or song title) or a Latin word may lay out left to right. Numbers don't count (`%lld دقيقة` is fine). When the sentence must begin with the value, start the string with U+200F (RIGHT-TO-LEFT MARK) and say so in `note`. The helper warns on every such string; many in the current tables start with `%@`, and the Arabic captures show whether they read right.
+- **Isolate a Latin value that touches digits or punctuation.** A note with an octave ("E♭3"), a chord change ("Em → G") or a tuning name inside a sentence stays whole when the argument is wrapped in U+2068 (FIRST STRONG ISOLATE) … U+2069 (POP DIRECTIONAL ISOLATE). Use it only where a value sits beside a number, a dash, a slash, a colon or parentheses, and list every mark you add in `note`: they are invisible to a reviewer. The import keeps them; the helper lists them.
+- **Digits**: Western digits in literal numbers unless the glossary says otherwise (the current fa table uses Persian digits in places); formatted numbers follow the device. Brackets and parentheses mirror by themselves; write them in reading order.
+
+The Arabic octave test ([§8.2](#82-the-localization-launch-tests)) guards the tuner readout; the Arabic captures are where a reviewer sees the rest.
+
+### 4.12 CJK, Thai and Indic scripts
+
+- **ja**: no spaces between kana or kanji and Latin letters, digits or arguments (Gメジャー, %lld日, レベル%lld); full-width 、。「」（）！？ and full-width ： in prose; ASCII digits always (lessons require them); です/ます.
+- **zh-CN**: a half-width space between Han characters and Latin letters, digits or arguments (保持你的 %lld 天连续记录, G 大调); full-width ，。：；？！“”（）and 《》 for titles; 你, not 您.
+- **ko**: normal Korean word spacing. A particle after an argument depends on the value's last sound (이/가, 을/를, 은/는, 와/과, 으로/로), which the translator can't see: rephrase so the argument needs no particle (a noun after it, or a colon), or use the paired form "을(를)".
+- **th**: no spaces between words (a space ends a phrase), no full stop; don't insert zero-width spaces, iOS breaks lines by dictionary.
+- **hi, bn, gu, kn, ml, mr, pa, ta, te**: keep the ZWJ and ZWNJ the script needs; the danda । ends a sentence in hi, bn and pa (the mr table uses a full stop); English loanwords for app terms are common (ट्यून), the glossary decides.
+
+### 4.13 Register and voice
+
+The English voice (`tools/curriculum/STYLE.md`): "Second person, present tense, warm and direct, like a good teacher sitting next to you. No exclamation marks except in a rare celebration. No emoji. No filler." Carry that over:
+
+- One register for the whole app, lessons included, fixed in the glossary.
+- No exclamation mark or emoji the English doesn't have; no marketing words the English doesn't use; nothing added, nothing left out.
+- Settings, buttons and system texts follow Apple's own conventions in the language.
+- Write a sentence a native teacher would say, not a mirror of the English.
+
+The register the shipped tables use (read from a sample of their strings; the glossary confirms or overrules it):
+
+| Register | Locales |
+|---|---|
+| Informal "you" | ca (tu), da, de (du), es (tú), et, fi, hu, is, it (tu), nl (je), no, pl, sv, sw, zu |
+| Formal or plural "you" | bg, cs, el, fa, fr (vous), id (Anda), lt, lv, pt (você, polite), ru (вы), sk, tr (mostly), uk (ви) |
+| Polite verb forms | bn, gu, hi, kn, mr, pa, ta, te, ur (आप-style); ja (です/ます); ko (해요체) |
+| Neutral | ar (masculine singular imperatives), ml, th, vi (bạn), zh-CN (你) |
+| **Mixed: decide and clean up** | he (plural and masculine singular), hr, ro, sl (formal and informal imperatives side by side), tr ("Her teli akort et" beside formal ones) |
+
+### 4.14 Grammar around arguments
+
+- Never inflect an argument or attach an ending to it. Build the sentence so the inserted value stands where its dictionary form fits: before or after a noun in apposition ("die %@-Saite"), or after a colon ("Nächstes Lied: %@").
+- Gender and case agreement with an unknown value (an instrument, a song): avoid it with a neutral construction.
+- Suffixing languages (tr, fi, hu, et, ko): the suffix depends on the value's sound; rephrase, or use the apostrophe form the language allows for foreign words (tr `%@'e` is still wrong half the time: prefer a label).
+- One key can serve several places (`where` lists up to two, and `code` the first): "Next", "Again" and "Slower" are on-screen labels and also Siri's command words (`ios/Timbre/Intents/PracticeIntents.swift`). Choose a wording that works in every place; say in `note` when none does.
+
+### 4.15 Legal, permission, VoiceOver, Siri, Watch
+
+- **Legal** (`launch: legal`): translate every fact exactly: automatic renewal, cancelling at least a day (24 hours) before renewal, where to cancel (Apple's own names for Settings › Apple Account › Subscriptions in the language), what stays free, the trial and its end, the billing problem and the grace period. Add nothing, soften nothing, drop nothing; don't shorten a legal sentence to meet `max_length` (say so in `note`). Apple reviews these texts in every language the app ships.
+- **Permission prompts** (`launch: permission`): the purpose and the privacy promise exactly ("Timbre plays the Apple Music songs you choose, so you can listen to them beside your own chord charts."); Apple rejects vague purpose strings. Timbre stays the subject.
+- **VoiceOver** (`launch: voiceover`): the text is spoken. Labels are short noun phrases without the control's type ("button"); hints are third-person verb phrases saying what happens ("Opens…", "Plays…", "Shows…"), as iOS phrases them in the language. Prefer words to symbols VoiceOver reads oddly; no abbreviations where the English has none.
+- **Siri phrases** (`AppShortcuts.strings`): natural spoken commands a person says aloud, keeping `${applicationName}` and every other token.
+- **Watch, widgets, Live Activity**: the shortest natural wording.
+
+## 5. Prompts
+
+The system prompt is the same for every batch and every locale. The batch message carries the locale's glossary, a few of its current translations as style anchors, and the batch; the helper writes it ([§6](#6-the-batch-helper)).
+
+### 5.1 System prompt
+
+Save as `system.txt` and send it as the system (or developer) message of every request:
+
+```text
+You are the senior localizer for Timbre, an iPhone app that is a precise tuner and a music teacher in one: it tunes 60
+instruments, teaches guitar, ukulele, bass, violin, cello, mandolin, banjo, singing, ear training, music theory and
+rhythm with lessons that listen to the player through the microphone, and has songs to play along to, a metronome, a
+drone, ear games, streaks and a subscription called Timbre Pro. You translate its strings from American English into
+the language the user message names. Your text ships in the app as it is: a program checks it, then a native speaker
+reads a sample.
+
+VOICE
+- Timbre speaks like a good teacher sitting next to the player: warm, direct, second person, present tense, plain
+  words, short sentences. Use the register (formal or informal "you") the glossary fixes, everywhere.
+- Write what a native speaker would write in an iPhone app (Apple's own wording and conventions for the language),
+  not a word-for-word copy. Keep the meaning, every fact, and roughly the length.
+- No exclamation mark, emoji, filler or marketing word the English doesn't have. Add nothing, leave nothing out.
+
+INPUT
+A JSON array of items. Each item has:
+- id: echo it back.
+- table: Localizable.strings (app interface, widgets, Watch, VoiceOver), Localizable.stringsdict (a plural),
+  AppShortcuts.strings (a Siri phrase), InfoPlist.strings (a system permission prompt), Learn.strings (lesson text).
+- source: the English to translate.
+- context: where the text appears and what it does; for lessons the course, unit, lesson, step and the role of the text.
+- where, code: the Swift source line; it shows what each %@ or %lld will hold.
+- layout, max_length: the text sits somewhere tight; stay within max_length characters (count each Chinese, Japanese or
+  Korean character as two).
+- launch: legal, permission, voiceover or funnel. Special rules below.
+- status: new; changed (the English was edited: start from previous.translation and change only what the edit from
+  previous.source to source requires); rejected (a checker refused rejected_text or previous.translation for the reason
+  in problem: fix exactly that).
+- refs: the app's current translations of other controls or screens this text names. Use them verbatim.
+- lesson_title: the current translation of the title of the lesson this text belongs to. Name the song the same way.
+- plural_forms: for a plural, the plural categories of this language that you must fill.
+- translation: only in a review pass: the current translation to check.
+
+HARD RULES (a program refuses a translation that breaks rules 1 to 6)
+1. Format arguments (%@ %lld %d %lf %f %.1f %llu %u): keep every one, the same number of each type. To change their
+   order, number ALL of them with their position in the English (%1$@ … %2$lld); never mix numbered and plain ones.
+   Keep %% as %%. Never translate, space out or add an argument.
+2. Tokens ${applicationName} ${instrument} ${key} ${bpm} ${command}: keep each exactly, any order. Every Siri phrase
+   keeps ${applicationName}.
+3. Line breaks: keep the English number of line breaks (required in lessons; in the interface keep the line structure).
+   No leading or trailing spaces.
+4. Lessons (table Learn.strings): every group of digits in the English appears in your text, the same groups the same
+   number of times, in ASCII digits 0-9 (never words, never full-width or native digits); add no digit the English
+   lacks, so numbers the English spells out stay words. Keep the count of ♯, ♭ and % signs. A ♯ or ♭ sign stays a
+   sign; a spelled-out "sharp" or "flat" becomes your language's word from the glossary, never a sign. German only:
+   B natural is H, and B♭ is B (drop the sign).
+5. Plurals (table Localizable.stringsdict): answer in "plural" with every category of plural_forms; every form keeps
+   the same arguments as the English, the number included, even in "one".
+6. Note and chord names in lessons stay exactly as in the English (C, F♯, B♭, Em, G7, D/F♯, DADGAD), except the German
+   rule above. Interface strings never spell a note themselves: the app inserts notes through %@. "Loop A–B" and
+   "Set B" are loop markers, not notes.
+7. Never translate: Timbre, Timbre Pro, Pro (the plan), Apple, iPhone, iPad, Apple Watch, App Store, Apple Music,
+   Game Center, Siri, ChordPro, XP, BPM, Hz, A4, ¢. Never inflect "Timbre": rebuild the sentence instead. Literal
+   syntax stays: [G], {start_of_chorus}, URLs, › between Settings levels, ·, ×, →, ranges like 1–16.
+8. Use the glossary's translation for every term it lists, every time. Use refs and lesson_title verbatim.
+9. Never inflect an argument or attach an ending, particle, article or case suffix to it; build the sentence so the
+   inserted value needs none (a noun beside it, or a colon).
+10. Right-to-left languages (ar, fa, he, ur): begin with a word of the language, not with %@ or a Latin word; if the
+    sentence must begin with the value, start the string with U+200F. Where a Latin value (%@: a note, chord, tuning or
+    title) touches digits or punctuation, wrap that argument in U+2068 … U+2069. Name every invisible character you
+    add in note.
+11. Legal strings (launch: legal): every fact exactly (automatic renewal, cancel at least a day before renewal, where
+    to cancel with Apple's own names for Settings, Apple Account and Subscriptions in this language, what stays free,
+    the trial). Never shorten them to fit. Permission prompts (launch: permission): the purpose and the privacy promise
+    exactly, Timbre as the subject.
+12. VoiceOver strings (launch: voiceover) are spoken: labels are short noun phrases without the control's type; hints
+    are third-person verb phrases saying what happens ("Opens…"), as iOS phrases them in this language. No
+    abbreviation the English doesn't have.
+13. Use the language's punctuation, quotation marks and spacing as the glossary fixes them. One ellipsis character …
+    where the English has it.
+
+OUTPUT
+Only JSON, no prose, no code fence:
+{"items": [{"id": "s001", "translation": "…", "plural": null, "note": ""}, …]}
+- Exactly one item per input id, the same ids.
+- translation: your text. For a plural, "" (the forms go in plural).
+- plural: null, or for table Localizable.stringsdict an object with the keys zero, one, two, few, many, other; null
+  for each category not in plural_forms.
+- note: "" normally. One short English sentence when a human should look: an ambiguity you resolved, a rule you could
+  not meet (a length, a word order), a term the glossary lacks, an invisible character you added, a place where one
+  translation cannot serve every use of the key.
+
+BEFORE ANSWERING, CHECK EVERY ITEM
+- Same arguments and tokens as the English, numbered if reordered; %% kept.
+- Same line breaks; no leading or trailing space.
+- Lessons: same digit groups in ASCII digits, same ♯ ♭ % counts, letters as in the English (German H and B).
+- Plural: every category of plural_forms, each with the number.
+- Glossary terms, refs and lesson_title used exactly; register consistent; brand names intact.
+- Within max_length; legal and permission facts complete.
+- Right-to-left: starts with a word of the language or U+200F.
+- Valid JSON, one item per id.
+```
+
+### 5.2 Batch message
+
+`python3 gpt_l10n.py prompt <repo> <locale> batches/<batch>.json <repo>/docs/l10n/glossary/<locale>.md` writes `batches/<batch>.prompt.txt`: the user message for that batch. Its shape:
+
+```text
+Translate this batch of Timbre strings from American English into German (de).
+
+Locale decisions and glossary for German (binding):
+<<<
+(the whole glossary file)
+>>>
+
+How Timbre already reads in German (current translations; match their register, terms and punctuation):
+- "Pluck your thickest string" → "Zupf deine dickste Saite"
+- "Tap Listen to start" → "Tippe auf „Zuhören“, um zu starten"
+- … (ten interface pairs from the current table, plus six lesson pairs for a lesson batch)
+
+The batch: 40 strings, kind "voiceover". Return exactly one item per id, in the JSON format the system prompt gives.
+[ {"id": "s001", "table": "Localizable.strings", "source": "…", "where": "…", "code": "…", "launch": "voiceover", …}, … ]
+```
+
+The style anchors come from the locale's own shipped strings, so a locale whose current table is wrong in register (the mixed ones of [§4.13](#413-register-and-voice)) needs its glossary decision stated plainly; the glossary is binding, the anchors are examples.
+
+### 5.3 Output format
+
+GPT answers with this JSON. Through an API that supports structured output, pass the schema so the model can't answer anything else (it is written for strict mode: every property required, nulls explicit):
+
+```json
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["items"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "translation", "plural", "note"],
+        "properties": {
+          "id": {"type": "string"},
+          "translation": {"type": "string"},
+          "plural": {
+            "anyOf": [
+              {"type": "null"},
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["zero", "one", "two", "few", "many", "other"],
+                "properties": {
+                  "zero": {"type": ["string", "null"]},
+                  "one": {"type": ["string", "null"]},
+                  "two": {"type": ["string", "null"]},
+                  "few": {"type": ["string", "null"]},
+                  "many": {"type": ["string", "null"]},
+                  "other": {"type": "string"}
+                }
+              }
+            ]
+          },
+          "note": {"type": "string"}
+        }
+      }
+    }
+  }
+}
+```
+
+Save each answer beside its batch as `<batch>.out.json` (`de-003.json` → `de-003.out.json`).
+
+Driving it through the OpenAI API (Python SDK; adjust the model name, and drop `temperature` if the model refuses it):
+
+```python
+import json, sys
+from pathlib import Path
+from openai import OpenAI
+
+client = OpenAI()
+system = Path("system.txt").read_text(encoding="utf-8")
+schema = json.loads(Path("schema.json").read_text(encoding="utf-8"))     # the schema above
+for prompt in sys.argv[1:]:                                               # batches/de-0*.prompt.txt
+    out = Path(prompt.replace(".prompt.txt", ".out.json"))
+    if out.exists():
+        continue
+    response = client.chat.completions.create(
+        model="<your GPT model>",
+        temperature=0.2,
+        messages=[{"role": "system", "content": system},
+                  {"role": "user", "content": Path(prompt).read_text(encoding="utf-8")}],
+        response_format={"type": "json_schema",
+                         "json_schema": {"name": "timbre_batch", "strict": True, "schema": schema}},
+    )
+    out.write_text(response.choices[0].message.content, encoding="utf-8")
+    print(out)
+```
+
+In a chat window instead: put `system.txt` in the custom instructions (or paste it first), paste one `.prompt.txt` per message, and save each reply as the batch's `.out.json`. Start a new conversation every few batches so the glossary stays in view.
+
+### 5.4 Batch size, model and settings
+
+- **Size**: `--size 40` (the default). The helper never mixes kinds: the 11 legal strings form one batch, the permission prompt another, then VoiceOver, the funnel, the rest of the interface, and lessons, which it only cuts between lessons (a lesson is always translated whole, in order, about 40–50 strings a batch). Use `--size 25` for the languages GPT handles less well (zu, sw, pa, gu, kn, ml, mr, te, ta, bn), where smaller batches get more care.
+- **Model**: the strongest GPT model available. A reasoning model for lessons and for the legal batch.
+- **Temperature**: low (0.2) where the model accepts one: terminology must not wander between batches.
+- **Volume**: at 40 strings a batch, about 20 interface batches per locale (48 locales) and about 34 lesson batches per lesson language (9): some 1,270 requests for everything, plus a review pass. Run them through the API, not a chat window.
+- **Order**: steps 1–4 of [§2.4](#24-priority-and-the-gate-each-step-opens) first in every locale; within a locale, the helper's batch numbers follow the TODO order.
+
+### 5.5 Review pass
+
+After the merge, a second GPT pass checks the merged text before a human sees it:
+
+```sh
+cd ~/timbre-l10n
+python3 gpt_l10n.py split  ~/src/tuner de --review --out batches     # entries with a translation, not yet imported
+python3 gpt_l10n.py prompt ~/src/tuner de batches/de-review-001.json ~/src/tuner/docs/l10n/glossary/de.md
+#   GPT: system.txt + batches/de-review-001.prompt.txt  →  batches/de-review-001.out.json
+python3 gpt_l10n.py merge  ~/src/tuner de batches/de-review-0*.out.json
+```
+
+The review message asks GPT to return every item, unchanged when right, corrected with a `note` otherwise; `merge` writes the corrections back (they pass the same checks). Run it with a different model or a fresh conversation than the translation, so it doesn't approve its own reasoning. Every `note` from either pass goes to the human reviewer.
+
+### 5.6 Context beyond the batch
+
+The batch already carries `context`, the code line, `refs`, `lesson_title`, `previous` and the layout hints. Where the model accepts images, add the English screenshots of the screens a batch covers: the nightly tour publishes them on the `ci-results/app` branch (`git fetch origin ci-results/app`, the `screenshots` folder); the onboarding captures for the funnel, the paywall for the legal batch, the tuner for VoiceOver. For lessons, the batch is a whole lesson in order, which is the context a lesson needs. When `code` and `context` still leave an argument unclear, ask the developer before translating; a guessed `%@` is the most common cause of a wrong sentence.
+
+## 6. The batch helper
+
+`gpt_l10n.py` is a standalone script (Python 3.9 or later, standard library only; it was tested against this commit's TODO files: split, prompt, merge, then a clean `report.py --import`). Keep it outside the repository, for example in `~/timbre-l10n/` beside `system.txt`, `schema.json` and the `batches` folder; it reads the repository through the path you give it and changes only the `translation` fields of `tools/l10n/todo/<locale>.json`. It imports `tools/l10n/report.py` for the import's own checks, so its verdict and the import's never disagree, and adds the checks the import lacks (`%lf`, `%llu` and `%u` arguments; line breaks, length, brand names, exclamation marks, emoji, three dots, text left in English, right-to-left starts and invisible marks, as warnings).
+
+```sh
+cd ~/timbre-l10n
+python3 gpt_l10n.py split  ~/src/tuner de --out batches              # batches/de-001.json …, with a .map.json each
+python3 gpt_l10n.py prompt ~/src/tuner de batches/de-001.json ~/src/tuner/docs/l10n/glossary/de.md
+#   GPT: system.txt + batches/de-001.prompt.txt  →  batches/de-001.out.json
+python3 gpt_l10n.py merge  ~/src/tuner de batches/de-0*.out.json
+```
+
+`merge` prints, per answer: `ERROR` (the answer is refused and not written), `WARN` (written, but a reviewer must look), `NOTE` (GPT's own remark, for the reviewer), and "no answer" for ids GPT skipped. Answers for entries that left the TODO file meanwhile (translated elsewhere, or the English changed) are skipped. The refused and unanswered entries are still empty, so the next `split` picks them up: run it into a **new** folder each round (`--out batches-2`), because a new split numbers its ids afresh and an old answer must never meet a new map. Give GPT the `ERROR` lines of the previous round with the new batch. Entries the import refused (`status: rejected`) come back with their `problem` and the refused text.
+
+```python
+#!/usr/bin/env python3
+"""GPT batches for Timbre's translation TODO files (docs/l10n/TRANSLATING-WITH-GPT.md).
+
+    python3 gpt_l10n.py split  REPO LOCALE [--size 40] [--out DIR] [--review]  # batches from tools/l10n/todo/LOCALE.json
+    python3 gpt_l10n.py prompt REPO LOCALE BATCH.json GLOSSARY.md              # the user message for one batch
+    python3 gpt_l10n.py merge  REPO LOCALE BATCH.out.json ...                  # check answers, fill the TODO file
+
+`split` writes DIR/LOCALE-NNN.json (what GPT reads) and DIR/LOCALE-NNN.map.json (which TODO entry each id is): the
+entries still empty or rejected, or with --review the ones already filled (for the review pass). `prompt` writes
+BATCH.prompt.txt: the locale's glossary, a few of its current translations as style anchors, and the batch. `merge`
+reads GPT's answer saved as LOCALE-NNN.out.json beside its batch, runs the import's own checks plus stricter ones, and
+fills the "translation" field of each entry that passes. Nothing else in the TODO file changes.
+"""
+import hashlib
+import json
+import re
+import sys
+import unicodedata
+from pathlib import Path
+
+ARG = re.compile(r"%(?:(\d+)\$)?[-+ #0]*\d*(?:\.\d+)?(lld|llu|ld|lu|lf|d|u|f|@)")
+TOKEN = re.compile(r"\$\{\w+\}")
+RTL = {"ar", "fa", "he", "ur"}
+WIDE = {"ja", "ko", "zh-CN"}
+EMOJI = re.compile("[\U0001F000-\U0001FAFF]")
+# Invisible direction marks: ALM, LRM, RLM, the embeddings and overrides, the isolates.
+BIDI = re.compile("[" + "".join(map(chr, [0x061C, 0x200E, 0x200F, *range(0x202A, 0x202F), *range(0x2066, 0x206A)])) + "]")
+KEEP_AS_IS = {"XP", "Hz", "BPM", "A4", "Timbre", "Timbre Pro", "OK"}
+
+
+def spec_list(text):
+    """Every format argument in the order it is consumed (positional ones put back in order), and the ${…} tokens."""
+    found = [(m.group(1), m.group(2)) for m in ARG.finditer(text.replace("%%", ""))]
+    if any(p for p, _ in found):
+        if not all(p for p, _ in found):
+            return ["mixed"]
+        found = sorted(found, key=lambda pair: int(pair[0]))
+    return [kind for _, kind in found] + sorted(TOKEN.findall(text))
+
+
+def todo_path(repo, loc):
+    return repo / "tools/l10n/todo" / f"{loc}.json"
+
+
+def entries(path):
+    """(line number, entry) for every string of a TODO file (one JSON object per line, as report.py writes it)."""
+    for number, line in enumerate(path.read_text(encoding="utf-8").splitlines()):
+        if line.startswith("  {"):
+            yield number, json.loads(line.strip().rstrip(","))
+
+
+def plural_forms(repo, loc):
+    """The plural categories the locale's own .stringsdict uses (zero one two few many other)."""
+    sys.path.insert(0, str(repo / "tools/l10n"))
+    import report
+    found = set()
+    for entry in report.read_stringsdict(repo / f"ios/Timbre/Resources/{loc}.lproj/Localizable.stringsdict").values():
+        for value in entry.values():
+            if isinstance(value, dict):
+                found |= set(value) & {"zero", "one", "two", "few", "many", "other"}
+    return [f for f in ("zero", "one", "two", "few", "many", "other") if f in found] or ["one", "other"]
+
+
+def names_control(source, start):
+    """A capitalized name inside a sentence, after a lowercase word or an opening quote ("in Settings", "Tap Listen"),
+    not the start of a sentence and not the second word of a name ("Apple Music", "Timbre Pro")."""
+    before = source[:start].rstrip()
+    word = re.findall(r"[\w’']+$", before)
+    return bool(before) and (before[-1].islower() or before[-1] in "“\"«„‘(") and not (word and word[0][:1].isupper())
+
+
+def code_line(repo, where):
+    path, _, line = where.partition(":")
+    try:
+        return (repo / path).read_text(encoding="utf-8").splitlines()[int(line) - 1].strip()[:240]
+    except (OSError, ValueError, IndexError):
+        return ""
+
+
+def split(repo, loc, size, out, review=False):
+    sys.path.insert(0, str(repo / "tools/l10n"))
+    import report
+    table = report.read_strings(repo / f"ios/Timbre/Resources/{loc}.lproj/Localizable.strings")
+    names = {k: v for k, v in table.items() if len(k) <= 30 and k[:1].isupper() and len(k.split()) <= 3
+             and "%" not in k and not k.startswith("timbre_")}
+    learn_path = repo / "tools/l10n/learn" / f"{loc}.json"
+    learned = json.loads(learn_path.read_text(encoding="utf-8")) if learn_path.exists() else {}
+    forms = plural_forms(repo, loc)
+    def group(item):
+        """A batch holds one kind: one launch-critical kind, the rest of the interface, or whole lessons."""
+        if item["table"] == "Learn.strings":
+            return "lesson", re.split(r" · (?:step \d+|title|arrangement)", item.get("context", ""))[0]
+        return item.get("launch", "ui"), None
+
+    batches, current = [], []
+    for _, item in entries(todo_path(repo, loc)):
+        filled = bool(item.get("translation")) and item.get("status") != "rejected"
+        if filled != review:
+            continue
+        if current:
+            (kind, lesson), (last_kind, last_lesson) = group(item), group(current[-1])
+            # Lessons break only between lessons, so a lesson is always translated whole.
+            if kind != last_kind or (len(current) >= size and (lesson is None or lesson != last_lesson)):
+                batches.append(current)
+                current = []
+        current.append(item)
+    if current:
+        batches.append(current)
+    out.mkdir(parents=True, exist_ok=True)
+    for number, batch in enumerate(batches, 1):
+        items, mapping = [], {}
+        for index, item in enumerate(batch, 1):
+            ident = f"s{index:03d}"
+            mapping[ident] = [item["table"], item["key"]]
+            row = {"id": ident, "table": item["table"], "source": item["source"]}
+            for field in ("context", "layout", "max_length", "launch", "status", "previous", "problem"):
+                if item.get(field):
+                    row[field] = item[field]
+            if item.get("status") == "rejected" and item.get("translation"):
+                row["rejected_text"] = item["translation"]
+            if review:
+                row["translation"] = item["translation"]
+            if item.get("where"):
+                row["where"] = ", ".join(item["where"])
+                code = code_line(repo, item["where"][0])
+                if code:
+                    row["code"] = code
+            if item["table"] == "Localizable.stringsdict":
+                row["plural_forms"] = forms
+            # Other app strings this one names mid-sentence ("Tap Listen to start" names the Listen button).
+            refs = {k: v for k, v in names.items() if len(k) > 2 and k not in KEEP_AS_IS
+                    and any(names_control(item["source"], m.start()) for m in re.finditer(rf"(?<!\w){re.escape(k)}(?!\w)", item["source"]))}
+            if refs:
+                row["refs"] = dict(list(refs.items())[:6])
+            title = re.search(r"“(.+?)”", item.get("context", ""))
+            if item["table"] == "Learn.strings" and title:
+                key = "L" + hashlib.sha1(title.group(1).encode("utf-8")).hexdigest()[:10]
+                if learned.get(key):
+                    row["lesson_title"] = {"english": title.group(1), "translation": learned[key]}
+            items.append(row)
+        name = f"{loc}-{'review-' if review else ''}{number:03d}"
+        doc = {"locale": loc, "language": report.LANGUAGE_NAMES.get(loc, loc), "pass": "review" if review else "translate",
+               "kind": "lessons" if batch[0]["table"] == "Learn.strings" else batch[0].get("launch", "ui"), "items": items}
+        (out / f"{name}.json").write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        (out / f"{name}.map.json").write_text(json.dumps(mapping, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print(f"{loc}: {sum(len(b) for b in batches)} strings in {len(batches)} batches under {out}")
+
+
+ANCHORS = ["Pluck your thickest string", "Tune every string", "Tap Listen to start", "Play each note as it reaches the line",
+           "Tune a few times to see how close you land.", "Hold inside the green ring for a bullseye",
+           "Keep your %lld-day streak alive. Next up: %@", "Keeps your streak if you miss a day",
+           "A five-minute lesson keeps your streak going.",
+           "Pitch is measured on your iPhone. Recordings are never saved or uploaded."]
+
+TRANSLATE = """Translate this batch of Timbre strings from American English into {language} ({locale}).
+
+Locale decisions and glossary for {language} (binding):
+<<<
+{glossary}
+>>>
+
+How Timbre already reads in {language} (current translations; match their register, terms and punctuation):
+{anchors}
+
+The batch: {count} strings, kind "{kind}". Return exactly one item per id, in the JSON format the system prompt gives.
+{batch}
+"""
+
+REVIEW = """Review this batch of {language} ({locale}) translations of Timbre strings. Each item has the English
+(`source`) and the current `translation`. Check meaning, the glossary, register, grammar and every hard rule of the
+system prompt. Return exactly one item per id: the translation unchanged when it is right (note ""), or corrected,
+with `note` saying in English what you changed and why.
+
+Locale decisions and glossary for {language} (binding):
+<<<
+{glossary}
+>>>
+
+How Timbre already reads in {language}:
+{anchors}
+
+The batch: {count} strings, kind "{kind}".
+{batch}
+"""
+
+
+def prompt(repo, loc, batch_path, glossary_path):
+    sys.path.insert(0, str(repo / "tools/l10n"))
+    import report
+    batch = json.loads(Path(batch_path).read_text(encoding="utf-8"))
+    table = report.read_strings(repo / f"ios/Timbre/Resources/{loc}.lproj/Localizable.strings")
+    lines = [f"- {json.dumps(k, ensure_ascii=False)} → {json.dumps(table[k], ensure_ascii=False)}" for k in ANCHORS if k in table]
+    if batch["kind"] == "lessons":
+        learned = json.loads((repo / "tools/l10n/learn" / f"{loc}.json").read_text(encoding="utf-8"))
+        english = report.read_strings(repo / "ios/Timbre/Resources/en.lproj/Learn.strings")
+        picked = [(english[k], learned[k]) for k in english if learned.get(k) and 80 <= len(english[k]) <= 220][:6]
+        lines += [f"- {json.dumps(e, ensure_ascii=False)} → {json.dumps(t, ensure_ascii=False)}" for e, t in picked]
+    template = REVIEW if batch.get("pass") == "review" else TRANSLATE
+    text = template.format(language=batch["language"], locale=loc, kind=batch["kind"], count=len(batch["items"]),
+                           glossary=Path(glossary_path).read_text(encoding="utf-8").strip(),
+                           anchors="\n".join(lines) or "(none yet)",
+                           batch=json.dumps(batch["items"], ensure_ascii=False, indent=1))
+    out = Path(batch_path).with_suffix(".prompt.txt")
+    out.write_text(text, encoding="utf-8")
+    print(f"{out}: {len(text)} characters")
+
+
+def width(text, loc):
+    if loc not in WIDE:
+        return len(text)
+    return sum(2 if unicodedata.east_asian_width(ch) in ("W", "F") else 1 for ch in text)
+
+
+def problems(item, value, loc, report):
+    """(errors, warnings) for one answer. Errors keep the answer out of the TODO file."""
+    table, key, source = item["table"], item["key"], item["source"]
+    errors = list(report.check(table, key, source, value, loc))
+    texts = list(value.values()) if isinstance(value, dict) else [value]
+    warnings = []
+    if table == "Localizable.stringsdict":
+        if isinstance(value, dict):
+            wanted = set(item.get("plural_forms") or [])
+            missing = sorted(wanted - set(value))
+            if missing:
+                warnings.append(f"plural forms missing: {', '.join(missing)}")
+    reference = source if table == "Learn.strings" else (key if table != "InfoPlist.strings" else source)
+    for text in texts:
+        text = str(text)
+        if table != "Learn.strings" and spec_list(reference) != spec_list(text):
+            errors.append(f"format arguments differ (%lf, %llu and %u included): {spec_list(reference)} vs {spec_list(text)}")
+        if table != "Learn.strings" and text.count("\n") != source.count("\n"):
+            warnings.append("line breaks differ from the English")
+        if item.get("max_length") and width(text, loc) > item["max_length"]:
+            warnings.append(f"longer than max_length {item['max_length']} ({width(text, loc)})")
+        for brand in ("Timbre Pro", "Timbre"):
+            if text.count(brand) != source.count(brand):
+                warnings.append(f"“{brand}” appears {text.count(brand)}× (English {source.count(brand)}×)")
+                break
+        if text.count("!") + text.count("！") > source.count("!"):
+            warnings.append("an exclamation mark the English doesn't have")
+        if EMOJI.search(text) and not EMOJI.search(source):
+            warnings.append("an emoji the English doesn't have")
+        if "…" in source and "..." in text:
+            warnings.append("three dots where the English has …")
+        if text != text.strip() or (source[:1].isspace() != text[:1].isspace()):
+            warnings.append("leading or trailing spaces")
+        if text == source and source not in KEEP_AS_IS and re.search(r"[A-Za-z]{3,}", source):
+            warnings.append("identical to the English")
+        if loc in RTL:
+            # Numbers don't decide a paragraph's direction; a %@ (a note, a chord, a title) or a Latin word can.
+            bare = re.sub(r"%(?:\d+\$)?[-+ #0]*\d*(?:\.\d+)?(?:lld|llu|ld|lu|lf|d|u|f)", "0", text)
+            first = next((ch for ch in bare if unicodedata.bidirectional(ch) in ("L", "R", "AL") or ch == "%"), "")
+            if first == "%" or unicodedata.bidirectional(first or " ") == "L":
+                warnings.append("starts with %@ or Latin text: begin with a word of the language, or with U+200F")
+        if BIDI.search(text):
+            warnings.append("invisible direction marks: " + ", ".join(f"U+{ord(c):04X}" for c in BIDI.findall(text)))
+    return errors, warnings
+
+
+def merge(repo, loc, outputs):
+    sys.path.insert(0, str(repo / "tools/l10n"))
+    import report
+    path = todo_path(repo, loc)
+    by_key = {(item["table"], item["key"]): item for _, item in entries(path)}
+    updates, failed = {}, 0
+    for output in outputs:
+        output = Path(output)
+        stem = output.name.removesuffix(".out.json")
+        mapping = json.loads((output.parent / f"{stem}.map.json").read_text(encoding="utf-8"))
+        batch = {row["id"]: row for row in json.loads((output.parent / f"{stem}.json").read_text(encoding="utf-8"))["items"]}
+        answer = json.loads(output.read_text(encoding="utf-8"))
+        seen = set()
+        for row in answer.get("items", []):
+            ident = row.get("id")
+            if ident not in mapping:
+                print(f"{stem} {ident}: not an id of this batch")
+                failed += 1
+                continue
+            seen.add(ident)
+            item = by_key.get(tuple(mapping[ident]))
+            if item is None:
+                print(f"{stem} {ident}: no longer in {path.name} (translated meanwhile, or the English changed)")
+                continue
+            plural = row.get("plural")
+            value = {k: v for k, v in plural.items() if v} if isinstance(plural, dict) else row.get("translation", "")
+            if not value:
+                print(f"{stem} {ident}: empty")
+                failed += 1
+                continue
+            item = dict(item, plural_forms=batch.get(ident, {}).get("plural_forms"))
+            errors, warnings = problems(item, value, loc, report)
+            label = f"{stem} {ident} {item['source'][:60]!r}"
+            for warning in warnings:
+                print(f"WARN  {label}: {warning}")
+            if row.get("note"):
+                print(f"NOTE  {label}: {row['note']}")
+            if errors:
+                print(f"ERROR {label}: {'; '.join(errors)} -> not written")
+                failed += 1
+                continue
+            updates[tuple(mapping[ident])] = value
+        for ident in sorted(set(mapping) - seen):
+            print(f"{stem} {ident}: no answer")
+            failed += 1
+    lines = path.read_text(encoding="utf-8").splitlines()
+    for number, item in entries(path):
+        ident = (item["table"], item["key"])
+        if ident in updates:
+            item["translation"] = updates[ident]
+            comma = "," if lines[number].rstrip().endswith(",") else ""
+            lines[number] = "  " + json.dumps(item, ensure_ascii=False) + comma
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"{loc}: {len(updates)} translations written into {path}, {failed} kept out")
+    return 1 if failed else 0
+
+
+def main(argv):
+    if len(argv) < 3 or argv[0] not in ("split", "prompt", "merge"):
+        sys.exit(__doc__)
+    command, repo, loc = argv[0], Path(argv[1]).resolve(), argv[2]
+    if command == "split":
+        size = int(argv[argv.index("--size") + 1]) if "--size" in argv else 40
+        out = Path(argv[argv.index("--out") + 1]) if "--out" in argv else Path("batches")
+        split(repo, loc, size, out, review="--review" in argv)
+        return 0
+    if command == "prompt":
+        prompt(repo, loc, argv[3], argv[4])
+        return 0
+    return merge(repo, loc, [a for a in argv[3:] if a.endswith(".out.json")])
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
+```
+
+## 7. Apply and verify
+
+### 7.1 The loop
+
+From the repository root, on a branch (`git switch -c l10n/de-gpt`; pushing a branch named `l10n/…` also runs the Localization export, [§7.3](#73-what-ci-runs)):
+
+```sh
+# 0. Start from a current TODO file. If the English changed since it was generated, CI fails anyway until this runs.
+python3 tools/l10n/report.py
+
+# 1. Batches, GPT, merge (§6). Then the review pass and the human review (§5.5, §8.5) on the TODO file.
+
+# 2. Import: checks every filled entry again, merges the good ones into tools/l10n/translations and tools/l10n/learn,
+#    applies all tables, regenerates the TODO files, pending.json and HANDOFF.md.
+python3 tools/l10n/report.py --import tools/l10n/todo
+#    Its two apply steps, run by hand after editing tools/l10n/translations or tools/l10n/learn directly:
+#    python3 tools/l10n/apply.py tools/l10n/translations    # interface tables, every locale
+#    python3 tools/l10n/apply_learn.py                      # lesson tables, the lesson languages
+
+# 3. Gates
+python3 tools/l10n/report.py --check --strict          # the handoff matches the code (CI's core job)
+python3 tools/l10n/critical.py --baseline              # no legal, permission or VoiceOver gap beyond the baseline (CI)
+python3 tools/l10n/critical.py --write-baseline        # when the previous line says gaps are translated now: shrink it
+python3 tools/l10n/critical.py --strict --locales de   # the App Store gate, for the locales you finished
+python3 tools/l10n/shipping.py                         # coverage per locale
+python3 tools/verify-ios-resources.py                  # 49 tables, every timbre_* key the code uses exists
+python3 tools/l10n/xcstrings.py --check                # every table still converts to a String Catalog
+python3 tools/marketing/screenshots.py --check         # listing work only (§9)
+plutil -lint ios/Timbre/Resources/*.lproj/*.strings ios/Timbre/Resources/*.lproj/*.stringsdict   # on a Mac
+```
+
+The import prints one line per refused translation ("de Localizable.strings 'Beat %lf': format arguments or ${…} tokens differ from the English: not imported"), then `apply.py` and `apply_learn.py` print what they wrote ("de/Localizable.strings: 784 entries (5 new)", "de: 4614/6080 lesson strings"), then the regenerated counts. Shrink the baseline after every import that translated critical strings: a baseline that still lists a translated gap would let that gap come back unnoticed.
+
+### 7.2 Reading failures
+
+| Message | Cause | Fix |
+|---|---|---|
+| `format arguments or ${…} tokens differ from the English` (import), `format arguments differ (%lf, %llu and %u included)` (helper) | An argument or token missing, added, of another type, or numbered and plain ones mixed | Correct the text in the TODO entry (`status: rejected`), or send it back to GPT with the message. |
+| `the numbers differ from the English` | Lesson: a digit group changed, missing, added, spelled out, or written in full-width or native digits | Keep every digit group as ASCII digits; keep number words as words. |
+| `the line breaks differ from the English` | Lesson: a `\n` added or dropped | Same line breaks as the English. |
+| `the count of ♯ differs from the English` (or ♭, %) | A sign added, dropped, or written as a word or as `#`/`b` | Signs stay signs; words stay words (German B♭ → B is allowed). |
+| `a plural needs a JSON object with at least an "other" form`, `one: format arguments differ from the English` | A plural given as a string, without `other`, or a form without the number | Give the JSON object; keep `%lld` in every form. |
+| `plural '…': add it to <locale>.lproj/Localizable.stringsdict by hand` | Normal for a plural that passed | [§7.5](#75-plurals-by-hand). |
+| `<locale>/<table>: format mismatch, kept English` (apply.py), `… kept English` (apply_learn.py) | A hand edit to `tools/l10n/translations` or `tools/l10n/learn` that breaks the rules | Fix that JSON file and run the apply script again. |
+| `FAILED: the committed handoff is out of date` (`report.py --check --strict`) | The TODO files, `pending.json` or HANDOFF.md weren't regenerated or committed | `python3 tools/l10n/report.py`, commit what it writes. |
+| `NEW legal […] '…': de, fr` and `FAILED: … new legal, permission or VoiceOver gaps` (`critical.py --baseline`) | A critical English string without its translations | Translate it, or record the gap deliberately with `--write-baseline`. |
+| `FAILED: N legal, permission or VoiceOver gaps in the shipped locales` (`critical.py --strict`) | A shipped locale lacks one of them | Translate, or ship fewer locales ([§7.6](#76-shipping-fewer-locales)). |
+| `No string tables for: …` (exit 2) | A wrong code in `--locales` | Use the `.lproj` codes. |
+| `AssertionError` at `len(locales) == 49` (verify-ios-resources.py) | A `.lproj` folder was added or removed | Translations never add folders; restore it. |
+| The accessibility job fails `testAGermanDeviceWelcomesInGerman` with an expected failure that didn't happen | The German funnel arrived | [§8.2](#82-the-localization-launch-tests). |
+
+### 7.3 What CI runs
+
+- **Every pull request and push to main** (`.github/workflows/ios.yml`, the core job): `report.py --check --strict` (fails when the committed handoff is out of date; publishes fresh TODO files to the `ci-results/core` branch, folder `l10n`), `critical.py --baseline --github` (fails on a new critical gap), and `tools/verify-ios-resources.py`. The accessibility job runs `LocalizationLaunchUITests` with the accessibility audit.
+- **Localization export** (`.github/workflows/l10n.yml`, Actions → Localization export → Run workflow, or any push to a branch named `l10n/…`): exports the English from source with Xcode (`xcodebuild -exportLocalizations`), runs `report.py --check --xliff` and `critical.py --xliff` with Xcode's own keys, and publishes `en.xliff`, the handoff files, `report.log`, `critical.log` and `critical-missing.json` to `ci-results/l10n` (a side branch publishes to `ci-results/l10n--<branch name with dashes>`): `git fetch origin ci-results/l10n` and read them from `FETCH_HEAD`.
+- **App Store delivery** (`.github/workflows/apple-delivery.yml`): `critical.py --strict` over the shipped locales, after the optional `ship_min_coverage` bar. Only an internal TestFlight build (`internal_testflight_untranslated`) skips it, and that build can't be submitted.
+
+### 7.4 Confirm guessed keys (key_check)
+
+`swiftstrings.py` reads Swift without a compiler and infers each interpolation's type. When it can't be sure, the TODO entry carries `key_check`: the key's `%lld` or `%@` is a guess. Imported under a wrong guess, the translation lands under a key the app never looks up, the entry disappears from the TODO file, `critical.py` counts it as translated, and the app shows English. Before importing such entries:
+
+1. Run the Localization export ([§7.3](#73-what-ci-runs)) and fetch its `en.xliff`.
+2. `python3 tools/l10n/report.py --check --xliff en.xliff --out /tmp/handoff`: the entries Xcode keys differently show up with their real keys in `/tmp/handoff/tools/l10n/todo/<locale>.json`.
+3. If a key differs, copy the translation to the real key's entry (fix the argument type if it changed), and leave the guessed entry empty.
+4. Import, then commit what plain `python3 tools/l10n/report.py` writes (CI runs without the export; once a table holds the real key, the scanner settles on it by itself).
+
+For a release with key_check entries among the critical strings (today: "Then %@. It renews automatically until you cancel in Settings." and "Loop bar %lld"), read the export's `critical.log` before uploading: it is the only gate that uses Xcode's keys.
+
+### 7.5 Plurals by hand
+
+The import checks a plural and prints it, but doesn't write `.stringsdict` files. Add it to `ios/Timbre/Resources/<locale>.lproj/Localizable.stringsdict` in the shape the file already uses (one `dict` per key, a `%#@n@` format and the forms):
+
+```xml
+	<key>%lld sessions</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@n@</string>
+		<key>n</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld занятие</string>
+			<key>few</key>
+			<string>%lld занятия</string>
+			<key>many</key>
+			<string>%lld занятий</string>
+			<key>other</key>
+			<string>%lld занятия</string>
+		</dict>
+	</dict>
+```
+
+Escape `&` and `<` as `&amp;` and `&lt;`. Run `plutil -lint` on the file (on a Mac) and `python3 tools/l10n/report.py`; the entry leaves the TODO file.
+
+### 7.6 Shipping fewer locales
+
+Which languages ship is the owner's decision; `tools/l10n/shipping.py` applies it:
+
+```sh
+python3 tools/l10n/shipping.py                              # interface and lesson coverage, critical gaps, what ships now
+python3 tools/l10n/shipping.py --min 95                     # which locales a 95 % bar keeps (dry run)
+python3 tools/l10n/shipping.py --min 95 --critical          # … and only those with every critical string
+python3 tools/l10n/shipping.py --min 95 --critical --apply  # write it: then cd ios && xcodegen generate
+python3 tools/l10n/shipping.py --all --apply                # ship every locale again
+```
+
+`--apply` rewrites `CFBundleLocalizations` of the Timbre target and the `excludes` lines marked `# shipping.py` in each target that copies string tables, so a left-out locale is neither in the build nor listed on the App Store. Its `.lproj` folder and its translation files stay in the repository, and it comes back with the next `--apply` once it clears the bar. Coverage counts the interface (Localizable, plurals, AppShortcuts, InfoPlist), not the lessons.
+
+The delivery workflow's `ship_min_coverage` input applies `--min` to its own checkout for one upload, without `--critical`: a locale above the bar that lacks a critical string still fails that upload. Use `--critical` locally and commit, or translate the critical strings first.
+
+### 7.7 What to commit
+
+One commit per import, with:
+
+- `tools/l10n/todo/*.json`, `tools/l10n/todo/index.json`, `tools/l10n/pending.json`, `docs/l10n/HANDOFF.md`, and `tools/l10n/source/learn-history.json` when it changed (`report.py` writes them);
+- `tools/l10n/translations/<locale>.json` and `tools/l10n/learn/<locale>.json` (the delivered translations);
+- `ios/Timbre/Resources/<locale>.lproj/*.strings` (and a hand-edited `.stringsdict`);
+- `tools/l10n/critical-baseline.json` after `--write-baseline`;
+- `docs/l10n/glossary/<locale>.md`;
+- `ios/TimbreUITests/LocalizationLaunchUITests.swift` when the German funnel arrived ([§8.2](#82-the-localization-launch-tests));
+- `docs/ios/APP-STORE-LISTING-LOCALIZED.md` for listing work.
+
+Not the helper's batches, prompts or answers.
+
+## 8. QA
+
+### 8.1 Pseudo-localization
+
+Before and while translating, pseudo-languages find layout problems that no translation should have to work around:
+
+- **Bounded strings** (automatic): `LocalizationLaunchUITests.testNoTextOnTheWelcomeOrTheTunerBypassesTheStringTables` launches with `-NSSurroundLocalizedStrings YES`, so every looked-up string reads `[# … #]`, and fails on any text of three or more Latin letters outside the brackets on the welcome screen and the tuner (only "Timbre" and "BPM" may be). A text that bypasses the tables stays English in every language whatever the translators do.
+- **By hand, in Xcode** (Product › Scheme › Edit Scheme › Run › Options › App Language): *Double-Length Pseudolanguage* shows where German or Finnish will truncate (look at every `one line` label: the tab bar, chips, the paywall's plan cards, the Watch); *Right-to-Left Pseudolanguage* shows layout that doesn't flip; *Accented Pseudolanguage* shows clipped diacritics and line height. Fix layout in code, not by shortening translations below what the language needs.
+
+### 8.2 The localization launch tests
+
+`ios/TimbreUITests/LocalizationLaunchUITests.swift` runs in the accessibility job on every pull request:
+
+- `testAGermanDeviceWelcomesInGerman`: the welcome's button isn't "Get started". The headline ("Tune in seconds.\nThen learn to play.") and its subline ("Timbre listens and tells you exactly how you did.") are funnel strings still waiting; the test wraps their two assertions in `XCTExpectFailure`, which fails the test as soon as the expected failure stops happening. **When the German funnel is imported, unwrap them in the same pull request** (lines 56–63 today: delete the comment, the `waiting` line and the `XCTExpectFailure` around the two `XCTAssertFalse` lines, and keep those two lines, which guard the German welcome from then on), or the accessibility job fails.
+- `testAGermanDeviceNamesTheTabsInGerman` pins the German tab names "Stimmen", "Lernen", "Fortschritt"; `testAnArabicDeviceRunsRightToLeft` pins the Arabic "ضبط" (Tune) and "التقدّم" (Progress) and checks the tab bar flips; `LocalizationTests` (unit tests) pins the German "Get started" as "Los geht's". Changing any of those translations means changing the test with it.
+- `testAnArabicTunerKeepsTheOctaveRightOfTheNote`: the tuner's note reads "E₂", not "₂E", in Arabic.
+
+### 8.3 Screenshots in the language
+
+The UI tour takes its pictures in any language:
+
+```sh
+TEST_RUNNER_TIMBRE_UI_LANGUAGE=de TEST_RUNNER_TIMBRE_UI_LOCALE=de_DE xcodebuild test -project ios/Timbre.xcodeproj -scheme Timbre \
+  -destination "platform=iOS Simulator,name=iPhone 17 Pro Max" -only-testing:TimbreUITests/TimbreUITests -resultBundlePath /tmp/de.xcresult
+xcrun xcresulttool export attachments --path /tmp/de.xcresult --output-path /tmp/de-captures
+```
+
+(`TimbreUITests` launches the app with `-AppleLanguages (de) -AppleLocale de_DE` from those variables; use any installed simulator.) Review the captures for truncation, overlaps, wrong direction (ar, he, fa, ur) and English left over, screen by screen against the English captures on `ci-results/app`. A few store-frame checks read English text (the chord step's "Every string rings", the results' headline), so a localized run keeps frames such as #3 (`52b-lesson-chord`) and #7 (`62-lesson-results`) as `-wrong`, which `screenshots.py` refuses to render ([§10](#10-traps-the-tooling-doesnt-catch)).
+
+### 8.4 Reading it in the app
+
+Reviewers read on a phone: an internal TestFlight build carries every translation imported so far (the delivery workflow's `internal_testflight_untranslated` input skips the critical gate for internal testers only). In the app, Settings › Language › App language switches the language without changing the phone's. A reviewer goes through the onboarding, the paywall (both plans, the trial terms), the tuner with VoiceOver on, one lesson per course, a song with the band, Practice, Progress, Settings, a widget and the Watch.
+
+### 8.5 Human review
+
+A native speaker who plays an instrument reviews, with the glossary, the batch JSON (English, context, translation) and the app. Corrections go into the TODO file's `translation` before the import (preferred), or afterwards into `tools/l10n/translations/<locale>.json` (a key that isn't there yet can be added: `apply.py` replaces the table's line) or `tools/l10n/learn/<locale>.json`, followed by `python3 tools/l10n/apply.py tools/l10n/translations` or `python3 tools/l10n/apply_learn.py`, then `python3 tools/l10n/report.py`.
+
+| What | Review |
+|---|---|
+| Glossary | 100 %, before the first batch |
+| Legal and permission strings | 100 %, plus the back-translation check (§8.7) |
+| Funnel (onboarding to paywall), the paywall, Siri phrases | 100 % |
+| VoiceOver | 100 % in the 9 major locales, read with VoiceOver on; 30 % elsewhere |
+| Every `WARN` of the helper and every GPT `note` | 100 % |
+| Rest of the interface | 20 % in the 9 major locales, 10 % elsewhere, picked at random, plus every string with a `layout` |
+| Lessons | One whole lesson per unit read in the app, plus 10 % at random; every song title against the glossary |
+| Store listing | 100 %, by someone who knows the market's search terms |
+
+When a sample finds more than 2 % substantive errors (meaning, a glossary term, register, a fact), review all strings of that kind for the locale, and fix the cause in the glossary or the prompt before the next batch.
+
+### 8.6 Terminology consistency pass
+
+After each import, list the strings whose English uses a glossary term but whose translation doesn't use the glossary's translation (the shipped tables, the filled TODO entries and the lesson translations). It reads the glossary's **App key** and **Translation** columns and compares a stem, so it is a list for a reviewer, not a gate; a word with several senses (Tune) lists many false hits. Run from the repository root:
+
+```sh
+python3 - de docs/l10n/glossary/de.md <<'EOF'
+import re, sys, json
+sys.path.insert(0, "tools/l10n")
+import report
+loc, glossary = sys.argv[1], sys.argv[2]
+table = report.read_strings(report.RES / f"{loc}.lproj/Localizable.strings")
+pairs = dict(table)                                   # shipped: English key -> translation
+for line in open(f"tools/l10n/todo/{loc}.json", encoding="utf-8"):
+    if line.startswith("  {"):
+        item = json.loads(line.strip().rstrip(","))
+        if isinstance(item.get("translation"), str) and item["translation"]:
+            pairs[item["source"]] = item["translation"]   # filled, not imported yet
+learn = report.read_strings(report.RES / "en.lproj/Learn.strings")
+done = json.load(open(f"tools/l10n/learn/{loc}.json", encoding="utf-8")) if loc in report.lesson_locales() else {}
+pairs.update({learn[k]: v for k, v in done.items() if k in learn})
+for line in open(glossary, encoding="utf-8"):
+    cells = [c.strip() for c in line.strip().strip("|").split("|")]
+    if len(cells) < 5 or not cells[3].startswith("`") or cells[4] in ("", "—"):
+        continue
+    want = cells[4].split(" / ")[0].split(";")[0].strip()
+    stem = want.casefold()[:max(4, len(want) - 2)]
+    for key in re.findall(r"`([^`]+)`", cells[3]):
+        if "%" in key:
+            continue
+        hits = [(e, t) for e, t in pairs.items() if not e.startswith("timbre_")
+                and re.search(rf"(?<!\w){re.escape(key)}(?!\w)", e, re.I)]
+        off = [(e, t) for e, t in hits if stem not in t.casefold()]
+        if off:
+            print(f"\n{key!r} -> {want!r}: {len(off)} of {len(hits)} strings don't use it")
+            for e, t in off[:8]:
+                print(f"    {e[:70]!r} -> {t[:70]!r}")
+EOF
+```
+
+### 8.7 Legal back-translation
+
+For the 11 legal strings and the permission prompts of each locale, a separate GPT conversation translates the translation back into English, without seeing the original; compare the facts (renewal, the cancellation window, where to cancel, what stays free, the trial, what is recorded). Any difference is fixed before the import.
+
+## 9. The App Store listing
+
+Nine listing locales: de-DE, fr-FR, es-MX, pt-BR, it, ja, ko, zh-Hans, ru (the app's de, fr, es, pt, it, ja, ko, zh-CN, ru). Everything lives in `docs/ios/APP-STORE-LISTING-LOCALIZED.md`; App Store Connect gets it by hand. Its "State" section is the to-do: each locale's name, subtitle and keywords are current; its promotional text, description, What's New and screenshot captions must be translated from the "Source for translators", where every count the build can change is a variable (`{instruments}`, `{tunings}`, `{courses}`, `{lessons}`, `{songs_floor}`, `{originals}`) with its value in a table that `screenshots.py --check` keeps equal to the build.
+
+### 9.1 Fields and limits
+
+| Field | Limit | Checked by `screenshots.py --check` for the localized locales |
+|---|---:|---|
+| Name | 30 | length (NFC characters) |
+| Subtitle | 30 | length |
+| Keywords | 100 | length; every Custom Product Page word of the locale is in the field |
+| Promotional text | 170 | not checked |
+| Description | 4,000 | not checked |
+| What's New | 4,000 | not checked |
+| Screenshot caption | 30 (the repository's design limit) | length; same captures in the English order; no number the English row doesn't quote; `TRANSLATE:` rows listed, not failed |
+| Supporting line | none | no number the English row doesn't quote |
+| App Preview captions | none | not checked (only when the preview is localized) |
+
+The unchecked fields are checked by the translator: count characters with Python's `len()` on the NFC string, as the listing does, and compare every count against the variables table.
+
+### 9.2 Keywords
+
+Apple's rules, as `APP-STORE-LISTING.md` and `APP-STORE-LISTING-LOCALIZED.md` apply them:
+
+- At most 100 characters; comma-separated with no space after a comma (a space only inside a two-word term).
+- Singular forms only (Apple matches plurals); no category names ("music"); no word already in that locale's name or subtitle, except an instrument word a Custom Product Page needs (a page can be assigned only keywords from its localization's field); in ja, ko and zh-Hans no keyword may be a substring of the name or subtitle, with the same exception.
+- No duplicates; no competitors' or other apps' names, no trademarks that aren't Apple's or Timbre's.
+- Search terms come from what people in that market type, not from the English list: GPT can propose candidates, a native who knows the market decides, and App Store Connect's search popularity confirms once the locale is live.
+
+`screenshots.py --check` enforces the no-space, no-duplicate and name-or-subtitle rules only for the English listing; for the localized fields it checks the length and the Custom Product Page words. The rest is the translator's check. Each locale's page words are in the "Custom Product Page keywords by locale" table; a word marked "— add …" must go into the field before that page can be found in the language.
+
+### 9.3 Promotional text, description, What's New
+
+GPT gets the English source block with its variables, the locale's current name, subtitle and keywords, its stale earlier text (folded under "Earlier text", for wording that still fits), the glossary, and these rules from the listing doc:
+
+- Same facts as the English, no stronger: the free tier, no ads, no account, audio never recorded, the trial reminder ("with notifications on, Timbre reminds you two days before a free trial ends").
+- Adapted, not word for word, with the app's own terms (the glossary): drone, streak, quest, badge, unit, course.
+- The variables filled with the values of the table; no other number.
+- `<privacy policy URL>` stays as it is; the Terms link is Apple's standard EULA in every locale.
+- The legal line uses Apple's own wording for Settings › Apple Account › Subscriptions in that language (each locale's Notes give it).
+- No language count ("available in 49 languages"): the listing doesn't count languages until every shipped locale is complete.
+
+The result replaces the locale's stale blocks as `### Promotional text`, `### Description` and `### What's New` code blocks in its section.
+
+### 9.4 Screenshot captions
+
+In the locale's two caption tables, replace each `TRANSLATE: …` cell with the translation:
+
+- A caption at most 30 characters; the supporting line as short as the English.
+- Numbers as literal values, not variables (the renderer draws the cell as written), and only numbers the English row quotes ("60 instruments, to the cent" may say 60, nothing else).
+- No `|` (it would split the table cell); keep the capture column and the row order.
+- ja, ko, zh-Hans and ru captions are drawn in a system font with those glyphs (Sora has none), or the one `--font` names.
+
+Then `python3 tools/marketing/screenshots.py --check`, the localized captures ([§8.3](#83-screenshots-in-the-language)) and `python3 tools/marketing/screenshots.py <captures> <out> --locale de-DE` (and `--ipad`).
+
+### 9.5 Other App Store Connect text
+
+- In-app purchase display names and descriptions, per locale (the English table is in `APP-STORE-LISTING.md`; App Store Connect shows the limits).
+- Game Center: leaderboard names ("Bullseye", "Bullseye this week", "Ear trainer level", "Practice streak", featured songs' titles) and the 31 achievements, whose titles and descriptions are the app's own badge texts: reuse the locale's translations from `Localizable.strings` so the app and Game Center agree.
+- Review notes stay in English.
+
+## 10. Traps the tooling doesn't catch
+
+What can still go wrong after every check above passes, and what to do about it:
+
+1. **`%lf`, `%llu`, `%u` are invisible to the import** (`tools/l10n/apply.py`, `ARG`): a translation that drops one is imported. The helper checks them; translate those strings through it.
+2. **Guessed keys** (`key_check`): a wrong guess imports silently and `critical.py` counts the string as translated ([§7.4](#74-confirm-guessed-keys-key_check)).
+3. **Plurals aren't applied by the import** ([§7.5](#75-plurals-by-hand)), and the import refuses a `one` form without the number although the English has one.
+4. **Interface line breaks, length, register, terminology and meaning** are not checked by the import; the helper warns on the first two, the review catches the rest.
+5. **The German funnel** turns `testAGermanDeviceWelcomesInGerman` red until its `XCTExpectFailure` wrapper is removed ([§8.2](#82-the-localization-launch-tests)).
+6. **Localized store frames #3 and #7** come out `-wrong` in a localized capture run, because their checks read English text (`ios/TimbreUITests/TimbreUITests.swift`, the comment on `language`): a full localized set can't be rendered until those checks read identifiers.
+7. **Wrong terms in the shipped tables**, which the anchors and `refs` may show GPT: "Intonation" (the drone trainer) is translated as the guitar-setup adjustment in ca (Octavació), es (Octavación), ja (オクターブ調整), pt (Oitavado) and zh-CN (八度音准); the register is mixed in he, hr, ro, sl and tr; "Bullseye" is translated everywhere although HANDOFF.md says to keep game names. The glossary overrules the tables; a clean-up batch for those keys means editing `tools/l10n/translations/<locale>.json` and running `apply.py`, since they aren't in the TODO files.
+8. **Shared keys**: "Next", "Again" and "Slower" are on-screen labels and Siri's command words; one translation has to serve both ([§4.14](#414-grammar-around-arguments)).
+9. **Localized listing text** (promotional text, description, What's New) and the localized keyword rules beyond length are not checked by `screenshots.py` ([§9.1](#91-fields-and-limits), [§9.2](#92-keywords)); a listing locale outside its nine is not checked at all.
+10. **`ship_min_coverage`** in the delivery workflow doesn't require the critical strings: a locale above the bar without them fails the upload instead of being left out ([§7.6](#76-shipping-fewer-locales)).
