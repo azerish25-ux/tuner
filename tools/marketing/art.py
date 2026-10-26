@@ -110,7 +110,7 @@ def caption_locale() -> str:
 
 def preferred_fallbacks() -> list[str]:
     locale = caption_locale()
-    marker = "ヒラギノ" if locale.startswith("ja") else "AppleSDGothic" if locale.startswith("ko") else "PingFang" if locale.startswith("zh") else None
+    marker = "ヒラギノ" if locale.startswith("ja") else "AppleSDGothic" if locale.startswith("ko") else "PingFang" if locale.startswith("zh") else "DejaVu"
     return sorted(FALLBACK_FONTS, key=lambda path: 0 if marker and marker in path else 1)
 
 
@@ -130,7 +130,13 @@ def system_fallbacks() -> tuple[str, ...]:
 
 def managed_fonts() -> list[str]:
     directory = Path(os.environ.get("TIMBRE_CAPTION_FONT_DIR", str(ROOT / "build/marketing-fonts")))
-    return [str(p) for p in sorted(directory.glob("*.ttf"))] if directory.is_dir() else []
+    if not directory.is_dir():
+        return []
+    locale = caption_locale()
+    wanted = "NotoSansTC" if locale.startswith("zh-Hant") else "NotoSansSC" if locale.startswith("zh") else "NotoSansKR" if locale.startswith("ko") else "NotoSansJP" if locale.startswith("ja") else None
+    cjk = ("NotoSansJP", "NotoSansKR", "NotoSansSC", "NotoSansTC")
+    return [str(p) for p in sorted(directory.glob("*.ttf"))
+            if not p.name.startswith(cjk) or (wanted and p.name.startswith(wanted))]
 
 
 def fallback_font(path: str, weight: str, size: int):
@@ -167,8 +173,9 @@ def caption_font(text: str, weight: str, size: int):
 
 
 def text_layout() -> dict:
-    language = caption_locale().split("-")[0]
-    return {"direction": "rtl" if language in {"ar", "fa", "he", "ur"} else "ltr", "language": language}
+    language = caption_locale()
+    base = language.split("-")[0]
+    return {"direction": "rtl" if base in {"ar", "fa", "he", "ur"} else "ltr", "language": language}
 
 
 def line_step(font, lines: list[str], leading: float = 1.06) -> int:

@@ -37,9 +37,11 @@ class CaptionFontTests(unittest.TestCase):
 
     def test_rtl_direction_is_explicit_even_with_latin_brand_first(self):
         with patch.dict(os.environ, {'TIMBRE_CAPTION_LOCALE': 'ar-SA'}):
-            self.assertEqual(art.text_layout(), {'direction': 'rtl', 'language': 'ar'})
+            self.assertEqual(art.text_layout(), {'direction': 'rtl', 'language': 'ar-SA'})
         with patch.dict(os.environ, {'TIMBRE_CAPTION_LOCALE': 'de-DE'}):
             self.assertEqual(art.text_layout()['direction'], 'ltr')
+        with patch.dict(os.environ, {'TIMBRE_CAPTION_LOCALE': 'zh-Hant'}):
+            self.assertEqual(art.text_layout()['language'], 'zh-Hant')
 
     def test_graphemes_not_individual_combining_marks_are_wrapped(self):
         self.assertEqual(art.wrap('किक्षि', FakeFont(), 3), ['कि', 'क्षि'])
@@ -92,12 +94,29 @@ class CaptionFontTests(unittest.TestCase):
                 font_assets.fetch_checked('https://raw.githubusercontent.com/google/fonts/abc/ofl/test/font.ttf', hashlib.sha256(b'verified').hexdigest(), target, 'abc')
                 request.assert_not_called()
 
-    def test_collection_locales_choose_correct_installed_cjk_face(self):
-        path = '/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc'
-        if not Path(path).exists():
-            self.skipTest('Linux CJK font is installed by caption typography CI')
-        for locale, index in [('ja', 0), ('ko', 1), ('zh-Hans', 2), ('zh-Hant', 3)]:
-            self.assertEqual(art.collection_face(path, locale), index)
+    def test_collection_locales_select_named_regional_faces(self):
+        from types import SimpleNamespace
+        families = ['Noto Sans CJK JP', 'Noto Sans CJK KR', 'Noto Sans CJK SC', 'Noto Sans CJK TC']
+        faces = [{'name': SimpleNamespace(getDebugName=lambda field, name=name: name)} for name in families]
+        factory = MagicMock()
+        factory.return_value.__enter__.return_value = SimpleNamespace(fonts=faces)
+        art.collection_face.cache_clear()
+        with patch('fontTools.ttLib.TTCollection', factory):
+            for locale, index in [('ja', 0), ('ko', 1), ('zh-Hans', 2), ('zh-Hant', 3)]:
+                self.assertEqual(art.collection_face('regional.ttc', locale), index)
+
+    def test_managed_cjk_fonts_never_substitute_another_region(self):
+        with tempfile.TemporaryDirectory() as folder:
+            for name in ['NotoSansJP[wght].ttf', 'NotoSansSC[wght].ttf', 'NotoSansTC[wght].ttf', 'NotoSansKR[wght].ttf', 'NotoSansThai[wght].ttf']:
+                (Path(folder) / name).touch()
+            with patch.dict(os.environ, {'TIMBRE_CAPTION_FONT_DIR': folder, 'TIMBRE_CAPTION_LOCALE': 'zh-Hant'}):
+                names = [Path(p).name for p in art.managed_fonts()]
+                self.assertIn('NotoSansTC[wght].ttf', names)
+                self.assertNotIn('NotoSansSC[wght].ttf', names)
+                self.assertNotIn('NotoSansJP[wght].ttf', names)
+                self.assertNotIn('NotoSansKR[wght].ttf', names)
+                self.assertIn('NotoSansThai[wght].ttf', names)
+
 
 
 if __name__ == '__main__':

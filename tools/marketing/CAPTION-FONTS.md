@@ -7,7 +7,7 @@ python3 -m pip install -r tools/marketing/requirements.txt
 python3 tools/marketing/font_assets.py --audit --out ci-out/caption-typography.json
 ```
 
-The installer fetches only the pinned Google Fonts revision and verifies each font and its SIL Open Font License file against SHA-256 before saving it under `build/marketing-fonts`. The manifest records upstream URLs and copyright/license provenance. Font binaries are not added to the app or repository. No paid service or subscription is involved.
+The installer fetches only the pinned Google Fonts revision and verifies each font and its SIL Open Font License file against SHA-256 before saving it under `build/marketing-fonts`. The manifest records upstream URLs and copyright/license provenance. Font binaries are not added to the app or repository. No paid service or subscription is involved. Regional Japanese/Korean/Simplified-Chinese/Traditional-Chinese fonts are also pinned here, avoiding a slow operating-system package mirror.
 
 Set `TIMBRE_CAPTION_FONT_DIR` when using another prepared directory. Existing screenshot and preview `--locale` arguments control shaping direction and CJK collection-face selection. A requested font whose glyphs cannot be verified is rejected; a collection is checked on the exact rendered face, not a union of other faces. Arabic/Hebrew/Urdu paragraphs keep RTL direction even when a Latin brand begins the text. Unicode grapheme clusters stay together when an unspaced caption wraps.
 

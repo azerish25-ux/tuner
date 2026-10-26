@@ -1,0 +1,9 @@
+{
+  "source_commit": "89ba75099babd0cc48a8b675becdaa81dbbf8fcf",
+  "run": 40334529474,
+  "job": 121612433793,
+  "conclusion": "cancelled at fifteen-minute timeout",
+  "verified_cause": "Python dependencies installed successfully. Download of fonts-noto-cjk (61.2MB) from azure.archive.ubuntu.com began13:53:35 and did not finish before cancellation14:08:26. Typography tests and audit were skipped, not passed.",
+  "repair": "Remove operating-system font package download; install checksum-pinned OFL regional CJK fonts from the same official Google Fonts revision as other script fonts. Keep all glyph, shaping and layout checks. Bound install/audit to300 seconds.",
+  "status": "Local14 tests and all2050 glyph/layout checks pass; fresh CI pending."
+}
