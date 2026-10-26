@@ -89,7 +89,7 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         tablet = (ROOT / 'ios/TimbreUITests/TabletScreenshotsUITests.swift').read_text()
         helper = (ROOT / 'ios/TimbreUITests/CaptureLocalization.swift').read_text()
         workflow = (ROOT / '.github/workflows/localized-capture-check.yml').read_text()
-        self.assertIn('return language == "en" ? name : nil', helper)
+        self.assertIn('return language == "en" ? source : nil', helper)
         for code in [phone, tablet]:
             self.assertIn('CaptureLocalization.tabLabel(name)', code)
             self.assertIn('CaptureLocalization.language', code)
@@ -111,8 +111,28 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         self.assertEqual(len(expected), 49)
         self.assertEqual(expected['en']['headline'], matrix_fixture.KEYS['headline'])
         for labels in expected.values():
-            for key in ['tune', 'learn', 'songs', 'practice', 'progress']:
+            for key in ['tune', 'learn', 'songs', 'practice', 'progress', 'tuned', 'in_tune']:
                 self.assertTrue(labels[key].strip())
+
+    def test_general_tour_state_checks_do_not_depend_on_english_captions(self):
+        phone = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+        self.assertNotIn('private func labeled(', phone)
+        self.assertNotIn('app.buttons["Not now"]', phone)
+        for identifier in ['onboarding.microphone.skip', 'journey.accuracy', 'journey.accuracy.locked', 'lesson.explain.turnCue']:
+            self.assertIn(identifier, phone)
+        explain = (ROOT / 'ios/Timbre/Learn/LessonExplain.swift').read_text()
+        self.assertIn('if cueShown {\n                turnCue(compact: false)\n                    .accessibilityIdentifier("lesson.explain.turnCue")', explain)
+        self.assertIn('XCTAssertTrue(element("lesson.explain.turnCue").waitForExistence', phone)
+
+    def test_tuner_capture_values_use_current_locale_and_missing_probe_fails(self):
+        phone = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+        tablet = (ROOT / 'ios/TimbreUITests/TabletScreenshotsUITests.swift').read_text()
+        for code in [phone, tablet]:
+            self.assertIn('CaptureLocalization.tuned', code)
+            self.assertIn('CaptureLocalization.inTune', code)
+            self.assertNotIn('(node.value as? String) == "Tuned"', code)
+            self.assertNotIn('status == "In tune"', code)
+        self.assertIn('return (false, "the probe has no lock field")', phone)
 
     def test_focused_ci_checks_ltr_rtl_and_requires_real_valid_attachments(self):
         source = (ROOT / '.github/workflows/localized-capture-check.yml').read_text()

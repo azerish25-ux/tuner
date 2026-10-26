@@ -18,6 +18,8 @@ KEYS = {
     'songs': 'Songs',
     'practice': 'Practice',
     'progress': 'Progress',
+    'tuned': 'Tuned',
+    'in_tune': 'In tune',
 }
 
 

@@ -26,5 +26,24 @@
   },
   "diagnosis": "Old quiet wait demonstrably ended mid-take. Accessibility polling stalls main-thread demo readings and is a plausible cause of the missed transition; exact causation and replacement outcome require fresh CI. This is a real clipped result frame, not the earlier German false positive.",
   "bounded_change": "Wait40 seconds before querying results; wait45 seconds before single chord snapshot. Preserve all completion, six-string, three-star and active-fade geometry assertions. No grading, production layout or source curriculum changes.",
-  "status": "timing repair locally tested; fresh runtime verification pending"
+  "status": "Timing repair verified on fresh English pilot; original failed frame preserved, not relabeled.",
+  "verified_rerun": {
+    "source_commit": "d8757b799a887e7402ff819da2f3e556e9788cbc",
+    "run": 40326595300,
+    "job": 121584776037,
+    "conclusion": "success",
+    "tests": 3,
+    "failures": 0,
+    "actual_bounds": {
+      "share_bottom": 619,
+      "level_bottom": 699,
+      "viewport": 770,
+      "fade": 0,
+      "buttons": 778,
+      "safe_bottom": 770,
+      "fits": true
+    },
+    "log_timestamp": "2026-10-26T13:12:58.4590010Z",
+    "limits": "English pilot only; other locales and newer selectors remain separate pending runs."
+  }
 }

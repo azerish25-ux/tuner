@@ -33,7 +33,7 @@ class MatrixFixtureTests(unittest.TestCase):
         result = matrix_fixture.fixture(['fa'])
         self.assertEqual(result['fa']['headline'], values[matrix_fixture.KEYS['headline']])
         self.assertIn('\n', result['fa']['headline'])
-        self.assertEqual(len(result['fa']), 9)
+        self.assertEqual(set(result['fa']), set(matrix_fixture.KEYS) | {'lesson_status'})
         self.assertEqual(result['fa']['lesson_status'], 'pending')
 
     def write_lessons(self, locale, entries):

@@ -646,7 +646,7 @@ struct JourneyView: View {
 
     private var accuracy: some View {
         VStack(alignment: .leading, spacing: 10) {
-            CardTitle("Tuning accuracy")
+            CardTitle("Tuning accuracy").accessibilityIdentifier("journey.accuracy")
             if tuningSessions.count < 2 {
                 Text("Tune a few times to see how close you land.").font(.subheadline).foregroundStyle(Palette.inkSoft)
             } else {
@@ -686,6 +686,7 @@ struct JourneyView: View {
             .stillCard()
         }
         .buttonStyle(PressScaleStyle())
+        .accessibilityIdentifier("journey.accuracy.locked")
     }
 
     private var recent: some View {

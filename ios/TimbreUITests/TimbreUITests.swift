@@ -61,10 +61,6 @@ final class TimbreUITests: XCTestCase {
     }
 
     private func element(_ id: String) -> XCUIElement { app.descendants(matching: .any).matching(identifier: id).firstMatch }
-    /// The first element whose whole accessibility label matches `pattern` (a regular expression).
-    private func labeled(_ pattern: String) -> XCUIElement {
-        app.descendants(matching: .any).matching(NSPredicate(format: "label MATCHES %@", pattern)).firstMatch
-    }
     /// Taps a tab, retrying while a sheet is still dismissing and swallows the tap.
     private func tabButton(_ name: String) -> XCUIElement {
         guard let label = CaptureLocalization.tabLabel(name) else {
@@ -285,20 +281,23 @@ final class TimbreUITests: XCTestCase {
     /// aside for the readout's In tune badge. The badge holds after a lock while the string stays in the band, so the
     /// snapshot (taken just after the picture) sees what the picture shows. `summary` says what was seen.
     private func tunerLock(strings: Int) -> (shown: Bool, summary: String) {
+        guard let tunedWord = CaptureLocalization.tuned, let inTuneWord = CaptureLocalization.inTune else {
+            return (false, "Missing localized tuner-state capture fixture")
+        }
         var chips: [String: (selected: Bool, tuned: Bool)] = [:]
         var status: String?
         var stage = false
         for node in appNodes() {
             if node.identifier.hasPrefix("string.") {
                 let seen = chips[node.identifier] ?? (selected: false, tuned: false)
-                chips[node.identifier] = (selected: seen.selected || node.isSelected, tuned: seen.tuned || (node.value as? String) == "Tuned")
+                chips[node.identifier] = (selected: seen.selected || node.isSelected, tuned: seen.tuned || (node.value as? String) == tunedWord)
             }
             if node.identifier == "tune.status" { status = node.label }
             if node.identifier == "tune.stage" { stage = true }
         }
         let tuned = chips.values.filter { $0.tuned }.count
         let selectedTuned = chips.values.contains { $0.selected && $0.tuned }
-        let badge = status == nil || status == "In tune"
+        let badge = status == nil || status == inTuneWord
         let summary = "stage shown \(stage), \(tuned) of \(chips.count) strings tuned, selected tuned \(selectedTuned), status '\(status ?? "hidden: the In tune badge")'"
         // The store frame's caption is a string standing still: the selected chip's tick and the In tune badge, both.
         return (stage && tuned >= strings && selectedTuned && badge, summary)
@@ -308,14 +307,14 @@ final class TimbreUITests: XCTestCase {
     /// look), watched for up to `window` seconds: the `comet` scene plucks the held string again every 4 s, which earns
     /// the lock afresh, so one stretch between plucks is enough. A look stalls the app's main thread for about a second
     /// over the 3D stage, so the looks are about that far apart; the lock holds over such a pause (LockLatch). A probe
-    /// without a lock field has nothing to check (held). `summary` says what was seen.
+    /// without a lock field cannot prove the lock and fails the check. `summary` says what was seen.
     private func lockHolds(for seconds: TimeInterval = 1.5, window: TimeInterval = 7) -> (held: Bool, summary: String) {
         let end = Date().addingTimeInterval(window)
         var since: Date?
         var longest = 0.0
         var looks = 0
         while Date() < end {
-            guard let lock = tunerProbe().lock else { return (true, "the probe has no lock field") }
+            guard let lock = tunerProbe().lock else { return (false, "the probe has no lock field") }
             let now = Date()
             looks += 1
             if lock {
@@ -446,7 +445,7 @@ final class TimbreUITests: XCTestCase {
         continueUntil(element("onboarding.option.songs")); settle(1.2); shot("04-onboarding-goal")
         // A guitar has strings to hold: which hand plays (right-handed until the player says otherwise).
         continueUntil(element("onboarding.option.right")); settle(1.2); shot("04b-onboarding-hand")
-        let notNow = app.buttons["Not now"]
+        let notNow = element("onboarding.microphone.skip")
         for _ in 0..<3 where !notNow.exists { element("onboarding.continue").tap(); settle(1.5) }
         XCTAssertTrue(notNow.waitForExistence(timeout: 5))
         shot("05-onboarding-microphone")
@@ -614,12 +613,12 @@ final class TimbreUITests: XCTestCase {
         // Progress with Pro: its top (streak, level, coach, week) is the same on any plan, so the picture is taken on
         // the card Pro adds, the tuning accuracy chart, and kept only when that card (not the Pro teaser) is there.
         tab("Progress"); settle(1.5)
-        let chart = labeled("Tuning accuracy")
+        let chart = element("journey.accuracy")
         if chart.waitForExistence(timeout: 5) {
             scrollTo(chart)
             bringToUpperMiddle(chart)
         }
-        let teaser = labeled("Accuracy over time").exists
+        let teaser = element("journey.accuracy.locked").exists
         storeFrame("45-journey-pro", picture: stillScreenshot(), ok: chart.exists && chart.isHittable && !teaser,
                    "Progress shows \(teaser ? "the Pro teaser" : "no tuning accuracy card") after the purchase")
         tab("Practice"); settle()
@@ -674,7 +673,7 @@ final class TimbreUITests: XCTestCase {
         // strings, then "Your turn" (or, when the demo pitch plays it back, "Nice") shows under the neck. The picture
         // waits for that line: every fingertip is down and the strings have stopped shimmering.
         element("learn.continue").tap()
-        _ = labeled(".*(Your turn|Nice — ).*").waitForExistence(timeout: 12)
+        XCTAssertTrue(element("lesson.explain.turnCue").waitForExistence(timeout: 12))
         stillShot("51-lesson-explain", timeout: 2.5)
         // The lesson zooms open: a tap during the transition can be dropped, so tap until the tune check shows.
         let skip = element("lesson.tunecheck.skip")
@@ -791,6 +790,8 @@ final class TimbreUITests: XCTestCase {
             XCTAssertFalse(CaptureLocalization.tabLabel(tab)?.isEmpty ?? true)
         }
         XCTAssertNil(CaptureLocalization.tabLabel("not-a-tab"))
+        XCTAssertNotNil(CaptureLocalization.tuned)
+        XCTAssertNotNil(CaptureLocalization.inTune)
     }
 
     func testStoreResultsBoundsCalculation() {

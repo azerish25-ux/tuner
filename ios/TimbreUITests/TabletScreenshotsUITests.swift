@@ -297,6 +297,9 @@ final class TabletScreenshotsUITests: XCTestCase {
     /// The string chips from one snapshot: how many read "Tuned", whether the selected one does, and whether the status
     /// line ("Hold it…") has stepped aside for the In tune badge.
     private func lockedChips() -> (tuned: Int, selected: Bool, badge: Bool) {
+        guard let tunedWord = CaptureLocalization.tuned, let inTuneWord = CaptureLocalization.inTune else {
+            return (0, false, false)
+        }
         guard let root = try? app.snapshot() else { return (0, false, false) }
         var chips: [String: (selected: Bool, tuned: Bool)] = [:]
         var status: String?
@@ -306,9 +309,9 @@ final class TabletScreenshotsUITests: XCTestCase {
             if node.identifier == "tune.status" { status = node.label }
             guard node.identifier.hasPrefix("string.") else { continue }
             let seen = chips[node.identifier] ?? (selected: false, tuned: false)
-            chips[node.identifier] = (selected: seen.selected || node.isSelected, tuned: seen.tuned || (node.value as? String) == "Tuned")
+            chips[node.identifier] = (selected: seen.selected || node.isSelected, tuned: seen.tuned || (node.value as? String) == tunedWord)
         }
-        let badge = status == nil || status == "In tune"
+        let badge = status == nil || status == inTuneWord
         return (chips.values.filter { $0.tuned }.count, chips.values.contains { $0.selected && $0.tuned }, badge)
     }
 }

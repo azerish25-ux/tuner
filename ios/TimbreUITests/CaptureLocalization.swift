@@ -15,8 +15,15 @@ enum CaptureLocalization {
     static func tabLabel(_ name: String) -> String? {
         let fields = ["Tune": "tune", "Learn": "learn", "Songs": "songs", "Practice": "practice", "Progress": "progress"]
         guard let field = fields[name] else { return nil }
+        return label(field: field, source: name)
+    }
+
+    static var tuned: String? { label(field: "tuned", source: "Tuned") }
+    static var inTune: String? { label(field: "in_tune", source: "In tune") }
+
+    private static func label(field: String, source: String) -> String? {
         if let translated = labels?[language]?[field], !translated.isEmpty { return translated }
-        return language == "en" ? name : nil
+        return language == "en" ? source : nil
     }
 }
 

@@ -718,6 +718,7 @@ struct OnboardingView: View {
             }
             .buttonStyle(TextLinkStyle(tint: Palette.inkSoft))
             .padding(.bottom, 4)
+            .accessibilityIdentifier("onboarding.microphone.skip")
         }
     }
 

@@ -1,0 +1,3930 @@
+{
+  "locale": "ca",
+  "captured_at": "2026-10-26T13:15:58.673168+00:00",
+  "status": "partial-unreviewed-author-draft-not-imported",
+  "review_status": "independent semantic review pending",
+  "source_todo_sha256": "8fc6cc028dc0a2e3b98461a5d5ebf92e6c7ab8fab84c82ecee59947b31386005",
+  "drafted_nonempty_entries": 490,
+  "required_current_source_keys": 6083,
+  "scope": "Snapshot of accepted nonempty authoring TODO entries only; held exact-source draft candidates and work written later are not included. This is preservation, not import or completion. Context metadata may predate the separately reviewed ordinal reference remap; authoritative current curriculum governs integration.",
+  "rows": [
+    {
+      "table": "Learn.strings",
+      "key": "L94af6c4088",
+      "source": "Guitar",
+      "translation": "Guitarra",
+      "context": "Guitar course · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2525f0dd1a",
+      "source": "From your first note to fingerstyle, blues and lead",
+      "translation": "De la primera nota al punteig amb els dits, el blues i els solos",
+      "context": "Guitar course · course subtitle",
+      "max_length": 80
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld1e7626b0f",
+      "source": "Hello, guitar",
+      "translation": "Hola, guitarra",
+      "context": "Guitar · Unit 1 “Hello, guitar” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld0ad414962",
+      "source": "Hold it, tune it, play your first notes.",
+      "translation": "Agafa-la, afina-la i toca les primeres notes.",
+      "context": "Guitar · Unit 1 “Hello, guitar” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L377bdd369e",
+      "source": "Meet your guitar",
+      "translation": "Coneix la teva guitarra",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L35fd49f78b",
+      "source": "Six strings, one job",
+      "translation": "Sis cordes, una feina",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld7f60a63df",
+      "source": "The thickest string is the lowest. It sits nearest your face when you play. We call it string 6.",
+      "translation": "La corda més gruixuda és la més greu. Quan toques, és la més propera a la cara. En diem corda 6.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2f8101b73b",
+      "source": "Turn to tune",
+      "translation": "Gira per afinar",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 2 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L96b66429e0",
+      "source": "Each string has a tuning peg on the head. Turning it changes the pitch. Timbre listens and tells you which way.",
+      "translation": "Cada corda té una clavilla al claviller. Girar-la canvia l’altura del so. Timbre t’escolta i et diu cap on.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 2 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1c9c8a30d5",
+      "source": "Which string is string 6?",
+      "translation": "Quina és la corda 6?",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3fe3239a4a",
+      "source": "The thickest",
+      "translation": "La més gruixuda",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9ef451a1cc",
+      "source": "The thinnest",
+      "translation": "La més prima",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb25076c5d4",
+      "source": "The middle one",
+      "translation": "La del mig",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lab41f6b897",
+      "source": "Strings count from the thinnest (1) to the thickest (6).",
+      "translation": "Les cordes es compten de la més prima (1) a la més gruixuda (6).",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 3 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L73ff0ae4b6",
+      "source": "Pluck the thickest string and let it ring.",
+      "translation": "Polsa la corda més gruixuda i deixa-la ressonar.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8d8d13f6af",
+      "source": "Now the thinnest one, string 1.",
+      "translation": "Ara la més prima, la corda 1.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-1 “Meet your guitar” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf608c3d2a6",
+      "source": "The open strings",
+      "translation": "Les cordes a l’aire",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Leba98ce894",
+      "source": "From thick to thin: E, A, D, G, B, E. Try: Every Amateur Does Get Better Eventually.",
+      "translation": "De gruixuda a prima: E, A, D, G, B, E. Prova: En Albert Dibuixa Grans Barques Enormes.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L62773cc1b4",
+      "source": "Play strings 6, 5 and 4, one at a time.",
+      "translation": "Toca les cordes 6, 5 i 4, d’una en una.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Led8834e508",
+      "source": "Now strings 3, 2 and 1.",
+      "translation": "Ara les cordes 3, 2 i 1.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L10bf85ce64",
+      "source": "What is string 5 called?",
+      "translation": "Com es diu la corda 5?",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lef015c7687",
+      "source": "Which is higher?",
+      "translation": "Quina és més aguda?",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 5 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L957dc77c43",
+      "source": "The first",
+      "translation": "La primera",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 5 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbece65d16e",
+      "source": "The second",
+      "translation": "La segona",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 5 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3507df125b",
+      "source": "Open-string roll call",
+      "translation": "Repàs de les cordes a l’aire",
+      "context": "Guitar · Unit 1 · lesson gtr-1-2 “The open strings” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lacbf27617c",
+      "source": "Your first fretted notes",
+      "translation": "Les primeres notes amb trasts",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9114298cd0",
+      "source": "Press just behind the fret",
+      "translation": "Prem just darrere del trast",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2b54566755",
+      "source": "Put your fingertip just behind the metal fret, not on top of it. Press firmly enough for a clean ring.",
+      "translation": "Posa la punta del dit just darrere del trast metàl·lic, no al damunt. Prem prou perquè soni net.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lfb39835aeb",
+      "source": "String 1, fret 1, first finger.",
+      "translation": "Corda 1, trast 1, primer dit.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2ceccefc66",
+      "source": "String 1, fret 3, third finger.",
+      "translation": "Corda 1, trast 3, tercer dit.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L44368c8e63",
+      "source": "Open, fret 1, fret 3: E, F, G.",
+      "translation": "A l’aire, trast 1, trast 3: E, F, G.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbb91147d34",
+      "source": "Where do you press?",
+      "translation": "On has de prémer?",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La1f91698f6",
+      "source": "Just behind the fret",
+      "translation": "Just darrere del trast",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4d11838152",
+      "source": "On top of the fret",
+      "translation": "Al damunt del trast",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1471e7977b",
+      "source": "Between two frets, in the middle",
+      "translation": "Al mig de dos trasts",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc15b166920",
+      "source": "Up and back",
+      "translation": "Amunt i avall",
+      "context": "Guitar · Unit 1 · lesson gtr-1-3 “Your first fretted notes” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbb69c85edd",
+      "source": "Your first chord: E minor",
+      "translation": "El teu primer acord: E menor",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld662d5e26b",
+      "source": "Two fingers, six strings",
+      "translation": "Dos dits, sis cordes",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L09a5833cec",
+      "source": "E minor uses two fingers on fret 2, strings 5 and 4. Every string rings.",
+      "translation": "E menor es toca amb dos dits al trast 2, a les cordes 5 i 4. Sonen totes les cordes.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L16fedb6c29",
+      "source": "Strum down",
+      "translation": "Rasca avall",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L218ffdfd51",
+      "source": "Brush across all six strings from thick to thin, one smooth motion. Keep your wrist loose.",
+      "translation": "Rasca les sis cordes de gruixuda a prima amb un moviment fluid. Mantén el canell relaxat.",
+      "context": "Guitar · Unit 1 · lesson gtr-1-4 “Your first chord: E minor” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5a4c7da42b",
+      "source": "First-steps challenge",
+      "translation": "Repte dels primers passos",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L502e8524eb",
+      "source": "No new ideas, just you",
+      "translation": "Res de nou, només tu",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb047858f7f",
+      "source": "This challenge mixes the whole unit: the open strings, E, F and G on string 1, and E minor. Take a breath between steps.",
+      "translation": "Aquest repte combina tota la unitat: les cordes a l’aire, E, F i G a la corda 1, i E menor. Respira entre passos.",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcbdcef465a",
+      "source": "From thick to thin, the open strings are…",
+      "translation": "De gruixuda a prima, les cordes a l’aire són…",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3534785c8b",
+      "source": "Every Amateur Does Get Better Eventually: E A D G B E, string 6 to string 1.",
+      "translation": "En Albert Dibuixa Grans Barques Enormes: E A D G B E, de la corda 6 a la corda 1.",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 2 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3ed18e44f0",
+      "source": "Roll call, thin to thick",
+      "translation": "Repàs de prima a gruixuda",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 3 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lfb15c73b73",
+      "source": "Which is lower?",
+      "translation": "Quina és més greu?",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 4 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7aeab8183d",
+      "source": "E, F and G",
+      "translation": "E, F i G",
+      "context": "Guitar · Unit 1 · challenge gtr-1-5 “First-steps challenge” · step 5 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L13a24a6c0d",
+      "source": "Mary Had a Little Lamb: three notes",
+      "translation": "Mary Had a Little Lamb: tres notes",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld0ea5ebdfa",
+      "source": "Your first song",
+      "translation": "La teva primera cançó",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L67684dd3f9",
+      "source": "Mary Had a Little Lamb needs three notes: open string 2 is B, fret 2 on string 3 is A, and open string 3 is G. Your second finger plays the A.",
+      "translation": "Mary Had a Little Lamb necessita tres notes: la corda 2 a l’aire és B, el trast 2 de la corda 3 és A i la corda 3 a l’aire és G. Toca l’A amb el segon dit.",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0f0ba5e96c",
+      "source": "String 3, fret 2, second finger. That's A.",
+      "translation": "Corda 3, trast 2, segon dit. És A.",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La0e88a1c69",
+      "source": "B A G A B B B: open string 2, then string 3.",
+      "translation": "B A G A B B B: corda 2 a l’aire, després corda 3.",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb35d67698f",
+      "source": "First half",
+      "translation": "Primera meitat",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 4 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L401ad01ac9",
+      "source": "The verse",
+      "translation": "L’estrofa",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · step 5 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0c33a64f82",
+      "source": "Verse 1",
+      "translation": "Estrofa 1",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0d09e295cd",
+      "source": "Verse 2",
+      "translation": "Estrofa 2",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lce9f8d903a",
+      "source": "Verse 3",
+      "translation": "Estrofa 3",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5acc606203",
+      "source": "Verse 4",
+      "translation": "Estrofa 4",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7c10b1802d",
+      "source": "Outro",
+      "translation": "Final",
+      "context": "Guitar · Unit 1 · song gtr-1-6 “Mary Had a Little Lamb: three notes” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9e459895b8",
+      "source": "First melodies",
+      "translation": "Primeres melodies",
+      "context": "Guitar · Unit 2 “First melodies” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lfcd6ee8a23",
+      "source": "Notes on strings 1 and 2, reading tab, and your first two tunes.",
+      "translation": "Notes a les cordes 1 i 2, lectura de tabulatures i les teves dues primeres melodies.",
+      "context": "Guitar · Unit 2 “First melodies” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1185bdc7c0",
+      "source": "Three notes on string 2",
+      "translation": "Tres notes a la corda 2",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L46caccda3a",
+      "source": "String 2: B, C and D",
+      "translation": "Corda 2: B, C i D",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La536f7740f",
+      "source": "String 2 works like string 1. Open, it's B. Fret 1 with your first finger is C. Fret 3 with your third finger is D.",
+      "translation": "La corda 2 funciona com la corda 1. A l’aire és B. El trast 1 amb el primer dit és C. El trast 3 amb el tercer dit és D.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc55cf4408c",
+      "source": "Pluck string 2 open. That's B.",
+      "translation": "Polsa la corda 2 a l’aire. És B.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2200cf274d",
+      "source": "String 2, fret 1, first finger. That's C.",
+      "translation": "Corda 2, trast 1, primer dit. És C.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0819310447",
+      "source": "String 2, fret 3, third finger. That's D.",
+      "translation": "Corda 2, trast 3, tercer dit. És D.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L23bce6a2de",
+      "source": "Which finger plays fret 3?",
+      "translation": "Amb quin dit toques el trast 3?",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L916a78d701",
+      "source": "First",
+      "translation": "Primer",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8d3e7efd0a",
+      "source": "Second finger",
+      "translation": "Segon dit",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lafec931374",
+      "source": "Third finger",
+      "translation": "Tercer dit",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La7ac4ed745",
+      "source": "Fourth finger",
+      "translation": "Quart dit",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La5ee2d48fb",
+      "source": "One finger per fret: fret 1 gets finger 1, fret 2 gets finger 2, fret 3 gets finger 3.",
+      "translation": "Un dit per trast: al trast 1, el dit 1; al trast 2, el dit 2; al trast 3, el dit 3.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 5 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4e95f3a260",
+      "source": "Thumb behind the neck",
+      "translation": "El polze darrere del mànec",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 6 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld211b97b75",
+      "source": "Rest your thumb on the back of the neck, behind your second finger. Your fingers can then arch and land on their tips.",
+      "translation": "Recolza el polze a la part posterior del mànec, darrere del segon dit. Així els dits es poden arquejar i recolzar sobre les puntes.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 6 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3c50e8b84e",
+      "source": "Up and back on string 2",
+      "translation": "Amunt i avall a la corda 2",
+      "context": "Guitar · Unit 2 · lesson gtr-2-1 “Three notes on string 2” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L45d13a2383",
+      "source": "Reading tab",
+      "translation": "Llegir tabulatures",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L78a58336aa",
+      "source": "Tab is a map",
+      "translation": "La tabulatura és un mapa",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8ab2f23db2",
+      "source": "Tab draws six lines, one per string, with string 1 on top. A number on a line is the fret to press. A 0 means play that string open.",
+      "translation": "La tabulatura té sis línies, una per corda, amb la corda 1 a dalt. Un número indica el trast que has de prémer. Un 0 vol dir tocar la corda a l’aire.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lccf8acd553",
+      "source": "In tab, a 3 on the top line means…",
+      "translation": "A la tabulatura, un 3 a la línia de dalt vol dir…",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc403ba83f1",
+      "source": "String 6, fret 3",
+      "translation": "Corda 6, trast 3",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L600e2dce19",
+      "source": "String 1, fret 3",
+      "translation": "Corda 1, trast 3",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld82df6e098",
+      "source": "Play three strings",
+      "translation": "Tocar tres cordes",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7277fd97d8",
+      "source": "The top line is string 1, the thinnest. The number is the fret.",
+      "translation": "La línia de dalt és la corda 1, la més prima. El número és el trast.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 2 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2a3bf68f34",
+      "source": "Top line: 0, 1, 3.",
+      "translation": "Línia de dalt: 0, 1, 3.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7c796e01f6",
+      "source": "A 0 on the second line means…",
+      "translation": "Un 0 a la segona línia vol dir…",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2dd456e860",
+      "source": "Play string 2 open",
+      "translation": "Tocar la corda 2 a l’aire",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf9774646bd",
+      "source": "Don't play string 2",
+      "translation": "No tocar la corda 2",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcff74c469b",
+      "source": "Press string 2 at fret 10",
+      "translation": "Prémer la corda 2 al trast 10",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ldcd6285c8b",
+      "source": "Second line: 3, 1, 0.",
+      "translation": "Segona línia: 3, 1, 0.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6f1906dfa5",
+      "source": "Which note is this?",
+      "translation": "Quina nota és aquesta?",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 6 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L517a9d49ae",
+      "source": "Down the stairs",
+      "translation": "Baixa l’escala",
+      "context": "Guitar · Unit 2 · lesson gtr-2-2 “Reading tab” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L20fb3d8193",
+      "source": "Long and short notes",
+      "translation": "Notes llargues i curtes",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L67d0dcf34e",
+      "source": "A note that lasts two beats",
+      "translation": "Una nota que dura dues pulsacions",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L476514910a",
+      "source": "A half note rings for two beats. Pick once, count one, two, and let it sustain until the next note.",
+      "translation": "Una blanca dura dues pulsacions. Polsa una vegada, compta un, dos, i deixa-la sonar fins a la nota següent.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2990d369e9",
+      "source": "How long does a half note last?",
+      "translation": "Quant dura una blanca?",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5b3ab40010",
+      "source": "One beat",
+      "translation": "Una pulsació",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3db204f097",
+      "source": "Two beats",
+      "translation": "Dues pulsacions",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L937448906f",
+      "source": "Four beats",
+      "translation": "Quatre pulsacions",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L38ba47812c",
+      "source": "Half of a four-beat bar is two beats. A quarter note lasts one beat.",
+      "translation": "La meitat d’un compàs de quatre pulsacions són dues pulsacions. Una negra dura una pulsació.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 3 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1e817871a8",
+      "source": "Cross with a small move",
+      "translation": "Canvia de corda amb poc moviment",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L729b7425d6",
+      "source": "Going from string 2 to string 1 is a tiny move. Keep your picking hand close to the strings so the next note is ready.",
+      "translation": "Passar de la corda 2 a la corda 1 és un moviment molt petit. Mantén la mà que polsa a prop de les cordes per preparar la nota següent.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf2d0250794",
+      "source": "Fret 3 on string 2, then open string 1. Lift your finger as you pick.",
+      "translation": "Trast 3 de la corda 2, després corda 1 a l’aire. Aixeca el dit mentre polses.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La50440f7b6",
+      "source": "C and D on string 2, then E, F and G on string 1.",
+      "translation": "C i D a la corda 2, després E, F i G a la corda 1.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 6 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1f56f7cfc7",
+      "source": "Across the strings",
+      "translation": "D’una corda a l’altra",
+      "context": "Guitar · Unit 2 · lesson gtr-2-3 “Long and short notes” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lde97f92a64",
+      "source": "Ode to Joy",
+      "translation": "Oda a l’alegria",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb0714174a7",
+      "source": "A tune by Beethoven",
+      "translation": "Una melodia de Beethoven",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9225771ef7",
+      "source": "This melody comes from Beethoven's Ninth Symphony. It uses C, D, E, F and G, and it moves mostly one step at a time.",
+      "translation": "Aquesta melodia és de la Novena simfonia de Beethoven. Fa servir C, D, E, F i G, i es mou sobretot per graus conjunts.",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L831dc92b9e",
+      "source": "The first line, slowly: E E F G G F E D.",
+      "translation": "La primera frase, a poc a poc: E E F G G F E D.",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lae7d153d96",
+      "source": "Then: C C D E E D D.",
+      "translation": "Després: C C D E E D D.",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Led05e029d4",
+      "source": "Long, short, long",
+      "translation": "Llarga, curta, llarga",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbdd78d8957",
+      "source": "Each line ends with a lilt: a longer note, a quick one, then a held one. Count one-and-two, and slip the quick note in on the and.",
+      "translation": "Cada frase acaba amb un ritme viu: una nota més llarga, una de ràpida i una de sostinguda. Compta un-i-dos i intercala la ràpida a la i.",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lce405c63b1",
+      "source": "First line",
+      "translation": "Primera frase",
+      "context": "Guitar · Unit 2 · song gtr-2-4 “Ode to Joy” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L89e4852745",
+      "source": "Three notes and a jump",
+      "translation": "Tres notes i un salt",
+      "context": "Guitar · Unit 2 · song gtr-2-5 “Mary Had a Little Lamb” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf1cc990354",
+      "source": "This nursery tune walks on C, D and E, then jumps up to G. The jump is open string 1 to fret 3.",
+      "translation": "Aquesta cançó infantil camina per C, D i E, i després salta fins a G. El salt va de la corda 1 a l’aire al trast 3.",
+      "context": "Guitar · Unit 2 · song gtr-2-5 “Mary Had a Little Lamb” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le060c1abc6",
+      "source": "E D C D E E E: open string 1, down to string 2 and back.",
+      "translation": "E D C D E E E: corda 1 a l’aire, baixa a la corda 2 i torna.",
+      "context": "Guitar · Unit 2 · song gtr-2-5 “Mary Had a Little Lamb” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ldbecec8bff",
+      "source": "D D D on string 2, then E and G on string 1.",
+      "translation": "D D D a la corda 2, després E i G a la corda 1.",
+      "context": "Guitar · Unit 2 · song gtr-2-5 “Mary Had a Little Lamb” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L52b62b2b14",
+      "source": "Song spotlight: Letters in a Shoebox",
+      "translation": "Cançó: Cartes en una capsa de sabates",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L49b5f5c9cb",
+      "source": "A ballad on two strings",
+      "translation": "Una balada en dues cordes",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L55b84af5bf",
+      "source": "Letters in a Shoebox is a Timbre Original, a slow ballad in C. Its chorus lives on strings 1 and 2, and its hook opens with the long, short lilt you played in Ode to Joy. The whole song is in Songs, under Originals.",
+      "translation": "Cartes en una capsa de sabates és un original de Timbre, una balada lenta en C. La tornada fa servir les cordes 1 i 2, i el motiu comença amb el ritme llarg-curt de l’Oda a l’alegria. Trobaràs la cançó sencera a Cançons, dins d’Originals.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L20b554da11",
+      "source": "The hook: C and D on string 2, then E, F and G on string 1, and back to D.",
+      "translation": "El motiu: C i D a la corda 2, després E, F i G a la corda 1, i torna a D.",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lfa36e93af8",
+      "source": "The hook",
+      "translation": "El motiu",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 4 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9ac189a560",
+      "source": "Does the chorus end at home?",
+      "translation": "La tornada acaba a la tònica?",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 5 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ldf81944547",
+      "source": "Yes, it feels finished",
+      "translation": "Sí, sembla que ha acabat",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 5 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7ac6eb4e66",
+      "source": "No, it wants to go on",
+      "translation": "No, demana continuar",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 5 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L31855cbc4f",
+      "source": "The chorus",
+      "translation": "La tornada",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1ac3ce2b0d",
+      "source": "Letters in a Shoebox",
+      "translation": "Cartes en una capsa de sabates",
+      "context": "Guitar · Unit 2 · lesson gtr-2-spotlight “Song spotlight: Letters in a Shoebox” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6d2857de41",
+      "source": "Melody challenge",
+      "translation": "Repte de melodies",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L160b92eee7",
+      "source": "Six notes, two strings",
+      "translation": "Sis notes, dues cordes",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L60f61fb4e2",
+      "source": "No new ideas: E, F and G on string 1, B, C and D on string 2. Start slow, then hold a steady tempo.",
+      "translation": "Res de nou: E, F i G a la corda 1; B, C i D a la corda 2. Comença a poc a poc i després mantén un tempo constant.",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L16fdc846f0",
+      "source": "Which note is open string 2?",
+      "translation": "Quina nota és la corda 2 a l’aire?",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lad17f6d151",
+      "source": "Did the tune go up or down?",
+      "translation": "La melodia ha anat amunt o avall?",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 3 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2038bdec92",
+      "source": "Up",
+      "translation": "Amunt",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 3 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbf93e5ce8b",
+      "source": "Down",
+      "translation": "Avall",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 3 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La79bc75189",
+      "source": "All six notes, low to high.",
+      "translation": "Les sis notes, de greu a agut.",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L160018fbfc",
+      "source": "Six notes down",
+      "translation": "Sis notes avall",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 5 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld92e4abf8f",
+      "source": "Ode to Joy, a little faster",
+      "translation": "Oda a l’alegria, una mica més ràpid",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L304d3240c4",
+      "source": "Mary Had a Little Lamb, faster",
+      "translation": "Mary Had a Little Lamb, més ràpid",
+      "context": "Guitar · Unit 2 · challenge gtr-2-6 “Melody challenge” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6a06751695",
+      "source": "First chords",
+      "translation": "Primers acords",
+      "context": "Guitar · Unit 3 “First chords” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1267092566",
+      "source": "E minor, E, A minor and A, played cleanly, and your first chord changes.",
+      "translation": "E menor, E, A menor i A, amb un so net, i els primers canvis d’acord.",
+      "context": "Guitar · Unit 3 “First chords” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lce1a46d611",
+      "source": "Clean chords",
+      "translation": "Acords nets",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L297e9e07be",
+      "source": "Tips, not pads",
+      "translation": "Amb les puntes, no amb els tous",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2c2ebb5975",
+      "source": "Press with your fingertips, arched like a bridge, so no finger leans on the string below it. Short nails make this much easier.",
+      "translation": "Prem amb les puntes dels dits, arquejats com un pont, perquè cap dit toqui la corda de sota. Amb les ungles curtes és molt més fàcil.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L07c9e258fe",
+      "source": "Check each string",
+      "translation": "Comprova cada corda",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L777cf155db",
+      "source": "Pick the strings one at a time, thick to thin. A dull thud means a finger is touching that string. Adjust and pick it again.",
+      "translation": "Polsa les cordes d’una en una, de gruixuda a prima. Un so apagat vol dir que un dit toca aquella corda. Ajusta’l i torna-la a polsar.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lda4f2c3958",
+      "source": "E minor, string by string",
+      "translation": "E menor, corda per corda",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 4 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0009cb1a16",
+      "source": "One string sounds dull. What's the likely cause?",
+      "translation": "Una corda sona apagada. Quina n’és la causa més probable?",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L741d9469c2",
+      "source": "A finger is touching it",
+      "translation": "Un dit la toca",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbfe7d24c11",
+      "source": "You strummed too slowly",
+      "translation": "Has rascat massa a poc a poc",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L12329cbb7b",
+      "source": "The pick is too thin",
+      "translation": "La pua és massa prima",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L29e791ecc4",
+      "source": "A fingertip leaning on a neighboring string stops it ringing. Arch your fingers more.",
+      "translation": "Si la punta d’un dit toca una corda veïna, no la deixa ressonar. Arqueja més els dits.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-1 “Clean chords” · step 5 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6c3a5b85c6",
+      "source": "E major: add one finger",
+      "translation": "E major: afegeix-hi un dit",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lca3d6296b8",
+      "source": "E minor plus one",
+      "translation": "E menor més un dit",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6e7c200b38",
+      "source": "Keep your E minor shape and add your first finger on string 3, fret 1. That one note turns minor into major.",
+      "translation": "Mantén la posició d’E menor i afegeix el primer dit a la corda 3, trast 1. Aquesta sola nota transforma menor en major.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La34ad451bf",
+      "source": "Bright and dark",
+      "translation": "Brillant i fosc",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3223de15b5",
+      "source": "Major chords tend to sound bright and settled. Minor chords sound darker. E and E minor differ by just one note.",
+      "translation": "Els acords majors solen sonar brillants i estables. Els menors sonen més foscos. E i E menor només es diferencien en una nota.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8e449bf03d",
+      "source": "Major or minor?",
+      "translation": "Major o menor?",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 4 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L100b455471",
+      "source": "Minor",
+      "translation": "Menor",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 4 (listen) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5517163095",
+      "source": "E, string by string",
+      "translation": "E, corda per corda",
+      "context": "Guitar · Unit 3 · lesson gtr-3-2 “E major: add one finger” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L728cd633f1",
+      "source": "A minor",
+      "translation": "A menor",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L15cff38132",
+      "source": "Same shape, one string over",
+      "translation": "La mateixa posició, una corda més enllà",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L04cd34e7dd",
+      "source": "A minor is the E shape moved one string thinner: fingers 2 and 3 on fret 2, finger 1 on string 2, fret 1.",
+      "translation": "A menor és la posició d’E desplaçada una corda cap a les primes: dits 2 i 3 al trast 2, dit 1 a la corda 2, trast 1.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8a71a33747",
+      "source": "Start on the root",
+      "translation": "Comença a la fonamental",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L93b54ad89d",
+      "source": "The root is the note a chord is named after. In A minor it's open string 5, so start your strum there and skip string 6.",
+      "translation": "La fonamental és la nota que dona nom a l’acord. A A menor és la corda 5 a l’aire: comença el rascat allà i omet la corda 6.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lea7dcbc0a1",
+      "source": "Which string do you skip in A minor?",
+      "translation": "Quina corda omets a A menor?",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8b52fe3ce3",
+      "source": "String 1",
+      "translation": "Corda 1",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L14f54a0668",
+      "source": "String 6",
+      "translation": "Corda 6",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8ff7342a88",
+      "source": "String 5",
+      "translation": "Corda 5",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L99859ab4b6",
+      "source": "A minor's root is open string 5. Start the strum there.",
+      "translation": "La fonamental d’A menor és la corda 5 a l’aire. Comença el rascat allà.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 4 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L297e2d2669",
+      "source": "Which chord is minor?",
+      "translation": "Quin acord és menor?",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 5 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0eb850e0f9",
+      "source": "A minor, string by string",
+      "translation": "A menor, corda per corda",
+      "context": "Guitar · Unit 3 · lesson gtr-3-3 “A minor” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L920df29d22",
+      "source": "Three fingers in a row",
+      "translation": "Tres dits en fila",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf2e8c49236",
+      "source": "A packs fingers 1, 2 and 3 side by side on fret 2, on strings 4, 3 and 2. Strum from string 5.",
+      "translation": "A agrupa els dits 1, 2 i 3 al trast 2, a les cordes 4, 3 i 2. Rasca des de la corda 5.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld5c0a9986f",
+      "source": "Crowded? Angle them",
+      "translation": "Hi ha poc espai? Inclina’ls",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5d3468e2a0",
+      "source": "If your fingers feel cramped, slant them so each sits just behind the fret at a slight angle. Keep string 1 clear so it rings.",
+      "translation": "Si els dits estan atapeïts, inclina’ls una mica perquè cadascun quedi just darrere del trast. Deixa lliure la corda 1 perquè soni.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L912d5a9390",
+      "source": "Which fret holds all three fingers in A?",
+      "translation": "A quin trast poses els tres dits a A?",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9d5d06c602",
+      "source": "Fret 2",
+      "translation": "Trast 2",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L25fd2930a3",
+      "source": "Fret 1",
+      "translation": "Trast 1",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L806d33523e",
+      "source": "Fret 3",
+      "translation": "Trast 3",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L72be45acb1",
+      "source": "A, string by string",
+      "translation": "A, corda per corda",
+      "context": "Guitar · Unit 3 · lesson gtr-3-4 “A major” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L45b6d9e63c",
+      "source": "From E minor to A minor",
+      "translation": "D’E menor a A menor",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L97d4f3dd8e",
+      "source": "Move the shape, not the fingers",
+      "translation": "Mou la posició, no els dits",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc214834014",
+      "source": "From E minor to A minor, fingers 2 and 3 hop together to strings 4 and 3. Then finger 1 lands on string 2. Your hand barely moves.",
+      "translation": "D’E menor a A menor, els dits 2 i 3 salten junts a les cordes 4 i 3. Després, el dit 1 arriba a la corda 2. La mà gairebé no es mou.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La3f4c297e3",
+      "source": "Change early, land on one",
+      "translation": "Canvia abans, arriba a l’u",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf02792e9e5",
+      "source": "Strum once, then use the rest of the bar to change. Aim to land the new chord right on beat one. Speed comes later, by itself.",
+      "translation": "Rasca un cop i aprofita la resta del compàs per canviar. Intenta arribar al nou acord just al primer temps. La velocitat vindrà després, tota sola.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L951f4e8f4d",
+      "source": "How should your fingers travel between chords?",
+      "translation": "Com s’han de moure els dits entre acords?",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 7 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbf4cffd3cf",
+      "source": "One at a time",
+      "translation": "D’un en un",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 7 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lba3eda912b",
+      "source": "As high as possible",
+      "translation": "Tan amunt com puguis",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 7 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le6ae13d822",
+      "source": "Together, as one shape",
+      "translation": "Junts, mantenint la posició",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 7 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L110633d13f",
+      "source": "Moving the fingers as a unit is faster and lands cleaner. Keep them low, just above the strings.",
+      "translation": "Moure els dits en bloc és més ràpid i precís. Mantén-los baixos, just damunt de les cordes.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-5 “From E minor to A minor” · step 7 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L374c3725ba",
+      "source": "From A to E",
+      "translation": "D’A a E",
+      "context": "Guitar · Unit 3 · lesson gtr-3-6 “From A to E” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4a01cc8b59",
+      "source": "See the shape first",
+      "translation": "Visualitza primer la posició",
+      "context": "Guitar · Unit 3 · lesson gtr-3-6 “From A to E” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lfa2be0ab9c",
+      "source": "Every finger moves from A to E. Picture the E shape before you lift, then move all three together. Aim finger 2 at string 5.",
+      "translation": "Tots els dits es mouen d’A a E. Visualitza la posició d’E abans d’aixecar-los i mou-los junts. Dirigeix el dit 2 cap a la corda 5.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-6 “From A to E” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La16512a680",
+      "source": "Song spotlight: Dust on the Dashboard",
+      "translation": "Cançó: Pols al tauler de comandament",
+      "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le2da99d722",
+      "source": "Country on E and A",
+      "translation": "Country amb E i A",
+      "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L40cf5e5cf3",
+      "source": "Dust on the Dashboard is a Timbre Original: country in A. Every verse ends on two bars of E and two of A, the change you just learned. See the shape, move early and land on beat one. The whole song is in Songs, under Originals.",
+      "translation": "Pols al tauler de comandament és un original de Timbre: country en A. Cada estrofa acaba amb dos compassos d’E i dos d’A, el canvi que has après. Visualitza la posició, mou-te abans i arriba al primer temps. La cançó sencera és a Cançons, dins d’Originals.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf98b39c10f",
+      "source": "Does this end at home?",
+      "translation": "Això acaba a la tònica?",
+      "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · step 2 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L38282d193b",
+      "source": "Over E: open B, open E, D at fret 3 on string 2, C sharp at fret 2, then G sharp at fret 1 on string 3.",
+      "translation": "Sobre E: B i E a l’aire, D al trast 3 de la corda 2, C sostingut al trast 2 i G sostingut al trast 1 de la corda 3.",
+      "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6bb5e2c3fa",
+      "source": "The end of the verse",
+      "translation": "El final de l’estrofa",
+      "context": "Guitar · Unit 3 · lesson gtr-3-spotlight “Song spotlight: Dust on the Dashboard” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3e308928e8",
+      "source": "Chord-change challenge",
+      "translation": "Repte de canvis d’acord",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L221ab5e996",
+      "source": "Four chords, clean changes",
+      "translation": "Quatre acords, canvis nets",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0832428388",
+      "source": "No new ideas: E minor, E, A minor and A. Land each shape cleanly, then keep the changes steady.",
+      "translation": "Res de nou: E menor, E, A menor i A. Forma cada posició amb un so net i mantén els canvis regulars.",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L28887108d7",
+      "source": "Which finger turns E minor into E?",
+      "translation": "Quin dit transforma E menor en E?",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L625d141f7d",
+      "source": "Finger 4 on string 1",
+      "translation": "Dit 4 a la corda 1",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf42b604b43",
+      "source": "Finger 2 on string 6",
+      "translation": "Dit 2 a la corda 6",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L070e348de7",
+      "source": "Finger 1 on string 3",
+      "translation": "Dit 1 a la corda 3",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L001a8a4e76",
+      "source": "Finger 1 on string 3, fret 1 is the one note that makes E major.",
+      "translation": "El dit 1 a la corda 3, trast 1, toca l’única nota que fa E major.",
+      "context": "Guitar · Unit 3 · challenge gtr-3-7 “Chord-change challenge” · step 2 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb40e7e9efb",
+      "source": "Strumming",
+      "translation": "Rascats",
+      "context": "Guitar · Unit 4 “Strumming” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6f2ac8800d",
+      "source": "Downstrokes, down-up eighths, accents and a strumming hand that never stops.",
+      "translation": "Cops avall, corxeres avall-amunt, accents i una mà que no s’atura.",
+      "context": "Guitar · Unit 4 “Strumming” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc5270fb654",
+      "source": "One strum per beat",
+      "translation": "Un rascat per pulsació",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2cabfc4329",
+      "source": "Quarter notes",
+      "translation": "Negres",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf30e266da0",
+      "source": "A quarter note lasts one beat. Strum down on every beat and count out loud: one, two, three, four.",
+      "translation": "Una negra dura una pulsació. Rasca avall a cada pulsació i compta en veu alta: un, dos, tres, quatre.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2384698d7e",
+      "source": "Strum from the wrist",
+      "translation": "Rasca amb el canell",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4d8264bf18",
+      "source": "Let the motion come from a loose wrist and forearm, like shaking water off your hand. A stiff arm sounds harsh.",
+      "translation": "El moviment surt del canell i l’avantbraç relaxats, com si t’espolsessis aigua de la mà. Un braç rígid fa un so aspre.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld5bb3cb3e3",
+      "source": "How many quarter-note strums fill a bar of four?",
+      "translation": "Quants rascats de negra omplen un compàs de quatre temps?",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L16e018ece5",
+      "source": "Two",
+      "translation": "Dos",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc5d87b23f2",
+      "source": "Four",
+      "translation": "Quatre",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L20c26c702a",
+      "source": "Eight",
+      "translation": "Vuit",
+      "context": "Guitar · Unit 4 · lesson gtr-4-1 “One strum per beat” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3f9e2ba82f",
+      "source": "Down and up",
+      "translation": "Avall i amunt",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3bb7f9fd15",
+      "source": "Eighth notes: down-up",
+      "translation": "Corxeres: avall-amunt",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L53cc9a5bfd",
+      "source": "Split each beat in two. Strum down on the number and up on the and: one and two and. That's eight strums per bar.",
+      "translation": "Divideix cada pulsació en dues. Rasca avall al número i amunt a la i: un i dos i. Són vuit rascats per compàs.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L648307a100",
+      "source": "Where does the up strum fall?",
+      "translation": "On cau el rascat amunt?",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc953224dbf",
+      "source": "On the and",
+      "translation": "A la i",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcd86993d57",
+      "source": "On the number",
+      "translation": "Al número",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcf848a7efd",
+      "source": "Only on beat four",
+      "translation": "Només al quart temps",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L66ae417c89",
+      "source": "Down on the number, up on the and. Your hand goes down and up once per beat.",
+      "translation": "Avall al número, amunt a la i. La mà baixa i puja una vegada per pulsació.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 4 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1e9bc6385b",
+      "source": "Lighter going up",
+      "translation": "Més suau en pujar",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 5 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6ea8d54e79",
+      "source": "Up strums are naturally softer. Brush just the thinner three or four strings on the way up. That gives the groove its lift.",
+      "translation": "Els rascats amunt són naturalment més suaus. En pujar, frega només les tres o quatre cordes més primes. Això dona empenta al ritme.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-2 “Down and up” · step 5 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L80ff4ffcee",
+      "source": "Accent beat one",
+      "translation": "Accentua el primer temps",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc385d2091f",
+      "source": "Lean on one",
+      "translation": "Reforça l’u",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8c49b6c18f",
+      "source": "An accent is a note played a little louder. Strum beat one harder than the rest. It tells everyone where the bar begins.",
+      "translation": "Un accent és una nota una mica més forta. Rasca el primer temps més fort que la resta. Així tothom sap on comença el compàs.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L50fae3bee8",
+      "source": "Which beat gets the accent?",
+      "translation": "Quin temps porta l’accent?",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L88701ee81c",
+      "source": "Beat three",
+      "translation": "El tercer temps",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le8195a4ce0",
+      "source": "Every and",
+      "translation": "Cada i",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L61fc25fa4f",
+      "source": "Beat one",
+      "translation": "El primer temps",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lefe5a8489c",
+      "source": "Beat one starts the bar. A slightly louder first strum keeps you, and anyone listening, in time.",
+      "translation": "El primer temps inicia el compàs. Un primer rascat una mica més fort t’ajuda a tu i a qui t’escolta a seguir el ritme.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 3 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le24540d5b2",
+      "source": "Count the bars",
+      "translation": "Compta els compassos",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4f43432762",
+      "source": "Say the bar number on beat one: one, two, three, four; two, two, three, four. You always know where you are.",
+      "translation": "Digues el número del compàs al primer temps: un, dos, tres, quatre; dos, dos, tres, quatre. Així sempre saps on ets.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-3 “Accent beat one” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7f8ad82b9c",
+      "source": "Keep the hand moving",
+      "translation": "Mantén la mà en moviment",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le30d7248ff",
+      "source": "A pendulum hand",
+      "translation": "La mà com un pèndol",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L42b0890e73",
+      "source": "Your strumming hand swings down and up all the time, like a pendulum. To skip a strum, keep swinging and simply miss the strings.",
+      "translation": "La mà que rasca va avall i amunt tota l’estona, com un pèndol. Per ometre un rascat, continua el moviment sense tocar les cordes.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lded54f4d23",
+      "source": "To skip a strum, your hand…",
+      "translation": "Per ometre un rascat, la mà…",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L80cc36535b",
+      "source": "Keeps moving and misses the strings",
+      "translation": "Continua sense tocar les cordes",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La6899881d0",
+      "source": "Stops and waits",
+      "translation": "S’atura i espera",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L08b3bd0b98",
+      "source": "Strums twice as hard",
+      "translation": "Rasca el doble de fort",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L32f5531fae",
+      "source": "A hand that never stops keeps steady time. The skipped strum is a swing that doesn't touch the strings.",
+      "translation": "Una mà que no s’atura manté el ritme constant. El rascat omès és un moviment que no toca les cordes.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-4 “Keep the hand moving” · step 4 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld9b6e8bec7",
+      "source": "The folk strum",
+      "translation": "El rascat folk",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4ae2f0cb0a",
+      "source": "Down, down-up, up-down-up",
+      "translation": "Avall, avall-amunt, amunt-avall-amunt",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L76b5c122da",
+      "source": "This pattern drives countless songs. On beat three your hand swings down without touching the strings, then catches the up strum.",
+      "translation": "Aquest patró impulsa innombrables cançons. Al tercer temps, la mà baixa sense tocar les cordes i després les rasca amunt.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4ccadbfff8",
+      "source": "In this pattern, which beat has no strum on the number?",
+      "translation": "En aquest patró, quin temps no té rascat al número?",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb58b5a8ced",
+      "source": "One",
+      "translation": "Un",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf3cd4632fc",
+      "source": "Three",
+      "translation": "Tres",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2671f18144",
+      "source": "On three the hand swings down past the strings, then strums up on the and.",
+      "translation": "Al tres, la mà baixa sense tocar les cordes i després rasca amunt a la i.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-5 “The folk strum” · step 4 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf4f6aa9fd6",
+      "source": "Song spotlight: Low Tide Radio",
+      "translation": "Cançó: Ràdio de marea baixa",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L40de34d2de",
+      "source": "Reggae on the ands",
+      "translation": "Reggae a les is",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L749ac2f07c",
+      "source": "Low Tide Radio is a Timbre Original: laid-back reggae on E minor and A. The guitar plays only the ands. Keep your hand swinging down and up, miss the strings on each number and catch every and. The whole song is in Songs, under Originals.",
+      "translation": "Ràdio de marea baixa és un original de Timbre: reggae relaxat amb E menor i A. La guitarra només toca a les is. Mantén la mà avall i amunt, evita les cordes a cada número i toca-les a cada i. La cançó sencera és a Cançons, dins d’Originals.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L958cd7f8b2",
+      "source": "Where does the guitar play in Low Tide Radio?",
+      "translation": "On toca la guitarra a Ràdio de marea baixa?",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lefda538736",
+      "source": "Only on the ands",
+      "translation": "Només a les is",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L82e6d3612d",
+      "source": "On every number",
+      "translation": "A cada número",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L71e96e5d41",
+      "source": "Only on beat one",
+      "translation": "Només al primer temps",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbaaaeb8ba6",
+      "source": "Bass and drums hold the numbers. The guitar answers between them, on the ands.",
+      "translation": "El baix i la bateria marquen els números. La guitarra respon entremig, a les is.",
+      "context": "Guitar · Unit 4 · lesson gtr-4-spotlight “Song spotlight: Low Tide Radio” · step 5 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf42e6f48eb",
+      "source": "Strumming challenge",
+      "translation": "Repte de rascats",
+      "context": "Guitar · Unit 4 · challenge gtr-4-6 “Strumming challenge” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld852510182",
+      "source": "Steady hand, four chords",
+      "translation": "Mà constant, quatre acords",
+      "context": "Guitar · Unit 4 · challenge gtr-4-6 “Strumming challenge” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La5aeda8eb5",
+      "source": "No new ideas: quarters, eighths and the folk strum on the chords you know. Keep the hand swinging and lean on beat one.",
+      "translation": "Res de nou: negres, corxeres i el rascat folk amb els acords que coneixes. Mantén la mà en moviment i accentua el primer temps.",
+      "context": "Guitar · Unit 4 · challenge gtr-4-6 “Strumming challenge” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L49001bc117",
+      "source": "Down-up eighths: where are the up strums?",
+      "translation": "Corxeres avall-amunt: on són els rascats amunt?",
+      "context": "Guitar · Unit 4 · challenge gtr-4-6 “Strumming challenge” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L026036a0e5",
+      "source": "On every and",
+      "translation": "A cada i",
+      "context": "Guitar · Unit 4 · challenge gtr-4-6 “Strumming challenge” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb6a0055821",
+      "source": "Only on two and four",
+      "translation": "Només al dos i al quatre",
+      "context": "Guitar · Unit 4 · challenge gtr-4-6 “Strumming challenge” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbdfc9d5e3c",
+      "source": "More open chords",
+      "translation": "Més acords oberts",
+      "context": "Guitar · Unit 5 “More open chords” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld004ac6df6",
+      "source": "C, G, D and D minor, two classic progressions, and the one-minute change.",
+      "translation": "C, G, D i D menor, dues progressions clàssiques i canvis en un minut.",
+      "context": "Guitar · Unit 5 “More open chords” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Laf19c95d48",
+      "source": "A three-step staircase",
+      "translation": "Una escala de tres esglaons",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Laaf57f2a76",
+      "source": "C climbs like a staircase: finger 3 on string 5, fret 3; finger 2 on string 4, fret 2; finger 1 on string 2, fret 1.",
+      "translation": "C puja com una escala: dit 3 a la corda 5, trast 3; dit 2 a la corda 4, trast 2; dit 1 a la corda 2, trast 1.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc5a0fa0134",
+      "source": "Which string do you skip in C?",
+      "translation": "Quina corda omets a C?",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1ab6b5a5b3",
+      "source": "String 3",
+      "translation": "Corda 3",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le3f278d075",
+      "source": "C's root is on string 5, fret 3. Start the strum there.",
+      "translation": "La fonamental de C és a la corda 5, trast 3. Comença el rascat allà.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 3 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ldb61d61d3a",
+      "source": "A minor to C: one finger",
+      "translation": "D’A menor a C: un dit",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 5 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La241eba100",
+      "source": "Fingers 1 and 2 stay exactly where they are. Only finger 3 moves, from string 3 to string 5, fret 3.",
+      "translation": "Els dits 1 i 2 es queden exactament on són. Només es mou el dit 3, de la corda 3 a la corda 5, trast 3.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-1 “C major” · step 5 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le42f6df718",
+      "source": "Wide and bright",
+      "translation": "Ample i brillant",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0dd28dc711",
+      "source": "G spreads out: finger 2 on string 6, fret 3; finger 1 on string 5, fret 2; finger 3 on string 1, fret 3. All six strings ring.",
+      "translation": "G s’estén: dit 2 a la corda 6, trast 3; dit 1 a la corda 5, trast 2; dit 3 a la corda 1, trast 3. Sonen les sis cordes.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb36eb57ac7",
+      "source": "In G, which strings ring open?",
+      "translation": "A G, quines cordes sonen a l’aire?",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L843a47ea46",
+      "source": "Strings 2, 3 and 4",
+      "translation": "Cordes 2, 3 i 4",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb185897636",
+      "source": "Strings 1 and 6",
+      "translation": "Cordes 1 i 6",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc833bd9baf",
+      "source": "None of them",
+      "translation": "Cap",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L73b1f13160",
+      "source": "Lead with the bass",
+      "translation": "Comença pel baix",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 5 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3c6a908125",
+      "source": "When you change, land the finger for the lowest string first. It's the first note your strum hits, which buys a moment for the rest.",
+      "translation": "En canviar, col·loca primer el dit de la corda més greu. És la primera nota del rascat i et dona un moment per posar els altres.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-2 “G major” · step 5 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5f8b0a6d18",
+      "source": "D and D minor",
+      "translation": "D i D menor",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcfad049f54",
+      "source": "A small triangle",
+      "translation": "Un petit triangle",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L263e596db5",
+      "source": "D lives on the thinnest three strings: finger 1 on string 3, fret 2; finger 3 on string 2, fret 3; finger 2 on string 1, fret 2.",
+      "translation": "D és a les tres cordes més primes: dit 1 a la corda 3, trast 2; dit 3 a la corda 2, trast 3; dit 2 a la corda 1, trast 2.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3d8bca869b",
+      "source": "Where does a D chord's strum start?",
+      "translation": "On comença el rascat d’un acord de D?",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L89e03eb68c",
+      "source": "String 4",
+      "translation": "Corda 4",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0f052bad8c",
+      "source": "D's root is open string 4. Strings 5 and 6 stay quiet.",
+      "translation": "La fonamental de D és la corda 4 a l’aire. Les cordes 5 i 6 no sonen.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 3 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb36524405c",
+      "source": "D minor: one note lower",
+      "translation": "D menor: una nota més greu",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 5 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L19cabd994c",
+      "source": "For D minor, the note on string 1 drops to fret 1. Reshuffle: finger 1 on string 1, finger 2 on string 3, finger 3 stays on string 2.",
+      "translation": "A D menor, la nota de la corda 1 baixa al trast 1. Recol·loca els dits: dit 1 a la corda 1, dit 2 a la corda 3; el dit 3 es queda a la corda 2.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-3 “D and D minor” · step 5 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lce8580fbb3",
+      "source": "G, C and D",
+      "translation": "G, C i D",
+      "context": "Guitar · Unit 5 · lesson gtr-5-4 “G, C and D” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L937f7ac180",
+      "source": "Three chords, endless songs",
+      "translation": "Tres acords, cançons sense fi",
+      "context": "Guitar · Unit 5 · lesson gtr-5-4 “G, C and D” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5ef3f68e90",
+      "source": "A key is a song's home base. In the key of G, the chords G, C and D do most of the work. Countless folk and rock songs use only these three.",
+      "translation": "La tonalitat és la llar d’una cançó. En G, els acords G, C i D fan gairebé tota la feina. Moltíssimes cançons folk i rock només fan servir aquests tres.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-4 “G, C and D” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La634de9a19",
+      "source": "You keep landing late on a change. What helps most?",
+      "translation": "Sempre arribes tard al canvi. Què t’ajuda més?",
+      "context": "Guitar · Unit 5 · lesson gtr-5-4 “G, C and D” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld55aef3ff8",
+      "source": "Strumming harder",
+      "translation": "Rascar més fort",
+      "context": "Guitar · Unit 5 · lesson gtr-5-4 “G, C and D” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L425cc7a8d1",
+      "source": "Skipping that chord",
+      "translation": "Ometre aquell acord",
+      "context": "Guitar · Unit 5 · lesson gtr-5-4 “G, C and D” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2495d5c749",
+      "source": "Slowing down and moving early",
+      "translation": "Anar més lent i moure’t abans",
+      "context": "Guitar · Unit 5 · lesson gtr-5-4 “G, C and D” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L58eedeebf8",
+      "source": "Slow, early changes build the habit. Speed follows on its own.",
+      "translation": "Els canvis lents i anticipats creen l’hàbit. La velocitat ve tota sola.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-4 “G, C and D” · step 4 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5478c3c226",
+      "source": "A minor, C, G, D",
+      "translation": "A menor, C, G, D",
+      "context": "Guitar · Unit 5 · lesson gtr-5-5 “A minor, C, G, D” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbb8bd81946",
+      "source": "Four chords in a row",
+      "translation": "Quatre acords seguits",
+      "context": "Guitar · Unit 5 · lesson gtr-5-5 “A minor, C, G, D” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L80ac1b08fc",
+      "source": "A progression is a chord sequence that repeats. A minor, C, G, D starts dark and brightens as it climbs.",
+      "translation": "Una progressió és una seqüència d’acords que es repeteix. A menor, C, G, D comença fosca i s’il·lumina mentre puja.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-5 “A minor, C, G, D” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le01248bec7",
+      "source": "The one-minute change",
+      "translation": "Canvis en un minut",
+      "context": "Guitar · Unit 5 · lesson gtr-5-5 “A minor, C, G, D” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7ec3fd5bd8",
+      "source": "Away from the app, pick two chords and switch for one minute, one strum each. Count your clean changes and beat that score tomorrow. Start with D and D minor.",
+      "translation": "Sense l’app, tria dos acords i alterna’ls durant un minut, amb un rascat per acord. Compta els canvis nets i supera la marca demà. Comença amb D i D menor.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-5 “A minor, C, G, D” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb97205c81a",
+      "source": "In a one-minute change, what do you count?",
+      "translation": "En els canvis d’un minut, què comptes?",
+      "context": "Guitar · Unit 5 · lesson gtr-5-5 “A minor, C, G, D” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0838660743",
+      "source": "Clean changes",
+      "translation": "Canvis nets",
+      "context": "Guitar · Unit 5 · lesson gtr-5-5 “A minor, C, G, D” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lafdafefdc0",
+      "source": "Strings that buzz",
+      "translation": "Cordes que trastegen",
+      "context": "Guitar · Unit 5 · lesson gtr-5-5 “A minor, C, G, D” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5fd07fade8",
+      "source": "Seconds per chord",
+      "translation": "Segons per acord",
+      "context": "Guitar · Unit 5 · lesson gtr-5-5 “A minor, C, G, D” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6e4a00070b",
+      "source": "Song spotlight: Kite Weather",
+      "translation": "Cançó: Temps d’estels",
+      "context": "Guitar · Unit 5 · lesson gtr-5-spotlight “Song spotlight: Kite Weather” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L202aac1621",
+      "source": "Four chords, one loop",
+      "translation": "Quatre acords, un bucle",
+      "context": "Guitar · Unit 5 · lesson gtr-5-spotlight “Song spotlight: Kite Weather” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld021278fb3",
+      "source": "Kite Weather is a Timbre Original: bright campfire pop on G, D, E minor and C, around and around. Change early, and land the finger for the lowest string first. The whole song is in Songs, under Originals.",
+      "translation": "Temps d’estels és un original de Timbre: pop lluminós de foguera amb G, D, E menor i C, una vegada i una altra. Canvia abans i col·loca primer el dit de la corda més greu. La cançó sencera és a Cançons, dins d’Originals.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-spotlight “Song spotlight: Kite Weather” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9e497e97e9",
+      "source": "Which chord in Kite Weather skips strings 5 and 6?",
+      "translation": "Quin acord de Temps d’estels omet les cordes 5 i 6?",
+      "context": "Guitar · Unit 5 · lesson gtr-5-spotlight “Song spotlight: Kite Weather” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc3e1440b37",
+      "source": "E minor",
+      "translation": "E menor",
+      "context": "Guitar · Unit 5 · lesson gtr-5-spotlight “Song spotlight: Kite Weather” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L45bae2049d",
+      "source": "D's root is open string 4, so strings 5 and 6 stay quiet.",
+      "translation": "La fonamental de D és la corda 4 a l’aire, així que les cordes 5 i 6 no sonen.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-spotlight “Song spotlight: Kite Weather” · step 3 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1d454b3aac",
+      "source": "The verse adds A on string 3, fret 2: the note finger 1 holds in D. Open G, A, then open B.",
+      "translation": "L’estrofa afegeix A a la corda 3, trast 2: la nota del dit 1 a D. G a l’aire, A i després B a l’aire.",
+      "context": "Guitar · Unit 5 · lesson gtr-5-spotlight “Song spotlight: Kite Weather” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0d772098ad",
+      "source": "Open-chord challenge",
+      "translation": "Repte d’acords oberts",
+      "context": "Guitar · Unit 5 · challenge gtr-5-6 “Open-chord challenge” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Laf1a9874c9",
+      "source": "Eight open chords",
+      "translation": "Vuit acords oberts",
+      "context": "Guitar · Unit 5 · challenge gtr-5-6 “Open-chord challenge” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcbd8aa8a42",
+      "source": "No new ideas: C, G, D and D minor join E minor, E, A minor and A. Change early, strum steady and let each chord ring.",
+      "translation": "Res de nou: C, G, D i D menor s’afegeixen a E menor, E, A menor i A. Canvia abans, rasca regularment i deixa ressonar cada acord.",
+      "context": "Guitar · Unit 5 · challenge gtr-5-6 “Open-chord challenge” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Leed688f083",
+      "source": "Which chord skips strings 5 and 6?",
+      "translation": "Quin acord omet les cordes 5 i 6?",
+      "context": "Guitar · Unit 5 · challenge gtr-5-6 “Open-chord challenge” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0532d7cb1e",
+      "source": "Melodies on strings 3 and 4",
+      "translation": "Melodies a les cordes 3 i 4",
+      "context": "Guitar · Unit 6 “Melodies on strings 3 and 4” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7bd8097a38",
+      "source": "G and A on string 3, D, E and F on string 4, the C major scale and two traditional tunes.",
+      "translation": "G i A a la corda 3; D, E i F a la corda 4; l’escala de C major i dues melodies tradicionals.",
+      "context": "Guitar · Unit 6 “Melodies on strings 3 and 4” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf89f8336a3",
+      "source": "Notes on string 3",
+      "translation": "Notes a la corda 3",
+      "context": "Guitar · Unit 6 · lesson gtr-6-1 “Notes on string 3” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5d2826f313",
+      "source": "String 3: G and A",
+      "translation": "Corda 3: G i A",
+      "context": "Guitar · Unit 6 · lesson gtr-6-1 “Notes on string 3” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1a0c723729",
+      "source": "Open string 3 is G. Put finger 2 on fret 2 and you get A. The same rule holds: the finger matches the fret.",
+      "translation": "La corda 3 a l’aire és G. Posa el dit 2 al trast 2 i tens A. La regla és la mateixa: el dit correspon al trast.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-1 “Notes on string 3” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0345d17207",
+      "source": "Pluck string 3 open. That's G.",
+      "translation": "Polsa la corda 3 a l’aire. És G.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-1 “Notes on string 3” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0afdeb0817",
+      "source": "Which finger plays fret 2?",
+      "translation": "Amb quin dit toques el trast 2?",
+      "context": "Guitar · Unit 6 · lesson gtr-6-1 “Notes on string 3” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf37a20ea1c",
+      "source": "G and A on string 3, then B, C and D on string 2.",
+      "translation": "G i A a la corda 3, després B, C i D a la corda 2.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-1 “Notes on string 3” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb3d122111a",
+      "source": "G up to D and back",
+      "translation": "De G a D i tornada",
+      "context": "Guitar · Unit 6 · lesson gtr-6-1 “Notes on string 3” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ldea01f41bc",
+      "source": "Notes on string 4",
+      "translation": "Notes a la corda 4",
+      "context": "Guitar · Unit 6 · lesson gtr-6-2 “Notes on string 4” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L36170db9c7",
+      "source": "String 4: D, E and F",
+      "translation": "Corda 4: D, E i F",
+      "context": "Guitar · Unit 6 · lesson gtr-6-2 “Notes on string 4” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7be45b6fa8",
+      "source": "Open string 4 is D. Fret 2 is E and fret 3 is F. Keep your thumb low behind the neck so your fingers can reach.",
+      "translation": "La corda 4 a l’aire és D. El trast 2 és E i el trast 3 és F. Mantén el polze baix darrere del mànec perquè els dits hi arribin.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-2 “Notes on string 4” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lec875a327a",
+      "source": "Pluck string 4 open. That's D.",
+      "translation": "Polsa la corda 4 a l’aire. És D.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-2 “Notes on string 4” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc348a2afe4",
+      "source": "Fret 2, then fret 3: E, then F.",
+      "translation": "Trast 2, després trast 3: E, després F.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-2 “Notes on string 4” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L490f551702",
+      "source": "Open string 4 and string 2, fret 3 share which name?",
+      "translation": "Quin nom comparteixen la corda 4 a l’aire i la corda 2, trast 3?",
+      "context": "Guitar · Unit 6 · lesson gtr-6-2 “Notes on string 4” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L50354aa417",
+      "source": "Both are D, an octave apart: the same note name, one higher than the other.",
+      "translation": "Totes dues són D, separades per una octava: el mateix nom de nota, l’una més aguda que l’altra.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-2 “Notes on string 4” · step 4 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld311c4a00a",
+      "source": "Which D is higher?",
+      "translation": "Quin D és més agut?",
+      "context": "Guitar · Unit 6 · lesson gtr-6-2 “Notes on string 4” · step 5 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5c65302b62",
+      "source": "D, E and F on string 4, then G and A on string 3.",
+      "translation": "D, E i F a la corda 4, després G i A a la corda 3.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-2 “Notes on string 4” · step 6 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf4ed51a241",
+      "source": "Five notes, up and back",
+      "translation": "Cinc notes, amunt i avall",
+      "context": "Guitar · Unit 6 · lesson gtr-6-2 “Notes on string 4” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9c7d73d279",
+      "source": "The C major scale",
+      "translation": "L’escala de C major",
+      "context": "Guitar · Unit 6 · lesson gtr-6-3 “The C major scale” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1b95ed0f2e",
+      "source": "One more note: C",
+      "translation": "Una nota més: C",
+      "context": "Guitar · Unit 6 · lesson gtr-6-3 “The C major scale” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4e01389342",
+      "source": "Put finger 3 on string 5, fret 3. That's C, the note the C major scale starts on.",
+      "translation": "Posa el dit 3 a la corda 5, trast 3. És C, la nota on comença l’escala de C major.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-3 “The C major scale” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ledaf717764",
+      "source": "String 5, fret 3, third finger. That's C.",
+      "translation": "Corda 5, trast 3, tercer dit. És C.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-3 “The C major scale” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L515a00d6bf",
+      "source": "A scale is a ladder",
+      "translation": "Una escala és una escala de mà",
+      "context": "Guitar · Unit 6 · lesson gtr-6-3 “The C major scale” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf665d58f2a",
+      "source": "A scale climbs note by note from one letter to the same letter an octave higher. C major uses only plain letter names: C D E F G A B C.",
+      "translation": "Una escala puja nota a nota d’una lletra a la mateixa lletra una octava més amunt. C major només fa servir lletres sense alteracions: C D E F G A B C.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-3 “The C major scale” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le9a3af72e1",
+      "source": "String 5 fret 3, then strings 4, 3 and 2. Go slowly.",
+      "translation": "Corda 5, trast 3, després cordes 4, 3 i 2. Ves a poc a poc.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-3 “The C major scale” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb785906ad0",
+      "source": "How many different letter names are in C major?",
+      "translation": "Quantes lletres diferents hi ha a C major?",
+      "context": "Guitar · Unit 6 · lesson gtr-6-3 “The C major scale” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf8ed82841b",
+      "source": "Five",
+      "translation": "Cinc",
+      "context": "Guitar · Unit 6 · lesson gtr-6-3 “The C major scale” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb10d663463",
+      "source": "Six",
+      "translation": "Sis",
+      "context": "Guitar · Unit 6 · lesson gtr-6-3 “The C major scale” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L63abb5650f",
+      "source": "Seven",
+      "translation": "Set",
+      "context": "Guitar · Unit 6 · lesson gtr-6-3 “The C major scale” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L43a0400f7f",
+      "source": "C D E F G A B, then C again an octave higher.",
+      "translation": "C D E F G A B, i després C una altra vegada, una octava més amunt.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-3 “The C major scale” · step 5 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld9d98cb22c",
+      "source": "C major, up and down",
+      "translation": "C major, amunt i avall",
+      "context": "Guitar · Unit 6 · lesson gtr-6-3 “The C major scale” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La7dd2f8d1e",
+      "source": "A New Orleans favorite",
+      "translation": "Un clàssic de Nova Orleans",
+      "context": "Guitar · Unit 6 · song gtr-6-4 “When the Saints Go Marching In” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La432715d92",
+      "source": "This traditional spiritual became a jazz standard. It uses C, D, E, F and G on strings 5, 4 and 3.",
+      "translation": "Aquest espiritual tradicional es va convertir en un estàndard de jazz. Fa servir C, D, E, F i G a les cordes 5, 4 i 3.",
+      "context": "Guitar · Unit 6 · song gtr-6-4 “When the Saints Go Marching In” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L96e60c39eb",
+      "source": "The opening: C, E, F, then open G.",
+      "translation": "L’inici: C, E, F i després G a l’aire.",
+      "context": "Guitar · Unit 6 · song gtr-6-4 “When the Saints Go Marching In” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L147e861ab3",
+      "source": "Start after a rest",
+      "translation": "Comença després d’un silenci",
+      "context": "Guitar · Unit 6 · song gtr-6-4 “When the Saints Go Marching In” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8546634af5",
+      "source": "A pickup is a few notes that lead into a strong beat. Here beat one is silent, and C, E and F lead into a long G.",
+      "translation": "Una anacrusi són unes notes que porten a un temps fort. Aquí el primer temps és un silenci, i C, E i F porten a un G llarg.",
+      "context": "Guitar · Unit 6 · song gtr-6-4 “When the Saints Go Marching In” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6dd77c71ef",
+      "source": "The chorus: E E D C, then C E G G G F.",
+      "translation": "La tornada: E E D C, després C E G G G F.",
+      "context": "Guitar · Unit 6 · song gtr-6-4 “When the Saints Go Marching In” · step 6 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6c6c38ee17",
+      "source": "Second half",
+      "translation": "Segona meitat",
+      "context": "Guitar · Unit 6 · song gtr-6-4 “When the Saints Go Marching In” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6973e1fed9",
+      "source": "Chorus",
+      "translation": "Tornada",
+      "context": "Guitar · Unit 6 · song gtr-6-4 “When the Saints Go Marching In” · arrangement · song section label (Intro, Verse 1 …) on a small chip",
+      "max_length": 12
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lae4b1fee8c",
+      "source": "Traditional spiritual",
+      "translation": "Espiritual tradicional",
+      "context": "Guitar · Unit 6 · song gtr-6-4 “When the Saints Go Marching In” · arrangement · lyric credit (a name and year: usually keep as is)"
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7d73221cd1",
+      "source": "Three beats to a bar",
+      "translation": "Tres temps per compàs",
+      "context": "Guitar · Unit 6 · song gtr-6-5 “Amazing Grace” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4442dcca6b",
+      "source": "Amazing Grace is in three: count one, two, three, with the weight on one. Its notes sit on strings 4, 3 and 2.",
+      "translation": "Amazing Grace és a tres temps: compta un, dos, tres, amb el pes a l’u. Les notes són a les cordes 4, 3 i 2.",
+      "context": "Guitar · Unit 6 · song gtr-6-5 “Amazing Grace” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf1f2c89442",
+      "source": "How many beats are in each bar here?",
+      "translation": "Quants temps té cada compàs aquí?",
+      "context": "Guitar · Unit 6 · song gtr-6-5 “Amazing Grace” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L17a25d3e18",
+      "source": "A bar of three feels like a gentle sway: strong, weak, weak.",
+      "translation": "Un compàs de tres temps es balanceja suaument: fort, fluix, fluix.",
+      "context": "Guitar · Unit 6 · song gtr-6-5 “Amazing Grace” · step 2 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L677297f490",
+      "source": "The opening: D, G, B G, B, A. Open strings 4, 3 and 2, plus A.",
+      "translation": "L’inici: D, G, B G, B, A. Cordes 4, 3 i 2 a l’aire, més A.",
+      "context": "Guitar · Unit 6 · song gtr-6-5 “Amazing Grace” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7145911558",
+      "source": "Then down: G, E, D, D.",
+      "translation": "Després baixa: G, E, D, D.",
+      "context": "Guitar · Unit 6 · song gtr-6-5 “Amazing Grace” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7bfa664ab2",
+      "source": "The high part: open B up to D at fret 3, then down through B, G and A.",
+      "translation": "La part aguda: de B a l’aire a D al trast 3, i després baixa per B, G i A.",
+      "context": "Guitar · Unit 6 · song gtr-6-5 “Amazing Grace” · step 7 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6509372805",
+      "source": "Song spotlight: Halogen",
+      "translation": "Cançó: Halogen",
+      "context": "Guitar · Unit 6 · lesson gtr-6-spotlight “Song spotlight: Halogen” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9d4df7ea29",
+      "source": "A riff on strings 3, 4 and 5",
+      "translation": "Un riff a les cordes 3, 4 i 5",
+      "context": "Guitar · Unit 6 · lesson gtr-6-spotlight “Song spotlight: Halogen” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7653b6c98c",
+      "source": "Halogen is a Timbre Original: desert rock in D minor. Its riff uses the notes you just learned: open D, F at fret 3, open G, and C on string 5, fret 3. The whole song is in Songs, under Originals.",
+      "translation": "Halogen és un original de Timbre: rock desèrtic en D menor. El riff fa servir les notes que has après: D a l’aire, F al trast 3, G a l’aire i C a la corda 5, trast 3. La cançó sencera és a Cançons, dins d’Originals.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-spotlight “Song spotlight: Halogen” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4ff1f57db9",
+      "source": "Open string 4, F at fret 3, open string 3, then C at fret 3 on string 5.",
+      "translation": "Corda 4 a l’aire, F al trast 3, corda 3 a l’aire i C al trast 3 de la corda 5.",
+      "context": "Guitar · Unit 6 · lesson gtr-6-spotlight “Song spotlight: Halogen” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9f2544d5f1",
+      "source": "First bar, twice",
+      "translation": "Primer compàs, dues vegades",
+      "context": "Guitar · Unit 6 · lesson gtr-6-spotlight “Song spotlight: Halogen” · step 3 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8d167a9434",
+      "source": "Second bar, twice",
+      "translation": "Segon compàs, dues vegades",
+      "context": "Guitar · Unit 6 · lesson gtr-6-spotlight “Song spotlight: Halogen” · step 4 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9e4d457590",
+      "source": "The riff",
+      "translation": "El riff",
+      "context": "Guitar · Unit 6 · lesson gtr-6-spotlight “Song spotlight: Halogen” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4ce7a9627e",
+      "source": "Riff, up to speed",
+      "translation": "Riff al tempo final",
+      "context": "Guitar · Unit 6 · lesson gtr-6-spotlight “Song spotlight: Halogen” · step 8 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb259d75dfe",
+      "source": "Lower-strings challenge",
+      "translation": "Repte de cordes greus",
+      "context": "Guitar · Unit 6 · challenge gtr-6-6 “Lower-strings challenge” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le0dc25e3d3",
+      "source": "From string 5 to string 1",
+      "translation": "De la corda 5 a la corda 1",
+      "context": "Guitar · Unit 6 · challenge gtr-6-6 “Lower-strings challenge” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3917962920",
+      "source": "No new ideas: every note from C on string 5 up to G on string 1, plus both tunes. Keep your thumb low and your fingers arched.",
+      "translation": "Res de nou: totes les notes de C a la corda 5 fins a G a la corda 1, i totes dues melodies. Mantén el polze baix i els dits arquejats.",
+      "context": "Guitar · Unit 6 · challenge gtr-6-6 “Lower-strings challenge” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4bed9c3edf",
+      "source": "Where is A on string 3?",
+      "translation": "On és A a la corda 3?",
+      "context": "Guitar · Unit 6 · challenge gtr-6-6 “Lower-strings challenge” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L065919aae8",
+      "source": "C major from string 5, up to G on string 1.",
+      "translation": "C major des de la corda 5 fins a G a la corda 1.",
+      "context": "Guitar · Unit 6 · challenge gtr-6-6 “Lower-strings challenge” · step 4 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3a054acc2f",
+      "source": "All the way down",
+      "translation": "Tot avall",
+      "context": "Guitar · Unit 6 · challenge gtr-6-6 “Lower-strings challenge” · step 5 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0a50afc718",
+      "source": "The Saints, up to speed",
+      "translation": "The Saints, al tempo final",
+      "context": "Guitar · Unit 6 · challenge gtr-6-6 “Lower-strings challenge” · step 6 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L1ec8f46e9e",
+      "source": "Amazing Grace, flowing",
+      "translation": "Amazing Grace, amb fluïdesa",
+      "context": "Guitar · Unit 6 · challenge gtr-6-6 “Lower-strings challenge” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L31e7cf74cc",
+      "source": "Songs with chords",
+      "translation": "Cançons amb acords",
+      "context": "Guitar · Unit 7 “Songs with chords” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L648ac30e5c",
+      "source": "A mini F, D7, and two traditional songs with both chords and melody.",
+      "translation": "Un F petit, D7 i dues cançons tradicionals amb acords i melodia.",
+      "context": "Guitar · Unit 7 “Songs with chords” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L068982656c",
+      "source": "The mini F",
+      "translation": "El F petit",
+      "context": "Guitar · Unit 7 · lesson gtr-7-1 “The mini F” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8464614432",
+      "source": "F without the barre",
+      "translation": "F sense celleta",
+      "context": "Guitar · Unit 7 · lesson gtr-7-1 “The mini F” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ldc46ddce5d",
+      "source": "This small F uses four strings. Finger 1 lies flat across strings 1 and 2 at fret 1, finger 2 goes on string 3, fret 2, and finger 3 on string 4, fret 3.",
+      "translation": "Aquest F petit fa servir quatre cordes. El dit 1 s’estira sobre les cordes 1 i 2 al trast 1; el dit 2 va a la corda 3, trast 2, i el dit 3 a la corda 4, trast 3.",
+      "context": "Guitar · Unit 7 · lesson gtr-7-1 “The mini F” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L23ce0802b2",
+      "source": "Roll, don't crush",
+      "translation": "Gira el dit, no aixafis",
+      "context": "Guitar · Unit 7 · lesson gtr-7-1 “The mini F” · step 3 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le706279e3b",
+      "source": "Tilt finger 1 slightly onto its thumb side. The bonier edge presses two strings more easily. Check that string 2 rings.",
+      "translation": "Inclina una mica el dit 1 cap al polze. La vora més òssia prem dues cordes més fàcilment. Comprova que la corda 2 soni.",
+      "context": "Guitar · Unit 7 · lesson gtr-7-1 “The mini F” · step 3 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf93eaafc65",
+      "source": "A minor, C, D, F",
+      "translation": "A menor, C, D, F",
+      "context": "Guitar · Unit 7 · lesson gtr-7-1 “The mini F” · step 5 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L784f56f7aa",
+      "source": "This progression climbs step by step from A minor and lands on your new F. Strum twice per chord and change early.",
+      "translation": "Aquesta progressió puja pas a pas des d’A menor fins al nou F. Rasca dues vegades per acord i canvia abans.",
+      "context": "Guitar · Unit 7 · lesson gtr-7-1 “The mini F” · step 5 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb6ff429b9d",
+      "source": "Greensleeves: the chords",
+      "translation": "Greensleeves: els acords",
+      "context": "Guitar · Unit 7 · song gtr-7-2 “Greensleeves: the chords” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0567c9ef33",
+      "source": "This English tune is over 400 years old. Its chords are all ones you know: A minor, C, G, E minor, F and E. It's in three: strum once per bar, then on every beat.",
+      "translation": "Aquesta melodia anglesa té més de 400 anys. Ja coneixes tots els acords: A menor, C, G, E menor, F i E. És a tres temps: rasca un cop per compàs i després a cada pulsació.",
+      "context": "Guitar · Unit 7 · song gtr-7-2 “Greensleeves: the chords” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L23cfe3141e",
+      "source": "Which strings does the mini F leave silent?",
+      "translation": "Quines cordes no sonen amb el F petit?",
+      "context": "Guitar · Unit 7 · song gtr-7-2 “Greensleeves: the chords” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld57fa0bdcb",
+      "source": "Strings 5 and 6",
+      "translation": "Cordes 5 i 6",
+      "context": "Guitar · Unit 7 · song gtr-7-2 “Greensleeves: the chords” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5f709f471f",
+      "source": "Strings 1 and 2",
+      "translation": "Cordes 1 i 2",
+      "context": "Guitar · Unit 7 · song gtr-7-2 “Greensleeves: the chords” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9c7a826d5e",
+      "source": "Only string 3",
+      "translation": "Només la corda 3",
+      "context": "Guitar · Unit 7 · song gtr-7-2 “Greensleeves: the chords” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0f17702226",
+      "source": "The mini F starts on string 4. Begin your strum there and skip strings 5 and 6.",
+      "translation": "El F petit comença a la corda 4. Comença el rascat allà i omet les cordes 5 i 6.",
+      "context": "Guitar · Unit 7 · song gtr-7-2 “Greensleeves: the chords” · step 2 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2e09dac6dc",
+      "source": "Greensleeves: the melody",
+      "translation": "Greensleeves: la melodia",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le6e859cec4",
+      "source": "Sharps: one fret higher",
+      "translation": "Sostinguts: un trast més amunt",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L35377d621e",
+      "source": "A sharp raises a note by one fret. Greensleeves uses G sharp on string 3, fret 1, and F sharp on string 4, fret 4. Reach that one with your little finger.",
+      "translation": "Un sostingut apuja una nota un trast. Greensleeves fa servir G sostingut a la corda 3, trast 1, i F sostingut a la corda 4, trast 4. Arriba-hi amb el dit petit.",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld46172ac7a",
+      "source": "G sharp, A, B: string 3 at frets 1 and 2, then open string 2.",
+      "translation": "G sostingut, A, B: corda 3 als trasts 1 i 2, després corda 2 a l’aire.",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb9e74eceda",
+      "source": "The opening: A, C D, E F E, D B.",
+      "translation": "L’inici: A, C D, E F E, D B.",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcd09579b2c",
+      "source": "First phrase",
+      "translation": "Primera frase musical",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · step 4 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3f1bdf177c",
+      "source": "A sharp moves a note…",
+      "translation": "Un sostingut mou una nota…",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · step 5 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L26f479456a",
+      "source": "One fret higher",
+      "translation": "Un trast més amunt",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L67920ab8cb",
+      "source": "One fret lower",
+      "translation": "Un trast més avall",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L05e740748b",
+      "source": "To the next string",
+      "translation": "A la corda següent",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · step 5 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0f82fbbbb4",
+      "source": "Sharp means one fret higher. G sharp sits between G and A.",
+      "translation": "Sostingut vol dir un trast més amunt. G sostingut és entre G i A.",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · step 5 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2682308b1a",
+      "source": "The chorus starts high: G on string 1, fret 3, then F sharp at fret 2.",
+      "translation": "La tornada comença aguda: G a la corda 1, trast 3, després F sostingut al trast 2.",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · step 6 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L06e8a4031a",
+      "source": "Greensleeves, verse",
+      "translation": "Greensleeves, estrofa",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · step 7 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L768ad272b1",
+      "source": "Traditional (England, 1580s)",
+      "translation": "Tradicional (Anglaterra, dècada de 1580)",
+      "context": "Guitar · Unit 7 · song gtr-7-3 “Greensleeves: the melody” · arrangement · lyric credit (a name and year: usually keep as is)"
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L23e321ad88",
+      "source": "D7 and the Clementine chords",
+      "translation": "D7 i els acords de Clementine",
+      "context": "Guitar · Unit 7 · lesson gtr-7-4 “D7 and the Clementine chords” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L53daebd69c",
+      "source": "D7 leans toward G",
+      "translation": "D7 tendeix cap a G",
+      "context": "Guitar · Unit 7 · lesson gtr-7-4 “D7 and the Clementine chords” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8e1f78c027",
+      "source": "A seventh chord adds a note that pulls toward home. D7 wants to move to G. Fingers: 2 on string 3, fret 2; 1 on string 2, fret 1; 3 on string 1, fret 2.",
+      "translation": "Un acord de setena afegeix una nota que atreu cap a la tònica. D7 vol anar a G. Dits: 2 a la corda 3, trast 2; 1 a la corda 2, trast 1; 3 a la corda 1, trast 2.",
+      "context": "Guitar · Unit 7 · lesson gtr-7-4 “D7 and the Clementine chords” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L37b69acd66",
+      "source": "This American ballad from the 1880s needs only G and D7. It's in three, like Amazing Grace. Strum once per bar, then on every beat.",
+      "translation": "Aquesta balada americana de la dècada de 1880 només necessita G i D7. És a tres temps, com Amazing Grace. Rasca un cop per compàs i després a cada pulsació.",
+      "context": "Guitar · Unit 7 · lesson gtr-7-4 “D7 and the Clementine chords” · step 5 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9da40250c2",
+      "source": "Three strings and a stretch",
+      "translation": "Tres cordes i una extensió",
+      "context": "Guitar · Unit 7 · song gtr-7-5 “Clementine” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbf20a5e6df",
+      "source": "Clementine's melody sits on strings 4, 3 and 2. Its last line uses F sharp again: string 4, fret 4, little finger.",
+      "translation": "La melodia de Clementine és a les cordes 4, 3 i 2. L’última frase torna a fer servir F sostingut: corda 4, trast 4, dit petit.",
+      "context": "Guitar · Unit 7 · song gtr-7-5 “Clementine” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8897587e88",
+      "source": "The opening: G G G, down to open D, up to open B.",
+      "translation": "L’inici: G G G, baixa a D a l’aire i puja a B a l’aire.",
+      "context": "Guitar · Unit 7 · song gtr-7-5 “Clementine” · step 2 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L79ea537c97",
+      "source": "Which chord pulls toward G?",
+      "translation": "Quin acord atreu cap a G?",
+      "context": "Guitar · Unit 7 · song gtr-7-5 “Clementine” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L58d52b16c1",
+      "source": "D7's extra note leans toward G. When G arrives, the tension lets go.",
+      "translation": "La nota afegida de D7 tendeix cap a G. Quan arriba G, la tensió es desfà.",
+      "context": "Guitar · Unit 7 · song gtr-7-5 “Clementine” · step 3 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L27def3148b",
+      "source": "The last line: A, open D, F sharp at fret 4, A, then home to G.",
+      "translation": "L’última frase: A, D a l’aire, F sostingut al trast 4, A i tornada a G.",
+      "context": "Guitar · Unit 7 · song gtr-7-5 “Clementine” · step 5 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L359ebbaada",
+      "source": "Song spotlight: Ghost Light",
+      "translation": "Cançó: Llum fantasma",
+      "context": "Guitar · Unit 7 · lesson gtr-7-spotlight “Song spotlight: Ghost Light” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L93ad46cbed",
+      "source": "A ballad in A minor",
+      "translation": "Una balada en A menor",
+      "context": "Guitar · Unit 7 · lesson gtr-7-spotlight “Song spotlight: Ghost Light” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbf48d3e80a",
+      "source": "Ghost Light is a Timbre Original: a slow, dark ballad. Its verse walks A minor, F, C and E, so your mini F gets a song, and the G sharp in E pulls the tune back home. The whole song is in Songs, under Originals.",
+      "translation": "Llum fantasma és un original de Timbre: una balada lenta i fosca. L’estrofa recorre A menor, F, C i E: el teu F petit ja té una cançó, i el G sostingut d’E retorna la melodia a la tònica. La cançó sencera és a Cançons, dins d’Originals.",
+      "context": "Guitar · Unit 7 · lesson gtr-7-spotlight “Song spotlight: Ghost Light” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4812ecf7d6",
+      "source": "Listen to the verse's last chord. Major or minor?",
+      "translation": "Escolta l’últim acord de l’estrofa. Major o menor?",
+      "context": "Guitar · Unit 7 · lesson gtr-7-spotlight “Song spotlight: Ghost Light” · step 3 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L5d89aa22bd",
+      "source": "Big on one",
+      "translation": "Fort a l’u",
+      "context": "Guitar · Unit 7 · lesson gtr-7-spotlight “Song spotlight: Ghost Light” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2fea9a5a2c",
+      "source": "The ballad strum: one big strum on beat one and let it ring, another on three, then down-up on four. The space after each strum is part of the song.",
+      "translation": "El rascat de balada: un rascat fort al primer temps que deixes ressonar, un altre al tres i avall-amunt al quatre. L’espai entre rascats forma part de la cançó.",
+      "context": "Guitar · Unit 7 · lesson gtr-7-spotlight “Song spotlight: Ghost Light” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld0d9c0f923",
+      "source": "The verse's last line: open B, C at fret 1, B, G sharp at fret 1 on string 3, B, then open E.",
+      "translation": "Última frase de l’estrofa: B a l’aire, C al trast 1, B, G sostingut al trast 1 de la corda 3, B i E a l’aire.",
+      "context": "Guitar · Unit 7 · lesson gtr-7-spotlight “Song spotlight: Ghost Light” · step 6 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Le41fc3cfdf",
+      "source": "Songbook challenge",
+      "translation": "Repte del cançoner",
+      "context": "Guitar · Unit 7 · challenge gtr-7-6 “Songbook challenge” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcf1ece0f66",
+      "source": "Two songs, start to finish",
+      "translation": "Dues cançons de principi a fi",
+      "context": "Guitar · Unit 7 · challenge gtr-7-6 “Songbook challenge” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L71327ca01d",
+      "source": "No new ideas: the mini F, D7 and both songs from this unit. Change chords early and let the melodies sing.",
+      "translation": "Res de nou: el F petit, D7 i les dues cançons de la unitat. Canvia d’acord abans i deixa cantar les melodies.",
+      "context": "Guitar · Unit 7 · challenge gtr-7-6 “Songbook challenge” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld8ca78c4d8",
+      "source": "Which chord pulls hardest toward G?",
+      "translation": "Quin acord atreu més cap a G?",
+      "context": "Guitar · Unit 7 · challenge gtr-7-6 “Songbook challenge” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb6210cc6ee",
+      "source": "Clementine, up to speed",
+      "translation": "Clementine, al tempo final",
+      "context": "Guitar · Unit 7 · challenge gtr-7-6 “Songbook challenge” · step 8 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L3442d12e9f",
+      "source": "Seventh and sus chords",
+      "translation": "Acords de setena i sus",
+      "context": "Guitar · Unit 8 “Seventh and sus chords” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lae93d9d759",
+      "source": "E7, A7, G7 and B7, sus chords, the shuffle and your first 12-bar blues.",
+      "translation": "E7, A7, G7 i B7, acords sus, el shuffle i el teu primer blues de 12 compassos.",
+      "context": "Guitar · Unit 8 “Seventh and sus chords” · unit summary",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La6510a8eaf",
+      "source": "E7 and A7",
+      "translation": "E7 i A7",
+      "context": "Guitar · Unit 8 · lesson gtr-8-1 “E7 and A7” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L94294abc71",
+      "source": "E7: lift one finger",
+      "translation": "E7: aixeca un dit",
+      "context": "Guitar · Unit 8 · lesson gtr-8-1 “E7 and A7” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4d8fc5434e",
+      "source": "Play E, then lift finger 3 off string 4. The open D that rings is the seventh, a note that adds bluesy tension.",
+      "translation": "Toca E i aixeca el dit 3 de la corda 4. El D a l’aire que sona és la setena, una nota que afegeix tensió de blues.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-1 “E7 and A7” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lefe94a9cd8",
+      "source": "Which chord has the seventh?",
+      "translation": "Quin acord té la setena?",
+      "context": "Guitar · Unit 8 · lesson gtr-8-1 “E7 and A7” · step 3 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L68d9990b7c",
+      "source": "A7: the same trick",
+      "translation": "A7: el mateix truc",
+      "context": "Guitar · Unit 8 · lesson gtr-8-1 “E7 and A7” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7458302143",
+      "source": "Play A, then lift finger 2 off string 3. Open G rings, and A becomes A7.",
+      "translation": "Toca A i aixeca el dit 2 de la corda 3. Sona G a l’aire i A es converteix en A7.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-1 “E7 and A7” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lac4e52e004",
+      "source": "How do you turn E into E7 here?",
+      "translation": "Com transformes E en E7 aquí?",
+      "context": "Guitar · Unit 8 · lesson gtr-8-1 “E7 and A7” · step 6 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L17491176c3",
+      "source": "Add finger 4",
+      "translation": "Afegeix el dit 4",
+      "context": "Guitar · Unit 8 · lesson gtr-8-1 “E7 and A7” · step 6 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbe89acc771",
+      "source": "Move up one fret",
+      "translation": "Puja un trast",
+      "context": "Guitar · Unit 8 · lesson gtr-8-1 “E7 and A7” · step 6 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L373b53c523",
+      "source": "Lift finger 3",
+      "translation": "Aixeca el dit 3",
+      "context": "Guitar · Unit 8 · lesson gtr-8-1 “E7 and A7” · step 6 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L807478d21f",
+      "source": "G7 and B7",
+      "translation": "G7 i B7",
+      "context": "Guitar · Unit 8 · lesson gtr-8-2 “G7 and B7” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L4817cf6d35",
+      "source": "G7: a new high note",
+      "translation": "G7: una nota aguda nova",
+      "context": "Guitar · Unit 8 · lesson gtr-8-2 “G7 and B7” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0015244e3f",
+      "source": "G7 keeps the low G but puts F on top: finger 3 on string 6, fret 3; finger 2 on string 5, fret 2; finger 1 on string 1, fret 1.",
+      "translation": "G7 manté el G greu però hi posa F al damunt: dit 3 a la corda 6, trast 3; dit 2 a la corda 5, trast 2; dit 1 a la corda 1, trast 1.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-2 “G7 and B7” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc6252403e7",
+      "source": "B7: all four fingers",
+      "translation": "B7: tots quatre dits",
+      "context": "Guitar · Unit 8 · lesson gtr-8-2 “G7 and B7” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Laae818fc1b",
+      "source": "Build B7 from string 5: finger 2 at fret 2, finger 1 on string 4, fret 1, finger 3 on string 3, fret 2, little finger on string 1, fret 2. String 2 rings open.",
+      "translation": "Forma B7 des de la corda 5: dit 2 al trast 2; dit 1 a la corda 4, trast 1; dit 3 a la corda 3, trast 2; dit petit a la corda 1, trast 2. La corda 2 sona a l’aire.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-2 “G7 and B7” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L224c7417dc",
+      "source": "Which chord does B7 lead to most naturally?",
+      "translation": "A quin acord porta B7 amb més naturalitat?",
+      "context": "Guitar · Unit 8 · lesson gtr-8-2 “G7 and B7” · step 6 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L68d4cfda41",
+      "source": "B7 pulls toward E. Its tension melts into E minor or E.",
+      "translation": "B7 atreu cap a E. La tensió es desfà en E menor o E.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-2 “G7 and B7” · step 6 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L0024a55a06",
+      "source": "The shuffle",
+      "translation": "El shuffle",
+      "context": "Guitar · Unit 8 · lesson gtr-8-3 “The shuffle” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La3880c6876",
+      "source": "Long-short, long-short",
+      "translation": "Llarg-curt, llarg-curt",
+      "context": "Guitar · Unit 8 · lesson gtr-8-3 “The shuffle” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L090369bc10",
+      "source": "A shuffle splits each beat unevenly: a long strum down, a short one up. It's the heartbeat of the blues. Think hum-pty, dum-pty.",
+      "translation": "El shuffle divideix cada pulsació de manera desigual: un rascat llarg avall i un de curt amunt. És el batec del blues. Pensa en taaa-ta, taaa-ta.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-3 “The shuffle” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L115c17a080",
+      "source": "In a shuffle, each beat splits into…",
+      "translation": "En un shuffle, cada pulsació es divideix en…",
+      "context": "Guitar · Unit 8 · lesson gtr-8-3 “The shuffle” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Ld77b3c7b61",
+      "source": "Long, then short",
+      "translation": "Llarg, després curt",
+      "context": "Guitar · Unit 8 · lesson gtr-8-3 “The shuffle” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf91de05d29",
+      "source": "Two equal halves",
+      "translation": "Dues meitats iguals",
+      "context": "Guitar · Unit 8 · lesson gtr-8-3 “The shuffle” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf5424db4cf",
+      "source": "Short, then long",
+      "translation": "Curt, després llarg",
+      "context": "Guitar · Unit 8 · lesson gtr-8-3 “The shuffle” · step 3 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L7ff888e22b",
+      "source": "12-bar blues in E",
+      "translation": "Blues de 12 compassos en E",
+      "context": "Guitar · Unit 8 · lesson gtr-8-4 “12-bar blues in E” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L16297cc98c",
+      "source": "Twelve bars of blues",
+      "translation": "Dotze compassos de blues",
+      "context": "Guitar · Unit 8 · lesson gtr-8-4 “12-bar blues in E” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L82b33bf087",
+      "source": "Many blues songs follow one 12-bar plan. In E: four bars of E7, two of A7, two of E7, then one each of B7, A7, E7 and B7.",
+      "translation": "Molts blues segueixen un esquema de 12 compassos. En E: quatre compassos d’E7, dos d’A7, dos d’E7 i un de cadascun d’aquests: B7, A7, E7 i B7.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-4 “12-bar blues in E” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L237070b1ce",
+      "source": "How many bars of E7 open the 12-bar blues?",
+      "translation": "Quants compassos d’E7 obren el blues de 12 compassos?",
+      "context": "Guitar · Unit 8 · lesson gtr-8-4 “12-bar blues in E” · step 2 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf14bcf9b91",
+      "source": "Twelve",
+      "translation": "Dotze",
+      "context": "Guitar · Unit 8 · lesson gtr-8-4 “12-bar blues in E” · step 2 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb0940ee393",
+      "source": "The turnaround",
+      "translation": "L’enllaç de tornada",
+      "context": "Guitar · Unit 8 · lesson gtr-8-4 “12-bar blues in E” · step 4 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L443af6d6cc",
+      "source": "The last four bars move faster: B7, A7, E7, then B7, which turns you around to the top. Change early and keep the shuffle going.",
+      "translation": "Els quatre últims compassos canvien més de pressa: B7, A7, E7 i B7, que et torna al principi. Canvia abans i mantén el shuffle.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-4 “12-bar blues in E” · step 4 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L9aba20b233",
+      "source": "Sus chords",
+      "translation": "Acords sus",
+      "context": "Guitar · Unit 8 · lesson gtr-8-5 “Sus chords” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L2bfd46d927",
+      "source": "Suspended chords",
+      "translation": "Acords suspesos",
+      "context": "Guitar · Unit 8 · lesson gtr-8-5 “Sus chords” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf068a34024",
+      "source": "A sus chord swaps the note that makes it major or minor for a neighbor. It sounds open and unresolved until it settles home.",
+      "translation": "Un acord sus substitueix la nota que el fa major o menor per una de veïna. Sona obert i sense resoldre fins que torna a reposar.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-5 “Sus chords” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La584c5cd66",
+      "source": "Which chord sounds settled?",
+      "translation": "Quin acord sona estable?",
+      "context": "Guitar · Unit 8 · lesson gtr-8-5 “Sus chords” · step 3 (listen) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L85723bbf1d",
+      "source": "Dsus2 and Asus4",
+      "translation": "Dsus2 i Asus4",
+      "context": "Guitar · Unit 8 · lesson gtr-8-5 “Sus chords” · step 5 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L8d4acd4307",
+      "source": "Lift finger 2 off string 1 to get Dsus2. For Asus4, play A and add your little finger on string 2, fret 3.",
+      "translation": "Aixeca el dit 2 de la corda 1 per fer Dsus2. Per a Asus4, toca A i afegeix el dit petit a la corda 2, trast 3.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-5 “Sus chords” · step 5 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L6c79a5739e",
+      "source": "Song spotlight: Rust Belt Shuffle",
+      "translation": "Cançó: Shuffle del cinturó industrial",
+      "context": "Guitar · Unit 8 · lesson gtr-8-spotlight “Song spotlight: Rust Belt Shuffle” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L96bda2a527",
+      "source": "A shuffle with a tune",
+      "translation": "Un shuffle amb melodia",
+      "context": "Guitar · Unit 8 · lesson gtr-8-spotlight “Song spotlight: Rust Belt Shuffle” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L74f0435d4b",
+      "source": "Rust Belt Shuffle is a Timbre Original: a 12-bar blues in E, the plan you just strummed, with a swung tune on top. Keep the long-short feel in both hands. The whole song is in Songs, under Originals.",
+      "translation": "Shuffle del cinturó industrial és un original de Timbre: un blues de 12 compassos en E, l’esquema que has rascat, amb una melodia amb swing. Mantén el ritme llarg-curt amb totes dues mans. La cançó sencera és a Cançons, dins d’Originals.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-spotlight “Song spotlight: Rust Belt Shuffle” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lc580272a74",
+      "source": "Open G, then G sharp at fret 1 on string 3, then open B: the bluesy slide in bar two.",
+      "translation": "G a l’aire, G sostingut al trast 1 de la corda 3 i B a l’aire: el lliscament de blues del segon compàs.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-spotlight “Song spotlight: Rust Belt Shuffle” · step 3 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L28645e996b",
+      "source": "Bar two slides from G to G sharp. Which one belongs to E7?",
+      "translation": "El segon compàs llisca de G a G sostingut. Quin pertany a E7?",
+      "context": "Guitar · Unit 8 · lesson gtr-8-spotlight “Song spotlight: Rust Belt Shuffle” · step 4 (quiz) · question or instruction",
+      "max_length": 140
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lcb496b2462",
+      "source": "G sharp",
+      "translation": "G sostingut",
+      "context": "Guitar · Unit 8 · lesson gtr-8-spotlight “Song spotlight: Rust Belt Shuffle” · step 4 (quiz) · quiz answer",
+      "max_length": 48
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L49a23f903d",
+      "source": "E7 is E, G sharp, B and D. G is the blue note: it rubs against the chord, then slides into it.",
+      "translation": "E7 és E, G sostingut, B i D. G és la nota de blues: crea tensió amb l’acord i després hi llisca a dins.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-spotlight “Song spotlight: Rust Belt Shuffle” · step 4 (quiz) · explanation after a quiz answer",
+      "max_length": 220
+    },
+    {
+      "table": "Learn.strings",
+      "key": "La29acbee78",
+      "source": "First four bars",
+      "translation": "Els quatre primers compassos",
+      "context": "Guitar · Unit 8 · lesson gtr-8-spotlight “Song spotlight: Rust Belt Shuffle” · step 5 (along) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "L340c93526e",
+      "source": "Bar nine, over B7: F sharp at fret 2 on string 1, open E, D sharp at fret 4 on string 2 with your little finger, then B.",
+      "translation": "Novè compàs, sobre B7: F sostingut al trast 2 de la corda 1, E a l’aire, D sostingut al trast 4 de la corda 2 amb el dit petit i B.",
+      "context": "Guitar · Unit 8 · lesson gtr-8-spotlight “Song spotlight: Rust Belt Shuffle” · step 6 (notes) · hint under an exercise",
+      "max_length": 120
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lbe7d26f208",
+      "source": "Blues challenge",
+      "translation": "Repte de blues",
+      "context": "Guitar · Unit 8 · challenge gtr-8-6 “Blues challenge” · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lb6a2867f63",
+      "source": "Sevenths, sus and shuffle",
+      "translation": "Setenes, sus i shuffle",
+      "context": "Guitar · Unit 8 · challenge gtr-8-6 “Blues challenge” · step 1 (explain) · title",
+      "max_length": 42
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lec73f8d41b",
+      "source": "No new ideas: seventh chords, sus chords and the 12-bar shuffle. Keep the long-short swing steady through every change.",
+      "translation": "Res de nou: acords de setena, acords sus i el shuffle de 12 compassos. Mantén el swing llarg-curt constant a cada canvi.",
+      "context": "Guitar · Unit 8 · challenge gtr-8-6 “Blues challenge” · step 1 (explain) · lesson card text",
+      "max_length": 300
+    },
+    {
+      "table": "Learn.strings",
+      "key": "Lf698ed242e",
+      "source": "Which chord uses all four fingers?",
+      "translation": "Quin acord fa servir tots quatre dits?",
+      "context": "Guitar · Unit 8 · challenge gtr-8-6 “Blues challenge” · step 3 (quiz) · question or instruction",
+      "max_length": 140
+    }
+  ]
+}

@@ -592,6 +592,7 @@ struct ExplainStep: View {
             turnCue(compact: false).hidden()
             if cueShown {
                 turnCue(compact: false)
+                    .accessibilityIdentifier("lesson.explain.turnCue")
                     .id(demo == .heard)
                     .transition(ShowMe.captionTransition(reduceMotion: reduceMotion))
             }

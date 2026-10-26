@@ -1,0 +1,65 @@
+{
+  "source_commit": "6d8272fab8829993b219220a4da84924ff7761f4",
+  "run": 40311656530,
+  "verified_at": "2026-10-26T13:14:45Z",
+  "status": "all-eight-shards-success",
+  "scope": "48 non-English welcome/tab launches plus the first lesson where an imported map existed at this commit (28 translated lesson locales). Not every lesson, current 32-locale lesson content, or all store screenshots.",
+  "jobs": [
+    {
+      "id": 121534064812,
+      "name": "localized-launch (cs,sk,pl,ru,uk,hr)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/azerish25-ux/tuner/actions/runs/40311656530/job/121534064812"
+    },
+    {
+      "id": 121534064984,
+      "name": "localized-launch (ja,ko,zh-CN,th,vi,id)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/azerish25-ux/tuner/actions/runs/40311656530/job/121534064984"
+    },
+    {
+      "id": 121534065043,
+      "name": "localized-launch (hi,gu,kn,ml,mr,pa)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/azerish25-ux/tuner/actions/runs/40311656530/job/121534065043"
+    },
+    {
+      "id": 121534065108,
+      "name": "localized-launch (de,es,fr,it,pt,ca)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/azerish25-ux/tuner/actions/runs/40311656530/job/121534065108"
+    },
+    {
+      "id": 121534065139,
+      "name": "localized-launch (da,no,sv,fi,is,nl)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/azerish25-ux/tuner/actions/runs/40311656530/job/121534065139"
+    },
+    {
+      "id": 121534065140,
+      "name": "localized-launch (ta,te,tr,el,sw,zu)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/azerish25-ux/tuner/actions/runs/40311656530/job/121534065140"
+    },
+    {
+      "id": 121534065143,
+      "name": "localized-launch (ar,fa,he,ur,bg,bn)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/azerish25-ux/tuner/actions/runs/40311656530/job/121534065143"
+    },
+    {
+      "id": 121534065200,
+      "name": "localized-launch (et,lt,lv,hu,ro,sl)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/azerish25-ux/tuner/actions/runs/40311656530/job/121534065200"
+    }
+  ]
+}
