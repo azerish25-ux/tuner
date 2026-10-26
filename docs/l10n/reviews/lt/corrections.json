@@ -1,0 +1,2223 @@
+[
+ {
+  "locale": "lt",
+  "key": "Leacb886dc3",
+  "source": "Roller Rink's loop is the one, six, four and five of G. Which chord is the six?",
+  "old": "Roller Rink seka – pirmas, šeštas, ketvirtas ir penktas G laipsniai. Kuris akordas šeštas?",
+  "new": "„Roller Rink“ sekoje – G gamos pirmo, šešto, ketvirto ir penkto laipsnių akordai. Kuris akordas yra šešto laipsnio?",
+  "source_sha256": "68d5990da28997b510a5b41a7b275c0b767216fe3e66fae7d117934fb7fa7d2f",
+  "old_sha256": "751cc69b1d02f724d9edec7df9f04ea4801341b1c890f3a6134ffc564c8fdad1",
+  "new_sha256": "8ec1cbc9f1c1283590cfdc3918e5ac5889795a1171e94660075a9914f0c332f8",
+  "reason": "The loop consists of chords built on scale degrees one, six, four and five, not scale degrees alone or a chronological sixth chord. Explicit laipsnių akordai and šešto laipsnio remove the misleading sequential question.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-012.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-0071"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lc5aa12e43e",
+  "source": "Power chords and riffs",
+  "old": "Kvintakordžiai ir rifai",
+  "new": "Jėgos akordai ir rifai",
+  "source_sha256": "4652456889f69dec5af5b7ed7bb938d66545560ddf23d307f6c8cd9b77d00b8e",
+  "old_sha256": "61af3612cadcbb23e6bab86f3dc8bd1c9cdc11a37b9cefcf9ce6c5541cbbb0db",
+  "new_sha256": "0598c3c8bd1dcebb7d541be42f44ca559409ccdc3344be6b6b240c0c564b0aeb",
+  "reason": "Name the rock-guitar root/fifth sonority with the attested Lithuanian term jėgos akordai, not unsupported kvintakordžiai, which risks confusion with the classical triad term kvintakordas.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-0293"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L6a3f43a116",
+  "source": "Power chords, open and movable, palm muting and a riff of your own.",
+  "old": "Atvirieji ir perkeliami kvintakordžiai, slopinimas delnu ir savas rifas.",
+  "new": "Atvirieji ir perkeliami jėgos akordai, slopinimas delnu ir savas rifas.",
+  "source_sha256": "1457d3fb0a1fb7f80b65b5b056a7d3c8ccc6f36b2d6b2fc6df38ed5c7127044e",
+  "old_sha256": "a78f6084d5c8dcf81c350cecc497dbf9be6442463bdaa289c16add4325e4a78b",
+  "new_sha256": "8ae3382fb0c3e1aaa1e7a96d224eec4961dc83a9787693777f9539aeb4401b27",
+  "reason": "The unit summary must use jėgos akordai for open and movable root/fifth power chords; preserve both forms, palm muting and the personal riff.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-0293"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L7755242089",
+  "source": "A power chord plays only the root and the fifth, the note five letters up. Neither major nor minor, it stays punchy, even loud. E5 is the bottom of E minor.",
+  "old": "Kvintakordį sudaro tik pagrindinis tonas ir kvinta – nata, esanti penkiomis raidėmis aukščiau. Nei mažoras, nei minoras, jis išlieka raiškus net grojant garsiai. E5 – apatinė E minoro dalis.",
+  "new": "Jėgos akordą sudaro tik pagrindinis tonas ir kvinta – penkta nata, skaičiuojant raides nuo pagrindinio tono. Nei mažorinis, nei minorinis, jis išlieka raiškus net grojant garsiai. E5 – apatinė E minoro dalis.",
+  "source_sha256": "600f105f7686167a33af97431112e18d82c1cd6842177ceabf8f6cf2426ea59c",
+  "old_sha256": "b9152de7480eb5b1e15c6b46771942cf2a7c9179a288003e62cf8c745f991b78",
+  "new_sha256": "43decc1c403f107118ff5bb6a9cf5974423d685ccc5a7cc07ee8f5942bb68698",
+  "reason": "Use jėgos akordas for a root/fifth sonority with no third; penkta nata counted from the root expresses the inclusive fifth rather than moving five letters beyond it. Adjectival mažorinis/minorinis describe chord quality. E5 and E are unchanged.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-0295"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L179f13cc65",
+  "source": "Which notes make a power chord?",
+  "old": "Kokios natos sudaro kvintakordį?",
+  "new": "Kokios natos sudaro jėgos akordą?",
+  "source_sha256": "888ae0633c130879aeb1a8ee33a2184a3792d28b5ac0b408a0ff8824578cb8b7",
+  "old_sha256": "e57f267da6a514f41de4fbe8653a1ec7cedef95f369c67e4262b86c59ba44111",
+  "new_sha256": "a751c71df2eade2757f32d3adccb03255c1036d0299b73203055415bf98305f9",
+  "reason": "The full quiz contrasts root+third, three open strings and root+fifth. Jėgos akordą correctly names the latter without suggesting a classical triad.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-1356"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L0e294ddaf1",
+  "source": "Movable power chords",
+  "old": "Perkeliami kvintakordžiai",
+  "new": "Perkeliami jėgos akordai",
+  "source_sha256": "dd256458b1c5e3b88d2d253db4a513cb8c341812eed01d3158fdd888cbd492db",
+  "old_sha256": "3102e7b972ef28bbcddc50e7f9a0f2978a7e7eb8e8148b1ac4fdcc5f89ee07b8",
+  "new_sha256": "2de6b2fc3bf53ea35e059ca2550d0ff8430ff6449d6ea1b738562d613c96fd44",
+  "reason": "This lesson teaches movable root/fifth guitar shapes; use the same correct jėgos akordai term as their definition.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-0302"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Le78114d6a4",
+  "source": "Your root is on string 6, fret 5. Which power chord is it?",
+  "old": "Pagrindinis tonas – 6 stygoje ties 5 skirsniu. Koks tai kvintakordis?",
+  "new": "Pagrindinis tonas – 6 stygoje ties 5 skirsniu. Koks tai jėgos akordas?",
+  "source_sha256": "980001b8fd7f474dda944cb896745f26935b8f424c852a037a57b306f21c6f8e",
+  "old_sha256": "e3f3f40561b7549826bc676b4bbae49c378dfe13daeabc3643e674e53a666adc",
+  "new_sha256": "869e497724f72d267edc52b402ec7aa252d2f0dc12433e21e8c832d1fd979d55",
+  "reason": "Quiz asks which G5/A5/C5 root-fifth shape has its root at the stated fret. Correct the sonority name while preserving both exact numeric instructions.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-0671"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lcf460ca502",
+  "source": "Riffs and power chords",
+  "old": "Rifai ir kvintakordžiai",
+  "new": "Rifai ir jėgos akordai",
+  "source_sha256": "9402b9de30b34a376193c335765651688ed79cb922b3acf470be0625b7f2d617",
+  "old_sha256": "962fade2026e58a0565c2247d15b5bf35364b6ce71b9a4a394b0a4bf60916f19",
+  "new_sha256": "ce0fef1cf38e9629bf2e582ba247de56831ff2020be74d90fb64d6f67ec6a44a",
+  "reason": "The lesson title pairs riffs with rock power chords, not triads; use jėgos akordai.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-0313"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lfc5748dd2c",
+  "source": "Songs often answer a riff with power chords. Play the riff, then hit the chords on one, the and of two, and four.",
+  "old": "Dainose rifui dažnai atsako kvintakordžiai. Pagrokite rifą, tada akordus per pirmą dūžį, ties antro dūžio „ir“ ir per ketvirtą.",
+  "new": "Dainose rifui dažnai atsako jėgos akordai. Pagrokite rifą, tada akordus per pirmą dūžį, ties antro dūžio „ir“ ir per ketvirtą.",
+  "source_sha256": "eedeb2c3d173d5d3ee5d213c010c0d691f4c0324860b2ed60b7fb1165f59dbf9",
+  "old_sha256": "c4461c72f8de35d02f3bc9217c6d4c13bb1da7b610d6a0cdf8e3f576acd60aff",
+  "new_sha256": "82d3eb5a2818fda547a0c6d2cd740ac238db93916707d3a6736c445fe598c832",
+  "reason": "Use jėgos akordai for the riff response and retain the three exact rhythmic attacks: beat one, and of two, and four.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-0314"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L73601df885",
+  "source": "Basement Weather is a Timbre Original: garage rock in A. A riff on the low strings opens it, then power chords punch back on one, the and of two, and four. Keep your palm at the bridge. The whole song is in Songs, under Originals.",
+  "old": "Basement Weather – Timbre originali garažinio roko daina A tonacijoje. Ją pradeda žemų stygų rifas, o kvintakordžiai atsako per pirmą dūžį, antro dūžio „ir“ ir ketvirtą. Delną laikykite prie tiltelio. Visa daina – „Dainos“, „Originalios dainos“.",
+  "new": "Basement Weather – Timbre originali garažinio roko daina A tonacijoje. Ją pradeda žemų stygų rifas, o jėgos akordai atsako per pirmą dūžį, antro dūžio „ir“ ir ketvirtą. Delną laikykite prie tiltelio. Visa daina – „Dainos“, „Originalios dainos“.",
+  "source_sha256": "39c4701f4bc20fe140e7d835967132d0f5014a3ffa4713605d7519097f2769f4",
+  "old_sha256": "2907dff585eeb14f219a2daa09c014fd4a82f7e785430a0682de5a0a527fe793",
+  "new_sha256": "5d43cfa601c4b9c7bbeb2ac57dffc1146c608c508d3aa8e9634a63392ad088c4",
+  "reason": "Power-chord replies are jėgos akordai. Keep original song name, A key, three attacks, physical palm-at-bridge instruction and UI destinations intact.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-0317"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L09ccba787a",
+  "source": "No new ideas: power chords, open and movable, palm muting and your riff. Lock in with the click and keep the mutes tight.",
+  "old": "Nieko naujo: atvirieji ir perkeliami kvintakordžiai, slopinimas delnu ir jūsų rifas. Pataikykite į spragtelėjimus ir tiksliai slopinkite.",
+  "new": "Nieko naujo: atvirieji ir perkeliami jėgos akordai, slopinimas delnu ir jūsų rifas. Pataikykite į spragtelėjimus ir tiksliai slopinkite.",
+  "source_sha256": "d92babc3b5e96830238894a843f6382a174cb77e0e86b5efc1060acf88bbac5f",
+  "old_sha256": "c3dee68a185a9e3e3278e557a3f4505d2275cb1225adfc07ccd85185449c3339",
+  "new_sha256": "be398e2466dae64aaa1d8c2c6b900f0d01d272f5eb64e30265a06be4fc9c649b",
+  "reason": "The recap must use the corrected power-chord term while retaining open/movable distinction and click/muting timing instructions.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-0321"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L7f1de538f5",
+  "source": "Your root is on string 5, fret 3. Which power chord is it?",
+  "old": "Pagrindinis tonas – 5 stygoje ties 3 skirsniu. Koks tai kvintakordis?",
+  "new": "Pagrindinis tonas – 5 stygoje ties 3 skirsniu. Koks tai jėgos akordas?",
+  "source_sha256": "15755e4f1a11d10523af5177908a9dc517e9c93eb05233f62a78bc9ba830dde3",
+  "old_sha256": "23f1a78f178378735820816f4ed0fe55bc8c09cd8a60390394dccd653193b341",
+  "new_sha256": "5a88649a3c1b1e4749134c8c1b2b5121eea7dcb5f38ed7597afb4a425eb4e990",
+  "reason": "C5/D5/B5 options identify a power chord by its root; jėgos akordas names that sonority. Preserve string 5 and fret 3.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-0673"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L3a344e71b4",
+  "source": "Which one is a power chord?",
+  "old": "Kuris iš jų yra kvintakordis?",
+  "new": "Kuris iš jų yra jėgos akordas?",
+  "source_sha256": "58dcc90593d8953b2187fce31b06b6f0152506374b5ae9c684dddb93f7eefc7b",
+  "old_sha256": "9e98b555f81c4a050657efc872139087b2398612b0ec8f842fbb9cc8c680d23c",
+  "new_sha256": "999cf78ea4567a8ce055fbcec9fa57b490438e44a712d116139ce99591c98085",
+  "reason": "The listening question compares sonorities and asks for a root/fifth power chord, so use jėgos akordas. The shared first/second choices remain valid.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-0130"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L77ebaa5664",
+  "source": "Riffs, power chords and throwbacks",
+  "old": "Rifai, kvintakordžiai ir retro",
+  "new": "Rifai, jėgos akordai ir retro",
+  "source_sha256": "6b93628e05ccd554887155c5eb6fec0ced918b1f884d912ebdad0c927a8ae949",
+  "old_sha256": "42390a8d8118b3a8b9affad56d235cb733e3a5ae67b25cb780841b04a34b57cc",
+  "new_sha256": "0485793ac4bd6c26414931fc114be552583fc26e9d336ac5e9e07c7e574fd6b8",
+  "reason": "The unit title names rock power chords alongside riffs and throwbacks; use jėgos akordai consistently.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-052.json",
+  "author_correction_history": [
+   {
+    "receipt": "corrections/lt-correction-016.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Align directly authored inflected forms with binding Lithuanian glossary anchors kvintakordis and Ukulėlė; preserve all source details.",
+    "before_sha256": "7a6f91cfb0219641dd86db1381488eeb097609d27df56080f3c8d62fac6332db",
+    "after_sha256": "42390a8d8118b3a8b9affad56d235cb733e3a5ae67b25cb780841b04a34b57cc"
+   }
+  ],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3210"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L98ec3dad84",
+  "source": "Punk, garage rock, doo-wop, surf and heartland rock, with power chords, a riff and sus chords.",
+  "old": "Pankrokas, garažinis rokas, doo-wop, banglenčių ir širdies krašto rokas su kvintakordžiais, rifu ir sus akordais.",
+  "new": "Pankrokas, garažinis rokas, doo-wop, banglenčių ir heartland rokas su jėgos akordais, rifu ir sus akordais.",
+  "source_sha256": "d9e495101d695ca0b9716f59e679be0995a55076845f500f6f176229d53509be",
+  "old_sha256": "fd31412835c101ee155a014b00fcccf357bf5835002056807c7feeefcaed2750",
+  "new_sha256": "28bf39591ee8390919b09c25cf49c24068456a4a249ccf992db0c00decf7614a",
+  "reason": "Use jėgos akordais for power chords. Heartland is the genre label, not a literal širdies kraštas (heart land); retaining the technical genre modifier avoids inventing a nonsensical Lithuanian genre. All five styles and riff/sus features remain represented.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-052.json",
+  "author_correction_history": [
+   {
+    "receipt": "corrections/lt-correction-017.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Align directly authored inflected forms with binding Lithuanian glossary anchors kvintakordis and Ukulėlė; preserve all source details.",
+    "before_sha256": "8d6a25139b742993a43e2d4032a74b83e7554dd090238565c27b2f6fc2e56a8d",
+    "after_sha256": "fd31412835c101ee155a014b00fcccf357bf5835002056807c7feeefcaed2750"
+   }
+  ],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3210"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L66d9448f4d",
+  "source": "Static on Channel Nine is punk: four power chords, palm-muted eighths, 104 beats per minute. The verse mutters on low notes; the chorus is a gang shout, so dig in.",
+  "old": "„Static on Channel Nine“ – pankrokas: keturi kvintakordžiai, delnu slopintos aštuntinės, 104 dūžiai per minutę. Posmas murma žemomis natomis, priedainis – minios šūksnis, tad grokite drąsiai.",
+  "new": "„Static on Channel Nine“ – pankrokas: keturi jėgos akordai, delnu slopintos aštuntinės, 104 dūžiai per minutę. Posmas murma žemomis natomis, priedainis – minios šūksnis, tad grokite drąsiai.",
+  "source_sha256": "ec7d83ea3761b45934b50c8a3c04a449d0d07691bbd8c58793b715edd7b83387",
+  "old_sha256": "4e14ff26e9acd69b8e4aeda14d4d730dd2c5770c58c4a5b3c44670696412f291",
+  "new_sha256": "c174b518779cf7a0f3e06bd30d6a43a6328f906c7cb13c8a5d48863484088069",
+  "reason": "The punk song uses four power chords: correct their term, keeping the 104 tempo, palm-muted eighths, original title and verse/chorus contrast.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-052.json",
+  "author_correction_history": [
+   {
+    "receipt": "corrections/lt-correction-018.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Align directly authored inflected forms with binding Lithuanian glossary anchors kvintakordis and Ukulėlė; preserve all source details.",
+    "before_sha256": "0a8527f0b5ccaca496dd50a4311e377424207b817b7b90906ff5e4960214fcfe",
+    "after_sha256": "4e14ff26e9acd69b8e4aeda14d4d730dd2c5770c58c4a5b3c44670696412f291"
+   }
+  ],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3212"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lbc378f9892",
+  "source": "Basement Weather is garage rock at 92 beats per minute: a riff on the low strings, then power chords that punch back. Rest your palm at the bridge to keep the riff tight.",
+  "old": "„Basement Weather“ – garažinis rokas, 92 dūžiai per minutę: rifas žemomis stygomis, tada atsakantys kvintakordžių smūgiai. Priglauskite delną prie tiltelio, kad rifas būtų tikslus.",
+  "new": "„Basement Weather“ – garažinis rokas, 92 dūžiai per minutę: rifas žemomis stygomis, tada atsakantys jėgos akordų smūgiai. Priglauskite delną prie tiltelio, kad rifas būtų tikslus.",
+  "source_sha256": "0efede63dacc4c2518dc4562079bb4f69910f7f27d569d7ee3bc056fe7b96347",
+  "old_sha256": "d44509ffa2b6ea1b217efba06674eb8ae62f034068deb0e1c8d3519f058beee4",
+  "new_sha256": "12dcfc90fbef37f03c37a1c300201ead01876307b667eb6fb224fbd13d664b8b",
+  "reason": "Use jėgos akordų for the replying power-chord attacks; preserve 92 BPM, low-string riff and palm-by-bridge position.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-053.json",
+  "author_correction_history": [
+   {
+    "receipt": "corrections/lt-correction-019.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Align directly authored inflected forms with binding Lithuanian glossary anchors kvintakordis and Ukulėlė; preserve all source details.",
+    "before_sha256": "36487e9f5a0ec3bbd0f246e56aa2c5f7fd736fa4c84988cc3dbc825a7c965fa4",
+    "after_sha256": "d44509ffa2b6ea1b217efba06674eb8ae62f034068deb0e1c8d3519f058beee4"
+   }
+  ],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3216"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L4c9c92c06d",
+  "source": "Answer the riff with power chords on one, the and of two, and four: A5, G5, C5, D5. Between hits, ease your fretting fingers off so the chords stop short.",
+  "old": "Atsakykite rifui kvintakordžiais ties vienu, dviejų „ir“ ir keturiais: A5, G5, C5, D5. Tarp kirčių atleiskite spaudžiančius pirštus, kad akordai greitai nutiltų.",
+  "new": "Atsakykite rifui jėgos akordais per pirmą dūžį, ties antro dūžio „ir“ ir per ketvirtą: A5, G5, C5, D5. Tarp kirčių atleiskite spaudžiančius pirštus, kad akordai greitai nutiltų.",
+  "source_sha256": "21b618879dcc7bee7efe8cb92ffd3a2fb7da9917709e2b0382496d9683a8a312",
+  "old_sha256": "d25bc7280df7ea967cbbd7d05b033cbecbc1971dc87d32a1fffe34a2dc875814",
+  "new_sha256": "9e13b67364bdab260f703d8dc4ee5cc4ceae9d6ae893ada9f9ec8b17be6ad1bc",
+  "reason": "Correct power-chord terminology and unnatural ties vienu, dviejų ir ir keturiais: the timing means beat one, offbeat after two and beat four. Preserve A5/G5/C5/D5 and release-pressure muting.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-053.json",
+  "author_correction_history": [
+   {
+    "receipt": "corrections/lt-correction-020.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Align directly authored inflected forms with binding Lithuanian glossary anchors kvintakordis and Ukulėlė; preserve all source details.",
+    "before_sha256": "b2bec491d431813e2655cd993e2d63c99c021a34e25fb7aa97a511c178c62a34",
+    "after_sha256": "d25bc7280df7ea967cbbd7d05b033cbecbc1971dc87d32a1fffe34a2dc875814"
+   }
+  ],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3219"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L8e79e5f76b",
+  "source": "Power-chord punk and rock",
+  "old": "Kvintakordžių pankrokas ir rokas",
+  "new": "Pankrokas ir rokas jėgos akordais",
+  "source_sha256": "616733b4239a709482278f7cfc96f304bfbc1aa60d51910b15bb759f6be6fde8",
+  "old_sha256": "5dc00e2f4940d876b37b1e5d3cdc697cf87096f4d25a3e459bdac0e45e2e7195",
+  "new_sha256": "03caed4ad99b97d84553c27acaf027acb4da4cceece586581244b11a07938855",
+  "reason": "A natural instrumental phrase names punk/rock performed with power chords, not a possessive nonstandard kvintakordžių genre.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-053.json",
+  "author_correction_history": [
+   {
+    "receipt": "corrections/lt-correction-021.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Align directly authored inflected forms with binding Lithuanian glossary anchors kvintakordis and Ukulėlė; preserve all source details.",
+    "before_sha256": "7e362ef26c8219311bdbf8dd5d03982504ddc87374675d020304e86c6c232a23",
+    "after_sha256": "5dc00e2f4940d876b37b1e5d3cdc697cf87096f4d25a3e459bdac0e45e2e7195"
+   }
+  ],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-1232",
+   "CTX-1233"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L5a59483173",
+  "source": "Punk-pop, riff rock, dark 6/8 rock, an indie anthem and desert rock, on power chords and low-string riffs.",
+  "old": "Pankpopas, rifų, tamsus 6/8, nepriklausomas himniškas ir dykumų rokas: kvintakordžiai ir žemų stygų rifai.",
+  "new": "Pankpopas, rifų, tamsus 6/8, nepriklausomas himniškas ir dykumų rokas: jėgos akordai ir žemų stygų rifai.",
+  "source_sha256": "570f4525791c9c3a00fac6965c7c9c0b96de753f5e2436d29a2bea6ce96e9d26",
+  "old_sha256": "c0b237b2c59a124f5877ef03f8bec03301139e20774d990639715a11318d207b",
+  "new_sha256": "6d77ec2abbdcf6f6ec22d9ea97f26b60271f64d8bf7947cfed7403eb1c65a2c3",
+  "reason": "Correct jėgos akordai while preserving the five source styles, dark 6/8 meter and low-string riffs.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-053.json",
+  "author_correction_history": [
+   {
+    "receipt": "corrections/lt-correction-008.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Fit unit-summary layout by sharing rokas and using a colon, retaining every genre, meter, power-chord and low-string-riff detail.",
+    "before_sha256": "c07c25c9cf5f4410d21fede5272d76a7ec590f6555c49f1124beaa672da4c92e",
+    "after_sha256": "8d0b240643480dd995e933cc3134736b96cbe930a295777ae32d52ce41dd3ea2"
+   },
+   {
+    "receipt": "corrections/lt-correction-022.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Align directly authored inflected forms with binding Lithuanian glossary anchors kvintakordis and Ukulėlė; preserve all source details.",
+    "before_sha256": "8d0b240643480dd995e933cc3134736b96cbe930a295777ae32d52ce41dd3ea2",
+    "after_sha256": "c0b237b2c59a124f5877ef03f8bec03301139e20774d990639715a11318d207b"
+   }
+  ],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-1232"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L946d9e8e59",
+  "source": "Last Bell is punk-pop at 152 beats per minute: C5, G5, A5 and F5, the four-chord loop as power chords. All downstrokes in steady eighths, palm resting on the strings by the bridge.",
+  "old": "„Last Bell“ – pankpopas, 152 dūžiai per minutę: C5, G5, A5 ir F5, keturių akordų ciklas kvintakordžiais. Visos lygios aštuntinės braukiamos žemyn, delnas priglaustas prie stygų šalia tiltelio.",
+  "new": "„Last Bell“ – pankpopas, 152 dūžiai per minutę: C5, G5, A5 ir F5, keturių akordų ciklas jėgos akordais. Visos lygios aštuntinės braukiamos žemyn, delnas priglaustas prie stygų šalia tiltelio.",
+  "source_sha256": "134b74d2f15e76f5a0b4a02097c58eb91043334d96dd7fdae28356c7df810b0f",
+  "old_sha256": "a07132415c00bac6716c47c7471e236c2b5c15e0126db3e1f1e047d6040c3b99",
+  "new_sha256": "ce420009c71ddc1c21679cc2b397e458d12db904c1aad08b21d62b3d6e203da6",
+  "reason": "The named C5/G5/A5/F5 cycle uses power chords. Correct the instrumental term without altering 152 BPM, even downstrokes or palm placement.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-053.json",
+  "author_correction_history": [
+   {
+    "receipt": "corrections/lt-correction-023.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Align directly authored inflected forms with binding Lithuanian glossary anchors kvintakordis and Ukulėlė; preserve all source details.",
+    "before_sha256": "c5ebcb1e4cd8c761e8b241cf6f870f6028b441f2167303e81d8a09beaf2e46d8",
+    "after_sha256": "a07132415c00bac6716c47c7471e236c2b5c15e0126db3e1f1e047d6040c3b99"
+   }
+  ],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3240"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L002fe27c72",
+  "source": "Copper Wire is built on a riff: a short, catchy line on the low strings that the whole band locks onto. It runs at 112 beats per minute in E, with power chords in the chorus.",
+  "old": "„Copper Wire“ pagrindas – rifas: trumpa, įsimintina žemų stygų frazė, prie kurios prisiderina visa grupė. Tempas – 112 dūžių per minutę, tonacija E, priedainyje skamba kvintakordžiai.",
+  "new": "„Copper Wire“ pagrindas – rifas: trumpa, įsimintina žemų stygų frazė, prie kurios prisiderina visa grupė. Tempas – 112 dūžių per minutę, tonacija E, priedainyje skamba jėgos akordai.",
+  "source_sha256": "f0c357c50638c8093e6930871d03ada91f238c70b82a7d14d0d2890aba142eab",
+  "old_sha256": "88d52bfd97b0ed9dd6ac94d273d35f795116949e51e80f3185a5fb1b7d20472e",
+  "new_sha256": "4b225b8d68547e7815d8d7bfbb823c9638dfe144dae2c789b8a134828f86dd64",
+  "reason": "Use jėgos akordai in the chorus; preserve original title, low-string riff, 112 BPM and E key.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-053.json",
+  "author_correction_history": [
+   {
+    "receipt": "corrections/lt-correction-024.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Align directly authored inflected forms with binding Lithuanian glossary anchors kvintakordis and Ukulėlė; preserve all source details.",
+    "before_sha256": "ff9c4926104d84adc4b9042c4fc8ab3a0c03a69d4b7151b99fc8f84dfccf29de",
+    "after_sha256": "88d52bfd97b0ed9dd6ac94d273d35f795116949e51e80f3185a5fb1b7d20472e"
+   }
+  ],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3245"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L0f82f68db5",
+  "source": "Parking Lot Cathedral is indie rock at 128 beats per minute: D5, A5, B5 and G5, the four-chord loop again, now as power chords. Big, open, driving eighths.",
+  "old": "„Parking Lot Cathedral“ – nepriklausomas rokas, 128 dūžiai per minutę: D5, A5, B5 ir G5, vėl keturių akordų ciklas, dabar kvintakordžiais. Galingos, atviros, veržlios aštuntinės.",
+  "new": "„Parking Lot Cathedral“ – nepriklausomas rokas, 128 dūžiai per minutę: D5, A5, B5 ir G5, vėl keturių akordų ciklas, dabar jėgos akordais. Galingos, atviros, veržlios aštuntinės.",
+  "source_sha256": "ea752f1b6da08ed8079e9a99bd1dd855fc1eb9b77ec96385b36741f77a4aa33d",
+  "old_sha256": "6b5b2b57227b2e11d2151ea6b280a335ca5316de5e106ff5f74f93e8c132f054",
+  "new_sha256": "e2ffd3a1314be72c79536f153069625f7e061e2920a14252a5540fba58d3ee50",
+  "reason": "The D5/A5/B5/G5 progression is explicitly power chords; correct the term and retain 128 BPM plus the driving eighth-note feel.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-053.json",
+  "author_correction_history": [
+   {
+    "receipt": "corrections/lt-correction-025.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Align directly authored inflected forms with binding Lithuanian glossary anchors kvintakordis and Ukulėlė; preserve all source details.",
+    "before_sha256": "87eda06496825a0bb603de4badee21f0c4d2b1fc6acd8e2379282d991b9fed9b",
+    "after_sha256": "6b5b2b57227b2e11d2151ea6b280a335ca5316de5e106ff5f74f93e8c132f054"
+   }
+  ],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3254"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L170a45bedb",
+  "source": "Power-chord set",
+  "old": "Kvintakordžių rinkinys",
+  "new": "Jėgos akordų rinkinys",
+  "source_sha256": "0b015cb82361c28a641a25a8a12a1d71e4958147c4e13f374ae6676786609652",
+  "old_sha256": "e10eb38c3b5bd10b94d2e505fe713e4ebfda3cad15630bae6109ff178a7cedca",
+  "new_sha256": "c7539a9c4ac6505474b4ffce2b6bedbdec4d8e6bd799c1069f3a351f6ec57971",
+  "reason": "This lesson-set title groups power-chord performances; jėgos akordų expresses the intended sonority category.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-053.json",
+  "author_correction_history": [
+   {
+    "receipt": "corrections/lt-correction-026.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Align directly authored inflected forms with binding Lithuanian glossary anchors kvintakordis and Ukulėlė; preserve all source details.",
+    "before_sha256": "9f5b723db46c925403b1123bcad3fb7c5f9198412630fac8988316f8bb44d00a",
+    "after_sha256": "e10eb38c3b5bd10b94d2e505fe713e4ebfda3cad15630bae6109ff178a7cedca"
+   }
+  ],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3263"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L2562517239",
+  "source": "A power chord is a root and its fifth, with no third, so it is neither major nor minor.",
+  "old": "Kvintakordį sudaro pagrindinis tonas ir jo kvinta, be tercijos, tad jis nei mažorinis, nei minorinis.",
+  "new": "Jėgos akordą sudaro pagrindinis tonas ir jo kvinta, be tercijos, tad jis nei mažorinis, nei minorinis.",
+  "source_sha256": "85fe969a89e3e3a2e5b53b03e8d00e19f76e23e66b37b884d66898f2573dba09",
+  "old_sha256": "908aa8f6e74c5915f7c96ff1b12f8ac5a3ab36245cd85def9f66ec82d3a6315d",
+  "new_sha256": "c15840d4aca9509bf3eebb538b12e23eaf9723f130480e569308acab27818342",
+  "reason": "The explicit root/fifth/no-third definition confirms jėgos akordas, not the root-position triad term. Chord-quality neutrality is preserved.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-053.json",
+  "author_correction_history": [
+   {
+    "receipt": "corrections/lt-correction-027.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Align directly authored inflected forms with binding Lithuanian glossary anchors kvintakordis and Ukulėlė; preserve all source details.",
+    "before_sha256": "32b1e2f8b818fb32ab9a1926a0269cc4607f5a1d6a0662c7db73d6094c1ef236",
+    "after_sha256": "908aa8f6e74c5915f7c96ff1b12f8ac5a3ab36245cd85def9f66ec82d3a6315d"
+   }
+  ],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-0684"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L8819186657",
+  "source": "Punk-pop, riff rock, dark 6/8 rock, an indie anthem and desert rock, on power chords.",
+  "old": "Pankpopas, rifų rokas, tamsus rokas 6/8 metru, nepriklausomo roko himnas ir dykumų rokas kvintakordžiais.",
+  "new": "Pankpopas, rifų rokas, tamsus rokas 6/8 metru, nepriklausomo roko himnas ir dykumų rokas jėgos akordais.",
+  "source_sha256": "14231532c76f10b29879284d619c1ff5e8c3dd015ac0c1cdb2b47f6a96f44f74",
+  "old_sha256": "67438ebcb283144199e6251d6c079d602f4a5e9abd3dd7ab632ee492d42b451f",
+  "new_sha256": "50c3d014d3e2a6616dacda9c19c984a7bb9ef3eb6933fad7e6f21dcd7e94f80c",
+  "reason": "This second unit summary also needs jėgos akordais; preserve all five styles and 6/8 exactly.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-058.json",
+  "author_correction_history": [
+   {
+    "receipt": "corrections/lt-correction-037.receipt.json",
+    "author": "Lithuanian draft author 2",
+    "reason": "Align directly authored inflected forms with binding Lithuanian glossary anchors kvintakordis and Ukulėlė; preserve all source details.",
+    "before_sha256": "86d5131ad26907123172df447c6c38dfd89752d6e5e63466a9425ccd1191eacc",
+    "after_sha256": "67438ebcb283144199e6251d6c079d602f4a5e9abd3dd7ab632ee492d42b451f"
+   }
+  ],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-1233"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L6dddb64ee4",
+  "source": "Heartland rock",
+  "old": "Širdies krašto rokas",
+  "new": "Heartland rokas",
+  "source_sha256": "eb51a87227f9a0acdba66516f569c4fe070bb8c2abc34c6cb873333c4e6dd865",
+  "old_sha256": "6ea8945b235f42fd06b3d09720630b0072610a6bc3246fed83bbc3a2a40e0749",
+  "new_sha256": "e966a7b2111c544d9e20dbb672c48a353d27273bb365d157081c3e8948d4346f",
+  "reason": "Heartland rock is a named musical genre; literal Širdies krašto rokas invents a heart-land category. Retain the technical genre modifier and localize rokas, consistent with the unit summary.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-053.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3231"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L0ecaa6e8d5",
+  "source": "Mary Had a Little Lamb lives on the A string: open A, first finger a whole step up for B, second finger another whole step up for C sharp. Pluck it first, then bow it.",
+  "old": "„Mary Had a Little Lamb“ telpa ant A stygos: laisva A, pirmas pirštas tonu aukščiau – B, antras dar tonu aukščiau – C diezas. Pirmiausia užgaukite pirštu, tada stryku.",
+  "new": "„Mary Had a Little Lamb“ telpa ant A stygos: laisva A, pirmas pirštas tonu aukščiau – B, antras dar tonu aukščiau – C diezas. Pirmiausia užgaukite pirštu, tada griežkite stryku.",
+  "source_sha256": "afd934b77d4c0624d8a1f2065d0811c71336aa341e7f768ec851e1136874672d",
+  "old_sha256": "1a9471309092ac6c691ad189125c55424d88449f0ab935e58fb4e586ccc53fcd",
+  "new_sha256": "a1741373102294b3b1247ed8801ad8ee1016eef313a4d3ce799ed2dc56934267",
+  "reason": "Make the physical contrast between plucking and bowing explicit. Elliptical užgaukite pirštu, tada stryku can suggest striking with the bow; griežkite stryku clearly names bowing. Notes and whole-step/finger placements are unchanged.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-022.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-0153"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L2f086284e9",
+  "source": "Mary Had a Little Lamb lives on the D string: open D, first finger a whole step up for E, third finger two whole steps up for F sharp. Pluck it first, then bow it.",
+  "old": "„Mary Had a Little Lamb“ telpa ant D stygos: laisva D, pirmas pirštas tonu aukščiau – E, trečias dviem tonais aukščiau – F diezas. Pirmiausia užgaukite pirštu, tada stryku.",
+  "new": "„Mary Had a Little Lamb“ telpa ant D stygos: laisva D, pirmas pirštas tonu aukščiau – E, trečias dviem tonais aukščiau – F diezas. Pirmiausia užgaukite pirštu, tada griežkite stryku.",
+  "source_sha256": "d8162dbaf20d33068a5b43518d17ef64709e8525368bd4089fe3c632e43b7668",
+  "old_sha256": "ab6a7bc71fb94a1525193a6ce51acf2709a5589f0592a05a5018cb2463d09128",
+  "new_sha256": "7d3b00bf095c9fc07e56a0a5e0995da56199e722e78545d0308a853c1520d81e",
+  "reason": "The cello lesson contrasts plucking and bowing. Explicit griežkite stryku avoids the possible implication of striking with the bow; retain D/E/F sharp and the stated finger distances.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-026.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-0154"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lf665d58f2a",
+  "source": "A scale climbs note by note from one letter to the same letter an octave higher. C major uses only plain letter names: C D E F G A B C.",
+  "old": "Gama kyla nata po natos nuo vienos raidės iki tos pačios raide žymimos natos oktava aukščiau. C mažore – tik raidės be ženklų: C D E F G A B C.",
+  "new": "Gama kyla nata po natos nuo vienos natos iki ta pačia raide žymimos natos oktava aukščiau. C mažore – tik raidės be ženklų: C D E F G A B C.",
+  "source_sha256": "8b1b55022c06a594f0707057bb8c549657f9568345d8238ec9438a7db796a65d",
+  "old_sha256": "e367d286fc46684338d36cb3f77597c4c424a392fd08d875df1d7d11864c1242",
+  "new_sha256": "626cd68250e10b9083835321fc21a4b304fe73d6d03841bcbe411cd150afb602",
+  "reason": "Fix the case mismatch tos pačios raide to instrumental ta pačia raide and explicitly start from a note, not a letter. The same-letter octave span and complete C-major note sequence are preserved.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-004.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-0196"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L115c17a080",
+  "source": "In a shuffle, each beat splits into…",
+  "old": "Šaflo ritme kiekvienas dūžis dalijamas į…",
+  "new": "Kaip šaflo ritmu grojamos kiekvieno dūžio dalys?",
+  "source_sha256": "aeb97f376b93aadc5a0933765a80021815806e11e142b3f9ceb7a3cd69351cbb",
+  "old_sha256": "00f99979f449c98f1c0bce434be7e4aef96ecf97db1d6d09278bfdf75876e76a",
+  "new_sha256": "2972476ca894d517673fc62ae7e21a400549a3702c90a14d9d0dce4d510b18c2",
+  "reason": "The old dangling dalijamas į cannot grammatically introduce the shared adverbial Long, then short answer. Ask how the subdivisions are played; all shared duration-pattern answers then fit, preserving the shuffle subdivision question.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-005.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-0656"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L3f457fafb1",
+  "source": "In a swing strum, each beat splits into…",
+  "old": "Svingo braukime kiekvienas dūžis dalijamas į…",
+  "new": "Kaip svingo ritmu grojamos kiekvieno dūžio dalys?",
+  "source_sha256": "68a34d0c52d8fac2c5d80aa6e42c4336df8d60019e9198005aba1cc9a510d6e9",
+  "old_sha256": "060f9c61406a1eb568be1bd09358b9c7730e65d2841235569ca68d68d16a8ad8",
+  "new_sha256": "75df232fda6588b79be02bdc1f5dd636c019d44658257225267bf8f854b4a6c2",
+  "reason": "Remove the incompatible dangling į before the shared adverbial duration answers. The complete quiz still asks for swing subdivisions of each beat, now with a natural how-played question.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-018.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-0658"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L51f6cadc38",
+  "source": "Swing turns each pair of eighths into what?",
+  "old": "Kuo svingas paverčia kiekvieną aštuntinių porą?",
+  "new": "Kaip svingo ritmu grojamos dvi aštuntinės?",
+  "source_sha256": "f6ab0c9279592f12654cd0260dc8d17e3508a6c883631dc7f0a2581d63806f71",
+  "old_sha256": "931614d8ea7ca8f7c43cd2722f49b9ce060f95464c1486fe4e5329fee8dbc3ce",
+  "new_sha256": "e46156b12fe403e253b906dbc74fbb0ae3b48f38cb3a3f852e2163fb13b5c6eb",
+  "reason": "The instrumental Kuo ... paverčia formulation does not fit the shared adverbial answers. Ask how the pair of eighths is played in swing so the long/short and equal-duration alternatives all fit.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-045.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-0660"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lf91de05d29",
+  "source": "Two equal halves",
+  "old": "Dvi lygias puses",
+  "new": "Abi vienodai ilgai",
+  "source_sha256": "bb2abc07c1640baf290cd60861df6c580d93af19757232e7f512cacf63748b12",
+  "old_sha256": "e7ea0210fcf962c30856fddcb001bec666e669a010a088820471d7688d418284",
+  "new_sha256": "c73f6ff98f5737c33fd0ec661163683f3bbfa0c1feac841f73d1e9dc6d985966",
+  "reason": "Across all three complete shuffle/swing quizzes, this distractor means the two subdivisions have equal duration. The old accusative Dvi lygias puses only fits an į prompt and not Kuo. With the three repaired how-played prompts, Abi vienodai ilgai preserves both halves and their equality in a natural parallel adverbial form.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-005.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "CTX-0656",
+   "CTX-0658",
+   "CTX-0660"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lfcefd84a99",
+  "source": "A riff is a hook",
+  "old": "Rifas – įsimenantis motyvas",
+  "new": "Rifas – įsimintinas motyvas",
+  "source_sha256": "8ac03d86c33bab0f59383fef6bc4e6922ef4895f7ff44169e3ba4fa6ae981e40",
+  "old_sha256": "bcb0d0969c9ae5618ade0d2f66395ef146f539c12232e8fbc61f51facb5233e1",
+  "new_sha256": "5b48ee0209011436173f4e037ff512fcee83fd78eadf8c687631f5ba5d16c7ff",
+  "reason": "Register/glossary consistency polish: use the explicit memorable phrase įsimintinas motyvas, matching the glossary and later hook descriptions. Įsimenantis is also used colloquially for memorable; this is not claimed as a proven semantic error.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "style-consistency",
+  "full_context_ids": [
+   "ALL-0307"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L14d9aa4e87",
+  "source": "A riff is a short, catchy phrase that repeats. This one bounces off open low E. Rest your palm at the bridge to keep it tight.",
+  "old": "Rifas – trumpa, įsimenanti pasikartojanti frazė. Šis atsispiria nuo laisvos žemos E. Delną atremkite prie tiltelio, kad garsas būtų tikslus.",
+  "new": "Rifas – trumpa, lengvai įsimenama pasikartojanti frazė. Šis atsispiria nuo laisvos žemos E. Delną atremkite prie tiltelio, kad garsas būtų tikslus.",
+  "source_sha256": "9bd9be13bfee769e726c88cdfa347a7d702f4f2ce6a3bd5908e10982001cf8c2",
+  "old_sha256": "13d0fd2e99c05eb7e5772553656f5b4e7e0779b6106b04acbc101acdc1b324e1",
+  "new_sha256": "30cab1fd82fe6811682ef17a893bf8a723e7b83df44c902858a3be0c81d3d950",
+  "reason": "Register/clarity polish: lengvai įsimenama explicitly conveys the catchy, easily remembered phrase. The older įsimenanti has colloquial memorable usage, so this is not a proven semantic mistranslation. Repetition, open low E and palm-at-bridge instructions are unchanged.",
+  "reviewer": "Lithuanian independent AI reviewer 1",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-006.json",
+  "author_correction_history": [],
+  "classification": "style-consistency",
+  "full_context_ids": [
+   "ALL-0307"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L8c00bae676",
+  "index": 746,
+  "source": "B7 is five letters up from E. Five letters up from A is E, so E7 takes its place.",
+  "old": "B7 yra penkiomis raidėmis aukščiau E. Penkiomis raidėmis aukščiau A yra E, tad jo vietą užima E7.",
+  "new": "B7 pagrindinis tonas – penkta nata, skaičiuojant raides nuo E. Nuo A penkta nata yra E, tad jo vietą užima E7.",
+  "source_sha256": "fb339a709c9c2367239b417a889854f4d94f443cfe1c9ee184560bf68afca75a",
+  "old_sha256": "371316c5a513c9a4858b81cd16009d0e0228633f6ab573ec30d4f8998d5bab3f",
+  "new_sha256": "9c705cfb5b3ce7a16cb05252307da1b18718dbc7e317030bc780a9c4b26f10b5",
+  "reason": "Clarify the source fifth as inclusive counting: B is the fifth letter from E and E the fifth from A, not five letter-steps above either note. B7/E7 and the functional substitution remain unchanged.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-008.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0651"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L9cf127a892",
+  "index": 750,
+  "source": "Visit the four chord early",
+  "old": "Ketvirtą akordą aplankykite anksčiau",
+  "new": "Anksčiau į ketvirto laipsnio akordą",
+  "source_sha256": "788c1dbcb44716ee536714c3b3d610fbefc49bf56323e2051957ac39f78f4616",
+  "old_sha256": "c19fa79e41827f0269051cbd5a4169ca3940948a617c742b9a9e513d6192d9bb",
+  "new_sha256": "a003610339bcc81d87d5cce0242718ed571e5de3c2af4dcc99afe4327b88f7d8",
+  "reason": "The four chord means the chord built on scale degree four, not the fourth chord played. Make laipsnio explicit, matching the following quick-change explanation. The concise title remains within its 42-character layout limit.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-008.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "ALL-0421"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L38ebe33d09",
+  "index": 853,
+  "source": "Target, then a short bend. Same note or different?",
+  "old": "Tikslinė nata, tada trumpas tempimas. Natos sutampa ar skiriasi?",
+  "new": "Tikslinė nata, tada per mažas tempimas. Natos sutampa ar skiriasi?",
+  "source_sha256": "f789f3a67d9d6720a1650d3fbb9811493e5d6cb97384d3cdeb95207073dc8e12",
+  "old_sha256": "d254dcf82125055c298c4bef838972dde47837e28cd040213b17a2ea4c204c8f",
+  "new_sha256": "a5030c33026a0156081b33ba778ba189bdb97e1b10e549d5448da53517ff3674",
+  "reason": "In the immediately surrounding bend-target lesson, short means a bend that falls short of the target pitch, not a brief-duration bend. Replace temporal trumpas with per mažas to retain the listening discrimination.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-009.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0711"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L89070c4cff",
+  "index": 921,
+  "source": "F sharp minor as an E-shape barre sits at…",
+  "old": "F diezo minoras E formos barė grojamas ties…",
+  "new": "F diezo minoras E formos barė: kuris skirsnis?",
+  "source_sha256": "78d9541b2255f1953731ef59ff4184d3cd792715d3a2089c701d252c1c1d7295",
+  "old_sha256": "eb1799d2ab8dddf93a25b3f5b51c8f9858bf308d5ab37a280582023bcfe69768",
+  "new_sha256": "38a555f23e4212537bd44be6158cac9a82bccc46045583a7ba4e942ad065d4ac",
+  "reason": "The original prompt ends ties and requires instrumental case, but its shared fret choices are nominative standalone labels. Rephrase as a complete which-fret question so all three options fit without altering shared answers.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-009.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0536"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lf3da164b85",
+  "index": 939,
+  "source": "C sharp minor as an A minor shape barre sits at…",
+  "old": "C diezo minoras A minoro formos barė grojamas ties…",
+  "new": "C diezo minoras A minoro formos barė: kuris skirsnis?",
+  "source_sha256": "b979a630c0c5e8dc7eb570a939fd783e6b3937e2e60131ff2a26fdead504bc59",
+  "old_sha256": "b4d05dfcb99701bc2d46eef4d07e3bbfd1ab934a52fc80e3c3baae25d9eac341",
+  "new_sha256": "e1008c2366a0d8b1e92cf9b6fd3a7e7b58c03c42adf952e72cfb89a6172ea0b2",
+  "reason": "Remove the dangling instrumental-governing ties. A complete which-fret question fits the shared nominative Fret 4/Fret 2 labels and the normalized Fret 6 distractor.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-009.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0537"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lc6d901cedd",
+  "index": 940,
+  "source": "Fret 6",
+  "old": "6 skirsniu",
+  "new": "6 skirsnis",
+  "source_sha256": "4218a5e4f88400aee67b408527fd7fa70ae0c9261ed727777dbbf8a6380cc993",
+  "old_sha256": "6ab263c0c5c2bac6150fbd1410e8225d3954d39e834e0dba1b9c852222217ce7",
+  "new_sha256": "b5bd2a100b961090b78669e52705bde3ef8ccfde18c1f1c21e32da5026711bdb",
+  "reason": "Fret 6 is a standalone numeric fret-choice label in the C-sharp-minor quiz. Normalize instrumental skirsniu to nominative skirsnis, parallel with the other shared choices and the repaired full question; keep the deliberately wrong fret 6.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-009.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0537"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L5dab3832af",
+  "index": 1017,
+  "source": "A capo, G and D shapes on capo 2, and Oh! Susanna arranged with a verse and a chorus.",
+  "old": "Kapodastras, G ir D formos ties 2 skirsniu ir Oh! Susanna su posmu ir priedainiu.",
+  "new": "Kapodastras, G ir D formos su kapodastru ties 2 skirsniu ir Oh! Susanna aranžuotė su posmu bei priedainiu.",
+  "source_sha256": "06d0d75e8ebc8610c44aa2e238401f5af9d9b2500f6868f290747eb402f4e88e",
+  "old_sha256": "d56f3e29453902fa4f6358802aaed8540c1fbb40500f6e141c96596f0b5f3d54",
+  "new_sha256": "a87bbe3ed44841fbc0f23ddd6406b95bb751dc58fc386a21fa711017c34e060b",
+  "reason": "The source G and D shapes on capo 2 refers to open shapes relative to a capo on fret 2, not G/D shapes simply placed at fret 2. Explicitly retain the capo qualifier and the arrangement/verse/chorus meaning.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-010.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "ALL-0568"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L3a975de980",
+  "index": 1205,
+  "source": "Major, minor and dominant sevenths, open and barred, the ii–V–I, and swing comping.",
+  "old": "Didieji mažoriniai, mažieji minoriniai ir dominantseptakordai, barė, ii–V–I ir svingo pritarimas.",
+  "new": "Didieji mažoriniai, mažieji minoriniai ir dominantseptakordai – atviri ir su barė, ii–V–I ir svingo pritarimas.",
+  "source_sha256": "a7698c92aaa9054f1a3a76123c941833bb4e2eed00ac0155e278d3e1e96f5cc2",
+  "old_sha256": "2b4a002742f0c751fbc0b8f90ebbc9aa242e90061265eeed79ee1dcd0bbb2792",
+  "new_sha256": "6d53f03694c7584b03a0b868b9d7765233067e8c06d86a1d7c11c896fb930e4f",
+  "reason": "Restore the omitted open-versus-barred distinction. Source explicitly promises both open and barred seventh chords; the old summary retained only barė. Preserve all three seventh qualities, ii–V–I and swing comping.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-012.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "ALL-0672"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L77cf24ec08",
+  "index": 1110,
+  "source": "Like open C, the C shape's root is on…",
+  "old": "Kaip ir atviro C, C formos pagrindinis tonas yra…",
+  "new": "Kaip ir atviro C, kuri styga turi C formos pagrindinį toną?",
+  "source_sha256": "ee09a1a76f1bf0cd8c5049772f93b4ab0838a3b1ab7938ffe858719e5bc99a84",
+  "old_sha256": "ef4edb24ecae1bb9293a7bcef5272b807f5f634ed7c6efc652d65a6100a5875d",
+  "new_sha256": "7c833e2629eca60e0238ece7eea5d79e20db4b6d961461b1c0c255a47a2d9b5b",
+  "reason": "The old incomplete yra… prompt makes the shared string-number labels read as if the root itself is a string. Ask which string carries the root; this preserves the source location meaning and works naturally with all three unchanged nominative labels.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-011.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0526"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Le12ba17ea9",
+  "index": 1411,
+  "source": "Slide the minor box from fret 5 to fret 2 and it plays…",
+  "old": "Nuleidus minorinę poziciją nuo 5 iki 2 skirsnio, ji groja…",
+  "new": "Nuleiskite minorinę poziciją nuo 5 iki 2 skirsnio. Kokia tai gama?",
+  "source_sha256": "bc67d48d39a742b1e482f65a829738629bfde8402f7bc796b956baf13e42c1ad",
+  "old_sha256": "2d7f326db6b8b5f180e46f63f47a97308c516707c52ad829e3eab1961a142df4",
+  "new_sha256": "9d4e6e4db995cc1ec85a0d5dc33c7eb664c3d21ce35478485cb0168cb73598f3",
+  "reason": "Use a complete scale-identification question instead of a dangling transitive groja. This lets the shared nominative G major distractor fit alongside nominative pentatonic choices without changing its wider uses.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-014.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0620"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L7893d45a81",
+  "index": 1412,
+  "source": "D minor pentatonic",
+  "old": "D minorinę pentatoniką",
+  "new": "D minorinė pentatonika",
+  "source_sha256": "0625bdf27d5a458c3b00e9ec7c16402cf9d28d5dd7035f2794c6f20bfee72cfa",
+  "old_sha256": "2f64508dd69a23911af3df8e83854fe8458518880b99a21e818d171886eb3d40",
+  "new_sha256": "b1a9a89fa24bbf53ad367763738186544ce20942ab13ae6fff3f0180b9fe3868",
+  "reason": "Normalize this sole-context distractor to the nominative scale-name label required by the repaired full question; keep D minor deliberately incorrect.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-014.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0620"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L7212825ac8",
+  "index": 1413,
+  "source": "A major pentatonic",
+  "old": "A mažorinę pentatoniką",
+  "new": "A mažorinė pentatonika",
+  "source_sha256": "1c0f6c2f9f4b5a71fb4cd47a7cbad5d9e3fcb36a8983092d8e9f9c1ad60b4546",
+  "old_sha256": "25573f16595c96189a94adffc2e7c8d884064d3ccafad4af90ec91312b36b535",
+  "new_sha256": "8bdaffcac5d86c836cd841e7f936ddd4557ef54b2429f225ca54bc6460dd8e33",
+  "reason": "Normalize the correct sole-context A-major-pentatonic label to nominative, parallel with the shared G major distractor and repaired question.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-014.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0620"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lee5b5840e2",
+  "index": 4575,
+  "source": "Triplets",
+  "old": "Trioles",
+  "new": "Triolės",
+  "source_sha256": "d2389bf5456bc2f1bae8bf7fdbaabfd8151fc0f325f76f767829f2abcd2333e0",
+  "old_sha256": "5cd4fb572ade95932f29a2e1b4cd07d01fba1561ee77feff9ca2571a718f40ef",
+  "new_sha256": "fcc84d19cf2ae97c263eba8128a04fed43c8ecc7daa8d611219b243db62c7c50",
+  "reason": "The sole Triplets choice used accusative while the shared Eighth notes and Quarter notes choices are nominative titles. With the repaired full rhythm-identification question, use nominative Triolės for a parallel set without changing which option is correct.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-044.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0550"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L57bc96d79f",
+  "index": 4574,
+  "source": "You count 1-trip-let, 2-trip-let. What are you tapping?",
+  "old": "Skaičiuojate 1-tri-o, 2-tri-o. Ką stuksenate?",
+  "new": "Skaičiuojate 1-tri-o, 2-tri-o. Koks tai ritmas?",
+  "source_sha256": "4c4b9820ad8171e4004e365a3500ed10cb60ebbb8c202f451d8cef5cff8e3778",
+  "old_sha256": "ebfff8c3bf3f6cec5669159cbc86ef4ce45d99a6f720e425cc9f5b2f7ed219c3",
+  "new_sha256": "a95b826fd1143e647174a47b476f564d13b68117bba9adeb8cd4ce7b85f1b653",
+  "reason": "Use a complete rhythm-identification question rather than accusative-governing ką stuksenate, because its shared eighth/quarter-note labels are nominative. Together with Triolės, all options are now parallel and the counted three subdivisions remain explicit.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-044.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0550"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L2cbec77a01",
+  "index": 1326,
+  "source": "Whole, whole, half, whole, whole, whole, half spells…",
+  "old": "Tonas, tonas, pustonis, tonas, tonas, tonas, pustonis sudaro…",
+  "new": "Kokia gama sudaryta pagal seką: tonas, tonas, pustonis, tonas, tonas, tonas, pustonis?",
+  "source_sha256": "363376a4a78fc8e816a7fc84b66e150f4a660875aa95a3ad3b094a8588b527f9",
+  "old_sha256": "8b4e097a4dedd6568d0c305c23d24465b22724c050542db34da12136321ae5c9",
+  "new_sha256": "14f0738b3eeff26a4e961ae3648b69b25cb134244f8a49c83360d418323a8ab0",
+  "reason": "The major-scale choice also serves as a lesson title and must be nominative. Replace the dangling transitive sudaro prompt with a complete scale-identification question; preserve the exact whole/whole/half/whole/whole/whole/half order.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-013.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0745"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lc99c55e349",
+  "index": 1327,
+  "source": "The major scale",
+  "old": "Mažoro gamą",
+  "new": "Mažoro gama",
+  "source_sha256": "609bd9d4f9ff03575f2c4888168c490398b24964daa862dd160a8058779bd925",
+  "old_sha256": "785ef715e5e9476059d42e8878efc779e585eb156094f99b269df16b31ecd9c6",
+  "new_sha256": "daaad41e97fa1dc2e79b2608a824252f4f1359de939d950561dcbde635c158ab",
+  "reason": "The same key is both a quiz option and a standalone lesson title. Accusative Mažoro gamą is unsuitable for the title; nominative Mažoro gama works for that role and the repaired complete quiz question.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-013.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0745",
+   "CTX-0746"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L83811bcff6",
+  "index": 1328,
+  "source": "The minor pentatonic",
+  "old": "Minorinę pentatoniką",
+  "new": "Minorinė pentatonika",
+  "source_sha256": "661d018e3b1b09ce8858c4c93216dfae4e79e9dc56c231b68f6ba4529b671a60",
+  "old_sha256": "5976d9b59d6cdbcd91126cd438d6624b0b366ff3c8c37cb521191d766c4c3780",
+  "new_sha256": "f22f5f644f58bd3b960536f88e51d2e68fafb0799597d0a96131c90ae2e272e1",
+  "reason": "Normalize the whole minor-pentatonic distractor to nominative, parallel with the shared major-scale title/option after repairing its question. Preserve its deliberately wrong scale category.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-013.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0745"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L6fbb27dbe1",
+  "index": 1329,
+  "source": "The blues",
+  "old": "Bliuzą",
+  "new": "Bliuzas",
+  "source_sha256": "269c6d9714b5611802ff2e7fadaf7f44d0278da0652175715d2501e7f855d9c7",
+  "old_sha256": "1c64f00773a30899da820dbc132378178e47107cb70d605020e80a297c6f4d3b",
+  "new_sha256": "728784466e8618b5c62ed68b684dd5017b0fa1b429548a34cd8303af5aae68e1",
+  "reason": "Normalize the whole blues distractor to nominative in the repaired scale-identification quiz; do not change its musical category or correctness.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-013.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0745"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L8c9f842731",
+  "index": 1419,
+  "source": "What does a chorus usually carry?",
+  "old": "Ką paprastai turi priedainis?",
+  "new": "Kas paprastai skamba priedainyje?",
+  "source_sha256": "779d30cfc804125112a2384b458ad9ce1717dc60796667ac42baf473b19e071d",
+  "old_sha256": "c6f9663e46767fec41e0a27b2dc5eca1e4769364ceafcbcf1aa5309be03a435f",
+  "new_sha256": "5152e4237aecd3d3919b2fb38052e78d3f4bdea2e939966b217c20af499f2848",
+  "reason": "The previous ką turi prompt requires accusative but shares the nominative The intro option with another quiz. A full what-sounds-in-the-chorus question permits all options to remain parallel nominative labels.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-014.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0726"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Ld220e3205e",
+  "index": 1420,
+  "source": "The hook everyone sings",
+  "old": "Motyvą, kurį dainuoja visi",
+  "new": "Motyvas, kurį dainuoja visi",
+  "source_sha256": "318a8359a5f1087d0b87262372203054e97aaa5e3f6e995e1fd459cfd02375ab",
+  "old_sha256": "caaa320e8cccdb35aa23bfb4659a0e53cbddc5d8e8ce36b7fe7e6ee267a99ac6",
+  "new_sha256": "d151b9e5cf4db40eaa9452a3f1c6c18eeb94628f3509c281b3bda5af946e1cac",
+  "reason": "With the repaired full chorus question, use nominative Motyvas to agree with the shared Įžanga and indeclinable Gitaros solo labels. Preserve the hook sung by everyone as the correct answer.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-014.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0726"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lb20b5d720b",
+  "index": 5169,
+  "source": "An octave is the same letter, eight steps higher or lower. The two Ds blend, but one sounds brighter.",
+  "old": "Oktava – ta pati raidė, aštuoniais laipsniais aukščiau ar žemiau. Abi D susilieja, bet viena skamba skaisčiau.",
+  "new": "Oktava – atstumas tarp ta pačia raide žymimų natų, apimantis aštuonias gamos natas, skaičiuojant abi kraštines. Abi D susilieja, bet viena skamba skaisčiau.",
+  "source_sha256": "8dff982d6a69ccdc1acc70d474595b30501ee27bfd1d964fdbbfa1358f88981f",
+  "old_sha256": "67277531608e6b7a61af9eb4510e3bd1d83d9a79770f69a9884b47863958689d",
+  "new_sha256": "41ec2be3f5321879f5f07112d9e10ea6d9a108f37208720f55c5ee8292153557",
+  "reason": "An octave spans eight scale notes when both endpoints are counted, not eight upward or downward scale steps. Make inclusive counting explicit while retaining the same-letter concept, two Ds and brighter comparison.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-050.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0800"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Ld872a8e64f",
+  "index": 2691,
+  "source": "Fourth-finger G on the D string is an octave above the open G string: the same letter, eight notes higher. When it's in tune, the G string hums along.",
+  "old": "Ketvirto piršto G ant D stygos yra oktava aukščiau už laisvą G stygą: ta pati raidė, aštuoniomis natomis aukščiau. Kai nata tiksli, G styga dūzgia kartu.",
+  "new": "Ketvirto piršto G ant D stygos yra oktava aukščiau už laisvą G stygą: ta pati raidė, aštuonių gamos natų atstumas, skaičiuojant abi kraštines. Kai nata tiksli, G styga dūzgia kartu.",
+  "source_sha256": "6759714066eac04e4574fc981bbfa60ff1d3692da3d430e29f8a3ad8f035ab29",
+  "old_sha256": "fec25a46ef166205bd9affa84a388e9d95cf06f99b242dd15dfbd5d7df2049d6",
+  "new_sha256": "e10f74b91543cd6e39e92c574a836a881fcc70c5ff6121c2c615d6a1e434a958",
+  "reason": "Clarify the octave as an inclusive eight-note span rather than eight note-to-note upward moves. Preserve fourth-finger G, D string, open G and sympathetic resonance.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-026.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0863"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L3b7faf97f6",
+  "index": 3075,
+  "source": "Pick an open pair, then snap a fingertip down just behind fret 2. The new note sounds from the tap alone, with no second pick stroke.",
+  "old": "Užgaukite laisvą porą, tada staigiai nuleiskite piršto galiuką iškart už 2 skirsnio. Nauja nata suskamba vien nuo smūgio, be antro mediatoriaus kirčio.",
+  "new": "Užgaukite laisvą porą, tada staigiai prispauskite piršto galiuką prie pat 2 skirsnio iš grifo galvutės pusės. Nauja nata suskamba vien nuo smūgio, be antro mediatoriaus kirčio.",
+  "source_sha256": "b49a9ece1a26d09acd02db458858c35d01921277a2890a1e7c9581a36ff3999c",
+  "old_sha256": "b2868dd32dfe8d1490391d01833d2ae9fce1d9c2fbd966b491dced6bb52be435",
+  "new_sha256": "c69401d490298e6dd1300ff11dba140397c15d61d6146fa08c68f6854685dd19",
+  "reason": "Physical-clarity repair: už 2 skirsnio can be read as beyond the second fret. Explicit headstock-side placement preserves just behind fret 2, the paired strings and the no-second-pick hammer-on.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-030.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0912"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L0fdd781516",
+  "index": 3277,
+  "source": "Pick an open string, then snap a fingertip down just behind fret 2. The new note sounds from the tap alone, with no second pick.",
+  "old": "Užgaukite laisvą stygą, tada staigiai nuleiskite piršto galiuką iškart už 2 skirsnio. Nauja nata skamba vien nuo smūgio, be antro užgavimo.",
+  "new": "Užgaukite laisvą stygą, tada staigiai prispauskite piršto galiuką prie pat 2 skirsnio iš grifo galvutės pusės. Nauja nata skamba vien nuo smūgio, be antro užgavimo.",
+  "source_sha256": "51118cdcfeb6b060f490b570d4d628f17b2a12853ac12235a8c058bddbdbc6b8",
+  "old_sha256": "8ee38d3446a037747b5a89eaa4140e995cc47581eb233b7bb31213ddeb832637",
+  "new_sha256": "a4cf998fc49c6a6704446cddd3ff6fa3860376511dc958ac7b97107ab3ff8cbe",
+  "reason": "Physical-clarity repair for the single-string hammer-on: name the headstock side immediately beside fret 2 instead of potentially reading už as beyond it; retain the finger-produced second note without repicking.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-032.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0913"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "La1e019b524",
+  "index": 3352,
+  "source": "What does your thumb play after each brush?",
+  "old": "Ką nykštys groja po kiekvieno braukimo?",
+  "new": "Kas grojama nykščiu po kiekvieno braukimo?",
+  "source_sha256": "d1e8b395aaece19ba52e7b95c2460ed846248d2414169fed5a859067f05992a4",
+  "old_sha256": "431daf09918ee8e66f0e43f508b2fef3b28dc6b395783e562c273e648ab873f4",
+  "new_sha256": "ba4e863fc9aedb6c6f29aa96d174ace354fcb71e53d2355d280824f81145339b",
+  "reason": "Replace the accusative-governing ką groja prompt with a full passive question so the shared nominative open-fifth-string label fits without changing its other pitch-source quiz use.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-033.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0935"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L1d40eec6d3",
+  "index": 3353,
+  "source": "The melody note",
+  "old": "Melodijos natą",
+  "new": "Melodijos nata",
+  "source_sha256": "92e8d9c3d90fbc719597eba503ade5eba7ed3d3530513da73c547fb473ea831d",
+  "old_sha256": "081ef6fece43209f7370531847ff9ea3ded48ad41a997c3c9bbea52306f7ca3c",
+  "new_sha256": "7ad3c70b8df55f49d77d6bd3188a82ff0354708c2f62070eb952501409628f6f",
+  "reason": "Normalize this quiz distractor to nominative, parallel with the shared Laisva penkta styga answer and repaired full thumb-after-brush question. Keep melody note as the deliberately wrong alternative.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-033.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0935"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lb30829608d",
+  "index": 1881,
+  "source": "Rolled chords between the verses and the melody inside the chords. The tune is the hymn New Britain, printed in 1829, with John Newton's words.",
+  "old": "Tarp posmų – paeiliui užgaunami akordai, o jų viduje – melodija. Tai giesmės New Britain melodija, išspausdinta 1829 metais, su John Newton žodžiais.",
+  "new": "Tarp posmų – akordai, kurių natos užgaunamos paeiliui, o melodija – akordų viduje. Tai giesmės New Britain melodija, išspausdinta 1829 metais, su John Newton žodžiais.",
+  "source_sha256": "8482833b8e04e6d1a4bb2b016d67a11cd678755166a8b44bb0cb466b0a50e4f8",
+  "old_sha256": "1c59f1cbf0a837a73325973ce1d02e397fac2ae78de414b9ce41287ea0be69f6",
+  "new_sha256": "10a9a14a1b3e67efc0c2703eb88aaeb069d75b155081186ae7d28d3a61a0950f",
+  "reason": "Rolled chords means the notes within each chord are plucked successively, not merely that separate chords are played one after another. Make the intra-chord sequence explicit while preserving melody-inside-chords, New Britain, 1829 and John Newton credit.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-019.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "ALL-1064"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L0bd505d18c",
+  "index": 5795,
+  "source": "D down to D is an octave: eight steps of the scale, the same note name, one register lower.",
+  "old": "Nuo D žemyn iki D – oktava: aštuoni gamos laipteliai, tas pats natos vardas, vienu registru žemiau.",
+  "new": "Nuo D žemyn iki D – oktava: aštuonių gamos natų atstumas, skaičiuojant abi kraštines, tas pats natos pavadinimas, vienu registru žemiau.",
+  "source_sha256": "889bc4e9fb6ae279b1e69405f03867e204a6cb663b6b3e17cd41d19e2edfc597",
+  "old_sha256": "e6b25b27b4bae97e96b90e37196f40058c0fdd19828efb8bbcefdf572da9b4be",
+  "new_sha256": "26e1c2b985416bdbe466f517a0b5373117cf1e1229f214f5bf7d0ec43ae93bb8",
+  "reason": "An octave is an inclusive span of eight scale notes, not eight descending note-to-note moves. Clarify both-endpoint counting while retaining D-to-D, same note name and one-register-lower meaning.",
+  "reviewer": "Lithuanian independent AI reviewer 2",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-056.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-0957"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lc6450e709b",
+  "index": 6016,
+  "source": "The tunes everyone learns first: slow tempos, short phrases, big wins.",
+  "old": "Pirmosios visų mokomos melodijos: lėti tempai, trumpos frazės, dideli laimėjimai.",
+  "new": "Melodijos, kurias visi išmoksta pirmiausia: lėti tempai, trumpos frazės, dideli laimėjimai.",
+  "source_sha256": "b1f803d614633e7d826f49a5291608601ed1346d6803cec517c82340b84f8883",
+  "old_sha256": "e0127b6601a9a071084ee37c8ef914a4eaa8a24c22825739cda46b0cb5b79608",
+  "new_sha256": "dd8371f2b388104201c0acb0b3910ec22eba6aae6789b9498c6140ecc982a774",
+  "reason": "The old passive visų mokomos can read as taught by everyone rather than learned first by everyone. Use an explicit active relative clause to retain who learns and when, while preserving the three course-summary features.",
+  "reviewer": "Lithuanian independent AI reviewer 3",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-058.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-1154"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L869acd822f",
+  "index": 6012,
+  "source": "Which of these pieces was written for a band?",
+  "old": "Kuris iš šių kūrinių parašytas orkestrui?",
+  "new": "Kuris iš šių kūrinių parašytas pučiamųjų orkestrui?",
+  "source_sha256": "44c71e20f015cf2140d9076109a980e3450fe7a714ba1d9945aad6e69f46eeae",
+  "old_sha256": "b1e7ab58b9587c47dbfdd65d3b9ff50a9b2f240dccda04fd3751fc95eecd3bf4",
+  "new_sha256": "9874190b84831308783ea7a8c37ef9d671b69c7361eb822c0d16ec62fe8385a9",
+  "reason": "Band here means the military wind band distinguished from Spring for violin and strings and the piano rondo. Generic orkestrui also describes the string-ensemble distractor, so pučiamųjų preserves the intended ensemble distinction and the unique correct answer.",
+  "reviewer": "Lithuanian independent AI reviewer 3",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-058.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-1304"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L0077cab0a8",
+  "index": 6013,
+  "source": "Sousa wrote his marches for a military band. Spring is for violin and strings, and the rondo is for piano.",
+  "old": "Sousa rašė maršus kariniam orkestrui. „Spring“ skirta smuikui ir styginiams, o rondo – fortepijonui.",
+  "new": "Sousa rašė maršus kariniam pučiamųjų orkestrui. „Spring“ skirta smuikui ir styginiams, o rondo – fortepijonui.",
+  "source_sha256": "150432bd141805f82e14803eda214460e8ee4ca2c913fe32ca937a394f331668",
+  "old_sha256": "1073793b89b035ab63bdb982b78420bc32ecee23b3536b97a98e2cc37fb31e24",
+  "new_sha256": "aa72effe3220a82e23bedcb175f0e3a076c3202a27b1ab536207731963246cda",
+  "reason": "Specify the military wind-band ensemble consistently with the repaired question; generic kariniam orkestrui alone under-specifies the source band-versus-strings contrast. Preserve all three works and instrument alternatives.",
+  "reviewer": "Lithuanian independent AI reviewer 3",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-058.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-1304"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Le06a043bf5",
+  "index": 813,
+  "source": "A fast, firm landing right behind the fret",
+  "old": "Greitai ir tvirtai prispausti prie pat skirsnio",
+  "new": "Greitai ir tvirtai už skirsnio iš galvutės pusės",
+  "source_sha256": "7d85101a02130bbb4d9dc137a29599136deff26a5ec55953a51f83fa8035cfb1",
+  "old_sha256": "8856d6e1619edecf06cc20bcc199edaa851cf774abf8ae03c51f51c060fb7e83",
+  "new_sha256": "f439af2d8ff636e803c6343494f8cd003dac18c989b4e210be5d0173b38b6269",
+  "reason": "Restore right behind the fret as the headstock side of the fret, not merely near either side. This completes the same physical placement clarification already applied to the mandolin and banjo hammer-on explanations. The compact option preserves the headstock-side cue within the 48-character limit; the full explanation states the action explicitly.",
+  "reviewer": "Lithuanian independent AI reviewer 3",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-008.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-1362"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lcfcdca45bf",
+  "index": 815,
+  "source": "Speed and aim matter more than force. Land on the fingertip, right behind the fret, and the string keeps singing.",
+  "old": "Greitis ir tikslumas svarbiau už jėgą. Nusileiskite piršto galiuku prie pat skirsnio ir styga dainuos toliau.",
+  "new": "Greitis ir tikslumas svarbiau už jėgą. Nusileiskite piršto galiuku prie pat skirsnio iš grifo galvutės pusės ir styga dainuos toliau.",
+  "source_sha256": "604c18f095380c5da41ad7d45b9021d2b1fb8ed35d75449491536a834568013d",
+  "old_sha256": "3a39e6af4e5cfca5a3676e41e5c6991eb7fc019693e564600b2c55ba9125b111",
+  "new_sha256": "85c46c27f19bfa4cee8c135df1fe2371cd3d550d68797d0e996757dede0059f9",
+  "reason": "The source explicitly puts the fingertip immediately behind the fret. Add the headstock-side qualifier omitted in the old explanation, consistent with the repaired answer and inherited mandolin/banjo instructions.",
+  "reviewer": "Lithuanian independent AI reviewer 3",
+  "original_author": "Lithuanian draft author 1",
+  "original_batch": "lt-008.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-1362"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L9c09a3a919",
+  "index": 5362,
+  "source": "The one, five, six and four of C are C, G, A minor and F.",
+  "old": "C tonacijos pirmasis, penktasis, šeštasis ir ketvirtasis laipsniai yra C, G, A minoras ir F.",
+  "new": "C tonacijos pirmojo, penktojo, šeštojo ir ketvirtojo laipsnių akordai yra C, G, A minoras ir F.",
+  "source_sha256": "4060278286e3048f683447d77e6faf16c428922b17c5c079fa4e942020cc5536",
+  "old_sha256": "d07c7d08d87421afcc2461cf8e67a987b873d1e5a71ff8e54aecc4c7e82314e3",
+  "new_sha256": "a4755c668b7e457e80cf7e25c7f7c13aca90e8abf3e5ea12f06fd4e4b4b2b120",
+  "reason": "These are chords on scale degrees, not the scale degrees themselves: the sixth degree is A, whereas A minor is its chord. Make laipsnių akordai explicit without changing the four-chord sequence.",
+  "reviewer": "Lithuanian independent AI reviewer 3",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-052.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "CTX-1537"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lf3627bff2c",
+  "index": 2209,
+  "source": "Bow, finger and play in tune, from open strings to fiddle tunes",
+  "old": "Strykavimas, pirštai ir švarus garsas: nuo laisvų stygų iki liaudies melodijų",
+  "new": "Strykavimas, pirštuotė ir intonacija: nuo laisvų stygų iki liaudies melodijų",
+  "source_sha256": "c6dc92172e3e3d41f37f95766d0a3fbfec93633f6d7f5aabeb837a0087817155",
+  "old_sha256": "5a864e9b1c0602360d634fb24853ad7453791a8b1d002064f2a7fb62baa8b84e",
+  "new_sha256": "758ac7fd07ff39510b097ca31ff673ad957eacd19ed8e326bcb3a9d0884ac794",
+  "reason": "The course subtitle promises playing in tune, not just a clean tone. Make intonation explicit and use pirštuotė for fingering rather than the bare body-part noun pirštai; preserve both endpoint skills. The subtitle is shortened within its 80-character limit without removing the intonation skill.",
+  "reviewer": "Lithuanian independent AI reviewer 3",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-022.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "ALL-1276"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L3177f554bc",
+  "index": 2368,
+  "source": "When your D is in tune, the open D string vibrates along with it. The two share a letter name, eight notes apart: an octave. Listen for the violin sounding fuller.",
+  "old": "Kai D skamba tiksliai, kartu virpa laisva D styga. Abiejų pavadinimas ta pati raidė, jas skiria aštuonios natos – oktava. Klausykitės pilnesnio smuiko skambesio.",
+  "new": "Kai D skamba tiksliai, kartu virpa laisva D styga. Abi natos žymimos ta pačia raide; tarp jų oktava – aštuonios gamos natos, skaičiuojant abi kraštines. Klausykitės pilnesnio smuiko skambesio.",
+  "source_sha256": "3072b15637f6df62f0c8c12104d6f732150c20c6e5619c28d2e31a182865d5d6",
+  "old_sha256": "5fba82d08bc321465ace1a1bba096dcc772bc7133febbf0c4bf627b0ebdd3612",
+  "new_sha256": "e42a4de6c0df352e03aa87f31e1adbdcea88beb12250c6f5b17570dcb748a418",
+  "reason": "The old jas skiria aštuonios natos suggests eight intervening notes or transitions rather than inclusive octave counting. Explicitly count both endpoint notes, consistent with the predecessor octave repairs, while retaining sympathetic resonance and the same D letter.",
+  "reviewer": "Lithuanian independent AI reviewer 3",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-023.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "ALL-1373"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L8e0fa6714e",
+  "index": 2614,
+  "source": "Warm up: fourth finger against the open strings, A and then E.",
+  "old": "Apšilkite: ketvirtas pirštas prieš laisvas stygas, A, tada E.",
+  "new": "Apšilkite: lyginkite ketvirtu pirštu grojamas natas su laisvomis stygomis – A, tada E.",
+  "source_sha256": "493cc8c7a3d79434dd43380ee7068a183a9a72c634c342d54a984cde15d4aa66",
+  "old_sha256": "6443389839cb4b5981d31b6d1d359bea846225f3fcb20ddfe085a19676980792",
+  "new_sha256": "24f5e74489a4c2f93d70a171733b6f4a778eb3571eb1e65ad19fc8a857e03130",
+  "reason": "Against here means compare/match fourth-finger pitches to open strings, not a finger positioned physically opposite them. Make the warm-up comparison explicit while preserving A then E.",
+  "reviewer": "Lithuanian independent AI reviewer 3",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-026.json",
+  "author_correction_history": [],
+  "classification": "semantic-grammar-pedagogical-clarity",
+  "full_context_ids": [
+   "ALL-1523"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L06ed945364",
+  "index": 2834,
+  "source": "Each pair has to match the tuner and match itself. If its two strings disagree, you hear a slow wobble. Tune one string, then bring its partner to the same note.",
+  "old": "Kiekviena pora turi atitikti derintuvą ir pati save. Jei abi stygos nesutampa, girdite lėtą pulsavimą. Suderinkite vieną stygą, tada kitą pakelkite iki tos pačios natos.",
+  "new": "Kiekviena pora turi atitikti derintuvą, o abi jos stygos – viena kitą. Jei jų garsų aukščiai nesutampa, girdite lėtą pulsavimą. Suderinkite vieną stygą, tada kitą suderinkite pagal tą pačią natą.",
+  "source_sha256": "b01cd72afc3d2d3bd8ef9d28949427a4b5062ceb97b1c213c8b054faa5196aea",
+  "old_sha256": "263b3ff38e7464d75c8a435eeda4e57434f207c3f69b875d2f5d71e1d13a2e67",
+  "new_sha256": "0c1e9d091c34168b54a20d10decc6d1d35602ae1555e359ed829bde71cd27289",
+  "reason": "Bring its partner to the same note specifies matching pitch, not necessarily raising it. Replace pakelkite with neutral tuning, and make the pair-internal pitch agreement explicit; keep the audible slow beating cue.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-028.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-1674"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L61e1dfe135",
+  "index": 3016,
+  "source": "Five traditional jam tunes, simplified, from Boil Them Cabbage Down to Old Joe Clark.",
+  "old": "Penkios paprastesnės tradicinės melodijos: nuo „Boil Them Cabbage Down“ iki „Old Joe Clark“.",
+  "new": "Penkios supaprastintos tradicinės bendro grojimo melodijos: nuo „Boil Them Cabbage Down“ iki „Old Joe Clark“.",
+  "source_sha256": "27d5e704b5ac5fe3b868eb27a7bbb6c718de6f7f5720aae0df95c8636d7d21f2",
+  "old_sha256": "6fb8a23aecbffc55f8d1adaaea3fa22fa45cbc4c8103126557d6682b1a2f8e01",
+  "new_sha256": "7fa293193ddb3ae29dc11ea0ddfde0308646322ecbe5767df321f07c1bdb7d23",
+  "reason": "Restore both simplified arrangements and the jam-session purpose; paprastesnės merely says easier, while the old summary omitted the shared-playing setting. Preserve both original tune identifiers.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-029.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-1783"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L1ec7340ea4",
+  "index": 3400,
+  "source": "Sing it back",
+  "old": "Padainuokite atgal",
+  "new": "Atkartokite balsu",
+  "source_sha256": "e8ef9806b9739799260e345d96eb4a9fbd4d5e35c2ff874825894b2f7181bd75",
+  "old_sha256": "68dc490b690ae8b11d93bece5e1f67a0de73919e3109125a01860ae657e9690a",
+  "new_sha256": "fff809e80092166cfef29397c9d563e4e6a6b841e2db7fa1bbd6c901a31a0e22",
+  "reason": "Sing it back means reproduce the heard pitch, not sing backward. Atgal can suggest reversal; the direct Lithuanian instruction matches the adjoining listen/replay/sing sequence.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-033.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-2012"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L63233a5412",
+  "index": 3456,
+  "source": "Unison, octave, fifth and fourth, each linked to a tune you can hum.",
+  "old": "Unisonas, oktava, kvinta ir kvarta, kiekviena susieta su niūniuojama melodija.",
+  "new": "Unisonas, oktava, kvinta ir kvarta – kiekvienas intervalas siejamas su niūniuojama melodija.",
+  "source_sha256": "fd629d186516016a5334b12dfcb495c1899b8e5efa5f471b8295962c47c27112",
+  "old_sha256": "8042583cc16d51f49b40261be3c56cb1f290649e3bd4bdcaa3886434dde2b290",
+  "new_sha256": "5796e764b55d2e0dfded49e34876e487bc9a2bd3ff4f87aac566428722191897",
+  "reason": "The old feminine kiekviena does not agree with the mixed list including masculine unisonas. Explicit kiekvienas intervalas retains the one-tune-per-interval meaning without a gender mismatch.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-034.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-2045"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L95bc608d2b",
+  "index": 4495,
+  "source": "This pattern lands on 1, the \"and\" of 2, and 4. Count 1 and 2 and 3 and 4 and, and tap only those three spots.",
+  "old": "Ši figūra skamba ties 1, „ir“ po 2 ir 4. Skaičiuokite 1 ir 2 ir 3 ir 4 ir, stuksenkite tik tose trijose vietose.",
+  "new": "Šios figūros natos tenka 1 dūžiui, „ir“ po 2 dūžio ir 4 dūžiui. Skaičiuokite 1 ir 2 ir 3 ir 4 ir, stuksenkite tik tose trijose vietose.",
+  "source_sha256": "529b92cfe2e781d601587d268ce859edf1a4e9ad576db358156cdeed0c0ec1fc",
+  "old_sha256": "c55aaabdba7edcf7ae344dbc2fc3f8eb654bec8a8d4e088f87926d345301ddfb",
+  "new_sha256": "59bea7c187bc20c33af85e3345def22935a71a8771c828d72d834598aa7acc38",
+  "reason": "Disambiguate the three onset positions: beat 1, the and after beat 2, and beat 4. The old „ir“ po 2 ir 4 can attach both 2 and 4 to po and imply the and after 4, shifting the third tap by an eighth note.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-044.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-2603"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L1a902fcb5b",
+  "index": 4628,
+  "source": "Count all eight eighths and tap just the accents: 1, the \"and\" of 2, and 4. This 3-3-2 pattern drives a lot of pop and Latin music.",
+  "old": "Skaičiuokite visas aštuonias aštuntines, stuksenkite tik akcentus: 1, „ir“ po 2 ir 4. Ši 3-3-2 figūra varo daug popmuzikos ir Lotynų Amerikos muzikos.",
+  "new": "Skaičiuokite visas aštuonias aštuntines, stuksenkite tik akcentus: ties 1, ties „ir“ po 2 ir ties 4. Ši 3-3-2 figūra varo daug popmuzikos ir Lotynų Amerikos muzikos.",
+  "source_sha256": "99a2d94b0ba1ce952ee72571e519e96682a6bda070944183b89bf9ed265dafc3",
+  "old_sha256": "4fe82fb4c9dc9d223d31bf22e4bf37b6782bb847b94696c44b1a3d119c73dad3",
+  "new_sha256": "3867f5df46b62f11a0ba552469e7bb45357638410990a678e45448fbc19495fd",
+  "reason": "As in the preceding syncopation explanation, the accented positions are beat 1, the and after 2, and beat 4. Repeated ties prevents po from governing both 2 and 4 and changing the 3-3-2 rhythm.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-045.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-2667"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L3dfd137528",
+  "index": 4662,
+  "source": "To sustain is to hold a note at one steady pitch. Let the air out slowly and evenly, like fogging a mirror without stopping.",
+  "old": "Išlaikyti – laikyti natą viename stabiliame aukštyje. Orą leiskite lėtai ir tolygiai, tarsi be sustojimo rasotumėte veidrodį kvėpavimu.",
+  "new": "Išlaikyti – laikyti natą viename stabiliame aukštyje. Orą leiskite lėtai ir tolygiai, tarsi be sustojimo kvėpuotumėte į veidrodį, kad jis aprasotų.",
+  "source_sha256": "35caacfda3217bcd03cb822d99b43ae0eaec65f616af6c833bd4c3b9bd71bad2",
+  "old_sha256": "cb0c5b37eab7c9401c781e3d0b96731abed8f44051a53ebc277e308affb7d141",
+  "new_sha256": "7dcdb1ed153085e444115f33af21818a3bf4a3af2bbf69191bbbf32159031738",
+  "reason": "The mirror-fogging image needs the mirror to become misted by the learner’s breath. Rasotumėte veidrodį wrongly uses the intransitive verb with an object; use a natural clause preserving continuous, slow, even exhalation.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-045.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-2685"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L073ebc6d51",
+  "index": 4823,
+  "source": "Same name, eight notes up",
+  "old": "Tas pats vardas, aštuoniomis aukščiau",
+  "new": "Tas pats vardas, oktava aukščiau",
+  "source_sha256": "8de9a4f837d26dff880d53008740fa6da6cdf85244b55a897c9dec10b288e70c",
+  "old_sha256": "737d4b44685a78d5edfb59ab31cce298ec7363b04e20b2d74d1a18a90e1c590e",
+  "new_sha256": "ffb420c439ec39da3a6f23ab8710dfcd884f47680728ca4f80541536e4451545",
+  "reason": "Aštuoniomis aukščiau implies eight upward transitions rather than the octave’s inclusive eight-note span. Use the unambiguous octave heading, with the exact inclusive count made explicit in the adjoining body.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-047.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-2788"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L8ae6e236df",
+  "index": 4824,
+  "source": "An octave leaps from do to the next do, eight scale notes up. The two notes share a name and blend so well they almost sound like one.",
+  "old": "Oktava šoka nuo do iki kitos do, aštuoniomis gamos natomis aukštyn. Abi natos turi tą patį pavadinimą ir taip gerai susilieja, kad beveik skamba kaip viena.",
+  "new": "Oktava – šuolis nuo do iki kitos do aukščiau: aštuonios gamos natos, skaičiuojant abi kraštines. Abi natos turi tą patį pavadinimą ir taip gerai susilieja, kad beveik skamba kaip viena.",
+  "source_sha256": "e7e2a6bab0295845e4d7aa5d0b34c9d949a43b9105342f96fdbcf5a3a62f5b5c",
+  "old_sha256": "95a74d02ebf317da4d8d02a47d723697e4c326ceedb4133f80518c92a0d0f2e7",
+  "new_sha256": "ec76d404f333e1bb8f2d137fda9486663732e42ca1cb4410d26d078e58aa8516",
+  "reason": "Clarify inclusive octave counting, as in the inherited octave repairs. Aštuoniomis gamos natomis aukštyn reads as eight successive steps, which would overshoot the next do. Count both endpoints without changing the source’s eight-note span or blending claim.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-047.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-2788"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lae8f59ebdd",
+  "index": 5161,
+  "source": "A7 needs two fingers on fret 2: finger 1 on string 4, finger 3 on string 2. Start your strum on string 5. That C sharp on string 2 is the one the melody climbs through.",
+  "old": "A7 reikia dviejų pirštų ties 2 skirsniu: 1 pirštas ant 4 stygos, 3 ant 2. Braukite nuo 5 stygos. Ta C diezas ant 2 stygos – nata, per kurią kyla melodija.",
+  "new": "A7 reikia dviejų pirštų ties 2 skirsniu: 1 pirštas ant 4 stygos, 3 ant 2. Braukite nuo 5 stygos. C diezas ant 2 stygos – ta nata, per kurią kyla melodija.",
+  "source_sha256": "4eb12518f538cece2a504ea76fe008621ce831fa7d4c6f1f2306daadaafa5c59",
+  "old_sha256": "88270d3805229f36efddcbfed2b25a65630ba45bd85a858c08e6353d108d4f1a",
+  "new_sha256": "4683d5bda1c6e5b749b4c9fbc384776827e905817af86a1f5e607f650a42e492",
+  "reason": "Repair Ta C diezas gender agreement by making ta modify nata rather than masculine diezas; retain the A7 fingering, strum-start string and melodic C-sharp connection.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-050.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3015"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Le1bece3682",
+  "index": 5188,
+  "source": "D uses the top four strings. Finger 1 on string 3, fret 2; finger 2 on string 1, fret 2; finger 3 on string 2, fret 3. Strum from open string 4.",
+  "old": "D naudoja viršutines keturias stygas. 1 pirštas ant 3 stygos, 2 skirsnio; 2 pirštas ant 1 stygos, 2 skirsnio; 3 pirštas ant 2 stygos, 3 skirsnio. Braukite nuo laisvos 4 stygos.",
+  "new": "D akordui naudojamos keturios aukščiausiai skambančios stygos. 1 pirštas ant 3 stygos, 2 skirsnio; 2 pirštas ant 1 stygos, 2 skirsnio; 3 pirštas ant 2 stygos, 3 skirsnio. Braukite nuo laisvos 4 stygos.",
+  "source_sha256": "3c30f570620d57ebca9df03d30f7a907283fc15dd480b63e190d7c34ffd6513f",
+  "old_sha256": "fd16b5793d320e9eee8a0b835dc7d0be265ab093667d0dba4b9bd1a7c24f4e04",
+  "new_sha256": "8fa3a0eebed15bf343bff94a6f0fb571af15ae4dc3118a2da77b4f6ce0f533af",
+  "reason": "Top four here means the four highest-pitched strings, 4 through 1, not the physically upper strings nearest the player’s face. Make pitch sense explicit while retaining all numbered fretting and strum instructions.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-050.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3033"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L395bfd4fb5",
+  "index": 5299,
+  "source": "Gravel Road Two-Step is dance-hall country in A at 116 beats per minute. Pick the root on one and three, strum on two and four, and add a quick up after each strum.",
+  "old": "„Gravel Road Two-Step“ – šokių salės kantri A tonacijoje, 116 dūžių per minutę. Pagrindinį toną grokite su pirmu ir trečiu dūžiu, braukite su antru ir ketvirtu, po kiekvieno braukimo greitai kilkite aukštyn.",
+  "new": "„Gravel Road Two-Step“ – šokių salės kantri A tonacijoje, 116 dūžių per minutę. Pagrindinį toną grokite su pirmu ir trečiu dūžiu, braukite su antru ir ketvirtu, po kiekvieno braukimo pridėkite greitą braukimą aukštyn.",
+  "source_sha256": "73a8908b8d392c0310a060ea9308fe1df7fdf5bd9b7264a8d3a989c5ae213394",
+  "old_sha256": "c13025f910deb8a75ee97a8c88a3dd1860c400353efac1c54022b5fa346b6a69",
+  "new_sha256": "880c57128c401e2a6302adacf2f42b39b918b5189889c720df29bcc4ed7cc9f7",
+  "reason": "A quick up is an additional upstroke, not merely moving the hand or learner upward. Explicit braukimą aukštyn preserves the sounded extra strum after each downstroke.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-051.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3109"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L8e0159dfcd",
+  "index": 5311,
+  "source": "Hammock Season is easy reggae in C at 76 beats per minute. The guitar plays only on beats two and four: one short, bright upstroke on the top strings, then silence.",
+  "old": "„Hammock Season“ – lengvas regis C tonacijoje, 76 dūžiai per minutę. Gitara groja tik su antru ir ketvirtu dūžiu: trumpas, skaidrus kirtis aukštyn per viršutines stygas, tada tyla.",
+  "new": "„Hammock Season“ – lengvas regis C tonacijoje, 76 dūžiai per minutę. Gitara groja tik su antru ir ketvirtu dūžiu: trumpas, skaidrus kirtis aukštyn per aukščiausiai skambančias stygas, tada tyla.",
+  "source_sha256": "162231f35176aa35943b4dcfba342eb920074111703d3e798c248cdbab36ada0",
+  "old_sha256": "8b85f996e87e812b451a47e2f271a5da27d92b50057fe473260b375d88439030",
+  "new_sha256": "d1e407b17390b4c91422c4f6885940fc70d327e133b22979033e15f915bdc78d",
+  "reason": "Top strings denotes the high-pitched strings, confirmed by the following explicit strings 1–3 instruction. Avoid physically upper viršutines, which can lead a beginner to the low strings; preserve the source’s beats two and four simplification.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-051.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3118"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L4cfe4ee7d4",
+  "index": 5329,
+  "source": "Sparkler Season rides the most famous loop in pop: C, G, A minor and F, the one, five, six and four of C. Hundreds of hits share these chords; a new tune and new words make each one its own.",
+  "old": "„Sparkler Season“ remiasi garsiausiu popmuzikos ratu: C, G, A minoras ir F, pirmas, penktas, šeštas ir ketvirtas C laipsniai. Šimtai hitų turi šiuos akordus; nauja melodija ir žodžiai kiekvieną padaro savitą.",
+  "new": "„Sparkler Season“ remiasi garsiausiu popmuzikos ratu: C, G, A minoras ir F – C tonacijos pirmojo, penktojo, šeštojo ir ketvirtojo laipsnių akordai. Šimtai hitų turi šiuos akordus; nauja melodija ir žodžiai kiekvieną padaro savitą.",
+  "source_sha256": "b9aad754d25d0471288ff6c46337e39393239b3c7942e9b73c51a49a04bfcd04",
+  "old_sha256": "c010ff4ad38a1b84ea447efbb7412e13e69d4b02f3d24db4faaf4195225c8d5c",
+  "new_sha256": "4b7aff4add66c06e865e0240bc1f04dc6fc982b65a2e5e035fcf8bafee6c91bb",
+  "reason": "C, G, A minor and F are chords built on the named scale degrees, not the degrees themselves. Make laipsnių akordai explicit, consistent with inherited row5362, while preserving all four chord qualities and the source loop explanation.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-051.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3131"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L28eaabb81a",
+  "index": 5335,
+  "source": "Roller Rink is bright dance pop at 120 beats per minute: G, E minor, C and D, the one, six, four and five. Strum even eighths and feel the kick drum land on every beat.",
+  "old": "„Roller Rink“ – ryški šokių popmuzika, 120 dūžių per minutę: G, E minoras, C ir D, pirmasis, šeštasis, ketvirtasis ir penktasis laipsniai. Braukite lygiomis aštuntinėmis ir pajuskite bosinį būgną per kiekvieną dūžį.",
+  "new": "„Roller Rink“ – ryški šokių popmuzika, 120 dūžių per minutę: G, E minoras, C ir D – pirmojo, šeštojo, ketvirtojo ir penktojo laipsnių akordai. Braukite lygiomis aštuntinėmis ir pajuskite bosinį būgną per kiekvieną dūžį.",
+  "source_sha256": "6a19e1e34263bf7d8406699ad94e98758fe465cf0aaff206460e9feab465ee09",
+  "old_sha256": "831a5f918aa7ece960f856800cf18c2194e71c083d7b44022ae965a2f35712da",
+  "new_sha256": "8192ae8898162a32e97c491dedd2a801b2a08ab294588ad564b8ed4f59fcadc8",
+  "reason": "The numeral sequence describes chords on scale degrees, not standalone notes/degrees. Add akordai and correct the corresponding genitive forms without changing G, E minor, C, D or their order.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-052.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3135"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Le24f2a69d5",
+  "index": 5339,
+  "source": "Start on the six",
+  "old": "Pradėkite nuo šeštojo laipsnio",
+  "new": "Pradėkite šeštojo laipsnio akordu",
+  "source_sha256": "f6556e3a9cdef426f559a857a8f58219ce8846188e7a3ed882035ab8a73afe54",
+  "old_sha256": "81b0a78b1a43bc135aa6018a8e0eec8bc1857d4a21b49b41f8bf2ec1037980aa",
+  "new_sha256": "655832379440087c39d7344a4d698282052cb69713e0659547d8bb110afd5a7b",
+  "reason": "The six here is the vi chord starting the E-minor/C/G/D loop, not a lone sixth scale note. State akordu in the title consistently with the corrected numeral/chord explanations.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-052.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3140"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L18a856d383",
+  "index": 5353,
+  "source": "Scoreboard Lights is a stadium anthem in D at 100 beats per minute: D, A, B minor and G, the same one, five, six, four loop in a new key. Drive steady eighths.",
+  "old": "„Scoreboard Lights“ – stadiono himnas D tonacijoje, 100 dūžių per minutę: D, A, B minoras ir G, tas pats pirmojo, penktojo, šeštojo, ketvirtojo laipsnių ciklas naujoje tonacijoje. Veržliai grokite lygias aštuntines.",
+  "new": "„Scoreboard Lights“ – stadiono himnas D tonacijoje, 100 dūžių per minutę: D, A, B minoras ir G, tas pats pirmojo, penktojo, šeštojo, ketvirtojo laipsnių akordų ciklas naujoje tonacijoje. Veržliai grokite lygias aštuntines.",
+  "source_sha256": "a970b23fea7a80c10eebbf75ff588f04b7b335cb82338a8a2a27d460b5ffa49f",
+  "old_sha256": "0bd6f9b12a73318cab48e522d561945f7ed0da7858fb47c5096725b6fdf805b0",
+  "new_sha256": "ca7542bec1ef661dc88df58cb46582533aa6841a304b0710ed89ab3be1ffac51",
+  "reason": "Complete the same degree-versus-chord repair: the repeating loop is of chords on those degrees, not the scale degrees alone. All chord names, numerals spelled in words, tempo and eighth-note instruction stay unchanged.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-052.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3149"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lc7ededc2df",
+  "index": 5355,
+  "source": "This B minor uses the top four strings only: fret 4 on strings 4 and 3, fret 3 on string 2, fret 2 on string 1. The full barre comes later.",
+  "old": "Šiam B minorui reikia tik keturių viršutinių stygų: 4 skirsnio 4 ir 3 stygose, 3 skirsnio 2 stygoje, 2 skirsnio 1 stygoje. Visą barė išmoksite vėliau.",
+  "new": "Šiam B minorui reikia tik keturių aukščiausiai skambančių stygų: 4 skirsnio 4 ir 3 stygose, 3 skirsnio 2 stygoje, 2 skirsnio 1 stygoje. Visą barė išmoksite vėliau.",
+  "source_sha256": "ca2b2702394ca086b74258f683f7625b0f855d4b57d22c3953e0182e6da73509",
+  "old_sha256": "d219c36967808f4b1ecea2cef2f4459fe3a170f668f69470b69a231fc73e42ed",
+  "new_sha256": "4293f208480cd3cc76f3de1e85f97a9945c555c2b5b844a9dba33e43d8ac23a0",
+  "reason": "Top four strings is pitch-ranked strings 4–1, not the physically upper bass strings. Clarify aukščiausiai skambančių while preserving every fret and string number and the later full-barre promise.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-052.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3150"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L34547c6e01",
+  "index": 5364,
+  "source": "Blues, a waltz, 6/8 folk, lo-fi and funk, with seventh chords, sus chords and swung rhythms.",
+  "old": "Bliuzas, valsas, 6/8 folkloras, lo-fi ir fankas su septakordais, sus akordais ir svinguojančiais ritmais.",
+  "new": "Bliuzas, valsas, 6/8 folkas, lo-fi ir fankas su septakordais, sus akordais ir svinguojančiais ritmais.",
+  "source_sha256": "c306a1ae46509033b9e7115aa08520034450664571db693bc3f8b8829e1cd886",
+  "old_sha256": "2b8010e388b5fc7bc21adbe97076525f1bc280d1f2d0fb2230876e12d84935f9",
+  "new_sha256": "2af8975f6f84e453d4607224e6a6d265541da4fb1fd277e22a674a5a7309445c",
+  "reason": "This is a list of modern song genres including indie folk, not folklore as a broader cultural category. Use folkas consistently with the actual Cedar Smoke lesson and the rest of the original-song genre labels.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-052.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3156"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L68d4c57c61",
+  "index": 5527,
+  "source": "Play the full B minor barre at fret 2 if you can. If not, use the top four strings: fret 4 on strings 4 and 3, fret 3 on string 2, fret 2 on string 1.",
+  "old": "Jei galite, grokite visą B minoro barė 2 skirsnyje. Jei ne, naudokite keturias viršutines stygas: 4 skirsnį 4 ir 3 stygose, 3 skirsnį 2 stygoje, 2 skirsnį 1 stygoje.",
+  "new": "Jei galite, grokite visą B minoro barė 2 skirsnyje. Jei ne, naudokite keturias aukščiausiai skambančias stygas: 4 skirsnį 4 ir 3 stygose, 3 skirsnį 2 stygoje, 2 skirsnį 1 stygoje.",
+  "source_sha256": "6cdd3c3f5d6cf4ac468bca0c81b14a5b728215cfdff77079563aecec0cb7cbcc",
+  "old_sha256": "390ce2dca73b81c99052fb1fc33acc76b5e1d5191dcf9497c9de488a2010469b",
+  "new_sha256": "0aae045873dd94ee14c0a39dadde5a8086f73caec7034a688f5f1027945d41b1",
+  "reason": "Clarify that top four means the four highest-pitched strings, matching the explicit 4,3,2,1 fingering and the earlier B-minor explanation, not the physically upper bass strings.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-053.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3294"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L397e8e477d",
+  "index": 5533,
+  "source": "Lay finger 1 flat across all six strings at fret 1 and build an E shape in front of it. Not there yet? Use the mini F on the top four strings for now.",
+  "old": "Gulsčiai prispauskite 1 pirštu visas šešias stygas 1 skirsnyje, o prieš jį sudėkite E formą. Dar nepavyksta? Kol kas naudokite mažąjį F keturiomis viršutinėmis stygomis.",
+  "new": "Gulsčiai prispauskite 1 pirštu visas šešias stygas 1 skirsnyje, o korpuso pusėje nuo jo sudėkite E formą. Dar nepavyksta? Kol kas naudokite mažąjį F keturiomis aukščiausiai skambančiomis stygomis.",
+  "source_sha256": "fb8892c2d56e642434398d7872b4c1659b6e5f6c6cd2e1a2bd3d3091a4c0c2fa",
+  "old_sha256": "24f80c822725c7726741d75ad75ccf3308e035f9ac97177287b4cc93c99bfe9a",
+  "new_sha256": "a0c0f0da6971ce6b67323c13cb54a588aa8f0eba764953f0030aa57983ac9b68",
+  "reason": "Make both physical cues unambiguous: the E shape is on the body side of the barre, and mini F uses the four highest-pitched strings. The old prieš jį and viršutinėmis can suggest the wrong fret/string direction. Retain the full-versus-easy alternative and existing digits.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-053.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3299"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L4748699753",
+  "index": 5537,
+  "source": "Market Day borrows from highlife, the bright guitar pop of Ghana and Nigeria: G, B minor, C and D at 104 beats per minute. The hook bounces off the beat, so keep your body moving.",
+  "old": "„Market Day“ semiasi iš highlife, šviesios Ganos ir Nigerijos gitarinės popmuzikos: G, B minoras, C ir D, 104 dūžiai per minutę. Įsimintinas motyvas atšoka nuo dūžio, tad nenustokite judėti.",
+  "new": "„Market Day“ semiasi iš highlife, šviesios Ganos ir Nigerijos gitarinės popmuzikos: G, B minoras, C ir D, 104 dūžiai per minutę. Įsimintinas motyvas šokinėja tarp dūžių, tad nenustokite judėti.",
+  "source_sha256": "04290c2316bcdfdb77c39e83b49963329ea0b2f1c433d1a6e44e49f07a8a2c51",
+  "old_sha256": "37dbc4db1e0777c8db33d3e5b3b767a04c00372780590e690b982f807c074976",
+  "new_sha256": "189f0b6fe02d4ac5f5fc95a14a98f358f2f26c9dfba4dd8cbd00f3affab56e65",
+  "reason": "Off the beat describes syncopated placement between beats, not bouncing physically away from a beat. Tarp dūžių restores the rhythmic cue while keeping the highlife description, chord sequence and tempo.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-054.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3303"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L8b540851de",
+  "index": 5568,
+  "source": "Slow Motion Strobe is synth-pop at 118 beats per minute: F sharp minor, D, A and E. The strum is pushed: two of its hits land on the and, just before the beat.",
+  "old": "„Slow Motion Strobe“ – sintpopas, 118 dūžių per minutę: F diezo minoras, D, A ir E. Braukimas paskubintas: du jo kirčiai tenka „ir“, prieš pat dūžį.",
+  "new": "„Slow Motion Strobe“ – sintpopas, 118 dūžių per minutę: F diezo minoras, D, A ir E. Du braukimo kirčiai paankstinti: jie tenka „ir“ prieš pat dūžį.",
+  "source_sha256": "9fdb8b3feecc635f7615263cefc56c0cc8ea961cee1c40f08684caaae833afc9",
+  "old_sha256": "cc1560e1c8a6756ae16833a3ea5c219b3278f2295958b0ea19c1e0e60a141f27",
+  "new_sha256": "0e2b23e7fa7b00508c356fed088ea28260dbb57b08c81e88afe33ef2be56c077",
+  "reason": "Pushed here is deliberate anticipated syncopation, not hurried/rushed playing. Specify the two anticipated strokes on and before the beat rather than calling the strum paskubintas.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-054.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3323"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Leaa1e0fc89",
+  "index": 5626,
+  "source": "A waltz in three",
+  "old": "Trijų dalių valsas",
+  "new": "Valsas trijų dūžių taktu",
+  "source_sha256": "0a4046321ff9ddde25d06fe83ffb9025cb1a208ccc58499b5059115f6b755472",
+  "old_sha256": "3031de7a7dac1d15361c25a8a0985c6462305d0e4a95c2f235655f56702e7926",
+  "new_sha256": "ba4b1e8faa6a7debc72fd5be6f2ca81d32dbf8c0f1e32179c6a112906124987f",
+  "reason": "In three describes triple meter, not three formal sections. Trijų dalių valsas can mean a three-part waltz; dūžių taktu ties the heading to the adjoining one-two-three count.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-054.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3369"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L431be71b0e",
+  "index": 5717,
+  "source": "The big run: open G, leap to G at fret 3 on string 1, then step all the way down to A.",
+  "old": "Didysis pasažas: laisva G, šuolis iki G 1 stygos 3 skirsnyje, tada laipteliais iki pat A.",
+  "new": "Didysis pasažas: laisva G, šuolis iki G 1 stygos 3 skirsnyje, tada laipteliais žemyn iki pat A.",
+  "source_sha256": "1102b57aca0718bd3824a5115305b09733ff55dd2e285569b946da7cb68a518b",
+  "old_sha256": "eef0ae9032806bad36de674dadfa14703443939a8509e519c3ea2705ecd8704e",
+  "new_sha256": "ecd8b272e641e9090bf37814f0d0749d7e8ff589a6a5ce9204bba0745d7bdcd2",
+  "reason": "Restore the explicit downward direction of the scalar run after the octave leap. The old laipteliais iki pat A omitted down and could be read as continuing upward.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-055.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3432"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "La7bfd88357",
+  "index": 5730,
+  "source": "Scott Joplin published The Entertainer in 1902, and a 1973 film made it famous again. In ragtime the tune leans off the beat while the bass keeps steady time.",
+  "old": "Scott Joplin paskelbė „The Entertainer“ 1902 metais, o 1973 metų filmas vėl jį išgarsino. Regtaime melodija krypsta nuo dūžio, o bosas išlaiko lygų ritmą.",
+  "new": "Scott Joplin paskelbė „The Entertainer“ 1902 metais, o 1973 metų filmas vėl jį išgarsino. Regtaime melodija akcentuoja tarpus tarp dūžių, o bosas išlaiko lygų ritmą.",
+  "source_sha256": "25fcde78319ec35c77f62d65fa58074d1ffce29fb1dd48ad063b0c6367ae31a1",
+  "old_sha256": "d4bae2c1f9846d5abb2518e3c144e6da516d3edf797e46819e782227317f75a1",
+  "new_sha256": "b89e7842acfeb62b300a0a82000968f825fb64ba242b158fc96d94b825d544bb",
+  "reason": "Leans off the beat describes intentional syncopation over a steady bass, not drifting out of time. Explicit between-beat accents retain the musical contrast and both dates.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-055.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3440"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Laea00bbadf",
+  "index": 5786,
+  "source": "Her-ald is long-short: her- lands on three and holds, and -ald slips in on the and of four. Count one, two, three, four-and.",
+  "old": "„Her-ald“ – ilgai–trumpai: „her-“ tenka trims ir tęsiasi, o „-ald“ įsiterpia ties keturių „ir“. Skaičiuokite vienas, du, trys, keturi-ir.",
+  "new": "„Her-ald“ – ilgai–trumpai: „her-“ prasideda su trečiu dūžiu ir tęsiasi, o „-ald“ įsiterpia ties „ir“ po ketvirto dūžio. Skaičiuokite vienas, du, trys, keturi-ir.",
+  "source_sha256": "0d4bedcb2f9c92db94d5ba23f69c5b06ad1ec4852957b7c47a72850c1d9ea208",
+  "old_sha256": "dfb440e68ca27e02a3ab432a244dd8c0ee895e9eae5dcfc402162590ce744664",
+  "new_sha256": "0daf7029e4bd13ed0a083a92db0f2d6cc143cd00ba2c9efde915998ed6bdbee7",
+  "reason": "Make the exact syllable onsets grammatical and explicit: her- starts on beat three and -ald on the and after four. Bare tenka trims and keturių „ir“ are unnatural and can obscure beat placement; retain the literal lyric syllables and spoken count.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-056.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3474"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "L36c01e8a53",
+  "index": 5932,
+  "source": "The verse starts just before beat one, on a dotted eighth and a sixteenth. Count four-e-and-a: 'Mid lands on four, and its short turn on a.",
+  "old": "Posmas prasideda prieš pat pirmą dūžį, aštuntine su tašku ir šešioliktine. Skaičiuokite keturi-e-ir-a: „'Mid“ tenka keturiems, o trumpas jo posūkis – „a“.",
+  "new": "Posmas prasideda prieš pat pirmą dūžį, aštuntine su tašku ir šešioliktine. Skaičiuokite keturi-e-ir-a: „'Mid“ prasideda su ketvirtu dūžiu, o trumpas jo posūkis tenka „a“.",
+  "source_sha256": "fa2d1ac72d051097835c0f4cdff242825423b9626ea7ab66be9e3dc15ae5bb83",
+  "old_sha256": "336a44fa4e22e308727c13b2b6cc3665d91393011cd336964004884780d697ac",
+  "new_sha256": "4345f67b377579cb80d2f7ae11977fa2ddfd9fa06c970166704682a5a765e679",
+  "reason": "Specify beat four rather than bare tenka keturiems, which is not a natural beat-location phrase. Preserve the dotted-eighth/sixteenth pickup, the literal lyric token and all four subdivision syllables.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-057.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3565"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ },
+ {
+  "locale": "lt",
+  "key": "Lbfc05f8c1b",
+  "index": 6011,
+  "source": "Vivaldi, Mozart and Sousa, back to back: a violin concerto, a piano rondo and a band march, each arranged for your guitar.",
+  "old": "Vivaldi, Mozart ir Sousa vienas po kito: smuiko koncertas, fortepijono rondo ir orkestro maršas, visi pritaikyti jūsų gitarai.",
+  "new": "Vivaldi, Mozart ir Sousa vienas po kito: smuiko koncertas, fortepijono rondo ir pučiamųjų orkestro maršas, visi pritaikyti jūsų gitarai.",
+  "source_sha256": "26962deb0b60cb1e688346bf389153e438fb7bfc34e9e813701d9eab528b85f9",
+  "old_sha256": "020228c83f3c796cc6461f2b2de80fd95a6de325659a68e4c677632f01a88021",
+  "new_sha256": "8db86a97e58e19864cd091c6456441304f6a563651871551edd5465b12b6b277",
+  "reason": "Carry the inherited band-versus-string-ensemble distinction into the medley introduction: Sousa’s band march is for wind band, not an unspecified orchestra. This matches the already repaired following quiz/explanation without changing the three works or guitar arrangements.",
+  "reviewer": "Lithuanian independent AI reviewer 4",
+  "original_author": "Lithuanian draft author 2",
+  "original_batch": "lt-058.json",
+  "author_correction_history": [],
+  "classification": "semantic-terminology-grammar-or-physical-clarity",
+  "full_context_ids": [
+   "ALL-3611"
+  ],
+  "status": "guarded-correction-all-current-boundary-contexts-read"
+ }
+]

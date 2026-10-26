@@ -1,0 +1,122 @@
+{
+ "locale": "lt",
+ "review_type": "independent AI semantic review; not native-human, musician, device, audio or release certification",
+ "sealed_packages": [
+  {
+   "name": "timbre-lt-complete",
+   "manifest_sha256": "eff2595fe169fea7c9b5cab92d07063f2dc38940eef905ea21183b732e1f4fdf",
+   "verified_files": 59
+  },
+  {
+   "name": "timbre-lt-independent",
+   "manifest_sha256": "e11651606b60177bed6071be720449bf2f487c42d6eceb6875246456671babd5",
+   "verified_files": 174
+  },
+  {
+   "name": "timbre-lt-continuation",
+   "manifest_sha256": "1a6ee564fc307ca53041bdd0e2207b02e53620fc192de5ac122141cb9c6e20b0",
+   "verified_files": 62
+  },
+  {
+   "name": "timbre-lt-final",
+   "manifest_sha256": "6dc303f900e0bd1c3501d466caaa1a3e6123f8112becd24529005e5f5d11726e",
+   "verified_files": 45
+  },
+  {
+   "name": "lt",
+   "manifest_sha256": "aba735a11c84e7c5f5a06ddf0de706cd0fb880c5346327f8a9c28ddfb7bf8fc5",
+   "verified_files": 641
+  }
+ ],
+ "current_source_hashes": {
+  "ios/Timbre/Resources/en.lproj/Learn.strings": "718a9431e97997dcad904b99eb00f0072385142d63ebb7ffc1c27ff374ca6de3",
+  "ios/Sources/TimbreCore/Resources/curriculum.json": "f5399d3d13edd2f94b660648e7dd23aceef66a21e095567988bbb6bd38995bf1",
+  "tools/l10n/gpt_l10n.py": "b74452e7165145c82449bf7fc70a0a114282a69ed875a18a7ba46e7ff0c70731"
+ },
+ "exact_pairs": 6083,
+ "decisions": {
+  "accept": 5615,
+  "genuine-identity-approval": 366,
+  "guarded-correction": 102
+ },
+ "required_contexts": 1545,
+ "supplemental_contexts": 1127,
+ "read_contexts": 2672,
+ "new_complete_primary_boundaries": 1086,
+ "new_final_corrected_context_rereads": 28,
+ "all_corrected_context_rereads": 86,
+ "reviewer_final_decisions": {
+  "Lithuanian independent AI reviewer 1": 703,
+  "Lithuanian independent AI reviewer 2": 2112,
+  "Lithuanian independent AI reviewer 3": 1674,
+  "Lithuanian independent AI reviewer 4": 1594
+ },
+ "inherited_final_judgments_preserved": 4489,
+ "inherited_primary_only_false_flags_preserved": 1789,
+ "false_primary_flag_read_modes": {
+  "complete_context": 1781,
+  "separately_evidenced_targeted_pair": 8
+ },
+ "guarded_author_receipts": 47,
+ "author_receipt_keys": 46,
+ "helper_shared_records": 4127,
+ "helper_option_records": 2284,
+ "all_current_required_context_memberships_verified": true,
+ "final_map_sha256": "3685e715a63ce3c251202e7c6ebe61a2bea0e4c7aee9537de78ae83af20d46f4",
+ "original_frozen_artifact_hashes": {
+  "HANDOFF.md": "a7dbbb1d8a7f0409cabc1f007d2379258bdf4e62df169f5a8336fe3b362d030a",
+  "QA-FINAL.json": "19bc05990c2cd29d2ab290bfae2ef477eb8098eb1f89d6c6b72352b161f090c0",
+  "complete-locale-map.json": "d0e18a99c999697cfe4dbec722d6bc1880e735f1cf7dc39281fe3e526214372e",
+  "context-membership-proof.json": "c2e74b4298d658cb1d10bde3abd299d204cee0a1c96ee261df928cb4d250be93",
+  "context-queue.json": "1c7fae11565e363df70333ff23b8403f63450e9d97a7be5b009ce92ec9439f5d",
+  "context-review-coverage.json": "305f573e3e1791fb594bc59a203d7c5b649b9e7629cfefcea7934f2e1d91b031",
+  "corrected-context-confirmation-display.txt": "c7cf371a7f87dad17f70afdca45a882a1382d496d9f86a6834c20f8efde4d658",
+  "corrected-context-confirmation-prepared.json": "4cdc590d7ac7995a2ff7c4d1638cd45c4345edc9a2ec0728ec238d2b30906156",
+  "corrected-context-confirmation.json": "377584e52e4dbf4be21bd521b5dbfc7f76d3c9c8c7580cd68755c46189399750",
+  "coverage-final.json": "11d22bf711283df7ec62ef42f821f0b0655c9be3e7923438e01bca01c7108e86",
+  "final-context-state-binding.json": "6ab29d99847e4d23d50fb64cf4cd867d3c4fa6d30dc2fcd4c1d7fd3104cd1ba7",
+  "final-input-reverification.json": "e4a690a6ca27fa347a02ef4ae7401b160877ee3c7739aac687fa4e10753502e6",
+  "final-map.json": "3685e715a63ce3c251202e7c6ebe61a2bea0e4c7aee9537de78ae83af20d46f4",
+  "full-qa-detail.json": "959649549f155794e77bf7ff1f1a93285159eb56c7252c5177e646b8203108f1",
+  "guarded-corrections.json": "27dfc171a51dbad90a69742c2bd5186d41198bc6231a42fc7b07475c40964b52",
+  "importer-handoff.json": "98eaf3f11888ac2c94bee9b7dbc39bd93424bc70548ce1505e0798f3a5fc3b50",
+  "input-verification.json": "d6b5cfe732febf5b42a76687e1ca50d25d3c54f41e3a6990403b697edb3a7f5c",
+  "invariant-decisions.json": "ec5e0a1c267bf0689696fb610da6643cbb5f2038bce536224b89d1387272cabf",
+  "invariant-registry-proposal.json": "0349a73466f922d719d2f83785c682abaa0beeb9a8258d03f4678060cf6efc1a",
+  "provenance-and-coverage-audit.json": "4c4a61351f4134a1991b97be499a2acce55f1daaab4a585b79f1ef70045b907e",
+  "read-0001-0070-keys.json": "7d0a703bf0b697d7cd81a7c7ae49feae725d6ed71b4630f3ef3d34faae1ad99a",
+  "read-0001-0070.txt": "f3b204cefca838a93fbdefdcfd3332705257baffeab9b4026a823bcba592dcc0",
+  "read-0071-0140-keys.json": "d0b0727e295a739c5928c5360f926dc1a45c97a34668c209f398ec6070eb02da",
+  "read-0071-0140.txt": "1b4485d034b851f994f85067109425e74b3c22c530e277a0d7832e2bcf6dc1e6",
+  "read-0141-0210-keys.json": "4e036ff29c11768530df245599f65c9adfc5ce48e35e956ae3ba64b0194a2247",
+  "read-0141-0210.txt": "9e946306220e897d854f288b85c2694c92435358c429072437019cae13a8ac7a",
+  "read-0211-0280-keys.json": "e9a7d98ecf24b6faa20e99d6d87eb336ea6844bdb5aa3efb958a8962e8e8ad36",
+  "read-0211-0280.txt": "2e835627a53ae0d8a1ac8bfaae5891fc21108bce4ccc019435accee26d549726",
+  "read-0281-0350-keys.json": "c98c194948f446aab9b4ba7842ac21c05228af74a93fad5bedc9ea5a543c9c33",
+  "read-0281-0350.txt": "609ffcf7b7c21aa443412b97a8d29ef8391e3511d2fe3e1998b47a90324577cb",
+  "read-0351-0420-keys.json": "5240a577b8cb5cd7bb08b426fd76ae943cb4121608211163cc294b81c10af7ce",
+  "read-0351-0420.txt": "7ff43b9547a332601e711306b741fbe1c70b4b1afccc813189feb52ac191df2e",
+  "read-0421-0490-keys.json": "ff849432c736111fcbe69c7769aba6bbf47e943379b6b105c978113052d36ec1",
+  "read-0421-0490.txt": "57f18fd8d1cb0c320ddc086486a2dbf8c3049a8acb5a13784d734301b2b1d11d",
+  "read-0491-0560-keys.json": "0675c49cfaa3de60ac8b21e8af6587a11662cc31760532529340bcc696fee4d0",
+  "read-0491-0560.txt": "978aca4fda8db88b0d591e5b9218a6141dcd700ccb5d9d6021f182131f973f4b",
+  "read-0561-0630-keys.json": "f3b492e69bde87ac28aa2e5dca2f5366610fa78ad3933667726072265a6e85ec",
+  "read-0561-0630.txt": "134cac99bd7d36ec8d36e5b7afcbe0eca6ae42b7d36122c08e0f1d9b825183b5",
+  "read-0631-0700-keys.json": "b12b5968eda3c9d48eb7af3706c488ee155b477780525734b2a21be29c4a6d44",
+  "read-0631-0700.txt": "d8a5a0ce64148f57db2d74e5abcaf0a5c133150d554fde3ee5a514ed200bf21b",
+  "read-0701-0770-keys.json": "3e1deb8533f14637546e052a89dffb3ccd3e0494a1b99098b9eff4d802e00f32",
+  "read-0701-0770.txt": "db53cbd456ba8d23bc38ae6e10a72be72dabaf359e10647458d4e339edebf610",
+  "read-0771-0840-keys.json": "e83fc93e08ebbc878e42c728e4d7d4408a8c69fd83b6843462f6cd8f4c954d92",
+  "read-0771-0840.txt": "037770d9dc021816c33c2f3b534056036eb2de3f8bedcaea6b5fc8498713895f",
+  "read-0841-0910-keys.json": "8ddf60bbc31d4c3bf848cf0b572b0dba1283bc7c83a1a36055393e3fcaf9d3f8",
+  "read-0841-0910.txt": "cc90c0ec27cb6793e5506d90b0ea10a986df0e334d4a890909704a21cc8b95a6",
+  "read-0911-0980-keys.json": "bffaa06158e5a9d7ce62d6a243bb7bddcd890eea0c4760b7898b2bf3a1845d2b",
+  "read-0911-0980.txt": "ad33cb0a752dfe6f34658ab73d89ef4110525c6be8e6d28e35c040d013e18e7b",
+  "read-0981-1050-keys.json": "0e67d49655d24d143e255bf52dcfea9219c83726510c9e71019f077609000292",
+  "read-0981-1050.txt": "1a603549ab15a7035900884ce2b5c187254ad890092e88c85e1abc2ac5e23b7b",
+  "read-1051-1086-keys.json": "c610d83993777d561dac7c35486096a790bf085b0e1f5144a5fdcd6bacd4e3a3",
+  "read-1051-1086.txt": "6a91d0f93d5178fa43526e90fe0a4a490f2f30fa28100f1ceb994c284107e8e6",
+  "remaining.json": "27ce91bdb5b1e84f0ed4a2cce25bee19d422d91a96f184ff689658e0966d1c27",
+  "review-notes.md": "afc517ba9384f202da2edbc7e110b68b53f7c48a0d811310deb252f71111c82b"
+ }
+}

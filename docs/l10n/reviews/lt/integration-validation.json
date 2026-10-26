@@ -1,0 +1,78 @@
+{
+  "locale": "lt",
+  "status": "integration-verified-publication-parent-owned",
+  "exact_applied_pairs": 6083,
+  "rejected_pairs": 0,
+  "guarded_corrections": 102,
+  "individual_identity_approvals": 366,
+  "required_contexts": 1545,
+  "supplemental_contexts": 1127,
+  "corrected_context_rereads": 86,
+  "new_corrected_context_rereads": 28,
+  "global_lesson_status": {
+    "complete_target_locales": 44,
+    "required_target_locales": 48,
+    "remaining_locales": [
+      "is",
+      "sk",
+      "sl",
+      "uk"
+    ],
+    "remaining_pairs": 24332,
+    "release_full_coverage_complete": false
+  },
+  "passed_checks": [
+    {
+      "command": "strict sealed importer and installed-map revalidation",
+      "result": "all manifests, current sources, author/reviewer guard chains, context memberships and attribution verified"
+    },
+    {
+      "command": "python tools/l10n/apply_learn.py",
+      "result": "lt: 6083/6083; no rejections"
+    },
+    {
+      "command": "python tools/l10n/report.py",
+      "result": "regenerated handoff/index; LT TODO removed"
+    },
+    {
+      "command": "python tools/l10n/report.py --check --strict",
+      "exit_code": 0
+    },
+    {
+      "command": "python tools/verify-ios-resources.py",
+      "exit_code": 0
+    },
+    {
+      "command": "python tools/l10n/critical.py --baseline",
+      "exit_code": 0,
+      "known_gaps": 0
+    },
+    {
+      "command": "python -m unittest discover -s tools/l10n/tests -p 'test_*.py'",
+      "exit_code": 0,
+      "tests": 152
+    },
+    {
+      "command": "python tools/l10n/drafts/verify.py",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "preservation": {
+    "unrelated_existing_publisher_files_byte_identical": 2079,
+    "draft_snapshots_untouched": true,
+    "root_RTL_files_untouched": true,
+    "all_other_locale_registry_entries_unchanged": true
+  },
+  "installed_sha256": {
+    "tools/l10n/learn/lt.json": "3685e715a63ce3c251202e7c6ebe61a2bea0e4c7aee9537de78ae83af20d46f4",
+    "ios/Timbre/Resources/lt.lproj/Learn.strings": "073ed469cac0571dab68f78102e402ee270a924f0081a0519501ac845e183190"
+  },
+  "limitations": [
+    "Independent AI semantic review is not native-human, musician, device, audio or release certification.",
+    "The four untranslated lesson locales remain incomplete; English fallback is not counted as completion."
+  ]
+}
