@@ -1,6 +1,6 @@
 # Swedish (sv) glossary
 
-Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface; lessons deliberately remain English in this locale.
+Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface and the full lesson curriculum. Swedish lesson author draft complete (6,082 strings), 2026-10-26; independent semantic review, human/native-musician review and device review are not claimed.
 
 ## 1. Locale decisions
 - Locale/variant: sv, standard Swedish; Norwegian is Bokmål.
@@ -13,6 +13,15 @@ Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native mus
 - Siri: natural imperative, retain ${applicationName} and every named token.
 - Brands: Timbre, Timbre Pro, Pro, ChordPro unchanged and uninflected. Keep [G], ChordPro directives, URLs, ›, ·, ×, arrows and all format tokens verbatim.
 - Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.
+
+### Explicit locale conventions
+- Exact address: du.
+- Quotation marks: ”…”; no spaces inside quotation marks. Other punctuation uses normal Western spacing.
+- Units, spoken and compact: cent; minuter/min; sekunder/s; millisekunder/ms. Spoken VoiceOver labels use full words, not the screen abbreviation.
+- Musical accidentals (sharp / flat / double sharp / double flat): kors; b; dubbelkors; dubbel-b. These are notation terms; the tuner direction terms above instead describe whether the pitch is too low or high.
+- Apple feature labels (Home Screen / Lock Screen / widget / Live Activity / Shortcuts / Control Center / Family Sharing): Hemskärm; låsskärm; widget; Liveaktivitet; Genvägar; Kontrollcenter; Familjedelning. Product names remain unchanged. Verify supported-system labels on device before release; English names deliberately retained for unsupported system UI languages.
+- Instrument names: use the already localized `timbre_catalog_*` names; do not substitute English when a localized catalogue name exists. Tuning presets use the existing `timbre_catalog_tuning_*` names, preserving Drop/Open note letters and DADGAD.
+- Counted flat strings: prefer a count-neutral label for unknown counts where inflection differs; never attach a case suffix to a placeholder. Numeric chord 7 and 3D stay numeric; musical symbols and cents sign stay unchanged.
 
 ## 2. Terms
 Existing shipped terminology below is binding by sense and may be grammatically inflected, except inserted values and brand names. Supplemented terms precede anchors and override them only for the same sense.
@@ -172,7 +181,55 @@ Existing shipped terminology below is binding by sense and may be grammatically 
 | Key | Existing app sense | UI | `Key` | Tonart | Existing table anchor |
 
 ## 3. Course and song names
-Use the instrument-name anchors for Guitar, Ukulele, Bass, Violin, Cello, Mandolin, Banjo. Songs equals the Songs tab. Ear Training/Rhythm reuse existing feature terminology; Music Theory/Singing and Originals/Standards & Classics are specified above. Songbook reuses the existing anchor. No localized lesson corpus in this locale. Keep English song titles unless a firmly established local title exists; preserve traditional proper names and Timbre Originals titles. A title in prose must exactly match its lesson title. Lyric credits retain names and years, translating only connecting words; lyrics are not translated.
+Use the instrument-name anchors for Guitar, Ukulele, Bass, Violin, Cello, Mandolin, Banjo. Songs equals the Songs tab. Ear Training/Rhythm reuse existing feature terminology; Music Theory/Singing and Originals/Standards & Classics are specified above. Songbook reuses the existing anchor. The full lesson corpus is being localized in Swedish. Keep English song titles unless a firmly established local title exists; preserve traditional proper names and Timbre Originals titles. A title in prose must exactly match its lesson title. Lyric credits retain names and years, translating only connecting words; lyrics are not translated.
 
 ## 4. Words that mislead
 Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.
+
+### Context-review decisions
+- `In` / `Out` in HighwayTimingStrip are short Intro / Outro section labels, not inside/outside, enabled/disabled, or loop boundaries.
+- `Push beat` / `Push the and of` mean play the beat/offbeat more strongly (dynamic accent), never anticipate its timing.
+- `String %lld, low %lld` / `high %lld`: the second argument is a finger number with low/high placement; make finger explicit, not pitch.
+- `Tap Sync, then tap along once`: mark changes through one complete playback pass, not a single tap and not “immediately.”
+- Watch `Taps resume` refers to haptic pulses resuming when the wrist is raised, not touch gestures by the user.
+- Price/duration values can contain singular or plural units. Use period/duration label framing rather than an agreeing singular article around an unknown value.
+- Haptic feature explanations should introduce the feature name as a named function before describing its operation, not use a bare imperative as the subject.
+- Lesson control “moves on” means advances to the next step, not within the same step.
+
+### Lesson drafting conventions (2026-10-26, awaiting independent review)
+- Standard Swedish teaching voice, du. Notes keep source letters, including B; symbolic ♯/♭ and all chord notation remain exact. Spelled accidentals use Swedish names (C sharp = Ciss, F sharp = Fiss, B flat = Bess), never insert new accidental symbols.
+- Established localized titles used consistently: Ode to Joy = Ode till glädjen; Twinkle, Twinkle, Little Star = Blinka lilla stjärna; Row, Row, Row Your Boat = Ro, ro, ro din båt. Other song titles and Timbre Originals titles retain their proper names.
+- Intervals: Second = Sekund, Third = Ters, Fourth = Kvart. Frozen TODO/batch contexts still show historical finger uses. The publisher source repair has now been applied: all current generic uses are intervals, and explicit finger keys carry ordinal finger answers. Current shared-context evidence was verified on 2026-10-26; historical batch metadata is intentionally unchanged.
+- Finger numbers remain exact. Explicit First finger / Third finger / Little finger = Första fingret / Tredje fingret / Lillfingret.
+- Picking = plock or slå an by context; fingerpicking = fingerspel; Travis picking = Travisplock; palm muting = handflatedämpning. Hammer-on, pull-off, slide, bend, vibrato retain established loanwords.
+- Seventh chord = septimackord; major seventh = stor septima; minor seventh = liten septima; minor seventh chord = mollseptimackord. Keep numeric symbols only where source uses digits.
+- Major/minor pentatonic = dur-/mollpentatonik. Dorian/Mixolydian = dorisk/mixolydisk. CAGED and p-i-m-a remain notation.
+- D/U strumming shorthand remains exact notation pending independent contextual review; surrounding prose uses ned/upp. Island strum = ö-kompet.
+- Mnemonics are adapted while preserving note initials: EADGBE = En Apa Dansar Gärna Bakom Eken; GCEA = Goda Citroner Eller Apelsiner.
+- Exact-source proper names, credits, notation and genuine Swedish loanword invariants are drafted in batch outputs but held out by the importer for independent semantic review. No fake differences or self-approved invariant registry entries.
+
+### Additional lesson decisions through batch 018
+- Timbre Original in descriptive prose = originallåt från Timbre; the navigation category Originals stays Original. This avoids an English noun phrase in otherwise Swedish prose.
+- Additional established titles: The Swan = Svanen; The Carnival of the Animals = Djurens karneval; Brahms’ Lullaby = Brahms vaggvisa; Minuet in G = Menuett i G.
+- String teaching: bow = stråke, down-/up-bow = nedstråk/uppstråk, frog = frosch, scroll = snäcka, tailpiece = stränghållare, rosin = harts, endpin = stackel. Shift = lägesväxling; fourth position = fjärde läget.
+- GDAE mnemonic = Glada Djur Arbetar Enigt; CGDA = Cirkusens Glada Djur Arbetar; EADG = En Apa Dansar Gärna. Every initial matches the unchanged source note sequence.
+- Mandolin pairs = strängpar/par (courses introduced as körer); beating = svävning; chop = hugg. Banjo pinch = dubbelknäpp, roll = rullning, forward roll = framåtrullning. Crosspicking and clawhammer retain their established technique names. Mountain minor is retained as the named Appalachian sound, not asserted to be an established Swedish term.
+- One draft soft-layout exception through batch 018: “Pekfinger, långfinger, pekfinger, långfinger” is 44 characters vs target 42. Retain complete, intelligible finger names pending visual review.
+
+### Completion decisions through batch 033 (author draft, not independent approval)
+- All 6,082 strings are directly authored. 390 exact-source candidates remain held for independent semantic acceptance; they are not omissions. The combined review artifact includes them. Original input/map/output batches are retained; a keyed, hash-bound `author-corrections.json` overlay records 119 author corrections without replacing original output bytes.
+- Open notes use the earlier curriculum convention **öppet E**, **öppet G**; open string = **öppen sträng**. Late-batch wording was harmonized for grammatical agreement. **Power chord = powerackord** throughout; **home note = hemmatonen**. Avoid the ambiguous compound *femtonsmönster*: five-note patterns = **mönster med fem toner**.
+- Pre-chorus = **Refrängbrygga**, distinct from Bridge = Brygga. Major/minor interval quality = stor/liten; perfect = ren; augmented = överstigande; diminished = förminskad. Seventh chords retain the prior septimackord terminology, not added digits.
+- Staff = notsystem; treble clef = G-klav; bass clef = F-klav/basklav; ledger lines = hjälplinjer; key signature = fasta förtecken. Middle C = ettstrukna C; scientific pitch labels such as C4 stay exact. Slur = legatobåge; tie = bindebåge.
+- Rhythm tapping = knacka (not a button-tap instruction). Triplet = triol; count 1-trip-let is adapted to **1-tri-ol**, with the last syllable **ol** and all digits retained. Offbeat = mellanslag/och-slag, backbeat = baktakt. Lip trills = läppdallring; solfege = solmisation.
+- Bare shared Up/Down = **Upp/Ned**, neutral for both pitch direction and mandolin picking direction (41 uses each, 11 distinct quiz contexts each). One beat = **Ett slag**, neutral for duration and missing-beat questions (8 uses, 7 distinct contexts). These are not past-tense or pitch-only answers.
+- Bare Half = Halvkadens; Authentic = Autentisk; Plagal = Plagal; Deceptive = Bedräglig. Current shared contexts are exclusively cadence choices; Plagal remains an exact-source candidate rather than a registered exemption.
+- Bass clef line mnemonic GBDFA = **Glada Björnar Dansar Framför Alla**; bass spaces ACEG = **Alla Clowner Efterliknar Grisar**; treble lines EGBDF = **En Glad Björn Dansar Fint**. FACE is explicitly introduced as an English word, preserving its note letters. The W/H scale-recipe notation stays exact and is explicitly defined as W = hel, H = halv.
+- Additional localized titles: Jingle Bells = Bjällerklang; Frère Jacques = Broder Jakob; Canon in D = Kanon i D; Largo, New World Symphony = Largo, symfonin Från nya världen; In the Hall of the Mountain King = I bergakungens sal; Silent Night = Stilla natt; Morning Mood = Morgonstämning; Spring = Våren; The Four Seasons = De fyra årstiderna; The Planets = Planeterna; The Blue Danube = An der schönen blauen Donau; Can-can = Cancan; O Christmas Tree = O Tannenbaum (the lesson sings the German text); Holy, Holy, Holy = Helig, helig, helig; Abide with Me = Bliv kvar hos mig; Nearer, My God, to Thee = Närmare, Gud, till dig. Für Elise retains its familiar title.
+- **Baa, Baa, Black Sheep remains the English title**: Swedish Bä, bä, vita lamm uses a different melody and would falsify the shared-melody quiz explanation. Old MacDonald Had a Farm likewise remains the title taught, not replaced with a different local song. English sung lyric words and lyric cues remain English, while their instructional framing is translated.
+
+### Approved bounded bar/measure adaptation
+Source “What's another word for a bar?” becomes **Vilket ord betyder samma sak som engelskans bar?**. Explanation “Bar and measure mean the same thing.” becomes **Engelskans bar och measure betyder båda takt.** Shared choices remain normal Swedish: Beat = **Slag**, Rest = **Paus**, Measure = **Takt**. The preceding explanation introduces the English synonyms alongside Swedish takt. This preserves the intended correct answer and musical concept without a circular Swedish synonym quiz or globally retaining English answer choices. The parent explicitly approved this refined wording and superseded an earlier definition-question suggestion. No source/key migration was made. The current publisher has one use of each affected question/choice/explanation; evidence and exact parent receipt are in the frozen review handoff.
+
+### Remaining review boundary
+One soft length warning remains: “Pekfinger, långfinger, pekfinger, långfinger” is 44 characters against 42. Full finger names are intentionally retained for comprehension pending visual review. Mechanical QA does not establish linguistic, native-musician, accessibility or device approval. Shared-key context evidence, all exact-source candidates and adapted mnemonics/titles must be independently checked.

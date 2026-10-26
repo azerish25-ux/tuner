@@ -1,6 +1,6 @@
 # Danish (da) glossary
 
-Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface; lessons deliberately remain English in this locale.
+Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface and the lesson draft. Lesson draft by /root/translate_danish_lessons, 2026-10-26; independent semantic review pending.
 
 ## 1. Locale decisions
 - Locale/variant: da, standard Danish; Norwegian is Bokmål.
@@ -13,6 +13,15 @@ Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native mus
 - Siri: natural imperative, retain ${applicationName} and every named token.
 - Brands: Timbre, Timbre Pro, Pro, ChordPro unchanged and uninflected. Keep [G], ChordPro directives, URLs, ›, ·, ×, arrows and all format tokens verbatim.
 - Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.
+
+### Explicit locale conventions
+- Exact address: du.
+- Quotation marks: “…”; no spaces inside quotation marks. Other punctuation uses normal Western spacing.
+- Units, spoken and compact: cent; minutter/min.; sekunder/s; millisekunder/ms. Spoken VoiceOver labels use full words, not the screen abbreviation.
+- Musical accidentals (sharp / flat / double sharp / double flat): kryds; b; dobbeltkryds; dobbelt-b. These are notation terms; the tuner direction terms above instead describe whether the pitch is too low or high.
+- Apple feature labels (Home Screen / Lock Screen / widget / Live Activity / Shortcuts / Control Center / Family Sharing): Hjemmeskærm; låseskærm; widget; Liveaktivitet; Genveje; Kontrolcenter; Familiedeling. Product names remain unchanged. Verify supported-system labels on device before release; English names deliberately retained for unsupported system UI languages.
+- Instrument names: use the already localized `timbre_catalog_*` names; do not substitute English when a localized catalogue name exists. Tuning presets use the existing `timbre_catalog_tuning_*` names, preserving Drop/Open note letters and DADGAD.
+- Counted flat strings: prefer a count-neutral label for unknown counts where inflection differs; never attach a case suffix to a placeholder. Numeric chord 7 and 3D stay numeric; musical symbols and cents sign stay unchanged.
 
 ## 2. Terms
 Existing shipped terminology below is binding by sense and may be grammatically inflected, except inserted values and brand names. Supplemented terms precede anchors and override them only for the same sense.
@@ -172,7 +181,91 @@ Existing shipped terminology below is binding by sense and may be grammatically 
 | Key | Existing app sense | UI | `Key` | Toneart | Existing table anchor |
 
 ## 3. Course and song names
-Use the instrument-name anchors for Guitar, Ukulele, Bass, Violin, Cello, Mandolin, Banjo. Songs equals the Songs tab. Ear Training/Rhythm reuse existing feature terminology; Music Theory/Singing and Originals/Standards & Classics are specified above. Songbook reuses the existing anchor. No localized lesson corpus in this locale. Keep English song titles unless a firmly established local title exists; preserve traditional proper names and Timbre Originals titles. A title in prose must exactly match its lesson title. Lyric credits retain names and years, translating only connecting words; lyrics are not translated.
+Use the instrument-name anchors for Guitar, Ukulele, Bass, Violin, Cello, Mandolin, Banjo. Songs equals the Songs tab. Ear Training/Rhythm reuse existing feature terminology; Music Theory/Singing and Originals/Standards & Classics are specified above. Songbook reuses the existing anchor. The localized lesson draft follows these same terms. Keep English song titles unless a firmly established local title exists; preserve traditional proper names and Timbre Originals titles. A title in prose must exactly match its lesson title. Lyric credits retain names and years, translating only connecting words; lyrics are not translated.
 
 ## 4. Words that mislead
 Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.
+
+### Context-review decisions
+- `In` / `Out` in HighwayTimingStrip are short Intro / Outro section labels, not inside/outside, enabled/disabled, or loop boundaries.
+- `Push beat` / `Push the and of` mean play the beat/offbeat more strongly (dynamic accent), never anticipate its timing.
+- `String %lld, low %lld` / `high %lld`: the second argument is a finger number with low/high placement; make finger explicit, not pitch.
+- `Tap Sync, then tap along once`: mark changes through one complete playback pass, not a single tap and not “immediately.”
+- Watch `Taps resume` refers to haptic pulses resuming when the wrist is raised, not touch gestures by the user.
+- Price/duration values can contain singular or plural units. Use period/duration label framing rather than an agreeing singular article around an unknown value.
+- Haptic feature explanations should introduce the feature name as a named function before describing its operation, not use a bare imperative as the subject.
+- Lesson control “moves on” means advances to the next step, not within the same step.
+
+## Lesson draft decisions (2026-10-26; independent review pending)
+- Source context delta: the frozen TODO still associates bare `Second`, `Third`, `Fourth` with finger questions. Publisher source has remapped finger uses to explicit finger keys. The bare keys are musical intervals and translate as `Sekund`, `Terts`, `Kvart`; TODO metadata is deliberately unchanged.
+- Note letters remain English international B, not Danish H, as required by the lesson notation contract. Spelled sharp/flat use `med kryds` / `med b`; never introduce accidental symbols absent from the source.
+- `Ode to Joy` is `Ode til glæden`. Other traditional and Original song titles are preserved unless a specific established Danish title is recorded here. Title modifiers and surrounding prose are translated.
+- Guitar open-string mnemonic `Every Amateur Does Get Better Eventually` becomes `En And Danser Glad Bag Elefanten`, preserving E A D G B E.
+- Lesson terminology: fretted note = grebet tone; finger = finger (ordinal spelled when English spells it); tab = tabulatur; quarter note = fjerdedelsnode; eighth note = ottendedelsnode; half note = halvnode; strumming = rytmisk akkordspil; folk strum = folk-rytmen; root = grundtone; progression = akkordfølge; hook = hook; down/up strums = nedslag/opslag.
+- Standard Danish instrument/loanword labels and proper-name/title/notation strings can genuinely equal English; exact-source candidates are recorded separately for independent approval, never changed merely to defeat copied-English checks.
+
+### Additional lesson terms and learning conventions
+- In lesson prose, unit remains `del`; course `kursus`; lesson `lektion`. An entire strumming pattern is a `rytme` or `anslagsmønster`, not an individual anslag.
+- Clefs: treble clef `G-nøgle`, bass clef `F-nøgle`; staff `nodesystem`, bar line `taktstreg`; slur `legatobue`, tie `bindebue`; dotted note `punkteret node`; triplet `triol`; sixteenth note `sekstendedelsnode`.
+- Intervals: second `sekund`, third `terts`, fourth `kvart`, fifth `kvint`, sixth `sekst`, seventh `septim`, octave `oktav`; minor/major interval `lille/stor`, perfect `ren`, diminished `formindsket`, augmented `forstørret`. In chord quality, minor/major remains `mol/dur` instead. Tonic uses `grundtone` in beginner explanations and `tonika` in functional theory.
+- Bow/instrument parts: bow `bue`, frog `frosch`, bow stick `stang`, tip `spids`, rosin `harpiks`, scroll `snekke`, fingerboard `gribebræt`, bridge `stol`, tailpiece `strengeholder`, fine tuner `finstemmer`, nut `oversadel`, saddle `sadel`. Cello endpin is drafted as `endepind`; native musician review should weigh the conventional alternative `stachel`.
+- Bow directions `nedstrøg/opstrøg`, distinct from pick/strum `nedslag/opslag`. High/low numbered finger positions remain explicit finger placements, not high/low string pitch.
+- Palm muting `håndkantsdæmpning`; walking bass `walkingbas`; chromatic approach `kromatisk ledetone`; pre-chorus `før-omkvæd`. Instrument bridge `stol` is distinct from song-form bridge `kontraststykke`.
+- Established guitar/banjo technique loans are retained: hammer-on(s), pull-off(s), slides, crosspicking, clawhammer, rolls, pinch. Named banjo rhythmic vocables `Bum-ditty` / `Bum, dit, ty` remain phonetic teaching cues. These are proposed exact-source exceptions, not independent approvals.
+- `maj-septimakkord` is used when major seventh is written out, avoiding introduction of a digit 7 not in the source. Chord symbols such as Cmaj7, Dm7 and B♭ are never respelled.
+- Folk/country guitar uses `folk-rytmen`; the ukulele island strum is `ø-rytmen`. Loan genre words remain recognizable; e.g. blues, surf, punk, doo-wop, highlife and neosoul.
+- W/H scale patterns stay literal W/H. Their legend explains W as `hel` and H as `halv`; the pattern is not converted into Danish initial letters.
+- Triplet counting `1-trip-let, 2-trip-let` becomes `1-tri-ol, 2-tri-ol`, with any referred-to syllable `let` correspondingly `ol`. Rhythmic `and` becomes `og`; an offbeat location is explicitly `og efter to`, not the ordinary conjunction joining two beats.
+- Bar/measure synonym question is adapted to avoid a circular Danish question: `What's another word for a bar?` → `Hvad betyder det engelske “bar”?`; choices Beat / Rest / Measure → `Slag` / `Pause` / `Takt`; explanation → `Bar og measure betyder begge takt.` Shared Slag and Pause retain their normal meanings everywhere else. Source keys/text and option ordering are unchanged.
+
+### Mnemonic adaptations
+Each mnemonic preserves the source's initial-letter sequence; these are localized teaching examples, not literal translations.
+- Guitar E A D G B E: `En And Danser Glad Bag Elefanten`.
+- Ukulele G C E A: `Glade Citroner Elsker Appelsiner`.
+- Bass E A D G: `En And Danser Glad`.
+- Violin/mandolin G D A E: `Glade Dyr Arbejder Energisk`.
+- Cello C G D A: `Citroner Giver Dej Appetit`.
+- Treble lines E G B D F: `En Glad Bjørn Danser Flot`.
+- Bass lines G B D F A: `Glade Bjørne Danser For Altid`.
+- Bass spaces A C E G: `Alle Cykler Er Grønne`.
+- Treble-space FACE remains FACE as the literal F A C E letter sequence. Individual quiz references to mnemonic words follow the adapted sentence.
+
+### Localized established song/work titles
+The named title in prose follows the title mapping; original sung words remain in their original language even when the work title is Danish. Short lyric fragments tested in a quiz are not translated as ordinary English nouns.
+
+| English source title/work | Danish draft title |
+|---|---|
+| Ode to Joy | Ode til glæden |
+| Twinkle, Twinkle, Little Star / Twinkle Twinkle Little Star | Blinke, blinke stjernelille |
+| Frère Jacques | Mester Jakob |
+| Jingle Bells | Bjældeklang |
+| Old MacDonald Had a Farm | Jens Hansens bondegård |
+| Brahms' Lullaby | Brahms' vuggevise |
+| Minuet in G | Menuet i G |
+| The Swan | Svanen |
+| The Carnival of the Animals | Dyrenes karneval |
+| Canon in D | Kanon i D |
+| Largo, New World Symphony | Largo, Fra den nye verden |
+| In the Hall of the Mountain King | I Dovregubbens hal |
+| Silent Night | Glade jul |
+| Mozart's Symphony No.40 | Mozarts symfoni nr.40 |
+| The Merry Wives of Windsor | De lystige koner i Windsor |
+| Messiah | Messias |
+| O Christmas Tree | O juletræ |
+| The Blue Danube | Den blå Donau |
+| Can-can | Cancan |
+| Orpheus in the Underworld | Orfeus i underverdenen |
+| Carmen: Prelude | Carmen: forspil |
+| The Toreador Song / Toreador Song | Toreadorsangen / Toreadorsang |
+| Morning Mood | Morgenstemning |
+| Holy, Holy, Holy | Hellig, hellig, hellig |
+| Abide with Me | Bliv hos mig |
+| Nearer, My God, to Thee | Nærmere Gud til dig |
+| The Last Rose of Summer | Sommerens sidste rose |
+| The Planets | Planeterne |
+| Spring | Foråret |
+| The Four Seasons | De fire årstider |
+
+- Other traditional, hymn and classical titles retain the identifying source title in this draft, including Mary Had a Little Lamb, Row, Row, Row Your Boat, Amazing Grace, Auld Lang Syne, Greensleeves, Lightly Row, Aura Lee, Für Elise, Eine kleine Nachtmusik, Rondo alla Turca and Jupiter. Timbre Originals retain their proper titles. Each exact-source title is individually listed as an invariant candidate for independent review.
+- The nursery-song references `the alphabet song` and `Baa, Baa, Black Sheep` become `alfabetsangen` and `Mæ, mæ, lam` in prose. Composer Handel is Danish `Händel` in prose; attribution credits preserve source names and dates.
+- `Fly`, `Wide`, `Boat`, `Town` and `Bethlehem` in lyric-recognition questions stay the sung English words. They are not untranslated navigation or ordinary vocabulary. Likewise the all-lyric-and-note exercise `Ma-ry had a lit-tle lamb: E D C D E E E.` retains its complete literal content.

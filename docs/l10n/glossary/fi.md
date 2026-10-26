@@ -1,9 +1,9 @@
 # Finnish (fi) glossary
 
-Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface; lessons deliberately remain English in this locale.
+Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface and lessons. Complete 6,082-row lesson author draft, 2026-10-26; independent full-locale, native musician and device review are outstanding.
 
 ## 1. Locale decisions
-- Locale/variant: fi, standard Finnish; Norwegian is Bokmål.
+- Locale/variant: fi, standard Finnish.
 - Register: Informal singular, warm direct second person; avoid gender assumptions. Short imperative actions; noun labels; third-person VoiceOver hints. Avoid reader-gender marking.
 - Typography: sentence case, normal word spaces, no double or edge spaces. Curly apostrophe where needed; single ellipsis …. Quotes follow shipped table (Nordic ”…”/“…”; Baltic „…“/„…”; sw/zu “…”). Digits ASCII 0–9. Preserve line structure.
 - Units: Hz, BPM, XP, ¢, A4 unchanged; cents = Sentit. Minutes use existing minutes entry; seconds s, milliseconds ms on screen, full words in spoken hints.
@@ -13,6 +13,15 @@ Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native mus
 - Siri: natural imperative, retain ${applicationName} and every named token.
 - Brands: Timbre, Timbre Pro, Pro, ChordPro unchanged and uninflected. Keep [G], ChordPro directives, URLs, ›, ·, ×, arrows and all format tokens verbatim.
 - Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.
+
+### Explicit locale conventions
+- Exact address: sinä (usually omit pronoun).
+- Quotation marks: ”…”; no spaces inside quotation marks. Other punctuation uses normal Western spacing.
+- Units, spoken and compact: sentti; minuutit/min; sekunnit/s; millisekunnit/ms. Spoken VoiceOver labels use full words, not the screen abbreviation.
+- Musical accidentals (sharp / flat / double sharp / double flat): ylennys; alennus; kaksoisylennys; kaksoisalennus. These are notation terms; the tuner direction terms above instead describe whether the pitch is too low or high.
+- Apple feature labels (Home Screen / Lock Screen / widget / Live Activity / Shortcuts / Control Center / Family Sharing): Koti-valikko; lukittu näyttö; widgetti; Live-aktiviteetti; Pikakomennot; Ohjauskeskus; Perhejako. Product names remain unchanged. Verify supported-system labels on device before release; English names deliberately retained for unsupported system UI languages.
+- Instrument names: use the already localized `timbre_catalog_*` names; do not substitute English when a localized catalogue name exists. Tuning presets use the existing `timbre_catalog_tuning_*` names, preserving Drop/Open note letters and DADGAD.
+- Counted flat strings: prefer a count-neutral label for unknown counts where inflection differs; never attach a case suffix to a placeholder. Numeric chord 7 and 3D stay numeric; musical symbols and cents sign stay unchanged.
 
 ## 2. Terms
 Existing shipped terminology below is binding by sense and may be grammatically inflected, except inserted values and brand names. Supplemented terms precede anchors and override them only for the same sense.
@@ -172,7 +181,37 @@ Existing shipped terminology below is binding by sense and may be grammatically 
 | Key | Existing app sense | UI | `Key` | Sävellaji | Existing table anchor |
 
 ## 3. Course and song names
-Use the instrument-name anchors for Guitar, Ukulele, Bass, Violin, Cello, Mandolin, Banjo. Songs equals the Songs tab. Ear Training/Rhythm reuse existing feature terminology; Music Theory/Singing and Originals/Standards & Classics are specified above. Songbook reuses the existing anchor. No localized lesson corpus in this locale. Keep English song titles unless a firmly established local title exists; preserve traditional proper names and Timbre Originals titles. A title in prose must exactly match its lesson title. Lyric credits retain names and years, translating only connecting words; lyrics are not translated.
+Use the instrument-name anchors for Guitar, Ukulele, Bass, Violin, Cello, Mandolin, Banjo. Songs equals the Songs tab. Ear Training/Rhythm reuse existing feature terminology; Music Theory/Singing and Originals/Standards & Classics are specified above. Songbook reuses the existing anchor. The new Finnish lesson corpus is a complete author draft, not yet independently approved. Keep English song titles unless a firmly established local title exists; preserve traditional proper names and Timbre Originals titles. A title in prose must exactly match its lesson title. Lyric credits retain names and years, translating only connecting words; lyrics are not translated.
 
 ## 4. Words that mislead
 Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.
+
+### Context-review decisions
+- `In` / `Out` in HighwayTimingStrip are short Intro / Outro section labels, not inside/outside, enabled/disabled, or loop boundaries.
+- `Push beat` / `Push the and of` mean play the beat/offbeat more strongly (dynamic accent), never anticipate its timing.
+- `String %lld, low %lld` / `high %lld`: the second argument is a finger number with low/high placement; make finger explicit, not pitch.
+- `Tap Sync, then tap along once`: mark changes through one complete playback pass, not a single tap and not “immediately.”
+- Watch `Taps resume` refers to haptic pulses resuming when the wrist is raised, not touch gestures by the user.
+- Price/duration values can contain singular or plural units. Use period/duration label framing rather than an agreeing singular article around an unknown value.
+- Haptic feature explanations should introduce the feature name as a named function before describing its operation, not use a bare imperative as the subject.
+- Lesson control “moves on” means advances to the next step, not within the same step.
+
+## 5. Lesson draft decisions (2026-10-26; not approval)
+- Use warm, concise singular imperatives; preserve source digits, note letters, chord symbols and line breaks. Finnish normally uses H, but the curriculum deliberately retains English B and B♭ exactly.
+- Finger = sormi; index / middle / ring / pinky = etusormi / keskisormi / nimetön / pikkusormi. Explicit Second finger / Third finger / Fourth finger refer to finger numbering. Bare Second / Third / Fourth in interval questions = sekunti / terssi / kvartti, never finger names.
+- Beat = isku; pulse = syke; measure/bar = tahti. Downbeat = tahdin ykkönen where appropriate, not every downstroke. Downstroke/upstroke = alaslyönti/ylöslyönti. Strum = komppaa/soita sointu; pluck = näppäile; pick noun = plektra.
+- Whole step = kokoaskel, half step = puolisävelaskel; major/minor = duuri/molli, interval major/minor = suuri/pieni. Fourth/fifth/sixth/seventh/octave = kvartti/kvintti/seksti/septimi/oktaavi.
+- Bow noun = jousi; bowing = jousitus; frog = frossi; tip = kärki; hair = jouhet. Up-bow/down-bow = työntöjousi/vetojousi.
+- Hammer-on / pull-off / slide / bend remain established technique terms with Finnish explanatory prose. Sustain = anna soida; mute = vaimenna.
+- Keep original song titles and Timbre Originals titles; translate descriptive additions after a colon. Translate lyric-credit connectors while retaining composers, years and original title text. Exact English-identical whole-string cases are proposed individually for review, not treated as automatically approved.
+- Middle section = väliosa; Strings: 1, 2, 3 and 4 = Kielet: 1, 2, 3 ja 4. Never confuse a section with middle finger.
+
+### Completed-author handoff notes
+- Author: `/root/translate_finnish_lessons` (AI drafting agent, claire). Completion is not independent review or native approval.
+- Shared `Up` / `Down` = Ylös / Alas, so the choices work for pitch direction and mandolin pick direction; `One beat` = Yksi isku. These three corrections have a bounded parent-review receipt.
+- The bar/measure quiz asks “Mikä sana tarkoittaa samaa kuin englannin bar?”; normal shared answers are Beat = Isku, Rest = Tauko, Measure = Tahti. Explanation: “Englannin bar ja measure tarkoittavat samaa: tahtia.” This explicit English-word adaptation avoids a circular Finnish synonym question.
+- One established work-title exception: Vivaldi’s `Spring` = Kevät, also in prose. Other original song titles remain identifying names. Finnish case endings may attach to a known title in a sentence; title identity is unchanged.
+- Use barré consistently for the guitar/ukulele technique; hammer-on, pull-off, crosspicking, clawhammer and lick remain named teaching techniques with Finnish explanation. Exact whole-string cases remain review candidates.
+- Localized open-string mnemonics preserve initial letters, not English wording: EADGBE “Eilen Aamulla Dinosaurus Gertta Banaaneja Etsi”; GCEA “Gertta Cembaloa Eilen Ajatteli”; EADG “Eilen Aamulla Dinosaurus Groovasi”; GDAE “Gertta Dinosaurus Aina Etsii”; CGDA “Cembaloa Gertta Dinosaurus Ajatteli”. Reviewer should assess naturalness/memorability, especially the Gertta dinosaur word order. Staff-line English mnemonics are retained where subsequent cards explicitly teach their word-to-letter mapping.
+- One layout hint remains: `Sunrise` → Auringonnousu is 13 characters against a 12-character chip hint. Preserve the natural term pending device/layout review rather than an unclear abbreviation.
+- Review handoff: `/tmp/timbre-new-lessons/fi/HANDOFF.md`; exact-source candidates are proposals, not approvals.

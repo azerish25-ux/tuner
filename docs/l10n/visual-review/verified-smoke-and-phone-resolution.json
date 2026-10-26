@@ -1,0 +1,18 @@
+{
+  "commit": "31305f67c11c8d2e16940bc54edbf9681df14920",
+  "workflow_run": 40288874201,
+  "app_job": 121459778958,
+  "verified_at_utc": "2026-10-26T09:49:15Z",
+  "result": "58 app tests and 3 smoke UI tests passed",
+  "specific_passes": [
+    "testPhoneRegionsResolveThroughFoundationToAvailableAppLanguages (49 configured regional cases)",
+    "testFreshSettingsAutomaticallyFollowPhoneLanguage",
+    "testLessonsUseTheSameAutomaticAndManualResolver",
+    "testTheTunerLocksAString"
+  ],
+  "limits": [
+    "This verifies the named older commit, not subsequently imported lesson translations.",
+    "Accessibility job 121459779131 failed contrast checks; not waived.",
+    "Current 1aad360 matrix has six successful groups and two simulator lifecycle failures. RTL job retry requested; Indic retry blocked while same run is active."
+  ]
+}

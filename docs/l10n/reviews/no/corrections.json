@@ -1,0 +1,2772 @@
+[
+  {
+    "locale": "no",
+    "key": "L6f2b7fab42",
+    "source": "Which pair sounds lower?",
+    "old": "Hvilket par låter dypest?",
+    "new": "Hvilken av de to tonene låter dypest?",
+    "reason": "The existing question uses neuter par (Hvilket par), but its shared answers are Den første/Den andre, which correctly use common gender in all other contexts. Ask about the two sounded tones here so the existing shared answers agree, without changing pitch comparison or correct option. The paired strings sound one pitch each.",
+    "source_sha256": "99aee24dcb84e116e77960913dd699e5b7e91fd7b6f9cebad0091d5cceb02b28",
+    "old_sha256": "dfa52cecb5672d1df100491cd6208f09d4857897d5dcb0665c413fec9fbe1ca1",
+    "new_sha256": "21afad060facc7ab5811073cf1d9c5855187c5cf22e567c92015066189374b68",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "contexts-0001-0168.txt, context 165 (man-1-4)",
+      "read-2815-2979.txt",
+      "mandolin-pair-evidence.json"
+    ],
+    "whole_lesson_review_complete": true,
+    "whole_lesson_recheck": "Confirmed with complete man-1-4 and surrounding paired-string teaching: two separate pitches [[76],[55]], answer second. The proposed feminine tone question agrees with shared Den første/Den andre while each course sounds one pitch."
+  },
+  {
+    "locale": "no",
+    "key": "L4d8264bf18",
+    "source": "Let the motion come from a loose wrist and forearm, like shaking water off your hand. A stiff arm sounds harsh.",
+    "old": "La bevegelsen komme fra et løst håndledd og underarm, som når du rister vann av hånden. En stiv arm gir en hard klang.",
+    "new": "La bevegelsen komme fra et avslappet håndledd og en avslappet underarm, som når du rister vann av hånden. En stiv arm gir en hard klang.",
+    "reason": "Correct article/adjective agreement: håndledd is neuter but underarm is common gender. Keep both wrist and forearm relaxed, not stiff, and preserve the physical instruction.",
+    "source_sha256": "11a5781284bdd9fa6289d65e628969e14daf08310f5897cb952c2c6db18eb5f0",
+    "old_sha256": "b76f3d7679c785208a11101d9cf293a4f47ad390267080d33ee79723f3612b6e",
+    "new_sha256": "aae49123fe10782775b9615eae35a6732d6dcebe6f48d68ca327d1cc1d01ad63",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-0169-0337.txt, row 233"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lb36524405c",
+    "source": "D minor: one note lower",
+    "old": "D-moll: én tone lavere",
+    "new": "D-moll: senk én tone",
+    "reason": "Avoid implying that the whole chord moves one whole tone down. The lesson lowers one constituent note by one fret to change D major to D minor; the title now unambiguously says to lower one note.",
+    "source_sha256": "fafc3475a154f0e6fe7be4874370f051ab2b8e41f3d4ce12c21dbbfde4b35e17",
+    "old_sha256": "e176c97e8c002a4e19b4c08102724a97f2a327ea86b6b8e22f209c032cf6ead1",
+    "new_sha256": "f849b1f1060b86769d15847f929b7e5f2988e923e25a0a944540640321b6b1fe",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-0169-0337.txt, rows 312–313"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L3c6aabe514",
+    "source": "In this pattern, what does your hand do on beat two?",
+    "old": "Hva gjør hånden på andre slag i dette mønsteret?",
+    "new": "Hva skal hånden gjøre på andre slag i dette mønsteret?",
+    "reason": "Use a modal question so all answers can be infinitives, including shared Stoppe og vente. Its other context requires the infinitive after skal. Apply together with the two unique answer-form corrections.",
+    "source_sha256": "4f5d5d0105809073da3f30a162cb4e2c4bea61f63b099cf0c08df5538900bd50",
+    "old_sha256": "11e8302c6f1fbaf179eda4a4498eb26aaf75e9a156199a06792c6d9946970231",
+    "new_sha256": "9dba8e6a561ef6fa805d57abb41cebd6051d0de7b5301773dee5940d4182afe9",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "contexts-0169-0337.txt, context 75",
+      "gtr-15-5 complete unique lesson rows inspected 2026-10-26"
+    ],
+    "whole_lesson_review_complete": true,
+    "correction_group": "NO-GTR15-MODAL",
+    "apply_together_with": [
+      "L3c6aabe514",
+      "Laf67b9eef1",
+      "Lea47d3a3fc"
+    ]
+  },
+  {
+    "locale": "no",
+    "key": "Laf67b9eef1",
+    "source": "Strums down hard",
+    "old": "Slår hardt ned",
+    "new": "Slå hardt ned",
+    "reason": "Infinitive answer form required by the coordinated correction of gtr-15-5 question to Hva skal hånden gjøre; keeps the shared infinitive Stoppe og vente grammatical in both contexts.",
+    "source_sha256": "edba3254a36587eef4f8e755afedccaac15530c2e75f7640b69b91fd6b761e72",
+    "old_sha256": "6c4b0320d1ce433abef1ebbff7bb208ddfff20bae578f190c9297fcd9720f071",
+    "new_sha256": "0d8a7f1b537f851f46088bbc4759e80614241a3af3043eb9a23269d91aba2990",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "gtr-15-5 complete unique lesson rows inspected 2026-10-26"
+    ],
+    "whole_lesson_review_complete": true,
+    "correction_group": "NO-GTR15-MODAL",
+    "apply_together_with": [
+      "L3c6aabe514",
+      "Laf67b9eef1",
+      "Lea47d3a3fc"
+    ]
+  },
+  {
+    "locale": "no",
+    "key": "Lea47d3a3fc",
+    "source": "Swings down past the strings",
+    "old": "Svinger ned forbi strengene",
+    "new": "Svinge ned forbi strengene",
+    "reason": "Infinitive answer form required by the coordinated correction of gtr-15-5 question to Hva skal hånden gjøre; keeps the shared infinitive Stoppe og vente grammatical in both contexts.",
+    "source_sha256": "f3148b914f6c4152fef55ebeb604bc5e498a00c243d609a2c8123872c03d644b",
+    "old_sha256": "a66214a8c074f5560bc3d3f420438f0e53e6814cf504fac75c9c8f6df03dcf3e",
+    "new_sha256": "d2ebea182509da7304602110cef4b09b3e120c8e57d6a84dd2e51c59f34c98a4",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "gtr-15-5 complete unique lesson rows inspected 2026-10-26"
+    ],
+    "whole_lesson_review_complete": true,
+    "correction_group": "NO-GTR15-MODAL",
+    "apply_together_with": [
+      "L3c6aabe514",
+      "Laf67b9eef1",
+      "Lea47d3a3fc"
+    ]
+  },
+  {
+    "locale": "no",
+    "key": "L7755242089",
+    "source": "A power chord plays only the root and the fifth, the note five letters up. Neither major nor minor, it stays punchy, even loud. E5 is the bottom of E minor.",
+    "old": "En powerakkord spiller bare grunntonen og kvinten, tonen fem bokstavtrinn opp. Verken dur eller moll, den beholder trøkket, også sterkt spilt. E5 er den nederste delen av E-moll.",
+    "new": "En powerakkord består bare av grunntonen og kvinten, den femte tonen regnet fra grunntonen. Den er verken dur eller moll og beholder trøkket, også når den spilles sterkt. E5 er den nederste delen av E-moll.",
+    "reason": "Replace an unidiomatic English-style detached clause with a complete Bokmål sentence. Also make fifth counting inclusive: fem bokstavtrinn opp can imply five transitions (a sixth), whereas a fifth counts the root as the first note. Preserve the power-chord instruction and E5/E-minor identifiers.",
+    "source_sha256": "600f105f7686167a33af97431112e18d82c1cd6842177ceabf8f6cf2426ea59c",
+    "old_sha256": "504b6dff0b46f4734aa5498a1fd5feec3e4fc996443a5b44a1818dd725d72f06",
+    "new_sha256": "92f072bd50c7294bac58e77db7fa75b3a27dc89fff6b2b9c6b9a1dafc51ef672",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-0499-0666.txt, row 525"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L8c00bae676",
+    "source": "B7 is five letters up from E. Five letters up from A is E, so E7 takes its place.",
+    "old": "B7 er fem bokstavtrinn opp fra E. Fem bokstavtrinn opp fra A er E, så E7 tar plassen.",
+    "new": "Grunntonen i B7 er det femte tonenavnet når du teller fra E. Teller du fra A på samme måte, kommer du til E, så E7 tar plassen.",
+    "reason": "Clarify inclusive fifth counting rather than five letter transitions. E to B and A to E are fifths only when the starting note is counted as one; fem bokstavtrinn opp suggests a sixth. Keep all chord/note identifiers unchanged.",
+    "source_sha256": "fb339a709c9c2367239b417a889854f4d94f443cfe1c9ee184560bf68afca75a",
+    "old_sha256": "d1a7882777646d611ad1a562d964015aa70902af48a9f1caefb0110fe279412e",
+    "new_sha256": "581435dc04533ddfa4a674838e09ab1e21e7e44c01a684efd54f50b227666e6e",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "contexts-0338-0498.txt, context 24",
+      "contexts-0499-0666.txt, context 6"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L8f17a64c02",
+    "source": "String 3: pick fret 5 with finger 1, then hammer finger 3 onto fret 7.",
+    "old": "Streng 3: slå an bånd 5 med finger 1, og slå så finger 3 ned på bånd 7.",
+    "new": "Streng 3: hold bånd 5 med finger 1 og slå an tonen, og slå så finger 3 ned på bånd 7.",
+    "reason": "Disambiguate fretting finger from picking finger: finger 1 holds fret 5; the other hand picks the note, then finger 3 performs the hammer-on. Slå an bånd 5 med finger 1 could tell the beginner to pluck using finger 1. Preserve all string/fret/finger numbers.",
+    "source_sha256": "cfe0b53abcc48a178552620afe64570924f305a0d1da9f3d48e72c559f5b38cc",
+    "old_sha256": "25d57fb4e6d0a8a16909b3a58810497fabaf6d316cb0d1d9065b25c33015ab45",
+    "new_sha256": "2b746de7575654219bea8f72d41f5a4aa61c092892275db9707dffaa2e78bb2e",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-0667-0829.txt, rows 807–815"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Ldd672a79e0",
+    "source": "A boogie line walks up the chord and back, each note twice, long-short like the shuffle. Over A7 it climbs A, C sharp, E, F sharp, G, then walks back down.",
+    "old": "En boogielinje går opp gjennom akkorden og tilbake, hver tone to ganger, lang-kort som shuffle. Over A7 stiger den A, C kryss, E, F kryss, G, og går så ned igjen.",
+    "new": "En boogielinje går opp gjennom akkorden og tilbake, hver tone to ganger, lang-kort som shuffle. Over A7 går den opp gjennom A, C kryss, E, F kryss og G, og så ned igjen.",
+    "reason": "Use idiomatic Norwegian construction går opp gjennom the note sequence; stiger den A is an ungrammatical direct-object construction. Preserve the complete notes, chord and long-short exercise.",
+    "source_sha256": "9786c159080d721cee4793025b509329b28e21d63fc5fad004d15bc8f0853b97",
+    "old_sha256": "0cf10e8094113e871b79b0e76beadcf46d913410d8ccdb21715b2745716069bd",
+    "new_sha256": "2d38d8a12c06612567bf217d49f9fb46798645fdadec5063fd9df15f3ce8900c",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-0667-0829.txt, row 758"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L38ebe33d09",
+    "source": "Target, then a short bend. Same note or different?",
+    "old": "Måltone, så en kort bend. Samme eller ulik tone?",
+    "new": "Måltone, så en bend som ikke når helt opp. Samme eller ulik tone?",
+    "reason": "Short means the bend falls short in pitch, not that it is brief in duration. Publisher gtr-13-4 listen step plays MIDI 64 followed by 63, with Different correct, immediately after explaining under-bending. Clarify that pitch relationship.",
+    "source_sha256": "f789f3a67d9d6720a1650d3fbb9811493e5d6cb97384d3cdeb95207073dc8e12",
+    "old_sha256": "db11347566663a97eb0d2a3be004acfa9fcb528d9ec71bbfd2d4ace6a7ed43b0",
+    "new_sha256": "b7645e009195f766d20e078594131c3ea5421a02557c8e6b0742a35f2b1c020d",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-0830-0990.txt, rows 848–855",
+      "publisher curriculum gtr-13-4 listen sound [[64],[63]], answer 1",
+      "contexts-0830-0990.txt, context 11"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "La5f49e18ed",
+    "source": "Bend to a target",
+    "old": "Bøy til en måltone",
+    "new": "Treff en måltone med en bend",
+    "reason": "Use the established technique term bend rather than an objectless everyday Bøy; clearly identifies the goal of matching a target pitch, consistent with the explanation and glossary.",
+    "source_sha256": "3b17f87c01d50cd06551ab2c8d6cf66e837f991b1c2e2d9ddec135c0fb918012",
+    "old_sha256": "d476724209b158d38415474d51bf4e61872c6db2f5b5c9528cc34f9fd7de5a1d",
+    "new_sha256": "2d5478a6fffad95d9fefb154c459c0d6943cab5b9ce2ab2e1bf0d39c92bf4287",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-0830-0990.txt, rows 843–847"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lc9ae6e4fa7",
+    "source": "Reggae: the offbeat chop",
+    "old": "Reggae: korte anslag på mellomslag",
+    "new": "Reggae: korte anslag på to og fire",
+    "reason": "This whole lesson explicitly teaches short chords on beats two and four, not between beats. Mellomslag incorrectly directs offbeat eighths in Norwegian. Name the taught beat positions in words; no source digit or notation is added or changed. English offbeat is broad/ambiguous here.",
+    "source_sha256": "9ef82ff9851e212a7dbd9d2b9a384f68947e7b05a2e220ac65eee7eb74bbc763",
+    "old_sha256": "d5e4fca38541bd73a3c4d19bc4fb3ba4c3d0222d2de2ceb8436c9a12fda4c973",
+    "new_sha256": "4eeece020d1caf6b17b04db49d812f0f7386269129f27e9fcb504e8b84861b44",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-0830-0990.txt, rows 968–979"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L734b1f0943",
+    "source": "The two-step",
+    "old": "Totrinnsrytmen",
+    "new": "Two-step-rytmen",
+    "reason": "Keep the recognizable country dance/style term two-step, consistent with the song title and later two-step explanation. Totrinnsrytmen is an invented literal calque that obscures the named style.",
+    "source_sha256": "244e87dc50c6b955bbd9344d6e09fb8a533a4299bd0a033ed52b5785a3d61af7",
+    "old_sha256": "3f3cda8bf704c69cbebc17f82ed9f5bbe28e8d87e536053b799ff0b91dbf24da",
+    "new_sha256": "123770f335acc3f343967fc3bd6622df7822b590cbf39e75ccd6729ffbddfdd2",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-0991-1151.txt, rows 1068–1077",
+      "contexts-0169-0337.txt, context 70"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "La9c57d56a0",
+    "source": "Next up: the E shape",
+    "old": "Neste opp: E-grepet",
+    "new": "Neste: E-grepet",
+    "reason": "Remove the literal English calque Neste opp. Neste naturally introduces the next chord shape; the following explanation retains the upward neck movement.",
+    "source_sha256": "87ed3b5da099d485005eb9ab0b0e17061aa026d85e2d5b808037a4d250708381",
+    "old_sha256": "c3fdd66149e458b3dda833feaaeb21d9884ecc714eecae94d29d5806cafe1bbd",
+    "new_sha256": "06af98dd9d84c59b78b6b483bb21e7ddffc70624dc9794e071873a1f64d07375",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-0991-1151.txt, rows 1094–1095"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lf46578d518",
+    "source": "It starts on the and and rings across the next beat. That push is syncopation, like your pop strum.",
+    "old": "Den starter på og og klinger over neste slag. Denne forskyvningen er synkopering, som i popanslaget ditt.",
+    "new": "Den starter på og-slaget og klinger over neste slag. Denne forskyvningen er synkopering, som i popanslaget ditt.",
+    "reason": "Disambiguate the count syllable og from the following conjunction. Og-slaget is already established in this draft and clearly names the between-beat onset; preserve the tied/sustained syncopation.",
+    "source_sha256": "99ffcf1f6fd2e203352d021ec7c68ef3312222e7ab904664cffbc866d6fc9789",
+    "old_sha256": "7c6f28dbca5d0af172c07d3a6f6ee1d8aacc9e14a3de93f3ff13f69fc25af594",
+    "new_sha256": "86e67ab20471d5f69c90a8a288977a50efe75dee3bfe4b6d67ae61107df55815",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-0991-1151.txt, rows 1051–1054"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L921bfa2279",
+    "source": "The top notes here run G, G, G, F sharp: almost still while the chords change under them. A note that two chords share is a common tone, and it's why triads sound so smooth.",
+    "old": "Topptonene her går G, G, G, F kryss: nesten stille mens akkordene skifter under. En tone som to akkorder deler, er en fellestone, og det er derfor treklanger låter så smidig.",
+    "new": "Topptonene her går G, G, G, F kryss og beveger seg knapt mens akkordene skifter under. En tone som to akkorder deler, er en fellestone, og det er derfor treklanger låter så smidig.",
+    "reason": "Still describes minimal melodic movement, not soft volume or silence. Beveger seg knapt prevents Norwegian stille from misleading the learner about dynamics while preserving the repeated top-note sequence.",
+    "source_sha256": "90883c64c3f674a962a1aba6c434de21558d5b4aab0b5708b644d3bab69fccaa",
+    "old_sha256": "dd43eed966ed4e1e4f86868782c8da1699f59d5047eaa349501a0f0c9e5a60fa",
+    "new_sha256": "dcf7014968748b3953e8dac191f65b94e2f6b6e8c61909d906fde0963f03950e",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1152-1313.txt, row 1188"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Leacb886dc3",
+    "source": "Roller Rink's loop is the one, six, four and five of G. Which chord is the six?",
+    "old": "Sløyfen i Roller Rink er første, sjette, fjerde og femte trinn i G. Hvilken akkord er sjette?",
+    "new": "Sløyfen i Roller Rink følger første, sjette, fjerde og femte trinn i G. Hvilken akkord ligger på sjette trinn?",
+    "reason": "Use natural Bokmål and explicitly ask for the chord on scale degree six, not the sixth chord in the playback order. The four-chord loop and answer E minor remain unchanged.",
+    "source_sha256": "68d5990da28997b510a5b41a7b275c0b767216fe3e66fae7d117934fb7fa7d2f",
+    "old_sha256": "af9fdd895d178af0a2befd756013b043caeac34a3e55833299477e6b60f8b433",
+    "new_sha256": "bac441b0c043f9ae3a1a297ab924dbc7fc357b0cfd235b1451851932b0e7d2c9",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1152-1313.txt, rows 1193–1195",
+      "contexts-0001-0168.txt, context 50"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lecfac300b7",
+    "source": "Sevenths with the root on string 5",
+    "old": "Septimer med grunntone på streng 5",
+    "new": "Septimakkorder med grunntone på streng 5",
+    "reason": "Sevenths here means seventh chords, not seventh intervals (septimer). Match the unit's chord vocabulary and its root-position exercises.",
+    "source_sha256": "b244682dfed6acb230e0d28ced23811cac798c0f5174015b239411cdf3190416",
+    "old_sha256": "bed26a5410b6c8760d55e9ceeaeb9ba137b2bde13368e0222e451ff306c44e36",
+    "new_sha256": "919f817b2fbae8770274f2013348e4468d144bc452fe3c5fa74c134b2e4268e2",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1152-1313.txt, rows 1221–1230"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L7187db723a",
+    "source": "Sevenths, swung",
+    "old": "Septimer med swing",
+    "new": "Septimakkorder med swing",
+    "reason": "Sevenths here abbreviates seventh chords; septimer normally names intervals. The challenge reviews chord comping, so make the chord noun explicit.",
+    "source_sha256": "ac6205a65f676144335a8696182a7991b5e3ca7ad5ab8a248315583a564a8d3a",
+    "old_sha256": "49d95cb14c37519b09f48211d7e7ae4189a7161bc7dbf00ea9e2974019f8b129",
+    "new_sha256": "c989b27288d026365d61742b9c7368bbd3cc186cb339b75e63148ce20dea11a5",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1152-1313.txt, rows 1253–1255"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L3d062b60ba",
+    "source": "Swing guitarists comp: short chords that answer the band. The Charleston rhythm hits beat one and the swung and of two, then leaves space.",
+    "old": "Swinggitarister komper: korte akkorder som svarer bandet. Charleston-rytmen treffer første slag og det svingte og etter to, og lar så rommet stå åpent.",
+    "new": "Swinggitarister komper: korte akkorder som svarer bandet. Charleston-rytmen treffer første slag og så og-slaget etter to i swingrytme, før det blir en pause.",
+    "reason": "Replace the unclear literal det svingte og with an explicit swing-rhythm offbeat. Keep onset on beat one and the swung offbeat after two, followed by space.",
+    "source_sha256": "822f8edf99722c8b963bcdabb0d3d47aa4b2982fa9b8ba096c9fc73c6f25a4e9",
+    "old_sha256": "cbfde80f326dd715a835d9b620e30c6d95dca8647044ff31ada864be7bb51c35",
+    "new_sha256": "7baa27abe40cd8ea9a5ed71ad84015bf3f859010598850d641a2281b72ef2583",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1152-1313.txt, rows 1242–1244"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lb58b5a8ced",
+    "source": "One",
+    "old": "En",
+    "new": "Én",
+    "reason": "Deliberate standalone numeral-name UI label (the name of the number), not an elliptical full noun phrase. All 14 distinct publisher contexts are separate numeric answer labels or beat-number labels; none inserts this key into running text. The accent makes numerical one explicit. Ordinary full-phrase agreement would require Ett with slag/kryss/halvtonetrinn and Én with common-gender nouns; this UI convention does not waive that rule, and complete One beat remains Ett slag. Parent policy reviewed independently against every context; no new digits or slash-gender compromise.",
+    "source_sha256": "8b12507783d5becacbf2ebe5b01a60024d8728a8f86dcc818bce699e8b3320bc",
+    "old_sha256": "fb92c7e381b71ceda36d7e3d0f1064386452c4d6b2300ec9818652830f23f17c",
+    "new_sha256": "6505c19e57c6684e4cf541a257a732bf445083a6ee2ded65e26ad106d2d41b6a",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "contexts-0169-0337.txt, all 14 One contexts",
+      "Språkrådet spelling distinction read 2026-10-26: https://sprakradet.no/spraksporsmal-og-svar/et-eller-ett/ (supports gender/number spelling, not a universal UI exemption)"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L09ccd34cd2",
+    "source": "Now slide finger 3 on string 3 from fret 4 to fret 6, B up to C sharp, then glide back into the box.",
+    "old": "Gli nå finger 3 på streng 3 fra bånd 4 til bånd 6, B opp til C kryss, og gli så tilbake inn i boksen.",
+    "new": "La nå finger 3 gli på streng 3 fra bånd 4 til bånd 6, B opp til C kryss, og gli så tilbake inn i boksen.",
+    "reason": "Gli is intransitive in Norwegian. Replace the English-style transitive Gli finger 3 with La finger 3 gli, preserving the exact finger, string, fret movement and pitch direction.",
+    "source_sha256": "5721bc8618e6b29dcd051413b5df1a182e4787bc143d16f42c6466d858491daf",
+    "old_sha256": "40a7c21d3c37b3f189035e005e0c8279df087befeef43c009434179995250c8b",
+    "new_sha256": "fd7a1da22b24eea8a08ad33d5c6bb57f7da4dee4d694f2d388294aa7e10d1057",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1314-1489.txt, rows 1351–1353"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lce48b53eeb",
+    "source": "The easiest intro is the song's last line, played before the first verse. It sets the key, the tempo and the mood, and the singer knows exactly where to come in.",
+    "old": "Den enkleste introen er sangens siste linje, spilt før første vers. Den angir toneart, tempo og stemning, og sangeren vet akkurat hvor han eller hun skal komme inn.",
+    "new": "Den enkleste introen er sangens siste linje, spilt før første vers. Den angir toneart, tempo og stemning, så sangeren vet akkurat når det er tid for å komme inn.",
+    "reason": "Avoid introducing unnecessary han eller hun where the English and glossary are gender-neutral. Preserve the singer's clear entry cue using natural Bokmål.",
+    "source_sha256": "7e2ea593a0781815fa267420ffa939e873dab9a7a18e25fe0d5330cb360a7c2e",
+    "old_sha256": "730b0077aab994920a7e23998525d8609bf014351115d36c98243076dad37cfa",
+    "new_sha256": "ffcdbd61e13956bb45a894eba2627748106a966b95f07f7dcc22174d48e26af7",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1314-1489.txt, row 1431"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lee8da162d0",
+    "source": "Picked verse, strummed chorus",
+    "old": "Plukket vers, slått refreng",
+    "new": "Fingerspill i verset, anslag i refrenget",
+    "reason": "Slått refreng omits the musical particle an and is unnatural. Name fingerspill and anslag (the glossary strumming noun) explicitly, matching the explanation while fitting the existing 42-character title budget.",
+    "source_sha256": "cc172fcb81100d52dfde993df005c282fdcb885207207447fe20c43a24e47071",
+    "old_sha256": "2c763042a32c721c2f4179ae9eb9b182fd4b455baa1e3a0ad368728eae242719",
+    "new_sha256": "4554775049f5becb43c4d603aa772421357328590339bff105593b23880835c7",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1314-1489.txt, rows 1440–1449"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "La1beb6f2c6",
+    "source": "Each section can add a little: a picked verse, a strummed chorus, then triads up the neck for the last chorus. Save your biggest sound for the end.",
+    "old": "Hver del kan legge til litt: et plukket vers, et slått refreng, så treklanger oppover halsen til siste refreng. Spar den største klangen til slutten.",
+    "new": "Hver del kan legge til litt: et vers med fingerspill, et refreng med akkordanslag, så treklanger oppover halsen til siste refreng. Spar den største klangen til slutten.",
+    "reason": "Replace the unnatural et slått refreng and clarify the fingerpicked/strummed contrast consistently with the corrected lesson title. Preserve the build toward triads in the final chorus.",
+    "source_sha256": "c130639ccbbf1d1eb0feddf05953e8637916a3cf1bb3bafd0ae45487f1f2ddaf",
+    "old_sha256": "4337df09a1868de8fbec199c3ac0ebcf9d10ea64340b0b29f4adbc1b47eb395f",
+    "new_sha256": "64c77bfd58338a40a2bcf177bebef753f47e0154f5090d969918dddc8c91d9a3",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1314-1489.txt, rows 1440–1449"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lbb5fc3144b",
+    "source": "Down by the Riverside, a spiritual first printed in 1918, gets the full treatment: a Travis-picked intro, two verses and choruses, a pentatonic solo, and a tag.",
+    "old": "Down by the Riverside, en spiritual først trykt i 1918, får hele behandlingen: en intro med Travis-plukking, to vers og refrenger, en pentaton solo og en gjentatt avslutning.",
+    "new": "Down by the Riverside, en spiritual først trykt i 1918, får et komplett arrangement: en intro med Travis-plukking, to vers og refrenger, en pentaton solo og en gjentatt avslutning.",
+    "reason": "Replace the literal calque får hele behandlingen with the intended musical meaning, receives a complete arrangement. Keep the song name, date and all arrangement sections.",
+    "source_sha256": "b7fafda6e4b5ad7871542ca38d1ce749787c0d659aa97f96656b057968b29ea9",
+    "old_sha256": "2a3af4e4bdb3ba598bf7c06f4917118cd50e058ff14d5656a7884a2ba7f5b85f",
+    "new_sha256": "c0729b03c4593cd8598965011fc91a3b5c1e6fbf9e6dada8037d3904c674c7d6",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1314-1489.txt, row 1465"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lf6d6d4ae3e",
+    "source": "Jukebox Moon is a Timbre Original: a fifties slow dance in AABA form, a verse, the verse again, a bridge on F, then the verse once more. Strum every beat, with a quick swung up into each new bar. The whole song is in Songs, under Originals.",
+    "old": "Jukebox Moon er en Timbre-original: en rolig femtitallsdans i AABA-form, et vers, verset igjen, en bro på F, så verset én gang til. Slå an hvert slag, med et raskt, svingt oppslag inn i hver ny takt. Hele sangen finnes i Sanger, under Originaler.",
+    "new": "Jukebox Moon er en Timbre-original: en rolig femtitallsdans i AABA-form, et vers, verset igjen, en bro på F, så verset én gang til. Slå an hvert slag, med et raskt oppslag i swingrytme inn i hver ny takt. Hele sangen finnes i Sanger, under Originaler.",
+    "reason": "Use explicit swingrytme instead of the unclear literal svingt for swung rhythmic timing. Preserve the fast upstroke into each new bar, form, title and navigation labels.",
+    "source_sha256": "392a011ca918b75f25a429307372d694e1493ed98d135474f1a931b97c647330",
+    "old_sha256": "57a3e04196d58e1bfb5b75f5f7803bd3a964ea9989e46b248b2ccd06f03f70ad",
+    "new_sha256": "3da6ae9bc33a5cda939595149139935b83841d166d4d2ab8cee594654f07e4a6",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1314-1489.txt, row 1478"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lb90246945a",
+    "source": "On the and between beats",
+    "old": "På og mellom slagene",
+    "new": "På og-slaget mellom slagene",
+    "reason": "Names the counted offbeat explicitly; bare «på og mellom» reads as a broken prepositional phrase rather than the rhythmic and.",
+    "source_sha256": "b8840de6fae52376b973994e78dda024dd984597e10722f9b77d759db9cfde01",
+    "old_sha256": "19d754448778fb1bb26759cf986d8b0f6bae6dfdedd8988cfee5fc93579c9c0e",
+    "new_sha256": "71ee87b54d053b77cb2cf3a5170eb226671a5cb46ff2d27974a41758378d0e5c",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1490-1652.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "La3f7eb7ea9",
+    "source": "What does your hand do on the and of 1?",
+    "old": "Hva gjør hånden på og etter 1?",
+    "new": "Hva gjør hånden på og-slaget etter 1?",
+    "reason": "Makes the counted and an explicit offbeat, not the conjunction «og» between unfinished phrases.",
+    "source_sha256": "b1ad5720c0a9a35d56d1d9536c975dc9c9fcd4ba0c847e6d340a8ba67edf8913",
+    "old_sha256": "b75e476cee58640afbf48b4dcf1ae601c88913e814d3859078a2a42e54d89341",
+    "new_sha256": "e5c496299867dd2bfc9bd398db80755fa06b901017d48ac4864f1ac0ae3e6fbf",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1490-1652.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L0858349791",
+    "source": "A song's chords are steps of its key: I, IV and V. Change key and the numbers stay. In C that's C, F and G7; in G, it's G, C and D7; in F, F, B flat and C7.",
+    "old": "Akkordene i en sang er trinn i tonearten: I, IV og V. Bytt toneart, så blir tallene. I C er det C, F og G7; i G er det G, C og D7; i F er det F, B med b og C7.",
+    "new": "Akkordene i en sang er trinn i tonearten: I, IV og V. Bytt toneart, så er tallene de samme. I C er det C, F og G7; i G er det G, C og D7; i F er det F, B med b og C7.",
+    "reason": "«Så blir tallene» lacks the complement needed to convey that harmonic numbers remain unchanged.",
+    "source_sha256": "c39c714ba5d9e7bae01548814133f71d00f8cee826e6db15e0511c5bc24e2a34",
+    "old_sha256": "c579a0f20b62d11f6c1d96c384c0eb7ed314d26bf657abb6b8f19506eb6e3f4d",
+    "new_sha256": "c3660cbc51f7b90b7f6e51f3bc9eca7728d421e801389ddf51d5e43fb53b2a66",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1653-1815.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L25e46acd36",
+    "source": "If a song sits too high or too low to sing, move it to another key. Same numbers, same song, just a better fit for the voice.",
+    "old": "Hvis en sang ligger for høyt eller lavt å synge, flytt den til en annen toneart. Samme tall, samme sang, bare bedre tilpasset stemmen.",
+    "new": "Hvis en sang ligger for høyt eller for lavt til at du kan synge den, flytt den til en annen toneart. Samme tall, samme sang, bare bedre tilpasset stemmen.",
+    "reason": "Repairs the incomplete construction «for høyt eller lavt å synge» while preserving the singer-specific key-choice advice.",
+    "source_sha256": "8b4acf8023e4f250103ae81fe6474a49f1151d844fc6e35ef46e4b092c18b61a",
+    "old_sha256": "a8fd8870f568d1c79416e84d56a053ec45713fdf6178c69a1deecbb225c231a9",
+    "new_sha256": "f65d7b72ec777b9af3ce6fd0b434cc8be57a57c6660f33666ebdb1629273541e",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1653-1815.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L1e35f9ed03",
+    "source": "Push the and of 2",
+    "old": "Beton og etter 2",
+    "new": "Beton og-slaget etter 2",
+    "reason": "The title names an offbeat; «Beton og etter» reads like an incomplete conjunction phrase.",
+    "source_sha256": "f0e7be76634918e668ef71f750c8445da75f9d793484ae98d154a524dbfdc431",
+    "old_sha256": "87dc107bb54e3769c466305f8601428bf4817a97407e523fb9e03f35c3edb87d",
+    "new_sha256": "5eca8882e9950b757e4ab79c1278b08308aefb3b780ef3e512a11d47aaa5568d",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1816-1940.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Ld026471b5e",
+    "source": "Strum steady down-up eighths, but hit three of them harder: 1, the and of 2, and 4. The accents fall 3, 3 and 2 eighths apart.",
+    "old": "Slå jevne ned-opp-åttedeler, men treff tre av dem hardere: 1, og etter 2, og 4. Mellom betoningene er det 3, 3 og 2 åttedeler.",
+    "new": "Slå jevne ned-opp-åttedeler, men treff tre av dem hardere: 1, og-slaget etter 2, og 4. Mellom betoningene er det 3, 3 og 2 åttedeler.",
+    "reason": "Distinguishes the counted offbeat from list conjunctions so the three intended accents remain unmistakable.",
+    "source_sha256": "7a81de22ecd0cc226b4835e6bf71bbe4fd2575d4dbe4c7cd384a1f8ac38e8bc2",
+    "old_sha256": "390ef8dc6d6edea4b6395f0294a7eff98a76f3198d553288769f05d8a5951026",
+    "new_sha256": "c25d1bb5b7a99189331cbcbf347851b6d57fc43b9be534325cd3f5a5aeda271f",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1816-1940.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Le8678bd3b8",
+    "source": "1, the and of 2, and 4",
+    "old": "1, og etter 2, og 4",
+    "new": "1, og-slaget etter 2, og 4",
+    "reason": "Matches the explicitly named rhythmic offbeat in the lesson; keeps all digits and accent locations.",
+    "source_sha256": "7448db20443ea3a67bf0fa4d4d512a9fdd8f38d49e147791959d7f05ae632da6",
+    "old_sha256": "678952672468381924e156d4805073abfc33e5c8950fe8634cd039697a16d386",
+    "new_sha256": "1041a9db23ea53b4d34cdb507c95d072c218f5bf988d80bd2586093a77e1ba1f",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1816-1940.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "La585d1d107",
+    "source": "Four public-domain songs arranged for ukulele, and how to lead a room through them.",
+    "old": "Fire opphavsrettsfrie sanger arrangert for ukulele, og hvordan du leder et rom gjennom dem.",
+    "new": "Fire opphavsrettsfrie sanger arrangert for ukulele, og hvordan du leder en forsamling gjennom dem.",
+    "reason": "Natural Norwegian denotes the assembled singers rather than literally leading a room.",
+    "source_sha256": "8b45426d1b80220fcaa49eb1718f685165255c2bc6706d33995aabbf9bcc56e0",
+    "old_sha256": "1c56fe0355264ea544d6ce914c52cf23873b0587cd1ed3255530439905369f4f",
+    "new_sha256": "0bc5fa18333eba8605436cb3eb8e9959b4b7dcdb96a3f3f75ab3d8075b628316",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1816-1940.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Ldc0a18e3ea",
+    "source": "Miss a chord? Keep strumming and catch the next one. A singing room follows the beat, not every note.",
+    "old": "Bommer du på en akkord? Fortsett å slå an og treff den neste. Et rom som synger, følger takten, ikke hver tone.",
+    "new": "Bommer du på en akkord? Fortsett å slå an og treff den neste. En syngende forsamling følger takten, ikke hver tone.",
+    "reason": "Replaces unnatural literal «et rom som synger» with the people singing, preserving the group-leading advice.",
+    "source_sha256": "0dc202ebb1f707e3866caf1e05f8fa54f59a0c6915f061987bbbc854b4ced8ba",
+    "old_sha256": "a738e98cd1846bd2e8b7b66f0dc5641c726c3de2bbe43f63e311987cef535a65",
+    "new_sha256": "7912268653b6e8f49c2110bc295bfb9a8119643fe77e012e0acc79ffe398fcb3",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1816-1940.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L339d5e6044",
+    "source": "Both are A. Each string is tuned to fret 5 of the string below it.",
+    "old": "Begge er A. Hver streng er stemt til bånd 5 på strengen under.",
+    "new": "Begge er A. Hver streng er stemt til tonen på bånd 5 på den dypere nabostrengen.",
+    "reason": "Makes lower mean lower pitch, not the physically lower string: tuning is matched to the thicker adjacent string.",
+    "source_sha256": "d80cd7c35693c78d478dec2e29eaa29a2a893db809cf9bc07176c655cc304d46",
+    "old_sha256": "5a0fc22610ffd535d774fa6f9ac5739b10c92959dad850c1f75bb7e72f9c99d6",
+    "new_sha256": "cdb7f5be443d9fc23c4d663b3e389852e354d37abc62f8c94197615cfcebe878",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1941-2109.txt",
+      "contexts-1941-2109.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L8a8683d90c",
+    "source": "Both are D. Each string is tuned to fret 5 of the string below it.",
+    "old": "Begge er D. Hver streng er stemt til bånd 5 på strengen under.",
+    "new": "Begge er D. Hver streng er stemt til tonen på bånd 5 på den dypere nabostrengen.",
+    "reason": "Clarifies the lower-pitched adjacent string; «strengen under» can direct the learner to the physically wrong string.",
+    "source_sha256": "0279ebb686e8228ac602d99654b223d70d7abc9e6631e3a27eb32aad0c363e4c",
+    "old_sha256": "c02e3d72a86ee3b15971e17d10990e42494026b7fd7c37e834ab715ee8098d27",
+    "new_sha256": "037ba81161e4bbff1dffe4ec0d480180ab93165b303e5c2b00651733da5591dd",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1941-2109.txt",
+      "contexts-1941-2109.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L3b29c073fd",
+    "source": "Either one",
+    "old": "Hvilken som helst",
+    "new": "Det er valgfritt",
+    "reason": "Shared option answers both feminine/common «tone» and neuter «anslag». A gender-neutral full clause preserves either-is-allowed distractor meaning in both actual prompts without a slash compromise.",
+    "source_sha256": "70571991b11a8d4176a27075407ead61eaccdc6f4800ed046396ff86bd12acbc",
+    "old_sha256": "bef3c0eaffaf50e7f984bccaff94f8ad7365e7306113d5b0f89418df671d6fc3",
+    "new_sha256": "9ac246ec28ad55919dbc45997c8affe0c895562515a7f8b890c854534e9cbb3f",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1941-2109.txt",
+      "contexts-1941-2109.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L1f53cfa218",
+    "source": "A dotted quarter lasts one and a half beats. Play on 1, hold through 2, then play on the and of 2, then on 3 and 4.",
+    "old": "En punktert firedel varer halvannet slag. Spill på 1, hold gjennom 2, spill så på og etter 2, så på 3 og 4.",
+    "new": "En punktert firedel varer halvannet slag. Spill på 1, hold tonen inn i slag 2, spill så på og-slaget etter 2, så på 3 og 4.",
+    "reason": "Makes the intended one-and-a-half-beat duration explicit: «hold gjennom 2» could imply holding the entire second beat; names the and-of-two as an offbeat.",
+    "source_sha256": "afe9fc3279e704525f5e5ef2fb55720d4af8759f7bd802192d9763429e464e07",
+    "old_sha256": "0826e9fee1e3eae331395d4a1e0d9b5ac7682d17b7ef04d01b9bcbf3bd0f4756",
+    "new_sha256": "4a5f1455aabace8e88d16f7e0515753d3bd14892c6edcb30b8ef72ad51aa1ef1",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2110-2207.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L74c9c1f9c1",
+    "source": "From low to high: G, D, A, E. Each string is five letter names above the last, an interval called a fifth. Try: Good Dogs Always Eat.",
+    "old": "Fra lav til høy: G, D, A, E. Hver streng ligger fem bokstavtrinn over den forrige, et intervall kalt en kvint. Prøv huskeregelen: Gode Dager Avler Energi.",
+    "new": "Fra lav til høy: G, D, A, E. Hver streng ligger en kvint over den forrige, den femte tonen når du teller bokstavnavn fra og med den forrige strengen. Prøv huskeregelen: Gode Dager Avler Energi.",
+    "reason": "A fifth counts the starting letter inclusively; «fem bokstavtrinn over» incorrectly suggests five transitions. Preserves the G-D-A-E mnemonic and fifth concept.",
+    "source_sha256": "ef9f0e2a02ac120f605053c145c2cdbcafd015856a542fd30feea8b09e16cde0",
+    "old_sha256": "5ffa4e4036b4ee6b423b1ca045461c89e64842d756919cf95187067128a63205",
+    "new_sha256": "e8109dff671175b9dbd99bb48612452971fd90e011a1037656e131bc011cc204",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2208-2377.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Le74a7237be",
+    "source": "Flat means too low. Clockwise tightens the string and raises the pitch.",
+    "old": "For lav betyr for lav tonehøyde. Med klokken strammer strengen og hever tonen.",
+    "new": "For lav betyr for lav tonehøyde. Når du vrir med klokken, strammes strengen og tonen blir høyere.",
+    "reason": "Repairs the ungrammatical adverbial subject «Med klokken strammer strengen» and clearly attributes tightening to the tuner rotation.",
+    "source_sha256": "31a9989972d1466aedddefccd66eb81eecb8ee1d6036f4a26a818d71b4563120",
+    "old_sha256": "1a2fdcd438f8c5e0fd7d518257e80ca90fe8382c3af43c689abd268567ded8c3",
+    "new_sha256": "e41ab8b279246b61035aab7fe26724f6b84e60cc54578d801b607a5d3dcfb18a",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2208-2377.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L3177f554bc",
+    "source": "When your D is in tune, the open D string vibrates along with it. The two share a letter name, eight notes apart: an octave. Listen for the violin sounding fuller.",
+    "old": "Når D er ren, vibrerer den åpne D-strengen med. De har samme bokstavnavn, åtte toner fra hverandre: en oktav. Lytt etter at fiolinen får fyldigere klang.",
+    "new": "Når D er ren, vibrerer den åpne D-strengen med. De har samme bokstavnavn, med en oktav imellom: fra første til åttende tone i skalaen. Lytt etter at fiolinen får fyldigere klang.",
+    "reason": "Clarifies inclusive octave counting; «åtte toner fra hverandre» could mean eight intervening whole tones rather than first-to-eighth scale degree.",
+    "source_sha256": "3072b15637f6df62f0c8c12104d6f732150c20c6e5619c28d2e31a182865d5d6",
+    "old_sha256": "3b97cbafffc0e73c60fdcddee207b1f3c9503ad1ecfc306b14c4b49be8e5531f",
+    "new_sha256": "a8de1a4e3ea28620a4cf8f11fc0a03b89b836893d92e52ddb6c78c2813a95803",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2208-2377.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L285b045a4f",
+    "source": "Slide second finger back until it touches first. On the A string that's C natural, a half step below C sharp. Players call it low 2.",
+    "old": "Gli andre finger tilbake til den berører første. På A-strengen er det C uten fortegn, en halvtone under C kryss. Musikere kaller det lav 2.",
+    "new": "La andre finger gli tilbake til den berører første. På A-strengen er det C uten fortegn, en halvtone under C kryss. Musikere kaller det lav 2.",
+    "reason": "Norwegian gli is intransitive; «la fingeren gli» correctly directs the finger slide.",
+    "source_sha256": "41f6d4dad49d8ad90454197995b73f425c72aebef5c8b82d9d45d56b05378b92",
+    "old_sha256": "8a0d2382243f43abc25408d7c8b732c9e8204f517a9dc7cfcc89de75c171dbb6",
+    "new_sha256": "5f3ccc158c93a22a168299e804561d4ad4e5e56ab627e228e33d7bb5f0db77a7",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2378-2540.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L3605ff02ac",
+    "source": "G natural instead of G sharp gives Old Joe Clark its old-time sound.",
+    "old": "G uten fortegn i stedet for G kryss gir Old Joe Clark sin gammeldagse klang.",
+    "new": "G uten fortegn i stedet for G kryss gir Old Joe Clark den gammeldagse klangen.",
+    "reason": "Corrects the possessive reference: the tune receives its sound, not the grammatical subject G-natural giving away its own sound.",
+    "source_sha256": "fe02e1723281f1f112975cfbe9e9f79c5be36eaee8b77efac978182e0237d2bd",
+    "old_sha256": "60f4040d9c7c74bdb846194450dc2dafcee432ccbfaa40ed6076b26f84a14a71",
+    "new_sha256": "10ec49ea6695e668702a11cb055f8da818abcda79491c8dffeea5b7043e55385",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2378-2540.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L07c74c4f57",
+    "source": "Every key sets your second finger. Before you play, ask: high 2 or low 2, and on which string?",
+    "old": "Hver toneart bestemmer andre finger. Før du spiller, spør: høy 2 eller lav 2, og på hvilken streng?",
+    "new": "Hver toneart bestemmer plasseringen av andre finger. Før du spiller, spør: høy 2 eller lav 2, og på hvilken streng?",
+    "reason": "Clarifies that the key determines finger placement, not the finger itself.",
+    "source_sha256": "eb598028303c88fe66514bf1e1a58f117cd0d498c7a48c579bfcd325061ab14c",
+    "old_sha256": "81d5fe0068764c251bf4a7b8ee6f3e7e2ba75d288f673dc8b7fe73fada085bc9",
+    "new_sha256": "3989a4d14da0a6b28aac0e188ddf3bc63e4951ad6bbc8ebc183685f39e5f1af6",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2378-2540.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L8d7832013f",
+    "source": "It avoids a string crossing and sounds warmer",
+    "old": "Det unngår strengeskift og låter varmere",
+    "new": "Du unngår strengeskift og får varmere klang",
+    "reason": "Natural Norwegian makes the player avoid the crossing; «det unngår» incorrectly assigns the action to the technique.",
+    "source_sha256": "f95f9553b87e133d492880097fc97218f213afa59453578fd739d4b16a8e2a6d",
+    "old_sha256": "342915547534c6e8ad65ffdd10629cb9e318bdb29604d27fccb333ca6a9ed4d9",
+    "new_sha256": "7cce9b43c41f8a038774c5468b3030ae1aeac0cbd5471413878f0d2a88a345ad",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2541-2619.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lf5fe463b78",
+    "source": "Getting ready for vibrato",
+    "old": "Gjør klar for vibrato",
+    "new": "Gjør deg klar for vibrato",
+    "reason": "Adds the reflexive object required for the learner to get ready; «gjør klar» alone leaves an implied object missing.",
+    "source_sha256": "955516ee55edb8ce67c8e7a648d1517992e965a4390b7cfdab2c0b5f2e1c9932",
+    "old_sha256": "8be9497a77dc3b0bb4f278ed518779ad6d8eacecb3cb3d78b61979a559af2d2c",
+    "new_sha256": "5f48301f26788a3143e6f2bcf5ff1169b9cc9f48014b3583272199384ea20d65",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2541-2619.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L43a99bfc67",
+    "source": "Set second finger on the A string. Keep the fingertip in place, soften the knuckle, and slowly rock your hand toward the scroll and back. Small and even. A teacher's eye helps here.",
+    "old": "Sett andre finger på A-strengen. Hold fingertuppen på plass, mykne knoken og vugg langsomt hånden mot snekken og tilbake. Smått og jevnt. En lærer kan hjelpe ved å se på.",
+    "new": "Sett andre finger på A-strengen. Hold fingertuppen på plass, slapp av i fingerleddet og vugg langsomt hånden mot snekken og tilbake. Smått og jevnt. En lærer kan hjelpe ved å se på.",
+    "reason": "Softening the knuckle means relaxing the finger joint, not making the bone itself soft. Keeps the fingertip fixed and the physical direction intact.",
+    "source_sha256": "19f60dd729f9495c9f73a63a8918107c91bb531f29899d33de6231402f9b04cb",
+    "old_sha256": "784a976d9ed9c771003e8c1bb0363c35a839c51cf5e44af0896d4c69568554f5",
+    "new_sha256": "9b9e4d10ed52d319e7d0688cc6d89193ba997103c144b461f1ea4902afc09e7d",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2541-2619.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "La6f5916eae",
+    "source": "From low to high: C, G, D, A. Each string is five letter names above the last, an interval called a fifth. Try: Cats Go Dancing Around.",
+    "old": "Fra lav til høy: C, G, D, A. Hver streng ligger fem bokstavtrinn over den forrige, et intervall kalt en kvint. Prøv huskeregelen: Celloer Gir Deg Applaus.",
+    "new": "Fra lav til høy: C, G, D, A. Hver streng ligger en kvint over den forrige, den femte tonen når du teller bokstavnavn fra og med den forrige strengen. Prøv huskeregelen: Celloer Gir Deg Applaus.",
+    "reason": "Clarifies inclusive fifth counting, matching the violin explanation; five transitions would incorrectly imply a sixth. Retains the C-G-D-A mnemonic.",
+    "source_sha256": "c9f340672a77dceecf4b4522111d0fbb2d2ecb7e6dac7c4685295fba3eca0fb7",
+    "old_sha256": "d79034bf84d4801ae761260f0db3bdf9ca1cef41b714434814486567719e78aa",
+    "new_sha256": "3138722c8ae7d7702b292e8b1ca21613e8f778f3fd85ab524490c8cccb8fffd1",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2620-2814.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Ld872a8e64f",
+    "source": "Fourth-finger G on the D string is an octave above the open G string: the same letter, eight notes higher. When it's in tune, the G string hums along.",
+    "old": "G med fjerde finger på D-strengen er en oktav over åpen G-streng: samme bokstav, åtte toner høyere. Når tonen er ren, summer G-strengen med.",
+    "new": "G med fjerde finger på D-strengen er en oktav over åpen G-streng: samme bokstav, fra første til åttende tone i skalaen. Når tonen er ren, summer G-strengen med.",
+    "reason": "Makes first-to-eighth inclusive octave counting explicit rather than implying eight whole-tone steps.",
+    "source_sha256": "6759714066eac04e4574fc981bbfa60ff1d3692da3d430e29f8a3ad8f035ab29",
+    "old_sha256": "a3fb5af2f749cb8425255d8d636e50ac32594e1e1615c5470cec2a0af6092365",
+    "new_sha256": "efa65d26f134906adf7e435e1300a333ffec538f1b85b6b2f803db8d1f634046",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2620-2814.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L29912cf72c",
+    "source": "B with first finger, then slide that finger up to D. Keep it light on the way.",
+    "old": "B med første finger, så gli den opp til D. Hold den lett på veien.",
+    "new": "B med første finger, la så den fingeren gli opp til D. Hold den lett på veien.",
+    "reason": "Repairs intransitive gli used with a direct object; keeps the same finger and light contact.",
+    "source_sha256": "30b95f71efb6d9b8df0817cb4543c969a9a26857d3914daea40f1c1e0f3fa876",
+    "old_sha256": "74fb8ad14dbbe0e4f2b4caad1b9c12e94a74e780052d923fcfdca99de27677b3",
+    "new_sha256": "36d4897bc02154bc91bd2e6cd2c531c06ab57630420560a6589c3c8e5e3ae13b",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2620-2814.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L57e2f80c73",
+    "source": "Play E with first finger in first position, then slide that finger up to G. That's three half steps, the same distance as B to D on the A string.",
+    "old": "Spill E med første finger i første posisjon, og gli så fingeren opp til G. Det er tre halvtoner, samme avstand som B til D på A-strengen.",
+    "new": "Spill E med første finger i første posisjon, og la så fingeren gli opp til G. Det er tre halvtoner, samme avstand som B til D på A-strengen.",
+    "reason": "Repairs intransitive gli used transitively while preserving the three-semitone shift and comparisons.",
+    "source_sha256": "0abcf94490b7ca6fec07af593b592caa203da4eccbc691ac4b623c1982d0ecd1",
+    "old_sha256": "9b50df6a3be36d7c8fbd12b3d812b85cfd26571a7a56d0600983a091663f07de",
+    "new_sha256": "b4895b9fc7721218075f592f417745e6a7dd0adbb23599f008e5ea631eec1360",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2620-2814.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lc8c3d39130",
+    "source": "In Amazing Grace, the high D comes right after open A. While the A rings, slide your hand up to fourth position and land on D with first finger.",
+    "old": "I Amazing Grace kommer den høye D-en rett etter åpen A. Mens A klinger, glir du hånden opp til fjerde posisjon og lander på D med første finger.",
+    "new": "I Amazing Grace kommer den høye D-en rett etter åpen A. Mens A klinger, lar du hånden gli opp til fjerde posisjon og lander på D med første finger.",
+    "reason": "Correct Norwegian causative construction is «lar du hånden gli», not transitive «glir du hånden».",
+    "source_sha256": "88881c09cdfa6bcc43ec53b2fc625f5ec719b41718d90c13bdadcf0fb52e4505",
+    "old_sha256": "7ec0f74842d2d43c0089cdc71cef60a9d9350361130056983f390546f0885ffb",
+    "new_sha256": "eeb1259700eea1ed5db4ddd90594a4f055db0368ab2ed6dd0c6c1f6a990fe967",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2620-2814.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L28cc39140a",
+    "source": "Tuned pairs, a relaxed pick and four open notes. Play each one cleanly, with both strings of the pair ringing.",
+    "old": "Stemte par, avslappet plekter og fire åpne toner. Spill hver rent, med begge strengene i paret klingende.",
+    "new": "Stemte par, et avslappet plektergrep og fire åpne toner. Spill hver tone rent, så begge strengene i paret klinger.",
+    "reason": "The grip should be relaxed, not the inanimate pick; also gives the final ringing instruction natural Norwegian syntax.",
+    "source_sha256": "f43909d93a66f6949a818383f344fab685327d10a68bd1d015757a009459adf4",
+    "old_sha256": "dab35220460f6d1b28130dc762ed7a8a99b56f12f4aa575f628963d77c3f6371",
+    "new_sha256": "77f6c87d136bd735de28f138687e744fb1f53b5c345569d31be95bb1bd736511",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2815-2979.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lada3439dab",
+    "source": "Alternate your pick in eighth notes and make long notes sing with tremolo.",
+    "old": "Veksle plekteret i åttedeler og få lange toner til å synge med tremolo.",
+    "new": "Veksle mellom ned- og oppslag i åttedeler og få lange toner til å synge med tremolo.",
+    "reason": "Clarifies that the player alternates stroke direction, rather than swapping the pick itself.",
+    "source_sha256": "3eb2600abef5c3bf89176c5104e1b75ffd4055f9076b20efd3136b2ab371e7ea",
+    "old_sha256": "4e11fe0dc3fa4fce8107588ed8ddaa28d0cea061130b92a900b03e26582dcc70",
+    "new_sha256": "bcaae2ab6d0e971d2918e23e22163f381d558e59232b054bea592fc2582d50a8",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2815-2979.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L7831336036",
+    "source": "Pick down on each beat and up on the and in between. Your hand swings like a pendulum, down, up, down, up, even when a note waits.",
+    "old": "Slå ned på hvert slag og opp på og imellom. Hånden svinger som en pendel, ned, opp, ned, opp, selv når en tone venter.",
+    "new": "Slå ned på hvert slag og opp på og-slaget imellom. Hånden svinger som en pendel, ned, opp, ned, opp, selv når en tone venter.",
+    "reason": "Names the counted offbeat explicitly; «opp på og imellom» otherwise parses as an unfinished conjunction phrase.",
+    "source_sha256": "157001a0a98f4c9ebb55caed03c12b95ec2ec25e0a1d09502fe0724b51829ded",
+    "old_sha256": "2a6c8bc7c9ce9ec18e8b3cf08ef66d27b21dcd138bb081bc95f898b10c7cc6d3",
+    "new_sha256": "399707a15357e79127978efa5899e531aac044ec04da7fd707cd4d1f4a15f3cc",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2815-2979.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L4acde30783",
+    "source": "Which stroke plays the and of beat 2?",
+    "old": "Hvilket anslag spiller og etter slag 2?",
+    "new": "Hvilket anslag spiller og-slaget etter slag 2?",
+    "reason": "Distinguishes the rhythmic and from the conjunction and preserves the physical stroke question.",
+    "source_sha256": "f7a35c04bc1510ae1f08a1552035dfe0f4d2b0baa615c2fc996defbe493a567e",
+    "old_sha256": "e9c98deaca2e938d13f50dcd5c0cce78699b9d36daa780992258d85fa546b82e",
+    "new_sha256": "a72cb7afeff72fe66e6a251ed3b739140b09ca4a9f0f4538a5dec161ba92bf24",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2815-2979.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lbd5e650c4e",
+    "source": "From C, slide your second finger back to fret 2. The chord turns darker, though only one finger moved.",
+    "old": "Fra C glir du andre finger tilbake til bånd 2. Akkorden blir mørkere, selv om bare én finger flyttet seg.",
+    "new": "Fra C lar du andre finger gli tilbake til bånd 2. Akkorden blir mørkere, selv om bare én finger flyttet seg.",
+    "reason": "Repairs transitive use of the intransitive verb gli.",
+    "source_sha256": "99623aa638e4830cc4158eeaeb5d5badaec73cc44efd501d1ba11baa98cfebe7",
+    "old_sha256": "f28348d298b98be2ab2a198b53c56dbb1fc19e2aa58c863b9749e3505ce2f237",
+    "new_sha256": "a2dbe2502c6761f622a3d64d0b63ad496769a227602702ef7fcad4c1662ad38f",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2980-3111.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L52c31f2b7d",
+    "source": "G needs a new stretch: first finger fret 2 on pair 2, second finger fret 3 on pair 1, third finger fret 5 on pair 3, little finger fret 7 on pair 4.",
+    "old": "G trenger en ny strekk: første finger på bånd 2 på par 2, andre på bånd 3 på par 1, tredje på bånd 5 på par 3, lillefinger på bånd 7 på par 4.",
+    "new": "G krever at du strekker fingrene annerledes: første finger på bånd 2 på par 2, andre på bånd 3 på par 1, tredje på bånd 5 på par 3, lillefinger på bånd 7 på par 4.",
+    "reason": "Natural physical instruction describes a different finger stretch; «en ny strekk» can suggest a muscle strain rather than a fingering reach.",
+    "source_sha256": "0e6a9ccf3730ec3aff578bf5a8e0f5a64f866adc83a8279a6f66e78513b320c4",
+    "old_sha256": "122dcd8db24dbdee3dbb9cf42d486eb5ca1a3de803a5894aa61661da084136ff",
+    "new_sha256": "2a46396b05e8ea7f7790f30af25ee31789925839236cffb69776c228dcef78b2",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2980-3111.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lf2b380c306",
+    "source": "The chop is choked by the fretting hand. Relax the pressure but keep your fingertips on the strings.",
+    "old": "Hugget kuttes av gripehånden. Slapp av i trykket, men behold fingertuppene på strengene.",
+    "new": "Hugget kuttes av gripehånden. Lett på trykket, men behold fingertuppene på strengene.",
+    "reason": "«Slapp av i trykket» is an unnatural calque; ease the pressure without releasing string contact.",
+    "source_sha256": "72a942ebff8ae24664145a7530924efc81b084e5b430b0879655200b01bf1a75",
+    "old_sha256": "fc047d21031ab7d31ae00a3fd0be47e01ddb8b206135d017ff3af69c4f7e9e22",
+    "new_sha256": "ddae7bc7fb8f28d7e312a3487f8d8f3c4fb92617e5573e1b7250bd9768ecee04",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-2980-3111.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L639b70b19b",
+    "source": "Mountain minor",
+    "old": "Fjellmoll",
+    "new": "Mountain minor-klang",
+    "reason": "Makes the culture-specific source label recognizable rather than introducing the literal calque «fjellmoll» as a musician’s term.",
+    "source_sha256": "7a75d55265c61569b7d39f7be3b5622f11aaf1ef1b51240baff1a601380ececc",
+    "old_sha256": "472b09f9659e50949c36aebafb0bb5e30f86a31e85744e759a89571974289ee3",
+    "new_sha256": "d4b59a2bd0726efc4061b09cebc929ff6767ff949d339b22e786f5fdf33f37dd",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-3112-3275.txt",
+      "contexts-3112-3275.txt"
+    ],
+    "atomic_group": "NO-BJO-MOUNTAIN-MINOR",
+    "apply_together_with": [
+      "L639b70b19b",
+      "L532c25828a",
+      "La6191327f7"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L532c25828a",
+    "source": "Shady Grove has the dark, old sound players call mountain minor. It comes to rest on A instead of G, and the high G of the fifth string sings against it.",
+    "old": "Shady Grove har den mørke, gamle klangen musikere kaller fjellmoll. Den faller til ro på A i stedet for G, og den høye G-en på femte streng synger mot den.",
+    "new": "Shady Grove har den mørke, gamle klangen musikere på engelsk kaller mountain minor. Den faller til ro på A i stedet for G, og den høye G-en på femte streng synger mot den.",
+    "reason": "Keeps the source’s culture-specific named sound recognizable with explicit English-term framing rather than the literal «fjellmoll» calque.",
+    "source_sha256": "c4c1e016ae023ea54e0de2191b56f654d404d96a7d3a3533d87e7a23b3295bca",
+    "old_sha256": "dda98b0c35c365cc3c27736c2a45cb7eef74eec881c0ee6e607a9f9db127fdce",
+    "new_sha256": "d405379e7911fb832943991af8d307c1a0cf1c1c46b9777e8a3e8fef1d3ef5bb",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-3112-3275.txt",
+      "contexts-3112-3275.txt"
+    ],
+    "atomic_group": "NO-BJO-MOUNTAIN-MINOR",
+    "apply_together_with": [
+      "L639b70b19b",
+      "L532c25828a",
+      "La6191327f7"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "La6191327f7",
+    "source": "Shady Grove is in mountain minor, centered on A. The others come home to G.",
+    "old": "Shady Grove går i fjellmoll, med A som sentrum. De andre kommer hjem til G.",
+    "new": "Shady Grove har mountain minor-klang, med A som sentrum. De andre kommer hjem til G.",
+    "reason": "Matches the English-term framing taught in the preceding song lesson without asserting a different Norwegian modal category.",
+    "source_sha256": "4b309e758964f08ce160909d22a221eaa36a304effb4ded2dc79b5747fb46fd1",
+    "old_sha256": "78d7d1306f5d3968aa6671805766670fb5ac2ebb162c19180bde47eedd78c0ed",
+    "new_sha256": "6c718abcc5cef6d25fec387521959a68e2a2105bbce09c894c31d0081d4b8c1d",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-3112-3275.txt",
+      "contexts-3112-3275.txt"
+    ],
+    "atomic_group": "NO-BJO-MOUNTAIN-MINOR",
+    "apply_together_with": [
+      "L639b70b19b",
+      "L532c25828a",
+      "La6191327f7"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Ldec07dceb7",
+    "source": "Fret string 3 at fret 2, pick it, and slide the same finger up to fret 4 while pressing. A to B in one smooth glide is a classic banjo sound.",
+    "old": "Grip streng 3 på bånd 2, slå an og gli samme finger opp til bånd 4 mens du trykker. A til B i én jevn glidning er en klassisk banjolyd.",
+    "new": "Grip streng 3 på bånd 2, slå an og la samme finger gli opp til bånd 4 mens du trykker. A til B i én jevn glidning er en klassisk banjolyd.",
+    "reason": "Repairs transitive gli; same finger slides while maintaining fretting pressure.",
+    "source_sha256": "0a252f901f71af43f04a62178bee1ac86db6554337c1a58c4c610c3bd6f25385",
+    "old_sha256": "c60b9338fb9a3a028ad01bfafd9921f3255d7565bed9474bd3778d6b9a4d3d34",
+    "new_sha256": "f0eebf8da6a70005a5260171386a239581eb04a889c5f193712048c2b18a64db",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-3276-3363.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lcc4d766967",
+    "source": "Which move glides a fretted note up to a higher fret?",
+    "old": "Hvilken bevegelse glir en grepet tone opp til et høyere bånd?",
+    "new": "Hvilken bevegelse lar en grepet tone gli opp til et høyere bånd?",
+    "reason": "Correct causative construction with intransitive gli, preserving the distinction between slide, hammer-on and pull-off.",
+    "source_sha256": "50a27104be0e0e97636ca24e928e65bdba27e3df8ecc684da08051929785f5bb",
+    "old_sha256": "1eaf2676167d477f6317e38c08c0df6fa2419ba24b99e6e865cf88f06882d8eb",
+    "new_sha256": "0a7fff821628a259aa885e205fe5222ab2e6c2b44ca274234a7229f2c315f273",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-3276-3363.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L27464c9a14",
+    "source": "Pitch is how high or low a note sounds. On a keyboard, low notes sit on the left and high notes on the right. Your ear already knows the difference; here you sharpen it.",
+    "old": "Tonehøyde er hvor høyt eller lavt en tone låter. På et klaviatur ligger dype toner til venstre og høye til høyre. Øret kjenner allerede forskjellen; her skjerper du den.",
+    "new": "Tonehøyde er hvor høyt eller lavt en tone låter. På et klaviatur ligger dype toner til venstre og høye til høyre. Øret kjenner allerede forskjellen; her skjerper du gehøret.",
+    "reason": "The final pronoun must refer to hearing ability, not «forskjellen»; naming gehøret restores the source meaning.",
+    "source_sha256": "3fd344d1d81ff71f15ae650bade4b7184108e58324e2bab49b65e6a724744f90",
+    "old_sha256": "e36828572b83d39a7dd1d84af405c9560fbdc0f8c312510177bf527c643ecadc",
+    "new_sha256": "eff2102fb91a57eec680e3f1255704c27ff1c52db35f57b5c659931bc59db66e",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-3364-3525.txt",
+      "contexts-3364-3525.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "La9a5089400",
+    "source": "D up to F is a...",
+    "old": "D opp til F er et…",
+    "new": "Hva slags intervall er D opp til F?",
+    "reason": "Shared prompt has neuter Trinn/Sprang choices in ear training and common-gender Ters/Sekund/Kvart in theory. Removes the incompatible indefinite article while keeping the same interval-classification question.",
+    "source_sha256": "94080b7bcaa7339b547ba8072bb8157788eff670613619ccfce2ef8d101407ce",
+    "old_sha256": "e9bcdd2028d4f41747df18165872a1b1ad8b0e24cd82c9eb9c06d64694d9c898",
+    "new_sha256": "d1b64ff42472c08038dd89638f8be2f3924ba0540b84b1b9972319835beb8242",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-3364-3525.txt",
+      "contexts-3364-3525.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Ldb332603d2",
+    "source": "Put them together and the staff climbs E, F, G, A, B, C, D, E, F: line, space, line, space, all the way up.",
+    "old": "Sett dem sammen, så stiger notesystemet E, F, G, A, B, C, D, E, F: linje, mellomrom, linje, mellomrom, hele veien opp.",
+    "new": "Sett dem sammen, så får du E, F, G, A, B, C, D, E, F oppover i notesystemet: linje, mellomrom, linje, mellomrom, hele veien opp.",
+    "reason": "Repairs the ungrammatical construction «stiger notesystemet E...» while retaining every note and the alternating line/space map.",
+    "source_sha256": "72c6601b25d236699e42ed217bb4f8f9baab7cba604fa33cbdd8d8de0d44877f",
+    "old_sha256": "f1203adb3fd07c10147f1605980eef703993f6d1601b3c6b6056cd3d6c02eb4a",
+    "new_sha256": "39baf9ef4bd95a16d3d6d5a31f353a688bfa2f4d683b780faa5ba4246c483196",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-3841-4010.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L2b7813665a",
+    "source": "A rest is a measured silence. Each note value has a matching rest: a quarter rest lasts one beat, a half rest two. Keep counting through them.",
+    "old": "En pause er målt stillhet. Hver noteverdi har en tilsvarende pause: en firedelspause varer ett slag, en halvpause to. Fortsett å telle gjennom dem.",
+    "new": "En pause er stillhet med en bestemt varighet. Hver noteverdi har en tilsvarende pause: en firedelspause varer ett slag, en halvpause to. Fortsett å telle gjennom dem.",
+    "reason": "Measured silence means silence of a defined duration; this is more natural and specific Norwegian than the literal «målt stillhet».",
+    "source_sha256": "adab2a0a7a459d9f4cd721e5e2e2a5222808b5a4023ed985d80154736266b379",
+    "old_sha256": "7e7f01dec4a4e1a65e5aba98a2194040730c1888efa8d4d01d99e073a4d3b885",
+    "new_sha256": "04f82a4514c63cd95d2136167bba4887d536267c23ad91781a5cac031683ce07",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-3841-4010.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Le1ce250168",
+    "source": "Which of these fifths is smaller than perfect?",
+    "old": "Hvilken av disse kvintene er mindre enn ren?",
+    "new": "Hvilken av disse kvintene er mindre enn en ren kvint?",
+    "reason": "Complete the Norwegian comparison with the interval noun; «mindre enn ren» compares size to an adjective and is an unnatural English calque.",
+    "source_sha256": "e27f1a41a54cea9a026f1d88d9ddd0ed4cb05e517940cbab2af355639f8dec74",
+    "old_sha256": "36097b2041b34ed81344038af27d8d5d50b88881564da1368cdba3e5109f58cb",
+    "new_sha256": "66c20ff6848f1dc29772d3bebd4ad0131536eafa61e69e5020f8d719d4cb00b3",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4011-4174.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L193dfdb00e",
+    "source": "The sixth note is A, and lowercase vi means minor.",
+    "old": "Sjette tone er A, og liten vi betyr moll.",
+    "new": "Sjette tone er A, og vi med små bokstaver betyr moll.",
+    "reason": "«Lowercase» denotes letter case, not small size: replace the unnatural «liten vi» with explicit small-letter notation.",
+    "source_sha256": "471fd9a25d64c916c6d9b6cae84f37a7f40e7054f5cd9aaf8d836fe22bf934ef",
+    "old_sha256": "f00b94f78d8e8fabc16e5de80ec5d1723a02427d6f1ebbb392c2acddc97a8f01",
+    "new_sha256": "c719fc325dfe74eb4e186912ac042cd8f2fb3da5c2359a21ac18fbdc1053a2a3",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4175-4337.txt",
+      "contexts-4175-4337.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lf92d0a07e3",
+    "source": "Spell it, hear it, number it",
+    "old": "Stav den, hør den, nummerer den",
+    "new": "Navngi tonene, hør og nummerer akkorden",
+    "reason": "In this chord challenge «spell» means naming the chord tones, not spelling the word; make the musical action explicit in natural Norwegian.",
+    "source_sha256": "f2b4917a964f1e218901ad9240964d28bcd187556a6aed29c32cf0be95c71113",
+    "old_sha256": "5c5b19caa1834f546e922b31199f9d413fa32df8b36a639ad72b0160bd94c80e",
+    "new_sha256": "e4c380d23205555bafbf85852a276ce18335a500087b5e7d45e716d1c25c1c39",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4175-4337.txt",
+      "contexts-4175-4337.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L6a266df3b3",
+    "source": "This four-chord loop runs under a huge number of pop songs. In C major it's C, G, A minor, F. The minor vi adds a touch of shade before IV lifts back toward home.",
+    "old": "Denne sløyfen på fire akkorder ligger under svært mange poplåter. I C-dur er det C, G, A-moll, F. Mollakkorden vi gir litt skygge før IV løfter tilbake mot hjemme.",
+    "new": "Denne sløyfen på fire akkorder ligger under svært mange poplåter. I C-dur er det C, G, A-moll, F. Mollakkorden vi gir litt skygge før IV gir et løft på veien hjem.",
+    "reason": "Replace ungrammatical «mot hjemme» with a natural tonal-home metaphor while retaining the minor shading and IV lift toward home.",
+    "source_sha256": "d245bc580908e721f7a72243f7ffe4f28c9233a805be31ffb6173c1861422f9b",
+    "old_sha256": "cead96c0af0c656995d524702f09a38ffe17b030084f543285aee22f2298b6db",
+    "new_sha256": "b01f38e485618b4d6caee58282751775a7a3a2dfbd3ba559182099c0e2fb6c3a",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4175-4337.txt",
+      "contexts-4175-4337.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L2e5d1a8b85",
+    "source": "Four bars of I. Two of IV, two of I. One of V, one of IV, two of I. Then it repeats. In A: A7 four times, D7 twice, A7 twice, E7, D7, A7 twice.",
+    "old": "Fire takter I. To IV, to I. Én V, én IV, to I. Så gjentas det. I A: A7 fire ganger, D7 to ganger, A7 to ganger, E7, D7, A7 to ganger.",
+    "new": "Fire takter med I. To med IV, to med I. Én med V, én med IV, to med I. Så gjentas det. I A: A7 fire ganger, D7 to ganger, A7 to ganger, E7, D7, A7 to ganger.",
+    "reason": "Supply the Norwegian preposition linking bar durations to their chords; preserve the exact 12-bar structure and every chord symbol.",
+    "source_sha256": "0eacebb22ee84423f10f3fed421636888448307ca4fa068f1393fbed731e4072",
+    "old_sha256": "130faa6aacec9dbafb2c8112ab8cf372f79bff5ca12c3ee8fdec4b0c4f00dd9a",
+    "new_sha256": "32bd2573df3b2c73617fed1e9d73f717e394b6bc4c700a90c9bfda13fee8e54e",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4175-4337.txt",
+      "contexts-4175-4337.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L051e1dcbb4",
+    "source": "How many bars of I open the 12-bar blues?",
+    "old": "Hvor mange takter I åpner 12-taktersbluesen?",
+    "new": "Hvor mange takter med I åpner 12-taktersbluesen?",
+    "reason": "Add «med» so the duration count clearly refers to bars played on chord I, not a bare ungrammatical noun-symbol sequence.",
+    "source_sha256": "d00f896097c420278c5177f0ef70445db19fcff108fe5ae87f7b5eb6c6efd7c2",
+    "old_sha256": "0b98bff7fc4a338b41f1ec82764fdf4b66646921168eddcb49c0e7884e375d10",
+    "new_sha256": "9cfd3f47bd0871da3141f1f46622ea58ec2b1a0f59ad854e351f347d12a0121f",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4175-4337.txt",
+      "contexts-4175-4337.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Ld9c70a3e72",
+    "source": "Four bars of I, then IV arrives in bar 5.",
+    "old": "Fire takter I, så kommer IV i takt 5.",
+    "new": "Fire takter med I, så kommer IV i takt 5.",
+    "reason": "Natural Norwegian requires linking the bar count to chord I; align with the corrected 12-bar plan and prompt.",
+    "source_sha256": "cc7ae70e06a1db3dfa2322fa6da02fa2ab74d1038016f07307da8f799860a672",
+    "old_sha256": "fc71283d22a7d672689ff8447bd822716ac3a03d01abac48265713ad74b44ac0",
+    "new_sha256": "c9a9f75994213e7d2e0e54519cd584f4b83caf0e860b7d5ee6c7b2012ccf82b3",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4175-4337.txt",
+      "contexts-4175-4337.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lc1c51a80aa",
+    "source": "Bar 9 is the one bar of V, before IV in bar 10.",
+    "old": "Takt 9 er den ene takten V, før IV i takt 10.",
+    "new": "Takt 9 er den ene takten med V, før IV i takt 10.",
+    "reason": "Insert the missing relation «med V»; «takten V» could misread V as the bar label rather than its chord.",
+    "source_sha256": "e95c03058d4dc784f02ddc86e84a4646b0ed2e5b5e06ac0363b9a10571d2698a",
+    "old_sha256": "216133ea8d131fe65e277990dde9c8fab28d4c5c9c9cf98767668c4f32775fd0",
+    "new_sha256": "69431a7adaac92190406f4f6d94157a3c46aed6f4be59a49360e85bf23fc65aa",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4175-4337.txt",
+      "contexts-4175-4337.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L833e16fa33",
+    "source": "IV to I is a plagal cadence, the soft amen at the end of many hymns. Stopping on V is a half cadence, like a comma. V to vi is deceptive: you expect home and get a surprise.",
+    "old": "IV til I er en plagal kadens, det myke amen i slutten av mange salmer. Å stoppe på V er en halvslutning, som et komma. V til vi er skuffende: du venter hjemme, men blir overrasket.",
+    "new": "IV til I er en plagal kadens, det myke amen i slutten av mange salmer. Å stoppe på V er en halvslutning, som et komma. V til vi er en skuffende kadens: du forventer å komme hjem, men blir overrasket.",
+    "reason": "«Du venter hjemme» means waiting while at home, not expecting a tonic resolution. State the established cadence name and preserve the expectation-of-home metaphor accurately.",
+    "source_sha256": "d47d7155ef27a1f958b03d2ccf954c9f34d1d17e711649007e73ef1004e3b0b3",
+    "old_sha256": "15b13ef3e436e50fab8664ccb25ea23372568fefb4a8d19166ac875e4deebbfa",
+    "new_sha256": "ada2a142e8dcca6ad494424a2c3a5a87444ca1a479786e9eb3529757ca459d2e",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4338-4370.txt",
+      "contexts-4338-4370.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Ld4c44f8425",
+    "source": "A half cadence pauses on V, like a comma.",
+    "old": "En halvslutning pauser på V, som et komma.",
+    "new": "En halvslutning stanser på V, som et komma.",
+    "reason": "Use idiomatic «stanser på V» rather than the awkward intransitive «pauser på V» for stopping on the dominant.",
+    "source_sha256": "3575755aa261d0ef5be97d349a72194d3d69246d6d2aaf94ffbc76440b7d5546",
+    "old_sha256": "af490c80f1ecf840b5e004dd0c5cab361e41c02f49ac0e89d57dce165783918f",
+    "new_sha256": "90790e46d8fb5a2fff11c509194ec8f229cce8748a40f4c92ad78efc8af9f9e2",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4338-4370.txt",
+      "contexts-4338-4370.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lf5cc23e145",
+    "source": "The beat is a steady pulse",
+    "old": "Takten er en jevn puls",
+    "new": "Slagene danner en jevn puls",
+    "reason": "Distinguish individual beats/pulse from «takt» as a bar, which the next lesson explicitly introduces; avoid teaching the same noun as both definitions.",
+    "source_sha256": "fccdc6b269552a95e640776ecf08ad1d75188bda8abb3003aa78840c14d2f0e9",
+    "old_sha256": "4e632b304b0bac13120ecb40a82d37b6b4ed2742b50266705c9ad874ccd56f49",
+    "new_sha256": "357e2981a83948cf1919670dc8499ade40160e6a32e854d48f4e6dcbb580655f",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4371-4532.txt",
+      "contexts-4371-4532.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L032ccbe9b9",
+    "source": "The beat is the steady pulse you tap your foot to. It never rushes or drags, like footsteps on an easy walk. Every rhythm sits on top of it.",
+    "old": "Takten er den jevne pulsen du tramper til. Den verken skynder seg eller henger etter, som skritt på en rolig tur. Hver rytme ligger oppå den.",
+    "new": "Slagene danner den jevne pulsen du tramper til. Den verken skynder seg eller henger etter, som skritt på en rolig tur. Hver rytme ligger oppå den.",
+    "reason": "Keep the beat/pulse definition separate from «en takt» (bar) taught immediately afterward, while retaining the steady-walking metaphor.",
+    "source_sha256": "99b318139e643d5e800ba90d5ebb2aab596b4bf4749cc57bab076e8d2da0f93d",
+    "old_sha256": "4935fcd4e79a6341ee556c91c58b4233a723aa19e26417c0e679553881143d0e",
+    "new_sha256": "638f38d42d9859ff2a7671a663d0ce7bc1102024e0450e0dd5ab7a9e9f428692",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4371-4532.txt",
+      "contexts-4371-4532.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lf856db8d2b",
+    "source": "Wait a little behind the click",
+    "old": "Vente litt bak klikket",
+    "new": "Vente til litt etter klikket",
+    "reason": "Temporal «behind the click» needs «etter klikket», not the spatial calque «bak klikket». This remains the intentionally incorrect quiz choice.",
+    "source_sha256": "db0bf7c5ee7e7737d947cda120508dae80551de9b441cf1e1d7dcc7092fcd552",
+    "old_sha256": "24a13a3638d0a9d52bef2c204ac555dc8f90bdcd17f35091e82fc65ba53cba28",
+    "new_sha256": "0da506571ae055211f3e17e6f62cad123387b8bb164c295ce2a673d0a4254902",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4371-4532.txt",
+      "contexts-4371-4532.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L9130b5f088",
+    "source": "A rest is counted silence",
+    "old": "En pause er telt stillhet",
+    "new": "En pause er stillhet du teller",
+    "reason": "Replace the opaque calque «telt stillhet» with natural Norwegian explaining that counting continues through silence.",
+    "source_sha256": "f51b1e4a9853134ac4e2c11e76461df05a6d8a2e68ef2b81cb2efba5d5608778",
+    "old_sha256": "6ccff3798de898e8aa5c97af79a3abb928809a714dc2489911e01f622b58ff05",
+    "new_sha256": "cf6076fcc1252cad7790c3434d7282464fd87c0af8b8fd7328117ff496cdc648",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4371-4532.txt",
+      "contexts-4371-4532.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L191a8a2769",
+    "source": "Tap the and",
+    "old": "Trykk på og",
+    "new": "Trykk på og-slaget",
+    "reason": "Use the established subdivision label og-slaget; bare unquoted «og» reads as an unfinished conjunction in this title.",
+    "source_sha256": "70e95c42079151823ce9cb94c1ff96da38167e39fa8f7770cc08e343c5e98e70",
+    "old_sha256": "de1b713b3812018da7d3cadf1ac90d09cbdb6139f9dafab447b3b03e12982c85",
+    "new_sha256": "62ad3d2d46afb8c1a8c83b78bd42ef5408a52aeff1e3ea35ef31b87ac7bbbd32",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4371-4532.txt",
+      "contexts-4371-4532.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L698eca6ecd",
+    "source": "Rest, then tap the and",
+    "old": "Pause, så trykk på og",
+    "new": "Pause, så trykk på og-slaget",
+    "reason": "Use the same explicit og-slaget label as the lesson title rather than dangling «og».",
+    "source_sha256": "3a127c5903aefbccc42cf7e7eefbf5ff364487893a91ea53892f3b9f66afcbae",
+    "old_sha256": "dca4d14eb9e3c2f682970c50f89811d96b6b2c1467d7f29245ff72a71858bfae",
+    "new_sha256": "490de045cee5e78555b716d860d0a37eb9d19b1514cbf66a8836452a0cd86b0f",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4371-4532.txt",
+      "contexts-4371-4532.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L9c310b54ba",
+    "source": "An eighth rest lasts half a beat. Count 1 and 2 and, rest on 2, and tap its \"and\" instead. It feels like a small push into beat 3.",
+    "old": "En åttedelspause varer et halvt slag. Tell 1 og 2 og, hvil på 2 og trykk på dens “og” i stedet. Det føles som et lite skyv inn i slag 3.",
+    "new": "En åttedelspause varer et halvt slag. Tell 1 og 2 og, hvil på 2 og trykk på det påfølgende “og” i stedet. Det føles som et lite skyv inn i slag 3.",
+    "reason": "Replace «dens og», which has no clear grammatical antecedent, with the following subdivision. Preserve the original numeral multiset and exact timing.",
+    "source_sha256": "cb7bc0e9954da511ef37f573f7aff6ebbad9b209e2c03c57bbf4275f90b27352",
+    "old_sha256": "1b94bf8ca83a420c260aa797ba28a00c859e8eeb7422809be4ef1ee4b462aaaa",
+    "new_sha256": "e6d81b6570303a81c5802140f26a517876bb83f5986e74b9f5d09362a48df8f1",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4371-4532.txt",
+      "contexts-4371-4532.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L95bc608d2b",
+    "source": "This pattern lands on 1, the \"and\" of 2, and 4. Count 1 and 2 and 3 and 4 and, and tap only those three spots.",
+    "old": "Dette mønsteret lander på 1, “og” etter 2 og 4. Tell 1 og 2 og 3 og 4 og, og trykk bare på de tre stedene.",
+    "new": "Dette mønsteret lander på 1, på “og” etter 2 og på 4. Tell 1 og 2 og 3 og 4 og, og trykk bare på de tre stedene.",
+    "reason": "Repeat the preposition to distinguish the and of 2 from beat 4; otherwise «og etter 2 og 4» can be read as two offbeats. No numbers or events change.",
+    "source_sha256": "529b92cfe2e781d601587d268ce859edf1a4e9ad576db358156cdeed0c0ec1fc",
+    "old_sha256": "81d4f598ecaf3e0efda834e5810d721d5b418bd7affc8b431ed7fb39da1fec3e",
+    "new_sha256": "349a678b8d6162a21b60dfd4c1c6d13745fb6015f24dbc57f4833a97a8a67345",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4371-4532.txt",
+      "contexts-4371-4532.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L630868a13b",
+    "source": "This challenge mixes ties and dots. Count every eighth out loud; a held note still takes up its full time.",
+    "old": "Denne utfordringen blander bindebuer og punktering. Tell hver åttedel høyt; en holdt tone tar fortsatt hele sin tid.",
+    "new": "Denne utfordringen blander bindebuer og punktering. Tell hver åttedel høyt; en holdt tone skal fortsatt vare fullt ut.",
+    "reason": "Use a natural duration instruction rather than «tar hele sin tid», an English calque.",
+    "source_sha256": "5a0e59cbd99495fd0aa1db06ba007ba244b95a349f3d07a5043a39ed885da621",
+    "old_sha256": "31c56b97ed01e89850aaa9c1b86f3ad7424057c93476a58a1126834adebc4833",
+    "new_sha256": "de96e938258a4d4cb444aef4b52b95d6e0f87f493cf241d89fcae15dbc23f8f6",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4533-4641.txt",
+      "contexts-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L4279cdf578",
+    "source": "In swing, each pair of eighths turns long-short. The \"and\" moves late, onto the last part of a triplet. Think doo-ba, doo-ba.",
+    "old": "I swing blir hvert åttedelspar lang-kort. “Og” flyttes sent, til siste del av en triol. Tenk du-ba, du-ba.",
+    "new": "I swing blir hvert åttedelspar en lang og en kort tone. “Og” kommer senere, på siste del av en triol. Tenk du-ba, du-ba.",
+    "reason": "Clarify that the subdivision sounds later, not that the act of moving it happens late; give the long-short pair natural Norwegian syntax.",
+    "source_sha256": "b9b6937849d1d8b243c3de60772982d46d465330f72505439d668d04b9d42391",
+    "old_sha256": "db55522f929695dc947ab87f19e6b51e868bd0d57698c3857701967bf1db1f1f",
+    "new_sha256": "a6092ec6ce8eb6e37e7ff231eaa777ad0ac2b1144e7e9679857377986df6bbef",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4533-4641.txt",
+      "contexts-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L75dd0c550b",
+    "source": "Count 1-trip-let and tap only on \"1\" and \"let.\" The gap in the middle is the swing.",
+    "old": "Tell 1-tri-ol og trykk bare på “1” og “ol”. Mellomrommet i midten er svingen.",
+    "new": "Tell 1-tri-ol og trykk bare på “1” og “ol”. Mellomrommet i midten gir swingrytmen.",
+    "reason": "Name the swing rhythm explicitly rather than a literal turn; keep the localized three-syllable count and the two sounded syllables aligned.",
+    "source_sha256": "c7008e9776612e91df3c0dfc4309ee96465b4d1ff61b7bd8df8412de07a3bc48",
+    "old_sha256": "29e8aba5abf735c58f69fe1385edd8f9606cc4e70a7cbcf8ee7915fce69f415c",
+    "new_sha256": "301c348557205be0e1f5c15fd9df0e2a9bd174a416f9d7cdf4f3b8bd9b692962",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4533-4641.txt",
+      "contexts-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L1f866e8950",
+    "source": "Jazz drummers play this on the ride cymbal: 1, 2, a swung \"and,\" 3, 4, a swung \"and.\" It sounds like ding, ding-a ding.",
+    "old": "Jazztrommeslagere spiller dette på ridecymbalen: 1, 2, et svingt “og”, 3, 4, et svingt “og”. Det låter ding, ding-a ding.",
+    "new": "Jazztrommeslagere spiller dette på ridecymbalen: 1, 2, et “og” med swing, 3, 4, et “og” med swing. Det låter ding, ding-a ding.",
+    "reason": "Use the musical construction «med swing» instead of «svingt», which reads as physically swung; align with the existing guitar rhythm corrections.",
+    "source_sha256": "d81b3740577aecbcaec3a622a1f2c02f1542e702918fbe797b8f104686594b1e",
+    "old_sha256": "179d26eadda7808b32b0e91cb04b5cca2f2031be90dbc3ed7360866909017ee7",
+    "new_sha256": "9668009c06598d44443d957990342c32869fd03084e0801cffaaf21a4aa6d7d6",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4533-4641.txt",
+      "contexts-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Le6ad0e718d",
+    "source": "How do you tap a swung \"and\"?",
+    "old": "Hvordan trykker du et svingt “og”?",
+    "new": "Hvordan trykker du på et “og” med swing?",
+    "reason": "Use natural Norwegian «trykker på» and the explicit musical modifier «med swing».",
+    "source_sha256": "6b6d85ef42e1e6b09a80df295bfbb6137910fc45c0c330fae089d0e3cdc9bfc5",
+    "old_sha256": "fb6c96fa3b0f3a22bf5e82ec082e518cf562d7b8fb06976c76d3d962eed896e9",
+    "new_sha256": "6aad7ca22d3a8d15d657f4954bd9f0721b73d1e7bfe93435127aefeba473f76a",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4533-4641.txt",
+      "contexts-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lc07db2c832",
+    "source": "A swung \"and\" waits for the last triplet of the beat.",
+    "old": "Et svingt “og” venter til siste trioltone i slaget.",
+    "new": "Et “og” med swing kommer på siste trioltone i slaget.",
+    "reason": "Describe the musical timing naturally and consistently, without the physically swung calque.",
+    "source_sha256": "f7b691db4ba36e7ffa4db50db550ae0cbb7257ac91abbbdf52764fb81f5a7493",
+    "old_sha256": "71d651944d02758bd687de7e75173392895bd0029042abb0748f78ffb79a3121",
+    "new_sha256": "debcc6512e8b2ee93abd1b95da6b813af68d0da5ed3f936cdabff01848c10934",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4533-4641.txt",
+      "contexts-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "La88ea4fac6",
+    "source": "Straight eighths split the beat evenly; swung eighths go long-short. Tap one, then the other, and feel the difference.",
+    "old": "Rette åttedeler deler slaget jevnt; svingte går lang-kort. Trykk det ene, så det andre, og kjenn forskjellen.",
+    "new": "Rette åttedeler deler slaget jevnt; åttedeler med swing går lang-kort. Trykk det ene, så det andre, og kjenn forskjellen.",
+    "reason": "Replace bare «svingte» with explicit åttedeler med swing, preserving the straight/swung contrast.",
+    "source_sha256": "85ad31453dc485e52472ce39aa70d15edd1da7fa6dfa63b0232cb4fcc0a05eb1",
+    "old_sha256": "ea09eb563ce2327a33a543578a3195111079032cdb29ce9d300cb873847ff691",
+    "new_sha256": "eb11d4589eb20346efaba616fdaca056d5d9f63c2858335b7f83bd2a9eca7893",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4533-4641.txt",
+      "contexts-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L5008b8a25f",
+    "source": "Waltz in three, march in two, rock in 6/8, and place the accents.",
+    "old": "Vals i tre, marsj i to, rock i 6/8 og plassering av betoning.",
+    "new": "Valsetakt i tre, marsjtakt i to, vuggende 6/8 og plassering av betoning.",
+    "reason": "Here «rock» refers to rocking/swaying compound meter, not the rock genre; the 6/8 lesson explicitly teaches a lullaby-like rocking feel.",
+    "source_sha256": "98ae2468c0534052f3688e519c827633ae0e7603565ecdef385601a59231c8d1",
+    "old_sha256": "da7167afa2e75316de4d36248e109c5b50204f466860ed90b7781fa362b93c6e",
+    "new_sha256": "60b58938094212c3e8bc8dfeb1bc53684cb36316eb788bd4867e474de512c661",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4533-4641.txt",
+      "contexts-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L1a902fcb5b",
+    "source": "Count all eight eighths and tap just the accents: 1, the \"and\" of 2, and 4. This 3-3-2 pattern drives a lot of pop and Latin music.",
+    "old": "Tell alle åtte åttedeler og trykk bare betoningene: 1, “og” etter 2 og 4. Dette 3-3-2-mønsteret driver mye pop og latinamerikansk musikk.",
+    "new": "Tell alle åtte åttedeler og trykk bare betoningene: på 1, på “og” etter 2 og på 4. Dette 3-3-2-mønsteret driver mye pop og latinamerikansk musikk.",
+    "reason": "Disambiguate the three accent locations: beat 1, the and of 2, and beat 4, not offbeats after both 2 and 4.",
+    "source_sha256": "99a2d94b0ba1ce952ee72571e519e96682a6bda070944183b89bf9ed265dafc3",
+    "old_sha256": "d29850b9662433eb0fcfa2516d7c3c7247f2e250b57df2c62db91442bf1bae52",
+    "new_sha256": "c00aa3340b658920f0482391a10335d78eec351ce99deb057d6a0863b6a25451",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4533-4641.txt",
+      "contexts-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L44f4e7e1ff",
+    "source": "The backbeat",
+    "old": "Bakslaget",
+    "new": "Etterslaget",
+    "reason": "Use the established Norwegian musical term etterslag for backbeat, not bakslag (setback/recoil). SNL backbeat lists etterslag and defines beats two and four.",
+    "source_sha256": "2d81c2acaed2a0b75f2ba0efcb6668f61ca64cd3f8a25c47b7f085f30c61b9b4",
+    "old_sha256": "f6b9bd8868c4c01fb5bd1f6ac008a4487fec0430bcc0d916f22cc6e81387f82c",
+    "new_sha256": "6186a37ceac510d338a6f4d656f14ed964e2e957317361dc15a9b49f08f5619c",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4533-4641.txt",
+      "contexts-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lcbd395cf69",
+    "source": "Rock, pop and soul put the accent on beats 2 and 4. This is the backbeat. Count all four and tap only 2 and 4, like a snare drum.",
+    "old": "Rock, pop og soul betoner slag 2 og 4. Dette er bakslagene. Tell alle fire og trykk bare 2 og 4, som en skarptromme.",
+    "new": "Rock, pop og soul betoner slag 2 og 4. Dette er etterslagene. Tell alle fire og trykk bare 2 og 4, som en skarptromme.",
+    "reason": "Use musical etterslag consistently with the title and the established Norwegian terminology; retain every beat number.",
+    "source_sha256": "edc97dc7e2f85420b21e1f5fd840f796997cc8a750fd38aadd1448e2d682bc6d",
+    "old_sha256": "2f886454d05c590f0e859dc7fd0c92926ffad31100d3153bc0ad2f4c19dbe7c4",
+    "new_sha256": "37fb4167730fb010f1135c591265c05ba2ca75390b14f6374009099083ba5800",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4533-4641.txt",
+      "contexts-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L0bc3dc7e3b",
+    "source": "The chunk, the island strum with a backbeat, swing and the ragtime chords, accents in 3-3-2, and the waltz.",
+    "old": "Dempede klikkanslag, øy-anslag med bakslag, swing og ragtimeakkorder, betoning i 3-3-2 og vals.",
+    "new": "Dempede klikkanslag, øy-anslag med etterslag, swing og ragtimeakkorder, betoning i 3-3-2 og vals.",
+    "reason": "Cross-course glossary reconciliation: use the established musical term etterslag for backbeat, not the literal bakslag. Exact rhythm and note instructions unchanged. Confirmed again in full ukulele lesson context and against SNL backbeat.",
+    "source_sha256": "0c2ee5ad09b67d6cf11ab3148da9cf7df3529f0c6ad20efbad4c15b0b2f5db84",
+    "old_sha256": "52e5eb7cc5c9a4fc9830b343046bea80ff05b9608956a32d2a2c4285efcf87d7",
+    "new_sha256": "703a41bbac490b6e85fae4ae8de913048f61b842a90ee8427bb7331dffe2da09",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1779-1810.txt",
+      "read-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L80a64c52c1",
+    "source": "Two and four are the backbeat, where the snare drum plays. A chunk there gives the strum a drummer's punch.",
+    "old": "To og fire er bakslagene, der skarptrommen spiller. Et klikkanslag der gir anslaget trommetrøkk.",
+    "new": "To og fire er etterslagene, der skarptrommen spiller. Et klikkanslag der gir anslaget trommetrøkk.",
+    "reason": "Cross-course glossary reconciliation: use the established musical term etterslag for backbeat, not the literal bakslag. Exact rhythm and note instructions unchanged. Confirmed again in full ukulele lesson context and against SNL backbeat.",
+    "source_sha256": "4a647679dc2479218726ab1c6bd72be81ffb54ccedbbccdd56a095c1e9e4951c",
+    "old_sha256": "161397636f7aa7d3a49593d2e61456b408098e343445dbb7d691a80735cdcb4c",
+    "new_sha256": "b66cec418d37ff978ca6c12aee976ca6a9ca3781e71792780db0797a9c4a429a",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1779-1810.txt",
+      "read-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lc0ded9cc39",
+    "source": "Take the island strum, D, DU, UDU, and turn the down on 2 into a chunk. The rhythm stays the same; the groove gets a backbeat.",
+    "old": "Ta øy-anslaget, D, DU, UDU, og gjør nedslaget på 2 til et klikk. Rytmen er den samme; grooven får et bakslag.",
+    "new": "Ta øy-anslaget, D, DU, UDU, og gjør nedslaget på 2 til et klikk. Rytmen er den samme; grooven får et etterslag.",
+    "reason": "Cross-course glossary reconciliation: use the established musical term etterslag for backbeat, not the literal bakslag. Exact rhythm and note instructions unchanged. Confirmed again in full ukulele lesson context and against SNL backbeat.",
+    "source_sha256": "6736239d649c439cdd64d3af9e1271d76522af6639fe17fa422218e666d864a0",
+    "old_sha256": "3bb9f9344c3497e5f33206e74f1a1c97c9887577ed84961c490e55e3d707abde",
+    "new_sha256": "0bbccfe87c1c4ee3d313f7ee23c00193a5efd21a2b96a71d726d903ce2f698b1",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-1779-1810.txt",
+      "read-4533-4641.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L34ea735774",
+    "source": "Timbre listens for the note's name, so a C sung low or high both count. Pick the octave that feels easy, never strained.",
+    "old": "Timbre lytter etter tonenavnet, så en C sunget lavt eller høyt teller begge. Velg oktaven som føles lett, aldri anstrengt.",
+    "new": "Timbre lytter etter tonenavnet, så både en lav og en høy C teller. Velg oktaven som føles lett, aldri anstrengt.",
+    "reason": "Repair the singular «en C … teller begge» construction while preserving acceptance in either octave.",
+    "source_sha256": "e21e817223400903b383916c4f1748ac5047be21c053d047563576f2190d9cc2",
+    "old_sha256": "16190b2d8e8da72532b6c67f55dfd0b1edc94167065999cc9403fbb3cf64c893",
+    "new_sha256": "d1b3a8efe582116833d1bca058cfbb8bd9c8133691e1c13aee210ceacd6a9274",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4642-4812.txt",
+      "contexts-4642-4812.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L4ab8cd9c25",
+    "source": "Flat means under the target pitch; sharp means over it. If you're flat, lift a little. If you're sharp, ease down. Small moves work best.",
+    "old": "For lavt betyr under måltonen; for høyt betyr over. Er du for lav, løft litt. Er du for høy, senk forsiktig. Små bevegelser virker best.",
+    "new": "For lavt betyr under måltonen; for høyt betyr over. Synger du for lavt, løft tonehøyden litt. Synger du for høyt, senk den forsiktig. Små bevegelser virker best.",
+    "reason": "Use adverbial singing-pitch language rather than describing the person as physically short/tall. Make the small pitch adjustment explicit.",
+    "source_sha256": "f2293ee58db8a55cddd38a1dc5a9c7dc7b905d7e1d358086f4ee24577d35c34d",
+    "old_sha256": "541345557c8c617334c2af224076a02b58e3ec70fa99ea66e82f46593bfba93c",
+    "new_sha256": "629ceb8aad769034d846b25aaab2fd590682687148483165eab600fe3f774b13",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4642-4812.txt",
+      "contexts-4642-4812.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L21c0a8fdd8",
+    "source": "Timbre says you're flat. What do you do?",
+    "old": "Timbre sier at du er for lav. Hva gjør du?",
+    "new": "Timbre sier at du synger for lavt. Hva gjør du?",
+    "reason": "The app diagnoses sung pitch, not the singer's physical height; use «synger for lavt».",
+    "source_sha256": "bb64f6f93975c2cb6445222fb543c361e6f20c0d0be1f4f3dd2c61e91cbb0702",
+    "old_sha256": "ee41917f4d7152fa03e45ab09a293ab0fe0fbd6bfb49857a2f49c5bbc2fe3ed7",
+    "new_sha256": "2e59b447615f3b7ded8f785df91f15bd18a7ac698709ecf922263ba65790b8e9",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4642-4812.txt",
+      "contexts-4642-4812.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L3aa3fb08ad",
+    "source": "E, D, C: three steps down to home.",
+    "old": "E, D, C: tre trinn ned til grunntonen.",
+    "new": "E, D, C: tre toner trinnvis ned til grunntonen.",
+    "reason": "The three named notes make two downward moves. Clarify the inclusive three-note count instead of implying three interval transitions.",
+    "source_sha256": "37148fb2cc07b5710a28492f6234366e3d9b57ef287603def31af8419ee2e887",
+    "old_sha256": "b4a2e73c0f6fa67ddd71954ec4e89e61e898682034b7323fac8f0e71648fba07",
+    "new_sha256": "3c05a6a2ae676afa35a0188eb69870467eb3ced10a91e537c36de507c62fed9f",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4642-4812.txt",
+      "contexts-4642-4812.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L3eca6b3e69",
+    "source": "Up five, down five",
+    "old": "Fem trinn opp, fem ned",
+    "new": "Fem toner opp, fem ned",
+    "reason": "The lesson sings the five-note do-to-sol pattern, not five interval moves. Do not add an incorrect «trinn» distance to the shorter English title.",
+    "source_sha256": "5c8a7bc323521d82d5a77cd331dd9b5222545af66cfdfec011039fae23b7185f",
+    "old_sha256": "0db71f492ac3112708474f13dbb0cc531868b7c3ffbc81845d99cee99f9b03cd",
+    "new_sha256": "e28a7525a519b1e875fe1e262f96899281bbdcefcc0800e5c42db079effb3973",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4642-4812.txt",
+      "contexts-4642-4812.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L28a90c9e14",
+    "source": "Back down from C to C. Keep each lower note bright so it doesn't sag flat.",
+    "old": "Ned igjen fra C til C. Behold klangen i hver lavere tone, så den ikke synker under riktig tonehøyde.",
+    "new": "Ned igjen fra C til C. Hold klangen lys i hver lavere tone, så den ikke synker under riktig tonehøyde.",
+    "reason": "Restore the specific bright-timbre cue; merely «behold klangen» omits bright, which is distinct from pitch height.",
+    "source_sha256": "bdc7f57270a68a7d0089f4028b86eccc3d0bd172ce4f2d6630d413be0f11b3cf",
+    "old_sha256": "b3b4471c49d4505204dcfefa01ed9f4f968c29bb1478971c8cc48f2c0bc0d5d2",
+    "new_sha256": "68394af569842f9b28f035cd8a295736efafb1442851df00a46fd18285f7c7ad",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4642-4812.txt",
+      "contexts-4642-4812.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lb11d12c3d8",
+    "source": "Breathe low before each scale, keep the top light, and keep lower notes bright on the way down.",
+    "old": "Pust dypt før hver skala, la toppen være lett, og behold klangen i de lavere tonene på vei ned.",
+    "new": "Pust dypt før hver skala, la toppen være lett, og behold en lys klang i de lavere tonene på vei ned.",
+    "reason": "Preserve the explicit bright-timbre instruction for descending notes, not just generic retained sound.",
+    "source_sha256": "bf6bb9f9881e48847c3ac3b1472f6d37e080085595d31ddc31838c6c51ba659a",
+    "old_sha256": "ec35b6aa128c9044c879f0bfe03fb496fecedcf14d1bb839af95834fcfbc7992",
+    "new_sha256": "2da81a431636195353bbb73ec0bf928a5f2a70668562972031379eb8cd113557",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4642-4812.txt",
+      "contexts-4642-4812.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L073ebc6d51",
+    "source": "Same name, eight notes up",
+    "old": "Samme navn, åtte toner opp",
+    "new": "Samme navn, åtte toner fra bunn til topp",
+    "reason": "Clarify the inclusive eight-note span of an octave; «åtte toner opp» can suggest eight successive moves.",
+    "source_sha256": "8de9a4f837d26dff880d53008740fa6da6cdf85244b55a897c9dec10b288e70c",
+    "old_sha256": "5e9776229d1a5af71aa5c07ad05a6738ead909c6082a93191adeb2b815c4d52d",
+    "new_sha256": "c8b605877b5f54c6aa091382152cbe5c94689385255eb5cec61d824d0a167e08",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4813-4980.txt",
+      "contexts-4813-4980.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L8ae6e236df",
+    "source": "An octave leaps from do to the next do, eight scale notes up. The two notes share a name and blend so well they almost sound like one.",
+    "old": "En oktav hopper fra do til neste do, åtte skalatoner opp. De to tonene har samme navn og smelter så godt sammen at de nesten høres ut som én.",
+    "new": "En oktav går fra do til neste do og spenner over åtte skalatoner. De to tonene har samme navn og smelter så godt sammen at de nesten høres ut som én.",
+    "reason": "Use the precise inclusive span, matching the later octave explanation, rather than an ambiguous count of upward moves.",
+    "source_sha256": "e7e2a6bab0295845e4d7aa5d0b34c9d949a43b9105342f96fdbcf5a3a62f5b5c",
+    "old_sha256": "da9b00be148a525a551e042a6bdd6da3b30d68862b5694c5e68d7d003c338280",
+    "new_sha256": "d4c34e1818f2cf1a7469fce800b07949ff70fc5e03d647323a9c629a5d3e8d72",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4813-4980.txt",
+      "contexts-4813-4980.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L373e4f02b7",
+    "source": "Hold notes steady, shape loud and soft, and warm up well.",
+    "old": "Hold tonene stødig, form sterkt og svakt, og varm godt opp.",
+    "new": "Hold tonene stødig, varier mellom sterkt og svakt og varm godt opp.",
+    "reason": "Replace incomplete «form sterkt og svakt» with a natural instruction to vary dynamics.",
+    "source_sha256": "11e9fc5c54ecf7cea6146d0213955297614b238a6112648fc3781bebef5d274b",
+    "old_sha256": "c8ad31a409b94b798f07bf886f34b3d9c04e8785b034286fd1c61acb7b84a646",
+    "new_sha256": "fe0d0b2f3fc5f340273d86a826e00eadb83333c33bfe55cbdb9d34163a105e83",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4813-4980.txt",
+      "contexts-4813-4980.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L5c1e7ffe61",
+    "source": "Straight tone first",
+    "old": "Rett tone først",
+    "new": "Tone uten vibrato først",
+    "reason": "In this voice-control lesson straight means without vibrato, not right/correct. State the vocal concept explicitly.",
+    "source_sha256": "914fd2e544a4cb3c7e61e9d7797f17120e372e1b50abad6544de906185502466",
+    "old_sha256": "f75b69daa95cdf3bc0d602047f8aa831315440a6ed3ff732d6fae9017d124d8d",
+    "new_sha256": "e301f21df1a53639a923439133ab7a49616de79113fdd700ad49109b35c085a8",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4813-4980.txt",
+      "contexts-4813-4980.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L3c04db022b",
+    "source": "Learn to hold a straight, steady note before you chase vibrato. When your voice is relaxed and supported, vibrato often appears on its own.",
+    "old": "Lær å holde en rett, stødig tone før du jakter på vibrato. Når stemmen er avspent og støttet, kommer vibrato ofte av seg selv.",
+    "new": "Lær først å holde en stødig tone uten vibrato. Når stemmen er avspent og støttet, kommer vibrato ofte av seg selv.",
+    "reason": "Clarify straight tone as no vibrato while preserving the first-goal-before-vibrato teaching sequence.",
+    "source_sha256": "748019efe548ce772114a94a83f8e37b0b8c7d03a9c69ec3964b2aa1fe4fcf23",
+    "old_sha256": "a8702e582de063ded6d91c55d5c16f243b372a850b9bffc3b003ba6c234387ec",
+    "new_sha256": "d7da21ae7593ba4f2e9f147dbf1ed9eefde65422cf99c81dca3a2f4c2954fbf2",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4813-4980.txt",
+      "contexts-4813-4980.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L2cefd57e14",
+    "source": "A straight, steady A. No wave, just a clear line.",
+    "old": "En rett, stødig A. Ingen bølge, bare en klar linje.",
+    "new": "En stødig A uten vibrato. Ingen bølge, bare en klar linje.",
+    "reason": "Make the absence of vibrato explicit; «rett A» can instead mean correct A.",
+    "source_sha256": "cbde1b8e0e1466d4723b6ce8633f0ad4613224f795bd92692e23b913a5232479",
+    "old_sha256": "d603375ebfda0281d3e70d7e39b578735460148cc1d9a79e71b9221106217fe1",
+    "new_sha256": "fe7386397f22e0ee48de71f70298d223516881bf836a047b4fab10af93c95642",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4813-4980.txt",
+      "contexts-4813-4980.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lce2e0519ba",
+    "source": "A steady, straight tone",
+    "old": "En stødig, rett tone",
+    "new": "En stødig tone uten vibrato",
+    "reason": "Align the correct first-goal choice with the clarified straight-tone explanation, without implying that vibrato is incorrect pitch.",
+    "source_sha256": "183c5f352c86bd2e7423b2390ae6f5264e995c9652caf8fe8e4d2313d1f12bf5",
+    "old_sha256": "e2ce02de7cf63fd37ed1c11d5773cd5a76cf24f506d45f031495781f330f13eb",
+    "new_sha256": "98419a146a8162d264d03d90c15478292756b147364837af48b2573997777ea5",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4813-4980.txt",
+      "contexts-4813-4980.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L55ec63b759",
+    "source": "Straight and steady",
+    "old": "Rett og stødig",
+    "new": "Jevnt og uten vibrato",
+    "reason": "Use the explicit vocal meaning of straight in the exercise title.",
+    "source_sha256": "69939c2e33fc8b4cf7a0a4062329f9749bccd2cbb8d8810fe4dae138558cd624",
+    "old_sha256": "96d1e95f77027b20052ed9659f621ccf679217f0e3abef734f72d75b1e5e820d",
+    "new_sha256": "a3e8b95f28d102288765b190e539e6ea31f499c8c6dbfe8be840d83771f98954",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4813-4980.txt",
+      "contexts-4813-4980.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L944e411624",
+    "source": "In the middle section, E and F share a single beat. Count one, two-and, three, four, and play E on two and F on the and.",
+    "old": "I midtdelen deler E og F ett slag. Tell en, to-og, tre, fire, og spill E på to og F på og.",
+    "new": "I midtdelen deler E og F ett slag. Tell en, to-og, tre, fire, og spill E på to og F på og-slaget.",
+    "reason": "Replace a dangling final conjunction with the established og-slaget subdivision label; preserve every sung count and note.",
+    "source_sha256": "178bdfbe1761e00894406bad4f4384d2b4c38e70754c6e54e15412101ff9bb57",
+    "old_sha256": "3b074c2fb9ab7677ff4a0eff8fa17629d87bfe00ca772edaaf7748248e78a4ad",
+    "new_sha256": "78f1f0aa4ef1993fe34cf9f66d2f125580ff277b2c49ab6bb77f5b46435a0f27",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4813-4980.txt",
+      "contexts-4813-4980.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L028ca831a9",
+    "source": "In that phrase, C rings for a beat and a half and D slips in on the and of four. Count one, two, three, four-and.",
+    "old": "I den frasen klinger C i halvannet slag, og D kommer på og etter fire. Tell en, to, tre, fire-og.",
+    "new": "I den frasen klinger C i halvannet slag, og D kommer på og-slaget etter fire. Tell en, to, tre, fire-og.",
+    "reason": "Use the explicit og-slaget subdivision label rather than unquoted conjunction «og» as a bare noun.",
+    "source_sha256": "5d40f9973b0ca171095fa1e38489c7e9ac1ca538fbcaf3c9a5d7e9d08c27e8a3",
+    "old_sha256": "c3531bca3c23ab1fbfb68db2465660a4af2c0bdea7f0c094336c0f366136557a",
+    "new_sha256": "0917b0b37052c0d09b2703d3ed248e08ebb6c7a4ee0972f3c6cb9e22a03eb993",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4981-5145.txt",
+      "contexts-4981-5145.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L76ec2a9418",
+    "source": "G sounds like home, and D7 pulls back toward it. The verse is three bars of G, one of D7, two of G, then D7 and G.",
+    "old": "G høres ut som hjemme, og D7 trekker tilbake dit. Verset er tre takter G, én D7, to G, så D7 og G.",
+    "new": "G høres ut som hjemme, og D7 trekker tilbake dit. Verset er tre takter med G, én med D7, to med G, så D7 og G.",
+    "reason": "Supply the preposition relating the bar counts to their chords, consistent with the reviewed theory progression instructions.",
+    "source_sha256": "656f73b82769975088f7b5f33c0726d01c9c7c904b150d6b2f701941d8279838",
+    "old_sha256": "d7252b93d7df5b5ec22dbd1507e7f610207cb082841debb7a84b4dc79f00144d",
+    "new_sha256": "28fb1902d26c7aef4467a6b4ff146919732b62bc96b30c9ea002dade0c51ec0f",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4981-5145.txt",
+      "contexts-4981-5145.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lfe960ab991",
+    "source": "The verse needs only the two chords from Oh! Susanna: two bars of G, two of D7, two of G, then D7 and G.",
+    "old": "Verset trenger bare de to akkordene fra Oh! Susanna: to takter G, to D7, to G, så D7 og G.",
+    "new": "Verset trenger bare de to akkordene fra Oh! Susanna: to takter med G, to med D7, to med G, så D7 og G.",
+    "reason": "Natural Norwegian links the counted bars to chord labels with «med»; all chord order and durations remain unchanged.",
+    "source_sha256": "4a08676cc89931534e724a634636cc1f948b22bea82a45c2fb3b0c8cbe3dcc3f",
+    "old_sha256": "63c1576391eb2be5ae8064ba6c6a15a45edce19077f9d67b43f0df1ec884dd9e",
+    "new_sha256": "18e0a5fef7a6a7256aa75c91f3cd2834e07190807260834e8be84191151df6f9",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4981-5145.txt",
+      "contexts-4981-5145.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lc8ef98423b",
+    "source": "Most bars open with a long note and a quick one. Count one, two-and, three: the quick note lands on the and of two.",
+    "old": "De fleste taktene starter med en lang tone og en rask. Tell en, to-og, tre: den raske tonen kommer på og etter to.",
+    "new": "De fleste taktene starter med en lang tone og en rask. Tell en, to-og, tre: den raske tonen kommer på og-slaget etter to.",
+    "reason": "Name the offbeat explicitly with og-slaget, preserving the rhythmic count.",
+    "source_sha256": "efa8a8846187ada156082a4b5305cc34358e2cb7245730f2d8b2762c55844488",
+    "old_sha256": "a7cd26768026a774ea5ff0eec8f76b72fab0473581e29c94266985c315f11fcc",
+    "new_sha256": "93b5ab5a2ed62818cb7b75d6b9f956c4326f6f09057af8b23fc9f8f69cc89c4c",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4981-5145.txt",
+      "contexts-4981-5145.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "La002bb134a",
+    "source": "A pickup is a few notes that lead into the first strong beat. Here they fall on the and of beat three.",
+    "old": "En opptakt er noen toner som leder inn i det første tunge slaget. Her kommer de på og etter tredje slag.",
+    "new": "En opptakt er noen toner som leder inn i det første tunge slaget. Her kommer de på og-slaget etter tredje slag.",
+    "reason": "Use the established og-slaget label rather than the incomplete-looking «på og».",
+    "source_sha256": "926b2cbc08db9614b7b9c81ac9853d32ef3bf2027721ffb6f8b80ccb2bf3f98e",
+    "old_sha256": "de59f08818ec915701466ec44a4e1858fe1c24fc1ef40ffca8c832303ec40102",
+    "new_sha256": "308ec56d725abc14055508add3219b03a9922eba83b556fd0ccb27ff1b58486e",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4981-5145.txt",
+      "contexts-4981-5145.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lf23c32ed91",
+    "source": "A dot makes a note half again as long. In bar two, F sharp rings for a beat and a half, G slips in on the and of two, and A lands on three.",
+    "old": "Et punkt forlenger en note med halvparten av verdien. I andre takt klinger F kryss i halvannet slag, G kommer på og etter to, og A lander på tre.",
+    "new": "Et punkt forlenger en note med halvparten av verdien. I andre takt klinger F kryss i halvannet slag, G kommer på og-slaget etter to, og A lander på tre.",
+    "reason": "Keep the precise dotted rhythm but name the between-beat og-slag explicitly and consistently.",
+    "source_sha256": "a3e81d6de9429c7bf88d954db4c27253d8a74f09c0ec0e5de040d00eac1f77ef",
+    "old_sha256": "32e5db3160ea5dfc58f37ab3cb139dac1ff28839df41c310c7c85981b9c80280",
+    "new_sha256": "8b6dd35ec287f3e31208da6f5381453fa989921c5fa771275d358cb8c492c3bf",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-4981-5145.txt",
+      "contexts-4981-5145.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lb20b5d720b",
+    "source": "An octave is the same letter, eight steps higher or lower. The two Ds blend, but one sounds brighter.",
+    "old": "En oktav er samme bokstav, åtte trinn høyere eller lavere. De to D-ene smelter sammen, men den ene klinger lysere.",
+    "new": "En oktav spenner over åtte skalatoner, med samme bokstavnavn i begge ender. De to D-ene smelter sammen, men den ene klinger lysere.",
+    "reason": "Clarify the inclusive eight-note octave span instead of incorrectly implying eight stepwise moves; preserve the same-name and octave-blending explanation.",
+    "source_sha256": "8dff982d6a69ccdc1acc70d474595b30501ee27bfd1d964fdbbfa1358f88981f",
+    "old_sha256": "a4ccee20855a8fe0603201b0b7121946dc1c31de3a879c66f0ab86953046704b",
+    "new_sha256": "baae12c2fbf912d1db0c427ba136a9065302eb39318e5c020edc56d3245477bc",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5146-5242.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L0521b1782d",
+    "source": "Low Tide Radio is laid-back reggae at 80 beats per minute. The guitar plays only on the and of each beat, a short chop called a skank, while bass and drums hold the beat.",
+    "old": "Low Tide Radio er avslappet reggae i 80 slag i minuttet. Gitaren spiller bare på og etter hvert slag, et kort anslag kalt skank, mens bass og trommer holder pulsen.",
+    "new": "Low Tide Radio er avslappet reggae i 80 slag i minuttet. Gitaren spiller bare på og-slaget etter hvert slag, et kort anslag kalt skank, mens bass og trommer holder pulsen.",
+    "reason": "Use the explicit og-slag subdivision term, not the unquoted conjunction as a bare noun.",
+    "source_sha256": "fa479eb389921bcb155692cd21ff73ba2f0bfae901125a5303adbd199a1e852b",
+    "old_sha256": "604fcc2209726af61c892ba244613f1bc0fc56033932a72be50e66b7cd9a28fb",
+    "new_sha256": "d62e563423ee5112b8e0d79c7c424e050f73f2f5c511dda15d7afa8123ef6269",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5243-5403.txt",
+      "contexts-5243-5403.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L455b21019c",
+    "source": "Strum down on each and, then ease your fretting fingers off the strings so the chord stops. Chk, chk, chk, chk. The silence between chops is half the groove.",
+    "old": "Slå ned på hvert og, og lett så trykket fra gripefingrene så akkorden stopper. Tsjk, tsjk, tsjk, tsjk. Stillheten mellom anslagene er halve grooven.",
+    "new": "Slå ned på hvert og-slag, og lett så trykket fra gripefingrene så akkorden stopper. Tsjk, tsjk, tsjk, tsjk. Stillheten mellom anslagene er halve grooven.",
+    "reason": "Name the subdivisions consistently as og-slag; no strum direction or muting instruction changes.",
+    "source_sha256": "b4e3aec78d4f8fdba0697e9636ddcad9f3ae2829c38fbfcd08345726f848ff03",
+    "old_sha256": "491c8a06ee5086307d82b67bfdc2ae9693a5655148b6f56c3c685484985e6b09",
+    "new_sha256": "5e9ce04ec557b27b6d3664e785ed057042d677761153783de914e94348485c7a",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5243-5403.txt",
+      "contexts-5243-5403.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Le690b8925a",
+    "source": "On the and of each beat",
+    "old": "På og etter hvert slag",
+    "new": "På og-slaget etter hvert slag",
+    "reason": "The answer names a musical subdivision and needs the explicit og-slaget label.",
+    "source_sha256": "9751481a624bdcde2bd0b3e9dab85c62cc9d84ddd26978e2a01b68cfbefd78e4",
+    "old_sha256": "fab201e19d30a3cfbe0cd20cf8c5b304131c69c60cf4675efeb4fcf3850bd10f",
+    "new_sha256": "5e6b0f60dd3fac14cf6d5688628b2ae733d357736ae02ebe9c14709a6da80bc0",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5243-5403.txt",
+      "contexts-5243-5403.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L7d35795799",
+    "source": "Sevenths, sus and swing",
+    "old": "Septimer, sus og swing",
+    "new": "Septimakkorder, sus og swing",
+    "reason": "This unit concerns seventh chords, not isolated seventh intervals; use the chord term consistently.",
+    "source_sha256": "5f188f558dec4cec6ed78c94e6efc84764669f017d72e002cbf6aad963a610c2",
+    "old_sha256": "1022b2b663a6b1d4e36bfe3f5d016c4acd413afcb36dde4ea6f90d44030e920a",
+    "new_sha256": "355d480fc7505f9bbae662e900844b45802c42596f898ba00966883ba099adfd",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5243-5403.txt",
+      "contexts-5243-5403.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L3556ca9d74",
+    "source": "Swing and sevenths set",
+    "old": "Sett med swing og septimer",
+    "new": "Sett med swing og septimakkorder",
+    "reason": "The set revises seventh chords, not seventh intervals; retain that distinction in the title.",
+    "source_sha256": "e167620cb2eb2f01cff830fbbc1633ffe9da9acbaa7a0ec2a009da8122ebf07a",
+    "old_sha256": "c860ff673b51806ffc25b14b15b8be8346aa48e4ccef17eca48e337d23df117b",
+    "new_sha256": "c36016c73199ae879f51c98f87bcafbe9d9605a5123c1acd6b4cdfbad5a84528",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5243-5403.txt",
+      "contexts-5243-5403.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "La12debeda3",
+    "source": "Bedroom pop in sevenths",
+    "old": "Soveromspop med septimer",
+    "new": "Soveromspop med septimakkorder",
+    "reason": "Sevenths means seventh chords in this song lesson, not seventh intervals.",
+    "source_sha256": "42a00a1b05240b758dad98b2c45dcfcc3d3476e38b4c4a2e72db5b89156c0f26",
+    "old_sha256": "da43b2ac937c04e21fd3aa1ecf564f0a451decd54c64cdd8e095ff009073b05b",
+    "new_sha256": "006d78591742ade70b1edc143297522bfe5bd9674f8b833b3f0b2fedeb19420b",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5404-5564.txt",
+      "contexts-5404-5564.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L4c9c92c06d",
+    "source": "Answer the riff with power chords on one, the and of two, and four: A5, G5, C5, D5. Between hits, ease your fretting fingers off so the chords stop short.",
+    "old": "Svar riffet med powerakkorder på en, og etter to, og fire: A5, G5, C5, D5. Lett trykket fra gripefingrene mellom treffene, så akkordene stopper raskt.",
+    "new": "Svar riffet med powerakkorder på en, på og-slaget etter to og på fire: A5, G5, C5, D5. Lett trykket fra gripefingrene mellom treffene, så akkordene stopper raskt.",
+    "reason": "Name the og-slag and distinguish all three attack locations unambiguously; preserve the complete chord sequence.",
+    "source_sha256": "21b618879dcc7bee7efe8cb92ffd3a2fb7da9917709e2b0382496d9683a8a312",
+    "old_sha256": "6f8bdd9abcc5f503909c93144411584ff9d9bfe125fdb917010116e986286621",
+    "new_sha256": "a4a77ed7f4d6274acf9584c1e45a282ee060665706f83da90f84c63dfb1bc45a",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5404-5564.txt",
+      "contexts-5404-5564.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Leb7244c771",
+    "source": "A minor's own notes have G. E major needs G sharp, a half step under A, so it leans hard toward home.",
+    "old": "A-molls egne toner har G. E-dur trenger G kryss, et halvt tonetrinn under A, så den trekker sterkt hjemover.",
+    "new": "G er en av A-molls egne toner. E-dur trenger G kryss, et halvt tonetrinn under A, så den trekker sterkt hjemover.",
+    "reason": "Repair the unnatural «toner har G» construction while retaining the new raised leading-tone explanation.",
+    "source_sha256": "9ccb6b15d30302153bbf1f9d8f8a33bd9dc51623ca207bfa24164662ec1c1906",
+    "old_sha256": "9fb0208731b64b5794a1875537c62c535dc1f7d4e506c491abd4377b9387388a",
+    "new_sha256": "5d8015255ea62b05f2150d1b305c53c4f2892affe28d69d0f6980f160b15d75f",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5404-5564.txt",
+      "contexts-5404-5564.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L68d4c57c61",
+    "source": "Play the full B minor barre at fret 2 if you can. If not, use the top four strings: fret 4 on strings 4 and 3, fret 3 on string 2, fret 2 on string 1.",
+    "old": "Spill fullt B-mollbarré i bånd 2 hvis du kan. Hvis ikke, bruk de fire lyseste strengene: bånd 4 på streng 4 og 3, bånd 3 på streng 2, bånd 2 på streng 1.",
+    "new": "Spill B-moll med full barré i bånd 2 hvis du kan. Hvis ikke, bruk de fire lyseste strengene: bånd 4 på streng 4 og 3, bånd 3 på streng 2, bånd 2 på streng 1.",
+    "reason": "Use grammatical «B-moll med full barré» rather than neuter «fullt B-mollbarré»; all physical alternatives remain exact.",
+    "source_sha256": "6cdd3c3f5d6cf4ac468bca0c81b14a5b728215cfdff77079563aecec0cb7cbcc",
+    "old_sha256": "60676ed934f6cec856180d4fbb2a95dd6df40d4dca067395fd71d77946b87066",
+    "new_sha256": "ef883c98d6a683072494fecc0d5d450f98734506160854a6e9d603c5af0a77b5",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5404-5564.txt",
+      "contexts-5404-5564.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L68a5d9377b",
+    "source": "Rooftop Choir is a stadium-sized anthem at 92 beats per minute. You play the chorus in C, then one bar of A lifts everything a whole step, and the chorus returns in D.",
+    "old": "Rooftop Choir er en stadionstor låt i 92 slag i minuttet. Du spiller refrenget i C, så løfter én takt A alt et helt tonetrinn, og refrenget kommer tilbake i D.",
+    "new": "Rooftop Choir er en stadionstor låt i 92 slag i minuttet. Du spiller refrenget i C, så løfter én takt med A alt et helt tonetrinn, og refrenget kommer tilbake i D.",
+    "reason": "Add the required relation between the bar and its chord, «takt med A».",
+    "source_sha256": "2e586106ed43ceba5bd0aeb01c6efbc56660b38b22bf0a027eb20296c6edd47b",
+    "old_sha256": "9d7564be1f28da9d63e28b49979cfe6003fcbbbe5427c2dba438e2ac59926d54",
+    "new_sha256": "1a00d2713d59db307541dde5360489d1abde302e0eb7c33de48066a9f4d34742",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5404-5564.txt",
+      "contexts-5404-5564.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L8b540851de",
+    "source": "Slow Motion Strobe is synth-pop at 118 beats per minute: F sharp minor, D, A and E. The strum is pushed: two of its hits land on the and, just before the beat.",
+    "old": "Slow Motion Strobe er synthpop i 118 slag i minuttet: F kryss-moll, D, A og E. Anslagene foregriper slaget: to av dem kommer på og, rett før slaget.",
+    "new": "Slow Motion Strobe er synthpop i 118 slag i minuttet: F kryss-moll, D, A og E. Anslagene foregriper slaget: to av dem kommer på og-slaget, rett før slaget.",
+    "reason": "Use the established og-slaget name for the anticipated subdivision, rather than dangling «på og».",
+    "source_sha256": "9fdb8b3feecc635f7615263cefc56c0cc8ea961cee1c40f08684caaae833afc9",
+    "old_sha256": "f46e153339d8fa1da2b031cf13e17bc723e120786c4d472a848db03690cc51fb",
+    "new_sha256": "847d8449c746519a8e9835d48feac8ca9006259a04bb4d6d0d24acc8b6dad70a",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5565-5594.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L1bd8477e7b",
+    "source": "This tune moves in quarter notes and pairs of eighths. Count one, two-and, three, four-and, and the lilt comes by itself.",
+    "old": "Denne melodien går i firedeler og par av åttedeler. Tell en, to-og, tre, fire-og, så kommer svingen av seg selv.",
+    "new": "Denne melodien går i firedeler og par av åttedeler. Tell en, to-og, tre, fire-og, så kommer den vuggende rytmen av seg selv.",
+    "reason": "Lilt here is rhythmic sway, not an instruction to swing the straight eighths; avoid ambiguous «svingen».",
+    "source_sha256": "3c194fd0a09f6d13eb21b8b7871e1a084fb76135d5d2ebb601d09b07777c95ee",
+    "old_sha256": "cc357192e07d6a853c544dd5264ccca345e515b8aa8ce8b155d4ad8402a543cd",
+    "new_sha256": "960676fcaf3f12842d8405d13198b8e241872bf1f71e752545425fe6e6e1faf9",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5595-5758.txt",
+      "contexts-5595-5758.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Le05c9e34aa",
+    "source": "This song rocks in six-eight: two big beats a bar, each split in three. Count one-two-three, four-five-six, like oars pulling and coming back.",
+    "old": "Denne sangen vugger i seks åttedeler: to store slag per takt, hvert delt i tre. Tell en-to-tre, fire-fem-seks, som årer som trekkes og føres tilbake.",
+    "new": "Denne sangen vugger i seks åttendedelstakt: to store slag per takt, hvert delt i tre. Tell en-to-tre, fire-fem-seks, som årer som trekkes og føres tilbake.",
+    "reason": "Name the meter, seks åttendedelstakt, rather than merely six eighth-note durations; preserve two compound beats and the rowing metaphor.",
+    "source_sha256": "da5e0806ad103b48bf1d87010caef7bf95909fe7e6c5be18ef67d45bb835530a",
+    "old_sha256": "257a027843e9815f675862d87614c218b5bfb993343da4ad5ac9e3733ccc5d62",
+    "new_sha256": "212aca3dca8058503fa978f2d2cd86edcb96c8d5e05a69fe6e2246408917e119",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5595-5758.txt",
+      "contexts-5595-5758.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L5b73319e44",
+    "source": "The Skye Boat Song rocks in six-eight. O Christmas Tree is in three, and All Through the Night in four.",
+    "old": "The Skye Boat Song vugger i seks åttedeler. O Christmas Tree går i tre, og All Through the Night i fire.",
+    "new": "The Skye Boat Song vugger i seks åttendedelstakt. O Christmas Tree går i tre, og All Through the Night i fire.",
+    "reason": "Match the clarified compound-meter term used in the song explanation.",
+    "source_sha256": "2242d6b03393e88362d5fbfefc611bcc76126fd6aad74d4832c6b9790d32bd50",
+    "old_sha256": "3cd94a0ecea0d3e1e34131d9a040118e986f28c6960563b34b1eedc3fc5fa388",
+    "new_sha256": "a16461ff70919c48eeff3682114793d6e281dbc6e2a20d76b2a1c6511b01fd13",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5595-5758.txt",
+      "contexts-5595-5758.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lc4e661674d",
+    "source": "Joplin, Sousa, Bizet and Grieg: syncopation, six-eight and key changes.",
+    "old": "Joplin, Sousa, Bizet og Grieg: synkopering, seks åttedeler og toneartsskifter.",
+    "new": "Joplin, Sousa, Bizet og Grieg: synkopering, seks åttendedelstakt og toneartsskifter.",
+    "reason": "The summary names a meter, not simply six note values.",
+    "source_sha256": "ef2c248463c6b65160e38dcd71d33aa22414decadf2c5b13730ecc3ad57e407c",
+    "old_sha256": "33b42770801d36ed96461ed0cf75a47fe5e5d8a24f7b8c125e5dcd6b519f2124",
+    "new_sha256": "ebda3db02774ac7b3901c400c5c77e8495cd3ec099ceff14d32027b446c71f0e",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5595-5758.txt",
+      "contexts-5595-5758.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L638f400164",
+    "source": "Syncopation puts the accent between the beats. In the opening, each C lands on an and. Count one-and-two-and and feel the C pull ahead.",
+    "old": "Synkopering legger trykket mellom slagene. I åpningen kommer hver C på et og. Tell en-og-to-og og kjenn at C trekker fremover.",
+    "new": "Synkopering legger trykket mellom slagene. I åpningen kommer hver C på et og-slag. Tell en-og-to-og og kjenn at C trekker fremover.",
+    "reason": "Use the established musical subdivision noun og-slag rather than unquoted «et og».",
+    "source_sha256": "16d63af0440364caeea2e20ad60188de8ff3a9121c54cd67466d9bfd8c0180b8",
+    "old_sha256": "ee06198bcb0caba699982249a8b791615b1c94b275b80aae2cb2c7a2c43ca297",
+    "new_sha256": "b192d788c2985e43194131f3e103b393798fc37ffb5b63159fc0b02c6a88ec17",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5595-5758.txt",
+      "contexts-5595-5758.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L2125d1e9cc",
+    "source": "John Philip Sousa published The Liberty Bell in 1893, and a British TV comedy later made it its theme. It's in six-eight: two big beats a bar, like left, right.",
+    "old": "John Philip Sousa utga The Liberty Bell i 1893, og en britisk TV-komedie brukte den senere som kjenningsmelodi. Den går i seks åttedeler: to store slag per takt, som venstre, høyre.",
+    "new": "John Philip Sousa utga The Liberty Bell i 1893, og en britisk TV-komedie brukte den senere som kjenningsmelodi. Den går i seks åttendedelstakt: to store slag per takt, som venstre, høyre.",
+    "reason": "Name the actual six-eight meter, consistent with the other compound-time lessons, without adding numeric notation absent from the source.",
+    "source_sha256": "1075f35d6430bd779db104f3d682a7f6c096ac8fe0240c5f976549c5eadca0c3",
+    "old_sha256": "276c31f90cdb3a5571e9335a95581222a5dab60b90429a789a13d0e7ba7b4102",
+    "new_sha256": "bc3a1d06bd8bb1559da9212c7f6031c6579ef97ebc5bc65b4b66d74973512225",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5595-5758.txt",
+      "contexts-5595-5758.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L3fb6369a3b",
+    "source": "Carols by candlelight",
+    "old": "Julesanger i stearinlys",
+    "new": "Julesanger i levende lys",
+    "reason": "Use the idiomatic Norwegian expression for candlelight; «i stearinlys» literally places the songs inside candles.",
+    "source_sha256": "bae2ad674d8bc413c1b747e47754bcea8301434c6514380acd0cad05e0846d8a",
+    "old_sha256": "902ee2196d8297ac487e858c7f4b21cfa6e72273b344c39018e870d38b209382",
+    "new_sha256": "bf4ae113075550841ff0c7973254311377ea8957f5e765c5cd031c53a82df25d",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5759-5923.txt",
+      "contexts-5759-5923.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L6fc1b88b81",
+    "source": "Four Christmas carols to sing by candlelight: Wesley and Mendelssohn, a lullaby, and two tunes from America.",
+    "old": "Fire julesanger å synge i stearinlys: Wesley og Mendelssohn, en vuggesang og to melodier fra Amerika.",
+    "new": "Fire julesanger å synge i levende lys: Wesley og Mendelssohn, en vuggesang og to melodier fra Amerika.",
+    "reason": "Match the idiomatic candlelight title with «i levende lys».",
+    "source_sha256": "0ea2b0a30edbd526267769c55d75c77865824da099a96e257b4d40f93b2d0e74",
+    "old_sha256": "dc49f8b292628177e14bcd0014194397b95266436bead630ba2416e781382f7e",
+    "new_sha256": "3ff7299759778b6bc725772c057ff4e56d9d48cdb205c84030c30f3a85e32d48",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5759-5923.txt",
+      "contexts-5759-5923.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Laea00bbadf",
+    "source": "Her-ald is long-short: her- lands on three and holds, and -ald slips in on the and of four. Count one, two, three, four-and.",
+    "old": "Her-ald er lang-kort: her- kommer på tre og holdes, og -ald kommer på og etter fire. Tell en, to, tre, fire-og.",
+    "new": "Her-ald er lang-kort: her- kommer på tre og holdes, og -ald kommer på og-slaget etter fire. Tell en, to, tre, fire-og.",
+    "reason": "Use the explicit og-slaget subdivision label while keeping the original sung syllables and counting unchanged.",
+    "source_sha256": "0d4bedcb2f9c92db94d5ba23f69c5b06ad1ec4852957b7c47a72850c1d9ea208",
+    "old_sha256": "0f46c08a8da18f1b7065717c50f0409a3ba74b9ccaeaf42c341b7480ae4648e5",
+    "new_sha256": "c39847c412ef1a747504e653f4473dfdc21836d35dd12dae09edc8e9a3fae2e2",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5759-5923.txt",
+      "contexts-5759-5923.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L0bd505d18c",
+    "source": "D down to D is an octave: eight steps of the scale, the same note name, one register lower.",
+    "old": "D ned til D er en oktav: åtte skalatrinn, samme tonenavn, ett register lavere.",
+    "new": "D ned til D er en oktav: åtte skalatoner med begge endene, samme tonenavn, ett register lavere.",
+    "reason": "Clarify the inclusive octave count consistently with the other interval explanations, rather than imply eight downward transitions.",
+    "source_sha256": "889bc4e9fb6ae279b1e69405f03867e204a6cb663b6b3e17cd41d19e2edfc597",
+    "old_sha256": "d5ce0d39673a598ac52950bc556c3f3613cf3b7a4359a62c9a38b6f8d41bb8dc",
+    "new_sha256": "fe6c784bcb2bcd13f48da03bbba11e6420703a93824652c3abcc2fb7d0cbc3eb",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5759-5923.txt",
+      "contexts-5759-5923.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L82412d17ba",
+    "source": "A sharp at fret 3 on string 3 leans into open B, a half step up. It gives O little town its gentle sway.",
+    "old": "A kryss i bånd 3 på streng 3 trekker mot åpen B, et halvt tonetrinn opp. Det gir O little town den milde svingen.",
+    "new": "A kryss i bånd 3 på streng 3 trekker mot åpen B, et halvt tonetrinn opp. Det får O little town til å vugge mykt.",
+    "reason": "Render gentle sway as soft rocking, not a potentially misleading instruction to use swing rhythm.",
+    "source_sha256": "4575265c94f17bd64213f95e942db388b259d2cf593cb859c18a14d99f1eb651",
+    "old_sha256": "883a3e8d172df678acad6ce257ac4e1ef442fa55fa449b60bab60627201aa605",
+    "new_sha256": "a89c2cdde0b6ddd79a834dd49b9228f4384bb4b1368fbe3a8c3b28b9b72e1be2",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5759-5923.txt",
+      "contexts-5759-5923.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L493d6a3068",
+    "source": "A carol in six-eight",
+    "old": "En julesang i seks åttedeler",
+    "new": "En julesang i seks åttendedelstakt",
+    "reason": "Name the compound meter, not merely six eighth-note values.",
+    "source_sha256": "51c2945d93143777786ca6a026eed3dabc66ef7b89be6029dfa22b50fb37b217",
+    "old_sha256": "8d003466cb5ff8ff20a495c7f68d393a8dc567e4d8ba7099160a84f79b384ef6",
+    "new_sha256": "163a10e84af630ec65141c454b8f836b029e635f033f6852e542f80dad3e2d06",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5759-5923.txt",
+      "contexts-5759-5923.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L63b5f26523",
+    "source": "In six-eight a quarter and an eighth make one big beat: long, short. Count one-two-three, four-five-six, and play on one, three, four and six.",
+    "old": "I seks åttedeler blir en firedel og en åttedel ett stort slag: lang, kort. Tell en-to-tre, fire-fem-seks, og spill på en, tre, fire og seks.",
+    "new": "I seks åttendedelstakt blir en firedel og en åttedel ett stort slag: lang, kort. Tell en-to-tre, fire-fem-seks, og spill på en, tre, fire og seks.",
+    "reason": "Use the explicit meter term consistent with the title; preserve the count and sounded subdivisions.",
+    "source_sha256": "60fc139f3b43a2a52c9598d8193121b07b6c850da14f8a83e9509a0e954785e3",
+    "old_sha256": "37ca56cf36f14ace016bb2e02c81d195b28f658379f3fbf9cfec7a0099c3ceb4",
+    "new_sha256": "7a25237b7650feb6267faac940f39ca2c6a04e797dd2c55d217e0e829abc36c6",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5759-5923.txt",
+      "contexts-5759-5923.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Le058253f15",
+    "source": "Roots and fifths, as a bass player first backs a band: the chord's root where it starts, its fifth between, low in first position. The song stays in C, where the band plays it.",
+    "old": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone der den begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i C, der bandet spiller den.",
+    "new": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone når akkorden begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i C, der bandet spiller den.",
+    "reason": "The bass root is played when the chord begins, a temporal onset cue, not where an ambiguous «den» spatially begins. Make the chord antecedent explicit; retain this edition’s exact key and root/fifth instruction.",
+    "source_sha256": "861dd8e149c814c1516a5b300cfc104e3cd34611cba001800c2a5838d641db72",
+    "old_sha256": "0d1cf2175739f756be854737d15191efc70cd20a40109affbc9ab9ea4aba27c5",
+    "new_sha256": "64af20d19ff2eb7c5a56be7c4d58905481411656c94744bf269923974a09908e",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5924-6082.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lcbc9c4f23d",
+    "source": "Roots and fifths, as a bass player first backs a band: the chord's root where it starts, its fifth between, low in first position. The song stays in G, where the band plays it.",
+    "old": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone der den begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i G, der bandet spiller den.",
+    "new": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone når akkorden begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i G, der bandet spiller den.",
+    "reason": "The bass root is played when the chord begins, a temporal onset cue, not where an ambiguous «den» spatially begins. Make the chord antecedent explicit; retain this edition’s exact key and root/fifth instruction.",
+    "source_sha256": "2f3cbc98e6a03e3ff4ca2864382e9d9807e1643acadb94646c23ac6addf8d260",
+    "old_sha256": "b10a1e65e9a82b3cb2591034ae74a34d98e17293bb06390b1922bc915686e0c2",
+    "new_sha256": "cd1523e4fe5b2c49060234f6c196ba90a50ff3852e2138a1b8c327d244ab5dd0",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5924-6082.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lba1b4a7ec4",
+    "source": "Roots and fifths, as a bass player first backs a band: the chord's root where it starts, its fifth between, low in first position. The song stays in D, where the band plays it.",
+    "old": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone der den begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i D, der bandet spiller den.",
+    "new": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone når akkorden begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i D, der bandet spiller den.",
+    "reason": "The bass root is played when the chord begins, a temporal onset cue, not where an ambiguous «den» spatially begins. Make the chord antecedent explicit; retain this edition’s exact key and root/fifth instruction.",
+    "source_sha256": "8438da755d2cb2769f6d459f28918b59991349b8da3ed08a770c738ef250348b",
+    "old_sha256": "b0640c7d1266dee3db047285af61c30e7652b0a374b5b8e63e431e05f0db75c4",
+    "new_sha256": "8829ccf02c341e6ba51cc43aeab67a016e65f06f9d6e867dedb20640a1648216",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5924-6082.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L948c4988ab",
+    "source": "Roots and fifths, as a bass player first backs a band: the chord's root where it starts, its fifth between, low in first position. The song stays in A minor, where the band plays it.",
+    "old": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone der den begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i A-moll, der bandet spiller den.",
+    "new": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone når akkorden begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i A-moll, der bandet spiller den.",
+    "reason": "The bass root is played when the chord begins, a temporal onset cue, not where an ambiguous «den» spatially begins. Make the chord antecedent explicit; retain this edition’s exact key and root/fifth instruction.",
+    "source_sha256": "e6f28be399b50a61f258a63848504bdaf4e59c40ebbced44b64beeb367a44943",
+    "old_sha256": "9a24c11b4926b7fd83f15f24b6d33a5a22a942f5ee7aaafebe6ae9973271614b",
+    "new_sha256": "b0f98b932a79c3131e3ac79870fa844d1f4b4c76ff2b76c15d2e0acced5e8543",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5924-6082.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L4628ff6cee",
+    "source": "Roots and fifths, as a bass player first backs a band: the chord's root where it starts, its fifth between, low in first position. The song stays in A, where the band plays it.",
+    "old": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone der den begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i A, der bandet spiller den.",
+    "new": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone når akkorden begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i A, der bandet spiller den.",
+    "reason": "The bass root is played when the chord begins, a temporal onset cue, not where an ambiguous «den» spatially begins. Make the chord antecedent explicit; retain this edition’s exact key and root/fifth instruction.",
+    "source_sha256": "2dfc71c6b2c28d8e20a877aca0f84adc85e94752eadf867afca7ee52c9c4c959",
+    "old_sha256": "07031fa6c0b1651c47287d3fb2a732d1d150f2890af381d03ee174c1ec8cecd3",
+    "new_sha256": "2680a8eed2be84fae54c339c0f0f948c68f65515c6d5247bd1221dbf04519d37",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5924-6082.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L80be651842",
+    "source": "Roots and fifths, as a bass player first backs a band: the chord's root where it starts, its fifth between, low in first position. The song stays in E minor, where the band plays it.",
+    "old": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone der den begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i E-moll, der bandet spiller den.",
+    "new": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone når akkorden begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i E-moll, der bandet spiller den.",
+    "reason": "The bass root is played when the chord begins, a temporal onset cue, not where an ambiguous «den» spatially begins. Make the chord antecedent explicit; retain this edition’s exact key and root/fifth instruction.",
+    "source_sha256": "ef20b6f884860ac0a664f09afd12928fefc7ae428f07b106796ace270271144b",
+    "old_sha256": "32e4f90ea822335df79214fef8f242c1b69aab605a3e34b53e88e02041b0a8ff",
+    "new_sha256": "29b4a46ea97123fbe1b64dc8ba66646a10f0c5faa07059032fbfe268856dec28",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5924-6082.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L700caf50a2",
+    "source": "Roots and fifths, as a bass player first backs a band: the chord's root where it starts, its fifth between, low in first position. The song stays in E, where the band plays it.",
+    "old": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone der den begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i E, der bandet spiller den.",
+    "new": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone når akkorden begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i E, der bandet spiller den.",
+    "reason": "The bass root is played when the chord begins, a temporal onset cue, not where an ambiguous «den» spatially begins. Make the chord antecedent explicit; retain this edition’s exact key and root/fifth instruction.",
+    "source_sha256": "258a5a6faedf9a00293a49658b2d4997aae6cba021ca347b1ae97209b2f57c30",
+    "old_sha256": "1bc6166edd31bedd6c37e01f382e7c50532f2d701c9f9f25ee95ca55213be8f1",
+    "new_sha256": "bf4d4eac52e6b25dc45abbcb889d8cefb7fc2c074ed1de901e504573abb7626c",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5924-6082.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Lf09abc15d8",
+    "source": "Roots and fifths, as a bass player first backs a band: the chord's root where it starts, its fifth between, low in first position. The song stays in D minor, where the band plays it.",
+    "old": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone der den begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i D-moll, der bandet spiller den.",
+    "new": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone når akkorden begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i D-moll, der bandet spiller den.",
+    "reason": "The bass root is played when the chord begins, a temporal onset cue, not where an ambiguous «den» spatially begins. Make the chord antecedent explicit; retain this edition’s exact key and root/fifth instruction.",
+    "source_sha256": "ad0401de37c08aebc35a2ee8c16322877a55632961430f938a9d68b22376ed70",
+    "old_sha256": "e48b791330ab0f05620b6916bb4e0b33335d2c0f53ab1e75df8296ead5a40537",
+    "new_sha256": "77afa931c2612e611fedc8ebdc5b9822b414bf2582836b0ebeafc6632487e51e",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5924-6082.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L15931dec06",
+    "source": "Roots and fifths, as a bass player first backs a band: the chord's root where it starts, its fifth between, low in first position. The song stays in G minor, where the band plays it.",
+    "old": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone der den begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i G-moll, der bandet spiller den.",
+    "new": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone når akkorden begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i G-moll, der bandet spiller den.",
+    "reason": "The bass root is played when the chord begins, a temporal onset cue, not where an ambiguous «den» spatially begins. Make the chord antecedent explicit; retain this edition’s exact key and root/fifth instruction.",
+    "source_sha256": "82f37ba165a91e5968cd83a84495154254d490c6f44ef013816a2379a1471fa8",
+    "old_sha256": "4e0a3235b89dea4bbe431bc6e906f62937832d67becedcfe6569d0a3472760af",
+    "new_sha256": "b46b12692294f94ad135ea28a80573fa93ca4a82a2f34fe71e5f9eaabc8ca930",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5924-6082.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Le928e4affd",
+    "source": "Roots and fifths, as a bass player first backs a band: the chord's root where it starts, its fifth between, low in first position. The song stays in B minor, where the band plays it.",
+    "old": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone der den begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i B-moll, der bandet spiller den.",
+    "new": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone når akkorden begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i B-moll, der bandet spiller den.",
+    "reason": "The bass root is played when the chord begins, a temporal onset cue, not where an ambiguous «den» spatially begins. Make the chord antecedent explicit; retain this edition’s exact key and root/fifth instruction.",
+    "source_sha256": "fe00b26cb94617511c8f68ab24b471f0b86228fe5a6d711cf127f1945346025b",
+    "old_sha256": "9a3db1b4255c55b52715ffe0bb9ef67ad0f4a845a4f0ae24557b365e77cacac0",
+    "new_sha256": "43561fbf3ae79edcd64df0684bfc8662caeaa662ddfc1840800bf209228d2765",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5924-6082.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "La84286cfd7",
+    "source": "Roots and fifths, as a bass player first backs a band: the chord's root where it starts, its fifth between, low in first position. The song stays in F, where the band plays it.",
+    "old": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone der den begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i F, der bandet spiller den.",
+    "new": "Grunntoner og kvinter, slik en bassist først akkompagnerer et band: akkordens grunntone når akkorden begynner, og kvinten imellom, lavt i første posisjon. Sangen blir i F, der bandet spiller den.",
+    "reason": "The bass root is played when the chord begins, a temporal onset cue, not where an ambiguous «den» spatially begins. Make the chord antecedent explicit; retain this edition’s exact key and root/fifth instruction.",
+    "source_sha256": "c86441e1850eeb4c6d6d8885e62e0dc0097eac0b1c4de5bdf4c294a7019d6c6f",
+    "old_sha256": "231f77f2d877460a156b9e02123775fd3f6218145cf0c95894eb8a46ccd6d5cf",
+    "new_sha256": "3412a80d34f431724164ca7f04d35d5cc5f2e7204127548b096517b2cc41c206",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "read-5924-6082.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L15682a9a23",
+    "source": "Whole bows on every string",
+    "old": "Hele buer på hver streng",
+    "new": "Hele buestrøk på hver streng",
+    "reason": "In both violin and cello contexts, bows denotes bow strokes, not plural physical bows. Buestrøk makes the movement explicit and agrees with the adjacent instructions and the established Long bows/Bowing terminology.",
+    "source_sha256": "2a1921e25e50de53c1f75506c37f78ea2cf15151bcd04ff267c5b5f633f7eebc",
+    "old_sha256": "b708bdab2f6e1c650c2309eeb604f4d262a1ecb3bb52b5edde1e499374c962c3",
+    "new_sha256": "37da5d3cb66b1322041a81203d512dd3c888da5d565f0dd0dd9031b05a56bc44",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "non-option-read-0201-0300.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L25d6ca24cb",
+    "source": "Quarter notes, half bows",
+    "old": "Firedeler, halve buer",
+    "new": "Firedeler, halve buestrøk",
+    "reason": "In both violin and cello contexts, bows denotes bow strokes, not plural physical bows. Buestrøk makes the movement explicit and agrees with the adjacent instructions and the established Long bows/Bowing terminology.",
+    "source_sha256": "ccd7b4cb836282876b4efdf906a0e40b53b64cedfcc2e21928c35f6e4714dc92",
+    "old_sha256": "f3f69a355fb4b2554a0018cd5118c104e8ff84c7f262bd0e3c7163f7ea01050a",
+    "new_sha256": "d9932e78803d9988b1bbb715c688d0c828624f11e9a79a2d531576be0f80764b",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "non-option-read-0201-0300.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "L5cffb13f9a",
+    "source": "Half notes, slower bows",
+    "old": "Halvnoter, langsommere buer",
+    "new": "Halvnoter, langsommere buestrøk",
+    "reason": "In both violin and cello contexts, bows denotes bow strokes, not plural physical bows. Buestrøk makes the movement explicit and agrees with the adjacent instructions and the established Long bows/Bowing terminology.",
+    "source_sha256": "dff11312ee1575577f9175a8d7413ac1ef864ad04ba95faca83617cce57c37e7",
+    "old_sha256": "59f8fe74e7ef247294f69c0a7d0cd883e56eb0b6e23e431e0adeb182dc531167",
+    "new_sha256": "930728c610796ebb84f80fb656c3f97575ff2567cbb0af10f37b1a12df942faa",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "non-option-read-0201-0300.txt"
+    ],
+    "whole_lesson_review_complete": true
+  },
+  {
+    "locale": "no",
+    "key": "Le0292d92c0",
+    "source": "Bows and rhythms",
+    "old": "Buer og rytmer",
+    "new": "Buestrøk og rytmer",
+    "reason": "In both violin and cello contexts, bows denotes bow strokes, not plural physical bows. Buestrøk makes the movement explicit and agrees with the adjacent instructions and the established Long bows/Bowing terminology.",
+    "source_sha256": "883f19655c55b18b3057d15b711e672ed241216452ab9ab32e21b55936446f38",
+    "old_sha256": "93f3c7a4b2dd195319a373e1a9e8adeaf3bbbdad6f511398576e4c706ccf8e1e",
+    "new_sha256": "66c40aa1f29d51184ebecc8ac7e89bafeb4bccd82d613a9b7d109c7759a9d3d0",
+    "reviewed_by": "review artifact review_norwegian_lessons (independent AI reviewer; not human/native/device certification)",
+    "evidence": [
+      "non-option-read-0201-0300.txt"
+    ],
+    "whole_lesson_review_complete": true
+  }
+]

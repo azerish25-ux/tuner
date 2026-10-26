@@ -1,6 +1,6 @@
 # Norwegian (no) glossary
 
-Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface; lessons deliberately remain English in this locale.
+Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native musician and device review remain outstanding. Applies to interface and Norwegian Bokmål lesson drafts. Lesson translations drafted 2026-10-26; independent linguistic review is pending.
 
 ## 1. Locale decisions
 - Locale/variant: no, standard Norwegian; Norwegian is Bokmål.
@@ -13,6 +13,15 @@ Review: AI-reviewed working glossary, 2026-10-25. Not human-approved. Native mus
 - Siri: natural imperative, retain ${applicationName} and every named token.
 - Brands: Timbre, Timbre Pro, Pro, ChordPro unchanged and uninflected. Keep [G], ChordPro directives, URLs, ›, ·, ×, arrows and all format tokens verbatim.
 - Musical tuning terminology overrides: the drone-training Intonation is pitch accuracy, not saddle adjustment. da/no/sv Temperament means musical temperament (not physical temperature); use Temperering / Temperering / Temperering respectively when this source occurs.
+
+### Explicit locale conventions
+- Exact address: du.
+- Quotation marks: “…”; no spaces inside quotation marks. Other punctuation uses normal Western spacing.
+- Units, spoken and compact: cent; minutter/min; sekunder/s; millisekunder/ms. Spoken VoiceOver labels use full words, not the screen abbreviation.
+- Musical accidentals (sharp / flat / double sharp / double flat): kryss; b; dobbeltkryss; dobbelt-b. These are notation terms; the tuner direction terms above instead describe whether the pitch is too low or high.
+- Apple feature labels (Home Screen / Lock Screen / widget / Live Activity / Shortcuts / Control Center / Family Sharing): Hjem-skjerm; låst skjerm; widget; Direkteaktivitet; Snarveier; Kontrollsenter; Familiedeling. Product names remain unchanged. Verify supported-system labels on device before release; English names deliberately retained for unsupported system UI languages.
+- Instrument names: use the already localized `timbre_catalog_*` names; do not substitute English when a localized catalogue name exists. Tuning presets use the existing `timbre_catalog_tuning_*` names, preserving Drop/Open note letters and DADGAD.
+- Counted flat strings: prefer a count-neutral label for unknown counts where inflection differs; never attach a case suffix to a placeholder. Numeric chord 7 and 3D stay numeric; musical symbols and cents sign stay unchanged.
 
 ## 2. Terms
 Existing shipped terminology below is binding by sense and may be grammatically inflected, except inserted values and brand names. Supplemented terms precede anchors and override them only for the same sense.
@@ -127,7 +136,7 @@ Existing shipped terminology below is binding by sense and may be grammatically 
 | Speed trainer | Existing app sense | UI | `Speed trainer` | Tempotrener | Existing table anchor |
 | Studio (lighter) | Existing app sense | UI | `Studio (lighter)` | Studio (lettere) | Existing table anchor |
 | Tanpura | Existing app sense | UI | `Tanpura` | Tanpura | Existing table anchor |
-| Temperament | Existing app sense | UI | `Temperament` | Temperatur | Existing table anchor |
+| Temperament | Musical tuning system | UI/lessons | `Temperament` | Temperering | Corrected musical sense; not physical temperature |
 | Tempo | Existing app sense | UI | `Tempo` | Tempo | Existing table anchor |
 | Terms | Existing app sense | UI | `Terms` | Vilkår | Existing table anchor |
 | Timbre | Existing app sense | UI | `Timbre` | Timbre | Existing table anchor |
@@ -172,7 +181,64 @@ Existing shipped terminology below is binding by sense and may be grammatically 
 | Key | Existing app sense | UI | `Key` | Toneart | Existing table anchor |
 
 ## 3. Course and song names
-Use the instrument-name anchors for Guitar, Ukulele, Bass, Violin, Cello, Mandolin, Banjo. Songs equals the Songs tab. Ear Training/Rhythm reuse existing feature terminology; Music Theory/Singing and Originals/Standards & Classics are specified above. Songbook reuses the existing anchor. No localized lesson corpus in this locale. Keep English song titles unless a firmly established local title exists; preserve traditional proper names and Timbre Originals titles. A title in prose must exactly match its lesson title. Lyric credits retain names and years, translating only connecting words; lyrics are not translated.
+Use the instrument-name anchors for Guitar, Ukulele, Bass, Violin, Cello, Mandolin, Banjo. Songs equals the Songs tab. Ear Training/Rhythm reuse existing feature terminology; Music Theory/Singing and Originals/Standards & Classics are specified above. Songbook reuses the existing anchor. Keep English song titles unless a firmly established local title exists; preserve traditional proper names and Timbre Originals titles. A title in prose must exactly match its lesson title. Lyric credits retain names and years, translating only connecting words; lyrics are not translated.
 
 ## 4. Words that mislead
 Tune: tuning verb/tab versus melody noun; use separate terms above. Sharp/flat: tuning too high/low versus musical accidental. Bar: musical measure, never pub or toolbar. Key: musical tonality, never password/keycap. Pick: plectrum or pluck, but choose in interface. Lock: confirmation of stable correct pitch, not a padlock; locked content is separate. Take: a recorded attempt. Run: streak or complete performance, not running. Chart: chord sheet/diagram except statistical plots in Progress. Intonation: pitch accuracy over a drone, not saddle setup. Next/Again/Slower: one term must work both on controls and as spoken commands, using shipped anchors. Practice: music practice, not professional business. Feel: haptic sensation, not emotion. Quest: optional side goal distinct from the Today activity set. Challenge: friend competition versus cumulative lesson test; translate by context. Finger numbers 1–4 and open 0 remain unchanged. Loop A–B labels are markers, not note names. For hammer-on/pull-off/slide/bend/vibrato use established guitar-teaching loanwords, not everyday translations; I–IV–V and V/I chord symbols remain intact.
+
+### Context-review decisions
+- `In` / `Out` in HighwayTimingStrip are short Intro / Outro section labels, not inside/outside, enabled/disabled, or loop boundaries.
+- `Push beat` / `Push the and of` mean play the beat/offbeat more strongly (dynamic accent), never anticipate its timing.
+- `String %lld, low %lld` / `high %lld`: the second argument is a finger number with low/high placement; make finger explicit, not pitch.
+- `Tap Sync, then tap along once`: mark changes through one complete playback pass, not a single tap and not “immediately.”
+- Watch `Taps resume` refers to haptic pulses resuming when the wrist is raised, not touch gestures by the user.
+- Price/duration values can contain singular or plural units. Use period/duration label framing rather than an agreeing singular article around an unknown value.
+- Haptic feature explanations should introduce the feature name as a named function before describing its operation, not use a bare imperative as the subject.
+- Lesson control “moves on” means advances to the next step, not within the same step.
+
+## 5. Lesson-specific draft decisions (2026-10-26)
+
+Draft terminology, awaiting independent review; not a native-review sign-off.
+
+- Notes and chord symbols retain source notation, including B (not H), ♯/♭, Em, G7 and slash chords. Plain spelled-out accidentals use kryss/b; in explanatory prose “hevet/senket en halvtone” where clearer. Never add or remove musical signs.
+- Bare Second / Third / Fourth are interval names: sekund / ters / kvart. Explicit finger ordinals use andre finger / tredje finger / fjerde finger. Fifth, sixth and seventh intervals: kvint, sekst, septim. Perfect: ren; major: stor; minor: liten, when describing intervals. Major/minor key or chord: dur/moll.
+- Beat = slag; bar/measure = takt; pulse = puls; downbeat = første slag; upbeat/offbeat = mellomslag, or oppslag when referring to strumming direction. Count-in = opptelling. Quarter note = firedelsnote; eighth note = åttedelsnote; half note = halvnote; whole note = helnote.
+- Fret = bånd; fretboard = gripebrett; fretting hand = gripehånd; picking hand = anslagshånd; open string = åpen streng; fingerboard position = posisjon. Bow = bue; bow stroke = buestrøk; down-bow/up-bow = nedstrøk/oppstrøk; bow hair = buehår.
+- Strum (noun) = anslag; strum (verb) = slå an; pick (object) = plekter; pick/pluck (verb) = knips/spill, according to technique. Fingerpicking = fingerspill; hammer-on and pull-off retain established teaching loanwords; slide = slide/glidning by context. Bend = bend; vibrato = vibrato.
+- Root = grunntone; tonic = tonika (harmonic function), grunntone where identifying the tonal home. Key = toneart. Scale degree = skalatrinn. Chord progression = akkordrekke. Voicing = akkordlegging. Inversion = omvending. Drone = bordun.
+- Quiz = quiz; challenge = utfordring; checkpoint = kontrollpunkt; whole song = hele sangen; full take = helt opptak; play along = spill med; listen = lytt.
+- Preserve traditional English song titles and Timbre Originals names consistently; translate descriptive subtitles, section labels and connecting prose. Titles that are exact-source proper names or genuinely identical Norwegian music terms are held for independent invariant approval, never changed just to evade copied-English detection. Lyric credits translate connecting words only; sung lyrics remain unchanged.
+
+### Additional course terminology from drafted batches 1–20
+- Natural note (no accidental) = tone uten fortegn; e.g. C natural = C uten fortegn. “Ren” is reserved for pitch accuracy/perfect intervals, not the accidental itself.
+- Bridge as an instrument part = stol; musical bridge section = bro. Nut = oversadel; tailpiece = strengeholder; endpin = pigg; scroll = snekke; bow frog = frosch; rosin = harpiks; fine tuner = finstemmer.
+- Slur = legatobue; slurred notes = bundne toner. Shift (bowed strings) = posisjonsskift; first/fourth position = første/fjerde posisjon. High/low 2 finger placements = høy/lav 2.
+- Mandolin course (paired strings) = kor/strengpar; subsequent numbered pair = par. Crosspicking = kryssplukking; chop = hugg; paired-string beats = svevninger.
+- Banjo roll = rull; forward roll = foroverrull; alternating thumb roll = rull med vekslende tommel; pinch = dobbeltknips; drone string = bordunstreng; banjo head = skinn.
+- Traditional song names generally remain original; established descriptive classical titles use Norwegian: Minuet in G = Menuett i G; Brahms' Lullaby = Brahms’ vuggesang. The Swan is consistently retained as the lesson's title in this draft.
+- D/U strumming patterns, p-i-m-a fingering letters, note lists, Roman numeral progressions, and numeric rhythm groupings are notation and stay unchanged. Every exact-source candidate is awaiting independent semantic approval.
+
+### Additional course terminology from drafted batches 21–38
+- Unison as a named interval = prim. The shared answer also appears under a two-voices question, so that question explicitly asks which interval the voices form; its explanatory prose still naturally uses “synge unisont”. This is a target-only contextual adaptation, not a source-key change.
+- Power chord = powerakkord throughout (including the late Originals and songbook units), matching the earlier lessons and interface anchor. Ordinary interval fifth remains kvint.
+- Solfège = solmisasjon; sung do/re/mi/fa/sol/la/ti syllables stay literal. The curriculum uses movable do, with do as hjemmetonen. Ninth interval = none; an answer meaning “none” is ingen, never none.
+- Triplet = triol; 1-trip-let becomes 1-tri-ol, preserving three equally spaced syllables and all digits. The swing exercise’s final syllable “let” correspondingly becomes “ol”. W/H scale-pattern codes remain literal, explicitly defined as W = heltone and H = halvtone in the question.
+- Time signature = taktart; tie = bindebue, distinct from slur = legatobue. Sixteenth = sekstendel; dotted = punktert. Rhythm exercise tap = trykk (screen), not klapp; explicit physical clapping remains klapp.
+- Bare Up/Down answers = Opp/Ned, usable for both pitch direction and physical picking direction. Shared One beat = Ett slag, usable for both duration and a missing beat.
+- Because bar and measure both translate as takt, the synonym quiz asks what the English music word “bar” means; its explanation names both English terms and the answer Measure remains Takt. Distractors Beat/Rest remain Slag/Pause.
+- Retained song-lyric options Fly/Wide/Boat/Town/Bethlehem identify actual words in the original sung verses; they are proposed exact-source candidates, not English UI leakage. Original lyric fragments in otherwise translated instructions remain unchanged to match the score.
+- Additional established/descriptive classical titles: Canon in D = Kanon i D; In the Hall of the Mountain King = I Dovregubbens hall; Morning Mood = Morgenstemning; The Blue Danube = Den blå Donau; Spring = Våren; Mozart’s Symphony No. 40 = Mozarts symfoni nr. 40; Carmen: Prelude = Carmen: forspill. These are used consistently in related prose. Originals brand/song names remain unchanged.
+- Chorus = refreng; refrain = omkvæd where the source distinguishes the labels; pre-chorus = førrefreng; medley = potpurri. Musical round = kanon, not the generic game round runde.
+
+### Mnemonic adaptations (target only, exact note order retained)
+- E A D G B E: Every Amateur Does Get Better Eventually → En Ape Danser Gjerne Bak Elefanten.
+- E A D G: Every Amp Drives Grooves → En Ape Danser Gjerne.
+- G D A E: Good Dogs Always Eat → Gode Dager Avler Energi (violin and mandolin).
+- C G D A: Cats Go Dancing Around → Celloer Gir Deg Applaus.
+- G C E A: Good Cooks Eat Apples → Gode Celloer Elsker Applaus.
+- E G B D F: Every Good Boy Does Fine → En Glad Bjørn Danser Fint; all individual-word references are updated consistently.
+- G B D F A: Good Boys Do Fine Always → Gode Bjørner Danser For Alle.
+- A C E G: All Cows Eat Grass → Alle Celloer Elsker Gitarer.
+- F A C E stays FACE, described explicitly as an English word. The introductory note-alphabet sentence says “Her bruker vi …” to make the curriculum’s B-not-H convention clear without claiming that all Norwegian notation follows it.
+
+The completed lesson draft is not independently reviewed or device-tested. Exact-source candidate reasons and source-context adaptation receipts are supplied separately in the author handoff; they are not invariant approvals.

@@ -172,4 +172,134 @@ Brand names Timbre, Timbre Pro, Pro, Apple, iPhone, iPad, Apple Watch, App Store
 Instrument course titles match catalogue instrument names. Ear Training, Music Theory, Rhythm and Singing match their existing localized Learn titles; Songs must match the Songs tab. Originals and Standards & Classics use existing localized course titles. Instrument Songbook titles use the localized instrument plus the existing localized Songbook term. Established public-domain song titles use their established local titles; other traditional titles stay English. Timbre Originals retain existing localized lesson titles. Every prose mention and leaderboard uses the exact lesson title. Lyric credits preserve names and years and translate connecting prose. Sung lyrics remain unchanged.
 
 ## 4. Words that mislead
-Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation is playing in tune over a drone, never octave/saddle adjustment. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.
+Tune as a verb means tuning, as a noun a melody. Sharp/flat on the tuner mean too high/low, not accidentals. Bar means measure; key means tonality. Pick means plectrum or plucking in music, choose in UI. Lock means a stable in-tune confirmation, not a padlock. Take is one recorded performance, not taking a lesson. Run means a practice streak or an uninterrupted passage, not running. Chart means an instrumental chord diagram/sheet unless progress statistics explicitly demand a graph. Intonation in the current Practice tool is octave/saddle setup (IntonationView.swift:4–6, 237–245). General lesson intonation still means pitch accuracy; translate by context. The manual’s contrary claim is stale. Practice is musical practice. Feel is haptic vibration, not emotion. A challenge to a friend differs from the unit's final challenge lesson; preserve context.
+
+## 5. Lesson draft decisions (2026-10-26; independent review pending)
+
+These are drafting decisions, not native-speaker or independent-review approval. The lesson TODO remains a draft. Exact-source candidates are held by the import helper and recorded separately; no artificial wording changes are made to bypass that gate.
+
+- Standard instrument spelling is **ukelele**, not the historical UI misspelling “oekelele”. The publisher independently verified and normalized the live UI on 2026-10-26. The bass course is **Basgitaar**; violin **Viool**; mandolin **Mandoline**.
+- Generic **Second / Third / Fourth** are interval answers: **Secunde / Terts / Kwart**. Their frozen TODO contexts still mention finger questions, but the publisher has migrated those calls to existing explicit finger keys. Explicit **First finger / Second finger / Third finger / Fourth finger / Little finger** remain **Eerste vinger / Tweede vinger / Derde vinger / Vierde vinger / Pink**. Do not translate generic interval keys as fingers because of stale context.
+- Major/minor: C-majeur, A-mineur. Spelled accidentals: F-kruis, B-mol; signs and literal chord symbols remain exactly as source. Compounds may read F-kruismineur. Dutch does not use German H substitution.
+- Root = grondtoon; scale degree = toonladdertrap; triad = drieklank; inversion = omkering; common tone = gemeenschappelijke toon. Major seventh interval = grote septiem; minor seventh interval = kleine septiem. Chords: groot septiemakkoord, mineurseptiemakkoord, dominantseptiemakkoord.
+- Fretboard = toets; nut = topkam; pickup (hardware) = element; pickup (musical lead-in) = opmaat. Picking/fretting hand = aanslaghand/grijphand. Rest stroke = apoyando-aanslag, explained physically on first use.
+- Pentatonic box = pentatonisch patroon (short: patroon); Dorian = dorisch; Mixolydian = mixolydisch. Count mnemonic one-e-and-a = één-e-en-e.
+- Hook = motief; fill = fill; lick = lick; turnaround = turnaround; walking bass = walking bass; palm muting, fingerpicking, Travis picking, hammer-on, pull-off, slide, bend, vibrato and groove are normal musical loanwords. Exact-source titles containing only such established terminology remain candidates for independent review, not automatically approved.
+- Chunk = gedempte aanslag. Reggae chop is described as a short, cut-off stroke; “reggaechop” is permitted as a compact compound label after the explanation. Strum down/up = neerslag/opslag or neer/op within a pattern. Literal D/DU/UDU patterns remain unchanged.
+- The arrangement terms use couplet, refrein, brug, coda and tussenspel. Intro, solo and outro are normal Dutch loanwords. Texture in arranging = klankbeeld.
+- Guitars: E A D G B E mnemonic = **Een Aap Die Geen Bananen Eet**. Ukelele G C E A = **Goede Chefs Eten Appels**. Bass E A D G = **Elke Aap Doet Gek**. These preserve the taught note-letter initials, rather than translating a mnemonic into useless initials.
+- Originals collection = **Eigen werk**. “A Timbre Original” = **een eigen nummer van Timbre**. Songs control remains **Nummers**. Songbook = **Liedjesboek**, matching the UI.
+- Public-domain titles localized when established: Ode to Joy → **Ode aan de vreugde**; Row, Row, Row Your Boat → **Vaar, vaar, vaar maar mee**; Twinkle, Twinkle, Little Star → **Twinkel, twinkel, kleine ster**. Other traditional titles encountered so far remain their original titles. Sung words and lyric snippets embedded in instructional hints remain unchanged; surrounding instruction is translated.
+
+### Original song titles established in the guitar draft
+
+Use these exact names in later courses and all prose mentions:
+
+| English title | Dutch draft title |
+|---|---|
+| Letters in a Shoebox | Brieven in een schoenendoos |
+| Dust on the Dashboard | Stof op het dashboard |
+| Low Tide Radio | Radio bij eb |
+| Kite Weather | Vliegerweer |
+| Halogen | Halogeen |
+| Ghost Light | Spooklicht |
+| Rust Belt Shuffle | Rustbeltshuffle |
+| Basement Weather | Kelderweer |
+| Glass Satellites | Glazen satellieten |
+| Porchlight | Verandalicht |
+| Neon Laundromat | Neonwasserette |
+| Saltwater Sunday | Zoutwaterzondag |
+| Spray Paint Sunrise | Zonsopkomst in spuitverf |
+| Sparkler Season | Sterretjesseizoen |
+| Gravel Road Two-Step | Two-step op de grindweg |
+| Lantern Hill | Lantaarnheuvel |
+| Roller Rink | Rolschaatsbaan |
+| Late Checkout | Laat uitchecken |
+| Market Day | Marktdag |
+| Slow Motion Strobe | Trage stroboscoop |
+| Jukebox Moon | Jukeboxmaan |
+
+### Bowed instruments, mandolin and banjo
+
+- For violin/cello, bridge = **kam**, peg = **stemsleutel**, bow = **strijkstok/stok**, frog = **slof**, tip = **punt**, bow hair = **haar**, rosin = **hars**, chinrest = **kinhouder**, scroll = **krul**, fine tuner = **fijnstemmer**, tailpiece = **staartstuk**, cello endpin = **pin**. These context-specific terms do not replace guitar brug/stemmechaniek.
+- Bow stroke = **streek**; downbow/upbow = **afstreek/opstreek**; slur = **legatoboog**, with **binden** as the verb. A rhythmic tie is **overbinding**, not a slur. Shift = **positiewissel**; left-hand frame = **handvorm**. High/low second finger = **hoge/lage 2** when the source uses digits. Natural C in finger-placement explanations = **C zonder voorteken**.
+- Violin/mandolin G D A E mnemonic: **Geef De Aap Eten**. Cello C G D A mnemonic: **Cellisten Geven Dagelijks Applaus**.
+- Mandolin paired courses = **snaarparen**, introduced also as **koren**; beating between close pitches = **zweving**. Chop descriptions remain **gedempte neerslag**; crosspicking and tremolo are established technique terms.
+- Banjo head = **vel**; thumbpick/fingerpick = **duimplectrum/vingerplectrum**. Rolls = **rolls**; alternating-thumb roll = **wisselduimroll**; forward roll = **voorwaartse roll**. Pinch and clawhammer remain technique labels. Mountain minor is a tuning/style label, not an instruction to lower a mountain; bum-ditty/bum, dit, ty retain their taught rhythm syllables.
+
+### Ear training, theory, rhythm and singing
+
+- Inner hearing = **innerlijk gehoor**; audiation = **audiatie**. Movable-do syllables retain **do re mi fa sol la ti**, including **ti** rather than substituting si. The lesson teaches those syllables explicitly; they do not replace letter-note notation elsewhere.
+- Interval terminology: prime, secunde, terts, kwart, kwint, sext, septiem, octaaf, none; major/minor = **groot/klein**; perfect = **rein**; diminished/augmented = **verminderd/overmatig**. The shared Unison answer is **Prime (unisono)**: current publisher contexts include both same-pitch voices and interval identification. Vocal prose uses **unisono** naturally.
+- Treble clef = **G-sleutel**, introduced also as **vioolsleutel**; bass clef = **F-sleutel/bassleutel**; staff = **notenbalk**; ledger line = **hulplijn**; spaces = **tussenruimtes**; middle C = **centrale C**.
+- Treble line mnemonic E G B D F: **Een Grote Beer Drinkt Fris**. Treble spaces F A C E retain **FACE**, explicitly explained as an English word. Bass lines G B D F A: **Grote Beren Drinken Fris Appelsap**. Bass spaces A C E G: **Alle Clowns Eten Groente**. Individual mnemonic-word choices preserve the corresponding initial.
+- Key signature = **vaste voortekens**; accidental in a bar = **toevallig voorteken**. The major-scale W/H formula remains literal notation, with W = hele toon and H = halve toon explained. Quiz distractor H remains H: it is not silently changed into a valid Dutch note name.
+- Bar and measure both translate to **maat**. To avoid a circular synonym quiz, the question explicitly asks **Wat betekent het Engelse muziekwoord “bar”?** and the explanation says **De Engelse woorden bar en measure betekenen allebei maat.** The body introduces the English labels; shared Measure/Beat/Rest answers remain Dutch. This is a recorded pedagogical localization adaptation, not untranslated UI.
+- Authentic cadence = **authentieke cadens**; plagal cadence = **plagale cadens**; half cadence = **halfslot**; deceptive cadence = **bedrieglijk slot**. Downbeat is contextually the first beat of a bar; on-beat contrasts with **tegentel** for offbeat. Syncopation = **syncope/syncopen**.
+- Triplet count 1-trip-let / 2-trip-let becomes **1-tri-ool / 2-tri-ool**, three equal spoken parts. The swing instruction refers to the final **ool**. Sixteenth counts use **één-e-en-e**; when source singles out the final a, Dutch explicitly says **de laatste e**.
+- Sung vowel ah = **aa**, loo = **loe**, da remains **da**. These are pronunciation cues, not song lyrics. Literal lyrics and lyric-answer choices such as Fly/Wide/Boat and Town/Thee retain their original sung words; the surrounding question/explanation is translated.
+- Power chord remains **powerchord** throughout, matching the pre-existing glossary and guitar course. Later draft powerakkoord variants were normalized in a separate author correction receipt, with historical batch bytes preserved. Handpalmdemping is a physical explanation of palm muting, not a separate technique.
+- Unit references in flowing lesson prose may read **onderdeel**; the existing UI Unit label is not changed by this lesson draft.
+
+### Further established and descriptive titles
+
+These are author draft choices for independent review. Title mentions follow the corresponding title key; sung words stay in their original language.
+
+| English | Dutch draft |
+|---|---|
+| Brahms' Lullaby | Brahms’ wiegenlied |
+| Minuet in G | Menuet in G |
+| The Swan | De zwaan |
+| The Carnival of the Animals | Het carnaval der dieren |
+| Frère Jacques | Vader Jacob |
+| Largo, New World Symphony | Largo, Uit de Nieuwe Wereld |
+| In the Hall of the Mountain King | In de hal van de bergkoning |
+| Silent Night | Stille nacht |
+| Mozart's Symphony No. 40 | Mozarts Symfonie nr. 40 |
+| O Christmas Tree | O dennenboom |
+| O Come, All Ye Faithful | Komt allen tezamen |
+| The Blue Danube | De blauwe Donau |
+| Can-can | Cancan |
+| Carmen: Prelude | Carmen: voorspel |
+| Morning Mood | Ochtendstemming |
+| Hark! The Herald Angels Sing | Hoor, de engelen zingen d'eer |
+| Holy, Holy, Holy | Heilig, heilig, heilig |
+| Abide with Me | Blijf mij nabij |
+| Spring | Lente |
+| The Four Seasons | De vier jaargetijden |
+
+### Remaining Original song titles
+
+| English title | Dutch draft title |
+|---|---|
+| Moth and Ember | Mot en sintel |
+| First Frost | Eerste vorst |
+| Hammock Season | Hangmatseizoen |
+| Glow-in-the-Dark Stars | Lichtgevende sterren |
+| Echo Canyon | Echokloof |
+| Open Windows | Open ramen |
+| Scoreboard Lights | Scorebordlichten |
+| Carousel at Closing Time | Draaimolen bij sluitingstijd |
+| Cedar Smoke | Cederrook |
+| Rain on the Skylight | Regen op het dakraam |
+| Pocket Change | Kleingeld |
+| Kitchen Slow Dance | Schuifelen in de keuken |
+| Houseplants | Kamerplanten |
+| Static on Channel Nine | Ruis op kanaal negen |
+| Boardwalk Comet | Boulevardkomeet |
+| Mile Marker Zero | Mijlpaal nul |
+| Last Bell | Laatste bel |
+| Copper Wire | Koperdraad |
+| Cold Lake | Koud meer |
+| Parking Lot Cathedral | Parkeerplaatskathedraal |
+| Keeper's Daughter | De dochter van de wachter |
+| Snow Globe Town | Stad in een sneeuwbol |
+| Thistle and Thread | Distel en draad |
+| Late Bus Home | Late bus naar huis |
+| Velvet Hour | Fluwelen uur |
+| Rooftop Choir | Dakkoor |
+| Bright Side of the Block | De zonnige kant van de straat |
+| Over You Soon | Straks ben ik over je heen |
+| Constellation Prize | Sterrenbeeldprijs |
+
+The source pun Constellation Prize/consolation prize does not transfer literally; the Dutch draft retains the constellation image. Independent review should assess this creative-title choice and the naturalness of the other newly coined Original titles. No native, legal, device, or independent semantic sign-off is asserted for these additions.
