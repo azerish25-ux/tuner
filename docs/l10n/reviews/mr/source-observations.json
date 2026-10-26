@@ -1,0 +1,110 @@
+[
+  {
+    "kind": "source_contradiction",
+    "finding": "Neon introduction says A7 throughout, but song contains E7 in chorus and B7/E7 bridge; guitar spotlight correctly says chorus drops to E7.",
+    "evidence": [
+      {
+        "batch": 47,
+        "id": "s079",
+        "key": "L5490c1ee9f",
+        "source": "Neon Laundromat stays on one chord, A7, the whole way through. A vamp like this lives on rhythm: tight, choppy strums at 96 beats per minute and a hook that dodges the beat.",
+        "translation": "Neon Laundromat पूर्ण वेळ एकाच A7 कॉर्डवर राहते. असा पुनरावृत्त व्हॅम्प लयीवर जगतो: प्रतिमिनिट 96 ठेक्यांनी नेमके, तुटक स्ट्रम आणि मुख्य ठेका चुकवत जाणारी लक्षवेधी चाल.",
+        "context": "Originals · Unit 4 · song orig-neon-laundromat “Neon Laundromat” · step 1 (explain) · lesson card text"
+      },
+      {
+        "batch": 7,
+        "id": "s094",
+        "key": "L08f08e985c",
+        "source": "Neon Laundromat is a Timbre Original: funk that sits on one chord, A7. Its hook slides from C to C sharp, the same rub your blues licks make, and its chorus drops to E7. The whole song is in Songs, under Originals.",
+        "translation": "Neon Laundromat हे Timbre चे मौलिक गाणे: A7 या एकाच कॉर्डवरील फंक. लक्षवेधी चाल C वरून C शार्पकडे सरकते—तुमच्या ब्लूज लिक्ससारखाच ताण—आणि मुखडा E7 कडे उतरतो. पूर्ण गाणे गाणीमधील मौलिक गाणी विभागात आहे.",
+        "context": "Guitar · Unit 12 · lesson gtr-12-spotlight “Song spotlight: Neon Laundromat” · step 1 (explain) · lesson card text"
+      }
+    ],
+    "curriculum_evidence": [
+      {
+        "file": "tools/curriculum/courses/originals.py",
+        "lines": "432–451",
+        "data": {
+          "NEON_V.chords": "A7 A7 A7 A7 A7 A7 A7 A7",
+          "NEON_C.chords": "A7 A7 E7 E7 A7 A7 E7 A7",
+          "NEON_SONG.Bridge.chords": "B7 B7 E7 E7 B7 B7 E7 E7"
+        }
+      },
+      {
+        "file": "tools/curriculum/courses/guitar_part2.py",
+        "lines": "233,305–321",
+        "data": {
+          "NEON_CHORUS": "[(A7, 2), (E7, 2), (A7, 2), (E7, 1), (A7, 1)]"
+        }
+      }
+    ],
+    "translation_status": "Preserves each source; requires source-level resolution, not silent Marathi-only correction."
+  },
+  {
+    "kind": "source_technique_ambiguity",
+    "finding": "G to G sharp can slide on string 3, but open B is on string 2; sliding into open B can mean melodic motion rather than a literal same-string slide.",
+    "evidence": [
+      {
+        "batch": 47,
+        "id": "s060",
+        "key": "Lcb89454ade",
+        "source": "Open B, D at fret 3, open E and back. Then G and G sharp on string 3, sliding into open B.",
+        "translation": "मोकळा B, फ्रेट 3 वर D, मोकळा E आणि परत. मग तार 3 वर G आणि G शार्प, सरकत मोकळ्या B कडे.",
+        "context": "Originals · Unit 4 · song orig-rust-belt-shuffle “Rust Belt Shuffle” · step 4 (notes) · hint under an exercise"
+      }
+    ],
+    "curriculum_evidence": [
+      {
+        "file": "tools/curriculum/courses/originals.py",
+        "lines": "463–467",
+        "data": {
+          "notes": [
+            "B3",
+            "D4",
+            "E4",
+            "E4",
+            "D4",
+            "B3",
+            "G3",
+            "G#3",
+            "B3"
+          ],
+          "quiz": "Bar two slides from G to G sharp. Which one belongs to E7?"
+        }
+      }
+    ],
+    "translation_status": "Retains sliding motion wording सरकत मोकळ्या B कडे without asserting a same-string slide. Full ambiguity remains for source review."
+  },
+  {
+    "kind": "source_technique_ambiguity",
+    "finding": "A sharp at string 3 fret 3 is followed by open B on string 2; a literal same-string finger slide cannot end on that open string.",
+    "evidence": [
+      {
+        "batch": 49,
+        "id": "s080",
+        "key": "L4b49795891",
+        "source": "A sharp sits between A and B, at fret 3 on string 3. It slides up into open B, the bluesy lift that gives gospel its sound.",
+        "translation": "A शार्प हा A आणि B यांच्या मध्ये, तार 3 वरील फ्रेट 3 वर आहे. तो वर मोकळ्या B कडे सरकतो; ब्लूजसारखी ही चढण गॉस्पेलचा बाज घडवते.",
+        "context": "Standards & Classics · Unit 1 · song std-down-by-the-riverside “Down by the Riverside” · step 3 (explain) · lesson card text"
+      }
+    ],
+    "curriculum_evidence": [
+      {
+        "file": "tools/curriculum/courses/songs_part3.py",
+        "lines": "137–139",
+        "data": {
+          "fretboard": "[(3, 2, 2), (3, 3, 3), (2, 0)]",
+          "notes": [
+            "B3",
+            "B3",
+            "A#3",
+            "B3",
+            "A3",
+            "G3"
+          ]
+        }
+      }
+    ],
+    "translation_status": "Retains melodic upward sliding wording वर मोकळ्या B कडे सरकतो rather than explicit same-string technique instruction; source ambiguity pending."
+  }
+]

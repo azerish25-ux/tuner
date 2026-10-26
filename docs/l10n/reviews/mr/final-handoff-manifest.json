@@ -1,0 +1,33 @@
+{
+  "files": {
+    "baseline.json": "0a43184b6fd80e517709558f03e443d047369e34e90d05083b399221f43abe72",
+    "checkpoint.json": "e0a9329319e82552cae73012907dd55d9d001e25a067afe5b50dc8c63c2c48c0",
+    "full-mechanical-qa.json": "e9bdbde2fa505dbed9281cc7dfcae91cc9020aa5a155b4a8fd143f3d66d589fd",
+    "reviewed-final-drafts.json": "38b7c81df2d79e34c299f3bd35b8bab7bac8bb52937cac814f77dc2616422853",
+    "reviewed-integration-map.json": "883807f2d679eeeaf911eabbc77bbdf7f85cd97f3cc634e98e78689d0684e1d1",
+    "reviewed-identity-candidates.json": "0b289e84b4992b2a07e6d3a0913fadb4bcd71e7768b53e3251c8db2d57de1dad",
+    "context-split-addendum.json": "278bbe5558ff21de79f7ae02a168d502aeea8b327ec0da2e7f4efa842e41f5ad",
+    "context-split-addendum-review.json": "0674abc0c2165fef8f3e2955b9c89180c3860bf3907fcc1a6d4e732d730328ec",
+    "early-independent-review.json": "ee9eb35b34223ca489d06ec578cb22d98a814e75594618a77c8d4c582d765642",
+    "late-independent-review.json": "11fa86dd59cb5483ae03b7557e095652d2162a64245c551dfa732eb7d43414ab",
+    "early-correction-acceptance.json": "b207eedf68d6441c99f5b40450871608a8dcfddf20432436e78548170ba5c590",
+    "late-final-correction-acceptance.json": "619ac3fa88cd1b3dfeff3014da952421b87ccc7a2fa1b4ee864c94911106883d",
+    "source-observations.json": "79de1f81ff866052e1b1f39ddc4d563925cbc4d20673d2f9cbf2a4ec2e274bcb",
+    "canonical_mr_todo": "663424f1fc0e81651885ada4d78d93ae086928ca84d3b2ce4ceede606db8f989",
+    "canonical_mr_glossary": "170e32223def3dcd35e3abe3c6c9ea8320a83224e7077b9180d9c61b24281bd3",
+    "mr-late-final-verification.json": "6cf307c5bb0f9248f553a8887d8273def823a4253bb3456050aaa3f8722dbdd8",
+    "early-correction-application-verification.json": "9e84d836775abaa7d21fd38b6011046ab7cd85fd089967a5477c4ca9ea2546a3",
+    "late-correction-application-verification.json": "055ef9dfae216126f1873cf31bc1f717baa19fcc8fe7af0cad73c713bffbe644",
+    "glossary-consistency-review.json": "603564bb9e185c70ed5b09505ad40c17fdcecd5fbb2a4767e2a1a015b6b0023c",
+    "glossary-final-correction-acceptance.json": "7ed25821f28bac6a5a35668cf4c8c128675bde64e45f6b0807edf4cc769e6d26",
+    "split-addendum-mechanical-qa.json": "67c14f6176a20523c443d935099b51abcd40686c546870eb9d36191d6f30d6fe"
+  },
+  "baseline_rows": 6080,
+  "integration_rows": 6082,
+  "opposite_author_reviewed_rows": 6082,
+  "corrected_baseline_rows": 133,
+  "identities_pending_parent_gate": 305,
+  "canonical_translated": 5775,
+  "source_observations": 3,
+  "final_state": "Complete: all 6082 integration targets independently reviewed and hash-verified; no pending translation-review actions. Parent owns identity gate/context delta integration and publication."
+}

@@ -1,0 +1,41 @@
+{
+  "commit": "a64f90722ae51369f6fbb0bae5a21525c340455f",
+  "workflow_run": 40270426747,
+  "artifact_id": 12628419302,
+  "artifact_sha256": "7bc9071497912b148ac5c2e8b4ab1127815dd768b0ac7f6518e3136ebea6fe67",
+  "review": "Direct visual inspection of actual simulator PNGs; AI inspection, not human/native or full accessibility certification",
+  "captures": [
+    {
+      "locale": "bg",
+      "screen": "welcome",
+      "artifact_file": "85946997-6C9C-4E70-9F77-E3CE2C01CBC6.png",
+      "sha256": "8ae548a45be7d16ec65d335e695648f6a302c8a5b108e63a4a2424a0b1f885aa",
+      "status": "verified_in_capture",
+      "observation": "Full welcome headline wraps without the former ellipsis at default text size."
+    },
+    {
+      "locale": "bg",
+      "screen": "tuner",
+      "artifact_file": "AC563965-E18B-4A23-B24A-EB7390BD8DAC.png",
+      "sha256": "cd52ceafb9fbe463ac150a6713f18156698d2f36670223278aa036631c05cf36",
+      "status": "partially_verified",
+      "observation": "Full instrument name wraps. Songs tab still English because its label depended on missing Learn text; source fallback repair is in progress."
+    },
+    {
+      "locale": "fa",
+      "screen": "welcome",
+      "artifact_file": "28C6D76E-1F1D-4A67-9F04-941F72DB5ED3.png",
+      "sha256": "1f26ce1b8532af80a25a4e83fbe23f488faed4a1a32634f6fc27db5397e849ca",
+      "status": "verified_in_capture",
+      "observation": "Ownership link begins with Persian and mixed Timbre Pro wording appears in intended reading order."
+    },
+    {
+      "locale": "bg",
+      "screen": "tuner-ax5",
+      "artifact_file": "06592CBB-DB69-4A92-B51C-A1D0F68B44CE.png",
+      "sha256": "e57c3a14b0a9564c3d0cd9569708d22e2bfb0feaf54ea68e2833e32e516c3dab",
+      "status": "unresolved",
+      "observation": "Full instrument name visible, but overall extreme text-size layout overlaps system/top content, truncates secondary labels and crowds lower controls. Scoped header checks are not full-screen accessibility approval."
+    }
+  ]
+}

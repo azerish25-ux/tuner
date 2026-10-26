@@ -1,0 +1,75 @@
+{
+  "reviewer": "AI author/reviewer B",
+  "review_type": "Independent AI lesson-terminology consistency review, not human/native/device certification or legal/platform verification",
+  "artifact": "authoring workspace/docs/l10n/glossary/mr.md",
+  "artifact_sha256": "53212c031776eb0f71d7263168db86f3645eefc5a09b4415e4a4c2ad951d821e",
+  "reviewed_scope": [
+    "Section 5 all thirteen clarification bullets",
+    "Sections 2D, 2E, 2F and 3 as relevant music/course cross-checks"
+  ],
+  "checks": [
+    {
+      "topic": "rhythmic_durations",
+      "result": "Accepted: duration note names are distinguished from interval degrees."
+    },
+    {
+      "topic": "steady_timing",
+      "result": "Accepted: one consistent tempo is not a motionless hand."
+    },
+    {
+      "topic": "physical_vs_pitch",
+      "result": "Accepted: pitch direction is not inferred physical string location."
+    },
+    {
+      "topic": "counting_syllables",
+      "result": "Accepted: short अन् and एक-इ-अन्-अ remain usable and preserve ASCII numbers."
+    },
+    {
+      "topic": "mnemonics_and_original_lyrics",
+      "result": "Accepted: English evidence remains contextual, not untranslated instructional prose."
+    },
+    {
+      "topic": "song_titles",
+      "result": "Accepted: stable original spelling when no verified established local title exists; identities require separate review."
+    },
+    {
+      "topic": "keyboard_harmony",
+      "result": "Accepted: पट्टी/की, त्रिस्वरी कॉर्ड, इन्व्हर्जन and notation distinctions."
+    },
+    {
+      "topic": "context_splits",
+      "result": "Accepted: frozen addendum independently reviewed separately; rhythm/list and finger/section contexts are now separate."
+    },
+    {
+      "topic": "unison_and_octave",
+      "result": "Accepted: युनिसन denotes identical pitch; English octave explanation does not give false etymology to सप्तक."
+    },
+    {
+      "topic": "dot_six_eight_steps",
+      "result": "Accepted: बिंदू/बिंदूयुक्त, two large beats vs six counts, pitch whole/half steps distinct from durations."
+    },
+    {
+      "topic": "spoken_rhythms",
+      "result": "Accepted: ता/ति-ति and 1-ता-कि keep usable subdivisions, swing on 1 and कि."
+    },
+    {
+      "topic": "chop_and_heavy_bow",
+      "result": "Section 5 accepted; conflicting older section D chop mapping requires reconciliation."
+    },
+    {
+      "topic": "interlude_carol_medley_dynamics",
+      "result": "Accepted: मध्यवादन, कॅरोल, गीतगुंफण and dynamic meanings distinct from instrument."
+    }
+  ],
+  "findings": [
+    {
+      "section": "2D, strum/downstroke/upstroke/chop/chunk/mute row",
+      "before": "| strum, downstroke, upstroke, chop, chunk, mute | Strumming and muted strokes | UI 21, lessons 120 | `Strum` | स्ट्रम / खालचा स्ट्रोक / वरचा स्ट्रोक / दाबलेला स्ट्रोक / दाबलेला स्ट्रोक / म्यूट | A muted stroke is judged as muted, not as a miss. |",
+      "before_sha256": "657e34cf9338c7fc4427f18cb23ef726f6c879366f248278a4f26b9b1d735195",
+      "proposed": "| strum, downstroke, upstroke, chop, chunk, mute | Strumming and muted strokes | UI 21, lessons 120 | `Strum` | स्ट्रम / खालचा स्ट्रोक / वरचा स्ट्रोक / तुटक स्ट्रोक / दाबलेला स्ट्रोक / म्यूट | A muted stroke is judged as muted, not as a miss. |",
+      "proposed_sha256": "008ef6b11eddc4347ac9eaed60385bbc5f44f8cb0308ba71bf725c5664460aa9",
+      "reason": "Old table still maps chop to दाबलेला स्ट्रोक, contradicting section 5 and reviewed reggae targets. Change only chop slot to तुटक स्ट्रोक; chunk is a separate term and not silently changed.",
+      "status": "parent_correction_pending"
+    }
+  ]
+}

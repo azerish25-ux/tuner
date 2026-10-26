@@ -74,4 +74,22 @@ final class LocalizationTests: XCTestCase {
         XCTAssertEqual(String(localized: "I already have Timbre Pro"), "از قبل Timbre Pro را دارم")
     }
 
+    @MainActor
+    func testSongsTabUsesInterfaceLanguageWhenCourseTextIsMissing() {
+        TimbreLocalization.language = "bg"
+        let missing = LearnCourse(id: "songs", title: LearnText(key: "TEST_MISSING_SONGS_TITLE", "Songs"),
+                                  subtitle: LearnText(""), instrument: nil, symbol: "music.note.list", accent: "mint", units: [])
+        XCTAssertEqual(SongsView.title(in: Curriculum(courses: [missing])), "Песни")
+        XCTAssertEqual(SongsView.title(in: Curriculum(courses: [])), "Песни")
+    }
+
+    @MainActor
+    func testSongsTabPreservesAnAvailableTranslatedCourseTitle() throws {
+        TimbreLocalization.language = "it"
+        let curriculum = try Curriculum.bundled()
+        let title = try XCTUnwrap(curriculum.course(id: "songs")?.title)
+        XCTAssertNotEqual(title.localized, title.defaultValue)
+        XCTAssertEqual(SongsView.title(in: curriculum), title.localized)
+    }
+
 }

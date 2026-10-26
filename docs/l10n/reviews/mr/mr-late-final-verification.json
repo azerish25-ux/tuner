@@ -1,0 +1,73 @@
+{
+  "verifier": "AI author/reviewer B",
+  "verified_utc": "2026-10-26T05:29:45.377987+00:00",
+  "scope": "Read-only final artifact/application verification, not a human/native/device certification and not source-fact repair.",
+  "late_accepted_targets_verified": 103,
+  "late_targets_all_match": true,
+  "glossary": {
+    "artifact": "authoring workspace/docs/l10n/glossary/mr.md",
+    "sha256": "170e32223def3dcd35e3abe3c6c9ea8320a83224e7077b9180d9c61b24281bd3",
+    "acceptance_artifact": "frozen Marathi draft package/glossary-final-correction-acceptance.json",
+    "acceptance_sha256": "7ed25821f28bac6a5a35668cf4c8c128675bde64e45f6b0807edf4cc769e6d26",
+    "final_row_sha256": "9ebbb91671cfded40431430121123d8c6f4fb13ab7c9018e01a70684671d1668",
+    "exact_accepted_chunk_and_chop_row_present": true,
+    "pending_glossary_findings": 0
+  },
+  "integration": {
+    "artifact": "frozen Marathi draft package/reviewed-integration-map.json",
+    "sha256": "883807f2d679eeeaf911eabbc77bbdf7f85cd97f3cc634e98e78689d0684e1d1",
+    "expected_original_rows": 6080,
+    "new_context_split_rows": 2,
+    "verified_rows": 6082,
+    "method": "Compare every integration source/target and hash to the final batch outputs plus four-row independently reviewed context split addendum; verify distinct author/reviewer metadata.",
+    "mismatches": []
+  },
+  "evidence": [
+    {
+      "path": "frozen Marathi draft package/early-independent-review.json",
+      "sha256": "ee9eb35b34223ca489d06ec578cb22d98a814e75594618a77c8d4c582d765642"
+    },
+    {
+      "path": "frozen Marathi draft package/early-guarded-corrections.json",
+      "sha256": "05971cda664e4e2105ef0e326da76cca64b9aea73e5b0822128659cfb987dc5e"
+    },
+    {
+      "path": "frozen Marathi draft package/early-correction-application-verification.json",
+      "sha256": "9e84d836775abaa7d21fd38b6011046ab7cd85fd089967a5477c4ca9ea2546a3"
+    },
+    {
+      "path": "frozen Marathi draft package/late-correction-acceptance.json",
+      "sha256": "6e39f1bc999656ab3a310c787f785de01926038bdf62624d35cae48a6af14241"
+    },
+    {
+      "path": "frozen Marathi draft package/late-correction-counterproposals.json",
+      "sha256": "d479b91661598694875c745f78bb190b799b32b8ad7b2570f43b9f8626acf085"
+    },
+    {
+      "path": "frozen Marathi draft package/late-supplemental-corrections.json",
+      "sha256": "35adc31028ef37cacd1bcb9ae20ef60d1fdde1579573a479a94bea9c81c911b6"
+    },
+    {
+      "path": "frozen Marathi draft package/late-tie-followup-acceptance.json",
+      "sha256": "a771531b15cae3e6a4ec8ce295f4943f5cf80fb69018ffd14cabbc215e6faad3"
+    },
+    {
+      "path": "frozen Marathi draft package/late-correction-application-verification.json",
+      "sha256": "055ef9dfae216126f1873cf31bc1f717baa19fcc8fe7af0cad73c713bffbe644"
+    },
+    {
+      "path": "frozen Marathi draft package/context-split-addendum-review.json",
+      "sha256": "0674abc0c2165fef8f3e2955b9c89180c3860bf3907fcc1a6d4e732d730328ec"
+    },
+    {
+      "path": "frozen Marathi draft package/glossary-consistency-review.json",
+      "sha256": "603564bb9e185c70ed5b09505ad40c17fdcecd5fbb2a4767e2a1a015b6b0023c"
+    },
+    {
+      "path": "frozen Marathi draft package/source-observations.json",
+      "sha256": "79de1f81ff866052e1b1f39ddc4d563925cbc4d20673d2f9cbf2a4ec2e274bcb"
+    }
+  ],
+  "open_source_observations": 3,
+  "pending_translation_review_actions": 0
+}

@@ -41,7 +41,8 @@ struct RootView: View {
             Tab("Tune", systemImage: "gauge.with.needle", value: AppTab.tune) { TuneView().underTabBar() }
             Tab("Learn", systemImage: "graduationcap", value: AppTab.learn) { LearnView().underTabBar() }
             // Songs sits beside Learn (both are the curriculum) and takes the centre of the bar. Its title is the
-            // Songs course's own, already translated in every language. Instruments are chosen from the tuner's picker.
+            // translated course title, or the interface translation while that locale's lessons are unfinished.
+            // Instruments are chosen from the tuner's picker.
             Tab(SongsView.title(in: store.curriculum), systemImage: "music.note.list", value: AppTab.songs) { SongsView().underTabBar() }
             // The metronome, drone, chords, scales and ear games: practice, not a game controller's "Play".
             Tab("Practice", systemImage: "metronome", value: AppTab.practice) { PracticeView().underTabBar() }

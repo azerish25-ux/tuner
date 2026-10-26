@@ -47,7 +47,7 @@ final class LocalizationMatrixUITests: XCTestCase {
             application.launch()
             let tabs = application.tabBars.firstMatch
             XCTAssertTrue(tabs.waitForExistence(timeout: 30), "\(language): tabs did not appear")
-            for field in ["tune", "learn", "progress"] {
+            for field in ["tune", "learn", "songs", "practice", "progress"] {
                 let value = try XCTUnwrap(labels[field])
                 XCTAssertTrue(tabs.buttons[value].exists, "\(language): missing translated tab \(field)")
             }

@@ -1,0 +1,58 @@
+{
+  "source_artifact": "frozen Marathi draft package/context-split-addendum.json",
+  "source_artifact_sha256": "278bbe5558ff21de79f7ae02a168d502aeea8b327ec0da2e7f4efa842e41f5ad",
+  "reviewer": "AI author/reviewer B",
+  "reviewer_type": "independent AI review only",
+  "rows": [
+    {
+      "key": "Lf94a998e29",
+      "source": "Strings: 1, 2, 3 and 4",
+      "translation": "तारा: 1, 2, 3 आणि 4",
+      "kind": "new",
+      "context_guard": "enumeration of physical strings; conjunction not timed counting",
+      "source_sha256": "a9c0f5eaf3a697599b3602ce970b13b1f3fbfa5800b0f02cee313043a39f4d1a",
+      "translation_sha256": "695a148034b3e62e182aebcc58ff20d8118cc12c05cf59c70f09002c1a01227d",
+      "reviewer": "AI author/reviewer B",
+      "review_status": "accepted",
+      "review_reason": "Physical string enumeration explicitly uses तारा and ordinary conjunction आणि; digits and list order preserved."
+    },
+    {
+      "key": "L4f162aedb4",
+      "source": "Middle section",
+      "translation": "मधला भाग",
+      "kind": "new",
+      "context_guard": "song section, not finger",
+      "source_sha256": "3bb8d1b80c1fb7c14b7404bf6e3c408d1f07d8022175ee18f2667497b875255f",
+      "translation_sha256": "7995624102aff7d7f05cc4e29b3be5adddda21c1f6d3b694b36257c1c2eff9f6",
+      "reviewer": "AI author/reviewer B",
+      "review_status": "accepted",
+      "review_reason": "मधला भाग correctly names a middle song section, without finger meaning."
+    },
+    {
+      "key": "Lf6586312d9",
+      "source": "1, 2, 3 and 4",
+      "before": "1, 2, 3 आणि 4",
+      "translation": "1, 2, 3 अन् 4",
+      "kind": "retained_key_correction",
+      "context_guard": "rhythmic count only after split; short spoken subdivision",
+      "source_sha256": "faa94c6c64f21a16db578795be5c586e5dc33af7abb741e0f4ddeab86f7fbd89",
+      "translation_sha256": "59b49a8b40b5392721ce14789acb3c258505e233af9e78be55f1aa564fefedfd",
+      "reviewer": "AI author/reviewer B",
+      "review_status": "accepted",
+      "review_reason": "After context split, rhythmic count correctly uses short spoken अन् rather than list conjunction; ASCII digits, order and punctuation preserved."
+    },
+    {
+      "key": "Lced02810fc",
+      "source": "Middle",
+      "before": "मधले बोट",
+      "translation": "मधले बोट",
+      "kind": "retained_key_confirmation",
+      "context_guard": "middle finger only after split",
+      "source_sha256": "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+      "translation_sha256": "896bd0dc8016b376035164a846a5835c5c553ae21aac2c8ab0a36d3461febdc3",
+      "reviewer": "AI author/reviewer B",
+      "review_status": "accepted",
+      "review_reason": "After context split, Middle refers only to finger; मधले बोट is accurate."
+    }
+  ]
+}

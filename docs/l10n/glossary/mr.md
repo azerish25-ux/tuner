@@ -20,7 +20,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Units | सेंट्स; मिनिटे; सेकंद; मिलिसेकंद. Hz, BPM, ¢, XP unchanged |  |
 | Capitalization | No case; preserve brand spelling |  |
 | Note names in the interface | Runtime supplies notes; do not invent them |  |
-| Note names in lessons (lesson languages only) | Not a lesson locale; retain C, F♯, B♭, Em, G7 if referenced |  |
+| Note names in lessons (lesson languages only) | Lessons are required; retain C, F♯, B♭, Em, G7 if referenced |  |
 | Sharp / flat / double sharp / double flat as words | शार्प / फ्लॅट / डबल शार्प / डबल फ्लॅट |  |
 | Tuning direction | कमी / जास्त for tuner direction; not accidentals |  |
 | iOS Settings path (legal text) | सेटिंग्ज › Apple खाते › सदस्यता. AI-reviewed; device verification pending |  |
@@ -60,7 +60,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | Chord view / Neck view | What VoiceOver calls the Show me switch | VoiceOver | `Chord view`, `Neck view` | कॉर्ड दृश्य / नेक दृश्य |  |
 | Show me | The 3D demonstration of a chord or notes on the neck | lessons | `Show me` | दाखवा | Sits on a small capsule: short. |
 | Strum to tune | One strum reads every string at once | tuner, listing | `Strum to tune` | ट्यून करण्यासाठी स्ट्रम करा |  |
-| Tune by feel / Feel | The phone pulses with the beat between the string and its note, slower as they meet, still at the lock | tuner, settings | `Tune by feel`, `Feel` | कंपनांनी ट्यून करा / कंपन अनुभवा | "Feel it", "Feel the beat" use the same sense. |
+| Tune by feel / Feel | The phone pulses with the beat between the string and its note, slower as they meet, still at the lock | tuner, settings | `Tune by feel`, `Feel` | कंपनांनी ट्यून करा / कंपन | "Feel it", "Feel the beat" use the same sense. |
 | Bullseye | The pitch game (hit the centre ring); also leaderboard names | Practice, Game Center | `Bullseye` | अचूक नेम | Every current table translates it (de Volltreffer, fr Tir parfait, ja ど真ん中, ru В яблочко …) although HANDOFF.md says to keep game names. Decide once; every string naming the game ("Win a round of Bullseye", "Score 2,000 in Bullseye") uses this. |
 | Ear trainer / Ear training | The ear games and the ear course | Practice, Learn | `Ear training` | कानाचा सराव |  |
 | Drone | A sustained reference tone to play or sing against | Practice, lessons | `Drone` | आधार स्वर | de Bordun, fr Bourdon, es Nota pedal, ja ドローン (current tables). |
@@ -109,7 +109,7 @@ Every row is mandatory. The "Current table" hints come from reading the shipped 
 | half step, whole step, interval, third, fifth, octave |  | lessons | `Octave` | अर्धा स्वर / पूर्ण स्वर / स्वरांतर / तृतीय / पंचम / सप्तक |  |
 | bar | A measure (bar 2 of the song); not a UI bar | UI 7, lessons 167 | `Bar %lld` | बार |  |
 | beat, tempo, downbeat, count |  | UI 29, lessons 251 | `Tempo` | ठेका / टेम्पो / पहिला ठेका / मोजणी |  |
-| strum, downstroke, upstroke, chop, chunk, mute | Strumming and muted strokes | UI 21, lessons 120 | `Strum` | स्ट्रम / खालचा स्ट्रोक / वरचा स्ट्रोक / दाबलेला स्ट्रोक / दाबलेला स्ट्रोक / म्यूट | A muted stroke is judged as muted, not as a miss. |
+| strum, downstroke, upstroke, chop, chunk, mute | Strumming and muted strokes | UI 21, lessons 120 | `Strum` | स्ट्रम / खालचा स्ट्रोक / वरचा स्ट्रोक / तुटक स्ट्रोक / चंक (नाद लगेच थांबवणारा स्ट्रम) / म्यूट | A muted stroke is judged as muted, not as a miss. |
 | pick | A plectrum, or picking strings; in UI often "choose" | UI 8, lessons 77 |  | पिक (plectrum); निवडा (choose); तार वाजवा (picking) | Translate by sense; check `context`. |
 | fingerpicking, hammer-on, pull-off, slide, bend, vibrato | Techniques | lessons |  | फिंगरपिकिंग / हॅमर-ऑन / पुल-ऑफ / स्लाइड / बेंड / व्हायब्रेटो | Use the terms guitar teachers in the language use; loanwords are fine where usual. |
 | bowing, open-string bowing | Violin and cello | lessons |  | बोने वाजवणे / मोकळ्या तारेवर बो फिरवणे |  |
@@ -187,3 +187,19 @@ Write the translation that applies in Timbre, and the one GPT must avoid.
 | Next, Again, Slower | on-screen labels and also Siri command words (`ios/Timbre/Intents/PracticeIntents.swift`): one translation serves both | — | पुढे / पुन्हा / हळू | Use the sense above |
 | Practice | the tab and the activity | a medical or legal practice | सराव | a medical or legal practice |
 | Feel | the haptic tuning feature, feeling the beat | emotions | कंपन अनुभवा (haptics; not emotion) | emotions |
+
+## 5. Lesson-drafting clarifications (AI draft, 2026-10-26)
+
+- Rhythmic durations: whole/half/quarter/eighth/sixteenth note = होल/हाफ/क्वार्टर/एट्थ/सिक्स्टीन्थ नोट. These are durations, not pitch intervals. Interval degrees use तृतीय, चतुर्थ, पंचम, षष्ठ, सप्तम, नवम; major/minor qualities remain मेजर/मायनर.
+- Steady beat/tempo means एकसारखी लय/गती, not a motionless hand. A physically still hand can be स्थिर; keep a strumming hand moving when the instruction says so.
+- High/low pitch is उंच/खालचा स्वर. Thick/thin strings are जाड/पातळ तारा; never infer their physical location from pitch words. “Top strings” in these guitar voicings means the thin, higher-pitched strings.
+- Timed counting uses pronounceable short अन् for the English subdivision syllable “and”: एक-अन्-दोन-अन्; sixteenths एक-इ-अन्-अ. Explanatory prose may name the “आणि” subdivision. Preserve ASCII numbers where the source uses digits.
+- English initial-letter mnemonics stay as examples introduced by Marathi prose; do not invent Marathi initials that fail to match the note letters. Original sung words stay unchanged only as quoted lyric examples, with surrounding instruction translated.
+- Standard song names without a verified established Marathi title are kept in their original spelling consistently; all descriptive title additions and prose are Marathi. Bare original names, credits and notation are identity candidates for separate independent semantic review, not automatic coverage claims.
+- Keyboard key = पट्टी; tonal key = की. Triad = त्रिस्वरी कॉर्ड; inversion = इन्व्हर्जन; root = मूळ स्वर; pentatonic box = पेंटाटोनिक पॅटर्न. Roman chord numerals and literal fingering letters p, i, m, a stay unchanged.
+- Shared counts/list labels and ambiguous Middle finger/section keys require the parent context-split migration; do not make one context-specific wording silently serve incompatible uses.
+- Unison = युनिसन (two sounds at exactly the same pitch), not a label for monophonic texture. When explaining the English word “octave” via eight letters, name the English word explicitly: Marathi सप्तक must not be given that false etymology.
+- Rhythmic dot/dotted = बिंदू / बिंदूयुक्त; a dot lengthens a note by half its value. Six-eight = सहा-आठ तालमाप; its six subdivision counts are not six large beats. Whole/half steps are पूर्ण स्वर / अर्धा स्वर distances, not rhythmic note values.
+- Spoken rhythm examples can use ता, ति-ति for long/short-short; triplets use 1-ता-कि, with swing on 1 and कि. Keep the beat count and subdivision timing intact.
+- Reggae chop = तुटक स्ट्रोक, describing a short, clipped articulation, not increased fretting pressure. Cello “heavy bow” means adding weight to the stroke, not choosing a heavier bow.
+- Interlude (song section) = मध्यवादन; carol = कॅरोल; medley = गीतगुंफण. Dynamics piano/forte are सौम्य आवाज / मोठा आवाज (पियानो / फोर्ते), not the piano instrument.

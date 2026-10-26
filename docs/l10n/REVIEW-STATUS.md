@@ -213,3 +213,19 @@ Initial logs/result bundles remain preserved; completion markers must come entir
 from the successful attempt. Local validation: 102 localization tests plus workflow
 YAML/shell syntax pass. This does not turn the earlier failed run into a pass; fresh
 simulator execution remains required.
+
+## Marathi and navigation fallback checkpoint
+
+Marathi now includes all 6,082 current lesson strings, with source/final hashes,
+opposite-author per-row review, 133 accepted corrections and 305 source-bound
+invariant decisions checked before import. Review evidence is in `reviews/mr/`.
+
+Direct inspection of actual a64f907 simulator captures confirms the earlier Bulgarian
+headline/instrument wrapping and Persian ownership-link corrections at default text
+size. It also exposed an English Songs tab where lesson content is absent: the tab
+now uses the interface translation when the course name falls back to English, while
+preserving an available translated course name. The matrix checks all five tabs, and
+app tests cover fallback and retained course-title behavior. New simulator verification
+is still required. The extreme AX5 tuner screenshot shows broader overlap/truncation
+that remains unresolved; passing a scoped header check is not full-screen approval.
+Evidence: `visual-review/launch-a64f907.json`.

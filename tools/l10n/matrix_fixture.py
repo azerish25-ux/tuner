@@ -15,6 +15,8 @@ KEYS = {
     'start': 'Get started',
     'tune': 'Tune',
     'learn': 'Learn',
+    'songs': 'Songs',
+    'practice': 'Practice',
     'progress': 'Progress',
 }
 
@@ -75,6 +77,12 @@ def fixture(locales):
                 raise ValueError(f'{locale}: untranslated matrix field {field}')
             values[field] = value
         values.update(lesson_expectations(locale))
+        # Mirror SongsView.title: preserve a translated course title (e.g. Italian Canzoni),
+        # otherwise use the UI table rather than the curriculum's English fallback.
+        course = report.read_strings(report.RES / f'{locale}.lproj/Learn.strings').get('Le1404b4267')
+        source_course = report.read_strings(report.RES / 'en.lproj/Learn.strings').get('Le1404b4267', 'Songs')
+        if course and course != source_course:
+            values['songs'] = course
         result[locale] = values
     return result
 

@@ -33,7 +33,7 @@ class MatrixFixtureTests(unittest.TestCase):
         result = matrix_fixture.fixture(['fa'])
         self.assertEqual(result['fa']['headline'], values[matrix_fixture.KEYS['headline']])
         self.assertIn('\n', result['fa']['headline'])
-        self.assertEqual(len(result['fa']), 7)
+        self.assertEqual(len(result['fa']), 9)
         self.assertEqual(result['fa']['lesson_status'], 'pending')
 
     def write_lessons(self, locale, entries):
@@ -96,6 +96,20 @@ class MatrixFixtureTests(unittest.TestCase):
             matrix_fixture.validate_log(expected, 'TIMBRE_L10N_MATRIX_TESTED bg\nTIMBRE_L10N_LESSON_TESTED bg\n')
         with self.assertRaises(ValueError):
             matrix_fixture.validate_log({'bg': {'lesson_status': 'unknown'}}, '')
+
+    def test_songs_uses_ui_without_translated_course(self):
+        self.write_table('bg', {key: 'localized ' + key for key in matrix_fixture.KEYS.values()})
+        self.assertEqual(matrix_fixture.fixture(['bg'])['bg']['songs'], 'localized Songs')
+
+    def test_songs_preserves_translated_course_title(self):
+        self.write_table('it', {key: 'localized ' + key for key in matrix_fixture.KEYS.values()})
+        source = {key: 'Source text' for key in matrix_fixture.LESSON_KEYS.values()}
+        self.write_lessons('en', dict(source, Le1404b4267='Songs'))
+        target = {key: 'testo tradotto' for key in source}
+        self.write_lessons('it', dict(target, Le1404b4267='Canzoni'))
+        self.assertEqual(matrix_fixture.fixture(['it'])['it']['songs'], 'Canzoni')
+        self.write_lessons('it', dict(target, Le1404b4267='Songs'))
+        self.assertEqual(matrix_fixture.fixture(['it'])['it']['songs'], 'localized Songs')
 
     def test_unknown_locale_rejected(self):
         with self.assertRaisesRegex(ValueError, 'Unknown locale'):

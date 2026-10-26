@@ -119,9 +119,13 @@ struct SongsView: View {
     /// The tune's other versions shown as badges under a tile's sleeve; "+2" for the rest.
     private var versionLimit: Int { sizeClass == .regular ? 3 : 2 }
 
-    /// The tab's title: the Songs course's own, translated with the curriculum.
+    /// Prefer the translated course name; unfinished lesson content must not make an otherwise localized tab English.
     static func title(in curriculum: Curriculum) -> String {
-        curriculum.course(id: "songs")?.title.localized ?? "Songs"
+        if let title = curriculum.course(id: "songs")?.title {
+            let localized = title.localized
+            if localized != title.defaultValue { return localized }
+        }
+        return String(localized: "Songs")
     }
 
     var body: some View {
