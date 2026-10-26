@@ -273,3 +273,14 @@ hashes remain historical, not rewritten to pretend they cover later spelling cha
 Swedish, Danish, Norwegian and Romanian authoring work. These drafts are not imported
 or included in the completed-language count. Its verifier checks hashes and source
 bindings, not translation quality. Work created after each snapshot remains ongoing.
+
+## Accessibility-size tuner layout candidate
+
+The observed AX5 screen overflow is addressed with a vertically scrollable layout
+at accessibility text sizes instead of squeezing header, stage and readout into a
+fixed screen-height stack. The normal-size arrangement is unchanged. Tuning captions,
+status and quest text can wrap, and the string-end labels retain their full height.
+The matrix now requires the AX5 status and string rail to be reachable above the tab
+bar and captures both after scrolling. This is an implementation candidate: actual
+Xcode/simulator execution and fresh visual inspection are still required. It does not
+resolve or waive the separate contrast findings elsewhere in the app.

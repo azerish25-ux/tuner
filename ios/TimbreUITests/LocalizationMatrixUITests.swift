@@ -67,6 +67,7 @@ final class LocalizationMatrixUITests: XCTestCase {
                 XCTAssertTrue(instrument.waitForExistence(timeout: 30))
                 capture(application, name: "l10n-\(language)-tuner-ax5")
                 try assertInstrumentFits(application)
+                try assertAccessibleTunerCanScroll(application, language: language)
                 application.terminate()
             }
             print("TIMBRE_L10N_MATRIX_TESTED \(language)")
@@ -104,6 +105,24 @@ final class LocalizationMatrixUITests: XCTestCase {
         tune.tap() // Keep the subsequent accessibility-size tuner launch on the same tab.
         XCTAssertTrue(app.buttons["tune.instrument"].waitForExistence(timeout: 15), "\(language): tuner did not reopen")
         print("TIMBRE_L10N_LESSON_TESTED \(language)")
+    }
+
+    /// Large localized text must remain reachable, not be squeezed into a screen-height stack.
+    private func assertAccessibleTunerCanScroll(_ app: XCUIApplication, language: String) throws {
+        let scroll = app.scrollViews["tune.accessible.scroll"].firstMatch
+        XCTAssertTrue(scroll.waitForExistence(timeout: 10), "Accessibility tuner must scroll")
+        let tabBar = app.tabBars.firstMatch
+        for identifier in ["tune.status", "tune.string.rail"] {
+            let target = app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+            for _ in 0..<10 {
+                if target.exists && target.isHittable && target.frame.maxY <= tabBar.frame.minY { break }
+                scroll.swipeUp(velocity: .slow)
+            }
+            XCTAssertTrue(target.exists && target.isHittable, "\(identifier) must be reachable at AX5")
+            XCTAssertGreaterThanOrEqual(target.frame.minY, app.frame.minY, "\(identifier) above viewport")
+            XCTAssertLessThanOrEqual(target.frame.maxY, tabBar.frame.minY, "\(identifier) behind tab bar")
+            capture(app, name: "l10n-\(language)-ax5-\(identifier)")
+        }
     }
 
     private func assertInstrumentFits(_ app: XCUIApplication) throws {

@@ -48,30 +48,47 @@ struct TuneView: View {
             StageBackground()
             PitchAura(latch: latch, listening: audio.running).allowsHitTesting(false)
             GeometryReader { proxy in
-                let arrangement = TuneArrangement(size: proxy.size, regular: regularWindow)
-                let pane = TuneArrangement.showsPane(arrangement, size: proxy.size, regularWidth: horizontalSizeClass == .regular,
-                                                     largeType: dynamicTypeSize.isAccessibilitySize)
-                let scale = TuneArrangement.readout(arrangement, size: proxy.size, regular: regularWindow, pane: pane,
-                                                    largeType: dynamicTypeSize.isAccessibilitySize)
-                VStack(spacing: 0) {
-                    // Over the stage: nothing the stage lets spill past its top ever takes the header's taps.
-                    header.zIndex(1)
-                    // One layout that changes shape rather than two branches: the stage keeps its identity when the
-                    // window turns or resizes, so the 3D instrument carries on instead of being rebuilt, losing its
-                    // loaded model and showing the studio stand-in (or nothing) while it loads again.
-                    arrangement.layout {
-                        stage(controls: arrangement != .columns)
-                            // The iPad's landscape columns: the instrument keeps a gutter off the screen's leading edge, so
-                            // the whole-headstock close-up never presses its buttons against it.
-                            .padding(.leading, arrangement == .columns ? TuneArrangement.stageLead : 0)
-                            .frame(width: arrangement == .columns ? TuneArrangement.stageWidth(in: proxy.size.width, pane: pane) : nil)
-                            .frame(maxWidth: arrangement == .beside ? CGFloat.infinity : nil, maxHeight: .infinity)
-                        panel(arrangement, width: proxy.size.width, scale: scale)
-                        if pane { sidePane(arrangement, width: proxy.size.width, scale: scale) }
-                        if arrangement == .columns { controlRail }
+                if dynamicTypeSize.isAccessibilitySize {
+                    // Large localized text needs its measured height, not a share of a fixed-height screen.
+                    // Scrolling keeps the header, controls, readout and string rail reachable without overlap.
+                    ScrollView {
+                        VStack(spacing: 16) {
+                            header
+                            stage(controls: true)
+                                .frame(height: max(320, min(480, proxy.size.width * 0.9)))
+                            tuningPanel(.phone)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.bottom, 24)
                     }
+                    .accessibilityIdentifier("tune.accessible.scroll")
+                } else {
+                    let arrangement = TuneArrangement(size: proxy.size, regular: regularWindow)
+                    let pane = TuneArrangement.showsPane(arrangement, size: proxy.size, regularWidth: horizontalSizeClass == .regular,
+                                                         largeType: dynamicTypeSize.isAccessibilitySize)
+                    let scale = TuneArrangement.readout(arrangement, size: proxy.size, regular: regularWindow, pane: pane,
+                                                        largeType: dynamicTypeSize.isAccessibilitySize)
+                    VStack(spacing: 0) {
+                        // Over the stage: nothing the stage lets spill past its top ever takes the header's taps.
+                        header.zIndex(1)
+                        // One layout that changes shape rather than two branches: the stage keeps its identity when the
+                        // window turns or resizes, so the 3D instrument carries on instead of being rebuilt, losing its
+                        // loaded model and showing the studio stand-in (or nothing) while it loads again.
+                        arrangement.layout {
+                            stage(controls: arrangement != .columns)
+                                // The iPad's landscape columns: the instrument keeps a gutter off the screen's leading edge, so
+                                // the whole-headstock close-up never presses its buttons against it.
+                                .padding(.leading, arrangement == .columns ? TuneArrangement.stageLead : 0)
+                                .frame(width: arrangement == .columns ? TuneArrangement.stageWidth(in: proxy.size.width, pane: pane) : nil)
+                                .frame(maxWidth: arrangement == .beside ? CGFloat.infinity : nil, maxHeight: .infinity)
+                            panel(arrangement, width: proxy.size.width, scale: scale)
+                            if pane { sidePane(arrangement, width: proxy.size.width, scale: scale) }
+                            if arrangement == .columns { controlRail }
+                        }
+                    }
+                    .frame(width: proxy.size.width, height: proxy.size.height)
                 }
-                .frame(width: proxy.size.width, height: proxy.size.height)
             }
             CelebrationOverlay()
         }
@@ -244,11 +261,15 @@ struct TuneView: View {
     @ViewBuilder private var tuningLine: some View {
         if store.referenceMode {
             Text("Any note · A4 \(Int(store.settings.referencePitchHz)) Hz")
-                .font(.footnote).foregroundStyle(Palette.inkSoft).lineLimit(1)
+                .font(.footnote).foregroundStyle(Palette.inkSoft)
+                .lineLimit(dynamicTypeSize.isAccessibilitySize ? nil : 1)
+                .fixedSize(horizontal: false, vertical: dynamicTypeSize.isAccessibilitySize)
         } else {
             TuningMenu(onNewCustom: { creatingTuning = true }) {
                 HStack(spacing: 4) {
-                    Text("\(store.tuning.name.localized) · A4 \(Int(store.settings.referencePitchHz)) Hz").lineLimit(1)
+                    Text("\(store.tuning.name.localized) · A4 \(Int(store.settings.referencePitchHz)) Hz")
+                        .lineLimit(dynamicTypeSize.isAccessibilitySize ? nil : 1)
+                        .fixedSize(horizontal: false, vertical: dynamicTypeSize.isAccessibilitySize)
                     Image(systemName: "chevron.up.chevron.down").font(.caption2.weight(.bold)).accessibilityHidden(true)
                 }
                 .font(.footnote).foregroundStyle(Palette.inkSoft)
@@ -437,6 +458,9 @@ struct TuneView: View {
     private func statusText(_ words: String, color: Color, quiet: Bool, hidden: Bool, large: Bool) -> some View {
         let font: Font = large ? Font.callout.weight(.semibold) : Font.footnote.weight(.semibold)
         return Text(verbatim: quiet ? " " : words).font(font)
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: dynamicTypeSize.isAccessibilitySize)
+            .padding(.horizontal, dynamicTypeSize.isAccessibilitySize ? Metrics.gutter : 0)
             .foregroundStyle(color)
             .monospacedDigit()
             // The words swap in one frame; only the fade is animated, so two lines never blend into one.
@@ -511,6 +535,7 @@ struct TuneView: View {
             // Chromatic has no strings to quest over; the simple tuner has no quest line.
             if !store.referenceMode && !store.settings.simpleTuner { questLine }
             StringRail(motion: motion, latch: latch).opacity(store.referenceMode ? 0 : 1).frame(height: store.referenceMode ? 8 : nil)
+                .accessibilityIdentifier("tune.string.rail")
         }
         .padding(.bottom, 8)
     }
@@ -520,10 +545,14 @@ struct TuneView: View {
         let quest = store.quests.first { $0.kind == .tuneAll }
         let counter = quest.map { store.questCounter($0) }
         let done = counter?.done ?? min(store.lockedCourses.count, store.courses.count), total = counter?.total ?? store.courses.count
-        return HStack(alignment: .firstTextBaseline, spacing: 6) {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 6))
+            : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 6))
+        return layout {
             // "Quest" is a side goal; "Today" is the three-activity set.
             Text("Quest · tune every string").foregroundStyle(contrast == .increased ? Palette.ink : Palette.inkSoft)
-                .font(.caption).lineLimit(1).minimumScaleFactor(0.8)
+                .font(.caption).lineLimit(dynamicTypeSize.isAccessibilitySize ? nil : 1)
+                .fixedSize(horizontal: false, vertical: dynamicTypeSize.isAccessibilitySize)
             // Strings, not chips: a mandolin's four ×2 chips count as 8. Reads "3 of 6".
             Text.fraction(done, total).font(.caption.weight(.bold)).foregroundStyle(Palette.ink).monospacedDigit()
                 .fixedSize()

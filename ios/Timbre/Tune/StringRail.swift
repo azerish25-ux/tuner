@@ -64,7 +64,8 @@ struct StringRail: View {
         }
         .font(.caption2.weight(.medium))
         .foregroundStyle(color)
-        .lineLimit(1)
+        .lineLimit(nil)
+        .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, Metrics.gutter + 4)
         .accessibilityHidden(true)
     }
