@@ -393,7 +393,8 @@ struct SongPerformStep: View {
     private var lyricRow: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 30, paused: phase != .playing)) { _ in
             let beat = lyricBeat(CACurrentMediaTime())
-            HighwayLyrics(sheet: lyrics, beat: beat, accent: accent, section: sectionName(atBeat: beat))
+            HighwayLyrics(sheet: lyrics, beat: beat, accent: accent, section: sectionName(atBeat: beat),
+                          sectionStartBar: lesson.arrangement?.section(atBeat: max(0, beat ?? 0))?.bar)
         }
         .padding(.horizontal, Metrics.gutter)
     }

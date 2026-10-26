@@ -1,0 +1,45 @@
+{
+  "source_commit": "89ba75099babd0cc48a8b675becdaa81dbbf8fcf",
+  "run": 40334529341,
+  "jobs": {
+    "en": {
+      "id": 121612433698,
+      "failed_tests": [
+        "test14StoreSongPerform",
+        "test19StoreViolinResults"
+      ]
+    },
+    "de": {
+      "id": 121612433765,
+      "failed_tests": [
+        "test12StoreChord",
+        "test14StoreSongPerform"
+      ]
+    },
+    "ar": {
+      "id": 121612433382,
+      "failed_tests": [
+        "test14StoreSongPerform"
+      ]
+    }
+  },
+  "conclusion": "all three expanded-pilot jobs failed; not approved assets",
+  "english_artifact": 12658075676,
+  "english_artifact_sha256": "786b58b1d7617e41104c5f10989a22e20d8679722c215e7696cf13d103562f71",
+  "images_inspected": {
+    "7F41E707-A3EC-47C7-BEEB-331383608ED2.png": "74c7e775690e13fa329e6d8b181715396631883eb03263f7d5eccad82cc18f48",
+    "17C7C344-8163-4EEC-81E7-CCDBC39462D0.png": "6b06ab519e1bd1f5cc87aa91198f10f6b177c376710c3507fc13b97e3991745b"
+  },
+  "findings": [
+    "English violin image shows a completed100-percent take and the Continue button, not a bad score or results screen. The single navigation tap did not advance.",
+    "English song image shows chorus/79combo while later snapshot reported verse2/98combo. Old/new lyric lines overlap in the captured transition. Later metadata cannot validate that earlier frame.",
+    "German chord had not completed at its single45-second quiet check. Other locales passed the same six-string invariant."
+  ],
+  "repairs": [
+    "Bounded three-attempt Continue navigation, stopping once results exist; no replay or grade change.",
+    "Start song capture at first chorus, sample semantic state before capture, stop at first stable HUD/lyric pair, and require the same section-start identifier plus chorus/8+combo after capture.",
+    "DEBUG capture scene changes lyric lines in place, matching the already-still score; release animation unchanged.",
+    "Sparse bounded chord-state checks with ten seconds of quiet between them, then capture only after all six strings and completion are verified."
+  ],
+  "status": "Local contract tests pass; fresh simulator verification pending. Original failures and wrong images preserved."
+}

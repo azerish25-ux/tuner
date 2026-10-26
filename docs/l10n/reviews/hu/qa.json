@@ -1,0 +1,19 @@
+{
+ "status": "COMPLETE-independent-AI-semantic-review",
+ "source_bindings": 6083,
+ "nonidentity_issues": [],
+ "digit_multiset_mismatches": [],
+ "placeholder_mismatches": [],
+ "newline_mismatches": [],
+ "unapproved_identities": [],
+ "identity_count": 258,
+ "raw_validator_identity_error_counts": {
+  "identical to English; translation or explicit independent semantic review required": 258
+ },
+ "raw_validator_identity_warning_counts": {
+  "identical to the English": 129
+ },
+ "digit_order_changes_reviewed": 159,
+ "layout": "Source max-length checks pass. No rendered/device layout certification.",
+ "semantic_approval_basis": "All exact primary pairs and distinct full contexts actually read, individual judgments and final correction/identity rereads retained."
+}

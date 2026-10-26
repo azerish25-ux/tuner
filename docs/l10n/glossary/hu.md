@@ -98,7 +98,7 @@ Status: AI-drafted and AI-reviewed terminology decisions; not human-reviewed or 
 | fingerpicking / hammer-on / pull-off / slide / bend / vibrato | | ujjal pengetés / hammer-on / pull-off / csúsztatás / nyújtás / vibrato |
 | bowing / open-string bowing | | vonózás / üres húrok vonózása |
 | tune (melody) | | dallam |
-| cadence / V chord / I–IV–V | | kadencia / V. fokú akkord / I–IV–V |
+| cadence / V chord / I–IV–V | | zárlat / V. fokú akkord / I–IV–V |
 | pickup (anacrusis) | | felütés |
 | Intro / Verse 1 / Chorus / Bridge / Solo / Outro / Tag | | Bevezető / 1. versszak / Refrén / Átkötés / Szóló / Lezárás / Zárómotívum |
 | section | | szakasz |
@@ -125,3 +125,52 @@ Instrument courses use the catalogue instrument names. Songs uses the term above
 
 ## 4. Words that mislead
 Tune means bringing pitch to the target; a tune is a melody. Sharp/flat direction uses the existing flat/sharp labels (too low/high), not accidental names. Bar means musical measure, key means tonality, pick means plectrum/plucking or choose according to context. Lock means pitch confirmation, not a padlock. Take means recorded attempt, run a streak or passage attempt, not running. Chart means chord diagram/sheet unless statistical context. Intonation means pitch accuracy over a sustained tone, not saddle adjustment or speech stress. Practice means musical practice; Feel means vibration feedback, not emotion. Chop/chunk are muted rhythmic strokes, never a missed note.
+
+
+## 5. Current complete lesson draft (2026-10-26)
+
+Author: `/root/translate_hungarian_lessons`. These lesson-specific decisions are author proposals, **not independent or native-speaker signoff**. The frozen 6,083-key handoff is under `/tmp/timbre-new-lessons/hu`; independent semantic/invariant decisions and device layout verification remain pending. Existing app terminology above is historical; this section records the current lesson authoring decisions.
+
+### Musical meaning and notation
+- Preserve source A–G note letters, including **B**, even though Hungarian traditional notation often uses H. A source H in a deliberately wrong quiz choice stays H; it is not a license to turn B into H.
+- Preserve spelled accidentals as words: sharp = kereszt, flat = bé, natural = törzshang/feloldott hang by context. Do not substitute ♯/♭ for words or vice versa. Pitch too high/low remains magas/mély, not an accidental.
+- Chord and scale qualities: dúr/moll. Interval qualities: nagy/kis, tiszta, szűkített/bővített. Source interval-only Second/Third/Fourth = szekund/terc/kvart; finger keys explicitly name the ujj. Phrase ordinals name the musical phrase, not the answer button's location.
+- Harmonic cadence = **zárlat** (autentikus, plagális, félzárlat, álzárlat), not a soloist's kadencia. Instrument bridge = **húrláb**; song bridge = **átkötés**. The current explicit source splits are preserved.
+- A tie = átkötés between identical pitches; a slur = kötés/kötőív for connected notes. Context, not one English-word replacement, determines these terms.
+- Half step = félhang; whole step = egészhang. The half step/semitone introduction explicitly identifies two English labels for the same Hungarian term. The bar/measure synonym question uses the valid Hungarian pair ütem/taktus.
+- Movable-do syllables: dó, ré, mi, fá, szó, lá, ti. Keep source ti, not fixed-do si. Do not apply solfège spelling to source letter-name notation.
+- Down/up directions = lefelé/felfelé, neutral enough for picking strokes and melodic direction. Same/different = ugyanaz/más, valid for notes and chords. Shared answer labels avoid noun cases that only fit their first question.
+- Numeric rhythmic recipes and D/U stroke notation retain the source tokens. W/H is explicitly defined as W = egész, H = fél. English triplet count 1-trip-let / 2-trip-let becomes 1-tri-o / 2-tri-o, three equal syllables; the final-syllable instruction selects o.
+- The source 1700s means the entire century: use **az 1700-zal kezdődő század** to disambiguate it while preserving the exact numeric token.
+
+### Instrument and style vocabulary
+- Instrument courses: Gitár, Ukulele, Basszusgitár, Hegedű, Cselló, Mandolin, Bendzsó. Other courses: Hallásfejlesztés, Zeneelmélet, Ritmus, Éneklés, Dalok, Saját szerzemények, Örökzöldek és klasszikusok. Course prose uses kurzus and fejezet naturally; lesson = lecke.
+- Bow parts/posture: vonó, kápa, csúcs, gyanta, húrláb, álltartó, csiga, támasztóláb; position = fekvés. Violin “level with the floor” means nagyjából vízszintesen, not floor-height placement.
+- Hammer-on/pull-off retain the established technique names; slide = csúsztatás, bend = nyújtás. A bend “short” of target is **alulnyújtott**, not short in time. The hammer-on exercise explicitly says finger 1 holds the note before the picking hand plucks.
+- Mandolin chop = tompított beütés; ukulele chunk = tompított csattanás. Neither means an error. Crosspicking = keresztpengetés. Banjo roll = gördülő minta, with előregördülés and váltott hüvelykujjas gördülés as appropriate. Clawhammer and bum-ditty retain their taught technical/rhythmic names.
+- Tremolo = tremoló. Current “Tremolo through long notes” = Tremolózd végig a hosszú hangokat; the retired next-beat instruction is not used.
+- Chart in song instructions = akkordmenet or akkordlap, rather than statistical diagram. Hook = főmotívum. Guitar strum and single-note pluck are distinguished in surrounding wording where bare pengetés would be ambiguous.
+- Beat = ütés, pulse = lüktetés, bar = ütem, offbeat = ellenütés, backbeat = ellenhangsúly, syncopation = szinkópa. Quarter/half/whole/eighth/sixteenth = negyed/fél/egész/nyolcad/tizenhatod kotta; triplet = triola.
+- Major/minor spelling with source letter names: A-dúr, B-moll, F kereszt-moll; keep literal coded Am7, Fmaj7, Dsus4, etc.
+
+### Mnemonics and sung repertoire
+- E A D G B E: **Egy Aranyos Diák Gitározik, Barátja Eszik**.
+- E A D G: **Egy Aranyos Diák Gitározik**.
+- G C E A: **Gabi Citromot Eszik Almával**.
+- G D A E: **Gabi Délután Almát Eszik**.
+- C G D A: **Cili Gitározik, Dani Alszik**.
+- E G B D F: **Egy Gitáros Barát Dallamokat Fütyül**.
+- G B D F A: **Gabi Barátja Délután Fagyit Akar**.
+- A C E G: **Anna Csendben Eszik Gyümölcsöt**.
+- FACE remains the source note-letter word; prose explicitly calls it an English word.
+- Sung lyrics and exact lyric-word choices (Fly, Wide, Boat, Town, Bethlehem) retain the performance language. Instructional explanations and connecting credit words are translated. Each whole-string identity is held for its own independent decision, not approved by this glossary.
+- Established local titles include Örömóda, János bácsi, Csengőszó, Csendes éj, Ó, szép fenyő, Ó, jöjjetek, hívek, G-dúr menüett, A hattyú, D-dúr kánon, Kis éji zene, Kék Duna, Kánkán, Reggeli hangulat, Tavasz, Török rondó. Ragyogj, ragyogj, kis csillag is the chosen Twinkle title. Other original repertoire titles are retained where no local title was established by this author; native title review remains pending.
+- Timbre Originals titles are translated consistently, including **Zenegéphold** (not Zenegép-hold). The complete exact source/target title decisions are frozen in `song-title-decisions.json`; Hungarian case suffixes in prose are intentional.
+- Section chips use short meaningful labels: Bevezető, versszak, Refrén, Átkötés, Szóló, Lezárás, Zárómotívum, Előrefrén, Kidolgozás, Induló, Trió, Téma kvinttel feljebb, Teljes fény. Character budgets are checked, but actual device fit has not been observed.
+
+## Independently reviewed lesson overrides
+
+- Final lesson terminology: dúr/moll for chord/scale quality; nagy/kis and tiszta kvart/kvint for interval quality. Latin A–G/B source notation remains unchanged.
+- Cadence is zárlat; song bridge is átkötés; instrument bridge is húrláb. Bowing slur remains kötés/kötőív.
+- The reviewed date constructions use natural 1700-as évek wording, superseding the older cumbersome glossary phrase while preserving the source numeric token.
+- The bar synonym quiz consistently uses ütem/taktus and Ütés/Szünet/Taktus choices. Felfelé/Lefelé and Egy ütés have complete shared-role review.

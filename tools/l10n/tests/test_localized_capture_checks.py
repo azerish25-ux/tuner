@@ -68,7 +68,7 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         self.assertNotIn('waitForExistence', between)
         chord = source.split('func test12StoreChord()', 1)[1].split('func ', 1)[0]
         self.assertIn('settle(45)', chord)
-        self.assertNotIn('waitForExistence', chord)
+        self.assertNotIn('.waitForExistence(', chord)
 
     def test_additional_store_frames_use_semantic_controls_and_state(self):
         checks = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
@@ -76,13 +76,14 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
             self.assertNotIn(obsolete, checks)
         for identifier in ['performance.combo.', 'performance.lyrics', 'performance.score', 'instruments.family.folk_world_strings', 'strum.summary.tune']:
             self.assertIn(identifier, checks)
-        self.assertIn('hud == nil || score == nil || regions.count != 3', checks)
+        self.assertIn('hud == nil || score == nil || lyrics == nil || regions.count != 4', checks)
         self.assertIn('target.frame.midX > app.frame.midX', checks)
         hud = (ROOT / 'ios/Timbre/Learn/HighwayHUD.swift').read_text()
         lyrics = (ROOT / 'ios/Timbre/Learn/HighwayLyrics.swift').read_text()
         self.assertIn('.accessibilityLabel(Text("Combo"))', hud)
         self.assertIn('.accessibilityLabel(Text("Lyrics"))', lyrics)
-        self.assertIn('.accessibilityIdentifier("performance.lyrics")', lyrics)
+        self.assertIn('.accessibilityIdentifier(stateIdentifier)', lyrics)
+        self.assertIn('performance.lyrics.section.', lyrics)
 
     def test_tablet_and_phone_share_explicit_language_and_tab_fixture(self):
         phone = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
@@ -152,6 +153,53 @@ class LocalizedCaptureChecksTests(unittest.TestCase):
         self.assertLess((beats + take['beatsPerBar']) * 60 / take['bpm'] + tail, 21)
         source = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
         self.assertIn('settle(7); shot("60-along-playing")\n        settle(14)', source)
+
+    def test_results_navigation_retries_do_not_replay_or_change_the_take(self):
+        source = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+        self.assertEqual(source.count('guard openResultsForCapture() else { return }'), 2)
+        helper = source.split('private func openResultsForCapture()', 1)[1].split('func testCaptureLocalizationNavigationFixture()', 1)[0]
+        self.assertIn('1...3 where !result.exists', helper)
+        self.assertIn('button.isEnabled && button.isHittable', helper)
+        self.assertNotIn('along.again', helper)
+        self.assertIn('XCTFail(', helper)
+
+    def test_song_capture_semantics_precede_the_stable_pair_and_include_lyrics(self):
+        source = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+        method = source.split('private func storePerformFrame(', 1)[1].split('private func hudRegions(', 1)[0]
+        self.assertLess(method.index('for node in appNodes()'), method.index('let first = XCUIScreen'))
+        self.assertIn('regions.count == 4', method)
+        self.assertIn('picture = first\n                    break', method)
+        self.assertIn('node.identifier == sectionIdentifier', method)
+        self.assertIn('!sameSection || endingCombo < 8', method)
+        lyrics = (ROOT / 'ios/Timbre/Learn/HighwayLyrics.swift').read_text()
+        self.assertIn('if DemoScene.stillScore', lyrics)
+        self.assertIn('transaction.disablesAnimations = true', lyrics)
+        self.assertIn('#if DEBUG\n        .transaction', lyrics)
+        self.assertIn('app.launchEnvironment["TIMBRE_SCENE_BAR"] = "12"', source)
+
+    def test_chord_capture_waits_sparsely_and_captures_confirmed_completion(self):
+        source = (ROOT / 'ios/TimbreUITests/TimbreUITests.swift').read_text()
+        chord = source.split('func test12StoreChord()', 1)[1].split('func ', 1)[0]
+        self.assertIn('for attempt in 0..<6', chord)
+        self.assertIn('if attempt < 5 { settle(10) }', chord)
+        self.assertIn('if complete { break }', chord)
+        self.assertLess(chord.index('complete = ringing'), chord.index('XCUIScreen.main.screenshot()'))
+        self.assertIn('ok: complete', chord)
+
+    def test_performance_capture_starts_inside_first_chorus(self):
+        curriculum = json.loads((ROOT / 'ios/Sources/TimbreCore/Resources/curriculum.json').read_text())
+        def dictionaries(value):
+            if isinstance(value, dict):
+                yield value
+                for child in value.values():
+                    yield from dictionaries(child)
+            elif isinstance(value, list):
+                for child in value:
+                    yield from dictionaries(child)
+        song = next(x for x in dictionaries(curriculum) if x.get('id') == 'orig-kite-weather')
+        chorus = next(x for x in song['arrangement']['sections'] if x['kind'] == 'chorus')
+        self.assertEqual(chorus['bar'], 12)
+        self.assertGreaterEqual(chorus['bars'], 8)
 
     def test_focused_ci_checks_ltr_rtl_and_requires_real_valid_attachments(self):
         source = (ROOT / '.github/workflows/localized-capture-check.yml').read_text()

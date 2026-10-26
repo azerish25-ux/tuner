@@ -741,8 +741,7 @@ final class TimbreUITests: XCTestCase {
         // App Store frame #7. The results land in order: the stars, the coach, the XP counting up, then the level bar
         // (labelled "Level N") fills under them. Its arrival means the XP has finished counting; the badges that pop in
         // after it and the bar's fill settle before the picture. Kept only with three stars (the row reads "3 of 3 stars").
-        element("lesson.continue").tap()
-        XCTAssertTrue(element("lesson.results.level").waitForExistence(timeout: 15))
+        guard openResultsForCapture() else { return }
         let results = stillScreenshot(timeout: 3)
         let headline = element("lesson.results.stars.3").exists
         let room = resultsFit()
@@ -773,14 +772,35 @@ final class TimbreUITests: XCTestCase {
         settle(40)
         XCTAssertTrue(element("along.again").waitForExistence(timeout: 30), "The violin play-along never finished")
         settle(1)
-        element("lesson.continue").tap()
-        XCTAssertTrue(element("lesson.results.level").waitForExistence(timeout: 15))
+        guard openResultsForCapture() else { return }
         let results = stillScreenshot(timeout: 3)
         let headline = element("lesson.results.stars.3").exists
         let room = resultsFit()
         storeFrame("62b-lesson-results-violin", picture: results, ok: headline && room.fits,
                    headline ? room.summary
                             : "the violin results don't show three stars: the play-along wasn't played clean")
+    }
+
+    /// A completed take can still be settling when Continue appears. Retry only that
+    /// navigation control, never the performance or its grade, and stop once results exist.
+    private func openResultsForCapture() -> Bool {
+        let result = element("lesson.results.level")
+        let button = element("lesson.continue")
+        for attempt in 1...3 where !result.exists {
+            if button.waitForExistence(timeout: 2) && button.isEnabled && button.isHittable {
+                button.tap()
+            }
+            if result.waitForExistence(timeout: 6) {
+                print("TIMBRE_RESULTS_OPENED attempt=\(attempt)")
+                return true
+            }
+        }
+        guard result.exists else {
+            XCTFail("The completed take did not open lesson results after three Continue attempts")
+            shot("lesson-results-navigation-wrong")
+            return false
+        }
+        return true
     }
 
     func testCaptureLocalizationNavigationFixture() {
@@ -954,21 +974,30 @@ final class TimbreUITests: XCTestCase {
     /// every string lit instead of handing over to the next step.
     func test12StoreChord() throws {
         launch(pitch: true, scene: "lesson-chord")
-        // This scene holds the completed chord. Let its six strings be heard without
-        // repeated accessibility queries stalling the software-rendered 3D scene.
+        // Leave the six strings quiet while the scene loads and hears them. A busy
+        // software-rendered simulator can need longer; sparse snapshots avoid starving
+        // the demo pitch as rapid waitForExistence polling did.
         settle(45)
-        let picture = XCUIScreen.main.screenshot()
-        // The E-minor scene must expose all six individually heard strings. No English labels or
-        // localized-number parsing, and an empty/missing check set cannot pass vacuously.
-        let nodes = appNodes()
-        let ringing = nodes.contains { $0.identifier == "lesson.chord.complete" }
-        let checks = nodes.filter { $0.identifier.hasPrefix("lesson.chord.string.") }
-        let heard = Set((1...6).filter { number in
-            checks.contains { $0.identifier == "lesson.chord.string.\(number).heard" }
-        })
-        storeFrame("52b-lesson-chord", picture: picture,
-                   ok: ringing && checks.count == 6 && heard == Set(1...6),
-                   ringing ? "\(heard.count) of 6 strings heard; \(checks.count) checks visible" : "the chord step never heard every string")
+        var complete = false
+        var heard: Set<Int> = []
+        var checkCount = 0
+        for attempt in 0..<6 {
+            let nodes = appNodes()
+            let ringing = nodes.contains { $0.identifier == "lesson.chord.complete" }
+            let checks = nodes.filter { $0.identifier.hasPrefix("lesson.chord.string.") }
+            heard = Set((1...6).filter { number in
+                checks.contains { $0.identifier == "lesson.chord.string.\(number).heard" }
+            })
+            checkCount = checks.count
+            complete = ringing && checks.count == 6 && heard == Set(1...6)
+            if complete { break }
+            if attempt < 5 { settle(10) }
+        }
+        // The scene holds its completed chord; capture after confirmation, never approve
+        // an earlier incomplete picture using a later successful snapshot.
+        settle(1.2)
+        storeFrame("52b-lesson-chord", picture: XCUIScreen.main.screenshot(), ok: complete,
+                   "\(heard.count) of 6 strings heard; \(checkCount) checks visible after bounded quiet waits")
     }
 
     /// App Store frame #8: Strum to tune, every string of the guitar read from one strum (polyphonic, the tuner no
@@ -997,15 +1026,12 @@ final class TimbreUITests: XCTestCase {
                    "the strum screen reads '\(summary)' (Fine-tune button: \(read), a sheet over it: \(covered)), not the demo strum")
     }
 
-    /// App Store frame #2 through the `song-perform` scene (DemoScenes.swift): Kite Weather, the Originals' song of the
-    /// day, performed on the fretboard runway mid-chorus, with its words under the runway, fret numbers on the gems and
-    /// a long combo. The scene opens the song on its performance and starts the take by itself 3 s later at bar 16 of
-    /// 56 (every note before it played clean, 68 in a row); the demo pitch plays on, on time. The hook line ("It's kite
-    /// weather, kite weather") is in the light from about 2 to 7.5 s into the take, so the picture is taken about 4.5 s
-    /// in, hands off from the moment the lesson shows: a query stalls the app's main thread, and a note heard late
-    /// would break the run. One snapshot afterwards checks the combo and that the words are the chorus's, and the frame
-    /// is kept only from a pair of pictures 120 ms apart whose HUD reads the same: no digit caught mid-change.
+    /// App Store frame #2: Kite Weather opens at its first chorus (zero-based bar 12).
+    /// Earlier notes are played by the existing scene; the actual take continues normally.
+    /// Semantic state is sampled before capture, and the first pair with stable HUD and lyrics is kept.
     func test14StoreSongPerform() throws {
+        // Start at the first chorus, leaving enough real music for both capture and validation.
+        app.launchEnvironment["TIMBRE_SCENE_BAR"] = "12"
         launch(pitch: true, scene: "song-perform")
         storePerformFrame("65-song-perform", song: "Kite Weather", chorus: ["kite weather", "let it climb", "summer winds"])
     }
@@ -1025,65 +1051,100 @@ final class TimbreUITests: XCTestCase {
     /// How long the take has been on screen when its pictures are taken: about 4.5 s in, its hook line in the light.
     private static let takeHold: TimeInterval = 4.5
 
-    /// A performance's store frame: hands off from the moment the lesson shows (a query stalls the app's main thread, and a
-    /// note heard late would break the run), then pairs of pictures; one snapshot afterwards checks the combo and that the
-    /// words are the chorus's. The pictures are taken `takeHold` seconds after the take is seen on screen (the stage's
-    /// mint Perform button given way to the take's dark Stop, `takeButton`), not a fixed time after the lesson opened:
-    /// starting the audio output can hold the app for seconds first, and a held app shows the stage still.
+    /// Read the current performance state, then choose a stable pair without an unnecessary
+    /// six-pair delay. The HUD and lyric region must all be present and stable.
     private func storePerformFrame(_ name: String, song: String, chorus: [String]) {
         let opened = element("lesson.close").waitForExistence(timeout: 30)
         let playing = waitForDark(Self.takeButton, hold: Self.takeHold, timeout: 40)
-        // Pairs of pictures 120 ms apart, hands off. The frame is the first of a pair whose HUD (score, combo, multiplier)
-        // reads the same in both: no counter caught mid-change or mid-pop, which a single picture can't promise.
-        var pairs: [(XCUIScreenshot, XCUIScreenshot)] = []
-        for _ in 0..<6 {
-            let first = XCUIScreen.main.screenshot()
-            Thread.sleep(forTimeInterval: 0.12)
-            pairs.append((first, XCUIScreen.main.screenshot()))
-        }
+        // Resolve semantics and bounds before capturing, then stop on the first stable pair.
+        // The previous six-pair burst read a later verse while validating an earlier chorus image.
+        let screen = app.frame
         var combo = 0
         var words = ""
         var hud: CGRect?
         var score: CGRect?
+        var lyrics: CGRect?
+        var sectionIdentifier: String?
         for node in appNodes() {
             if node.identifier.hasPrefix("performance.combo.") {
                 combo = Int(node.identifier.dropFirst("performance.combo.".count)) ?? 0
                 hud = node.frame
             }
-            if node.identifier == "performance.lyrics", let value = node.value as? String { words = value.lowercased() }
+            if node.identifier.hasPrefix("performance.lyrics.section."), let value = node.value as? String {
+                sectionIdentifier = node.identifier
+                words = value.lowercased()
+                lyrics = node.frame
+            }
             if node.identifier == "performance.score" { score = node.frame }
         }
-        let regions = hudRegions(hud: hud, score: score)
-        let steady = pairs.firstIndex { StillScreen.regionsMatch($0.0, $0.1, regions) }
-        let picture = steady.map { pairs[$0].0 } ?? pairs[0].0
-        let inChorus = chorus.contains { words.contains($0) }
+        var regions = hudRegions(hud: hud, score: score, screen: screen)
+        if let lyrics, !lyrics.isEmpty, lyrics.minX.isFinite, lyrics.minY.isFinite,
+           lyrics.width.isFinite, lyrics.height.isFinite,
+           screen.width > 0, screen.height > 0,
+           screen.insetBy(dx: -1, dy: -1).contains(lyrics) {
+            regions.append(CGRect(x: lyrics.minX / screen.width, y: lyrics.minY / screen.height,
+                                  width: lyrics.width / screen.width, height: lyrics.height / screen.height))
+        }
+        var picture: XCUIScreenshot?
+        var last: XCUIScreenshot?
+        if opened && playing && combo >= 8 && chorus.contains(where: { words.contains($0) }) && regions.count == 4 {
+            for _ in 0..<6 {
+                let first = XCUIScreen.main.screenshot()
+                Thread.sleep(forTimeInterval: 0.12)
+                let second = XCUIScreen.main.screenshot()
+                last = first
+                if StillScreen.regionsMatch(first, second, regions) {
+                    picture = first
+                    break
+                }
+            }
+        }
+        // The same section anchor must bracket the actual images. A later verse or
+        // another chorus cannot certify an earlier frame just because its words look similar.
+        var sameSection = false
+        var endingWords = ""
+        var endingCombo = 0
+        if picture != nil {
+            for node in appNodes() {
+                if let sectionIdentifier, node.identifier == sectionIdentifier {
+                    sameSection = true
+                    endingWords = (node.value as? String)?.lowercased() ?? ""
+                }
+                if node.identifier.hasPrefix("performance.combo.") {
+                    endingCombo = Int(node.identifier.dropFirst("performance.combo.".count)) ?? 0
+                }
+            }
+        }
         let problem: String
         if !playing {
-            problem = "\(song)'s take never stayed on screen for \(Self.takeHold) s (the stage's Perform button stayed lit; opened: \(opened))"
-        } else if !(opened && combo >= 8 && inChorus) {
+            problem = "\(song)'s take never stayed on screen for \(Self.takeHold) s (opened: \(opened))"
+        } else if !(opened && combo >= 8 && chorus.contains(where: { words.contains($0) })) {
             problem = "\(song)'s take shows a combo of \(combo) and the words '\(words)' (opened: \(opened)), not a run of 8+ in the chorus"
-        } else if hud == nil || score == nil || regions.count != 3 {
-            problem = "the semantic combo or score region is missing"
-        } else if steady == nil {
-            problem = "the HUD changed between every pair of pictures 120 ms apart (\(regions.count) regions): a counter mid-change"
+        } else if hud == nil || score == nil || lyrics == nil || regions.count != 4 {
+            problem = "the semantic combo, score or lyric region is missing"
+        } else if picture == nil {
+            problem = "the HUD or lyrics changed between every capture pair; no stable frame was approved"
+        } else if !sameSection || endingCombo < 8 || !chorus.contains(where: { endingWords.contains($0) }) {
+            problem = "the performance left the verified chorus during capture; no frame was approved"
         } else {
             problem = ""
         }
-        storeFrame(name, picture: picture, ok: problem.isEmpty, problem)
+        storeFrame(name, picture: picture ?? last, ok: problem.isEmpty, problem)
     }
 
     /// The HUD's numbers as fractions of the screen: the combo counter (the left of the HUD row), the multiplier dial
     /// (its right; the runway between them moves) and the score. Empty without the HUD.
-    private func hudRegions(hud: CGRect?, score: CGRect?) -> [CGRect] {
-        let screen = app.frame
-        guard screen.width > 0, screen.height > 0, let hud else { return [] }
+    private func hudRegions(hud: CGRect?, score: CGRect?, screen: CGRect) -> [CGRect] {
+        guard screen.width > 0, screen.height > 0,
+              let hud, !hud.isEmpty, hud.minX.isFinite, hud.minY.isFinite, hud.width.isFinite, hud.height.isFinite,
+              let score, !score.isEmpty, score.minX.isFinite, score.minY.isFinite, score.width.isFinite, score.height.isFinite else { return [] }
         func fraction(_ box: CGRect) -> CGRect {
             CGRect(x: box.minX / screen.width, y: box.minY / screen.height, width: box.width / screen.width, height: box.height / screen.height)
         }
         let side = min(hud.width * 0.24, 110)
         var regions = [fraction(CGRect(x: hud.minX, y: hud.minY, width: side, height: hud.height)),
                        fraction(CGRect(x: hud.maxX - side, y: hud.minY, width: side, height: hud.height))]
-        if let score { regions.append(fraction(score)) }
+        regions.append(fraction(score))
         return regions
     }
 

@@ -1,0 +1,13 @@
+{
+ "scope": "Read-only reconciliation of publisher QA gates with exact independently reviewed identity evidence; no registry or publisher exception was written.",
+ "raw_publisher_error_rows": 373,
+ "raw_publisher_warning_rows": 215,
+ "exact_individual_identity_gates_matched": 373,
+ "exact_identity_warning_rows_matched": 215,
+ "unresolved_structural_or_length_errors": 0,
+ "unresolved_structural_or_length_warnings": 0,
+ "guarded_corrections": 153,
+ "correction_errors": 0,
+ "correction_warnings": 0,
+ "requires_parent_invariant_integration_then_publisher_revalidation": true
+}

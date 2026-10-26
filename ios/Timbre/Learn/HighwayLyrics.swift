@@ -12,6 +12,13 @@ struct HighwayLyrics: View {
     let accent: Color
     /// The section playing ("Chorus"), over the words; nil leaves the row out.
     var section: String?
+    /// Stable position of the current section, independent of its localized name.
+    var sectionStartBar: Int?
+
+    private var stateIdentifier: String {
+        guard let sectionStartBar else { return "performance.lyrics" }
+        return "performance.lyrics.section.\(sectionStartBar)"
+    }
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -48,8 +55,18 @@ struct HighwayLyrics: View {
         .dynamicTypeSize(...DynamicTypeSize.xxLarge)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Lyrics"))
-        .accessibilityIdentifier("performance.lyrics")
+        .accessibilityIdentifier(stateIdentifier)
         .accessibilityValue(Text(verbatim: spoken(cue)))
+        #if DEBUG
+        .transaction { transaction in
+            // Match the capture scene's still score: words change in place rather than
+            // catching overlapping old/new lyric lines in a single exported frame.
+            if DemoScene.stillScore {
+                transaction.animation = nil
+                transaction.disablesAnimations = true
+            }
+        }
+        #endif
     }
 
     // MARK: Rows
