@@ -5,6 +5,16 @@ manual's human-review step. No human native-speaker, legal, accessibility-listen
 or market review is claimed. Automated checks cannot establish perfect fluency
 or release readiness. This work does not authorize App Store submission.
 
+## Current checkpoint — 26 October 2026, 09:52 UTC
+
+- Interface resources: all 49 app languages have literal-key coverage; this is not a universal device/semantic certification.
+- Lessons: 25 translated targets plus English now cover all 6,083 current source keys. Finnish, Danish, Swedish, Dutch and Norwegian were imported after full independent AI review, 842 guarded corrections and 1,940 exact-source retention approvals. Bridge and interval source splits and the sustained-tremolo repair reconcile their frozen drafts with current content.
+- Romanian is in independent review. Hebrew, Thai, Telugu, Swahili and Zulu remain author drafts. 17 further targets have not yet entered lesson drafting.
+- Store text: all 50 Apple-supported locale payloads have independent AI text review. Localized screenshot/preview renders, production privacy URL and account-side checks are not complete; release_ready remains false.
+- GitHub run 40288874201 on 31305f6 passed 58 app tests and 3 smoke tests, including all configured regional language cases and the corrected tuner string identifier. Its accessibility audit still failed contrast checks.
+- Matrix run 40286089721 passed six groups; two groups failed simulator lifecycle operations. Retrying is not a pass or assertion waiver.
+- Historical sections below describe their own earlier checkpoints, not current coverage.
+
 ## Imported checkpoint: German launch strings
 
 - 151 launch strings imported: 11 purchase/legal, one permission, 93 VoiceOver,
